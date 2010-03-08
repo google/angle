@@ -1,0 +1,174 @@
+//
+// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
+// Surface.cpp: Implements the egl::Surface class, representing a drawing surface
+// such as the client area of a window, including any back buffers.
+// Implements EGLSurface and related functionality. [EGL 1.4] section 2.2 page 3.
+
+#include "Surface.h"
+
+#include "main.h"
+#include "debug.h"
+
+namespace egl
+{
+Surface::Surface(IDirect3DDevice9 *device, IDirect3DSwapChain9 *swapChain, EGLint configID) : mSwapChain(swapChain), mConfigID(configID)
+{
+    mBackBuffer = NULL;
+    mRenderTarget = NULL;
+
+    mPixelAspectRatio = (EGLint)(1.0 * EGL_DISPLAY_SCALING);   // FIXME: Determine actual pixel aspect ratio
+    mRenderBuffer = EGL_BACK_BUFFER;
+    mSwapBehavior = EGL_BUFFER_PRESERVED;
+
+    if (mSwapChain)
+    {
+        mSwapChain->AddRef();
+        mSwapChain->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &mBackBuffer);
+
+        D3DSURFACE_DESC description;
+        mBackBuffer->GetDesc(&description);
+
+        mWidth = description.Width;
+        mHeight = description.Height;
+
+        HRESULT result = device->CreateRenderTarget(mWidth, mHeight, description.Format, description.MultiSampleType, description.MultiSampleQuality, FALSE, &mRenderTarget, NULL);
+
+        if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+        {
+            error(EGL_BAD_ALLOC);
+
+            return;
+        }
+
+        ASSERT(SUCCEEDED(result));
+    }
+}
+
+Surface::~Surface()
+{
+    if (mSwapChain)
+    {
+        mSwapChain->Release();
+    }
+
+    if (mBackBuffer)
+    {
+        mBackBuffer->Release();
+    }
+
+    if (mRenderTarget)
+    {
+        mRenderTarget->Release();
+    }
+}
+
+HWND Surface::getWindowHandle()
+{
+    if (mSwapChain)
+    {
+        D3DPRESENT_PARAMETERS presentParameters;
+        mSwapChain->GetPresentParameters(&presentParameters);
+
+        return presentParameters.hDeviceWindow;
+    }
+
+    return NULL;
+}
+
+void Surface::swap()
+{
+    if (mSwapChain)
+    {
+        IDirect3DDevice9 *device;
+        mSwapChain->GetDevice(&device);
+
+        D3DSURFACE_DESC description;
+        mBackBuffer->GetDesc(&description);
+
+        // Copy the render target into a texture
+        IDirect3DTexture9 *texture;
+        HRESULT result = device->CreateTexture(mWidth, mHeight, 1, D3DUSAGE_RENDERTARGET, description.Format, D3DPOOL_DEFAULT, &texture, NULL);
+
+        if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+        {
+            return error(EGL_BAD_ALLOC);
+        }
+
+        ASSERT(SUCCEEDED(result));
+        
+        IDirect3DSurface9 *textureSurface;
+        texture->GetSurfaceLevel(0, &textureSurface);
+
+        device->StretchRect(mRenderTarget, NULL, textureSurface, NULL, D3DTEXF_POINT);
+        
+        // Disable all pipeline operations
+        device->SetRenderState(D3DRS_ZENABLE, D3DZB_FALSE);
+        device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+        device->SetRenderState(D3DRS_ALPHATESTENABLE , FALSE);
+        device->SetRenderState(D3DRS_ALPHABLENDENABLE , FALSE);
+        device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+        device->SetRenderState(D3DRS_STENCILENABLE, FALSE);
+        device->SetRenderState(D3DRS_CLIPPLANEENABLE, 0);
+        device->SetRenderState(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_ALPHA | D3DCOLORWRITEENABLE_BLUE | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_RED);
+        device->SetRenderState(D3DRS_SRGBWRITEENABLE, FALSE);
+        device->SetPixelShader(NULL);
+        device->SetVertexShader(NULL);
+
+        // Just sample the texture
+        device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+        device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
+        device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
+        device->SetTexture(0, texture);
+        device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
+        device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
+        device->SetSamplerState(0, D3DSAMP_SRGBTEXTURE, FALSE);
+        device->SetFVF(D3DFVF_XYZRHW | D3DFVF_TEX1);
+        device->SetRenderTarget(0, mBackBuffer);
+
+        // Render the texture upside down into the back buffer
+        float quad[4][6] = {{     0 - 0.5f,       0 - 0.5f, 0.0f, 1.0f, 0.0f, 1.0f},
+                            {mWidth - 0.5f,       0 - 0.5f, 0.0f, 1.0f, 1.0f, 1.0f},
+                            {mWidth - 0.5f, mHeight - 0.5f, 0.0f, 1.0f, 1.0f, 0.0f},
+                            {     0 - 0.5f, mHeight - 0.5f, 0.0f, 1.0f, 0.0f, 0.0f}};   // x, y, z, rhw, u, v
+
+        device->BeginScene();
+        device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, quad, 6 * sizeof(float));
+        device->EndScene();
+
+        result = mSwapChain->Present(NULL, NULL, NULL, NULL, D3DPRESENT_INTERVAL_DEFAULT);   // FIXME: Get the swap interval from the associated Display
+
+        if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY || result == D3DERR_DRIVERINTERNALERROR)
+        {
+            return error(EGL_BAD_ALLOC);
+        }
+        
+        textureSurface->Release();
+        texture->Release();
+        device->Release();
+    }
+}
+
+EGLint Surface::getWidth() const
+{
+    return mWidth;
+}
+
+EGLint Surface::getHeight() const
+{
+    return mHeight;
+}
+
+IDirect3DSurface9 *Surface::getRenderTarget()
+{
+    if (mRenderTarget)
+    {
+        mRenderTarget->AddRef();
+    }
+
+    return mRenderTarget;
+}
+}
