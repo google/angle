@@ -819,7 +819,7 @@ bool Program::applyUniform1iv(GLint location, GLsizei count, const GLint *v)
         UINT descriptionCount = 1;
         HRESULT result = mConstantTablePS->GetConstantDesc(constantPS, &constantDescription, &descriptionCount);
 
-        if (SUCCEEDED(result))
+        if (FAILED(result))
         {
             return false;
         }
