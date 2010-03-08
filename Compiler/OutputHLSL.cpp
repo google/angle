@@ -296,17 +296,67 @@ void OutputHLSL::header()
            "{\n"
            "    return x - y * floor(x / y);\n"
            "}\n"
+           "\n"
            "float2 mod(float2 x, float y)\n"   // FIXME: Prevent name clashes
            "{\n"
            "    return x - y * floor(x / y);\n"
            "}\n"
+           "\n"
            "float3 mod(float3 x, float y)\n"   // FIXME: Prevent name clashes
            "{\n"
            "    return x - y * floor(x / y);\n"
            "}\n"
+           "\n"
            "float4 mod(float4 x, float y)\n"   // FIXME: Prevent name clashes
            "{\n"
            "    return x - y * floor(x / y);\n"
+           "}\n"
+           "\n"
+           "float faceforward(float N, float I, float Nref)\n"   // FIXME: Prevent name clashes
+           "{\n"
+           "    if(dot(Nref, I) < 0)\n"
+           "    {\n"
+           "        return N;\n"
+           "    }\n"
+           "    else\n"
+           "    {\n"
+           "        return -N;\n"
+           "    }\n"
+           "}\n"
+           "\n"
+           "float2 faceforward(float2 N, float2 I, float2 Nref)\n"   // FIXME: Prevent name clashes
+           "{\n"
+           "    if(dot(Nref, I) < 0)\n"
+           "    {\n"
+           "        return N;\n"
+           "    }\n"
+           "    else\n"
+           "    {\n"
+           "        return -N;\n"
+           "    }\n"
+           "}\n"
+           "\n"
+           "float3 faceforward(float3 N, float3 I, float3 Nref)\n"   // FIXME: Prevent name clashes
+           "{\n"
+           "    if(dot(Nref, I) < 0)\n"
+           "    {\n"
+           "        return N;\n"
+           "    }\n"
+           "    else\n"
+           "    {\n"
+           "        return -N;\n"
+           "    }\n"
+           "}\n"
+           "float4 faceforward(float4 N, float4 I, float4 Nref)\n"   // FIXME: Prevent name clashes
+           "{\n"
+           "    if(dot(Nref, I) < 0)\n"
+           "    {\n"
+           "        return N;\n"
+           "    }\n"
+           "    else\n"
+           "    {\n"
+           "        return -N;\n"
+           "    }\n"
            "}\n"
            "\n";
 }
@@ -818,7 +868,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpDistance:      outputTriplet(visit, "distance(", ", ", ")");      break;
       case EOpDot:           outputTriplet(visit, "dot(", ", ", ")");           break;
       case EOpCross:         outputTriplet(visit, "cross(", ", ", ")");         break;
-      case EOpFaceForward:   UNIMPLEMENTED(); /* FIXME */ out << "face-forward";            break;
+      case EOpFaceForward:   outputTriplet(visit, "faceforward(", ", ", ")");   break;
       case EOpReflect:       outputTriplet(visit, "reflect(", ", ", ")");       break;
       case EOpRefract:       outputTriplet(visit, "refract(", ", ", ")");       break;
       case EOpMul:           outputTriplet(visit, "(", " * ", ")");             break;

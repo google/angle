@@ -556,7 +556,7 @@ void IdentifyBuiltIns(EShLanguage language, TSymbolTable& symbolTable)
 	symbolTable.relateToOperator("dot",          EOpDot);
 	symbolTable.relateToOperator("cross",        EOpCross);
 	symbolTable.relateToOperator("normalize",    EOpNormalize);
-	symbolTable.relateToOperator("forward",      EOpFaceForward);
+	symbolTable.relateToOperator("faceforward",  EOpFaceForward);
 	symbolTable.relateToOperator("reflect",      EOpReflect);
 	symbolTable.relateToOperator("refract",      EOpRefract);
 	
