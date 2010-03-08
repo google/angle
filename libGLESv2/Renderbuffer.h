@@ -90,6 +90,7 @@ class Stencilbuffer : public Renderbuffer
 {
   public:
     Stencilbuffer(IDirect3DSurface9 *depthStencil);
+    Stencilbuffer(int width, int height);
 
     ~Stencilbuffer();
 

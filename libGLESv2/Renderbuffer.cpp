@@ -218,7 +218,7 @@ IDirect3DSurface9 *Depthbuffer::getDepthStencil()
 }
 
 Stencilbuffer::Stencilbuffer(IDirect3DSurface9 *depthStencil) : mDepthStencil(depthStencil)
- {
+{
     if (depthStencil)
     {
         depthStencil->AddRef();
@@ -229,7 +229,35 @@ Stencilbuffer::Stencilbuffer(IDirect3DSurface9 *depthStencil) : mDepthStencil(de
         mWidth = description.Width;
         mHeight = description.Height;
     }
- }
+}
+
+Stencilbuffer::Stencilbuffer(int width, int height)
+{
+    IDirect3DDevice9 *device = getDevice();
+
+    mDepthStencil = NULL;
+    HRESULT result = device->CreateDepthStencilSurface(width, height, D3DFMT_D24S8, D3DMULTISAMPLE_NONE, 0, FALSE, &mDepthStencil, 0);
+
+    if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+    {
+        error(GL_OUT_OF_MEMORY);
+
+        return;
+    }
+
+    ASSERT(SUCCEEDED(result));
+
+    if (mDepthStencil)
+    {
+        mWidth = width;
+        mHeight = height;
+    }
+    else
+    {
+        mWidth = 0;
+        mHeight = 0;
+    }
+}
 
 Stencilbuffer::~Stencilbuffer()
 {

@@ -2580,11 +2580,10 @@ void __stdcall glRenderbufferStorage(GLenum target, GLenum internalformat, GLsiz
               case GL_RGB5_A1:
               case GL_RGB565:
                 UNIMPLEMENTED();   // FIXME
-            //    context->setRenderbuffer(new Colorbuffer(renderTarget));
+            //  context->setRenderbuffer(new Colorbuffer(renderTarget));
                 break;
               case GL_STENCIL_INDEX8:
-                UNIMPLEMENTED();   // FIXME
-            //    context->setRenderbuffer(new Stencilbuffer(depthStencil));
+                context->setRenderbuffer(new gl::Stencilbuffer(width, height));
                 break;
               default:
                 return error(GL_INVALID_ENUM);
