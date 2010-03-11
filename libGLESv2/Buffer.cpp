@@ -10,111 +10,79 @@
 
 #include "Buffer.h"
 
-#include "main.h"
+#include <cstdlib>
+#include <limits>
+#include <utility>
+
+#include "debug.h"
+#include "geometry/backend.h"
 
 namespace gl
 {
-Buffer::Buffer()
-{
-    mSize = 0;
-    mData = NULL;
 
-    mVertexBuffer = NULL;
-    mIndexBuffer = NULL;
+Buffer::Buffer(BufferBackEnd *backEnd)
+    : mBackEnd(backEnd), mIdentityTranslation(NULL)
+{
 }
 
 Buffer::~Buffer()
 {
-    erase();
+    delete mIdentityTranslation;
 }
 
-void Buffer::storeData(GLsizeiptr size, const void *data)
+GLenum Buffer::bufferData(const void* data, GLsizeiptr size, GLenum usage)
 {
-    erase();
+    if (size < 0) return GL_INVALID_VALUE;
 
-    mSize = size;
-    mData = new unsigned char[size];
+    const data_t* newdata = static_cast<const data_t*>(data);
 
-    if (data)
+    if (size != mContents.size())
     {
-        memcpy(mData, data, size);
+        // vector::resize only provides the basic exception guarantee, so use temporaries & swap to get the strong exception guarantee.
+        // We don't want to risk having mContents and mIdentityTranslation that have different contents or even different sizes.
+        std::vector<data_t> newContents(newdata, newdata + size);
+
+        TranslatedVertexBuffer *newIdentityTranslation = mBackEnd->createVertexBuffer(size);
+
+        // No exceptions allowed after this point.
+
+        mContents.swap(newContents);
+
+        delete mIdentityTranslation;
+        mIdentityTranslation = newIdentityTranslation;
     }
+    else
+    {
+        const data_t* newdata = static_cast<const data_t*>(data);
+        mContents.assign(newdata, newdata + size);
+    }
+
+    return copyToIdentityBuffer(0, size);
 }
 
-IDirect3DVertexBuffer9 *Buffer::getVertexBuffer()
+GLenum Buffer::bufferSubData(const void* data, GLsizeiptr size, GLintptr offset)
 {
-    if (!mVertexBuffer)
-    {
-        IDirect3DDevice9 *device = getDevice();
+    if (size < 0 || offset < 0) return GL_INVALID_VALUE;
+    if (std::numeric_limits<GLsizeiptr>::max() - offset < size) return GL_INVALID_VALUE;
+    if (size + offset > static_cast<GLsizeiptr>(mContents.size())) return GL_INVALID_VALUE;
 
-        HRESULT result = device->CreateVertexBuffer(mSize, 0, 0, D3DPOOL_MANAGED, &mVertexBuffer, NULL);
+    const data_t *newdata = static_cast<const data_t*>(data);
+    copy(newdata, newdata + size, mContents.begin() + offset);
 
-        if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
-        {
-            return error(GL_OUT_OF_MEMORY, (IDirect3DVertexBuffer9*)NULL);
-        }
-
-        ASSERT(SUCCEEDED(result));
-
-        if (mVertexBuffer && mData)
-        {
-            void *dataStore;
-            mVertexBuffer->Lock(0, mSize, &dataStore, 0);
-            memcpy(dataStore, mData, mSize);
-            mVertexBuffer->Unlock();
-        }
-    }
-
-    return mVertexBuffer;
+    return copyToIdentityBuffer(offset, size);
 }
 
-IDirect3DIndexBuffer9 *Buffer::getIndexBuffer()
+GLenum Buffer::copyToIdentityBuffer(GLintptr offset, GLsizeiptr length)
 {
-    if (!mIndexBuffer)
-    {
-        IDirect3DDevice9 *device = getDevice();
+    ASSERT(offset >= 0 && length >= 0);
 
-        HRESULT result = device->CreateIndexBuffer(mSize, 0, D3DFMT_INDEX16, D3DPOOL_MANAGED, &mIndexBuffer, NULL);
+    // This is a stalling map. Not great for performance.
+    data_t *p = static_cast<data_t*>(mIdentityTranslation->map());
 
-        if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
-        {
-            return error(GL_OUT_OF_MEMORY, (IDirect3DIndexBuffer9*)NULL);
-        }
+    memcpy(p + offset, &mContents[0] + offset, length);
+    mIdentityTranslation->unmap();
 
-        ASSERT(SUCCEEDED(result));
-
-        if (mIndexBuffer && mData)
-        {
-            void *dataStore;
-            mIndexBuffer->Lock(0, mSize, &dataStore, 0);
-            memcpy(dataStore, mData, mSize);
-            mIndexBuffer->Unlock();
-        }
-    }
-
-    return mIndexBuffer;
+    return GL_NO_ERROR;
 }
 
-void Buffer::erase()
-{
-    mSize = 0;
-
-    if (mData)
-    {
-        delete[] mData;
-        mData = NULL;
-    }
-
-    if (mVertexBuffer)
-    {
-        mVertexBuffer->Release();
-        mVertexBuffer = NULL;
-    }
-
-    if (mIndexBuffer)
-    {
-        mIndexBuffer->Release();
-        mIndexBuffer = NULL;
-    }
-}
 }

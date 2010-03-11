@@ -21,21 +21,14 @@
 #include "RenderBuffer.h"
 #include "mathutil.h"
 #include "utilities.h"
+#include "geometry/backend.h"
+#include "geometry/VertexDataManager.h"
+#include "geometry/dx9.h"
 
 namespace gl
 {
-Array::Array()
-{
-    enabled = false;
-    boundBuffer = 0;
-    size = 4;
-    type = GL_FLOAT;
-    normalized = GL_FALSE;
-    stride = 0;
-    pointer = NULL;
-}
-
-Context::Context(const egl::Config *config) : mConfig(config)
+Context::Context(const egl::Config *config)
+    : mConfig(config)
 {
     setClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     depthClearValue = 1.0f;
@@ -126,6 +119,9 @@ Context::Context(const egl::Config *config) : mConfig(config)
 
     currentProgram = 0;
 
+    mBufferBackEnd = NULL;
+    mVertexDataManager = NULL;
+
     mInvalidEnum = false;
     mInvalidValue = false;
     mInvalidOperation = false;
@@ -143,6 +139,9 @@ Context::~Context()
     delete mColorbufferZero;
     delete mDepthbufferZero;
     delete mStencilbufferZero;
+
+    delete mBufferBackEnd;
+    delete mVertexDataManager;
 
     while (!mBufferMap.empty())
     {
@@ -178,6 +177,12 @@ Context::~Context()
 void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 {
     IDirect3DDevice9 *device = display->getDevice();
+
+    if (!mBufferBackEnd)
+    {
+        mBufferBackEnd = new Dx9BackEnd(device);
+        mVertexDataManager = new VertexDataManager(this, mBufferBackEnd);
+    }
 
     // Wrap the existing Direct3D 9 resources into GL objects and assign them to the '0' names
     IDirect3DSurface9 *defaultRenderTarget = surface->getRenderTarget();
@@ -418,7 +423,7 @@ void Context::bindArrayBuffer(unsigned int buffer)
 {
     if (buffer != 0 && !getBuffer(buffer))
     {
-        mBufferMap[buffer] = new Buffer();
+        mBufferMap[buffer] = new Buffer(mBufferBackEnd);
     }
 
     arrayBuffer = buffer;
@@ -428,7 +433,7 @@ void Context::bindElementArrayBuffer(unsigned int buffer)
 {
     if (buffer != 0 && !getBuffer(buffer))
     {
-        mBufferMap[buffer] = new Buffer();
+        mBufferMap[buffer] = new Buffer(mBufferBackEnd);
     }
 
     elementArrayBuffer = buffer;
@@ -915,161 +920,68 @@ void Context::applyState()
     device->SetRenderState(D3DRS_DITHERENABLE, dither ? TRUE : FALSE);
 }
 
-// Applies the vertex attribute and array bindings to the Direct3D 9 device
-void Context::applyVertexBuffer(int count)
+// Fill in the programAttribute field of the array of TranslatedAttributes based on the active GLSL program.
+void Context::lookupAttributeMapping(TranslatedAttribute *attributes)
 {
-    IDirect3DDevice9 *device = getDevice();
-    Program *programObject = getCurrentProgram();
-    IDirect3DVertexShader9 *vertexShader = programObject->getVertexShader();
-
-    D3DVERTEXELEMENT9 vertexElements[MAX_VERTEX_ATTRIBS + 1];
-    D3DVERTEXELEMENT9 *currentElement = &vertexElements[0];
-
-    for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
+    for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
     {
-        if (vertexAttribute[attributeIndex].enabled && programObject->isActiveAttribute(attributeIndex))
+        if (attributes[i].enabled)
         {
-            GLuint boundBuffer = vertexAttribute[attributeIndex].boundBuffer;
-            UINT stride = vertexAttribute[attributeIndex].stride;
-            GLint size = vertexAttribute[attributeIndex].size;
-            GLenum type = vertexAttribute[attributeIndex].type;
-
-            if (stride == 0)
-            {
-                switch (type)
-                {
-                  case GL_BYTE:            stride = size * sizeof(GLbyte);        break;
-                  case GL_UNSIGNED_BYTE:    stride = size * sizeof(GLubyte);    break;
-                  case GL_SHORT:            stride = size * sizeof(GLshort);    break;
-                  case GL_UNSIGNED_SHORT:    stride = size * sizeof(GLushort);    break;
-                  case GL_FIXED:            stride = size * sizeof(GLfixed);    break;
-                  case GL_FLOAT:            stride = size * sizeof(GLfloat);    break;
-                  default: UNREACHABLE();
-                }
-            }
-
-            currentElement->Stream = attributeIndex;
-
-            if (boundBuffer)
-            {
-                currentElement->Offset = (unsigned short)vertexAttribute[attributeIndex].pointer;
-            }
-            else
-            {
-                currentElement->Offset = 0;
-            }
-
-            switch (type)
-            {
-              case GL_BYTE:
-                if (vertexAttribute[attributeIndex].normalized)
-                {
-                    UNIMPLEMENTED();   // FIXME
-                }
-                else
-                {
-                    UNIMPLEMENTED();   // FIXME
-                }
-                break;
-              case GL_UNSIGNED_BYTE:
-                if (vertexAttribute[attributeIndex].normalized)
-                {
-                    switch (size)
-                    {
-                    case 1: UNIMPLEMENTED();   // FIXME
-                    case 2: UNIMPLEMENTED();   // FIXME
-                    case 3: UNIMPLEMENTED();   // FIXME
-                    case 4: currentElement->Type = D3DDECLTYPE_UBYTE4N; break;
-                    default: UNREACHABLE();
-                    }
-                }
-                else
-                {
-                    UNIMPLEMENTED();   // FIXME
-                }
-                break;
-            case GL_SHORT:
-                if (vertexAttribute[attributeIndex].normalized)
-                {
-                    UNIMPLEMENTED();   // FIXME
-                }
-                else
-                {
-                    UNIMPLEMENTED();   // FIXME
-                }
-                break;
-            case GL_UNSIGNED_SHORT:
-                if (vertexAttribute[attributeIndex].normalized)
-                {
-                    UNIMPLEMENTED();   // FIXME
-                }
-                else
-                {
-                    UNIMPLEMENTED();   // FIXME
-                }
-                break;
-            case GL_FIXED:
-                UNIMPLEMENTED();   // FIXME
-                break;
-            case GL_FLOAT:
-                switch (size)
-                {
-                  case 1: currentElement->Type = D3DDECLTYPE_FLOAT1; break;
-                  case 2: currentElement->Type = D3DDECLTYPE_FLOAT2; break;
-                  case 3: currentElement->Type = D3DDECLTYPE_FLOAT3; break;
-                  case 4: currentElement->Type = D3DDECLTYPE_FLOAT4; break;
-                  default: UNREACHABLE();
-                }
-                break;
-              default: UNREACHABLE();
-            }
-
-            currentElement->Method = D3DDECLMETHOD_DEFAULT;
-            currentElement->Usage = D3DDECLUSAGE_TEXCOORD;
-            currentElement->UsageIndex = programObject->getInputMapping(attributeIndex);
-
-            currentElement++;
-
-            if (boundBuffer)
-            {
-                Buffer *buffer = getBuffer(boundBuffer);
-                IDirect3DVertexBuffer9 *streamData = buffer->getVertexBuffer();
-                device->SetStreamSource(attributeIndex, streamData, 0, stride);
-            }
-            else if (vertexAttribute[attributeIndex].pointer)
-            {
-                IDirect3DVertexBuffer9 *vertexBuffer = NULL;
-                void *data;
-
-                HRESULT result = device->CreateVertexBuffer(stride * count, 0, 0, D3DPOOL_MANAGED, &vertexBuffer, NULL);
-
-                if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
-                {
-                    return error(GL_OUT_OF_MEMORY);
-                }
-
-                ASSERT(SUCCEEDED(result));
-
-                vertexBuffer->Lock(0, 0, &data, 0);
-                memcpy(data, vertexAttribute[attributeIndex].pointer, stride *count);
-                vertexBuffer->Unlock();
-
-                device->SetStreamSource(attributeIndex, vertexBuffer, 0, stride);
-                vertexBuffer->Release();
-            }
-            else UNIMPLEMENTED();   // FIXME
-        }
-        else
-        {
-            device->SetStreamSource(attributeIndex, NULL, 0, 0);
+            attributes[i].programAttribute = getCurrentProgram()->getInputMapping(i);
         }
     }
+}
 
-    D3DVERTEXELEMENT9 end = D3DDECL_END();
-    *currentElement = end;
+// The indices parameter to glDrawElements can have two interpretations:
+// - as a pointer into client memory
+// - as an offset into the current GL_ELEMENT_ARRAY_BUFFER buffer
+// Handle these cases here and return a pointer to the index data.
+const Index *Context::adjustIndexPointer(const void *indices)
+{
+    if (elementArrayBuffer)
+    {
+        Buffer *buffer = getBuffer(elementArrayBuffer);
+        return reinterpret_cast<const Index*>(static_cast<unsigned char*>(buffer->data()) + reinterpret_cast<GLsizei>(indices));
+    }
+    else
+    {
+        return static_cast<const Index*>(indices);
+    }
+}
 
-    IDirect3DVertexDeclaration9 *vertexDeclaration = NULL;
-    HRESULT result = device->CreateVertexDeclaration(vertexElements, &vertexDeclaration);
+void Context::applyVertexBuffer(GLint first, GLsizei count)
+{
+    TranslatedAttribute translated[MAX_VERTEX_ATTRIBS];
+
+    mVertexDataManager->preRenderValidate(first, count, translated);
+
+    lookupAttributeMapping(translated);
+
+    mBufferBackEnd->preDraw(translated);
+}
+
+void Context::applyVertexBuffer(GLsizei count, const void *indices, GLenum indexType)
+{
+    TranslatedAttribute translated[MAX_VERTEX_ATTRIBS];
+
+    mVertexDataManager->preRenderValidate(adjustIndexPointer(indices), count, translated);
+
+    lookupAttributeMapping(translated);
+
+    mBufferBackEnd->preDraw(translated);
+}
+
+// Applies the indices and element array bindings to the Direct3D 9 device
+void Context::applyIndexBuffer(const void *indices, GLsizei count)
+{
+    GLsizei length = count * sizeof(Index);
+
+    IDirect3DDevice9 *device = getDevice();
+
+    IDirect3DIndexBuffer9 *indexBuffer = NULL;
+    void *data;
+
+    HRESULT result = device->CreateIndexBuffer(length, 0, D3DFMT_INDEX16, D3DPOOL_MANAGED, &indexBuffer, NULL);
 
     if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
     {
@@ -1078,53 +990,17 @@ void Context::applyVertexBuffer(int count)
 
     ASSERT(SUCCEEDED(result));
 
-    if (vertexDeclaration)
+    if (indexBuffer)
     {
-        device->SetVertexDeclaration(vertexDeclaration);
-        vertexDeclaration->Release();   // Will only effectively be deleted when no longer in use
-    }
-}
-
-// Applies the indices and element array bindings to the Direct3D 9 device
-void Context::applyIndexBuffer(const void *indices, int length)
-{
-    IDirect3DDevice9 *device = getDevice();
-
-    if (elementArrayBuffer)
-    {
-        Buffer *buffer = getBuffer(elementArrayBuffer);
-        IDirect3DIndexBuffer9 *indexBuffer = buffer->getIndexBuffer();
+        indexBuffer->Lock(0, length, &data, 0);
+        memcpy(data, adjustIndexPointer(indices), length);
+        indexBuffer->Unlock();
 
         device->SetIndices(indexBuffer);
-        startIndex = (unsigned int)(size_t)indices / 2;   // FIXME: Assumes even value and 16-bit indices
+        indexBuffer->Release();   // Will only effectively be deleted when no longer in use
     }
-    else if (indices)
-    {
-        IDirect3DIndexBuffer9 *indexBuffer = NULL;
-        void *data;
 
-        HRESULT result = device->CreateIndexBuffer(length, 0, D3DFMT_INDEX16, D3DPOOL_MANAGED, &indexBuffer, NULL);
-
-        if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
-        {
-            return error(GL_OUT_OF_MEMORY);
-        }
-
-        ASSERT(SUCCEEDED(result));
-
-        if (indexBuffer)
-        {
-            indexBuffer->Lock(0, length, &data, 0);
-            memcpy(data, indices, length);
-            indexBuffer->Unlock();
-
-            device->SetIndices(indexBuffer);
-            indexBuffer->Release();   // Will only effectively be deleted when no longer in use
-        }
-
-        startIndex = 0;
-    }
-    else UNREACHABLE();
+    startIndex = 0;
 }
 
 // Applies the shaders and shader constants to the Direct3D 9 device
@@ -1521,7 +1397,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
     }
 
     applyState();
-    applyVertexBuffer(count);
+    applyVertexBuffer(first, count);
     applyShaders();
     applyTextures();
 
@@ -1560,8 +1436,8 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void* 
     }
 
     applyState();
-    applyVertexBuffer(count);
-    applyIndexBuffer(indices, count * sizeof(unsigned short));
+    applyVertexBuffer(count, indices, type);
+    applyIndexBuffer(indices, count);
     applyShaders();
     applyTextures();
 
@@ -1722,9 +1598,9 @@ void Context::detachBuffer(GLuint buffer)
 
     for (int attribute = 0; attribute < MAX_VERTEX_ATTRIBS; attribute++)
     {
-        if (vertexAttribute[attribute].boundBuffer == buffer)
+        if (vertexAttribute[attribute].mBoundBuffer == buffer)
         {
-            vertexAttribute[attribute].boundBuffer = 0;
+            vertexAttribute[attribute].mBoundBuffer = 0;
         }
     }
 }

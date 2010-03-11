@@ -11,37 +11,47 @@
 #ifndef LIBGLESV2_BUFFER_H_
 #define LIBGLESV2_BUFFER_H_
 
+#include <cstddef>
+#include <vector>
+
 #define GL_APICALL
 #include <GLES2/gl2.h>
-#include <d3d9.h>
 
 #include "angleutils.h"
 
 namespace gl
 {
+
+class BufferBackEnd;
+class TranslatedVertexBuffer;
+
 class Buffer
 {
   public:
-    Buffer();
-
+    explicit Buffer(BufferBackEnd *backEnd);
     ~Buffer();
 
-    void storeData(GLsizeiptr size, const void *data);
+    GLenum bufferData(const void *data, GLsizeiptr size, GLenum usage);
+    GLenum bufferSubData(const void *data, GLsizeiptr size, GLintptr offset);
 
-    IDirect3DVertexBuffer9 *getVertexBuffer();
-    IDirect3DIndexBuffer9 *getIndexBuffer();
+    void *data() { return &mContents[0]; }
+    GLsizeiptr size() const { return mContents.size(); }
+
+    TranslatedVertexBuffer *identityBuffer() { return mIdentityTranslation; }
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Buffer);
 
-    void erase();
+    typedef unsigned char data_t;
 
-    unsigned int mSize;
-    void *mData;
+    std::vector<data_t> mContents;
 
-    IDirect3DVertexBuffer9 *mVertexBuffer;
-    IDirect3DIndexBuffer9 *mIndexBuffer;
+    BufferBackEnd *mBackEnd;
+    TranslatedVertexBuffer *mIdentityTranslation;
+
+    GLenum copyToIdentityBuffer(GLintptr offset, GLsizeiptr length);
 };
+
 }
 
 #endif   // LIBGLESV2_BUFFER_H_

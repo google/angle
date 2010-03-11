@@ -454,7 +454,7 @@ void __stdcall glBufferData(GLenum target, GLsizeiptr size, const void* data, GL
                 return error(GL_INVALID_OPERATION);
             }
 
-            buffer->storeData(size, data);
+            buffer->bufferData(data, size, usage);
         }
     }
     catch(std::bad_alloc&)
@@ -474,7 +474,36 @@ void __stdcall glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, 
             return error(GL_INVALID_VALUE);
         }
 
-        UNIMPLEMENTED();   // FIXME
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            gl::Buffer *buffer;
+
+            switch (target)
+            {
+              case GL_ARRAY_BUFFER:
+                buffer = context->getArrayBuffer();
+                break;
+              case GL_ELEMENT_ARRAY_BUFFER:
+                buffer = context->getElementArrayBuffer();
+                break;
+              default:
+                return error(GL_INVALID_ENUM);
+            }
+
+            if (!buffer)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            GLenum err = buffer->bufferSubData(data, size, offset);
+
+            if (err != GL_NO_ERROR)
+            {
+                return error(err);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -1100,7 +1129,7 @@ void __stdcall glDisableVertexAttribArray(GLuint index)
 
         if (context)
         {
-            context->vertexAttribute[index].enabled = false;
+            context->vertexAttribute[index].mEnabled = false;
         }
     }
     catch(std::bad_alloc&)
@@ -1214,7 +1243,7 @@ void __stdcall glEnableVertexAttribArray(GLuint index)
 
         if (context)
         {
-            context->vertexAttribute[index].enabled = true;
+            context->vertexAttribute[index].mEnabled = true;
         }
     }
     catch(std::bad_alloc&)
@@ -3777,12 +3806,12 @@ void __stdcall glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLbo
 
         if (context)
         {
-            context->vertexAttribute[index].boundBuffer = context->arrayBuffer;
-            context->vertexAttribute[index].size = size;
-            context->vertexAttribute[index].type = type;
-            context->vertexAttribute[index].normalized = normalized;
-            context->vertexAttribute[index].stride = stride;
-            context->vertexAttribute[index].pointer = ptr;
+            context->vertexAttribute[index].mBoundBuffer = context->arrayBuffer;
+            context->vertexAttribute[index].mSize = size;
+            context->vertexAttribute[index].mType = type;
+            context->vertexAttribute[index].mNormalized = normalized;
+            context->vertexAttribute[index].mStride = stride;
+            context->vertexAttribute[index].mPointer = ptr;
         }
     }
     catch(std::bad_alloc&)

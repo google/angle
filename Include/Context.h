@@ -29,6 +29,8 @@ class Config;
 
 namespace gl
 {
+struct TranslatedAttribute;
+
 class Buffer;
 class Shader;
 class Program;
@@ -40,6 +42,8 @@ class Renderbuffer;
 class Colorbuffer;
 class Depthbuffer;
 class Stencilbuffer;
+class VertexDataManager;
+class BufferBackEnd;
 
 enum
 {
@@ -57,6 +61,9 @@ enum
     IMPLEMENTATION_COLOR_READ_TYPE = GL_UNSIGNED_SHORT_5_6_5
 };
 
+// Because indices are accessed internally, we convert them to a common format.
+typedef unsigned short Index;
+
 struct Color
 {
     float red;
@@ -65,18 +72,31 @@ struct Color
     float alpha;
 };
 
-// Helper structure describing a single vertex attribute array
-struct Array
+// Helper structure describing a single vertex attribute
+class AttributeState
 {
-    Array();
+  public:
+    AttributeState()
+        : mType(GL_FLOAT), mSize(0), mNormalized(false), mStride(0), mPointer(NULL), mBoundBuffer(0), mEnabled(false)
+    {
+        mCurrentValue[0] = 0;
+        mCurrentValue[1] = 0;
+        mCurrentValue[2] = 0;
+        mCurrentValue[3] = 1;
+    }
 
-    bool enabled;
-    GLuint boundBuffer;
-    GLint size;
-    GLenum type;
-    GLboolean normalized;
-    GLsizei stride;
-    const void *pointer;
+    // From VertexArrayPointer
+    GLenum mType;
+    GLint mSize;
+    bool mNormalized;
+    GLsizei mStride; // 0 means natural stride
+    const void *mPointer;
+
+    GLuint mBoundBuffer; // Captured when VertexArrayPointer is called.
+
+    bool mEnabled; // From Enable/DisableVertexAttribArray
+
+    float mCurrentValue[4]; // From VertexAttrib4f
 };
 
 // Helper structure to store all raw state
@@ -149,7 +169,7 @@ struct State
     GLuint renderbuffer;
     GLuint currentProgram;
 
-    Array vertexAttribute[MAX_VERTEX_ATTRIBS];
+    AttributeState vertexAttribute[MAX_VERTEX_ATTRIBS];
     GLuint samplerTexture[MAX_TEXTURE_IMAGE_UNITS];
 
     unsigned int startIndex;
@@ -216,8 +236,9 @@ class Context : public State
 
     bool applyRenderTarget(bool ignoreViewport);
     void applyState();
-    void applyVertexBuffer(int count);
-    void applyIndexBuffer(const void *indices, int length);
+    void applyVertexBuffer(GLint first, GLsizei count);
+    void applyVertexBuffer(GLsizei count, const void *indices, GLenum indexType);
+    void applyIndexBuffer(const void *indices, GLsizei count);
     void applyShaders();
     void applyTextures();
 
@@ -238,6 +259,9 @@ class Context : public State
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Context);
+
+    void lookupAttributeMapping(TranslatedAttribute *attributes);
+    const Index *adjustIndexPointer(const void *indices);
 
     void detachBuffer(GLuint buffer);
     void detachTexture(GLuint texture);
@@ -270,6 +294,9 @@ class Context : public State
 
     typedef std::map<GLuint, Renderbuffer*> RenderbufferMap;
     RenderbufferMap mRenderbufferMap;
+
+    BufferBackEnd *mBufferBackEnd;
+    VertexDataManager *mVertexDataManager;
 
     // Recorded errors
     bool mInvalidEnum;
