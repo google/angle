@@ -21,7 +21,7 @@ inline bool isPow2(int x)
 inline int log2(int x)
 {
     int r = 0;
-    while((x >> r) > 1) r++;
+    while ((x >> r) > 1) r++;
     return r;
 }
 
@@ -35,11 +35,11 @@ inline unsigned int unorm(float x)
 {
     const unsigned int max = 0xFFFFFFFF >> (32 - n);
 
-    if(x > 1)
+    if (x > 1)
     {
         return max;
     }
-    else if(x < 0)
+    else if (x < 0)
     {
         return 0;
     }

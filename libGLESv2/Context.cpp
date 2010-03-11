@@ -309,7 +309,7 @@ GLuint Context::createRenderbuffer()
 {
     unsigned int handle = 1;
 
-    while(mRenderbufferMap.find(handle) != mRenderbufferMap.end())
+    while (mRenderbufferMap.find(handle) != mRenderbufferMap.end())
     {
         handle++;
     }
@@ -621,7 +621,7 @@ Colorbuffer *Context::getColorbuffer(GLuint handle)
     {
         Renderbuffer *renderbuffer = getRenderbuffer(handle);
 
-        if(renderbuffer && renderbuffer->isColorbuffer())
+        if (renderbuffer && renderbuffer->isColorbuffer())
         {
             return static_cast<Colorbuffer*>(renderbuffer);
         }
@@ -640,7 +640,7 @@ Depthbuffer *Context::getDepthbuffer(GLuint handle)
     {
         Renderbuffer *renderbuffer = getRenderbuffer(handle);
 
-        if(renderbuffer && renderbuffer->isDepthbuffer())
+        if (renderbuffer && renderbuffer->isDepthbuffer())
         {
             return static_cast<Depthbuffer*>(renderbuffer);
         }
@@ -659,7 +659,7 @@ Stencilbuffer *Context::getStencilbuffer(GLuint handle)
     {
         Renderbuffer *renderbuffer = getRenderbuffer(handle);
 
-        if(renderbuffer && renderbuffer->isStencilbuffer())
+        if (renderbuffer && renderbuffer->isStencilbuffer())
         {
             return static_cast<Stencilbuffer*>(renderbuffer);
         }

@@ -701,7 +701,7 @@ EGLBoolean __stdcall eglReleaseTexImage(EGLDisplay dpy, EGLSurface surface, EGLi
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
 
-        if(!validate(display))
+        if (!validate(display))
         {
             return EGL_FALSE;
         }
@@ -726,7 +726,7 @@ EGLBoolean __stdcall eglSwapInterval(EGLDisplay dpy, EGLint interval)
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
 
-        if(!validate(display))
+        if (!validate(display))
         {
             return EGL_FALSE;
         }

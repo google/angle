@@ -308,7 +308,7 @@ void Texture2D::setImage(GLint level, GLenum internalFormat, GLsizei width, GLsi
     int imageSize = pixelSize(mImageArray[level]) * width * height;
     mImageArray[level].pixels = new unsigned char[imageSize];
 
-    if(pixels)
+    if (pixels)
     {
         memcpy(mImageArray[level].pixels, pixels, imageSize);
     }

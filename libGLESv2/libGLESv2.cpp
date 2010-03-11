@@ -63,7 +63,7 @@ void __stdcall glAttachShader(GLuint program, GLuint shader)
             gl::Program *programObject = context->getProgram(program);
             gl::Shader *shaderObject = context->getShader(shader);
             
-            if(!programObject || !shaderObject)
+            if (!programObject || !shaderObject)
             {
                 return error(GL_INVALID_VALUE);
             }
@@ -884,7 +884,7 @@ void __stdcall glDeleteRenderbuffers(GLsizei n, const GLuint* renderbuffers)
 
         if (context)
         {
-            for(int i = 0; i < n; i++)
+            for (int i = 0; i < n; i++)
             {
                 context->deleteRenderbuffer(renderbuffers[i]);
             }
