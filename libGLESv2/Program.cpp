@@ -357,8 +357,10 @@ ID3DXBuffer *Program::compileToBinary(const char *hlsl, const char *profile, ID3
 
     ID3DXBuffer *binary = NULL;
     ID3DXBuffer *errorMessage = NULL;
+    DWORD flags = D3DXSHADER_USE_LEGACY_D3DX9_31_DLL |
+                  D3DXSHADER_PREFER_FLOW_CONTROL;
 
-    HRESULT result = D3DXCompileShader(hlsl, (UINT)strlen(hlsl), NULL, 0, "main", profile, D3DXSHADER_USE_LEGACY_D3DX9_31_DLL, &binary, &errorMessage, constantTable);
+    HRESULT result = D3DXCompileShader(hlsl, (UINT)strlen(hlsl), NULL, 0, "main", profile, flags, &binary, &errorMessage, constantTable);
 
     if (SUCCEEDED(result))
     {
@@ -404,8 +406,8 @@ void Program::link()
 
     const char *pixelHLSL = mFragmentShader->linkHLSL();
     const char *vertexHLSL = mVertexShader->linkHLSL(pixelHLSL);
-    ID3DXBuffer *vertexBinary = compileToBinary(vertexHLSL, "vs_2_0", &mConstantTableVS);
-    ID3DXBuffer *pixelBinary = compileToBinary(pixelHLSL, "ps_2_0", &mConstantTablePS);
+    ID3DXBuffer *vertexBinary = compileToBinary(vertexHLSL, "vs_3_0", &mConstantTableVS);
+    ID3DXBuffer *pixelBinary = compileToBinary(pixelHLSL, "ps_3_0", &mConstantTablePS);
 
     if (vertexBinary && pixelBinary)
     {
