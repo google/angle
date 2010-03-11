@@ -387,25 +387,25 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
 
     switch (node->getOp())
     {
-      case EOpAssign:                  outputTriplet(visit, "(", " = ", ")");       break;
-      case EOpInitialize:              outputTriplet(visit, NULL, " = ", NULL);     break;
-      case EOpAddAssign:               outputTriplet(visit, NULL, " += ", NULL);    break;
-      case EOpSubAssign:               outputTriplet(visit, NULL, " -= ", NULL);    break;
-      case EOpMulAssign:               outputTriplet(visit, NULL, " *= ", NULL);    break;
+      case EOpAssign:                  outputTriplet(visit, "(", " = ", ")");     break;
+      case EOpInitialize:              outputTriplet(visit, NULL, " = ", NULL);   break;
+      case EOpAddAssign:               outputTriplet(visit, NULL, " += ", NULL);  break;
+      case EOpSubAssign:               outputTriplet(visit, NULL, " -= ", NULL);  break;
+      case EOpMulAssign:               outputTriplet(visit, NULL, " *= ", NULL);  break;
       case EOpVectorTimesMatrixAssign: UNIMPLEMENTED(); /* FIXME */ out << "matrix mult second child into first child";  break;
-      case EOpVectorTimesScalarAssign: outputTriplet(visit, NULL, " *= ", NULL);    break;
+      case EOpVectorTimesScalarAssign: outputTriplet(visit, NULL, " *= ", NULL);  break;
       case EOpMatrixTimesScalarAssign: UNIMPLEMENTED(); /* FIXME */ out << "matrix scale second child into first child"; break;
       case EOpMatrixTimesMatrixAssign: UNIMPLEMENTED(); /* FIXME */ out << "matrix mult second child into first child"; break;
-      case EOpDivAssign:               outputTriplet(visit, NULL, " /= ", NULL);    break;
+      case EOpDivAssign:               outputTriplet(visit, NULL, " /= ", NULL);  break;
       case EOpModAssign:               UNIMPLEMENTED(); /* FIXME */ out << "mod second child into first child";          break;
       case EOpAndAssign:               UNIMPLEMENTED(); /* FIXME */ out << "and second child into first child";          break;
       case EOpInclusiveOrAssign:       UNIMPLEMENTED(); /* FIXME */ out << "or second child into first child";           break;
       case EOpExclusiveOrAssign:       UNIMPLEMENTED(); /* FIXME */ out << "exclusive or second child into first child"; break;
       case EOpLeftShiftAssign:         UNIMPLEMENTED(); /* FIXME */ out << "left shift second child into first child";   break;
       case EOpRightShiftAssign:        UNIMPLEMENTED(); /* FIXME */ out << "right shift second child into first child";  break;
-      case EOpIndexDirect:             outputTriplet(visit, NULL, "[", "]"); break;
-      case EOpIndexIndirect:           outputTriplet(visit, NULL, "[", "]"); break;
-      case EOpIndexDirectStruct:       UNIMPLEMENTED(); /* FIXME */ out << "direct index for structure";   break;
+      case EOpIndexDirect:             outputTriplet(visit, NULL, "[", "]");      break;
+      case EOpIndexIndirect:           outputTriplet(visit, NULL, "[", "]");      break;
+      case EOpIndexDirectStruct:       outputTriplet(visit, NULL, ".", NULL);     break;
       case EOpVectorSwizzle:
         if (visit == InVisit)
         {
@@ -540,9 +540,9 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
       case EOpFract:            outputTriplet(visit, "frac(", NULL, ")");      break;
       case EOpLength:           outputTriplet(visit, "length(", NULL, ")");    break;
       case EOpNormalize:        outputTriplet(visit, "normalize(", NULL, ")"); break;
-//      case EOpDPdx:             outputTriplet(visit, "ddx(", NULL, ")");       break;
-//      case EOpDPdy:             outputTriplet(visit, "ddy(", NULL, ")");       break;
-//      case EOpFwidth:           outputTriplet(visit, "fwidth(", NULL, ")");    break;        
+//    case EOpDPdx:             outputTriplet(visit, "ddx(", NULL, ")");       break;
+//    case EOpDPdy:             outputTriplet(visit, "ddy(", NULL, ")");       break;
+//    case EOpFwidth:           outputTriplet(visit, "fwidth(", NULL, ")");    break;        
       case EOpAny:              outputTriplet(visit, "any(", NULL, ")");       break;
       case EOpAll:              outputTriplet(visit, "all(", NULL, ")");       break;
       default: UNREACHABLE();
@@ -919,100 +919,109 @@ void OutputHLSL::visitConstantUnion(TIntermConstantUnion *node)
 {
     TInfoSinkBase &out = context.infoSink.obj;
     
-    int size = node->getType().getObjectSize();
-    bool matrix = node->getType().isMatrix();
-    TBasicType type = node->getUnionArrayPointer()[0].getType();
+    TType &type = node->getType();
 
-    switch (type)
+    if(type.isField())
     {
-      case EbtBool:
-        if (!matrix)
-        {
-            switch (size)
-            {
-              case 1: out << "bool(";  break;
-              case 2: out << "bool2("; break;
-              case 3: out << "bool3("; break;
-              case 4: out << "bool4("; break;
-              default: UNREACHABLE();
-            }
-        }
-        else
-        {
-            UNIMPLEMENTED();
-        }
-        break;
-      case EbtFloat:
-        if (!matrix)
-        {
-            switch (size)
-            {
-              case 1: out << "float(";  break;
-              case 2: out << "float2("; break;
-              case 3: out << "float3("; break;
-              case 4: out << "float4("; break;
-              default: UNREACHABLE();
-            }
-        }
-        else
-        {
-            switch (size)
-            {
-              case 4:  out << "float2x2("; break;
-              case 9:  out << "float3x3("; break;
-              case 16: out << "float4x4("; break;
-              default: UNREACHABLE();
-            }
-        }
-        break;
-      case EbtInt:
-        if (!matrix)
-        {
-            switch (size)
-            {
-              case 1: out << "int(";  break;
-              case 2: out << "int2("; break;
-              case 3: out << "int3("; break;
-              case 4: out << "int4("; break;
-              default: UNREACHABLE();
-            }
-        }
-        else
-        {
-            UNIMPLEMENTED();
-        }
-        break;
-      default:
-        UNIMPLEMENTED();   // FIXME
+        out << type.getFieldName();
     }
-
-    for (int i = 0; i < size; i++)
+    else
     {
-        switch (type)
+        int size = type.getObjectSize();
+        bool matrix = type.isMatrix();
+        TBasicType basicType = node->getUnionArrayPointer()[0].getType();
+
+        switch (basicType)
         {
           case EbtBool:
-            if (node->getUnionArrayPointer()[i].getBConst())
+            if (!matrix)
             {
-                out << "true";
+                switch (size)
+                {
+                  case 1: out << "bool(";  break;
+                  case 2: out << "bool2("; break;
+                  case 3: out << "bool3("; break;
+                  case 4: out << "bool4("; break;
+                  default: UNREACHABLE();
+                }
             }
             else
             {
-                out << "false";
+                UNIMPLEMENTED();
             }
             break;
           case EbtFloat:
-            out << node->getUnionArrayPointer()[i].getFConst();           
+            if (!matrix)
+            {
+                switch (size)
+                {
+                  case 1: out << "float(";  break;
+                  case 2: out << "float2("; break;
+                  case 3: out << "float3("; break;
+                  case 4: out << "float4("; break;
+                  default: UNREACHABLE();
+                }
+            }
+            else
+            {
+                switch (size)
+                {
+                  case 4:  out << "float2x2("; break;
+                  case 9:  out << "float3x3("; break;
+                  case 16: out << "float4x4("; break;
+                  default: UNREACHABLE();
+                }
+            }
             break;
           case EbtInt:
-            out << node->getUnionArrayPointer()[i].getIConst();
+            if (!matrix)
+            {
+                switch (size)
+                {
+                  case 1: out << "int(";  break;
+                  case 2: out << "int2("; break;
+                  case 3: out << "int3("; break;
+                  case 4: out << "int4("; break;
+                  default: UNREACHABLE();
+                }
+            }
+            else
+            {
+                UNIMPLEMENTED();
+            }
             break;
-          default: 
+          default:
             UNIMPLEMENTED();   // FIXME
         }
 
-        if (i != size - 1)
+        for (int i = 0; i < size; i++)
         {
-            out << ", ";
+            switch (basicType)
+            {
+              case EbtBool:
+                if (node->getUnionArrayPointer()[i].getBConst())
+                {
+                    out << "true";
+                }
+                else
+                {
+                    out << "false";
+                }
+                break;
+              case EbtFloat:
+                out << node->getUnionArrayPointer()[i].getFConst();           
+                break;
+              case EbtInt:
+                out << node->getUnionArrayPointer()[i].getIConst();
+                break;
+              default: 
+                UNIMPLEMENTED();   // FIXME
+            }
+
+            if (i != size - 1)
+            {
+                out << ", ";
+            }
         }
     }
 

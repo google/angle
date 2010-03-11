@@ -205,6 +205,7 @@ public:
 
 	virtual bool isMatrix() const { return matrix ? true : false; }
 	virtual bool isArray() const  { return array ? true : false; }
+	bool isField() const { return fieldName != 0; }
 	int getArraySize() const { return arraySize; }
 	void setArraySize(int s) { array = true; arraySize = s; }
 	void setMaxArraySize (int s) { maxArraySize = s; }

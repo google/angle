@@ -422,7 +422,7 @@ postfix_expression
                     } else {
                         constUnion *unionArray = new constUnion[1];
                         unionArray->setIConst(i);
-                        TIntermTyped* index = parseContext.intermediate.addConstantUnion(unionArray, TType(EbtInt, EvqConst), $3.line);
+                        TIntermTyped* index = parseContext.intermediate.addConstantUnion(unionArray, *(*fields)[i].type, $3.line);
                         $$ = parseContext.intermediate.addIndex(EOpIndexDirectStruct, $1, index, $2.line);
                         $$->setType(*(*fields)[i].type);
                     }
