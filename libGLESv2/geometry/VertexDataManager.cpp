@@ -173,7 +173,7 @@ GLenum VertexDataManager::internalPreRenderValidate(const AttributeState *attrib
     // Handle any attributes needing translation or lifting.
     if (translateOrLift.any())
     {
-        std::size_t count = maxIndex - minIndex + 1;
+        std::size_t count = maxIndex + 1;
 
         std::size_t requiredSpace = 0;
 

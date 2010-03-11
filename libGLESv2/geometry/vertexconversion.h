@@ -213,11 +213,11 @@ struct VertexDataConverter
         {
             if (WidenRule::initialWidth > elementindex)
             {
-                *out = Converter::convert(in[elementindex]);
+                out[elementindex] = Converter::convert(in[elementindex]);
             }
             else
             {
-                *out = defaultvalue;
+                out[elementindex] = defaultvalue;
             }
         }
     }
