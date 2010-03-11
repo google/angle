@@ -235,7 +235,7 @@ const char *VertexShader::linkHLSL(const char *pixelHLSL)
             char varyingName[100];
             int semanticIndex;
             int matches = sscanf(input, "%s : TEXCOORD%d;", varyingName, &semanticIndex);
-            
+
             if (matches == 2)
             {
                 ASSERT(semanticIndex < 10 && semanticIndex < MAX_VARYING_VECTORS);

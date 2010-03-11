@@ -99,12 +99,12 @@ void Surface::swap()
         }
 
         ASSERT(SUCCEEDED(result));
-        
+
         IDirect3DSurface9 *textureSurface;
         texture->GetSurfaceLevel(0, &textureSurface);
 
         device->StretchRect(mRenderTarget, NULL, textureSurface, NULL, D3DTEXF_POINT);
-        
+
         // Disable all pipeline operations
         device->SetRenderState(D3DRS_ZENABLE, D3DZB_FALSE);
         device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
@@ -145,7 +145,7 @@ void Surface::swap()
         {
             return error(EGL_BAD_ALLOC);
         }
-        
+
         textureSurface->Release();
         texture->Release();
         device->Release();

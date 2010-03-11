@@ -114,7 +114,7 @@ bool Display::initialize()
                         if (SUCCEEDED(result))
                         {
                             HRESULT result = mD3d9->CheckDepthStencilMatch(mAdapter, mDeviceType, currentDisplayMode.Format, renderTargetFormat, depthStencilFormat);   // FIXME: Only accept color formats available both in fullscreen and windowed?
-                            
+
                             if (SUCCEEDED(result))
                             {
                                 // FIXME: Enumerate multi-sampling
@@ -273,7 +273,7 @@ egl::Surface *Display::createWindowSurface(HWND window, EGLConfig config)
 
         swapChain->Release();
     }
-        
+
     return surface;
 }
 

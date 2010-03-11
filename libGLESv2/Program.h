@@ -81,7 +81,7 @@ class Program
     bool setUniform1iv(GLint location, GLsizei count, const GLint *v);
 
     void applyUniforms();
-    
+
     void link();
     bool isLinked();
 

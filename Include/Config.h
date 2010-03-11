@@ -74,7 +74,7 @@ class Config
 class SortConfig
 {
   public:
-    explicit SortConfig(const EGLint *attribList); 
+    explicit SortConfig(const EGLint *attribList);
 
     bool operator()(const Config *x, const Config *y) const;
     bool operator()(const Config &x, const Config &y) const;

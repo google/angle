@@ -27,7 +27,7 @@ class Buffer
     ~Buffer();
 
     void storeData(GLsizeiptr size, const void *data);
-    
+
     IDirect3DVertexBuffer9 *getVertexBuffer();
     IDirect3DIndexBuffer9 *getIndexBuffer();
 

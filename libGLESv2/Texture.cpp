@@ -45,7 +45,7 @@ bool Texture::setMinFilter(GLenum filter)
         return true;
       default:
         return false;
-    }    
+    }
 }
 
 // Returns true on successful filter state update (valid enum parameter)
@@ -442,7 +442,7 @@ IDirect3DSurface9 *Texture2D::getRenderTarget()
 {
     if (!mRenderTarget && getTexture())
     {
-        mTexture->GetSurfaceLevel(0, &mRenderTarget);    
+        mTexture->GetSurfaceLevel(0, &mRenderTarget);
     }
 
     return mRenderTarget;

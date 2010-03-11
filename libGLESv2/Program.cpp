@@ -419,7 +419,7 @@ void Program::link()
         }
 
         ASSERT(SUCCEEDED(vertexResult) && SUCCEEDED(pixelResult));
-        
+
         vertexBinary->Release();
         pixelBinary->Release();
         vertexBinary = NULL;
@@ -435,14 +435,14 @@ void Program::link()
             D3DXCONSTANTTABLE_DESC constantTableDescription;
             D3DXCONSTANT_DESC constantDescription;
             UINT descriptionCount = 1;
-            
+
             mConstantTablePS->GetDesc(&constantTableDescription);
 
             for (unsigned int constantIndex = 0; constantIndex < constantTableDescription.Constants; constantIndex++)
             {
                 D3DXHANDLE constantHandle = mConstantTablePS->GetConstant(0, constantIndex);
                 mConstantTablePS->GetConstantDesc(constantHandle, &constantDescription, &descriptionCount);
-                
+
                 UniformArray::iterator uniform = mUniforms.begin();
 
                 while (uniform != mUniforms.end())
@@ -831,7 +831,7 @@ bool Program::applyUniform1iv(GLint location, GLsizei count, const GLint *v)
             for (unsigned int samplerIndex = firstIndex; samplerIndex < firstIndex + count; samplerIndex++)
             {
                 GLint mappedSampler = v[0];
-            
+
                 if (mappedSampler >= 0 && mappedSampler < MAX_TEXTURE_IMAGE_UNITS)
                 {
                     if (samplerIndex >= 0 && samplerIndex < MAX_TEXTURE_IMAGE_UNITS)
@@ -840,7 +840,7 @@ bool Program::applyUniform1iv(GLint location, GLsizei count, const GLint *v)
                     }
                 }
             }
-            
+
             return true;
         }
     }

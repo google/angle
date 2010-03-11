@@ -62,7 +62,7 @@ void __stdcall glAttachShader(GLuint program, GLuint shader)
         {
             gl::Program *programObject = context->getProgram(program);
             gl::Shader *shaderObject = context->getShader(shader);
-            
+
             if (!programObject || !shaderObject)
             {
                 return error(GL_INVALID_VALUE);
@@ -96,7 +96,7 @@ void __stdcall glBindAttribLocation(GLuint program, GLuint index, const char* na
         if (context)
         {
             gl::Program *programObject = context->getProgram(program);
-            
+
             if (!programObject)
             {
                 return error(GL_INVALID_VALUE);
@@ -436,7 +436,7 @@ void __stdcall glBufferData(GLenum target, GLsizeiptr size, const void* data, GL
         if (context)
         {
             gl::Buffer *buffer;
-            
+
             switch (target)
             {
               case GL_ARRAY_BUFFER:
@@ -619,7 +619,7 @@ void __stdcall glCompileShader(GLuint shader)
         if (context)
         {
             gl::Shader *shaderObject = context->getShader(shader);
-            
+
             if (!shaderObject)
             {
                 return error(GL_INVALID_VALUE);
@@ -696,7 +696,7 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
 
 void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height)
 {
-    TRACE("GLenum target = 0x%X, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei height = %d", 
+    TRACE("GLenum target = 0x%X, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei height = %d",
           target, level, xoffset, yoffset, x, y, width, height);
 
     try
@@ -748,7 +748,7 @@ GLuint __stdcall glCreateShader(GLenum type)
             switch (type)
             {
               case GL_FRAGMENT_SHADER:
-              case GL_VERTEX_SHADER:        
+              case GL_VERTEX_SHADER:
                 return context->createShader(type);
               default:
                 return error(GL_INVALID_ENUM, 0);
@@ -1030,7 +1030,7 @@ void __stdcall glDetachShader(GLuint program, GLuint shader)
         {
             gl::Program *programObject = context->getProgram(program);
             gl::Shader *shaderObject = context->getShader(shader);
-            
+
             if (!programObject || !shaderObject)
             {
                 return error(GL_INVALID_VALUE);
@@ -1906,7 +1906,7 @@ void __stdcall glGetShaderiv(GLuint shader, GLenum pname, GLint* params)
         if (context)
         {
             gl::Shader *shaderObject = context->getShader(shader);
-            
+
             if (!shaderObject)
             {
                 return error(GL_INVALID_VALUE);
@@ -2603,7 +2603,7 @@ void __stdcall glSampleCoverage(GLclampf value, GLboolean invert)
     try
     {
         gl::Context* context = gl::getContext();
-        
+
         if (context)
         {
             context->sampleCoverageValue = gl::clamp01(value);
@@ -2628,7 +2628,7 @@ void __stdcall glScissor(GLint x, GLint y, GLsizei width, GLsizei height)
         }
 
         gl::Context* context = gl::getContext();
-        
+
         if (context)
         {
             context->scissorX = x;
@@ -2645,7 +2645,7 @@ void __stdcall glScissor(GLint x, GLint y, GLsizei width, GLsizei height)
 
 void __stdcall glShaderBinary(GLsizei n, const GLuint* shaders, GLenum binaryformat, const void* binary, GLsizei length)
 {
-    TRACE("GLsizei n = %d, const GLuint* shaders = 0x%0.8p, GLenum binaryformat = 0x%X, const void* binary = 0x%0.8p, GLsizei length = %d", 
+    TRACE("GLsizei n = %d, const GLuint* shaders = 0x%0.8p, GLenum binaryformat = 0x%X, const void* binary = 0x%0.8p, GLsizei length = %d",
            n, shaders, binaryformat, binary, length);
 
     try
@@ -2679,7 +2679,7 @@ void __stdcall glShaderSource(GLuint shader, GLsizei count, const char** string,
         if (context)
         {
             gl::Shader *shaderObject = context->getShader(shader);
-            
+
             if (!shaderObject)
             {
                 return error(GL_INVALID_VALUE);
@@ -2696,7 +2696,7 @@ void __stdcall glShaderSource(GLuint shader, GLsizei count, const char** string,
 
 void __stdcall glStencilFunc(GLenum func, GLint ref, GLuint mask)
 {
-    glStencilFuncSeparate(GL_FRONT_AND_BACK, func, ref, mask); 
+    glStencilFuncSeparate(GL_FRONT_AND_BACK, func, ref, mask);
 }
 
 void __stdcall glStencilFuncSeparate(GLenum face, GLenum func, GLint ref, GLuint mask)
@@ -2827,7 +2827,7 @@ void __stdcall glStencilOpSeparate(GLenum face, GLenum fail, GLenum zfail, GLenu
           case GL_DECR:
           case GL_INVERT:
           case GL_INCR_WRAP:
-          case GL_DECR_WRAP: 
+          case GL_DECR_WRAP:
             break;
           default:
             return error(GL_INVALID_ENUM);
@@ -2842,7 +2842,7 @@ void __stdcall glStencilOpSeparate(GLenum face, GLenum fail, GLenum zfail, GLenu
           case GL_DECR:
           case GL_INVERT:
           case GL_INCR_WRAP:
-          case GL_DECR_WRAP: 
+          case GL_DECR_WRAP:
             break;
           default:
             return error(GL_INVALID_ENUM);
@@ -2857,7 +2857,7 @@ void __stdcall glStencilOpSeparate(GLenum face, GLenum fail, GLenum zfail, GLenu
           case GL_DECR:
           case GL_INVERT:
           case GL_INCR_WRAP:
-          case GL_DECR_WRAP: 
+          case GL_DECR_WRAP:
             break;
           default:
             return error(GL_INVALID_ENUM);
@@ -2903,7 +2903,7 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
         {
             return error(GL_INVALID_VALUE);
         }
-        
+
         switch (target)
         {
           case GL_TEXTURE_2D:

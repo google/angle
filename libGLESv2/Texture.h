@@ -23,7 +23,7 @@ enum
 {
     MAX_TEXTURE_SIZE = 2048,
     MAX_CUBE_MAP_TEXTURE_SIZE = 2048,
-    
+
     MAX_TEXTURE_LEVELS = 11   // log2 of MAX_TEXTURE_SIZE
 };
 

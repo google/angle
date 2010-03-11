@@ -39,43 +39,43 @@ BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved)
         // Fall throught to initialize index
       case DLL_THREAD_ATTACH:
         {
-            egl::Current *current = (egl::Current*)LocalAlloc(LPTR, sizeof(egl::Current)); 
-            
+            egl::Current *current = (egl::Current*)LocalAlloc(LPTR, sizeof(egl::Current));
+
             if (current)
             {
                 TlsSetValue(currentTLS, current);
-                
+
                 current->error = EGL_SUCCESS;
                 current->API = EGL_OPENGL_ES_API;
             }
         }
-        break; 
+        break;
       case DLL_THREAD_DETACH:
         {
             void *current = TlsGetValue(currentTLS);
-        
+
             if (current)
             {
                 LocalFree((HLOCAL)current);
             }
         }
-        break; 
+        break;
       case DLL_PROCESS_DETACH:
         {
             void *current = TlsGetValue(currentTLS);
-            
+
             if (current)
             {
                 LocalFree((HLOCAL)current);
             }
- 
+
             TlsFree(currentTLS);
         }
-        break; 
-      default: 
-        break; 
-    } 
- 
+        break;
+      default:
+        break;
+    }
+
     return TRUE;
 }
 

@@ -28,10 +28,10 @@ BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved)
             }
         }
         // Fall throught to initialize index
-      case DLL_THREAD_ATTACH: 
+      case DLL_THREAD_ATTACH:
         {
-            gl::Current *current = (gl::Current*)LocalAlloc(LPTR, sizeof(gl::Current)); 
-            
+            gl::Current *current = (gl::Current*)LocalAlloc(LPTR, sizeof(gl::Current));
+
             if (current)
             {
                 TlsSetValue(currentTLS, current);
@@ -40,17 +40,17 @@ BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved)
                 current->display = NULL;
             }
         }
-        break; 
+        break;
       case DLL_THREAD_DETACH:
         {
             void *current = TlsGetValue(currentTLS);
-        
+
             if (current)
             {
                 LocalFree((HLOCAL)current);
             }
         }
-        break; 
+        break;
       case DLL_PROCESS_DETACH:
         {
             void *current = TlsGetValue(currentTLS);
@@ -59,14 +59,14 @@ BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved)
             {
                 LocalFree((HLOCAL)current);
             }
- 
+
             TlsFree(currentTLS);
         }
-        break; 
-      default: 
-        break; 
-    } 
- 
+        break;
+      default:
+        break;
+    }
+
     return TRUE;
 }
 

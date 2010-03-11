@@ -139,7 +139,7 @@ struct State
     bool colorMaskBlue;
     bool colorMaskAlpha;
     bool depthMask;
-    
+
     int activeSampler;   // Active texture unit selector - GL_TEXTURE0
     GLuint arrayBuffer;
     GLuint elementArrayBuffer;

@@ -15,7 +15,7 @@
 namespace es2dx
 {
 
-D3DCMPFUNC ConvertComparison(GLenum comparison) 
+D3DCMPFUNC ConvertComparison(GLenum comparison)
 {
     D3DCMPFUNC d3dComp = D3DCMP_ALWAYS;
     switch (comparison)
@@ -188,7 +188,7 @@ void ConvertMinFilter(GLenum minFilter, D3DTEXTUREFILTERTYPE *d3dMinFilter, D3DT
         *d3dMinFilter = D3DTEXF_LINEAR;
         *d3dMipFilter = D3DTEXF_LINEAR;
         break;
-      default: 
+      default:
         *d3dMinFilter = D3DTEXF_POINT;
         *d3dMipFilter = D3DTEXF_NONE;
         UNREACHABLE();
@@ -223,7 +223,7 @@ unsigned int GetAlphaSize(D3DFORMAT colorFormat)
 {
     switch (colorFormat)
     {
-      case D3DFMT_A2R10G10B10:  
+      case D3DFMT_A2R10G10B10:
         return 2;
       case D3DFMT_A8R8G8B8:
         return 8;
@@ -242,7 +242,7 @@ unsigned int GetRedSize(D3DFORMAT colorFormat)
 {
     switch (colorFormat)
     {
-      case D3DFMT_A2R10G10B10:  
+      case D3DFMT_A2R10G10B10:
         return 10;
       case D3DFMT_A8R8G8B8:
       case D3DFMT_X8R8G8B8:
@@ -260,7 +260,7 @@ unsigned int GetGreenSize(D3DFORMAT colorFormat)
 {
     switch (colorFormat)
     {
-      case D3DFMT_A2R10G10B10:  
+      case D3DFMT_A2R10G10B10:
         return 10;
       case D3DFMT_A8R8G8B8:
       case D3DFMT_X8R8G8B8:
@@ -279,7 +279,7 @@ unsigned int GetBlueSize(D3DFORMAT colorFormat)
 {
     switch (colorFormat)
     {
-      case D3DFMT_A2R10G10B10:  
+      case D3DFMT_A2R10G10B10:
         return 10;
       case D3DFMT_A8R8G8B8:
       case D3DFMT_X8R8G8B8:
@@ -314,7 +314,7 @@ unsigned int GetDepthSize(D3DFORMAT depthFormat)
     return 0;
 }
 
-bool ConvertPrimitiveType(GLenum primitiveType, GLsizei primitiveCount, 
+bool ConvertPrimitiveType(GLenum primitiveType, GLsizei primitiveCount,
                           D3DPRIMITIVETYPE *d3dPrimitiveType, int *d3dPrimitiveCount)
 {
     switch (primitiveType)

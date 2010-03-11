@@ -82,7 +82,7 @@ void Framebuffer::detachRenderbuffer(GLuint renderbuffer)
 IDirect3DSurface9 *Framebuffer::getRenderTarget()
 {
     Renderbuffer *colorbuffer = getColorbuffer();
-    
+
     if (colorbuffer)
     {
         return colorbuffer->getRenderTarget();
@@ -95,7 +95,7 @@ IDirect3DSurface9 *Framebuffer::getDepthStencil()
 {
     gl::Context *context = gl::getContext();
     Depthbuffer *depthbuffer = context->getDepthbuffer(mDepthbufferHandle);
-    
+
     if (depthbuffer)
     {
         return depthbuffer->getDepthStencil();
@@ -131,7 +131,7 @@ Depthbuffer *Framebuffer::getDepthbuffer()
 {
     gl::Context *context = gl::getContext();
     Depthbuffer *depthbuffer = context->getDepthbuffer(mDepthbufferHandle);
-    
+
     if (depthbuffer && depthbuffer->isDepthbuffer())
     {
         return depthbuffer;
@@ -144,7 +144,7 @@ Stencilbuffer *Framebuffer::getStencilbuffer()
 {
     gl::Context *context = gl::getContext();
     Stencilbuffer *stencilbuffer = context->getStencilbuffer(mStencilbufferHandle);
-    
+
     if (stencilbuffer && stencilbuffer->isStencilbuffer())
     {
         return stencilbuffer;

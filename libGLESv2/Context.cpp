@@ -7,7 +7,7 @@
 // Context.cpp: Implements the gl::Context class, managing all GL state and performing
 // rendering operations. It is the GLES2 specific implementation of EGLContext.
 
-#include "Context.h" 
+#include "Context.h"
 
 #include <algorithm>
 
@@ -537,7 +537,7 @@ void Context::setRenderbuffer(Renderbuffer *buffer)
 Buffer *Context::getBuffer(unsigned int handle)
 {
     BufferMap::iterator buffer = mBufferMap.find(handle);
-    
+
     if (buffer == mBufferMap.end())
     {
         return NULL;
@@ -551,7 +551,7 @@ Buffer *Context::getBuffer(unsigned int handle)
 Shader *Context::getShader(unsigned int handle)
 {
     ShaderMap::iterator shader = mShaderMap.find(handle);
-    
+
     if (shader == mShaderMap.end())
     {
         return NULL;
@@ -565,7 +565,7 @@ Shader *Context::getShader(unsigned int handle)
 Program *Context::getProgram(unsigned int handle)
 {
     ProgramMap::iterator program = mProgramMap.find(handle);
-    
+
     if (program == mProgramMap.end())
     {
         return NULL;
@@ -579,7 +579,7 @@ Program *Context::getProgram(unsigned int handle)
 Texture *Context::getTexture(unsigned int handle)
 {
     TextureMap::iterator texture = mTextureMap.find(handle);
-    
+
     if (texture == mTextureMap.end())
     {
         return NULL;
@@ -593,7 +593,7 @@ Texture *Context::getTexture(unsigned int handle)
 Framebuffer *Context::getFramebuffer(unsigned int handle)
 {
     FramebufferMap::iterator framebuffer = mFramebufferMap.find(handle);
-    
+
     if (framebuffer == mFramebufferMap.end())
     {
         return NULL;
@@ -607,7 +607,7 @@ Framebuffer *Context::getFramebuffer(unsigned int handle)
 Renderbuffer *Context::getRenderbuffer(unsigned int handle)
 {
     RenderbufferMap::iterator renderbuffer = mRenderbufferMap.find(handle);
-    
+
     if (renderbuffer == mRenderbufferMap.end())
     {
         return NULL;
@@ -929,7 +929,7 @@ void Context::applyVertexBuffer(int count)
     {
         if (vertexAttribute[attributeIndex].enabled && programObject->isActiveAttribute(attributeIndex))
         {
-            GLuint boundBuffer = vertexAttribute[attributeIndex].boundBuffer;    
+            GLuint boundBuffer = vertexAttribute[attributeIndex].boundBuffer;
             UINT stride = vertexAttribute[attributeIndex].stride;
             GLint size = vertexAttribute[attributeIndex].size;
             GLenum type = vertexAttribute[attributeIndex].type;
@@ -1402,7 +1402,7 @@ void Context::clear(GLbitfield mask)
     const bool needMaskedStencilClear = (flags & D3DCLEAR_STENCIL) &&
                                         (stencilWritemask & stencilUnmasked) != stencilUnmasked;
     const bool needMaskedColorClear = (flags & D3DCLEAR_TARGET) &&
-                                      !(colorMaskRed && colorMaskGreen && 
+                                      !(colorMaskRed && colorMaskGreen &&
                                         colorMaskBlue && alphaUnmasked);
 
     if (needMaskedColorClear || needMaskedStencilClear)
@@ -1435,7 +1435,7 @@ void Context::clear(GLbitfield mask)
             device->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_ALWAYS);
             device->SetRenderState(D3DRS_STENCILREF, stencil);
             device->SetRenderState(D3DRS_STENCILWRITEMASK, stencilWritemask);
-            device->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_REPLACE); 
+            device->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_REPLACE);
             device->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_REPLACE);
             device->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);
         }
@@ -1448,7 +1448,7 @@ void Context::clear(GLbitfield mask)
         device->SetVertexShader(NULL);
         device->SetFVF(D3DFVF_XYZRHW | D3DFVF_DIFFUSE);
 
-        struct Vertex 
+        struct Vertex
         {
             float x, y, z, w;
             D3DCOLOR diffuse;
