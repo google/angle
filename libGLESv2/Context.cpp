@@ -8,6 +8,9 @@
 // rendering operations. It is the GLES2 specific implementation of EGLContext.
 
 #include "Context.h" 
+
+#include <algorithm>
+
 #include "main.h"
 #include "Display.h"
 #include "Buffer.h"
@@ -750,10 +753,10 @@ bool Context::applyRenderTarget(bool ignoreViewport)
     }
     else
     {
-        viewport.X = max(viewportX, 0);
-        viewport.Y = max(viewportY, 0);
-        viewport.Width = min(viewportWidth, (int)desc.Width - (int)viewport.X);
-        viewport.Height = min(viewportHeight, (int)desc.Height - (int)viewport.Y);
+        viewport.X = std::max(viewportX, 0);
+        viewport.Y = std::max(viewportY, 0);
+        viewport.Width = std::min(viewportWidth, (int)desc.Width - (int)viewport.X);
+        viewport.Height = std::min(viewportHeight, (int)desc.Height - (int)viewport.Y);
         viewport.MinZ = clamp01(zNear);
         viewport.MaxZ = clamp01(zFar);
     }
@@ -1212,10 +1215,10 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum
     }
 
     D3DLOCKED_RECT lock;
-    RECT rect = {max(x, 0),
-                 max(y, 0),
-                 min(x + width, (int)desc.Width),
-                 min(y + height, (int)desc.Height)};
+    RECT rect = {std::max(x, 0),
+                 std::max(y, 0),
+                 std::min(x + width, (int)desc.Width),
+                 std::min(y + height, (int)desc.Height)};
 
     result = systemSurface->LockRect(&lock, &rect, D3DLOCK_READONLY);
 

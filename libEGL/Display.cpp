@@ -10,10 +10,11 @@
 
 #include "Display.h"
 
+#include <algorithm>
+#include <vector>
+
 #include "main.h"
 #include "debug.h"
-
-#include <vector>
 
 namespace egl
 {
@@ -65,11 +66,11 @@ bool Display::initialize()
             EGLint minSwapInterval = 4;
             EGLint maxSwapInterval = 0;
 
-            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_IMMEDIATE)    {minSwapInterval = min(minSwapInterval, 0); maxSwapInterval = max(maxSwapInterval, 0);}
-            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_ONE)        {minSwapInterval = min(minSwapInterval, 1); maxSwapInterval = max(maxSwapInterval, 1);}
-            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_TWO)        {minSwapInterval = min(minSwapInterval, 2); maxSwapInterval = max(maxSwapInterval, 2);}
-            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_THREE)        {minSwapInterval = min(minSwapInterval, 3); maxSwapInterval = max(maxSwapInterval, 3);}
-            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_FOUR)        {minSwapInterval = min(minSwapInterval, 4); maxSwapInterval = max(maxSwapInterval, 4);}
+            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_IMMEDIATE)    {minSwapInterval = std::min(minSwapInterval, 0); maxSwapInterval = std::max(maxSwapInterval, 0);}
+            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_ONE)        {minSwapInterval = std::min(minSwapInterval, 1); maxSwapInterval = std::max(maxSwapInterval, 1);}
+            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_TWO)        {minSwapInterval = std::min(minSwapInterval, 2); maxSwapInterval = std::max(maxSwapInterval, 2);}
+            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_THREE)        {minSwapInterval = std::min(minSwapInterval, 3); maxSwapInterval = std::max(maxSwapInterval, 3);}
+            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_FOUR)        {minSwapInterval = std::min(minSwapInterval, 4); maxSwapInterval = std::max(maxSwapInterval, 4);}
 
             const D3DFORMAT adapterFormats[] =
             {

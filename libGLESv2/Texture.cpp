@@ -10,6 +10,8 @@
 
 #include "Texture.h"
 
+#include <algorithm>
+
 #include "main.h"
 #include "mathutil.h"
 #include "debug.h"
@@ -347,7 +349,7 @@ bool Texture2D::isComplete()
 
     if (mipmapping)
     {
-        int q = log2(max(mWidth, mHeight));
+        int q = log2(std::max(mWidth, mHeight));
 
         for (int level = 1; level <= q; level++)
         {
