@@ -26,6 +26,7 @@ Texture::Texture() : Colorbuffer(0)
     mWrapT = GL_REPEAT;
 
     mDirtyImageData = true;
+    mDirtyMetaData = true;
 }
 
 Texture::~Texture()
@@ -94,108 +95,44 @@ bool Texture::setWrapT(GLenum wrap)
     }
 }
 
-GLenum Texture::getMinFilter()
+GLenum Texture::getMinFilter() const
 {
     return mMinFilter;
 }
 
-GLenum Texture::getMagFilter()
+GLenum Texture::getMagFilter() const
 {
     return mMagFilter;
 }
 
-GLenum Texture::getWrapS()
+GLenum Texture::getWrapS() const
 {
     return mWrapS;
 }
 
-GLenum Texture::getWrapT()
+GLenum Texture::getWrapT() const
 {
     return mWrapT;
 }
 
 // Copies an Image into an already locked Direct3D 9 surface, performing format conversions as necessary
-void Texture::copyImage(const D3DLOCKED_RECT &lock, D3DFORMAT format, Image *image)
+void Texture::copyImage(const D3DLOCKED_RECT &lock, D3DFORMAT format, const Image &image)
 {
-    if (lock.pBits && !image->pixels.empty())
+    ASSERT(format == D3DFMT_A8R8G8B8);
+
+    std::size_t sourcePitch = imagePitch(image);
+
+    if (lock.pBits && !image.pixels.empty())
     {
-        for (int y = 0; y < image->height; y++)
+        if (lock.Pitch == sourcePitch)
         {
-            unsigned char *source = &image->pixels[0] + y * image->width * pixelSize(*image);
-            unsigned short *source16 = (unsigned short*)source;
-            unsigned char *dest = (unsigned char*)lock.pBits + y * lock.Pitch;
-
-            for (int x = 0; x < image->width; x++)
+            memcpy(lock.pBits, &image.pixels[0], lock.Pitch * image.height);
+        }
+        else
+        {
+            for (int y = 0; y < image.height; y++)
             {
-                unsigned char r;
-                unsigned char g;
-                unsigned char b;
-                unsigned char a;
-
-                switch (image->format)
-                {
-                  case GL_ALPHA:
-                    UNIMPLEMENTED();
-                    break;
-                  case GL_LUMINANCE:
-                    UNIMPLEMENTED();
-                    break;
-                  case GL_LUMINANCE_ALPHA:
-                    UNIMPLEMENTED();
-                    break;
-                  case GL_RGB:
-                    switch (image->type)
-                    {
-                      case GL_UNSIGNED_BYTE:          UNIMPLEMENTED(); break;
-                      case GL_UNSIGNED_SHORT_5_6_5:
-                        {
-                            unsigned short rgba = source16[x];
-
-                            a = 0xFF;
-                            b = ((rgba & 0x001F) << 3) | ((rgba & 0x001F) >> 2);
-                            g = ((rgba & 0x07E0) >> 3) | ((rgba & 0x07E0) >> 9);
-                            r = ((rgba & 0xF800) >> 8) | ((rgba & 0xF800) >> 13);
-                        }
-                        break;
-                      default: UNREACHABLE();
-                    }
-                    break;
-                  case GL_RGBA:
-                    switch (image->type)
-                    {
-                      case GL_UNSIGNED_BYTE:
-                        r = source[x * 4 + 0];
-                        g = source[x * 4 + 1];
-                        b = source[x * 4 + 2];
-                        a = source[x * 4 + 3];
-                        break;
-                      case GL_UNSIGNED_SHORT_4_4_4_4:
-                        {
-                            unsigned short rgba = source16[x];
-
-                            a = ((rgba & 0x000F) << 4) | ((rgba & 0x000F) >> 0);
-                            b = ((rgba & 0x00F0) << 0) | ((rgba & 0x00F0) >> 4);
-                            g = ((rgba & 0x0F00) >> 4) | ((rgba & 0x0F00) >> 8);
-                            r = ((rgba & 0xF000) >> 8) | ((rgba & 0xF000) >> 12);
-                        }
-                        break;
-                      case GL_UNSIGNED_SHORT_5_5_5_1:    UNIMPLEMENTED();            break;
-                      default: UNREACHABLE();
-                    }
-                    break;
-                  default: UNREACHABLE();
-                }
-
-                switch (format)
-                {
-                  case D3DFMT_A8R8G8B8:
-                    dest[4 * x + 0] = b;
-                    dest[4 * x + 1] = g;
-                    dest[4 * x + 2] = r;
-                    dest[4 * x + 3] = a;
-                    break;
-                  default: UNREACHABLE();
-                }
+                memcpy(static_cast<unsigned char*>(lock.pBits) + y * lock.Pitch, &image.pixels[0] + y * sourcePitch, sourcePitch);
             }
         }
     }
@@ -204,47 +141,16 @@ void Texture::copyImage(const D3DLOCKED_RECT &lock, D3DFORMAT format, Image *ima
 // Selects an internal Direct3D 9 format for storing an Image
 D3DFORMAT Texture::selectFormat(const Image &image)
 {
-    switch (image.format)
-    {
-      case GL_ALPHA:
-        UNIMPLEMENTED();
-        break;
-      case GL_LUMINANCE:
-        UNIMPLEMENTED();
-        break;
-      case GL_LUMINANCE_ALPHA:
-        UNIMPLEMENTED();
-        break;
-      case GL_RGB:
-        switch (image.type)
-        {
-          case GL_UNSIGNED_BYTE:        UNIMPLEMENTED();
-          case GL_UNSIGNED_SHORT_5_6_5: return D3DFMT_A8R8G8B8;
-          default: UNREACHABLE();
-        }
-        break;
-      case GL_RGBA:
-        switch (image.type)
-        {
-          case GL_UNSIGNED_BYTE:          return D3DFMT_A8R8G8B8;
-          case GL_UNSIGNED_SHORT_4_4_4_4: return D3DFMT_A8R8G8B8;
-          case GL_UNSIGNED_SHORT_5_5_5_1: UNIMPLEMENTED();
-          default: UNREACHABLE();
-        }
-        break;
-      default: UNREACHABLE();
-    }
-
-    return D3DFMT_UNKNOWN;
+    return D3DFMT_A8R8G8B8;
 }
 
 // Returns the size, in bytes, of a single texel in an Image
-int Texture::pixelSize(const Image &image)
+int Texture::pixelSize(GLenum format, GLenum type)
 {
-    switch (image.type)
+    switch (type)
     {
       case GL_UNSIGNED_BYTE:
-        switch (image.format)
+        switch (format)
         {
           case GL_ALPHA:           return sizeof(unsigned char);
           case GL_LUMINANCE:       return sizeof(unsigned char);
@@ -264,26 +170,153 @@ int Texture::pixelSize(const Image &image)
     return 0;
 }
 
-void Texture::setImage(GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels, Image *img)
+int Texture::imagePitch(const Image &img) const
 {
-    mDirtyImageData = true;
+    return img.width * 4;
+}
 
-    img->internalFormat = internalFormat;
+// Store the pixel rectangle designated by xoffset,yoffset,width,height with pixels stored as format/type at input
+// into the BGRA8 pixel rectangle at output with outputPitch bytes in between each line.
+void Texture::loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type,
+                            const void *input, size_t outputPitch, void *output) const
+{
+    size_t inputPitch = width * pixelSize(format, type);
+
+    for (int y = 0; y < height; y++)
+    {
+        const unsigned char *source = static_cast<const unsigned char*>(input) + y * inputPitch;
+        const unsigned short *source16 = reinterpret_cast<const unsigned short*>(source);
+        unsigned char *dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
+
+        for (int x = 0; x < width; x++)
+        {
+            unsigned char r;
+            unsigned char g;
+            unsigned char b;
+            unsigned char a;
+
+            switch (format)
+            {
+              case GL_ALPHA:
+                a = source[x];
+                r = 0;
+                g = 0;
+                b = 0;
+                break;
+
+              case GL_LUMINANCE:
+                r = source[x];
+                g = source[x];
+                b = source[x];
+                a = 0xFF;
+                break;
+
+              case GL_LUMINANCE_ALPHA:
+                r = source[2*x+0];
+                g = source[2*x+0];
+                b = source[2*x+0];
+                a = source[2*x+1];
+                break;
+
+              case GL_RGB:
+                switch (type)
+                {
+                  case GL_UNSIGNED_BYTE:
+                    r = source[x * 3 + 0];
+                    b = source[x * 3 + 1];
+                    g = source[x * 3 + 2];
+                    a = 0xFF;
+                    break;
+
+                  case GL_UNSIGNED_SHORT_5_6_5:
+                    {
+                        unsigned short rgba = source16[x];
+
+                        a = 0xFF;
+                        b = ((rgba & 0x001F) << 3) | ((rgba & 0x001F) >> 2);
+                        g = ((rgba & 0x07E0) >> 3) | ((rgba & 0x07E0) >> 9);
+                        r = ((rgba & 0xF800) >> 8) | ((rgba & 0xF800) >> 13);
+                    }
+                    break;
+
+                  default: UNREACHABLE();
+                }
+                break;
+
+              case GL_RGBA:
+                switch (type)
+                {
+                  case GL_UNSIGNED_BYTE:
+                    r = source[x * 4 + 0];
+                    g = source[x * 4 + 1];
+                    b = source[x * 4 + 2];
+                    a = source[x * 4 + 3];
+                    break;
+
+                  case GL_UNSIGNED_SHORT_4_4_4_4:
+                    {
+                        unsigned short rgba = source16[x];
+
+                        a = ((rgba & 0x000F) << 4) | ((rgba & 0x000F) >> 0);
+                        b = ((rgba & 0x00F0) << 0) | ((rgba & 0x00F0) >> 4);
+                        g = ((rgba & 0x0F00) >> 4) | ((rgba & 0x0F00) >> 8);
+                        r = ((rgba & 0xF000) >> 8) | ((rgba & 0xF000) >> 12);
+                    }
+                    break;
+
+                  case GL_UNSIGNED_SHORT_5_5_5_1:
+                    {
+                        unsigned short rgba = source16[x];
+
+                        a = (rgba & 0x0001) ? 0xFF : 0;
+                        b = ((rgba & 0x003E) << 2) | ((rgba & 0x903E) >> 3);
+                        g = ((rgba & 0x07C0) >> 3) | ((rgba & 0x07C0) >> 8);
+                        r = ((rgba & 0xF800) >> 8) | ((rgba & 0x07C0) >> 13);
+                    }
+                    break;
+
+                  default: UNREACHABLE();
+                }
+                break;
+              default: UNREACHABLE();
+            }
+
+            dest[4 * x + 0] = b;
+            dest[4 * x + 1] = g;
+            dest[4 * x + 2] = r;
+            dest[4 * x + 3] = a;
+        }
+    }
+}
+
+void Texture::setImage(GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels, Image *img)
+{
     img->width = width;
     img->height = height;
     img->format = format;
-    img->type = type;
 
-    size_t imageSize = pixelSize(*img) * width * height;
+    size_t imageSize = imagePitch(*img) * img->height;
 
     std::vector<unsigned char> storage(imageSize);
 
     if (pixels)
     {
-        memcpy(&storage[0], pixels, imageSize);
+        loadImageData(0, 0, width, height, format, type, pixels, imagePitch(*img), &storage[0]);
     }
 
     img->pixels.swap(storage);
+
+    mDirtyImageData = true;
+    mDirtyMetaData = true;
+}
+
+void Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels, Image *img)
+{
+    if (width + xoffset > img->width || height + yoffset > img->height) return error(GL_INVALID_VALUE);
+
+    loadImageData(xoffset, yoffset, width, height, format, type, pixels, imagePitch(*img), &img->pixels[0]);
+
+    mDirtyImageData = true;
 }
 
 IDirect3DBaseTexture9 *Texture::getTexture()
@@ -293,12 +326,20 @@ IDirect3DBaseTexture9 *Texture::getTexture()
         return NULL;
     }
 
+    if (mDirtyMetaData)
+    {
+        ASSERT(mDirtyImageData);
+
+        mBaseTexture = createTexture();
+    }
+
     if (mDirtyImageData)
     {
-        mBaseTexture = createTexture();
-
-        mDirtyImageData = false;
+        updateTexture();
     }
+
+    mDirtyMetaData = false;
+    mDirtyImageData = false;
 
     return mBaseTexture;
 }
@@ -324,12 +365,7 @@ GLenum Texture2D::getTarget() const
 
 void Texture2D::setImage(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels)
 {
-    if (level < 0 || level >= MAX_TEXTURE_LEVELS)
-    {
-        return;
-    }
-
-    Texture::setImage(internalFormat, width, height, format, type, pixels, &mImageArray[level]);
+    Texture::setImage(width, height, format, type, pixels, &mImageArray[level]);
 
     if (level == 0)
     {
@@ -338,9 +374,16 @@ void Texture2D::setImage(GLint level, GLenum internalFormat, GLsizei width, GLsi
     }
 }
 
-// Tests for GL texture object completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
-bool Texture2D::isComplete()
+void Texture2D::subImage(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels)
 {
+    Texture::subImage(xoffset, yoffset, width, height, format, type, pixels, &mImageArray[level]);
+}
+
+// Tests for GL texture object completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
+bool Texture2D::isComplete() const
+{
+    ASSERT(mWidth == mImageArray[0].width && mHeight == mImageArray[0].height);
+
     if (mWidth <= 0 || mHeight <= 0)
     {
         return false;
@@ -370,16 +413,6 @@ bool Texture2D::isComplete()
         for (int level = 1; level <= q; level++)
         {
             if (mImageArray[level].format != mImageArray[0].format)
-            {
-                return false;
-            }
-
-            if (mImageArray[level].internalFormat != mImageArray[0].internalFormat)
-            {
-                return false;
-            }
-
-            if (mImageArray[level].type != mImageArray[0].type)
             {
                 return false;
             }
@@ -414,43 +447,44 @@ IDirect3DBaseTexture9 *Texture2D::createTexture()
         return error(GL_OUT_OF_MEMORY, (IDirect3DBaseTexture9*)NULL);
     }
 
-    ASSERT(SUCCEEDED(result));
+    if (mTexture) mTexture->Release();
+    mTexture = texture;
+    return texture;
+}
+
+void Texture2D::updateTexture()
+{
+    IDirect3DDevice9 *device = getDevice();
+    D3DFORMAT format = selectFormat(mImageArray[0]);
 
     IDirect3DTexture9 *lockableTexture;
-    result = device->CreateTexture(mWidth, mHeight, 0, D3DUSAGE_DYNAMIC, format, D3DPOOL_SYSTEMMEM, &lockableTexture, NULL);
+    HRESULT result = device->CreateTexture(mWidth, mHeight, 0, D3DUSAGE_DYNAMIC, format, D3DPOOL_SYSTEMMEM, &lockableTexture, NULL);
 
     if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
     {
-        texture->Release();
-        return error(GL_OUT_OF_MEMORY, (IDirect3DBaseTexture9*)NULL);
+        return error(GL_OUT_OF_MEMORY);
     }
 
-    ASSERT(SUCCEEDED(result));
-
-    int levelCount = texture->GetLevelCount();
+    int levelCount = mTexture->GetLevelCount();
 
     for (int level = 0; level < levelCount; level++)
     {
         D3DLOCKED_RECT lock = {0};
         lockableTexture->LockRect(level, &lock, NULL, 0);
 
-        copyImage(lock, format, &mImageArray[level]);
+        copyImage(lock, format, mImageArray[level]);
 
         lockableTexture->UnlockRect(level);
     }
 
-    device->UpdateTexture(lockableTexture, texture);
+    device->UpdateTexture(lockableTexture, mTexture);
     lockableTexture->Release();
-
-    if (mTexture) mTexture->Release();
-    mTexture = texture;
-    return texture;
 }
 
 // Returns the top-level texture surface as a render target
 IDirect3DSurface9 *Texture2D::getRenderTarget()
 {
-    if (mDirtyImageData && mRenderTarget)
+    if (mDirtyMetaData && mRenderTarget)
     {
         mRenderTarget->Release();
         mRenderTarget = NULL;
@@ -513,8 +547,13 @@ void TextureCubeMap::setImageNegZ(GLint level, GLenum internalFormat, GLsizei wi
     setImage(5, level, internalFormat, width, height, format, type, pixels);
 }
 
+void TextureCubeMap::subImage(GLenum face, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels)
+{
+    Texture::subImage(xoffset, yoffset, width, height, format, type, pixels, &mImageArray[faceIndex(face)][level]);
+}
+
 // Tests for GL texture object completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
-bool TextureCubeMap::isComplete()
+bool TextureCubeMap::isComplete() const
 {
     if (mWidth <= 0 || mHeight <= 0 || mWidth != mHeight)
     {
@@ -559,16 +598,6 @@ bool TextureCubeMap::isComplete()
                     return false;
                 }
 
-                if (mImageArray[face][level].internalFormat != mImageArray[0][0].internalFormat)
-                {
-                    return false;
-                }
-
-                if (mImageArray[face][level].type != mImageArray[0][0].type)
-                {
-                    return false;
-                }
-
                 if (mImageArray[face][level].width != (mImageArray[0][level - 1].width + 1) / 2)
                 {
                     return false;
@@ -600,15 +629,23 @@ IDirect3DBaseTexture9 *TextureCubeMap::createTexture()
         return error(GL_OUT_OF_MEMORY, (IDirect3DBaseTexture9*)NULL);
     }
 
-    ASSERT(SUCCEEDED(result));
+    if (mTexture) mTexture->Release();
+
+    mTexture = texture;
+    return mTexture;
+}
+
+void TextureCubeMap::updateTexture()
+{
+    IDirect3DDevice9 *device = getDevice();
+    D3DFORMAT format = selectFormat(mImageArray[0][0]);
 
     IDirect3DCubeTexture9 *lockableTexture;
-    result = device->CreateCubeTexture(mWidth, 0, D3DUSAGE_DYNAMIC, format, D3DPOOL_SYSTEMMEM, &lockableTexture, NULL);
+    HRESULT result = device->CreateCubeTexture(mWidth, 0, D3DUSAGE_DYNAMIC, format, D3DPOOL_SYSTEMMEM, &lockableTexture, NULL);
 
     if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
     {
-        texture->Release();
-        return error(GL_OUT_OF_MEMORY, (IDirect3DBaseTexture9*)NULL);
+        return error(GL_OUT_OF_MEMORY);
     }
 
     ASSERT(SUCCEEDED(result));
@@ -620,29 +657,19 @@ IDirect3DBaseTexture9 *TextureCubeMap::createTexture()
             D3DLOCKED_RECT lock = {0};
             lockableTexture->LockRect((D3DCUBEMAP_FACES)face, level, &lock, NULL, 0);
 
-            copyImage(lock, format, &mImageArray[face][level]);
+            copyImage(lock, format, mImageArray[face][level]);
 
             lockableTexture->UnlockRect((D3DCUBEMAP_FACES)face, level);
         }
     }
 
-    device->UpdateTexture(lockableTexture, texture);
+    device->UpdateTexture(lockableTexture, mTexture);
     lockableTexture->Release();
-
-    if (mTexture) mTexture->Release();
-
-    mTexture = texture;
-    return mTexture;
 }
 
 void TextureCubeMap::setImage(int face, GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels)
 {
-    if (level < 0 || level >= MAX_TEXTURE_LEVELS)
-    {
-        return;
-    }
-
-    Texture::setImage(internalFormat, width, height, format, type, pixels, &mImageArray[face][level]);
+    Texture::setImage(width, height, format, type, pixels, &mImageArray[face][level]);
 
     if (face == 0 && level == 0)
     {
@@ -650,4 +677,16 @@ void TextureCubeMap::setImage(int face, GLint level, GLenum internalFormat, GLsi
         mHeight = height;
     }
 }
+
+unsigned int TextureCubeMap::faceIndex(GLenum face)
+{
+    META_ASSERT(GL_TEXTURE_CUBE_MAP_NEGATIVE_X - GL_TEXTURE_CUBE_MAP_POSITIVE_X == 1);
+    META_ASSERT(GL_TEXTURE_CUBE_MAP_POSITIVE_Y - GL_TEXTURE_CUBE_MAP_POSITIVE_X == 2);
+    META_ASSERT(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y - GL_TEXTURE_CUBE_MAP_POSITIVE_X == 3);
+    META_ASSERT(GL_TEXTURE_CUBE_MAP_POSITIVE_Z - GL_TEXTURE_CUBE_MAP_POSITIVE_X == 4);
+    META_ASSERT(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z - GL_TEXTURE_CUBE_MAP_POSITIVE_X == 5);
+
+    return face - GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+}
+
 }

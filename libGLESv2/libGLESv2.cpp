@@ -10,6 +10,9 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 
+#include <exception>
+#include <limits>
+
 #include "Context.h"
 #include "main.h"
 #include "Program.h"
@@ -20,8 +23,7 @@
 #include "Framebuffer.h"
 #include "mathutil.h"
 #include "debug.h"
-
-#include <exception>
+#include "utilities.h"
 
 extern "C"
 {
@@ -3147,12 +3149,62 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
 
     try
     {
-        if (width < 0 || height < 0)
+        if (target != GL_TEXTURE_2D && !es2dx::IsCubemapTextureTarget(target))
+        {
+            return error(GL_INVALID_ENUM);
+        }
+
+        if (level < 0 || level > gl::MAX_TEXTURE_LEVELS || xoffset < 0 || yoffset < 0 || width < 0 || height < 0)
         {
             return error(GL_INVALID_VALUE);
         }
 
-        UNIMPLEMENTED();   // FIXME
+        if (std::numeric_limits<GLsizei>::max() - xoffset < width || std::numeric_limits<GLsizei>::max() - yoffset < height)
+        {
+            return error(GL_INVALID_VALUE);
+        }
+
+        if (!es2dx::CheckTextureFormatType(format, type))
+        {
+            return error(GL_INVALID_ENUM);
+        }
+
+        if (width == 0 || height == 0 || pixels == NULL)
+        {
+            return;
+        }
+
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            if (target == GL_TEXTURE_2D)
+            {
+                gl::Texture2D *texture = context->getTexture2D();
+
+                if (!texture)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                texture->subImage(level, xoffset, yoffset, width, height, format, type, pixels);
+            }
+            else if (es2dx::IsCubemapTextureTarget(target))
+            {
+                gl::TextureCubeMap *texture = context->getTextureCubeMap();
+
+                if (!texture)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                texture->subImage(target, level, xoffset, yoffset, width, height, format, type, pixels);
+            }
+            else
+            {
+                UNREACHABLE();
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
