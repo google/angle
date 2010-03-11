@@ -57,8 +57,8 @@ void OutputHLSL::header()
         }
 
         out <<  uniforms;
-        out << "\n";
-        out << "struct PS_INPUT\n"   // FIXME: Prevent name clashes
+        out << "\n"
+               "struct PS_INPUT\n"   // FIXME: Prevent name clashes
                "{\n";
         out <<        varyingInput;
         out << "};\n"
@@ -167,7 +167,16 @@ void OutputHLSL::header()
         out << "\n";
     }
 
-    out << "float vec1(float x)\n"   // FIXME: Prevent name clashes
+    out << "struct gl_DepthRangeParameters\n"
+           "{\n"
+           "    float near;\n"
+           "    float far;\n"
+           "    float diff;\n"
+           "};\n"
+           "\n"
+           "uniform gl_DepthRangeParameters gl_DepthRange;\n"
+           "\n"
+           "float vec1(float x)\n"   // FIXME: Prevent name clashes
            "{\n"
            "    return x;\n"
            "}\n"
@@ -921,7 +930,7 @@ void OutputHLSL::visitConstantUnion(TIntermConstantUnion *node)
     
     TType &type = node->getType();
 
-    if(type.isField())
+    if (type.isField())
     {
         out << type.getFieldName();
     }
@@ -1023,9 +1032,9 @@ void OutputHLSL::visitConstantUnion(TIntermConstantUnion *node)
                 out << ", ";
             }
         }
-    }
 
-    out << ")";
+        out << ")";
+    }
 }
 
 bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)

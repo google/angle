@@ -233,17 +233,18 @@ const char *VertexShader::linkHLSL(const char *pixelHLSL)
         while (*input != '}' && output)
         {
             char varyingName[100];
-            int semanticIndex;
+            unsigned int semanticIndex;
             int matches = sscanf(input, "%s : TEXCOORD%d;", varyingName, &semanticIndex);
 
             if (matches == 2)
             {
-                ASSERT(semanticIndex < 10 && semanticIndex < MAX_VARYING_VECTORS);
+                ASSERT(semanticIndex < MAX_VARYING_VECTORS);
                 char *varying = strstr(output, varyingName);
-                varying = strstr(varying, " : TEXCOORD0;");
-
-                if (output)
+                
+                if (varying)
                 {
+                    ASSERT(semanticIndex <= 9);   // Single character
+                    varying = strstr(varying, " : TEXCOORD0;");
                     varying[11] = '0' + semanticIndex;
                 }
                 else

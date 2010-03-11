@@ -25,6 +25,9 @@
 #include "geometry/VertexDataManager.h"
 #include "geometry/dx9.h"
 
+#undef near
+#undef far
+
 namespace gl
 {
 Context::Context(const egl::Config *config)
@@ -792,6 +795,16 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         GLuint halfPixelSize = programObject->getUniformLocation("gl_HalfPixelSize");
         GLfloat xy[2] = {1.0f / description.Width, 1.0f / description.Height};
         programObject->setUniform2fv(halfPixelSize, 1, (GLfloat*)&xy);
+
+        GLuint near = programObject->getUniformLocation("gl_DepthRange.near");
+        programObject->setUniform1fv(near, 1, &zNear);
+
+        GLuint far = programObject->getUniformLocation("gl_DepthRange.far");
+        programObject->setUniform1fv(far, 1, &zFar);
+
+        GLuint diff = programObject->getUniformLocation("gl_DepthRange.diff");
+        GLfloat zDiff = zFar - zNear;
+        programObject->setUniform1fv(diff, 1, &zDiff);
     }
 
     return true;

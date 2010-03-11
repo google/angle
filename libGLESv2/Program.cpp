@@ -434,72 +434,17 @@ void Program::link()
                 return;
             }
 
-            D3DXCONSTANTTABLE_DESC constantTableDescription;
-            D3DXCONSTANT_DESC constantDescription;
-            UINT descriptionCount = 1;
-
-            mConstantTablePS->GetDesc(&constantTableDescription);
-
-            for (unsigned int constantIndex = 0; constantIndex < constantTableDescription.Constants; constantIndex++)
+            if (!linkUniforms(mConstantTablePS))
             {
-                D3DXHANDLE constantHandle = mConstantTablePS->GetConstant(0, constantIndex);
-                mConstantTablePS->GetConstantDesc(constantHandle, &constantDescription, &descriptionCount);
-
-                UniformArray::iterator uniform = mUniforms.begin();
-
-                while (uniform != mUniforms.end())
-                {
-                    if ((*uniform)->name == constantDescription.Name)
-                    {
-                        UNREACHABLE();   // Redefinition; detect at compile
-                    }
-
-                    uniform++;
-                }
-
-                if (uniform == mUniforms.end())
-                {
-                    defineUniform(constantDescription);
-                }
+                return;
             }
 
-            mConstantTableVS->GetDesc(&constantTableDescription);
-
-            for (unsigned int constantIndex = 0; constantIndex < constantTableDescription.Constants; constantIndex++)
+            if (!linkUniforms(mConstantTableVS))
             {
-                D3DXHANDLE constantHandle = mConstantTableVS->GetConstant(0, constantIndex);
-                mConstantTableVS->GetConstantDesc(constantHandle, &constantDescription, &descriptionCount);
-
-                UniformArray::iterator uniform = mUniforms.begin();
-
-                while (uniform != mUniforms.end())
-                {
-                    if ((*uniform)->name == constantDescription.Name)
-                    {
-                        UNIMPLEMENTED();   // FIXME: Verify it's the same type as the fragment uniform
-
-                        if (true)
-                        {
-                            break;
-                        }
-                        else
-                        {
-                            return;
-                        }
-                    }
-
-                    uniform++;
-                }
-
-                if (uniform == mUniforms.end())
-                {
-                    defineUniform(constantDescription);
-                }
+                return;
             }
 
-            mLinked = true;
-
-            return;
+            mLinked = true;   // Success
         }
     }
 }
@@ -544,8 +489,97 @@ bool Program::linkAttributes()
     return true;
 }
 
+bool Program::linkUniforms(ID3DXConstantTable *constantTable)
+{
+    D3DXCONSTANTTABLE_DESC constantTableDescription;
+    D3DXCONSTANT_DESC constantDescription;
+    UINT descriptionCount = 1;
+
+    constantTable->GetDesc(&constantTableDescription);
+
+    for (unsigned int constantIndex = 0; constantIndex < constantTableDescription.Constants; constantIndex++)
+    {
+        D3DXHANDLE constantHandle = constantTable->GetConstant(0, constantIndex);
+        constantTable->GetConstantDesc(constantHandle, &constantDescription, &descriptionCount);
+
+        if (!defineUniform(constantHandle, constantDescription))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 // Adds the description of a constant found in the binary shader to the list of uniforms
-void Program::defineUniform(const D3DXCONSTANT_DESC &constantDescription)
+// Returns true if succesful (uniform not already defined)
+bool Program::defineUniform(const D3DXHANDLE &constantHandle, const D3DXCONSTANT_DESC &constantDescription, std::string name)
+{
+    switch(constantDescription.Class)
+    {
+      case D3DXPC_STRUCT:
+        {
+            for (unsigned int field = 0; field < constantDescription.StructMembers; field++)
+            {
+                D3DXHANDLE fieldHandle = mConstantTablePS->GetConstant(constantHandle, field);
+
+                D3DXCONSTANT_DESC fieldDescription;
+                UINT descriptionCount = 1;
+
+                mConstantTablePS->GetConstantDesc(fieldHandle, &fieldDescription, &descriptionCount);
+
+                if (!defineUniform(fieldHandle, fieldDescription, name + constantDescription.Name + "."))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+      case D3DXPC_SCALAR:
+      case D3DXPC_VECTOR:
+      case D3DXPC_MATRIX_COLUMNS:
+      case D3DXPC_OBJECT:
+        return defineUniform(constantDescription, name + constantDescription.Name);
+      default:
+        UNREACHABLE();
+        return false;
+    }
+}
+
+bool Program::defineUniform(const D3DXCONSTANT_DESC &constantDescription, std::string &name)
+{
+    Uniform *uniform = createUniform(constantDescription, name);
+
+    if(!uniform)
+    {
+        return false;
+    }
+
+    // Check if already defined
+    GLint location = getUniformLocation(name.c_str());
+    UniformType type = uniform->type;
+        
+    if (location >= 0)
+    {
+        delete uniform;
+
+        if (mUniforms[location]->type != type)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    mUniforms.push_back(uniform);
+
+    return true;
+}
+
+Uniform *Program::createUniform(const D3DXCONSTANT_DESC &constantDescription, std::string &name)
 {
     if (constantDescription.Rows == 1)   // Vectors and scalars
     {
@@ -556,9 +590,7 @@ void Program::defineUniform(const D3DXCONSTANT_DESC &constantDescription)
           case D3DXPT_BOOL:
             switch (constantDescription.Columns)
             {
-              case 1:
-                mUniforms.push_back(new Uniform(UNIFORM_1IV, constantDescription.Name, 1 * sizeof(GLint) * constantDescription.Elements));
-                break;
+              case 1: return new Uniform(UNIFORM_1IV, name, 1 * sizeof(GLint) * constantDescription.Elements);
               default:
                 UNIMPLEMENTED();   // FIXME
                 UNREACHABLE();
@@ -567,18 +599,10 @@ void Program::defineUniform(const D3DXCONSTANT_DESC &constantDescription)
           case D3DXPT_FLOAT:
             switch (constantDescription.Columns)
             {
-              case 1:
-                mUniforms.push_back(new Uniform(UNIFORM_1FV, constantDescription.Name, 1 * sizeof(GLfloat) * constantDescription.Elements));
-                break;
-              case 2:
-                mUniforms.push_back(new Uniform(UNIFORM_2FV, constantDescription.Name, 2 * sizeof(GLfloat) * constantDescription.Elements));
-                break;
-              case 3:
-                mUniforms.push_back(new Uniform(UNIFORM_3FV, constantDescription.Name, 3 * sizeof(GLfloat) * constantDescription.Elements));
-                break;
-              case 4:
-                mUniforms.push_back(new Uniform(UNIFORM_4FV, constantDescription.Name, 4 * sizeof(GLfloat) * constantDescription.Elements));
-                break;
+              case 1: return new Uniform(UNIFORM_1FV, name, 1 * sizeof(GLfloat) * constantDescription.Elements);
+              case 2: return new Uniform(UNIFORM_2FV, name, 2 * sizeof(GLfloat) * constantDescription.Elements);
+              case 3: return new Uniform(UNIFORM_3FV, name, 3 * sizeof(GLfloat) * constantDescription.Elements);
+              case 4: return new Uniform(UNIFORM_4FV, name, 4 * sizeof(GLfloat) * constantDescription.Elements);
               default: UNREACHABLE();
             }
             break;
@@ -594,15 +618,9 @@ void Program::defineUniform(const D3DXCONSTANT_DESC &constantDescription)
           case D3DXPT_FLOAT:
             switch (constantDescription.Rows)
             {
-              case 2:
-                mUniforms.push_back(new Uniform(UNIFORM_MATRIX_2FV, constantDescription.Name, 2 * 2 * sizeof(GLfloat) * constantDescription.Elements));
-                break;
-              case 3:
-                mUniforms.push_back(new Uniform(UNIFORM_MATRIX_3FV, constantDescription.Name, 3 * 3 * sizeof(GLfloat) * constantDescription.Elements));
-                break;
-              case 4:
-                mUniforms.push_back(new Uniform(UNIFORM_MATRIX_4FV, constantDescription.Name, 4 * 4 * sizeof(GLfloat) * constantDescription.Elements));
-                break;
+              case 2: return new Uniform(UNIFORM_MATRIX_2FV, name, 2 * 2 * sizeof(GLfloat) * constantDescription.Elements);
+              case 3: return new Uniform(UNIFORM_MATRIX_3FV, name, 3 * 3 * sizeof(GLfloat) * constantDescription.Elements);
+              case 4: return new Uniform(UNIFORM_MATRIX_4FV, name, 4 * 4 * sizeof(GLfloat) * constantDescription.Elements);
               default: UNREACHABLE();
             }
             break;
@@ -610,6 +628,8 @@ void Program::defineUniform(const D3DXCONSTANT_DESC &constantDescription)
         }
     }
     else UNREACHABLE();
+
+    return 0;
 }
 
 bool Program::applyUniform1fv(GLint location, GLsizei count, const GLfloat *v)

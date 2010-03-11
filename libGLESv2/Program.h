@@ -33,10 +33,9 @@ enum UniformType
     UNIFORM_1IV
 };
 
-// Helper class representing a single shader uniform
-class Uniform
+// Helper struct representing a single shader uniform
+struct Uniform
 {
-  public:
     Uniform(UniformType type, const std::string &name, unsigned int bytes);
 
     ~Uniform();
@@ -45,9 +44,6 @@ class Uniform
     const std::string name;
     const unsigned int bytes;
     unsigned char *data;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(Uniform);
 };
 
 class Program
@@ -95,7 +91,10 @@ class Program
     void unlink(bool destroy = false);
 
     bool linkAttributes();
-    void defineUniform(const D3DXCONSTANT_DESC &constantDescription);
+    bool linkUniforms(ID3DXConstantTable *constantTable);
+    bool defineUniform(const D3DXHANDLE &constantHandle, const D3DXCONSTANT_DESC &constantDescription, std::string name = "");
+    bool defineUniform(const D3DXCONSTANT_DESC &constantDescription, std::string &name);
+    Uniform *createUniform(const D3DXCONSTANT_DESC &constantDescription, std::string &name);
     bool applyUniform1fv(GLint location, GLsizei count, const GLfloat *v);
     bool applyUniform2fv(GLint location, GLsizei count, const GLfloat *v);
     bool applyUniform3fv(GLint location, GLsizei count, const GLfloat *v);
