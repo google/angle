@@ -672,12 +672,22 @@ void __stdcall glCompressedTexImage2D(GLenum target, GLint level, GLenum interna
 
     try
     {
-        if (width < 0 || height < 0 || imageSize < 0)
+        if (target != GL_TEXTURE_2D && !es2dx::IsCubemapTextureTarget(target))
+        {
+            return error(GL_INVALID_ENUM);
+        }
+
+        if (level < 0 || level > gl::MAX_TEXTURE_LEVELS)
         {
             return error(GL_INVALID_VALUE);
         }
 
-        UNIMPLEMENTED();   // FIXME
+        if (width < 0 || height < 0 || (level > 0 && !gl::isPow2(width)) || (level > 0 && !gl::isPow2(height)) || border != 0 || imageSize < 0)
+        {
+            return error(GL_INVALID_VALUE);
+        }
+
+        return error(GL_INVALID_ENUM); // ultimately we don't support compressed textures
     }
     catch(std::bad_alloc&)
     {
@@ -692,12 +702,27 @@ void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
 
     try
     {
-        if (width < 0 || height < 0 || imageSize < 0)
+        if (target != GL_TEXTURE_2D && !es2dx::IsCubemapTextureTarget(target))
+        {
+            return error(GL_INVALID_ENUM);
+        }
+
+        if (level < 0 || level > gl::MAX_TEXTURE_LEVELS)
         {
             return error(GL_INVALID_VALUE);
         }
 
-        UNIMPLEMENTED();   // FIXME
+        if (xoffset < 0 || yoffset < 0 || width < 0 || height < 0 || (level > 0 && !gl::isPow2(width)) || (level > 0 && !gl::isPow2(height)) || imageSize < 0)
+        {
+            return error(GL_INVALID_VALUE);
+        }
+
+        if (xoffset != 0 || yoffset != 0)
+        {
+            return error(GL_INVALID_OPERATION);
+        }
+
+        return error(GL_INVALID_OPERATION); // The texture being operated on is not a compressed texture.
     }
     catch(std::bad_alloc&)
     {
@@ -1758,6 +1783,8 @@ void __stdcall glGetIntegerv(GLenum pname, GLint* params)
               case GL_MAX_FRAGMENT_UNIFORM_VECTORS:     *params = gl::MAX_FRAGMENT_UNIFORM_VECTORS;     break;
               case GL_MAX_RENDERBUFFER_SIZE:            *params = gl::MAX_RENDERBUFFER_SIZE;            break;
               case GL_NUM_SHADER_BINARY_FORMATS:        *params = 0;                                break;
+              case GL_NUM_COMPRESSED_TEXTURE_FORMATS:   *params = 0;                                break;
+              case GL_COMPRESSED_TEXTURE_FORMATS: /* no compressed texture formats are supported */ break;
               case GL_ARRAY_BUFFER_BINDING:             *params = context->arrayBuffer;             break;
               case GL_FRAMEBUFFER_BINDING:              *params = context->framebuffer;             break;
               case GL_RENDERBUFFER_BINDING:             *params = context->renderbuffer;            break;
