@@ -24,6 +24,8 @@ Texture::Texture() : Colorbuffer(0)
     mMagFilter = GL_LINEAR;
     mWrapS = GL_REPEAT;
     mWrapT = GL_REPEAT;
+
+    mDirtyImageData = true;
 }
 
 Texture::~Texture()
@@ -113,24 +115,24 @@ GLenum Texture::getWrapT()
 }
 
 // Copies an Image into an already locked Direct3D 9 surface, performing format conversions as necessary
-void Texture::copyImage(D3DLOCKED_RECT &lock, D3DFORMAT format, Image &image)
+void Texture::copyImage(const D3DLOCKED_RECT &lock, D3DFORMAT format, Image *image)
 {
-    if (lock.pBits && image.pixels)
+    if (lock.pBits && !image->pixels.empty())
     {
-        for (int y = 0; y < image.height; y++)
+        for (int y = 0; y < image->height; y++)
         {
-            unsigned char *source = (unsigned char*)image.pixels + y * image.width * pixelSize(image);
+            unsigned char *source = &image->pixels[0] + y * image->width * pixelSize(*image);
             unsigned short *source16 = (unsigned short*)source;
             unsigned char *dest = (unsigned char*)lock.pBits + y * lock.Pitch;
 
-            for (int x = 0; x < image.width; x++)
+            for (int x = 0; x < image->width; x++)
             {
                 unsigned char r;
                 unsigned char g;
                 unsigned char b;
                 unsigned char a;
 
-                switch (image.format)
+                switch (image->format)
                 {
                   case GL_ALPHA:
                     UNIMPLEMENTED();
@@ -142,7 +144,7 @@ void Texture::copyImage(D3DLOCKED_RECT &lock, D3DFORMAT format, Image &image)
                     UNIMPLEMENTED();
                     break;
                   case GL_RGB:
-                    switch (image.type)
+                    switch (image->type)
                     {
                       case GL_UNSIGNED_BYTE:          UNIMPLEMENTED(); break;
                       case GL_UNSIGNED_SHORT_5_6_5:
@@ -159,7 +161,7 @@ void Texture::copyImage(D3DLOCKED_RECT &lock, D3DFORMAT format, Image &image)
                     }
                     break;
                   case GL_RGBA:
-                    switch (image.type)
+                    switch (image->type)
                     {
                       case GL_UNSIGNED_BYTE:
                         r = source[x * 4 + 0];
@@ -262,23 +264,52 @@ int Texture::pixelSize(const Image &image)
     return 0;
 }
 
-Texture2D::Texture2D()
+void Texture::setImage(GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels, Image *img)
 {
-    for (int level = 0; level < MAX_TEXTURE_LEVELS; level++)
+    mDirtyImageData = true;
+
+    img->internalFormat = internalFormat;
+    img->width = width;
+    img->height = height;
+    img->format = format;
+    img->type = type;
+
+    size_t imageSize = pixelSize(*img) * width * height;
+
+    std::vector<unsigned char> storage(imageSize);
+
+    if (pixels)
     {
-        mImageArray[level].pixels = NULL;
+        memcpy(&storage[0], pixels, imageSize);
     }
 
+    img->pixels.swap(storage);
+}
+
+IDirect3DBaseTexture9 *Texture::getTexture()
+{
+    if (!isComplete())
+    {
+        return NULL;
+    }
+
+    if (mDirtyImageData)
+    {
+        mBaseTexture = createTexture();
+
+        mDirtyImageData = false;
+    }
+
+    return mBaseTexture;
+}
+
+Texture2D::Texture2D()
+{
     mTexture = NULL;
 }
 
 Texture2D::~Texture2D()
 {
-    for (int level = 0; level < MAX_TEXTURE_LEVELS; level++)
-    {
-        delete[] mImageArray[level].pixels;
-    }
-
     if (mTexture)
     {
         mTexture->Release();
@@ -298,22 +329,7 @@ void Texture2D::setImage(GLint level, GLenum internalFormat, GLsizei width, GLsi
         return;
     }
 
-    mImageArray[level].internalFormat = internalFormat;
-    mImageArray[level].width = width;
-    mImageArray[level].height = height;
-    mImageArray[level].format = format;
-    mImageArray[level].type = type;
-
-    delete[] mImageArray[level].pixels;
-    mImageArray[level].pixels = NULL;
-
-    int imageSize = pixelSize(mImageArray[level]) * width * height;
-    mImageArray[level].pixels = new unsigned char[imageSize];
-
-    if (pixels)
-    {
-        memcpy(mImageArray[level].pixels, pixels, imageSize);
-    }
+    Texture::setImage(internalFormat, width, height, format, type, pixels, &mImageArray[level]);
 
     if (level == 0)
     {
@@ -384,63 +400,63 @@ bool Texture2D::isComplete()
 }
 
 // Constructs a Direct3D 9 texture resource from the texture images, or returns an existing one
-IDirect3DBaseTexture9 *Texture2D::getTexture()
+IDirect3DBaseTexture9 *Texture2D::createTexture()
 {
-    if (!isComplete())
+    IDirect3DTexture9 *texture;
+
+    IDirect3DDevice9 *device = getDevice();
+    D3DFORMAT format = selectFormat(mImageArray[0]);
+
+    HRESULT result = device->CreateTexture(mWidth, mHeight, 0, D3DUSAGE_RENDERTARGET, format, D3DPOOL_DEFAULT, &texture, NULL);
+
+    if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
     {
-        return NULL;
+        return error(GL_OUT_OF_MEMORY, (IDirect3DBaseTexture9*)NULL);
     }
 
-    if (!mTexture)   // FIXME: Recreate when changed (same for getRenderTarget)
+    ASSERT(SUCCEEDED(result));
+
+    IDirect3DTexture9 *lockableTexture;
+    result = device->CreateTexture(mWidth, mHeight, 0, D3DUSAGE_DYNAMIC, format, D3DPOOL_SYSTEMMEM, &lockableTexture, NULL);
+
+    if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
     {
-        IDirect3DDevice9 *device = getDevice();
-        D3DFORMAT format = selectFormat(mImageArray[0]);
-
-        HRESULT result = device->CreateTexture(mWidth, mHeight, 0, D3DUSAGE_RENDERTARGET, format, D3DPOOL_DEFAULT, &mTexture, NULL);
-
-        if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
-        {
-            error(GL_OUT_OF_MEMORY, 0);
-        }
-
-        ASSERT(SUCCEEDED(result));
-
-        IDirect3DTexture9 *lockableTexture;
-        result = device->CreateTexture(mWidth, mHeight, 0, D3DUSAGE_DYNAMIC, format, D3DPOOL_SYSTEMMEM, &lockableTexture, NULL);
-
-        if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
-        {
-            error(GL_OUT_OF_MEMORY,(IDirect3DBaseTexture9*)NULL);
-        }
-
-        ASSERT(SUCCEEDED(result));
-
-        if (mTexture)   // FIXME: Handle failure
-        {
-            int levelCount = mTexture->GetLevelCount();
-
-            for (int level = 0; level < levelCount; level++)
-            {
-                D3DLOCKED_RECT lock = {0};
-                lockableTexture->LockRect(level, &lock, NULL, 0);
-
-                copyImage(lock, format, mImageArray[level]);
-
-                lockableTexture->UnlockRect(level);
-            }
-
-            device->UpdateTexture(lockableTexture, mTexture);
-            lockableTexture->Release();
-        }
+        texture->Release();
+        return error(GL_OUT_OF_MEMORY, (IDirect3DBaseTexture9*)NULL);
     }
 
-    return mTexture;
+    ASSERT(SUCCEEDED(result));
+
+    int levelCount = texture->GetLevelCount();
+
+    for (int level = 0; level < levelCount; level++)
+    {
+        D3DLOCKED_RECT lock = {0};
+        lockableTexture->LockRect(level, &lock, NULL, 0);
+
+        copyImage(lock, format, &mImageArray[level]);
+
+        lockableTexture->UnlockRect(level);
+    }
+
+    device->UpdateTexture(lockableTexture, texture);
+    lockableTexture->Release();
+
+    if (mTexture) mTexture->Release();
+    mTexture = texture;
+    return texture;
 }
 
 // Returns the top-level texture surface as a render target
 IDirect3DSurface9 *Texture2D::getRenderTarget()
 {
-    if (!mRenderTarget && getTexture())
+    if (mDirtyImageData && mRenderTarget)
+    {
+        mRenderTarget->Release();
+        mRenderTarget = NULL;
+    }
+
+    if (!mRenderTarget && getTexture()) // FIXME: getTexture fails for incomplete textures. Check spec.
     {
         mTexture->GetSurfaceLevel(0, &mRenderTarget);
     }
@@ -450,27 +466,11 @@ IDirect3DSurface9 *Texture2D::getRenderTarget()
 
 TextureCubeMap::TextureCubeMap()
 {
-    for (int face = 0; face < 6; face++)
-    {
-        for (int level = 0; level < MAX_TEXTURE_LEVELS; level++)
-        {
-            mImageArray[face][level].pixels = NULL;
-        }
-    }
-
     mTexture = NULL;
 }
 
 TextureCubeMap::~TextureCubeMap()
 {
-    for (int face = 0; face < 6; face++)
-    {
-        for (int level = 0; level < MAX_TEXTURE_LEVELS; level++)
-        {
-            delete[] mImageArray[face][level].pixels;
-        }
-    }
-
     if (mTexture)
     {
         mTexture->Release();
@@ -586,57 +586,52 @@ bool TextureCubeMap::isComplete()
 }
 
 // Constructs a Direct3D 9 texture resource from the texture images, or returns an existing one
-IDirect3DBaseTexture9 *TextureCubeMap::getTexture()
+IDirect3DBaseTexture9 *TextureCubeMap::createTexture()
 {
-    if (!isComplete())
+    IDirect3DDevice9 *device = getDevice();
+    D3DFORMAT format = selectFormat(mImageArray[0][0]);
+
+    IDirect3DCubeTexture9 *texture;
+
+    HRESULT result = device->CreateCubeTexture(mWidth, 0, D3DUSAGE_RENDERTARGET, format, D3DPOOL_DEFAULT, &texture, NULL);
+
+    if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
     {
-        return NULL;
+        return error(GL_OUT_OF_MEMORY, (IDirect3DBaseTexture9*)NULL);
     }
 
-    if (!mTexture)   // FIXME: Recreate when changed (same for getRenderTarget)
+    ASSERT(SUCCEEDED(result));
+
+    IDirect3DCubeTexture9 *lockableTexture;
+    result = device->CreateCubeTexture(mWidth, 0, D3DUSAGE_DYNAMIC, format, D3DPOOL_SYSTEMMEM, &lockableTexture, NULL);
+
+    if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
     {
-        IDirect3DDevice9 *device = getDevice();
-        D3DFORMAT format = selectFormat(mImageArray[0][0]);
+        texture->Release();
+        return error(GL_OUT_OF_MEMORY, (IDirect3DBaseTexture9*)NULL);
+    }
 
-        HRESULT result = device->CreateCubeTexture(mWidth, 0, D3DUSAGE_RENDERTARGET, format, D3DPOOL_DEFAULT, &mTexture, NULL);
+    ASSERT(SUCCEEDED(result));
 
-        if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+    for (int face = 0; face < 6; face++)
+    {
+        for (int level = 0; level < MAX_TEXTURE_LEVELS; level++)
         {
-            error(GL_OUT_OF_MEMORY, (IDirect3DBaseTexture9*)NULL);
-        }
+            D3DLOCKED_RECT lock = {0};
+            lockableTexture->LockRect((D3DCUBEMAP_FACES)face, level, &lock, NULL, 0);
 
-        ASSERT(SUCCEEDED(result));
+            copyImage(lock, format, &mImageArray[face][level]);
 
-        IDirect3DCubeTexture9 *lockableTexture;
-        result = device->CreateCubeTexture(mWidth, 0, D3DUSAGE_DYNAMIC, format, D3DPOOL_SYSTEMMEM, &lockableTexture, NULL);
-
-        if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
-        {
-            return error(GL_OUT_OF_MEMORY, (IDirect3DBaseTexture9*)NULL);
-        }
-
-        ASSERT(SUCCEEDED(result));
-
-        if (mTexture)
-        {
-            for (int face = 0; face < 6; face++)
-            {
-                for (int level = 0; level < MAX_TEXTURE_LEVELS; level++)
-                {
-                    D3DLOCKED_RECT lock = {0};
-                    lockableTexture->LockRect((D3DCUBEMAP_FACES)face, level, &lock, NULL, 0);
-
-                    copyImage(lock, format, mImageArray[face][level]);
-
-                    lockableTexture->UnlockRect((D3DCUBEMAP_FACES)face, level);
-                }
-            }
-
-            device->UpdateTexture(lockableTexture, mTexture);
-            lockableTexture->Release();
+            lockableTexture->UnlockRect((D3DCUBEMAP_FACES)face, level);
         }
     }
 
+    device->UpdateTexture(lockableTexture, texture);
+    lockableTexture->Release();
+
+    if (mTexture) mTexture->Release();
+
+    mTexture = texture;
     return mTexture;
 }
 
@@ -647,22 +642,7 @@ void TextureCubeMap::setImage(int face, GLint level, GLenum internalFormat, GLsi
         return;
     }
 
-    mImageArray[face][level].internalFormat = internalFormat;
-    mImageArray[face][level].width = width;
-    mImageArray[face][level].height = height;
-    mImageArray[face][level].format = format;
-    mImageArray[face][level].type = type;
-
-    delete[] mImageArray[face][level].pixels;
-    mImageArray[face][level].pixels = NULL;
-
-    int imageSize = pixelSize(mImageArray[face][level]) * width * height;
-    mImageArray[face][level].pixels = new unsigned char[imageSize];
-
-    if (pixels)
-    {
-        memcpy(mImageArray[face][level].pixels, pixels, imageSize);
-    }
+    Texture::setImage(internalFormat, width, height, format, type, pixels, &mImageArray[face][level]);
 
     if (face == 0 && level == 0)
     {

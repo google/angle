@@ -17,6 +17,8 @@
 #include <GLES2/gl2.h>
 #include <d3d9.h>
 
+#include <vector>
+
 namespace gl
 {
 enum
@@ -25,17 +27,6 @@ enum
     MAX_CUBE_MAP_TEXTURE_SIZE = 2048,
 
     MAX_TEXTURE_LEVELS = 11   // log2 of MAX_TEXTURE_SIZE
-};
-
-// Helper structure representing a single image layer
-struct Image
-{
-    GLenum internalFormat;
-    GLsizei width;
-    GLsizei height;
-    GLenum format;
-    GLenum type;
-    void *pixels;
 };
 
 class Texture : public Colorbuffer
@@ -58,10 +49,22 @@ class Texture : public Colorbuffer
     GLenum getWrapT();
 
     virtual bool isComplete() = 0;
-    virtual IDirect3DBaseTexture9 *getTexture() = 0;
+    IDirect3DBaseTexture9 *getTexture();
 
   protected:
-    void copyImage(D3DLOCKED_RECT &lock, D3DFORMAT format, Image &image);
+    // Helper structure representing a single image layer
+    struct Image
+    {
+        GLenum internalFormat;
+        GLsizei width;
+        GLsizei height;
+        GLenum format;
+        GLenum type;
+
+        std::vector<unsigned char> pixels;
+    };
+
+    void copyImage(const D3DLOCKED_RECT &lock, D3DFORMAT format, Image *image);
 
     static D3DFORMAT selectFormat(const Image &image);
     static int pixelSize(const Image &image);
@@ -71,8 +74,17 @@ class Texture : public Colorbuffer
     GLenum mWrapS;
     GLenum mWrapT;
 
+    void setImage(GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels, Image *img);
+
+    // The pointer returned is weak and it is assumed the derived class will keep a strong pointer until the next createTexture() call.
+    virtual IDirect3DBaseTexture9 *createTexture() = 0;
+
+    bool mDirtyImageData; // FIXME: would be private but getRenderTarget is still implemented through the derived classes and they need it.
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture);
+
+    IDirect3DBaseTexture9 *mBaseTexture; // This is a weak pointer. The derived class is assumed to own a strong pointer.
 };
 
 class Texture2D : public Texture
@@ -97,11 +109,12 @@ class Texture2D : public Texture
     GLenum getWrapT();
 
     bool isComplete();
-    IDirect3DBaseTexture9 *getTexture();
     IDirect3DSurface9 *getRenderTarget();
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture2D);
+
+    virtual IDirect3DBaseTexture9 *createTexture();
 
     Image mImageArray[MAX_TEXTURE_LEVELS];
 
@@ -125,10 +138,11 @@ class TextureCubeMap : public Texture
     void setImageNegZ(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels);
 
     bool isComplete();
-    IDirect3DBaseTexture9 *getTexture();
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureCubeMap);
+
+    virtual IDirect3DBaseTexture9 *createTexture();
 
     void setImage(int face, GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels);
 
