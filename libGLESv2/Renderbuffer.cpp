@@ -206,7 +206,7 @@ GLuint Depthbuffer::getDepthSize()
         D3DSURFACE_DESC description;
         mDepthStencil->GetDesc(&description);
 
-        es2dx::GetDepthSize(description.Format);
+        return es2dx::GetDepthSize(description.Format);
     }
 
     return 0;
