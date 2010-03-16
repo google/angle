@@ -105,13 +105,6 @@ bool TOutputTraverser::visitBinary(Visit visit, TIntermBinary* node)
 	case EOpMatrixTimesScalarAssign:  out.debug << "matrix scale second child into first child"; break;
 	case EOpMatrixTimesMatrixAssign:  out.debug << "matrix mult second child into first child"; break;
 	case EOpDivAssign:                out.debug << "divide second child into first child";       break;
-	case EOpModAssign:                out.debug << "mod second child into first child";          break;
-	case EOpAndAssign:                out.debug << "and second child into first child";          break;
-	case EOpInclusiveOrAssign:        out.debug << "or second child into first child";           break;
-	case EOpExclusiveOrAssign:        out.debug << "exclusive or second child into first child"; break;
-	case EOpLeftShiftAssign:          out.debug << "left shift second child into first child";   break;
-	case EOpRightShiftAssign:         out.debug << "right shift second child into first child";  break;
-
 	case EOpIndexDirect:   out.debug << "direct index";   break;
 	case EOpIndexIndirect: out.debug << "indirect index"; break;
 	case EOpIndexDirectStruct:   out.debug << "direct index for structure";   break;
@@ -121,12 +114,6 @@ bool TOutputTraverser::visitBinary(Visit visit, TIntermBinary* node)
 	case EOpSub:    out.debug << "subtract";                break;
 	case EOpMul:    out.debug << "component-wise multiply"; break;
 	case EOpDiv:    out.debug << "divide";                  break;
-	case EOpMod:    out.debug << "mod";                     break;
-	case EOpRightShift:  out.debug << "right-shift";  break;
-	case EOpLeftShift:   out.debug << "left-shift";   break;
-	case EOpAnd:         out.debug << "bitwise and";  break;
-	case EOpInclusiveOr: out.debug << "inclusive-or"; break;
-	case EOpExclusiveOr: out.debug << "exclusive-or"; break;
 	case EOpEqual:            out.debug << "Compare Equal";                 break;
 	case EOpNotEqual:         out.debug << "Compare Not Equal";             break;
 	case EOpLessThan:         out.debug << "Compare Less Than";             break;
@@ -163,7 +150,6 @@ bool TOutputTraverser::visitUnary(Visit visit, TIntermUnary* node)
 	case EOpNegative:       out.debug << "Negate value";         break;
 	case EOpVectorLogicalNot:
 	case EOpLogicalNot:     out.debug << "Negate conditional";   break;
-	case EOpBitwiseNot:     out.debug << "Bitwise not";          break;
 
 	case EOpPostIncrement:  out.debug << "Post-Increment";       break;
 	case EOpPostDecrement:  out.debug << "Post-Decrement";       break;
@@ -279,16 +265,6 @@ bool TOutputTraverser::visitAggregate(Visit visit, TIntermAggregate* node)
 	case EOpReflect:       out.debug << "reflect";                 break;
 	case EOpRefract:       out.debug << "refract";                 break;
 	case EOpMul:           out.debug << "component-wise multiply"; break;
-
-	case EOpItof:          out.debug << "itof";        break;
-	case EOpFtoi:          out.debug << "ftoi";        break;
-	case EOpSkipPixels:    out.debug << "skipPixels";  break;
-	case EOpReadInput:     out.debug << "readInput";   break;
-	case EOpWritePixel:    out.debug << "writePixel";  break;
-	case EOpBitmapLsb:     out.debug << "bitmapLSB";   break;
-	case EOpBitmapMsb:     out.debug << "bitmapMSB";   break;
-	case EOpWriteOutput:   out.debug << "writeOutput"; break;
-	case EOpReadPixel:     out.debug << "readPixel";   break;
 
 	default: out.debug.message(EPrefixError, "Bad aggregation op");
 	}

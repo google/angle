@@ -513,7 +513,6 @@ void IdentifyBuiltIns(EShLanguage language, TSymbolTable& symbolTable)
 	symbolTable.relateToOperator("not",              EOpVectorLogicalNot);
 
 	symbolTable.relateToOperator("matrixCompMult",   EOpMul);
-	symbolTable.relateToOperator("mod",              EOpMod);
 
 	symbolTable.relateToOperator("equal",            EOpVectorEqual);
 	symbolTable.relateToOperator("notEqual",         EOpVectorNotEqual);
@@ -544,6 +543,7 @@ void IdentifyBuiltIns(EShLanguage language, TSymbolTable& symbolTable)
 	symbolTable.relateToOperator("floor",        EOpFloor);
 	symbolTable.relateToOperator("ceil",         EOpCeil);
 	symbolTable.relateToOperator("fract",        EOpFract);
+	symbolTable.relateToOperator("mod",          EOpMod);
 	symbolTable.relateToOperator("min",          EOpMin);
 	symbolTable.relateToOperator("max",          EOpMax);
 	symbolTable.relateToOperator("clamp",        EOpClamp);
@@ -568,21 +568,9 @@ void IdentifyBuiltIns(EShLanguage language, TSymbolTable& symbolTable)
 	case EShLangVertex:
 		break;
 	case EShLangFragment:
-	//	symbolTable.relateToOperator("dFdx",         EOpDPdx);             
-	//	symbolTable.relateToOperator("dFdy",         EOpDPdy);             
-	//	symbolTable.relateToOperator("fwidth",       EOpFwidth);
-		break;
-	case EShLangPack:
-	case EShLangUnpack:
-		symbolTable.relateToOperator("itof",         EOpItof);
-		symbolTable.relateToOperator("ftoi",         EOpFtoi);
-		symbolTable.relateToOperator("skipPixels",   EOpSkipPixels);
-		symbolTable.relateToOperator("readInput",    EOpReadInput);
-		symbolTable.relateToOperator("writePixel",   EOpWritePixel);
-		symbolTable.relateToOperator("bitmapLSB",    EOpBitmapLsb);
-		symbolTable.relateToOperator("bitmapMSB",    EOpBitmapMsb);
-		symbolTable.relateToOperator("writeOutput",  EOpWriteOutput);
-		symbolTable.relateToOperator("readPixel",    EOpReadPixel);
+	//	symbolTable.relateToOperator("dFdx",         EOpDPdx);     // OES_standard_derivatives extension
+	//	symbolTable.relateToOperator("dFdy",         EOpDPdy);     // OES_standard_derivatives extension
+	//	symbolTable.relateToOperator("fwidth",       EOpFwidth);   // OES_standard_derivatives extension
 		break;
 	default: assert(false && "Language not supported");
 	}

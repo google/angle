@@ -474,16 +474,8 @@ function_call
         TFunction* fnCall = $1.function;
         TOperator op = fnCall->getBuiltInOp();
 
-        if (op == EOpArrayLength) {
-            if ($1.intermNode->getAsTyped() == 0 || $1.intermNode->getAsTyped()->getType().getArraySize() == 0) {
-                parseContext.error($1.line, "", fnCall->getName().c_str(), "array must be declared with a size before using this method");
-                parseContext.recover();
-            }
-
-            constUnion *unionArray = new constUnion[1];
-            unionArray->setIConst($1.intermNode->getAsTyped()->getType().getArraySize());
-            $$ = parseContext.intermediate.addConstantUnion(unionArray, TType(EbtInt, EvqConst), $1.line);
-        } else if (op != EOpNull) {
+        if (op != EOpNull)
+        {
             //
             // Then this should be a constructor.
             // Don't go through the symbol table for constructors.
@@ -744,7 +736,6 @@ unary_expression
                 switch($1.op) {
                 case EOpNegative:   errorOp = "-"; break;
                 case EOpLogicalNot: errorOp = "!"; break;
-                case EOpBitwiseNot: errorOp = "~"; break;
 				default: break;
                 }
                 parseContext.unaryOpError($1.line, errorOp, $2->getCompleteString());
@@ -761,8 +752,6 @@ unary_operator
     : PLUS  { $$.line = $1.line; $$.op = EOpNull; }
     | DASH  { $$.line = $1.line; $$.op = EOpNegative; }
     | BANG  { $$.line = $1.line; $$.op = EOpLogicalNot; }
-    | TILDE { PACK_UNPACK_ONLY("~", $1.line);
-              $$.line = $1.line; $$.op = EOpBitwiseNot; }
     ;
 // Grammar Note:  No '*' or '&' unary ops.  Pointers are not supported.
 
@@ -782,15 +771,6 @@ multiplicative_expression
         $$ = parseContext.intermediate.addBinaryMath(EOpDiv, $1, $3, $2.line, parseContext.symbolTable);
         if ($$ == 0) {
             parseContext.binaryOpError($2.line, "/", $1->getCompleteString(), $3->getCompleteString());
-            parseContext.recover();
-            $$ = $1;
-        }
-    }
-    | multiplicative_expression PERCENT unary_expression {
-        PACK_UNPACK_ONLY("%", $2.line);
-        $$ = parseContext.intermediate.addBinaryMath(EOpMod, $1, $3, $2.line, parseContext.symbolTable);
-        if ($$ == 0) {
-            parseContext.binaryOpError($2.line, "%", $1->getCompleteString(), $3->getCompleteString());
             parseContext.recover();
             $$ = $1;
         }
@@ -819,24 +799,6 @@ additive_expression
 
 shift_expression
     : additive_expression { $$ = $1; }
-    | shift_expression LEFT_OP additive_expression {
-        PACK_UNPACK_ONLY("<<", $2.line);
-        $$ = parseContext.intermediate.addBinaryMath(EOpLeftShift, $1, $3, $2.line, parseContext.symbolTable);
-        if ($$ == 0) {
-            parseContext.binaryOpError($2.line, "<<", $1->getCompleteString(), $3->getCompleteString());
-            parseContext.recover();
-            $$ = $1;
-        }
-    }
-    | shift_expression RIGHT_OP additive_expression {
-        PACK_UNPACK_ONLY(">>", $2.line);
-        $$ = parseContext.intermediate.addBinaryMath(EOpRightShift, $1, $3, $2.line, parseContext.symbolTable);
-        if ($$ == 0) {
-            parseContext.binaryOpError($2.line, ">>", $1->getCompleteString(), $3->getCompleteString());
-            parseContext.recover();
-            $$ = $1;
-        }
-    }
     ;
 
 relational_expression
@@ -911,41 +873,14 @@ equality_expression
 
 and_expression
     : equality_expression { $$ = $1; }
-    | and_expression AMPERSAND equality_expression {
-        PACK_UNPACK_ONLY("&", $2.line);
-        $$ = parseContext.intermediate.addBinaryMath(EOpAnd, $1, $3, $2.line, parseContext.symbolTable);
-        if ($$ == 0) {
-            parseContext.binaryOpError($2.line, "&", $1->getCompleteString(), $3->getCompleteString());
-            parseContext.recover();
-            $$ = $1;
-        }
-    }
     ;
 
 exclusive_or_expression
     : and_expression { $$ = $1; }
-    | exclusive_or_expression CARET and_expression {
-        PACK_UNPACK_ONLY("^", $2.line);
-        $$ = parseContext.intermediate.addBinaryMath(EOpExclusiveOr, $1, $3, $2.line, parseContext.symbolTable);
-        if ($$ == 0) {
-            parseContext.binaryOpError($2.line, "^", $1->getCompleteString(), $3->getCompleteString());
-            parseContext.recover();
-            $$ = $1;
-        }
-    }
     ;
 
 inclusive_or_expression
     : exclusive_or_expression { $$ = $1; }
-    | inclusive_or_expression VERTICAL_BAR exclusive_or_expression {
-        PACK_UNPACK_ONLY("|", $2.line);
-        $$ = parseContext.intermediate.addBinaryMath(EOpInclusiveOr, $1, $3, $2.line, parseContext.symbolTable);
-        if ($$ == 0) {
-            parseContext.binaryOpError($2.line, "|", $1->getCompleteString(), $3->getCompleteString());
-            parseContext.recover();
-            $$ = $1;
-        }
-    }
     ;
 
 logical_and_expression
@@ -1027,14 +962,8 @@ assignment_operator
     : EQUAL        {                                    $$.line = $1.line; $$.op = EOpAssign; }
     | MUL_ASSIGN   { FRAG_VERT_ONLY("*=", $1.line);     $$.line = $1.line; $$.op = EOpMulAssign; }
     | DIV_ASSIGN   { FRAG_VERT_ONLY("/=", $1.line);     $$.line = $1.line; $$.op = EOpDivAssign; }
-    | MOD_ASSIGN   { PACK_UNPACK_ONLY("%=", $1.line);   $$.line = $1.line; $$.op = EOpModAssign; }
     | ADD_ASSIGN   {                                    $$.line = $1.line; $$.op = EOpAddAssign; }
     | SUB_ASSIGN   {                                    $$.line = $1.line; $$.op = EOpSubAssign; }
-    | LEFT_ASSIGN  { PACK_UNPACK_ONLY("<<=", $1.line);  $$.line = $1.line; $$.op = EOpLeftShiftAssign; }
-    | RIGHT_ASSIGN { PACK_UNPACK_ONLY("<<=", $1.line);  $$.line = $1.line; $$.op = EOpRightShiftAssign; }
-    | AND_ASSIGN   { PACK_UNPACK_ONLY("&=",  $1.line);  $$.line = $1.line; $$.op = EOpAndAssign; }
-    | XOR_ASSIGN   { PACK_UNPACK_ONLY("^=",  $1.line);  $$.line = $1.line; $$.op = EOpExclusiveOrAssign; }
-    | OR_ASSIGN    { PACK_UNPACK_ONLY("|=",  $1.line);  $$.line = $1.line; $$.op = EOpInclusiveOrAssign; }
     ;
 
 expression

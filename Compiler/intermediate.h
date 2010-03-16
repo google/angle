@@ -38,7 +38,6 @@ enum TOperator {
 	EOpNegative,
 	EOpLogicalNot,
 	EOpVectorLogicalNot,
-	EOpBitwiseNot,
 
 	EOpPostIncrement,
 	EOpPostDecrement,
@@ -60,12 +59,6 @@ enum TOperator {
 	EOpSub,
 	EOpMul,
 	EOpDiv,
-	EOpMod,
-	EOpRightShift,
-	EOpLeftShift,
-	EOpAnd,
-	EOpInclusiveOr,
-	EOpExclusiveOr,
 	EOpEqual,
 	EOpNotEqual,
 	EOpVectorEqual,
@@ -117,6 +110,7 @@ enum TOperator {
 	EOpFloor,
 	EOpCeil,
 	EOpFract,
+	EOpMod,
 	EOpMin,
 	EOpMax,
 	EOpClamp,
@@ -133,24 +127,14 @@ enum TOperator {
 	EOpReflect,
 	EOpRefract,
 
-//	EOpDPdx,            // Fragment only
-//	EOpDPdy,            // Fragment only
-//	EOpFwidth,          // Fragment only
+//	EOpDPdx,            // Fragment only, OES_standard_derivatives extension
+//	EOpDPdy,            // Fragment only, OES_standard_derivatives extension
+//	EOpFwidth,          // Fragment only, OES_standard_derivatives extension
 
 	EOpMatrixTimesMatrix,
 
 	EOpAny,
 	EOpAll,
-	
-	EOpItof,         // pack/unpack only
-	EOpFtoi,         // pack/unpack only    
-	EOpSkipPixels,   // pack/unpack only
-	EOpReadInput,    // unpack only
-	EOpWritePixel,   // unpack only
-	EOpBitmapLsb,    // unpack only
-	EOpBitmapMsb,    // unpack only
-	EOpWriteOutput,  // pack only
-	EOpReadPixel,    // pack only
 	
 	//
 	// Branch
@@ -196,18 +180,6 @@ enum TOperator {
 	EOpMatrixTimesScalarAssign,
 	EOpMatrixTimesMatrixAssign,
 	EOpDivAssign,
-	EOpModAssign,
-	EOpAndAssign,
-	EOpInclusiveOrAssign,
-	EOpExclusiveOrAssign,
-	EOpLeftShiftAssign,
-	EOpRightShiftAssign,
-
-	//
-	// Array operators
-	//
-
-	EOpArrayLength,
 };
 
 class TIntermTraverser;

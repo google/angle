@@ -679,12 +679,6 @@ bool TIntermOperator::modifiesState() const
 	case EOpMatrixTimesScalarAssign:
 	case EOpMatrixTimesMatrixAssign:
 	case EOpDivAssign:
-	case EOpModAssign:
-	case EOpAndAssign:
-	case EOpInclusiveOrAssign:
-	case EOpExclusiveOrAssign:
-	case EOpLeftShiftAssign:
-	case EOpRightShiftAssign:
 		return true;
 	default:
 		return false;
@@ -729,10 +723,6 @@ bool TIntermUnary::promote(TInfoSink&)
 	switch (op) {
 	case EOpLogicalNot:
 		if (operand->getBasicType() != EbtBool)
-			return false;
-		break;
-	case EOpBitwiseNot:
-		if (operand->getBasicType() != EbtInt)
 			return false;
 		break;
 	case EOpNegative:
@@ -847,28 +837,6 @@ bool TIntermBinary::promote(TInfoSink& infoSink)
 			break;
 
 		//
-		// Check for integer only operands.
-		//
-		case EOpMod:
-		case EOpRightShift:
-		case EOpLeftShift:
-		case EOpAnd:
-		case EOpInclusiveOr:
-		case EOpExclusiveOr:
-			if (left->getBasicType() != EbtInt || right->getBasicType() != EbtInt)
-				return false;
-			break;
-		case EOpModAssign:
-		case EOpAndAssign:
-		case EOpInclusiveOrAssign:
-		case EOpExclusiveOrAssign:
-		case EOpLeftShiftAssign:
-		case EOpRightShiftAssign:
-			if (left->getBasicType() != EbtInt || right->getBasicType() != EbtInt)
-				return false;
-			// fall through
-
-		//
 		// Everything else should have matching types
 		//
 		default:
@@ -957,11 +925,9 @@ bool TIntermBinary::promote(TInfoSink& infoSink)
 	case EOpAdd:
 	case EOpSub:
 	case EOpDiv:
-	case EOpMod:
 	case EOpAddAssign:
 	case EOpSubAssign:
 	case EOpDivAssign:
-	case EOpModAssign:
 		if (left->isMatrix() && right->isVector() ||
 			left->isVector() && right->isMatrix() ||
 			left->getBasicType() != right->getBasicType())
@@ -996,12 +962,6 @@ default:
 	case EOpSubAssign:
 	case EOpMulAssign:
 	case EOpDivAssign:
-	case EOpModAssign:
-	case EOpAndAssign:
-	case EOpInclusiveOrAssign:
-	case EOpExclusiveOrAssign:
-	case EOpLeftShiftAssign:
-	case EOpRightShiftAssign:
 		if (getType() != left->getType())
 			return false;
 		break;
@@ -1197,52 +1157,6 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, TIntermTyped* constantNod
 						tempConstArray[i].setFConst(tempConstArray[i].getFConst() + ((unionArray[j].getFConst()) * rightUnionArray[i*size + j].getFConst()));
 					}
 				}
-			}
-			break;
-
-		case EOpMod:
-			tempConstArray = new constUnion[objectSize];
-			{// support MSVC++6.0
-				for (int i = 0; i < objectSize; i++)
-					tempConstArray[i] = unionArray[i] % rightUnionArray[i];
-			}
-			break;
-
-		case EOpRightShift:
-			tempConstArray = new constUnion[objectSize];
-			{// support MSVC++6.0
-				for (int i = 0; i < objectSize; i++)
-					tempConstArray[i] = unionArray[i] >> rightUnionArray[i];
-			}
-			break;
-
-		case EOpLeftShift:
-			tempConstArray = new constUnion[objectSize];
-			{// support MSVC++6.0
-				for (int i = 0; i < objectSize; i++)
-					tempConstArray[i] = unionArray[i] << rightUnionArray[i];
-			}
-			break;
-
-		case EOpAnd:
-			tempConstArray = new constUnion[objectSize];
-			{// support MSVC++6.0
-				for (int i = 0; i < objectSize; i++)
-					tempConstArray[i] = unionArray[i] & rightUnionArray[i];
-			}
-			break;
-		case EOpInclusiveOr:
-			tempConstArray = new constUnion[objectSize];
-			{// support MSVC++6.0
-				for (int i = 0; i < objectSize; i++)
-					tempConstArray[i] = unionArray[i] | rightUnionArray[i];
-			}
-			break;
-		case EOpExclusiveOr:
-			tempConstArray = new constUnion[objectSize];
-			{// support MSVC++6.0
-				for (int i = 0; i < objectSize; i++)
-					tempConstArray[i] = unionArray[i] ^ rightUnionArray[i];
 			}
 			break;
 

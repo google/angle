@@ -406,12 +406,6 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
       case EOpMatrixTimesScalarAssign: UNIMPLEMENTED(); /* FIXME */ out << "matrix scale second child into first child"; break;
       case EOpMatrixTimesMatrixAssign: UNIMPLEMENTED(); /* FIXME */ out << "matrix mult second child into first child"; break;
       case EOpDivAssign:               outputTriplet(visit, NULL, " /= ", NULL);  break;
-      case EOpModAssign:               UNIMPLEMENTED(); /* FIXME */ out << "mod second child into first child";          break;
-      case EOpAndAssign:               UNIMPLEMENTED(); /* FIXME */ out << "and second child into first child";          break;
-      case EOpInclusiveOrAssign:       UNIMPLEMENTED(); /* FIXME */ out << "or second child into first child";           break;
-      case EOpExclusiveOrAssign:       UNIMPLEMENTED(); /* FIXME */ out << "exclusive or second child into first child"; break;
-      case EOpLeftShiftAssign:         UNIMPLEMENTED(); /* FIXME */ out << "left shift second child into first child";   break;
-      case EOpRightShiftAssign:        UNIMPLEMENTED(); /* FIXME */ out << "right shift second child into first child";  break;
       case EOpIndexDirect:             outputTriplet(visit, NULL, "[", "]");      break;
       case EOpIndexIndirect:           outputTriplet(visit, NULL, "[", "]");      break;
       case EOpIndexDirectStruct:       outputTriplet(visit, NULL, ".", NULL);     break;
@@ -455,12 +449,6 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
       case EOpSub:               outputTriplet(visit, "(", " - ", ")"); break;
       case EOpMul:               outputTriplet(visit, "(", " * ", ")"); break;
       case EOpDiv:               outputTriplet(visit, "(", " / ", ")"); break;
-      case EOpMod:               UNIMPLEMENTED(); /* FIXME */ out << "mod";                     break;
-      case EOpRightShift:        UNIMPLEMENTED(); /* FIXME */ out << "right-shift";  break;
-      case EOpLeftShift:         UNIMPLEMENTED(); /* FIXME */ out << "left-shift";   break;
-      case EOpAnd:               UNIMPLEMENTED(); /* FIXME */ out << "bitwise and";  break;
-      case EOpInclusiveOr:       UNIMPLEMENTED(); /* FIXME */ out << "inclusive-or"; break;
-      case EOpExclusiveOr:       UNIMPLEMENTED(); /* FIXME */ out << "exclusive-or"; break;
       case EOpEqual:             outputTriplet(visit, "(", " == ", ")");  break;
       case EOpNotEqual:          outputTriplet(visit, "(", " != ", ")");  break;
       case EOpLessThan:          outputTriplet(visit, "(", " < ", ")");   break;
@@ -490,7 +478,6 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
       case EOpNegative:         outputTriplet(visit, "(-", NULL, ")");  break;
       case EOpVectorLogicalNot: outputTriplet(visit, "(!", NULL, ")");  break;
       case EOpLogicalNot:       outputTriplet(visit, "(!", NULL, ")");  break;
-      case EOpBitwiseNot:       outputTriplet(visit, "(~", NULL, ")");  break;
       case EOpPostIncrement:    outputTriplet(visit, "(", NULL, "++)"); break;
       case EOpPostDecrement:    outputTriplet(visit, "(", NULL, "--)"); break;
       case EOpPreIncrement:     outputTriplet(visit, "(++", NULL, ")"); break;
@@ -881,15 +868,6 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpReflect:       outputTriplet(visit, "reflect(", ", ", ")");       break;
       case EOpRefract:       outputTriplet(visit, "refract(", ", ", ")");       break;
       case EOpMul:           outputTriplet(visit, "(", " * ", ")");             break;
-      case EOpItof:          UNIMPLEMENTED(); /* FIXME */ out << "itof";        break;
-      case EOpFtoi:          UNIMPLEMENTED(); /* FIXME */ out << "ftoi";        break;
-      case EOpSkipPixels:    UNIMPLEMENTED(); /* FIXME */ out << "skipPixels";  break;
-      case EOpReadInput:     UNIMPLEMENTED(); /* FIXME */ out << "readInput";   break;
-      case EOpWritePixel:    UNIMPLEMENTED(); /* FIXME */ out << "writePixel";  break;
-      case EOpBitmapLsb:     UNIMPLEMENTED(); /* FIXME */ out << "bitmapLSB";   break;
-      case EOpBitmapMsb:     UNIMPLEMENTED(); /* FIXME */ out << "bitmapMSB";   break;
-      case EOpWriteOutput:   UNIMPLEMENTED(); /* FIXME */ out << "writeOutput"; break;
-      case EOpReadPixel:     UNIMPLEMENTED(); /* FIXME */ out << "readPixel";   break;
       default: UNREACHABLE();
     }
 
