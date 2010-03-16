@@ -792,25 +792,25 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         renderTarget->GetDesc(&description);
         Program *programObject = getCurrentProgram();
 
-        GLuint halfPixelSize = programObject->getUniformLocation("gl_HalfPixelSize");
+        GLint halfPixelSize = programObject->getUniformLocation("gl_HalfPixelSize");
         GLfloat xy[2] = {1.0f / description.Width, 1.0f / description.Height};
         programObject->setUniform2fv(halfPixelSize, 1, (GLfloat*)&xy);
 
-        GLuint window = programObject->getUniformLocation("gl_Window");
+        GLint window = programObject->getUniformLocation("gl_Window");
         GLfloat whxy[4] = {viewportWidth / 2.0f, viewportHeight / 2.0f, (float)viewportX + viewportWidth / 2.0f, (float)viewportY + viewportHeight / 2.0f};
         programObject->setUniform4fv(window, 1, (GLfloat*)&whxy);
 
-        GLuint depth = programObject->getUniformLocation("gl_Depth");
+        GLint depth = programObject->getUniformLocation("gl_Depth");
         GLfloat dz[2] = {(zFar - zNear) / 2.0f, (zNear + zFar) / 2.0f};
         programObject->setUniform2fv(depth, 1, (GLfloat*)&dz);
 
-        GLuint near = programObject->getUniformLocation("gl_DepthRange.near");
+        GLint near = programObject->getUniformLocation("gl_DepthRange.near");
         programObject->setUniform1fv(near, 1, &zNear);
 
-        GLuint far = programObject->getUniformLocation("gl_DepthRange.far");
+        GLint far = programObject->getUniformLocation("gl_DepthRange.far");
         programObject->setUniform1fv(far, 1, &zFar);
 
-        GLuint diff = programObject->getUniformLocation("gl_DepthRange.diff");
+        GLint diff = programObject->getUniformLocation("gl_DepthRange.diff");
         GLfloat zDiff = zFar - zNear;
         programObject->setUniform1fv(diff, 1, &zDiff);
     }
@@ -822,6 +822,11 @@ bool Context::applyRenderTarget(bool ignoreViewport)
 void Context::applyState()
 {
     IDirect3DDevice9 *device = getDevice();
+    Program *programObject = getCurrentProgram();
+
+    GLint frontCCW = programObject->getUniformLocation("__frontCCW");
+    GLint ccw = (frontFace == GL_CCW);
+    programObject->setUniform1iv(frontCCW, 1, &ccw);
 
     if (cullFace)
     {

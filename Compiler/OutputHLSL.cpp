@@ -58,13 +58,15 @@ void OutputHLSL::header()
 
         out << "uniform float4 gl_Window;\n"
                "uniform float2 gl_Depth;\n"
+               "uniform bool __frontCCW;\n"
                "\n";
         out <<  uniforms;
         out << "\n"
                "struct PS_INPUT\n"   // FIXME: Prevent name clashes
                "{\n";
         out <<      varyingInput;
-        out << "    float4 gl_FragCoord : TEXCOORD" << HLSL_FRAG_COORD_SEMANTIC << ";\n"
+        out << "    float4 gl_FragCoord : TEXCOORD" << HLSL_FRAG_COORD_SEMANTIC << ";\n";
+        out << "    float __vFace : VFACE;\n"
                "};\n"
                "\n";
         out <<    varyingGlobals;
@@ -76,6 +78,7 @@ void OutputHLSL::header()
                "\n"
                "static float4 gl_Color[1] = {float4(0, 0, 0, 0)};\n"
                "static float4 gl_FragCoord = float4(0, 0, 0, 0);\n"
+               "static bool gl_FrontFacing = false;\n"
                "\n"
                "float4 gl_texture2D(sampler2D s, float2 t)\n"
                "{\n"
@@ -635,7 +638,8 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                                "    gl_FragCoord.x = (input.gl_FragCoord.x * rhw) * gl_Window.x + gl_Window.z;\n"
                                "    gl_FragCoord.y = (input.gl_FragCoord.y * rhw) * gl_Window.y + gl_Window.w;\n"
                                "    gl_FragCoord.z = (input.gl_FragCoord.z * rhw) * gl_Depth.x + gl_Depth.y;\n"
-                               "    gl_FragCoord.w = rhw;\n";
+                               "    gl_FragCoord.w = rhw;\n"
+                               "    gl_FrontFacing = __frontCCW ? (input.__vFace >= 0.0) : (input.__vFace <= 0.0);\n";
 
                         for (TSymbolTableLevel::const_iterator namedSymbol = symbols->begin(); namedSymbol != symbols->end(); namedSymbol++)
                         {
