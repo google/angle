@@ -46,7 +46,7 @@ class FormatConverterFactory
           case 2: return getFormatConverterForSize<2>();
           case 3: return getFormatConverterForSize<3>();
           case 4: return getFormatConverterForSize<4>();
-          default: UNREACHABLE();
+          default: UNREACHABLE(); return getFormatConverterForSize<1>();
         }
     }
 };
@@ -140,7 +140,7 @@ FormatConverter Dx9BackEnd::getFormatConverter(GLenum type, std::size_t size, bo
       case GL_FLOAT:
         return FormatConverterFactory<float, NoWiden, Identity<float> >::getFormatConverter(size);
 
-      default: UNREACHABLE();
+      default: UNREACHABLE(); return FormatConverterFactory<float, NoWiden, Identity<float> >::getFormatConverter(1);
     }
 }
 
@@ -163,7 +163,9 @@ D3DDECLTYPE Dx9BackEnd::mapAttributeType(GLenum type, std::size_t size, bool nor
       case GL_FLOAT:
         return floatTypes[size-1];
 
-      default: UNREACHABLE();
+      default:
+        UNREACHABLE();
+        return D3DDECLTYPE_FLOAT1;
     }
 }
 

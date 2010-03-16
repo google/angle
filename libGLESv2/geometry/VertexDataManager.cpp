@@ -263,7 +263,7 @@ std::size_t VertexDataManager::typeSize(GLenum type) const
       case GL_SHORT: case GL_UNSIGNED_SHORT: return sizeof(GLshort);
       case GL_FIXED: return sizeof(GLfixed);
       case GL_FLOAT: return sizeof(GLfloat);
-      default: UNREACHABLE();
+      default: UNREACHABLE(); return sizeof(GLfloat);
     }
 }
 
