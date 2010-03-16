@@ -559,7 +559,7 @@ bool Program::defineUniform(const D3DXCONSTANT_DESC &constantDescription, std::s
     // Check if already defined
     GLint location = getUniformLocation(name.c_str());
     UniformType type = uniform->type;
-        
+
     if (location >= 0)
     {
         delete uniform;

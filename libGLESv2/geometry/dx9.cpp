@@ -77,7 +77,7 @@ TranslatedIndexBuffer *Dx9BackEnd::createIndexBuffer(std::size_t size)
 }
 
 // Mapping from OpenGL-ES vertex attrib type to D3D decl type:
-// 
+//
 // BYTE                 Translate to SHORT, expand to x2,x4 as needed.
 // BYTE-norm            Translate to FLOAT since it can't be exactly represented as SHORT-norm.
 // UNSIGNED_BYTE        x4 only. x1,x2,x3=>x4

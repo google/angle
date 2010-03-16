@@ -241,7 +241,7 @@ const char *VertexShader::linkHLSL(const char *pixelHLSL)
             {
                 ASSERT(semanticIndex < MAX_VARYING_VECTORS);
                 char *varying = strstr(output, varyingName);
-                
+
                 if (varying)
                 {
                     ASSERT(semanticIndex <= 9);   // Single character
