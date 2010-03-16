@@ -276,6 +276,8 @@ class Context : public State
     void detachFramebuffer(GLuint framebuffer);
     void detachRenderbuffer(GLuint renderbuffer);
 
+    Texture *getIncompleteTexture(SamplerType type);
+
     const egl::Config *const mConfig;
 
     Texture2D *mTexture2DZero;
@@ -305,6 +307,8 @@ class Context : public State
 
     BufferBackEnd *mBufferBackEnd;
     VertexDataManager *mVertexDataManager;
+
+    Texture *mIncompleteTextures[SAMPLER_TYPE_COUNT];
 
     // Recorded errors
     bool mInvalidEnum;

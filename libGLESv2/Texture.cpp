@@ -391,7 +391,7 @@ bool Texture2D::isComplete() const
 
     bool mipmapping;
 
-    switch (mMagFilter)
+    switch (mMinFilter)
     {
       case GL_NEAREST:
       case GL_LINEAR:
@@ -562,7 +562,7 @@ bool TextureCubeMap::isComplete() const
 
     bool mipmapping;
 
-    switch (mMagFilter)
+    switch (mMinFilter)
     {
       case GL_NEAREST:
       case GL_LINEAR:

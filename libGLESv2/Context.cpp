@@ -123,6 +123,11 @@ Context::Context(const egl::Config *config)
         }
     }
 
+    for (int type = 0; type < SAMPLER_TYPE_COUNT; type++)
+    {
+        mIncompleteTextures[type] = NULL;
+    }
+
     currentProgram = 0;
 
     mBufferBackEnd = NULL;
@@ -138,6 +143,11 @@ Context::Context(const egl::Config *config)
 Context::~Context()
 {
     currentProgram = 0;
+
+    for (int type = 0; type < SAMPLER_TYPE_COUNT; type++)
+    {
+        delete mIncompleteTextures[type];
+    }
 
     delete mTexture2DZero;
     delete mTextureCubeMapZero;
@@ -1061,21 +1071,28 @@ void Context::applyTextures()
 
             Texture *texture = getSamplerTexture(textureUnit, textureType);
 
-            GLenum wrapS = texture->getWrapS();
-            GLenum wrapT = texture->getWrapT();
-            GLenum minFilter = texture->getMinFilter();
-            GLenum magFilter = texture->getMagFilter();
+            if (texture->isComplete())
+            {
+                GLenum wrapS = texture->getWrapS();
+                GLenum wrapT = texture->getWrapT();
+                GLenum minFilter = texture->getMinFilter();
+                GLenum magFilter = texture->getMagFilter();
 
-            device->SetSamplerState(sampler, D3DSAMP_ADDRESSU, es2dx::ConvertTextureWrap(wrapS));
-            device->SetSamplerState(sampler, D3DSAMP_ADDRESSV, es2dx::ConvertTextureWrap(wrapT));
+                device->SetSamplerState(sampler, D3DSAMP_ADDRESSU, es2dx::ConvertTextureWrap(wrapS));
+                device->SetSamplerState(sampler, D3DSAMP_ADDRESSV, es2dx::ConvertTextureWrap(wrapT));
 
-            device->SetSamplerState(sampler, D3DSAMP_MAGFILTER, es2dx::ConvertMagFilter(magFilter));
-            D3DTEXTUREFILTERTYPE d3dMinFilter, d3dMipFilter;
-            es2dx::ConvertMinFilter(minFilter, &d3dMinFilter, &d3dMipFilter);
-            device->SetSamplerState(sampler, D3DSAMP_MINFILTER, d3dMinFilter);
-            device->SetSamplerState(sampler, D3DSAMP_MIPFILTER, d3dMipFilter);
+                device->SetSamplerState(sampler, D3DSAMP_MAGFILTER, es2dx::ConvertMagFilter(magFilter));
+                D3DTEXTUREFILTERTYPE d3dMinFilter, d3dMipFilter;
+                es2dx::ConvertMinFilter(minFilter, &d3dMinFilter, &d3dMipFilter);
+                device->SetSamplerState(sampler, D3DSAMP_MINFILTER, d3dMinFilter);
+                device->SetSamplerState(sampler, D3DSAMP_MIPFILTER, d3dMipFilter);
 
-            device->SetTexture(sampler, texture->getTexture());
+                device->SetTexture(sampler, texture->getTexture());
+            }
+            else
+            {
+                device->SetTexture(sampler, getIncompleteTexture(textureType)->getTexture());
+            }
         }
         else
         {
@@ -1704,6 +1721,50 @@ void Context::detachRenderbuffer(GLuint renderbuffer)
     {
         framebuffer->detachRenderbuffer(renderbuffer);
     }
+}
+
+Texture *Context::getIncompleteTexture(SamplerType type)
+{
+    Texture *t = mIncompleteTextures[type];
+
+    if (t == NULL)
+    {
+        static const GLubyte color[] = { 0, 0, 0, 255 };
+
+        switch (type)
+        {
+          default:
+            UNREACHABLE();
+            // default falls through to SAMPLER_2D
+
+          case SAMPLER_2D:
+            {
+                Texture2D *incomplete2d = new Texture2D;
+                incomplete2d->setImage(0, GL_RGBA, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, color);
+                t = incomplete2d;
+            }
+            break;
+
+          case SAMPLER_CUBE:
+            {
+              TextureCubeMap *incompleteCube = new TextureCubeMap;
+
+              incompleteCube->setImagePosX(0, GL_RGBA, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, color);
+              incompleteCube->setImageNegX(0, GL_RGBA, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, color);
+              incompleteCube->setImagePosY(0, GL_RGBA, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, color);
+              incompleteCube->setImageNegY(0, GL_RGBA, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, color);
+              incompleteCube->setImagePosZ(0, GL_RGBA, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, color);
+              incompleteCube->setImageNegZ(0, GL_RGBA, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, color);
+
+              t = incompleteCube;
+            }
+            break;
+        }
+
+        mIncompleteTextures[type] = t;
+    }
+
+    return t;
 }
 }
 
