@@ -796,6 +796,14 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         GLfloat xy[2] = {1.0f / description.Width, 1.0f / description.Height};
         programObject->setUniform2fv(halfPixelSize, 1, (GLfloat*)&xy);
 
+        GLuint window = programObject->getUniformLocation("gl_Window");
+        GLfloat whxy[4] = {viewportWidth / 2.0f, viewportHeight / 2.0f, (float)viewportX + viewportWidth / 2.0f, (float)viewportY + viewportHeight / 2.0f};
+        programObject->setUniform4fv(window, 1, (GLfloat*)&whxy);
+
+        GLuint depth = programObject->getUniformLocation("gl_Depth");
+        GLfloat dz[2] = {(zFar - zNear) / 2.0f, (zNear + zFar) / 2.0f};
+        programObject->setUniform2fv(depth, 1, (GLfloat*)&dz);
+
         GLuint near = programObject->getUniformLocation("gl_DepthRange.near");
         programObject->setUniform1fv(near, 1, &zNear);
 

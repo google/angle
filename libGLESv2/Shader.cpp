@@ -12,6 +12,7 @@
 
 #include "main.h"
 #include "Shaderlang.h"
+#include "OutputHLSL.h"
 #include "debug.h"
 
 namespace gl
@@ -236,7 +237,7 @@ const char *VertexShader::linkHLSL(const char *pixelHLSL)
             unsigned int semanticIndex;
             int matches = sscanf(input, "%s : TEXCOORD%d;", varyingName, &semanticIndex);
 
-            if (matches == 2)
+            if (matches == 2 && semanticIndex != sh::HLSL_FRAG_COORD_SEMANTIC)
             {
                 ASSERT(semanticIndex < MAX_VARYING_VECTORS);
                 char *varying = strstr(output, varyingName);

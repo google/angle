@@ -56,12 +56,16 @@ void OutputHLSL::header()
             }
         }
 
+        out << "uniform float4 gl_Window;\n"
+               "uniform float2 gl_Depth;\n"
+               "\n";
         out <<  uniforms;
         out << "\n"
                "struct PS_INPUT\n"   // FIXME: Prevent name clashes
                "{\n";
-        out <<        varyingInput;
-        out << "};\n"
+        out <<      varyingInput;
+        out << "    float4 gl_FragCoord : TEXCOORD" << HLSL_FRAG_COORD_SEMANTIC << ";\n"
+               "};\n"
                "\n";
         out <<    varyingGlobals;
         out << "\n"
@@ -71,6 +75,7 @@ void OutputHLSL::header()
                "};\n"
                "\n"
                "static float4 gl_Color[1] = {float4(0, 0, 0, 0)};\n"
+               "static float4 gl_FragCoord = float4(0, 0, 0, 0);\n"
                "\n"
                "float4 gl_texture2D(sampler2D s, float2 t)\n"
                "{\n"
@@ -141,13 +146,13 @@ void OutputHLSL::header()
             }
         }
 
-        out << "uniform float2 gl_HalfPixelSize;\n";
-        out << "\n";
+        out << "uniform float2 gl_HalfPixelSize;\n"
+               "\n";
         out <<  uniforms;
         out << "\n";
         out <<  globals;
-        out << "\n";
-        out << "struct VS_INPUT\n"   // FIXME: Prevent name clashes
+        out << "\n"
+               "struct VS_INPUT\n"   // FIXME: Prevent name clashes
                "{\n";
         out <<        attributeInput;
         out << "};\n"
@@ -157,8 +162,9 @@ void OutputHLSL::header()
                "struct VS_OUTPUT\n"   // FIXME: Prevent name clashes
                "{\n"
                "    float4 gl_Position : POSITION;\n"
-               "    float gl_PointSize : PSIZE;\n";
-        out <<        varyingOutput;
+               "    float gl_PointSize : PSIZE;\n"
+               "    float4 gl_FragCoord : TEXCOORD" << HLSL_FRAG_COORD_SEMANTIC << ";\n";
+        out <<      varyingOutput;
         out << "};\n"
                "\n"
                "static float4 gl_Position = float4(0, 0, 0, 0);\n"
@@ -624,7 +630,12 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                     if (language == EShLangFragment)
                     {
                         out << "PS_OUTPUT main(PS_INPUT input)\n"   // FIXME: Prevent name clashes
-                               "{\n";
+                               "{\n"
+                               "    float rhw = 1.0 / input.gl_FragCoord.w;\n"
+                               "    gl_FragCoord.x = (input.gl_FragCoord.x * rhw) * gl_Window.x + gl_Window.z;\n"
+                               "    gl_FragCoord.y = (input.gl_FragCoord.y * rhw) * gl_Window.y + gl_Window.w;\n"
+                               "    gl_FragCoord.z = (input.gl_FragCoord.z * rhw) * gl_Depth.x + gl_Depth.y;\n"
+                               "    gl_FragCoord.w = rhw;\n";
 
                         for (TSymbolTableLevel::const_iterator namedSymbol = symbols->begin(); namedSymbol != symbols->end(); namedSymbol++)
                         {
@@ -728,7 +739,8 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                                "    output.gl_Position.y = -(gl_Position.y - gl_HalfPixelSize.y * gl_Position.w);\n"
                                "    output.gl_Position.z = (gl_Position.z + gl_Position.w) * 0.5;\n"
                                "    output.gl_Position.w = gl_Position.w;\n"
-                               "    output.gl_PointSize = gl_PointSize;\n";
+                               "    output.gl_PointSize = gl_PointSize;\n"
+                               "    output.gl_FragCoord = gl_Position;\n";
 
                         TSymbolTableLevel *symbols = context.symbolTable.getGlobalLevel();
 
