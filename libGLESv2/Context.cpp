@@ -115,9 +115,12 @@ Context::Context(const egl::Config *config)
     bindFramebuffer(0);
     bindRenderbuffer(0);
 
-    for (int sampler = 0; sampler < MAX_TEXTURE_IMAGE_UNITS; sampler++)
+    for (int type = 0; type < SAMPLER_TYPE_COUNT; type++)
     {
-        samplerTexture[sampler] = 0;
+        for (int sampler = 0; sampler < MAX_TEXTURE_IMAGE_UNITS; sampler++)
+        {
+            samplerTexture[type][sampler] = 0;
+        }
     }
 
     currentProgram = 0;
@@ -458,7 +461,7 @@ void Context::bindTexture2D(GLuint texture)
 
     texture2D = texture;
 
-    samplerTexture[activeSampler] = texture;
+    samplerTexture[SAMPLER_2D][activeSampler] = texture;
 }
 
 void Context::bindTextureCubeMap(GLuint texture)
@@ -477,7 +480,7 @@ void Context::bindTextureCubeMap(GLuint texture)
 
     textureCubeMap = texture;
 
-    samplerTexture[activeSampler] = texture;
+    samplerTexture[SAMPLER_CUBE][activeSampler] = texture;
 }
 
 void Context::bindFramebuffer(GLuint framebuffer)
@@ -718,9 +721,9 @@ TextureCubeMap *Context::getTextureCubeMap()
     return (TextureCubeMap*)getTexture(textureCubeMap);
 }
 
-Texture *Context::getSamplerTexture(unsigned int sampler)
+Texture *Context::getSamplerTexture(unsigned int sampler, SamplerType type)
 {
-    return getTexture(samplerTexture[sampler]);
+    return getTexture(samplerTexture[type][sampler]);
 }
 
 Framebuffer *Context::getFramebuffer()
@@ -1051,11 +1054,13 @@ void Context::applyTextures()
 
     for (int sampler = 0; sampler < MAX_TEXTURE_IMAGE_UNITS; sampler++)
     {
-        unsigned int textureUnit = programObject->getSamplerMapping(sampler);
-        Texture *texture = getSamplerTexture(textureUnit);
-
-        if (texture && texture->isComplete())
+        int textureUnit = programObject->getSamplerMapping(sampler);
+        if (textureUnit != -1)
         {
+            SamplerType textureType = programObject->getSamplerType(sampler);
+
+            Texture *texture = getSamplerTexture(textureUnit, textureType);
+
             GLenum wrapS = texture->getWrapS();
             GLenum wrapT = texture->getWrapT();
             GLenum minFilter = texture->getMinFilter();
@@ -1071,6 +1076,10 @@ void Context::applyTextures()
             device->SetSamplerState(sampler, D3DSAMP_MIPFILTER, d3dMipFilter);
 
             device->SetTexture(sampler, texture->getTexture());
+        }
+        else
+        {
+            device->SetTexture(sampler, NULL);
         }
     }
 }
@@ -1637,11 +1646,14 @@ void Context::detachTexture(GLuint texture)
     // If a texture object is deleted, it is as if all texture units which are bound to that texture object are
     // rebound to texture object zero
 
-    for (int sampler = 0; sampler < MAX_TEXTURE_IMAGE_UNITS; sampler++)
+    for (int type = 0; type < SAMPLER_TYPE_COUNT; type++)
     {
-        if (samplerTexture[sampler] == texture)
+        for (int sampler = 0; sampler < MAX_TEXTURE_IMAGE_UNITS; sampler++)
         {
-            samplerTexture[sampler] = 0;
+            if (samplerTexture[type][sampler] == texture)
+            {
+                samplerTexture[type][sampler] = 0;
+            }
         }
     }
 

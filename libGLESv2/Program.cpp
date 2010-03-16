@@ -164,12 +164,22 @@ int Program::getInputMapping(int attributeIndex)
 // index referenced in the compiled HLSL shader
 GLint Program::getSamplerMapping(unsigned int samplerIndex)
 {
-    if (samplerIndex < MAX_TEXTURE_IMAGE_UNITS)
+    assert(samplerIndex < sizeof(mSamplers)/sizeof(mSamplers[0]));
+
+    if (mSamplers[samplerIndex].active)
     {
-        return mSamplerMapping[samplerIndex];
+        return mSamplers[samplerIndex].logicalTextureUnit;
     }
 
-    return 0;
+    return -1;
+}
+
+SamplerType Program::getSamplerType(unsigned int samplerIndex)
+{
+    assert(samplerIndex < sizeof(mSamplers)/sizeof(mSamplers[0]));
+    assert(mSamplers[samplerIndex].active);
+
+    return mSamplers[samplerIndex].type;
 }
 
 GLint Program::getUniformLocation(const char *name)
@@ -434,6 +444,11 @@ void Program::link()
                 return;
             }
 
+            for (int i = 0; i < MAX_TEXTURE_IMAGE_UNITS; i++)
+            {
+                mSamplers[i].active = false;
+            }
+
             if (!linkUniforms(mConstantTablePS))
             {
                 return;
@@ -515,6 +530,17 @@ bool Program::linkUniforms(ID3DXConstantTable *constantTable)
 // Returns true if succesful (uniform not already defined)
 bool Program::defineUniform(const D3DXHANDLE &constantHandle, const D3DXCONSTANT_DESC &constantDescription, std::string name)
 {
+    if (constantDescription.RegisterSet == D3DXRS_SAMPLER)
+    {
+        unsigned int samplerIndex = constantDescription.RegisterIndex;
+
+        assert(samplerIndex < sizeof(mSamplers)/sizeof(mSamplers[0]));
+
+        mSamplers[samplerIndex].active = true;
+        mSamplers[samplerIndex].type = (constantDescription.Type == D3DXPT_SAMPLERCUBE) ? SAMPLER_CUBE : SAMPLER_2D;
+        mSamplers[samplerIndex].logicalTextureUnit = 0;
+    }
+
     switch(constantDescription.Class)
     {
       case D3DXPC_STRUCT:
@@ -858,7 +884,8 @@ bool Program::applyUniform1iv(GLint location, GLsizei count, const GLint *v)
                 {
                     if (samplerIndex >= 0 && samplerIndex < MAX_TEXTURE_IMAGE_UNITS)
                     {
-                        mSamplerMapping[samplerIndex] = mappedSampler;
+                        ASSERT(mSamplers[samplerIndex].active);
+                        mSamplers[samplerIndex].logicalTextureUnit = mappedSampler;
                     }
                 }
             }
@@ -935,7 +962,7 @@ void Program::unlink(bool destroy)
 
     for (int index = 0; index < MAX_TEXTURE_IMAGE_UNITS; index++)
     {
-        mSamplerMapping[index] = 0;
+        mSamplers[index].active = false;
     }
 
     while (!mUniforms.empty())

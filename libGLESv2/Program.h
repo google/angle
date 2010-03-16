@@ -65,6 +65,7 @@ class Program
     int getInputMapping(int attributeIndex);
 
     GLint getSamplerMapping(unsigned int samplerIndex);
+    SamplerType getSamplerType(unsigned int samplerIndex);
 
     GLint getUniformLocation(const char *name);
     bool setUniform1fv(GLint location, GLsizei count, const GLfloat *v);
@@ -115,7 +116,14 @@ class Program
     char *mAttributeName[MAX_VERTEX_ATTRIBS];
     int mInputMapping[MAX_VERTEX_ATTRIBS];
 
-    GLint mSamplerMapping[MAX_TEXTURE_IMAGE_UNITS];
+    struct Sampler
+    {
+        bool active;
+        GLint logicalTextureUnit;
+        SamplerType type;
+    };
+
+    Sampler mSamplers[MAX_TEXTURE_IMAGE_UNITS];
 
     typedef std::vector<Uniform*> UniformArray;
     UniformArray mUniforms;

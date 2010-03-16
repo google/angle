@@ -64,6 +64,14 @@ enum
 // Because indices are accessed internally, we convert them to a common format.
 typedef unsigned short Index;
 
+enum SamplerType
+{
+    SAMPLER_2D,
+    SAMPLER_CUBE,
+
+    SAMPLER_TYPE_COUNT
+};
+
 struct Color
 {
     float red;
@@ -170,7 +178,7 @@ struct State
     GLuint currentProgram;
 
     AttributeState vertexAttribute[MAX_VERTEX_ATTRIBS];
-    GLuint samplerTexture[MAX_TEXTURE_IMAGE_UNITS];
+    GLuint samplerTexture[SAMPLER_TYPE_COUNT][MAX_TEXTURE_IMAGE_UNITS];
 
     unsigned int startIndex;
 };
@@ -231,7 +239,7 @@ class Context : public State
     Program *getCurrentProgram();
     Texture2D *getTexture2D();
     TextureCubeMap *getTextureCubeMap();
-    Texture *getSamplerTexture(unsigned int sampler);
+    Texture *getSamplerTexture(unsigned int sampler, SamplerType type);
     Framebuffer *getFramebuffer();
 
     bool applyRenderTarget(bool ignoreViewport);
