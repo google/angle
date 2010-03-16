@@ -202,13 +202,12 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 
     // Wrap the existing Direct3D 9 resources into GL objects and assign them to the '0' names
     IDirect3DSurface9 *defaultRenderTarget = surface->getRenderTarget();
-    IDirect3DSurface9 *defaultDepthStencil = NULL;
-    device->GetDepthStencilSurface(&defaultDepthStencil);
+    IDirect3DSurface9 *depthStencil = surface->getDepthStencil();
 
     Framebuffer *framebufferZero = new Framebuffer();
     Colorbuffer *colorbufferZero = new Colorbuffer(defaultRenderTarget);
-    Depthbuffer *depthbufferZero = new Depthbuffer(defaultDepthStencil);
-    Stencilbuffer *stencilbufferZero = new Stencilbuffer(defaultDepthStencil);
+    Depthbuffer *depthbufferZero = new Depthbuffer(depthStencil);
+    Stencilbuffer *stencilbufferZero = new Stencilbuffer(depthStencil);
 
     setFramebufferZero(framebufferZero);
     setColorbufferZero(colorbufferZero);
@@ -221,9 +220,9 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 
     defaultRenderTarget->Release();
 
-    if (defaultDepthStencil)
+    if (depthStencil)
     {
-        defaultDepthStencil->Release();
+        depthStencil->Release();
     }
 }
 

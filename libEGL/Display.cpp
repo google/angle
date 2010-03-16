@@ -235,6 +235,7 @@ egl::Surface *Display::createWindowSurface(HWND window, EGLConfig config)
     presentParameters.Windowed = TRUE;   // FIXME
 
     IDirect3DSwapChain9 *swapChain = NULL;
+    IDirect3DSurface9 *depthStencilSurface = NULL;
 
     if (!mDevice)
     {
@@ -250,25 +251,68 @@ egl::Surface *Display::createWindowSurface(HWND window, EGLConfig config)
         if (mDevice)
         {
             mDevice->GetSwapChain(0, &swapChain);
+            mDevice->GetDepthStencilSurface(&depthStencilSurface);
         }
     }
     else
     {
-        HRESULT result = mDevice->CreateAdditionalSwapChain(&presentParameters, &swapChain);
-
-        if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+        if (!mSurfaceSet.empty())
         {
-            return error(EGL_BAD_ALLOC, (egl::Surface*)NULL);
-        }
+            // if the device already exists, and there are other surfaces/windows currently in use, we need to create
+            // a separate swap chain for the new draw surface.
+            HRESULT result = mDevice->CreateAdditionalSwapChain(&presentParameters, &swapChain);
 
-        ASSERT(SUCCEEDED(result));
+            if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+            {
+                ERR("Could not create additional swap chains. Out of memory.");
+                return error(EGL_BAD_ALLOC, (egl::Surface*)NULL);
+            }
+
+            ASSERT(SUCCEEDED(result));
+
+            // CreateAdditionalSwapChain does not automatically generate a depthstencil surface, unlike 
+            // CreateDevice, so we must do so explicitly.
+            result = mDevice->CreateDepthStencilSurface(presentParameters.BackBufferWidth, presentParameters.BackBufferHeight,
+                                                        presentParameters.AutoDepthStencilFormat, presentParameters.MultiSampleType,
+                                                        presentParameters.MultiSampleQuality, FALSE, &depthStencilSurface, NULL);
+
+            if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+            {
+                swapChain->Release();
+                ERR("Could not create depthstencil surface for new swap chain. Out of memory.");
+                return error(EGL_BAD_ALLOC, (egl::Surface*)NULL);
+            }
+
+            ASSERT(SUCCEEDED(result));
+        }
+        else
+        {
+            // if the device already exists, but there are no surfaces in use, then all the surfaces/windows
+            // have been destroyed, and we should repurpose the originally created depthstencil surface for
+            // use with the new surface we are creating.
+            HRESULT result = mDevice->Reset(&presentParameters);
+
+            if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+            {
+                ERR("Could not resent presentation parameters for device. Out of memory.");
+                return error(EGL_BAD_ALLOC, (egl::Surface*)NULL);
+            }
+
+            ASSERT(SUCCEEDED(result));
+
+            if (mDevice)
+            {
+                mDevice->GetSwapChain(0, &swapChain);
+                mDevice->GetDepthStencilSurface(&depthStencilSurface);
+            }
+        }
     }
 
     Surface *surface = NULL;
 
     if (swapChain)
     {
-        surface = new Surface(mDevice, swapChain, configuration->mConfigID);
+        surface = new Surface(mDevice, swapChain, depthStencilSurface, configuration->mConfigID);
         mSurfaceSet.insert(surface);
 
         swapChain->Release();

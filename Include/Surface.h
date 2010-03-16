@@ -22,7 +22,7 @@ namespace egl
 class Surface
 {
   public:
-    Surface(IDirect3DDevice9 *device, IDirect3DSwapChain9 *swapChain, EGLint configID);
+    Surface(IDirect3DDevice9 *device, IDirect3DSwapChain9 *swapChain, IDirect3DSurface9* depthStencil, EGLint configID);
 
     ~Surface();
 
@@ -33,12 +33,14 @@ class Surface
     EGLint getHeight() const;
 
     virtual IDirect3DSurface9 *getRenderTarget();
+    virtual IDirect3DSurface9 *getDepthStencil();
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Surface);
     IDirect3DSwapChain9 *const mSwapChain;
     IDirect3DSurface9 *mBackBuffer;
     IDirect3DSurface9 *mRenderTarget;
+    IDirect3DSurface9 *mDepthStencil;
 
     const EGLint mConfigID;            // ID of EGLConfig surface was created with
     EGLint mHeight;                    // Height of surface

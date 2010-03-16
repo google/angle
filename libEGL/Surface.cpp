@@ -15,7 +15,8 @@
 
 namespace egl
 {
-Surface::Surface(IDirect3DDevice9 *device, IDirect3DSwapChain9 *swapChain, EGLint configID) : mSwapChain(swapChain), mConfigID(configID)
+Surface::Surface(IDirect3DDevice9 *device, IDirect3DSwapChain9 *swapChain, IDirect3DSurface9 *depthStencil, EGLint configID) 
+    : mSwapChain(swapChain), mConfigID(configID), mDepthStencil(depthStencil)
 {
     mBackBuffer = NULL;
     mRenderTarget = NULL;
@@ -63,6 +64,11 @@ Surface::~Surface()
     if (mRenderTarget)
     {
         mRenderTarget->Release();
+    }
+
+    if (mDepthStencil)
+    {
+        mDepthStencil->Release();
     }
 }
 
@@ -170,5 +176,15 @@ IDirect3DSurface9 *Surface::getRenderTarget()
     }
 
     return mRenderTarget;
+}
+
+IDirect3DSurface9 *Surface::getDepthStencil()
+{
+    if (mDepthStencil)
+    {
+        mDepthStencil->AddRef();
+    }
+
+    return mDepthStencil;
 }
 }
