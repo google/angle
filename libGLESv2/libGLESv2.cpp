@@ -390,10 +390,16 @@ void __stdcall glBlendFuncSeparate(GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha
             return error(GL_INVALID_ENUM);
         }
 
-        if ((srcRGB == GL_CONSTANT_COLOR && dstRGB == GL_CONSTANT_ALPHA) ||
-            (srcRGB == GL_CONSTANT_ALPHA && dstRGB == GL_CONSTANT_COLOR))
+        bool constantColorUsed = (srcRGB == GL_CONSTANT_COLOR || srcRGB == GL_ONE_MINUS_CONSTANT_COLOR ||
+                                  dstRGB == GL_CONSTANT_COLOR || dstRGB == GL_ONE_MINUS_CONSTANT_COLOR);
+
+        bool constantAlphaUsed = (srcRGB == GL_CONSTANT_ALPHA || srcRGB == GL_ONE_MINUS_CONSTANT_ALPHA ||
+                                  dstRGB == GL_CONSTANT_ALPHA || dstRGB == GL_ONE_MINUS_CONSTANT_ALPHA);
+
+        if (constantColorUsed && constantAlphaUsed)
         {
-            UNIMPLEMENTED();
+            ERR("Simultaneous use of GL_CONSTANT_ALPHA/GL_ONE_MINUS_CONSTANT_ALPHA and GL_CONSTANT_COLOR/GL_ONE_MINUS_CONSTANT_COLOR invalid under WebGL");
+            return error(GL_INVALID_OPERATION);
         }
 
         gl::Context *context = gl::getContext();

@@ -37,8 +37,8 @@ D3DCMPFUNC ConvertComparison(GLenum comparison)
 D3DCOLOR ConvertColor(gl::Color color)
 {
     return D3DCOLOR_RGBA(gl::unorm<8>(color.red),
-                         gl::unorm<8>(color.blue),
                          gl::unorm<8>(color.green),
+                         gl::unorm<8>(color.blue),
                          gl::unorm<8>(color.alpha));
 }
 
