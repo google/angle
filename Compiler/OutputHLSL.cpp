@@ -53,6 +53,11 @@ void OutputHLSL::header()
                     varyingInput += "    " + typeString(type) + " " + name + arrayString(type) + semantic + ";\n";
                     varyingGlobals += "static " + typeString(type) + " " + name + arrayString(type) + " = " + initializer(type) + ";\n";
                 }
+                else if (qualifier == EvqConst)
+                {
+                    // Constants are repeated as literals where used
+                }
+                else UNREACHABLE();
             }
         }
 
@@ -144,6 +149,10 @@ void OutputHLSL::header()
                 else if (qualifier == EvqGlobal)
                 {
                     globals += typeString(type) + " " + name + arrayString(type) + ";\n";
+                }
+                else if (qualifier == EvqConst)
+                {
+                    // Constants are repeated as literals where used
                 }
                 else UNREACHABLE();
             }
@@ -365,6 +374,7 @@ void OutputHLSL::header()
            "        return -N;\n"
            "    }\n"
            "}\n"
+           "\n"
            "float4 faceforward(float4 N, float4 I, float4 Nref)\n"   // FIXME: Prevent name clashes
            "{\n"
            "    if(dot(Nref, I) < 0)\n"
@@ -375,6 +385,27 @@ void OutputHLSL::header()
            "    {\n"
            "        return -N;\n"
            "    }\n"
+           "}\n"
+           "\n"
+           "bool __equal(float2x2 m, float2x2 n)\n"
+           "{\n"
+           "    return m[0][0] == n[0][0] && m[0][1] == n[0][1] &&\n"
+           "           m[1][0] == n[1][0] && m[1][1] == n[1][1];\n"
+           "}\n"
+           "\n"
+           "bool __equal(float3x3 m, float3x3 n)\n"
+           "{\n"
+           "    return m[0][0] == n[0][0] && m[0][1] == n[0][1] && m[0][2] == n[0][2] &&\n"
+           "           m[1][0] == n[1][0] && m[1][1] == n[1][1] && m[1][2] == n[1][2] &&\n"
+           "           m[2][0] == n[2][0] && m[2][1] == n[2][1] && m[2][2] == n[2][2];\n"
+           "}\n"
+           "\n"
+           "bool __equal(float4x4 m, float4x4 n)\n"
+           "{\n"
+           "    return m[0][0] == n[0][0] && m[0][1] == n[0][1] && m[0][2] == n[0][2] && m[0][3] == n[0][3] &&\n"
+           "           m[1][0] == n[1][0] && m[1][1] == n[1][1] && m[1][2] == n[1][2] && m[1][3] == n[1][3] &&\n"
+           "           m[2][0] == n[2][0] && m[2][1] == n[2][1] && m[2][2] == n[2][2] && m[2][3] == n[2][3] &&\n"
+           "           m[3][0] == n[3][0] && m[3][1] == n[3][1] && m[3][2] == n[3][2] && m[3][3] == n[3][3];\n"
            "}\n"
            "\n";
 }
@@ -458,8 +489,26 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
       case EOpSub:               outputTriplet(visit, "(", " - ", ")"); break;
       case EOpMul:               outputTriplet(visit, "(", " * ", ")"); break;
       case EOpDiv:               outputTriplet(visit, "(", " / ", ")"); break;
-      case EOpEqual:             outputTriplet(visit, "(", " == ", ")");  break;
-      case EOpNotEqual:          outputTriplet(visit, "(", " != ", ")");  break;
+      case EOpEqual:
+        if (!node->getLeft()->isMatrix())
+        {
+            outputTriplet(visit, "(", " == ", ")");
+        }
+        else
+        {
+            outputTriplet(visit, "__equal(", ", ", ")");
+        }
+        break;
+      case EOpNotEqual:
+        if (!node->getLeft()->isMatrix())
+        {
+            outputTriplet(visit, "(", " != ", ")");
+        }
+        else
+        {
+            outputTriplet(visit, "!__equal(", ", ", ")");
+        }
+        break;
       case EOpLessThan:          outputTriplet(visit, "(", " < ", ")");   break;
       case EOpGreaterThan:       outputTriplet(visit, "(", " > ", ")");   break;
       case EOpLessThanEqual:     outputTriplet(visit, "(", " <= ", ")");  break;
@@ -850,7 +899,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpConstructIVec4:   UNIMPLEMENTED(); /* FIXME */ out << "Construct ivec4"; break;
       case EOpConstructMat2:    outputTriplet(visit, "float2x2(", ", ", ")"); break;
       case EOpConstructMat3:    outputTriplet(visit, "float3x3(", ", ", ")"); break;
-      case EOpConstructMat4:    UNIMPLEMENTED(); /* FIXME */ out << "Construct mat4";  break;
+      case EOpConstructMat4:    outputTriplet(visit, "float4x4(", ", ", ")"); break;
       case EOpConstructStruct:  UNIMPLEMENTED(); /* FIXME */ out << "Construct structure";  break;
       case EOpLessThan:         outputTriplet(visit, "(", " < ", ")");             break;
       case EOpGreaterThan:      outputTriplet(visit, "(", " > ", ")");             break;

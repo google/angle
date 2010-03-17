@@ -184,7 +184,7 @@ void TConstTraverser::visitConstantUnion(TIntermConstantUnion* node)
                 else 
                     leftUnionArray[i].setFConst(0.0f);
 
-                (element)++;
+                (index)++;
 
                 if (node->getType().getObjectSize() > 1)
                     count++;                
