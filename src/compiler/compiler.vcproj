@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="Compiler"
+	Name="compiler"
 	ProjectGUID="{5B3A6DB8-1E7E-40D7-92B9-DA8AAE619FAD}"
-	RootNamespace="Compiler"
+	RootNamespace="compiler"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
