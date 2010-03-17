@@ -908,9 +908,11 @@ void Context::applyState()
         const D3DRENDERSTATETYPE D3DRS_CCW_STENCILREF = D3DRS_STENCILREF;
         const D3DRENDERSTATETYPE D3DRS_CCW_STENCILMASK = D3DRS_STENCILMASK;
         const D3DRENDERSTATETYPE D3DRS_CCW_STENCILWRITEMASK = D3DRS_STENCILWRITEMASK;
-        ASSERT(stencilRef == stencilBackRef);
-        ASSERT(stencilMask == stencilBackMask);
-        ASSERT(stencilWritemask == stencilBackWritemask);
+        if(stencilWritemask != stencilBackWritemask || stencilRef != stencilBackRef || stencilMask != stencilBackMask)
+        {
+            ERR("Separate front/back stencil writemasks, reference values, or stencil mask values are invalid under WebGL.");
+            return error(GL_INVALID_OPERATION);
+        }
 
         device->SetRenderState(frontFace == GL_CCW ? D3DRS_STENCILWRITEMASK : D3DRS_CCW_STENCILWRITEMASK, stencilWritemask);
         device->SetRenderState(frontFace == GL_CCW ? D3DRS_STENCILFUNC : D3DRS_CCW_STENCILFUNC, es2dx::ConvertComparison(stencilFunc));
