@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="./; ../Include/"
+				AdditionalIncludeDirectories="./; ../include/"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -104,7 +104,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="./; ../Include/"
+				AdditionalIncludeDirectories="./; ../include/"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_DEPRECATE"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
@@ -162,7 +162,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Executing flex on $(InputPath)"
-						CommandLine="if EXIST $(InputDir)Gen_glslang.cpp del $(InputDir)Gen_glslang.cpp&#x0D;&#x0A;$(InputDir)Tools\flex.exe $(InputPath)&#x0D;&#x0A;"
+						CommandLine="if EXIST $(InputDir)Gen_glslang.cpp del $(InputDir)Gen_glslang.cpp&#x0D;&#x0A;$(InputDir)tools\flex.exe $(InputPath)&#x0D;&#x0A;"
 						AdditionalDependencies="glslang_tab.h"
 						Outputs="$(InputDir)Gen_glslang.cpp"
 					/>
@@ -188,7 +188,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Executing Bison on $(InputPath)"
-						CommandLine="SET BISON_SIMPLE=$(InputDir)Tools\bison.simple&#x0D;&#x0A;SET BISON_HAIRY=$(InputDir)Tools\bison.simple&#x0D;&#x0A;if EXIST $(InputDir)Gen_$(InputName)_tab.cpp del $(InputDir)Gen_$(InputName)_tab.cpp&#x0D;&#x0A;$(InputDir)Tools\bison.exe -d -t -v $(InputName).y&#x0D;&#x0A;rename $(InputDir)$(InputName)_tab.c Gen_$(InputName)_tab.cpp&#x0D;&#x0A;"
+						CommandLine="SET BISON_SIMPLE=$(InputDir)tools\bison.simple&#x0D;&#x0A;SET BISON_HAIRY=$(InputDir)tools\bison.simple&#x0D;&#x0A;if EXIST $(InputDir)Gen_$(InputName)_tab.cpp del $(InputDir)Gen_$(InputName)_tab.cpp&#x0D;&#x0A;$(InputDir)tools\bison.exe -d -t -v $(InputName).y&#x0D;&#x0A;rename $(InputDir)$(InputName)_tab.c Gen_$(InputName)_tab.cpp&#x0D;&#x0A;"
 						Outputs="$(InputDir)Gen_$(InputName)_tab.cpp"
 					/>
 				</FileConfiguration>
@@ -268,39 +268,39 @@
 				>
 			</File>
 			<Filter
-				Name="Preprocessor"
+				Name="preprocessor"
 				>
 				<File
-					RelativePath=".\Preprocessor\atom.c"
+					RelativePath=".\preprocessor\atom.c"
 					>
 				</File>
 				<File
-					RelativePath=".\Preprocessor\cpp.c"
+					RelativePath=".\preprocessor\cpp.c"
 					>
 				</File>
 				<File
-					RelativePath=".\Preprocessor\cppstruct.c"
+					RelativePath=".\preprocessor\cppstruct.c"
 					>
 				</File>
 				<File
-					RelativePath=".\Preprocessor\memory.c"
+					RelativePath=".\preprocessor\memory.c"
 					>
 				</File>
 				<File
-					RelativePath=".\Preprocessor\scanner.c"
+					RelativePath=".\preprocessor\scanner.c"
 					>
 				</File>
 				<File
-					RelativePath=".\Preprocessor\symbols.c"
+					RelativePath=".\preprocessor\symbols.c"
 					>
 				</File>
 				<File
-					RelativePath=".\Preprocessor\tokens.c"
+					RelativePath=".\preprocessor\tokens.c"
 					>
 				</File>
 			</Filter>
 			<Filter
-				Name="Generated"
+				Name="generated"
 				>
 				<File
 					RelativePath=".\Gen_glslang.cpp"
@@ -410,51 +410,51 @@
 				>
 			</File>
 			<Filter
-				Name="Preprocessor"
+				Name="preprocessor"
 				>
 				<File
-					RelativePath=".\Preprocessor\atom.h"
+					RelativePath=".\preprocessor\atom.h"
 					>
 				</File>
 				<File
-					RelativePath=".\Preprocessor\compile.h"
+					RelativePath=".\preprocessor\compile.h"
 					>
 				</File>
 				<File
-					RelativePath=".\Preprocessor\cpp.h"
+					RelativePath=".\preprocessor\cpp.h"
 					>
 				</File>
 				<File
-					RelativePath=".\Preprocessor\memory.h"
+					RelativePath=".\preprocessor\memory.h"
 					>
 				</File>
 				<File
-					RelativePath=".\Preprocessor\parser.h"
+					RelativePath=".\preprocessor\parser.h"
 					>
 				</File>
 				<File
-					RelativePath=".\Preprocessor\preprocess.h"
+					RelativePath=".\preprocessor\preprocess.h"
 					>
 				</File>
 				<File
-					RelativePath=".\Preprocessor\scanner.h"
+					RelativePath=".\preprocessor\scanner.h"
 					>
 				</File>
 				<File
-					RelativePath=".\Preprocessor\slglobals.h"
+					RelativePath=".\preprocessor\slglobals.h"
 					>
 				</File>
 				<File
-					RelativePath=".\Preprocessor\symbols.h"
+					RelativePath=".\preprocessor\symbols.h"
 					>
 				</File>
 				<File
-					RelativePath=".\Preprocessor\tokens.h"
+					RelativePath=".\preprocessor\tokens.h"
 					>
 				</File>
 			</Filter>
 			<Filter
-				Name="Generated"
+				Name="generated"
 				>
 				<File
 					RelativePath=".\glslang_tab.h"
