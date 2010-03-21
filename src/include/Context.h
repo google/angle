@@ -283,6 +283,8 @@ class Context : public State
 
     Texture *getIncompleteTexture(SamplerType type);
 
+    bool cullSkipsDraw(GLenum primitiveType);
+
     const egl::Config *const mConfig;
 
     Texture2D *mTexture2DZero;

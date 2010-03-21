@@ -1458,9 +1458,12 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
     applyShaders();
     applyTextures();
 
-    device->BeginScene();
-    device->DrawPrimitive(primitiveType, first, primitiveCount);
-    device->EndScene();
+    if (!cullSkipsDraw(mode))
+    {
+        device->BeginScene();
+        device->DrawPrimitive(primitiveType, first, primitiveCount);
+        device->EndScene();
+    }
 }
 
 void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void* indices)
@@ -1498,9 +1501,12 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void* 
     applyShaders();
     applyTextures();
 
-    device->BeginScene();
-    device->DrawIndexedPrimitive(primitiveType, 0, 0, count, startIndex, primitiveCount);
-    device->EndScene();
+    if (!cullSkipsDraw(mode))
+    {
+        device->BeginScene();
+        device->DrawIndexedPrimitive(primitiveType, 0, 0, count, startIndex, primitiveCount);
+        device->EndScene();
+    }
 }
 
 void Context::finish()
@@ -1771,6 +1777,20 @@ Texture *Context::getIncompleteTexture(SamplerType type)
 
     return t;
 }
+
+bool Context::cullSkipsDraw(GLenum primitiveType)
+{
+    if (cullFace && cullMode == GL_FRONT_AND_BACK &&
+        (primitiveType == GL_TRIANGLES || primitiveType == GL_TRIANGLE_FAN || primitiveType == GL_TRIANGLE_STRIP))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 }
 
 extern "C"

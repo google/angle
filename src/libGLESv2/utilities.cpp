@@ -131,7 +131,7 @@ D3DCULL ConvertCullMode(GLenum cullFace, GLenum frontFace)
         cull = (frontFace == GL_CCW ? D3DCULL_CCW : D3DCULL_CW);
         break;
       case GL_FRONT_AND_BACK:
-        UNIMPLEMENTED();   // FIXME
+        cull = D3DCULL_NONE; // culling will be handled during draw
         break;
       default: UNREACHABLE();
     }
