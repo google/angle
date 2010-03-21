@@ -482,6 +482,11 @@ void __stdcall glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, 
             return error(GL_INVALID_VALUE);
         }
 
+        if (data == NULL)
+        {
+            return;
+        }
+
         gl::Context *context = gl::getContext();
 
         if (context)

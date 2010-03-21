@@ -42,9 +42,7 @@ class Buffer
   private:
     DISALLOW_COPY_AND_ASSIGN(Buffer);
 
-    typedef unsigned char data_t;
-
-    std::vector<data_t> mContents;
+    std::vector<GLubyte> mContents;
 
     BufferBackEnd *mBackEnd;
     TranslatedVertexBuffer *mIdentityTranslation;

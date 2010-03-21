@@ -34,13 +34,22 @@ GLenum Buffer::bufferData(const void* data, GLsizeiptr size, GLenum usage)
 {
     if (size < 0) return GL_INVALID_VALUE;
 
-    const data_t* newdata = static_cast<const data_t*>(data);
+    const GLubyte* newdata = static_cast<const GLubyte*>(data);
 
     if (size != mContents.size())
     {
         // vector::resize only provides the basic exception guarantee, so use temporaries & swap to get the strong exception guarantee.
         // We don't want to risk having mContents and mIdentityTranslation that have different contents or even different sizes.
-        std::vector<data_t> newContents(newdata, newdata + size);
+        std::vector<GLubyte> newContents;
+
+        if (newdata != NULL)
+        {
+            newContents.assign(newdata, newdata + size);
+        }
+        else
+        {
+            newContents.assign(size, 0);
+        }
 
         TranslatedVertexBuffer *newIdentityTranslation = mBackEnd->createVertexBuffer(size);
 
@@ -51,9 +60,8 @@ GLenum Buffer::bufferData(const void* data, GLsizeiptr size, GLenum usage)
         delete mIdentityTranslation;
         mIdentityTranslation = newIdentityTranslation;
     }
-    else
+    else if (newdata != NULL)
     {
-        const data_t* newdata = static_cast<const data_t*>(data);
         mContents.assign(newdata, newdata + size);
     }
 
@@ -66,7 +74,7 @@ GLenum Buffer::bufferSubData(const void* data, GLsizeiptr size, GLintptr offset)
     if (std::numeric_limits<GLsizeiptr>::max() - offset < size) return GL_INVALID_VALUE;
     if (size + offset > static_cast<GLsizeiptr>(mContents.size())) return GL_INVALID_VALUE;
 
-    const data_t *newdata = static_cast<const data_t*>(data);
+    const GLubyte *newdata = static_cast<const GLubyte*>(data);
     copy(newdata, newdata + size, mContents.begin() + offset);
 
     return copyToIdentityBuffer(offset, size);
@@ -77,7 +85,7 @@ GLenum Buffer::copyToIdentityBuffer(GLintptr offset, GLsizeiptr length)
     ASSERT(offset >= 0 && length >= 0);
 
     // This is a stalling map. Not great for performance.
-    data_t *p = static_cast<data_t*>(mIdentityTranslation->map());
+    GLubyte *p = static_cast<GLubyte*>(mIdentityTranslation->map());
 
     memcpy(p + offset, &mContents[0] + offset, length);
     mIdentityTranslation->unmap();
