@@ -49,7 +49,10 @@ class Texture : public Colorbuffer
     GLenum getWrapT() const;
 
     virtual bool isComplete() const = 0;
+
     IDirect3DBaseTexture9 *getTexture();
+    IDirect3DSurface9 *getRenderTarget(GLenum target);
+    IDirect3DSurface9 *getRenderTarget() { return getRenderTarget(GL_TEXTURE_2D); } // FIXME: to be removed once FBO rendering is completed.
 
   protected:
     // Helper structure representing a single image layer
@@ -82,15 +85,17 @@ class Texture : public Colorbuffer
     // The pointer returned is weak and it is assumed the derived class will keep a strong pointer until the next createTexture() call.
     virtual IDirect3DBaseTexture9 *createTexture() = 0;
     virtual void updateTexture() = 0;
+    virtual IDirect3DBaseTexture9 *convertToRenderTarget() = 0;
+    virtual IDirect3DSurface9 *getSurface(GLenum target) = 0;
 
     virtual bool dirtyImageData() const = 0;
-
-    bool mDirtyMetaData; // FIXME: would be private but getRenderTarget is still implemented through the derived classes and they need it.
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture);
 
     IDirect3DBaseTexture9 *mBaseTexture; // This is a weak pointer. The derived class is assumed to own a strong pointer.
+
+    bool mDirtyMetaData;
 
     void loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type,
                        const void *input, std::size_t outputPitch, void *output) const;
@@ -109,13 +114,14 @@ class Texture2D : public Texture
     void subImage(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels);
 
     bool isComplete() const;
-    IDirect3DSurface9 *getRenderTarget();
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture2D);
 
     virtual IDirect3DBaseTexture9 *createTexture();
     virtual void updateTexture();
+    virtual IDirect3DBaseTexture9 *convertToRenderTarget();
+    virtual IDirect3DSurface9 *getSurface(GLenum target);
 
     virtual bool dirtyImageData() const;
 
@@ -151,6 +157,8 @@ class TextureCubeMap : public Texture
 
     virtual IDirect3DBaseTexture9 *createTexture();
     virtual void updateTexture();
+    virtual IDirect3DBaseTexture9 *convertToRenderTarget();
+    virtual IDirect3DSurface9 *getSurface(GLenum target);
 
     virtual bool dirtyImageData() const;
 
