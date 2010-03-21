@@ -142,6 +142,8 @@ Context::Context(const egl::Config *config)
     mInvalidOperation = false;
     mOutOfMemory = false;
     mInvalidFramebufferOperation = false;
+
+    mHasBeenCurrent = false;
 }
 
 Context::~Context()
@@ -221,6 +223,21 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
     framebufferZero->setColorbuffer(GL_RENDERBUFFER, 0);
     framebufferZero->setDepthbuffer(GL_RENDERBUFFER, 0);
     framebufferZero->setStencilbuffer(GL_RENDERBUFFER, 0);
+
+    if(!mHasBeenCurrent)
+    {
+        viewportX = 0;
+        viewportY = 0;
+        viewportWidth = surface->getWidth();
+        viewportHeight = surface->getHeight();
+
+        scissorX = 0;
+        scissorY = 0;
+        scissorWidth = surface->getWidth();
+        scissorHeight = surface->getHeight();
+
+        mHasBeenCurrent = true;
+    }
 
     defaultRenderTarget->Release();
 

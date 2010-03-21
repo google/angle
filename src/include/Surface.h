@@ -29,8 +29,8 @@ class Surface
     HWND getWindowHandle();
     void swap();
 
-    EGLint getWidth() const;
-    EGLint getHeight() const;
+    virtual EGLint getWidth() const;
+    virtual EGLint getHeight() const;
 
     virtual IDirect3DSurface9 *getRenderTarget();
     virtual IDirect3DSurface9 *getDepthStencil();

@@ -323,6 +323,8 @@ class Context : public State
     bool mInvalidOperation;
     bool mOutOfMemory;
     bool mInvalidFramebufferOperation;
+
+    bool mHasBeenCurrent;
 };
 }
 
