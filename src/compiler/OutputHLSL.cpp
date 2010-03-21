@@ -943,25 +943,38 @@ bool OutputHLSL::visitSelection(Visit visit, TIntermSelection *node)
 {
     TInfoSinkBase &out = context.infoSink.obj;
 
-    out << "if(";
-
-    node->getCondition()->traverse(this);
-
-    out << ")\n"
-           "{\n";
-
-    node->getTrueBlock()->traverse(this);
-
-    out << ";}\n";
-
-    if (node->getFalseBlock())
+    if(node->getType().getBasicType() == EbtVoid)   // if/else statement
     {
-        out << "else\n"
+        out << "if(";
+
+        node->getCondition()->traverse(this);
+
+        out << ")\n"
                "{\n";
 
-        node->getFalseBlock()->traverse(this);
+        node->getTrueBlock()->traverse(this);
 
         out << ";}\n";
+
+        if (node->getFalseBlock())
+        {
+            out << "else\n"
+                   "{\n";
+
+            node->getFalseBlock()->traverse(this);
+
+            out << ";}\n";
+        }
+    }
+    else   // Ternary operator expression
+    {
+        out << "(";
+        node->getCondition()->traverse(this);
+        out << ") ? (";
+        node->getTrueBlock()->traverse(this);
+        out << ") : (";
+        node->getFalseBlock()->traverse(this);
+        out << ")\n";
     }
 
     return false;
