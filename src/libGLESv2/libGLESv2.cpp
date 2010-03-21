@@ -1795,6 +1795,8 @@ void __stdcall glGetIntegerv(GLenum pname, GLint* params)
               case GL_FRAMEBUFFER_BINDING:              *params = context->framebuffer;             break;
               case GL_RENDERBUFFER_BINDING:             *params = context->renderbuffer;            break;
               case GL_CURRENT_PROGRAM:                  *params = context->currentProgram;          break;
+              case GL_PACK_ALIGNMENT:                   *params = context->packAlignment;           break;
+              case GL_UNPACK_ALIGNMENT:                 *params = context->unpackAlignment;         break;
               case GL_RED_BITS:
               case GL_GREEN_BITS:
               case GL_BLUE_BITS:
@@ -2498,16 +2500,33 @@ void __stdcall glPixelStorei(GLenum pname, GLint param)
 
     try
     {
-        switch (pname)
+        gl::Context *context = gl::getContext();
+
+        if (context)
         {
-          case GL_UNPACK_ALIGNMENT:
-        //    UNIMPLEMENTED();   // FIXME
-            break;
-          case GL_PACK_ALIGNMENT:
-        //    UNIMPLEMENTED();   // FIXME
-            break;
-          default:
-            return error(GL_INVALID_ENUM);
+            switch (pname)
+            {
+              case GL_UNPACK_ALIGNMENT:
+                if (param != 1 && param != 2 && param != 4 && param != 8)
+                {
+                    return error(GL_INVALID_VALUE);
+                }
+
+                context->unpackAlignment = param;
+                break;
+
+              case GL_PACK_ALIGNMENT:
+                if (param != 1 && param != 2 && param != 4 && param != 8)
+                {
+                    return error(GL_INVALID_VALUE);
+                }
+
+                context->packAlignment = param;
+                break;
+
+              default:
+                return error(GL_INVALID_ENUM);
+            }
         }
     }
     catch(std::bad_alloc&)
@@ -3057,7 +3076,7 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
                     return error(GL_INVALID_OPERATION);
                 }
 
-                texture->setImage(level, internalformat, width, height, format, type, pixels);
+                texture->setImage(level, internalformat, width, height, format, type, context->unpackAlignment, pixels);
             }
             else
             {
@@ -3071,22 +3090,22 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
                 switch (target)
                 {
                   case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
-                    texture->setImagePosX(level, internalformat, width, height, format, type, pixels);
+                    texture->setImagePosX(level, internalformat, width, height, format, type, context->unpackAlignment, pixels);
                     break;
                   case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
-                    texture->setImageNegX(level, internalformat, width, height, format, type, pixels);
+                    texture->setImageNegX(level, internalformat, width, height, format, type, context->unpackAlignment, pixels);
                     break;
                   case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-                    texture->setImagePosY(level, internalformat, width, height, format, type, pixels);
+                    texture->setImagePosY(level, internalformat, width, height, format, type, context->unpackAlignment, pixels);
                     break;
                   case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-                    texture->setImageNegY(level, internalformat, width, height, format, type, pixels);
+                    texture->setImageNegY(level, internalformat, width, height, format, type, context->unpackAlignment, pixels);
                     break;
                   case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-                    texture->setImagePosZ(level, internalformat, width, height, format, type, pixels);
+                    texture->setImagePosZ(level, internalformat, width, height, format, type, context->unpackAlignment, pixels);
                     break;
                   case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
-                    texture->setImageNegZ(level, internalformat, width, height, format, type, pixels);
+                    texture->setImageNegZ(level, internalformat, width, height, format, type, context->unpackAlignment, pixels);
                     break;
                   default: UNREACHABLE();
                 }
@@ -3220,7 +3239,7 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
                     return error(GL_INVALID_OPERATION);
                 }
 
-                texture->subImage(level, xoffset, yoffset, width, height, format, type, pixels);
+                texture->subImage(level, xoffset, yoffset, width, height, format, type, context->unpackAlignment, pixels);
             }
             else if (es2dx::IsCubemapTextureTarget(target))
             {
@@ -3231,7 +3250,7 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
                     return error(GL_INVALID_OPERATION);
                 }
 
-                texture->subImage(target, level, xoffset, yoffset, width, height, format, type, pixels);
+                texture->subImage(target, level, xoffset, yoffset, width, height, format, type, context->unpackAlignment, pixels);
             }
             else
             {

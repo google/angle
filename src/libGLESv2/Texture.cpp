@@ -163,12 +163,20 @@ int Texture::imagePitch(const Image &img) const
     return img.width * 4;
 }
 
+GLsizei Texture::computePitch(GLsizei width, GLenum format, GLenum type, GLint alignment) const
+{
+    ASSERT(alignment > 0 && isPow2(alignment));
+
+    GLsizei rawPitch = pixelSize(format, type) * width;
+    return (rawPitch + alignment - 1) & ~(alignment - 1);
+}
+
 // Store the pixel rectangle designated by xoffset,yoffset,width,height with pixels stored as format/type at input
 // into the BGRA8 pixel rectangle at output with outputPitch bytes in between each line.
 void Texture::loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type,
-                            const void *input, size_t outputPitch, void *output) const
+                            GLint unpackAlignment, const void *input, size_t outputPitch, void *output) const
 {
-    size_t inputPitch = width * pixelSize(format, type);
+    GLsizei inputPitch = computePitch(width, format, type, unpackAlignment);
 
     for (int y = 0; y < height; y++)
     {
@@ -277,7 +285,7 @@ void Texture::loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei
     }
 }
 
-void Texture::setImage(GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels, Image *img)
+void Texture::setImage(GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *img)
 {
     IDirect3DSurface9 *newSurface = NULL;
     HRESULT result = getDevice()->CreateOffscreenPlainSurface(width, height, selectFormat(format), D3DPOOL_SYSTEMMEM, &newSurface, NULL);
@@ -304,7 +312,7 @@ void Texture::setImage(GLsizei width, GLsizei height, GLenum format, GLenum type
 
         if (SUCCEEDED(result))
         {
-            loadImageData(0, 0, width, height, format, type, pixels, locked.Pitch, locked.pBits);
+            loadImageData(0, 0, width, height, format, type, unpackAlignment, pixels, locked.Pitch, locked.pBits);
             newSurface->UnlockRect();
         }
 
@@ -314,7 +322,7 @@ void Texture::setImage(GLsizei width, GLsizei height, GLenum format, GLenum type
     mDirtyMetaData = true;
 }
 
-void Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels, Image *img)
+void Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *img)
 {
     if (width + xoffset > img->width || height + yoffset > img->height) return error(GL_INVALID_VALUE);
 
@@ -325,7 +333,7 @@ void Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
 
     if (SUCCEEDED(result))
     {
-        loadImageData(xoffset, yoffset, width, height, format, type, pixels, locked.Pitch, locked.pBits);
+        loadImageData(xoffset, yoffset, width, height, format, type, unpackAlignment, pixels, locked.Pitch, locked.pBits);
         img->surface->UnlockRect();
     }
 
@@ -399,9 +407,9 @@ GLenum Texture2D::getTarget() const
     return GL_TEXTURE_2D;
 }
 
-void Texture2D::setImage(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels)
+void Texture2D::setImage(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    Texture::setImage(width, height, format, type, pixels, &mImageArray[level]);
+    Texture::setImage(width, height, format, type, unpackAlignment, pixels, &mImageArray[level]);
 
     if (level == 0)
     {
@@ -445,9 +453,9 @@ void Texture2D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei wi
     }
 }
 
-void Texture2D::subImage(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels)
+void Texture2D::subImage(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    Texture::subImage(xoffset, yoffset, width, height, format, type, pixels, &mImageArray[level]);
+    Texture::subImage(xoffset, yoffset, width, height, format, type, unpackAlignment, pixels, &mImageArray[level]);
     commitRect(level, xoffset, yoffset, width, height);
 }
 
@@ -665,34 +673,34 @@ GLenum TextureCubeMap::getTarget() const
     return GL_TEXTURE_CUBE_MAP;
 }
 
-void TextureCubeMap::setImagePosX(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels)
+void TextureCubeMap::setImagePosX(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    setImage(0, level, internalFormat, width, height, format, type, pixels);
+    setImage(0, level, internalFormat, width, height, format, type, unpackAlignment, pixels);
 }
 
-void TextureCubeMap::setImageNegX(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels)
+void TextureCubeMap::setImageNegX(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    setImage(1, level, internalFormat, width, height, format, type, pixels);
+    setImage(1, level, internalFormat, width, height, format, type, unpackAlignment, pixels);
 }
 
-void TextureCubeMap::setImagePosY(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels)
+void TextureCubeMap::setImagePosY(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    setImage(2, level, internalFormat, width, height, format, type, pixels);
+    setImage(2, level, internalFormat, width, height, format, type, unpackAlignment, pixels);
 }
 
-void TextureCubeMap::setImageNegY(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels)
+void TextureCubeMap::setImageNegY(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    setImage(3, level, internalFormat, width, height, format, type, pixels);
+    setImage(3, level, internalFormat, width, height, format, type, unpackAlignment, pixels);
 }
 
-void TextureCubeMap::setImagePosZ(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels)
+void TextureCubeMap::setImagePosZ(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    setImage(4, level, internalFormat, width, height, format, type, pixels);
+    setImage(4, level, internalFormat, width, height, format, type, unpackAlignment, pixels);
 }
 
-void TextureCubeMap::setImageNegZ(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels)
+void TextureCubeMap::setImageNegZ(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    setImage(5, level, internalFormat, width, height, format, type, pixels);
+    setImage(5, level, internalFormat, width, height, format, type, unpackAlignment, pixels);
 }
 
 void TextureCubeMap::commitRect(GLenum faceTarget, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
@@ -732,9 +740,9 @@ void TextureCubeMap::commitRect(GLenum faceTarget, GLint level, GLint xoffset, G
     }
 }
 
-void TextureCubeMap::subImage(GLenum face, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels)
+void TextureCubeMap::subImage(GLenum face, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    Texture::subImage(xoffset, yoffset, width, height, format, type, pixels, &mImageArray[faceIndex(face)][level]);
+    Texture::subImage(xoffset, yoffset, width, height, format, type, unpackAlignment, pixels, &mImageArray[faceIndex(face)][level]);
     commitRect(face, level, xoffset, yoffset, width, height);
 }
 
@@ -932,9 +940,9 @@ IDirect3DSurface9 *TextureCubeMap::getSurface(GLenum target)
     return surface;
 }
 
-void TextureCubeMap::setImage(int face, GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels)
+void TextureCubeMap::setImage(int face, GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    Texture::setImage(width, height, format, type, pixels, &mImageArray[face][level]);
+    Texture::setImage(width, height, format, type, unpackAlignment, pixels, &mImageArray[face][level]);
 
     if (face == 0 && level == 0)
     {

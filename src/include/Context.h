@@ -181,6 +181,9 @@ struct State
     GLuint samplerTexture[SAMPLER_TYPE_COUNT][MAX_TEXTURE_IMAGE_UNITS];
 
     unsigned int startIndex;
+
+    GLint unpackAlignment;
+    GLint packAlignment;
 };
 
 class Context : public State
