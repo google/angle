@@ -109,7 +109,7 @@ void Surface::swap()
         IDirect3DSurface9 *textureSurface;
         texture->GetSurfaceLevel(0, &textureSurface);
 
-        device->StretchRect(mRenderTarget, NULL, textureSurface, NULL, D3DTEXF_POINT);
+        device->StretchRect(mRenderTarget, NULL, textureSurface, NULL, D3DTEXF_NONE);
 
         // Disable all pipeline operations
         device->SetRenderState(D3DRS_ZENABLE, D3DZB_FALSE);
