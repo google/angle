@@ -55,16 +55,19 @@ class Texture : public Colorbuffer
     // Helper structure representing a single image layer
     struct Image
     {
+        Image();
+        ~Image();
+
         GLsizei width;
         GLsizei height;
         GLenum format;
 
-        std::vector<unsigned char> pixels;
+        bool dirty;
+
+        IDirect3DSurface9 *surface;
     };
 
-    void copyImage(const D3DLOCKED_RECT &lock, D3DFORMAT format, const Image &image);
-
-    static D3DFORMAT selectFormat(const Image &image);
+    static D3DFORMAT selectFormat(GLenum format);
     static int pixelSize(GLenum format, GLenum type);
     int imagePitch(const Image& img) const;
 
@@ -80,14 +83,14 @@ class Texture : public Colorbuffer
     virtual IDirect3DBaseTexture9 *createTexture() = 0;
     virtual void updateTexture() = 0;
 
+    virtual bool dirtyImageData() const = 0;
+
     bool mDirtyMetaData; // FIXME: would be private but getRenderTarget is still implemented through the derived classes and they need it.
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture);
 
     IDirect3DBaseTexture9 *mBaseTexture; // This is a weak pointer. The derived class is assumed to own a strong pointer.
-
-    bool mDirtyImageData;
 
     void loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type,
                        const void *input, std::size_t outputPitch, void *output) const;
@@ -113,6 +116,10 @@ class Texture2D : public Texture
 
     virtual IDirect3DBaseTexture9 *createTexture();
     virtual void updateTexture();
+
+    virtual bool dirtyImageData() const;
+
+    void commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
 
     Image mImageArray[MAX_TEXTURE_LEVELS];
 
@@ -145,9 +152,12 @@ class TextureCubeMap : public Texture
     virtual IDirect3DBaseTexture9 *createTexture();
     virtual void updateTexture();
 
+    virtual bool dirtyImageData() const;
+
     static unsigned int faceIndex(GLenum face);
 
     void setImage(int face, GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels);
+    void commitRect(GLenum faceTarget, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
 
     Image mImageArray[6][MAX_TEXTURE_LEVELS];
 

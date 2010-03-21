@@ -18,6 +18,17 @@
 
 namespace gl
 {
+
+Texture::Image::Image()
+  : dirty(false), surface(NULL)
+{
+}
+
+Texture::Image::~Image()
+{
+  if (surface) surface->Release();
+}
+
 Texture::Texture() : Colorbuffer(0)
 {
     mMinFilter = GL_NEAREST_MIPMAP_LINEAR;
@@ -25,7 +36,6 @@ Texture::Texture() : Colorbuffer(0)
     mWrapS = GL_REPEAT;
     mWrapT = GL_REPEAT;
 
-    mDirtyImageData = true;
     mDirtyMetaData = true;
 }
 
@@ -115,31 +125,8 @@ GLenum Texture::getWrapT() const
     return mWrapT;
 }
 
-// Copies an Image into an already locked Direct3D 9 surface, performing format conversions as necessary
-void Texture::copyImage(const D3DLOCKED_RECT &lock, D3DFORMAT format, const Image &image)
-{
-    ASSERT(format == D3DFMT_A8R8G8B8);
-
-    std::size_t sourcePitch = imagePitch(image);
-
-    if (lock.pBits && !image.pixels.empty())
-    {
-        if (lock.Pitch == sourcePitch)
-        {
-            memcpy(lock.pBits, &image.pixels[0], lock.Pitch * image.height);
-        }
-        else
-        {
-            for (int y = 0; y < image.height; y++)
-            {
-                memcpy(static_cast<unsigned char*>(lock.pBits) + y * lock.Pitch, &image.pixels[0] + y * sourcePitch, sourcePitch);
-            }
-        }
-    }
-}
-
 // Selects an internal Direct3D 9 format for storing an Image
-D3DFORMAT Texture::selectFormat(const Image &image)
+D3DFORMAT Texture::selectFormat(GLenum format)
 {
     return D3DFMT_A8R8G8B8;
 }
@@ -269,9 +256,9 @@ void Texture::loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei
                         unsigned short rgba = source16[x];
 
                         a = (rgba & 0x0001) ? 0xFF : 0;
-                        b = ((rgba & 0x003E) << 2) | ((rgba & 0x903E) >> 3);
+                        b = ((rgba & 0x003E) << 2) | ((rgba & 0x003E) >> 3);
                         g = ((rgba & 0x07C0) >> 3) | ((rgba & 0x07C0) >> 8);
-                        r = ((rgba & 0xF800) >> 8) | ((rgba & 0x07C0) >> 13);
+                        r = ((rgba & 0xF800) >> 8) | ((rgba & 0xF800) >> 13);
                     }
                     break;
 
@@ -291,22 +278,38 @@ void Texture::loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei
 
 void Texture::setImage(GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels, Image *img)
 {
+    IDirect3DSurface9 *newSurface = NULL;
+    HRESULT result = getDevice()->CreateOffscreenPlainSurface(width, height, selectFormat(format), D3DPOOL_SYSTEMMEM, &newSurface, NULL);
+
+    if (FAILED(result))
+    {
+        ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
+        return error(GL_OUT_OF_MEMORY);
+    }
+
+    if (img->surface) img->surface->Release();
+    img->surface = newSurface;
+
     img->width = width;
     img->height = height;
     img->format = format;
 
-    size_t imageSize = imagePitch(*img) * img->height;
-
-    std::vector<unsigned char> storage(imageSize);
-
-    if (pixels)
+    if (pixels != NULL)
     {
-        loadImageData(0, 0, width, height, format, type, pixels, imagePitch(*img), &storage[0]);
+        D3DLOCKED_RECT locked;
+        HRESULT result = newSurface->LockRect(&locked, NULL, 0);
+
+        ASSERT(SUCCEEDED(result));
+
+        if (SUCCEEDED(result))
+        {
+            loadImageData(0, 0, width, height, format, type, pixels, locked.Pitch, locked.pBits);
+            newSurface->UnlockRect();
+        }
+
+        img->dirty = true;
     }
 
-    img->pixels.swap(storage);
-
-    mDirtyImageData = true;
     mDirtyMetaData = true;
 }
 
@@ -314,9 +317,18 @@ void Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
 {
     if (width + xoffset > img->width || height + yoffset > img->height) return error(GL_INVALID_VALUE);
 
-    loadImageData(xoffset, yoffset, width, height, format, type, pixels, imagePitch(*img), &img->pixels[0]);
+    D3DLOCKED_RECT locked;
+    HRESULT result = img->surface->LockRect(&locked, NULL, 0);
 
-    mDirtyImageData = true;
+    ASSERT(SUCCEEDED(result));
+
+    if (SUCCEEDED(result))
+    {
+        loadImageData(xoffset, yoffset, width, height, format, type, pixels, locked.Pitch, locked.pBits);
+        img->surface->UnlockRect();
+    }
+
+    img->dirty = true;
 }
 
 IDirect3DBaseTexture9 *Texture::getTexture()
@@ -328,18 +340,16 @@ IDirect3DBaseTexture9 *Texture::getTexture()
 
     if (mDirtyMetaData)
     {
-        ASSERT(mDirtyImageData);
-
         mBaseTexture = createTexture();
     }
 
-    if (mDirtyImageData)
+    if (mDirtyMetaData || dirtyImageData())
     {
         updateTexture();
     }
 
     mDirtyMetaData = false;
-    mDirtyImageData = false;
+    ASSERT(!dirtyImageData());
 
     return mBaseTexture;
 }
@@ -374,9 +384,39 @@ void Texture2D::setImage(GLint level, GLenum internalFormat, GLsizei width, GLsi
     }
 }
 
+void Texture2D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
+{
+    ASSERT(mImageArray[level].surface != NULL);
+
+    if (mTexture != NULL)
+    {
+        IDirect3DSurface9 *destLevel = NULL;
+        mTexture->GetSurfaceLevel(level, &destLevel);
+
+        Image *img = &mImageArray[level];
+
+        RECT sourceRect;
+        sourceRect.left = xoffset;
+        sourceRect.top = yoffset;
+        sourceRect.right = xoffset + width;
+        sourceRect.bottom = yoffset + height;
+
+        POINT destPoint;
+        destPoint.x = xoffset;
+        destPoint.y = yoffset;
+
+        getDevice()->UpdateSurface(img->surface, &sourceRect, destLevel, &destPoint);
+
+        destLevel->Release();
+
+        img->dirty = false;
+    }
+}
+
 void Texture2D::subImage(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels)
 {
     Texture::subImage(xoffset, yoffset, width, height, format, type, pixels, &mImageArray[level]);
+    commitRect(level, xoffset, yoffset, width, height);
 }
 
 // Tests for GL texture object completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
@@ -438,7 +478,7 @@ IDirect3DBaseTexture9 *Texture2D::createTexture()
     IDirect3DTexture9 *texture;
 
     IDirect3DDevice9 *device = getDevice();
-    D3DFORMAT format = selectFormat(mImageArray[0]);
+    D3DFORMAT format = selectFormat(mImageArray[0].format);
 
     HRESULT result = device->CreateTexture(mWidth, mHeight, 0, D3DUSAGE_RENDERTARGET, format, D3DPOOL_DEFAULT, &texture, NULL);
 
@@ -455,30 +495,23 @@ IDirect3DBaseTexture9 *Texture2D::createTexture()
 void Texture2D::updateTexture()
 {
     IDirect3DDevice9 *device = getDevice();
-    D3DFORMAT format = selectFormat(mImageArray[0]);
-
-    IDirect3DTexture9 *lockableTexture;
-    HRESULT result = device->CreateTexture(mWidth, mHeight, 0, D3DUSAGE_DYNAMIC, format, D3DPOOL_SYSTEMMEM, &lockableTexture, NULL);
-
-    if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
-    {
-        return error(GL_OUT_OF_MEMORY);
-    }
 
     int levelCount = mTexture->GetLevelCount();
 
     for (int level = 0; level < levelCount; level++)
     {
-        D3DLOCKED_RECT lock = {0};
-        lockableTexture->LockRect(level, &lock, NULL, 0);
+        if (mImageArray[level].dirty)
+        {
+            IDirect3DSurface9 *levelSurface = NULL;
+            mTexture->GetSurfaceLevel(level, &levelSurface);
 
-        copyImage(lock, format, mImageArray[level]);
+            device->UpdateSurface(mImageArray[level].surface, NULL, levelSurface, NULL);
 
-        lockableTexture->UnlockRect(level);
+            levelSurface->Release();
+
+            mImageArray[level].dirty = false;
+        }
     }
-
-    device->UpdateTexture(lockableTexture, mTexture);
-    lockableTexture->Release();
 }
 
 // Returns the top-level texture surface as a render target
@@ -496,6 +529,18 @@ IDirect3DSurface9 *Texture2D::getRenderTarget()
     }
 
     return mRenderTarget;
+}
+
+bool Texture2D::dirtyImageData() const
+{
+    int q = log2(std::max(mWidth, mHeight));
+
+    for (int i = 0; i <= q; i++)
+    {
+        if (mImageArray[i].dirty) return true;
+    }
+
+    return false;
 }
 
 TextureCubeMap::TextureCubeMap()
@@ -547,9 +592,41 @@ void TextureCubeMap::setImageNegZ(GLint level, GLenum internalFormat, GLsizei wi
     setImage(5, level, internalFormat, width, height, format, type, pixels);
 }
 
+void TextureCubeMap::commitRect(GLenum faceTarget, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
+{
+    int face = faceIndex(faceTarget);
+
+    ASSERT(mImageArray[face][level].surface != NULL);
+
+    if (mTexture != NULL)
+    {
+        IDirect3DSurface9 *destLevel = NULL;
+        mTexture->GetCubeMapSurface(static_cast<D3DCUBEMAP_FACES>(face), level, &destLevel);
+
+        Image *img = &mImageArray[face][level];
+
+        RECT sourceRect;
+        sourceRect.left = xoffset;
+        sourceRect.top = yoffset;
+        sourceRect.right = xoffset + width;
+        sourceRect.bottom = yoffset + height;
+
+        POINT destPoint;
+        destPoint.x = xoffset;
+        destPoint.y = yoffset;
+
+        getDevice()->UpdateSurface(img->surface, &sourceRect, destLevel, &destPoint);
+
+        destLevel->Release();
+
+        img->dirty = false;
+    }
+}
+
 void TextureCubeMap::subImage(GLenum face, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels)
 {
     Texture::subImage(xoffset, yoffset, width, height, format, type, pixels, &mImageArray[faceIndex(face)][level]);
+    commitRect(face, level, xoffset, yoffset, width, height);
 }
 
 // Tests for GL texture object completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
@@ -618,7 +695,7 @@ bool TextureCubeMap::isComplete() const
 IDirect3DBaseTexture9 *TextureCubeMap::createTexture()
 {
     IDirect3DDevice9 *device = getDevice();
-    D3DFORMAT format = selectFormat(mImageArray[0][0]);
+    D3DFORMAT format = selectFormat(mImageArray[0][0].format);
 
     IDirect3DCubeTexture9 *texture;
 
@@ -638,33 +715,26 @@ IDirect3DBaseTexture9 *TextureCubeMap::createTexture()
 void TextureCubeMap::updateTexture()
 {
     IDirect3DDevice9 *device = getDevice();
-    D3DFORMAT format = selectFormat(mImageArray[0][0]);
-
-    IDirect3DCubeTexture9 *lockableTexture;
-    HRESULT result = device->CreateCubeTexture(mWidth, 0, D3DUSAGE_DYNAMIC, format, D3DPOOL_SYSTEMMEM, &lockableTexture, NULL);
-
-    if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
-    {
-        return error(GL_OUT_OF_MEMORY);
-    }
-
-    ASSERT(SUCCEEDED(result));
 
     for (int face = 0; face < 6; face++)
     {
-        for (int level = 0; level < MAX_TEXTURE_LEVELS; level++)
+        for (int level = 0; level <= log2(mWidth); level++)
         {
-            D3DLOCKED_RECT lock = {0};
-            lockableTexture->LockRect((D3DCUBEMAP_FACES)face, level, &lock, NULL, 0);
+            Image *img = &mImageArray[face][level];
 
-            copyImage(lock, format, mImageArray[face][level]);
+            if (img->dirty)
+            {
+                IDirect3DSurface9 *levelSurface = NULL;
+                mTexture->GetCubeMapSurface(static_cast<D3DCUBEMAP_FACES>(face), level, &levelSurface);
 
-            lockableTexture->UnlockRect((D3DCUBEMAP_FACES)face, level);
+                device->UpdateSurface(img->surface, NULL, levelSurface, NULL);
+
+                levelSurface->Release();
+
+                img->dirty = false;
+            }
         }
     }
-
-    device->UpdateTexture(lockableTexture, mTexture);
-    lockableTexture->Release();
 }
 
 void TextureCubeMap::setImage(int face, GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels)
@@ -687,6 +757,21 @@ unsigned int TextureCubeMap::faceIndex(GLenum face)
     META_ASSERT(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z - GL_TEXTURE_CUBE_MAP_POSITIVE_X == 5);
 
     return face - GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+}
+
+bool TextureCubeMap::dirtyImageData() const
+{
+    int q = log2(mWidth);
+
+    for (int f = 0; f < 6; f++)
+    {
+        for (int i = 0; i <= q; i++)
+        {
+            if (mImageArray[f][i].dirty) return true;
+        }
+    }
+
+    return false;
 }
 
 }
