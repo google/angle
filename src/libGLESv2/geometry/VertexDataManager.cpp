@@ -51,7 +51,7 @@ VertexDataManager::ArrayTranslationHelper::ArrayTranslationHelper(GLint first, G
 
 void VertexDataManager::ArrayTranslationHelper::translate(const FormatConverter &converter, GLsizei stride, const void *source, void *dest)
 {
-    converter.convertArray(source, stride, mCount, dest);
+    converter.convertArray(source, stride, mFirst+mCount, dest);
 }
 
 VertexDataManager::IndexedTranslationHelper::IndexedTranslationHelper(const Index *indices, GLsizei count)
