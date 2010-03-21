@@ -1797,6 +1797,7 @@ void __stdcall glGetIntegerv(GLenum pname, GLint* params)
               case GL_CURRENT_PROGRAM:                  *params = context->currentProgram;          break;
               case GL_PACK_ALIGNMENT:                   *params = context->packAlignment;           break;
               case GL_UNPACK_ALIGNMENT:                 *params = context->unpackAlignment;         break;
+              case GL_GENERATE_MIPMAP_HINT:             *params = context->generateMipmapHint;      break;
               case GL_RED_BITS:
               case GL_GREEN_BITS:
               case GL_BLUE_BITS:
@@ -2248,7 +2249,29 @@ void __stdcall glHint(GLenum target, GLenum mode)
 
     try
     {
-        UNIMPLEMENTED();   // FIXME
+        switch (target)
+        {
+          case GL_GENERATE_MIPMAP_HINT:
+            switch (mode)
+            {
+              case GL_FASTEST:
+              case GL_NICEST:
+              case GL_DONT_CARE:
+                break;
+              default:
+                return error(GL_INVALID_ENUM); 
+            }
+            break;
+          default:
+              return error(GL_INVALID_ENUM);
+        }
+
+        gl::Context *context = gl::getContext();
+        if (context)
+        {
+            if (target == GL_GENERATE_MIPMAP_HINT)
+                context->generateMipmapHint = mode;
+        }
     }
     catch(std::bad_alloc&)
     {

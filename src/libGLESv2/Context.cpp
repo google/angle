@@ -75,6 +75,7 @@ Context::Context(const egl::Config *config)
     sampleCoverageInvert = GL_FALSE;
     scissorTest = false;
     dither = true;
+    generateMipmapHint = GL_DONT_CARE;
 
     viewportX = 0;
     viewportY = 0;
