@@ -140,7 +140,7 @@ void Shader::compileToHLSL(void *compiler)
         return;
     }
 
-    trace(mSource);
+    TRACE("\n%s", mSource);
 
     delete[] mErrors;
     mErrors = NULL;
@@ -165,14 +165,14 @@ void Shader::compileToHLSL(void *compiler)
         mHlsl = new char[strlen(obj) + 1];
         strcpy(mHlsl, obj);
 
-        trace(mHlsl);
+        TRACE("\n%s", mHlsl);
     }
     else
     {
         mErrors = new char[strlen(info) + 1];
         strcpy(mErrors, info);
 
-        trace(mErrors);
+        TRACE("\n%s", mErrors);
     }
 }
 

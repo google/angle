@@ -385,8 +385,8 @@ ID3DXBuffer *Program::compileToBinary(const char *hlsl, const char *profile, ID3
     if (errorMessage)
     {
         const char *message = (const char*)errorMessage->GetBufferPointer();
-        trace(hlsl);
-        trace(message);
+        TRACE("\n%s", hlsl);
+        TRACE("\n%s", message);
     }
 
     return NULL;
