@@ -8,8 +8,8 @@
 
 #include "main.h"
 #include "Display.h"
-#include "Context.h"
-#include "debug.h"
+#include "libGLESv2/Context.h"
+#include "common/debug.h"
 
 #include <exception>
 

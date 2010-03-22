@@ -17,7 +17,7 @@
 #define GL_APICALL
 #include <GLES2/gl2.h>
 
-#include "angleutils.h"
+#include "common/angleutils.h"
 
 namespace gl
 {

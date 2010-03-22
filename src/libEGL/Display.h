@@ -19,7 +19,7 @@
 
 #include "Config.h"
 #include "Surface.h"
-#include "Context.h"
+#include "libGLESv2/Context.h"
 
 #include <set>
 

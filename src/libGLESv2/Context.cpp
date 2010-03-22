@@ -12,7 +12,7 @@
 #include <algorithm>
 
 #include "main.h"
-#include "Display.h"
+#include "libEGL/Display.h"
 #include "Buffer.h"
 #include "Shader.h"
 #include "Program.h"

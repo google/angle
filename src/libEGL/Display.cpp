@@ -14,7 +14,7 @@
 #include <vector>
 
 #include "main.h"
-#include "debug.h"
+#include "common/debug.h"
 
 namespace egl
 {

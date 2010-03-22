@@ -11,7 +11,7 @@
 
 #include "main.h"
 #include "Shader.h"
-#include "debug.h"
+#include "common/debug.h"
 
 namespace gl
 {

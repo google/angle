@@ -13,7 +13,7 @@
 #include <algorithm>
 #include <vector>
 
-#include "debug.h"
+#include "common/debug.h"
 
 using namespace std;
 

@@ -15,7 +15,7 @@
 #include <EGL/egl.h>
 #include <d3d9.h>
 
-#include "angleutils.h"
+#include "common/angleutils.h"
 
 namespace egl
 {

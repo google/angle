@@ -8,7 +8,7 @@
 
 #include "main.h"
 
-#include "debug.h"
+#include "common/debug.h"
 
 static DWORD currentTLS = TLS_OUT_OF_INDEXES;
 

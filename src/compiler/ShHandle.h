@@ -14,7 +14,7 @@
 // This should not be included by driver code.
 //
 
-#include "ShaderLang.h"
+#include "GLSLANG/ShaderLang.h"
 
 #include "InfoSink.h"
 

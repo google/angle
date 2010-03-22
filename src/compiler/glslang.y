@@ -27,7 +27,7 @@ Jutta Degener, 1995
 
 #include "SymbolTable.h"
 #include "ParseHelper.h"
-#include "ShaderLang.h"
+#include "GLSLANG/ShaderLang.h"
 
 #ifdef _WIN32
     #define YYPARSE_PARAM parseContext

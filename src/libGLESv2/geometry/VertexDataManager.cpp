@@ -9,7 +9,7 @@
 
 #include "geometry/VertexDataManager.h"
 
-#include "debug.h"
+#include "common/debug.h"
 #include "Program.h"
 
 #include "Buffer.h"

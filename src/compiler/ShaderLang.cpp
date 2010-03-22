@@ -8,16 +8,15 @@
 // Implement the top-level of interface to the compiler/linker,
 // as defined in ShaderLang.h
 //
-#include "SymbolTable.h"
-#include "ParseHelper.h"
 
-#include "ShHandle.h"
-#include "InitializeDll.h"
+#include "GLSLANG/ShaderLang.h"
 
-#include "ShaderLang.h"
 #include "Initialize.h"
-
+#include "InitializeDll.h"
 #include "OutputHLSL.h"
+#include "ParseHelper.h"
+#include "ShHandle.h"
+#include "SymbolTable.h"
 
 //
 // A symbol table for each language.  Each has a different

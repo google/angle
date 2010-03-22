@@ -17,7 +17,7 @@
 
 #include <set>
 
-#include "angleutils.h"
+#include "common/angleutils.h"
 
 namespace egl
 {

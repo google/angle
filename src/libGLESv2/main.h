@@ -13,8 +13,8 @@
 #include <GLES2/gl2.h>
 
 #include "Context.h"
-#include "Display.h"
-#include "debug.h"
+#include "common/debug.h"
+#include "libEGL/Display.h"
 
 namespace gl
 {

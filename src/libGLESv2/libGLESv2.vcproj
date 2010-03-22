@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../../include/;../include/; ../compiler/;."
+				AdditionalIncludeDirectories="./;../;../../include/"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBGLESV2_EXPORTS;_CRT_SECURE_NO_DEPRECATE;NOMINMAX"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -118,7 +118,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="../../include/;../include/; ../compiler/;."
+				AdditionalIncludeDirectories="./;../;../../include/"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBGLESV2_EXPORTS;_CRT_SECURE_NO_DEPRECATE;NOMINMAX"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
@@ -189,7 +189,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Common\debug.cpp"
+				RelativePath="..\common\debug.cpp"
 				>
 			</File>
 			<File
@@ -247,27 +247,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\Include\angleutils.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Buffer.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\Config.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\Context.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\debug.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Include\Display.h"
+				RelativePath=".\Context.h"
 				>
 			</File>
 			<File
@@ -275,19 +259,19 @@
 				>
 			</File>
 			<File
-				RelativePath="..\Include\GLES2\gl2.h"
+				RelativePath="..\..\include\GLES2\gl2.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\GLES2\gl2ext.h"
+				RelativePath="..\..\include\GLES2\gl2ext.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\GLES2\gl2platform.h"
+				RelativePath="..\..\include\GLES2\gl2extimg.h"
 				>
 			</File>
 			<File
-				RelativePath="..\Include\KHR\khrplatform.h"
+				RelativePath="..\..\include\GLES2\gl2platform.h"
 				>
 			</File>
 			<File
@@ -339,26 +323,8 @@
 				</File>
 			</Filter>
 		</Filter>
-		<Filter
-			Name="Resource Files"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
-			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
-			>
-		</Filter>
-		<File
-			RelativePath="..\AUTHORS"
-			>
-		</File>
-		<File
-			RelativePath="..\CONTRIBUTORS"
-			>
-		</File>
 		<File
 			RelativePath=".\libGLESv2.def"
-			>
-		</File>
-		<File
-			RelativePath="..\LICENSE"
 			>
 		</File>
 	</Files>

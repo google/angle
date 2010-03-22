@@ -18,7 +18,7 @@
 
 #include <map>
 
-#include "angleutils.h"
+#include "common/angleutils.h"
 
 namespace egl
 {

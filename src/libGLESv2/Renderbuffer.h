@@ -15,7 +15,7 @@
 #include <GLES2/gl2.h>
 #include <d3d9.h>
 
-#include "angleutils.h"
+#include "common/angleutils.h"
 
 namespace gl
 {

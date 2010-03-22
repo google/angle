@@ -14,7 +14,7 @@
 #include <limits>
 #include <utility>
 
-#include "debug.h"
+#include "common/debug.h"
 #include "geometry/backend.h"
 
 namespace gl

@@ -9,8 +9,8 @@
 #include "main.h"
 
 #include "Framebuffer.h"
-#include "Surface.h"
-#include "debug.h"
+#include "libEGL/Surface.h"
+#include "common/debug.h"
 
 static DWORD currentTLS = TLS_OUT_OF_INDEXES;
 

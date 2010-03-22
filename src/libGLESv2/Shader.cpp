@@ -11,9 +11,9 @@
 #include "Shader.h"
 
 #include "main.h"
-#include "Shaderlang.h"
-#include "OutputHLSL.h"
-#include "debug.h"
+#include "GLSLANG/Shaderlang.h"
+#include "compiler/OutputHLSL.h"
+#include "common/debug.h"
 
 namespace gl
 {

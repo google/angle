@@ -6,8 +6,8 @@
 
 #include "OutputHLSL.h"
 
+#include "common/debug.h"
 #include "InfoSink.h"
-#include "debug.h"
 
 namespace sh
 {

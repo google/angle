@@ -22,7 +22,7 @@
 #include "Renderbuffer.h"
 #include "Framebuffer.h"
 #include "mathutil.h"
-#include "debug.h"
+#include "common/debug.h"
 #include "utilities.h"
 
 extern "C"

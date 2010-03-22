@@ -9,7 +9,7 @@
 
 #include "geometry/backend.h"
 
-#include "debug.h"
+#include "common/debug.h"
 
 namespace gl
 {

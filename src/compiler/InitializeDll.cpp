@@ -8,7 +8,7 @@
 #include "InitializeGlobals.h"
 #include "InitializeParseContext.h"
 
-#include "ShaderLang.h"
+#include "GLSLANG/ShaderLang.h"
 
 OS_TLSIndex ThreadInitializeIndex = OS_INVALID_TLS_INDEX;
 

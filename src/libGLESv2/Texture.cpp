@@ -14,7 +14,7 @@
 
 #include "main.h"
 #include "mathutil.h"
-#include "debug.h"
+#include "common/debug.h"
 #include "utilities.h"
 
 namespace gl

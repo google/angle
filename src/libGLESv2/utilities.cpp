@@ -8,7 +8,7 @@
 
 #include "utilities.h"
 
-#include "debug.h"
+#include "common/debug.h"
 #include "mathutil.h"
 #include "Context.h"
 
