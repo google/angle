@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="compiler"
+	Name="translator_common"
 	ProjectGUID="{5B3A6DB8-1E7E-40D7-92B9-DA8AAE619FAD}"
 	RootNamespace="compiler"
 	Keyword="Win32Proj"
@@ -150,10 +150,6 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\CodeGen.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\glslang.l"
 				>
 				<FileConfiguration
@@ -233,10 +229,6 @@
 			</File>
 			<File
 				RelativePath=".\ossource.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\OutputHLSL.cpp"
 				>
 			</File>
 			<File
@@ -363,10 +355,6 @@
 			</File>
 			<File
 				RelativePath=".\osinclude.h"
-				>
-			</File>
-			<File
-				RelativePath=".\OutputHLSL.h"
 				>
 			</File>
 			<File

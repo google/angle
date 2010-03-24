@@ -56,7 +56,7 @@ class TIntermNode;
 //
 class TCompiler : public TShHandleBase {
 public:
-    TCompiler(EShLanguage l, TInfoSink& sink) : infoSink(sink) , language(l), haveValidObjectCode(false) { }
+    TCompiler(EShLanguage l) : language(l), haveValidObjectCode(false) { }
     virtual ~TCompiler() { }
     EShLanguage getLanguage() { return language; }
     virtual TInfoSink& getInfoSink() { return infoSink; }
@@ -65,8 +65,8 @@ public:
 
     virtual TCompiler* getAsCompiler() { return this; }
     virtual bool linkable() { return haveValidObjectCode; }
-    
-    TInfoSink& infoSink;
+
+    TInfoSink infoSink;
 protected:
     EShLanguage language;
     bool haveValidObjectCode;
@@ -85,14 +85,13 @@ typedef TVector<TShHandleBase*> THandleList;
 
 class TLinker : public TShHandleBase {
 public:
-    TLinker(EShExecutable e, TInfoSink& iSink) : 
-        infoSink(iSink),
+    TLinker(EShExecutable e) : 
         executable(e), 
         haveReturnableObjectCode(false),
         appAttributeBindings(0),
         fixedAttributeBindings(0),
-		excludedAttributes(0),
-		excludedCount(0),
+        excludedAttributes(0),
+        excludedCount(0),
         uniformBindings(0) { }
     virtual TLinker* getAsLinker() { return this; }
     virtual ~TLinker() { }
@@ -100,20 +99,20 @@ public:
     virtual bool link(THandleList&) { return false; }
     virtual void setAppAttributeBindings(const ShBindingTable* t)   { appAttributeBindings = t; }
     virtual void setFixedAttributeBindings(const ShBindingTable* t) { fixedAttributeBindings = t; }
-	virtual void getAttributeBindings(ShBindingTable const **t) const = 0;
-	virtual void setExcludedAttributes(const int* attributes, int count) { excludedAttributes = attributes; excludedCount = count; }
+    virtual void getAttributeBindings(ShBindingTable const **t) const = 0;
+    virtual void setExcludedAttributes(const int* attributes, int count) { excludedAttributes = attributes; excludedCount = count; }
     virtual ShBindingTable* getUniformBindings() const  { return uniformBindings; }
     virtual const void* getObjectCode() const { return 0; } // a real compiler would be returning object code here
     virtual TInfoSink& getInfoSink() { return infoSink; }
-    TInfoSink& infoSink;
+    TInfoSink infoSink;
 protected:
     EShExecutable executable;
     bool haveReturnableObjectCode;  // true when objectCode is acceptable to send to driver
 
     const ShBindingTable* appAttributeBindings;
     const ShBindingTable* fixedAttributeBindings;
-	const int* excludedAttributes;
-	int excludedCount;
+    const int* excludedAttributes;
+    int excludedCount;
     ShBindingTable* uniformBindings;                // created by the linker    
 };
 
@@ -130,7 +129,7 @@ TCompiler* ConstructCompiler(EShLanguage, int);
 
 TShHandleBase* ConstructLinker(EShExecutable, int);
 void DeleteLinker(TShHandleBase*);
-    
+
 TUniformMap* ConstructUniformMap();
 void DeleteCompiler(TCompiler*);
 

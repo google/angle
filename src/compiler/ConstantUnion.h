@@ -272,7 +272,7 @@ public:
         return returnValue;
     }
 
-    TBasicType getType() { return type; }
+    TBasicType getType() const { return type; }
 private:
 
     union  {

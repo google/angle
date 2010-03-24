@@ -13,7 +13,6 @@
 
 #include "Initialize.h"
 #include "InitializeDll.h"
-#include "OutputHLSL.h"
 #include "ParseHelper.h"
 #include "ShHandle.h"
 #include "SymbolTable.h"
@@ -244,19 +243,20 @@ int ShCompile(
         return 0;
     
     GlobalPoolAllocator.push();
-    compiler->infoSink.info.erase();
-    compiler->infoSink.debug.erase();
-    compiler->infoSink.obj.erase();
+    TInfoSink& infoSink = compiler->infoSink;
+    infoSink.info.erase();
+    infoSink.debug.erase();
+    infoSink.obj.erase();
 
     if (numStrings == 0)
         return 1;
 
-    TIntermediate intermediate(compiler->infoSink);
+    TIntermediate intermediate(infoSink);
     TSymbolTable symbolTable(SymbolTables[compiler->getLanguage()]);
     
-    GenerateBuiltInSymbolTable(resources, compiler->infoSink, &symbolTable, compiler->getLanguage());
+    GenerateBuiltInSymbolTable(resources, infoSink, &symbolTable, compiler->getLanguage());
 
-    TParseContext parseContext(symbolTable, intermediate, compiler->getLanguage(), compiler->infoSink);
+    TParseContext parseContext(symbolTable, intermediate, compiler->getLanguage(), infoSink);
     parseContext.initializeExtensionBehavior();
 
     GlobalParseContext = &parseContext;
@@ -290,18 +290,10 @@ int ShCompile(
                 if (debugOptions & EDebugOpIntermediate)
                     intermediate.outputTree(parseContext.treeRoot);
 
-				if(debugOptions & EDebugOpObjectCode)
-				{
-					sh::OutputHLSL outputHLSL(parseContext);
-
-					outputHLSL.header();
-					parseContext.treeRoot->traverse(&outputHLSL);
-				}
-
                 //
                 // Call the machine dependent compiler
                 //
-                if (! compiler->compile(parseContext.treeRoot))
+                if (!compiler->compile(parseContext.treeRoot))
                     success = false;
             }
         }
