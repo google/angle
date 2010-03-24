@@ -24,16 +24,16 @@ namespace gl
 
 // A macro to output a trace of a function call and its arguments to the debugging log
 #ifndef NDEBUG
-    #define TRACE(arguments, ...) gl::trace("trace: %s"arguments"\n", __FUNCTION__, __VA_ARGS__)
+    #define TRACE(message, ...) gl::trace("trace: %s"message"\n", __FUNCTION__, __VA_ARGS__)
 #else
     #define TRACE(...) ((void)0)
 #endif
 
 // A macro to output a function call and its arguments to the debugging log, to denote an item in need of fixing. Will occur even in release mode.
-#define FIXME(arguments, ...) gl::trace("fixme: %s"arguments"\n", __FUNCTION__, __VA_ARGS__)
+#define FIXME(message, ...) gl::trace("fixme: %s"message"\n", __FUNCTION__, __VA_ARGS__)
 
 // A macro to output a function call and its arguments to the debugging log, in case of error. Will occur even in release mode.
-#define ERR(arguments, ...) gl::trace("err: %s"arguments"\n", __FUNCTION__, __VA_ARGS__)
+#define ERR(message, ...) gl::trace("err: %s"message"\n", __FUNCTION__, __VA_ARGS__)
 
 // A macro asserting a condition and outputting failures to the debug log
 #define ASSERT(expression) do { \
