@@ -77,6 +77,8 @@ Context::Context(const egl::Config *config)
     dither = true;
     generateMipmapHint = GL_DONT_CARE;
 
+    lineWidth = 1.0f;
+
     viewportX = 0;
     viewportY = 0;
     viewportWidth = config->mDisplayMode.Width;

@@ -150,6 +150,8 @@ struct State
     bool scissorTest;
     bool dither;
 
+    GLfloat lineWidth;
+
     GLenum generateMipmapHint;
 
     GLint viewportX;

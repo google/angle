@@ -1758,7 +1758,24 @@ void __stdcall glGetFloatv(GLenum pname, GLfloat* params)
 
     try
     {
-        UNIMPLEMENTED();   // FIXME
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            switch (pname)
+            {
+              case GL_LINE_WIDTH:                           *params = context->lineWidth;          break;
+              case GL_ALIASED_LINE_WIDTH_RANGE:
+                {
+                    params[0] = 1.0f;
+                    params[1] = 1.0f;
+                }
+                break;
+              default:
+                UNIMPLEMENTED();   // FIXME
+                return error(GL_INVALID_ENUM);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -2507,9 +2524,11 @@ void __stdcall glLineWidth(GLfloat width)
             return error(GL_INVALID_VALUE);
         }
 
-        if (width != 1.0f)
+        gl::Context *context = gl::getContext();
+
+        if (context)
         {
-            UNIMPLEMENTED();   // FIXME
+            context->lineWidth = width;
         }
     }
     catch(std::bad_alloc&)
