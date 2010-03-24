@@ -414,14 +414,17 @@ void Program::link()
         return;
     }
 
+    IDirect3DDevice9 *device = getDevice();
+    const char *vertexProfile = D3DXGetVertexShaderProfile(device);
+    const char *pixelProfile = D3DXGetPixelShaderProfile(device);
+
     const char *pixelHLSL = mFragmentShader->linkHLSL();
     const char *vertexHLSL = mVertexShader->linkHLSL(pixelHLSL);
-    ID3DXBuffer *vertexBinary = compileToBinary(vertexHLSL, "vs_3_0", &mConstantTableVS);
-    ID3DXBuffer *pixelBinary = compileToBinary(pixelHLSL, "ps_3_0", &mConstantTablePS);
+    ID3DXBuffer *vertexBinary = compileToBinary(vertexHLSL, vertexProfile, &mConstantTableVS);
+    ID3DXBuffer *pixelBinary = compileToBinary(pixelHLSL, pixelProfile, &mConstantTablePS);
 
     if (vertexBinary && pixelBinary)
     {
-        IDirect3DDevice9 *device = getDevice();
         HRESULT vertexResult = device->CreateVertexShader((DWORD*)vertexBinary->GetBufferPointer(), &mVertexExecutable);
         HRESULT pixelResult = device->CreatePixelShader((DWORD*)pixelBinary->GetBufferPointer(), &mPixelExecutable);
 
