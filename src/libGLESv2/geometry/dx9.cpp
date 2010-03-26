@@ -17,6 +17,7 @@
 #include "common/debug.h"
 
 #include "geometry/vertexconversion.h"
+#include "geometry/IndexDataManager.h"
 
 namespace
 {
@@ -179,7 +180,13 @@ IDirect3DIndexBuffer9 *Dx9BackEnd::getDxBuffer(TranslatedIndexBuffer *ib) const
     return ib ? static_cast<Dx9IndexBuffer*>(ib)->getBuffer() : NULL;
 }
 
-GLenum Dx9BackEnd::preDraw(const TranslatedAttribute *attributes)
+GLenum Dx9BackEnd::setupIndicesPreDraw(const TranslatedIndexData &indexInfo)
+{
+    mDevice->SetIndices(getDxBuffer(indexInfo.buffer));
+    return GL_NO_ERROR;
+}
+
+GLenum Dx9BackEnd::setupAttributesPreDraw(const TranslatedAttribute *attributes)
 {
     HRESULT hr;
 

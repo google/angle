@@ -30,6 +30,7 @@ class Config;
 namespace gl
 {
 struct TranslatedAttribute;
+struct TranslatedIndexData;
 
 class Buffer;
 class Shader;
@@ -43,6 +44,7 @@ class Colorbuffer;
 class Depthbuffer;
 class Stencilbuffer;
 class VertexDataManager;
+class IndexDataManager;
 class BufferBackEnd;
 
 enum
@@ -189,8 +191,6 @@ struct State
     AttributeState vertexAttribute[MAX_VERTEX_ATTRIBS];
     GLuint samplerTexture[SAMPLER_TYPE_COUNT][MAX_TEXTURE_IMAGE_UNITS];
 
-    unsigned int startIndex;
-
     GLint unpackAlignment;
     GLint packAlignment;
 };
@@ -257,8 +257,8 @@ class Context : public State
     bool applyRenderTarget(bool ignoreViewport);
     void applyState();
     void applyVertexBuffer(GLint first, GLsizei count);
-    void applyVertexBuffer(GLsizei count, const void *indices, GLenum indexType);
-    void applyIndexBuffer(const void *indices, GLsizei count);
+    void applyVertexBuffer(const TranslatedIndexData &indexInfo);
+    TranslatedIndexData applyIndexBuffer(const void *indices, GLsizei count, GLenum mode, GLenum type);
     void applyShaders();
     void applyTextures();
 
@@ -321,6 +321,7 @@ class Context : public State
 
     BufferBackEnd *mBufferBackEnd;
     VertexDataManager *mVertexDataManager;
+    IndexDataManager *mIndexDataManager;
 
     Texture *mIncompleteTextures[SAMPLER_TYPE_COUNT];
 

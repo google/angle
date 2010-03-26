@@ -23,6 +23,7 @@
 #include "utilities.h"
 #include "geometry/backend.h"
 #include "geometry/VertexDataManager.h"
+#include "geometry/IndexDataManager.h"
 #include "geometry/dx9.h"
 
 #undef near
@@ -138,6 +139,7 @@ Context::Context(const egl::Config *config)
 
     mBufferBackEnd = NULL;
     mVertexDataManager = NULL;
+    mIndexDataManager = NULL;
 
     mInvalidEnum = false;
     mInvalidValue = false;
@@ -166,6 +168,7 @@ Context::~Context()
 
     delete mBufferBackEnd;
     delete mVertexDataManager;
+    delete mIndexDataManager;
 
     while (!mBufferMap.empty())
     {
@@ -206,6 +209,7 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
     {
         mBufferBackEnd = new Dx9BackEnd(device);
         mVertexDataManager = new VertexDataManager(this, mBufferBackEnd);
+        mIndexDataManager = new IndexDataManager(this, mBufferBackEnd);
     }
 
     // Wrap the existing Direct3D 9 resources into GL objects and assign them to the '0' names
@@ -1020,50 +1024,26 @@ void Context::applyVertexBuffer(GLint first, GLsizei count)
 
     lookupAttributeMapping(translated);
 
-    mBufferBackEnd->preDraw(translated);
+    mBufferBackEnd->setupAttributesPreDraw(translated);
 }
 
-void Context::applyVertexBuffer(GLsizei count, const void *indices, GLenum indexType)
+void Context::applyVertexBuffer(const TranslatedIndexData &indexInfo)
 {
     TranslatedAttribute translated[MAX_VERTEX_ATTRIBS];
 
-    mVertexDataManager->preRenderValidate(adjustIndexPointer(indices), count, translated);
+    mVertexDataManager->preRenderValidate(indexInfo, translated);
 
     lookupAttributeMapping(translated);
 
-    mBufferBackEnd->preDraw(translated);
+    mBufferBackEnd->setupAttributesPreDraw(translated);
 }
 
 // Applies the indices and element array bindings to the Direct3D 9 device
-void Context::applyIndexBuffer(const void *indices, GLsizei count)
+TranslatedIndexData Context::applyIndexBuffer(const void *indices, GLsizei count, GLenum mode, GLenum type)
 {
-    GLsizei length = count * sizeof(Index);
-
-    IDirect3DDevice9 *device = getDevice();
-
-    IDirect3DIndexBuffer9 *indexBuffer = NULL;
-    void *data;
-
-    HRESULT result = device->CreateIndexBuffer(length, 0, D3DFMT_INDEX16, D3DPOOL_MANAGED, &indexBuffer, NULL);
-
-    if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
-    {
-        return error(GL_OUT_OF_MEMORY);
-    }
-
-    ASSERT(SUCCEEDED(result));
-
-    if (indexBuffer)
-    {
-        indexBuffer->Lock(0, length, &data, 0);
-        memcpy(data, adjustIndexPointer(indices), length);
-        indexBuffer->Unlock();
-
-        device->SetIndices(indexBuffer);
-        indexBuffer->Release();   // Will only effectively be deleted when no longer in use
-    }
-
-    startIndex = 0;
+    TranslatedIndexData indexInfo = mIndexDataManager->preRenderValidate(mode, type, count, getBuffer(elementArrayBuffer), indices);
+    mBufferBackEnd->setupIndicesPreDraw(indexInfo);
+    return indexInfo;
 }
 
 // Applies the shaders and shader constants to the Direct3D 9 device
@@ -1480,7 +1460,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
     if (!cullSkipsDraw(mode))
     {
         device->BeginScene();
-        device->DrawPrimitive(primitiveType, first, primitiveCount);
+        device->DrawPrimitive(primitiveType, 0, primitiveCount);
         device->EndScene();
     }
 }
@@ -1515,15 +1495,15 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void* 
     }
 
     applyState();
-    applyVertexBuffer(count, indices, type);
-    applyIndexBuffer(indices, count);
+    TranslatedIndexData indexInfo = applyIndexBuffer(indices, count, mode, type);
+    applyVertexBuffer(indexInfo);
     applyShaders();
     applyTextures();
 
     if (!cullSkipsDraw(mode))
     {
         device->BeginScene();
-        device->DrawIndexedPrimitive(primitiveType, 0, 0, count, startIndex, primitiveCount);
+        device->DrawIndexedPrimitive(primitiveType, -(INT)indexInfo.minIndex, indexInfo.minIndex, indexInfo.maxIndex-indexInfo.minIndex+1, indexInfo.offset/sizeof(Index), primitiveCount);
         device->EndScene();
     }
 }

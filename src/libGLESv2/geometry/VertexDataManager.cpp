@@ -14,6 +14,7 @@
 
 #include "Buffer.h"
 #include "geometry/backend.h"
+#include "geometry/IndexDataManager.h"
 
 namespace
 {
@@ -51,17 +52,17 @@ VertexDataManager::ArrayTranslationHelper::ArrayTranslationHelper(GLint first, G
 
 void VertexDataManager::ArrayTranslationHelper::translate(const FormatConverter &converter, GLsizei stride, const void *source, void *dest)
 {
-    converter.convertArray(source, stride, mFirst+mCount, dest);
+    converter.convertArray(source, stride, mCount, dest);
 }
 
-VertexDataManager::IndexedTranslationHelper::IndexedTranslationHelper(const Index *indices, GLsizei count)
-    : mIndices(indices), mCount(count)
+VertexDataManager::IndexedTranslationHelper::IndexedTranslationHelper(const Index *indices, Index minIndex, GLsizei count)
+    : mIndices(indices), mMinIndex(minIndex), mCount(count)
 {
 }
 
 void VertexDataManager::IndexedTranslationHelper::translate(const FormatConverter &converter, GLsizei stride, const void *source, void *dest)
 {
-    converter.convertIndexed(source, stride, mCount, mIndices, dest);
+    converter.convertIndexed(source, stride, mMinIndex, mCount, mIndices, dest);
 }
 
 std::bitset<MAX_VERTEX_ATTRIBS> VertexDataManager::activeAttribs()
@@ -85,43 +86,16 @@ GLenum VertexDataManager::preRenderValidate(GLint start, GLsizei count,
 {
     ArrayTranslationHelper translationHelper(start, count);
 
-    return internalPreRenderValidate(mContext->vertexAttribute, activeAttribs(), start, start+count, &translationHelper, outAttribs);
+    return internalPreRenderValidate(mContext->vertexAttribute, activeAttribs(), start, start+count-1, &translationHelper, outAttribs);
 }
 
-namespace
-{
-
-void indexRange(const Index *indices, std::size_t count, Index *minOut, Index *maxOut)
-{
-    ASSERT(count > 0);
-
-    Index minSoFar = indices[0];
-    Index maxSoFar = indices[0];
-
-    for (std::size_t i = 1; i < count; i++)
-    {
-        if (indices[i] > maxSoFar) maxSoFar = indices[i];
-        if (indices[i] < minSoFar) minSoFar = indices[i];
-    }
-
-    *minOut = minSoFar;
-    *maxOut = maxSoFar;
-}
-
-}
-
-GLenum VertexDataManager::preRenderValidate(const Index *indices, GLsizei count,
+GLenum VertexDataManager::preRenderValidate(const TranslatedIndexData &indexInfo,
                                             TranslatedAttribute *outAttribs)
 
 {
-    Index minIndex;
-    Index maxIndex;
+    IndexedTranslationHelper translationHelper(indexInfo.indices, indexInfo.minIndex, indexInfo.count);
 
-    indexRange(indices, count, &minIndex, &maxIndex);
-
-    IndexedTranslationHelper translationHelper(indices, count);
-
-    return internalPreRenderValidate(mContext->vertexAttribute, activeAttribs(), minIndex, maxIndex, &translationHelper, outAttribs);
+    return internalPreRenderValidate(mContext->vertexAttribute, activeAttribs(), indexInfo.minIndex, indexInfo.maxIndex, &translationHelper, outAttribs);
 }
 
 GLenum VertexDataManager::internalPreRenderValidate(const AttributeState *attribs,
@@ -159,8 +133,8 @@ GLenum VertexDataManager::internalPreRenderValidate(const AttributeState *attrib
                 translated[i].type = attribs[i].mType;
                 translated[i].size = attribs[i].mSize;
                 translated[i].normalized = attribs[i].mNormalized;
-                translated[i].offset = static_cast<std::size_t>(static_cast<const char*>(attribs[i].mPointer) - static_cast<const char*>(NULL));
                 translated[i].stride = interpretGlStride(attribs[i]);
+                translated[i].offset = static_cast<std::size_t>(static_cast<const char*>(attribs[i].mPointer) - static_cast<const char*>(NULL)) + translated[i].stride * minIndex;
                 translated[i].buffer = mContext->getBuffer(attribs[i].mBoundBuffer)->identityBuffer();
             }
             else
@@ -173,7 +147,7 @@ GLenum VertexDataManager::internalPreRenderValidate(const AttributeState *attrib
     // Handle any attributes needing translation or lifting.
     if (translateOrLift.any())
     {
-        std::size_t count = maxIndex + 1;
+        std::size_t count = maxIndex - minIndex + 1;
 
         std::size_t requiredSpace = 0;
 
@@ -221,6 +195,10 @@ GLenum VertexDataManager::internalPreRenderValidate(const AttributeState *attrib
                 {
                     input = attribs[i].mPointer;
                 }
+
+                size_t inputStride = interpretGlStride(attribs[i]);
+
+                input = static_cast<const char*>(input) + inputStride * minIndex;
 
                 translator->translate(formatConverter, interpretGlStride(attribs[i]), input, output);
 

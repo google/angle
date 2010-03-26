@@ -238,6 +238,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\geometry\IndexDataManager.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\geometry\VertexDataManager.cpp"
 					>
 				</File>
@@ -313,6 +317,10 @@
 				</File>
 				<File
 					RelativePath=".\geometry\dx9.h"
+					>
+				</File>
+				<File
+					RelativePath=".\geometry\IndexDataManager.h"
 					>
 				</File>
 				<File

@@ -180,12 +180,12 @@ struct VertexDataConverter
         return convertArray(static_cast<const InputType*>(in), stride, n, static_cast<OutputType*>(out));
     }
 
-    static void convertIndexed(const InputType *in, std::size_t stride, std::size_t n, const Index *indices, OutputType *out)
+    static void convertIndexed(const InputType *in, std::size_t stride, Index minIndex, std::size_t n, const Index *indices, OutputType *out)
     {
         for (std::size_t i = 0; i < n; i++)
         {
-            const InputType *ein = pointerAddBytes(in, indices[i] * stride);
-            OutputType *eout = pointerAddBytes(out, indices[i] * finalSize);
+            const InputType *ein = pointerAddBytes(in, (indices[i] - minIndex) * stride);
+            OutputType *eout = pointerAddBytes(out, (indices[i] - minIndex) * finalSize);
 
             copyComponent(eout, ein, 0, static_cast<OutputType>(DefaultValueRule::zero()));
             copyComponent(eout, ein, 1, static_cast<OutputType>(DefaultValueRule::zero()));
@@ -194,9 +194,9 @@ struct VertexDataConverter
         }
     }
 
-    static void convertIndexed(const void *in, std::size_t stride, std::size_t n, const Index *indices, void *out)
+    static void convertIndexed(const void *in, std::size_t stride, Index minIndex, std::size_t n, const Index *indices, void *out)
     {
-        convertIndexed(static_cast<const InputType*>(in), stride, n, indices, static_cast<OutputType*>(out));
+        convertIndexed(static_cast<const InputType*>(in), stride, minIndex, n, indices, static_cast<OutputType*>(out));
     }
 
   private:

@@ -26,7 +26,7 @@ struct FormatConverter
 {
     bool identity;
     std::size_t outputVertexSize;
-    void (*convertIndexed)(const void *in, std::size_t stride, std::size_t n, const Index *indices, void *out);
+    void (*convertIndexed)(const void *in, std::size_t stride, Index minIndex, std::size_t n, const Index *indices, void *out);
     void (*convertArray)(const void *in, std::size_t stride, std::size_t n, void *out);
 };
 
@@ -57,7 +57,8 @@ class BufferBackEnd
     virtual TranslatedIndexBuffer *createIndexBuffer(std::size_t size) = 0;
     virtual FormatConverter getFormatConverter(GLenum type, std::size_t size, bool normalize) = 0;
 
-    virtual GLenum preDraw(const TranslatedAttribute *attributes) = 0;
+    virtual GLenum setupIndicesPreDraw(const TranslatedIndexData &indexInfo) = 0;
+    virtual GLenum setupAttributesPreDraw(const TranslatedAttribute *attributes) = 0;
 };
 
 class TranslatedBuffer

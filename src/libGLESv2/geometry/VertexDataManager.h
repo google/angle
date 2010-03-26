@@ -26,6 +26,7 @@ class BufferBackEnd;
 class TranslatedVertexBuffer;
 struct TranslatedAttribute;
 struct FormatConverter;
+struct TranslatedIndexData;
 
 class VertexDataManager
 {
@@ -39,8 +40,7 @@ class VertexDataManager
                              GLsizei count,
                              TranslatedAttribute *outAttribs);
 
-    GLenum preRenderValidate(const Index *indices,
-                             GLsizei count,
+    GLenum preRenderValidate(const TranslatedIndexData &indexInfo,
                              TranslatedAttribute* outAttribs);
 
   private:
@@ -69,12 +69,13 @@ class VertexDataManager
     class IndexedTranslationHelper : public TranslationHelper
     {
       public:
-        IndexedTranslationHelper(const Index *indices, GLsizei count);
+        IndexedTranslationHelper(const Index *indices, Index minIndex, GLsizei count);
 
         void translate(const FormatConverter &converter, GLint stride, const void *source, void *dest);
 
       private:
         const Index *mIndices;
+        Index mMinIndex;
         GLsizei mCount;
     };
 
