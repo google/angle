@@ -1768,6 +1768,10 @@ void __stdcall glGetFloatv(GLenum pname, GLfloat* params)
                 *params = context->lineWidth;
                 break;
               case GL_ALIASED_LINE_WIDTH_RANGE:
+                params[0] = gl::ALIASED_LINE_WIDTH_RANGE_MIN;
+                params[1] = gl::ALIASED_LINE_WIDTH_RANGE_MAX;
+                break;
+              case GL_ALIASED_POINT_SIZE_RANGE:
                 params[0] = gl::ALIASED_POINT_SIZE_RANGE_MIN;
                 params[1] = gl::ALIASED_POINT_SIZE_RANGE_MAX;
                 break;
