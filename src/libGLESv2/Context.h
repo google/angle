@@ -61,6 +61,9 @@ enum
     IMPLEMENTATION_COLOR_READ_TYPE = GL_UNSIGNED_SHORT_5_6_5
 };
 
+const float ALIASED_POINT_SIZE_RANGE_MIN = 1.0f;
+const float ALIASED_POINT_SIZE_RANGE_MAX = 1.0f;
+
 // Because indices are accessed internally, we convert them to a common format.
 typedef unsigned short Index;
 

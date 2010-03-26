@@ -83,6 +83,7 @@ void OutputHLSL::header()
                "\n"
                "static float4 gl_Color[1] = {float4(0, 0, 0, 0)};\n"
                "static float4 gl_FragCoord = float4(0, 0, 0, 0);\n"
+               "static float2 gl_PointCoord = float2(0.5, 0.5);\n"
                "static bool gl_FrontFacing = false;\n"
                "\n"
                "float4 gl_texture2D(sampler2D s, float2 t)\n"
@@ -180,7 +181,7 @@ void OutputHLSL::header()
         out << "};\n"
                "\n"
                "static float4 gl_Position = float4(0, 0, 0, 0);\n"
-               "static float gl_PointSize = float(0);\n";
+               "static float gl_PointSize = float(1);\n";
         out <<  varyingGlobals;
         out << "\n";
     }
@@ -792,7 +793,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                                "    output.gl_Position.y = -(gl_Position.y - gl_HalfPixelSize.y * gl_Position.w);\n"
                                "    output.gl_Position.z = (gl_Position.z + gl_Position.w) * 0.5;\n"
                                "    output.gl_Position.w = gl_Position.w;\n"
-                               "    output.gl_PointSize = gl_PointSize;\n"
+                               "    output.gl_PointSize = 1.0;\n"
                                "    output.gl_FragCoord = gl_Position;\n";
 
                         TSymbolTableLevel *symbols = context.symbolTable.getGlobalLevel();
