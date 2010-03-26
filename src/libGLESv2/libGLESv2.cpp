@@ -4001,7 +4001,7 @@ void __stdcall glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLbo
             context->vertexAttribute[index].mBoundBuffer = context->arrayBuffer;
             context->vertexAttribute[index].mSize = size;
             context->vertexAttribute[index].mType = type;
-            context->vertexAttribute[index].mNormalized = normalized;
+            context->vertexAttribute[index].mNormalized = (normalized == GL_TRUE);
             context->vertexAttribute[index].mStride = stride;
             context->vertexAttribute[index].mPointer = ptr;
         }
