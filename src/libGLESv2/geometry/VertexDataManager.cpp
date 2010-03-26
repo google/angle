@@ -103,7 +103,7 @@ GLenum VertexDataManager::internalPreRenderValidate(const AttributeState *attrib
                                                     Index minIndex,
                                                     Index maxIndex,
                                                     TranslationHelper *translator,
-                                                    TranslatedAttribute *outAttribs)
+                                                    TranslatedAttribute *translated)
 {
     std::bitset<MAX_VERTEX_ATTRIBS> translateOrLift;
 
@@ -112,8 +112,6 @@ GLenum VertexDataManager::internalPreRenderValidate(const AttributeState *attrib
         if (!activeAttribs[i] && attribs[i].mEnabled && attribs[i].mBoundBuffer != 0 && !mContext->getBuffer(attribs[i].mBoundBuffer))
             return GL_INVALID_OPERATION;
     }
-
-    TranslatedAttribute translated[MAX_VERTEX_ATTRIBS];
 
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
     {
@@ -206,8 +204,6 @@ GLenum VertexDataManager::internalPreRenderValidate(const AttributeState *attrib
             }
         }
     }
-
-    std::copy(translated, translated + MAX_VERTEX_ATTRIBS, outAttribs);
 
     return GL_NO_ERROR;
 }
