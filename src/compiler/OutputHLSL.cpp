@@ -544,19 +544,34 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
 
     switch (node->getOp())
     {
-      case EOpAssign:                  outputTriplet(visit, "(", " = ", ")");     break;
-      case EOpInitialize:              outputTriplet(visit, NULL, " = ", NULL);   break;
-      case EOpAddAssign:               outputTriplet(visit, NULL, " += ", NULL);  break;
-      case EOpSubAssign:               outputTriplet(visit, NULL, " -= ", NULL);  break;
-      case EOpMulAssign:               outputTriplet(visit, NULL, " *= ", NULL);  break;
-      case EOpVectorTimesMatrixAssign: UNIMPLEMENTED(); /* FIXME */ out << "matrix mult second child into first child";  break;
-      case EOpVectorTimesScalarAssign: outputTriplet(visit, NULL, " *= ", NULL);  break;
-      case EOpMatrixTimesScalarAssign: UNIMPLEMENTED(); /* FIXME */ out << "matrix scale second child into first child"; break;
-      case EOpMatrixTimesMatrixAssign: UNIMPLEMENTED(); /* FIXME */ out << "matrix mult second child into first child"; break;
-      case EOpDivAssign:               outputTriplet(visit, NULL, " /= ", NULL);  break;
-      case EOpIndexDirect:             outputTriplet(visit, NULL, "[", "]");      break;
-      case EOpIndexIndirect:           outputTriplet(visit, NULL, "[", "]");      break;
-      case EOpIndexDirectStruct:       outputTriplet(visit, NULL, ".", NULL);     break;
+      case EOpAssign:                  outputTriplet(visit, "(", " = ", ")");           break;
+      case EOpInitialize:              outputTriplet(visit, NULL, " = ", NULL);         break;
+      case EOpAddAssign:               outputTriplet(visit, "(", " += ", ")");          break;
+      case EOpSubAssign:               outputTriplet(visit, "(", " -= ", ")");          break;
+      case EOpMulAssign:               outputTriplet(visit, "(", " *= ", ")");          break;
+      case EOpVectorTimesScalarAssign: outputTriplet(visit, "(", " *= ", ")");          break;
+      case EOpMatrixTimesScalarAssign: outputTriplet(visit, "(", " *= ", ")");          break;
+      case EOpVectorTimesMatrixAssign:
+      case EOpMatrixTimesMatrixAssign:
+        if (visit == PreVisit)
+        {
+            out << "(";
+        }
+        else if (visit == InVisit)
+        {
+            out << " = mul(";
+            node->getLeft()->traverse(this);
+            out << ", ";
+        }
+        else
+        {
+            out << "))";
+        }
+        break;
+      case EOpDivAssign:               outputTriplet(visit, "(", " /= ", ")");          break;
+      case EOpIndexDirect:             outputTriplet(visit, NULL, "[", "]");            break;
+      case EOpIndexIndirect:           outputTriplet(visit, NULL, "[", "]");            break;
+      case EOpIndexDirectStruct:       outputTriplet(visit, NULL, ".", NULL);           break;
       case EOpVectorSwizzle:
         if (visit == InVisit)
         {
@@ -622,10 +637,10 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
       case EOpLessThanEqual:     outputTriplet(visit, "(", " <= ", ")");  break;
       case EOpGreaterThanEqual:  outputTriplet(visit, "(", " >= ", ")");  break;
       case EOpVectorTimesScalar: outputTriplet(visit, "(", " * ", ")");   break;
-      case EOpVectorTimesMatrix: UNIMPLEMENTED(); /* FIXME */ out << "vector-times-matrix";   break;
+      case EOpMatrixTimesScalar: outputTriplet(visit, "(", " * ", ")");   break;
+      case EOpVectorTimesMatrix: outputTriplet(visit, "mul(", ", ", ")"); break;
       case EOpMatrixTimesVector: outputTriplet(visit, "mul(", ", ", ")"); break;
-      case EOpMatrixTimesScalar: UNIMPLEMENTED(); /* FIXME */ out << "matrix-scale";          break;
-      case EOpMatrixTimesMatrix: UNIMPLEMENTED(); /* FIXME */ out << "matrix-multiply";       break;
+      case EOpMatrixTimesMatrix: outputTriplet(visit, "mul(", ", ", ")"); break;
       case EOpLogicalOr:         outputTriplet(visit, "(", " || ", ")");  break;
       case EOpLogicalXor:        outputTriplet(visit, "xor(", ", ", ")"); break;   // FIXME: Prevent name clashes
       case EOpLogicalAnd:        outputTriplet(visit, "(", " && ", ")");  break;
