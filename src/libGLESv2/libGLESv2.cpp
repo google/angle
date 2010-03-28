@@ -1226,7 +1226,6 @@ void __stdcall glDrawElements(GLenum mode, GLsizei count, GLenum type, const voi
         switch (type)
         {
           case GL_UNSIGNED_BYTE:
-            UNIMPLEMENTED();   // FIXME
           case GL_UNSIGNED_SHORT:
             break;
           default:
