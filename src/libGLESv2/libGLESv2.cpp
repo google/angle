@@ -1928,8 +1928,7 @@ void __stdcall glGetProgramiv(GLuint program, GLenum pname, GLint* params)
             switch (pname)
             {
               case GL_DELETE_STATUS:
-                UNIMPLEMENTED();   // FIXME
-                *params = GL_FALSE;
+                *params = programObject->isFlaggedForDeletion();
                 return;
               case GL_LINK_STATUS:
                 *params = programObject->isLinked();
@@ -1939,12 +1938,10 @@ void __stdcall glGetProgramiv(GLuint program, GLenum pname, GLint* params)
                 *params = GL_TRUE;
                 return;
               case GL_INFO_LOG_LENGTH:
-                UNIMPLEMENTED();   // FIXME
-                *params = 0;
+                *params = programObject->getInfoLogLength();
                 return;
               case GL_ATTACHED_SHADERS:
-                UNIMPLEMENTED();   // FIXME
-                *params = 2;
+                *params = programObject->getAttachedShadersCount();
                 return;
               case GL_ACTIVE_ATTRIBUTES:
                 UNIMPLEMENTED();   // FIXME
@@ -1985,7 +1982,19 @@ void __stdcall glGetProgramInfoLog(GLuint program, GLsizei bufsize, GLsizei* len
             return error(GL_INVALID_VALUE);
         }
 
-        UNIMPLEMENTED();   // FIXME
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            gl::Program *programObject = context->getProgram(program);
+
+            if (!programObject)
+            {
+                return error(GL_INVALID_VALUE);
+            }
+
+            programObject->getInfoLog(bufsize, length, infolog);
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -2030,19 +2039,16 @@ void __stdcall glGetShaderiv(GLuint shader, GLenum pname, GLint* params)
                 *params = shaderObject->getType();
                 return;
               case GL_DELETE_STATUS:
-                UNIMPLEMENTED();   // FIXME
-                *params = GL_FALSE;
+                *params = shaderObject->isFlaggedForDeletion();
                 return;
               case GL_COMPILE_STATUS:
                 *params = shaderObject->isCompiled() ? GL_TRUE : GL_FALSE;
                 return;
               case GL_INFO_LOG_LENGTH:
-                UNIMPLEMENTED();   // FIXME
-                *params = 0;
+                *params = shaderObject->getInfoLogLength();
                 return;
               case GL_SHADER_SOURCE_LENGTH:
-                UNIMPLEMENTED();   // FIXME
-                *params = 1;
+                *params = shaderObject->getSourceLength();
                 return;
               default:
                 return error(GL_INVALID_ENUM);
@@ -2067,7 +2073,19 @@ void __stdcall glGetShaderInfoLog(GLuint shader, GLsizei bufsize, GLsizei* lengt
             return error(GL_INVALID_VALUE);
         }
 
-        UNIMPLEMENTED();   // FIXME
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            gl::Shader *shaderObject = context->getShader(shader);
+
+            if (!shaderObject)
+            {
+                return error(GL_INVALID_VALUE);
+            }
+
+            shaderObject->getInfoLog(bufsize, length, infolog);
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -2102,7 +2120,19 @@ void __stdcall glGetShaderSource(GLuint shader, GLsizei bufsize, GLsizei* length
             return error(GL_INVALID_VALUE);
         }
 
-        UNIMPLEMENTED();   // FIXME
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            gl::Shader *shaderObject = context->getShader(shader);
+
+            if (!shaderObject)
+            {
+                return error(GL_INVALID_VALUE);
+            }
+
+            shaderObject->getSource(bufsize, length, source);
+        }
     }
     catch(std::bad_alloc&)
     {

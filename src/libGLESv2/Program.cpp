@@ -41,6 +41,8 @@ Program::Program()
         mAttributeName[index] = NULL;
     }
 
+    mInfoLog = NULL;
+
     unlink();
 
     mDeleteStatus = false;
@@ -105,6 +107,11 @@ bool Program::detachShader(Shader *shader)
     unlink();
 
     return true;
+}
+
+int Program::getAttachedShadersCount() const
+{
+    return (mVertexShader ? 1 : 0) + (mFragmentShader ? 1 : 0);
 }
 
 IDirect3DPixelShader9 *Program::getPixelShader()
@@ -385,6 +392,7 @@ ID3DXBuffer *Program::compileToBinary(const char *hlsl, const char *profile, ID3
     if (errorMessage)
     {
         const char *message = (const char*)errorMessage->GetBufferPointer();
+
         TRACE("\n%s", hlsl);
         TRACE("\n%s", message);
     }
@@ -403,6 +411,9 @@ void Program::link()
     }
 
     unlink();
+
+    delete[] mInfoLog;
+    mInfoLog = NULL;
 
     if (!mFragmentShader || !mFragmentShader->isCompiled())
     {
@@ -910,6 +921,32 @@ bool Program::applyUniform1iv(GLint location, GLsizei count, const GLint *v)
     return true;
 }
 
+void Program::appendToInfoLog(const char *info)
+{
+    if (!info)
+    {
+        return;
+    }
+
+    size_t infoLength = strlen(info);
+
+    if (!mInfoLog)
+    {
+        mInfoLog = new char[infoLength + 1];
+        strcpy(mInfoLog, info);
+    }
+    else
+    {
+        size_t logLength = strlen(mInfoLog);
+        char *newLog = new char[logLength + infoLength + 1];
+        strcpy(newLog, mInfoLog);
+        strcpy(newLog + logLength, info);
+
+        delete[] mInfoLog;
+        mInfoLog = newLog;
+    }
+}
+
 // Returns the program object to an unlinked state, after detaching a shader, before re-linking, or at destruction
 void Program::unlink(bool destroy)
 {
@@ -932,6 +969,9 @@ void Program::unlink(bool destroy)
             delete[] mAttributeName[index];
             mAttributeName[index] = NULL;
         }
+
+        delete[] mInfoLog;
+        mInfoLog = NULL;
     }
 
     if (mPixelExecutable)
@@ -980,6 +1020,42 @@ void Program::unlink(bool destroy)
 bool Program::isLinked()
 {
     return mLinked;
+}
+
+int Program::getInfoLogLength() const
+{
+    if (!mInfoLog)
+    {
+        return 0;
+    }
+    else
+    {
+       return strlen(mInfoLog) + 1;
+    }
+}
+
+void Program::getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog)
+{
+    int index = 0;
+
+    if (mInfoLog)
+    {
+        while (index < bufSize - 1 && index < (int)strlen(mInfoLog))
+        {
+            infoLog[index] = mInfoLog[index];
+            index++;
+        }
+    }
+
+    if (bufSize)
+    {
+        infoLog[index] = '\0';
+    }
+
+    if (length)
+    {
+        *length = index;
+    }
 }
 
 void Program::flagForDeletion()

@@ -31,6 +31,10 @@ class Shader
 
     void deleteSource();
     void setSource(GLsizei count, const char **string, const GLint *length);
+    int getInfoLogLength() const;
+    void getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog);
+    int getSourceLength() const;
+    void getSource(GLsizei bufSize, GLsizei *length, char *source);
 
     virtual void compile() = 0;
     bool isCompiled();
@@ -40,6 +44,7 @@ class Shader
     void detach();
     bool isAttached() const;
     bool isDeletable() const;
+    bool isFlaggedForDeletion() const;
     void flagForDeletion();
 
     static void releaseCompiler();
@@ -54,7 +59,7 @@ class Shader
 
     char *mSource;
     char *mHlsl;
-    char *mErrors;
+    char *mInfoLog;
 
     static void *mFragmentCompiler;
     static void *mVertexCompiler;

@@ -55,6 +55,7 @@ class Program
 
     bool attachShader(Shader *shader);
     bool detachShader(Shader *shader);
+    int getAttachedShadersCount() const;
 
     IDirect3DPixelShader9 *getPixelShader();
     IDirect3DVertexShader9 *getVertexShader();
@@ -81,6 +82,8 @@ class Program
 
     void link();
     bool isLinked();
+    int getInfoLogLength() const;
+    void getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog);
 
     void flagForDeletion();
     bool isFlaggedForDeletion() const;
@@ -104,6 +107,8 @@ class Program
     bool applyUniformMatrix3fv(GLint location, GLsizei count, const GLfloat *value);
     bool applyUniformMatrix4fv(GLint location, GLsizei count, const GLfloat *value);
     bool applyUniform1iv(GLint location, GLsizei count, const GLint *v);
+
+    void appendToInfoLog(const char *info);
 
     FragmentShader *mFragmentShader;
     VertexShader *mVertexShader;
@@ -130,6 +135,7 @@ class Program
 
     bool mLinked;
     bool mDeleteStatus;   // Flag to indicate that the program can be deleted when no longer in use
+    char *mInfoLog;
 };
 }
 

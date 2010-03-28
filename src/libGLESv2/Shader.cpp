@@ -24,7 +24,7 @@ Shader::Shader()
 {
     mSource = NULL;
     mHlsl = NULL;
-    mErrors = NULL;
+    mInfoLog = NULL;
 
     // Perform a one-time initialization of the shader compiler (or after being destructed by releaseCompiler)
     if (!mFragmentCompiler)
@@ -46,7 +46,7 @@ Shader::~Shader()
 {
     delete[] mSource;
     delete[] mHlsl;
-    delete[] mErrors;
+    delete[] mInfoLog;
 }
 
 void Shader::setSource(GLsizei count, const char **string, const GLint *length)
@@ -89,6 +89,78 @@ void Shader::setSource(GLsizei count, const char **string, const GLint *length)
     mSource[totalLength] = '\0';
 }
 
+int Shader::getInfoLogLength() const
+{
+    if (!mInfoLog)
+    {
+        return 0;
+    }
+    else
+    {
+       return strlen(mInfoLog) + 1;
+    }
+}
+
+void Shader::getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog)
+{
+    int index = 0;
+
+    if (mInfoLog)
+    {
+        while (index < bufSize - 1 && index < (int)strlen(mInfoLog))
+        {
+            infoLog[index] = mInfoLog[index];
+            index++;
+        }
+    }
+
+    if (bufSize)
+    {
+        infoLog[index] = '\0';
+    }
+
+    if (length)
+    {
+        *length = index;
+    }
+}
+
+int Shader::getSourceLength() const
+{
+    if (!mSource)
+    {
+        return 0;
+    }
+    else
+    {
+       return strlen(mSource) + 1;
+    }
+}
+
+void Shader::getSource(GLsizei bufSize, GLsizei *length, char *source)
+{
+    int index = 0;
+
+    if (mSource)
+    {
+        while (index < bufSize - 1 && index < (int)strlen(mInfoLog))
+        {
+            source[index] = mSource[index];
+            index++;
+        }
+    }
+
+    if (bufSize)
+    {
+        source[index] = '\0';
+    }
+
+    if (length)
+    {
+        *length = index;
+    }
+}
+
 bool Shader::isCompiled()
 {
     return mHlsl != NULL;
@@ -119,6 +191,11 @@ bool Shader::isDeletable() const
     return mDeleteStatus == true && mAttachCount == 0;
 }
 
+bool Shader::isFlaggedForDeletion() const
+{
+    return mDeleteStatus;
+}
+
 void Shader::flagForDeletion()
 {
     mDeleteStatus = true;
@@ -142,8 +219,8 @@ void Shader::compileToHLSL(void *compiler)
 
     TRACE("\n%s", mSource);
 
-    delete[] mErrors;
-    mErrors = NULL;
+    delete[] mInfoLog;
+    mInfoLog = NULL;
 
     TBuiltInResource resources;
 
@@ -169,10 +246,10 @@ void Shader::compileToHLSL(void *compiler)
     }
     else
     {
-        mErrors = new char[strlen(info) + 1];
-        strcpy(mErrors, info);
+        mInfoLog = new char[strlen(info) + 1];
+        strcpy(mInfoLog, info);
 
-        TRACE("\n%s", mErrors);
+        TRACE("\n%s", mInfoLog);
     }
 }
 
