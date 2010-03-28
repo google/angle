@@ -15,7 +15,7 @@
 
 namespace gl
 {
-Uniform::Uniform(UniformType type, const std::string &name, unsigned int bytes) : type(type), name(name), bytes(bytes)
+Uniform::Uniform(GLenum type, const std::string &name, unsigned int bytes) : type(type), name(name), bytes(bytes)
 {
     this->data = new unsigned char[bytes];
     memset(this->data, 0, bytes);
@@ -209,7 +209,7 @@ bool Program::setUniform1fv(GLint location, GLsizei count, const GLfloat* v)
         return false;
     }
 
-    if (mUniforms[location]->type != UNIFORM_1FV || mUniforms[location]->bytes < sizeof(GLfloat) * count)
+    if (mUniforms[location]->type != GL_FLOAT || mUniforms[location]->bytes < sizeof(GLfloat) * count)
     {
         return false;
     }
@@ -226,7 +226,7 @@ bool Program::setUniform2fv(GLint location, GLsizei count, const GLfloat *v)
         return false;
     }
 
-    if (mUniforms[location]->type != UNIFORM_2FV || mUniforms[location]->bytes < 2 * sizeof(GLfloat) * count)
+    if (mUniforms[location]->type != GL_FLOAT_VEC2 || mUniforms[location]->bytes < 2 * sizeof(GLfloat) * count)
     {
         return false;
     }
@@ -243,7 +243,7 @@ bool Program::setUniform3fv(GLint location, GLsizei count, const GLfloat *v)
         return false;
     }
 
-    if (mUniforms[location]->type != UNIFORM_3FV || mUniforms[location]->bytes < 3 * sizeof(GLfloat) * count)
+    if (mUniforms[location]->type != GL_FLOAT_VEC3 || mUniforms[location]->bytes < 3 * sizeof(GLfloat) * count)
     {
         return false;
     }
@@ -260,7 +260,7 @@ bool Program::setUniform4fv(GLint location, GLsizei count, const GLfloat *v)
         return false;
     }
 
-    if (mUniforms[location]->type != UNIFORM_4FV || mUniforms[location]->bytes < 4 * sizeof(GLfloat) * count)
+    if (mUniforms[location]->type != GL_FLOAT_VEC4 || mUniforms[location]->bytes < 4 * sizeof(GLfloat) * count)
     {
         return false;
     }
@@ -277,7 +277,7 @@ bool Program::setUniformMatrix2fv(GLint location, GLsizei count, const GLfloat *
         return false;
     }
 
-    if (mUniforms[location]->type != UNIFORM_MATRIX_2FV || mUniforms[location]->bytes < 4 * sizeof(GLfloat) * count)
+    if (mUniforms[location]->type != GL_FLOAT_MAT2 || mUniforms[location]->bytes < 4 * sizeof(GLfloat) * count)
     {
         return false;
     }
@@ -294,7 +294,7 @@ bool Program::setUniformMatrix3fv(GLint location, GLsizei count, const GLfloat *
         return false;
     }
 
-    if (mUniforms[location]->type != UNIFORM_MATRIX_3FV || mUniforms[location]->bytes < 9 * sizeof(GLfloat) * count)
+    if (mUniforms[location]->type != GL_FLOAT_MAT3 || mUniforms[location]->bytes < 9 * sizeof(GLfloat) * count)
     {
         return false;
     }
@@ -311,7 +311,7 @@ bool Program::setUniformMatrix4fv(GLint location, GLsizei count, const GLfloat *
         return false;
     }
 
-    if (mUniforms[location]->type != UNIFORM_MATRIX_4FV || mUniforms[location]->bytes <  16 * sizeof(GLfloat) * count)
+    if (mUniforms[location]->type != GL_FLOAT_MAT4 || mUniforms[location]->bytes <  16 * sizeof(GLfloat) * count)
     {
         return false;
     }
@@ -328,7 +328,7 @@ bool Program::setUniform1iv(GLint location, GLsizei count, const GLint *v)
         return false;
     }
 
-    if (mUniforms[location]->type != UNIFORM_1IV || mUniforms[location]->bytes < sizeof(GLint) * count)
+    if (mUniforms[location]->type != GL_INT || mUniforms[location]->bytes < sizeof(GLint) * count)
     {
         return false;
     }
@@ -349,14 +349,14 @@ void Program::applyUniforms()
 
         switch (mUniforms[location]->type)
         {
-          case UNIFORM_1FV:        applyUniform1fv(location, bytes / sizeof(GLfloat), f);            break;
-          case UNIFORM_2FV:        applyUniform2fv(location, bytes / 2 / sizeof(GLfloat), f);        break;
-          case UNIFORM_3FV:        applyUniform3fv(location, bytes / 3 / sizeof(GLfloat), f);        break;
-          case UNIFORM_4FV:        applyUniform4fv(location, bytes / 4 / sizeof(GLfloat), f);        break;
-          case UNIFORM_MATRIX_2FV: applyUniformMatrix2fv(location, bytes / 4 / sizeof(GLfloat), f);  break;
-          case UNIFORM_MATRIX_3FV: applyUniformMatrix3fv(location, bytes / 9 / sizeof(GLfloat), f);  break;
-          case UNIFORM_MATRIX_4FV: applyUniformMatrix4fv(location, bytes / 16 / sizeof(GLfloat), f); break;
-          case UNIFORM_1IV:        applyUniform1iv(location, bytes / sizeof(GLint), i);              break;
+          case GL_FLOAT:      applyUniform1fv(location, bytes / sizeof(GLfloat), f);            break;
+          case GL_FLOAT_VEC2: applyUniform2fv(location, bytes / 2 / sizeof(GLfloat), f);        break;
+          case GL_FLOAT_VEC3: applyUniform3fv(location, bytes / 3 / sizeof(GLfloat), f);        break;
+          case GL_FLOAT_VEC4: applyUniform4fv(location, bytes / 4 / sizeof(GLfloat), f);        break;
+          case GL_FLOAT_MAT2: applyUniformMatrix2fv(location, bytes / 4 / sizeof(GLfloat), f);  break;
+          case GL_FLOAT_MAT3: applyUniformMatrix3fv(location, bytes / 9 / sizeof(GLfloat), f);  break;
+          case GL_FLOAT_MAT4: applyUniformMatrix4fv(location, bytes / 16 / sizeof(GLfloat), f); break;
+          case GL_INT:        applyUniform1iv(location, bytes / sizeof(GLint), i);              break;
           default:
             UNIMPLEMENTED();   // FIXME
             UNREACHABLE();
@@ -598,7 +598,7 @@ bool Program::defineUniform(const D3DXCONSTANT_DESC &constantDescription, std::s
 
     // Check if already defined
     GLint location = getUniformLocation(name.c_str());
-    UniformType type = uniform->type;
+    GLenum type = uniform->type;
 
     if (location >= 0)
     {
@@ -630,7 +630,7 @@ Uniform *Program::createUniform(const D3DXCONSTANT_DESC &constantDescription, st
           case D3DXPT_BOOL:
             switch (constantDescription.Columns)
             {
-              case 1: return new Uniform(UNIFORM_1IV, name, 1 * sizeof(GLint) * constantDescription.Elements);
+              case 1: return new Uniform(GL_INT, name, 1 * sizeof(GLint) * constantDescription.Elements);
               default:
                 UNIMPLEMENTED();   // FIXME
                 UNREACHABLE();
@@ -639,10 +639,10 @@ Uniform *Program::createUniform(const D3DXCONSTANT_DESC &constantDescription, st
           case D3DXPT_FLOAT:
             switch (constantDescription.Columns)
             {
-              case 1: return new Uniform(UNIFORM_1FV, name, 1 * sizeof(GLfloat) * constantDescription.Elements);
-              case 2: return new Uniform(UNIFORM_2FV, name, 2 * sizeof(GLfloat) * constantDescription.Elements);
-              case 3: return new Uniform(UNIFORM_3FV, name, 3 * sizeof(GLfloat) * constantDescription.Elements);
-              case 4: return new Uniform(UNIFORM_4FV, name, 4 * sizeof(GLfloat) * constantDescription.Elements);
+              case 1: return new Uniform(GL_FLOAT, name, 1 * sizeof(GLfloat) * constantDescription.Elements);
+              case 2: return new Uniform(GL_FLOAT_VEC2, name, 2 * sizeof(GLfloat) * constantDescription.Elements);
+              case 3: return new Uniform(GL_FLOAT_VEC3, name, 3 * sizeof(GLfloat) * constantDescription.Elements);
+              case 4: return new Uniform(GL_FLOAT_VEC4, name, 4 * sizeof(GLfloat) * constantDescription.Elements);
               default: UNREACHABLE();
             }
             break;
@@ -658,9 +658,9 @@ Uniform *Program::createUniform(const D3DXCONSTANT_DESC &constantDescription, st
           case D3DXPT_FLOAT:
             switch (constantDescription.Rows)
             {
-              case 2: return new Uniform(UNIFORM_MATRIX_2FV, name, 2 * 2 * sizeof(GLfloat) * constantDescription.Elements);
-              case 3: return new Uniform(UNIFORM_MATRIX_3FV, name, 3 * 3 * sizeof(GLfloat) * constantDescription.Elements);
-              case 4: return new Uniform(UNIFORM_MATRIX_4FV, name, 4 * 4 * sizeof(GLfloat) * constantDescription.Elements);
+              case 2: return new Uniform(GL_FLOAT_MAT2, name, 2 * 2 * sizeof(GLfloat) * constantDescription.Elements);
+              case 3: return new Uniform(GL_FLOAT_MAT3, name, 3 * 3 * sizeof(GLfloat) * constantDescription.Elements);
+              case 4: return new Uniform(GL_FLOAT_MAT4, name, 4 * 4 * sizeof(GLfloat) * constantDescription.Elements);
               default: UNREACHABLE();
             }
             break;

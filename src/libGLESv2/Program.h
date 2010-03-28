@@ -21,26 +21,14 @@ namespace gl
 class FragmentShader;
 class VertexShader;
 
-enum UniformType
-{
-    UNIFORM_1FV,
-    UNIFORM_2FV,
-    UNIFORM_3FV,
-    UNIFORM_4FV,
-    UNIFORM_MATRIX_2FV,
-    UNIFORM_MATRIX_3FV,
-    UNIFORM_MATRIX_4FV,
-    UNIFORM_1IV
-};
-
 // Helper struct representing a single shader uniform
 struct Uniform
 {
-    Uniform(UniformType type, const std::string &name, unsigned int bytes);
+    Uniform(GLenum type, const std::string &name, unsigned int bytes);
 
     ~Uniform();
 
-    const UniformType type;
+    const GLenum type;
     const std::string name;
     const unsigned int bytes;
     unsigned char *data;
