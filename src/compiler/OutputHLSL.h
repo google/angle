@@ -23,6 +23,7 @@ class OutputHLSL : public TIntermTraverser
     OutputHLSL(TParseContext &context);
 
     void header();
+    void footer();
 
   protected:
     void visitSymbol(TIntermSymbol*);

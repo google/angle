@@ -411,6 +411,113 @@ void OutputHLSL::header()
            "\n";
 }
 
+void OutputHLSL::footer()
+{
+    EShLanguage language = context.language;
+    TInfoSinkBase &out = context.infoSink.obj;
+    TSymbolTableLevel *symbols = context.symbolTable.getGlobalLevel();
+
+    if (language == EShLangFragment)
+    {
+        out << "PS_OUTPUT main(PS_INPUT input)\n"   // FIXME: Prevent name clashes
+               "{\n"
+               "    float rhw = 1.0 / input.gl_FragCoord.w;\n"
+               "    gl_FragCoord.x = (input.gl_FragCoord.x * rhw) * gl_Window.x + gl_Window.z;\n"
+               "    gl_FragCoord.y = (input.gl_FragCoord.y * rhw) * gl_Window.y + gl_Window.w;\n"
+               "    gl_FragCoord.z = (input.gl_FragCoord.z * rhw) * gl_Depth.x + gl_Depth.y;\n"
+               "    gl_FragCoord.w = rhw;\n"
+               "    gl_FrontFacing = __frontCCW ? (input.__vFace >= 0.0) : (input.__vFace <= 0.0);\n";
+
+        for (TSymbolTableLevel::const_iterator namedSymbol = symbols->begin(); namedSymbol != symbols->end(); namedSymbol++)
+        {
+            const TSymbol *symbol = (*namedSymbol).second;
+            const TString &name = symbol->getName();
+
+            if (symbol->isVariable())
+            {
+                const TVariable *variable = static_cast<const TVariable*>(symbol);
+                const TType &type = variable->getType();
+                TQualifier qualifier = type.getQualifier();
+
+                if (qualifier == EvqVaryingIn)
+                {
+                    out << "    " + name + " = input." + name + ";\n";   // FIXME: Prevent name clashes
+                }
+            }
+        }
+
+        out << "\n"
+               "    gl_main();\n"
+               "\n"
+               "    PS_OUTPUT output;\n"                    // FIXME: Prevent name clashes
+               "    output.gl_Color[0] = gl_Color[0];\n";   // FIXME: Prevent name clashes
+
+        TSymbolTableLevel *symbols = context.symbolTable.getGlobalLevel();
+
+        for (TSymbolTableLevel::const_iterator namedSymbol = symbols->begin(); namedSymbol != symbols->end(); namedSymbol++)
+        {
+            const TSymbol *symbol = (*namedSymbol).second;
+            const TString &name = symbol->getName();
+        }
+    }
+    else
+    {
+        out << "VS_OUTPUT main(VS_INPUT input)\n"   // FIXME: Prevent name clashes
+               "{\n";
+
+        for (TSymbolTableLevel::const_iterator namedSymbol = symbols->begin(); namedSymbol != symbols->end(); namedSymbol++)
+        {
+            const TSymbol *symbol = (*namedSymbol).second;
+            const TString &name = symbol->getName();
+
+            if (symbol->isVariable())
+            {
+                const TVariable *variable = static_cast<const TVariable*>(symbol);
+                const TType &type = variable->getType();
+                TQualifier qualifier = type.getQualifier();
+
+                if (qualifier == EvqAttribute)
+                {
+                    out << "    " + name + " = input." + name + ";\n";   // FIXME: Prevent name clashes
+                }
+            }
+        }
+
+        out << "\n"
+               "    gl_main();\n"
+               "\n"
+               "    VS_OUTPUT output;\n"   // FIXME: Prevent name clashes
+               "    output.gl_Position.x = gl_Position.x - gl_HalfPixelSize.x * gl_Position.w;\n"
+               "    output.gl_Position.y = -(gl_Position.y - gl_HalfPixelSize.y * gl_Position.w);\n"
+               "    output.gl_Position.z = (gl_Position.z + gl_Position.w) * 0.5;\n"
+               "    output.gl_Position.w = gl_Position.w;\n"
+               "    output.gl_PointSize = gl_PointSize;\n"
+               "    output.gl_FragCoord = gl_Position;\n";
+
+        TSymbolTableLevel *symbols = context.symbolTable.getGlobalLevel();
+
+        for (TSymbolTableLevel::const_iterator namedSymbol = symbols->begin(); namedSymbol != symbols->end(); namedSymbol++)
+        {
+            const TSymbol *symbol = (*namedSymbol).second;
+            const TString &name = symbol->getName();
+
+            if (symbol->isVariable())
+            {
+                const TVariable *variable = static_cast<const TVariable*>(symbol);
+                TQualifier qualifier = variable->getType().getQualifier();
+
+                if (qualifier == EvqVaryingOut || qualifier == EvqInvariantVaryingOut)
+                {
+                    out << "    output." + name + " = " + name + ";\n";   // FIXME: Prevent name clashes
+                }
+            }
+        }
+    }
+
+    out << "    return output;\n"   // FIXME: Prevent name clashes
+           "}\n";
+}
+
 void OutputHLSL::visitSymbol(TIntermSymbol *node)
 {
     TInfoSinkBase &out = context.infoSink.obj;
@@ -678,151 +785,41 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             {
                 if (name == "main")
                 {
-                    TSymbolTableLevel *symbols = context.symbolTable.getGlobalLevel();
-
-                    if (language == EShLangFragment)
-                    {
-                        out << "PS_OUTPUT main(PS_INPUT input)\n"   // FIXME: Prevent name clashes
-                               "{\n"
-                               "    float rhw = 1.0 / input.gl_FragCoord.w;\n"
-                               "    gl_FragCoord.x = (input.gl_FragCoord.x * rhw) * gl_Window.x + gl_Window.z;\n"
-                               "    gl_FragCoord.y = (input.gl_FragCoord.y * rhw) * gl_Window.y + gl_Window.w;\n"
-                               "    gl_FragCoord.z = (input.gl_FragCoord.z * rhw) * gl_Depth.x + gl_Depth.y;\n"
-                               "    gl_FragCoord.w = rhw;\n"
-                               "    gl_FrontFacing = __frontCCW ? (input.__vFace >= 0.0) : (input.__vFace <= 0.0);\n";
-
-                        for (TSymbolTableLevel::const_iterator namedSymbol = symbols->begin(); namedSymbol != symbols->end(); namedSymbol++)
-                        {
-                            const TSymbol *symbol = (*namedSymbol).second;
-                            const TString &name = symbol->getName();
-
-                            if (symbol->isVariable())
-                            {
-                                const TVariable *variable = static_cast<const TVariable*>(symbol);
-                                const TType &type = variable->getType();
-                                TQualifier qualifier = type.getQualifier();
-
-                                if(qualifier == EvqVaryingIn)
-                                {
-                                    out << "    " + name + " = input." + name + ";\n";   // FIXME: Prevent name clashes
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        out << "VS_OUTPUT main(VS_INPUT input)\n"   // FIXME: Prevent name clashes
-                               "{\n";
-
-                        for (TSymbolTableLevel::const_iterator namedSymbol = symbols->begin(); namedSymbol != symbols->end(); namedSymbol++)
-                        {
-                            const TSymbol *symbol = (*namedSymbol).second;
-                            const TString &name = symbol->getName();
-
-                            if (symbol->isVariable())
-                            {
-                                const TVariable *variable = static_cast<const TVariable*>(symbol);
-                                const TType &type = variable->getType();
-                                TQualifier qualifier = type.getQualifier();
-
-                                if (qualifier == EvqAttribute)
-                                {
-                                    out << "    " + name + " = input." + name + ";\n";   // FIXME: Prevent name clashes
-                                }
-                            }
-                        }
-                    }
-
-                    // Erase the (empty) argument list
-                    TIntermSequence &sequence = node->getSequence();
-                    sequence.erase(sequence.begin());
+                    name = "gl_main";
                 }
-                else
+
+                out << typeString(node->getType()) << " " << name << "(";
+
+                TIntermSequence &sequence = node->getSequence();
+                TIntermSequence &arguments = sequence[0]->getAsAggregate()->getSequence();
+
+                for (unsigned int i = 0; i < arguments.size(); i++)
                 {
-                    out << typeString(node->getType()) << " " << name << "(";
+                    TIntermSymbol *symbol = arguments[i]->getAsSymbolNode();
 
-                    TIntermSequence &sequence = node->getSequence();
-                    TIntermSequence &arguments = sequence[0]->getAsAggregate()->getSequence();
-
-                    for (unsigned int i = 0; i < arguments.size(); i++)
+                    if (symbol)
                     {
-                        TIntermSymbol *symbol = arguments[i]->getAsSymbolNode();
+                        const TType &type = symbol->getType();
+                        const TString &name = symbol->getSymbol();
 
-                        if (symbol)
+                        out << typeString(type) + " " + name;
+
+                        if (i < arguments.size() - 1)
                         {
-                            const TType &type = symbol->getType();
-                            const TString &name = symbol->getSymbol();
-
-                            out << typeString(type) + " " + name;
-
-                            if(i < arguments.size() - 1)
-                            {
-                                out << ", ";
-                            }
+                            out << ", ";
                         }
-                        else UNREACHABLE();
                     }
-
-                    sequence.erase(sequence.begin());
-
-                    out << ")\n"
-                           "{\n";
+                    else UNREACHABLE();
                 }
+
+                sequence.erase(sequence.begin());
+
+                out << ")\n"
+                       "{\n";
             }
             else if (visit == PostVisit)
             {
-                if (name == "main")
-                {
-                    if (language == EShLangFragment)
-                    {
-                        out << "    PS_OUTPUT output;\n"                    // FIXME: Prevent name clashes
-                               "    output.gl_Color[0] = gl_Color[0];\n";   // FIXME: Prevent name clashes
-
-                        TSymbolTableLevel *symbols = context.symbolTable.getGlobalLevel();
-
-                        for (TSymbolTableLevel::const_iterator namedSymbol = symbols->begin(); namedSymbol != symbols->end(); namedSymbol++)
-                        {
-                            const TSymbol *symbol = (*namedSymbol).second;
-                            const TString &name = symbol->getName();
-                        }
-                    }
-                    else
-                    {
-                        out << "    VS_OUTPUT output;\n"   // FIXME: Prevent name clashes
-                               "    output.gl_Position.x = gl_Position.x - gl_HalfPixelSize.x * gl_Position.w;\n"
-                               "    output.gl_Position.y = -(gl_Position.y - gl_HalfPixelSize.y * gl_Position.w);\n"
-                               "    output.gl_Position.z = (gl_Position.z + gl_Position.w) * 0.5;\n"
-                               "    output.gl_Position.w = gl_Position.w;\n"
-                               "    output.gl_PointSize = 1.0;\n"
-                               "    output.gl_FragCoord = gl_Position;\n";
-
-                        TSymbolTableLevel *symbols = context.symbolTable.getGlobalLevel();
-
-                        for (TSymbolTableLevel::const_iterator namedSymbol = symbols->begin(); namedSymbol != symbols->end(); namedSymbol++)
-                        {
-                            const TSymbol *symbol = (*namedSymbol).second;
-                            const TString &name = symbol->getName();
-
-                            if (symbol->isVariable())
-                            {
-                                const TVariable *variable = static_cast<const TVariable*>(symbol);
-                                TQualifier qualifier = variable->getType().getQualifier();
-
-                                if(qualifier == EvqVaryingOut || qualifier == EvqInvariantVaryingOut)
-                                {
-                                    out << "    output." + name + " = " + name + ";\n";   // FIXME: Prevent name clashes
-                                }
-                            }
-                        }
-                    }
-
-                    out << "    return output;\n"   // FIXME: Prevent name clashes
-                           "}\n";
-                }
-                else
-                {
-                    out << "}\n";
-                }
+                out << "}\n";
             }
         }
         break;
@@ -944,7 +941,7 @@ bool OutputHLSL::visitSelection(Visit visit, TIntermSelection *node)
 {
     TInfoSinkBase &out = context.infoSink.obj;
 
-    if(node->getType().getBasicType() == EbtVoid)   // if/else statement
+    if (node->getType().getBasicType() == EbtVoid)   // if/else statement
     {
         out << "if(";
 

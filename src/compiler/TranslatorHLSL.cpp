@@ -7,16 +7,19 @@
 #include "TranslatorHLSL.h"
 #include "OutputHLSL.h"
 
-TranslatorHLSL::TranslatorHLSL(EShLanguage l, int dOptions)
-        : TCompiler(l),
-          debugOptions(dOptions) {
+TranslatorHLSL::TranslatorHLSL(EShLanguage language, int debugOptions)
+    : TCompiler(language), debugOptions(debugOptions)
+{
 }
 
-bool TranslatorHLSL::compile(TIntermNode* root) {
+bool TranslatorHLSL::compile(TIntermNode *root)
+{
     TParseContext& parseContext = *GetGlobalParseContext();
     sh::OutputHLSL outputHLSL(parseContext);
+
     outputHLSL.header();
     parseContext.treeRoot->traverse(&outputHLSL);
-
+    outputHLSL.footer();
+    
     return true;
 }
