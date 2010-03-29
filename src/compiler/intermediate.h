@@ -417,6 +417,7 @@ public:
 	TIntermSelection(TIntermTyped* cond, TIntermNode* trueB, TIntermNode* falseB, const TType& type) :
 		TIntermTyped(type), condition(cond), trueBlock(trueB), falseBlock(falseB) {}
 	virtual void traverse(TIntermTraverser*);
+        bool usesTernaryOperator() const { return getBasicType() != EbtVoid; }
 	virtual TIntermNode* getCondition() const { return condition; }
 	virtual TIntermNode* getTrueBlock() const { return trueBlock; }
 	virtual TIntermNode* getFalseBlock() const { return falseBlock; }

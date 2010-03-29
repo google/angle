@@ -285,23 +285,35 @@ bool TOutputGLSL::visitSelection(Visit visit, TIntermSelection* node)
 {
     TInfoSinkBase& out = objSink();
 
-    out << "if (";
-    node->getCondition()->traverse(this);
-    out << ") {\n";
-
-    incrementDepth();
-    node->getTrueBlock()->traverse(this);
-    out << getIndentationString(depth - 2) << "}";
-
-    if (node->getFalseBlock())
+    if (node->usesTernaryOperator())
     {
-        out << " else {\n";
+        out << "(";
+        node->getCondition()->traverse(this);
+        out << ") ? (";
+        node->getTrueBlock()->traverse(this);
+        out << ") : (";
         node->getFalseBlock()->traverse(this);
-        out << getIndentationString(depth - 2) << "}";
+        out << ")";
     }
-    decrementDepth();
+    else
+    {
+        out << "if (";
+        node->getCondition()->traverse(this);
+        out << ") {\n";
 
-    out << "\n";
+        incrementDepth();
+        node->getTrueBlock()->traverse(this);
+        out << getIndentationString(depth - 2) << "}";
+
+        if (node->getFalseBlock())
+        {
+            out << " else {\n";
+            node->getFalseBlock()->traverse(this);
+            out << getIndentationString(depth - 2) << "}";
+        }
+        decrementDepth();
+        out << "\n";
+    }
     return false;
 }
 
