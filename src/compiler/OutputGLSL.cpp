@@ -17,10 +17,6 @@ TString getTypeName(const TType& type)
         out << "mat";
         out << type.getNominalSize();
     }
-    else if (type.isArray())
-    {
-        UNIMPLEMENTED();
-    }
     else if (type.isVector())
     {
         switch (type.getBasicType())
@@ -120,6 +116,10 @@ void TOutputGLSL::visitSymbol(TIntermSymbol* node)
         out << getTypeName(node->getType()) << " ";
     }
     out << node->getSymbol();
+    if (writeFullSymbol && node->getType().isArray())
+    {
+        out << "[" << node->getType().getArraySize() << "]";
+    }
 }
 
 void TOutputGLSL::visitConstantUnion(TIntermConstantUnion* node)
@@ -161,7 +161,7 @@ bool TOutputGLSL::visitBinary(Visit visit, TIntermBinary* node)
             break;
         case EOpAddAssign: writeTriplet(visit, NULL, " += ", NULL); break;
         case EOpSubAssign: UNIMPLEMENTED(); break;
-        case EOpMulAssign: UNIMPLEMENTED(); break;
+        case EOpMulAssign: writeTriplet(visit, NULL, " *= ", NULL); break;
         case EOpVectorTimesMatrixAssign: UNIMPLEMENTED(); break;
         case EOpVectorTimesScalarAssign: UNIMPLEMENTED(); break;
         case EOpMatrixTimesScalarAssign: UNIMPLEMENTED(); break;
@@ -210,7 +210,7 @@ bool TOutputGLSL::visitBinary(Visit visit, TIntermBinary* node)
         case EOpMul: writeTriplet(visit, "(", " * ", ")"); break;
         case EOpDiv: writeTriplet(visit, "(", " / ", ")"); break;
         case EOpMod: UNIMPLEMENTED(); break;
-        case EOpEqual: UNIMPLEMENTED(); break;
+        case EOpEqual: writeTriplet(visit, "(", " == ", ")"); break;
         case EOpNotEqual: UNIMPLEMENTED(); break;
         case EOpLessThan: writeTriplet(visit, "(", " < ", ")"); break;
         case EOpGreaterThan: writeTriplet(visit, "(", " > ", ")"); break;
@@ -254,7 +254,7 @@ bool TOutputGLSL::visitUnary(Visit visit, TIntermUnary* node)
         case EOpConvFloatToBool: UNIMPLEMENTED(); break;
         case EOpConvBoolToFloat: UNIMPLEMENTED(); break;
         case EOpConvIntToFloat: writeTriplet(visit, "float(", NULL, ")"); break;
-        case EOpConvFloatToInt: UNIMPLEMENTED(); break;
+        case EOpConvFloatToInt: writeTriplet(visit, "int(", NULL, ")"); break;
         case EOpConvBoolToInt: UNIMPLEMENTED(); break;
 
         case EOpRadians: UNIMPLEMENTED(); break;
@@ -263,7 +263,7 @@ bool TOutputGLSL::visitUnary(Visit visit, TIntermUnary* node)
         case EOpCos: writeTriplet(visit, "cos(", NULL, ")"); break;
         case EOpTan: UNIMPLEMENTED(); break;
         case EOpAsin: UNIMPLEMENTED(); break;
-        case EOpAcos: UNIMPLEMENTED(); break;
+        case EOpAcos: writeTriplet(visit, "acos(", NULL, ")"); break;
         case EOpAtan: UNIMPLEMENTED(); break;
 
         case EOpExp: UNIMPLEMENTED(); break;
@@ -273,7 +273,7 @@ bool TOutputGLSL::visitUnary(Visit visit, TIntermUnary* node)
         case EOpSqrt: UNIMPLEMENTED(); break;
         case EOpInverseSqrt: UNIMPLEMENTED(); break;
 
-        case EOpAbs: UNIMPLEMENTED(); break;
+        case EOpAbs: writeTriplet(visit, "abs(", NULL, ")"); break;
         case EOpSign: UNIMPLEMENTED(); break;
         case EOpFloor: writeTriplet(visit, "floor(", NULL, ")"); break;
         case EOpCeil: UNIMPLEMENTED(); break;
