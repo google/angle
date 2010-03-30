@@ -988,7 +988,7 @@ void OutputHLSL::visitConstantUnion(TIntermConstantUnion *node)
 {
     TInfoSinkBase &out = context.infoSink.obj;
     
-    TType &type = node->getType();
+    const TType &type = node->getType();
 
     if (type.isField())
     {

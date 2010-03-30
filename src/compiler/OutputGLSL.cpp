@@ -56,6 +56,7 @@ TOutputGLSL::TOutputGLSL(TParseContext &context)
 {
 }
 
+// Header declares user-defined structs.
 void TOutputGLSL::header()
 {
     TInfoSinkBase& out = objSink();
@@ -68,11 +69,25 @@ void TOutputGLSL::header()
             continue;
 
         const TVariable* variable = static_cast<const TVariable*>(symbol);
-        const TString& name = variable->getName();
-        const TType& type = variable->getType();
-        TQualifier qualifier = type.getQualifier();
+        if (!variable->isUserType())
+            continue;
 
-        //symbol->dump(parseContext.infoSink);
+        const TType& type = variable->getType();
+        ASSERT(type.getQualifier() == EvqTemporary);
+        ASSERT(type.getBasicType() == EbtStruct);
+
+        out << "struct " << variable->getName() << "{\n";
+        const TTypeList* structure = type.getStruct();
+        ASSERT(structure != NULL);
+        incrementDepth();
+        for (size_t i = 0; i < structure->size(); ++i) {
+            const TType* fieldType = (*structure)[i].type;
+            ASSERT(fieldType != NULL);
+            out << getIndentationString(depth);
+            out << getTypeName(*fieldType) << " " << fieldType->getFieldName() << ";\n";
+        }
+        decrementDepth();
+        out << "};\n";
     }
 }
 
@@ -198,7 +213,7 @@ bool TOutputGLSL::visitBinary(Visit visit, TIntermBinary* node)
         case EOpEqual: UNIMPLEMENTED(); break;
         case EOpNotEqual: UNIMPLEMENTED(); break;
         case EOpLessThan: writeTriplet(visit, "(", " < ", ")"); break;
-        case EOpGreaterThan: writeTriplet(visit, NULL, " > ", NULL); break;
+        case EOpGreaterThan: writeTriplet(visit, "(", " > ", ")"); break;
         case EOpLessThanEqual: UNIMPLEMENTED(); break;
         case EOpGreaterThanEqual: UNIMPLEMENTED(); break;
 
@@ -338,7 +353,7 @@ bool TOutputGLSL::visitAggregate(Visit visit, TIntermAggregate* node)
         case EOpFunction:
             if (visit == PreVisit)
             {
-                TString returnType = node->getBasicString();
+                TString returnType = getTypeName(node->getType());
                 TString functionName = TFunction::unmangleName(node->getName());
                 out << returnType << " " << functionName;
             }

@@ -795,9 +795,9 @@ bool TIntermBinary::promote(TInfoSink& infoSink)
 		// Set array information.
 		//
 		case EOpAssign:
-		case EOpInitialize:
-			getType().setArraySize(left->getType().getArraySize());
-			getType().setArrayInformationType(left->getType().getArrayInformationType());
+                case EOpInitialize:
+                        getTypePointer()->setArraySize(left->getType().getArraySize());
+			getTypePointer()->setArrayInformationType(left->getType().getArrayInformationType());
 			break;
 
 		default:
