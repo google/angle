@@ -53,6 +53,10 @@ void OutputHLSL::header()
                     varyingInput += "    " + typeString(type) + " " + name + arrayString(type) + semantic + ";\n";
                     varyingGlobals += "static " + typeString(type) + " " + name + arrayString(type) + " = " + initializer(type) + ";\n";
                 }
+                else if (qualifier == EvqGlobal)
+                {
+                    // Globals are declared and intialized as an aggregate node
+                }
                 else if (qualifier == EvqConst)
                 {
                     // Constants are repeated as literals where used
@@ -106,14 +110,13 @@ void OutputHLSL::header()
                "}\n"
                "\n";
     }
-    else
+    else   // Vertex shader
     {
         TString uniforms;
         TString attributeInput;
         TString attributeGlobals;
         TString varyingOutput;
         TString varyingGlobals;
-        TString globals;
 
         TSymbolTableLevel *symbols = context.symbolTable.getGlobalLevel();
         int semanticIndex = 0;
@@ -149,7 +152,7 @@ void OutputHLSL::header()
                 }
                 else if (qualifier == EvqGlobal)
                 {
-                    globals += typeString(type) + " " + name + arrayString(type) + ";\n";
+                    // Globals are declared and intialized as an aggregate node
                 }
                 else if (qualifier == EvqConst)
                 {
@@ -162,8 +165,6 @@ void OutputHLSL::header()
         out << "uniform float2 gl_HalfPixelSize;\n"
                "\n";
         out <<  uniforms;
-        out << "\n";
-        out <<  globals;
         out << "\n"
                "struct VS_INPUT\n"   // FIXME: Prevent name clashes
                "{\n";
@@ -451,16 +452,8 @@ void OutputHLSL::footer()
                "\n"
                "    PS_OUTPUT output;\n"                    // FIXME: Prevent name clashes
                "    output.gl_Color[0] = gl_Color[0];\n";   // FIXME: Prevent name clashes
-
-        TSymbolTableLevel *symbols = context.symbolTable.getGlobalLevel();
-
-        for (TSymbolTableLevel::const_iterator namedSymbol = symbols->begin(); namedSymbol != symbols->end(); namedSymbol++)
-        {
-            const TSymbol *symbol = (*namedSymbol).second;
-            const TString &name = symbol->getName();
-        }
     }
-    else
+    else   // Vertex shader
     {
         out << "VS_OUTPUT main(VS_INPUT input)\n"   // FIXME: Prevent name clashes
                "{\n";
@@ -749,7 +742,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             TIntermTyped *variable = sequence[0]->getAsTyped();
             bool visit = true;
 
-            if (variable && variable->getQualifier() == EvqTemporary)
+            if (variable && (variable->getQualifier() == EvqTemporary || variable->getQualifier() == EvqGlobal))
             {
                 out << typeString(variable->getType()) + " ";
 
