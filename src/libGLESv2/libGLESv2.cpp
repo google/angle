@@ -1667,7 +1667,19 @@ void __stdcall glGetAttachedShaders(GLuint program, GLsizei maxcount, GLsizei* c
             return error(GL_INVALID_VALUE);
         }
 
-        UNIMPLEMENTED();   // FIXME
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            gl::Program *programObject = context->getProgram(program);
+
+            if (!programObject)
+            {
+                return error(GL_INVALID_VALUE);
+            }
+
+            return programObject->getAttachedShaders(maxcount, count, shaders);
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -2099,7 +2111,39 @@ void __stdcall glGetShaderPrecisionFormat(GLenum shadertype, GLenum precisiontyp
 
     try
     {
-        UNIMPLEMENTED();   // FIXME
+        switch (shadertype)
+        {
+          case GL_VERTEX_SHADER:
+          case GL_FRAGMENT_SHADER:
+            break;
+          default:
+            return error(GL_INVALID_ENUM);
+        }
+
+        switch (precisiontype)
+        {
+          case GL_LOW_FLOAT:
+          case GL_MEDIUM_FLOAT:
+          case GL_HIGH_FLOAT:
+            // Assume IEEE 754 precision
+            range[0] = 127;
+            range[1] = 127;
+            precision[0] = 23;
+            precision[1] = 23;
+            break;
+          case GL_LOW_INT:
+          case GL_MEDIUM_INT:
+          case GL_HIGH_INT:
+            // Some (most) hardware only supports single-precision floating-point numbers,
+            // which can accurately represent integers up to +/-16777216
+            range[0] = 24;
+            range[1] = 24;
+            precision[0] = 0;
+            precision[1] = 0;
+            break;
+          default:
+            return error(GL_INVALID_ENUM);
+        }
     }
     catch(std::bad_alloc&)
     {

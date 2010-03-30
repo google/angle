@@ -72,6 +72,7 @@ class Program
     bool isLinked();
     int getInfoLogLength() const;
     void getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog);
+    void getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shaders);
 
     void flagForDeletion();
     bool isFlaggedForDeletion() const;

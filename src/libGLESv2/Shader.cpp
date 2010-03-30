@@ -20,7 +20,7 @@ namespace gl
 void *Shader::mFragmentCompiler = NULL;
 void *Shader::mVertexCompiler = NULL;
 
-Shader::Shader()
+Shader::Shader(GLuint handle) : mHandle(handle)
 {
     mSource = NULL;
     mHlsl = NULL;
@@ -47,6 +47,11 @@ Shader::~Shader()
     delete[] mSource;
     delete[] mHlsl;
     delete[] mInfoLog;
+}
+
+GLuint Shader::getHandle() const
+{
+    return mHandle;
 }
 
 void Shader::setSource(GLsizei count, const char **string, const GLint *length)
@@ -282,7 +287,7 @@ InputMapping::~InputMapping()
     delete[] mAttribute;
 }
 
-VertexShader::VertexShader()
+VertexShader::VertexShader(GLuint handle) : Shader(handle)
 {
 }
 
@@ -396,7 +401,7 @@ void VertexShader::parseAttributes()
     }
 }
 
-FragmentShader::FragmentShader()
+FragmentShader::FragmentShader(GLuint handle) : Shader(handle)
 {
 }
 

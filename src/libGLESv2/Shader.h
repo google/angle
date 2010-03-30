@@ -23,11 +23,12 @@ namespace gl
 class Shader
 {
   public:
-    Shader();
+    explicit Shader(GLuint handle);
 
     virtual ~Shader();
 
     virtual GLenum getType() = 0;
+    GLuint getHandle() const;
 
     void deleteSource();
     void setSource(GLsizei count, const char **string, const GLint *length);
@@ -54,6 +55,7 @@ class Shader
 
     void compileToHLSL(void *compiler);
 
+    const GLuint mHandle;
     int mAttachCount;     // Number of program objects this shader is attached to
     bool mDeleteStatus;   // Flag to indicate that the shader can be deleted when no longer in use
 
@@ -82,7 +84,7 @@ class InputMapping
 class VertexShader : public Shader
 {
   public:
-    VertexShader();
+    explicit VertexShader(GLuint handle);
 
     ~VertexShader();
 
@@ -104,7 +106,7 @@ class VertexShader : public Shader
 class FragmentShader : public Shader
 {
   public:
-    FragmentShader();
+    explicit FragmentShader(GLuint handle);
 
     ~FragmentShader();
 

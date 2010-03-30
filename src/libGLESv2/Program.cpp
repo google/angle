@@ -1058,6 +1058,36 @@ void Program::getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog)
     }
 }
 
+void Program::getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shaders)
+{
+    int total = 0;
+
+    if (mVertexShader)
+    {
+        if (total < maxCount)
+        {
+            shaders[total] = mVertexShader->getHandle();
+        }
+
+        total++;
+    }
+
+    if (mFragmentShader)
+    {
+        if (total < maxCount)
+        {
+            shaders[total] = mFragmentShader->getHandle();
+        }
+
+        total++;
+    }
+
+    if (count)
+    {
+        *count = total;
+    }
+}
+
 void Program::flagForDeletion()
 {
     mDeleteStatus = true;
