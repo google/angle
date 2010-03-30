@@ -793,8 +793,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpComma:         UNIMPLEMENTED(); /* FIXME */ out << "Comma\n"; return true;
       case EOpFunction:
         {
-            const TString &mangledName = node->getName();
-            TString name = TString(mangledName.c_str(), mangledName.find_first_of('('));
+            TString name = TFunction::unmangleName(node->getName());
 
             if (visit == PreVisit)
             {
@@ -842,8 +841,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         {
             if (visit == PreVisit)
             {
-                const TString &mangledName = node->getName();
-                TString name = TString(mangledName.c_str(), mangledName.find_first_of('('));
+                TString name = TFunction::unmangleName(node->getName());
 
                 if (node->isUserDefined())
                 {

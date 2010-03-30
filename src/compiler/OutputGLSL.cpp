@@ -42,11 +42,6 @@ TString getTypeName(const TType& type)
     return TString(out.c_str());
 }
 
-TString getUnmangledFunctionName(const TString& mangledName)
-{
-    return TString(mangledName.c_str(), mangledName.find_first_of('('));
-}
-
 TString getIndentationString(int depth)
 {
     TString indentation(depth, ' ');
@@ -344,7 +339,7 @@ bool TOutputGLSL::visitAggregate(Visit visit, TIntermAggregate* node)
             if (visit == PreVisit)
             {
                 TString returnType = node->getBasicString();
-                TString functionName = getUnmangledFunctionName(node->getName());
+                TString functionName = TFunction::unmangleName(node->getName());
                 out << returnType << " " << functionName;
             }
             else if (visit == InVisit)
@@ -362,7 +357,7 @@ bool TOutputGLSL::visitAggregate(Visit visit, TIntermAggregate* node)
         case EOpFunctionCall:
             if (visit == PreVisit)
             {
-                TString functionName = getUnmangledFunctionName(node->getName());
+                TString functionName = TFunction::unmangleName(node->getName());
                 out << functionName << "(";
             }
             else if (visit == InVisit)

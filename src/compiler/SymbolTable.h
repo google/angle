@@ -33,7 +33,7 @@
 #include "Common.h"
 #include "intermediate.h"
 #include "InfoSink.h"
- 
+
 //
 // Symbol base class.  (Can build functions or variables out of these...)
 //
@@ -49,8 +49,8 @@ public:
     void setUniqueId(int id) { uniqueId = id; }
     int getUniqueId() const { return uniqueId; }
     virtual void dump(TInfoSink &infoSink) const = 0;	
-	TSymbol(const TSymbol&);
-	virtual TSymbol* clone(TStructureMap& remapper) = 0;
+    TSymbol(const TSymbol&);
+    virtual TSymbol* clone(TStructureMap& remapper) = 0;
 
 protected:
     const TString *name;
@@ -81,7 +81,8 @@ public:
 
     virtual void dump(TInfoSink &infoSink) const;
 
-    constUnion* getConstPointer() { 
+    constUnion* getConstPointer()
+    { 
         if (!unionArray)
             unionArray = new constUnion[type.getObjectSize()];
 
@@ -95,9 +96,9 @@ public:
         delete unionArray;
         unionArray = constArray;  
     }
-	TVariable(const TVariable&, TStructureMap& remapper); // copy constructor
-	virtual TVariable* clone(TStructureMap& remapper);
-      
+    TVariable(const TVariable&, TStructureMap& remapper); // copy constructor
+    virtual TVariable* clone(TStructureMap& remapper);
+
 protected:
     TType type;
     bool userType;
@@ -114,10 +115,11 @@ protected:
 struct TParameter {
     TString *name;
     TType* type;
-	void copyParam(const TParameter& param, TStructureMap& remapper) {
-		name = NewPoolTString(param.name->c_str());
-		type = param.type->clone(remapper);
-	}
+    void copyParam(const TParameter& param, TStructureMap& remapper)
+    {
+        name = NewPoolTString(param.name->c_str());
+        type = param.type->clone(remapper);
+    }
 };
 
 //
@@ -133,18 +135,24 @@ public:
     TFunction(const TString *name, TType& retType, TOperator tOp = EOpNull) : 
         TSymbol(name), 
         returnType(retType),
-        mangledName(*name + '('),
+        mangledName(TFunction::mangleName(*name)),
         op(tOp),
         defined(false) { }
-	virtual ~TFunction();
+    virtual ~TFunction();
     virtual bool isFunction() const { return true; }    
-    
+
+    static TString mangleName(const TString& name) { return name + '('; }
+    static TString unmangleName(const TString& mangledName)
+    {
+        return TString(mangledName.c_str(), mangledName.find_first_of('('));
+    }
+
     void addParameter(TParameter& p) 
     { 
         parameters.push_back(p);
         mangledName = mangledName + p.type->getMangledName();
     }
-    
+
     const TString& getMangledName() const { return mangledName; }
     const TType& getReturnType() const { return returnType; }
     void relateToOperator(TOperator o) { op = o; }
@@ -153,16 +161,16 @@ public:
     bool isDefined() { return defined; }
 
     int getParamCount() const { return static_cast<int>(parameters.size()); }    
-          TParameter& operator [](int i)       { return parameters[i]; }
+    TParameter& operator [](int i)       { return parameters[i]; }
     const TParameter& operator [](int i) const { return parameters[i]; }
-    
+
     virtual void dump(TInfoSink &infoSink) const;
-	TFunction(const TFunction&, TStructureMap& remapper);
-	virtual TFunction* clone(TStructureMap& remapper);
-    
+    TFunction(const TFunction&, TStructureMap& remapper);
+    virtual TFunction* clone(TStructureMap& remapper);
+
 protected:
     typedef TVector<TParameter> TParamList;
-	TParamList parameters;
+    TParamList parameters;
     TType returnType;
     TString mangledName;
     TOperator op;
@@ -172,15 +180,15 @@ protected:
 
 class TSymbolTableLevel {
 public:
-	typedef std::map<TString, TSymbol*, std::less<TString>, pool_allocator<std::pair<const TString, TSymbol*> > > tLevel;
-	typedef tLevel::const_iterator const_iterator;
+    typedef std::map<TString, TSymbol*, std::less<TString>, pool_allocator<std::pair<const TString, TSymbol*> > > tLevel;
+    typedef tLevel::const_iterator const_iterator;
     typedef const tLevel::value_type tLevelPair;
     typedef std::pair<tLevel::iterator, bool> tInsertResult;
 
     POOL_ALLOCATOR_NEW_DELETE(GlobalPoolAllocator)
     TSymbolTableLevel() { }
-	~TSymbolTableLevel();
-    
+    ~TSymbolTableLevel();
+
     bool insert(TSymbol& symbol) 
     {
         //
@@ -188,7 +196,7 @@ public:
         //
         tInsertResult result;
         result = level.insert(tLevelPair(symbol.getMangledName(), &symbol));
-        
+
         return result.second;
     }
 
@@ -201,20 +209,20 @@ public:
             return (*it).second;
     }
 
-	const_iterator begin() const
-	{
-		return level.begin();
-	}
+    const_iterator begin() const
+    {
+        return level.begin();
+    }
 
-	const_iterator end() const
-	{
-		return level.end();
-	}
+    const_iterator end() const
+    {
+        return level.end();
+    }
 
     void relateToOperator(const char* name, TOperator op);
     void dump(TInfoSink &infoSink) const;
-	TSymbolTableLevel* clone(TStructureMap& remapper);
-    
+    TSymbolTableLevel* clone(TStructureMap& remapper);
+
 protected:
     tLevel level;
 };
@@ -252,11 +260,13 @@ public:
     bool atBuiltInLevel() { return atSharedBuiltInLevel() || atDynamicBuiltInLevel(); }
     bool atSharedBuiltInLevel() { return table.size() == 1; }	
     bool atGlobalLevel() { return table.size() <= 3; }
-    void push() { 
+    void push()
+    { 
         table.push_back(new TSymbolTableLevel);
     }
 
-    void pop() { 
+    void pop()
+    { 
         delete table[currentLevel()]; 
         table.pop_back(); 
     }
@@ -266,7 +276,7 @@ public:
         symbol.setUniqueId(++uniqueId);
         return table[currentLevel()]->insert(symbol);
     }
-    
+
     TSymbol* find(const TString& name, bool* builtIn = 0, bool *sameScope = 0) 
     {
         int level = currentLevel();
@@ -287,7 +297,7 @@ public:
     void relateToOperator(const char* name, TOperator op) { table[0]->relateToOperator(name, op); }
     int getMaxSymbolId() { return uniqueId; }
     void dump(TInfoSink &infoSink) const;
-	void copyTable(const TSymbolTable& copyOf);
+    void copyTable(const TSymbolTable& copyOf);
 
 protected:    
     int currentLevel() const { return static_cast<int>(table.size()) - 1; }
