@@ -45,7 +45,7 @@ bool Display::initialize()
     {
         if (mDc != NULL)
         {
-        //    UNIMPLEMENTED();   // FIXME: Determine which adapter index the device context corresponds to
+        //  UNIMPLEMENTED();   // FIXME: Determine which adapter index the device context corresponds to
         }
 
         D3DCAPS9 caps;
@@ -56,7 +56,7 @@ bool Display::initialize()
             return error(EGL_BAD_ALLOC, false);
         }
 
-        if (caps.PixelShaderVersion < D3DPS_VERSION(2, 0) || caps.VertexShaderVersion < D3DVS_VERSION(2, 0))
+        if (caps.PixelShaderVersion < D3DPS_VERSION(2, 0))
         {
             mD3d9->Release();
             mD3d9 = NULL;
@@ -66,11 +66,11 @@ bool Display::initialize()
             EGLint minSwapInterval = 4;
             EGLint maxSwapInterval = 0;
 
-            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_IMMEDIATE)    {minSwapInterval = std::min(minSwapInterval, 0); maxSwapInterval = std::max(maxSwapInterval, 0);}
-            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_ONE)        {minSwapInterval = std::min(minSwapInterval, 1); maxSwapInterval = std::max(maxSwapInterval, 1);}
-            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_TWO)        {minSwapInterval = std::min(minSwapInterval, 2); maxSwapInterval = std::max(maxSwapInterval, 2);}
-            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_THREE)        {minSwapInterval = std::min(minSwapInterval, 3); maxSwapInterval = std::max(maxSwapInterval, 3);}
-            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_FOUR)        {minSwapInterval = std::min(minSwapInterval, 4); maxSwapInterval = std::max(maxSwapInterval, 4);}
+            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_IMMEDIATE) {minSwapInterval = std::min(minSwapInterval, 0); maxSwapInterval = std::max(maxSwapInterval, 0);}
+            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_ONE)       {minSwapInterval = std::min(minSwapInterval, 1); maxSwapInterval = std::max(maxSwapInterval, 1);}
+            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_TWO)       {minSwapInterval = std::min(minSwapInterval, 2); maxSwapInterval = std::max(maxSwapInterval, 2);}
+            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_THREE)     {minSwapInterval = std::min(minSwapInterval, 3); maxSwapInterval = std::max(maxSwapInterval, 3);}
+            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_FOUR)      {minSwapInterval = std::min(minSwapInterval, 4); maxSwapInterval = std::max(maxSwapInterval, 4);}
 
             const D3DFORMAT adapterFormats[] =
             {
@@ -84,15 +84,15 @@ bool Display::initialize()
 
             const D3DFORMAT depthStencilFormats[] =
             {
-            //    D3DFMT_D16_LOCKABLE,
+            //  D3DFMT_D16_LOCKABLE,
                 D3DFMT_D32,
                 D3DFMT_D15S1,
                 D3DFMT_D24S8,
                 D3DFMT_D24X8,
                 D3DFMT_D24X4S4,
                 D3DFMT_D16,
-            //    D3DFMT_D32F_LOCKABLE,
-            //    D3DFMT_D24FS8
+            //  D3DFMT_D32F_LOCKABLE,
+            //  D3DFMT_D24FS8
             };
 
             D3DDISPLAYMODE currentDisplayMode;
@@ -216,8 +216,6 @@ egl::Surface *Display::createWindowSurface(HWND window, EGLConfig config)
 {
     const egl::Config *configuration = mConfigSet.get(config);
 
-    UINT adapter = D3DADAPTER_DEFAULT;
-    D3DDEVTYPE deviceType = D3DDEVTYPE_HAL;
     D3DPRESENT_PARAMETERS presentParameters = {0};
 
     presentParameters.AutoDepthStencilFormat = configuration->mDepthStencilFormat;
@@ -239,11 +237,25 @@ egl::Surface *Display::createWindowSurface(HWND window, EGLConfig config)
 
     if (!mDevice)
     {
-        HRESULT result = mD3d9->CreateDevice(adapter, deviceType, window, D3DCREATE_FPU_PRESERVE | D3DCREATE_MIXED_VERTEXPROCESSING | D3DCREATE_NOWINDOWCHANGES, &presentParameters, &mDevice);
+        UINT adapter = D3DADAPTER_DEFAULT;
+        D3DDEVTYPE deviceType = D3DDEVTYPE_HAL;
+        DWORD behaviorFlags = D3DCREATE_FPU_PRESERVE | D3DCREATE_NOWINDOWCHANGES;
+
+        HRESULT result = mD3d9->CreateDevice(adapter, deviceType, window, behaviorFlags | D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_PUREDEVICE, &presentParameters, &mDevice);
 
         if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
         {
             return error(EGL_BAD_ALLOC, (egl::Surface*)NULL);
+        }
+
+        if (FAILED(result))
+        {
+            result = mD3d9->CreateDevice(adapter, deviceType, window, behaviorFlags | D3DCREATE_SOFTWARE_VERTEXPROCESSING, &presentParameters, &mDevice);
+
+            if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+            {
+                return error(EGL_BAD_ALLOC, (egl::Surface*)NULL);
+            }
         }
 
         ASSERT(SUCCEEDED(result));
