@@ -467,8 +467,49 @@ bool TOutputGLSL::visitAggregate(Visit visit, TIntermAggregate* node)
 
 bool TOutputGLSL::visitLoop(Visit visit, TIntermLoop* node)
 {
-    UNIMPLEMENTED();
-    return true;
+    TInfoSinkBase& out = objSink();
+
+    // Loop header.
+    if (node->testFirst())  // for loop
+    {
+        out << "for (";
+        if (node->getInit())
+            node->getInit()->traverse(this);
+        out << "; ";
+
+        ASSERT(node->getTest() != NULL);
+        node->getTest()->traverse(this);
+        out << "; ";
+
+        if (node->getTerminal())
+            node->getTerminal()->traverse(this);
+        out << ") {\n";
+    }
+    else  // do-while loop
+    {
+        out << "do {\n";
+    }
+
+    // Loop body.
+    if (node->getBody())
+        node->getBody()->traverse(this);
+
+    // Loop footer.
+    if (node->testFirst())  // for loop
+    {
+        out << "}\n";
+    }
+    else  // do-while loop
+    {
+        out << "} while (";
+        ASSERT(node->getTest() != NULL);
+        node->getTest()->traverse(this);
+        out << ");\n";
+    }
+
+    // No need to visit children. They have been already processed in
+    // this function.
+    return false;
 }
 
 bool TOutputGLSL::visitBranch(Visit visit, TIntermBranch* node)
