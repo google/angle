@@ -2171,7 +2171,7 @@ void __stdcall glGetShaderSource(GLuint shader, GLsizei bufsize, GLsizei* length
 
             if (!shaderObject)
             {
-                return error(GL_INVALID_VALUE);
+                return error(GL_INVALID_OPERATION);
             }
 
             shaderObject->getSource(bufsize, length, source);
@@ -2916,7 +2916,7 @@ void __stdcall glShaderSource(GLuint shader, GLsizei count, const char** string,
 
             if (!shaderObject)
             {
-                return error(GL_INVALID_VALUE);
+                return error(GL_INVALID_OPERATION);
             }
 
             shaderObject->setSource(count, string, length);

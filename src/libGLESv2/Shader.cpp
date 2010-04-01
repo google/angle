@@ -148,7 +148,7 @@ void Shader::getSource(GLsizei bufSize, GLsizei *length, char *source)
 
     if (mSource)
     {
-        while (index < bufSize - 1 && index < (int)strlen(mInfoLog))
+        while (index < bufSize - 1 && index < (int)strlen(mSource))
         {
             source[index] = mSource[index];
             index++;
