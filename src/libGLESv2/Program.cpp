@@ -374,10 +374,8 @@ ID3DXBuffer *Program::compileToBinary(const char *hlsl, const char *profile, ID3
 
     ID3DXBuffer *binary = NULL;
     ID3DXBuffer *errorMessage = NULL;
-    DWORD flags = D3DXSHADER_USE_LEGACY_D3DX9_31_DLL |
-                  D3DXSHADER_PREFER_FLOW_CONTROL;
 
-    HRESULT result = D3DXCompileShader(hlsl, (UINT)strlen(hlsl), NULL, 0, "main", profile, flags, &binary, &errorMessage, constantTable);
+    HRESULT result = D3DXCompileShader(hlsl, (UINT)strlen(hlsl), NULL, 0, "main", profile, 0, &binary, &errorMessage, constantTable);
 
     if (SUCCEEDED(result))
     {
