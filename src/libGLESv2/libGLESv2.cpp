@@ -2903,7 +2903,7 @@ void __stdcall glShaderSource(GLuint shader, GLsizei count, const char** string,
 
     try
     {
-        if (count < 0)
+        if (shader == 0 || count < 0)
         {
             return error(GL_INVALID_VALUE);
         }
