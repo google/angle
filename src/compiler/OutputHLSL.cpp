@@ -553,12 +553,24 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
         else if (visit == InVisit)
         {
             out << " = mul(";
+            
+            if (node->getOp() == EOpMatrixTimesMatrixAssign)
+            {
+                out << "transpose(";
+            }
+            
             node->getLeft()->traverse(this);
-            out << ", ";
+            
+            if (node->getOp() == EOpMatrixTimesMatrixAssign)
+            {
+                out << ")";
+            }
+
+            out << ", transpose(";
         }
         else
         {
-            out << "))";
+            out << ")))";
         }
         break;
       case EOpDivAssign:               outputTriplet(visit, "(", " /= ", ")");          break;
@@ -631,9 +643,9 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
       case EOpGreaterThanEqual:  outputTriplet(visit, "(", " >= ", ")");  break;
       case EOpVectorTimesScalar: outputTriplet(visit, "(", " * ", ")");   break;
       case EOpMatrixTimesScalar: outputTriplet(visit, "(", " * ", ")");   break;
-      case EOpVectorTimesMatrix: outputTriplet(visit, "mul(", ", ", ")"); break;
-      case EOpMatrixTimesVector: outputTriplet(visit, "mul(", ", ", ")"); break;
-      case EOpMatrixTimesMatrix: outputTriplet(visit, "mul(", ", ", ")"); break;
+      case EOpVectorTimesMatrix: outputTriplet(visit, "mul(", ", transpose(", "))"); break;
+      case EOpMatrixTimesVector: outputTriplet(visit, "mul(transpose(", "), ", ")"); break;
+      case EOpMatrixTimesMatrix: outputTriplet(visit, "mul(transpose(", "), transpose(", "))"); break;
       case EOpLogicalOr:         outputTriplet(visit, "(", " || ", ")");  break;
       case EOpLogicalXor:        outputTriplet(visit, "xor(", ", ", ")"); break;   // FIXME: Prevent name clashes
       case EOpLogicalAnd:        outputTriplet(visit, "(", " && ", ")");  break;

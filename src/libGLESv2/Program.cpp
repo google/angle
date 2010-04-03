@@ -789,12 +789,12 @@ bool Program::applyUniformMatrix2fv(GLint location, GLsizei count, const GLfloat
 
     if (constantPS)
     {
-        mConstantTablePS->SetMatrixArray(device, constantPS, matrix, count);
+        mConstantTablePS->SetMatrixTransposeArray(device, constantPS, matrix, count);
     }
 
     if (constantVS)
     {
-        mConstantTableVS->SetMatrixArray(device, constantVS, matrix, count);
+        mConstantTableVS->SetMatrixTransposeArray(device, constantVS, matrix, count);
     }
 
     delete[] matrix;
@@ -822,12 +822,12 @@ bool Program::applyUniformMatrix3fv(GLint location, GLsizei count, const GLfloat
 
     if (constantPS)
     {
-        mConstantTablePS->SetMatrixArray(device, constantPS, matrix, count);
+        mConstantTablePS->SetMatrixTransposeArray(device, constantPS, matrix, count);
     }
 
     if (constantVS)
     {
-        mConstantTableVS->SetMatrixArray(device, constantVS, matrix, count);
+        mConstantTableVS->SetMatrixTransposeArray(device, constantVS, matrix, count);
     }
 
     delete[] matrix;
@@ -855,12 +855,12 @@ bool Program::applyUniformMatrix4fv(GLint location, GLsizei count, const GLfloat
 
     if (constantPS)
     {
-        mConstantTablePS->SetMatrixArray(device, constantPS, matrix, count);
+        mConstantTablePS->SetMatrixTransposeArray(device, constantPS, matrix, count);
     }
 
     if (constantVS)
     {
-        mConstantTableVS->SetMatrixArray(device, constantVS, matrix, count);
+        mConstantTableVS->SetMatrixTransposeArray(device, constantVS, matrix, count);
     }
 
     delete[] matrix;
