@@ -251,6 +251,20 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
     {
         depthStencil->Release();
     }
+
+    D3DCAPS9 capabilities;
+    device->GetDeviceCaps(&capabilities);
+    
+    if (capabilities.PixelShaderVersion == D3DPS_VERSION(3, 0))
+    {
+        mPsProfile = "ps_3_0";
+        mVsProfile = "vs_3_0";
+    }
+    else  // egl::Display guarantees support for at least 2.0
+    {
+        mPsProfile = "ps_2_0";
+        mVsProfile = "vs_2_0";
+    }
 }
 
 void Context::setClearColor(float red, float green, float blue, float alpha)
@@ -1640,6 +1654,16 @@ GLenum Context::getError()
     }
 
     return GL_NO_ERROR;
+}
+
+const char *Context::getPixelShaderProfile()
+{
+    return mPsProfile;
+}
+
+const char *Context::getVertexShaderProfile()
+{
+    return mVsProfile;
 }
 
 void Context::detachBuffer(GLuint buffer)

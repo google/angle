@@ -423,9 +423,9 @@ void Program::link()
         return;
     }
 
-    IDirect3DDevice9 *device = getDevice();
-    const char *vertexProfile = D3DXGetVertexShaderProfile(device);
-    const char *pixelProfile = D3DXGetPixelShaderProfile(device);
+    Context *context = getContext();
+    const char *vertexProfile = context->getVertexShaderProfile();
+    const char *pixelProfile = context->getPixelShaderProfile();
 
     const char *pixelHLSL = mFragmentShader->linkHLSL();
     const char *vertexHLSL = mVertexShader->linkHLSL(pixelHLSL);
@@ -434,6 +434,7 @@ void Program::link()
 
     if (vertexBinary && pixelBinary)
     {
+        IDirect3DDevice9 *device = getDevice();
         HRESULT vertexResult = device->CreateVertexShader((DWORD*)vertexBinary->GetBufferPointer(), &mVertexExecutable);
         HRESULT pixelResult = device->CreatePixelShader((DWORD*)pixelBinary->GetBufferPointer(), &mPixelExecutable);
 

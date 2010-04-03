@@ -277,6 +277,9 @@ class Context : public State
 
     GLenum getError();
 
+    const char *getPixelShaderProfile();
+    const char *getVertexShaderProfile();
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Context);
 
@@ -333,6 +336,9 @@ class Context : public State
     bool mInvalidFramebufferOperation;
 
     bool mHasBeenCurrent;
+
+    const char *mPsProfile;
+    const char *mVsProfile;
 };
 }
 
