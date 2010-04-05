@@ -50,6 +50,7 @@ void OutputHLSL::header()
                     sprintf(semantic, " : TEXCOORD%d", semanticIndex);
                     semanticIndex += type.isArray() ? type.getArraySize() : 1;
 
+                    // Program linking depends on this exact format
                     varyingInput += "    " + typeString(type) + " " + name + arrayString(type) + semantic + ";\n";
                     varyingGlobals += "static " + typeString(type) + " " + name + arrayString(type) + " = " + initializer(type) + ";\n";
                 }
@@ -74,7 +75,7 @@ void OutputHLSL::header()
                "struct PS_INPUT\n"   // FIXME: Prevent name clashes
                "{\n";
         out <<      varyingInput;
-        out << "    float4 gl_FragCoord : TEXCOORD" << HLSL_FRAG_COORD_SEMANTIC << ";\n";
+        out << "    float4 gl_FragCoord : TEXCOORD" << semanticIndex << ";\n";
         out << "    float __vFace : VFACE;\n"
                "};\n"
                "\n";
@@ -147,6 +148,7 @@ void OutputHLSL::header()
                 }
                 else if (qualifier == EvqVaryingOut || qualifier == EvqInvariantVaryingOut)
                 {
+                    // Program linking depends on this exact format
                     varyingOutput += "    " + typeString(type) + " " + name + arrayString(type) + " : TEXCOORD0;\n";   // Actual semantic index assigned during link
                     varyingGlobals += "static " + typeString(type) + " " + name + arrayString(type) + " = " + initializer(type) + ";\n";
                 }
@@ -177,7 +179,7 @@ void OutputHLSL::header()
                "{\n"
                "    float4 gl_Position : POSITION;\n"
                "    float gl_PointSize : PSIZE;\n"
-               "    float4 gl_FragCoord : TEXCOORD" << HLSL_FRAG_COORD_SEMANTIC << ";\n";
+               "    float4 gl_FragCoord : TEXCOORD0;\n";   // Actual semantic index assigned during link
         out <<      varyingOutput;
         out << "};\n"
                "\n"
@@ -501,6 +503,7 @@ void OutputHLSL::footer()
 
                 if (qualifier == EvqVaryingOut || qualifier == EvqInvariantVaryingOut)
                 {
+                    // Program linking depends on this exact format
                     out << "    output." + name + " = " + name + ";\n";   // FIXME: Prevent name clashes
                 }
             }

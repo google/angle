@@ -171,7 +171,7 @@ bool Shader::isCompiled()
     return mHlsl != NULL;
 }
 
-const char *Shader::linkHLSL()
+const char *Shader::getHLSL()
 {
     return mHlsl;
 }
@@ -304,45 +304,6 @@ void VertexShader::compile()
 {
     compileToHLSL(mVertexCompiler);
     parseAttributes();
-}
-
-const char *VertexShader::linkHLSL(const char *pixelHLSL)
-{
-    if (mHlsl && pixelHLSL)
-    {
-        const char *input = strstr(pixelHLSL, "struct PS_INPUT");
-        char *output = strstr(mHlsl, "struct VS_OUTPUT");
-
-        while (*input != '}' && output)
-        {
-            char varyingName[100];
-            unsigned int semanticIndex;
-            int matches = sscanf(input, "%s : TEXCOORD%d;", varyingName, &semanticIndex);
-
-            if (matches == 2 && semanticIndex != sh::HLSL_FRAG_COORD_SEMANTIC)
-            {
-                ASSERT(semanticIndex < MAX_VARYING_VECTORS);
-                char *varying = strstr(output, varyingName);
-
-                if (varying)
-                {
-                    ASSERT(semanticIndex <= 9);   // Single character
-                    varying = strstr(varying, " : TEXCOORD0;");
-                    varying[11] = '0' + semanticIndex;
-                }
-                else
-                {
-                    return NULL;
-                }
-
-                input = strstr(input, ";");
-            }
-
-            input++;
-        }
-    }
-
-    return mHlsl;
 }
 
 const char *VertexShader::getAttributeName(unsigned int attributeIndex)

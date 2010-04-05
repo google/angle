@@ -12,11 +12,6 @@
 
 namespace sh
 {
-enum
-{
-    HLSL_FRAG_COORD_SEMANTIC = 15   // Semantic index assigned to the gl_FragCoord varying
-};
-
 class OutputHLSL : public TIntermTraverser
 {
   public:

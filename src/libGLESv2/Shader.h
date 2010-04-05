@@ -39,7 +39,7 @@ class Shader
 
     virtual void compile() = 0;
     bool isCompiled();
-    const char *linkHLSL();
+    const char *getHLSL();
 
     void attach();
     void detach();
@@ -90,7 +90,6 @@ class VertexShader : public Shader
 
     GLenum getType();
     void compile();
-    const char *linkHLSL(const char *pixelHLSL);
     const char *getAttributeName(unsigned int attributeIndex);
     bool isActiveAttribute(const char *attributeName);
     int getInputMapping(const char *attributeName);

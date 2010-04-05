@@ -41,6 +41,8 @@ Program::Program()
         mAttributeName[index] = NULL;
     }
 
+    mPixelHLSL = NULL;
+    mVertexHLSL = NULL;
     mInfoLog = NULL;
 
     unlink();
@@ -398,6 +400,92 @@ ID3DXBuffer *Program::compileToBinary(const char *hlsl, const char *profile, ID3
     return NULL;
 }
 
+void Program::parseVaryings(const char *structure, char *hlsl, VaryingArray &varyings)
+{
+    char *input = strstr(hlsl, structure);
+    input += strlen(structure);
+
+    while (input && *input != '}')
+    {
+        char varyingType[256];
+        char varyingName[256];
+        unsigned int semanticIndex;
+        int matches = sscanf(input, "    %s %s : TEXCOORD%d;", varyingType, varyingName, &semanticIndex);
+
+        if (matches == 3)
+        {
+            ASSERT(semanticIndex <= 9);   // Single character
+
+            varyings.push_back(Varying(varyingName, input));
+        }
+
+        input = strstr(input, ";");
+        input += 2;
+    }
+}
+
+bool Program::linkVaryings()
+{
+    if (!mPixelHLSL || !mVertexHLSL)
+    {
+        return false;
+    }
+
+    VaryingArray vertexVaryings;
+    VaryingArray pixelVaryings;
+
+    parseVaryings("struct VS_OUTPUT\n{\n", mVertexHLSL, vertexVaryings);
+    parseVaryings("struct PS_INPUT\n{\n", mPixelHLSL, pixelVaryings);
+
+    for (unsigned int out = 0; out < vertexVaryings.size(); out++)
+    {
+        unsigned int in;
+        for (in = 0; in < pixelVaryings.size(); in++)
+        {
+            if (vertexVaryings[out].name == pixelVaryings[in].name)
+            {
+                pixelVaryings[in].link = out;
+                vertexVaryings[out].link = in;
+
+                break;
+            }
+        }
+
+        if (in != pixelVaryings.size())
+        {
+            // FIXME: Verify matching type and qualifiers
+
+            char *outputSemantic = strstr(vertexVaryings[out].declaration, " : TEXCOORD");
+            char *inputSemantic = strstr(pixelVaryings[in].declaration, " : TEXCOORD");
+            outputSemantic[11] = inputSemantic[11];
+        }
+        else
+        {
+            // Comment out the declaration and output assignment
+            vertexVaryings[out].declaration[0] = '/';
+            vertexVaryings[out].declaration[1] = '/';
+
+            char outputString[256];
+            sprintf(outputString, "    output.%s = ", vertexVaryings[out].name.c_str());
+            char *varyingOutput = strstr(mVertexHLSL, outputString);
+
+            varyingOutput[0] = '/';
+            varyingOutput[1] = '/';
+        }
+    }
+
+    // Verify that each pixel varying has been linked to a vertex varying
+    for (unsigned int in = 0; in < pixelVaryings.size(); in++)
+    {
+        if (pixelVaryings[in].link < 0)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 // Links the HLSL code of the vertex and pixel shader by matching up their varyings,
 // compiling them into binaries, determining the attribute mappings, and collecting
 // a list of uniforms
@@ -409,9 +497,6 @@ void Program::link()
     }
 
     unlink();
-
-    delete[] mInfoLog;
-    mInfoLog = NULL;
 
     if (!mFragmentShader || !mFragmentShader->isCompiled())
     {
@@ -427,10 +512,21 @@ void Program::link()
     const char *vertexProfile = context->getVertexShaderProfile();
     const char *pixelProfile = context->getPixelShaderProfile();
 
-    const char *pixelHLSL = mFragmentShader->linkHLSL();
-    const char *vertexHLSL = mVertexShader->linkHLSL(pixelHLSL);
-    ID3DXBuffer *vertexBinary = compileToBinary(vertexHLSL, vertexProfile, &mConstantTableVS);
-    ID3DXBuffer *pixelBinary = compileToBinary(pixelHLSL, pixelProfile, &mConstantTablePS);
+    const char *ps = mFragmentShader->getHLSL();
+    const char *vs = mVertexShader->getHLSL();
+
+    mPixelHLSL = new char[strlen(ps) + 1];
+    strcpy(mPixelHLSL, ps);
+    mVertexHLSL = new char[strlen(vs) + 1];
+    strcpy(mVertexHLSL, vs);
+
+    if (!linkVaryings())
+    {
+        return;
+    }
+
+    ID3DXBuffer *vertexBinary = compileToBinary(mVertexHLSL, vertexProfile, &mConstantTableVS);
+    ID3DXBuffer *pixelBinary = compileToBinary(mPixelHLSL, pixelProfile, &mConstantTablePS);
 
     if (vertexBinary && pixelBinary)
     {
@@ -968,9 +1064,6 @@ void Program::unlink(bool destroy)
             delete[] mAttributeName[index];
             mAttributeName[index] = NULL;
         }
-
-        delete[] mInfoLog;
-        mInfoLog = NULL;
     }
 
     if (mPixelExecutable)
@@ -1012,6 +1105,15 @@ void Program::unlink(bool destroy)
         delete mUniforms.back();
         mUniforms.pop_back();
     }
+
+    delete[] mPixelHLSL;
+    mPixelHLSL = NULL;
+
+    delete[] mVertexHLSL;
+    mVertexHLSL = NULL;
+
+    delete[] mInfoLog;
+    mInfoLog = NULL;
 
     mLinked = false;
 }
