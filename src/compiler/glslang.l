@@ -39,24 +39,23 @@ O           [0-7]
 #endif
 
 int yy_input(char* buf, int max_size);
-TSourceLoc yylineno;
 
-#ifdef _WIN32
-    extern int yyparse(TParseContext&);
-    #define YY_DECL int yylex(YYSTYPE* pyylval, TParseContext& parseContext)    
-#else
-    extern int yyparse(void*);
-    #define YY_DECL int yylex(YYSTYPE* pyylval, void* parseContextLocal)
-    #define parseContext (*((TParseContext*)(parseContextLocal)))		
-#endif
+extern int yyparse(void*);
+#define YY_DECL int yylex(YYSTYPE* pyylval, void* parseContextLocal)
+#define parseContext (*((TParseContext*)(parseContextLocal)))
  
 #define YY_INPUT(buf,result,max_size) (result = yy_input(buf, max_size))
 
 %}
 
+/*
+TODO(alokp): yylineno is only here to support old flex.exe in compiler/tools.
+Remove it when we can exclusively use the newer version.
+*/
+%option yylineno
+
 %option noyywrap
 %option never-interactive
-%option outfile="Gen_glslang.cpp"
 %x FIELDS
 
 
@@ -308,12 +307,7 @@ int PaParseStrings(char* argv[], int strLen[], int argc, TParseContext& parseCon
     yylineno   = 1;
    
     if (*cpp->PaStrLen >= 0) {    
-        int ret;
-        #ifdef _WIN32
-            ret = yyparse(parseContextLocal);            
-        #else
-            ret = yyparse((void*)(&parseContextLocal));
-        #endif
+        int ret = yyparse((void*)(&parseContextLocal));
         if (cpp->CompileError == 1 || parseContextLocal.recoveredFromError || parseContextLocal.numErrors > 0)
              return 1;
         else

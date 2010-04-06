@@ -61,19 +61,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libGLESv2", "..\src\libGLES
 		{5620F0E4-6C43-49BC-A178-B804E1A0C3A7} = {5620F0E4-6C43-49BC-A178-B804E1A0C3A7}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "translator_glsl", "..\src\compiler\translator_glsl.vcproj", "{65DB6E65-00E6-4533-8446-5F623BD94909}"
-	ProjectSection(ProjectDependencies) = postProject
-		{5B3A6DB8-1E7E-40D7-92B9-DA8AAE619FAD} = {5B3A6DB8-1E7E-40D7-92B9-DA8AAE619FAD}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "translator_hlsl", "..\src\compiler\translator_hlsl.vcproj", "{5620F0E4-6C43-49BC-A178-B804E1A0C3A7}"
 	ProjectSection(ProjectDependencies) = postProject
 		{5B3A6DB8-1E7E-40D7-92B9-DA8AAE619FAD} = {5B3A6DB8-1E7E-40D7-92B9-DA8AAE619FAD}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "essl_to_glsl", "translator\essl_to_glsl.vcproj", "{EADEBCCD-65ED-45D1-9E06-949A21EBAB9E}"
-	ProjectSection(ProjectDependencies) = postProject
-		{65DB6E65-00E6-4533-8446-5F623BD94909} = {65DB6E65-00E6-4533-8446-5F623BD94909}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "essl_to_hlsl", "translator\essl_to_hlsl.vcproj", "{E12EA115-EBC7-47C2-B651-30A0CE986025}"
@@ -137,18 +127,10 @@ Global
 		{B5871A7A-968C-42E3-A33B-981E6F448E78}.Debug|Win32.Build.0 = Debug|Win32
 		{B5871A7A-968C-42E3-A33B-981E6F448E78}.Release|Win32.ActiveCfg = Release|Win32
 		{B5871A7A-968C-42E3-A33B-981E6F448E78}.Release|Win32.Build.0 = Release|Win32
-		{65DB6E65-00E6-4533-8446-5F623BD94909}.Debug|Win32.ActiveCfg = Debug|Win32
-		{65DB6E65-00E6-4533-8446-5F623BD94909}.Debug|Win32.Build.0 = Debug|Win32
-		{65DB6E65-00E6-4533-8446-5F623BD94909}.Release|Win32.ActiveCfg = Release|Win32
-		{65DB6E65-00E6-4533-8446-5F623BD94909}.Release|Win32.Build.0 = Release|Win32
 		{5620F0E4-6C43-49BC-A178-B804E1A0C3A7}.Debug|Win32.ActiveCfg = Debug|Win32
 		{5620F0E4-6C43-49BC-A178-B804E1A0C3A7}.Debug|Win32.Build.0 = Debug|Win32
 		{5620F0E4-6C43-49BC-A178-B804E1A0C3A7}.Release|Win32.ActiveCfg = Release|Win32
 		{5620F0E4-6C43-49BC-A178-B804E1A0C3A7}.Release|Win32.Build.0 = Release|Win32
-		{EADEBCCD-65ED-45D1-9E06-949A21EBAB9E}.Debug|Win32.ActiveCfg = Debug|Win32
-		{EADEBCCD-65ED-45D1-9E06-949A21EBAB9E}.Debug|Win32.Build.0 = Debug|Win32
-		{EADEBCCD-65ED-45D1-9E06-949A21EBAB9E}.Release|Win32.ActiveCfg = Release|Win32
-		{EADEBCCD-65ED-45D1-9E06-949A21EBAB9E}.Release|Win32.Build.0 = Release|Win32
 		{E12EA115-EBC7-47C2-B651-30A0CE986025}.Debug|Win32.ActiveCfg = Debug|Win32
 		{E12EA115-EBC7-47C2-B651-30A0CE986025}.Debug|Win32.Build.0 = Debug|Win32
 		{E12EA115-EBC7-47C2-B651-30A0CE986025}.Release|Win32.ActiveCfg = Release|Win32

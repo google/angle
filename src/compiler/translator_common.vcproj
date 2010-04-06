@@ -158,7 +158,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Executing flex on $(InputPath)"
-						CommandLine="if EXIST $(InputDir)Gen_glslang.cpp del $(InputDir)Gen_glslang.cpp&#x0D;&#x0A;$(InputDir)tools\flex.exe $(InputPath)&#x0D;&#x0A;"
+						CommandLine="if EXIST $(InputDir)Gen_glslang.cpp del $(InputDir)Gen_glslang.cpp&#x0D;&#x0A;$(InputDir)tools\flex.exe $(InputPath)&#x0D;&#x0A;rename $(InputDir)lex.yy.c Gen_$(InputName).cpp&#x0D;&#x0A;"
 						AdditionalDependencies="glslang_tab.h"
 						Outputs="$(InputDir)Gen_glslang.cpp"
 					/>
