@@ -4,7 +4,7 @@
 
 {
   'variables': {
-    'library%': 'static_library',
+    'library%': 'shared_library',
   },
   'target_defaults': {
     'default_configuration': 'Debug',
@@ -20,7 +20,8 @@
           'VCCLCompilerTool': {
             'BufferSecurityCheck': 'true',
             'DebugInformationFormat': '3',
-            'ExceptionHandling': '0',
+            # TODO(alokp): Disable exceptions before integrating with chromium.
+            #'ExceptionHandling': '0',
             'EnableFunctionLevelLinking': 'true',
             'MinimalRebuild': 'false',
             'PreprocessorDefinitions': [
