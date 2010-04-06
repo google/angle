@@ -16,7 +16,7 @@ namespace gl
 
 void *TranslatedBuffer::map(std::size_t requiredSpace, std::size_t *offset)
 {
-    ASSERT(requiredSpace < mBufferSize);
+    ASSERT(requiredSpace <= mBufferSize);
 
     reserveSpace(requiredSpace);
 
