@@ -138,7 +138,7 @@
     },
     {
       'target_name': 'libGLESv2',
-      'type': '<(library)',
+      'type': 'shared_library',
       'dependencies': ['translator_hlsl'],
       'include_dirs': [
         'libGLESv2',
@@ -188,7 +188,7 @@
     },
     {
       'target_name': 'libEGL',
-      'type': '<(library)',
+      'type': 'shared_library',
       'dependencies': ['libGLESv2'],
       'include_dirs': [
         'libEGL',
