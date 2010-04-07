@@ -70,6 +70,8 @@ Context::Context(const egl::Config *config)
     stencilBackPassDepthFail = GL_KEEP;
     stencilBackPassDepthPass = GL_KEEP;
     polygonOffsetFill = false;
+    polygonOffsetFactor = 0.0f;
+    polygonOffsetUnits = 0.0f;
     sampleAlphaToCoverage = false;
     sampleCoverage = false;
     sampleCoverageValue = 1.0f;
@@ -779,6 +781,366 @@ Texture *Context::getSamplerTexture(unsigned int sampler, SamplerType type)
 Framebuffer *Context::getFramebuffer()
 {
     return getFramebuffer(framebuffer);
+}
+
+bool Context::getBooleanv(GLenum pname, GLboolean *params)
+{
+    switch (pname)
+    {
+      case GL_SHADER_COMPILER:          *params = GL_TRUE;                  break;
+      case GL_SAMPLE_COVERAGE_INVERT:   *params = sampleCoverageInvert;     break;
+      case GL_DEPTH_WRITEMASK:          *params = depthMask;                break;
+      case GL_COLOR_WRITEMASK:
+        params[0] = colorMaskRed;
+        params[1] = colorMaskGreen;
+        params[2] = colorMaskBlue;
+        params[3] = colorMaskAlpha;
+        break;
+      default:
+        return false;
+    }
+
+    return true;
+}
+
+bool Context::getFloatv(GLenum pname, GLfloat *params)
+{
+    // Please note: DEPTH_CLEAR_VALUE is included in our internal getFloatv implementation
+    // because it is stored as a float, despite the fact that the GL ES 2.0 spec names
+    // GetIntegerv as its native query function. As it would require conversion in any
+    // case, this should make no difference to the calling application.
+    switch (pname)
+    {
+      case GL_LINE_WIDTH:               *params = lineWidth;            break;
+      case GL_SAMPLE_COVERAGE_VALUE:    *params = sampleCoverageValue;  break;
+      case GL_DEPTH_CLEAR_VALUE:        *params = depthClearValue;      break;
+      case GL_POLYGON_OFFSET_FACTOR:    *params = polygonOffsetFactor;  break;
+      case GL_POLYGON_OFFSET_UNITS:     *params = polygonOffsetUnits;   break;
+      case GL_ALIASED_LINE_WIDTH_RANGE:
+        params[0] = gl::ALIASED_LINE_WIDTH_RANGE_MIN;
+        params[1] = gl::ALIASED_LINE_WIDTH_RANGE_MAX;
+        break;
+      case GL_ALIASED_POINT_SIZE_RANGE:
+        params[0] = gl::ALIASED_POINT_SIZE_RANGE_MIN;
+        params[1] = gl::ALIASED_POINT_SIZE_RANGE_MAX;
+        break;
+      case GL_DEPTH_RANGE:
+        params[0] = zNear;
+        params[1] = zFar;
+        break;
+      case GL_COLOR_CLEAR_VALUE:
+        params[0] = colorClearValue.red;
+        params[1] = colorClearValue.green;
+        params[2] = colorClearValue.blue;
+        params[3] = colorClearValue.alpha;
+        break;
+      default:
+        return false;
+    }
+
+    return true;
+}
+
+bool Context::getIntegerv(GLenum pname, GLint *params)
+{
+    // Please note: DEPTH_CLEAR_VALUE is not included in our internal getIntegerv implementation
+    // because it is stored as a float, despite the fact that the GL ES 2.0 spec names
+    // GetIntegerv as its native query function. As it would require conversion in any
+    // case, this should make no difference to the calling application. You may find it in 
+    // Context::getFloatv.
+    switch (pname)
+    {
+      case GL_MAX_VERTEX_ATTRIBS:               *params = gl::MAX_VERTEX_ATTRIBS;               break;
+      case GL_MAX_VERTEX_UNIFORM_VECTORS:       *params = gl::MAX_VERTEX_UNIFORM_VECTORS;       break;
+      case GL_MAX_VARYING_VECTORS:              *params = gl::MAX_VARYING_VECTORS;              break;
+      case GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS: *params = gl::MAX_COMBINED_TEXTURE_IMAGE_UNITS; break;
+      case GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS:   *params = gl::MAX_VERTEX_TEXTURE_IMAGE_UNITS;   break;
+      case GL_MAX_TEXTURE_IMAGE_UNITS:          *params = gl::MAX_TEXTURE_IMAGE_UNITS;          break;
+      case GL_MAX_FRAGMENT_UNIFORM_VECTORS:     *params = gl::MAX_FRAGMENT_UNIFORM_VECTORS;     break;
+      case GL_MAX_RENDERBUFFER_SIZE:            *params = gl::MAX_RENDERBUFFER_SIZE;            break;
+      case GL_NUM_SHADER_BINARY_FORMATS:        *params = 0;                                break;
+      case GL_NUM_COMPRESSED_TEXTURE_FORMATS:   *params = 0;                                break;
+      case GL_COMPRESSED_TEXTURE_FORMATS: /* no compressed texture formats are supported */ break;
+      case GL_SHADER_BINARY_FORMATS:      /* no shader binary formats are supported */      break;
+      case GL_ARRAY_BUFFER_BINDING:             *params = arrayBuffer;              break;
+      case GL_ELEMENT_ARRAY_BUFFER_BINDING:     *params = elementArrayBuffer;       break;
+      case GL_FRAMEBUFFER_BINDING:              *params = framebuffer;              break;
+      case GL_RENDERBUFFER_BINDING:             *params = renderbuffer;             break;
+      case GL_CURRENT_PROGRAM:                  *params = currentProgram;           break;
+      case GL_PACK_ALIGNMENT:                   *params = packAlignment;            break;
+      case GL_UNPACK_ALIGNMENT:                 *params = unpackAlignment;          break;
+      case GL_GENERATE_MIPMAP_HINT:             *params = generateMipmapHint;       break;
+      case GL_ACTIVE_TEXTURE:                   *params = activeSampler;            break;
+      case GL_STENCIL_FUNC:                     *params = stencilFunc;              break;
+      case GL_STENCIL_REF:                      *params = stencilRef;               break;
+      case GL_STENCIL_VALUE_MASK:               *params = stencilMask;              break;
+      case GL_STENCIL_BACK_FUNC:                *params = stencilBackFunc;          break;
+      case GL_STENCIL_BACK_REF:                 *params = stencilBackRef;           break;
+      case GL_STENCIL_BACK_VALUE_MASK:          *params = stencilBackMask;          break;
+      case GL_STENCIL_FAIL:                     *params = stencilFail;              break;
+      case GL_STENCIL_PASS_DEPTH_FAIL:          *params = stencilPassDepthFail;     break;
+      case GL_STENCIL_PASS_DEPTH_PASS:          *params = stencilPassDepthPass;     break;
+      case GL_STENCIL_BACK_FAIL:                *params = stencilBackFail;          break;
+      case GL_STENCIL_BACK_PASS_DEPTH_FAIL:     *params = stencilBackPassDepthFail;     break;
+      case GL_STENCIL_BACK_PASS_DEPTH_PASS:     *params = stencilBackPassDepthPass;     break;
+      case GL_DEPTH_FUNC:                       *params = depthFunc;                    break;
+      case GL_BLEND_SRC_RGB:                    *params = sourceBlendRGB;               break;
+      case GL_BLEND_SRC_ALPHA:                  *params = sourceBlendAlpha;             break;
+      case GL_BLEND_DST_RGB:                    *params = destBlendRGB;                 break;
+      case GL_BLEND_DST_ALPHA:                  *params = destBlendAlpha;               break;
+      case GL_BLEND_EQUATION_RGB:               *params = blendEquationRGB;             break;
+      case GL_BLEND_EQUATION_ALPHA:             *params = blendEquationAlpha;           break;
+      case GL_STENCIL_WRITEMASK:                *params = stencilWritemask;             break;
+      case GL_STENCIL_BACK_WRITEMASK:           *params = stencilBackWritemask;         break;
+      case GL_STENCIL_CLEAR_VALUE:              *params = stencilClearValue;            break;
+      case GL_SUBPIXEL_BITS:                    *params = 4;                            break;
+      case GL_MAX_TEXTURE_SIZE:                 *params = gl::MAX_TEXTURE_SIZE;             break;
+      case GL_MAX_CUBE_MAP_TEXTURE_SIZE:        *params = gl::MAX_CUBE_MAP_TEXTURE_SIZE;    break;
+      case GL_SAMPLE_BUFFERS:                   *params = 0;                                break;
+      case GL_SAMPLES:                          *params = 0;                                break;
+      case GL_IMPLEMENTATION_COLOR_READ_TYPE:   *params = gl::IMPLEMENTATION_COLOR_READ_TYPE;   break;
+      case GL_IMPLEMENTATION_COLOR_READ_FORMAT: *params = gl::IMPLEMENTATION_COLOR_READ_FORMAT; break;
+      case GL_MAX_VIEWPORT_DIMS:
+        {
+            int maxDimension = std::max((int)gl::MAX_RENDERBUFFER_SIZE, (int)gl::MAX_TEXTURE_SIZE);
+            params[0] = maxDimension;
+            params[1] = maxDimension;
+        }
+        break;
+      case GL_VIEWPORT:
+        params[0] = viewportX;
+        params[1] = viewportY;
+        params[2] = viewportWidth;
+        params[3] = viewportHeight;
+        break;
+      case GL_SCISSOR_BOX:
+        params[0] = scissorX;
+        params[1] = scissorY;
+        params[2] = scissorWidth;
+        params[3] = scissorHeight;
+        break;
+      case GL_CULL_FACE_MODE:                   *params = cullMode;                 break;
+      case GL_FRONT_FACE:                       *params = frontFace;                break;
+      case GL_RED_BITS:
+      case GL_GREEN_BITS:
+      case GL_BLUE_BITS:
+      case GL_ALPHA_BITS:
+        {
+            gl::Framebuffer *framebuffer = getFramebuffer();
+            gl::Colorbuffer *colorbuffer = framebuffer->getColorbuffer();
+
+            if (colorbuffer)
+            {
+                switch (pname)
+                {
+                  case GL_RED_BITS:   *params = colorbuffer->getRedSize();   break;
+                  case GL_GREEN_BITS: *params = colorbuffer->getGreenSize(); break;
+                  case GL_BLUE_BITS:  *params = colorbuffer->getBlueSize();  break;
+                  case GL_ALPHA_BITS: *params = colorbuffer->getAlphaSize(); break;
+                }
+            }
+            else
+            {
+                *params = 0;
+            }
+        }
+        break;
+      case GL_DEPTH_BITS:
+        {
+            gl::Framebuffer *framebuffer = getFramebuffer();
+            gl::Depthbuffer *depthbuffer = framebuffer->getDepthbuffer();
+
+            if (depthbuffer)
+            {
+                *params = depthbuffer->getDepthSize();
+            }
+            else
+            {
+                *params = 0;
+            }
+        }
+        break;
+      case GL_STENCIL_BITS:
+        {
+            gl::Framebuffer *framebuffer = getFramebuffer();
+            gl::Stencilbuffer *stencilbuffer = framebuffer->getStencilbuffer();
+
+            if (stencilbuffer)
+            {
+                *params = stencilbuffer->getStencilSize();
+            }
+            else
+            {
+                *params = 0;
+            }
+        }
+        break;
+      case GL_TEXTURE_BINDING_2D:
+        {
+            if (activeSampler < 0 || activeSampler > gl::MAX_TEXTURE_IMAGE_UNITS - 1)
+            {
+                error(GL_INVALID_OPERATION);
+                return false;
+            }
+
+            *params = samplerTexture[SAMPLER_2D][activeSampler];
+        }
+        break;
+      case GL_TEXTURE_BINDING_CUBE_MAP:
+        {
+            if (activeSampler < 0 || activeSampler > gl::MAX_TEXTURE_IMAGE_UNITS - 1)
+            {
+                error(GL_INVALID_OPERATION);
+                return false;
+            }
+
+            *params = samplerTexture[SAMPLER_CUBE][activeSampler];
+        }
+        break;
+      default:
+        return false;
+    }
+
+    return true;
+}
+
+bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams)
+{
+    // Please note: the query type returned for DEPTH_CLEAR_VALUE in this implementation
+    // is FLOAT rather than INT, as would be suggested by the GL ES 2.0 spec. This is due
+    // to the fact that it is stored internally as a float, and so would require conversion
+    // if returned from Context::getIntegerv. Since this conversion is already implemented 
+    // in the case that one calls glGetIntegerv to retrieve a float-typed state variable, we
+    // place DEPTH_CLEAR_VALUE with the floats. This should make no difference to the calling
+    // application.
+    switch (pname)
+    {
+      case GL_COMPRESSED_TEXTURE_FORMATS: /* no compressed texture formats are supported */ 
+      case GL_SHADER_BINARY_FORMATS:
+        {
+            *type = GL_INT;
+            *numParams = 0;
+        }
+        break;
+      case GL_MAX_VERTEX_ATTRIBS:
+      case GL_MAX_VERTEX_UNIFORM_VECTORS:
+      case GL_MAX_VARYING_VECTORS:
+      case GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS:
+      case GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS:
+      case GL_MAX_TEXTURE_IMAGE_UNITS:
+      case GL_MAX_FRAGMENT_UNIFORM_VECTORS:
+      case GL_MAX_RENDERBUFFER_SIZE:
+      case GL_NUM_SHADER_BINARY_FORMATS:
+      case GL_NUM_COMPRESSED_TEXTURE_FORMATS:
+      case GL_ARRAY_BUFFER_BINDING:
+      case GL_FRAMEBUFFER_BINDING:
+      case GL_RENDERBUFFER_BINDING:
+      case GL_CURRENT_PROGRAM:
+      case GL_PACK_ALIGNMENT:
+      case GL_UNPACK_ALIGNMENT:
+      case GL_GENERATE_MIPMAP_HINT:
+      case GL_RED_BITS:
+      case GL_GREEN_BITS:
+      case GL_BLUE_BITS:
+      case GL_ALPHA_BITS:
+      case GL_DEPTH_BITS:
+      case GL_STENCIL_BITS:
+      case GL_ELEMENT_ARRAY_BUFFER_BINDING:
+      case GL_CULL_FACE_MODE:
+      case GL_FRONT_FACE:
+      case GL_ACTIVE_TEXTURE:
+      case GL_STENCIL_FUNC:
+      case GL_STENCIL_VALUE_MASK:
+      case GL_STENCIL_REF:
+      case GL_STENCIL_FAIL:
+      case GL_STENCIL_PASS_DEPTH_FAIL:
+      case GL_STENCIL_PASS_DEPTH_PASS:
+      case GL_STENCIL_BACK_FUNC:
+      case GL_STENCIL_BACK_VALUE_MASK:
+      case GL_STENCIL_BACK_REF:
+      case GL_STENCIL_BACK_FAIL:
+      case GL_STENCIL_BACK_PASS_DEPTH_FAIL:
+      case GL_STENCIL_BACK_PASS_DEPTH_PASS:
+      case GL_DEPTH_FUNC:
+      case GL_BLEND_SRC_RGB:
+      case GL_BLEND_SRC_ALPHA:
+      case GL_BLEND_DST_RGB:
+      case GL_BLEND_DST_ALPHA:
+      case GL_BLEND_EQUATION_RGB:
+      case GL_BLEND_EQUATION_ALPHA:
+      case GL_STENCIL_WRITEMASK:
+      case GL_STENCIL_BACK_WRITEMASK:
+      case GL_STENCIL_CLEAR_VALUE:
+      case GL_SUBPIXEL_BITS:
+      case GL_MAX_TEXTURE_SIZE:
+      case GL_MAX_CUBE_MAP_TEXTURE_SIZE:
+      case GL_SAMPLE_BUFFERS:
+      case GL_SAMPLES:
+      case GL_IMPLEMENTATION_COLOR_READ_TYPE:
+      case GL_IMPLEMENTATION_COLOR_READ_FORMAT:
+      case GL_TEXTURE_BINDING_2D:
+      case GL_TEXTURE_BINDING_CUBE_MAP:
+        {
+            *type = GL_INT;
+            *numParams = 1;
+        }
+        break;
+      case GL_MAX_VIEWPORT_DIMS:
+        {
+            *type = GL_INT;
+            *numParams = 2;
+        }
+        break;
+      case GL_VIEWPORT:
+      case GL_SCISSOR_BOX:
+        {
+            *type = GL_INT;
+            *numParams = 4;
+        }
+        break;
+      case GL_SHADER_COMPILER:
+      case GL_SAMPLE_COVERAGE_INVERT:
+      case GL_DEPTH_WRITEMASK:
+        {
+            *type = GL_BOOL;
+            *numParams = 1;
+        }
+        break;
+      case GL_COLOR_WRITEMASK:
+        {
+            *type = GL_BOOL;
+            *numParams = 4;
+        }
+        break;
+      case GL_POLYGON_OFFSET_FACTOR:
+      case GL_POLYGON_OFFSET_UNITS:
+      case GL_SAMPLE_COVERAGE_VALUE:
+      case GL_DEPTH_CLEAR_VALUE:
+      case GL_LINE_WIDTH:
+        {
+            *type = GL_FLOAT;
+            *numParams = 1;
+        }
+        break;
+      case GL_ALIASED_LINE_WIDTH_RANGE:
+      case GL_ALIASED_POINT_SIZE_RANGE:
+      case GL_DEPTH_RANGE:
+        {
+            *type = GL_FLOAT;
+            *numParams = 2;
+        }
+        break;
+      case GL_COLOR_CLEAR_VALUE:
+        {
+            *type = GL_FLOAT;
+            *numParams = 4;
+        }
+        break;
+      default:
+        return false;
+    }
+
+    return true;
 }
 
 // Applies the render target surface, depth stencil surface, viewport rectangle and

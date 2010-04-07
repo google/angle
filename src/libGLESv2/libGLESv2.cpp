@@ -1721,12 +1721,55 @@ void __stdcall glGetBooleanv(GLenum pname, GLboolean* params)
 
     try
     {
-        switch (pname)
+        gl::Context *context = gl::getContext();
+
+        if (context)
         {
-          case GL_SHADER_COMPILER: *params = GL_TRUE; break;
-          default:
-            UNIMPLEMENTED();   // FIXME
-            return error(GL_INVALID_ENUM);
+            if (!(context->getBooleanv(pname, params)))
+            {
+                GLenum nativeType;
+                unsigned int numParams = 0;
+                if (!context->getQueryParameterInfo(pname, &nativeType, &numParams))
+                    return error(GL_INVALID_ENUM);
+
+                if (numParams == 0)
+                    return; // it is known that the pname is valid, but there are no parameters to return
+
+                if (nativeType == GL_FLOAT)
+                {
+                    GLfloat *floatParams = NULL;
+                    floatParams = new GLfloat[numParams];
+
+                    context->getFloatv(pname, floatParams);
+
+                    for (unsigned int i = 0; i < numParams; ++i)
+                    {
+                        if (floatParams[i] == 0.0f)
+                            params[i] = GL_FALSE;
+                        else
+                            params[i] = GL_TRUE;
+                    }
+
+                    delete [] floatParams;
+                }
+                else if (nativeType == GL_INT)
+                {
+                    GLint *intParams = NULL;
+                    intParams = new GLint[numParams];
+
+                    context->getIntegerv(pname, intParams);
+
+                    for (unsigned int i = 0; i < numParams; ++i)
+                    {
+                        if (intParams[i] == 0)
+                            params[i] = GL_FALSE;
+                        else
+                            params[i] = GL_TRUE;
+                    }
+
+                    delete [] intParams;
+                }
+            }
         }
     }
     catch(std::bad_alloc&)
@@ -1773,22 +1816,47 @@ void __stdcall glGetFloatv(GLenum pname, GLfloat* params)
 
         if (context)
         {
-            switch (pname)
+            if (!(context->getFloatv(pname, params)))
             {
-              case GL_LINE_WIDTH:
-                *params = context->lineWidth;
-                break;
-              case GL_ALIASED_LINE_WIDTH_RANGE:
-                params[0] = gl::ALIASED_LINE_WIDTH_RANGE_MIN;
-                params[1] = gl::ALIASED_LINE_WIDTH_RANGE_MAX;
-                break;
-              case GL_ALIASED_POINT_SIZE_RANGE:
-                params[0] = gl::ALIASED_POINT_SIZE_RANGE_MIN;
-                params[1] = gl::ALIASED_POINT_SIZE_RANGE_MAX;
-                break;
-              default:
-                UNIMPLEMENTED();   // FIXME
-                return error(GL_INVALID_ENUM);
+                GLenum nativeType;
+                unsigned int numParams = 0;
+                if (!context->getQueryParameterInfo(pname, &nativeType, &numParams))
+                    return error(GL_INVALID_ENUM);
+
+                if (numParams == 0)
+                    return; // it is known that the pname is valid, but that there are no parameters to return.
+
+                if (nativeType == GL_BOOL)
+                {
+                    GLboolean *boolParams = NULL;
+                    boolParams = new GLboolean[numParams];
+
+                    context->getBooleanv(pname, boolParams);
+
+                    for (unsigned int i = 0; i < numParams; ++i)
+                    {
+                        if (boolParams[i] == GL_FALSE)
+                            params[i] = 0.0f;
+                        else
+                            params[i] = 1.0f;
+                    }
+
+                    delete [] boolParams;
+                }
+                else if (nativeType == GL_INT)
+                {
+                    GLint *intParams = NULL;
+                    intParams = new GLint[numParams];
+
+                    context->getIntegerv(pname, intParams);
+
+                    for (unsigned int i = 0; i < numParams; ++i)
+                    {
+                        params[i] = (GLfloat)intParams[i];
+                    }
+
+                    delete [] intParams;
+                }
             }
         }
     }
@@ -1833,83 +1901,52 @@ void __stdcall glGetIntegerv(GLenum pname, GLint* params)
 
         if (context)
         {
-            switch (pname)
+            if (!(context->getIntegerv(pname, params)))
             {
-              case GL_MAX_VERTEX_ATTRIBS:               *params = gl::MAX_VERTEX_ATTRIBS;               break;
-              case GL_MAX_VERTEX_UNIFORM_VECTORS:       *params = gl::MAX_VERTEX_UNIFORM_VECTORS;       break;
-              case GL_MAX_VARYING_VECTORS:              *params = gl::MAX_VARYING_VECTORS;              break;
-              case GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS: *params = gl::MAX_COMBINED_TEXTURE_IMAGE_UNITS; break;
-              case GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS:   *params = gl::MAX_VERTEX_TEXTURE_IMAGE_UNITS;   break;
-              case GL_MAX_TEXTURE_IMAGE_UNITS:          *params = gl::MAX_TEXTURE_IMAGE_UNITS;          break;
-              case GL_MAX_FRAGMENT_UNIFORM_VECTORS:     *params = gl::MAX_FRAGMENT_UNIFORM_VECTORS;     break;
-              case GL_MAX_RENDERBUFFER_SIZE:            *params = gl::MAX_RENDERBUFFER_SIZE;            break;
-              case GL_NUM_SHADER_BINARY_FORMATS:        *params = 0;                                break;
-              case GL_NUM_COMPRESSED_TEXTURE_FORMATS:   *params = 0;                                break;
-              case GL_COMPRESSED_TEXTURE_FORMATS: /* no compressed texture formats are supported */ break;
-              case GL_ARRAY_BUFFER_BINDING:             *params = context->arrayBuffer;             break;
-              case GL_FRAMEBUFFER_BINDING:              *params = context->framebuffer;             break;
-              case GL_RENDERBUFFER_BINDING:             *params = context->renderbuffer;            break;
-              case GL_CURRENT_PROGRAM:                  *params = context->currentProgram;          break;
-              case GL_PACK_ALIGNMENT:                   *params = context->packAlignment;           break;
-              case GL_UNPACK_ALIGNMENT:                 *params = context->unpackAlignment;         break;
-              case GL_GENERATE_MIPMAP_HINT:             *params = context->generateMipmapHint;      break;
-              case GL_RED_BITS:
-              case GL_GREEN_BITS:
-              case GL_BLUE_BITS:
-              case GL_ALPHA_BITS:
-                {
-                    gl::Framebuffer *framebuffer = context->getFramebuffer();
-                    gl::Colorbuffer *colorbuffer = framebuffer->getColorbuffer();
+                GLenum nativeType;
+                unsigned int numParams = 0;
+                if (!context->getQueryParameterInfo(pname, &nativeType, &numParams))
+                    return error(GL_INVALID_ENUM);
 
-                    if (colorbuffer)
+                if (numParams == 0)
+                    return; // it is known that pname is valid, but there are no parameters to return
+
+                if (nativeType == GL_BOOL)
+                {
+                    GLboolean *boolParams = NULL;
+                    boolParams = new GLboolean[numParams];
+
+                    context->getBooleanv(pname, boolParams);
+
+                    for (unsigned int i = 0; i < numParams; ++i)
                     {
-                        switch (pname)
+                        if (boolParams[i] == GL_FALSE)
+                            params[i] = 0;
+                        else
+                            params[i] = 1;
+                    }
+
+                    delete [] boolParams;
+                }
+                else if (nativeType == GL_FLOAT)
+                {
+                    GLfloat *floatParams = NULL;
+                    floatParams = new GLfloat[numParams];
+
+                    context->getFloatv(pname, floatParams);
+
+                    for (unsigned int i = 0; i < numParams; ++i)
+                    {
+                        if (pname == GL_DEPTH_RANGE || pname == GL_COLOR_CLEAR_VALUE || pname == GL_DEPTH_CLEAR_VALUE)
                         {
-                          case GL_RED_BITS:   *params = colorbuffer->getRedSize();   break;
-                          case GL_GREEN_BITS: *params = colorbuffer->getGreenSize(); break;
-                          case GL_BLUE_BITS:  *params = colorbuffer->getBlueSize();  break;
-                          case GL_ALPHA_BITS: *params = colorbuffer->getAlphaSize(); break;
+                            params[i] = (GLint)(((GLfloat)(0xFFFFFFFF) * floatParams[i] - 1.0f) / 2.0f);
                         }
+                        else
+                            params[i] = (GLint)(floatParams[i] > 0.0f ? floor(floatParams[i] + 0.5) : ceil(floatParams[i] - 0.5));
                     }
-                    else
-                    {
-                        *params = 0;
-                    }
-                }
-                break;
-              case GL_DEPTH_BITS:
-                {
-                    gl::Framebuffer *framebuffer = context->getFramebuffer();
-                    gl::Depthbuffer *depthbuffer = framebuffer->getDepthbuffer();
 
-                    if (depthbuffer)
-                    {
-                        *params = depthbuffer->getDepthSize();
-                    }
-                    else
-                    {
-                        *params = 0;
-                    }
+                    delete [] floatParams;
                 }
-                break;
-              case GL_STENCIL_BITS:
-                {
-                    gl::Framebuffer *framebuffer = context->getFramebuffer();
-                    gl::Stencilbuffer *stencilbuffer = framebuffer->getStencilbuffer();
-
-                    if (stencilbuffer)
-                    {
-                        *params = stencilbuffer->getStencilSize();
-                    }
-                    else
-                    {
-                        *params = 0;
-                    }
-                }
-                break;
-              default:
-                UNIMPLEMENTED();   // FIXME
-                return error(GL_INVALID_ENUM);
             }
         }
     }

@@ -150,6 +150,8 @@ struct State
     GLenum stencilBackPassDepthPass;
     GLuint stencilBackWritemask;
     bool polygonOffsetFill;
+    GLfloat polygonOffsetFactor;
+    GLfloat polygonOffsetUnits;
     bool sampleAlphaToCoverage;
     bool sampleCoverage;
     GLclampf sampleCoverageValue;
@@ -253,6 +255,12 @@ class Context : public State
     TextureCubeMap *getTextureCubeMap();
     Texture *getSamplerTexture(unsigned int sampler, SamplerType type);
     Framebuffer *getFramebuffer();
+
+    bool getFloatv(GLenum pname, GLfloat *params);
+    bool getIntegerv(GLenum pname, GLint *params);
+    bool getBooleanv(GLenum pname, GLboolean *params);
+
+    bool getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams);
 
     bool applyRenderTarget(bool ignoreViewport);
     void applyState();
