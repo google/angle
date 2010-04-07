@@ -280,7 +280,7 @@ int main ( int argc, char *argv[] )
    esInitContext ( &esContext );
    esContext.userData = &userData;
 
-   esCreateWindow ( &esContext, "ParticleSystem", 640, 480, ES_WINDOW_RGB );
+   esCreateWindow ( &esContext, TEXT("ParticleSystem"), 640, 480, ES_WINDOW_RGB );
    
    if ( !Init ( &esContext ) )
       return 0;

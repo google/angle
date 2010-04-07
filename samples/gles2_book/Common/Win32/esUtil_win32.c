@@ -87,19 +87,18 @@ LRESULT WINAPI ESWindowProc ( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
 //
 //      Create Win32 instance and window
 //
-GLboolean WinCreate ( ESContext *esContext, const char *title )
+GLboolean WinCreate ( ESContext *esContext, LPCTSTR title )
 {
    WNDCLASS wndclass = {0}; 
    DWORD    wStyle   = 0;
    RECT     windowRect;
    HINSTANCE hInstance = GetModuleHandle(NULL);
-
-
+   
    wndclass.style         = CS_OWNDC;
    wndclass.lpfnWndProc   = (WNDPROC)ESWindowProc; 
    wndclass.hInstance     = hInstance; 
    wndclass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH); 
-   wndclass.lpszClassName = "opengles2.0"; 
+   wndclass.lpszClassName = TEXT("opengles2.0");
 
    if (!RegisterClass (&wndclass) ) 
       return FALSE; 
@@ -115,10 +114,8 @@ GLboolean WinCreate ( ESContext *esContext, const char *title )
 
    AdjustWindowRect ( &windowRect, wStyle, FALSE );
 
-
-
    esContext->hWnd = CreateWindow(
-                         "opengles2.0",
+                         TEXT("opengles2.0"),
                          title,
                          wStyle,
                          0,
@@ -133,7 +130,6 @@ GLboolean WinCreate ( ESContext *esContext, const char *title )
    // Set the ESContext* to the GWL_USERDATA so that it is available to the 
    // ESWindowProc
    SetWindowLongPtr (  esContext->hWnd, GWL_USERDATA, (LONG) (LONG_PTR) esContext );
-
 
    if ( esContext->hWnd == NULL )
       return GL_FALSE;

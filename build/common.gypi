@@ -14,6 +14,7 @@
         'msvs_configuration_attributes': {
           'OutputDirectory': '$(SolutionDir)$(ConfigurationName)',
           'IntermediateDirectory': '$(OutDir)\\obj\\$(ProjectName)',
+          'CharacterSet': '1',  # UNICODE
         },
         'msvs_configuration_platform': 'Win32',
         'msvs_settings': {
@@ -43,13 +44,12 @@
             'GenerateDebugInformation': 'true',
             'ImportLibrary': '$(OutDir)\\lib\\$(TargetName).lib',
             'MapFileName': '$(OutDir)\\$(TargetName).map',
-            # SubSystem values:
-            #   0 == not set
-            #   1 == /SUBSYSTEM:CONSOLE
-            #   2 == /SUBSYSTEM:WINDOWS
             # Most of the executables we'll ever create are tests
             # and utilities with console output.
-            'SubSystem': '1',
+            'SubSystem': '1',  # /SUBSYSTEM:CONSOLE
+          },
+          'VCResourceCompilerTool': {
+            'Culture': '1033',
           },
         },
       },  # Common

@@ -259,7 +259,7 @@ int main ( int argc, char *argv[] )
    esInitContext ( &esContext );
    esContext.userData = &userData;
 
-   esCreateWindow ( &esContext, "Stencil Test", 320, 240,
+   esCreateWindow ( &esContext, TEXT("Stencil Test"), 320, 240,
                     ES_WINDOW_RGB | ES_WINDOW_DEPTH | ES_WINDOW_STENCIL );
    
    if ( !Init ( &esContext ) )

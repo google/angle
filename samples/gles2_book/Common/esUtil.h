@@ -111,7 +111,7 @@ void ESUTIL_API esInitContext ( ESContext *esContext );
 ///         ES_WINDOW_STENCIL - specifies that a stencil buffer should be created
 ///         ES_WINDOW_MULTISAMPLE - specifies that a multi-sample buffer should be created
 /// \return GL_TRUE if window creation is succesful, GL_FALSE otherwise
-GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, const char *title, GLint width, GLint height, GLuint flags );
+GLboolean ESUTIL_API esCreateWindow ( ESContext *esContext, LPCTSTR title, GLint width, GLint height, GLuint flags );
 
 //
 /// \brief Start the main loop for the OpenGL ES application

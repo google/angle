@@ -200,7 +200,7 @@ int main ( int argc, char *argv[] )
    esInitContext ( &esContext );
    esContext.userData = &userData;
 
-   esCreateWindow ( &esContext, "MultiTexture", 320, 240, ES_WINDOW_RGB );
+   esCreateWindow ( &esContext, TEXT("MultiTexture"), 320, 240, ES_WINDOW_RGB );
    
    if ( !Init ( &esContext ) )
       return 0;

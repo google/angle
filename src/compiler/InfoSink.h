@@ -25,9 +25,8 @@ enum TPrefixType {
 
 enum TOutputStream {
     ENull = 0,
-    EDebugger = 0x01,
-    EStdOut = 0x02,
-    EString = 0x04,
+    EStdOut = 0x01,
+    EString = 0x02,
 };
 //
 // Encapsulate info logs for all objects that have them.
@@ -37,7 +36,7 @@ enum TOutputStream {
 //
 class TInfoSinkBase {
 public:
-    TInfoSinkBase() : outputStream(4) {}
+    TInfoSinkBase() : outputStream(EString) {}
     void erase() { sink.erase(); }
     TInfoSinkBase& operator<<(const TPersistString& t) { append(t); return *this; }
     TInfoSinkBase& operator<<(char c)                  { append(1, c); return *this; }
