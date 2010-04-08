@@ -25,6 +25,7 @@
 */
 
 /* Platform-specific types and definitions for egl.h
+ * $Revision: 9724 $ on $Date: 2009-12-02 02:05:33 -0800 (Wed, 02 Dec 2009) $
  *
  * Adopters may modify khrplatform.h and this file to suit their platform.
  * You are encouraged to submit all modifications to the Khronos group so that
@@ -49,8 +50,10 @@
 #define EGLAPI KHRONOS_APICALL
 #endif
 
+#ifndef EGLAPIENTRY
 #define EGLAPIENTRY  KHRONOS_APIENTRY
-#define EGLAPIENTRYP KHRONOS_APIENTRY*
+#endif
+#define EGLAPIENTRYP EGLAPIENTRY*
 
 /* The types NativeDisplayType, NativeWindowType, and NativePixmapType
  * are aliases of window-system-dependent types, such as X Display * or
@@ -69,7 +72,13 @@ typedef HDC     EGLNativeDisplayType;
 typedef HBITMAP EGLNativePixmapType;
 typedef HWND    EGLNativeWindowType;
 
-#elif defined(SUPPORT_X11)
+#elif defined(__WINSCW__) || defined(__SYMBIAN32__)  /* Symbian */
+
+typedef int   EGLNativeDisplayType;
+typedef void *EGLNativeWindowType;
+typedef void *EGLNativePixmapType;
+
+#elif defined(__unix__)
 
 /* X11 (tentative)  */
 #include <X11/Xlib.h>
@@ -80,15 +89,7 @@ typedef Pixmap   EGLNativePixmapType;
 typedef Window   EGLNativeWindowType;
 
 #else
-
-#if defined(_WIN64) ||  __WORDSIZE == 64
-typedef khronos_int64_t EGLNativeDisplayType;
-#else
-typedef int EGLNativeDisplayType;
-#endif
-typedef void *EGLNativeWindowType;
-typedef void *EGLNativePixmapType;
-
+#error "Platform not recognized"
 #endif
 
 /* EGL 1.2 types, renamed for consistency in EGL 1.3 */
@@ -104,10 +105,6 @@ typedef EGLNativeWindowType  NativeWindowType;
  * handles are 64 bit types, then EGLint should be defined as a signed 64-bit
  * integer type.
  */
- #if defined(_WIN64) ||  __WORDSIZE == 64
-typedef khronos_int64_t EGLint;
-#else
 typedef khronos_int32_t EGLint;
-#endif
 
 #endif /* __eglplatform_h */
