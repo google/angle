@@ -82,9 +82,9 @@ void __stdcall glAttachShader(GLuint program, GLuint shader)
     }
 }
 
-void __stdcall glBindAttribLocation(GLuint program, GLuint index, const char* name)
+void __stdcall glBindAttribLocation(GLuint program, GLuint index, const GLchar* name)
 {
-    TRACE("(GLuint program = %d, GLuint index = %d, const char* name = 0x%0.8p)", program, index, name);
+    TRACE("(GLuint program = %d, GLuint index = %d, const GLchar* name = 0x%0.8p)", program, index, name);
 
     try
     {
@@ -420,9 +420,9 @@ void __stdcall glBlendFuncSeparate(GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha
     }
 }
 
-void __stdcall glBufferData(GLenum target, GLsizeiptr size, const void* data, GLenum usage)
+void __stdcall glBufferData(GLenum target, GLsizeiptr size, const GLvoid* data, GLenum usage)
 {
-    TRACE("(GLenum target = 0x%X, GLsizeiptr size = %d, const void* data = 0x%0.8p, GLenum usage = %d)",
+    TRACE("(GLenum target = 0x%X, GLsizeiptr size = %d, const GLvoid* data = 0x%0.8p, GLenum usage = %d)",
           target, size, data, usage);
 
     try
@@ -474,9 +474,9 @@ void __stdcall glBufferData(GLenum target, GLsizeiptr size, const void* data, GL
     }
 }
 
-void __stdcall glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const void* data)
+void __stdcall glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const GLvoid* data)
 {
-    TRACE("(GLenum target = 0x%X, GLintptr offset = %d, GLsizeiptr size = %d, const void* data = 0x%0.8p)",
+    TRACE("(GLenum target = 0x%X, GLintptr offset = %d, GLsizeiptr size = %d, const GLvoid* data = 0x%0.8p)",
           target, offset, size, data);
 
     try
@@ -682,10 +682,11 @@ void __stdcall glCompileShader(GLuint shader)
     }
 }
 
-void __stdcall glCompressedTexImage2D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, GLsizei imageSize, const void* data)
+void __stdcall glCompressedTexImage2D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, 
+                                      GLint border, GLsizei imageSize, const GLvoid* data)
 {
     TRACE("(GLenum target = 0x%X, GLint level = %d, GLenum internalformat = 0x%X, GLsizei width = %d, " 
-          "GLsizei height = %d, GLint border = %d, GLsizei imageSize = %d, const void* data = 0x%0.8p)",
+          "GLsizei height = %d, GLint border = %d, GLsizei imageSize = %d, const GLvoid* data = 0x%0.8p)",
           target, level, internalformat, width, height, border, imageSize, data);
 
     try
@@ -713,11 +714,12 @@ void __stdcall glCompressedTexImage2D(GLenum target, GLint level, GLenum interna
     }
 }
 
-void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void* data)
+void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                         GLenum format, GLsizei imageSize, const GLvoid* data)
 {
     TRACE("(GLenum target = 0x%X, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, "
           "GLsizei width = %d, GLsizei height = %d, GLenum format = 0x%X, "
-          "GLsizei imageSize = %d, const void* data = 0x%0.8p)",
+          "GLsizei imageSize = %d, const GLvoid* data = 0x%0.8p)",
           target, level, xoffset, yoffset, width, height, format, imageSize, data);
 
     try
@@ -1211,9 +1213,9 @@ void __stdcall glDrawArrays(GLenum mode, GLint first, GLsizei count)
     }
 }
 
-void __stdcall glDrawElements(GLenum mode, GLsizei count, GLenum type, const void* indices)
+void __stdcall glDrawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid* indices)
 {
-    TRACE("(GLenum mode = 0x%X, GLsizei count = %d, GLenum type = 0x%X, const void* indices = 0x%0.8p)",
+    TRACE("(GLenum mode = 0x%X, GLsizei count = %d, GLenum type = 0x%X, const GLvoid* indices = 0x%0.8p)",
           mode, count, type, indices);
 
     try
@@ -1613,10 +1615,10 @@ void __stdcall glGenTextures(GLsizei n, GLuint* textures)
     }
 }
 
-void __stdcall glGetActiveAttrib(GLuint program, GLuint index, GLsizei bufsize, GLsizei* length, GLint* size, GLenum* type, char* name)
+void __stdcall glGetActiveAttrib(GLuint program, GLuint index, GLsizei bufsize, GLsizei* length, GLint* size, GLenum* type, GLchar* name)
 {
     TRACE("(GLuint program = %d, GLuint index = %d, GLsizei bufsize = %d, GLsizei* length = 0x%0.8p, "
-          "GLint* size = 0x%0.8p, GLenum* type = %0.8p, char* name = %0.8p)",
+          "GLint* size = 0x%0.8p, GLenum* type = %0.8p, GLchar* name = %0.8p)",
           program, index, bufsize, length, size, type, name);
 
     try
@@ -1634,10 +1636,10 @@ void __stdcall glGetActiveAttrib(GLuint program, GLuint index, GLsizei bufsize, 
     }
 }
 
-void __stdcall glGetActiveUniform(GLuint program, GLuint index, GLsizei bufsize, GLsizei* length, GLint* size, GLenum* type, char* name)
+void __stdcall glGetActiveUniform(GLuint program, GLuint index, GLsizei bufsize, GLsizei* length, GLint* size, GLenum* type, GLchar* name)
 {
     TRACE("(GLuint program = %d, GLuint index = %d, GLsizei bufsize = %d, "
-          "GLsizei* length = 0x%0.8p, GLint* size = 0x%0.8p, GLenum* type = 0x%0.8p, char* name = 0x%0.8p)",
+          "GLsizei* length = 0x%0.8p, GLint* size = 0x%0.8p, GLenum* type = 0x%0.8p, GLchar* name = 0x%0.8p)",
           program, index, bufsize, length, size, type, name);
 
     try
@@ -1687,9 +1689,9 @@ void __stdcall glGetAttachedShaders(GLuint program, GLsizei maxcount, GLsizei* c
     }
 }
 
-int __stdcall glGetAttribLocation(GLuint program, const char* name)
+int __stdcall glGetAttribLocation(GLuint program, const GLchar* name)
 {
-    TRACE("(GLuint program = %d, const char* name = %s)", program, name);
+    TRACE("(GLuint program = %d, const GLchar* name = %s)", program, name);
 
     try
     {
@@ -2018,9 +2020,9 @@ void __stdcall glGetProgramiv(GLuint program, GLenum pname, GLint* params)
     }
 }
 
-void __stdcall glGetProgramInfoLog(GLuint program, GLsizei bufsize, GLsizei* length, char* infolog)
+void __stdcall glGetProgramInfoLog(GLuint program, GLsizei bufsize, GLsizei* length, GLchar* infolog)
 {
-    TRACE("(GLuint program = %d, GLsizei bufsize = %d, GLsizei* length = 0x%0.8p, char* infolog = 0x%0.8p)",
+    TRACE("(GLuint program = %d, GLsizei bufsize = %d, GLsizei* length = 0x%0.8p, GLchar* infolog = 0x%0.8p)",
           program, bufsize, length, infolog);
 
     try
@@ -2109,9 +2111,9 @@ void __stdcall glGetShaderiv(GLuint shader, GLenum pname, GLint* params)
     }
 }
 
-void __stdcall glGetShaderInfoLog(GLuint shader, GLsizei bufsize, GLsizei* length, char* infolog)
+void __stdcall glGetShaderInfoLog(GLuint shader, GLsizei bufsize, GLsizei* length, GLchar* infolog)
 {
-    TRACE("(GLuint shader = %d, GLsizei bufsize = %d, GLsizei* length = 0x%0.8p, char* infolog = 0x%0.8p)",
+    TRACE("(GLuint shader = %d, GLsizei bufsize = %d, GLsizei* length = 0x%0.8p, GLchar* infolog = 0x%0.8p)",
           shader, bufsize, length, infolog);
 
     try
@@ -2188,9 +2190,9 @@ void __stdcall glGetShaderPrecisionFormat(GLenum shadertype, GLenum precisiontyp
     }
 }
 
-void __stdcall glGetShaderSource(GLuint shader, GLsizei bufsize, GLsizei* length, char* source)
+void __stdcall glGetShaderSource(GLuint shader, GLsizei bufsize, GLsizei* length, GLchar* source)
 {
-    TRACE("(GLuint shader = %d, GLsizei bufsize = %d, GLsizei* length = 0x%0.8p, char* source = 0x%0.8p)",
+    TRACE("(GLuint shader = %d, GLsizei bufsize = %d, GLsizei* length = 0x%0.8p, GLchar* source = 0x%0.8p)",
           shader, bufsize, length, source);
 
     try
@@ -2306,9 +2308,9 @@ void __stdcall glGetUniformiv(GLuint program, GLint location, GLint* params)
     }
 }
 
-int __stdcall glGetUniformLocation(GLuint program, const char* name)
+int __stdcall glGetUniformLocation(GLuint program, const GLchar* name)
 {
-    TRACE("(GLuint program = %d, const char* name = 0x%0.8p)", program, name);
+    TRACE("(GLuint program = %d, const GLchar* name = 0x%0.8p)", program, name);
 
     try
     {
@@ -2382,9 +2384,9 @@ void __stdcall glGetVertexAttribiv(GLuint index, GLenum pname, GLint* params)
     }
 }
 
-void __stdcall glGetVertexAttribPointerv(GLuint index, GLenum pname, void** pointer)
+void __stdcall glGetVertexAttribPointerv(GLuint index, GLenum pname, GLvoid** pointer)
 {
-    TRACE("(GLuint index = %d, GLenum pname = 0x%X, void** pointer = 0x%0.8p)", index, pname, pointer);
+    TRACE("(GLuint index = %d, GLenum pname = 0x%X, GLvoid** pointer = 0x%0.8p)", index, pname, pointer);
 
     try
     {
@@ -2735,10 +2737,10 @@ void __stdcall glPolygonOffset(GLfloat factor, GLfloat units)
     }
 }
 
-void __stdcall glReadPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, void* pixels)
+void __stdcall glReadPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid* pixels)
 {
     TRACE("(GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei height = %d, "
-          "GLenum format = 0x%X, GLenum type = 0x%X, void* pixels = 0x%0.8p)",
+          "GLenum format = 0x%X, GLenum type = 0x%X, GLvoid* pixels = 0x%0.8p)",
           x, y, width, height, format, type,  pixels);
 
     try
@@ -2912,10 +2914,10 @@ void __stdcall glScissor(GLint x, GLint y, GLsizei width, GLsizei height)
     }
 }
 
-void __stdcall glShaderBinary(GLsizei n, const GLuint* shaders, GLenum binaryformat, const void* binary, GLsizei length)
+void __stdcall glShaderBinary(GLsizei n, const GLuint* shaders, GLenum binaryformat, const GLvoid* binary, GLsizei length)
 {
     TRACE("(GLsizei n = %d, const GLuint* shaders = 0x%0.8p, GLenum binaryformat = 0x%X, "
-          "const void* binary = 0x%0.8p, GLsizei length = %d)",
+          "const GLvoid* binary = 0x%0.8p, GLsizei length = %d)",
           n, shaders, binaryformat, binary, length);
 
     try
@@ -2933,9 +2935,9 @@ void __stdcall glShaderBinary(GLsizei n, const GLuint* shaders, GLenum binaryfor
     }
 }
 
-void __stdcall glShaderSource(GLuint shader, GLsizei count, const char** string, const GLint* length)
+void __stdcall glShaderSource(GLuint shader, GLsizei count, const GLchar** string, const GLint* length)
 {
-    TRACE("(GLuint shader = %d, GLsizei count = %d, const char** string = 0x%0.8p, const GLint* length = 0x%0.8p)",
+    TRACE("(GLuint shader = %d, GLsizei count = %d, const GLchar** string = 0x%0.8p, const GLint* length = 0x%0.8p)",
           shader, count, string, length);
 
     try
@@ -3160,10 +3162,11 @@ void __stdcall glStencilOpSeparate(GLenum face, GLenum fail, GLenum zfail, GLenu
     }
 }
 
-void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const void* pixels)
+void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height,
+                            GLint border, GLenum format, GLenum type, const GLvoid* pixels)
 {
     TRACE("(GLenum target = 0x%X, GLint level = %d, GLint internalformat = %d, GLsizei width = %d, GLsizei height = %d, "
-          "GLint border = %d, GLenum format = 0x%X, GLenum type = 0x%X, const void* pixels =  0x%0.8p)",
+          "GLint border = %d, GLenum format = 0x%X, GLenum type = 0x%X, const GLvoid* pixels =  0x%0.8p)",
           target, level, internalformat, width, height, border, format, type, pixels);
 
     try
@@ -3385,11 +3388,12 @@ void __stdcall glTexParameteriv(GLenum target, GLenum pname, const GLint* params
     glTexParameteri(target, pname, *params);
 }
 
-void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const void* pixels)
+void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                               GLenum format, GLenum type, const GLvoid* pixels)
 {
     TRACE("(GLenum target = 0x%X, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, "
           "GLsizei width = %d, GLsizei height = %d, GLenum format = 0x%X, GLenum type = 0x%X, "
-          "const void* pixels = 0x%0.8p)",
+          "const GLvoid* pixels = 0x%0.8p)",
            target, level, xoffset, yoffset, width, height, format, type, pixels);
 
     try
@@ -4068,10 +4072,10 @@ void __stdcall glVertexAttrib4fv(GLuint index, const GLfloat* values)
     }
 }
 
-void __stdcall glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void* ptr)
+void __stdcall glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* ptr)
 {
     TRACE("(GLuint index = %d, GLint size = %d, GLenum type = 0x%X, "
-          "GLboolean normalized = %d, GLsizei stride = %d, const void* ptr = 0x%0.8p)",
+          "GLboolean normalized = %d, GLsizei stride = %d, const GLvoid* ptr = 0x%0.8p)",
           index, size, type, normalized, stride, ptr);
 
     try
@@ -4149,11 +4153,12 @@ void __stdcall glViewport(GLint x, GLint y, GLsizei width, GLsizei height)
     }
 }
 
-void __stdcall glTexImage3DOES(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type, const void* pixels)
+void __stdcall glTexImage3DOES(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth,
+                               GLint border, GLenum format, GLenum type, const GLvoid* pixels)
 {
     TRACE("(GLenum target = 0x%X, GLint level = %d, GLenum internalformat = 0x%X, "
           "GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d, GLint border = %d, "
-          "GLenum format = 0x%X, GLenum type = 0x%x, const void* pixels = 0x%0.8p)",
+          "GLenum format = 0x%X, GLenum type = 0x%x, const GLvoid* pixels = 0x%0.8p)",
           target, level, internalformat, width, height, depth, border, format, type, pixels);
 
     try
