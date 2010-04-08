@@ -185,6 +185,7 @@ enum TOperator {
 class TIntermTraverser;
 class TIntermAggregate;
 class TIntermBinary;
+class TIntermUnary;
 class TIntermConstantUnion;
 class TIntermSelection;
 class TIntermTyped;
@@ -206,6 +207,7 @@ public:
     virtual TIntermConstantUnion*     getAsConstantUnion()         { return 0; }
     virtual TIntermAggregate* getAsAggregate()     { return 0; }
     virtual TIntermBinary*    getAsBinaryNode()    { return 0; }
+    virtual TIntermUnary*     getAsUnaryNode()     { return 0; }
     virtual TIntermSelection* getAsSelectionNode() { return 0; }
     virtual TIntermSymbol*    getAsSymbolNode()    { return 0; }
     virtual ~TIntermNode() { }
@@ -220,9 +222,6 @@ struct TIntermNodePair {
     TIntermNode* node1;
     TIntermNode* node2;
 };
-
-class TIntermSymbol;
-class TIntermBinary;
 
 //
 // Intermediate class for nodes that have a type.
@@ -365,6 +364,7 @@ public:
     virtual void traverse(TIntermTraverser*);
     virtual void setOperand(TIntermTyped* o) { operand = o; }
     virtual TIntermTyped* getOperand() { return operand; }
+    virtual TIntermUnary* getAsUnaryNode() { return this; }
     virtual bool promote(TInfoSink&);
 protected:
     TIntermTyped* operand;
