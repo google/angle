@@ -499,16 +499,9 @@ void Context::bindElementArrayBuffer(unsigned int buffer)
 
 void Context::bindTexture2D(GLuint texture)
 {
-    if (!getTexture(texture) || texture == 0)
+    if (!getTexture(texture) && texture != 0)
     {
-        if (texture != 0)
-        {
-            mTextureMap[texture] = new Texture2D();
-        }
-        else   // Special case: 0 refers to different initial textures based on the target
-        {
-            mTextureMap[0] = mTexture2DZero;
-        }
+        mTextureMap[texture] = new Texture2D();
     }
 
     texture2D = texture;
@@ -518,16 +511,9 @@ void Context::bindTexture2D(GLuint texture)
 
 void Context::bindTextureCubeMap(GLuint texture)
 {
-    if (!getTexture(texture) || texture == 0)
+    if (!getTexture(texture) && texture != 0)
     {
-        if (texture != 0)
-        {
-            mTextureMap[texture] = new TextureCubeMap();
-        }
-        else   // Special case: 0 refers to different initial textures based on the target
-        {
-            mTextureMap[0] = mTextureCubeMapZero;
-        }
+        mTextureMap[texture] = new TextureCubeMap();
     }
 
     textureCubeMap = texture;
@@ -641,6 +627,8 @@ Program *Context::getProgram(unsigned int handle)
 
 Texture *Context::getTexture(unsigned int handle)
 {
+    if (handle == 0) return NULL;
+
     TextureMap::iterator texture = mTextureMap.find(handle);
 
     if (texture == mTextureMap.end())
@@ -775,7 +763,19 @@ TextureCubeMap *Context::getTextureCubeMap()
 
 Texture *Context::getSamplerTexture(unsigned int sampler, SamplerType type)
 {
-    return getTexture(samplerTexture[type][sampler]);
+    GLuint texid = samplerTexture[type][sampler];
+
+    if (texid == 0)
+    {
+        switch (type)
+        {
+          default: UNREACHABLE();
+          case SAMPLER_2D: return mTexture2DZero;
+          case SAMPLER_CUBE: return mTextureCubeMapZero;
+        }
+    }
+
+    return getTexture(texid);
 }
 
 Framebuffer *Context::getFramebuffer()
