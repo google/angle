@@ -271,10 +271,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\GLES2\gl2extimg.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\include\GLES2\gl2platform.h"
 				>
 			</File>
