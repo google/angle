@@ -491,11 +491,6 @@ bool Program::linkVaryings()
 // a list of uniforms
 void Program::link()
 {
-    if (mLinked)
-    {
-        return;
-    }
-
     unlink();
 
     if (!mFragmentShader || !mFragmentShader->isCompiled())
