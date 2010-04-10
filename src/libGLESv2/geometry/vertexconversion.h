@@ -122,7 +122,7 @@ struct WidenToEven
     static const std::size_t finalWidth = N+(N&1);
 };
 
-template <unsigned int N>
+template <std::size_t N>
 struct WidenToFour
 {
     static const std::size_t initialWidth = N;
