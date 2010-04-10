@@ -1331,7 +1331,7 @@ init_declarator_list
 single_declaration
     : fully_specified_type {
         $$.type = $1;
-        $$.intermAggregate = 0;
+        $$.intermAggregate = parseContext->intermediate.makeAggregate(parseContext->intermediate.addSymbol(0, "", TType($1), $1.line), $1.line);;
     }
     | fully_specified_type IDENTIFIER {
 		$$.intermAggregate = parseContext->intermediate.makeAggregate(parseContext->intermediate.addSymbol(0, *$2.string, TType($1), $2.line), $2.line);

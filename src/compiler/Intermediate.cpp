@@ -774,7 +774,7 @@ bool TIntermBinary::promote(TInfoSink& infoSink)
     // Base assumption:  just make the type the same as the left
     // operand.  Then only deviations from this need be coded.
     //
-    setType(TType(type, EvqTemporary, left->getNominalSize(), left->isMatrix()));
+    setType(left->getType());
 
     //
     // Array operations.
@@ -1394,4 +1394,3 @@ void TIntermAggregate::addToPragmaTable(const TPragmaTable& pTable)
     pragmaTable = new TPragmaTable();
     *pragmaTable = pTable;
 }
-
