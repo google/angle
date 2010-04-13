@@ -1902,7 +1902,14 @@ void __stdcall glGetAttachedShaders(GLuint program, GLsizei maxcount, GLsizei* c
 
             if (!programObject)
             {
-                return error(GL_INVALID_VALUE);
+                if (context->getShader(program))
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+                else
+                {
+                    return error(GL_INVALID_VALUE);
+                }
             }
 
             return programObject->getAttachedShaders(maxcount, count, shaders);
