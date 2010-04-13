@@ -1104,10 +1104,27 @@ void __stdcall glDeleteProgram(GLuint program)
 
     try
     {
+        if (program == 0)
+        {
+            return;
+        }
+
         gl::Context *context = gl::getContext();
 
         if (context)
         {
+            if (!context->getProgram(program))
+            {
+                if(context->getShader(program))
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+                else
+                {
+                    return error(GL_INVALID_VALUE);
+                }
+            }
+
             context->deleteProgram(program);
         }
     }
@@ -1150,10 +1167,27 @@ void __stdcall glDeleteShader(GLuint shader)
 
     try
     {
+        if (shader == 0)
+        {
+            return;
+        }
+
         gl::Context *context = gl::getContext();
 
         if (context)
         {
+            if (!context->getShader(shader))
+            {
+                if(context->getProgram(shader))
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+                else
+                {
+                    return error(GL_INVALID_VALUE);
+                }
+            }
+
             context->deleteShader(shader);
         }
     }
