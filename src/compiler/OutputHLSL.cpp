@@ -1624,7 +1624,7 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
             while (iterations > 0)
             {
                 int remainder = (limit - initial + 1) % increment;
-                int clampedLimit = initial + increment * min(255, iterations) - 1 - remainder;
+                int clampedLimit = initial + increment * std::min(255, iterations) - 1 - remainder;
 
                 // for(int index = initial; index < clampedLimit; index += increment)
 
