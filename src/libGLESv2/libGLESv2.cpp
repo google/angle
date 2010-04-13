@@ -4268,7 +4268,19 @@ void __stdcall glUseProgram(GLuint program)
         {
             gl::Program *programObject = context->getProgram(program);
 
-            if (programObject && !programObject->isLinked())
+            if (!programObject && program != 0)
+            {
+                if (context->getShader(program))
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+                else
+                {
+                    return error(GL_INVALID_VALUE);
+                }
+            }
+
+            if (program != 0 && !programObject->isLinked())
             {
                 return error(GL_INVALID_OPERATION);
             }
