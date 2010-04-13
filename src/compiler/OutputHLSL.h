@@ -33,6 +33,8 @@ class OutputHLSL : public TIntermTraverser
     bool handleExcessiveLoop(TIntermLoop *node);
     void outputTriplet(Visit visit, const char *preString, const char *inString, const char *postString);
 
+    static TString argumentString(const TIntermSymbol *symbol);
+    static TString qualifierString(TQualifier qualifier);
     static TString typeString(const TType &type);
     static TString arrayString(const TType &type);
     static TString initializer(const TType &type);

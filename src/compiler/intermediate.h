@@ -29,7 +29,9 @@ enum TOperator {
     EOpFunctionCall,    
     EOpFunction,        // For function definition
     EOpParameters,      // an aggregate listing the parameters to a function
+
     EOpDeclaration,
+    EOpPrototype,
 
     //
     // Unary operators

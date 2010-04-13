@@ -870,6 +870,34 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             out << ", ";
         }
         break;
+      case EOpPrototype:
+        if (visit == PreVisit)
+        {
+            out << typeString(node->getType()) << " " << node->getName() << "(";
+
+            TIntermSequence &arguments = node->getSequence();
+
+            for (unsigned int i = 0; i < arguments.size(); i++)
+            {
+                TIntermSymbol *symbol = arguments[i]->getAsSymbolNode();
+
+                if (symbol)
+                {
+                    out << argumentString(symbol);
+
+                    if (i < arguments.size() - 1)
+                    {
+                        out << ", ";
+                    }
+                }
+                else UNREACHABLE();
+            }
+
+            out << ");\n";
+
+            return false;
+        }
+        break;
       case EOpComma:         UNIMPLEMENTED(); /* FIXME */ out << "Comma\n"; return true;
       case EOpFunction:
         {
@@ -893,10 +921,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
                     if (symbol)
                     {
-                        const TType &type = symbol->getType();
-                        const TString &name = symbol->getSymbol();
-
-                        out << typeString(type) + " " + name;
+                        out << argumentString(symbol);
 
                         if (i < arguments.size() - 1)
                         {
@@ -1475,6 +1500,29 @@ void OutputHLSL::outputTriplet(Visit visit, const char *preString, const char *i
     {
         out << postString;
     }
+}
+
+TString OutputHLSL::argumentString(const TIntermSymbol *symbol)
+{
+    TQualifier qualifier = symbol->getQualifier();
+    const TType &type = symbol->getType();
+    const TString &name = symbol->getSymbol();
+
+    return qualifierString(qualifier) + " " + typeString(type) + " " + name + arrayString(type);
+}
+
+TString OutputHLSL::qualifierString(TQualifier qualifier)
+{
+    switch(qualifier)
+    {
+      case EvqIn:            return "in";
+      case EvqOut:           return "out";
+      case EvqInOut:         return "inout";
+      case EvqConstReadOnly: return "const";
+      default: UNREACHABLE();
+    }
+
+    return "";
 }
 
 TString OutputHLSL::typeString(const TType &type)

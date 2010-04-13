@@ -985,7 +985,31 @@ constant_expression
     ;
 
 declaration
-    : function_prototype SEMICOLON   { $$ = 0; }
+    : function_prototype SEMICOLON   {
+        TFunction &function = *($1.function);
+        
+        TIntermAggregate *prototype = new TIntermAggregate;
+        prototype->setType(function.getReturnType());
+        prototype->setName(function.getName());
+        
+        for (int i = 0; i < function.getParamCount(); i++)
+        {
+            TParameter &param = function[i];
+            if (param.name != 0)
+            {
+                TVariable *variable = new TVariable(param.name, *param.type);
+                
+                prototype = parseContext->intermediate.growAggregate(prototype, parseContext->intermediate.addSymbol(variable->getUniqueId(), variable->getName(), variable->getType(), $1.line), $1.line);
+            }
+            else
+            {
+                prototype = parseContext->intermediate.growAggregate(prototype, parseContext->intermediate.addSymbol(0, "", *param.type, $1.line), $1.line);
+            }
+        }
+        
+        prototype->setOperator(EOpPrototype);
+        $$ = prototype;
+    }
     | init_declarator_list SEMICOLON {
 		if ($1.intermAggregate)
             $1.intermAggregate->setOperator(EOpDeclaration);
