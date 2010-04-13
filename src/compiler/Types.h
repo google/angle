@@ -214,6 +214,7 @@ public:
 	void setArrayInformationType(TType* t) { arrayInformationType = t; }
 	TType* getArrayInformationType() const { return arrayInformationType; }
 	virtual bool isVector() const { return size > 1 && !matrix; }
+    virtual bool isScalar() const { return size == 1 && !matrix && !structure; }
 	static const char* getBasicString(TBasicType t) {
 		switch (t) {
 		case EbtVoid:              return "void";              break;

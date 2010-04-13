@@ -48,6 +48,20 @@ class OutputHLSL : public TIntermTraverser
     TInfoSinkBase mHeader;
     TInfoSinkBase mBody;
     TInfoSinkBase mFooter;
+
+    // Parameters determining what goes in the header output
+    bool mUsesEqualMat2;
+    bool mUsesEqualMat3;
+    bool mUsesEqualMat4;
+    bool mUsesEqualVec2;
+    bool mUsesEqualVec3;
+    bool mUsesEqualVec4;
+    bool mUsesEqualIVec2;
+    bool mUsesEqualIVec3;
+    bool mUsesEqualIVec4;
+    bool mUsesEqualBVec2;
+    bool mUsesEqualBVec3;
+    bool mUsesEqualBVec4;
 };
 }
 

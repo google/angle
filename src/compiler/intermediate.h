@@ -243,6 +243,7 @@ public:
     virtual bool isMatrix() const { return type.isMatrix(); }
     virtual bool isArray()  const { return type.isArray(); }
     virtual bool isVector() const { return type.isVector(); }
+    virtual bool isScalar() const { return type.isScalar(); }
     const char* getBasicString()      const { return type.getBasicString(); }
     const char* getQualifierString()  const { return type.getQualifierString(); }
     TString getCompleteString() const { return type.getCompleteString(); }
