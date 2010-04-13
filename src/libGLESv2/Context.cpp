@@ -1540,6 +1540,7 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum
 
     unsigned char *source = (unsigned char*)lock.pBits;
     unsigned char *dest = (unsigned char*)pixels;
+    unsigned short *dest16 = (unsigned short*)pixels;
 
     for (int j = 0; j < rect.bottom - rect.top; j++)
     {
@@ -1631,10 +1632,13 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum
                   default: UNREACHABLE();
                 }
                 break;
-              case IMPLEMENTATION_COLOR_READ_FORMAT:
+              case GL_RGB:   // IMPLEMENTATION_COLOR_READ_FORMAT
                 switch (type)
                 {
-                  case IMPLEMENTATION_COLOR_READ_TYPE:
+                  case GL_UNSIGNED_SHORT_5_6_5:   // IMPLEMENTATION_COLOR_READ_TYPE
+                    dest16[i + j * width] = ((unsigned short)(31 * b + 0.5f) << 0) |
+                                            ((unsigned short)(63 * g + 0.5f) << 5) |
+                                            ((unsigned short)(31 * r + 0.5f) << 11);
                     break;
                   default: UNREACHABLE();
                 }
