@@ -1722,11 +1722,19 @@ int __stdcall glGetAttribLocation(GLuint program, const GLchar* name)
 
         if (context)
         {
+
             gl::Program *programObject = context->getProgram(program);
 
             if (!programObject)
             {
-                return error(GL_INVALID_VALUE, -1);
+                if (context->getShader(program))
+                {
+                    return error(GL_INVALID_OPERATION, -1);
+                }
+                else
+                {
+                    return error(GL_INVALID_VALUE, -1);
+                }
             }
 
             return programObject->getAttributeLocation(name);
