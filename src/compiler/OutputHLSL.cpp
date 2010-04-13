@@ -95,7 +95,7 @@ void OutputHLSL::header()
                "\n";
         out <<  uniforms;
         out << "\n"
-               "struct PS_INPUT\n"   // FIXME: Prevent name clashes
+               "struct PS_INPUT\n"
                "{\n";
         out <<      varyingInput;
         out << "    float4 gl_FragCoord : TEXCOORD" << semanticIndex << ";\n";
@@ -104,7 +104,7 @@ void OutputHLSL::header()
                "\n";
         out <<    varyingGlobals;
         out << "\n"
-               "struct PS_OUTPUT\n"   // FIXME: Prevent name clashes
+               "struct PS_OUTPUT\n"
                "{\n"
                "    float4 gl_Color[1] : COLOR;\n"
                "};\n"
@@ -191,14 +191,14 @@ void OutputHLSL::header()
                "\n";
         out <<  uniforms;
         out << "\n"
-               "struct VS_INPUT\n"   // FIXME: Prevent name clashes
+               "struct VS_INPUT\n"
                "{\n";
         out <<        attributeInput;
         out << "};\n"
                "\n";
         out <<  attributeGlobals;
         out << "\n"
-               "struct VS_OUTPUT\n"   // FIXME: Prevent name clashes
+               "struct VS_OUTPUT\n"
                "{\n"
                "    float4 gl_Position : POSITION;\n"
                "    float gl_PointSize : PSIZE;\n"
@@ -221,152 +221,152 @@ void OutputHLSL::header()
            "\n"
            "uniform gl_DepthRangeParameters gl_DepthRange;\n"
            "\n"
-           "float vec1(float x)\n"   // FIXME: Prevent name clashes
+           "float vec1(float x)\n"
            "{\n"
            "    return x;\n"
            "}\n"
            "\n"
-           "float vec1(float2 xy)\n"   // FIXME: Prevent name clashes
+           "float vec1(float2 xy)\n"
            "{\n"
            "    return xy[0];\n"
            "}\n"
            "\n"
-           "float vec1(float3 xyz)\n"   // FIXME: Prevent name clashes
+           "float vec1(float3 xyz)\n"
            "{\n"
            "    return xyz[0];\n"
            "}\n"
            "\n"
-           "float vec1(float4 xyzw)\n"   // FIXME: Prevent name clashes
+           "float vec1(float4 xyzw)\n"
            "{\n"
            "    return xyzw[0];\n"
            "}\n"
            "\n"
-           "float2 vec2(float x)\n"   // FIXME: Prevent name clashes
+           "float2 vec2(float x)\n"
            "{\n"
            "    return float2(x, x);\n"
            "}\n"
            "\n"
-           "float2 vec2(float x, float y)\n"   // FIXME: Prevent name clashes
+           "float2 vec2(float x, float y)\n"
            "{\n"
            "    return float2(x, y);\n"
            "}\n"
            "\n"
-           "float2 vec2(float2 xy)\n"   // FIXME: Prevent name clashes
+           "float2 vec2(float2 xy)\n"
            "{\n"
            "    return xy;\n"
            "}\n"
            "\n"
-           "float2 vec2(float3 xyz)\n"   // FIXME: Prevent name clashes
+           "float2 vec2(float3 xyz)\n"
            "{\n"
            "    return float2(xyz[0], xyz[1]);\n"
            "}\n"
            "\n"
-           "float2 vec2(float4 xyzw)\n"   // FIXME: Prevent name clashes
+           "float2 vec2(float4 xyzw)\n"
            "{\n"
            "    return float2(xyzw[0], xyzw[1]);\n"
            "}\n"
            "\n"
-           "float3 vec3(float x)\n"   // FIXME: Prevent name clashes
+           "float3 vec3(float x)\n"
            "{\n"
            "    return float3(x, x, x);\n"
            "}\n"
            "\n"
-           "float3 vec3(float x, float y, float z)\n"   // FIXME: Prevent name clashes
+           "float3 vec3(float x, float y, float z)\n"
            "{\n"
            "    return float3(x, y, z);\n"
            "}\n"
            "\n"
-           "float3 vec3(float2 xy, float z)\n"   // FIXME: Prevent name clashes
+           "float3 vec3(float2 xy, float z)\n"
            "{\n"
            "    return float3(xy[0], xy[1], z);\n"
            "}\n"
            "\n"
-           "float3 vec3(float x, float2 yz)\n"   // FIXME: Prevent name clashes
+           "float3 vec3(float x, float2 yz)\n"
            "{\n"
            "    return float3(x, yz[0], yz[1]);\n"
            "}\n"
            "\n"
-           "float3 vec3(float3 xyz)\n"   // FIXME: Prevent name clashes
+           "float3 vec3(float3 xyz)\n"
            "{\n"
            "    return xyz;\n"
            "}\n"
            "\n"
-           "float3 vec3(float4 xyzw)\n"   // FIXME: Prevent name clashes
+           "float3 vec3(float4 xyzw)\n"
            "{\n"
            "    return float3(xyzw[0], xyzw[1], xyzw[2]);\n"
            "}\n"
            "\n"
-           "float4 vec4(float x)\n"   // FIXME: Prevent name clashes
+           "float4 vec4(float x)\n"
            "{\n"
            "    return float4(x, x, x, x);\n"
            "}\n"
            "\n"
-           "float4 vec4(float x, float y, float z, float w)\n"   // FIXME: Prevent name clashes
+           "float4 vec4(float x, float y, float z, float w)\n"
            "{\n"
            "    return float4(x, y, z, w);\n"
            "}\n"
            "\n"
-           "float4 vec4(float2 xy, float z, float w)\n"   // FIXME: Prevent name clashes
+           "float4 vec4(float2 xy, float z, float w)\n"
            "{\n"
            "    return float4(xy[0], xy[1], z, w);\n"
            "}\n"
            "\n"
-           "float4 vec4(float x, float2 yz, float w)\n"   // FIXME: Prevent name clashes
+           "float4 vec4(float x, float2 yz, float w)\n"
            "{\n"
            "    return float4(x, yz[0], yz[1], w);\n"
            "}\n"
            "\n"
-           "float4 vec4(float x, float y, float2 zw)\n"   // FIXME: Prevent name clashes
+           "float4 vec4(float x, float y, float2 zw)\n"
            "{\n"
            "    return float4(x, y, zw[0], zw[1]);\n"
            "}\n"
            "\n"
-           "float4 vec4(float2 xy, float2 zw)\n"   // FIXME: Prevent name clashes
+           "float4 vec4(float2 xy, float2 zw)\n"
            "{\n"
            "    return float4(xy[0], xy[1], zw[0], zw[1]);\n"
            "}\n"
            "\n"
-           "float4 vec4(float3 xyz, float w)\n"   // FIXME: Prevent name clashes
+           "float4 vec4(float3 xyz, float w)\n"
            "{\n"
            "    return float4(xyz[0], xyz[1], xyz[2], w);\n"
            "}\n"
            "\n"
-           "float4 vec4(float x, float3 yzw)\n"   // FIXME: Prevent name clashes
+           "float4 vec4(float x, float3 yzw)\n"
            "{\n"
            "    return float4(x, yzw[0], yzw[1], yzw[2]);\n"
            "}\n"
            "\n"
-           "float4 vec4(float4 xyzw)\n"   // FIXME: Prevent name clashes
+           "float4 vec4(float4 xyzw)\n"
            "{\n"
            "    return xyzw;\n"
            "}\n"
            "\n"
-           "bool xor(bool p, bool q)\n"   // FIXME: Prevent name clashes
+           "bool xor(bool p, bool q)\n"
            "{\n"
            "    return (p || q) && !(p && q);\n"
            "}\n"
            "\n"
-           "float mod(float x, float y)\n"   // FIXME: Prevent name clashes
+           "float mod(float x, float y)\n"
            "{\n"
            "    return x - y * floor(x / y);\n"
            "}\n"
            "\n"
-           "float2 mod(float2 x, float y)\n"   // FIXME: Prevent name clashes
+           "float2 mod(float2 x, float y)\n"
            "{\n"
            "    return x - y * floor(x / y);\n"
            "}\n"
            "\n"
-           "float3 mod(float3 x, float y)\n"   // FIXME: Prevent name clashes
+           "float3 mod(float3 x, float y)\n"
            "{\n"
            "    return x - y * floor(x / y);\n"
            "}\n"
            "\n"
-           "float4 mod(float4 x, float y)\n"   // FIXME: Prevent name clashes
+           "float4 mod(float4 x, float y)\n"
            "{\n"
            "    return x - y * floor(x / y);\n"
            "}\n"
            "\n"
-           "float faceforward(float N, float I, float Nref)\n"   // FIXME: Prevent name clashes
+           "float faceforward(float N, float I, float Nref)\n"
            "{\n"
            "    if(dot(Nref, I) < 0)\n"
            "    {\n"
@@ -378,7 +378,7 @@ void OutputHLSL::header()
            "    }\n"
            "}\n"
            "\n"
-           "float2 faceforward(float2 N, float2 I, float2 Nref)\n"   // FIXME: Prevent name clashes
+           "float2 faceforward(float2 N, float2 I, float2 Nref)\n"
            "{\n"
            "    if(dot(Nref, I) < 0)\n"
            "    {\n"
@@ -390,7 +390,7 @@ void OutputHLSL::header()
            "    }\n"
            "}\n"
            "\n"
-           "float3 faceforward(float3 N, float3 I, float3 Nref)\n"   // FIXME: Prevent name clashes
+           "float3 faceforward(float3 N, float3 I, float3 Nref)\n"
            "{\n"
            "    if(dot(Nref, I) < 0)\n"
            "    {\n"
@@ -402,7 +402,7 @@ void OutputHLSL::header()
            "    }\n"
            "}\n"
            "\n"
-           "float4 faceforward(float4 N, float4 I, float4 Nref)\n"   // FIXME: Prevent name clashes
+           "float4 faceforward(float4 N, float4 I, float4 Nref)\n"
            "{\n"
            "    if(dot(Nref, I) < 0)\n"
            "    {\n"
@@ -526,7 +526,7 @@ void OutputHLSL::footer()
 
     if (language == EShLangFragment)
     {
-        out << "PS_OUTPUT main(PS_INPUT input)\n"   // FIXME: Prevent name clashes
+        out << "PS_OUTPUT main(PS_INPUT input)\n"
                "{\n"
                "    float rhw = 1.0 / input.gl_FragCoord.w;\n"
                "    gl_FragCoord.x = (input.gl_FragCoord.x * rhw) * gl_Window.x + gl_Window.z;\n"
@@ -548,7 +548,7 @@ void OutputHLSL::footer()
 
                 if (qualifier == EvqVaryingIn)
                 {
-                    out << "    " + decorate(name) + " = input." + decorate(name) + ";\n";   // FIXME: Prevent name clashes
+                    out << "    " + decorate(name) + " = input." + decorate(name) + ";\n";
                 }
             }
         }
@@ -556,12 +556,12 @@ void OutputHLSL::footer()
         out << "\n"
                "    gl_main();\n"
                "\n"
-               "    PS_OUTPUT output;\n"                    // FIXME: Prevent name clashes
-               "    output.gl_Color[0] = gl_Color[0];\n";   // FIXME: Prevent name clashes
+               "    PS_OUTPUT output;\n"                 
+               "    output.gl_Color[0] = gl_Color[0];\n";
     }
     else   // Vertex shader
     {
-        out << "VS_OUTPUT main(VS_INPUT input)\n"   // FIXME: Prevent name clashes
+        out << "VS_OUTPUT main(VS_INPUT input)\n"
                "{\n";
 
         for (TSymbolTableLevel::const_iterator namedSymbol = symbols->begin(); namedSymbol != symbols->end(); namedSymbol++)
@@ -577,7 +577,7 @@ void OutputHLSL::footer()
 
                 if (qualifier == EvqAttribute)
                 {
-                    out << "    " + decorate(name) + " = input." + decorate(name) + ";\n";   // FIXME: Prevent name clashes
+                    out << "    " + decorate(name) + " = input." + decorate(name) + ";\n";
                 }
             }
         }
@@ -585,7 +585,7 @@ void OutputHLSL::footer()
         out << "\n"
                "    gl_main();\n"
                "\n"
-               "    VS_OUTPUT output;\n"   // FIXME: Prevent name clashes
+               "    VS_OUTPUT output;\n"
                "    output.gl_Position.x = gl_Position.x - gl_HalfPixelSize.x * gl_Position.w;\n"
                "    output.gl_Position.y = -(gl_Position.y - gl_HalfPixelSize.y * gl_Position.w);\n"
                "    output.gl_Position.z = (gl_Position.z + gl_Position.w) * 0.5;\n"
@@ -608,13 +608,13 @@ void OutputHLSL::footer()
                 if (qualifier == EvqVaryingOut || qualifier == EvqInvariantVaryingOut)
                 {
                     // Program linking depends on this exact format
-                    out << "    output." + decorate(name) + " = " + decorate(name) + ";\n";   // FIXME: Prevent name clashes
+                    out << "    output." + decorate(name) + " = " + decorate(name) + ";\n";
                 }
             }
         }
     }
 
-    out << "    return output;\n"   // FIXME: Prevent name clashes
+    out << "    return output;\n"
            "}\n";
 }
 
@@ -840,7 +840,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
       case EOpMatrixTimesVector: outputTriplet(visit, "mul(transpose(", "), ", ")"); break;
       case EOpMatrixTimesMatrix: outputTriplet(visit, "mul(", ", ", ")"); break;
       case EOpLogicalOr:         outputTriplet(visit, "(", " || ", ")");  break;
-      case EOpLogicalXor:        outputTriplet(visit, "xor(", ", ", ")"); break;   // FIXME: Prevent name clashes
+      case EOpLogicalXor:        outputTriplet(visit, "xor(", ", ", ")"); break;
       case EOpLogicalAnd:        outputTriplet(visit, "(", " && ", ")");  break;
       default: UNREACHABLE();
     }
@@ -1165,7 +1165,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpGreaterThanEqual: outputTriplet(visit, "(", " >= ", ")");                break;
       case EOpVectorEqual:      outputTriplet(visit, "(", " == ", ")");                break;
       case EOpVectorNotEqual:   outputTriplet(visit, "(", " != ", ")");                break;
-      case EOpMod:              outputTriplet(visit, "mod(", ", ", ")");               break;   // FIXME: Prevent name clashes
+      case EOpMod:              outputTriplet(visit, "mod(", ", ", ")");               break;
       case EOpPow:              outputTriplet(visit, "pow(", ", ", ")");               break;
       case EOpAtan:
         if (node->getSequence().size() == 1)
