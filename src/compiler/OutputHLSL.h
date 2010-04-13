@@ -17,10 +17,13 @@ class OutputHLSL : public TIntermTraverser
   public:
     OutputHLSL(TParseContext &context);
 
+    void output();
+
+  protected:
     void header();
     void footer();
 
-  protected:
+    // Visit AST nodes and output their code to the body stream
     void visitSymbol(TIntermSymbol*);
     void visitConstantUnion(TIntermConstantUnion*);
     bool visitBinary(Visit visit, TIntermBinary*);
@@ -39,7 +42,12 @@ class OutputHLSL : public TIntermTraverser
     static TString arrayString(const TType &type);
     static TString initializer(const TType &type);
 
-    TParseContext &context;
+    TParseContext &mContext;
+
+    // Output streams
+    TInfoSinkBase mHeader;
+    TInfoSinkBase mBody;
+    TInfoSinkBase mFooter;
 };
 }
 

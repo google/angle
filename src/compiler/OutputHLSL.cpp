@@ -11,14 +11,25 @@
 
 namespace sh
 {
-OutputHLSL::OutputHLSL(TParseContext &context) : TIntermTraverser(true, true, true), context(context)
+OutputHLSL::OutputHLSL(TParseContext &context) : TIntermTraverser(true, true, true), mContext(context)
 {
+}
+
+void OutputHLSL::output()
+{
+    mContext.treeRoot->traverse(this);   // Output the body first to determine what has to go in the header and footer
+    header();
+    footer();
+
+    mContext.infoSink.obj << mHeader.c_str();
+    mContext.infoSink.obj << mBody.c_str();
+    mContext.infoSink.obj << mFooter.c_str();
 }
 
 void OutputHLSL::header()
 {
-    EShLanguage language = context.language;
-    TInfoSinkBase &out = context.infoSink.obj;
+    EShLanguage language = mContext.language;
+    TInfoSinkBase &out = mHeader;
 
     if (language == EShLangFragment)
     {
@@ -26,7 +37,7 @@ void OutputHLSL::header()
         TString varyingInput;
         TString varyingGlobals;
 
-        TSymbolTableLevel *symbols = context.symbolTable.getGlobalLevel();
+        TSymbolTableLevel *symbols = mContext.symbolTable.getGlobalLevel();
         int semanticIndex = 0;
 
         for (TSymbolTableLevel::const_iterator namedSymbol = symbols->begin(); namedSymbol != symbols->end(); namedSymbol++)
@@ -119,7 +130,7 @@ void OutputHLSL::header()
         TString varyingOutput;
         TString varyingGlobals;
 
-        TSymbolTableLevel *symbols = context.symbolTable.getGlobalLevel();
+        TSymbolTableLevel *symbols = mContext.symbolTable.getGlobalLevel();
         int semanticIndex = 0;
 
         for (TSymbolTableLevel::const_iterator namedSymbol = symbols->begin(); namedSymbol != symbols->end(); namedSymbol++)
@@ -416,9 +427,9 @@ void OutputHLSL::header()
 
 void OutputHLSL::footer()
 {
-    EShLanguage language = context.language;
-    TInfoSinkBase &out = context.infoSink.obj;
-    TSymbolTableLevel *symbols = context.symbolTable.getGlobalLevel();
+    EShLanguage language = mContext.language;
+    TInfoSinkBase &out = mFooter;
+    TSymbolTableLevel *symbols = mContext.symbolTable.getGlobalLevel();
 
     if (language == EShLangFragment)
     {
@@ -489,7 +500,7 @@ void OutputHLSL::footer()
                "    output.gl_PointSize = gl_PointSize;\n"
                "    output.gl_FragCoord = gl_Position;\n";
 
-        TSymbolTableLevel *symbols = context.symbolTable.getGlobalLevel();
+        TSymbolTableLevel *symbols = mContext.symbolTable.getGlobalLevel();
 
         for (TSymbolTableLevel::const_iterator namedSymbol = symbols->begin(); namedSymbol != symbols->end(); namedSymbol++)
         {
@@ -516,7 +527,7 @@ void OutputHLSL::footer()
 
 void OutputHLSL::visitSymbol(TIntermSymbol *node)
 {
-    TInfoSinkBase &out = context.infoSink.obj;
+    TInfoSinkBase &out = mBody;
 
     TString name = node->getSymbol();
 
@@ -536,7 +547,7 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
 
 bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
 {
-    TInfoSinkBase &out = context.infoSink.obj;
+    TInfoSinkBase &out = mBody;
 
     switch (node->getOp())
     {
@@ -711,7 +722,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
 
 bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
 {
-    TInfoSinkBase &out = context.infoSink.obj;
+    TInfoSinkBase &out = mBody;
 
     switch (node->getOp())
     {
@@ -789,8 +800,8 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
 
 bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 {
-    EShLanguage language = context.language;
-    TInfoSinkBase &out = context.infoSink.obj;
+    EShLanguage language = mContext.language;
+    TInfoSinkBase &out = mBody;
 
     if (node->getOp() == EOpNull)
     {
@@ -1057,7 +1068,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
 bool OutputHLSL::visitSelection(Visit visit, TIntermSelection *node)
 {
-    TInfoSinkBase &out = context.infoSink.obj;
+    TInfoSinkBase &out = mBody;
 
     if (node->usesTernaryOperator())
     {
@@ -1098,7 +1109,7 @@ bool OutputHLSL::visitSelection(Visit visit, TIntermSelection *node)
 
 void OutputHLSL::visitConstantUnion(TIntermConstantUnion *node)
 {
-    TInfoSinkBase &out = context.infoSink.obj;
+    TInfoSinkBase &out = mBody;
     
     const TType &type = node->getType();
 
@@ -1231,7 +1242,7 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
         return false;
     }
 
-    TInfoSinkBase &out = context.infoSink.obj;
+    TInfoSinkBase &out = mBody;
 
     if (!node->testFirst())
     {
@@ -1288,7 +1299,7 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
 
 bool OutputHLSL::visitBranch(Visit visit, TIntermBranch *node)
 {
-    TInfoSinkBase &out = context.infoSink.obj;
+    TInfoSinkBase &out = mBody;
 
     switch (node->getFlowOp())
     {
@@ -1321,7 +1332,7 @@ bool OutputHLSL::visitBranch(Visit visit, TIntermBranch *node)
 // Handle loops with more than 255 iterations (unsupported by D3D9) by splitting them
 bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
 {
-    TInfoSinkBase &out = context.infoSink.obj;
+    TInfoSinkBase &out = mBody;
 
     // Parse loops of the form:
     // for(int index = initial; index [comparator] limit; index += increment)
@@ -1486,7 +1497,7 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
 
 void OutputHLSL::outputTriplet(Visit visit, const char *preString, const char *inString, const char *postString)
 {
-    TInfoSinkBase &out = context.infoSink.obj;
+    TInfoSinkBase &out = mBody;
 
     if (visit == PreVisit && preString)
     {

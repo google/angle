@@ -17,9 +17,7 @@ bool TranslatorHLSL::compile(TIntermNode *root)
     TParseContext& parseContext = *GetGlobalParseContext();
     sh::OutputHLSL outputHLSL(parseContext);
 
-    outputHLSL.header();
-    parseContext.treeRoot->traverse(&outputHLSL);
-    outputHLSL.footer();
+    outputHLSL.output();
     
     return true;
 }
