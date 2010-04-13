@@ -692,6 +692,117 @@ bool Program::setUniform4iv(GLint location, GLsizei count, const GLint *v)
     return true;
 }
 
+bool Program::getUniformfv(GLint location, GLfloat *params)
+{
+    if (location < 0 || location >= (int)mUniforms.size())
+    {
+        return false;
+    }
+
+    unsigned int count = 0;
+
+    switch (mUniforms[location]->type)
+    {
+      case GL_FLOAT:
+      case GL_BOOL:
+          count = 1;
+          break;
+      case GL_FLOAT_VEC2:
+      case GL_BOOL_VEC2:
+          count = 2;
+          break;
+      case GL_FLOAT_VEC3:
+      case GL_BOOL_VEC3:
+          count = 3;
+          break;
+      case GL_FLOAT_VEC4:
+      case GL_BOOL_VEC4:
+      case GL_FLOAT_MAT2:
+          count = 4;
+          break;
+      case GL_FLOAT_MAT3:
+          count = 9;
+          break;
+      case GL_FLOAT_MAT4:
+          count = 16;
+          break;
+      default:
+          return false;
+    }
+
+    if (mUniforms[location]->type == GL_BOOL || mUniforms[location]->type == GL_BOOL_VEC2 ||
+        mUniforms[location]->type == GL_BOOL_VEC3 || mUniforms[location]->type == GL_BOOL_VEC4)
+    {
+        GLboolean *boolParams = mUniforms[location]->data;
+
+        for (unsigned int i = 0; i < count; ++i)
+        {
+            if (boolParams[i] == GL_FALSE)
+                params[i] = 0.0f;
+            else
+                params[i] = 1.0f;
+        }
+    }
+    else
+    {
+        memcpy(params, mUniforms[location]->data, count * sizeof(GLfloat));
+    }
+
+    return true;
+}
+
+bool Program::getUniformiv(GLint location, GLint *params)
+{
+    if (location < 0 || location >= (int)mUniforms.size())
+    {
+        return false;
+    }
+
+    unsigned int count = 0;
+
+    switch (mUniforms[location]->type)
+    {
+      case GL_INT:
+      case GL_BOOL:
+          count = 1;
+          break;
+      case GL_INT_VEC2:
+      case GL_BOOL_VEC2:
+          count = 2;
+          break;
+      case GL_INT_VEC3:
+      case GL_BOOL_VEC3:
+          count = 3;
+          break;
+      case GL_INT_VEC4:
+      case GL_BOOL_VEC4:
+          count = 4;
+          break;
+      default:
+          return false;
+    }
+
+    if (mUniforms[location]->type == GL_BOOL || mUniforms[location]->type == GL_BOOL_VEC2 ||
+        mUniforms[location]->type == GL_BOOL_VEC3 || mUniforms[location]->type == GL_BOOL_VEC4)
+    {
+        GLboolean *boolParams = mUniforms[location]->data;
+
+        for (unsigned int i = 0; i < count; ++i)
+        {
+            if (boolParams[i] == GL_FALSE)
+                params[i] = 0;
+            else
+                params[i] = 1;
+        }
+    }
+    else
+    {
+        memcpy(params, mUniforms[location]->data, count * sizeof(GLint));
+    }
+
+    return true;
+}
+
 // Applies all the uniforms set for this program object to the Direct3D 9 device
 void Program::applyUniforms()
 {

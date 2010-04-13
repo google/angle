@@ -69,6 +69,9 @@ class Program
     bool setUniform3iv(GLint location, GLsizei count, const GLint *v);
     bool setUniform4iv(GLint location, GLsizei count, const GLint *v);
 
+    bool getUniformfv(GLint location, GLfloat *params);
+    bool getUniformiv(GLint location, GLint *params);
+
     void applyUniforms();
 
     void link();

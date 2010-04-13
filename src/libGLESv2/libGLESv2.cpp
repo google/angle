@@ -2286,7 +2286,27 @@ void __stdcall glGetUniformfv(GLuint program, GLint location, GLfloat* params)
 
     try
     {
-        UNIMPLEMENTED();   // FIXME
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            if (program == 0)
+            {
+                return error(GL_INVALID_VALUE);
+            }
+
+            gl::Program *programObject = context->getProgram(program);
+
+            if (!programObject || !programObject->isLinked())
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            if (!programObject->getUniformfv(location, params))
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -2300,7 +2320,32 @@ void __stdcall glGetUniformiv(GLuint program, GLint location, GLint* params)
 
     try
     {
-        UNIMPLEMENTED();   // FIXME
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            if (program == 0)
+            {
+                return error(GL_INVALID_VALUE);
+            }
+
+            gl::Program *programObject = context->getProgram(program);
+
+            if (!programObject || !programObject->isLinked())
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            if (!programObject)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            if (!programObject->getUniformiv(location, params))
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
