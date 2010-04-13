@@ -16,12 +16,13 @@
 #include "mathutil.h"
 #include "common/debug.h"
 #include "utilities.h"
+#include "Blit.h"
 
 namespace gl
 {
 
 Texture::Image::Image()
-  : dirty(false), surface(NULL)
+  : width(0), height(0), dirty(false), surface(NULL)
 {
 }
 
@@ -30,7 +31,7 @@ Texture::Image::~Image()
   if (surface) surface->Release();
 }
 
-Texture::Texture() : Colorbuffer(0)
+Texture::Texture(Context *context) : Colorbuffer(0), mContext(context)
 {
     mMinFilter = GL_NEAREST_MIPMAP_LINEAR;
     mMagFilter = GL_LINEAR;
@@ -42,6 +43,11 @@ Texture::Texture() : Colorbuffer(0)
 
 Texture::~Texture()
 {
+}
+
+Blit *Texture::getBlitter()
+{
+    return mContext->getBlitter();
 }
 
 // Returns true on successful filter state update (valid enum parameter)
@@ -388,7 +394,28 @@ IDirect3DSurface9 *Texture::getRenderTarget(GLenum target)
     return mRenderTarget;
 }
 
-Texture2D::Texture2D()
+void Texture::dropTexture()
+{
+    if (mRenderTarget)
+    {
+        mRenderTarget->Release();
+        mRenderTarget = NULL;
+    }
+
+    if (mBaseTexture)
+    {
+        mBaseTexture = NULL;
+    }
+}
+
+void Texture::pushTexture(IDirect3DBaseTexture9 *newTexture)
+{
+    mBaseTexture = newTexture;
+    mDirtyMetaData = false;
+}
+
+
+Texture2D::Texture2D(Context *context) : Texture(context)
 {
     mTexture = NULL;
 }
@@ -407,15 +434,62 @@ GLenum Texture2D::getTarget() const
     return GL_TEXTURE_2D;
 }
 
+// While OpenGL doesn't check texture consistency until draw-time, D3D9 requires a complete texture
+// for render-to-texture (such as CopyTexImage). We have no way of keeping individual inconsistent levels.
+// Call this when a particular level of the texture must be defined with a specific format, width and height.
+//
+// Returns true if the existing texture was unsuitable had to be destroyed. If so, it will also set
+// a new height and width for the texture by working backwards from the given width and height.
+bool Texture2D::redefineTexture(GLint level, GLenum internalFormat, GLsizei width, GLsizei height)
+{
+    bool widthOkay = (mWidth >> level == width);
+    bool heightOkay = (mHeight >> level == height);
+
+    bool sizeOkay = ((widthOkay && heightOkay)
+                     || (widthOkay && mHeight >> level == 0 && height == 1)
+                     || (heightOkay && mWidth >> level == 0 && width == 1));
+
+    bool textureOkay = (sizeOkay && internalFormat == mImageArray[0].format);
+
+    if (!textureOkay)
+    {
+        TRACE("Redefining 2D texture (%d, 0x%04X, %d, %d => 0x%04X, %d, %d).", level,
+              mImageArray[0].format, mWidth, mHeight,
+              internalFormat, width, height);
+
+        // Purge all the levels and the texture.
+
+        for (int i = 0; i < MAX_TEXTURE_LEVELS; i++)
+        {
+            if (mImageArray[i].surface != NULL)
+            {
+                mImageArray[i].dirty = false;
+
+                mImageArray[i].surface->Release();
+                mImageArray[i].surface = NULL;
+            }
+        }
+
+        if (mTexture != NULL)
+        {
+            mTexture->Release();
+            mTexture = NULL;
+            dropTexture();
+        }
+
+        mWidth = width << level;
+        mHeight = height << level;
+        mImageArray[0].format = internalFormat;
+    }
+
+    return !textureOkay;
+}
+
 void Texture2D::setImage(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    Texture::setImage(width, height, format, type, unpackAlignment, pixels, &mImageArray[level]);
+    redefineTexture(level, internalFormat, width, height);
 
-    if (level == 0)
-    {
-        mWidth = width;
-        mHeight = height;
-    }
+    Texture::setImage(width, height, format, type, unpackAlignment, pixels, &mImageArray[level]);
 }
 
 void Texture2D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
@@ -457,6 +531,56 @@ void Texture2D::subImage(GLint level, GLint xoffset, GLint yoffset, GLsizei widt
 {
     Texture::subImage(xoffset, yoffset, width, height, format, type, unpackAlignment, pixels, &mImageArray[level]);
     commitRect(level, xoffset, yoffset, width, height);
+}
+
+void Texture2D::copyImage(GLint level, GLenum internalFormat, GLint x, GLint y, GLsizei width, GLsizei height, Renderbuffer *source)
+{
+    if (redefineTexture(level, internalFormat, width, height))
+    {
+        convertToRenderTarget();
+        pushTexture(mTexture);
+    }
+
+    RECT sourceRect;
+    sourceRect.left = x;
+    sourceRect.top = y + height;
+    sourceRect.right = x + width;
+    sourceRect.bottom = y;
+
+    IDirect3DSurface9 *dest;
+    HRESULT hr = mTexture->GetSurfaceLevel(level, &dest);
+
+    getBlitter()->formatConvert(source->getRenderTarget(), sourceRect, internalFormat, 0, 0, dest);
+    dest->Release();
+
+    mImageArray[level].width = width;
+    mImageArray[level].height = height;
+    mImageArray[level].format = internalFormat;
+}
+
+void Texture2D::copySubImage(GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Renderbuffer *source)
+{
+    if (redefineTexture(0, mImageArray[0].format, mImageArray[0].width, mImageArray[0].height))
+    {
+        convertToRenderTarget();
+        pushTexture(mTexture);
+    }
+    else
+    {
+        getRenderTarget(GL_TEXTURE_2D);
+    }
+
+    RECT sourceRect;
+    sourceRect.left = x;
+    sourceRect.top = y + height;
+    sourceRect.right = x + width;
+    sourceRect.bottom = y;
+
+    IDirect3DSurface9 *dest;
+    HRESULT hr = mTexture->GetSurfaceLevel(level, &dest);
+
+    getBlitter()->formatConvert(source->getRenderTarget(), sourceRect, mImageArray[0].format, xoffset, yoffset, dest);
+    dest->Release();
 }
 
 // Tests for GL texture object completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
@@ -654,7 +778,7 @@ bool Texture2D::dirtyImageData() const
     return false;
 }
 
-TextureCubeMap::TextureCubeMap()
+TextureCubeMap::TextureCubeMap(Context *context) : Texture(context)
 {
     mTexture = NULL;
 }
@@ -711,12 +835,10 @@ void TextureCubeMap::commitRect(GLenum faceTarget, GLint level, GLint xoffset, G
 
     if (mTexture != NULL)
     {
-        IDirect3DSurface9 *destLevel = NULL;
-        HRESULT result = mTexture->GetCubeMapSurface(static_cast<D3DCUBEMAP_FACES>(face), level, &destLevel);
+        IDirect3DSurface9 *destLevel = getCubeMapSurface(face, level);
+        ASSERT(destLevel != NULL);
 
-        ASSERT(SUCCEEDED(result));
-
-        if (SUCCEEDED(result))
+        if (destLevel != NULL)
         {
             Image *img = &mImageArray[face][level];
 
@@ -730,7 +852,7 @@ void TextureCubeMap::commitRect(GLenum faceTarget, GLint level, GLint xoffset, G
             destPoint.x = xoffset;
             destPoint.y = yoffset;
 
-            result = getDevice()->UpdateSurface(img->surface, &sourceRect, destLevel, &destPoint);
+            HRESULT result = getDevice()->UpdateSurface(img->surface, &sourceRect, destLevel, &destPoint);
             ASSERT(SUCCEEDED(result));
 
             destLevel->Release();
@@ -842,14 +964,12 @@ void TextureCubeMap::updateTexture()
 
             if (img->dirty)
             {
-                IDirect3DSurface9 *levelSurface;
-                HRESULT result = mTexture->GetCubeMapSurface(static_cast<D3DCUBEMAP_FACES>(face), level, &levelSurface);
+                IDirect3DSurface9 *levelSurface = getCubeMapSurface(face, level);
+                ASSERT(levelSurface != NULL);
 
-                ASSERT(SUCCEEDED(result));
-
-                if (SUCCEEDED(result))
+                if (levelSurface != NULL)
                 {
-                    result = device->UpdateSurface(img->surface, NULL, levelSurface, NULL);
+                    HRESULT result = device->UpdateSurface(img->surface, NULL, levelSurface, NULL);
                     ASSERT(SUCCEEDED(result));
 
                     levelSurface->Release();
@@ -934,21 +1054,16 @@ IDirect3DSurface9 *TextureCubeMap::getSurface(GLenum target)
 {
     ASSERT(es2dx::IsCubemapTextureTarget(target));
 
-    IDirect3DSurface9 *surface = NULL;
-    HRESULT result = mTexture->GetCubeMapSurface(static_cast<D3DCUBEMAP_FACES>(faceIndex(target)), 0, &surface);
-    ASSERT(SUCCEEDED(result));
+    IDirect3DSurface9 *surface = getCubeMapSurface(target, 0);
+    ASSERT(surface != NULL);
     return surface;
 }
 
 void TextureCubeMap::setImage(int face, GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    Texture::setImage(width, height, format, type, unpackAlignment, pixels, &mImageArray[face][level]);
+    redefineTexture(level, internalFormat, width);
 
-    if (face == 0 && level == 0)
-    {
-        mWidth = width;
-        mHeight = height;
-    }
+    Texture::setImage(width, height, format, type, unpackAlignment, pixels, &mImageArray[face][level]);
 }
 
 unsigned int TextureCubeMap::faceIndex(GLenum face)
@@ -975,6 +1090,139 @@ bool TextureCubeMap::dirtyImageData() const
     }
 
     return false;
+}
+
+// While OpenGL doesn't check texture consistency until draw-time, D3D9 requires a complete texture
+// for render-to-texture (such as CopyTexImage). We have no way of keeping individual inconsistent levels & faces.
+// Call this when a particular level of the texture must be defined with a specific format, width and height.
+//
+// Returns true if the existing texture was unsuitable had to be destroyed. If so, it will also set
+// a new size for the texture by working backwards from the given size.
+bool TextureCubeMap::redefineTexture(GLint level, GLenum internalFormat, GLsizei width)
+{
+    // Are these settings compatible with level 0?
+    bool sizeOkay = (mImageArray[0][0].width >> level == width);
+
+    bool textureOkay = (sizeOkay && internalFormat == mImageArray[0][0].format);
+
+    if (!textureOkay)
+    {
+        TRACE("Redefining cube texture (%d, 0x%04X, %d => 0x%04X, %d).", level,
+              mImageArray[0][0].format, mImageArray[0][0].width,
+              internalFormat, width);
+
+        // Purge all the levels and the texture.
+        for (int i = 0; i < MAX_TEXTURE_LEVELS; i++)
+        {
+            for (int f = 0; f < 6; f++)
+            {
+                if (mImageArray[f][i].surface != NULL)
+                {
+                    mImageArray[f][i].dirty = false;
+
+                    mImageArray[f][i].surface->Release();
+                    mImageArray[f][i].surface = NULL;
+                }
+            }
+        }
+
+        if (mTexture != NULL)
+        {
+            mTexture->Release();
+            mTexture = NULL;
+            dropTexture();
+        }
+
+        mWidth = width << level;
+        mImageArray[0][0].width = width << level;
+        mHeight = width << level;
+        mImageArray[0][0].height = width << level;
+
+        mImageArray[0][0].format = internalFormat;
+    }
+
+    return !textureOkay;
+}
+
+void TextureCubeMap::copyImage(GLenum face, GLint level, GLenum internalFormat, GLint x, GLint y, GLsizei width, GLsizei height, Renderbuffer *source)
+{
+    unsigned int faceindex = faceIndex(face);
+
+    if (redefineTexture(level, internalFormat, width))
+    {
+        convertToRenderTarget();
+        pushTexture(mTexture);
+    }
+
+    RECT sourceRect;
+    sourceRect.left = x;
+    sourceRect.top = y + height;
+    sourceRect.right = x + width;
+    sourceRect.bottom = y;
+
+    IDirect3DSurface9 *dest = getCubeMapSurface(face, level);
+
+    getBlitter()->formatConvert(source->getRenderTarget(), sourceRect, internalFormat, 0, 0, dest);
+    dest->Release();
+
+    mImageArray[faceindex][level].width = width;
+    mImageArray[faceindex][level].height = height;
+    mImageArray[faceindex][level].format = internalFormat;
+}
+
+IDirect3DSurface9 *TextureCubeMap::getCubeMapSurface(unsigned int faceIdentifier, unsigned int level)
+{
+    unsigned int faceIndex;
+
+    if (faceIdentifier < 6)
+    {
+        faceIndex = faceIdentifier;
+    }
+    else if (faceIdentifier >= GL_TEXTURE_CUBE_MAP_POSITIVE_X && faceIdentifier <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z)
+    {
+        faceIndex = faceIdentifier - GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+    }
+    else
+    {
+        UNREACHABLE();
+        faceIndex = 0;
+    }
+
+    if (mTexture == NULL)
+    {
+        UNREACHABLE();
+        return NULL;
+    }
+
+    IDirect3DSurface9 *surface = NULL;
+
+    HRESULT hr = mTexture->GetCubeMapSurface(static_cast<D3DCUBEMAP_FACES>(faceIndex), level, &surface);
+
+    return (SUCCEEDED(hr)) ? surface : NULL;
+}
+
+void TextureCubeMap::copySubImage(GLenum face, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Renderbuffer *source)
+{
+    if (redefineTexture(0, mImageArray[0][0].format, mImageArray[0][0].width))
+    {
+        convertToRenderTarget();
+        pushTexture(mTexture);
+    }
+    else
+    {
+        getRenderTarget(face);
+    }
+
+    RECT sourceRect;
+    sourceRect.left = x;
+    sourceRect.top = y + height;
+    sourceRect.right = x + width;
+    sourceRect.bottom = y;
+
+    IDirect3DSurface9 *dest = getCubeMapSurface(face, level);
+
+    getBlitter()->formatConvert(source->getRenderTarget(), sourceRect, mImageArray[0][0].format, xoffset, yoffset, dest);
+    dest->Release();
 }
 
 }

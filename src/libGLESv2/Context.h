@@ -46,6 +46,7 @@ class Stencilbuffer;
 class VertexDataManager;
 class IndexDataManager;
 class BufferBackEnd;
+class Blit;
 
 enum
 {
@@ -288,6 +289,8 @@ class Context : public State
     const char *getPixelShaderProfile();
     const char *getVertexShaderProfile();
 
+    Blit *getBlitter() { return mBlit; }
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Context);
 
@@ -333,6 +336,8 @@ class Context : public State
     BufferBackEnd *mBufferBackEnd;
     VertexDataManager *mVertexDataManager;
     IndexDataManager *mIndexDataManager;
+
+    Blit *mBlit;
 
     Texture *mIncompleteTextures[SAMPLER_TYPE_COUNT];
 

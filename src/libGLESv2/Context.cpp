@@ -25,6 +25,7 @@
 #include "geometry/VertexDataManager.h"
 #include "geometry/IndexDataManager.h"
 #include "geometry/dx9.h"
+#include "Blit.h"
 
 #undef near
 #undef far
@@ -106,8 +107,8 @@ Context::Context(const egl::Config *config)
     // In order that access to these initial textures not be lost, they are treated as texture
     // objects all of whose names are 0.
 
-    mTexture2DZero = new Texture2D();
-    mTextureCubeMapZero = new TextureCubeMap();
+    mTexture2DZero = new Texture2D(this);
+    mTextureCubeMapZero = new TextureCubeMap(this);
 
     mColorbufferZero = NULL;
     mDepthbufferZero = NULL;
@@ -142,6 +143,7 @@ Context::Context(const egl::Config *config)
     mBufferBackEnd = NULL;
     mVertexDataManager = NULL;
     mIndexDataManager = NULL;
+    mBlit = NULL;
 
     mInvalidEnum = false;
     mInvalidValue = false;
@@ -171,6 +173,7 @@ Context::~Context()
     delete mBufferBackEnd;
     delete mVertexDataManager;
     delete mIndexDataManager;
+    delete mBlit;
 
     while (!mBufferMap.empty())
     {
@@ -212,6 +215,7 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         mBufferBackEnd = new Dx9BackEnd(device);
         mVertexDataManager = new VertexDataManager(this, mBufferBackEnd);
         mIndexDataManager = new IndexDataManager(this, mBufferBackEnd);
+        mBlit = new Blit(this);
     }
 
     // Wrap the existing Direct3D 9 resources into GL objects and assign them to the '0' names
@@ -501,7 +505,7 @@ void Context::bindTexture2D(GLuint texture)
 {
     if (!getTexture(texture) && texture != 0)
     {
-        mTextureMap[texture] = new Texture2D();
+        mTextureMap[texture] = new Texture2D(this);
     }
 
     texture2D = texture;
@@ -513,7 +517,7 @@ void Context::bindTextureCubeMap(GLuint texture)
 {
     if (!getTexture(texture) && texture != 0)
     {
-        mTextureMap[texture] = new TextureCubeMap();
+        mTextureMap[texture] = new TextureCubeMap(this);
     }
 
     textureCubeMap = texture;
@@ -2157,7 +2161,7 @@ Texture *Context::getIncompleteTexture(SamplerType type)
 
           case SAMPLER_2D:
             {
-                Texture2D *incomplete2d = new Texture2D;
+                Texture2D *incomplete2d = new Texture2D(this);
                 incomplete2d->setImage(0, GL_RGBA, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, 1, color);
                 t = incomplete2d;
             }
@@ -2165,7 +2169,7 @@ Texture *Context::getIncompleteTexture(SamplerType type)
 
           case SAMPLER_CUBE:
             {
-              TextureCubeMap *incompleteCube = new TextureCubeMap;
+              TextureCubeMap *incompleteCube = new TextureCubeMap(this);
 
               incompleteCube->setImagePosX(0, GL_RGBA, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, 1, color);
               incompleteCube->setImageNegX(0, GL_RGBA, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, 1, color);

@@ -21,6 +21,9 @@
 
 namespace gl
 {
+class Context;
+class Blit;
+
 enum
 {
     MAX_TEXTURE_SIZE = 2048,
@@ -32,7 +35,7 @@ enum
 class Texture : public Colorbuffer
 {
   public:
-    Texture();
+    explicit Texture(Context *context);
 
     ~Texture();
 
@@ -90,11 +93,17 @@ class Texture : public Colorbuffer
 
     virtual bool dirtyImageData() const = 0;
 
+    void dropTexture();
+    void pushTexture(IDirect3DBaseTexture9 *newTexture);
+
+    Blit *getBlitter();
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture);
 
-    IDirect3DBaseTexture9 *mBaseTexture; // This is a weak pointer. The derived class is assumed to own a strong pointer.
+    Context *mContext;
 
+    IDirect3DBaseTexture9 *mBaseTexture; // This is a weak pointer. The derived class is assumed to own a strong pointer.
     bool mDirtyMetaData;
 
     void loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type,
@@ -106,7 +115,7 @@ class Texture : public Colorbuffer
 class Texture2D : public Texture
 {
   public:
-    Texture2D();
+    explicit Texture2D(Context *context);
 
     ~Texture2D();
 
@@ -114,6 +123,8 @@ class Texture2D : public Texture
 
     void setImage(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void subImage(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
+    void copyImage(GLint level, GLenum internalFormat, GLint x, GLint y, GLsizei width, GLsizei height, Renderbuffer *source);
+    void copySubImage(GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Renderbuffer *source);
 
     bool isComplete() const;
 
@@ -132,12 +143,14 @@ class Texture2D : public Texture
     Image mImageArray[MAX_TEXTURE_LEVELS];
 
     IDirect3DTexture9 *mTexture;
+
+    bool redefineTexture(GLint level, GLenum internalFormat, GLsizei width, GLsizei height);
 };
 
 class TextureCubeMap : public Texture
 {
   public:
-    TextureCubeMap();
+    explicit TextureCubeMap(Context *context);
 
     ~TextureCubeMap();
 
@@ -151,6 +164,8 @@ class TextureCubeMap : public Texture
     void setImageNegZ(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
 
     void subImage(GLenum face, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
+    void copyImage(GLenum face, GLint level, GLenum internalFormat, GLint x, GLint y, GLsizei width, GLsizei height, Renderbuffer *source);
+    void copySubImage(GLenum face, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Renderbuffer *source);
 
     bool isComplete() const;
 
@@ -164,10 +179,15 @@ class TextureCubeMap : public Texture
 
     virtual bool dirtyImageData() const;
 
+    // faceIdentifier is 0-5 or one of the GL_TEXTURE_CUBE_MAP_* enumerants.
+    // Returns NULL if the call underlying Direct3D call fails.
+    IDirect3DSurface9 *getCubeMapSurface(unsigned int faceIdentifier, unsigned int level);
+
     static unsigned int faceIndex(GLenum face);
 
     void setImage(int face, GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void commitRect(GLenum faceTarget, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
+    bool redefineTexture(GLint level, GLenum internalFormat, GLsizei width);
 
     Image mImageArray[6][MAX_TEXTURE_LEVELS];
 

@@ -158,6 +158,8 @@
         'libGLESv2/geometry/vertexconversion.h',
         'libGLESv2/geometry/VertexDataManager.cpp',
         'libGLESv2/geometry/VertexDataManager.h',
+        'libGLESv2/Blit.cpp',
+        'libGLESv2/Blit.h',
         'libGLESv2/Buffer.cpp',
         'libGLESv2/Buffer.h',
         'libGLESv2/Context.cpp',

@@ -791,12 +791,94 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
 
     try
     {
-        if (width < 0 || height < 0)
+        if (level < 0 || width < 0 || height < 0)
         {
             return error(GL_INVALID_VALUE);
         }
 
-        UNIMPLEMENTED();   // FIXME
+        if (level > 0 && (!gl::isPow2(width) || !gl::isPow2(height)))
+        {
+            return error(GL_INVALID_VALUE);
+        }
+
+        switch (target)
+        {
+          case GL_TEXTURE_2D:
+            if (width > (gl::MAX_TEXTURE_SIZE >> level) || height > (gl::MAX_TEXTURE_SIZE >> level))
+            {
+                return error(GL_INVALID_VALUE);
+            }
+            break;
+          case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
+          case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
+          case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
+          case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
+          case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
+          case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
+            if (!gl::isPow2(width) || !gl::isPow2(height))
+            {
+                return error(GL_INVALID_VALUE);
+            }
+
+            if (width > (gl::MAX_CUBE_MAP_TEXTURE_SIZE >> level) || height > (gl::MAX_CUBE_MAP_TEXTURE_SIZE >> level))
+            {
+                return error(GL_INVALID_VALUE);
+            }
+            break;
+          default:
+            return error(GL_INVALID_ENUM);
+        }
+
+        switch (internalformat)
+        {
+          case GL_ALPHA:
+          case GL_LUMINANCE:
+          case GL_LUMINANCE_ALPHA:
+          case GL_RGB:
+          case GL_RGBA:
+            break;
+          default:
+            return error(GL_INVALID_VALUE);
+        }
+
+        if (border != 0)
+        {
+            return error(GL_INVALID_VALUE);
+        }
+
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            gl::Renderbuffer *source = context->getFramebuffer()->getColorbuffer();
+
+            if (target == GL_TEXTURE_2D)
+            {
+                gl::Texture2D *texture = context->getTexture2D();
+
+                if (!texture)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                texture->copyImage(level, internalformat, x, y, width, height, source);
+            }
+            else if (es2dx::IsCubemapTextureTarget(target))
+            {
+                gl::TextureCubeMap *texture = context->getTextureCubeMap();
+
+                if (!texture)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                texture->copyImage(target, level, internalformat, x, y, width, height, source);
+            }
+            else
+            {
+                UNREACHABLE();
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -812,13 +894,61 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
 
     try
     {
-        if (width < 0 || height < 0)
+        if (target != GL_TEXTURE_2D && !es2dx::IsCubemapTextureTarget(target))
+        {
+            return error(GL_INVALID_ENUM);
+        }
+
+        if (level < 0 || level > gl::MAX_TEXTURE_LEVELS || xoffset < 0 || yoffset < 0 || width < 0 || height < 0)
         {
             return error(GL_INVALID_VALUE);
         }
 
-        UNIMPLEMENTED();   // FIXME
+        if (std::numeric_limits<GLsizei>::max() - xoffset < width || std::numeric_limits<GLsizei>::max() - yoffset < height)
+        {
+            return error(GL_INVALID_VALUE);
+        }
+
+        if (width == 0 || height == 0)
+        {
+            return;
+        }
+
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            gl::Renderbuffer *source = context->getFramebuffer()->getColorbuffer();
+
+            if (target == GL_TEXTURE_2D)
+            {
+                gl::Texture2D *texture = context->getTexture2D();
+
+                if (!texture)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                texture->copySubImage(level, xoffset, yoffset, x, y, width, height, source);
+            }
+            else if (es2dx::IsCubemapTextureTarget(target))
+            {
+                gl::TextureCubeMap *texture = context->getTextureCubeMap();
+
+                if (!texture)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                texture->copySubImage(target, level, xoffset, yoffset, x, y, width, height, source);
+            }
+            else
+            {
+                UNREACHABLE();
+            }
+        }
     }
+
     catch(std::bad_alloc&)
     {
         return error(GL_OUT_OF_MEMORY);
