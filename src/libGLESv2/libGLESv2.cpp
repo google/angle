@@ -3225,7 +3225,7 @@ void __stdcall glShaderSource(GLuint shader, GLsizei count, const GLchar** strin
 
     try
     {
-        if (shader == 0 || count < 0)
+        if (count < 0)
         {
             return error(GL_INVALID_VALUE);
         }
@@ -3238,7 +3238,14 @@ void __stdcall glShaderSource(GLuint shader, GLsizei count, const GLchar** strin
 
             if (!shaderObject)
             {
-                return error(GL_INVALID_OPERATION);
+                if (context->getProgram(shader))
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+                else
+                {
+                    return error(GL_INVALID_VALUE);
+                }
             }
 
             shaderObject->setSource(count, string, length);
