@@ -106,6 +106,10 @@ class Program
     bool defineUniform(const D3DXHANDLE &constantHandle, const D3DXCONSTANT_DESC &constantDescription, std::string name = "");
     bool defineUniform(const D3DXCONSTANT_DESC &constantDescription, std::string &name);
     Uniform *createUniform(const D3DXCONSTANT_DESC &constantDescription, std::string &name);
+    bool applyUniform1bv(GLint location, GLsizei count, const GLboolean *v);
+    bool applyUniform2bv(GLint location, GLsizei count, const GLboolean *v);
+    bool applyUniform3bv(GLint location, GLsizei count, const GLboolean *v);
+    bool applyUniform4bv(GLint location, GLsizei count, const GLboolean *v);
     bool applyUniform1fv(GLint location, GLsizei count, const GLfloat *v);
     bool applyUniform2fv(GLint location, GLsizei count, const GLfloat *v);
     bool applyUniform3fv(GLint location, GLsizei count, const GLfloat *v);
