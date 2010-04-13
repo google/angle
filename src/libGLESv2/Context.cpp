@@ -796,6 +796,15 @@ bool Context::getBooleanv(GLenum pname, GLboolean *params)
         params[2] = colorMaskBlue;
         params[3] = colorMaskAlpha;
         break;
+      case GL_CULL_FACE:                *params = cullFace;
+      case GL_POLYGON_OFFSET_FILL:      *params = polygonOffsetFill;
+      case GL_SAMPLE_ALPHA_TO_COVERAGE: *params = sampleAlphaToCoverage;
+      case GL_SAMPLE_COVERAGE:          *params = sampleCoverage;
+      case GL_SCISSOR_TEST:             *params = scissorTest;
+      case GL_STENCIL_TEST:             *params = stencilTest;
+      case GL_DEPTH_TEST:               *params = depthTest;
+      case GL_BLEND:                    *params = blend;
+      case GL_DITHER:                   *params = dither;
       default:
         return false;
     }
@@ -1101,6 +1110,15 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_SHADER_COMPILER:
       case GL_SAMPLE_COVERAGE_INVERT:
       case GL_DEPTH_WRITEMASK:
+      case GL_CULL_FACE:                // CULL_FACE through DITHER are natural to IsEnabled,
+      case GL_POLYGON_OFFSET_FILL:      // but can be retrieved through the Get{Type}v queries.
+      case GL_SAMPLE_ALPHA_TO_COVERAGE: // For this purpose, they are treated here as bool-natural
+      case GL_SAMPLE_COVERAGE:
+      case GL_SCISSOR_TEST:
+      case GL_STENCIL_TEST:
+      case GL_DEPTH_TEST:
+      case GL_BLEND:
+      case GL_DITHER:
         {
             *type = GL_BOOL;
             *numParams = 1;
