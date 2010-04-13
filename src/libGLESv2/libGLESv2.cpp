@@ -701,7 +701,14 @@ void __stdcall glCompileShader(GLuint shader)
 
             if (!shaderObject)
             {
-                return error(GL_INVALID_VALUE);
+                if (context->getProgram(shader))
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+                else
+                {
+                    return error(GL_INVALID_VALUE);
+                }
             }
 
             shaderObject->compile();
