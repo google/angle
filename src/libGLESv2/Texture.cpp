@@ -225,8 +225,8 @@ void Texture::loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei
                 {
                   case GL_UNSIGNED_BYTE:
                     r = source[x * 3 + 0];
-                    b = source[x * 3 + 1];
-                    g = source[x * 3 + 2];
+                    g = source[x * 3 + 1];
+                    b = source[x * 3 + 2];
                     a = 0xFF;
                     break;
 
