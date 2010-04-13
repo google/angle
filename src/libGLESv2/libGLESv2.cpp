@@ -120,7 +120,19 @@ void __stdcall glBindAttribLocation(GLuint program, GLuint index, const GLchar* 
 
             if (!programObject)
             {
-                return error(GL_INVALID_VALUE);
+                if (context->getShader(program))
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+                else
+                {
+                    return error(GL_INVALID_VALUE);
+                }
+            }
+
+            if (strncmp(name, "gl_", 3) == 0)
+            {
+                return error(GL_INVALID_OPERATION);
             }
 
             programObject->bindAttributeLocation(index, name);
