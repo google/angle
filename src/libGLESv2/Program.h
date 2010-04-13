@@ -65,6 +65,9 @@ class Program
     bool setUniformMatrix3fv(GLint location, GLsizei count, const GLfloat *value);
     bool setUniformMatrix4fv(GLint location, GLsizei count, const GLfloat *value);
     bool setUniform1iv(GLint location, GLsizei count, const GLint *v);
+    bool setUniform2iv(GLint location, GLsizei count, const GLint *v);
+    bool setUniform3iv(GLint location, GLsizei count, const GLint *v);
+    bool setUniform4iv(GLint location, GLsizei count, const GLint *v);
 
     void applyUniforms();
 
@@ -118,6 +121,9 @@ class Program
     bool applyUniformMatrix3fv(GLint location, GLsizei count, const GLfloat *value);
     bool applyUniformMatrix4fv(GLint location, GLsizei count, const GLfloat *value);
     bool applyUniform1iv(GLint location, GLsizei count, const GLint *v);
+    bool applyUniform2iv(GLint location, GLsizei count, const GLint *v);
+    bool applyUniform3iv(GLint location, GLsizei count, const GLint *v);
+    bool applyUniform4iv(GLint location, GLsizei count, const GLint *v);
 
     void appendToInfoLog(const char *info);
 

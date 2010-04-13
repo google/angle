@@ -3472,14 +3472,14 @@ void __stdcall glUniform1fv(GLint location, GLsizei count, const GLfloat* v)
 
     try
     {
-        if (location == -1)
-        {
-            return;
-        }
-
         if (count < 0)
         {
             return error(GL_INVALID_VALUE);
+        }
+
+        if (location == -1)
+        {
+            return;
         }
 
         gl::Context *context = gl::getContext();
@@ -3521,6 +3521,11 @@ void __stdcall glUniform1iv(GLint location, GLsizei count, const GLint* v)
             return error(GL_INVALID_VALUE);
         }
 
+        if (location == -1)
+        {
+            return;
+        }
+
         gl::Context *context = gl::getContext();
 
         if (context)
@@ -3557,14 +3562,14 @@ void __stdcall glUniform2fv(GLint location, GLsizei count, const GLfloat* v)
 
     try
     {
-        if (location == -1)
-        {
-            return;
-        }
-
         if (count < 0)
         {
             return error(GL_INVALID_VALUE);
+        }
+        
+        if (location == -1)
+        {
+            return;
         }
 
         gl::Context *context = gl::getContext();
@@ -3608,7 +3613,27 @@ void __stdcall glUniform2iv(GLint location, GLsizei count, const GLint* v)
             return error(GL_INVALID_VALUE);
         }
 
-        UNIMPLEMENTED();   // FIXME
+        if (location == -1)
+        {
+            return;
+        }
+
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            gl::Program *program = context->getCurrentProgram();
+
+            if (!program)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            if (!program->setUniform2iv(location, count, v))
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -3680,7 +3705,27 @@ void __stdcall glUniform3iv(GLint location, GLsizei count, const GLint* v)
             return error(GL_INVALID_VALUE);
         }
 
-        UNIMPLEMENTED();   // FIXME
+        if (location == -1)
+        {
+            return;
+        }
+
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            gl::Program *program = context->getCurrentProgram();
+
+            if (!program)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            if (!program->setUniform3iv(location, count, v))
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -3752,7 +3797,27 @@ void __stdcall glUniform4iv(GLint location, GLsizei count, const GLint* v)
             return error(GL_INVALID_VALUE);
         }
 
-        UNIMPLEMENTED();   // FIXME
+        if (location == -1)
+        {
+            return;
+        }
+
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            gl::Program *program = context->getCurrentProgram();
+
+            if (!program)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            if (!program->setUniform4iv(location, count, v))
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {

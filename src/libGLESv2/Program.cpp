@@ -419,10 +419,17 @@ bool Program::setUniformMatrix2fv(GLint location, GLsizei count, const GLfloat *
         return false;
     }
 
-    if (mUniforms[location]->type != GL_FLOAT_MAT2 || mUniforms[location]->bytes < 4 * sizeof(GLfloat) * count)
+    if (mUniforms[location]->type != GL_FLOAT_MAT2)
     {
         return false;
     }
+
+    int arraySize = mUniforms[location]->bytes / sizeof(GLfloat) / 4;
+
+    if (arraySize == 1 && count > 1)
+        return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
+
+    count = std::min(arraySize, count);
 
     memcpy(mUniforms[location]->data, value, 4 * sizeof(GLfloat) * count);
 
@@ -436,10 +443,17 @@ bool Program::setUniformMatrix3fv(GLint location, GLsizei count, const GLfloat *
         return false;
     }
 
-    if (mUniforms[location]->type != GL_FLOAT_MAT3 || mUniforms[location]->bytes < 9 * sizeof(GLfloat) * count)
+    if (mUniforms[location]->type != GL_FLOAT_MAT3)
     {
         return false;
     }
+
+    int arraySize = mUniforms[location]->bytes / sizeof(GLfloat) / 9;
+
+    if (arraySize == 1 && count > 1)
+        return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
+
+    count = std::min(arraySize, count);
 
     memcpy(mUniforms[location]->data, value, 9 * sizeof(GLfloat) * count);
 
@@ -453,10 +467,17 @@ bool Program::setUniformMatrix4fv(GLint location, GLsizei count, const GLfloat *
         return false;
     }
 
-    if (mUniforms[location]->type != GL_FLOAT_MAT4 || mUniforms[location]->bytes <  16 * sizeof(GLfloat) * count)
+    if (mUniforms[location]->type != GL_FLOAT_MAT4)
     {
         return false;
     }
+
+    int arraySize = mUniforms[location]->bytes / sizeof(GLfloat) / 16;
+
+    if (arraySize == 1 && count > 1)
+        return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
+
+    count = std::min(arraySize, count);
 
     memcpy(mUniforms[location]->data, value, 16 * sizeof(GLfloat) * count);
 
@@ -470,12 +491,203 @@ bool Program::setUniform1iv(GLint location, GLsizei count, const GLint *v)
         return false;
     }
 
-    if (mUniforms[location]->type != GL_INT || mUniforms[location]->bytes < sizeof(GLint) * count)
+    if (mUniforms[location]->type == GL_INT)
+    {
+        int arraySize = mUniforms[location]->bytes / sizeof(GLint);
+
+        if (arraySize == 1 && count > 1)
+            return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
+
+        count = std::min(arraySize, count);
+
+        memcpy(mUniforms[location]->data, v, sizeof(GLint) * count);
+    }
+    else if (mUniforms[location]->type == GL_BOOL)
+    {
+        int arraySize = mUniforms[location]->bytes / sizeof(GLboolean);
+
+        if (arraySize == 1 && count > 1)
+            return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
+
+        count = std::min(arraySize, count);
+        GLboolean *boolParams = new GLboolean[count];
+
+        for (int i = 0; i < count; ++i)
+        {
+            if (v[i] == 0)
+            {
+                boolParams[i] = GL_FALSE;
+            }
+            else
+            {
+                boolParams[i] = GL_TRUE;
+            }
+        }
+
+        memcpy(mUniforms[location]->data, boolParams, sizeof(GLboolean) * count);
+
+        delete [] boolParams;
+    }
+    else
     {
         return false;
     }
 
-    memcpy(mUniforms[location]->data, v, sizeof(GLint) * count);
+    return true;
+}
+
+bool Program::setUniform2iv(GLint location, GLsizei count, const GLint *v)
+{
+    if (location < 0 || location >= (int)mUniforms.size())
+    {
+        return false;
+    }
+
+    if (mUniforms[location]->type == GL_INT_VEC2)
+    {
+        int arraySize = mUniforms[location]->bytes / sizeof(GLint) / 2;
+
+        if (arraySize == 1 && count > 1)
+            return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
+
+        count = std::min(arraySize, count);
+
+        memcpy(mUniforms[location]->data, v, 2 * sizeof(GLint) * count);
+    }
+    else if (mUniforms[location]->type == GL_BOOL_VEC2)
+    {
+        int arraySize = mUniforms[location]->bytes / sizeof(GLboolean) / 2;
+
+        if (arraySize == 1 && count > 1)
+            return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
+
+        count = std::min(arraySize, count);
+        GLboolean *boolParams = new GLboolean[count * 2];
+
+        for (int i = 0; i < count * 2; ++i)
+        {
+            if (v[i] == 0)
+            {
+                boolParams[i] = GL_FALSE;
+            }
+            else
+            {
+                boolParams[i] = GL_TRUE;
+            }
+        }
+
+        memcpy(mUniforms[location]->data, boolParams, 2 * sizeof(GLboolean) * count);
+
+        delete [] boolParams;
+    }
+    else
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool Program::setUniform3iv(GLint location, GLsizei count, const GLint *v)
+{
+    if (location < 0 || location >= (int)mUniforms.size())
+    {
+        return false;
+    }
+
+    if (mUniforms[location]->type == GL_INT_VEC3)
+    {
+        int arraySize = mUniforms[location]->bytes / sizeof(GLint) / 3;
+
+        if (arraySize == 1 && count > 1)
+            return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
+
+        count = std::min(arraySize, count);
+
+        memcpy(mUniforms[location]->data, v, 3 * sizeof(GLint) * count);
+    }
+    else if (mUniforms[location]->type == GL_BOOL_VEC3)
+    {
+        int arraySize = mUniforms[location]->bytes / sizeof(GLboolean) / 3;
+
+        if (arraySize == 1 && count > 1)
+            return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
+
+        count = std::min(arraySize, count);
+        GLboolean *boolParams = new GLboolean[count * 3];
+
+        for (int i = 0; i < count * 3; ++i)
+        {
+            if (v[i] == 0)
+            {
+                boolParams[i] = GL_FALSE;
+            }
+            else
+            {
+                boolParams[i] = GL_TRUE;
+            }
+        }
+
+        memcpy(mUniforms[location]->data, boolParams, 3 * sizeof(GLboolean) * count);
+
+        delete [] boolParams;
+    }
+    else
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool Program::setUniform4iv(GLint location, GLsizei count, const GLint *v)
+{
+    if (location < 0 || location >= (int)mUniforms.size())
+    {
+        return false;
+    }
+
+    if (mUniforms[location]->type == GL_INT_VEC4)
+    {
+        int arraySize = mUniforms[location]->bytes / sizeof(GLint) / 4;
+
+        if (arraySize == 1 && count > 1)
+            return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
+
+        count = std::min(arraySize, count);
+
+        memcpy(mUniforms[location]->data, v, 4 * sizeof(GLint) * count);
+    }
+    else if (mUniforms[location]->type == GL_BOOL_VEC4)
+    {
+        int arraySize = mUniforms[location]->bytes / sizeof(GLboolean) / 4;
+
+        if (arraySize == 1 && count > 1)
+            return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
+
+        count = std::min(arraySize, count);
+        GLboolean *boolParams = new GLboolean[count * 4];
+
+        for (int i = 0; i < count * 4; ++i)
+        {
+            if (v[i] == 0)
+            {
+                boolParams[i] = GL_FALSE;
+            }
+            else
+            {
+                boolParams[i] = GL_TRUE;
+            }
+        }
+
+        memcpy(mUniforms[location]->data, boolParams, 4 * sizeof(GLboolean) * count);
+
+        delete [] boolParams;
+    }
+    else
+    {
+        return false;
+    }
 
     return true;
 }
@@ -504,6 +716,9 @@ void Program::applyUniforms()
           case GL_FLOAT_MAT3: applyUniformMatrix3fv(location, bytes / 9 / sizeof(GLfloat), f);  break;
           case GL_FLOAT_MAT4: applyUniformMatrix4fv(location, bytes / 16 / sizeof(GLfloat), f); break;
           case GL_INT:        applyUniform1iv(location, bytes / sizeof(GLint), i);              break;
+          case GL_INT_VEC2:   applyUniform2iv(location, bytes / 2 / sizeof(GLint), i);          break;
+          case GL_INT_VEC3:   applyUniform3iv(location, bytes / 3 / sizeof(GLint), i);          break;
+          case GL_INT_VEC4:   applyUniform4iv(location, bytes / 4 / sizeof(GLint), i);          break;
           default:
             UNIMPLEMENTED();   // FIXME
             UNREACHABLE();
@@ -875,6 +1090,16 @@ Uniform *Program::createUniform(const D3DXCONSTANT_DESC &constantDescription, st
               case 2: return new Uniform(GL_BOOL_VEC2, name, 2 * sizeof(GLboolean) * constantDescription.Elements);
               case 3: return new Uniform(GL_BOOL_VEC3, name, 3 * sizeof(GLboolean) * constantDescription.Elements);
               case 4: return new Uniform(GL_BOOL_VEC4, name, 4 * sizeof(GLboolean) * constantDescription.Elements);
+              default: UNREACHABLE();
+            }
+            break;
+          case D3DXPT_INT:
+            switch (constantDescription.Columns)
+            {
+              case 1: return new Uniform(GL_INT, name, 1 * sizeof(GLint) * constantDescription.Elements);
+              case 2: return new Uniform(GL_INT_VEC2, name, 2 * sizeof(GLint) * constantDescription.Elements);
+              case 3: return new Uniform(GL_INT_VEC3, name, 3 * sizeof(GLint) * constantDescription.Elements);
+              case 4: return new Uniform(GL_INT_VEC4, name, 4 * sizeof(GLint) * constantDescription.Elements);
               default: UNREACHABLE();
             }
             break;
@@ -1285,6 +1510,96 @@ bool Program::applyUniform1iv(GLint location, GLsizei count, const GLint *v)
     {
         mConstantTableVS->SetIntArray(device, constantVS, v, count);
     }
+
+    return true;
+}
+
+bool Program::applyUniform2iv(GLint location, GLsizei count, const GLint *v)
+{
+    D3DXVECTOR4 *vector = new D3DXVECTOR4[count];
+
+    for (int i = 0; i < count; i++)
+    {
+        vector[i] = D3DXVECTOR4((float)v[0], (float)v[1], 0, 0);
+
+        v += 2;
+    }
+
+    D3DXHANDLE constantPS = mConstantTablePS->GetConstantByName(0, mUniforms[location]->name.c_str());
+    D3DXHANDLE constantVS = mConstantTableVS->GetConstantByName(0, mUniforms[location]->name.c_str());
+    IDirect3DDevice9 *device = getDevice();
+
+    if (constantPS)
+    {
+        mConstantTablePS->SetVectorArray(device, constantPS, vector, count);
+    }
+
+    if (constantVS)
+    {
+        mConstantTableVS->SetVectorArray(device, constantVS, vector, count);
+    }
+
+    delete[] vector;
+
+    return true;
+}
+
+bool Program::applyUniform3iv(GLint location, GLsizei count, const GLint *v)
+{
+    D3DXVECTOR4 *vector = new D3DXVECTOR4[count];
+
+    for (int i = 0; i < count; i++)
+    {
+        vector[i] = D3DXVECTOR4((float)v[0], (float)v[1], (float)v[2], 0);
+
+        v += 3;
+    }
+
+    D3DXHANDLE constantPS = mConstantTablePS->GetConstantByName(0, mUniforms[location]->name.c_str());
+    D3DXHANDLE constantVS = mConstantTableVS->GetConstantByName(0, mUniforms[location]->name.c_str());
+    IDirect3DDevice9 *device = getDevice();
+
+    if (constantPS)
+    {
+        mConstantTablePS->SetVectorArray(device, constantPS, vector, count);
+    }
+
+    if (constantVS)
+    {
+        mConstantTableVS->SetVectorArray(device, constantVS, vector, count);
+    }
+
+    delete[] vector;
+
+    return true;
+}
+
+bool Program::applyUniform4iv(GLint location, GLsizei count, const GLint *v)
+{
+    D3DXVECTOR4 *vector = new D3DXVECTOR4[count];
+
+    for (int i = 0; i < count; i++)
+    {
+        vector[i] = D3DXVECTOR4((float)v[0], (float)v[1], (float)v[2], (float)v[3]);
+
+        v += 4;
+    }
+
+    D3DXHANDLE constantPS = mConstantTablePS->GetConstantByName(0, mUniforms[location]->name.c_str());
+    D3DXHANDLE constantVS = mConstantTableVS->GetConstantByName(0, mUniforms[location]->name.c_str());
+    IDirect3DDevice9 *device = getDevice();
+
+    if (constantPS)
+    {
+        mConstantTablePS->SetVectorArray(device, constantPS, vector, count);
+    }
+
+    if (constantVS)
+    {
+        mConstantTableVS->SetVectorArray(device, constantVS, vector, count);
+    }
+
+    delete [] vector;
 
     return true;
 }
