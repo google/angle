@@ -1108,12 +1108,35 @@ void __stdcall glDetachShader(GLuint program, GLuint shader)
 
         if (context)
         {
+
             gl::Program *programObject = context->getProgram(program);
             gl::Shader *shaderObject = context->getShader(shader);
-
-            if (!programObject || !shaderObject)
+            
+            if (!programObject)
             {
-                return error(GL_INVALID_VALUE);
+                gl::Shader *shaderByProgramHandle;
+                shaderByProgramHandle = context->getShader(program);
+                if (!shaderByProgramHandle)
+                {
+                    return error(GL_INVALID_VALUE);
+                }
+                else
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+            }
+
+            if (!shaderObject)
+            {
+                gl::Program *programByShaderHandle = context->getProgram(shader);
+                if (!programByShaderHandle)
+                {
+                    return error(GL_INVALID_VALUE);
+                }
+                else
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
             }
 
             if (!programObject->detachShader(shaderObject))
