@@ -2617,7 +2617,14 @@ int __stdcall glGetUniformLocation(GLuint program, const GLchar* name)
 
             if (!programObject)
             {
-                return error(GL_INVALID_VALUE, -1);
+                if (context->getShader(program))
+                {
+                    return error(GL_INVALID_OPERATION, -1);
+                }
+                else
+                {
+                    return error(GL_INVALID_VALUE, -1);
+                }
             }
 
             if (!programObject->isLinked())
