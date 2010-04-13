@@ -1756,6 +1756,11 @@ int __stdcall glGetAttribLocation(GLuint program, const GLchar* name)
                 }
             }
 
+            if (!programObject->isLinked())
+            {
+                return error(GL_INVALID_OPERATION, -1);
+            }
+
             return programObject->getAttributeLocation(name);
         }
     }
