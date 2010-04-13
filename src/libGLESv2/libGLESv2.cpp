@@ -65,9 +65,28 @@ void __stdcall glAttachShader(GLuint program, GLuint shader)
             gl::Program *programObject = context->getProgram(program);
             gl::Shader *shaderObject = context->getShader(shader);
 
-            if (!programObject || !shaderObject)
+            if (!programObject)
             {
-                return error(GL_INVALID_VALUE);
+                if (context->getShader(program))
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+                else
+                {
+                    return error(GL_INVALID_VALUE);
+                }
+            }
+
+            if (!shaderObject)
+            {
+                if (context->getProgram(shader))
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+                else
+                {
+                    return error(GL_INVALID_VALUE);
+                }
             }
 
             if (!programObject->attachShader(shaderObject))
