@@ -41,6 +41,7 @@ class OutputHLSL : public TIntermTraverser
     static TString typeString(const TType &type);
     static TString arrayString(const TType &type);
     static TString initializer(const TType &type);
+    static TString decorate(const TString &string);   // Prepend an underscore to avoid naming clashes
 
     TParseContext &mContext;
 

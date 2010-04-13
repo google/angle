@@ -1261,7 +1261,7 @@ void Context::applyState()
     IDirect3DDevice9 *device = getDevice();
     Program *programObject = getCurrentProgram();
 
-    GLint frontCCW = programObject->getUniformLocation("__frontCCW");
+    GLint frontCCW = programObject->getUniformLocation("gl_frontCCW");
     GLint ccw = (frontFace == GL_CCW);
     programObject->setUniform1iv(frontCCW, 1, &ccw);
 

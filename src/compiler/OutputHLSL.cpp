@@ -65,7 +65,7 @@ void OutputHLSL::header()
 
                 if (qualifier == EvqUniform)
                 {
-                    uniforms += "uniform " + typeString(type) + " " + name + arrayString(type) + ";\n";
+                    uniforms += "uniform " + typeString(type) + " " + decorate(name) + arrayString(type) + ";\n";
                 }
                 else if (qualifier == EvqVaryingIn || qualifier == EvqInvariantVaryingIn)
                 {
@@ -74,8 +74,8 @@ void OutputHLSL::header()
                     semanticIndex += type.isArray() ? type.getArraySize() : 1;
 
                     // Program linking depends on this exact format
-                    varyingInput += "    " + typeString(type) + " " + name + arrayString(type) + semantic + ";\n";
-                    varyingGlobals += "static " + typeString(type) + " " + name + arrayString(type) + " = " + initializer(type) + ";\n";
+                    varyingInput += "    " + typeString(type) + " " + decorate(name) + arrayString(type) + semantic + ";\n";
+                    varyingGlobals += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
                 }
                 else if (qualifier == EvqGlobal || qualifier == EvqTemporary)
                 {
@@ -91,7 +91,7 @@ void OutputHLSL::header()
 
         out << "uniform float4 gl_Window;\n"
                "uniform float2 gl_Depth;\n"
-               "uniform bool __frontCCW;\n"
+               "uniform bool gl_frontCCW;\n"
                "\n";
         out <<  uniforms;
         out << "\n"
@@ -99,7 +99,7 @@ void OutputHLSL::header()
                "{\n";
         out <<      varyingInput;
         out << "    float4 gl_FragCoord : TEXCOORD" << semanticIndex << ";\n";
-        out << "    float __vFace : VFACE;\n"
+        out << "    float vFace : VFACE;\n"
                "};\n"
                "\n";
         out <<    varyingGlobals;
@@ -158,7 +158,7 @@ void OutputHLSL::header()
 
                 if (qualifier == EvqUniform)
                 {
-                    uniforms += "uniform " + typeString(type) + " " + name + arrayString(type) + ";\n";
+                    uniforms += "uniform " + typeString(type) + " " + decorate(name) + arrayString(type) + ";\n";
                 }
                 else if (qualifier == EvqAttribute)
                 {
@@ -166,14 +166,14 @@ void OutputHLSL::header()
                     sprintf(semantic, " : TEXCOORD%d", semanticIndex);
                     semanticIndex += type.isArray() ? type.getArraySize() : 1;
 
-                    attributeInput += "    " + typeString(type) + " " + name + arrayString(type) + semantic + ";\n";
-                    attributeGlobals += "static " + typeString(type) + " " + name + arrayString(type) + " = " + initializer(type) + ";\n";
+                    attributeInput += "    " + typeString(type) + " " + decorate(name) + arrayString(type) + semantic + ";\n";
+                    attributeGlobals += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
                 }
                 else if (qualifier == EvqVaryingOut || qualifier == EvqInvariantVaryingOut)
                 {
                     // Program linking depends on this exact format
-                    varyingOutput += "    " + typeString(type) + " " + name + arrayString(type) + " : TEXCOORD0;\n";   // Actual semantic index assigned during link
-                    varyingGlobals += "static " + typeString(type) + " " + name + arrayString(type) + " = " + initializer(type) + ";\n";
+                    varyingOutput += "    " + typeString(type) + " " + decorate(name) + arrayString(type) + " : TEXCOORD0;\n";   // Actual semantic index assigned during link
+                    varyingGlobals += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
                 }
                 else if (qualifier == EvqGlobal || qualifier == EvqTemporary)
                 {
@@ -417,7 +417,7 @@ void OutputHLSL::header()
 
     if (mUsesEqualMat2)
     {
-        out << "bool __equal(float2x2 m, float2x2 n)\n"
+        out << "bool equal(float2x2 m, float2x2 n)\n"
                "{\n"
                "    return m[0][0] == n[0][0] && m[0][1] == n[0][1] &&\n"
                "           m[1][0] == n[1][0] && m[1][1] == n[1][1];\n"
@@ -426,7 +426,7 @@ void OutputHLSL::header()
 
     if (mUsesEqualMat3)
     {
-        out << "bool __equal(float3x3 m, float3x3 n)\n"
+        out << "bool equal(float3x3 m, float3x3 n)\n"
                "{\n"
                "    return m[0][0] == n[0][0] && m[0][1] == n[0][1] && m[0][2] == n[0][2] &&\n"
                "           m[1][0] == n[1][0] && m[1][1] == n[1][1] && m[1][2] == n[1][2] &&\n"
@@ -436,7 +436,7 @@ void OutputHLSL::header()
 
     if (mUsesEqualMat4)
     {
-        out << "bool __equal(float4x4 m, float4x4 n)\n"
+        out << "bool equal(float4x4 m, float4x4 n)\n"
                "{\n"
                "    return m[0][0] == n[0][0] && m[0][1] == n[0][1] && m[0][2] == n[0][2] && m[0][3] == n[0][3] &&\n"
                "           m[1][0] == n[1][0] && m[1][1] == n[1][1] && m[1][2] == n[1][2] && m[1][3] == n[1][3] &&\n"
@@ -447,7 +447,7 @@ void OutputHLSL::header()
 
     if (mUsesEqualVec2)
     {
-        out << "bool __equal(float2 v, float2 u)\n"
+        out << "bool equal(float2 v, float2 u)\n"
                "{\n"
                "    return v.x == u.x && v.y == u.y;\n"
                "}\n";
@@ -455,7 +455,7 @@ void OutputHLSL::header()
 
     if (mUsesEqualVec3)
     {
-        out << "bool __equal(float3 v, float3 u)\n"
+        out << "bool equal(float3 v, float3 u)\n"
                "{\n"
                "    return v.x == u.x && v.y == u.y && v.z == u.z;\n"
                "}\n";
@@ -463,7 +463,7 @@ void OutputHLSL::header()
 
     if (mUsesEqualVec4)
     {
-        out << "bool __equal(float4 v, float4 u)\n"
+        out << "bool equal(float4 v, float4 u)\n"
                "{\n"
                "    return v.x == u.x && v.y == u.y && v.z == u.z && v.w == u.w;\n"
                "}\n";
@@ -471,7 +471,7 @@ void OutputHLSL::header()
 
     if (mUsesEqualIVec2)
     {
-        out << "bool __equal(int2 v, int2 u)\n"
+        out << "bool equal(int2 v, int2 u)\n"
                "{\n"
                "    return v.x == u.x && v.y == u.y;\n"
                "}\n";
@@ -479,7 +479,7 @@ void OutputHLSL::header()
 
     if (mUsesEqualIVec3)
     {
-        out << "bool __equal(int3 v, int3 u)\n"
+        out << "bool equal(int3 v, int3 u)\n"
                "{\n"
                "    return v.x == u.x && v.y == u.y && v.z == u.z;\n"
                "}\n";
@@ -487,7 +487,7 @@ void OutputHLSL::header()
 
     if (mUsesEqualIVec4)
     {
-        out << "bool __equal(int4 v, int4 u)\n"
+        out << "bool equal(int4 v, int4 u)\n"
                "{\n"
                "    return v.x == u.x && v.y == u.y && v.z == u.z && v.w == u.w;\n"
                "}\n";
@@ -495,7 +495,7 @@ void OutputHLSL::header()
 
     if (mUsesEqualBVec2)
     {
-        out << "bool __equal(bool2 v, bool2 u)\n"
+        out << "bool equal(bool2 v, bool2 u)\n"
                "{\n"
                "    return v.x == u.x && v.y == u.y;\n"
                "}\n";
@@ -503,7 +503,7 @@ void OutputHLSL::header()
 
     if (mUsesEqualBVec3)
     {
-        out << "bool __equal(bool3 v, bool3 u)\n"
+        out << "bool equal(bool3 v, bool3 u)\n"
                "{\n"
                "    return v.x == u.x && v.y == u.y && v.z == u.z;\n"
                "}\n";
@@ -511,7 +511,7 @@ void OutputHLSL::header()
 
     if (mUsesEqualBVec4)
     {
-        out << "bool __equal(bool4 v, bool4 u)\n"
+        out << "bool equal(bool4 v, bool4 u)\n"
                "{\n"
                "    return v.x == u.x && v.y == u.y && v.z == u.z && v.w == u.w;\n"
                "}\n";
@@ -533,7 +533,7 @@ void OutputHLSL::footer()
                "    gl_FragCoord.y = (input.gl_FragCoord.y * rhw) * gl_Window.y + gl_Window.w;\n"
                "    gl_FragCoord.z = (input.gl_FragCoord.z * rhw) * gl_Depth.x + gl_Depth.y;\n"
                "    gl_FragCoord.w = rhw;\n"
-               "    gl_FrontFacing = __frontCCW ? (input.__vFace >= 0.0) : (input.__vFace <= 0.0);\n";
+               "    gl_FrontFacing = gl_frontCCW ? (input.vFace >= 0.0) : (input.vFace <= 0.0);\n";
 
         for (TSymbolTableLevel::const_iterator namedSymbol = symbols->begin(); namedSymbol != symbols->end(); namedSymbol++)
         {
@@ -548,7 +548,7 @@ void OutputHLSL::footer()
 
                 if (qualifier == EvqVaryingIn)
                 {
-                    out << "    " + name + " = input." + name + ";\n";   // FIXME: Prevent name clashes
+                    out << "    " + decorate(name) + " = input." + decorate(name) + ";\n";   // FIXME: Prevent name clashes
                 }
             }
         }
@@ -577,7 +577,7 @@ void OutputHLSL::footer()
 
                 if (qualifier == EvqAttribute)
                 {
-                    out << "    " + name + " = input." + name + ";\n";   // FIXME: Prevent name clashes
+                    out << "    " + decorate(name) + " = input." + decorate(name) + ";\n";   // FIXME: Prevent name clashes
                 }
             }
         }
@@ -608,7 +608,7 @@ void OutputHLSL::footer()
                 if (qualifier == EvqVaryingOut || qualifier == EvqInvariantVaryingOut)
                 {
                     // Program linking depends on this exact format
-                    out << "    output." + name + " = " + name + ";\n";   // FIXME: Prevent name clashes
+                    out << "    output." + decorate(name) + " = " + decorate(name) + ";\n";   // FIXME: Prevent name clashes
                 }
             }
         }
@@ -634,7 +634,7 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
     }
     else
     {
-        out << name;
+        out << decorate(name);
     }
 }
 
@@ -822,11 +822,11 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
 
             if (node->getOp() == EOpEqual)
             {
-                outputTriplet(visit, "__equal(", ", ", ")");
+                outputTriplet(visit, "equal(", ", ", ")");
             }
             else
             {
-                outputTriplet(visit, "!__equal(", ", ", ")");
+                outputTriplet(visit, "!equal(", ", ", ")");
             }
         }
         break;
@@ -986,7 +986,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                     const TType &type = variable->getType();
                     const TTypeList &fields = *type.getStruct();
 
-                    out << "struct " + type.getTypeName() + "\n"
+                    out << "struct " + decorate(type.getTypeName()) + "\n"
                            "{\n";
 
                     for (unsigned int i = 0; i < fields.size(); i++)
@@ -1011,7 +1011,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpPrototype:
         if (visit == PreVisit)
         {
-            out << typeString(node->getType()) << " " << node->getName() << "(";
+            out << typeString(node->getType()) << " " << decorate(node->getName()) << "(";
 
             TIntermSequence &arguments = node->getSequence();
 
@@ -1036,19 +1036,23 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             return false;
         }
         break;
-      case EOpComma:         UNIMPLEMENTED(); /* FIXME */ out << "Comma\n"; return true;
+      case EOpComma:            outputTriplet(visit, NULL, ", ", NULL);                break;
       case EOpFunction:
         {
             TString name = TFunction::unmangleName(node->getName());
 
             if (visit == PreVisit)
             {
+                out << typeString(node->getType()) << " ";
+
                 if (name == "main")
                 {
-                    name = "gl_main";
+                    out << "gl_main(";
                 }
-
-                out << typeString(node->getType()) << " " << name << "(";
+                else
+                {
+                    out << decorate(name) << "(";
+                }
 
                 TIntermSequence &sequence = node->getSequence();
                 TIntermSequence &arguments = sequence[0]->getAsAggregate()->getSequence();
@@ -1088,7 +1092,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
                 if (node->isUserDefined())
                 {
-                    out << name << "(";
+                    out << decorate(name) << "(";
                 }
                 else
                 {
@@ -1640,7 +1644,7 @@ TString OutputHLSL::argumentString(const TIntermSymbol *symbol)
     const TType &type = symbol->getType();
     const TString &name = symbol->getSymbol();
 
-    return qualifierString(qualifier) + " " + typeString(type) + " " + name + arrayString(type);
+    return qualifierString(qualifier) + " " + typeString(type) + " " + decorate(name) + arrayString(type);
 }
 
 TString OutputHLSL::qualifierString(TQualifier qualifier)
@@ -1661,7 +1665,7 @@ TString OutputHLSL::typeString(const TType &type)
 {
     if (type.getBasicType() == EbtStruct)
     {
-        return type.getTypeName();
+        return decorate(type.getTypeName());
     }
     else if (type.isMatrix())
     {
@@ -1765,5 +1769,17 @@ TString OutputHLSL::initializer(const TType &type)
     }
 
     return string;
+}
+
+TString OutputHLSL::decorate(const TString &string)
+{
+    if (string.substr(0, 3) != "gl_")
+    {
+        return "_" + string;
+    }
+    else
+    {
+        return string;
+    }
 }
 }

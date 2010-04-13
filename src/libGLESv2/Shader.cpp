@@ -348,7 +348,7 @@ void VertexShader::parseAttributes()
             char attributeName[100];
             int semanticIndex;
 
-            int matches = sscanf(input, "%s : TEXCOORD%d;", attributeName, &semanticIndex);
+            int matches = sscanf(input, "_%s : TEXCOORD%d;", attributeName, &semanticIndex);
 
             if (matches == 2)
             {

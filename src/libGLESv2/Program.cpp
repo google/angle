@@ -195,7 +195,7 @@ GLint Program::getUniformLocation(const char *name)
 {
     for (unsigned int location = 0; location < mUniforms.size(); location++)
     {
-        if (mUniforms[location]->name == name)
+        if (mUniforms[location]->name == decorate(name))
         {
             return location;
         }
@@ -1248,6 +1248,19 @@ Uniform *Program::createUniform(const D3DXCONSTANT_DESC &constantDescription, st
     else UNREACHABLE();
 
     return 0;
+}
+
+// This methods needs to match OutputHLSL::decorate
+std::string Program::decorate(const std::string &string)
+{
+    if (string.substr(0, 3) != "gl_")
+    {
+        return "_" + string;
+    }
+    else
+    {
+        return string;
+    }
 }
 
 bool Program::applyUniform1bv(GLint location, GLsizei count, const GLboolean *v)
