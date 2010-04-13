@@ -303,6 +303,12 @@ int ShCompile(
         success = false;
         if (debugOptions & EDebugOpIntermediate)
             intermediate.outputTree(parseContext.treeRoot);
+    } else if (!parseContext.treeRoot) {
+        parseContext.error(1, "Unexpected end of file.", "", "");
+        parseContext.infoSink.info << parseContext.numErrors << " compilation errors.  No code generated.\n\n";
+        success = false;
+        if (debugOptions & EDebugOpIntermediate)
+            intermediate.outputTree(parseContext.treeRoot);
     }
 
     intermediate.remove(parseContext.treeRoot);
