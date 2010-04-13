@@ -2950,7 +2950,14 @@ void __stdcall glLinkProgram(GLuint program)
 
             if (!programObject)
             {
-                return error(GL_INVALID_VALUE);
+                if (context->getShader(program))
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+                else
+                {
+                    return error(GL_INVALID_VALUE);
+                }
             }
 
             programObject->link();
