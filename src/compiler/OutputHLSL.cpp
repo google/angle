@@ -1242,7 +1242,10 @@ bool OutputHLSL::visitSelection(Visit visit, TIntermSelection *node)
         out << ")\n"
                "{\n";
 
-        node->getTrueBlock()->traverse(this);
+        if (node->getTrueBlock())
+        {
+            node->getTrueBlock()->traverse(this);
+        }
 
         out << ";}\n";
 
