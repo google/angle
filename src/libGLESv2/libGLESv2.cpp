@@ -2031,7 +2031,40 @@ void __stdcall glGetBufferParameteriv(GLenum target, GLenum pname, GLint* params
 
     try
     {
-        UNIMPLEMENTED();   // FIXME
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            gl::Buffer *buffer;
+
+            switch (target)
+            {
+              case GL_ARRAY_BUFFER:
+                buffer = context->getArrayBuffer();
+                break;
+              case GL_ELEMENT_ARRAY_BUFFER:
+                buffer = context->getElementArrayBuffer();
+                break;
+              default: return error(GL_INVALID_ENUM);
+            }
+
+            if (!buffer)
+            {
+                // A null buffer means that "0" is bound to the requested buffer target
+                return error(GL_INVALID_OPERATION);
+            }
+
+            switch (pname)
+            {
+              case GL_BUFFER_USAGE:
+                *params = buffer->usage();
+                break;
+              case GL_BUFFER_SIZE:
+                *params = buffer->size();
+                break;
+              default: return error(GL_INVALID_ENUM);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {

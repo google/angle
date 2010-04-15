@@ -65,6 +65,8 @@ GLenum Buffer::bufferData(const void* data, GLsizeiptr size, GLenum usage)
         mContents.assign(newdata, newdata + size);
     }
 
+    mUsage = usage;
+
     return copyToIdentityBuffer(0, size);
 }
 

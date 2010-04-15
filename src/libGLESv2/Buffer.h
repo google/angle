@@ -36,6 +36,7 @@ class Buffer
 
     void *data() { return &mContents[0]; }
     GLsizeiptr size() const { return mContents.size(); }
+    GLenum usage() const { return mUsage; }
 
     TranslatedVertexBuffer *identityBuffer() { return mIdentityTranslation; }
 
@@ -43,6 +44,7 @@ class Buffer
     DISALLOW_COPY_AND_ASSIGN(Buffer);
 
     std::vector<GLubyte> mContents;
+    GLenum mUsage;
 
     BufferBackEnd *mBackEnd;
     TranslatedVertexBuffer *mIdentityTranslation;
