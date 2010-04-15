@@ -134,6 +134,8 @@
         'compiler/OutputHLSL.h',
         'compiler/TranslatorHLSL.cpp',
         'compiler/TranslatorHLSL.h',
+        'compiler/UnfoldSelect.cpp',
+        'compiler/UnfoldSelect.h',
       ],
     },
     {

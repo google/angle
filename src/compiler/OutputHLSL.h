@@ -12,12 +12,24 @@
 
 namespace sh
 {
+class UnfoldSelect;
+
 class OutputHLSL : public TIntermTraverser
 {
   public:
-    OutputHLSL(TParseContext &context);
+    explicit OutputHLSL(TParseContext &context);
+    ~OutputHLSL();
 
     void output();
+
+    TInfoSinkBase &getBodyStream();
+
+    static TString argumentString(const TIntermSymbol *symbol);
+    static TString qualifierString(TQualifier qualifier);
+    static TString typeString(const TType &type);
+    static TString arrayString(const TType &type);
+    static TString initializer(const TType &type);
+    static TString decorate(const TString &string);   // Prepend an underscore to avoid naming clashes
 
   protected:
     void header();
@@ -33,17 +45,12 @@ class OutputHLSL : public TIntermTraverser
     bool visitLoop(Visit visit, TIntermLoop*);
     bool visitBranch(Visit visit, TIntermBranch*);
 
+    bool isSingleStatement(TIntermNode *node);
     bool handleExcessiveLoop(TIntermLoop *node);
     void outputTriplet(Visit visit, const char *preString, const char *inString, const char *postString);
 
-    static TString argumentString(const TIntermSymbol *symbol);
-    static TString qualifierString(TQualifier qualifier);
-    static TString typeString(const TType &type);
-    static TString arrayString(const TType &type);
-    static TString initializer(const TType &type);
-    static TString decorate(const TString &string);   // Prepend an underscore to avoid naming clashes
-
     TParseContext &mContext;
+    UnfoldSelect *mUnfoldSelect;
 
     // Output streams
     TInfoSinkBase mHeader;

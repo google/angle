@@ -162,6 +162,10 @@
 				RelativePath=".\TranslatorHLSL.cpp"
 				>
 			</File>
+			<File
+				RelativePath=".\UnfoldSelect.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -174,6 +178,10 @@
 			</File>
 			<File
 				RelativePath=".\TranslatorHLSL.h"
+				>
+			</File>
+			<File
+				RelativePath=".\UnfoldSelect.h"
 				>
 			</File>
 		</Filter>

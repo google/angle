@@ -6,6 +6,7 @@
 
 #include "OutputHLSL.h"
 
+#include "UnfoldSelect.h"
 #include "common/debug.h"
 #include "InfoSink.h"
 
@@ -13,6 +14,8 @@ namespace sh
 {
 OutputHLSL::OutputHLSL(TParseContext &context) : TIntermTraverser(true, true, true), mContext(context)
 {
+    mUnfoldSelect = new UnfoldSelect(context, this);
+
     mUsesEqualMat2 = false;
     mUsesEqualMat3 = false;
     mUsesEqualMat4 = false;
@@ -27,6 +30,11 @@ OutputHLSL::OutputHLSL(TParseContext &context) : TIntermTraverser(true, true, tr
     mUsesEqualBVec4 = false;
 }
 
+OutputHLSL::~OutputHLSL()
+{
+    delete mUnfoldSelect;
+}
+
 void OutputHLSL::output()
 {
     mContext.treeRoot->traverse(this);   // Output the body first to determine what has to go in the header and footer
@@ -36,6 +44,11 @@ void OutputHLSL::output()
     mContext.infoSink.obj << mHeader.c_str();
     mContext.infoSink.obj << mBody.c_str();
     mContext.infoSink.obj << mFooter.c_str();
+}
+
+TInfoSinkBase &OutputHLSL::getBodyStream()
+{
+    return mBody;
 }
 
 void OutputHLSL::header()
@@ -933,7 +946,22 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
     switch (node->getOp())
     {
-      case EOpSequence: outputTriplet(visit, NULL, ";\n", ";\n"); break;
+      case EOpSequence:
+        {
+            for (TIntermSequence::iterator sit = node->getSequence().begin(); sit != node->getSequence().end(); sit++)
+            {
+                if (isSingleStatement(*sit))
+                {
+                    mUnfoldSelect->traverse(*sit);
+                }
+
+                (*sit)->traverse(this);
+
+                out << ";\n";
+            }
+
+            return false;
+        }
       case EOpDeclaration:
         if (visit == PreVisit)
         {
@@ -1200,16 +1228,12 @@ bool OutputHLSL::visitSelection(Visit visit, TIntermSelection *node)
 
     if (node->usesTernaryOperator())
     {
-        out << "(";
-        node->getCondition()->traverse(this);
-        out << ") ? (";
-        node->getTrueBlock()->traverse(this);
-        out << ") : (";
-        node->getFalseBlock()->traverse(this);
-        out << ")\n";
+        out << "t" << mUnfoldSelect->getTemporaryIndex();
     }
     else  // if/else statement
     {
+        mUnfoldSelect->traverse(node->getCondition());
+
         out << "if(";
 
         node->getCondition()->traverse(this);
@@ -1373,6 +1397,21 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
     }
     else
     {
+        if (node->getInit())
+        {
+            mUnfoldSelect->traverse(node->getInit());
+        }
+        
+        if (node->getTest())
+        {
+            mUnfoldSelect->traverse(node->getTest());
+        }
+        
+        if (node->getTerminal())
+        {
+            mUnfoldSelect->traverse(node->getTerminal());
+        }
+
         out << "for(";
         
         if (node->getInit())
@@ -1446,6 +1485,33 @@ bool OutputHLSL::visitBranch(Visit visit, TIntermBranch *node)
         }
         break;
       default: UNREACHABLE();
+    }
+
+    return true;
+}
+
+bool OutputHLSL::isSingleStatement(TIntermNode *node)
+{
+    TIntermAggregate *aggregate = node->getAsAggregate();
+
+    if (aggregate)
+    {
+        if (aggregate->getOp() == EOpSequence)
+        {
+            return false;
+        }
+        else
+        {
+            for (TIntermSequence::iterator sit = aggregate->getSequence().begin(); sit != aggregate->getSequence().end(); sit++)
+            {
+                if (!isSingleStatement(*sit))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
     }
 
     return true;
