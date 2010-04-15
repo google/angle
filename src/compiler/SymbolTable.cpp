@@ -47,7 +47,7 @@ void TType::buildMangledName(TString& mangledName)
 
 	mangledName += static_cast<char>('0' + getNominalSize());
 	if (isArray()) {
-		char buf[10];
+		char buf[20];
 		sprintf(buf, "%d", arraySize);
 		mangledName += '[';
 		mangledName += buf;
