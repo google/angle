@@ -822,7 +822,7 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
           case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
           case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
           case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
-            if (!gl::isPow2(width) || !gl::isPow2(height))
+            if (width != height)
             {
                 return error(GL_INVALID_VALUE);
             }
@@ -3506,7 +3506,7 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
           case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
           case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
           case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
-            if (!gl::isPow2(width) || !gl::isPow2(height))
+            if (width != height)
             {
                 return error(GL_INVALID_VALUE);
             }
