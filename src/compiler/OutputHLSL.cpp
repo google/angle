@@ -1115,21 +1115,18 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                     else if (name == "texture2DLod")
                     {
                         out << "gl_texture2DLod(";
-                        UNIMPLEMENTED();   // FIXME: Move lod to last texture coordinate component
+                        UNIMPLEMENTED();   // Requires the vertex shader texture sampling extension
                     }
                     else if (name == "texture2DProjLod")
                     {
                         out << "gl_texture2DProjLod(";
-                        UNIMPLEMENTED();   // FIXME: Move lod to last texture coordinate component
+                        UNIMPLEMENTED();   // Requires the vertex shader texture sampling extension
                     }
                     else if (name == "textureCube")
                     {
-                        out << "gl_textureCube(";   // FIXME: Incorrect sampling location
+                        out << "gl_textureCube(";
                     }
-                    else
-                    {
-                        UNIMPLEMENTED();   // FIXME
-                    }
+                    else UNREACHABLE();
                 }
             }
             else if (visit == InVisit)
