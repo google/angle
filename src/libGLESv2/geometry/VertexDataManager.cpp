@@ -129,7 +129,7 @@ GLenum VertexDataManager::internalPreRenderValidate(const AttributeState *attrib
             if (attribs[i].mBoundBuffer != 0 && mBackend->getFormatConverter(attribs[i].mType, attribs[i].mSize, attribs[i].mNormalized).identity)
             {
                 std::size_t stride = interpretGlStride(attribs[i]);
-                std::size_t offset = static_cast<std::size_t>(static_cast<const char*>(attribs[i].mPointer) - static_cast<const char*>(NULL)) + translated[i].stride * minIndex;
+                std::size_t offset = static_cast<std::size_t>(static_cast<const char*>(attribs[i].mPointer) - static_cast<const char*>(NULL)) + stride * minIndex;
 
                 if (mBackend->validateStream(attribs[i].mType, attribs[i].mSize, stride, offset))
                 {
