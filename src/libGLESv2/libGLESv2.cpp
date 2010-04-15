@@ -2682,12 +2682,44 @@ void __stdcall glGetVertexAttribfv(GLuint index, GLenum pname, GLfloat* params)
 
     try
     {
-        if (index >= gl::MAX_VERTEX_ATTRIBS)
-        {
-            return error(GL_INVALID_VALUE);
-        }
+        gl::Context *context = gl::getContext();
 
-        UNIMPLEMENTED();   // FIXME
+        if (context)
+        {
+            if (index >= gl::MAX_VERTEX_ATTRIBS)
+            {
+                return error(GL_INVALID_VALUE);
+            }
+
+            switch (pname)
+            {
+              case GL_VERTEX_ATTRIB_ARRAY_ENABLED:
+                *params = (GLfloat)(context->vertexAttribute[index].mEnabled ? GL_TRUE : GL_FALSE);
+                break;
+              case GL_VERTEX_ATTRIB_ARRAY_SIZE:
+                *params = (GLfloat)context->vertexAttribute[index].mSize;
+                break;
+              case GL_VERTEX_ATTRIB_ARRAY_STRIDE:
+                *params = (GLfloat)context->vertexAttribute[index].mStride;
+                break;
+              case GL_VERTEX_ATTRIB_ARRAY_TYPE:
+                *params = (GLfloat)context->vertexAttribute[index].mType;
+                break;
+              case GL_VERTEX_ATTRIB_ARRAY_NORMALIZED:
+                *params = (GLfloat)(context->vertexAttribute[index].mNormalized ? GL_TRUE : GL_FALSE);
+                break;
+              case GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING:
+                *params = (GLfloat)context->vertexAttribute[index].mBoundBuffer;
+                break;
+              case GL_CURRENT_VERTEX_ATTRIB:
+                for (int i = 0; i < 4; ++i)
+                {
+                    params[i] = context->vertexAttribute[index].mCurrentValue[i];
+                }
+                break;
+              default: return error(GL_INVALID_ENUM);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -2701,12 +2733,45 @@ void __stdcall glGetVertexAttribiv(GLuint index, GLenum pname, GLint* params)
 
     try
     {
-        if (index >= gl::MAX_VERTEX_ATTRIBS)
-        {
-            return error(GL_INVALID_VALUE);
-        }
+        gl::Context *context = gl::getContext();
 
-        UNIMPLEMENTED();   // FIXME
+        if (context)
+        {
+            if (index >= gl::MAX_VERTEX_ATTRIBS)
+            {
+                return error(GL_INVALID_VALUE);
+            }
+
+            switch (pname)
+            {
+              case GL_VERTEX_ATTRIB_ARRAY_ENABLED:
+                *params = (context->vertexAttribute[index].mEnabled ? GL_TRUE : GL_FALSE);
+                break;
+              case GL_VERTEX_ATTRIB_ARRAY_SIZE:
+                *params = context->vertexAttribute[index].mSize;
+                break;
+              case GL_VERTEX_ATTRIB_ARRAY_STRIDE:
+                *params = context->vertexAttribute[index].mStride;
+                break;
+              case GL_VERTEX_ATTRIB_ARRAY_TYPE:
+                *params = context->vertexAttribute[index].mType;
+                break;
+              case GL_VERTEX_ATTRIB_ARRAY_NORMALIZED:
+                *params = (context->vertexAttribute[index].mNormalized ? GL_TRUE : GL_FALSE);
+                break;
+              case GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING:
+                *params = context->vertexAttribute[index].mBoundBuffer;
+                break;
+              case GL_CURRENT_VERTEX_ATTRIB:
+                for (int i = 0; i < 4; ++i)
+                {
+                    float currentValue = context->vertexAttribute[index].mCurrentValue[i];
+                    params[i] = (GLint)(currentValue > 0.0f ? floor(currentValue + 0.5f) : ceil(currentValue - 0.5f));
+                }
+                break;
+              default: return error(GL_INVALID_ENUM);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -2720,12 +2785,22 @@ void __stdcall glGetVertexAttribPointerv(GLuint index, GLenum pname, GLvoid** po
 
     try
     {
-        if (index >= gl::MAX_VERTEX_ATTRIBS)
-        {
-            return error(GL_INVALID_VALUE);
-        }
+        gl::Context *context = gl::getContext();
 
-        UNIMPLEMENTED();   // FIXME
+        if (context)
+        {
+            if (index >= gl::MAX_VERTEX_ATTRIBS)
+            {
+                return error(GL_INVALID_VALUE);
+            }
+
+            if (pname != GL_VERTEX_ATTRIB_ARRAY_POINTER)
+            {
+                return error(GL_INVALID_ENUM);
+            }
+
+            *pointer = const_cast<GLvoid*>(context->vertexAttribute[index].mPointer);
+        }
     }
     catch(std::bad_alloc&)
     {
