@@ -24,7 +24,6 @@ class OutputHLSL : public TIntermTraverser
 
     TInfoSinkBase &getBodyStream();
 
-    static TString argumentString(const TIntermSymbol *symbol);
     static TString qualifierString(TQualifier qualifier);
     static TString typeString(const TType &type);
     static TString arrayString(const TType &type);
@@ -48,6 +47,7 @@ class OutputHLSL : public TIntermTraverser
     bool isSingleStatement(TIntermNode *node);
     bool handleExcessiveLoop(TIntermLoop *node);
     void outputTriplet(Visit visit, const char *preString, const char *inString, const char *postString);
+    TString argumentString(const TIntermSymbol *symbol);
 
     TParseContext &mContext;
     UnfoldSelect *mUnfoldSelect;
@@ -70,6 +70,8 @@ class OutputHLSL : public TIntermTraverser
     bool mUsesEqualBVec2;
     bool mUsesEqualBVec3;
     bool mUsesEqualBVec4;
+
+    int mArgumentIndex;   // For creating unique argument names
 };
 }
 

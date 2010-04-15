@@ -12,6 +12,14 @@
 
 namespace sh
 {
+// Integer to TString conversion
+TString str(int i)
+{
+    char buffer[20];
+    sprintf(buffer, "%d", i);
+    return buffer;
+}
+
 OutputHLSL::OutputHLSL(TParseContext &context) : TIntermTraverser(true, true, true), mContext(context)
 {
     mUnfoldSelect = new UnfoldSelect(context, this);
@@ -28,6 +36,8 @@ OutputHLSL::OutputHLSL(TParseContext &context) : TIntermTraverser(true, true, tr
     mUsesEqualBVec2 = false;
     mUsesEqualBVec3 = false;
     mUsesEqualBVec4 = false;
+
+    mArgumentIndex = 0;
 }
 
 OutputHLSL::~OutputHLSL()
@@ -82,13 +92,11 @@ void OutputHLSL::header()
                 }
                 else if (qualifier == EvqVaryingIn || qualifier == EvqInvariantVaryingIn)
                 {
-                    char semantic[100];
-                    sprintf(semantic, " : TEXCOORD%d", semanticIndex);
-                    semanticIndex += type.isArray() ? type.getArraySize() : 1;
-
                     // Program linking depends on this exact format
-                    varyingInput += "    " + typeString(type) + " " + decorate(name) + arrayString(type) + semantic + ";\n";
+                    varyingInput += "    " + typeString(type) + " " + decorate(name) + arrayString(type) + " : TEXCOORD" + str(semanticIndex) + ";\n";
                     varyingGlobals += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
+
+                    semanticIndex += type.isArray() ? type.getArraySize() : 1;
                 }
                 else if (qualifier == EvqGlobal || qualifier == EvqTemporary)
                 {
@@ -176,12 +184,10 @@ void OutputHLSL::header()
                 }
                 else if (qualifier == EvqAttribute)
                 {
-                    char semantic[100];
-                    sprintf(semantic, " : TEXCOORD%d", semanticIndex);
-                    semanticIndex += type.isArray() ? type.getArraySize() : 1;
-
-                    attributeInput += "    " + typeString(type) + " " + decorate(name) + arrayString(type) + semantic + ";\n";
+                    attributeInput += "    " + typeString(type) + " " + decorate(name) + arrayString(type) + " : TEXCOORD" + str(semanticIndex) + ";\n";
                     attributeGlobals += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
+
+                    semanticIndex += type.isArray() ? type.getArraySize() : 1;
                 }
                 else if (qualifier == EvqVaryingOut || qualifier == EvqInvariantVaryingOut)
                 {
@@ -1709,9 +1715,18 @@ TString OutputHLSL::argumentString(const TIntermSymbol *symbol)
 {
     TQualifier qualifier = symbol->getQualifier();
     const TType &type = symbol->getType();
-    const TString &name = symbol->getSymbol();
+    TString name = symbol->getSymbol();
 
-    return qualifierString(qualifier) + " " + typeString(type) + " " + decorate(name) + arrayString(type);
+    if (name.empty())   // HLSL demands named arguments, also for prototypes
+    {
+        name = "x" + str(mArgumentIndex++);
+    }
+    else
+    {
+        name = decorate(name);
+    }
+
+    return qualifierString(qualifier) + " " + typeString(type) + " " + name + arrayString(type);
 }
 
 TString OutputHLSL::qualifierString(TQualifier qualifier)
@@ -1791,10 +1806,7 @@ TString OutputHLSL::arrayString(const TType &type)
         return "";
     }
 
-    char buffer[100];
-    sprintf(buffer, "[%d]", type.getArraySize());
-
-    return buffer;
+    return "[" + str(type.getArraySize()) + "]";
 }
 
 TString OutputHLSL::initializer(const TType &type)
