@@ -988,8 +988,8 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                         if (symbol)
                         {
                             symbol->traverse(this);
-
                             out << arrayString(symbol->getType());
+                            out << " = " + initializer(variable->getType());
                         }
                         else
                         {
@@ -1809,11 +1809,11 @@ TString OutputHLSL::initializer(const TType &type)
     {
         string += typeString(type) + "(";
 
-        for (int component = 0; component < type.getNominalSize(); component++)
+        for (int component = 0; component < type.getInstanceSize(); component++)
         {
             string += "0";
 
-            if (component < type.getNominalSize() - 1)
+            if (component < type.getInstanceSize() - 1)
             {
                 string += ", ";
             }
