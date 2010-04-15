@@ -264,7 +264,7 @@ class Context : public State
     bool getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams);
 
     bool applyRenderTarget(bool ignoreViewport);
-    void applyState();
+    void applyState(GLenum drawMode);
     void applyVertexBuffer(GLint first, GLsizei count);
     void applyVertexBuffer(const TranslatedIndexData &indexInfo);
     TranslatedIndexData applyIndexBuffer(const void *indices, GLsizei count, GLenum mode, GLenum type);
@@ -304,7 +304,8 @@ class Context : public State
 
     Texture *getIncompleteTexture(SamplerType type);
 
-    bool cullSkipsDraw(GLenum primitiveType);
+    bool cullSkipsDraw(GLenum drawMode);
+    bool isTriangleMode(GLenum drawMode);
 
     const egl::Config *const mConfig;
 

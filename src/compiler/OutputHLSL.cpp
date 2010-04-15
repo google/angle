@@ -104,7 +104,8 @@ void OutputHLSL::header()
 
         out << "uniform float4 gl_Window;\n"
                "uniform float2 gl_Depth;\n"
-               "uniform bool gl_frontCCW;\n"
+               "uniform bool gl_PointsOrLines;\n"
+               "uniform bool gl_FrontCCW;\n"
                "\n";
         out <<  uniforms;
         out << "\n"
@@ -546,7 +547,7 @@ void OutputHLSL::footer()
                "    gl_FragCoord.y = (input.gl_FragCoord.y * rhw) * gl_Window.y + gl_Window.w;\n"
                "    gl_FragCoord.z = (input.gl_FragCoord.z * rhw) * gl_Depth.x + gl_Depth.y;\n"
                "    gl_FragCoord.w = rhw;\n"
-               "    gl_FrontFacing = gl_frontCCW ? (input.vFace >= 0.0) : (input.vFace <= 0.0);\n";
+               "    gl_FrontFacing = gl_PointsOrLines || (gl_FrontCCW ? (input.vFace >= 0.0) : (input.vFace <= 0.0));\n";
 
         for (TSymbolTableLevel::const_iterator namedSymbol = symbols->begin(); namedSymbol != symbols->end(); namedSymbol++)
         {

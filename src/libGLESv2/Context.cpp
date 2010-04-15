@@ -1256,14 +1256,18 @@ bool Context::applyRenderTarget(bool ignoreViewport)
 }
 
 // Applies the fixed-function state (culling, depth test, alpha blending, stenciling, etc) to the Direct3D 9 device
-void Context::applyState()
+void Context::applyState(GLenum drawMode)
 {
     IDirect3DDevice9 *device = getDevice();
     Program *programObject = getCurrentProgram();
 
-    GLint frontCCW = programObject->getUniformLocation("gl_frontCCW");
+    GLint frontCCW = programObject->getUniformLocation("gl_FrontCCW");
     GLint ccw = (frontFace == GL_CCW);
     programObject->setUniform1iv(frontCCW, 1, &ccw);
+
+    GLint pointsOrLines = programObject->getUniformLocation("gl_PointsOrLines");
+    GLint alwaysFront = !isTriangleMode(drawMode);
+    programObject->setUniform1iv(pointsOrLines, 1, &alwaysFront);
 
     if (cullFace)
     {
@@ -1854,7 +1858,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
         return error(GL_INVALID_FRAMEBUFFER_OPERATION);
     }
 
-    applyState();
+    applyState(mode);
     applyVertexBuffer(first, count);
     applyShaders();
     applyTextures();
@@ -1896,7 +1900,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void* 
         return error(GL_INVALID_FRAMEBUFFER_OPERATION);
     }
 
-    applyState();
+    applyState(mode);
     TranslatedIndexData indexInfo = applyIndexBuffer(indices, count, mode, type);
     applyVertexBuffer(indexInfo);
     applyShaders();
@@ -2189,19 +2193,29 @@ Texture *Context::getIncompleteTexture(SamplerType type)
     return t;
 }
 
-bool Context::cullSkipsDraw(GLenum primitiveType)
+bool Context::cullSkipsDraw(GLenum drawMode)
 {
-    if (cullFace && cullMode == GL_FRONT_AND_BACK &&
-        (primitiveType == GL_TRIANGLES || primitiveType == GL_TRIANGLE_FAN || primitiveType == GL_TRIANGLE_STRIP))
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return cullFace && cullMode == GL_FRONT_AND_BACK && isTriangleMode(drawMode);
 }
 
+bool Context::isTriangleMode(GLenum drawMode)
+{
+    switch (drawMode)
+    {
+      case GL_TRIANGLES:
+      case GL_TRIANGLE_FAN:
+      case GL_TRIANGLE_STRIP:
+        return true;
+      case GL_POINTS:
+      case GL_LINES:
+      case GL_LINE_LOOP:
+      case GL_LINE_STRIP:
+        return false;
+      default: UNREACHABLE();
+    }
+
+    return false;
+}
 }
 
 extern "C"
