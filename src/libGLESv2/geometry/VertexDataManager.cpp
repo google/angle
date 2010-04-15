@@ -128,12 +128,22 @@ GLenum VertexDataManager::internalPreRenderValidate(const AttributeState *attrib
         {
             if (attribs[i].mBoundBuffer != 0 && mBackend->getFormatConverter(attribs[i].mType, attribs[i].mSize, attribs[i].mNormalized).identity)
             {
-                translated[i].type = attribs[i].mType;
-                translated[i].size = attribs[i].mSize;
-                translated[i].normalized = attribs[i].mNormalized;
-                translated[i].stride = interpretGlStride(attribs[i]);
-                translated[i].offset = static_cast<std::size_t>(static_cast<const char*>(attribs[i].mPointer) - static_cast<const char*>(NULL)) + translated[i].stride * minIndex;
-                translated[i].buffer = mContext->getBuffer(attribs[i].mBoundBuffer)->identityBuffer();
+                std::size_t stride = interpretGlStride(attribs[i]);
+                std::size_t offset = static_cast<std::size_t>(static_cast<const char*>(attribs[i].mPointer) - static_cast<const char*>(NULL)) + translated[i].stride * minIndex;
+
+                if (mBackend->validateStream(attribs[i].mType, attribs[i].mSize, stride, offset))
+                {
+                    translated[i].type = attribs[i].mType;
+                    translated[i].size = attribs[i].mSize;
+                    translated[i].normalized = attribs[i].mNormalized;
+                    translated[i].stride = stride;
+                    translated[i].offset = offset;
+                    translated[i].buffer = mContext->getBuffer(attribs[i].mBoundBuffer)->identityBuffer();
+                }
+                else
+                {
+                    translateOrLift[i] = true;
+                }
             }
             else
             {

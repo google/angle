@@ -27,6 +27,8 @@ class Dx9BackEnd : public BufferBackEnd
     virtual TranslatedIndexBuffer *createIndexBuffer(std::size_t size);
     virtual FormatConverter getFormatConverter(GLenum type, std::size_t size, bool normalize);
 
+    virtual bool validateStream(GLenum type, std::size_t size, std::size_t stride, std::size_t offset) const;
+
     virtual GLenum setupIndicesPreDraw(const TranslatedIndexData &indexInfo);
     virtual GLenum setupAttributesPreDraw(const TranslatedAttribute *attributes);
 

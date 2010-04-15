@@ -57,6 +57,9 @@ class BufferBackEnd
     virtual TranslatedIndexBuffer *createIndexBuffer(std::size_t size) = 0;
     virtual FormatConverter getFormatConverter(GLenum type, std::size_t size, bool normalize) = 0;
 
+    // For an identity-mappable stream, verify that the stride and offset are okay.
+    virtual bool validateStream(GLenum type, std::size_t size, std::size_t stride, std::size_t offset) const = 0;
+
     virtual GLenum setupIndicesPreDraw(const TranslatedIndexData &indexInfo) = 0;
     virtual GLenum setupAttributesPreDraw(const TranslatedAttribute *attributes) = 0;
 };

@@ -170,6 +170,12 @@ D3DDECLTYPE Dx9BackEnd::mapAttributeType(GLenum type, std::size_t size, bool nor
     }
 }
 
+bool Dx9BackEnd::validateStream(GLenum type, std::size_t size, std::size_t stride, std::size_t offset) const
+{
+    // D3D9 requires the stream offset and stride to be a multiple of DWORD.
+    return (stride % sizeof(DWORD) == 0 && offset % sizeof(DWORD) == 0);
+}
+
 IDirect3DVertexBuffer9 *Dx9BackEnd::getDxBuffer(TranslatedVertexBuffer *vb) const
 {
     return vb ? static_cast<Dx9VertexBuffer*>(vb)->getBuffer() : NULL;
