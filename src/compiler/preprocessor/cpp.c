@@ -630,7 +630,8 @@ static int CPPpragma(yystypepp * yylvalpp)
 	return token;    
 } // CPPpragma
 
-#define GL2_VERSION_NUMBER 110
+#define ESSL_VERSION_NUMBER 100
+#define ESSL_VERSION_STRING "100"
 
 static int CPPversion(yystypepp * yylvalpp)
 {
@@ -652,8 +653,8 @@ static int CPPversion(yystypepp * yylvalpp)
     yylvalpp->sc_int=atoi(yylvalpp->symbol_name);
 	//SetVersionNumber(yylvalpp->sc_int);
     
-    if (yylvalpp->sc_int != GL2_VERSION_NUMBER)
-        CPPShInfoLogMsg("Version number not supported by GL2");
+    if (yylvalpp->sc_int != ESSL_VERSION_NUMBER)
+        CPPShInfoLogMsg("Version number not supported by ESSL");
 
     token = cpp->currentInput->scan(cpp->currentInput, yylvalpp);
     
@@ -896,7 +897,7 @@ int MacroExpand(int atom, yystypepp * yylvalpp)
         return 1;
     }
 	if (atom == __VERSION__Atom) {
-        strcpy(yylvalpp->symbol_name,"100");
+        strcpy(yylvalpp->symbol_name,ESSL_VERSION_STRING);
         yylvalpp->sc_int = atoi(yylvalpp->symbol_name);
         UngetToken(CPP_INTCONSTANT, yylvalpp);
         return 1;
