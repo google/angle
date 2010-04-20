@@ -12,6 +12,7 @@
 #include "libGLESv2/main.h"
 #include "libGLESv2/Renderbuffer.h"
 #include "libGLESv2/Texture.h"
+#include "libGLESv2/utilities.h"
 
 namespace gl
 {
@@ -51,7 +52,8 @@ void Framebuffer::setStencilbuffer(GLenum type, GLuint stencilbuffer)
 
 void Framebuffer::detachTexture(GLuint texture)
 {
-    if (mColorbufferHandle == texture && mColorbufferType == GL_TEXTURE)
+    if (mColorbufferHandle == texture
+        && (mColorbufferType == GL_TEXTURE_2D || es2dx::IsCubemapTextureTarget(mColorbufferType)))
     {
         mColorbufferType = GL_NONE;
         mColorbufferHandle = 0;
@@ -109,15 +111,19 @@ Colorbuffer *Framebuffer::getColorbuffer()
     gl::Context *context = gl::getContext();
     Colorbuffer *colorbuffer = NULL;
 
-    if (mColorbufferType == GL_RENDERBUFFER)
+    if (mColorbufferType == GL_NONE)
+    {
+        UNREACHABLE();
+        colorbuffer = NULL;
+    }
+    else if (mColorbufferType == GL_RENDERBUFFER)
     {
         colorbuffer = context->getColorbuffer(mColorbufferHandle);
     }
-    else if (mColorbufferType == GL_TEXTURE)
+    else
     {
-        colorbuffer = context->getTexture(mColorbufferHandle);
+        colorbuffer = context->getTexture(mColorbufferHandle)->getColorbuffer(mColorbufferType);
     }
-    else UNREACHABLE();
 
     if (colorbuffer && colorbuffer->isColorbuffer())
     {

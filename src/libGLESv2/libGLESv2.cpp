@@ -1636,34 +1636,40 @@ void __stdcall glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum t
 
         if (context)
         {
-            if (texture)
+            if (texture == 0)
             {
+                textarget = GL_NONE;
+            }
+            else
+            {
+                gl::Texture *tex = context->getTexture(texture);
+
+                if (tex == NULL)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
                 switch (textarget)
                 {
                   case GL_TEXTURE_2D:
-                    if (!context->getTexture2D())
+                    if (tex->getTarget() != GL_TEXTURE_2D)
                     {
                         return error(GL_INVALID_OPERATION);
                     }
                     break;
+
                   case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
-                    UNIMPLEMENTED();   // FIXME
-                    break;
                   case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
-                    UNIMPLEMENTED();   // FIXME
-                    break;
                   case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-                    UNIMPLEMENTED();   // FIXME
-                    break;
                   case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-                    UNIMPLEMENTED();   // FIXME
-                    break;
                   case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-                    UNIMPLEMENTED();   // FIXME
-                    break;
                   case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
-                    UNIMPLEMENTED();   // FIXME
+                    if (tex->getTarget() != GL_TEXTURE_CUBE_MAP)
+                    {
+                        return error(GL_INVALID_OPERATION);
+                    }
                     break;
+
                   default:
                     return error(GL_INVALID_ENUM);
                 }
@@ -1681,7 +1687,7 @@ void __stdcall glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum t
                 return error(GL_INVALID_OPERATION);
             }
 
-            framebuffer->setColorbuffer(GL_TEXTURE, texture);
+            framebuffer->setColorbuffer(textarget, texture);
         }
     }
     catch(std::bad_alloc&)

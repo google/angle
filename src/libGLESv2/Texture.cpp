@@ -32,7 +32,7 @@ Texture::Image::~Image()
   if (surface) surface->Release();
 }
 
-Texture::Texture(Context *context) : Colorbuffer(0), mContext(context)
+Texture::Texture(Context *context) : mContext(context)
 {
     mMinFilter = GL_NEAREST_MIPMAP_LINEAR;
     mMagFilter = GL_LINEAR;
@@ -40,6 +40,7 @@ Texture::Texture(Context *context) : Colorbuffer(0), mContext(context)
     mWrapT = GL_REPEAT;
 
     mDirtyMetaData = true;
+    mIsRenderable = false;
 }
 
 Texture::~Texture()
@@ -131,6 +132,16 @@ GLenum Texture::getWrapS() const
 GLenum Texture::getWrapT() const
 {
     return mWrapT;
+}
+
+GLuint Texture::getWidth() const
+{
+    return mWidth;
+}
+
+GLuint Texture::getHeight() const
+{
+    return mHeight;
 }
 
 // Selects an internal Direct3D 9 format for storing an Image
@@ -361,6 +372,7 @@ IDirect3DBaseTexture9 *Texture::getTexture()
     if (mDirtyMetaData)
     {
         mBaseTexture = createTexture();
+        mIsRenderable = false;
     }
 
     if (mDirtyMetaData || dirtyImageData())
@@ -375,18 +387,12 @@ IDirect3DBaseTexture9 *Texture::getTexture()
 }
 
 // Returns the top-level texture surface as a render target
-IDirect3DSurface9 *Texture::getRenderTarget(GLenum target)
+void Texture::needRenderTarget()
 {
-    if (mDirtyMetaData && mRenderTarget)
-    {
-        mRenderTarget->Release();
-        mRenderTarget = NULL;
-    }
-
-    if (!mRenderTarget)
+    if (!mIsRenderable)
     {
         mBaseTexture = convertToRenderTarget();
-        mRenderTarget = getSurface(target);
+        mIsRenderable = true;
     }
 
     if (dirtyImageData())
@@ -395,38 +401,36 @@ IDirect3DSurface9 *Texture::getRenderTarget(GLenum target)
     }
 
     mDirtyMetaData = false;
-
-    return mRenderTarget;
 }
 
 void Texture::dropTexture()
 {
-    if (mRenderTarget)
-    {
-        mRenderTarget->Release();
-        mRenderTarget = NULL;
-    }
-
     if (mBaseTexture)
     {
         mBaseTexture = NULL;
     }
+
+    mIsRenderable = false;
 }
 
-void Texture::pushTexture(IDirect3DBaseTexture9 *newTexture)
+void Texture::pushTexture(IDirect3DBaseTexture9 *newTexture, bool renderable)
 {
     mBaseTexture = newTexture;
     mDirtyMetaData = false;
+    mIsRenderable = renderable;
 }
 
 
 Texture2D::Texture2D(Context *context) : Texture(context)
 {
     mTexture = NULL;
+    mColorbufferProxy = NULL;
 }
 
 Texture2D::~Texture2D()
 {
+    delete mColorbufferProxy;
+
     if (mTexture)
     {
         mTexture->Release();
@@ -543,7 +547,7 @@ void Texture2D::copyImage(GLint level, GLenum internalFormat, GLint x, GLint y, 
     if (redefineTexture(level, internalFormat, width, height))
     {
         convertToRenderTarget();
-        pushTexture(mTexture);
+        pushTexture(mTexture, true);
     }
 
     if (width != 0 && height != 0)
@@ -576,7 +580,7 @@ void Texture2D::copySubImage(GLint level, GLint xoffset, GLint yoffset, GLint x,
     if (redefineTexture(0, mImageArray[0].format, mImageArray[0].width, mImageArray[0].height))
     {
         convertToRenderTarget();
-        pushTexture(mTexture);
+        pushTexture(mTexture, true);
     }
     else
     {
@@ -599,9 +603,10 @@ void Texture2D::copySubImage(GLint level, GLint xoffset, GLint yoffset, GLint x,
 // Tests for GL texture object completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
 bool Texture2D::isComplete() const
 {
-    ASSERT(mWidth == mImageArray[0].width && mHeight == mImageArray[0].height);
+    GLsizei width = mImageArray[0].width;
+    GLsizei height = mImageArray[0].height;
 
-    if (mWidth <= 0 || mHeight <= 0)
+    if (width <= 0 || height <= 0)
     {
         return false;
     }
@@ -625,7 +630,7 @@ bool Texture2D::isComplete() const
 
     if (mipmapping)
     {
-        int q = log2(std::max(mWidth, mHeight));
+        int q = log2(std::max(width, height));
 
         for (int level = 1; level <= q; level++)
         {
@@ -773,18 +778,6 @@ IDirect3DBaseTexture9 *Texture2D::convertToRenderTarget()
     return mTexture;
 }
 
-IDirect3DSurface9 *Texture2D::getSurface(GLenum target)
-{
-    ASSERT(target == GL_TEXTURE_2D);
-
-    IDirect3DSurface9 *surface = NULL;
-    HRESULT result = mTexture->GetSurfaceLevel(0, &surface);
-
-    ASSERT(SUCCEEDED(result));
-
-    return surface;
-}
-
 bool Texture2D::dirtyImageData() const
 {
     int q = log2(std::max(mWidth, mHeight));
@@ -821,7 +814,7 @@ void Texture2D::generateMipmaps()
         mImageArray[i].height = std::max(mImageArray[0].height >> i, 1);
     }
 
-    getRenderTarget();
+    needRenderTarget();
 
     for (unsigned int i = 1; i <= q; i++)
     {
@@ -841,13 +834,50 @@ void Texture2D::generateMipmaps()
     }
 }
 
+Colorbuffer *Texture2D::getColorbuffer(GLenum target)
+{
+    if (target != GL_TEXTURE_2D)
+    {
+        return error(GL_INVALID_OPERATION, (Colorbuffer *)NULL);
+    }
+
+    if (mColorbufferProxy == NULL)
+    {
+        mColorbufferProxy = new TextureColorbufferProxy(this, target);
+    }
+
+    return mColorbufferProxy;
+}
+
+IDirect3DSurface9 *Texture2D::getRenderTarget(GLenum target)
+{
+    ASSERT(target == GL_TEXTURE_2D);
+
+    needRenderTarget();
+
+    IDirect3DSurface9 *renderTarget = NULL;
+    mTexture->GetSurfaceLevel(0, &renderTarget);
+
+    return renderTarget;
+}
+
 TextureCubeMap::TextureCubeMap(Context *context) : Texture(context)
 {
     mTexture = NULL;
+
+    for (int i = 0; i < 6; i++)
+    {
+        mFaceProxies[i] = NULL;
+    }
 }
 
 TextureCubeMap::~TextureCubeMap()
 {
+    for (int i = 0; i < 6; i++)
+    {
+        delete mFaceProxies[i];
+    }
+
     if (mTexture)
     {
         mTexture->Release();
@@ -934,7 +964,9 @@ void TextureCubeMap::subImage(GLenum face, GLint level, GLint xoffset, GLint yof
 // Tests for GL texture object completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
 bool TextureCubeMap::isComplete() const
 {
-    if (mWidth <= 0 || mHeight <= 0 || mWidth != mHeight)
+    int size = mImageArray[0][0].width;
+
+    if (size <= 0)
     {
         return false;
     }
@@ -958,7 +990,7 @@ bool TextureCubeMap::isComplete() const
 
     for (int face = 0; face < 6; face++)
     {
-        if (mImageArray[face][0].width != mWidth || mImageArray[face][0].height != mHeight)
+        if (mImageArray[face][0].width != size || mImageArray[face][0].height != size)
         {
             return false;
         }
@@ -966,7 +998,7 @@ bool TextureCubeMap::isComplete() const
 
     if (mipmapping)
     {
-        int q = log2(mWidth);
+        int q = log2(size);
 
         for (int face = 0; face < 6; face++)
         {
@@ -1119,15 +1151,6 @@ IDirect3DBaseTexture9 *TextureCubeMap::convertToRenderTarget()
     return mTexture;
 }
 
-IDirect3DSurface9 *TextureCubeMap::getSurface(GLenum target)
-{
-    ASSERT(es2dx::IsCubemapTextureTarget(target));
-
-    IDirect3DSurface9 *surface = getCubeMapSurface(target, 0);
-    ASSERT(surface != NULL);
-    return surface;
-}
-
 void TextureCubeMap::setImage(int face, GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
     redefineTexture(level, internalFormat, width);
@@ -1220,7 +1243,7 @@ void TextureCubeMap::copyImage(GLenum face, GLint level, GLenum internalFormat, 
     if (redefineTexture(level, internalFormat, width))
     {
         convertToRenderTarget();
-        pushTexture(mTexture);
+        pushTexture(mTexture, true);
     }
 
     ASSERT(width == height);
@@ -1287,7 +1310,7 @@ void TextureCubeMap::copySubImage(GLenum face, GLint level, GLint xoffset, GLint
     if (redefineTexture(0, mImageArray[0][0].format, mImageArray[0][0].width))
     {
         convertToRenderTarget();
-        pushTexture(mTexture);
+        pushTexture(mTexture, true);
     }
     else
     {
@@ -1352,7 +1375,7 @@ void TextureCubeMap::generateMipmaps()
         }
     }
 
-    getRenderTarget();
+    needRenderTarget();
 
     for (unsigned int f = 0; f < 6; f++)
     {
@@ -1370,6 +1393,59 @@ void TextureCubeMap::generateMipmaps()
             if (lower != NULL) lower->Release();
         }
     }
+}
+
+Colorbuffer *TextureCubeMap::getColorbuffer(GLenum target)
+{
+    if (!es2dx::IsCubemapTextureTarget(target))
+    {
+        return error(GL_INVALID_OPERATION, (Colorbuffer *)NULL);
+    }
+
+    unsigned int face = faceIndex(target);
+
+    if (mFaceProxies[face] == NULL)
+    {
+        mFaceProxies[face] = new TextureColorbufferProxy(this, target);
+    }
+
+    return mFaceProxies[face];
+}
+
+IDirect3DSurface9 *TextureCubeMap::getRenderTarget(GLenum target)
+{
+    ASSERT(es2dx::IsCubemapTextureTarget(target));
+
+    needRenderTarget();
+
+    IDirect3DSurface9 *renderTarget = NULL;
+    mTexture->GetCubeMapSurface(static_cast<D3DCUBEMAP_FACES>(faceIndex(target)), 0, &renderTarget);
+
+    return renderTarget;
+}
+
+Texture::TextureColorbufferProxy::TextureColorbufferProxy(Texture *texture, GLenum target)
+  : Colorbuffer(NULL), mTexture(texture), mTarget(target)
+{
+    ASSERT(target == GL_TEXTURE_2D || es2dx::IsCubemapTextureTarget(target));
+    latchTextureInfo();
+}
+
+IDirect3DSurface9 *Texture::TextureColorbufferProxy::getRenderTarget()
+{
+    latchTextureInfo();
+
+    if (mRenderTarget) mRenderTarget->Release();
+
+    mRenderTarget = mTexture->getRenderTarget(mTarget);
+
+    return mRenderTarget;
+}
+
+void Texture::TextureColorbufferProxy::latchTextureInfo()
+{
+    mWidth = mTexture->getWidth();
+    mHeight = mTexture->getHeight();
 }
 
 }

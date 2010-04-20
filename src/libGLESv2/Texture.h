@@ -11,13 +11,15 @@
 #ifndef LIBGLESV2_TEXTURE_H_
 #define LIBGLESV2_TEXTURE_H_
 
+#include <vector>
+
 #define GL_APICALL
 #include <GLES2/gl2.h>
 #include <d3d9.h>
 
-#include <vector>
-
 #include "libGLESv2/Renderbuffer.h"
+#include "libGLESv2/utilities.h"
+#include "common/debug.h"
 
 namespace gl
 {
@@ -32,12 +34,12 @@ enum
     MAX_TEXTURE_LEVELS = 12   // 1+log2 of MAX_TEXTURE_SIZE
 };
 
-class Texture : public Colorbuffer
+class Texture
 {
   public:
     explicit Texture(Context *context);
 
-    ~Texture();
+    virtual ~Texture();
 
     virtual GLenum getTarget() const = 0;
 
@@ -51,15 +53,33 @@ class Texture : public Colorbuffer
     GLenum getWrapS() const;
     GLenum getWrapT() const;
 
+    GLuint getWidth() const;
+    GLuint getHeight() const;
+
     virtual bool isComplete() const = 0;
 
     IDirect3DBaseTexture9 *getTexture();
-    IDirect3DSurface9 *getRenderTarget(GLenum target);
-    IDirect3DSurface9 *getRenderTarget() { return getRenderTarget(GL_TEXTURE_2D); } // FIXME: to be removed once FBO rendering is completed.
+    virtual Colorbuffer *getColorbuffer(GLenum target) = 0;
 
     virtual void generateMipmaps() = 0;
 
   protected:
+    class TextureColorbufferProxy;
+    friend class TextureColorbufferProxy;
+    class TextureColorbufferProxy : public Colorbuffer
+    {
+      public:
+        TextureColorbufferProxy(Texture *texture, GLenum target); // target is a 2D-like texture target (GL_TEXTURE_2D or one of the cube face targets)
+
+        virtual IDirect3DSurface9 *getRenderTarget();
+
+      private:
+        Texture *mTexture;
+        GLenum mTarget;
+
+        void latchTextureInfo();
+    };
+
     // Helper structure representing a single image layer
     struct Image
     {
@@ -87,18 +107,23 @@ class Texture : public Colorbuffer
     void setImage(GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *img);
     void subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *img);
 
+    void needRenderTarget();
+
     // The pointer returned is weak and it is assumed the derived class will keep a strong pointer until the next createTexture() call.
     virtual IDirect3DBaseTexture9 *createTexture() = 0;
     virtual void updateTexture() = 0;
     virtual IDirect3DBaseTexture9 *convertToRenderTarget() = 0;
-    virtual IDirect3DSurface9 *getSurface(GLenum target) = 0;
+    virtual IDirect3DSurface9 *getRenderTarget(GLenum target) = 0;
 
     virtual bool dirtyImageData() const = 0;
 
     void dropTexture();
-    void pushTexture(IDirect3DBaseTexture9 *newTexture);
+    void pushTexture(IDirect3DBaseTexture9 *newTexture, bool renderable);
 
     Blit *getBlitter();
+
+    unsigned int mWidth;
+    unsigned int mHeight;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture);
@@ -107,6 +132,7 @@ class Texture : public Colorbuffer
 
     IDirect3DBaseTexture9 *mBaseTexture; // This is a weak pointer. The derived class is assumed to own a strong pointer.
     bool mDirtyMetaData;
+    bool mIsRenderable;
 
     void loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type,
                        GLint unpackAlignment, const void *input, std::size_t outputPitch, void *output) const;
@@ -132,13 +158,14 @@ class Texture2D : public Texture
 
     virtual void generateMipmaps();
 
+    virtual Colorbuffer *getColorbuffer(GLenum target);
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture2D);
 
     virtual IDirect3DBaseTexture9 *createTexture();
     virtual void updateTexture();
     virtual IDirect3DBaseTexture9 *convertToRenderTarget();
-    virtual IDirect3DSurface9 *getSurface(GLenum target);
 
     virtual bool dirtyImageData() const;
 
@@ -148,7 +175,11 @@ class Texture2D : public Texture
 
     IDirect3DTexture9 *mTexture;
 
+    TextureColorbufferProxy *mColorbufferProxy;
+
     bool redefineTexture(GLint level, GLenum internalFormat, GLsizei width, GLsizei height);
+
+    virtual IDirect3DSurface9 *getRenderTarget(GLenum target);
 };
 
 class TextureCubeMap : public Texture
@@ -175,13 +206,14 @@ class TextureCubeMap : public Texture
 
     virtual void generateMipmaps();
 
+    virtual Colorbuffer *getColorbuffer(GLenum target);
+
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureCubeMap);
 
     virtual IDirect3DBaseTexture9 *createTexture();
     virtual void updateTexture();
     virtual IDirect3DBaseTexture9 *convertToRenderTarget();
-    virtual IDirect3DSurface9 *getSurface(GLenum target);
 
     virtual bool dirtyImageData() const;
 
@@ -200,6 +232,10 @@ class TextureCubeMap : public Texture
     Image mImageArray[6][MAX_TEXTURE_LEVELS];
 
     IDirect3DCubeTexture9 *mTexture;
+
+    TextureColorbufferProxy *mFaceProxies[6];
+
+    virtual IDirect3DSurface9 *getRenderTarget(GLenum target);
 };
 }
 
