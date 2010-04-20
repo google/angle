@@ -329,8 +329,7 @@ bool ConvertPrimitiveType(GLenum primitiveType, GLsizei primitiveCount,
         *d3dPrimitiveCount = primitiveCount / 2;
         break;
       case GL_LINE_LOOP:
-        UNIMPLEMENTED();   // FIXME: Emulate using an index buffer
-        *d3dPrimitiveType = D3DPT_LINELIST;
+        *d3dPrimitiveType = D3DPT_LINESTRIP;
         *d3dPrimitiveCount = primitiveCount;
         break;
       case GL_LINE_STRIP:

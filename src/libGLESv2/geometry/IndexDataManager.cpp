@@ -39,8 +39,9 @@ namespace
 template <class InputIndexType>
 void copyIndices(const InputIndexType *in, GLsizei count, Index *out, GLuint *minIndex, GLuint *maxIndex)
 {
-    GLuint minIndexSoFar = *in;
-    GLuint maxIndexSoFar = *in;
+    Index first = *in;
+    GLuint minIndexSoFar = first;
+    GLuint maxIndexSoFar = first;
 
     for (GLsizei i = 0; i < count; i++)
     {
@@ -49,6 +50,9 @@ void copyIndices(const InputIndexType *in, GLsizei count, Index *out, GLuint *mi
 
         *out++ = *in++;
     }
+
+    // It might be a line loop, so copy the loop index.
+    *out = first;
 
     *minIndex = minIndexSoFar;
     *maxIndex = maxIndexSoFar;
@@ -65,7 +69,7 @@ TranslatedIndexData IndexDataManager::preRenderValidate(GLenum mode, GLenum type
 
     translated.count = count;
 
-    std::size_t requiredSpace = spaceRequired(mode, type, count);
+    std::size_t requiredSpace = spaceRequired(type, count);
 
     if (requiredSpace > mStreamBuffer->size())
     {
@@ -112,9 +116,9 @@ TranslatedIndexData IndexDataManager::preRenderValidate(GLenum mode, GLenum type
     return translated;
 }
 
-std::size_t IndexDataManager::spaceRequired(GLenum mode, GLenum type, GLsizei count)
+std::size_t IndexDataManager::spaceRequired(GLenum type, GLsizei count)
 {
-    return count * sizeof(Index);
+    return (count + 1) * sizeof(Index); // +1 because we always leave an extra for line loops
 }
 
 }
