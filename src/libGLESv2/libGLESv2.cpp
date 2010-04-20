@@ -2358,7 +2358,97 @@ void __stdcall glGetRenderbufferParameteriv(GLenum target, GLenum pname, GLint* 
 
     try
     {
-        UNIMPLEMENTED();   // FIXME
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            if (target != GL_RENDERBUFFER)
+            {
+                return error(GL_INVALID_ENUM);
+            }
+
+            if (context->renderbuffer == 0)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            gl::Renderbuffer *renderbuffer = context->getRenderbuffer(context->renderbuffer);
+
+            switch (pname)
+            {
+              case GL_RENDERBUFFER_WIDTH:
+                *params = renderbuffer->getWidth();
+                break;
+              case GL_RENDERBUFFER_HEIGHT:
+                *params = renderbuffer->getHeight();
+                break;
+              case GL_RENDERBUFFER_INTERNAL_FORMAT:
+                *params = renderbuffer->getFormat();
+                break;
+              case GL_RENDERBUFFER_RED_SIZE:
+                if (renderbuffer->isColorbuffer())
+                {
+                    *params = static_cast<gl::Colorbuffer*>(renderbuffer)->getRedSize();
+                }
+                else
+                {
+                    *params = 0;
+                }
+                break;
+              case GL_RENDERBUFFER_GREEN_SIZE:
+                if (renderbuffer->isColorbuffer())
+                {
+                    *params = static_cast<gl::Colorbuffer*>(renderbuffer)->getGreenSize();
+                }
+                else
+                {
+                    *params = 0;
+                }
+                break;
+              case GL_RENDERBUFFER_BLUE_SIZE:
+                if (renderbuffer->isColorbuffer())
+                {
+                    *params = static_cast<gl::Colorbuffer*>(renderbuffer)->getBlueSize();
+                }
+                else
+                {
+                    *params = 0;
+                }
+                break;
+              case GL_RENDERBUFFER_ALPHA_SIZE:
+                if (renderbuffer->isColorbuffer())
+                {
+                    *params = static_cast<gl::Colorbuffer*>(renderbuffer)->getAlphaSize();
+                }
+                else
+                {
+                    *params = 0;
+                }
+                break;
+              case GL_RENDERBUFFER_DEPTH_SIZE:
+                if (renderbuffer->isDepthbuffer())
+                {
+                    *params = static_cast<gl::Depthbuffer*>(renderbuffer)->getDepthSize();
+                }
+                else
+                {
+                    *params = 0;
+                }
+                break;
+              case GL_RENDERBUFFER_STENCIL_SIZE:
+                if (renderbuffer->isStencilbuffer())
+                {
+                    *params = static_cast<gl::Stencilbuffer*>(renderbuffer)->getStencilSize();
+                }
+                else
+                {
+                    *params = 0;
+                }
+                break;
+              default:
+                return error(GL_INVALID_ENUM);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {

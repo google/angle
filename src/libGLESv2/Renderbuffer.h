@@ -35,10 +35,12 @@ class Renderbuffer
 
     int getWidth();
     int getHeight();
+    GLenum getFormat();
 
   protected:
     int mWidth;
     int mHeight;
+    GLenum mFormat;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderbuffer);
