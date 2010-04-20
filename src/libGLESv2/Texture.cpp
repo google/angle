@@ -551,8 +551,8 @@ void Texture2D::copyImage(GLint level, GLenum internalFormat, GLint x, GLint y, 
         RECT sourceRect;
         sourceRect.left = x;
         sourceRect.right = x + width;
-        sourceRect.top = source->getHeight() - (y + height);
-        sourceRect.bottom = source->getHeight() - y;
+        sourceRect.top = y;
+        sourceRect.bottom = y + height;
 
         IDirect3DSurface9 *dest;
         HRESULT hr = mTexture->GetSurfaceLevel(level, &dest);
@@ -586,8 +586,8 @@ void Texture2D::copySubImage(GLint level, GLint xoffset, GLint yoffset, GLint x,
     RECT sourceRect;
     sourceRect.left = x;
     sourceRect.right = x + width;
-    sourceRect.top = source->getHeight() - (y + height);
-    sourceRect.bottom = source->getHeight() - y;
+    sourceRect.top = y;
+    sourceRect.bottom = y + height;
 
     IDirect3DSurface9 *dest;
     HRESULT hr = mTexture->GetSurfaceLevel(level, &dest);
@@ -1230,8 +1230,8 @@ void TextureCubeMap::copyImage(GLenum face, GLint level, GLenum internalFormat, 
         RECT sourceRect;
         sourceRect.left = x;
         sourceRect.right = x + width;
-        sourceRect.top = source->getHeight() - (y + height);
-        sourceRect.bottom = source->getHeight() - y;
+        sourceRect.top = y;
+        sourceRect.bottom = y + height;
 
         IDirect3DSurface9 *dest = getCubeMapSurface(face, level);
 
@@ -1297,8 +1297,8 @@ void TextureCubeMap::copySubImage(GLenum face, GLint level, GLint xoffset, GLint
     RECT sourceRect;
     sourceRect.left = x;
     sourceRect.right = x + width;
-    sourceRect.top = source->getHeight() - (y + height);
-    sourceRect.bottom = source->getHeight() - y;
+    sourceRect.top = y;
+    sourceRect.bottom = y + height;
 
     IDirect3DSurface9 *dest = getCubeMapSurface(face, level);
 
