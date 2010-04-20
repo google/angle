@@ -6,18 +6,18 @@
 
 // geometry/dx9.h: Direct3D 9-based implementation of BufferBackEnd, TranslatedVertexBuffer and TranslatedIndexBuffer.
 
-#include "dx9.h"
+#include "libGLESv2/geometry/dx9.h"
 
 #include <cstddef>
 
 #define GL_APICALL
 #include <GLES2/gl2.h>
 
-#include "Context.h"
 #include "common/debug.h"
 
-#include "geometry/vertexconversion.h"
-#include "geometry/IndexDataManager.h"
+#include "libGLESv2/Context.h"
+#include "libGLESv2/geometry/vertexconversion.h"
+#include "libGLESv2/geometry/IndexDataManager.h"
 
 namespace
 {

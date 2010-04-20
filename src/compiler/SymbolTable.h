@@ -30,9 +30,9 @@
 //   are tracked in the intermediate representation, not the symbol table.
 //
 
-#include "Common.h"
-#include "intermediate.h"
-#include "InfoSink.h"
+#include "compiler/Common.h"
+#include "compiler/intermediate.h"
+#include "compiler/InfoSink.h"
 
 //
 // Symbol base class.  (Can build functions or variables out of these...)

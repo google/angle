@@ -10,8 +10,9 @@
 // built-in functions and operators.
 //
 
-#include "intermediate.h"
-#include "Initialize.h"
+#include "compiler/Initialize.h"
+
+#include "compiler/intermediate.h"
 
 void TBuiltIns::initialize()
 {

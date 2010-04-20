@@ -11,8 +11,8 @@
 
 #include <d3d9.h>
 
-#include "Buffer.h"
-#include "geometry/backend.h"
+#include "libGLESv2/Buffer.h"
+#include "libGLESv2/geometry/backend.h"
 
 namespace gl
 {

@@ -7,7 +7,7 @@
 #ifndef COMPILER_TRANSLATORHLSL_H_
 #define COMPILER_TRANSLATORHLSL_H_
 
-#include "ShHandle.h"
+#include "compiler/ShHandle.h"
 
 class TranslatorHLSL : public TCompiler {
 public:

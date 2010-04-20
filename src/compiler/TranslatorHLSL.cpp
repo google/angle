@@ -4,8 +4,9 @@
 // found in the LICENSE file.
 //
 
-#include "TranslatorHLSL.h"
-#include "OutputHLSL.h"
+#include "compiler/TranslatorHLSL.h"
+
+#include "compiler/OutputHLSL.h"
 
 TranslatorHLSL::TranslatorHLSL(EShLanguage language, int debugOptions)
     : TCompiler(language), debugOptions(debugOptions)

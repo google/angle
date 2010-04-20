@@ -7,11 +7,12 @@
 // Program.cpp: Implements the gl::Program class. Implements GL program objects
 // and related functionality. [OpenGL ES 2.0.24] section 2.10.3 page 28.
 
-#include "Program.h"
+#include "libGLESv2/Program.h"
 
-#include "main.h"
-#include "Shader.h"
 #include "common/debug.h"
+
+#include "libGLESv2/main.h"
+#include "libGLESv2/Shader.h"
 
 namespace gl
 {

@@ -7,7 +7,7 @@
 // geometry/backend.h: Abstract classes BufferBackEnd, TranslatedVertexBuffer and TranslatedIndexBuffer
 // that must be implemented by any API-specific implementation of ANGLE.
 
-#include "geometry/backend.h"
+#include "libGLESv2/geometry/backend.h"
 
 #include "common/debug.h"
 

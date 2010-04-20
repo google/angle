@@ -8,10 +8,11 @@
 // such as the client area of a window, including any back buffers.
 // Implements EGLSurface and related functionality. [EGL 1.4] section 2.2 page 3.
 
-#include "Surface.h"
+#include "libEGL/Surface.h"
 
-#include "main.h"
 #include "common/debug.h"
+
+#include "libEGL/main.h"
 
 namespace egl
 {

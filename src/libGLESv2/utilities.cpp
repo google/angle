@@ -6,11 +6,12 @@
 
 // utilities.cpp: Conversion functions and other utility routines.
 
-#include "utilities.h"
+#include "libGLESv2/utilities.h"
 
 #include "common/debug.h"
-#include "mathutil.h"
-#include "Context.h"
+
+#include "libGLESv2/mathutil.h"
+#include "libGLESv2/Context.h"
 
 namespace es2dx
 {

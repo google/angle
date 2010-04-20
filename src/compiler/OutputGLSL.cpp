@@ -4,7 +4,8 @@
 // found in the LICENSE file.
 //
 
-#include "OutputGLSL.h"
+#include "compiler/OutputGLSL.h"
+
 #include "common/debug.h"
 
 namespace

@@ -8,8 +8,8 @@
 // The top level algorithms for linking multiple
 // shaders together.
 //
-#include "Common.h"
-#include "ShHandle.h"
+#include "compiler/Common.h"
+#include "compiler/ShHandle.h"
 
 //
 // Actual link object, derived from the shader handle base classes.

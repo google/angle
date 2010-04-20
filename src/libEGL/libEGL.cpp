@@ -6,12 +6,14 @@
 
 // libEGL.cpp: Implements the exported EGL functions.
 
-#include "main.h"
-#include "Display.h"
-#include "libGLESv2/Context.h"
-#include "common/debug.h"
-
 #include <exception>
+
+#include "common/debug.h"
+#include "libGLESv2/Context.h"
+
+#include "libEGL/main.h"
+#include "libEGL/Display.h"
+
 
 bool validate(egl::Display *display)
 {

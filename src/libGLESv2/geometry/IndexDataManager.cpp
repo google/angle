@@ -7,11 +7,12 @@
 // geometry/IndexDataManager.cpp: Defines the IndexDataManager, a class that
 // runs the Buffer translation process for index buffers.
 
-#include "geometry/IndexDataManager.h"
+#include "libGLESv2/geometry/IndexDataManager.h"
 
 #include "common/debug.h"
-#include "Buffer.h"
-#include "geometry/backend.h"
+
+#include "libGLESv2/Buffer.h"
+#include "libGLESv2/geometry/backend.h"
 
 namespace
 {

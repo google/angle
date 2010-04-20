@@ -7,8 +7,8 @@
 #ifndef CROSSCOMPILERGLSL_OUTPUTGLSL_H_
 #define CROSSCOMPILERGLSL_OUTPUTGLSL_H_
 
-#include "intermediate.h"
-#include "ParseHelper.h"
+#include "compiler/intermediate.h"
+#include "compiler/ParseHelper.h"
 
 class TOutputGLSL : public TIntermTraverser
 {

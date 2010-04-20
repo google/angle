@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-#include "intermediate.h"
+#include "compiler/intermediate.h"
 
 //
 // Traverse the intermediate representation tree, and

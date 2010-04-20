@@ -4,8 +4,9 @@
 // found in the LICENSE file.
 //
 
-#include "TranslatorGLSL.h"
-#include "OutputGLSL.h"
+#include "compiler/TranslatorGLSL.h"
+
+#include "compiler/OutputGLSL.h"
 
 TranslatorGLSL::TranslatorGLSL(EShLanguage l, int dOptions)
         : TCompiler(l),

@@ -4,11 +4,12 @@
 // found in the LICENSE file.
 //
 
-#include "UnfoldSelect.h"
+#include "compiler/UnfoldSelect.h"
 
-#include "OutputHLSL.h"
 #include "common/debug.h"
-#include "InfoSink.h"
+
+#include "compiler/InfoSink.h"
+#include "compiler/OutputHLSL.h"
 
 namespace sh
 {

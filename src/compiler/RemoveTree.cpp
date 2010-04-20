@@ -4,8 +4,9 @@
 // found in the LICENSE file.
 //
 
-#include "intermediate.h"
-#include "RemoveTree.h"
+#include "compiler/intermediate.h"
+#include "compiler/RemoveTree.h"
+
 //
 // Code to recursively delete the intermediate tree.
 //

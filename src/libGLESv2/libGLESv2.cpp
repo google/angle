@@ -13,17 +13,18 @@
 #include <exception>
 #include <limits>
 
-#include "Context.h"
-#include "main.h"
-#include "Program.h"
-#include "Shader.h"
-#include "Buffer.h"
-#include "Texture.h"
-#include "Renderbuffer.h"
-#include "Framebuffer.h"
-#include "mathutil.h"
 #include "common/debug.h"
-#include "utilities.h"
+
+#include "libGLESv2/main.h"
+#include "libGLESv2/mathutil.h"
+#include "libGLESv2/utilities.h"
+#include "libGLESv2/Buffer.h"
+#include "libGLESv2/Context.h"
+#include "libGLESv2/Framebuffer.h"
+#include "libGLESv2/Program.h"
+#include "libGLESv2/Renderbuffer.h"
+#include "libGLESv2/Shader.h"
+#include "libGLESv2/Texture.h"
 
 extern "C"
 {

@@ -4,11 +4,11 @@
 // found in the LICENSE file.
 //
 
-#include "PoolAlloc.h"
-#include "Common.h"
+#include "compiler/PoolAlloc.h"
 
-#include "InitializeGlobals.h"
-#include "osinclude.h"
+#include "compiler/osinclude.h"
+#include "compiler/Common.h"
+#include "compiler/InitializeGlobals.h"
 
 OS_TLSIndex PoolIndex = TLS_OUT_OF_INDEXES;
 

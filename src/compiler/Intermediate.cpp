@@ -8,10 +8,11 @@
 // Build the intermediate representation.
 //
 
-#include "localintermediate.h"
-#include "QualifierAlive.h"
-#include "RemoveTree.h"
 #include <float.h>
+
+#include "compiler/localintermediate.h"
+#include "compiler/QualifierAlive.h"
+#include "compiler/RemoveTree.h"
 
 bool CompareStructure(const TType& leftNodeType, constUnion* rightUnionArray, constUnion* leftUnionArray);
 

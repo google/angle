@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-#include "localintermediate.h"
+#include "compiler/localintermediate.h"
 
 //
 // Two purposes:

@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-#include "InfoSink.h"
+#include "compiler/InfoSink.h"
 
 #ifdef _WIN32
     #include <windows.h>

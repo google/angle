@@ -6,9 +6,9 @@
 #ifndef _PARSER_HELPER_INCLUDED_
 #define _PARSER_HELPER_INCLUDED_
 
-#include "ShHandle.h"
-#include "SymbolTable.h"
-#include "localintermediate.h"
+#include "compiler/ShHandle.h"
+#include "compiler/SymbolTable.h"
+#include "compiler/localintermediate.h"
 
 struct TMatrixFields {
 	bool wholeRow;

@@ -11,11 +11,11 @@
 
 #include "GLSLANG/ShaderLang.h"
 
-#include "Initialize.h"
-#include "InitializeDll.h"
-#include "ParseHelper.h"
-#include "ShHandle.h"
-#include "SymbolTable.h"
+#include "compiler/Initialize.h"
+#include "compiler/InitializeDll.h"
+#include "compiler/ParseHelper.h"
+#include "compiler/ShHandle.h"
+#include "compiler/SymbolTable.h"
 
 //
 // A symbol table for each language.  Each has a different

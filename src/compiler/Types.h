@@ -7,8 +7,8 @@
 #ifndef _TYPES_INCLUDED
 #define _TYPES_INCLUDED
 
-#include "Common.h"
-#include "BaseTypes.h"
+#include "compiler/Common.h"
+#include "compiler/BaseTypes.h"
 
 //
 // Need to have association of line numbers to types in a list for building structs.

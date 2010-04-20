@@ -7,8 +7,9 @@
 #ifndef _INFOSINK_INCLUDED_
 #define _INFOSINK_INCLUDED_
 
-#include "Common.h"
 #include <math.h>
+
+#include "compiler/Common.h"
 
 //
 // TPrefixType is used to centralize how info log messages start.

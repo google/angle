@@ -6,12 +6,13 @@
 
 // Blit.cpp: Surface copy utility class.
 
-#include "Blit.h"
+#include "libGLESv2/Blit.h"
 
 #include <d3dx9.h>
 
-#include "main.h"
 #include "common/debug.h"
+
+#include "libGLESv2/main.h"
 
 namespace
 {

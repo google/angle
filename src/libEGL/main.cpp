@@ -6,7 +6,7 @@
 
 // main.cpp: DLL entry point and management of thread-local data.
 
-#include "main.h"
+#include "libEGL/main.h"
 
 #include "common/debug.h"
 

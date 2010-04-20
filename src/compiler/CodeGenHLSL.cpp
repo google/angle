@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-#include "TranslatorHLSL.h"
+#include "compiler/TranslatorHLSL.h"
 
 //
 // This function must be provided to create the actual

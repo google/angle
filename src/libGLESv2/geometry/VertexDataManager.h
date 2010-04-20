@@ -16,7 +16,7 @@
 #define GL_APICALL
 #include <GLES2/gl2.h>
 
-#include "Context.h"
+#include "libGLESv2/Context.h"
 
 namespace gl
 {

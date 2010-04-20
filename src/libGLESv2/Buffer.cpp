@@ -8,14 +8,15 @@
 // index data. Implements GL buffer objects and related functionality.
 // [OpenGL ES 2.0.24] section 2.9 page 21.
 
-#include "Buffer.h"
+#include "libGLESv2/Buffer.h"
 
 #include <cstdlib>
 #include <limits>
 #include <utility>
 
 #include "common/debug.h"
-#include "geometry/backend.h"
+
+#include "libGLESv2/geometry/backend.h"
 
 namespace gl
 {

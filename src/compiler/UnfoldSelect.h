@@ -7,8 +7,8 @@
 #ifndef COMPILER_UNFOLDSELECT_H_
 #define COMPILER_UNFOLDSELECT_H_
 
-#include "intermediate.h"
-#include "ParseHelper.h"
+#include "compiler/intermediate.h"
+#include "compiler/ParseHelper.h"
 
 namespace sh
 {

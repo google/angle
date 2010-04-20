@@ -7,7 +7,7 @@
 #define __INITIALIZEDLL_H
 
 
-#include "osinclude.h"
+#include "compiler/osinclude.h"
 
 
 bool InitProcess();

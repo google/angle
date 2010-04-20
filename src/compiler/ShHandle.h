@@ -16,7 +16,7 @@
 
 #include "GLSLANG/ShaderLang.h"
 
-#include "InfoSink.h"
+#include "compiler/InfoSink.h"
 
 class TCompiler;
 class TLinker;

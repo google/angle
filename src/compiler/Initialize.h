@@ -8,9 +8,10 @@
 #define _INITIALIZE_INCLUDED_
 
 #include "GLSLANG/ResourceLimits.h"
-#include "Common.h"
-#include "ShHandle.h"
-#include "SymbolTable.h"
+
+#include "compiler/Common.h"
+#include "compiler/ShHandle.h"
+#include "compiler/SymbolTable.h"
 
 typedef TVector<TString> TBuiltInStrings;
 

@@ -4,11 +4,12 @@
 // found in the LICENSE file.
 //
 
-#include "InitializeDll.h"
-#include "InitializeGlobals.h"
-#include "InitializeParseContext.h"
+#include "compiler/InitializeDll.h"
 
 #include "GLSLANG/ShaderLang.h"
+
+#include "compiler/InitializeGlobals.h"
+#include "compiler/InitializeParseContext.h"
 
 OS_TLSIndex ThreadInitializeIndex = OS_INVALID_TLS_INDEX;
 

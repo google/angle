@@ -7,14 +7,15 @@
 // geometry/VertexDataManager.h: Defines the VertexDataManager, a class that
 // runs the Buffer translation process.
 
-#include "geometry/VertexDataManager.h"
+#include "libGLESv2/geometry/VertexDataManager.h"
 
 #include "common/debug.h"
-#include "Program.h"
 
-#include "Buffer.h"
-#include "geometry/backend.h"
-#include "geometry/IndexDataManager.h"
+#include "libGLESv2/Buffer.h"
+#include "libGLESv2/Program.h"
+
+#include "libGLESv2/geometry/backend.h"
+#include "libGLESv2/geometry/IndexDataManager.h"
 
 namespace
 {

@@ -9,7 +9,7 @@
 // are documented in the header file.
 //
 
-#include "SymbolTable.h"
+#include "compiler/SymbolTable.h"
 
 //
 // TType helper function needs a place to live.

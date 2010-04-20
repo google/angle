@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-#include "ParseHelper.h"
+#include "compiler/ParseHelper.h"
 
 //
 // Use this class to carry along data from node to node in 
