@@ -549,9 +549,9 @@ void Texture2D::copyImage(GLint level, GLenum internalFormat, GLint x, GLint y, 
     {
         RECT sourceRect;
         sourceRect.left = x;
-        sourceRect.top = y + height;
         sourceRect.right = x + width;
-        sourceRect.bottom = y;
+        sourceRect.top = source->getHeight() - (y + height);
+        sourceRect.bottom = source->getHeight() - y;
 
         IDirect3DSurface9 *dest;
         HRESULT hr = mTexture->GetSurfaceLevel(level, &dest);
@@ -584,9 +584,9 @@ void Texture2D::copySubImage(GLint level, GLint xoffset, GLint yoffset, GLint x,
 
     RECT sourceRect;
     sourceRect.left = x;
-    sourceRect.top = y + height;
     sourceRect.right = x + width;
-    sourceRect.bottom = y;
+    sourceRect.top = source->getHeight() - (y + height);
+    sourceRect.bottom = source->getHeight() - y;
 
     IDirect3DSurface9 *dest;
     HRESULT hr = mTexture->GetSurfaceLevel(level, &dest);
@@ -794,6 +794,50 @@ bool Texture2D::dirtyImageData() const
     }
 
     return false;
+}
+
+void Texture2D::generateMipmaps()
+{
+    if (!isPow2(mImageArray[0].width) || !isPow2(mImageArray[0].height))
+    {
+        return error(GL_INVALID_OPERATION);
+    }
+
+    // Purge array levels 1 through q and reset them to represent the generated mipmap levels.
+    unsigned int q = log2(std::max(mWidth, mHeight));
+    for (unsigned int i = 1; i <= q; i++)
+    {
+        if (mImageArray[i].surface != NULL)
+        {
+            mImageArray[i].surface->Release();
+            mImageArray[i].surface = NULL;
+        }
+
+        mImageArray[i].dirty = false;
+
+        mImageArray[i].format = mImageArray[0].format;
+        mImageArray[i].width = std::max(mImageArray[0].width >> i, 1);
+        mImageArray[i].height = std::max(mImageArray[0].height >> i, 1);
+    }
+
+    getRenderTarget();
+
+    for (unsigned int i = 1; i <= q; i++)
+    {
+        IDirect3DSurface9 *upper = NULL;
+        IDirect3DSurface9 *lower = NULL;
+
+        mTexture->GetSurfaceLevel(i-1, &upper);
+        mTexture->GetSurfaceLevel(i, &lower);
+
+        if (upper != NULL && lower != NULL)
+        {
+            getBlitter()->boxFilter(upper, lower);
+        }
+
+        if (upper != NULL) upper->Release();
+        if (lower != NULL) lower->Release();
+    }
 }
 
 TextureCubeMap::TextureCubeMap(Context *context) : Texture(context)
@@ -1184,9 +1228,9 @@ void TextureCubeMap::copyImage(GLenum face, GLint level, GLenum internalFormat, 
     {
         RECT sourceRect;
         sourceRect.left = x;
-        sourceRect.top = y + height;
         sourceRect.right = x + width;
-        sourceRect.bottom = y;
+        sourceRect.top = source->getHeight() - (y + height);
+        sourceRect.bottom = source->getHeight() - y;
 
         IDirect3DSurface9 *dest = getCubeMapSurface(face, level);
 
@@ -1251,14 +1295,80 @@ void TextureCubeMap::copySubImage(GLenum face, GLint level, GLint xoffset, GLint
 
     RECT sourceRect;
     sourceRect.left = x;
-    sourceRect.top = y + height;
     sourceRect.right = x + width;
-    sourceRect.bottom = y;
+    sourceRect.top = source->getHeight() - (y + height);
+    sourceRect.bottom = source->getHeight() - y;
 
     IDirect3DSurface9 *dest = getCubeMapSurface(face, level);
 
     getBlitter()->formatConvert(source->getRenderTarget(), sourceRect, mImageArray[0][0].format, xoffset, yoffset, dest);
     dest->Release();
+}
+
+bool TextureCubeMap::isCubeComplete() const
+{
+    if (mImageArray[0][0].width == 0)
+    {
+        return false;
+    }
+
+    for (unsigned int f = 1; f < 6; f++)
+    {
+        if (mImageArray[f][0].width != mImageArray[0][0].width
+            || mImageArray[f][0].format != mImageArray[0][0].format)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+void TextureCubeMap::generateMipmaps()
+{
+    if (!isPow2(mImageArray[0][0].width) || !isCubeComplete())
+    {
+        return error(GL_INVALID_OPERATION);
+    }
+
+    // Purge array levels 1 through q and reset them to represent the generated mipmap levels.
+    unsigned int q = log2(mImageArray[0][0].width);
+    for (unsigned int f = 0; f < 6; f++)
+    {
+        for (unsigned int i = 1; i <= q; i++)
+        {
+            if (mImageArray[f][i].surface != NULL)
+            {
+                mImageArray[f][i].surface->Release();
+                mImageArray[f][i].surface = NULL;
+            }
+
+            mImageArray[f][i].dirty = false;
+
+            mImageArray[f][i].format = mImageArray[f][0].format;
+            mImageArray[f][i].width = std::max(mImageArray[f][0].width >> i, 1);
+            mImageArray[f][i].height = mImageArray[f][i].width;
+        }
+    }
+
+    getRenderTarget();
+
+    for (unsigned int f = 0; f < 6; f++)
+    {
+        for (unsigned int i = 1; i <= q; i++)
+        {
+            IDirect3DSurface9 *upper = getCubeMapSurface(f, i-1);
+            IDirect3DSurface9 *lower = getCubeMapSurface(f, i);
+
+            if (upper != NULL && lower != NULL)
+            {
+                getBlitter()->boxFilter(upper, lower);
+            }
+
+            if (upper != NULL) upper->Release();
+            if (lower != NULL) lower->Release();
+        }
+    }
 }
 
 }

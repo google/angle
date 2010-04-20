@@ -1751,7 +1751,28 @@ void __stdcall glGenerateMipmap(GLenum target)
 
     try
     {
-        UNIMPLEMENTED();   // FIXME
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            gl::Texture *texture;
+
+            switch (target)
+            {
+              case GL_TEXTURE_2D:
+                texture = context->getTexture2D();
+                break;
+
+              case GL_TEXTURE_CUBE_MAP:
+                texture = context->getTextureCubeMap();
+                break;
+
+              default:
+                return error(GL_INVALID_ENUM);
+            }
+
+            texture->generateMipmaps();
+        }
     }
     catch(std::bad_alloc&)
     {

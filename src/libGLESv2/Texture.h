@@ -57,6 +57,8 @@ class Texture : public Colorbuffer
     IDirect3DSurface9 *getRenderTarget(GLenum target);
     IDirect3DSurface9 *getRenderTarget() { return getRenderTarget(GL_TEXTURE_2D); } // FIXME: to be removed once FBO rendering is completed.
 
+    virtual void generateMipmaps() = 0;
+
   protected:
     // Helper structure representing a single image layer
     struct Image
@@ -128,6 +130,8 @@ class Texture2D : public Texture
 
     bool isComplete() const;
 
+    virtual void generateMipmaps();
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture2D);
 
@@ -169,6 +173,8 @@ class TextureCubeMap : public Texture
 
     bool isComplete() const;
 
+    virtual void generateMipmaps();
+
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureCubeMap);
 
@@ -184,6 +190,8 @@ class TextureCubeMap : public Texture
     IDirect3DSurface9 *getCubeMapSurface(unsigned int faceIdentifier, unsigned int level);
 
     static unsigned int faceIndex(GLenum face);
+
+    bool isCubeComplete() const;
 
     void setImage(int face, GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void commitRect(GLenum faceTarget, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);

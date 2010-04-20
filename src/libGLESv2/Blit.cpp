@@ -238,6 +238,48 @@ bool Blit::setPixelShader(ShaderId shader)
     return setShader<IDirect3DPixelShader9>(shader, mContext->getPixelShaderProfile(), &IDirect3DDevice9::CreatePixelShader, &IDirect3DDevice9::SetPixelShader);
 }
 
+RECT Blit::getSurfaceRect(IDirect3DSurface9 *surface) const
+{
+    D3DSURFACE_DESC desc;
+    surface->GetDesc(&desc);
+
+    RECT rect;
+    rect.left = 0;
+    rect.top = 0;
+    rect.right = desc.Width;
+    rect.bottom = desc.Height;
+
+    return rect;
+}
+
+bool Blit::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
+{
+    IDirect3DTexture9 *texture = copySurfaceToTexture(source, getSurfaceRect(source));
+    if (!texture)
+    {
+        return false;
+    }
+
+    IDirect3DDevice9 *device = getDevice();
+    device->SetTexture(0, texture);
+    device->SetRenderTarget(0, dest);
+
+    setVertexShader(SHADER_VS_STANDARD);
+    setPixelShader(SHADER_PS_PASSTHROUGH);
+
+    setCommonBlitState();
+    device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
+    device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
+
+    setViewport(getSurfaceRect(dest), 0, 0);
+
+    render();
+
+    texture->Release();
+
+    return true;
+}
+
 bool Blit::formatConvert(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, IDirect3DSurface9 *dest)
 {
     IDirect3DTexture9 *texture = copySurfaceToTexture(source, sourceRect);
@@ -251,7 +293,7 @@ bool Blit::formatConvert(IDirect3DSurface9 *source, const RECT &sourceRect, GLen
     device->SetTexture(0, texture);
     device->SetRenderTarget(0, dest);
 
-    setViewport(sourceRect, xoffset, yoffset, dest);
+    setViewport(sourceRect, xoffset, yoffset);
 
     setCommonBlitState();
     if (setFormatConvertShaders(destFormat))
@@ -334,7 +376,7 @@ IDirect3DTexture9 *Blit::copySurfaceToTexture(IDirect3DSurface9 *surface, const 
 
     // Copy the render target into a texture
     IDirect3DTexture9 *texture;
-    HRESULT result = device->CreateTexture(sourceRect.right - sourceRect.left, sourceRect.top - sourceRect.bottom, 1, D3DUSAGE_RENDERTARGET, sourceDesc.Format, D3DPOOL_DEFAULT, &texture, NULL);
+    HRESULT result = device->CreateTexture(sourceRect.right - sourceRect.left, sourceRect.bottom - sourceRect.top, 1, D3DUSAGE_RENDERTARGET, sourceDesc.Format, D3DPOOL_DEFAULT, &texture, NULL);
 
     if (FAILED(result))
     {
@@ -355,8 +397,8 @@ IDirect3DTexture9 *Blit::copySurfaceToTexture(IDirect3DSurface9 *surface, const 
     RECT d3dSourceRect;
     d3dSourceRect.left = sourceRect.left;
     d3dSourceRect.right = sourceRect.right;
-    d3dSourceRect.top = sourceRect.bottom;
-    d3dSourceRect.bottom = sourceRect.top;
+    d3dSourceRect.top = sourceRect.top;
+    d3dSourceRect.bottom = sourceRect.bottom;
 
     result = device->StretchRect(surface, &d3dSourceRect, textureSurface, NULL, D3DTEXF_NONE);
 
@@ -372,18 +414,15 @@ IDirect3DTexture9 *Blit::copySurfaceToTexture(IDirect3DSurface9 *surface, const 
     return texture;
 }
 
-void Blit::setViewport(const RECT &sourceRect, GLint xoffset, GLint yoffset, IDirect3DSurface9 *dest)
+void Blit::setViewport(const RECT &sourceRect, GLint xoffset, GLint yoffset)
 {
-    D3DSURFACE_DESC desc;
-    dest->GetDesc(&desc);
-
     IDirect3DDevice9 *device = getDevice();
 
     D3DVIEWPORT9 vp;
     vp.X      = xoffset;
     vp.Y      = yoffset;
     vp.Width  = sourceRect.right - sourceRect.left;
-    vp.Height = sourceRect.top - sourceRect.bottom;
+    vp.Height = sourceRect.bottom - sourceRect.top;
     vp.MinZ   = 0.0f;
     vp.MaxZ   = 1.0f;
     device->SetViewport(&vp);
@@ -410,6 +449,8 @@ void Blit::setCommonBlitState()
     device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
     device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
     device->SetSamplerState(0, D3DSAMP_SRGBTEXTURE, FALSE);
+    device->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
+    device->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
 }
 
 void Blit::render()

@@ -29,9 +29,13 @@ class Blit
     ~Blit();
 
     // Copy from source surface to dest surface.
-    // sourceRect, xoffset, yoffset are in OpenGL coordinates. Assumes that source is internally flipped (for example as a render target would be).
+    // sourceRect, xoffset, yoffset are in D3D coordinates (0,0 in upper-left)
     // source is interpreted as RGBA and destFormat specifies the desired result format. For example, if destFormat = GL_RGB, the alpha channel will be forced to 0.
     bool formatConvert(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, IDirect3DSurface9 *dest);
+
+    // 2x2 box filter sample from source to dest.
+    // Requires that source is RGB(A) and dest has the same format as source.
+    bool boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest);
 
   private:
     Context *mContext;
@@ -44,8 +48,9 @@ class Blit
     bool setFormatConvertShaders(GLenum destFormat);
 
     IDirect3DTexture9 *copySurfaceToTexture(IDirect3DSurface9 *surface, const RECT &sourceRect);
-    void setViewport(const RECT &sourceRect, GLint xoffset, GLint yoffset, IDirect3DSurface9 *dest);
+    void setViewport(const RECT &sourceRect, GLint xoffset, GLint yoffset);
     void setCommonBlitState();
+    RECT getSurfaceRect(IDirect3DSurface9 *surface) const;
 
     // This enum is used to index mCompiledShaders and mShaderSource.
     enum ShaderId
