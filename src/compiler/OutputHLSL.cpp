@@ -94,15 +94,21 @@ void OutputHLSL::header()
 
                 if (qualifier == EvqUniform)
                 {
-                    uniforms += "uniform " + typeString(type) + " " + decorate(name) + arrayString(type) + ";\n";
+                    if (mReferencedUniforms.find(name.c_str()) != mReferencedUniforms.end())
+                    {
+                        uniforms += "uniform " + typeString(type) + " " + decorate(name) + arrayString(type) + ";\n";
+                    }
                 }
                 else if (qualifier == EvqVaryingIn || qualifier == EvqInvariantVaryingIn)
                 {
-                    // Program linking depends on this exact format
-                    varyingInput += "    " + typeString(type) + " " + decorate(name) + arrayString(type) + " : TEXCOORD" + str(semanticIndex) + ";\n";
-                    varyingGlobals += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
+                    if (mReferencedVaryings.find(name.c_str()) != mReferencedVaryings.end())
+                    {
+                        // Program linking depends on this exact format
+                        varyingInput += "    " + typeString(type) + " " + decorate(name) + arrayString(type) + " : TEXCOORD" + str(semanticIndex) + ";\n";
+                        varyingGlobals += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
 
-                    semanticIndex += type.isArray() ? type.getArraySize() : 1;
+                        semanticIndex += type.isArray() ? type.getArraySize() : 1;
+                    }
                 }
                 else if (qualifier == EvqGlobal || qualifier == EvqTemporary)
                 {
@@ -231,20 +237,29 @@ void OutputHLSL::header()
 
                 if (qualifier == EvqUniform)
                 {
-                    uniforms += "uniform " + typeString(type) + " " + decorate(name) + arrayString(type) + ";\n";
+                    if (mReferencedUniforms.find(name.c_str()) != mReferencedUniforms.end())
+                    {
+                        uniforms += "uniform " + typeString(type) + " " + decorate(name) + arrayString(type) + ";\n";
+                    }
                 }
                 else if (qualifier == EvqAttribute)
                 {
-                    attributeInput += "    " + typeString(type) + " " + decorate(name) + arrayString(type) + " : TEXCOORD" + str(semanticIndex) + ";\n";
-                    attributeGlobals += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
+                    if (mReferencedAttributes.find(name.c_str()) != mReferencedAttributes.end())
+                    {
+                        attributeInput += "    " + typeString(type) + " " + decorate(name) + arrayString(type) + " : TEXCOORD" + str(semanticIndex) + ";\n";
+                        attributeGlobals += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
 
-                    semanticIndex += type.isArray() ? type.getArraySize() : 1;
+                        semanticIndex += type.isArray() ? type.getArraySize() : 1;
+                    }
                 }
                 else if (qualifier == EvqVaryingOut || qualifier == EvqInvariantVaryingOut)
                 {
-                    // Program linking depends on this exact format
-                    varyingOutput += "    " + typeString(type) + " " + decorate(name) + arrayString(type) + " : TEXCOORD0;\n";   // Actual semantic index assigned during link
-                    varyingGlobals += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
+                    if (mReferencedVaryings.find(name.c_str()) != mReferencedVaryings.end())
+                    {
+                        // Program linking depends on this exact format
+                        varyingOutput += "    " + typeString(type) + " " + decorate(name) + arrayString(type) + " : TEXCOORD0;\n";   // Actual semantic index assigned during link
+                        varyingGlobals += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
+                    }
                 }
                 else if (qualifier == EvqGlobal || qualifier == EvqTemporary)
                 {
@@ -617,9 +632,12 @@ void OutputHLSL::footer()
                 const TType &type = variable->getType();
                 TQualifier qualifier = type.getQualifier();
 
-                if (qualifier == EvqVaryingIn)
+                if (qualifier == EvqVaryingIn || qualifier == EvqInvariantVaryingIn)
                 {
-                    out << "    " + decorate(name) + " = input." + decorate(name) + ";\n";
+                    if (mReferencedVaryings.find(name.c_str()) != mReferencedVaryings.end())
+                    {
+                        out << "    " + decorate(name) + " = input." + decorate(name) + ";\n";
+                    }
                 }
             }
         }
@@ -648,7 +666,10 @@ void OutputHLSL::footer()
 
                 if (qualifier == EvqAttribute)
                 {
-                    out << "    " + decorate(name) + " = input." + decorate(name) + ";\n";
+                    if (mReferencedAttributes.find(name.c_str()) != mReferencedAttributes.end())
+                    {
+                        out << "    " + decorate(name) + " = input." + decorate(name) + ";\n";
+                    }
                 }
             }
         }
@@ -678,8 +699,11 @@ void OutputHLSL::footer()
 
                 if (qualifier == EvqVaryingOut || qualifier == EvqInvariantVaryingOut)
                 {
-                    // Program linking depends on this exact format
-                    out << "    output." + decorate(name) + " = " + decorate(name) + ";\n";
+                    if (mReferencedVaryings.find(name.c_str()) != mReferencedVaryings.end())
+                    {
+                        // Program linking depends on this exact format
+                        out << "    output." + decorate(name) + " = " + decorate(name) + ";\n";
+                    }
                 }
             }
         }
@@ -705,6 +729,21 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
     }
     else
     {
+        TQualifier qualifier = node->getQualifier();
+
+        if (qualifier == EvqUniform)
+        {
+            mReferencedUniforms.insert(name.c_str());
+        }
+        else if (qualifier == EvqAttribute)
+        {
+            mReferencedAttributes.insert(name.c_str());
+        }
+        else if (qualifier == EvqVaryingOut || qualifier == EvqInvariantVaryingOut || qualifier == EvqVaryingIn || qualifier == EvqInvariantVaryingIn)
+        {
+            mReferencedVaryings.insert(name.c_str());
+        }
+
         out << decorate(name);
     }
 }

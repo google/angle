@@ -57,6 +57,10 @@ class OutputHLSL : public TIntermTraverser
     TInfoSinkBase mBody;
     TInfoSinkBase mFooter;
 
+    std::set<std::string> mReferencedUniforms;
+    std::set<std::string> mReferencedAttributes;
+    std::set<std::string> mReferencedVaryings;
+
     // Parameters determining what goes in the header output
     bool mUsesTexture2D;
     bool mUsesTexture2D_bias;
