@@ -2536,7 +2536,42 @@ void __stdcall glGetTexParameterfv(GLenum target, GLenum pname, GLfloat* params)
 
     try
     {
-        UNIMPLEMENTED();   // FIXME
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            gl::Texture *texture;
+
+            switch (target)
+            {
+              case GL_TEXTURE_2D:
+                texture = context->getTexture2D();
+                break;
+              case GL_TEXTURE_CUBE_MAP:
+                texture = context->getTextureCubeMap();
+                break;
+              default:
+                return error(GL_INVALID_ENUM);
+            }
+
+            switch (pname)
+            {
+              case GL_TEXTURE_MAG_FILTER:
+                *params = (GLfloat)texture->getMagFilter();
+                break;
+              case GL_TEXTURE_MIN_FILTER:
+                *params = (GLfloat)texture->getMinFilter();
+                break;
+              case GL_TEXTURE_WRAP_S:
+                *params = (GLfloat)texture->getWrapS();
+                break;
+              case GL_TEXTURE_WRAP_T:
+                *params = (GLfloat)texture->getWrapT();
+                break;
+              default:
+                return error(GL_INVALID_ENUM);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -2550,7 +2585,42 @@ void __stdcall glGetTexParameteriv(GLenum target, GLenum pname, GLint* params)
 
     try
     {
-        UNIMPLEMENTED();   // FIXME
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            gl::Texture *texture;
+
+            switch (target)
+            {
+              case GL_TEXTURE_2D:
+                texture = context->getTexture2D();
+                break;
+              case GL_TEXTURE_CUBE_MAP:
+                texture = context->getTextureCubeMap();
+                break;
+              default:
+                return error(GL_INVALID_ENUM);
+            }
+
+            switch (pname)
+            {
+              case GL_TEXTURE_MAG_FILTER:
+                *params = texture->getMagFilter();
+                break;
+              case GL_TEXTURE_MIN_FILTER:
+                *params = texture->getMinFilter();
+                break;
+              case GL_TEXTURE_WRAP_S:
+                *params = texture->getWrapS();
+                break;
+              case GL_TEXTURE_WRAP_T:
+                *params = texture->getWrapT();
+                break;
+              default:
+                return error(GL_INVALID_ENUM);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
