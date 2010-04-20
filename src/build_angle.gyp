@@ -146,6 +146,7 @@
         'libGLESv2',
         '.',
         '../include',
+        '$(DXSDK_DIR)/include',
       ],
       'sources': [
         'common/angleutils.h',
@@ -186,6 +187,7 @@
       ],
       'msvs_settings': {
         'VCLinkerTool': {
+          'AdditionalLibraryDirectories': ['$(DXSDK_DIR)/lib/x86'],
           'AdditionalDependencies': ['d3dx9.lib'],
         }
       },
