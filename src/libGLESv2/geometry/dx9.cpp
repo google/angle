@@ -55,7 +55,6 @@ class FormatConverterFactory
 
 namespace gl
 {
-
 Dx9BackEnd::Dx9BackEnd(IDirect3DDevice9 *d3ddevice)
     : mDevice(d3ddevice)
 {
@@ -70,6 +69,11 @@ Dx9BackEnd::~Dx9BackEnd()
 TranslatedVertexBuffer *Dx9BackEnd::createVertexBuffer(std::size_t size)
 {
     return new Dx9VertexBuffer(mDevice, size);
+}
+
+TranslatedVertexBuffer *Dx9BackEnd::createVertexBufferForStrideZero(std::size_t size)
+{
+    return new Dx9VertexBufferZeroStrideWorkaround(mDevice, size);
 }
 
 TranslatedIndexBuffer *Dx9BackEnd::createIndexBuffer(std::size_t size)
@@ -248,6 +252,18 @@ Dx9BackEnd::Dx9VertexBuffer::Dx9VertexBuffer(IDirect3DDevice9 *device, std::size
     }
 }
 
+Dx9BackEnd::Dx9VertexBuffer::Dx9VertexBuffer(IDirect3DDevice9 *device, std::size_t size, DWORD usageFlags)
+    : TranslatedVertexBuffer(size)
+{
+    HRESULT hr = device->CreateVertexBuffer(size, usageFlags, 0, D3DPOOL_DEFAULT, &mVertexBuffer, NULL);
+    if (hr != S_OK)
+    {
+        ERR("Out of memory allocating a vertex buffer of size %lu.", size);
+        throw std::bad_alloc();
+    }
+}
+
+
 Dx9BackEnd::Dx9VertexBuffer::~Dx9VertexBuffer()
 {
     mVertexBuffer->Release();
@@ -284,6 +300,27 @@ void *Dx9BackEnd::Dx9VertexBuffer::streamingMap(std::size_t offset, std::size_t 
     void *mapPtr;
 
     mVertexBuffer->Lock(offset, size, &mapPtr, D3DLOCK_NOOVERWRITE);
+
+    return mapPtr;
+}
+
+// Normally VBs are created with D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, but some hardware & drivers won't render
+// if any stride-zero streams are in D3DUSAGE_DYNAMIC VBs, so this provides a way to create such VBs with only D3DUSAGE_WRITEONLY set.
+// D3DLOCK_DISCARD and D3DLOCK_NOOVERWRITE are only available on D3DUSAGE_DYNAMIC VBs, so we override methods to avoid using these flags.
+Dx9BackEnd::Dx9VertexBufferZeroStrideWorkaround::Dx9VertexBufferZeroStrideWorkaround(IDirect3DDevice9 *device, std::size_t size)
+    : Dx9VertexBuffer(device, size, D3DUSAGE_WRITEONLY)
+{
+}
+
+void Dx9BackEnd::Dx9VertexBufferZeroStrideWorkaround::recycle()
+{
+}
+
+void *Dx9BackEnd::Dx9VertexBufferZeroStrideWorkaround::streamingMap(std::size_t offset, std::size_t size)
+{
+    void *mapPtr;
+
+    getBuffer()->Lock(offset, size, &mapPtr, 0);
 
     return mapPtr;
 }

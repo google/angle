@@ -54,6 +54,7 @@ class BufferBackEnd
     virtual ~BufferBackEnd() { }
 
     virtual TranslatedVertexBuffer *createVertexBuffer(std::size_t size) = 0;
+    virtual TranslatedVertexBuffer *createVertexBufferForStrideZero(std::size_t size) = 0;
     virtual TranslatedIndexBuffer *createIndexBuffer(std::size_t size) = 0;
     virtual FormatConverter getFormatConverter(GLenum type, std::size_t size, bool normalize) = 0;
 

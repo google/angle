@@ -24,6 +24,7 @@ class Dx9BackEnd : public BufferBackEnd
     ~Dx9BackEnd();
 
     virtual TranslatedVertexBuffer *createVertexBuffer(std::size_t size);
+    virtual TranslatedVertexBuffer *createVertexBufferForStrideZero(std::size_t size);
     virtual TranslatedIndexBuffer *createIndexBuffer(std::size_t size);
     virtual FormatConverter getFormatConverter(GLenum type, std::size_t size, bool normalize);
 
@@ -44,6 +45,8 @@ class Dx9BackEnd : public BufferBackEnd
         IDirect3DVertexBuffer9 *getBuffer() const;
 
       protected:
+        Dx9VertexBuffer(IDirect3DDevice9 *device, std::size_t size, DWORD usageFlags);
+
         virtual void *map();
         virtual void unmap();
 
@@ -52,6 +55,16 @@ class Dx9BackEnd : public BufferBackEnd
 
       private:
         IDirect3DVertexBuffer9 *mVertexBuffer;
+    };
+
+    class Dx9VertexBufferZeroStrideWorkaround : public Dx9VertexBuffer
+    {
+      public:
+        Dx9VertexBufferZeroStrideWorkaround(IDirect3DDevice9 *device, std::size_t size);
+
+      protected:
+        virtual void recycle();
+        virtual void *streamingMap(std::size_t offset, std::size_t size);
     };
 
     class Dx9IndexBuffer : public TranslatedIndexBuffer

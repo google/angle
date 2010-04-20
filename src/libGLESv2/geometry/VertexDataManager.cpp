@@ -31,7 +31,7 @@ VertexDataManager::VertexDataManager(Context *context, BufferBackEnd *backend)
     mStreamBuffer = mBackend->createVertexBuffer(INITIAL_STREAM_BUFFER_SIZE);
     try
     {
-        mCurrentValueBuffer = mBackend->createVertexBuffer(4*sizeof(float)*MAX_VERTEX_ATTRIBS);
+        mCurrentValueBuffer = mBackend->createVertexBufferForStrideZero(4*sizeof(float)*MAX_VERTEX_ATTRIBS);
     }
     catch (...)
     {

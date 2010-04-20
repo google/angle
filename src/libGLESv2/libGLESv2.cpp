@@ -4614,7 +4614,13 @@ void __stdcall glVertexAttrib1f(GLuint index, GLfloat x)
             return error(GL_INVALID_VALUE);
         }
 
-        UNIMPLEMENTED();   // FIXME
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            GLfloat vals[4] = { x, 0, 0, 1 };
+            context->setVertexAttrib(index, vals);
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -4633,7 +4639,13 @@ void __stdcall glVertexAttrib1fv(GLuint index, const GLfloat* values)
             return error(GL_INVALID_VALUE);
         }
 
-        UNIMPLEMENTED();   // FIXME
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            GLfloat vals[4] = { values[0], 0, 0, 1 };
+            context->setVertexAttrib(index, vals);
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -4652,7 +4664,13 @@ void __stdcall glVertexAttrib2f(GLuint index, GLfloat x, GLfloat y)
             return error(GL_INVALID_VALUE);
         }
 
-        UNIMPLEMENTED();   // FIXME
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            GLfloat vals[4] = { x, y, 0, 1 };
+            context->setVertexAttrib(index, vals);
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -4671,7 +4689,13 @@ void __stdcall glVertexAttrib2fv(GLuint index, const GLfloat* values)
             return error(GL_INVALID_VALUE);
         }
 
-        UNIMPLEMENTED();   // FIXME
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            GLfloat vals[4] = { values[0], values[1], 0, 1 };
+            context->setVertexAttrib(index, vals);
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -4690,7 +4714,13 @@ void __stdcall glVertexAttrib3f(GLuint index, GLfloat x, GLfloat y, GLfloat z)
             return error(GL_INVALID_VALUE);
         }
 
-        UNIMPLEMENTED();   // FIXME
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            GLfloat vals[4] = { x, y, z, 1 };
+            context->setVertexAttrib(index, vals);
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -4709,7 +4739,13 @@ void __stdcall glVertexAttrib3fv(GLuint index, const GLfloat* values)
             return error(GL_INVALID_VALUE);
         }
 
-        UNIMPLEMENTED();   // FIXME
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            GLfloat vals[4] = { values[0], values[1], values[2], 1 };
+            context->setVertexAttrib(index, vals);
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -4728,7 +4764,13 @@ void __stdcall glVertexAttrib4f(GLuint index, GLfloat x, GLfloat y, GLfloat z, G
             return error(GL_INVALID_VALUE);
         }
 
-        UNIMPLEMENTED();   // FIXME
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            GLfloat vals[4] = { x, y, z, w };
+            context->setVertexAttrib(index, vals);
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -4747,7 +4789,12 @@ void __stdcall glVertexAttrib4fv(GLuint index, const GLfloat* values)
             return error(GL_INVALID_VALUE);
         }
 
-        UNIMPLEMENTED();   // FIXME
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            context->setVertexAttrib(index, values);
+        }
     }
     catch(std::bad_alloc&)
     {

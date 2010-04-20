@@ -239,6 +239,8 @@ class Context : public State
     void setStencilbufferZero(Stencilbuffer *stencilBuffer);
     void setRenderbuffer(Renderbuffer *renderbuffer);
 
+    void setVertexAttrib(GLuint index, const GLfloat *values);
+
     Buffer *getBuffer(GLuint handle);
     Shader *getShader(GLuint handle);
     Program *getProgram(GLuint handle);

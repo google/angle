@@ -2217,6 +2217,19 @@ bool Context::isTriangleMode(GLenum drawMode)
 
     return false;
 }
+
+void Context::setVertexAttrib(GLuint index, const GLfloat *values)
+{
+    ASSERT(index < gl::MAX_VERTEX_ATTRIBS);
+
+    vertexAttribute[index].mCurrentValue[0] = values[0];
+    vertexAttribute[index].mCurrentValue[1] = values[1];
+    vertexAttribute[index].mCurrentValue[2] = values[2];
+    vertexAttribute[index].mCurrentValue[3] = values[3];
+
+    mVertexDataManager->dirtyCurrentValues();
+}
+
 }
 
 extern "C"
