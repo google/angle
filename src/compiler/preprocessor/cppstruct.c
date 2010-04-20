@@ -53,7 +53,7 @@ NVIDIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "slglobals.h"
+#include "compiler/preprocessor/slglobals.h"
 
 CPPStruct  *cpp      = NULL;
 static int  refCount = 0;

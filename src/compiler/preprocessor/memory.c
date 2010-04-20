@@ -59,7 +59,7 @@ typedef unsigned __int64 uintptr_t;
 typedef unsigned int uintptr_t;
 #endif
 
-#include "memory.h"
+#include "compiler/preprocessor/memory.h"
 
 // default alignment and chunksize, if called with 0 arguments
 #define CHUNKSIZE       (64*1024)

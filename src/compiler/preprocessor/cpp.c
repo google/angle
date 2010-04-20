@@ -56,7 +56,7 @@ NVIDIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <string.h>
 #include <ctype.h>
 
-#include "slglobals.h"
+#include "compiler/preprocessor/slglobals.h"
 
 static int CPPif(yystypepp * yylvalpp);
 

@@ -53,8 +53,8 @@ NVIDIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #if !defined(__CPP_H)
 #define __CPP_H 1
 
-#include "parser.h"
-#include "tokens.h"
+#include "compiler/preprocessor/parser.h"
+#include "compiler/preprocessor/tokens.h"
 
 int InitCPP(void);
 int FinalCPP(void);

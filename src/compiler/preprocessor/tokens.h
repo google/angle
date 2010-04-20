@@ -53,7 +53,7 @@ NVIDIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #if !defined(__TOKENS_H)
 #define __TOKENS_H 1
 
-#include "parser.h"
+#include "compiler/preprocessor/parser.h"
 
 #define EOF_SY (-1)
 

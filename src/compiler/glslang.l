@@ -30,8 +30,8 @@ O           [0-7]
 %{
 #include <stdio.h>
 #include <stdlib.h>
-#include "ParseHelper.h"
-#include "glslang_tab.h"
+#include "compiler/ParseHelper.h"
+#include "compiler/glslang_tab.h"
 
 /* windows only pragma */
 #ifdef _MSC_VER
@@ -245,7 +245,7 @@ BEGIN(INITIAL);
 
 //Including Pre-processor.
 extern "C" {
-  #include "./preprocessor/preprocess.h"
+  #include "compiler/preprocessor/preprocess.h"
 } 
 
 //

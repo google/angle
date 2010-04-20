@@ -56,7 +56,7 @@ NVIDIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define MAX_SYMBOL_NAME_LEN 128
 #define MAX_STRING_LEN 512
 
-#include "parser.h"
+#include "compiler/preprocessor/parser.h"
 
 // Not really atom table stuff but needed first...
 

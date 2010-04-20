@@ -65,15 +65,15 @@ extern CPPStruct *cpp;
 #undef  CPPC_ENABLE_TOOLS
 #define CPPC_ENABLE_TOOLS 1
 
-#include "memory.h"
-#include "atom.h"
-#include "scanner.h"
-#include "cpp.h"
-#include "tokens.h"
-#include "symbols.h"
-#include "compile.h"
+#include "compiler/preprocessor/memory.h"
+#include "compiler/preprocessor/atom.h"
+#include "compiler/preprocessor/scanner.h"
+#include "compiler/preprocessor/cpp.h"
+#include "compiler/preprocessor/tokens.h"
+#include "compiler/preprocessor/symbols.h"
+#include "compiler/preprocessor/compile.h"
 #if !defined(NO_PARSER)
-#include "parser.h"
+#include "compiler/preprocessor/parser.h"
 #endif
 
 #if !defined(NULL)

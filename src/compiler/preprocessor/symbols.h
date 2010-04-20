@@ -53,7 +53,7 @@ NVIDIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #if !defined(__SYMBOLS_H)
 #define __SYMBOLS_H 1
 
-#include "memory.h"
+#include "compiler/preprocessor/memory.h"
 
 typedef enum symbolkind {
    MACRO_S
@@ -85,7 +85,7 @@ struct Scope_Rec {
 
 // Symbol table is a simple binary tree.
 
-#include "cpp.h"        // to get MacroSymbol def
+#include "compiler/preprocessor/cpp.h"        // to get MacroSymbol def
 
 struct Symbol_Rec {
     Symbol *left, *right;

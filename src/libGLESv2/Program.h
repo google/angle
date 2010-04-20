@@ -10,11 +10,11 @@
 #ifndef LIBGLESV2_PROGRAM_H_
 #define LIBGLESV2_PROGRAM_H_
 
-#include "Context.h"
-
 #include <d3dx9.h>
 #include <string>
 #include <vector>
+
+#include "libGLESv2/Context.h"
 
 namespace gl
 {

@@ -12,11 +12,11 @@
 #ifndef LIBGLESV2_SHADER_H_
 #define LIBGLESV2_SHADER_H_
 
-#include "Context.h"
-
 #define GL_APICALL
 #include <GLES2/gl2.h>
 #include <d3dx9.h>
+
+#include "libGLESv2/Context.h"
 
 namespace gl
 {

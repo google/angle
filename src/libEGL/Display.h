@@ -17,11 +17,12 @@
 #include <windows.h>
 #include <d3d9.h>
 
-#include "Config.h"
-#include "Surface.h"
+#include <set>
+
 #include "libGLESv2/Context.h"
 
-#include <set>
+#include "libEGL/Config.h"
+#include "libEGL/Surface.h"
 
 namespace egl
 {

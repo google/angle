@@ -62,7 +62,7 @@ NVIDIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                        ((*(int *)&(x) & 0x007fffffL)==0000000000L))
 #endif
 
-#include "slglobals.h"
+#include "compiler/preprocessor/slglobals.h"
 
 
 typedef struct StringInputSrc {

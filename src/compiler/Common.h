@@ -45,7 +45,7 @@ typedef int TSourceLoc;
 
 	#include <assert.h>
 
-#include "PoolAlloc.h"
+#include "compiler/PoolAlloc.h"
 
 //
 // Put POOL_ALLOCATOR_NEW_DELETE in base classes to make them use this scheme.

@@ -25,8 +25,8 @@ possible; please let me know if you discover discrepancies.
 Jutta Degener, 1995
 */
 
-#include "SymbolTable.h"
-#include "ParseHelper.h"
+#include "compiler/SymbolTable.h"
+#include "compiler/ParseHelper.h"
 #include "GLSLANG/ShaderLang.h"
 
 #define YYPARSE_PARAM parseContextLocal

@@ -11,13 +11,13 @@
 #ifndef LIBGLESV2_TEXTURE_H_
 #define LIBGLESV2_TEXTURE_H_
 
-#include "Renderbuffer.h"
-
 #define GL_APICALL
 #include <GLES2/gl2.h>
 #include <d3d9.h>
 
 #include <vector>
+
+#include "libGLESv2/Renderbuffer.h"
 
 namespace gl
 {
