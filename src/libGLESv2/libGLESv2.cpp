@@ -3354,8 +3354,7 @@ void __stdcall glRenderbufferStorage(GLenum target, GLenum internalformat, GLsiz
               case GL_RGBA4:
               case GL_RGB5_A1:
               case GL_RGB565:
-                UNIMPLEMENTED();   // FIXME
-            //  context->setRenderbuffer(new Colorbuffer(renderTarget));
+                context->setRenderbuffer(new gl::Colorbuffer(width, height, internalformat));
                 break;
               case GL_STENCIL_INDEX8:
                 context->setRenderbuffer(new gl::Stencilbuffer(width, height));

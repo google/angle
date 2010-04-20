@@ -392,4 +392,17 @@ bool CheckTextureFormatType(GLenum format, GLenum type)
     }
 }
 
+D3DFORMAT ConvertRenderbufferFormat(GLenum format)
+{
+    switch (format)
+    {
+      case GL_RGBA4:
+      case GL_RGB5_A1:              return D3DFMT_A8R8G8B8;
+      case GL_RGB565:               return D3DFMT_R5G6B5;
+      case GL_DEPTH_COMPONENT16:
+      case GL_STENCIL_INDEX8:       return D3DFMT_D24S8;
+      default: UNREACHABLE();       return D3DFMT_A8R8G8B8;
+    }
+}
+
 }

@@ -74,6 +74,35 @@ Colorbuffer::Colorbuffer(IDirect3DSurface9 *renderTarget) : mRenderTarget(render
     }
 }
 
+Colorbuffer::Colorbuffer(int width, int height, GLenum format)
+{
+    IDirect3DDevice9 *device = getDevice();
+
+    mRenderTarget = NULL;
+    HRESULT result = device->CreateRenderTarget(width, height, es2dx::ConvertRenderbufferFormat(format), 
+                                                D3DMULTISAMPLE_NONE, 0, FALSE, &mRenderTarget, NULL);
+
+    if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+    {
+        error(GL_OUT_OF_MEMORY);
+
+        return;
+    }
+
+    ASSERT(SUCCEEDED(result));
+
+    if (mRenderTarget)
+    {
+        mWidth = width;
+        mHeight = height;
+    }
+    else
+    {
+        mWidth = 0;
+        mHeight = 0;
+    }
+}
+
 Colorbuffer::~Colorbuffer()
 {
     if (mRenderTarget)

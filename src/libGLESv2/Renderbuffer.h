@@ -47,7 +47,8 @@ class Renderbuffer
 class Colorbuffer : public Renderbuffer
 {
   public:
-    Colorbuffer(IDirect3DSurface9 *renderTarget);
+    explicit Colorbuffer(IDirect3DSurface9 *renderTarget);
+    Colorbuffer(int width, int height, GLenum format);
 
     ~Colorbuffer();
 
@@ -70,7 +71,7 @@ class Colorbuffer : public Renderbuffer
 class Depthbuffer : public Renderbuffer
 {
   public:
-    Depthbuffer(IDirect3DSurface9 *depthStencil);
+    explicit Depthbuffer(IDirect3DSurface9 *depthStencil);
     Depthbuffer(int width, int height);
 
     ~Depthbuffer();
@@ -89,7 +90,7 @@ class Depthbuffer : public Renderbuffer
 class Stencilbuffer : public Renderbuffer
 {
   public:
-    Stencilbuffer(IDirect3DSurface9 *depthStencil);
+    explicit Stencilbuffer(IDirect3DSurface9 *depthStencil);
     Stencilbuffer(int width, int height);
 
     ~Stencilbuffer();
