@@ -58,6 +58,12 @@ class OutputHLSL : public TIntermTraverser
     TInfoSinkBase mFooter;
 
     // Parameters determining what goes in the header output
+    bool mUsesTexture2D;
+    bool mUsesTexture2D_bias;
+    bool mUsesTexture2DProj;
+    bool mUsesTexture2DProj_bias;
+    bool mUsesTextureCube;
+    bool mUsesTextureCube_bias;
     bool mUsesEqualMat2;
     bool mUsesEqualMat3;
     bool mUsesEqualMat4;

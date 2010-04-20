@@ -24,6 +24,12 @@ OutputHLSL::OutputHLSL(TParseContext &context) : TIntermTraverser(true, true, tr
 {
     mUnfoldSelect = new UnfoldSelect(context, this);
 
+    mUsesTexture2D = false;
+    mUsesTexture2D_bias = false;
+    mUsesTexture2DProj = false;
+    mUsesTexture2DProj_bias = false;
+    mUsesTextureCube = false;
+    mUsesTextureCube_bias = false;
     mUsesEqualMat2 = false;
     mUsesEqualMat3 = false;
     mUsesEqualMat4 = false;
@@ -135,26 +141,71 @@ void OutputHLSL::header()
                "static float4 gl_FragCoord = float4(0, 0, 0, 0);\n"
                "static float2 gl_PointCoord = float2(0.5, 0.5);\n"
                "static bool gl_FrontFacing = false;\n"
-               "\n"
-               "float4 gl_texture2D(sampler2D s, float2 t)\n"
-               "{\n"
-               "    return tex2D(s, t);\n"
-               "}\n"
-               "\n"
-               "float4 gl_texture2DProj(sampler2D s, float3 t)\n"
-               "{\n"
-               "    return tex2Dproj(s, float4(t.x, t.y, 0, t.z));\n"
-               "}\n"
-               "float4 gl_texture2DBias(sampler2D s, float2 t, float bias)\n"
-               "{\n"
-               "    return tex2Dbias(s, float4(t.x, t.y, 0, bias));\n"
-               "}\n"
-               "\n"
-               "float4 gl_textureCube(samplerCUBE s, float3 t)\n"
-               "{\n"
-               "    return texCUBE(s, t);\n"
-               "}\n"
                "\n";
+
+        if (mUsesTexture2D)
+        {
+            out << "float4 gl_texture2D(sampler2D s, float2 t)\n"
+                   "{\n"
+                   "    return tex2D(s, t);\n"
+                   "}\n"
+                   "\n";
+        }
+
+        if (mUsesTexture2D_bias)
+        {
+            out << "float4 gl_texture2D(sampler2D s, float2 t, float bias)\n"
+                   "{\n"
+                   "    return tex2Dbias(s, float4(t.x, t.y, 0, bias));\n"
+                   "}\n"
+                   "\n";
+        }
+
+        if (mUsesTexture2DProj)
+        {
+            out << "float4 gl_texture2DProj(sampler2D s, float3 t)\n"
+                   "{\n"
+                   "    return tex2Dproj(s, float4(t.x, t.y, 0, t.z));\n"
+                   "}\n"
+                   "\n"
+                   "float4 gl_texture2DProj(sampler2D s, float4 t)\n"
+                   "{\n"
+                   "    return tex2Dproj(s, t);\n"
+                   "}\n"
+                   "\n";
+        }
+
+        if (mUsesTexture2DProj_bias)
+        {
+            out << "float4 gl_texture2DProj(sampler2D s, float3 t, float bias)\n"
+                   "{\n"
+                   "    return tex2Dbias(s, float4(t.x / t.z, t.y / t.z, 0, bias));\n"
+                   "}\n"
+                   "\n"
+                   "float4 gl_texture2DProj(sampler2D s, float4 t, float bias)\n"
+                   "{\n"
+                   "    return tex2Dbias(s, float4(t.x / t.w, t.y / t.w, 0, bias));\n"
+                   "}\n"
+                   "\n";
+        }
+
+        if (mUsesTextureCube)
+        {
+            out << "float4 gl_textureCube(samplerCUBE s, float3 t)\n"
+                   "{\n"
+                   "    return texCUBE(s, t);\n"
+                   "}\n"
+                   "\n";
+        }
+
+        if (mUsesTextureCube_bias)
+        {
+            out << "float4 gl_textureCube(samplerCUBE s, float3 t, float bias)\n"
+                   "{\n"
+                   "    return texCUBEbias(s, float4(t.x, t.y, t.z, bias));\n"
+                   "}\n"
+                   "\n";
+        }
     }
     else   // Vertex shader
     {
@@ -1135,31 +1186,55 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                     {
                         if (node->getSequence().size() == 2)
                         {
-                            out << "gl_texture2D(";
+                            mUsesTexture2D = true;
                         }
                         else if (node->getSequence().size() == 3)
                         {
-                            out << "gl_texture2DBias(";
+                            mUsesTexture2D_bias = true;
                         }
                         else UNREACHABLE();
+
+                        out << "gl_texture2D(";
                     }
                     else if (name == "texture2DProj")
                     {
+                        if (node->getSequence().size() == 2)
+                        {
+                            mUsesTexture2DProj = true;
+                        }
+                        else if (node->getSequence().size() == 3)
+                        {
+                            mUsesTexture2DProj_bias = true;
+                        }
+                        else UNREACHABLE();
+
                         out << "gl_texture2DProj(";
+                    }
+                    else if (name == "textureCube")
+                    {
+                        if (node->getSequence().size() == 2)
+                        {
+                            mUsesTextureCube = true;
+                        }
+                        else if (node->getSequence().size() == 3)
+                        {
+                            mUsesTextureCube_bias = true;
+                        }
+                        else UNREACHABLE();
+
+                        out << "gl_textureCube(";
                     }
                     else if (name == "texture2DLod")
                     {
-                        out << "gl_texture2DLod(";
                         UNIMPLEMENTED();   // Requires the vertex shader texture sampling extension
                     }
                     else if (name == "texture2DProjLod")
                     {
-                        out << "gl_texture2DProjLod(";
                         UNIMPLEMENTED();   // Requires the vertex shader texture sampling extension
                     }
-                    else if (name == "textureCube")
+                    else if (name == "textureCubeLod")
                     {
-                        out << "gl_textureCube(";
+                        UNIMPLEMENTED();   // Requires the vertex shader texture sampling extension
                     }
                     else UNREACHABLE();
                 }
