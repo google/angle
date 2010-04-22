@@ -24,6 +24,7 @@ TString str(int i)
 OutputHLSL::OutputHLSL(TParseContext &context) : TIntermTraverser(true, true, true), mContext(context)
 {
     mUnfoldSelect = new UnfoldSelect(context, this);
+    mInsideFunction = false;
 
     mUsesTexture2D = false;
     mUsesTexture2D_bias = false;
@@ -1046,6 +1047,11 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
     {
       case EOpSequence:
         {
+            if (mInsideFunction)
+            {
+                out << "{\n";
+            }
+
             for (TIntermSequence::iterator sit = node->getSequence().begin(); sit != node->getSequence().end(); sit++)
             {
                 if (isSingleStatement(*sit))
@@ -1056,6 +1062,11 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 (*sit)->traverse(this);
 
                 out << ";\n";
+            }
+
+            if (mInsideFunction)
+            {
+                out << "}\n";
             }
 
             return false;
@@ -1201,12 +1212,13 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
                 sequence.erase(sequence.begin());
 
-                out << ")\n"
-                       "{\n";
+                out << ")\n";
+
+                mInsideFunction = true;
             }
             else if (visit == PostVisit)
             {
-                out << "}\n";
+                mInsideFunction = false;
             }
         }
         break;

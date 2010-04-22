@@ -51,6 +51,7 @@ class OutputHLSL : public TIntermTraverser
 
     TParseContext &mContext;
     UnfoldSelect *mUnfoldSelect;
+    bool mInsideFunction;
 
     // Output streams
     TInfoSinkBase mHeader;
