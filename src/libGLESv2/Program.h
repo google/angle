@@ -26,13 +26,13 @@ class VertexShader;
 // Helper struct representing a single shader uniform
 struct Uniform
 {
-    Uniform(GLenum type, const std::string &name, unsigned int bytes);
+    Uniform(GLenum type, const std::string &name, unsigned int arraySize);
 
     ~Uniform();
 
     const GLenum type;
     const std::string name;
-    const unsigned int bytes;
+    const unsigned int arraySize;
     unsigned char *data;
 };
 

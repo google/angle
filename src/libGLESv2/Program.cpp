@@ -13,11 +13,14 @@
 
 #include "libGLESv2/main.h"
 #include "libGLESv2/Shader.h"
+#include "libGLESv2/utilities.h"
 
 namespace gl
 {
-Uniform::Uniform(GLenum type, const std::string &name, unsigned int bytes) : type(type), name(name), bytes(bytes)
+Uniform::Uniform(GLenum type, const std::string &name, unsigned int arraySize) : type(type), name(name), arraySize(arraySize)
 {
+    int bytes = UniformTypeSize(type) * arraySize;
+
     this->data = new unsigned char[bytes];
     memset(this->data, 0, bytes);
 }
@@ -205,7 +208,7 @@ bool Program::setUniform1fv(GLint location, GLsizei count, const GLfloat* v)
 
     if (mUniforms[location]->type == GL_FLOAT)
     {
-        int arraySize = mUniforms[location]->bytes / sizeof(GLfloat);
+        int arraySize = mUniforms[location]->arraySize;
 
         if (arraySize == 1 && count > 1)
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
@@ -216,7 +219,7 @@ bool Program::setUniform1fv(GLint location, GLsizei count, const GLfloat* v)
     }
     else if (mUniforms[location]->type == GL_BOOL)
     {
-        int arraySize = mUniforms[location]->bytes / sizeof(GLboolean);
+        int arraySize = mUniforms[location]->arraySize;
 
         if (arraySize == 1 && count > 1)
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
@@ -257,7 +260,7 @@ bool Program::setUniform2fv(GLint location, GLsizei count, const GLfloat *v)
 
     if (mUniforms[location]->type == GL_FLOAT_VEC2)
     {
-        int arraySize = mUniforms[location]->bytes / sizeof(GLfloat) / 2;
+        int arraySize = mUniforms[location]->arraySize;
 
         if (arraySize == 1 && count > 1)
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
@@ -268,7 +271,7 @@ bool Program::setUniform2fv(GLint location, GLsizei count, const GLfloat *v)
     }
     else if (mUniforms[location]->type == GL_BOOL_VEC2)
     {
-        int arraySize = mUniforms[location]->bytes / sizeof(GLboolean) / 2;
+        int arraySize = mUniforms[location]->arraySize;
 
         if (arraySize == 1 && count > 1)
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
@@ -309,7 +312,7 @@ bool Program::setUniform3fv(GLint location, GLsizei count, const GLfloat *v)
 
     if (mUniforms[location]->type == GL_FLOAT_VEC3)
     {
-        int arraySize = mUniforms[location]->bytes / sizeof(GLfloat) / 3;
+        int arraySize = mUniforms[location]->arraySize;
 
         if (arraySize == 1 && count > 1)
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
@@ -320,7 +323,7 @@ bool Program::setUniform3fv(GLint location, GLsizei count, const GLfloat *v)
     }
     else if (mUniforms[location]->type == GL_BOOL_VEC3)
     {
-        int arraySize = mUniforms[location]->bytes / sizeof(GLboolean) / 3;
+        int arraySize = mUniforms[location]->arraySize;
 
         if (arraySize == 1 && count > 1)
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
@@ -361,7 +364,7 @@ bool Program::setUniform4fv(GLint location, GLsizei count, const GLfloat *v)
 
     if (mUniforms[location]->type == GL_FLOAT_VEC4)
     {
-        int arraySize = mUniforms[location]->bytes / sizeof(GLfloat) / 4;
+        int arraySize = mUniforms[location]->arraySize;
 
         if (arraySize == 1 && count > 1)
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
@@ -372,7 +375,7 @@ bool Program::setUniform4fv(GLint location, GLsizei count, const GLfloat *v)
     }
     else if (mUniforms[location]->type == GL_BOOL_VEC4)
     {
-        int arraySize = mUniforms[location]->bytes / sizeof(GLboolean) / 4;
+        int arraySize = mUniforms[location]->arraySize;
 
         if (arraySize == 1 && count > 1)
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
@@ -416,7 +419,7 @@ bool Program::setUniformMatrix2fv(GLint location, GLsizei count, const GLfloat *
         return false;
     }
 
-    int arraySize = mUniforms[location]->bytes / sizeof(GLfloat) / 4;
+    int arraySize = mUniforms[location]->arraySize;
 
     if (arraySize == 1 && count > 1)
         return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
@@ -440,7 +443,7 @@ bool Program::setUniformMatrix3fv(GLint location, GLsizei count, const GLfloat *
         return false;
     }
 
-    int arraySize = mUniforms[location]->bytes / sizeof(GLfloat) / 9;
+    int arraySize = mUniforms[location]->arraySize;
 
     if (arraySize == 1 && count > 1)
         return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
@@ -464,7 +467,7 @@ bool Program::setUniformMatrix4fv(GLint location, GLsizei count, const GLfloat *
         return false;
     }
 
-    int arraySize = mUniforms[location]->bytes / sizeof(GLfloat) / 16;
+    int arraySize = mUniforms[location]->arraySize;
 
     if (arraySize == 1 && count > 1)
         return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
@@ -485,7 +488,7 @@ bool Program::setUniform1iv(GLint location, GLsizei count, const GLint *v)
 
     if (mUniforms[location]->type == GL_INT)
     {
-        int arraySize = mUniforms[location]->bytes / sizeof(GLint);
+        int arraySize = mUniforms[location]->arraySize;
 
         if (arraySize == 1 && count > 1)
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
@@ -496,7 +499,7 @@ bool Program::setUniform1iv(GLint location, GLsizei count, const GLint *v)
     }
     else if (mUniforms[location]->type == GL_BOOL)
     {
-        int arraySize = mUniforms[location]->bytes / sizeof(GLboolean);
+        int arraySize = mUniforms[location]->arraySize;
 
         if (arraySize == 1 && count > 1)
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
@@ -537,7 +540,7 @@ bool Program::setUniform2iv(GLint location, GLsizei count, const GLint *v)
 
     if (mUniforms[location]->type == GL_INT_VEC2)
     {
-        int arraySize = mUniforms[location]->bytes / sizeof(GLint) / 2;
+        int arraySize = mUniforms[location]->arraySize;
 
         if (arraySize == 1 && count > 1)
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
@@ -548,7 +551,7 @@ bool Program::setUniform2iv(GLint location, GLsizei count, const GLint *v)
     }
     else if (mUniforms[location]->type == GL_BOOL_VEC2)
     {
-        int arraySize = mUniforms[location]->bytes / sizeof(GLboolean) / 2;
+        int arraySize = mUniforms[location]->arraySize;
 
         if (arraySize == 1 && count > 1)
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
@@ -589,7 +592,7 @@ bool Program::setUniform3iv(GLint location, GLsizei count, const GLint *v)
 
     if (mUniforms[location]->type == GL_INT_VEC3)
     {
-        int arraySize = mUniforms[location]->bytes / sizeof(GLint) / 3;
+        int arraySize = mUniforms[location]->arraySize;
 
         if (arraySize == 1 && count > 1)
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
@@ -600,7 +603,7 @@ bool Program::setUniform3iv(GLint location, GLsizei count, const GLint *v)
     }
     else if (mUniforms[location]->type == GL_BOOL_VEC3)
     {
-        int arraySize = mUniforms[location]->bytes / sizeof(GLboolean) / 3;
+        int arraySize = mUniforms[location]->arraySize;
 
         if (arraySize == 1 && count > 1)
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
@@ -641,7 +644,7 @@ bool Program::setUniform4iv(GLint location, GLsizei count, const GLint *v)
 
     if (mUniforms[location]->type == GL_INT_VEC4)
     {
-        int arraySize = mUniforms[location]->bytes / sizeof(GLint) / 4;
+        int arraySize = mUniforms[location]->arraySize;
 
         if (arraySize == 1 && count > 1)
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
@@ -652,7 +655,7 @@ bool Program::setUniform4iv(GLint location, GLsizei count, const GLint *v)
     }
     else if (mUniforms[location]->type == GL_BOOL_VEC4)
     {
-        int arraySize = mUniforms[location]->bytes / sizeof(GLboolean) / 4;
+        int arraySize = mUniforms[location]->arraySize;
 
         if (arraySize == 1 && count > 1)
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
@@ -691,53 +694,34 @@ bool Program::getUniformfv(GLint location, GLfloat *params)
         return false;
     }
 
-    unsigned int count = 0;
+    unsigned int count = UniformComponentCount(mUniforms[location]->type);
 
-    switch (mUniforms[location]->type)
+    switch (UniformComponentType(mUniforms[location]->type))
     {
-      case GL_FLOAT:
       case GL_BOOL:
-          count = 1;
-          break;
-      case GL_FLOAT_VEC2:
-      case GL_BOOL_VEC2:
-          count = 2;
-          break;
-      case GL_FLOAT_VEC3:
-      case GL_BOOL_VEC3:
-          count = 3;
-          break;
-      case GL_FLOAT_VEC4:
-      case GL_BOOL_VEC4:
-      case GL_FLOAT_MAT2:
-          count = 4;
-          break;
-      case GL_FLOAT_MAT3:
-          count = 9;
-          break;
-      case GL_FLOAT_MAT4:
-          count = 16;
-          break;
-      default:
-          return false;
-    }
-
-    if (mUniforms[location]->type == GL_BOOL || mUniforms[location]->type == GL_BOOL_VEC2 ||
-        mUniforms[location]->type == GL_BOOL_VEC3 || mUniforms[location]->type == GL_BOOL_VEC4)
-    {
-        GLboolean *boolParams = mUniforms[location]->data;
-
-        for (unsigned int i = 0; i < count; ++i)
         {
-            if (boolParams[i] == GL_FALSE)
-                params[i] = 0.0f;
-            else
-                params[i] = 1.0f;
+            GLboolean *boolParams = (GLboolean*)mUniforms[location]->data;
+
+            for (unsigned int i = 0; i < count; ++i)
+            {
+                params[i] = (boolParams[i] == GL_FALSE) ? 0.0f : 1.0f;
+            }
         }
-    }
-    else
-    {
+        break;
+      case GL_FLOAT:
         memcpy(params, mUniforms[location]->data, count * sizeof(GLfloat));
+        break;
+      case GL_INT:
+        {
+            GLint *intParams = (GLint*)mUniforms[location]->data;
+
+            for (unsigned int i = 0; i < count; ++i)
+            {
+                params[i] = (float)intParams[i];
+            }
+        }
+        break;
+      default: UNREACHABLE();
     }
 
     return true;
@@ -750,46 +734,34 @@ bool Program::getUniformiv(GLint location, GLint *params)
         return false;
     }
 
-    unsigned int count = 0;
+    unsigned int count = UniformComponentCount(mUniforms[location]->type);
 
-    switch (mUniforms[location]->type)
+    switch (UniformComponentType(mUniforms[location]->type))
     {
-      case GL_INT:
       case GL_BOOL:
-          count = 1;
-          break;
-      case GL_INT_VEC2:
-      case GL_BOOL_VEC2:
-          count = 2;
-          break;
-      case GL_INT_VEC3:
-      case GL_BOOL_VEC3:
-          count = 3;
-          break;
-      case GL_INT_VEC4:
-      case GL_BOOL_VEC4:
-          count = 4;
-          break;
-      default:
-          return false;
-    }
-
-    if (mUniforms[location]->type == GL_BOOL || mUniforms[location]->type == GL_BOOL_VEC2 ||
-        mUniforms[location]->type == GL_BOOL_VEC3 || mUniforms[location]->type == GL_BOOL_VEC4)
-    {
-        GLboolean *boolParams = mUniforms[location]->data;
-
-        for (unsigned int i = 0; i < count; ++i)
         {
-            if (boolParams[i] == GL_FALSE)
-                params[i] = 0;
-            else
-                params[i] = 1;
+            GLboolean *boolParams = (GLboolean*)mUniforms[location]->data;
+
+            for (unsigned int i = 0; i < count; ++i)
+            {
+                params[i] = (GLint)boolParams[i];
+            }
         }
-    }
-    else
-    {
+        break;
+      case GL_FLOAT:
+        {
+            GLfloat *floatParams = (GLfloat*)mUniforms[location]->data;
+
+            for (unsigned int i = 0; i < count; ++i)
+            {
+                params[i] = (GLint)floatParams[i];
+            }
+        }
+        break;
+      case GL_INT:
         memcpy(params, mUniforms[location]->data, count * sizeof(GLint));
+        break;
+      default: UNREACHABLE();
     }
 
     return true;
@@ -800,28 +772,28 @@ void Program::applyUniforms()
 {
     for (unsigned int location = 0; location < mUniforms.size(); location++)
     {
-        int bytes = mUniforms[location]->bytes;
+        int arraySize = mUniforms[location]->arraySize;
         GLfloat *f = (GLfloat*)mUniforms[location]->data;
         GLint *i = (GLint*)mUniforms[location]->data;
         GLboolean *b = (GLboolean*)mUniforms[location]->data;
 
         switch (mUniforms[location]->type)
         {
-          case GL_BOOL:       applyUniform1bv(location, bytes / sizeof(GLboolean), b);          break;
-          case GL_BOOL_VEC2:  applyUniform2bv(location, bytes / 2 / sizeof(GLboolean), b);      break;
-          case GL_BOOL_VEC3:  applyUniform3bv(location, bytes / 3 / sizeof(GLboolean), b);      break;
-          case GL_BOOL_VEC4:  applyUniform4bv(location, bytes / 4 / sizeof(GLboolean), b);      break;
-          case GL_FLOAT:      applyUniform1fv(location, bytes / sizeof(GLfloat), f);            break;
-          case GL_FLOAT_VEC2: applyUniform2fv(location, bytes / 2 / sizeof(GLfloat), f);        break;
-          case GL_FLOAT_VEC3: applyUniform3fv(location, bytes / 3 / sizeof(GLfloat), f);        break;
-          case GL_FLOAT_VEC4: applyUniform4fv(location, bytes / 4 / sizeof(GLfloat), f);        break;
-          case GL_FLOAT_MAT2: applyUniformMatrix2fv(location, bytes / 4 / sizeof(GLfloat), f);  break;
-          case GL_FLOAT_MAT3: applyUniformMatrix3fv(location, bytes / 9 / sizeof(GLfloat), f);  break;
-          case GL_FLOAT_MAT4: applyUniformMatrix4fv(location, bytes / 16 / sizeof(GLfloat), f); break;
-          case GL_INT:        applyUniform1iv(location, bytes / sizeof(GLint), i);              break;
-          case GL_INT_VEC2:   applyUniform2iv(location, bytes / 2 / sizeof(GLint), i);          break;
-          case GL_INT_VEC3:   applyUniform3iv(location, bytes / 3 / sizeof(GLint), i);          break;
-          case GL_INT_VEC4:   applyUniform4iv(location, bytes / 4 / sizeof(GLint), i);          break;
+          case GL_BOOL:       applyUniform1bv(location, arraySize, b);       break;
+          case GL_BOOL_VEC2:  applyUniform2bv(location, arraySize, b);       break;
+          case GL_BOOL_VEC3:  applyUniform3bv(location, arraySize, b);       break;
+          case GL_BOOL_VEC4:  applyUniform4bv(location, arraySize, b);       break;
+          case GL_FLOAT:      applyUniform1fv(location, arraySize, f);       break;
+          case GL_FLOAT_VEC2: applyUniform2fv(location, arraySize, f);       break;
+          case GL_FLOAT_VEC3: applyUniform3fv(location, arraySize, f);       break;
+          case GL_FLOAT_VEC4: applyUniform4fv(location, arraySize, f);       break;
+          case GL_FLOAT_MAT2: applyUniformMatrix2fv(location, arraySize, f); break;
+          case GL_FLOAT_MAT3: applyUniformMatrix3fv(location, arraySize, f); break;
+          case GL_FLOAT_MAT4: applyUniformMatrix4fv(location, arraySize, f); break;
+          case GL_INT:        applyUniform1iv(location, arraySize, i);       break;
+          case GL_INT_VEC2:   applyUniform2iv(location, arraySize, i);       break;
+          case GL_INT_VEC3:   applyUniform3iv(location, arraySize, i);       break;
+          case GL_INT_VEC4:   applyUniform4iv(location, arraySize, i);       break;
           default:
             UNIMPLEMENTED();   // FIXME
             UNREACHABLE();
@@ -1011,11 +983,6 @@ void Program::link()
             if (!linkAttributes())
             {
                 return;
-            }
-
-            for (int i = 0; i < MAX_TEXTURE_IMAGE_UNITS; i++)
-            {
-                mSamplers[i].active = false;
             }
 
             if (!linkUniforms(mConstantTablePS))
@@ -1211,37 +1178,37 @@ Uniform *Program::createUniform(const D3DXCONSTANT_DESC &constantDescription, st
           case D3DXPT_SAMPLERCUBE:
             switch (constantDescription.Columns)
             {
-              case 1: return new Uniform(GL_INT, name, 1 * sizeof(GLint) * constantDescription.Elements);
+              case 1: return new Uniform(GL_INT, name, constantDescription.Elements);
               default: UNREACHABLE();
             }
             break;
           case D3DXPT_BOOL:
             switch (constantDescription.Columns)
             {
-              case 1: return new Uniform(GL_BOOL, name, 1 * sizeof(GLboolean) * constantDescription.Elements);
-              case 2: return new Uniform(GL_BOOL_VEC2, name, 2 * sizeof(GLboolean) * constantDescription.Elements);
-              case 3: return new Uniform(GL_BOOL_VEC3, name, 3 * sizeof(GLboolean) * constantDescription.Elements);
-              case 4: return new Uniform(GL_BOOL_VEC4, name, 4 * sizeof(GLboolean) * constantDescription.Elements);
+              case 1: return new Uniform(GL_BOOL, name, constantDescription.Elements);
+              case 2: return new Uniform(GL_BOOL_VEC2, name, constantDescription.Elements);
+              case 3: return new Uniform(GL_BOOL_VEC3, name, constantDescription.Elements);
+              case 4: return new Uniform(GL_BOOL_VEC4, name, constantDescription.Elements);
               default: UNREACHABLE();
             }
             break;
           case D3DXPT_INT:
             switch (constantDescription.Columns)
             {
-              case 1: return new Uniform(GL_INT, name, 1 * sizeof(GLint) * constantDescription.Elements);
-              case 2: return new Uniform(GL_INT_VEC2, name, 2 * sizeof(GLint) * constantDescription.Elements);
-              case 3: return new Uniform(GL_INT_VEC3, name, 3 * sizeof(GLint) * constantDescription.Elements);
-              case 4: return new Uniform(GL_INT_VEC4, name, 4 * sizeof(GLint) * constantDescription.Elements);
+              case 1: return new Uniform(GL_INT, name, constantDescription.Elements);
+              case 2: return new Uniform(GL_INT_VEC2, name, constantDescription.Elements);
+              case 3: return new Uniform(GL_INT_VEC3, name, constantDescription.Elements);
+              case 4: return new Uniform(GL_INT_VEC4, name, constantDescription.Elements);
               default: UNREACHABLE();
             }
             break;
           case D3DXPT_FLOAT:
             switch (constantDescription.Columns)
             {
-              case 1: return new Uniform(GL_FLOAT, name, 1 * sizeof(GLfloat) * constantDescription.Elements);
-              case 2: return new Uniform(GL_FLOAT_VEC2, name, 2 * sizeof(GLfloat) * constantDescription.Elements);
-              case 3: return new Uniform(GL_FLOAT_VEC3, name, 3 * sizeof(GLfloat) * constantDescription.Elements);
-              case 4: return new Uniform(GL_FLOAT_VEC4, name, 4 * sizeof(GLfloat) * constantDescription.Elements);
+              case 1: return new Uniform(GL_FLOAT, name, constantDescription.Elements);
+              case 2: return new Uniform(GL_FLOAT_VEC2, name, constantDescription.Elements);
+              case 3: return new Uniform(GL_FLOAT_VEC3, name, constantDescription.Elements);
+              case 4: return new Uniform(GL_FLOAT_VEC4, name, constantDescription.Elements);
               default: UNREACHABLE();
             }
             break;
@@ -1257,9 +1224,9 @@ Uniform *Program::createUniform(const D3DXCONSTANT_DESC &constantDescription, st
           case D3DXPT_FLOAT:
             switch (constantDescription.Rows)
             {
-              case 2: return new Uniform(GL_FLOAT_MAT2, name, 2 * 2 * sizeof(GLfloat) * constantDescription.Elements);
-              case 3: return new Uniform(GL_FLOAT_MAT3, name, 3 * 3 * sizeof(GLfloat) * constantDescription.Elements);
-              case 4: return new Uniform(GL_FLOAT_MAT4, name, 4 * 4 * sizeof(GLfloat) * constantDescription.Elements);
+              case 2: return new Uniform(GL_FLOAT_MAT2, name, constantDescription.Elements);
+              case 3: return new Uniform(GL_FLOAT_MAT3, name, constantDescription.Elements);
+              case 4: return new Uniform(GL_FLOAT_MAT4, name, constantDescription.Elements);
               default: UNREACHABLE();
             }
             break;
@@ -1951,7 +1918,7 @@ void Program::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length,
         }
     }
 
-    *size = 1;
+    *size = 1;   // Always a single 'type' instance
 
     *type = mLinkedAttribute[attribute].type;
 }
@@ -2018,7 +1985,7 @@ void Program::getActiveUniform(GLuint index, GLsizei bufsize, GLsizei *length, G
         }
     }
 
-    *size = 1;
+    *size = mUniforms[uniform]->arraySize;
 
     *type = mUniforms[uniform]->type;
 }

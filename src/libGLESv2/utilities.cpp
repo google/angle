@@ -13,6 +13,84 @@
 #include "libGLESv2/mathutil.h"
 #include "libGLESv2/Context.h"
 
+namespace gl
+{
+
+int UniformComponentCount(GLenum type)
+{
+    switch (type)
+    {
+      case GL_BOOL:
+      case GL_FLOAT:
+      case GL_INT:
+          return 1;
+      case GL_BOOL_VEC2:
+      case GL_FLOAT_VEC2:
+      case GL_INT_VEC2:
+          return 2;
+      case GL_INT_VEC3:
+      case GL_FLOAT_VEC3:
+      case GL_BOOL_VEC3:
+          return 3;
+      case GL_BOOL_VEC4:
+      case GL_FLOAT_VEC4:
+      case GL_INT_VEC4:
+      case GL_FLOAT_MAT2:
+          return 4;
+      case GL_FLOAT_MAT3:
+          return 9;
+      case GL_FLOAT_MAT4:
+          return 16;
+      default:
+          UNREACHABLE();
+    }
+
+    return 0;
+}
+
+GLenum UniformComponentType(GLenum type)
+{
+    switch(type)
+    {
+      case GL_BOOL:
+      case GL_BOOL_VEC2:
+      case GL_BOOL_VEC3:
+      case GL_BOOL_VEC4:
+          return GL_BOOL;
+      case GL_FLOAT:
+      case GL_FLOAT_VEC2:
+      case GL_FLOAT_VEC3:
+      case GL_FLOAT_VEC4:
+      case GL_FLOAT_MAT2:
+      case GL_FLOAT_MAT3:
+      case GL_FLOAT_MAT4:
+          return GL_FLOAT;
+      case GL_INT:
+      case GL_INT_VEC2:
+      case GL_INT_VEC3:
+      case GL_INT_VEC4:
+          return GL_INT;
+      default:
+          UNREACHABLE();
+    }
+
+    return GL_NONE;
+}
+
+size_t UniformTypeSize(GLenum type)
+{
+    switch(type)
+    {
+      case GL_BOOL:  return sizeof(GLboolean);
+      case GL_FLOAT: return sizeof(GLfloat);
+      case GL_INT:   return sizeof(GLint);
+    }
+
+    return UniformTypeSize(UniformComponentType(type)) * UniformComponentCount(type);
+}
+
+}
+
 namespace es2dx
 {
 
