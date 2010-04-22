@@ -11,11 +11,13 @@
 #include <stdio.h>
 #include <stdarg.h>
 
+static bool trace_on = true;
+
 namespace gl
 {
 void trace(const char *format, ...)
 {
-    if (true)
+    if (trace_on)
     {
         if (format)
         {
