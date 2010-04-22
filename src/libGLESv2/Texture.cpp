@@ -630,6 +630,12 @@ bool Texture2D::isComplete() const
 
     if (mipmapping)
     {
+        if ((getWrapS() != GL_CLAMP_TO_EDGE && !isPow2(width))
+            || (getWrapT() != GL_CLAMP_TO_EDGE && !isPow2(height)))
+        {
+            return false;
+        }
+
         int q = log2(std::max(width, height));
 
         for (int level = 1; level <= q; level++)
@@ -639,12 +645,12 @@ bool Texture2D::isComplete() const
                 return false;
             }
 
-            if (mImageArray[level].width != (mImageArray[level - 1].width + 1) / 2)
+            if (mImageArray[level].width != std::max(1, width >> level))
             {
                 return false;
             }
 
-            if (mImageArray[level].height != (mImageArray[level - 1].height + 1) / 2)
+            if (mImageArray[level].height != std::max(1, height >> level))
             {
                 return false;
             }
@@ -998,6 +1004,11 @@ bool TextureCubeMap::isComplete() const
 
     if (mipmapping)
     {
+        if (!isPow2(size) && (getWrapS() != GL_CLAMP_TO_EDGE || getWrapT() != GL_CLAMP_TO_EDGE))
+        {
+            return false;
+        }
+
         int q = log2(size);
 
         for (int face = 0; face < 6; face++)
@@ -1009,15 +1020,12 @@ bool TextureCubeMap::isComplete() const
                     return false;
                 }
 
-                if (mImageArray[face][level].width != (mImageArray[0][level - 1].width + 1) / 2)
+                if (mImageArray[face][level].width != std::max(1, size >> level))
                 {
                     return false;
                 }
 
-                if (mImageArray[face][level].height != (mImageArray[0][level - 1].height + 1) / 2)
-                {
-                    return false;
-                }
+                ASSERT(mImageArray[face][level].height == mImageArray[face][level].width);
             }
         }
     }
