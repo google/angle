@@ -1082,7 +1082,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             {
                 if (!variable->getAsSymbolNode() || variable->getAsSymbolNode()->getSymbol() != "")   // Variable declaration
                 {
-                    if (variable->getQualifier() == EvqGlobal)
+                    if (!mInsideFunction)
                     {
                         out << "static ";
                     }
