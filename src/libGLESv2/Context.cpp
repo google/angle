@@ -1390,14 +1390,14 @@ void Context::applyState(GLenum drawMode)
     device->SetRenderState(D3DRS_DITHERENABLE, dither ? TRUE : FALSE);
 }
 
-// Fill in the programAttribute field of the array of TranslatedAttributes based on the active GLSL program.
+// Fill in the semanticIndex field of the array of TranslatedAttributes based on the active GLSL program.
 void Context::lookupAttributeMapping(TranslatedAttribute *attributes)
 {
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
     {
         if (attributes[i].enabled)
         {
-            attributes[i].programAttribute = getCurrentProgram()->getInputMapping(i);
+            attributes[i].semanticIndex = getCurrentProgram()->getSemanticIndex(i);
         }
     }
 }

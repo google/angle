@@ -259,35 +259,6 @@ void Shader::compileToHLSL(void *compiler)
     }
 }
 
-InputMapping::InputMapping()
-{
-    mAttribute = NULL;
-    mSemanticIndex = -1;
-}
-
-InputMapping::InputMapping(const char *attribute, int semanticIndex)
-{
-    mAttribute = new char[strlen(attribute) + 1];
-    strcpy(mAttribute, attribute);
-    mSemanticIndex = semanticIndex;
-}
-
-InputMapping &InputMapping::operator=(const InputMapping &inputMapping)
-{
-    delete[] mAttribute;
-
-    mAttribute = new char[strlen(inputMapping.mAttribute) + 1];
-    strcpy(mAttribute, inputMapping.mAttribute);
-    mSemanticIndex = inputMapping.mSemanticIndex;
-
-    return *this;
-}
-
-InputMapping::~InputMapping()
-{
-    delete[] mAttribute;
-}
-
 VertexShader::VertexShader(GLuint handle) : Shader(handle)
 {
 }
@@ -307,30 +278,25 @@ void VertexShader::compile()
     parseAttributes();
 }
 
-const char *VertexShader::getAttributeName(unsigned int attributeIndex)
+const char *VertexShader::getAttributeName(unsigned int semanticIndex)
 {
-    if (attributeIndex < MAX_VERTEX_ATTRIBS)
+    if (semanticIndex < MAX_VERTEX_ATTRIBS + 1)
     {
-        return mInputMapping[attributeIndex].mAttribute;
+        return mAttributeName[semanticIndex].c_str();
     }
 
     return 0;
 }
 
-bool VertexShader::isActiveAttribute(const char *attributeName)
+int VertexShader::getSemanticIndex(const std::string &attributeName)
 {
-    return getInputMapping(attributeName) != -1;
-}
-
-int VertexShader::getInputMapping(const char *attributeName)
-{
-    if (attributeName)
+    if (!attributeName.empty())
     {
-        for (int index = 0; index < MAX_VERTEX_ATTRIBS; index++)
+        for (int semanticIndex = 0; semanticIndex < MAX_VERTEX_ATTRIBS; semanticIndex++)
         {
-            if (mInputMapping[index].mAttribute && strcmp(mInputMapping[index].mAttribute, attributeName) == 0)
+            if (mAttributeName[semanticIndex] == attributeName)
             {
-                return mInputMapping[index].mSemanticIndex;
+                return semanticIndex;
             }
         }
     }
@@ -353,9 +319,14 @@ void VertexShader::parseAttributes()
 
             if (matches == 2)
             {
-                ASSERT(attributeIndex < MAX_VERTEX_ATTRIBS);
-                mInputMapping[attributeIndex] = InputMapping(attributeName, semanticIndex);
-                attributeIndex++;
+                if (semanticIndex < MAX_VERTEX_ATTRIBS + 1)
+                {
+                    mAttributeName[semanticIndex] = attributeName;
+                }
+                else
+                {
+                    break;
+                }
 
                 input = strstr(input, ";");
             }

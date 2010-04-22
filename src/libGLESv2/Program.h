@@ -13,6 +13,7 @@
 #include <d3dx9.h>
 #include <string>
 #include <vector>
+#include <set>
 
 #include "libGLESv2/Context.h"
 
@@ -50,8 +51,7 @@ class Program
 
     void bindAttributeLocation(GLuint index, const char *name);
     GLuint getAttributeLocation(const char *name);
-    bool isActiveAttribute(int attributeIndex);
-    int getInputMapping(int attributeIndex);
+    int getSemanticIndex(int attributeIndex);
 
     GLint getSamplerMapping(unsigned int samplerIndex);
     SamplerType getSamplerType(unsigned int samplerIndex);
@@ -107,6 +107,7 @@ class Program
     bool linkVaryings();
 
     bool linkAttributes();
+    int getAttributeBinding(const char *name);
 
     bool linkUniforms(ID3DXConstantTable *constantTable);
     bool defineUniform(const D3DXHANDLE &constantHandle, const D3DXCONSTANT_DESC &constantDescription, std::string name = "");
@@ -129,7 +130,7 @@ class Program
     bool applyUniform3iv(GLint location, GLsizei count, const GLint *v);
     bool applyUniform4iv(GLint location, GLsizei count, const GLint *v);
 
-    void appendToInfoLog(const char *info);
+    void appendToInfoLog(const char *info, ...);
 
     FragmentShader *mFragmentShader;
     VertexShader *mVertexShader;
@@ -142,8 +143,9 @@ class Program
     ID3DXConstantTable *mConstantTablePS;
     ID3DXConstantTable *mConstantTableVS;
 
-    char *mAttributeName[MAX_VERTEX_ATTRIBS];
-    int mInputMapping[MAX_VERTEX_ATTRIBS];
+    std::set<std::string> mAttributeBinding[MAX_VERTEX_ATTRIBS];
+    std::string mLinkedAttribute[MAX_VERTEX_ATTRIBS];
+    int mSemanticIndex[MAX_VERTEX_ATTRIBS];
 
     struct Sampler
     {

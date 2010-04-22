@@ -37,11 +37,6 @@ Program::Program()
     mConstantTablePS = NULL;
     mConstantTableVS = NULL;
 
-    for (int index = 0; index < MAX_VERTEX_ATTRIBS; index++)
-    {
-        mAttributeName[index] = NULL;
-    }
-
     mPixelHLSL = NULL;
     mVertexHLSL = NULL;
     mInfoLog = NULL;
@@ -131,40 +126,36 @@ void Program::bindAttributeLocation(GLuint index, const char *name)
 {
     if (index < MAX_VERTEX_ATTRIBS)
     {
-        delete[] mAttributeName[index];
-        mAttributeName[index] = new char[strlen(name) + 1];
-        strcpy(mAttributeName[index], name);
+        for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
+        {
+            mAttributeBinding[i].erase(name);
+        }
+
+        mAttributeBinding[index].insert(name);
     }
 }
 
 GLuint Program::getAttributeLocation(const char *name)
 {
-    for (int index = 0; index < MAX_VERTEX_ATTRIBS; index++)
+    if (name)
     {
-        if (mAttributeName[index] && strcmp(mAttributeName[index], name) == 0)
+        for (int index = 0; index < MAX_VERTEX_ATTRIBS; index++)
         {
-            return index;
+            if (mLinkedAttribute[index] == std::string(name))
+            {
+                return index;
+            }
         }
     }
 
     return -1;
 }
 
-bool Program::isActiveAttribute(int attributeIndex)
+int Program::getSemanticIndex(int attributeIndex)
 {
     if (attributeIndex >= 0 && attributeIndex < MAX_VERTEX_ATTRIBS)
     {
-        return mInputMapping[attributeIndex] != -1;
-    }
-
-    return false;
-}
-
-int Program::getInputMapping(int attributeIndex)
-{
-    if (attributeIndex >= 0 && attributeIndex < MAX_VERTEX_ATTRIBS)
-    {
-        return mInputMapping[attributeIndex];
+        return mSemanticIndex[attributeIndex];
     }
 
     return -1;
@@ -951,6 +942,8 @@ bool Program::linkVaryings()
     {
         if (pixelVaryings[in].link < 0)
         {
+            appendToInfoLog("Pixel varying (%s) does not match any vertex varying", pixelVaryings[in].name);
+
             return false;
         }
     }
@@ -1043,41 +1036,68 @@ void Program::link()
 // Determines the mapping between GL attributes and Direct3D 9 vertex stream usage indices
 bool Program::linkAttributes()
 {
+    // Link attributes that have a binding location
     for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
     {
         const char *name = mVertexShader->getAttributeName(attributeIndex);
+        int location = getAttributeBinding(name);
 
-        if (name)
+        if (location != -1)   // Set by glBindAttribLocation
         {
-            GLuint location = getAttributeLocation(name);
-
-            if (location == -1)   // Not set by glBindAttribLocation
+            if (!mLinkedAttribute[location].empty())
             {
-                int availableIndex = 0;
-
-                while (availableIndex < MAX_VERTEX_ATTRIBS && mAttributeName[availableIndex] && mVertexShader->isActiveAttribute(mAttributeName[availableIndex]))
-                {
-                    availableIndex++;
-                }
-
-                if (availableIndex == MAX_VERTEX_ATTRIBS)
-                {
-                    return false;   // Fail to link
-                }
-
-                delete[] mAttributeName[availableIndex];
-                mAttributeName[availableIndex] = new char[strlen(name) + 1];   // FIXME: Check allocation
-                strcpy(mAttributeName[availableIndex], name);
+                // Multiple active attributes bound to the same location; not an error
             }
+
+            mLinkedAttribute[location] = name;
+        }
+    }
+
+    // Link attributes that don't have a binding location
+    for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS + 1; attributeIndex++)
+    {
+        const char *name = mVertexShader->getAttributeName(attributeIndex);
+        int location = getAttributeBinding(name);
+
+        if (location == -1)   // Not set by glBindAttribLocation
+        {
+            int availableIndex = 0;
+
+            while (availableIndex < MAX_VERTEX_ATTRIBS && !mLinkedAttribute[availableIndex].empty())
+            {
+                availableIndex++;
+            }
+
+            if (availableIndex == MAX_VERTEX_ATTRIBS)
+            {
+                appendToInfoLog("Too many active attributes (%s)", name);
+
+                return false;   // Fail to link
+            }
+
+            mLinkedAttribute[availableIndex] = name;
         }
     }
 
     for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
     {
-        mInputMapping[attributeIndex] = mVertexShader->getInputMapping(mAttributeName[attributeIndex]);
+        mSemanticIndex[attributeIndex] = mVertexShader->getSemanticIndex(mLinkedAttribute[attributeIndex].c_str());
     }
 
     return true;
+}
+
+int Program::getAttributeBinding(const char *name)
+{
+    for (int location = 0; location < MAX_VERTEX_ATTRIBS; location++)
+    {
+        if (mAttributeBinding[location].find(name) != mAttributeBinding[location].end())
+        {
+            return location;
+        }
+    }
+
+    return -1;
 }
 
 bool Program::linkUniforms(ID3DXConstantTable *constantTable)
@@ -1729,12 +1749,19 @@ bool Program::applyUniform4iv(GLint location, GLsizei count, const GLint *v)
     return true;
 }
 
-void Program::appendToInfoLog(const char *info)
+void Program::appendToInfoLog(const char *format, ...)
 {
-    if (!info)
+    if (!format)
     {
         return;
     }
+
+    char info[1024];
+
+    va_list vararg;
+    va_start(vararg, format);
+    vsnprintf(info, sizeof(info), format, vararg);
+    va_end(vararg);
 
     size_t infoLength = strlen(info);
 
@@ -1771,12 +1798,6 @@ void Program::unlink(bool destroy)
             mVertexShader->detach();
             mVertexShader = NULL;
         }
-
-        for (int index = 0; index < MAX_VERTEX_ATTRIBS; index++)
-        {
-            delete[] mAttributeName[index];
-            mAttributeName[index] = NULL;
-        }
     }
 
     if (mPixelExecutable)
@@ -1805,7 +1826,8 @@ void Program::unlink(bool destroy)
 
     for (int index = 0; index < MAX_VERTEX_ATTRIBS; index++)
     {
-        mInputMapping[index] = 0;
+        mLinkedAttribute[index].clear();
+        mSemanticIndex[index] = -1;
     }
 
     for (int index = 0; index < MAX_TEXTURE_IMAGE_UNITS; index++)

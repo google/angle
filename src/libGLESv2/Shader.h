@@ -67,20 +67,6 @@ class Shader
     static void *mVertexCompiler;
 };
 
-class InputMapping
-{
-  public:
-    InputMapping();
-    InputMapping(const char *attribute, int semanticIndex);
-
-    ~InputMapping();
-
-    InputMapping &operator=(const InputMapping &inputMapping);
-
-    char *mAttribute;
-    int mSemanticIndex;   // TEXCOORDi
-};
-
 class VertexShader : public Shader
 {
   public:
@@ -91,15 +77,14 @@ class VertexShader : public Shader
     GLenum getType();
     void compile();
     const char *getAttributeName(unsigned int attributeIndex);
-    bool isActiveAttribute(const char *attributeName);
-    int getInputMapping(const char *attributeName);
+    int getSemanticIndex(const std::string &attributeName);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(VertexShader);
 
     void parseAttributes();
 
-    InputMapping mInputMapping[MAX_VERTEX_ATTRIBS];
+    std::string mAttributeName[MAX_VERTEX_ATTRIBS + 1];   // One extra to report link error
 };
 
 class FragmentShader : public Shader

@@ -43,7 +43,7 @@ struct TranslatedAttribute
 
     std::size_t stride; // 0 means not to advance the read pointer at all
 
-    std::size_t programAttribute;
+    std::size_t semanticIndex;
 
     TranslatedVertexBuffer *buffer;
 };

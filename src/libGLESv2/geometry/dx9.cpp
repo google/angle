@@ -213,7 +213,7 @@ GLenum Dx9BackEnd::setupAttributesPreDraw(const TranslatedAttribute *attributes)
             nextElement->Type = static_cast<BYTE>(mapAttributeType(attributes[i].type, attributes[i].size, attributes[i].normalized));
             nextElement->Method = D3DDECLMETHOD_DEFAULT;
             nextElement->Usage = D3DDECLUSAGE_TEXCOORD;
-            nextElement->UsageIndex = attributes[i].programAttribute;
+            nextElement->UsageIndex = attributes[i].semanticIndex;
             nextElement++;
         }
     }

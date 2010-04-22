@@ -70,12 +70,11 @@ std::bitset<MAX_VERTEX_ATTRIBS> VertexDataManager::activeAttribs()
 {
     std::bitset<MAX_VERTEX_ATTRIBS> active;
 
-    Program *p = mContext->getCurrentProgram();
+    Program *program = mContext->getCurrentProgram();
 
-    for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
+    for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
     {
-        if (p->isActiveAttribute(i))
-            active[i] = true;
+        active[attributeIndex] = (program->getSemanticIndex(attributeIndex) != -1);
     }
 
     return active;
@@ -83,7 +82,6 @@ std::bitset<MAX_VERTEX_ATTRIBS> VertexDataManager::activeAttribs()
 
 GLenum VertexDataManager::preRenderValidate(GLint start, GLsizei count,
                                             TranslatedAttribute *outAttribs)
-
 {
     ArrayTranslationHelper translationHelper(start, count);
 
@@ -92,7 +90,6 @@ GLenum VertexDataManager::preRenderValidate(GLint start, GLsizei count,
 
 GLenum VertexDataManager::preRenderValidate(const TranslatedIndexData &indexInfo,
                                             TranslatedAttribute *outAttribs)
-
 {
     IndexedTranslationHelper translationHelper(indexInfo.indices, indexInfo.minIndex, indexInfo.count);
 
