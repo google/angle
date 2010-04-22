@@ -15,6 +15,7 @@
 #include <vector>
 #include <set>
 
+#include "libGLESv2/Shader.h"
 #include "libGLESv2/Context.h"
 
 namespace gl
@@ -80,6 +81,10 @@ class Program
     void getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog);
     void getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shaders);
 
+    void getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name);
+    GLint getActiveAttributeCount();
+    GLint getActiveAttributeMaxLength();
+
     void flagForDeletion();
     bool isFlaggedForDeletion() const;
 
@@ -107,7 +112,7 @@ class Program
     bool linkVaryings();
 
     bool linkAttributes();
-    int getAttributeBinding(const char *name);
+    int getAttributeBinding(const std::string &name);
 
     bool linkUniforms(ID3DXConstantTable *constantTable);
     bool defineUniform(const D3DXHANDLE &constantHandle, const D3DXCONSTANT_DESC &constantDescription, std::string name = "");
@@ -130,6 +135,7 @@ class Program
     bool applyUniform3iv(GLint location, GLsizei count, const GLint *v);
     bool applyUniform4iv(GLint location, GLsizei count, const GLint *v);
 
+    GLenum parseAttributeType(const std::string &type);
     void appendToInfoLog(const char *info, ...);
 
     FragmentShader *mFragmentShader;
@@ -144,7 +150,7 @@ class Program
     ID3DXConstantTable *mConstantTableVS;
 
     std::set<std::string> mAttributeBinding[MAX_VERTEX_ATTRIBS];
-    std::string mLinkedAttribute[MAX_VERTEX_ATTRIBS];
+    Attribute mLinkedAttribute[MAX_VERTEX_ATTRIBS];
     int mSemanticIndex[MAX_VERTEX_ATTRIBS];
 
     struct Sampler

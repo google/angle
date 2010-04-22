@@ -141,7 +141,7 @@ GLuint Program::getAttributeLocation(const char *name)
     {
         for (int index = 0; index < MAX_VERTEX_ATTRIBS; index++)
         {
-            if (mLinkedAttribute[index] == std::string(name))
+            if (mLinkedAttribute[index].name == std::string(name))
             {
                 return index;
             }
@@ -1039,55 +1039,55 @@ bool Program::linkAttributes()
     // Link attributes that have a binding location
     for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
     {
-        const char *name = mVertexShader->getAttributeName(attributeIndex);
-        int location = getAttributeBinding(name);
+        const Attribute &attribute = mVertexShader->getAttribute(attributeIndex);
+        int location = getAttributeBinding(attribute.name);
 
         if (location != -1)   // Set by glBindAttribLocation
         {
-            if (!mLinkedAttribute[location].empty())
+            if (!mLinkedAttribute[location].name.empty())
             {
                 // Multiple active attributes bound to the same location; not an error
             }
 
-            mLinkedAttribute[location] = name;
+            mLinkedAttribute[location] = attribute;
         }
     }
 
     // Link attributes that don't have a binding location
     for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS + 1; attributeIndex++)
     {
-        const char *name = mVertexShader->getAttributeName(attributeIndex);
-        int location = getAttributeBinding(name);
+        const Attribute &attribute = mVertexShader->getAttribute(attributeIndex);
+        int location = getAttributeBinding(attribute.name);
 
         if (location == -1)   // Not set by glBindAttribLocation
         {
             int availableIndex = 0;
 
-            while (availableIndex < MAX_VERTEX_ATTRIBS && !mLinkedAttribute[availableIndex].empty())
+            while (availableIndex < MAX_VERTEX_ATTRIBS && !mLinkedAttribute[availableIndex].name.empty())
             {
                 availableIndex++;
             }
 
             if (availableIndex == MAX_VERTEX_ATTRIBS)
             {
-                appendToInfoLog("Too many active attributes (%s)", name);
+                appendToInfoLog("Too many active attributes (%s)", attribute.name.c_str());
 
                 return false;   // Fail to link
             }
 
-            mLinkedAttribute[availableIndex] = name;
+            mLinkedAttribute[availableIndex] = attribute;
         }
     }
 
     for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
     {
-        mSemanticIndex[attributeIndex] = mVertexShader->getSemanticIndex(mLinkedAttribute[attributeIndex].c_str());
+        mSemanticIndex[attributeIndex] = mVertexShader->getSemanticIndex(mLinkedAttribute[attributeIndex].name.c_str());
     }
 
     return true;
 }
 
-int Program::getAttributeBinding(const char *name)
+int Program::getAttributeBinding(const std::string &name)
 {
     for (int location = 0; location < MAX_VERTEX_ATTRIBS; location++)
     {
@@ -1749,6 +1749,41 @@ bool Program::applyUniform4iv(GLint location, GLsizei count, const GLint *v)
     return true;
 }
 
+GLenum Program::parseAttributeType(const std::string &type)
+{
+    if (type == "float")
+    {
+        return GL_FLOAT;
+    }
+    else if (type == "float2")
+    {
+        return GL_FLOAT_VEC2;
+    }
+    else if (type == "float3")
+    {
+        return GL_FLOAT_VEC3;
+    }
+    else if (type == "float4")
+    {
+        return GL_FLOAT_VEC4;
+    }
+    else if (type == "float2x2")
+    {
+        return GL_FLOAT_MAT2;
+    }
+    else if (type == "float3x3")
+    {
+        return GL_FLOAT_MAT3;
+    }
+    else if (type == "float4x4")
+    {
+        return GL_FLOAT_MAT4;
+    }
+    else UNREACHABLE();
+
+    return GL_NONE;
+}
+
 void Program::appendToInfoLog(const char *format, ...)
 {
     if (!format)
@@ -1826,7 +1861,8 @@ void Program::unlink(bool destroy)
 
     for (int index = 0; index < MAX_VERTEX_ATTRIBS; index++)
     {
-        mLinkedAttribute[index].clear();
+        mLinkedAttribute[index].name.clear();
+        mLinkedAttribute[index].type.clear();
         mSemanticIndex[index] = -1;
     }
 
@@ -1922,6 +1958,68 @@ void Program::getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shade
     {
         *count = total;
     }
+}
+
+void Program::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name)
+{
+    int attribute = 0;
+    for (unsigned int i = 0; i < index; i++)
+    {
+        do
+        {
+            attribute++;
+
+            ASSERT(attribute < MAX_VERTEX_ATTRIBS);   // index must be smaller than getActiveAttributeCount()
+        }
+        while (mLinkedAttribute[attribute].name.empty());
+    }
+
+    if (bufsize > 0)
+    {
+        const char *string = mLinkedAttribute[attribute].name.c_str();
+
+        strncpy(name, string, bufsize);
+        name[bufsize - 1] = '\0';
+
+        if (length)
+        {
+            *length = strlen(name);
+        }
+    }
+
+    *size = 1;
+
+    *type = parseAttributeType(mLinkedAttribute[attribute].type);
+}
+
+GLint Program::getActiveAttributeCount()
+{
+    int count = 0;
+
+    for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
+    {
+        if (!mLinkedAttribute[attributeIndex].name.empty())
+        {
+            count++;
+        }
+    }
+
+    return count;
+}
+
+GLint Program::getActiveAttributeMaxLength()
+{
+    int maxLength = 0;
+
+    for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
+    {
+        if (!mLinkedAttribute[attributeIndex].name.empty())
+        {
+            maxLength = std::max((int)(mLinkedAttribute[attributeIndex].name.length() + 1), maxLength);
+        }
+    }
+
+    return maxLength;
 }
 
 void Program::flagForDeletion()

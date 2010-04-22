@@ -1868,10 +1868,10 @@ void __stdcall glGenTextures(GLsizei n, GLuint* textures)
     }
 }
 
-void __stdcall glGetActiveAttrib(GLuint program, GLuint index, GLsizei bufsize, GLsizei* length, GLint* size, GLenum* type, GLchar* name)
+void __stdcall glGetActiveAttrib(GLuint program, GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name)
 {
-    TRACE("(GLuint program = %d, GLuint index = %d, GLsizei bufsize = %d, GLsizei* length = 0x%0.8p, "
-          "GLint* size = 0x%0.8p, GLenum* type = %0.8p, GLchar* name = %0.8p)",
+    TRACE("(GLuint program = %d, GLuint index = %d, GLsizei bufsize = %d, GLsizei *length = 0x%0.8p, "
+          "GLint *size = 0x%0.8p, GLenum *type = %0.8p, GLchar *name = %0.8p)",
           program, index, bufsize, length, size, type, name);
 
     try
@@ -1881,7 +1881,31 @@ void __stdcall glGetActiveAttrib(GLuint program, GLuint index, GLsizei bufsize, 
             return error(GL_INVALID_VALUE);
         }
 
-        UNIMPLEMENTED();   // FIXME
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            gl::Program *programObject = context->getProgram(program);
+
+            if (!programObject)
+            {
+                if (context->getShader(program))
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+                else
+                {
+                    return error(GL_INVALID_VALUE);
+                }
+            }
+
+            if (index >= programObject->getActiveAttributeCount())
+            {
+                return error(GL_INVALID_VALUE);
+            }
+
+            programObject->getActiveAttribute(index, bufsize, length, size, type, name);
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -2300,12 +2324,10 @@ void __stdcall glGetProgramiv(GLuint program, GLenum pname, GLint* params)
                 *params = programObject->getAttachedShadersCount();
                 return;
               case GL_ACTIVE_ATTRIBUTES:
-                UNIMPLEMENTED();   // FIXME
-                *params = 0;
+                *params = programObject->getActiveAttributeCount();
                 return;
               case GL_ACTIVE_ATTRIBUTE_MAX_LENGTH:
-                UNIMPLEMENTED();   // FIXME
-                *params = 0;
+                *params = programObject->getActiveAttributeMaxLength();
                 return;
               case GL_ACTIVE_UNIFORMS:
                 UNIMPLEMENTED();   // FIXME

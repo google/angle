@@ -67,6 +67,12 @@ class Shader
     static void *mVertexCompiler;
 };
 
+struct Attribute
+{
+    std::string type;
+    std::string name;
+};
+
 class VertexShader : public Shader
 {
   public:
@@ -76,7 +82,7 @@ class VertexShader : public Shader
 
     GLenum getType();
     void compile();
-    const char *getAttributeName(unsigned int attributeIndex);
+    const Attribute &getAttribute(unsigned int attributeIndex);
     int getSemanticIndex(const std::string &attributeName);
 
   private:
@@ -84,7 +90,7 @@ class VertexShader : public Shader
 
     void parseAttributes();
 
-    std::string mAttributeName[MAX_VERTEX_ATTRIBS + 1];   // One extra to report link error
+    Attribute mAttribute[MAX_VERTEX_ATTRIBS + 1];   // One extra to report link error
 };
 
 class FragmentShader : public Shader

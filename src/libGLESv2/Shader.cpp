@@ -278,14 +278,11 @@ void VertexShader::compile()
     parseAttributes();
 }
 
-const char *VertexShader::getAttributeName(unsigned int semanticIndex)
+const Attribute &VertexShader::getAttribute(unsigned int semanticIndex)
 {
-    if (semanticIndex < MAX_VERTEX_ATTRIBS + 1)
-    {
-        return mAttributeName[semanticIndex].c_str();
-    }
+    ASSERT(semanticIndex < MAX_VERTEX_ATTRIBS + 1);
 
-    return 0;
+    return mAttribute[semanticIndex];
 }
 
 int VertexShader::getSemanticIndex(const std::string &attributeName)
@@ -294,7 +291,7 @@ int VertexShader::getSemanticIndex(const std::string &attributeName)
     {
         for (int semanticIndex = 0; semanticIndex < MAX_VERTEX_ATTRIBS; semanticIndex++)
         {
-            if (mAttributeName[semanticIndex] == attributeName)
+            if (mAttribute[semanticIndex].name == attributeName)
             {
                 return semanticIndex;
             }
@@ -312,16 +309,18 @@ void VertexShader::parseAttributes()
 
         for (int attributeIndex = 0; *input != '}'; input++)
         {
+            char attributeType[100];
             char attributeName[100];
             int semanticIndex;
 
-            int matches = sscanf(input, "_%s : TEXCOORD%d;", attributeName, &semanticIndex);
+            int matches = sscanf(input, "%s _%s : TEXCOORD%d;", attributeType, attributeName, &semanticIndex);
 
-            if (matches == 2)
+            if (matches == 3)
             {
                 if (semanticIndex < MAX_VERTEX_ATTRIBS + 1)
                 {
-                    mAttributeName[semanticIndex] = attributeName;
+                    mAttribute[semanticIndex].type = attributeType;
+                    mAttribute[semanticIndex].name = attributeName;
                 }
                 else
                 {
