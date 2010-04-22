@@ -216,6 +216,41 @@ void Shader::releaseCompiler()
     mVertexCompiler = NULL;
 }
 
+GLenum Shader::parseAttributeType(const std::string &type)
+{
+    if (type == "float")
+    {
+        return GL_FLOAT;
+    }
+    else if (type == "float2")
+    {
+        return GL_FLOAT_VEC2;
+    }
+    else if (type == "float3")
+    {
+        return GL_FLOAT_VEC3;
+    }
+    else if (type == "float4")
+    {
+        return GL_FLOAT_VEC4;
+    }
+    else if (type == "float2x2")
+    {
+        return GL_FLOAT_MAT2;
+    }
+    else if (type == "float3x3")
+    {
+        return GL_FLOAT_MAT3;
+    }
+    else if (type == "float4x4")
+    {
+        return GL_FLOAT_MAT4;
+    }
+    else UNREACHABLE();
+
+    return GL_NONE;
+}
+
 void Shader::compileToHLSL(void *compiler)
 {
     if (isCompiled() || !mSource)
@@ -319,7 +354,7 @@ void VertexShader::parseAttributes()
             {
                 if (semanticIndex < MAX_VERTEX_ATTRIBS + 1)
                 {
-                    mAttribute[semanticIndex].type = attributeType;
+                    mAttribute[semanticIndex].type = parseAttributeType(attributeType);
                     mAttribute[semanticIndex].name = attributeName;
                 }
                 else

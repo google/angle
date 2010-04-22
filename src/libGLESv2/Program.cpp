@@ -1274,7 +1274,7 @@ Uniform *Program::createUniform(const D3DXCONSTANT_DESC &constantDescription, st
 // This methods needs to match OutputHLSL::decorate
 std::string Program::decorate(const std::string &string)
 {
-    if (string.substr(0, 3) != "gl_")
+    if (string.substr(0, 3) != "gl_" && string.substr(0, 3) != "dx_")
     {
         return "_" + string;
     }
@@ -1749,41 +1749,6 @@ bool Program::applyUniform4iv(GLint location, GLsizei count, const GLint *v)
     return true;
 }
 
-GLenum Program::parseAttributeType(const std::string &type)
-{
-    if (type == "float")
-    {
-        return GL_FLOAT;
-    }
-    else if (type == "float2")
-    {
-        return GL_FLOAT_VEC2;
-    }
-    else if (type == "float3")
-    {
-        return GL_FLOAT_VEC3;
-    }
-    else if (type == "float4")
-    {
-        return GL_FLOAT_VEC4;
-    }
-    else if (type == "float2x2")
-    {
-        return GL_FLOAT_MAT2;
-    }
-    else if (type == "float3x3")
-    {
-        return GL_FLOAT_MAT3;
-    }
-    else if (type == "float4x4")
-    {
-        return GL_FLOAT_MAT4;
-    }
-    else UNREACHABLE();
-
-    return GL_NONE;
-}
-
 void Program::appendToInfoLog(const char *format, ...)
 {
     if (!format)
@@ -1862,7 +1827,6 @@ void Program::unlink(bool destroy)
     for (int index = 0; index < MAX_VERTEX_ATTRIBS; index++)
     {
         mLinkedAttribute[index].name.clear();
-        mLinkedAttribute[index].type.clear();
         mSemanticIndex[index] = -1;
     }
 
@@ -1962,7 +1926,7 @@ void Program::getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shade
 
 void Program::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name)
 {
-    int attribute = 0;
+    unsigned int attribute = 0;
     for (unsigned int i = 0; i < index; i++)
     {
         do
@@ -1989,7 +1953,7 @@ void Program::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length,
 
     *size = 1;
 
-    *type = parseAttributeType(mLinkedAttribute[attribute].type);
+    *type = mLinkedAttribute[attribute].type;
 }
 
 GLint Program::getActiveAttributeCount()
@@ -2016,6 +1980,73 @@ GLint Program::getActiveAttributeMaxLength()
         if (!mLinkedAttribute[attributeIndex].name.empty())
         {
             maxLength = std::max((int)(mLinkedAttribute[attributeIndex].name.length() + 1), maxLength);
+        }
+    }
+
+    return maxLength;
+}
+
+void Program::getActiveUniform(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name)
+{
+    unsigned int uniform = 0;
+    for (unsigned int i = 0; i < index; i++)
+    {
+        do
+        {
+            uniform++;
+
+            ASSERT(uniform < mUniforms.size());   // index must be smaller than getActiveUniformCount()
+        }
+        while (mUniforms[uniform]->name.substr(0, 3) == "dx_");
+    }
+
+    if (bufsize > 0)
+    {
+        const char *string = mUniforms[uniform]->name.c_str();
+
+        if(string[0] == '_')   // Undecorate
+        {
+            string++;
+        }
+
+        strncpy(name, string, bufsize);
+        name[bufsize - 1] = '\0';
+
+        if (length)
+        {
+            *length = strlen(name);
+        }
+    }
+
+    *size = 1;
+
+    *type = mUniforms[uniform]->type;
+}
+
+GLint Program::getActiveUniformCount()
+{
+    int count = 0;
+
+    for (unsigned int uniformIndex = 0; uniformIndex < mUniforms.size(); uniformIndex++)
+    {
+        if (mUniforms[uniformIndex]->name.substr(0, 3) != "dx_")
+        {
+            count++;
+        }
+    }
+
+    return count;
+}
+
+GLint Program::getActiveUniformMaxLength()
+{
+    int maxLength = 0;
+
+    for (unsigned int uniformIndex = 0; uniformIndex < mUniforms.size(); uniformIndex++)
+    {
+        if (!mUniforms[uniformIndex]->name.empty() && mUniforms[uniformIndex]->name.substr(0, 3) != "dx_")
+        {
+            maxLength = std::max((int)(mUniforms[uniformIndex]->name.length() + 1), maxLength);
         }
     }
 

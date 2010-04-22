@@ -85,6 +85,10 @@ class Program
     GLint getActiveAttributeCount();
     GLint getActiveAttributeMaxLength();
 
+    void getActiveUniform(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name);
+    GLint getActiveUniformCount();
+    GLint getActiveUniformMaxLength();
+
     void flagForDeletion();
     bool isFlaggedForDeletion() const;
 
@@ -135,7 +139,6 @@ class Program
     bool applyUniform3iv(GLint location, GLsizei count, const GLint *v);
     bool applyUniform4iv(GLint location, GLsizei count, const GLint *v);
 
-    GLenum parseAttributeType(const std::string &type);
     void appendToInfoLog(const char *info, ...);
 
     FragmentShader *mFragmentShader;

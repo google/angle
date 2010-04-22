@@ -124,10 +124,10 @@ void OutputHLSL::header()
             }
         }
 
-        out << "uniform float4 gl_Window;\n"
-               "uniform float2 gl_Depth;\n"
-               "uniform bool gl_PointsOrLines;\n"
-               "uniform bool gl_FrontCCW;\n"
+        out << "uniform float4 dx_Window;\n"
+               "uniform float2 dx_Depth;\n"
+               "uniform bool dx_PointsOrLines;\n"
+               "uniform bool dx_FrontCCW;\n"
                "\n";
         out <<  uniforms;
         out << "\n"
@@ -275,7 +275,7 @@ void OutputHLSL::header()
             }
         }
 
-        out << "uniform float2 gl_HalfPixelSize;\n"
+        out << "uniform float2 dx_HalfPixelSize;\n"
                "\n";
         out <<  uniforms;
         out << "\n"
@@ -617,11 +617,11 @@ void OutputHLSL::footer()
         out << "PS_OUTPUT main(PS_INPUT input)\n"
                "{\n"
                "    float rhw = 1.0 / input.gl_FragCoord.w;\n"
-               "    gl_FragCoord.x = (input.gl_FragCoord.x * rhw) * gl_Window.x + gl_Window.z;\n"
-               "    gl_FragCoord.y = (input.gl_FragCoord.y * rhw) * gl_Window.y + gl_Window.w;\n"
-               "    gl_FragCoord.z = (input.gl_FragCoord.z * rhw) * gl_Depth.x + gl_Depth.y;\n"
+               "    gl_FragCoord.x = (input.gl_FragCoord.x * rhw) * dx_Window.x + dx_Window.z;\n"
+               "    gl_FragCoord.y = (input.gl_FragCoord.y * rhw) * dx_Window.y + dx_Window.w;\n"
+               "    gl_FragCoord.z = (input.gl_FragCoord.z * rhw) * dx_Depth.x + dx_Depth.y;\n"
                "    gl_FragCoord.w = rhw;\n"
-               "    gl_FrontFacing = gl_PointsOrLines || (gl_FrontCCW ? (input.vFace >= 0.0) : (input.vFace <= 0.0));\n";
+               "    gl_FrontFacing = dx_PointsOrLines || (dx_FrontCCW ? (input.vFace >= 0.0) : (input.vFace <= 0.0));\n";
 
         for (TSymbolTableLevel::const_iterator namedSymbol = symbols->begin(); namedSymbol != symbols->end(); namedSymbol++)
         {
@@ -680,8 +680,8 @@ void OutputHLSL::footer()
                "    gl_main();\n"
                "\n"
                "    VS_OUTPUT output;\n"
-               "    output.gl_Position.x = gl_Position.x - gl_HalfPixelSize.x * gl_Position.w;\n"
-               "    output.gl_Position.y = -(gl_Position.y - gl_HalfPixelSize.y * gl_Position.w);\n"
+               "    output.gl_Position.x = gl_Position.x - dx_HalfPixelSize.x * gl_Position.w;\n"
+               "    output.gl_Position.y = -(gl_Position.y - dx_HalfPixelSize.y * gl_Position.w);\n"
                "    output.gl_Position.z = (gl_Position.z + gl_Position.w) * 0.5;\n"
                "    output.gl_Position.w = gl_Position.w;\n"
                "    output.gl_PointSize = gl_PointSize;\n"
@@ -1979,7 +1979,7 @@ TString OutputHLSL::initializer(const TType &type)
 
 TString OutputHLSL::decorate(const TString &string)
 {
-    if (string.substr(0, 3) != "gl_")
+    if (string.substr(0, 3) != "gl_" && string.substr(0, 3) != "dx_")
     {
         return "_" + string;
     }

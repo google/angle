@@ -1899,7 +1899,7 @@ void __stdcall glGetActiveAttrib(GLuint program, GLuint index, GLsizei bufsize, 
                 }
             }
 
-            if (index >= programObject->getActiveAttributeCount())
+            if (index >= (GLuint)programObject->getActiveAttributeCount())
             {
                 return error(GL_INVALID_VALUE);
             }
@@ -1926,7 +1926,31 @@ void __stdcall glGetActiveUniform(GLuint program, GLuint index, GLsizei bufsize,
             return error(GL_INVALID_VALUE);
         }
 
-        UNIMPLEMENTED();   // FIXME
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            gl::Program *programObject = context->getProgram(program);
+
+            if (!programObject)
+            {
+                if (context->getShader(program))
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+                else
+                {
+                    return error(GL_INVALID_VALUE);
+                }
+            }
+
+            if (index >= (GLuint)programObject->getActiveUniformCount())
+            {
+                return error(GL_INVALID_VALUE);
+            }
+
+            programObject->getActiveUniform(index, bufsize, length, size, type, name);
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -2330,12 +2354,10 @@ void __stdcall glGetProgramiv(GLuint program, GLenum pname, GLint* params)
                 *params = programObject->getActiveAttributeMaxLength();
                 return;
               case GL_ACTIVE_UNIFORMS:
-                UNIMPLEMENTED();   // FIXME
-                *params = 0;
+                *params = programObject->getActiveUniformCount();
                 return;
               case GL_ACTIVE_UNIFORM_MAX_LENGTH:
-                UNIMPLEMENTED();   // FIXME
-                *params = 0;
+                *params = programObject->getActiveUniformMaxLength();
                 return;
               default:
                 return error(GL_INVALID_ENUM);

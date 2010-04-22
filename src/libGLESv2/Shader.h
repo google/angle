@@ -49,6 +49,7 @@ class Shader
     void flagForDeletion();
 
     static void releaseCompiler();
+    static GLenum parseAttributeType(const std::string &type);
 
   protected:
     DISALLOW_COPY_AND_ASSIGN(Shader);
@@ -69,7 +70,7 @@ class Shader
 
 struct Attribute
 {
-    std::string type;
+    GLenum type;
     std::string name;
 };
 
