@@ -950,7 +950,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
       case EOpMatrixTimesScalar: outputTriplet(visit, "(", " * ", ")");   break;
       case EOpVectorTimesMatrix: outputTriplet(visit, "mul(", ", transpose(", "))"); break;
       case EOpMatrixTimesVector: outputTriplet(visit, "mul(transpose(", "), ", ")"); break;
-      case EOpMatrixTimesMatrix: outputTriplet(visit, "mul(", ", ", ")"); break;
+      case EOpMatrixTimesMatrix: outputTriplet(visit, "transpose(mul(transpose(", "), transpose(", ")))"); break;
       case EOpLogicalOr:         outputTriplet(visit, "(", " || ", ")");  break;
       case EOpLogicalXor:        outputTriplet(visit, "xor(", ", ", ")"); break;
       case EOpLogicalAnd:        outputTriplet(visit, "(", " && ", ")");  break;
