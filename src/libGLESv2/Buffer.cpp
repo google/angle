@@ -37,7 +37,14 @@ GLenum Buffer::bufferData(const void* data, GLsizeiptr size, GLenum usage)
 
     const GLubyte* newdata = static_cast<const GLubyte*>(data);
 
-    if (size != mContents.size())
+    if (size == 0)
+    {
+        mContents.clear();
+
+        delete mIdentityTranslation;
+        mIdentityTranslation = NULL;
+    }
+    else if (size != mContents.size())
     {
         // vector::resize only provides the basic exception guarantee, so use temporaries & swap to get the strong exception guarantee.
         // We don't want to risk having mContents and mIdentityTranslation that have different contents or even different sizes.
@@ -87,11 +94,14 @@ GLenum Buffer::copyToIdentityBuffer(GLintptr offset, GLsizeiptr length)
 {
     ASSERT(offset >= 0 && length >= 0);
 
-    // This is a stalling map. Not great for performance.
-    GLubyte *p = static_cast<GLubyte*>(mIdentityTranslation->map());
+    if (length > 0) // If length == 0 mIdentityTranslation might be NULL.
+    {
+        // This is a stalling map. Not great for performance.
+        GLubyte *p = static_cast<GLubyte*>(mIdentityTranslation->map());
 
-    memcpy(p + offset, &mContents[0] + offset, length);
-    mIdentityTranslation->unmap();
+        memcpy(p + offset, &mContents[0] + offset, length);
+        mIdentityTranslation->unmap();
+    }
 
     return GL_NO_ERROR;
 }
