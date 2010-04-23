@@ -159,6 +159,36 @@ Stencilbuffer *Framebuffer::getStencilbuffer()
     return NULL;
 }
 
+GLenum Framebuffer::getColorbufferType()
+{
+    return mColorbufferType;
+}
+
+GLenum Framebuffer::getDepthbufferType()
+{
+    return mDepthbufferType;
+}
+
+GLenum Framebuffer::getStencilbufferType()
+{
+    return mStencilbufferType;
+}
+
+GLuint Framebuffer::getColorbufferHandle()
+{
+    return mColorbufferHandle;
+}
+
+GLuint Framebuffer::getDepthbufferHandle()
+{
+    return mDepthbufferHandle;
+}
+
+GLuint Framebuffer::getStencilbufferHandle()
+{
+    return mStencilbufferHandle;
+}
+
 GLenum Framebuffer::completeness()
 {
     gl::Context *context = gl::getContext();

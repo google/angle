@@ -2238,7 +2238,86 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
                 return error(GL_INVALID_OPERATION);
             }
 
-            UNIMPLEMENTED();   // FIXME
+            if (target != GL_FRAMEBUFFER)
+            {
+                return error(GL_INVALID_ENUM);
+            }
+
+            GLenum attachmentType;
+            GLuint attachmentHandle;
+            switch (attachment)
+            {
+              case GL_COLOR_ATTACHMENT0:    
+                attachmentType = context->getFramebuffer()->getColorbufferType();
+                attachmentHandle = context->getFramebuffer()->getColorbufferHandle(); 
+                break;
+              case GL_DEPTH_ATTACHMENT:     
+                attachmentType = context->getFramebuffer()->getDepthbufferType();
+                attachmentHandle = context->getFramebuffer()->getDepthbufferHandle();
+                break;
+              case GL_STENCIL_ATTACHMENT:   
+                attachmentType = context->getFramebuffer()->getStencilbufferType();
+                attachmentHandle = context->getFramebuffer()->getStencilbufferHandle();
+                break;
+              default: return error(GL_INVALID_ENUM);
+            }
+
+            GLenum attachmentObjectType;   // Type category
+            if (attachmentType ==  GL_NONE || attachmentType == GL_RENDERBUFFER)
+            {
+                attachmentObjectType = attachmentType;
+            }
+            else if (attachmentType == GL_TEXTURE_2D || es2dx::IsCubemapTextureTarget(attachmentType))
+            {
+                attachmentObjectType = GL_TEXTURE;
+            }
+            else UNREACHABLE();
+
+            switch (pname)
+            {
+              case GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE:
+                *params = attachmentObjectType;
+                break;
+              case GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME:
+                if (attachmentObjectType == GL_RENDERBUFFER || attachmentObjectType == GL_TEXTURE)
+                {
+                    *params = attachmentHandle;
+                }
+                else
+                {
+                    return error(GL_INVALID_ENUM);
+                }
+                break;
+              case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL:
+                if (attachmentObjectType == GL_TEXTURE)
+                {
+                    *params = 0; // FramebufferTexture2D will not allow level to be set to anything else in GL ES 2.0
+                }
+                else
+                {
+                    return error(GL_INVALID_ENUM);
+                }
+                break;
+              case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE:
+                if (attachmentObjectType == GL_TEXTURE)
+                {
+                    if (es2dx::IsCubemapTextureTarget(attachmentType))
+                    {
+                        *params = attachmentType;
+                    }
+                    else
+                    {
+                        *params = 0;
+                    }
+                }
+                else
+                {
+                    return error(GL_INVALID_ENUM);
+                }
+                break;
+              default:
+                return error(GL_INVALID_ENUM);
+            }
         }
     }
     catch(std::bad_alloc&)

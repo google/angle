@@ -43,6 +43,14 @@ class Framebuffer
     Depthbuffer *getDepthbuffer();
     Stencilbuffer *getStencilbuffer();
 
+    GLenum getColorbufferType();
+    GLenum getDepthbufferType();
+    GLenum getStencilbufferType();
+
+    GLuint getColorbufferHandle();
+    GLuint getDepthbufferHandle();
+    GLuint getStencilbufferHandle();
+
     GLenum completeness();
 
   private:
