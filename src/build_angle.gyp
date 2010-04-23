@@ -8,7 +8,6 @@
       'target_name': 'translator_common',
       'type': 'static_library',
       'include_dirs': [
-        'compiler',
         '.',
         '../include',
       ],
@@ -68,9 +67,9 @@
         'compiler/preprocessor/tokens.c',
         'compiler/preprocessor/tokens.h',
         # Generated files
-        'compiler/Gen_glslang.cpp',
-        'compiler/Gen_glslang_tab.cpp',
-        'compiler/glslang_tab.h',
+        '<(INTERMEDIATE_DIR)/Gen_glslang.cpp',
+        '<(INTERMEDIATE_DIR)/Gen_glslang_tab.cpp',
+        '<(INTERMEDIATE_DIR)/glslang_tab.h',
       ],
       'conditions': [
         ['OS=="win"', {
@@ -83,10 +82,11 @@
         {
           'action_name': 'flex_glslang',
           'inputs': ['compiler/glslang.l'],
-          'outputs': ['compiler/Gen_glslang.cpp'],
+          'outputs': ['<(INTERMEDIATE_DIR)/Gen_glslang.cpp'],
           'action': [
             'flex',
             '--noline',
+            '--nounistd',
             '--outfile=<(_outputs)',
             '<(_inputs)',
           ],
@@ -94,11 +94,11 @@
         {
           'action_name': 'bison_glslang',
           'inputs': ['compiler/glslang.y'],
-          'outputs': ['compiler/Gen_glslang_tab.cpp'],
+          'outputs': ['<(INTERMEDIATE_DIR)/Gen_glslang_tab.cpp'],
           'action': [
             'bison',
             '--no-lines',
-            '--defines=compiler/glslang_tab.h',
+            '--defines=<(INTERMEDIATE_DIR)/glslang_tab.h',
             '--skeleton=yacc.c',
             '--output=<(_outputs)',
             '<(_inputs)',
@@ -111,7 +111,6 @@
       'type': 'static_library',
       'dependencies': ['translator_common'],
       'include_dirs': [
-        'compiler',
         '.',
         '../include',
       ],
@@ -128,7 +127,6 @@
       'type': 'static_library',
       'dependencies': ['translator_common'],
       'include_dirs': [
-        'compiler',
         '.',
         '../include',
       ],
@@ -147,7 +145,6 @@
       'type': 'shared_library',
       'dependencies': ['translator_hlsl'],
       'include_dirs': [
-        'libGLESv2',
         '.',
         '../include',
         '$(DXSDK_DIR)/include',
@@ -201,7 +198,6 @@
       'type': 'shared_library',
       'dependencies': ['libGLESv2'],
       'include_dirs': [
-        'libEGL',
         '.',
         '../include',
       ],

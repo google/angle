@@ -30,8 +30,9 @@ O           [0-7]
 %{
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "compiler/ParseHelper.h"
-#include "compiler/glslang_tab.h"
+#include "glslang_tab.h"
 
 /* windows only pragma */
 #ifdef _MSC_VER
