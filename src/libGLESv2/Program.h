@@ -36,6 +36,16 @@ struct Uniform
     unsigned char *data;
 };
 
+// Struct used for correlating uniforms/elements of uniform arrays to handles
+struct UniformLocation
+{
+    UniformLocation(const std::string &name, unsigned int element, unsigned int index);
+
+    std::string name;
+    unsigned int element;
+    unsigned int index;
+};
+
 class Program
 {
   public:
@@ -167,6 +177,8 @@ class Program
 
     typedef std::vector<Uniform*> UniformArray;
     UniformArray mUniforms;
+    typedef std::vector<UniformLocation> UniformIndex;
+    UniformIndex mUniformIndex;
 
     bool mLinked;
     bool mDeleteStatus;   // Flag to indicate that the program can be deleted when no longer in use
