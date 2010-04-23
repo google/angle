@@ -9,7 +9,7 @@
 // This file contains contains the window's specific functions
 //
 
-#if !(defined(_WIN32) || defined(_WIN64))
+#if !defined(ANGLE_OS_WIN)
 #error Trying to build a windows specific file in a non windows build.
 #endif
 

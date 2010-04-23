@@ -228,7 +228,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ossource.cpp"
+				RelativePath=".\ossource_win.cpp"
 				>
 			</File>
 			<File

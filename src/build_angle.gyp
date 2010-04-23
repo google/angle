@@ -3,8 +3,6 @@
 # found in the LICENSE file.
 
 {
-  'variables': {
-  },
   'targets': [
     {
       'target_name': 'translator_common',
@@ -37,7 +35,6 @@
         'compiler/localintermediate.h',
         'compiler/MMap.h',
         'compiler/osinclude.h',
-        'compiler/ossource.cpp',
         'compiler/parseConst.cpp',
         'compiler/ParseHelper.cpp',
         'compiler/ParseHelper.h',
@@ -74,6 +71,13 @@
         'compiler/Gen_glslang.cpp',
         'compiler/Gen_glslang_tab.cpp',
         'compiler/glslang_tab.h',
+      ],
+      'conditions': [
+        ['OS=="win"', {
+          'sources': ['compiler/ossource_win.cpp'],
+        }, { # else: posix
+          'sources': ['compiler/ossource_posix.cpp'],
+        }],
       ],
       'actions': [
         {
