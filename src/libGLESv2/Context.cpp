@@ -848,6 +848,12 @@ bool Context::getFloatv(GLenum pname, GLfloat *params)
         params[2] = colorClearValue.blue;
         params[3] = colorClearValue.alpha;
         break;
+      case GL_BLEND_COLOR:
+        params[0] = blendColor.red;
+        params[1] = blendColor.green;
+        params[2] = blendColor.blue;
+        params[3] = blendColor.alpha;
+        break;
       default:
         return false;
     }
@@ -1154,6 +1160,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
         }
         break;
       case GL_COLOR_CLEAR_VALUE:
+      case GL_BLEND_COLOR:
         {
             *type = GL_FLOAT;
             *numParams = 4;

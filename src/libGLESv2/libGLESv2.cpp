@@ -2372,7 +2372,7 @@ void __stdcall glGetIntegerv(GLenum pname, GLint* params)
 
                     for (unsigned int i = 0; i < numParams; ++i)
                     {
-                        if (pname == GL_DEPTH_RANGE || pname == GL_COLOR_CLEAR_VALUE || pname == GL_DEPTH_CLEAR_VALUE)
+                        if (pname == GL_DEPTH_RANGE || pname == GL_COLOR_CLEAR_VALUE || pname == GL_DEPTH_CLEAR_VALUE || pname == GL_BLEND_COLOR)
                         {
                             params[i] = (GLint)(((GLfloat)(0xFFFFFFFF) * floatParams[i] - 1.0f) / 2.0f);
                         }
