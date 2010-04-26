@@ -730,7 +730,7 @@ void __stdcall glCompressedTexImage2D(GLenum target, GLint level, GLenum interna
 
     try
     {
-        if (target != GL_TEXTURE_2D && !es2dx::IsCubemapTextureTarget(target))
+        if (!es2dx::IsTextureTarget(target))
         {
             return error(GL_INVALID_ENUM);
         }
@@ -763,7 +763,7 @@ void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
 
     try
     {
-        if (target != GL_TEXTURE_2D && !es2dx::IsCubemapTextureTarget(target))
+        if (!es2dx::IsTextureTarget(target))
         {
             return error(GL_INVALID_ENUM);
         }
@@ -902,7 +902,7 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
 
     try
     {
-        if (target != GL_TEXTURE_2D && !es2dx::IsCubemapTextureTarget(target))
+        if (!es2dx::IsTextureTarget(target))
         {
             return error(GL_INVALID_ENUM);
         }
@@ -1627,6 +1627,8 @@ void __stdcall glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum t
         switch (attachment)
         {
           case GL_COLOR_ATTACHMENT0:
+          case GL_DEPTH_ATTACHMENT:
+          case GL_STENCIL_ATTACHMENT:
             break;
           default:
             return error(GL_INVALID_ENUM);
@@ -1687,7 +1689,12 @@ void __stdcall glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum t
                 return error(GL_INVALID_OPERATION);
             }
 
-            framebuffer->setColorbuffer(textarget, texture);
+            switch (attachment)
+            {
+              case GL_COLOR_ATTACHMENT0:  framebuffer->setColorbuffer(textarget, texture);   break;
+              case GL_DEPTH_ATTACHMENT:   framebuffer->setDepthbuffer(textarget, texture);   break;
+              case GL_STENCIL_ATTACHMENT: framebuffer->setStencilbuffer(textarget, texture); break;
+            }
         }
     }
     catch(std::bad_alloc&)
@@ -2263,11 +2270,11 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
             }
 
             GLenum attachmentObjectType;   // Type category
-            if (attachmentType ==  GL_NONE || attachmentType == GL_RENDERBUFFER)
+            if (attachmentType == GL_NONE || attachmentType == GL_RENDERBUFFER)
             {
                 attachmentObjectType = attachmentType;
             }
-            else if (attachmentType == GL_TEXTURE_2D || es2dx::IsCubemapTextureTarget(attachmentType))
+            else if (es2dx::IsTextureTarget(attachmentType))
             {
                 attachmentObjectType = GL_TEXTURE;
             }
@@ -4125,7 +4132,7 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
 
     try
     {
-        if (target != GL_TEXTURE_2D && !es2dx::IsCubemapTextureTarget(target))
+        if (!es2dx::IsTextureTarget(target))
         {
             return error(GL_INVALID_ENUM);
         }

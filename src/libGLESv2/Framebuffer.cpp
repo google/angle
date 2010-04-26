@@ -52,11 +52,22 @@ void Framebuffer::setStencilbuffer(GLenum type, GLuint stencilbuffer)
 
 void Framebuffer::detachTexture(GLuint texture)
 {
-    if (mColorbufferHandle == texture
-        && (mColorbufferType == GL_TEXTURE_2D || es2dx::IsCubemapTextureTarget(mColorbufferType)))
+    if (mColorbufferHandle == texture && es2dx::IsTextureTarget(mColorbufferType))
     {
         mColorbufferType = GL_NONE;
         mColorbufferHandle = 0;
+    }
+
+    if (mDepthbufferHandle == texture && es2dx::IsTextureTarget(mDepthbufferType))
+    {
+        mDepthbufferType = GL_NONE;
+        mDepthbufferHandle = 0;
+    }
+
+    if (mStencilbufferHandle == texture && es2dx::IsTextureTarget(mStencilbufferType))
+    {
+        mStencilbufferType = GL_NONE;
+        mStencilbufferHandle = 0;
     }
 }
 

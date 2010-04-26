@@ -438,6 +438,11 @@ bool IsCubemapTextureTarget(GLenum target)
     return (target >= GL_TEXTURE_CUBE_MAP_POSITIVE_X && target <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z);
 }
 
+bool IsTextureTarget(GLenum target)
+{
+    return target == GL_TEXTURE_2D || IsCubemapTextureTarget(target);
+}
+
 // Verify that format/type are one of the combinations from table 3.4.
 bool CheckTextureFormatType(GLenum format, GLenum type)
 {
