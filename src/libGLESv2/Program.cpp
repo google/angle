@@ -1075,6 +1075,8 @@ void Program::link()
 // Determines the mapping between GL attributes and Direct3D 9 vertex stream usage indices
 bool Program::linkAttributes()
 {
+    unsigned int usedLocations = 0;
+
     // Link attributes that have a binding location
     for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
     {
@@ -1089,6 +1091,20 @@ bool Program::linkAttributes()
             }
 
             mLinkedAttribute[location] = attribute;
+
+            int size = AttributeVectorCount(attribute.type);
+
+            if (size + location > MAX_VERTEX_ATTRIBS)
+            {
+                appendToInfoLog("Active attribute (%s) at location %d is too big to fit", attribute.name.c_str(), location);
+
+                return false;
+            }
+
+            for (int i = 0; i < size; i++)
+            {
+                usedLocations |= 1 << (location + i);
+            }
         }
     }
 
@@ -1098,16 +1114,12 @@ bool Program::linkAttributes()
         const Attribute &attribute = mVertexShader->getAttribute(attributeIndex);
         int location = getAttributeBinding(attribute.name);
 
-        if (location == -1)   // Not set by glBindAttribLocation
+        if (!attribute.name.empty() && location == -1)   // Not set by glBindAttribLocation
         {
-            int availableIndex = 0;
+            int size = AttributeVectorCount(attribute.type);
+            int availableIndex = AllocateFirstFreeBits(&usedLocations, size, MAX_VERTEX_ATTRIBS);
 
-            while (availableIndex < MAX_VERTEX_ATTRIBS && !mLinkedAttribute[availableIndex].name.empty())
-            {
-                availableIndex++;
-            }
-
-            if (availableIndex == MAX_VERTEX_ATTRIBS)
+            if (availableIndex == -1 || availableIndex + size > MAX_VERTEX_ATTRIBS)
             {
                 appendToInfoLog("Too many active attributes (%s)", attribute.name.c_str());
 
@@ -1118,9 +1130,23 @@ bool Program::linkAttributes()
         }
     }
 
-    for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
+    for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; )
     {
-        mSemanticIndex[attributeIndex] = mVertexShader->getSemanticIndex(mLinkedAttribute[attributeIndex].name.c_str());
+        int index = mVertexShader->getSemanticIndex(mLinkedAttribute[attributeIndex].name);
+
+        if (index == -1)
+        {
+            mSemanticIndex[attributeIndex++] = -1;
+        }
+        else
+        {
+            int size = AttributeVectorCount(mVertexShader->getAttribute(index).type);
+
+            for (int i = 0; i < size; i++)
+            {
+                mSemanticIndex[attributeIndex++] = index++;
+            }
+        }
     }
 
     return true;

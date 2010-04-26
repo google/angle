@@ -48,6 +48,7 @@ class OutputHLSL : public TIntermTraverser
     bool handleExcessiveLoop(TIntermLoop *node);
     void outputTriplet(Visit visit, const char *preString, const char *inString, const char *postString);
     TString argumentString(const TIntermSymbol *symbol);
+    int vectorSize(const TType &type) const;
 
     TParseContext &mContext;
     UnfoldSelect *mUnfoldSelect;

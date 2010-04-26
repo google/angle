@@ -21,6 +21,9 @@ struct Color;
 int UniformComponentCount(GLenum type);
 GLenum UniformComponentType(GLenum type);
 size_t UniformTypeSize(GLenum type);
+int AttributeVectorCount(GLenum type);
+
+int AllocateFirstFreeBits(unsigned int *bits, unsigned int allocationSize, unsigned int bitsSize);
 
 }
 

@@ -73,6 +73,14 @@ TInfoSinkBase &OutputHLSL::getBodyStream()
     return mBody;
 }
 
+int OutputHLSL::vectorSize(const TType &type) const
+{
+    int elementSize = type.isMatrix() ? type.getNominalSize() : 1;
+    int arraySize = type.isArray() ? type.getArraySize() : 1;
+
+    return elementSize * arraySize;
+}
+
 void OutputHLSL::header()
 {
     EShLanguage language = mContext.language;
@@ -255,7 +263,7 @@ void OutputHLSL::header()
                         attributeInput += "    " + typeString(type) + " " + decorate(name) + arrayString(type) + " : TEXCOORD" + str(semanticIndex) + ";\n";
                         attributeGlobals += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
 
-                        semanticIndex += type.isArray() ? type.getArraySize() : 1;
+                        semanticIndex += vectorSize(type);
                     }
                 }
                 else if (qualifier == EvqVaryingOut || qualifier == EvqInvariantVaryingOut)
@@ -690,7 +698,9 @@ void OutputHLSL::footer()
                 {
                     if (mReferencedAttributes.find(name.c_str()) != mReferencedAttributes.end())
                     {
-                        out << "    " + decorate(name) + " = input." + decorate(name) + ";\n";
+                        const char *transpose = type.isMatrix() ? "transpose" : "";
+
+                        out << "    " + decorate(name) + " = " + transpose + "(input." + decorate(name) + ");\n";
                     }
                 }
             }

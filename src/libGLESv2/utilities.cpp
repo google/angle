@@ -8,6 +8,8 @@
 
 #include "libGLESv2/utilities.h"
 
+#include <limits>
+
 #include "common/debug.h"
 
 #include "libGLESv2/mathutil.h"
@@ -87,6 +89,59 @@ size_t UniformTypeSize(GLenum type)
     }
 
     return UniformTypeSize(UniformComponentType(type)) * UniformComponentCount(type);
+}
+
+int AttributeVectorCount(GLenum type)
+{
+    switch (type)
+    {
+      case GL_BOOL:
+      case GL_FLOAT:
+      case GL_INT:
+      case GL_BOOL_VEC2:
+      case GL_FLOAT_VEC2:
+      case GL_INT_VEC2:
+      case GL_INT_VEC3:
+      case GL_FLOAT_VEC3:
+      case GL_BOOL_VEC3:
+      case GL_BOOL_VEC4:
+      case GL_FLOAT_VEC4:
+      case GL_INT_VEC4:
+        return 1;
+
+      case GL_FLOAT_MAT2:
+        return 2;
+
+      case GL_FLOAT_MAT3:
+        return 3;
+
+      case GL_FLOAT_MAT4:
+        return 4;
+
+      default:
+        UNREACHABLE();
+        return 0;
+    }
+}
+
+int AllocateFirstFreeBits(unsigned int *bits, unsigned int allocationSize, unsigned int bitsSize)
+{
+    ASSERT(allocationSize <= bitsSize);
+
+    unsigned int mask = std::numeric_limits<unsigned int>::max() >> (std::numeric_limits<unsigned int>::digits - allocationSize);
+
+    for (unsigned int i = 0; i < bitsSize - allocationSize + 1; i++)
+    {
+        if ((*bits & mask) == 0)
+        {
+            *bits |= mask;
+            return i;
+        }
+
+        mask <<= 1;
+    }
+
+    return -1;
 }
 
 }
