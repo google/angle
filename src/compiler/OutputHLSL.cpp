@@ -32,6 +32,10 @@ OutputHLSL::OutputHLSL(TParseContext &context) : TIntermTraverser(true, true, tr
     mUsesTexture2DProj_bias = false;
     mUsesTextureCube = false;
     mUsesTextureCube_bias = false;
+    mUsesFaceforward1 = false;
+    mUsesFaceforward2 = false;
+    mUsesFaceforward3 = false;
+    mUsesFaceforward4 = false;
     mUsesEqualMat2 = false;
     mUsesEqualMat3 = false;
     mUsesEqualMat4 = false;
@@ -453,55 +457,71 @@ void OutputHLSL::header()
            "{\n"
            "    return x - y * floor(x / y);\n"
            "}\n"
-           "\n"
-           "float faceforward(float N, float I, float Nref)\n"
-           "{\n"
-           "    if(dot(Nref, I) < 0)\n"
-           "    {\n"
-           "        return N;\n"
-           "    }\n"
-           "    else\n"
-           "    {\n"
-           "        return -N;\n"
-           "    }\n"
-           "}\n"
-           "\n"
-           "float2 faceforward(float2 N, float2 I, float2 Nref)\n"
-           "{\n"
-           "    if(dot(Nref, I) < 0)\n"
-           "    {\n"
-           "        return N;\n"
-           "    }\n"
-           "    else\n"
-           "    {\n"
-           "        return -N;\n"
-           "    }\n"
-           "}\n"
-           "\n"
-           "float3 faceforward(float3 N, float3 I, float3 Nref)\n"
-           "{\n"
-           "    if(dot(Nref, I) < 0)\n"
-           "    {\n"
-           "        return N;\n"
-           "    }\n"
-           "    else\n"
-           "    {\n"
-           "        return -N;\n"
-           "    }\n"
-           "}\n"
-           "\n"
-           "float4 faceforward(float4 N, float4 I, float4 Nref)\n"
-           "{\n"
-           "    if(dot(Nref, I) < 0)\n"
-           "    {\n"
-           "        return N;\n"
-           "    }\n"
-           "    else\n"
-           "    {\n"
-           "        return -N;\n"
-           "    }\n"
-           "}\n"
            "\n";
+
+    if (mUsesFaceforward1)
+    {
+        out << "float faceforward(float N, float I, float Nref)\n"
+               "{\n"
+               "    if(dot(Nref, I) < 0)\n"
+               "    {\n"
+               "        return N;\n"
+               "    }\n"
+               "    else\n"
+               "    {\n"
+               "        return -N;\n"
+               "    }\n"
+               "}\n"
+               "\n";
+    }
+
+    if (mUsesFaceforward2)
+    {
+        out << "float2 faceforward(float2 N, float2 I, float2 Nref)\n"
+               "{\n"
+               "    if(dot(Nref, I) < 0)\n"
+               "    {\n"
+               "        return N;\n"
+               "    }\n"
+               "    else\n"
+               "    {\n"
+               "        return -N;\n"
+               "    }\n"
+               "}\n"
+               "\n";
+    }
+
+    if (mUsesFaceforward3)
+    {
+        out << "float3 faceforward(float3 N, float3 I, float3 Nref)\n"
+               "{\n"
+               "    if(dot(Nref, I) < 0)\n"
+               "    {\n"
+               "        return N;\n"
+               "    }\n"
+               "    else\n"
+               "    {\n"
+               "        return -N;\n"
+               "    }\n"
+               "}\n"
+               "\n";
+    }
+
+    if (mUsesFaceforward4)
+    {
+        out << "float4 faceforward(float4 N, float4 I, float4 Nref)\n"
+               "{\n"
+               "    if(dot(Nref, I) < 0)\n"
+               "    {\n"
+               "        return N;\n"
+               "    }\n"
+               "    else\n"
+               "    {\n"
+               "        return -N;\n"
+               "    }\n"
+               "}\n"
+               "\n";
+    }
 
     if (mUsesEqualMat2)
     {
@@ -1346,7 +1366,20 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpDistance:      outputTriplet(visit, "distance(", ", ", ")");      break;
       case EOpDot:           outputTriplet(visit, "dot(", ", ", ")");           break;
       case EOpCross:         outputTriplet(visit, "cross(", ", ", ")");         break;
-      case EOpFaceForward:   outputTriplet(visit, "faceforward(", ", ", ")");   break;
+      case EOpFaceForward:
+        {
+            switch (node->getSequence()[0]->getAsTyped()->getSize())   // Number of components in the first argument
+            {
+            case 1: mUsesFaceforward1 = true; break;
+            case 2: mUsesFaceforward2 = true; break;
+            case 3: mUsesFaceforward3 = true; break;
+            case 4: mUsesFaceforward4 = true; break;
+            default: UNREACHABLE();
+            }
+            
+            outputTriplet(visit, "faceforward(", ", ", ")");
+        }
+        break;
       case EOpReflect:       outputTriplet(visit, "reflect(", ", ", ")");       break;
       case EOpRefract:       outputTriplet(visit, "refract(", ", ", ")");       break;
       case EOpMul:           outputTriplet(visit, "(", " * ", ")");             break;
