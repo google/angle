@@ -106,6 +106,9 @@ class OutputHLSL : public TIntermTraverser
     typedef std::set<Constructor, CompareConstructor> ConstructorSet;
     ConstructorSet mConstructors;
 
+    typedef std::list<TType> StructureArray;
+    StructureArray mStructures;
+
     int mArgumentIndex;   // For creating unique argument names
 };
 }

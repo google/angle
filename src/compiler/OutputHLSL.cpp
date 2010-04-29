@@ -11,6 +11,8 @@
 #include "compiler/InfoSink.h"
 #include "compiler/UnfoldSelect.h"
 
+#include <algorithm>
+
 namespace sh
 {
 // Integer to TString conversion
@@ -513,6 +515,25 @@ void OutputHLSL::header()
                "}\n";
     }
 
+    // Output structure declarations
+    for (StructureArray::iterator structure = mStructures.begin(); structure != mStructures.end(); structure++)
+    {
+        const TTypeList &fields = *structure->getStruct();
+
+        out << "struct " + decorate(structure->getTypeName()) + "\n"
+               "{\n";
+
+        for (unsigned int i = 0; i < fields.size(); i++)
+        {
+            const TType &field = *fields[i].type;
+
+            out << "    " + typeString(field) + " " + field.getFieldName() + ";\n";
+        }
+
+        out << "};\n";
+    }
+
+    // Output type constructors
     for (ConstructorSet::iterator constructor = mConstructors.begin(); constructor != mConstructors.end(); constructor++)
     {
         out << typeString(constructor->type) + " " + constructor->name + "(";
@@ -532,7 +553,14 @@ void OutputHLSL::header()
         out << ")\n"
                "{\n";
 
-        out << "    return " + typeString(constructor->type) + "(";
+        if (constructor->type.getStruct())
+        {
+            out << "    " + decorate(constructor->type.getTypeName()) + " structure = {";
+        }
+        else
+        {
+            out << "    return " + typeString(constructor->type) + "(";
+        }
 
         if (constructor->type.isMatrix() && constructor->parameters.size() == 1)
         {
@@ -617,9 +645,9 @@ void OutputHLSL::header()
                 }
                 else if (parameter.isMatrix() || parameter.getStruct())
                 {
-                    ASSERT(remainingComponents == parameter.getInstanceSize() || moreParameters);
+                    ASSERT(remainingComponents == parameter.getObjectSize() || moreParameters);
                     
-                    remainingComponents -= parameter.getInstanceSize();
+                    remainingComponents -= parameter.getObjectSize();
                 }
                 else UNREACHABLE();
 
@@ -635,8 +663,17 @@ void OutputHLSL::header()
             }
         }
 
-        out << ");\n"
-               "}\n";
+        if (constructor->type.getStruct())
+        {
+            out << "};\n"
+                   "    return structure;\n"
+                   "}\n";
+        }
+        else
+        {
+            out << ");\n"
+                   "}\n";
+        }
     }
 }
 
@@ -1156,20 +1193,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 }
                 else if (variable->getAsSymbolNode() && variable->getAsSymbolNode()->getSymbol() == "")   // Type (struct) declaration
                 {
-                    const TType &type = variable->getType();
-                    const TTypeList &fields = *type.getStruct();
-
-                    out << "struct " + decorate(type.getTypeName()) + "\n"
-                           "{\n";
-
-                    for (unsigned int i = 0; i < fields.size(); i++)
-                    {
-                        const TType &field = *fields[i].type;
-
-                        out << "    " + typeString(field) + " " + field.getFieldName() + ";\n";
-                    }
-
-                    out << "};\n";
+                    addConstructor(variable->getType(), variable->getType().getTypeName(), NULL);
                 }
                 else UNREACHABLE();
             }
@@ -1401,7 +1425,11 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         addConstructor(node->getType(), "mat4", &node->getSequence());
         outputTriplet(visit, "mat4(", ", ", ")");
         break;
-      case EOpConstructStruct:  outputTriplet(visit, "{", ", ", "}");                  break;
+      case EOpConstructStruct:
+        outputTriplet(visit, "{", ", ", "}");
+        addConstructor(node->getType(), node->getType().getTypeName() + "_ctor", &node->getSequence());
+      //outputTriplet(visit, node->getType().getTypeName() + "_ctor(", ", ", ")");
+        break;
       case EOpLessThan:         outputTriplet(visit, "(", " < ", ")");                 break;
       case EOpGreaterThan:      outputTriplet(visit, "(", " > ", ")");                 break;
       case EOpLessThanEqual:    outputTriplet(visit, "(", " <= ", ")");                break;
@@ -2116,6 +2144,21 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
             constructor.parameters.push_back((*parameter)->getAsTyped()->getType());
         }
     }
+    else if (type.getStruct())
+    {
+        if (std::find(mStructures.begin(), mStructures.end(), type) == mStructures.end())
+        {
+            mStructures.push_back(type);
+        }
+
+        const TTypeList *structure = type.getStruct();
+
+        for (unsigned int i = 0; i < structure->size(); i++)
+        {
+            constructor.parameters.push_back(*(*structure)[i].type);
+        }
+    }
+    else UNREACHABLE();
 
     mConstructors.insert(constructor);
 }
