@@ -2205,14 +2205,18 @@ void Program::validate()
         appendToInfoLog("Program has not been successfully linked.");
         mValidated = false;
     }
-    else if (!validateSamplers())
-    {
-        appendToInfoLog("Samplers of conflicting types refer to the same texture image unit.");
-        mValidated = false;
-    }
     else
     {
-        mValidated = true;
+        applyUniforms();
+        if (!validateSamplers())
+        {
+            appendToInfoLog("Samplers of conflicting types refer to the same texture image unit.");
+            mValidated = false;
+        }
+        else
+        {
+            mValidated = true;
+        }
     }
 }
 
