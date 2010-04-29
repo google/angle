@@ -88,6 +88,167 @@ void OutputHLSL::header()
     EShLanguage language = mContext.language;
     TInfoSinkBase &out = mHeader;
 
+    // Output structure declarations
+    for (StructureArray::iterator structure = mStructures.begin(); structure != mStructures.end(); structure++)
+    {
+        const TTypeList &fields = *structure->getStruct();
+
+        out << "struct " + decorate(structure->getTypeName()) + "\n"
+               "{\n";
+
+        for (unsigned int i = 0; i < fields.size(); i++)
+        {
+            const TType &field = *fields[i].type;
+
+            out << "    " + typeString(field) + " " + field.getFieldName() + arrayString(field) + ";\n";
+        }
+
+        out << "};\n";
+    }
+
+    // Output type constructors
+    for (ConstructorSet::iterator constructor = mConstructors.begin(); constructor != mConstructors.end(); constructor++)
+    {
+        out << typeString(constructor->type) + " " + constructor->name + "(";
+
+        for (unsigned int parameter = 0; parameter < constructor->parameters.size(); parameter++)
+        {
+            const TType &type = constructor->parameters[parameter];
+
+            out << typeString(type) + " x" + str(parameter) + arrayString(type);
+
+            if (parameter < constructor->parameters.size() - 1)
+            {
+                out << ", ";
+            }
+        }
+
+        out << ")\n"
+               "{\n";
+
+        if (constructor->type.getStruct())
+        {
+            out << "    " + decorate(constructor->type.getTypeName()) + " structure = {";
+        }
+        else
+        {
+            out << "    return " + typeString(constructor->type) + "(";
+        }
+
+        if (constructor->type.isMatrix() && constructor->parameters.size() == 1)
+        {
+            int dim = constructor->type.getNominalSize();
+            const TType &parameter = constructor->parameters[0];
+
+            if (parameter.isScalar())
+            {
+                for (int row = 0; row < dim; row++)
+                {
+                    for (int col = 0; col < dim; col++)
+                    {
+                        out << TString((row == col) ? "x0" : "0.0");
+                        
+                        if (row < dim - 1 || col < dim - 1)
+                        {
+                            out << ", ";
+                        }
+                    }
+                }
+            }
+            else if (parameter.isMatrix())
+            {
+                for (int row = 0; row < dim; row++)
+                {
+                    for (int col = 0; col < dim; col++)
+                    {
+                        if (row < parameter.getNominalSize() && col < parameter.getNominalSize())
+                        {
+                            out << TString("x0") + "[" + str(row) + "]" + "[" + str(col) + "]";
+                        }
+                        else
+                        {
+                            out << TString((row == col) ? "1.0" : "0.0");
+                        }
+
+                        if (row < dim - 1 || col < dim - 1)
+                        {
+                            out << ", ";
+                        }
+                    }
+                }
+            }
+            else UNREACHABLE();
+        }
+        else
+        {
+            int remainingComponents = constructor->type.getObjectSize();
+            int parameterIndex = 0;
+
+            while (remainingComponents > 0)
+            {
+                const TType &parameter = constructor->parameters[parameterIndex];
+                bool moreParameters = parameterIndex < (int)constructor->parameters.size() - 1;
+
+                out << "x" + str(parameterIndex);
+
+                if (parameter.isScalar())
+                {
+                    remainingComponents -= parameter.getObjectSize();
+                }
+                else if (parameter.isVector())
+                {
+                    if (remainingComponents == parameter.getObjectSize() || moreParameters)
+                    {
+                        remainingComponents -= parameter.getObjectSize();
+                    }
+                    else if (remainingComponents < parameter.getNominalSize())
+                    {
+                        switch (remainingComponents)
+                        {
+                        case 1: out << ".x";    break;
+                        case 2: out << ".xy";   break;
+                        case 3: out << ".xyz";  break;
+                        case 4: out << ".xyzw"; break;
+                        default: UNREACHABLE();
+                        }
+
+                        remainingComponents = 0;
+                    }
+                    else UNREACHABLE();
+                }
+                else if (parameter.isMatrix() || parameter.getStruct())
+                {
+                    ASSERT(remainingComponents == parameter.getObjectSize() || moreParameters);
+                    
+                    remainingComponents -= parameter.getObjectSize();
+                }
+                else UNREACHABLE();
+
+                if (moreParameters)
+                {
+                    parameterIndex++;
+                }
+
+                if (remainingComponents)
+                {
+                    out << ", ";
+                }
+            }
+        }
+
+        if (constructor->type.getStruct())
+        {
+            out << "};\n"
+                   "    return structure;\n"
+                   "}\n";
+        }
+        else
+        {
+            out << ");\n"
+                   "}\n";
+        }
+    }
+
     if (language == EShLangFragment)
     {
         TString uniforms;
@@ -513,167 +674,6 @@ void OutputHLSL::header()
                "{\n"
                "    return v.x == u.x && v.y == u.y && v.z == u.z && v.w == u.w;\n"
                "}\n";
-    }
-
-    // Output structure declarations
-    for (StructureArray::iterator structure = mStructures.begin(); structure != mStructures.end(); structure++)
-    {
-        const TTypeList &fields = *structure->getStruct();
-
-        out << "struct " + decorate(structure->getTypeName()) + "\n"
-               "{\n";
-
-        for (unsigned int i = 0; i < fields.size(); i++)
-        {
-            const TType &field = *fields[i].type;
-
-            out << "    " + typeString(field) + " " + field.getFieldName() + ";\n";
-        }
-
-        out << "};\n";
-    }
-
-    // Output type constructors
-    for (ConstructorSet::iterator constructor = mConstructors.begin(); constructor != mConstructors.end(); constructor++)
-    {
-        out << typeString(constructor->type) + " " + constructor->name + "(";
-
-        for (unsigned int parameter = 0; parameter < constructor->parameters.size(); parameter++)
-        {
-            const TType &type = constructor->parameters[parameter];
-
-            out << typeString(type) + " x" + str(parameter);
-
-            if (parameter < constructor->parameters.size() - 1)
-            {
-                out << ", ";
-            }
-        }
-
-        out << ")\n"
-               "{\n";
-
-        if (constructor->type.getStruct())
-        {
-            out << "    " + decorate(constructor->type.getTypeName()) + " structure = {";
-        }
-        else
-        {
-            out << "    return " + typeString(constructor->type) + "(";
-        }
-
-        if (constructor->type.isMatrix() && constructor->parameters.size() == 1)
-        {
-            int dim = constructor->type.getNominalSize();
-            const TType &parameter = constructor->parameters[0];
-
-            if (parameter.isScalar())
-            {
-                for (int row = 0; row < dim; row++)
-                {
-                    for (int col = 0; col < dim; col++)
-                    {
-                        out << TString((row == col) ? "x0" : "0.0");
-                        
-                        if (row < dim - 1 || col < dim - 1)
-                        {
-                            out << ", ";
-                        }
-                    }
-                }
-            }
-            else if (parameter.isMatrix())
-            {
-                for (int row = 0; row < dim; row++)
-                {
-                    for (int col = 0; col < dim; col++)
-                    {
-                        if (row < parameter.getNominalSize() && col < parameter.getNominalSize())
-                        {
-                            out << TString("x0") + "[" + str(row) + "]" + "[" + str(col) + "]";
-                        }
-                        else
-                        {
-                            out << TString((row == col) ? "1.0" : "0.0");
-                        }
-
-                        if (row < dim - 1 || col < dim - 1)
-                        {
-                            out << ", ";
-                        }
-                    }
-                }
-            }
-            else UNREACHABLE();
-        }
-        else
-        {
-            int remainingComponents = constructor->type.getObjectSize();
-            int parameterIndex = 0;
-
-            while (remainingComponents > 0)
-            {
-                const TType &parameter = constructor->parameters[parameterIndex];
-                bool moreParameters = parameterIndex < (int)constructor->parameters.size() - 1;
-
-                out << "x" + str(parameterIndex);
-
-                if (parameter.isScalar())
-                {
-                    remainingComponents -= 1;
-                }
-                else if (parameter.isVector())
-                {
-                    if (remainingComponents == parameter.getInstanceSize() || moreParameters)
-                    {
-                        remainingComponents -= parameter.getInstanceSize();
-                    }
-                    else if (remainingComponents < parameter.getNominalSize())
-                    {
-                        switch (remainingComponents)
-                        {
-                        case 1: out << ".x";    break;
-                        case 2: out << ".xy";   break;
-                        case 3: out << ".xyz";  break;
-                        case 4: out << ".xyzw"; break;
-                        default: UNREACHABLE();
-                        }
-
-                        remainingComponents = 0;
-                    }
-                    else UNREACHABLE();
-                }
-                else if (parameter.isMatrix() || parameter.getStruct())
-                {
-                    ASSERT(remainingComponents == parameter.getObjectSize() || moreParameters);
-                    
-                    remainingComponents -= parameter.getObjectSize();
-                }
-                else UNREACHABLE();
-
-                if (moreParameters)
-                {
-                    parameterIndex++;
-                }
-
-                if (remainingComponents)
-                {
-                    out << ", ";
-                }
-            }
-        }
-
-        if (constructor->type.getStruct())
-        {
-            out << "};\n"
-                   "    return structure;\n"
-                   "}\n";
-        }
-        else
-        {
-            out << ");\n"
-                   "}\n";
-        }
     }
 }
 
@@ -2142,6 +2142,9 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
     Constructor constructor;
 
     constructor.type = type;
+    constructor.type.clearArrayness();
+    constructor.type.changePrecision(EbpHigh);
+    constructor.type.changeQualifier(EvqTemporary);
     constructor.name = name;
 
     if (parameters)
@@ -2153,9 +2156,9 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
     }
     else if (type.getStruct())
     {
-        if (std::find(mStructures.begin(), mStructures.end(), type) == mStructures.end())
+        if (std::find(mStructures.begin(), mStructures.end(), constructor.type) == mStructures.end())
         {
-            mStructures.push_back(type);
+            mStructures.push_back(constructor.type);
         }
 
         const TTypeList *structure = type.getStruct();

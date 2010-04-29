@@ -928,11 +928,19 @@ void Program::parseVaryings(const char *structure, char *hlsl, VaryingArray &var
         char varyingType[256];
         char varyingName[256];
         unsigned int semanticIndex;
+
         int matches = sscanf(input, "    %s %s : TEXCOORD%d;", varyingType, varyingName, &semanticIndex);
 
         if (matches == 3)
         {
             ASSERT(semanticIndex <= 9);   // Single character
+
+            char *array = strstr(varyingName, "[");
+
+            if (array)
+            {
+                *array = '\0';
+            }
 
             varyings.push_back(Varying(varyingName, input));
         }
