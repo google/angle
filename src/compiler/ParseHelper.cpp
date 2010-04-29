@@ -467,8 +467,10 @@ bool TParseContext::constructorErrorCheck(int line, TIntermNode* node, TFunction
     }
 
     if (matrixInMatrix && !type->isArray()) {
-        error(line, "constructing matrix from matrix", "constructor", "(reserved)");
-        return true;
+        if (function.getParamCount() != 1) {
+          error(line, "constructing matrix from matrix can only take one argument", "constructor", "");
+          return true;
+        }
     }
 
     if (overFull) {
@@ -481,10 +483,12 @@ bool TParseContext::constructorErrorCheck(int line, TIntermNode* node, TFunction
         return true;
     }
 
-    if ((op != EOpConstructStruct && size != 1 && size < type->getObjectSize()) ||
-        (op == EOpConstructStruct && size < type->getObjectSize())) {
-        error(line, "not enough data provided for construction", "constructor", "");
-        return true;
+    if (!type->isMatrix()) {
+        if ((op != EOpConstructStruct && size != 1 && size < type->getObjectSize()) ||
+            (op == EOpConstructStruct && size < type->getObjectSize())) {
+            error(line, "not enough data provided for construction", "constructor", "");
+            return true;
+        }
     }
 
     TIntermTyped* typed = node->getAsTyped();
