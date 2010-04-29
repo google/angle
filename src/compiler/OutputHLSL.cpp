@@ -1532,7 +1532,7 @@ void OutputHLSL::visitConstantUnion(TIntermConstantUnion *node)
     
     const TType &type = node->getType();
 
-    if (type.isField())
+    if (type.isField() && type.getQualifier() != EvqConst)
     {
         out << type.getFieldName();
     }
