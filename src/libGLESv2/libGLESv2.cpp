@@ -3646,12 +3646,8 @@ void __stdcall glShaderBinary(GLsizei n, const GLuint* shaders, GLenum binaryfor
 
     try
     {
-        if (n < 0 || length < 0)
-        {
-            return error(GL_INVALID_VALUE);
-        }
-
-        UNIMPLEMENTED();   // FIXME
+        // No binary shader formats are supported.
+        return error(GL_INVALID_ENUM);
     }
     catch(std::bad_alloc&)
     {
