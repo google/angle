@@ -849,7 +849,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
         }
         else
         {
-            out << "))";
+            out << ")))";
         }
         break;
       case EOpMatrixTimesMatrixAssign:
@@ -865,7 +865,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
         }
         else
         {
-            out << ")";
+            out << "))";
         }
         break;
       case EOpDivAssign:               outputTriplet(visit, "(", " /= ", ")");          break;
