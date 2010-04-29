@@ -78,7 +78,7 @@ struct CPPStruct_Rec {
     int mostRecentToken;        // Most recent token seen by the scanner
     InputSrc *currentInput;
     int previous_token;
-    int notAVersionToken;      // used to make sure that #version is the first token seen in the file, if present
+    int pastFirstStatement;     // used to make sure that #version is the first statement seen in the file, if present
     
 	void *pC;                   // storing the parseContext of the compile object in cpp.  
      

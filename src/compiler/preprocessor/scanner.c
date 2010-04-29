@@ -120,7 +120,7 @@ int InitScanner(CPPStruct *cpp)
 
     cpp->currentInput = &eof_inputsrc;
     cpp->previous_token = '\n';
-    cpp->notAVersionToken = 0;
+    cpp->pastFirstStatement = 0;
 
     return 1;
 } // InitScanner
@@ -712,7 +712,7 @@ int yylex_CPP(char* buf, int maxSize)
         cpp->previous_token = token;
         // expand macros
         if (token == CPP_IDENTIFIER && MacroExpand(yylvalpp.sc_ident, &yylvalpp)) {
-            cpp->notAVersionToken = 1;
+            cpp->pastFirstStatement = 1;
             continue;
         }
         
@@ -720,13 +720,13 @@ int yylex_CPP(char* buf, int maxSize)
             continue;
           
         if (token == CPP_IDENTIFIER) {                
-            cpp->notAVersionToken = 1;
+            cpp->pastFirstStatement = 1;
             tokenString = GetStringOfAtom(atable,yylvalpp.sc_ident);
         } else if (token == CPP_FLOATCONSTANT||token == CPP_INTCONSTANT){             
-            cpp->notAVersionToken = 1;            
+            cpp->pastFirstStatement = 1;            
             tokenString = yylvalpp.symbol_name;
 		} else {            
-            cpp->notAVersionToken = 1;            
+            cpp->pastFirstStatement = 1;            
             tokenString = GetStringOfAtom(atable,token);
 	    }
 

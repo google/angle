@@ -304,7 +304,7 @@ int PaParseStrings(char* argv[], int strLen[], int argc, TParseContext& parseCon
     cpp->PaArgv     = argv;
     cpp->PaArgc     = argc;
     cpp->PaStrLen   = strLen;
-    cpp->notAVersionToken = 0;
+    cpp->pastFirstStatement = 0;
     yylineno   = 1;
    
     if (*cpp->PaStrLen >= 0) {    

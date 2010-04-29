@@ -638,7 +638,7 @@ static int CPPversion(yystypepp * yylvalpp)
 
     int token = cpp->currentInput->scan(cpp->currentInput, yylvalpp);
 
-    if (cpp->notAVersionToken == 1)
+    if (cpp->pastFirstStatement == 1)
         CPPShInfoLogMsg("#version must occur before any other statement in the program");
 
     if(token=='\n'){
@@ -734,7 +734,7 @@ int readCPPline(yystypepp * yylvalpp)
              }else{
                  CPPErrorToInfoLog("#else after a #else");
                  cpp->ifdepth=0;
-                 cpp->notAVersionToken = 1;
+                 cpp->pastFirstStatement = 1;
                  return 0;
              }
 		} else if (yylvalpp->sc_ident == elifAtom) {
@@ -787,7 +787,7 @@ int readCPPline(yystypepp * yylvalpp)
 		token = cpp->currentInput->scan(cpp->currentInput, yylvalpp);
 	}
         
-    cpp->notAVersionToken = !isVersion;
+    cpp->pastFirstStatement = 1;
 
     return token;
 } // readCPPline
