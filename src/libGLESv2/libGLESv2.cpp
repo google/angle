@@ -1346,11 +1346,6 @@ void __stdcall glDetachShader(GLuint program, GLuint shader)
             {
                 return error(GL_INVALID_OPERATION);
             }
-
-            if (shaderObject->isDeletable())
-            {
-                context->deleteShader(shader);
-            }
         }
     }
     catch(std::bad_alloc&)

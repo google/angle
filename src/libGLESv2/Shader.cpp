@@ -185,16 +185,16 @@ void Shader::attach()
 void Shader::detach()
 {
     mAttachCount--;
+
+    if (mAttachCount == 0 && mDeleteStatus)
+    {
+        getContext()->deleteShader(mHandle);
+    }
 }
 
 bool Shader::isAttached() const
 {
     return mAttachCount > 0;
-}
-
-bool Shader::isDeletable() const
-{
-    return mDeleteStatus == true && mAttachCount == 0;
 }
 
 bool Shader::isFlaggedForDeletion() const

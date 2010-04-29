@@ -44,7 +44,6 @@ class Shader
     void attach();
     void detach();
     bool isAttached() const;
-    bool isDeletable() const;
     bool isFlaggedForDeletion() const;
     void flagForDeletion();
 

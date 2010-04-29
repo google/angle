@@ -550,12 +550,13 @@ void Context::useProgram(GLuint program)
 {
     Program *programObject = getCurrentProgram();
 
+    GLuint priorProgram = currentProgram;
+    currentProgram = program;               // Must switch before trying to delete, otherwise it only gets flagged.
+
     if (programObject && programObject->isFlaggedForDeletion())
     {
-        deleteProgram(currentProgram);
+        deleteProgram(priorProgram);
     }
-
-    currentProgram = program;
 }
 
 void Context::setFramebufferZero(Framebuffer *buffer)

@@ -58,6 +58,16 @@ Program::Program()
 Program::~Program()
 {
     unlink(true);
+
+    if (mVertexShader != NULL)
+    {
+        mVertexShader->detach();
+    }
+
+    if (mFragmentShader != NULL)
+    {
+        mFragmentShader->detach();
+    }
 }
 
 bool Program::attachShader(Shader *shader)
