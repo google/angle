@@ -48,6 +48,7 @@ Program::Program()
     mPixelHLSL = NULL;
     mVertexHLSL = NULL;
     mInfoLog = NULL;
+    mValidated = false;
 
     unlink();
 
@@ -1882,6 +1883,14 @@ void Program::appendToInfoLog(const char *format, ...)
     }
 }
 
+void Program::resetInfoLog()
+{
+    if (mInfoLog)
+    {
+        delete [] mInfoLog;
+    }
+}
+
 // Returns the program object to an unlinked state, after detaching a shader, before re-linking, or at destruction
 void Program::unlink(bool destroy)
 {
@@ -1958,6 +1967,11 @@ void Program::unlink(bool destroy)
 bool Program::isLinked()
 {
     return mLinked;
+}
+
+bool Program::isValidated() const 
+{
+    return mValidated;
 }
 
 int Program::getInfoLogLength() const
@@ -2163,5 +2177,50 @@ void Program::flagForDeletion()
 bool Program::isFlaggedForDeletion() const
 {
     return mDeleteStatus;
+}
+
+void Program::validate()
+{
+    resetInfoLog();
+
+    if (!isLinked()) 
+    {
+        appendToInfoLog("Program has not been successfully linked.");
+        mValidated = false;
+    }
+    else if (!validateSamplers())
+    {
+        appendToInfoLog("Samplers of conflicting types refer to the same texture image unit.");
+        mValidated = false;
+    }
+    else
+    {
+        mValidated = true;
+    }
+}
+
+bool Program::validateSamplers() const
+{
+    // if any two active samplers in a program are of different types, but refer to the same
+    // texture image unit, and this is the current program, then ValidateProgram will fail, and
+    // DrawArrays and DrawElements will issue the INVALID_OPERATION error.
+    std::map<int, SamplerType> samplerMap; 
+    for (unsigned int i = 0; i < MAX_TEXTURE_IMAGE_UNITS; ++i)
+    {
+        if (mSamplers[i].active)
+        {
+            if (samplerMap.find(mSamplers[i].logicalTextureUnit) != samplerMap.end())
+            {
+                if (mSamplers[i].type != samplerMap[mSamplers[i].logicalTextureUnit])
+                    return false;
+            }
+            else
+            {
+                samplerMap[mSamplers[i].logicalTextureUnit] = mSamplers[i].type;
+            }
+        }
+    }
+
+    return true;
 }
 }

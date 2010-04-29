@@ -1861,6 +1861,11 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
         return;
     }
 
+    if (!getCurrentProgram()->validateSamplers())
+    {
+        return error(GL_INVALID_OPERATION);
+    }
+
     if (!applyRenderTarget(false))
     {
         return error(GL_INVALID_FRAMEBUFFER_OPERATION);
@@ -1901,6 +1906,11 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void* 
     if (primitiveCount <= 0)
     {
         return;
+    }
+
+    if (!getCurrentProgram()->validateSamplers())
+    {
+        return error(GL_INVALID_OPERATION);
     }
 
     if (!applyRenderTarget(false))

@@ -2424,8 +2424,7 @@ void __stdcall glGetProgramiv(GLuint program, GLenum pname, GLint* params)
                 *params = programObject->isLinked();
                 return;
               case GL_VALIDATE_STATUS:
-                UNIMPLEMENTED();   // FIXME
-                *params = GL_TRUE;
+                *params = programObject->isValidated();
                 return;
               case GL_INFO_LOG_LENGTH:
                 *params = programObject->getInfoLogLength();
@@ -4723,7 +4722,26 @@ void __stdcall glValidateProgram(GLuint program)
 
     try
     {
-        UNIMPLEMENTED();   // FIXME
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            gl::Program *programObject = context->getProgram(program);
+
+            if (!programObject)
+            {
+                if (context->getShader(program))
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+                else
+                {
+                    return error(GL_INVALID_VALUE);
+                }
+            }
+
+            programObject->validate();
+        }
     }
     catch(std::bad_alloc&)
     {

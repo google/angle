@@ -102,6 +102,10 @@ class Program
     void flagForDeletion();
     bool isFlaggedForDeletion() const;
 
+    void validate();
+    bool validateSamplers() const;
+    bool isValidated() const;
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Program);
 
@@ -150,6 +154,7 @@ class Program
     bool applyUniform4iv(GLint location, GLsizei count, const GLint *v);
 
     void appendToInfoLog(const char *info, ...);
+    void resetInfoLog();
 
     FragmentShader *mFragmentShader;
     VertexShader *mVertexShader;
@@ -183,6 +188,7 @@ class Program
     bool mLinked;
     bool mDeleteStatus;   // Flag to indicate that the program can be deleted when no longer in use
     char *mInfoLog;
+    bool mValidated;
 };
 }
 
