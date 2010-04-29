@@ -281,10 +281,10 @@ static int CPPelse(int matchelse, yystypepp * yylvalpp)
         atom = yylvalpp->sc_ident;
         if (atom == ifAtom || atom == ifdefAtom || atom == ifndefAtom){
             depth++; cpp->ifdepth++; cpp->elsetracker++;
+            cpp->elsedepth[cpp->elsetracker] = 0;
 		}
 		else if (atom == endifAtom) {
-            if(--depth<=0){
-		        cpp->elsedepth[cpp->elsetracker]=0;
+            if(--depth<0){
 			    --cpp->elsetracker;
                 if (cpp->ifdepth) 
                     --cpp->ifdepth;
@@ -461,6 +461,7 @@ static int CPPif(yystypepp * yylvalpp) {
     int token = cpp->currentInput->scan(cpp->currentInput, yylvalpp);
     int res = 0, err = 0;
 	cpp->elsetracker++;
+    cpp->elsedepth[cpp->elsetracker] = 0;
     if (!cpp->ifdepth++)
         ifloc = *cpp->tokenLoc;
 	if(cpp->ifdepth >MAX_IF_NESTING){
@@ -489,6 +490,7 @@ static int CPPifdef(int defined, yystypepp * yylvalpp)
 		return 0;
 	}
 	cpp->elsetracker++;
+    cpp->elsedepth[cpp->elsetracker] = 0;
     if (token != CPP_IDENTIFIER) {
             defined ? CPPErrorToInfoLog("ifdef"):CPPErrorToInfoLog("ifndef");
     } else {
@@ -748,7 +750,6 @@ int readCPPline(yystypepp * yylvalpp)
                 token = cpp->currentInput->scan(cpp->currentInput, yylvalpp);
 		    token = CPPelse(0, yylvalpp);
         } else if (yylvalpp->sc_ident == endifAtom) {
-			 cpp->elsedepth[cpp->elsetracker]=0;
 		     --cpp->elsetracker;
              if (!cpp->ifdepth){
                  CPPErrorToInfoLog("#endif mismatch");
