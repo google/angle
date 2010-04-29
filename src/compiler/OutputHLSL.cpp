@@ -2004,7 +2004,28 @@ TString OutputHLSL::typeString(const TType &type)
 {
     if (type.getBasicType() == EbtStruct)
     {
-        return decorate(type.getTypeName());
+        if (type.getTypeName() != "")
+        {
+            return decorate(type.getTypeName());
+        }
+        else   // Anonymous structure, define in place
+        {
+            const TTypeList &fields = *type.getStruct();
+
+            TString string = "struct\n"
+                             "{\n";
+
+            for (unsigned int i = 0; i < fields.size(); i++)
+            {
+                const TType &field = *fields[i].type;
+
+                string += "    " + typeString(field) + " " + field.getFieldName() + arrayString(field) + ";\n";
+            }
+
+            string += "} ";
+
+            return string;
+        }
     }
     else if (type.isMatrix())
     {
@@ -2113,6 +2134,11 @@ bool OutputHLSL::CompareConstructor::operator()(const Constructor &x, const Cons
 
 void OutputHLSL::addConstructor(const TType &type, const TString &name, const TIntermSequence *parameters)
 {
+    if (name == "")
+    {
+        return;   // Anonymous structures don't have constructors
+    }
+
     Constructor constructor;
 
     constructor.type = type;
