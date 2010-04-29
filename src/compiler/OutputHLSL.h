@@ -50,6 +50,8 @@ class OutputHLSL : public TIntermTraverser
     TString argumentString(const TIntermSymbol *symbol);
     int vectorSize(const TType &type) const;
 
+    void addConstructor(const TType &type, const TString &name, const TIntermSequence &parameters);
+
     TParseContext &mContext;
     UnfoldSelect *mUnfoldSelect;
     bool mInsideFunction;
@@ -86,6 +88,23 @@ class OutputHLSL : public TIntermTraverser
     bool mUsesEqualBVec2;
     bool mUsesEqualBVec3;
     bool mUsesEqualBVec4;
+
+    struct Constructor   // Describes a constructor signature
+    {
+        TType type;
+        TString name;
+
+        typedef std::vector<TType> ParameterArray;
+        ParameterArray parameters;
+    };
+
+    struct CompareConstructor
+    {
+        bool operator()(const Constructor &x, const Constructor &y) const;
+    };
+
+    typedef std::set<Constructor, CompareConstructor> ConstructorSet;
+    ConstructorSet mConstructors;
 
     int mArgumentIndex;   // For creating unique argument names
 };
