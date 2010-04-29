@@ -793,7 +793,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
     switch (node->getOp())
     {
       case EOpAssign:                  outputTriplet(visit, "(", " = ", ")");           break;
-      case EOpInitialize:              outputTriplet(visit, NULL, " = ", NULL);         break;
+      case EOpInitialize:              outputTriplet(visit, "", " = ", "");             break;
       case EOpAddAssign:               outputTriplet(visit, "(", " += ", ")");          break;
       case EOpSubAssign:               outputTriplet(visit, "(", " -= ", ")");          break;
       case EOpMulAssign:               outputTriplet(visit, "(", " *= ", ")");          break;
@@ -832,9 +832,9 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
         }
         break;
       case EOpDivAssign:               outputTriplet(visit, "(", " /= ", ")");          break;
-      case EOpIndexDirect:             outputTriplet(visit, NULL, "[", "]");            break;
-      case EOpIndexIndirect:           outputTriplet(visit, NULL, "[", "]");            break;
-      case EOpIndexDirectStruct:       outputTriplet(visit, NULL, ".", NULL);           break;
+      case EOpIndexDirect:             outputTriplet(visit, "", "[", "]");              break;
+      case EOpIndexIndirect:           outputTriplet(visit, "", "[", "]");              break;
+      case EOpIndexDirectStruct:       outputTriplet(visit, "", ".", "");               break;
       case EOpVectorSwizzle:
         if (visit == InVisit)
         {
@@ -1002,21 +1002,21 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
 
     switch (node->getOp())
     {
-      case EOpNegative:         outputTriplet(visit, "(-", NULL, ")");  break;
-      case EOpVectorLogicalNot: outputTriplet(visit, "(!", NULL, ")");  break;
-      case EOpLogicalNot:       outputTriplet(visit, "(!", NULL, ")");  break;
-      case EOpPostIncrement:    outputTriplet(visit, "(", NULL, "++)"); break;
-      case EOpPostDecrement:    outputTriplet(visit, "(", NULL, "--)"); break;
-      case EOpPreIncrement:     outputTriplet(visit, "(++", NULL, ")"); break;
-      case EOpPreDecrement:     outputTriplet(visit, "(--", NULL, ")"); break;
+      case EOpNegative:         outputTriplet(visit, "(-", "", ")");  break;
+      case EOpVectorLogicalNot: outputTriplet(visit, "(!", "", ")");  break;
+      case EOpLogicalNot:       outputTriplet(visit, "(!", "", ")");  break;
+      case EOpPostIncrement:    outputTriplet(visit, "(", "", "++)"); break;
+      case EOpPostDecrement:    outputTriplet(visit, "(", "", "--)"); break;
+      case EOpPreIncrement:     outputTriplet(visit, "(++", "", ")"); break;
+      case EOpPreDecrement:     outputTriplet(visit, "(--", "", ")"); break;
       case EOpConvIntToBool:
       case EOpConvFloatToBool:
         switch (node->getOperand()->getType().getNominalSize())
         {
-          case 1:    outputTriplet(visit, "bool(", NULL, ")");  break;
-          case 2:    outputTriplet(visit, "bool2(", NULL, ")"); break;
-          case 3:    outputTriplet(visit, "bool3(", NULL, ")"); break;
-          case 4:    outputTriplet(visit, "bool4(", NULL, ")"); break;
+          case 1:    outputTriplet(visit, "bool(", "", ")");  break;
+          case 2:    outputTriplet(visit, "bool2(", "", ")"); break;
+          case 3:    outputTriplet(visit, "bool3(", "", ")"); break;
+          case 4:    outputTriplet(visit, "bool4(", "", ")"); break;
           default: UNREACHABLE();
         }
         break;
@@ -1024,10 +1024,10 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
       case EOpConvIntToFloat:
         switch (node->getOperand()->getType().getNominalSize())
         {
-          case 1:    outputTriplet(visit, "float(", NULL, ")");  break;
-          case 2:    outputTriplet(visit, "float2(", NULL, ")"); break;
-          case 3:    outputTriplet(visit, "float3(", NULL, ")"); break;
-          case 4:    outputTriplet(visit, "float4(", NULL, ")"); break;
+          case 1:    outputTriplet(visit, "float(", "", ")");  break;
+          case 2:    outputTriplet(visit, "float2(", "", ")"); break;
+          case 3:    outputTriplet(visit, "float3(", "", ")"); break;
+          case 4:    outputTriplet(visit, "float4(", "", ")"); break;
           default: UNREACHABLE();
         }
         break;
@@ -1035,39 +1035,39 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
       case EOpConvBoolToInt:
         switch (node->getOperand()->getType().getNominalSize())
         {
-          case 1:    outputTriplet(visit, "int(", NULL, ")");  break;
-          case 2:    outputTriplet(visit, "int2(", NULL, ")"); break;
-          case 3:    outputTriplet(visit, "int3(", NULL, ")"); break;
-          case 4:    outputTriplet(visit, "int4(", NULL, ")"); break;
+          case 1:    outputTriplet(visit, "int(", "", ")");  break;
+          case 2:    outputTriplet(visit, "int2(", "", ")"); break;
+          case 3:    outputTriplet(visit, "int3(", "", ")"); break;
+          case 4:    outputTriplet(visit, "int4(", "", ")"); break;
           default: UNREACHABLE();
         }
         break;
-      case EOpRadians:          outputTriplet(visit, "radians(", NULL, ")");   break;
-      case EOpDegrees:          outputTriplet(visit, "degrees(", NULL, ")");   break;
-      case EOpSin:              outputTriplet(visit, "sin(", NULL, ")");       break;
-      case EOpCos:              outputTriplet(visit, "cos(", NULL, ")");       break;
-      case EOpTan:              outputTriplet(visit, "tan(", NULL, ")");       break;
-      case EOpAsin:             outputTriplet(visit, "asin(", NULL, ")");      break;
-      case EOpAcos:             outputTriplet(visit, "acos(", NULL, ")");      break;
-      case EOpAtan:             outputTriplet(visit, "atan(", NULL, ")");      break;
-      case EOpExp:              outputTriplet(visit, "exp(", NULL, ")");       break;
-      case EOpLog:              outputTriplet(visit, "log(", NULL, ")");       break;
-      case EOpExp2:             outputTriplet(visit, "exp2(", NULL, ")");      break;
-      case EOpLog2:             outputTriplet(visit, "log2(", NULL, ")");      break;
-      case EOpSqrt:             outputTriplet(visit, "sqrt(", NULL, ")");      break;
-      case EOpInverseSqrt:      outputTriplet(visit, "rsqrt(", NULL, ")");     break;
-      case EOpAbs:              outputTriplet(visit, "abs(", NULL, ")");       break;
-      case EOpSign:             outputTriplet(visit, "sign(", NULL, ")");      break;
-      case EOpFloor:            outputTriplet(visit, "floor(", NULL, ")");     break;
-      case EOpCeil:             outputTriplet(visit, "ceil(", NULL, ")");      break;
-      case EOpFract:            outputTriplet(visit, "frac(", NULL, ")");      break;
-      case EOpLength:           outputTriplet(visit, "length(", NULL, ")");    break;
-      case EOpNormalize:        outputTriplet(visit, "normalize(", NULL, ")"); break;
-//    case EOpDPdx:             outputTriplet(visit, "ddx(", NULL, ")");       break;
-//    case EOpDPdy:             outputTriplet(visit, "ddy(", NULL, ")");       break;
-//    case EOpFwidth:           outputTriplet(visit, "fwidth(", NULL, ")");    break;        
-      case EOpAny:              outputTriplet(visit, "any(", NULL, ")");       break;
-      case EOpAll:              outputTriplet(visit, "all(", NULL, ")");       break;
+      case EOpRadians:          outputTriplet(visit, "radians(", "", ")");   break;
+      case EOpDegrees:          outputTriplet(visit, "degrees(", "", ")");   break;
+      case EOpSin:              outputTriplet(visit, "sin(", "", ")");       break;
+      case EOpCos:              outputTriplet(visit, "cos(", "", ")");       break;
+      case EOpTan:              outputTriplet(visit, "tan(", "", ")");       break;
+      case EOpAsin:             outputTriplet(visit, "asin(", "", ")");      break;
+      case EOpAcos:             outputTriplet(visit, "acos(", "", ")");      break;
+      case EOpAtan:             outputTriplet(visit, "atan(", "", ")");      break;
+      case EOpExp:              outputTriplet(visit, "exp(", "", ")");       break;
+      case EOpLog:              outputTriplet(visit, "log(", "", ")");       break;
+      case EOpExp2:             outputTriplet(visit, "exp2(", "", ")");      break;
+      case EOpLog2:             outputTriplet(visit, "log2(", "", ")");      break;
+      case EOpSqrt:             outputTriplet(visit, "sqrt(", "", ")");      break;
+      case EOpInverseSqrt:      outputTriplet(visit, "rsqrt(", "", ")");     break;
+      case EOpAbs:              outputTriplet(visit, "abs(", "", ")");       break;
+      case EOpSign:             outputTriplet(visit, "sign(", "", ")");      break;
+      case EOpFloor:            outputTriplet(visit, "floor(", "", ")");     break;
+      case EOpCeil:             outputTriplet(visit, "ceil(", "", ")");      break;
+      case EOpFract:            outputTriplet(visit, "frac(", "", ")");      break;
+      case EOpLength:           outputTriplet(visit, "length(", "", ")");    break;
+      case EOpNormalize:        outputTriplet(visit, "normalize(", "", ")"); break;
+//    case EOpDPdx:             outputTriplet(visit, "ddx(", "", ")");       break;
+//    case EOpDPdy:             outputTriplet(visit, "ddy(", "", ")");       break;
+//    case EOpFwidth:           outputTriplet(visit, "fwidth(", "", ")");    break;        
+      case EOpAny:              outputTriplet(visit, "any(", "", ")");       break;
+      case EOpAll:              outputTriplet(visit, "all(", "", ")");       break;
       default: UNREACHABLE();
     }
 
@@ -1209,7 +1209,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             return false;
         }
         break;
-      case EOpComma:            outputTriplet(visit, NULL, ", ", NULL);                break;
+      case EOpComma:            outputTriplet(visit, "", ", ", "");                break;
       case EOpFunction:
         {
             TString name = TFunction::unmangleName(node->getName());
@@ -1342,65 +1342,65 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         break;
       case EOpParameters:       outputTriplet(visit, "(", ", ", ")\n{\n");             break;
       case EOpConstructFloat:
-          addConstructor(node->getType(), "vec1", node->getSequence());
-          outputTriplet(visit, "vec1(", "", ")");
-          break;
+        addConstructor(node->getType(), "vec1", &node->getSequence());
+        outputTriplet(visit, "vec1(", "", ")");
+        break;
       case EOpConstructVec2:
-          addConstructor(node->getType(), "vec2", node->getSequence());
-          outputTriplet(visit, "vec2(", ", ", ")");
-          break;
+        addConstructor(node->getType(), "vec2", &node->getSequence());
+        outputTriplet(visit, "vec2(", ", ", ")");
+        break;
       case EOpConstructVec3:
-          addConstructor(node->getType(), "vec3", node->getSequence());
-          outputTriplet(visit, "vec3(", ", ", ")");
-          break;
+        addConstructor(node->getType(), "vec3", &node->getSequence());
+        outputTriplet(visit, "vec3(", ", ", ")");
+        break;
       case EOpConstructVec4:
-          addConstructor(node->getType(), "vec4", node->getSequence());
-          outputTriplet(visit, "vec4(", ", ", ")");
-          break;
+        addConstructor(node->getType(), "vec4", &node->getSequence());
+        outputTriplet(visit, "vec4(", ", ", ")");
+        break;
       case EOpConstructBool:
-          addConstructor(node->getType(), "bvec1", node->getSequence());
-          outputTriplet(visit, "bvec1(", "", ")");
-          break;
+        addConstructor(node->getType(), "bvec1", &node->getSequence());
+        outputTriplet(visit, "bvec1(", "", ")");
+        break;
       case EOpConstructBVec2:
-          addConstructor(node->getType(), "bvec2", node->getSequence());
-          outputTriplet(visit, "bvec2(", ", ", ")");
-          break;
+        addConstructor(node->getType(), "bvec2", &node->getSequence());
+        outputTriplet(visit, "bvec2(", ", ", ")");
+        break;
       case EOpConstructBVec3:
-          addConstructor(node->getType(), "bvec3", node->getSequence());
-          outputTriplet(visit, "bvec3(", ", ", ")");
-          break;
+        addConstructor(node->getType(), "bvec3", &node->getSequence());
+        outputTriplet(visit, "bvec3(", ", ", ")");
+        break;
       case EOpConstructBVec4:
-          addConstructor(node->getType(), "bvec4", node->getSequence());
-          outputTriplet(visit, "bvec4(", ", ", ")");
-          break;
+        addConstructor(node->getType(), "bvec4", &node->getSequence());
+        outputTriplet(visit, "bvec4(", ", ", ")");
+        break;
       case EOpConstructInt:
-          addConstructor(node->getType(), "ivec1", node->getSequence());
-          outputTriplet(visit, "ivec1(", "", ")");
-          break;
+        addConstructor(node->getType(), "ivec1", &node->getSequence());
+        outputTriplet(visit, "ivec1(", "", ")");
+        break;
       case EOpConstructIVec2:
-          addConstructor(node->getType(), "ivec2", node->getSequence());
-          outputTriplet(visit, "ivec2(", ", ", ")");
-          break;
+        addConstructor(node->getType(), "ivec2", &node->getSequence());
+        outputTriplet(visit, "ivec2(", ", ", ")");
+        break;
       case EOpConstructIVec3:
-          addConstructor(node->getType(), "ivec3", node->getSequence());
-          outputTriplet(visit, "ivec3(", ", ", ")");
-          break;
+        addConstructor(node->getType(), "ivec3", &node->getSequence());
+        outputTriplet(visit, "ivec3(", ", ", ")");
+        break;
       case EOpConstructIVec4:
-          addConstructor(node->getType(), "ivec4", node->getSequence());
-          outputTriplet(visit, "ivec4(", ", ", ")");
-          break;
+        addConstructor(node->getType(), "ivec4", &node->getSequence());
+        outputTriplet(visit, "ivec4(", ", ", ")");
+        break;
       case EOpConstructMat2:
-          addConstructor(node->getType(), "mat2", node->getSequence());
-          outputTriplet(visit, "mat2(", ", ", ")");
-          break;
+        addConstructor(node->getType(), "mat2", &node->getSequence());
+        outputTriplet(visit, "mat2(", ", ", ")");
+        break;
       case EOpConstructMat3:
-          addConstructor(node->getType(), "mat3", node->getSequence());
-          outputTriplet(visit, "mat3(", ", ", ")");
-          break;
+        addConstructor(node->getType(), "mat3", &node->getSequence());
+        outputTriplet(visit, "mat3(", ", ", ")");
+        break;
       case EOpConstructMat4: 
-          addConstructor(node->getType(), "mat4", node->getSequence());
-          outputTriplet(visit, "mat4(", ", ", ")");
-          break;
+        addConstructor(node->getType(), "mat4", &node->getSequence());
+        outputTriplet(visit, "mat4(", ", ", ")");
+        break;
       case EOpConstructStruct:  outputTriplet(visit, "{", ", ", "}");                  break;
       case EOpLessThan:         outputTriplet(visit, "(", " < ", ")");                 break;
       case EOpGreaterThan:      outputTriplet(visit, "(", " > ", ")");                 break;
@@ -1698,9 +1698,9 @@ bool OutputHLSL::visitBranch(Visit visit, TIntermBranch *node)
 
     switch (node->getFlowOp())
     {
-      case EOpKill:     outputTriplet(visit, "discard", NULL, NULL);  break;
-      case EOpBreak:    outputTriplet(visit, "break", NULL, NULL);    break;
-      case EOpContinue: outputTriplet(visit, "continue", NULL, NULL); break;
+      case EOpKill:     outputTriplet(visit, "discard", "", "");  break;
+      case EOpBreak:    outputTriplet(visit, "break", "", "");    break;
+      case EOpContinue: outputTriplet(visit, "continue", "", ""); break;
       case EOpReturn:
         if (visit == PreVisit)
         {
@@ -1917,19 +1917,19 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
     return false;   // Not handled as an excessive loop
 }
 
-void OutputHLSL::outputTriplet(Visit visit, const char *preString, const char *inString, const char *postString)
+void OutputHLSL::outputTriplet(Visit visit, const TString &preString, const TString &inString, const TString &postString)
 {
     TInfoSinkBase &out = mBody;
 
-    if (visit == PreVisit && preString)
+    if (visit == PreVisit)
     {
         out << preString;
     }
-    else if (visit == InVisit && inString)
+    else if (visit == InVisit)
     {
         out << inString;
     }
-    else if (visit == PostVisit && postString)
+    else if (visit == PostVisit)
     {
         out << postString;
     }
@@ -2076,14 +2076,14 @@ TString OutputHLSL::initializer(const TType &type)
 
 bool OutputHLSL::CompareConstructor::operator()(const Constructor &x, const Constructor &y) const
 {
-    if (x.type != y.type)
-    {
-        return memcmp(&x.type, &y.type, sizeof(TType)) < 0;
-    }
-
     if (x.name != y.name)
     {
         return x.name < y.name;
+    }
+
+    if (x.type != y.type)
+    {
+        return memcmp(&x.type, &y.type, sizeof(TType)) < 0;
     }
 
     if (x.parameters.size() != y.parameters.size())
@@ -2102,16 +2102,19 @@ bool OutputHLSL::CompareConstructor::operator()(const Constructor &x, const Cons
     return false;
 }
 
-void OutputHLSL::addConstructor(const TType &type, const TString &name, const TIntermSequence &parameters)
+void OutputHLSL::addConstructor(const TType &type, const TString &name, const TIntermSequence *parameters)
 {
     Constructor constructor;
 
     constructor.type = type;
     constructor.name = name;
 
-    for (TIntermSequence::const_iterator parameter = parameters.begin(); parameter != parameters.end(); parameter++)
+    if (parameters)
     {
-        constructor.parameters.push_back((*parameter)->getAsTyped()->getType());
+        for (TIntermSequence::const_iterator parameter = parameters->begin(); parameter != parameters->end(); parameter++)
+        {
+            constructor.parameters.push_back((*parameter)->getAsTyped()->getType());
+        }
     }
 
     mConstructors.insert(constructor);
