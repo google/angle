@@ -3448,9 +3448,12 @@ void __stdcall glPolygonOffset(GLfloat factor, GLfloat units)
 
     try
     {
-        if (factor != 0.0f || units != 0.0f)
+        gl::Context *context = gl::getContext();
+
+        if (context)
         {
-            UNIMPLEMENTED();   // FIXME
+            context->polygonOffsetFactor = factor;
+            context->polygonOffsetUnits = units;
         }
     }
     catch(std::bad_alloc&)

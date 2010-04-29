@@ -1382,7 +1382,18 @@ void Context::applyState(GLenum drawMode)
 
     if (polygonOffsetFill)
     {
-        UNIMPLEMENTED();   // FIXME
+        gl::Depthbuffer *depthbuffer = getFramebuffer()->getDepthbuffer();
+        if (depthbuffer)
+        {
+            device->SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, *((DWORD*)&polygonOffsetFactor));
+            float depthBias = ldexp(polygonOffsetUnits, -(int)(depthbuffer->getDepthSize()));
+            device->SetRenderState(D3DRS_DEPTHBIAS, *((DWORD*)&depthBias));
+        }
+    }
+    else
+    {
+        device->SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, 0);
+        device->SetRenderState(D3DRS_DEPTHBIAS, 0);
     }
 
     if (sampleAlphaToCoverage)
