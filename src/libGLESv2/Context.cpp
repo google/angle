@@ -1234,12 +1234,10 @@ bool Context::applyRenderTarget(bool ignoreViewport)
 
     if (currentProgram)
     {
-        D3DSURFACE_DESC description;
-        renderTarget->GetDesc(&description);
         Program *programObject = getCurrentProgram();
 
         GLint halfPixelSize = programObject->getUniformLocation("dx_HalfPixelSize");
-        GLfloat xy[2] = {1.0f / description.Width, 1.0f / description.Height};
+        GLfloat xy[2] = {1.0f / viewport.Width, 1.0f / viewport.Height};
         programObject->setUniform2fv(halfPixelSize, 1, (GLfloat*)&xy);
 
         GLint window = programObject->getUniformLocation("dx_Window");
