@@ -1153,6 +1153,11 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
             if (variable && (variable->getQualifier() == EvqTemporary || variable->getQualifier() == EvqGlobal))
             {
+                if (variable->getType().getStruct())
+                {
+                    addConstructor(variable->getType(), variable->getType().getTypeName(), NULL);
+                }
+
                 if (!variable->getAsSymbolNode() || variable->getAsSymbolNode()->getSymbol() != "")   // Variable declaration
                 {
                     if (!mInsideFunction)
@@ -1193,7 +1198,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 }
                 else if (variable->getAsSymbolNode() && variable->getAsSymbolNode()->getSymbol() == "")   // Type (struct) declaration
                 {
-                    addConstructor(variable->getType(), variable->getType().getTypeName(), NULL);
+                    // Already added to constructor map
                 }
                 else UNREACHABLE();
             }
@@ -2065,41 +2070,17 @@ TString OutputHLSL::initializer(const TType &type)
 {
     TString string;
 
-    int arraySize = type.isArray() ? type.getArraySize() : 1;
-
-    if (type.isArray())
+    for (int component = 0; component < type.getObjectSize(); component++)
     {
-        string += "{";
-    }
+        string += "0";
 
-    for (int element = 0; element < arraySize; element++)
-    {
-        string += typeString(type) + "(";
-
-        for (int component = 0; component < type.getInstanceSize(); component++)
-        {
-            string += "0";
-
-            if (component < type.getInstanceSize() - 1)
-            {
-                string += ", ";
-            }
-        }
-
-        string += ")";
-
-        if (element < arraySize - 1)
+        if (component < type.getObjectSize() - 1)
         {
             string += ", ";
         }
     }
 
-    if (type.isArray())
-    {
-        string += "}";
-    }
-
-    return string;
+    return "{" + string + "}";
 }
 
 bool OutputHLSL::CompareConstructor::operator()(const Constructor &x, const Constructor &y) const
