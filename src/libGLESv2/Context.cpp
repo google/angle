@@ -1394,14 +1394,17 @@ void Context::applyState(GLenum drawMode)
         device->SetRenderState(D3DRS_DEPTHBIAS, 0);
     }
 
-    if (sampleAlphaToCoverage)
+    if (mConfig->mMultiSample != 0)
     {
-        UNIMPLEMENTED();   // FIXME
-    }
+        if (sampleAlphaToCoverage)
+        {
+            FIXME("Sample alpha to coverage is unimplemented.");
+        }
 
-    if (sampleCoverage)
-    {
-        UNIMPLEMENTED();   // FIXME: Ignore when SAMPLE_BUFFERS is not one
+        if (sampleCoverage)
+        {
+            FIXME("Sample coverage is unimplemented.");
+        }
     }
 
     device->SetRenderState(D3DRS_DITHERENABLE, dither ? TRUE : FALSE);
