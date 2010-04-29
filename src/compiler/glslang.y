@@ -1259,6 +1259,9 @@ init_declarator_list
             TVariable* variable;
             if (parseContext->arrayErrorCheck($4.line, *$3.string, $1.type, variable))
                 parseContext->recover();
+            TType type = TType($1.type);
+            type.setArraySize(size);
+            $$.intermAggregate = parseContext->intermediate.growAggregate($1.intermNode, parseContext->intermediate.addSymbol(0, *$3.string, type, $3.line), $3.line);
         }
     }
     | init_declarator_list COMMA IDENTIFIER LEFT_BRACKET RIGHT_BRACKET EQUAL initializer {
