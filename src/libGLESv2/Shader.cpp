@@ -21,7 +21,7 @@ namespace gl
 void *Shader::mFragmentCompiler = NULL;
 void *Shader::mVertexCompiler = NULL;
 
-Shader::Shader(GLuint handle) : mHandle(handle)
+Shader::Shader(Context *context, GLuint handle) : mHandle(handle), mContext(context)
 {
     mSource = NULL;
     mHlsl = NULL;
@@ -188,7 +188,7 @@ void Shader::detach()
 
     if (mAttachCount == 0 && mDeleteStatus)
     {
-        getContext()->deleteShader(mHandle);
+        mContext->deleteShader(mHandle);
     }
 }
 
@@ -294,7 +294,7 @@ void Shader::compileToHLSL(void *compiler)
     }
 }
 
-VertexShader::VertexShader(GLuint handle) : Shader(handle)
+VertexShader::VertexShader(Context *context, GLuint handle) : Shader(context, handle)
 {
 }
 
@@ -368,7 +368,7 @@ void VertexShader::parseAttributes()
     }
 }
 
-FragmentShader::FragmentShader(GLuint handle) : Shader(handle)
+FragmentShader::FragmentShader(Context *context, GLuint handle) : Shader(context, handle)
 {
 }
 

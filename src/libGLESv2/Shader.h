@@ -23,7 +23,7 @@ namespace gl
 class Shader
 {
   public:
-    explicit Shader(GLuint handle);
+    Shader(Context *context, GLuint handle);
 
     virtual ~Shader();
 
@@ -63,6 +63,8 @@ class Shader
     char *mHlsl;
     char *mInfoLog;
 
+    Context *mContext;
+
     static void *mFragmentCompiler;
     static void *mVertexCompiler;
 };
@@ -76,7 +78,7 @@ struct Attribute
 class VertexShader : public Shader
 {
   public:
-    explicit VertexShader(GLuint handle);
+    VertexShader(Context *context, GLuint handle);
 
     ~VertexShader();
 
@@ -96,7 +98,7 @@ class VertexShader : public Shader
 class FragmentShader : public Shader
 {
   public:
-    explicit FragmentShader(GLuint handle);
+    FragmentShader(Context *context, GLuint handle);
 
     ~FragmentShader();
 

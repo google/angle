@@ -319,11 +319,11 @@ GLuint Context::createShader(GLenum type)
 
     if (type == GL_VERTEX_SHADER)
     {
-        mShaderMap[handle] = new VertexShader(handle);
+        mShaderMap[handle] = new VertexShader(this, handle);
     }
     else if (type == GL_FRAGMENT_SHADER)
     {
-        mShaderMap[handle] = new FragmentShader(handle);
+        mShaderMap[handle] = new FragmentShader(this, handle);
     }
     else UNREACHABLE();
 
