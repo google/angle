@@ -2142,6 +2142,11 @@ void Program::getActiveUniform(GLuint index, GLsizei bufsize, GLsizei *length, G
     {
         std::string string = undecorate(mUniforms[uniform]->name);
 
+        if (mUniforms[uniform]->arraySize != 1)
+        {
+            string += "[0]";
+        }
+
         strncpy(name, string.c_str(), bufsize);
         name[bufsize - 1] = '\0';
 
