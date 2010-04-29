@@ -1342,12 +1342,24 @@ Uniform *Program::createUniform(const D3DXCONSTANT_DESC &constantDescription, st
     return 0;
 }
 
-// This methods needs to match OutputHLSL::decorate
+// This method needs to match OutputHLSL::decorate
 std::string Program::decorate(const std::string &string)
 {
     if (string.substr(0, 3) != "gl_" && string.substr(0, 3) != "dx_")
     {
         return "_" + string;
+    }
+    else
+    {
+        return string;
+    }
+}
+
+std::string Program::undecorate(const std::string &string)
+{
+    if (string.substr(0, 1) == "_")
+    {
+        return string.substr(1);
     }
     else
     {
@@ -2118,14 +2130,9 @@ void Program::getActiveUniform(GLuint index, GLsizei bufsize, GLsizei *length, G
 
     if (bufsize > 0)
     {
-        const char *string = mUniforms[uniform]->name.c_str();
+        std::string string = undecorate(mUniforms[uniform]->name);
 
-        if(string[0] == '_')   // Undecorate
-        {
-            string++;
-        }
-
-        strncpy(name, string, bufsize);
+        strncpy(name, string.c_str(), bufsize);
         name[bufsize - 1] = '\0';
 
         if (length)
@@ -2162,7 +2169,7 @@ GLint Program::getActiveUniformMaxLength()
     {
         if (!mUniforms[uniformIndex]->name.empty() && mUniforms[uniformIndex]->name.substr(0, 3) != "dx_")
         {
-            maxLength = std::max((int)(mUniforms[uniformIndex]->name.length() + 1), maxLength);
+            maxLength = std::max((int)(undecorate(mUniforms[uniformIndex]->name).length() + 1), maxLength);
         }
     }
 

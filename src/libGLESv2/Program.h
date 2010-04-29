@@ -136,7 +136,6 @@ class Program
     bool defineUniform(const D3DXHANDLE &constantHandle, const D3DXCONSTANT_DESC &constantDescription, std::string name = "");
     bool defineUniform(const D3DXCONSTANT_DESC &constantDescription, std::string &name);
     Uniform *createUniform(const D3DXCONSTANT_DESC &constantDescription, std::string &name);
-    static std::string decorate(const std::string &string);   // Prepend an underscore
     bool applyUniform1bv(GLint location, GLsizei count, const GLboolean *v);
     bool applyUniform2bv(GLint location, GLsizei count, const GLboolean *v);
     bool applyUniform3bv(GLint location, GLsizei count, const GLboolean *v);
@@ -155,6 +154,9 @@ class Program
 
     void appendToInfoLog(const char *info, ...);
     void resetInfoLog();
+
+    static std::string decorate(const std::string &string);     // Prepend an underscore
+    static std::string undecorate(const std::string &string);   // Remove leading underscore
 
     FragmentShader *mFragmentShader;
     VertexShader *mVertexShader;
