@@ -161,16 +161,20 @@ bool TOutputGLSL::visitBinary(Visit visit, TIntermBinary* node)
             }
             break;
         case EOpAddAssign: writeTriplet(visit, NULL, " += ", NULL); break;
-        case EOpSubAssign: UNIMPLEMENTED(); break;
-        case EOpMulAssign: writeTriplet(visit, NULL, " *= ", NULL); break;
-        case EOpVectorTimesMatrixAssign: UNIMPLEMENTED(); break;
-        case EOpVectorTimesScalarAssign: UNIMPLEMENTED(); break;
-        case EOpMatrixTimesScalarAssign: UNIMPLEMENTED(); break;
-        case EOpMatrixTimesMatrixAssign: UNIMPLEMENTED(); break;
-        case EOpDivAssign: UNIMPLEMENTED(); break;
+        case EOpSubAssign: writeTriplet(visit, NULL, " -= ", NULL); break;
+        case EOpDivAssign: writeTriplet(visit, NULL, " /= ", NULL); break;
+        case EOpMulAssign: 
+        case EOpVectorTimesMatrixAssign:
+        case EOpVectorTimesScalarAssign:
+        case EOpMatrixTimesScalarAssign:
+        case EOpMatrixTimesMatrixAssign:
+            writeTriplet(visit, NULL, " *= ", NULL);
+            break;
 
-        case EOpIndexDirect: writeTriplet(visit, NULL, "[", "]"); break;
-        case EOpIndexIndirect: UNIMPLEMENTED(); break;
+        case EOpIndexDirect:
+        case EOpIndexIndirect:
+            writeTriplet(visit, NULL, "[", "]");
+            break;
         case EOpIndexDirectStruct:
             if (visit == InVisit)
             {
@@ -212,11 +216,11 @@ bool TOutputGLSL::visitBinary(Visit visit, TIntermBinary* node)
         case EOpDiv: writeTriplet(visit, "(", " / ", ")"); break;
         case EOpMod: UNIMPLEMENTED(); break;
         case EOpEqual: writeTriplet(visit, "(", " == ", ")"); break;
-        case EOpNotEqual: UNIMPLEMENTED(); break;
+        case EOpNotEqual: writeTriplet(visit, "(", " != ", ")"); break;
         case EOpLessThan: writeTriplet(visit, "(", " < ", ")"); break;
         case EOpGreaterThan: writeTriplet(visit, "(", " > ", ")"); break;
-        case EOpLessThanEqual: UNIMPLEMENTED(); break;
-        case EOpGreaterThanEqual: UNIMPLEMENTED(); break;
+        case EOpLessThanEqual: writeTriplet(visit, "(", " <= ", ")"); break;
+        case EOpGreaterThanEqual: writeTriplet(visit, "(", " >= ", ")"); break;
 
         // Notice the fall-through.
         case EOpVectorTimesScalar:
@@ -228,8 +232,8 @@ bool TOutputGLSL::visitBinary(Visit visit, TIntermBinary* node)
             break;
 
         case EOpLogicalOr: writeTriplet(visit, "(", " || ", ")"); break;
-        case EOpLogicalXor: UNIMPLEMENTED(); break;
-        case EOpLogicalAnd: UNIMPLEMENTED(); break;
+        case EOpLogicalXor: writeTriplet(visit, "(", " ^^ ", ")"); break;
+        case EOpLogicalAnd: writeTriplet(visit, "(", " && ", ")"); break;
         default: UNREACHABLE(); break;
     }
 
@@ -243,48 +247,48 @@ bool TOutputGLSL::visitUnary(Visit visit, TIntermUnary* node)
     switch (node->getOp())
     {
         case EOpNegative: writeTriplet(visit, "(-", NULL, ")"); break;
-        case EOpVectorLogicalNot: UNIMPLEMENTED(); break;
-        case EOpLogicalNot: UNIMPLEMENTED(); break;
+        case EOpVectorLogicalNot: writeTriplet(visit, "(!", NULL, ")"); break;
+        case EOpLogicalNot: writeTriplet(visit, "(!", NULL, ")"); break;
 
-        case EOpPostIncrement: UNIMPLEMENTED(); break;
-        case EOpPostDecrement: UNIMPLEMENTED(); break;
-        case EOpPreIncrement: UNIMPLEMENTED(); break;
-        case EOpPreDecrement: UNIMPLEMENTED(); break;
+        case EOpPostIncrement: writeTriplet(visit, "(", NULL, "++)"); break;
+        case EOpPostDecrement: writeTriplet(visit, "(", NULL, "--)"); break;
+        case EOpPreIncrement: writeTriplet(visit, "(++", NULL, ")"); break;
+        case EOpPreDecrement: writeTriplet(visit, "(--", NULL, ")"); break;
 
-        case EOpConvIntToBool: UNIMPLEMENTED(); break;
-        case EOpConvFloatToBool: UNIMPLEMENTED(); break;
-        case EOpConvBoolToFloat: UNIMPLEMENTED(); break;
+        case EOpConvIntToBool: writeTriplet(visit, "bool(", NULL, ")"); break;
+        case EOpConvFloatToBool: writeTriplet(visit, "bool(", NULL, ")"); break;
+        case EOpConvBoolToFloat: writeTriplet(visit, "float(", NULL, ")"); break;
         case EOpConvIntToFloat: writeTriplet(visit, "float(", NULL, ")"); break;
         case EOpConvFloatToInt: writeTriplet(visit, "int(", NULL, ")"); break;
-        case EOpConvBoolToInt: UNIMPLEMENTED(); break;
+        case EOpConvBoolToInt: writeTriplet(visit, "int(", NULL, ")"); break;
 
-        case EOpRadians: UNIMPLEMENTED(); break;
-        case EOpDegrees: UNIMPLEMENTED(); break;
+        case EOpRadians: writeTriplet(visit, "radians(", NULL, ")"); break;
+        case EOpDegrees: writeTriplet(visit, "degrees(", NULL, ")"); break;
         case EOpSin: writeTriplet(visit, "sin(", NULL, ")"); break;
         case EOpCos: writeTriplet(visit, "cos(", NULL, ")"); break;
-        case EOpTan: UNIMPLEMENTED(); break;
-        case EOpAsin: UNIMPLEMENTED(); break;
+        case EOpTan: writeTriplet(visit, "tan(", NULL, ")"); break;
+        case EOpAsin: writeTriplet(visit, "asin(", NULL, ")"); break;
         case EOpAcos: writeTriplet(visit, "acos(", NULL, ")"); break;
-        case EOpAtan: UNIMPLEMENTED(); break;
+        case EOpAtan: writeTriplet(visit, "atan(", NULL, ")"); break;
 
-        case EOpExp: UNIMPLEMENTED(); break;
-        case EOpLog: UNIMPLEMENTED(); break;
-        case EOpExp2: UNIMPLEMENTED(); break;
-        case EOpLog2: UNIMPLEMENTED(); break;
-        case EOpSqrt: UNIMPLEMENTED(); break;
-        case EOpInverseSqrt: UNIMPLEMENTED(); break;
+        case EOpExp: writeTriplet(visit, "exp(", NULL, ")"); break;
+        case EOpLog: writeTriplet(visit, "log(", NULL, ")"); break;
+        case EOpExp2: writeTriplet(visit, "exp2(", NULL, ")"); break;
+        case EOpLog2: writeTriplet(visit, "log2(", NULL, ")"); break;
+        case EOpSqrt: writeTriplet(visit, "sqrt(", NULL, ")"); break;
+        case EOpInverseSqrt: writeTriplet(visit, "inversesqrt(", NULL, ")"); break;
 
         case EOpAbs: writeTriplet(visit, "abs(", NULL, ")"); break;
-        case EOpSign: UNIMPLEMENTED(); break;
+        case EOpSign: writeTriplet(visit, "sign(", NULL, ")"); break;
         case EOpFloor: writeTriplet(visit, "floor(", NULL, ")"); break;
-        case EOpCeil: UNIMPLEMENTED(); break;
-        case EOpFract: UNIMPLEMENTED(); break;
+        case EOpCeil: writeTriplet(visit, "ceil(", NULL, ")"); break;
+        case EOpFract: writeTriplet(visit, "fract(", NULL, ")"); break;
 
-        case EOpLength: UNIMPLEMENTED(); break;
+        case EOpLength: writeTriplet(visit, "length(", NULL, ")"); break;
         case EOpNormalize: writeTriplet(visit, "normalize(", NULL, ")"); break;
 
-        case EOpAny: UNIMPLEMENTED(); break;
-        case EOpAll: UNIMPLEMENTED(); break;
+        case EOpAny: writeTriplet(visit, "any(", NULL, ")"); break;
+        case EOpAll: writeTriplet(visit, "all(", NULL, ")"); break;
 
         default: UNREACHABLE(); break;
     }
@@ -313,7 +317,10 @@ bool TOutputGLSL::visitSelection(Visit visit, TIntermSelection* node)
         out << ") {\n";
 
         incrementDepth();
-        node->getTrueBlock()->traverse(this);
+        if (node->getTrueBlock())
+        {
+            node->getTrueBlock()->traverse(this);
+        }
         out << getIndentationString(depth - 2) << "}";
 
         if (node->getFalseBlock())
@@ -348,10 +355,28 @@ bool TOutputGLSL::visitAggregate(Visit visit, TIntermAggregate* node)
                 out << ";\n";
             }
             break;
-        case EOpComma:
-            UNIMPLEMENTED();
-            return true;
+        case EOpPrototype:
+            // Function declaration.
+            if (visit == PreVisit)
+            {
+                TString returnType = getTypeName(node->getType());
+                out << returnType << " " << node->getName() << "(";
+                writeFullSymbol = true;
+            }
+            else if (visit == InVisit)
+            {
+                // Called in between function arguments.
+                out << ", ";
+            }
+            else if (visit == PostVisit)
+            {
+                // Called after fucntion arguments.
+                out << ")";
+                writeFullSymbol = false;
+            }
+            break;
         case EOpFunction:
+            // Function definition.
             if (visit == PreVisit)
             {
                 TString returnType = getTypeName(node->getType());
@@ -371,6 +396,7 @@ bool TOutputGLSL::visitAggregate(Visit visit, TIntermAggregate* node)
             }
             break;
         case EOpFunctionCall:
+            // Function call.
             if (visit == PreVisit)
             {
                 TString functionName = TFunction::unmangleName(node->getName());
@@ -386,6 +412,7 @@ bool TOutputGLSL::visitAggregate(Visit visit, TIntermAggregate* node)
             }
             break;
         case EOpParameters:
+            // Function parameters.
             if (visit == PreVisit)
             {
                 out << "(";
@@ -402,6 +429,7 @@ bool TOutputGLSL::visitAggregate(Visit visit, TIntermAggregate* node)
             }
             break;
         case EOpDeclaration:
+            // Variable declaration.
             if (visit == PreVisit)
             {
                 writeFullSymbol = true;
@@ -417,49 +445,48 @@ bool TOutputGLSL::visitAggregate(Visit visit, TIntermAggregate* node)
             }
             break;
 
-        case EOpConstructFloat: UNIMPLEMENTED(); break;
-	case EOpConstructVec2: writeTriplet(visit, "vec2(", ", ", ")"); break;
-	case EOpConstructVec3: writeTriplet(visit, "vec3(", ", ", ")"); break;
-	case EOpConstructVec4: writeTriplet(visit, "vec4(", ", ", ")"); break;
-	case EOpConstructBool: UNIMPLEMENTED(); break;
-	case EOpConstructBVec2: UNIMPLEMENTED(); break;
-	case EOpConstructBVec3: UNIMPLEMENTED(); break;
-	case EOpConstructBVec4: UNIMPLEMENTED(); break;
-	case EOpConstructInt: UNIMPLEMENTED(); break;
-	case EOpConstructIVec2: UNIMPLEMENTED(); break;
-	case EOpConstructIVec3: UNIMPLEMENTED(); break;
-	case EOpConstructIVec4: UNIMPLEMENTED(); break;
-	case EOpConstructMat2: UNIMPLEMENTED(); break;
-	case EOpConstructMat3: UNIMPLEMENTED(); break;
-	case EOpConstructMat4: writeTriplet(visit, "mat4(", ", ", ")"); break;
-	case EOpConstructStruct: UNIMPLEMENTED(); break;
+        case EOpConstructFloat: writeTriplet(visit, "float(", NULL, ")"); break;
+        case EOpConstructVec2: writeTriplet(visit, "vec2(", ", ", ")"); break;
+        case EOpConstructVec3: writeTriplet(visit, "vec3(", ", ", ")"); break;
+        case EOpConstructVec4: writeTriplet(visit, "vec4(", ", ", ")"); break;
+        case EOpConstructBool: writeTriplet(visit, "bool(", NULL, ")"); break;
+        case EOpConstructBVec2: writeTriplet(visit, "bvec2(", ", ", ")"); break;
+        case EOpConstructBVec3: writeTriplet(visit, "bvec3(", ", ", ")"); break;
+        case EOpConstructBVec4: writeTriplet(visit, "bvec4(", ", ", ")"); break;
+        case EOpConstructInt: writeTriplet(visit, "int(", NULL, ")"); break;
+        case EOpConstructIVec2: writeTriplet(visit, "ivec2(", ", ", ")"); break;
+        case EOpConstructIVec3: writeTriplet(visit, "ivec3(", ", ", ")"); break;
+        case EOpConstructIVec4: writeTriplet(visit, "ivec4(", ", ", ")"); break;
+        case EOpConstructMat2: writeTriplet(visit, "mat2(", ", ", ")"); break;
+        case EOpConstructMat3: writeTriplet(visit, "mat3(", ", ", ")"); break;
+        case EOpConstructMat4: writeTriplet(visit, "mat4(", ", ", ")"); break;
+        case EOpConstructStruct: UNIMPLEMENTED(); break;
 
-	case EOpLessThan: UNIMPLEMENTED(); break;
-	case EOpGreaterThan: UNIMPLEMENTED(); break;
-	case EOpLessThanEqual: UNIMPLEMENTED(); break;
-	case EOpGreaterThanEqual: UNIMPLEMENTED(); break;
-	case EOpVectorEqual: UNIMPLEMENTED(); break;
-	case EOpVectorNotEqual: UNIMPLEMENTED(); break;
+        case EOpLessThan: writeTriplet(visit, "lessThan(", ", ", ")"); break;
+        case EOpGreaterThan: writeTriplet(visit, "greaterThan(", ", ", ")"); break;
+        case EOpLessThanEqual: writeTriplet(visit, "lessThanEqual(", ", ", ")"); break;
+        case EOpGreaterThanEqual: writeTriplet(visit, "greaterThanEqual(", ", ", ")"); break;
+        case EOpVectorEqual: writeTriplet(visit, "equal(", ", ", ")"); break;
+        case EOpVectorNotEqual: writeTriplet(visit, "notEqual(", ", ", ")"); break;
+        case EOpComma: writeTriplet(visit, NULL, ", ", NULL); break;
 
-	case EOpMod: writeTriplet(visit, "mod(", ", ", ")"); break;
-	case EOpPow: writeTriplet(visit, "pow(", ", ", ")"); break;
+        case EOpMod: writeTriplet(visit, "mod(", ", ", ")"); break;
+        case EOpPow: writeTriplet(visit, "pow(", ", ", ")"); break;
+        case EOpAtan: writeTriplet(visit, "atan(", ", ", ")"); break;
+        case EOpMin: writeTriplet(visit, "min(", ", ", ")"); break;
+        case EOpMax: writeTriplet(visit, "max(", ", ", ")"); break;
+        case EOpClamp: writeTriplet(visit, "clamp(", ", ", ")"); break;
+        case EOpMix: writeTriplet(visit, "mix(", ", ", ")"); break;
+        case EOpStep: writeTriplet(visit, "step(", ", ", ")"); break;
+        case EOpSmoothStep: writeTriplet(visit, "smoothstep(", ", ", ")"); break;
 
-	case EOpAtan: UNIMPLEMENTED(); break;
-
-	case EOpMin: writeTriplet(visit, "min(", ", ", ")"); break;
-	case EOpMax: writeTriplet(visit, "max(", ", ", ")"); break;
-	case EOpClamp: writeTriplet(visit, "clamp(", ", ", ")"); break;
-	case EOpMix: writeTriplet(visit, "mix(", ", ", ")"); break;
-	case EOpStep: UNIMPLEMENTED(); break;
-	case EOpSmoothStep: UNIMPLEMENTED(); break;
-
-	case EOpDistance: UNIMPLEMENTED(); break;
-	case EOpDot: writeTriplet(visit, "dot(", ", ", ")"); break;
-	case EOpCross: UNIMPLEMENTED(); break;
-	case EOpFaceForward: UNIMPLEMENTED(); break;
-	case EOpReflect: writeTriplet(visit, "reflect(", ", ", ")"); break;
-	case EOpRefract: UNIMPLEMENTED(); break;
-	case EOpMul: UNIMPLEMENTED(); break;
+        case EOpDistance: writeTriplet(visit, "distance(", ", ", ")"); break;
+        case EOpDot: writeTriplet(visit, "dot(", ", ", ")"); break;
+        case EOpCross: writeTriplet(visit, "cross(", ", ", ")"); break;
+        case EOpFaceForward: writeTriplet(visit, "faceforward(", ", ", ")"); break;
+        case EOpReflect: writeTriplet(visit, "reflect(", ", ", ")"); break;
+        case EOpRefract: writeTriplet(visit, "refract(", ", ", ")"); break;
+        case EOpMul: writeTriplet(visit, "matrixCompMult(", ", ", ")"); break;
 
         default: UNREACHABLE(); break;
     }
@@ -519,13 +546,10 @@ bool TOutputGLSL::visitBranch(Visit visit, TIntermBranch* node)
 
     switch (node->getFlowOp())
     {
-        case EOpKill: UNIMPLEMENTED(); break;
-        case EOpBreak: UNIMPLEMENTED(); break;
-        case EOpContinue: UNIMPLEMENTED(); break;
-        case EOpReturn:
-            if (visit == PreVisit)
-                out << "return ";
-            break;
+        case EOpKill: writeTriplet(visit, "discard", NULL, NULL); break;
+        case EOpBreak: writeTriplet(visit, "break", NULL, NULL); break;
+        case EOpContinue: writeTriplet(visit, "continue", NULL, NULL); break;
+        case EOpReturn: writeTriplet(visit, "return", NULL, NULL); break;
         default: UNREACHABLE(); break;
     }
 
