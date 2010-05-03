@@ -14,10 +14,8 @@ TranslatorGLSL::TranslatorGLSL(EShLanguage l, int dOptions)
 }
 
 bool TranslatorGLSL::compile(TIntermNode* root) {
-    TParseContext& parseContext = *GetGlobalParseContext();
-    TOutputGLSL outputGLSL(parseContext);
-    outputGLSL.header();
-    parseContext.treeRoot->traverse(&outputGLSL);
+    TOutputGLSL outputGLSL(infoSink.obj);
+    root->traverse(&outputGLSL);
 
     return true;
 }

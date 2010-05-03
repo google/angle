@@ -13,12 +13,10 @@
 class TOutputGLSL : public TIntermTraverser
 {
 public:
-    TOutputGLSL(TParseContext &context);
-
-    void header();
+    TOutputGLSL(TInfoSinkBase& objSink);
 
 protected:
-    TInfoSinkBase& objSink() { return parseContext.infoSink.obj; }
+    TInfoSinkBase& objSink() { return mObjSink; }
     void writeTriplet(Visit visit, const char* preStr, const char* inStr, const char* postStr);
 
     virtual void visitSymbol(TIntermSymbol* node);
@@ -31,8 +29,14 @@ protected:
     virtual bool visitBranch(Visit visit, TIntermBranch* node);
 
 private:
-    bool writeFullSymbol;
-    TParseContext &parseContext;
+    TInfoSinkBase& mObjSink;
+    bool mWriteFullSymbol;
+
+    // Structs are declared as the tree is traversed. This set contains all
+    // the structs already declared. It is maintained so that a struct is
+    // declared only once.
+    typedef std::set<TString> DeclaredStructs;
+    DeclaredStructs mDeclaredStructs;
 };
 
 #endif  // CROSSCOMPILERGLSL_OUTPUTGLSL_H_
