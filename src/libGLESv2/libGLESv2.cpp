@@ -5040,4 +5040,29 @@ void __stdcall glTexImage3DOES(GLenum target, GLint level, GLenum internalformat
         return error(GL_OUT_OF_MEMORY);
     }
 }
+
+__eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *procname)
+{
+    struct Extension
+    {
+        const char *name;
+        __eglMustCastToProperFunctionPointerType address;
+    };
+
+    static const Extension glExtensions[] =
+    {
+        {"glTexImage3DOES", (__eglMustCastToProperFunctionPointerType)glTexImage3DOES},
+    };
+
+    for (int ext = 0; ext < sizeof(glExtensions) / sizeof(Extension); ext++)
+    {
+        if (strcmp(procname, glExtensions[ext].name) == 0)
+        {
+            return (__eglMustCastToProperFunctionPointerType)glExtensions[ext].address;
+        }
+    }
+
+    return NULL;
+}
+
 }

@@ -1030,9 +1030,26 @@ __eglMustCastToProperFunctionPointerType __stdcall eglGetProcAddress(const char 
 
     try
     {
-        UNIMPLEMENTED();   // FIXME
+        struct Extension
+        {
+            const char *name;
+            __eglMustCastToProperFunctionPointerType address;
+        };
 
-        return NULL;
+        static const Extension eglExtensions[] =
+        {
+            {"", NULL},
+        };
+
+        for (int ext = 0; ext < sizeof(eglExtensions) / sizeof(Extension); ext++)
+        {
+            if (strcmp(procname, eglExtensions[ext].name) == 0)
+            {
+                return (__eglMustCastToProperFunctionPointerType)eglExtensions[ext].address;
+            }
+        }
+
+        return glGetProcAddress(procname);
     }
     catch(std::bad_alloc&)
     {

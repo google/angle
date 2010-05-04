@@ -365,6 +365,7 @@ gl::Context *glCreateContext(const egl::Config *config);
 void glDestroyContext(gl::Context *context);
 void glMakeCurrent(gl::Context *context, egl::Display *display, egl::Surface *surface);
 gl::Context *glGetCurrentContext();
+__eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *procname);
 }
 
 #endif   // INCLUDE_CONTEXT_H_
