@@ -27,6 +27,9 @@ int AllocateFirstFreeBits(unsigned int *bits, unsigned int allocationSize, unsig
 
 int ComputePixelSize(GLenum format, GLenum type);
 GLsizei ComputePitch(GLsizei width, GLenum format, GLenum type, GLint alignment);
+bool IsCubemapTextureTarget(GLenum target);
+bool IsTextureTarget(GLenum target);
+bool CheckTextureFormatType(GLenum format, GLenum type);
 
 }
 
@@ -51,9 +54,6 @@ unsigned int GetDepthSize(D3DFORMAT depthFormat);
 unsigned int GetStencilSize(D3DFORMAT stencilFormat);
 bool ConvertPrimitiveType(GLenum primitiveType, GLsizei primitiveCount,
                           D3DPRIMITIVETYPE *d3dPrimitiveType, int *d3dPrimitiveCount);
-bool IsCubemapTextureTarget(GLenum target);
-bool IsTextureTarget(GLenum target);
-bool CheckTextureFormatType(GLenum format, GLenum type);
 D3DFORMAT ConvertRenderbufferFormat(GLenum format);
 
 }

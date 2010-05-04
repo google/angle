@@ -178,6 +178,47 @@ int ComputePixelSize(GLenum format, GLenum type)
     return 0;
 }
 
+bool IsCubemapTextureTarget(GLenum target)
+{
+    return (target >= GL_TEXTURE_CUBE_MAP_POSITIVE_X && target <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z);
+}
+
+bool IsTextureTarget(GLenum target)
+{
+    return target == GL_TEXTURE_2D || IsCubemapTextureTarget(target);
+}
+
+// Verify that format/type are one of the combinations from table 3.4.
+bool CheckTextureFormatType(GLenum format, GLenum type)
+{
+    switch (type)
+    {
+      case GL_UNSIGNED_BYTE:
+        switch (format)
+        {
+          case GL_RGBA:
+          case GL_RGB:
+          case GL_ALPHA:
+          case GL_LUMINANCE:
+          case GL_LUMINANCE_ALPHA:
+            return true;
+
+          default:
+            return false;
+        }
+
+      case GL_UNSIGNED_SHORT_4_4_4_4:
+      case GL_UNSIGNED_SHORT_5_5_5_1:
+        return (format == GL_RGBA);
+
+      case GL_UNSIGNED_SHORT_5_6_5:
+        return (format == GL_RGB);
+
+      default:
+        return false;
+    }
+}
+
 }
 
 namespace es2dx
@@ -520,47 +561,6 @@ bool ConvertPrimitiveType(GLenum primitiveType, GLsizei primitiveCount,
     }
 
     return true;
-}
-
-bool IsCubemapTextureTarget(GLenum target)
-{
-    return (target >= GL_TEXTURE_CUBE_MAP_POSITIVE_X && target <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z);
-}
-
-bool IsTextureTarget(GLenum target)
-{
-    return target == GL_TEXTURE_2D || IsCubemapTextureTarget(target);
-}
-
-// Verify that format/type are one of the combinations from table 3.4.
-bool CheckTextureFormatType(GLenum format, GLenum type)
-{
-    switch (type)
-    {
-      case GL_UNSIGNED_BYTE:
-        switch (format)
-        {
-          case GL_RGBA:
-          case GL_RGB:
-          case GL_ALPHA:
-          case GL_LUMINANCE:
-          case GL_LUMINANCE_ALPHA:
-            return true;
-
-          default:
-            return false;
-        }
-
-      case GL_UNSIGNED_SHORT_4_4_4_4:
-      case GL_UNSIGNED_SHORT_5_5_5_1:
-        return (format == GL_RGBA);
-
-      case GL_UNSIGNED_SHORT_5_6_5:
-        return (format == GL_RGB);
-
-      default:
-        return false;
-    }
 }
 
 D3DFORMAT ConvertRenderbufferFormat(GLenum format)

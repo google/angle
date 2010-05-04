@@ -730,7 +730,7 @@ void __stdcall glCompressedTexImage2D(GLenum target, GLint level, GLenum interna
 
     try
     {
-        if (!es2dx::IsTextureTarget(target))
+        if (!gl::IsTextureTarget(target))
         {
             return error(GL_INVALID_ENUM);
         }
@@ -763,7 +763,7 @@ void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
 
     try
     {
-        if (!es2dx::IsTextureTarget(target))
+        if (!gl::IsTextureTarget(target))
         {
             return error(GL_INVALID_ENUM);
         }
@@ -871,7 +871,7 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
 
                 texture->copyImage(level, internalformat, x, y, width, height, source);
             }
-            else if (es2dx::IsCubemapTextureTarget(target))
+            else if (gl::IsCubemapTextureTarget(target))
             {
                 gl::TextureCubeMap *texture = context->getTextureCubeMap();
 
@@ -902,7 +902,7 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
 
     try
     {
-        if (!es2dx::IsTextureTarget(target))
+        if (!gl::IsTextureTarget(target))
         {
             return error(GL_INVALID_ENUM);
         }
@@ -939,7 +939,7 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
 
                 texture->copySubImage(level, xoffset, yoffset, x, y, width, height, source);
             }
-            else if (es2dx::IsCubemapTextureTarget(target))
+            else if (gl::IsCubemapTextureTarget(target))
             {
                 gl::TextureCubeMap *texture = context->getTextureCubeMap();
 
@@ -2269,7 +2269,7 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
             {
                 attachmentObjectType = attachmentType;
             }
-            else if (es2dx::IsTextureTarget(attachmentType))
+            else if (gl::IsTextureTarget(attachmentType))
             {
                 attachmentObjectType = GL_TEXTURE;
             }
@@ -2303,7 +2303,7 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
               case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE:
                 if (attachmentObjectType == GL_TEXTURE)
                 {
-                    if (es2dx::IsCubemapTextureTarget(attachmentType))
+                    if (gl::IsCubemapTextureTarget(attachmentType))
                     {
                         *params = attachmentType;
                     }
@@ -4125,7 +4125,7 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
 
     try
     {
-        if (!es2dx::IsTextureTarget(target))
+        if (!gl::IsTextureTarget(target))
         {
             return error(GL_INVALID_ENUM);
         }
@@ -4140,7 +4140,7 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
             return error(GL_INVALID_VALUE);
         }
 
-        if (!es2dx::CheckTextureFormatType(format, type))
+        if (!gl::CheckTextureFormatType(format, type))
         {
             return error(GL_INVALID_ENUM);
         }
@@ -4165,7 +4165,7 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
 
                 texture->subImage(level, xoffset, yoffset, width, height, format, type, context->unpackAlignment, pixels);
             }
-            else if (es2dx::IsCubemapTextureTarget(target))
+            else if (gl::IsCubemapTextureTarget(target))
             {
                 gl::TextureCubeMap *texture = context->getTextureCubeMap();
 

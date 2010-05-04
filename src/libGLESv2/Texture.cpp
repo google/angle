@@ -1371,7 +1371,7 @@ void TextureCubeMap::generateMipmaps()
 
 Colorbuffer *TextureCubeMap::getColorbuffer(GLenum target)
 {
-    if (!es2dx::IsCubemapTextureTarget(target))
+    if (!IsCubemapTextureTarget(target))
     {
         return error(GL_INVALID_OPERATION, (Colorbuffer *)NULL);
     }
@@ -1388,7 +1388,7 @@ Colorbuffer *TextureCubeMap::getColorbuffer(GLenum target)
 
 IDirect3DSurface9 *TextureCubeMap::getRenderTarget(GLenum target)
 {
-    ASSERT(es2dx::IsCubemapTextureTarget(target));
+    ASSERT(IsCubemapTextureTarget(target));
 
     needRenderTarget();
 
@@ -1401,7 +1401,7 @@ IDirect3DSurface9 *TextureCubeMap::getRenderTarget(GLenum target)
 Texture::TextureColorbufferProxy::TextureColorbufferProxy(Texture *texture, GLenum target)
   : Colorbuffer(NULL), mTexture(texture), mTarget(target)
 {
-    ASSERT(target == GL_TEXTURE_2D || es2dx::IsCubemapTextureTarget(target));
+    ASSERT(target == GL_TEXTURE_2D || IsCubemapTextureTarget(target));
     latchTextureInfo();
 }
 
