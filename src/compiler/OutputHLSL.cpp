@@ -2008,7 +2008,7 @@ TString OutputHLSL::typeString(const TType &type)
         {
             return decorate(type.getTypeName());
         }
-        else   // Anonymous structure, define in place
+        else   // Nameless structure, define in place
         {
             const TTypeList &fields = *type.getStruct();
 
@@ -2136,7 +2136,7 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
 {
     if (name == "")
     {
-        return;   // Anonymous structures don't have constructors
+        return;   // Nameless structures don't have constructors
     }
 
     Constructor constructor;
