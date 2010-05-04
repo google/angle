@@ -37,70 +37,70 @@ Context::Context(const egl::Config *config)
     : mConfig(config)
 {
     setClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    depthClearValue = 1.0f;
-    stencilClearValue = 0;
+    mState.depthClearValue = 1.0f;
+    mState.stencilClearValue = 0;
 
-    cullFace = false;
-    cullMode = GL_BACK;
-    frontFace = GL_CCW;
-    depthTest = false;
-    depthFunc = GL_LESS;
-    blend = false;
-    sourceBlendRGB = GL_ONE;
-    sourceBlendAlpha = GL_ONE;
-    destBlendRGB = GL_ZERO;
-    destBlendAlpha = GL_ZERO;
-    blendEquationRGB = GL_FUNC_ADD;
-    blendEquationAlpha = GL_FUNC_ADD;
-    blendColor.red = 0;
-    blendColor.green = 0;
-    blendColor.blue = 0;
-    blendColor.alpha = 0;
-    stencilTest = false;
-    stencilFunc = GL_ALWAYS;
-    stencilRef = 0;
-    stencilMask = -1;
-    stencilWritemask = -1;
-    stencilBackFunc = GL_ALWAYS;
-    stencilBackRef = 0;
-    stencilBackMask = - 1;
-    stencilBackWritemask = -1;
-    stencilFail = GL_KEEP;
-    stencilPassDepthFail = GL_KEEP;
-    stencilPassDepthPass = GL_KEEP;
-    stencilBackFail = GL_KEEP;
-    stencilBackPassDepthFail = GL_KEEP;
-    stencilBackPassDepthPass = GL_KEEP;
-    polygonOffsetFill = false;
-    polygonOffsetFactor = 0.0f;
-    polygonOffsetUnits = 0.0f;
-    sampleAlphaToCoverage = false;
-    sampleCoverage = false;
-    sampleCoverageValue = 1.0f;
-    sampleCoverageInvert = GL_FALSE;
-    scissorTest = false;
-    dither = true;
-    generateMipmapHint = GL_DONT_CARE;
+    mState.cullFace = false;
+    mState.cullMode = GL_BACK;
+    mState.frontFace = GL_CCW;
+    mState.depthTest = false;
+    mState.depthFunc = GL_LESS;
+    mState.blend = false;
+    mState.sourceBlendRGB = GL_ONE;
+    mState.sourceBlendAlpha = GL_ONE;
+    mState.destBlendRGB = GL_ZERO;
+    mState.destBlendAlpha = GL_ZERO;
+    mState.blendEquationRGB = GL_FUNC_ADD;
+    mState.blendEquationAlpha = GL_FUNC_ADD;
+    mState.blendColor.red = 0;
+    mState.blendColor.green = 0;
+    mState.blendColor.blue = 0;
+    mState.blendColor.alpha = 0;
+    mState.stencilTest = false;
+    mState.stencilFunc = GL_ALWAYS;
+    mState.stencilRef = 0;
+    mState.stencilMask = -1;
+    mState.stencilWritemask = -1;
+    mState.stencilBackFunc = GL_ALWAYS;
+    mState.stencilBackRef = 0;
+    mState.stencilBackMask = - 1;
+    mState.stencilBackWritemask = -1;
+    mState.stencilFail = GL_KEEP;
+    mState.stencilPassDepthFail = GL_KEEP;
+    mState.stencilPassDepthPass = GL_KEEP;
+    mState.stencilBackFail = GL_KEEP;
+    mState.stencilBackPassDepthFail = GL_KEEP;
+    mState.stencilBackPassDepthPass = GL_KEEP;
+    mState.polygonOffsetFill = false;
+    mState.polygonOffsetFactor = 0.0f;
+    mState.polygonOffsetUnits = 0.0f;
+    mState.sampleAlphaToCoverage = false;
+    mState.sampleCoverage = false;
+    mState.sampleCoverageValue = 1.0f;
+    mState.sampleCoverageInvert = GL_FALSE;
+    mState.scissorTest = false;
+    mState.dither = true;
+    mState.generateMipmapHint = GL_DONT_CARE;
 
-    lineWidth = 1.0f;
+    mState.lineWidth = 1.0f;
 
-    viewportX = 0;
-    viewportY = 0;
-    viewportWidth = config->mDisplayMode.Width;
-    viewportHeight = config->mDisplayMode.Height;
-    zNear = 0.0f;
-    zFar = 1.0f;
+    mState.viewportX = 0;
+    mState.viewportY = 0;
+    mState.viewportWidth = config->mDisplayMode.Width;
+    mState.viewportHeight = config->mDisplayMode.Height;
+    mState.zNear = 0.0f;
+    mState.zFar = 1.0f;
 
-    scissorX = 0;
-    scissorY = 0;
-    scissorWidth = config->mDisplayMode.Width;
-    scissorHeight = config->mDisplayMode.Height;
+    mState.scissorX = 0;
+    mState.scissorY = 0;
+    mState.scissorWidth = config->mDisplayMode.Width;
+    mState.scissorHeight = config->mDisplayMode.Height;
 
-    colorMaskRed = true;
-    colorMaskGreen = true;
-    colorMaskBlue = true;
-    colorMaskAlpha = true;
-    depthMask = true;
+    mState.colorMaskRed = true;
+    mState.colorMaskGreen = true;
+    mState.colorMaskBlue = true;
+    mState.colorMaskAlpha = true;
+    mState.depthMask = true;
 
     // [OpenGL ES 2.0.24] section 3.7 page 83:
     // In the initial state, TEXTURE_2D and TEXTURE_CUBE_MAP have twodimensional
@@ -115,9 +115,9 @@ Context::Context(const egl::Config *config)
     mDepthbufferZero = NULL;
     mStencilbufferZero = NULL;
 
-    activeSampler = 0;
-    arrayBuffer = 0;
-    elementArrayBuffer = 0;
+    mState.activeSampler = 0;
+    mState.arrayBuffer = 0;
+    mState.elementArrayBuffer = 0;
     bindTextureCubeMap(0);
     bindTexture2D(0);
     bindFramebuffer(0);
@@ -127,7 +127,7 @@ Context::Context(const egl::Config *config)
     {
         for (int sampler = 0; sampler < MAX_TEXTURE_IMAGE_UNITS; sampler++)
         {
-            samplerTexture[type][sampler] = 0;
+            mState.samplerTexture[type][sampler] = 0;
         }
     }
 
@@ -136,10 +136,10 @@ Context::Context(const egl::Config *config)
         mIncompleteTextures[type] = NULL;
     }
 
-    currentProgram = 0;
+    mState.currentProgram = 0;
 
-    packAlignment = 4;
-    unpackAlignment = 4;
+    mState.packAlignment = 4;
+    mState.unpackAlignment = 4;
 
     mBufferBackEnd = NULL;
     mVertexDataManager = NULL;
@@ -157,7 +157,7 @@ Context::Context(const egl::Config *config)
 
 Context::~Context()
 {
-    currentProgram = 0;
+    mState.currentProgram = 0;
 
     for (int type = 0; type < SAMPLER_TYPE_COUNT; type++)
     {
@@ -237,17 +237,17 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
     framebufferZero->setDepthbuffer(GL_RENDERBUFFER, 0);
     framebufferZero->setStencilbuffer(GL_RENDERBUFFER, 0);
 
-    if(!mHasBeenCurrent)
+    if (!mHasBeenCurrent)
     {
-        viewportX = 0;
-        viewportY = 0;
-        viewportWidth = surface->getWidth();
-        viewportHeight = surface->getHeight();
+        mState.viewportX = 0;
+        mState.viewportY = 0;
+        mState.viewportWidth = surface->getWidth();
+        mState.viewportHeight = surface->getHeight();
 
-        scissorX = 0;
-        scissorY = 0;
-        scissorWidth = surface->getWidth();
-        scissorHeight = surface->getHeight();
+        mState.scissorX = 0;
+        mState.scissorY = 0;
+        mState.scissorWidth = surface->getWidth();
+        mState.scissorHeight = surface->getHeight();
 
         mHasBeenCurrent = true;
     }
@@ -276,20 +276,314 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 
 void Context::setClearColor(float red, float green, float blue, float alpha)
 {
-    colorClearValue.red = red;
-    colorClearValue.green = green;
-    colorClearValue.blue = blue;
-    colorClearValue.alpha = alpha;
+    mState.colorClearValue.red = red;
+    mState.colorClearValue.green = green;
+    mState.colorClearValue.blue = blue;
+    mState.colorClearValue.alpha = alpha;
 }
 
 void Context::setClearDepth(float depth)
 {
-    depthClearValue = depth;
+    mState.depthClearValue = depth;
 }
 
 void Context::setClearStencil(int stencil)
 {
-    stencilClearValue = stencil;
+    mState.stencilClearValue = stencil;
+}
+
+void Context::setCullFace(bool enabled)
+{
+    mState.cullFace = enabled;
+}
+
+bool Context::isCullFaceEnabled() const
+{
+    return mState.cullFace;
+}
+
+void Context::setCullMode(GLenum mode)
+{
+    mState.cullMode = mode;
+}
+
+void Context::setFrontFace(GLenum front)
+{
+    mState.frontFace = front;
+}
+
+void Context::setDepthTest(bool enabled)
+{
+    mState.depthTest = enabled;
+}
+
+bool Context::isDepthTestEnabled() const
+{
+    return mState.depthTest;
+}
+
+void Context::setDepthFunc(GLenum depthFunc)
+{
+    mState.depthFunc = depthFunc;
+}
+
+void Context::setDepthRange(float zNear, float zFar)
+{
+    mState.zNear = zNear;
+    mState.zFar = zFar;
+}
+
+void Context::setBlend(bool enabled)
+{
+    mState.blend = enabled;
+}
+
+bool Context::isBlendEnabled() const
+{
+    return mState.blend;
+}
+
+void Context::setBlendFactors(GLenum sourceRGB, GLenum destRGB, GLenum sourceAlpha, GLenum destAlpha)
+{
+    mState.sourceBlendRGB = sourceRGB;
+    mState.destBlendRGB = destRGB;
+    mState.sourceBlendAlpha = sourceAlpha;
+    mState.destBlendAlpha = destAlpha;
+}
+
+void Context::setBlendColor(float red, float green, float blue, float alpha)
+{
+    mState.blendColor.red = red;
+    mState.blendColor.green = green;
+    mState.blendColor.blue = blue;
+    mState.blendColor.alpha = alpha;
+}
+
+void Context::setBlendEquation(GLenum rgbEquation, GLenum alphaEquation)
+{
+    mState.blendEquationRGB = rgbEquation;
+    mState.blendEquationAlpha = alphaEquation;
+}
+
+void Context::setStencilTest(bool enabled)
+{
+    mState.stencilTest = enabled;
+}
+
+bool Context::isStencilTestEnabled() const
+{
+    return mState.stencilTest;
+}
+
+void Context::setStencilParams(GLenum stencilFunc, GLint stencilRef, GLuint stencilMask)
+{
+    mState.stencilFunc = stencilFunc;
+    mState.stencilRef = stencilRef;
+    mState.stencilMask = stencilMask;
+}
+
+void Context::setStencilBackParams(GLenum stencilBackFunc, GLint stencilBackRef, GLuint stencilBackMask)
+{
+    mState.stencilBackFunc = stencilBackFunc;
+    mState.stencilBackRef = stencilBackRef;
+    mState.stencilBackMask = stencilBackMask;
+}
+
+void Context::setStencilWritemask(GLuint stencilWritemask)
+{
+    mState.stencilWritemask = stencilWritemask;
+}
+
+void Context::setStencilBackWritemask(GLuint stencilBackWritemask)
+{
+    mState.stencilBackWritemask = stencilBackWritemask;
+}
+
+void Context::setStencilOperations(GLenum stencilFail, GLenum stencilPassDepthFail, GLenum stencilPassDepthPass)
+{
+    mState.stencilFail = stencilFail;
+    mState.stencilPassDepthFail = stencilPassDepthFail;
+    mState.stencilPassDepthPass = stencilPassDepthPass;
+}
+
+void Context::setStencilBackOperations(GLenum stencilBackFail, GLenum stencilBackPassDepthFail, GLenum stencilBackPassDepthPass)
+{
+    mState.stencilBackFail = stencilBackFail;
+    mState.stencilBackPassDepthFail = stencilBackPassDepthFail;
+    mState.stencilBackPassDepthPass = stencilBackPassDepthPass;
+}
+
+void Context::setPolygonOffsetFill(bool enabled)
+{
+    mState.polygonOffsetFill = enabled;
+}
+
+bool Context::isPolygonOffsetFillEnabled() const
+{
+    return mState.polygonOffsetFill;
+}
+
+void Context::setPolygonOffsetParams(GLfloat factor, GLfloat units)
+{
+    mState.polygonOffsetFactor = factor;
+    mState.polygonOffsetUnits = units;
+}
+
+void Context::setSampleAlphaToCoverage(bool enabled)
+{
+    mState.sampleAlphaToCoverage = enabled;
+}
+
+bool Context::isSampleAlphaToCoverageEnabled() const
+{
+    return mState.sampleAlphaToCoverage;
+}
+
+void Context::setSampleCoverage(bool enabled)
+{
+    mState.sampleCoverage = enabled;
+}
+
+bool Context::isSampleCoverageEnabled() const
+{
+    return mState.sampleCoverage;
+}
+
+void Context::setSampleCoverageParams(GLclampf value, GLboolean invert)
+{
+    mState.sampleCoverageValue = value;
+    mState.sampleCoverageInvert = invert;
+}
+
+void Context::setScissorTest(bool enabled)
+{
+    mState.scissorTest = enabled;
+}
+
+bool Context::isScissorTestEnabled() const
+{
+    return mState.scissorTest;
+}
+
+void Context::setDither(bool enabled)
+{
+    mState.dither = enabled;
+}
+
+bool Context::isDitherEnabled() const
+{
+    return mState.dither;
+}
+
+void Context::setLineWidth(GLfloat width)
+{
+    mState.lineWidth = width;
+}
+
+void Context::setGenerateMipmapHint(GLenum hint)
+{
+    mState.generateMipmapHint = hint;
+}
+
+void Context::setViewportParams(GLint x, GLint y, GLsizei width, GLsizei height)
+{
+    mState.viewportX = x;
+    mState.viewportY = y;
+    mState.viewportWidth = width;
+    mState.viewportHeight = height;
+}
+
+void Context::setScissorParams(GLint x, GLint y, GLsizei width, GLsizei height)
+{
+    mState.scissorX = x;
+    mState.scissorY = y;
+    mState.scissorWidth = width;
+    mState.scissorHeight = height;
+}
+
+void Context::setColorMask(bool red, bool green, bool blue, bool alpha)
+{
+    mState.colorMaskRed = red;
+    mState.colorMaskGreen = green;
+    mState.colorMaskBlue = blue;
+    mState.colorMaskAlpha = alpha;
+}
+
+void Context::setDepthMask(bool mask)
+{
+    mState.depthMask = mask;
+}
+
+void Context::setActiveSampler(int active)
+{
+    mState.activeSampler = active;
+}
+
+GLuint Context::getFramebufferHandle() const
+{
+    return mState.framebuffer;
+}
+
+GLuint Context::getRenderbufferHandle() const
+{
+    return mState.renderbuffer;
+}
+
+GLuint Context::getArrayBufferHandle() const
+{
+    return mState.arrayBuffer;
+}
+
+void Context::setVertexAttribEnabled(unsigned int attribNum, bool enabled)
+{
+    mState.vertexAttribute[attribNum].mEnabled = enabled;
+}
+
+const AttributeState &Context::getVertexAttribState(unsigned int attribNum)
+{
+    return mState.vertexAttribute[attribNum];
+}
+
+void Context::setVertexAttribState(unsigned int attribNum, GLuint boundBuffer, GLint size, GLenum type, bool normalized,
+                                   GLsizei stride, const void *pointer)
+{
+    mState.vertexAttribute[attribNum].mBoundBuffer = boundBuffer;
+    mState.vertexAttribute[attribNum].mSize = size;
+    mState.vertexAttribute[attribNum].mType = type;
+    mState.vertexAttribute[attribNum].mNormalized = normalized;
+    mState.vertexAttribute[attribNum].mStride = stride;
+    mState.vertexAttribute[attribNum].mPointer = pointer;
+}
+
+const void *Context::getVertexAttribPointer(unsigned int attribNum) const
+{
+    return mState.vertexAttribute[attribNum].mPointer;
+}
+
+// returns entire set of attributes as a block
+const AttributeState *Context::getVertexAttribBlock()
+{
+    return mState.vertexAttribute;
+}
+
+void Context::setPackAlignment(GLint alignment)
+{
+    mState.packAlignment = alignment;
+}
+
+GLint Context::getPackAlignment() const
+{
+    return mState.packAlignment;
+}
+
+void Context::setUnpackAlignment(GLint alignment)
+{
+    mState.unpackAlignment = alignment;
+}
+
+GLint Context::getUnpackAlignment() const
+{
+    return mState.unpackAlignment;
 }
 
 // Returns an unused buffer name
@@ -427,7 +721,7 @@ void Context::deleteProgram(GLuint program)
 
     if (programObject != mProgramMap.end())
     {
-        if (program != currentProgram)
+        if (program != mState.currentProgram)
         {
             delete programObject->second;
             mProgramMap.erase(programObject);
@@ -489,7 +783,7 @@ void Context::bindArrayBuffer(unsigned int buffer)
         mBufferMap[buffer] = new Buffer(mBufferBackEnd);
     }
 
-    arrayBuffer = buffer;
+    mState.arrayBuffer = buffer;
 }
 
 void Context::bindElementArrayBuffer(unsigned int buffer)
@@ -499,7 +793,7 @@ void Context::bindElementArrayBuffer(unsigned int buffer)
         mBufferMap[buffer] = new Buffer(mBufferBackEnd);
     }
 
-    elementArrayBuffer = buffer;
+    mState.elementArrayBuffer = buffer;
 }
 
 void Context::bindTexture2D(GLuint texture)
@@ -509,9 +803,9 @@ void Context::bindTexture2D(GLuint texture)
         mTextureMap[texture] = new Texture2D(this);
     }
 
-    texture2D = texture;
+    mState.texture2D = texture;
 
-    samplerTexture[SAMPLER_2D][activeSampler] = texture;
+    mState.samplerTexture[SAMPLER_2D][mState.activeSampler] = texture;
 }
 
 void Context::bindTextureCubeMap(GLuint texture)
@@ -521,9 +815,9 @@ void Context::bindTextureCubeMap(GLuint texture)
         mTextureMap[texture] = new TextureCubeMap(this);
     }
 
-    textureCubeMap = texture;
+    mState.textureCubeMap = texture;
 
-    samplerTexture[SAMPLER_CUBE][activeSampler] = texture;
+    mState.samplerTexture[SAMPLER_CUBE][mState.activeSampler] = texture;
 }
 
 void Context::bindFramebuffer(GLuint framebuffer)
@@ -533,7 +827,7 @@ void Context::bindFramebuffer(GLuint framebuffer)
         mFramebufferMap[framebuffer] = new Framebuffer();
     }
 
-    this->framebuffer = framebuffer;
+    mState.framebuffer = framebuffer;
 }
 
 void Context::bindRenderbuffer(GLuint renderbuffer)
@@ -543,15 +837,15 @@ void Context::bindRenderbuffer(GLuint renderbuffer)
         mRenderbufferMap[renderbuffer] = new Renderbuffer();
     }
 
-    this->renderbuffer = renderbuffer;
+    mState.renderbuffer = renderbuffer;
 }
 
 void Context::useProgram(GLuint program)
 {
     Program *programObject = getCurrentProgram();
 
-    GLuint priorProgram = currentProgram;
-    currentProgram = program;               // Must switch before trying to delete, otherwise it only gets flagged.
+    GLuint priorProgram = mState.currentProgram;
+    mState.currentProgram = program;               // Must switch before trying to delete, otherwise it only gets flagged.
 
     if (programObject && programObject->isFlaggedForDeletion())
     {
@@ -585,8 +879,8 @@ void Context::setStencilbufferZero(Stencilbuffer *buffer)
 
 void Context::setRenderbuffer(Renderbuffer *buffer)
 {
-    delete mRenderbufferMap[renderbuffer];
-    mRenderbufferMap[renderbuffer] = buffer;
+    delete mRenderbufferMap[mState.renderbuffer];
+    mRenderbufferMap[mState.renderbuffer] = buffer;
 }
 
 Buffer *Context::getBuffer(unsigned int handle)
@@ -734,42 +1028,42 @@ Stencilbuffer *Context::getStencilbuffer(GLuint handle)
 
 Buffer *Context::getArrayBuffer()
 {
-    return getBuffer(arrayBuffer);
+    return getBuffer(mState.arrayBuffer);
 }
 
 Buffer *Context::getElementArrayBuffer()
 {
-    return getBuffer(elementArrayBuffer);
+    return getBuffer(mState.elementArrayBuffer);
 }
 
 Program *Context::getCurrentProgram()
 {
-    return getProgram(currentProgram);
+    return getProgram(mState.currentProgram);
 }
 
 Texture2D *Context::getTexture2D()
 {
-    if (texture2D == 0)   // Special case: 0 refers to different initial textures based on the target
+    if (mState.texture2D == 0)   // Special case: 0 refers to different initial textures based on the target
     {
         return mTexture2DZero;
     }
 
-    return (Texture2D*)getTexture(texture2D);
+    return (Texture2D*)getTexture(mState.texture2D);
 }
 
 TextureCubeMap *Context::getTextureCubeMap()
 {
-    if (textureCubeMap == 0)   // Special case: 0 refers to different initial textures based on the target
+    if (mState.textureCubeMap == 0)   // Special case: 0 refers to different initial textures based on the target
     {
         return mTextureCubeMapZero;
     }
 
-    return (TextureCubeMap*)getTexture(textureCubeMap);
+    return (TextureCubeMap*)getTexture(mState.textureCubeMap);
 }
 
 Texture *Context::getSamplerTexture(unsigned int sampler, SamplerType type)
 {
-    GLuint texid = samplerTexture[type][sampler];
+    GLuint texid = mState.samplerTexture[type][sampler];
 
     if (texid == 0)
     {
@@ -786,31 +1080,31 @@ Texture *Context::getSamplerTexture(unsigned int sampler, SamplerType type)
 
 Framebuffer *Context::getFramebuffer()
 {
-    return getFramebuffer(framebuffer);
+    return getFramebuffer(mState.framebuffer);
 }
 
 bool Context::getBooleanv(GLenum pname, GLboolean *params)
 {
     switch (pname)
     {
-      case GL_SHADER_COMPILER:          *params = GL_TRUE;                  break;
-      case GL_SAMPLE_COVERAGE_INVERT:   *params = sampleCoverageInvert;     break;
-      case GL_DEPTH_WRITEMASK:          *params = depthMask;                break;
+      case GL_SHADER_COMPILER:          *params = GL_TRUE;                          break;
+      case GL_SAMPLE_COVERAGE_INVERT:   *params = mState.sampleCoverageInvert;      break;
+      case GL_DEPTH_WRITEMASK:          *params = mState.depthMask;                 break;
       case GL_COLOR_WRITEMASK:
-        params[0] = colorMaskRed;
-        params[1] = colorMaskGreen;
-        params[2] = colorMaskBlue;
-        params[3] = colorMaskAlpha;
+        params[0] = mState.colorMaskRed;
+        params[1] = mState.colorMaskGreen;
+        params[2] = mState.colorMaskBlue;
+        params[3] = mState.colorMaskAlpha;
         break;
-      case GL_CULL_FACE:                *params = cullFace;
-      case GL_POLYGON_OFFSET_FILL:      *params = polygonOffsetFill;
-      case GL_SAMPLE_ALPHA_TO_COVERAGE: *params = sampleAlphaToCoverage;
-      case GL_SAMPLE_COVERAGE:          *params = sampleCoverage;
-      case GL_SCISSOR_TEST:             *params = scissorTest;
-      case GL_STENCIL_TEST:             *params = stencilTest;
-      case GL_DEPTH_TEST:               *params = depthTest;
-      case GL_BLEND:                    *params = blend;
-      case GL_DITHER:                   *params = dither;
+      case GL_CULL_FACE:                *params = mState.cullFace;
+      case GL_POLYGON_OFFSET_FILL:      *params = mState.polygonOffsetFill;
+      case GL_SAMPLE_ALPHA_TO_COVERAGE: *params = mState.sampleAlphaToCoverage;
+      case GL_SAMPLE_COVERAGE:          *params = mState.sampleCoverage;
+      case GL_SCISSOR_TEST:             *params = mState.scissorTest;
+      case GL_STENCIL_TEST:             *params = mState.stencilTest;
+      case GL_DEPTH_TEST:               *params = mState.depthTest;
+      case GL_BLEND:                    *params = mState.blend;
+      case GL_DITHER:                   *params = mState.dither;
       default:
         return false;
     }
@@ -826,11 +1120,11 @@ bool Context::getFloatv(GLenum pname, GLfloat *params)
     // case, this should make no difference to the calling application.
     switch (pname)
     {
-      case GL_LINE_WIDTH:               *params = lineWidth;            break;
-      case GL_SAMPLE_COVERAGE_VALUE:    *params = sampleCoverageValue;  break;
-      case GL_DEPTH_CLEAR_VALUE:        *params = depthClearValue;      break;
-      case GL_POLYGON_OFFSET_FACTOR:    *params = polygonOffsetFactor;  break;
-      case GL_POLYGON_OFFSET_UNITS:     *params = polygonOffsetUnits;   break;
+      case GL_LINE_WIDTH:               *params = mState.lineWidth;            break;
+      case GL_SAMPLE_COVERAGE_VALUE:    *params = mState.sampleCoverageValue;  break;
+      case GL_DEPTH_CLEAR_VALUE:        *params = mState.depthClearValue;      break;
+      case GL_POLYGON_OFFSET_FACTOR:    *params = mState.polygonOffsetFactor;  break;
+      case GL_POLYGON_OFFSET_UNITS:     *params = mState.polygonOffsetUnits;   break;
       case GL_ALIASED_LINE_WIDTH_RANGE:
         params[0] = gl::ALIASED_LINE_WIDTH_RANGE_MIN;
         params[1] = gl::ALIASED_LINE_WIDTH_RANGE_MAX;
@@ -840,20 +1134,20 @@ bool Context::getFloatv(GLenum pname, GLfloat *params)
         params[1] = gl::ALIASED_POINT_SIZE_RANGE_MAX;
         break;
       case GL_DEPTH_RANGE:
-        params[0] = zNear;
-        params[1] = zFar;
+        params[0] = mState.zNear;
+        params[1] = mState.zFar;
         break;
       case GL_COLOR_CLEAR_VALUE:
-        params[0] = colorClearValue.red;
-        params[1] = colorClearValue.green;
-        params[2] = colorClearValue.blue;
-        params[3] = colorClearValue.alpha;
+        params[0] = mState.colorClearValue.red;
+        params[1] = mState.colorClearValue.green;
+        params[2] = mState.colorClearValue.blue;
+        params[3] = mState.colorClearValue.alpha;
         break;
       case GL_BLEND_COLOR:
-        params[0] = blendColor.red;
-        params[1] = blendColor.green;
-        params[2] = blendColor.blue;
-        params[3] = blendColor.alpha;
+        params[0] = mState.blendColor.red;
+        params[1] = mState.blendColor.green;
+        params[2] = mState.blendColor.blue;
+        params[3] = mState.blendColor.alpha;
         break;
       default:
         return false;
@@ -883,37 +1177,37 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_NUM_COMPRESSED_TEXTURE_FORMATS:   *params = 0;                                break;
       case GL_COMPRESSED_TEXTURE_FORMATS: /* no compressed texture formats are supported */ break;
       case GL_SHADER_BINARY_FORMATS:      /* no shader binary formats are supported */      break;
-      case GL_ARRAY_BUFFER_BINDING:             *params = arrayBuffer;              break;
-      case GL_ELEMENT_ARRAY_BUFFER_BINDING:     *params = elementArrayBuffer;       break;
-      case GL_FRAMEBUFFER_BINDING:              *params = framebuffer;              break;
-      case GL_RENDERBUFFER_BINDING:             *params = renderbuffer;             break;
-      case GL_CURRENT_PROGRAM:                  *params = currentProgram;           break;
-      case GL_PACK_ALIGNMENT:                   *params = packAlignment;            break;
-      case GL_UNPACK_ALIGNMENT:                 *params = unpackAlignment;          break;
-      case GL_GENERATE_MIPMAP_HINT:             *params = generateMipmapHint;       break;
-      case GL_ACTIVE_TEXTURE:                   *params = activeSampler;            break;
-      case GL_STENCIL_FUNC:                     *params = stencilFunc;              break;
-      case GL_STENCIL_REF:                      *params = stencilRef;               break;
-      case GL_STENCIL_VALUE_MASK:               *params = stencilMask;              break;
-      case GL_STENCIL_BACK_FUNC:                *params = stencilBackFunc;          break;
-      case GL_STENCIL_BACK_REF:                 *params = stencilBackRef;           break;
-      case GL_STENCIL_BACK_VALUE_MASK:          *params = stencilBackMask;          break;
-      case GL_STENCIL_FAIL:                     *params = stencilFail;              break;
-      case GL_STENCIL_PASS_DEPTH_FAIL:          *params = stencilPassDepthFail;     break;
-      case GL_STENCIL_PASS_DEPTH_PASS:          *params = stencilPassDepthPass;     break;
-      case GL_STENCIL_BACK_FAIL:                *params = stencilBackFail;          break;
-      case GL_STENCIL_BACK_PASS_DEPTH_FAIL:     *params = stencilBackPassDepthFail;     break;
-      case GL_STENCIL_BACK_PASS_DEPTH_PASS:     *params = stencilBackPassDepthPass;     break;
-      case GL_DEPTH_FUNC:                       *params = depthFunc;                    break;
-      case GL_BLEND_SRC_RGB:                    *params = sourceBlendRGB;               break;
-      case GL_BLEND_SRC_ALPHA:                  *params = sourceBlendAlpha;             break;
-      case GL_BLEND_DST_RGB:                    *params = destBlendRGB;                 break;
-      case GL_BLEND_DST_ALPHA:                  *params = destBlendAlpha;               break;
-      case GL_BLEND_EQUATION_RGB:               *params = blendEquationRGB;             break;
-      case GL_BLEND_EQUATION_ALPHA:             *params = blendEquationAlpha;           break;
-      case GL_STENCIL_WRITEMASK:                *params = stencilWritemask;             break;
-      case GL_STENCIL_BACK_WRITEMASK:           *params = stencilBackWritemask;         break;
-      case GL_STENCIL_CLEAR_VALUE:              *params = stencilClearValue;            break;
+      case GL_ARRAY_BUFFER_BINDING:             *params = mState.arrayBuffer;              break;
+      case GL_ELEMENT_ARRAY_BUFFER_BINDING:     *params = mState.elementArrayBuffer;       break;
+      case GL_FRAMEBUFFER_BINDING:              *params = mState.framebuffer;              break;
+      case GL_RENDERBUFFER_BINDING:             *params = mState.renderbuffer;             break;
+      case GL_CURRENT_PROGRAM:                  *params = mState.currentProgram;           break;
+      case GL_PACK_ALIGNMENT:                   *params = mState.packAlignment;            break;
+      case GL_UNPACK_ALIGNMENT:                 *params = mState.unpackAlignment;          break;
+      case GL_GENERATE_MIPMAP_HINT:             *params = mState.generateMipmapHint;       break;
+      case GL_ACTIVE_TEXTURE:                   *params = mState.activeSampler;            break;
+      case GL_STENCIL_FUNC:                     *params = mState.stencilFunc;              break;
+      case GL_STENCIL_REF:                      *params = mState.stencilRef;               break;
+      case GL_STENCIL_VALUE_MASK:               *params = mState.stencilMask;              break;
+      case GL_STENCIL_BACK_FUNC:                *params = mState.stencilBackFunc;          break;
+      case GL_STENCIL_BACK_REF:                 *params = mState.stencilBackRef;           break;
+      case GL_STENCIL_BACK_VALUE_MASK:          *params = mState.stencilBackMask;          break;
+      case GL_STENCIL_FAIL:                     *params = mState.stencilFail;              break;
+      case GL_STENCIL_PASS_DEPTH_FAIL:          *params = mState.stencilPassDepthFail;     break;
+      case GL_STENCIL_PASS_DEPTH_PASS:          *params = mState.stencilPassDepthPass;     break;
+      case GL_STENCIL_BACK_FAIL:                *params = mState.stencilBackFail;          break;
+      case GL_STENCIL_BACK_PASS_DEPTH_FAIL:     *params = mState.stencilBackPassDepthFail;     break;
+      case GL_STENCIL_BACK_PASS_DEPTH_PASS:     *params = mState.stencilBackPassDepthPass;     break;
+      case GL_DEPTH_FUNC:                       *params = mState.depthFunc;                    break;
+      case GL_BLEND_SRC_RGB:                    *params = mState.sourceBlendRGB;               break;
+      case GL_BLEND_SRC_ALPHA:                  *params = mState.sourceBlendAlpha;             break;
+      case GL_BLEND_DST_RGB:                    *params = mState.destBlendRGB;                 break;
+      case GL_BLEND_DST_ALPHA:                  *params = mState.destBlendAlpha;               break;
+      case GL_BLEND_EQUATION_RGB:               *params = mState.blendEquationRGB;             break;
+      case GL_BLEND_EQUATION_ALPHA:             *params = mState.blendEquationAlpha;           break;
+      case GL_STENCIL_WRITEMASK:                *params = mState.stencilWritemask;             break;
+      case GL_STENCIL_BACK_WRITEMASK:           *params = mState.stencilBackWritemask;         break;
+      case GL_STENCIL_CLEAR_VALUE:              *params = mState.stencilClearValue;            break;
       case GL_SUBPIXEL_BITS:                    *params = 4;                            break;
       case GL_MAX_TEXTURE_SIZE:                 *params = gl::MAX_TEXTURE_SIZE;             break;
       case GL_MAX_CUBE_MAP_TEXTURE_SIZE:        *params = gl::MAX_CUBE_MAP_TEXTURE_SIZE;    break;
@@ -929,19 +1223,19 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
         }
         break;
       case GL_VIEWPORT:
-        params[0] = viewportX;
-        params[1] = viewportY;
-        params[2] = viewportWidth;
-        params[3] = viewportHeight;
+        params[0] = mState.viewportX;
+        params[1] = mState.viewportY;
+        params[2] = mState.viewportWidth;
+        params[3] = mState.viewportHeight;
         break;
       case GL_SCISSOR_BOX:
-        params[0] = scissorX;
-        params[1] = scissorY;
-        params[2] = scissorWidth;
-        params[3] = scissorHeight;
+        params[0] = mState.scissorX;
+        params[1] = mState.scissorY;
+        params[2] = mState.scissorWidth;
+        params[3] = mState.scissorHeight;
         break;
-      case GL_CULL_FACE_MODE:                   *params = cullMode;                 break;
-      case GL_FRONT_FACE:                       *params = frontFace;                break;
+      case GL_CULL_FACE_MODE:                   *params = mState.cullMode;                 break;
+      case GL_FRONT_FACE:                       *params = mState.frontFace;                break;
       case GL_RED_BITS:
       case GL_GREEN_BITS:
       case GL_BLUE_BITS:
@@ -998,24 +1292,24 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
         break;
       case GL_TEXTURE_BINDING_2D:
         {
-            if (activeSampler < 0 || activeSampler > gl::MAX_TEXTURE_IMAGE_UNITS - 1)
+            if (mState.activeSampler < 0 || mState.activeSampler > gl::MAX_TEXTURE_IMAGE_UNITS - 1)
             {
                 error(GL_INVALID_OPERATION);
                 return false;
             }
 
-            *params = samplerTexture[SAMPLER_2D][activeSampler];
+            *params = mState.samplerTexture[SAMPLER_2D][mState.activeSampler];
         }
         break;
       case GL_TEXTURE_BINDING_CUBE_MAP:
         {
-            if (activeSampler < 0 || activeSampler > gl::MAX_TEXTURE_IMAGE_UNITS - 1)
+            if (mState.activeSampler < 0 || mState.activeSampler > gl::MAX_TEXTURE_IMAGE_UNITS - 1)
             {
                 error(GL_INVALID_OPERATION);
                 return false;
             }
 
-            *params = samplerTexture[SAMPLER_CUBE][activeSampler];
+            *params = mState.samplerTexture[SAMPLER_CUBE][mState.activeSampler];
         }
         break;
       default:
@@ -1207,22 +1501,22 @@ bool Context::applyRenderTarget(bool ignoreViewport)
     }
     else
     {
-        viewport.X = std::max(viewportX, 0);
-        viewport.Y = std::max(viewportY, 0);
-        viewport.Width = std::min(viewportWidth, (int)desc.Width - (int)viewport.X);
-        viewport.Height = std::min(viewportHeight, (int)desc.Height - (int)viewport.Y);
-        viewport.MinZ = clamp01(zNear);
-        viewport.MaxZ = clamp01(zFar);
+        viewport.X = std::max(mState.viewportX, 0);
+        viewport.Y = std::max(mState.viewportY, 0);
+        viewport.Width = std::min(mState.viewportWidth, (int)desc.Width - (int)viewport.X);
+        viewport.Height = std::min(mState.viewportHeight, (int)desc.Height - (int)viewport.Y);
+        viewport.MinZ = clamp01(mState.zNear);
+        viewport.MaxZ = clamp01(mState.zFar);
     }
 
     device->SetViewport(&viewport);
 
-    if (scissorTest)
+    if (mState.scissorTest)
     {
-        RECT rect = {scissorX,
-                     scissorY,
-                     scissorX + scissorWidth,
-                     scissorY + scissorHeight};
+        RECT rect = {mState.scissorX,
+                     mState.scissorY,
+                     mState.scissorX + mState.scissorWidth,
+                     mState.scissorY + mState.scissorHeight};
 
         device->SetScissorRect(&rect);
         device->SetRenderState(D3DRS_SCISSORTESTENABLE, TRUE);
@@ -1232,7 +1526,7 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         device->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
     }
 
-    if (currentProgram)
+    if (mState.currentProgram)
     {
         Program *programObject = getCurrentProgram();
 
@@ -1241,21 +1535,23 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         programObject->setUniform2fv(halfPixelSize, 1, (GLfloat*)&xy);
 
         GLint window = programObject->getUniformLocation("dx_Window");
-        GLfloat whxy[4] = {viewportWidth / 2.0f, viewportHeight / 2.0f, (float)viewportX + viewportWidth / 2.0f, (float)viewportY + viewportHeight / 2.0f};
+        GLfloat whxy[4] = {mState.viewportWidth / 2.0f, mState.viewportHeight / 2.0f, 
+                          (float)mState.viewportX + mState.viewportWidth / 2.0f, 
+                          (float)mState.viewportY + mState.viewportHeight / 2.0f};
         programObject->setUniform4fv(window, 1, (GLfloat*)&whxy);
 
         GLint depth = programObject->getUniformLocation("dx_Depth");
-        GLfloat dz[2] = {(zFar - zNear) / 2.0f, (zNear + zFar) / 2.0f};
+        GLfloat dz[2] = {(mState.zFar - mState.zNear) / 2.0f, (mState.zNear + mState.zFar) / 2.0f};
         programObject->setUniform2fv(depth, 1, (GLfloat*)&dz);
 
         GLint near = programObject->getUniformLocation("gl_DepthRange.near");
-        programObject->setUniform1fv(near, 1, &zNear);
+        programObject->setUniform1fv(near, 1, &mState.zNear);
 
         GLint far = programObject->getUniformLocation("gl_DepthRange.far");
-        programObject->setUniform1fv(far, 1, &zFar);
+        programObject->setUniform1fv(far, 1, &mState.zFar);
 
         GLint diff = programObject->getUniformLocation("gl_DepthRange.diff");
-        GLfloat zDiff = zFar - zNear;
+        GLfloat zDiff = mState.zFar - mState.zNear;
         programObject->setUniform1fv(diff, 1, &zDiff);
     }
 
@@ -1269,60 +1565,62 @@ void Context::applyState(GLenum drawMode)
     Program *programObject = getCurrentProgram();
 
     GLint frontCCW = programObject->getUniformLocation("dx_FrontCCW");
-    GLint ccw = (frontFace == GL_CCW);
+    GLint ccw = (mState.frontFace == GL_CCW);
     programObject->setUniform1iv(frontCCW, 1, &ccw);
 
     GLint pointsOrLines = programObject->getUniformLocation("dx_PointsOrLines");
     GLint alwaysFront = !isTriangleMode(drawMode);
     programObject->setUniform1iv(pointsOrLines, 1, &alwaysFront);
 
-    if (cullFace)
+    if (mState.cullFace)
     {
-        device->SetRenderState(D3DRS_CULLMODE, es2dx::ConvertCullMode(cullMode, frontFace));
+        device->SetRenderState(D3DRS_CULLMODE, es2dx::ConvertCullMode(mState.cullMode, mState.frontFace));
     }
     else
     {
         device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
     }
 
-    if (depthTest)
+    if (mState.depthTest)
     {
         device->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
-        device->SetRenderState(D3DRS_ZFUNC, es2dx::ConvertComparison(depthFunc));
+        device->SetRenderState(D3DRS_ZFUNC, es2dx::ConvertComparison(mState.depthFunc));
     }
     else
     {
         device->SetRenderState(D3DRS_ZENABLE, D3DZB_FALSE);
     }
 
-    if (blend)
+    if (mState.blend)
     {
         device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 
-        if (sourceBlendRGB != GL_CONSTANT_ALPHA && sourceBlendRGB != GL_ONE_MINUS_CONSTANT_ALPHA &&
-            destBlendRGB != GL_CONSTANT_ALPHA && destBlendRGB != GL_ONE_MINUS_CONSTANT_ALPHA)
+        if (mState.sourceBlendRGB != GL_CONSTANT_ALPHA && mState.sourceBlendRGB != GL_ONE_MINUS_CONSTANT_ALPHA &&
+            mState.destBlendRGB != GL_CONSTANT_ALPHA && mState.destBlendRGB != GL_ONE_MINUS_CONSTANT_ALPHA)
         {
-            device->SetRenderState(D3DRS_BLENDFACTOR, es2dx::ConvertColor(blendColor));
+            device->SetRenderState(D3DRS_BLENDFACTOR, es2dx::ConvertColor(mState.blendColor));
         }
         else
         {
-            device->SetRenderState(D3DRS_BLENDFACTOR, D3DCOLOR_RGBA(unorm<8>(blendColor.alpha),
-                                                                    unorm<8>(blendColor.alpha),
-                                                                    unorm<8>(blendColor.alpha),
-                                                                    unorm<8>(blendColor.alpha)));
+            device->SetRenderState(D3DRS_BLENDFACTOR, D3DCOLOR_RGBA(unorm<8>(mState.blendColor.alpha),
+                                                                    unorm<8>(mState.blendColor.alpha),
+                                                                    unorm<8>(mState.blendColor.alpha),
+                                                                    unorm<8>(mState.blendColor.alpha)));
         }
 
-        device->SetRenderState(D3DRS_SRCBLEND, es2dx::ConvertBlendFunc(sourceBlendRGB));
-        device->SetRenderState(D3DRS_DESTBLEND, es2dx::ConvertBlendFunc(destBlendRGB));
-        device->SetRenderState(D3DRS_BLENDOP, es2dx::ConvertBlendOp(blendEquationRGB));
+        device->SetRenderState(D3DRS_SRCBLEND, es2dx::ConvertBlendFunc(mState.sourceBlendRGB));
+        device->SetRenderState(D3DRS_DESTBLEND, es2dx::ConvertBlendFunc(mState.destBlendRGB));
+        device->SetRenderState(D3DRS_BLENDOP, es2dx::ConvertBlendOp(mState.blendEquationRGB));
 
-        if (sourceBlendRGB != sourceBlendAlpha || destBlendRGB != destBlendAlpha || blendEquationRGB != blendEquationAlpha)
+        if (mState.sourceBlendRGB != mState.sourceBlendAlpha || 
+            mState.destBlendRGB != mState.destBlendAlpha || 
+            mState.blendEquationRGB != mState.blendEquationAlpha)
         {
             device->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, TRUE);
 
-            device->SetRenderState(D3DRS_SRCBLENDALPHA, es2dx::ConvertBlendFunc(sourceBlendAlpha));
-            device->SetRenderState(D3DRS_DESTBLENDALPHA, es2dx::ConvertBlendFunc(destBlendAlpha));
-            device->SetRenderState(D3DRS_BLENDOPALPHA, es2dx::ConvertBlendOp(blendEquationAlpha));
+            device->SetRenderState(D3DRS_SRCBLENDALPHA, es2dx::ConvertBlendFunc(mState.sourceBlendAlpha));
+            device->SetRenderState(D3DRS_DESTBLENDALPHA, es2dx::ConvertBlendFunc(mState.destBlendAlpha));
+            device->SetRenderState(D3DRS_BLENDOPALPHA, es2dx::ConvertBlendOp(mState.blendEquationAlpha));
 
         }
         else
@@ -1335,7 +1633,7 @@ void Context::applyState(GLenum drawMode)
         device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
     }
 
-    if (stencilTest)
+    if (mState.stencilTest)
     {
         device->SetRenderState(D3DRS_STENCILENABLE, TRUE);
         device->SetRenderState(D3DRS_TWOSIDEDSTENCILMODE, TRUE);
@@ -1344,47 +1642,58 @@ void Context::applyState(GLenum drawMode)
         const D3DRENDERSTATETYPE D3DRS_CCW_STENCILREF = D3DRS_STENCILREF;
         const D3DRENDERSTATETYPE D3DRS_CCW_STENCILMASK = D3DRS_STENCILMASK;
         const D3DRENDERSTATETYPE D3DRS_CCW_STENCILWRITEMASK = D3DRS_STENCILWRITEMASK;
-        if(stencilWritemask != stencilBackWritemask || stencilRef != stencilBackRef || stencilMask != stencilBackMask)
+        if (mState.stencilWritemask != mState.stencilBackWritemask || 
+            mState.stencilRef != mState.stencilBackRef || 
+            mState.stencilMask != mState.stencilBackMask)
         {
             ERR("Separate front/back stencil writemasks, reference values, or stencil mask values are invalid under WebGL.");
             return error(GL_INVALID_OPERATION);
         }
 
-        device->SetRenderState(frontFace == GL_CCW ? D3DRS_STENCILWRITEMASK : D3DRS_CCW_STENCILWRITEMASK, stencilWritemask);
-        device->SetRenderState(frontFace == GL_CCW ? D3DRS_STENCILFUNC : D3DRS_CCW_STENCILFUNC, es2dx::ConvertComparison(stencilFunc));
+        device->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILWRITEMASK : D3DRS_CCW_STENCILWRITEMASK, mState.stencilWritemask);
+        device->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILFUNC : D3DRS_CCW_STENCILFUNC, 
+                               es2dx::ConvertComparison(mState.stencilFunc));
 
-        device->SetRenderState(frontFace == GL_CCW ? D3DRS_STENCILREF : D3DRS_CCW_STENCILREF, stencilRef);   // FIXME: Clamp to range
-        device->SetRenderState(frontFace == GL_CCW ? D3DRS_STENCILMASK : D3DRS_CCW_STENCILMASK, stencilMask);
+        device->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILREF : D3DRS_CCW_STENCILREF, mState.stencilRef);   // FIXME: Clamp to range
+        device->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILMASK : D3DRS_CCW_STENCILMASK, mState.stencilMask);
 
-        device->SetRenderState(frontFace == GL_CCW ? D3DRS_STENCILFAIL : D3DRS_CCW_STENCILFAIL, es2dx::ConvertStencilOp(stencilFail));
-        device->SetRenderState(frontFace == GL_CCW ? D3DRS_STENCILZFAIL : D3DRS_CCW_STENCILZFAIL, es2dx::ConvertStencilOp(stencilPassDepthFail));
-        device->SetRenderState(frontFace == GL_CCW ? D3DRS_STENCILPASS : D3DRS_CCW_STENCILPASS, es2dx::ConvertStencilOp(stencilPassDepthPass));
+        device->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILFAIL : D3DRS_CCW_STENCILFAIL, 
+                               es2dx::ConvertStencilOp(mState.stencilFail));
+        device->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILZFAIL : D3DRS_CCW_STENCILZFAIL, 
+                               es2dx::ConvertStencilOp(mState.stencilPassDepthFail));
+        device->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILPASS : D3DRS_CCW_STENCILPASS, 
+                               es2dx::ConvertStencilOp(mState.stencilPassDepthPass));
 
-        device->SetRenderState(frontFace == GL_CW ? D3DRS_STENCILWRITEMASK : D3DRS_CCW_STENCILWRITEMASK, stencilBackWritemask);
-        device->SetRenderState(frontFace == GL_CW ? D3DRS_STENCILFUNC : D3DRS_CCW_STENCILFUNC, es2dx::ConvertComparison(stencilBackFunc));
+        device->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILWRITEMASK : D3DRS_CCW_STENCILWRITEMASK, mState.stencilBackWritemask);
+        device->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILFUNC : D3DRS_CCW_STENCILFUNC, 
+                               es2dx::ConvertComparison(mState.stencilBackFunc));
 
-        device->SetRenderState(frontFace == GL_CW ? D3DRS_STENCILREF : D3DRS_CCW_STENCILREF, stencilBackRef);   // FIXME: Clamp to range
-        device->SetRenderState(frontFace == GL_CW ? D3DRS_STENCILMASK : D3DRS_CCW_STENCILMASK, stencilBackMask);
+        device->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILREF : D3DRS_CCW_STENCILREF, mState.stencilBackRef);   // FIXME: Clamp to range
+        device->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILMASK : D3DRS_CCW_STENCILMASK, mState.stencilBackMask);
 
-        device->SetRenderState(frontFace == GL_CW ? D3DRS_STENCILFAIL : D3DRS_CCW_STENCILFAIL, es2dx::ConvertStencilOp(stencilBackFail));
-        device->SetRenderState(frontFace == GL_CW ? D3DRS_STENCILZFAIL : D3DRS_CCW_STENCILZFAIL, es2dx::ConvertStencilOp(stencilBackPassDepthFail));
-        device->SetRenderState(frontFace == GL_CW ? D3DRS_STENCILPASS : D3DRS_CCW_STENCILPASS, es2dx::ConvertStencilOp(stencilBackPassDepthPass));
+        device->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILFAIL : D3DRS_CCW_STENCILFAIL, 
+                               es2dx::ConvertStencilOp(mState.stencilBackFail));
+        device->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILZFAIL : D3DRS_CCW_STENCILZFAIL, 
+                               es2dx::ConvertStencilOp(mState.stencilBackPassDepthFail));
+        device->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILPASS : D3DRS_CCW_STENCILPASS, 
+                               es2dx::ConvertStencilOp(mState.stencilBackPassDepthPass));
     }
     else
     {
         device->SetRenderState(D3DRS_STENCILENABLE, FALSE);
     }
 
-    device->SetRenderState(D3DRS_COLORWRITEENABLE, es2dx::ConvertColorMask(colorMaskRed, colorMaskGreen, colorMaskBlue, colorMaskAlpha));
-    device->SetRenderState(D3DRS_ZWRITEENABLE, depthMask ? TRUE : FALSE);
+    device->SetRenderState(D3DRS_COLORWRITEENABLE, es2dx::ConvertColorMask(mState.colorMaskRed, mState.colorMaskGreen, 
+                                                                           mState.colorMaskBlue, mState.colorMaskAlpha));
+    device->SetRenderState(D3DRS_ZWRITEENABLE, mState.depthMask ? TRUE : FALSE);
 
-    if (polygonOffsetFill)
+    if (mState.polygonOffsetFill)
     {
         gl::Depthbuffer *depthbuffer = getFramebuffer()->getDepthbuffer();
         if (depthbuffer)
         {
-            device->SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, *((DWORD*)&polygonOffsetFactor));
-            float depthBias = ldexp(polygonOffsetUnits, -(int)(depthbuffer->getDepthSize()));
+            device->SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, *((DWORD*)&mState.polygonOffsetFactor));
+            float depthBias = ldexp(mState.polygonOffsetUnits, -(int)(depthbuffer->getDepthSize()));
             device->SetRenderState(D3DRS_DEPTHBIAS, *((DWORD*)&depthBias));
         }
     }
@@ -1396,18 +1705,18 @@ void Context::applyState(GLenum drawMode)
 
     if (mConfig->mMultiSample != 0)
     {
-        if (sampleAlphaToCoverage)
+        if (mState.sampleAlphaToCoverage)
         {
             FIXME("Sample alpha to coverage is unimplemented.");
         }
 
-        if (sampleCoverage)
+        if (mState.sampleCoverage)
         {
             FIXME("Sample coverage is unimplemented.");
         }
     }
 
-    device->SetRenderState(D3DRS_DITHERENABLE, dither ? TRUE : FALSE);
+    device->SetRenderState(D3DRS_DITHERENABLE, mState.dither ? TRUE : FALSE);
 }
 
 // Fill in the semanticIndex field of the array of TranslatedAttributes based on the active GLSL program.
@@ -1428,9 +1737,9 @@ void Context::lookupAttributeMapping(TranslatedAttribute *attributes)
 // Handle these cases here and return a pointer to the index data.
 const Index *Context::adjustIndexPointer(const void *indices)
 {
-    if (elementArrayBuffer)
+    if (mState.elementArrayBuffer)
     {
-        Buffer *buffer = getBuffer(elementArrayBuffer);
+        Buffer *buffer = getBuffer(mState.elementArrayBuffer);
         return reinterpret_cast<const Index*>(static_cast<unsigned char*>(buffer->data()) + reinterpret_cast<GLsizei>(indices));
     }
     else
@@ -1464,7 +1773,7 @@ void Context::applyVertexBuffer(const TranslatedIndexData &indexInfo)
 // Applies the indices and element array bindings to the Direct3D 9 device
 TranslatedIndexData Context::applyIndexBuffer(const void *indices, GLsizei count, GLenum mode, GLenum type)
 {
-    TranslatedIndexData indexInfo = mIndexDataManager->preRenderValidate(mode, type, count, getBuffer(elementArrayBuffer), indices);
+    TranslatedIndexData indexInfo = mIndexDataManager->preRenderValidate(mode, type, count, getBuffer(mState.elementArrayBuffer), indices);
     mBufferBackEnd->setupIndicesPreDraw(indexInfo);
     return indexInfo;
 }
@@ -1589,7 +1898,7 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum
     unsigned char *dest = (unsigned char*)pixels;
     unsigned short *dest16 = (unsigned short*)pixels;
 
-    GLsizei outputPitch = ComputePitch(width, format, type, packAlignment);
+    GLsizei outputPitch = ComputePitch(width, format, type, mState.packAlignment);
 
     for (int j = 0; j < rect.bottom - rect.top; j++)
     {
@@ -1717,7 +2026,7 @@ void Context::clear(GLbitfield mask)
     if (mask & GL_DEPTH_BUFFER_BIT)
     {
         mask &= ~GL_DEPTH_BUFFER_BIT;
-        if (depthMask)
+        if (mState.depthMask)
         {
             flags |= D3DCLEAR_ZBUFFER;
         }
@@ -1750,22 +2059,25 @@ void Context::clear(GLbitfield mask)
 
     applyRenderTarget(true);   // Clips the clear to the scissor rectangle but not the viewport
 
-    D3DCOLOR color = D3DCOLOR_ARGB(unorm<8>(colorClearValue.alpha), unorm<8>(colorClearValue.red), unorm<8>(colorClearValue.green), unorm<8>(colorClearValue.blue));
-    float depth = clamp01(depthClearValue);
-    int stencil = stencilClearValue & 0x000000FF;
+    D3DCOLOR color = D3DCOLOR_ARGB(unorm<8>(mState.colorClearValue.alpha), 
+                                            unorm<8>(mState.colorClearValue.red), 
+                                            unorm<8>(mState.colorClearValue.green), 
+                                            unorm<8>(mState.colorClearValue.blue));
+    float depth = clamp01(mState.depthClearValue);
+    int stencil = mState.stencilClearValue & 0x000000FF;
 
     IDirect3DSurface9 *renderTarget = framebufferObject->getRenderTarget();
 
     D3DSURFACE_DESC desc;
     renderTarget->GetDesc(&desc);
 
-    bool alphaUnmasked = (es2dx::GetAlphaSize(desc.Format) == 0) || colorMaskAlpha;
+    bool alphaUnmasked = (es2dx::GetAlphaSize(desc.Format) == 0) || mState.colorMaskAlpha;
 
     const bool needMaskedStencilClear = (flags & D3DCLEAR_STENCIL) &&
-                                        (stencilWritemask & stencilUnmasked) != stencilUnmasked;
+                                        (mState.stencilWritemask & stencilUnmasked) != stencilUnmasked;
     const bool needMaskedColorClear = (flags & D3DCLEAR_TARGET) &&
-                                      !(colorMaskRed && colorMaskGreen &&
-                                        colorMaskBlue && alphaUnmasked);
+                                      !(mState.colorMaskRed && mState.colorMaskGreen &&
+                                        mState.colorMaskBlue && alphaUnmasked);
 
     if (needMaskedColorClear || needMaskedStencilClear)
     {
@@ -1780,10 +2092,10 @@ void Context::clear(GLbitfield mask)
 
         if (flags & D3DCLEAR_TARGET)
         {
-            device->SetRenderState(D3DRS_COLORWRITEENABLE, (colorMaskRed   ? D3DCOLORWRITEENABLE_RED   : 0) |
-                                                           (colorMaskGreen ? D3DCOLORWRITEENABLE_GREEN : 0) |
-                                                           (colorMaskBlue  ? D3DCOLORWRITEENABLE_BLUE  : 0) |
-                                                           (colorMaskAlpha ? D3DCOLORWRITEENABLE_ALPHA : 0));
+            device->SetRenderState(D3DRS_COLORWRITEENABLE, (mState.colorMaskRed   ? D3DCOLORWRITEENABLE_RED   : 0) |
+                                                           (mState.colorMaskGreen ? D3DCOLORWRITEENABLE_GREEN : 0) |
+                                                           (mState.colorMaskBlue  ? D3DCOLORWRITEENABLE_BLUE  : 0) |
+                                                           (mState.colorMaskAlpha ? D3DCOLORWRITEENABLE_ALPHA : 0));
         }
         else
         {
@@ -1796,7 +2108,7 @@ void Context::clear(GLbitfield mask)
             device->SetRenderState(D3DRS_TWOSIDEDSTENCILMODE, FALSE);
             device->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_ALWAYS);
             device->SetRenderState(D3DRS_STENCILREF, stencil);
-            device->SetRenderState(D3DRS_STENCILWRITEMASK, stencilWritemask);
+            device->SetRenderState(D3DRS_STENCILWRITEMASK, mState.stencilWritemask);
             device->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_REPLACE);
             device->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_REPLACE);
             device->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);
@@ -1860,7 +2172,7 @@ void Context::clear(GLbitfield mask)
 
 void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
 {
-    if (!currentProgram)
+    if (!mState.currentProgram)
     {
         return error(GL_INVALID_OPERATION);
     }
@@ -1902,12 +2214,12 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
 
 void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void* indices)
 {
-    if (!currentProgram)
+    if (!mState.currentProgram)
     {
         return error(GL_INVALID_OPERATION);
     }
 
-    if (!indices && !elementArrayBuffer)
+    if (!indices && !mState.elementArrayBuffer)
     {
         return error(GL_INVALID_OPERATION);
     }
@@ -2098,21 +2410,21 @@ void Context::detachBuffer(GLuint buffer)
     // If a buffer object is deleted while it is bound, all bindings to that object in the current context
     // (i.e. in the thread that called Delete-Buffers) are reset to zero.
 
-    if (arrayBuffer == buffer)
+    if (mState.arrayBuffer == buffer)
     {
-        arrayBuffer = 0;
+        mState.arrayBuffer = 0;
     }
 
-    if (elementArrayBuffer == buffer)
+    if (mState.elementArrayBuffer == buffer)
     {
-        elementArrayBuffer = 0;
+        mState.elementArrayBuffer = 0;
     }
 
     for (int attribute = 0; attribute < MAX_VERTEX_ATTRIBS; attribute++)
     {
-        if (vertexAttribute[attribute].mBoundBuffer == buffer)
+        if (mState.vertexAttribute[attribute].mBoundBuffer == buffer)
         {
-            vertexAttribute[attribute].mBoundBuffer = 0;
+            mState.vertexAttribute[attribute].mBoundBuffer = 0;
         }
     }
 }
@@ -2127,9 +2439,9 @@ void Context::detachTexture(GLuint texture)
     {
         for (int sampler = 0; sampler < MAX_TEXTURE_IMAGE_UNITS; sampler++)
         {
-            if (samplerTexture[type][sampler] == texture)
+            if (mState.samplerTexture[type][sampler] == texture)
             {
-                samplerTexture[type][sampler] = 0;
+                mState.samplerTexture[type][sampler] = 0;
             }
         }
     }
@@ -2153,7 +2465,7 @@ void Context::detachFramebuffer(GLuint framebuffer)
     // If a framebuffer that is currently bound to the target FRAMEBUFFER is deleted, it is as though
     // BindFramebuffer had been executed with the target of FRAMEBUFFER and framebuffer of zero.
 
-    if (this->framebuffer == framebuffer)
+    if (mState.framebuffer == framebuffer)
     {
         bindFramebuffer(0);
     }
@@ -2165,7 +2477,7 @@ void Context::detachRenderbuffer(GLuint renderbuffer)
     // If a renderbuffer that is currently bound to RENDERBUFFER is deleted, it is as though BindRenderbuffer
     // had been executed with the target RENDERBUFFER and name of zero.
 
-    if (this->renderbuffer == renderbuffer)
+    if (mState.renderbuffer == renderbuffer)
     {
         bindRenderbuffer(0);
     }
@@ -2229,7 +2541,7 @@ Texture *Context::getIncompleteTexture(SamplerType type)
 
 bool Context::cullSkipsDraw(GLenum drawMode)
 {
-    return cullFace && cullMode == GL_FRONT_AND_BACK && isTriangleMode(drawMode);
+    return mState.cullFace && mState.cullMode == GL_FRONT_AND_BACK && isTriangleMode(drawMode);
 }
 
 bool Context::isTriangleMode(GLenum drawMode)
@@ -2255,10 +2567,10 @@ void Context::setVertexAttrib(GLuint index, const GLfloat *values)
 {
     ASSERT(index < gl::MAX_VERTEX_ATTRIBS);
 
-    vertexAttribute[index].mCurrentValue[0] = values[0];
-    vertexAttribute[index].mCurrentValue[1] = values[1];
-    vertexAttribute[index].mCurrentValue[2] = values[2];
-    vertexAttribute[index].mCurrentValue[3] = values[3];
+    mState.vertexAttribute[index].mCurrentValue[0] = values[0];
+    mState.vertexAttribute[index].mCurrentValue[1] = values[1];
+    mState.vertexAttribute[index].mCurrentValue[2] = values[2];
+    mState.vertexAttribute[index].mCurrentValue[3] = values[3];
 
     mVertexDataManager->dirtyCurrentValues();
 }

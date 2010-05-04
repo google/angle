@@ -85,7 +85,7 @@ GLenum VertexDataManager::preRenderValidate(GLint start, GLsizei count,
 {
     ArrayTranslationHelper translationHelper(start, count);
 
-    return internalPreRenderValidate(mContext->vertexAttribute, activeAttribs(), start, start+count-1, &translationHelper, outAttribs);
+    return internalPreRenderValidate(mContext->getVertexAttribBlock(), activeAttribs(), start, start+count-1, &translationHelper, outAttribs);
 }
 
 GLenum VertexDataManager::preRenderValidate(const TranslatedIndexData &indexInfo,
@@ -93,7 +93,7 @@ GLenum VertexDataManager::preRenderValidate(const TranslatedIndexData &indexInfo
 {
     IndexedTranslationHelper translationHelper(indexInfo.indices, indexInfo.minIndex, indexInfo.count);
 
-    return internalPreRenderValidate(mContext->vertexAttribute, activeAttribs(), indexInfo.minIndex, indexInfo.maxIndex, &translationHelper, outAttribs);
+    return internalPreRenderValidate(mContext->getVertexAttribBlock(), activeAttribs(), indexInfo.minIndex, indexInfo.maxIndex, &translationHelper, outAttribs);
 }
 
 GLenum VertexDataManager::internalPreRenderValidate(const AttributeState *attribs,

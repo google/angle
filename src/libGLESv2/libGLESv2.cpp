@@ -44,7 +44,7 @@ void __stdcall glActiveTexture(GLenum texture)
 
         if (context)
         {
-            context->activeSampler = texture - GL_TEXTURE0;
+            context->setActiveSampler(texture - GL_TEXTURE0);
         }
     }
     catch(std::bad_alloc&)
@@ -269,10 +269,7 @@ void __stdcall glBlendColor(GLclampf red, GLclampf green, GLclampf blue, GLclamp
 
         if (context)
         {
-            context->blendColor.red = gl::clamp01(red);
-            context->blendColor.blue = gl::clamp01(blue);
-            context->blendColor.green = gl::clamp01(green);
-            context->blendColor.alpha = gl::clamp01(alpha);
+            context->setBlendColor(gl::clamp01(red), gl::clamp01(green), gl::clamp01(blue), gl::clamp01(alpha));
         }
     }
     catch(std::bad_alloc&)
@@ -316,8 +313,7 @@ void __stdcall glBlendEquationSeparate(GLenum modeRGB, GLenum modeAlpha)
 
         if (context)
         {
-            context->blendEquationRGB = modeRGB;
-            context->blendEquationAlpha = modeAlpha;
+            context->setBlendEquation(modeRGB, modeAlpha);
         }
     }
     catch(std::bad_alloc&)
@@ -440,10 +436,7 @@ void __stdcall glBlendFuncSeparate(GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha
 
         if (context)
         {
-            context->sourceBlendRGB = srcRGB;
-            context->sourceBlendAlpha = srcAlpha;
-            context->destBlendRGB = dstRGB;
-            context->destBlendAlpha = dstAlpha;
+            context->setBlendFactors(srcRGB, dstRGB, srcAlpha, dstAlpha);
         }
     }
     catch(std::bad_alloc&)
@@ -676,10 +669,7 @@ void __stdcall glColorMask(GLboolean red, GLboolean green, GLboolean blue, GLboo
 
         if (context)
         {
-            context->colorMaskRed = red != GL_FALSE;
-            context->colorMaskGreen = green != GL_FALSE;
-            context->colorMaskBlue = blue != GL_FALSE;
-            context->colorMaskAlpha = alpha != GL_FALSE;
+            context->setColorMask(red != GL_FALSE, green != GL_FALSE, blue != GL_FALSE, alpha != GL_FALSE);
         }
     }
     catch(std::bad_alloc&)
@@ -1028,7 +1018,7 @@ void __stdcall glCullFace(GLenum mode)
 
                 if (context)
                 {
-                    context->cullMode = mode;
+                    context->setCullMode(mode);
                 }
             }
             break;
@@ -1253,7 +1243,7 @@ void __stdcall glDepthFunc(GLenum func)
 
         if (context)
         {
-            context->depthFunc = func;
+            context->setDepthFunc(func);
         }
     }
     catch(std::bad_alloc&)
@@ -1272,7 +1262,7 @@ void __stdcall glDepthMask(GLboolean flag)
 
         if (context)
         {
-            context->depthMask = flag != GL_FALSE;
+            context->setDepthMask(flag != GL_FALSE);
         }
     }
     catch(std::bad_alloc&)
@@ -1291,8 +1281,7 @@ void __stdcall glDepthRangef(GLclampf zNear, GLclampf zFar)
 
         if (context)
         {
-            context->zNear = zNear;
-            context->zFar = zFar;
+            context->setDepthRange(zNear, zFar);
         }
     }
     catch(std::bad_alloc&)
@@ -1366,15 +1355,15 @@ void __stdcall glDisable(GLenum cap)
         {
             switch (cap)
             {
-              case GL_CULL_FACE:                context->cullFace = false;              break;
-              case GL_POLYGON_OFFSET_FILL:      context->polygonOffsetFill = false;     break;
-              case GL_SAMPLE_ALPHA_TO_COVERAGE: context->sampleAlphaToCoverage = false; break;
-              case GL_SAMPLE_COVERAGE:          context->sampleCoverage = false;        break;
-              case GL_SCISSOR_TEST:             context->scissorTest = false;           break;
-              case GL_STENCIL_TEST:             context->stencilTest = false;           break;
-              case GL_DEPTH_TEST:               context->depthTest = false;             break;
-              case GL_BLEND:                    context->blend = false;                 break;
-              case GL_DITHER:                   context->dither = false;                break;
+              case GL_CULL_FACE:                context->setCullFace(false);              break;
+              case GL_POLYGON_OFFSET_FILL:      context->setPolygonOffsetFill(false);     break;
+              case GL_SAMPLE_ALPHA_TO_COVERAGE: context->setSampleAlphaToCoverage(false); break;
+              case GL_SAMPLE_COVERAGE:          context->setSampleCoverage(false);        break;
+              case GL_SCISSOR_TEST:             context->setScissorTest(false);           break;
+              case GL_STENCIL_TEST:             context->setStencilTest(false);           break;
+              case GL_DEPTH_TEST:               context->setDepthTest(false);             break;
+              case GL_BLEND:                    context->setBlend(false);                 break;
+              case GL_DITHER:                   context->setDither(false);                break;
               default:
                 return error(GL_INVALID_ENUM);
             }
@@ -1401,7 +1390,7 @@ void __stdcall glDisableVertexAttribArray(GLuint index)
 
         if (context)
         {
-            context->vertexAttribute[index].mEnabled = false;
+            context->setVertexAttribEnabled(index, false);
         }
     }
     catch(std::bad_alloc&)
@@ -1480,15 +1469,15 @@ void __stdcall glEnable(GLenum cap)
         {
             switch (cap)
             {
-              case GL_CULL_FACE:                context->cullFace = true;              break;
-              case GL_POLYGON_OFFSET_FILL:      context->polygonOffsetFill = true;     break;
-              case GL_SAMPLE_ALPHA_TO_COVERAGE: context->sampleAlphaToCoverage = true; break;
-              case GL_SAMPLE_COVERAGE:          context->sampleCoverage = true;        break;
-              case GL_SCISSOR_TEST:             context->scissorTest = true;           break;
-              case GL_STENCIL_TEST:             context->stencilTest = true;           break;
-              case GL_DEPTH_TEST:               context->depthTest = true;             break;
-              case GL_BLEND:                    context->blend = true;                 break;
-              case GL_DITHER:                   context->dither = true;                break;
+              case GL_CULL_FACE:                context->setCullFace(true);              break;
+              case GL_POLYGON_OFFSET_FILL:      context->setPolygonOffsetFill(true);     break;
+              case GL_SAMPLE_ALPHA_TO_COVERAGE: context->setSampleAlphaToCoverage(true); break;
+              case GL_SAMPLE_COVERAGE:          context->setSampleCoverage(true);        break;
+              case GL_SCISSOR_TEST:             context->setScissorTest(true);           break;
+              case GL_STENCIL_TEST:             context->setStencilTest(true);           break;
+              case GL_DEPTH_TEST:               context->setDepthTest(true);             break;
+              case GL_BLEND:                    context->setBlend(true);                 break;
+              case GL_DITHER:                   context->setDither(true);                break;
               default:
                 return error(GL_INVALID_ENUM);
             }
@@ -1515,7 +1504,7 @@ void __stdcall glEnableVertexAttribArray(GLuint index)
 
         if (context)
         {
-            context->vertexAttribute[index].mEnabled = true;
+            context->setVertexAttribEnabled(index, true);
         }
     }
     catch(std::bad_alloc&)
@@ -1580,7 +1569,7 @@ void __stdcall glFramebufferRenderbuffer(GLenum target, GLenum attachment, GLenu
         {
             gl::Framebuffer *framebuffer = context->getFramebuffer();
 
-            if (context->framebuffer == 0 || !framebuffer)
+            if (context->getFramebufferHandle() == 0 || !framebuffer)
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -1679,7 +1668,7 @@ void __stdcall glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum t
 
             gl::Framebuffer *framebuffer = context->getFramebuffer();
 
-            if (context->framebuffer == 0 || !framebuffer)
+            if (context->getFramebufferHandle() == 0 || !framebuffer)
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -1713,7 +1702,7 @@ void __stdcall glFrontFace(GLenum mode)
 
                 if (context)
                 {
-                    context->frontFace = mode;
+                    context->setFrontFace(mode);
                 }
             }
             break;
@@ -2235,7 +2224,7 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
 
         if (context)
         {
-            if (context->framebuffer == 0)
+            if (context->getFramebufferHandle() == 0)
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -2497,12 +2486,12 @@ void __stdcall glGetRenderbufferParameteriv(GLenum target, GLenum pname, GLint* 
                 return error(GL_INVALID_ENUM);
             }
 
-            if (context->renderbuffer == 0)
+            if (context->getRenderbufferHandle() == 0)
             {
                 return error(GL_INVALID_OPERATION);
             }
 
-            gl::Renderbuffer *renderbuffer = context->getRenderbuffer(context->renderbuffer);
+            gl::Renderbuffer *renderbuffer = context->getRenderbuffer(context->getRenderbufferHandle());
 
             switch (pname)
             {
@@ -3001,30 +2990,32 @@ void __stdcall glGetVertexAttribfv(GLuint index, GLenum pname, GLfloat* params)
                 return error(GL_INVALID_VALUE);
             }
 
+            gl::AttributeState attribState = context->getVertexAttribState(index);
+
             switch (pname)
             {
               case GL_VERTEX_ATTRIB_ARRAY_ENABLED:
-                *params = (GLfloat)(context->vertexAttribute[index].mEnabled ? GL_TRUE : GL_FALSE);
+                *params = (GLfloat)(attribState.mEnabled ? GL_TRUE : GL_FALSE);
                 break;
               case GL_VERTEX_ATTRIB_ARRAY_SIZE:
-                *params = (GLfloat)context->vertexAttribute[index].mSize;
+                *params = (GLfloat)attribState.mSize;
                 break;
               case GL_VERTEX_ATTRIB_ARRAY_STRIDE:
-                *params = (GLfloat)context->vertexAttribute[index].mStride;
+                *params = (GLfloat)attribState.mStride;
                 break;
               case GL_VERTEX_ATTRIB_ARRAY_TYPE:
-                *params = (GLfloat)context->vertexAttribute[index].mType;
+                *params = (GLfloat)attribState.mType;
                 break;
               case GL_VERTEX_ATTRIB_ARRAY_NORMALIZED:
-                *params = (GLfloat)(context->vertexAttribute[index].mNormalized ? GL_TRUE : GL_FALSE);
+                *params = (GLfloat)(attribState.mNormalized ? GL_TRUE : GL_FALSE);
                 break;
               case GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING:
-                *params = (GLfloat)context->vertexAttribute[index].mBoundBuffer;
+                *params = (GLfloat)attribState.mBoundBuffer;
                 break;
               case GL_CURRENT_VERTEX_ATTRIB:
                 for (int i = 0; i < 4; ++i)
                 {
-                    params[i] = context->vertexAttribute[index].mCurrentValue[i];
+                    params[i] = attribState.mCurrentValue[i];
                 }
                 break;
               default: return error(GL_INVALID_ENUM);
@@ -3052,30 +3043,32 @@ void __stdcall glGetVertexAttribiv(GLuint index, GLenum pname, GLint* params)
                 return error(GL_INVALID_VALUE);
             }
 
+            gl::AttributeState attribState = context->getVertexAttribState(index);
+
             switch (pname)
             {
               case GL_VERTEX_ATTRIB_ARRAY_ENABLED:
-                *params = (context->vertexAttribute[index].mEnabled ? GL_TRUE : GL_FALSE);
+                *params = (attribState.mEnabled ? GL_TRUE : GL_FALSE);
                 break;
               case GL_VERTEX_ATTRIB_ARRAY_SIZE:
-                *params = context->vertexAttribute[index].mSize;
+                *params = attribState.mSize;
                 break;
               case GL_VERTEX_ATTRIB_ARRAY_STRIDE:
-                *params = context->vertexAttribute[index].mStride;
+                *params = attribState.mStride;
                 break;
               case GL_VERTEX_ATTRIB_ARRAY_TYPE:
-                *params = context->vertexAttribute[index].mType;
+                *params = attribState.mType;
                 break;
               case GL_VERTEX_ATTRIB_ARRAY_NORMALIZED:
-                *params = (context->vertexAttribute[index].mNormalized ? GL_TRUE : GL_FALSE);
+                *params = (attribState.mNormalized ? GL_TRUE : GL_FALSE);
                 break;
               case GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING:
-                *params = context->vertexAttribute[index].mBoundBuffer;
+                *params = attribState.mBoundBuffer;
                 break;
               case GL_CURRENT_VERTEX_ATTRIB:
                 for (int i = 0; i < 4; ++i)
                 {
-                    float currentValue = context->vertexAttribute[index].mCurrentValue[i];
+                    float currentValue = attribState.mCurrentValue[i];
                     params[i] = (GLint)(currentValue > 0.0f ? floor(currentValue + 0.5f) : ceil(currentValue - 0.5f));
                 }
                 break;
@@ -3109,7 +3102,7 @@ void __stdcall glGetVertexAttribPointerv(GLuint index, GLenum pname, GLvoid** po
                 return error(GL_INVALID_ENUM);
             }
 
-            *pointer = const_cast<GLvoid*>(context->vertexAttribute[index].mPointer);
+            *pointer = const_cast<GLvoid*>(context->getVertexAttribPointer(index));
         }
     }
     catch(std::bad_alloc&)
@@ -3145,7 +3138,7 @@ void __stdcall glHint(GLenum target, GLenum mode)
         if (context)
         {
             if (target == GL_GENERATE_MIPMAP_HINT)
-                context->generateMipmapHint = mode;
+                context->setGenerateMipmapHint(mode);
         }
     }
     catch(std::bad_alloc&)
@@ -3192,15 +3185,15 @@ GLboolean __stdcall glIsEnabled(GLenum cap)
         {
             switch (cap)
             {
-              case GL_CULL_FACE:                return context->cullFace;
-              case GL_POLYGON_OFFSET_FILL:      return context->polygonOffsetFill;
-              case GL_SAMPLE_ALPHA_TO_COVERAGE: return context->sampleAlphaToCoverage;
-              case GL_SAMPLE_COVERAGE:          return context->sampleCoverage;
-              case GL_SCISSOR_TEST:             return context->scissorTest;
-              case GL_STENCIL_TEST:             return context->stencilTest;
-              case GL_DEPTH_TEST:               return context->depthTest;
-              case GL_BLEND:                    return context->blend;
-              case GL_DITHER:                   return context->dither;
+              case GL_CULL_FACE:                return context->isCullFaceEnabled();
+              case GL_POLYGON_OFFSET_FILL:      return context->isPolygonOffsetFillEnabled();
+              case GL_SAMPLE_ALPHA_TO_COVERAGE: return context->isSampleAlphaToCoverageEnabled();
+              case GL_SAMPLE_COVERAGE:          return context->isSampleCoverageEnabled();
+              case GL_SCISSOR_TEST:             return context->isScissorTestEnabled();
+              case GL_STENCIL_TEST:             return context->isStencilTestEnabled();
+              case GL_DEPTH_TEST:               return context->isDepthTestEnabled();
+              case GL_BLEND:                    return context->isBlendEnabled();
+              case GL_DITHER:                   return context->isDitherEnabled();
               default:
                 return error(GL_INVALID_ENUM, false);
             }
@@ -3359,7 +3352,7 @@ void __stdcall glLineWidth(GLfloat width)
 
         if (context)
         {
-            context->lineWidth = width;
+            context->setLineWidth(width);
         }
     }
     catch(std::bad_alloc&)
@@ -3419,7 +3412,7 @@ void __stdcall glPixelStorei(GLenum pname, GLint param)
                     return error(GL_INVALID_VALUE);
                 }
 
-                context->unpackAlignment = param;
+                context->setUnpackAlignment(param);
                 break;
 
               case GL_PACK_ALIGNMENT:
@@ -3428,7 +3421,7 @@ void __stdcall glPixelStorei(GLenum pname, GLint param)
                     return error(GL_INVALID_VALUE);
                 }
 
-                context->packAlignment = param;
+                context->setPackAlignment(param);
                 break;
 
               default:
@@ -3452,8 +3445,7 @@ void __stdcall glPolygonOffset(GLfloat factor, GLfloat units)
 
         if (context)
         {
-            context->polygonOffsetFactor = factor;
-            context->polygonOffsetUnits = units;
+            context->setPolygonOffsetParams(factor, units);
         }
     }
     catch(std::bad_alloc&)
@@ -3562,7 +3554,7 @@ void __stdcall glRenderbufferStorage(GLenum target, GLenum internalformat, GLsiz
 
         if (context)
         {
-            if (context->framebuffer == 0 || context->renderbuffer == 0)
+            if (context->getFramebufferHandle() == 0 || context->getRenderbufferHandle() == 0)
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -3601,8 +3593,7 @@ void __stdcall glSampleCoverage(GLclampf value, GLboolean invert)
 
         if (context)
         {
-            context->sampleCoverageValue = gl::clamp01(value);
-            context->sampleCoverageInvert = invert;
+            context->setSampleCoverageParams(gl::clamp01(value), invert);
         }
     }
     catch(std::bad_alloc&)
@@ -3626,10 +3617,7 @@ void __stdcall glScissor(GLint x, GLint y, GLsizei width, GLsizei height)
 
         if (context)
         {
-            context->scissorX = x;
-            context->scissorY = y;
-            context->scissorWidth = width;
-            context->scissorHeight = height;
+            context->setScissorParams(x, y, width, height);
         }
     }
     catch(std::bad_alloc&)
@@ -3736,16 +3724,12 @@ void __stdcall glStencilFuncSeparate(GLenum face, GLenum func, GLint ref, GLuint
         {
             if (face == GL_FRONT || face == GL_FRONT_AND_BACK)
             {
-                context->stencilFunc = func;
-                context->stencilRef = ref;
-                context->stencilMask = mask;
+                context->setStencilParams(func, ref, mask);
             }
 
             if (face == GL_BACK || face == GL_FRONT_AND_BACK)
             {
-                context->stencilBackFunc = func;
-                context->stencilBackRef = ref;
-                context->stencilBackMask = mask;
+                context->setStencilBackParams(func, ref, mask);
             }
         }
     }
@@ -3782,12 +3766,12 @@ void __stdcall glStencilMaskSeparate(GLenum face, GLuint mask)
         {
             if (face == GL_FRONT || face == GL_FRONT_AND_BACK)
             {
-                context->stencilWritemask = mask;
+                context->setStencilWritemask(mask);
             }
 
             if (face == GL_BACK || face == GL_FRONT_AND_BACK)
             {
-                context->stencilBackWritemask = mask;
+                context->setStencilBackWritemask(mask);
             }
         }
     }
@@ -3870,16 +3854,12 @@ void __stdcall glStencilOpSeparate(GLenum face, GLenum fail, GLenum zfail, GLenu
         {
             if (face == GL_FRONT || face == GL_FRONT_AND_BACK)
             {
-                context->stencilFail = fail;
-                context->stencilPassDepthFail = zfail;
-                context->stencilPassDepthPass = zpass;
+                context->setStencilOperations(fail, zfail, zpass);
             }
 
             if (face == GL_BACK || face == GL_FRONT_AND_BACK)
             {
-                context->stencilBackFail = fail;
-                context->stencilBackPassDepthFail = zfail;
-                context->stencilBackPassDepthPass = zpass;
+                context->setStencilBackOperations(fail, zfail, zpass);
             }
         }
     }
@@ -3997,7 +3977,7 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
                     return error(GL_INVALID_OPERATION);
                 }
 
-                texture->setImage(level, internalformat, width, height, format, type, context->unpackAlignment, pixels);
+                texture->setImage(level, internalformat, width, height, format, type, context->getUnpackAlignment(), pixels);
             }
             else
             {
@@ -4011,22 +3991,22 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
                 switch (target)
                 {
                   case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
-                    texture->setImagePosX(level, internalformat, width, height, format, type, context->unpackAlignment, pixels);
+                    texture->setImagePosX(level, internalformat, width, height, format, type, context->getUnpackAlignment(), pixels);
                     break;
                   case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
-                    texture->setImageNegX(level, internalformat, width, height, format, type, context->unpackAlignment, pixels);
+                    texture->setImageNegX(level, internalformat, width, height, format, type, context->getUnpackAlignment(), pixels);
                     break;
                   case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-                    texture->setImagePosY(level, internalformat, width, height, format, type, context->unpackAlignment, pixels);
+                    texture->setImagePosY(level, internalformat, width, height, format, type, context->getUnpackAlignment(), pixels);
                     break;
                   case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-                    texture->setImageNegY(level, internalformat, width, height, format, type, context->unpackAlignment, pixels);
+                    texture->setImageNegY(level, internalformat, width, height, format, type, context->getUnpackAlignment(), pixels);
                     break;
                   case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-                    texture->setImagePosZ(level, internalformat, width, height, format, type, context->unpackAlignment, pixels);
+                    texture->setImagePosZ(level, internalformat, width, height, format, type, context->getUnpackAlignment(), pixels);
                     break;
                   case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
-                    texture->setImageNegZ(level, internalformat, width, height, format, type, context->unpackAlignment, pixels);
+                    texture->setImageNegZ(level, internalformat, width, height, format, type, context->getUnpackAlignment(), pixels);
                     break;
                   default: UNREACHABLE();
                 }
@@ -4163,7 +4143,7 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
                     return error(GL_INVALID_OPERATION);
                 }
 
-                texture->subImage(level, xoffset, yoffset, width, height, format, type, context->unpackAlignment, pixels);
+                texture->subImage(level, xoffset, yoffset, width, height, format, type, context->getUnpackAlignment(), pixels);
             }
             else if (gl::IsCubemapTextureTarget(target))
             {
@@ -4174,7 +4154,7 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
                     return error(GL_INVALID_OPERATION);
                 }
 
-                texture->subImage(target, level, xoffset, yoffset, width, height, format, type, context->unpackAlignment, pixels);
+                texture->subImage(target, level, xoffset, yoffset, width, height, format, type, context->getUnpackAlignment(), pixels);
             }
             else
             {
@@ -4982,12 +4962,7 @@ void __stdcall glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLbo
 
         if (context)
         {
-            context->vertexAttribute[index].mBoundBuffer = context->arrayBuffer;
-            context->vertexAttribute[index].mSize = size;
-            context->vertexAttribute[index].mType = type;
-            context->vertexAttribute[index].mNormalized = (normalized == GL_TRUE);
-            context->vertexAttribute[index].mStride = stride;
-            context->vertexAttribute[index].mPointer = ptr;
+            context->setVertexAttribState(index, context->getArrayBufferHandle(), size, type, (normalized == GL_TRUE), stride, ptr);
         }
     }
     catch(std::bad_alloc&)
@@ -5011,10 +4986,7 @@ void __stdcall glViewport(GLint x, GLint y, GLsizei width, GLsizei height)
 
         if (context)
         {
-            context->viewportX = x;
-            context->viewportY = y;
-            context->viewportWidth = width;
-            context->viewportHeight = height;
+            context->setViewportParams(x, y, width, height);
         }
     }
     catch(std::bad_alloc&)

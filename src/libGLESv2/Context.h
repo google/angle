@@ -198,7 +198,7 @@ struct State
     GLint packAlignment;
 };
 
-class Context : public State
+class Context
 {
   public:
     Context(const egl::Config *config);
@@ -207,9 +207,94 @@ class Context : public State
 
     void makeCurrent(egl::Display *display, egl::Surface *surface);
 
+    // State manipulation
     void setClearColor(float red, float green, float blue, float alpha);
+
     void setClearDepth(float depth);
+
     void setClearStencil(int stencil);
+
+    void setCullFace(bool enabled);
+    bool isCullFaceEnabled() const;
+
+    void setCullMode(GLenum mode);
+
+    void setFrontFace(GLenum front);
+
+    void setDepthTest(bool enabled);
+    bool isDepthTestEnabled() const;
+
+    void setDepthFunc(GLenum depthFunc);
+
+    void setDepthRange(float zNear, float zFar);
+    
+    void setBlend(bool enabled);
+    bool isBlendEnabled() const;
+
+    void setBlendFactors(GLenum sourceRGB, GLenum destRGB, GLenum sourceAlpha, GLenum destAlpha);
+    void setBlendColor(float red, float green, float blue, float alpha);
+    void setBlendEquation(GLenum rgbEquation, GLenum alphaEquation);
+
+    void setStencilTest(bool enabled);
+    bool isStencilTestEnabled() const;
+
+    void setStencilParams(GLenum stencilFunc, GLint stencilRef, GLuint stencilMask);
+    void setStencilBackParams(GLenum stencilBackFunc, GLint stencilBackRef, GLuint stencilBackMask);
+    void setStencilWritemask(GLuint stencilWritemask);
+    void setStencilBackWritemask(GLuint stencilBackWritemask);
+    void setStencilOperations(GLenum stencilFail, GLenum stencilPassDepthFail, GLenum stencilPassDepthPass);
+    void setStencilBackOperations(GLenum stencilBackFail, GLenum stencilBackPassDepthFail, GLenum stencilBackPassDepthPass);
+
+    void setPolygonOffsetFill(bool enabled);
+    bool isPolygonOffsetFillEnabled() const;
+
+    void setPolygonOffsetParams(GLfloat factor, GLfloat units);
+
+    void setSampleAlphaToCoverage(bool enabled);
+    bool isSampleAlphaToCoverageEnabled() const;
+
+    void setSampleCoverage(bool enabled);
+    bool isSampleCoverageEnabled() const;
+
+    void setSampleCoverageParams(GLclampf value, GLboolean invert);
+
+    void setScissorTest(bool enabled);
+    bool isScissorTestEnabled() const;
+
+    void setDither(bool enabled);
+    bool isDitherEnabled() const;
+
+    void setLineWidth(GLfloat width);
+
+    void setGenerateMipmapHint(GLenum hint);
+
+    void setViewportParams(GLint x, GLint y, GLsizei width, GLsizei height);
+
+    void setScissorParams(GLint x, GLint y, GLsizei width, GLsizei height);
+
+    void setColorMask(bool red, bool green, bool blue, bool alpha);
+    void setDepthMask(bool mask);
+
+    void setActiveSampler(int active);
+
+    GLuint getFramebufferHandle() const;
+    GLuint getRenderbufferHandle() const;
+
+    GLuint getArrayBufferHandle() const;
+
+    void setVertexAttribEnabled(unsigned int attribNum, bool enabled);
+    const AttributeState &getVertexAttribState(unsigned int attribNum);
+    void setVertexAttribState(unsigned int attribNum, GLuint boundBuffer, GLint size, GLenum type,
+                              bool normalized, GLsizei stride, const void *pointer);
+    const void *getVertexAttribPointer(unsigned int attribNum) const;
+
+    const AttributeState *getVertexAttribBlock();
+
+    void setUnpackAlignment(GLint alignment);
+    GLint getUnpackAlignment() const;
+
+    void setPackAlignment(GLint alignment);
+    GLint getPackAlignment() const;
 
     GLuint createBuffer();
     GLuint createShader(GLenum type);
@@ -310,6 +395,8 @@ class Context : public State
     bool isTriangleMode(GLenum drawMode);
 
     const egl::Config *const mConfig;
+
+    State   mState;
 
     Texture2D *mTexture2DZero;
     TextureCubeMap *mTextureCubeMapZero;
