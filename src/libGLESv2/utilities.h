@@ -25,6 +25,9 @@ int AttributeVectorCount(GLenum type);
 
 int AllocateFirstFreeBits(unsigned int *bits, unsigned int allocationSize, unsigned int bitsSize);
 
+int ComputePixelSize(GLenum format, GLenum type);
+GLsizei ComputePitch(GLsizei width, GLenum format, GLenum type, GLint alignment);
+
 }
 
 namespace es2dx

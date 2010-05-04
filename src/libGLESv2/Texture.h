@@ -96,7 +96,6 @@ class Texture
     };
 
     static D3DFORMAT selectFormat(GLenum format);
-    static int pixelSize(GLenum format, GLenum type);
     int imagePitch(const Image& img) const;
 
     GLenum mMinFilter;
@@ -136,8 +135,6 @@ class Texture
 
     void loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type,
                        GLint unpackAlignment, const void *input, std::size_t outputPitch, void *output) const;
-
-    GLsizei computePitch(GLsizei width, GLenum format, GLenum type, GLint alignment) const;
 };
 
 class Texture2D : public Texture

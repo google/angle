@@ -144,6 +144,40 @@ int AllocateFirstFreeBits(unsigned int *bits, unsigned int allocationSize, unsig
     return -1;
 }
 
+GLsizei ComputePitch(GLsizei width, GLenum format, GLenum type, GLint alignment)
+{
+    ASSERT(alignment > 0 && isPow2(alignment));
+
+    GLsizei rawPitch = ComputePixelSize(format, type) * width;
+    return (rawPitch + alignment - 1) & ~(alignment - 1);
+}
+
+// Returns the size, in bytes, of a single texel in an Image
+int ComputePixelSize(GLenum format, GLenum type)
+{
+    switch (type)
+    {
+      case GL_UNSIGNED_BYTE:
+        switch (format)
+        {
+          case GL_ALPHA:           return sizeof(unsigned char);
+          case GL_LUMINANCE:       return sizeof(unsigned char);
+          case GL_LUMINANCE_ALPHA: return sizeof(unsigned char) * 2;
+          case GL_RGB:             return sizeof(unsigned char) * 3;
+          case GL_RGBA:            return sizeof(unsigned char) * 4;
+          default: UNREACHABLE();
+        }
+        break;
+      case GL_UNSIGNED_SHORT_4_4_4_4:
+      case GL_UNSIGNED_SHORT_5_5_5_1:
+      case GL_UNSIGNED_SHORT_5_6_5:
+        return sizeof(unsigned short);
+      default: UNREACHABLE();
+    }
+
+    return 0;
+}
+
 }
 
 namespace es2dx

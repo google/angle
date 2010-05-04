@@ -1589,6 +1589,8 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum
     unsigned char *dest = (unsigned char*)pixels;
     unsigned short *dest16 = (unsigned short*)pixels;
 
+    GLsizei outputPitch = ComputePitch(width, format, type, packAlignment);
+
     for (int j = 0; j < rect.bottom - rect.top; j++)
     {
         for (int i = 0; i < rect.right - rect.left; i++)
@@ -1671,10 +1673,10 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum
                 switch (type)
                 {
                   case GL_UNSIGNED_BYTE:
-                    dest[4 * (i + j * width) + 0] = (unsigned char)(255 * r + 0.5f);
-                    dest[4 * (i + j * width) + 1] = (unsigned char)(255 * g + 0.5f);
-                    dest[4 * (i + j * width) + 2] = (unsigned char)(255 * b + 0.5f);
-                    dest[4 * (i + j * width) + 3] = (unsigned char)(255 * a + 0.5f);
+                    dest[4 * i + j * outputPitch + 0] = (unsigned char)(255 * r + 0.5f);
+                    dest[4 * i + j * outputPitch + 1] = (unsigned char)(255 * g + 0.5f);
+                    dest[4 * i + j * outputPitch + 2] = (unsigned char)(255 * b + 0.5f);
+                    dest[4 * i + j * outputPitch + 3] = (unsigned char)(255 * a + 0.5f);
                     break;
                   default: UNREACHABLE();
                 }
@@ -1683,9 +1685,10 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum
                 switch (type)
                 {
                   case GL_UNSIGNED_SHORT_5_6_5:   // IMPLEMENTATION_COLOR_READ_TYPE
-                    dest16[i + j * width] = ((unsigned short)(31 * b + 0.5f) << 0) |
-                                            ((unsigned short)(63 * g + 0.5f) << 5) |
-                                            ((unsigned short)(31 * r + 0.5f) << 11);
+                    dest16[i + j * outputPitch / sizeof(unsigned short)] = 
+                        ((unsigned short)(31 * b + 0.5f) << 0) |
+                        ((unsigned short)(63 * g + 0.5f) << 5) |
+                        ((unsigned short)(31 * r + 0.5f) << 11);
                     break;
                   default: UNREACHABLE();
                 }

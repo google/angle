@@ -150,43 +150,9 @@ D3DFORMAT Texture::selectFormat(GLenum format)
     return D3DFMT_A8R8G8B8;
 }
 
-// Returns the size, in bytes, of a single texel in an Image
-int Texture::pixelSize(GLenum format, GLenum type)
-{
-    switch (type)
-    {
-      case GL_UNSIGNED_BYTE:
-        switch (format)
-        {
-          case GL_ALPHA:           return sizeof(unsigned char);
-          case GL_LUMINANCE:       return sizeof(unsigned char);
-          case GL_LUMINANCE_ALPHA: return sizeof(unsigned char) * 2;
-          case GL_RGB:             return sizeof(unsigned char) * 3;
-          case GL_RGBA:            return sizeof(unsigned char) * 4;
-          default: UNREACHABLE();
-        }
-        break;
-      case GL_UNSIGNED_SHORT_4_4_4_4:
-      case GL_UNSIGNED_SHORT_5_5_5_1:
-      case GL_UNSIGNED_SHORT_5_6_5:
-        return sizeof(unsigned short);
-      default: UNREACHABLE();
-    }
-
-    return 0;
-}
-
 int Texture::imagePitch(const Image &img) const
 {
     return img.width * 4;
-}
-
-GLsizei Texture::computePitch(GLsizei width, GLenum format, GLenum type, GLint alignment) const
-{
-    ASSERT(alignment > 0 && isPow2(alignment));
-
-    GLsizei rawPitch = pixelSize(format, type) * width;
-    return (rawPitch + alignment - 1) & ~(alignment - 1);
 }
 
 // Store the pixel rectangle designated by xoffset,yoffset,width,height with pixels stored as format/type at input
@@ -194,7 +160,7 @@ GLsizei Texture::computePitch(GLsizei width, GLenum format, GLenum type, GLint a
 void Texture::loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type,
                             GLint unpackAlignment, const void *input, size_t outputPitch, void *output) const
 {
-    GLsizei inputPitch = computePitch(width, format, type, unpackAlignment);
+    GLsizei inputPitch = ComputePitch(width, format, type, unpackAlignment);
 
     for (int y = 0; y < height; y++)
     {
