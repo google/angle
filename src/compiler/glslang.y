@@ -204,7 +204,7 @@ variable_identifier
         // pop will reclaim the memory
 
         if (variable->getType().getQualifier() == EvqConst ) {
-            constUnion* constArray = variable->getConstPointer();
+            ConstantUnion* constArray = variable->getConstPointer();
             TType t(variable->getType());
             $$ = parseContext->intermediate.addConstantUnion(constArray, t, $1.line);
         } else
@@ -227,17 +227,17 @@ primary_expression
             parseContext->error($1.line, " integer constant overflow", "", "");
             parseContext->recover();
         }
-        constUnion *unionArray = new constUnion[1];
+        ConstantUnion *unionArray = new ConstantUnion[1];
         unionArray->setIConst($1.i);
         $$ = parseContext->intermediate.addConstantUnion(unionArray, TType(EbtInt, EvqConst), $1.line);
     }
     | FLOATCONSTANT {
-        constUnion *unionArray = new constUnion[1];
+        ConstantUnion *unionArray = new ConstantUnion[1];
         unionArray->setFConst($1.f);
         $$ = parseContext->intermediate.addConstantUnion(unionArray, TType(EbtFloat, EvqConst), $1.line);
     }
     | BOOLCONSTANT {
-        constUnion *unionArray = new constUnion[1];
+        ConstantUnion *unionArray = new ConstantUnion[1];
         unionArray->setBConst($1.b);
         $$ = parseContext->intermediate.addConstantUnion(unionArray, TType(EbtBool, EvqConst), $1.line);
     }
@@ -301,7 +301,7 @@ postfix_expression
             }
         }
         if ($$ == 0) {
-            constUnion *unionArray = new constUnion[1];
+            ConstantUnion *unionArray = new ConstantUnion[1];
             unionArray->setFConst(0.0f);
             $$ = parseContext->intermediate.addConstantUnion(unionArray, TType(EbtFloat, EvqConst), $2.line);
         } else if ($1->isArray()) {
@@ -350,7 +350,7 @@ postfix_expression
                     $$->setType(TType($1->getBasicType(), EvqConst, (int) (*$3.string).size()));
             } else {
                 if (fields.num == 1) {
-                    constUnion *unionArray = new constUnion[1];
+                    ConstantUnion *unionArray = new ConstantUnion[1];
                     unionArray->setIConst(fields.offsets[0]);
                     TIntermTyped* index = parseContext->intermediate.addConstantUnion(unionArray, TType(EbtInt, EvqConst), $3.line);
                     $$ = parseContext->intermediate.addIndex(EOpIndexDirect, $1, index, $2.line);
@@ -375,13 +375,13 @@ postfix_expression
             if (fields.wholeRow || fields.wholeCol) {
                 parseContext->error($2.line, " non-scalar fields not implemented yet", ".", "");
                 parseContext->recover();
-                constUnion *unionArray = new constUnion[1];
+                ConstantUnion *unionArray = new ConstantUnion[1];
                 unionArray->setIConst(0);
                 TIntermTyped* index = parseContext->intermediate.addConstantUnion(unionArray, TType(EbtInt, EvqConst), $3.line);
                 $$ = parseContext->intermediate.addIndex(EOpIndexDirect, $1, index, $2.line);
                 $$->setType(TType($1->getBasicType(), EvqTemporary, $1->getNominalSize()));
             } else {
-                constUnion *unionArray = new constUnion[1];
+                ConstantUnion *unionArray = new ConstantUnion[1];
                 unionArray->setIConst(fields.col * $1->getNominalSize() + fields.row);
                 TIntermTyped* index = parseContext->intermediate.addConstantUnion(unionArray, TType(EbtInt, EvqConst), $3.line);
                 $$ = parseContext->intermediate.addIndex(EOpIndexDirect, $1, index, $2.line);
@@ -416,7 +416,7 @@ postfix_expression
                             $$->getTypePointer()->changeQualifier(EvqConst);
                         }
                     } else {
-                        constUnion *unionArray = new constUnion[1];
+                        ConstantUnion *unionArray = new ConstantUnion[1];
                         unionArray->setIConst(i);
                         TIntermTyped* index = parseContext->intermediate.addConstantUnion(unionArray, *(*fields)[i].type, $3.line);
                         $$ = parseContext->intermediate.addIndex(EOpIndexDirectStruct, $1, index, $2.line);
@@ -553,7 +553,7 @@ function_call
             } else {
                 // error message was put out by PaFindFunction()
                 // Put on a dummy node for error recovery
-                constUnion *unionArray = new constUnion[1];
+                ConstantUnion *unionArray = new ConstantUnion[1];
                 unionArray->setFConst(0.0f);
                 $$ = parseContext->intermediate.addConstantUnion(unionArray, TType(EbtFloat, EvqConst), $1.line);
                 parseContext->recover();
@@ -804,7 +804,7 @@ relational_expression
         if ($$ == 0) {
             parseContext->binaryOpError($2.line, "<", $1->getCompleteString(), $3->getCompleteString());
             parseContext->recover();
-            constUnion *unionArray = new constUnion[1];
+            ConstantUnion *unionArray = new ConstantUnion[1];
             unionArray->setBConst(false);
             $$ = parseContext->intermediate.addConstantUnion(unionArray, TType(EbtBool, EvqConst), $2.line);
         }
@@ -814,7 +814,7 @@ relational_expression
         if ($$ == 0) {
             parseContext->binaryOpError($2.line, ">", $1->getCompleteString(), $3->getCompleteString());
             parseContext->recover();
-            constUnion *unionArray = new constUnion[1];
+            ConstantUnion *unionArray = new ConstantUnion[1];
             unionArray->setBConst(false);
             $$ = parseContext->intermediate.addConstantUnion(unionArray, TType(EbtBool, EvqConst), $2.line);
         }
@@ -824,7 +824,7 @@ relational_expression
         if ($$ == 0) {
             parseContext->binaryOpError($2.line, "<=", $1->getCompleteString(), $3->getCompleteString());
             parseContext->recover();
-            constUnion *unionArray = new constUnion[1];
+            ConstantUnion *unionArray = new ConstantUnion[1];
             unionArray->setBConst(false);
             $$ = parseContext->intermediate.addConstantUnion(unionArray, TType(EbtBool, EvqConst), $2.line);
         }
@@ -834,7 +834,7 @@ relational_expression
         if ($$ == 0) {
             parseContext->binaryOpError($2.line, ">=", $1->getCompleteString(), $3->getCompleteString());
             parseContext->recover();
-            constUnion *unionArray = new constUnion[1];
+            ConstantUnion *unionArray = new ConstantUnion[1];
             unionArray->setBConst(false);
             $$ = parseContext->intermediate.addConstantUnion(unionArray, TType(EbtBool, EvqConst), $2.line);
         }
@@ -848,7 +848,7 @@ equality_expression
         if ($$ == 0) {
             parseContext->binaryOpError($2.line, "==", $1->getCompleteString(), $3->getCompleteString());
             parseContext->recover();
-            constUnion *unionArray = new constUnion[1];
+            ConstantUnion *unionArray = new ConstantUnion[1];
             unionArray->setBConst(false);
             $$ = parseContext->intermediate.addConstantUnion(unionArray, TType(EbtBool, EvqConst), $2.line);
         } else if (($1->isArray() || $3->isArray()) && parseContext->extensionErrorCheck($2.line, "GL_3DL_array_objects"))
@@ -859,7 +859,7 @@ equality_expression
         if ($$ == 0) {
             parseContext->binaryOpError($2.line, "!=", $1->getCompleteString(), $3->getCompleteString());
             parseContext->recover();
-            constUnion *unionArray = new constUnion[1];
+            ConstantUnion *unionArray = new ConstantUnion[1];
             unionArray->setBConst(false);
             $$ = parseContext->intermediate.addConstantUnion(unionArray, TType(EbtBool, EvqConst), $2.line);
         } else if (($1->isArray() || $3->isArray()) && parseContext->extensionErrorCheck($2.line, "GL_3DL_array_objects"))
@@ -886,7 +886,7 @@ logical_and_expression
         if ($$ == 0) {
             parseContext->binaryOpError($2.line, "&&", $1->getCompleteString(), $3->getCompleteString());
             parseContext->recover();
-            constUnion *unionArray = new constUnion[1];
+            ConstantUnion *unionArray = new ConstantUnion[1];
             unionArray->setBConst(false);
             $$ = parseContext->intermediate.addConstantUnion(unionArray, TType(EbtBool, EvqConst), $2.line);
         }
@@ -900,7 +900,7 @@ logical_xor_expression
         if ($$ == 0) {
             parseContext->binaryOpError($2.line, "^^", $1->getCompleteString(), $3->getCompleteString());
             parseContext->recover();
-            constUnion *unionArray = new constUnion[1];
+            ConstantUnion *unionArray = new ConstantUnion[1];
             unionArray->setBConst(false);
             $$ = parseContext->intermediate.addConstantUnion(unionArray, TType(EbtBool, EvqConst), $2.line);
         }
@@ -914,7 +914,7 @@ logical_or_expression
         if ($$ == 0) {
             parseContext->binaryOpError($2.line, "||", $1->getCompleteString(), $3->getCompleteString());
             parseContext->recover();
-            constUnion *unionArray = new constUnion[1];
+            ConstantUnion *unionArray = new ConstantUnion[1];
             unionArray->setBConst(false);
             $$ = parseContext->intermediate.addConstantUnion(unionArray, TType(EbtBool, EvqConst), $2.line);
         }
