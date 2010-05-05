@@ -681,6 +681,7 @@ IDirect3DBaseTexture9 *Texture2D::convertToRenderTarget()
 
     if (mWidth != 0 && mHeight != 0)
     {
+        egl::Display *display = getDisplay();
         IDirect3DDevice9 *device = getDevice();
         D3DFORMAT format = selectFormat(mImageArray[0].format);
 
@@ -722,6 +723,7 @@ IDirect3DBaseTexture9 *Texture2D::convertToRenderTarget()
                     return error(GL_OUT_OF_MEMORY, (IDirect3DBaseTexture9*)NULL);
                 }
 
+                display->endScene();
                 result = device->StretchRect(source, NULL, dest, NULL, D3DTEXF_NONE);
 
                 if (FAILED(result))
@@ -1056,6 +1058,7 @@ IDirect3DBaseTexture9 *TextureCubeMap::convertToRenderTarget()
 
     if (mWidth != 0)
     {
+        egl::Display *display = getDisplay();
         IDirect3DDevice9 *device = getDevice();
         D3DFORMAT format = selectFormat(mImageArray[0][0].format);
 
@@ -1099,6 +1102,7 @@ IDirect3DBaseTexture9 *TextureCubeMap::convertToRenderTarget()
                         return error(GL_OUT_OF_MEMORY, (IDirect3DBaseTexture9*)NULL);
                     }
 
+                    display->endScene();
                     result = device->StretchRect(source, NULL, dest, NULL, D3DTEXF_NONE);
 
                     if (FAILED(result))

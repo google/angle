@@ -2014,6 +2014,7 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum
 
 void Context::clear(GLbitfield mask)
 {
+    egl::Display *display = getDisplay();
     IDirect3DDevice9 *device = getDevice();
     DWORD flags = 0;
 
@@ -2153,9 +2154,8 @@ void Context::clear(GLbitfield mask)
         quad[3].w = 1.0f;
         quad[3].diffuse = color;
 
-        device->BeginScene();
+        display->startScene();
         device->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, quad, sizeof(Vertex));
-        device->EndScene();
 
         if (flags & D3DCLEAR_ZBUFFER)
         {
@@ -2177,6 +2177,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
         return error(GL_INVALID_OPERATION);
     }
 
+    egl::Display *display = getDisplay();
     IDirect3DDevice9 *device = getDevice();
     D3DPRIMITIVETYPE primitiveType;
     int primitiveCount;
@@ -2206,9 +2207,8 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
 
     if (!cullSkipsDraw(mode))
     {
-        device->BeginScene();
+        display->startScene();
         device->DrawPrimitive(primitiveType, 0, primitiveCount);
-        device->EndScene();
     }
 }
 
@@ -2224,6 +2224,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void* 
         return error(GL_INVALID_OPERATION);
     }
 
+    egl::Display *display = getDisplay();
     IDirect3DDevice9 *device = getDevice();
     D3DPRIMITIVETYPE primitiveType;
     int primitiveCount;
@@ -2254,14 +2255,14 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void* 
 
     if (!cullSkipsDraw(mode))
     {
-        device->BeginScene();
+        display->startScene();
         device->DrawIndexedPrimitive(primitiveType, -(INT)indexInfo.minIndex, indexInfo.minIndex, indexInfo.maxIndex-indexInfo.minIndex+1, indexInfo.offset/sizeof(Index), primitiveCount);
-        device->EndScene();
     }
 }
 
 void Context::finish()
 {
+    egl::Display *display = getDisplay();
     IDirect3DDevice9 *device = getDevice();
     IDirect3DQuery9 *occlusionQuery = NULL;
 
@@ -2283,9 +2284,8 @@ void Context::finish()
         device->SetVertexShader(NULL);
         device->SetFVF(D3DFVF_XYZRHW);
         float data[4] = {-1.0f, -1.0f, -1.0f, 1.0f};
-        device->BeginScene();
+        display->startScene();
         device->DrawPrimitiveUP(D3DPT_POINTLIST, 1, data, sizeof(data));
-        device->EndScene();
 
         occlusionQuery->Issue(D3DISSUE_END);
 

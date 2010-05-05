@@ -93,10 +93,16 @@ Context *getContext()
     return current->context;
 }
 
-IDirect3DDevice9 *getDevice()
+egl::Display *getDisplay()
 {
     Current *current = (Current*)TlsGetValue(currentTLS);
-    egl::Display *display = current->display;
+
+    return current->display;
+}
+
+IDirect3DDevice9 *getDevice()
+{
+    egl::Display *display = getDisplay();
 
     return display->getDevice();
 }

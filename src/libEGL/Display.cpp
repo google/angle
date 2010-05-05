@@ -26,6 +26,8 @@ Display::Display(HDC deviceContext) : mDc(deviceContext)
 
     mAdapter = D3DADAPTER_DEFAULT;
     mDeviceType = D3DDEVTYPE_HAL;
+
+    mSceneStarted = false;
 }
 
 Display::~Display()
@@ -163,6 +165,26 @@ void Display::terminate()
     {
         mD3d9->Release();
         mD3d9 = NULL;
+    }
+}
+
+void Display::startScene()
+{
+    if (!mSceneStarted)
+    {
+        long result = mDevice->BeginScene();
+        ASSERT(SUCCEEDED(result));
+        mSceneStarted = true;
+    }
+}
+
+void Display::endScene()
+{
+    if (mSceneStarted)
+    {
+        long result = mDevice->EndScene();
+        ASSERT(SUCCEEDED(result));
+        mSceneStarted = false;
     }
 }
 
@@ -323,7 +345,7 @@ egl::Surface *Display::createWindowSurface(HWND window, EGLConfig config)
 
     if (swapChain)
     {
-        surface = new Surface(mDevice, swapChain, depthStencilSurface, configuration->mConfigID);
+        surface = new Surface(this, swapChain, depthStencilSurface, configuration->mConfigID);
         mSurfaceSet.insert(surface);
 
         swapChain->Release();

@@ -36,6 +36,9 @@ class Display
     bool initialize();
     void terminate();
 
+    virtual void startScene();
+    virtual void endScene();
+
     bool getConfigs(EGLConfig *configs, const EGLint *attribList, EGLint configSize, EGLint *numConfig);
     bool getConfigAttrib(EGLConfig config, EGLint attribute, EGLint *value);
 
@@ -61,6 +64,8 @@ class Display
     D3DDEVTYPE mDeviceType;
     IDirect3D9 *mD3d9;
     IDirect3DDevice9 *mDevice;
+
+    bool mSceneStarted;
 
     typedef std::set<Surface*> SurfaceSet;
     SurfaceSet mSurfaceSet;

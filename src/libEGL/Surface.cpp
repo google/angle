@@ -13,11 +13,12 @@
 #include "common/debug.h"
 
 #include "libEGL/main.h"
+#include "libEGL/Display.h"
 
 namespace egl
 {
-Surface::Surface(IDirect3DDevice9 *device, IDirect3DSwapChain9 *swapChain, IDirect3DSurface9 *depthStencil, EGLint configID) 
-    : mSwapChain(swapChain), mConfigID(configID), mDepthStencil(depthStencil)
+Surface::Surface(Display *display, IDirect3DSwapChain9 *swapChain, IDirect3DSurface9 *depthStencil, EGLint configID) 
+    : mDisplay(display), mSwapChain(swapChain), mConfigID(configID), mDepthStencil(depthStencil)
 {
     mBackBuffer = NULL;
     mRenderTarget = NULL;
@@ -37,6 +38,7 @@ Surface::Surface(IDirect3DDevice9 *device, IDirect3DSwapChain9 *swapChain, IDire
         mWidth = description.Width;
         mHeight = description.Height;
 
+        IDirect3DDevice9 *device = display->getDevice();
         HRESULT result = device->CreateRenderTarget(mWidth, mHeight, description.Format, description.MultiSampleType, description.MultiSampleQuality, FALSE, &mRenderTarget, NULL);
 
         if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
@@ -90,9 +92,7 @@ void Surface::swap()
 {
     if (mSwapChain)
     {
-        IDirect3DDevice9 *device;
-        mSwapChain->GetDevice(&device);
-
+        IDirect3DDevice9 *device = mDisplay->getDevice();
         D3DSURFACE_DESC description;
         mBackBuffer->GetDesc(&description);
 
@@ -110,6 +110,7 @@ void Surface::swap()
         IDirect3DSurface9 *textureSurface;
         texture->GetSurfaceLevel(0, &textureSurface);
 
+        mDisplay->endScene();
         device->StretchRect(mRenderTarget, NULL, textureSurface, NULL, D3DTEXF_NONE);
 
         // Disable all pipeline operations
@@ -142,11 +143,11 @@ void Surface::swap()
                             {mWidth - 0.5f, mHeight - 0.5f, 0.0f, 1.0f, 1.0f, 0.0f},
                             {     0 - 0.5f, mHeight - 0.5f, 0.0f, 1.0f, 0.0f, 0.0f}};   // x, y, z, rhw, u, v
 
-        device->BeginScene();
+        mDisplay->startScene();
         device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, quad, 6 * sizeof(float));
-        device->EndScene();
 
-        result = mSwapChain->Present(NULL, NULL, NULL, NULL, D3DPRESENT_INTERVAL_DEFAULT);   // FIXME: Get the swap interval from the associated Display
+        mDisplay->endScene();
+        result = mSwapChain->Present(NULL, NULL, NULL, NULL, D3DPRESENT_INTERVAL_IMMEDIATE | D3DPRESENT_DONOTWAIT);   // FIXME: Get the swap interval from the associated Display
 
         if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY || result == D3DERR_DRIVERINTERNALERROR)
         {
@@ -155,7 +156,6 @@ void Surface::swap()
 
         textureSurface->Release();
         texture->Release();
-        device->Release();
     }
 }
 

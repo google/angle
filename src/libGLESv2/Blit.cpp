@@ -370,6 +370,7 @@ bool Blit::setFormatConvertShaders(GLenum destFormat)
 
 IDirect3DTexture9 *Blit::copySurfaceToTexture(IDirect3DSurface9 *surface, const RECT &sourceRect)
 {
+    egl::Display *display = getDisplay();
     IDirect3DDevice9 *device = getDevice();
 
     D3DSURFACE_DESC sourceDesc;
@@ -401,6 +402,7 @@ IDirect3DTexture9 *Blit::copySurfaceToTexture(IDirect3DSurface9 *surface, const 
     d3dSourceRect.top = sourceRect.top;
     d3dSourceRect.bottom = sourceRect.bottom;
 
+    display->endScene();
     result = device->StretchRect(surface, &d3dSourceRect, textureSurface, NULL, D3DTEXF_NONE);
 
     textureSurface->Release();
@@ -456,14 +458,14 @@ void Blit::setCommonBlitState()
 
 void Blit::render()
 {
+    egl::Display *display = getDisplay();
     IDirect3DDevice9 *device = getDevice();
 
     HRESULT hr = device->SetStreamSource(0, mQuadVertexBuffer, 0, 2 * sizeof(float));
     hr = device->SetVertexDeclaration(mQuadVertexDeclaration);
 
-    device->BeginScene();
+    display->startScene();
     hr = device->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
-    device->EndScene();
 }
 
 }
