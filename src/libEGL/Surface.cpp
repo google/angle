@@ -136,6 +136,7 @@ void Surface::swap()
         device->SetSamplerState(0, D3DSAMP_SRGBTEXTURE, FALSE);
         device->SetFVF(D3DFVF_XYZRHW | D3DFVF_TEX1);
         device->SetRenderTarget(0, mBackBuffer);
+        device->SetDepthStencilSurface(NULL);
 
         // Render the texture upside down into the back buffer
         float quad[4][6] = {{     0 - 0.5f,       0 - 0.5f, 0.0f, 1.0f, 0.0f, 1.0f},
