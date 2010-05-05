@@ -91,6 +91,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="@echo on&#x0D;&#x0A;mkdir $(ProjectDir)..\..\lib\$(ConfigurationName)\&#x0D;&#x0A;copy $(OutDir)\libGLESv2.dll $(ProjectDir)..\..\lib\$(ConfigurationName)\&#x0D;&#x0A;copy $(OutDir)\libGLESv2.lib $(ProjectDir)..\..\lib\$(ConfigurationName)\&#x0D;&#x0A;@echo off&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -169,6 +170,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="@echo on&#x0D;&#x0A;mkdir $(ProjectDir)..\..\lib\$(ConfigurationName)\&#x0D;&#x0A;copy $(OutDir)\libGLESv2.dll $(ProjectDir)..\..\lib\$(ConfigurationName)\&#x0D;&#x0A;copy $(OutDir)\libGLESv2.lib $(ProjectDir)..\..\lib\$(ConfigurationName)\&#x0D;&#x0A;@echo off&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>
