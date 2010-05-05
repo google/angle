@@ -146,6 +146,9 @@ void Surface::swap()
         mDisplay->startScene();
         device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, quad, 6 * sizeof(float));
 
+        textureSurface->Release();
+        texture->Release();
+
         mDisplay->endScene();
         result = mSwapChain->Present(NULL, NULL, NULL, NULL, D3DPRESENT_INTERVAL_IMMEDIATE | D3DPRESENT_DONOTWAIT);   // FIXME: Get the swap interval from the associated Display
 
@@ -153,9 +156,6 @@ void Surface::swap()
         {
             return error(EGL_BAD_ALLOC);
         }
-
-        textureSurface->Release();
-        texture->Release();
     }
 }
 

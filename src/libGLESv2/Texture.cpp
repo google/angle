@@ -550,7 +550,7 @@ void Texture2D::copySubImage(GLint level, GLint xoffset, GLint yoffset, GLint x,
     }
     else
     {
-        getRenderTarget(GL_TEXTURE_2D);
+        needRenderTarget();
     }
 
     RECT sourceRect;
