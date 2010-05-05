@@ -1479,6 +1479,8 @@ bool Context::applyRenderTarget(bool ignoreViewport)
 
     if (!framebufferObject || framebufferObject->completeness() != GL_FRAMEBUFFER_COMPLETE)
     {
+        error(GL_INVALID_FRAMEBUFFER_OPERATION);
+
         return false;
     }
 
@@ -1509,6 +1511,11 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         viewport.Height = std::min(mState.viewportHeight, (int)desc.Height - (int)viewport.Y);
         viewport.MinZ = clamp01(mState.zNear);
         viewport.MaxZ = clamp01(mState.zFar);
+    }
+
+    if (viewport.Width <= 0 || viewport.Height <= 0)
+    {
+        return false;   // Nothing to render
     }
 
     device->SetViewport(&viewport);
@@ -1999,6 +2006,15 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum
 
 void Context::clear(GLbitfield mask)
 {
+    Framebuffer *framebufferObject = getFramebuffer();
+
+    if (!framebufferObject || framebufferObject->completeness() != GL_FRAMEBUFFER_COMPLETE)
+    {
+        error(GL_INVALID_FRAMEBUFFER_OPERATION);
+
+        return;
+    }
+
     egl::Display *display = getDisplay();
     IDirect3DDevice9 *device = getDevice();
     DWORD flags = 0;
@@ -2018,7 +2034,6 @@ void Context::clear(GLbitfield mask)
         }
     }
 
-    Framebuffer *framebufferObject = getFramebuffer();
     IDirect3DSurface9 *depthStencil = framebufferObject->getDepthStencil();
 
     GLuint stencilUnmasked = 0x0;
@@ -2043,7 +2058,10 @@ void Context::clear(GLbitfield mask)
         return error(GL_INVALID_VALUE);
     }
 
-    applyRenderTarget(true);   // Clips the clear to the scissor rectangle but not the viewport
+    if (!applyRenderTarget(true))   // Clips the clear to the scissor rectangle but not the viewport
+    {
+        return;
+    }
 
     D3DCOLOR color = D3DCOLOR_ARGB(unorm<8>(mState.colorClearValue.alpha), 
                                             unorm<8>(mState.colorClearValue.red), 
@@ -2177,7 +2195,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
 
     if (!applyRenderTarget(false))
     {
-        return error(GL_INVALID_FRAMEBUFFER_OPERATION);
+        return;
     }
 
     applyState(mode);
@@ -2224,7 +2242,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void* 
 
     if (!applyRenderTarget(false))
     {
-        return error(GL_INVALID_FRAMEBUFFER_OPERATION);
+        return;
     }
 
     applyState(mode);
