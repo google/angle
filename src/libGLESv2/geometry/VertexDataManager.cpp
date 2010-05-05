@@ -26,7 +26,7 @@ namespace gl
 {
 
 VertexDataManager::VertexDataManager(Context *context, BufferBackEnd *backend)
-    : mContext(context), mBackend(backend), mDirtyCurrentValues(true)
+    : mContext(context), mBackend(backend), mDirtyCurrentValues(true), mCurrentValueOffset(0)
 {
     mStreamBuffer = mBackend->createVertexBuffer(INITIAL_STREAM_BUFFER_SIZE);
     try
@@ -224,7 +224,7 @@ void VertexDataManager::reloadCurrentValues(const AttributeState *attribs, std::
 
         mCurrentValueBuffer->reserveSpace(totalSize);
 
-        float* p = static_cast<float*>(mCurrentValueBuffer->map(totalSize, offset));
+        float* p = static_cast<float*>(mCurrentValueBuffer->map(totalSize, &mCurrentValueOffset));
 
         for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
         {
@@ -235,6 +235,8 @@ void VertexDataManager::reloadCurrentValues(const AttributeState *attribs, std::
 
         mDirtyCurrentValues = false;
     }
+
+    *offset = mCurrentValueOffset;
 }
 
 std::size_t VertexDataManager::typeSize(GLenum type) const
