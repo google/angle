@@ -132,7 +132,7 @@ void Config::set(D3DDISPLAYMODE displayMode, EGLint minInterval, EGLint maxInter
         mStencilSize = 0;
         break;
       case D3DFMT_D15S1:
-        mDepthSize = 16;
+        mDepthSize = 15;
         mStencilSize = 1;
         break;
       case D3DFMT_D24S8:

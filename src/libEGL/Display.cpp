@@ -238,11 +238,9 @@ egl::Surface *Display::createWindowSurface(HWND window, EGLConfig config)
 
     if (!mDevice)
     {
-        UINT adapter = D3DADAPTER_DEFAULT;
-        D3DDEVTYPE deviceType = D3DDEVTYPE_HAL;
         DWORD behaviorFlags = D3DCREATE_FPU_PRESERVE | D3DCREATE_NOWINDOWCHANGES;
 
-        HRESULT result = mD3d9->CreateDevice(adapter, deviceType, window, behaviorFlags | D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_PUREDEVICE, &presentParameters, &mDevice);
+        HRESULT result = mD3d9->CreateDevice(mAdapter, mDeviceType, window, behaviorFlags | D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_PUREDEVICE, &presentParameters, &mDevice);
 
         if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
         {
@@ -251,7 +249,7 @@ egl::Surface *Display::createWindowSurface(HWND window, EGLConfig config)
 
         if (FAILED(result))
         {
-            result = mD3d9->CreateDevice(adapter, deviceType, window, behaviorFlags | D3DCREATE_SOFTWARE_VERTEXPROCESSING, &presentParameters, &mDevice);
+            result = mD3d9->CreateDevice(mAdapter, mDeviceType, window, behaviorFlags | D3DCREATE_SOFTWARE_VERTEXPROCESSING, &presentParameters, &mDevice);
 
             if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
             {
