@@ -156,7 +156,7 @@ TVariable::TVariable(const TVariable& copyOf, TStructureMap& remapper) : TSymbol
 	if (copyOf.unionArray) {
 		assert(!copyOf.type.getStruct());
 		assert(copyOf.type.getObjectSize() == 1);
-		unionArray = new constUnion[1];
+		unionArray = new ConstantUnion[1];
 		unionArray[0] = copyOf.unionArray[0];
 	} else
 		unionArray = 0;

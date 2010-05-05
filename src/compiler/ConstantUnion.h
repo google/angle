@@ -8,7 +8,7 @@
 #define _CONSTANT_UNION_INCLUDED_
 
 
-class constUnion {
+class ConstantUnion {
 public:
 
     POOL_ALLOCATOR_NEW_DELETE(GlobalPoolAllocator)        
@@ -47,7 +47,7 @@ public:
         return false;
     }
 
-    bool operator==(const constUnion& constant) const
+    bool operator==(const ConstantUnion& constant) const
     {
         if (constant.type != type)
             return false;
@@ -88,12 +88,12 @@ public:
         return !operator==(b);
     }
 
-    bool operator!=(const constUnion& constant) const
+    bool operator!=(const ConstantUnion& constant) const
     {
         return !operator==(constant);
     }
 
-    bool operator>(const constUnion& constant) const
+    bool operator>(const ConstantUnion& constant) const
     { 
         assert(type == constant.type);
         switch (type) {
@@ -115,7 +115,7 @@ public:
         return false;
     }
 
-    bool operator<(const constUnion& constant) const
+    bool operator<(const ConstantUnion& constant) const
     { 
         assert(type == constant.type);
         switch (type) {
@@ -137,9 +137,9 @@ public:
         return false;
     }
 
-    constUnion operator+(const constUnion& constant) const
+    ConstantUnion operator+(const ConstantUnion& constant) const
     { 
-        constUnion returnValue;
+        ConstantUnion returnValue;
         assert(type == constant.type);
         switch (type) {
         case EbtInt: returnValue.setIConst(iConst + constant.iConst); break;
@@ -150,9 +150,9 @@ public:
         return returnValue;
     }
 
-    constUnion operator-(const constUnion& constant) const
+    ConstantUnion operator-(const ConstantUnion& constant) const
     { 
-        constUnion returnValue;
+        ConstantUnion returnValue;
         assert(type == constant.type);
         switch (type) {
         case EbtInt: returnValue.setIConst(iConst - constant.iConst); break;
@@ -163,9 +163,9 @@ public:
         return returnValue;
     }
 
-    constUnion operator*(const constUnion& constant) const
+    ConstantUnion operator*(const ConstantUnion& constant) const
     { 
-        constUnion returnValue;
+        ConstantUnion returnValue;
         assert(type == constant.type);
         switch (type) {
         case EbtInt: returnValue.setIConst(iConst * constant.iConst); break;
@@ -176,9 +176,9 @@ public:
         return returnValue;
     }
 
-    constUnion operator%(const constUnion& constant) const
+    ConstantUnion operator%(const ConstantUnion& constant) const
     { 
-        constUnion returnValue;
+        ConstantUnion returnValue;
         assert(type == constant.type);
         switch (type) {
         case EbtInt: returnValue.setIConst(iConst % constant.iConst); break;
@@ -188,9 +188,9 @@ public:
         return returnValue;
     }
 
-    constUnion operator>>(const constUnion& constant) const
+    ConstantUnion operator>>(const ConstantUnion& constant) const
     { 
-        constUnion returnValue;
+        ConstantUnion returnValue;
         assert(type == constant.type);
         switch (type) {
         case EbtInt: returnValue.setIConst(iConst >> constant.iConst); break;
@@ -200,9 +200,9 @@ public:
         return returnValue;
     }
 
-    constUnion operator<<(const constUnion& constant) const
+    ConstantUnion operator<<(const ConstantUnion& constant) const
     { 
-        constUnion returnValue;
+        ConstantUnion returnValue;
         assert(type == constant.type);
         switch (type) {
         case EbtInt: returnValue.setIConst(iConst << constant.iConst); break;
@@ -212,9 +212,9 @@ public:
         return returnValue;
     }
 
-    constUnion operator&(const constUnion& constant) const
+    ConstantUnion operator&(const ConstantUnion& constant) const
     { 
-        constUnion returnValue;
+        ConstantUnion returnValue;
         assert(type == constant.type);
         switch (type) {
         case EbtInt:  returnValue.setIConst(iConst & constant.iConst); break;
@@ -224,9 +224,9 @@ public:
         return returnValue;
     }
 
-    constUnion operator|(const constUnion& constant) const
+    ConstantUnion operator|(const ConstantUnion& constant) const
     { 
-        constUnion returnValue;
+        ConstantUnion returnValue;
         assert(type == constant.type);
         switch (type) {
         case EbtInt:  returnValue.setIConst(iConst | constant.iConst); break;
@@ -236,9 +236,9 @@ public:
         return returnValue;
     }
 
-    constUnion operator^(const constUnion& constant) const
+    ConstantUnion operator^(const ConstantUnion& constant) const
     { 
-        constUnion returnValue;
+        ConstantUnion returnValue;
         assert(type == constant.type);
         switch (type) {
         case EbtInt:  returnValue.setIConst(iConst ^ constant.iConst); break;
@@ -248,9 +248,9 @@ public:
         return returnValue;
     }
 
-    constUnion operator&&(const constUnion& constant) const
+    ConstantUnion operator&&(const ConstantUnion& constant) const
     { 
-        constUnion returnValue;
+        ConstantUnion returnValue;
         assert(type == constant.type);
         switch (type) {
         case EbtBool: returnValue.setBConst(bConst && constant.bConst); break;
@@ -260,9 +260,9 @@ public:
         return returnValue;
     }
 
-    constUnion operator||(const constUnion& constant) const
+    ConstantUnion operator||(const ConstantUnion& constant) const
     { 
-        constUnion returnValue;
+        ConstantUnion returnValue;
         assert(type == constant.type);
         switch (type) {
         case EbtBool: returnValue.setBConst(bConst || constant.bConst); break;

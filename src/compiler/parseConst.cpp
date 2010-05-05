@@ -12,7 +12,7 @@
 //
 class TConstTraverser : public TIntermTraverser {
 public:
-    TConstTraverser(constUnion* cUnion, bool singleConstParam, TOperator constructType, TInfoSink& sink, TSymbolTable& symTable, TType& t) : unionArray(cUnion), type(t),
+    TConstTraverser(ConstantUnion* cUnion, bool singleConstParam, TOperator constructType, TInfoSink& sink, TSymbolTable& symTable, TType& t) : unionArray(cUnion), type(t),
         constructorType(constructType), singleConstantParam(singleConstParam), infoSink(sink), symbolTable(symTable), error(false), isMatrix(false), matrixSize(0)
 	{
 		index = 0;
@@ -31,7 +31,7 @@ protected:
 	bool visitBranch(Visit visit, TIntermBranch*);
 
     int index;
-    constUnion *unionArray;
+    ConstantUnion *unionArray;
     TType type;
     TOperator constructorType;
     bool singleConstantParam;
@@ -140,7 +140,7 @@ bool TConstTraverser::visitSelection(Visit visit, TIntermSelection* node)
 
 void TConstTraverser::visitConstantUnion(TIntermConstantUnion* node)
 {
-    constUnion* leftUnionArray = unionArray;
+    ConstantUnion* leftUnionArray = unionArray;
     int instanceSize = type.getObjectSize();
 
     if (index >= instanceSize)
@@ -149,7 +149,7 @@ void TConstTraverser::visitConstantUnion(TIntermConstantUnion* node)
     if (!singleConstantParam) {
         int size = node->getType().getObjectSize();
     
-        constUnion *rightUnionArray = node->getUnionArrayPointer();
+        ConstantUnion *rightUnionArray = node->getUnionArrayPointer();
         for (int i=0; i < size; i++) {
             if (index >= instanceSize)
                 return;
@@ -159,7 +159,7 @@ void TConstTraverser::visitConstantUnion(TIntermConstantUnion* node)
         }
     } else {
         int totalSize = index + size;
-        constUnion *rightUnionArray = node->getUnionArrayPointer();
+        ConstantUnion *rightUnionArray = node->getUnionArrayPointer();
         if (!isMatrix) {
             int count = 0;
             for (int i = index; i < totalSize; i++) {
@@ -212,7 +212,7 @@ bool TConstTraverser::visitBranch(Visit visit, TIntermBranch* node)
 // Individual functions can be initialized to 0 to skip processing of that
 // type of node.  It's children will still be processed.
 //
-bool TIntermediate::parseConstTree(TSourceLoc line, TIntermNode* root, constUnion* unionArray, TOperator constructorType, TSymbolTable& symbolTable, TType t, bool singleConstantParam)
+bool TIntermediate::parseConstTree(TSourceLoc line, TIntermNode* root, ConstantUnion* unionArray, TOperator constructorType, TSymbolTable& symbolTable, TType t, bool singleConstantParam)
 {
     if (root == 0)
         return false;

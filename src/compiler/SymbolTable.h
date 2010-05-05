@@ -81,17 +81,17 @@ public:
 
     virtual void dump(TInfoSink &infoSink) const;
 
-    constUnion* getConstPointer()
+    ConstantUnion* getConstPointer()
     { 
         if (!unionArray)
-            unionArray = new constUnion[type.getObjectSize()];
+            unionArray = new ConstantUnion[type.getObjectSize()];
 
         return unionArray;
     }
 
-    constUnion* getConstPointer() const { return unionArray; }
+    ConstantUnion* getConstPointer() const { return unionArray; }
 
-    void shareConstPointer( constUnion *constArray)
+    void shareConstPointer( ConstantUnion *constArray)
     {
         delete unionArray;
         unionArray = constArray;  
@@ -104,7 +104,7 @@ protected:
     bool userType;
     // we are assuming that Pool Allocator will free the memory allocated to unionArray
     // when this object is destroyed
-    constUnion *unionArray;
+    ConstantUnion *unionArray;
     TType *arrayInformationType;  // this is used for updating maxArraySize in all the references to a given symbol
 };
 

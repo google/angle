@@ -115,7 +115,7 @@ void TOutputGLSL::visitConstantUnion(TIntermConstantUnion* node)
         out << getTypeName(type) << "(";
     for (int i = 0; i < size; ++i)
     {
-        const constUnion& data = node->getUnionArrayPointer()[i];
+        const ConstantUnion& data = node->getUnionArrayPointer()[i];
         switch (data.getType())
         {
             case EbtFloat: out << data.getFConst(); break;
@@ -178,7 +178,7 @@ bool TOutputGLSL::visitBinary(Visit visit, TIntermBinary* node)
                     TIntermConstantUnion* element = (*sit)->getAsConstantUnion();
                     ASSERT(element->getBasicType() == EbtInt);
                     ASSERT(element->getNominalSize() == 1);
-                    const constUnion& data = element->getUnionArrayPointer()[0];
+                    const ConstantUnion& data = element->getUnionArrayPointer()[0];
                     ASSERT(data.getType() == EbtInt);
                     switch (data.getIConst())
                     {

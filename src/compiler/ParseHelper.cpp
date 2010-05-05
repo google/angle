@@ -951,7 +951,7 @@ bool TParseContext::executeInitializer(TSourceLoc line, TString& identifier, TPu
             return true;
         }
         if (initializer->getAsConstantUnion()) { 
-            constUnion* unionArray = variable->getConstPointer();
+            ConstantUnion* unionArray = variable->getConstPointer();
 
             if (type.getObjectSize() == 1 && type.getBasicType() != EbtStruct) {
                 *unionArray = (initializer->getAsConstantUnion()->getUnionArrayPointer())[0];
@@ -962,7 +962,7 @@ bool TParseContext::executeInitializer(TSourceLoc line, TString& identifier, TPu
             const TSymbol* symbol = symbolTable.find(initializer->getAsSymbolNode()->getSymbol());
             const TVariable* tVar = static_cast<const TVariable*>(symbol);
 
-            constUnion* constArray = tVar->getConstPointer();
+            ConstantUnion* constArray = tVar->getConstPointer();
             variable->shareConstPointer(constArray);
         } else {
             error(line, " cannot assign to", "=", "'%s'", variable->getType().getCompleteString().c_str());
@@ -1095,7 +1095,7 @@ TIntermTyped* TParseContext::foldConstConstructor(TIntermAggregate* aggrNode, co
     aggrNode->setType(type);
     if (canBeFolded) {
         bool returnVal = false;
-        constUnion* unionArray = new constUnion[type.getObjectSize()];
+        ConstantUnion* unionArray = new ConstantUnion[type.getObjectSize()];
         if (aggrNode->getSequence().size() == 1)  {
             returnVal = intermediate.parseConstTree(aggrNode->getLine(), aggrNode, unionArray, aggrNode->getOp(), symbolTable,  type, true);
         }
@@ -1208,12 +1208,12 @@ TIntermTyped* TParseContext::addConstVectorNode(TVectorFields& fields, TIntermTy
     TIntermTyped* typedNode;
     TIntermConstantUnion* tempConstantNode = node->getAsConstantUnion();
 
-    constUnion *unionArray;
+    ConstantUnion *unionArray;
     if (tempConstantNode) {
         unionArray = tempConstantNode->getUnionArrayPointer();
 
         if (!unionArray) {  // this error message should never be raised
-            infoSink.info.message(EPrefixInternalError, "constUnion not initialized in addConstVectorNode function", line);
+            infoSink.info.message(EPrefixInternalError, "ConstantUnion not initialized in addConstVectorNode function", line);
             recover();
 
             return node;
@@ -1225,7 +1225,7 @@ TIntermTyped* TParseContext::addConstVectorNode(TVectorFields& fields, TIntermTy
         return 0;
     }
 
-    constUnion* constArray = new constUnion[fields.num];
+    ConstantUnion* constArray = new ConstantUnion[fields.num];
 
     for (int i = 0; i < fields.num; i++) {
         if (fields.offsets[i] >= node->getType().getObjectSize()) {
@@ -1259,7 +1259,7 @@ TIntermTyped* TParseContext::addConstMatrixNode(int index, TIntermTyped* node, T
     }
 
     if (tempConstantNode) {
-         constUnion* unionArray = tempConstantNode->getUnionArrayPointer();
+         ConstantUnion* unionArray = tempConstantNode->getUnionArrayPointer();
          int size = tempConstantNode->getType().getNominalSize();
          typedNode = intermediate.addConstantUnion(&unionArray[size*index], tempConstantNode->getType(), line);
     } else {
@@ -1295,7 +1295,7 @@ TIntermTyped* TParseContext::addConstArrayNode(int index, TIntermTyped* node, TS
     int arrayElementSize = arrayElementType.getObjectSize();
 
     if (tempConstantNode) {
-         constUnion* unionArray = tempConstantNode->getUnionArrayPointer();
+         ConstantUnion* unionArray = tempConstantNode->getUnionArrayPointer();
          typedNode = intermediate.addConstantUnion(&unionArray[arrayElementSize * index], tempConstantNode->getType(), line);
     } else {
         error(line, "Cannot offset into the array", "Error", "");
@@ -1330,7 +1330,7 @@ TIntermTyped* TParseContext::addConstStruct(TString& identifier, TIntermTyped* n
     }
 
     if (tempConstantNode) {
-         constUnion* constArray = tempConstantNode->getUnionArrayPointer();
+         ConstantUnion* constArray = tempConstantNode->getUnionArrayPointer();
 
          typedNode = intermediate.addConstantUnion(constArray+instanceSize, tempConstantNode->getType(), line); // type will be changed in the calling function
     } else {

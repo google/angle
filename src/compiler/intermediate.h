@@ -314,14 +314,14 @@ protected:
 
 class TIntermConstantUnion : public TIntermTyped {
 public:
-    TIntermConstantUnion(constUnion *unionPointer, const TType& t) : TIntermTyped(t), unionArrayPointer(unionPointer) { }
-    constUnion* getUnionArrayPointer() const { return unionArrayPointer; }
-    void setUnionArrayPointer(constUnion *c) { unionArrayPointer = c; }
+    TIntermConstantUnion(ConstantUnion *unionPointer, const TType& t) : TIntermTyped(t), unionArrayPointer(unionPointer) { }
+    ConstantUnion* getUnionArrayPointer() const { return unionArrayPointer; }
+    void setUnionArrayPointer(ConstantUnion *c) { unionArrayPointer = c; }
     virtual TIntermConstantUnion* getAsConstantUnion()  { return this; }
     virtual void traverse(TIntermTraverser* );
     virtual TIntermTyped* fold(TOperator, TIntermTyped*, TInfoSink&);
 protected:
-    constUnion *unionArrayPointer;
+    ConstantUnion *unionArrayPointer;
 };
 
 //
