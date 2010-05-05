@@ -26,8 +26,6 @@ Display::Display(HDC deviceContext) : mDc(deviceContext)
 
     mAdapter = D3DADAPTER_DEFAULT;
     mDeviceType = D3DDEVTYPE_HAL;
-
-    mSceneStarted = false;
 }
 
 Display::~Display()
@@ -283,6 +281,7 @@ egl::Surface *Display::createWindowSurface(HWND window, EGLConfig config)
 
         if (mDevice)
         {
+            mSceneStarted = false;
             mDevice->GetSwapChain(0, &swapChain);
             mDevice->GetDepthStencilSurface(&depthStencilSurface);
         }
@@ -327,7 +326,7 @@ egl::Surface *Display::createWindowSurface(HWND window, EGLConfig config)
 
             if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
             {
-                ERR("Could not resent presentation parameters for device. Out of memory.");
+                ERR("Could not reset presentation parameters for device. Out of memory.");
                 return error(EGL_BAD_ALLOC, (egl::Surface*)NULL);
             }
 
@@ -335,6 +334,7 @@ egl::Surface *Display::createWindowSurface(HWND window, EGLConfig config)
 
             if (mDevice)
             {
+                mSceneStarted = false;
                 mDevice->GetSwapChain(0, &swapChain);
                 mDevice->GetDepthStencilSurface(&depthStencilSurface);
             }
