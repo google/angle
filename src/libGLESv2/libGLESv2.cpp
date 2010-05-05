@@ -4031,7 +4031,7 @@ void __stdcall glTexParameterfv(GLenum target, GLenum pname, const GLfloat* para
 
 void __stdcall glTexParameteri(GLenum target, GLenum pname, GLint param)
 {
-    TRACE("(GLenum target = 0x%X, GLenum pname = 0x%X, GLfloat param = %f)", target, pname, param);
+    TRACE("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint param = %d)", target, pname, param);
 
     try
     {
