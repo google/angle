@@ -149,7 +149,6 @@ struct NormalizedDefaultValues
 // static const bool identity: true if this is an identity transform (with no widening)
 // static const std::size_t finalSize: number of bytes per output vertex
 // static void convertArray(const void *in, std::size_t stride, std::size_t n, void *out): convert an array of vertices. Input may be strided, but output will be unstrided.
-// static void convertIndexed(const void *in, std::size_t stride, std::size_t n, const Index *indices, void *out): convert an indexed array of vertices. Input may be strided, but output will be unstrided.
 
 template <class InT, class WidenRule, class Converter, class DefaultValueRule = SimpleDefaultValues<InT> >
 struct VertexDataConverter
@@ -178,25 +177,6 @@ struct VertexDataConverter
     static void convertArray(const void *in, std::size_t stride, std::size_t n, void *out)
     {
         return convertArray(static_cast<const InputType*>(in), stride, n, static_cast<OutputType*>(out));
-    }
-
-    static void convertIndexed(const InputType *in, std::size_t stride, Index minIndex, std::size_t n, const Index *indices, OutputType *out)
-    {
-        for (std::size_t i = 0; i < n; i++)
-        {
-            const InputType *ein = pointerAddBytes(in, (indices[i] - minIndex) * stride);
-            OutputType *eout = pointerAddBytes(out, (indices[i] - minIndex) * finalSize);
-
-            copyComponent(eout, ein, 0, static_cast<OutputType>(DefaultValueRule::zero()));
-            copyComponent(eout, ein, 1, static_cast<OutputType>(DefaultValueRule::zero()));
-            copyComponent(eout, ein, 2, static_cast<OutputType>(DefaultValueRule::zero()));
-            copyComponent(eout, ein, 3, static_cast<OutputType>(DefaultValueRule::one()));
-        }
-    }
-
-    static void convertIndexed(const void *in, std::size_t stride, Index minIndex, std::size_t n, const Index *indices, void *out)
-    {
-        convertIndexed(static_cast<const InputType*>(in), stride, minIndex, n, indices, static_cast<OutputType*>(out));
     }
 
   private:

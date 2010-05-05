@@ -32,7 +32,6 @@ class FormatConverterFactory
 
         formatConverter.identity = gl::VertexDataConverter<InputType, WidenRule<IncomingWidth>, ElementConverter, DefaultValueRule>::identity;
         formatConverter.outputVertexSize = gl::VertexDataConverter<InputType, WidenRule<IncomingWidth>, ElementConverter, DefaultValueRule>::finalSize;
-        formatConverter.convertIndexed = gl::VertexDataConverter<InputType, WidenRule<IncomingWidth>, ElementConverter, DefaultValueRule>::convertIndexed;
         formatConverter.convertArray = gl::VertexDataConverter<InputType, WidenRule<IncomingWidth>, ElementConverter, DefaultValueRule>::convertArray;
 
         return formatConverter;
@@ -66,6 +65,14 @@ Dx9BackEnd::~Dx9BackEnd()
     mDevice->Release();
 }
 
+bool Dx9BackEnd::supportIntIndices()
+{
+    D3DCAPS9 caps;
+    mDevice->GetDeviceCaps(&caps);
+
+    return (caps.MaxVertexIndex >= (1 << 16));
+}
+
 TranslatedVertexBuffer *Dx9BackEnd::createVertexBuffer(std::size_t size)
 {
     return new Dx9VertexBuffer(mDevice, size);
@@ -76,9 +83,9 @@ TranslatedVertexBuffer *Dx9BackEnd::createVertexBufferForStrideZero(std::size_t 
     return new Dx9VertexBufferZeroStrideWorkaround(mDevice, size);
 }
 
-TranslatedIndexBuffer *Dx9BackEnd::createIndexBuffer(std::size_t size)
+TranslatedIndexBuffer *Dx9BackEnd::createIndexBuffer(std::size_t size, GLenum type)
 {
-    return new Dx9IndexBuffer(mDevice, size);
+    return new Dx9IndexBuffer(mDevice, size, type);
 }
 
 // Mapping from OpenGL-ES vertex attrib type to D3D decl type:
@@ -325,10 +332,14 @@ void *Dx9BackEnd::Dx9VertexBufferZeroStrideWorkaround::streamingMap(std::size_t 
     return mapPtr;
 }
 
-Dx9BackEnd::Dx9IndexBuffer::Dx9IndexBuffer(IDirect3DDevice9 *device, std::size_t size)
+Dx9BackEnd::Dx9IndexBuffer::Dx9IndexBuffer(IDirect3DDevice9 *device, std::size_t size, GLenum type)
     : TranslatedIndexBuffer(size)
 {
-    HRESULT hr = device->CreateIndexBuffer(size, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &mIndexBuffer, NULL);
+    ASSERT(type == GL_UNSIGNED_SHORT || type == GL_UNSIGNED_INT);
+
+    D3DFORMAT format = (type == GL_UNSIGNED_SHORT) ? D3DFMT_INDEX16 : D3DFMT_INDEX32;
+
+    HRESULT hr = device->CreateIndexBuffer(size, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, format, D3DPOOL_DEFAULT, &mIndexBuffer, NULL);
     if (hr != S_OK)
     {
         ERR("Out of memory allocating an index buffer of size %lu.", size);

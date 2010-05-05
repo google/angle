@@ -40,51 +40,8 @@ class VertexDataManager
                              GLsizei count,
                              TranslatedAttribute *outAttribs);
 
-    GLenum preRenderValidate(const TranslatedIndexData &indexInfo,
-                             TranslatedAttribute* outAttribs);
-
   private:
-    std::bitset<MAX_VERTEX_ATTRIBS> activeAttribs();
-
-    class TranslationHelper
-    {
-      public:
-        virtual ~TranslationHelper() { }
-
-        virtual void translate(const FormatConverter &converter, GLsizei stride, const void *source, void *dest) = 0;
-    };
-
-    class ArrayTranslationHelper : public TranslationHelper
-    {
-      public:
-        ArrayTranslationHelper(GLint first, GLsizei count);
-
-        void translate(const FormatConverter &converter, GLsizei stride, const void *source, void *dest);
-
-      private:
-        GLint mFirst;
-        GLsizei mCount;
-    };
-
-    class IndexedTranslationHelper : public TranslationHelper
-    {
-      public:
-        IndexedTranslationHelper(const Index *indices, Index minIndex, GLsizei count);
-
-        void translate(const FormatConverter &converter, GLint stride, const void *source, void *dest);
-
-      private:
-        const Index *mIndices;
-        Index mMinIndex;
-        GLsizei mCount;
-    };
-
-    GLenum internalPreRenderValidate(const AttributeState *attribs,
-                                     const std::bitset<MAX_VERTEX_ATTRIBS> &activeAttribs,
-                                     Index minIndex,
-                                     Index maxIndex,
-                                     TranslationHelper *translator,
-                                     TranslatedAttribute *outAttribs);
+    std::bitset<MAX_VERTEX_ATTRIBS> getActiveAttribs() const;
 
     void reloadCurrentValues(const AttributeState *attribs, std::size_t *offset);
 

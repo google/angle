@@ -69,9 +69,6 @@ const float ALIASED_LINE_WIDTH_RANGE_MAX = 1.0f;
 const float ALIASED_POINT_SIZE_RANGE_MIN = 1.0f;
 const float ALIASED_POINT_SIZE_RANGE_MAX = 1.0f;
 
-// Because indices are accessed internally, we convert them to a common format.
-typedef unsigned short Index;
-
 enum SamplerType
 {
     SAMPLER_2D,
@@ -376,13 +373,14 @@ class Context
     const char *getPixelShaderProfile();
     const char *getVertexShaderProfile();
 
+    const char *getExtensionString() const;
+
     Blit *getBlitter() { return mBlit; }
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Context);
 
     void lookupAttributeMapping(TranslatedAttribute *attributes);
-    const Index *adjustIndexPointer(const void *indices);
 
     void detachBuffer(GLuint buffer);
     void detachTexture(GLuint texture);
@@ -422,6 +420,9 @@ class Context
 
     typedef std::map<GLuint, Renderbuffer*> RenderbufferMap;
     RenderbufferMap mRenderbufferMap;
+
+    void initExtensionString();
+    std::string mExtensionString;
 
     BufferBackEnd *mBufferBackEnd;
     VertexDataManager *mVertexDataManager;

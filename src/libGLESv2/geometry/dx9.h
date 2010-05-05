@@ -23,9 +23,11 @@ class Dx9BackEnd : public BufferBackEnd
     explicit Dx9BackEnd(IDirect3DDevice9 *d3ddevice);
     ~Dx9BackEnd();
 
+    virtual bool supportIntIndices();
+
     virtual TranslatedVertexBuffer *createVertexBuffer(std::size_t size);
     virtual TranslatedVertexBuffer *createVertexBufferForStrideZero(std::size_t size);
-    virtual TranslatedIndexBuffer *createIndexBuffer(std::size_t size);
+    virtual TranslatedIndexBuffer *createIndexBuffer(std::size_t size, GLenum type);
     virtual FormatConverter getFormatConverter(GLenum type, std::size_t size, bool normalize);
 
     virtual bool validateStream(GLenum type, std::size_t size, std::size_t stride, std::size_t offset) const;
@@ -70,7 +72,7 @@ class Dx9BackEnd : public BufferBackEnd
     class Dx9IndexBuffer : public TranslatedIndexBuffer
     {
       public:
-        Dx9IndexBuffer(IDirect3DDevice9 *device, std::size_t size);
+        Dx9IndexBuffer(IDirect3DDevice9 *device, std::size_t size, GLenum type);
         virtual ~Dx9IndexBuffer();
 
         IDirect3DIndexBuffer9 *getBuffer() const;

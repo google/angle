@@ -239,6 +239,8 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 
     if (!mHasBeenCurrent)
     {
+        initExtensionString();
+
         mState.viewportX = 0;
         mState.viewportY = 0;
         mState.viewportWidth = surface->getWidth();
@@ -1731,23 +1733,6 @@ void Context::lookupAttributeMapping(TranslatedAttribute *attributes)
     }
 }
 
-// The indices parameter to glDrawElements can have two interpretations:
-// - as a pointer into client memory
-// - as an offset into the current GL_ELEMENT_ARRAY_BUFFER buffer
-// Handle these cases here and return a pointer to the index data.
-const Index *Context::adjustIndexPointer(const void *indices)
-{
-    if (mState.elementArrayBuffer)
-    {
-        Buffer *buffer = getBuffer(mState.elementArrayBuffer);
-        return reinterpret_cast<const Index*>(static_cast<unsigned char*>(buffer->data()) + reinterpret_cast<GLsizei>(indices));
-    }
-    else
-    {
-        return static_cast<const Index*>(indices);
-    }
-}
-
 void Context::applyVertexBuffer(GLint first, GLsizei count)
 {
     TranslatedAttribute translated[MAX_VERTEX_ATTRIBS];
@@ -1763,7 +1748,7 @@ void Context::applyVertexBuffer(const TranslatedIndexData &indexInfo)
 {
     TranslatedAttribute translated[MAX_VERTEX_ATTRIBS];
 
-    mVertexDataManager->preRenderValidate(indexInfo, translated);
+    mVertexDataManager->preRenderValidate(indexInfo.minIndex, indexInfo.maxIndex-indexInfo.minIndex+1, translated);
 
     lookupAttributeMapping(translated);
 
@@ -2256,7 +2241,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void* 
     if (!cullSkipsDraw(mode))
     {
         display->startScene();
-        device->DrawIndexedPrimitive(primitiveType, -(INT)indexInfo.minIndex, indexInfo.minIndex, indexInfo.maxIndex-indexInfo.minIndex+1, indexInfo.offset/sizeof(Index), primitiveCount);
+        device->DrawIndexedPrimitive(primitiveType, -(INT)indexInfo.minIndex, indexInfo.minIndex, indexInfo.maxIndex-indexInfo.minIndex+1, indexInfo.offset/indexInfo.indexSize, primitiveCount);
     }
 }
 
@@ -2573,6 +2558,25 @@ void Context::setVertexAttrib(GLuint index, const GLfloat *values)
     mState.vertexAttribute[index].mCurrentValue[3] = values[3];
 
     mVertexDataManager->dirtyCurrentValues();
+}
+
+void Context::initExtensionString()
+{
+    if (mBufferBackEnd->supportIntIndices())
+    {
+        mExtensionString += "GL_OES_element_index_uint ";
+    }
+
+    std::string::size_type end = mExtensionString.find_last_not_of(' ');
+    if (end != std::string::npos)
+    {
+        mExtensionString.resize(end+1);
+    }
+}
+
+const char *Context::getExtensionString() const
+{
+    return mExtensionString.c_str();
 }
 
 }

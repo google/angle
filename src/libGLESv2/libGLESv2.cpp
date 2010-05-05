@@ -1439,6 +1439,7 @@ void __stdcall glDrawElements(GLenum mode, GLsizei count, GLenum type, const GLv
         {
           case GL_UNSIGNED_BYTE:
           case GL_UNSIGNED_SHORT:
+          case GL_UNSIGNED_INT:
             break;
           default:
             return error(GL_INVALID_ENUM);
@@ -2735,6 +2736,8 @@ const GLubyte* __stdcall glGetString(GLenum name)
 
     try
     {
+        gl::Context *context = gl::getContext();
+
         switch (name)
         {
           case GL_VENDOR:
@@ -2746,7 +2749,7 @@ const GLubyte* __stdcall glGetString(GLenum name)
           case GL_SHADING_LANGUAGE_VERSION:
             return (GLubyte*)"OpenGL ES GLSL ES 1.00 (git-devel "__DATE__ " " __TIME__")";
           case GL_EXTENSIONS:
-            return (GLubyte*)"";
+            return (GLubyte*)((context != NULL) ? context->getExtensionString() : "");
           default:
             return error(GL_INVALID_ENUM, (GLubyte*)NULL);
         }

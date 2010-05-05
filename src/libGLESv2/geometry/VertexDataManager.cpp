@@ -46,27 +46,7 @@ VertexDataManager::~VertexDataManager()
     delete mCurrentValueBuffer;
 }
 
-VertexDataManager::ArrayTranslationHelper::ArrayTranslationHelper(GLint first, GLsizei count)
-    : mFirst(first), mCount(count)
-{
-}
-
-void VertexDataManager::ArrayTranslationHelper::translate(const FormatConverter &converter, GLsizei stride, const void *source, void *dest)
-{
-    converter.convertArray(source, stride, mCount, dest);
-}
-
-VertexDataManager::IndexedTranslationHelper::IndexedTranslationHelper(const Index *indices, Index minIndex, GLsizei count)
-    : mIndices(indices), mMinIndex(minIndex), mCount(count)
-{
-}
-
-void VertexDataManager::IndexedTranslationHelper::translate(const FormatConverter &converter, GLsizei stride, const void *source, void *dest)
-{
-    converter.convertIndexed(source, stride, mMinIndex, mCount, mIndices, dest);
-}
-
-std::bitset<MAX_VERTEX_ATTRIBS> VertexDataManager::activeAttribs()
+std::bitset<MAX_VERTEX_ATTRIBS> VertexDataManager::getActiveAttribs() const
 {
     std::bitset<MAX_VERTEX_ATTRIBS> active;
 
@@ -81,28 +61,11 @@ std::bitset<MAX_VERTEX_ATTRIBS> VertexDataManager::activeAttribs()
 }
 
 GLenum VertexDataManager::preRenderValidate(GLint start, GLsizei count,
-                                            TranslatedAttribute *outAttribs)
+                                            TranslatedAttribute *translated)
 {
-    ArrayTranslationHelper translationHelper(start, count);
+    const AttributeState *attribs = mContext->getVertexAttribBlock();
+    const std::bitset<MAX_VERTEX_ATTRIBS> activeAttribs = getActiveAttribs();
 
-    return internalPreRenderValidate(mContext->getVertexAttribBlock(), activeAttribs(), start, start+count-1, &translationHelper, outAttribs);
-}
-
-GLenum VertexDataManager::preRenderValidate(const TranslatedIndexData &indexInfo,
-                                            TranslatedAttribute *outAttribs)
-{
-    IndexedTranslationHelper translationHelper(indexInfo.indices, indexInfo.minIndex, indexInfo.count);
-
-    return internalPreRenderValidate(mContext->getVertexAttribBlock(), activeAttribs(), indexInfo.minIndex, indexInfo.maxIndex, &translationHelper, outAttribs);
-}
-
-GLenum VertexDataManager::internalPreRenderValidate(const AttributeState *attribs,
-                                                    const std::bitset<MAX_VERTEX_ATTRIBS> &activeAttribs,
-                                                    Index minIndex,
-                                                    Index maxIndex,
-                                                    TranslationHelper *translator,
-                                                    TranslatedAttribute *translated)
-{
     std::bitset<MAX_VERTEX_ATTRIBS> translateOrLift;
 
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
@@ -127,7 +90,7 @@ GLenum VertexDataManager::internalPreRenderValidate(const AttributeState *attrib
             if (attribs[i].mBoundBuffer != 0 && mBackend->getFormatConverter(attribs[i].mType, attribs[i].mSize, attribs[i].mNormalized).identity)
             {
                 std::size_t stride = interpretGlStride(attribs[i]);
-                std::size_t offset = static_cast<std::size_t>(static_cast<const char*>(attribs[i].mPointer) - static_cast<const char*>(NULL)) + stride * minIndex;
+                std::size_t offset = static_cast<std::size_t>(static_cast<const char*>(attribs[i].mPointer) - static_cast<const char*>(NULL)) + stride * start;
 
                 if (mBackend->validateStream(attribs[i].mType, attribs[i].mSize, stride, offset))
                 {
@@ -153,8 +116,6 @@ GLenum VertexDataManager::internalPreRenderValidate(const AttributeState *attrib
     // Handle any attributes needing translation or lifting.
     if (translateOrLift.any())
     {
-        std::size_t count = maxIndex - minIndex + 1;
-
         std::size_t requiredSpace = 0;
 
         for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
@@ -204,9 +165,9 @@ GLenum VertexDataManager::internalPreRenderValidate(const AttributeState *attrib
 
                 size_t inputStride = interpretGlStride(attribs[i]);
 
-                input = static_cast<const char*>(input) + inputStride * minIndex;
+                input = static_cast<const char*>(input) + inputStride * start;
 
-                translator->translate(formatConverter, interpretGlStride(attribs[i]), input, output);
+                formatConverter.convertArray(input, inputStride, count, output);
 
                 mStreamBuffer->unmap();
             }
