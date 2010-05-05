@@ -20,11 +20,12 @@
 namespace egl
 {
 class Display;
+class Config;
 
 class Surface
 {
   public:
-    Surface(Display *display, IDirect3DSwapChain9 *swapChain, IDirect3DSurface9* depthStencil, EGLint configID);
+    Surface(Display *display, IDirect3DSwapChain9 *swapChain, IDirect3DSurface9* depthStencil, const egl::Config *config);
 
     ~Surface();
 
@@ -45,7 +46,7 @@ class Surface
     IDirect3DSurface9 *mRenderTarget;
     IDirect3DSurface9 *mDepthStencil;
 
-    const EGLint mConfigID;        // ID of EGLConfig surface was created with
+    const egl::Config *mConfig;    // EGL config surface was created with
     EGLint mHeight;                // Height of surface
     EGLint mWidth;                 // Width of surface
 //  EGLint horizontalResolution;   // Horizontal dot pitch

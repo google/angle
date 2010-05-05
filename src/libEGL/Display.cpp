@@ -26,6 +26,7 @@ Display::Display(HDC deviceContext) : mDc(deviceContext)
 
     mAdapter = D3DADAPTER_DEFAULT;
     mDeviceType = D3DDEVTYPE_HAL;
+    mSwapInterval = 1;
 }
 
 Display::~Display()
@@ -224,7 +225,7 @@ bool Display::getConfigAttrib(EGLConfig config, EGLint attribute, EGLint *value)
       case EGL_ALPHA_MASK_SIZE:           *value = configuration->mAlphaMaskSize;          break;
       case EGL_COLOR_BUFFER_TYPE:         *value = configuration->mColorBufferType;        break;
       case EGL_RENDERABLE_TYPE:           *value = configuration->mRenderableType;         break;
-      case EGL_MATCH_NATIVE_PIXMAP:       *value = false; UNIMPLEMENTED();                break;
+      case EGL_MATCH_NATIVE_PIXMAP:       *value = false; UNIMPLEMENTED();                 break;
       case EGL_CONFORMANT:                *value = configuration->mConformant;             break;
       default:
         return false;
@@ -233,9 +234,9 @@ bool Display::getConfigAttrib(EGLConfig config, EGLint attribute, EGLint *value)
     return true;
 }
 
-egl::Surface *Display::createWindowSurface(HWND window, EGLConfig config)
+Surface *Display::createWindowSurface(HWND window, EGLConfig config)
 {
-    const egl::Config *configuration = mConfigSet.get(config);
+    const Config *configuration = mConfigSet.get(config);
 
     D3DPRESENT_PARAMETERS presentParameters = {0};
 
@@ -249,7 +250,7 @@ egl::Surface *Display::createWindowSurface(HWND window, EGLConfig config)
     presentParameters.hDeviceWindow = window;
     presentParameters.MultiSampleQuality = 0;                  // FIXME: Unimplemented
     presentParameters.MultiSampleType = D3DMULTISAMPLE_NONE;   // FIXME: Unimplemented
-    presentParameters.PresentationInterval = configuration->mMinSwapInterval;
+    presentParameters.PresentationInterval = getPresentInterval(configuration, true);
     presentParameters.SwapEffect = D3DSWAPEFFECT_COPY;
     presentParameters.Windowed = TRUE;   // FIXME
 
@@ -345,7 +346,7 @@ egl::Surface *Display::createWindowSurface(HWND window, EGLConfig config)
 
     if (swapChain)
     {
-        surface = new Surface(this, swapChain, depthStencilSurface, configuration->mConfigID);
+        surface = new Surface(this, swapChain, depthStencilSurface, configuration);
         mSurfaceSet.insert(surface);
 
         swapChain->Release();
@@ -407,6 +408,30 @@ bool Display::hasExistingWindowSurface(HWND window)
     }
 
     return false;
+}
+
+void Display::setSwapInterval(GLint interval)
+{
+    mSwapInterval = interval;
+}
+
+DWORD Display::getPresentInterval(const egl::Config *config, bool maximumRate)
+{
+    GLint interval = maximumRate ? 0 : mSwapInterval;
+    interval = interval < config->mMinSwapInterval ? config->mMinSwapInterval : interval;
+    interval = interval > config->mMaxSwapInterval ? config->mMaxSwapInterval : interval;
+
+    switch(interval)
+    {
+      case 0: return D3DPRESENT_INTERVAL_IMMEDIATE;
+      case 1: return D3DPRESENT_INTERVAL_ONE;
+      case 2: return D3DPRESENT_INTERVAL_TWO;
+      case 3: return D3DPRESENT_INTERVAL_THREE;
+      case 4: return D3DPRESENT_INTERVAL_FOUR;
+      default: UNREACHABLE();
+    }
+
+    return D3DPRESENT_INTERVAL_DEFAULT;
 }
 
 IDirect3DDevice9 *Display::getDevice()

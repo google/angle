@@ -746,7 +746,7 @@ EGLBoolean __stdcall eglSwapInterval(EGLDisplay dpy, EGLint interval)
             return EGL_FALSE;
         }
 
-    //    UNIMPLEMENTED();   // FIXME
+        display->setSwapInterval(interval);
 
         return success(EGL_TRUE);
     }

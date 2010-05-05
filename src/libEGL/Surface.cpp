@@ -17,8 +17,8 @@
 
 namespace egl
 {
-Surface::Surface(Display *display, IDirect3DSwapChain9 *swapChain, IDirect3DSurface9 *depthStencil, EGLint configID) 
-    : mDisplay(display), mSwapChain(swapChain), mConfigID(configID), mDepthStencil(depthStencil)
+Surface::Surface(Display *display, IDirect3DSwapChain9 *swapChain, IDirect3DSurface9 *depthStencil, const Config *config) 
+    : mDisplay(display), mSwapChain(swapChain), mDepthStencil(depthStencil), mConfig(config)
 {
     mBackBuffer = NULL;
     mRenderTarget = NULL;
@@ -150,7 +150,7 @@ void Surface::swap()
         texture->Release();
 
         mDisplay->endScene();
-        result = mSwapChain->Present(NULL, NULL, NULL, NULL, D3DPRESENT_INTERVAL_IMMEDIATE | D3DPRESENT_DONOTWAIT);   // FIXME: Get the swap interval from the associated Display
+        result = mSwapChain->Present(NULL, NULL, NULL, NULL, mDisplay->getPresentInterval(mConfig, false));
 
         if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY || result == D3DERR_DRIVERINTERNALERROR)
         {
