@@ -43,7 +43,8 @@ TString getTypeName(const TType& type)
 TOutputGLSL::TOutputGLSL(TInfoSinkBase& objSink)
     : TIntermTraverser(true, true, true),
       mObjSink(objSink),
-      mWriteFullSymbol(false)
+      mWriteFullSymbol(false),
+      mScopeSequences(false)
 {
 }
 
@@ -62,6 +63,50 @@ void TOutputGLSL::writeTriplet(Visit visit, const char* preStr, const char* inSt
     {
         out << postStr;
     }
+}
+
+const ConstantUnion* TOutputGLSL::writeConstantUnion(const TType& type, const ConstantUnion* pConstUnion)
+{
+    TInfoSinkBase& out = objSink();
+
+    if (type.getBasicType() == EbtStruct)
+    {
+        out << type.getTypeName() << "(";
+        const TTypeList* structure = type.getStruct();
+        ASSERT(structure != NULL);
+        for (size_t i = 0; i < structure->size(); ++i)
+        {
+            const TType* fieldType = (*structure)[i].type;
+            ASSERT(fieldType != NULL);
+            pConstUnion = writeConstantUnion(*fieldType, pConstUnion);
+            if (i != structure->size() - 1) out << ", ";
+        }
+        out << ")";
+    }
+    else
+    {
+        int size = type.getObjectSize();
+        bool writeType = size > 1;
+        if (writeType) out << getTypeName(type) << "(";
+        for (int i = 0; i < size; ++i, ++pConstUnion)
+        {
+            switch (pConstUnion->getType())
+            {
+                case EbtFloat: out << pConstUnion->getFConst(); break;
+                case EbtInt: out << pConstUnion->getIConst(); break;
+                case EbtBool:
+                    if (pConstUnion->getBConst())
+                        out << "true";
+                    else
+                        out << "false";
+                    break;
+                default: UNREACHABLE();
+            }
+            if (i != size - 1) out << ", ";
+        }
+        if (writeType) out << ")";
+    }
+    return pConstUnion;
 }
 
 void TOutputGLSL::visitSymbol(TIntermSymbol* node)
@@ -106,28 +151,7 @@ void TOutputGLSL::visitSymbol(TIntermSymbol* node)
 
 void TOutputGLSL::visitConstantUnion(TIntermConstantUnion* node)
 {
-    TInfoSinkBase& out = objSink();
-
-    const TType& type = node->getType();
-    int size = type.getObjectSize();
-    bool writeType = (size > 1) || (type.getBasicType() == EbtStruct);
-    if (writeType)
-        out << getTypeName(type) << "(";
-    for (int i = 0; i < size; ++i)
-    {
-        const ConstantUnion& data = node->getUnionArrayPointer()[i];
-        switch (data.getType())
-        {
-            case EbtFloat: out << data.getFConst(); break;
-            case EbtInt: out << data.getIConst(); break;
-            case EbtBool: out << data.getBConst(); break;
-            default: UNREACHABLE(); break;
-        }
-        if (i != size - 1)
-            out << ", ";
-    }
-    if (writeType)
-        out << ")";
+    writeConstantUnion(node->getType(), node->getUnionArrayPointer());
 }
 
 bool TOutputGLSL::visitBinary(Visit visit, TIntermBinary* node)
@@ -331,13 +355,13 @@ bool TOutputGLSL::visitSelection(Visit visit, TIntermSelection* node)
         {
             node->getTrueBlock()->traverse(this);
         }
-        out << "}";
+        out << ";\n}";
 
         if (node->getFalseBlock())
         {
             out << " else {\n";
             node->getFalseBlock()->traverse(this);
-            out << "}";
+            out << ";\n}";
         }
         decrementDepth();
         out << "\n";
@@ -347,11 +371,26 @@ bool TOutputGLSL::visitSelection(Visit visit, TIntermSelection* node)
 
 bool TOutputGLSL::visitAggregate(Visit visit, TIntermAggregate* node)
 {
+    bool visitChildren = true;
     TInfoSinkBase& out = objSink();
     switch (node->getOp())
     {
         case EOpSequence:
-            writeTriplet(visit, NULL, ";\n", ";\n");
+            if (visit == PreVisit)
+            {
+                if (mScopeSequences)
+                    out << "{\n";
+            }
+            else if (visit == InVisit)
+            {
+                out << ";\n";
+            }
+            else if (visit == PostVisit)
+            {
+                out << ";\n";
+                if (mScopeSequences)
+                    out << "}\n";
+            }
             break;
         case EOpPrototype:
             // Function declaration.
@@ -373,26 +412,47 @@ bool TOutputGLSL::visitAggregate(Visit visit, TIntermAggregate* node)
                 mWriteFullSymbol = false;
             }
             break;
-        case EOpFunction:
+        case EOpFunction: {
             // Function definition.
-            if (visit == PreVisit)
+            TString returnType = getTypeName(node->getType());
+            TString functionName = TFunction::unmangleName(node->getName());
+            out << returnType << " " << functionName;
+
+            // Function definition node contains one or two children nodes
+            // representing function parameters and function body. The latter
+            // is not present in case of empty function bodies.
+            const TIntermSequence& sequence = node->getSequence();
+            ASSERT((sequence.size() == 1) || (sequence.size() == 2));
+            TIntermSequence::const_iterator seqIter = sequence.begin();
+
+            // Traverse function parameters.
+            TIntermAggregate* params = (*seqIter)->getAsAggregate();
+            ASSERT(params != NULL);
+            ASSERT(params->getOp() == EOpParameters);
+            params->traverse(this);
+
+            // Traverse function body.
+            TIntermAggregate* body = ++seqIter != sequence.end() ?
+                (*seqIter)->getAsAggregate() : NULL;
+            if (body != NULL)
             {
-                TString returnType = getTypeName(node->getType());
-                TString functionName = TFunction::unmangleName(node->getName());
-                out << returnType << " " << functionName;
+                ASSERT(body->getOp() == EOpSequence);
+                // Sequences are scoped with {} inside function body so that
+                // variables are declared in the correct scope.
+                mScopeSequences = true;
+                body->traverse(this);
+                mScopeSequences = false;
             }
-            else if (visit == InVisit)
+            else
             {
-                // Called after traversing function arguments (EOpParameters)
-                // but before traversing function body (EOpSequence).
-                out << "{\n";
+                // Empty function body.
+                out << "{}\n";
             }
-            else if (visit == PostVisit)
-            {
-                // Called after traversing function body (EOpSequence).
-                out << "}\n";
-            }
+ 
+            // Fully processed; no need to visit children.
+            visitChildren = false;
             break;
+        }
         case EOpFunctionCall:
             // Function call.
             if (visit == PreVisit)
@@ -503,7 +563,7 @@ bool TOutputGLSL::visitAggregate(Visit visit, TIntermAggregate* node)
 
         default: UNREACHABLE(); break;
     }
-    return true;
+    return visitChildren;
 }
 
 bool TOutputGLSL::visitLoop(Visit visit, TIntermLoop* node)

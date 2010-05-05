@@ -18,6 +18,7 @@ public:
 protected:
     TInfoSinkBase& objSink() { return mObjSink; }
     void writeTriplet(Visit visit, const char* preStr, const char* inStr, const char* postStr);
+    const ConstantUnion* writeConstantUnion(const TType& type, const ConstantUnion* pConstUnion);
 
     virtual void visitSymbol(TIntermSymbol* node);
     virtual void visitConstantUnion(TIntermConstantUnion* node);
@@ -31,6 +32,7 @@ protected:
 private:
     TInfoSinkBase& mObjSink;
     bool mWriteFullSymbol;
+    bool mScopeSequences;
 
     // Structs are declared as the tree is traversed. This set contains all
     // the structs already declared. It is maintained so that a struct is
