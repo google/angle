@@ -2164,7 +2164,7 @@ void Context::clear(GLbitfield mask)
             device->Clear(0, NULL, D3DCLEAR_ZBUFFER, color, depth, stencil);
         }
     }
-    else
+    else if (flags)
     {
         device->Clear(0, NULL, flags, color, depth, stencil);
     }
