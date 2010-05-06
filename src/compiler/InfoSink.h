@@ -11,6 +11,11 @@
 
 #include "compiler/Common.h"
 
+// Returns the fractional part of the given floating-point number.
+inline float fractionalPart(float f) {
+  return fmodf(f, 1.0f);
+}
+
 //
 // TPrefixType is used to centralize how info log messages start.
 // See below.
@@ -44,10 +49,16 @@ public:
     TInfoSinkBase& operator<<(const char* s)           { append(s); return *this; }
     TInfoSinkBase& operator<<(int n)                   { append(String(n)); return *this; }
     TInfoSinkBase& operator<<(const unsigned int n)    { append(String(n)); return *this; }
-    TInfoSinkBase& operator<<(float n)                 { char buf[40]; 
-                                                     sprintf(buf, "%.8g", n);
-                                                     append(buf); 
-                                                     return *this; }
+    TInfoSinkBase& operator<<(float n) {
+        char buf[40];
+        // Make sure that at least one decimal point is written. If a number
+        // does not have a fractional part, %g does not written the decimal
+        // portion which gets interpreted as integer by the compiler.
+        const char* format = fractionalPart(n) == 0.0f ? "%.1f" : "%.8g";
+        sprintf(buf, format, n);
+        append(buf); 
+        return *this;
+    }
     TInfoSinkBase& operator+(const TPersistString& t)  { append(t); return *this; }
     TInfoSinkBase& operator+(const TString& t)         { append(t); return *this; }
     TInfoSinkBase& operator<<(const TString& t)        { append(t); return *this; }
