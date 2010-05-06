@@ -13,7 +13,8 @@
 
 // Returns the fractional part of the given floating-point number.
 inline float fractionalPart(float f) {
-  return fmodf(f, 1.0f);
+  float intPart = 0.0f;
+  return modff(f, &intPart);
 }
 
 //
