@@ -38,13 +38,21 @@ TString getTypeName(const TType& type)
     }
     return TString(out.c_str());
 }
+
+TString arrayBrackets(const TType& type)
+{
+    ASSERT(type.isArray());
+    TInfoSinkBase out;
+    out << "[" << type.getArraySize() << "]";
+    return TString(out.c_str());
+}
 }  // namespace
 
 TOutputGLSL::TOutputGLSL(TInfoSinkBase& objSink)
     : TIntermTraverser(true, true, true),
       mObjSink(objSink),
-      mWriteFullSymbol(false),
-      mScopeSequences(false)
+      mScopeSequences(false),
+      mDeclaringVariables(false)
 {
 }
 
@@ -65,7 +73,70 @@ void TOutputGLSL::writeTriplet(Visit visit, const char* preStr, const char* inSt
     }
 }
 
-const ConstantUnion* TOutputGLSL::writeConstantUnion(const TType& type, const ConstantUnion* pConstUnion)
+void TOutputGLSL::writeVariableType(const TType& type)
+{
+    TInfoSinkBase& out = objSink();
+    TQualifier qualifier = type.getQualifier();
+    // TODO(alokp): Validate qualifier for variable declarations.
+    if ((qualifier != EvqTemporary) && (qualifier != EvqGlobal))
+        out << type.getQualifierString() << " ";
+
+    // Declare the struct if we have not done so already.
+    if ((type.getBasicType() == EbtStruct) &&
+        (mDeclaredStructs.find(type.getTypeName()) == mDeclaredStructs.end()))
+    {
+        out << "struct " << type.getTypeName() << "{\n";
+        const TTypeList* structure = type.getStruct();
+        ASSERT(structure != NULL);
+        for (size_t i = 0; i < structure->size(); ++i)
+        {
+            const TType* fieldType = (*structure)[i].type;
+            ASSERT(fieldType != NULL);
+            out << getTypeName(*fieldType) << " " << fieldType->getFieldName();
+            if (fieldType->isArray())
+                out << arrayBrackets(*fieldType);
+            out << ";\n";
+        }
+        out << "}";
+        mDeclaredStructs.insert(type.getTypeName());
+    }
+    else
+    {
+        out << getTypeName(type);
+    }
+}
+
+void TOutputGLSL::writeFunctionParameters(const TIntermSequence& args)
+{
+    TInfoSinkBase& out = objSink();
+    for (TIntermSequence::const_iterator iter = args.begin();
+         iter != args.end(); ++iter)
+    {
+        const TIntermSymbol* arg = (*iter)->getAsSymbolNode();
+        ASSERT(arg != NULL);
+
+        const TType& type = arg->getType();
+        TQualifier qualifier = type.getQualifier();
+        // TODO(alokp): Validate qualifier for function arguments.
+        if ((qualifier != EvqTemporary) && (qualifier != EvqGlobal))
+            out << type.getQualifierString() << " ";
+
+        out << getTypeName(type);
+
+        const TString& name = arg->getSymbol();
+        if (!name.empty())
+            out << " " << name;
+        if (type.isArray())
+            out << arrayBrackets(type);
+
+        // Put a comma if this is not the last argument.
+        if (iter != --args.end())
+            out << ", ";
+    }
+}
+
+const ConstantUnion* TOutputGLSL::writeConstantUnion(const TType& type,
+                                                     const ConstantUnion* pConstUnion)
 {
     TInfoSinkBase& out = objSink();
 
@@ -112,41 +183,10 @@ const ConstantUnion* TOutputGLSL::writeConstantUnion(const TType& type, const Co
 void TOutputGLSL::visitSymbol(TIntermSymbol* node)
 {
     TInfoSinkBase& out = objSink();
-    const TType& type = node->getType();
-
-    if (mWriteFullSymbol)
-    {
-        TQualifier qualifier = node->getQualifier();
-        if ((qualifier != EvqTemporary) && (qualifier != EvqGlobal))
-            out << node->getQualifierString() << " ";
-
-        // Declare the struct if we have not done so already.
-        if ((type.getBasicType() == EbtStruct) && (mDeclaredStructs.find(type.getTypeName()) == mDeclaredStructs.end()))
-        {
-            out << "struct " << type.getTypeName() << "{\n";
-            const TTypeList* structure = type.getStruct();
-            ASSERT(structure != NULL);
-            for (size_t i = 0; i < structure->size(); ++i)
-            {
-                const TType* fieldType = (*structure)[i].type;
-                ASSERT(fieldType != NULL);
-                out << getTypeName(*fieldType) << " " << fieldType->getFieldName() << ";\n";
-            }
-            out << "} ";
-            mDeclaredStructs.insert(type.getTypeName());
-        }
-        else
-        {
-            out << getTypeName(type) << " ";
-        }
-    }
-
     out << node->getSymbol();
 
-    if (mWriteFullSymbol && node->getType().isArray())
-    {
-        out << "[" << node->getType().getArraySize() << "]";
-    }
+    if (mDeclaringVariables && node->getType().isArray())
+        out << arrayBrackets(node->getType());
 }
 
 void TOutputGLSL::visitConstantUnion(TIntermConstantUnion* node)
@@ -160,13 +200,15 @@ bool TOutputGLSL::visitBinary(Visit visit, TIntermBinary* node)
     TInfoSinkBase& out = objSink();
     switch (node->getOp())
     {
-        case EOpAssign: writeTriplet(visit, NULL, " = ", NULL); break;
         case EOpInitialize:
-            if (visit == InVisit) {
+            if (visit == InVisit)
+            {
                 out << " = ";
-                mWriteFullSymbol= false;
+                // RHS of initialize is not being declared.
+                mDeclaringVariables = false;
             }
             break;
+        case EOpAssign: writeTriplet(visit, NULL, " = ", NULL); break;
         case EOpAddAssign: writeTriplet(visit, NULL, " += ", NULL); break;
         case EOpSubAssign: writeTriplet(visit, NULL, " -= ", NULL); break;
         case EOpDivAssign: writeTriplet(visit, NULL, " /= ", NULL); break;
@@ -392,28 +434,22 @@ bool TOutputGLSL::visitAggregate(Visit visit, TIntermAggregate* node)
                     out << "}\n";
             }
             break;
-        case EOpPrototype:
+        case EOpPrototype: {
             // Function declaration.
-            if (visit == PreVisit)
-            {
-                TString returnType = getTypeName(node->getType());
-                out << returnType << " " << node->getName() << "(";
-                mWriteFullSymbol = true;
-            }
-            else if (visit == InVisit)
-            {
-                // Called in between function arguments.
-                out << ", ";
-            }
-            else if (visit == PostVisit)
-            {
-                // Called after fucntion arguments.
-                out << ")";
-                mWriteFullSymbol = false;
-            }
+            ASSERT(visit == PreVisit);
+            TString returnType = getTypeName(node->getType());
+            out << returnType << " " << node->getName();
+
+            out << "(";
+            writeFunctionParameters(node->getSequence());
+            out << ")";
+
+            visitChildren = false;
             break;
+        }
         case EOpFunction: {
             // Function definition.
+            ASSERT(visit == PreVisit);
             TString returnType = getTypeName(node->getType());
             TString functionName = TFunction::unmangleName(node->getName());
             out << returnType << " " << functionName;
@@ -469,40 +505,36 @@ bool TOutputGLSL::visitAggregate(Visit visit, TIntermAggregate* node)
                 out << ")";
             }
             break;
-        case EOpParameters:
+        case EOpParameters: {
             // Function parameters.
-            if (visit == PreVisit)
-            {
-                out << "(";
-                mWriteFullSymbol = true;
-            }
-            else if (visit == InVisit)
-            {
-                out << ", ";
-            }
-            else
-            {
-                out << ")";
-                mWriteFullSymbol = false;
-            }
+            ASSERT(visit == PreVisit);
+            out << "(";
+            writeFunctionParameters(node->getSequence());
+            out << ")";
+            visitChildren = false;
             break;
-        case EOpDeclaration:
+        }
+        case EOpDeclaration: {
             // Variable declaration.
             if (visit == PreVisit)
             {
-                mWriteFullSymbol = true;
+                const TIntermSequence& sequence = node->getSequence();
+                const TIntermTyped* variable = sequence.front()->getAsTyped();
+                writeVariableType(variable->getType());
+                out << " ";
+                mDeclaringVariables = true;
             }
             else if (visit == InVisit)
             {
                 out << ", ";
-                mWriteFullSymbol = false;
+                mDeclaringVariables = true;
             }
             else
             {
-                mWriteFullSymbol = false;
+                mDeclaringVariables = false;
             }
             break;
-
+        }
         case EOpConstructFloat: writeTriplet(visit, "float(", NULL, ")"); break;
         case EOpConstructVec2: writeTriplet(visit, "vec2(", ", ", ")"); break;
         case EOpConstructVec3: writeTriplet(visit, "vec3(", ", ", ")"); break;
