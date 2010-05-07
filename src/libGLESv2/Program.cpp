@@ -895,7 +895,7 @@ ID3DXBuffer *Program::compileToBinary(const char *hlsl, const char *profile, ID3
     ID3DXBuffer *binary = NULL;
     ID3DXBuffer *errorMessage = NULL;
 
-    HRESULT result = D3DXCompileShader(hlsl, (UINT)strlen(hlsl), NULL, 0, "main", profile, 0, &binary, &errorMessage, constantTable);
+    HRESULT result = D3DXCompileShader(hlsl, (UINT)strlen(hlsl), NULL, NULL, "main", profile, 0, &binary, &errorMessage, constantTable);
 
     if (SUCCEEDED(result))
     {

@@ -89,6 +89,7 @@ class OutputHLSL : public TIntermTraverser
     bool mUsesEqualBVec2;
     bool mUsesEqualBVec3;
     bool mUsesEqualBVec4;
+    bool mUsesAtan2;
 
     struct Constructor   // Describes a constructor signature
     {

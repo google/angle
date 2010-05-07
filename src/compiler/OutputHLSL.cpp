@@ -50,6 +50,7 @@ OutputHLSL::OutputHLSL(TParseContext &context) : TIntermTraverser(true, true, tr
     mUsesEqualBVec2 = false;
     mUsesEqualBVec3 = false;
     mUsesEqualBVec4 = false;
+    mUsesAtan2 = false;
 
     mArgumentIndex = 0;
 }
@@ -673,6 +674,15 @@ void OutputHLSL::header()
         out << "bool equal(bool4 v, bool4 u)\n"
                "{\n"
                "    return v.x == u.x && v.y == u.y && v.z == u.z && v.w == u.w;\n"
+               "}\n";
+    }
+
+    if (mUsesAtan2)
+    {
+        out << "float atanyx(float y, float x)\n"
+               "{\n"
+               "    if(x == 0 && y == 0) x = 1;\n"   // Avoid producing a NaN
+               "    return atan2(y, x);\n"
                "}\n";
     }
 }
@@ -1450,15 +1460,9 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpMod:              outputTriplet(visit, "mod(", ", ", ")");               break;
       case EOpPow:              outputTriplet(visit, "pow(", ", ", ")");               break;
       case EOpAtan:
-        if (node->getSequence().size() == 1)
-        {
-            outputTriplet(visit, "atan(", ", ", ")");
-        }
-        else if (node->getSequence().size() == 2)
-        {
-            outputTriplet(visit, "atan2(", ", ", ")");
-        }
-        else UNREACHABLE();
+        ASSERT(node->getSequence().size() == 2);   // atan(x) is a unary operator
+        mUsesAtan2 = true;
+        outputTriplet(visit, "atanyx(", ", ", ")");
         break;
       case EOpMin:           outputTriplet(visit, "min(", ", ", ")");           break;
       case EOpMax:           outputTriplet(visit, "max(", ", ", ")");           break;
