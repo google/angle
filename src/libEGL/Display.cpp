@@ -88,10 +88,10 @@ bool Display::initialize()
             {
             //  D3DFMT_D16_LOCKABLE,
                 D3DFMT_D32,
-                D3DFMT_D15S1,
+            //  D3DFMT_D15S1,
                 D3DFMT_D24S8,
                 D3DFMT_D24X8,
-                D3DFMT_D24X4S4,
+            //  D3DFMT_D24X4S4,
                 D3DFMT_D16,
             //  D3DFMT_D32F_LOCKABLE,
             //  D3DFMT_D24FS8
