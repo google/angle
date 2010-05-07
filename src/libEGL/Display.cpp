@@ -74,10 +74,10 @@ bool Display::initialize()
             if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_THREE)     {minSwapInterval = std::min(minSwapInterval, 3); maxSwapInterval = std::max(maxSwapInterval, 3);}
             if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_FOUR)      {minSwapInterval = std::min(minSwapInterval, 4); maxSwapInterval = std::max(maxSwapInterval, 4);}
 
-            const D3DFORMAT adapterFormats[] =
+            const D3DFORMAT renderTargetFormats[] =
             {
                 D3DFMT_A1R5G5B5,
-                //D3DFMT_A2R10G10B10, // The color_ramp conformance test uses ReadPixels with UNSIGNED_BYTE causing it to think that rendering skipped a colour value.
+            //  D3DFMT_A2R10G10B10,   // The color_ramp conformance test uses ReadPixels with UNSIGNED_BYTE causing it to think that rendering skipped a colour value.
                 D3DFMT_A8R8G8B8,
                 D3DFMT_R5G6B5,
                 D3DFMT_X1R5G5B5,
@@ -100,9 +100,9 @@ bool Display::initialize()
             D3DDISPLAYMODE currentDisplayMode;
             mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
 
-            for (int formatIndex = 0; formatIndex < sizeof(adapterFormats) / sizeof(D3DFORMAT); formatIndex++)
+            for (int formatIndex = 0; formatIndex < sizeof(renderTargetFormats) / sizeof(D3DFORMAT); formatIndex++)
             {
-                D3DFORMAT renderTargetFormat = adapterFormats[formatIndex];
+                D3DFORMAT renderTargetFormat = renderTargetFormats[formatIndex];
 
                 HRESULT result = mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET, D3DRTYPE_SURFACE, renderTargetFormat);
 
@@ -115,7 +115,7 @@ bool Display::initialize()
 
                         if (SUCCEEDED(result))
                         {
-                            HRESULT result = mD3d9->CheckDepthStencilMatch(mAdapter, mDeviceType, currentDisplayMode.Format, renderTargetFormat, depthStencilFormat);   // FIXME: Only accept color formats available both in fullscreen and windowed?
+                            HRESULT result = mD3d9->CheckDepthStencilMatch(mAdapter, mDeviceType, currentDisplayMode.Format, renderTargetFormat, depthStencilFormat);
 
                             if (SUCCEEDED(result))
                             {
