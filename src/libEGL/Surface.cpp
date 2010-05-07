@@ -151,7 +151,7 @@ void Surface::swap()
         texture->Release();
 
         mDisplay->endScene();
-        result = mSwapChain->Present(NULL, NULL, NULL, NULL, mDisplay->getPresentInterval(mConfig, false));
+        result = mSwapChain->Present(NULL, NULL, NULL, NULL, mDisplay->getPresentInterval());
 
         if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY || result == D3DERR_DRIVERINTERNALERROR)
         {

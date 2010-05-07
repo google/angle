@@ -26,7 +26,10 @@ Display::Display(HDC deviceContext) : mDc(deviceContext)
 
     mAdapter = D3DADAPTER_DEFAULT;
     mDeviceType = D3DDEVTYPE_HAL;
-    mSwapInterval = 1;
+
+    mMinSwapInterval = 1;
+    mMaxSwapInterval = 1;
+    setSwapInterval(1);
 }
 
 Display::~Display()
@@ -65,14 +68,14 @@ bool Display::initialize()
         }
         else
         {
-            EGLint minSwapInterval = 4;
-            EGLint maxSwapInterval = 0;
+            mMinSwapInterval = 4;
+            mMaxSwapInterval = 0;
 
-            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_IMMEDIATE) {minSwapInterval = std::min(minSwapInterval, 0); maxSwapInterval = std::max(maxSwapInterval, 0);}
-            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_ONE)       {minSwapInterval = std::min(minSwapInterval, 1); maxSwapInterval = std::max(maxSwapInterval, 1);}
-            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_TWO)       {minSwapInterval = std::min(minSwapInterval, 2); maxSwapInterval = std::max(maxSwapInterval, 2);}
-            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_THREE)     {minSwapInterval = std::min(minSwapInterval, 3); maxSwapInterval = std::max(maxSwapInterval, 3);}
-            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_FOUR)      {minSwapInterval = std::min(minSwapInterval, 4); maxSwapInterval = std::max(maxSwapInterval, 4);}
+            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_IMMEDIATE) {mMinSwapInterval = std::min(mMinSwapInterval, 0); mMaxSwapInterval = std::max(mMaxSwapInterval, 0);}
+            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_ONE)       {mMinSwapInterval = std::min(mMinSwapInterval, 1); mMaxSwapInterval = std::max(mMaxSwapInterval, 1);}
+            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_TWO)       {mMinSwapInterval = std::min(mMinSwapInterval, 2); mMaxSwapInterval = std::max(mMaxSwapInterval, 2);}
+            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_THREE)     {mMinSwapInterval = std::min(mMinSwapInterval, 3); mMaxSwapInterval = std::max(mMaxSwapInterval, 3);}
+            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_FOUR)      {mMinSwapInterval = std::min(mMinSwapInterval, 4); mMaxSwapInterval = std::max(mMaxSwapInterval, 4);}
 
             const D3DFORMAT renderTargetFormats[] =
             {
@@ -121,7 +124,7 @@ bool Display::initialize()
                             {
                                 // FIXME: Enumerate multi-sampling
 
-                                mConfigSet.add(currentDisplayMode, minSwapInterval, maxSwapInterval, renderTargetFormat, depthStencilFormat, 0);
+                                mConfigSet.add(currentDisplayMode, mMinSwapInterval, mMaxSwapInterval, renderTargetFormat, depthStencilFormat, 0);
                             }
                         }
                     }
@@ -250,7 +253,7 @@ Surface *Display::createWindowSurface(HWND window, EGLConfig config)
     presentParameters.hDeviceWindow = window;
     presentParameters.MultiSampleQuality = 0;                  // FIXME: Unimplemented
     presentParameters.MultiSampleType = D3DMULTISAMPLE_NONE;   // FIXME: Unimplemented
-    presentParameters.PresentationInterval = getPresentInterval(configuration, true);
+    presentParameters.PresentationInterval = convertInterval(mMinSwapInterval);
     presentParameters.SwapEffect = D3DSWAPEFFECT_COPY;
     presentParameters.Windowed = TRUE;   // FIXME
 
@@ -413,14 +416,19 @@ bool Display::hasExistingWindowSurface(HWND window)
 void Display::setSwapInterval(GLint interval)
 {
     mSwapInterval = interval;
+    mSwapInterval = std::max(mSwapInterval, mMinSwapInterval);
+    mSwapInterval = std::min(mSwapInterval, mMaxSwapInterval);
+
+    mPresentInterval = convertInterval(mSwapInterval);
 }
 
-DWORD Display::getPresentInterval(const egl::Config *config, bool maximumRate)
+DWORD Display::getPresentInterval()
 {
-    GLint interval = maximumRate ? 0 : mSwapInterval;
-    interval = interval < config->mMinSwapInterval ? config->mMinSwapInterval : interval;
-    interval = interval > config->mMaxSwapInterval ? config->mMaxSwapInterval : interval;
+    return mPresentInterval;
+}
 
+DWORD Display::convertInterval(GLint interval)
+{
     switch(interval)
     {
       case 0: return D3DPRESENT_INTERVAL_IMMEDIATE;
