@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-static bool trace_on = true;
+static bool trace_on = false;
 
 namespace gl
 {

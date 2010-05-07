@@ -871,7 +871,14 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
       case EOpDivAssign:               outputTriplet(visit, "(", " /= ", ")");          break;
       case EOpIndexDirect:             outputTriplet(visit, "", "[", "]");              break;
       case EOpIndexIndirect:           outputTriplet(visit, "", "[", "]");              break;
-      case EOpIndexDirectStruct:       outputTriplet(visit, "", ".", "");               break;
+      case EOpIndexDirectStruct:
+        if (visit == InVisit)
+        {
+            out << "." + node->getType().getFieldName();
+
+            return false;
+        }
+        break;
       case EOpVectorSwizzle:
         if (visit == InVisit)
         {
@@ -1155,7 +1162,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             {
                 if (variable->getType().getStruct())
                 {
-                    addConstructor(variable->getType(), variable->getType().getTypeName(), NULL);
+                    addConstructor(variable->getType(), variable->getType().getTypeName() + "_ctor", NULL);
                 }
 
                 if (!variable->getAsSymbolNode() || variable->getAsSymbolNode()->getSymbol() != "")   // Variable declaration
@@ -1431,9 +1438,8 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         outputTriplet(visit, "mat4(", ", ", ")");
         break;
       case EOpConstructStruct:
-        outputTriplet(visit, "{", ", ", "}");
         addConstructor(node->getType(), node->getType().getTypeName() + "_ctor", &node->getSequence());
-      //outputTriplet(visit, node->getType().getTypeName() + "_ctor(", ", ", ")");
+        outputTriplet(visit, node->getType().getTypeName() + "_ctor(", ", ", ")");
         break;
       case EOpLessThan:         outputTriplet(visit, "(", " < ", ")");                 break;
       case EOpGreaterThan:      outputTriplet(visit, "(", " > ", ")");                 break;
@@ -1528,124 +1534,7 @@ bool OutputHLSL::visitSelection(Visit visit, TIntermSelection *node)
 
 void OutputHLSL::visitConstantUnion(TIntermConstantUnion *node)
 {
-    TInfoSinkBase &out = mBody;
-    
-    const TType &type = node->getType();
-
-    if (type.isField() && type.getQualifier() != EvqConst)
-    {
-        out << type.getFieldName();
-    }
-    else
-    {
-        int size = type.getObjectSize();
-
-        if (type.getBasicType() == EbtStruct)
-        {
-            out << "{";
-        }
-        else
-        {
-            bool matrix = type.isMatrix();
-            TBasicType elementType = node->getUnionArrayPointer()[0].getType();
-
-            switch (elementType)
-            {
-              case EbtBool:
-                if (!matrix)
-                {
-                    switch (size)
-                    {
-                      case 1: out << "bool(";  break;
-                      case 2: out << "bool2("; break;
-                      case 3: out << "bool3("; break;
-                      case 4: out << "bool4("; break;
-                      default: UNREACHABLE();
-                    }
-                }
-                else UNREACHABLE();
-                break;
-              case EbtFloat:
-                if (!matrix)
-                {
-                    switch (size)
-                    {
-                      case 1: out << "float(";  break;
-                      case 2: out << "float2("; break;
-                      case 3: out << "float3("; break;
-                      case 4: out << "float4("; break;
-                      default: UNREACHABLE();
-                    }
-                }
-                else
-                {
-                    switch (size)
-                    {
-                      case 4:  out << "float2x2("; break;
-                      case 9:  out << "float3x3("; break;
-                      case 16: out << "float4x4("; break;
-                      default: UNREACHABLE();
-                    }
-                }
-                break;
-              case EbtInt:
-                if (!matrix)
-                {
-                    switch (size)
-                    {
-                      case 1: out << "int(";  break;
-                      case 2: out << "int2("; break;
-                      case 3: out << "int3("; break;
-                      case 4: out << "int4("; break;
-                      default: UNREACHABLE();
-                    }
-                }
-                else UNREACHABLE();
-                break;
-              default:
-                UNIMPLEMENTED();   // FIXME
-            }
-        }
-
-        for (int i = 0; i < size; i++)
-        {
-            switch (node->getUnionArrayPointer()[i].getType())
-            {
-              case EbtBool:
-                if (node->getUnionArrayPointer()[i].getBConst())
-                {
-                    out << "true";
-                }
-                else
-                {
-                    out << "false";
-                }
-                break;
-              case EbtFloat:
-                out << node->getUnionArrayPointer()[i].getFConst();           
-                break;
-              case EbtInt:
-                out << node->getUnionArrayPointer()[i].getIConst();
-                break;
-              default: 
-                UNIMPLEMENTED();   // FIXME
-            }
-
-            if (i != size - 1)
-            {
-                out << ", ";
-            }
-        }
-
-        if (type.getBasicType() == EbtStruct)
-        {
-            out << "}";
-        }
-        else
-        {
-            out << ")";
-        }
-    }
+    writeConstantUnion(node->getType(), node->getUnionArrayPointer());
 }
 
 bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
@@ -2171,6 +2060,74 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
     else UNREACHABLE();
 
     mConstructors.insert(constructor);
+}
+
+const ConstantUnion *OutputHLSL::writeConstantUnion(const TType &type, const ConstantUnion *constUnion)
+{
+    TInfoSinkBase &out = mBody;
+
+    if (type.getBasicType() == EbtStruct)
+    {
+        out << type.getTypeName() + "_ctor(";
+        
+        const TTypeList *structure = type.getStruct();
+
+        for (size_t i = 0; i < structure->size(); i++)
+        {
+            const TType *fieldType = (*structure)[i].type;
+
+            constUnion = writeConstantUnion(*fieldType, constUnion);
+
+            if (i != structure->size() - 1)
+            {
+                out << ", ";
+            }
+        }
+
+        out << ")";
+    }
+    else
+    {
+        int size = type.getObjectSize();
+        bool writeType = size > 1;
+        
+        if (writeType)
+        {
+            out << typeString(type) << "(";
+        }
+
+        for (int i = 0; i < size; i++, constUnion++)
+        {
+            switch (constUnion->getType())
+            {
+              case EbtFloat: out << constUnion->getFConst(); break;
+              case EbtInt:   out << constUnion->getIConst(); break;
+              case EbtBool:
+                if (constUnion->getBConst())
+                {
+                    out << "true";
+                }
+                else
+                {
+                    out << "false";
+                }
+                break;
+              default: UNREACHABLE();
+            }
+
+            if (i != size - 1)
+            {
+                out << ", ";
+            }
+        }
+
+        if (writeType)
+        {
+            out << ")";
+        }
+    }
+
+    return constUnion;
 }
 
 TString OutputHLSL::decorate(const TString &string)
