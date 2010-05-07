@@ -1642,7 +1642,7 @@ void Context::applyState(GLenum drawMode)
         device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
     }
 
-    if (mState.stencilTest)
+    if (mState.stencilTest && hasStencil())
     {
         device->SetRenderState(D3DRS_STENCILENABLE, TRUE);
         device->SetRenderState(D3DRS_TWOSIDEDSTENCILMODE, TRUE);
@@ -2561,6 +2561,23 @@ bool Context::isTriangleMode(GLenum drawMode)
       case GL_LINE_STRIP:
         return false;
       default: UNREACHABLE();
+    }
+
+    return false;
+}
+
+bool Context::hasStencil()
+{
+    Framebuffer *framebufferObject = getFramebuffer();
+
+    if (framebufferObject)
+    {
+        Stencilbuffer *stencilbufferObject = framebufferObject->getStencilbuffer();
+
+        if (stencilbufferObject)
+        {
+            return stencilbufferObject->getStencilSize() > 0;
+        }
     }
 
     return false;

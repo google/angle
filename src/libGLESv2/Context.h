@@ -391,6 +391,7 @@ class Context
 
     bool cullSkipsDraw(GLenum drawMode);
     bool isTriangleMode(GLenum drawMode);
+    bool hasStencil();
 
     const egl::Config *const mConfig;
 
