@@ -117,16 +117,16 @@ void Config::set(D3DDISPLAYMODE displayMode, EGLint minInterval, EGLint maxInter
     mBindToTextureRGB = EGL_FALSE;
     mBindToTextureRGBA = EGL_FALSE;
     mColorBufferType = EGL_RGB_BUFFER;
-    mConfigCaveat = (displayMode.Format == renderTargetFormat) ? EGL_NONE : EGL_SLOW_CONFIG;
+    mConfigCaveat = (displayMode.Format == renderTargetFormat) ? EGL_NONE : (EGL_SLOW_CONFIG | EGL_NON_CONFORMANT_CONFIG);
     mConfigID = 0;
     mConformant = EGL_OPENGL_ES2_BIT;
 
     switch (depthStencilFormat)
     {
-//      case D3DFMT_D16_LOCKABLE:
-//        mDepthSize = 16;
-//        mStencilSize = 0;
-//        break;
+//    case D3DFMT_D16_LOCKABLE:
+//      mDepthSize = 16;
+//      mStencilSize = 0;
+//      break;
       case D3DFMT_D32:
         mDepthSize = 32;
         mStencilSize = 0;
@@ -152,13 +152,13 @@ void Config::set(D3DDISPLAYMODE displayMode, EGLint minInterval, EGLint maxInter
         mStencilSize = 0;
         break;
 //    case D3DFMT_D32F_LOCKABLE:
-//        mDepthSize = 32;
-//        mStencilSize = 0;
-//        break;
+//      mDepthSize = 32;
+//      mStencilSize = 0;
+//      break;
 //    case D3DFMT_D24FS8:
-//        mDepthSize = 24;
-//        mStencilSize = 8;
-//        break;
+//      mDepthSize = 24;
+//      mStencilSize = 8;
+//      break;
       default:
         UNREACHABLE();
     }
