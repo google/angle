@@ -10,7 +10,7 @@
 #include "compiler/Common.h"
 #include "compiler/InitializeGlobals.h"
 
-OS_TLSIndex PoolIndex = TLS_OUT_OF_INDEXES;
+OS_TLSIndex PoolIndex = OS_INVALID_TLS_INDEX;
 
 void InitializeGlobalPools()
 {
