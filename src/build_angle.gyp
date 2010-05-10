@@ -11,6 +11,11 @@
         '.',
         '../include',
       ],
+      'variables': {
+        'glslang_cpp_file': '<(INTERMEDIATE_DIR)/glslang.cpp',
+        'glslang_tab_cpp_file': '<(INTERMEDIATE_DIR)/glslang_tab.cpp',
+        'glslang_tab_h_file': '<(INTERMEDIATE_DIR)/glslang_tab.h',
+      },
       'sources': [
         'common/angleutils.h',
         'common/debug.cpp',
@@ -67,9 +72,9 @@
         'compiler/preprocessor/tokens.c',
         'compiler/preprocessor/tokens.h',
         # Generated files
-        '<(INTERMEDIATE_DIR)/Gen_glslang.cpp',
-        '<(INTERMEDIATE_DIR)/Gen_glslang_tab.cpp',
-        '<(INTERMEDIATE_DIR)/glslang_tab.h',
+        '<(glslang_cpp_file)',
+        '<(glslang_tab_cpp_file)',
+        '<(glslang_tab_h_file)',
       ],
       'conditions': [
         ['OS=="win"', {
@@ -82,25 +87,25 @@
         {
           'action_name': 'flex_glslang',
           'inputs': ['compiler/glslang.l'],
-          'outputs': ['<(INTERMEDIATE_DIR)/Gen_glslang.cpp'],
+          'outputs': ['<(glslang_cpp_file)'],
           'action': [
             'flex',
             '--noline',
             '--nounistd',
-            '--outfile=<(_outputs)',
+            '--outfile=<(glslang_cpp_file)',
             '<(_inputs)',
           ],
         },
         {
           'action_name': 'bison_glslang',
           'inputs': ['compiler/glslang.y'],
-          'outputs': ['<(INTERMEDIATE_DIR)/Gen_glslang_tab.cpp'],
+          'outputs': ['<(glslang_tab_cpp_file)', '<(glslang_tab_h_file)'],
           'action': [
             'bison',
             '--no-lines',
-            '--defines=<(INTERMEDIATE_DIR)/glslang_tab.h',
+            '--defines=<(glslang_tab_h_file)',
             '--skeleton=yacc.c',
-            '--output=<(_outputs)',
+            '--output=<(glslang_tab_cpp_file)',
             '<(_inputs)',
           ],
         },
