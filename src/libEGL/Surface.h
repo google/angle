@@ -40,11 +40,21 @@ class Surface
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Surface);
+
     Display *const mDisplay;
     IDirect3DSwapChain9 *const mSwapChain;
     IDirect3DSurface9 *mBackBuffer;
     IDirect3DSurface9 *mRenderTarget;
     IDirect3DSurface9 *mDepthStencil;
+    IDirect3DTexture9 *mFlipTexture;
+
+    void applyFlipState(IDirect3DDevice9 *device, IDirect3DTexture9 *source);
+    void restoreState(IDirect3DDevice9 *device);
+    void writeRecordableFlipState(IDirect3DDevice9 *device, IDirect3DTexture9 *source);
+    IDirect3DStateBlock9 *mFlipState;
+    IDirect3DStateBlock9 *mPreFlipState;
+    IDirect3DSurface9 *mPreFlipBackBuffer;
+    IDirect3DSurface9 *mPreFlipDepthStencil;
 
     const egl::Config *mConfig;    // EGL config surface was created with
     EGLint mHeight;                // Height of surface
