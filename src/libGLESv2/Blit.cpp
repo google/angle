@@ -122,7 +122,7 @@ const char * const Blit::mShaderSource[] =
 };
 
 Blit::Blit(Context *context)
-  : mContext(context), mQuadVertexBuffer(NULL), mQuadVertexDeclaration(NULL)
+  : mContext(context), mQuadVertexBuffer(NULL), mQuadVertexDeclaration(NULL), mSavedRenderTarget(NULL), mSavedDepthStencil(NULL), mSavedStateBlock(NULL)
 {
     initGeometry();
     memset(mCompiledShaders, 0, sizeof(mCompiledShaders));
@@ -130,6 +130,7 @@ Blit::Blit(Context *context)
 
 Blit::~Blit()
 {
+    if (mSavedStateBlock) mSavedStateBlock->Release();
     if (mQuadVertexBuffer) mQuadVertexBuffer->Release();
     if (mQuadVertexDeclaration) mQuadVertexDeclaration->Release();
 
@@ -262,6 +263,9 @@ bool Blit::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
     }
 
     IDirect3DDevice9 *device = getDevice();
+
+    saveState();
+
     device->SetTexture(0, texture);
     device->SetRenderTarget(0, dest);
 
@@ -278,6 +282,8 @@ bool Blit::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
 
     texture->Release();
 
+    restoreState();
+
     return true;
 }
 
@@ -291,6 +297,8 @@ bool Blit::formatConvert(IDirect3DSurface9 *source, const RECT &sourceRect, GLen
 
     IDirect3DDevice9 *device = getDevice();
 
+    saveState();
+
     device->SetTexture(0, texture);
     device->SetRenderTarget(0, dest);
 
@@ -303,6 +311,8 @@ bool Blit::formatConvert(IDirect3DSurface9 *source, const RECT &sourceRect, GLen
     }
 
     texture->Release();
+
+    restoreState();
 
     return true;
 }
@@ -466,6 +476,84 @@ void Blit::render()
 
     display->startScene();
     hr = device->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
+}
+
+void Blit::saveState()
+{
+    IDirect3DDevice9 *device = getDevice();
+
+    HRESULT hr;
+
+    device->GetDepthStencilSurface(&mSavedDepthStencil);
+    device->GetRenderTarget(0, &mSavedRenderTarget);
+
+    if (mSavedStateBlock == NULL)
+    {
+        hr = device->BeginStateBlock();
+        ASSERT(SUCCEEDED(hr) || hr == D3DERR_OUTOFVIDEOMEMORY || hr == E_OUTOFMEMORY);
+
+        setCommonBlitState();
+
+        static const float dummyConst[4] = { 0, 0, 0, 0 };
+
+        device->SetVertexShader(NULL);
+        device->SetVertexShaderConstantF(0, dummyConst, 1);
+        device->SetPixelShader(NULL);
+        device->SetPixelShaderConstantF(0, dummyConst, 1);
+
+        D3DVIEWPORT9 dummyVp;
+        dummyVp.X = 0;
+        dummyVp.Y = 0;
+        dummyVp.Width = 1;
+        dummyVp.Height = 1;
+        dummyVp.MinZ = 0;
+        dummyVp.MaxZ = 1;
+
+        device->SetViewport(&dummyVp);
+
+        device->SetTexture(0, NULL);
+
+        device->SetStreamSource(0, mQuadVertexBuffer, 0, 0);
+
+        device->SetVertexDeclaration(mQuadVertexDeclaration);
+
+        hr = device->EndStateBlock(&mSavedStateBlock);
+        ASSERT(SUCCEEDED(hr) || hr == D3DERR_OUTOFVIDEOMEMORY || hr == E_OUTOFMEMORY);
+    }
+
+    ASSERT(mSavedStateBlock != NULL);
+
+    if (mSavedStateBlock != NULL)
+    {
+        hr = mSavedStateBlock->Capture();
+        ASSERT(SUCCEEDED(hr));
+    }
+}
+
+void Blit::restoreState()
+{
+    IDirect3DDevice9 *device = getDevice();
+
+    device->SetDepthStencilSurface(mSavedDepthStencil);
+    if (mSavedDepthStencil != NULL)
+    {
+        mSavedDepthStencil->Release();
+        mSavedDepthStencil = NULL;
+    }
+
+    device->SetRenderTarget(0, mSavedRenderTarget);
+    if (mSavedRenderTarget != NULL)
+    {
+        mSavedRenderTarget->Release();
+        mSavedRenderTarget = NULL;
+    }
+
+    ASSERT(mSavedStateBlock != NULL);
+
+    if (mSavedStateBlock != NULL)
+    {
+        mSavedStateBlock->Apply();
+    }
 }
 
 }

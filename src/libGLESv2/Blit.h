@@ -77,6 +77,12 @@ class Blit
     bool setPixelShader(ShaderId shader);
     void render();
 
+    void saveState();
+    void restoreState();
+    IDirect3DStateBlock9 *mSavedStateBlock;
+    IDirect3DSurface9 *mSavedRenderTarget;
+    IDirect3DSurface9 *mSavedDepthStencil;
+
     DISALLOW_COPY_AND_ASSIGN(Blit);
 };
 }
