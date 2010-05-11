@@ -17,12 +17,14 @@
 
 namespace gl
 {
+unsigned int Program::mCurrentSerial = 1;
+
 Uniform::Uniform(GLenum type, const std::string &name, unsigned int arraySize) : type(type), name(name), arraySize(arraySize)
 {
     int bytes = UniformTypeSize(type) * arraySize;
-
-    this->data = new unsigned char[bytes];
-    memset(this->data, 0, bytes);
+    data = new unsigned char[bytes];
+    memset(data, 0, bytes);
+    dirty = true;
 }
 
 Uniform::~Uniform()
@@ -53,6 +55,8 @@ Program::Program()
     unlink();
 
     mDeleteStatus = false;
+
+    mSerial = issueSerial();
 }
 
 Program::~Program()
@@ -215,9 +219,11 @@ GLint Program::getUniformLocation(const char *name)
         subscript = atoi(subscrStr.c_str());
     }
 
+    nameStr = decorate(nameStr);
+
     for (unsigned int location = 0; location < mUniformIndex.size(); location++)
     {
-        if (mUniformIndex[location].name == decorate(nameStr) &&
+        if (mUniformIndex[location].name == nameStr &&
             mUniformIndex[location].element == subscript)
         {
             return location;
@@ -235,6 +241,7 @@ bool Program::setUniform1fv(GLint location, GLsizei count, const GLfloat* v)
     }
 
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
+    targetUniform->dirty = true;
 
     if (targetUniform->type == GL_FLOAT)
     {
@@ -291,6 +298,7 @@ bool Program::setUniform2fv(GLint location, GLsizei count, const GLfloat *v)
     }
 
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
+    targetUniform->dirty = true;
 
     if (targetUniform->type == GL_FLOAT_VEC2)
     {
@@ -348,6 +356,7 @@ bool Program::setUniform3fv(GLint location, GLsizei count, const GLfloat *v)
     }
 
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
+    targetUniform->dirty = true;
 
     if (targetUniform->type == GL_FLOAT_VEC3)
     {
@@ -404,6 +413,7 @@ bool Program::setUniform4fv(GLint location, GLsizei count, const GLfloat *v)
     }
 
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
+    targetUniform->dirty = true;
 
     if (targetUniform->type == GL_FLOAT_VEC4)
     {
@@ -460,6 +470,7 @@ bool Program::setUniformMatrix2fv(GLint location, GLsizei count, const GLfloat *
     }
 
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
+    targetUniform->dirty = true;
 
     if (targetUniform->type != GL_FLOAT_MAT2)
     {
@@ -487,6 +498,7 @@ bool Program::setUniformMatrix3fv(GLint location, GLsizei count, const GLfloat *
     }
 
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
+    targetUniform->dirty = true;
 
     if (targetUniform->type != GL_FLOAT_MAT3)
     {
@@ -514,6 +526,7 @@ bool Program::setUniformMatrix4fv(GLint location, GLsizei count, const GLfloat *
     }
 
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
+    targetUniform->dirty = true;
 
     if (targetUniform->type != GL_FLOAT_MAT4)
     {
@@ -541,6 +554,7 @@ bool Program::setUniform1iv(GLint location, GLsizei count, const GLint *v)
     }
 
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
+    targetUniform->dirty = true;
 
     if (targetUniform->type == GL_INT)
     {
@@ -597,6 +611,7 @@ bool Program::setUniform2iv(GLint location, GLsizei count, const GLint *v)
     }
 
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
+    targetUniform->dirty = true;
 
     if (targetUniform->type == GL_INT_VEC2)
     {
@@ -653,6 +668,7 @@ bool Program::setUniform3iv(GLint location, GLsizei count, const GLint *v)
     }
 
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
+    targetUniform->dirty = true;
 
     if (targetUniform->type == GL_INT_VEC3)
     {
@@ -709,6 +725,7 @@ bool Program::setUniform4iv(GLint location, GLsizei count, const GLint *v)
     }
 
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
+    targetUniform->dirty = true;
 
     if (targetUniform->type == GL_INT_VEC4)
     {
@@ -843,6 +860,14 @@ bool Program::getUniformiv(GLint location, GLint *params)
     return true;
 }
 
+void Program::dirtyAllUniforms()
+{
+    for (unsigned int index = 0; index < mUniforms.size(); index++)
+    {
+        mUniforms[index]->dirty = true;
+    }
+}
+
 // Applies all the uniforms set for this program object to the Direct3D 9 device
 void Program::applyUniforms()
 {
@@ -855,31 +880,35 @@ void Program::applyUniforms()
 
         Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
 
-        int arraySize = targetUniform->arraySize;
-        GLfloat *f = (GLfloat*)targetUniform->data;
-        GLint *i = (GLint*)targetUniform->data;
-        GLboolean *b = (GLboolean*)targetUniform->data;
-
-        switch (targetUniform->type)
+        if (targetUniform->dirty)
         {
-          case GL_BOOL:       applyUniform1bv(location, arraySize, b);       break;
-          case GL_BOOL_VEC2:  applyUniform2bv(location, arraySize, b);       break;
-          case GL_BOOL_VEC3:  applyUniform3bv(location, arraySize, b);       break;
-          case GL_BOOL_VEC4:  applyUniform4bv(location, arraySize, b);       break;
-          case GL_FLOAT:      applyUniform1fv(location, arraySize, f);       break;
-          case GL_FLOAT_VEC2: applyUniform2fv(location, arraySize, f);       break;
-          case GL_FLOAT_VEC3: applyUniform3fv(location, arraySize, f);       break;
-          case GL_FLOAT_VEC4: applyUniform4fv(location, arraySize, f);       break;
-          case GL_FLOAT_MAT2: applyUniformMatrix2fv(location, arraySize, f); break;
-          case GL_FLOAT_MAT3: applyUniformMatrix3fv(location, arraySize, f); break;
-          case GL_FLOAT_MAT4: applyUniformMatrix4fv(location, arraySize, f); break;
-          case GL_INT:        applyUniform1iv(location, arraySize, i);       break;
-          case GL_INT_VEC2:   applyUniform2iv(location, arraySize, i);       break;
-          case GL_INT_VEC3:   applyUniform3iv(location, arraySize, i);       break;
-          case GL_INT_VEC4:   applyUniform4iv(location, arraySize, i);       break;
-          default:
-            UNIMPLEMENTED();   // FIXME
-            UNREACHABLE();
+            int arraySize = targetUniform->arraySize;
+            GLfloat *f = (GLfloat*)targetUniform->data;
+            GLint *i = (GLint*)targetUniform->data;
+            GLboolean *b = (GLboolean*)targetUniform->data;
+
+            switch (targetUniform->type)
+            {
+              case GL_BOOL:       applyUniform1bv(location, arraySize, b);       break;
+              case GL_BOOL_VEC2:  applyUniform2bv(location, arraySize, b);       break;
+              case GL_BOOL_VEC3:  applyUniform3bv(location, arraySize, b);       break;
+              case GL_BOOL_VEC4:  applyUniform4bv(location, arraySize, b);       break;
+              case GL_FLOAT:      applyUniform1fv(location, arraySize, f);       break;
+              case GL_FLOAT_VEC2: applyUniform2fv(location, arraySize, f);       break;
+              case GL_FLOAT_VEC3: applyUniform3fv(location, arraySize, f);       break;
+              case GL_FLOAT_VEC4: applyUniform4fv(location, arraySize, f);       break;
+              case GL_FLOAT_MAT2: applyUniformMatrix2fv(location, arraySize, f); break;
+              case GL_FLOAT_MAT3: applyUniformMatrix3fv(location, arraySize, f); break;
+              case GL_FLOAT_MAT4: applyUniformMatrix4fv(location, arraySize, f); break;
+              case GL_INT:        applyUniform1iv(location, arraySize, i);       break;
+              case GL_INT_VEC2:   applyUniform2iv(location, arraySize, i);       break;
+              case GL_INT_VEC3:   applyUniform3iv(location, arraySize, i);       break;
+              case GL_INT_VEC4:   applyUniform4iv(location, arraySize, i);       break;
+              default:
+                UNREACHABLE();
+            }
+
+            targetUniform->dirty = false;
         }
     }
 }
@@ -2002,6 +2031,16 @@ bool Program::isLinked()
 bool Program::isValidated() const 
 {
     return mValidated;
+}
+
+unsigned int Program::getSerial() const
+{
+    return mSerial;
+}
+
+unsigned int Program::issueSerial()
+{
+    return mCurrentSerial++;
 }
 
 int Program::getInfoLogLength() const

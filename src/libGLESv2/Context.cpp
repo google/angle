@@ -153,6 +153,8 @@ Context::Context(const egl::Config *config)
     mInvalidFramebufferOperation = false;
 
     mHasBeenCurrent = false;
+
+    markAllStateDirty();
 }
 
 Context::~Context()
@@ -274,6 +276,11 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         mPsProfile = "ps_2_0";
         mVsProfile = "vs_2_0";
     }
+}
+
+void Context::markAllStateDirty()
+{
+    mAppliedProgram = 0;
 }
 
 void Context::setClearColor(float red, float green, float blue, float alpha)
@@ -1780,6 +1787,12 @@ void Context::applyShaders()
 
     device->SetVertexShader(vertexShader);
     device->SetPixelShader(pixelShader);
+
+    if (programObject->getSerial() != mAppliedProgram)
+    {
+        programObject->dirtyAllUniforms();
+        mAppliedProgram = programObject->getSerial();
+    }
 
     programObject->applyUniforms();
 }

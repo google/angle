@@ -33,7 +33,9 @@ struct Uniform
     const GLenum type;
     const std::string name;
     const unsigned int arraySize;
+
     unsigned char *data;
+    bool dirty;
 };
 
 // Struct used for correlating uniforms/elements of uniform arrays to handles
@@ -83,6 +85,7 @@ class Program
     bool getUniformfv(GLint location, GLfloat *params);
     bool getUniformiv(GLint location, GLint *params);
 
+    void dirtyAllUniforms();
     void applyUniforms();
 
     void link();
@@ -105,6 +108,8 @@ class Program
     void validate();
     bool validateSamplers() const;
     bool isValidated() const;
+
+    unsigned int getSerial() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Program);
@@ -158,6 +163,8 @@ class Program
     static std::string decorate(const std::string &string);     // Prepend an underscore
     static std::string undecorate(const std::string &string);   // Remove leading underscore
 
+    static unsigned int issueSerial();
+
     FragmentShader *mFragmentShader;
     VertexShader *mVertexShader;
 
@@ -191,6 +198,10 @@ class Program
     bool mDeleteStatus;   // Flag to indicate that the program can be deleted when no longer in use
     char *mInfoLog;
     bool mValidated;
+
+    unsigned int mSerial;
+
+    static unsigned int mCurrentSerial;
 };
 }
 

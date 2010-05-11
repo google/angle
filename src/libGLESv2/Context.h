@@ -204,6 +204,8 @@ class Context
 
     void makeCurrent(egl::Display *display, egl::Surface *surface);
 
+    void markAllStateDirty();
+
     // State manipulation
     void setClearColor(float red, float green, float blue, float alpha);
 
@@ -441,6 +443,8 @@ class Context
     bool mInvalidFramebufferOperation;
 
     bool mHasBeenCurrent;
+
+    unsigned int mAppliedProgram;
 
     const char *mPsProfile;
     const char *mVsProfile;
