@@ -51,12 +51,8 @@ NVIDIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef __STDC99__
+#ifndef _MSC_VER
 #include <stdint.h>
-#elif defined (_WIN64)
-typedef unsigned __int64 uintptr_t;
-#else 
-typedef unsigned int uintptr_t;
 #endif
 
 #include "compiler/preprocessor/memory.h"
