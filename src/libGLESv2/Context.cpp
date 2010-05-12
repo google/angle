@@ -2512,6 +2512,9 @@ void Context::finish()
 
     if (occlusionQuery)
     {
+        IDirect3DStateBlock9 *savedState = NULL;
+        device->CreateStateBlock(D3DSBT_ALL, &savedState);
+
         occlusionQuery->Issue(D3DISSUE_BEGIN);
 
         // Render something outside the render target
@@ -2531,6 +2534,12 @@ void Context::finish()
         }
 
         occlusionQuery->Release();
+
+        if (savedState)
+        {
+            savedState->Apply();
+            savedState->Release();
+        }
     }
 }
 
