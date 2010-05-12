@@ -190,9 +190,16 @@ GLint Program::getSamplerMapping(unsigned int samplerIndex)
 {
     assert(samplerIndex < sizeof(mSamplers)/sizeof(mSamplers[0]));
 
+    GLint logicalTextureUnit = -1;
+
     if (mSamplers[samplerIndex].active)
     {
-        return mSamplers[samplerIndex].logicalTextureUnit;
+        logicalTextureUnit = mSamplers[samplerIndex].logicalTextureUnit;
+    }
+
+    if (logicalTextureUnit < MAX_TEXTURE_IMAGE_UNITS)
+    {
+        return logicalTextureUnit;
     }
 
     return -1;
@@ -1816,14 +1823,11 @@ bool Program::applyUniform1iv(GLint location, GLsizei count, const GLint *v)
             {
                 GLint mappedSampler = v[0];
 
-                if (mappedSampler >= 0 && mappedSampler < MAX_TEXTURE_IMAGE_UNITS)
+                if (samplerIndex >= 0 && samplerIndex < MAX_TEXTURE_IMAGE_UNITS)
                 {
-                    if (samplerIndex >= 0 && samplerIndex < MAX_TEXTURE_IMAGE_UNITS)
-                    {
-                        ASSERT(mSamplers[samplerIndex].active);
-                        mSamplers[samplerIndex].logicalTextureUnit = mappedSampler;
-                        mSamplers[samplerIndex].dirty = true;
-                    }
+                    ASSERT(mSamplers[samplerIndex].active);
+                    mSamplers[samplerIndex].logicalTextureUnit = mappedSampler;
+                    mSamplers[samplerIndex].dirty = true;
                 }
             }
 
