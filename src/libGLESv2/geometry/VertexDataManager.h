@@ -43,9 +43,7 @@ class VertexDataManager
   private:
     std::bitset<MAX_VERTEX_ATTRIBS> getActiveAttribs() const;
 
-    void reloadCurrentValues(const AttributeState *attribs, std::size_t *offset);
-
-    void processNonArrayAttributes(const AttributeState *attribs, const std::bitset<MAX_VERTEX_ATTRIBS> &activeAttribs, TranslatedAttribute *translated);
+    void processNonArrayAttributes(const AttributeState *attribs, const std::bitset<MAX_VERTEX_ATTRIBS> &activeAttribs, TranslatedAttribute *translated, std::size_t count);
 
     std::size_t typeSize(GLenum type) const;
     std::size_t interpretGlStride(const AttributeState &attrib) const;
@@ -61,6 +59,9 @@ class VertexDataManager
     bool mDirtyCurrentValues;
     std::size_t mCurrentValueOffset;            // Offset within mCurrentValueBuffer that the current attribute values were last loaded at.
     TranslatedVertexBuffer *mCurrentValueBuffer;
+    TranslatedVertexBuffer *mCurrentValueLoadBuffer;
+    std::size_t mCurrentValueStride;
+    std::size_t mCurrentValueSize;
 };
 
 }

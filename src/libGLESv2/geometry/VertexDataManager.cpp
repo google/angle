@@ -20,6 +20,8 @@
 namespace
 {
     enum { INITIAL_STREAM_BUFFER_SIZE = 1024*1024 };
+    enum { MAX_CURRENT_VALUE_EXPANSION = 16 };
+    enum { CURRENT_VALUES_REQUIRED_SPACE = 4 * sizeof(float) * gl::MAX_VERTEX_ATTRIBS * MAX_CURRENT_VALUE_EXPANSION };
 }
 
 namespace gl
@@ -31,7 +33,7 @@ VertexDataManager::VertexDataManager(Context *context, BufferBackEnd *backend)
     mStreamBuffer = mBackend->createVertexBuffer(INITIAL_STREAM_BUFFER_SIZE);
     try
     {
-        mCurrentValueBuffer = mBackend->createVertexBufferForStrideZero(4*sizeof(float)*MAX_VERTEX_ATTRIBS);
+        mCurrentValueBuffer = mBackend->createVertexBufferForStrideZero(4 * sizeof(float) * MAX_VERTEX_ATTRIBS);
     }
     catch (...)
     {
@@ -77,8 +79,18 @@ GLenum VertexDataManager::preRenderValidate(GLint start, GLsizei count,
         translated[i].enabled = activeAttribs[i];
     }
 
-    processNonArrayAttributes(attribs, activeAttribs, translated);
+    bool usesCurrentValues = false;
 
+    for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
+    {
+        if (activeAttribs[i] && !attribs[i].mEnabled)
+        {
+            usesCurrentValues = true;
+            break;
+        }
+    }
+
+    // Handle the identity-mapped attributes.
     // Process array attributes.
 
     std::size_t requiredSpace = 0;
@@ -89,6 +101,11 @@ GLenum VertexDataManager::preRenderValidate(GLint start, GLsizei count,
         {
             requiredSpace += spaceRequired(attribs[i], count);
         }
+    }
+
+    if (usesCurrentValues)
+    {
+        requiredSpace += CURRENT_VALUES_REQUIRED_SPACE;
     }
 
     if (requiredSpace > mStreamBuffer->size())
@@ -145,30 +162,12 @@ GLenum VertexDataManager::preRenderValidate(GLint start, GLsizei count,
         }
     }
 
-    return GL_NO_ERROR;
-}
-
-void VertexDataManager::reloadCurrentValues(const AttributeState *attribs, std::size_t *offset)
-{
-    if (mDirtyCurrentValues)
+    if (usesCurrentValues)
     {
-        std::size_t totalSize = 4 * sizeof(float) * MAX_VERTEX_ATTRIBS;
-
-        mCurrentValueBuffer->reserveSpace(totalSize);
-
-        float* p = static_cast<float*>(mCurrentValueBuffer->map(totalSize, &mCurrentValueOffset));
-
-        for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
-        {
-            memcpy(&p[i*4], attribs[i].mCurrentValue, sizeof(attribs[i].mCurrentValue)); // FIXME: this should be doing a translation. This assumes that GL_FLOATx4 is supported.
-        }
-
-        mCurrentValueBuffer->unmap();
-
-        mDirtyCurrentValues = false;
+        processNonArrayAttributes(attribs, activeAttribs, translated, count);
     }
 
-    *offset = mCurrentValueOffset;
+    return GL_NO_ERROR;
 }
 
 std::size_t VertexDataManager::typeSize(GLenum type) const
@@ -214,37 +213,67 @@ std::size_t VertexDataManager::spaceRequired(const AttributeState &attrib, std::
     return roundUp(size, 4 * sizeof(GLfloat));
 }
 
-void VertexDataManager::processNonArrayAttributes(const AttributeState *attribs, const std::bitset<MAX_VERTEX_ATTRIBS> &activeAttribs, TranslatedAttribute *translated)
+void VertexDataManager::processNonArrayAttributes(const AttributeState *attribs, const std::bitset<MAX_VERTEX_ATTRIBS> &activeAttribs, TranslatedAttribute *translated, std::size_t count)
 {
-    bool usesCurrentValues = false;
-
-    for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
+    if (count <= MAX_CURRENT_VALUE_EXPANSION)
     {
-        if (activeAttribs[i] && !attribs[i].mEnabled)
+        if (mDirtyCurrentValues || mCurrentValueLoadBuffer != mStreamBuffer)
         {
-            usesCurrentValues = true;
-            break;
+            float *p = static_cast<float*>(mStreamBuffer->map(CURRENT_VALUES_REQUIRED_SPACE, &mCurrentValueOffset));
+
+            for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
+            {
+                float *out = p + MAX_CURRENT_VALUE_EXPANSION * 4 * i;
+                for (unsigned int j = 0; j < MAX_CURRENT_VALUE_EXPANSION; j++)
+                {
+                    *out++ = attribs[i].mCurrentValue[0];
+                    *out++ = attribs[i].mCurrentValue[1];
+                    *out++ = attribs[i].mCurrentValue[2];
+                    *out++ = attribs[i].mCurrentValue[3];
+                }
+            }
+
+            mStreamBuffer->unmap();
+
+            mCurrentValueLoadBuffer = mStreamBuffer;
+            mCurrentValueSize = MAX_CURRENT_VALUE_EXPANSION;
+            mCurrentValueStride = 4 * sizeof(float);
+        }
+    }
+    else
+    {
+        if (mDirtyCurrentValues || mCurrentValueLoadBuffer != mCurrentValueBuffer)
+        {
+            std::size_t totalSize = 4 * sizeof(float) * MAX_VERTEX_ATTRIBS;
+
+            mCurrentValueBuffer->reserveSpace(totalSize);
+
+            float* p = static_cast<float*>(mCurrentValueBuffer->map(totalSize, &mCurrentValueOffset));
+
+            for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
+            {
+                memcpy(&p[i*4], attribs[i].mCurrentValue, sizeof(attribs[i].mCurrentValue)); // FIXME: this should be doing a translation. This assumes that GL_FLOATx4 is supported.
+            }
+
+            mCurrentValueBuffer->unmap();
+
+            mCurrentValueLoadBuffer = mCurrentValueBuffer;
+            mCurrentValueSize = 1;
+            mCurrentValueStride = 0;
         }
     }
 
-    if (usesCurrentValues)
+    for (std::size_t i = 0; i < MAX_VERTEX_ATTRIBS; i++)
     {
-        std::size_t currentValueOffset;
-
-        reloadCurrentValues(attribs, &currentValueOffset);
-
-        for (std::size_t i = 0; i < MAX_VERTEX_ATTRIBS; i++)
+        if (activeAttribs[i] && !attribs[i].mEnabled)
         {
-            if (activeAttribs[i] && !attribs[i].mEnabled)
-            {
-                translated[i].buffer = mCurrentValueBuffer;
+            translated[i].buffer = mCurrentValueLoadBuffer;
 
-                translated[i].type = GL_FLOAT;
-                translated[i].size = 4;
-                translated[i].normalized = false;
-                translated[i].stride = 0;
-                translated[i].offset = currentValueOffset + 4 * sizeof(float) * i;
-            }
+            translated[i].type = GL_FLOAT;
+            translated[i].size = 4;
+            translated[i].normalized = false;
+            translated[i].stride = mCurrentValueStride;
+            translated[i].offset = mCurrentValueOffset + 4 * sizeof(float) * i * mCurrentValueSize;
         }
     }
 }
