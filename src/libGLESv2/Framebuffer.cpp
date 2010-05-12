@@ -116,6 +116,19 @@ IDirect3DSurface9 *Framebuffer::getRenderTarget()
     return NULL;
 }
 
+unsigned int Framebuffer::getDepthbufferSerial()
+{
+    gl::Context *context = gl::getContext();
+    Depthbuffer *depthbuffer = context->getDepthbuffer(mDepthbufferHandle);
+
+    if (depthbuffer)
+    {
+        return depthbuffer->getSerial();
+    }
+
+    return 0;
+}
+
 IDirect3DSurface9 *Framebuffer::getDepthStencil()
 {
     gl::Context *context = gl::getContext();

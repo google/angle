@@ -446,6 +446,7 @@ class Context
 
     unsigned int mAppliedProgram;
     unsigned int mAppliedRenderTargetSerial;
+    unsigned int mAppliedDepthbufferSerial;
 
     const char *mPsProfile;
     const char *mVsProfile;

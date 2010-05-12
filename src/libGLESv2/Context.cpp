@@ -285,6 +285,7 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 void Context::markAllStateDirty()
 {
     mAppliedRenderTargetSerial = 0;
+    mAppliedDepthbufferSerial = 0;
     mAppliedProgram = 0;
 
     mClearStateDirty = true;
@@ -1642,7 +1643,12 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         mAppliedRenderTargetSerial = renderTargetSerial;
     }
 
-    device->SetDepthStencilSurface(depthStencil);
+    unsigned int depthbufferSerial = framebufferObject->getDepthbufferSerial();
+    if (depthbufferSerial != mAppliedDepthbufferSerial)
+    {
+        device->SetDepthStencilSurface(depthStencil);
+        mAppliedDepthbufferSerial = depthbufferSerial;
+    }
 
     D3DVIEWPORT9 viewport;
     D3DSURFACE_DESC desc;
