@@ -449,6 +449,20 @@ class Context
 
     const char *mPsProfile;
     const char *mVsProfile;
+
+    // state caching flags
+    bool mClearStateDirty;
+    bool mCullStateDirty;
+    bool mDepthStateDirty;
+    bool mMaskStateDirty;
+    bool mPixelPackingStateDirty;
+    bool mBlendStateDirty;
+    bool mStencilStateDirty;
+    bool mPolygonOffsetStateDirty;
+    bool mScissorStateDirty;
+    bool mSampleStateDirty;
+    bool mFrontFaceDirty;
+    bool mDitherStateDirty;
 };
 }
 
