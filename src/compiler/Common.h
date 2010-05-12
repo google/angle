@@ -60,10 +60,6 @@ typedef int TSourceLoc;
     void operator delete[](void*) { }                                 \
     void operator delete[](void *, void *) { }
 
-#define TBaseMap std::map
-#define TBaseList std::list
-#define TBaseSet std::set
-
 //
 // Pool version of string.
 //
@@ -86,12 +82,12 @@ public:
     TVector(size_type i): std::vector<T, pool_allocator<T> >(i) {}
 };
 
-template <class T> class TList   : public TBaseList  <T, pool_allocator<T> > {
+template <class T> class TList : public std::list<T, pool_allocator<T> > {
 public:
-    typedef typename TBaseList<T, pool_allocator<T> >::size_type size_type;
-    TList() : TBaseList<T, pool_allocator<T> >() {}
-    TList(const pool_allocator<T>& a) : TBaseList<T, pool_allocator<T> >(a) {}
-    TList(size_type i): TBaseList<T, pool_allocator<T> >(i) {}
+    typedef typename std::list<T, pool_allocator<T> >::size_type size_type;
+    TList() : std::list<T, pool_allocator<T> >() {}
+    TList(const pool_allocator<T>& a) : std::list<T, pool_allocator<T> >(a) {}
+    TList(size_type i): std::list<T, pool_allocator<T> >(i) {}
 };
 
 // This is called TStlSet, because TSet is taken by an existing compiler class.
@@ -101,13 +97,13 @@ template <class T, class CMP> class TStlSet : public std::set<T, CMP, pool_alloc
 
 
 template <class K, class D, class CMP = std::less<K> > 
-class TMap : public TBaseMap<K, D, CMP, pool_allocator<std::pair<K, D> > > {
+class TMap : public std::map<K, D, CMP, pool_allocator<std::pair<const K, D> > > {
 public:
-    typedef pool_allocator<std::pair <K, D> > tAllocator;
+    typedef pool_allocator<std::pair<const K, D> > tAllocator;
 
-    TMap() : TBaseMap<K, D, CMP, tAllocator >() {}
+    TMap() : std::map<K, D, CMP, tAllocator>() {}
     // use correct two-stage name lookup supported in gcc 3.4 and above
-    TMap(const tAllocator& a) : TBaseMap<K, D, CMP, tAllocator>(TBaseMap<K, D, CMP, tAllocator >::key_compare(), a) {}
+    TMap(const tAllocator& a) : std::map<K, D, CMP, tAllocator>(std::map<K, D, CMP, tAllocator>::key_compare(), a) {}
 };
 
 //

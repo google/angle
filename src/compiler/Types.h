@@ -78,8 +78,8 @@ public:
 	}
 };
 
-typedef std::map<TTypeList*, TTypeList*> TStructureMap;
-typedef std::map<TTypeList*, TTypeList*>::iterator TStructureMapIterator;
+typedef TMap<TTypeList*, TTypeList*> TStructureMap;
+typedef TMap<TTypeList*, TTypeList*>::iterator TStructureMapIterator;
 //
 // Base class for things that have a type.
 //

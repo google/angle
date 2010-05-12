@@ -180,7 +180,7 @@ protected:
 
 class TSymbolTableLevel {
 public:
-    typedef std::map<TString, TSymbol*, std::less<TString>, pool_allocator<std::pair<const TString, TSymbol*> > > tLevel;
+    typedef TMap<TString, TSymbol*> tLevel;
     typedef tLevel::const_iterator const_iterator;
     typedef const tLevel::value_type tLevelPair;
     typedef std::pair<tLevel::iterator, bool> tInsertResult;
