@@ -70,14 +70,24 @@ void copyIndices(const InputIndexType *in, GLsizei count, OutputIndexType *out, 
 
 }
 
-TranslatedIndexData IndexDataManager::preRenderValidate(GLenum mode, GLenum type, GLsizei count, Buffer *arrayElementBuffer, const void *indices)
+GLenum IndexDataManager::preRenderValidate(GLenum mode, GLenum type, GLsizei count, Buffer *arrayElementBuffer, const void *indices, TranslatedIndexData *translated)
 {
     ASSERT(type == GL_UNSIGNED_SHORT || type == GL_UNSIGNED_BYTE || type == GL_UNSIGNED_INT);
     ASSERT(count > 0);
 
-    TranslatedIndexData translated;
+    if (arrayElementBuffer != NULL)
+    {
+        GLsizei offset = reinterpret_cast<GLsizei>(indices);
 
-    translated.count = count;
+        if (typeSize(type) * count + offset > static_cast<std::size_t>(arrayElementBuffer->size()))
+        {
+            return GL_INVALID_OPERATION;
+        }
+
+        indices = static_cast<const GLubyte*>(arrayElementBuffer->data()) + offset;
+    }
+
+    translated->count = count;
 
     std::size_t requiredSpace = spaceRequired(type, count);
 
@@ -86,23 +96,18 @@ TranslatedIndexData IndexDataManager::preRenderValidate(GLenum mode, GLenum type
     size_t offset;
     void *output = streamIb->map(requiredSpace, &offset);
 
-    translated.buffer = streamIb;
-    translated.offset = offset;
-    translated.indexSize = indexSize(type);
+    translated->buffer = streamIb;
+    translated->offset = offset;
+    translated->indexSize = indexSize(type);
 
-    translated.indices = output;
-
-    if (arrayElementBuffer != NULL)
-    {
-        indices = static_cast<const GLubyte*>(arrayElementBuffer->data()) + reinterpret_cast<GLsizei>(indices);
-    }
+    translated->indices = output;
 
     if (type == GL_UNSIGNED_BYTE)
     {
         const GLubyte *in = static_cast<const GLubyte*>(indices);
         GLushort *out = static_cast<GLushort*>(output);
 
-        copyIndices(in, count, out, &translated.minIndex, &translated.maxIndex);
+        copyIndices(in, count, out, &translated->minIndex, &translated->maxIndex);
     }
     else if (type == GL_UNSIGNED_INT)
     {
@@ -112,7 +117,7 @@ TranslatedIndexData IndexDataManager::preRenderValidate(GLenum mode, GLenum type
         {
             GLuint *out = static_cast<GLuint*>(output);
 
-            copyIndices(in, count, out, &translated.minIndex, &translated.maxIndex);
+            copyIndices(in, count, out, &translated->minIndex, &translated->maxIndex);
         }
         else
         {
@@ -120,7 +125,7 @@ TranslatedIndexData IndexDataManager::preRenderValidate(GLenum mode, GLenum type
 
             GLushort *out = static_cast<GLushort*>(output);
 
-            copyIndices(in, count, out, &translated.minIndex, &translated.maxIndex);
+            copyIndices(in, count, out, &translated->minIndex, &translated->maxIndex);
         }
     }
     else
@@ -128,17 +133,28 @@ TranslatedIndexData IndexDataManager::preRenderValidate(GLenum mode, GLenum type
         const GLushort *in = static_cast<const GLushort*>(indices);
         GLushort *out = static_cast<GLushort*>(output);
 
-        copyIndices(in, count, out, &translated.minIndex, &translated.maxIndex);
+        copyIndices(in, count, out, &translated->minIndex, &translated->maxIndex);
     }
 
     streamIb->unmap();
 
-    return translated;
+    return GL_NO_ERROR;
 }
 
 std::size_t IndexDataManager::indexSize(GLenum type) const
 {
     return (type == GL_UNSIGNED_INT && mIntIndicesSupported) ? sizeof(GLuint) : sizeof(GLushort);
+}
+
+std::size_t IndexDataManager::typeSize(GLenum type) const
+{
+    switch (type)
+    {
+      case GL_UNSIGNED_INT: return sizeof(GLuint);
+      case GL_UNSIGNED_SHORT: return sizeof(GLushort);
+      default: UNREACHABLE();
+      case GL_UNSIGNED_BYTE: return sizeof(GLubyte);
+    }
 }
 
 std::size_t IndexDataManager::spaceRequired(GLenum type, GLsizei count) const

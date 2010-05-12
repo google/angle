@@ -1967,11 +1967,16 @@ void Context::applyVertexBuffer(const TranslatedIndexData &indexInfo)
 }
 
 // Applies the indices and element array bindings to the Direct3D 9 device
-TranslatedIndexData Context::applyIndexBuffer(const void *indices, GLsizei count, GLenum mode, GLenum type)
+GLenum Context::applyIndexBuffer(const void *indices, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo)
 {
-    TranslatedIndexData indexInfo = mIndexDataManager->preRenderValidate(mode, type, count, getBuffer(mState.elementArrayBuffer), indices);
-    mBufferBackEnd->setupIndicesPreDraw(indexInfo);
-    return indexInfo;
+    GLenum error = mIndexDataManager->preRenderValidate(mode, type, count, getBuffer(mState.elementArrayBuffer), indices, indexInfo);
+
+    if (error == GL_NO_ERROR)
+    {
+        mBufferBackEnd->setupIndicesPreDraw(*indexInfo);
+    }
+
+    return error;
 }
 
 // Applies the shaders and shader constants to the Direct3D 9 device
@@ -2456,7 +2461,14 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void* 
     }
 
     applyState(mode);
-    TranslatedIndexData indexInfo = applyIndexBuffer(indices, count, mode, type);
+
+    TranslatedIndexData indexInfo;
+    GLenum err = applyIndexBuffer(indices, count, mode, type, &indexInfo);
+    if (err != GL_NO_ERROR)
+    {
+        return error(err);
+    }
+
     applyVertexBuffer(indexInfo);
     applyShaders();
     applyTextures();

@@ -45,9 +45,10 @@ class IndexDataManager
     IndexDataManager(Context *context, BufferBackEnd *backend);
     ~IndexDataManager();
 
-    TranslatedIndexData preRenderValidate(GLenum mode, GLenum type, GLsizei count, Buffer *arrayElementBuffer, const void *indices);
+    GLenum preRenderValidate(GLenum mode, GLenum type, GLsizei count, Buffer *arrayElementBuffer, const void *indices, TranslatedIndexData *translated);
 
   private:
+    std::size_t IndexDataManager::typeSize(GLenum type) const;
     std::size_t IndexDataManager::indexSize(GLenum type) const;
     std::size_t spaceRequired(GLenum type, GLsizei count) const;
     TranslatedIndexBuffer *prepareIndexBuffer(GLenum type, std::size_t requiredSpace);

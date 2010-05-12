@@ -353,7 +353,7 @@ class Context
     void applyState(GLenum drawMode);
     void applyVertexBuffer(GLint first, GLsizei count);
     void applyVertexBuffer(const TranslatedIndexData &indexInfo);
-    TranslatedIndexData applyIndexBuffer(const void *indices, GLsizei count, GLenum mode, GLenum type);
+    GLenum applyIndexBuffer(const void *indices, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo);
     void applyShaders();
     void applyTextures();
 
