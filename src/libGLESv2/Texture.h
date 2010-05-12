@@ -69,7 +69,8 @@ class Texture
     class TextureColorbufferProxy : public Colorbuffer
     {
       public:
-        TextureColorbufferProxy(Texture *texture, GLenum target); // target is a 2D-like texture target (GL_TEXTURE_2D or one of the cube face targets)
+        TextureColorbufferProxy(Texture *texture, GLenum target);
+            // target is a 2D-like texture target (GL_TEXTURE_2D or one of the cube face targets)
 
         virtual IDirect3DSurface9 *getRenderTarget();
 

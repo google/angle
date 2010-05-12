@@ -39,6 +39,8 @@ class Framebuffer
     IDirect3DSurface9 *getRenderTarget();
     IDirect3DSurface9 *getDepthStencil();
 
+    unsigned int getRenderTargetSerial();
+
     Colorbuffer *getColorbuffer();
     Depthbuffer *getDepthbuffer();
     Stencilbuffer *getStencilbuffer();

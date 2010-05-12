@@ -36,14 +36,20 @@ class Renderbuffer
     int getWidth();
     int getHeight();
     GLenum getFormat();
+    unsigned int getSerial() const;
+
+    static unsigned int issueSerial();
 
   protected:
     int mWidth;
     int mHeight;
     GLenum mFormat;
+    unsigned int mSerial;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderbuffer);
+
+    static unsigned int mCurrentSerial;
 };
 
 class Colorbuffer : public Renderbuffer

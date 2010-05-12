@@ -36,7 +36,10 @@ namespace gl
 Context::Context(const egl::Config *config)
     : mConfig(config)
 {
+    mAppliedRenderTargetSerial = 0;
+
     setClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
     mState.depthClearValue = 1.0f;
     mState.stencilClearValue = 0;
 
@@ -276,10 +279,14 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         mPsProfile = "ps_2_0";
         mVsProfile = "vs_2_0";
     }
+
+    markAllStateDirty();
 }
 
+// This function will set all of the state-related dirty flags, so that all state is set during next pre-draw.
 void Context::markAllStateDirty()
 {
+    mAppliedRenderTargetSerial = 0;
     mAppliedProgram = 0;
 }
 
@@ -1482,6 +1489,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
 bool Context::applyRenderTarget(bool ignoreViewport)
 {
     IDirect3DDevice9 *device = getDevice();
+
     Framebuffer *framebufferObject = getFramebuffer();
 
     if (!framebufferObject || framebufferObject->completeness() != GL_FRAMEBUFFER_COMPLETE)
@@ -1494,7 +1502,13 @@ bool Context::applyRenderTarget(bool ignoreViewport)
     IDirect3DSurface9 *renderTarget = framebufferObject->getRenderTarget();
     IDirect3DSurface9 *depthStencil = framebufferObject->getDepthStencil();
 
-    device->SetRenderTarget(0, renderTarget);
+    unsigned int renderTargetSerial = framebufferObject->getRenderTargetSerial();
+    if (renderTargetSerial != mAppliedRenderTargetSerial)
+    {
+        device->SetRenderTarget(0, renderTarget);
+        mAppliedRenderTargetSerial = renderTargetSerial;
+    }
+
     device->SetDepthStencilSurface(depthStencil);
 
     D3DVIEWPORT9 viewport;

@@ -445,6 +445,7 @@ class Context
     bool mHasBeenCurrent;
 
     unsigned int mAppliedProgram;
+    unsigned int mAppliedRenderTargetSerial;
 
     const char *mPsProfile;
     const char *mVsProfile;

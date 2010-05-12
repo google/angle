@@ -92,6 +92,18 @@ void Framebuffer::detachRenderbuffer(GLuint renderbuffer)
     }
 }
 
+unsigned int Framebuffer::getRenderTargetSerial()
+{
+    Renderbuffer *colorbuffer = getColorbuffer();
+
+    if (colorbuffer)
+    {
+        return colorbuffer->getSerial();
+    }
+
+    return 0;
+}
+
 IDirect3DSurface9 *Framebuffer::getRenderTarget()
 {
     Renderbuffer *colorbuffer = getColorbuffer();

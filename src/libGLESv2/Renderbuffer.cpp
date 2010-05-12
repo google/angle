@@ -15,11 +15,14 @@
 
 namespace gl
 {
+unsigned int Renderbuffer::mCurrentSerial = 1;
+
 Renderbuffer::Renderbuffer()
 {
     mWidth = 0;
     mHeight = 0;
     mFormat = GL_RGBA4; // default format, needs to be one of the expected renderbuffer formats
+    mSerial = issueSerial();
 }
 
 Renderbuffer::~Renderbuffer()
@@ -66,6 +69,16 @@ GLenum Renderbuffer::getFormat()
     return mFormat;
 }
 
+unsigned int Renderbuffer::getSerial() const
+{
+    return mSerial;
+}
+
+unsigned int Renderbuffer::issueSerial()
+{
+    return mCurrentSerial++;
+}
+
 Colorbuffer::Colorbuffer(IDirect3DSurface9 *renderTarget) : mRenderTarget(renderTarget)
 {
     if (renderTarget)
@@ -78,6 +91,7 @@ Colorbuffer::Colorbuffer(IDirect3DSurface9 *renderTarget) : mRenderTarget(render
         mWidth = description.Width;
         mHeight = description.Height;
     }
+
 }
 
 Colorbuffer::Colorbuffer(int width, int height, GLenum format)
