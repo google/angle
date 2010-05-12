@@ -152,11 +152,11 @@ const unsigned char TAllocation::guardBlockBeginVal = 0xfb;
 const unsigned char TAllocation::guardBlockEndVal   = 0xfe;
 const unsigned char TAllocation::userDataFill       = 0xcd;
 
-#   ifdef GUARD_BLOCKS
+#ifdef GUARD_BLOCKS
 	const size_t TAllocation::guardBlockSize = 16;
-#   else
+#else
 	const size_t TAllocation::guardBlockSize = 0;
-#   endif
+#endif
 
 //
 // Check a single guard block for damage
