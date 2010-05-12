@@ -40,6 +40,7 @@ Texture::Texture(Context *context) : mContext(context)
     mWrapT = GL_REPEAT;
 
     mDirtyMetaData = true;
+    mDirty = true;
     mIsRenderable = false;
 }
 
@@ -63,8 +64,14 @@ bool Texture::setMinFilter(GLenum filter)
       case GL_LINEAR_MIPMAP_NEAREST:
       case GL_NEAREST_MIPMAP_LINEAR:
       case GL_LINEAR_MIPMAP_LINEAR:
-        mMinFilter = filter;
-        return true;
+        {
+            if (mMinFilter != filter)
+            {
+                mMinFilter = filter;
+                mDirty = true;
+            }
+            return true;
+        }
       default:
         return false;
     }
@@ -77,8 +84,14 @@ bool Texture::setMagFilter(GLenum filter)
     {
       case GL_NEAREST:
       case GL_LINEAR:
-        mMagFilter = filter;
-        return true;
+        {
+            if (mMagFilter != filter)
+            {
+                mMagFilter = filter;
+                mDirty = true;
+            }
+            return true;
+        }
       default:
         return false;
     }
@@ -92,8 +105,14 @@ bool Texture::setWrapS(GLenum wrap)
       case GL_REPEAT:
       case GL_CLAMP_TO_EDGE:
       case GL_MIRRORED_REPEAT:
-        mWrapS = wrap;
-        return true;
+        {
+            if (mWrapS != wrap)
+            {
+                mWrapS = wrap;
+                mDirty = true;
+            }
+            return true;
+        }
       default:
         return false;
     }
@@ -107,8 +126,14 @@ bool Texture::setWrapT(GLenum wrap)
       case GL_REPEAT:
       case GL_CLAMP_TO_EDGE:
       case GL_MIRRORED_REPEAT:
-        mWrapT = wrap;
-        return true;
+        {
+            if (mWrapT != wrap)
+            {
+                mWrapT = wrap;
+                mDirty = true;
+            }
+            return true;
+        }
       default:
         return false;
     }
@@ -352,6 +377,11 @@ IDirect3DBaseTexture9 *Texture::getTexture()
     return mBaseTexture;
 }
 
+bool Texture::isDirty() const
+{
+    return (mDirty || mDirtyMetaData || dirtyImageData());
+}
+
 // Returns the top-level texture surface as a render target
 void Texture::needRenderTarget()
 {
@@ -384,6 +414,7 @@ void Texture::pushTexture(IDirect3DBaseTexture9 *newTexture, bool renderable)
     mBaseTexture = newTexture;
     mDirtyMetaData = false;
     mIsRenderable = renderable;
+    mDirty = true;
 }
 
 

@@ -206,6 +206,26 @@ SamplerType Program::getSamplerType(unsigned int samplerIndex)
     return mSamplers[samplerIndex].type;
 }
 
+bool Program::isSamplerDirty(unsigned int samplerIndex) const
+{
+    if (samplerIndex < sizeof(mSamplers)/sizeof(mSamplers[0]))
+    {
+        return mSamplers[samplerIndex].dirty;
+    }
+    else UNREACHABLE();
+
+    return false;
+}
+
+void Program::setSamplerDirty(unsigned int samplerIndex, bool dirty)
+{
+    if (samplerIndex < sizeof(mSamplers)/sizeof(mSamplers[0]))
+    {
+        mSamplers[samplerIndex].dirty = dirty;
+    }
+    else UNREACHABLE();
+}
+
 GLint Program::getUniformLocation(const char *name)
 {
     std::string nameStr(name);
@@ -868,6 +888,14 @@ void Program::dirtyAllUniforms()
     }
 }
 
+void Program::dirtyAllSamplers()
+{
+    for (unsigned int index = 0; index < MAX_TEXTURE_IMAGE_UNITS; ++index)
+    {
+        mSamplers[index].dirty = true;
+    }
+}
+
 // Applies all the uniforms set for this program object to the Direct3D 9 device
 void Program::applyUniforms()
 {
@@ -1248,6 +1276,7 @@ bool Program::defineUniform(const D3DXHANDLE &constantHandle, const D3DXCONSTANT
         mSamplers[samplerIndex].active = true;
         mSamplers[samplerIndex].type = (constantDescription.Type == D3DXPT_SAMPLERCUBE) ? SAMPLER_CUBE : SAMPLER_2D;
         mSamplers[samplerIndex].logicalTextureUnit = 0;
+        mSamplers[samplerIndex].dirty = true;
     }
 
     switch(constantDescription.Class)
@@ -1792,6 +1821,7 @@ bool Program::applyUniform1iv(GLint location, GLsizei count, const GLint *v)
                     {
                         ASSERT(mSamplers[samplerIndex].active);
                         mSamplers[samplerIndex].logicalTextureUnit = mappedSampler;
+                        mSamplers[samplerIndex].dirty = true;
                     }
                 }
             }
@@ -2001,6 +2031,7 @@ void Program::unlink(bool destroy)
     for (int index = 0; index < MAX_TEXTURE_IMAGE_UNITS; index++)
     {
         mSamplers[index].active = false;
+        mSamplers[index].dirty = true;
     }
 
     while (!mUniforms.empty())

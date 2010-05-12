@@ -63,6 +63,8 @@ class Texture
 
     virtual void generateMipmaps() = 0;
 
+    bool isDirty() const;
+
   protected:
     class TextureColorbufferProxy;
     friend class TextureColorbufferProxy;
@@ -133,6 +135,8 @@ class Texture
     IDirect3DBaseTexture9 *mBaseTexture; // This is a weak pointer. The derived class is assumed to own a strong pointer.
     bool mDirtyMetaData;
     bool mIsRenderable;
+
+    bool mDirty;
 
     void loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type,
                        GLint unpackAlignment, const void *input, std::size_t outputPitch, void *output) const;
