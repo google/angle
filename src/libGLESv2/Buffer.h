@@ -29,7 +29,6 @@ class Buffer
 {
   public:
     explicit Buffer(BufferBackEnd *backEnd);
-    ~Buffer();
 
     GLenum bufferData(const void *data, GLsizeiptr size, GLenum usage);
     GLenum bufferSubData(const void *data, GLsizeiptr size, GLintptr offset);
@@ -38,8 +37,6 @@ class Buffer
     GLsizeiptr size() const { return mContents.size(); }
     GLenum usage() const { return mUsage; }
 
-    TranslatedVertexBuffer *identityBuffer() { return mIdentityTranslation; }
-
   private:
     DISALLOW_COPY_AND_ASSIGN(Buffer);
 
@@ -47,9 +44,6 @@ class Buffer
     GLenum mUsage;
 
     BufferBackEnd *mBackEnd;
-    TranslatedVertexBuffer *mIdentityTranslation;
-
-    GLenum copyToIdentityBuffer(GLintptr offset, GLsizeiptr length);
 };
 
 }

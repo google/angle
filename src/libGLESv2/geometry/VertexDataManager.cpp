@@ -66,8 +66,6 @@ GLenum VertexDataManager::preRenderValidate(GLint start, GLsizei count,
     const AttributeState *attribs = mContext->getVertexAttribBlock();
     const std::bitset<MAX_VERTEX_ATTRIBS> activeAttribs = getActiveAttribs();
 
-    std::bitset<MAX_VERTEX_ATTRIBS> translateOrLift;
-
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
     {
         if (!activeAttribs[i] && attribs[i].mEnabled && attribs[i].mBoundBuffer != 0 && !mContext->getBuffer(attribs[i].mBoundBuffer))
@@ -81,96 +79,69 @@ GLenum VertexDataManager::preRenderValidate(GLint start, GLsizei count,
 
     processNonArrayAttributes(attribs, activeAttribs, translated);
 
-    // Handle the identity-mapped attributes.
+    // Process array attributes.
+
+    std::size_t requiredSpace = 0;
 
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
     {
         if (activeAttribs[i] && attribs[i].mEnabled)
         {
-            if (attribs[i].mBoundBuffer != 0 && mBackend->getFormatConverter(attribs[i].mType, attribs[i].mSize, attribs[i].mNormalized).identity)
-            {
-                std::size_t stride = interpretGlStride(attribs[i]);
-                std::size_t offset = static_cast<std::size_t>(static_cast<const char*>(attribs[i].mPointer) - static_cast<const char*>(NULL)) + stride * start;
-
-                if (mBackend->validateStream(attribs[i].mType, attribs[i].mSize, stride, offset))
-                {
-                    translated[i].type = attribs[i].mType;
-                    translated[i].size = attribs[i].mSize;
-                    translated[i].normalized = attribs[i].mNormalized;
-                    translated[i].stride = stride;
-                    translated[i].offset = offset;
-                    translated[i].buffer = mContext->getBuffer(attribs[i].mBoundBuffer)->identityBuffer();
-                }
-                else
-                {
-                    translateOrLift[i] = true;
-                }
-            }
-            else
-            {
-                translateOrLift[i] = true;
-            }
+            requiredSpace += spaceRequired(attribs[i], count);
         }
     }
 
-    // Handle any attributes needing translation or lifting.
-    if (translateOrLift.any())
+    if (requiredSpace > mStreamBuffer->size())
     {
-        std::size_t requiredSpace = 0;
+        std::size_t newSize = std::max(requiredSpace, 3 * mStreamBuffer->size() / 2); // 1.5 x mStreamBuffer->size() is arbitrary and should be checked to see we don't have too many reallocations.
 
-        for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
+        TranslatedVertexBuffer *newStreamBuffer = mBackend->createVertexBuffer(newSize);
+
+        delete mStreamBuffer;
+        mStreamBuffer = newStreamBuffer;
+    }
+
+    mStreamBuffer->reserveSpace(requiredSpace);
+
+    for (size_t i = 0; i < MAX_VERTEX_ATTRIBS; i++)
+    {
+        if (activeAttribs[i] && attribs[i].mEnabled)
         {
-            if (translateOrLift[i])
+            FormatConverter formatConverter = mBackend->getFormatConverter(attribs[i].mType, attribs[i].mSize, attribs[i].mNormalized);
+
+            translated[i].type = attribs[i].mType;
+            translated[i].size = attribs[i].mSize;
+            translated[i].normalized = attribs[i].mNormalized;
+            translated[i].stride = formatConverter.outputVertexSize;
+            translated[i].buffer = mStreamBuffer;
+
+            void *output = mStreamBuffer->map(spaceRequired(attribs[i], count), &translated[i].offset);
+
+            const void *input;
+            if (attribs[i].mBoundBuffer)
             {
-                requiredSpace += spaceRequired(attribs[i], count);
+                input = mContext->getBuffer(attribs[i].mBoundBuffer)->data();
+                input = static_cast<const char*>(input) + reinterpret_cast<size_t>(attribs[i].mPointer);
             }
-        }
-
-        if (requiredSpace > mStreamBuffer->size())
-        {
-            std::size_t newSize = std::max(requiredSpace, 3 * mStreamBuffer->size() / 2); // 1.5 x mStreamBuffer->size() is arbitrary and should be checked to see we don't have too many reallocations.
-
-            TranslatedVertexBuffer *newStreamBuffer = mBackend->createVertexBuffer(newSize);
-
-            delete mStreamBuffer;
-            mStreamBuffer = newStreamBuffer;
-        }
-
-        mStreamBuffer->reserveSpace(requiredSpace);
-
-        for (size_t i = 0; i < MAX_VERTEX_ATTRIBS; i++)
-        {
-            if (translateOrLift[i])
+            else
             {
-                FormatConverter formatConverter = mBackend->getFormatConverter(attribs[i].mType, attribs[i].mSize, attribs[i].mNormalized);
+                input = attribs[i].mPointer;
+            }
 
-                translated[i].type = attribs[i].mType;
-                translated[i].size = attribs[i].mSize;
-                translated[i].normalized = attribs[i].mNormalized;
-                translated[i].stride = formatConverter.outputVertexSize;
-                translated[i].buffer = mStreamBuffer;
+            size_t inputStride = interpretGlStride(attribs[i]);
 
-                void *output = mStreamBuffer->map(spaceRequired(attribs[i], count), &translated[i].offset);
+            input = static_cast<const char*>(input) + inputStride * start;
 
-                const void *input;
-                if (attribs[i].mBoundBuffer)
-                {
-                    input = mContext->getBuffer(attribs[i].mBoundBuffer)->data();
-                    input = static_cast<const char*>(input) + reinterpret_cast<size_t>(attribs[i].mPointer);
-                }
-                else
-                {
-                    input = attribs[i].mPointer;
-                }
-
-                size_t inputStride = interpretGlStride(attribs[i]);
-
-                input = static_cast<const char*>(input) + inputStride * start;
-
+            if (formatConverter.identity && inputStride == typeSize(attribs[i].mType) * attribs[i].mSize)
+            {
+                memcpy(output, input, count * inputStride);
+            }
+            else
+            {
                 formatConverter.convertArray(input, inputStride, count, output);
-
-                mStreamBuffer->unmap();
             }
+
+            mStreamBuffer->unmap();
         }
     }
 

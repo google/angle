@@ -22,13 +22,8 @@ namespace gl
 {
 
 Buffer::Buffer(BufferBackEnd *backEnd)
-    : mBackEnd(backEnd), mIdentityTranslation(NULL)
+    : mBackEnd(backEnd)
 {
-}
-
-Buffer::~Buffer()
-{
-    delete mIdentityTranslation;
 }
 
 GLenum Buffer::bufferData(const void* data, GLsizeiptr size, GLenum usage)
@@ -40,14 +35,10 @@ GLenum Buffer::bufferData(const void* data, GLsizeiptr size, GLenum usage)
     if (size == 0)
     {
         mContents.clear();
-
-        delete mIdentityTranslation;
-        mIdentityTranslation = NULL;
     }
     else if (size != mContents.size())
     {
         // vector::resize only provides the basic exception guarantee, so use temporaries & swap to get the strong exception guarantee.
-        // We don't want to risk having mContents and mIdentityTranslation that have different contents or even different sizes.
         std::vector<GLubyte> newContents;
 
         if (newdata != NULL)
@@ -59,14 +50,10 @@ GLenum Buffer::bufferData(const void* data, GLsizeiptr size, GLenum usage)
             newContents.assign(size, 0);
         }
 
-        TranslatedVertexBuffer *newIdentityTranslation = mBackEnd->createVertexBuffer(size);
-
         // No exceptions allowed after this point.
 
         mContents.swap(newContents);
 
-        delete mIdentityTranslation;
-        mIdentityTranslation = newIdentityTranslation;
     }
     else if (newdata != NULL)
     {
@@ -75,7 +62,7 @@ GLenum Buffer::bufferData(const void* data, GLsizeiptr size, GLenum usage)
 
     mUsage = usage;
 
-    return copyToIdentityBuffer(0, size);
+    return GL_NO_ERROR;
 }
 
 GLenum Buffer::bufferSubData(const void* data, GLsizeiptr size, GLintptr offset)
@@ -86,22 +73,6 @@ GLenum Buffer::bufferSubData(const void* data, GLsizeiptr size, GLintptr offset)
 
     const GLubyte *newdata = static_cast<const GLubyte*>(data);
     copy(newdata, newdata + size, mContents.begin() + offset);
-
-    return copyToIdentityBuffer(offset, size);
-}
-
-GLenum Buffer::copyToIdentityBuffer(GLintptr offset, GLsizeiptr length)
-{
-    ASSERT(offset >= 0 && length >= 0);
-
-    if (length > 0) // If length == 0 mIdentityTranslation might be NULL.
-    {
-        // This is a stalling map. Not great for performance.
-        GLubyte *p = static_cast<GLubyte*>(mIdentityTranslation->map());
-
-        memcpy(p + offset, &mContents[0] + offset, length);
-        mIdentityTranslation->unmap();
-    }
 
     return GL_NO_ERROR;
 }
