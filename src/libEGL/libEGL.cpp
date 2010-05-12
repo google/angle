@@ -137,8 +137,8 @@ EGLBoolean __stdcall eglInitialize(EGLDisplay dpy, EGLint *major, EGLint *minor)
             return error(EGL_NOT_INITIALIZED, EGL_FALSE);
         }
 
-        *major = 1;
-        *minor = 4;
+        if (major) *major = 1;
+        if (minor) *minor = 4;
 
         return success(EGL_TRUE);
     }
