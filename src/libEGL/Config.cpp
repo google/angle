@@ -314,67 +314,67 @@ size_t ConfigSet::size() const
 
 bool ConfigSet::getConfigs(EGLConfig *configs, const EGLint *attribList, EGLint configSize, EGLint *numConfig)
 {
-    if (configs)
+    vector<const Config*> passed;
+    passed.reserve(mSet.size());
+
+    for (Iterator config = mSet.begin(); config != mSet.end(); config++)
     {
-        vector<const Config*> passed;
-        passed.reserve(mSet.size());
+        bool match = true;
+        const EGLint *attribute = attribList;
 
-        for (Iterator config = mSet.begin(); config != mSet.end(); config++)
+        while (attribute[0] != EGL_NONE)
         {
-            bool match = true;
-            const EGLint *attribute = attribList;
-
-            while (attribute[0] != EGL_NONE)
+            switch (attribute[0])
             {
-                switch (attribute[0])
-                {
-                  case EGL_BUFFER_SIZE:               match = config->mBufferSize >= attribute[1];                            break;
-                  case EGL_ALPHA_SIZE:                match = config->mAlphaSize >= attribute[1];                            break;
-                  case EGL_BLUE_SIZE:                 match = config->mBlueSize >= attribute[1];                            break;
-                  case EGL_GREEN_SIZE:                match = config->mGreenSize >= attribute[1];                            break;
-                  case EGL_RED_SIZE:                  match = config->mRedSize >= attribute[1];                            break;
-                  case EGL_DEPTH_SIZE:                match = config->mDepthSize >= attribute[1];                            break;
-                  case EGL_STENCIL_SIZE:              match = config->mStencilSize >= attribute[1];                        break;
-                  case EGL_CONFIG_CAVEAT:             match = config->mConfigCaveat == attribute[1];                        break;
-                  case EGL_CONFIG_ID:                 match = config->mConfigID == attribute[1];                            break;
-                  case EGL_LEVEL:                     match = config->mLevel >= attribute[1];                                break;
-                  case EGL_NATIVE_RENDERABLE:         match = config->mNativeRenderable == attribute[1];                    break;
-                  case EGL_NATIVE_VISUAL_TYPE:        match = config->mNativeVisualType == attribute[1];                    break;
-                  case EGL_SAMPLES:                   match = config->mSamples >= attribute[1];                            break;
-                  case EGL_SAMPLE_BUFFERS:            match = config->mSampleBuffers >= attribute[1];                        break;
-                  case EGL_SURFACE_TYPE:              match = (config->mSurfaceType & attribute[1]) == attribute[1];        break;
-                  case EGL_TRANSPARENT_TYPE:          match = config->mTransparentType == attribute[1];                    break;
-                  case EGL_TRANSPARENT_BLUE_VALUE:    match = config->mTransparentBlueValue == attribute[1];                break;
-                  case EGL_TRANSPARENT_GREEN_VALUE:   match = config->mTransparentGreenValue == attribute[1];                break;
-                  case EGL_TRANSPARENT_RED_VALUE:     match = config->mTransparentRedValue == attribute[1];                break;
-                  case EGL_BIND_TO_TEXTURE_RGB:       match = config->mBindToTextureRGB == attribute[1];                    break;
-                  case EGL_BIND_TO_TEXTURE_RGBA:      match = config->mBindToTextureRGBA == attribute[1];                    break;
-                  case EGL_MIN_SWAP_INTERVAL:         match = config->mMinSwapInterval == attribute[1];                    break;
-                  case EGL_MAX_SWAP_INTERVAL:         match = config->mMaxSwapInterval == attribute[1];                    break;
-                  case EGL_LUMINANCE_SIZE:            match = config->mLuminanceSize >= attribute[1];                        break;
-                  case EGL_ALPHA_MASK_SIZE:           match = config->mAlphaMaskSize >= attribute[1];                        break;
-                  case EGL_COLOR_BUFFER_TYPE:         match = config->mColorBufferType == attribute[1];                    break;
-                  case EGL_RENDERABLE_TYPE:           match = (config->mRenderableType & attribute[1]) == attribute[1];    break;
-                  case EGL_MATCH_NATIVE_PIXMAP:       match = false; UNIMPLEMENTED();                                        break;
-                  case EGL_CONFORMANT:                match = (config->mConformant & attribute[1]) == attribute[1];        break;
-                  default:
-                    return false;
-                }
-
-                if (!match)
-                {
-                    break;
-                }
-
-                attribute += 2;
+              case EGL_BUFFER_SIZE:               match = config->mBufferSize >= attribute[1];                            break;
+              case EGL_ALPHA_SIZE:                match = config->mAlphaSize >= attribute[1];                            break;
+              case EGL_BLUE_SIZE:                 match = config->mBlueSize >= attribute[1];                            break;
+              case EGL_GREEN_SIZE:                match = config->mGreenSize >= attribute[1];                            break;
+              case EGL_RED_SIZE:                  match = config->mRedSize >= attribute[1];                            break;
+              case EGL_DEPTH_SIZE:                match = config->mDepthSize >= attribute[1];                            break;
+              case EGL_STENCIL_SIZE:              match = config->mStencilSize >= attribute[1];                        break;
+              case EGL_CONFIG_CAVEAT:             match = config->mConfigCaveat == attribute[1];                        break;
+              case EGL_CONFIG_ID:                 match = config->mConfigID == attribute[1];                            break;
+              case EGL_LEVEL:                     match = config->mLevel >= attribute[1];                                break;
+              case EGL_NATIVE_RENDERABLE:         match = config->mNativeRenderable == attribute[1];                    break;
+              case EGL_NATIVE_VISUAL_TYPE:        match = config->mNativeVisualType == attribute[1];                    break;
+              case EGL_SAMPLES:                   match = config->mSamples >= attribute[1];                            break;
+              case EGL_SAMPLE_BUFFERS:            match = config->mSampleBuffers >= attribute[1];                        break;
+              case EGL_SURFACE_TYPE:              match = (config->mSurfaceType & attribute[1]) == attribute[1];        break;
+              case EGL_TRANSPARENT_TYPE:          match = config->mTransparentType == attribute[1];                    break;
+              case EGL_TRANSPARENT_BLUE_VALUE:    match = config->mTransparentBlueValue == attribute[1];                break;
+              case EGL_TRANSPARENT_GREEN_VALUE:   match = config->mTransparentGreenValue == attribute[1];                break;
+              case EGL_TRANSPARENT_RED_VALUE:     match = config->mTransparentRedValue == attribute[1];                break;
+              case EGL_BIND_TO_TEXTURE_RGB:       match = config->mBindToTextureRGB == attribute[1];                    break;
+              case EGL_BIND_TO_TEXTURE_RGBA:      match = config->mBindToTextureRGBA == attribute[1];                    break;
+              case EGL_MIN_SWAP_INTERVAL:         match = config->mMinSwapInterval == attribute[1];                    break;
+              case EGL_MAX_SWAP_INTERVAL:         match = config->mMaxSwapInterval == attribute[1];                    break;
+              case EGL_LUMINANCE_SIZE:            match = config->mLuminanceSize >= attribute[1];                        break;
+              case EGL_ALPHA_MASK_SIZE:           match = config->mAlphaMaskSize >= attribute[1];                        break;
+              case EGL_COLOR_BUFFER_TYPE:         match = config->mColorBufferType == attribute[1];                    break;
+              case EGL_RENDERABLE_TYPE:           match = (config->mRenderableType & attribute[1]) == attribute[1];    break;
+              case EGL_MATCH_NATIVE_PIXMAP:       match = false; UNIMPLEMENTED();                                        break;
+              case EGL_CONFORMANT:                match = (config->mConformant & attribute[1]) == attribute[1];        break;
+              default:
+                return false;
             }
 
-            if (match)
+            if (!match)
             {
-                passed.push_back(&*config);
+                break;
             }
+
+            attribute += 2;
         }
 
+        if (match)
+        {
+            passed.push_back(&*config);
+        }
+    }
+
+    if (configs)
+    {
         sort(passed.begin(), passed.end(), SortConfig(attribList));
 
         EGLint index;
@@ -387,7 +387,7 @@ bool ConfigSet::getConfigs(EGLConfig *configs, const EGLint *attribList, EGLint 
     }
     else
     {
-        *numConfig = (EGLint)mSet.size();
+        *numConfig = passed.size();
     }
 
     return true;
