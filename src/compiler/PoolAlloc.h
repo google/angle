@@ -32,6 +32,7 @@
 //
 
 #include <stddef.h>
+#include <string.h>
 #include <vector>
 
 // If we are using guard blocks, we must track each indivual
