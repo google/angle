@@ -84,6 +84,7 @@ static int errorAtom = 0;
 static int __LINE__Atom = 0;
 static int __FILE__Atom = 0;
 static int __VERSION__Atom = 0;
+static int gl_esAtom = 0;
 static int versionAtom = 0;
 static int extensionAtom = 0;
 
@@ -118,6 +119,7 @@ int InitCPP(void)
     __LINE__Atom = LookUpAddString(atable, "__LINE__");
     __FILE__Atom = LookUpAddString(atable, "__FILE__");
 	__VERSION__Atom = LookUpAddString(atable, "__VERSION__");
+    gl_esAtom = LookUpAddString(atable, "GL_ES");
     versionAtom = LookUpAddString(atable, "version");
     extensionAtom = LookUpAddString(atable, "extension");
     macros = NewScopeInPool(mem_CreatePool(0, 0));
@@ -897,6 +899,12 @@ int MacroExpand(int atom, yystypepp * yylvalpp)
 	if (atom == __VERSION__Atom) {
         strcpy(yylvalpp->symbol_name,ESSL_VERSION_STRING);
         yylvalpp->sc_int = atoi(yylvalpp->symbol_name);
+        UngetToken(CPP_INTCONSTANT, yylvalpp);
+        return 1;
+    }
+    if (atom == gl_esAtom) {
+        strcpy(yylvalpp->symbol_name,"1");
+        yylvalpp->sc_int = 1;
         UngetToken(CPP_INTCONSTANT, yylvalpp);
         return 1;
     }
