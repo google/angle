@@ -72,7 +72,7 @@ GLenum Buffer::bufferSubData(const void* data, GLsizeiptr size, GLintptr offset)
     if (size + offset > static_cast<GLsizeiptr>(mContents.size())) return GL_INVALID_VALUE;
 
     const GLubyte *newdata = static_cast<const GLubyte*>(data);
-    copy(newdata, newdata + size, mContents.begin() + offset);
+    memcpy(&mContents[offset], newdata, size);
 
     return GL_NO_ERROR;
 }
