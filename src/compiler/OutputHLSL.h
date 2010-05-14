@@ -73,6 +73,12 @@ class OutputHLSL : public TIntermTraverser
     bool mUsesTexture2DProj_bias;
     bool mUsesTextureCube;
     bool mUsesTextureCube_bias;
+    bool mUsesDepthRange;
+    bool mUsesXor;
+    bool mUsesMod1;
+    bool mUsesMod2;
+    bool mUsesMod3;
+    bool mUsesMod4;
     bool mUsesFaceforward1;
     bool mUsesFaceforward2;
     bool mUsesFaceforward3;

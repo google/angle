@@ -34,6 +34,12 @@ OutputHLSL::OutputHLSL(TParseContext &context) : TIntermTraverser(true, true, tr
     mUsesTexture2DProj_bias = false;
     mUsesTextureCube = false;
     mUsesTextureCube_bias = false;
+    mUsesDepthRange = false;
+    mUsesXor = false;
+    mUsesMod1 = false;
+    mUsesMod2 = false;
+    mUsesMod3 = false;
+    mUsesMod4 = false;
     mUsesFaceforward1 = false;
     mUsesFaceforward2 = false;
     mUsesFaceforward3 = false;
@@ -476,40 +482,63 @@ void OutputHLSL::header()
         out << "\n";
     }
 
-    out << "struct gl_DepthRangeParameters\n"
-           "{\n"
-           "    float near;\n"
-           "    float far;\n"
-           "    float diff;\n"
-           "};\n"
-           "\n"
-           "uniform gl_DepthRangeParameters gl_DepthRange;\n"
-           "\n"
-           "bool xor(bool p, bool q)\n"
-           "{\n"
-           "    return (p || q) && !(p && q);\n"
-           "}\n"
-           "\n"
-           "float mod(float x, float y)\n"
-           "{\n"
-           "    return x - y * floor(x / y);\n"
-           "}\n"
-           "\n"
-           "float2 mod(float2 x, float y)\n"
-           "{\n"
-           "    return x - y * floor(x / y);\n"
-           "}\n"
-           "\n"
-           "float3 mod(float3 x, float y)\n"
-           "{\n"
-           "    return x - y * floor(x / y);\n"
-           "}\n"
-           "\n"
-           "float4 mod(float4 x, float y)\n"
-           "{\n"
-           "    return x - y * floor(x / y);\n"
-           "}\n"
-           "\n";
+    if (mUsesDepthRange)
+    {
+        out << "struct gl_DepthRangeParameters\n"
+               "{\n"
+               "    float near;\n"
+               "    float far;\n"
+               "    float diff;\n"
+               "};\n"
+               "\n"
+               "uniform gl_DepthRangeParameters gl_DepthRange;\n"
+               "\n";
+    }
+
+    if (mUsesXor)
+    {
+        out << "bool xor(bool p, bool q)\n"
+               "{\n"
+               "    return (p || q) && !(p && q);\n"
+               "}\n"
+               "\n";
+    }
+
+    if (mUsesMod1)
+    {
+        out << "float mod(float x, float y)\n"
+               "{\n"
+               "    return x - y * floor(x / y);\n"
+               "}\n"
+               "\n";
+    }
+    
+    if (mUsesMod2)
+    {
+        out << "float2 mod(float2 x, float y)\n"
+               "{\n"
+               "    return x - y * floor(x / y);\n"
+               "}\n"
+               "\n";
+    }
+    
+    if (mUsesMod3)
+    {
+        out << "float3 mod(float3 x, float y)\n"
+               "{\n"
+               "    return x - y * floor(x / y);\n"
+               "}\n"
+               "\n";
+    }
+
+    if (mUsesMod4)
+    {
+        out << "float4 mod(float4 x, float y)\n"
+               "{\n"
+               "    return x - y * floor(x / y);\n"
+               "}\n"
+               "\n";
+    }
 
     if (mUsesFaceforward1)
     {
@@ -812,6 +841,11 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
     {
         out << "gl_Color";
     }
+    else if (name == "gl_DepthRange")
+    {
+        mUsesDepthRange = true;
+        out << name;
+    }
     else
     {
         TQualifier qualifier = node->getQualifier();
@@ -1042,7 +1076,10 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
       case EOpMatrixTimesVector: outputTriplet(visit, "mul(transpose(", "), ", ")"); break;
       case EOpMatrixTimesMatrix: outputTriplet(visit, "transpose(mul(transpose(", "), transpose(", ")))"); break;
       case EOpLogicalOr:         outputTriplet(visit, "(", " || ", ")");  break;
-      case EOpLogicalXor:        outputTriplet(visit, "xor(", ", ", ")"); break;
+      case EOpLogicalXor:
+        mUsesXor = true;
+        outputTriplet(visit, "xor(", ", ", ")");
+        break;
       case EOpLogicalAnd:        outputTriplet(visit, "(", " && ", ")");  break;
       default: UNREACHABLE();
     }
@@ -1457,7 +1494,20 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpGreaterThanEqual: outputTriplet(visit, "(", " >= ", ")");                break;
       case EOpVectorEqual:      outputTriplet(visit, "(", " == ", ")");                break;
       case EOpVectorNotEqual:   outputTriplet(visit, "(", " != ", ")");                break;
-      case EOpMod:              outputTriplet(visit, "mod(", ", ", ")");               break;
+      case EOpMod:
+        {
+            switch (node->getSequence()[0]->getAsTyped()->getSize())   // Number of components in the first argument
+            {
+              case 1: mUsesMod1 = true; break;
+              case 2: mUsesMod2 = true; break;
+              case 3: mUsesMod3 = true; break;
+              case 4: mUsesMod4 = true; break;
+              default: UNREACHABLE();
+            }
+
+            outputTriplet(visit, "mod(", ", ", ")");
+        }
+        break;
       case EOpPow:              outputTriplet(visit, "pow(", ", ", ")");               break;
       case EOpAtan:
         ASSERT(node->getSequence().size() == 2);   // atan(x) is a unary operator
