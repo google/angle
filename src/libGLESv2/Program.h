@@ -36,6 +36,10 @@ struct Uniform
 
     unsigned char *data;
     bool dirty;
+
+    D3DXHANDLE vsHandle;
+    D3DXHANDLE psHandle;
+    bool handlesSet;
 };
 
 // Struct used for correlating uniforms/elements of uniform arrays to handles
@@ -146,6 +150,8 @@ class Program
     bool applyUniform2iv(GLint location, GLsizei count, const GLint *v);
     bool applyUniform3iv(GLint location, GLsizei count, const GLint *v);
     bool applyUniform4iv(GLint location, GLsizei count, const GLint *v);
+
+    void getConstantHandles(Uniform *targetUniform, D3DXHANDLE *constantPS, D3DXHANDLE *constantVS);
 
     void appendToInfoLog(const char *info, ...);
     void resetInfoLog();

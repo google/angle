@@ -32,6 +32,7 @@ Uniform::Uniform(GLenum type, const std::string &name, unsigned int arraySize) :
     data = new unsigned char[bytes];
     memset(data, 0, bytes);
     dirty = true;
+    handlesSet = false;
 }
 
 Uniform::~Uniform()
@@ -1793,8 +1794,10 @@ bool Program::applyUniform1bv(GLint location, GLsizei count, const GLboolean *v)
 
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
 
-    D3DXHANDLE constantPS = mConstantTablePS->GetConstantByName(0, targetUniform->name.c_str());
-    D3DXHANDLE constantVS = mConstantTableVS->GetConstantByName(0, targetUniform->name.c_str());
+    D3DXHANDLE constantPS;
+    D3DXHANDLE constantVS;
+    getConstantHandles(targetUniform, &constantPS, &constantVS);
+
     IDirect3DDevice9 *device = getDevice();
 
     if (constantPS)
@@ -1826,8 +1829,9 @@ bool Program::applyUniform2bv(GLint location, GLsizei count, const GLboolean *v)
 
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
 
-    D3DXHANDLE constantPS = mConstantTablePS->GetConstantByName(0, targetUniform->name.c_str());
-    D3DXHANDLE constantVS = mConstantTableVS->GetConstantByName(0, targetUniform->name.c_str());
+    D3DXHANDLE constantPS;
+    D3DXHANDLE constantVS;
+    getConstantHandles(targetUniform, &constantPS, &constantVS);
     IDirect3DDevice9 *device = getDevice();
 
     if (constantPS)
@@ -1860,8 +1864,9 @@ bool Program::applyUniform3bv(GLint location, GLsizei count, const GLboolean *v)
 
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
 
-    D3DXHANDLE constantPS = mConstantTablePS->GetConstantByName(0, targetUniform->name.c_str());
-    D3DXHANDLE constantVS = mConstantTableVS->GetConstantByName(0, targetUniform->name.c_str());
+    D3DXHANDLE constantPS;
+    D3DXHANDLE constantVS;
+    getConstantHandles(targetUniform, &constantPS, &constantVS);
     IDirect3DDevice9 *device = getDevice();
 
     if (constantPS)
@@ -1895,8 +1900,9 @@ bool Program::applyUniform4bv(GLint location, GLsizei count, const GLboolean *v)
 
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
 
-    D3DXHANDLE constantPS = mConstantTablePS->GetConstantByName(0, targetUniform->name.c_str());
-    D3DXHANDLE constantVS = mConstantTableVS->GetConstantByName(0, targetUniform->name.c_str());
+    D3DXHANDLE constantPS;
+    D3DXHANDLE constantVS;
+    getConstantHandles(targetUniform, &constantPS, &constantVS);
     IDirect3DDevice9 *device = getDevice();
 
     if (constantPS)
@@ -1918,8 +1924,9 @@ bool Program::applyUniform1fv(GLint location, GLsizei count, const GLfloat *v)
 {
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
 
-    D3DXHANDLE constantPS = mConstantTablePS->GetConstantByName(0, targetUniform->name.c_str());
-    D3DXHANDLE constantVS = mConstantTableVS->GetConstantByName(0, targetUniform->name.c_str());
+    D3DXHANDLE constantPS;
+    D3DXHANDLE constantVS;
+    getConstantHandles(targetUniform, &constantPS, &constantVS);
     IDirect3DDevice9 *device = getDevice();
 
     if (constantPS)
@@ -1948,8 +1955,9 @@ bool Program::applyUniform2fv(GLint location, GLsizei count, const GLfloat *v)
 
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
 
-    D3DXHANDLE constantPS = mConstantTablePS->GetConstantByName(0, targetUniform->name.c_str());
-    D3DXHANDLE constantVS = mConstantTableVS->GetConstantByName(0, targetUniform->name.c_str());
+    D3DXHANDLE constantPS;
+    D3DXHANDLE constantVS;
+    getConstantHandles(targetUniform, &constantPS, &constantVS);
     IDirect3DDevice9 *device = getDevice();
 
     if (constantPS)
@@ -1980,8 +1988,9 @@ bool Program::applyUniform3fv(GLint location, GLsizei count, const GLfloat *v)
 
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
 
-    D3DXHANDLE constantPS = mConstantTablePS->GetConstantByName(0, targetUniform->name.c_str());
-    D3DXHANDLE constantVS = mConstantTableVS->GetConstantByName(0, targetUniform->name.c_str());
+    D3DXHANDLE constantPS;
+    D3DXHANDLE constantVS;
+    getConstantHandles(targetUniform, &constantPS, &constantVS);
     IDirect3DDevice9 *device = getDevice();
 
     if (constantPS)
@@ -2003,8 +2012,9 @@ bool Program::applyUniform4fv(GLint location, GLsizei count, const GLfloat *v)
 {
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
 
-    D3DXHANDLE constantPS = mConstantTablePS->GetConstantByName(0, targetUniform->name.c_str());
-    D3DXHANDLE constantVS = mConstantTableVS->GetConstantByName(0, targetUniform->name.c_str());
+    D3DXHANDLE constantPS;
+    D3DXHANDLE constantVS;
+    getConstantHandles(targetUniform, &constantPS, &constantVS);
     IDirect3DDevice9 *device = getDevice();
 
     if (constantPS)
@@ -2036,8 +2046,9 @@ bool Program::applyUniformMatrix2fv(GLint location, GLsizei count, const GLfloat
 
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
 
-    D3DXHANDLE constantPS = mConstantTablePS->GetConstantByName(0, targetUniform->name.c_str());
-    D3DXHANDLE constantVS = mConstantTableVS->GetConstantByName(0, targetUniform->name.c_str());
+    D3DXHANDLE constantPS;
+    D3DXHANDLE constantVS;
+    getConstantHandles(targetUniform, &constantPS, &constantVS);
     IDirect3DDevice9 *device = getDevice();
 
     if (constantPS)
@@ -2071,8 +2082,9 @@ bool Program::applyUniformMatrix3fv(GLint location, GLsizei count, const GLfloat
 
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
 
-    D3DXHANDLE constantPS = mConstantTablePS->GetConstantByName(0, targetUniform->name.c_str());
-    D3DXHANDLE constantVS = mConstantTableVS->GetConstantByName(0, targetUniform->name.c_str());
+    D3DXHANDLE constantPS;
+    D3DXHANDLE constantVS;
+    getConstantHandles(targetUniform, &constantPS, &constantVS);
     IDirect3DDevice9 *device = getDevice();
 
     if (constantPS)
@@ -2106,8 +2118,9 @@ bool Program::applyUniformMatrix4fv(GLint location, GLsizei count, const GLfloat
 
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
 
-    D3DXHANDLE constantPS = mConstantTablePS->GetConstantByName(0, targetUniform->name.c_str());
-    D3DXHANDLE constantVS = mConstantTableVS->GetConstantByName(0, targetUniform->name.c_str());
+    D3DXHANDLE constantPS;
+    D3DXHANDLE constantVS;
+    getConstantHandles(targetUniform, &constantPS, &constantVS);
     IDirect3DDevice9 *device = getDevice();
 
     if (constantPS)
@@ -2129,8 +2142,9 @@ bool Program::applyUniform1iv(GLint location, GLsizei count, const GLint *v)
 {
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
 
-    D3DXHANDLE constantPS = mConstantTablePS->GetConstantByName(0, targetUniform->name.c_str());
-    D3DXHANDLE constantVS = mConstantTableVS->GetConstantByName(0, targetUniform->name.c_str());
+    D3DXHANDLE constantPS;
+    D3DXHANDLE constantVS;
+    getConstantHandles(targetUniform, &constantPS, &constantVS);
     IDirect3DDevice9 *device = getDevice();
 
     if (constantPS)
@@ -2190,8 +2204,9 @@ bool Program::applyUniform2iv(GLint location, GLsizei count, const GLint *v)
 
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
 
-    D3DXHANDLE constantPS = mConstantTablePS->GetConstantByName(0, targetUniform->name.c_str());
-    D3DXHANDLE constantVS = mConstantTableVS->GetConstantByName(0, targetUniform->name.c_str());
+    D3DXHANDLE constantPS;
+    D3DXHANDLE constantVS;
+    getConstantHandles(targetUniform, &constantPS, &constantVS);
     IDirect3DDevice9 *device = getDevice();
 
     if (constantPS)
@@ -2222,8 +2237,9 @@ bool Program::applyUniform3iv(GLint location, GLsizei count, const GLint *v)
 
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
 
-    D3DXHANDLE constantPS = mConstantTablePS->GetConstantByName(0, targetUniform->name.c_str());
-    D3DXHANDLE constantVS = mConstantTableVS->GetConstantByName(0, targetUniform->name.c_str());
+    D3DXHANDLE constantPS;
+    D3DXHANDLE constantVS;
+    getConstantHandles(targetUniform, &constantPS, &constantVS);
     IDirect3DDevice9 *device = getDevice();
 
     if (constantPS)
@@ -2254,8 +2270,9 @@ bool Program::applyUniform4iv(GLint location, GLsizei count, const GLint *v)
 
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
 
-    D3DXHANDLE constantPS = mConstantTablePS->GetConstantByName(0, targetUniform->name.c_str());
-    D3DXHANDLE constantVS = mConstantTableVS->GetConstantByName(0, targetUniform->name.c_str());
+    D3DXHANDLE constantPS;
+    D3DXHANDLE constantVS;
+    getConstantHandles(targetUniform, &constantPS, &constantVS);
     IDirect3DDevice9 *device = getDevice();
 
     if (constantPS)
@@ -2657,5 +2674,18 @@ bool Program::validateSamplers() const
     }
 
     return true;
+}
+
+void Program::getConstantHandles(Uniform *targetUniform, D3DXHANDLE *constantPS, D3DXHANDLE *constantVS)
+{
+    if (!targetUniform->handlesSet)
+    {
+        targetUniform->psHandle = mConstantTablePS->GetConstantByName(0, targetUniform->name.c_str());
+        targetUniform->vsHandle = mConstantTableVS->GetConstantByName(0, targetUniform->name.c_str());
+        targetUniform->handlesSet = true;
+    }
+
+    *constantPS = targetUniform->psHandle;
+    *constantVS = targetUniform->vsHandle;
 }
 }
