@@ -254,7 +254,8 @@ GLint Program::getUniformLocation(const char *name)
 
     nameStr = decorate(nameStr);
 
-    for (unsigned int location = 0; location < mUniformIndex.size(); location++)
+    unsigned int numUniforms = mUniformIndex.size();
+    for (unsigned int location = 0; location < numUniforms; location++)
     {
         if (mUniformIndex[location].name == nameStr &&
             mUniformIndex[location].element == subscript)
@@ -895,7 +896,8 @@ bool Program::getUniformiv(GLint location, GLint *params)
 
 void Program::dirtyAllUniforms()
 {
-    for (unsigned int index = 0; index < mUniforms.size(); index++)
+    unsigned int numUniforms = mUniforms.size();
+    for (unsigned int index = 0; index < numUniforms; index++)
     {
         mUniforms[index]->dirty = true;
     }
@@ -912,7 +914,8 @@ void Program::dirtyAllSamplers()
 // Applies all the uniforms set for this program object to the Direct3D 9 device
 void Program::applyUniforms()
 {
-    for (unsigned int location = 0; location < mUniformIndex.size(); location++)
+    unsigned int numUniforms = mUniformIndex.size();
+    for (unsigned int location = 0; location < numUniforms; location++)
     {
         if (mUniformIndex[location].element != 0)
         {
@@ -2591,7 +2594,8 @@ GLint Program::getActiveUniformCount()
 {
     int count = 0;
 
-    for (unsigned int uniformIndex = 0; uniformIndex < mUniforms.size(); uniformIndex++)
+    unsigned int numUniforms = mUniforms.size();
+    for (unsigned int uniformIndex = 0; uniformIndex < numUniforms; uniformIndex++)
     {
         if (mUniforms[uniformIndex]->name.substr(0, 3) != "dx_")
         {
@@ -2606,7 +2610,8 @@ GLint Program::getActiveUniformMaxLength()
 {
     int maxLength = 0;
 
-    for (unsigned int uniformIndex = 0; uniformIndex < mUniforms.size(); uniformIndex++)
+    unsigned int numUniforms = mUniforms.size();
+    for (unsigned int uniformIndex = 0; uniformIndex < numUniforms; uniformIndex++)
     {
         if (!mUniforms[uniformIndex]->name.empty() && mUniforms[uniformIndex]->name.substr(0, 3) != "dx_")
         {
