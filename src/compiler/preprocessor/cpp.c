@@ -98,6 +98,12 @@ int InitCPP(void)
 {
     char        buffer[64], *t;
     const char  *f;
+
+    SourceLoc location = {0};
+    Symbol *symbol;
+    MacroSymbol macro = {0};
+    yystypepp one = {0};
+
     // Add various atoms needed by the CPP line scanner:
     bindAtom = LookUpAddString(atable, "bind");
     constAtom = LookUpAddString(atable, "const");
@@ -129,6 +135,15 @@ int InitCPP(void)
     while ((isalnum(*f) || *f == '_') && t < buffer + sizeof(buffer) - 1)
         *t++ = toupper(*f++);
     *t = 0;
+
+    // #define GL_ES 1
+    macro.body = NewTokenStream("GL_ES", macros->pool);
+    one.sc_int = 1;
+    strcpy(one.symbol_name, "1");
+    RecordToken(macro.body, CPP_INTCONSTANT, &one);
+    symbol = AddSymbol(&location, macros, gl_esAtom, MACRO_S);
+    symbol->details.mac = macro;
+
 	return 1;
 } // InitCPP
 
@@ -899,12 +914,6 @@ int MacroExpand(int atom, yystypepp * yylvalpp)
 	if (atom == __VERSION__Atom) {
         strcpy(yylvalpp->symbol_name,ESSL_VERSION_STRING);
         yylvalpp->sc_int = atoi(yylvalpp->symbol_name);
-        UngetToken(CPP_INTCONSTANT, yylvalpp);
-        return 1;
-    }
-    if (atom == gl_esAtom) {
-        strcpy(yylvalpp->symbol_name,"1");
-        yylvalpp->sc_int = 1;
         UngetToken(CPP_INTCONSTANT, yylvalpp);
         return 1;
     }
