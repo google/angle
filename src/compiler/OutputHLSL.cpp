@@ -2006,7 +2006,7 @@ bool OutputHLSL::CompareConstructor::operator()(const Constructor &x, const Cons
 
     if (x.type != y.type)
     {
-        return memcmp(&x.type, &y.type, sizeof(TType)) < 0;
+        return x.type < y.type;
     }
 
     if (x.parameters.size() != y.parameters.size())
@@ -2018,7 +2018,7 @@ bool OutputHLSL::CompareConstructor::operator()(const Constructor &x, const Cons
     {
         if (x.parameters[i] != y.parameters[i])
         {
-            return memcmp(&x.parameters[i], &y.parameters[i], sizeof(TType)) < 0;
+            return x.parameters[i] < y.parameters[i];
         }
     }
 

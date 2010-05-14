@@ -101,7 +101,7 @@ public:
 							}
 	explicit TType(TTypeList* userDef, const TString& n, TPrecision p = EbpHigh) :
 							type(EbtStruct), precision(p), qualifier(EvqTemporary), size(1), matrix(false), array(false), arraySize(0),
-							structure(userDef), maxArraySize(0), arrayInformationType(0), fieldName(0), mangled(0) {
+							structure(userDef), structureSize(0), maxArraySize(0), arrayInformationType(0), fieldName(0), mangled(0) {
 								typeName = NewPoolTString(n.c_str());
 							}
 	explicit TType() {}
@@ -275,6 +275,16 @@ public:
 	}
 	bool operator!=(const TType& right) const {
 		return !operator==(right);
+	}
+    bool operator<(const TType& right) const {
+        if (type != right.type) return type < right.type;
+        if (size != right.size) return size < right.size;
+        if (matrix != right.matrix) return matrix < right.matrix;
+        if (array != right.array) return array < right.array;
+        if (arraySize != right.arraySize) return arraySize < right.arraySize;
+        if (structure != right.structure) return structure < right.structure;
+
+        return false;
 	}
 	TString getCompleteString() const;
 
