@@ -38,6 +38,8 @@ class Dx9BackEnd : public BufferBackEnd
   private:
     IDirect3DDevice9 *mDevice;
 
+    bool mAppliedAttribEnabled[MAX_VERTEX_ATTRIBS];
+
     class Dx9VertexBuffer : public TranslatedVertexBuffer
     {
       public:

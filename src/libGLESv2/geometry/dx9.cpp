@@ -58,6 +58,11 @@ Dx9BackEnd::Dx9BackEnd(IDirect3DDevice9 *d3ddevice)
     : mDevice(d3ddevice)
 {
     mDevice->AddRef();
+
+    for (int i = 0; i < MAX_VERTEX_ATTRIBS; ++i)
+    {
+        mAppliedAttribEnabled[i] = true;
+    }
 }
 
 Dx9BackEnd::~Dx9BackEnd()
@@ -238,10 +243,18 @@ GLenum Dx9BackEnd::setupAttributesPreDraw(const TranslatedAttribute *attributes)
         if (attributes[i].enabled)
         {
             mDevice->SetStreamSource(i, getDxBuffer(attributes[i].buffer), attributes[i].offset, attributes[i].stride);
+            if (!mAppliedAttribEnabled[i])
+            {
+                mAppliedAttribEnabled[i] = true;
+            }
         }
         else
         {
-            mDevice->SetStreamSource(i, 0, 0, 0);
+            if (mAppliedAttribEnabled[i])
+            {
+                mDevice->SetStreamSource(i, 0, 0, 0);
+                mAppliedAttribEnabled[i] = false;
+            }
         }
     }
 
