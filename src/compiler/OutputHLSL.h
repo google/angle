@@ -32,7 +32,6 @@ class OutputHLSL : public TIntermTraverser
 
   protected:
     void header();
-    void footer();
 
     // Visit AST nodes and output their code to the body stream
     void visitSymbol(TIntermSymbol*);
@@ -74,6 +73,10 @@ class OutputHLSL : public TIntermTraverser
     bool mUsesTextureCube;
     bool mUsesTextureCube_bias;
     bool mUsesDepthRange;
+    bool mUsesFragCoord;
+    bool mUsesPointCoord;
+    bool mUsesFrontFacing;
+    bool mUsesPointSize;
     bool mUsesXor;
     bool mUsesMod1;
     bool mUsesMod2;

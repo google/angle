@@ -15,6 +15,7 @@
 #include "common/debug.h"
 
 #include "libGLESv2/main.h"
+#include "libGLESv2/utilities.h"
 
 namespace gl
 {
@@ -216,39 +217,41 @@ void Shader::releaseCompiler()
     mVertexCompiler = NULL;
 }
 
-GLenum Shader::parseAttributeType(const std::string &type)
+void Shader::parseVaryings()
 {
-    if (type == "float")
+    if (mHlsl)
     {
-        return GL_FLOAT;
-    }
-    else if (type == "float2")
-    {
-        return GL_FLOAT_VEC2;
-    }
-    else if (type == "float3")
-    {
-        return GL_FLOAT_VEC3;
-    }
-    else if (type == "float4")
-    {
-        return GL_FLOAT_VEC4;
-    }
-    else if (type == "float2x2")
-    {
-        return GL_FLOAT_MAT2;
-    }
-    else if (type == "float3x3")
-    {
-        return GL_FLOAT_MAT3;
-    }
-    else if (type == "float4x4")
-    {
-        return GL_FLOAT_MAT4;
-    }
-    else UNREACHABLE();
+        const char *input = strstr(mHlsl, "// Varyings") + 12;
 
-    return GL_NONE;
+        while(true)
+        {
+            char varyingType[256];
+            char varyingName[256];
+
+            int matches = sscanf(input, "static %s %s", varyingType, varyingName);
+
+            if (matches != 2)
+            {
+                break;
+            }
+
+            char *array = strstr(varyingName, "[");
+            int size = 1;
+
+            if (array)
+            {
+                size = atoi(array + 1);
+                *array = '\0';
+            }
+
+            varyings.push_back(Varying(parseType(varyingType), varyingName, size, array != NULL));
+
+            input = strstr(input, ";") + 2;
+        }
+
+        mUsesFragCoord = strstr(mHlsl, "GL_USES_FRAG_COORD") != NULL;
+        mUsesFrontFacing = strstr(mHlsl, "GL_USES_FRONT_FACING") != NULL;
+    }
 }
 
 void Shader::compileToHLSL(void *compiler)
@@ -294,6 +297,124 @@ void Shader::compileToHLSL(void *compiler)
     }
 }
 
+GLenum Shader::parseType(const std::string &type)
+{
+    if (type == "float")
+    {
+        return GL_FLOAT;
+    }
+    else if (type == "float2")
+    {
+        return GL_FLOAT_VEC2;
+    }
+    else if (type == "float3")
+    {
+        return GL_FLOAT_VEC3;
+    }
+    else if (type == "float4")
+    {
+        return GL_FLOAT_VEC4;
+    }
+    else if (type == "float2x2")
+    {
+        return GL_FLOAT_MAT2;
+    }
+    else if (type == "float3x3")
+    {
+        return GL_FLOAT_MAT3;
+    }
+    else if (type == "float4x4")
+    {
+        return GL_FLOAT_MAT4;
+    }
+    else UNREACHABLE();
+
+    return GL_NONE;
+}
+
+// true if varying x has a higher priority in packing than y
+bool Shader::compareVarying(const Varying &x, const Varying &y)
+{
+    if(x.type == y.type)
+    {
+        return x.size > y.size;
+    }
+
+    switch (x.type)
+    {
+      case GL_FLOAT_MAT4: return true;
+      case GL_FLOAT_MAT2:
+        switch(y.type)
+        {
+          case GL_FLOAT_MAT4: return false;
+          case GL_FLOAT_MAT2: return true;
+          case GL_FLOAT_VEC4: return true;
+          case GL_FLOAT_MAT3: return true;
+          case GL_FLOAT_VEC3: return true;
+          case GL_FLOAT_VEC2: return true;
+          case GL_FLOAT:      return true;
+          default: UNREACHABLE();
+        }
+        break;
+      case GL_FLOAT_VEC4:
+        switch(y.type)
+        {
+          case GL_FLOAT_MAT4: return false;
+          case GL_FLOAT_MAT2: return false;
+          case GL_FLOAT_VEC4: return true;
+          case GL_FLOAT_MAT3: return true;
+          case GL_FLOAT_VEC3: return true;
+          case GL_FLOAT_VEC2: return true;
+          case GL_FLOAT:      return true;
+          default: UNREACHABLE();
+        }
+        break;
+      case GL_FLOAT_MAT3:
+        switch(y.type)
+        {
+          case GL_FLOAT_MAT4: return false;
+          case GL_FLOAT_MAT2: return false;
+          case GL_FLOAT_VEC4: return false;
+          case GL_FLOAT_MAT3: return true;
+          case GL_FLOAT_VEC3: return true;
+          case GL_FLOAT_VEC2: return true;
+          case GL_FLOAT:      return true;
+          default: UNREACHABLE();
+        }
+        break;
+      case GL_FLOAT_VEC3:
+        switch(y.type)
+        {
+          case GL_FLOAT_MAT4: return false;
+          case GL_FLOAT_MAT2: return false;
+          case GL_FLOAT_VEC4: return false;
+          case GL_FLOAT_MAT3: return false;
+          case GL_FLOAT_VEC3: return true;
+          case GL_FLOAT_VEC2: return true;
+          case GL_FLOAT:      return true;
+          default: UNREACHABLE();
+        }
+        break;
+      case GL_FLOAT_VEC2:
+        switch(y.type)
+        {
+          case GL_FLOAT_MAT4: return false;
+          case GL_FLOAT_MAT2: return false;
+          case GL_FLOAT_VEC4: return false;
+          case GL_FLOAT_MAT3: return false;
+          case GL_FLOAT_VEC3: return false;
+          case GL_FLOAT_VEC2: return true;
+          case GL_FLOAT:      return true;
+          default: UNREACHABLE();
+        }
+        break;
+      case GL_FLOAT: return false;
+      default: UNREACHABLE();
+    }
+
+    return false;
+}
+
 VertexShader::VertexShader(Context *context, GLuint handle) : Shader(context, handle)
 {
 }
@@ -311,25 +432,22 @@ void VertexShader::compile()
 {
     compileToHLSL(mVertexCompiler);
     parseAttributes();
-}
-
-const Attribute &VertexShader::getAttribute(unsigned int semanticIndex)
-{
-    ASSERT(semanticIndex < MAX_VERTEX_ATTRIBS + 1);
-
-    return mAttribute[semanticIndex];
+    parseVaryings();
 }
 
 int VertexShader::getSemanticIndex(const std::string &attributeName)
 {
     if (!attributeName.empty())
     {
-        for (int semanticIndex = 0; semanticIndex < MAX_VERTEX_ATTRIBS; semanticIndex++)
+        int semanticIndex = 0;
+        for (AttributeArray::iterator attribute = mAttributes.begin(); attribute != mAttributes.end(); attribute++)
         {
-            if (mAttribute[semanticIndex].name == attributeName)
+            if (attribute->name == attributeName)
             {
                 return semanticIndex;
             }
+
+            semanticIndex += VariableRowCount(attribute->type);
         }
     }
 
@@ -340,30 +458,23 @@ void VertexShader::parseAttributes()
 {
     if (mHlsl)
     {
-        const char *input = strstr(mHlsl, "struct VS_INPUT");
+        const char *input = strstr(mHlsl, "// Attributes") + 14;
 
-        for (int attributeIndex = 0; *input != '}'; input++)
+        while(true)
         {
-            char attributeType[100];
-            char attributeName[100];
-            int semanticIndex;
+            char attributeType[256];
+            char attributeName[256];
 
-            int matches = sscanf(input, "%s _%s : TEXCOORD%d;", attributeType, attributeName, &semanticIndex);
+            int matches = sscanf(input, "static %s _%s", attributeType, attributeName);
 
-            if (matches == 3)
+            if (matches != 2)
             {
-                if (semanticIndex < MAX_VERTEX_ATTRIBS + 1)
-                {
-                    mAttribute[semanticIndex].type = parseAttributeType(attributeType);
-                    mAttribute[semanticIndex].name = attributeName;
-                }
-                else
-                {
-                    break;
-                }
-
-                input = strstr(input, ";");
+                break;
             }
+
+            mAttributes.push_back(Attribute(parseType(attributeType), attributeName));
+
+            input = strstr(input, ";") + 2;
         }
     }
 }
@@ -384,5 +495,7 @@ GLenum FragmentShader::getType()
 void FragmentShader::compile()
 {
     compileToHLSL(mFragmentCompiler);
+    parseVaryings();
+    varyings.sort(compareVarying);
 }
 }

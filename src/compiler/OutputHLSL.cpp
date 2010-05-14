@@ -35,6 +35,10 @@ OutputHLSL::OutputHLSL(TParseContext &context) : TIntermTraverser(true, true, tr
     mUsesTextureCube = false;
     mUsesTextureCube_bias = false;
     mUsesDepthRange = false;
+    mUsesFragCoord = false;
+    mUsesPointCoord = false;
+    mUsesFrontFacing = false;
+    mUsesPointSize = false;
     mUsesXor = false;
     mUsesMod1 = false;
     mUsesMod2 = false;
@@ -68,13 +72,11 @@ OutputHLSL::~OutputHLSL()
 
 void OutputHLSL::output()
 {
-    mContext.treeRoot->traverse(this);   // Output the body first to determine what has to go in the header and footer
+    mContext.treeRoot->traverse(this);   // Output the body first to determine what has to go in the header
     header();
-    footer();
 
     mContext.infoSink.obj << mHeader.c_str();
     mContext.infoSink.obj << mBody.c_str();
-    mContext.infoSink.obj << mFooter.c_str();
 }
 
 TInfoSinkBase &OutputHLSL::getBodyStream()
@@ -259,8 +261,7 @@ void OutputHLSL::header()
     if (language == EShLangFragment)
     {
         TString uniforms;
-        TString varyingInput;
-        TString varyingGlobals;
+        TString varyings;
 
         TSymbolTableLevel *symbols = mContext.symbolTable.getGlobalLevel();
         int semanticIndex = 0;
@@ -288,8 +289,7 @@ void OutputHLSL::header()
                     if (mReferencedVaryings.find(name.c_str()) != mReferencedVaryings.end())
                     {
                         // Program linking depends on this exact format
-                        varyingInput += "    " + typeString(type) + " " + decorate(name) + arrayString(type) + " : TEXCOORD" + str(semanticIndex) + ";\n";
-                        varyingGlobals += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
+                        varyings += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
 
                         semanticIndex += type.isArray() ? type.getArraySize() : 1;
                     }
@@ -306,32 +306,43 @@ void OutputHLSL::header()
             }
         }
 
-        out << "uniform float4 dx_Window;\n"
-               "uniform float2 dx_Depth;\n"
-               "uniform bool dx_PointsOrLines;\n"
-               "uniform bool dx_FrontCCW;\n"
-               "\n";
+        out << "// Varyings\n";
+        out <<  varyings;
+        out << "\n"
+               "static float4 gl_Color[1] = {float4(0, 0, 0, 0)};\n";
+
+        if (mUsesFragCoord)
+        {
+            out << "static float4 gl_FragCoord = float4(0, 0, 0, 0);\n";
+        }
+
+        if (mUsesPointCoord)
+        {
+            out << "static float2 gl_PointCoord = float2(0.5, 0.5);\n";
+        }
+
+        if (mUsesFrontFacing)
+        {
+            out << "static bool gl_FrontFacing = false;\n";
+        }
+
+        out << "\n";
+
+        if (mUsesFragCoord)
+        {
+            out << "uniform float4 dx_Window;\n"
+                   "uniform float2 dx_Depth;\n";
+        }
+
+        if (mUsesFrontFacing)
+        {
+            out << "uniform bool dx_PointsOrLines;\n"
+                   "uniform bool dx_FrontCCW;\n";
+        }
+        
+        out << "\n";
         out <<  uniforms;
-        out << "\n"
-               "struct PS_INPUT\n"
-               "{\n";
-        out <<      varyingInput;
-        out << "    float4 gl_FragCoord : TEXCOORD" << semanticIndex << ";\n";
-        out << "    float vFace : VFACE;\n"
-               "};\n"
-               "\n";
-        out <<    varyingGlobals;
-        out << "\n"
-               "struct PS_OUTPUT\n"
-               "{\n"
-               "    float4 gl_Color[1] : COLOR;\n"
-               "};\n"
-               "\n"
-               "static float4 gl_Color[1] = {float4(0, 0, 0, 0)};\n"
-               "static float4 gl_FragCoord = float4(0, 0, 0, 0);\n"
-               "static float2 gl_PointCoord = float2(0.5, 0.5);\n"
-               "static bool gl_FrontFacing = false;\n"
-               "\n";
+        out << "\n";
 
         if (mUsesTexture2D)
         {
@@ -400,13 +411,10 @@ void OutputHLSL::header()
     else   // Vertex shader
     {
         TString uniforms;
-        TString attributeInput;
-        TString attributeGlobals;
-        TString varyingOutput;
-        TString varyingGlobals;
+        TString attributes;
+        TString varyings;
 
         TSymbolTableLevel *symbols = mContext.symbolTable.getGlobalLevel();
-        int semanticIndex = 0;
 
         for (TSymbolTableLevel::const_iterator namedSymbol = symbols->begin(); namedSymbol != symbols->end(); namedSymbol++)
         {
@@ -430,10 +438,7 @@ void OutputHLSL::header()
                 {
                     if (mReferencedAttributes.find(name.c_str()) != mReferencedAttributes.end())
                     {
-                        attributeInput += "    " + typeString(type) + " " + decorate(name) + arrayString(type) + " : TEXCOORD" + str(semanticIndex) + ";\n";
-                        attributeGlobals += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
-
-                        semanticIndex += vectorSize(type);
+                        attributes += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
                     }
                 }
                 else if (qualifier == EvqVaryingOut || qualifier == EvqInvariantVaryingOut)
@@ -441,8 +446,7 @@ void OutputHLSL::header()
                     if (mReferencedVaryings.find(name.c_str()) != mReferencedVaryings.end())
                     {
                         // Program linking depends on this exact format
-                        varyingOutput += "    " + typeString(type) + " " + decorate(name) + arrayString(type) + " : TEXCOORD0;\n";   // Actual semantic index assigned during link
-                        varyingGlobals += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
+                        varyings += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
                     }
                 }
                 else if (qualifier == EvqGlobal || qualifier == EvqTemporary)
@@ -457,29 +461,44 @@ void OutputHLSL::header()
             }
         }
 
-        out << "uniform float2 dx_HalfPixelSize;\n"
+        out << "// Attributes\n";
+        out <<  attributes;
+        out << "\n"
+               "static float4 gl_Position = float4(0, 0, 0, 0);\n";
+        
+        if (mUsesPointSize)
+        {
+            out << "static float gl_PointSize = float(1);\n";
+        }
+
+        out << "\n"
+               "// Varyings\n";
+        out <<  varyings;
+        out << "\n"
+               "uniform float2 dx_HalfPixelSize;\n"
                "\n";
         out <<  uniforms;
-        out << "\n"
-               "struct VS_INPUT\n"
-               "{\n";
-        out <<        attributeInput;
-        out << "};\n"
-               "\n";
-        out <<  attributeGlobals;
-        out << "\n"
-               "struct VS_OUTPUT\n"
-               "{\n"
-               "    float4 gl_Position : POSITION;\n"
-               "    float gl_PointSize : PSIZE;\n"
-               "    float4 gl_FragCoord : TEXCOORD0;\n";   // Actual semantic index assigned during link
-        out <<      varyingOutput;
-        out << "};\n"
-               "\n"
-               "static float4 gl_Position = float4(0, 0, 0, 0);\n"
-               "static float gl_PointSize = float(1);\n";
-        out <<  varyingGlobals;
         out << "\n";
+    }
+
+    if (mUsesFragCoord)
+    {
+        out << "#define GL_USES_FRAG_COORD\n";
+    }
+
+    if (mUsesPointCoord)
+    {
+        out << "#define GL_USES_POINT_COORD\n";
+    }
+
+    if (mUsesFrontFacing)
+    {
+        out << "#define GL_USES_FRONT_FACING\n";
+    }
+
+    if (mUsesPointSize)
+    {
+        out << "#define GL_USES_POINT_SIZE\n";
     }
 
     if (mUsesDepthRange)
@@ -716,117 +735,6 @@ void OutputHLSL::header()
     }
 }
 
-void OutputHLSL::footer()
-{
-    EShLanguage language = mContext.language;
-    TInfoSinkBase &out = mFooter;
-    TSymbolTableLevel *symbols = mContext.symbolTable.getGlobalLevel();
-
-    if (language == EShLangFragment)
-    {
-        out << "PS_OUTPUT main(PS_INPUT input)\n"
-               "{\n"
-               "    float rhw = 1.0 / input.gl_FragCoord.w;\n"
-               "    gl_FragCoord.x = (input.gl_FragCoord.x * rhw) * dx_Window.x + dx_Window.z;\n"
-               "    gl_FragCoord.y = (input.gl_FragCoord.y * rhw) * dx_Window.y + dx_Window.w;\n"
-               "    gl_FragCoord.z = (input.gl_FragCoord.z * rhw) * dx_Depth.x + dx_Depth.y;\n"
-               "    gl_FragCoord.w = rhw;\n"
-               "    gl_FrontFacing = dx_PointsOrLines || (dx_FrontCCW ? (input.vFace >= 0.0) : (input.vFace <= 0.0));\n";
-
-        for (TSymbolTableLevel::const_iterator namedSymbol = symbols->begin(); namedSymbol != symbols->end(); namedSymbol++)
-        {
-            const TSymbol *symbol = (*namedSymbol).second;
-            const TString &name = symbol->getName();
-
-            if (symbol->isVariable())
-            {
-                const TVariable *variable = static_cast<const TVariable*>(symbol);
-                const TType &type = variable->getType();
-                TQualifier qualifier = type.getQualifier();
-
-                if (qualifier == EvqVaryingIn || qualifier == EvqInvariantVaryingIn)
-                {
-                    if (mReferencedVaryings.find(name.c_str()) != mReferencedVaryings.end())
-                    {
-                        out << "    " + decorate(name) + " = input." + decorate(name) + ";\n";
-                    }
-                }
-            }
-        }
-
-        out << "\n"
-               "    gl_main();\n"
-               "\n"
-               "    PS_OUTPUT output;\n"                 
-               "    output.gl_Color[0] = gl_Color[0];\n";
-    }
-    else   // Vertex shader
-    {
-        out << "VS_OUTPUT main(VS_INPUT input)\n"
-               "{\n";
-
-        for (TSymbolTableLevel::const_iterator namedSymbol = symbols->begin(); namedSymbol != symbols->end(); namedSymbol++)
-        {
-            const TSymbol *symbol = (*namedSymbol).second;
-            const TString &name = symbol->getName();
-
-            if (symbol->isVariable())
-            {
-                const TVariable *variable = static_cast<const TVariable*>(symbol);
-                const TType &type = variable->getType();
-                TQualifier qualifier = type.getQualifier();
-
-                if (qualifier == EvqAttribute)
-                {
-                    if (mReferencedAttributes.find(name.c_str()) != mReferencedAttributes.end())
-                    {
-                        const char *transpose = type.isMatrix() ? "transpose" : "";
-
-                        out << "    " + decorate(name) + " = " + transpose + "(input." + decorate(name) + ");\n";
-                    }
-                }
-            }
-        }
-
-        out << "\n"
-               "    gl_main();\n"
-               "\n"
-               "    VS_OUTPUT output;\n"
-               "    output.gl_Position.x = gl_Position.x - dx_HalfPixelSize.x * gl_Position.w;\n"
-               "    output.gl_Position.y = -(gl_Position.y - dx_HalfPixelSize.y * gl_Position.w);\n"
-               "    output.gl_Position.z = (gl_Position.z + gl_Position.w) * 0.5;\n"
-               "    output.gl_Position.w = gl_Position.w;\n"
-               "    output.gl_PointSize = gl_PointSize;\n"
-               "    output.gl_FragCoord = gl_Position;\n";
-
-        TSymbolTableLevel *symbols = mContext.symbolTable.getGlobalLevel();
-
-        for (TSymbolTableLevel::const_iterator namedSymbol = symbols->begin(); namedSymbol != symbols->end(); namedSymbol++)
-        {
-            const TSymbol *symbol = (*namedSymbol).second;
-            const TString &name = symbol->getName();
-
-            if (symbol->isVariable())
-            {
-                const TVariable *variable = static_cast<const TVariable*>(symbol);
-                TQualifier qualifier = variable->getType().getQualifier();
-
-                if (qualifier == EvqVaryingOut || qualifier == EvqInvariantVaryingOut)
-                {
-                    if (mReferencedVaryings.find(name.c_str()) != mReferencedVaryings.end())
-                    {
-                        // Program linking depends on this exact format
-                        out << "    output." + decorate(name) + " = " + decorate(name) + ";\n";
-                    }
-                }
-            }
-        }
-    }
-
-    out << "    return output;\n"
-           "}\n";
-}
-
 void OutputHLSL::visitSymbol(TIntermSymbol *node)
 {
     TInfoSinkBase &out = mBody;
@@ -844,6 +752,26 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
     else if (name == "gl_DepthRange")
     {
         mUsesDepthRange = true;
+        out << name;
+    }
+    else if (name == "gl_FragCoord")
+    {
+        mUsesFragCoord = true;
+        out << name;
+    }
+    else if (name == "gl_PointCoord")
+    {
+        mUsesPointCoord = true;
+        out << name;
+    }
+    else if (name == "gl_FrontFacing")
+    {
+        mUsesFrontFacing = true;
+        out << name;
+    }
+    else if (name == "gl_PointSize")
+    {
+        mUsesPointSize = true;
         out << name;
     }
     else

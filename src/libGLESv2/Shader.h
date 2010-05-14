@@ -15,13 +15,35 @@
 #define GL_APICALL
 #include <GLES2/gl2.h>
 #include <d3dx9.h>
+#include <list>
+#include <vector>
 
 #include "libGLESv2/Context.h"
 
 namespace gl
 {
+struct Varying
+{
+    Varying(GLenum type, const std::string &name, int size, bool array)
+        : type(type), name(name), size(size), array(array), reg(-1), col(-1)
+    {
+    }
+
+    GLenum type;
+    std::string name;
+    int size;   // Number of 'type' elements
+    bool array;
+
+    int reg;    // First varying register, assigned during link
+    int col;    // First register element, assigned during link
+};
+
+typedef std::list<Varying> VaryingList;
+
 class Shader
 {
+    friend Program;
+
   public:
     Shader(Context *context, GLuint handle);
 
@@ -48,12 +70,16 @@ class Shader
     void flagForDeletion();
 
     static void releaseCompiler();
-    static GLenum parseAttributeType(const std::string &type);
 
   protected:
     DISALLOW_COPY_AND_ASSIGN(Shader);
 
+    void parseVaryings();
+
     void compileToHLSL(void *compiler);
+
+    static GLenum parseType(const std::string &type);
+    static bool compareVarying(const Varying &x, const Varying &y);
 
     const GLuint mHandle;
     int mAttachCount;     // Number of program objects this shader is attached to
@@ -63,6 +89,11 @@ class Shader
     char *mHlsl;
     char *mInfoLog;
 
+    VaryingList varyings;
+
+    bool mUsesFragCoord;
+    bool mUsesFrontFacing;
+
     Context *mContext;
 
     static void *mFragmentCompiler;
@@ -71,12 +102,24 @@ class Shader
 
 struct Attribute
 {
+    Attribute() : type(GL_NONE), name("")
+    {
+    }
+
+    Attribute(GLenum type, const std::string &name) : type(type), name(name)
+    {
+    }
+
     GLenum type;
     std::string name;
 };
 
+typedef std::vector<Attribute> AttributeArray;
+
 class VertexShader : public Shader
 {
+    friend Program;
+
   public:
     VertexShader(Context *context, GLuint handle);
 
@@ -84,7 +127,6 @@ class VertexShader : public Shader
 
     GLenum getType();
     void compile();
-    const Attribute &getAttribute(unsigned int attributeIndex);
     int getSemanticIndex(const std::string &attributeName);
 
   private:
@@ -92,7 +134,7 @@ class VertexShader : public Shader
 
     void parseAttributes();
 
-    Attribute mAttribute[MAX_VERTEX_ATTRIBS + 1];   // One extra to report link error
+    AttributeArray mAttributes;
 };
 
 class FragmentShader : public Shader

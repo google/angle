@@ -121,21 +121,7 @@ class Program
     ID3DXBuffer *compileToBinary(const char *hlsl, const char *profile, ID3DXConstantTable **constantTable);
     void unlink(bool destroy = false);
 
-    struct Varying
-    {
-        Varying(const std::string &name, char *declaration) : name(name), declaration(declaration)
-        {
-            link = -1;
-        }
-
-        int link;
-        std::string name;
-        char *declaration;
-    };
-
-    typedef std::vector<Varying> VaryingArray;
-
-    void parseVaryings(const char *structure, char *hlsl, VaryingArray &varyings);
+    int packVaryings(const Varying *packing[][4]);
     bool linkVaryings();
 
     bool linkAttributes();
@@ -172,8 +158,8 @@ class Program
     FragmentShader *mFragmentShader;
     VertexShader *mVertexShader;
 
-    char *mPixelHLSL;
-    char *mVertexHLSL;
+    std::string mPixelHLSL;
+    std::string mVertexHLSL;
 
     IDirect3DPixelShader9 *mPixelExecutable;
     IDirect3DVertexShader9 *mVertexExecutable;
