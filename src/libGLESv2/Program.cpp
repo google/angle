@@ -1070,7 +1070,7 @@ bool Program::linkVaryings()
     {
         if (pixelVaryings[in].link < 0)
         {
-            appendToInfoLog("Pixel varying (%s) does not match any vertex varying", pixelVaryings[in].name);
+            appendToInfoLog("Fragment varying (%s) does not match any vertex varying", pixelVaryings[in].name.c_str());
 
             return false;
         }
