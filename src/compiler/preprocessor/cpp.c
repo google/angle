@@ -188,12 +188,9 @@ static int CPPdefine(yystypepp * yylvalpp)
 	}
     mac.body = NewTokenStream(GetAtomString(atable, name), macros->pool);
     while (token != '\n') {
-        while (token == '\\') {
-            token = cpp->currentInput->scan(cpp->currentInput, yylvalpp);
-            if (token == '\n')
-                token = cpp->currentInput->scan(cpp->currentInput, yylvalpp);
-            else
-                RecordToken(mac.body, '\\', yylvalpp);
+        if (token == '\\') {
+            CPPErrorToInfoLog("The line continuation character (\\) is not part of the OpenGL ES Shading Language");
+            return token;
         }
         RecordToken(mac.body, token, yylvalpp);
         token = cpp->currentInput->scan(cpp->currentInput, yylvalpp);

@@ -664,10 +664,8 @@ static int byte_scan(InputSrc *in, yystypepp * yylvalpp)
             ch = cpp->currentInput->getch(cpp->currentInput, yylvalpp);
             while (ch != '"' && ch != '\n' && ch != EOF) {
                 if (ch == '\\') {
-                    ch = cpp->currentInput->getch(cpp->currentInput, yylvalpp);
-                    if (ch == '\n' || ch == EOF) {
-                        break;
-                    }
+                    CPPErrorToInfoLog("The line continuation character (\\) is not part of the OpenGL ES Shading Language");
+                    return -1;
                 }
                 if (len < MAX_STRING_LEN) {
                     string_val[len] = ch;
