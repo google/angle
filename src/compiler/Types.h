@@ -244,7 +244,7 @@ public:
 			totalSize = size;
 
 		if (isArray())
-			totalSize *= Max(getArraySize(), getMaxArraySize());
+            totalSize *= std::max(getArraySize(), getMaxArraySize());
 
 		return totalSize;
 	}

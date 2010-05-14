@@ -7,45 +7,16 @@
 #ifndef _COMMON_INCLUDED_
 #define _COMMON_INCLUDED_
 
-#ifdef _WIN32
-    #include <basetsd.h>
-#elif defined (solaris)
-    #include <sys/int_types.h>
-    #define UINT_PTR uintptr_t
-#else
-    #include <stdint.h>
-    #define UINT_PTR uintptr_t
-#endif
+#include <assert.h>
+#include <stdio.h>
 
-/* windows only pragma */
-#ifdef _MSC_VER
-    #pragma warning(disable : 4786) // Don't warn about too long identifiers
-    #pragma warning(disable : 4514) // unused inline method
-    #pragma warning(disable : 4201) // nameless union
-#endif
-
-//
-// Doing the push and pop below for warnings does not leave the warning state
-// the way it was.  This seems like a defect in the compiler.  We would like
-// to do this, but since it does not work correctly right now, it is turned
-// off.
-//
-//??#pragma warning(push, 3)
-
-	#include <set>
-    #include <vector>
-    #include <map>
-    #include <list>
-    #include <string>
-    #include <stdio.h>
-
-//??#pragma warning(pop)
-
-typedef int TSourceLoc;
-
-	#include <assert.h>
+#include <map>
+#include <string>
+#include <vector>
 
 #include "compiler/PoolAlloc.h"
+
+typedef int TSourceLoc;
 
 //
 // Put POOL_ALLOCATOR_NEW_DELETE in base classes to make them use this scheme.
@@ -82,20 +53,6 @@ public:
     TVector(size_type i): std::vector<T, pool_allocator<T> >(i) {}
 };
 
-template <class T> class TList : public std::list<T, pool_allocator<T> > {
-public:
-    typedef typename std::list<T, pool_allocator<T> >::size_type size_type;
-    TList() : std::list<T, pool_allocator<T> >() {}
-    TList(const pool_allocator<T>& a) : std::list<T, pool_allocator<T> >(a) {}
-    TList(size_type i): std::list<T, pool_allocator<T> >(i) {}
-};
-
-// This is called TStlSet, because TSet is taken by an existing compiler class.
-template <class T, class CMP> class TStlSet : public std::set<T, CMP, pool_allocator<T> > {
-    // No pool allocator versions of constructors in std::set.
-};
-
-
 template <class K, class D, class CMP = std::less<K> > 
 class TMap : public std::map<K, D, CMP, pool_allocator<std::pair<const K, D> > > {
 public:
@@ -111,12 +68,6 @@ public:
 // across compiles/links.
 //
 typedef std::basic_string<char> TPersistString;
-
-//
-// templatized min and max functions.
-//
-template <class T> T Min(const T a, const T b) { return a < b ? a : b; }
-template <class T> T Max(const T a, const T b) { return a > b ? a : b; }
 
 //
 // Create a TString object from an integer.

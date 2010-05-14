@@ -7,6 +7,9 @@
 #ifndef COMPILER_OUTPUTHLSL_H_
 #define COMPILER_OUTPUTHLSL_H_
 
+#include <list>
+#include <set>
+
 #include "compiler/intermediate.h"
 #include "compiler/ParseHelper.h"
 

@@ -7,6 +7,8 @@
 #ifndef CROSSCOMPILERGLSL_OUTPUTGLSL_H_
 #define CROSSCOMPILERGLSL_OUTPUTGLSL_H_
 
+#include <set>
+
 #include "compiler/intermediate.h"
 #include "compiler/ParseHelper.h"
 
