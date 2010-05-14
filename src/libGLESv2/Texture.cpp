@@ -418,6 +418,29 @@ void Texture::pushTexture(IDirect3DBaseTexture9 *newTexture, bool renderable)
 }
 
 
+GLint Texture::creationLevels(GLsizei width, GLsizei height, GLint maxlevel) const
+{
+    if (isPow2(width) && isPow2(height))
+    {
+        return maxlevel;
+    }
+    else
+    {
+        // One of the restrictions of NONPOW2CONDITIONAL is that NPOTs may only have a single level.
+        return (getContext()->getDeviceCaps().TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL) ? 1 : maxlevel;
+    }
+}
+
+GLint Texture::creationLevels(GLsizei size, GLint maxlevel) const
+{
+    return creationLevels(size, size, maxlevel);
+}
+
+int Texture::levelCount() const
+{
+    return mBaseTexture ? mBaseTexture->GetLevelCount() : 0;
+}
+
 Texture2D::Texture2D(Context *context) : Texture(context)
 {
     mTexture = NULL;
@@ -502,7 +525,7 @@ void Texture2D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei wi
 {
     ASSERT(mImageArray[level].surface != NULL);
 
-    if (mTexture != NULL)
+    if (level < levelCount())
     {
         IDirect3DSurface9 *destLevel = NULL;
         HRESULT result = mTexture->GetSurfaceLevel(level, &destLevel);
@@ -547,7 +570,7 @@ void Texture2D::copyImage(GLint level, GLenum internalFormat, GLint x, GLint y, 
         pushTexture(mTexture, true);
     }
 
-    if (width != 0 && height != 0)
+    if (width != 0 && height != 0 && level < levelCount())
     {
         RECT sourceRect;
         sourceRect.left = x;
@@ -584,17 +607,20 @@ void Texture2D::copySubImage(GLint level, GLint xoffset, GLint yoffset, GLint x,
         needRenderTarget();
     }
 
-    RECT sourceRect;
-    sourceRect.left = x;
-    sourceRect.right = x + width;
-    sourceRect.top = y;
-    sourceRect.bottom = y + height;
+    if (level < levelCount())
+    {
+        RECT sourceRect;
+        sourceRect.left = x;
+        sourceRect.right = x + width;
+        sourceRect.top = y;
+        sourceRect.bottom = y + height;
 
-    IDirect3DSurface9 *dest;
-    HRESULT hr = mTexture->GetSurfaceLevel(level, &dest);
+        IDirect3DSurface9 *dest;
+        HRESULT hr = mTexture->GetSurfaceLevel(level, &dest);
 
-    getBlitter()->formatConvert(source->getRenderTarget(), sourceRect, mImageArray[0].format, xoffset, yoffset, dest);
-    dest->Release();
+        getBlitter()->formatConvert(source->getRenderTarget(), sourceRect, mImageArray[0].format, xoffset, yoffset, dest);
+        dest->Release();
+    }
 }
 
 // Tests for GL texture object completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
@@ -665,7 +691,7 @@ IDirect3DBaseTexture9 *Texture2D::createTexture()
     IDirect3DDevice9 *device = getDevice();
     D3DFORMAT format = selectFormat(mImageArray[0].format);
 
-    HRESULT result = device->CreateTexture(mWidth, mHeight, 0, 0, format, D3DPOOL_DEFAULT, &texture, NULL);
+    HRESULT result = device->CreateTexture(mWidth, mHeight, creationLevels(mWidth, mHeight, 0), 0, format, D3DPOOL_DEFAULT, &texture, NULL);
 
     if (FAILED(result))
     {
@@ -682,9 +708,9 @@ void Texture2D::updateTexture()
 {
     IDirect3DDevice9 *device = getDevice();
 
-    int levelCount = mTexture->GetLevelCount();
+    int levels = levelCount();
 
-    for (int level = 0; level < levelCount; level++)
+    for (int level = 0; level < levels; level++)
     {
         if (mImageArray[level].dirty)
         {
@@ -716,7 +742,7 @@ IDirect3DBaseTexture9 *Texture2D::convertToRenderTarget()
         IDirect3DDevice9 *device = getDevice();
         D3DFORMAT format = selectFormat(mImageArray[0].format);
 
-        HRESULT result = device->CreateTexture(mWidth, mHeight, 0, D3DUSAGE_RENDERTARGET, format, D3DPOOL_DEFAULT, &texture, NULL);
+        HRESULT result = device->CreateTexture(mWidth, mHeight, creationLevels(mWidth, mHeight, 0), D3DUSAGE_RENDERTARGET, format, D3DPOOL_DEFAULT, &texture, NULL);
 
         if (FAILED(result))
         {
@@ -726,7 +752,7 @@ IDirect3DBaseTexture9 *Texture2D::convertToRenderTarget()
 
         if (mTexture != NULL)
         {
-            int levels = texture->GetLevelCount();
+            int levels = levelCount();
             for (int i = 0; i < levels; i++)
             {
                 IDirect3DSurface9 *source;
@@ -931,7 +957,7 @@ void TextureCubeMap::commitRect(GLenum faceTarget, GLint level, GLint xoffset, G
 
     ASSERT(mImageArray[face][level].surface != NULL);
 
-    if (mTexture != NULL)
+    if (level < levelCount())
     {
         IDirect3DSurface9 *destLevel = getCubeMapSurface(face, level);
         ASSERT(destLevel != NULL);
@@ -1040,7 +1066,7 @@ IDirect3DBaseTexture9 *TextureCubeMap::createTexture()
 
     IDirect3DCubeTexture9 *texture;
 
-    HRESULT result = device->CreateCubeTexture(mWidth, 0, 0, format, D3DPOOL_DEFAULT, &texture, NULL);
+    HRESULT result = device->CreateCubeTexture(mWidth, creationLevels(mWidth, 0), 0, format, D3DPOOL_DEFAULT, &texture, NULL);
 
     if (FAILED(result))
     {
@@ -1060,7 +1086,8 @@ void TextureCubeMap::updateTexture()
 
     for (int face = 0; face < 6; face++)
     {
-        for (int level = 0; level <= log2(mWidth); level++)
+        int levels = levelCount();
+        for (int level = 0; level < levels; level++)
         {
             Image *img = &mImageArray[face][level];
 
@@ -1093,7 +1120,7 @@ IDirect3DBaseTexture9 *TextureCubeMap::convertToRenderTarget()
         IDirect3DDevice9 *device = getDevice();
         D3DFORMAT format = selectFormat(mImageArray[0][0].format);
 
-        HRESULT result = device->CreateCubeTexture(mWidth, 0, D3DUSAGE_RENDERTARGET, format, D3DPOOL_DEFAULT, &texture, NULL);
+        HRESULT result = device->CreateCubeTexture(mWidth, creationLevels(mWidth, 0), D3DUSAGE_RENDERTARGET, format, D3DPOOL_DEFAULT, &texture, NULL);
 
         if (FAILED(result))
         {
@@ -1103,7 +1130,7 @@ IDirect3DBaseTexture9 *TextureCubeMap::convertToRenderTarget()
 
         if (mTexture != NULL)
         {
-            int levels = texture->GetLevelCount();
+            int levels = levelCount();
             for (int f = 0; f < 6; f++)
             {
                 for (int i = 0; i < levels; i++)
@@ -1257,7 +1284,7 @@ void TextureCubeMap::copyImage(GLenum face, GLint level, GLenum internalFormat, 
 
     ASSERT(width == height);
 
-    if (width > 0)
+    if (width > 0 && level < levelCount())
     {
         RECT sourceRect;
         sourceRect.left = x;
@@ -1326,16 +1353,19 @@ void TextureCubeMap::copySubImage(GLenum face, GLint level, GLint xoffset, GLint
         getRenderTarget(face);
     }
 
-    RECT sourceRect;
-    sourceRect.left = x;
-    sourceRect.right = x + width;
-    sourceRect.top = y;
-    sourceRect.bottom = y + height;
+    if (level < levelCount())
+    {
+        RECT sourceRect;
+        sourceRect.left = x;
+        sourceRect.right = x + width;
+        sourceRect.top = y;
+        sourceRect.bottom = y + height;
 
-    IDirect3DSurface9 *dest = getCubeMapSurface(face, level);
+        IDirect3DSurface9 *dest = getCubeMapSurface(face, level);
 
-    getBlitter()->formatConvert(source->getRenderTarget(), sourceRect, mImageArray[0][0].format, xoffset, yoffset, dest);
-    dest->Release();
+        getBlitter()->formatConvert(source->getRenderTarget(), sourceRect, mImageArray[0][0].format, xoffset, yoffset, dest);
+        dest->Release();
+    }
 }
 
 bool TextureCubeMap::isCubeComplete() const

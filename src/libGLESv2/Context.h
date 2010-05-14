@@ -379,6 +379,8 @@ class Context
 
     Blit *getBlitter() { return mBlit; }
 
+    const D3DCAPS9 &getDeviceCaps() { return mDeviceCaps; }
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Context);
 
@@ -464,6 +466,8 @@ class Context
     bool mSampleStateDirty;
     bool mFrontFaceDirty;
     bool mDitherStateDirty;
+
+    D3DCAPS9 mDeviceCaps;
 };
 }
 

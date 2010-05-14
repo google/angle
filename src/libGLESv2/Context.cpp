@@ -214,12 +214,28 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 {
     IDirect3DDevice9 *device = display->getDevice();
 
-    if (!mBufferBackEnd)
+    if (!mHasBeenCurrent)
     {
+        device->GetDeviceCaps(&mDeviceCaps);
+
         mBufferBackEnd = new Dx9BackEnd(device);
         mVertexDataManager = new VertexDataManager(this, mBufferBackEnd);
         mIndexDataManager = new IndexDataManager(this, mBufferBackEnd);
         mBlit = new Blit(this);
+
+        initExtensionString();
+
+        mState.viewportX = 0;
+        mState.viewportY = 0;
+        mState.viewportWidth = surface->getWidth();
+        mState.viewportHeight = surface->getHeight();
+
+        mState.scissorX = 0;
+        mState.scissorY = 0;
+        mState.scissorWidth = surface->getWidth();
+        mState.scissorHeight = surface->getHeight();
+
+        mHasBeenCurrent = true;
     }
 
     // Wrap the existing Direct3D 9 resources into GL objects and assign them to the '0' names
@@ -239,23 +255,6 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
     framebufferZero->setColorbuffer(GL_RENDERBUFFER, 0);
     framebufferZero->setDepthbuffer(GL_RENDERBUFFER, 0);
     framebufferZero->setStencilbuffer(GL_RENDERBUFFER, 0);
-
-    if (!mHasBeenCurrent)
-    {
-        initExtensionString();
-
-        mState.viewportX = 0;
-        mState.viewportY = 0;
-        mState.viewportWidth = surface->getWidth();
-        mState.viewportHeight = surface->getHeight();
-
-        mState.scissorX = 0;
-        mState.scissorY = 0;
-        mState.scissorWidth = surface->getWidth();
-        mState.scissorHeight = surface->getHeight();
-
-        mHasBeenCurrent = true;
-    }
 
     defaultRenderTarget->Release();
 

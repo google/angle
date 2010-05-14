@@ -111,6 +111,9 @@ class Texture
 
     void needRenderTarget();
 
+    GLint creationLevels(GLsizei width, GLsizei height, GLint maxlevel) const;
+    GLint creationLevels(GLsizei size, GLint maxlevel) const;
+
     // The pointer returned is weak and it is assumed the derived class will keep a strong pointer until the next createTexture() call.
     virtual IDirect3DBaseTexture9 *createTexture() = 0;
     virtual void updateTexture() = 0;
@@ -126,6 +129,8 @@ class Texture
 
     unsigned int mWidth;
     unsigned int mHeight;
+
+    int levelCount() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture);
