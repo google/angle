@@ -75,7 +75,7 @@ int TType::getStructSize() const
 
 void TVariable::dump(TInfoSink& infoSink) const
 {
-    infoSink.debug << getName().c_str() << ": " << type.getQualifierString() << " " << type.getBasicString();
+    infoSink.debug << getName().c_str() << ": " << type.getQualifierString() << " " << type.getPrecisionString() << " " << type.getBasicString();
     if (type.isArray()) {
         infoSink.debug << "[0]";
     }
@@ -207,5 +207,8 @@ void TSymbolTable::copyTable(const TSymbolTable& copyOf)
     uniqueId = copyOf.uniqueId;
     for (unsigned int i = 0; i < copyOf.table.size(); ++i) {
         table.push_back(copyOf.table[i]->clone(remapper));
+    }
+    for( unsigned int i = 0; i < copyOf.precisionStack.size(); i++) {
+        precisionStack.push_back( copyOf.precisionStack[i] );
     }
 }

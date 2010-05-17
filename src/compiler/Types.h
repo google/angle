@@ -51,18 +51,13 @@ public:
     {
         type = bt;
         qualifier = q;
-        precision = EbpHigh;
+        precision = EbpUndefined;
         size = 1;
         matrix = false;
         array = false;
         arraySize = 0;
         userDef = 0;
         line = ln;
-    }
-
-    void setPrecision(TPrecision pcs)
-    {
-        precision = pcs;
     }
 
     void setAggregate(int s, bool m = false)
@@ -86,7 +81,7 @@ typedef TMap<TTypeList*, TTypeList*>::iterator TStructureMapIterator;
 class TType {
 public:
     POOL_ALLOCATOR_NEW_DELETE(GlobalPoolAllocator)
-    explicit TType(TBasicType t, TQualifier q = EvqTemporary, int s = 1, bool m = false, bool a = false, TPrecision p = EbpHigh) :
+    explicit TType(TBasicType t, TPrecision p, TQualifier q = EvqTemporary, int s = 1, bool m = false, bool a = false) :
                             type(t), precision(p), qualifier(q), size(s), matrix(m), array(a), arraySize(0),
                             structure(0), structureSize(0), maxArraySize(0), arrayInformationType(0), fieldName(0), mangled(0), typeName(0)
                             { }
@@ -99,7 +94,7 @@ public:
                                   typeName = NewPoolTString(p.userDef->getTypeName().c_str());
                               }
                             }
-    explicit TType(TTypeList* userDef, const TString& n, TPrecision p = EbpHigh) :
+    explicit TType(TTypeList* userDef, const TString& n, TPrecision p = EbpUndefined) :
                             type(EbtStruct), precision(p), qualifier(EvqTemporary), size(1), matrix(false), array(false), arraySize(0),
                             structure(userDef), structureSize(0), maxArraySize(0), arrayInformationType(0), fieldName(0), mangled(0) {
                                 typeName = NewPoolTString(n.c_str());

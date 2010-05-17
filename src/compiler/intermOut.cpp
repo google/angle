@@ -41,7 +41,7 @@ TString TType::getCompleteString() const
     char *p = &buf[0];
 
     if (qualifier != EvqTemporary && qualifier != EvqGlobal)
-        p += sprintf(p, "%s ", getQualifierString());
+        p += sprintf(p, "%s %s ", getQualifierString(), getPrecisionString());
     if (array)
         p += sprintf(p, "array of ");
     if (matrix)

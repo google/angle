@@ -225,6 +225,24 @@ void TParseContext::binaryOpError(int line, const char* op, TString left, TStrin
             op, left.c_str(), right.c_str());
 }
 
+bool TParseContext::precisionErrorCheck(int line, TPrecision precision, TBasicType type){
+    switch( type ){
+    case EbtFloat:
+        if( precision == EbpUndefined ){
+            error( line, "No precision specified for (float)", "", "" );
+            return true;
+        }
+        break;
+    case EbtInt:
+        if( precision == EbpUndefined ){
+            error( line, "No precision specified (int)", "", "" );
+            return true;
+        }
+        break;
+    }
+    return false;
+}
+
 //
 // Both test and if necessary, spit out an error, to see if the node is really
 // an l-value that can be operated on this way.

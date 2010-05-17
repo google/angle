@@ -129,7 +129,7 @@ class TFunction : public TSymbol {
 public:
     TFunction(TOperator o) :
         TSymbol(0),
-        returnType(TType(EbtVoid)),
+        returnType(TType(EbtVoid, EbpUndefined)),
         op(o),
         defined(false) { }
     TFunction(const TString *name, TType& retType, TOperator tOp = EOpNull) : 
@@ -241,6 +241,7 @@ public:
     TSymbolTable(TSymbolTable& symTable)
     {
         table.push_back(symTable.table[0]);
+        precisionStack.push_back( symTable.precisionStack[0] );
         uniqueId = symTable.uniqueId;
     }
 
@@ -263,12 +264,14 @@ public:
     void push()
     { 
         table.push_back(new TSymbolTableLevel);
+        precisionStack.push_back( PrecisionStackLevel() );
     }
 
     void pop()
     { 
         delete table[currentLevel()]; 
         table.pop_back(); 
+        precisionStack.pop_back();
     }
 
     bool insert(TSymbol& symbol)
@@ -299,11 +302,37 @@ public:
     void dump(TInfoSink &infoSink) const;
     void copyTable(const TSymbolTable& copyOf);
 
+    void setDefaultPrecision( TBasicType type, TPrecision prec ){
+        if( type != EbtFloat && type != EbtInt ) return; // Only set default precision for int/float
+        int indexOfLastElement = static_cast<int>(precisionStack.size()) - 1;
+        precisionStack[indexOfLastElement][type] = prec; // Uses map operator [], overwrites the current value
+    }
+
+    // Searches down the precisionStack for a precision qualifier for the specified TBasicType
+    TPrecision getDefaultPrecision( TBasicType type){
+        if( type != EbtFloat && type != EbtInt ) return EbpUndefined;
+        int level = static_cast<int>(precisionStack.size()) - 1;
+        assert( level >= 0); // Just to be safe. Should not happen.
+        PrecisionStackLevel::iterator it;
+        TPrecision prec = EbpUndefined; // If we dont find anything we return this. Should we error check this?
+        while( level >= 0 ){
+            it = precisionStack[level].find( type );
+            if( it != precisionStack[level].end() ){
+                prec = (*it).second;
+                break;
+            }
+            level--;
+        }
+        return prec;
+    }
+
 protected:    
     int currentLevel() const { return static_cast<int>(table.size()) - 1; }
     bool atDynamicBuiltInLevel() { return table.size() == 2; }
 
     std::vector<TSymbolTableLevel*> table;
+    typedef std::map< TBasicType, TPrecision > PrecisionStackLevel;
+    std::vector< PrecisionStackLevel > precisionStack;
     int uniqueId;     // for unique identification in code generation
 };
 

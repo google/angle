@@ -12,9 +12,11 @@
 //
 enum TPrecision
 {
-    EbpHigh,
-    EbpMedium,
+    // These need to be kept sorted
+    EbpUndefined,
     EbpLow,
+    EbpMedium,
+    EbpHigh,
 };
 
 __inline const char* getPrecisionString(TPrecision p)
@@ -24,7 +26,7 @@ __inline const char* getPrecisionString(TPrecision p)
     case EbpHigh:		return "highp";		break;
     case EbpMedium:		return "mediump";	break;
     case EbpLow:		return "lowp";		break;
-    default:			return "unknown precision";
+    default:			return "mediump";   break;   // Safest fallback
     }
 }
 

@@ -23,6 +23,8 @@ void TBuiltIns::initialize()
     TString BuiltInFunctionsVertex;
     TString BuiltInFunctionsFragment;
     TString StandardUniforms;
+    TString VertexDefaultPrecision;
+    TString FragmentDefaultPrecision;
 
     {
         //============================================================================
@@ -427,19 +429,47 @@ void TBuiltIns::initialize()
         // Depth range in window coordinates
         //
         s.append(TString("struct gl_DepthRangeParameters {"));
-        s.append(TString("    float near;"));        // n       // FIXME: highp
-        s.append(TString("    float far;"));         // f       // FIXME: highp
-        s.append(TString("    float diff;"));        // f - n   // FIXME: highp
+        s.append(TString("    highp float near;"));        // n
+        s.append(TString("    highp float far;"));         // f
+        s.append(TString("    highp float diff;"));        // f - n
         s.append(TString("};"));
         s.append(TString("uniform gl_DepthRangeParameters gl_DepthRange;"));
 
         s.append(TString("\n"));
     }
+    {
+        //============================================================================
+        //
+        // Default precision for vertex shaders.
+        //
+        //============================================================================
 
+        TString& s = VertexDefaultPrecision;
+
+        s.append(TString("precision highp int;"));
+        s.append(TString("precision highp float;"));
+        s.append(TString("\n"));
+    }
+    {
+        //============================================================================
+        //
+        // Default precision for fragment shaders.
+        //
+        //============================================================================
+        
+        TString& s = FragmentDefaultPrecision;
+        
+        s.append(TString("precision mediump int;"));
+        // No default precision for float in fragment shaders
+        s.append(TString("\n"));
+    }
+
+    builtInStrings[EShLangFragment].push_back(FragmentDefaultPrecision);
     builtInStrings[EShLangFragment].push_back(BuiltInFunctions.c_str());
     builtInStrings[EShLangFragment].push_back(BuiltInFunctionsFragment);
     builtInStrings[EShLangFragment].push_back(StandardUniforms);
-
+    
+    builtInStrings[EShLangVertex].push_back(VertexDefaultPrecision);
     builtInStrings[EShLangVertex].push_back(BuiltInFunctions);
     builtInStrings[EShLangVertex].push_back(BuiltInFunctionsVertex);
     builtInStrings[EShLangVertex].push_back(StandardUniforms);
@@ -489,18 +519,18 @@ void IdentifyBuiltIns(EShLanguage language, TSymbolTable& symbolTable)
     switch(language) {
 
     case EShLangFragment: {
-            symbolTable.insert(*new TVariable(NewPoolTString("gl_FragCoord"),                   TType(EbtFloat, EvqFragCoord,   4)));   // FIXME: mediump
-            symbolTable.insert(*new TVariable(NewPoolTString("gl_FrontFacing"),                 TType(EbtBool,  EvqFrontFacing, 1)));
-            symbolTable.insert(*new TVariable(NewPoolTString("gl_FragColor"),                   TType(EbtFloat, EvqFragColor,   4)));   // FIXME: mediump
-            symbolTable.insert(*new TVariable(NewPoolTString("gl_FragData[gl_MaxDrawBuffers]"), TType(EbtFloat, EvqFragData,    4)));   // FIXME: mediump
-            symbolTable.insert(*new TVariable(NewPoolTString("gl_PointCoord"),                  TType(EbtFloat, EvqPointCoord,  2)));   // FIXME: mediump
+            symbolTable.insert(*new TVariable(NewPoolTString("gl_FragCoord"),                   TType(EbtFloat, EbpMedium, EvqFragCoord,   4)));
+            symbolTable.insert(*new TVariable(NewPoolTString("gl_FrontFacing"),                 TType(EbtBool,  EbpUndefined, EvqFrontFacing, 1)));
+            symbolTable.insert(*new TVariable(NewPoolTString("gl_FragColor"),                   TType(EbtFloat, EbpMedium, EvqFragColor,   4)));
+            symbolTable.insert(*new TVariable(NewPoolTString("gl_FragData[gl_MaxDrawBuffers]"), TType(EbtFloat, EbpMedium, EvqFragData,    4)));
+            symbolTable.insert(*new TVariable(NewPoolTString("gl_PointCoord"),                  TType(EbtFloat, EbpMedium, EvqPointCoord,  2)));
 
         }
         break;
 
     case EShLangVertex:
-        symbolTable.insert(*new TVariable(NewPoolTString("gl_Position"),    TType(EbtFloat, EvqPosition,    4)));   // FIXME: highp
-        symbolTable.insert(*new TVariable(NewPoolTString("gl_PointSize"),   TType(EbtFloat, EvqPointSize,   1)));   // FIXME: mediump
+        symbolTable.insert(*new TVariable(NewPoolTString("gl_Position"),    TType(EbtFloat, EbpHigh, EvqPosition,    4)));
+        symbolTable.insert(*new TVariable(NewPoolTString("gl_PointSize"),   TType(EbtFloat, EbpMedium, EvqPointSize,   1)));
         break;
     default: break;
     }
@@ -587,7 +617,7 @@ void IdentifyBuiltIns(EShLanguage language, TSymbolTable& symbolTable, const TBu
 
     case EShLangFragment: {
             // Set up gl_FragData.  The array size.
-            TType fragData(EbtFloat, EvqFragColor,   4, false, true);
+            TType fragData(EbtFloat, EbpMedium, EvqFragColor,   4, false, true);
             fragData.setArraySize(resources.maxDrawBuffers);
             symbolTable.insert(*new TVariable(NewPoolTString("gl_FragData"),    fragData));
         }

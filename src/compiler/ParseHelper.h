@@ -65,6 +65,7 @@ struct TParseContext {
     void assignError(int line, const char* op, TString left, TString right);
     void unaryOpError(int line, const char* op, TString operand);
     void binaryOpError(int line, const char* op, TString left, TString right);
+    bool precisionErrorCheck(int line, TPrecision precision, TBasicType type);
     bool lValueErrorCheck(int line, const char* op, TIntermTyped*);
     bool constErrorCheck(TIntermTyped* node);
     bool integerErrorCheck(TIntermTyped* node, const char* token);
