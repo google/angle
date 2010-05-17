@@ -732,7 +732,7 @@ unary_expression
                 switch($1.op) {
                 case EOpNegative:   errorOp = "-"; break;
                 case EOpLogicalNot: errorOp = "!"; break;
-				default: break;
+                default: break;
                 }
                 parseContext->unaryOpError($1.line, errorOp, $2->getCompleteString());
                 parseContext->recover();
@@ -1011,12 +1011,12 @@ declaration
         $$ = prototype;
     }
     | init_declarator_list SEMICOLON {
-		if ($1.intermAggregate)
+        if ($1.intermAggregate)
             $1.intermAggregate->setOperator(EOpDeclaration);
         $$ = $1.intermAggregate;
     }
     | PRECISION precision_qualifier type_specifier_no_prec SEMICOLON {
-    	$$ = 0;
+        $$ = 0;
     }
     ;
 
@@ -1274,7 +1274,7 @@ init_declarator_list
         if (parseContext->arrayTypeErrorCheck($4.line, $1.type) || parseContext->arrayQualifierErrorCheck($4.line, $1.type))
             parseContext->recover();
         else {
-			$1.type.setArray(true, $7->getType().getArraySize());
+            $1.type.setArray(true, $7->getType().getArraySize());
             if (parseContext->arrayErrorCheck($4.line, *$3.string, $1.type, variable))
                 parseContext->recover();
         }
@@ -1345,7 +1345,7 @@ init_declarator_list
             // build the intermediate representation
             //
             if (intermNode)
-		$$.intermAggregate = parseContext->intermediate.growAggregate($1.intermNode, intermNode, $4.line);
+        $$.intermAggregate = parseContext->intermediate.growAggregate($1.intermNode, intermNode, $4.line);
             else
                 $$.intermAggregate = $1.intermAggregate;
         } else {
@@ -1361,7 +1361,7 @@ single_declaration
         $$.intermAggregate = parseContext->intermediate.makeAggregate(parseContext->intermediate.addSymbol(0, "", TType($1), $1.line), $1.line);
     }
     | fully_specified_type IDENTIFIER {
-		$$.intermAggregate = parseContext->intermediate.makeAggregate(parseContext->intermediate.addSymbol(0, *$2.string, TType($1), $2.line), $2.line);
+        $$.intermAggregate = parseContext->intermediate.makeAggregate(parseContext->intermediate.addSymbol(0, *$2.string, TType($1), $2.line), $2.line);
         
         if (parseContext->structQualifierErrorCheck($2.line, $$.type))
             parseContext->recover();
@@ -1395,11 +1395,11 @@ single_declaration
         }
     }
     | fully_specified_type IDENTIFIER LEFT_BRACKET constant_expression RIGHT_BRACKET {
-		TType type = TType($1);
-		int size;
+        TType type = TType($1);
+        int size;
         if (parseContext->arraySizeErrorCheck($2.line, $4, size))
             parseContext->recover();
-		type.setArraySize(size);
+        type.setArraySize(size);
         $$.intermAggregate = parseContext->intermediate.makeAggregate(parseContext->intermediate.addSymbol(0, *$2.string, type, $2.line), $2.line);
         
         if (parseContext->structQualifierErrorCheck($2.line, $1))
@@ -1429,24 +1429,24 @@ single_declaration
 
         $$.type = $1;
 
-	    TIntermNode* intermNode;
+        TIntermNode* intermNode;
         if (!parseContext->executeInitializer($2.line, *$2.string, $1, $4, intermNode)) {
-		//
-		// Build intermediate representation
-		//
+        //
+        // Build intermediate representation
+        //
             if(intermNode)
-				$$.intermAggregate = parseContext->intermediate.makeAggregate(intermNode, $3.line);
+                $$.intermAggregate = parseContext->intermediate.makeAggregate(intermNode, $3.line);
             else
-				$$.intermAggregate = 0;
+                $$.intermAggregate = 0;
         } else {
-			parseContext->recover();
-			$$.intermAggregate = 0;
-		}
-	}
+            parseContext->recover();
+            $$.intermAggregate = 0;
+        }
+    }
     | INVARIANT IDENTIFIER {
-		VERTEX_ONLY("invariant declaration", $1.line);
-		$$.qualifier = EvqInvariantVaryingOut;
-	    $$.intermAggregate = 0;
+        VERTEX_ONLY("invariant declaration", $1.line);
+        $$.qualifier = EvqInvariantVaryingOut;
+        $$.intermAggregate = 0;
     }
 
 //
@@ -1589,23 +1589,23 @@ type_qualifier
 
 type_specifier
     : type_specifier_no_prec {
-    	$$ = $1;
+        $$ = $1;
     }
     | precision_qualifier type_specifier_no_prec {
-    	$$ = $2;
-	$$.setPrecision($1);
+        $$ = $2;
+    $$.setPrecision($1);
     }
     ;
 
 precision_qualifier
     : HIGH_PRECISION {
-    	$$ = EbpHigh;
+        $$ = EbpHigh;
     }
     | MEDIUM_PRECISION {
-    	$$ = EbpMedium;
+        $$ = EbpMedium;
     }
     | LOW_PRECISION  {
-    	$$ = EbpLow;
+        $$ = EbpLow;
     }
     ;
 

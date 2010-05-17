@@ -12,20 +12,20 @@
 //
 enum TPrecision
 {
-	EbpHigh,
-	EbpMedium,
-	EbpLow,
+    EbpHigh,
+    EbpMedium,
+    EbpLow,
 };
 
 __inline const char* getPrecisionString(TPrecision p)
 {
-	switch(p)
-	{
-	case EbpHigh:		return "highp";		break;
-	case EbpMedium:		return "mediump";	break;
-	case EbpLow:		return "lowp";		break;
-	default:			return "unknown precision";
-	}
+    switch(p)
+    {
+    case EbpHigh:		return "highp";		break;
+    case EbpMedium:		return "mediump";	break;
+    case EbpLow:		return "lowp";		break;
+    default:			return "unknown precision";
+    }
 }
 
 //
@@ -33,21 +33,21 @@ __inline const char* getPrecisionString(TPrecision p)
 //
 enum TBasicType
 {
-	EbtVoid,
-	EbtFloat,
-	EbtInt,
-	EbtBool,
-	EbtGuardSamplerBegin,  // non type:  see implementation of IsSampler()
-	EbtSampler2D,
-	EbtSamplerCube,
-	EbtGuardSamplerEnd,    // non type:  see implementation of IsSampler()
-	EbtStruct,
-	EbtAddress,            // should be deprecated??
+    EbtVoid,
+    EbtFloat,
+    EbtInt,
+    EbtBool,
+    EbtGuardSamplerBegin,  // non type:  see implementation of IsSampler()
+    EbtSampler2D,
+    EbtSamplerCube,
+    EbtGuardSamplerEnd,    // non type:  see implementation of IsSampler()
+    EbtStruct,
+    EbtAddress,            // should be deprecated??
 };
 
 __inline bool IsSampler(TBasicType type)
 {
-	return type > EbtGuardSamplerBegin && type < EbtGuardSamplerEnd;
+    return type > EbtGuardSamplerBegin && type < EbtGuardSamplerEnd;
 }
 
 //
@@ -58,41 +58,41 @@ __inline bool IsSampler(TBasicType type)
 //
 enum TQualifier
 {
-	EvqTemporary,     // For temporaries (within a function), read/write
-	EvqGlobal,        // For globals read/write
-	EvqConst,         // User defined constants and non-output parameters in functions
-	EvqAttribute,     // Readonly
-	EvqVaryingIn,     // readonly, fragment shaders only
-	EvqVaryingOut,    // vertex shaders only  read/write
-	EvqInvariantVaryingIn,     // readonly, fragment shaders only
-	EvqInvariantVaryingOut,    // vertex shaders only  read/write
-	EvqUniform,       // Readonly, vertex and fragment
+    EvqTemporary,     // For temporaries (within a function), read/write
+    EvqGlobal,        // For globals read/write
+    EvqConst,         // User defined constants and non-output parameters in functions
+    EvqAttribute,     // Readonly
+    EvqVaryingIn,     // readonly, fragment shaders only
+    EvqVaryingOut,    // vertex shaders only  read/write
+    EvqInvariantVaryingIn,     // readonly, fragment shaders only
+    EvqInvariantVaryingOut,    // vertex shaders only  read/write
+    EvqUniform,       // Readonly, vertex and fragment
 
-	// pack/unpack input and output
-	EvqInput,
-	EvqOutput,
+    // pack/unpack input and output
+    EvqInput,
+    EvqOutput,
 
-	// parameters
-	EvqIn,
-	EvqOut,
-	EvqInOut,
-	EvqConstReadOnly,
+    // parameters
+    EvqIn,
+    EvqOut,
+    EvqInOut,
+    EvqConstReadOnly,
 
-	// built-ins written by vertex shader
-	EvqPosition,
-	EvqPointSize,
+    // built-ins written by vertex shader
+    EvqPosition,
+    EvqPointSize,
 
-	// built-ins read by fragment shader
-	EvqFragCoord,
-	EvqFrontFacing,
-	EvqPointCoord,
+    // built-ins read by fragment shader
+    EvqFragCoord,
+    EvqFrontFacing,
+    EvqPointCoord,
 
-	// built-ins written by fragment shader
-	EvqFragColor,
-	EvqFragData,
+    // built-ins written by fragment shader
+    EvqFragColor,
+    EvqFragData,
 
-	// end of list
-	EvqLast,
+    // end of list
+    EvqLast,
 };
 
 //
@@ -100,31 +100,31 @@ enum TQualifier
 //
 __inline const char* getQualifierString(TQualifier q)
 {
-	switch(q)
-	{
-	case EvqTemporary:      return "Temporary";      break;
-	case EvqGlobal:         return "Global";         break;
-	case EvqConst:          return "const";          break;
-	case EvqConstReadOnly:  return "const";          break;
-	case EvqAttribute:      return "attribute";      break;
-	case EvqVaryingIn:      return "varying";        break;
-	case EvqVaryingOut:     return "varying";        break;
-	case EvqInvariantVaryingIn: return "invariant varying";	break;
-	case EvqInvariantVaryingOut:return "invariant varying";	break;
-	case EvqUniform:        return "uniform";        break;
-	case EvqIn:             return "in";             break;
-	case EvqOut:            return "out";            break;
-	case EvqInOut:          return "inout";          break;
-	case EvqInput:          return "input";          break;
-	case EvqOutput:         return "output";         break;
-	case EvqPosition:       return "Position";       break;
-	case EvqPointSize:      return "PointSize";      break;
-	case EvqFragCoord:      return "FragCoord";      break;
-	case EvqFrontFacing:    return "FrontFacing";    break;
-	case EvqFragColor:      return "FragColor";      break;
-	case EvqFragData:       return "FragData";      break;
-	default:                return "unknown qualifier";
-	}
+    switch(q)
+    {
+    case EvqTemporary:      return "Temporary";      break;
+    case EvqGlobal:         return "Global";         break;
+    case EvqConst:          return "const";          break;
+    case EvqConstReadOnly:  return "const";          break;
+    case EvqAttribute:      return "attribute";      break;
+    case EvqVaryingIn:      return "varying";        break;
+    case EvqVaryingOut:     return "varying";        break;
+    case EvqInvariantVaryingIn: return "invariant varying";	break;
+    case EvqInvariantVaryingOut:return "invariant varying";	break;
+    case EvqUniform:        return "uniform";        break;
+    case EvqIn:             return "in";             break;
+    case EvqOut:            return "out";            break;
+    case EvqInOut:          return "inout";          break;
+    case EvqInput:          return "input";          break;
+    case EvqOutput:         return "output";         break;
+    case EvqPosition:       return "Position";       break;
+    case EvqPointSize:      return "PointSize";      break;
+    case EvqFragCoord:      return "FragCoord";      break;
+    case EvqFrontFacing:    return "FrontFacing";    break;
+    case EvqFragColor:      return "FragColor";      break;
+    case EvqFragData:       return "FragData";      break;
+    default:                return "unknown qualifier";
+    }
 }
 
 #endif // _BASICTYPES_INCLUDED_
