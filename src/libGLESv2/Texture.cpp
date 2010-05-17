@@ -42,6 +42,7 @@ Texture::Texture(Context *context) : mContext(context)
     mDirtyMetaData = true;
     mDirty = true;
     mIsRenderable = false;
+    mBaseTexture = NULL;
 }
 
 Texture::~Texture()
