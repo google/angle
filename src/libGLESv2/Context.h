@@ -153,7 +153,7 @@ struct State
     bool sampleAlphaToCoverage;
     bool sampleCoverage;
     GLclampf sampleCoverageValue;
-    GLboolean sampleCoverageInvert;
+    bool sampleCoverageInvert;
     bool scissorTest;
     bool dither;
 
@@ -255,7 +255,7 @@ class Context
     void setSampleCoverage(bool enabled);
     bool isSampleCoverageEnabled() const;
 
-    void setSampleCoverageParams(GLclampf value, GLboolean invert);
+    void setSampleCoverageParams(GLclampf value, bool invert);
 
     void setScissorTest(bool enabled);
     bool isScissorTestEnabled() const;

@@ -669,7 +669,7 @@ void __stdcall glColorMask(GLboolean red, GLboolean green, GLboolean blue, GLboo
 
         if (context)
         {
-            context->setColorMask(red != GL_FALSE, green != GL_FALSE, blue != GL_FALSE, alpha != GL_FALSE);
+            context->setColorMask(red == GL_TRUE, green == GL_TRUE, blue == GL_TRUE, alpha == GL_TRUE);
         }
     }
     catch(std::bad_alloc&)
@@ -3596,7 +3596,7 @@ void __stdcall glSampleCoverage(GLclampf value, GLboolean invert)
 
         if (context)
         {
-            context->setSampleCoverageParams(gl::clamp01(value), invert);
+            context->setSampleCoverageParams(gl::clamp01(value), invert == GL_TRUE);
         }
     }
     catch(std::bad_alloc&)

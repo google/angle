@@ -78,7 +78,7 @@ Context::Context(const egl::Config *config)
     mState.sampleAlphaToCoverage = false;
     mState.sampleCoverage = false;
     mState.sampleCoverageValue = 1.0f;
-    mState.sampleCoverageInvert = GL_FALSE;
+    mState.sampleCoverageInvert = false;
     mState.scissorTest = false;
     mState.dither = true;
     mState.generateMipmapHint = GL_DONT_CARE;
@@ -571,7 +571,7 @@ bool Context::isSampleCoverageEnabled() const
     return mState.sampleCoverage;
 }
 
-void Context::setSampleCoverageParams(GLclampf value, GLboolean invert)
+void Context::setSampleCoverageParams(GLclampf value, bool invert)
 {
     if (mState.sampleCoverageValue != value ||
         mState.sampleCoverageInvert != invert)
