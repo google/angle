@@ -121,7 +121,7 @@
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="2"
 				AdditionalIncludeDirectories="$(ProjectDir)/..; $(ProjectDir)/../../include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBGLESV2_EXPORTS;_CRT_SECURE_NO_DEPRECATE;NOMINMAX"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBGLESV2_EXPORTS;_CRT_SECURE_NO_DEPRECATE;NOMINMAX;_SECURE_SCL=0"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"

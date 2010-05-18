@@ -107,7 +107,7 @@
 				InlineFunctionExpansion="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="$(ProjectDir)../;$(ProjectDir)../../include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;NOMINMAX"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;NOMINMAX;_SECURE_SCL=0"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
