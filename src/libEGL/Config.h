@@ -21,6 +21,8 @@
 
 namespace egl
 {
+class Display;
+
 class Config
 {
   public:
@@ -92,21 +94,22 @@ class SortConfig
 
 class ConfigSet
 {
+    friend Display;
+
   public:
     ConfigSet();
 
     void add(D3DDISPLAYMODE displayMode, EGLint minSwapInterval, EGLint maxSwapInterval, D3DFORMAT renderTargetFormat, D3DFORMAT depthStencilFormat, EGLint multiSample);
-    void enumerate();
     size_t size() const;
     bool getConfigs(EGLConfig *configs, const EGLint *attribList, EGLint configSize, EGLint *numConfig);
     const egl::Config *get(EGLConfig configHandle);
 
+  private:
+    DISALLOW_COPY_AND_ASSIGN(ConfigSet);
+
     typedef std::set<Config, SortConfig> Set;
     typedef Set::iterator Iterator;
     Set mSet;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(ConfigSet);
 
     static const EGLint mSortAttribs[];
 };

@@ -103,6 +103,8 @@ bool Display::initialize()
             D3DDISPLAYMODE currentDisplayMode;
             mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
 
+            ConfigSet configSet;
+
             for (int formatIndex = 0; formatIndex < sizeof(renderTargetFormats) / sizeof(D3DFORMAT); formatIndex++)
             {
                 D3DFORMAT renderTargetFormat = renderTargetFormats[formatIndex];
@@ -124,15 +126,24 @@ bool Display::initialize()
                             {
                                 // FIXME: Enumerate multi-sampling
 
-                                mConfigSet.add(currentDisplayMode, mMinSwapInterval, mMaxSwapInterval, renderTargetFormat, depthStencilFormat, 0);
+                                configSet.add(currentDisplayMode, mMinSwapInterval, mMaxSwapInterval, renderTargetFormat, depthStencilFormat, 0);
                             }
                         }
                     }
                 }
             }
-        }
 
-        mConfigSet.enumerate();
+            // Give the sorted configs a unique ID and store them internally
+            EGLint index = 1;
+            for (ConfigSet::Iterator config = configSet.mSet.begin(); config != configSet.mSet.end(); config++)
+            {
+                Config configuration = *config;
+                configuration.mConfigID = index;
+                index++;
+
+                mConfigSet.mSet.insert(configuration);
+            }
+        }
     }
 
     if (!isInitialized())
