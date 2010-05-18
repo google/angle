@@ -929,7 +929,7 @@ void Context::bindArrayBuffer(unsigned int buffer)
 {
     if (buffer != 0 && !getBuffer(buffer))
     {
-        mBufferMap[buffer] = new Buffer(mBufferBackEnd);
+        mBufferMap[buffer] = new Buffer();
     }
 
     mState.arrayBuffer = buffer;
@@ -939,7 +939,7 @@ void Context::bindElementArrayBuffer(unsigned int buffer)
 {
     if (buffer != 0 && !getBuffer(buffer))
     {
-        mBufferMap[buffer] = new Buffer(mBufferBackEnd);
+        mBufferMap[buffer] = new Buffer();
     }
 
     mState.elementArrayBuffer = buffer;

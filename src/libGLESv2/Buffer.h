@@ -22,28 +22,26 @@
 namespace gl
 {
 
-class BufferBackEnd;
-class TranslatedVertexBuffer;
-
 class Buffer
 {
   public:
-    explicit Buffer(BufferBackEnd *backEnd);
+    Buffer();
 
-    GLenum bufferData(const void *data, GLsizeiptr size, GLenum usage);
-    GLenum bufferSubData(const void *data, GLsizeiptr size, GLintptr offset);
+    virtual ~Buffer();
 
-    void *data() { return &mContents[0]; }
-    GLsizeiptr size() const { return mContents.size(); }
+    void bufferData(const void *data, GLsizeiptr size, GLenum usage);
+    void bufferSubData(const void *data, GLsizeiptr size, GLintptr offset);
+
+    void *data() { return mContents; }
+    size_t size() const { return mSize; }
     GLenum usage() const { return mUsage; }
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Buffer);
 
-    std::vector<GLubyte> mContents;
+    GLubyte *mContents;
+    size_t mSize;
     GLenum mUsage;
-
-    BufferBackEnd *mBackEnd;
 };
 
 }

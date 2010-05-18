@@ -506,7 +506,7 @@ void __stdcall glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, 
 
     try
     {
-        if (size < 0)
+        if (size < 0 || offset < 0)
         {
             return error(GL_INVALID_VALUE);
         }
@@ -539,12 +539,12 @@ void __stdcall glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, 
                 return error(GL_INVALID_OPERATION);
             }
 
-            GLenum err = buffer->bufferSubData(data, size, offset);
-
-            if (err != GL_NO_ERROR)
+            if ((size_t)size + offset > buffer->size())
             {
-                return error(err);
+                return error(GL_INVALID_VALUE);
             }
+
+            buffer->bufferSubData(data, size, offset);
         }
     }
     catch(std::bad_alloc&)

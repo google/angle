@@ -10,71 +10,47 @@
 
 #include "libGLESv2/Buffer.h"
 
-#include <cstdlib>
-#include <limits>
-#include <utility>
-
-#include "common/debug.h"
-
-#include "libGLESv2/geometry/backend.h"
-
 namespace gl
 {
 
-Buffer::Buffer(BufferBackEnd *backEnd)
-    : mBackEnd(backEnd)
+Buffer::Buffer()
 {
+    mContents = NULL;
+    mSize = 0;
+    mUsage = GL_DYNAMIC_DRAW;
 }
 
-GLenum Buffer::bufferData(const void* data, GLsizeiptr size, GLenum usage)
+Buffer::~Buffer()
 {
-    if (size < 0) return GL_INVALID_VALUE;
+    delete[] mContents;
+}
 
-    const GLubyte* newdata = static_cast<const GLubyte*>(data);
-
+void Buffer::bufferData(const void *data, GLsizeiptr size, GLenum usage)
+{
     if (size == 0)
     {
-        mContents.clear();
+        delete[] mContents;
+        mContents = NULL;
     }
-    else if (size != mContents.size())
+    else if (size != mSize)
     {
-        // vector::resize only provides the basic exception guarantee, so use temporaries & swap to get the strong exception guarantee.
-        std::vector<GLubyte> newContents;
-
-        if (newdata != NULL)
-        {
-            newContents.assign(newdata, newdata + size);
-        }
-        else
-        {
-            newContents.assign(size, 0);
-        }
-
-        // No exceptions allowed after this point.
-
-        mContents.swap(newContents);
-
+        delete[] mContents;
+        mContents = new GLubyte[size];
+        memset(mContents, 0, size);
     }
-    else if (newdata != NULL)
+
+    if (data != NULL && size > 0)
     {
-        mContents.assign(newdata, newdata + size);
+        memcpy(mContents, data, size);
     }
 
+    mSize = size;
     mUsage = usage;
-
-    return GL_NO_ERROR;
 }
 
-GLenum Buffer::bufferSubData(const void* data, GLsizeiptr size, GLintptr offset)
+void Buffer::bufferSubData(const void *data, GLsizeiptr size, GLintptr offset)
 {
-    if (size < 0 || offset < 0) return GL_INVALID_VALUE;
-    if (std::numeric_limits<GLsizeiptr>::max() - offset < size) return GL_INVALID_VALUE;
-    if (size + offset > static_cast<GLsizeiptr>(mContents.size())) return GL_INVALID_VALUE;
-
-    const GLubyte *newdata = static_cast<const GLubyte*>(data);
-    memcpy(&mContents[offset], newdata, size);
-
-    return GL_NO_ERROR;
+    memcpy(mContents + offset, data, size);
 }
 
 }
