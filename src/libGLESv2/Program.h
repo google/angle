@@ -93,6 +93,15 @@ class Program
     bool getUniformfv(GLint location, GLfloat *params);
     bool getUniformiv(GLint location, GLint *params);
 
+    GLint getDepthRangeDiffLocation() const;
+    GLint getDepthRangeNearLocation() const;
+    GLint getDepthRangeFarLocation() const;
+    GLint getDxDepthLocation() const;
+    GLint getDxWindowLocation() const;
+    GLint getDxHalfPixelSizeLocation() const;
+    GLint getDxFrontCCWLocation() const;
+    GLint getDxPointsOrLinesLocation() const;
+
     void dirtyAllUniforms();
     void applyUniforms();
 
@@ -190,6 +199,15 @@ class Program
     UniformArray mUniforms;
     typedef std::vector<UniformLocation> UniformIndex;
     UniformIndex mUniformIndex;
+
+    GLint mDepthRangeDiffLocation;
+    GLint mDepthRangeNearLocation;
+    GLint mDepthRangeFarLocation;
+    GLint mDxDepthLocation;
+    GLint mDxWindowLocation;
+    GLint mDxHalfPixelSizeLocation;
+    GLint mDxFrontCCWLocation;
+    GLint mDxPointsOrLinesLocation;
 
     bool mLinked;
     bool mDeleteStatus;   // Flag to indicate that the program can be deleted when no longer in use

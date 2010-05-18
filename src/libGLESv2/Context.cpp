@@ -1703,27 +1703,27 @@ bool Context::applyRenderTarget(bool ignoreViewport)
     {
         Program *programObject = getCurrentProgram();
 
-        GLint halfPixelSize = programObject->getUniformLocation("dx_HalfPixelSize");
+        GLint halfPixelSize = programObject->getDxHalfPixelSizeLocation();
         GLfloat xy[2] = {1.0f / viewport.Width, 1.0f / viewport.Height};
         programObject->setUniform2fv(halfPixelSize, 1, (GLfloat*)&xy);
 
-        GLint window = programObject->getUniformLocation("dx_Window");
+        GLint window = programObject->getDxWindowLocation();
         GLfloat whxy[4] = {mState.viewportWidth / 2.0f, mState.viewportHeight / 2.0f, 
                           (float)mState.viewportX + mState.viewportWidth / 2.0f, 
                           (float)mState.viewportY + mState.viewportHeight / 2.0f};
         programObject->setUniform4fv(window, 1, (GLfloat*)&whxy);
 
-        GLint depth = programObject->getUniformLocation("dx_Depth");
+        GLint depth = programObject->getDxDepthLocation();
         GLfloat dz[2] = {(mState.zFar - mState.zNear) / 2.0f, (mState.zNear + mState.zFar) / 2.0f};
         programObject->setUniform2fv(depth, 1, (GLfloat*)&dz);
 
-        GLint near = programObject->getUniformLocation("gl_DepthRange.near");
+        GLint near = programObject->getDepthRangeNearLocation();
         programObject->setUniform1fv(near, 1, &mState.zNear);
 
-        GLint far = programObject->getUniformLocation("gl_DepthRange.far");
+        GLint far = programObject->getDepthRangeFarLocation();
         programObject->setUniform1fv(far, 1, &mState.zFar);
 
-        GLint diff = programObject->getUniformLocation("gl_DepthRange.diff");
+        GLint diff = programObject->getDepthRangeDiffLocation();
         GLfloat zDiff = mState.zFar - mState.zNear;
         programObject->setUniform1fv(diff, 1, &zDiff);
     }
@@ -1737,11 +1737,11 @@ void Context::applyState(GLenum drawMode)
     IDirect3DDevice9 *device = getDevice();
     Program *programObject = getCurrentProgram();
 
-    GLint frontCCW = programObject->getUniformLocation("dx_FrontCCW");
+    GLint frontCCW = programObject->getDxFrontCCWLocation();
     GLint ccw = (mState.frontFace == GL_CCW);
     programObject->setUniform1iv(frontCCW, 1, &ccw);
 
-    GLint pointsOrLines = programObject->getUniformLocation("dx_PointsOrLines");
+    GLint pointsOrLines = programObject->getDxPointsOrLinesLocation();
     GLint alwaysFront = !isTriangleMode(drawMode);
     programObject->setUniform1iv(pointsOrLines, 1, &alwaysFront);
 

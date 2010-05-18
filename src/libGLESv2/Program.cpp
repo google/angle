@@ -1494,6 +1494,15 @@ void Program::link()
                 return;
             }
 
+            mDepthRangeNearLocation = getUniformLocation("gl_DepthRange.near");
+            mDepthRangeFarLocation = getUniformLocation("gl_DepthRange.far");
+            mDepthRangeDiffLocation = getUniformLocation("gl_DepthRange.diff");
+            mDxDepthLocation = getUniformLocation("dx_Depth");
+            mDxWindowLocation = getUniformLocation("dx_Window");
+            mDxHalfPixelSizeLocation = getUniformLocation("dx_HalfPixelSize");
+            mDxFrontCCWLocation = getUniformLocation("dx_FrontCCW");
+            mDxPointsOrLinesLocation = getUniformLocation("dx_PointsOrLines");
+
             mLinked = true;   // Success
         }
     }
@@ -2394,6 +2403,15 @@ void Program::unlink(bool destroy)
         mUniforms.pop_back();
     }
 
+    mDepthRangeDiffLocation = -1;
+    mDepthRangeNearLocation = -1;
+    mDepthRangeFarLocation = -1;
+    mDxDepthLocation = -1;
+    mDxWindowLocation = -1;
+    mDxHalfPixelSizeLocation = -1;
+    mDxFrontCCWLocation = -1;
+    mDxPointsOrLinesLocation = -1;
+
     mUniformIndex.clear();
 
     mPixelHLSL.clear();
@@ -2693,4 +2711,45 @@ void Program::getConstantHandles(Uniform *targetUniform, D3DXHANDLE *constantPS,
     *constantPS = targetUniform->psHandle;
     *constantVS = targetUniform->vsHandle;
 }
+
+GLint Program::getDepthRangeDiffLocation() const
+{
+    return mDepthRangeDiffLocation;
+}
+
+GLint Program::getDepthRangeNearLocation() const
+{
+    return mDepthRangeFarLocation;
+}
+
+GLint Program::getDepthRangeFarLocation() const
+{
+    return mDepthRangeFarLocation;
+}
+
+GLint Program::getDxDepthLocation() const
+{
+    return mDxDepthLocation;
+}
+
+GLint Program::getDxWindowLocation() const
+{
+    return mDxWindowLocation;
+}
+
+GLint Program::getDxHalfPixelSizeLocation() const
+{
+    return mDxHalfPixelSizeLocation;
+}
+
+GLint Program::getDxFrontCCWLocation() const
+{
+    return mDxFrontCCWLocation;
+}
+
+GLint Program::getDxPointsOrLinesLocation() const
+{
+    return mDxPointsOrLinesLocation;
+}
+
 }
