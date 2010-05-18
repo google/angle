@@ -2719,7 +2719,7 @@ GLint Program::getDepthRangeDiffLocation() const
 
 GLint Program::getDepthRangeNearLocation() const
 {
-    return mDepthRangeFarLocation;
+    return mDepthRangeNearLocation;
 }
 
 GLint Program::getDepthRangeFarLocation() const
