@@ -119,6 +119,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				InlineFunctionExpansion="2"
 				AdditionalIncludeDirectories="$(ProjectDir)/..; $(ProjectDir)/../../include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBEGL_EXPORTS;_CRT_SECURE_NO_DEPRECATE;NOMINMAX"
 				RuntimeLibrary="0"
