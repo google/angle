@@ -84,7 +84,6 @@ static int errorAtom = 0;
 static int __LINE__Atom = 0;
 static int __FILE__Atom = 0;
 static int __VERSION__Atom = 0;
-static int gl_esAtom = 0;
 static int versionAtom = 0;
 static int extensionAtom = 0;
 
@@ -98,11 +97,6 @@ int InitCPP(void)
 {
     char        buffer[64], *t;
     const char  *f;
-
-    SourceLoc location = {0};
-    Symbol *symbol;
-    MacroSymbol macro = {0};
-    yystypepp one = {0};
 
     // Add various atoms needed by the CPP line scanner:
     bindAtom = LookUpAddString(atable, "bind");
@@ -125,7 +119,6 @@ int InitCPP(void)
     __LINE__Atom = LookUpAddString(atable, "__LINE__");
     __FILE__Atom = LookUpAddString(atable, "__FILE__");
 	__VERSION__Atom = LookUpAddString(atable, "__VERSION__");
-    gl_esAtom = LookUpAddString(atable, "GL_ES");
     versionAtom = LookUpAddString(atable, "version");
     extensionAtom = LookUpAddString(atable, "extension");
     macros = NewScopeInPool(mem_CreatePool(0, 0));
@@ -136,13 +129,8 @@ int InitCPP(void)
         *t++ = toupper(*f++);
     *t = 0;
 
-    // #define GL_ES 1
-    macro.body = NewTokenStream("GL_ES", macros->pool);
-    one.sc_int = 1;
-    strcpy(one.symbol_name, "1");
-    RecordToken(macro.body, CPP_INTCONSTANT, &one);
-    symbol = AddSymbol(&location, macros, gl_esAtom, MACRO_S);
-    symbol->details.mac = macro;
+    PredefineIntMacro("GL_ES", 1);
+    PredefineIntMacro("GL_FRAGMENT_PRECISION_HIGH", 1);
 
 	return 1;
 } // InitCPP
@@ -809,6 +797,22 @@ int readCPPline(yystypepp * yylvalpp)
 
 void FreeMacro(MacroSymbol *s) {
     DeleteTokenStream(s->body);
+}
+
+void PredefineIntMacro(const char *name, int value) {
+    SourceLoc location = {0};
+    Symbol *symbol = NULL;
+    MacroSymbol macro = {0};
+    yystypepp val = {0};
+    int atom = 0;
+
+    macro.body = NewTokenStream(name, macros->pool);
+    val.sc_int = value;
+    sprintf(val.symbol_name, "%d", value);
+    RecordToken(macro.body, CPP_INTCONSTANT, &val);
+    atom = LookUpAddString(atable, name);
+    symbol = AddSymbol(&location, macros, atom, MACRO_S);
+    symbol->details.mac = macro;
 }
 
 static int eof_scan(InputSrc *in, yystypepp * yylvalpp) { return -1; }

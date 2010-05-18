@@ -71,7 +71,7 @@ typedef struct MacroSymbol {
 } MacroSymbol;
 
 void FreeMacro(MacroSymbol *);
-int PredefineMacro(char *);
+void PredefineIntMacro(const char *name, int value);
 
 void  CPPDebugLogMsg(const char *msg);      // Prints information into debug log
 void  CPPShInfoLogMsg(const char*);         // Store cpp Err Msg into Sh.Info.Log
