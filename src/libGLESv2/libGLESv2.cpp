@@ -3557,7 +3557,7 @@ void __stdcall glRenderbufferStorage(GLenum target, GLenum internalformat, GLsiz
 
         if (context)
         {
-            if (context->getFramebufferHandle() == 0 || context->getRenderbufferHandle() == 0)
+            if (context->getRenderbufferHandle() == 0)
             {
                 return error(GL_INVALID_OPERATION);
             }
