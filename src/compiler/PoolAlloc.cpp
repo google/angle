@@ -9,6 +9,7 @@
 #ifndef _MSC_VER
 #include <stdint.h>
 #endif
+#include <stdio.h>
 
 #include "compiler/InitializeGlobals.h"
 #include "compiler/osinclude.h"
