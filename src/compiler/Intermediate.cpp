@@ -9,6 +9,7 @@
 //
 
 #include <float.h>
+#include <limits.h>
 
 #include "compiler/localintermediate.h"
 #include "compiler/QualifierAlive.h"
