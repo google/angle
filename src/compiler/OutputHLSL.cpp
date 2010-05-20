@@ -62,6 +62,8 @@ OutputHLSL::OutputHLSL(TParseContext &context) : TIntermTraverser(true, true, tr
     mUsesEqualBVec4 = false;
     mUsesAtan2 = false;
 
+    mScopeDepth = 0;
+
     mArgumentIndex = 0;
 }
 
@@ -97,165 +99,14 @@ void OutputHLSL::header()
     EShLanguage language = mContext.language;
     TInfoSinkBase &out = mHeader;
 
-    // Output structure declarations
-    for (StructureArray::iterator structure = mStructures.begin(); structure != mStructures.end(); structure++)
+    for (StructDeclarations::iterator structDeclaration = mStructDeclarations.begin(); structDeclaration != mStructDeclarations.end(); structDeclaration++)
     {
-        const TTypeList &fields = *structure->getStruct();
-
-        out << "struct " + decorate(structure->getTypeName()) + "\n"
-               "{\n";
-
-        for (unsigned int i = 0; i < fields.size(); i++)
-        {
-            const TType &field = *fields[i].type;
-
-            out << "    " + typeString(field) + " " + field.getFieldName() + arrayString(field) + ";\n";
-        }
-
-        out << "};\n";
+        out << *structDeclaration;
     }
 
-    // Output type constructors
-    for (ConstructorSet::iterator constructor = mConstructors.begin(); constructor != mConstructors.end(); constructor++)
+    for (Constructors::iterator constructor = mConstructors.begin(); constructor != mConstructors.end(); constructor++)
     {
-        out << typeString(constructor->type) + " " + constructor->name + "(";
-
-        for (unsigned int parameter = 0; parameter < constructor->parameters.size(); parameter++)
-        {
-            const TType &type = constructor->parameters[parameter];
-
-            out << typeString(type) + " x" + str(parameter) + arrayString(type);
-
-            if (parameter < constructor->parameters.size() - 1)
-            {
-                out << ", ";
-            }
-        }
-
-        out << ")\n"
-               "{\n";
-
-        if (constructor->type.getStruct())
-        {
-            out << "    " + decorate(constructor->type.getTypeName()) + " structure = {";
-        }
-        else
-        {
-            out << "    return " + typeString(constructor->type) + "(";
-        }
-
-        if (constructor->type.isMatrix() && constructor->parameters.size() == 1)
-        {
-            int dim = constructor->type.getNominalSize();
-            const TType &parameter = constructor->parameters[0];
-
-            if (parameter.isScalar())
-            {
-                for (int row = 0; row < dim; row++)
-                {
-                    for (int col = 0; col < dim; col++)
-                    {
-                        out << TString((row == col) ? "x0" : "0.0");
-                        
-                        if (row < dim - 1 || col < dim - 1)
-                        {
-                            out << ", ";
-                        }
-                    }
-                }
-            }
-            else if (parameter.isMatrix())
-            {
-                for (int row = 0; row < dim; row++)
-                {
-                    for (int col = 0; col < dim; col++)
-                    {
-                        if (row < parameter.getNominalSize() && col < parameter.getNominalSize())
-                        {
-                            out << TString("x0") + "[" + str(row) + "]" + "[" + str(col) + "]";
-                        }
-                        else
-                        {
-                            out << TString((row == col) ? "1.0" : "0.0");
-                        }
-
-                        if (row < dim - 1 || col < dim - 1)
-                        {
-                            out << ", ";
-                        }
-                    }
-                }
-            }
-            else UNREACHABLE();
-        }
-        else
-        {
-            int remainingComponents = constructor->type.getObjectSize();
-            int parameterIndex = 0;
-
-            while (remainingComponents > 0)
-            {
-                const TType &parameter = constructor->parameters[parameterIndex];
-                bool moreParameters = parameterIndex < (int)constructor->parameters.size() - 1;
-
-                out << "x" + str(parameterIndex);
-
-                if (parameter.isScalar())
-                {
-                    remainingComponents -= parameter.getObjectSize();
-                }
-                else if (parameter.isVector())
-                {
-                    if (remainingComponents == parameter.getObjectSize() || moreParameters)
-                    {
-                        remainingComponents -= parameter.getObjectSize();
-                    }
-                    else if (remainingComponents < parameter.getNominalSize())
-                    {
-                        switch (remainingComponents)
-                        {
-                        case 1: out << ".x";    break;
-                        case 2: out << ".xy";   break;
-                        case 3: out << ".xyz";  break;
-                        case 4: out << ".xyzw"; break;
-                        default: UNREACHABLE();
-                        }
-
-                        remainingComponents = 0;
-                    }
-                    else UNREACHABLE();
-                }
-                else if (parameter.isMatrix() || parameter.getStruct())
-                {
-                    ASSERT(remainingComponents == parameter.getObjectSize() || moreParameters);
-                    
-                    remainingComponents -= parameter.getObjectSize();
-                }
-                else UNREACHABLE();
-
-                if (moreParameters)
-                {
-                    parameterIndex++;
-                }
-
-                if (remainingComponents)
-                {
-                    out << ", ";
-                }
-            }
-        }
-
-        if (constructor->type.getStruct())
-        {
-            out << "};\n"
-                   "    return structure;\n"
-                   "}\n";
-        }
-        else
-        {
-            out << ");\n"
-                   "}\n";
-        }
+        out << *constructor;
     }
 
     if (language == EShLangFragment)
@@ -1105,6 +956,17 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             if (mInsideFunction)
             {
                 out << "{\n";
+
+                mScopeDepth++;
+
+                if (mScopeBracket.size() < mScopeDepth)
+                {
+                    mScopeBracket.push_back(0);   // New scope level
+                }
+                else
+                {
+                    mScopeBracket[mScopeDepth - 1]++;   // New scope at existing level
+                }
             }
 
             for (TIntermSequence::iterator sit = node->getSequence().begin(); sit != node->getSequence().end(); sit++)
@@ -1122,6 +984,8 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             if (mInsideFunction)
             {
                 out << "}\n";
+
+                mScopeDepth--;
             }
 
             return false;
@@ -1137,7 +1001,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             {
                 if (variable->getType().getStruct())
                 {
-                    addConstructor(variable->getType(), variable->getType().getTypeName() + "_ctor", NULL);
+                    addConstructor(variable->getType(), scopedStruct(variable->getType().getTypeName()), NULL);
                 }
 
                 if (!variable->getAsSymbolNode() || variable->getAsSymbolNode()->getSymbol() != "")   // Variable declaration
@@ -1413,8 +1277,8 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         outputTriplet(visit, "mat4(", ", ", ")");
         break;
       case EOpConstructStruct:
-        addConstructor(node->getType(), node->getType().getTypeName() + "_ctor", &node->getSequence());
-        outputTriplet(visit, node->getType().getTypeName() + "_ctor(", ", ", ")");
+        addConstructor(node->getType(), scopedStruct(node->getType().getTypeName()), &node->getSequence());
+        outputTriplet(visit, structLookup(node->getType().getTypeName()) + "_ctor(", ", ", ")");
         break;
       case EOpLessThan:         outputTriplet(visit, "(", " < ", ")");                 break;
       case EOpGreaterThan:      outputTriplet(visit, "(", " > ", ")");                 break;
@@ -1877,7 +1741,7 @@ TString OutputHLSL::typeString(const TType &type)
     {
         if (type.getTypeName() != "")
         {
-            return decorate(type.getTypeName());
+            return structLookup(type.getTypeName());
         }
         else   // Nameless structure, define in place
         {
@@ -1975,34 +1839,6 @@ TString OutputHLSL::initializer(const TType &type)
     return "{" + string + "}";
 }
 
-bool OutputHLSL::CompareConstructor::operator()(const Constructor &x, const Constructor &y) const
-{
-    if (x.name != y.name)
-    {
-        return x.name < y.name;
-    }
-
-    if (x.type != y.type)
-    {
-        return x.type < y.type;
-    }
-
-    if (x.parameters.size() != y.parameters.size())
-    {
-        return x.parameters.size() < y.parameters.size();
-    }
-
-    for (unsigned int i = 0; i < x.parameters.size(); i++)
-    {
-        if (x.parameters[i] != y.parameters[i])
-        {
-            return x.parameters[i] < y.parameters[i];
-        }
-    }
-
-    return false;
-}
-
 void OutputHLSL::addConstructor(const TType &type, const TString &name, const TIntermSequence *parameters)
 {
     if (name == "")
@@ -2010,36 +1846,201 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
         return;   // Nameless structures don't have constructors
     }
 
-    Constructor constructor;
+    TType ctorType = type;
+    ctorType.clearArrayness();
+    ctorType.changePrecision(EbpHigh);
+    ctorType.changeQualifier(EvqTemporary);
 
-    constructor.type = type;
-    constructor.type.clearArrayness();
-    constructor.type.changePrecision(EbpHigh);
-    constructor.type.changeQualifier(EvqTemporary);
-    constructor.name = name;
+    TString ctorName = type.getStruct() ? decorate(name) : name;
+
+    typedef std::vector<TType> ParameterArray;
+    ParameterArray ctorParameters;
 
     if (parameters)
     {
         for (TIntermSequence::const_iterator parameter = parameters->begin(); parameter != parameters->end(); parameter++)
         {
-            constructor.parameters.push_back((*parameter)->getAsTyped()->getType());
+            ctorParameters.push_back((*parameter)->getAsTyped()->getType());
         }
     }
     else if (type.getStruct())
     {
-        if (std::find(mStructures.begin(), mStructures.end(), constructor.type) == mStructures.end())
+        mStructNames.insert(decorate(name));
+
+        TString structure;
+        structure += "struct " + decorate(name) + "\n"
+                     "{\n";
+
+        const TTypeList &fields = *type.getStruct();
+
+        for (unsigned int i = 0; i < fields.size(); i++)
         {
-            mStructures.push_back(constructor.type);
+            const TType &field = *fields[i].type;
+
+            structure += "    " + typeString(field) + " " + field.getFieldName() + arrayString(field) + ";\n";
         }
 
-        const TTypeList *structure = type.getStruct();
+        structure += "};\n";
 
-        for (unsigned int i = 0; i < structure->size(); i++)
+        if (std::find(mStructDeclarations.begin(), mStructDeclarations.end(), structure) == mStructDeclarations.end())
         {
-            constructor.parameters.push_back(*(*structure)[i].type);
+            mStructDeclarations.push_back(structure);
+        }
+
+        for (unsigned int i = 0; i < fields.size(); i++)
+        {
+            ctorParameters.push_back(*fields[i].type);
         }
     }
     else UNREACHABLE();
+
+    TString constructor;
+
+    if (ctorType.getStruct())
+    {
+        constructor += ctorName + " " + ctorName + "_ctor(";
+    }
+    else   // Built-in type
+    {
+        constructor += typeString(ctorType) + " " + ctorName + "(";
+    }
+
+    for (unsigned int parameter = 0; parameter < ctorParameters.size(); parameter++)
+    {
+        const TType &type = ctorParameters[parameter];
+
+        constructor += typeString(type) + " x" + str(parameter) + arrayString(type);
+
+        if (parameter < ctorParameters.size() - 1)
+        {
+            constructor += ", ";
+        }
+    }
+
+    constructor += ")\n"
+                   "{\n";
+
+    if (ctorType.getStruct())
+    {
+        constructor += "    " + ctorName + " structure = {";
+    }
+    else
+    {
+        constructor += "    return " + typeString(ctorType) + "(";
+    }
+
+    if (ctorType.isMatrix() && ctorParameters.size() == 1)
+    {
+        int dim = ctorType.getNominalSize();
+        const TType &parameter = ctorParameters[0];
+
+        if (parameter.isScalar())
+        {
+            for (int row = 0; row < dim; row++)
+            {
+                for (int col = 0; col < dim; col++)
+                {
+                    constructor += TString((row == col) ? "x0" : "0.0");
+                    
+                    if (row < dim - 1 || col < dim - 1)
+                    {
+                        constructor += ", ";
+                    }
+                }
+            }
+        }
+        else if (parameter.isMatrix())
+        {
+            for (int row = 0; row < dim; row++)
+            {
+                for (int col = 0; col < dim; col++)
+                {
+                    if (row < parameter.getNominalSize() && col < parameter.getNominalSize())
+                    {
+                        constructor += TString("x0") + "[" + str(row) + "]" + "[" + str(col) + "]";
+                    }
+                    else
+                    {
+                        constructor += TString((row == col) ? "1.0" : "0.0");
+                    }
+
+                    if (row < dim - 1 || col < dim - 1)
+                    {
+                        constructor += ", ";
+                    }
+                }
+            }
+        }
+        else UNREACHABLE();
+    }
+    else
+    {
+        int remainingComponents = ctorType.getObjectSize();
+        int parameterIndex = 0;
+
+        while (remainingComponents > 0)
+        {
+            const TType &parameter = ctorParameters[parameterIndex];
+            bool moreParameters = parameterIndex < (int)ctorParameters.size() - 1;
+
+            constructor += "x" + str(parameterIndex);
+
+            if (parameter.isScalar())
+            {
+                remainingComponents -= parameter.getObjectSize();
+            }
+            else if (parameter.isVector())
+            {
+                if (remainingComponents == parameter.getObjectSize() || moreParameters)
+                {
+                    remainingComponents -= parameter.getObjectSize();
+                }
+                else if (remainingComponents < parameter.getNominalSize())
+                {
+                    switch (remainingComponents)
+                    {
+                      case 1: constructor += ".x";    break;
+                      case 2: constructor += ".xy";   break;
+                      case 3: constructor += ".xyz";  break;
+                      case 4: constructor += ".xyzw"; break;
+                      default: UNREACHABLE();
+                    }
+
+                    remainingComponents = 0;
+                }
+                else UNREACHABLE();
+            }
+            else if (parameter.isMatrix() || parameter.getStruct())
+            {
+                ASSERT(remainingComponents == parameter.getObjectSize() || moreParameters);
+                
+                remainingComponents -= parameter.getObjectSize();
+            }
+            else UNREACHABLE();
+
+            if (moreParameters)
+            {
+                parameterIndex++;
+            }
+
+            if (remainingComponents)
+            {
+                constructor += ", ";
+            }
+        }
+    }
+
+    if (ctorType.getStruct())
+    {
+        constructor += "};\n"
+                       "    return structure;\n"
+                       "}\n";
+    }
+    else
+    {
+        constructor += ");\n"
+                       "}\n";
+    }
 
     mConstructors.insert(constructor);
 }
@@ -2050,7 +2051,7 @@ const ConstantUnion *OutputHLSL::writeConstantUnion(const TType &type, const Con
 
     if (type.getBasicType() == EbtStruct)
     {
-        out << type.getTypeName() + "_ctor(";
+        out << structLookup(type.getTypeName()) + "_ctor(";
         
         const TTypeList *structure = type.getStruct();
 
@@ -2110,6 +2111,48 @@ const ConstantUnion *OutputHLSL::writeConstantUnion(const TType &type, const Con
     }
 
     return constUnion;
+}
+
+TString OutputHLSL::scopeString(unsigned int depthLimit)
+{
+    TString string;
+
+    for (unsigned int i = 0; i < mScopeBracket.size() && i < depthLimit; i++)
+    {
+        string += "_" + str(i);
+    }
+
+    return string;
+}
+
+TString OutputHLSL::scopedStruct(const TString &typeName)
+{
+    if (typeName == "")
+    {
+        return typeName;
+    }
+
+    return typeName + scopeString(mScopeDepth);
+}
+
+TString OutputHLSL::structLookup(const TString &typeName)
+{
+    for (int depth = mScopeDepth; depth >= 0; depth--)
+    {
+        TString scopedName = decorate(typeName + scopeString(depth));
+
+        for (StructNames::iterator structName = mStructNames.begin(); structName != mStructNames.end(); structName++)
+        {
+            if (*structName == scopedName)
+            {
+                return scopedName;
+            }
+        }
+    }
+
+    UNREACHABLE();   // Should have found a matching constructor
+
+    return typeName;
 }
 
 TString OutputHLSL::decorate(const TString &string)

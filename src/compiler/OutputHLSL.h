@@ -27,8 +27,8 @@ class OutputHLSL : public TIntermTraverser
 
     TInfoSinkBase &getBodyStream();
 
+    TString typeString(const TType &type);
     static TString qualifierString(TQualifier qualifier);
-    static TString typeString(const TType &type);
     static TString arrayString(const TType &type);
     static TString initializer(const TType &type);
     static TString decorate(const TString &string);   // Prepend an underscore to avoid naming clashes
@@ -54,6 +54,10 @@ class OutputHLSL : public TIntermTraverser
 
     void addConstructor(const TType &type, const TString &name, const TIntermSequence *parameters);
     const ConstantUnion *writeConstantUnion(const TType &type, const ConstantUnion *constUnion);
+
+    TString scopeString(unsigned int depthLimit);
+    TString scopedStruct(const TString &typeName);
+    TString structLookup(const TString &typeName);
 
     TParseContext &mContext;
     UnfoldSelect *mUnfoldSelect;
@@ -103,25 +107,18 @@ class OutputHLSL : public TIntermTraverser
     bool mUsesEqualBVec4;
     bool mUsesAtan2;
 
-    struct Constructor   // Describes a constructor signature
-    {
-        TType type;
-        TString name;
+    typedef std::set<TString> Constructors;
+    Constructors mConstructors;
 
-        typedef std::vector<TType> ParameterArray;
-        ParameterArray parameters;
-    };
+    typedef std::set<TString> StructNames;
+    StructNames mStructNames;
 
-    struct CompareConstructor
-    {
-        bool operator()(const Constructor &x, const Constructor &y) const;
-    };
+    typedef std::list<TString> StructDeclarations;
+    StructDeclarations mStructDeclarations;
 
-    typedef std::set<Constructor, CompareConstructor> ConstructorSet;
-    ConstructorSet mConstructors;
-
-    typedef std::list<TType> StructureArray;
-    StructureArray mStructures;
+    typedef std::vector<int> ScopeBracket;
+    ScopeBracket mScopeBracket;
+    unsigned int mScopeDepth;
 
     int mArgumentIndex;   // For creating unique argument names
 };
