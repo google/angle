@@ -114,7 +114,7 @@ Remove it when we can exclusively use the newer version.
 "sampler2D"       {  pyylval->lex.line = yylineno; parseContext.lexAfterType = true; return SAMPLER2D; }
 "samplerCube"     {  pyylval->lex.line = yylineno; parseContext.lexAfterType = true; return SAMPLERCUBE; }
 
-"struct"       {  pyylval->lex.line = yylineno; return(STRUCT); }
+"struct"       {  pyylval->lex.line = yylineno; parseContext.lexAfterType = true; return(STRUCT); }
 
 "asm"          {  PaReservedWord(); return 0; }
 
