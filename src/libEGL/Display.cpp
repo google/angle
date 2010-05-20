@@ -17,6 +17,8 @@
 
 #include "libEGL/main.h"
 
+#define REF_RAST 0   // Can also be enabled by defining FORCE_REF_RAST in the project's predefined macros
+
 namespace egl
 {
 Display::Display(HDC deviceContext) : mDc(deviceContext)
@@ -25,7 +27,12 @@ Display::Display(HDC deviceContext) : mDc(deviceContext)
     mDevice = NULL;
 
     mAdapter = D3DADAPTER_DEFAULT;
-    mDeviceType = D3DDEVTYPE_HAL;
+
+    #if REF_RAST == 1 || FORCE_REF_RAST
+        mDeviceType = D3DDEVTYPE_REF;
+    #else
+        mDeviceType = D3DDEVTYPE_HAL;
+    #endif
 
     mMinSwapInterval = 1;
     mMaxSwapInterval = 1;
