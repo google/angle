@@ -32,6 +32,7 @@ struct FormatConverter
 struct TranslatedAttribute
 {
     bool enabled;
+    bool nonArray;
 
     // These are the original untranslated values. (Or just have some sort of BufferBackEnd::TranslatedTypeKey.)
     GLenum type;

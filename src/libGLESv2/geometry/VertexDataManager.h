@@ -59,9 +59,6 @@ class VertexDataManager
     bool mDirtyCurrentValues;
     std::size_t mCurrentValueOffset;            // Offset within mCurrentValueBuffer that the current attribute values were last loaded at.
     TranslatedVertexBuffer *mCurrentValueBuffer;
-    TranslatedVertexBuffer *mCurrentValueLoadBuffer;
-    std::size_t mCurrentValueStride;
-    std::size_t mCurrentValueSize;
 };
 
 }

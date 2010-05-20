@@ -143,6 +143,8 @@ void Surface::writeRecordableFlipState(IDirect3DDevice9 *device, IDirect3DTextur
     device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
     device->SetSamplerState(0, D3DSAMP_SRGBTEXTURE, FALSE);
     device->SetFVF(D3DFVF_XYZRHW | D3DFVF_TEX1);
+
+    device->SetStreamSourceFreq(0, 1); // DrawPrimitiveUP only cares about stream 0, not the rest.
 }
 
 void Surface::applyFlipState(IDirect3DDevice9 *device, IDirect3DTexture9 *source)

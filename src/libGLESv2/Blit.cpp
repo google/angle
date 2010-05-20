@@ -464,6 +464,11 @@ void Blit::setCommonBlitState()
     device->SetSamplerState(0, D3DSAMP_SRGBTEXTURE, FALSE);
     device->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
     device->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
+
+    for (int i = 0; i < MAX_VERTEX_ATTRIBS+1; i++)
+    {
+        device->SetStreamSourceFreq(i, 1);
+    }
 }
 
 void Blit::render()

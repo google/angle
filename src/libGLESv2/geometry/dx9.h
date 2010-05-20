@@ -38,7 +38,18 @@ class Dx9BackEnd : public BufferBackEnd
   private:
     IDirect3DDevice9 *mDevice;
 
+    bool mUseInstancingForStrideZero;
+
     bool mAppliedAttribEnabled[MAX_VERTEX_ATTRIBS];
+
+    enum StreamFrequency
+    {
+        STREAM_FREQUENCY_UNINSTANCED = 0,
+        STREAM_FREQUENCY_INDEXED,
+        STREAM_FREQUENCY_INSTANCED
+    };
+
+    StreamFrequency mStreamFrequency[MAX_VERTEX_ATTRIBS+1];
 
     class Dx9VertexBuffer : public TranslatedVertexBuffer
     {

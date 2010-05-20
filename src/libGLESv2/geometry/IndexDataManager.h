@@ -33,8 +33,6 @@ struct TranslatedIndexData
     GLuint count;
     GLuint indexSize;
 
-    const void *indices;
-
     TranslatedIndexBuffer *buffer;
     GLsizei offset;
 };
@@ -46,6 +44,7 @@ class IndexDataManager
     ~IndexDataManager();
 
     GLenum preRenderValidate(GLenum mode, GLenum type, GLsizei count, Buffer *arrayElementBuffer, const void *indices, TranslatedIndexData *translated);
+    GLenum preRenderValidateUnindexed(GLenum mode, GLsizei count, TranslatedIndexData *indexInfo);
 
   private:
     std::size_t IndexDataManager::typeSize(GLenum type) const;
@@ -60,6 +59,11 @@ class IndexDataManager
 
     TranslatedIndexBuffer *mStreamBufferShort;
     TranslatedIndexBuffer *mStreamBufferInt;
+
+    TranslatedIndexBuffer *mCountingBuffer;
+    GLsizei mCountingBufferSize;
+
+    TranslatedIndexBuffer *mLineLoopBuffer;
 };
 
 }

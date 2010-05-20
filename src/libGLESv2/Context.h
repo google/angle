@@ -351,9 +351,10 @@ class Context
 
     bool applyRenderTarget(bool ignoreViewport);
     void applyState(GLenum drawMode);
-    GLenum applyVertexBuffer(GLint first, GLsizei count);
+    GLenum applyVertexBuffer(GLenum mode, GLint first, GLsizei count, bool *useIndexing, TranslatedIndexData *indexInfo);
     GLenum applyVertexBuffer(const TranslatedIndexData &indexInfo);
     GLenum applyIndexBuffer(const void *indices, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo);
+    GLenum applyCountingIndexBuffer(GLenum mode, GLenum count, TranslatedIndexData *indexInfo);
     void applyShaders();
     void applyTextures();
 

@@ -62,7 +62,14 @@ Dx9BackEnd::Dx9BackEnd(IDirect3DDevice9 *d3ddevice)
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; ++i)
     {
         mAppliedAttribEnabled[i] = true;
+        mStreamFrequency[i] = STREAM_FREQUENCY_UNINSTANCED;
     }
+
+    mStreamFrequency[MAX_VERTEX_ATTRIBS] = STREAM_FREQUENCY_UNINSTANCED;
+
+    D3DCAPS9 caps;
+    mDevice->GetDeviceCaps(&caps);
+    mUseInstancingForStrideZero = (caps.VertexShaderVersion >= D3DVS_VERSION(3, 0));
 }
 
 Dx9BackEnd::~Dx9BackEnd()
@@ -85,7 +92,14 @@ TranslatedVertexBuffer *Dx9BackEnd::createVertexBuffer(std::size_t size)
 
 TranslatedVertexBuffer *Dx9BackEnd::createVertexBufferForStrideZero(std::size_t size)
 {
-    return new Dx9VertexBufferZeroStrideWorkaround(mDevice, size);
+    if (mUseInstancingForStrideZero)
+    {
+        return new Dx9VertexBuffer(mDevice, size);
+    }
+    else
+    {
+        return new Dx9VertexBufferZeroStrideWorkaround(mDevice, size);
+    }
 }
 
 TranslatedIndexBuffer *Dx9BackEnd::createIndexBuffer(std::size_t size, GLenum type)
@@ -220,7 +234,7 @@ GLenum Dx9BackEnd::setupAttributesPreDraw(const TranslatedAttribute *attributes)
     {
         if (attributes[i].enabled)
         {
-            nextElement->Stream = i;
+            nextElement->Stream = i + 1;    // Stream 0 is skipped because D3D does not permit it to be an instanced stream.
             nextElement->Offset = 0;
             nextElement->Type = static_cast<BYTE>(mapAttributeType(attributes[i].type, attributes[i].size, attributes[i].normalized));
             nextElement->Method = D3DDECLMETHOD_DEFAULT;
@@ -238,11 +252,17 @@ GLenum Dx9BackEnd::setupAttributesPreDraw(const TranslatedAttribute *attributes)
     mDevice->SetVertexDeclaration(vertexDeclaration);
     vertexDeclaration->Release();
 
+    mDevice->SetStreamSource(0, NULL, 0, 0);
+
+    bool nonArrayAttributes = false;
+
     for (size_t i = 0; i < MAX_VERTEX_ATTRIBS; i++)
     {
         if (attributes[i].enabled)
         {
-            mDevice->SetStreamSource(i, getDxBuffer(attributes[i].buffer), attributes[i].offset, attributes[i].stride);
+            if (attributes[i].nonArray) nonArrayAttributes = true;
+
+            mDevice->SetStreamSource(i + 1, getDxBuffer(attributes[i].buffer), attributes[i].offset, attributes[i].stride);
             if (!mAppliedAttribEnabled[i])
             {
                 mAppliedAttribEnabled[i] = true;
@@ -252,8 +272,56 @@ GLenum Dx9BackEnd::setupAttributesPreDraw(const TranslatedAttribute *attributes)
         {
             if (mAppliedAttribEnabled[i])
             {
-                mDevice->SetStreamSource(i, 0, 0, 0);
+                mDevice->SetStreamSource(i + 1, 0, 0, 0);
                 mAppliedAttribEnabled[i] = false;
+            }
+        }
+    }
+
+    if (mUseInstancingForStrideZero)
+    {
+        // When there are no stride zero attributes, we disable instancing so that DrawPrimitive can be used.
+
+        if (nonArrayAttributes)
+        {
+            if (mStreamFrequency[0] != STREAM_FREQUENCY_INDEXED)
+            {
+                mStreamFrequency[0] = STREAM_FREQUENCY_INDEXED;
+                mDevice->SetStreamSourceFreq(0, D3DSTREAMSOURCE_INDEXEDDATA | 1);
+            }
+
+            for (size_t i = 0; i < MAX_VERTEX_ATTRIBS; i++)
+            {
+                if (attributes[i].enabled)
+                {
+                    if (attributes[i].nonArray)
+                    {
+                        if (mStreamFrequency[i+1] != STREAM_FREQUENCY_INSTANCED)
+                        {
+                            mStreamFrequency[i+1] = STREAM_FREQUENCY_INSTANCED;
+                            mDevice->SetStreamSourceFreq(i + 1, D3DSTREAMSOURCE_INSTANCEDATA | 1);
+                        }
+                    }
+                    else
+                    {
+                        if (mStreamFrequency[i+1] != STREAM_FREQUENCY_INDEXED)
+                        {
+                            mStreamFrequency[i+1] = STREAM_FREQUENCY_INDEXED;
+                            mDevice->SetStreamSourceFreq(i + 1, D3DSTREAMSOURCE_INDEXEDDATA | 1);
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            for (size_t i = 0; i < MAX_VERTEX_ATTRIBS + 1; i++)
+            {
+                if (mStreamFrequency[i] != STREAM_FREQUENCY_UNINSTANCED)
+                {
+                    mStreamFrequency[i] = STREAM_FREQUENCY_UNINSTANCED;
+                    mDevice->SetStreamSourceFreq(i, 1);
+                }
             }
         }
     }

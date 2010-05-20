@@ -22,8 +22,6 @@
 namespace
 {
     enum { INITIAL_STREAM_BUFFER_SIZE = 1024*1024 };
-    enum { MAX_CURRENT_VALUE_EXPANSION = 16 };
-    enum { CURRENT_VALUES_REQUIRED_SPACE = 4 * sizeof(float) * gl::MAX_VERTEX_ATTRIBS * MAX_CURRENT_VALUE_EXPANSION };
 }
 
 namespace gl
@@ -105,11 +103,6 @@ GLenum VertexDataManager::preRenderValidate(GLint start, GLsizei count,
         }
     }
 
-    if (usesCurrentValues)
-    {
-        requiredSpace += CURRENT_VALUES_REQUIRED_SPACE;
-    }
-
     if (requiredSpace > mStreamBuffer->size())
     {
         std::size_t newSize = std::max(requiredSpace, 3 * mStreamBuffer->size() / 2); // 1.5 x mStreamBuffer->size() is arbitrary and should be checked to see we don't have too many reallocations.
@@ -128,6 +121,7 @@ GLenum VertexDataManager::preRenderValidate(GLint start, GLsizei count,
         {
             FormatConverter formatConverter = mBackend->getFormatConverter(attribs[i].mType, attribs[i].mSize, attribs[i].mNormalized);
 
+            translated[i].nonArray = false;
             translated[i].type = attribs[i].mType;
             translated[i].size = attribs[i].mSize;
             translated[i].normalized = attribs[i].mNormalized;
@@ -237,65 +231,39 @@ std::size_t VertexDataManager::spaceRequired(const AttributeState &attrib, std::
 
 void VertexDataManager::processNonArrayAttributes(const AttributeState *attribs, const std::bitset<MAX_VERTEX_ATTRIBS> &activeAttribs, TranslatedAttribute *translated, std::size_t count)
 {
-    if (count <= MAX_CURRENT_VALUE_EXPANSION)
+    if (mDirtyCurrentValues)
     {
-        if (mDirtyCurrentValues || mCurrentValueLoadBuffer != mStreamBuffer)
+        std::size_t totalSize = 4 * sizeof(float) * MAX_VERTEX_ATTRIBS;
+
+        mCurrentValueBuffer->reserveSpace(totalSize);
+
+        float* currentValues = static_cast<float*>(mCurrentValueBuffer->map(totalSize, &mCurrentValueOffset));
+
+        for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
         {
-            float *p = static_cast<float*>(mStreamBuffer->map(CURRENT_VALUES_REQUIRED_SPACE, &mCurrentValueOffset));
-
-            for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
-            {
-                float *out = p + MAX_CURRENT_VALUE_EXPANSION * 4 * i;
-                for (unsigned int j = 0; j < MAX_CURRENT_VALUE_EXPANSION; j++)
-                {
-                    *out++ = attribs[i].mCurrentValue[0];
-                    *out++ = attribs[i].mCurrentValue[1];
-                    *out++ = attribs[i].mCurrentValue[2];
-                    *out++ = attribs[i].mCurrentValue[3];
-                }
-            }
-
-            mStreamBuffer->unmap();
-
-            mCurrentValueLoadBuffer = mStreamBuffer;
-            mCurrentValueSize = MAX_CURRENT_VALUE_EXPANSION;
-            mCurrentValueStride = 4 * sizeof(float);
+            // This assumes that the GL_FLOATx4 is supported by the back-end. (For D3D9, it is a mandatory format.)
+            currentValues[i*4+0] = attribs[i].mCurrentValue[0];
+            currentValues[i*4+1] = attribs[i].mCurrentValue[1];
+            currentValues[i*4+2] = attribs[i].mCurrentValue[2];
+            currentValues[i*4+3] = attribs[i].mCurrentValue[3];
         }
-    }
-    else
-    {
-        if (mDirtyCurrentValues || mCurrentValueLoadBuffer != mCurrentValueBuffer)
-        {
-            std::size_t totalSize = 4 * sizeof(float) * MAX_VERTEX_ATTRIBS;
 
-            mCurrentValueBuffer->reserveSpace(totalSize);
-
-            float* p = static_cast<float*>(mCurrentValueBuffer->map(totalSize, &mCurrentValueOffset));
-
-            for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
-            {
-                memcpy(&p[i*4], attribs[i].mCurrentValue, sizeof(attribs[i].mCurrentValue)); // FIXME: this should be doing a translation. This assumes that GL_FLOATx4 is supported.
-            }
-
-            mCurrentValueBuffer->unmap();
-
-            mCurrentValueLoadBuffer = mCurrentValueBuffer;
-            mCurrentValueSize = 1;
-            mCurrentValueStride = 0;
-        }
+        mCurrentValueBuffer->unmap();
     }
 
     for (std::size_t i = 0; i < MAX_VERTEX_ATTRIBS; i++)
     {
         if (activeAttribs[i] && !attribs[i].mEnabled)
         {
-            translated[i].buffer = mCurrentValueLoadBuffer;
+            translated[i].nonArray = true;
+
+            translated[i].buffer = mCurrentValueBuffer;
 
             translated[i].type = GL_FLOAT;
             translated[i].size = 4;
             translated[i].normalized = false;
-            translated[i].stride = mCurrentValueStride;
-            translated[i].offset = mCurrentValueOffset + 4 * sizeof(float) * i * mCurrentValueSize;
+            translated[i].stride = 0;
+            translated[i].offset = mCurrentValueOffset + 4 * sizeof(float) * i;
         }
     }
 }

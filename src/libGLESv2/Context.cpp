@@ -1943,20 +1943,39 @@ void Context::lookupAttributeMapping(TranslatedAttribute *attributes)
     }
 }
 
-GLenum Context::applyVertexBuffer(GLint first, GLsizei count)
+GLenum Context::applyVertexBuffer(GLenum mode, GLint first, GLsizei count, bool *useIndexing, TranslatedIndexData *indexInfo)
 {
     TranslatedAttribute translated[MAX_VERTEX_ATTRIBS];
 
     GLenum err = mVertexDataManager->preRenderValidate(first, count, translated);
-
-    if (err == GL_NO_ERROR)
+    if (err != GL_NO_ERROR)
     {
-        lookupAttributeMapping(translated);
-
-        mBufferBackEnd->setupAttributesPreDraw(translated);
+        return err;
     }
 
-    return err;
+    lookupAttributeMapping(translated);
+
+    mBufferBackEnd->setupAttributesPreDraw(translated);
+
+    for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
+    {
+        if (translated[i].enabled && translated[i].nonArray)
+        {
+            err = mIndexDataManager->preRenderValidateUnindexed(mode, count, indexInfo);
+            if (err != GL_NO_ERROR)
+            {
+                return err;
+            }
+
+            mBufferBackEnd->setupIndicesPreDraw(*indexInfo);
+
+            *useIndexing = true;
+            return GL_NO_ERROR;
+        }
+    }
+
+    *useIndexing = false;
+    return GL_NO_ERROR;
 }
 
 GLenum Context::applyVertexBuffer(const TranslatedIndexData &indexInfo)
@@ -1978,14 +1997,14 @@ GLenum Context::applyVertexBuffer(const TranslatedIndexData &indexInfo)
 // Applies the indices and element array bindings to the Direct3D 9 device
 GLenum Context::applyIndexBuffer(const void *indices, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo)
 {
-    GLenum error = mIndexDataManager->preRenderValidate(mode, type, count, getBuffer(mState.elementArrayBuffer), indices, indexInfo);
+    GLenum err = mIndexDataManager->preRenderValidate(mode, type, count, getBuffer(mState.elementArrayBuffer), indices, indexInfo);
 
-    if (error == GL_NO_ERROR)
+    if (err == GL_NO_ERROR)
     {
         mBufferBackEnd->setupIndicesPreDraw(*indexInfo);
     }
 
-    return error;
+    return err;
 }
 
 // Applies the shaders and shader constants to the Direct3D 9 device
@@ -2359,6 +2378,7 @@ void Context::clear(GLbitfield mask)
         device->SetPixelShader(NULL);
         device->SetVertexShader(NULL);
         device->SetFVF(D3DFVF_XYZRHW | D3DFVF_DIFFUSE);
+        device->SetStreamSourceFreq(0, 1);
 
         struct Vertex
         {
@@ -2434,7 +2454,9 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
 
     applyState(mode);
 
-    GLenum err = applyVertexBuffer(first, count);
+    TranslatedIndexData indexInfo;
+    bool useIndexing;
+    GLenum err = applyVertexBuffer(mode, first, count, &useIndexing, &indexInfo);
     if (err != GL_NO_ERROR)
     {
         return error(err);
@@ -2451,7 +2473,14 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
     if (!cullSkipsDraw(mode))
     {
         display->startScene();
-        device->DrawPrimitive(primitiveType, 0, primitiveCount);
+        if (useIndexing)
+        {
+            device->DrawIndexedPrimitive(primitiveType, -(INT)indexInfo.minIndex, indexInfo.minIndex, indexInfo.maxIndex-indexInfo.minIndex+1, indexInfo.offset/indexInfo.indexSize, primitiveCount);
+        }
+        else
+        {
+            device->DrawPrimitive(primitiveType, 0, primitiveCount);
+        }
     }
 }
 
@@ -2538,6 +2567,7 @@ void Context::finish()
         occlusionQuery->Issue(D3DISSUE_BEGIN);
 
         // Render something outside the render target
+        device->SetStreamSourceFreq(0, 1);
         device->SetPixelShader(NULL);
         device->SetVertexShader(NULL);
         device->SetFVF(D3DFVF_XYZRHW);

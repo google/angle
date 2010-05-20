@@ -12,6 +12,7 @@
 #include "common/debug.h"
 
 #include "libGLESv2/Buffer.h"
+#include "libGLESv2/mathutil.h"
 #include "libGLESv2/geometry/backend.h"
 
 namespace
@@ -25,6 +26,11 @@ namespace gl
 IndexDataManager::IndexDataManager(Context *context, BufferBackEnd *backend)
   : mContext(context), mBackend(backend), mIntIndicesSupported(backend->supportIntIndices())
 {
+    mCountingBuffer = NULL;
+    mCountingBufferSize = 0;
+
+    mLineLoopBuffer = NULL;
+
     mStreamBufferShort = mBackend->createIndexBuffer(INITIAL_INDEX_BUFFER_SIZE, GL_UNSIGNED_SHORT);
 
     if (mIntIndicesSupported)
@@ -41,6 +47,8 @@ IndexDataManager::~IndexDataManager()
 {
     delete mStreamBufferShort;
     delete mStreamBufferInt;
+    delete mCountingBuffer;
+    delete mLineLoopBuffer;
 }
 
 namespace
@@ -99,8 +107,6 @@ GLenum IndexDataManager::preRenderValidate(GLenum mode, GLenum type, GLsizei cou
     translated->buffer = streamIb;
     translated->offset = offset;
     translated->indexSize = indexSize(type);
-
-    translated->indices = output;
 
     if (type == GL_UNSIGNED_BYTE)
     {
@@ -191,6 +197,65 @@ TranslatedIndexBuffer *IndexDataManager::prepareIndexBuffer(GLenum type, std::si
     streamIb->reserveSpace(requiredSpace);
 
     return streamIb;
+}
+
+GLenum IndexDataManager::preRenderValidateUnindexed(GLenum mode, GLsizei count, TranslatedIndexData *indexInfo)
+{
+    if (count >= 65535) return GL_OUT_OF_MEMORY;
+
+    if (mode == GL_LINE_LOOP)
+    {
+        // For line loops, create a single-use buffer that runs 0 - count-1, 0.
+        delete mLineLoopBuffer;
+        mLineLoopBuffer = mBackend->createIndexBuffer((count+1) * sizeof(unsigned short), GL_UNSIGNED_SHORT);
+
+        unsigned short *indices = static_cast<unsigned short *>(mLineLoopBuffer->map());
+
+        for (int i = 0; i < count; i++)
+        {
+            indices[i] = i;
+        }
+
+        indices[count] = 0;
+
+        mLineLoopBuffer->unmap();
+
+        indexInfo->buffer = mLineLoopBuffer;
+        indexInfo->count = count + 1;
+        indexInfo->maxIndex = count - 1;
+    }
+    else if (mCountingBufferSize < count)
+    {
+        mCountingBufferSize = std::max(static_cast<GLsizei>(ceilPow2(count)), mCountingBufferSize*2);
+
+        delete mCountingBuffer;
+        mCountingBuffer = mBackend->createIndexBuffer(count * sizeof(unsigned short), GL_UNSIGNED_SHORT);
+
+        unsigned short *indices = static_cast<unsigned short *>(mCountingBuffer->map());
+
+        for (int i = 0; i < count; i++)
+        {
+            indices[i] = i;
+        }
+
+        mCountingBuffer->unmap();
+
+        indexInfo->buffer = mCountingBuffer;
+        indexInfo->count = count;
+        indexInfo->maxIndex = count - 1;
+    }
+    else
+    {
+        indexInfo->buffer = mCountingBuffer;
+        indexInfo->count = count;
+        indexInfo->maxIndex = count - 1;
+    }
+
+    indexInfo->indexSize = sizeof(unsigned short);
+    indexInfo->minIndex = 0;
+    indexInfo->offset = 0;
+
+    return GL_NO_ERROR;
 }
 
 }
