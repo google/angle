@@ -221,7 +221,7 @@ void Surface::restoreState(IDirect3DDevice9 *device)
     }
 }
 
-void Surface::swap()
+bool Surface::swap()
 {
     if (mSwapChain)
     {
@@ -253,9 +253,18 @@ void Surface::swap()
 
         if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY || result == D3DERR_DRIVERINTERNALERROR)
         {
-            return error(EGL_BAD_ALLOC);
+            return error(EGL_BAD_ALLOC, false);
         }
+
+        if (result == D3DERR_DEVICELOST)
+        {
+            return error(EGL_CONTEXT_LOST, false);
+        }
+
+        ASSERT(SUCCEEDED(result));
     }
+
+    return true;
 }
 
 EGLint Surface::getWidth() const

@@ -823,6 +823,13 @@ EGLBoolean __stdcall eglMakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface 
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
         gl::Context *context = static_cast<gl::Context*>(ctx);
+        IDirect3DDevice9 *device = display->getDevice();
+        DWORD passes;
+
+        if (!device || device->ValidateDevice(&passes) == D3DERR_DEVICELOST)
+        {
+            return error(EGL_CONTEXT_LOST, false);
+        }
 
         if (ctx != EGL_NO_CONTEXT && !validate(display, context))
         {
@@ -987,9 +994,11 @@ EGLBoolean __stdcall eglSwapBuffers(EGLDisplay dpy, EGLSurface surface)
         }
 
         egl::Surface *eglSurface = (egl::Surface*)surface;
-        eglSurface->swap();
 
-        return success(EGL_TRUE);
+        if (eglSurface->swap())
+        {
+            return success(EGL_TRUE);
+        }
     }
     catch(std::bad_alloc&)
     {

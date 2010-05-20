@@ -30,7 +30,7 @@ class Surface
     ~Surface();
 
     HWND getWindowHandle();
-    void swap();
+    bool swap();
 
     virtual EGLint getWidth() const;
     virtual EGLint getHeight() const;
