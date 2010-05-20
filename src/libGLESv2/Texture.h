@@ -76,11 +76,12 @@ class Texture
 
         virtual IDirect3DSurface9 *getRenderTarget();
 
+        virtual int getWidth();
+        virtual int getHeight();
+
       private:
         Texture *mTexture;
         GLenum mTarget;
-
-        void latchTextureInfo();
     };
 
     // Helper structure representing a single image layer

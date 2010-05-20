@@ -64,6 +64,13 @@ int Renderbuffer::getHeight()
     return mHeight;
 }
 
+void Renderbuffer::setSize(int width, int height)
+{
+    mWidth = width;
+    mHeight = height;
+}
+
+
 GLenum Renderbuffer::getFormat()
 {
     return mFormat;
@@ -88,8 +95,7 @@ Colorbuffer::Colorbuffer(IDirect3DSurface9 *renderTarget) : mRenderTarget(render
         D3DSURFACE_DESC description;
         renderTarget->GetDesc(&description);
 
-        mWidth = description.Width;
-        mHeight = description.Height;
+        setSize(description.Width, description.Height);
     }
 
 }
@@ -113,14 +119,12 @@ Colorbuffer::Colorbuffer(int width, int height, GLenum format)
 
     if (mRenderTarget)
     {
-        mWidth = width;
-        mHeight = height;
+        setSize(width, height);
         mFormat = format;
     }
     else
     {
-        mWidth = 0;
-        mHeight = 0;
+        setSize(0, 0);
         mFormat = GL_RGBA4;
     }
 }
@@ -204,8 +208,7 @@ Depthbuffer::Depthbuffer(IDirect3DSurface9 *depthStencil) : mDepthStencil(depthS
         D3DSURFACE_DESC description;
         depthStencil->GetDesc(&description);
 
-        mWidth = description.Width;
-        mHeight = description.Height;
+        setSize(description.Width, description.Height);
         mFormat = GL_DEPTH_COMPONENT16; // If the renderbuffer parameters are queried, the calling function
                                         // will expect one of the valid renderbuffer formats for use in 
                                         // glRenderbufferStorage
@@ -230,16 +233,14 @@ Depthbuffer::Depthbuffer(int width, int height)
 
     if (mDepthStencil)
     {
-        mWidth = width;
-        mHeight = height;
+        setSize(width, height);
         mFormat = GL_DEPTH_COMPONENT16; // If the renderbuffer parameters are queried, the calling function
                                         // will expect one of the valid renderbuffer formats for use in 
                                         // glRenderbufferStorage
     }
     else
     {
-        mWidth = 0;
-        mHeight = 0;
+        setSize(0, 0);
         mFormat = GL_RGBA4; //default format
     }
 }
@@ -284,8 +285,7 @@ Stencilbuffer::Stencilbuffer(IDirect3DSurface9 *depthStencil) : mDepthStencil(de
         D3DSURFACE_DESC description;
         depthStencil->GetDesc(&description);
 
-        mWidth = description.Width;
-        mHeight = description.Height;
+        setSize(description.Width, description.Height);
         mFormat = GL_STENCIL_INDEX8; // If the renderbuffer parameters are queried, the calling function
                                      // will expect one of the valid renderbuffer formats for use in 
                                      // glRenderbufferStorage
@@ -310,16 +310,14 @@ Stencilbuffer::Stencilbuffer(int width, int height)
 
     if (mDepthStencil)
     {
-        mWidth = width;
-        mHeight = height;
+        setSize(width, height);
         mFormat = GL_STENCIL_INDEX8; // If the renderbuffer parameters are queried, the calling function
                                      // will expect one of the valid renderbuffer formats for use in 
                                      // glRenderbufferStorage
     }
     else
     {
-        mWidth = 0;
-        mHeight = 0;
+        setSize(0, 0);
         mFormat = GL_RGBA4; //default format
     }
 }

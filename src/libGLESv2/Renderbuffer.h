@@ -33,16 +33,15 @@ class Renderbuffer
     virtual IDirect3DSurface9 *getRenderTarget();
     virtual IDirect3DSurface9 *getDepthStencil();
 
-    int getWidth();
-    int getHeight();
+    virtual int getWidth();
+    virtual int getHeight();
     GLenum getFormat();
     unsigned int getSerial() const;
 
     static unsigned int issueSerial();
 
   protected:
-    int mWidth;
-    int mHeight;
+    void setSize(int width, int height);
     GLenum mFormat;
     unsigned int mSerial;
 
@@ -50,6 +49,9 @@ class Renderbuffer
     DISALLOW_COPY_AND_ASSIGN(Renderbuffer);
 
     static unsigned int mCurrentSerial;
+
+    int mWidth;
+    int mHeight;
 };
 
 class Colorbuffer : public Renderbuffer

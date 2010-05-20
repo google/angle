@@ -1468,13 +1468,10 @@ Texture::TextureColorbufferProxy::TextureColorbufferProxy(Texture *texture, GLen
   : Colorbuffer(NULL), mTexture(texture), mTarget(target)
 {
     ASSERT(target == GL_TEXTURE_2D || IsCubemapTextureTarget(target));
-    latchTextureInfo();
 }
 
 IDirect3DSurface9 *Texture::TextureColorbufferProxy::getRenderTarget()
 {
-    latchTextureInfo();
-
     if (mRenderTarget) mRenderTarget->Release();
 
     mRenderTarget = mTexture->getRenderTarget(mTarget);
@@ -1482,10 +1479,14 @@ IDirect3DSurface9 *Texture::TextureColorbufferProxy::getRenderTarget()
     return mRenderTarget;
 }
 
-void Texture::TextureColorbufferProxy::latchTextureInfo()
+int Texture::TextureColorbufferProxy::getWidth()
 {
-    mWidth = mTexture->getWidth();
-    mHeight = mTexture->getHeight();
+    return mTexture->getWidth();
+}
+
+int Texture::TextureColorbufferProxy::getHeight()
+{
+    return mTexture->getHeight();
 }
 
 }
