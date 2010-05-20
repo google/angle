@@ -1943,26 +1943,36 @@ void Context::lookupAttributeMapping(TranslatedAttribute *attributes)
     }
 }
 
-void Context::applyVertexBuffer(GLint first, GLsizei count)
+GLenum Context::applyVertexBuffer(GLint first, GLsizei count)
 {
     TranslatedAttribute translated[MAX_VERTEX_ATTRIBS];
 
-    mVertexDataManager->preRenderValidate(first, count, translated);
+    GLenum err = mVertexDataManager->preRenderValidate(first, count, translated);
 
-    lookupAttributeMapping(translated);
+    if (err == GL_NO_ERROR)
+    {
+        lookupAttributeMapping(translated);
 
-    mBufferBackEnd->setupAttributesPreDraw(translated);
+        mBufferBackEnd->setupAttributesPreDraw(translated);
+    }
+
+    return err;
 }
 
-void Context::applyVertexBuffer(const TranslatedIndexData &indexInfo)
+GLenum Context::applyVertexBuffer(const TranslatedIndexData &indexInfo)
 {
     TranslatedAttribute translated[MAX_VERTEX_ATTRIBS];
 
-    mVertexDataManager->preRenderValidate(indexInfo.minIndex, indexInfo.maxIndex-indexInfo.minIndex+1, translated);
+    GLenum err = mVertexDataManager->preRenderValidate(indexInfo.minIndex, indexInfo.maxIndex-indexInfo.minIndex+1, translated);
 
-    lookupAttributeMapping(translated);
+    if (err == GL_NO_ERROR)
+    {
+        lookupAttributeMapping(translated);
 
-    mBufferBackEnd->setupAttributesPreDraw(translated);
+        mBufferBackEnd->setupAttributesPreDraw(translated);
+    }
+
+    return err;
 }
 
 // Applies the indices and element array bindings to the Direct3D 9 device
@@ -2423,7 +2433,13 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
     }
 
     applyState(mode);
-    applyVertexBuffer(first, count);
+
+    GLenum err = applyVertexBuffer(first, count);
+    if (err != GL_NO_ERROR)
+    {
+        return error(err);
+    }
+
     applyShaders();
     applyTextures();
 
@@ -2478,7 +2494,12 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void* 
         return error(err);
     }
 
-    applyVertexBuffer(indexInfo);
+    err = applyVertexBuffer(indexInfo);
+    if (err != GL_NO_ERROR)
+    {
+        return error(err);
+    }
+
     applyShaders();
     applyTextures();
 

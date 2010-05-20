@@ -9,6 +9,8 @@
 
 #include "libGLESv2/geometry/VertexDataManager.h"
 
+#include <limits>
+
 #include "common/debug.h"
 
 #include "libGLESv2/Buffer.h"
@@ -132,24 +134,44 @@ GLenum VertexDataManager::preRenderValidate(GLint start, GLsizei count,
             translated[i].stride = formatConverter.outputVertexSize;
             translated[i].buffer = mStreamBuffer;
 
+            size_t inputStride = interpretGlStride(attribs[i]);
+            size_t elementSize = typeSize(attribs[i].mType) * attribs[i].mSize;
+
             void *output = mStreamBuffer->map(spaceRequired(attribs[i], count), &translated[i].offset);
 
             const void *input;
             if (attribs[i].mBoundBuffer)
             {
-                input = mContext->getBuffer(attribs[i].mBoundBuffer)->data();
-                input = static_cast<const char*>(input) + reinterpret_cast<size_t>(attribs[i].mPointer);
+                Buffer *buffer = mContext->getBuffer(attribs[i].mBoundBuffer);
+
+                size_t offset = reinterpret_cast<size_t>(attribs[i].mPointer);
+
+                // Before we calculate the required size below, make sure it can be computed without integer overflow.
+                if (std::numeric_limits<std::size_t>::max() - start < static_cast<std::size_t>(count)
+                    || std::numeric_limits<std::size_t>::max() / inputStride < static_cast<std::size_t>(start + count - 1) // it's a prerequisite that count >= 1, so start+count-1 >= 0.
+                    || std::numeric_limits<std::size_t>::max() - offset < inputStride * (start + count - 1)
+                    || std::numeric_limits<std::size_t>::max() - elementSize < offset + inputStride * (start + count - 1) + elementSize)
+                {
+                    mStreamBuffer->unmap();
+                    return GL_INVALID_OPERATION;
+                }
+
+                if (offset + inputStride * (start + count - 1) + elementSize > buffer->size())
+                {
+                    mStreamBuffer->unmap();
+                    return GL_INVALID_OPERATION;
+                }
+
+                input = static_cast<const char*>(buffer->data()) + offset;
             }
             else
             {
                 input = attribs[i].mPointer;
             }
 
-            size_t inputStride = interpretGlStride(attribs[i]);
-
             input = static_cast<const char*>(input) + inputStride * start;
 
-            if (formatConverter.identity && inputStride == typeSize(attribs[i].mType) * attribs[i].mSize)
+            if (formatConverter.identity && inputStride == elementSize)
             {
                 memcpy(output, input, count * inputStride);
             }
