@@ -28,7 +28,7 @@ Display::Display(HDC deviceContext) : mDc(deviceContext)
 
     mAdapter = D3DADAPTER_DEFAULT;
 
-    #if REF_RAST == 1 || FORCE_REF_RAST
+    #if REF_RAST == 1 || defined(FORCE_REF_RAST)
         mDeviceType = D3DDEVTYPE_REF;
     #else
         mDeviceType = D3DDEVTYPE_HAL;
