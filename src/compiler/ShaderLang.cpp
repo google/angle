@@ -22,7 +22,7 @@
 // set of built-ins, and we want to preserve that from
 // compile to compile.
 //
-TSymbolTable SymbolTables[EShLangCount];
+TSymbolTable* SymbolTables[EShLangCount];
 
 
 TPoolAllocator* PerProcessGPA = 0;
@@ -59,8 +59,10 @@ int ShInitialize()
         PerProcessGPA->push();
         SetGlobalPoolAllocatorPtr(PerProcessGPA);
 
-        SymbolTables[EShLangVertex].copyTable(symTables[EShLangVertex]);
-        SymbolTables[EShLangFragment].copyTable(symTables[EShLangFragment]);
+        SymbolTables[EShLangVertex] = new TSymbolTable;
+        SymbolTables[EShLangVertex]->copyTable(symTables[EShLangVertex]);
+        SymbolTables[EShLangFragment] = new TSymbolTable;
+        SymbolTables[EShLangFragment]->copyTable(symTables[EShLangFragment]);
 
         SetGlobalPoolAllocatorPtr(gPoolAllocator);
 
@@ -133,6 +135,11 @@ int __fastcall ShFinalize()
   if (PerProcessGPA) {
     PerProcessGPA->popAll();
     delete PerProcessGPA;
+    PerProcessGPA = 0;
+  }
+  for (int i = 0; i < EShLangCount; ++i) {
+    delete SymbolTables[i];
+    SymbolTables[i] = 0;
   }
   return 1;
 }
@@ -252,7 +259,7 @@ int ShCompile(
         return 1;
 
     TIntermediate intermediate(infoSink);
-    TSymbolTable symbolTable(SymbolTables[compiler->getLanguage()]);
+    TSymbolTable symbolTable(*SymbolTables[compiler->getLanguage()]);
     
     GenerateBuiltInSymbolTable(resources, infoSink, &symbolTable, compiler->getLanguage());
 

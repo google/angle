@@ -215,6 +215,8 @@ void Shader::releaseCompiler()
 
     mFragmentCompiler = NULL;
     mVertexCompiler = NULL;
+
+    ShFinalize();
 }
 
 void Shader::parseVaryings()
