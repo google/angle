@@ -46,12 +46,30 @@ TString arrayBrackets(const TType& type)
     out << "[" << type.getArraySize() << "]";
     return TString(out.c_str());
 }
+
+bool isSingleStatement(TIntermNode* node) {
+    const TIntermAggregate* aggregate = node->getAsAggregate();
+    if (aggregate != NULL)
+    {
+        if ((aggregate->getOp() == EOpFunction) ||
+            (aggregate->getOp() == EOpSequence))
+            return false;
+    }
+    else if (node->getAsSelectionNode() != NULL)
+    {
+        return false;
+    }
+    else if (node->getAsLoopNode() != NULL)
+    {
+        return false;
+    }
+    return true;
+}
 }  // namespace
 
 TOutputGLSL::TOutputGLSL(TInfoSinkBase& objSink)
     : TIntermTraverser(true, true, true),
       mObjSink(objSink),
-      mScopeSequences(false),
       mDeclaringVariables(false)
 {
 }
@@ -390,23 +408,17 @@ bool TOutputGLSL::visitSelection(Visit visit, TIntermSelection* node)
     {
         out << "if (";
         node->getCondition()->traverse(this);
-        out << ") {\n";
+        out << ")\n";
 
         incrementDepth();
-        if (node->getTrueBlock())
-        {
-            node->getTrueBlock()->traverse(this);
-        }
-        out << ";\n}";
+        visitCodeBlock(node->getTrueBlock());
 
         if (node->getFalseBlock())
         {
-            out << " else {\n";
-            node->getFalseBlock()->traverse(this);
-            out << ";\n}";
+            out << "else\n";
+            visitCodeBlock(node->getFalseBlock());
         }
         decrementDepth();
-        out << "\n";
     }
     return false;
 }
@@ -417,23 +429,29 @@ bool TOutputGLSL::visitAggregate(Visit visit, TIntermAggregate* node)
     TInfoSinkBase& out = objSink();
     switch (node->getOp())
     {
-        case EOpSequence:
-            if (visit == PreVisit)
+        case EOpSequence: {
+            // Scope the sequences except when at the global scope.
+            if (depth > 0) out << "{\n";
+
+            incrementDepth();
+            const TIntermSequence& sequence = node->getSequence();
+            for (TIntermSequence::const_iterator iter = sequence.begin();
+                 iter != sequence.end(); ++iter)
             {
-                if (mScopeSequences)
-                    out << "{\n";
+                TIntermNode* node = *iter;
+                ASSERT(node != NULL);
+                node->traverse(this);
+
+                if (isSingleStatement(node))
+                    out << ";\n";
             }
-            else if (visit == InVisit)
-            {
-                out << ";\n";
-            }
-            else if (visit == PostVisit)
-            {
-                out << ";\n";
-                if (mScopeSequences)
-                    out << "}\n";
-            }
+            decrementDepth();
+
+            // Scope the sequences except when at the global scope.
+            if (depth > 0) out << "}\n";
+            visitChildren = false;
             break;
+        }
         case EOpPrototype: {
             // Function declaration.
             ASSERT(visit == PreVisit);
@@ -454,6 +472,7 @@ bool TOutputGLSL::visitAggregate(Visit visit, TIntermAggregate* node)
             TString functionName = TFunction::unmangleName(node->getName());
             out << returnType << " " << functionName;
 
+            incrementDepth();
             // Function definition node contains one or two children nodes
             // representing function parameters and function body. The latter
             // is not present in case of empty function bodies.
@@ -470,20 +489,8 @@ bool TOutputGLSL::visitAggregate(Visit visit, TIntermAggregate* node)
             // Traverse function body.
             TIntermAggregate* body = ++seqIter != sequence.end() ?
                 (*seqIter)->getAsAggregate() : NULL;
-            if (body != NULL)
-            {
-                ASSERT(body->getOp() == EOpSequence);
-                // Sequences are scoped with {} inside function body so that
-                // variables are declared in the correct scope.
-                mScopeSequences = true;
-                body->traverse(this);
-                mScopeSequences = false;
-            }
-            else
-            {
-                // Empty function body.
-                out << "{}\n";
-            }
+            visitCodeBlock(body);
+            decrementDepth();
  
             // Fully processed; no need to visit children.
             visitChildren = false;
@@ -602,6 +609,7 @@ bool TOutputGLSL::visitLoop(Visit visit, TIntermLoop* node)
 {
     TInfoSinkBase& out = objSink();
 
+    incrementDepth();
     // Loop header.
     if (node->testFirst())  // for loop
     {
@@ -616,29 +624,25 @@ bool TOutputGLSL::visitLoop(Visit visit, TIntermLoop* node)
 
         if (node->getTerminal())
             node->getTerminal()->traverse(this);
-        out << ") {\n";
+        out << ")\n";
     }
     else  // do-while loop
     {
-        out << "do {\n";
+        out << "do\n";
     }
 
     // Loop body.
-    if (node->getBody())
-        node->getBody()->traverse(this);
+    visitCodeBlock(node->getBody());
 
     // Loop footer.
-    if (node->testFirst())  // for loop
+    if (!node->testFirst())  // while loop
     {
-        out << "}\n";
-    }
-    else  // do-while loop
-    {
-        out << "} while (";
+        out << "while (";
         ASSERT(node->getTest() != NULL);
         node->getTest()->traverse(this);
         out << ");\n";
     }
+    decrementDepth();
 
     // No need to visit children. They have been already processed in
     // this function.
@@ -659,4 +663,20 @@ bool TOutputGLSL::visitBranch(Visit visit, TIntermBranch* node)
     }
 
     return true;
+}
+
+void TOutputGLSL::visitCodeBlock(TIntermNode* node) {
+    TInfoSinkBase &out = objSink();
+    if (node != NULL)
+    {
+        node->traverse(this);
+        // Single statements not part of a sequence need to be terminated
+        // with semi-colon.
+        if (isSingleStatement(node))
+            out << ";\n";
+    }
+    else
+    {
+        out << "{\n}\n";  // Empty code block.
+    }
 }

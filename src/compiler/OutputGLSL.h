@@ -33,9 +33,10 @@ protected:
     virtual bool visitLoop(Visit visit, TIntermLoop* node);
     virtual bool visitBranch(Visit visit, TIntermBranch* node);
 
+    void visitCodeBlock(TIntermNode* node);
+
 private:
     TInfoSinkBase& mObjSink;
-    bool mScopeSequences;
     bool mDeclaringVariables;
 
     // Structs are declared as the tree is traversed. This set contains all

@@ -192,6 +192,7 @@ class TIntermConstantUnion;
 class TIntermSelection;
 class TIntermTyped;
 class TIntermSymbol;
+class TIntermLoop;
 class TInfoSink;
 
 //
@@ -205,13 +206,14 @@ public:
     virtual TSourceLoc getLine() const { return line; }
     virtual void setLine(TSourceLoc l) { line = l; }
     virtual void traverse(TIntermTraverser*) = 0;
-    virtual TIntermTyped*     getAsTyped()         { return 0; }
-    virtual TIntermConstantUnion*     getAsConstantUnion()         { return 0; }
-    virtual TIntermAggregate* getAsAggregate()     { return 0; }
-    virtual TIntermBinary*    getAsBinaryNode()    { return 0; }
-    virtual TIntermUnary*     getAsUnaryNode()     { return 0; }
+    virtual TIntermTyped* getAsTyped() { return 0; }
+    virtual TIntermConstantUnion* getAsConstantUnion() { return 0; }
+    virtual TIntermAggregate* getAsAggregate() { return 0; }
+    virtual TIntermBinary* getAsBinaryNode() { return 0; }
+    virtual TIntermUnary* getAsUnaryNode() { return 0; }
     virtual TIntermSelection* getAsSelectionNode() { return 0; }
-    virtual TIntermSymbol*    getAsSymbolNode()    { return 0; }
+    virtual TIntermSymbol* getAsSymbolNode() { return 0; }
+    virtual TIntermLoop* getAsLoopNode() { return 0; }
     virtual ~TIntermNode() { }
 protected:
     TSourceLoc line;
@@ -264,6 +266,7 @@ public:
             test(aTest),
             terminal(aTerminal),
             first(testFirst) { }
+    virtual TIntermLoop* getAsLoopNode() { return this; }
     virtual void traverse(TIntermTraverser*);
     TIntermNode *getInit() { return init; }
     TIntermNode *getBody() { return body; }
