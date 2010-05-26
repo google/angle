@@ -314,7 +314,7 @@ bool TOutputGLSL::visitUnary(Visit visit, TIntermUnary* node)
     switch (node->getOp())
     {
         case EOpNegative: writeTriplet(visit, "(-", NULL, ")"); break;
-        case EOpVectorLogicalNot: writeTriplet(visit, "(!", NULL, ")"); break;
+        case EOpVectorLogicalNot: writeTriplet(visit, "not(", NULL, ")"); break;
         case EOpLogicalNot: writeTriplet(visit, "(!", NULL, ")"); break;
 
         case EOpPostIncrement: writeTriplet(visit, "(", NULL, "++)"); break;
