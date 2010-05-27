@@ -69,7 +69,16 @@ Dx9BackEnd::Dx9BackEnd(IDirect3DDevice9 *d3ddevice)
 
     D3DCAPS9 caps;
     mDevice->GetDeviceCaps(&caps);
-    mUseInstancingForStrideZero = (caps.VertexShaderVersion >= D3DVS_VERSION(3, 0));
+
+    IDirect3D9 *mD3D;
+    mDevice->GetDirect3D(&mD3D);
+
+    D3DADAPTER_IDENTIFIER9 ident;
+    mD3D->GetAdapterIdentifier(caps.AdapterOrdinal, 0, &ident);
+    mD3D->Release();
+
+    // Instancing is mandatory for all HW with SM3 vertex shaders, but avoid hardware where it does not work.
+    mUseInstancingForStrideZero = (caps.VertexShaderVersion >= D3DVS_VERSION(3, 0) && ident.VendorId != 0x8086);
 }
 
 Dx9BackEnd::~Dx9BackEnd()
