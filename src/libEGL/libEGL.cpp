@@ -828,7 +828,7 @@ EGLBoolean __stdcall eglMakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface 
 
         if (!device || device->ValidateDevice(&passes) == D3DERR_DEVICELOST)
         {
-            return error(EGL_CONTEXT_LOST, false);
+            return error(EGL_CONTEXT_LOST, EGL_FALSE);
         }
 
         if (ctx != EGL_NO_CONTEXT && !validate(display, context))
