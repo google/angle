@@ -47,6 +47,9 @@ BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved)
 
                 current->error = EGL_SUCCESS;
                 current->API = EGL_OPENGL_ES_API;
+                current->display = EGL_NO_DISPLAY;
+                current->drawSurface = EGL_NO_SURFACE;
+                current->readSurface = EGL_NO_SURFACE;
             }
         }
         break;
@@ -107,6 +110,48 @@ EGLenum getCurrentAPI()
     Current *current = (Current*)TlsGetValue(currentTLS);
 
     return current->API;
+}
+
+void setCurrentDisplay(EGLDisplay dpy)
+{
+    Current *current = (Current*)TlsGetValue(currentTLS);
+
+    current->display = dpy;
+}
+
+EGLDisplay getCurrentDisplay()
+{
+    Current *current = (Current*)TlsGetValue(currentTLS);
+
+    return current->display;
+}
+
+void setCurrentDrawSurface(EGLSurface surface)
+{
+    Current *current = (Current*)TlsGetValue(currentTLS);
+
+    current->drawSurface = surface;
+}
+
+EGLSurface getCurrentDrawSurface()
+{
+    Current *current = (Current*)TlsGetValue(currentTLS);
+
+    return current->drawSurface;
+}
+
+void setCurrentReadSurface(EGLSurface surface)
+{
+    Current *current = (Current*)TlsGetValue(currentTLS);
+
+    current->readSurface = surface;
+}
+
+EGLSurface getCurrentReadSurface()
+{
+    Current *current = (Current*)TlsGetValue(currentTLS);
+
+    return current->readSurface;
 }
 }
 

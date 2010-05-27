@@ -18,6 +18,9 @@ struct Current
 {
     EGLint error;
     EGLenum API;
+    EGLDisplay display;
+    EGLSurface drawSurface;
+    EGLSurface readSurface;
 };
 
 void setCurrentError(EGLint error);
@@ -25,6 +28,15 @@ EGLint getCurrentError();
 
 void setCurrentAPI(EGLenum API);
 EGLenum getCurrentAPI();
+
+void setCurrentDisplay(EGLDisplay dpy);
+EGLDisplay getCurrentDisplay();
+
+void setCurrentDrawSurface(EGLSurface surface);
+EGLSurface getCurrentDrawSurface();
+
+void setCurrentReadSurface(EGLSurface surface);
+EGLSurface getCurrentReadSurface();
 }
 
 void error(EGLint errorCode);

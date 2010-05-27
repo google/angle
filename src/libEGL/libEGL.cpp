@@ -847,6 +847,10 @@ EGLBoolean __stdcall eglMakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface 
             UNIMPLEMENTED();   // FIXME
         }
 
+        egl::setCurrentDisplay(dpy);
+        egl::setCurrentDrawSurface(draw);
+        egl::setCurrentReadSurface(read);
+
         glMakeCurrent(context, display, static_cast<egl::Surface*>(draw));
 
         return success(EGL_TRUE);
@@ -883,9 +887,20 @@ EGLSurface __stdcall eglGetCurrentSurface(EGLint readdraw)
 
     try
     {
-        UNIMPLEMENTED();   // FIXME
-
-        return success(EGL_NO_SURFACE);
+        if (readdraw == EGL_READ)
+        {
+            EGLSurface read = egl::getCurrentReadSurface();
+            return success(read);
+        }
+        else if (readdraw == EGL_DRAW)
+        {
+            EGLSurface draw = egl::getCurrentDrawSurface();
+            return success(draw);
+        }
+        else
+        {
+            return error(EGL_BAD_PARAMETER, EGL_NO_SURFACE);
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -901,9 +916,9 @@ EGLDisplay __stdcall eglGetCurrentDisplay(void)
 
     try
     {
-        UNIMPLEMENTED();   // FIXME
+        EGLDisplay dpy = egl::getCurrentDisplay();
 
-        return success(EGL_NO_DISPLAY);
+        return success(dpy);
     }
     catch(std::bad_alloc&)
     {
