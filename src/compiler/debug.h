@@ -28,7 +28,7 @@ void Trace(const char* format, ...);
 
 #else   // TRACE_ENABLED
 
-#define Trace ((void)0)
+#define Trace(...) ((void)0)
 
 #endif  // TRACE_ENABLED
 
