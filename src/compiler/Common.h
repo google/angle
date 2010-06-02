@@ -7,16 +7,16 @@
 #ifndef _COMMON_INCLUDED_
 #define _COMMON_INCLUDED_
 
-#include <assert.h>
-#include <stdio.h>
-
 #include <map>
+#include <sstream>
 #include <string>
 #include <vector>
 
 #include "compiler/PoolAlloc.h"
 
 typedef int TSourceLoc;
+const unsigned int SourceLocLineMask = 0xffff;
+const unsigned int SourceLocStringShift = 16;
 
 //
 // Put POOL_ALLOCATOR_NEW_DELETE in base classes to make them use this scheme.
@@ -35,12 +35,20 @@ typedef int TSourceLoc;
 // Pool version of string.
 //
 typedef pool_allocator<char> TStringAllocator;
-typedef std::basic_string <char, std::char_traits<char>, TStringAllocator > TString;
+typedef std::basic_string <char, std::char_traits<char>, TStringAllocator> TString;
+typedef std::basic_ostringstream<char, std::char_traits<char>, TStringAllocator> TStringStream;
 inline TString* NewPoolTString(const char* s)
 {
 	void* memory = GlobalPoolAllocator.allocate(sizeof(TString));
 	return new(memory) TString(s);
 }
+
+//
+// Persistent string memory.  Should only be used for strings that survive
+// across compiles/links.
+//
+#define TPersistString std::string
+#define TPersistStringStream std::ostringstream
 
 //
 // Pool allocator versions of vectors, lists, and maps
@@ -63,49 +71,6 @@ public:
     TMap(const tAllocator& a) : std::map<K, D, CMP, tAllocator>(std::map<K, D, CMP, tAllocator>::key_compare(), a) {}
 };
 
-//
-// Persistent string memory.  Should only be used for strings that survive
-// across compiles/links.
-//
-typedef std::basic_string<char> TPersistString;
-
-//
-// Create a TString object from an integer.
-//
-inline const TString String(const int i, const int base = 10)
-{
-    char text[16];     // 32 bit ints are at most 10 digits in base 10
-    
-    #ifdef _WIN32
-        _itoa(i, text, base);
-    #else
-        // we assume base 10 for all cases
-        sprintf(text, "%d", i);
-    #endif
-
-    return text;
-}
-
-const unsigned int SourceLocLineMask = 0xffff;
-const unsigned int SourceLocStringShift = 16;
-
-__inline TPersistString FormatSourceLoc(const TSourceLoc loc)
-{
-    char locText[64];
-
-    int string = loc >> SourceLocStringShift;
-    int line = loc & SourceLocLineMask;
-
-    if (line)
-        sprintf(locText, "%d:%d", string, line);
-    else
-        sprintf(locText, "%d:? ", string);
-
-    return TPersistString(locText);
-}
-
-
 typedef TMap<TString, TString> TPragmaTable;
-typedef TMap<TString, TString>::tAllocator TPragmaTableAllocator;
 
 #endif // _COMMON_INCLUDED_

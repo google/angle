@@ -477,37 +477,21 @@ void TBuiltIns::initialize()
 
 void TBuiltIns::initialize(const TBuiltInResource &resources)
 {
-    TString builtIns;
+    TStringStream builtIns;
 
     // Implementation dependent constants
-    char builtInConstant[80];
+    builtIns << "const int gl_MaxVertexAttribs = " << resources.maxVertexAttribs << ";";
+    builtIns << "const int gl_MaxVertexUniformVectors = " << resources.maxVertexUniformVectors << ";";
 
-    sprintf(builtInConstant, "const int  gl_MaxVertexAttribs = %d;", resources.maxVertexAttribs);
-    builtIns.append(TString(builtInConstant));
+    builtIns << "const int gl_MaxVaryingVectors = " << resources.maxVaryingVectors << ";";
+    builtIns << "const int gl_MaxVertexTextureImageUnits = " << resources.maxVertexTextureImageUnits << ";";
+    builtIns << "const int gl_MaxCombinedTextureImageUnits = " << resources.maxCombinedTextureImageUnits << ";";
+    builtIns << "const int gl_MaxTextureImageUnits = " << resources.maxTextureImageUnits << ";";
+    builtIns << "const int gl_MaxFragmentUniformVectors = " << resources.maxFragmentUniformVectors << ";";
+    builtIns << "const int gl_MaxDrawBuffers = " << resources.maxDrawBuffers << ";";
 
-    sprintf(builtInConstant, "const int  gl_MaxVertexUniformVectors = %d;", resources.maxVertexUniformVectors);
-    builtIns.append(TString(builtInConstant));       
-
-    sprintf(builtInConstant, "const int  gl_MaxVaryingVectors = %d;", resources.maxVaryingVectors);
-    builtIns.append(TString(builtInConstant));        
-
-    sprintf(builtInConstant, "const int  gl_MaxVertexTextureImageUnits = %d;", resources.maxVertexTextureImageUnits);
-    builtIns.append(TString(builtInConstant));        
-
-    sprintf(builtInConstant, "const int  gl_MaxCombinedTextureImageUnits = %d;", resources.maxCombinedTextureImageUnits);
-    builtIns.append(TString(builtInConstant));        
-
-    sprintf(builtInConstant, "const int  gl_MaxTextureImageUnits = %d;", resources.maxTextureImageUnits);
-    builtIns.append(TString(builtInConstant));
-
-    sprintf(builtInConstant, "const int  gl_MaxFragmentUniformVectors = %d;", resources.maxFragmentUniformVectors);
-    builtIns.append(TString(builtInConstant));
-
-    sprintf(builtInConstant, "const int  gl_MaxDrawBuffers = %d;", resources.maxDrawBuffers);
-    builtIns.append(TString(builtInConstant));
-
-    builtInStrings[EShLangFragment].push_back(builtIns);
-    builtInStrings[EShLangVertex].push_back(builtIns);
+    builtInStrings[EShLangFragment].push_back(builtIns.str());
+    builtInStrings[EShLangVertex].push_back(builtIns.str());
 }
 
 void IdentifyBuiltIns(EShLanguage language, TSymbolTable& symbolTable)

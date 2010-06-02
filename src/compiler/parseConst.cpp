@@ -63,9 +63,10 @@ bool TConstTraverser::visitBinary(Visit visit, TIntermBinary* node)
     TQualifier qualifier = node->getType().getQualifier();
     
     if (qualifier != EvqConst) {
-        char buf[200];
-        sprintf(buf, "'constructor' : assigning non-constant to %s", type.getCompleteString().c_str());
-        infoSink.info.message(EPrefixError, buf, node->getLine());
+        TString buf;
+        buf.append("'constructor' : assigning non-constant to ");
+        buf.append(type.getCompleteString());
+        infoSink.info.message(EPrefixError, buf.c_str(), node->getLine());
         error = true;
         return false;  
     }
@@ -77,9 +78,10 @@ bool TConstTraverser::visitBinary(Visit visit, TIntermBinary* node)
 
 bool TConstTraverser::visitUnary(Visit visit, TIntermUnary* node)
 {
-    char buf[200];
-    sprintf(buf, "'constructor' : assigning non-constant to '%s'", type.getCompleteString().c_str());
-    infoSink.info.message(EPrefixError, buf, node->getLine());
+    TString buf;
+    buf.append("'constructor' : assigning non-constant to ");
+    buf.append(type.getCompleteString());
+    infoSink.info.message(EPrefixError, buf.c_str(), node->getLine());
     error = true;
     return false;  
 }
@@ -87,9 +89,10 @@ bool TConstTraverser::visitUnary(Visit visit, TIntermUnary* node)
 bool TConstTraverser::visitAggregate(Visit visit, TIntermAggregate* node)
 {
     if (!node->isConstructor() && node->getOp() != EOpComma) {
-        char buf[200];
-        sprintf(buf, "'constructor' : assigning non-constant to '%s'", type.getCompleteString().c_str());
-        infoSink.info.message(EPrefixError, buf, node->getLine());
+        TString buf;
+        buf.append("'constructor' : assigning non-constant to ");
+        buf.append(type.getCompleteString());
+        infoSink.info.message(EPrefixError, buf.c_str(), node->getLine());
         error = true;
         return false;  
     }

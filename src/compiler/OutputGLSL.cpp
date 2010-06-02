@@ -183,12 +183,7 @@ const ConstantUnion* TOutputGLSL::writeConstantUnion(const TType& type,
             {
                 case EbtFloat: out << pConstUnion->getFConst(); break;
                 case EbtInt: out << pConstUnion->getIConst(); break;
-                case EbtBool:
-                    if (pConstUnion->getBConst())
-                        out << "true";
-                    else
-                        out << "false";
-                    break;
+                case EbtBool: out << pConstUnion->getBConst(); break;
                 default: UNREACHABLE();
             }
             if (i != size - 1) out << ", ";

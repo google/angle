@@ -37,22 +37,20 @@ protected:
 
 TString TType::getCompleteString() const
 {
-    char buf[100];
-    char *p = &buf[0];
+    TStringStream stream;
 
     if (qualifier != EvqTemporary && qualifier != EvqGlobal)
-        p += sprintf(p, "%s %s ", getQualifierString(), getPrecisionString());
+        stream << getQualifierString() << " " << getPrecisionString() << " ";
     if (array)
-        p += sprintf(p, "array of ");
+        stream << "array of ";
     if (matrix)
-        p += sprintf(p, "%dX%d matrix of ", size, size);
+        stream << size << "X" << size << " matrix of ";
     else if (size > 1)
-        p += sprintf(p, "%d-component vector of ", size);
+        stream << size << "-component vector of ";
 
-    sprintf(p, "%s", getBasicString());
-
-    return TString(buf);
-}   
+    stream << getBasicString();
+    return stream.str();
+}
 
 //
 // Helper functions for printing, not part of traversing.
@@ -62,7 +60,7 @@ void OutputTreeText(TInfoSink& infoSink, TIntermNode* node, const int depth)
 {
     int i;
 
-    infoSink.debug << FormatSourceLoc(node->getLine());
+    infoSink.debug.location(node->getLine());
 
     for (i = 0; i < depth; ++i)
         infoSink.debug << "  ";
@@ -81,12 +79,8 @@ void TOutputTraverser::visitSymbol(TIntermSymbol* node)
 {
     OutputTreeText(infoSink, node, depth);
 
-    char buf[100];
-    sprintf(buf, "'%s' (%s)\n",
-        node->getSymbol().c_str(),
-        node->getCompleteString().c_str());
-
-    infoSink.debug << buf;
+    infoSink.debug << "'" << node->getSymbol() << "' ";
+    infoSink.debug << "(" << node->getCompleteString() << ")\n";
 }
 
 bool TOutputTraverser::visitBinary(Visit visit, TIntermBinary* node)
@@ -317,7 +311,6 @@ void TOutputTraverser::visitConstantUnion(TIntermConstantUnion* node)
 
     int size = node->getType().getObjectSize();
 
-    char buf[300];
     for (int i = 0; i < size; i++) {
         OutputTreeText(out, node, depth);
         switch (node->getUnionArrayPointer()[i].getType()) {
@@ -331,12 +324,12 @@ void TOutputTraverser::visitConstantUnion(TIntermConstantUnion* node)
                 out.debug << "\n";
                 break;
             case EbtFloat:
-                sprintf(buf, "%f (%s)", node->getUnionArrayPointer()[i].getFConst(), "const float");
-                out.debug << buf << "\n";
+                out.debug << node->getUnionArrayPointer()[i].getFConst();
+                out.debug << " (const float)\n";
                 break;
             case EbtInt:
-                sprintf(buf, "%d (%s)", node->getUnionArrayPointer()[i].getIConst(), "const int");
-                out.debug << buf << "\n";
+                out.debug << node->getUnionArrayPointer()[i].getIConst();
+                out.debug << " (const int)\n";
                 break;
             default:
                 out.info.message(EPrefixInternalError, "Unknown constant", node->getLine());

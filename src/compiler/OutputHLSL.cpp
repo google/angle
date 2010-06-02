@@ -2085,16 +2085,7 @@ const ConstantUnion *OutputHLSL::writeConstantUnion(const TType &type, const Con
             {
               case EbtFloat: out << constUnion->getFConst(); break;
               case EbtInt:   out << constUnion->getIConst(); break;
-              case EbtBool:
-                if (constUnion->getBConst())
-                {
-                    out << "true";
-                }
-                else
-                {
-                    out << "false";
-                }
-                break;
+              case EbtBool:  out << constUnion->getBConst(); break;
               default: UNREACHABLE();
             }
 

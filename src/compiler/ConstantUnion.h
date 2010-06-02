@@ -7,6 +7,7 @@
 #ifndef _CONSTANT_UNION_INCLUDED_
 #define _CONSTANT_UNION_INCLUDED_
 
+#include <assert.h>
 
 class ConstantUnion {
 public:

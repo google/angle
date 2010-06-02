@@ -8,7 +8,6 @@
 #define _INFOSINK_INCLUDED_
 
 #include <math.h>
-
 #include "compiler/Common.h"
 
 // Returns the fractional part of the given floating-point number.
@@ -30,11 +29,6 @@ enum TPrefixType {
     EPrefixNote
 };
 
-enum TOutputStream {
-    ENull = 0,
-    EStdOut = 0x01,
-    EString = 0x02,
-};
 //
 // Encapsulate info logs for all objects that have them.
 //
@@ -43,72 +37,68 @@ enum TOutputStream {
 //
 class TInfoSinkBase {
 public:
-    TInfoSinkBase() : outputStream(EString) {}
-    void erase() { sink.erase(); }
-    TInfoSinkBase& operator<<(const TPersistString& t) { append(t); return *this; }
-    TInfoSinkBase& operator<<(char c)                  { append(1, c); return *this; }
-    TInfoSinkBase& operator<<(const char* s)           { append(s); return *this; }
-    TInfoSinkBase& operator<<(int n)                   { append(String(n)); return *this; }
-    TInfoSinkBase& operator<<(const unsigned int n)    { append(String(n)); return *this; }
-    TInfoSinkBase& operator<<(float n) {
-        char buf[40];
-        // Make sure that at least one decimal point is written. If a number
-        // does not have a fractional part, %g does not written the decimal
-        // portion which gets interpreted as integer by the compiler.
-        const char* format = fractionalPart(n) == 0.0f ? "%.1f" : "%.8g";
-        sprintf(buf, format, n);
-        append(buf); 
+    TInfoSinkBase() {}
+
+    template <typename T>
+    TInfoSinkBase& operator<<(const T& t) {
+        TPersistStringStream stream;
+        stream << t;
+        sink.append(stream.str());
         return *this;
     }
-    TInfoSinkBase& operator+(const TPersistString& t)  { append(t); return *this; }
-    TInfoSinkBase& operator+(const TString& t)         { append(t); return *this; }
-    TInfoSinkBase& operator<<(const TString& t)        { append(t); return *this; }
-    TInfoSinkBase& operator+(const char* s)            { append(s); return *this; }
-    const char* c_str() const { return sink.c_str(); }
-    void prefix(TPrefixType message) {
-        switch(message) {
-        case EPrefixNone:                                      break;
-        case EPrefixWarning:       append("WARNING: ");        break;
-        case EPrefixError:         append("ERROR: ");          break;
-        case EPrefixInternalError: append("INTERNAL ERROR: "); break;
-        case EPrefixUnimplemented: append("UNIMPLEMENTED: ");  break;
-        case EPrefixNote:          append("NOTE: ");           break;
-        default:                   append("UNKOWN ERROR: ");   break;
+    // Override << operator for specific types. It is faster to append strings
+    // and characters directly to the sink.
+    TInfoSinkBase& operator<<(char c) {
+        sink.append(1, c);
+        return *this;
+    }
+    TInfoSinkBase& operator<<(const char* str) {
+        sink.append(str);
+        return *this;
+    }
+    TInfoSinkBase& operator<<(const TPersistString& str) {
+        sink.append(str);
+        return *this;
+    }
+    TInfoSinkBase& operator<<(const TString& str) {
+        sink.append(str.c_str());
+        return *this;
+    }
+    // Make sure floats are written with correct precision.
+    TInfoSinkBase& operator<<(float f) {
+        // Make sure that at least one decimal point is written. If a number
+        // does not have a fractional part, the default precision format does
+        // not write the decimal portion which gets interpreted as integer by
+        // the compiler.
+        TPersistStringStream stream;
+        if (fractionalPart(f) == 0.0f) {
+            stream.precision(2);
+            stream << std::showpoint << f;
+        } else {
+            stream << f;
         }
+        sink.append(stream.str());
+        return *this;
     }
-    void location(TSourceLoc loc) {
-        append(FormatSourceLoc(loc).c_str());
-        append(": ");
-    }
-    void message(TPrefixType message, const char* s) {
-        prefix(message);
-        append(s);
-        append("\n");
-    }
-    void message(TPrefixType message, const char* s, TSourceLoc loc) {
-        prefix(message);
-        location(loc);
-        append(s);
-        append("\n");
-    }
-    
-    void setOutputStream(int output = 4)
-    {
-        outputStream = output;
+    // Write boolean values as their names instead of integral value.
+    TInfoSinkBase& operator<<(bool b) {
+        const char* str = b ? "true" : "false";
+        sink.append(str);
+        return *this;
     }
 
-protected:
-    void append(const char *s); 
+    void erase() { sink.clear(); }
 
-    void append(int count, char c);
-    void append(const TPersistString& t);
-    void append(const TString& t);
+    const TPersistString& str() const { return sink; }
+    const char* c_str() const { return sink.c_str(); }
 
-    void checkMem(size_t growth) { if (sink.capacity() < sink.size() + growth + 2)  
-                                       sink.reserve(sink.capacity() +  sink.capacity() / 2); }
-    void appendToStream(const char* s);
+    void prefix(TPrefixType message);
+    void location(TSourceLoc loc);
+    void message(TPrefixType message, const char* s);
+    void message(TPrefixType message, const char* s, TSourceLoc loc);
+
+private:
     TPersistString sink;
-    int outputStream;
 };
 
 class TInfoSink {

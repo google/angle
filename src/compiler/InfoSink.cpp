@@ -6,50 +6,54 @@
 
 #include "compiler/InfoSink.h"
 
-#ifdef _WIN32
-    #include <windows.h>
-#endif
-
-void TInfoSinkBase::append(const char *s)           
-{
-    if (outputStream & EString) {
-        checkMem(strlen(s)); 
-        sink.append(s); 
+void TInfoSinkBase::prefix(TPrefixType message) {
+    switch(message) {
+        case EPrefixNone:
+            break;
+        case EPrefixWarning:
+            sink.append("WARNING: ");
+            break;
+        case EPrefixError:
+            sink.append("ERROR: ");
+            break;
+        case EPrefixInternalError:
+            sink.append("INTERNAL ERROR: ");
+            break;
+        case EPrefixUnimplemented:
+            sink.append("UNIMPLEMENTED: ");
+            break;
+        case EPrefixNote:
+            sink.append("NOTE: ");
+            break;
+        default:
+            sink.append("UNKOWN ERROR: ");
+            break;
     }
-
-    if (outputStream & EStdOut)
-        fprintf(stdout, "%s", s);
 }
 
-void TInfoSinkBase::append(int count, char c)       
-{ 
-    if (outputStream & EString) {
-        checkMem(count);         
-        sink.append(count, c); 
-    }
+void TInfoSinkBase::location(TSourceLoc loc) {
+    int string = loc >> SourceLocStringShift;
+    int line = loc & SourceLocLineMask;
 
-    if (outputStream & EStdOut)
-        fprintf(stdout, "%c", c);
+    TPersistStringStream stream;
+    if (line)
+        stream << string << ":" << line;
+    else
+        stream << string << ":? ";
+    stream << ": ";
+
+    sink.append(stream.str());
 }
 
-void TInfoSinkBase::append(const TPersistString& t) 
-{ 
-    if (outputStream & EString) {
-        checkMem(t.size());  
-        sink.append(t); 
-    }
-
-    if (outputStream & EStdOut)
-        fprintf(stdout, "%s", t.c_str());
+void TInfoSinkBase::message(TPrefixType message, const char* s) {
+    prefix(message);
+    sink.append(s);
+    sink.append("\n");
 }
 
-void TInfoSinkBase::append(const TString& t)
-{ 
-    if (outputStream & EString) {
-        checkMem(t.size());  
-        sink.append(t.c_str()); 
-    }
-
-    if (outputStream & EStdOut)
-        fprintf(stdout, "%s", t.c_str());
+void TInfoSinkBase::message(TPrefixType message, const char* s, TSourceLoc loc) {
+    prefix(message);
+    location(loc);
+    sink.append(s);
+    sink.append("\n");
 }

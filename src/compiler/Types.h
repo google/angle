@@ -7,6 +7,7 @@
 #ifndef _TYPES_INCLUDED
 #define _TYPES_INCLUDED
 
+#include <assert.h>
 #include "compiler/Common.h"
 #include "compiler/BaseTypes.h"
 

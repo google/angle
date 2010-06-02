@@ -30,6 +30,7 @@
 //   are tracked in the intermediate representation, not the symbol table.
 //
 
+#include <assert.h>
 #include "compiler/Common.h"
 #include "compiler/intermediate.h"
 #include "compiler/InfoSink.h"
