@@ -7,9 +7,9 @@
 #ifndef _TYPES_INCLUDED
 #define _TYPES_INCLUDED
 
-#include <assert.h>
-#include "compiler/Common.h"
 #include "compiler/BaseTypes.h"
+#include "compiler/Common.h"
+#include "compiler/debug.h"
 
 //
 // Need to have association of line numbers to types in a list for building structs.

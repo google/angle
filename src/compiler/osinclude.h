@@ -32,7 +32,7 @@
 #include <errno.h>
 #endif  // ANGLE_OS_WIN
 
-#include <assert.h>
+#include "compiler/debug.h"
 
 //
 // Thread Local Storage Operations

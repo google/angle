@@ -6,8 +6,7 @@
 
 #include "compiler/OutputHLSL.h"
 
-#include "common/debug.h"
-
+#include "compiler/debug.h"
 #include "compiler/InfoSink.h"
 #include "compiler/UnfoldSelect.h"
 
