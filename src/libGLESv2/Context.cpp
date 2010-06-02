@@ -454,7 +454,7 @@ void Context::setStencilParams(GLenum stencilFunc, GLint stencilRef, GLuint sten
         mState.stencilMask != stencilMask)
     {
         mState.stencilFunc = stencilFunc;
-        mState.stencilRef = stencilRef;
+        mState.stencilRef = (stencilRef > 0) ? stencilRef : 0;
         mState.stencilMask = stencilMask;
         mStencilStateDirty = true;
     }
@@ -467,7 +467,7 @@ void Context::setStencilBackParams(GLenum stencilBackFunc, GLint stencilBackRef,
         mState.stencilBackMask != stencilBackMask)
     {
         mState.stencilBackFunc = stencilBackFunc;
-        mState.stencilBackRef = stencilBackRef;
+        mState.stencilBackRef = (stencilBackRef > 0) ? stencilBackRef : 0;
         mState.stencilBackMask = stencilBackMask;
         mStencilStateDirty = true;
     }
@@ -1840,11 +1840,16 @@ void Context::applyState(GLenum drawMode)
                 return error(GL_INVALID_OPERATION);
             }
 
+            // get the maximum size of the stencil ref
+            gl::Framebuffer *framebuffer = getFramebuffer();
+            gl::Stencilbuffer *stencilbuffer = framebuffer->getStencilbuffer();
+            GLuint maxStencil = (1 << stencilbuffer->getStencilSize()) - 1;
+
             device->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILWRITEMASK : D3DRS_CCW_STENCILWRITEMASK, mState.stencilWritemask);
             device->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILFUNC : D3DRS_CCW_STENCILFUNC, 
                                    es2dx::ConvertComparison(mState.stencilFunc));
 
-            device->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILREF : D3DRS_CCW_STENCILREF, mState.stencilRef);   // FIXME: Clamp to range
+            device->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILREF : D3DRS_CCW_STENCILREF, (mState.stencilRef < (GLint)maxStencil) ? mState.stencilRef : maxStencil);
             device->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILMASK : D3DRS_CCW_STENCILMASK, mState.stencilMask);
 
             device->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILFAIL : D3DRS_CCW_STENCILFAIL, 
@@ -1858,7 +1863,7 @@ void Context::applyState(GLenum drawMode)
             device->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILFUNC : D3DRS_CCW_STENCILFUNC, 
                                    es2dx::ConvertComparison(mState.stencilBackFunc));
 
-            device->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILREF : D3DRS_CCW_STENCILREF, mState.stencilBackRef);   // FIXME: Clamp to range
+            device->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILREF : D3DRS_CCW_STENCILREF, (mState.stencilBackRef < (GLint)maxStencil) ? mState.stencilBackRef : maxStencil);
             device->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILMASK : D3DRS_CCW_STENCILMASK, mState.stencilBackMask);
 
             device->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILFAIL : D3DRS_CCW_STENCILFAIL, 
