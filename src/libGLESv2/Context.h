@@ -468,6 +468,8 @@ class Context
     bool mFrontFaceDirty;
     bool mDitherStateDirty;
 
+    IDirect3DStateBlock9 *mMaskedClearSavedState;
+
     D3DCAPS9 mDeviceCaps;
 };
 }

@@ -155,6 +155,7 @@ Context::Context(const egl::Config *config)
 
     mHasBeenCurrent = false;
 
+    mMaskedClearSavedState = NULL;
     markAllStateDirty();
 }
 
@@ -207,6 +208,11 @@ Context::~Context()
     while (!mTextureMap.empty())
     {
         deleteTexture(mTextureMap.begin()->first);
+    }
+
+    if (mMaskedClearSavedState)
+    {
+        mMaskedClearSavedState->Release();
     }
 }
 
@@ -2343,6 +2349,42 @@ void Context::clear(GLbitfield mask)
 
     if (needMaskedColorClear || needMaskedStencilClear)
     {
+        // State which is altered in all paths from this point to the clear call is saved.
+        // State which is altered in only some paths will be flagged dirty in the case that
+        //  that path is taken.
+        HRESULT hr;
+        if (mMaskedClearSavedState == NULL)
+        {
+            hr = device->BeginStateBlock();
+            ASSERT(SUCCEEDED(hr) || hr == D3DERR_OUTOFVIDEOMEMORY || hr == E_OUTOFMEMORY);
+
+            device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+            device->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
+            device->SetRenderState(D3DRS_ZENABLE, FALSE);
+            device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+            device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
+            device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+            device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+            device->SetRenderState(D3DRS_CLIPPLANEENABLE, 0);
+            device->SetRenderState(D3DRS_COLORWRITEENABLE, 0);
+            device->SetRenderState(D3DRS_STENCILENABLE, FALSE);
+            device->SetPixelShader(NULL);
+            device->SetVertexShader(NULL);
+            device->SetFVF(D3DFVF_XYZRHW | D3DFVF_DIFFUSE);
+            device->SetStreamSourceFreq(0, 1);
+
+            hr = device->EndStateBlock(&mMaskedClearSavedState);
+            ASSERT(SUCCEEDED(hr) || hr == D3DERR_OUTOFVIDEOMEMORY || hr == E_OUTOFMEMORY);
+        }
+
+        ASSERT(mMaskedClearSavedState != NULL);
+
+        if (mMaskedClearSavedState != NULL)
+        {
+            hr = mMaskedClearSavedState->Capture();
+            ASSERT(SUCCEEDED(hr));
+        }
+
         device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
         device->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
         device->SetRenderState(D3DRS_ZENABLE, FALSE);
@@ -2374,6 +2416,7 @@ void Context::clear(GLbitfield mask)
             device->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_REPLACE);
             device->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_REPLACE);
             device->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);
+            mStencilStateDirty = true;
         }
         else
         {
@@ -2424,6 +2467,11 @@ void Context::clear(GLbitfield mask)
             device->SetRenderState(D3DRS_ZENABLE, TRUE);
             device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
             device->Clear(0, NULL, D3DCLEAR_ZBUFFER, color, depth, stencil);
+        }
+
+        if (mMaskedClearSavedState != NULL)
+        {
+            mMaskedClearSavedState->Apply();
         }
     }
     else if (flags)
