@@ -72,9 +72,12 @@ public:
         // the compiler.
         TPersistStringStream stream;
         if (fractionalPart(f) == 0.0f) {
-            stream.precision(2);
-            stream << std::showpoint << f;
+            stream.precision(1);
+            stream << std::showpoint << std::fixed << f;
         } else {
+            stream.unsetf(std::ios::fixed);
+            stream.unsetf(std::ios::scientific);
+            stream.precision(8);
             stream << f;
         }
         sink.append(stream.str());
