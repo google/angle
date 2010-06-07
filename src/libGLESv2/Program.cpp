@@ -239,7 +239,7 @@ void Program::setSamplerDirty(unsigned int samplerIndex, bool dirty)
     else UNREACHABLE();
 }
 
-GLint Program::getUniformLocation(const char *name)
+GLint Program::getUniformLocation(const char *name, bool decorated)
 {
     std::string nameStr(name);
     int subscript = 0;
@@ -252,7 +252,10 @@ GLint Program::getUniformLocation(const char *name)
         subscript = atoi(subscrStr.c_str());
     }
 
-    nameStr = decorate(nameStr);
+    if (!decorated)
+    {
+        nameStr = decorate(nameStr);
+    }
 
     unsigned int numUniforms = mUniformIndex.size();
     for (unsigned int location = 0; location < numUniforms; location++)
@@ -1494,14 +1497,16 @@ void Program::link()
                 return;
             }
 
-            mDepthRangeNearLocation = getUniformLocation("gl_DepthRange.near");
-            mDepthRangeFarLocation = getUniformLocation("gl_DepthRange.far");
-            mDepthRangeDiffLocation = getUniformLocation("gl_DepthRange.diff");
-            mDxDepthLocation = getUniformLocation("dx_Depth");
-            mDxWindowLocation = getUniformLocation("dx_Window");
-            mDxHalfPixelSizeLocation = getUniformLocation("dx_HalfPixelSize");
-            mDxFrontCCWLocation = getUniformLocation("dx_FrontCCW");
-            mDxPointsOrLinesLocation = getUniformLocation("dx_PointsOrLines");
+            // these uniforms are searched as already-decorated because gl_ and dx_
+            // are reserved prefixes, and do not receive additional decoration
+            mDepthRangeNearLocation = getUniformLocation("gl_DepthRange.near", true);
+            mDepthRangeFarLocation = getUniformLocation("gl_DepthRange.far", true);
+            mDepthRangeDiffLocation = getUniformLocation("gl_DepthRange.diff", true);
+            mDxDepthLocation = getUniformLocation("dx_Depth", true);
+            mDxWindowLocation = getUniformLocation("dx_Window", true);
+            mDxHalfPixelSizeLocation = getUniformLocation("dx_HalfPixelSize", true);
+            mDxFrontCCWLocation = getUniformLocation("dx_FrontCCW", true);
+            mDxPointsOrLinesLocation = getUniformLocation("dx_PointsOrLines", true);
 
             mLinked = true;   // Success
         }
@@ -1671,7 +1676,7 @@ bool Program::defineUniform(const D3DXCONSTANT_DESC &constantDescription, std::s
     }
 
     // Check if already defined
-    GLint location = getUniformLocation(name.c_str());
+    GLint location = getUniformLocation(name.c_str(), true);
     GLenum type = uniform->type;
 
     if (location >= 0)

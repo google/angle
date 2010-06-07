@@ -77,7 +77,7 @@ class Program
     bool isSamplerDirty(unsigned int samplerIndex) const;
     void setSamplerDirty(unsigned int samplerIndex, bool dirty);
 
-    GLint getUniformLocation(const char *name);
+    GLint getUniformLocation(const char *name, bool decorated);
     bool setUniform1fv(GLint location, GLsizei count, const GLfloat *v);
     bool setUniform2fv(GLint location, GLsizei count, const GLfloat *v);
     bool setUniform3fv(GLint location, GLsizei count, const GLfloat *v);
