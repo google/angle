@@ -51,6 +51,30 @@ class Dx9BackEnd : public BufferBackEnd
 
     StreamFrequency mStreamFrequency[MAX_VERTEX_ATTRIBS+1];
 
+    struct TranslationInfo
+    {
+        FormatConverter formatConverter;
+        D3DDECLTYPE d3dDeclType;
+    };
+
+    enum { NUM_GL_VERTEX_ATTRIB_TYPES = 6 };
+
+    TranslationInfo mAttributeTypes[NUM_GL_VERTEX_ATTRIB_TYPES][2][4]; // [GL types as enumerated by typeIndex()][normalized][size-1]
+
+    struct TranslationDescription
+    {
+        DWORD capsFlag;
+        TranslationInfo preferredConversion;
+        TranslationInfo fallbackConversion;
+    };
+
+    // This table is used to generate mAttributeTypes.
+    static const TranslationDescription mPossibleTranslations[NUM_GL_VERTEX_ATTRIB_TYPES][2][4]; // [GL types as enumerated by typeIndex()][normalized][size-1]
+
+    void checkVertexCaps(DWORD declTypes);
+
+    unsigned int typeIndex(GLenum type) const;
+
     class Dx9VertexBuffer : public TranslatedVertexBuffer
     {
       public:
