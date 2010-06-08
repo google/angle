@@ -459,6 +459,11 @@ GLenum Dx9BackEnd::setupAttributesPreDraw(const TranslatedAttribute *attributes)
                 if (mStreamFrequency[i] != STREAM_FREQUENCY_UNINSTANCED)
                 {
                     mStreamFrequency[i] = STREAM_FREQUENCY_UNINSTANCED;
+
+                    // This should not be needed, but otherwise there is a buggy driver that will leave instancing
+                    // enabled for the first draw after it has been turned off.
+                    mDevice->SetStreamSourceFreq(i, D3DSTREAMSOURCE_INDEXEDDATA | 1);
+
                     mDevice->SetStreamSourceFreq(i, 1);
                 }
             }
