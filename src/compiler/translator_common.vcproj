@@ -164,7 +164,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Executing flex on $(InputPath)"
-						CommandLine="if EXIST $(InputDir)Gen_glslang.cpp del $(InputDir)Gen_glslang.cpp&#x0D;&#x0A;$(InputDir)tools\flex.exe $(InputPath)&#x0D;&#x0A;rename $(InputDir)lex.yy.c Gen_$(InputName).cpp&#x0D;&#x0A;"
+						CommandLine="@echo on&#x0D;&#x0A;if EXIST &quot;$(InputDir)Gen_glslang.cpp&quot; del &quot;$(InputDir)Gen_glslang.cpp&quot;&#x0D;&#x0A;&quot;$(InputDir)tools\flex.exe&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;rename &quot;$(InputDir)lex.yy.c&quot; Gen_$(InputName).cpp&#x0D;&#x0A;@echo off"
 						AdditionalDependencies="glslang_tab.h"
 						Outputs="$(InputDir)Gen_glslang.cpp"
 					/>
@@ -175,7 +175,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Executing flex on $(InputPath)"
-						CommandLine="if EXIST $(InputDir)Gen_glslang.cpp del $(InputDir)Gen_glslang.cpp&#x0D;&#x0A;$(InputDir)tools\flex.exe $(InputPath)&#x0D;&#x0A;rename $(InputDir)lex.yy.c Gen_$(InputName).cpp&#x0D;&#x0A;"
+						CommandLine="@echo on&#x0D;&#x0A;if EXIST &quot;$(InputDir)Gen_glslang.cpp&quot; del &quot;$(InputDir)Gen_glslang.cpp&quot;&#x0D;&#x0A;&quot;$(InputDir)tools\flex.exe&quot; &quot;$(InputPath)&quot;&#x0D;&#x0A;rename &quot;$(InputDir)lex.yy.c&quot; Gen_$(InputName).cpp&#x0D;&#x0A;@echo off"
 						AdditionalDependencies="glslang_tab.h"
 						Outputs="$(InputDir)Gen_glslang.cpp"
 					/>
@@ -190,7 +190,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Executing Bison on $(InputPath)"
-						CommandLine="SET BISON_SIMPLE=$(InputDir)tools\bison.simple&#x0D;&#x0A;SET BISON_HAIRY=$(InputDir)tools\bison.simple&#x0D;&#x0A;if EXIST $(InputDir)Gen_$(InputName)_tab.cpp del $(InputDir)Gen_$(InputName)_tab.cpp&#x0D;&#x0A;$(InputDir)tools\bison.exe -d -t -v $(InputName).y&#x0D;&#x0A;rename $(InputDir)$(InputName)_tab.c Gen_$(InputName)_tab.cpp&#x0D;&#x0A;"
+						CommandLine="@echo on&#x0D;&#x0A;SET BISON_SIMPLE=tools\bison.simple&#x0D;&#x0A;SET BISON_HAIRY=tools\bison.simple&#x0D;&#x0A;if EXIST &quot;$(InputDir)Gen_$(InputName)_tab.cpp&quot; del &quot;$(InputDir)Gen_$(InputName)_tab.cpp&quot;&#x0D;&#x0A;tools\bison.exe -d -t -v $(InputName).y&#x0D;&#x0A;rename &quot;$(InputDir)$(InputName)_tab.c&quot; Gen_$(InputName)_tab.cpp&#x0D;&#x0A;@echo off"
 						Outputs="$(InputDir)Gen_$(InputName)_tab.cpp"
 					/>
 				</FileConfiguration>
@@ -200,7 +200,7 @@
 					<Tool
 						Name="VCCustomBuildTool"
 						Description="Executing Bison on $(InputPath)"
-						CommandLine="SET BISON_SIMPLE=$(InputDir)Tools\bison.simple&#x0D;&#x0A;SET BISON_HAIRY=$(InputDir)Tools\bison.simple&#x0D;&#x0A;if EXIST $(InputDir)Gen_$(InputName)_tab.cpp del $(InputDir)Gen_$(InputName)_tab.cpp&#x0D;&#x0A;$(InputDir)Tools\bison.exe -d -t -v $(InputName).y&#x0D;&#x0A;rename $(InputDir)$(InputName)_tab.c Gen_$(InputName)_tab.cpp&#x0D;&#x0A;"
+						CommandLine="@echo on&#x0D;&#x0A;SET BISON_SIMPLE=tools\bison.simple&#x0D;&#x0A;SET BISON_HAIRY=tools\bison.simple&#x0D;&#x0A;if EXIST &quot;$(InputDir)Gen_$(InputName)_tab.cpp&quot; del &quot;$(InputDir)Gen_$(InputName)_tab.cpp&quot;&#x0D;&#x0A;tools\bison.exe -d -t -v $(InputName).y&#x0D;&#x0A;rename &quot;$(InputDir)$(InputName)_tab.c&quot; Gen_$(InputName)_tab.cpp&#x0D;&#x0A;@echo off"
 						Outputs="$(InputDir)Gen_$(InputName)_tab.cpp"
 					/>
 				</FileConfiguration>
