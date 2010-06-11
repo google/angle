@@ -47,18 +47,18 @@ TString arrayBrackets(const TType& type)
 }
 
 bool isSingleStatement(TIntermNode* node) {
-    const TIntermAggregate* aggregate = node->getAsAggregate();
-    if (aggregate != NULL)
+    if (const TIntermAggregate* aggregate = node->getAsAggregate())
     {
-        if ((aggregate->getOp() == EOpFunction) ||
-            (aggregate->getOp() == EOpSequence))
-            return false;
+        return (aggregate->getOp() != EOpFunction) &&
+               (aggregate->getOp() != EOpSequence);
     }
-    else if (node->getAsSelectionNode() != NULL)
+    else if (const TIntermSelection* selection = node->getAsSelectionNode())
     {
-        return false;
+        // Ternary operators are usually part of an assignment operator.
+        // This handles those rare cases in which they are all by themselves.
+        return selection->usesTernaryOperator();
     }
-    else if (node->getAsLoopNode() != NULL)
+    else if (node->getAsLoopNode())
     {
         return false;
     }
