@@ -220,16 +220,17 @@ bool TOutputGLSL::visitBinary(Visit visit, TIntermBinary* node)
                 mDeclaringVariables = false;
             }
             break;
-        case EOpAssign: writeTriplet(visit, NULL, " = ", NULL); break;
-        case EOpAddAssign: writeTriplet(visit, NULL, " += ", NULL); break;
-        case EOpSubAssign: writeTriplet(visit, NULL, " -= ", NULL); break;
-        case EOpDivAssign: writeTriplet(visit, NULL, " /= ", NULL); break;
+        case EOpAssign: writeTriplet(visit, "(", " = ", ")"); break;
+        case EOpAddAssign: writeTriplet(visit, "(", " += ", ")"); break;
+        case EOpSubAssign: writeTriplet(visit, "(", " -= ", ")"); break;
+        case EOpDivAssign: writeTriplet(visit, "(", " /= ", ")"); break;
+        // Notice the fall-through.
         case EOpMulAssign: 
         case EOpVectorTimesMatrixAssign:
         case EOpVectorTimesScalarAssign:
         case EOpMatrixTimesScalarAssign:
         case EOpMatrixTimesMatrixAssign:
-            writeTriplet(visit, NULL, " *= ", NULL);
+            writeTriplet(visit, "(", " *= ", ")");
             break;
 
         case EOpIndexDirect:
