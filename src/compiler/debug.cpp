@@ -9,6 +9,7 @@
 #include "compiler/debug.h"
 
 #include <stdarg.h>
+#include <stdio.h>
 
 #include "compiler/ParseHelper.h"
 

@@ -11,6 +11,8 @@
 
 #include "compiler/SymbolTable.h"
 
+#include <stdio.h>
+
 //
 // TType helper function needs a place to live.
 //

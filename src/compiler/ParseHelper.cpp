@@ -7,6 +7,7 @@
 #include "compiler/ParseHelper.h"
 
 #include <stdarg.h>
+#include <stdio.h>
 
 #include "compiler/osinclude.h"
 #include "compiler/InitializeParseContext.h"
