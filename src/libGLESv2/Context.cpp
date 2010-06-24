@@ -222,9 +222,9 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 
     if (!mHasBeenCurrent)
     {
-        device->GetDeviceCaps(&mDeviceCaps);
+        mDeviceCaps = display->getDeviceCaps();
 
-        mBufferBackEnd = new Dx9BackEnd(device);
+        mBufferBackEnd = new Dx9BackEnd(this, device);
         mVertexDataManager = new VertexDataManager(this, mBufferBackEnd);
         mIndexDataManager = new IndexDataManager(this, mBufferBackEnd);
         mBlit = new Blit(this);
@@ -268,11 +268,8 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
     {
         depthStencil->Release();
     }
-
-    D3DCAPS9 capabilities;
-    device->GetDeviceCaps(&capabilities);
     
-    if (capabilities.PixelShaderVersion == D3DPS_VERSION(3, 0))
+    if (mDeviceCaps.PixelShaderVersion == D3DPS_VERSION(3, 0))
     {
         mPsProfile = "ps_3_0";
         mVsProfile = "vs_3_0";

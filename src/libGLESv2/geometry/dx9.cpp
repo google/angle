@@ -16,6 +16,7 @@
 #include "common/debug.h"
 
 #include "libGLESv2/Context.h"
+#include "libGLESv2/main.h"
 #include "libGLESv2/geometry/vertexconversion.h"
 #include "libGLESv2/geometry/IndexDataManager.h"
 
@@ -194,7 +195,7 @@ public:
 
 namespace gl
 {
-Dx9BackEnd::Dx9BackEnd(IDirect3DDevice9 *d3ddevice)
+Dx9BackEnd::Dx9BackEnd(Context *context, IDirect3DDevice9 *d3ddevice)
     : mDevice(d3ddevice)
 {
     mDevice->AddRef();
@@ -207,18 +208,18 @@ Dx9BackEnd::Dx9BackEnd(IDirect3DDevice9 *d3ddevice)
 
     mStreamFrequency[MAX_VERTEX_ATTRIBS] = STREAM_FREQUENCY_UNINSTANCED;
 
-    D3DCAPS9 caps;
-    mDevice->GetDeviceCaps(&caps);
+    D3DCAPS9 caps = context->getDeviceCaps();
 
-    IDirect3D9 *mD3D;
-    mDevice->GetDirect3D(&mD3D);
+    IDirect3D9 *d3dObject;
+    mDevice->GetDirect3D(&d3dObject);
 
     D3DADAPTER_IDENTIFIER9 ident;
-    mD3D->GetAdapterIdentifier(caps.AdapterOrdinal, 0, &ident);
-    mD3D->Release();
+    d3dObject->GetAdapterIdentifier(caps.AdapterOrdinal, 0, &ident);
+    d3dObject->Release();
 
     // Instancing is mandatory for all HW with SM3 vertex shaders, but avoid hardware where it does not work.
     mUseInstancingForStrideZero = (caps.VertexShaderVersion >= D3DVS_VERSION(3, 0) && ident.VendorId != 0x8086);
+    mSupportIntIndices = (caps.MaxVertexIndex >= (1 << 16));
 
     checkVertexCaps(caps.DeclTypes);
 }
@@ -230,10 +231,7 @@ Dx9BackEnd::~Dx9BackEnd()
 
 bool Dx9BackEnd::supportIntIndices()
 {
-    D3DCAPS9 caps;
-    mDevice->GetDeviceCaps(&caps);
-
-    return (caps.MaxVertexIndex >= (1 << 16));
+    return mSupportIntIndices;
 }
 
 // Initialise a TranslationInfo

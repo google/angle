@@ -59,6 +59,7 @@ class Display
     static DWORD convertInterval(GLint interval);
 
     virtual IDirect3DDevice9 *getDevice();
+    virtual D3DCAPS9 getDeviceCaps();
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Display);
@@ -68,6 +69,7 @@ class Display
     D3DDEVTYPE mDeviceType;
     IDirect3D9 *mD3d9;
     IDirect3DDevice9 *mDevice;
+    D3DCAPS9 mDeviceCaps;
 
     bool mSceneStarted;
     GLint mSwapInterval;

@@ -60,15 +60,14 @@ bool Display::initialize()
         //  UNIMPLEMENTED();   // FIXME: Determine which adapter index the device context corresponds to
         }
 
-        D3DCAPS9 caps;
-        HRESULT result = mD3d9->GetDeviceCaps(mAdapter, mDeviceType, &caps);
+        HRESULT result = mD3d9->GetDeviceCaps(mAdapter, mDeviceType, &mDeviceCaps);
 
         if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
         {
             return error(EGL_BAD_ALLOC, false);
         }
 
-        if (caps.PixelShaderVersion < D3DPS_VERSION(2, 0))
+        if (mDeviceCaps.PixelShaderVersion < D3DPS_VERSION(2, 0))
         {
             mD3d9->Release();
             mD3d9 = NULL;
@@ -78,11 +77,11 @@ bool Display::initialize()
             mMinSwapInterval = 4;
             mMaxSwapInterval = 0;
 
-            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_IMMEDIATE) {mMinSwapInterval = std::min(mMinSwapInterval, 0); mMaxSwapInterval = std::max(mMaxSwapInterval, 0);}
-            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_ONE)       {mMinSwapInterval = std::min(mMinSwapInterval, 1); mMaxSwapInterval = std::max(mMaxSwapInterval, 1);}
-            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_TWO)       {mMinSwapInterval = std::min(mMinSwapInterval, 2); mMaxSwapInterval = std::max(mMaxSwapInterval, 2);}
-            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_THREE)     {mMinSwapInterval = std::min(mMinSwapInterval, 3); mMaxSwapInterval = std::max(mMaxSwapInterval, 3);}
-            if (caps.PresentationIntervals & D3DPRESENT_INTERVAL_FOUR)      {mMinSwapInterval = std::min(mMinSwapInterval, 4); mMaxSwapInterval = std::max(mMaxSwapInterval, 4);}
+            if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_IMMEDIATE) {mMinSwapInterval = std::min(mMinSwapInterval, 0); mMaxSwapInterval = std::max(mMaxSwapInterval, 0);}
+            if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_ONE)       {mMinSwapInterval = std::min(mMinSwapInterval, 1); mMaxSwapInterval = std::max(mMaxSwapInterval, 1);}
+            if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_TWO)       {mMinSwapInterval = std::min(mMinSwapInterval, 2); mMaxSwapInterval = std::max(mMaxSwapInterval, 2);}
+            if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_THREE)     {mMinSwapInterval = std::min(mMinSwapInterval, 3); mMaxSwapInterval = std::max(mMaxSwapInterval, 3);}
+            if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_FOUR)      {mMinSwapInterval = std::min(mMinSwapInterval, 4); mMaxSwapInterval = std::max(mMaxSwapInterval, 4);}
 
             const D3DFORMAT renderTargetFormats[] =
             {
@@ -463,5 +462,10 @@ DWORD Display::convertInterval(GLint interval)
 IDirect3DDevice9 *Display::getDevice()
 {
     return mDevice;
+}
+
+D3DCAPS9 Display::getDeviceCaps()
+{
+    return mDeviceCaps;
 }
 }

@@ -20,7 +20,7 @@ namespace gl
 class Dx9BackEnd : public BufferBackEnd
 {
   public:
-    explicit Dx9BackEnd(IDirect3DDevice9 *d3ddevice);
+    explicit Dx9BackEnd(Context *context, IDirect3DDevice9 *d3ddevice);
     ~Dx9BackEnd();
 
     virtual bool supportIntIndices();
@@ -39,6 +39,7 @@ class Dx9BackEnd : public BufferBackEnd
     IDirect3DDevice9 *mDevice;
 
     bool mUseInstancingForStrideZero;
+    bool mSupportIntIndices;
 
     bool mAppliedAttribEnabled[MAX_VERTEX_ATTRIBS];
 
