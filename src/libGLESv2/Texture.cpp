@@ -427,8 +427,8 @@ GLint Texture::creationLevels(GLsizei width, GLsizei height, GLint maxlevel) con
     }
     else
     {
-        // One of the restrictions of NONPOW2CONDITIONAL is that NPOTs may only have a single level.
-        return (getContext()->getDeviceCaps().TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL) ? 1 : maxlevel;
+        // OpenGL ES 2.0 without GL_OES_texture_npot does not permit NPOT mipmaps.
+        return 1;
     }
 }
 
@@ -635,7 +635,7 @@ bool Texture2D::isComplete() const
         return false;
     }
 
-    bool mipmapping;
+    bool mipmapping = false;
 
     switch (mMinFilter)
     {
@@ -652,10 +652,15 @@ bool Texture2D::isComplete() const
      default: UNREACHABLE();
     }
 
+    if ((getWrapS() != GL_CLAMP_TO_EDGE && !isPow2(width))
+        || (getWrapT() != GL_CLAMP_TO_EDGE && !isPow2(height)))
+    {
+        return false;
+    }
+
     if (mipmapping)
     {
-        if ((getWrapS() != GL_CLAMP_TO_EDGE && !isPow2(width))
-            || (getWrapT() != GL_CLAMP_TO_EDGE && !isPow2(height)))
+        if (!isPow2(width) || !isPow2(height))
         {
             return false;
         }
