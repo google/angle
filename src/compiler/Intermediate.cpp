@@ -17,14 +17,8 @@
 
 bool CompareStructure(const TType& leftNodeType, ConstantUnion* rightUnionArray, ConstantUnion* leftUnionArray);
 
-TPrecision GetHighestPrecision( TPrecision left, TPrecision right, TInfoSink& infoSink ){
-    TPrecision highest = left > right ? left : right;
-
-    if (highest == EbpUndefined) {
-        infoSink.info.message(EPrefixInternalError, "Unknown or invalid precision for operands", 0);
-    }
-
-    return highest;
+TPrecision GetHighestPrecision( TPrecision left, TPrecision right ){
+    return left > right ? left : right;
 }
 ////////////////////////////////////////////////////////////////////////////
 //
@@ -788,7 +782,7 @@ bool TIntermBinary::promote(TInfoSink& infoSink)
     //
     setType(left->getType());
 
-    TPrecision highestPrecision = GetHighestPrecision(left->getPrecision(), right->getPrecision(), infoSink);
+    TPrecision highestPrecision = GetHighestPrecision(left->getPrecision(), right->getPrecision());
     getTypePointer()->changePrecision(highestPrecision);
 
     //
