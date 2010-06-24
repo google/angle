@@ -2283,13 +2283,17 @@ void Context::clear(GLbitfield mask)
     if (mask & GL_COLOR_BUFFER_BIT)
     {
         mask &= ~GL_COLOR_BUFFER_BIT;
-        flags |= D3DCLEAR_TARGET;
+
+        if (framebufferObject->getColorbufferType() != GL_NONE)
+        {
+            flags |= D3DCLEAR_TARGET;
+        }
     }
 
     if (mask & GL_DEPTH_BUFFER_BIT)
     {
         mask &= ~GL_DEPTH_BUFFER_BIT;
-        if (mState.depthMask)
+        if (mState.depthMask && framebufferObject->getDepthbufferType() != GL_NONE)
         {
             flags |= D3DCLEAR_ZBUFFER;
         }
