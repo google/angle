@@ -34,8 +34,8 @@ Shader::Shader(Context *context, GLuint handle) : mHandle(handle), mContext(cont
 
         if (result)
         {
-            mFragmentCompiler = ShConstructCompiler(EShLangFragment, EDebugOpObjectCode);
-            mVertexCompiler = ShConstructCompiler(EShLangVertex, EDebugOpObjectCode);
+            mFragmentCompiler = ShConstructCompiler(EShLangFragment, EShSpecGLES2);
+            mVertexCompiler = ShConstructCompiler(EShLangVertex, EShSpecGLES2);
         }
     }
 

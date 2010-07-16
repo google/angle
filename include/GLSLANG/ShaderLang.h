@@ -42,6 +42,15 @@ typedef enum {
 } EShLanguage;
 
 //
+// The language specification compiler conforms to.
+// It currently supports OpenGL ES and WebGL specifications.
+//
+typedef enum {
+    EShSpecGLES2,
+    EShSpecWebGL,
+} EShSpec;
+
+//
 // Types of output the linker will create.
 //
 typedef enum {
@@ -88,7 +97,7 @@ typedef void* ShHandle;
 // Driver calls these to create and destroy compiler/linker
 // objects.
 //
-ShHandle ShConstructCompiler(const EShLanguage, int debugOptions);  // one per shader
+ShHandle ShConstructCompiler(EShLanguage, EShSpec);  // one per shader
 ShHandle ShConstructLinker(const EShExecutable, int debugOptions);  // one per shader pair
 ShHandle ShConstructUniformMap();                 // one per uniform namespace (currently entire program object)
 void ShDestruct(ShHandle);

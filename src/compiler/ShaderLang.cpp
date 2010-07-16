@@ -82,12 +82,12 @@ int ShInitialize()
 // objects.
 //
 
-ShHandle ShConstructCompiler(const EShLanguage language, int debugOptions)
+ShHandle ShConstructCompiler(EShLanguage language, EShSpec spec)
 {
     if (!InitThread())
         return 0;
 
-    TShHandleBase* base = static_cast<TShHandleBase*>(ConstructCompiler(language, debugOptions));
+    TShHandleBase* base = static_cast<TShHandleBase*>(ConstructCompiler(language, spec));
     
     return reinterpret_cast<void*>(base);
 }

@@ -56,7 +56,7 @@ class TIntermNode;
 //
 class TCompiler : public TShHandleBase {
 public:
-    TCompiler(EShLanguage l) : language(l), haveValidObjectCode(false) { }
+    TCompiler(EShLanguage l, EShSpec s) : language(l), spec(s), haveValidObjectCode(false) { }
     virtual ~TCompiler() { }
     EShLanguage getLanguage() { return language; }
     virtual TInfoSink& getInfoSink() { return infoSink; }
@@ -69,6 +69,7 @@ public:
     TInfoSink infoSink;
 protected:
     EShLanguage language;
+    EShSpec spec;
     bool haveValidObjectCode;
 };
 
@@ -125,7 +126,7 @@ protected:
 // destroy the machine dependent objects, which contain the
 // above machine independent information.
 //
-TCompiler* ConstructCompiler(EShLanguage, int);
+TCompiler* ConstructCompiler(EShLanguage, EShSpec);
 
 TShHandleBase* ConstructLinker(EShExecutable, int);
 void DeleteLinker(TShHandleBase*);

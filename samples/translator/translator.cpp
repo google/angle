@@ -71,7 +71,7 @@ int C_DECL main(int argc, char* argv[])
                 default:  usage(); return EFailUsage;
             }
         } else {
-            compilers[numCompilers] = ShConstructCompiler(FindLanguage(argv[0]), debugOptions);
+            compilers[numCompilers] = ShConstructCompiler(FindLanguage(argv[0]), EShSpecGLES2);
             if (compilers[numCompilers] == 0)
                 return EFailCompilerCreate;
             ++numCompilers;
