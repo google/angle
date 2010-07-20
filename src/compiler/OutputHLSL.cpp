@@ -10,6 +10,7 @@
 #include "compiler/InfoSink.h"
 #include "compiler/UnfoldSelect.h"
 
+#include <stdio.h>
 #include <algorithm>
 
 namespace sh
