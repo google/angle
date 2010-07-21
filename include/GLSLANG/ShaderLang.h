@@ -17,15 +17,15 @@
 
 //
 // This is the platform independent interface between an OGL driver
-// and the shading language compiler/linker.
+// and the shading language compiler.
 //
 
 #ifdef __cplusplus
-	extern "C" {
+extern "C" {
 #endif
 //
 // Driver must call this first, once, before doing any other
-// compiler/linker operations.
+// compiler operations.
 //
 int ShInitialize();
 //
@@ -36,9 +36,9 @@ int __fastcall ShFinalize();
 // Types of languages the compiler can consume.
 //
 typedef enum {
-	EShLangVertex,
-	EShLangFragment,
-	EShLangCount,
+    EShLangVertex,
+    EShLangFragment,
+    EShLangCount,
 } EShLanguage;
 
 //
@@ -51,55 +51,28 @@ typedef enum {
 } EShSpec;
 
 //
-// Types of output the linker will create.
-//
-typedef enum {
-	EShExVertexFragment,
-	EShExFragment
-} EShExecutable;
-
-//
 // Optimization level for the compiler.
 //
 typedef enum {
-	EShOptNoGeneration,
-	EShOptNone,
-	EShOptSimple,       // Optimizations that can be done quickly
-	EShOptFull,         // Optimizations that will take more time
+    EShOptNoGeneration,
+    EShOptNone,
+    EShOptSimple,       // Optimizations that can be done quickly
+    EShOptFull,         // Optimizations that will take more time
 } EShOptimizationLevel;
 
 //
-// Build a table for bindings.  This can be used for locating
-// attributes, uniforms, globals, etc., as needed.
-//
-typedef struct {
-	const char* name;
-	int binding;
-} ShBinding;
-
-typedef struct {
-	int numBindings;
-	ShBinding* bindings;  // array of bindings
-} ShBindingTable;
-
-//
 // ShHandle held by but opaque to the driver.  It is allocated,
-// managed, and de-allocated by the compiler/linker. It's contents 
-// are defined by and used by the compiler and linker.  For example,
-// symbol table information and object code passed from the compiler 
-// to the linker can be stored where ShHandle points.
+// managed, and de-allocated by the compiler. It's contents 
+// are defined by and used by the compiler.
 //
 // If handle creation fails, 0 will be returned.
 //
 typedef void* ShHandle;
 
 //
-// Driver calls these to create and destroy compiler/linker
-// objects.
+// Driver calls these to create and destroy compiler objects.
 //
 ShHandle ShConstructCompiler(EShLanguage, EShSpec);  // one per shader
-ShHandle ShConstructLinker(const EShExecutable, int debugOptions);  // one per shader pair
-ShHandle ShConstructUniformMap();                 // one per uniform namespace (currently entire program object)
 void ShDestruct(ShHandle);
 
 //
@@ -110,44 +83,13 @@ void ShDestruct(ShHandle);
 // ShHandle, so it can answer future queries.
 //
 int ShCompile(
-	const ShHandle,
-	const char* const shaderStrings[],
-	const int numStrings,
-	const EShOptimizationLevel,
-	const TBuiltInResource *resources,
-	int debugOptions
-	);
-
-
-//
-// Similar to ShCompile, but accepts an opaque handle to an
-// intermediate language structure.
-//
-int ShCompileIntermediate(
-	ShHandle compiler,
-	ShHandle intermediate,
-	const EShOptimizationLevel,
-	int debuggable           // boolean
-	);
-
-int ShLink(
-	const ShHandle,               // linker object
-	const ShHandle h[],           // compiler objects to link together
-	const int numHandles,
-	ShHandle uniformMap,          // updated with new uniforms
-	short int** uniformsAccessed,  // returned with indexes of uniforms accessed
-	int* numUniformsAccessed); 	
-
-int ShLinkExt(
-	const ShHandle,               // linker object
-	const ShHandle h[],           // compiler objects to link together
-	const int numHandles);
-
-//
-// ShSetEncrpytionMethod is a place-holder for specifying
-// how source code is encrypted.
-//
-void ShSetEncryptionMethod(ShHandle);
+    const ShHandle,
+    const char* const shaderStrings[],
+    const int numStrings,
+    const EShOptimizationLevel,
+    const TBuiltInResource *resources,
+    int debugOptions
+    );
 
 //
 // All the following return 0 if the information is not
@@ -155,30 +97,15 @@ void ShSetEncryptionMethod(ShHandle);
 //
 const char* ShGetInfoLog(const ShHandle);
 const char* ShGetObjectCode(const ShHandle);
-const void* ShGetExecutable(const ShHandle);
-int ShSetVirtualAttributeBindings(const ShHandle, const ShBindingTable*);   // to detect user aliasing
-int ShSetFixedAttributeBindings(const ShHandle, const ShBindingTable*);     // to force any physical mappings
-int ShGetPhysicalAttributeBindings(const ShHandle, const ShBindingTable**); // for all attributes
-//
-// Tell the linker to never assign a vertex attribute to this list of physical attributes
-//
-int ShExcludeAttributes(const ShHandle, int *attributes, int count);
-
-//
-// Returns the location ID of the named uniform.
-// Returns -1 if error.
-//
-int ShGetUniformLocation(const ShHandle uniformMap, const char* name);
 
 enum TDebugOptions {
-	EDebugOpNone               = 0x000,
-	EDebugOpIntermediate       = 0x001,
-	EDebugOpAssembly           = 0x002,
-	EDebugOpObjectCode         = 0x004,
-	EDebugOpLinkMaps           = 0x008
+    EDebugOpNone               = 0x000,
+    EDebugOpIntermediate       = 0x001,
+    EDebugOpObjectCode         = 0x002,
 };
+
 #ifdef __cplusplus
-	}
+}
 #endif
 
 #endif // _COMPILER_INTERFACE_INCLUDED_

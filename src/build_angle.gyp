@@ -34,7 +34,6 @@
         'compiler/intermediate.h',
         'compiler/intermOut.cpp',
         'compiler/IntermTraverse.cpp',
-        'compiler/Link.cpp',
         'compiler/localintermediate.h',
         'compiler/MMap.h',
         'compiler/osinclude.h',

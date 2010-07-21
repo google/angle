@@ -18,9 +18,7 @@ enum TFailCode {
     ESuccess = 0,
     EFailUsage,
     EFailCompile,
-    EFailLink,
     EFailCompilerCreate,
-    EFailLinkerCreate
 };
 
 static EShLanguage FindLanguage(char *lang);
@@ -55,14 +53,12 @@ int C_DECL main(int argc, char* argv[])
     int debugOptions = 0;
     int i;
 
-    ShHandle    linker = 0;
-    ShHandle    uniformMap = 0;
     ShHandle    compilers[EShLangCount];
 
     ShInitialize();
 
     argc--;
-    argv++;    
+    argv++;
     for (; argc >= 1; argc--, argv++) {
         if (argv[0][0] == '-' || argv[0][0] == '/') {
             switch (argv[0][1]) {
@@ -104,6 +100,7 @@ int C_DECL main(int argc, char* argv[])
     for (i = 0; i < numCompilers; ++i)
         ShDestruct(compilers[i]);
 
+    ShFinalize();
     return compileFailed ? EFailCompile : ESuccess;
 }
 
