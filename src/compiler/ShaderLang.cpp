@@ -170,7 +170,9 @@ bool InitializeSymbolTable(TBuiltInStrings* BuiltInStrings, EShLanguage language
 	else
 		symbolTable = &symbolTables[language];
 
-    TParseContext parseContext(*symbolTable, intermediate, language, infoSink);
+    // TODO(alokp): Investigate if a parse-context is necessary here and
+    // if symbol-table can be shared between GLES2 and WebGL specs.
+    TParseContext parseContext(*symbolTable, intermediate, language, EShSpecGLES2, infoSink);
 
     GlobalParseContext = &parseContext;
     
@@ -263,7 +265,7 @@ int ShCompile(
     
     GenerateBuiltInSymbolTable(resources, infoSink, &symbolTable, compiler->getLanguage());
 
-    TParseContext parseContext(symbolTable, intermediate, compiler->getLanguage(), infoSink);
+    TParseContext parseContext(symbolTable, intermediate, compiler->getLanguage(), compiler->getSpec(), infoSink);
     parseContext.initializeExtensionBehavior();
 
     GlobalParseContext = &parseContext;

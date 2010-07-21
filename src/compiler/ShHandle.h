@@ -58,7 +58,9 @@ class TCompiler : public TShHandleBase {
 public:
     TCompiler(EShLanguage l, EShSpec s) : language(l), spec(s), haveValidObjectCode(false) { }
     virtual ~TCompiler() { }
+
     EShLanguage getLanguage() { return language; }
+    EShSpec getSpec() { return spec; }
     virtual TInfoSink& getInfoSink() { return infoSink; }
 
     virtual bool compile(TIntermNode* root) = 0;
