@@ -56,8 +56,8 @@ struct TParseContext {
     TMap<TString, TBehavior> extensionBehavior;
     void initializeExtensionBehavior();
 
-    void C_DECL error(TSourceLoc, const char *szReason, const char *szToken,
-                      const char *szExtraInfoFormat, ...);
+    void error(TSourceLoc, const char *szReason, const char *szToken,
+               const char *szExtraInfoFormat, ...);
     bool reservedErrorCheck(int line, const TString& identifier);
     void recover();
 

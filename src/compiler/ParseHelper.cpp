@@ -176,8 +176,8 @@ void TParseContext::recover()
 //
 // Used by flex/bison to output all syntax and parsing errors.
 //
-void C_DECL TParseContext::error(TSourceLoc nLine, const char *szReason, const char *szToken, 
-                                 const char *szExtraInfoFormat, ...)
+void TParseContext::error(TSourceLoc nLine, const char *szReason, const char *szToken, 
+                          const char *szExtraInfoFormat, ...)
 {
     char szExtraInfo[400];
     va_list marker;

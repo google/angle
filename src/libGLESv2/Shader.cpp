@@ -278,7 +278,7 @@ void Shader::compileToHLSL(void *compiler)
     resources.maxFragmentUniformVectors = MAX_FRAGMENT_UNIFORM_VECTORS;
     resources.maxDrawBuffers = MAX_DRAW_BUFFERS;
 
-    int result = ShCompile(compiler, &mSource, 1, EShOptNone, &resources, EDebugOpObjectCode);
+    int result = ShCompile(compiler, &mSource, 1, EShOptNone, &resources, EDebugOpNone);
     const char *obj = ShGetObjectCode(compiler);
     const char *info = ShGetInfoLog(compiler);
 

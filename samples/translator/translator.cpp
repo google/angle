@@ -46,11 +46,12 @@ void GenerateResources(TBuiltInResource& resources)
     resources.maxDrawBuffers = 1;
 }
 
-int C_DECL main(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
     int numCompilers = 0;
     bool compileFailed = false;
     int debugOptions = 0;
+    bool writeObjectCode = false;
     int i;
 
     ShHandle    compilers[EShLangCount];
@@ -63,7 +64,7 @@ int C_DECL main(int argc, char* argv[])
         if (argv[0][0] == '-' || argv[0][0] == '/') {
             switch (argv[0][1]) {
                 case 'i': debugOptions |= EDebugOpIntermediate; break;
-                case 'o': debugOptions |= EDebugOpObjectCode; break;
+                case 'o': writeObjectCode = true; break;
                 default:  usage(); return EFailUsage;
             }
         } else {
@@ -89,7 +90,7 @@ int C_DECL main(int argc, char* argv[])
         puts(ShGetInfoLog(compilers[i]));
         LogMsg("END", "COMPILER", i, "INFO LOG");
     }
-    if ((debugOptions & EDebugOpObjectCode) != 0) {
+    if (writeObjectCode) {
         for (i = 0; i < numCompilers; ++i) {
             LogMsg("BEGIN", "COMPILER", i, "OBJ CODE");
             puts(ShGetObjectCode(compilers[i]));

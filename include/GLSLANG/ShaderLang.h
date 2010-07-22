@@ -8,13 +8,6 @@
 
 #include "ResourceLimits.h"
 
-#ifdef _WIN32
-#define C_DECL __cdecl
-#else
-#define __fastcall
-#define C_DECL
-#endif
-
 //
 // This is the platform independent interface between an OGL driver
 // and the shading language compiler.
@@ -31,7 +24,7 @@ int ShInitialize();
 //
 // Driver should call this at shutdown.
 //
-int __fastcall ShFinalize();
+int ShFinalize();
 //
 // Types of languages the compiler can consume.
 //
@@ -59,6 +52,11 @@ typedef enum {
     EShOptSimple,       // Optimizations that can be done quickly
     EShOptFull,         // Optimizations that will take more time
 } EShOptimizationLevel;
+
+enum TDebugOptions {
+    EDebugOpNone               = 0x000,
+    EDebugOpIntermediate       = 0x001,  // Writes intermediate tree into info-log.
+};
 
 //
 // ShHandle held by but opaque to the driver.  It is allocated,
@@ -97,12 +95,6 @@ int ShCompile(
 //
 const char* ShGetInfoLog(const ShHandle);
 const char* ShGetObjectCode(const ShHandle);
-
-enum TDebugOptions {
-    EDebugOpNone               = 0x000,
-    EDebugOpIntermediate       = 0x001,
-    EDebugOpObjectCode         = 0x002,
-};
 
 #ifdef __cplusplus
 }
