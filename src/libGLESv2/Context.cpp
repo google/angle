@@ -2116,19 +2116,19 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum
 
     result = device->GetRenderTargetData(renderTarget, systemSurface);
 
-    if (result == D3DERR_DRIVERINTERNALERROR)
-    {
-        systemSurface->Release();
-
-        return error(GL_OUT_OF_MEMORY);
-    }
-
     if (FAILED(result))
     {
-        UNREACHABLE();
         systemSurface->Release();
 
-        return;   // No sensible error to generate
+        switch (result)
+        {
+            case D3DERR_DRIVERINTERNALERROR:
+            case D3DERR_DEVICELOST:
+                return error(GL_OUT_OF_MEMORY);
+            default:
+                UNREACHABLE();
+                return;   // No sensible error to generate
+        }
     }
 
     D3DLOCKED_RECT lock;
