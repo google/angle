@@ -22,12 +22,12 @@ enum TFailCode {
 };
 
 static EShLanguage FindLanguage(char *lang);
-bool CompileFile(char *fileName, ShHandle, int, const TBuiltInResource*);
+bool CompileFile(char *fileName, ShHandle, int);
 void usage();
 void FreeFileData(char **data);
 char** ReadFileData(char *fileName);
 void LogMsg(char* msg, const char* name, const int num, const char* logName);
-int ShOutputMultipleStrings(char ** );
+
 //Added to accomodate the multiple strings.
 int OutputMultipleStrings = 1;
 
@@ -48,61 +48,77 @@ void GenerateResources(TBuiltInResource& resources)
 
 int main(int argc, char* argv[])
 {
-    int numCompilers = 0;
-    bool compileFailed = false;
+    TFailCode failCode = ESuccess;
+
     int debugOptions = 0;
     bool writeObjectCode = false;
-    int i;
 
-    ShHandle    compilers[EShLangCount];
+    int numCompiles = 0;
+    ShHandle vertexCompiler = 0;
+    ShHandle fragmentCompiler = 0;
 
     ShInitialize();
 
+    TBuiltInResource resources;
+    GenerateResources(resources);
+
     argc--;
     argv++;
-    for (; argc >= 1; argc--, argv++) {
+    for (; (argc >= 1) && (failCode == ESuccess); argc--, argv++) {
         if (argv[0][0] == '-' || argv[0][0] == '/') {
             switch (argv[0][1]) {
-                case 'i': debugOptions |= EDebugOpIntermediate; break;
-                case 'o': writeObjectCode = true; break;
-                default:  usage(); return EFailUsage;
+            case 'i': debugOptions |= EDebugOpIntermediate; break;
+            case 'o': writeObjectCode = true; break;
+            default: failCode = EFailUsage;
             }
         } else {
-            compilers[numCompilers] = ShConstructCompiler(FindLanguage(argv[0]), EShSpecGLES2);
-            if (compilers[numCompilers] == 0)
-                return EFailCompilerCreate;
-            ++numCompilers;
+            ShHandle compiler = 0;
+            switch (FindLanguage(argv[0])) {
+            case EShLangVertex:
+                if (vertexCompiler == 0)
+                    vertexCompiler = ShConstructCompiler(EShLangVertex, EShSpecGLES2, &resources);
+                compiler = vertexCompiler;
+                break;
+            case EShLangFragment:
+                if (fragmentCompiler == 0)
+                    fragmentCompiler = ShConstructCompiler(EShLangFragment, EShSpecGLES2, &resources);
+                compiler = fragmentCompiler;
+                break;
+            default: break;
+            }
+            if (compiler) {
+              bool compiled = CompileFile(argv[0], compiler, debugOptions);
 
-            TBuiltInResource resources;
-            GenerateResources(resources);
-            if (!CompileFile(argv[0], compilers[numCompilers-1], debugOptions, &resources))
-                compileFailed = true;
+              LogMsg("BEGIN", "COMPILER", numCompiles, "INFO LOG");
+              puts(ShGetInfoLog(compiler));
+              LogMsg("END", "COMPILER", numCompiles, "INFO LOG");
+
+              if (compiled && writeObjectCode) {
+                  LogMsg("BEGIN", "COMPILER", numCompiles, "OBJ CODE");
+                  puts(ShGetObjectCode(compiler));
+                  LogMsg("END", "COMPILER", numCompiles, "OBJ CODE");
+              }
+              if (!compiled)
+                  failCode = EFailCompile;
+              ++numCompiles;
+            } else {
+                failCode = EFailCompilerCreate;
+            }
         }
     }
 
-    if (!numCompilers) {
+    if ((vertexCompiler == 0) && (fragmentCompiler == 0))
+        failCode = EFailUsage;
+    if (failCode == EFailUsage)
         usage();
-        return EFailUsage;
-    }
 
-    for (i = 0; i < numCompilers; ++i) {
-        LogMsg("BEGIN", "COMPILER", i, "INFO LOG");
-        puts(ShGetInfoLog(compilers[i]));
-        LogMsg("END", "COMPILER", i, "INFO LOG");
-    }
-    if (writeObjectCode) {
-        for (i = 0; i < numCompilers; ++i) {
-            LogMsg("BEGIN", "COMPILER", i, "OBJ CODE");
-            puts(ShGetObjectCode(compilers[i]));
-            LogMsg("END", "COMPILER", i, "OBJ CODE");
-        }
-    }
-
-    for (i = 0; i < numCompilers; ++i)
-        ShDestruct(compilers[i]);
-
+    if (vertexCompiler)
+        ShDestruct(vertexCompiler);
+    if (fragmentCompiler)
+        ShDestruct(fragmentCompiler);
     ShFinalize();
-    return compileFailed ? EFailCompile : ESuccess;
+
+    return failCode;
 }
 
 //
@@ -133,7 +149,7 @@ static EShLanguage FindLanguage(char *name)
 //
 //   Read a file's data into a string, and compile it using ShCompile
 //
-bool CompileFile(char *fileName, ShHandle compiler, int debugOptions, const TBuiltInResource *resources)
+bool CompileFile(char *fileName, ShHandle compiler, int debugOptions)
 {
     int ret;
     char **data = ReadFileData(fileName);
@@ -141,7 +157,7 @@ bool CompileFile(char *fileName, ShHandle compiler, int debugOptions, const TBui
     if (!data)
         return false;
 
-    ret = ShCompile(compiler, data, OutputMultipleStrings, EShOptNone, resources, debugOptions);
+    ret = ShCompile(compiler, data, OutputMultipleStrings, EShOptNone, debugOptions);
 
     FreeFileData(data);
 
@@ -229,13 +245,3 @@ void LogMsg(char* msg, const char* name, const int num, const char* logName)
         "#### %s %s INFO LOG ####\n", msg, name, num, logName);
 }
 
-int ShOutputMultipleStrings(char** argv)
-{
-    if(!(abs(OutputMultipleStrings = atoi(*argv)))||((OutputMultipleStrings >5 || OutputMultipleStrings < 1)? 1:0)){
-        printf("Invalid Command Line Argument after -c option.\n"
-            "Usage: -c <integer> where integer =[1,5]\n"
-            "This option must be specified before the input file path\n");
-        return 0;
-    }
-    return 1;
-}
