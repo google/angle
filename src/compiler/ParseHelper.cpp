@@ -1410,6 +1410,20 @@ bool InitializeParseContextIndex()
     return true;
 }
 
+bool FreeParseContextIndex()
+{
+    OS_TLSIndex tlsiIndex = GlobalParseContextIndex;
+
+    if (GlobalParseContextIndex == OS_INVALID_TLS_INDEX) {
+        assert(0 && "FreeParseContextIndex(): Parse Context index not initalised");
+        return false;
+    }
+
+    GlobalParseContextIndex = OS_INVALID_TLS_INDEX;
+
+    return OS_FreeTLSIndex(tlsiIndex);
+}
+
 bool InitializeGlobalParseContext()
 {
     if (GlobalParseContextIndex == OS_INVALID_TLS_INDEX) {
@@ -1435,17 +1449,6 @@ bool InitializeGlobalParseContext()
     return true;
 }
 
-TParseContextPointer& GetGlobalParseContext()
-{
-    //
-    // Minimal error checking for speed
-    //
-
-    TThreadParseContext *lpParseContext = static_cast<TThreadParseContext *>(OS_GetTLSValue(GlobalParseContextIndex));
-
-    return lpParseContext->lpGlobalParseContext;
-}
-
 bool FreeParseContext()
 {
     if (GlobalParseContextIndex == OS_INVALID_TLS_INDEX) {
@@ -1460,16 +1463,14 @@ bool FreeParseContext()
     return true;
 }
 
-bool FreeParseContextIndex()
+TParseContextPointer& GetGlobalParseContext()
 {
-    OS_TLSIndex tlsiIndex = GlobalParseContextIndex;
+    //
+    // Minimal error checking for speed
+    //
 
-    if (GlobalParseContextIndex == OS_INVALID_TLS_INDEX) {
-        assert(0 && "FreeParseContextIndex(): Parse Context index not initalised");
-        return false;
-    }
+    TThreadParseContext *lpParseContext = static_cast<TThreadParseContext *>(OS_GetTLSValue(GlobalParseContextIndex));
 
-    GlobalParseContextIndex = OS_INVALID_TLS_INDEX;
-
-    return OS_FreeTLSIndex(tlsiIndex);
+    return lpParseContext->lpGlobalParseContext;
 }
+

@@ -90,9 +90,10 @@ static bool GenerateBuiltInSymbolTable(
 //
 int ShInitialize()
 {
-    bool ret = InitProcess();
+    if (!InitProcess())
+        return 0;
 
-    return ret ? 1 : 0;
+    return 1;
 }
 
 //
@@ -134,6 +135,9 @@ void ShDestruct(ShHandle handle)
 //
 int ShFinalize()
 {
+    if (!DetachProcess())
+        return 0;
+
     return 1;
 }
 
