@@ -70,12 +70,6 @@ GLenum VertexDataManager::preRenderValidate(GLint start, GLsizei count,
 
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
     {
-        if (!activeAttribs[i] && attribs[i].mEnabled && attribs[i].mBoundBuffer != 0 && !mContext->getBuffer(attribs[i].mBoundBuffer))
-            return GL_INVALID_OPERATION;
-    }
-
-    for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
-    {
         translated[i].enabled = activeAttribs[i];
     }
 
