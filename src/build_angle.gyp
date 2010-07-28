@@ -186,6 +186,8 @@
             'libGLESv2/mathutil.h',
             'libGLESv2/Program.cpp',
             'libGLESv2/Program.h',
+            'libGLESv2/RefCountObject.cpp',
+            'libGLESv2/RefCountObject.h',
             'libGLESv2/Renderbuffer.cpp',
             'libGLESv2/Renderbuffer.h',
             'libGLESv2/Shader.cpp',

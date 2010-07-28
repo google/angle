@@ -15,73 +15,133 @@
 
 namespace gl
 {
-unsigned int Renderbuffer::mCurrentSerial = 1;
+unsigned int RenderbufferStorage::mCurrentSerial = 1;
 
-Renderbuffer::Renderbuffer()
+Renderbuffer::Renderbuffer(GLuint id, RenderbufferStorage *storage) : RefCountObject(id)
 {
-    mWidth = 0;
-    mHeight = 0;
-    mFormat = GL_RGBA4; // default format, needs to be one of the expected renderbuffer formats
-    mSerial = issueSerial();
+    ASSERT(storage != NULL);
+    mStorage = storage;
 }
 
 Renderbuffer::~Renderbuffer()
 {
+    delete mStorage;
 }
 
-bool Renderbuffer::isColorbuffer()
+bool Renderbuffer::isColorbuffer() const
 {
-    return false;
+    return mStorage->isColorbuffer();
 }
 
-bool Renderbuffer::isDepthbuffer()
+bool Renderbuffer::isDepthbuffer() const
 {
-    return false;
+    return mStorage->isDepthbuffer();
 }
 
-bool Renderbuffer::isStencilbuffer()
+bool Renderbuffer::isStencilbuffer() const
 {
-    return false;
+    return mStorage->isStencilbuffer();
 }
 
 IDirect3DSurface9 *Renderbuffer::getRenderTarget()
 {
-    return NULL;
+    return mStorage->getRenderTarget();
 }
 
 IDirect3DSurface9 *Renderbuffer::getDepthStencil()
 {
+    return mStorage->getDepthStencil();
+}
+
+int Renderbuffer::getWidth() const
+{
+    return mStorage->getWidth();
+}
+
+int Renderbuffer::getHeight() const
+{
+    return mStorage->getHeight();
+}
+
+GLenum Renderbuffer::getFormat() const
+{
+    return mStorage->getFormat();
+}
+
+unsigned int Renderbuffer::getSerial() const
+{
+    return mStorage->getSerial();
+}
+
+void Renderbuffer::setStorage(RenderbufferStorage *newStorage)
+{
+    ASSERT(newStorage != NULL);
+
+    delete mStorage;
+    mStorage = newStorage;
+}
+
+RenderbufferStorage::RenderbufferStorage()
+{
+    mSerial = issueSerial();
+}
+
+RenderbufferStorage::~RenderbufferStorage()
+{
+}
+
+bool RenderbufferStorage::isColorbuffer() const
+{
+    return false;
+}
+
+bool RenderbufferStorage::isDepthbuffer() const
+{
+    return false;
+}
+
+bool RenderbufferStorage::isStencilbuffer() const
+{
+    return false;
+}
+
+IDirect3DSurface9 *RenderbufferStorage::getRenderTarget()
+{
     return NULL;
 }
 
-int Renderbuffer::getWidth()
+IDirect3DSurface9 *RenderbufferStorage::getDepthStencil()
+{
+    return NULL;
+}
+
+int RenderbufferStorage::getWidth() const
 {
     return mWidth;
 }
 
-int Renderbuffer::getHeight()
+int RenderbufferStorage::getHeight() const
 {
     return mHeight;
 }
 
-void Renderbuffer::setSize(int width, int height)
+void RenderbufferStorage::setSize(int width, int height)
 {
     mWidth = width;
     mHeight = height;
 }
 
-
-GLenum Renderbuffer::getFormat()
+GLenum RenderbufferStorage::getFormat() const
 {
     return mFormat;
 }
 
-unsigned int Renderbuffer::getSerial() const
+unsigned int RenderbufferStorage::getSerial() const
 {
     return mSerial;
 }
 
-unsigned int Renderbuffer::issueSerial()
+unsigned int RenderbufferStorage::issueSerial()
 {
     return mCurrentSerial++;
 }
@@ -105,17 +165,21 @@ Colorbuffer::Colorbuffer(int width, int height, GLenum format)
     IDirect3DDevice9 *device = getDevice();
 
     mRenderTarget = NULL;
-    HRESULT result = device->CreateRenderTarget(width, height, es2dx::ConvertRenderbufferFormat(format), 
-                                                D3DMULTISAMPLE_NONE, 0, FALSE, &mRenderTarget, NULL);
 
-    if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+    if (width > 0 && height > 0)
     {
-        error(GL_OUT_OF_MEMORY);
+        HRESULT result = device->CreateRenderTarget(width, height, es2dx::ConvertRenderbufferFormat(format), 
+                                                    D3DMULTISAMPLE_NONE, 0, FALSE, &mRenderTarget, NULL);
 
-        return;
+        if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+        {
+            error(GL_OUT_OF_MEMORY);
+
+            return;
+        }
+
+        ASSERT(SUCCEEDED(result));
     }
-
-    ASSERT(SUCCEEDED(result));
 
     if (mRenderTarget)
     {
@@ -137,12 +201,12 @@ Colorbuffer::~Colorbuffer()
     }
 }
 
-bool Colorbuffer::isColorbuffer()
+bool Colorbuffer::isColorbuffer() const
 {
     return true;
 }
 
-GLuint Colorbuffer::getRedSize()
+GLuint Colorbuffer::getRedSize() const
 {
     if (mRenderTarget)
     {
@@ -155,7 +219,7 @@ GLuint Colorbuffer::getRedSize()
     return 0;
 }
 
-GLuint Colorbuffer::getGreenSize()
+GLuint Colorbuffer::getGreenSize() const
 {
     if (mRenderTarget)
     {
@@ -168,7 +232,7 @@ GLuint Colorbuffer::getGreenSize()
     return 0;
 }
 
-GLuint Colorbuffer::getBlueSize()
+GLuint Colorbuffer::getBlueSize() const
 {
     if (mRenderTarget)
     {
@@ -181,7 +245,7 @@ GLuint Colorbuffer::getBlueSize()
     return 0;
 }
 
-GLuint Colorbuffer::getAlphaSize()
+GLuint Colorbuffer::getAlphaSize() const
 {
     if (mRenderTarget)
     {
@@ -249,17 +313,17 @@ DepthStencilbuffer::~DepthStencilbuffer()
     }
 }
 
-bool DepthStencilbuffer::isDepthbuffer()
+bool DepthStencilbuffer::isDepthbuffer() const
 {
     return true;
 }
 
-bool DepthStencilbuffer::isStencilbuffer()
+bool DepthStencilbuffer::isStencilbuffer() const
 {
     return true;
 }
 
-GLuint DepthStencilbuffer::getDepthSize()
+GLuint DepthStencilbuffer::getDepthSize() const
 {
     if (mDepthStencil)
     {
@@ -272,7 +336,7 @@ GLuint DepthStencilbuffer::getDepthSize()
     return 0;
 }
 
-GLuint DepthStencilbuffer::getStencilSize()
+GLuint DepthStencilbuffer::getStencilSize() const
 {
     if (mDepthStencil)
     {
@@ -314,12 +378,12 @@ Depthbuffer::~Depthbuffer()
 {
 }
 
-bool Depthbuffer::isDepthbuffer()
+bool Depthbuffer::isDepthbuffer() const
 {
     return true;
 }
 
-bool Depthbuffer::isStencilbuffer()
+bool Depthbuffer::isStencilbuffer() const
 {
     return false;
 }
@@ -352,12 +416,12 @@ Stencilbuffer::~Stencilbuffer()
 {
 }
 
-bool Stencilbuffer::isDepthbuffer()
+bool Stencilbuffer::isDepthbuffer() const
 {
     return false;
 }
 
-bool Stencilbuffer::isStencilbuffer()
+bool Stencilbuffer::isStencilbuffer() const
 {
     return true;
 }

@@ -120,27 +120,19 @@ Context::Context(const egl::Config *config, const gl::Context *shareContext)
     // In order that access to these initial textures not be lost, they are treated as texture
     // objects all of whose names are 0.
 
-    mTexture2DZero = new Texture2D();
-    mTextureCubeMapZero = new TextureCubeMap();
+    mTexture2DZero = new Texture2D(0);
+    mTextureCubeMapZero = new TextureCubeMap(0);
 
     mColorbufferZero = NULL;
     mDepthStencilbufferZero = NULL;
 
     mState.activeSampler = 0;
-    mState.arrayBuffer = 0;
-    mState.elementArrayBuffer = 0;
+    bindArrayBuffer(0);
+    bindElementArrayBuffer(0);
     bindTextureCubeMap(0);
     bindTexture2D(0);
     bindFramebuffer(0);
     bindRenderbuffer(0);
-
-    for (int type = 0; type < SAMPLER_TYPE_COUNT; type++)
-    {
-        for (int sampler = 0; sampler < MAX_TEXTURE_IMAGE_UNITS; sampler++)
-        {
-            mState.samplerTexture[type][sampler] = 0;
-        }
-    }
 
     for (int type = 0; type < SAMPLER_TYPE_COUNT; type++)
     {
@@ -181,26 +173,42 @@ Context::~Context()
         mState.currentProgram = 0;
     }
 
+    while (!mFramebufferMap.empty())
+    {
+        deleteFramebuffer(mFramebufferMap.begin()->first);
+    }
+
+    for (int type = 0; type < SAMPLER_TYPE_COUNT; type++)
+    {
+        for (int sampler = 0; sampler < MAX_TEXTURE_IMAGE_UNITS; sampler++)
+        {
+            mState.samplerTexture[type][sampler].set(NULL);
+        }
+    }
+
     for (int type = 0; type < SAMPLER_TYPE_COUNT; type++)
     {
         delete mIncompleteTextures[type];
     }
 
+    for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
+    {
+        mState.vertexAttribute[i].mBoundBuffer.set(NULL);
+    }
+
+    mState.arrayBuffer.set(NULL);
+    mState.elementArrayBuffer.set(NULL);
+    mState.texture2D.set(NULL);
+    mState.textureCubeMap.set(NULL);
+    mState.renderbuffer.set(NULL);
+
     delete mTexture2DZero;
     delete mTextureCubeMapZero;
-
-    delete mColorbufferZero;
-    delete mDepthStencilbufferZero;
 
     delete mBufferBackEnd;
     delete mVertexDataManager;
     delete mIndexDataManager;
     delete mBlit;
-
-    while (!mFramebufferMap.empty())
-    {
-        deleteFramebuffer(mFramebufferMap.begin()->first);
-    }
 
     if (mMaskedClearSavedState)
     {
@@ -242,17 +250,11 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
     IDirect3DSurface9 *defaultRenderTarget = surface->getRenderTarget();
     IDirect3DSurface9 *depthStencil = surface->getDepthStencil();
 
-    Framebuffer *framebufferZero = new Framebuffer(0);
     Colorbuffer *colorbufferZero = new Colorbuffer(defaultRenderTarget);
     DepthStencilbuffer *depthStencilbufferZero = new DepthStencilbuffer(depthStencil);
+    Framebuffer *framebufferZero = new DefaultFramebuffer(colorbufferZero, depthStencilbufferZero);
 
     setFramebufferZero(framebufferZero);
-    setColorbufferZero(colorbufferZero);
-    setDepthStencilbufferZero(depthStencilbufferZero);
-
-    framebufferZero->setColorbuffer(GL_RENDERBUFFER, 0);
-    framebufferZero->setDepthbuffer(GL_RENDERBUFFER, 0);
-    framebufferZero->setStencilbuffer(GL_RENDERBUFFER, 0);
 
     defaultRenderTarget->Release();
 
@@ -667,12 +669,12 @@ GLuint Context::getFramebufferHandle() const
 
 GLuint Context::getRenderbufferHandle() const
 {
-    return mState.renderbuffer;
+    return mState.renderbuffer.id();
 }
 
 GLuint Context::getArrayBufferHandle() const
 {
-    return mState.arrayBuffer;
+    return mState.arrayBuffer.id();
 }
 
 void Context::setVertexAttribEnabled(unsigned int attribNum, bool enabled)
@@ -685,10 +687,10 @@ const AttributeState &Context::getVertexAttribState(unsigned int attribNum)
     return mState.vertexAttribute[attribNum];
 }
 
-void Context::setVertexAttribState(unsigned int attribNum, GLuint boundBuffer, GLint size, GLenum type, bool normalized,
+void Context::setVertexAttribState(unsigned int attribNum, Buffer *boundBuffer, GLint size, GLenum type, bool normalized,
                                    GLsizei stride, const void *pointer)
 {
-    mState.vertexAttribute[attribNum].mBoundBuffer = boundBuffer;
+    mState.vertexAttribute[attribNum].mBoundBuffer.set(boundBuffer);
     mState.vertexAttribute[attribNum].mSize = size;
     mState.vertexAttribute[attribNum].mType = type;
     mState.vertexAttribute[attribNum].mNormalized = normalized;
@@ -854,39 +856,39 @@ void Context::bindArrayBuffer(unsigned int buffer)
 {
     mResourceManager->checkBufferAllocation(buffer);
 
-    mState.arrayBuffer = buffer;
+    mState.arrayBuffer.set(getBuffer(buffer));
 }
 
 void Context::bindElementArrayBuffer(unsigned int buffer)
 {
     mResourceManager->checkBufferAllocation(buffer);
 
-    mState.elementArrayBuffer = buffer;
+    mState.elementArrayBuffer.set(getBuffer(buffer));
 }
 
 void Context::bindTexture2D(GLuint texture)
 {
     mResourceManager->checkTextureAllocation(texture, SAMPLER_2D);
 
-    mState.texture2D = texture;
+    mState.texture2D.set(getTexture(texture));
 
-    mState.samplerTexture[SAMPLER_2D][mState.activeSampler] = texture;
+    mState.samplerTexture[SAMPLER_2D][mState.activeSampler].set(mState.texture2D.get());
 }
 
 void Context::bindTextureCubeMap(GLuint texture)
 {
     mResourceManager->checkTextureAllocation(texture, SAMPLER_CUBE);
 
-    mState.textureCubeMap = texture;
+    mState.textureCubeMap.set(getTexture(texture));
 
-    mState.samplerTexture[SAMPLER_CUBE][mState.activeSampler] = texture;
+    mState.samplerTexture[SAMPLER_CUBE][mState.activeSampler].set(mState.textureCubeMap.get());
 }
 
 void Context::bindFramebuffer(GLuint framebuffer)
 {
     if (!getFramebuffer(framebuffer))
     {
-        mFramebufferMap[framebuffer] = new Framebuffer(framebuffer);
+        mFramebufferMap[framebuffer] = new Framebuffer();
     }
 
     mState.framebuffer = framebuffer;
@@ -894,7 +896,9 @@ void Context::bindFramebuffer(GLuint framebuffer)
 
 void Context::bindRenderbuffer(GLuint renderbuffer)
 {
-    mState.renderbuffer = renderbuffer;
+    mResourceManager->checkRenderbufferAllocation(renderbuffer);
+
+    mState.renderbuffer.set(getRenderbuffer(renderbuffer));
 }
 
 void Context::useProgram(GLuint program)
@@ -925,22 +929,10 @@ void Context::setFramebufferZero(Framebuffer *buffer)
     mFramebufferMap[0] = buffer;
 }
 
-void Context::setColorbufferZero(Colorbuffer *buffer)
+void Context::setRenderbufferStorage(RenderbufferStorage *renderbuffer)
 {
-    delete mColorbufferZero;
-    mColorbufferZero = buffer;
-}
-
-void Context::setDepthStencilbufferZero(DepthStencilbuffer *buffer)
-{
-    delete mDepthStencilbufferZero;
-    mDepthStencilbufferZero = buffer;
-}
-
-void Context::setRenderbuffer(Renderbuffer *renderbuffer)
-{
-    mResourceManager->deleteRenderbuffer(mState.renderbuffer);
-    mResourceManager->setRenderbuffer(mState.renderbuffer, renderbuffer);
+    Renderbuffer *renderbufferObject = mState.renderbuffer.get();
+    renderbufferObject->setStorage(renderbuffer);
 }
 
 Framebuffer *Context::getFramebuffer(unsigned int handle)
@@ -957,71 +949,14 @@ Framebuffer *Context::getFramebuffer(unsigned int handle)
     }
 }
 
-Colorbuffer *Context::getColorbuffer(GLuint handle)
-{
-    if (handle != 0)
-    {
-        Renderbuffer *renderbuffer = mResourceManager->getRenderbuffer(handle);
-
-        if (renderbuffer && renderbuffer->isColorbuffer())
-        {
-            return static_cast<Colorbuffer*>(renderbuffer);
-        }
-    }
-    else   // Special case: 0 refers to different initial render targets based on the attachment type
-    {
-        return mColorbufferZero;
-    }
-
-    return NULL;
-}
-
-DepthStencilbuffer *Context::getDepthbuffer(GLuint handle)
-{
-    if (handle != 0)
-    {
-        Renderbuffer *renderbuffer = mResourceManager->getRenderbuffer(handle);
-
-        if (renderbuffer && renderbuffer->isDepthbuffer())
-        {
-            return static_cast<DepthStencilbuffer*>(renderbuffer);
-        }
-    }
-    else   // Special case: 0 refers to different initial render targets based on the attachment type
-    {
-        return mDepthStencilbufferZero;
-    }
-
-    return NULL;
-}
-
-DepthStencilbuffer *Context::getStencilbuffer(GLuint handle)
-{
-    if (handle != 0)
-    {
-        Renderbuffer *renderbuffer = mResourceManager->getRenderbuffer(handle);
-
-        if (renderbuffer && renderbuffer->isStencilbuffer())
-        {
-            return static_cast<DepthStencilbuffer*>(renderbuffer);
-        }
-    }
-    else
-    {
-        return mDepthStencilbufferZero;
-    }
-
-    return NULL;
-}
-
 Buffer *Context::getArrayBuffer()
 {
-    return mResourceManager->getBuffer(mState.arrayBuffer);
+    return mState.arrayBuffer.get();
 }
 
 Buffer *Context::getElementArrayBuffer()
 {
-    return mResourceManager->getBuffer(mState.elementArrayBuffer);
+    return mState.elementArrayBuffer.get();
 }
 
 Program *Context::getCurrentProgram()
@@ -1031,27 +966,27 @@ Program *Context::getCurrentProgram()
 
 Texture2D *Context::getTexture2D()
 {
-    if (mState.texture2D == 0)   // Special case: 0 refers to different initial textures based on the target
+    if (mState.texture2D.id() == 0)   // Special case: 0 refers to different initial textures based on the target
     {
         return mTexture2DZero;
     }
 
-    return (Texture2D*)mResourceManager->getTexture(mState.texture2D);
+    return static_cast<Texture2D*>(mState.texture2D.get());
 }
 
 TextureCubeMap *Context::getTextureCubeMap()
 {
-    if (mState.textureCubeMap == 0)   // Special case: 0 refers to different initial textures based on the target
+    if (mState.textureCubeMap.id() == 0)   // Special case: 0 refers to different initial textures based on the target
     {
         return mTextureCubeMapZero;
     }
 
-    return (TextureCubeMap*)mResourceManager->getTexture(mState.textureCubeMap);
+    return static_cast<TextureCubeMap*>(mState.textureCubeMap.get());
 }
 
 Texture *Context::getSamplerTexture(unsigned int sampler, SamplerType type)
 {
-    GLuint texid = mState.samplerTexture[type][sampler];
+    GLuint texid = mState.samplerTexture[type][sampler].id();
 
     if (texid == 0)
     {
@@ -1063,7 +998,7 @@ Texture *Context::getSamplerTexture(unsigned int sampler, SamplerType type)
         }
     }
 
-    return mResourceManager->getTexture(texid);
+    return mState.samplerTexture[type][sampler].get();
 }
 
 bool Context::getBooleanv(GLenum pname, GLboolean *params)
@@ -1160,10 +1095,10 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_NUM_COMPRESSED_TEXTURE_FORMATS:   *params = 0;                                    break;
       case GL_COMPRESSED_TEXTURE_FORMATS: /* no compressed texture formats are supported */     break;
       case GL_SHADER_BINARY_FORMATS:      /* no shader binary formats are supported */          break;
-      case GL_ARRAY_BUFFER_BINDING:             *params = mState.arrayBuffer;                   break;
-      case GL_ELEMENT_ARRAY_BUFFER_BINDING:     *params = mState.elementArrayBuffer;            break;
+      case GL_ARRAY_BUFFER_BINDING:             *params = mState.arrayBuffer.id();              break;
+      case GL_ELEMENT_ARRAY_BUFFER_BINDING:     *params = mState.elementArrayBuffer.id();       break;
       case GL_FRAMEBUFFER_BINDING:              *params = mState.framebuffer;                   break;
-      case GL_RENDERBUFFER_BINDING:             *params = mState.renderbuffer;                  break;
+      case GL_RENDERBUFFER_BINDING:             *params = mState.renderbuffer.id();             break;
       case GL_CURRENT_PROGRAM:                  *params = mState.currentProgram;                break;
       case GL_PACK_ALIGNMENT:                   *params = mState.packAlignment;                 break;
       case GL_UNPACK_ALIGNMENT:                 *params = mState.unpackAlignment;               break;
@@ -1281,7 +1216,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
                 return false;
             }
 
-            *params = mState.samplerTexture[SAMPLER_2D][mState.activeSampler];
+            *params = mState.samplerTexture[SAMPLER_2D][mState.activeSampler].id();
         }
         break;
       case GL_TEXTURE_BINDING_CUBE_MAP:
@@ -1292,7 +1227,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
                 return false;
             }
 
-            *params = mState.samplerTexture[SAMPLER_CUBE][mState.activeSampler];
+            *params = mState.samplerTexture[SAMPLER_CUBE][mState.activeSampler].id();
         }
         break;
       default:
@@ -1852,7 +1787,7 @@ GLenum Context::applyVertexBuffer(const TranslatedIndexData &indexInfo)
 // Applies the indices and element array bindings to the Direct3D 9 device
 GLenum Context::applyIndexBuffer(const void *indices, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo)
 {
-    GLenum err = mIndexDataManager->preRenderValidate(mode, type, count, mResourceManager->getBuffer(mState.elementArrayBuffer), indices, indexInfo);
+    GLenum err = mIndexDataManager->preRenderValidate(mode, type, count, mState.elementArrayBuffer.get(), indices, indexInfo);
 
     if (err == GL_NO_ERROR)
     {
@@ -2608,21 +2543,21 @@ void Context::detachBuffer(GLuint buffer)
     // If a buffer object is deleted while it is bound, all bindings to that object in the current context
     // (i.e. in the thread that called Delete-Buffers) are reset to zero.
 
-    if (mState.arrayBuffer == buffer)
+    if (mState.arrayBuffer.id() == buffer)
     {
-        mState.arrayBuffer = 0;
+        mState.arrayBuffer.set(NULL);
     }
 
-    if (mState.elementArrayBuffer == buffer)
+    if (mState.elementArrayBuffer.id() == buffer)
     {
-        mState.elementArrayBuffer = 0;
+        mState.elementArrayBuffer.set(NULL);
     }
 
     for (int attribute = 0; attribute < MAX_VERTEX_ATTRIBS; attribute++)
     {
-        if (mState.vertexAttribute[attribute].mBoundBuffer == buffer)
+        if (mState.vertexAttribute[attribute].mBoundBuffer.id() == buffer)
         {
-            mState.vertexAttribute[attribute].mBoundBuffer = 0;
+            mState.vertexAttribute[attribute].mBoundBuffer.set(NULL);
         }
     }
 }
@@ -2637,9 +2572,9 @@ void Context::detachTexture(GLuint texture)
     {
         for (int sampler = 0; sampler < MAX_TEXTURE_IMAGE_UNITS; sampler++)
         {
-            if (mState.samplerTexture[type][sampler] == texture)
+            if (mState.samplerTexture[type][sampler].id() == texture)
             {
-                mState.samplerTexture[type][sampler] = 0;
+                mState.samplerTexture[type][sampler].set(NULL);
             }
         }
     }
@@ -2675,7 +2610,7 @@ void Context::detachRenderbuffer(GLuint renderbuffer)
     // If a renderbuffer that is currently bound to RENDERBUFFER is deleted, it is as though BindRenderbuffer
     // had been executed with the target RENDERBUFFER and name of zero.
 
-    if (mState.renderbuffer == renderbuffer)
+    if (mState.renderbuffer.id() == renderbuffer)
     {
         bindRenderbuffer(0);
     }
@@ -2709,7 +2644,7 @@ Texture *Context::getIncompleteTexture(SamplerType type)
 
           case SAMPLER_2D:
             {
-                Texture2D *incomplete2d = new Texture2D();
+                Texture2D *incomplete2d = new Texture2D(Texture::INCOMPLETE_TEXTURE_ID);
                 incomplete2d->setImage(0, GL_RGBA, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, 1, color);
                 t = incomplete2d;
             }
@@ -2717,7 +2652,7 @@ Texture *Context::getIncompleteTexture(SamplerType type)
 
           case SAMPLER_CUBE:
             {
-              TextureCubeMap *incompleteCube = new TextureCubeMap();
+              TextureCubeMap *incompleteCube = new TextureCubeMap(Texture::INCOMPLETE_TEXTURE_ID);
 
               incompleteCube->setImagePosX(0, GL_RGBA, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, 1, color);
               incompleteCube->setImageNegX(0, GL_RGBA, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, 1, color);

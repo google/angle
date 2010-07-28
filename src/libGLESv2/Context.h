@@ -20,6 +20,7 @@
 
 #include "common/angleutils.h"
 #include "libGLESv2/ResourceManager.h"
+#include "libGLESv2/RefCountObject.h"
 
 namespace egl
 {
@@ -41,6 +42,7 @@ class Texture2D;
 class TextureCubeMap;
 class Framebuffer;
 class Renderbuffer;
+class RenderbufferStorage;
 class Colorbuffer;
 class Depthbuffer;
 class Stencilbuffer;
@@ -85,7 +87,7 @@ class AttributeState
 {
   public:
     AttributeState()
-        : mType(GL_FLOAT), mSize(0), mNormalized(false), mStride(0), mPointer(NULL), mBoundBuffer(0), mEnabled(false)
+        : mType(GL_FLOAT), mSize(0), mNormalized(false), mStride(0), mPointer(NULL), mEnabled(false)
     {
         mCurrentValue[0] = 0;
         mCurrentValue[1] = 0;
@@ -100,7 +102,7 @@ class AttributeState
     GLsizei mStride; // 0 means natural stride
     const void *mPointer;
 
-    GLuint mBoundBuffer; // Captured when VertexArrayPointer is called.
+    BindingPointer<Buffer> mBoundBuffer; // Captured when VertexArrayPointer is called.
 
     bool mEnabled; // From Enable/DisableVertexAttribArray
 
@@ -175,16 +177,16 @@ struct State
     bool depthMask;
 
     int activeSampler;   // Active texture unit selector - GL_TEXTURE0
-    GLuint arrayBuffer;
-    GLuint elementArrayBuffer;
-    GLuint texture2D;
-    GLuint textureCubeMap;
+    BindingPointer<Buffer> arrayBuffer;
+    BindingPointer<Buffer> elementArrayBuffer;
+    BindingPointer<Texture> texture2D;
+    BindingPointer<Texture> textureCubeMap;
     GLuint framebuffer;
-    GLuint renderbuffer;
+    BindingPointer<Renderbuffer> renderbuffer;
     GLuint currentProgram;
 
     AttributeState vertexAttribute[MAX_VERTEX_ATTRIBS];
-    GLuint samplerTexture[SAMPLER_TYPE_COUNT][MAX_TEXTURE_IMAGE_UNITS];
+    BindingPointer<Texture> samplerTexture[SAMPLER_TYPE_COUNT][MAX_TEXTURE_IMAGE_UNITS];
 
     GLint unpackAlignment;
     GLint packAlignment;
@@ -278,7 +280,7 @@ class Context
 
     void setVertexAttribEnabled(unsigned int attribNum, bool enabled);
     const AttributeState &getVertexAttribState(unsigned int attribNum);
-    void setVertexAttribState(unsigned int attribNum, GLuint boundBuffer, GLint size, GLenum type,
+    void setVertexAttribState(unsigned int attribNum, Buffer *boundBuffer, GLint size, GLenum type,
                               bool normalized, GLsizei stride, const void *pointer);
     const void *getVertexAttribPointer(unsigned int attribNum) const;
 
@@ -303,7 +305,7 @@ class Context
     void deleteProgram(GLuint program);
     void deleteTexture(GLuint texture);
     void deleteRenderbuffer(GLuint renderbuffer);
-    
+
     // Framebuffers are owned by the Context, so these methods do not pass through
     GLuint createFramebuffer();
     void deleteFramebuffer(GLuint framebuffer);
@@ -317,9 +319,8 @@ class Context
     void useProgram(GLuint program);
 
     void setFramebufferZero(Framebuffer *framebuffer);
-    void setColorbufferZero(Colorbuffer *renderbuffer);
-    void setDepthStencilbufferZero(DepthStencilbuffer *depthStencilBuffer);
-    void setRenderbuffer(Renderbuffer *renderbuffer);
+
+    void setRenderbufferStorage(RenderbufferStorage *renderbuffer);
 
     void setVertexAttrib(GLuint index, const GLfloat *values);
 
@@ -329,9 +330,6 @@ class Context
     Texture *getTexture(GLuint handle);
     Framebuffer *getFramebuffer(GLuint handle);
     Renderbuffer *getRenderbuffer(GLuint handle);
-    Colorbuffer *getColorbuffer(GLuint handle);
-    DepthStencilbuffer *getDepthbuffer(GLuint handle);
-    DepthStencilbuffer *getStencilbuffer(GLuint handle);
 
     Buffer *getArrayBuffer();
     Buffer *getElementArrayBuffer();

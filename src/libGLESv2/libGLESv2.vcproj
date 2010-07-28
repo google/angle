@@ -217,6 +217,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\RefCountObject.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Renderbuffer.cpp"
 				>
 			</File>
@@ -300,6 +304,10 @@
 			</File>
 			<File
 				RelativePath=".\Program.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RefCountObject.h"
 				>
 			</File>
 			<File

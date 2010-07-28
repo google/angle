@@ -128,9 +128,9 @@ GLenum VertexDataManager::preRenderValidate(GLint start, GLsizei count,
             void *output = mStreamBuffer->map(spaceRequired(attribs[i], count), &translated[i].offset);
 
             const void *input;
-            if (attribs[i].mBoundBuffer)
+            if (attribs[i].mBoundBuffer.get())
             {
-                Buffer *buffer = mContext->getBuffer(attribs[i].mBoundBuffer);
+                Buffer *buffer = attribs[i].mBoundBuffer.get();
 
                 size_t offset = reinterpret_cast<size_t>(attribs[i].mPointer);
 

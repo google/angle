@@ -146,14 +146,13 @@ GLuint ResourceManager::createRenderbuffer()
     return handle;
 }
 
-// FIXME: shared object deletion needs handling
 void ResourceManager::deleteBuffer(GLuint buffer)
 {
     BufferMap::iterator bufferObject = mBufferMap.find(buffer);
 
     if (bufferObject != mBufferMap.end())
     {
-        delete bufferObject->second;
+        if (bufferObject->second) bufferObject->second->release();
         mBufferMap.erase(bufferObject);
     }
 }
@@ -194,30 +193,24 @@ void ResourceManager::deleteProgram(GLuint program)
     }
 }
 
-// FIXME: shared object deletion needs handling
 void ResourceManager::deleteTexture(GLuint texture)
 {
     TextureMap::iterator textureObject = mTextureMap.find(texture);
 
     if (textureObject != mTextureMap.end())
     {
-        if (texture != 0)
-        {
-            delete textureObject->second;
-        }
-
+        if (textureObject->second) textureObject->second->release();
         mTextureMap.erase(textureObject);
     }
 }
 
-// FIXME: shared object deletion needs handling
 void ResourceManager::deleteRenderbuffer(GLuint renderbuffer)
 {
     RenderbufferMap::iterator renderbufferObject = mRenderbufferMap.find(renderbuffer);
 
     if (renderbufferObject != mRenderbufferMap.end())
     {
-        delete renderbufferObject->second;
+        if (renderbufferObject->second) renderbufferObject->second->release();
         mRenderbufferMap.erase(renderbufferObject);
     }
 }
@@ -303,7 +296,9 @@ void ResourceManager::checkBufferAllocation(unsigned int buffer)
 {
     if (buffer != 0 && !getBuffer(buffer))
     {
-        mBufferMap[buffer] = new Buffer();
+        Buffer *bufferObject = new Buffer(buffer);
+        mBufferMap[buffer] = bufferObject;
+        bufferObject->addRef();
     }
 }
 
@@ -311,14 +306,24 @@ void ResourceManager::checkTextureAllocation(GLuint texture, SamplerType type)
 {
     if (!getTexture(texture) && texture != 0)
     {
+        Texture *textureObject;
+
         if (type == SAMPLER_2D)
         {
-            mTextureMap[texture] = new Texture2D();
+            textureObject = new Texture2D(texture);
         }
         else if (type == SAMPLER_CUBE)
         {
-            mTextureMap[texture] = new TextureCubeMap();
+            textureObject = new TextureCubeMap(texture);
         }
+        else
+        {
+            UNREACHABLE();
+            return;
+        }
+
+        mTextureMap[texture] = textureObject;
+        textureObject->addRef();
     }
 }
 
@@ -326,7 +331,9 @@ void ResourceManager::checkRenderbufferAllocation(GLuint renderbuffer)
 {
     if (renderbuffer != 0 && !getRenderbuffer(renderbuffer))
     {
-        mRenderbufferMap[renderbuffer] = new Renderbuffer();
+        Renderbuffer *renderbufferObject = new Renderbuffer(renderbuffer, new Colorbuffer(0, 0, GL_RGBA4));
+        mRenderbufferMap[renderbuffer] = renderbufferObject;
+        renderbufferObject->addRef();
     }
 }
 
