@@ -113,8 +113,7 @@ Context::Context(const egl::Config *config)
     mTextureCubeMapZero = new TextureCubeMap(this);
 
     mColorbufferZero = NULL;
-    mDepthbufferZero = NULL;
-    mStencilbufferZero = NULL;
+    mDepthStencilbufferZero = NULL;
 
     mState.activeSampler = 0;
     mState.arrayBuffer = 0;
@@ -172,8 +171,7 @@ Context::~Context()
     delete mTextureCubeMapZero;
 
     delete mColorbufferZero;
-    delete mDepthbufferZero;
-    delete mStencilbufferZero;
+    delete mDepthStencilbufferZero;
 
     delete mBufferBackEnd;
     delete mVertexDataManager;
@@ -250,13 +248,11 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 
     Framebuffer *framebufferZero = new Framebuffer();
     Colorbuffer *colorbufferZero = new Colorbuffer(defaultRenderTarget);
-    Depthbuffer *depthbufferZero = new Depthbuffer(depthStencil);
-    Stencilbuffer *stencilbufferZero = new Stencilbuffer(depthStencil);
+    DepthStencilbuffer *depthStencilbufferZero = new DepthStencilbuffer(depthStencil);
 
     setFramebufferZero(framebufferZero);
     setColorbufferZero(colorbufferZero);
-    setDepthbufferZero(depthbufferZero);
-    setStencilbufferZero(stencilbufferZero);
+    setDepthStencilbufferZero(depthStencilbufferZero);
 
     framebufferZero->setColorbuffer(GL_RENDERBUFFER, 0);
     framebufferZero->setDepthbuffer(GL_RENDERBUFFER, 0);
@@ -1008,16 +1004,10 @@ void Context::setColorbufferZero(Colorbuffer *buffer)
     mColorbufferZero = buffer;
 }
 
-void Context::setDepthbufferZero(Depthbuffer *buffer)
+void Context::setDepthStencilbufferZero(DepthStencilbuffer *buffer)
 {
-    delete mDepthbufferZero;
-    mDepthbufferZero = buffer;
-}
-
-void Context::setStencilbufferZero(Stencilbuffer *buffer)
-{
-    delete mStencilbufferZero;
-    mStencilbufferZero = buffer;
+    delete mDepthStencilbufferZero;
+    mDepthStencilbufferZero = buffer;
 }
 
 void Context::setRenderbuffer(Renderbuffer *buffer)
@@ -1131,7 +1121,7 @@ Colorbuffer *Context::getColorbuffer(GLuint handle)
     return NULL;
 }
 
-Depthbuffer *Context::getDepthbuffer(GLuint handle)
+DepthStencilbuffer *Context::getDepthbuffer(GLuint handle)
 {
     if (handle != 0)
     {
@@ -1139,18 +1129,18 @@ Depthbuffer *Context::getDepthbuffer(GLuint handle)
 
         if (renderbuffer && renderbuffer->isDepthbuffer())
         {
-            return static_cast<Depthbuffer*>(renderbuffer);
+            return static_cast<DepthStencilbuffer*>(renderbuffer);
         }
     }
     else   // Special case: 0 refers to different initial render targets based on the attachment type
     {
-        return mDepthbufferZero;
+        return mDepthStencilbufferZero;
     }
 
     return NULL;
 }
 
-Stencilbuffer *Context::getStencilbuffer(GLuint handle)
+DepthStencilbuffer *Context::getStencilbuffer(GLuint handle)
 {
     if (handle != 0)
     {
@@ -1158,12 +1148,12 @@ Stencilbuffer *Context::getStencilbuffer(GLuint handle)
 
         if (renderbuffer && renderbuffer->isStencilbuffer())
         {
-            return static_cast<Stencilbuffer*>(renderbuffer);
+            return static_cast<DepthStencilbuffer*>(renderbuffer);
         }
     }
     else
     {
-        return mStencilbufferZero;
+        return mDepthStencilbufferZero;
     }
 
     return NULL;
@@ -1406,7 +1396,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_DEPTH_BITS:
         {
             gl::Framebuffer *framebuffer = getFramebuffer();
-            gl::Depthbuffer *depthbuffer = framebuffer->getDepthbuffer();
+            gl::DepthStencilbuffer *depthbuffer = framebuffer->getDepthbuffer();
 
             if (depthbuffer)
             {
@@ -1421,7 +1411,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_STENCIL_BITS:
         {
             gl::Framebuffer *framebuffer = getFramebuffer();
-            gl::Stencilbuffer *stencilbuffer = framebuffer->getStencilbuffer();
+            gl::DepthStencilbuffer *stencilbuffer = framebuffer->getStencilbuffer();
 
             if (stencilbuffer)
             {
@@ -1627,7 +1617,7 @@ bool Context::applyRenderTarget(bool ignoreViewport)
     }
 
     IDirect3DSurface9 *renderTarget = framebufferObject->getRenderTarget();
-    IDirect3DSurface9 *depthStencil = framebufferObject->getDepthStencil();
+    IDirect3DSurface9 *depthStencil = NULL;
 
     unsigned int renderTargetSerial = framebufferObject->getRenderTargetSerial();
     if (renderTargetSerial != mAppliedRenderTargetSerial)
@@ -1636,11 +1626,25 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         mAppliedRenderTargetSerial = renderTargetSerial;
     }
 
-    unsigned int depthbufferSerial = framebufferObject->getDepthbufferSerial();
-    if (depthbufferSerial != mAppliedDepthbufferSerial)
+    unsigned int depthbufferSerial = 0;
+    unsigned int stencilbufferSerial = 0;
+    if (framebufferObject->getDepthbufferType() != GL_NONE)
+    {
+        depthStencil = framebufferObject->getDepthbuffer()->getDepthStencil();
+        depthbufferSerial = framebufferObject->getDepthbuffer()->getSerial();
+    }
+    else if (framebufferObject->getStencilbufferType() != GL_NONE)
+    {
+        depthStencil = framebufferObject->getStencilbuffer()->getDepthStencil();
+        stencilbufferSerial = framebufferObject->getStencilbuffer()->getSerial();
+    }
+
+    if (depthbufferSerial != mAppliedDepthbufferSerial ||
+        stencilbufferSerial != mAppliedStencilbufferSerial)
     {
         device->SetDepthStencilSurface(depthStencil);
         mAppliedDepthbufferSerial = depthbufferSerial;
+        mAppliedStencilbufferSerial = stencilbufferSerial;
     }
 
     D3DVIEWPORT9 viewport;
@@ -1739,6 +1743,8 @@ void Context::applyState(GLenum drawMode)
     GLint alwaysFront = !isTriangleMode(drawMode);
     programObject->setUniform1iv(pointsOrLines, 1, &alwaysFront);
 
+    Framebuffer *framebufferObject = getFramebuffer();
+
     if (mCullStateDirty || mFrontFaceDirty)
     {
         if (mState.cullFace)
@@ -1755,7 +1761,7 @@ void Context::applyState(GLenum drawMode)
 
     if (mDepthStateDirty)
     {
-        if (mState.depthTest)
+        if (mState.depthTest && framebufferObject->getDepthbufferType() != GL_NONE)
         {
             device->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
             device->SetRenderState(D3DRS_ZFUNC, es2dx::ConvertComparison(mState.depthFunc));
@@ -1836,7 +1842,7 @@ void Context::applyState(GLenum drawMode)
 
             // get the maximum size of the stencil ref
             gl::Framebuffer *framebuffer = getFramebuffer();
-            gl::Stencilbuffer *stencilbuffer = framebuffer->getStencilbuffer();
+            gl::DepthStencilbuffer *stencilbuffer = framebuffer->getStencilbuffer();
             GLuint maxStencil = (1 << stencilbuffer->getStencilSize()) - 1;
 
             device->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILWRITEMASK : D3DRS_CCW_STENCILWRITEMASK, mState.stencilWritemask);
@@ -1888,7 +1894,7 @@ void Context::applyState(GLenum drawMode)
     {
         if (mState.polygonOffsetFill)
         {
-            gl::Depthbuffer *depthbuffer = getFramebuffer()->getDepthbuffer();
+            gl::DepthStencilbuffer *depthbuffer = getFramebuffer()->getDepthbuffer();
             if (depthbuffer)
             {
                 device->SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, *((DWORD*)&mState.polygonOffsetFactor));
@@ -2290,22 +2296,24 @@ void Context::clear(GLbitfield mask)
         }
     }
 
-    IDirect3DSurface9 *depthStencil = framebufferObject->getDepthStencil();
-
     GLuint stencilUnmasked = 0x0;
 
-    if ((mask & GL_STENCIL_BUFFER_BIT) && depthStencil)
+    if (mask & GL_STENCIL_BUFFER_BIT)
     {
-        D3DSURFACE_DESC desc;
-        depthStencil->GetDesc(&desc);
-
         mask &= ~GL_STENCIL_BUFFER_BIT;
-        unsigned int stencilSize = es2dx::GetStencilSize(desc.Format);
-        stencilUnmasked = (0x1 << stencilSize) - 1;
-
-        if (stencilUnmasked != 0x0)
+        if (framebufferObject->getStencilbufferType() != GL_NONE)
         {
-            flags |= D3DCLEAR_STENCIL;
+            IDirect3DSurface9 *depthStencil = framebufferObject->getStencilbuffer()->getDepthStencil();
+            D3DSURFACE_DESC desc;
+            depthStencil->GetDesc(&desc);
+
+            unsigned int stencilSize = es2dx::GetStencilSize(desc.Format);
+            stencilUnmasked = (0x1 << stencilSize) - 1;
+
+            if (stencilUnmasked != 0x0)
+            {
+                flags |= D3DCLEAR_STENCIL;
+            }
         }
     }
 
@@ -2901,9 +2909,9 @@ bool Context::hasStencil()
 {
     Framebuffer *framebufferObject = getFramebuffer();
 
-    if (framebufferObject)
+    if (framebufferObject && framebufferObject->getStencilbufferType() != GL_NONE)
     {
-        Stencilbuffer *stencilbufferObject = framebufferObject->getStencilbuffer();
+        DepthStencilbuffer *stencilbufferObject = framebufferObject->getStencilbuffer();
 
         if (stencilbufferObject)
         {
@@ -2928,6 +2936,8 @@ void Context::setVertexAttrib(GLuint index, const GLfloat *values)
 
 void Context::initExtensionString()
 {
+    mExtensionString += "GL_OES_packed_depth_stencil ";
+
     if (mBufferBackEnd->supportIntIndices())
     {
         mExtensionString += "GL_OES_element_index_uint ";

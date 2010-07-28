@@ -78,7 +78,28 @@ class Colorbuffer : public Renderbuffer
     DISALLOW_COPY_AND_ASSIGN(Colorbuffer);
 };
 
-class Depthbuffer : public Renderbuffer
+class DepthStencilbuffer : public Renderbuffer
+{
+  public:
+    explicit DepthStencilbuffer(IDirect3DSurface9 *depthStencil);
+    DepthStencilbuffer(int width, int height);
+
+    ~DepthStencilbuffer();
+
+    virtual bool isDepthbuffer();
+    virtual bool isStencilbuffer();
+
+    GLuint getDepthSize();
+    GLuint getStencilSize();
+
+    IDirect3DSurface9 *getDepthStencil();
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(DepthStencilbuffer);
+    IDirect3DSurface9 *mDepthStencil;
+};
+
+class Depthbuffer : public DepthStencilbuffer
 {
   public:
     explicit Depthbuffer(IDirect3DSurface9 *depthStencil);
@@ -87,17 +108,13 @@ class Depthbuffer : public Renderbuffer
     ~Depthbuffer();
 
     bool isDepthbuffer();
-
-    GLuint getDepthSize();
-
-    IDirect3DSurface9 *getDepthStencil();
+    bool isStencilbuffer();
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Depthbuffer);
-    IDirect3DSurface9 *mDepthStencil;
 };
 
-class Stencilbuffer : public Renderbuffer
+class Stencilbuffer : public DepthStencilbuffer
 {
   public:
     explicit Stencilbuffer(IDirect3DSurface9 *depthStencil);
@@ -105,15 +122,11 @@ class Stencilbuffer : public Renderbuffer
 
     ~Stencilbuffer();
 
+    bool isDepthbuffer();
     bool isStencilbuffer();
-
-    GLuint getStencilSize();
-
-    IDirect3DSurface9 *getDepthStencil();
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Stencilbuffer);
-    IDirect3DSurface9 *mDepthStencil;
 };
 }
 

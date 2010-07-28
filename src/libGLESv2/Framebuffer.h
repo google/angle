@@ -21,6 +21,7 @@ namespace gl
 class Colorbuffer;
 class Depthbuffer;
 class Stencilbuffer;
+class DepthStencilbuffer;
 
 class Framebuffer
 {
@@ -43,8 +44,8 @@ class Framebuffer
     unsigned int getDepthbufferSerial();
 
     Colorbuffer *getColorbuffer();
-    Depthbuffer *getDepthbuffer();
-    Stencilbuffer *getStencilbuffer();
+    DepthStencilbuffer *getDepthbuffer();
+    DepthStencilbuffer *getStencilbuffer();
 
     GLenum getColorbufferType();
     GLenum getDepthbufferType();

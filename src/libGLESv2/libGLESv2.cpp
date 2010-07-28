@@ -3543,6 +3543,7 @@ void __stdcall glRenderbufferStorage(GLenum target, GLenum internalformat, GLsiz
           case GL_RGB5_A1:
           case GL_RGB565:
           case GL_STENCIL_INDEX8:
+          case GL_DEPTH24_STENCIL8_OES:
             break;
           default:
             return error(GL_INVALID_ENUM);
@@ -3574,6 +3575,9 @@ void __stdcall glRenderbufferStorage(GLenum target, GLenum internalformat, GLsiz
                 break;
               case GL_STENCIL_INDEX8:
                 context->setRenderbuffer(new gl::Stencilbuffer(width, height));
+                break;
+              case GL_DEPTH24_STENCIL8_OES:
+                context->setRenderbuffer(new gl::DepthStencilbuffer(width, height));
                 break;
               default:
                 return error(GL_INVALID_ENUM);

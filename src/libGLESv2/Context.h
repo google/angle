@@ -43,6 +43,7 @@ class Renderbuffer;
 class Colorbuffer;
 class Depthbuffer;
 class Stencilbuffer;
+class DepthStencilbuffer;
 class VertexDataManager;
 class IndexDataManager;
 class BufferBackEnd;
@@ -320,8 +321,7 @@ class Context
 
     void setFramebufferZero(Framebuffer *framebuffer);
     void setColorbufferZero(Colorbuffer *renderbuffer);
-    void setDepthbufferZero(Depthbuffer *depthBuffer);
-    void setStencilbufferZero(Stencilbuffer *stencilBuffer);
+    void setDepthStencilbufferZero(DepthStencilbuffer *depthStencilBuffer);
     void setRenderbuffer(Renderbuffer *renderbuffer);
 
     void setVertexAttrib(GLuint index, const GLfloat *values);
@@ -333,8 +333,8 @@ class Context
     Framebuffer *getFramebuffer(GLuint handle);
     Renderbuffer *getRenderbuffer(GLuint handle);
     Colorbuffer *getColorbuffer(GLuint handle);
-    Depthbuffer *getDepthbuffer(GLuint handle);
-    Stencilbuffer *getStencilbuffer(GLuint handle);
+    DepthStencilbuffer *getDepthbuffer(GLuint handle);
+    DepthStencilbuffer *getStencilbuffer(GLuint handle);
 
     Buffer *getArrayBuffer();
     Buffer *getElementArrayBuffer();
@@ -405,8 +405,7 @@ class Context
     TextureCubeMap *mTextureCubeMapZero;
 
     Colorbuffer *mColorbufferZero;
-    Depthbuffer *mDepthbufferZero;
-    Stencilbuffer *mStencilbufferZero;
+    DepthStencilbuffer *mDepthStencilbufferZero;
 
     typedef std::map<GLuint, Buffer*> BufferMap;
     BufferMap mBufferMap;
@@ -449,6 +448,7 @@ class Context
     unsigned int mAppliedProgram;
     unsigned int mAppliedRenderTargetSerial;
     unsigned int mAppliedDepthbufferSerial;
+    unsigned int mAppliedStencilbufferSerial;
 
     bool mSupportsShaderModel3;
 
