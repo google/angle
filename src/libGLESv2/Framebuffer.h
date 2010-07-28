@@ -26,7 +26,7 @@ class DepthStencilbuffer;
 class Framebuffer
 {
   public:
-    Framebuffer();
+    explicit Framebuffer(GLuint handle);
 
     ~Framebuffer();
 
@@ -68,6 +68,8 @@ class Framebuffer
 
     GLuint mStencilbufferHandle;
     GLenum mStencilbufferType;
+
+    GLuint mHandle;
 };
 }
 

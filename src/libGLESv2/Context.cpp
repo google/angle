@@ -236,7 +236,7 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
     IDirect3DSurface9 *defaultRenderTarget = surface->getRenderTarget();
     IDirect3DSurface9 *depthStencil = surface->getDepthStencil();
 
-    Framebuffer *framebufferZero = new Framebuffer();
+    Framebuffer *framebufferZero = new Framebuffer(0);
     Colorbuffer *colorbufferZero = new Colorbuffer(defaultRenderTarget);
     DepthStencilbuffer *depthStencilbufferZero = new DepthStencilbuffer(depthStencil);
 
@@ -874,7 +874,7 @@ void Context::bindFramebuffer(GLuint framebuffer)
 {
     if (!getFramebuffer(framebuffer))
     {
-        mFramebufferMap[framebuffer] = new Framebuffer();
+        mFramebufferMap[framebuffer] = new Framebuffer(framebuffer);
     }
 
     mState.framebuffer = framebuffer;

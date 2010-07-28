@@ -16,7 +16,7 @@
 
 namespace gl
 {
-Framebuffer::Framebuffer()
+    Framebuffer::Framebuffer(GLuint handle) : mHandle(handle)
 {
     mColorbufferType = GL_NONE;
     mColorbufferHandle = 0;
@@ -225,84 +225,91 @@ GLenum Framebuffer::completeness()
     int width = 0;
     int height = 0;
 
-    if (mColorbufferType != GL_NONE)
+    if (mHandle != 0)
     {
-        Colorbuffer *colorbuffer = getColorbuffer();
-
-        if (!colorbuffer)
+        if (mColorbufferType != GL_NONE)
         {
-            return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
+            Colorbuffer *colorbuffer = getColorbuffer();
+
+            if (!colorbuffer)
+            {
+                return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
+            }
+
+            if (colorbuffer->getWidth() == 0 || colorbuffer->getHeight() == 0)
+            {
+                return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
+            }
+
+            width = colorbuffer->getWidth();
+            height = colorbuffer->getHeight();
+        }
+        else
+        {
+            return GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT;
         }
 
-        if (colorbuffer->getWidth() == 0 || colorbuffer->getHeight() == 0)
+        DepthStencilbuffer *depthbuffer = NULL;
+        DepthStencilbuffer *stencilbuffer = NULL;
+
+        if (mDepthbufferType != GL_NONE)
         {
-            return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
+            depthbuffer = context->getDepthbuffer(mDepthbufferHandle);
+
+            if (!depthbuffer)
+            {
+                return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
+            }
+
+            if (depthbuffer->getWidth() == 0 || depthbuffer->getHeight() == 0)
+            {
+                return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
+            }
+
+            if (width == 0)
+            {
+                width = depthbuffer->getWidth();
+                height = depthbuffer->getHeight();
+            }
+            else if (width != depthbuffer->getWidth() || height != depthbuffer->getHeight())
+            {
+                return GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS;
+            }
         }
 
-        width = colorbuffer->getWidth();
-        height = colorbuffer->getHeight();
-    }
-
-    DepthStencilbuffer *depthbuffer = NULL;
-    DepthStencilbuffer *stencilbuffer = NULL;
-
-    if (mDepthbufferType != GL_NONE)
-    {
-        depthbuffer = context->getDepthbuffer(mDepthbufferHandle);
-
-        if (!depthbuffer)
+        if (mStencilbufferType != GL_NONE)
         {
-            return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
+            stencilbuffer = context->getStencilbuffer(mStencilbufferHandle);
+
+            if (!stencilbuffer)
+            {
+                return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
+            }
+
+            if (stencilbuffer->getWidth() == 0 || stencilbuffer->getHeight() == 0)
+            {
+                return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
+            }
+
+            if (width == 0)
+            {
+                width = stencilbuffer->getWidth();
+                height = stencilbuffer->getHeight();
+            }
+            else if (width != stencilbuffer->getWidth() || height != stencilbuffer->getHeight())
+            {
+                return GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS;
+            }
         }
 
-        if (depthbuffer->getWidth() == 0 || depthbuffer->getHeight() == 0)
+        if (mDepthbufferType == GL_RENDERBUFFER && mStencilbufferType == GL_RENDERBUFFER)
         {
-            return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
-        }
-
-        if (width == 0)
-        {
-            width = depthbuffer->getWidth();
-            height = depthbuffer->getHeight();
-        }
-        else if (width != depthbuffer->getWidth() || height != depthbuffer->getHeight())
-        {
-            return GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS;
-        }
-    }
-
-    if (mStencilbufferType != GL_NONE)
-    {
-        stencilbuffer = context->getStencilbuffer(mStencilbufferHandle);
-
-        if (!stencilbuffer)
-        {
-            return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
-        }
-
-        if (stencilbuffer->getWidth() == 0 || stencilbuffer->getHeight() == 0)
-        {
-            return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
-        }
-
-        if (width == 0)
-        {
-            width = stencilbuffer->getWidth();
-            height = stencilbuffer->getHeight();
-        }
-        else if (width != stencilbuffer->getWidth() || height != stencilbuffer->getHeight())
-        {
-            return GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS;
-        }
-    }
-
-    if (mDepthbufferType == GL_RENDERBUFFER && mStencilbufferType == GL_RENDERBUFFER)
-    {
-        if (depthbuffer->getFormat() != GL_DEPTH24_STENCIL8_OES ||
-            stencilbuffer->getFormat() != GL_DEPTH24_STENCIL8_OES ||
-            depthbuffer->getSerial() != stencilbuffer->getSerial())
-        {
-            return GL_FRAMEBUFFER_UNSUPPORTED;
+            if (depthbuffer->getFormat() != GL_DEPTH24_STENCIL8_OES ||
+                stencilbuffer->getFormat() != GL_DEPTH24_STENCIL8_OES ||
+                depthbuffer->getSerial() != stencilbuffer->getSerial())
+            {
+                return GL_FRAMEBUFFER_UNSUPPORTED;
+            }
         }
     }
 
