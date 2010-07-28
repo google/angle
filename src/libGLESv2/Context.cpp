@@ -1928,6 +1928,12 @@ void Context::applyTextures()
 void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, void* pixels)
 {
     Framebuffer *framebuffer = getFramebuffer();
+
+    if (framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
+    {
+        return error(GL_INVALID_FRAMEBUFFER_OPERATION);
+    }
+
     IDirect3DSurface9 *renderTarget = framebuffer->getRenderTarget();
     IDirect3DDevice9 *device = getDevice();
 

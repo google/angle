@@ -848,7 +848,13 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
 
         if (context)
         {
-            gl::Renderbuffer *source = context->getFramebuffer()->getColorbuffer();
+            gl::Framebuffer *framebuffer = context->getFramebuffer();
+            if (framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
+            {
+                return error(GL_INVALID_FRAMEBUFFER_OPERATION);
+            }
+
+            gl::Renderbuffer *source = framebuffer->getColorbuffer();
 
             if (target == GL_TEXTURE_2D)
             {
@@ -916,7 +922,13 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
 
         if (context)
         {
-            gl::Renderbuffer *source = context->getFramebuffer()->getColorbuffer();
+            gl::Framebuffer *framebuffer = context->getFramebuffer();
+            if (framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
+            {
+                return error(GL_INVALID_FRAMEBUFFER_OPERATION);
+            }
+
+            gl::Renderbuffer *source = framebuffer->getColorbuffer();
 
             if (target == GL_TEXTURE_2D)
             {
