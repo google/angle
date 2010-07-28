@@ -32,7 +32,7 @@ Texture::Image::~Image()
   if (surface) surface->Release();
 }
 
-Texture::Texture(Context *context) : mContext(context)
+Texture::Texture()
 {
     mMinFilter = GL_NEAREST_MIPMAP_LINEAR;
     mMagFilter = GL_LINEAR;
@@ -51,7 +51,8 @@ Texture::~Texture()
 
 Blit *Texture::getBlitter()
 {
-    return mContext->getBlitter();
+    Context *context = getContext();
+    return context->getBlitter();
 }
 
 // Returns true on successful filter state update (valid enum parameter)
@@ -442,7 +443,7 @@ int Texture::levelCount() const
     return mBaseTexture ? mBaseTexture->GetLevelCount() : 0;
 }
 
-Texture2D::Texture2D(Context *context) : Texture(context)
+Texture2D::Texture2D()
 {
     mTexture = NULL;
     mColorbufferProxy = NULL;
@@ -898,7 +899,7 @@ IDirect3DSurface9 *Texture2D::getRenderTarget(GLenum target)
     return renderTarget;
 }
 
-TextureCubeMap::TextureCubeMap(Context *context) : Texture(context)
+TextureCubeMap::TextureCubeMap()
 {
     mTexture = NULL;
 

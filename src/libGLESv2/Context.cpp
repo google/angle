@@ -17,6 +17,7 @@
 #include "libGLESv2/mathutil.h"
 #include "libGLESv2/utilities.h"
 #include "libGLESv2/Blit.h"
+#include "libGLESv2/ResourceManager.h"
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/FrameBuffer.h"
 #include "libGLESv2/Program.h"
@@ -103,14 +104,17 @@ Context::Context(const egl::Config *config)
     mState.colorMaskAlpha = true;
     mState.depthMask = true;
 
+    // FIXME: Resource managers should get managed with context sharing
+    mResourceManager = new ResourceManager();
+
     // [OpenGL ES 2.0.24] section 3.7 page 83:
     // In the initial state, TEXTURE_2D and TEXTURE_CUBE_MAP have twodimensional
     // and cube map texture state vectors respectively associated with them.
     // In order that access to these initial textures not be lost, they are treated as texture
     // objects all of whose names are 0.
 
-    mTexture2DZero = new Texture2D(this);
-    mTextureCubeMapZero = new TextureCubeMap(this);
+    mTexture2DZero = new Texture2D();
+    mTextureCubeMapZero = new TextureCubeMap();
 
     mColorbufferZero = NULL;
     mDepthStencilbufferZero = NULL;
@@ -160,7 +164,15 @@ Context::Context(const egl::Config *config)
 
 Context::~Context()
 {
-    mState.currentProgram = 0;
+    if (mState.currentProgram != 0)
+    {
+        Program *programObject = mResourceManager->getProgram(mState.currentProgram);
+        if (programObject)
+        {
+            programObject->release();
+        }
+        mState.currentProgram = 0;
+    }
 
     for (int type = 0; type < SAMPLER_TYPE_COUNT; type++)
     {
@@ -178,40 +190,18 @@ Context::~Context()
     delete mIndexDataManager;
     delete mBlit;
 
-    while (!mBufferMap.empty())
-    {
-        deleteBuffer(mBufferMap.begin()->first);
-    }
-
-    while (!mProgramMap.empty())
-    {
-        deleteProgram(mProgramMap.begin()->first);
-    }
-
-    while (!mShaderMap.empty())
-    {
-        deleteShader(mShaderMap.begin()->first);
-    }
-
     while (!mFramebufferMap.empty())
     {
         deleteFramebuffer(mFramebufferMap.begin()->first);
-    }
-
-    while (!mRenderbufferMap.empty())
-    {
-        deleteRenderbuffer(mRenderbufferMap.begin()->first);
-    }
-
-    while (!mTextureMap.empty())
-    {
-        deleteTexture(mTextureMap.begin()->first);
     }
 
     if (mMaskedClearSavedState)
     {
         mMaskedClearSavedState->Release();
     }
+
+    // FIXME: Context should not be responsible for resource manager deallocation
+    delete mResourceManager;
 }
 
 void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
@@ -725,72 +715,29 @@ GLint Context::getUnpackAlignment() const
     return mState.unpackAlignment;
 }
 
-// Returns an unused buffer name
 GLuint Context::createBuffer()
 {
-    unsigned int handle = 1;
-
-    while (mBufferMap.find(handle) != mBufferMap.end())
-    {
-        handle++;
-    }
-
-    mBufferMap[handle] = NULL;
-
-    return handle;
+    return mResourceManager->createBuffer();
 }
 
-// Returns an unused shader/program name
-GLuint Context::createShader(GLenum type)
-{
-    unsigned int handle = 1;
-
-    while (mShaderMap.find(handle) != mShaderMap.end() || mProgramMap.find(handle) != mProgramMap.end())   // Shared name space
-    {
-        handle++;
-    }
-
-    if (type == GL_VERTEX_SHADER)
-    {
-        mShaderMap[handle] = new VertexShader(this, handle);
-    }
-    else if (type == GL_FRAGMENT_SHADER)
-    {
-        mShaderMap[handle] = new FragmentShader(this, handle);
-    }
-    else UNREACHABLE();
-
-    return handle;
-}
-
-// Returns an unused program/shader name
 GLuint Context::createProgram()
 {
-    unsigned int handle = 1;
-
-    while (mProgramMap.find(handle) != mProgramMap.end() || mShaderMap.find(handle) != mShaderMap.end())   // Shared name space
-    {
-        handle++;
-    }
-
-    mProgramMap[handle] = new Program();
-
-    return handle;
+    return mResourceManager->createProgram();
 }
 
-// Returns an unused texture name
+GLuint Context::createShader(GLenum type)
+{
+    return mResourceManager->createShader(type);
+}
+
 GLuint Context::createTexture()
 {
-    unsigned int handle = 1;
+    return mResourceManager->createTexture();
+}
 
-    while (mTextureMap.find(handle) != mTextureMap.end())
-    {
-        handle++;
-    }
-
-    mTextureMap[handle] = NULL;
-
-    return handle;
+GLuint Context::createRenderbuffer()
+{
+    return mResourceManager->createRenderbuffer();
 }
 
 // Returns an unused framebuffer name
@@ -808,85 +755,44 @@ GLuint Context::createFramebuffer()
     return handle;
 }
 
-// Returns an unused renderbuffer name
-GLuint Context::createRenderbuffer()
-{
-    unsigned int handle = 1;
-
-    while (mRenderbufferMap.find(handle) != mRenderbufferMap.end())
-    {
-        handle++;
-    }
-
-    mRenderbufferMap[handle] = NULL;
-
-    return handle;
-}
-
 void Context::deleteBuffer(GLuint buffer)
 {
-    BufferMap::iterator bufferObject = mBufferMap.find(buffer);
-
-    if (bufferObject != mBufferMap.end())
+    if (mResourceManager->getBuffer(buffer))
     {
         detachBuffer(buffer);
-
-        delete bufferObject->second;
-        mBufferMap.erase(bufferObject);
     }
+    
+    mResourceManager->deleteBuffer(buffer);
 }
 
 void Context::deleteShader(GLuint shader)
 {
-    ShaderMap::iterator shaderObject = mShaderMap.find(shader);
-
-    if (shaderObject != mShaderMap.end())
-    {
-        if (!shaderObject->second->isAttached())
-        {
-            delete shaderObject->second;
-            mShaderMap.erase(shaderObject);
-        }
-        else
-        {
-            shaderObject->second->flagForDeletion();
-        }
-    }
+    mResourceManager->deleteShader(shader);
 }
 
 void Context::deleteProgram(GLuint program)
 {
-    ProgramMap::iterator programObject = mProgramMap.find(program);
-
-    if (programObject != mProgramMap.end())
-    {
-        if (program != mState.currentProgram)
-        {
-            delete programObject->second;
-            mProgramMap.erase(programObject);
-        }
-        else
-        {
-            programObject->second->flagForDeletion();
-        }
-    }
+    mResourceManager->deleteProgram(program);
 }
 
 void Context::deleteTexture(GLuint texture)
 {
-    TextureMap::iterator textureObject = mTextureMap.find(texture);
-
-    if (textureObject != mTextureMap.end())
+    if (mResourceManager->getTexture(texture))
     {
         detachTexture(texture);
-
-        if (texture != 0)
-        {
-            delete textureObject->second;
-        }
-
-        mTextureMap.erase(textureObject);
     }
+
+    mResourceManager->deleteTexture(texture);
+}
+
+void Context::deleteRenderbuffer(GLuint renderbuffer)
+{
+    if (mResourceManager->getRenderbuffer(renderbuffer))
+    {
+        detachRenderbuffer(renderbuffer);
+    }
+    
+    mResourceManager->deleteRenderbuffer(renderbuffer);
 }
 
 void Context::deleteFramebuffer(GLuint framebuffer)
@@ -902,45 +808,53 @@ void Context::deleteFramebuffer(GLuint framebuffer)
     }
 }
 
-void Context::deleteRenderbuffer(GLuint renderbuffer)
+Buffer *Context::getBuffer(GLuint handle)
 {
-    RenderbufferMap::iterator renderbufferObject = mRenderbufferMap.find(renderbuffer);
+    return mResourceManager->getBuffer(handle);
+}
 
-    if (renderbufferObject != mRenderbufferMap.end())
-    {
-        detachRenderbuffer(renderbuffer);
+Shader *Context::getShader(GLuint handle)
+{
+    return mResourceManager->getShader(handle);
+}
 
-        delete renderbufferObject->second;
-        mRenderbufferMap.erase(renderbufferObject);
-    }
+Program *Context::getProgram(GLuint handle)
+{
+    return mResourceManager->getProgram(handle);
+}
+
+Texture *Context::getTexture(GLuint handle)
+{
+    return mResourceManager->getTexture(handle);
+}
+
+Renderbuffer *Context::getRenderbuffer(GLuint handle)
+{
+    return mResourceManager->getRenderbuffer(handle);
+}
+
+Framebuffer *Context::getFramebuffer()
+{
+    return getFramebuffer(mState.framebuffer);
 }
 
 void Context::bindArrayBuffer(unsigned int buffer)
 {
-    if (buffer != 0 && !getBuffer(buffer))
-    {
-        mBufferMap[buffer] = new Buffer();
-    }
+    mResourceManager->checkBufferAllocation(buffer);
 
     mState.arrayBuffer = buffer;
 }
 
 void Context::bindElementArrayBuffer(unsigned int buffer)
 {
-    if (buffer != 0 && !getBuffer(buffer))
-    {
-        mBufferMap[buffer] = new Buffer();
-    }
+    mResourceManager->checkBufferAllocation(buffer);
 
     mState.elementArrayBuffer = buffer;
 }
 
 void Context::bindTexture2D(GLuint texture)
 {
-    if (!getTexture(texture) && texture != 0)
-    {
-        mTextureMap[texture] = new Texture2D(this);
-    }
+    mResourceManager->checkTextureAllocation(texture, SAMPLER_2D);
 
     mState.texture2D = texture;
 
@@ -949,10 +863,7 @@ void Context::bindTexture2D(GLuint texture)
 
 void Context::bindTextureCubeMap(GLuint texture)
 {
-    if (!getTexture(texture) && texture != 0)
-    {
-        mTextureMap[texture] = new TextureCubeMap(this);
-    }
+    mResourceManager->checkTextureAllocation(texture, SAMPLER_CUBE);
 
     mState.textureCubeMap = texture;
 
@@ -971,24 +882,28 @@ void Context::bindFramebuffer(GLuint framebuffer)
 
 void Context::bindRenderbuffer(GLuint renderbuffer)
 {
-    if (renderbuffer != 0 && !getRenderbuffer(renderbuffer))
-    {
-        mRenderbufferMap[renderbuffer] = new Renderbuffer();
-    }
-
     mState.renderbuffer = renderbuffer;
 }
 
 void Context::useProgram(GLuint program)
 {
-    Program *programObject = getCurrentProgram();
-
     GLuint priorProgram = mState.currentProgram;
     mState.currentProgram = program;               // Must switch before trying to delete, otherwise it only gets flagged.
 
-    if (programObject && programObject->isFlaggedForDeletion())
+    if (priorProgram != program)
     {
-        deleteProgram(priorProgram);
+        Program *newProgram = mResourceManager->getProgram(program);
+        Program *oldProgram = mResourceManager->getProgram(priorProgram);
+
+        if (newProgram)
+        {
+            newProgram->addRef();
+        }
+        
+        if (oldProgram)
+        {
+            oldProgram->release();
+        }
     }
 }
 
@@ -1010,68 +925,10 @@ void Context::setDepthStencilbufferZero(DepthStencilbuffer *buffer)
     mDepthStencilbufferZero = buffer;
 }
 
-void Context::setRenderbuffer(Renderbuffer *buffer)
+void Context::setRenderbuffer(Renderbuffer *renderbuffer)
 {
-    delete mRenderbufferMap[mState.renderbuffer];
-    mRenderbufferMap[mState.renderbuffer] = buffer;
-}
-
-Buffer *Context::getBuffer(unsigned int handle)
-{
-    BufferMap::iterator buffer = mBufferMap.find(handle);
-
-    if (buffer == mBufferMap.end())
-    {
-        return NULL;
-    }
-    else
-    {
-        return buffer->second;
-    }
-}
-
-Shader *Context::getShader(unsigned int handle)
-{
-    ShaderMap::iterator shader = mShaderMap.find(handle);
-
-    if (shader == mShaderMap.end())
-    {
-        return NULL;
-    }
-    else
-    {
-        return shader->second;
-    }
-}
-
-Program *Context::getProgram(unsigned int handle)
-{
-    ProgramMap::iterator program = mProgramMap.find(handle);
-
-    if (program == mProgramMap.end())
-    {
-        return NULL;
-    }
-    else
-    {
-        return program->second;
-    }
-}
-
-Texture *Context::getTexture(unsigned int handle)
-{
-    if (handle == 0) return NULL;
-
-    TextureMap::iterator texture = mTextureMap.find(handle);
-
-    if (texture == mTextureMap.end())
-    {
-        return NULL;
-    }
-    else
-    {
-        return texture->second;
-    }
+    mResourceManager->deleteRenderbuffer(mState.renderbuffer);
+    mResourceManager->setRenderbuffer(mState.renderbuffer, renderbuffer);
 }
 
 Framebuffer *Context::getFramebuffer(unsigned int handle)
@@ -1088,25 +945,11 @@ Framebuffer *Context::getFramebuffer(unsigned int handle)
     }
 }
 
-Renderbuffer *Context::getRenderbuffer(unsigned int handle)
-{
-    RenderbufferMap::iterator renderbuffer = mRenderbufferMap.find(handle);
-
-    if (renderbuffer == mRenderbufferMap.end())
-    {
-        return NULL;
-    }
-    else
-    {
-        return renderbuffer->second;
-    }
-}
-
 Colorbuffer *Context::getColorbuffer(GLuint handle)
 {
     if (handle != 0)
     {
-        Renderbuffer *renderbuffer = getRenderbuffer(handle);
+        Renderbuffer *renderbuffer = mResourceManager->getRenderbuffer(handle);
 
         if (renderbuffer && renderbuffer->isColorbuffer())
         {
@@ -1125,7 +968,7 @@ DepthStencilbuffer *Context::getDepthbuffer(GLuint handle)
 {
     if (handle != 0)
     {
-        Renderbuffer *renderbuffer = getRenderbuffer(handle);
+        Renderbuffer *renderbuffer = mResourceManager->getRenderbuffer(handle);
 
         if (renderbuffer && renderbuffer->isDepthbuffer())
         {
@@ -1144,7 +987,7 @@ DepthStencilbuffer *Context::getStencilbuffer(GLuint handle)
 {
     if (handle != 0)
     {
-        Renderbuffer *renderbuffer = getRenderbuffer(handle);
+        Renderbuffer *renderbuffer = mResourceManager->getRenderbuffer(handle);
 
         if (renderbuffer && renderbuffer->isStencilbuffer())
         {
@@ -1161,17 +1004,17 @@ DepthStencilbuffer *Context::getStencilbuffer(GLuint handle)
 
 Buffer *Context::getArrayBuffer()
 {
-    return getBuffer(mState.arrayBuffer);
+    return mResourceManager->getBuffer(mState.arrayBuffer);
 }
 
 Buffer *Context::getElementArrayBuffer()
 {
-    return getBuffer(mState.elementArrayBuffer);
+    return mResourceManager->getBuffer(mState.elementArrayBuffer);
 }
 
 Program *Context::getCurrentProgram()
 {
-    return getProgram(mState.currentProgram);
+    return mResourceManager->getProgram(mState.currentProgram);
 }
 
 Texture2D *Context::getTexture2D()
@@ -1181,7 +1024,7 @@ Texture2D *Context::getTexture2D()
         return mTexture2DZero;
     }
 
-    return (Texture2D*)getTexture(mState.texture2D);
+    return (Texture2D*)mResourceManager->getTexture(mState.texture2D);
 }
 
 TextureCubeMap *Context::getTextureCubeMap()
@@ -1191,7 +1034,7 @@ TextureCubeMap *Context::getTextureCubeMap()
         return mTextureCubeMapZero;
     }
 
-    return (TextureCubeMap*)getTexture(mState.textureCubeMap);
+    return (TextureCubeMap*)mResourceManager->getTexture(mState.textureCubeMap);
 }
 
 Texture *Context::getSamplerTexture(unsigned int sampler, SamplerType type)
@@ -1208,12 +1051,7 @@ Texture *Context::getSamplerTexture(unsigned int sampler, SamplerType type)
         }
     }
 
-    return getTexture(texid);
-}
-
-Framebuffer *Context::getFramebuffer()
-{
-    return getFramebuffer(mState.framebuffer);
+    return mResourceManager->getTexture(texid);
 }
 
 bool Context::getBooleanv(GLenum pname, GLboolean *params)
@@ -2002,7 +1840,7 @@ GLenum Context::applyVertexBuffer(const TranslatedIndexData &indexInfo)
 // Applies the indices and element array bindings to the Direct3D 9 device
 GLenum Context::applyIndexBuffer(const void *indices, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo)
 {
-    GLenum err = mIndexDataManager->preRenderValidate(mode, type, count, getBuffer(mState.elementArrayBuffer), indices, indexInfo);
+    GLenum err = mIndexDataManager->preRenderValidate(mode, type, count, mResourceManager->getBuffer(mState.elementArrayBuffer), indices, indexInfo);
 
     if (err == GL_NO_ERROR)
     {
@@ -2853,7 +2691,7 @@ Texture *Context::getIncompleteTexture(SamplerType type)
 
           case SAMPLER_2D:
             {
-                Texture2D *incomplete2d = new Texture2D(this);
+                Texture2D *incomplete2d = new Texture2D();
                 incomplete2d->setImage(0, GL_RGBA, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, 1, color);
                 t = incomplete2d;
             }
@@ -2861,7 +2699,7 @@ Texture *Context::getIncompleteTexture(SamplerType type)
 
           case SAMPLER_CUBE:
             {
-              TextureCubeMap *incompleteCube = new TextureCubeMap(this);
+              TextureCubeMap *incompleteCube = new TextureCubeMap();
 
               incompleteCube->setImagePosX(0, GL_RGBA, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, 1, color);
               incompleteCube->setImageNegX(0, GL_RGBA, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, 1, color);

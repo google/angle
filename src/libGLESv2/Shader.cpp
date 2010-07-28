@@ -21,7 +21,7 @@ namespace gl
 void *Shader::mFragmentCompiler = NULL;
 void *Shader::mVertexCompiler = NULL;
 
-Shader::Shader(Context *context, GLuint handle) : mHandle(handle), mContext(context)
+Shader::Shader(ResourceManager *manager, GLuint handle) : mHandle(handle), mResourceManager(manager)
 {
     mSource = NULL;
     mHlsl = NULL;
@@ -49,7 +49,7 @@ Shader::Shader(Context *context, GLuint handle) : mHandle(handle), mContext(cont
         }
     }
 
-    mAttachCount = 0;
+    mRefCount = 0;
     mDeleteStatus = false;
 }
 
@@ -187,24 +187,24 @@ const char *Shader::getHLSL()
     return mHlsl;
 }
 
-void Shader::attach()
+void Shader::addRef()
 {
-    mAttachCount++;
+    mRefCount++;
 }
 
-void Shader::detach()
+void Shader::release()
 {
-    mAttachCount--;
+    mRefCount--;
 
-    if (mAttachCount == 0 && mDeleteStatus)
+    if (mRefCount == 0 && mDeleteStatus)
     {
-        mContext->deleteShader(mHandle);
+        mResourceManager->deleteShader(mHandle);
     }
 }
 
-bool Shader::isAttached() const
+unsigned int Shader::getRefCount() const
 {
-    return mAttachCount > 0;
+    return mRefCount;
 }
 
 bool Shader::isFlaggedForDeletion() const
@@ -417,7 +417,7 @@ bool Shader::compareVarying(const Varying &x, const Varying &y)
     return false;
 }
 
-VertexShader::VertexShader(Context *context, GLuint handle) : Shader(context, handle)
+VertexShader::VertexShader(ResourceManager *manager, GLuint handle) : Shader(manager, handle)
 {
 }
 
@@ -481,7 +481,7 @@ void VertexShader::parseAttributes()
     }
 }
 
-FragmentShader::FragmentShader(Context *context, GLuint handle) : Shader(context, handle)
+FragmentShader::FragmentShader(ResourceManager *manager, GLuint handle) : Shader(manager, handle)
 {
 }
 

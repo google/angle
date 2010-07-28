@@ -23,7 +23,6 @@
 
 namespace gl
 {
-class Context;
 class Blit;
 
 enum
@@ -37,7 +36,7 @@ enum
 class Texture
 {
   public:
-    explicit Texture(Context *context);
+    explicit Texture();
 
     virtual ~Texture();
 
@@ -136,8 +135,6 @@ class Texture
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture);
 
-    Context *mContext;
-
     IDirect3DBaseTexture9 *mBaseTexture; // This is a weak pointer. The derived class is assumed to own a strong pointer.
     bool mDirtyMetaData;
     bool mIsRenderable;
@@ -151,7 +148,7 @@ class Texture
 class Texture2D : public Texture
 {
   public:
-    explicit Texture2D(Context *context);
+    explicit Texture2D();
 
     ~Texture2D();
 
@@ -193,7 +190,7 @@ class Texture2D : public Texture
 class TextureCubeMap : public Texture
 {
   public:
-    explicit TextureCubeMap(Context *context);
+    explicit TextureCubeMap();
 
     ~TextureCubeMap();
 

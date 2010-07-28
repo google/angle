@@ -45,7 +45,7 @@ UniformLocation::UniformLocation(const std::string &name, unsigned int element, 
 {
 }
 
-Program::Program()
+Program::Program(ResourceManager *manager, GLuint handle) : mResourceManager(manager), mHandle(handle)
 {
     mFragmentShader = NULL;
     mVertexShader = NULL;
@@ -62,6 +62,8 @@ Program::Program()
 
     mDeleteStatus = false;
 
+    mRefCount = 0;
+
     mSerial = issueSerial();
 }
 
@@ -71,12 +73,12 @@ Program::~Program()
 
     if (mVertexShader != NULL)
     {
-        mVertexShader->detach();
+        mVertexShader->release();
     }
 
     if (mFragmentShader != NULL)
     {
-        mFragmentShader->detach();
+        mFragmentShader->release();
     }
 }
 
@@ -90,7 +92,7 @@ bool Program::attachShader(Shader *shader)
         }
 
         mVertexShader = (VertexShader*)shader;
-        mVertexShader->attach();
+        mVertexShader->addRef();
     }
     else if (shader->getType() == GL_FRAGMENT_SHADER)
     {
@@ -100,7 +102,7 @@ bool Program::attachShader(Shader *shader)
         }
 
         mFragmentShader = (FragmentShader*)shader;
-        mFragmentShader->attach();
+        mFragmentShader->addRef();
     }
     else UNREACHABLE();
 
@@ -116,7 +118,7 @@ bool Program::detachShader(Shader *shader)
             return false;
         }
 
-        mVertexShader->detach();
+        mVertexShader->release();
         mVertexShader = NULL;
     }
     else if (shader->getType() == GL_FRAGMENT_SHADER)
@@ -126,7 +128,7 @@ bool Program::detachShader(Shader *shader)
             return false;
         }
 
-        mFragmentShader->detach();
+        mFragmentShader->release();
         mFragmentShader = NULL;
     }
     else UNREACHABLE();
@@ -2379,13 +2381,13 @@ void Program::unlink(bool destroy)
     {
         if (mFragmentShader)
         {
-            mFragmentShader->detach();
+            mFragmentShader->release();
             mFragmentShader = NULL;
         }
 
         if (mVertexShader)
         {
-            mVertexShader->detach();
+            mVertexShader->release();
             mVertexShader = NULL;
         }
     }
@@ -2460,6 +2462,26 @@ bool Program::isLinked()
 bool Program::isValidated() const 
 {
     return mValidated;
+}
+
+void Program::release()
+{
+    mRefCount--;
+
+    if (mRefCount == 0 && mDeleteStatus)
+    {
+        mResourceManager->deleteProgram(mHandle);
+    }
+}
+
+void Program::addRef()
+{
+    mRefCount++;
+}
+
+unsigned int Program::getRefCount() const
+{
+    return mRefCount;
 }
 
 unsigned int Program::getSerial() const

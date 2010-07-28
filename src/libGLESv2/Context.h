@@ -7,8 +7,8 @@
 // Context.h: Defines the gl::Context class, managing all GL state and performing
 // rendering operations. It is the GLES2 specific implementation of EGLContext.
 
-#ifndef INCLUDE_CONTEXT_H_
-#define INCLUDE_CONTEXT_H_
+#ifndef LIBGLESV2_CONTEXT_H_
+#define LIBGLESV2_CONTEXT_H_
 
 #define GL_APICALL
 #include <GLES2/gl2.h>
@@ -19,6 +19,7 @@
 #include <map>
 
 #include "common/angleutils.h"
+#include "libGLESv2/ResourceManager.h"
 
 namespace egl
 {
@@ -70,14 +71,6 @@ const float ALIASED_LINE_WIDTH_RANGE_MAX = 1.0f;
 const float ALIASED_POINT_SIZE_RANGE_MIN = 1.0f;
 const float ALIASED_POINT_SIZE_RANGE_MAX_SM2 = 1.0f;
 const float ALIASED_POINT_SIZE_RANGE_MAX_SM3 = 64.0f;
-
-enum SamplerType
-{
-    SAMPLER_2D,
-    SAMPLER_CUBE,
-
-    SAMPLER_TYPE_COUNT
-};
 
 struct Color
 {
@@ -297,19 +290,23 @@ class Context
     void setPackAlignment(GLint alignment);
     GLint getPackAlignment() const;
 
+    // These create  and destroy methods are merely pass-throughs to 
+    // ResourceManager, which owns these object types
     GLuint createBuffer();
     GLuint createShader(GLenum type);
     GLuint createProgram();
     GLuint createTexture();
-    GLuint createFramebuffer();
     GLuint createRenderbuffer();
 
     void deleteBuffer(GLuint buffer);
     void deleteShader(GLuint shader);
     void deleteProgram(GLuint program);
     void deleteTexture(GLuint texture);
-    void deleteFramebuffer(GLuint framebuffer);
     void deleteRenderbuffer(GLuint renderbuffer);
+    
+    // Framebuffers are owned by the Context, so these methods do not pass through
+    GLuint createFramebuffer();
+    void deleteFramebuffer(GLuint framebuffer);
 
     void bindArrayBuffer(GLuint buffer);
     void bindElementArrayBuffer(GLuint buffer);
@@ -407,23 +404,8 @@ class Context
     Colorbuffer *mColorbufferZero;
     DepthStencilbuffer *mDepthStencilbufferZero;
 
-    typedef std::map<GLuint, Buffer*> BufferMap;
-    BufferMap mBufferMap;
-
-    typedef std::map<GLuint, Shader*> ShaderMap;
-    ShaderMap mShaderMap;
-
-    typedef std::map<GLuint, Program*> ProgramMap;
-    ProgramMap mProgramMap;
-
-    typedef std::map<GLuint, Texture*> TextureMap;
-    TextureMap mTextureMap;
-
     typedef std::map<GLuint, Framebuffer*> FramebufferMap;
     FramebufferMap mFramebufferMap;
-
-    typedef std::map<GLuint, Renderbuffer*> RenderbufferMap;
-    RenderbufferMap mRenderbufferMap;
 
     void initExtensionString();
     std::string mExtensionString;
@@ -433,7 +415,7 @@ class Context
     IndexDataManager *mIndexDataManager;
 
     Blit *mBlit;
-
+    
     Texture *mIncompleteTextures[SAMPLER_TYPE_COUNT];
 
     // Recorded errors
@@ -469,6 +451,8 @@ class Context
     IDirect3DStateBlock9 *mMaskedClearSavedState;
 
     D3DCAPS9 mDeviceCaps;
+
+    ResourceManager *mResourceManager;
 };
 }
 

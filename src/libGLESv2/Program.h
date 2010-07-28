@@ -20,6 +20,7 @@
 
 namespace gl
 {
+class ResourceManager;
 class FragmentShader;
 class VertexShader;
 
@@ -55,7 +56,7 @@ struct UniformLocation
 class Program
 {
   public:
-    Program();
+    Program(ResourceManager *manager, GLuint handle);
 
     ~Program();
 
@@ -119,6 +120,9 @@ class Program
     GLint getActiveUniformCount();
     GLint getActiveUniformMaxLength();
 
+    void addRef();
+    void release();
+    unsigned int getRefCount() const;
     void flagForDeletion();
     bool isFlaggedForDeletion() const;
 
@@ -214,9 +218,14 @@ class Program
     char *mInfoLog;
     bool mValidated;
 
+    unsigned int mRefCount;
+
     unsigned int mSerial;
 
     static unsigned int mCurrentSerial;
+
+    ResourceManager *mResourceManager;
+    const GLuint mHandle;
 };
 }
 

@@ -221,6 +221,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ResourceManager.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Shader.cpp"
 				>
 			</File>
@@ -300,6 +304,10 @@
 			</File>
 			<File
 				RelativePath=".\Renderbuffer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ResourceManager.h"
 				>
 			</File>
 			<File
