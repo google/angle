@@ -1527,7 +1527,7 @@ void Program::link()
             mDepthRangeFarLocation = getUniformLocation("gl_DepthRange.far", true);
             mDepthRangeDiffLocation = getUniformLocation("gl_DepthRange.diff", true);
             mDxDepthLocation = getUniformLocation("dx_Depth", true);
-            mDxViewportLocation= getUniformLocation("dx_Viewport", true);
+            mDxViewportLocation = getUniformLocation("dx_Viewport", true);
             mDxHalfPixelSizeLocation = getUniformLocation("dx_HalfPixelSize", true);
             mDxFrontCCWLocation = getUniformLocation("dx_FrontCCW", true);
             mDxPointsOrLinesLocation = getUniformLocation("dx_PointsOrLines", true);
