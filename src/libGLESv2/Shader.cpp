@@ -262,6 +262,8 @@ void Shader::parseVaryings()
 
         mUsesFragCoord = strstr(mHlsl, "GL_USES_FRAG_COORD") != NULL;
         mUsesFrontFacing = strstr(mHlsl, "GL_USES_FRONT_FACING") != NULL;
+        mUsesPointSize = strstr(mHlsl, "GL_USES_POINT_SIZE") != NULL;
+        mUsesPointCoord = strstr(mHlsl, "GL_USES_POINT_COORD") != NULL;
     }
 }
 

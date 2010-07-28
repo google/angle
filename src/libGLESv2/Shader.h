@@ -93,6 +93,8 @@ class Shader
 
     bool mUsesFragCoord;
     bool mUsesFrontFacing;
+    bool mUsesPointSize;
+    bool mUsesPointCoord;
 
     Context *mContext;
 

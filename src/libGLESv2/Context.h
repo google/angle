@@ -67,7 +67,8 @@ enum
 const float ALIASED_LINE_WIDTH_RANGE_MIN = 1.0f;
 const float ALIASED_LINE_WIDTH_RANGE_MAX = 1.0f;
 const float ALIASED_POINT_SIZE_RANGE_MIN = 1.0f;
-const float ALIASED_POINT_SIZE_RANGE_MAX = 1.0f;
+const float ALIASED_POINT_SIZE_RANGE_MAX_SM2 = 1.0f;
+const float ALIASED_POINT_SIZE_RANGE_MAX_SM3 = 64.0f;
 
 enum SamplerType
 {
@@ -373,9 +374,7 @@ class Context
 
     GLenum getError();
 
-    const char *getPixelShaderProfile();
-    const char *getVertexShaderProfile();
-
+    bool supportsShaderModel3() const;
     const char *getExtensionString() const;
 
     Blit *getBlitter() { return mBlit; }
@@ -451,8 +450,7 @@ class Context
     unsigned int mAppliedRenderTargetSerial;
     unsigned int mAppliedDepthbufferSerial;
 
-    const char *mPsProfile;
-    const char *mVsProfile;
+    bool mSupportsShaderModel3;
 
     // state caching flags
     bool mClearStateDirty;

@@ -362,6 +362,9 @@ Surface *Display::createWindowSurface(HWND window, EGLConfig config)
         }
     }
 
+    // Permanent non-default states
+    mDevice->SetRenderState(D3DRS_POINTSPRITEENABLE, TRUE);
+
     Surface *surface = NULL;
 
     if (swapChain)

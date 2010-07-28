@@ -269,16 +269,7 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         depthStencil->Release();
     }
     
-    if (mDeviceCaps.PixelShaderVersion == D3DPS_VERSION(3, 0))
-    {
-        mPsProfile = "ps_3_0";
-        mVsProfile = "vs_3_0";
-    }
-    else  // egl::Display guarantees support for at least 2.0
-    {
-        mPsProfile = "ps_2_0";
-        mVsProfile = "vs_2_0";
-    }
+    mSupportsShaderModel3 = mDeviceCaps.PixelShaderVersion == D3DPS_VERSION(3, 0);
 
     markAllStateDirty();
 }
@@ -1283,7 +1274,7 @@ bool Context::getFloatv(GLenum pname, GLfloat *params)
         break;
       case GL_ALIASED_POINT_SIZE_RANGE:
         params[0] = gl::ALIASED_POINT_SIZE_RANGE_MIN;
-        params[1] = gl::ALIASED_POINT_SIZE_RANGE_MAX;
+        params[1] = supportsShaderModel3() ? gl::ALIASED_POINT_SIZE_RANGE_MAX_SM3 : gl::ALIASED_POINT_SIZE_RANGE_MAX_SM2;
         break;
       case GL_DEPTH_RANGE:
         params[0] = mState.zNear;
@@ -2742,14 +2733,9 @@ GLenum Context::getError()
     return GL_NO_ERROR;
 }
 
-const char *Context::getPixelShaderProfile()
+bool Context::supportsShaderModel3() const
 {
-    return mPsProfile;
-}
-
-const char *Context::getVertexShaderProfile()
-{
-    return mVsProfile;
+    return mSupportsShaderModel3;
 }
 
 void Context::detachBuffer(GLuint buffer)
