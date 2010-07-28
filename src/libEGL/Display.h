@@ -70,6 +70,7 @@ class Display
     IDirect3D9 *mD3d9;
     IDirect3DDevice9 *mDevice;
     D3DCAPS9 mDeviceCaps;
+    HWND mDeviceWindow;
 
     bool mSceneStarted;
     GLint mSwapInterval;
@@ -84,6 +85,8 @@ class Display
 
     typedef std::set<gl::Context*> ContextSet;
     ContextSet mContextSet;
+
+    bool createDevice();
 };
 }
 
