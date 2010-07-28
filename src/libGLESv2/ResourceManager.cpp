@@ -19,6 +19,7 @@ namespace gl
 {
 ResourceManager::ResourceManager()
 {
+    mRefCount = 1;
 }
 
 ResourceManager::~ResourceManager()
@@ -46,6 +47,19 @@ ResourceManager::~ResourceManager()
     while (!mTextureMap.empty())
     {
         deleteTexture(mTextureMap.begin()->first);
+    }
+}
+
+void ResourceManager::addRef()
+{
+    mRefCount++;
+}
+
+void ResourceManager::release()
+{
+    if (--mRefCount == 0)
+    {
+        delete this;
     }
 }
 

@@ -378,11 +378,11 @@ Surface *Display::createWindowSurface(HWND window, EGLConfig config)
     return surface;
 }
 
-EGLContext Display::createContext(EGLConfig configHandle)
+EGLContext Display::createContext(EGLConfig configHandle, const gl::Context *shareContext)
 {
     const egl::Config *config = mConfigSet.get(configHandle);
 
-    gl::Context *context = glCreateContext(config);
+    gl::Context *context = glCreateContext(config, shareContext);
     mContextSet.insert(context);
 
     return context;

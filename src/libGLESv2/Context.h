@@ -193,7 +193,7 @@ struct State
 class Context
 {
   public:
-    Context(const egl::Config *config);
+    Context(const egl::Config *config, const gl::Context *shareContext);
 
     ~Context();
 
@@ -459,7 +459,7 @@ class Context
 extern "C"
 {
 // Exported functions for use by EGL
-gl::Context *glCreateContext(const egl::Config *config);
+gl::Context *glCreateContext(const egl::Config *config, const gl::Context *shareContext);
 void glDestroyContext(gl::Context *context);
 void glMakeCurrent(gl::Context *context, egl::Display *display, egl::Surface *surface);
 gl::Context *glGetCurrentContext();

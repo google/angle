@@ -772,7 +772,7 @@ EGLContext __stdcall eglCreateContext(EGLDisplay dpy, EGLConfig config, EGLConte
             return EGL_NO_CONTEXT;
         }
 
-        EGLContext context = display->createContext(config);
+        EGLContext context = display->createContext(config, static_cast<gl::Context*>(share_context));
 
         return success(context);
     }

@@ -39,6 +39,9 @@ class ResourceManager
     ResourceManager();
     ~ResourceManager();
 
+    void addRef();
+    void release();
+
     GLuint createBuffer();
     GLuint createShader(GLenum type);
     GLuint createProgram();
@@ -65,6 +68,8 @@ class ResourceManager
 
   private:
     DISALLOW_COPY_AND_ASSIGN(ResourceManager);
+
+    std::size_t mRefCount;
 
     typedef std::map<GLuint, Buffer*> BufferMap;
     BufferMap mBufferMap;

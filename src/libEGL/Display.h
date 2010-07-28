@@ -43,7 +43,7 @@ class Display
     bool getConfigAttrib(EGLConfig config, EGLint attribute, EGLint *value);
 
     egl::Surface *createWindowSurface(HWND window, EGLConfig config);
-    EGLContext createContext(EGLConfig configHandle);
+    EGLContext createContext(EGLConfig configHandle, const gl::Context *shareContext);
 
     void destroySurface(egl::Surface *surface);
     void destroyContext(gl::Context *context);

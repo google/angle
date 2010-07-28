@@ -34,7 +34,7 @@
 
 namespace gl
 {
-Context::Context(const egl::Config *config)
+Context::Context(const egl::Config *config, const gl::Context *shareContext)
     : mConfig(config)
 {
     setClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -104,8 +104,15 @@ Context::Context(const egl::Config *config)
     mState.colorMaskAlpha = true;
     mState.depthMask = true;
 
-    // FIXME: Resource managers should get managed with context sharing
-    mResourceManager = new ResourceManager();
+    if (shareContext != NULL)
+    {
+        mResourceManager = shareContext->mResourceManager;
+        mResourceManager->addRef();
+    }
+    else
+    {
+        mResourceManager = new ResourceManager();
+    }
 
     // [OpenGL ES 2.0.24] section 3.7 page 83:
     // In the initial state, TEXTURE_2D and TEXTURE_CUBE_MAP have twodimensional
@@ -200,8 +207,7 @@ Context::~Context()
         mMaskedClearSavedState->Release();
     }
 
-    // FIXME: Context should not be responsible for resource manager deallocation
-    delete mResourceManager;
+    mResourceManager->release();
 }
 
 void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
@@ -277,6 +283,12 @@ void Context::markAllStateDirty()
     mScissorStateDirty = true;
     mSampleStateDirty = true;
     mDitherStateDirty = true;
+    mFrontFaceDirty = true;
+
+    if (mBufferBackEnd != NULL)
+    {
+        mBufferBackEnd->invalidate();
+    }
 }
 
 void Context::setClearColor(float red, float green, float blue, float alpha)
@@ -2803,9 +2815,9 @@ const char *Context::getExtensionString() const
 
 extern "C"
 {
-gl::Context *glCreateContext(const egl::Config *config)
+gl::Context *glCreateContext(const egl::Config *config, const gl::Context *shareContext)
 {
-    return new gl::Context(config);
+    return new gl::Context(config, shareContext);
 }
 
 void glDestroyContext(gl::Context *context)
