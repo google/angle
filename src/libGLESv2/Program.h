@@ -97,7 +97,7 @@ class Program
     GLint getDepthRangeNearLocation() const;
     GLint getDepthRangeFarLocation() const;
     GLint getDxDepthLocation() const;
-    GLint getDxWindowLocation() const;
+    GLint getDxViewportLocation() const;
     GLint getDxHalfPixelSizeLocation() const;
     GLint getDxFrontCCWLocation() const;
     GLint getDxPointsOrLinesLocation() const;
@@ -204,7 +204,7 @@ class Program
     GLint mDepthRangeNearLocation;
     GLint mDepthRangeFarLocation;
     GLint mDxDepthLocation;
-    GLint mDxWindowLocation;
+    GLint mDxViewportLocation;
     GLint mDxHalfPixelSizeLocation;
     GLint mDxFrontCCWLocation;
     GLint mDxPointsOrLinesLocation;

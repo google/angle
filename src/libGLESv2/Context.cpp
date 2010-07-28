@@ -1701,7 +1701,7 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         GLfloat xy[2] = {1.0f / viewport.Width, 1.0f / viewport.Height};
         programObject->setUniform2fv(halfPixelSize, 1, (GLfloat*)&xy);
 
-        GLint window = programObject->getDxWindowLocation();
+        GLint window = programObject->getDxViewportLocation();
         GLfloat whxy[4] = {mState.viewportWidth / 2.0f, mState.viewportHeight / 2.0f, 
                           (float)mState.viewportX + mState.viewportWidth / 2.0f, 
                           (float)mState.viewportY + mState.viewportHeight / 2.0f};

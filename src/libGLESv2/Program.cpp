@@ -1394,8 +1394,8 @@ bool Program::linkVaryings()
     if (mFragmentShader->mUsesFragCoord)
     {
         mPixelHLSL += "    float rhw = 1.0 / input.gl_FragCoord.w;\n"
-                      "    gl_FragCoord.x = (input.gl_FragCoord.x * rhw) * dx_Window.x + dx_Window.z;\n"
-                      "    gl_FragCoord.y = (input.gl_FragCoord.y * rhw) * dx_Window.y + dx_Window.w;\n"
+                      "    gl_FragCoord.x = (input.gl_FragCoord.x * rhw) * dx_Viewport.x + dx_Viewport.z;\n"
+                      "    gl_FragCoord.y = (input.gl_FragCoord.y * rhw) * dx_Viewport.y + dx_Viewport.w;\n"
                       "    gl_FragCoord.z = (input.gl_FragCoord.z * rhw) * dx_Depth.x + dx_Depth.y;\n"
                       "    gl_FragCoord.w = rhw;\n";
     }
@@ -1527,7 +1527,7 @@ void Program::link()
             mDepthRangeFarLocation = getUniformLocation("gl_DepthRange.far", true);
             mDepthRangeDiffLocation = getUniformLocation("gl_DepthRange.diff", true);
             mDxDepthLocation = getUniformLocation("dx_Depth", true);
-            mDxWindowLocation = getUniformLocation("dx_Window", true);
+            mDxViewportLocation= getUniformLocation("dx_Viewport", true);
             mDxHalfPixelSizeLocation = getUniformLocation("dx_HalfPixelSize", true);
             mDxFrontCCWLocation = getUniformLocation("dx_FrontCCW", true);
             mDxPointsOrLinesLocation = getUniformLocation("dx_PointsOrLines", true);
@@ -2436,7 +2436,7 @@ void Program::unlink(bool destroy)
     mDepthRangeNearLocation = -1;
     mDepthRangeFarLocation = -1;
     mDxDepthLocation = -1;
-    mDxWindowLocation = -1;
+    mDxViewportLocation = -1;
     mDxHalfPixelSizeLocation = -1;
     mDxFrontCCWLocation = -1;
     mDxPointsOrLinesLocation = -1;
@@ -2761,9 +2761,9 @@ GLint Program::getDxDepthLocation() const
     return mDxDepthLocation;
 }
 
-GLint Program::getDxWindowLocation() const
+GLint Program::getDxViewportLocation() const
 {
-    return mDxWindowLocation;
+    return mDxViewportLocation;
 }
 
 GLint Program::getDxHalfPixelSizeLocation() const
