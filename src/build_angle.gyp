@@ -190,6 +190,8 @@
             'libGLESv2/RefCountObject.h',
             'libGLESv2/Renderbuffer.cpp',
             'libGLESv2/Renderbuffer.h',
+            'libGLESv2/ResourceManager.cpp',
+            'libGLESv2/ResourceManager.h',
             'libGLESv2/Shader.cpp',
             'libGLESv2/Shader.h',
             'libGLESv2/Texture.cpp',
