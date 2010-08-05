@@ -581,6 +581,10 @@ void Texture2D::copyImage(GLint level, GLenum internalFormat, GLint x, GLint y, 
         convertToRenderTarget();
         pushTexture(mTexture, true);
     }
+    else
+    {
+        needRenderTarget();
+    }
 
     if (width != 0 && height != 0 && level < levelCount())
     {
@@ -1301,6 +1305,10 @@ void TextureCubeMap::copyImage(GLenum face, GLint level, GLenum internalFormat, 
         convertToRenderTarget();
         pushTexture(mTexture, true);
     }
+    else
+    {
+        needRenderTarget();
+    }
 
     ASSERT(width == height);
 
@@ -1370,7 +1378,7 @@ void TextureCubeMap::copySubImage(GLenum face, GLint level, GLint xoffset, GLint
     }
     else
     {
-        getRenderTarget(face);
+        needRenderTarget();
     }
 
     if (level < levelCount())

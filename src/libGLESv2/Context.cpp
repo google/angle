@@ -1409,6 +1409,7 @@ bool Context::applyRenderTarget(bool ignoreViewport)
     {
         device->SetRenderTarget(0, renderTarget);
         mAppliedRenderTargetSerial = renderTargetSerial;
+        mScissorStateDirty = true; // Scissor area must be clamped to render target's size-- this is different for different render targets.
     }
 
     unsigned int depthbufferSerial = 0;
@@ -1470,7 +1471,8 @@ bool Context::applyRenderTarget(bool ignoreViewport)
                          mState.scissorY,
                          mState.scissorX + mState.scissorWidth,
                          mState.scissorY + mState.scissorHeight};
-
+            rect.right = std::min(static_cast<UINT>(rect.right), desc.Width);
+            rect.bottom = std::min(static_cast<UINT>(rect.bottom), desc.Height);
             device->SetScissorRect(&rect);
             device->SetRenderState(D3DRS_SCISSORTESTENABLE, TRUE);
         }
@@ -1478,7 +1480,7 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         {
             device->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
         }
-        
+
         mScissorStateDirty = false;
     }
 
