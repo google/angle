@@ -198,6 +198,12 @@ void Texture::loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei
         const unsigned short *source16 = reinterpret_cast<const unsigned short*>(source);
         unsigned char *dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
 
+        // fast path for EXT_texture_format_BGRA8888
+        if (format == GL_BGRA_EXT && type == GL_UNSIGNED_BYTE) {
+            memcpy(dest, source, width*4);
+            continue;
+        }
+
         for (int x = 0; x < width; x++)
         {
             unsigned char r;
