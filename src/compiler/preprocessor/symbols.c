@@ -152,7 +152,7 @@ Symbol *NewSymbol(SourceLoc *loc, Scope *fScope, int name, symbolkind kind)
 {
     Symbol *lSymb;
     char *pch;
-    int ii;
+    unsigned int ii;
 
     lSymb = (Symbol *) mem_Alloc(fScope->pool, sizeof(Symbol));
     lSymb->left = NULL;
