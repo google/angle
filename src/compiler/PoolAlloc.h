@@ -264,19 +264,26 @@ public:
     template<class Other>
     pool_allocator(const pool_allocator<Other>& p) : allocator(p.getAllocator()) { }
 
+#if defined(__SUNPRO_CC) && !defined(_RWSTD_ALLOCATOR)
+    // libCStd on some platforms have a different allocate/deallocate interface.
+    // Caller pre-bakes sizeof(T) into 'n' which is the number of bytes to be
+    // allocated, not the number of elements.
+    void* allocate(size_type n) { 
+        return getAllocator().allocate(n);
+    }
+    void* allocate(size_type n, const void*) {
+        return getAllocator().allocate(n);
+    }
+    void deallocate(void*, size_type) {}
+#else
     pointer allocate(size_type n) { 
         return reinterpret_cast<pointer>(getAllocator().allocate(n * sizeof(T)));
     }
     pointer allocate(size_type n, const void*) { 
         return reinterpret_cast<pointer>(getAllocator().allocate(n * sizeof(T)));
     }
-
-    void deallocate(void*, size_type) { }
-    void deallocate(pointer, size_type) { }
-
-    pointer _Charalloc(size_t n) {
-        return reinterpret_cast<pointer>(getAllocator().allocate(n));
-    }
+    void deallocate(pointer, size_type) {}
+#endif  // _RWSTD_ALLOCATOR
 
     void construct(pointer p, const T& val) { new ((void *)p) T(val); }
     void destroy(pointer p) { p->T::~T(); }
