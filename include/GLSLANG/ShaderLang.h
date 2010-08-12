@@ -19,10 +19,12 @@ extern "C" {
 //
 // Driver must call this first, once, before doing any other
 // compiler operations.
+// If the function succeeds, the return value is nonzero, else zero.
 //
 int ShInitialize();
 //
 // Driver should call this at shutdown.
+// If the function succeeds, the return value is nonzero, else zero.
 //
 int ShFinalize();
 //
