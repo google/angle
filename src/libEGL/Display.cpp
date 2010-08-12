@@ -70,86 +70,84 @@ bool Display::initialize()
 
         if (mDeviceCaps.PixelShaderVersion < D3DPS_VERSION(2, 0))
         {
-            mD3d9->Release();
-            mD3d9 = NULL;
+            terminate();
+            return error(EGL_NOT_INITIALIZED, false);
         }
-        else
+
+        mMinSwapInterval = 4;
+        mMaxSwapInterval = 0;
+
+        if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_IMMEDIATE) {mMinSwapInterval = std::min(mMinSwapInterval, 0); mMaxSwapInterval = std::max(mMaxSwapInterval, 0);}
+        if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_ONE)       {mMinSwapInterval = std::min(mMinSwapInterval, 1); mMaxSwapInterval = std::max(mMaxSwapInterval, 1);}
+        if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_TWO)       {mMinSwapInterval = std::min(mMinSwapInterval, 2); mMaxSwapInterval = std::max(mMaxSwapInterval, 2);}
+        if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_THREE)     {mMinSwapInterval = std::min(mMinSwapInterval, 3); mMaxSwapInterval = std::max(mMaxSwapInterval, 3);}
+        if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_FOUR)      {mMinSwapInterval = std::min(mMinSwapInterval, 4); mMaxSwapInterval = std::max(mMaxSwapInterval, 4);}
+
+        const D3DFORMAT renderTargetFormats[] =
         {
-            mMinSwapInterval = 4;
-            mMaxSwapInterval = 0;
+            D3DFMT_A1R5G5B5,
+        //  D3DFMT_A2R10G10B10,   // The color_ramp conformance test uses ReadPixels with UNSIGNED_BYTE causing it to think that rendering skipped a colour value.
+            D3DFMT_A8R8G8B8,
+            D3DFMT_R5G6B5,
+            D3DFMT_X1R5G5B5,
+            D3DFMT_X8R8G8B8
+        };
 
-            if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_IMMEDIATE) {mMinSwapInterval = std::min(mMinSwapInterval, 0); mMaxSwapInterval = std::max(mMaxSwapInterval, 0);}
-            if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_ONE)       {mMinSwapInterval = std::min(mMinSwapInterval, 1); mMaxSwapInterval = std::max(mMaxSwapInterval, 1);}
-            if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_TWO)       {mMinSwapInterval = std::min(mMinSwapInterval, 2); mMaxSwapInterval = std::max(mMaxSwapInterval, 2);}
-            if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_THREE)     {mMinSwapInterval = std::min(mMinSwapInterval, 3); mMaxSwapInterval = std::max(mMaxSwapInterval, 3);}
-            if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_FOUR)      {mMinSwapInterval = std::min(mMinSwapInterval, 4); mMaxSwapInterval = std::max(mMaxSwapInterval, 4);}
+        const D3DFORMAT depthStencilFormats[] =
+        {
+        //  D3DFMT_D16_LOCKABLE,
+            D3DFMT_D32,
+        //  D3DFMT_D15S1,
+            D3DFMT_D24S8,
+            D3DFMT_D24X8,
+        //  D3DFMT_D24X4S4,
+            D3DFMT_D16,
+        //  D3DFMT_D32F_LOCKABLE,
+        //  D3DFMT_D24FS8
+        };
 
-            const D3DFORMAT renderTargetFormats[] =
+        D3DDISPLAYMODE currentDisplayMode;
+        mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
+
+        ConfigSet configSet;
+
+        for (int formatIndex = 0; formatIndex < sizeof(renderTargetFormats) / sizeof(D3DFORMAT); formatIndex++)
+        {
+            D3DFORMAT renderTargetFormat = renderTargetFormats[formatIndex];
+
+            HRESULT result = mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET, D3DRTYPE_SURFACE, renderTargetFormat);
+
+            if (SUCCEEDED(result))
             {
-                D3DFMT_A1R5G5B5,
-            //  D3DFMT_A2R10G10B10,   // The color_ramp conformance test uses ReadPixels with UNSIGNED_BYTE causing it to think that rendering skipped a colour value.
-                D3DFMT_A8R8G8B8,
-                D3DFMT_R5G6B5,
-                D3DFMT_X1R5G5B5,
-                D3DFMT_X8R8G8B8
-            };
-
-            const D3DFORMAT depthStencilFormats[] =
-            {
-            //  D3DFMT_D16_LOCKABLE,
-                D3DFMT_D32,
-            //  D3DFMT_D15S1,
-                D3DFMT_D24S8,
-                D3DFMT_D24X8,
-            //  D3DFMT_D24X4S4,
-                D3DFMT_D16,
-            //  D3DFMT_D32F_LOCKABLE,
-            //  D3DFMT_D24FS8
-            };
-
-            D3DDISPLAYMODE currentDisplayMode;
-            mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
-
-            ConfigSet configSet;
-
-            for (int formatIndex = 0; formatIndex < sizeof(renderTargetFormats) / sizeof(D3DFORMAT); formatIndex++)
-            {
-                D3DFORMAT renderTargetFormat = renderTargetFormats[formatIndex];
-
-                HRESULT result = mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET, D3DRTYPE_SURFACE, renderTargetFormat);
-
-                if (SUCCEEDED(result))
+                for (int depthStencilIndex = 0; depthStencilIndex < sizeof(depthStencilFormats) / sizeof(D3DFORMAT); depthStencilIndex++)
                 {
-                    for (int depthStencilIndex = 0; depthStencilIndex < sizeof(depthStencilFormats) / sizeof(D3DFORMAT); depthStencilIndex++)
+                    D3DFORMAT depthStencilFormat = depthStencilFormats[depthStencilIndex];
+                    HRESULT result = mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_SURFACE, depthStencilFormat);
+
+                    if (SUCCEEDED(result))
                     {
-                        D3DFORMAT depthStencilFormat = depthStencilFormats[depthStencilIndex];
-                        HRESULT result = mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_SURFACE, depthStencilFormat);
+                        HRESULT result = mD3d9->CheckDepthStencilMatch(mAdapter, mDeviceType, currentDisplayMode.Format, renderTargetFormat, depthStencilFormat);
 
                         if (SUCCEEDED(result))
                         {
-                            HRESULT result = mD3d9->CheckDepthStencilMatch(mAdapter, mDeviceType, currentDisplayMode.Format, renderTargetFormat, depthStencilFormat);
+                            // FIXME: Enumerate multi-sampling
 
-                            if (SUCCEEDED(result))
-                            {
-                                // FIXME: Enumerate multi-sampling
-
-                                configSet.add(currentDisplayMode, mMinSwapInterval, mMaxSwapInterval, renderTargetFormat, depthStencilFormat, 0);
-                            }
+                            configSet.add(currentDisplayMode, mMinSwapInterval, mMaxSwapInterval, renderTargetFormat, depthStencilFormat, 0);
                         }
                     }
                 }
             }
+        }
 
-            // Give the sorted configs a unique ID and store them internally
-            EGLint index = 1;
-            for (ConfigSet::Iterator config = configSet.mSet.begin(); config != configSet.mSet.end(); config++)
-            {
-                Config configuration = *config;
-                configuration.mConfigID = index;
-                index++;
+        // Give the sorted configs a unique ID and store them internally
+        EGLint index = 1;
+        for (ConfigSet::Iterator config = configSet.mSet.begin(); config != configSet.mSet.end(); config++)
+        {
+            Config configuration = *config;
+            configuration.mConfigID = index;
+            index++;
 
-                mConfigSet.mSet.insert(configuration);
-            }
+            mConfigSet.mSet.insert(configuration);
         }
 
         if (!createDevice())
