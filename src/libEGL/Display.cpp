@@ -23,7 +23,10 @@ namespace egl
 {
 Display::Display(HDC deviceContext) : mDc(deviceContext)
 {
+    mD3d9Module = NULL;
+    
     mD3d9 = NULL;
+    mD3d9ex = NULL;
     mDevice = NULL;
     mDeviceWindow = NULL;
 
@@ -52,7 +55,38 @@ bool Display::initialize()
         return true;
     }
 
-    mD3d9 = Direct3DCreate9(D3D_SDK_VERSION);
+    mD3d9Module = LoadLibrary(TEXT("d3d9.dll"));
+    if (mD3d9Module == NULL)
+    {
+        terminate();
+        return false;
+    }
+
+    typedef IDirect3D9* (WINAPI *Direct3DCreate9Func)(UINT);
+    Direct3DCreate9Func Direct3DCreate9Ptr = reinterpret_cast<Direct3DCreate9Func>(GetProcAddress(mD3d9Module, "Direct3DCreate9"));
+
+    if (Direct3DCreate9Ptr == NULL)
+    {
+        terminate();
+        return false;
+    }
+
+    typedef HRESULT (WINAPI *Direct3DCreate9ExFunc)(UINT, IDirect3D9Ex**);
+    Direct3DCreate9ExFunc Direct3DCreate9ExPtr = reinterpret_cast<Direct3DCreate9ExFunc>(GetProcAddress(mD3d9Module, "Direct3DCreate9Ex"));
+
+    // Use Direct3D9Ex if available. Among other things, this version is less
+    // inclined to report a lost context, for example when the user switches
+    // desktop. Direct3D9Ex is available in Windows Vista and later if suitable drivers are available.
+    if (Direct3DCreate9ExPtr && SUCCEEDED(Direct3DCreate9ExPtr(D3D_SDK_VERSION, &mD3d9ex)))
+    {
+        ASSERT(mD3d9ex);
+        mD3d9ex->QueryInterface(IID_IDirect3D9, reinterpret_cast<void**>(&mD3d9));
+        ASSERT(mD3d9);
+    }
+    else
+    {
+        mD3d9 = Direct3DCreate9Ptr(D3D_SDK_VERSION);
+    }
 
     if (mD3d9)
     {
@@ -196,6 +230,18 @@ void Display::terminate()
     {
         DestroyWindow(mDeviceWindow);
         mDeviceWindow = NULL;
+    }
+    
+    if (mD3d9ex)
+    {
+        mD3d9ex->Release();
+        mD3d9ex = NULL;
+    }
+
+    if (mD3d9Module)
+    {
+        FreeLibrary(mD3d9Module);
+        mD3d9Module = NULL;
     }
 }
 
