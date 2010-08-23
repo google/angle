@@ -92,7 +92,12 @@ void Surface::resetSwapChain()
     presentParameters.Windowed = TRUE;
 
     RECT windowRect;
-    GetClientRect(getWindowHandle(), &windowRect);
+    if (!GetClientRect(getWindowHandle(), &windowRect))
+    {
+        ASSERT(false);
+        return;
+    }
+
     presentParameters.BackBufferWidth = windowRect.right - windowRect.left;
     presentParameters.BackBufferHeight = windowRect.bottom - windowRect.top;
 
@@ -308,7 +313,12 @@ void Surface::releaseRecordedState(IDirect3DDevice9 *device)
 bool Surface::checkForWindowResize()
 {
     RECT client;
-    GetClientRect(getWindowHandle(), &client);
+    if (!GetClientRect(getWindowHandle(), &client))
+    {
+        ASSERT(false);
+        return false;
+    }
+
     if (getWidth() != client.right - client.left || getHeight() != client.bottom - client.top)
     {
         resetSwapChain();
