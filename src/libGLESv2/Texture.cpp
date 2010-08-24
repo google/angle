@@ -200,116 +200,241 @@ void Texture::loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei
 {
     GLsizei inputPitch = ComputePitch(width, format, type, unpackAlignment);
 
+    switch (format)
+    {
+      case GL_ALPHA:
+        loadAlphaImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+        break;
+
+      case GL_LUMINANCE:
+        loadLuminanceImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+        break;
+
+      case GL_LUMINANCE_ALPHA:
+        loadLuminanceAlphaImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+        break;
+
+      case GL_RGB:
+        switch (type)
+        {
+          case GL_UNSIGNED_BYTE:
+            loadRGBUByteImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+
+          case GL_UNSIGNED_SHORT_5_6_5:
+            loadRGB565ImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+
+          default: UNREACHABLE();
+        }
+        break;
+
+      case GL_RGBA:
+        switch (type)
+        {
+          case GL_UNSIGNED_BYTE:
+            loadRGBAUByteImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+
+          case GL_UNSIGNED_SHORT_4_4_4_4:
+            loadRGBA4444ImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+
+          case GL_UNSIGNED_SHORT_5_5_5_1:
+            loadRGBA5551ImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+
+          default: UNREACHABLE();
+        }
+        break;
+      case GL_BGRA_EXT:
+        switch (type)
+        {
+          case GL_UNSIGNED_BYTE:
+            loadBGRAImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+
+          default: UNREACHABLE();
+        }
+        break;
+      default: UNREACHABLE();
+    }
+}
+
+void Texture::loadAlphaImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                 size_t inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned char *source = NULL;
+    unsigned char *dest = NULL;
+    
     for (int y = 0; y < height; y++)
     {
-        const unsigned char *source = static_cast<const unsigned char*>(input) + y * inputPitch;
-        const unsigned short *source16 = reinterpret_cast<const unsigned short*>(source);
-        unsigned char *dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
-
-        // fast path for EXT_texture_format_BGRA8888
-        if (format == GL_BGRA_EXT && type == GL_UNSIGNED_BYTE) {
-            memcpy(dest, source, width*4);
-            continue;
-        }
-
+        source = static_cast<const unsigned char*>(input) + y * inputPitch;
+        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
         for (int x = 0; x < width; x++)
         {
-            unsigned char r;
-            unsigned char g;
-            unsigned char b;
-            unsigned char a;
-
-            switch (format)
-            {
-              case GL_ALPHA:
-                a = source[x];
-                r = 0;
-                g = 0;
-                b = 0;
-                break;
-
-              case GL_LUMINANCE:
-                r = source[x];
-                g = source[x];
-                b = source[x];
-                a = 0xFF;
-                break;
-
-              case GL_LUMINANCE_ALPHA:
-                r = source[2*x+0];
-                g = source[2*x+0];
-                b = source[2*x+0];
-                a = source[2*x+1];
-                break;
-
-              case GL_RGB:
-                switch (type)
-                {
-                  case GL_UNSIGNED_BYTE:
-                    r = source[x * 3 + 0];
-                    g = source[x * 3 + 1];
-                    b = source[x * 3 + 2];
-                    a = 0xFF;
-                    break;
-
-                  case GL_UNSIGNED_SHORT_5_6_5:
-                    {
-                        unsigned short rgba = source16[x];
-
-                        a = 0xFF;
-                        b = ((rgba & 0x001F) << 3) | ((rgba & 0x001F) >> 2);
-                        g = ((rgba & 0x07E0) >> 3) | ((rgba & 0x07E0) >> 9);
-                        r = ((rgba & 0xF800) >> 8) | ((rgba & 0xF800) >> 13);
-                    }
-                    break;
-
-                  default: UNREACHABLE();
-                }
-                break;
-
-              case GL_RGBA:
-                switch (type)
-                {
-                  case GL_UNSIGNED_BYTE:
-                    r = source[x * 4 + 0];
-                    g = source[x * 4 + 1];
-                    b = source[x * 4 + 2];
-                    a = source[x * 4 + 3];
-                    break;
-
-                  case GL_UNSIGNED_SHORT_4_4_4_4:
-                    {
-                        unsigned short rgba = source16[x];
-
-                        a = ((rgba & 0x000F) << 4) | ((rgba & 0x000F) >> 0);
-                        b = ((rgba & 0x00F0) << 0) | ((rgba & 0x00F0) >> 4);
-                        g = ((rgba & 0x0F00) >> 4) | ((rgba & 0x0F00) >> 8);
-                        r = ((rgba & 0xF000) >> 8) | ((rgba & 0xF000) >> 12);
-                    }
-                    break;
-
-                  case GL_UNSIGNED_SHORT_5_5_5_1:
-                    {
-                        unsigned short rgba = source16[x];
-
-                        a = (rgba & 0x0001) ? 0xFF : 0;
-                        b = ((rgba & 0x003E) << 2) | ((rgba & 0x003E) >> 3);
-                        g = ((rgba & 0x07C0) >> 3) | ((rgba & 0x07C0) >> 8);
-                        r = ((rgba & 0xF800) >> 8) | ((rgba & 0xF800) >> 13);
-                    }
-                    break;
-
-                  default: UNREACHABLE();
-                }
-                break;
-              default: UNREACHABLE();
-            }
-
-            dest[4 * x + 0] = b;
-            dest[4 * x + 1] = g;
-            dest[4 * x + 2] = r;
-            dest[4 * x + 3] = a;
+            dest[4 * x + 0] = 0;
+            dest[4 * x + 1] = 0;
+            dest[4 * x + 2] = 0;
+            dest[4 * x + 3] = source[x];
         }
+    }
+}
+
+void Texture::loadLuminanceImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                     size_t inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned char *source = NULL;
+    unsigned char *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = static_cast<const unsigned char*>(input) + y * inputPitch;
+        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
+        for (int x = 0; x < width; x++)
+        {
+            dest[4 * x + 0] = source[x];
+            dest[4 * x + 1] = source[x];
+            dest[4 * x + 2] = source[x];
+            dest[4 * x + 3] = 0xFF;
+        }
+    }
+}
+
+void Texture::loadLuminanceAlphaImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                          size_t inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned char *source = NULL;
+    unsigned char *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = static_cast<const unsigned char*>(input) + y * inputPitch;
+        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
+        for (int x = 0; x < width; x++)
+        {
+            dest[4 * x + 0] = source[2*x+0];
+            dest[4 * x + 1] = source[2*x+0];
+            dest[4 * x + 2] = source[2*x+0];
+            dest[4 * x + 3] = source[2*x+1];
+        }
+    }
+}
+
+void Texture::loadRGBUByteImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                    size_t inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned char *source = NULL;
+    unsigned char *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = static_cast<const unsigned char*>(input) + y * inputPitch;
+        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
+        for (int x = 0; x < width; x++)
+        {
+            dest[4 * x + 0] = source[x * 3 + 2];
+            dest[4 * x + 1] = source[x * 3 + 1];
+            dest[4 * x + 2] = source[x * 3 + 0];
+            dest[4 * x + 3] = 0xFF;
+        }
+    }
+}
+
+void Texture::loadRGB565ImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                  size_t inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned short *source = NULL;
+    unsigned char *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
+        for (int x = 0; x < width; x++)
+        {
+            unsigned short rgba = source[x];
+            dest[4 * x + 0] = ((rgba & 0x001F) << 3) | ((rgba & 0x001F) >> 2);
+            dest[4 * x + 1] = ((rgba & 0x07E0) >> 3) | ((rgba & 0x07E0) >> 9);
+            dest[4 * x + 2] = ((rgba & 0xF800) >> 8) | ((rgba & 0xF800) >> 13);
+            dest[4 * x + 3] = 0xFF;
+        }
+    }
+}
+
+void Texture::loadRGBAUByteImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                     size_t inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned char *source = NULL;
+    unsigned char *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = static_cast<const unsigned char*>(input) + y * inputPitch;
+        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
+        for (int x = 0; x < width; x++)
+        {
+            dest[4 * x + 0] = source[x * 4 + 2];
+            dest[4 * x + 1] = source[x * 4 + 1];
+            dest[4 * x + 2] = source[x * 4 + 0];
+            dest[4 * x + 3] = source[x * 4 + 3];
+        }
+    }
+}
+
+void Texture::loadRGBA4444ImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                    size_t inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned short *source = NULL;
+    unsigned char *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
+        for (int x = 0; x < width; x++)
+        {
+            unsigned short rgba = source[x];
+            dest[4 * x + 0] = ((rgba & 0x00F0) << 0) | ((rgba & 0x00F0) >> 4);
+            dest[4 * x + 1] = ((rgba & 0x0F00) >> 4) | ((rgba & 0x0F00) >> 8);
+            dest[4 * x + 2] = ((rgba & 0xF000) >> 8) | ((rgba & 0xF000) >> 12);
+            dest[4 * x + 3] = ((rgba & 0x000F) << 4) | ((rgba & 0x000F) >> 0);
+        }
+    }
+}
+
+void Texture::loadRGBA5551ImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                    size_t inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned short *source = NULL;
+    unsigned char *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
+        for (int x = 0; x < width; x++)
+        {
+            unsigned short rgba = source[x];
+            dest[4 * x + 0] = ((rgba & 0x003E) << 2) | ((rgba & 0x003E) >> 3);
+            dest[4 * x + 1] = ((rgba & 0x07C0) >> 3) | ((rgba & 0x07C0) >> 8);
+            dest[4 * x + 2] = ((rgba & 0xF800) >> 8) | ((rgba & 0xF800) >> 13);
+            dest[4 * x + 3] = (rgba & 0x0001) ? 0xFF : 0;
+        }
+    }
+}
+
+void Texture::loadBGRAImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                size_t inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned char *source = NULL;
+    unsigned char *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = static_cast<const unsigned char*>(input) + y * inputPitch;
+        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
+        memcpy(dest, source, width*4);
     }
 }
 

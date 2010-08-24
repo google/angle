@@ -147,6 +147,25 @@ class Texture : public RefCountObject
     void loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type,
                        GLint unpackAlignment, const void *input, std::size_t outputPitch, void *output) const;
 
+    void loadAlphaImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                            size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadLuminanceImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadLuminanceAlphaImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                     size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadRGBUByteImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                               size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadRGB565ImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                             size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadRGBAUByteImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadRGBA4444ImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                               size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadRGBA5551ImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                               size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadBGRAImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                           size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
+
     IDirect3DBaseTexture9 *mBaseTexture; // This is a weak pointer. The derived class is assumed to own a strong pointer.
 
     bool mDirty;
