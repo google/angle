@@ -3214,7 +3214,8 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
             return error(GL_INVALID_OPERATION); // only whole-buffer copies are permitted
         }
 
-        if (drawDSBuffer->getSamples() != 0)
+        if ((drawDSBuffer && drawDSBuffer->getSamples() != 0) || 
+            (readDSBuffer && readDSBuffer->getSamples() != 0))
         {
             return error(GL_INVALID_OPERATION);
         }
