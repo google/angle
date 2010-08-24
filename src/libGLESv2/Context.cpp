@@ -1806,7 +1806,7 @@ void Context::applyState(GLenum drawMode)
         mPolygonOffsetStateDirty = false;
     }
 
-    if (mConfig->mMultiSample != 0 && mSampleStateDirty)
+    if (framebufferObject->isMultisample() && mSampleStateDirty)
     {
         if (mState.sampleAlphaToCoverage)
         {
@@ -1815,7 +1815,34 @@ void Context::applyState(GLenum drawMode)
 
         if (mState.sampleCoverage)
         {
-            FIXME("Sample coverage is unimplemented.");
+            device->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, TRUE);
+            unsigned int mask = 0;
+            if (mState.sampleCoverageValue != 0)
+            {
+                float threshold = 0.5f;
+
+                for (int i = 0; i < framebufferObject->getSamples(); ++i)
+                {
+                    mask <<= 1;
+
+                    if ((i + 1) * mState.sampleCoverageValue >= threshold)
+                    {
+                        threshold += 1.0f;
+                        mask |= 1;
+                    }
+                }
+            }
+            
+            if (mState.sampleCoverageInvert)
+            {
+                mask = ~mask;
+            }
+
+            device->SetRenderState(D3DRS_MULTISAMPLEMASK, mask);
+        }
+        else
+        {
+            device->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, FALSE);
         }
 
         mSampleStateDirty = false;
@@ -2928,6 +2955,7 @@ void Context::initExtensionString()
     mExtensionString += "GL_EXT_texture_format_BGRA8888 ";
     mExtensionString += "GL_EXT_read_format_bgra ";
     mExtensionString += "GL_ANGLE_framebuffer_blit ";
+
 
     if (getMaxSupportedSamples() == 0)
     {
