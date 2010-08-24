@@ -320,7 +320,28 @@ void Texture::createSurface(GLsizei width, GLsizei height, GLenum format, Image 
 
     if (width != 0 && height != 0)
     {
-        HRESULT result = getDevice()->CreateTexture(width, height, 1, NULL, selectFormat(format), D3DPOOL_SYSTEMMEM, &newTexture, NULL);
+        int levelToFetch = 0;
+        GLsizei requestWidth = width;
+        GLsizei requestHeight = height;
+        if (IsCompressed(format) && (width % 4 != 0 || height % 4 != 0))
+        {
+            bool isMult4 = false;
+            int upsampleCount = 0;
+            while (!isMult4)
+            {
+                requestWidth <<= 1;
+                requestHeight <<= 1;
+                upsampleCount++;
+                if (requestWidth % 4 == 0 && requestHeight % 4 == 0)
+                {
+                    isMult4 = true;
+                }
+            }
+            levelToFetch = upsampleCount;
+        }
+
+        HRESULT result = getDevice()->CreateTexture(requestWidth, requestHeight, levelToFetch + 1, NULL, selectFormat(format),
+                                                    D3DPOOL_SYSTEMMEM, &newTexture, NULL);
 
         if (FAILED(result))
         {
@@ -328,7 +349,7 @@ void Texture::createSurface(GLsizei width, GLsizei height, GLenum format, Image 
             return error(GL_OUT_OF_MEMORY);
         }
 
-        newTexture->GetSurfaceLevel(0, &newSurface);
+        newTexture->GetSurfaceLevel(levelToFetch, &newSurface);
         newTexture->Release();
     }
 
