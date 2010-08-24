@@ -44,6 +44,7 @@ class Framebuffer
 
     unsigned int getRenderTargetSerial();
     unsigned int getDepthbufferSerial();
+    unsigned int getStencilbufferSerial();
 
     Colorbuffer *getColorbuffer();
     DepthStencilbuffer *getDepthbuffer();

@@ -2807,6 +2807,7 @@ void Context::initExtensionString()
     mExtensionString += "GL_OES_packed_depth_stencil ";
     mExtensionString += "GL_EXT_texture_format_BGRA8888 ";
     mExtensionString += "GL_EXT_read_format_bgra ";
+    mExtensionString += "GL_ANGLE_framebuffer_blit ";
 
     if (mBufferBackEnd->supportIntIndices())
     {
@@ -2823,6 +2824,256 @@ void Context::initExtensionString()
 const char *Context::getExtensionString() const
 {
     return mExtensionString.c_str();
+}
+
+void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, 
+                              GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
+                              GLbitfield mask)
+{
+    IDirect3DDevice9 *device = getDevice();
+
+    Framebuffer *readFramebuffer = getReadFramebuffer();
+    Framebuffer *drawFramebuffer = getDrawFramebuffer();
+
+    if (!readFramebuffer || readFramebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE ||
+        !drawFramebuffer || drawFramebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
+    {
+        return error(GL_INVALID_FRAMEBUFFER_OPERATION);
+    }
+
+    RECT sourceRect;
+    RECT destRect;
+
+    if (srcX0 < srcX1)
+    {
+        sourceRect.left = srcX0;
+        sourceRect.right = srcX1;
+        destRect.left = dstX0;
+        destRect.right = dstX1;
+    }
+    else
+    {
+        sourceRect.left = srcX1;
+        destRect.left = dstX1;
+        sourceRect.right = srcX0;
+        destRect.right = dstX0;
+    }
+
+    // Arguments to StretchRect must be in D3D-style (0-top) coordinates, so we must 
+    // flip our Y-values here
+    if (srcY0 < srcY1)
+    {
+        sourceRect.bottom = srcY1;
+        destRect.bottom = dstY1;
+        sourceRect.top = srcY0;
+        destRect.top = dstY0;
+    }
+    else
+    {
+        sourceRect.bottom = srcY0;
+        destRect.bottom = dstY0;
+        sourceRect.top = srcY1;
+        destRect.top = dstY1;
+    }
+
+    RECT sourceScissoredRect = sourceRect;
+    RECT destScissoredRect = destRect;
+
+    if (mState.scissorTest)
+    {
+        // Only write to parts of the destination framebuffer which pass the scissor test
+        // Please note: the destRect is now in D3D-style coordinates, so the *top* of the
+        // rect will be checked against scissorY, rather than the bottom.
+        if (destRect.left < mState.scissorX)
+        {
+            int xDiff = mState.scissorX - destRect.left;
+            destScissoredRect.left = mState.scissorX;
+            sourceScissoredRect.left += xDiff;
+        }
+
+        if (destRect.right > mState.scissorX + mState.scissorWidth)
+        {
+            int xDiff = destRect.right - (mState.scissorX + mState.scissorWidth);
+            destScissoredRect.right = mState.scissorX + mState.scissorWidth;
+            sourceScissoredRect.right -= xDiff;
+        }
+
+        if (destRect.top < mState.scissorY)
+        {
+            int yDiff = mState.scissorY - destRect.top;
+            destScissoredRect.top = mState.scissorY;
+            sourceScissoredRect.top += yDiff;
+        }
+
+        if (destRect.bottom > mState.scissorY + mState.scissorHeight)
+        {
+            int yDiff = destRect.bottom - (mState.scissorY + mState.scissorHeight);
+            destScissoredRect.bottom = mState.scissorY + mState.scissorHeight;
+            sourceScissoredRect.bottom -= yDiff;
+        }
+    }
+
+    bool blitRenderTarget = false;
+    bool blitDepthStencil = false;
+
+    RECT sourceTrimmedRect = sourceScissoredRect;
+    RECT destTrimmedRect = destScissoredRect;
+
+    // The source & destination rectangles also may need to be trimmed if they fall out of the bounds of 
+    // the actual draw and read surfaces.
+    if (sourceTrimmedRect.left < 0)
+    {
+        int xDiff = 0 - sourceTrimmedRect.left;
+        sourceTrimmedRect.left = 0;
+        destTrimmedRect.left += xDiff;
+    }
+
+    int readBufferWidth = readFramebuffer->getColorbuffer()->getWidth();
+    int readBufferHeight = readFramebuffer->getColorbuffer()->getHeight();
+    int drawBufferWidth = drawFramebuffer->getColorbuffer()->getWidth();
+    int drawBufferHeight = drawFramebuffer->getColorbuffer()->getHeight();
+
+    if (sourceTrimmedRect.right > readBufferWidth)
+    {
+        int xDiff = sourceTrimmedRect.right - readBufferWidth;
+        sourceTrimmedRect.right = readBufferWidth;
+        destTrimmedRect.right -= xDiff;
+    }
+
+    if (sourceTrimmedRect.top < 0)
+    {
+        int yDiff = 0 - sourceTrimmedRect.top;
+        sourceTrimmedRect.top = 0;
+        destTrimmedRect.top += yDiff;
+    }
+
+    if (sourceTrimmedRect.bottom > readBufferHeight)
+    {
+        int yDiff = sourceTrimmedRect.bottom - readBufferHeight;
+        sourceTrimmedRect.bottom = readBufferHeight;
+        destTrimmedRect.bottom -= yDiff;
+    }
+
+    if (destTrimmedRect.left < 0)
+    {
+        int xDiff = 0 - destTrimmedRect.left;
+        destTrimmedRect.left = 0;
+        sourceTrimmedRect.left += xDiff;
+    }
+
+    if (destTrimmedRect.right > drawBufferWidth)
+    {
+        int xDiff = destTrimmedRect.right - drawBufferWidth;
+        destTrimmedRect.right = drawBufferWidth;
+        sourceTrimmedRect.right -= xDiff;
+    }
+
+    if (destTrimmedRect.top < 0)
+    {
+        int yDiff = 0 - destTrimmedRect.top;
+        destTrimmedRect.top = 0;
+        sourceTrimmedRect.top += yDiff;
+    }
+
+    if (destTrimmedRect.bottom > drawBufferHeight)
+    {
+        int yDiff = destTrimmedRect.bottom - drawBufferHeight;
+        destTrimmedRect.bottom = drawBufferHeight;
+        sourceTrimmedRect.bottom -= yDiff;
+    }
+
+    if (mask & GL_COLOR_BUFFER_BIT)
+    {
+        if (readFramebuffer->getColorbufferType() != drawFramebuffer->getColorbufferType() ||
+            readFramebuffer->getColorbuffer()->getD3DFormat() != drawFramebuffer->getColorbuffer()->getD3DFormat())
+        {
+            ERR("Color buffer format conversion in BlitFramebufferANGLE not supported by this implementation");
+            return error(GL_INVALID_OPERATION);
+        }
+
+        blitRenderTarget = true;
+
+    }
+
+    if (mask & (GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT))
+    {
+        DepthStencilbuffer *readDSBuffer = NULL;
+        DepthStencilbuffer *drawDSBuffer = NULL;
+
+        // We support OES_packed_depth_stencil, and do not support a separately attached depth and stencil buffer, so if we have
+        // both a depth and stencil buffer, it will be the same buffer.
+
+        if (mask & GL_DEPTH_BUFFER_BIT)
+        {
+            if (readFramebuffer->getDepthbuffer() && drawFramebuffer->getDepthbuffer())
+            {
+                if (readFramebuffer->getDepthbufferType() != drawFramebuffer->getDepthbufferType() ||
+                    readFramebuffer->getDepthbuffer()->getD3DFormat() != drawFramebuffer->getDepthbuffer()->getD3DFormat())
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                blitDepthStencil = true;
+                readDSBuffer = readFramebuffer->getDepthbuffer();
+                drawDSBuffer = drawFramebuffer->getDepthbuffer();
+            }
+        }
+
+        if (mask & GL_STENCIL_BUFFER_BIT)
+        {
+            if (readFramebuffer->getStencilbuffer() && drawFramebuffer->getStencilbuffer())
+            {
+                if (readFramebuffer->getStencilbufferType() != drawFramebuffer->getStencilbufferType() ||
+                    readFramebuffer->getStencilbuffer()->getD3DFormat() != drawFramebuffer->getStencilbuffer()->getD3DFormat())
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                blitDepthStencil = true;
+                readDSBuffer = readFramebuffer->getStencilbuffer();
+                drawDSBuffer = drawFramebuffer->getStencilbuffer();
+            }
+        }
+
+        if (sourceTrimmedRect.bottom - sourceTrimmedRect.top < readDSBuffer->getHeight() ||
+            sourceTrimmedRect.right - sourceTrimmedRect.left < readDSBuffer->getWidth() || 
+            destTrimmedRect.bottom - destTrimmedRect.top < drawDSBuffer->getHeight() ||
+            destTrimmedRect.right - destTrimmedRect.left < drawDSBuffer->getWidth() ||
+            sourceTrimmedRect.top != 0 || destTrimmedRect.top != 0 || sourceTrimmedRect.left != 0 || destTrimmedRect.left != 0)
+        {
+            ERR("Only whole-buffer depth and stencil blits are supported by this implementation.");
+            return error(GL_INVALID_OPERATION); // only whole-buffer copies are permitted
+        }
+    }
+
+    if (blitRenderTarget || blitDepthStencil)
+    {
+        egl::Display *display = getDisplay();
+        display->endScene();
+
+        if (blitRenderTarget)
+        {
+            HRESULT result = device->StretchRect(readFramebuffer->getRenderTarget(), &sourceTrimmedRect, 
+                                                 drawFramebuffer->getRenderTarget(), &destTrimmedRect, D3DTEXF_NONE);
+
+            if (FAILED(result))
+            {
+                ERR("BlitFramebufferANGLE failed: StretchRect returned %x.", result);
+                return;
+            }
+        }
+
+        if (blitDepthStencil)
+        {
+            HRESULT result = device->StretchRect(readFramebuffer->getDepthStencil(), NULL, drawFramebuffer->getDepthStencil(), NULL, D3DTEXF_NONE);
+
+            if (FAILED(result))
+            {
+                ERR("BlitFramebufferANGLE failed: StretchRect returned %x.", result);
+                return;
+            }
+        }
+    }
 }
 
 }

@@ -68,6 +68,11 @@ GLenum Renderbuffer::getFormat() const
     return mStorage->getFormat();
 }
 
+D3DFORMAT Renderbuffer::getD3DFormat() const
+{
+    return mStorage->getD3DFormat();
+}
+
 unsigned int Renderbuffer::getSerial() const
 {
     return mStorage->getSerial();
@@ -134,6 +139,11 @@ void RenderbufferStorage::setSize(int width, int height)
 GLenum RenderbufferStorage::getFormat() const
 {
     return mFormat;
+}
+
+D3DFORMAT RenderbufferStorage::getD3DFormat() const
+{
+    return mD3DFormat;
 }
 
 unsigned int RenderbufferStorage::getSerial() const

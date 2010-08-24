@@ -140,6 +140,23 @@ IDirect3DSurface9 *Framebuffer::getRenderTarget()
     return NULL;
 }
 
+IDirect3DSurface9 *Framebuffer::getDepthStencil()
+{
+    Renderbuffer *depthstencilbuffer = mDepthbufferPointer.get();
+    
+    if (!depthstencilbuffer)
+    {
+        depthstencilbuffer = mStencilbufferPointer.get();
+    }
+
+    if (depthstencilbuffer)
+    {
+        return depthstencilbuffer->getDepthStencil();
+    }
+
+    return NULL;
+}
+
 unsigned int Framebuffer::getDepthbufferSerial()
 {
     Renderbuffer *depthbuffer = mDepthbufferPointer.get();
@@ -147,6 +164,18 @@ unsigned int Framebuffer::getDepthbufferSerial()
     if (depthbuffer)
     {
         return depthbuffer->getSerial();
+    }
+
+    return 0;
+}
+
+unsigned int Framebuffer::getStencilbufferSerial()
+{
+    Renderbuffer *stencilbuffer = mStencilbufferPointer.get();
+
+    if (stencilbuffer)
+    {
+        return stencilbuffer->getSerial();
     }
 
     return 0;

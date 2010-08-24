@@ -785,6 +785,14 @@ typedef void (GL_APIENTRYP PFNGLENDTILINGQCOMPROC) (GLbitfield preserveMask);
 /* GL_ANGLE_framebuffer_blit */
 #ifndef GL_ANGLE_framebuffer_blit
 #define GL_ANGLE_framebuffer_blit 1
+#ifdef GL_GLEXT_PROTOTYPES
+GL_APICALL void GL_APIENTRY glBlitFramebufferANGLE (GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1,
+                                                    GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
+                                                    GLbitfield mask, GLenum filter);
+#endif
+typedef void (GL_APIENTRYP PFNGLBLITFRAMEBUFFERANGLEPROC) (GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1,
+                                                           GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
+                                                           GLbitfield mask, GLenum filter);
 #endif
 
 #ifdef __cplusplus

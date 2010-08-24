@@ -5087,6 +5087,54 @@ void __stdcall glViewport(GLint x, GLint y, GLsizei width, GLsizei height)
     }
 }
 
+void __stdcall glBlitFramebufferANGLE(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
+                                      GLbitfield mask, GLenum filter)
+{
+    TRACE("(GLint srcX0 = %d, GLint srcY0 = %d, GLint srcX1 = %d, GLint srcY1 = %d, "
+          "GLint dstX0 = %d, GLint dstY0 = %d, GLint dstX1 = %d, GLint dstY1 = %d, "
+          "GLbitfield mask = 0x%X, GLenum filter = 0x%X)",
+          srcX0, srcY0, srcX1, srcX1, dstX0, dstY0, dstX1, dstY1, mask, filter);
+
+    try
+    {
+        switch (filter)
+        {
+          case GL_NEAREST:
+            break;
+          default:
+            return error(GL_INVALID_ENUM);
+        }
+
+        if ((mask & ~(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)) != 0)
+        {
+            return error(GL_INVALID_VALUE);
+        }
+
+        if (srcX1 - srcX0 != dstX1 - dstX0 || srcY1 - srcY0 != dstY1 - dstY0)
+        {
+            ERR("Scaling and flipping in BlitFramebufferANGLE not supported by this implementation");
+            return error(GL_INVALID_OPERATION);
+        }
+
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            if (context->getReadFramebufferHandle() == context->getDrawFramebufferHandle())
+            {
+                ERR("Blits with the same source and destination framebuffer are not supported by this implementation.");
+                return error(GL_INVALID_OPERATION);
+            }
+
+            context->blitFramebuffer(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask);
+        }
+    }
+    catch(std::bad_alloc&)
+    {
+        return error(GL_OUT_OF_MEMORY);
+    }
+}
+
 void __stdcall glTexImage3DOES(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth,
                                GLint border, GLenum format, GLenum type, const GLvoid* pixels)
 {
@@ -5116,6 +5164,7 @@ __eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *
     static const Extension glExtensions[] =
     {
         {"glTexImage3DOES", (__eglMustCastToProperFunctionPointerType)glTexImage3DOES},
+        {"glBlitFramebufferANGLE", (__eglMustCastToProperFunctionPointerType)glBlitFramebufferANGLE}
     };
 
     for (int ext = 0; ext < sizeof(glExtensions) / sizeof(Extension); ext++)

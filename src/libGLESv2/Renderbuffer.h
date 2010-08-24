@@ -42,6 +42,7 @@ class RenderbufferStorage
     virtual int getWidth() const;
     virtual int getHeight() const;
     GLenum getFormat() const;
+    D3DFORMAT getD3DFormat() const;
     unsigned int getSerial() const;
 
     static unsigned int issueSerial();
@@ -81,6 +82,7 @@ class Renderbuffer : public RefCountObject
     int getWidth() const;
     int getHeight() const;
     GLenum getFormat() const;
+    D3DFORMAT getD3DFormat() const;
     unsigned int getSerial() const;
 
     void setStorage(RenderbufferStorage *newStorage);
