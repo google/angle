@@ -49,6 +49,7 @@ class RenderbufferStorage
   protected:
     void setSize(int width, int height);
     GLenum mFormat;
+    D3DFORMAT mD3DFormat;
     unsigned int mSerial;
 
   private:

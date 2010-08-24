@@ -156,6 +156,11 @@ Colorbuffer::Colorbuffer(IDirect3DSurface9 *renderTarget) : mRenderTarget(render
         renderTarget->GetDesc(&description);
 
         setSize(description.Width, description.Height);
+        mD3DFormat = description.Format;
+    }
+    else
+    {
+        mD3DFormat = D3DFMT_UNKNOWN;
     }
 
 }
@@ -165,10 +170,11 @@ Colorbuffer::Colorbuffer(int width, int height, GLenum format)
     IDirect3DDevice9 *device = getDevice();
 
     mRenderTarget = NULL;
+    D3DFORMAT requestedFormat = es2dx::ConvertRenderbufferFormat(format);
 
     if (width > 0 && height > 0)
     {
-        HRESULT result = device->CreateRenderTarget(width, height, es2dx::ConvertRenderbufferFormat(format), 
+        HRESULT result = device->CreateRenderTarget(width, height, requestedFormat, 
                                                     D3DMULTISAMPLE_NONE, 0, FALSE, &mRenderTarget, NULL);
 
         if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
@@ -185,11 +191,13 @@ Colorbuffer::Colorbuffer(int width, int height, GLenum format)
     {
         setSize(width, height);
         mFormat = format;
+        mD3DFormat = requestedFormat;
     }
     else
     {
         setSize(0, 0);
         mFormat = GL_RGBA4;
+        mD3DFormat = D3DFMT_UNKNOWN;
     }
 }
 
@@ -273,7 +281,12 @@ DepthStencilbuffer::DepthStencilbuffer(IDirect3DSurface9 *depthStencil) : mDepth
         depthStencil->GetDesc(&description);
 
         setSize(description.Width, description.Height);
-        mFormat = GL_DEPTH24_STENCIL8_OES; 
+        mFormat = (description.Format == D3DFMT_D16 ? GL_DEPTH_COMPONENT16 : GL_DEPTH24_STENCIL8_OES); 
+        mD3DFormat = description.Format;
+    }
+    else
+    {
+        mD3DFormat = D3DFMT_UNKNOWN;
     }
 }
 
@@ -297,11 +310,13 @@ DepthStencilbuffer::DepthStencilbuffer(int width, int height)
     {
         setSize(width, height);
         mFormat = GL_DEPTH24_STENCIL8_OES;  
+        mD3DFormat = D3DFMT_D24S8;
     }
     else
     {
         setSize(0, 0);
         mFormat = GL_RGBA4; //default format
+        mD3DFormat = D3DFMT_UNKNOWN;
     }
 }
 
