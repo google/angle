@@ -265,6 +265,8 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 
         mMaxSupportedSamples = max;
 
+        mSupportsCompressedTextures = display->getCompressedTextureSupport();
+
         initExtensionString();
 
         mState.viewportX = 0;
@@ -1146,8 +1148,6 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_MAX_FRAGMENT_UNIFORM_VECTORS:     *params = gl::MAX_FRAGMENT_UNIFORM_VECTORS;     break;
       case GL_MAX_RENDERBUFFER_SIZE:            *params = gl::MAX_RENDERBUFFER_SIZE;            break;
       case GL_NUM_SHADER_BINARY_FORMATS:        *params = 0;                                    break;
-      case GL_NUM_COMPRESSED_TEXTURE_FORMATS:   *params = 0;                                    break;
-      case GL_COMPRESSED_TEXTURE_FORMATS: /* no compressed texture formats are supported */     break;
       case GL_SHADER_BINARY_FORMATS:      /* no shader binary formats are supported */          break;
       case GL_ARRAY_BUFFER_BINDING:             *params = mState.arrayBuffer.id();              break;
       case GL_ELEMENT_ARRAY_BUFFER_BINDING:     *params = mState.elementArrayBuffer.id();       break;
@@ -1185,6 +1185,20 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_SUBPIXEL_BITS:                    *params = 4;                                    break;
       case GL_MAX_TEXTURE_SIZE:                 *params = gl::MAX_TEXTURE_SIZE;                 break;
       case GL_MAX_CUBE_MAP_TEXTURE_SIZE:        *params = gl::MAX_CUBE_MAP_TEXTURE_SIZE;        break;
+      case GL_NUM_COMPRESSED_TEXTURE_FORMATS:   
+        {
+            if (supportsCompressedTextures())
+            {
+                // at current, only GL_COMPRESSED_RGB_S3TC_DXT1_EXT and 
+                // GL_COMPRESSED_RGBA_S3TC_DXT1_EXT are supported
+                *params = 2;
+            }
+            else
+            {
+                *params = 0;
+            }
+        }
+        break;
       case GL_MAX_SAMPLES_ANGLE:
         {
             GLsizei maxSamples = getMaxSupportedSamples();
@@ -1235,6 +1249,15 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
             int maxDimension = std::max((int)gl::MAX_RENDERBUFFER_SIZE, (int)gl::MAX_TEXTURE_SIZE);
             params[0] = maxDimension;
             params[1] = maxDimension;
+        }
+        break;
+      case GL_COMPRESSED_TEXTURE_FORMATS:
+        {
+            if (supportsCompressedTextures())
+            {
+                params[0] = GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
+                params[1] = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+            }
         }
         break;
       case GL_VIEWPORT:
@@ -2762,6 +2785,11 @@ int Context::getNearestSupportedSamples(D3DFORMAT format, int requested) const
     return -1;
 }
 
+bool Context::supportsCompressedTextures() const
+{
+    return mSupportsCompressedTextures;
+}
+
 void Context::detachBuffer(GLuint buffer)
 {
     // [OpenGL ES 2.0.24] section 2.9 page 22:
@@ -2958,6 +2986,10 @@ void Context::initExtensionString()
     mExtensionString += "GL_ANGLE_framebuffer_blit ";
     mExtensionString += "GL_OES_rgb8_rgba8 ";
 
+    if (supportsCompressedTextures())
+    {
+        mExtensionString += "GL_EXT_texture_compression_dxt1 ";
+    }
 
     if (getMaxSupportedSamples() != 0)
     {

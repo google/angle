@@ -29,6 +29,9 @@ int AllocateFirstFreeBits(unsigned int *bits, unsigned int allocationSize, unsig
 
 int ComputePixelSize(GLenum format, GLenum type);
 GLsizei ComputePitch(GLsizei width, GLenum format, GLenum type, GLint alignment);
+GLsizei ComputeCompressedPitch(GLsizei width, GLenum format);
+GLsizei ComputeCompressedSize(GLsizei width, GLsizei height, GLenum format);
+bool IsCompressed(GLenum format);
 bool IsCubemapTextureTarget(GLenum target);
 bool IsTextureTarget(GLenum target);
 bool CheckTextureFormatType(GLenum format, GLenum type);

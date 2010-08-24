@@ -55,7 +55,9 @@ class Texture : public RefCountObject
     GLuint getWidth() const;
     GLuint getHeight() const;
 
+    virtual GLenum getFormat() const = 0;
     virtual bool isComplete() const = 0;
+    virtual bool isCompressed() const = 0;
 
     IDirect3DBaseTexture9 *getTexture();
     virtual Renderbuffer *getColorbuffer(GLenum target) = 0;
@@ -82,6 +84,7 @@ class Texture : public RefCountObject
 
         virtual int getWidth() const;
         virtual int getHeight() const;
+        virtual GLenum getFormat() const;
 
       private:
         Texture *mTexture;
@@ -108,6 +111,8 @@ class Texture : public RefCountObject
 
     void setImage(GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *img);
     bool subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *img);
+    void setCompressedImage(GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels, Image *img);
+    bool subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels, Image *img);
 
     void needRenderTarget();
 
@@ -147,6 +152,8 @@ class Texture : public RefCountObject
     bool mDirty;
     bool mDirtyMetaData;
     bool mIsRenderable;
+
+    void createSurface(GLsizei width, GLsizei height, GLenum format, Image *img);
 };
 
 class Texture2D : public Texture
@@ -157,13 +164,17 @@ class Texture2D : public Texture
     ~Texture2D();
 
     GLenum getTarget() const;
+    GLenum getFormat() const;
 
     void setImage(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
+    void setCompressedImage(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels);
     void subImage(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
+    void subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels);
     void copyImage(GLint level, GLenum internalFormat, GLint x, GLint y, GLsizei width, GLsizei height, RenderbufferStorage *source);
     void copySubImage(GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, RenderbufferStorage *source);
 
     bool isComplete() const;
+    bool isCompressed() const;
 
     virtual void generateMipmaps();
 
@@ -197,6 +208,7 @@ class TextureCubeMap : public Texture
     ~TextureCubeMap();
 
     GLenum getTarget() const;
+    GLenum getFormat() const;
 
     void setImagePosX(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void setImageNegX(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
@@ -205,11 +217,15 @@ class TextureCubeMap : public Texture
     void setImagePosZ(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void setImageNegZ(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
 
+    void setCompressedImage(GLenum face, GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels);
+
     void subImage(GLenum face, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
+    void subImageCompressed(GLenum face, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels);
     void copyImage(GLenum face, GLint level, GLenum internalFormat, GLint x, GLint y, GLsizei width, GLsizei height, RenderbufferStorage *source);
     void copySubImage(GLenum face, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, RenderbufferStorage *source);
 
     bool isComplete() const;
+    bool isCompressed() const;
 
     virtual void generateMipmaps();
 

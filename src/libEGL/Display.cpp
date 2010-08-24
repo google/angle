@@ -479,4 +479,12 @@ void Display::getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray)
         multiSampleArray[multiSampleIndex] = SUCCEEDED(result);
     }
 }
+
+bool Display::getCompressedTextureSupport()
+{
+    D3DDISPLAYMODE currentDisplayMode;
+    mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
+
+    return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT1));
+}
 }

@@ -61,6 +61,7 @@ class Display
     virtual IDirect3DDevice9 *getDevice();
     virtual D3DCAPS9 getDeviceCaps();
     virtual void getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray);
+    virtual bool getCompressedTextureSupport();
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Display);

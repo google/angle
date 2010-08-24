@@ -23,7 +23,7 @@ namespace gl
 {
 
 Texture::Image::Image()
-  : width(0), height(0), dirty(false), surface(NULL)
+  : width(0), height(0), dirty(false), surface(NULL), format(GL_NONE)
 {
 }
 
@@ -177,7 +177,15 @@ GLuint Texture::getHeight() const
 // Selects an internal Direct3D 9 format for storing an Image
 D3DFORMAT Texture::selectFormat(GLenum format)
 {
-    return D3DFMT_A8R8G8B8;
+    if (format == GL_COMPRESSED_RGB_S3TC_DXT1_EXT ||
+        format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT)
+    {
+        return D3DFMT_DXT1;
+    }
+    else
+    {
+        return D3DFMT_A8R8G8B8;
+    }
 }
 
 int Texture::imagePitch(const Image &img) const
@@ -305,14 +313,13 @@ void Texture::loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei
     }
 }
 
-void Texture::setImage(GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *img)
+void Texture::createSurface(GLsizei width, GLsizei height, GLenum format, Image *img)
 {
     IDirect3DTexture9 *newTexture = NULL;
     IDirect3DSurface9 *newSurface = NULL;
 
     if (width != 0 && height != 0)
     {
-        //HRESULT result = getDevice()->CreateOffscreenPlainSurface(width, height, selectFormat(format), D3DPOOL_SYSTEMMEM, &newSurface, NULL);
         HRESULT result = getDevice()->CreateTexture(width, height, 1, NULL, selectFormat(format), D3DPOOL_SYSTEMMEM, &newTexture, NULL);
 
         if (FAILED(result))
@@ -331,18 +338,46 @@ void Texture::setImage(GLsizei width, GLsizei height, GLenum format, GLenum type
     img->width = width;
     img->height = height;
     img->format = format;
+}
 
-    if (pixels != NULL && newSurface != NULL)
+void Texture::setImage(GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *img)
+{
+    createSurface(width, height, format, img);
+
+    if (pixels != NULL && img->surface != NULL)
     {
         D3DLOCKED_RECT locked;
-        HRESULT result = newSurface->LockRect(&locked, NULL, 0);
+        HRESULT result = img->surface->LockRect(&locked, NULL, 0);
 
         ASSERT(SUCCEEDED(result));
 
         if (SUCCEEDED(result))
         {
             loadImageData(0, 0, width, height, format, type, unpackAlignment, pixels, locked.Pitch, locked.pBits);
-            newSurface->UnlockRect();
+            img->surface->UnlockRect();
+        }
+
+        img->dirty = true;
+    }
+
+    mDirtyMetaData = true;
+}
+
+void Texture::setCompressedImage(GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels, Image *img)
+{
+    createSurface(width, height, format, img);
+
+    if (pixels != NULL && img->surface != NULL)
+    {
+        D3DLOCKED_RECT locked;
+        HRESULT result = img->surface->LockRect(&locked, NULL, 0);
+
+        ASSERT(SUCCEEDED(result));
+
+        if (SUCCEEDED(result))
+        {
+            memcpy(locked.pBits, pixels, imageSize);
+            img->surface->UnlockRect();
         }
 
         img->dirty = true;
@@ -367,6 +402,46 @@ bool Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
     if (SUCCEEDED(result))
     {
         loadImageData(xoffset, yoffset, width, height, format, type, unpackAlignment, pixels, locked.Pitch, locked.pBits);
+        img->surface->UnlockRect();
+    }
+
+    img->dirty = true;
+    return true;
+}
+
+bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels, Image *img)
+{
+    if (width + xoffset > img->width || height + yoffset > img->height)
+    {
+        error(GL_INVALID_VALUE);
+        return false;
+    }
+
+    if (format != getFormat())
+    {
+        error(GL_INVALID_OPERATION);
+        return false;
+    }
+
+    RECT updateRegion;
+    updateRegion.left = xoffset;
+    updateRegion.right = xoffset + width;
+    updateRegion.bottom = yoffset + height;
+    updateRegion.top = yoffset;
+
+    D3DLOCKED_RECT locked;
+    HRESULT result = img->surface->LockRect(&locked, &updateRegion, 0);
+
+    ASSERT(SUCCEEDED(result));
+
+    if (SUCCEEDED(result))
+    {
+        GLsizei inputPitch = ComputeCompressedPitch(width, format);
+        int rows = imageSize / inputPitch;
+        for (int i = 0; i < rows; ++i)
+        {
+            memcpy((void*)((BYTE*)locked.pBits + i * locked.Pitch), (void*)((BYTE*)pixels + i * inputPitch), inputPitch);
+        }
         img->surface->UnlockRect();
     }
 
@@ -484,6 +559,11 @@ GLenum Texture2D::getTarget() const
     return GL_TEXTURE_2D;
 }
 
+GLenum Texture2D::getFormat() const
+{
+    return mImageArray[0].format;
+}
+
 // While OpenGL doesn't check texture consistency until draw-time, D3D9 requires a complete texture
 // for render-to-texture (such as CopyTexImage). We have no way of keeping individual inconsistent levels.
 // Call this when a particular level of the texture must be defined with a specific format, width and height.
@@ -542,6 +622,13 @@ void Texture2D::setImage(GLint level, GLenum internalFormat, GLsizei width, GLsi
     Texture::setImage(width, height, format, type, unpackAlignment, pixels, &mImageArray[level]);
 }
 
+void Texture2D::setCompressedImage(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels)
+{
+    redefineTexture(level, internalFormat, width, height);
+
+    Texture::setCompressedImage(width, height, internalFormat, imageSize, pixels, &mImageArray[level]);
+}
+
 void Texture2D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
     ASSERT(mImageArray[level].surface != NULL);
@@ -580,6 +667,14 @@ void Texture2D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei wi
 void Texture2D::subImage(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
     if (Texture::subImage(xoffset, yoffset, width, height, format, type, unpackAlignment, pixels, &mImageArray[level]))
+    {
+        commitRect(level, xoffset, yoffset, width, height);
+    }
+}
+
+void Texture2D::subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels)
+{
+    if (Texture::subImageCompressed(xoffset, yoffset, width, height, format, imageSize, pixels, &mImageArray[level]))
     {
         commitRect(level, xoffset, yoffset, width, height);
     }
@@ -713,6 +808,11 @@ bool Texture2D::isComplete() const
     }
 
     return true;
+}
+
+bool Texture2D::isCompressed() const
+{
+    return IsCompressed(getFormat());
 }
 
 // Constructs a Direct3D 9 texture resource from the texture images, or returns an existing one
@@ -954,6 +1054,11 @@ GLenum TextureCubeMap::getTarget() const
     return GL_TEXTURE_CUBE_MAP;
 }
 
+GLenum TextureCubeMap::getFormat() const
+{
+    return mImageArray[0][0].format;
+}
+
 void TextureCubeMap::setImagePosX(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
     setImage(0, level, internalFormat, width, height, format, type, unpackAlignment, pixels);
@@ -982,6 +1087,13 @@ void TextureCubeMap::setImagePosZ(GLint level, GLenum internalFormat, GLsizei wi
 void TextureCubeMap::setImageNegZ(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
     setImage(5, level, internalFormat, width, height, format, type, unpackAlignment, pixels);
+}
+
+void TextureCubeMap::setCompressedImage(GLenum face, GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels)
+{
+    redefineTexture(level, internalFormat, width);
+
+    Texture::setCompressedImage(width, height, internalFormat, imageSize, pixels, &mImageArray[faceIndex(face)][level]);
 }
 
 void TextureCubeMap::commitRect(GLenum faceTarget, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
@@ -1022,6 +1134,14 @@ void TextureCubeMap::commitRect(GLenum faceTarget, GLint level, GLint xoffset, G
 void TextureCubeMap::subImage(GLenum face, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
     if (Texture::subImage(xoffset, yoffset, width, height, format, type, unpackAlignment, pixels, &mImageArray[faceIndex(face)][level]))
+    {
+        commitRect(face, level, xoffset, yoffset, width, height);
+    }
+}
+
+void TextureCubeMap::subImageCompressed(GLenum face, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels)
+{
+    if (Texture::subImageCompressed(xoffset, yoffset, width, height, format, imageSize, pixels, &mImageArray[faceIndex(face)][level]))
     {
         commitRect(face, level, xoffset, yoffset, width, height);
     }
@@ -1091,6 +1211,11 @@ bool TextureCubeMap::isComplete() const
     }
 
     return true;
+}
+
+bool TextureCubeMap::isCompressed() const
+{
+    return IsCompressed(getFormat());
 }
 
 // Constructs a Direct3D 9 texture resource from the texture images, or returns an existing one
@@ -1536,6 +1661,11 @@ int Texture::TextureColorbufferProxy::getWidth() const
 int Texture::TextureColorbufferProxy::getHeight() const
 {
     return mTexture->getHeight();
+}
+
+GLenum Texture::TextureColorbufferProxy::getFormat() const
+{
+    return mTexture->getFormat();
 }
 
 }

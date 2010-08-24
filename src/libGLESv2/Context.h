@@ -377,6 +377,7 @@ class Context
     GLsizei getMaxSupportedSamples() const;
     int getNearestSupportedSamples(D3DFORMAT format, int requested) const;
     const char *getExtensionString() const;
+    bool supportsCompressedTextures() const;
 
     void blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, 
                          GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
@@ -442,6 +443,7 @@ class Context
     bool mSupportsShaderModel3;
     std::map<D3DFORMAT, bool *> mMultiSampleSupport;
     GLsizei mMaxSupportedSamples;
+    bool mSupportsCompressedTextures;
 
     // state caching flags
     bool mClearStateDirty;

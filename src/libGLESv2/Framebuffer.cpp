@@ -305,6 +305,14 @@ GLenum Framebuffer::completeness()
             return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
         }
 
+        if (IsTextureTarget(mColorbufferType))
+        {
+            if (IsCompressed(colorbuffer->getFormat()))
+            {
+                return GL_FRAMEBUFFER_UNSUPPORTED;
+            }
+        }
+
         width = colorbuffer->getWidth();
         height = colorbuffer->getHeight();
         samples = colorbuffer->getSamples();
@@ -349,6 +357,14 @@ GLenum Framebuffer::completeness()
         {
             return GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_ANGLE;
         }
+        
+        if (IsTextureTarget(mDepthbufferType))
+        {
+            if (IsCompressed(depthbuffer->getFormat()))
+            {
+                return GL_FRAMEBUFFER_UNSUPPORTED;
+            }
+        }
     }
 
     if (mStencilbufferType != GL_NONE)
@@ -382,6 +398,14 @@ GLenum Framebuffer::completeness()
         else if (samples != stencilbuffer->getSamples())
         {
             return GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_ANGLE;
+        }
+        
+        if (IsTextureTarget(mStencilbufferType))
+        {
+            if (IsCompressed(stencilbuffer->getFormat()))
+            {
+                return GL_FRAMEBUFFER_UNSUPPORTED;
+            }
         }
     }
 

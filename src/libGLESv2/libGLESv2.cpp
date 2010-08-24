@@ -736,11 +736,6 @@ void __stdcall glCompressedTexImage2D(GLenum target, GLint level, GLenum interna
 
     try
     {
-        if (!gl::IsTextureTarget(target))
-        {
-            return error(GL_INVALID_ENUM);
-        }
-
         if (level < 0 || level > gl::MAX_TEXTURE_LEVELS)
         {
             return error(GL_INVALID_VALUE);
@@ -751,7 +746,97 @@ void __stdcall glCompressedTexImage2D(GLenum target, GLint level, GLenum interna
             return error(GL_INVALID_VALUE);
         }
 
-        return error(GL_INVALID_ENUM); // ultimately we don't support compressed textures
+        switch (target)
+        {
+          case GL_TEXTURE_2D:
+            if (width > (gl::MAX_TEXTURE_SIZE >> level) || height > (gl::MAX_TEXTURE_SIZE >> level))
+            {
+                return error(GL_INVALID_VALUE);
+            }
+            break;
+          case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
+          case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
+          case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
+          case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
+          case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
+          case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
+            if (width != height)
+            {
+                return error(GL_INVALID_VALUE);
+            }
+
+            if (width > (gl::MAX_CUBE_MAP_TEXTURE_SIZE >> level) || height > (gl::MAX_CUBE_MAP_TEXTURE_SIZE >> level))
+            {
+                return error(GL_INVALID_VALUE);
+            }
+            break;
+          default:
+            return error(GL_INVALID_ENUM);
+        }
+
+        switch (internalformat)
+        {
+          case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
+          case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
+            break;
+          default:
+            return error(GL_INVALID_ENUM);
+        }
+
+        if (border != 0)
+        {
+            return error(GL_INVALID_VALUE);
+        }
+
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            if (!context->supportsCompressedTextures())
+            {
+                return error(GL_INVALID_ENUM); // in this case, it's as though the internal format switch failed
+            }
+
+            if (imageSize != gl::ComputeCompressedSize(width, height, internalformat))
+            {
+                return error(GL_INVALID_VALUE);
+            }
+
+            if (target == GL_TEXTURE_2D)
+            {
+                gl::Texture2D *texture = context->getTexture2D();
+
+                if (!texture)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                texture->setCompressedImage(level, internalformat, width, height, imageSize, data);
+            }
+            else
+            {
+                gl::TextureCubeMap *texture = context->getTextureCubeMap();
+
+                if (!texture)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                switch (target)
+                {
+                  case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
+                  case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
+                  case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
+                  case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
+                  case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
+                  case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
+                    texture->setCompressedImage(target, level, internalformat, width, height, imageSize, data);
+                    break;
+                  default: UNREACHABLE();
+                }
+            }
+        }
+
     }
     catch(std::bad_alloc&)
     {
@@ -779,17 +864,95 @@ void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
             return error(GL_INVALID_VALUE);
         }
 
-        if (xoffset < 0 || yoffset < 0 || width < 0 || height < 0 || (level > 0 && !gl::isPow2(width)) || (level > 0 && !gl::isPow2(height)) || imageSize < 0)
+        if (xoffset < 0 || yoffset < 0 || width < 0 || height < 0 || 
+            (level > 0 && !gl::isPow2(width)) || (level > 0 && !gl::isPow2(height)) || imageSize < 0)
         {
             return error(GL_INVALID_VALUE);
         }
 
-        if (xoffset != 0 || yoffset != 0)
+        switch (format)
         {
-            return error(GL_INVALID_OPERATION);
+          case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
+          case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
+            break;
+          default:
+            return error(GL_INVALID_ENUM);
         }
 
-        return error(GL_INVALID_OPERATION); // The texture being operated on is not a compressed texture.
+        if (width == 0 || height == 0 || data == NULL)
+        {
+            return;
+        }
+
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            if (!context->supportsCompressedTextures())
+            {
+                return error(GL_INVALID_ENUM); // in this case, it's as though the format switch has failed.
+            }
+
+            if (imageSize != gl::ComputeCompressedSize(width, height, format))
+            {
+                return error(GL_INVALID_VALUE);
+            }
+
+            if (xoffset % 4 != 0 || yoffset % 4 != 0)
+            {
+                return error(GL_INVALID_OPERATION); // we wait to check the offsets until this point, because the multiple-of-four restriction
+                                                    // does not exist unless DXT1 textures are supported.
+            }
+
+            if (target == GL_TEXTURE_2D)
+            {
+                gl::Texture2D *texture = context->getTexture2D();
+
+                if (!texture)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                if (!texture->isCompressed())
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                if ((width % 4 != 0 && width != texture->getWidth()) || 
+                    (height % 4 != 0 && height != texture->getHeight()))
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                texture->subImageCompressed(level, xoffset, yoffset, width, height, format, imageSize, data);
+            }
+            else if (gl::IsCubemapTextureTarget(target))
+            {
+                gl::TextureCubeMap *texture = context->getTextureCubeMap();
+
+                if (!texture)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                if (!texture->isCompressed())
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                if ((width % 4 != 0 && width != texture->getWidth()) || 
+                    (height % 4 != 0 && height != texture->getHeight()))
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                texture->subImageCompressed(target, level, xoffset, yoffset, width, height, format, imageSize, data);
+            }
+            else
+            {
+                UNREACHABLE();
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -850,6 +1013,8 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
           case GL_LUMINANCE_ALPHA:
           case GL_RGB:
           case GL_RGBA:
+          case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:  // Compressed textures are not supported here, but if they are unsupported altogether,
+          case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT: // a different error is generated than otherwise. That is handled below.
             break;
           default:
             return error(GL_INVALID_VALUE);
@@ -864,6 +1029,19 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
 
         if (context)
         {
+            if (internalformat == GL_COMPRESSED_RGB_S3TC_DXT1_EXT || 
+                internalformat == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT)
+            {
+                if (context->supportsCompressedTextures())
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+                else
+                {
+                    return error(GL_INVALID_ENUM);
+                }
+            }
+
             gl::Framebuffer *framebuffer = context->getReadFramebuffer();
             if (framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
             {
@@ -884,6 +1062,11 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
                 {
                     return error(GL_INVALID_OPERATION);
                 }
+                
+                if (texture->isCompressed())
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
 
                 texture->copyImage(level, internalformat, x, y, width, height, source);
             }
@@ -892,6 +1075,11 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
                 gl::TextureCubeMap *texture = context->getTextureCubeMap();
 
                 if (!texture)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                if (texture->isCompressed())
                 {
                     return error(GL_INVALID_OPERATION);
                 }
@@ -963,6 +1151,11 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
                     return error(GL_INVALID_OPERATION);
                 }
 
+                if (texture->isCompressed())
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
                 texture->copySubImage(level, xoffset, yoffset, x, y, width, height, source);
             }
             else if (gl::IsCubemapTextureTarget(target))
@@ -970,6 +1163,11 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
                 gl::TextureCubeMap *texture = context->getTextureCubeMap();
 
                 if (!texture)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                if (texture->isCompressed())
                 {
                     return error(GL_INVALID_OPERATION);
                 }
@@ -1684,6 +1882,11 @@ void __stdcall glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum t
                     return error(GL_INVALID_OPERATION);
                 }
 
+                if (tex->isCompressed())
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
                 switch (textarget)
                 {
                   case GL_TEXTURE_2D:
@@ -1827,6 +2030,11 @@ void __stdcall glGenerateMipmap(GLenum target)
 
               default:
                 return error(GL_INVALID_ENUM);
+            }
+
+            if (texture->isCompressed())
+            {
+                return error(GL_INVALID_OPERATION);
             }
 
             texture->generateMipmaps();
@@ -4083,6 +4291,9 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
                 return error(GL_INVALID_ENUM);
             }
             break;
+          case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:  // error cases for compressed textures are handled below
+          case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
+            break; 
           default:
             return error(GL_INVALID_VALUE);
         }
@@ -4096,6 +4307,19 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
 
         if (context)
         {
+            if (internalformat == GL_COMPRESSED_RGB_S3TC_DXT1_EXT ||
+                internalformat == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT)
+            {
+                if (context->supportsCompressedTextures())
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+                else
+                {
+                    return error(GL_INVALID_ENUM);
+                }
+            }
+
             if (target == GL_TEXTURE_2D)
             {
                 gl::Texture2D *texture = context->getTexture2D();
@@ -4271,6 +4495,11 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
                     return error(GL_INVALID_OPERATION);
                 }
 
+                if (texture->isCompressed())
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
                 texture->subImage(level, xoffset, yoffset, width, height, format, type, context->getUnpackAlignment(), pixels);
             }
             else if (gl::IsCubemapTextureTarget(target))
@@ -4278,6 +4507,11 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
                 gl::TextureCubeMap *texture = context->getTextureCubeMap();
 
                 if (!texture)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                if (texture->isCompressed())
                 {
                     return error(GL_INVALID_OPERATION);
                 }
@@ -5200,7 +5434,7 @@ __eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *
     static const Extension glExtensions[] =
     {
         {"glTexImage3DOES", (__eglMustCastToProperFunctionPointerType)glTexImage3DOES},
-        {"glBlitFramebufferANGLE", (__eglMustCastToProperFunctionPointerType)glBlitFramebufferANGLE}
+        {"glBlitFramebufferANGLE", (__eglMustCastToProperFunctionPointerType)glBlitFramebufferANGLE},
     };
 
     for (int ext = 0; ext < sizeof(glExtensions) / sizeof(Extension); ext++)

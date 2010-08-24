@@ -183,6 +183,49 @@ GLsizei ComputePitch(GLsizei width, GLenum format, GLenum type, GLint alignment)
     return (rawPitch + alignment - 1) & ~(alignment - 1);
 }
 
+GLsizei ComputeCompressedPitch(GLsizei width, GLenum format)
+{
+    switch (format)
+    {
+      case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
+      case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
+        break;
+      default:
+        return 0;
+    }
+
+    ASSERT(width % 4 == 0);
+
+    return 8 * width / 4;
+}
+
+GLsizei ComputeCompressedSize(GLsizei width, GLsizei height, GLenum format)
+{
+    switch (format)
+    {
+      case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
+      case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
+        break;
+      default:
+        return 0;
+    }
+
+    return 8 * (GLsizei)ceil((float)width / 4.0f) * (GLsizei)ceil((float)height / 4.0f);
+}
+
+bool IsCompressed(GLenum format)
+{
+    if(format == GL_COMPRESSED_RGB_S3TC_DXT1_EXT ||
+       format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 // Returns the size, in bytes, of a single texel in an Image
 int ComputePixelSize(GLenum format, GLenum type)
 {

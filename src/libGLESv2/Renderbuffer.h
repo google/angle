@@ -41,7 +41,7 @@ class RenderbufferStorage
 
     virtual int getWidth() const;
     virtual int getHeight() const;
-    GLenum getFormat() const;
+    virtual GLenum getFormat() const;
     D3DFORMAT getD3DFormat() const;
     GLsizei getSamples() const;
     unsigned int getSerial() const;
