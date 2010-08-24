@@ -2956,6 +2956,7 @@ void Context::initExtensionString()
     mExtensionString += "GL_EXT_texture_format_BGRA8888 ";
     mExtensionString += "GL_EXT_read_format_bgra ";
     mExtensionString += "GL_ANGLE_framebuffer_blit ";
+    mExtensionString += "GL_OES_rgb8_rgba8 ";
 
 
     if (getMaxSupportedSamples() != 0)
