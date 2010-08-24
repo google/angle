@@ -180,7 +180,7 @@ void __stdcall glBindFramebuffer(GLenum target, GLuint framebuffer)
 
     try
     {
-        if (target != GL_FRAMEBUFFER)
+        if (target != GL_FRAMEBUFFER && target != GL_DRAW_FRAMEBUFFER_ANGLE && target != GL_READ_FRAMEBUFFER_ANGLE)
         {
             return error(GL_INVALID_ENUM);
         }
@@ -189,7 +189,15 @@ void __stdcall glBindFramebuffer(GLenum target, GLuint framebuffer)
 
         if (context)
         {
-            context->bindFramebuffer(framebuffer);
+            if (target == GL_READ_FRAMEBUFFER_ANGLE || target == GL_FRAMEBUFFER)
+            {
+                context->bindReadFramebuffer(framebuffer);
+            }
+            
+            if (target == GL_DRAW_FRAMEBUFFER_ANGLE || target == GL_FRAMEBUFFER)
+            {
+                context->bindDrawFramebuffer(framebuffer);
+            }
         }
     }
     catch(std::bad_alloc&)
@@ -559,7 +567,7 @@ GLenum __stdcall glCheckFramebufferStatus(GLenum target)
 
     try
     {
-        if (target != GL_FRAMEBUFFER)
+        if (target != GL_FRAMEBUFFER && target != GL_DRAW_FRAMEBUFFER_ANGLE && target != GL_READ_FRAMEBUFFER_ANGLE)
         {
             return error(GL_INVALID_ENUM, 0);
         }
@@ -568,7 +576,15 @@ GLenum __stdcall glCheckFramebufferStatus(GLenum target)
 
         if (context)
         {
-            gl::Framebuffer *framebuffer = context->getFramebuffer();
+            gl::Framebuffer *framebuffer = NULL;
+            if (target == GL_READ_FRAMEBUFFER_ANGLE)
+            {
+                framebuffer = context->getReadFramebuffer();
+            }
+            else
+            {
+                framebuffer = context->getDrawFramebuffer();
+            }
 
             return framebuffer->completeness();
         }
@@ -848,7 +864,7 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
 
         if (context)
         {
-            gl::Framebuffer *framebuffer = context->getFramebuffer();
+            gl::Framebuffer *framebuffer = context->getReadFramebuffer();
             if (framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
             {
                 return error(GL_INVALID_FRAMEBUFFER_OPERATION);
@@ -921,7 +937,7 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
 
         if (context)
         {
-            gl::Framebuffer *framebuffer = context->getFramebuffer();
+            gl::Framebuffer *framebuffer = context->getReadFramebuffer();
             if (framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
             {
                 return error(GL_INVALID_FRAMEBUFFER_OPERATION);
@@ -1569,7 +1585,8 @@ void __stdcall glFramebufferRenderbuffer(GLenum target, GLenum attachment, GLenu
 
     try
     {
-        if (target != GL_FRAMEBUFFER || renderbuffertarget != GL_RENDERBUFFER)
+        if ((target != GL_FRAMEBUFFER && target != GL_DRAW_FRAMEBUFFER_ANGLE && target != GL_READ_FRAMEBUFFER_ANGLE)
+            || renderbuffertarget != GL_RENDERBUFFER)
         {
             return error(GL_INVALID_ENUM);
         }
@@ -1578,9 +1595,20 @@ void __stdcall glFramebufferRenderbuffer(GLenum target, GLenum attachment, GLenu
 
         if (context)
         {
-            gl::Framebuffer *framebuffer = context->getFramebuffer();
+            gl::Framebuffer *framebuffer = NULL;
+            GLuint framebufferHandle = 0;
+            if (target == GL_READ_FRAMEBUFFER_ANGLE)
+            {
+                framebuffer = context->getReadFramebuffer();
+                framebufferHandle = context->getReadFramebufferHandle();
+            }
+            else 
+            {
+                framebuffer = context->getDrawFramebuffer();
+                framebufferHandle = context->getDrawFramebufferHandle();
+            }
 
-            if (context->getFramebufferHandle() == 0 || !framebuffer)
+            if (framebufferHandle == 0 || !framebuffer)
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -1614,7 +1642,7 @@ void __stdcall glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum t
 
     try
     {
-        if (target != GL_FRAMEBUFFER)
+        if (target != GL_FRAMEBUFFER && target != GL_DRAW_FRAMEBUFFER_ANGLE && target != GL_READ_FRAMEBUFFER_ANGLE)
         {
             return error(GL_INVALID_ENUM);
         }
@@ -1677,9 +1705,20 @@ void __stdcall glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum t
                 }
             }
 
-            gl::Framebuffer *framebuffer = context->getFramebuffer();
+            gl::Framebuffer *framebuffer = NULL;
+            GLuint framebufferHandle = 0;
+            if (target == GL_READ_FRAMEBUFFER_ANGLE)
+            {
+                framebuffer = context->getReadFramebuffer();
+                framebufferHandle = context->getReadFramebufferHandle();
+            }
+            else
+            {
+                framebuffer = context->getDrawFramebuffer();
+                framebufferHandle = context->getDrawFramebufferHandle();
+            }
 
-            if (context->getFramebufferHandle() == 0 || !framebuffer)
+            if (framebufferHandle == 0 || !framebuffer)
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -2235,14 +2274,29 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
 
         if (context)
         {
-            if (context->getFramebufferHandle() == 0)
-            {
-                return error(GL_INVALID_OPERATION);
-            }
-
-            if (target != GL_FRAMEBUFFER)
+            if (target != GL_FRAMEBUFFER && target != GL_DRAW_FRAMEBUFFER_ANGLE && target != GL_READ_FRAMEBUFFER_ANGLE)
             {
                 return error(GL_INVALID_ENUM);
+            }
+
+            gl::Framebuffer *framebuffer = NULL;
+            if (target == GL_READ_FRAMEBUFFER_ANGLE)
+            {
+                if(context->getReadFramebufferHandle() == 0)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                framebuffer = context->getReadFramebuffer();
+            }
+            else 
+            {
+                if (context->getDrawFramebufferHandle() == 0)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                framebuffer = context->getDrawFramebuffer();
             }
 
             GLenum attachmentType;
@@ -2250,16 +2304,16 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
             switch (attachment)
             {
               case GL_COLOR_ATTACHMENT0:    
-                attachmentType = context->getFramebuffer()->getColorbufferType();
-                attachmentHandle = context->getFramebuffer()->getColorbufferHandle(); 
+                attachmentType = framebuffer->getColorbufferType();
+                attachmentHandle = framebuffer->getColorbufferHandle(); 
                 break;
               case GL_DEPTH_ATTACHMENT:     
-                attachmentType = context->getFramebuffer()->getDepthbufferType();
-                attachmentHandle = context->getFramebuffer()->getDepthbufferHandle();
+                attachmentType = framebuffer->getDepthbufferType();
+                attachmentHandle = framebuffer->getDepthbufferHandle();
                 break;
               case GL_STENCIL_ATTACHMENT:   
-                attachmentType = context->getFramebuffer()->getStencilbufferType();
-                attachmentHandle = context->getFramebuffer()->getStencilbufferHandle();
+                attachmentType = framebuffer->getStencilbufferType();
+                attachmentHandle = framebuffer->getStencilbufferHandle();
                 break;
               default: return error(GL_INVALID_ENUM);
             }

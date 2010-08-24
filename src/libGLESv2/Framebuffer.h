@@ -57,6 +57,8 @@ class Framebuffer
     GLuint getDepthbufferHandle();
     GLuint getStencilbufferHandle();
 
+    bool hasStencil();
+
     virtual GLenum completeness();
 
   protected:

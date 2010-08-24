@@ -224,6 +224,21 @@ GLuint Framebuffer::getStencilbufferHandle()
     return mStencilbufferPointer.id();
 }
 
+bool Framebuffer::hasStencil()
+{
+    if (mStencilbufferType != GL_NONE)
+    {
+        DepthStencilbuffer *stencilbufferObject = getStencilbuffer();
+
+        if (stencilbufferObject)
+        {
+            return stencilbufferObject->getStencilSize() > 0;
+        }
+    }
+
+    return false;
+}
+
 GLenum Framebuffer::completeness()
 {
     int width = 0;

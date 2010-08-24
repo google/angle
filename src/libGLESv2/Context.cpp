@@ -131,7 +131,8 @@ Context::Context(const egl::Config *config, const gl::Context *shareContext)
     bindElementArrayBuffer(0);
     bindTextureCubeMap(0);
     bindTexture2D(0);
-    bindFramebuffer(0);
+    bindReadFramebuffer(0);
+    bindDrawFramebuffer(0);
     bindRenderbuffer(0);
 
     for (int type = 0; type < SAMPLER_TYPE_COUNT; type++)
@@ -662,9 +663,14 @@ void Context::setActiveSampler(int active)
     mState.activeSampler = active;
 }
 
-GLuint Context::getFramebufferHandle() const
+GLuint Context::getReadFramebufferHandle() const
 {
-    return mState.framebuffer;
+    return mState.readFramebuffer;
+}
+
+GLuint Context::getDrawFramebufferHandle() const
+{
+    return mState.drawFramebuffer;
 }
 
 GLuint Context::getRenderbufferHandle() const
@@ -847,9 +853,14 @@ Renderbuffer *Context::getRenderbuffer(GLuint handle)
     return mResourceManager->getRenderbuffer(handle);
 }
 
-Framebuffer *Context::getFramebuffer()
+Framebuffer *Context::getReadFramebuffer()
 {
-    return getFramebuffer(mState.framebuffer);
+    return getFramebuffer(mState.readFramebuffer);
+}
+
+Framebuffer *Context::getDrawFramebuffer()
+{
+    return getFramebuffer(mState.drawFramebuffer);
 }
 
 void Context::bindArrayBuffer(unsigned int buffer)
@@ -884,14 +895,24 @@ void Context::bindTextureCubeMap(GLuint texture)
     mState.samplerTexture[SAMPLER_CUBE][mState.activeSampler].set(mState.textureCubeMap.get());
 }
 
-void Context::bindFramebuffer(GLuint framebuffer)
+void Context::bindReadFramebuffer(GLuint framebuffer)
 {
     if (!getFramebuffer(framebuffer))
     {
         mFramebufferMap[framebuffer] = new Framebuffer();
     }
 
-    mState.framebuffer = framebuffer;
+    mState.readFramebuffer = framebuffer;
+}
+
+void Context::bindDrawFramebuffer(GLuint framebuffer)
+{
+    if (!getFramebuffer(framebuffer))
+    {
+        mFramebufferMap[framebuffer] = new Framebuffer();
+    }
+
+    mState.drawFramebuffer = framebuffer;
 }
 
 void Context::bindRenderbuffer(GLuint renderbuffer)
@@ -1097,7 +1118,9 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_SHADER_BINARY_FORMATS:      /* no shader binary formats are supported */          break;
       case GL_ARRAY_BUFFER_BINDING:             *params = mState.arrayBuffer.id();              break;
       case GL_ELEMENT_ARRAY_BUFFER_BINDING:     *params = mState.elementArrayBuffer.id();       break;
-      case GL_FRAMEBUFFER_BINDING:              *params = mState.framebuffer;                   break;
+      //case GL_FRAMEBUFFER_BINDING:              // now equivalent to GL_DRAW_FRAMEBUFFER_BINDING_ANGLE
+      case GL_DRAW_FRAMEBUFFER_BINDING_ANGLE:     *params = mState.drawFramebuffer;               break;
+      case GL_READ_FRAMEBUFFER_BINDING_ANGLE:     *params = mState.readFramebuffer;               break;
       case GL_RENDERBUFFER_BINDING:             *params = mState.renderbuffer.id();             break;
       case GL_CURRENT_PROGRAM:                  *params = mState.currentProgram;                break;
       case GL_PACK_ALIGNMENT:                   *params = mState.packAlignment;                 break;
@@ -1159,7 +1182,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_BLUE_BITS:
       case GL_ALPHA_BITS:
         {
-            gl::Framebuffer *framebuffer = getFramebuffer();
+            gl::Framebuffer *framebuffer = getDrawFramebuffer();
             gl::Colorbuffer *colorbuffer = framebuffer->getColorbuffer();
 
             if (colorbuffer)
@@ -1180,7 +1203,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
         break;
       case GL_DEPTH_BITS:
         {
-            gl::Framebuffer *framebuffer = getFramebuffer();
+            gl::Framebuffer *framebuffer = getDrawFramebuffer();
             gl::DepthStencilbuffer *depthbuffer = framebuffer->getDepthbuffer();
 
             if (depthbuffer)
@@ -1195,7 +1218,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
         break;
       case GL_STENCIL_BITS:
         {
-            gl::Framebuffer *framebuffer = getFramebuffer();
+            gl::Framebuffer *framebuffer = getDrawFramebuffer();
             gl::DepthStencilbuffer *stencilbuffer = framebuffer->getStencilbuffer();
 
             if (stencilbuffer)
@@ -1392,7 +1415,7 @@ bool Context::applyRenderTarget(bool ignoreViewport)
 {
     IDirect3DDevice9 *device = getDevice();
 
-    Framebuffer *framebufferObject = getFramebuffer();
+    Framebuffer *framebufferObject = getDrawFramebuffer();
 
     if (!framebufferObject || framebufferObject->completeness() != GL_FRAMEBUFFER_COMPLETE)
     {
@@ -1530,7 +1553,7 @@ void Context::applyState(GLenum drawMode)
     GLint alwaysFront = !isTriangleMode(drawMode);
     programObject->setUniform1iv(pointsOrLines, 1, &alwaysFront);
 
-    Framebuffer *framebufferObject = getFramebuffer();
+    Framebuffer *framebufferObject = getDrawFramebuffer();
 
     if (mCullStateDirty || mFrontFaceDirty)
     {
@@ -1610,7 +1633,7 @@ void Context::applyState(GLenum drawMode)
 
     if (mStencilStateDirty || mFrontFaceDirty)
     {
-        if (mState.stencilTest && hasStencil())
+        if (mState.stencilTest && framebufferObject->hasStencil())
         {
             device->SetRenderState(D3DRS_STENCILENABLE, TRUE);
             device->SetRenderState(D3DRS_TWOSIDEDSTENCILMODE, TRUE);
@@ -1628,8 +1651,7 @@ void Context::applyState(GLenum drawMode)
             }
 
             // get the maximum size of the stencil ref
-            gl::Framebuffer *framebuffer = getFramebuffer();
-            gl::DepthStencilbuffer *stencilbuffer = framebuffer->getStencilbuffer();
+            gl::DepthStencilbuffer *stencilbuffer = framebufferObject->getStencilbuffer();
             GLuint maxStencil = (1 << stencilbuffer->getStencilSize()) - 1;
 
             device->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILWRITEMASK : D3DRS_CCW_STENCILWRITEMASK, mState.stencilWritemask);
@@ -1681,7 +1703,7 @@ void Context::applyState(GLenum drawMode)
     {
         if (mState.polygonOffsetFill)
         {
-            gl::DepthStencilbuffer *depthbuffer = getFramebuffer()->getDepthbuffer();
+            gl::DepthStencilbuffer *depthbuffer = framebufferObject->getDepthbuffer();
             if (depthbuffer)
             {
                 device->SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, *((DWORD*)&mState.polygonOffsetFactor));
@@ -1876,7 +1898,7 @@ void Context::applyTextures()
 
 void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, void* pixels)
 {
-    Framebuffer *framebuffer = getFramebuffer();
+    Framebuffer *framebuffer = getReadFramebuffer();
 
     if (framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
     {
@@ -2110,7 +2132,7 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum
 
 void Context::clear(GLbitfield mask)
 {
-    Framebuffer *framebufferObject = getFramebuffer();
+    Framebuffer *framebufferObject = getDrawFramebuffer();
 
     if (!framebufferObject || framebufferObject->completeness() != GL_FRAMEBUFFER_COMPLETE)
     {
@@ -2639,11 +2661,17 @@ void Context::detachTexture(GLuint texture)
     // as if FramebufferTexture2D had been called, with a texture of 0, for each attachment point to which this
     // image was attached in the currently bound framebuffer.
 
-    Framebuffer *framebuffer = getFramebuffer();
+    Framebuffer *readFramebuffer = getReadFramebuffer();
+    Framebuffer *drawFramebuffer = getDrawFramebuffer();
 
-    if (framebuffer)
+    if (readFramebuffer)
     {
-        framebuffer->detachTexture(texture);
+        readFramebuffer->detachTexture(texture);
+    }
+
+    if (drawFramebuffer && drawFramebuffer != readFramebuffer)
+    {
+        drawFramebuffer->detachTexture(texture);
     }
 }
 
@@ -2653,9 +2681,14 @@ void Context::detachFramebuffer(GLuint framebuffer)
     // If a framebuffer that is currently bound to the target FRAMEBUFFER is deleted, it is as though
     // BindFramebuffer had been executed with the target of FRAMEBUFFER and framebuffer of zero.
 
-    if (mState.framebuffer == framebuffer)
+    if (mState.readFramebuffer == framebuffer)
     {
-        bindFramebuffer(0);
+        bindReadFramebuffer(0);
+    }
+
+    if (mState.drawFramebuffer == framebuffer)
+    {
+        bindDrawFramebuffer(0);
     }
 }
 
@@ -2675,11 +2708,17 @@ void Context::detachRenderbuffer(GLuint renderbuffer)
     // then it is as if FramebufferRenderbuffer had been called, with a renderbuffer of 0, for each attachment
     // point to which this image was attached in the currently bound framebuffer.
 
-    Framebuffer *framebuffer = getFramebuffer();
+    Framebuffer *readFramebuffer = getReadFramebuffer();
+    Framebuffer *drawFramebuffer = getDrawFramebuffer();
 
-    if (framebuffer)
+    if (readFramebuffer)
     {
-        framebuffer->detachRenderbuffer(renderbuffer);
+        readFramebuffer->detachRenderbuffer(renderbuffer);
+    }
+
+    if (drawFramebuffer && drawFramebuffer != readFramebuffer)
+    {
+        drawFramebuffer->detachRenderbuffer(renderbuffer);
     }
 }
 
@@ -2746,23 +2785,6 @@ bool Context::isTriangleMode(GLenum drawMode)
       case GL_LINE_STRIP:
         return false;
       default: UNREACHABLE();
-    }
-
-    return false;
-}
-
-bool Context::hasStencil()
-{
-    Framebuffer *framebufferObject = getFramebuffer();
-
-    if (framebufferObject && framebufferObject->getStencilbufferType() != GL_NONE)
-    {
-        DepthStencilbuffer *stencilbufferObject = framebufferObject->getStencilbuffer();
-
-        if (stencilbufferObject)
-        {
-            return stencilbufferObject->getStencilSize() > 0;
-        }
     }
 
     return false;

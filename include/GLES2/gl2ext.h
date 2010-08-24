@@ -351,6 +351,18 @@ typedef void* GLeglImageOES;
 #endif
 
 /*------------------------------------------------------------------------*
+ * ANGLE extension tokens
+ *------------------------------------------------------------------------*/
+
+/* GL_ANGLE_framebuffer_blit */
+#ifndef GL_ANGLE_framebuffer_blit
+#define GL_READ_FRAMEBUFFER_ANGLE         0x8CA8
+#define GL_DRAW_FRAMEBUFFER_ANGLE         0x8CA9
+#define GL_DRAW_FRAMEBUFFER_BINDING_ANGLE 0x8CA6 // alias GL_FRAMEBUFFER_BINDING
+#define GL_READ_FRAMEBUFFER_BINDING_ANGLE 0x8CAA
+#endif
+
+/*------------------------------------------------------------------------*
  * End of extension tokens, start of corresponding extension functions
  *------------------------------------------------------------------------*/
 
@@ -764,6 +776,15 @@ GL_APICALL void GL_APIENTRY glEndTilingQCOM (GLbitfield preserveMask);
 #endif
 typedef void (GL_APIENTRYP PFNGLSTARTTILINGQCOMPROC) (GLuint x, GLuint y, GLuint width, GLuint height, GLbitfield preserveMask);
 typedef void (GL_APIENTRYP PFNGLENDTILINGQCOMPROC) (GLbitfield preserveMask);
+#endif
+
+/*------------------------------------------------------------------------*
+ * ANGLE extension functions
+ *------------------------------------------------------------------------*/
+
+/* GL_ANGLE_framebuffer_blit */
+#ifndef GL_ANGLE_framebuffer_blit
+#define GL_ANGLE_framebuffer_blit 1
 #endif
 
 #ifdef __cplusplus

@@ -181,7 +181,8 @@ struct State
     BindingPointer<Buffer> elementArrayBuffer;
     BindingPointer<Texture> texture2D;
     BindingPointer<Texture> textureCubeMap;
-    GLuint framebuffer;
+    GLuint readFramebuffer;
+    GLuint drawFramebuffer;
     BindingPointer<Renderbuffer> renderbuffer;
     GLuint currentProgram;
 
@@ -273,7 +274,8 @@ class Context
 
     void setActiveSampler(int active);
 
-    GLuint getFramebufferHandle() const;
+    GLuint getReadFramebufferHandle() const;
+    GLuint getDrawFramebufferHandle() const;
     GLuint getRenderbufferHandle() const;
 
     GLuint getArrayBufferHandle() const;
@@ -314,7 +316,8 @@ class Context
     void bindElementArrayBuffer(GLuint buffer);
     void bindTexture2D(GLuint texture);
     void bindTextureCubeMap(GLuint texture);
-    void bindFramebuffer(GLuint framebuffer);
+    void bindReadFramebuffer(GLuint framebuffer);
+    void bindDrawFramebuffer(GLuint framebuffer);
     void bindRenderbuffer(GLuint renderbuffer);
     void useProgram(GLuint program);
 
@@ -337,7 +340,8 @@ class Context
     Texture2D *getTexture2D();
     TextureCubeMap *getTextureCubeMap();
     Texture *getSamplerTexture(unsigned int sampler, SamplerType type);
-    Framebuffer *getFramebuffer();
+    Framebuffer *getReadFramebuffer();
+    Framebuffer *getDrawFramebuffer();
 
     bool getFloatv(GLenum pname, GLfloat *params);
     bool getIntegerv(GLenum pname, GLint *params);
@@ -390,7 +394,6 @@ class Context
 
     bool cullSkipsDraw(GLenum drawMode);
     bool isTriangleMode(GLenum drawMode);
-    bool hasStencil();
 
     const egl::Config *const mConfig;
 
