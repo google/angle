@@ -303,7 +303,7 @@ TIntermAggregate* TIntermediate::setAggregateOperator(TIntermNode* node, TOperat
     //
     // Set the operator.
     //
-    aggNode->setOperator(op);
+    aggNode->setOp(op);
     if (line != 0)
         aggNode->setLine(line);
 
@@ -515,9 +515,9 @@ TIntermTyped* TIntermediate::addComma(TIntermTyped* left, TIntermTyped* right, T
         return right;
     } else {
         TIntermTyped *commaAggregate = growAggregate(left, right, line);
-        commaAggregate->getAsAggregate()->setOperator(EOpComma);
+        commaAggregate->getAsAggregate()->setOp(EOpComma);
         commaAggregate->setType(right->getType());
-        commaAggregate->getTypePointer()->changeQualifier(EvqTemporary);
+        commaAggregate->getTypePointer()->setQualifier(EvqTemporary);
         return commaAggregate;
     }
 }
@@ -640,7 +640,7 @@ bool TIntermediate::postProcess(TIntermNode* root, EShLanguage language)
     //
     TIntermAggregate* aggRoot = root->getAsAggregate();
     if (aggRoot && aggRoot->getOp() == EOpNull)
-        aggRoot->setOperator(EOpSequence);
+        aggRoot->setOp(EOpSequence);
 
     return true;
 }
@@ -773,12 +773,12 @@ bool TIntermBinary::promote(TInfoSink& infoSink)
 
     // The result gets promoted to the highest precision.
     TPrecision higherPrecision = GetHigherPrecision(left->getPrecision(), right->getPrecision());
-    getTypePointer()->changePrecision(higherPrecision);
+    getTypePointer()->setPrecision(higherPrecision);
 
     // Binary operations results in temporary variables unless both
     // operands are const.
     if (left->getQualifier() != EvqConst || right->getQualifier() != EvqConst) {
-        getTypePointer()->changeQualifier(EvqTemporary);
+        getTypePointer()->setQualifier(EvqTemporary);
     }
 
     //
@@ -964,7 +964,7 @@ bool TIntermBinary::promote(TInfoSink& infoSink)
 
 bool CompareStruct(const TType& leftNodeType, ConstantUnion* rightUnionArray, ConstantUnion* leftUnionArray)
 {
-    TTypeList* fields = leftNodeType.getStruct();
+    const TTypeList* fields = leftNodeType.getStruct();
 
     size_t structSize = fields->size();
     int index = 0;

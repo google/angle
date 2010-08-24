@@ -486,7 +486,7 @@ bool TParseContext::constructorErrorCheck(int line, TIntermNode* node, TFunction
     }
     
     if (constType)
-        type->changeQualifier(EvqConst);
+        type->setQualifier(EvqConst);
 
     if (type->isArray() && type->getArraySize() != function.getParamCount()) {
         error(line, "array constructor needs one argument per array element", "constructor", "");
@@ -586,14 +586,14 @@ bool TParseContext::samplerErrorCheck(int line, const TPublicType& pType, const 
 {
     if (pType.type == EbtStruct) {
         if (containsSampler(*pType.userDef)) {
-            error(line, reason, TType::getBasicString(pType.type), "(structure contains a sampler)");
+            error(line, reason, getBasicString(pType.type), "(structure contains a sampler)");
         
             return true;
         }
         
         return false;
     } else if (IsSampler(pType.type)) {
-        error(line, reason, TType::getBasicString(pType.type), "");
+        error(line, reason, getBasicString(pType.type), "");
 
         return true;
     }
@@ -879,9 +879,9 @@ bool TParseContext::paramErrorCheck(int line, TQualifier qualifier, TQualifier p
     }
 
     if (qualifier == EvqConst)
-        type->changeQualifier(EvqConstReadOnly);
+        type->setQualifier(EvqConstReadOnly);
     else
-        type->changeQualifier(paramQualifier);
+        type->setQualifier(paramQualifier);
 
     return false;
 }
@@ -976,13 +976,13 @@ bool TParseContext::executeInitializer(TSourceLoc line, TString& identifier, TPu
     if (qualifier == EvqConst) {
         if (qualifier != initializer->getType().getQualifier()) {
             error(line, " assigning non-constant to", "=", "'%s'", variable->getType().getCompleteString().c_str());
-            variable->getType().changeQualifier(EvqTemporary);
+            variable->getType().setQualifier(EvqTemporary);
             return true;
         }
         if (type != initializer->getType()) {
             error(line, " non-matching types for const initializer ", 
                 variable->getType().getQualifierString(), "");
-            variable->getType().changeQualifier(EvqTemporary);
+            variable->getType().setQualifier(EvqTemporary);
             return true;
         }
         if (initializer->getAsConstantUnion()) { 
@@ -1001,7 +1001,7 @@ bool TParseContext::executeInitializer(TSourceLoc line, TString& identifier, TPu
             variable->shareConstPointer(constArray);
         } else {
             error(line, " cannot assign to", "=", "'%s'", variable->getType().getCompleteString().c_str());
-            variable->getType().changeQualifier(EvqTemporary);
+            variable->getType().setQualifier(EvqTemporary);
             return true;
         }
     }
@@ -1052,7 +1052,7 @@ TIntermTyped* TParseContext::addConstructor(TIntermNode* node, const TType* type
 
     TIntermAggregate* aggrNode = node->getAsAggregate();
     
-    TTypeList::iterator memberTypes;
+    TTypeList::const_iterator memberTypes;
     if (op == EOpConstructStruct)
         memberTypes = type->getStruct()->begin();
     
@@ -1350,7 +1350,7 @@ TIntermTyped* TParseContext::addConstArrayNode(int index, TIntermTyped* node, TS
 //
 TIntermTyped* TParseContext::addConstStruct(TString& identifier, TIntermTyped* node, TSourceLoc line)
 {
-    TTypeList* fields = node->getType().getStruct();
+    const TTypeList* fields = node->getType().getStruct();
     TIntermTyped *typedNode;
     int instanceSize = 0;
     unsigned int index = 0;
