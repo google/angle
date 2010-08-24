@@ -2957,7 +2957,7 @@ void Context::initExtensionString()
     mExtensionString += "GL_ANGLE_framebuffer_blit ";
 
 
-    if (getMaxSupportedSamples() == 0)
+    if (getMaxSupportedSamples() != 0)
     {
         mExtensionString += "GL_ANGLE_framebuffer_multisample ";
     }
