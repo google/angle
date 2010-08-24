@@ -307,17 +307,22 @@ void Texture::loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei
 
 void Texture::setImage(GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *img)
 {
+    IDirect3DTexture9 *newTexture = NULL;
     IDirect3DSurface9 *newSurface = NULL;
 
     if (width != 0 && height != 0)
     {
-        HRESULT result = getDevice()->CreateOffscreenPlainSurface(width, height, selectFormat(format), D3DPOOL_SYSTEMMEM, &newSurface, NULL);
+        //HRESULT result = getDevice()->CreateOffscreenPlainSurface(width, height, selectFormat(format), D3DPOOL_SYSTEMMEM, &newSurface, NULL);
+        HRESULT result = getDevice()->CreateTexture(width, height, 1, NULL, selectFormat(format), D3DPOOL_SYSTEMMEM, &newTexture, NULL);
 
         if (FAILED(result))
         {
             ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
             return error(GL_OUT_OF_MEMORY);
         }
+
+        newTexture->GetSurfaceLevel(0, &newSurface);
+        newTexture->Release();
     }
 
     if (img->surface) img->surface->Release();
