@@ -374,6 +374,8 @@ class Context
     GLenum getError();
 
     bool supportsShaderModel3() const;
+    GLsizei getMaxSupportedSamples() const;
+    int getNearestSupportedSamples(D3DFORMAT format, int requested) const;
     const char *getExtensionString() const;
 
     void blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, 
@@ -438,6 +440,8 @@ class Context
     unsigned int mAppliedStencilbufferSerial;
 
     bool mSupportsShaderModel3;
+    std::map<D3DFORMAT, bool *> mMultiSampleSupport;
+    GLsizei mMaxSupportedSamples;
 
     // state caching flags
     bool mClearStateDirty;

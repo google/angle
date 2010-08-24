@@ -362,6 +362,13 @@ typedef void* GLeglImageOES;
 #define GL_READ_FRAMEBUFFER_BINDING_ANGLE 0x8CAA
 #endif
 
+/* GL_ANGLE_framebuffer_multisample */
+#ifndef GL_ANGLE_framebuffer_multisample
+#define GL_RENDERBUFFER_SAMPLES_ANGLE                   0x8CAB
+#define GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_ANGLE     0x8D56
+#define GL_MAX_SAMPLES_ANGLE                            0x8D57
+#endif
+
 /*------------------------------------------------------------------------*
  * End of extension tokens, start of corresponding extension functions
  *------------------------------------------------------------------------*/
@@ -793,6 +800,17 @@ GL_APICALL void GL_APIENTRY glBlitFramebufferANGLE (GLint srcX0, GLint srcY0, GL
 typedef void (GL_APIENTRYP PFNGLBLITFRAMEBUFFERANGLEPROC) (GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1,
                                                            GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
                                                            GLbitfield mask, GLenum filter);
+#endif
+
+/* GL_ANGLE_framebuffer_multisample */
+#ifndef GL_ANGLE_framebuffer_multisample
+#define GL_ANGLE_framebuffer_multisample 1
+#ifdef GL_GLEXT_PROTOTYPES
+GL_APICALL void GL_APIENTRY glRenderbufferStorageMultisampleANGLE (GLenum target, GLsizei samples, GLenum internalformat, 
+                                                                   GLsizei width, GLsizei height);
+#endif
+typedef void (GL_APIENTRYP PFNGLRENDERBUFFERSTORAGEMULTISAMPLEANGLEPROC) (GLenum target, GLsizei samples, GLenum internalformat,
+                                                                          GLsizei width, GLsizei height);
 #endif
 
 #ifdef __cplusplus

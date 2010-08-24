@@ -610,4 +610,20 @@ D3DFORMAT ConvertRenderbufferFormat(GLenum format)
     }
 }
 
+GLsizei GetSamplesFromMultisampleType(D3DMULTISAMPLE_TYPE type)
+{
+    if (type == D3DMULTISAMPLE_NONMASKABLE)
+        return 0;
+    else
+        return type;
+}
+
+D3DMULTISAMPLE_TYPE GetMultisampleTypeFromSamples(GLsizei samples)
+{
+    if (samples <= 1)
+        return D3DMULTISAMPLE_NONE;
+    else
+        return (D3DMULTISAMPLE_TYPE)samples;
+}
+
 }

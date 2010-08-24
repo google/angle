@@ -870,6 +870,11 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
                 return error(GL_INVALID_FRAMEBUFFER_OPERATION);
             }
 
+            if (context->getReadFramebufferHandle() != 0 && framebuffer->getColorbuffer()->getSamples() != 0)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
             gl::Colorbuffer *source = framebuffer->getColorbuffer();
             if (target == GL_TEXTURE_2D)
             {
@@ -941,6 +946,11 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
             if (framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
             {
                 return error(GL_INVALID_FRAMEBUFFER_OPERATION);
+            }
+
+            if (context->getReadFramebufferHandle() != 0 && framebuffer->getColorbuffer()->getSamples() != 0)
+            {
+                return error(GL_INVALID_OPERATION);
             }
 
             gl::Colorbuffer *source = framebuffer->getColorbuffer();
@@ -2629,6 +2639,18 @@ void __stdcall glGetRenderbufferParameteriv(GLenum target, GLenum pname, GLint* 
                     *params = 0;
                 }
                 break;
+              case GL_RENDERBUFFER_SAMPLES_ANGLE:
+                {
+                    if (context->getMaxSupportedSamples() != 0)
+                    {
+                        *params = renderbuffer->getStorage()->getSamples();
+                    }
+                    else
+                    {
+                        return error(GL_INVALID_ENUM);
+                    }
+                }
+                break;
               default:
                 return error(GL_INVALID_ENUM);
             }
@@ -3596,10 +3618,10 @@ void __stdcall glReleaseShaderCompiler(void)
     }
 }
 
-void __stdcall glRenderbufferStorage(GLenum target, GLenum internalformat, GLsizei width, GLsizei height)
+void __stdcall glRenderbufferStorageMultisampleANGLE(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height)
 {
-    TRACE("(GLenum target = 0x%X, GLenum internalformat = 0x%X, GLsizei width = %d, GLsizei height = %d)",
-          target, internalformat, width, height);
+    TRACE("(GLenum target = 0x%X, GLsizei samples = %d, GLenum internalformat = 0x%X, GLsizei width = %d, GLsizei height = %d)",
+          target, samples, internalformat, width, height);
 
     try
     {
@@ -3624,7 +3646,7 @@ void __stdcall glRenderbufferStorage(GLenum target, GLenum internalformat, GLsiz
             return error(GL_INVALID_ENUM);
         }
 
-        if (width < 0 || height < 0 || width > gl::MAX_RENDERBUFFER_SIZE || height > gl::MAX_RENDERBUFFER_SIZE)
+        if (width < 0 || height < 0 || width > gl::MAX_RENDERBUFFER_SIZE || height > gl::MAX_RENDERBUFFER_SIZE || samples < 0)
         {
             return error(GL_INVALID_VALUE);
         }
@@ -3633,6 +3655,11 @@ void __stdcall glRenderbufferStorage(GLenum target, GLenum internalformat, GLsiz
 
         if (context)
         {
+            if (samples > context->getMaxSupportedSamples())
+            {
+                return error(GL_INVALID_VALUE);
+            }
+
             GLuint handle = context->getRenderbufferHandle();
             if (handle == 0)
             {
@@ -3642,18 +3669,18 @@ void __stdcall glRenderbufferStorage(GLenum target, GLenum internalformat, GLsiz
             switch (internalformat)
             {
               case GL_DEPTH_COMPONENT16:
-                context->setRenderbufferStorage(new gl::Depthbuffer(width, height));
+                context->setRenderbufferStorage(new gl::Depthbuffer(width, height, samples));
                 break;
               case GL_RGBA4:
               case GL_RGB5_A1:
               case GL_RGB565:
-                context->setRenderbufferStorage(new gl::Colorbuffer(width, height, internalformat));
+                context->setRenderbufferStorage(new gl::Colorbuffer(width, height, internalformat, samples));
                 break;
               case GL_STENCIL_INDEX8:
-                context->setRenderbufferStorage(new gl::Stencilbuffer(width, height));
+                context->setRenderbufferStorage(new gl::Stencilbuffer(width, height, samples));
                 break;
               case GL_DEPTH24_STENCIL8_OES:
-                context->setRenderbufferStorage(new gl::DepthStencilbuffer(width, height));
+                context->setRenderbufferStorage(new gl::DepthStencilbuffer(width, height, samples));
                 break;
               default:
                 return error(GL_INVALID_ENUM);
@@ -3664,6 +3691,11 @@ void __stdcall glRenderbufferStorage(GLenum target, GLenum internalformat, GLsiz
     {
         return error(GL_OUT_OF_MEMORY);
     }
+}
+
+void __stdcall glRenderbufferStorage(GLenum target, GLenum internalformat, GLsizei width, GLsizei height)
+{
+    glRenderbufferStorageMultisampleANGLE(target, 0, internalformat, width, height);
 }
 
 void __stdcall glSampleCoverage(GLclampf value, GLboolean invert)

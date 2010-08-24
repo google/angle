@@ -158,6 +158,7 @@ Context::Context(const egl::Config *config, const gl::Context *shareContext)
 
     mHasBeenCurrent = false;
 
+    mMaxSupportedSamples = 0;
     mMaskedClearSavedState = NULL;
     markAllStateDirty();
 }
@@ -177,6 +178,12 @@ Context::~Context()
     while (!mFramebufferMap.empty())
     {
         deleteFramebuffer(mFramebufferMap.begin()->first);
+    }
+
+    while (!mMultiSampleSupport.empty())
+    {
+        delete [] mMultiSampleSupport.begin()->second;
+        mMultiSampleSupport.erase(mMultiSampleSupport.begin());
     }
 
     for (int type = 0; type < SAMPLER_TYPE_COUNT; type++)
@@ -231,6 +238,31 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         mVertexDataManager = new VertexDataManager(this, mBufferBackEnd);
         mIndexDataManager = new IndexDataManager(this, mBufferBackEnd);
         mBlit = new Blit(this);
+
+        const D3DFORMAT renderBufferFormats[] =
+        {
+            D3DFMT_A8R8G8B8,
+            D3DFMT_R5G6B5,
+            D3DFMT_D24S8
+        };
+
+        int max = 0;
+        for (int i = 0; i < sizeof(renderBufferFormats) / sizeof(D3DFORMAT); ++i)
+        {
+            bool *multisampleArray = new bool[D3DMULTISAMPLE_16_SAMPLES + 1];
+            display->getMultiSampleSupport(renderBufferFormats[i], multisampleArray);
+            mMultiSampleSupport[renderBufferFormats[i]] = multisampleArray;
+
+            for (int j = D3DMULTISAMPLE_16_SAMPLES; j >= 0; --j)
+            {
+                if (multisampleArray[j] && j != D3DMULTISAMPLE_NONMASKABLE && j > max)
+                {
+                    max = j;
+                }
+            }
+        }
+
+        mMaxSupportedSamples = max;
 
         initExtensionString();
 
@@ -1152,8 +1184,49 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_SUBPIXEL_BITS:                    *params = 4;                                    break;
       case GL_MAX_TEXTURE_SIZE:                 *params = gl::MAX_TEXTURE_SIZE;                 break;
       case GL_MAX_CUBE_MAP_TEXTURE_SIZE:        *params = gl::MAX_CUBE_MAP_TEXTURE_SIZE;        break;
-      case GL_SAMPLE_BUFFERS:                   *params = 0;                                    break;
-      case GL_SAMPLES:                          *params = 0;                                    break;
+      case GL_MAX_SAMPLES_ANGLE:
+        {
+            GLsizei maxSamples = getMaxSupportedSamples();
+            if (maxSamples != 0)
+            {
+                *params = maxSamples;
+            }
+            else
+            {
+                return false;
+            }
+
+            break;
+        }
+      case GL_SAMPLE_BUFFERS:                   
+      case GL_SAMPLES:
+        {
+            gl::Framebuffer *framebuffer = getDrawFramebuffer();
+            if (framebuffer->completeness() == GL_FRAMEBUFFER_COMPLETE)
+            {
+                switch (pname)
+                {
+                  case GL_SAMPLE_BUFFERS:
+                    if (framebuffer->getSamples() != 0)
+                    {
+                        *params = 1;
+                    }
+                    else
+                    {
+                        *params = 0;
+                    }
+                    break;
+                  case GL_SAMPLES:
+                    *params = framebuffer->getSamples();
+                    break;
+                }
+            }
+            else 
+            {
+                *params = 0;
+            }
+        }
+        break;
       case GL_IMPLEMENTATION_COLOR_READ_TYPE:   *params = gl::IMPLEMENTATION_COLOR_READ_TYPE;   break;
       case GL_IMPLEMENTATION_COLOR_READ_FORMAT: *params = gl::IMPLEMENTATION_COLOR_READ_FORMAT; break;
       case GL_MAX_VIEWPORT_DIMS:
@@ -1339,6 +1412,19 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
         {
             *type = GL_INT;
             *numParams = 1;
+        }
+        break;
+      case GL_MAX_SAMPLES_ANGLE:
+        {
+            if (getMaxSupportedSamples() != 0)
+            {
+                *type = GL_INT;
+                *numParams = 1;
+            }
+            else
+            {
+                return false;
+            }
         }
         break;
       case GL_MAX_VIEWPORT_DIMS:
@@ -1903,6 +1989,11 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum
     if (framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
     {
         return error(GL_INVALID_FRAMEBUFFER_OPERATION);
+    }
+
+    if (getReadFramebufferHandle() != 0 && framebuffer->getSamples() != 0)
+    {
+        return error(GL_INVALID_OPERATION);
     }
 
     IDirect3DSurface9 *renderTarget = framebuffer->getRenderTarget();
@@ -2614,6 +2705,35 @@ bool Context::supportsShaderModel3() const
     return mSupportsShaderModel3;
 }
 
+int Context::getMaxSupportedSamples() const
+{
+    return mMaxSupportedSamples;
+}
+
+int Context::getNearestSupportedSamples(D3DFORMAT format, int requested) const
+{
+    if (requested == 0)
+    {
+        return requested;
+    }
+
+    std::map<D3DFORMAT, bool *>::const_iterator itr = mMultiSampleSupport.find(format);
+    if (itr == mMultiSampleSupport.end())
+    {
+        return -1;
+    }
+
+    for (int i = requested; i <= D3DMULTISAMPLE_16_SAMPLES; ++i)
+    {
+        if (itr->second[i] && i != D3DMULTISAMPLE_NONMASKABLE)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
 void Context::detachBuffer(GLuint buffer)
 {
     // [OpenGL ES 2.0.24] section 2.9 page 22:
@@ -2809,6 +2929,11 @@ void Context::initExtensionString()
     mExtensionString += "GL_EXT_read_format_bgra ";
     mExtensionString += "GL_ANGLE_framebuffer_blit ";
 
+    if (getMaxSupportedSamples() == 0)
+    {
+        mExtensionString += "GL_ANGLE_framebuffer_multisample ";
+    }
+
     if (mBufferBackEnd->supportIntIndices())
     {
         mExtensionString += "GL_OES_element_index_uint ";
@@ -2839,6 +2964,11 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
         !drawFramebuffer || drawFramebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
     {
         return error(GL_INVALID_FRAMEBUFFER_OPERATION);
+    }
+
+    if (drawFramebuffer->getSamples() != 0)
+    {
+        return error(GL_INVALID_OPERATION);
     }
 
     RECT sourceRect;
@@ -2982,12 +3112,27 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
         sourceTrimmedRect.bottom -= yDiff;
     }
 
+    bool partialBufferCopy = false;
+    if (sourceTrimmedRect.bottom - sourceTrimmedRect.top < readFramebuffer->getColorbuffer()->getHeight() ||
+        sourceTrimmedRect.right - sourceTrimmedRect.left < readFramebuffer->getColorbuffer()->getWidth() || 
+        destTrimmedRect.bottom - destTrimmedRect.top < drawFramebuffer->getColorbuffer()->getHeight() ||
+        destTrimmedRect.right - destTrimmedRect.left < drawFramebuffer->getColorbuffer()->getWidth() ||
+        sourceTrimmedRect.top != 0 || destTrimmedRect.top != 0 || sourceTrimmedRect.left != 0 || destTrimmedRect.left != 0)
+    {
+        partialBufferCopy = true;
+    }
+
     if (mask & GL_COLOR_BUFFER_BIT)
     {
         if (readFramebuffer->getColorbufferType() != drawFramebuffer->getColorbufferType() ||
             readFramebuffer->getColorbuffer()->getD3DFormat() != drawFramebuffer->getColorbuffer()->getD3DFormat())
         {
             ERR("Color buffer format conversion in BlitFramebufferANGLE not supported by this implementation");
+            return error(GL_INVALID_OPERATION);
+        }
+        
+        if (partialBufferCopy && readFramebuffer->getSamples() != 0)
+        {
             return error(GL_INVALID_OPERATION);
         }
 
@@ -3035,14 +3180,15 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
             }
         }
 
-        if (sourceTrimmedRect.bottom - sourceTrimmedRect.top < readDSBuffer->getHeight() ||
-            sourceTrimmedRect.right - sourceTrimmedRect.left < readDSBuffer->getWidth() || 
-            destTrimmedRect.bottom - destTrimmedRect.top < drawDSBuffer->getHeight() ||
-            destTrimmedRect.right - destTrimmedRect.left < drawDSBuffer->getWidth() ||
-            sourceTrimmedRect.top != 0 || destTrimmedRect.top != 0 || sourceTrimmedRect.left != 0 || destTrimmedRect.left != 0)
+        if (partialBufferCopy)
         {
             ERR("Only whole-buffer depth and stencil blits are supported by this implementation.");
             return error(GL_INVALID_OPERATION); // only whole-buffer copies are permitted
+        }
+
+        if (drawDSBuffer->getSamples() != 0)
+        {
+            return error(GL_INVALID_OPERATION);
         }
     }
 

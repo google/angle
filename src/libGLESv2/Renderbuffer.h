@@ -43,6 +43,7 @@ class RenderbufferStorage
     virtual int getHeight() const;
     GLenum getFormat() const;
     D3DFORMAT getD3DFormat() const;
+    GLsizei getSamples() const;
     unsigned int getSerial() const;
 
     static unsigned int issueSerial();
@@ -51,6 +52,7 @@ class RenderbufferStorage
     void setSize(int width, int height);
     GLenum mFormat;
     D3DFORMAT mD3DFormat;
+    GLsizei mSamples;
     unsigned int mSerial;
 
   private:
@@ -98,7 +100,7 @@ class Colorbuffer : public RenderbufferStorage
 {
   public:
     explicit Colorbuffer(IDirect3DSurface9 *renderTarget);
-    Colorbuffer(int width, int height, GLenum format);
+    Colorbuffer(int width, int height, GLenum format, GLsizei samples);
 
     ~Colorbuffer();
 
@@ -122,7 +124,7 @@ class DepthStencilbuffer : public RenderbufferStorage
 {
   public:
     explicit DepthStencilbuffer(IDirect3DSurface9 *depthStencil);
-    DepthStencilbuffer(int width, int height);
+    DepthStencilbuffer(int width, int height, GLsizei samples);
 
     ~DepthStencilbuffer();
 
@@ -143,7 +145,7 @@ class Depthbuffer : public DepthStencilbuffer
 {
   public:
     explicit Depthbuffer(IDirect3DSurface9 *depthStencil);
-    Depthbuffer(int width, int height);
+    Depthbuffer(int width, int height, GLsizei samples);
 
     ~Depthbuffer();
 
@@ -158,7 +160,7 @@ class Stencilbuffer : public DepthStencilbuffer
 {
   public:
     explicit Stencilbuffer(IDirect3DSurface9 *depthStencil);
-    Stencilbuffer(int width, int height);
+    Stencilbuffer(int width, int height, GLsizei samples);
 
     ~Stencilbuffer();
 

@@ -272,6 +272,7 @@ GLenum Framebuffer::completeness()
 {
     int width = 0;
     int height = 0;
+    int samples = -1;
 
     if (mColorbufferType != GL_NONE)
     {
@@ -289,6 +290,7 @@ GLenum Framebuffer::completeness()
 
         width = colorbuffer->getWidth();
         height = colorbuffer->getHeight();
+        samples = colorbuffer->getSamples();
     }
     else
     {
@@ -321,6 +323,15 @@ GLenum Framebuffer::completeness()
         {
             return GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS;
         }
+
+        if (samples == -1)
+        {
+            samples = depthbuffer->getSamples();
+        }
+        else if (samples != depthbuffer->getSamples())
+        {
+            return GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_ANGLE;
+        }
     }
 
     if (mStencilbufferType != GL_NONE)
@@ -345,6 +356,15 @@ GLenum Framebuffer::completeness()
         else if (width != stencilbuffer->getWidth() || height != stencilbuffer->getHeight())
         {
             return GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS;
+        }
+
+        if (samples == -1)
+        {
+            samples = stencilbuffer->getSamples();
+        }
+        else if (samples != stencilbuffer->getSamples())
+        {
+            return GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_ANGLE;
         }
     }
 
@@ -372,6 +392,18 @@ DefaultFramebuffer::DefaultFramebuffer(Colorbuffer *color, DepthStencilbuffer *d
     Renderbuffer *depthStencilRenderbuffer = new Renderbuffer(0, depthStencil);
     mDepthbufferPointer.set(depthStencilRenderbuffer);
     mStencilbufferPointer.set(depthStencilRenderbuffer);
+}
+
+int Framebuffer::getSamples()
+{
+    if (completeness() == GL_FRAMEBUFFER_COMPLETE)
+    {
+        return getColorbuffer()->getSamples();
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 GLenum DefaultFramebuffer::completeness()

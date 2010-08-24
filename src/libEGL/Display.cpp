@@ -164,7 +164,7 @@ bool Display::initialize()
 
                         if (SUCCEEDED(result))
                         {
-                            // FIXME: Enumerate multi-sampling
+                            // FIXME: enumerate multi-sampling
 
                             configSet.add(currentDisplayMode, mMinSwapInterval, mMaxSwapInterval, renderTargetFormat, depthStencilFormat, 0);
                         }
@@ -467,5 +467,16 @@ IDirect3DDevice9 *Display::getDevice()
 D3DCAPS9 Display::getDeviceCaps()
 {
     return mDeviceCaps;
+}
+
+void Display::getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray)
+{
+    for (int multiSampleIndex = 0; multiSampleIndex <= D3DMULTISAMPLE_16_SAMPLES; multiSampleIndex++)
+    {
+        HRESULT result = mD3d9->CheckDeviceMultiSampleType(mAdapter, mDeviceType, format,
+                                                           TRUE, (D3DMULTISAMPLE_TYPE)multiSampleIndex, NULL);
+
+        multiSampleArray[multiSampleIndex] = SUCCEEDED(result);
+    }
 }
 }

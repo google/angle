@@ -146,6 +146,7 @@ EXPORTS
     ; Extensions
     glTexImage3DOES                 @143
     glBlitFramebufferANGLE          @149
+    glRenderbufferStorageMultisampleANGLE @150
     
     ; EGL dependencies
     glCreateContext                 @144 NONAME
