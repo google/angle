@@ -3641,6 +3641,8 @@ void __stdcall glRenderbufferStorageMultisampleANGLE(GLenum target, GLsizei samp
           case GL_RGB565:
           case GL_STENCIL_INDEX8:
           case GL_DEPTH24_STENCIL8_OES:
+          case GL_RGB8_OES:
+          case GL_RGBA8_OES:
             break;
           default:
             return error(GL_INVALID_ENUM);
@@ -3674,6 +3676,8 @@ void __stdcall glRenderbufferStorageMultisampleANGLE(GLenum target, GLsizei samp
               case GL_RGBA4:
               case GL_RGB5_A1:
               case GL_RGB565:
+              case GL_RGB8_OES:
+              case GL_RGBA8_OES:
                 context->setRenderbufferStorage(new gl::Colorbuffer(width, height, internalformat, samples));
                 break;
               case GL_STENCIL_INDEX8:

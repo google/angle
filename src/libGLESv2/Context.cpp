@@ -242,6 +242,7 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         const D3DFORMAT renderBufferFormats[] =
         {
             D3DFMT_A8R8G8B8,
+            D3DFMT_X8R8G8B8,
             D3DFMT_R5G6B5,
             D3DFMT_D24S8
         };
