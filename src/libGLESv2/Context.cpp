@@ -2627,7 +2627,8 @@ void Context::finish()
         IDirect3DStateBlock9 *savedState = NULL;
         device->CreateStateBlock(D3DSBT_ALL, &savedState);
 
-        occlusionQuery->Issue(D3DISSUE_BEGIN);
+        HRESULT result = occlusionQuery->Issue(D3DISSUE_BEGIN);
+        ASSERT(SUCCEEDED(result));
 
         // Render something outside the render target
         device->SetStreamSourceFreq(0, 1);
@@ -2638,7 +2639,8 @@ void Context::finish()
         display->startScene();
         device->DrawPrimitiveUP(D3DPT_POINTLIST, 1, data, sizeof(data));
 
-        occlusionQuery->Issue(D3DISSUE_END);
+        result = occlusionQuery->Issue(D3DISSUE_END);
+        ASSERT(SUCCEEDED(result));
 
         while (occlusionQuery->GetData(NULL, 0, D3DGETDATA_FLUSH) == S_FALSE)
         {
@@ -2672,15 +2674,16 @@ void Context::flush()
 
     if (eventQuery)
     {
-        eventQuery->Issue(D3DISSUE_END);
+        HRESULT result = eventQuery->Issue(D3DISSUE_END);
+        ASSERT(SUCCEEDED(result));
 
-        while (eventQuery->GetData(NULL, 0, D3DGETDATA_FLUSH) == S_FALSE)
-        {
-            // Keep polling, but allow other threads to do something useful first
-            Sleep(0);
-        }
-
+        result = eventQuery->GetData(NULL, 0, D3DGETDATA_FLUSH);
         eventQuery->Release();
+
+        if (result == D3DERR_DEVICELOST)
+        {
+            error(GL_OUT_OF_MEMORY);
+        }
     }
 }
 
