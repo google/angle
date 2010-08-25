@@ -34,16 +34,20 @@ int OutputMultipleStrings = 1;
 //
 // Set up the per compile resources
 //
-void GenerateResources(TBuiltInResource& resources)
+void GenerateResources(TBuiltInResource* resources)
 {
-    resources.maxVertexAttribs = 8;
-    resources.maxVertexUniformVectors = 128;
-    resources.maxVaryingVectors = 8;
-    resources.maxVertexTextureImageUnits = 0;
-    resources.maxCombinedTextureImageUnits = 8;
-    resources.maxTextureImageUnits = 8;
-    resources.maxFragmentUniformVectors = 16;
-    resources.maxDrawBuffers = 1;
+    ShInitBuiltInResource(resources);
+
+    resources->MaxVertexAttribs = 8;
+    resources->MaxVertexUniformVectors = 128;
+    resources->MaxVaryingVectors = 8;
+    resources->MaxVertexTextureImageUnits = 0;
+    resources->MaxCombinedTextureImageUnits = 8;
+    resources->MaxTextureImageUnits = 8;
+    resources->MaxFragmentUniformVectors = 16;
+    resources->MaxDrawBuffers = 1;
+
+    resources->OES_standard_derivatives = 0;
 }
 
 int main(int argc, char* argv[])
@@ -60,7 +64,7 @@ int main(int argc, char* argv[])
     ShInitialize();
 
     TBuiltInResource resources;
-    GenerateResources(resources);
+    GenerateResources(&resources);
 
     argc--;
     argv++;

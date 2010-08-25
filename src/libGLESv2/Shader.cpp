@@ -35,14 +35,15 @@ Shader::Shader(ResourceManager *manager, GLuint handle) : mHandle(handle), mReso
         if (result)
         {
             TBuiltInResource resources;
-            resources.maxVertexAttribs = MAX_VERTEX_ATTRIBS;
-            resources.maxVertexUniformVectors = MAX_VERTEX_UNIFORM_VECTORS;
-            resources.maxVaryingVectors = MAX_VARYING_VECTORS;
-            resources.maxVertexTextureImageUnits = MAX_VERTEX_TEXTURE_IMAGE_UNITS;
-            resources.maxCombinedTextureImageUnits = MAX_COMBINED_TEXTURE_IMAGE_UNITS;
-            resources.maxTextureImageUnits = MAX_TEXTURE_IMAGE_UNITS;
-            resources.maxFragmentUniformVectors = MAX_FRAGMENT_UNIFORM_VECTORS;
-            resources.maxDrawBuffers = MAX_DRAW_BUFFERS;
+            ShInitBuiltInResource(&resources);
+            resources.MaxVertexAttribs = MAX_VERTEX_ATTRIBS;
+            resources.MaxVertexUniformVectors = MAX_VERTEX_UNIFORM_VECTORS;
+            resources.MaxVaryingVectors = MAX_VARYING_VECTORS;
+            resources.MaxVertexTextureImageUnits = MAX_VERTEX_TEXTURE_IMAGE_UNITS;
+            resources.MaxCombinedTextureImageUnits = MAX_COMBINED_TEXTURE_IMAGE_UNITS;
+            resources.MaxTextureImageUnits = MAX_TEXTURE_IMAGE_UNITS;
+            resources.MaxFragmentUniformVectors = MAX_FRAGMENT_UNIFORM_VECTORS;
+            resources.MaxDrawBuffers = MAX_DRAW_BUFFERS;
 
             mFragmentCompiler = ShConstructCompiler(EShLangFragment, EShSpecGLES2, &resources);
             mVertexCompiler = ShConstructCompiler(EShLangVertex, EShSpecGLES2, &resources);

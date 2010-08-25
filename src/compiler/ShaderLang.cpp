@@ -97,9 +97,38 @@ int ShInitialize()
 }
 
 //
+// Cleanup symbol tables
+//
+int ShFinalize()
+{
+    if (!DetachProcess())
+        return 0;
+
+    return 1;
+}
+
+//
+// Initialize built-in resources with minimum expected values.
+//
+void ShInitBuiltInResource(TBuiltInResource* resources)
+{
+    // Constants.
+    resources->MaxVertexAttribs = 8;
+    resources->MaxVertexUniformVectors = 128;
+    resources->MaxVaryingVectors = 8;
+    resources->MaxVertexTextureImageUnits = 0;
+    resources->MaxCombinedTextureImageUnits = 8;
+    resources->MaxTextureImageUnits = 8;
+    resources->MaxFragmentUniformVectors = 16;
+    resources->MaxDrawBuffers = 1;
+
+    // Extensions.
+    resources->OES_standard_derivatives = 0;
+}
+
+//
 // Driver calls these to create and destroy compiler objects.
 //
-
 ShHandle ShConstructCompiler(EShLanguage language, EShSpec spec, const TBuiltInResource* resources)
 {
     if (!InitThread())
@@ -128,17 +157,6 @@ void ShDestruct(ShHandle handle)
 
     if (base->getAsCompiler())
         DeleteCompiler(base->getAsCompiler());
-}
-
-//
-// Cleanup symbol tables
-//
-int ShFinalize()
-{
-    if (!DetachProcess())
-        return 0;
-
-    return 1;
 }
 
 //
