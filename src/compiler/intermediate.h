@@ -129,9 +129,9 @@ enum TOperator {
     EOpReflect,
     EOpRefract,
 
-    //EOpDPdx,            // Fragment only, OES_standard_derivatives extension
-    //EOpDPdy,            // Fragment only, OES_standard_derivatives extension
-    //EOpFwidth,          // Fragment only, OES_standard_derivatives extension
+    EOpDFdx,            // Fragment only, OES_standard_derivatives extension
+    EOpDFdy,            // Fragment only, OES_standard_derivatives extension
+    EOpFwidth,          // Fragment only, OES_standard_derivatives extension
 
     EOpMatrixTimesMatrix,
 

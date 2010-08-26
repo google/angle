@@ -377,7 +377,7 @@ static TString BuiltInFunctionsVertex()
 // Prototypes for built-in functions seen by fragment shaders only.
 //
 //============================================================================
-static TString BuiltInFunctionsFragment()
+static TString BuiltInFunctionsFragment(const TBuiltInResource& resources)
 {
     TString s;
 
@@ -389,20 +389,22 @@ static TString BuiltInFunctionsFragment()
     s.append(TString("vec4 texture2DProj(sampler2D sampler, vec4 coord, float bias);"));
     s.append(TString("vec4 textureCube(samplerCube sampler, vec3 coord, float bias);"));
 
-    //s.append(TString("float dFdx(float p);"));
-    //s.append(TString("vec2  dFdx(vec2  p);"));
-    //s.append(TString("vec3  dFdx(vec3  p);"));
-    //s.append(TString("vec4  dFdx(vec4  p);"));
+    if (resources.OES_standard_derivatives) {
+        s.append(TString("float dFdx(float p);"));
+        s.append(TString("vec2  dFdx(vec2  p);"));
+        s.append(TString("vec3  dFdx(vec3  p);"));
+        s.append(TString("vec4  dFdx(vec4  p);"));
 
-    //s.append(TString("float dFdy(float p);"));
-    //s.append(TString("vec2  dFdy(vec2  p);"));
-    //s.append(TString("vec3  dFdy(vec3  p);"));
-    //s.append(TString("vec4  dFdy(vec4  p);"));
+        s.append(TString("float dFdy(float p);"));
+        s.append(TString("vec2  dFdy(vec2  p);"));
+        s.append(TString("vec3  dFdy(vec3  p);"));
+        s.append(TString("vec4  dFdy(vec4  p);"));
 
-    s.append(TString("float fwidth(float p);"));
-    s.append(TString("vec2  fwidth(vec2  p);"));
-    s.append(TString("vec3  fwidth(vec3  p);"));
-    s.append(TString("vec4  fwidth(vec4  p);"));
+        s.append(TString("float fwidth(float p);"));
+        s.append(TString("vec2  fwidth(vec2  p);"));
+        s.append(TString("vec3  fwidth(vec3  p);"));
+        s.append(TString("vec4  fwidth(vec4  p);"));
+    }
 
     s.append(TString("\n"));
     return s;
@@ -491,7 +493,7 @@ void TBuiltIns::initialize(EShLanguage language, EShSpec spec, const TBuiltInRes
     case EShLangFragment:
         builtInStrings.push_back(DefaultPrecisionFragment());
         builtInStrings.push_back(BuiltInFunctionsCommon());
-        builtInStrings.push_back(BuiltInFunctionsFragment());
+        builtInStrings.push_back(BuiltInFunctionsFragment(resources));
         builtInStrings.push_back(StandardUniforms());
         break;
 
@@ -595,9 +597,11 @@ void IdentifyBuiltIns(EShLanguage language, EShSpec spec, const TBuiltInResource
     case EShLangVertex:
         break;
     case EShLangFragment:
-        //symbolTable.relateToOperator("dFdx",   EOpDPdx);    // OES_standard_derivatives extension
-        //symbolTable.relateToOperator("dFdy",   EOpDPdy);    // OES_standard_derivatives extension
-        //symbolTable.relateToOperator("fwidth", EOpFwidth);  // OES_standard_derivatives extension
+        if (resources.OES_standard_derivatives) {
+            symbolTable.relateToOperator("dFdx",   EOpDFdx);
+            symbolTable.relateToOperator("dFdy",   EOpDFdy);
+            symbolTable.relateToOperator("fwidth", EOpFwidth);
+        }
         break;
     default: break;
     }
