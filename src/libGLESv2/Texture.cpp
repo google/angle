@@ -45,6 +45,7 @@ Texture::Texture(GLuint id) : RefCountObject(id)
     mDirtyMetaData = true;
     mDirty = true;
     mIsRenderable = false;
+    mType = GL_UNSIGNED_BYTE;
     mBaseTexture = NULL;
 }
 
@@ -174,23 +175,31 @@ GLuint Texture::getHeight() const
     return mHeight;
 }
 
+bool Texture::isFloatingPoint() const
+{
+    return (mType == GL_FLOAT || mType == GL_HALF_FLOAT_OES);
+}
+
 // Selects an internal Direct3D 9 format for storing an Image
-D3DFORMAT Texture::selectFormat(GLenum format)
+D3DFORMAT Texture::selectFormat(GLenum format, GLenum type)
 {
     if (format == GL_COMPRESSED_RGB_S3TC_DXT1_EXT ||
         format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT)
     {
         return D3DFMT_DXT1;
     }
+    else if (type == GL_FLOAT)
+    {
+        return D3DFMT_A32B32G32R32F;
+    }
+    else if (type == GL_HALF_FLOAT_OES)
+    {
+        return D3DFMT_A16B16G16R16F;
+    }
     else
     {
         return D3DFMT_A8R8G8B8;
     }
-}
-
-int Texture::imagePitch(const Image &img) const
-{
-    return img.width * 4;
 }
 
 // Store the pixel rectangle designated by xoffset,yoffset,width,height with pixels stored as format/type at input
@@ -200,60 +209,100 @@ void Texture::loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei
 {
     GLsizei inputPitch = ComputePitch(width, format, type, unpackAlignment);
 
-    switch (format)
+    switch (type)
     {
-      case GL_ALPHA:
-        loadAlphaImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
-        break;
-
-      case GL_LUMINANCE:
-        loadLuminanceImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
-        break;
-
-      case GL_LUMINANCE_ALPHA:
-        loadLuminanceAlphaImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
-        break;
-
-      case GL_RGB:
-        switch (type)
+      case GL_UNSIGNED_BYTE:
+        switch (format)
         {
-          case GL_UNSIGNED_BYTE:
+          case GL_ALPHA:
+            loadAlphaImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          case GL_LUMINANCE:
+            loadLuminanceImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          case GL_LUMINANCE_ALPHA:
+            loadLuminanceAlphaImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          case GL_RGB:
             loadRGBUByteImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
             break;
-
-          case GL_UNSIGNED_SHORT_5_6_5:
-            loadRGB565ImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
-            break;
-
-          default: UNREACHABLE();
-        }
-        break;
-
-      case GL_RGBA:
-        switch (type)
-        {
-          case GL_UNSIGNED_BYTE:
+          case GL_RGBA:
             loadRGBAUByteImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
             break;
-
-          case GL_UNSIGNED_SHORT_4_4_4_4:
-            loadRGBA4444ImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+          case GL_BGRA_EXT:
+            loadBGRAImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
             break;
-
-          case GL_UNSIGNED_SHORT_5_5_5_1:
-            loadRGBA5551ImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
-            break;
-
           default: UNREACHABLE();
         }
         break;
-      case GL_BGRA_EXT:
-        switch (type)
+      case GL_UNSIGNED_SHORT_5_6_5:
+        switch (format)
         {
-          case GL_UNSIGNED_BYTE:
-            loadBGRAImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+          case GL_RGB:
+            loadRGB565ImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
             break;
-
+          default: UNREACHABLE();
+        }
+        break;
+      case GL_UNSIGNED_SHORT_4_4_4_4:
+        switch (format)
+        {
+          case GL_RGBA:
+            loadRGBA4444ImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          default: UNREACHABLE();
+        }
+        break;
+      case GL_UNSIGNED_SHORT_5_5_5_1:
+        switch (format)
+        {
+          case GL_RGBA:
+            loadRGBA5551ImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          default: UNREACHABLE();
+        }
+        break;
+      case GL_FLOAT:
+        switch (format)
+        {
+          // float textures are converted to RGBA, not BGRA, as they're stored that way in D3D
+          case GL_ALPHA:
+            loadAlphaFloatImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          case GL_LUMINANCE:
+            loadLuminanceFloatImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          case GL_LUMINANCE_ALPHA:
+            loadLuminanceAlphaFloatImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          case GL_RGB:
+            loadRGBFloatImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          case GL_RGBA:
+            loadRGBAFloatImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          default: UNREACHABLE();
+        }
+        break;
+      case GL_HALF_FLOAT_OES:
+        switch (format)
+        {
+          // float textures are converted to RGBA, not BGRA, as they're stored that way in D3D
+          case GL_ALPHA:
+            loadAlphaHalfFloatImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          case GL_LUMINANCE:
+            loadLuminanceHalfFloatImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          case GL_LUMINANCE_ALPHA:
+            loadLuminanceAlphaHalfFloatImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          case GL_RGB:
+            loadRGBHalfFloatImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          case GL_RGBA:
+            loadRGBAHalfFloatImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
           default: UNREACHABLE();
         }
         break;
@@ -271,6 +320,46 @@ void Texture::loadAlphaImageData(GLint xoffset, GLint yoffset, GLsizei width, GL
     {
         source = static_cast<const unsigned char*>(input) + y * inputPitch;
         dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
+        for (int x = 0; x < width; x++)
+        {
+            dest[4 * x + 0] = 0;
+            dest[4 * x + 1] = 0;
+            dest[4 * x + 2] = 0;
+            dest[4 * x + 3] = source[x];
+        }
+    }
+}
+
+void Texture::loadAlphaFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                      size_t inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const float *source = NULL;
+    float *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const float*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = reinterpret_cast<float*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch  + xoffset * 16);
+        for (int x = 0; x < width; x++)
+        {
+            dest[4 * x + 0] = 0;
+            dest[4 * x + 1] = 0;
+            dest[4 * x + 2] = 0;
+            dest[4 * x + 3] = source[x];
+        }
+    }
+}
+
+void Texture::loadAlphaHalfFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                          size_t inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned short *source = NULL;
+    unsigned short *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = reinterpret_cast<unsigned short*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 8);
         for (int x = 0; x < width; x++)
         {
             dest[4 * x + 0] = 0;
@@ -301,6 +390,46 @@ void Texture::loadLuminanceImageData(GLint xoffset, GLint yoffset, GLsizei width
     }
 }
 
+void Texture::loadLuminanceFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                          size_t inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const float *source = NULL;
+    float *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const float*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = reinterpret_cast<float*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch  + xoffset * 16);
+        for (int x = 0; x < width; x++)
+        {
+            dest[4 * x + 0] = source[x];
+            dest[4 * x + 1] = source[x];
+            dest[4 * x + 2] = source[x];
+            dest[4 * x + 3] = 1.0f;
+        }
+    }
+}
+
+void Texture::loadLuminanceHalfFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                                   size_t inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned short *source = NULL;
+    unsigned short *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = reinterpret_cast<unsigned short*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 8);
+        for (int x = 0; x < width; x++)
+        {
+            dest[4 * x + 0] = source[x];
+            dest[4 * x + 1] = source[x];
+            dest[4 * x + 2] = source[x];
+            dest[4 * x + 3] = 0x3C00; // SEEEEEMMMMMMMMMM, S = 0, E = 15, M = 0: 16bit flpt representation of 1
+        }
+    }
+}
+
 void Texture::loadLuminanceAlphaImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                                           size_t inputPitch, const void *input, size_t outputPitch, void *output) const
 {
@@ -311,6 +440,46 @@ void Texture::loadLuminanceAlphaImageData(GLint xoffset, GLint yoffset, GLsizei 
     {
         source = static_cast<const unsigned char*>(input) + y * inputPitch;
         dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
+        for (int x = 0; x < width; x++)
+        {
+            dest[4 * x + 0] = source[2*x+0];
+            dest[4 * x + 1] = source[2*x+0];
+            dest[4 * x + 2] = source[2*x+0];
+            dest[4 * x + 3] = source[2*x+1];
+        }
+    }
+}
+
+void Texture::loadLuminanceAlphaFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                               size_t inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const float *source = NULL;
+    float *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const float*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = reinterpret_cast<float*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch  + xoffset * 16);
+        for (int x = 0; x < width; x++)
+        {
+            dest[4 * x + 0] = source[2*x+0];
+            dest[4 * x + 1] = source[2*x+0];
+            dest[4 * x + 2] = source[2*x+0];
+            dest[4 * x + 3] = source[2*x+1];
+        }
+    }
+}
+
+void Texture::loadLuminanceAlphaHalfFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                                   size_t inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned short *source = NULL;
+    unsigned short *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = reinterpret_cast<unsigned short*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 8);
         for (int x = 0; x < width; x++)
         {
             dest[4 * x + 0] = source[2*x+0];
@@ -358,6 +527,46 @@ void Texture::loadRGB565ImageData(GLint xoffset, GLint yoffset, GLsizei width, G
             dest[4 * x + 1] = ((rgba & 0x07E0) >> 3) | ((rgba & 0x07E0) >> 9);
             dest[4 * x + 2] = ((rgba & 0xF800) >> 8) | ((rgba & 0xF800) >> 13);
             dest[4 * x + 3] = 0xFF;
+        }
+    }
+}
+
+void Texture::loadRGBFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                    size_t inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const float *source = NULL;
+    float *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const float*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = reinterpret_cast<float*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch  + xoffset * 16);
+        for (int x = 0; x < width; x++)
+        {
+            dest[4 * x + 0] = source[x * 3 + 0];
+            dest[4 * x + 1] = source[x * 3 + 1];
+            dest[4 * x + 2] = source[x * 3 + 2];
+            dest[4 * x + 3] = 1.0f;
+        }
+    }
+}
+
+void Texture::loadRGBHalfFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                        size_t inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned short *source = NULL;
+    unsigned short *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = reinterpret_cast<unsigned short*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch  + xoffset * 8);
+        for (int x = 0; x < width; x++)
+        {
+            dest[4 * x + 0] = source[x * 3 + 0];
+            dest[4 * x + 1] = source[x * 3 + 1];
+            dest[4 * x + 2] = source[x * 3 + 2];
+            dest[4 * x + 3] = 0x3C00; // SEEEEEMMMMMMMMMM, S = 0, E = 15, M = 0: 16bit flpt representation of 1
         }
     }
 }
@@ -424,6 +633,34 @@ void Texture::loadRGBA5551ImageData(GLint xoffset, GLint yoffset, GLsizei width,
     }
 }
 
+void Texture::loadRGBAFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                     size_t inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const float *source = NULL;
+    float *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const float*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = reinterpret_cast<float*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch  + xoffset * 16);
+        memcpy(dest, source, width * 16);
+    }
+}
+
+void Texture::loadRGBAHalfFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                        size_t inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned char *source = NULL;
+    unsigned char *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = static_cast<const unsigned char*>(input) + y * inputPitch;
+        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch  + xoffset * 8;
+        memcpy(dest, source, width * 8);
+    }
+}
+
 void Texture::loadBGRAImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                                 size_t inputPitch, const void *input, size_t outputPitch, void *output) const
 {
@@ -438,7 +675,7 @@ void Texture::loadBGRAImageData(GLint xoffset, GLint yoffset, GLsizei width, GLs
     }
 }
 
-void Texture::createSurface(GLsizei width, GLsizei height, GLenum format, Image *img)
+void Texture::createSurface(GLsizei width, GLsizei height, GLenum format, GLenum type, Image *img)
 {
     IDirect3DTexture9 *newTexture = NULL;
     IDirect3DSurface9 *newSurface = NULL;
@@ -465,7 +702,7 @@ void Texture::createSurface(GLsizei width, GLsizei height, GLenum format, Image 
             levelToFetch = upsampleCount;
         }
 
-        HRESULT result = getDevice()->CreateTexture(requestWidth, requestHeight, levelToFetch + 1, NULL, selectFormat(format),
+        HRESULT result = getDevice()->CreateTexture(requestWidth, requestHeight, levelToFetch + 1, NULL, selectFormat(format, type),
                                                     D3DPOOL_SYSTEMMEM, &newTexture, NULL);
 
         if (FAILED(result))
@@ -488,7 +725,7 @@ void Texture::createSurface(GLsizei width, GLsizei height, GLenum format, Image 
 
 void Texture::setImage(GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *img)
 {
-    createSurface(width, height, format, img);
+    createSurface(width, height, format, type, img);
 
     if (pixels != NULL && img->surface != NULL)
     {
@@ -511,7 +748,7 @@ void Texture::setImage(GLsizei width, GLsizei height, GLenum format, GLenum type
 
 void Texture::setCompressedImage(GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels, Image *img)
 {
-    createSurface(width, height, format, img);
+    createSurface(width, height, format, GL_UNSIGNED_BYTE, img);
 
     if (pixels != NULL && img->surface != NULL)
     {
@@ -716,7 +953,7 @@ GLenum Texture2D::getFormat() const
 //
 // Returns true if the existing texture was unsuitable had to be destroyed. If so, it will also set
 // a new height and width for the texture by working backwards from the given width and height.
-bool Texture2D::redefineTexture(GLint level, GLenum internalFormat, GLsizei width, GLsizei height)
+bool Texture2D::redefineTexture(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum type)
 {
     bool widthOkay = (mWidth >> level == width);
     bool heightOkay = (mHeight >> level == height);
@@ -725,7 +962,9 @@ bool Texture2D::redefineTexture(GLint level, GLenum internalFormat, GLsizei widt
                      || (widthOkay && mHeight >> level == 0 && height == 1)
                      || (heightOkay && mWidth >> level == 0 && width == 1));
 
-    bool textureOkay = (sizeOkay && internalFormat == mImageArray[0].format);
+    bool typeOkay = (type == mType);
+
+    bool textureOkay = (sizeOkay && typeOkay && internalFormat == mImageArray[0].format);
 
     if (!textureOkay)
     {
@@ -756,6 +995,7 @@ bool Texture2D::redefineTexture(GLint level, GLenum internalFormat, GLsizei widt
         mWidth = width << level;
         mHeight = height << level;
         mImageArray[0].format = internalFormat;
+        mType = type;
     }
 
     return !textureOkay;
@@ -763,14 +1003,14 @@ bool Texture2D::redefineTexture(GLint level, GLenum internalFormat, GLsizei widt
 
 void Texture2D::setImage(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    redefineTexture(level, internalFormat, width, height);
+    redefineTexture(level, internalFormat, width, height, type);
 
     Texture::setImage(width, height, format, type, unpackAlignment, pixels, &mImageArray[level]);
 }
 
 void Texture2D::setCompressedImage(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels)
 {
-    redefineTexture(level, internalFormat, width, height);
+    redefineTexture(level, internalFormat, width, height, GL_UNSIGNED_BYTE);
 
     Texture::setCompressedImage(width, height, internalFormat, imageSize, pixels, &mImageArray[level]);
 }
@@ -828,7 +1068,7 @@ void Texture2D::subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GL
 
 void Texture2D::copyImage(GLint level, GLenum internalFormat, GLint x, GLint y, GLsizei width, GLsizei height, RenderbufferStorage *source)
 {
-    if (redefineTexture(level, internalFormat, width, height))
+    if (redefineTexture(level, internalFormat, width, height, mType))
     {
         convertToRenderTarget();
         pushTexture(mTexture, true);
@@ -865,7 +1105,7 @@ void Texture2D::copySubImage(GLint level, GLint xoffset, GLint yoffset, GLint x,
         return error(GL_INVALID_VALUE);
     }
 
-    if (redefineTexture(0, mImageArray[0].format, mImageArray[0].width, mImageArray[0].height))
+    if (redefineTexture(0, mImageArray[0].format, mImageArray[0].width, mImageArray[0].height, mType))
     {
         convertToRenderTarget();
         pushTexture(mTexture, true);
@@ -919,6 +1159,16 @@ bool Texture2D::isComplete() const
      default: UNREACHABLE();
     }
 
+    if ((getFormat() == GL_FLOAT && !getContext()->supportsFloatLinearFilter()) ||
+        (getFormat() == GL_HALF_FLOAT_OES && !getContext()->supportsHalfFloatLinearFilter()))
+    {
+        if (mMagFilter != GL_NEAREST || (mMinFilter != GL_NEAREST && mMinFilter != GL_NEAREST_MIPMAP_NEAREST))
+        {
+            return false;
+        }
+    }
+
+
     if ((getWrapS() != GL_CLAMP_TO_EDGE && !isPow2(width))
         || (getWrapT() != GL_CLAMP_TO_EDGE && !isPow2(height)))
     {
@@ -967,7 +1217,7 @@ IDirect3DBaseTexture9 *Texture2D::createTexture()
     IDirect3DTexture9 *texture;
 
     IDirect3DDevice9 *device = getDevice();
-    D3DFORMAT format = selectFormat(mImageArray[0].format);
+    D3DFORMAT format = selectFormat(mImageArray[0].format, mType);
 
     HRESULT result = device->CreateTexture(mWidth, mHeight, creationLevels(mWidth, mHeight, 0), 0, format, D3DPOOL_DEFAULT, &texture, NULL);
 
@@ -1018,7 +1268,7 @@ IDirect3DBaseTexture9 *Texture2D::convertToRenderTarget()
     {
         egl::Display *display = getDisplay();
         IDirect3DDevice9 *device = getDevice();
-        D3DFORMAT format = selectFormat(mImageArray[0].format);
+        D3DFORMAT format = selectFormat(mImageArray[0].format, mType);
 
         HRESULT result = device->CreateTexture(mWidth, mHeight, creationLevels(mWidth, mHeight, 0), D3DUSAGE_RENDERTARGET, format, D3DPOOL_DEFAULT, &texture, NULL);
 
@@ -1328,6 +1578,15 @@ bool TextureCubeMap::isComplete() const
         }
     }
 
+    if ((getFormat() == GL_FLOAT && !getContext()->supportsFloatLinearFilter()) ||
+        (getFormat() == GL_HALF_FLOAT_OES && !getContext()->supportsHalfFloatLinearFilter()))
+    {
+        if (mMagFilter != GL_NEAREST || (mMinFilter != GL_NEAREST && mMinFilter != GL_NEAREST_MIPMAP_NEAREST))
+        {
+            return false;
+        }
+    }
+
     if (mipmapping)
     {
         if (!isPow2(size) && (getWrapS() != GL_CLAMP_TO_EDGE || getWrapT() != GL_CLAMP_TO_EDGE))
@@ -1368,7 +1627,7 @@ bool TextureCubeMap::isCompressed() const
 IDirect3DBaseTexture9 *TextureCubeMap::createTexture()
 {
     IDirect3DDevice9 *device = getDevice();
-    D3DFORMAT format = selectFormat(mImageArray[0][0].format);
+    D3DFORMAT format = selectFormat(mImageArray[0][0].format, mType);
 
     IDirect3DCubeTexture9 *texture;
 
@@ -1424,7 +1683,7 @@ IDirect3DBaseTexture9 *TextureCubeMap::convertToRenderTarget()
     {
         egl::Display *display = getDisplay();
         IDirect3DDevice9 *device = getDevice();
-        D3DFORMAT format = selectFormat(mImageArray[0][0].format);
+        D3DFORMAT format = selectFormat(mImageArray[0][0].format, mType);
 
         HRESULT result = device->CreateCubeTexture(mWidth, creationLevels(mWidth, 0), D3DUSAGE_RENDERTARGET, format, D3DPOOL_DEFAULT, &texture, NULL);
 

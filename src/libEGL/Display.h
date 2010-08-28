@@ -62,6 +62,8 @@ class Display
     virtual D3DCAPS9 getDeviceCaps();
     virtual void getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray);
     virtual bool getCompressedTextureSupport();
+    virtual bool getFloatTextureSupport(bool *filtering);
+    virtual bool getHalfFloatTextureSupport(bool *filtering);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Display);

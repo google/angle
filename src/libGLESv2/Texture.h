@@ -58,6 +58,7 @@ class Texture : public RefCountObject
     virtual GLenum getFormat() const = 0;
     virtual bool isComplete() const = 0;
     virtual bool isCompressed() const = 0;
+    bool isFloatingPoint() const;
 
     IDirect3DBaseTexture9 *getTexture();
     virtual Renderbuffer *getColorbuffer(GLenum target) = 0;
@@ -106,8 +107,7 @@ class Texture : public RefCountObject
         IDirect3DSurface9 *surface;
     };
 
-    static D3DFORMAT selectFormat(GLenum format);
-    int imagePitch(const Image& img) const;
+    static D3DFORMAT selectFormat(GLenum format, GLenum type);
 
     void setImage(GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *img);
     bool subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *img);
@@ -140,6 +140,7 @@ class Texture : public RefCountObject
     GLenum mMagFilter;
     GLenum mWrapS;
     GLenum mWrapT;
+    GLenum mType;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture);
@@ -149,22 +150,44 @@ class Texture : public RefCountObject
 
     void loadAlphaImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                             size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadAlphaFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                 size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadAlphaHalfFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                     size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
     void loadLuminanceImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                                 size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadLuminanceFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                     size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadLuminanceHalfFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                         size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
     void loadLuminanceAlphaImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                                      size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadLuminanceAlphaFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                          size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadLuminanceAlphaHalfFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                              size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
     void loadRGBUByteImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                                size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
     void loadRGB565ImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                              size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadRGBFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                               size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadRGBHalfFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                   size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
     void loadRGBAUByteImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                                 size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
     void loadRGBA4444ImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                                size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
     void loadRGBA5551ImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                                size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadRGBAFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadRGBAHalfFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                    size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
     void loadBGRAImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                            size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
+
+    void createSurface(GLsizei width, GLsizei height, GLenum format, GLenum type, Image *img);
 
     IDirect3DBaseTexture9 *mBaseTexture; // This is a weak pointer. The derived class is assumed to own a strong pointer.
 
@@ -172,7 +195,6 @@ class Texture : public RefCountObject
     bool mDirtyMetaData;
     bool mIsRenderable;
 
-    void createSurface(GLsizei width, GLsizei height, GLenum format, Image *img);
 };
 
 class Texture2D : public Texture
@@ -209,7 +231,7 @@ class Texture2D : public Texture
 
     virtual bool dirtyImageData() const;
 
-    bool redefineTexture(GLint level, GLenum internalFormat, GLsizei width, GLsizei height);
+    bool redefineTexture(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum type);
     void commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
 
     Image mImageArray[MAX_TEXTURE_LEVELS];

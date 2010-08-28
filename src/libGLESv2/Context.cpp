@@ -266,6 +266,8 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         mMaxSupportedSamples = max;
 
         mSupportsCompressedTextures = display->getCompressedTextureSupport();
+        mSupportsFloatTextures = display->getFloatTextureSupport(&mSupportsFloatLinearFilter);
+        mSupportsHalfFloatTextures = display->getHalfFloatTextureSupport(&mSupportsHalfFloatLinearFilter);
 
         initExtensionString();
 
@@ -2793,6 +2795,26 @@ bool Context::supportsCompressedTextures() const
     return mSupportsCompressedTextures;
 }
 
+bool Context::supportsFloatTextures() const
+{
+    return mSupportsFloatTextures;
+}
+
+bool Context::supportsFloatLinearFilter() const
+{
+    return mSupportsFloatLinearFilter;
+}
+
+bool Context::supportsHalfFloatTextures() const
+{
+    return mSupportsHalfFloatTextures;
+}
+
+bool Context::supportsHalfFloatLinearFilter() const
+{
+    return mSupportsHalfFloatLinearFilter;
+}
+
 void Context::detachBuffer(GLuint buffer)
 {
     // [OpenGL ES 2.0.24] section 2.9 page 22:
@@ -2992,6 +3014,26 @@ void Context::initExtensionString()
     if (supportsCompressedTextures())
     {
         mExtensionString += "GL_EXT_texture_compression_dxt1 ";
+    }
+
+    if (supportsFloatTextures())
+    {
+        mExtensionString += "GL_OES_texture_float ";
+    }
+
+    if (supportsHalfFloatTextures())
+    {
+        mExtensionString += "GL_OES_texture_half_float ";
+    }
+
+    if (supportsFloatLinearFilter())
+    {
+        mExtensionString += "GL_OES_texture_float_linear ";
+    }
+
+    if (supportsHalfFloatLinearFilter())
+    {
+        mExtensionString += "GL_OES_texture_half_float_linear ";
     }
 
     if (getMaxSupportedSamples() != 0)

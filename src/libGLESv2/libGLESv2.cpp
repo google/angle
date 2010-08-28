@@ -1068,6 +1068,11 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
                     return error(GL_INVALID_OPERATION);
                 }
 
+                if (texture->isFloatingPoint())
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
                 texture->copyImage(level, internalformat, x, y, width, height, source);
             }
             else if (gl::IsCubemapTextureTarget(target))
@@ -1080,6 +1085,11 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
                 }
 
                 if (texture->isCompressed())
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                if (texture->isFloatingPoint())
                 {
                     return error(GL_INVALID_OPERATION);
                 }
@@ -1156,6 +1166,11 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
                     return error(GL_INVALID_OPERATION);
                 }
 
+                if (texture->isFloatingPoint())
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
                 texture->copySubImage(level, xoffset, yoffset, x, y, width, height, source);
             }
             else if (gl::IsCubemapTextureTarget(target))
@@ -1168,6 +1183,11 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
                 }
 
                 if (texture->isCompressed())
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                if (texture->isFloatingPoint())
                 {
                     return error(GL_INVALID_OPERATION);
                 }
@@ -4256,6 +4276,8 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
             switch (type)
             {
               case GL_UNSIGNED_BYTE:
+              case GL_FLOAT:
+              case GL_HALF_FLOAT_OES:
                 break;
               default:
                 return error(GL_INVALID_ENUM);
@@ -4266,6 +4288,8 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
             {
               case GL_UNSIGNED_BYTE:
               case GL_UNSIGNED_SHORT_5_6_5:
+              case GL_FLOAT:
+              case GL_HALF_FLOAT_OES:
                 break;
               default:
                 return error(GL_INVALID_ENUM);
@@ -4277,6 +4301,8 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
               case GL_UNSIGNED_BYTE:
               case GL_UNSIGNED_SHORT_4_4_4_4:
               case GL_UNSIGNED_SHORT_5_5_5_1:
+              case GL_FLOAT:
+              case GL_HALF_FLOAT_OES:
                 break;
               default:
                 return error(GL_INVALID_ENUM);
@@ -4315,6 +4341,21 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
                     return error(GL_INVALID_OPERATION);
                 }
                 else
+                {
+                    return error(GL_INVALID_ENUM);
+                }
+            }
+
+            if (type == GL_FLOAT)
+            {
+                if (!context->supportsFloatTextures())
+                {
+                    return error(GL_INVALID_ENUM);
+                }
+            }
+            else if (type == GL_HALF_FLOAT_OES)
+            {
+                if (!context->supportsHalfFloatTextures())
                 {
                     return error(GL_INVALID_ENUM);
                 }
@@ -4486,6 +4527,21 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
 
         if (context)
         {
+            if (format == GL_FLOAT)
+            {
+                if (!context->supportsFloatTextures())
+                {
+                    return error(GL_INVALID_ENUM);
+                }
+            }
+            else if (format == GL_HALF_FLOAT_OES)
+            {
+                if (!context->supportsHalfFloatTextures())
+                {
+                    return error(GL_INVALID_ENUM);
+                }
+            }
+
             if (target == GL_TEXTURE_2D)
             {
                 gl::Texture2D *texture = context->getTexture2D();
@@ -4496,6 +4552,11 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
                 }
 
                 if (texture->isCompressed())
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                if (format != texture->getFormat())
                 {
                     return error(GL_INVALID_OPERATION);
                 }
@@ -4512,6 +4573,11 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
                 }
 
                 if (texture->isCompressed())
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                if (format != texture->getFormat())
                 {
                     return error(GL_INVALID_OPERATION);
                 }

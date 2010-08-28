@@ -378,6 +378,10 @@ class Context
     int getNearestSupportedSamples(D3DFORMAT format, int requested) const;
     const char *getExtensionString() const;
     bool supportsCompressedTextures() const;
+    bool supportsFloatTextures() const;
+    bool supportsFloatLinearFilter() const;
+    bool supportsHalfFloatTextures() const;
+    bool supportsHalfFloatLinearFilter() const;
 
     void blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, 
                          GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
@@ -444,6 +448,10 @@ class Context
     std::map<D3DFORMAT, bool *> mMultiSampleSupport;
     GLsizei mMaxSupportedSamples;
     bool mSupportsCompressedTextures;
+    bool mSupportsFloatTextures;
+    bool mSupportsFloatLinearFilter;
+    bool mSupportsHalfFloatTextures;
+    bool mSupportsHalfFloatLinearFilter;
 
     // state caching flags
     bool mClearStateDirty;

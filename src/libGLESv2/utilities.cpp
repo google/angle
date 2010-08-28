@@ -247,6 +247,28 @@ int ComputePixelSize(GLenum format, GLenum type)
       case GL_UNSIGNED_SHORT_5_5_5_1:
       case GL_UNSIGNED_SHORT_5_6_5:
         return sizeof(unsigned short);
+      case GL_FLOAT:
+        switch (format)
+        {
+          case GL_ALPHA:           return sizeof(float);
+          case GL_LUMINANCE:       return sizeof(float);
+          case GL_LUMINANCE_ALPHA: return sizeof(float) * 2;
+          case GL_RGB:             return sizeof(float) * 3;
+          case GL_RGBA:            return sizeof(float) * 4;
+          default: UNREACHABLE();
+        }
+        break;
+      case GL_HALF_FLOAT_OES:
+        switch (format)
+        {
+          case GL_ALPHA:           return sizeof(unsigned short);
+          case GL_LUMINANCE:       return sizeof(unsigned short);
+          case GL_LUMINANCE_ALPHA: return sizeof(unsigned short) * 2;
+          case GL_RGB:             return sizeof(unsigned short) * 3;
+          case GL_RGBA:            return sizeof(unsigned short) * 4;
+          default: UNREACHABLE();
+        }
+        break;
       default: UNREACHABLE();
     }
 
@@ -273,6 +295,21 @@ bool CheckTextureFormatType(GLenum format, GLenum type)
         {
           case GL_RGBA:
           case GL_BGRA_EXT:
+          case GL_RGB:
+          case GL_ALPHA:
+          case GL_LUMINANCE:
+          case GL_LUMINANCE_ALPHA:
+            return true;
+
+          default:
+            return false;
+        }
+
+      case GL_FLOAT:
+      case GL_HALF_FLOAT_OES:
+        switch (format)
+        {
+          case GL_RGBA:
           case GL_RGB:
           case GL_ALPHA:
           case GL_LUMINANCE:

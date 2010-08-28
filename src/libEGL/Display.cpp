@@ -487,4 +487,46 @@ bool Display::getCompressedTextureSupport()
 
     return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT1));
 }
+
+bool Display::getFloatTextureSupport(bool *filtering)
+{
+    D3DDISPLAYMODE currentDisplayMode;
+    mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
+
+    if (SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_QUERY_FILTER, 
+                                           D3DRTYPE_TEXTURE, D3DFMT_A32B32G32R32F)))
+    {
+        *filtering = true;
+        return true;
+    }
+    else
+    {
+        *filtering = false;
+        return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, 
+                                                  D3DRTYPE_TEXTURE, D3DFMT_A32B32G32R32F)) &&
+               SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0,
+                                                  D3DRTYPE_CUBETEXTURE, D3DFMT_A32B32G32R32F));
+    }
+}
+
+bool Display::getHalfFloatTextureSupport(bool *filtering)
+{
+    D3DDISPLAYMODE currentDisplayMode;
+    mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
+
+    if (SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_QUERY_FILTER, 
+                                           D3DRTYPE_TEXTURE, D3DFMT_A16B16G16R16F)))
+    {
+        *filtering = true;
+        return true;
+    }
+    else
+    {
+        *filtering = false;
+        return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, 
+                                                  D3DRTYPE_TEXTURE, D3DFMT_A16B16G16R16F)) &&
+               SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0,
+                                                  D3DRTYPE_CUBETEXTURE, D3DFMT_A16B16G16R16F));
+    }
+}
 }
