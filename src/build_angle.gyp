@@ -177,6 +177,8 @@
             'libGLESv2/Buffer.h',
             'libGLESv2/Context.cpp',
             'libGLESv2/Context.h',
+            'libGLESv2/Fence.cpp',
+            'libGLESv2/Fence.h',
             'libGLESv2/Framebuffer.cpp',
             'libGLESv2/Framebuffer.h',
             'libGLESv2/libGLESv2.cpp',

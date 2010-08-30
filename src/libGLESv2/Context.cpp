@@ -19,6 +19,7 @@
 #include "libGLESv2/Blit.h"
 #include "libGLESv2/ResourceManager.h"
 #include "libGLESv2/Buffer.h"
+#include "libGLESv2/Fence.h"
 #include "libGLESv2/FrameBuffer.h"
 #include "libGLESv2/Program.h"
 #include "libGLESv2/RenderBuffer.h"
@@ -158,6 +159,8 @@ Context::Context(const egl::Config *config, const gl::Context *shareContext)
 
     mHasBeenCurrent = false;
 
+    mSupportsCompressedTextures = false;
+    mSupportsEventQueries = false;
     mMaxSupportedSamples = 0;
     mMaskedClearSavedState = NULL;
     markAllStateDirty();
@@ -178,6 +181,11 @@ Context::~Context()
     while (!mFramebufferMap.empty())
     {
         deleteFramebuffer(mFramebufferMap.begin()->first);
+    }
+
+    while (!mFenceMap.empty())
+    {
+        deleteFence(mFenceMap.begin()->first);
     }
 
     while (!mMultiSampleSupport.empty())
@@ -265,6 +273,7 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 
         mMaxSupportedSamples = max;
 
+        mSupportsEventQueries = display->getEventQuerySupport();
         mSupportsCompressedTextures = display->getCompressedTextureSupport();
         mSupportsFloatTextures = display->getFloatTextureSupport(&mSupportsFloatLinearFilter);
         mSupportsHalfFloatTextures = display->getHalfFloatTextureSupport(&mSupportsHalfFloatLinearFilter);
@@ -812,6 +821,20 @@ GLuint Context::createFramebuffer()
     return handle;
 }
 
+GLuint Context::createFence()
+{
+    unsigned int handle = 0;
+
+    while (mFenceMap.find(handle) != mFenceMap.end())
+    {
+        handle++;
+    }
+
+    mFenceMap[handle] = new Fence;
+
+    return handle;
+}
+
 void Context::deleteBuffer(GLuint buffer)
 {
     if (mResourceManager->getBuffer(buffer))
@@ -862,6 +885,17 @@ void Context::deleteFramebuffer(GLuint framebuffer)
 
         delete framebufferObject->second;
         mFramebufferMap.erase(framebufferObject);
+    }
+}
+
+void Context::deleteFence(GLuint fence)
+{
+    FenceMap::iterator fenceObject = mFenceMap.find(fence);
+
+    if (fenceObject != mFenceMap.end())
+    {
+        delete fenceObject->second;
+        mFenceMap.erase(fenceObject);
     }
 }
 
@@ -1004,6 +1038,20 @@ Framebuffer *Context::getFramebuffer(unsigned int handle)
     else
     {
         return framebuffer->second;
+    }
+}
+
+Fence *Context::getFence(unsigned int handle)
+{
+    FenceMap::iterator fence = mFenceMap.find(handle);
+
+    if (fence == mFenceMap.end())
+    {
+        return NULL;
+    }
+    else
+    {
+        return fence->second;
     }
 }
 
@@ -2790,6 +2838,11 @@ int Context::getNearestSupportedSamples(D3DFORMAT format, int requested) const
     return -1;
 }
 
+bool Context::supportsEventQueries() const
+{
+    return mSupportsEventQueries;
+}
+
 bool Context::supportsCompressedTextures() const
 {
     return mSupportsCompressedTextures;
@@ -3010,6 +3063,11 @@ void Context::initExtensionString()
     mExtensionString += "GL_EXT_read_format_bgra ";
     mExtensionString += "GL_ANGLE_framebuffer_blit ";
     mExtensionString += "GL_OES_rgb8_rgba8 ";
+
+    if (supportsEventQueries())
+    {
+        mExtensionString += "GL_NV_fence ";
+    }
 
     if (supportsCompressedTextures())
     {

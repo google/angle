@@ -20,6 +20,7 @@
 #include "libGLESv2/utilities.h"
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/Context.h"
+#include "libGLESv2/Fence.h"
 #include "libGLESv2/Framebuffer.h"
 #include "libGLESv2/Program.h"
 #include "libGLESv2/Renderbuffer.h"
@@ -1313,6 +1314,33 @@ void __stdcall glDeleteBuffers(GLsizei n, const GLuint* buffers)
     }
 }
 
+void __stdcall glDeleteFencesNV(GLsizei n, const GLuint* fences)
+{
+    TRACE("(GLsizei n = %d, const GLuint* fences = 0x%0.8p)", n, fences);
+
+    try
+    {
+        if (n < 0)
+        {
+            return error(GL_INVALID_VALUE);
+        }
+
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                context->deleteFence(fences[i]);
+            }
+        }
+    }
+    catch(std::bad_alloc&)
+    {
+        return error(GL_OUT_OF_MEMORY);
+    }
+}
+
 void __stdcall glDeleteFramebuffers(GLsizei n, const GLuint* framebuffers)
 {
     TRACE("(GLsizei n = %d, const GLuint* framebuffers = 0x%0.8p)", n, framebuffers);
@@ -1768,6 +1796,32 @@ void __stdcall glEnableVertexAttribArray(GLuint index)
     }
 }
 
+void __stdcall glFinishFenceNV(GLuint fence)
+{
+    TRACE("(GLuint fence = %d)", fence);
+
+    try
+    {
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            gl::Fence* fenceObject = context->getFence(fence);
+
+            if (fenceObject == NULL)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            fenceObject->finishFence();
+        }
+    }
+    catch(std::bad_alloc&)
+    {
+        return error(GL_OUT_OF_MEMORY);
+    }
+}
+
 void __stdcall glFinish(void)
 {
     TRACE("()");
@@ -2058,6 +2112,33 @@ void __stdcall glGenerateMipmap(GLenum target)
             }
 
             texture->generateMipmaps();
+        }
+    }
+    catch(std::bad_alloc&)
+    {
+        return error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glGenFencesNV(GLsizei n, GLuint* fences)
+{
+    TRACE("(GLsizei n = %d, GLuint* fences = 0x%0.8p)", n, fences);
+
+    try
+    {
+        if (n < 0)
+        {
+            return error(GL_INVALID_VALUE);
+        }
+
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                fences[i] = context->createFence();
+            }
         }
     }
     catch(std::bad_alloc&)
@@ -2439,6 +2520,33 @@ GLenum __stdcall glGetError(void)
     }
 
     return GL_NO_ERROR;
+}
+
+void __stdcall glGetFenceivNV(GLuint fence, GLenum pname, GLint *params)
+{
+    TRACE("(GLuint fence = %d, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", fence, pname, params);
+
+    try
+    {
+    
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            gl::Fence *fenceObject = context->getFence(fence);
+
+            if (fenceObject == NULL)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            fenceObject->getFenceiv(pname, params);
+        }
+    }
+    catch(std::bad_alloc&)
+    {
+        return error(GL_OUT_OF_MEMORY);
+    }
 }
 
 void __stdcall glGetFloatv(GLenum pname, GLfloat* params)
@@ -3524,6 +3632,34 @@ GLboolean __stdcall glIsEnabled(GLenum cap)
     return false;
 }
 
+GLboolean __stdcall glIsFenceNV(GLuint fence)
+{
+    TRACE("(GLuint fence = %d)", fence);
+
+    try
+    {
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            gl::Fence *fenceObject = context->getFence(fence);
+
+            if (fenceObject == NULL)
+            {
+                return GL_FALSE;
+            }
+
+            return fenceObject->isFence();
+        }
+    }
+    catch(std::bad_alloc&)
+    {
+        return error(GL_OUT_OF_MEMORY, GL_FALSE);
+    }
+
+    return GL_FALSE;
+}
+
 GLboolean __stdcall glIsFramebuffer(GLuint framebuffer)
 {
     TRACE("(GLuint framebuffer = %d)", framebuffer);
@@ -3949,6 +4085,37 @@ void __stdcall glSampleCoverage(GLclampf value, GLboolean invert)
     }
 }
 
+void __stdcall glSetFenceNV(GLuint fence, GLenum condition)
+{
+    TRACE("(GLuint fence = %d, GLenum condition = 0x%X)", fence, condition);
+
+    try
+    {
+        if (condition != GL_ALL_COMPLETED_NV)
+        {
+            return error(GL_INVALID_ENUM);
+        }
+
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            gl::Fence *fenceObject = context->getFence(fence);
+
+            if (fenceObject == NULL)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            fenceObject->setFence(condition);    
+        }
+    }
+    catch(std::bad_alloc&)
+    {
+        return error(GL_OUT_OF_MEMORY);
+    }
+}
+
 void __stdcall glScissor(GLint x, GLint y, GLsizei width, GLsizei height)
 {
     TRACE("(GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei height = %d)", x, y, width, height);
@@ -4214,6 +4381,34 @@ void __stdcall glStencilOpSeparate(GLenum face, GLenum fail, GLenum zfail, GLenu
     {
         return error(GL_OUT_OF_MEMORY);
     }
+}
+
+GLboolean __stdcall glTestFenceNV(GLuint fence)
+{
+    TRACE("(GLuint fence = %d)", fence);
+
+    try
+    {
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            gl::Fence *fenceObject = context->getFence(fence);
+
+            if (fenceObject == NULL)
+            {
+                return error(GL_INVALID_OPERATION, GL_TRUE);
+            }
+
+            return fenceObject->testFence();
+        }
+    }
+    catch(std::bad_alloc&)
+    {
+        error(GL_OUT_OF_MEMORY);
+    }
+    
+    return GL_TRUE;
 }
 
 void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height,
@@ -5501,6 +5696,13 @@ __eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *
     {
         {"glTexImage3DOES", (__eglMustCastToProperFunctionPointerType)glTexImage3DOES},
         {"glBlitFramebufferANGLE", (__eglMustCastToProperFunctionPointerType)glBlitFramebufferANGLE},
+        {"glDeleteFencesNV", (__eglMustCastToProperFunctionPointerType)glDeleteFencesNV},
+        {"glGenFencesNV", (__eglMustCastToProperFunctionPointerType)glGenFencesNV},
+        {"glIsFenceNV", (__eglMustCastToProperFunctionPointerType)glIsFenceNV},
+        {"glTestFenceNV", (__eglMustCastToProperFunctionPointerType)glTestFenceNV},
+        {"glGetFenceivNV", (__eglMustCastToProperFunctionPointerType)glGetFenceivNV},
+        {"glFinishFenceNV", (__eglMustCastToProperFunctionPointerType)glFinishFenceNV},
+        {"glSetFenceNV", (__eglMustCastToProperFunctionPointerType)glSetFenceNV},
     };
 
     for (int ext = 0; ext < sizeof(glExtensions) / sizeof(Extension); ext++)

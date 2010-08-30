@@ -529,4 +529,16 @@ bool Display::getHalfFloatTextureSupport(bool *filtering)
                                                   D3DRTYPE_CUBETEXTURE, D3DFMT_A16B16G16R16F));
     }
 }
+
+bool Display::getEventQuerySupport()
+{
+    IDirect3DQuery9 *query;
+    HRESULT result = mDevice->CreateQuery(D3DQUERYTYPE_EVENT, &query);
+    if (SUCCEEDED(result))
+    {
+        query->Release();
+    }
+
+    return result != D3DERR_NOTAVAILABLE;
+}
 }

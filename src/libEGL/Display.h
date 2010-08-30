@@ -64,6 +64,7 @@ class Display
     virtual bool getCompressedTextureSupport();
     virtual bool getFloatTextureSupport(bool *filtering);
     virtual bool getHalfFloatTextureSupport(bool *filtering);
+    virtual bool getEventQuerySupport();
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Display);

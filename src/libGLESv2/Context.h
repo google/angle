@@ -51,6 +51,7 @@ class VertexDataManager;
 class IndexDataManager;
 class BufferBackEnd;
 class Blit;
+class Fence;
 
 enum
 {
@@ -312,6 +313,10 @@ class Context
     GLuint createFramebuffer();
     void deleteFramebuffer(GLuint framebuffer);
 
+    // Fences are owned by the Context.
+    GLuint createFence();
+    void deleteFence(GLuint fence);
+
     void bindArrayBuffer(GLuint buffer);
     void bindElementArrayBuffer(GLuint buffer);
     void bindTexture2D(GLuint texture);
@@ -328,6 +333,7 @@ class Context
     void setVertexAttrib(GLuint index, const GLfloat *values);
 
     Buffer *getBuffer(GLuint handle);
+    Fence *getFence(GLuint handle);
     Shader *getShader(GLuint handle);
     Program *getProgram(GLuint handle);
     Texture *getTexture(GLuint handle);
@@ -377,6 +383,7 @@ class Context
     GLsizei getMaxSupportedSamples() const;
     int getNearestSupportedSamples(D3DFORMAT format, int requested) const;
     const char *getExtensionString() const;
+    bool supportsEventQueries() const;
     bool supportsCompressedTextures() const;
     bool supportsFloatTextures() const;
     bool supportsFloatLinearFilter() const;
@@ -419,6 +426,9 @@ class Context
     typedef std::map<GLuint, Framebuffer*> FramebufferMap;
     FramebufferMap mFramebufferMap;
 
+    typedef std::map<GLuint, Fence*> FenceMap;
+    FenceMap mFenceMap;
+
     void initExtensionString();
     std::string mExtensionString;
 
@@ -447,6 +457,7 @@ class Context
     bool mSupportsShaderModel3;
     std::map<D3DFORMAT, bool *> mMultiSampleSupport;
     GLsizei mMaxSupportedSamples;
+    bool mSupportsEventQueries;
     bool mSupportsCompressedTextures;
     bool mSupportsFloatTextures;
     bool mSupportsFloatLinearFilter;
