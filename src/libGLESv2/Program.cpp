@@ -2371,6 +2371,7 @@ void Program::resetInfoLog()
     if (mInfoLog)
     {
         delete [] mInfoLog;
+        mInfoLog = NULL;
     }
 }
 
