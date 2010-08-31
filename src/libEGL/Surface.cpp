@@ -37,39 +37,51 @@ Surface::Surface(Display *display, const Config *config, HWND window)
 
 Surface::~Surface()
 {
+    release();
+}
+
+void Surface::release()
+{
     if (mSwapChain)
     {
         mSwapChain->Release();
+        mSwapChain = NULL;
     }
 
     if (mBackBuffer)
     {
         mBackBuffer->Release();
+        mBackBuffer = NULL;
     }
 
     if (mRenderTarget)
     {
         mRenderTarget->Release();
+        mRenderTarget = NULL;
     }
 
     if (mDepthStencil)
     {
         mDepthStencil->Release();
+        mDepthStencil = NULL;
     }
 
     if (mFlipTexture)
     {
         mFlipTexture->Release();
+        mFlipTexture = NULL;
     }
 
     if (mFlipState)
     {
         mFlipState->Release();
+        mFlipState = NULL;
     }
 
     if (mPreFlipState)
     {
         mPreFlipState->Release();
+        mPreFlipState = NULL;
     }
 }
 

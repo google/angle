@@ -29,6 +29,9 @@ class Surface
 
     ~Surface();
 
+    void release();
+    void resetSwapChain();
+
     HWND getWindowHandle();
     bool swap();
 
@@ -48,7 +51,6 @@ class Surface
     IDirect3DSurface9 *mDepthStencil;
     IDirect3DTexture9 *mFlipTexture;
 
-    void resetSwapChain();
     bool checkForWindowResize();
 
     void applyFlipState(IDirect3DDevice9 *device);

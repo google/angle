@@ -68,6 +68,9 @@ class Display
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Display);
+
+    D3DPRESENT_PARAMETERS getPresentParameters();
+
     const HDC mDc;
 
     HMODULE mD3d9Module;

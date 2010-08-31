@@ -17,7 +17,8 @@
 
 #include "libEGL/main.h"
 
-#define REF_RAST 0   // Can also be enabled by defining FORCE_REF_RAST in the project's predefined macros
+#define REF_RAST 0        // Can also be enabled by defining FORCE_REF_RAST in the project's predefined macros
+#define ENABLE_D3D9EX 1   // Enables use of the IDirect3D9Ex interface, when available
 
 namespace egl
 {
@@ -77,7 +78,7 @@ bool Display::initialize()
     // Use Direct3D9Ex if available. Among other things, this version is less
     // inclined to report a lost context, for example when the user switches
     // desktop. Direct3D9Ex is available in Windows Vista and later if suitable drivers are available.
-    if (Direct3DCreate9ExPtr && SUCCEEDED(Direct3DCreate9ExPtr(D3D_SDK_VERSION, &mD3d9ex)))
+    if (ENABLE_D3D9EX && Direct3DCreate9ExPtr && SUCCEEDED(Direct3DCreate9ExPtr(D3D_SDK_VERSION, &mD3d9ex)))
     {
         ASSERT(mD3d9ex);
         mD3d9ex->QueryInterface(IID_IDirect3D9, reinterpret_cast<void**>(&mD3d9));
@@ -101,6 +102,8 @@ bool Display::initialize()
         {
             return error(EGL_BAD_ALLOC, false);
         }
+
+        ASSERT(SUCCEEDED(result));
 
         if (mDeviceCaps.PixelShaderVersion < D3DPS_VERSION(2, 0))
         {
@@ -183,13 +186,6 @@ bool Display::initialize()
 
             mConfigSet.mSet.insert(configuration);
         }
-
-        if (!createDevice())
-        {
-            terminate();
-
-            return false;
-        }
     }
 
     if (!isInitialized())
@@ -198,6 +194,11 @@ bool Display::initialize()
 
         return false;
     }
+
+    static const TCHAR windowName[] = TEXT("AngleHiddenWindow");
+    static const TCHAR className[] = TEXT("STATIC");
+
+    mDeviceWindow = CreateWindowEx(WS_EX_NOACTIVATE, className, windowName, WS_DISABLED | WS_POPUP, 0, 0, 1, 1, HWND_MESSAGE, NULL, GetModuleHandle(NULL), NULL);
 
     return true;
 }
@@ -314,28 +315,7 @@ bool Display::getConfigAttrib(EGLConfig config, EGLint attribute, EGLint *value)
 
 bool Display::createDevice()
 {
-    static const TCHAR windowName[] = TEXT("AngleHiddenWindow");
-    static const TCHAR className[] = TEXT("STATIC");
-
-    mDeviceWindow = CreateWindowEx(WS_EX_NOACTIVATE, className, windowName, WS_DISABLED | WS_POPUP, 0, 0, 1, 1, HWND_MESSAGE, NULL, GetModuleHandle(NULL), NULL);
-
-    D3DPRESENT_PARAMETERS presentParameters = {0};
-
-    // The default swap chain is never actually used. Surface will create a new swap chain with the proper parameters.
-    presentParameters.AutoDepthStencilFormat = D3DFMT_UNKNOWN;
-    presentParameters.BackBufferCount = 1;
-    presentParameters.BackBufferFormat = D3DFMT_UNKNOWN;
-    presentParameters.BackBufferWidth = 1;
-    presentParameters.BackBufferHeight = 1;
-    presentParameters.EnableAutoDepthStencil = FALSE;
-    presentParameters.Flags = 0;
-    presentParameters.hDeviceWindow = mDeviceWindow;
-    presentParameters.MultiSampleQuality = 0;
-    presentParameters.MultiSampleType = D3DMULTISAMPLE_NONE;
-    presentParameters.PresentationInterval = convertInterval(mMinSwapInterval);
-    presentParameters.SwapEffect = D3DSWAPEFFECT_DISCARD;
-    presentParameters.Windowed = TRUE;
-
+    D3DPRESENT_PARAMETERS presentParameters = getPresentParameters();
     DWORD behaviorFlags = D3DCREATE_FPU_PRESERVE | D3DCREATE_NOWINDOWCHANGES;
 
     HRESULT result = mD3d9->CreateDevice(mAdapter, mDeviceType, mDeviceWindow, behaviorFlags | D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_PUREDEVICE, &presentParameters, &mDevice);
@@ -377,6 +357,40 @@ Surface *Display::createWindowSurface(HWND window, EGLConfig config)
 
 EGLContext Display::createContext(EGLConfig configHandle, const gl::Context *shareContext)
 {
+    if (!mDevice)
+    {
+        if (!createDevice())
+        {
+            return NULL;
+        }
+    }
+    else if (FAILED(mDevice->TestCooperativeLevel()))   // Lost device
+    {
+        D3DPRESENT_PARAMETERS presentParameters = getPresentParameters();
+        HRESULT result;
+        
+        do
+        {
+            Sleep(0);   // Give the graphics driver some CPU time
+
+            result = mDevice->Reset(&presentParameters);
+        }
+        while (result == D3DERR_DEVICELOST);
+
+        if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY || result == D3DERR_DEVICEREMOVED || result == D3DERR_DRIVERINTERNALERROR)
+        {
+            return error(EGL_BAD_ALLOC, (EGLContext)NULL);
+        }
+
+        ASSERT(SUCCEEDED(result));
+
+        // Restore any surfaces that may have been lost
+        for (SurfaceSet::iterator surface = mSurfaceSet.begin(); surface != mSurfaceSet.end(); surface++)
+        {
+            (*surface)->resetSwapChain();
+        }
+    }
+
     const egl::Config *config = mConfigSet.get(configHandle);
 
     gl::Context *context = glCreateContext(config, shareContext);
@@ -395,6 +409,14 @@ void Display::destroyContext(gl::Context *context)
 {
     glDestroyContext(context);
     mContextSet.erase(context);
+
+    if (mContextSet.empty() && mDevice && FAILED(mDevice->TestCooperativeLevel()))   // Last context of a lost device
+    {
+        for (SurfaceSet::iterator surface = mSurfaceSet.begin(); surface != mSurfaceSet.end(); surface++)
+        {
+            (*surface)->release();
+        }	
+    }
 }
 
 bool Display::isInitialized()
@@ -461,6 +483,14 @@ DWORD Display::convertInterval(GLint interval)
 
 IDirect3DDevice9 *Display::getDevice()
 {
+    if (!mDevice)
+    {
+        if (!createDevice())
+        {
+            return NULL;
+        }
+    }
+
     return mDevice;
 }
 
@@ -540,5 +570,27 @@ bool Display::getEventQuerySupport()
     }
 
     return result != D3DERR_NOTAVAILABLE;
+}
+
+D3DPRESENT_PARAMETERS Display::getPresentParameters()
+{
+    D3DPRESENT_PARAMETERS presentParameters = {0};
+
+    // The default swap chain is never actually used. Surface will create a new swap chain with the proper parameters.
+    presentParameters.AutoDepthStencilFormat = D3DFMT_UNKNOWN;
+    presentParameters.BackBufferCount = 1;
+    presentParameters.BackBufferFormat = D3DFMT_UNKNOWN;
+    presentParameters.BackBufferWidth = 1;
+    presentParameters.BackBufferHeight = 1;
+    presentParameters.EnableAutoDepthStencil = FALSE;
+    presentParameters.Flags = 0;
+    presentParameters.hDeviceWindow = mDeviceWindow;
+    presentParameters.MultiSampleQuality = 0;
+    presentParameters.MultiSampleType = D3DMULTISAMPLE_NONE;
+    presentParameters.PresentationInterval = convertInterval(mMinSwapInterval);
+    presentParameters.SwapEffect = D3DSWAPEFFECT_DISCARD;
+    presentParameters.Windowed = TRUE;
+
+    return presentParameters;
 }
 }

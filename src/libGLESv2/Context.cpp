@@ -303,7 +303,10 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 
     setFramebufferZero(framebufferZero);
 
-    defaultRenderTarget->Release();
+    if (defaultRenderTarget)
+    {
+        defaultRenderTarget->Release();
+    }
 
     if (depthStencil)
     {
@@ -1585,6 +1588,12 @@ bool Context::applyRenderTarget(bool ignoreViewport)
     }
 
     IDirect3DSurface9 *renderTarget = framebufferObject->getRenderTarget();
+
+    if (!renderTarget)
+    {
+        return false;   // Context must be lost
+    }
+
     IDirect3DSurface9 *depthStencil = NULL;
 
     unsigned int renderTargetSerial = framebufferObject->getRenderTargetSerial();
@@ -2098,6 +2107,12 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum
     }
 
     IDirect3DSurface9 *renderTarget = framebuffer->getRenderTarget();
+
+    if (!renderTarget)
+    {
+        return;   // Context must be lost, return silently
+    }
+
     IDirect3DDevice9 *device = getDevice();
 
     D3DSURFACE_DESC desc;
@@ -2395,6 +2410,11 @@ void Context::clear(GLbitfield mask)
     int stencil = mState.stencilClearValue & 0x000000FF;
 
     IDirect3DSurface9 *renderTarget = framebufferObject->getRenderTarget();
+
+    if (!renderTarget)
+    {
+        return;   // Context must be lost, return silently
+    }
 
     D3DSURFACE_DESC desc;
     renderTarget->GetDesc(&desc);
