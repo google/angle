@@ -31,6 +31,8 @@ Surface::Surface(Display *display, const Config *config, HWND window)
     mPixelAspectRatio = (EGLint)(1.0 * EGL_DISPLAY_SCALING);   // FIXME: Determine actual pixel aspect ratio
     mRenderBuffer = EGL_BACK_BUFFER;
     mSwapBehavior = EGL_BUFFER_PRESERVED;
+    mSwapInterval = -1;
+    setSwapInterval(1);
 
     resetSwapChain();
 }
@@ -99,7 +101,7 @@ void Surface::resetSwapChain()
     presentParameters.hDeviceWindow = getWindowHandle();
     presentParameters.MultiSampleQuality = 0;                  // FIXME: Unimplemented
     presentParameters.MultiSampleType = D3DMULTISAMPLE_NONE;   // FIXME: Unimplemented
-    presentParameters.PresentationInterval = Display::convertInterval(mConfig->mMinSwapInterval);
+    presentParameters.PresentationInterval = mPresentInterval;
     presentParameters.SwapEffect = D3DSWAPEFFECT_DISCARD;
     presentParameters.Windowed = TRUE;
 
@@ -189,6 +191,8 @@ void Surface::resetSwapChain()
     mBackBuffer = backBuffer;
     mRenderTarget = renderTarget;
     mFlipTexture = flipTexture;
+
+    mPresentIntervalDirty = false;
 
     // The flip state block recorded mFlipTexture so it is now invalid.
     releaseRecordedState(device);
@@ -322,7 +326,7 @@ void Surface::releaseRecordedState(IDirect3DDevice9 *device)
     }
 }
 
-bool Surface::checkForWindowResize()
+bool Surface::checkForOutOfDateSwapChain()
 {
     RECT client;
     if (!GetClientRect(getWindowHandle(), &client))
@@ -331,7 +335,7 @@ bool Surface::checkForWindowResize()
         return false;
     }
 
-    if (getWidth() != client.right - client.left || getHeight() != client.bottom - client.top)
+    if (getWidth() != client.right - client.left || getHeight() != client.bottom - client.top || mPresentIntervalDirty)
     {
         resetSwapChain();
 
@@ -346,6 +350,22 @@ bool Surface::checkForWindowResize()
     return false;
 }
 
+DWORD Surface::convertInterval(EGLint interval)
+{
+    switch(interval)
+    {
+      case 0: return D3DPRESENT_INTERVAL_IMMEDIATE;
+      case 1: return D3DPRESENT_INTERVAL_ONE;
+      case 2: return D3DPRESENT_INTERVAL_TWO;
+      case 3: return D3DPRESENT_INTERVAL_THREE;
+      case 4: return D3DPRESENT_INTERVAL_FOUR;
+      default: UNREACHABLE();
+    }
+
+    return D3DPRESENT_INTERVAL_DEFAULT;
+}
+
+
 bool Surface::swap()
 {
     if (mSwapChain)
@@ -359,7 +379,7 @@ bool Surface::swap()
         EGLint oldWidth = mWidth;
         EGLint oldHeight = mHeight;
 
-        checkForWindowResize();
+        checkForOutOfDateSwapChain();
 
         IDirect3DDevice9 *device = mDisplay->getDevice();
 
@@ -392,7 +412,7 @@ bool Surface::swap()
         restoreState(device);
 
         mDisplay->endScene();
-        HRESULT result = mSwapChain->Present(NULL, NULL, NULL, NULL, mDisplay->getPresentInterval());
+        HRESULT result = mSwapChain->Present(NULL, NULL, NULL, NULL, 0);
 
         if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY || result == D3DERR_DRIVERINTERNALERROR)
         {
@@ -439,5 +459,20 @@ IDirect3DSurface9 *Surface::getDepthStencil()
     }
 
     return mDepthStencil;
+}
+
+void Surface::setSwapInterval(EGLint interval)
+{
+    if (mSwapInterval == interval)
+    {
+        return;
+    }
+    
+    mSwapInterval = interval;
+    mSwapInterval = std::max(mSwapInterval, mDisplay->getMinSwapInterval());
+    mSwapInterval = std::min(mSwapInterval, mDisplay->getMaxSwapInterval());
+
+    mPresentInterval = convertInterval(mSwapInterval);
+    mPresentIntervalDirty = true;
 }
 }

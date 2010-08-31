@@ -54,9 +54,8 @@ class Display
     bool isValidSurface(egl::Surface *surface);
     bool hasExistingWindowSurface(HWND window);
 
-    void setSwapInterval(GLint interval);
-    DWORD getPresentInterval();
-    static DWORD convertInterval(GLint interval);
+    EGLint getMinSwapInterval();
+    EGLint getMaxSwapInterval();
 
     virtual IDirect3DDevice9 *getDevice();
     virtual D3DCAPS9 getDeviceCaps();
@@ -84,11 +83,9 @@ class Display
     HWND mDeviceWindow;
 
     bool mSceneStarted;
-    GLint mSwapInterval;
     EGLint mMaxSwapInterval;
     EGLint mMinSwapInterval;
-    DWORD mPresentInterval;
-
+    
     typedef std::set<Surface*> SurfaceSet;
     SurfaceSet mSurfaceSet;
 

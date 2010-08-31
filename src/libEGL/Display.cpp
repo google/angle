@@ -41,7 +41,6 @@ Display::Display(HDC deviceContext) : mDc(deviceContext)
 
     mMinSwapInterval = 1;
     mMaxSwapInterval = 1;
-    setSwapInterval(1);
 }
 
 Display::~Display()
@@ -452,33 +451,14 @@ bool Display::hasExistingWindowSurface(HWND window)
     return false;
 }
 
-void Display::setSwapInterval(GLint interval)
+EGLint Display::getMinSwapInterval()
 {
-    mSwapInterval = interval;
-    mSwapInterval = std::max(mSwapInterval, mMinSwapInterval);
-    mSwapInterval = std::min(mSwapInterval, mMaxSwapInterval);
-
-    mPresentInterval = convertInterval(mSwapInterval);
+    return mMinSwapInterval;
 }
 
-DWORD Display::getPresentInterval()
+EGLint Display::getMaxSwapInterval()
 {
-    return mPresentInterval;
-}
-
-DWORD Display::convertInterval(GLint interval)
-{
-    switch(interval)
-    {
-      case 0: return D3DPRESENT_INTERVAL_IMMEDIATE;
-      case 1: return D3DPRESENT_INTERVAL_ONE;
-      case 2: return D3DPRESENT_INTERVAL_TWO;
-      case 3: return D3DPRESENT_INTERVAL_THREE;
-      case 4: return D3DPRESENT_INTERVAL_FOUR;
-      default: UNREACHABLE();
-    }
-
-    return D3DPRESENT_INTERVAL_DEFAULT;
+    return mMaxSwapInterval;
 }
 
 IDirect3DDevice9 *Display::getDevice()
@@ -587,7 +567,7 @@ D3DPRESENT_PARAMETERS Display::getPresentParameters()
     presentParameters.hDeviceWindow = mDeviceWindow;
     presentParameters.MultiSampleQuality = 0;
     presentParameters.MultiSampleType = D3DMULTISAMPLE_NONE;
-    presentParameters.PresentationInterval = convertInterval(mMinSwapInterval);
+    presentParameters.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
     presentParameters.SwapEffect = D3DSWAPEFFECT_DISCARD;
     presentParameters.Windowed = TRUE;
 

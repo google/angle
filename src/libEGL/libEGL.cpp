@@ -746,7 +746,14 @@ EGLBoolean __stdcall eglSwapInterval(EGLDisplay dpy, EGLint interval)
             return EGL_FALSE;
         }
 
-        display->setSwapInterval(interval);
+        egl::Surface *draw_surface = static_cast<egl::Surface*>(egl::getCurrentDrawSurface());
+
+        if (draw_surface == NULL)
+        {
+            return error(EGL_BAD_SURFACE, EGL_FALSE);
+        }
+        
+        draw_surface->setSwapInterval(interval);
 
         return success(EGL_TRUE);
     }

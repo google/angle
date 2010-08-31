@@ -41,6 +41,8 @@ class Surface
     virtual IDirect3DSurface9 *getRenderTarget();
     virtual IDirect3DSurface9 *getDepthStencil();
 
+    void setSwapInterval(EGLint interval);
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Surface);
 
@@ -51,7 +53,9 @@ class Surface
     IDirect3DSurface9 *mDepthStencil;
     IDirect3DTexture9 *mFlipTexture;
 
-    bool checkForWindowResize();
+    bool checkForOutOfDateSwapChain();
+
+    static DWORD convertInterval(EGLint interval);
 
     void applyFlipState(IDirect3DDevice9 *device);
     void restoreState(IDirect3DDevice9 *device);
@@ -79,6 +83,9 @@ class Surface
 //  EGLenum textureTarget;         // Type of texture: 2D or no texture
 //  EGLenum vgAlphaFormat;         // Alpha format for OpenVG
 //  EGLenum vgColorSpace;          // Color space for OpenVG
+    EGLint mSwapInterval;
+    DWORD mPresentInterval;
+    bool mPresentIntervalDirty;
 };
 }
 
