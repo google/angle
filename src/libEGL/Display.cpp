@@ -498,45 +498,59 @@ bool Display::getCompressedTextureSupport()
     return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT1));
 }
 
-bool Display::getFloatTextureSupport(bool *filtering)
+bool Display::getFloatTextureSupport(bool *filtering, bool *renderable)
 {
     D3DDISPLAYMODE currentDisplayMode;
     mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
 
-    if (SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_QUERY_FILTER, 
-                                           D3DRTYPE_TEXTURE, D3DFMT_A32B32G32R32F)))
+    *filtering = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_QUERY_FILTER, 
+                                                    D3DRTYPE_TEXTURE, D3DFMT_A32B32G32R32F)) &&
+                 SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_QUERY_FILTER,
+                                                    D3DRTYPE_CUBETEXTURE, D3DFMT_A32B32G32R32F));
+    
+    *renderable = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET,
+                                                     D3DRTYPE_TEXTURE, D3DFMT_A32B32G32R32F))&&
+                  SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET,
+                                                     D3DRTYPE_CUBETEXTURE, D3DFMT_A32B32G32R32F));
+
+    if (!filtering && !renderable)
     {
-        *filtering = true;
-        return true;
-    }
-    else
-    {
-        *filtering = false;
         return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, 
                                                   D3DRTYPE_TEXTURE, D3DFMT_A32B32G32R32F)) &&
                SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0,
                                                   D3DRTYPE_CUBETEXTURE, D3DFMT_A32B32G32R32F));
     }
+    else
+    {
+        return true;
+    }
 }
 
-bool Display::getHalfFloatTextureSupport(bool *filtering)
+bool Display::getHalfFloatTextureSupport(bool *filtering, bool *renderable)
 {
     D3DDISPLAYMODE currentDisplayMode;
     mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
 
-    if (SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_QUERY_FILTER, 
-                                           D3DRTYPE_TEXTURE, D3DFMT_A16B16G16R16F)))
+    *filtering = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_QUERY_FILTER, 
+                                                    D3DRTYPE_TEXTURE, D3DFMT_A16B16G16R16F)) &&
+                 SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_QUERY_FILTER,
+                                                    D3DRTYPE_CUBETEXTURE, D3DFMT_A16B16G16R16F));
+    
+    *renderable = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET, 
+                                                    D3DRTYPE_TEXTURE, D3DFMT_A16B16G16R16F)) &&
+                 SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET,
+                                                    D3DRTYPE_CUBETEXTURE, D3DFMT_A16B16G16R16F));
+
+    if (!filtering && !renderable)
     {
-        *filtering = true;
-        return true;
-    }
-    else
-    {
-        *filtering = false;
         return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, 
                                                   D3DRTYPE_TEXTURE, D3DFMT_A16B16G16R16F)) &&
                SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0,
                                                   D3DRTYPE_CUBETEXTURE, D3DFMT_A16B16G16R16F));
+    }
+    else
+    {
+        return true;
     }
 }
 

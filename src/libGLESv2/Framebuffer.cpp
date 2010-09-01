@@ -311,6 +311,12 @@ GLenum Framebuffer::completeness()
             {
                 return GL_FRAMEBUFFER_UNSUPPORTED;
             }
+
+            if (colorbuffer->isFloatingPoint() && (!getContext()->supportsFloatRenderableTextures() || 
+                                                   !getContext()->supportsHalfFloatRenderableTextures()))
+            {
+                return GL_FRAMEBUFFER_UNSUPPORTED;
+            }
         }
 
         width = colorbuffer->getWidth();

@@ -2073,4 +2073,9 @@ GLenum Texture::TextureColorbufferProxy::getFormat() const
     return mTexture->getFormat();
 }
 
+bool Texture::TextureColorbufferProxy::isFloatingPoint() const
+{
+    return mTexture->isFloatingPoint();
+}
+
 }

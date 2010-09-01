@@ -387,8 +387,10 @@ class Context
     bool supportsCompressedTextures() const;
     bool supportsFloatTextures() const;
     bool supportsFloatLinearFilter() const;
+    bool supportsFloatRenderableTextures() const;
     bool supportsHalfFloatTextures() const;
     bool supportsHalfFloatLinearFilter() const;
+    bool supportsHalfFloatRenderableTextures() const;
 
     void blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, 
                          GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
@@ -461,8 +463,10 @@ class Context
     bool mSupportsCompressedTextures;
     bool mSupportsFloatTextures;
     bool mSupportsFloatLinearFilter;
+    bool mSupportsFloatRenderableTextures;
     bool mSupportsHalfFloatTextures;
     bool mSupportsHalfFloatLinearFilter;
+    bool mSupportsHalfFloatRenderableTextures;
 
     // state caching flags
     bool mClearStateDirty;

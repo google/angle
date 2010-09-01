@@ -275,8 +275,8 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 
         mSupportsEventQueries = display->getEventQuerySupport();
         mSupportsCompressedTextures = display->getCompressedTextureSupport();
-        mSupportsFloatTextures = display->getFloatTextureSupport(&mSupportsFloatLinearFilter);
-        mSupportsHalfFloatTextures = display->getHalfFloatTextureSupport(&mSupportsHalfFloatLinearFilter);
+        mSupportsFloatTextures = display->getFloatTextureSupport(&mSupportsFloatLinearFilter, &mSupportsFloatRenderableTextures);
+        mSupportsHalfFloatTextures = display->getHalfFloatTextureSupport(&mSupportsHalfFloatLinearFilter, &mSupportsHalfFloatRenderableTextures);
 
         initExtensionString();
 
@@ -2256,6 +2256,28 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum
                     r = (argb & 0x3FF00000) * (1.0f / 0x3FF00000);
                 }
                 break;
+              case D3DFMT_A32B32G32R32F:
+                {
+                    // float formats in D3D are stored rgba, rather than the other way round
+                    r = *((float*)(source + 16 * i + j * lock.Pitch) + 0);
+                    g = *((float*)(source + 16 * i + j * lock.Pitch) + 1);
+                    b = *((float*)(source + 16 * i + j * lock.Pitch) + 2);
+                    a = *((float*)(source + 16 * i + j * lock.Pitch) + 3);
+                }
+                break;
+              case D3DFMT_A16B16G16R16F:
+                {
+                    // float formats in D3D are stored rgba, rather than the other way round
+                    float abgr[4];
+
+                    D3DXFloat16To32Array(abgr, (D3DXFLOAT16*)(source + 8 * i + j * lock.Pitch), 4);
+
+                    a = abgr[3];
+                    b = abgr[2];
+                    g = abgr[1];
+                    r = abgr[0];
+                }
+                break;
               default:
                 UNIMPLEMENTED();   // FIXME
                 UNREACHABLE();
@@ -2878,6 +2900,11 @@ bool Context::supportsFloatLinearFilter() const
     return mSupportsFloatLinearFilter;
 }
 
+bool Context::supportsFloatRenderableTextures() const
+{
+    return mSupportsFloatRenderableTextures;
+}
+
 bool Context::supportsHalfFloatTextures() const
 {
     return mSupportsHalfFloatTextures;
@@ -2886,6 +2913,11 @@ bool Context::supportsHalfFloatTextures() const
 bool Context::supportsHalfFloatLinearFilter() const
 {
     return mSupportsHalfFloatLinearFilter;
+}
+
+bool Context::supportsHalfFloatRenderableTextures() const
+{
+    return mSupportsHalfFloatRenderableTextures;
 }
 
 void Context::detachBuffer(GLuint buffer)

@@ -141,6 +141,11 @@ GLenum RenderbufferStorage::getFormat() const
     return mFormat;
 }
 
+bool RenderbufferStorage::isFloatingPoint() const
+{
+    return false; // no floating point renderbuffers 
+}
+
 D3DFORMAT RenderbufferStorage::getD3DFormat() const
 {
     return mD3DFormat;

@@ -226,6 +226,18 @@ bool IsCompressed(GLenum format)
     }
 }
 
+bool IsFloatingPoint(GLenum type)
+{
+    if (type == GL_FLOAT || type == GL_HALF_FLOAT_OES)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 // Returns the size, in bytes, of a single texel in an Image
 int ComputePixelSize(GLenum format, GLenum type)
 {
@@ -545,6 +557,10 @@ unsigned int GetAlphaSize(D3DFORMAT colorFormat)
 {
     switch (colorFormat)
     {
+      case D3DFMT_A16B16G16R16F:
+        return 16;
+      case D3DFMT_A32B32G32R32F:
+        return 32;
       case D3DFMT_A2R10G10B10:
         return 2;
       case D3DFMT_A8R8G8B8:
@@ -564,6 +580,10 @@ unsigned int GetRedSize(D3DFORMAT colorFormat)
 {
     switch (colorFormat)
     {
+      case D3DFMT_A16B16G16R16F:
+        return 16;
+      case D3DFMT_A32B32G32R32F:
+        return 32;
       case D3DFMT_A2R10G10B10:
         return 10;
       case D3DFMT_A8R8G8B8:
@@ -582,6 +602,10 @@ unsigned int GetGreenSize(D3DFORMAT colorFormat)
 {
     switch (colorFormat)
     {
+      case D3DFMT_A16B16G16R16F:
+        return 16;
+      case D3DFMT_A32B32G32R32F:
+        return 32;
       case D3DFMT_A2R10G10B10:
         return 10;
       case D3DFMT_A8R8G8B8:
@@ -601,6 +625,10 @@ unsigned int GetBlueSize(D3DFORMAT colorFormat)
 {
     switch (colorFormat)
     {
+      case D3DFMT_A16B16G16R16F:
+        return 16;
+      case D3DFMT_A32B32G32R32F:
+        return 32;
       case D3DFMT_A2R10G10B10:
         return 10;
       case D3DFMT_A8R8G8B8:

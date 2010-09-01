@@ -86,6 +86,7 @@ class Texture : public RefCountObject
         virtual int getWidth() const;
         virtual int getHeight() const;
         virtual GLenum getFormat() const;
+        virtual bool isFloatingPoint() const;
 
       private:
         Texture *mTexture;
