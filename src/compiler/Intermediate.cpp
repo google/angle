@@ -51,18 +51,23 @@ TIntermSymbol* TIntermediate::addSymbol(int id, const TString& name, const TType
 TIntermTyped* TIntermediate::addBinaryMath(TOperator op, TIntermTyped* left, TIntermTyped* right, TSourceLoc line, TSymbolTable& symbolTable)
 {
     switch (op) {
+        case EOpEqual:
+        case EOpNotEqual:
+            if (left->isArray())
+                return 0;
+            break;
         case EOpLessThan:
         case EOpGreaterThan:
         case EOpLessThanEqual:
         case EOpGreaterThanEqual:
-            if (left->getType().isMatrix() || left->getType().isArray() || left->getType().isVector() || left->getType().getBasicType() == EbtStruct) {
+            if (left->isMatrix() || left->isArray() || left->isVector() || left->getBasicType() == EbtStruct) {
                 return 0;
             }
             break;
         case EOpLogicalOr:
         case EOpLogicalXor:
         case EOpLogicalAnd:
-            if (left->getType().getBasicType() != EbtBool || left->getType().isMatrix() || left->getType().isArray() || left->getType().isVector()) {
+            if (left->getBasicType() != EbtBool || left->isMatrix() || left->isArray() || left->isVector()) {
                 return 0;
             }
             break;
@@ -70,7 +75,7 @@ TIntermTyped* TIntermediate::addBinaryMath(TOperator op, TIntermTyped* left, TIn
         case EOpSub:
         case EOpDiv:
         case EOpMul:
-            if (left->getType().getBasicType() == EbtStruct || left->getType().getBasicType() == EbtBool)
+            if (left->getBasicType() == EbtStruct || left->getBasicType() == EbtBool)
                 return 0;
         default: break;
     }
@@ -78,8 +83,10 @@ TIntermTyped* TIntermediate::addBinaryMath(TOperator op, TIntermTyped* left, TIn
     //
     // First try converting the children to compatible types.
     //
-
-    if (!(left->getType().getStruct() && right->getType().getStruct())) {
+    if (left->getType().getStruct() && right->getType().getStruct()) {
+        if (left->getType() != right->getType())
+            return 0;
+    } else {
         TIntermTyped* child = addConversion(op, left->getType(), right);
         if (child)
             right = child;
@@ -90,11 +97,7 @@ TIntermTyped* TIntermediate::addBinaryMath(TOperator op, TIntermTyped* left, TIn
             else
                 return 0;
         }
-    } else {
-        if (left->getType() != right->getType())
-            return 0;
     }
-
 
     //
     // Need a new node holding things together then.  Make
@@ -107,18 +110,16 @@ TIntermTyped* TIntermediate::addBinaryMath(TOperator op, TIntermTyped* left, TIn
 
     node->setLeft(left);
     node->setRight(right);
-    if (! node->promote(infoSink))
+    if (!node->promote(infoSink))
         return 0;
-
-    TIntermConstantUnion *leftTempConstant = left->getAsConstantUnion();
-    TIntermConstantUnion *rightTempConstant = right->getAsConstantUnion();
 
     //
     // See if we can fold constants.
     //
-
     TIntermTyped* typedReturnNode = 0;
-    if ( leftTempConstant && rightTempConstant) {
+    TIntermConstantUnion *leftTempConstant = left->getAsConstantUnion();
+    TIntermConstantUnion *rightTempConstant = right->getAsConstantUnion();
+    if (leftTempConstant && rightTempConstant) {
         typedReturnNode = leftTempConstant->fold(node->getOp(), rightTempConstant, infoSink);
 
         if (typedReturnNode)
@@ -760,6 +761,12 @@ bool TIntermUnary::promote(TInfoSink&)
 //
 bool TIntermBinary::promote(TInfoSink& infoSink)
 {
+    // This function only handles scalars, vectors, and matrices.
+    if (left->isArray() || right->isArray()) {
+        infoSink.info.message(EPrefixInternalError, "Invalid operation for arrays", getLine());
+        return false;
+    }
+
     // GLSL ES 2.0 does not support implicit type casting.
     // So the basic type should always match.
     if (left->getBasicType() != right->getBasicType())
@@ -779,40 +786,6 @@ bool TIntermBinary::promote(TInfoSink& infoSink)
     // operands are const.
     if (left->getQualifier() != EvqConst || right->getQualifier() != EvqConst) {
         getTypePointer()->setQualifier(EvqTemporary);
-    }
-
-    //
-    // Array operations.
-    //
-    if (left->isArray() || right->isArray()) {
-        //
-        // Arrays types have to be exact matches.
-        //
-        if (left->getType() != right->getType())
-            return false;
-
-        switch (op) {
-            //
-            // Promote to conditional
-            //
-            case EOpEqual:
-            case EOpNotEqual:
-                setType(TType(EbtBool, EbpUndefined));
-                break;
-
-            //
-            // Set array information.
-            //
-            case EOpAssign:
-            case EOpInitialize:
-                getTypePointer()->setArraySize(left->getType().getArraySize());
-                getTypePointer()->setArrayInformationType(left->getType().getArrayInformationType());
-                break;
-
-            default:
-                return false;
-        }
-        return true;
     }
 
     int size = std::max(left->getNominalSize(), right->getNominalSize());

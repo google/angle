@@ -674,13 +674,10 @@ bool TParseContext::arraySizeErrorCheck(int line, TIntermTyped* expr, int& size)
 //
 bool TParseContext::arrayQualifierErrorCheck(int line, TPublicType type)
 {
-    if (type.qualifier == EvqAttribute) {
+    if ((type.qualifier == EvqAttribute) || (type.qualifier == EvqConst)) {
         error(line, "cannot declare arrays of this qualifier", TType(type).getCompleteString().c_str(), "");
         return true;
     }
-
-    if (type.qualifier == EvqConst && extensionErrorCheck(line, "GL_3DL_array_objects"))
-        return true;
 
     return false;
 }
@@ -1387,8 +1384,6 @@ void TParseContext::initializeExtensionBehavior()
     // example code: extensionBehavior["test"] = EBhDisable; // where "test" is the name of 
     // supported extension
     //
-    extensionBehavior["GL_ARB_texture_rectangle"] = EBhRequire;
-    extensionBehavior["GL_3DL_array_objects"] = EBhDisable;
 }
 
 OS_TLSIndex GlobalParseContextIndex = OS_INVALID_TLS_INDEX;

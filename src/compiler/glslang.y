@@ -625,19 +625,16 @@ function_identifier
         // Constructor
         //
         if ($1.array) {
-            if (parseContext->extensionErrorCheck($1.line, "GL_3DL_array_objects")) {
-                parseContext->recover();
-                $1.setArray(false);
-            }
+            // Constructors for arrays are not allowed.
+            parseContext->error($1.line, "cannot construct this type", "array", "");
+            parseContext->recover();
+            $1.setArray(false);
         }
 
+        TOperator op = EOpNull;
         if ($1.userDef) {
-            TString tempString = "";
-            TType type($1);
-            TFunction *function = new TFunction(&tempString, type, EOpConstructStruct);
-            $$ = function;
+            op = EOpConstructStruct;
         } else {
-            TOperator op = EOpNull;
             switch ($1.type) {
             case EbtFloat:
                 if ($1.matrix) {
@@ -671,6 +668,7 @@ function_identifier
                 case 4:       FRAG_VERT_ONLY("bvec4", $1.line); op = EOpConstructBVec4; break;
                 }
                 break;
+            default: break;
             }
             if (op == EOpNull) {
                 parseContext->error($1.line, "cannot construct this type", getBasicString($1.type), "");
@@ -678,11 +676,11 @@ function_identifier
                 $1.type = EbtFloat;
                 op = EOpConstructFloat;
             }
-            TString tempString = "";
-            TType type($1);
-            TFunction *function = new TFunction(&tempString, type, op);
-            $$ = function;
         }
+        TString tempString;
+        TType type($1);
+        TFunction *function = new TFunction(&tempString, type, op);
+        $$ = function;
     }
     | IDENTIFIER {
         if (parseContext->reservedErrorCheck($1.line, *$1.string))
@@ -851,8 +849,7 @@ equality_expression
             ConstantUnion *unionArray = new ConstantUnion[1];
             unionArray->setBConst(false);
             $$ = parseContext->intermediate.addConstantUnion(unionArray, TType(EbtBool, EbpUndefined, EvqConst), $2.line);
-        } else if (($1->isArray() || $3->isArray()) && parseContext->extensionErrorCheck($2.line, "GL_3DL_array_objects"))
-            parseContext->recover();
+        }
     }
     | equality_expression NE_OP relational_expression {
         $$ = parseContext->intermediate.addBinaryMath(EOpNotEqual, $1, $3, $2.line, parseContext->symbolTable);
@@ -862,8 +859,7 @@ equality_expression
             ConstantUnion *unionArray = new ConstantUnion[1];
             unionArray->setBConst(false);
             $$ = parseContext->intermediate.addConstantUnion(unionArray, TType(EbtBool, EbpUndefined, EvqConst), $2.line);
-        } else if (($1->isArray() || $3->isArray()) && parseContext->extensionErrorCheck($2.line, "GL_3DL_array_objects"))
-            parseContext->recover();
+        }
     }
     ;
 
@@ -949,8 +945,7 @@ assignment_expression
             parseContext->assignError($2.line, "assign", $1->getCompleteString(), $3->getCompleteString());
             parseContext->recover();
             $$ = $1;
-        } else if (($1->isArray() || $3->isArray()) && parseContext->extensionErrorCheck($2.line, "GL_3DL_array_objects"))
-            parseContext->recover();
+        }
     }
     ;
 
@@ -1272,75 +1267,6 @@ init_declarator_list
             $$.intermAggregate = parseContext->intermediate.growAggregate($1.intermNode, parseContext->intermediate.addSymbol(0, *$3.string, type, $3.line), $3.line);
         }
     }
-    | init_declarator_list COMMA IDENTIFIER LEFT_BRACKET RIGHT_BRACKET EQUAL initializer {
-        if (parseContext->structQualifierErrorCheck($3.line, $1.type))
-            parseContext->recover();
-
-        $$ = $1;
-
-        TVariable* variable = 0;
-        if (parseContext->arrayTypeErrorCheck($4.line, $1.type) || parseContext->arrayQualifierErrorCheck($4.line, $1.type))
-            parseContext->recover();
-        else {
-            $1.type.setArray(true, $7->getType().getArraySize());
-            if (parseContext->arrayErrorCheck($4.line, *$3.string, $1.type, variable))
-                parseContext->recover();
-        }
-
-        if (parseContext->extensionErrorCheck($$.line, "GL_3DL_array_objects"))
-            parseContext->recover();
-        else {
-            TIntermNode* intermNode;
-            if (!parseContext->executeInitializer($3.line, *$3.string, $1.type, $7, intermNode, variable)) {
-                //
-                // build the intermediate representation
-                //
-                if (intermNode)
-                    $$.intermAggregate = parseContext->intermediate.growAggregate($1.intermNode, intermNode, $6.line);
-                else
-                    $$.intermAggregate = $1.intermAggregate;
-            } else {
-                parseContext->recover();
-                $$.intermAggregate = 0;
-            }
-        }
-    }
-    | init_declarator_list COMMA IDENTIFIER LEFT_BRACKET constant_expression RIGHT_BRACKET EQUAL initializer {
-        if (parseContext->structQualifierErrorCheck($3.line, $1.type))
-            parseContext->recover();
-
-        $$ = $1;
-
-        TVariable* variable = 0;
-        if (parseContext->arrayTypeErrorCheck($4.line, $1.type) || parseContext->arrayQualifierErrorCheck($4.line, $1.type))
-            parseContext->recover();
-        else {
-            int size;
-            if (parseContext->arraySizeErrorCheck($4.line, $5, size))
-                parseContext->recover();
-            $1.type.setArray(true, size);
-            if (parseContext->arrayErrorCheck($4.line, *$3.string, $1.type, variable))
-                parseContext->recover();
-        }
-
-        if (parseContext->extensionErrorCheck($$.line, "GL_3DL_array_objects"))
-            parseContext->recover();
-        else {
-            TIntermNode* intermNode;
-            if (!parseContext->executeInitializer($3.line, *$3.string, $1.type, $8, intermNode, variable)) {
-                //
-                // build the intermediate representation
-                //
-                if (intermNode)
-                    $$.intermAggregate = parseContext->intermediate.growAggregate($1.intermNode, intermNode, $7.line);
-                else
-                    $$.intermAggregate = $1.intermAggregate;
-            } else {
-                parseContext->recover();
-                $$.intermAggregate = 0;
-            }
-        }
-    }
     | init_declarator_list COMMA IDENTIFIER EQUAL initializer {
         if (parseContext->structQualifierErrorCheck($3.line, $1.type))
             parseContext->recover();
@@ -1531,18 +1457,14 @@ fully_specified_type
         $$ = $1;
 
         if ($1.array) {
-            if (parseContext->extensionErrorCheck($1.line, "GL_3DL_array_objects")) {
-                parseContext->recover();
-                $1.setArray(false);
-            }
+            parseContext->error($1.line, "not supported", "first-class array", "");
+            parseContext->recover();
+            $1.setArray(false);
         }
     }
     | type_qualifier type_specifier  {
-        if ($2.array && parseContext->extensionErrorCheck($2.line, "GL_3DL_array_objects")) {
-            parseContext->recover();
-            $2.setArray(false);
-        }
-        if ($2.array && parseContext->arrayQualifierErrorCheck($2.line, $1)) {
+        if ($2.array) {
+            parseContext->error($2.line, "not supported", "first-class array", "");
             parseContext->recover();
             $2.setArray(false);
         }
