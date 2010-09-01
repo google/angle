@@ -226,18 +226,6 @@ bool IsCompressed(GLenum format)
     }
 }
 
-bool IsFloatingPoint(GLenum type)
-{
-    if (type == GL_FLOAT || type == GL_HALF_FLOAT_OES)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
 // Returns the size, in bytes, of a single texel in an Image
 int ComputePixelSize(GLenum format, GLenum type)
 {
