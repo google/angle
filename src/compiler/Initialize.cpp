@@ -619,3 +619,9 @@ void IdentifyBuiltIns(EShLanguage language, EShSpec spec, const TBuiltInResource
     }
 }
 
+void InitExtensionBehavior(const TBuiltInResource& resources,
+                           TExtensionBehavior& extBehavior)
+{
+    if (resources.OES_standard_derivatives)
+        extBehavior["GL_OES_standard_derivatives"] = EBhDisable;
+}

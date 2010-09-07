@@ -16,6 +16,7 @@
 
 #include "GLSLANG/ShaderLang.h"
 
+#include "compiler/ExtensionBehavior.h"
 #include "compiler/InfoSink.h"
 #include "compiler/SymbolTable.h"
 
@@ -44,6 +45,7 @@ public:
     EShLanguage getLanguage() const { return language; }
     EShSpec getSpec() const { return spec; }
     TSymbolTable& getSymbolTable() { return symbolTable; }
+    TExtensionBehavior& getExtensionBehavior() { return extensionBehavior; }
     TInfoSink& getInfoSink() { return infoSink; }
 
     virtual bool compile(TIntermNode* root) = 0;
@@ -57,6 +59,8 @@ protected:
     // Built-in symbol table for the given language, spec, and resources.
     // It is preserved from compile-to-compile.
     TSymbolTable symbolTable;
+    // Built-in extensions with default behavior.
+    TExtensionBehavior extensionBehavior;
     // Output sink.
     TInfoSink infoSink;
 };

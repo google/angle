@@ -23,7 +23,8 @@ static bool InitializeSymbolTable(
         TInfoSink& infoSink, TSymbolTable& symbolTable)
 {
     TIntermediate intermediate(infoSink);
-    TParseContext parseContext(symbolTable, intermediate, language, spec, infoSink);
+    TExtensionBehavior extBehavior;
+    TParseContext parseContext(symbolTable, extBehavior, intermediate, language, spec, infoSink);
 
     GlobalParseContext = &parseContext;
 
@@ -77,6 +78,14 @@ static bool GenerateBuiltInSymbolTable(
 
     builtIns.initialize(language, spec, resources);
     return InitializeSymbolTable(builtIns.getBuiltInStrings(), language, spec, resources, infoSink, symbolTable);
+}
+
+static void DefineExtensionMacros(const TExtensionBehavior& extBehavior)
+{
+    for (TExtensionBehavior::const_iterator iter = extBehavior.begin();
+         iter != extBehavior.end(); ++iter) {
+        PredefineIntMacro(iter->first.c_str(), 1);
+    }
 }
 
 //
@@ -144,6 +153,7 @@ ShHandle ShConstructCompiler(EShLanguage language, EShSpec spec, const TBuiltInR
         ShDestruct(base);
         return 0;
     }
+    InitExtensionBehavior(*resources, compiler->getExtensionBehavior());
 
     return reinterpret_cast<void*>(base);
 }
@@ -196,14 +206,16 @@ int ShCompile(
 
     TIntermediate intermediate(infoSink);
     TSymbolTable& symbolTable = compiler->getSymbolTable();
+    const TExtensionBehavior& extBehavior = compiler->getExtensionBehavior();
 
-    TParseContext parseContext(symbolTable, intermediate, compiler->getLanguage(), compiler->getSpec(), infoSink);
-    parseContext.initializeExtensionBehavior();
+    TParseContext parseContext(symbolTable, extBehavior, intermediate,
+        compiler->getLanguage(), compiler->getSpec(), infoSink);
     GlobalParseContext = &parseContext;
  
     setInitialState();
 
     InitPreprocessor();
+    DefineExtensionMacros(extBehavior);
     //
     // Parse the application's shaders.  All the following symbol table
     // work will be throw-away, so push a new allocation scope that can

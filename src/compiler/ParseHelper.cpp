@@ -1375,17 +1375,6 @@ TIntermTyped* TParseContext::addConstStruct(TString& identifier, TIntermTyped* n
     return typedNode;
 }
 
-//
-// Initialize all supported extensions to disable
-//
-void TParseContext::initializeExtensionBehavior()
-{
-    //
-    // example code: extensionBehavior["test"] = EBhDisable; // where "test" is the name of 
-    // supported extension
-    //
-}
-
 OS_TLSIndex GlobalParseContextIndex = OS_INVALID_TLS_INDEX;
 
 bool InitializeParseContextIndex()

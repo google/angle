@@ -404,6 +404,7 @@ protected:
 
 typedef TVector<TIntermNode*> TIntermSequence;
 typedef TVector<int> TQualifierList;
+typedef TMap<TString, TString> TPragmaTable;
 //
 // Nodes that operate on an arbitrary sized set of children.
 //
