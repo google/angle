@@ -418,12 +418,13 @@ public:
     virtual void traverse(TIntermTraverser*);
 
     TIntermSequence& getSequence() { return sequence; }
+
     void setName(const TString& n) { name = n; }
     const TString& getName() const { return name; }
 
     void setUserDefined() { userDefined = true; }
     bool isUserDefined() { return userDefined; }
-    TQualifierList& getQualifier() { return qualifier; }
+
     void setOptimize(bool o) { optimize = o; }
     bool getOptimize() { return optimize; }
     void setDebug(bool d) { debug = d; }
@@ -435,9 +436,9 @@ protected:
     TIntermAggregate(const TIntermAggregate&); // disallow copy constructor
     TIntermAggregate& operator=(const TIntermAggregate&); // disallow assignment operator
     TIntermSequence sequence;
-    TQualifierList qualifier;
     TString name;
     bool userDefined; // used for user defined function names
+
     bool optimize;
     bool debug;
     TPragmaTable *pragmaTable;

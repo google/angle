@@ -537,16 +537,14 @@ function_call
                     $$->getAsAggregate()->setName(fnCandidate->getMangledName());
 
                     TQualifier qual;
-                    TQualifierList& qualifierList = $$->getAsAggregate()->getQualifier();
                     for (int i = 0; i < fnCandidate->getParamCount(); ++i) {
-                        qual = (*fnCandidate)[i].type->getQualifier();
+                        qual = fnCandidate->getParam(i).type->getQualifier();
                         if (qual == EvqOut || qual == EvqInOut) {
                             if (parseContext->lValueErrorCheck($$->getLine(), "assign", $$->getAsAggregate()->getSequence()[i]->getAsTyped())) {
                                 parseContext->error($1.intermNode->getLine(), "Constant value cannot be passed for 'out' or 'inout' parameters.", "Error", "");
                                 parseContext->recover();
                             }
                         }
-                        qualifierList.push_back(qual);
                     }
                 }
                 $$->setType(fnCandidate->getReturnType());
@@ -989,7 +987,7 @@ declaration
         
         for (int i = 0; i < function.getParamCount(); i++)
         {
-            TParameter &param = function[i];
+            const TParameter &param = function.getParam(i);
             if (param.name != 0)
             {
                 TVariable *variable = new TVariable(param.name, *param.type);
@@ -1033,8 +1031,8 @@ function_prototype
                 parseContext->recover();
             }
             for (int i = 0; i < prevDec->getParamCount(); ++i) {
-                if ((*prevDec)[i].type->getQualifier() != (*$1)[i].type->getQualifier()) {
-                    parseContext->error($2.line, "overloaded functions must have the same parameter qualifiers", (*$1)[i].type->getQualifierString(), "");
+                if (prevDec->getParam(i).type->getQualifier() != $1->getParam(i).type->getQualifier()) {
+                    parseContext->error($2.line, "overloaded functions must have the same parameter qualifiers", $1->getParam(i).type->getQualifierString(), "");
                     parseContext->recover();
                 }
             }
@@ -1992,8 +1990,8 @@ external_declaration
 
 function_definition
     : function_prototype {
-        TFunction& function = *($1.function);
-        TFunction* prevDec = static_cast<TFunction*>(parseContext->symbolTable.find(function.getMangledName()));
+        TFunction* function = $1.function;
+        TFunction* prevDec = static_cast<TFunction*>(parseContext->symbolTable.find(function->getMangledName()));
         //
         // Note:  'prevDec' could be 'function' if this is the first time we've seen function
         // as it would have just been put in the symbol table.  Otherwise, we're looking up
@@ -2003,7 +2001,7 @@ function_definition
             //
             // Then this function already has a body.
             //
-            parseContext->error($1.line, "function already has a body", function.getName().c_str(), "");
+            parseContext->error($1.line, "function already has a body", function->getName().c_str(), "");
             parseContext->recover();
         }
         prevDec->setDefined();
@@ -2011,13 +2009,13 @@ function_definition
         //
         // Raise error message if main function takes any parameters or return anything other than void
         //
-        if (function.getName() == "main") {
-            if (function.getParamCount() > 0) {
-                parseContext->error($1.line, "function cannot take any parameter(s)", function.getName().c_str(), "");
+        if (function->getName() == "main") {
+            if (function->getParamCount() > 0) {
+                parseContext->error($1.line, "function cannot take any parameter(s)", function->getName().c_str(), "");
                 parseContext->recover();
             }
-            if (function.getReturnType().getBasicType() != EbtVoid) {
-                parseContext->error($1.line, "", function.getReturnType().getBasicString(), "main function cannot return a value");
+            if (function->getReturnType().getBasicType() != EbtVoid) {
+                parseContext->error($1.line, "", function->getReturnType().getBasicString(), "main function cannot return a value");
                 parseContext->recover();
             }
         }
@@ -2042,8 +2040,8 @@ function_definition
         // knows where to find parameters.
         //
         TIntermAggregate* paramNodes = new TIntermAggregate;
-        for (int i = 0; i < function.getParamCount(); i++) {
-            TParameter& param = function[i];
+        for (int i = 0; i < function->getParamCount(); i++) {
+            const TParameter& param = function->getParam(i);
             if (param.name != 0) {
                 TVariable *variable = new TVariable(param.name, *param.type);
                 //
@@ -2054,10 +2052,6 @@ function_definition
                     parseContext->recover();
                     delete variable;
                 }
-                //
-                // Transfer ownership of name pointer to symbol table.
-                //
-                param.name = 0;
 
                 //
                 // Add the parameter to the HIL

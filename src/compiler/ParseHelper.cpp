@@ -471,17 +471,18 @@ bool TParseContext::constructorErrorCheck(int line, TIntermNode* node, TFunction
     bool matrixInMatrix = false;
     bool arrayArg = false;
     for (int i = 0; i < function.getParamCount(); ++i) {
-        size += function[i].type->getObjectSize();
+        const TParameter& param = function.getParam(i);
+        size += param.type->getObjectSize();
         
-        if (constructingMatrix && function[i].type->isMatrix())
+        if (constructingMatrix && param.type->isMatrix())
             matrixInMatrix = true;
         if (full)
             overFull = true;
         if (op != EOpConstructStruct && !type->isArray() && size >= type->getObjectSize())
             full = true;
-        if (function[i].type->getQualifier() != EvqConst)
+        if (param.type->getQualifier() != EvqConst)
             constType = false;
-        if (function[i].type->isArray())
+        if (param.type->isArray())
             arrayArg = true;
     }
     
