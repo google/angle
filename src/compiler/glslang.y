@@ -501,9 +501,12 @@ function_call
             fnCandidate = parseContext->findFunction($1.line, fnCall, &builtIn);
             if (fnCandidate) {
                 //
-                // A declared function.  But, it might still map to a built-in
-                // operation.
+                // A declared function.
                 //
+                if (builtIn && !fnCandidate->getExtension().empty() &&
+                    parseContext->extensionErrorCheck($1.line, fnCandidate->getExtension())) {
+                    parseContext->recover();
+                }
                 op = fnCandidate->getBuiltInOp();
                 if (builtIn && op != EOpNull) {
                     //

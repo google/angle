@@ -884,15 +884,21 @@ bool TParseContext::paramErrorCheck(int line, TQualifier qualifier, TQualifier p
     return false;
 }
 
-bool TParseContext::extensionErrorCheck(int line, const char* extension)
-{       
-    if (extensionBehavior[extension] == EBhWarn) {
-        infoSink.info.message(EPrefixWarning, ("extension " + TString(extension) + " is being used").c_str(), line);
-        return false;
-    }
-    if (extensionBehavior[extension] == EBhDisable) {
-        error(line, "extension", extension, "is disabled");
+bool TParseContext::extensionErrorCheck(int line, const TString& extension)
+{
+    TExtensionBehavior::const_iterator iter = extensionBehavior.find(extension);
+    if (iter == extensionBehavior.end()) {
+        error(line, "extension", extension.c_str(), "is not supported");
         return true;
+    }
+    if (iter->second == EBhDisable) {
+        error(line, "extension", extension.c_str(), "is disabled");
+        return true;
+    }
+    if (iter->second == EBhWarn) {
+        TString msg = "extension " + extension + " is being used";
+        infoSink.info.message(EPrefixWarning, msg.c_str(), line);
+        return false;
     }
 
     return false;

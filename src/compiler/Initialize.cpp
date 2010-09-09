@@ -601,6 +601,10 @@ void IdentifyBuiltIns(EShLanguage language, EShSpec spec, const TBuiltInResource
             symbolTable.relateToOperator("dFdx",   EOpDFdx);
             symbolTable.relateToOperator("dFdy",   EOpDFdy);
             symbolTable.relateToOperator("fwidth", EOpFwidth);
+
+            symbolTable.relateToExtension("dFdx", "GL_OES_standard_derivatives");
+            symbolTable.relateToExtension("dFdy", "GL_OES_standard_derivatives");
+            symbolTable.relateToExtension("fwidth", "GL_OES_standard_derivatives");
         }
         break;
     default: break;
