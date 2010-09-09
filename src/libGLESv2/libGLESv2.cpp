@@ -3542,28 +3542,27 @@ void __stdcall glHint(GLenum target, GLenum mode)
 
     try
     {
-        switch (target)
+        switch (mode)
         {
-          case GL_GENERATE_MIPMAP_HINT:
-            switch (mode)
-            {
-              case GL_FASTEST:
-              case GL_NICEST:
-              case GL_DONT_CARE:
-                break;
-              default:
-                return error(GL_INVALID_ENUM); 
-            }
+          case GL_FASTEST:
+          case GL_NICEST:
+          case GL_DONT_CARE:
             break;
           default:
-              return error(GL_INVALID_ENUM);
+            return error(GL_INVALID_ENUM); 
         }
 
         gl::Context *context = gl::getContext();
-        if (context)
+        switch (target)
         {
-            if (target == GL_GENERATE_MIPMAP_HINT)
-                context->setGenerateMipmapHint(mode);
+          case GL_GENERATE_MIPMAP_HINT:
+            if (context) context->setGenerateMipmapHint(mode);
+            break;
+          case GL_FRAGMENT_SHADER_DERIVATIVE_HINT_OES:
+            if (context) context->setFragmentShaderDerivativeHint(mode);
+            break;
+          default:
+            return error(GL_INVALID_ENUM);
         }
     }
     catch(std::bad_alloc&)

@@ -44,6 +44,7 @@ Shader::Shader(ResourceManager *manager, GLuint handle) : mHandle(handle), mReso
             resources.MaxTextureImageUnits = MAX_TEXTURE_IMAGE_UNITS;
             resources.MaxFragmentUniformVectors = MAX_FRAGMENT_UNIFORM_VECTORS;
             resources.MaxDrawBuffers = MAX_DRAW_BUFFERS;
+            resources.OES_standard_derivatives = 1;
 
             mFragmentCompiler = ShConstructCompiler(EShLangFragment, EShSpecGLES2, &resources);
             mVertexCompiler = ShConstructCompiler(EShLangVertex, EShSpecGLES2, &resources);

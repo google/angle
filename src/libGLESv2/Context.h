@@ -12,6 +12,7 @@
 
 #define GL_APICALL
 #include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
 #define EGLAPI
 #include <EGL/egl.h>
 #include <d3d9.h>
@@ -158,6 +159,7 @@ struct State
     GLfloat lineWidth;
 
     GLenum generateMipmapHint;
+    GLenum fragmentShaderDerivativeHint;
 
     GLint viewportX;
     GLint viewportY;
@@ -265,6 +267,7 @@ class Context
     void setLineWidth(GLfloat width);
 
     void setGenerateMipmapHint(GLenum hint);
+    void setFragmentShaderDerivativeHint(GLenum hint);
 
     void setViewportParams(GLint x, GLint y, GLsizei width, GLsizei height);
 

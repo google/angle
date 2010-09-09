@@ -84,6 +84,7 @@ Context::Context(const egl::Config *config, const gl::Context *shareContext)
     mState.scissorTest = false;
     mState.dither = true;
     mState.generateMipmapHint = GL_DONT_CARE;
+    mState.fragmentShaderDerivativeHint = GL_DONT_CARE;
 
     mState.lineWidth = 1.0f;
 
@@ -664,6 +665,14 @@ void Context::setGenerateMipmapHint(GLenum hint)
     mState.generateMipmapHint = hint;
 }
 
+void Context::setFragmentShaderDerivativeHint(GLenum hint)
+{
+    mState.fragmentShaderDerivativeHint = hint;
+    // TODO: Propagate the hint to shader translator so we can write
+    // ddx, ddx_coarse, or ddx_fine depending on the hint.
+    // Ignore for now. It is valid for implementations to ignore hint.
+}
+
 void Context::setViewportParams(GLint x, GLint y, GLsizei width, GLsizei height)
 {
     mState.viewportX = x;
@@ -1212,6 +1221,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_PACK_ALIGNMENT:                   *params = mState.packAlignment;                 break;
       case GL_UNPACK_ALIGNMENT:                 *params = mState.unpackAlignment;               break;
       case GL_GENERATE_MIPMAP_HINT:             *params = mState.generateMipmapHint;            break;
+      case GL_FRAGMENT_SHADER_DERIVATIVE_HINT_OES: *params = mState.fragmentShaderDerivativeHint; break;
       case GL_ACTIVE_TEXTURE:                   *params = (mState.activeSampler + GL_TEXTURE0); break;
       case GL_STENCIL_FUNC:                     *params = mState.stencilFunc;                   break;
       case GL_STENCIL_REF:                      *params = mState.stencilRef;                    break;
@@ -1445,6 +1455,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_PACK_ALIGNMENT:
       case GL_UNPACK_ALIGNMENT:
       case GL_GENERATE_MIPMAP_HINT:
+      case GL_FRAGMENT_SHADER_DERIVATIVE_HINT_OES:
       case GL_RED_BITS:
       case GL_GREEN_BITS:
       case GL_BLUE_BITS:
@@ -3115,6 +3126,7 @@ void Context::initExtensionString()
     mExtensionString += "GL_EXT_read_format_bgra ";
     mExtensionString += "GL_ANGLE_framebuffer_blit ";
     mExtensionString += "GL_OES_rgb8_rgba8 ";
+    mExtensionString += "GL_OES_standard_derivatives ";
 
     if (supportsEventQueries())
     {
