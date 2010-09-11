@@ -923,12 +923,11 @@ int Texture::levelCount() const
 Texture2D::Texture2D(GLuint id) : Texture(id)
 {
     mTexture = NULL;
-    mColorbufferProxy = NULL;
 }
 
 Texture2D::~Texture2D()
 {
-    delete mColorbufferProxy;
+    mColorbufferProxy.set(NULL);
 
     if (mTexture)
     {
@@ -1400,13 +1399,12 @@ Renderbuffer *Texture2D::getColorbuffer(GLenum target)
         return error(GL_INVALID_OPERATION, (Renderbuffer *)NULL);
     }
 
-    if (mColorbufferProxy == NULL)
+    if (mColorbufferProxy.get() == NULL)
     {
-        mColorbufferProxy = new Renderbuffer(id(), new TextureColorbufferProxy(this, target));
-        mColorbufferProxy->addRef();
+        mColorbufferProxy.set(new Renderbuffer(id(), new TextureColorbufferProxy(this, target)));
     }
 
-    return mColorbufferProxy;
+    return mColorbufferProxy.get();
 }
 
 IDirect3DSurface9 *Texture2D::getRenderTarget(GLenum target)
@@ -1424,18 +1422,13 @@ IDirect3DSurface9 *Texture2D::getRenderTarget(GLenum target)
 TextureCubeMap::TextureCubeMap(GLuint id) : Texture(id)
 {
     mTexture = NULL;
-
-    for (int i = 0; i < 6; i++)
-    {
-        mFaceProxies[i] = NULL;
-    }
 }
 
 TextureCubeMap::~TextureCubeMap()
 {
     for (int i = 0; i < 6; i++)
     {
-        delete mFaceProxies[i];
+        mFaceProxies[i].set(NULL);
     }
 
     if (mTexture)
@@ -2012,13 +2005,12 @@ Renderbuffer *TextureCubeMap::getColorbuffer(GLenum target)
 
     unsigned int face = faceIndex(target);
 
-    if (mFaceProxies[face] == NULL)
+    if (mFaceProxies[face].get() == NULL)
     {
-        mFaceProxies[face] = new Renderbuffer(id(), new TextureColorbufferProxy(this, target));
-        mFaceProxies[face]->addRef();
+        mFaceProxies[face].set(new Renderbuffer(id(), new TextureColorbufferProxy(this, target)));
     }
 
-    return mFaceProxies[face];
+    return mFaceProxies[face].get();
 }
 
 IDirect3DSurface9 *TextureCubeMap::getRenderTarget(GLenum target)
