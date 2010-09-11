@@ -18,6 +18,7 @@
 #include <d3d9.h>
 
 #include "libGLESv2/Renderbuffer.h"
+#include "libGLESv2/RefCountObject.h"
 #include "libGLESv2/utilities.h"
 #include "common/debug.h"
 
@@ -239,7 +240,7 @@ class Texture2D : public Texture
 
     IDirect3DTexture9 *mTexture;
 
-    Renderbuffer *mColorbufferProxy;
+    BindingPointer<Renderbuffer> mColorbufferProxy;
 };
 
 class TextureCubeMap : public Texture
@@ -299,7 +300,7 @@ class TextureCubeMap : public Texture
 
     IDirect3DCubeTexture9 *mTexture;
 
-    Renderbuffer *mFaceProxies[6];
+    BindingPointer<Renderbuffer> mFaceProxies[6];
 };
 }
 

@@ -9,6 +9,8 @@
 // that need to be reference counted for correct cross-context deletion.
 // (Concretely, textures, buffers and renderbuffers.)
 
+#include "main.h"
+
 #include "RefCountObject.h"
 
 namespace gl
@@ -18,6 +20,7 @@ RefCountObject::RefCountObject(GLuint id)
 {
     mId = id;
     mRefCount = 0;
+    mIsDeleted = false;
 }
 
 RefCountObject::~RefCountObject()
@@ -37,6 +40,22 @@ void RefCountObject::release() const
     {
         delete this;
     }
+}
+
+GLuint RefCountObject::id() const
+{
+    if (mIsDeleted)
+    {
+        return error(GL_INVALID_OPERATION, 0);
+    }
+    
+    return mId;
+}
+
+void RefCountObject::markAsDeleted()
+{
+    mId = 0;
+    mIsDeleted = true;
 }
 
 void RefCountObjectBindingPointer::set(RefCountObject *newObject)

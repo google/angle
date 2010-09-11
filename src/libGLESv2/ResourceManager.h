@@ -24,6 +24,7 @@ class Shader;
 class Program;
 class Texture;
 class Renderbuffer;
+class Framebuffer;
 
 enum SamplerType
 {
@@ -47,25 +48,29 @@ class ResourceManager
     GLuint createProgram();
     GLuint createTexture();
     GLuint createRenderbuffer();
+    GLuint createFramebuffer();
 
     void deleteBuffer(GLuint buffer);
     void deleteShader(GLuint shader);
     void deleteProgram(GLuint program);
     void deleteTexture(GLuint texture);
     void deleteRenderbuffer(GLuint renderbuffer);
+    void deleteFramebuffer(GLuint framebuffer);
 
     Buffer *getBuffer(GLuint handle);
     Shader *getShader(GLuint handle);
     Program *getProgram(GLuint handle);
     Texture *getTexture(GLuint handle);
     Renderbuffer *getRenderbuffer(GLuint handle);
+    Framebuffer *getFramebuffer(GLuint handle);
     
     void setRenderbuffer(GLuint handle, Renderbuffer *renderbuffer);
 
     void checkBufferAllocation(unsigned int buffer);
     void checkTextureAllocation(GLuint texture, SamplerType type);
     void checkRenderbufferAllocation(GLuint renderbuffer);
-
+    void checkFramebufferAllocation(GLuint framebuffer);
+    
   private:
     DISALLOW_COPY_AND_ASSIGN(ResourceManager);
 
@@ -85,6 +90,9 @@ class ResourceManager
 
     typedef std::map<GLuint, Renderbuffer*> RenderbufferMap;
     RenderbufferMap mRenderbufferMap;
+
+    typedef std::map<GLuint, Framebuffer*> FramebufferMap;
+    FramebufferMap mFramebufferMap;
 };
 
 }

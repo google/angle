@@ -31,10 +31,13 @@ class RefCountObject
     virtual void addRef() const;
     virtual void release() const;
 
-    GLuint id() const { return mId; }
+    GLuint id() const;
+    
+    void markAsDeleted();
     
   private:
     GLuint mId;
+    bool mIsDeleted;
 
     mutable std::size_t mRefCount;
 };

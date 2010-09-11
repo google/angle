@@ -25,10 +25,10 @@ class Depthbuffer;
 class Stencilbuffer;
 class DepthStencilbuffer;
 
-class Framebuffer
+class Framebuffer : public RefCountObject
 {
   public:
-    Framebuffer();
+    Framebuffer(GLuint id);
 
     virtual ~Framebuffer();
 

@@ -12,6 +12,7 @@
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/Program.h"
 #include "libGLESv2/RenderBuffer.h"
+#include "libGLESv2/FrameBuffer.h"
 #include "libGLESv2/Shader.h"
 #include "libGLESv2/Texture.h"
 
@@ -146,13 +147,32 @@ GLuint ResourceManager::createRenderbuffer()
     return handle;
 }
 
+// Returns an unused framebuffer name
+GLuint ResourceManager::createFramebuffer()
+{
+    unsigned int handle = 1;
+
+    while (mFramebufferMap.find(handle) != mFramebufferMap.end())
+    {
+        handle++;
+    }
+
+    mFramebufferMap[handle] = NULL;
+
+    return handle;
+}
+
 void ResourceManager::deleteBuffer(GLuint buffer)
 {
     BufferMap::iterator bufferObject = mBufferMap.find(buffer);
 
     if (bufferObject != mBufferMap.end())
     {
-        if (bufferObject->second) bufferObject->second->release();
+        if (bufferObject->second)
+        {
+            bufferObject->second->markAsDeleted();
+            bufferObject->second->release();
+        }
         mBufferMap.erase(bufferObject);
     }
 }
@@ -199,7 +219,11 @@ void ResourceManager::deleteTexture(GLuint texture)
 
     if (textureObject != mTextureMap.end())
     {
-        if (textureObject->second) textureObject->second->release();
+        if (textureObject->second)
+        {
+            textureObject->second->markAsDeleted();
+            textureObject->second->release();
+        }
         mTextureMap.erase(textureObject);
     }
 }
@@ -210,8 +234,27 @@ void ResourceManager::deleteRenderbuffer(GLuint renderbuffer)
 
     if (renderbufferObject != mRenderbufferMap.end())
     {
-        if (renderbufferObject->second) renderbufferObject->second->release();
+        if (renderbufferObject->second)
+        {
+            renderbufferObject->second->markAsDeleted();
+            renderbufferObject->second->release();
+        }
         mRenderbufferMap.erase(renderbufferObject);
+    }
+}
+
+void ResourceManager::deleteFramebuffer(GLuint framebuffer)
+{
+    FramebufferMap::iterator framebufferObject = mFramebufferMap.find(framebuffer);
+
+    if (framebufferObject != mFramebufferMap.end())
+    {
+        if (framebufferObject->second)
+        {
+            framebufferObject->second->markAsDeleted();
+            framebufferObject->second->release();
+        }
+        mFramebufferMap.erase(framebufferObject);
     }
 }
 
@@ -287,6 +330,20 @@ Renderbuffer *ResourceManager::getRenderbuffer(unsigned int handle)
     }
 }
 
+Framebuffer *ResourceManager::getFramebuffer(unsigned int handle)
+{
+    FramebufferMap::iterator framebuffer = mFramebufferMap.find(handle);
+
+    if (framebuffer == mFramebufferMap.end())
+    {
+        return NULL;
+    }
+    else
+    {
+        return framebuffer->second;
+    }
+}
+
 void ResourceManager::setRenderbuffer(GLuint handle, Renderbuffer *buffer)
 {
     mRenderbufferMap[handle] = buffer;
@@ -334,6 +391,16 @@ void ResourceManager::checkRenderbufferAllocation(GLuint renderbuffer)
         Renderbuffer *renderbufferObject = new Renderbuffer(renderbuffer, new Colorbuffer(0, 0, GL_RGBA4, 0));
         mRenderbufferMap[renderbuffer] = renderbufferObject;
         renderbufferObject->addRef();
+    }
+}
+
+void ResourceManager::checkFramebufferAllocation(GLuint framebuffer)
+{
+    if (framebuffer != 0 && !getFramebuffer(framebuffer))
+    {
+        Framebuffer *framebufferObject = new Framebuffer(framebuffer);
+        mFramebufferMap[framebuffer] = framebufferObject;
+        framebufferObject->addRef();
     }
 }
 
