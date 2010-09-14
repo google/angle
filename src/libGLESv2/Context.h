@@ -454,6 +454,7 @@ class Context
     unsigned int mAppliedRenderTargetSerial;
     unsigned int mAppliedDepthbufferSerial;
     unsigned int mAppliedStencilbufferSerial;
+    bool mDepthStencilDirty;
 
     bool mSupportsShaderModel3;
     std::map<D3DFORMAT, bool *> mMultiSampleSupport;
