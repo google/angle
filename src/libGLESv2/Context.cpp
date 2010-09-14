@@ -315,7 +315,7 @@ void Context::markAllStateDirty()
     mAppliedRenderTargetSerial = 0;
     mAppliedDepthbufferSerial = 0;
     mAppliedStencilbufferSerial = 0;
-    mDepthStencilDirty = true;
+    mDepthStencilInitialized = false;
     mAppliedProgram = 0;
 
     mClearStateDirty = true;
@@ -1608,12 +1608,12 @@ bool Context::applyRenderTarget(bool ignoreViewport)
 
     if (depthbufferSerial != mAppliedDepthbufferSerial ||
         stencilbufferSerial != mAppliedStencilbufferSerial ||
-        mDepthStencilDirty)
+        !mDepthStencilInitialized)
     {
         device->SetDepthStencilSurface(depthStencil);
         mAppliedDepthbufferSerial = depthbufferSerial;
         mAppliedStencilbufferSerial = stencilbufferSerial;
-        mDepthStencilDirty = false;
+        mDepthStencilInitialized = true;
     }
 
     D3DVIEWPORT9 viewport;
