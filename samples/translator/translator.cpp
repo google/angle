@@ -54,12 +54,12 @@ int main(int argc, char* argv[])
 {
     TFailCode failCode = ESuccess;
 
-    int debugOptions = 0;
-    bool writeObjectCode = false;
-
+    int compileOptions = 0;
     int numCompiles = 0;
     ShHandle vertexCompiler = 0;
     ShHandle fragmentCompiler = 0;
+    char* buffer = 0;
+    int bufferLen = 0;
 
     ShInitialize();
 
@@ -71,8 +71,8 @@ int main(int argc, char* argv[])
     for (; (argc >= 1) && (failCode == ESuccess); argc--, argv++) {
         if (argv[0][0] == '-' || argv[0][0] == '/') {
             switch (argv[0][1]) {
-            case 'i': debugOptions |= EDebugOpIntermediate; break;
-            case 'o': writeObjectCode = true; break;
+            case 'i': compileOptions |= EShOptIntermediateTree; break;
+            case 'o': compileOptions |= EShOptObjectCode; break;
             default: failCode = EFailUsage;
             }
         } else {
@@ -91,15 +91,21 @@ int main(int argc, char* argv[])
             default: break;
             }
             if (compiler) {
-              bool compiled = CompileFile(argv[0], compiler, debugOptions);
+              bool compiled = CompileFile(argv[0], compiler, compileOptions);
 
               LogMsg("BEGIN", "COMPILER", numCompiles, "INFO LOG");
-              puts(ShGetInfoLog(compiler));
+              ShGetInfo(compiler, SH_INFO_LOG_LENGTH, &bufferLen);
+              buffer = (char*) realloc(buffer, bufferLen * sizeof(char));
+              ShGetInfoLog(compiler, buffer);
+              puts(buffer);
               LogMsg("END", "COMPILER", numCompiles, "INFO LOG");
 
-              if (compiled && writeObjectCode) {
+              if (compiled && (compileOptions & EShOptObjectCode)) {
                   LogMsg("BEGIN", "COMPILER", numCompiles, "OBJ CODE");
-                  puts(ShGetObjectCode(compiler));
+                  ShGetInfo(compiler, SH_OBJECT_CODE_LENGTH, &bufferLen);
+                  buffer = (char*) realloc(buffer, bufferLen * sizeof(char));
+                  ShGetObjectCode(compiler, buffer);
+                  puts(buffer);
                   LogMsg("END", "COMPILER", numCompiles, "OBJ CODE");
               }
               if (!compiled)
@@ -120,6 +126,8 @@ int main(int argc, char* argv[])
         ShDestruct(vertexCompiler);
     if (fragmentCompiler)
         ShDestruct(fragmentCompiler);
+    if (buffer)
+        free(buffer);
     ShFinalize();
 
     return failCode;
@@ -153,7 +161,7 @@ static EShLanguage FindLanguage(char *name)
 //
 //   Read a file's data into a string, and compile it using ShCompile
 //
-bool CompileFile(char *fileName, ShHandle compiler, int debugOptions)
+bool CompileFile(char *fileName, ShHandle compiler, int compileOptions)
 {
     int ret;
     char **data = ReadFileData(fileName);
@@ -161,7 +169,7 @@ bool CompileFile(char *fileName, ShHandle compiler, int debugOptions)
     if (!data)
         return false;
 
-    ret = ShCompile(compiler, data, OutputMultipleStrings, EShOptNone, debugOptions);
+    ret = ShCompile(compiler, data, OutputMultipleStrings, compileOptions);
 
     FreeFileData(data);
 

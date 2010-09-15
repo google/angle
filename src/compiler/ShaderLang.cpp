@@ -180,9 +180,7 @@ int ShCompile(
     const ShHandle handle,
     const char* const shaderStrings[],
     const int numStrings,
-    const EShOptimizationLevel optLevel,
-    int debugOptions
-    )
+    int compileOptions)
 {
     if (!InitThread())
         return 0;
@@ -227,40 +225,34 @@ int ShCompile(
     if (!symbolTable.atGlobalLevel())
         parseContext.infoSink.info.message(EPrefixInternalError, "Wrong symbol table level");
 
-    int ret = PaParseStrings(const_cast<char**>(shaderStrings), 0, numStrings, parseContext);
-    if (ret)
+    if (PaParseStrings(const_cast<char**>(shaderStrings), 0, numStrings, parseContext))
         success = false;
 
     if (success && parseContext.treeRoot) {
-        if (optLevel == EShOptNoGeneration)
-            parseContext.infoSink.info.message(EPrefixNone, "No errors.  No code generation was requested.");
-        else {
-            success = intermediate.postProcess(parseContext.treeRoot, parseContext.language);
+        success = intermediate.postProcess(parseContext.treeRoot, parseContext.language);
+        if (success) {
+            if (compileOptions & EShOptIntermediateTree)
+                intermediate.outputTree(parseContext.treeRoot);
 
-            if (success) {
+            //
+            // Call the machine dependent compiler
+            //
+            if (compileOptions & EShOptObjectCode)
+                success = compiler->compile(parseContext.treeRoot);
 
-                if (debugOptions & EDebugOpIntermediate)
-                    intermediate.outputTree(parseContext.treeRoot);
-
-                //
-                // Call the machine dependent compiler
-                //
-                if (!compiler->compile(parseContext.treeRoot))
-                    success = false;
-            }
+            // TODO(alokp): Extract attributes and uniforms.
+            //if (compileOptions & EShOptAttribsUniforms)
         }
     } else if (!success) {
         parseContext.infoSink.info.prefix(EPrefixError);
         parseContext.infoSink.info << parseContext.numErrors << " compilation errors.  No code generated.\n\n";
         success = false;
-        if (debugOptions & EDebugOpIntermediate)
+        if (compileOptions & EShOptIntermediateTree)
             intermediate.outputTree(parseContext.treeRoot);
     } else if (!parseContext.treeRoot) {
         parseContext.error(1, "Unexpected end of file.", "", "");
         parseContext.infoSink.info << parseContext.numErrors << " compilation errors.  No code generated.\n\n";
         success = false;
-        if (debugOptions & EDebugOpIntermediate)
-            intermediate.outputTree(parseContext.treeRoot);
     }
 
     intermediate.remove(parseContext.treeRoot);
@@ -281,43 +273,88 @@ int ShCompile(
     return success ? 1 : 0;
 }
 
+void ShGetInfo(const ShHandle handle, EShInfo pname, int* params)
+{
+    if (!handle || !params)
+        return;
+
+    TShHandleBase* base = static_cast<TShHandleBase*>(handle);
+    TCompiler* compiler = base->getAsCompiler();
+    if (!compiler) return;
+
+    switch(pname)
+    {
+    case SH_INFO_LOG_LENGTH:
+        *params = compiler->getInfoSink().info.size() + 1;
+        break;
+    case SH_OBJECT_CODE_LENGTH:
+        *params = compiler->getInfoSink().obj.size() + 1;
+        break;
+    case SH_ACTIVE_UNIFORMS:
+        UNIMPLEMENTED();
+        break;
+    case SH_ACTIVE_UNIFORM_MAX_LENGTH:
+        UNIMPLEMENTED();
+        break;
+    case SH_ACTIVE_ATTRIBUTES:
+        UNIMPLEMENTED();
+        break;
+    case SH_ACTIVE_ATTRIBUTE_MAX_LENGTH:
+        UNIMPLEMENTED();
+        break;
+
+    default: UNREACHABLE();
+    }
+}
+
 //
 // Return any compiler log of messages for the application.
 //
-const char* ShGetInfoLog(const ShHandle handle)
+void ShGetInfoLog(const ShHandle handle, char* infoLog)
 {
-    if (!InitThread())
-        return 0;
-
-    if (handle == 0)
-        return 0;
+    if (!handle || !infoLog)
+        return;
 
     TShHandleBase* base = static_cast<TShHandleBase*>(handle);
-    TInfoSink* infoSink = 0;
+    TCompiler* compiler = base->getAsCompiler();
+    if (!compiler) return;
 
-    if (base->getAsCompiler())
-        infoSink = &(base->getAsCompiler()->getInfoSink());
-
-    infoSink->info << infoSink->debug.c_str();
-    return infoSink->info.c_str();
+    TInfoSink& infoSink = compiler->getInfoSink();
+    strcpy(infoLog, infoSink.info.c_str());
 }
 
 //
 // Return any object code.
 //
-const char* ShGetObjectCode(const ShHandle handle)
+void ShGetObjectCode(const ShHandle handle, char* objCode)
 {
-    if (!InitThread())
-        return 0;
-
-    if (handle == 0)
-        return 0;
+    if (!handle || !objCode)
+        return;
 
     TShHandleBase* base = static_cast<TShHandleBase*>(handle);
-    TInfoSink* infoSink;
+    TCompiler* compiler = base->getAsCompiler();
+    if (!compiler) return;
 
-    if (base->getAsCompiler())
-        infoSink = &(base->getAsCompiler()->getInfoSink());
+    TInfoSink& infoSink = compiler->getInfoSink();
+    strcpy(objCode, infoSink.obj.c_str());
+}
 
-    return infoSink->obj.c_str();
+void ShGetActiveAttrib(const ShHandle handle,
+                       int index,
+                       int* length,
+                       int* size,
+                       EShDataType* type,
+                       char* name)
+{
+    UNIMPLEMENTED();
+}
+
+void ShGetActiveUniform(const ShHandle handle,
+                        int index,
+                        int* length,
+                        int* size,
+                        EShDataType* type,
+                        char* name)
+{
+    UNIMPLEMENTED();
 }

@@ -70,21 +70,6 @@ typedef struct
 void ShInitBuiltInResource(TBuiltInResource* resources);
 
 //
-// Optimization level for the compiler.
-//
-typedef enum {
-    EShOptNoGeneration,
-    EShOptNone,
-    EShOptSimple,       // Optimizations that can be done quickly
-    EShOptFull,         // Optimizations that will take more time
-} EShOptimizationLevel;
-
-enum TDebugOptions {
-    EDebugOpNone               = 0x000,
-    EDebugOpIntermediate       = 0x001,  // Writes intermediate tree into info-log.
-};
-
-//
 // ShHandle held by but opaque to the driver.  It is allocated,
 // managed, and de-allocated by the compiler. It's contents 
 // are defined by and used by the compiler.
@@ -99,6 +84,20 @@ typedef void* ShHandle;
 ShHandle ShConstructCompiler(EShLanguage, EShSpec, const TBuiltInResource*);
 void ShDestruct(ShHandle);
 
+typedef enum {
+    // Performs validations only.
+    EShOptNone = 0x000,
+    // Writes intermediate tree to info log.
+    // Can be queried by calling ShGetInfoLog().
+    EShOptIntermediateTree = 0x001,
+    // Translates intermediate tree to glsl or hlsl shader.
+    // Can be queried by calling ShGetObjectCode().
+    EShOptObjectCode = 0x002,
+    // Extracts attributes and uniforms.
+    // Can be queried by calling ShGetActiveAttrib() and ShGetActiveUniform().
+    EShOptAttribsUniforms = 0x004,
+} EShCompileOptions;
+
 //
 // The return value of ShCompile is boolean, indicating
 // success or failure.
@@ -110,16 +109,127 @@ int ShCompile(
     const ShHandle,
     const char* const shaderStrings[],
     const int numStrings,
-    const EShOptimizationLevel,
-    int debugOptions
+    int compileOptions
     );
 
+// The names of the following enums have been derived by replacing GL prefix
+// with SH. For example, SH_INFO_LOG_LENGTH is equivalent to GL_INFO_LOG_LENGTH.
+// The enum values are also equal to the values of their GL counterpart. This
+// is done to make it easier for applications to use the shader library.
 //
-// All the following return 0 if the information is not
-// available in the object passed down, or the object is bad.
-//
-const char* ShGetInfoLog(const ShHandle);
-const char* ShGetObjectCode(const ShHandle);
+// The only exception to this rule is SH_OBJECT_CODE_LENGTH, which does not
+// have a GL equivalent. It uses the value of GL_SHADER_SOURCE_LENGTH instead.
+typedef enum {
+    SH_INFO_LOG_LENGTH = 0x8B84,
+    SH_OBJECT_CODE_LENGTH = 0x8B88,  // equal to GL_SHADER_SOURCE_LENGTH.
+    SH_ACTIVE_UNIFORMS = 0x8B86,
+    SH_ACTIVE_UNIFORM_MAX_LENGTH = 0x8B87,
+    SH_ACTIVE_ATTRIBUTES = 0x8B89,
+    SH_ACTIVE_ATTRIBUTE_MAX_LENGTH = 0x8B8A,
+} EShInfo;
+
+typedef enum {
+    SH_FLOAT = 0x1406,
+    SH_FLOAT_VEC2 = 0x8B50,
+    SH_FLOAT_VEC3 = 0x8B51,
+    SH_FLOAT_VEC4 = 0x8B52,
+    SH_FLOAT_MAT2 = 0x8B5A,
+    SH_FLOAT_MAT3 = 0x8B5B,
+    SH_FLOAT_MAT4 = 0x8B5C,
+    SH_INT = 0x1404,
+    SH_INT_VEC2 = 0x8B53,
+    SH_INT_VEC3 = 0x8B54,
+    SH_INT_VEC4 = 0x8B55,
+    SH_BOOL = 0x8B56,
+    SH_BOOL_VEC2 = 0x8B57,
+    SH_BOOL_VEC3 = 0x8B58,
+    SH_BOOL_VEC4 = 0x8B59,
+    SH_SAMPLER_2D = 0x8B5E,
+    SH_SAMPLER_CUBE = 0x8B60,
+} EShDataType;
+
+// Returns a parameter from a compiled shader.
+// Parameters:
+// handle: Specifies the compiler
+// pname: Specifies the parameter to query.
+// The following parameters are defined:
+// SH_INFO_LOG_LENGTH: the number of characters in the information log
+//                     including the null termination character.
+// SH_OBJECT_CODE_LENGTH: the number of characters in the object code
+//                        including the null termination character.
+// SH_ACTIVE_ATTRIBUTES: the number of active attribute variables.
+// SH_ACTIVE_ATTRIBUTE_MAX_LENGTH: the length of the longest active attribute
+//                                 variable name including the null
+//                                 termination character.
+// SH_ACTIVE_UNIFORMS: the number of active uniform variables.
+// SH_ACTIVE_UNIFORM_MAX_LENGTH: the length of the longest active uniform
+//                               variable name including the null
+//                               termination character.
+// 
+// params: Requested parameter
+void ShGetInfo(const ShHandle handle, EShInfo pname, int* params);
+
+// Returns nul-terminated information log for a compiled shader.
+// Parameters:
+// handle: Specifies the compiler
+// infoLog: Specifies an array of characters that is used to return
+//          the information log. It is assumed that infoLog has enough memory
+//          to accomodate the information log. The size of the buffer required
+//          to store the returned information log can be obtained by calling
+//          ShGetInfo with SH_INFO_LOG_LENGTH.
+void ShGetInfoLog(const ShHandle handle, char* infoLog);
+
+// Returns null-terminated object code for a compiled shader.
+// Parameters:
+// handle: Specifies the compiler
+// infoLog: Specifies an array of characters that is used to return
+//          the object code. It is assumed that infoLog has enough memory to
+//          accomodate the object code. The size of the buffer required to
+//          store the returned object code can be obtained by calling
+//          ShGetInfo with SH_OBJECT_CODE_LENGTH.
+void ShGetObjectCode(const ShHandle handle, char* objCode);
+
+// Returns information about an active attribute variable.
+// Parameters:
+// handle: Specifies the compiler
+// index: Specifies the index of the attribute variable to be queried.
+// length: Returns the number of characters actually written in the string
+//         indicated by name (excluding the null terminator) if a value other
+//         than NULL is passed.
+// size: Returns the size of the attribute variable.
+// type: Returns the data type of the attribute variable.
+// name: Returns a null terminated string containing the name of the
+//       attribute variable. It is assumed that name has enough memory to
+//       accomodate the attribute variable name. The size of the buffer
+//       required to store the attribute variable name can be obtained by
+//       calling ShGetInfo with SH_ACTIVE_ATTRIBUTE_MAX_LENGTH.
+void ShGetActiveAttrib(const ShHandle handle,
+                       int index,
+                       int* length,
+                       int* size,
+                       EShDataType* type,
+                       char* name);
+
+// Returns information about an active uniform variable.
+// Parameters:
+// handle: Specifies the compiler
+// index: Specifies the index of the uniform variable to be queried.
+// length: Returns the number of characters actually written in the string
+//         indicated by name (excluding the null terminator) if a value
+//         other than NULL is passed.
+// size: Returns the size of the uniform variable.
+// type: Returns the data type of the uniform variable.
+// name: Returns a null terminated string containing the name of the
+//       uniform variable. It is assumed that name has enough memory to
+//       accomodate the uniform variable name. The size of the buffer required
+//       to store the uniform variable name can be obtained by calling
+//       ShGetInfo with SH_ACTIVE_UNIFORMS_MAX_LENGTH.
+void ShGetActiveUniform(const ShHandle handle,
+                        int index,
+                        int* length,
+                        int* size,
+                        EShDataType* type,
+                        char* name);
 
 #ifdef __cplusplus
 }

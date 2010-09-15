@@ -281,21 +281,23 @@ void Shader::compileToHLSL(void *compiler)
     delete[] mInfoLog;
     mInfoLog = NULL;
 
-    int result = ShCompile(compiler, &mSource, 1, EShOptNone, EDebugOpNone);
-    const char *obj = ShGetObjectCode(compiler);
-    const char *info = ShGetInfoLog(compiler);
+    int result = ShCompile(compiler, &mSource, 1, EShOptObjectCode);
 
     if (result)
     {
-        mHlsl = new char[strlen(obj) + 1];
-        strcpy(mHlsl, obj);
+        int objCodeLen = 0;
+        ShGetInfo(compiler, SH_OBJECT_CODE_LENGTH, &objCodeLen);
+        mHlsl = new char[objCodeLen];
+        ShGetObjectCode(compiler, mHlsl);
 
         TRACE("\n%s", mHlsl);
     }
     else
     {
-        mInfoLog = new char[strlen(info) + 1];
-        strcpy(mInfoLog, info);
+        int infoLogLen = 0;
+        ShGetInfo(compiler, SH_INFO_LOG_LENGTH, &infoLogLen);
+        mInfoLog = new char[infoLogLen];
+        ShGetInfoLog(compiler, mInfoLog);
 
         TRACE("\n%s", mInfoLog);
     }
