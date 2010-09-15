@@ -17,7 +17,7 @@
 namespace gl
 {
 
-Framebuffer::Framebuffer(GLuint id) : RefCountObject(id)
+Framebuffer::Framebuffer()
 {
     mColorbufferType = GL_NONE;
     mDepthbufferType = GL_NONE;
@@ -429,7 +429,6 @@ GLenum Framebuffer::completeness()
 }
 
 DefaultFramebuffer::DefaultFramebuffer(Colorbuffer *color, DepthStencilbuffer *depthStencil)
-    : Framebuffer(0)
 {
     mColorbufferType = GL_RENDERBUFFER;
     mDepthbufferType = GL_RENDERBUFFER;

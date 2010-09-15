@@ -184,8 +184,8 @@ struct State
     BindingPointer<Buffer> elementArrayBuffer;
     BindingPointer<Texture> texture2D;
     BindingPointer<Texture> textureCubeMap;
-    BindingPointer<Framebuffer> readFramebuffer;
-    BindingPointer<Framebuffer> drawFramebuffer;
+    GLuint readFramebuffer;
+    GLuint drawFramebuffer;
     BindingPointer<Renderbuffer> renderbuffer;
     GLuint currentProgram;
 
@@ -422,10 +422,14 @@ class Context
 
     State   mState;
 
-    BindingPointer<Texture2D> mTexture2DZero;
-    BindingPointer<TextureCubeMap> mTextureCubeMapZero;
-    
-    BindingPointer<Framebuffer> mFramebufferZero;
+    Texture2D *mTexture2DZero;
+    TextureCubeMap *mTextureCubeMapZero;
+
+    Colorbuffer *mColorbufferZero;
+    DepthStencilbuffer *mDepthStencilbufferZero;
+
+    typedef std::map<GLuint, Framebuffer*> FramebufferMap;
+    FramebufferMap mFramebufferMap;
 
     typedef std::map<GLuint, Fence*> FenceMap;
     FenceMap mFenceMap;
@@ -439,7 +443,7 @@ class Context
 
     Blit *mBlit;
     
-    BindingPointer<Texture> mIncompleteTextures[SAMPLER_TYPE_COUNT];
+    Texture *mIncompleteTextures[SAMPLER_TYPE_COUNT];
 
     // Recorded errors
     bool mInvalidEnum;

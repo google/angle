@@ -122,8 +122,11 @@ Context::Context(const egl::Config *config, const gl::Context *shareContext)
     // In order that access to these initial textures not be lost, they are treated as texture
     // objects all of whose names are 0.
 
-    mTexture2DZero.set(new Texture2D(0));
-    mTextureCubeMapZero.set(new TextureCubeMap(0));
+    mTexture2DZero = new Texture2D(0);
+    mTextureCubeMapZero = new TextureCubeMap(0);
+
+    mColorbufferZero = NULL;
+    mDepthStencilbufferZero = NULL;
 
     mState.activeSampler = 0;
     bindArrayBuffer(0);
@@ -133,6 +136,11 @@ Context::Context(const egl::Config *config, const gl::Context *shareContext)
     bindReadFramebuffer(0);
     bindDrawFramebuffer(0);
     bindRenderbuffer(0);
+
+    for (int type = 0; type < SAMPLER_TYPE_COUNT; type++)
+    {
+        mIncompleteTextures[type] = NULL;
+    }
 
     mState.currentProgram = 0;
 
@@ -171,6 +179,11 @@ Context::~Context()
         mState.currentProgram = 0;
     }
 
+    while (!mFramebufferMap.empty())
+    {
+        deleteFramebuffer(mFramebufferMap.begin()->first);
+    }
+
     while (!mFenceMap.empty())
     {
         deleteFence(mFenceMap.begin()->first);
@@ -192,7 +205,7 @@ Context::~Context()
 
     for (int type = 0; type < SAMPLER_TYPE_COUNT; type++)
     {
-        mIncompleteTextures[type].set(NULL);
+        delete mIncompleteTextures[type];
     }
 
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
@@ -205,12 +218,9 @@ Context::~Context()
     mState.texture2D.set(NULL);
     mState.textureCubeMap.set(NULL);
     mState.renderbuffer.set(NULL);
-    mState.readFramebuffer.set(NULL);
-    mState.drawFramebuffer.set(NULL);
 
-    mTexture2DZero.set(NULL);
-    mTextureCubeMapZero.set(NULL);
-    mFramebufferZero.set(NULL);
+    delete mTexture2DZero;
+    delete mTextureCubeMapZero;
 
     delete mBufferBackEnd;
     delete mVertexDataManager;
@@ -715,12 +725,12 @@ void Context::setActiveSampler(int active)
 
 GLuint Context::getReadFramebufferHandle() const
 {
-    return mState.readFramebuffer.id();
+    return mState.readFramebuffer;
 }
 
 GLuint Context::getDrawFramebufferHandle() const
 {
-    return mState.drawFramebuffer.id();
+    return mState.drawFramebuffer;
 }
 
 GLuint Context::getRenderbufferHandle() const
@@ -810,9 +820,19 @@ GLuint Context::createRenderbuffer()
     return mResourceManager->createRenderbuffer();
 }
 
+// Returns an unused framebuffer name
 GLuint Context::createFramebuffer()
 {
-    return mResourceManager->createFramebuffer();
+    unsigned int handle = 1;
+
+    while (mFramebufferMap.find(handle) != mFramebufferMap.end())
+    {
+        handle++;
+    }
+
+    mFramebufferMap[handle] = NULL;
+
+    return handle;
 }
 
 GLuint Context::createFence()
@@ -871,12 +891,15 @@ void Context::deleteRenderbuffer(GLuint renderbuffer)
 
 void Context::deleteFramebuffer(GLuint framebuffer)
 {
-    if (mResourceManager->getFramebuffer(framebuffer))
+    FramebufferMap::iterator framebufferObject = mFramebufferMap.find(framebuffer);
+
+    if (framebufferObject != mFramebufferMap.end())
     {
         detachFramebuffer(framebuffer);
-    }
 
-    mResourceManager->deleteFramebuffer(framebuffer);
+        delete framebufferObject->second;
+        mFramebufferMap.erase(framebufferObject);
+    }
 }
 
 void Context::deleteFence(GLuint fence)
@@ -915,14 +938,14 @@ Renderbuffer *Context::getRenderbuffer(GLuint handle)
     return mResourceManager->getRenderbuffer(handle);
 }
 
-Framebuffer *Context::getFramebuffer(GLuint handle)
+Framebuffer *Context::getReadFramebuffer()
 {
-    if (handle == 0)
-    {
-        return mFramebufferZero.get();
-    }
+    return getFramebuffer(mState.readFramebuffer);
+}
 
-    return mResourceManager->getFramebuffer(handle);
+Framebuffer *Context::getDrawFramebuffer()
+{
+    return getFramebuffer(mState.drawFramebuffer);
 }
 
 void Context::bindArrayBuffer(unsigned int buffer)
@@ -959,16 +982,22 @@ void Context::bindTextureCubeMap(GLuint texture)
 
 void Context::bindReadFramebuffer(GLuint framebuffer)
 {
-    mResourceManager->checkFramebufferAllocation(framebuffer);
-    
-    mState.readFramebuffer.set(getFramebuffer(framebuffer));
+    if (!getFramebuffer(framebuffer))
+    {
+        mFramebufferMap[framebuffer] = new Framebuffer();
+    }
+
+    mState.readFramebuffer = framebuffer;
 }
 
 void Context::bindDrawFramebuffer(GLuint framebuffer)
 {
-    mResourceManager->checkFramebufferAllocation(framebuffer);
-    
-    mState.drawFramebuffer.set(getFramebuffer(framebuffer));
+    if (!getFramebuffer(framebuffer))
+    {
+        mFramebufferMap[framebuffer] = new Framebuffer();
+    }
+
+    mState.drawFramebuffer = framebuffer;
 }
 
 void Context::bindRenderbuffer(GLuint renderbuffer)
@@ -1002,23 +1031,28 @@ void Context::useProgram(GLuint program)
 
 void Context::setFramebufferZero(Framebuffer *buffer)
 {
-    if (mState.readFramebuffer.get() == mFramebufferZero.get())
-    {
-        mState.readFramebuffer.set(buffer);
-    }
-    
-    if (mState.drawFramebuffer.get() == mFramebufferZero.get())
-    {
-        mState.drawFramebuffer.set(buffer);
-    }
-    
-    mFramebufferZero.set(buffer);
+    delete mFramebufferMap[0];
+    mFramebufferMap[0] = buffer;
 }
 
 void Context::setRenderbufferStorage(RenderbufferStorage *renderbuffer)
 {
     Renderbuffer *renderbufferObject = mState.renderbuffer.get();
     renderbufferObject->setStorage(renderbuffer);
+}
+
+Framebuffer *Context::getFramebuffer(unsigned int handle)
+{
+    FramebufferMap::iterator framebuffer = mFramebufferMap.find(handle);
+
+    if (framebuffer == mFramebufferMap.end())
+    {
+        return NULL;
+    }
+    else
+    {
+        return framebuffer->second;
+    }
 }
 
 Fence *Context::getFence(unsigned int handle)
@@ -1054,7 +1088,7 @@ Texture2D *Context::getTexture2D()
 {
     if (mState.texture2D.id() == 0)   // Special case: 0 refers to different initial textures based on the target
     {
-        return mTexture2DZero.get();
+        return mTexture2DZero;
     }
 
     return static_cast<Texture2D*>(mState.texture2D.get());
@@ -1064,7 +1098,7 @@ TextureCubeMap *Context::getTextureCubeMap()
 {
     if (mState.textureCubeMap.id() == 0)   // Special case: 0 refers to different initial textures based on the target
     {
-        return mTextureCubeMapZero.get();
+        return mTextureCubeMapZero;
     }
 
     return static_cast<TextureCubeMap*>(mState.textureCubeMap.get());
@@ -1079,22 +1113,12 @@ Texture *Context::getSamplerTexture(unsigned int sampler, SamplerType type)
         switch (type)
         {
           default: UNREACHABLE();
-          case SAMPLER_2D: return mTexture2DZero.get();
-          case SAMPLER_CUBE: return mTextureCubeMapZero.get();
+          case SAMPLER_2D: return mTexture2DZero;
+          case SAMPLER_CUBE: return mTextureCubeMapZero;
         }
     }
 
     return mState.samplerTexture[type][sampler].get();
-}
-
-Framebuffer *Context::getReadFramebuffer()
-{
-    return mState.readFramebuffer.get();
-}
-
-Framebuffer *Context::getDrawFramebuffer()
-{
-   return mState.drawFramebuffer.get();
 }
 
 bool Context::getBooleanv(GLenum pname, GLboolean *params)
@@ -1192,8 +1216,8 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_ARRAY_BUFFER_BINDING:             *params = mState.arrayBuffer.id();              break;
       case GL_ELEMENT_ARRAY_BUFFER_BINDING:     *params = mState.elementArrayBuffer.id();       break;
       //case GL_FRAMEBUFFER_BINDING:              // now equivalent to GL_DRAW_FRAMEBUFFER_BINDING_ANGLE
-      case GL_DRAW_FRAMEBUFFER_BINDING_ANGLE:     *params = mState.drawFramebuffer.id();        break;
-      case GL_READ_FRAMEBUFFER_BINDING_ANGLE:     *params = mState.readFramebuffer.id();        break;
+      case GL_DRAW_FRAMEBUFFER_BINDING_ANGLE:     *params = mState.drawFramebuffer;               break;
+      case GL_READ_FRAMEBUFFER_BINDING_ANGLE:     *params = mState.readFramebuffer;               break;
       case GL_RENDERBUFFER_BINDING:             *params = mState.renderbuffer.id();             break;
       case GL_CURRENT_PROGRAM:                  *params = mState.currentProgram;                break;
       case GL_PACK_ALIGNMENT:                   *params = mState.packAlignment;                 break;
@@ -2978,12 +3002,12 @@ void Context::detachFramebuffer(GLuint framebuffer)
     // If a framebuffer that is currently bound to the target FRAMEBUFFER is deleted, it is as though
     // BindFramebuffer had been executed with the target of FRAMEBUFFER and framebuffer of zero.
 
-    if (mState.readFramebuffer.id() == framebuffer)
+    if (mState.readFramebuffer == framebuffer)
     {
         bindReadFramebuffer(0);
     }
 
-    if (mState.drawFramebuffer.id() == framebuffer)
+    if (mState.drawFramebuffer == framebuffer)
     {
         bindDrawFramebuffer(0);
     }
@@ -3021,7 +3045,7 @@ void Context::detachRenderbuffer(GLuint renderbuffer)
 
 Texture *Context::getIncompleteTexture(SamplerType type)
 {
-    Texture *t = mIncompleteTextures[type].get();
+    Texture *t = mIncompleteTextures[type];
 
     if (t == NULL)
     {
@@ -3057,7 +3081,7 @@ Texture *Context::getIncompleteTexture(SamplerType type)
             break;
         }
 
-        mIncompleteTextures[type].set(t);
+        mIncompleteTextures[type] = t;
     }
 
     return t;
