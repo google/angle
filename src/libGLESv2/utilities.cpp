@@ -25,6 +25,8 @@ int UniformComponentCount(GLenum type)
       case GL_BOOL:
       case GL_FLOAT:
       case GL_INT:
+      case GL_SAMPLER_2D:
+      case GL_SAMPLER_CUBE:
           return 1;
       case GL_BOOL_VEC2:
       case GL_FLOAT_VEC2:
@@ -68,6 +70,8 @@ GLenum UniformComponentType(GLenum type)
       case GL_FLOAT_MAT4:
           return GL_FLOAT;
       case GL_INT:
+      case GL_SAMPLER_2D:
+      case GL_SAMPLER_CUBE:
       case GL_INT_VEC2:
       case GL_INT_VEC3:
       case GL_INT_VEC4:
