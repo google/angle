@@ -122,11 +122,8 @@ Context::Context(const egl::Config *config, const gl::Context *shareContext)
     // In order that access to these initial textures not be lost, they are treated as texture
     // objects all of whose names are 0.
 
-    mTexture2DZero = new Texture2D(0);
-    mTextureCubeMapZero = new TextureCubeMap(0);
-
-    mColorbufferZero = NULL;
-    mDepthStencilbufferZero = NULL;
+    mTexture2DZero.set(new Texture2D(0));
+    mTextureCubeMapZero.set(new TextureCubeMap(0));
 
     mState.activeSampler = 0;
     bindArrayBuffer(0);
@@ -136,11 +133,6 @@ Context::Context(const egl::Config *config, const gl::Context *shareContext)
     bindReadFramebuffer(0);
     bindDrawFramebuffer(0);
     bindRenderbuffer(0);
-
-    for (int type = 0; type < SAMPLER_TYPE_COUNT; type++)
-    {
-        mIncompleteTextures[type] = NULL;
-    }
 
     mState.currentProgram = 0;
 
@@ -205,7 +197,7 @@ Context::~Context()
 
     for (int type = 0; type < SAMPLER_TYPE_COUNT; type++)
     {
-        delete mIncompleteTextures[type];
+        mIncompleteTextures[type].set(NULL);
     }
 
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
@@ -219,8 +211,8 @@ Context::~Context()
     mState.textureCubeMap.set(NULL);
     mState.renderbuffer.set(NULL);
 
-    delete mTexture2DZero;
-    delete mTextureCubeMapZero;
+    mTexture2DZero.set(NULL);
+    mTextureCubeMapZero.set(NULL);
 
     delete mBufferBackEnd;
     delete mVertexDataManager;
@@ -1088,7 +1080,7 @@ Texture2D *Context::getTexture2D()
 {
     if (mState.texture2D.id() == 0)   // Special case: 0 refers to different initial textures based on the target
     {
-        return mTexture2DZero;
+        return mTexture2DZero.get();
     }
 
     return static_cast<Texture2D*>(mState.texture2D.get());
@@ -1098,7 +1090,7 @@ TextureCubeMap *Context::getTextureCubeMap()
 {
     if (mState.textureCubeMap.id() == 0)   // Special case: 0 refers to different initial textures based on the target
     {
-        return mTextureCubeMapZero;
+        return mTextureCubeMapZero.get();
     }
 
     return static_cast<TextureCubeMap*>(mState.textureCubeMap.get());
@@ -1113,8 +1105,8 @@ Texture *Context::getSamplerTexture(unsigned int sampler, SamplerType type)
         switch (type)
         {
           default: UNREACHABLE();
-          case SAMPLER_2D: return mTexture2DZero;
-          case SAMPLER_CUBE: return mTextureCubeMapZero;
+          case SAMPLER_2D: return mTexture2DZero.get();
+          case SAMPLER_CUBE: return mTextureCubeMapZero.get();
         }
     }
 
@@ -3045,7 +3037,7 @@ void Context::detachRenderbuffer(GLuint renderbuffer)
 
 Texture *Context::getIncompleteTexture(SamplerType type)
 {
-    Texture *t = mIncompleteTextures[type];
+    Texture *t = mIncompleteTextures[type].get();
 
     if (t == NULL)
     {
@@ -3081,7 +3073,7 @@ Texture *Context::getIncompleteTexture(SamplerType type)
             break;
         }
 
-        mIncompleteTextures[type] = t;
+        mIncompleteTextures[type].set(t);
     }
 
     return t;

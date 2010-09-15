@@ -422,11 +422,9 @@ class Context
 
     State   mState;
 
-    Texture2D *mTexture2DZero;
-    TextureCubeMap *mTextureCubeMapZero;
+    BindingPointer<Texture2D> mTexture2DZero;
+    BindingPointer<TextureCubeMap> mTextureCubeMapZero;
 
-    Colorbuffer *mColorbufferZero;
-    DepthStencilbuffer *mDepthStencilbufferZero;
 
     typedef std::map<GLuint, Framebuffer*> FramebufferMap;
     FramebufferMap mFramebufferMap;
@@ -443,7 +441,7 @@ class Context
 
     Blit *mBlit;
     
-    Texture *mIncompleteTextures[SAMPLER_TYPE_COUNT];
+    BindingPointer<Texture> mIncompleteTextures[SAMPLER_TYPE_COUNT];
 
     // Recorded errors
     bool mInvalidEnum;
