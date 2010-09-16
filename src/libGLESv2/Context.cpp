@@ -2481,6 +2481,7 @@ void Context::clear(GLbitfield mask)
             device->SetVertexShader(NULL);
             device->SetFVF(D3DFVF_XYZRHW | D3DFVF_DIFFUSE);
             device->SetStreamSourceFreq(0, 1);
+            device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
 
             hr = device->EndStateBlock(&mMaskedClearSavedState);
             ASSERT(SUCCEEDED(hr) || hr == D3DERR_OUTOFVIDEOMEMORY || hr == E_OUTOFMEMORY);
@@ -2536,6 +2537,7 @@ void Context::clear(GLbitfield mask)
         device->SetVertexShader(NULL);
         device->SetFVF(D3DFVF_XYZRHW | D3DFVF_DIFFUSE);
         device->SetStreamSourceFreq(0, 1);
+        device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
 
         struct Vertex
         {
