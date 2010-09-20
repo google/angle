@@ -91,6 +91,11 @@ void Surface::resetSwapChain()
 {
     IDirect3DDevice9 *device = mDisplay->getDevice();
 
+    if (device == NULL)
+    {
+        return;
+    }
+    
     D3DPRESENT_PARAMETERS presentParameters = {0};
 
     presentParameters.AutoDepthStencilFormat = mConfig->mDepthStencilFormat;
