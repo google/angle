@@ -1374,6 +1374,11 @@ void Texture2D::generateMipmaps()
 
     needRenderTarget();
 
+    if (mTexture == NULL)
+    {
+        return;
+    }
+
     for (unsigned int i = 1; i <= q; i++)
     {
         IDirect3DSurface9 *upper = NULL;
@@ -1982,6 +1987,11 @@ void TextureCubeMap::generateMipmaps()
     }
 
     needRenderTarget();
+
+    if (mTexture == NULL)
+    {
+        return;
+    }
 
     for (unsigned int f = 0; f < 6; f++)
     {
