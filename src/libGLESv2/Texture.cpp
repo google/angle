@@ -1413,6 +1413,11 @@ IDirect3DSurface9 *Texture2D::getRenderTarget(GLenum target)
 
     needRenderTarget();
 
+    if (mTexture == NULL)
+    {
+        return NULL;
+    }
+    
     IDirect3DSurface9 *renderTarget = NULL;
     mTexture->GetSurfaceLevel(0, &renderTarget);
 
@@ -2018,7 +2023,12 @@ IDirect3DSurface9 *TextureCubeMap::getRenderTarget(GLenum target)
     ASSERT(IsCubemapTextureTarget(target));
 
     needRenderTarget();
-
+    
+    if (mTexture == NULL)
+    {
+        return NULL;
+    }
+    
     IDirect3DSurface9 *renderTarget = NULL;
     mTexture->GetCubeMapSurface(static_cast<D3DCUBEMAP_FACES>(faceIndex(target)), 0, &renderTarget);
 
