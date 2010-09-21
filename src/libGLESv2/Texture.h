@@ -61,6 +61,7 @@ class Texture : public RefCountObject
     virtual bool isCompressed() const = 0;
     bool isFloatingPoint() const;
 
+    D3DFORMAT getD3DFormat() const;
     IDirect3DBaseTexture9 *getTexture();
     virtual Renderbuffer *getColorbuffer(GLenum target) = 0;
 

@@ -3351,7 +3351,11 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
 
     if (mask & GL_COLOR_BUFFER_BIT)
     {
-        if (readFramebuffer->getColorbufferType() != drawFramebuffer->getColorbufferType() ||
+        const bool validReadType = readFramebuffer->getColorbufferType() == GL_TEXTURE_2D ||
+            readFramebuffer->getColorbufferType() == GL_RENDERBUFFER;
+        const bool validDrawType = drawFramebuffer->getColorbufferType() == GL_TEXTURE_2D ||
+            drawFramebuffer->getColorbufferType() == GL_RENDERBUFFER;
+        if (!validReadType || !validDrawType ||
             readFramebuffer->getColorbuffer()->getD3DFormat() != drawFramebuffer->getColorbuffer()->getD3DFormat())
         {
             ERR("Color buffer format conversion in BlitFramebufferANGLE not supported by this implementation");

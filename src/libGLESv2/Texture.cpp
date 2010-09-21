@@ -832,6 +832,11 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GL
     return true;
 }
 
+D3DFORMAT Texture::getD3DFormat() const
+{
+    return selectFormat(getFormat(), mType);
+}
+
 IDirect3DBaseTexture9 *Texture::getTexture()
 {
     if (!isComplete())
@@ -2046,7 +2051,7 @@ IDirect3DSurface9 *TextureCubeMap::getRenderTarget(GLenum target)
 }
 
 Texture::TextureColorbufferProxy::TextureColorbufferProxy(Texture *texture, GLenum target)
-  : Colorbuffer(NULL), mTexture(texture), mTarget(target)
+  : Colorbuffer(texture), mTexture(texture), mTarget(target)
 {
     ASSERT(target == GL_TEXTURE_2D || IsCubemapTextureTarget(target));
 }

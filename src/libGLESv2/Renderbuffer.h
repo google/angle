@@ -21,6 +21,7 @@
 
 namespace gl
 {
+    class Texture;
 
 // A class derived from RenderbufferStorage is created whenever glRenderbufferStorage
 // is called. The specific concrete type depends on whether the internal format is
@@ -101,6 +102,7 @@ class Colorbuffer : public RenderbufferStorage
 {
   public:
     explicit Colorbuffer(IDirect3DSurface9 *renderTarget);
+    explicit Colorbuffer(const Texture* texture);
     Colorbuffer(int width, int height, GLenum format, GLsizei samples);
 
     ~Colorbuffer();

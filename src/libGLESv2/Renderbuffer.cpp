@@ -11,6 +11,7 @@
 #include "libGLESv2/Renderbuffer.h"
 
 #include "libGLESv2/main.h"
+#include "libGLESv2/Texture.h"
 #include "libGLESv2/utilities.h"
 
 namespace gl
@@ -184,6 +185,13 @@ Colorbuffer::Colorbuffer(IDirect3DSurface9 *renderTarget) : mRenderTarget(render
         mD3DFormat = D3DFMT_UNKNOWN;
         mSamples = 0;
     }
+}
+
+Colorbuffer::Colorbuffer(const Texture* texture) : mRenderTarget(NULL)
+{
+    setSize(texture->getWidth(), texture->getHeight());
+    mD3DFormat = texture->getD3DFormat();
+    mSamples = 0;
 }
 
 Colorbuffer::Colorbuffer(int width, int height, GLenum format, GLsizei samples)
