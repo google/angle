@@ -1896,39 +1896,46 @@ void Context::applyState(GLenum drawMode)
         mPolygonOffsetStateDirty = false;
     }
 
-    if (framebufferObject->isMultisample() && mSampleStateDirty)
+    if (mSampleStateDirty)
     {
-        if (mState.sampleAlphaToCoverage)
+        if (framebufferObject->isMultisample())
         {
-            FIXME("Sample alpha to coverage is unimplemented.");
-        }
-
-        if (mState.sampleCoverage)
-        {
-            device->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, TRUE);
-            unsigned int mask = 0;
-            if (mState.sampleCoverageValue != 0)
+            if (mState.sampleAlphaToCoverage)
             {
-                float threshold = 0.5f;
+                FIXME("Sample alpha to coverage is unimplemented.");
+            }
 
-                for (int i = 0; i < framebufferObject->getSamples(); ++i)
+            device->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, TRUE);
+            if (mState.sampleCoverage)
+            {
+                unsigned int mask = 0;
+                if (mState.sampleCoverageValue != 0)
                 {
-                    mask <<= 1;
+                    float threshold = 0.5f;
 
-                    if ((i + 1) * mState.sampleCoverageValue >= threshold)
+                    for (int i = 0; i < framebufferObject->getSamples(); ++i)
                     {
-                        threshold += 1.0f;
-                        mask |= 1;
+                        mask <<= 1;
+
+                        if ((i + 1) * mState.sampleCoverageValue >= threshold)
+                        {
+                            threshold += 1.0f;
+                            mask |= 1;
+                        }
                     }
                 }
-            }
-            
-            if (mState.sampleCoverageInvert)
-            {
-                mask = ~mask;
-            }
+                
+                if (mState.sampleCoverageInvert)
+                {
+                    mask = ~mask;
+                }
 
-            device->SetRenderState(D3DRS_MULTISAMPLEMASK, mask);
+                device->SetRenderState(D3DRS_MULTISAMPLEMASK, mask);
+            }
+            else
+            {
+                device->SetRenderState(D3DRS_MULTISAMPLEMASK, 0xFFFFFFFF);
+            }
         }
         else
         {
