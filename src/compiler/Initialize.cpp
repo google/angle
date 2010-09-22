@@ -311,15 +311,6 @@ static TString BuiltInFunctionsCommon()
     s.append(TString("bvec4 not(bvec4 x);"));
 
     //
-    // Texture Functions.
-    //
-    s.append(TString("vec4 texture2D(sampler2D sampler, vec2 coord);"));
-    s.append(TString("vec4 texture2DProj(sampler2D sampler, vec3 coord);"));
-    s.append(TString("vec4 texture2DProj(sampler2D sampler, vec4 coord);"));
-
-    s.append(TString("vec4 textureCube(samplerCube sampler, vec3 coord);"));
-
-    //
     // Noise functions.
     //
     //s.append(TString("float noise1(float x);"));
@@ -342,7 +333,6 @@ static TString BuiltInFunctionsCommon()
     //s.append(TString("vec4 noise4(vec3  x);"));
     //s.append(TString("vec4 noise4(vec4  x);"));
 
-    s.append(TString("\n"));
     return s;
 }
 
@@ -351,7 +341,7 @@ static TString BuiltInFunctionsCommon()
 // Prototypes for built-in functions seen by vertex shaders only.
 //
 //============================================================================
-static TString BuiltInFunctionsVertex()
+static TString BuiltInFunctionsVertex(const TBuiltInResource& resources)
 {
     TString s;
 
@@ -363,12 +353,18 @@ static TString BuiltInFunctionsVertex()
     //
     // Texture Functions.
     //
-    s.append(TString("vec4 texture2DLod(sampler2D sampler, vec2 coord, float lod);"));
-    s.append(TString("vec4 texture2DProjLod(sampler2D sampler, vec3 coord, float lod);"));
-    s.append(TString("vec4 texture2DProjLod(sampler2D sampler, vec4 coord, float lod);"));
-    s.append(TString("vec4 textureCubeLod(samplerCube sampler, vec3 coord, float lod);"));
+    if (resources.MaxVertexTextureImageUnits > 0) {
+        s.append(TString("vec4 texture2D(sampler2D sampler, vec2 coord);"));
+        s.append(TString("vec4 texture2DProj(sampler2D sampler, vec3 coord);"));
+        s.append(TString("vec4 texture2DProj(sampler2D sampler, vec4 coord);"));
+        s.append(TString("vec4 textureCube(samplerCube sampler, vec3 coord);"));
 
-    s.append(TString("\n"));
+        s.append(TString("vec4 texture2DLod(sampler2D sampler, vec2 coord, float lod);"));
+        s.append(TString("vec4 texture2DProjLod(sampler2D sampler, vec3 coord, float lod);"));
+        s.append(TString("vec4 texture2DProjLod(sampler2D sampler, vec4 coord, float lod);"));
+        s.append(TString("vec4 textureCubeLod(samplerCube sampler, vec3 coord, float lod);"));
+    }
+
     return s;
 }
 
@@ -384,6 +380,11 @@ static TString BuiltInFunctionsFragment(const TBuiltInResource& resources)
     //
     // Texture Functions.
     //
+    s.append(TString("vec4 texture2D(sampler2D sampler, vec2 coord);"));
+    s.append(TString("vec4 texture2DProj(sampler2D sampler, vec3 coord);"));
+    s.append(TString("vec4 texture2DProj(sampler2D sampler, vec4 coord);"));
+    s.append(TString("vec4 textureCube(samplerCube sampler, vec3 coord);"));
+
     s.append(TString("vec4 texture2D(sampler2D sampler, vec2 coord, float bias);"));
     s.append(TString("vec4 texture2DProj(sampler2D sampler, vec3 coord, float bias);"));
     s.append(TString("vec4 texture2DProj(sampler2D sampler, vec4 coord, float bias);"));
@@ -406,7 +407,6 @@ static TString BuiltInFunctionsFragment(const TBuiltInResource& resources)
         s.append(TString("vec4  fwidth(vec4  p);"));
     }
 
-    s.append(TString("\n"));
     return s;
 }
 
@@ -429,7 +429,6 @@ static TString StandardUniforms()
     s.append(TString("};"));
     s.append(TString("uniform gl_DepthRangeParameters gl_DepthRange;"));
 
-    s.append(TString("\n"));
     return s;
 }
 
@@ -445,7 +444,6 @@ static TString DefaultPrecisionVertex()
     s.append(TString("precision highp int;"));
     s.append(TString("precision highp float;"));
 
-    s.append(TString("\n"));
     return s;
 }
 
@@ -461,7 +459,6 @@ static TString DefaultPrecisionFragment()
     s.append(TString("precision mediump int;"));
     // No default precision for float in fragment shaders
 
-    s.append(TString("\n"));
     return s;
 }
 
@@ -500,7 +497,7 @@ void TBuiltIns::initialize(EShLanguage language, EShSpec spec, const TBuiltInRes
     case EShLangVertex:
         builtInStrings.push_back(DefaultPrecisionVertex());
         builtInStrings.push_back(BuiltInFunctionsCommon());
-        builtInStrings.push_back(BuiltInFunctionsVertex());
+        builtInStrings.push_back(BuiltInFunctionsVertex(resources));
         builtInStrings.push_back(StandardUniforms());
         break;
 
