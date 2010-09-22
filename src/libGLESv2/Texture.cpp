@@ -777,18 +777,27 @@ bool Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
         return false;
     }
 
-    D3DLOCKED_RECT locked;
-    HRESULT result = img->surface->LockRect(&locked, NULL, 0);
-
-    ASSERT(SUCCEEDED(result));
-
-    if (SUCCEEDED(result))
+    if (!img->surface)
     {
-        loadImageData(xoffset, yoffset, width, height, format, type, unpackAlignment, pixels, locked.Pitch, locked.pBits);
-        img->surface->UnlockRect();
+        createSurface(img->width, img->height, format, type, img);
     }
 
-    img->dirty = true;
+    if (pixels != NULL && img->surface != NULL)
+    {
+        D3DLOCKED_RECT locked;
+        HRESULT result = img->surface->LockRect(&locked, NULL, 0);
+
+        ASSERT(SUCCEEDED(result));
+
+        if (SUCCEEDED(result))
+        {
+            loadImageData(xoffset, yoffset, width, height, format, type, unpackAlignment, pixels, locked.Pitch, locked.pBits);
+            img->surface->UnlockRect();
+        }
+
+        img->dirty = true;
+    }
+
     return true;
 }
 
@@ -806,29 +815,38 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GL
         return false;
     }
 
-    RECT updateRegion;
-    updateRegion.left = xoffset;
-    updateRegion.right = xoffset + width;
-    updateRegion.bottom = yoffset + height;
-    updateRegion.top = yoffset;
-
-    D3DLOCKED_RECT locked;
-    HRESULT result = img->surface->LockRect(&locked, &updateRegion, 0);
-
-    ASSERT(SUCCEEDED(result));
-
-    if (SUCCEEDED(result))
+    if (!img->surface)
     {
-        GLsizei inputPitch = ComputeCompressedPitch(width, format);
-        int rows = imageSize / inputPitch;
-        for (int i = 0; i < rows; ++i)
-        {
-            memcpy((void*)((BYTE*)locked.pBits + i * locked.Pitch), (void*)((BYTE*)pixels + i * inputPitch), inputPitch);
-        }
-        img->surface->UnlockRect();
+        createSurface(img->width, img->height, format, GL_UNSIGNED_BYTE, img);
     }
 
-    img->dirty = true;
+    if (pixels != NULL && img->surface != NULL)
+    {
+        RECT updateRegion;
+        updateRegion.left = xoffset;
+        updateRegion.right = xoffset + width;
+        updateRegion.bottom = yoffset + height;
+        updateRegion.top = yoffset;
+
+        D3DLOCKED_RECT locked;
+        HRESULT result = img->surface->LockRect(&locked, &updateRegion, 0);
+
+        ASSERT(SUCCEEDED(result));
+
+        if (SUCCEEDED(result))
+        {
+            GLsizei inputPitch = ComputeCompressedPitch(width, format);
+            int rows = imageSize / inputPitch;
+            for (int i = 0; i < rows; ++i)
+            {
+                memcpy((void*)((BYTE*)locked.pBits + i * locked.Pitch), (void*)((BYTE*)pixels + i * inputPitch), inputPitch);
+            }
+            img->surface->UnlockRect();
+        }
+
+        img->dirty = true;
+    }
+
     return true;
 }
 
