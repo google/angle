@@ -95,12 +95,22 @@ bool Display::initialize()
         //  UNIMPLEMENTED();   // FIXME: Determine which adapter index the device context corresponds to
         }
 
-        HRESULT result = mD3d9->GetDeviceCaps(mAdapter, mDeviceType, &mDeviceCaps);
-
-        if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+        HRESULT result;
+        
+        do
         {
-            return error(EGL_BAD_ALLOC, false);
+            result = mD3d9->GetDeviceCaps(mAdapter, mDeviceType, &mDeviceCaps);
+
+            if (result == D3DERR_NOTAVAILABLE)
+            {
+                Sleep(0);   // Give the driver some time to initialize/recover
+            }
+            else if (FAILED(result))   // D3DERR_OUTOFVIDEOMEMORY, E_OUTOFMEMORY, D3DERR_INVALIDDEVICE, or another error we can't recover from
+            {
+                return error(EGL_BAD_ALLOC, false);
+            }
         }
+        while(result == D3DERR_NOTAVAILABLE);
 
         ASSERT(SUCCEEDED(result));
 
@@ -216,6 +226,12 @@ void Display::terminate()
 
     if (mDevice)
     {
+        // If the device is lost, reset it first to prevent leaving the driver in an unstable state
+        if (FAILED(mDevice->TestCooperativeLevel()))
+        {
+            resetDevice();
+        }
+
         mDevice->Release();
         mDevice = NULL;
     }
@@ -314,7 +330,7 @@ bool Display::getConfigAttrib(EGLConfig config, EGLint attribute, EGLint *value)
 
 bool Display::createDevice()
 {
-    D3DPRESENT_PARAMETERS presentParameters = getPresentParameters();
+    D3DPRESENT_PARAMETERS presentParameters = getDefaultPresentParameters();
     DWORD behaviorFlags = D3DCREATE_FPU_PRESERVE | D3DCREATE_NOWINDOWCHANGES;
 
     HRESULT result = mD3d9->CreateDevice(mAdapter, mDeviceType, mDeviceWindow, behaviorFlags | D3DCREATE_HARDWARE_VERTEXPROCESSING | D3DCREATE_PUREDEVICE, &presentParameters, &mDevice);
@@ -343,6 +359,29 @@ bool Display::createDevice()
     return true;
 }
 
+bool Display::resetDevice()
+{
+    D3DPRESENT_PARAMETERS presentParameters = getDefaultPresentParameters();
+    HRESULT result;
+    
+    do
+    {
+        Sleep(0);   // Give the graphics driver some CPU time
+
+        result = mDevice->Reset(&presentParameters);
+    }
+    while (result == D3DERR_DEVICELOST);
+
+    if (FAILED(result))
+    {
+        return error(EGL_BAD_ALLOC, false);
+    }
+
+    ASSERT(SUCCEEDED(result));
+
+    return true;
+}
+
 Surface *Display::createWindowSurface(HWND window, EGLConfig config)
 {
     const Config *configuration = mConfigSet.get(config);
@@ -364,23 +403,10 @@ EGLContext Display::createContext(EGLConfig configHandle, const gl::Context *sha
     }
     else if (FAILED(mDevice->TestCooperativeLevel()))   // Lost device
     {
-        D3DPRESENT_PARAMETERS presentParameters = getPresentParameters();
-        HRESULT result;
-        
-        do
+        if (!resetDevice())
         {
-            Sleep(0);   // Give the graphics driver some CPU time
-
-            result = mDevice->Reset(&presentParameters);
+            return NULL;
         }
-        while (result == D3DERR_DEVICELOST);
-
-        if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY || result == D3DERR_DEVICEREMOVED || result == D3DERR_DRIVERINTERNALERROR)
-        {
-            return error(EGL_BAD_ALLOC, (EGLContext)NULL);
-        }
-
-        ASSERT(SUCCEEDED(result));
 
         // Restore any surfaces that may have been lost
         for (SurfaceSet::iterator surface = mSurfaceSet.begin(); surface != mSurfaceSet.end(); surface++)
@@ -565,7 +591,7 @@ bool Display::getEventQuerySupport()
     return result != D3DERR_NOTAVAILABLE;
 }
 
-D3DPRESENT_PARAMETERS Display::getPresentParameters()
+D3DPRESENT_PARAMETERS Display::getDefaultPresentParameters()
 {
     D3DPRESENT_PARAMETERS presentParameters = {0};
 

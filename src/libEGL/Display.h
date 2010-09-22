@@ -68,7 +68,7 @@ class Display
   private:
     DISALLOW_COPY_AND_ASSIGN(Display);
 
-    D3DPRESENT_PARAMETERS getPresentParameters();
+    D3DPRESENT_PARAMETERS getDefaultPresentParameters();
 
     const HDC mDc;
 
@@ -95,6 +95,7 @@ class Display
     ContextSet mContextSet;
 
     bool createDevice();
+    bool resetDevice();
 };
 }
 
