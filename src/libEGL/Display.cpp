@@ -204,14 +204,14 @@ bool Display::initialize()
 
 void Display::terminate()
 {
-    for (SurfaceSet::iterator surface = mSurfaceSet.begin(); surface != mSurfaceSet.end(); surface++)
+    while (!mSurfaceSet.empty())
     {
-        delete *surface;
+        destroySurface(*mSurfaceSet.begin());
     }
 
-    for (ContextSet::iterator context = mContextSet.begin(); context != mContextSet.end(); context++)
+    while (!mContextSet.empty())
     {
-        glDestroyContext(*context);
+        destroyContext(*mContextSet.begin());
     }
 
     if (mDevice)
