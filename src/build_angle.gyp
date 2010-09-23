@@ -19,6 +19,7 @@
       'sources': [
         'compiler/BaseTypes.h',
         'compiler/Common.h',
+        'compiler/Compiler.cpp',
         'compiler/ConstantUnion.h',
         'compiler/debug.cpp',
         'compiler/debug.h',
@@ -52,6 +53,8 @@
         'compiler/SymbolTable.h',
         'compiler/Types.h',
         'compiler/unistd.h',
+        'compiler/VariableInfo.cpp',
+        'compiler/VariableInfo.h',
         'compiler/preprocessor/atom.c',
         'compiler/preprocessor/atom.h',
         'compiler/preprocessor/compile.h',

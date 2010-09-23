@@ -19,9 +19,9 @@
 #include "compiler/ExtensionBehavior.h"
 #include "compiler/InfoSink.h"
 #include "compiler/SymbolTable.h"
+#include "compiler/VariableInfo.h"
 
 class TCompiler;
-class TIntermNode;
 
 //
 // The base class used to back handles returned to the driver.
@@ -39,20 +39,31 @@ public:
 //
 class TCompiler : public TShHandleBase {
 public:
-    TCompiler(EShLanguage l, EShSpec s) : language(l), spec(s) { }
-    virtual ~TCompiler() { }
-
-    EShLanguage getLanguage() const { return language; }
-    EShSpec getSpec() const { return spec; }
-    TSymbolTable& getSymbolTable() { return symbolTable; }
-    TExtensionBehavior& getExtensionBehavior() { return extensionBehavior; }
-    TInfoSink& getInfoSink() { return infoSink; }
-
-    virtual bool compile(TIntermNode* root) = 0;
-
+    TCompiler(EShLanguage l, EShSpec s) : language(l), spec(s) {}
+    virtual ~TCompiler() {}
     virtual TCompiler* getAsCompiler() { return this; }
 
+    bool Init(const TBuiltInResource& resources);
+    bool compile(const char* const shaderStrings[],
+                 const int numStrings,
+                 int compileOptions);
+
+    // Get results of the last compilation.
+    TInfoSink& getInfoSink() { return infoSink; }
+    const TVariableInfoList& getAttribs() const { return attribs; }
+    const TVariableInfoList& getUniforms() const { return uniforms; }
+
 protected:
+    // Initialize symbol-table with built-in symbols.
+    bool InitBuiltInSymbolTable(const TBuiltInResource& resources);
+    // Clears the results from the previous compilation.
+    void clearResults();
+    // Collect info for all attribs and uniforms.
+    void collectAttribsUniforms(TIntermNode* root);
+    // Translate to object code.
+    virtual void translate(TIntermNode* root) = 0;
+
+private:
     EShLanguage language;
     EShSpec spec;
 
@@ -61,8 +72,11 @@ protected:
     TSymbolTable symbolTable;
     // Built-in extensions with default behavior.
     TExtensionBehavior extensionBehavior;
-    // Output sink.
-    TInfoSink infoSink;
+
+    // Results of compilation.
+    TInfoSink infoSink;  // Output sink.
+    TVariableInfoList attribs;  // Active attributes in the compiled shader.
+    TVariableInfoList uniforms;  // Active uniforms in the compiled shader.
 };
 
 //

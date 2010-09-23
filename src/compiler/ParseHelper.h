@@ -98,7 +98,7 @@ struct TParseContext {
     bool AfterEOF;
 };
 
-int PaParseStrings(char* argv[], int strLen[], int argc, TParseContext&);
+int PaParseStrings(const char* const argv[], const int strLen[], int argc, TParseContext&);
 void PaReservedWord();
 int PaIdentOrType(TString& id, TParseContext&, TSymbol*&);
 int PaParseComment(int &lineno, TParseContext&);

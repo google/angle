@@ -631,7 +631,7 @@ TIntermBranch* TIntermediate::addBranch(TOperator branchOp, TIntermTyped* expres
 // This is to be executed once the final root is put on top by the parsing
 // process.
 //
-bool TIntermediate::postProcess(TIntermNode* root, EShLanguage language)
+bool TIntermediate::postProcess(TIntermNode* root)
 {
     if (root == 0)
         return true;

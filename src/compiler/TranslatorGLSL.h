@@ -12,7 +12,9 @@
 class TranslatorGLSL : public TCompiler {
 public:
     TranslatorGLSL(EShLanguage lang, EShSpec spec);
-    virtual bool compile(TIntermNode* root);
+
+protected:
+    virtual void translate(TIntermNode* root);
 };
 
 #endif  // COMPILER_TRANSLATORGLSL_H_

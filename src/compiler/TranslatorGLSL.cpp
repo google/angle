@@ -12,9 +12,7 @@ TranslatorGLSL::TranslatorGLSL(EShLanguage lang, EShSpec spec)
     : TCompiler(lang, spec) {
 }
 
-bool TranslatorGLSL::compile(TIntermNode* root) {
-    TOutputGLSL outputGLSL(infoSink.obj);
+void TranslatorGLSL::translate(TIntermNode* root) {
+    TOutputGLSL outputGLSL(getInfoSink().obj);
     root->traverse(&outputGLSL);
-
-    return true;
 }

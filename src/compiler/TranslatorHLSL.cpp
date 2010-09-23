@@ -13,12 +13,10 @@ TranslatorHLSL::TranslatorHLSL(EShLanguage lang, EShSpec spec)
 {
 }
 
-bool TranslatorHLSL::compile(TIntermNode *root)
+void TranslatorHLSL::translate(TIntermNode *root)
 {
     TParseContext& parseContext = *GetGlobalParseContext();
     sh::OutputHLSL outputHLSL(parseContext);
 
     outputHLSL.output();
-    
-    return true;
 }
