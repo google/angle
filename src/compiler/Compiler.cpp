@@ -41,13 +41,12 @@ static bool InitializeSymbolTable(
 
     for (TBuiltInStrings::const_iterator i = builtInStrings.begin(); i != builtInStrings.end(); ++i)
     {
-        const char* builtInShaders[1];
-        int builtInLengths[1];
+        const char* builtInShaders = i->c_str();
+        int builtInLengths = static_cast<int>(i->size());
+        if (builtInLengths <= 0)
+          continue;
 
-        builtInShaders[0] = (*i).c_str();
-        builtInLengths[0] = (int) (*i).size();
-
-        if (PaParseStrings(builtInShaders, builtInLengths, 1, parseContext) != 0)
+        if (PaParseStrings(&builtInShaders, &builtInLengths, 1, parseContext) != 0)
         {
             infoSink.info.message(EPrefixInternalError, "Unable to parse built-ins");
             return false;
