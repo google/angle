@@ -171,9 +171,7 @@ bool CollectAttribsUniforms::visitAggregate(Visit, TIntermAggregate* node)
         break;
     case EOpDeclaration: {
         const TIntermSequence& sequence = node->getSequence();
-        const TIntermSymbol* variable = sequence.front()->getAsSymbolNode();
-        const TType& type = variable->getType();
-        TQualifier qualifier = type.getQualifier();
+        TQualifier qualifier = sequence.front()->getAsTyped()->getQualifier();
         if (qualifier == EvqAttribute || qualifier == EvqUniform)
         {
             TVariableInfoList& infoList = qualifier == EvqAttribute ?
@@ -181,7 +179,13 @@ bool CollectAttribsUniforms::visitAggregate(Visit, TIntermAggregate* node)
             for (TIntermSequence::const_iterator i = sequence.begin();
                  i != sequence.end(); ++i)
             {
-                variable = (*i)->getAsSymbolNode();
+                const TIntermSymbol* variable = (*i)->getAsSymbolNode();
+                // The only case in which the sequence will not contain a
+                // TIntermSymbol node is initialization. It will contain a
+                // TInterBinary node in that case. Since attributes and unifroms
+                // cannot be initialized in a shader, we must have only
+                // TIntermSymbol nodes in the sequence.
+                ASSERT(variable != NULL);
                 getVariableInfo(variable->getType(), variable->getSymbol(),
                                 infoList);
             }
