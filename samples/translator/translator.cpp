@@ -6,6 +6,7 @@
 
 #include "GLSLANG/ShaderLang.h"
 
+#include <assert.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,6 +28,7 @@ void usage();
 void FreeFileData(char **data);
 char** ReadFileData(char *fileName);
 void LogMsg(char* msg, const char* name, const int num, const char* logName);
+void PrintActiveVariables(ShHandle compiler, EShInfo varType);
 
 //Added to accomodate the multiple strings.
 int OutputMultipleStrings = 1;
@@ -60,6 +62,7 @@ int main(int argc, char* argv[])
     ShHandle fragmentCompiler = 0;
     char* buffer = 0;
     int bufferLen = 0;
+    int numAttribs = 0, numUniforms = 0;
 
     ShInitialize();
 
@@ -73,6 +76,7 @@ int main(int argc, char* argv[])
             switch (argv[0][1]) {
             case 'i': compileOptions |= EShOptIntermediateTree; break;
             case 'o': compileOptions |= EShOptObjectCode; break;
+            case 'u': compileOptions |= EShOptAttribsUniforms; break;
             default: failCode = EFailUsage;
             }
         } else {
@@ -99,6 +103,7 @@ int main(int argc, char* argv[])
               ShGetInfoLog(compiler, buffer);
               puts(buffer);
               LogMsg("END", "COMPILER", numCompiles, "INFO LOG");
+              printf("\n\n");
 
               if (compiled && (compileOptions & EShOptObjectCode)) {
                   LogMsg("BEGIN", "COMPILER", numCompiles, "OBJ CODE");
@@ -107,6 +112,18 @@ int main(int argc, char* argv[])
                   ShGetObjectCode(compiler, buffer);
                   puts(buffer);
                   LogMsg("END", "COMPILER", numCompiles, "OBJ CODE");
+                  printf("\n\n");
+              }
+              if (compiled && (compileOptions & EShOptAttribsUniforms)) {
+                  LogMsg("BEGIN", "COMPILER", numCompiles, "ACTIVE ATTRIBS");
+                  PrintActiveVariables(compiler, SH_ACTIVE_ATTRIBUTES);
+                  LogMsg("END", "COMPILER", numCompiles, "ACTIVE ATTRIBS");
+                  printf("\n\n");
+
+                  LogMsg("BEGIN", "COMPILER", numCompiles, "ACTIVE UNIFORMS");
+                  PrintActiveVariables(compiler, SH_ACTIVE_UNIFORMS);
+                  LogMsg("END", "COMPILER", numCompiles, "ACTIVE UNIFORMS");
+                  printf("\n\n");
               }
               if (!compiled)
                   failCode = EFailCompile;
@@ -181,10 +198,11 @@ bool CompileFile(char *fileName, ShHandle compiler, int compileOptions)
 //
 void usage()
 {
-    printf("Usage: translate [-i -o] file1 file2 ...\n"
+    printf("Usage: translate [-i -o -u] file1 file2 ...\n"
         "Where: filename = filename ending in .frag or .vert\n"
         "       -i = print intermediate tree\n"
-        "       -o = print translated code\n");
+        "       -o = print translated code\n"
+        "       -u = print active attribs and uniforms\n");
 }
 
 //
@@ -253,7 +271,60 @@ void FreeFileData(char** data)
 
 void LogMsg(char* msg, const char* name, const int num, const char* logName)
 {
-    printf(num >= 0 ? "#### %s %s %d %s ####\n" :
-        "#### %s %s INFO LOG ####\n", msg, name, num, logName);
+    printf("#### %s %s %d %s ####\n", msg, name, num, logName);
+}
+
+void PrintActiveVariables(ShHandle compiler, EShInfo varType)
+{
+    int nameSize = 0;
+    switch (varType) {
+        case SH_ACTIVE_ATTRIBUTES:
+            ShGetInfo(compiler, SH_ACTIVE_ATTRIBUTE_MAX_LENGTH, &nameSize);
+            break;
+        case SH_ACTIVE_UNIFORMS:
+            ShGetInfo(compiler, SH_ACTIVE_UNIFORM_MAX_LENGTH, &nameSize);
+            break;
+        default: assert(0);
+    }
+    if (nameSize <= 1) return;
+    char* name = (char*) malloc(nameSize * sizeof(char));
+
+    int activeVars = 0, size = 0;
+    EShDataType type;
+    char* typeName = NULL;
+    ShGetInfo(compiler, varType, &activeVars);
+    for (int i = 0; i < activeVars; ++i) {
+        switch (varType) {
+            case SH_ACTIVE_ATTRIBUTES:
+                ShGetActiveAttrib(compiler, i, NULL, &size, &type, name);
+                break;
+            case SH_ACTIVE_UNIFORMS:
+                ShGetActiveUniform(compiler, i, NULL, &size, &type, name);
+                break;
+            default: assert(0);
+        }
+        switch (type) {
+            case SH_FLOAT: typeName = "GL_FLOAT"; break;
+            case SH_FLOAT_VEC2: typeName = "GL_FLOAT_VEC2"; break;
+            case SH_FLOAT_VEC3: typeName = "GL_FLOAT_VEC3"; break;
+            case SH_FLOAT_VEC4: typeName = "GL_FLOAT_VEC4"; break;
+            case SH_INT: typeName = "GL_INT"; break;
+            case SH_INT_VEC2: typeName = "GL_INT_VEC2"; break;
+            case SH_INT_VEC3: typeName = "GL_INT_VEC3"; break;
+            case SH_INT_VEC4: typeName = "GL_INT_VEC4"; break;
+            case SH_BOOL: typeName = "GL_BOOL"; break;
+            case SH_BOOL_VEC2: typeName = "GL_BOOL_VEC2"; break;
+            case SH_BOOL_VEC3: typeName = "GL_BOOL_VEC3"; break;
+            case SH_BOOL_VEC4: typeName = "GL_BOOL_VEC4"; break;
+            case SH_FLOAT_MAT2: typeName = "GL_FLOAT_MAT2"; break;
+            case SH_FLOAT_MAT3: typeName = "GL_FLOAT_MAT3"; break;
+            case SH_FLOAT_MAT4: typeName = "GL_FLOAT_MAT4"; break;
+            case SH_SAMPLER_2D: typeName = "GL_SAMPLER_2D"; break;
+            case SH_SAMPLER_CUBE: typeName = "GL_SAMPLER_CUBE"; break;
+            default: assert(0);
+        }
+        printf("%d: name:%s type:%s size:%d\n", i, name, typeName, size);
+    }
+    free(name);
 }
 

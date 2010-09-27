@@ -11,16 +11,55 @@
 
 #include "GLSLANG/ShaderLang.h"
 
-#include "compiler/Initialize.h"
 #include "compiler/InitializeDll.h"
-#include "compiler/ParseHelper.h"
 #include "compiler/ShHandle.h"
-#include "compiler/SymbolTable.h"
 
 //
 // This is the platform independent interface between an OGL driver
 // and the shading language compiler.
 //
+
+static int getVariableMaxLength(const TVariableInfoList& varList)
+{
+    TString::size_type maxLen = 0;
+    for (TVariableInfoList::const_iterator i = varList.begin();
+         i != varList.end(); ++i)
+    {
+        maxLen = std::max(maxLen, i->name.size());
+    }
+    // Add 1 to include null-termination character.
+    return static_cast<int>(maxLen) + 1;
+}
+
+static void getVariableInfo(EShInfo varType,
+                            const ShHandle handle,
+                            int index,
+                            int* length,
+                            int* size,
+                            EShDataType* type,
+                            char* name)
+{
+    if (!handle || !size || !type || !name)
+        return;
+    ASSERT((varType == SH_ACTIVE_ATTRIBUTES) ||
+           (varType == SH_ACTIVE_UNIFORMS));
+
+    TShHandleBase* base = reinterpret_cast<TShHandleBase*>(handle);
+    TCompiler* compiler = base->getAsCompiler();
+    if (compiler == 0)
+        return;
+
+    const TVariableInfoList& varList = varType == SH_ACTIVE_ATTRIBUTES ?
+        compiler->getAttribs() : compiler->getUniforms();
+    if (index < 0 || index >= static_cast<int>(varList.size()))
+        return;
+
+    const TVariableInfo& varInfo = varList[index];
+    if (length) *length = varInfo.name.size();
+    *size = varInfo.size;
+    *type = varInfo.type;
+    strcpy(name, varInfo.name.c_str());
+}
 
 //
 // Driver must call this first, once, before doing any other
@@ -151,16 +190,16 @@ void ShGetInfo(const ShHandle handle, EShInfo pname, int* params)
         *params = compiler->getInfoSink().obj.size() + 1;
         break;
     case SH_ACTIVE_UNIFORMS:
-        UNIMPLEMENTED();
+        *params = compiler->getUniforms().size();
         break;
     case SH_ACTIVE_UNIFORM_MAX_LENGTH:
-        UNIMPLEMENTED();
+        *params = getVariableMaxLength(compiler->getUniforms());
         break;
     case SH_ACTIVE_ATTRIBUTES:
-        UNIMPLEMENTED();
+        *params = compiler->getAttribs().size();
         break;
     case SH_ACTIVE_ATTRIBUTE_MAX_LENGTH:
-        UNIMPLEMENTED();
+        *params = getVariableMaxLength(compiler->getAttribs());
         break;
 
     default: UNREACHABLE();
@@ -206,7 +245,8 @@ void ShGetActiveAttrib(const ShHandle handle,
                        EShDataType* type,
                        char* name)
 {
-    UNIMPLEMENTED();
+    getVariableInfo(SH_ACTIVE_ATTRIBUTES,
+                    handle, index, length, size, type, name);
 }
 
 void ShGetActiveUniform(const ShHandle handle,
@@ -216,5 +256,7 @@ void ShGetActiveUniform(const ShHandle handle,
                         EShDataType* type,
                         char* name)
 {
-    UNIMPLEMENTED();
+    getVariableInfo(SH_ACTIVE_UNIFORMS,
+                    handle, index, length, size, type, name);
 }
+

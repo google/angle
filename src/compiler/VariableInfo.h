@@ -24,12 +24,12 @@ public:
 
     virtual void visitSymbol(TIntermSymbol*);
     virtual void visitConstantUnion(TIntermConstantUnion*);
-    virtual bool visitBinary(Visit visit, TIntermBinary*);
-    virtual bool visitUnary(Visit visit, TIntermUnary*);
-    virtual bool visitSelection(Visit visit, TIntermSelection*);
-    virtual bool visitAggregate(Visit visit, TIntermAggregate*);
-    virtual bool visitLoop(Visit visit, TIntermLoop*);
-    virtual bool visitBranch(Visit visit, TIntermBranch*);
+    virtual bool visitBinary(Visit, TIntermBinary*);
+    virtual bool visitUnary(Visit, TIntermUnary*);
+    virtual bool visitSelection(Visit, TIntermSelection*);
+    virtual bool visitAggregate(Visit, TIntermAggregate*);
+    virtual bool visitLoop(Visit, TIntermLoop*);
+    virtual bool visitBranch(Visit, TIntermBranch*);
 
 private:
     TVariableInfoList& mAttribs;

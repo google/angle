@@ -129,6 +129,7 @@ typedef enum {
 } EShInfo;
 
 typedef enum {
+    SH_NONE = 0,
     SH_FLOAT = 0x1406,
     SH_FLOAT_VEC2 = 0x8B50,
     SH_FLOAT_VEC3 = 0x8B51,
