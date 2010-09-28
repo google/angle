@@ -14,6 +14,11 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+// Version number for shader translation API.
+// It is incremented everytime the API changes.
+#define SH_VERSION 100
+
 //
 // Driver must call this first, once, before doing any other
 // compiler operations.
