@@ -8,8 +8,8 @@
 
 #include "compiler/OutputHLSL.h"
 
-TranslatorHLSL::TranslatorHLSL(EShLanguage lang, EShSpec spec)
-    : TCompiler(lang, spec)
+TranslatorHLSL::TranslatorHLSL(ShShaderType type, ShShaderSpec spec)
+    : TCompiler(type, spec)
 {
 }
 

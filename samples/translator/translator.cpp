@@ -22,13 +22,13 @@ enum TFailCode {
     EFailCompilerCreate,
 };
 
-static EShLanguage FindLanguage(char *lang);
-bool CompileFile(char *fileName, ShHandle, int);
-void usage();
-void FreeFileData(char **data);
-char** ReadFileData(char *fileName);
-void LogMsg(char* msg, const char* name, const int num, const char* logName);
-void PrintActiveVariables(ShHandle compiler, EShInfo varType);
+static ShShaderType FindShaderType(char *lang);
+static bool CompileFile(char *fileName, ShHandle, int);
+static void usage();
+static void FreeFileData(char **data);
+static char** ReadFileData(char *fileName);
+static void LogMsg(char* msg, const char* name, const int num, const char* logName);
+static void PrintActiveVariables(ShHandle compiler, ShShaderInfo varType);
 
 //Added to accomodate the multiple strings.
 int OutputMultipleStrings = 1;
@@ -36,9 +36,9 @@ int OutputMultipleStrings = 1;
 //
 // Set up the per compile resources
 //
-void GenerateResources(TBuiltInResource* resources)
+void GenerateResources(ShBuiltInResources* resources)
 {
-    ShInitBuiltInResource(resources);
+    ShInitBuiltInResources(resources);
 
     resources->MaxVertexAttribs = 8;
     resources->MaxVertexUniformVectors = 128;
@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
 
     ShInitialize();
 
-    TBuiltInResource resources;
+    ShBuiltInResources resources;
     GenerateResources(&resources);
 
     argc--;
@@ -74,22 +74,22 @@ int main(int argc, char* argv[])
     for (; (argc >= 1) && (failCode == ESuccess); argc--, argv++) {
         if (argv[0][0] == '-' || argv[0][0] == '/') {
             switch (argv[0][1]) {
-            case 'i': compileOptions |= EShOptIntermediateTree; break;
-            case 'o': compileOptions |= EShOptObjectCode; break;
-            case 'u': compileOptions |= EShOptAttribsUniforms; break;
+            case 'i': compileOptions |= SH_INTERMEDIATE_TREE; break;
+            case 'o': compileOptions |= SH_OBJECT_CODE; break;
+            case 'u': compileOptions |= SH_ATTRIBUTES_UNIFORMS; break;
             default: failCode = EFailUsage;
             }
         } else {
             ShHandle compiler = 0;
-            switch (FindLanguage(argv[0])) {
-            case EShLangVertex:
+            switch (FindShaderType(argv[0])) {
+            case SH_VERTEX_SHADER:
                 if (vertexCompiler == 0)
-                    vertexCompiler = ShConstructCompiler(EShLangVertex, EShSpecGLES2, &resources);
+                    vertexCompiler = ShConstructCompiler(SH_VERTEX_SHADER, SH_GLES2_SPEC, &resources);
                 compiler = vertexCompiler;
                 break;
-            case EShLangFragment:
+            case SH_FRAGMENT_SHADER:
                 if (fragmentCompiler == 0)
-                    fragmentCompiler = ShConstructCompiler(EShLangFragment, EShSpecGLES2, &resources);
+                    fragmentCompiler = ShConstructCompiler(SH_FRAGMENT_SHADER, SH_GLES2_SPEC, &resources);
                 compiler = fragmentCompiler;
                 break;
             default: break;
@@ -105,7 +105,7 @@ int main(int argc, char* argv[])
               LogMsg("END", "COMPILER", numCompiles, "INFO LOG");
               printf("\n\n");
 
-              if (compiled && (compileOptions & EShOptObjectCode)) {
+              if (compiled && (compileOptions & SH_OBJECT_CODE)) {
                   LogMsg("BEGIN", "COMPILER", numCompiles, "OBJ CODE");
                   ShGetInfo(compiler, SH_OBJECT_CODE_LENGTH, &bufferLen);
                   buffer = (char*) realloc(buffer, bufferLen * sizeof(char));
@@ -114,7 +114,7 @@ int main(int argc, char* argv[])
                   LogMsg("END", "COMPILER", numCompiles, "OBJ CODE");
                   printf("\n\n");
               }
-              if (compiled && (compileOptions & EShOptAttribsUniforms)) {
+              if (compiled && (compileOptions & SH_ATTRIBUTES_UNIFORMS)) {
                   LogMsg("BEGIN", "COMPILER", numCompiles, "ACTIVE ATTRIBS");
                   PrintActiveVariables(compiler, SH_ACTIVE_ATTRIBUTES);
                   LogMsg("END", "COMPILER", numCompiles, "ACTIVE ATTRIBS");
@@ -151,16 +151,16 @@ int main(int argc, char* argv[])
 }
 
 //
-//   Deduce the language from the filename.  Files must end in one of the
+//   Deduce the shader type from the filename.  Files must end in one of the
 //   following extensions:
 //
-//   .frag*    = fragment programs
-//   .vert*    = vertex programs
+//   .frag*    = fragment shader
+//   .vert*    = vertex shader
 //
-static EShLanguage FindLanguage(char *name)
+ShShaderType FindShaderType(char *name)
 {
     if (!name)
-        return EShLangFragment;
+        return SH_FRAGMENT_SHADER;
 
     char *ext = strrchr(name, '.');
 
@@ -168,11 +168,11 @@ static EShLanguage FindLanguage(char *name)
         for (; ext > name && ext[0] != '.'; ext--);
 
     if (ext = strrchr(name, '.')) {
-        if (strncmp(ext, ".frag", 4) == 0) return EShLangFragment;
-        if (strncmp(ext, ".vert", 4) == 0) return EShLangVertex;
+        if (strncmp(ext, ".frag", 4) == 0) return SH_FRAGMENT_SHADER;
+        if (strncmp(ext, ".vert", 4) == 0) return SH_VERTEX_SHADER;
     }
 
-    return EShLangFragment;
+    return SH_FRAGMENT_SHADER;
 }
 
 //
@@ -274,7 +274,7 @@ void LogMsg(char* msg, const char* name, const int num, const char* logName)
     printf("#### %s %s %d %s ####\n", msg, name, num, logName);
 }
 
-void PrintActiveVariables(ShHandle compiler, EShInfo varType)
+void PrintActiveVariables(ShHandle compiler, ShShaderInfo varType)
 {
     int nameSize = 0;
     switch (varType) {
@@ -290,7 +290,7 @@ void PrintActiveVariables(ShHandle compiler, EShInfo varType)
     char* name = (char*) malloc(nameSize * sizeof(char));
 
     int activeVars = 0, size = 0;
-    EShDataType type;
+    ShDataType type = SH_NONE;
     char* typeName = NULL;
     ShGetInfo(compiler, varType, &activeVars);
     for (int i = 0; i < activeVars; ++i) {

@@ -341,7 +341,7 @@ static TString BuiltInFunctionsCommon()
 // Prototypes for built-in functions seen by vertex shaders only.
 //
 //============================================================================
-static TString BuiltInFunctionsVertex(const TBuiltInResource& resources)
+static TString BuiltInFunctionsVertex(const ShBuiltInResources& resources)
 {
     TString s;
 
@@ -373,7 +373,7 @@ static TString BuiltInFunctionsVertex(const TBuiltInResource& resources)
 // Prototypes for built-in functions seen by fragment shaders only.
 //
 //============================================================================
-static TString BuiltInFunctionsFragment(const TBuiltInResource& resources)
+static TString BuiltInFunctionsFragment(const ShBuiltInResources& resources)
 {
     TString s;
 
@@ -467,7 +467,7 @@ static TString DefaultPrecisionFragment()
 // Implementation dependent built-in constants.
 //
 //============================================================================
-static TString BuiltInConstants(const TBuiltInResource &resources)
+static TString BuiltInConstants(const ShBuiltInResources &resources)
 {
     TStringStream s;
 
@@ -484,17 +484,18 @@ static TString BuiltInConstants(const TBuiltInResource &resources)
     return s.str();
 }
 
-void TBuiltIns::initialize(EShLanguage language, EShSpec spec, const TBuiltInResource& resources)
+void TBuiltIns::initialize(ShShaderType type, ShShaderSpec spec,
+                           const ShBuiltInResources& resources)
 {
-    switch (language) {
-    case EShLangFragment:
+    switch (type) {
+    case SH_FRAGMENT_SHADER:
         builtInStrings.push_back(DefaultPrecisionFragment());
         builtInStrings.push_back(BuiltInFunctionsCommon());
         builtInStrings.push_back(BuiltInFunctionsFragment(resources));
         builtInStrings.push_back(StandardUniforms());
         break;
 
-    case EShLangVertex:
+    case SH_VERTEX_SHADER:
         builtInStrings.push_back(DefaultPrecisionVertex());
         builtInStrings.push_back(BuiltInFunctionsCommon());
         builtInStrings.push_back(BuiltInFunctionsVertex(resources));
@@ -507,14 +508,16 @@ void TBuiltIns::initialize(EShLanguage language, EShSpec spec, const TBuiltInRes
     builtInStrings.push_back(BuiltInConstants(resources));
 }
 
-void IdentifyBuiltIns(EShLanguage language, EShSpec spec, const TBuiltInResource& resources, TSymbolTable& symbolTable)
+void IdentifyBuiltIns(ShShaderType type, ShShaderSpec spec,
+                      const ShBuiltInResources& resources,
+                      TSymbolTable& symbolTable)
 {
     //
     // First, insert some special built-in variables that are not in 
     // the built-in header files.
     //
-    switch(language) {
-    case EShLangFragment:
+    switch(type) {
+    case SH_FRAGMENT_SHADER:
         symbolTable.insert(*new TVariable(NewPoolTString("gl_FragCoord"),                   TType(EbtFloat, EbpMedium, EvqFragCoord,   4)));
         symbolTable.insert(*new TVariable(NewPoolTString("gl_FrontFacing"),                 TType(EbtBool,  EbpUndefined, EvqFrontFacing, 1)));
         symbolTable.insert(*new TVariable(NewPoolTString("gl_FragColor"),                   TType(EbtFloat, EbpMedium, EvqFragColor,   4)));
@@ -522,7 +525,7 @@ void IdentifyBuiltIns(EShLanguage language, EShSpec spec, const TBuiltInResource
         symbolTable.insert(*new TVariable(NewPoolTString("gl_PointCoord"),                  TType(EbtFloat, EbpMedium, EvqPointCoord,  2)));
         break;
 
-    case EShLangVertex:
+    case SH_VERTEX_SHADER:
         symbolTable.insert(*new TVariable(NewPoolTString("gl_Position"),    TType(EbtFloat, EbpHigh, EvqPosition,    4)));
         symbolTable.insert(*new TVariable(NewPoolTString("gl_PointSize"),   TType(EbtFloat, EbpMedium, EvqPointSize,   1)));
         break;
@@ -590,10 +593,10 @@ void IdentifyBuiltIns(EShLanguage language, EShSpec spec, const TBuiltInResource
     symbolTable.relateToOperator("all",          EOpAll);
 
     // Map language-specific operators.
-    switch(language) {
-    case EShLangVertex:
+    switch(type) {
+    case SH_VERTEX_SHADER:
         break;
-    case EShLangFragment:
+    case SH_FRAGMENT_SHADER:
         if (resources.OES_standard_derivatives) {
             symbolTable.relateToOperator("dFdx",   EOpDFdx);
             symbolTable.relateToOperator("dFdy",   EOpDFdy);
@@ -608,8 +611,8 @@ void IdentifyBuiltIns(EShLanguage language, EShSpec spec, const TBuiltInResource
     }
 
     // Finally add resource-specific variables.
-    switch(language) {
-    case EShLangFragment: {
+    switch(type) {
+    case SH_FRAGMENT_SHADER: {
             // Set up gl_FragData.  The array size.
             TType fragData(EbtFloat, EbpMedium, EvqFragColor,   4, false, true);
             fragData.setArraySize(resources.MaxDrawBuffers);
@@ -620,7 +623,7 @@ void IdentifyBuiltIns(EShLanguage language, EShSpec spec, const TBuiltInResource
     }
 }
 
-void InitExtensionBehavior(const TBuiltInResource& resources,
+void InitExtensionBehavior(const ShBuiltInResources& resources,
                            TExtensionBehavior& extBehavior)
 {
     if (resources.OES_standard_derivatives)

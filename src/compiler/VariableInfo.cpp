@@ -14,7 +14,7 @@ static TString arrayBrackets(int index)
 }
 
 // Returns the data type for an attribute or uniform.
-static EShDataType getVariableDataType(const TType& type)
+static ShDataType getVariableDataType(const TType& type)
 {
     switch (type.getBasicType()) {
       case EbtFloat:

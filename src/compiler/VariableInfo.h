@@ -11,7 +11,7 @@
 // It is currently being used to store info about active attribs and uniforms.
 struct TVariableInfo {
     TPersistString name;
-    EShDataType type;
+    ShDataType type;
     int size;
 };
 typedef std::vector<TVariableInfo> TVariableInfoList;

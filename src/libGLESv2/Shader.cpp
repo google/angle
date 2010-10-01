@@ -34,8 +34,8 @@ Shader::Shader(ResourceManager *manager, GLuint handle) : mHandle(handle), mReso
 
         if (result)
         {
-            TBuiltInResource resources;
-            ShInitBuiltInResource(&resources);
+            ShBuiltInResources resources;
+            ShInitBuiltInResources(&resources);
             resources.MaxVertexAttribs = MAX_VERTEX_ATTRIBS;
             resources.MaxVertexUniformVectors = MAX_VERTEX_UNIFORM_VECTORS;
             resources.MaxVaryingVectors = MAX_VARYING_VECTORS;
@@ -46,8 +46,8 @@ Shader::Shader(ResourceManager *manager, GLuint handle) : mHandle(handle), mReso
             resources.MaxDrawBuffers = MAX_DRAW_BUFFERS;
             resources.OES_standard_derivatives = 1;
 
-            mFragmentCompiler = ShConstructCompiler(EShLangFragment, EShSpecGLES2, &resources);
-            mVertexCompiler = ShConstructCompiler(EShLangVertex, EShSpecGLES2, &resources);
+            mFragmentCompiler = ShConstructCompiler(SH_FRAGMENT_SHADER, SH_GLES2_SPEC, &resources);
+            mVertexCompiler = ShConstructCompiler(SH_VERTEX_SHADER, SH_GLES2_SPEC, &resources);
         }
     }
 
@@ -281,7 +281,7 @@ void Shader::compileToHLSL(void *compiler)
     delete[] mInfoLog;
     mInfoLog = NULL;
 
-    int result = ShCompile(compiler, &mSource, 1, EShOptObjectCode);
+    int result = ShCompile(compiler, &mSource, 1, SH_OBJECT_CODE);
 
     if (result)
     {

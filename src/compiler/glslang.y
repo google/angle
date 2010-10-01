@@ -40,48 +40,26 @@ compiler/tools. Remove it when we can exclusively use the newer version.
 #define YY_DECL int yylex(YYSTYPE* pyylval, void* parseContextLocal)
 extern void yyerror(const char*);
 
-#define FRAG_VERT_ONLY(S, L) {                                                  \
-    if (parseContext->language != EShLangFragment &&                             \
-        parseContext->language != EShLangVertex) {                               \
-        parseContext->error(L, " supported in vertex/fragment shaders only ", S, "", "");   \
-        parseContext->recover();                                                            \
-    }                                                                           \
+#define FRAG_VERT_ONLY(S, L) {  \
+    if (parseContext->shaderType != SH_FRAGMENT_SHADER &&  \
+        parseContext->shaderType != SH_VERTEX_SHADER) {  \
+        parseContext->error(L, " supported in vertex/fragment shaders only ", S, "", "");  \
+        parseContext->recover();  \
+    }  \
 }
 
-#define VERTEX_ONLY(S, L) {                                                     \
-    if (parseContext->language != EShLangVertex) {                               \
-        parseContext->error(L, " supported in vertex shaders only ", S, "", "");            \
-        parseContext->recover();                                                            \
-    }                                                                           \
+#define VERTEX_ONLY(S, L) {  \
+    if (parseContext->shaderType != SH_VERTEX_SHADER) {  \
+        parseContext->error(L, " supported in vertex shaders only ", S, "", "");  \
+        parseContext->recover();  \
+    }  \
 }
 
-#define FRAG_ONLY(S, L) {                                                       \
-    if (parseContext->language != EShLangFragment) {                             \
-        parseContext->error(L, " supported in fragment shaders only ", S, "", "");          \
-        parseContext->recover();                                                            \
-    }                                                                           \
-}
-
-#define PACK_ONLY(S, L) {                                                       \
-    if (parseContext->language != EShLangPack) {                                 \
-        parseContext->error(L, " supported in pack shaders only ", S, "", "");              \
-        parseContext->recover();                                                            \
-    }                                                                           \
-}
-
-#define UNPACK_ONLY(S, L) {                                                     \
-    if (parseContext->language != EShLangUnpack) {                               \
-        parseContext->error(L, " supported in unpack shaders only ", S, "", "");            \
-        parseContext->recover();                                                            \
-    }                                                                           \
-}
-
-#define PACK_UNPACK_ONLY(S, L) {                                                \
-    if (parseContext->language != EShLangUnpack &&                               \
-        parseContext->language != EShLangPack) {                                 \
-        parseContext->error(L, " supported in pack/unpack shaders only ", S, "", "");       \
-        parseContext->recover();                                                            \
-    }                                                                           \
+#define FRAG_ONLY(S, L) {  \
+    if (parseContext->shaderType != SH_FRAGMENT_SHADER) {  \
+        parseContext->error(L, " supported in fragment shaders only ", S, "", "");  \
+        parseContext->recover();  \
+    }  \
 }
 %}
 %union {
@@ -1498,7 +1476,7 @@ type_qualifier
     | VARYING {
         if (parseContext->globalErrorCheck($1.line, parseContext->symbolTable.atGlobalLevel(), "varying"))
             parseContext->recover();
-        if (parseContext->language == EShLangVertex)
+        if (parseContext->shaderType == SH_VERTEX_SHADER)
             $$.setBasic(EbtVoid, EvqVaryingOut, $1.line);
         else
             $$.setBasic(EbtVoid, EvqVaryingIn, $1.line);
@@ -1506,7 +1484,7 @@ type_qualifier
     | INVARIANT VARYING {
         if (parseContext->globalErrorCheck($1.line, parseContext->symbolTable.atGlobalLevel(), "invariant varying"))
             parseContext->recover();
-        if (parseContext->language == EShLangVertex)
+        if (parseContext->shaderType == SH_VERTEX_SHADER)
             $$.setBasic(EbtVoid, EvqInvariantVaryingOut, $1.line);
         else
             $$.setBasic(EbtVoid, EvqInvariantVaryingIn, $1.line);

@@ -11,7 +11,7 @@
 
 class TranslatorHLSL : public TCompiler {
 public:
-    TranslatorHLSL(EShLanguage lang, EShSpec spec);
+    TranslatorHLSL(ShShaderType type, ShShaderSpec spec);
 
 protected:
     virtual void translate(TIntermNode* root);

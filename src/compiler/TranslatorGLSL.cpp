@@ -8,8 +8,8 @@
 
 #include "compiler/OutputGLSL.h"
 
-TranslatorGLSL::TranslatorGLSL(EShLanguage lang, EShSpec spec)
-    : TCompiler(lang, spec) {
+TranslatorGLSL::TranslatorGLSL(ShShaderType type, ShShaderSpec spec)
+    : TCompiler(type, spec) {
 }
 
 void TranslatorGLSL::translate(TIntermNode* root) {

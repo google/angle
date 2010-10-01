@@ -31,12 +31,12 @@ static int getVariableMaxLength(const TVariableInfoList& varList)
     return static_cast<int>(maxLen) + 1;
 }
 
-static void getVariableInfo(EShInfo varType,
+static void getVariableInfo(ShShaderInfo varType,
                             const ShHandle handle,
                             int index,
                             int* length,
                             int* size,
-                            EShDataType* type,
+                            ShDataType* type,
                             char* name)
 {
     if (!handle || !size || !type || !name)
@@ -87,7 +87,7 @@ int ShFinalize()
 //
 // Initialize built-in resources with minimum expected values.
 //
-void ShInitBuiltInResource(TBuiltInResource* resources)
+void ShInitBuiltInResources(ShBuiltInResources* resources)
 {
     // Constants.
     resources->MaxVertexAttribs = 8;
@@ -106,12 +106,13 @@ void ShInitBuiltInResource(TBuiltInResource* resources)
 //
 // Driver calls these to create and destroy compiler objects.
 //
-ShHandle ShConstructCompiler(EShLanguage language, EShSpec spec, const TBuiltInResource* resources)
+ShHandle ShConstructCompiler(ShShaderType type, ShShaderSpec spec,
+                             const ShBuiltInResources* resources)
 {
     if (!InitThread())
         return 0;
 
-    TShHandleBase* base = static_cast<TShHandleBase*>(ConstructCompiler(language, spec));
+    TShHandleBase* base = static_cast<TShHandleBase*>(ConstructCompiler(type, spec));
     TCompiler* compiler = base->getAsCompiler();
     if (compiler == 0)
         return 0;
@@ -172,7 +173,7 @@ int ShCompile(
     return success ? 1 : 0;
 }
 
-void ShGetInfo(const ShHandle handle, EShInfo pname, int* params)
+void ShGetInfo(const ShHandle handle, ShShaderInfo pname, int* params)
 {
     if (!handle || !params)
         return;
@@ -242,7 +243,7 @@ void ShGetActiveAttrib(const ShHandle handle,
                        int index,
                        int* length,
                        int* size,
-                       EShDataType* type,
+                       ShDataType* type,
                        char* name)
 {
     getVariableInfo(SH_ACTIVE_ATTRIBUTES,
@@ -253,7 +254,7 @@ void ShGetActiveUniform(const ShHandle handle,
                         int index,
                         int* length,
                         int* size,
-                        EShDataType* type,
+                        ShDataType* type,
                         char* name)
 {
     getVariableInfo(SH_ACTIVE_UNIFORMS,

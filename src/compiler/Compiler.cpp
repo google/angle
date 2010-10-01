@@ -10,12 +10,12 @@
 
 static bool InitializeSymbolTable(
         const TBuiltInStrings& builtInStrings,
-        EShLanguage language, EShSpec spec, const TBuiltInResource& resources,
+        ShShaderType type, ShShaderSpec spec, const ShBuiltInResources& resources,
         TInfoSink& infoSink, TSymbolTable& symbolTable)
 {
     TIntermediate intermediate(infoSink);
     TExtensionBehavior extBehavior;
-    TParseContext parseContext(symbolTable, extBehavior, intermediate, language, spec, infoSink);
+    TParseContext parseContext(symbolTable, extBehavior, intermediate, type, spec, infoSink);
 
     GlobalParseContext = &parseContext;
 
@@ -53,7 +53,7 @@ static bool InitializeSymbolTable(
         }
     }
 
-    IdentifyBuiltIns(language, spec, resources, symbolTable);
+    IdentifyBuiltIns(type, spec, resources, symbolTable);
 
     FinalizePreprocessor();
 
@@ -68,7 +68,17 @@ static void DefineExtensionMacros(const TExtensionBehavior& extBehavior)
     }
 }
 
-bool TCompiler::Init(const TBuiltInResource& resources)
+TCompiler::TCompiler(ShShaderType type, ShShaderSpec spec)
+    : shaderType(type),
+      shaderSpec(spec) 
+{
+}
+
+TCompiler::~TCompiler()
+{
+}
+
+bool TCompiler::Init(const ShBuiltInResources& resources)
 {
     // Generate built-in symbol table.
     if (!InitBuiltInSymbolTable(resources))
@@ -89,7 +99,7 @@ bool TCompiler::compile(const char* const shaderStrings[],
 
     TIntermediate intermediate(infoSink);
     TParseContext parseContext(symbolTable, extensionBehavior, intermediate,
-                               language, spec, infoSink);
+                               shaderType, shaderSpec, infoSink);
     GlobalParseContext = &parseContext;
     setInitialState();
 
@@ -110,13 +120,13 @@ bool TCompiler::compile(const char* const shaderStrings[],
     if (success) {
         success = intermediate.postProcess(parseContext.treeRoot);
 
-        if (success && (compileOptions & EShOptIntermediateTree))
+        if (success && (compileOptions & SH_INTERMEDIATE_TREE))
             intermediate.outputTree(parseContext.treeRoot);
 
-        if (success && (compileOptions & EShOptObjectCode))
+        if (success && (compileOptions & SH_OBJECT_CODE))
             translate(parseContext.treeRoot);
 
-        if (success && (compileOptions & EShOptAttribsUniforms))
+        if (success && (compileOptions & SH_ATTRIBUTES_UNIFORMS))
             collectAttribsUniforms(parseContext.treeRoot);
     }
 
@@ -131,12 +141,13 @@ bool TCompiler::compile(const char* const shaderStrings[],
     return success;
 }
 
-bool TCompiler::InitBuiltInSymbolTable(const TBuiltInResource& resources)
+bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources& resources)
 {
     TBuiltIns builtIns;
 
-    builtIns.initialize(language, spec, resources);
-    return InitializeSymbolTable(builtIns.getBuiltInStrings(), language, spec, resources, infoSink, symbolTable);
+    builtIns.initialize(shaderType, shaderSpec, resources);
+    return InitializeSymbolTable(builtIns.getBuiltInStrings(),
+        shaderType, shaderSpec, resources, infoSink, symbolTable);
 }
 
 void TCompiler::clearResults()

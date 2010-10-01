@@ -96,7 +96,7 @@ int OutputHLSL::vectorSize(const TType &type) const
 
 void OutputHLSL::header()
 {
-    EShLanguage language = mContext.language;
+    ShShaderType shaderType = mContext.shaderType;
     TInfoSinkBase &out = mHeader;
 
     for (StructDeclarations::iterator structDeclaration = mStructDeclarations.begin(); structDeclaration != mStructDeclarations.end(); structDeclaration++)
@@ -109,7 +109,7 @@ void OutputHLSL::header()
         out << *constructor;
     }
 
-    if (language == EShLangFragment)
+    if (shaderType == SH_FRAGMENT_SHADER)
     {
         TString uniforms;
         TString varyings;
@@ -946,7 +946,7 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
 
 bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 {
-    EShLanguage language = mContext.language;
+    ShShaderType shaderType = mContext.shaderType;
     TInfoSinkBase &out = mBody;
 
     switch (node->getOp())

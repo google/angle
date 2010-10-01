@@ -415,7 +415,7 @@ bool TParseContext::reservedErrorCheck(int line, const TString& identifier)
             error(line, reservedErrMsg, "gl_", "");
             return true;
         }
-        if (spec == EShSpecWebGL) {
+        if (shaderSpec == SH_WEBGL_SPEC) {
             if (identifier.substr(0, 6) == TString("webgl_")) {
                 error(line, reservedErrMsg, "webgl_", "");
                 return true;
