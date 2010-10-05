@@ -1614,11 +1614,23 @@ bool Context::applyRenderTarget(bool ignoreViewport)
     if (framebufferObject->getDepthbufferType() != GL_NONE)
     {
         depthStencil = framebufferObject->getDepthbuffer()->getDepthStencil();
+        if (!depthStencil)
+        {
+            ERR("Depth stencil pointer unexpectedly null.");
+            return false;
+        }
+        
         depthbufferSerial = framebufferObject->getDepthbuffer()->getSerial();
     }
     else if (framebufferObject->getStencilbufferType() != GL_NONE)
     {
         depthStencil = framebufferObject->getStencilbuffer()->getDepthStencil();
+        if (!depthStencil)
+        {
+            ERR("Depth stencil pointer unexpectedly null.");
+            return false;
+        }
+        
         stencilbufferSerial = framebufferObject->getStencilbuffer()->getSerial();
     }
 
@@ -2415,6 +2427,12 @@ void Context::clear(GLbitfield mask)
         if (framebufferObject->getStencilbufferType() != GL_NONE)
         {
             IDirect3DSurface9 *depthStencil = framebufferObject->getStencilbuffer()->getDepthStencil();
+            if (!depthStencil)
+            {
+                ERR("Depth stencil pointer unexpectedly null.");
+                return;
+            }
+            
             D3DSURFACE_DESC desc;
             depthStencil->GetDesc(&desc);
 
