@@ -3,6 +3,11 @@
 # found in the LICENSE file.
 
 {
+  'target_defaults': {
+    'defines': [
+      'TRACE_OUTPUT_FILE="angle-debug.txt"',
+    ],
+  },
   'targets': [
     {
       'target_name': 'translator_common',
