@@ -996,7 +996,7 @@ bool Texture2D::redefineTexture(GLint level, GLenum internalFormat, GLsizei widt
 
         // Purge all the levels and the texture.
 
-        for (int i = 0; i < MAX_TEXTURE_LEVELS; i++)
+        for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
         {
             if (mImageArray[i].surface != NULL)
             {
@@ -1831,7 +1831,7 @@ bool TextureCubeMap::redefineTexture(GLint level, GLenum internalFormat, GLsizei
               internalFormat, width);
 
         // Purge all the levels and the texture.
-        for (int i = 0; i < MAX_TEXTURE_LEVELS; i++)
+        for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
         {
             for (int f = 0; f < 6; f++)
             {

@@ -240,6 +240,16 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         mIndexDataManager = new IndexDataManager(this, mBufferBackEnd);
         mBlit = new Blit(this);
 
+        mSupportsShaderModel3 = mDeviceCaps.PixelShaderVersion == D3DPS_VERSION(3, 0);
+
+        mMaxTextureDimension = std::min(std::min((int)mDeviceCaps.MaxTextureWidth, (int)mDeviceCaps.MaxTextureHeight),
+                                        (int)gl::IMPLEMENTATION_MAX_TEXTURE_SIZE);
+        mMaxCubeTextureDimension = std::min(mMaxTextureDimension, (int)gl::IMPLEMENTATION_MAX_CUBE_MAP_TEXTURE_SIZE);
+        mMaxRenderbufferDimension = mMaxTextureDimension;
+        mMaxTextureLevel = log2(mMaxTextureDimension) + 1;
+        TRACE("MaxTextureDimension=%d, MaxCubeTextureDimension=%d, MaxRenderbufferDimension=%d, MaxTextureLevel=%d",
+              mMaxTextureDimension, mMaxCubeTextureDimension, mMaxRenderbufferDimension, mMaxTextureLevel);
+
         const D3DFORMAT renderBufferFormats[] =
         {
             D3DFMT_A8R8G8B8,
@@ -306,8 +316,6 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         depthStencil->Release();
     }
     
-    mSupportsShaderModel3 = mDeviceCaps.PixelShaderVersion == D3DPS_VERSION(3, 0);
-
     markAllStateDirty();
 }
 
@@ -1202,7 +1210,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS:   *params = gl::MAX_VERTEX_TEXTURE_IMAGE_UNITS;   break;
       case GL_MAX_TEXTURE_IMAGE_UNITS:          *params = gl::MAX_TEXTURE_IMAGE_UNITS;          break;
       case GL_MAX_FRAGMENT_UNIFORM_VECTORS:     *params = gl::MAX_FRAGMENT_UNIFORM_VECTORS;     break;
-      case GL_MAX_RENDERBUFFER_SIZE:            *params = gl::MAX_RENDERBUFFER_SIZE;            break;
+      case GL_MAX_RENDERBUFFER_SIZE:            *params = getMaximumRenderbufferDimension();    break;
       case GL_NUM_SHADER_BINARY_FORMATS:        *params = 0;                                    break;
       case GL_SHADER_BINARY_FORMATS:      /* no shader binary formats are supported */          break;
       case GL_ARRAY_BUFFER_BINDING:             *params = mState.arrayBuffer.id();              break;
@@ -1240,8 +1248,8 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_STENCIL_BACK_WRITEMASK:           *params = mState.stencilBackWritemask;          break;
       case GL_STENCIL_CLEAR_VALUE:              *params = mState.stencilClearValue;             break;
       case GL_SUBPIXEL_BITS:                    *params = 4;                                    break;
-      case GL_MAX_TEXTURE_SIZE:                 *params = gl::MAX_TEXTURE_SIZE;                 break;
-      case GL_MAX_CUBE_MAP_TEXTURE_SIZE:        *params = gl::MAX_CUBE_MAP_TEXTURE_SIZE;        break;
+      case GL_MAX_TEXTURE_SIZE:                 *params = getMaximumTextureDimension();         break;
+      case GL_MAX_CUBE_MAP_TEXTURE_SIZE:        *params = getMaximumCubeTextureDimension();     break;
       case GL_NUM_COMPRESSED_TEXTURE_FORMATS:   
         {
             if (supportsCompressedTextures())
@@ -1303,7 +1311,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_IMPLEMENTATION_COLOR_READ_FORMAT: *params = gl::IMPLEMENTATION_COLOR_READ_FORMAT; break;
       case GL_MAX_VIEWPORT_DIMS:
         {
-            int maxDimension = std::max((int)gl::MAX_RENDERBUFFER_SIZE, (int)gl::MAX_TEXTURE_SIZE);
+            int maxDimension = std::max(getMaximumRenderbufferDimension(), getMaximumTextureDimension());
             params[0] = maxDimension;
             params[1] = maxDimension;
         }
@@ -2952,6 +2960,26 @@ bool Context::supportsHalfFloatLinearFilter() const
 bool Context::supportsHalfFloatRenderableTextures() const
 {
     return mSupportsHalfFloatRenderableTextures;
+}
+
+int Context::getMaximumRenderbufferDimension() const
+{
+    return mMaxRenderbufferDimension;
+}
+
+int Context::getMaximumTextureDimension() const
+{
+    return mMaxTextureDimension;
+}
+
+int Context::getMaximumCubeTextureDimension() const
+{
+    return mMaxCubeTextureDimension;
+}
+
+int Context::getMaximumTextureLevel() const
+{
+    return mMaxTextureLevel;
 }
 
 void Context::detachBuffer(GLuint buffer)

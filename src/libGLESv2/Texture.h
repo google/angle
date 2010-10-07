@@ -28,10 +28,13 @@ class Blit;
 
 enum
 {
-    MAX_TEXTURE_SIZE = 2048,
-    MAX_CUBE_MAP_TEXTURE_SIZE = 2048,
+    // These are the maximums the implementation can support
+    // The actual GL caps are limited by the device caps
+    // and should be queried from the Context
+    IMPLEMENTATION_MAX_TEXTURE_SIZE = 16384,
+    IMPLEMENTATION_MAX_CUBE_MAP_TEXTURE_SIZE = 16384,
 
-    MAX_TEXTURE_LEVELS = 12   // 1+log2 of MAX_TEXTURE_SIZE
+    IMPLEMENTATION_MAX_TEXTURE_LEVELS = 15   // 1+log2 of MAX_TEXTURE_SIZE
 };
 
 class Texture : public RefCountObject
@@ -237,7 +240,7 @@ class Texture2D : public Texture
     bool redefineTexture(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum type);
     void commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
 
-    Image mImageArray[MAX_TEXTURE_LEVELS];
+    Image mImageArray[IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
     IDirect3DTexture9 *mTexture;
 
@@ -297,7 +300,7 @@ class TextureCubeMap : public Texture
     void commitRect(GLenum faceTarget, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
     bool redefineTexture(GLint level, GLenum internalFormat, GLsizei width);
 
-    Image mImageArray[6][MAX_TEXTURE_LEVELS];
+    Image mImageArray[6][IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
     IDirect3DCubeTexture9 *mTexture;
 

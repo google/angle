@@ -737,7 +737,7 @@ void __stdcall glCompressedTexImage2D(GLenum target, GLint level, GLenum interna
 
     try
     {
-        if (level < 0 || level > gl::MAX_TEXTURE_LEVELS)
+        if (level < 0)
         {
             return error(GL_INVALID_VALUE);
         }
@@ -745,34 +745,6 @@ void __stdcall glCompressedTexImage2D(GLenum target, GLint level, GLenum interna
         if (width < 0 || height < 0 || (level > 0 && !gl::isPow2(width)) || (level > 0 && !gl::isPow2(height)) || border != 0 || imageSize < 0)
         {
             return error(GL_INVALID_VALUE);
-        }
-
-        switch (target)
-        {
-          case GL_TEXTURE_2D:
-            if (width > (gl::MAX_TEXTURE_SIZE >> level) || height > (gl::MAX_TEXTURE_SIZE >> level))
-            {
-                return error(GL_INVALID_VALUE);
-            }
-            break;
-          case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
-          case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
-          case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-          case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-          case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-          case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
-            if (width != height)
-            {
-                return error(GL_INVALID_VALUE);
-            }
-
-            if (width > (gl::MAX_CUBE_MAP_TEXTURE_SIZE >> level) || height > (gl::MAX_CUBE_MAP_TEXTURE_SIZE >> level))
-            {
-                return error(GL_INVALID_VALUE);
-            }
-            break;
-          default:
-            return error(GL_INVALID_ENUM);
         }
 
         switch (internalformat)
@@ -793,6 +765,41 @@ void __stdcall glCompressedTexImage2D(GLenum target, GLint level, GLenum interna
 
         if (context)
         {
+            if (level > context->getMaximumTextureLevel())
+            {
+                return error(GL_INVALID_VALUE);
+            }
+
+            switch (target)
+            {
+              case GL_TEXTURE_2D:
+                if (width > (context->getMaximumTextureDimension() >> level) ||
+                    height > (context->getMaximumTextureDimension() >> level))
+                {
+                    return error(GL_INVALID_VALUE);
+                }
+                break;
+              case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
+              case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
+              case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
+              case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
+              case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
+              case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
+                if (width != height)
+                {
+                    return error(GL_INVALID_VALUE);
+                }
+
+                if (width > (context->getMaximumCubeTextureDimension() >> level) ||
+                    height > (context->getMaximumCubeTextureDimension() >> level))
+                {
+                    return error(GL_INVALID_VALUE);
+                }
+                break;
+              default:
+                return error(GL_INVALID_ENUM);
+            }
+
             if (!context->supportsCompressedTextures())
             {
                 return error(GL_INVALID_ENUM); // in this case, it's as though the internal format switch failed
@@ -860,7 +867,7 @@ void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
             return error(GL_INVALID_ENUM);
         }
 
-        if (level < 0 || level > gl::MAX_TEXTURE_LEVELS)
+        if (level < 0)
         {
             return error(GL_INVALID_VALUE);
         }
@@ -889,6 +896,11 @@ void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
 
         if (context)
         {
+            if (level > context->getMaximumTextureLevel())
+            {
+                return error(GL_INVALID_VALUE);
+            }
+
             if (!context->supportsCompressedTextures())
             {
                 return error(GL_INVALID_ENUM); // in this case, it's as though the format switch has failed.
@@ -979,34 +991,6 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
             return error(GL_INVALID_VALUE);
         }
 
-        switch (target)
-        {
-          case GL_TEXTURE_2D:
-            if (width > (gl::MAX_TEXTURE_SIZE >> level) || height > (gl::MAX_TEXTURE_SIZE >> level))
-            {
-                return error(GL_INVALID_VALUE);
-            }
-            break;
-          case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
-          case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
-          case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-          case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-          case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-          case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
-            if (width != height)
-            {
-                return error(GL_INVALID_VALUE);
-            }
-
-            if (width > (gl::MAX_CUBE_MAP_TEXTURE_SIZE >> level) || height > (gl::MAX_CUBE_MAP_TEXTURE_SIZE >> level))
-            {
-                return error(GL_INVALID_VALUE);
-            }
-            break;
-          default:
-            return error(GL_INVALID_ENUM);
-        }
-
         switch (internalformat)
         {
           case GL_ALPHA:
@@ -1030,6 +1014,36 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
 
         if (context)
         {
+            switch (target)
+            {
+              case GL_TEXTURE_2D:
+                if (width > (context->getMaximumTextureDimension() >> level) ||
+                    height > (context->getMaximumTextureDimension() >> level))
+                {
+                    return error(GL_INVALID_VALUE);
+                }
+                break;
+              case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
+              case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
+              case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
+              case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
+              case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
+              case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
+                if (width != height)
+                {
+                    return error(GL_INVALID_VALUE);
+                }
+
+                if (width > (context->getMaximumCubeTextureDimension() >> level) ||
+                    height > (context->getMaximumCubeTextureDimension() >> level))
+                {
+                    return error(GL_INVALID_VALUE);
+                }
+                break;
+              default:
+                return error(GL_INVALID_ENUM);
+            }
+
             if (internalformat == GL_COMPRESSED_RGB_S3TC_DXT1_EXT || 
                 internalformat == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT)
             {
@@ -1122,7 +1136,7 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
             return error(GL_INVALID_ENUM);
         }
 
-        if (level < 0 || level > gl::MAX_TEXTURE_LEVELS || xoffset < 0 || yoffset < 0 || width < 0 || height < 0)
+        if (level < 0 || xoffset < 0 || yoffset < 0 || width < 0 || height < 0)
         {
             return error(GL_INVALID_VALUE);
         }
@@ -1141,6 +1155,11 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
 
         if (context)
         {
+            if (level > context->getMaximumTextureLevel())
+            {
+                return error(GL_INVALID_VALUE);
+            }
+
             gl::Framebuffer *framebuffer = context->getReadFramebuffer();
             if (framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
             {
@@ -4011,7 +4030,7 @@ void __stdcall glRenderbufferStorageMultisampleANGLE(GLenum target, GLsizei samp
             return error(GL_INVALID_ENUM);
         }
 
-        if (width < 0 || height < 0 || width > gl::MAX_RENDERBUFFER_SIZE || height > gl::MAX_RENDERBUFFER_SIZE || samples < 0)
+        if (width < 0 || height < 0 || samples < 0)
         {
             return error(GL_INVALID_VALUE);
         }
@@ -4020,7 +4039,9 @@ void __stdcall glRenderbufferStorageMultisampleANGLE(GLenum target, GLsizei samp
 
         if (context)
         {
-            if (samples > context->getMaxSupportedSamples())
+            if (width > context->getMaximumRenderbufferDimension() || 
+                height > context->getMaximumRenderbufferDimension() ||
+                samples > context->getMaxSupportedSamples())
             {
                 return error(GL_INVALID_VALUE);
             }
@@ -4429,34 +4450,6 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
             return error(GL_INVALID_VALUE);
         }
 
-        switch (target)
-        {
-          case GL_TEXTURE_2D:
-            if (width > (gl::MAX_TEXTURE_SIZE >> level) || height > (gl::MAX_TEXTURE_SIZE >> level))
-            {
-                return error(GL_INVALID_VALUE);
-            }
-            break;
-          case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
-          case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
-          case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-          case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-          case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-          case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
-            if (width != height)
-            {
-                return error(GL_INVALID_VALUE);
-            }
-
-            if (width > (gl::MAX_CUBE_MAP_TEXTURE_SIZE >> level) || height > (gl::MAX_CUBE_MAP_TEXTURE_SIZE >> level))
-            {
-                return error(GL_INVALID_VALUE);
-            }
-            break;
-          default:
-            return error(GL_INVALID_ENUM);
-        }
-
         if (internalformat != format)
         {
             return error(GL_INVALID_OPERATION);
@@ -4527,6 +4520,36 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
 
         if (context)
         {
+            switch (target)
+            {
+              case GL_TEXTURE_2D:
+                if (width > (context->getMaximumTextureDimension() >> level) ||
+                    height > (context->getMaximumTextureDimension() >> level))
+                {
+                    return error(GL_INVALID_VALUE);
+                }
+                break;
+              case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
+              case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
+              case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
+              case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
+              case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
+              case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
+                if (width != height)
+                {
+                    return error(GL_INVALID_VALUE);
+                }
+
+                if (width > (context->getMaximumCubeTextureDimension() >> level) ||
+                    height > (context->getMaximumCubeTextureDimension() >> level))
+                {
+                    return error(GL_INVALID_VALUE);
+                }
+                break;
+              default:
+                return error(GL_INVALID_ENUM);
+            }
+
             if (internalformat == GL_COMPRESSED_RGB_S3TC_DXT1_EXT ||
                 internalformat == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT)
             {
@@ -4697,7 +4720,7 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
             return error(GL_INVALID_ENUM);
         }
 
-        if (level < 0 || level > gl::MAX_TEXTURE_LEVELS || xoffset < 0 || yoffset < 0 || width < 0 || height < 0)
+        if (level < 0 || xoffset < 0 || yoffset < 0 || width < 0 || height < 0)
         {
             return error(GL_INVALID_VALUE);
         }
@@ -4721,6 +4744,11 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
 
         if (context)
         {
+            if (level > context->getMaximumTextureLevel())
+            {
+                return error(GL_INVALID_VALUE);
+            }
+
             if (format == GL_FLOAT)
             {
                 if (!context->supportsFloatTextures())

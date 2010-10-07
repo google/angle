@@ -63,7 +63,6 @@ enum
     MAX_VERTEX_TEXTURE_IMAGE_UNITS = 0,
     MAX_TEXTURE_IMAGE_UNITS = 16,
     MAX_FRAGMENT_UNIFORM_VECTORS = 16,
-    MAX_RENDERBUFFER_SIZE = 4096,   // FIXME: Verify
     MAX_DRAW_BUFFERS = 1,
 
     IMPLEMENTATION_COLOR_READ_FORMAT = GL_RGB,
@@ -383,6 +382,10 @@ class Context
     GLenum getError();
 
     bool supportsShaderModel3() const;
+    int getMaximumRenderbufferDimension() const;
+    int getMaximumTextureDimension() const;
+    int getMaximumCubeTextureDimension() const;
+    int getMaximumTextureLevel() const;
     GLsizei getMaxSupportedSamples() const;
     int getNearestSupportedSamples(D3DFORMAT format, int requested) const;
     const char *getExtensionString() const;
@@ -459,6 +462,10 @@ class Context
     bool mDepthStencilInitialized;
 
     bool mSupportsShaderModel3;
+    int  mMaxRenderbufferDimension;
+    int  mMaxTextureDimension;
+    int  mMaxCubeTextureDimension;
+    int  mMaxTextureLevel;
     std::map<D3DFORMAT, bool *> mMultiSampleSupport;
     GLsizei mMaxSupportedSamples;
     bool mSupportsEventQueries;
