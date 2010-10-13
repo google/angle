@@ -54,6 +54,8 @@ public:
     const TVariableInfoList& getUniforms() const { return uniforms; }
 
 protected:
+    ShShaderType getShaderType() const { return shaderType; }
+    ShShaderSpec getShaderSpec() const { return shaderSpec; }
     // Initialize symbol-table with built-in symbols.
     bool InitBuiltInSymbolTable(const ShBuiltInResources& resources);
     // Clears the results from the previous compilation.

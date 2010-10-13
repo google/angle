@@ -133,6 +133,8 @@
         'compiler/OutputGLSL.h',
         'compiler/TranslatorGLSL.cpp',
         'compiler/TranslatorGLSL.h',
+        'compiler/VersionGLSL.cpp',
+        'compiler/VersionGLSL.h',
       ],
     },
     {
