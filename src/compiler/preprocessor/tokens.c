@@ -224,8 +224,7 @@ void RecordToken(TokenStream *pTok, int token, yystypepp * yylvalpp)
     case CPP_INTCONSTANT:
          str=yylvalpp->symbol_name;
          while (*str){
-            lAddByte(pTok,(unsigned char) *str);
-            *str++;
+            lAddByte(pTok, (unsigned char) *str++);
          }
          lAddByte(pTok, 0);
          break;
