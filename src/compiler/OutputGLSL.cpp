@@ -619,8 +619,8 @@ bool TOutputGLSL::visitLoop(Visit visit, TIntermLoop* node)
             node->getInit()->traverse(this);
         out << "; ";
 
-        ASSERT(node->getTest() != NULL);
-        node->getTest()->traverse(this);
+        if (node->getTest())
+            node->getTest()->traverse(this);
         out << "; ";
 
         if (node->getTerminal())
