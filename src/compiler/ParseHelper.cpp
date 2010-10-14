@@ -1025,6 +1025,7 @@ bool TParseContext::executeInitializer(TSourceLoc line, TString& identifier, TPu
 
 bool TParseContext::areAllChildConst(TIntermAggregate* aggrNode)
 {
+    ASSERT(aggrNode != NULL);
     if (!aggrNode->isConstructor())
         return false;
 
@@ -1032,13 +1033,10 @@ bool TParseContext::areAllChildConst(TIntermAggregate* aggrNode)
 
     // check if all the child nodes are constants so that they can be inserted into 
     // the parent node
-    if (aggrNode) {
-        TIntermSequence &childSequenceVector = aggrNode->getSequence() ;
-        for (TIntermSequence::iterator p = childSequenceVector.begin(); 
-                                    p != childSequenceVector.end(); p++) {
-            if (!(*p)->getAsTyped()->getAsConstantUnion())
-                return false;
-        }
+    TIntermSequence &sequence = aggrNode->getSequence() ;
+    for (TIntermSequence::iterator p = sequence.begin(); p != sequence.end(); ++p) {
+        if (!(*p)->getAsTyped()->getAsConstantUnion())
+            return false;
     }
 
     return allConstant;
