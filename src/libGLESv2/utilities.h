@@ -36,6 +36,10 @@ bool IsCubemapTextureTarget(GLenum target);
 bool IsTextureTarget(GLenum target);
 bool CheckTextureFormatType(GLenum format, GLenum type);
 
+bool IsColorRenderable(GLenum internalformat);
+bool IsDepthRenderable(GLenum internalformat);
+bool IsStencilRenderable(GLenum internalformat);
+
 }
 
 namespace es2dx

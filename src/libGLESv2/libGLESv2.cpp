@@ -4015,18 +4015,8 @@ void __stdcall glRenderbufferStorageMultisampleANGLE(GLenum target, GLsizei samp
             return error(GL_INVALID_ENUM);
         }
 
-        switch (internalformat)
+        if (!gl::IsColorRenderable(internalformat) && !gl::IsDepthRenderable(internalformat) && !gl::IsStencilRenderable(internalformat))
         {
-          case GL_DEPTH_COMPONENT16:
-          case GL_RGBA4:
-          case GL_RGB5_A1:
-          case GL_RGB565:
-          case GL_STENCIL_INDEX8:
-          case GL_DEPTH24_STENCIL8_OES:
-          case GL_RGB8_OES:
-          case GL_RGBA8_OES:
-            break;
-          default:
             return error(GL_INVALID_ENUM);
         }
 

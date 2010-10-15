@@ -305,7 +305,14 @@ GLenum Framebuffer::completeness()
             return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
         }
 
-        if (IsTextureTarget(mColorbufferType))
+        if (mColorbufferType == GL_RENDERBUFFER)
+        {
+            if (!gl::IsColorRenderable(colorbuffer->getFormat()))
+            {
+                return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
+            }
+        }
+        else if (IsTextureTarget(mColorbufferType))
         {
             if (IsCompressed(colorbuffer->getFormat()))
             {
@@ -323,6 +330,7 @@ GLenum Framebuffer::completeness()
                 return GL_FRAMEBUFFER_UNSUPPORTED;
             }
         }
+        else UNREACHABLE();
 
         width = colorbuffer->getWidth();
         height = colorbuffer->getHeight();
@@ -338,6 +346,11 @@ GLenum Framebuffer::completeness()
 
     if (mDepthbufferType != GL_NONE)
     {
+        if (mDepthbufferType != GL_RENDERBUFFER)
+        {
+            return GL_FRAMEBUFFER_UNSUPPORTED;   // Requires GL_OES_depth_texture
+        }
+
         depthbuffer = getDepthbuffer();
 
         if (!depthbuffer)
@@ -368,18 +381,15 @@ GLenum Framebuffer::completeness()
         {
             return GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_ANGLE;
         }
-        
-        if (IsTextureTarget(mDepthbufferType))
-        {
-            if (IsCompressed(depthbuffer->getFormat()))
-            {
-                return GL_FRAMEBUFFER_UNSUPPORTED;
-            }
-        }
     }
 
     if (mStencilbufferType != GL_NONE)
     {
+        if (mStencilbufferType != GL_RENDERBUFFER)
+        {
+            return GL_FRAMEBUFFER_UNSUPPORTED;
+        }
+
         stencilbuffer = getStencilbuffer();
 
         if (!stencilbuffer)
@@ -409,14 +419,6 @@ GLenum Framebuffer::completeness()
         else if (samples != stencilbuffer->getSamples())
         {
             return GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_ANGLE;
-        }
-        
-        if (IsTextureTarget(mStencilbufferType))
-        {
-            if (IsCompressed(stencilbuffer->getFormat()))
-            {
-                return GL_FRAMEBUFFER_UNSUPPORTED;
-            }
         }
     }
 

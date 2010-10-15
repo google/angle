@@ -2104,7 +2104,7 @@ IDirect3DSurface9 *TextureCubeMap::getRenderTarget(GLenum target)
 Texture::TextureColorbufferProxy::TextureColorbufferProxy(Texture *texture, GLenum target)
   : Colorbuffer(texture), mTexture(texture), mTarget(target)
 {
-    ASSERT(target == GL_TEXTURE_2D || IsCubemapTextureTarget(target));
+    ASSERT(IsTextureTarget(target));
 }
 
 void Texture::TextureColorbufferProxy::addRef() const

@@ -336,6 +336,69 @@ bool CheckTextureFormatType(GLenum format, GLenum type)
     }
 }
 
+bool IsColorRenderable(GLenum internalformat)
+{
+    switch (internalformat)
+    {
+      case GL_RGBA4:
+      case GL_RGB5_A1:
+      case GL_RGB565:
+      case GL_RGB8_OES:
+      case GL_RGBA8_OES:
+        return true;
+      case GL_DEPTH_COMPONENT16:
+      case GL_STENCIL_INDEX8:
+      case GL_DEPTH24_STENCIL8_OES:
+        return false;
+      default:
+        UNIMPLEMENTED();
+    }
+
+    return false;
+}
+
+bool IsDepthRenderable(GLenum internalformat)
+{
+    switch (internalformat)
+    {
+      case GL_DEPTH_COMPONENT16:
+      case GL_DEPTH24_STENCIL8_OES:
+        return true;
+      case GL_STENCIL_INDEX8:
+      case GL_RGBA4:
+      case GL_RGB5_A1:
+      case GL_RGB565:
+      case GL_RGB8_OES:
+      case GL_RGBA8_OES:
+        return false;
+      default:
+        UNIMPLEMENTED();
+    }
+
+    return false;
+}
+
+bool IsStencilRenderable(GLenum internalformat)
+{
+    switch (internalformat)
+    {
+      case GL_STENCIL_INDEX8:
+      case GL_DEPTH24_STENCIL8_OES:
+        return true;
+      case GL_RGBA4:
+      case GL_RGB5_A1:
+      case GL_RGB565:
+      case GL_RGB8_OES:
+      case GL_RGBA8_OES:
+      case GL_DEPTH_COMPONENT16:
+        return false;
+      default:
+        UNIMPLEMENTED();
+    }
+
+    return false;
+}
+
 }
 
 namespace es2dx
