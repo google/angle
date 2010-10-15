@@ -45,7 +45,7 @@ UniformLocation::UniformLocation(const std::string &name, unsigned int element, 
 {
 }
 
-Program::Program(ResourceManager *manager, GLuint handle) : mResourceManager(manager), mHandle(handle)
+Program::Program(ResourceManager *manager, GLuint handle) : mResourceManager(manager), mHandle(handle), mSerial(issueSerial())
 {
     mFragmentShader = NULL;
     mVertexShader = NULL;
@@ -63,8 +63,6 @@ Program::Program(ResourceManager *manager, GLuint handle) : mResourceManager(man
     mDeleteStatus = false;
 
     mRefCount = 0;
-
-    mSerial = issueSerial();
 }
 
 Program::~Program()

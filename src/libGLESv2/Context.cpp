@@ -2242,16 +2242,6 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum
                     r = (rgb & 0xF800) * (1.0f / 0xF800);
                 }
                 break;
-              case D3DFMT_X1R5G5B5:
-                {
-                    unsigned short xrgb = *(unsigned short*)(source + 2 * i + j * lock.Pitch);
-
-                    a = 1.0f;
-                    b = (xrgb & 0x001F) * (1.0f / 0x001F);
-                    g = (xrgb & 0x03E0) * (1.0f / 0x03E0);
-                    r = (xrgb & 0x7C00) * (1.0f / 0x7C00);
-                }
-                break;
               case D3DFMT_A1R5G5B5:
                 {
                     unsigned short argb = *(unsigned short*)(source + 2 * i + j * lock.Pitch);

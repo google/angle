@@ -55,7 +55,7 @@ class RenderbufferStorage
     GLenum mFormat;
     D3DFORMAT mD3DFormat;
     GLsizei mSamples;
-    unsigned int mSerial;
+    const unsigned int mSerial;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(RenderbufferStorage);

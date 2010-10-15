@@ -220,7 +220,7 @@ class Program
 
     unsigned int mRefCount;
 
-    unsigned int mSerial;
+    const unsigned int mSerial;
 
     static unsigned int mCurrentSerial;
 

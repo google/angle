@@ -69,4 +69,12 @@ GLsizei GetSamplesFromMultisampleType(D3DMULTISAMPLE_TYPE type);
 
 }
 
+namespace dx2es
+{
+
+GLenum ConvertBackBufferFormat(D3DFORMAT format);
+GLenum ConvertDepthStencilFormat(D3DFORMAT format);
+
+}
+
 #endif  // LIBGLESV2_UTILITIES_H

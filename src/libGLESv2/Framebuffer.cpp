@@ -438,8 +438,8 @@ GLenum Framebuffer::completeness()
 DefaultFramebuffer::DefaultFramebuffer(Colorbuffer *color, DepthStencilbuffer *depthStencil)
 {
     mColorbufferType = GL_RENDERBUFFER;
-    mDepthbufferType = GL_RENDERBUFFER;
-    mStencilbufferType = GL_RENDERBUFFER;
+    mDepthbufferType = (depthStencil->getDepthSize() != 0) ? GL_RENDERBUFFER : GL_NONE;
+    mStencilbufferType = (depthStencil->getStencilSize() != 0) ? GL_RENDERBUFFER : GL_NONE;
 
     mColorbufferPointer.set(new Renderbuffer(0, color));
 
@@ -462,6 +462,9 @@ int Framebuffer::getSamples()
 
 GLenum DefaultFramebuffer::completeness()
 {
+    // The default framebuffer should always be complete
+    ASSERT(Framebuffer::completeness() == GL_FRAMEBUFFER_COMPLETE);
+
     return GL_FRAMEBUFFER_COMPLETE;
 }
 
