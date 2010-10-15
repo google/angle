@@ -63,6 +63,7 @@ class Texture : public RefCountObject
     virtual bool isComplete() const = 0;
     virtual bool isCompressed() const = 0;
     bool isFloatingPoint() const;
+    bool isRenderableFormat() const;
 
     D3DFORMAT getD3DFormat() const;
     IDirect3DBaseTexture9 *getTexture();
@@ -120,6 +121,7 @@ class Texture : public RefCountObject
     bool subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *img);
     void setCompressedImage(GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels, Image *img);
     bool subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels, Image *img);
+    void copyNonRenderable(Image *image, GLenum internalFormat, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, IDirect3DSurface9 *renderTarget);
 
     void needRenderTarget();
 
@@ -136,6 +138,7 @@ class Texture : public RefCountObject
 
     void dropTexture();
     void pushTexture(IDirect3DBaseTexture9 *newTexture, bool renderable);
+    void createSurface(GLsizei width, GLsizei height, GLenum format, GLenum type, Image *img);
 
     Blit *getBlitter();
 
@@ -148,6 +151,8 @@ class Texture : public RefCountObject
     GLenum mWrapS;
     GLenum mWrapT;
     GLenum mType;
+
+    bool mDirtyMetaData;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture);
@@ -194,14 +199,10 @@ class Texture : public RefCountObject
     void loadBGRAImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                            size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
 
-    void createSurface(GLsizei width, GLsizei height, GLenum format, GLenum type, Image *img);
-
     IDirect3DBaseTexture9 *mBaseTexture; // This is a weak pointer. The derived class is assumed to own a strong pointer.
 
     bool mDirty;
-    bool mDirtyMetaData;
     bool mIsRenderable;
-
 };
 
 class Texture2D : public Texture
