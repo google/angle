@@ -152,7 +152,7 @@ class Texture : public RefCountObject
     DISALLOW_COPY_AND_ASSIGN(Texture);
 
     void loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type,
-                       GLint unpackAlignment, const void *input, std::size_t outputPitch, void *output) const;
+                       GLint unpackAlignment, const void *input, std::size_t outputPitch, void *output, D3DSURFACE_DESC *description) const;
 
     void loadAlphaImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                             size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
@@ -161,13 +161,13 @@ class Texture : public RefCountObject
     void loadAlphaHalfFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                                      size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
     void loadLuminanceImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
+                                size_t inputPitch, const void *input, size_t outputPitch, void *output, bool native) const;
     void loadLuminanceFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                                      size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
     void loadLuminanceHalfFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                                          size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
     void loadLuminanceAlphaImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                     size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
+                                     size_t inputPitch, const void *input, size_t outputPitch, void *output, bool native) const;
     void loadLuminanceAlphaFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                                           size_t inputPitch, const void *input, size_t outputPitch, void *output) const;
     void loadLuminanceAlphaHalfFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,

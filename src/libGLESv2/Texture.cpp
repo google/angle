@@ -196,16 +196,27 @@ D3DFORMAT Texture::selectFormat(GLenum format, GLenum type)
     {
         return D3DFMT_A16B16G16R16F;
     }
-    else
+    else if (type == GL_UNSIGNED_BYTE)
     {
+        if (format == GL_LUMINANCE && getContext()->supportsLuminanceTextures())
+        {
+            return D3DFMT_L8;
+        }
+        else if (format == GL_LUMINANCE_ALPHA && getContext()->supportsLuminanceAlphaTextures())
+        {
+            return D3DFMT_A8L8;
+        }
+
         return D3DFMT_A8R8G8B8;
     }
+
+    return D3DFMT_A8R8G8B8;
 }
 
 // Store the pixel rectangle designated by xoffset,yoffset,width,height with pixels stored as format/type at input
-// into the BGRA8 pixel rectangle at output with outputPitch bytes in between each line.
+// into the target pixel rectangle at output with outputPitch bytes in between each line.
 void Texture::loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type,
-                            GLint unpackAlignment, const void *input, size_t outputPitch, void *output) const
+                            GLint unpackAlignment, const void *input, size_t outputPitch, void *output, D3DSURFACE_DESC *description) const
 {
     GLsizei inputPitch = ComputePitch(width, format, type, unpackAlignment);
 
@@ -218,10 +229,10 @@ void Texture::loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei
             loadAlphaImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
             break;
           case GL_LUMINANCE:
-            loadLuminanceImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            loadLuminanceImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output, description->Format == D3DFMT_L8);
             break;
           case GL_LUMINANCE_ALPHA:
-            loadLuminanceAlphaImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            loadLuminanceAlphaImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output, description->Format == D3DFMT_A8L8);
             break;
           case GL_RGB:
             loadRGBUByteImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
@@ -371,7 +382,7 @@ void Texture::loadAlphaHalfFloatImageData(GLint xoffset, GLint yoffset, GLsizei 
 }
 
 void Texture::loadLuminanceImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                     size_t inputPitch, const void *input, size_t outputPitch, void *output) const
+                                     size_t inputPitch, const void *input, size_t outputPitch, void *output, bool native) const
 {
     const unsigned char *source = NULL;
     unsigned char *dest = NULL;
@@ -380,12 +391,20 @@ void Texture::loadLuminanceImageData(GLint xoffset, GLint yoffset, GLsizei width
     {
         source = static_cast<const unsigned char*>(input) + y * inputPitch;
         dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
-        for (int x = 0; x < width; x++)
+
+        if (!native)   // BGRA8 destination format
         {
-            dest[4 * x + 0] = source[x];
-            dest[4 * x + 1] = source[x];
-            dest[4 * x + 2] = source[x];
-            dest[4 * x + 3] = 0xFF;
+            for (int x = 0; x < width; x++)
+            {
+                dest[4 * x + 0] = source[x];
+                dest[4 * x + 1] = source[x];
+                dest[4 * x + 2] = source[x];
+                dest[4 * x + 3] = 0xFF;
+            }
+        }
+        else   // L8 destination format
+        {
+            memcpy(dest, source, width);
         }
     }
 }
@@ -431,7 +450,7 @@ void Texture::loadLuminanceHalfFloatImageData(GLint xoffset, GLint yoffset, GLsi
 }
 
 void Texture::loadLuminanceAlphaImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                          size_t inputPitch, const void *input, size_t outputPitch, void *output) const
+                                          size_t inputPitch, const void *input, size_t outputPitch, void *output, bool native) const
 {
     const unsigned char *source = NULL;
     unsigned char *dest = NULL;
@@ -440,12 +459,20 @@ void Texture::loadLuminanceAlphaImageData(GLint xoffset, GLint yoffset, GLsizei 
     {
         source = static_cast<const unsigned char*>(input) + y * inputPitch;
         dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
-        for (int x = 0; x < width; x++)
+        
+        if (!native)   // BGRA8 destination format
         {
-            dest[4 * x + 0] = source[2*x+0];
-            dest[4 * x + 1] = source[2*x+0];
-            dest[4 * x + 2] = source[2*x+0];
-            dest[4 * x + 3] = source[2*x+1];
+            for (int x = 0; x < width; x++)
+            {
+                dest[4 * x + 0] = source[2*x+0];
+                dest[4 * x + 1] = source[2*x+0];
+                dest[4 * x + 2] = source[2*x+0];
+                dest[4 * x + 3] = source[2*x+1];
+            }
+        }
+        else
+        {
+            memcpy(dest, source, width * 2);
         }
     }
 }
@@ -729,6 +756,9 @@ void Texture::setImage(GLsizei width, GLsizei height, GLenum format, GLenum type
 
     if (pixels != NULL && img->surface != NULL)
     {
+        D3DSURFACE_DESC description;
+        img->surface->GetDesc(&description);
+
         D3DLOCKED_RECT locked;
         HRESULT result = img->surface->LockRect(&locked, NULL, 0);
 
@@ -736,7 +766,7 @@ void Texture::setImage(GLsizei width, GLsizei height, GLenum format, GLenum type
 
         if (SUCCEEDED(result))
         {
-            loadImageData(0, 0, width, height, format, type, unpackAlignment, pixels, locked.Pitch, locked.pBits);
+            loadImageData(0, 0, width, height, format, type, unpackAlignment, pixels, locked.Pitch, locked.pBits, &description);
             img->surface->UnlockRect();
         }
 
@@ -784,6 +814,9 @@ bool Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
 
     if (pixels != NULL && img->surface != NULL)
     {
+        D3DSURFACE_DESC description;
+        img->surface->GetDesc(&description);
+
         D3DLOCKED_RECT locked;
         HRESULT result = img->surface->LockRect(&locked, NULL, 0);
 
@@ -791,7 +824,7 @@ bool Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
 
         if (SUCCEEDED(result))
         {
-            loadImageData(xoffset, yoffset, width, height, format, type, unpackAlignment, pixels, locked.Pitch, locked.pBits);
+            loadImageData(xoffset, yoffset, width, height, format, type, unpackAlignment, pixels, locked.Pitch, locked.pBits, &description);
             img->surface->UnlockRect();
         }
 
@@ -973,7 +1006,7 @@ GLenum Texture2D::getFormat() const
 // for render-to-texture (such as CopyTexImage). We have no way of keeping individual inconsistent levels.
 // Call this when a particular level of the texture must be defined with a specific format, width and height.
 //
-// Returns true if the existing texture was unsuitable had to be destroyed. If so, it will also set
+// Returns true if the existing texture was unsuitable and had to be destroyed. If so, it will also set
 // a new height and width for the texture by working backwards from the given width and height.
 bool Texture2D::redefineTexture(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum type)
 {
