@@ -397,6 +397,8 @@ class Context
     bool supportsHalfFloatTextures() const;
     bool supportsHalfFloatLinearFilter() const;
     bool supportsHalfFloatRenderableTextures() const;
+    bool supportsLuminanceTextures() const;
+    bool supportsLuminanceAlphaTextures() const;
 
     void blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, 
                          GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
@@ -476,6 +478,8 @@ class Context
     bool mSupportsHalfFloatTextures;
     bool mSupportsHalfFloatLinearFilter;
     bool mSupportsHalfFloatRenderableTextures;
+    bool mSupportsLuminanceTextures;
+    bool mSupportsLuminanceAlphaTextures;
 
     // state caching flags
     bool mClearStateDirty;

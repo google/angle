@@ -280,6 +280,8 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         mSupportsCompressedTextures = display->getCompressedTextureSupport();
         mSupportsFloatTextures = display->getFloatTextureSupport(&mSupportsFloatLinearFilter, &mSupportsFloatRenderableTextures);
         mSupportsHalfFloatTextures = display->getHalfFloatTextureSupport(&mSupportsHalfFloatLinearFilter, &mSupportsHalfFloatRenderableTextures);
+        mSupportsLuminanceTextures = display->getLuminanceTextureSupport();
+        mSupportsLuminanceAlphaTextures = display->getLuminanceAlphaTextureSupport();
 
         initExtensionString();
 
@@ -2980,6 +2982,16 @@ int Context::getMaximumCubeTextureDimension() const
 int Context::getMaximumTextureLevel() const
 {
     return mMaxTextureLevel;
+}
+
+bool Context::supportsLuminanceTextures() const
+{
+    return mSupportsLuminanceTextures;
+}
+
+bool Context::supportsLuminanceAlphaTextures() const
+{
+    return mSupportsLuminanceAlphaTextures;
 }
 
 void Context::detachBuffer(GLuint buffer)
