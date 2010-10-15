@@ -317,6 +317,11 @@ GLenum Framebuffer::completeness()
             {
                 return GL_FRAMEBUFFER_UNSUPPORTED;
             }
+
+            if (colorbuffer->getFormat() == GL_LUMINANCE || colorbuffer->getFormat() == GL_LUMINANCE_ALPHA)
+            {
+                return GL_FRAMEBUFFER_UNSUPPORTED;
+            }
         }
 
         width = colorbuffer->getWidth();
