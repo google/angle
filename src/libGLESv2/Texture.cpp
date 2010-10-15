@@ -1153,7 +1153,7 @@ void Texture2D::copyImage(GLint level, GLenum internalFormat, GLint x, GLint y, 
     mImageArray[level].format = internalFormat;
 }
 
-void Texture2D::copySubImage(GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, RenderbufferStorage *source)
+void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, RenderbufferStorage *source)
 {
     if (xoffset + width > mImageArray[level].width || yoffset + height > mImageArray[level].height)
     {
@@ -1586,19 +1586,19 @@ void TextureCubeMap::commitRect(GLenum faceTarget, GLint level, GLint xoffset, G
     }
 }
 
-void TextureCubeMap::subImage(GLenum face, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
+void TextureCubeMap::subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    if (Texture::subImage(xoffset, yoffset, width, height, format, type, unpackAlignment, pixels, &mImageArray[faceIndex(face)][level]))
+    if (Texture::subImage(xoffset, yoffset, width, height, format, type, unpackAlignment, pixels, &mImageArray[faceIndex(target)][level]))
     {
-        commitRect(face, level, xoffset, yoffset, width, height);
+        commitRect(target, level, xoffset, yoffset, width, height);
     }
 }
 
-void TextureCubeMap::subImageCompressed(GLenum face, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels)
+void TextureCubeMap::subImageCompressed(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels)
 {
-    if (Texture::subImageCompressed(xoffset, yoffset, width, height, format, imageSize, pixels, &mImageArray[faceIndex(face)][level]))
+    if (Texture::subImageCompressed(xoffset, yoffset, width, height, format, imageSize, pixels, &mImageArray[faceIndex(target)][level]))
     {
-        commitRect(face, level, xoffset, yoffset, width, height);
+        commitRect(target, level, xoffset, yoffset, width, height);
     }
 }
 
@@ -1896,9 +1896,9 @@ bool TextureCubeMap::redefineTexture(GLint level, GLenum internalFormat, GLsizei
     return !textureOkay;
 }
 
-void TextureCubeMap::copyImage(GLenum face, GLint level, GLenum internalFormat, GLint x, GLint y, GLsizei width, GLsizei height, RenderbufferStorage *source)
+void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum internalFormat, GLint x, GLint y, GLsizei width, GLsizei height, RenderbufferStorage *source)
 {
-    unsigned int faceindex = faceIndex(face);
+    unsigned int faceindex = faceIndex(target);
 
     if (redefineTexture(level, internalFormat, width))
     {
@@ -1920,7 +1920,7 @@ void TextureCubeMap::copyImage(GLenum face, GLint level, GLenum internalFormat, 
         sourceRect.top = y;
         sourceRect.bottom = y + height;
 
-        IDirect3DSurface9 *dest = getCubeMapSurface(face, level);
+        IDirect3DSurface9 *dest = getCubeMapSurface(target, level);
 
         getBlitter()->formatConvert(source->getRenderTarget(), sourceRect, internalFormat, 0, 0, dest);
         dest->Release();
@@ -1962,9 +1962,9 @@ IDirect3DSurface9 *TextureCubeMap::getCubeMapSurface(unsigned int faceIdentifier
     return (SUCCEEDED(hr)) ? surface : NULL;
 }
 
-void TextureCubeMap::copySubImage(GLenum face, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, RenderbufferStorage *source)
+void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, RenderbufferStorage *source)
 {
-    GLsizei size = mImageArray[faceIndex(face)][level].width;
+    GLsizei size = mImageArray[faceIndex(target)][level].width;
 
     if (xoffset + width > size || yoffset + height > size)
     {
@@ -1989,7 +1989,7 @@ void TextureCubeMap::copySubImage(GLenum face, GLint level, GLint xoffset, GLint
         sourceRect.top = y;
         sourceRect.bottom = y + height;
 
-        IDirect3DSurface9 *dest = getCubeMapSurface(face, level);
+        IDirect3DSurface9 *dest = getCubeMapSurface(target, level);
 
         getBlitter()->formatConvert(source->getRenderTarget(), sourceRect, mImageArray[0][0].format, xoffset, yoffset, dest);
         dest->Release();

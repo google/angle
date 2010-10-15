@@ -991,20 +991,6 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
             return error(GL_INVALID_VALUE);
         }
 
-        switch (internalformat)
-        {
-          case GL_ALPHA:
-          case GL_LUMINANCE:
-          case GL_LUMINANCE_ALPHA:
-          case GL_RGB:
-          case GL_RGBA:
-          case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:  // Compressed textures are not supported here, but if they are unsupported altogether,
-          case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT: // a different error is generated than otherwise. That is handled below.
-            break;
-          default:
-            return error(GL_INVALID_VALUE);
-        }
-
         if (border != 0)
         {
             return error(GL_INVALID_VALUE);
@@ -1044,20 +1030,8 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
                 return error(GL_INVALID_ENUM);
             }
 
-            if (internalformat == GL_COMPRESSED_RGB_S3TC_DXT1_EXT || 
-                internalformat == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT)
-            {
-                if (context->supportsCompressedTextures())
-                {
-                    return error(GL_INVALID_OPERATION);
-                }
-                else
-                {
-                    return error(GL_INVALID_ENUM);
-                }
-            }
-
             gl::Framebuffer *framebuffer = context->getReadFramebuffer();
+
             if (framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
             {
                 return error(GL_INVALID_FRAMEBUFFER_OPERATION);
@@ -1069,21 +1043,64 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
             }
 
             gl::Colorbuffer *source = framebuffer->getColorbuffer();
+            GLenum colorbufferFormat = source->getFormat();
+
+            // [OpenGL ES 2.0.24] table 3.9
+            switch (internalformat)
+            {
+              case GL_ALPHA:
+                if (colorbufferFormat != GL_ALPHA &&
+                    colorbufferFormat != GL_RGBA &&
+                    colorbufferFormat != GL_RGBA4 &&
+                    colorbufferFormat != GL_RGB5_A1 &&
+                    colorbufferFormat != GL_RGBA8_OES)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+                break;
+              case GL_LUMINANCE:
+              case GL_RGB:
+                if (colorbufferFormat != GL_RGB &&
+                    colorbufferFormat != GL_RGB565 &&
+                    colorbufferFormat != GL_RGB8_OES &&
+                    colorbufferFormat != GL_RGBA &&
+                    colorbufferFormat != GL_RGBA4 &&
+                    colorbufferFormat != GL_RGB5_A1 &&
+                    colorbufferFormat != GL_RGBA8_OES)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+                break;
+              case GL_LUMINANCE_ALPHA:
+              case GL_RGBA:
+                if (colorbufferFormat != GL_RGBA &&
+                    colorbufferFormat != GL_RGBA4 &&
+                    colorbufferFormat != GL_RGB5_A1 &&
+                    colorbufferFormat != GL_RGBA8_OES)
+                 {
+                     return error(GL_INVALID_OPERATION);
+                 }
+                 break;
+              case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
+              case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
+                if (context->supportsCompressedTextures())
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+                else
+                {
+                    return error(GL_INVALID_ENUM);
+                }
+                break;
+              default:
+                return error(GL_INVALID_ENUM);
+            }
+
             if (target == GL_TEXTURE_2D)
             {
                 gl::Texture2D *texture = context->getTexture2D();
 
                 if (!texture)
-                {
-                    return error(GL_INVALID_OPERATION);
-                }
-                
-                if (texture->isCompressed())
-                {
-                    return error(GL_INVALID_OPERATION);
-                }
-
-                if (texture->isFloatingPoint())
                 {
                     return error(GL_INVALID_OPERATION);
                 }
@@ -1099,22 +1116,9 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
                     return error(GL_INVALID_OPERATION);
                 }
 
-                if (texture->isCompressed())
-                {
-                    return error(GL_INVALID_OPERATION);
-                }
-
-                if (texture->isFloatingPoint())
-                {
-                    return error(GL_INVALID_OPERATION);
-                }
-
                 texture->copyImage(target, level, internalformat, x, y, width, height, source);
             }
-            else
-            {
-                UNREACHABLE();
-            }
+            else UNREACHABLE();
         }
     }
     catch(std::bad_alloc&)
@@ -1161,6 +1165,7 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
             }
 
             gl::Framebuffer *framebuffer = context->getReadFramebuffer();
+
             if (framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
             {
                 return error(GL_INVALID_FRAMEBUFFER_OPERATION);
@@ -1172,52 +1177,70 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
             }
 
             gl::Colorbuffer *source = framebuffer->getColorbuffer();
+            GLenum colorbufferFormat = source->getFormat();
+            gl::Texture *texture = NULL;
+
             if (target == GL_TEXTURE_2D)
             {
-                gl::Texture2D *texture = context->getTexture2D();
-
-                if (!texture)
-                {
-                    return error(GL_INVALID_OPERATION);
-                }
-
-                if (texture->isCompressed())
-                {
-                    return error(GL_INVALID_OPERATION);
-                }
-
-                if (texture->isFloatingPoint())
-                {
-                    return error(GL_INVALID_OPERATION);
-                }
-
-                texture->copySubImage(level, xoffset, yoffset, x, y, width, height, source);
+                texture = context->getTexture2D();
             }
             else if (gl::IsCubemapTextureTarget(target))
             {
-                gl::TextureCubeMap *texture = context->getTextureCubeMap();
-
-                if (!texture)
-                {
-                    return error(GL_INVALID_OPERATION);
-                }
-
-                if (texture->isCompressed())
-                {
-                    return error(GL_INVALID_OPERATION);
-                }
-
-                if (texture->isFloatingPoint())
-                {
-                    return error(GL_INVALID_OPERATION);
-                }
-
-                texture->copySubImage(target, level, xoffset, yoffset, x, y, width, height, source);
+                texture = context->getTextureCubeMap();
             }
-            else
+            else UNREACHABLE();
+
+            if (!texture)
             {
-                UNREACHABLE();
+                return error(GL_INVALID_OPERATION);
             }
+
+            GLenum textureFormat = texture->getFormat();
+
+            // [OpenGL ES 2.0.24] table 3.9
+            switch (textureFormat)
+            {
+              case GL_ALPHA:
+                if (colorbufferFormat != GL_ALPHA &&
+                    colorbufferFormat != GL_RGBA &&
+                    colorbufferFormat != GL_RGBA4 &&
+                    colorbufferFormat != GL_RGB5_A1 &&
+                    colorbufferFormat != GL_RGBA8_OES)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+                break;
+              case GL_LUMINANCE:
+              case GL_RGB:
+                if (colorbufferFormat != GL_RGB &&
+                    colorbufferFormat != GL_RGB565 &&
+                    colorbufferFormat != GL_RGB8_OES &&
+                    colorbufferFormat != GL_RGBA &&
+                    colorbufferFormat != GL_RGBA4 &&
+                    colorbufferFormat != GL_RGB5_A1 &&
+                    colorbufferFormat != GL_RGBA8_OES)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+                break;
+              case GL_LUMINANCE_ALPHA:
+              case GL_RGBA:
+                if (colorbufferFormat != GL_RGBA &&
+                    colorbufferFormat != GL_RGBA4 &&
+                    colorbufferFormat != GL_RGB5_A1 &&
+                    colorbufferFormat != GL_RGBA8_OES)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+                break;
+              case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
+              case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
+                return error(GL_INVALID_OPERATION);
+              default:
+                return error(GL_INVALID_OPERATION);
+            }
+
+            texture->copySubImage(target, level, xoffset, yoffset, x, y, width, height, source);
         }
     }
 
