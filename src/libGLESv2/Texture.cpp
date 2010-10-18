@@ -1271,7 +1271,6 @@ void Texture2D::copyImage(GLint level, GLenum internalFormat, GLint x, GLint y, 
    
     if (!isRenderableFormat())
     {
-        needRenderTarget();
         copyNonRenderable(&mImageArray[level], internalFormat, 0, 0, x, y, width, height, renderTarget);
     }
     else
