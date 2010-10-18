@@ -1006,6 +1006,26 @@ void Texture::copyNonRenderable(Image *image, GLenum internalFormat, GLint xoffs
                 UNREACHABLE();
             }
             break;
+          case D3DFMT_R5G6B5:
+            switch(getD3DFormat())
+            {
+              case D3DFMT_L8:
+                for(int y = 0; y < height; y++)
+                {
+                    for(int x = 0; x < height; x++)
+                    {
+                        unsigned char red = source[x * 2 + 1] & 0xF8;
+                        dest[x] = red | (red >> 5);
+                    }
+
+                    source += sourceLock.Pitch;
+                    dest += destLock.Pitch;
+                }
+                break;
+              default:
+                UNREACHABLE();
+            }
+            break;
           default:
             UNREACHABLE();
         }
