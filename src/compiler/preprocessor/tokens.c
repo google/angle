@@ -275,8 +275,7 @@ int ReadToken(TokenStream *pTok, yystypepp * yylvalpp)
                      ch == '_')
             {
                 if (len < MAX_SYMBOL_NAME_LEN) {
-                    symbol_name[len] = ch;
-                    len++;
+                    symbol_name[len++] = ch;
                     ch = lReadByte(pTok);
                 }
             }
@@ -290,7 +289,7 @@ int ReadToken(TokenStream *pTok, yystypepp * yylvalpp)
             while ((ch = lReadByte(pTok)) != 0)
                 if (len < MAX_STRING_LEN)
                     string_val[len++] = ch;
-            string_val[len] = 0;
+            string_val[len] = '\0';
             yylvalpp->sc_ident = LookUpAddString(atable, string_val);
             break;
         case CPP_FLOATCONSTANT:
@@ -299,8 +298,7 @@ int ReadToken(TokenStream *pTok, yystypepp * yylvalpp)
             while ((ch >= '0' && ch <= '9')||(ch=='e'||ch=='E'||ch=='.')||(ch=='+'||ch=='-'))
             {
                 if (len < MAX_SYMBOL_NAME_LEN) {
-                    symbol_name[len] = ch;
-                    len++;
+                    symbol_name[len++] = ch;
                     ch = lReadByte(pTok);
                 }
             }
@@ -315,8 +313,7 @@ int ReadToken(TokenStream *pTok, yystypepp * yylvalpp)
             while ((ch >= '0' && ch <= '9'))
             {
                 if (len < MAX_SYMBOL_NAME_LEN) {
-                    symbol_name[len] = ch;
-                    len++;
+                    symbol_name[len++] = ch;
                     ch = lReadByte(pTok);
                 }
             }

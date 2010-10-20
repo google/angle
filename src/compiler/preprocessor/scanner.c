@@ -45,6 +45,7 @@ NVIDIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // scanner.c
 //
 
+#include <assert.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -52,7 +53,7 @@ NVIDIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #if 0
     #include <ieeefp.h>
-    #else
+#else
     #define isinff(x) (((*(int *)&(x) & 0x7f800000L)==0x7f800000L) && \
                        ((*(int *)&(x) & 0x007fffffL)==0000000000L))
 #endif
@@ -133,38 +134,38 @@ int FreeScanner(void)
  */
 static int str_getch(StringInputSrc *in)
 {
-	for(;;){
-	   if (*in->p){
-	      if (*in->p == '\n') {
+    for(;;){
+       if (*in->p){
+          if (*in->p == '\n') {
              in->base.line++;
              IncLineNumber();
           }
           return *in->p++;
-	   }
-	   if(++(cpp->PaWhichStr) < cpp->PaArgc){
-		  free(in);
-		  SetStringNumber(cpp->PaWhichStr);
-    	  SetLineNumber(1);
-		  ScanFromString(cpp->PaArgv[cpp->PaWhichStr]);
-		  in=(StringInputSrc*)cpp->currentInput;
-	      continue;             
-	   }
-	   else{
-	      cpp->currentInput = in->base.prev;
-	      cpp->PaWhichStr=0;
+       }
+       if(++(cpp->PaWhichStr) < cpp->PaArgc){
+          free(in);
+          SetStringNumber(cpp->PaWhichStr);
+          SetLineNumber(1);
+          ScanFromString(cpp->PaArgv[cpp->PaWhichStr]);
+          in=(StringInputSrc*)cpp->currentInput;
+          continue;             
+       }
+       else{
+          cpp->currentInput = in->base.prev;
+          cpp->PaWhichStr=0;
           free(in);
           return EOF;
        }  
-	}
+    }
 } // str_getch
 
 static void str_ungetch(StringInputSrc *in, int ch, yystypepp *type) {
     if (in->p[-1] == ch)in->p--;
-	else {
-		*(in->p)='\0'; //this would take care of shifting to the previous string.
-	    cpp->PaWhichStr--;
-	}  
-	if (ch == '\n') {
+    else {
+        *(in->p)='\0'; //this would take care of shifting to the previous string.
+        cpp->PaWhichStr--;
+    }  
+    if (ch == '\n') {
         in->base.line--;
         DecLineNumber();
     }
@@ -173,9 +174,9 @@ static void str_ungetch(StringInputSrc *in, int ch, yystypepp *type) {
 int ScanFromString(const char *s)
 {
     
-	StringInputSrc *in = malloc(sizeof(StringInputSrc));
+    StringInputSrc *in = malloc(sizeof(StringInputSrc));
     memset(in, 0, sizeof(StringInputSrc));
-	in->p = s;
+    in->p = s;
     in->base.line = 1;
     in->base.scan = byte_scan;
     in->base.getch = (int (*)(InputSrc *, yystypepp *))str_getch;
@@ -223,7 +224,7 @@ static float lBuildFloatValue(const char *str, int len, int exp)
     }
     rv = (float)val;
     if (isinff(rv)) {
-		CPPErrorToInfoLog(" ERROR___FP_CONST_OVERFLOW");
+        CPPErrorToInfoLog(" ERROR___FP_CONST_OVERFLOW");
     }
     return rv;
 } // lBuildFloatValue
@@ -244,10 +245,10 @@ static int lFloatConst(char *str, int len, int ch, yystypepp * yylvalpp)
     HasDecimal = 0;
     declen = 0;
     exp = 0;
-	
+    
     str_len=len;
     if (ch == '.') {
-		str[len++]=ch;
+        str[len++]=ch;
         HasDecimal = 1;
         ch = cpp->currentInput->getch(cpp->currentInput, yylvalpp);
         while (ch >= '0' && ch <= '9') {
@@ -269,20 +270,20 @@ static int lFloatConst(char *str, int len, int ch, yystypepp * yylvalpp)
 
     if (ch == 'e' || ch == 'E') {
         ExpSign = 1;
-		str[len++]=ch;
+        str[len++]=ch;
         ch = cpp->currentInput->getch(cpp->currentInput, yylvalpp);
         if (ch == '+') {
             str[len++]=ch;  
-			ch = cpp->currentInput->getch(cpp->currentInput, yylvalpp);
+            ch = cpp->currentInput->getch(cpp->currentInput, yylvalpp);
         } else if (ch == '-') {
             ExpSign = -1;
-			str[len++]=ch;
+            str[len++]=ch;
             ch = cpp->currentInput->getch(cpp->currentInput, yylvalpp);
         }
         if (ch >= '0' && ch <= '9') {
             while (ch >= '0' && ch <= '9') {
                 exp = exp*10 + ch - '0';
-				str[len++]=ch;
+                str[len++]=ch;
                 ch = cpp->currentInput->getch(cpp->currentInput, yylvalpp);
             }
         } else {
@@ -293,7 +294,7 @@ static int lFloatConst(char *str, int len, int ch, yystypepp * yylvalpp)
       
     if (len == 0) {
         lval = 0.0f;
-		strcpy(str,"0.0");
+        strcpy(str,"0.0");
     } else {
         str[len]='\0';      
         lval = lBuildFloatValue(str, str_len, exp - declen);
@@ -320,21 +321,21 @@ static int byte_scan(InputSrc *in, yystypepp * yylvalpp)
     for (;;) {
         yylvalpp->sc_int = 0;
         ch = cpp->currentInput->getch(cpp->currentInput, yylvalpp);
-		
+        
         while (ch == ' ' || ch == '\t' || ch == '\r') {
             yylvalpp->sc_int = 1;
             ch = cpp->currentInput->getch(cpp->currentInput, yylvalpp);
         }
-		
+        
         cpp->ltokenLoc.file = cpp->currentInput->name;
         cpp->ltokenLoc.line = cpp->currentInput->line;
         len = 0;
         switch (ch) {
         default:
-			return ch; // Single character token
+            return ch; // Single character token
         case EOF:
             return -1;
-		case 'A': case 'B': case 'C': case 'D': case 'E':
+        case 'A': case 'B': case 'C': case 'D': case 'E':
         case 'F': case 'G': case 'H': case 'I': case 'J':
         case 'K': case 'L': case 'M': case 'N': case 'O':
         case 'P': case 'Q': case 'R': case 'S': case 'T':
@@ -348,18 +349,14 @@ static int byte_scan(InputSrc *in, yystypepp * yylvalpp)
         case 'z':            
             do {
                 if (len < MAX_SYMBOL_NAME_LEN) {
-                    symbol_name[len] = ch;
-                    len++;
-                    ch = cpp->currentInput->getch(cpp->currentInput, yylvalpp);					
-                } else {
-                    ch = cpp->currentInput->getch(cpp->currentInput, yylvalpp);
+                    symbol_name[len++] = ch;
                 }
+                ch = cpp->currentInput->getch(cpp->currentInput, yylvalpp);
             } while ((ch >= 'a' && ch <= 'z') ||
                      (ch >= 'A' && ch <= 'Z') ||
                      (ch >= '0' && ch <= '9') ||
                      ch == '_');
-            if (len >= MAX_SYMBOL_NAME_LEN)
-                len = MAX_SYMBOL_NAME_LEN - 1;
+            assert(len <= MAX_SYMBOL_NAME_LEN);
             symbol_name[len] = '\0';
             cpp->currentInput->ungetch(cpp->currentInput, ch, yylvalpp);
             yylvalpp->sc_ident = LookUpAddString(atable, symbol_name);
@@ -369,7 +366,7 @@ static int byte_scan(InputSrc *in, yystypepp * yylvalpp)
             yylvalpp->symbol_name[len++] = ch;
             ch = cpp->currentInput->getch(cpp->currentInput, yylvalpp);
             if (ch == 'x' || ch == 'X') {
-				yylvalpp->symbol_name[len++] = ch;
+                yylvalpp->symbol_name[len++] = ch;
                 ch = cpp->currentInput->getch(cpp->currentInput, yylvalpp);
                 if ((ch >= '0' && ch <= '9') ||
                     (ch >= 'A' && ch <= 'F') ||
@@ -378,7 +375,7 @@ static int byte_scan(InputSrc *in, yystypepp * yylvalpp)
                     AlreadyComplained = 0;
                     ival = 0;
                     do {
-						yylvalpp->symbol_name[len++] = ch;
+                        yylvalpp->symbol_name[len++] = ch;
                         if (ival <= 0x0fffffff) {
                             if (ch >= '0' && ch <= '9') {
                                 ii = ch - '0';
@@ -401,8 +398,8 @@ static int byte_scan(InputSrc *in, yystypepp * yylvalpp)
                     CPPErrorToInfoLog("ERROR___ERROR_IN_HEX_CONSTANT");
                 }
                 yylvalpp->symbol_name[len] = '\0';
-				cpp->currentInput->ungetch(cpp->currentInput, ch, yylvalpp);
-				yylvalpp->sc_int = ival;
+                cpp->currentInput->ungetch(cpp->currentInput, ch, yylvalpp);
+                yylvalpp->sc_int = ival;
                 return CPP_INTCONSTANT;
             } else if (ch >= '0' && ch <= '7') { // octal integer constants
                 AlreadyComplained = 0;
@@ -422,12 +419,12 @@ static int byte_scan(InputSrc *in, yystypepp * yylvalpp)
                 if (ch == '.' || ch == 'e' || ch == 'f' || ch == 'h' || ch == 'x'|| ch == 'E') 
                      return lFloatConst(yylvalpp->symbol_name, len, ch, yylvalpp);
                 yylvalpp->symbol_name[len] = '\0';
-				cpp->currentInput->ungetch(cpp->currentInput, ch, yylvalpp);
-				yylvalpp->sc_int = ival;
+                cpp->currentInput->ungetch(cpp->currentInput, ch, yylvalpp);
+                yylvalpp->sc_int = ival;
                 return CPP_INTCONSTANT;
             } else {
-				cpp->currentInput->ungetch(cpp->currentInput, ch, yylvalpp);
-				ch = '0';
+                cpp->currentInput->ungetch(cpp->currentInput, ch, yylvalpp);
+                ch = '0';
             }
             // Fall through...
         case '1': case '2': case '3': case '4':
@@ -435,8 +432,7 @@ static int byte_scan(InputSrc *in, yystypepp * yylvalpp)
             do {
                 if (len < MAX_SYMBOL_NAME_LEN) {
                     if (len > 0 || ch != '0') {
-                        yylvalpp->symbol_name[len] = ch;
-                   len++;
+                        yylvalpp->symbol_name[len++] = ch;
                     }
                     ch = cpp->currentInput->getch(cpp->currentInput, yylvalpp);
                 }
@@ -445,7 +441,7 @@ static int byte_scan(InputSrc *in, yystypepp * yylvalpp)
                 return lFloatConst(yylvalpp->symbol_name, len, ch, yylvalpp);
             } else {
                 yylvalpp->symbol_name[len] = '\0';
-				cpp->currentInput->ungetch(cpp->currentInput, ch, yylvalpp);
+                cpp->currentInput->ungetch(cpp->currentInput, ch, yylvalpp);
                 ival = 0;
                 AlreadyComplained = 0;
                 for (ii = 0; ii < len; ii++) {
@@ -663,8 +659,7 @@ static int byte_scan(InputSrc *in, yystypepp * yylvalpp)
                     return -1;
                 }
                 if (len < MAX_STRING_LEN) {
-                    string_val[len] = ch;
-                    len++;
+                    string_val[len++] = ch;
                     ch = cpp->currentInput->getch(cpp->currentInput, yylvalpp);
                 }
             };
@@ -682,21 +677,21 @@ static int byte_scan(InputSrc *in, yystypepp * yylvalpp)
 
 int yylex_CPP(char* buf, int maxSize)
 {    
-	yystypepp yylvalpp;
+    yystypepp yylvalpp;
     int token = '\n';   
 
     for(;;) {
 
         char* tokenString = 0;
         token = cpp->currentInput->scan(cpp->currentInput, &yylvalpp);
-		if(check_EOF(token))
-		    return 0;
+        if(check_EOF(token))
+            return 0;
         if (token == '#') {
             if (cpp->previous_token == '\n'|| cpp->previous_token == 0) {
-			    token = readCPPline(&yylvalpp);
+                token = readCPPline(&yylvalpp);
                 if(check_EOF(token))
                     return 0;
-			    continue;
+                continue;
             } else {
                 CPPErrorToInfoLog("preprocessor command must not be preceded by any other statement in that line");
                 return 0;
@@ -718,17 +713,17 @@ int yylex_CPP(char* buf, int maxSize)
         } else if (token == CPP_FLOATCONSTANT||token == CPP_INTCONSTANT){             
             cpp->pastFirstStatement = 1;            
             tokenString = yylvalpp.symbol_name;
-		} else {            
+        } else {            
             cpp->pastFirstStatement = 1;            
             tokenString = GetStringOfAtom(atable,token);
-	    }
+        }
 
         if (tokenString) {
             if ((signed)strlen(tokenString) >= maxSize) {
                 cpp->tokensBeforeEOF = 1;
                 return maxSize;               
             } else  if (strlen(tokenString) > 0) {
-			    strcpy(buf, tokenString);
+                strcpy(buf, tokenString);
                 cpp->tokensBeforeEOF = 1;
                 return (int)strlen(tokenString);
             }  
@@ -745,7 +740,7 @@ int check_EOF(int token)
 {
    if(token==-1){
        if(cpp->ifdepth >0){
-		CPPErrorToInfoLog("#endif missing!! Compilation stopped");
+        CPPErrorToInfoLog("#endif missing!! Compilation stopped");
         cpp->CompileError=1;
        }
       return 1;
