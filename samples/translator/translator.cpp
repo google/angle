@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <vector>
 
 //
 // Return codes from main.
@@ -22,16 +23,18 @@ enum TFailCode {
     EFailCompilerCreate,
 };
 
-static ShShaderType FindShaderType(char *lang);
-static bool CompileFile(char *fileName, ShHandle, int);
 static void usage();
-static void FreeFileData(char **data);
-static char** ReadFileData(char *fileName);
+static ShShaderType FindShaderType(const char* fileName);
+static bool CompileFile(char* fileName, ShHandle compiler, int compileOptions);
 static void LogMsg(char* msg, const char* name, const int num, const char* logName);
 static void PrintActiveVariables(ShHandle compiler, ShShaderInfo varType);
 
-//Added to accomodate the multiple strings.
-int OutputMultipleStrings = 1;
+// If NUM_SOURCE_STRINGS is set to a value > 1, the input file data is
+// broken into that many chunks.
+const unsigned int NUM_SOURCE_STRINGS = 2;
+typedef std::vector<char*> ShaderSource;
+static bool ReadShaderSource(const char* fileName, ShaderSource& source);
+static void FreeShaderSource(ShaderSource& source);
 
 //
 // Set up the per compile resources
@@ -151,49 +154,6 @@ int main(int argc, char* argv[])
 }
 
 //
-//   Deduce the shader type from the filename.  Files must end in one of the
-//   following extensions:
-//
-//   .frag*    = fragment shader
-//   .vert*    = vertex shader
-//
-ShShaderType FindShaderType(char *name)
-{
-    if (!name)
-        return SH_FRAGMENT_SHADER;
-
-    char *ext = strrchr(name, '.');
-
-    if (ext && strcmp(ext, ".sl") == 0)
-        for (; ext > name && ext[0] != '.'; ext--);
-
-    if (ext = strrchr(name, '.')) {
-        if (strncmp(ext, ".frag", 4) == 0) return SH_FRAGMENT_SHADER;
-        if (strncmp(ext, ".vert", 4) == 0) return SH_VERTEX_SHADER;
-    }
-
-    return SH_FRAGMENT_SHADER;
-}
-
-//
-//   Read a file's data into a string, and compile it using ShCompile
-//
-bool CompileFile(char *fileName, ShHandle compiler, int compileOptions)
-{
-    int ret;
-    char **data = ReadFileData(fileName);
-
-    if (!data)
-        return false;
-
-    ret = ShCompile(compiler, data, OutputMultipleStrings, compileOptions);
-
-    FreeFileData(data);
-
-    return ret ? true : false;
-}
-
-//
 //   print usage to stdout
 //
 void usage()
@@ -206,67 +166,42 @@ void usage()
 }
 
 //
-//   Malloc a string of sufficient size and read a string into it.
+//   Deduce the shader type from the filename.  Files must end in one of the
+//   following extensions:
 //
-# define MAX_SOURCE_STRINGS 5
-char** ReadFileData(char *fileName) 
+//   .frag*    = fragment shader
+//   .vert*    = vertex shader
+//
+ShShaderType FindShaderType(const char* fileName)
 {
-    FILE* in = fopen(fileName, "r");
-    char* fdata = 0;
-    int count = 0;
-    char** return_data = (char**)malloc(MAX_SOURCE_STRINGS+1);
+    assert(fileName);
 
-    if (!in) {
-        printf("Error: unable to open input file: %s\n", fileName);
-        return 0;
+    const char* ext = strrchr(fileName, '.');
+
+    if (ext && strcmp(ext, ".sl") == 0)
+        for (; ext > fileName && ext[0] != '.'; ext--);
+
+    if (ext = strrchr(fileName, '.')) {
+        if (strncmp(ext, ".frag", 4) == 0) return SH_FRAGMENT_SHADER;
+        if (strncmp(ext, ".vert", 4) == 0) return SH_VERTEX_SHADER;
     }
 
-    while (fgetc(in) != EOF)
-        count++;
-
-    fseek(in, 0, SEEK_SET);
-
-    if (!(fdata = (char*)malloc(count+2))) {
-        printf("Error allocating memory\n");
-        return 0;
-    }
-    if (fread(fdata, 1, count, in) != count) {
-        printf("Error reading input file: %s\n", fileName);
-        return 0;
-    }
-    fdata[count] = '\0';
-    fclose(in);
-    if (count == 0){
-        return_data[0] = (char*)malloc(count+2);
-        return_data[0][0] = '\0';
-        OutputMultipleStrings = 0;
-        return return_data;  
-    }
-
-    int len = (int)(ceil)((float)count / (float)OutputMultipleStrings);
-    int ptr_len = 0, i = 0;
-    while (count > 0) {
-        return_data[i] = (char*)malloc(len+2);
-        memcpy(return_data[i], fdata+ptr_len, len);
-        return_data[i][len] = '\0';
-        count -= (len);
-        ptr_len += (len);
-        if (count < len){
-            if(count == 0){
-                OutputMultipleStrings = (i+1);
-                break;
-            }
-            len = count;
-        }
-        ++i;
-    }
-    return return_data;
+    return SH_FRAGMENT_SHADER;
 }
 
-void FreeFileData(char** data)
+//
+//   Read a file's data into a string, and compile it using ShCompile
+//
+bool CompileFile(char* fileName, ShHandle compiler, int compileOptions)
 {
-    for(int i=0;i<OutputMultipleStrings;i++)
-        free(data[i]);
+    ShaderSource source;
+    if (!ReadShaderSource(fileName, source))
+        return false;
+
+    int ret = ShCompile(compiler, &source[0], source.size(), compileOptions);
+
+    FreeShaderSource(source);
+    return ret ? true : false;
 }
 
 void LogMsg(char* msg, const char* name, const int num, const char* logName)
@@ -287,7 +222,7 @@ void PrintActiveVariables(ShHandle compiler, ShShaderInfo varType)
         default: assert(0);
     }
     if (nameSize <= 1) return;
-    char* name = (char*) malloc(nameSize * sizeof(char));
+    char* name = new char[nameSize];
 
     int activeVars = 0, size = 0;
     ShDataType type = SH_NONE;
@@ -325,6 +260,43 @@ void PrintActiveVariables(ShHandle compiler, ShShaderInfo varType)
         }
         printf("%d: name:%s type:%s size:%d\n", i, name, typeName, size);
     }
-    free(name);
+    delete [] name;
+}
+
+static bool ReadShaderSource(const char* fileName, ShaderSource& source) {
+    FILE* in = fopen(fileName, "rb");
+    if (!in) {
+        printf("Error: unable to open input file: %s\n", fileName);
+        return false;
+    }
+
+    // Obtain file size.
+    fseek(in, 0, SEEK_END);
+    int count = ftell(in);
+    rewind(in);
+
+    int len = (int)ceil((float)count / (float)NUM_SOURCE_STRINGS);
+    source.reserve(NUM_SOURCE_STRINGS);
+    // Notice the usage of do-while instead of a while loop here.
+    // It is there to handle empty files in which case a single empty
+    // string is added to vector.
+    do {
+        char* data = new char[len + 1];
+        int nread = fread(data, 1, len, in);
+        data[nread] = '\0';
+        source.push_back(data);
+
+        count -= nread;
+    } while (count > 0);
+
+    fclose(in);
+    return true;
+}
+
+static void FreeShaderSource(ShaderSource& source) {
+    for (ShaderSource::size_type i = 0; i < source.size(); ++i) {
+        delete [] source[i];
+    }
+    source.clear();
 }
 
