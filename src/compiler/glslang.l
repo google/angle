@@ -318,17 +318,17 @@ int PaParseStrings(const char* const argv[], const int strLen[], int argc, TPars
         return 0;
 }
 
-void yyerror(const char *s) 
+void yyerror(const char *reason) 
 {
     if (((TParseContext *)cpp->pC)->AfterEOF) {
-        if (cpp->tokensBeforeEOF == 1) {
-            GlobalParseContext->error(yylineno, "syntax error", "pre-mature EOF", s, "");
-            GlobalParseContext->recover();
-        }
+        if (cpp->tokensBeforeEOF == 1)
+            GlobalParseContext->error(yylineno, reason, "pre-mature EOF", "");
+        else
+            GlobalParseContext->error(yylineno, reason, "unexpected EOF", "");
     } else {
-        GlobalParseContext->error(yylineno, "syntax error", yytext, s, "");
-        GlobalParseContext->recover();
-    }            
+        GlobalParseContext->error(yylineno, reason, yytext, "");
+    }
+    GlobalParseContext->recover();
 }
 
 void PaReservedWord()
