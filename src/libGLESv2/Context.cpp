@@ -1136,15 +1136,15 @@ bool Context::getBooleanv(GLenum pname, GLboolean *params)
         params[2] = mState.colorMaskBlue;
         params[3] = mState.colorMaskAlpha;
         break;
-      case GL_CULL_FACE:                *params = mState.cullFace;
-      case GL_POLYGON_OFFSET_FILL:      *params = mState.polygonOffsetFill;
-      case GL_SAMPLE_ALPHA_TO_COVERAGE: *params = mState.sampleAlphaToCoverage;
-      case GL_SAMPLE_COVERAGE:          *params = mState.sampleCoverage;
-      case GL_SCISSOR_TEST:             *params = mState.scissorTest;
-      case GL_STENCIL_TEST:             *params = mState.stencilTest;
-      case GL_DEPTH_TEST:               *params = mState.depthTest;
-      case GL_BLEND:                    *params = mState.blend;
-      case GL_DITHER:                   *params = mState.dither;
+      case GL_CULL_FACE:                *params = mState.cullFace;                  break;
+      case GL_POLYGON_OFFSET_FILL:      *params = mState.polygonOffsetFill;         break;
+      case GL_SAMPLE_ALPHA_TO_COVERAGE: *params = mState.sampleAlphaToCoverage;     break;
+      case GL_SAMPLE_COVERAGE:          *params = mState.sampleCoverage;            break;
+      case GL_SCISSOR_TEST:             *params = mState.scissorTest;               break;
+      case GL_STENCIL_TEST:             *params = mState.stencilTest;               break;
+      case GL_DEPTH_TEST:               *params = mState.depthTest;                 break;
+      case GL_BLEND:                    *params = mState.blend;                     break;
+      case GL_DITHER:                   *params = mState.dither;                    break;
       default:
         return false;
     }
@@ -1217,9 +1217,9 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_SHADER_BINARY_FORMATS:      /* no shader binary formats are supported */          break;
       case GL_ARRAY_BUFFER_BINDING:             *params = mState.arrayBuffer.id();              break;
       case GL_ELEMENT_ARRAY_BUFFER_BINDING:     *params = mState.elementArrayBuffer.id();       break;
-      //case GL_FRAMEBUFFER_BINDING:              // now equivalent to GL_DRAW_FRAMEBUFFER_BINDING_ANGLE
-      case GL_DRAW_FRAMEBUFFER_BINDING_ANGLE:     *params = mState.drawFramebuffer;               break;
-      case GL_READ_FRAMEBUFFER_BINDING_ANGLE:     *params = mState.readFramebuffer;               break;
+      //case GL_FRAMEBUFFER_BINDING:            // now equivalent to GL_DRAW_FRAMEBUFFER_BINDING_ANGLE
+      case GL_DRAW_FRAMEBUFFER_BINDING_ANGLE:   *params = mState.drawFramebuffer;               break;
+      case GL_READ_FRAMEBUFFER_BINDING_ANGLE:   *params = mState.readFramebuffer;               break;
       case GL_RENDERBUFFER_BINDING:             *params = mState.renderbuffer.id();             break;
       case GL_CURRENT_PROGRAM:                  *params = mState.currentProgram;                break;
       case GL_PACK_ALIGNMENT:                   *params = mState.packAlignment;                 break;
