@@ -32,6 +32,7 @@ O           [0-7]
 #include <stdlib.h>
 
 #include "compiler/ParseHelper.h"
+#include "compiler/util.h"
 #include "glslang_tab.h"
 
 /* windows only pragma */
@@ -176,9 +177,9 @@ Remove it when we can exclusively use the newer version.
 0{D}+             { pyylval->lex.line = yylineno; parseContext.error(yylineno, "Invalid Octal number.", yytext, "", ""); parseContext.recover(); return 0;}
 {D}+              { pyylval->lex.line = yylineno; pyylval->lex.i = strtol(yytext, 0, 0); return(INTCONSTANT); }
 
-{D}+{E}           { pyylval->lex.line = yylineno; pyylval->lex.f = static_cast<float>(atof(yytext)); return(FLOATCONSTANT); }
-{D}+"."{D}*({E})? { pyylval->lex.line = yylineno; pyylval->lex.f = static_cast<float>(atof(yytext)); return(FLOATCONSTANT); }
-"."{D}+({E})?     { pyylval->lex.line = yylineno; pyylval->lex.f = static_cast<float>(atof(yytext)); return(FLOATCONSTANT); }
+{D}+{E}           { pyylval->lex.line = yylineno; pyylval->lex.f = static_cast<float>(atof_dot(yytext)); return(FLOATCONSTANT); }
+{D}+"."{D}*({E})? { pyylval->lex.line = yylineno; pyylval->lex.f = static_cast<float>(atof_dot(yytext)); return(FLOATCONSTANT); }
+"."{D}+({E})?     { pyylval->lex.line = yylineno; pyylval->lex.f = static_cast<float>(atof_dot(yytext)); return(FLOATCONSTANT); }
 
 "/*"            {  int ret = PaParseComment(pyylval->lex.line, parseContext); if (!ret) return ret; }   
 

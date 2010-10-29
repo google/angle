@@ -77,6 +77,8 @@
         'compiler/preprocessor/symbols.h',
         'compiler/preprocessor/tokens.c',
         'compiler/preprocessor/tokens.h',
+        'compiler/util.cpp',
+        'compiler/util.h',
         # Generated files
         '<(glslang_cpp_file)',
         '<(glslang_tab_cpp_file)',

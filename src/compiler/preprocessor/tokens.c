@@ -52,6 +52,7 @@ NVIDIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "compiler/debug.h"
 #include "compiler/preprocessor/slglobals.h"
+#include "compiler/util.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////// Preprocessor and Token Recorder and Playback: ////////////////////////
@@ -305,7 +306,7 @@ int ReadToken(TokenStream *pTok, yystypepp * yylvalpp)
             symbol_name[len] = '\0';
             assert(ch == '\0');
             strcpy(yylvalpp->symbol_name,symbol_name);
-            yylvalpp->sc_fval=(float)atof(yylvalpp->symbol_name);
+            yylvalpp->sc_fval=(float)atof_dot(yylvalpp->symbol_name);
             break;
         case CPP_INTCONSTANT:
             len = 0;

@@ -59,7 +59,7 @@ NVIDIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endif
 
 #include "compiler/preprocessor/slglobals.h"
-
+#include "compiler/util.h"
 
 typedef struct StringInputSrc {
     InputSrc base;
@@ -244,7 +244,7 @@ static int lFloatConst(int ch, int len, yystypepp * yylvalpp)
 
     assert(len <= MAX_SYMBOL_NAME_LEN);
     yylvalpp->symbol_name[len] = '\0';
-    yylvalpp->sc_fval = (float) atof(yylvalpp->symbol_name);
+    yylvalpp->sc_fval = (float) atof_dot(yylvalpp->symbol_name);
     if (isinff(yylvalpp->sc_fval)) {
         CPPErrorToInfoLog("FLOAT CONSTANT OVERFLOW");
     }
