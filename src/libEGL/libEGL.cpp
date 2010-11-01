@@ -774,15 +774,18 @@ EGLContext __stdcall eglCreateContext(EGLDisplay dpy, EGLConfig config, EGLConte
     {
         // Get the requested client version (default is 1) and check it is two.
         EGLint client_version = 1;
-        for (const EGLint* attribute = attrib_list; attribute[0] != EGL_NONE; attribute += 2)
+        if (attrib_list)
         {
-            if (attribute[0] == EGL_CONTEXT_CLIENT_VERSION)
+            for (const EGLint* attribute = attrib_list; attribute[0] != EGL_NONE; attribute += 2)
             {
-                client_version = attribute[1];
-            }
-            else
-            {
-                return error(EGL_BAD_ATTRIBUTE, EGL_NO_CONTEXT);
+                if (attribute[0] == EGL_CONTEXT_CLIENT_VERSION)
+                {
+                    client_version = attribute[1];
+                }
+                else
+                {
+                    return error(EGL_BAD_ATTRIBUTE, EGL_NO_CONTEXT);
+                }
             }
         }
 
