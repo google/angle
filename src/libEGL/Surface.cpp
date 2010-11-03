@@ -220,6 +220,7 @@ void Surface::writeRecordableFlipState(IDirect3DDevice9 *device)
     device->SetRenderState(D3DRS_CLIPPLANEENABLE, 0);
     device->SetRenderState(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_ALPHA | D3DCOLORWRITEENABLE_BLUE | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_RED);
     device->SetRenderState(D3DRS_SRGBWRITEENABLE, FALSE);
+    device->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
     device->SetPixelShader(NULL);
     device->SetVertexShader(NULL);
 
@@ -236,6 +237,11 @@ void Surface::writeRecordableFlipState(IDirect3DDevice9 *device)
     device->SetFVF(D3DFVF_XYZRHW | D3DFVF_TEX1);
 
     device->SetStreamSourceFreq(0, 1); // DrawPrimitiveUP only cares about stream 0, not the rest.
+
+    RECT scissorRect = {0};   // Scissoring is disabled for flipping, but we need this to capture and restore the old rectangle
+    device->SetScissorRect(&scissorRect);
+    D3DVIEWPORT9 viewport = {0, 0, mWidth, mHeight, 0.0f, 1.0f};
+    device->SetViewport(&viewport);
 }
 
 void Surface::applyFlipState(IDirect3DDevice9 *device)
@@ -296,8 +302,6 @@ void Surface::applyFlipState(IDirect3DDevice9 *device)
 
 void Surface::restoreState(IDirect3DDevice9 *device)
 {
-    mPreFlipState->Apply();
-
     device->SetRenderTarget(0, mPreFlipBackBuffer);
     device->SetDepthStencilSurface(mPreFlipDepthStencil);
 
@@ -312,6 +316,8 @@ void Surface::restoreState(IDirect3DDevice9 *device)
         mPreFlipDepthStencil->Release();
         mPreFlipDepthStencil = NULL;
     }
+
+    mPreFlipState->Apply();
 }
 
 // On the next flip, this will cause the state to be recorded from scratch.
