@@ -1373,6 +1373,9 @@ bool Program::linkVaryings()
     if (mFragmentShader->mUsesFragCoord)
     {
         mPixelHLSL += "    float4 gl_FragCoord : " + varyingSemantic + str(registers) + ";\n";
+        if (sm3) {
+            mPixelHLSL += "    float4 dx_VPos : VPOS;\n";
+        }
     }
 
     if (mFragmentShader->mUsesPointCoord && sm3)
@@ -1397,10 +1400,15 @@ bool Program::linkVaryings()
 
     if (mFragmentShader->mUsesFragCoord)
     {
-        mPixelHLSL += "    float rhw = 1.0 / input.gl_FragCoord.w;\n"
-                      "    gl_FragCoord.x = (input.gl_FragCoord.x * rhw) * dx_Viewport.x + dx_Viewport.z;\n"
-                      "    gl_FragCoord.y = (input.gl_FragCoord.y * rhw) * dx_Viewport.y + dx_Viewport.w;\n"
-                      "    gl_FragCoord.z = (input.gl_FragCoord.z * rhw) * dx_Depth.x + dx_Depth.y;\n"
+        mPixelHLSL += "    float rhw = 1.0 / input.gl_FragCoord.w;\n";
+        if (sm3) {
+            mPixelHLSL += "    gl_FragCoord.x = input.dx_VPos.x;\n"
+                          "    gl_FragCoord.y = input.dx_VPos.y;\n";
+        } else {
+            mPixelHLSL += "    gl_FragCoord.x = (input.gl_FragCoord.x * rhw) * dx_Viewport.x + dx_Viewport.z;\n"
+                          "    gl_FragCoord.y = (input.gl_FragCoord.y * rhw) * dx_Viewport.y + dx_Viewport.w;\n";
+        }
+        mPixelHLSL += "    gl_FragCoord.z = (input.gl_FragCoord.z * rhw) * dx_Depth.x + dx_Depth.y;\n"
                       "    gl_FragCoord.w = rhw;\n";
     }
 
