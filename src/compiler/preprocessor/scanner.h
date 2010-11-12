@@ -60,8 +60,6 @@ typedef struct SourceLoc_Rec {
     unsigned short file, line;
 } SourceLoc;
 
-int yyparse (void);
-
 int yylex_CPP(char* buf, int maxSize);
 
 typedef struct InputSrc {

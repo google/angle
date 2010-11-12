@@ -19,8 +19,6 @@ static bool InitializeSymbolTable(
 
     GlobalParseContext = &parseContext;
 
-    setInitialState();
-
     assert(symbolTable.isEmpty());       
     //
     // Parse the built-ins.  This should only happen once per
@@ -31,13 +29,6 @@ static bool InitializeSymbolTable(
     // are preserved, and the test for an empty table fails.
     //
     symbolTable.push();
-    
-    //Initialize the Preprocessor
-    if (InitPreprocessor())
-    {
-        infoSink.info.message(EPrefixInternalError,  "Unable to intialize the Preprocessor");
-        return false;
-    }
 
     for (TBuiltInStrings::const_iterator i = builtInStrings.begin(); i != builtInStrings.end(); ++i)
     {
@@ -46,7 +37,7 @@ static bool InitializeSymbolTable(
         if (builtInLengths <= 0)
           continue;
 
-        if (PaParseStrings(&builtInShaders, &builtInLengths, 1, parseContext) != 0)
+        if (PaParseStrings(1, &builtInShaders, &builtInLengths, &parseContext) != 0)
         {
             infoSink.info.message(EPrefixInternalError, "Unable to parse built-ins");
             return false;
@@ -55,17 +46,7 @@ static bool InitializeSymbolTable(
 
     IdentifyBuiltIns(type, spec, resources, symbolTable);
 
-    FinalizePreprocessor();
-
     return true;
-}
-
-static void DefineExtensionMacros(const TExtensionBehavior& extBehavior)
-{
-    for (TExtensionBehavior::const_iterator iter = extBehavior.begin();
-         iter != extBehavior.end(); ++iter) {
-        PredefineIntMacro(iter->first.c_str(), 1);
-    }
 }
 
 TCompiler::TCompiler(ShShaderType type, ShShaderSpec spec)
@@ -101,11 +82,6 @@ bool TCompiler::compile(const char* const shaderStrings[],
     TParseContext parseContext(symbolTable, extensionBehavior, intermediate,
                                shaderType, shaderSpec, infoSink);
     GlobalParseContext = &parseContext;
-    setInitialState();
-
-    // Initialize preprocessor.
-    InitPreprocessor();
-    DefineExtensionMacros(extensionBehavior);
 
     // We preserve symbols at the built-in level from compile-to-compile.
     // Start pushing the user-defined symbols at global level.
@@ -115,7 +91,7 @@ bool TCompiler::compile(const char* const shaderStrings[],
 
     // Parse shader.
     bool success =
-        (PaParseStrings(shaderStrings, 0, numStrings, parseContext) == 0) &&
+        (PaParseStrings(numStrings, shaderStrings, NULL, &parseContext) == 0) &&
         (parseContext.treeRoot != NULL);
     if (success) {
         success = intermediate.postProcess(parseContext.treeRoot);
@@ -136,7 +112,6 @@ bool TCompiler::compile(const char* const shaderStrings[],
     // throwing away all but the built-ins.
     while (!symbolTable.atBuiltInLevel())
         symbolTable.pop();
-    FinalizePreprocessor();
 
     return success;
 }
