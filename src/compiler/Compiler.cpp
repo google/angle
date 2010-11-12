@@ -78,6 +78,11 @@ bool TCompiler::compile(const char* const shaderStrings[],
     if (numStrings == 0)
         return true;
 
+    // If compiling for WebGL, validate control-flow and indexing as well.
+    if (shaderSpec == SH_WEBGL_SPEC) {
+        compileOptions |= SH_VALIDATE_CONTROL_FLOW | SH_VALIDATE_INDEXING;
+    }
+
     TIntermediate intermediate(infoSink);
     TParseContext parseContext(symbolTable, extensionBehavior, intermediate,
                                shaderType, shaderSpec, infoSink);
