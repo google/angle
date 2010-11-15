@@ -64,7 +64,7 @@ OutputHLSL::OutputHLSL(TParseContext &context) : TIntermTraverser(true, true, tr
 
     mScopeDepth = 0;
 
-    mArgumentIndex = 0;
+    mUniqueIndex = 0;
 }
 
 OutputHLSL::~OutputHLSL()
@@ -653,7 +653,26 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
     switch (node->getOp())
     {
       case EOpAssign:                  outputTriplet(visit, "(", " = ", ")");           break;
-      case EOpInitialize:              outputTriplet(visit, "", " = ", "");             break;
+      case EOpInitialize:
+        if (visit == PreVisit)
+        {
+            // GLSL allows to write things like "float x = x;" where a new variable x is defined
+            // and the value of an existing variable x is assigned. HLSL uses C semantics (the
+            // new variable is created before the assignment is evaluated), so we need to convert
+            // this to "float t = x, x = t;".
+
+            // Type already printed
+            out << "t" + str(mUniqueIndex) + " = ";
+            node->getRight()->traverse(this);
+            out << ", ";
+            node->getLeft()->traverse(this);
+            out << " = t" + str(mUniqueIndex);
+
+            mUniqueIndex++;
+
+            return false;
+        }
+        break;
       case EOpAddAssign:               outputTriplet(visit, "(", " += ", ")");          break;
       case EOpSubAssign:               outputTriplet(visit, "(", " -= ", ")");          break;
       case EOpMulAssign:               outputTriplet(visit, "(", " *= ", ")");          break;
@@ -1711,7 +1730,7 @@ TString OutputHLSL::argumentString(const TIntermSymbol *symbol)
 
     if (name.empty())   // HLSL demands named arguments, also for prototypes
     {
-        name = "x" + str(mArgumentIndex++);
+        name = "x" + str(mUniqueIndex++);
     }
     else
     {
