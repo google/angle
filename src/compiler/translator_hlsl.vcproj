@@ -160,6 +160,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SearchSymbol.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\TranslatorHLSL.cpp"
 				>
 			</File>
@@ -175,6 +179,10 @@
 			>
 			<File
 				RelativePath=".\OutputHLSL.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SearchSymbol.h"
 				>
 			</File>
 			<File

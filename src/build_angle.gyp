@@ -144,6 +144,8 @@
         'compiler/TranslatorHLSL.h',
         'compiler/UnfoldSelect.cpp',
         'compiler/UnfoldSelect.h',
+        'compiler/SearchSymbol.cpp',
+        'compiler/SearchSymbol.h',
       ],
     },
   ],

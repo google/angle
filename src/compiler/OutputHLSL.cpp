@@ -9,6 +9,7 @@
 #include "compiler/debug.h"
 #include "compiler/InfoSink.h"
 #include "compiler/UnfoldSelect.h"
+#include "compiler/SearchSymbol.h"
 
 #include <stdio.h>
 #include <algorithm>
@@ -661,16 +662,29 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
             // new variable is created before the assignment is evaluated), so we need to convert
             // this to "float t = x, x = t;".
 
-            // Type already printed
-            out << "t" + str(mUniqueIndex) + " = ";
-            node->getRight()->traverse(this);
-            out << ", ";
-            node->getLeft()->traverse(this);
-            out << " = t" + str(mUniqueIndex);
+            TIntermSymbol *symbolNode = node->getLeft()->getAsSymbolNode();
+            TIntermTyped *expression = node->getRight();
 
-            mUniqueIndex++;
+            sh::SearchSymbol searchSymbol(symbolNode->getSymbol());
+            expression->traverse(&searchSymbol);
+            bool sameSymbol = searchSymbol.foundMatch();
 
-            return false;
+            if (sameSymbol)
+            {
+                // Type already printed
+                out << "t" + str(mUniqueIndex) + " = ";
+                expression->traverse(this);
+                out << ", ";
+                symbolNode->traverse(this);
+                out << " = t" + str(mUniqueIndex);
+
+                mUniqueIndex++;
+                return false;
+            }
+        }
+        else if (visit == InVisit)
+        {
+            out << " = ";
         }
         break;
       case EOpAddAssign:               outputTriplet(visit, "(", " += ", ")");          break;
