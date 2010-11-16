@@ -1425,7 +1425,7 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
 
     TInfoSinkBase &out = mBody;
 
-    if (!node->testFirst())
+    if (node->getType() == ELoopDoWhile)
     {
         out << "do\n"
                "{\n";
@@ -1437,14 +1437,14 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
             mUnfoldSelect->traverse(node->getInit());
         }
         
-        if (node->getTest())
+        if (node->getCondition())
         {
-            mUnfoldSelect->traverse(node->getTest());
+            mUnfoldSelect->traverse(node->getCondition());
         }
         
-        if (node->getTerminal())
+        if (node->getExpression())
         {
-            mUnfoldSelect->traverse(node->getTerminal());
+            mUnfoldSelect->traverse(node->getExpression());
         }
 
         out << "for(";
@@ -1456,16 +1456,16 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
 
         out << "; ";
 
-        if (node->getTest())
+        if (node->getCondition())
         {
-            node->getTest()->traverse(this);
+            node->getCondition()->traverse(this);
         }
 
         out << "; ";
 
-        if (node->getTerminal())
+        if (node->getExpression())
         {
-            node->getTerminal()->traverse(this);
+            node->getExpression()->traverse(this);
         }
 
         out << ")\n"
@@ -1479,11 +1479,11 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
 
     out << "}\n";
 
-    if (!node->testFirst())
+    if (node->getType() == ELoopDoWhile)
     {
         out << "while(\n";
 
-        node->getTest()->traverse(this);
+        node->getCondition()->traverse(this);
 
         out << ")";
     }
@@ -1598,9 +1598,9 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
     }
 
     // Parse comparator and limit value
-    if (index != NULL && node->getTest())
+    if (index != NULL && node->getCondition())
     {
-        TIntermBinary *test = node->getTest()->getAsBinaryNode();
+        TIntermBinary *test = node->getCondition()->getAsBinaryNode();
         
         if (test && test->getLeft()->getAsSymbolNode()->getId() == index->getId())
         {
@@ -1618,10 +1618,10 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
     }
 
     // Parse increment
-    if (index != NULL && comparator != EOpNull && node->getTerminal())
+    if (index != NULL && comparator != EOpNull && node->getExpression())
     {
-        TIntermBinary *binaryTerminal = node->getTerminal()->getAsBinaryNode();
-        TIntermUnary *unaryTerminal = node->getTerminal()->getAsUnaryNode();
+        TIntermBinary *binaryTerminal = node->getExpression()->getAsBinaryNode();
+        TIntermUnary *unaryTerminal = node->getExpression()->getAsUnaryNode();
         
         if (binaryTerminal)
         {

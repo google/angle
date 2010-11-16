@@ -603,9 +603,9 @@ TIntermTyped* TIntermediate::addSwizzle(TVectorFields& fields, TSourceLoc line)
 //
 // Create loop nodes.
 //
-TIntermNode* TIntermediate::addLoop(TIntermNode *init, TIntermNode* body, TIntermTyped* test, TIntermTyped* terminal, bool testFirst, TSourceLoc line)
+TIntermNode* TIntermediate::addLoop(TLoopType type, TIntermNode* init, TIntermTyped* cond, TIntermTyped* expr, TIntermNode* body, TSourceLoc line)
 {
-    TIntermNode* node = new TIntermLoop(init, body, test, terminal, testFirst);
+    TIntermNode* node = new TIntermLoop(type, init, cond, expr, body);
     node->setLine(line);
 
     return node;

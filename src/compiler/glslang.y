@@ -1854,19 +1854,19 @@ condition
 iteration_statement
     : WHILE LEFT_PAREN { context->symbolTable.push(); ++context->loopNestingLevel; } condition RIGHT_PAREN statement_no_new_scope {
         context->symbolTable.pop();
-        $$ = context->intermediate.addLoop(0, $6, $4, 0, true, $1.line);
+        $$ = context->intermediate.addLoop(ELoopWhile, 0, $4, 0, $6, $1.line);
         --context->loopNestingLevel;
     }
     | DO { ++context->loopNestingLevel; } statement WHILE LEFT_PAREN expression RIGHT_PAREN SEMICOLON {
         if (context->boolErrorCheck($8.line, $6))
             context->recover();
 
-        $$ = context->intermediate.addLoop(0, $3, $6, 0, false, $4.line);
+        $$ = context->intermediate.addLoop(ELoopDoWhile, 0, $6, 0, $3, $4.line);
         --context->loopNestingLevel;
     }
     | FOR LEFT_PAREN { context->symbolTable.push(); ++context->loopNestingLevel; } for_init_statement for_rest_statement RIGHT_PAREN statement_no_new_scope {
         context->symbolTable.pop();
-        $$ = context->intermediate.addLoop($4, $7, reinterpret_cast<TIntermTyped*>($5.node1), reinterpret_cast<TIntermTyped*>($5.node2), true, $1.line);
+        $$ = context->intermediate.addLoop(ELoopFor, $4, reinterpret_cast<TIntermTyped*>($5.node1), reinterpret_cast<TIntermTyped*>($5.node2), $7, $1.line);
         --context->loopNestingLevel;
     }
     ;
