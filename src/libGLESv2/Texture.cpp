@@ -191,6 +191,7 @@ bool Texture::isRenderableFormat() const
       case D3DFMT_DXT1:
         return false;
       case D3DFMT_A8R8G8B8:
+      case D3DFMT_X8R8G8B8:
       case D3DFMT_A16B16G16R16F:
       case D3DFMT_A32B32G32R32F:
         return true;
@@ -226,6 +227,10 @@ D3DFORMAT Texture::selectFormat(GLenum format, GLenum type)
         else if (format == GL_LUMINANCE_ALPHA && getContext()->supportsLuminanceAlphaTextures())
         {
             return D3DFMT_A8L8;
+        }
+        else if (format == GL_RGB)
+        {
+            return D3DFMT_X8R8G8B8;
         }
 
         return D3DFMT_A8R8G8B8;
