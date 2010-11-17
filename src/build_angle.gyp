@@ -16,11 +16,6 @@
         '.',
         '../include',
       ],
-      'variables': {
-        'glslang_lex_source_file': 'compiler/glslang_lex.cpp',
-        'glslang_tab_source_file': 'compiler/glslang_tab.cpp',
-        'glslang_tab_header_file': 'compiler/glslang_tab.h',
-      },
       'sources': [
         'compiler/BaseTypes.h',
         'compiler/Common.h',
@@ -29,11 +24,9 @@
         'compiler/debug.cpp',
         'compiler/debug.h',
         'compiler/glslang.h',
-        # BEGIN Generated Files
-        '<(glslang_lex_source_file)',
-        '<(glslang_tab_source_file)',
-        '<(glslang_tab_header_file)',
-        # END Generated Files
+        'compiler/glslang_lex.cpp',
+        'compiler/glslang_tab.cpp',
+        'compiler/glslang_tab.h',
         'compiler/InfoSink.cpp',
         'compiler/InfoSink.h',
         'compiler/Initialize.cpp',
@@ -92,22 +85,6 @@
         }, { # else: posix
           'sources': ['compiler/ossource_posix.cpp'],
         }],
-      ],
-      'actions': [
-        {
-          'action_name': 'flex_glslang',
-          'inputs': ['compiler/glslang.l'],
-          'outputs': ['<(glslang_lex_source_file)'],
-          'action': ['compiler/generate_glslang_lexer.sh'],
-          'message': 'Executing flex on <(_inputs)',
-        },
-        {
-          'action_name': 'bison_glslang',
-          'inputs': ['compiler/glslang.y'],
-          'outputs': ['<(glslang_tab_source_file)', '<(glslang_tab_header_file)'],
-          'action': ['compiler/generate_glslang_parser.sh'],
-          'message': 'Executing bison on <(_inputs)',
-        },
       ],
     },
     {
