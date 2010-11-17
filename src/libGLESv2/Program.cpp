@@ -1374,7 +1374,7 @@ bool Program::linkVaryings()
     {
         mPixelHLSL += "    float4 gl_FragCoord : " + varyingSemantic + str(registers) + ";\n";
         if (sm3) {
-            mPixelHLSL += "    float4 dx_VPos : VPOS;\n";
+            mPixelHLSL += "    float2 dx_VPos : VPOS;\n";
         }
     }
 
@@ -2641,17 +2641,25 @@ GLint Program::getActiveAttributeMaxLength()
 
 void Program::getActiveUniform(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name)
 {
-    unsigned int uniform = 0;
-    for (unsigned int i = 0; i < index; i++)
+    // Skip over internal uniforms
+    unsigned int activeUniform = 0;
+    unsigned int uniform;
+    for (uniform = 0; uniform < mUniforms.size(); uniform++)
     {
-        do
+        while (mUniforms[uniform]->name.substr(0, 3) == "dx_")
         {
             uniform++;
-
-            ASSERT(uniform < mUniforms.size());   // index must be smaller than getActiveUniformCount()
         }
-        while (mUniforms[uniform]->name.substr(0, 3) == "dx_");
+
+        if (activeUniform == index)
+        {
+            break;
+        }
+
+        activeUniform++;
     }
+
+    ASSERT(uniform < mUniforms.size());   // index must be smaller than getActiveUniformCount()
 
     if (bufsize > 0)
     {

@@ -1658,6 +1658,9 @@ bool Context::applyRenderTarget(bool ignoreViewport)
     D3DSURFACE_DESC desc;
     renderTarget->GetDesc(&desc);
 
+    float zNear = clamp01(mState.zNear);
+    float zFar = clamp01(mState.zFar);
+
     if (ignoreViewport)
     {
         viewport.X = 0;
@@ -1673,8 +1676,8 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         viewport.Y = std::max(mState.viewportY, 0);
         viewport.Width = std::min(mState.viewportWidth, (int)desc.Width - (int)viewport.X);
         viewport.Height = std::min(mState.viewportHeight, (int)desc.Height - (int)viewport.Y);
-        viewport.MinZ = clamp01(mState.zNear);
-        viewport.MaxZ = clamp01(mState.zFar);
+        viewport.MinZ = zNear;
+        viewport.MaxZ = zFar;
     }
 
     if (viewport.Width <= 0 || viewport.Height <= 0)
@@ -1720,17 +1723,17 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         programObject->setUniform4fv(window, 1, (GLfloat*)&whxy);
 
         GLint depth = programObject->getDxDepthLocation();
-        GLfloat dz[2] = {(mState.zFar - mState.zNear) / 2.0f, (mState.zNear + mState.zFar) / 2.0f};
+        GLfloat dz[2] = {(zFar - zNear) / 2.0f, (zNear + zFar) / 2.0f};
         programObject->setUniform2fv(depth, 1, (GLfloat*)&dz);
 
         GLint near = programObject->getDepthRangeNearLocation();
-        programObject->setUniform1fv(near, 1, &mState.zNear);
+        programObject->setUniform1fv(near, 1, &zNear);
 
         GLint far = programObject->getDepthRangeFarLocation();
-        programObject->setUniform1fv(far, 1, &mState.zFar);
+        programObject->setUniform1fv(far, 1, &zFar);
 
         GLint diff = programObject->getDepthRangeDiffLocation();
-        GLfloat zDiff = mState.zFar - mState.zNear;
+        GLfloat zDiff = zFar - zNear;
         programObject->setUniform1fv(diff, 1, &zDiff);
     }
 
