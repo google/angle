@@ -34,11 +34,13 @@ Surface::Surface(Display *display, const Config *config, HWND window)
     mSwapInterval = -1;
     setSwapInterval(1);
 
+    subclassWindow();
     resetSwapChain();
 }
 
 Surface::~Surface()
 {
+    unsubclassWindow();
     release();
 }
 
@@ -89,6 +91,18 @@ void Surface::release()
 
 void Surface::resetSwapChain()
 {
+    RECT windowRect;
+    if (!GetClientRect(getWindowHandle(), &windowRect))
+    {
+      ASSERT(false);
+      return;
+    }
+
+    resetSwapChain(windowRect.right - windowRect.left, windowRect.bottom - windowRect.top);
+}
+
+void Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
+{
     IDirect3DDevice9 *device = mDisplay->getDevice();
 
     if (device == NULL)
@@ -109,16 +123,8 @@ void Surface::resetSwapChain()
     presentParameters.PresentationInterval = mPresentInterval;
     presentParameters.SwapEffect = D3DSWAPEFFECT_DISCARD;
     presentParameters.Windowed = TRUE;
-
-    RECT windowRect;
-    if (!GetClientRect(getWindowHandle(), &windowRect))
-    {
-        ASSERT(false);
-        return;
-    }
-
-    presentParameters.BackBufferWidth = windowRect.right - windowRect.left;
-    presentParameters.BackBufferHeight = windowRect.bottom - windowRect.top;
+    presentParameters.BackBufferWidth = backbufferWidth;
+    presentParameters.BackBufferHeight = backbufferHeight;
 
     IDirect3DSwapChain9 *swapChain = NULL;
     HRESULT result = device->CreateAdditionalSwapChain(&presentParameters, &swapChain);
@@ -198,6 +204,8 @@ void Surface::resetSwapChain()
     mFlipTexture = flipTexture;
 
     mPresentIntervalDirty = false;
+
+    InvalidateRect(mWindow, NULL, FALSE);
 
     // The flip state block recorded mFlipTexture so it is now invalid.
     releaseRecordedState(device);
@@ -336,6 +344,52 @@ void Surface::releaseRecordedState(IDirect3DDevice9 *device)
         mPreFlipState = NULL;
     }
 }
+#define kSurfaceProperty L"Egl::SurfaceOwner"
+#define kParentWndProc L"Egl::SurfaceParentWndProc"
+
+static LRESULT CALLBACK SurfaceWindowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
+  if (message == WM_SIZE) {
+      Surface* surf = reinterpret_cast<Surface*>(GetProp(hwnd, kSurfaceProperty));
+      if(surf) {
+        surf->checkForOutOfDateSwapChain();
+      }
+  }
+  WNDPROC prevWndFunc = reinterpret_cast<WNDPROC >(GetProp(hwnd, kParentWndProc));
+  return CallWindowProc(prevWndFunc, hwnd, message, wparam, lparam);
+}
+
+void Surface::subclassWindow()
+{
+  SetLastError(0);
+  LONG oldWndProc = SetWindowLong(mWindow, GWL_WNDPROC, reinterpret_cast<LONG>(SurfaceWindowProc));
+  if(oldWndProc == 0 && GetLastError() != ERROR_SUCCESS) {
+    mWindowSubclassed = false;
+    return;
+  }
+
+  SetProp(mWindow, kSurfaceProperty, reinterpret_cast<HANDLE>(this));
+  SetProp(mWindow, kParentWndProc, reinterpret_cast<HANDLE>(oldWndProc));
+  mWindowSubclassed = true;
+}
+
+void Surface::unsubclassWindow()
+{
+  if(!mWindowSubclassed)
+    return;
+  // Check the windowproc is still SurfaceWindowProc.
+  // If this assert fails, then it is likely the application has subclassed the
+  // hwnd as well and did not unsubclass before destroying its EGL context. The
+  // application should be modified to either subclass before initializing the
+  // EGL context, or to unsubclass before destroying the EGL context.
+  ASSERT(GetWindowLong(mWindow, GWL_WNDPROC) == reinterpret_cast<LONG>(SurfaceWindowProc));
+
+  // un-subclass
+  LONG prevWndFunc = reinterpret_cast<LONG>(GetProp(mWindow, kParentWndProc));
+  SetWindowLong(mWindow, GWL_WNDPROC, prevWndFunc);
+  RemoveProp(mWindow, kSurfaceProperty);
+  RemoveProp(mWindow, kParentWndProc);
+  mWindowSubclassed = false;
+}
 
 bool Surface::checkForOutOfDateSwapChain()
 {
@@ -346,10 +400,14 @@ bool Surface::checkForOutOfDateSwapChain()
         return false;
     }
 
-    if (getWidth() != client.right - client.left || getHeight() != client.bottom - client.top || mPresentIntervalDirty)
-    {
-        resetSwapChain();
+    // Grow the buffer now, if the window has grown. We need to grow now to avoid losing information.
+    int clientWidth = client.right - client.left;
+    int clientHeight = client.bottom - client.top;
+    bool sizeDirty = clientWidth != getWidth() || clientHeight != getHeight();
 
+    if (sizeDirty || mPresentIntervalDirty)
+    {
+        resetSwapChain(clientWidth, clientHeight);
         if (static_cast<egl::Surface*>(getCurrentDrawSurface()) == this)
         {
             glMakeCurrent(glGetCurrentContext(), static_cast<egl::Display*>(getCurrentDisplay()), this);
@@ -357,7 +415,6 @@ bool Surface::checkForOutOfDateSwapChain()
 
         return true;
     }
-
     return false;
 }
 
@@ -387,11 +444,6 @@ bool Surface::swap()
         IDirect3DSurface9 *renderTarget = mRenderTarget;
         renderTarget->AddRef();
 
-        EGLint oldWidth = mWidth;
-        EGLint oldHeight = mHeight;
-
-        checkForOutOfDateSwapChain();
-
         IDirect3DDevice9 *device = mDisplay->getDevice();
 
         IDirect3DSurface9 *textureSurface;
@@ -404,18 +456,18 @@ bool Surface::swap()
         applyFlipState(device);
         device->SetTexture(0, flipTexture);
 
-        float xscale = (float)mWidth / oldWidth;
-        float yscale = (float)mHeight / oldHeight;
-
         // Render the texture upside down into the back buffer
-        // Texcoords are chosen to pin a potentially resized image into the upper-left corner without scaling.
-        float quad[4][6] = {{     0 - 0.5f,       0 - 0.5f, 0.0f, 1.0f, 0.0f,   1.0f       },
-                            {mWidth - 0.5f,       0 - 0.5f, 0.0f, 1.0f, xscale, 1.0f       },
-                            {mWidth - 0.5f, mHeight - 0.5f, 0.0f, 1.0f, xscale, 1.0f-yscale},
-                            {     0 - 0.5f, mHeight - 0.5f, 0.0f, 1.0f, 0.0f,   1.0f-yscale}};   // x, y, z, rhw, u, v
+        // Texcoords are chosen to flip the renderTarget about its Y axis.
+        float w = static_cast<float>(getWidth());
+        float h = static_cast<float>(getHeight());
+        float quad[4][6] = {{0 - 0.5f, 0 - 0.5f, 0.0f, 1.0f, 0.0f, 1.0f},
+                            {w - 0.5f, 0 - 0.5f, 0.0f, 1.0f, 1.0f, 1.0f},
+                            {w - 0.5f, h - 0.5f, 0.0f, 1.0f, 1.0f, 0.0f},
+                            {0 - 0.5f, h - 0.5f, 0.0f, 1.0f, 0.0f, 0.0f}};   // x, y, z, rhw, u, v
 
         mDisplay->startScene();
         device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, quad, 6 * sizeof(float));
+
 
         flipTexture->Release();
         textureSurface->Release();
@@ -423,6 +475,7 @@ bool Surface::swap()
         restoreState(device);
 
         mDisplay->endScene();
+
         HRESULT result = mSwapChain->Present(NULL, NULL, NULL, NULL, 0);
 
         if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY || result == D3DERR_DRIVERINTERNALERROR)
@@ -437,6 +490,7 @@ bool Surface::swap()
 
         ASSERT(SUCCEEDED(result));
 
+        checkForOutOfDateSwapChain();
     }
 
     return true;

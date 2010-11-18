@@ -40,6 +40,16 @@ LRESULT WINAPI ESWindowProc ( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
       case WM_CREATE:
          break;
 
+      case WM_SIZE:
+         {
+            ESContext *esContext = (ESContext*)(LONG_PTR) GetWindowLongPtr ( hWnd, GWL_USERDATA );
+            if ( esContext ) {
+               esContext->width = LOWORD( lParam );
+               esContext->height = HIWORD( lParam );
+               InvalidateRect( esContext->hWnd, NULL, FALSE );
+            }
+         }
+
       case WM_PAINT:
          {
             ESContext *esContext = (ESContext*)(LONG_PTR) GetWindowLongPtr ( hWnd, GWL_USERDATA );
@@ -47,7 +57,8 @@ LRESULT WINAPI ESWindowProc ( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
             if ( esContext && esContext->drawFunc )
                esContext->drawFunc ( esContext );
             
-            ValidateRect( esContext->hWnd, NULL );
+            if ( esContext )
+              ValidateRect( esContext->hWnd, NULL );
          }
          break;
 
@@ -103,7 +114,7 @@ GLboolean WinCreate ( ESContext *esContext, LPCTSTR title )
    if (!RegisterClass (&wndclass) ) 
       return FALSE; 
 
-   wStyle = WS_VISIBLE | WS_POPUP | WS_BORDER | WS_SYSMENU | WS_CAPTION;
+   wStyle = WS_VISIBLE | WS_POPUP | WS_BORDER | WS_SYSMENU | WS_CAPTION | WS_SIZEBOX;
    
    // Adjust the window rectangle so that the client area has
    // the correct number of pixels

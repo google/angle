@@ -42,8 +42,8 @@ class Surface
     virtual IDirect3DSurface9 *getDepthStencil();
 
     void setSwapInterval(EGLint interval);
-
-  private:
+    bool checkForOutOfDateSwapChain(); // returns true if swapchain changed due to resize or interval update
+private:
     DISALLOW_COPY_AND_ASSIGN(Surface);
 
     Display *const mDisplay;
@@ -53,8 +53,9 @@ class Surface
     IDirect3DSurface9 *mDepthStencil;
     IDirect3DTexture9 *mFlipTexture;
 
-    bool checkForOutOfDateSwapChain();
-
+    void subclassWindow();
+    void unsubclassWindow();
+    void resetSwapChain(int backbufferWidth, int backbufferHeight);
     static DWORD convertInterval(EGLint interval);
 
     void applyFlipState(IDirect3DDevice9 *device);
@@ -67,6 +68,7 @@ class Surface
     IDirect3DSurface9 *mPreFlipDepthStencil;
 
     const HWND mWindow;            // Window that the surface is created for.
+    bool mWindowSubclassed;        // Indicates whether we successfully subclassed mWindow for WM_RESIZE hooking
     const egl::Config *mConfig;    // EGL config surface was created with
     EGLint mHeight;                // Height of surface
     EGLint mWidth;                 // Width of surface
