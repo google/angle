@@ -241,26 +241,22 @@ void Program::setSamplerDirty(unsigned int samplerIndex, bool dirty)
 
 GLint Program::getUniformLocation(const char *name, bool decorated)
 {
-    std::string nameStr(name);
+    std::string _name = decorated ? name : decorate(name);
     int subscript = 0;
-    size_t beginB = nameStr.find('[');
-    size_t endB = nameStr.find(']');
-    if (beginB != std::string::npos && endB != std::string::npos)
-    {
-        std::string subscrStr = nameStr.substr(beginB + 1, beginB - endB - 1);
-        nameStr.erase(beginB);
-        subscript = atoi(subscrStr.c_str());
-    }
 
-    if (!decorated)
+    // Strip any trailing array operator and retrieve the subscript
+    size_t open = _name.find_last_of('[');
+    size_t close = _name.find_last_of(']');
+    if (open != std::string::npos && close == _name.length() - 1)
     {
-        nameStr = decorate(nameStr);
+        subscript = atoi(_name.substr(open + 1).c_str());
+        _name.erase(open);
     }
 
     unsigned int numUniforms = mUniformIndex.size();
     for (unsigned int location = 0; location < numUniforms; location++)
     {
-        if (mUniformIndex[location].name == nameStr &&
+        if (mUniformIndex[location].name == _name &&
             mUniformIndex[location].element == subscript)
         {
             return location;
@@ -1674,18 +1670,23 @@ bool Program::defineUniform(const D3DXHANDLE &constantHandle, const D3DXCONSTANT
     {
       case D3DXPC_STRUCT:
         {
-            for (unsigned int field = 0; field < constantDescription.StructMembers; field++)
+            for (unsigned int arrayIndex = 0; arrayIndex < constantDescription.Elements; arrayIndex++)
             {
-                D3DXHANDLE fieldHandle = mConstantTablePS->GetConstant(constantHandle, field);
-
-                D3DXCONSTANT_DESC fieldDescription;
-                UINT descriptionCount = 1;
-
-                mConstantTablePS->GetConstantDesc(fieldHandle, &fieldDescription, &descriptionCount);
-
-                if (!defineUniform(fieldHandle, fieldDescription, name + constantDescription.Name + "."))
+                for (unsigned int field = 0; field < constantDescription.StructMembers; field++)
                 {
-                    return false;
+                    D3DXHANDLE fieldHandle = mConstantTablePS->GetConstant(constantHandle, field);
+
+                    D3DXCONSTANT_DESC fieldDescription;
+                    UINT descriptionCount = 1;
+
+                    mConstantTablePS->GetConstantDesc(fieldHandle, &fieldDescription, &descriptionCount);
+
+                    std::string structIndex = (constantDescription.Elements > 1) ? ("[" + str(arrayIndex) + "]") : "";
+
+                    if (!defineUniform(fieldHandle, fieldDescription, name + constantDescription.Name + structIndex + "."))
+                    {
+                        return false;
+                    }
                 }
             }
 
