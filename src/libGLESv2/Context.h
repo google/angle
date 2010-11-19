@@ -181,8 +181,6 @@ struct State
     int activeSampler;   // Active texture unit selector - GL_TEXTURE0
     BindingPointer<Buffer> arrayBuffer;
     BindingPointer<Buffer> elementArrayBuffer;
-    BindingPointer<Texture> texture2D;
-    BindingPointer<Texture> textureCubeMap;
     GLuint readFramebuffer;
     GLuint drawFramebuffer;
     BindingPointer<Renderbuffer> renderbuffer;

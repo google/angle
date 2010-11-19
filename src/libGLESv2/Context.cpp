@@ -207,8 +207,6 @@ Context::~Context()
 
     mState.arrayBuffer.set(NULL);
     mState.elementArrayBuffer.set(NULL);
-    mState.texture2D.set(NULL);
-    mState.textureCubeMap.set(NULL);
     mState.renderbuffer.set(NULL);
 
     mTexture2DZero.set(NULL);
@@ -968,18 +966,14 @@ void Context::bindTexture2D(GLuint texture)
 {
     mResourceManager->checkTextureAllocation(texture, SAMPLER_2D);
 
-    mState.texture2D.set(getTexture(texture));
-
-    mState.samplerTexture[SAMPLER_2D][mState.activeSampler].set(mState.texture2D.get());
+    mState.samplerTexture[SAMPLER_2D][mState.activeSampler].set(getTexture(texture));
 }
 
 void Context::bindTextureCubeMap(GLuint texture)
 {
     mResourceManager->checkTextureAllocation(texture, SAMPLER_CUBE);
 
-    mState.textureCubeMap.set(getTexture(texture));
-
-    mState.samplerTexture[SAMPLER_CUBE][mState.activeSampler].set(mState.textureCubeMap.get());
+    mState.samplerTexture[SAMPLER_CUBE][mState.activeSampler].set(getTexture(texture));
 }
 
 void Context::bindReadFramebuffer(GLuint framebuffer)
@@ -1088,29 +1082,19 @@ Program *Context::getCurrentProgram()
 
 Texture2D *Context::getTexture2D()
 {
-    if (mState.texture2D.id() == 0)   // Special case: 0 refers to different initial textures based on the target
-    {
-        return mTexture2DZero.get();
-    }
-
-    return static_cast<Texture2D*>(mState.texture2D.get());
+    return static_cast<Texture2D*>(getSamplerTexture(mState.activeSampler, SAMPLER_2D));
 }
 
 TextureCubeMap *Context::getTextureCubeMap()
 {
-    if (mState.textureCubeMap.id() == 0)   // Special case: 0 refers to different initial textures based on the target
-    {
-        return mTextureCubeMapZero.get();
-    }
-
-    return static_cast<TextureCubeMap*>(mState.textureCubeMap.get());
+    return static_cast<TextureCubeMap*>(getSamplerTexture(mState.activeSampler, SAMPLER_CUBE));
 }
 
 Texture *Context::getSamplerTexture(unsigned int sampler, SamplerType type)
 {
     GLuint texid = mState.samplerTexture[type][sampler].id();
 
-    if (texid == 0)
+    if (texid == 0)   // Special case: 0 refers to different initial textures based on the target
     {
         switch (type)
         {
