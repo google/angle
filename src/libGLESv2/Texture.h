@@ -144,6 +144,8 @@ class Texture : public RefCountObject
 
     int levelCount() const;
 
+    bool isRenderable() const;
+
     unsigned int mWidth;
     unsigned int mHeight;
     GLenum mMinFilter;

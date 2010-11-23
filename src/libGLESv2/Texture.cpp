@@ -10,6 +10,8 @@
 
 #include "libGLESv2/Texture.h"
 
+#include <d3dx9tex.h>
+
 #include <algorithm>
 
 #include "common/debug.h"
@@ -1137,6 +1139,11 @@ int Texture::levelCount() const
     return mBaseTexture ? mBaseTexture->GetLevelCount() : 0;
 }
 
+bool Texture::isRenderable() const
+{
+    return mIsRenderable;
+}
+
 Texture2D::Texture2D(GLuint id) : Texture(id)
 {
     mTexture = NULL;
@@ -1623,28 +1630,50 @@ void Texture2D::generateMipmaps()
         mImageArray[i].height = std::max(mImageArray[0].height >> i, 1);
     }
 
-    needRenderTarget();
-
-    if (mTexture == NULL)
+    if (isRenderable())
     {
-        return;
-    }
-
-    for (unsigned int i = 1; i <= q; i++)
-    {
-        IDirect3DSurface9 *upper = NULL;
-        IDirect3DSurface9 *lower = NULL;
-
-        mTexture->GetSurfaceLevel(i-1, &upper);
-        mTexture->GetSurfaceLevel(i, &lower);
-
-        if (upper != NULL && lower != NULL)
+        if (mTexture == NULL)
         {
-            getBlitter()->boxFilter(upper, lower);
+            ERR(" failed because mTexture was null.");
+            return;
         }
 
-        if (upper != NULL) upper->Release();
-        if (lower != NULL) lower->Release();
+        for (unsigned int i = 1; i <= q; i++)
+        {
+            IDirect3DSurface9 *upper = NULL;
+            IDirect3DSurface9 *lower = NULL;
+
+            mTexture->GetSurfaceLevel(i-1, &upper);
+            mTexture->GetSurfaceLevel(i, &lower);
+
+            if (upper != NULL && lower != NULL)
+            {
+                getBlitter()->boxFilter(upper, lower);
+            }
+
+            if (upper != NULL) upper->Release();
+            if (lower != NULL) lower->Release();
+        }
+    }
+    else
+    {
+        for (unsigned int i = 1; i <= q; i++)
+        {
+            createSurface(mImageArray[i].width, mImageArray[i].height, mImageArray[i].format, mType, &mImageArray[i]);
+            if (mImageArray[i].surface == NULL)
+            {
+                return error(GL_OUT_OF_MEMORY);
+            }
+
+            if (FAILED(D3DXLoadSurfaceFromSurface(mImageArray[i].surface, NULL, NULL, mImageArray[i - 1].surface, NULL, NULL, D3DX_FILTER_BOX, 0)))
+            {
+                ERR(" failed to load filter %d to %d.", i - 1, i);
+            }
+
+            mImageArray[i].dirty = true;
+        }
+
+        mDirtyMetaData = true;
     }
 }
 
@@ -2271,28 +2300,52 @@ void TextureCubeMap::generateMipmaps()
         }
     }
 
-    needRenderTarget();
-
-    if (mTexture == NULL)
+    if (isRenderable())
     {
-        return;
-    }
-
-    for (unsigned int f = 0; f < 6; f++)
-    {
-        for (unsigned int i = 1; i <= q; i++)
+        if (mTexture == NULL)
         {
-            IDirect3DSurface9 *upper = getCubeMapSurface(f, i-1);
-            IDirect3DSurface9 *lower = getCubeMapSurface(f, i);
-
-            if (upper != NULL && lower != NULL)
-            {
-                getBlitter()->boxFilter(upper, lower);
-            }
-
-            if (upper != NULL) upper->Release();
-            if (lower != NULL) lower->Release();
+            return;
         }
+
+        for (unsigned int f = 0; f < 6; f++)
+        {
+            for (unsigned int i = 1; i <= q; i++)
+            {
+                IDirect3DSurface9 *upper = getCubeMapSurface(f, i-1);
+                IDirect3DSurface9 *lower = getCubeMapSurface(f, i);
+
+                if (upper != NULL && lower != NULL)
+                {
+                    getBlitter()->boxFilter(upper, lower);
+                }
+
+                if (upper != NULL) upper->Release();
+                if (lower != NULL) lower->Release();
+            }
+        }
+    }
+    else
+    {
+        for (unsigned int f = 0; f < 6; f++)
+        {
+            for (unsigned int i = 1; i <= q; i++)
+            {
+                createSurface(mImageArray[f][i].width, mImageArray[f][i].height, mImageArray[f][i].format, mType, &mImageArray[f][i]);
+                if (mImageArray[f][i].surface == NULL)
+                {
+                    return error(GL_OUT_OF_MEMORY);
+                }
+
+                if (FAILED(D3DXLoadSurfaceFromSurface(mImageArray[f][i].surface, NULL, NULL, mImageArray[f][i - 1].surface, NULL, NULL, D3DX_FILTER_BOX, 0)))
+                {
+                    ERR(" failed to load filter %d to %d.", i - 1, i);
+                }
+
+                mImageArray[f][i].dirty = true;
+            }
+        }
+
+        mDirtyMetaData = true;
     }
 }
 
