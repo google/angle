@@ -28,9 +28,14 @@ class TCompiler;
 //
 class TShHandleBase {
 public:
-    TShHandleBase() { }
-    virtual ~TShHandleBase() { }
+    TShHandleBase();
+    virtual ~TShHandleBase();
     virtual TCompiler* getAsCompiler() { return 0; }
+
+protected:
+    // Memory allocator. Allocates and tracks memory required by the compiler.
+    // Deallocates all memory when compiler is destructed.
+    TPoolAllocator allocator;
 };
 
 //

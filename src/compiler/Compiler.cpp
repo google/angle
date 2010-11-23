@@ -8,10 +8,11 @@
 #include "compiler/ParseHelper.h"
 #include "compiler/ShHandle.h"
 
-static bool InitializeSymbolTable(
-        const TBuiltInStrings& builtInStrings,
-        ShShaderType type, ShShaderSpec spec, const ShBuiltInResources& resources,
-        TInfoSink& infoSink, TSymbolTable& symbolTable)
+namespace {
+bool InitializeSymbolTable(
+    const TBuiltInStrings& builtInStrings,
+    ShShaderType type, ShShaderSpec spec, const ShBuiltInResources& resources,
+    TInfoSink& infoSink, TSymbolTable& symbolTable)
 {
     TIntermediate intermediate(infoSink);
     TExtensionBehavior extBehavior;
@@ -49,6 +50,34 @@ static bool InitializeSymbolTable(
     return true;
 }
 
+class TScopedPoolAllocator {
+public:
+    TScopedPoolAllocator(TPoolAllocator* allocator, bool pushPop)
+        : mAllocator(allocator), mPushPopAllocator(pushPop) {
+        if (mPushPopAllocator) mAllocator->push();
+        SetGlobalPoolAllocator(mAllocator);
+    }
+    ~TScopedPoolAllocator() {
+        SetGlobalPoolAllocator(NULL);
+        if (mPushPopAllocator) mAllocator->pop();
+    }
+
+private:
+    TPoolAllocator* mAllocator;
+    bool mPushPopAllocator;
+};
+}  // namespace
+
+TShHandleBase::TShHandleBase() {
+    allocator.push();
+    SetGlobalPoolAllocator(&allocator);
+}
+
+TShHandleBase::~TShHandleBase() {
+    SetGlobalPoolAllocator(NULL);
+    allocator.popAll();
+}
+
 TCompiler::TCompiler(ShShaderType type, ShShaderSpec spec)
     : shaderType(type),
       shaderSpec(spec) 
@@ -61,11 +90,13 @@ TCompiler::~TCompiler()
 
 bool TCompiler::Init(const ShBuiltInResources& resources)
 {
+    TScopedPoolAllocator scopedAlloc(&allocator, false);
+
     // Generate built-in symbol table.
     if (!InitBuiltInSymbolTable(resources))
         return false;
-
     InitExtensionBehavior(resources, extensionBehavior);
+
     return true;
 }
 
@@ -73,6 +104,7 @@ bool TCompiler::compile(const char* const shaderStrings[],
                         const int numStrings,
                         int compileOptions)
 {
+    TScopedPoolAllocator scopedAlloc(&allocator, true);
     clearResults();
 
     if (numStrings == 0)
