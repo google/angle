@@ -184,6 +184,8 @@ enum TOperator {
     EOpDivAssign,
 };
 
+extern const char* getOperatorString(TOperator op);
+
 class TIntermTraverser;
 class TIntermAggregate;
 class TIntermBinary;

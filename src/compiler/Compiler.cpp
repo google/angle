@@ -7,6 +7,7 @@
 #include "compiler/Initialize.h"
 #include "compiler/ParseHelper.h"
 #include "compiler/ShHandle.h"
+#include "compiler/ValidateLimitations.h"
 
 namespace {
 bool InitializeSymbolTable(
@@ -110,10 +111,9 @@ bool TCompiler::compile(const char* const shaderStrings[],
     if (numStrings == 0)
         return true;
 
-    // If compiling for WebGL, validate control-flow and indexing as well.
-    if (shaderSpec == SH_WEBGL_SPEC) {
-        compileOptions |= SH_VALIDATE_CONTROL_FLOW | SH_VALIDATE_INDEXING;
-    }
+    // If compiling for WebGL, validate loop and indexing as well.
+    if (shaderSpec == SH_WEBGL_SPEC)
+        compileOptions |= SH_VALIDATE_LOOP_INDEXING;
 
     TIntermediate intermediate(infoSink);
     TParseContext parseContext(symbolTable, extensionBehavior, intermediate,
@@ -131,16 +131,20 @@ bool TCompiler::compile(const char* const shaderStrings[],
         (PaParseStrings(numStrings, shaderStrings, NULL, &parseContext) == 0) &&
         (parseContext.treeRoot != NULL);
     if (success) {
-        success = intermediate.postProcess(parseContext.treeRoot);
+        TIntermNode* root = parseContext.treeRoot;
+        success = intermediate.postProcess(root);
+
+        if (success && (compileOptions & SH_VALIDATE_LOOP_INDEXING))
+            success = validateLimitations(root);
 
         if (success && (compileOptions & SH_INTERMEDIATE_TREE))
-            intermediate.outputTree(parseContext.treeRoot);
+            intermediate.outputTree(root);
 
         if (success && (compileOptions & SH_OBJECT_CODE))
-            translate(parseContext.treeRoot);
+            translate(root);
 
         if (success && (compileOptions & SH_ATTRIBUTES_UNIFORMS))
-            collectAttribsUniforms(parseContext.treeRoot);
+            collectAttribsUniforms(root);
     }
 
     // Cleanup memory.
@@ -170,6 +174,12 @@ void TCompiler::clearResults()
 
     attribs.clear();
     uniforms.clear();
+}
+
+bool TCompiler::validateLimitations(TIntermNode* root) {
+    ValidateLimitations validate(shaderType, infoSink.info);
+    root->traverse(&validate);
+    return validate.numErrors() == 0;
 }
 
 void TCompiler::collectAttribsUniforms(TIntermNode* root)

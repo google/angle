@@ -59,6 +59,8 @@
         'compiler/unistd.h',
         'compiler/util.cpp',
         'compiler/util.h',
+        'compiler/ValidateLimitations.cpp',
+        'compiler/ValidateLimitations.h',
         'compiler/VariableInfo.cpp',
         'compiler/VariableInfo.h',
         'compiler/preprocessor/atom.c',
