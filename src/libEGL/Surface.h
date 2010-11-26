@@ -42,14 +42,14 @@ class Surface
     virtual IDirect3DSurface9 *getDepthStencil();
 
     void setSwapInterval(EGLint interval);
-    bool checkForOutOfDateSwapChain(); // returns true if swapchain changed due to resize or interval update
+    bool checkForOutOfDateSwapChain();   // Returns true if swapchain changed due to resize or interval update
+
 private:
     DISALLOW_COPY_AND_ASSIGN(Surface);
 
     Display *const mDisplay;
     IDirect3DSwapChain9 *mSwapChain;
     IDirect3DSurface9 *mBackBuffer;
-    IDirect3DSurface9 *mRenderTarget;
     IDirect3DSurface9 *mDepthStencil;
     IDirect3DTexture9 *mFlipTexture;
 
