@@ -1191,7 +1191,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
     {
       case GL_MAX_VERTEX_ATTRIBS:               *params = gl::MAX_VERTEX_ATTRIBS;               break;
       case GL_MAX_VERTEX_UNIFORM_VECTORS:       *params = gl::MAX_VERTEX_UNIFORM_VECTORS;       break;
-      case GL_MAX_VARYING_VECTORS:              *params = gl::MAX_VARYING_VECTORS;              break;
+      case GL_MAX_VARYING_VECTORS:              *params = getMaximumVaryingVectors();           break;
       case GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS: *params = gl::MAX_COMBINED_TEXTURE_IMAGE_UNITS; break;
       case GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS:   *params = gl::MAX_VERTEX_TEXTURE_IMAGE_UNITS;   break;
       case GL_MAX_TEXTURE_IMAGE_UNITS:          *params = gl::MAX_TEXTURE_IMAGE_UNITS;          break;
@@ -2870,6 +2870,11 @@ GLenum Context::getError()
 bool Context::supportsShaderModel3() const
 {
     return mSupportsShaderModel3;
+}
+
+int Context::getMaximumVaryingVectors() const
+{
+    return mSupportsShaderModel3 ? MAX_VARYING_VECTORS_SM3 : MAX_VARYING_VECTORS_SM2;
 }
 
 int Context::getMaxSupportedSamples() const

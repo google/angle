@@ -999,6 +999,9 @@ ID3DXBuffer *Program::compileToBinary(const char *hlsl, const char *profile, ID3
 // Returns the number of used varying registers, or -1 if unsuccesful
 int Program::packVaryings(const Varying *packing[][4])
 {
+    Context *context = getContext();
+    const int maxVaryingVectors = context->getMaximumVaryingVectors();
+
     for (VaryingList::iterator varying = mFragmentShader->varyings.begin(); varying != mFragmentShader->varyings.end(); varying++)
     {
         int n = VariableRowCount(varying->type) * varying->size;
@@ -1007,7 +1010,7 @@ int Program::packVaryings(const Varying *packing[][4])
 
         if (m == 2 || m == 3 || m == 4)
         {
-            for (int r = 0; r <= MAX_VARYING_VECTORS - n && !success; r++)
+            for (int r = 0; r <= maxVaryingVectors - n && !success; r++)
             {
                 bool available = true;
 
@@ -1041,7 +1044,7 @@ int Program::packVaryings(const Varying *packing[][4])
 
             if (!success && m == 2)
             {
-                for (int r = MAX_VARYING_VECTORS - n; r >= 0 && !success; r--)
+                for (int r = maxVaryingVectors - n; r >= 0 && !success; r--)
                 {
                     bool available = true;
 
@@ -1078,7 +1081,7 @@ int Program::packVaryings(const Varying *packing[][4])
         {
             int space[4] = {0};
 
-            for (int y = 0; y < MAX_VARYING_VECTORS; y++)
+            for (int y = 0; y < maxVaryingVectors; y++)
             {
                 for (int x = 0; x < 4; x++)
                 {
@@ -1098,7 +1101,7 @@ int Program::packVaryings(const Varying *packing[][4])
 
             if (space[column] > n)
             {
-                for (int r = 0; r < MAX_VARYING_VECTORS; r++)
+                for (int r = 0; r < maxVaryingVectors; r++)
                 {
                     if (!packing[r][column])
                     {
@@ -1131,7 +1134,7 @@ int Program::packVaryings(const Varying *packing[][4])
     // Return the number of used registers
     int registers = 0;
 
-    for (int r = 0; r < MAX_VARYING_VECTORS; r++)
+    for (int r = 0; r < maxVaryingVectors; r++)
     {
         if (packing[r][0] || packing[r][1] || packing[r][2] || packing[r][3])
         {
@@ -1149,7 +1152,7 @@ bool Program::linkVaryings()
         return false;
     }
 
-    const Varying *packing[MAX_VARYING_VECTORS][4] = {NULL};
+    const Varying *packing[MAX_VARYING_VECTORS_SM3][4] = {NULL};
     int registers = packVaryings(packing);
 
     if (registers < 0)
@@ -1157,7 +1160,11 @@ bool Program::linkVaryings()
         return false;
     }
 
-    if (registers == MAX_VARYING_VECTORS && mFragmentShader->mUsesFragCoord)
+    Context *context = getContext();
+    const bool sm3 = context->supportsShaderModel3();
+    const int maxVaryingVectors = context->getMaximumVaryingVectors();
+
+    if (registers == maxVaryingVectors && mFragmentShader->mUsesFragCoord)
     {
         appendToInfoLog("No varying registers left to support gl_FragCoord");
 
@@ -1195,8 +1202,6 @@ bool Program::linkVaryings()
         }
     }
 
-    Context *context = getContext();
-    bool sm3 = context->supportsShaderModel3();
     std::string varyingSemantic = (sm3 ? "COLOR" : "TEXCOORD");
 
     mVertexHLSL += "struct VS_INPUT\n"

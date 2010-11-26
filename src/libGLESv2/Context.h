@@ -58,7 +58,8 @@ enum
 {
     MAX_VERTEX_ATTRIBS = 12,
     MAX_VERTEX_UNIFORM_VECTORS = 128,
-    MAX_VARYING_VECTORS = 8,
+    MAX_VARYING_VECTORS_SM2 = 8,
+    MAX_VARYING_VECTORS_SM3 = 10,
     MAX_COMBINED_TEXTURE_IMAGE_UNITS = 16,
     MAX_VERTEX_TEXTURE_IMAGE_UNITS = 0,
     MAX_TEXTURE_IMAGE_UNITS = 16,
@@ -380,6 +381,7 @@ class Context
     GLenum getError();
 
     bool supportsShaderModel3() const;
+    int getMaximumVaryingVectors() const;
     int getMaximumRenderbufferDimension() const;
     int getMaximumTextureDimension() const;
     int getMaximumCubeTextureDimension() const;
