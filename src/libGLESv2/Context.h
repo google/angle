@@ -63,7 +63,8 @@ enum
     MAX_COMBINED_TEXTURE_IMAGE_UNITS = 16,
     MAX_VERTEX_TEXTURE_IMAGE_UNITS = 0,
     MAX_TEXTURE_IMAGE_UNITS = 16,
-    MAX_FRAGMENT_UNIFORM_VECTORS = 16,
+    MAX_FRAGMENT_UNIFORM_VECTORS_SM2 = 32 - 3,    // Reserve space for dx_Viewport, dx_Depth, and dx_DepthRange. dx_PointOrLines and dx_FrontCCW use separate bool registers.
+    MAX_FRAGMENT_UNIFORM_VECTORS_SM3 = 224 - 3,
     MAX_DRAW_BUFFERS = 1,
 
     IMPLEMENTATION_COLOR_READ_FORMAT = GL_RGB,
@@ -382,6 +383,7 @@ class Context
 
     bool supportsShaderModel3() const;
     int getMaximumVaryingVectors() const;
+    int getMaximumFragmentUniformVectors() const;
     int getMaximumRenderbufferDimension() const;
     int getMaximumTextureDimension() const;
     int getMaximumCubeTextureDimension() const;
