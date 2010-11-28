@@ -270,6 +270,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ValidateLimitations.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\VariableInfo.cpp"
 				>
 			</File>
@@ -413,6 +417,10 @@
 			</File>
 			<File
 				RelativePath=".\util.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ValidateLimitations.h"
 				>
 			</File>
 			<File
