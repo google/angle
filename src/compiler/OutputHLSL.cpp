@@ -362,7 +362,8 @@ void OutputHLSL::header()
                "    float diff;\n"
                "};\n"
                "\n"
-               "uniform gl_DepthRangeParameters gl_DepthRange;\n"
+               "uniform float3 dx_DepthRange;"
+               "static gl_DepthRangeParameters gl_DepthRange = {dx_DepthRange.x, dx_DepthRange.y, dx_DepthRange.z};\n"
                "\n";
     }
 

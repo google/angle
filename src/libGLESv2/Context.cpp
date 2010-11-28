@@ -1698,27 +1698,21 @@ bool Context::applyRenderTarget(bool ignoreViewport)
 
         GLint halfPixelSize = programObject->getDxHalfPixelSizeLocation();
         GLfloat xy[2] = {1.0f / viewport.Width, 1.0f / viewport.Height};
-        programObject->setUniform2fv(halfPixelSize, 1, (GLfloat*)&xy);
+        programObject->setUniform2fv(halfPixelSize, 1, xy);
 
-        GLint window = programObject->getDxViewportLocation();
+        GLint viewport = programObject->getDxViewportLocation();
         GLfloat whxy[4] = {mState.viewportWidth / 2.0f, mState.viewportHeight / 2.0f, 
                           (float)mState.viewportX + mState.viewportWidth / 2.0f, 
                           (float)mState.viewportY + mState.viewportHeight / 2.0f};
-        programObject->setUniform4fv(window, 1, (GLfloat*)&whxy);
+        programObject->setUniform4fv(viewport, 1, whxy);
 
         GLint depth = programObject->getDxDepthLocation();
         GLfloat dz[2] = {(zFar - zNear) / 2.0f, (zNear + zFar) / 2.0f};
-        programObject->setUniform2fv(depth, 1, (GLfloat*)&dz);
+        programObject->setUniform2fv(depth, 1, dz);
 
-        GLint near = programObject->getDepthRangeNearLocation();
-        programObject->setUniform1fv(near, 1, &zNear);
-
-        GLint far = programObject->getDepthRangeFarLocation();
-        programObject->setUniform1fv(far, 1, &zFar);
-
-        GLint diff = programObject->getDepthRangeDiffLocation();
-        GLfloat zDiff = zFar - zNear;
-        programObject->setUniform1fv(diff, 1, &zDiff);
+        GLint depthRange = programObject->getDxDepthRangeLocation();
+        GLfloat nearFarDiff[3] = {zNear, zFar, zFar - zNear};
+        programObject->setUniform3fv(depthRange, 1, nearFarDiff);
     }
 
     return true;

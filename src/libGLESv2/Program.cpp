@@ -1536,9 +1536,7 @@ void Program::link()
 
             // these uniforms are searched as already-decorated because gl_ and dx_
             // are reserved prefixes, and do not receive additional decoration
-            mDepthRangeNearLocation = getUniformLocation("gl_DepthRange.near", true);
-            mDepthRangeFarLocation = getUniformLocation("gl_DepthRange.far", true);
-            mDepthRangeDiffLocation = getUniformLocation("gl_DepthRange.diff", true);
+            mDxDepthRangeLocation = getUniformLocation("dx_DepthRange", true);
             mDxDepthLocation = getUniformLocation("dx_Depth", true);
             mDxViewportLocation = getUniformLocation("dx_Viewport", true);
             mDxHalfPixelSizeLocation = getUniformLocation("dx_HalfPixelSize", true);
@@ -2457,9 +2455,7 @@ void Program::unlink(bool destroy)
         mUniforms.pop_back();
     }
 
-    mDepthRangeDiffLocation = -1;
-    mDepthRangeNearLocation = -1;
-    mDepthRangeFarLocation = -1;
+    mDxDepthRangeLocation = -1;
     mDxDepthLocation = -1;
     mDxViewportLocation = -1;
     mDxHalfPixelSizeLocation = -1;
@@ -2794,19 +2790,9 @@ void Program::getConstantHandles(Uniform *targetUniform, D3DXHANDLE *constantPS,
     *constantVS = targetUniform->vsHandle;
 }
 
-GLint Program::getDepthRangeDiffLocation() const
+GLint Program::getDxDepthRangeLocation() const
 {
-    return mDepthRangeDiffLocation;
-}
-
-GLint Program::getDepthRangeNearLocation() const
-{
-    return mDepthRangeNearLocation;
-}
-
-GLint Program::getDepthRangeFarLocation() const
-{
-    return mDepthRangeFarLocation;
+    return mDxDepthRangeLocation;
 }
 
 GLint Program::getDxDepthLocation() const
