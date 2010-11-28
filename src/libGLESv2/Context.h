@@ -56,7 +56,7 @@ class Fence;
 
 enum
 {
-    MAX_VERTEX_ATTRIBS = 12,
+    MAX_VERTEX_ATTRIBS = 16 - 1,            // Stream 0 reserved to enable instancing for non-array attributes
     MAX_VERTEX_UNIFORM_VECTORS = 128,
     MAX_VARYING_VECTORS_SM2 = 8,
     MAX_VARYING_VECTORS_SM3 = 10,
