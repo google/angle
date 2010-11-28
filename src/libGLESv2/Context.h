@@ -57,7 +57,7 @@ class Fence;
 enum
 {
     MAX_VERTEX_ATTRIBS = 16 - 1,            // Stream 0 reserved to enable instancing for non-array attributes
-    MAX_VERTEX_UNIFORM_VECTORS = 128,
+    MAX_VERTEX_UNIFORM_VECTORS = 256 - 2,   // 256 is the minimum for SM2, and in practice the maximum for DX9. Reserve space for dx_HalfPixelSize and dx_DepthRange.
     MAX_VARYING_VECTORS_SM2 = 8,
     MAX_VARYING_VECTORS_SM3 = 10,
     MAX_COMBINED_TEXTURE_IMAGE_UNITS = 16,
