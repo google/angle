@@ -1659,14 +1659,15 @@ bool Program::defineUniform(const D3DXHANDLE &constantHandle, const D3DXCONSTANT
 {
     if (constantDescription.RegisterSet == D3DXRS_SAMPLER)
     {
-        unsigned int samplerIndex = constantDescription.RegisterIndex;
+        for (unsigned int samplerIndex = constantDescription.RegisterIndex; samplerIndex < constantDescription.RegisterIndex + constantDescription.RegisterCount; samplerIndex++)
+        {
+            ASSERT(samplerIndex < sizeof(mSamplers)/sizeof(mSamplers[0]));
 
-        assert(samplerIndex < sizeof(mSamplers)/sizeof(mSamplers[0]));
-
-        mSamplers[samplerIndex].active = true;
-        mSamplers[samplerIndex].type = (constantDescription.Type == D3DXPT_SAMPLERCUBE) ? SAMPLER_CUBE : SAMPLER_2D;
-        mSamplers[samplerIndex].logicalTextureUnit = 0;
-        mSamplers[samplerIndex].dirty = true;
+            mSamplers[samplerIndex].active = true;
+            mSamplers[samplerIndex].type = (constantDescription.Type == D3DXPT_SAMPLERCUBE) ? SAMPLER_CUBE : SAMPLER_2D;
+            mSamplers[samplerIndex].logicalTextureUnit = 0;
+            mSamplers[samplerIndex].dirty = true;
+        }
     }
 
     switch(constantDescription.Class)
