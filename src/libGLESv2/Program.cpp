@@ -2582,16 +2582,22 @@ void Program::getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shade
 
 void Program::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name)
 {
-    unsigned int attribute = 0;
-    for (unsigned int i = 0; i < index; i++)
+    // Skip over inactive attributes
+    unsigned int activeAttribute = 0;
+    unsigned int attribute;
+    for (attribute = 0; attribute < MAX_VERTEX_ATTRIBS; attribute++)
     {
-        do
+        if (mLinkedAttribute[attribute].name.empty())
         {
-            attribute++;
-
-            ASSERT(attribute < MAX_VERTEX_ATTRIBS);   // index must be smaller than getActiveAttributeCount()
+            continue;
         }
-        while (mLinkedAttribute[attribute].name.empty());
+
+        if (activeAttribute == index)
+        {
+            break;
+        }
+
+        activeAttribute++;
     }
 
     if (bufsize > 0)
@@ -2649,9 +2655,9 @@ void Program::getActiveUniform(GLuint index, GLsizei bufsize, GLsizei *length, G
     unsigned int uniform;
     for (uniform = 0; uniform < mUniforms.size(); uniform++)
     {
-        while (mUniforms[uniform]->name.substr(0, 3) == "dx_")
+        if (mUniforms[uniform]->name.substr(0, 3) == "dx_")
         {
-            uniform++;
+            continue;
         }
 
         if (activeUniform == index)
