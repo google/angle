@@ -3,9 +3,5 @@ Release
 *.ncb
 *.suo
 *.vcproj.*
-src/compiler/Gen_glslang.cpp
-src/compiler/Gen_glslang_tab.cpp
-src/compiler/glslang.output
-src/compiler/glslang_tab.h
 patches-*
 
