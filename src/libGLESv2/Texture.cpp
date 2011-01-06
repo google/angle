@@ -412,13 +412,14 @@ void Texture::loadAlphaHalfFloatImageData(GLint xoffset, GLint yoffset, GLsizei 
 void Texture::loadLuminanceImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                                      size_t inputPitch, const void *input, size_t outputPitch, void *output, bool native) const
 {
+    const int destBytesPerPixel = native? 1: 4;
     const unsigned char *source = NULL;
     unsigned char *dest = NULL;
 
     for (int y = 0; y < height; y++)
     {
         source = static_cast<const unsigned char*>(input) + y * inputPitch;
-        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
+        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * destBytesPerPixel;
 
         if (!native)   // BGRA8 destination format
         {
@@ -480,13 +481,14 @@ void Texture::loadLuminanceHalfFloatImageData(GLint xoffset, GLint yoffset, GLsi
 void Texture::loadLuminanceAlphaImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                                           size_t inputPitch, const void *input, size_t outputPitch, void *output, bool native) const
 {
+    const int destBytesPerPixel = native? 2: 4;
     const unsigned char *source = NULL;
     unsigned char *dest = NULL;
 
     for (int y = 0; y < height; y++)
     {
         source = static_cast<const unsigned char*>(input) + y * inputPitch;
-        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
+        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * destBytesPerPixel;
         
         if (!native)   // BGRA8 destination format
         {
