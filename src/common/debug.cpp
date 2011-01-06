@@ -21,6 +21,7 @@ namespace gl
 {
 void trace(const char *format, ...)
 {
+#if !defined(ANGLE_DISABLE_TRACE) 
     if (trace_on)
     {
         if (format)
@@ -38,5 +39,6 @@ void trace(const char *format, ...)
             }
         }
     }
+#endif // !defined(ANGLE_DISABLE_TRACE)
 }
 }
