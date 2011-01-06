@@ -8,6 +8,8 @@
 // such as the client area of a window, including any back buffers.
 // Implements EGLSurface and related functionality. [EGL 1.4] section 2.2 page 3.
 
+#include <tchar.h>
+
 #include "libEGL/Surface.h"
 
 #include "common/debug.h"
@@ -311,8 +313,8 @@ void Surface::releaseRecordedState(IDirect3DDevice9 *device)
         mPreFlipState = NULL;
     }
 }
-#define kSurfaceProperty L"Egl::SurfaceOwner"
-#define kParentWndProc L"Egl::SurfaceParentWndProc"
+#define kSurfaceProperty _TEXT("Egl::SurfaceOwner")
+#define kParentWndProc _TEXT("Egl::SurfaceParentWndProc")
 
 static LRESULT CALLBACK SurfaceWindowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
   if (message == WM_SIZE) {
