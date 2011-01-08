@@ -2599,10 +2599,15 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
         display->startScene();
         
         device->DrawPrimitive(primitiveType, 0, primitiveCount);
+
+        if (mode == GL_LINE_LOOP)   // Draw the last segment separately
+        {
+            drawClosingLine(first, first + count - 1);
+        }
     }
 }
 
-void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void* indices)
+void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void *indices)
 {
     if (!mState.currentProgram)
     {
@@ -2659,7 +2664,13 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void* 
     if (!cullSkipsDraw(mode))
     {
         display->startScene();
+
         device->DrawIndexedPrimitive(primitiveType, -(INT)indexInfo.minIndex, indexInfo.minIndex, vertexCount, indexInfo.startIndex, primitiveCount);
+
+        if (mode == GL_LINE_LOOP)   // Draw the last segment separately
+        {
+            drawClosingLine(count, type, indices);
+        }
     }
 }
 
@@ -2740,6 +2751,93 @@ void Context::flush()
             error(GL_OUT_OF_MEMORY);
         }
     }
+}
+
+void Context::drawClosingLine(unsigned int first, unsigned int last)
+{
+    IDirect3DDevice9 *device = getDevice();
+    IDirect3DIndexBuffer9 *indexBuffer = NULL;
+    HRESULT result = D3DERR_INVALIDCALL;
+
+    if (supports32bitIndices())
+    {
+        result = device->CreateIndexBuffer(8, D3DUSAGE_WRITEONLY, D3DFMT_INDEX32, D3DPOOL_DEFAULT, &indexBuffer, 0);
+
+        if (SUCCEEDED(result))
+        {
+            unsigned int *data;
+            result = indexBuffer->Lock(0, 0, (void**)&data, 0);
+
+            if (SUCCEEDED(result))
+            {
+                data[0] = last;
+                data[1] = first;
+            }
+        }
+    }
+    else
+    {
+        result = device->CreateIndexBuffer(4, D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &indexBuffer, 0);
+
+        if (SUCCEEDED(result))
+        {
+            unsigned short *data;
+            result = indexBuffer->Lock(0, 0, (void**)&data, 0);
+
+            if (SUCCEEDED(result))
+            {
+                data[0] = last;
+                data[1] = first;
+            }
+        }
+    }
+    
+    if (SUCCEEDED(result))
+    {
+        indexBuffer->Unlock();
+        device->SetIndices(indexBuffer);
+
+        device->DrawIndexedPrimitive(D3DPT_LINELIST, 0, 0, 2, 0, 1);
+
+        indexBuffer->Release();
+    }
+    else
+    {
+        ERR("Could not create an index buffer for closing a line loop.");
+        error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void Context::drawClosingLine(GLsizei count, GLenum type, const void *indices)
+{
+    unsigned int first = 0;
+    unsigned int last = 0;
+
+    if (mState.elementArrayBuffer.get())
+    {
+        Buffer *indexBuffer = mState.elementArrayBuffer.get();
+        intptr_t offset = reinterpret_cast<intptr_t>(indices);
+        indices = static_cast<const GLubyte*>(indexBuffer->data()) + offset;
+    }
+
+    switch (type)
+    {
+      case GL_UNSIGNED_BYTE:
+        first = static_cast<const GLubyte*>(indices)[0];
+        last = static_cast<const GLubyte*>(indices)[count - 1];
+        break;
+      case GL_UNSIGNED_SHORT:
+        first = static_cast<const GLushort*>(indices)[0];
+        last = static_cast<const GLushort*>(indices)[count - 1];
+        break;
+      case GL_UNSIGNED_INT:
+        first = static_cast<const GLuint*>(indices)[0];
+        last = static_cast<const GLuint*>(indices)[count - 1];
+        break;
+      default: UNREACHABLE();
+    }
+
+    drawClosingLine(first, last);
 }
 
 void Context::recordInvalidEnum()

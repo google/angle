@@ -390,9 +390,13 @@ class Context
     void readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, void* pixels);
     void clear(GLbitfield mask);
     void drawArrays(GLenum mode, GLint first, GLsizei count);
-    void drawElements(GLenum mode, GLsizei count, GLenum type, const void* indices);
+    void drawElements(GLenum mode, GLsizei count, GLenum type, const void *indices);
     void finish();
     void flush();
+
+	// Draw the last segment of a line loop
+    void drawClosingLine(unsigned int first, unsigned int last);
+    void drawClosingLine(GLsizei count, GLenum type, const void *indices);
 
     void recordInvalidEnum();
     void recordInvalidValue();
