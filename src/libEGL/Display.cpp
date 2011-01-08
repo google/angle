@@ -606,9 +606,21 @@ bool Display::getLuminanceAlphaTextureSupport()
     return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_A8L8));
 }
 
-bool Display::isDirect3D9Ex()
+D3DPOOL Display::getBufferPool(DWORD usage) const
 {
-    return mD3d9ex != NULL;
+    if (mD3d9ex != NULL)
+    {
+        return D3DPOOL_DEFAULT;
+    }
+    else
+    {
+        if (!(usage & D3DUSAGE_DYNAMIC))
+        {
+            return D3DPOOL_MANAGED;
+        }
+    }
+
+    return D3DPOOL_DEFAULT;
 }
 
 bool Display::getEventQuerySupport()

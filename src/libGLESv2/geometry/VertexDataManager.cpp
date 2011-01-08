@@ -541,7 +541,7 @@ VertexBuffer::VertexBuffer(IDirect3DDevice9 *device, std::size_t size, DWORD usa
 {
     if (size > 0)
     {
-        D3DPOOL pool = getDisplay()->isDirect3D9Ex() ? D3DPOOL_DEFAULT : D3DPOOL_MANAGED;
+        D3DPOOL pool = getDisplay()->getBufferPool(usageFlags);
         HRESULT result = device->CreateVertexBuffer(size, usageFlags, 0, pool, &mVertexBuffer, NULL);
         
         if (FAILED(result))
@@ -665,7 +665,7 @@ void StreamingVertexBuffer::reserveRequiredSpace()
 
         mBufferSize = std::max(mRequiredSpace, 3 * mBufferSize / 2);   // 1.5 x mBufferSize is arbitrary and should be checked to see we don't have too many reallocations.
 
-        D3DPOOL pool = getDisplay()->isDirect3D9Ex() ? D3DPOOL_DEFAULT : D3DPOOL_MANAGED;
+        D3DPOOL pool = getDisplay()->getBufferPool(D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY);
         HRESULT result = mDevice->CreateVertexBuffer(mBufferSize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, 0, pool, &mVertexBuffer, NULL);
     
         if (FAILED(result))
@@ -727,7 +727,7 @@ void StaticVertexBuffer::reserveRequiredSpace()
 {
     if (!mVertexBuffer && mBufferSize == 0)
     {
-        D3DPOOL pool = getDisplay()->isDirect3D9Ex() ? D3DPOOL_DEFAULT : D3DPOOL_MANAGED;
+        D3DPOOL pool = getDisplay()->getBufferPool(D3DUSAGE_WRITEONLY);
         HRESULT result = mDevice->CreateVertexBuffer(mRequiredSpace, D3DUSAGE_WRITEONLY, 0, pool, &mVertexBuffer, NULL);
     
         if (FAILED(result))

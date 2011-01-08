@@ -66,7 +66,7 @@ class Display
     virtual bool getHalfFloatTextureSupport(bool *filtering, bool *renderable);
     virtual bool getLuminanceTextureSupport();
     virtual bool getLuminanceAlphaTextureSupport();
-    virtual bool isDirect3D9Ex();
+    virtual D3DPOOL getBufferPool(DWORD usage) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Display);
