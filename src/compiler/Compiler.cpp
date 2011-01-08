@@ -187,4 +187,3 @@ void TCompiler::collectAttribsUniforms(TIntermNode* root)
     CollectAttribsUniforms collect(attribs, uniforms);
     root->traverse(&collect);
 }
-

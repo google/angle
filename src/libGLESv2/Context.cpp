@@ -25,10 +25,8 @@
 #include "libGLESv2/RenderBuffer.h"
 #include "libGLESv2/Shader.h"
 #include "libGLESv2/Texture.h"
-#include "libGLESv2/geometry/backend.h"
 #include "libGLESv2/geometry/VertexDataManager.h"
 #include "libGLESv2/geometry/IndexDataManager.h"
-#include "libGLESv2/geometry/dx9.h"
 
 #undef near
 #undef far
@@ -139,7 +137,6 @@ Context::Context(const egl::Config *config, const gl::Context *shareContext)
     mState.packAlignment = 4;
     mState.unpackAlignment = 4;
 
-    mBufferBackEnd = NULL;
     mVertexDataManager = NULL;
     mIndexDataManager = NULL;
     mBlit = NULL;
@@ -212,7 +209,6 @@ Context::~Context()
     mTexture2DZero.set(NULL);
     mTextureCubeMapZero.set(NULL);
 
-    delete mBufferBackEnd;
     delete mVertexDataManager;
     delete mIndexDataManager;
     delete mBlit;
@@ -233,9 +229,8 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
     {
         mDeviceCaps = display->getDeviceCaps();
 
-        mBufferBackEnd = new Dx9BackEnd(this, device);
-        mVertexDataManager = new VertexDataManager(this, mBufferBackEnd);
-        mIndexDataManager = new IndexDataManager(this, mBufferBackEnd);
+        mVertexDataManager = new VertexDataManager(this, device);
+        mIndexDataManager = new IndexDataManager(this, device);
         mBlit = new Blit(this);
 
         mSupportsShaderModel3 = mDeviceCaps.PixelShaderVersion == D3DPS_VERSION(3, 0);
@@ -280,6 +275,8 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         mSupportsHalfFloatTextures = display->getHalfFloatTextureSupport(&mSupportsHalfFloatLinearFilter, &mSupportsHalfFloatRenderableTextures);
         mSupportsLuminanceTextures = display->getLuminanceTextureSupport();
         mSupportsLuminanceAlphaTextures = display->getLuminanceAlphaTextureSupport();
+
+        mSupports32bitIndices = mDeviceCaps.MaxVertexIndex >= (1 << 16);
 
         initExtensionString();
 
@@ -339,11 +336,6 @@ void Context::markAllStateDirty()
     mSampleStateDirty = true;
     mDitherStateDirty = true;
     mFrontFaceDirty = true;
-
-    if (mBufferBackEnd != NULL)
-    {
-        mBufferBackEnd->invalidate();
-    }
 }
 
 void Context::setClearColor(float red, float green, float blue, float alpha)
@@ -743,12 +735,12 @@ GLuint Context::getArrayBufferHandle() const
     return mState.arrayBuffer.id();
 }
 
-void Context::setVertexAttribEnabled(unsigned int attribNum, bool enabled)
+void Context::setEnableVertexAttribArray(unsigned int attribNum, bool enabled)
 {
-    mState.vertexAttribute[attribNum].mEnabled = enabled;
+    mState.vertexAttribute[attribNum].mArrayEnabled = enabled;
 }
 
-const AttributeState &Context::getVertexAttribState(unsigned int attribNum)
+const VertexAttribute &Context::getVertexAttribState(unsigned int attribNum)
 {
     return mState.vertexAttribute[attribNum];
 }
@@ -769,8 +761,7 @@ const void *Context::getVertexAttribPointer(unsigned int attribNum) const
     return mState.vertexAttribute[attribNum].mPointer;
 }
 
-// returns entire set of attributes as a block
-const AttributeState *Context::getVertexAttribBlock()
+const VertexAttributeArray &Context::getVertexAttributes()
 {
     return mState.vertexAttribute;
 }
@@ -1963,18 +1954,18 @@ void Context::lookupAttributeMapping(TranslatedAttribute *attributes)
 {
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
     {
-        if (attributes[i].enabled)
+        if (attributes[i].active)
         {
             attributes[i].semanticIndex = getCurrentProgram()->getSemanticIndex(i);
         }
     }
 }
 
-GLenum Context::applyVertexBuffer(GLenum mode, GLint first, GLsizei count, bool *useIndexing, TranslatedIndexData *indexInfo)
+GLenum Context::applyVertexBuffer(GLint first, GLsizei count)
 {
     TranslatedAttribute translated[MAX_VERTEX_ATTRIBS];
 
-    GLenum err = mVertexDataManager->preRenderValidate(first, count, translated);
+    GLenum err = mVertexDataManager->prepareVertexData(first, count, translated);
     if (err != GL_NO_ERROR)
     {
         return err;
@@ -1982,53 +1973,20 @@ GLenum Context::applyVertexBuffer(GLenum mode, GLint first, GLsizei count, bool 
 
     lookupAttributeMapping(translated);
 
-    mBufferBackEnd->setupAttributesPreDraw(translated);
+    mVertexDataManager->setupAttributes(translated);
 
-    for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
-    {
-        if (translated[i].enabled && translated[i].nonArray)
-        {
-            err = mIndexDataManager->preRenderValidateUnindexed(mode, count, indexInfo);
-            if (err != GL_NO_ERROR)
-            {
-                return err;
-            }
-
-            mBufferBackEnd->setupIndicesPreDraw(*indexInfo);
-
-            *useIndexing = true;
-            return GL_NO_ERROR;
-        }
-    }
-
-    *useIndexing = false;
     return GL_NO_ERROR;
-}
-
-GLenum Context::applyVertexBuffer(const TranslatedIndexData &indexInfo)
-{
-    TranslatedAttribute translated[MAX_VERTEX_ATTRIBS];
-
-    GLenum err = mVertexDataManager->preRenderValidate(indexInfo.minIndex, indexInfo.maxIndex-indexInfo.minIndex+1, translated);
-
-    if (err == GL_NO_ERROR)
-    {
-        lookupAttributeMapping(translated);
-
-        mBufferBackEnd->setupAttributesPreDraw(translated);
-    }
-
-    return err;
 }
 
 // Applies the indices and element array bindings to the Direct3D 9 device
 GLenum Context::applyIndexBuffer(const void *indices, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo)
 {
-    GLenum err = mIndexDataManager->preRenderValidate(mode, type, count, mState.elementArrayBuffer.get(), indices, indexInfo);
+    IDirect3DDevice9 *device = getDevice();
+    GLenum err = mIndexDataManager->prepareIndexData(type, count, mState.elementArrayBuffer.get(), indices, indexInfo);
 
     if (err == GL_NO_ERROR)
     {
-        mBufferBackEnd->setupIndicesPreDraw(*indexInfo);
+        device->SetIndices(indexInfo->indexBuffer);
     }
 
     return err;
@@ -2486,7 +2444,6 @@ void Context::clear(GLbitfield mask)
             device->SetPixelShader(NULL);
             device->SetVertexShader(NULL);
             device->SetFVF(D3DFVF_XYZRHW | D3DFVF_DIFFUSE);
-            device->SetStreamSourceFreq(0, 1);
             device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
 
             hr = device->EndStateBlock(&mMaskedClearSavedState);
@@ -2542,7 +2499,6 @@ void Context::clear(GLbitfield mask)
         device->SetPixelShader(NULL);
         device->SetVertexShader(NULL);
         device->SetFVF(D3DFVF_XYZRHW | D3DFVF_DIFFUSE);
-        device->SetStreamSourceFreq(0, 1);
         device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
 
         struct Vertex
@@ -2624,9 +2580,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
 
     applyState(mode);
 
-    TranslatedIndexData indexInfo;
-    bool useIndexing;
-    GLenum err = applyVertexBuffer(mode, first, count, &useIndexing, &indexInfo);
+    GLenum err = applyVertexBuffer(first, count);
     if (err != GL_NO_ERROR)
     {
         return error(err);
@@ -2643,14 +2597,8 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
     if (!cullSkipsDraw(mode))
     {
         display->startScene();
-        if (useIndexing)
-        {
-            device->DrawIndexedPrimitive(primitiveType, -(INT)indexInfo.minIndex, indexInfo.minIndex, indexInfo.maxIndex-indexInfo.minIndex+1, indexInfo.offset/indexInfo.indexSize, primitiveCount);
-        }
-        else
-        {
-            device->DrawPrimitive(primitiveType, 0, primitiveCount);
-        }
+        
+        device->DrawPrimitive(primitiveType, 0, primitiveCount);
     }
 }
 
@@ -2693,7 +2641,8 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void* 
         return error(err);
     }
 
-    err = applyVertexBuffer(indexInfo);
+    GLsizei vertexCount = indexInfo.maxIndex - indexInfo.minIndex + 1;
+    err = applyVertexBuffer(indexInfo.minIndex, vertexCount);
     if (err != GL_NO_ERROR)
     {
         return error(err);
@@ -2710,7 +2659,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void* 
     if (!cullSkipsDraw(mode))
     {
         display->startScene();
-        device->DrawIndexedPrimitive(primitiveType, -(INT)indexInfo.minIndex, indexInfo.minIndex, indexInfo.maxIndex-indexInfo.minIndex+1, indexInfo.offset/indexInfo.indexSize, primitiveCount);
+        device->DrawIndexedPrimitive(primitiveType, -(INT)indexInfo.minIndex, indexInfo.minIndex, vertexCount, indexInfo.startIndex, primitiveCount);
     }
 }
 
@@ -2738,7 +2687,6 @@ void Context::finish()
         ASSERT(SUCCEEDED(result));
 
         // Render something outside the render target
-        device->SetStreamSourceFreq(0, 1);
         device->SetPixelShader(NULL);
         device->SetVertexShader(NULL);
         device->SetFVF(D3DFVF_XYZRHW);
@@ -2975,6 +2923,11 @@ bool Context::supportsLuminanceAlphaTextures() const
     return mSupportsLuminanceAlphaTextures;
 }
 
+bool Context::supports32bitIndices() const
+{
+    return mSupports32bitIndices;
+}
+
 void Context::detachBuffer(GLuint buffer)
 {
     // [OpenGL ES 2.0.24] section 2.9 page 22:
@@ -3160,7 +3113,7 @@ void Context::setVertexAttrib(GLuint index, const GLfloat *values)
     mState.vertexAttribute[index].mCurrentValue[2] = values[2];
     mState.vertexAttribute[index].mCurrentValue[3] = values[3];
 
-    mVertexDataManager->dirtyCurrentValues();
+    mVertexDataManager->dirtyCurrentValue(index);
 }
 
 void Context::initExtensionString()
@@ -3207,7 +3160,7 @@ void Context::initExtensionString()
         mExtensionString += "GL_ANGLE_framebuffer_multisample ";
     }
 
-    if (mBufferBackEnd->supportIntIndices())
+    if (supports32bitIndices())
     {
         mExtensionString += "GL_OES_element_index_uint ";
     }

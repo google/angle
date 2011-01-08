@@ -1714,7 +1714,7 @@ void __stdcall glDisableVertexAttribArray(GLuint index)
 
         if (context)
         {
-            context->setVertexAttribEnabled(index, false);
+            context->setEnableVertexAttribArray(index, false);
         }
     }
     catch(std::bad_alloc&)
@@ -1759,20 +1759,25 @@ void __stdcall glDrawElements(GLenum mode, GLsizei count, GLenum type, const GLv
             return error(GL_INVALID_VALUE);
         }
 
-        switch (type)
-        {
-          case GL_UNSIGNED_BYTE:
-          case GL_UNSIGNED_SHORT:
-          case GL_UNSIGNED_INT:
-            break;
-          default:
-            return error(GL_INVALID_ENUM);
-        }
-
         gl::Context *context = gl::getContext();
 
         if (context)
         {
+            switch (type)
+            {
+              case GL_UNSIGNED_BYTE:
+              case GL_UNSIGNED_SHORT:
+                break;
+              case GL_UNSIGNED_INT:
+                if (!context->supports32bitIndices())
+                {
+                    return error(GL_INVALID_ENUM);    
+                }
+                break;
+              default:
+                return error(GL_INVALID_ENUM);
+            }
+        
             context->drawElements(mode, count, type, indices);
         }
     }
@@ -1829,7 +1834,7 @@ void __stdcall glEnableVertexAttribArray(GLuint index)
 
         if (context)
         {
-            context->setVertexAttribEnabled(index, true);
+            context->setEnableVertexAttribArray(index, true);
         }
     }
     catch(std::bad_alloc&)
@@ -3457,12 +3462,12 @@ void __stdcall glGetVertexAttribfv(GLuint index, GLenum pname, GLfloat* params)
                 return error(GL_INVALID_VALUE);
             }
 
-            const gl::AttributeState &attribState = context->getVertexAttribState(index);
+            const gl::VertexAttribute &attribState = context->getVertexAttribState(index);
 
             switch (pname)
             {
               case GL_VERTEX_ATTRIB_ARRAY_ENABLED:
-                *params = (GLfloat)(attribState.mEnabled ? GL_TRUE : GL_FALSE);
+                *params = (GLfloat)(attribState.mArrayEnabled ? GL_TRUE : GL_FALSE);
                 break;
               case GL_VERTEX_ATTRIB_ARRAY_SIZE:
                 *params = (GLfloat)attribState.mSize;
@@ -3510,12 +3515,12 @@ void __stdcall glGetVertexAttribiv(GLuint index, GLenum pname, GLint* params)
                 return error(GL_INVALID_VALUE);
             }
 
-            const gl::AttributeState &attribState = context->getVertexAttribState(index);
+            const gl::VertexAttribute &attribState = context->getVertexAttribState(index);
 
             switch (pname)
             {
               case GL_VERTEX_ATTRIB_ARRAY_ENABLED:
-                *params = (attribState.mEnabled ? GL_TRUE : GL_FALSE);
+                *params = (attribState.mArrayEnabled ? GL_TRUE : GL_FALSE);
                 break;
               case GL_VERTEX_ATTRIB_ARRAY_SIZE:
                 *params = attribState.mSize;

@@ -213,8 +213,6 @@ void Surface::writeRecordableFlipState(IDirect3DDevice9 *device)
     device->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
     device->SetFVF(D3DFVF_XYZRHW | D3DFVF_TEX1);
 
-    device->SetStreamSourceFreq(0, 1);   // DrawPrimitiveUP only cares about stream 0, not the rest.
-
     RECT scissorRect = {0};   // Scissoring is disabled for flipping, but we need this to capture and restore the old rectangle
     device->SetScissorRect(&scissorRect);
     D3DVIEWPORT9 viewport = {0, 0, mWidth, mHeight, 0.0f, 1.0f};

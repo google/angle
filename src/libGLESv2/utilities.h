@@ -61,7 +61,7 @@ unsigned int GetGreenSize(D3DFORMAT colorFormat);
 unsigned int GetBlueSize(D3DFORMAT colorFormat);
 unsigned int GetDepthSize(D3DFORMAT depthFormat);
 unsigned int GetStencilSize(D3DFORMAT stencilFormat);
-bool ConvertPrimitiveType(GLenum primitiveType, GLsizei primitiveCount,
+bool ConvertPrimitiveType(GLenum primitiveType, GLsizei elementCount,
                           D3DPRIMITIVETYPE *d3dPrimitiveType, int *d3dPrimitiveCount);
 D3DFORMAT ConvertRenderbufferFormat(GLenum format);
 D3DMULTISAMPLE_TYPE GetMultisampleTypeFromSamples(GLsizei samples);
