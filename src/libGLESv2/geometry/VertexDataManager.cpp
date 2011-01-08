@@ -59,7 +59,12 @@ UINT VertexDataManager::writeAttributeData(ArrayVertexBuffer *vertexBuffer, GLin
     const FormatConverter &converter = formatConverter(attribute);
     UINT streamOffset = 0;
 
-    void *output = vertexBuffer->map(attribute, spaceRequired(attribute, count), &streamOffset);
+    void *output = NULL;
+    
+    if (vertexBuffer)
+    {
+        output = vertexBuffer->map(attribute, spaceRequired(attribute, count), &streamOffset);
+    }
 
     if (output == NULL)
     {
@@ -123,7 +128,10 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
             }
             else if (!staticBuffer || staticBuffer->lookupAttribute(attribs[i]) == -1)
             {
-                mStreamingBuffer->addRequiredSpace(spaceRequired(attribs[i], count));
+                if (mStreamingBuffer)
+                {
+                    mStreamingBuffer->addRequiredSpace(spaceRequired(attribs[i], count));
+                }
             }
         }
     }
@@ -153,7 +161,7 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
                     }
                 }
 
-                if (!matchingAttributes)
+                if (!matchingAttributes && mStreamingBuffer)
                 {
                     mStreamingBuffer->addRequiredSpaceFor(staticBuffer);
                     buffer->invalidateStaticData();
@@ -172,7 +180,10 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
             ArrayVertexBuffer *staticBuffer = buffer ? buffer->getVertexBuffer() : NULL;
             ArrayVertexBuffer *vertexBuffer = staticBuffer ? staticBuffer : mStreamingBuffer;
 
-            vertexBuffer->reserveRequiredSpace();
+            if (vertexBuffer)
+            {
+                vertexBuffer->reserveRequiredSpace();
+            }
         }
     }
 

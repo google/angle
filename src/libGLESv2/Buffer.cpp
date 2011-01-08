@@ -75,8 +75,11 @@ void Buffer::bufferSubData(const void *data, GLsizeiptr size, GLintptr offset)
 
         if (mUsage == GL_STATIC_DRAW)
         {
-            mVertexBuffer = new StaticVertexBuffer(getDevice());
-            mIndexBuffer = new StaticIndexBuffer(getDevice());
+            // If applications update the buffer data after it has already been used in a draw call,
+            // it most likely isn't used as a static buffer so we should fall back to streaming usage
+            // for best performance. So ignore the usage hint and don't create new static buffers.
+        //  mVertexBuffer = new StaticVertexBuffer(getDevice());
+        //  mIndexBuffer = new StaticIndexBuffer(getDevice());
         }
     }
 }

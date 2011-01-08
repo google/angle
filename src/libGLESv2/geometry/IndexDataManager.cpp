@@ -156,9 +156,14 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, Buffer *bu
             }
         }
 
-        indexBuffer->reserveSpace(convertCount * indexSize(format), type);
-
-        void *output = indexBuffer->map(indexSize(format) * convertCount, &streamOffset);
+        void *output = NULL;
+        
+        if (indexBuffer)
+        {
+            indexBuffer->reserveSpace(convertCount * indexSize(format), type);
+            output = indexBuffer->map(indexSize(format) * convertCount, &streamOffset);
+        }
+        
         if (output == NULL)
         {
             ERR("Failed to map index buffer.");
