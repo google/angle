@@ -13,6 +13,7 @@
 
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/Program.h"
+#include "libGLESv2/main.h"
 
 #include "libGLESv2/geometry/vertexconversion.h"
 #include "libGLESv2/geometry/IndexDataManager.h"
@@ -529,7 +530,8 @@ VertexBuffer::VertexBuffer(IDirect3DDevice9 *device, std::size_t size, DWORD usa
 {
     if (size > 0)
     {
-        HRESULT result = device->CreateVertexBuffer(size, usageFlags, 0, D3DPOOL_DEFAULT, &mVertexBuffer, NULL);
+        D3DPOOL pool = getDisplay()->isDirect3D9Ex() ? D3DPOOL_DEFAULT : D3DPOOL_MANAGED;
+        HRESULT result = device->CreateVertexBuffer(size, usageFlags, 0, pool, &mVertexBuffer, NULL);
         
         if (FAILED(result))
         {
@@ -651,7 +653,9 @@ void StreamingVertexBuffer::reserveRequiredSpace()
         }
 
         mBufferSize = std::max(mRequiredSpace, 3 * mBufferSize / 2);   // 1.5 x mBufferSize is arbitrary and should be checked to see we don't have too many reallocations.
-        HRESULT result = mDevice->CreateVertexBuffer(mBufferSize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, 0, D3DPOOL_DEFAULT, &mVertexBuffer, NULL);
+
+        D3DPOOL pool = getDisplay()->isDirect3D9Ex() ? D3DPOOL_DEFAULT : D3DPOOL_MANAGED;
+        HRESULT result = mDevice->CreateVertexBuffer(mBufferSize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, 0, pool, &mVertexBuffer, NULL);
     
         if (FAILED(result))
         {
@@ -712,7 +716,8 @@ void StaticVertexBuffer::reserveRequiredSpace()
 {
     if (!mVertexBuffer && mBufferSize == 0)
     {
-        HRESULT result = mDevice->CreateVertexBuffer(mRequiredSpace, D3DUSAGE_WRITEONLY, 0, D3DPOOL_DEFAULT, &mVertexBuffer, NULL);
+        D3DPOOL pool = getDisplay()->isDirect3D9Ex() ? D3DPOOL_DEFAULT : D3DPOOL_MANAGED;
+        HRESULT result = mDevice->CreateVertexBuffer(mRequiredSpace, D3DUSAGE_WRITEONLY, 0, pool, &mVertexBuffer, NULL);
     
         if (FAILED(result))
         {

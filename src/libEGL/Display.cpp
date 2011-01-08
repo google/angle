@@ -606,6 +606,11 @@ bool Display::getLuminanceAlphaTextureSupport()
     return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_A8L8));
 }
 
+bool Display::isDirect3D9Ex()
+{
+    return mD3d9ex != NULL;
+}
+
 bool Display::getEventQuerySupport()
 {
     IDirect3DQuery9 *query;

@@ -13,6 +13,7 @@
 
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/mathutil.h"
+#include "libGLESv2/main.h"
 
 namespace
 {
@@ -202,7 +203,8 @@ IndexBuffer::IndexBuffer(IDirect3DDevice9 *device, UINT size, D3DFORMAT format) 
 {
     if (size > 0)
     {
-        HRESULT result = device->CreateIndexBuffer(size, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, format, D3DPOOL_DEFAULT, &mIndexBuffer, NULL);
+        D3DPOOL pool = getDisplay()->isDirect3D9Ex() ? D3DPOOL_DEFAULT : D3DPOOL_MANAGED;
+        HRESULT result = device->CreateIndexBuffer(size, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, format, pool, &mIndexBuffer, NULL);
 
         if (FAILED(result))
         {
@@ -274,7 +276,8 @@ void StreamingIndexBuffer::reserveSpace(UINT requiredSpace, GLenum type)
 
         mBufferSize = std::max(requiredSpace, 2 * mBufferSize);
 
-        HRESULT result = mDevice->CreateIndexBuffer(mBufferSize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, type == GL_UNSIGNED_INT ? D3DFMT_INDEX32 : D3DFMT_INDEX16, D3DPOOL_DEFAULT, &mIndexBuffer, NULL);
+        D3DPOOL pool = getDisplay()->isDirect3D9Ex() ? D3DPOOL_DEFAULT : D3DPOOL_MANAGED;
+        HRESULT result = mDevice->CreateIndexBuffer(mBufferSize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, type == GL_UNSIGNED_INT ? D3DFMT_INDEX32 : D3DFMT_INDEX16, pool, &mIndexBuffer, NULL);
     
         if (FAILED(result))
         {
@@ -326,7 +329,8 @@ void StaticIndexBuffer::reserveSpace(UINT requiredSpace, GLenum type)
 {
     if (!mIndexBuffer && mBufferSize == 0)
     {
-        HRESULT result = mDevice->CreateIndexBuffer(requiredSpace, D3DUSAGE_WRITEONLY, type == GL_UNSIGNED_INT ? D3DFMT_INDEX32 : D3DFMT_INDEX16, D3DPOOL_DEFAULT, &mIndexBuffer, NULL);
+        D3DPOOL pool = getDisplay()->isDirect3D9Ex() ? D3DPOOL_DEFAULT : D3DPOOL_MANAGED;
+        HRESULT result = mDevice->CreateIndexBuffer(requiredSpace, D3DUSAGE_WRITEONLY, type == GL_UNSIGNED_INT ? D3DFMT_INDEX32 : D3DFMT_INDEX16, pool, &mIndexBuffer, NULL);
     
         if (FAILED(result))
         {
