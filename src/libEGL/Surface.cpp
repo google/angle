@@ -135,6 +135,7 @@ void Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
 
         ERR("Could not create additional swap chains: %08lX", result);
+        release();
         return error(EGL_BAD_ALLOC);
     }
 
@@ -146,9 +147,8 @@ void Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
 
-        mSwapChain->Release();
-
         ERR("Could not create depthstencil surface for new swap chain: %08lX", result);
+        release();
         return error(EGL_BAD_ALLOC);
     }
 
@@ -161,10 +161,8 @@ void Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
 
-        mSwapChain->Release();
-        mDepthStencil->Release();
-
         ERR("Could not create flip texture for new swap chain: %08lX", result);
+        release();
         return error(EGL_BAD_ALLOC);
     }
 
