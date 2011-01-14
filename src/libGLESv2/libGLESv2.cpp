@@ -5741,6 +5741,7 @@ __eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *
     {
         {"glTexImage3DOES", (__eglMustCastToProperFunctionPointerType)glTexImage3DOES},
         {"glBlitFramebufferANGLE", (__eglMustCastToProperFunctionPointerType)glBlitFramebufferANGLE},
+        {"glRenderbufferStorageMultisampleANGLE", (__eglMustCastToProperFunctionPointerType)glRenderbufferStorageMultisampleANGLE},
         {"glDeleteFencesNV", (__eglMustCastToProperFunctionPointerType)glDeleteFencesNV},
         {"glGenFencesNV", (__eglMustCastToProperFunctionPointerType)glGenFencesNV},
         {"glIsFenceNV", (__eglMustCastToProperFunctionPointerType)glIsFenceNV},
