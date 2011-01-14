@@ -3437,10 +3437,10 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
     }
 
     bool partialBufferCopy = false;
-    if (sourceTrimmedRect.bottom - sourceTrimmedRect.top < readFramebuffer->getColorbuffer()->getHeight() ||
-        sourceTrimmedRect.right - sourceTrimmedRect.left < readFramebuffer->getColorbuffer()->getWidth() || 
-        destTrimmedRect.bottom - destTrimmedRect.top < drawFramebuffer->getColorbuffer()->getHeight() ||
-        destTrimmedRect.right - destTrimmedRect.left < drawFramebuffer->getColorbuffer()->getWidth() ||
+    if (sourceTrimmedRect.bottom - sourceTrimmedRect.top < readBufferHeight ||
+        sourceTrimmedRect.right - sourceTrimmedRect.left < readBufferWidth || 
+        destTrimmedRect.bottom - destTrimmedRect.top < drawBufferHeight ||
+        destTrimmedRect.right - destTrimmedRect.left < drawBufferWidth ||
         sourceTrimmedRect.top != 0 || destTrimmedRect.top != 0 || sourceTrimmedRect.left != 0 || destTrimmedRect.left != 0)
     {
         partialBufferCopy = true;
