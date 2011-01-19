@@ -52,6 +52,7 @@ D3DBLENDOP ConvertBlendOp(GLenum blendOp);
 D3DSTENCILOP ConvertStencilOp(GLenum stencilOp);
 D3DTEXTUREADDRESS ConvertTextureWrap(GLenum wrap);
 D3DCULL ConvertCullMode(GLenum cullFace, GLenum frontFace);
+D3DCUBEMAP_FACES ConvertCubeFace(GLenum cubeFace);
 DWORD ConvertColorMask(bool red, bool green, bool blue, bool alpha);
 D3DTEXTUREFILTERTYPE ConvertMagFilter(GLenum magFilter);
 void ConvertMinFilter(GLenum minFilter, D3DTEXTUREFILTERTYPE *d3dMinFilter, D3DTEXTUREFILTERTYPE *d3dMipFilter);

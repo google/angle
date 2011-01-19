@@ -189,18 +189,7 @@ GLsizei ComputePitch(GLsizei width, GLenum format, GLenum type, GLint alignment)
 
 GLsizei ComputeCompressedPitch(GLsizei width, GLenum format)
 {
-    switch (format)
-    {
-      case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
-      case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
-        break;
-      default:
-        return 0;
-    }
-
-    ASSERT(width % 4 == 0);
-
-    return 8 * width / 4;
+    return ComputeCompressedSize(width, 1, format);
 }
 
 GLsizei ComputeCompressedSize(GLsizei width, GLsizei height, GLenum format)
@@ -526,6 +515,39 @@ D3DCULL ConvertCullMode(GLenum cullFace, GLenum frontFace)
     }
 
     return cull;
+}
+
+D3DCUBEMAP_FACES ConvertCubeFace(GLenum cubeFace)
+{
+    D3DCUBEMAP_FACES face = D3DCUBEMAP_FACE_POSITIVE_X;
+
+    // Map a cube map texture target to the corresponding  D3D surface index. Note that the
+    // Y faces are swapped because the Y coordinate to the texture lookup intrinsic functions
+    // are negated in the pixel shader.
+    switch (cubeFace)
+    {
+      case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
+        face = D3DCUBEMAP_FACE_POSITIVE_X;
+        break;
+      case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
+        face = D3DCUBEMAP_FACE_NEGATIVE_X;
+        break;
+      case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
+        face = D3DCUBEMAP_FACE_NEGATIVE_Y;
+        break;
+      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
+        face = D3DCUBEMAP_FACE_POSITIVE_Y;
+        break;
+      case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
+        face = D3DCUBEMAP_FACE_POSITIVE_Z;
+        break;
+      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
+        face = D3DCUBEMAP_FACE_NEGATIVE_Z;
+        break;
+      default: UNREACHABLE();
+    }
+
+    return face;
 }
 
 DWORD ConvertColorMask(bool red, bool green, bool blue, bool alpha)

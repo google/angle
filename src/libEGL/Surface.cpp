@@ -24,10 +24,7 @@ Surface::Surface(Display *display, const Config *config, HWND window)
 {
     mSwapChain = NULL;
     mDepthStencil = NULL;
-    mBackBuffer = NULL;
-    mFlipTexture = NULL;
-    mFlipState = NULL;
-    mPreFlipState = NULL;
+    mRenderTarget = NULL;
 
     mPixelAspectRatio = (EGLint)(1.0 * EGL_DISPLAY_SCALING);   // FIXME: Determine actual pixel aspect ratio
     mRenderBuffer = EGL_BACK_BUFFER;
@@ -53,34 +50,16 @@ void Surface::release()
         mSwapChain = NULL;
     }
 
-    if (mBackBuffer)
-    {
-        mBackBuffer->Release();
-        mBackBuffer = NULL;
-    }
-
     if (mDepthStencil)
     {
         mDepthStencil->Release();
         mDepthStencil = NULL;
     }
 
-    if (mFlipTexture)
+    if (mRenderTarget)
     {
-        mFlipTexture->Release();
-        mFlipTexture = NULL;
-    }
-
-    if (mFlipState)
-    {
-        mFlipState->Release();
-        mFlipState = NULL;
-    }
-
-    if (mPreFlipState)
-    {
-        mPreFlipState->Release();
-        mPreFlipState = NULL;
+        mRenderTarget->Release();
+        mRenderTarget = NULL;
     }
 }
 
@@ -152,30 +131,13 @@ void Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
         return error(EGL_BAD_ALLOC);
     }
 
-    ASSERT(SUCCEEDED(result));
-
-    result = device->CreateTexture(presentParameters.BackBufferWidth, presentParameters.BackBufferHeight, 1, D3DUSAGE_RENDERTARGET,
-                                   presentParameters.BackBufferFormat, D3DPOOL_DEFAULT, &mFlipTexture, NULL);
-
-    if (FAILED(result))
-    {
-        ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-
-        ERR("Could not create flip texture for new swap chain: %08lX", result);
-        release();
-        return error(EGL_BAD_ALLOC);
-    }
-
-    mSwapChain->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &mBackBuffer);
+    mSwapChain->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &mRenderTarget);
     mWidth = presentParameters.BackBufferWidth;
     mHeight = presentParameters.BackBufferHeight;
 
     mPresentIntervalDirty = false;
 
     InvalidateRect(mWindow, NULL, FALSE);
-
-    // The flip state block recorded mFlipTexture so it is now invalid.
-    releaseRecordedState(device);
 }
 
 HWND Surface::getWindowHandle()
@@ -183,132 +145,7 @@ HWND Surface::getWindowHandle()
     return mWindow;
 }
 
-void Surface::writeRecordableFlipState(IDirect3DDevice9 *device)
-{
-    // Disable all pipeline operations
-    device->SetRenderState(D3DRS_ZENABLE, D3DZB_FALSE);
-    device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-    device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-    device->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-    device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-    device->SetRenderState(D3DRS_STENCILENABLE, FALSE);
-    device->SetRenderState(D3DRS_CLIPPLANEENABLE, 0);
-    device->SetRenderState(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_ALPHA | D3DCOLORWRITEENABLE_BLUE | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_RED);
-    device->SetRenderState(D3DRS_SRGBWRITEENABLE, FALSE);
-    device->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
-    device->SetPixelShader(NULL);
-    device->SetVertexShader(NULL);
 
-    // Just sample the texture
-    device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
-    device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);
-    device->SetTextureStageState(1, D3DTSS_COLOROP, D3DTOP_DISABLE);
-    device->SetTexture(0, NULL);   // The actual texture will change after resizing. But the pre-flip state block must save/restore the texture.
-    device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
-    device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
-    device->SetSamplerState(0, D3DSAMP_SRGBTEXTURE, FALSE);
-    device->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
-    device->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
-    device->SetFVF(D3DFVF_XYZRHW | D3DFVF_TEX1);
-
-    RECT scissorRect = {0};   // Scissoring is disabled for flipping, but we need this to capture and restore the old rectangle
-    device->SetScissorRect(&scissorRect);
-    D3DVIEWPORT9 viewport = {0, 0, mWidth, mHeight, 0.0f, 1.0f};
-    device->SetViewport(&viewport);
-}
-
-void Surface::applyFlipState(IDirect3DDevice9 *device)
-{
-    HRESULT hr;
-
-    if (mFlipState == NULL)
-    {
-        // Create two state blocks both recording the states that are changed when swapping.
-
-        // mPreFlipState will record the original state each entry.
-        hr = device->BeginStateBlock();
-        ASSERT(SUCCEEDED(hr));
-        writeRecordableFlipState(device);
-        hr = device->EndStateBlock(&mPreFlipState);
-        ASSERT(SUCCEEDED(hr) || hr == D3DERR_OUTOFVIDEOMEMORY || hr == E_OUTOFMEMORY);
-
-        if (SUCCEEDED(hr))
-        {
-            mPreFlipState->Capture();
-        }
-
-        // mFlipState will record the state for the swap operation.
-        hr = device->BeginStateBlock();
-        ASSERT(SUCCEEDED(hr));
-
-        writeRecordableFlipState(device);
-
-        hr = device->EndStateBlock(&mFlipState);
-        ASSERT(SUCCEEDED(hr) || hr == D3DERR_OUTOFVIDEOMEMORY || hr == E_OUTOFMEMORY);
-
-        if (FAILED(hr))
-        {
-            mFlipState = NULL;
-            mPreFlipState->Release();
-            mPreFlipState = NULL;
-        }
-        else
-        {
-            hr = mFlipState->Apply();
-            ASSERT(SUCCEEDED(hr));
-        }
-    }
-    else
-    {
-        hr = mPreFlipState->Capture();
-        ASSERT(SUCCEEDED(hr));
-        hr = mFlipState->Apply();
-        ASSERT(SUCCEEDED(hr));
-    }
-
-    device->GetRenderTarget(0, &mPreFlipBackBuffer);
-    device->GetDepthStencilSurface(&mPreFlipDepthStencil);
-
-    device->SetRenderTarget(0, mBackBuffer);
-    device->SetDepthStencilSurface(NULL);
-}
-
-void Surface::restoreState(IDirect3DDevice9 *device)
-{
-    device->SetRenderTarget(0, mPreFlipBackBuffer);
-    device->SetDepthStencilSurface(mPreFlipDepthStencil);
-
-    if (mPreFlipBackBuffer)
-    {
-        mPreFlipBackBuffer->Release();
-        mPreFlipBackBuffer = NULL;
-    }
-
-    if (mPreFlipDepthStencil)
-    {
-        mPreFlipDepthStencil->Release();
-        mPreFlipDepthStencil = NULL;
-    }
-
-    mPreFlipState->Apply();
-}
-
-// On the next flip, this will cause the state to be recorded from scratch.
-// In particular we need to do this if the flip texture changes.
-void Surface::releaseRecordedState(IDirect3DDevice9 *device)
-{
-    if (mFlipState)
-    {
-        mFlipState->Release();
-        mFlipState = NULL;
-    }
-
-    if (mPreFlipState)
-    {
-        mPreFlipState->Release();
-        mPreFlipState = NULL;
-    }
-}
 #define kSurfaceProperty _TEXT("Egl::SurfaceOwner")
 #define kParentWndProc _TEXT("Egl::SurfaceParentWndProc")
 
@@ -407,25 +244,6 @@ bool Surface::swap()
 {
     if (mSwapChain)
     {
-        IDirect3DDevice9 *device = mDisplay->getDevice();
-
-        applyFlipState(device);
-        device->SetTexture(0, mFlipTexture);
-
-        // Render the texture upside down into the back buffer
-        // Texcoords are chosen to flip the renderTarget about its Y axis.
-        float w = static_cast<float>(getWidth());
-        float h = static_cast<float>(getHeight());
-        float quad[4][6] = {{0 - 0.5f, 0 - 0.5f, 0.0f, 1.0f, 0.0f, 1.0f},
-                            {w - 0.5f, 0 - 0.5f, 0.0f, 1.0f, 1.0f, 1.0f},
-                            {w - 0.5f, h - 0.5f, 0.0f, 1.0f, 1.0f, 0.0f},
-                            {0 - 0.5f, h - 0.5f, 0.0f, 1.0f, 0.0f, 0.0f}};   // x, y, z, rhw, u, v
-
-        mDisplay->startScene();
-        device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, quad, 6 * sizeof(float));
-
-        restoreState(device);
-
         mDisplay->endScene();
 
         HRESULT result = mSwapChain->Present(NULL, NULL, NULL, NULL, 0);
@@ -460,14 +278,12 @@ EGLint Surface::getHeight() const
 
 IDirect3DSurface9 *Surface::getRenderTarget()
 {
-    IDirect3DSurface9 *textureSurface = NULL;
-
-    if (mFlipTexture)
+    if (mRenderTarget)
     {
-        mFlipTexture->GetSurfaceLevel(0, &textureSurface);
+        mRenderTarget->AddRef();
     }
 
-    return textureSurface;
+    return mRenderTarget;
 }
 
 IDirect3DSurface9 *Surface::getDepthStencil()

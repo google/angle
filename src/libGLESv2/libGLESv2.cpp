@@ -1105,7 +1105,7 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
                     return error(GL_INVALID_OPERATION);
                 }
 
-                texture->copyImage(level, internalformat, x, y, width, height, source);
+                texture->copyImage(level, internalformat, x, y, width, height, framebuffer);
             }
             else if (gl::IsCubemapTextureTarget(target))
             {
@@ -1116,7 +1116,7 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
                     return error(GL_INVALID_OPERATION);
                 }
 
-                texture->copyImage(target, level, internalformat, x, y, width, height, source);
+                texture->copyImage(target, level, internalformat, x, y, width, height, framebuffer);
             }
             else UNREACHABLE();
         }
@@ -1240,7 +1240,7 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
                 return error(GL_INVALID_OPERATION);
             }
 
-            texture->copySubImage(target, level, xoffset, yoffset, x, y, width, height, source);
+            texture->copySubImage(target, level, xoffset, yoffset, x, y, width, height, framebuffer);
         }
     }
 
