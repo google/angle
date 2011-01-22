@@ -1415,7 +1415,7 @@ bool Program::linkVaryings()
 
     if (mFragmentShader->mUsesPointCoord && sm3)
     {
-        mPixelHLSL += "    gl_PointCoord = float2(input.gl_PointCoord.x, 1.0 - input.gl_PointCoord.y);\n";
+        mPixelHLSL += "    gl_PointCoord = input.gl_PointCoord;\n";
     }
 
     if (mFragmentShader->mUsesFrontFacing)
