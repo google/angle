@@ -9,6 +9,7 @@
 #include <exception>
 
 #include "common/debug.h"
+#include "common/version.h"
 #include "libGLESv2/Context.h"
 
 #include "libEGL/main.h"
@@ -195,9 +196,9 @@ const char *__stdcall eglQueryString(EGLDisplay dpy, EGLint name)
           case EGL_EXTENSIONS:
             return success("");
           case EGL_VENDOR:
-            return success("TransGaming Inc.");
+            return success("Google Inc.");
           case EGL_VERSION:
-            return success("1.4 (git-devel "__DATE__" " __TIME__")");
+            return success("1.4 (ANGLE "VERSION_STRING")");
         }
 
         return error(EGL_BAD_PARAMETER, (const char*)NULL);

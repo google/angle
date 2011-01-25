@@ -315,6 +315,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\resource.h"
+				>
+			</File>
+			<File
 				RelativePath=".\ResourceManager.h"
 				>
 			</File>
@@ -328,6 +332,10 @@
 			</File>
 			<File
 				RelativePath=".\utilities.h"
+				>
+			</File>
+			<File
+				RelativePath="..\common\version.h"
 				>
 			</File>
 			<Filter
@@ -349,6 +357,10 @@
 		</Filter>
 		<File
 			RelativePath=".\libGLESv2.def"
+			>
+		</File>
+		<File
+			RelativePath=".\libGLESv2.rc"
 			>
 		</File>
 	</Files>

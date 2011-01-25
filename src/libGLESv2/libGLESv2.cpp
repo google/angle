@@ -14,6 +14,7 @@
 #include <limits>
 
 #include "common/debug.h"
+#include "common/version.h"
 
 #include "libGLESv2/main.h"
 #include "libGLESv2/mathutil.h"
@@ -3210,13 +3211,13 @@ const GLubyte* __stdcall glGetString(GLenum name)
         switch (name)
         {
           case GL_VENDOR:
-            return (GLubyte*)"TransGaming Inc.";
+            return (GLubyte*)"Google Inc.";
           case GL_RENDERER:
             return (GLubyte*)"ANGLE";
           case GL_VERSION:
-            return (GLubyte*)"OpenGL ES 2.0 (git-devel "__DATE__ " " __TIME__")";
+            return (GLubyte*)"OpenGL ES 2.0 (ANGLE "VERSION_STRING")";
           case GL_SHADING_LANGUAGE_VERSION:
-            return (GLubyte*)"OpenGL ES GLSL ES 1.00 (git-devel "__DATE__ " " __TIME__")";
+            return (GLubyte*)"OpenGL ES GLSL ES 1.00 (ANGLE "VERSION_STRING")";
           case GL_EXTENSIONS:
             return (GLubyte*)((context != NULL) ? context->getExtensionString() : "");
           default:
