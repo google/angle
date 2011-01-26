@@ -71,7 +71,9 @@ typedef enum {
   SH_VALIDATE_LOOP_INDEXING = 0x0001,
   SH_INTERMEDIATE_TREE      = 0x0002,
   SH_OBJECT_CODE            = 0x0004,
-  SH_ATTRIBUTES_UNIFORMS    = 0x0008
+  SH_ATTRIBUTES_UNIFORMS    = 0x0008,
+  SH_LINE_DIRECTIVES        = 0x0010,
+  SH_SOURCE_PATH            = 0x0200,
 } ShCompileOptions;
 
 //

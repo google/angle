@@ -9,6 +9,8 @@
 #include "libGLESv2/utilities.h"
 
 #include <limits>
+#include <stdio.h>
+#include <windows.h>
 
 #include "common/debug.h"
 
@@ -846,4 +848,37 @@ GLenum ConvertDepthStencilFormat(D3DFORMAT format)
     return GL_DEPTH24_STENCIL8_OES;
 }
 
+}
+
+std::string getTempPath()
+{
+    char path[MAX_PATH];
+    DWORD pathLen = GetTempPathA(sizeof(path) / sizeof(path[0]), path);
+    if (pathLen == 0)
+    {
+        UNREACHABLE();
+        return std::string();
+    }
+
+    UINT unique = GetTempFileNameA(path, "sh", 0, path);
+    if (unique == 0)
+    {
+        UNREACHABLE();
+        return std::string();
+    }
+    
+    return path;
+}
+
+void writeFile(const char* path, const void* content, size_t size)
+{
+    FILE* file = fopen(path, "w");
+    if (!file)
+    {
+        UNREACHABLE();
+        return;
+    }
+
+    fwrite(content, sizeof(char), size, file);
+    fclose(file);
 }

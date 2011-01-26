@@ -14,6 +14,8 @@
 #include <GLES2/gl2ext.h>
 #include <d3d9.h>
 
+#include <string>
+
 namespace gl
 {
 
@@ -77,5 +79,8 @@ GLenum ConvertBackBufferFormat(D3DFORMAT format);
 GLenum ConvertDepthStencilFormat(D3DFORMAT format);
 
 }
+
+std::string getTempPath();
+void writeFile(const char* path, const void* data, size_t size);
 
 #endif  // LIBGLESV2_UTILITIES_H

@@ -5,7 +5,7 @@
 {
   'target_defaults': {
     'defines': [
-      'TRACE_OUTPUT_FILE="angle-debug.txt"',
+      'ANGLE_DISABLE_TRACE',
     ],
   },
   'targets': [
@@ -183,7 +183,10 @@
           'msvs_settings': {
             'VCLinkerTool': {
               'AdditionalLibraryDirectories': ['$(DXSDK_DIR)/lib/x86'],
-              'AdditionalDependencies': ['d3dx9.lib'],
+              'AdditionalDependencies': [
+                'd3d9.lib',
+                'd3dx9.lib',
+              ],
             }
           },
         },
@@ -215,6 +218,7 @@
             'VCLinkerTool': {
               'AdditionalLibraryDirectories': ['$(DXSDK_DIR)/lib/x86'],
               'AdditionalDependencies': [
+                'd3d9.lib',
                 'dxguid.lib',
               ],
             }

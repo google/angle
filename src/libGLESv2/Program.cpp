@@ -971,7 +971,24 @@ ID3DXBuffer *Program::compileToBinary(const char *hlsl, const char *profile, ID3
     ID3DXBuffer *binary = NULL;
     ID3DXBuffer *errorMessage = NULL;
 
-    HRESULT result = D3DXCompileShader(hlsl, (UINT)strlen(hlsl), NULL, NULL, "main", profile, 0, &binary, &errorMessage, constantTable);
+    DWORD result;
+    if (perfActive())
+    {
+        DWORD flags = D3DXSHADER_DEBUG;
+#ifndef NDEBUG
+        flags |= D3DXSHADER_SKIPOPTIMIZATION;
+#endif
+
+        std::string sourcePath = getTempPath();
+        std::string sourceText = std::string("#line 2 \"") + sourcePath + std::string("\"\n\n") + std::string(hlsl);
+        writeFile(sourcePath.c_str(), sourceText.c_str(), sourceText.size());
+        
+        result = D3DXCompileShader(sourceText.c_str(), sourceText.size(), NULL, NULL, "main", profile, flags, &binary, &errorMessage, constantTable);
+    }
+    else
+    {
+        result = D3DXCompileShader(hlsl, (UINT)strlen(hlsl), NULL, NULL, "main", profile, 0, &binary, &errorMessage, constantTable);
+    }
 
     if (SUCCEEDED(result))
     {
@@ -1460,9 +1477,6 @@ bool Program::linkVaryings()
                   "\n"
                   "    return output;\n"
                   "}\n";
-
-    TRACE("\n%s", mPixelHLSL.c_str());
-    TRACE("\n%s", mVertexHLSL.c_str());
 
     return true;
 }
