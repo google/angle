@@ -621,6 +621,12 @@ int yylex_CPP(char* buf, int maxSize)
         token = cpp->currentInput->scan(cpp->currentInput, &yylvalpp);
         if(check_EOF(token))
             return 0;
+        if (token < 0) {
+            // This check may need to be improved to support UTF-8
+            // characters in comments.
+            CPPErrorToInfoLog("preprocessor encountered non-ASCII character in shader source");
+            return 0;
+        }
         if (token == '#') {
             if (cpp->previous_token == '\n'|| cpp->previous_token == 0) {
                 token = readCPPline(&yylvalpp);
