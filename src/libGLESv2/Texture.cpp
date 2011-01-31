@@ -1352,15 +1352,11 @@ void Texture2D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei wi
         {
             Image *img = &mImageArray[level];
 
-            RECT sourceRect;
-            sourceRect.left = xoffset;
-            sourceRect.top = yoffset;
-            sourceRect.right = xoffset + width;
-            sourceRect.bottom = yoffset + height;
+            RECT sourceRect = transformPixelRect(xoffset, yoffset, width, height, img->height);;
 
             POINT destPoint;
-            destPoint.x = xoffset;
-            destPoint.y = yoffset;
+            destPoint.x = sourceRect.left;
+            destPoint.y = sourceRect.top;
 
             result = getDevice()->UpdateSurface(img->surface, &sourceRect, destLevel, &destPoint);
             ASSERT(SUCCEEDED(result));
@@ -1890,15 +1886,11 @@ void TextureCubeMap::commitRect(GLenum faceTarget, GLint level, GLint xoffset, G
         {
             Image *img = &mImageArray[face][level];
 
-            RECT sourceRect;
-            sourceRect.left = xoffset;
-            sourceRect.top = yoffset;
-            sourceRect.right = xoffset + width;
-            sourceRect.bottom = yoffset + height;
+            RECT sourceRect = transformPixelRect(xoffset, yoffset, width, height, img->height);;
 
             POINT destPoint;
-            destPoint.x = xoffset;
-            destPoint.y = yoffset;
+            destPoint.x = sourceRect.left;
+            destPoint.y = sourceRect.top;
 
             HRESULT result = getDevice()->UpdateSurface(img->surface, &sourceRect, destLevel, &destPoint);
             ASSERT(SUCCEEDED(result));
