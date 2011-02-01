@@ -57,10 +57,10 @@ class Texture : public RefCountObject
     GLenum getWrapS() const;
     GLenum getWrapT() const;
 
-    GLuint getWidth() const;
-    GLuint getHeight() const;
+    GLsizei getWidth() const;
+    GLsizei getHeight() const;
 
-    virtual GLenum getFormat() const = 0;
+    virtual GLenum getInternalFormat() const = 0;
     virtual bool isComplete() const = 0;
     virtual bool isCompressed() const = 0;
     bool isFloatingPoint() const;
@@ -68,38 +68,17 @@ class Texture : public RefCountObject
 
     D3DFORMAT getD3DFormat() const;
     IDirect3DBaseTexture9 *getTexture();
-    virtual Renderbuffer *getColorbuffer(GLenum target) = 0;
+    virtual Renderbuffer *getRenderbuffer(GLenum target) = 0;
 
     virtual void generateMipmaps() = 0;
     virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source) = 0;
 
     bool isDirty() const;
 
-    static const GLuint INCOMPLETE_TEXTURE_ID = static_cast<GLuint>(-1); // Every texture takes an id at creation time. The value is arbitrary because it is never registered with the resource manager.
+    static const GLuint INCOMPLETE_TEXTURE_ID = static_cast<GLuint>(-1);   // Every texture takes an id at creation time. The value is arbitrary because it is never registered with the resource manager.
 
   protected:
-    class TextureColorbufferProxy;
-    friend class TextureColorbufferProxy;
-    class TextureColorbufferProxy : public Colorbuffer
-    {
-      public:
-        TextureColorbufferProxy(Texture *texture, GLenum target);
-            // target is a 2D-like texture target (GL_TEXTURE_2D or one of the cube face targets)
-
-        virtual void addRef() const;
-        virtual void release() const;
-
-        virtual IDirect3DSurface9 *getRenderTarget();
-
-        virtual int getWidth() const;
-        virtual int getHeight() const;
-        virtual GLenum getFormat() const;
-        virtual bool isFloatingPoint() const;
-
-      private:
-        Texture *mTexture;
-        GLenum mTarget;
-    };
+    friend class Colorbuffer;
 
     // Helper structure representing a single image layer
     struct Image
@@ -147,8 +126,8 @@ class Texture : public RefCountObject
 
     bool isRenderable() const;
 
-    unsigned int mWidth;
-    unsigned int mHeight;
+    GLsizei mWidth;
+    GLsizei mHeight;
     GLenum mMinFilter;
     GLenum mMagFilter;
     GLenum mWrapS;
@@ -218,7 +197,7 @@ class Texture2D : public Texture
     ~Texture2D();
 
     GLenum getTarget() const;
-    GLenum getFormat() const;
+    GLenum getInternalFormat() const;
 
     void setImage(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void setCompressedImage(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels);
@@ -232,7 +211,7 @@ class Texture2D : public Texture
 
     virtual void generateMipmaps();
 
-    virtual Renderbuffer *getColorbuffer(GLenum target);
+    virtual Renderbuffer *getRenderbuffer(GLenum target);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture2D);
@@ -262,7 +241,7 @@ class TextureCubeMap : public Texture
     ~TextureCubeMap();
 
     GLenum getTarget() const;
-    GLenum getFormat() const;
+    GLenum getInternalFormat() const;
 
     void setImagePosX(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void setImageNegX(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
@@ -283,7 +262,7 @@ class TextureCubeMap : public Texture
 
     virtual void generateMipmaps();
 
-    virtual Renderbuffer *getColorbuffer(GLenum target);
+    virtual Renderbuffer *getRenderbuffer(GLenum target);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureCubeMap);

@@ -168,12 +168,12 @@ GLenum Texture::getWrapT() const
     return mWrapT;
 }
 
-GLuint Texture::getWidth() const
+GLsizei Texture::getWidth() const
 {
     return mWidth;
 }
 
-GLuint Texture::getHeight() const
+GLsizei Texture::getHeight() const
 {
     return mHeight;
 }
@@ -937,7 +937,7 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GL
         return false;
     }
 
-    if (format != getFormat())
+    if (format != getInternalFormat())
     {
         error(GL_INVALID_OPERATION);
         return false;
@@ -1147,7 +1147,7 @@ void Texture::copyNonRenderable(Image *image, GLenum internalFormat, GLint xoffs
 
 D3DFORMAT Texture::getD3DFormat() const
 {
-    return selectFormat(getFormat(), mType);
+    return selectFormat(getInternalFormat(), mType);
 }
 
 IDirect3DBaseTexture9 *Texture::getTexture()
@@ -1264,7 +1264,7 @@ GLenum Texture2D::getTarget() const
     return GL_TEXTURE_2D;
 }
 
-GLenum Texture2D::getFormat() const
+GLenum Texture2D::getInternalFormat() const
 {
     return mImageArray[0].format;
 }
@@ -1452,7 +1452,7 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
    
     if (!isRenderableFormat())
     {
-        copyNonRenderable(&mImageArray[level], getFormat(), xoffset, yoffset, x, y, width, height, renderTarget);
+        copyNonRenderable(&mImageArray[level], getInternalFormat(), xoffset, yoffset, x, y, width, height, renderTarget);
     }
     else
     {
@@ -1513,8 +1513,8 @@ bool Texture2D::isComplete() const
      default: UNREACHABLE();
     }
 
-    if ((getFormat() == GL_FLOAT && !getContext()->supportsFloatLinearFilter()) ||
-        (getFormat() == GL_HALF_FLOAT_OES && !getContext()->supportsHalfFloatLinearFilter()))
+    if ((getInternalFormat() == GL_FLOAT && !getContext()->supportsFloatLinearFilter()) ||
+        (getInternalFormat() == GL_HALF_FLOAT_OES && !getContext()->supportsHalfFloatLinearFilter()))
     {
         if (mMagFilter != GL_NEAREST || (mMinFilter != GL_NEAREST && mMinFilter != GL_NEAREST_MIPMAP_NEAREST))
         {
@@ -1562,7 +1562,7 @@ bool Texture2D::isComplete() const
 
 bool Texture2D::isCompressed() const
 {
-    return IsCompressed(getFormat());
+    return IsCompressed(getInternalFormat());
 }
 
 // Constructs a Direct3D 9 texture resource from the texture images, or returns an existing one
@@ -1774,7 +1774,7 @@ void Texture2D::generateMipmaps()
     }
 }
 
-Renderbuffer *Texture2D::getColorbuffer(GLenum target)
+Renderbuffer *Texture2D::getRenderbuffer(GLenum target)
 {
     if (target != GL_TEXTURE_2D)
     {
@@ -1783,7 +1783,7 @@ Renderbuffer *Texture2D::getColorbuffer(GLenum target)
 
     if (mColorbufferProxy.get() == NULL)
     {
-        mColorbufferProxy.set(new Renderbuffer(id(), new TextureColorbufferProxy(this, target)));
+        mColorbufferProxy.set(new Renderbuffer(id(), new Colorbuffer(this, target)));
     }
 
     return mColorbufferProxy.get();
@@ -1830,7 +1830,7 @@ GLenum TextureCubeMap::getTarget() const
     return GL_TEXTURE_CUBE_MAP;
 }
 
-GLenum TextureCubeMap::getFormat() const
+GLenum TextureCubeMap::getInternalFormat() const
 {
     return mImageArray[0][0].format;
 }
@@ -1953,8 +1953,8 @@ bool TextureCubeMap::isComplete() const
         }
     }
 
-    if ((getFormat() == GL_FLOAT && !getContext()->supportsFloatLinearFilter()) ||
-        (getFormat() == GL_HALF_FLOAT_OES && !getContext()->supportsHalfFloatLinearFilter()))
+    if ((getInternalFormat() == GL_FLOAT && !getContext()->supportsFloatLinearFilter()) ||
+        (getInternalFormat() == GL_HALF_FLOAT_OES && !getContext()->supportsHalfFloatLinearFilter()))
     {
         if (mMagFilter != GL_NEAREST || (mMinFilter != GL_NEAREST && mMinFilter != GL_NEAREST_MIPMAP_NEAREST))
         {
@@ -1995,7 +1995,7 @@ bool TextureCubeMap::isComplete() const
 
 bool TextureCubeMap::isCompressed() const
 {
-    return IsCompressed(getFormat());
+    return IsCompressed(getInternalFormat());
 }
 
 // Constructs a Direct3D 9 texture resource from the texture images, or returns an existing one
@@ -2300,7 +2300,7 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
    
     if (!isRenderableFormat())
     {
-        copyNonRenderable(&mImageArray[faceindex][level], getFormat(), 0, 0, x, y, width, height, renderTarget);
+        copyNonRenderable(&mImageArray[faceindex][level], getInternalFormat(), 0, 0, x, y, width, height, renderTarget);
     }
     else
     {
@@ -2427,7 +2427,7 @@ void TextureCubeMap::generateMipmaps()
     }
 }
 
-Renderbuffer *TextureCubeMap::getColorbuffer(GLenum target)
+Renderbuffer *TextureCubeMap::getRenderbuffer(GLenum target)
 {
     if (!IsCubemapTextureTarget(target))
     {
@@ -2438,7 +2438,7 @@ Renderbuffer *TextureCubeMap::getColorbuffer(GLenum target)
 
     if (mFaceProxies[face].get() == NULL)
     {
-        mFaceProxies[face].set(new Renderbuffer(id(), new TextureColorbufferProxy(this, target)));
+        mFaceProxies[face].set(new Renderbuffer(id(), new Colorbuffer(this, target)));
     }
 
     return mFaceProxies[face].get();
@@ -2459,51 +2459,6 @@ IDirect3DSurface9 *TextureCubeMap::getRenderTarget(GLenum target)
     mTexture->GetCubeMapSurface(es2dx::ConvertCubeFace(target), 0, &renderTarget);
 
     return renderTarget;
-}
-
-Texture::TextureColorbufferProxy::TextureColorbufferProxy(Texture *texture, GLenum target)
-  : Colorbuffer(texture), mTexture(texture), mTarget(target)
-{
-    ASSERT(IsTextureTarget(target));
-}
-
-void Texture::TextureColorbufferProxy::addRef() const
-{
-    mTexture->addRef();
-}
-
-void Texture::TextureColorbufferProxy::release() const
-{
-    mTexture->release();
-}
-
-IDirect3DSurface9 *Texture::TextureColorbufferProxy::getRenderTarget()
-{
-    if (mRenderTarget) mRenderTarget->Release();
-
-    mRenderTarget = mTexture->getRenderTarget(mTarget);
-
-    return mRenderTarget;
-}
-
-int Texture::TextureColorbufferProxy::getWidth() const
-{
-    return mTexture->getWidth();
-}
-
-int Texture::TextureColorbufferProxy::getHeight() const
-{
-    return mTexture->getHeight();
-}
-
-GLenum Texture::TextureColorbufferProxy::getFormat() const
-{
-    return mTexture->getFormat();
-}
-
-bool Texture::TextureColorbufferProxy::isFloatingPoint() const
-{
-    return mTexture->isFloatingPoint();
 }
 
 }

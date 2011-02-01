@@ -2378,7 +2378,7 @@ void Context::clear(GLbitfield mask)
             D3DSURFACE_DESC desc;
             depthStencil->GetDesc(&desc);
 
-            unsigned int stencilSize = es2dx::GetStencilSize(desc.Format);
+            unsigned int stencilSize = dx2es::GetStencilSize(desc.Format);
             stencilUnmasked = (0x1 << stencilSize) - 1;
 
             if (stencilUnmasked != 0x0)
@@ -2415,7 +2415,7 @@ void Context::clear(GLbitfield mask)
     D3DSURFACE_DESC desc;
     renderTarget->GetDesc(&desc);
 
-    bool alphaUnmasked = (es2dx::GetAlphaSize(desc.Format) == 0) || mState.colorMaskAlpha;
+    bool alphaUnmasked = (dx2es::GetAlphaSize(desc.Format) == 0) || mState.colorMaskAlpha;
 
     const bool needMaskedStencilClear = (flags & D3DCLEAR_STENCIL) &&
                                         (mState.stencilWritemask & stencilUnmasked) != stencilUnmasked;

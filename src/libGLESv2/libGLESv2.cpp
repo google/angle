@@ -1044,7 +1044,7 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
             }
 
             gl::Colorbuffer *source = framebuffer->getColorbuffer();
-            GLenum colorbufferFormat = source->getFormat();
+            GLenum colorbufferFormat = source->getInternalFormat();
 
             // [OpenGL ES 2.0.24] table 3.9
             switch (internalformat)
@@ -1178,7 +1178,7 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
             }
 
             gl::Colorbuffer *source = framebuffer->getColorbuffer();
-            GLenum colorbufferFormat = source->getFormat();
+            GLenum colorbufferFormat = source->getInternalFormat();
             gl::Texture *texture = NULL;
 
             if (target == GL_TEXTURE_2D)
@@ -1196,7 +1196,7 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
                 return error(GL_INVALID_OPERATION);
             }
 
-            GLenum textureFormat = texture->getFormat();
+            GLenum textureFormat = texture->getInternalFormat();
 
             // [OpenGL ES 2.0.24] table 3.9
             switch (textureFormat)
@@ -2954,85 +2954,23 @@ void __stdcall glGetRenderbufferParameteriv(GLenum target, GLenum pname, GLint* 
 
             switch (pname)
             {
-              case GL_RENDERBUFFER_WIDTH:
-                *params = renderbuffer->getWidth();
-                break;
-              case GL_RENDERBUFFER_HEIGHT:
-                *params = renderbuffer->getHeight();
-                break;
-              case GL_RENDERBUFFER_INTERNAL_FORMAT:
-                *params = renderbuffer->getFormat();
-                break;
-              case GL_RENDERBUFFER_RED_SIZE:
-                if (renderbuffer->isColorbuffer())
-                {
-                    *params = static_cast<gl::Colorbuffer*>(renderbuffer->getStorage())->getRedSize();
-                }
-                else
-                {
-                    *params = 0;
-                }
-                break;
-              case GL_RENDERBUFFER_GREEN_SIZE:
-                if (renderbuffer->isColorbuffer())
-                {
-                    *params = static_cast<gl::Colorbuffer*>(renderbuffer->getStorage())->getGreenSize();
-                }
-                else
-                {
-                    *params = 0;
-                }
-                break;
-              case GL_RENDERBUFFER_BLUE_SIZE:
-                if (renderbuffer->isColorbuffer())
-                {
-                    *params = static_cast<gl::Colorbuffer*>(renderbuffer->getStorage())->getBlueSize();
-                }
-                else
-                {
-                    *params = 0;
-                }
-                break;
-              case GL_RENDERBUFFER_ALPHA_SIZE:
-                if (renderbuffer->isColorbuffer())
-                {
-                    *params = static_cast<gl::Colorbuffer*>(renderbuffer->getStorage())->getAlphaSize();
-                }
-                else
-                {
-                    *params = 0;
-                }
-                break;
-              case GL_RENDERBUFFER_DEPTH_SIZE:
-                if (renderbuffer->isDepthbuffer())
-                {
-                    *params = static_cast<gl::Depthbuffer*>(renderbuffer->getStorage())->getDepthSize();
-                }
-                else
-                {
-                    *params = 0;
-                }
-                break;
-              case GL_RENDERBUFFER_STENCIL_SIZE:
-                if (renderbuffer->isStencilbuffer())
-                {
-                    *params = static_cast<gl::Stencilbuffer*>(renderbuffer->getStorage())->getStencilSize();
-                }
-                else
-                {
-                    *params = 0;
-                }
-                break;
+              case GL_RENDERBUFFER_WIDTH:           *params = renderbuffer->getWidth();          break;
+              case GL_RENDERBUFFER_HEIGHT:          *params = renderbuffer->getHeight();         break;
+              case GL_RENDERBUFFER_INTERNAL_FORMAT: *params = renderbuffer->getInternalFormat(); break;
+              case GL_RENDERBUFFER_RED_SIZE:        *params = renderbuffer->getRedSize();        break;
+              case GL_RENDERBUFFER_GREEN_SIZE:      *params = renderbuffer->getGreenSize();      break;
+              case GL_RENDERBUFFER_BLUE_SIZE:       *params = renderbuffer->getBlueSize();       break;
+              case GL_RENDERBUFFER_ALPHA_SIZE:      *params = renderbuffer->getAlphaSize();      break;
+              case GL_RENDERBUFFER_DEPTH_SIZE:      *params = renderbuffer->getDepthSize();      break;
+              case GL_RENDERBUFFER_STENCIL_SIZE:    *params = renderbuffer->getStencilSize();    break;
               case GL_RENDERBUFFER_SAMPLES_ANGLE:
+                if (context->getMaxSupportedSamples() != 0)
                 {
-                    if (context->getMaxSupportedSamples() != 0)
-                    {
-                        *params = renderbuffer->getStorage()->getSamples();
-                    }
-                    else
-                    {
-                        return error(GL_INVALID_ENUM);
-                    }
+                    *params = renderbuffer->getSamples();
+                }
+                else
+                {
+                    return error(GL_INVALID_ENUM);
                 }
                 break;
               default:
@@ -4797,7 +4735,7 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
                     return error(GL_INVALID_OPERATION);
                 }
 
-                if (format != texture->getFormat())
+                if (format != texture->getInternalFormat())
                 {
                     return error(GL_INVALID_OPERATION);
                 }
@@ -4818,7 +4756,7 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
                     return error(GL_INVALID_OPERATION);
                 }
 
-                if (format != texture->getFormat())
+                if (format != texture->getInternalFormat())
                 {
                     return error(GL_INVALID_OPERATION);
                 }

@@ -608,6 +608,75 @@ void ConvertMinFilter(GLenum minFilter, D3DTEXTUREFILTERTYPE *d3dMinFilter, D3DT
     }
 }
 
+bool ConvertPrimitiveType(GLenum primitiveType, GLsizei elementCount,
+                          D3DPRIMITIVETYPE *d3dPrimitiveType, int *d3dPrimitiveCount)
+{
+    switch (primitiveType)
+    {
+      case GL_POINTS:
+        *d3dPrimitiveType = D3DPT_POINTLIST;
+        *d3dPrimitiveCount = elementCount;
+        break;
+      case GL_LINES:
+        *d3dPrimitiveType = D3DPT_LINELIST;
+        *d3dPrimitiveCount = elementCount / 2;
+        break;
+      case GL_LINE_LOOP:
+        *d3dPrimitiveType = D3DPT_LINESTRIP;
+        *d3dPrimitiveCount = elementCount - 1;   // D3D doesn't support line loops, so we draw the last line separately
+        break;
+      case GL_LINE_STRIP:
+        *d3dPrimitiveType = D3DPT_LINESTRIP;
+        *d3dPrimitiveCount = elementCount - 1;
+        break;
+      case GL_TRIANGLES:
+        *d3dPrimitiveType = D3DPT_TRIANGLELIST;
+        *d3dPrimitiveCount = elementCount / 3;
+        break;
+      case GL_TRIANGLE_STRIP:
+        *d3dPrimitiveType = D3DPT_TRIANGLESTRIP;
+        *d3dPrimitiveCount = elementCount - 2;
+        break;
+      case GL_TRIANGLE_FAN:
+        *d3dPrimitiveType = D3DPT_TRIANGLEFAN;
+        *d3dPrimitiveCount = elementCount - 2;
+        break;
+      default:
+        return false;
+    }
+
+    return true;
+}
+
+D3DFORMAT ConvertRenderbufferFormat(GLenum format)
+{
+    switch (format)
+    {
+      case GL_RGBA4:
+      case GL_RGB5_A1:
+      case GL_RGBA8_OES:            return D3DFMT_A8R8G8B8;
+      case GL_RGB565:               return D3DFMT_R5G6B5;
+      case GL_RGB8_OES:             return D3DFMT_X8R8G8B8;
+      case GL_DEPTH_COMPONENT16:
+      case GL_STENCIL_INDEX8:       
+      case GL_DEPTH24_STENCIL8_OES: return D3DFMT_D24S8;
+      default: UNREACHABLE();       return D3DFMT_A8R8G8B8;
+    }
+}
+
+D3DMULTISAMPLE_TYPE GetMultisampleTypeFromSamples(GLsizei samples)
+{
+    if (samples <= 1)
+        return D3DMULTISAMPLE_NONE;
+    else
+        return (D3DMULTISAMPLE_TYPE)samples;
+}
+
+}
+
+namespace dx2es
+{
+
 unsigned int GetStencilSize(D3DFORMAT stencilFormat)
 {
     switch(stencilFormat)
@@ -625,8 +694,8 @@ unsigned int GetStencilSize(D3DFORMAT stencilFormat)
       case D3DFMT_D32F_LOCKABLE:
       case D3DFMT_D16:
         return 0;
-//      case D3DFMT_D32_LOCKABLE:  return 0;   // DirectX 9Ex only
-//      case D3DFMT_S8_LOCKABLE:   return 8;   // DirectX 9Ex only
+    //case D3DFMT_D32_LOCKABLE:  return 0;   // DirectX 9Ex only
+    //case D3DFMT_S8_LOCKABLE:   return 8;   // DirectX 9Ex only
       default: UNREACHABLE();
     }
     return 0;
@@ -739,62 +808,6 @@ unsigned int GetDepthSize(D3DFORMAT depthFormat)
     return 0;
 }
 
-bool ConvertPrimitiveType(GLenum primitiveType, GLsizei elementCount,
-                          D3DPRIMITIVETYPE *d3dPrimitiveType, int *d3dPrimitiveCount)
-{
-    switch (primitiveType)
-    {
-      case GL_POINTS:
-        *d3dPrimitiveType = D3DPT_POINTLIST;
-        *d3dPrimitiveCount = elementCount;
-        break;
-      case GL_LINES:
-        *d3dPrimitiveType = D3DPT_LINELIST;
-        *d3dPrimitiveCount = elementCount / 2;
-        break;
-      case GL_LINE_LOOP:
-        *d3dPrimitiveType = D3DPT_LINESTRIP;
-        *d3dPrimitiveCount = elementCount - 1;   // D3D doesn't support line loops, so we draw the last line separately
-        break;
-      case GL_LINE_STRIP:
-        *d3dPrimitiveType = D3DPT_LINESTRIP;
-        *d3dPrimitiveCount = elementCount - 1;
-        break;
-      case GL_TRIANGLES:
-        *d3dPrimitiveType = D3DPT_TRIANGLELIST;
-        *d3dPrimitiveCount = elementCount / 3;
-        break;
-      case GL_TRIANGLE_STRIP:
-        *d3dPrimitiveType = D3DPT_TRIANGLESTRIP;
-        *d3dPrimitiveCount = elementCount - 2;
-        break;
-      case GL_TRIANGLE_FAN:
-        *d3dPrimitiveType = D3DPT_TRIANGLEFAN;
-        *d3dPrimitiveCount = elementCount - 2;
-        break;
-      default:
-        return false;
-    }
-
-    return true;
-}
-
-D3DFORMAT ConvertRenderbufferFormat(GLenum format)
-{
-    switch (format)
-    {
-      case GL_RGBA4:
-      case GL_RGB5_A1:
-      case GL_RGBA8_OES:            return D3DFMT_A8R8G8B8;
-      case GL_RGB565:               return D3DFMT_R5G6B5;
-      case GL_RGB8_OES:             return D3DFMT_X8R8G8B8;
-      case GL_DEPTH_COMPONENT16:
-      case GL_STENCIL_INDEX8:       
-      case GL_DEPTH24_STENCIL8_OES: return D3DFMT_D24S8;
-      default: UNREACHABLE();       return D3DFMT_A8R8G8B8;
-    }
-}
-
 GLsizei GetSamplesFromMultisampleType(D3DMULTISAMPLE_TYPE type)
 {
     if (type == D3DMULTISAMPLE_NONMASKABLE)
@@ -802,19 +815,6 @@ GLsizei GetSamplesFromMultisampleType(D3DMULTISAMPLE_TYPE type)
     else
         return type;
 }
-
-D3DMULTISAMPLE_TYPE GetMultisampleTypeFromSamples(GLsizei samples)
-{
-    if (samples <= 1)
-        return D3DMULTISAMPLE_NONE;
-    else
-        return (D3DMULTISAMPLE_TYPE)samples;
-}
-
-}
-
-namespace dx2es
-{
 
 GLenum ConvertBackBufferFormat(D3DFORMAT format)
 {
