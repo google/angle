@@ -1788,7 +1788,6 @@ void Context::applyState(GLenum drawMode)
                 device->SetRenderState(D3DRS_SRCBLENDALPHA, es2dx::ConvertBlendFunc(mState.sourceBlendAlpha));
                 device->SetRenderState(D3DRS_DESTBLENDALPHA, es2dx::ConvertBlendFunc(mState.destBlendAlpha));
                 device->SetRenderState(D3DRS_BLENDOPALPHA, es2dx::ConvertBlendOp(mState.blendEquationAlpha));
-
             }
             else
             {
@@ -2118,12 +2117,12 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum
 
         switch (result)
         {
-            case D3DERR_DRIVERINTERNALERROR:
-            case D3DERR_DEVICELOST:
-                return error(GL_OUT_OF_MEMORY);
-            default:
-                UNREACHABLE();
-                return;   // No sensible error to generate
+          case D3DERR_DRIVERINTERNALERROR:
+          case D3DERR_DEVICELOST:
+            return error(GL_OUT_OF_MEMORY);
+          default:
+            UNREACHABLE();
+            return;   // No sensible error to generate
         }
     }
 
@@ -2399,9 +2398,9 @@ void Context::clear(GLbitfield mask)
     }
 
     D3DCOLOR color = D3DCOLOR_ARGB(unorm<8>(mState.colorClearValue.alpha), 
-                                            unorm<8>(mState.colorClearValue.red), 
-                                            unorm<8>(mState.colorClearValue.green), 
-                                            unorm<8>(mState.colorClearValue.blue));
+                                   unorm<8>(mState.colorClearValue.red), 
+                                   unorm<8>(mState.colorClearValue.green), 
+                                   unorm<8>(mState.colorClearValue.blue));
     float depth = clamp01(mState.depthClearValue);
     int stencil = mState.stencilClearValue & 0x000000FF;
 
@@ -2447,7 +2446,13 @@ void Context::clear(GLbitfield mask)
             device->SetPixelShader(NULL);
             device->SetVertexShader(NULL);
             device->SetFVF(D3DFVF_XYZRHW | D3DFVF_DIFFUSE);
-            device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
+            device->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, TRUE);
+            device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+            device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TFACTOR);
+            device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
+            device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TFACTOR);
+            device->SetRenderState(D3DRS_TEXTUREFACTOR, color);
+            device->SetRenderState(D3DRS_MULTISAMPLEMASK, 0xFFFFFFFF);
 
             hr = device->EndStateBlock(&mMaskedClearSavedState);
             ASSERT(SUCCEEDED(hr) || hr == D3DERR_OUTOFVIDEOMEMORY || hr == E_OUTOFMEMORY);
@@ -2472,10 +2477,7 @@ void Context::clear(GLbitfield mask)
 
         if (flags & D3DCLEAR_TARGET)
         {
-            device->SetRenderState(D3DRS_COLORWRITEENABLE, (mState.colorMaskRed   ? D3DCOLORWRITEENABLE_RED   : 0) |
-                                                           (mState.colorMaskGreen ? D3DCOLORWRITEENABLE_GREEN : 0) |
-                                                           (mState.colorMaskBlue  ? D3DCOLORWRITEENABLE_BLUE  : 0) |
-                                                           (mState.colorMaskAlpha ? D3DCOLORWRITEENABLE_ALPHA : 0));
+            device->SetRenderState(D3DRS_COLORWRITEENABLE, es2dx::ConvertColorMask(mState.colorMaskRed, mState.colorMaskGreen, mState.colorMaskBlue, mState.colorMaskAlpha));
         }
         else
         {
@@ -2501,42 +2503,38 @@ void Context::clear(GLbitfield mask)
 
         device->SetPixelShader(NULL);
         device->SetVertexShader(NULL);
-        device->SetFVF(D3DFVF_XYZRHW | D3DFVF_DIFFUSE);
-        device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_DISABLE);
+        device->SetFVF(D3DFVF_XYZRHW);
+        device->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, TRUE);
+        device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
+        device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TFACTOR);
+        device->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
+        device->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TFACTOR);
+        device->SetRenderState(D3DRS_TEXTUREFACTOR, color);
+        device->SetRenderState(D3DRS_MULTISAMPLEMASK, 0xFFFFFFFF);
 
-        struct Vertex
-        {
-            float x, y, z, w;
-            D3DCOLOR diffuse;
-        };
+        float quad[4][4];   // A quadrilateral covering the target, aligned to match the edges
+        quad[0][0] = -0.5f;
+        quad[0][1] = desc.Height - 0.5f;
+        quad[0][2] = 0.0f;
+        quad[0][3] = 1.0f;
 
-        Vertex quad[4];
-        quad[0].x = 0.0f;
-        quad[0].y = (float)desc.Height;
-        quad[0].z = 0.0f;
-        quad[0].w = 1.0f;
-        quad[0].diffuse = color;
+        quad[1][0] = desc.Width - 0.5f;
+        quad[1][1] = desc.Height - 0.5f;
+        quad[1][2] = 0.0f;
+        quad[1][3] = 1.0f;
 
-        quad[1].x = (float)desc.Width;
-        quad[1].y = (float)desc.Height;
-        quad[1].z = 0.0f;
-        quad[1].w = 1.0f;
-        quad[1].diffuse = color;
+        quad[2][0] = -0.5f;
+        quad[2][1] = -0.5f;
+        quad[2][2] = 0.0f;
+        quad[2][3] = 1.0f;
 
-        quad[2].x = 0.0f;
-        quad[2].y = 0.0f;
-        quad[2].z = 0.0f;
-        quad[2].w = 1.0f;
-        quad[2].diffuse = color;
-
-        quad[3].x = (float)desc.Width;
-        quad[3].y = 0.0f;
-        quad[3].z = 0.0f;
-        quad[3].w = 1.0f;
-        quad[3].diffuse = color;
+        quad[3][0] = desc.Width - 0.5f;
+        quad[3][1] = -0.5f;
+        quad[3][2] = 0.0f;
+        quad[3][3] = 1.0f;
 
         display->startScene();
-        device->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, quad, sizeof(Vertex));
+        device->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, quad, sizeof(float[4]));
 
         if (flags & D3DCLEAR_ZBUFFER)
         {
