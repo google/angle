@@ -857,7 +857,7 @@ EGLBoolean __stdcall eglMakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface 
         gl::Context *context = static_cast<gl::Context*>(ctx);
         IDirect3DDevice9 *device = display->getDevice();
 
-        if (!device || FAILED(device->TestCooperativeLevel()))
+        if (!device || display->isDeviceLost())
         {
             return error(EGL_CONTEXT_LOST, EGL_FALSE);
         }

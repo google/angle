@@ -27,8 +27,9 @@ Display::Display(HDC deviceContext) : mDc(deviceContext)
     mD3d9Module = NULL;
     
     mD3d9 = NULL;
-    mD3d9ex = NULL;
+    mD3d9Ex = NULL;
     mDevice = NULL;
+    mDeviceEx = NULL;
     mDeviceWindow = NULL;
 
     mAdapter = D3DADAPTER_DEFAULT;
@@ -68,10 +69,10 @@ bool Display::initialize()
     // Use Direct3D9Ex if available. Among other things, this version is less
     // inclined to report a lost context, for example when the user switches
     // desktop. Direct3D9Ex is available in Windows Vista and later if suitable drivers are available.
-    if (ENABLE_D3D9EX && Direct3DCreate9ExPtr && SUCCEEDED(Direct3DCreate9ExPtr(D3D_SDK_VERSION, &mD3d9ex)))
+    if (ENABLE_D3D9EX && Direct3DCreate9ExPtr && SUCCEEDED(Direct3DCreate9ExPtr(D3D_SDK_VERSION, &mD3d9Ex)))
     {
-        ASSERT(mD3d9ex);
-        mD3d9ex->QueryInterface(IID_IDirect3D9, reinterpret_cast<void**>(&mD3d9));
+        ASSERT(mD3d9Ex);
+        mD3d9Ex->QueryInterface(IID_IDirect3D9, reinterpret_cast<void**>(&mD3d9));
         ASSERT(mD3d9);
     }
     else
@@ -229,13 +230,19 @@ void Display::terminate()
     if (mDevice)
     {
         // If the device is lost, reset it first to prevent leaving the driver in an unstable state
-        if (FAILED(mDevice->TestCooperativeLevel()))
+        if (isDeviceLost())
         {
             resetDevice();
         }
 
         mDevice->Release();
         mDevice = NULL;
+    }
+
+    if (mDeviceEx)
+    {
+        mDeviceEx->Release();
+        mDeviceEx = NULL;
     }
 
     if (mD3d9)
@@ -250,10 +257,10 @@ void Display::terminate()
         mDeviceWindow = NULL;
     }
     
-    if (mD3d9ex)
+    if (mD3d9Ex)
     {
-        mD3d9ex->Release();
-        mD3d9ex = NULL;
+        mD3d9Ex->Release();
+        mD3d9Ex = NULL;
     }
 
     if (mD3d9Module)
@@ -352,6 +359,12 @@ bool Display::createDevice()
         }
     }
 
+    if (mD3d9Ex)
+    {
+        result = mDevice->QueryInterface(IID_IDirect3DDevice9Ex, (void**) &mDeviceEx);
+        ASSERT(SUCCEEDED(result));
+    }
+
     // Permanent non-default states
     mDevice->SetRenderState(D3DRS_POINTSPRITEENABLE, TRUE);
 
@@ -402,7 +415,7 @@ EGLContext Display::createContext(EGLConfig configHandle, const gl::Context *sha
             return NULL;
         }
     }
-    else if (FAILED(mDevice->TestCooperativeLevel()))   // Lost device
+    else if (isDeviceLost())   // Lost device
     {
         if (!resetDevice())
         {
@@ -435,7 +448,7 @@ void Display::destroyContext(gl::Context *context)
     glDestroyContext(context);
     mContextSet.erase(context);
 
-    if (mContextSet.empty() && mDevice && FAILED(mDevice->TestCooperativeLevel()))   // Last context of a lost device
+    if (mContextSet.empty() && mDevice && isDeviceLost())   // Last context of a lost device
     {
         for (SurfaceSet::iterator surface = mSurfaceSet.begin(); surface != mSurfaceSet.end(); surface++)
         {
@@ -503,6 +516,18 @@ IDirect3DDevice9 *Display::getDevice()
 D3DCAPS9 Display::getDeviceCaps()
 {
     return mDeviceCaps;
+}
+
+bool Display::isDeviceLost()
+{
+    if (mDeviceEx)
+    {
+        return FAILED(mDeviceEx->CheckDeviceState(NULL));
+    }
+    else
+    {
+        return FAILED(mDevice->TestCooperativeLevel());
+    }
 }
 
 void Display::getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray)
@@ -598,7 +623,7 @@ bool Display::getLuminanceAlphaTextureSupport()
 
 D3DPOOL Display::getBufferPool(DWORD usage) const
 {
-    if (mD3d9ex != NULL)
+    if (mD3d9Ex != NULL)
     {
         return D3DPOOL_DEFAULT;
     }
