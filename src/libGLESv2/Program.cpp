@@ -1169,6 +1169,20 @@ bool Program::linkVaryings()
         return false;
     }
 
+    // Reset the varying register assignments
+    for (VaryingList::iterator fragVar = mFragmentShader->varyings.begin(); fragVar != mFragmentShader->varyings.end(); fragVar++)
+    {
+        fragVar->reg = -1;
+        fragVar->col = -1;
+    }
+
+    for (VaryingList::iterator vtxVar = mVertexShader->varyings.begin(); vtxVar != mVertexShader->varyings.end(); vtxVar++)
+    {
+        vtxVar->reg = -1;
+        vtxVar->col = -1;
+    }
+
+    // Map the varyings to the register file
     const Varying *packing[MAX_VARYING_VECTORS_SM3][4] = {NULL};
     int registers = packVaryings(packing);
 
@@ -1177,6 +1191,7 @@ bool Program::linkVaryings()
         return false;
     }
 
+    // Write the HLSL input/output declarations
     Context *context = getContext();
     const bool sm3 = context->supportsShaderModel3();
     const int maxVaryingVectors = context->getMaximumVaryingVectors();
@@ -1213,7 +1228,7 @@ bool Program::linkVaryings()
 
         if (!matched)
         {
-            appendToInfoLog("Fragment varying varying %s does not match any vertex varying", input->name.c_str());
+            appendToInfoLog("Fragment varying %s does not match any vertex varying", input->name.c_str());
 
             return false;
         }
