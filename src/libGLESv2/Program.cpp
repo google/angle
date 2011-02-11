@@ -1110,13 +1110,13 @@ int Program::packVaryings(const Varying *packing[][4])
 
             for (int x = 0; x < 4; x++)
             {
-                if (space[x] > n && space[x] < space[column])
+                if (space[x] >= n && space[x] < space[column])
                 {
                     column = x;
                 }
             }
 
-            if (space[column] > n)
+            if (space[column] >= n)
             {
                 for (int r = 0; r < maxVaryingVectors; r++)
                 {
