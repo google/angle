@@ -99,18 +99,11 @@ public:
         assert(type == constant.type);
         switch (type) {
         case EbtInt:
-            if (iConst > constant.iConst)
-                return true;
-
-            return false;
+            return iConst > constant.iConst;
         case EbtFloat:
-            if (fConst > constant.fConst)
-                return true;
-
-            return false;
+            return fConst > constant.fConst;
         default:
-            assert(false && "Default missing");
-            return false;
+            return false;   // Invalid operation, handled at semantic analysis
         }
 
         return false;
@@ -121,18 +114,11 @@ public:
         assert(type == constant.type);
         switch (type) {
         case EbtInt:
-            if (iConst < constant.iConst)
-                return true;
-
-            return false;
+            return iConst < constant.iConst;
         case EbtFloat:
-            if (fConst < constant.fConst)
-                return true;
-
-            return false;
+            return fConst < constant.fConst;
         default:
-            assert(false && "Default missing");
-            return false;
+            return false;   // Invalid operation, handled at semantic analysis
         }
 
         return false;
