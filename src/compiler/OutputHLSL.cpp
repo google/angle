@@ -1534,9 +1534,9 @@ bool OutputHLSL::visitBranch(Visit visit, TIntermBranch *node)
 
     switch (node->getFlowOp())
     {
-      case EOpKill:     outputTriplet(visit, "discard", "", "");  break;
-      case EOpBreak:    outputTriplet(visit, "break", "", "");    break;
-      case EOpContinue: outputTriplet(visit, "continue", "", ""); break;
+      case EOpKill:     outputTriplet(visit, "discard;\n", "", "");  break;
+      case EOpBreak:    outputTriplet(visit, "break;\n", "", "");    break;
+      case EOpContinue: outputTriplet(visit, "continue;\n", "", ""); break;
       case EOpReturn:
         if (visit == PreVisit)
         {
