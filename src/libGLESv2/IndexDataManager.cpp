@@ -4,10 +4,10 @@
 // found in the LICENSE file.
 //
 
-// geometry/IndexDataManager.cpp: Defines the IndexDataManager, a class that
+// IndexDataManager.cpp: Defines the IndexDataManager, a class that
 // runs the Buffer translation process for index buffers.
 
-#include "libGLESv2/geometry/IndexDataManager.h"
+#include "libGLESv2/IndexDataManager.h"
 
 #include "common/debug.h"
 

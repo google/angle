@@ -4,11 +4,11 @@
 // found in the LICENSE file.
 //
 
-// geometry/IndexDataManager.h: Defines the IndexDataManager, a class that
+// IndexDataManager.h: Defines the IndexDataManager, a class that
 // runs the Buffer translation process for index buffers.
 
-#ifndef LIBGLESV2_GEOMETRY_INDEXDATAMANAGER_H_
-#define LIBGLESV2_GEOMETRY_INDEXDATAMANAGER_H_
+#ifndef LIBGLESV2_INDEXDATAMANAGER_H_
+#define LIBGLESV2_INDEXDATAMANAGER_H_
 
 #include <vector>
 #include <cstddef>
@@ -117,4 +117,4 @@ class IndexDataManager
 
 }
 
-#endif   // LIBGLESV2_GEOMETRY_INDEXDATAMANAGER_H_
+#endif   // LIBGLESV2_INDEXDATAMANAGER_H_

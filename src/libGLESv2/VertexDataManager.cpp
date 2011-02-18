@@ -4,10 +4,10 @@
 // found in the LICENSE file.
 //
 
-// geometry/VertexDataManager.h: Defines the VertexDataManager, a class that
+// VertexDataManager.h: Defines the VertexDataManager, a class that
 // runs the Buffer translation process.
 
-#include "libGLESv2/geometry/VertexDataManager.h"
+#include "libGLESv2/VertexDataManager.h"
 
 #include "common/debug.h"
 
@@ -15,8 +15,8 @@
 #include "libGLESv2/Program.h"
 #include "libGLESv2/main.h"
 
-#include "libGLESv2/geometry/vertexconversion.h"
-#include "libGLESv2/geometry/IndexDataManager.h"
+#include "libGLESv2/vertexconversion.h"
+#include "libGLESv2/IndexDataManager.h"
 
 namespace
 {

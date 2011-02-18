@@ -11,8 +11,8 @@
 #include "libGLESv2/Buffer.h"
 
 #include "libGLESv2/main.h"
-#include "libGLESv2/geometry/VertexDataManager.h"
-#include "libGLESv2/geometry/IndexDataManager.h"
+#include "libGLESv2/VertexDataManager.h"
+#include "libGLESv2/IndexDataManager.h"
 
 namespace gl
 {

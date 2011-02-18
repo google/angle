@@ -4,11 +4,11 @@
 // found in the LICENSE file.
 //
 
-// geometry/vertexconversion.h: A library of vertex conversion classes that can be used to build
+// vertexconversion.h: A library of vertex conversion classes that can be used to build
 // the FormatConverter objects used by the buffer conversion system.
 
-#ifndef LIBGLESV2_GEOMETRY_VERTEXCONVERSION_H_
-#define LIBGLESV2_GEOMETRY_VERTEXCONVERSION_H_
+#ifndef LIBGLESV2_VERTEXCONVERSION_H_
+#define LIBGLESV2_VERTEXCONVERSION_H_
 
 #include <cstddef>
 #include <limits>
@@ -205,4 +205,4 @@ struct VertexDataConverter
 
 }
 
-#endif   // LIBGLESV2_GEOMETRY_VERTEXCONVERSION_H_
+#endif   // LIBGLESV2_VERTEXCONVERSION_H_

@@ -25,8 +25,8 @@
 #include "libGLESv2/RenderBuffer.h"
 #include "libGLESv2/Shader.h"
 #include "libGLESv2/Texture.h"
-#include "libGLESv2/geometry/VertexDataManager.h"
-#include "libGLESv2/geometry/IndexDataManager.h"
+#include "libGLESv2/VertexDataManager.h"
+#include "libGLESv2/IndexDataManager.h"
 
 #undef near
 #undef far
