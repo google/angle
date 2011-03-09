@@ -558,7 +558,7 @@ bool TParseContext::constructorErrorCheck(int line, TIntermNode* node, TFunction
         }
     }
 
-    TIntermTyped* typed = node->getAsTyped();
+    TIntermTyped *typed = node ? node->getAsTyped() : 0;
     if (typed == 0) {
         error(line, "constructor argument does not have a type", "constructor", "");
         return true;
