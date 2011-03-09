@@ -558,11 +558,9 @@ static int byte_scan(InputSrc *in, yystypepp * yylvalpp)
                     return -1;
                 return '\n';
             } else if (ch == '*') {
-                int nlcount = 0;
                 ch = cpp->currentInput->getch(cpp->currentInput, yylvalpp);
                 do {
                     while (ch != '*') {
-                        if (ch == '\n') nlcount++;
                         if (ch == EOF) {
                             CPPErrorToInfoLog("EOF IN COMMENT");
                             return -1;
@@ -575,9 +573,6 @@ static int byte_scan(InputSrc *in, yystypepp * yylvalpp)
                         return -1;
                     }
                 } while (ch != '/');
-                if (nlcount) {
-                    return '\n';
-                }
                 // Go try it again...
             } else if (ch == '=') {
                 return CPP_DIV_ASSIGN;
