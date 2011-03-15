@@ -51,6 +51,8 @@ public:
             return constant.fConst == fConst;
         case EbtBool:
             return constant.bConst == bConst;
+        default:
+            return false;
         }
 
         return false;
