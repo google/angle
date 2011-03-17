@@ -696,9 +696,9 @@ unsigned int GetStencilSize(D3DFORMAT stencilFormat)
         return 0;
     //case D3DFMT_D32_LOCKABLE:  return 0;   // DirectX 9Ex only
     //case D3DFMT_S8_LOCKABLE:   return 8;   // DirectX 9Ex only
-      default: UNREACHABLE();
+      default:
+        return 0;
     }
-    return 0;
 }
 
 unsigned int GetAlphaSize(D3DFORMAT colorFormat)
@@ -718,9 +718,9 @@ unsigned int GetAlphaSize(D3DFORMAT colorFormat)
       case D3DFMT_X8R8G8B8:
       case D3DFMT_R5G6B5:
         return 0;
-      default: UNREACHABLE();
+      default:
+        return 0;
     }
-    return 0;
 }
 
 unsigned int GetRedSize(D3DFORMAT colorFormat)
@@ -739,9 +739,9 @@ unsigned int GetRedSize(D3DFORMAT colorFormat)
       case D3DFMT_A1R5G5B5:
       case D3DFMT_R5G6B5:
         return 5;
-      default: UNREACHABLE();
+      default:
+        return 0;
     }
-    return 0;
 }
 
 unsigned int GetGreenSize(D3DFORMAT colorFormat)
@@ -761,9 +761,9 @@ unsigned int GetGreenSize(D3DFORMAT colorFormat)
         return 5;
       case D3DFMT_R5G6B5:
         return 6;
-      default: UNREACHABLE();
+      default:
+        return 0;
     }
-    return 0;
 }
 
 unsigned int GetBlueSize(D3DFORMAT colorFormat)
@@ -782,9 +782,9 @@ unsigned int GetBlueSize(D3DFORMAT colorFormat)
       case D3DFMT_A1R5G5B5:
       case D3DFMT_R5G6B5:
         return 5;
-      default: UNREACHABLE();
+      default:
+        return 0;
     }
-    return 0;
 }
 
 unsigned int GetDepthSize(D3DFORMAT depthFormat)
@@ -802,10 +802,8 @@ unsigned int GetDepthSize(D3DFORMAT depthFormat)
       case D3DFMT_D24FS8:        return 24;
     //case D3DFMT_D32_LOCKABLE:  return 32;   // D3D9Ex only
     //case D3DFMT_S8_LOCKABLE:   return 0;    // D3D9Ex only
-      default:
-        UNREACHABLE();
+      default:                   return 0;
     }
-    return 0;
 }
 
 GLsizei GetSamplesFromMultisampleType(D3DMULTISAMPLE_TYPE type)
