@@ -2031,27 +2031,33 @@ void Context::applyTextures()
 
             Texture *texture = getSamplerTexture(textureUnit, textureType);
 
-            if (mAppliedTextureSerial[sampler] != texture->getSerial() || texture->isDirty())
+            if (mAppliedTextureSerial[sampler] != texture->getSerial() || texture->isDirtyParameter() || texture->isDirtyImage())
             {
                 IDirect3DBaseTexture9 *d3dTexture = texture->getTexture();
 
                 if (d3dTexture)
                 {
-                    GLenum wrapS = texture->getWrapS();
-                    GLenum wrapT = texture->getWrapT();
-                    GLenum minFilter = texture->getMinFilter();
-                    GLenum magFilter = texture->getMagFilter();
+                    if (mAppliedTextureSerial[sampler] != texture->getSerial() || texture->isDirtyParameter())
+                    {
+                        GLenum wrapS = texture->getWrapS();
+                        GLenum wrapT = texture->getWrapT();
+                        GLenum minFilter = texture->getMinFilter();
+                        GLenum magFilter = texture->getMagFilter();
 
-                    device->SetSamplerState(sampler, D3DSAMP_ADDRESSU, es2dx::ConvertTextureWrap(wrapS));
-                    device->SetSamplerState(sampler, D3DSAMP_ADDRESSV, es2dx::ConvertTextureWrap(wrapT));
+                        device->SetSamplerState(sampler, D3DSAMP_ADDRESSU, es2dx::ConvertTextureWrap(wrapS));
+                        device->SetSamplerState(sampler, D3DSAMP_ADDRESSV, es2dx::ConvertTextureWrap(wrapT));
 
-                    device->SetSamplerState(sampler, D3DSAMP_MAGFILTER, es2dx::ConvertMagFilter(magFilter));
-                    D3DTEXTUREFILTERTYPE d3dMinFilter, d3dMipFilter;
-                    es2dx::ConvertMinFilter(minFilter, &d3dMinFilter, &d3dMipFilter);
-                    device->SetSamplerState(sampler, D3DSAMP_MINFILTER, d3dMinFilter);
-                    device->SetSamplerState(sampler, D3DSAMP_MIPFILTER, d3dMipFilter);
+                        device->SetSamplerState(sampler, D3DSAMP_MAGFILTER, es2dx::ConvertMagFilter(magFilter));
+                        D3DTEXTUREFILTERTYPE d3dMinFilter, d3dMipFilter;
+                        es2dx::ConvertMinFilter(minFilter, &d3dMinFilter, &d3dMipFilter);
+                        device->SetSamplerState(sampler, D3DSAMP_MINFILTER, d3dMinFilter);
+                        device->SetSamplerState(sampler, D3DSAMP_MIPFILTER, d3dMipFilter);
+                    }
 
-                    device->SetTexture(sampler, d3dTexture);
+                    if (mAppliedTextureSerial[sampler] != texture->getSerial() || texture->isDirtyImage())
+                    {
+                        device->SetTexture(sampler, d3dTexture);
+                    }
                 }
                 else
                 {

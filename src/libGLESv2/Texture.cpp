@@ -45,7 +45,9 @@ Texture::Texture(GLuint id) : RefCountObject(id), mSerial(issueSerial())
     mMagFilter = GL_LINEAR;
     mWrapS = GL_REPEAT;
     mWrapT = GL_REPEAT;
-    mDirty = true;
+    mDirtyParameter = true;
+    
+    mDirtyImage = true;
     
     mIsRenderable = false;
 }
@@ -75,7 +77,7 @@ bool Texture::setMinFilter(GLenum filter)
             if (mMinFilter != filter)
             {
                 mMinFilter = filter;
-                mDirty = true;
+                mDirtyParameter = true;
             }
             return true;
         }
@@ -95,7 +97,7 @@ bool Texture::setMagFilter(GLenum filter)
             if (mMagFilter != filter)
             {
                 mMagFilter = filter;
-                mDirty = true;
+                mDirtyParameter = true;
             }
             return true;
         }
@@ -116,7 +118,7 @@ bool Texture::setWrapS(GLenum wrap)
             if (mWrapS != wrap)
             {
                 mWrapS = wrap;
-                mDirty = true;
+                mDirtyParameter = true;
             }
             return true;
         }
@@ -137,7 +139,7 @@ bool Texture::setWrapT(GLenum wrap)
             if (mWrapT != wrap)
             {
                 mWrapT = wrap;
-                mDirty = true;
+                mDirtyParameter = true;
             }
             return true;
         }
@@ -847,7 +849,7 @@ void Texture::setImage(GLint unpackAlignment, const void *pixels, Image *image)
         }
 
         image->dirty = true;
-        mDirty = true;
+        mDirtyImage = true;
     }
 }
 
@@ -871,7 +873,7 @@ void Texture::setCompressedImage(GLsizei imageSize, const void *pixels, Image *i
         }
 
         image->dirty = true;
-        mDirty = true;
+        mDirtyImage = true;
     }
 }
 
@@ -905,7 +907,7 @@ bool Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
         }
 
         image->dirty = true;
-        mDirty = true;
+        mDirtyImage = true;
     }
 
     return true;
@@ -952,7 +954,7 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GL
         }
 
         image->dirty = true;
-        mDirty = true;
+        mDirtyImage = true;
     }
 
     return true;
@@ -1120,7 +1122,7 @@ void Texture::copyNonRenderable(Image *image, GLenum format, GLint xoffset, GLin
         }
 
         image->dirty = true;
-        mDirty = true;
+        mDirtyImage = true;
     }
 
     image->surface->UnlockRect();
@@ -1150,14 +1152,20 @@ IDirect3DBaseTexture9 *Texture::getTexture()
     return getBaseTexture();
 }
 
-bool Texture::isDirty() const
+bool Texture::isDirtyParameter() const
 {
-    return mDirty;
+    return mDirtyParameter;
+}
+
+bool Texture::isDirtyImage() const
+{
+    return mDirtyImage;
 }
 
 void Texture::resetDirty()
 {
-    mDirty = false;
+    mDirtyParameter = false;
+    mDirtyImage = false;
 }
 
 unsigned int Texture::getSerial() const
@@ -1271,7 +1279,7 @@ void Texture2D::redefineTexture(GLint level, GLenum format, GLsizei width, GLsiz
         {
             mTexture->Release();
             mTexture = NULL;
-            mDirty = true;
+            mDirtyImage = true;
             mIsRenderable = false;
         }
     }
@@ -1541,7 +1549,7 @@ void Texture2D::createTexture()
     }
 
     mTexture = texture;
-    mDirty = true;
+    mDirtyImage = true;
     mIsRenderable = false;
 }
 
@@ -1648,7 +1656,7 @@ void Texture2D::convertToRenderTarget()
     }
 
     mTexture = texture;
-    mDirty = true;
+    mDirtyImage = true;
     mIsRenderable = true;
 }
 
@@ -1999,7 +2007,7 @@ void TextureCubeMap::createTexture()
     }
 
     mTexture = texture;
-    mDirty = true;
+    mDirtyImage = true;
     mIsRenderable = false;
 }
 
@@ -2108,7 +2116,7 @@ void TextureCubeMap::convertToRenderTarget()
     }
 
     mTexture = texture;
-    mDirty = true;
+    mDirtyImage = true;
     mIsRenderable = true;
 }
 
@@ -2169,7 +2177,7 @@ void TextureCubeMap::redefineTexture(int face, GLint level, GLenum format, GLsiz
         {
             mTexture->Release();
             mTexture = NULL;
-            mDirty = true;
+            mDirtyImage = true;
             mIsRenderable = false;
         }
     }
