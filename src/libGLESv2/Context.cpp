@@ -1572,9 +1572,7 @@ bool Context::applyRenderTarget(bool ignoreViewport)
 
     if (!framebufferObject || framebufferObject->completeness() != GL_FRAMEBUFFER_COMPLETE)
     {
-        error(GL_INVALID_FRAMEBUFFER_OPERATION);
-
-        return false;
+        return error(GL_INVALID_FRAMEBUFFER_OPERATION, false);
     }
 
     IDirect3DSurface9 *renderTarget = framebufferObject->getRenderTarget();
@@ -2332,9 +2330,7 @@ void Context::clear(GLbitfield mask)
 
     if (!framebufferObject || framebufferObject->completeness() != GL_FRAMEBUFFER_COMPLETE)
     {
-        error(GL_INVALID_FRAMEBUFFER_OPERATION);
-
-        return;
+        return error(GL_INVALID_FRAMEBUFFER_OPERATION);
     }
 
     egl::Display *display = getDisplay();

@@ -849,38 +849,38 @@ void Texture::createSurface(GLsizei width, GLsizei height, GLenum format, GLenum
     image->type = type;
 }
 
-void Texture::setImage(GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *img)
+void Texture::setImage(GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *image)
 {
-    createSurface(width, height, format, type, img);
+    createSurface(width, height, format, type, image);
 
-    if (pixels != NULL && img->surface != NULL)
+    if (pixels != NULL && image->surface != NULL)
     {
         D3DSURFACE_DESC description;
-        img->surface->GetDesc(&description);
+        image->surface->GetDesc(&description);
 
         D3DLOCKED_RECT locked;
-        HRESULT result = img->surface->LockRect(&locked, NULL, 0);
+        HRESULT result = image->surface->LockRect(&locked, NULL, 0);
 
         ASSERT(SUCCEEDED(result));
 
         if (SUCCEEDED(result))
         {
             loadImageData(0, 0, width, height, format, type, unpackAlignment, pixels, locked.Pitch, locked.pBits, &description);
-            img->surface->UnlockRect();
+            image->surface->UnlockRect();
         }
 
-        img->dirty = true;
+        image->dirty = true;
     }
 }
 
-void Texture::setCompressedImage(GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels, Image *img)
+void Texture::setCompressedImage(GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels, Image *image)
 {
-    createSurface(width, height, format, GL_UNSIGNED_BYTE, img);
+    createSurface(width, height, format, GL_UNSIGNED_BYTE, image);
 
-    if (pixels != NULL && img->surface != NULL)
+    if (pixels != NULL && image->surface != NULL)
     {
         D3DLOCKED_RECT locked;
-        HRESULT result = img->surface->LockRect(&locked, NULL, 0);
+        HRESULT result = image->surface->LockRect(&locked, NULL, 0);
 
         ASSERT(SUCCEEDED(result));
 
@@ -889,51 +889,51 @@ void Texture::setCompressedImage(GLsizei width, GLsizei height, GLenum format, G
             int inputPitch = ComputeCompressedPitch(width, format);
             int inputSize = ComputeCompressedSize(width, height, format);
             loadCompressedImageData(0, 0, width, height, -inputPitch, static_cast<const char*>(pixels) + inputSize - inputPitch, locked.Pitch, locked.pBits);
-            img->surface->UnlockRect();
+            image->surface->UnlockRect();
         }
 
-        img->dirty = true;
+        image->dirty = true;
     }
 }
 
-bool Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *img)
+bool Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *image)
 {
-    if (width + xoffset > img->width || height + yoffset > img->height)
+    if (width + xoffset > image->width || height + yoffset > image->height)
     {
         error(GL_INVALID_VALUE);
         return false;
     }
 
-    if (!img->surface)
+    if (!image->surface)
     {
-        createSurface(img->width, img->height, format, type, img);
+        createSurface(image->width, image->height, format, type, image);
     }
 
-    if (pixels != NULL && img->surface != NULL)
+    if (pixels != NULL && image->surface != NULL)
     {
         D3DSURFACE_DESC description;
-        img->surface->GetDesc(&description);
+        image->surface->GetDesc(&description);
 
         D3DLOCKED_RECT locked;
-        HRESULT result = img->surface->LockRect(&locked, NULL, 0);
+        HRESULT result = image->surface->LockRect(&locked, NULL, 0);
 
         ASSERT(SUCCEEDED(result));
 
         if (SUCCEEDED(result))
         {
-            loadImageData(xoffset, transformPixelYOffset(yoffset, height, img->height), width, height, format, type, unpackAlignment, pixels, locked.Pitch, locked.pBits, &description);
-            img->surface->UnlockRect();
+            loadImageData(xoffset, transformPixelYOffset(yoffset, height, image->height), width, height, format, type, unpackAlignment, pixels, locked.Pitch, locked.pBits, &description);
+            image->surface->UnlockRect();
         }
 
-        img->dirty = true;
+        image->dirty = true;
     }
 
     return true;
 }
 
-bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels, Image *img)
+bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels, Image *image)
 {
-    if (width + xoffset > img->width || height + yoffset > img->height)
+    if (width + xoffset > image->width || height + yoffset > image->height)
     {
         error(GL_INVALID_VALUE);
         return false;
@@ -945,12 +945,12 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GL
         return false;
     }
 
-    if (!img->surface)
+    if (!image->surface)
     {
-        createSurface(img->width, img->height, format, GL_UNSIGNED_BYTE, img);
+        createSurface(image->width, image->height, format, GL_UNSIGNED_BYTE, image);
     }
 
-    if (pixels != NULL && img->surface != NULL)
+    if (pixels != NULL && image->surface != NULL)
     {
         RECT updateRegion;
         updateRegion.left = xoffset;
@@ -959,7 +959,7 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GL
         updateRegion.top = yoffset;
 
         D3DLOCKED_RECT locked;
-        HRESULT result = img->surface->LockRect(&locked, &updateRegion, 0);
+        HRESULT result = image->surface->LockRect(&locked, &updateRegion, 0);
 
         ASSERT(SUCCEEDED(result));
 
@@ -967,11 +967,11 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GL
         {
             int inputPitch = ComputeCompressedPitch(width, format);
             int inputSize = ComputeCompressedSize(width, height, format);
-            loadCompressedImageData(xoffset, transformPixelYOffset(yoffset, height, img->height), width, height, -inputPitch, static_cast<const char*>(pixels) + inputSize - inputPitch, locked.Pitch, locked.pBits);
-            img->surface->UnlockRect();
+            loadCompressedImageData(xoffset, transformPixelYOffset(yoffset, height, image->height), width, height, -inputPitch, static_cast<const char*>(pixels) + inputSize - inputPitch, locked.Pitch, locked.pBits);
+            image->surface->UnlockRect();
         }
 
-        img->dirty = true;
+        image->dirty = true;
     }
 
     return true;
@@ -1314,20 +1314,20 @@ void Texture2D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei wi
 
         if (SUCCEEDED(result))
         {
-            Image *img = &mImageArray[level];
+            Image *image = &mImageArray[level];
 
-            RECT sourceRect = transformPixelRect(xoffset, yoffset, width, height, img->height);;
+            RECT sourceRect = transformPixelRect(xoffset, yoffset, width, height, image->height);;
 
             POINT destPoint;
             destPoint.x = sourceRect.left;
             destPoint.y = sourceRect.top;
 
-            result = getDevice()->UpdateSurface(img->surface, &sourceRect, destLevel, &destPoint);
+            result = getDevice()->UpdateSurface(image->surface, &sourceRect, destLevel, &destPoint);
             ASSERT(SUCCEEDED(result));
 
             destLevel->Release();
 
-            img->dirty = false;
+            image->dirty = false;
         }
     }
 }
@@ -1847,20 +1847,20 @@ void TextureCubeMap::commitRect(GLenum faceTarget, GLint level, GLint xoffset, G
 
         if (destLevel != NULL)
         {
-            Image *img = &mImageArray[face][level];
+            Image *image = &mImageArray[face][level];
 
-            RECT sourceRect = transformPixelRect(xoffset, yoffset, width, height, img->height);;
+            RECT sourceRect = transformPixelRect(xoffset, yoffset, width, height, image->height);;
 
             POINT destPoint;
             destPoint.x = sourceRect.left;
             destPoint.y = sourceRect.top;
 
-            HRESULT result = getDevice()->UpdateSurface(img->surface, &sourceRect, destLevel, &destPoint);
+            HRESULT result = getDevice()->UpdateSurface(image->surface, &sourceRect, destLevel, &destPoint);
             ASSERT(SUCCEEDED(result));
 
             destLevel->Release();
 
-            img->dirty = false;
+            image->dirty = false;
         }
     }
 }
@@ -2004,21 +2004,21 @@ void TextureCubeMap::updateTexture()
         int levels = levelCount();
         for (int level = 0; level < levels; level++)
         {
-            Image *img = &mImageArray[face][level];
+            Image *image = &mImageArray[face][level];
 
-            if (img->dirty)
+            if (image->dirty)
             {
                 IDirect3DSurface9 *levelSurface = getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level);
                 ASSERT(levelSurface != NULL);
 
                 if (levelSurface != NULL)
                 {
-                    HRESULT result = device->UpdateSurface(img->surface, NULL, levelSurface, NULL);
+                    HRESULT result = device->UpdateSurface(image->surface, NULL, levelSurface, NULL);
                     ASSERT(SUCCEEDED(result));
 
                     levelSurface->Release();
 
-                    img->dirty = false;
+                    image->dirty = false;
                 }
             }
         }
