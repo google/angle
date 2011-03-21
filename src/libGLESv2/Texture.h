@@ -89,6 +89,7 @@ class Texture : public RefCountObject
         GLsizei width;
         GLsizei height;
         GLenum format;
+        GLenum type;
 
         bool dirty;
 
@@ -279,7 +280,7 @@ class TextureCubeMap : public Texture
 
     void setImage(int face, GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void commitRect(GLenum faceTarget, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
-    bool redefineTexture(GLint level, GLenum format, GLsizei width);
+    bool redefineTexture(GLint level, GLenum format, GLsizei width, GLenum type);
 
     Image mImageArray[6][IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
