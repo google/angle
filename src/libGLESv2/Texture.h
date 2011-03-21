@@ -57,10 +57,11 @@ class Texture : public RefCountObject
     GLenum getWrapS() const;
     GLenum getWrapT() const;
 
-    GLsizei getWidth() const;
-    GLsizei getHeight() const;
-
+    virtual GLsizei getWidth() const = 0;
+    virtual GLsizei getHeight() const = 0;
     virtual GLenum getInternalFormat() const = 0;
+    virtual GLenum getType() const = 0;
+
     virtual bool isComplete() const = 0;
     virtual bool isCompressed() const = 0;
     bool isFloatingPoint() const;
@@ -98,13 +99,11 @@ class Texture : public RefCountObject
 
     static D3DFORMAT selectFormat(GLenum format, GLenum type);
 
-    void setImage(GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *image);
+    void setImage(GLint unpackAlignment, const void *pixels, Image *image);
     bool subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *image);
-    void setCompressedImage(GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels, Image *image);
+    void setCompressedImage(GLsizei imageSize, const void *pixels, Image *image);
     bool subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels, Image *image);
     void copyNonRenderable(Image *image, GLenum format, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, IDirect3DSurface9 *renderTarget);
-
-    void needRenderTarget();
 
     GLint creationLevels(GLsizei width, GLsizei height, GLint maxlevel) const;
     GLint creationLevels(GLsizei size, GLint maxlevel) const;
@@ -115,14 +114,11 @@ class Texture : public RefCountObject
     virtual void convertToRenderTarget() = 0;
     virtual IDirect3DSurface9 *getRenderTarget(GLenum target) = 0;
 
-    void createSurface(GLsizei width, GLsizei height, GLenum format, GLenum type, Image *image);
+    void createSurface(Image *image);
 
     Blit *getBlitter();
 
     int levelCount() const;
-
-    GLsizei mWidth;
-    GLsizei mHeight;
 
     GLenum mMinFilter;
     GLenum mMagFilter;
@@ -131,7 +127,6 @@ class Texture : public RefCountObject
     bool mDirtyParameters;
 
     bool mIsRenderable;
-    GLenum mType;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture);
@@ -189,7 +184,11 @@ class Texture2D : public Texture
     ~Texture2D();
 
     GLenum getTarget() const;
-    GLenum getInternalFormat() const;
+
+    virtual GLsizei getWidth() const;
+    virtual GLsizei getHeight() const;
+    virtual GLenum getInternalFormat() const;
+    virtual GLenum getType() const;
 
     void setImage(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void setCompressedImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels);
@@ -214,7 +213,7 @@ class Texture2D : public Texture
     virtual void convertToRenderTarget();
     virtual IDirect3DSurface9 *getRenderTarget(GLenum target);
 
-    bool redefineTexture(GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type);
+    void redefineTexture(GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type);
     void commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
 
     Image mImageArray[IMPLEMENTATION_MAX_TEXTURE_LEVELS];
@@ -231,8 +230,12 @@ class TextureCubeMap : public Texture
 
     ~TextureCubeMap();
 
-    GLenum getTarget() const;
-    GLenum getInternalFormat() const;
+    virtual GLenum getTarget() const;
+    
+    virtual GLsizei getWidth() const;
+    virtual GLsizei getHeight() const;
+    virtual GLenum getInternalFormat() const;
+    virtual GLenum getType() const;
 
     void setImagePosX(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void setImageNegX(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
@@ -272,9 +275,9 @@ class TextureCubeMap : public Texture
 
     bool isCubeComplete() const;
 
-    void setImage(int face, GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
+    void setImage(int faceIndex, GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void commitRect(GLenum faceTarget, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
-    bool redefineTexture(GLint level, GLenum format, GLsizei width, GLenum type);
+    void redefineTexture(int faceIndex, GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type);
 
     Image mImageArray[6][IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
