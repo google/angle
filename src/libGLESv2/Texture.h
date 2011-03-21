@@ -74,6 +74,7 @@ class Texture : public RefCountObject
     virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source) = 0;
 
     bool isDirty() const;
+    void resetDirty();
 
     static const GLuint INCOMPLETE_TEXTURE_ID = static_cast<GLuint>(-1);   // Every texture takes an id at creation time. The value is arbitrary because it is never registered with the resource manager.
 
@@ -123,7 +124,7 @@ class Texture : public RefCountObject
     GLenum mMagFilter;
     GLenum mWrapS;
     GLenum mWrapT;
-    bool mDirtyParameters;
+    bool mDirty;
 
     bool mIsRenderable;
 

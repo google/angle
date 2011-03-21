@@ -319,11 +319,16 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 // This function will set all of the state-related dirty flags, so that all state is set during next pre-draw.
 void Context::markAllStateDirty()
 {
+    for (int t = 0; t < MAX_TEXTURE_IMAGE_UNITS; t++)
+    {
+        mAppliedTexture[t] = 0;
+    }
+
+    mAppliedProgram = 0;
     mAppliedRenderTargetSerial = 0;
     mAppliedDepthbufferSerial = 0;
     mAppliedStencilbufferSerial = 0;
     mDepthStencilInitialized = false;
-    mAppliedProgram = 0;
 
     mClearStateDirty = true;
     mCullStateDirty = true;
@@ -2005,7 +2010,6 @@ void Context::applyShaders()
     if (programObject->getSerial() != mAppliedProgram)
     {
         programObject->dirtyAllUniforms();
-        programObject->dirtyAllSamplers();
         mAppliedProgram = programObject->getSerial();
     }
 
@@ -2027,9 +2031,11 @@ void Context::applyTextures()
 
             Texture *texture = getSamplerTexture(textureUnit, textureType);
 
-            if (programObject->isSamplerDirty(sampler) || texture->isDirty())
+            if (mAppliedTexture[sampler] != texture->id() || texture->isDirty())
             {
-                if (texture->isComplete())
+                IDirect3DBaseTexture9 *d3dTexture = texture->getTexture();
+
+                if (d3dTexture)
                 {
                     GLenum wrapS = texture->getWrapS();
                     GLenum wrapT = texture->getWrapT();
@@ -2045,22 +2051,23 @@ void Context::applyTextures()
                     device->SetSamplerState(sampler, D3DSAMP_MINFILTER, d3dMinFilter);
                     device->SetSamplerState(sampler, D3DSAMP_MIPFILTER, d3dMipFilter);
 
-                    device->SetTexture(sampler, texture->getTexture());
+                    device->SetTexture(sampler, d3dTexture);
                 }
                 else
                 {
                     device->SetTexture(sampler, getIncompleteTexture(textureType)->getTexture());
                 }
-            }
 
-            programObject->setSamplerDirty(sampler, false);
+                mAppliedTexture[sampler] = texture->id();
+                texture->resetDirty();
+            }
         }
         else
         {
-            if (programObject->isSamplerDirty(sampler))
+            if (mAppliedTexture[sampler] != 0)
             {
                 device->SetTexture(sampler, NULL);
-                programObject->setSamplerDirty(sampler, false);
+                mAppliedTexture[sampler] = 0;
             }
         }   
     }

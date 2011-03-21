@@ -71,12 +71,8 @@ class Program
     GLuint getAttributeLocation(const char *name);
     int getSemanticIndex(int attributeIndex);
 
-    void dirtyAllSamplers();
-
     GLint getSamplerMapping(unsigned int samplerIndex);
     SamplerType getSamplerType(unsigned int samplerIndex);
-    bool isSamplerDirty(unsigned int samplerIndex) const;
-    void setSamplerDirty(unsigned int samplerIndex, bool dirty);
 
     GLint getUniformLocation(const char *name, bool decorated);
     bool setUniform1fv(GLint location, GLsizei count, const GLfloat *v);
@@ -192,7 +188,6 @@ class Program
         bool active;
         GLint logicalTextureUnit;
         SamplerType type;
-        bool dirty;
     };
 
     Sampler mSamplers[MAX_TEXTURE_IMAGE_UNITS];
