@@ -1380,7 +1380,7 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
 
     redefineTexture(0, mImageArray[0].format, mImageArray[0].width, mImageArray[0].height, GL_UNSIGNED_BYTE);
    
-    if (!isRenderableFormat())
+    if (!isRenderableFormat() || (!mTexture && !isComplete()))
     {
         copyNonRenderable(&mImageArray[level], getInternalFormat(), xoffset, yoffset, x, y, width, height, renderTarget);
     }
@@ -2166,7 +2166,7 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint 
     unsigned int faceindex = faceIndex(target);
     redefineTexture(faceindex, level, format, width, height, GL_UNSIGNED_BYTE);
 
-    if (!isRenderableFormat())
+    if (!isRenderableFormat() || (!mTexture && !isComplete()))
     {
         copyNonRenderable(&mImageArray[faceindex][level], format, 0, 0, x, y, width, height, renderTarget);
     }
