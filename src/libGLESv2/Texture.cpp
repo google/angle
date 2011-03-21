@@ -24,6 +24,7 @@
 
 namespace gl
 {
+unsigned int Texture::mCurrentSerial = 1;
 
 Texture::Image::Image()
   : width(0), height(0), dirty(false), surface(NULL), format(GL_NONE), type(GL_UNSIGNED_BYTE)
@@ -38,7 +39,7 @@ Texture::Image::~Image()
     }
 }
 
-Texture::Texture(GLuint id) : RefCountObject(id)
+Texture::Texture(GLuint id) : RefCountObject(id), mSerial(issueSerial())
 {
     mMinFilter = GL_NEAREST_MIPMAP_LINEAR;
     mMagFilter = GL_LINEAR;
@@ -1159,6 +1160,11 @@ void Texture::resetDirty()
     mDirty = false;
 }
 
+unsigned int Texture::getSerial() const
+{
+    return mSerial;
+}
+
 GLint Texture::creationLevels(GLsizei width, GLsizei height, GLint maxlevel) const
 {
     if (isPow2(width) && isPow2(height))
@@ -1180,6 +1186,11 @@ GLint Texture::creationLevels(GLsizei size, GLint maxlevel) const
 int Texture::levelCount() const
 {
     return getBaseTexture() ? getBaseTexture()->GetLevelCount() : 0;
+}
+
+unsigned int Texture::issueSerial()
+{
+    return mCurrentSerial++;
 }
 
 Texture2D::Texture2D(GLuint id) : Texture(id)

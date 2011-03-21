@@ -483,8 +483,8 @@ class Context
 
     bool mHasBeenCurrent;
 
-    unsigned int mAppliedTexture[MAX_TEXTURE_IMAGE_UNITS];
-    unsigned int mAppliedProgram;
+    unsigned int mAppliedTextureSerial[MAX_TEXTURE_IMAGE_UNITS];
+    unsigned int mAppliedProgramSerial;
     unsigned int mAppliedRenderTargetSerial;
     unsigned int mAppliedDepthbufferSerial;
     unsigned int mAppliedStencilbufferSerial;

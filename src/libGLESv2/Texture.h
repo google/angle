@@ -75,6 +75,7 @@ class Texture : public RefCountObject
 
     bool isDirty() const;
     void resetDirty();
+    unsigned int getSerial() const;
 
     static const GLuint INCOMPLETE_TEXTURE_ID = static_cast<GLuint>(-1);   // Every texture takes an id at creation time. The value is arbitrary because it is never registered with the resource manager.
 
@@ -174,6 +175,12 @@ class Texture : public RefCountObject
                            int inputPitch, const void *input, size_t outputPitch, void *output) const;
     void loadCompressedImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                                  int inputPitch, const void *input, size_t outputPitch, void *output) const;
+
+    static unsigned int issueSerial();
+
+    const unsigned int mSerial;
+
+    static unsigned int mCurrentSerial;
 };
 
 class Texture2D : public Texture

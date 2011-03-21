@@ -321,10 +321,10 @@ void Context::markAllStateDirty()
 {
     for (int t = 0; t < MAX_TEXTURE_IMAGE_UNITS; t++)
     {
-        mAppliedTexture[t] = 0;
+        mAppliedTextureSerial[t] = 0;
     }
 
-    mAppliedProgram = 0;
+    mAppliedProgramSerial = 0;
     mAppliedRenderTargetSerial = 0;
     mAppliedDepthbufferSerial = 0;
     mAppliedStencilbufferSerial = 0;
@@ -2007,10 +2007,10 @@ void Context::applyShaders()
     device->SetVertexShader(vertexShader);
     device->SetPixelShader(pixelShader);
 
-    if (programObject->getSerial() != mAppliedProgram)
+    if (programObject->getSerial() != mAppliedProgramSerial)
     {
         programObject->dirtyAllUniforms();
-        mAppliedProgram = programObject->getSerial();
+        mAppliedProgramSerial = programObject->getSerial();
     }
 
     programObject->applyUniforms();
@@ -2031,7 +2031,7 @@ void Context::applyTextures()
 
             Texture *texture = getSamplerTexture(textureUnit, textureType);
 
-            if (mAppliedTexture[sampler] != texture->id() || texture->isDirty())
+            if (mAppliedTextureSerial[sampler] != texture->getSerial() || texture->isDirty())
             {
                 IDirect3DBaseTexture9 *d3dTexture = texture->getTexture();
 
@@ -2058,16 +2058,16 @@ void Context::applyTextures()
                     device->SetTexture(sampler, getIncompleteTexture(textureType)->getTexture());
                 }
 
-                mAppliedTexture[sampler] = texture->id();
+                mAppliedTextureSerial[sampler] = texture->getSerial();
                 texture->resetDirty();
             }
         }
         else
         {
-            if (mAppliedTexture[sampler] != 0)
+            if (mAppliedTextureSerial[sampler] != 0)
             {
                 device->SetTexture(sampler, NULL);
-                mAppliedTexture[sampler] = 0;
+                mAppliedTextureSerial[sampler] = 0;
             }
         }   
     }
