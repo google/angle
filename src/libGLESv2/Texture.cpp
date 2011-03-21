@@ -1220,6 +1220,11 @@ GLenum Texture2D::getType() const
 
 void Texture2D::redefineTexture(GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type)
 {
+    GLsizei textureWidth = mImageArray[0].width;
+    GLsizei textureHeight = mImageArray[0].height;
+    GLenum textureFormat = mImageArray[0].format;
+    GLenum textureType = mImageArray[0].type;
+
     mImageArray[level].width = width;
     mImageArray[level].height = height;
     mImageArray[level].format = format;
@@ -1230,12 +1235,9 @@ void Texture2D::redefineTexture(GLint level, GLenum format, GLsizei width, GLsiz
         return;
     }
 
-    D3DSURFACE_DESC texture;
-    mTexture->GetLevelDesc(0, &texture);
-
-    bool widthOkay = (texture.Width >> level == width) || (texture.Width >> level == 0 && width == 1);
-    bool heightOkay = (texture.Height >> level == height) || (texture.Height >> level == 0 && height == 1);
-    bool textureOkay = (widthOkay && heightOkay && texture.Format == selectFormat(format, type));
+    bool widthOkay = (textureWidth >> level == width) || (textureWidth >> level == 0 && width == 1);
+    bool heightOkay = (textureHeight >> level == height) || (textureHeight >> level == 0 && height == 1);
+    bool textureOkay = (widthOkay && heightOkay && textureFormat == format && textureType == type);
 
     if (!textureOkay)   // Purge all the levels and the texture.
     {
@@ -2109,6 +2111,11 @@ unsigned int TextureCubeMap::faceIndex(GLenum face)
 
 void TextureCubeMap::redefineTexture(int face, GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type)
 {
+    GLsizei textureWidth = mImageArray[0][0].width;
+    GLsizei textureHeight = mImageArray[0][0].height;
+    GLenum textureFormat = mImageArray[0][0].format;
+    GLenum textureType = mImageArray[0][0].type;
+
     mImageArray[face][level].width = width;
     mImageArray[face][level].height = height;
     mImageArray[face][level].format = format;
@@ -2119,11 +2126,8 @@ void TextureCubeMap::redefineTexture(int face, GLint level, GLenum format, GLsiz
         return;
     }
 
-    D3DSURFACE_DESC texture;
-    mTexture->GetLevelDesc(0, &texture);
-
-    bool sizeOkay = (texture.Width >> level == width);
-    bool textureOkay = (sizeOkay && texture.Format == selectFormat(format, type));
+    bool sizeOkay = (textureWidth >> level == width);
+    bool textureOkay = (sizeOkay && textureFormat == format && textureType == type);
 
     if (!textureOkay)   // Purge all the levels and the texture.
     {
