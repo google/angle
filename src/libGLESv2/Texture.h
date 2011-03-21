@@ -115,8 +115,6 @@ class Texture : public RefCountObject
     virtual void convertToRenderTarget() = 0;
     virtual IDirect3DSurface9 *getRenderTarget(GLenum target) = 0;
 
-    virtual bool dirtyImageData() const = 0;
-
     void createSurface(GLsizei width, GLsizei height, GLenum format, GLenum type, Image *img);
 
     Blit *getBlitter();
@@ -216,8 +214,6 @@ class Texture2D : public Texture
     virtual void convertToRenderTarget();
     virtual IDirect3DSurface9 *getRenderTarget(GLenum target);
 
-    virtual bool dirtyImageData() const;
-
     bool redefineTexture(GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type);
     void commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
 
@@ -267,8 +263,6 @@ class TextureCubeMap : public Texture
     virtual void updateTexture();
     virtual void convertToRenderTarget();
     virtual IDirect3DSurface9 *getRenderTarget(GLenum target);
-
-    virtual bool dirtyImageData() const;
 
     // face is one of the GL_TEXTURE_CUBE_MAP_* enumerants.
     // Returns NULL if the call underlying Direct3D call fails.

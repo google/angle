@@ -26,7 +26,7 @@ namespace gl
 {
 
 Texture::Image::Image()
-  : width(0), height(0), dirty(false), surface(NULL), format(GL_NONE)
+  : width(0), height(0), dirty(false), surface(NULL), format(GL_NONE), type(GL_UNSIGNED_BYTE)
 {
 }
 
@@ -1162,13 +1162,8 @@ IDirect3DBaseTexture9 *Texture::getTexture()
     {
         createTexture();
     }
-    
-    if (dirtyImageData())
-    {
-        updateTexture();
-    }
 
-    ASSERT(!dirtyImageData());
+    updateTexture();
 
     return getBaseTexture();
 }
@@ -1186,10 +1181,7 @@ void Texture::needRenderTarget()
         convertToRenderTarget();
     }
 
-    if (dirtyImageData())
-    {
-        updateTexture();
-    }
+    updateTexture();
 }
 
 GLint Texture::creationLevels(GLsizei width, GLsizei height, GLint maxlevel) const
@@ -1675,18 +1667,6 @@ void Texture2D::convertToRenderTarget()
     mIsRenderable = true;
 }
 
-bool Texture2D::dirtyImageData() const
-{
-    int q = log2(std::max(mWidth, mHeight));
-
-    for (int i = 0; i <= q; i++)
-    {
-        if (mImageArray[i].dirty) return true;
-    }
-
-    return false;
-}
-
 void Texture2D::generateMipmaps()
 {
     if (!isPow2(mImageArray[0].width) || !isPow2(mImageArray[0].height))
@@ -2138,21 +2118,6 @@ unsigned int TextureCubeMap::faceIndex(GLenum face)
     META_ASSERT(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z - GL_TEXTURE_CUBE_MAP_POSITIVE_X == 5);
 
     return face - GL_TEXTURE_CUBE_MAP_POSITIVE_X;
-}
-
-bool TextureCubeMap::dirtyImageData() const
-{
-    int q = log2(mWidth);
-
-    for (int f = 0; f < 6; f++)
-    {
-        for (int i = 0; i <= q; i++)
-        {
-            if (mImageArray[f][i].dirty) return true;
-        }
-    }
-
-    return false;
 }
 
 // While OpenGL doesn't check texture consistency until draw-time, D3D9 requires a complete texture
