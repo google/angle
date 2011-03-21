@@ -49,7 +49,6 @@ Texture::Texture(GLuint id) : RefCountObject(id)
     mDirty = true;
     mIsRenderable = false;
     mType = GL_UNSIGNED_BYTE;
-    mBaseTexture = NULL;
 }
 
 Texture::~Texture()
@@ -1159,7 +1158,7 @@ IDirect3DBaseTexture9 *Texture::getTexture()
 
     if (mDirtyMetaData)
     {
-        mBaseTexture = createTexture();
+        createTexture();
         mIsRenderable = false;
     }
 
@@ -1171,7 +1170,7 @@ IDirect3DBaseTexture9 *Texture::getTexture()
     mDirtyMetaData = false;
     ASSERT(!dirtyImageData());
 
-    return mBaseTexture;
+    return getBaseTexture();
 }
 
 bool Texture::isDirty() const
@@ -1184,7 +1183,7 @@ void Texture::needRenderTarget()
 {
     if (!mIsRenderable)
     {
-        mBaseTexture = convertToRenderTarget();
+        convertToRenderTarget();
         mIsRenderable = true;
     }
 
@@ -1195,25 +1194,6 @@ void Texture::needRenderTarget()
 
     mDirtyMetaData = false;
 }
-
-void Texture::dropTexture()
-{
-    if (mBaseTexture)
-    {
-        mBaseTexture = NULL;
-    }
-
-    mIsRenderable = false;
-}
-
-void Texture::pushTexture(IDirect3DBaseTexture9 *newTexture, bool renderable)
-{
-    mBaseTexture = newTexture;
-    mDirtyMetaData = false;
-    mIsRenderable = renderable;
-    mDirty = true;
-}
-
 
 GLint Texture::creationLevels(GLsizei width, GLsizei height, GLint maxlevel) const
 {
@@ -1235,12 +1215,7 @@ GLint Texture::creationLevels(GLsizei size, GLint maxlevel) const
 
 int Texture::levelCount() const
 {
-    return mBaseTexture ? mBaseTexture->GetLevelCount() : 0;
-}
-
-bool Texture::isRenderable() const
-{
-    return mIsRenderable;
+    return getBaseTexture() ? getBaseTexture()->GetLevelCount() : 0;
 }
 
 Texture2D::Texture2D(GLuint id) : Texture(id)
@@ -1311,7 +1286,7 @@ bool Texture2D::redefineTexture(GLint level, GLenum internalFormat, GLsizei widt
         {
             mTexture->Release();
             mTexture = NULL;
-            dropTexture();
+            mIsRenderable = false;
         }
 
         mWidth = width << level;
@@ -1405,7 +1380,9 @@ void Texture2D::copyImage(GLint level, GLenum internalFormat, GLint x, GLint y, 
         if (redefined)
         {
             convertToRenderTarget();
-            pushTexture(mTexture, true);
+            mDirtyMetaData = false;
+            mIsRenderable = true;
+            mDirty = true;
         }
         else
         {
@@ -1459,7 +1436,9 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
         if (redefined)
         {
             convertToRenderTarget();
-            pushTexture(mTexture, true);
+            mDirtyMetaData = false;
+            mIsRenderable = true;
+            mDirty = true;
         }
         else
         {
@@ -1565,8 +1544,13 @@ bool Texture2D::isCompressed() const
     return IsCompressed(getInternalFormat());
 }
 
-// Constructs a Direct3D 9 texture resource from the texture images, or returns an existing one
-IDirect3DBaseTexture9 *Texture2D::createTexture()
+IDirect3DBaseTexture9 *Texture2D::getBaseTexture() const
+{
+    return mTexture;
+}
+
+// Constructs a Direct3D 9 texture resource from the texture images
+void Texture2D::createTexture()
 {
     IDirect3DTexture9 *texture;
 
@@ -1578,12 +1562,15 @@ IDirect3DBaseTexture9 *Texture2D::createTexture()
     if (FAILED(result))
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-        return error(GL_OUT_OF_MEMORY, (IDirect3DBaseTexture9*)NULL);
+        return error(GL_OUT_OF_MEMORY);
     }
 
-    if (mTexture) mTexture->Release();
+    if (mTexture)
+    {
+        mTexture->Release();
+    }
+
     mTexture = texture;
-    return texture;
 }
 
 void Texture2D::updateTexture()
@@ -1614,7 +1601,7 @@ void Texture2D::updateTexture()
     }
 }
 
-IDirect3DBaseTexture9 *Texture2D::convertToRenderTarget()
+void Texture2D::convertToRenderTarget()
 {
     IDirect3DTexture9 *texture = NULL;
 
@@ -1629,7 +1616,7 @@ IDirect3DBaseTexture9 *Texture2D::convertToRenderTarget()
         if (FAILED(result))
         {
             ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-            return error(GL_OUT_OF_MEMORY, (IDirect3DBaseTexture9*)NULL);
+            return error(GL_OUT_OF_MEMORY);
         }
 
         if (mTexture != NULL)
@@ -1646,7 +1633,7 @@ IDirect3DBaseTexture9 *Texture2D::convertToRenderTarget()
 
                     texture->Release();
 
-                    return error(GL_OUT_OF_MEMORY, (IDirect3DBaseTexture9*)NULL);
+                    return error(GL_OUT_OF_MEMORY);
                 }
 
                 IDirect3DSurface9 *dest;
@@ -1659,7 +1646,7 @@ IDirect3DBaseTexture9 *Texture2D::convertToRenderTarget()
                     texture->Release();
                     source->Release();
 
-                    return error(GL_OUT_OF_MEMORY, (IDirect3DBaseTexture9*)NULL);
+                    return error(GL_OUT_OF_MEMORY);
                 }
 
                 display->endScene();
@@ -1673,7 +1660,7 @@ IDirect3DBaseTexture9 *Texture2D::convertToRenderTarget()
                     source->Release();
                     dest->Release();
 
-                    return error(GL_OUT_OF_MEMORY, (IDirect3DBaseTexture9*)NULL);
+                    return error(GL_OUT_OF_MEMORY);
                 }
 
                 source->Release();
@@ -1688,7 +1675,6 @@ IDirect3DBaseTexture9 *Texture2D::convertToRenderTarget()
     }
 
     mTexture = texture;
-    return mTexture;
 }
 
 bool Texture2D::dirtyImageData() const
@@ -1727,7 +1713,7 @@ void Texture2D::generateMipmaps()
         mImageArray[i].height = std::max(mImageArray[0].height >> i, 1);
     }
 
-    if (isRenderable())
+    if (mIsRenderable)
     {
         if (mTexture == NULL)
         {
@@ -1998,8 +1984,13 @@ bool TextureCubeMap::isCompressed() const
     return IsCompressed(getInternalFormat());
 }
 
+IDirect3DBaseTexture9 *TextureCubeMap::getBaseTexture() const
+{
+    return mTexture;
+}
+
 // Constructs a Direct3D 9 texture resource from the texture images, or returns an existing one
-IDirect3DBaseTexture9 *TextureCubeMap::createTexture()
+void TextureCubeMap::createTexture()
 {
     IDirect3DDevice9 *device = getDevice();
     D3DFORMAT format = selectFormat(mImageArray[0][0].format, mType);
@@ -2011,13 +2002,15 @@ IDirect3DBaseTexture9 *TextureCubeMap::createTexture()
     if (FAILED(result))
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-        return error(GL_OUT_OF_MEMORY, (IDirect3DBaseTexture9*)NULL);
+        return error(GL_OUT_OF_MEMORY);
     }
 
-    if (mTexture) mTexture->Release();
+    if (mTexture)
+    {
+        mTexture->Release();
+    }
 
     mTexture = texture;
-    return mTexture;
 }
 
 void TextureCubeMap::updateTexture()
@@ -2050,7 +2043,7 @@ void TextureCubeMap::updateTexture()
     }
 }
 
-IDirect3DBaseTexture9 *TextureCubeMap::convertToRenderTarget()
+void TextureCubeMap::convertToRenderTarget()
 {
     IDirect3DCubeTexture9 *texture = NULL;
 
@@ -2065,7 +2058,7 @@ IDirect3DBaseTexture9 *TextureCubeMap::convertToRenderTarget()
         if (FAILED(result))
         {
             ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-            return error(GL_OUT_OF_MEMORY, (IDirect3DBaseTexture9*)NULL);
+            return error(GL_OUT_OF_MEMORY);
         }
 
         if (mTexture != NULL)
@@ -2084,7 +2077,7 @@ IDirect3DBaseTexture9 *TextureCubeMap::convertToRenderTarget()
 
                         texture->Release();
 
-                        return error(GL_OUT_OF_MEMORY, (IDirect3DBaseTexture9*)NULL);
+                        return error(GL_OUT_OF_MEMORY);
                     }
 
                     IDirect3DSurface9 *dest;
@@ -2097,7 +2090,7 @@ IDirect3DBaseTexture9 *TextureCubeMap::convertToRenderTarget()
                         texture->Release();
                         source->Release();
 
-                        return error(GL_OUT_OF_MEMORY, (IDirect3DBaseTexture9*)NULL);
+                        return error(GL_OUT_OF_MEMORY);
                     }
 
                     display->endScene();
@@ -2111,7 +2104,7 @@ IDirect3DBaseTexture9 *TextureCubeMap::convertToRenderTarget()
                         source->Release();
                         dest->Release();
 
-                        return error(GL_OUT_OF_MEMORY, (IDirect3DBaseTexture9*)NULL);
+                        return error(GL_OUT_OF_MEMORY);
                     }
                 }
             }
@@ -2124,7 +2117,6 @@ IDirect3DBaseTexture9 *TextureCubeMap::convertToRenderTarget()
     }
 
     mTexture = texture;
-    return mTexture;
 }
 
 void TextureCubeMap::setImage(int face, GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
@@ -2198,7 +2190,7 @@ bool TextureCubeMap::redefineTexture(GLint level, GLenum internalFormat, GLsizei
         {
             mTexture->Release();
             mTexture = NULL;
-            dropTexture();
+            mIsRenderable = false;
         }
 
         mWidth = width << level;
@@ -2234,7 +2226,9 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum internalFormat
         if (redefined)
         {
             convertToRenderTarget();
-            pushTexture(mTexture, true);
+            mDirtyMetaData = false;
+            mIsRenderable = true;
+            mDirty = true;
         }
         else
         {
@@ -2307,7 +2301,9 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
         if (redefined)
         {
             convertToRenderTarget();
-            pushTexture(mTexture, true);
+            mDirtyMetaData = false;
+            mIsRenderable = true;
+            mDirty = true;
         }
         else
         {
@@ -2378,7 +2374,7 @@ void TextureCubeMap::generateMipmaps()
         }
     }
 
-    if (isRenderable())
+    if (mIsRenderable)
     {
         if (mTexture == NULL)
         {

@@ -108,23 +108,19 @@ class Texture : public RefCountObject
     GLint creationLevels(GLsizei width, GLsizei height, GLint maxlevel) const;
     GLint creationLevels(GLsizei size, GLint maxlevel) const;
 
-    // The pointer returned is weak and it is assumed the derived class will keep a strong pointer until the next createTexture() call.
-    virtual IDirect3DBaseTexture9 *createTexture() = 0;
+    virtual IDirect3DBaseTexture9 *getBaseTexture() const = 0;
+    virtual void createTexture() = 0;
     virtual void updateTexture() = 0;
-    virtual IDirect3DBaseTexture9 *convertToRenderTarget() = 0;
+    virtual void convertToRenderTarget() = 0;
     virtual IDirect3DSurface9 *getRenderTarget(GLenum target) = 0;
 
     virtual bool dirtyImageData() const = 0;
 
-    void dropTexture();
-    void pushTexture(IDirect3DBaseTexture9 *newTexture, bool renderable);
     void createSurface(GLsizei width, GLsizei height, GLenum format, GLenum type, Image *img);
 
     Blit *getBlitter();
 
     int levelCount() const;
-
-    bool isRenderable() const;
 
     GLsizei mWidth;
     GLsizei mHeight;
@@ -135,6 +131,8 @@ class Texture : public RefCountObject
     GLenum mType;
 
     bool mDirtyMetaData;
+    bool mIsRenderable;
+    bool mDirty;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture);
@@ -182,11 +180,6 @@ class Texture : public RefCountObject
                            int inputPitch, const void *input, size_t outputPitch, void *output) const;
     void loadCompressedImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                                  int inputPitch, const void *input, size_t outputPitch, void *output) const;
-
-    IDirect3DBaseTexture9 *mBaseTexture; // This is a weak pointer. The derived class is assumed to own a strong pointer.
-
-    bool mDirty;
-    bool mIsRenderable;
 };
 
 class Texture2D : public Texture
@@ -216,9 +209,10 @@ class Texture2D : public Texture
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture2D);
 
-    virtual IDirect3DBaseTexture9 *createTexture();
+    virtual IDirect3DBaseTexture9 *getBaseTexture() const;
+    virtual void createTexture();
     virtual void updateTexture();
-    virtual IDirect3DBaseTexture9 *convertToRenderTarget();
+    virtual void convertToRenderTarget();
     virtual IDirect3DSurface9 *getRenderTarget(GLenum target);
 
     virtual bool dirtyImageData() const;
@@ -267,9 +261,10 @@ class TextureCubeMap : public Texture
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureCubeMap);
 
-    virtual IDirect3DBaseTexture9 *createTexture();
+    virtual IDirect3DBaseTexture9 *getBaseTexture() const;
+    virtual void createTexture();
     virtual void updateTexture();
-    virtual IDirect3DBaseTexture9 *convertToRenderTarget();
+    virtual void convertToRenderTarget();
     virtual IDirect3DSurface9 *getRenderTarget(GLenum target);
 
     virtual bool dirtyImageData() const;
