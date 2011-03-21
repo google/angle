@@ -32,7 +32,10 @@ Texture::Image::Image()
 
 Texture::Image::~Image()
 {
-  if (surface) surface->Release();
+    if (surface)
+    {
+        surface->Release();
+    }
 }
 
 Texture::Texture(GLuint id) : RefCountObject(id)
@@ -970,7 +973,7 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GL
 }
 
 // This implements glCopyTex[Sub]Image2D for non-renderable internal texture formats
-void Texture::copyNonRenderable(Image *image, GLenum internalFormat, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, IDirect3DSurface9 *renderTarget)
+void Texture::copyNonRenderable(Image *image, GLenum format, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, IDirect3DSurface9 *renderTarget)
 {
     IDirect3DDevice9 *device = getDevice();
     IDirect3DSurface9 *surface = NULL;
@@ -1008,7 +1011,7 @@ void Texture::copyNonRenderable(Image *image, GLenum internalFormat, GLint xoffs
 
     if (!image->surface)
     {
-        createSurface(width, height, internalFormat, mType, image);
+        createSurface(width, height, format, mType, image);
     }
 
     if (image->surface == NULL)
@@ -1239,7 +1242,7 @@ GLenum Texture2D::getInternalFormat() const
 //
 // Returns true if the existing texture was unsuitable and had to be destroyed. If so, it will also set
 // a new height and width for the texture by working backwards from the given width and height.
-bool Texture2D::redefineTexture(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum type)
+bool Texture2D::redefineTexture(GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type)
 {
     bool widthOkay = (mWidth >> level == width);
     bool heightOkay = (mHeight >> level == height);
@@ -1250,13 +1253,13 @@ bool Texture2D::redefineTexture(GLint level, GLenum internalFormat, GLsizei widt
 
     bool typeOkay = (type == mType);
 
-    bool textureOkay = (sizeOkay && typeOkay && internalFormat == mImageArray[0].format);
+    bool textureOkay = (sizeOkay && typeOkay && format == mImageArray[0].format);
 
     if (!textureOkay)
     {
         TRACE("Redefining 2D texture (%d, 0x%04X, %d, %d => 0x%04X, %d, %d).", level,
               mImageArray[0].format, mWidth, mHeight,
-              internalFormat, width, height);
+              format, width, height);
 
         // Purge all the levels and the texture.
 
@@ -1280,25 +1283,25 @@ bool Texture2D::redefineTexture(GLint level, GLenum internalFormat, GLsizei widt
 
         mWidth = width << level;
         mHeight = height << level;
-        mImageArray[0].format = internalFormat;
+        mImageArray[0].format = format;
         mType = type;
     }
 
     return !textureOkay;
 }
 
-void Texture2D::setImage(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
+void Texture2D::setImage(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    redefineTexture(level, internalFormat, width, height, type);
+    redefineTexture(level, format, width, height, type);
 
     Texture::setImage(width, height, format, type, unpackAlignment, pixels, &mImageArray[level]);
 }
 
-void Texture2D::setCompressedImage(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels)
+void Texture2D::setCompressedImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels)
 {
-    redefineTexture(level, internalFormat, width, height, GL_UNSIGNED_BYTE);
+    redefineTexture(level, format, width, height, GL_UNSIGNED_BYTE);
 
-    Texture::setCompressedImage(width, height, internalFormat, imageSize, pixels, &mImageArray[level]);
+    Texture::setCompressedImage(width, height, format, imageSize, pixels, &mImageArray[level]);
 }
 
 void Texture2D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
@@ -1348,7 +1351,7 @@ void Texture2D::subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GL
     }
 }
 
-void Texture2D::copyImage(GLint level, GLenum internalFormat, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
+void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
 {
     IDirect3DSurface9 *renderTarget = source->getRenderTarget();
 
@@ -1358,11 +1361,11 @@ void Texture2D::copyImage(GLint level, GLenum internalFormat, GLint x, GLint y, 
         return error(GL_OUT_OF_MEMORY);
     }
 
-    bool redefined = redefineTexture(level, internalFormat, width, height, mType);
+    bool redefined = redefineTexture(level, format, width, height, mType);
    
     if (!isRenderableFormat())
     {
-        copyNonRenderable(&mImageArray[level], internalFormat, 0, 0, x, y, width, height, renderTarget);
+        copyNonRenderable(&mImageArray[level], format, 0, 0, x, y, width, height, renderTarget);
     }
     else
     {
@@ -1386,14 +1389,14 @@ void Texture2D::copyImage(GLint level, GLenum internalFormat, GLint x, GLint y, 
             IDirect3DSurface9 *dest;
             HRESULT hr = mTexture->GetSurfaceLevel(level, &dest);
 
-            getBlitter()->formatConvert(source->getRenderTarget(), sourceRect, internalFormat, 0, 0, dest);
+            getBlitter()->formatConvert(source->getRenderTarget(), sourceRect, format, 0, 0, dest);
             dest->Release();
         }
     }
 
     mImageArray[level].width = width;
     mImageArray[level].height = height;
-    mImageArray[level].format = internalFormat;
+    mImageArray[level].format = format;
 }
 
 void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
@@ -1804,41 +1807,41 @@ GLenum TextureCubeMap::getInternalFormat() const
     return mImageArray[0][0].format;
 }
 
-void TextureCubeMap::setImagePosX(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
+void TextureCubeMap::setImagePosX(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    setImage(0, level, internalFormat, width, height, format, type, unpackAlignment, pixels);
+    setImage(0, level, width, height, format, type, unpackAlignment, pixels);
 }
 
-void TextureCubeMap::setImageNegX(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
+void TextureCubeMap::setImageNegX(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    setImage(1, level, internalFormat, width, height, format, type, unpackAlignment, pixels);
+    setImage(1, level, width, height, format, type, unpackAlignment, pixels);
 }
 
-void TextureCubeMap::setImagePosY(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
+void TextureCubeMap::setImagePosY(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    setImage(2, level, internalFormat, width, height, format, type, unpackAlignment, pixels);
+    setImage(2, level, width, height, format, type, unpackAlignment, pixels);
 }
 
-void TextureCubeMap::setImageNegY(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
+void TextureCubeMap::setImageNegY(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    setImage(3, level, internalFormat, width, height, format, type, unpackAlignment, pixels);
+    setImage(3, level, width, height, format, type, unpackAlignment, pixels);
 }
 
-void TextureCubeMap::setImagePosZ(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
+void TextureCubeMap::setImagePosZ(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    setImage(4, level, internalFormat, width, height, format, type, unpackAlignment, pixels);
+    setImage(4, level, width, height, format, type, unpackAlignment, pixels);
 }
 
-void TextureCubeMap::setImageNegZ(GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
+void TextureCubeMap::setImageNegZ(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    setImage(5, level, internalFormat, width, height, format, type, unpackAlignment, pixels);
+    setImage(5, level, width, height, format, type, unpackAlignment, pixels);
 }
 
-void TextureCubeMap::setCompressedImage(GLenum face, GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels)
+void TextureCubeMap::setCompressedImage(GLenum face, GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels)
 {
-    redefineTexture(level, internalFormat, width);
+    redefineTexture(level, format, width);
 
-    Texture::setCompressedImage(width, height, internalFormat, imageSize, pixels, &mImageArray[faceIndex(face)][level]);
+    Texture::setCompressedImage(width, height, format, imageSize, pixels, &mImageArray[faceIndex(face)][level]);
 }
 
 void TextureCubeMap::commitRect(GLenum faceTarget, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
@@ -2104,9 +2107,9 @@ void TextureCubeMap::convertToRenderTarget()
     mIsRenderable = true;
 }
 
-void TextureCubeMap::setImage(int face, GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
+void TextureCubeMap::setImage(int face, GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    redefineTexture(level, internalFormat, width);
+    redefineTexture(level, format, width);
 
     Texture::setImage(width, height, format, type, unpackAlignment, pixels, &mImageArray[face][level]);
 }
@@ -2143,18 +2146,18 @@ bool TextureCubeMap::dirtyImageData() const
 //
 // Returns true if the existing texture was unsuitable had to be destroyed. If so, it will also set
 // a new size for the texture by working backwards from the given size.
-bool TextureCubeMap::redefineTexture(GLint level, GLenum internalFormat, GLsizei width)
+bool TextureCubeMap::redefineTexture(GLint level, GLenum format, GLsizei width)
 {
     // Are these settings compatible with level 0?
     bool sizeOkay = (mImageArray[0][0].width >> level == width);
 
-    bool textureOkay = (sizeOkay && internalFormat == mImageArray[0][0].format);
+    bool textureOkay = (sizeOkay && format == mImageArray[0][0].format);
 
     if (!textureOkay)
     {
         TRACE("Redefining cube texture (%d, 0x%04X, %d => 0x%04X, %d).", level,
               mImageArray[0][0].format, mImageArray[0][0].width,
-              internalFormat, width);
+              format, width);
 
         // Purge all the levels and the texture.
         for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
@@ -2183,13 +2186,13 @@ bool TextureCubeMap::redefineTexture(GLint level, GLenum internalFormat, GLsizei
         mHeight = width << level;
         mImageArray[0][0].height = width << level;
 
-        mImageArray[0][0].format = internalFormat;
+        mImageArray[0][0].format = format;
     }
 
     return !textureOkay;
 }
 
-void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum internalFormat, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
+void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
 {
     IDirect3DSurface9 *renderTarget = source->getRenderTarget();
 
@@ -2200,11 +2203,11 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum internalFormat
     }
 
     unsigned int faceindex = faceIndex(target);
-    bool redefined = redefineTexture(level, internalFormat, width);
+    bool redefined = redefineTexture(level, format, width);
 
     if (!isRenderableFormat())
     {
-        copyNonRenderable(&mImageArray[faceindex][level], internalFormat, 0, 0, x, y, width, height, renderTarget);
+        copyNonRenderable(&mImageArray[faceindex][level], format, 0, 0, x, y, width, height, renderTarget);
     }
     else
     {
@@ -2229,14 +2232,14 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum internalFormat
 
             IDirect3DSurface9 *dest = getCubeMapSurface(target, level);
 
-            getBlitter()->formatConvert(source->getRenderTarget(), sourceRect, internalFormat, 0, 0, dest);
+            getBlitter()->formatConvert(source->getRenderTarget(), sourceRect, format, 0, 0, dest);
             dest->Release();
         }
     }
 
     mImageArray[faceindex][level].width = width;
     mImageArray[faceindex][level].height = height;
-    mImageArray[faceindex][level].format = internalFormat;
+    mImageArray[faceindex][level].format = format;
 }
 
 IDirect3DSurface9 *TextureCubeMap::getCubeMapSurface(GLenum face, unsigned int level)
