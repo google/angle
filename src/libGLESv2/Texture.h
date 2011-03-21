@@ -124,15 +124,15 @@ class Texture : public RefCountObject
 
     GLsizei mWidth;
     GLsizei mHeight;
+
     GLenum mMinFilter;
     GLenum mMagFilter;
     GLenum mWrapS;
     GLenum mWrapT;
-    GLenum mType;
+    bool mDirtyParameters;
 
-    bool mDirtyMetaData;
     bool mIsRenderable;
-    bool mDirty;
+    GLenum mType;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture);

@@ -37,16 +37,15 @@ Texture::Image::~Image()
 
 Texture::Texture(GLuint id) : RefCountObject(id)
 {
+    mWidth = 0;
+    mHeight = 0;
+
     mMinFilter = GL_NEAREST_MIPMAP_LINEAR;
     mMagFilter = GL_LINEAR;
     mWrapS = GL_REPEAT;
     mWrapT = GL_REPEAT;
-
-    mWidth = 0;
-    mHeight = 0;
-
-    mDirtyMetaData = true;
-    mDirty = true;
+    mDirtyParameters = true;
+    
     mIsRenderable = false;
     mType = GL_UNSIGNED_BYTE;
 }
@@ -76,7 +75,7 @@ bool Texture::setMinFilter(GLenum filter)
             if (mMinFilter != filter)
             {
                 mMinFilter = filter;
-                mDirty = true;
+                mDirtyParameters = true;
             }
             return true;
         }
@@ -96,7 +95,7 @@ bool Texture::setMagFilter(GLenum filter)
             if (mMagFilter != filter)
             {
                 mMagFilter = filter;
-                mDirty = true;
+                mDirtyParameters = true;
             }
             return true;
         }
@@ -117,7 +116,7 @@ bool Texture::setWrapS(GLenum wrap)
             if (mWrapS != wrap)
             {
                 mWrapS = wrap;
-                mDirty = true;
+                mDirtyParameters = true;
             }
             return true;
         }
@@ -138,7 +137,7 @@ bool Texture::setWrapT(GLenum wrap)
             if (mWrapT != wrap)
             {
                 mWrapT = wrap;
-                mDirty = true;
+                mDirtyParameters = true;
             }
             return true;
         }
@@ -864,8 +863,6 @@ void Texture::setImage(GLsizei width, GLsizei height, GLenum format, GLenum type
 
         img->dirty = true;
     }
-
-    mDirtyMetaData = true;
 }
 
 void Texture::setCompressedImage(GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels, Image *img)
@@ -889,8 +886,6 @@ void Texture::setCompressedImage(GLsizei width, GLsizei height, GLenum format, G
 
         img->dirty = true;
     }
-
-    mDirtyMetaData = true;
 }
 
 bool Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *img)
@@ -1136,7 +1131,6 @@ void Texture::copyNonRenderable(Image *image, GLenum internalFormat, GLint xoffs
         }
 
         image->dirty = true;
-        mDirtyMetaData = true;    
     }
 
     image->surface->UnlockRect();
@@ -1156,18 +1150,16 @@ IDirect3DBaseTexture9 *Texture::getTexture()
         return NULL;
     }
 
-    if (mDirtyMetaData)
+    if (!getBaseTexture())
     {
         createTexture();
-        mIsRenderable = false;
     }
-
-    if (mDirtyMetaData || dirtyImageData())
+    
+    if (dirtyImageData())
     {
         updateTexture();
     }
 
-    mDirtyMetaData = false;
     ASSERT(!dirtyImageData());
 
     return getBaseTexture();
@@ -1175,7 +1167,7 @@ IDirect3DBaseTexture9 *Texture::getTexture()
 
 bool Texture::isDirty() const
 {
-    return (mDirty || mDirtyMetaData || dirtyImageData());
+    return true;//(mDirty || mDirtyMetaData || dirtyImageData());
 }
 
 // Returns the top-level texture surface as a render target
@@ -1184,15 +1176,12 @@ void Texture::needRenderTarget()
     if (!mIsRenderable)
     {
         convertToRenderTarget();
-        mIsRenderable = true;
     }
 
     if (dirtyImageData())
     {
         updateTexture();
     }
-
-    mDirtyMetaData = false;
 }
 
 GLint Texture::creationLevels(GLsizei width, GLsizei height, GLint maxlevel) const
@@ -1380,9 +1369,6 @@ void Texture2D::copyImage(GLint level, GLenum internalFormat, GLint x, GLint y, 
         if (redefined)
         {
             convertToRenderTarget();
-            mDirtyMetaData = false;
-            mIsRenderable = true;
-            mDirty = true;
         }
         else
         {
@@ -1436,9 +1422,6 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
         if (redefined)
         {
             convertToRenderTarget();
-            mDirtyMetaData = false;
-            mIsRenderable = true;
-            mDirty = true;
         }
         else
         {
@@ -1571,6 +1554,7 @@ void Texture2D::createTexture()
     }
 
     mTexture = texture;
+    mIsRenderable = false;
 }
 
 void Texture2D::updateTexture()
@@ -1675,6 +1659,7 @@ void Texture2D::convertToRenderTarget()
     }
 
     mTexture = texture;
+    mIsRenderable = true;
 }
 
 bool Texture2D::dirtyImageData() const
@@ -1755,8 +1740,6 @@ void Texture2D::generateMipmaps()
 
             mImageArray[i].dirty = true;
         }
-
-        mDirtyMetaData = true;
     }
 }
 
@@ -2011,6 +1994,7 @@ void TextureCubeMap::createTexture()
     }
 
     mTexture = texture;
+    mIsRenderable = false;
 }
 
 void TextureCubeMap::updateTexture()
@@ -2117,6 +2101,7 @@ void TextureCubeMap::convertToRenderTarget()
     }
 
     mTexture = texture;
+    mIsRenderable = true;
 }
 
 void TextureCubeMap::setImage(int face, GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
@@ -2226,9 +2211,6 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum internalFormat
         if (redefined)
         {
             convertToRenderTarget();
-            mDirtyMetaData = false;
-            mIsRenderable = true;
-            mDirty = true;
         }
         else
         {
@@ -2301,9 +2283,6 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
         if (redefined)
         {
             convertToRenderTarget();
-            mDirtyMetaData = false;
-            mIsRenderable = true;
-            mDirty = true;
         }
         else
         {
@@ -2418,8 +2397,6 @@ void TextureCubeMap::generateMipmaps()
                 mImageArray[f][i].dirty = true;
             }
         }
-
-        mDirtyMetaData = true;
     }
 }
 
