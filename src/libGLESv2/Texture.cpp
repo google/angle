@@ -165,11 +165,6 @@ GLenum Texture::getWrapT() const
     return mWrapT;
 }
 
-bool Texture::isFloatingPoint() const
-{
-    return (getType() == GL_FLOAT || getType() == GL_HALF_FLOAT_OES);
-}
-
 bool Texture::isRenderableFormat() const
 {
     D3DFORMAT format = getD3DFormat();

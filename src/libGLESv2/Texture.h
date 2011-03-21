@@ -64,7 +64,6 @@ class Texture : public RefCountObject
 
     virtual bool isComplete() const = 0;
     virtual bool isCompressed() const = 0;
-    bool isFloatingPoint() const;
     bool isRenderableFormat() const;
 
     D3DFORMAT getD3DFormat() const;

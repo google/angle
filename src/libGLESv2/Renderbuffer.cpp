@@ -325,6 +325,16 @@ GLenum Colorbuffer::getInternalFormat() const
     return mInternalFormat;
 }
 
+GLenum Colorbuffer::getType() const
+{
+    if (mTexture)
+    {
+        return mTexture->getType();
+    }
+
+    return GL_UNSIGNED_BYTE;
+}
+
 D3DFORMAT Colorbuffer::getD3DFormat() const
 {
     if (mTexture)
@@ -333,16 +343,6 @@ D3DFORMAT Colorbuffer::getD3DFormat() const
     }
 
     return mD3DFormat;
-}
-
-bool Colorbuffer::isFloatingPoint() const
-{
-    if (mTexture)
-    {
-        return mTexture->isFloatingPoint();
-    }
-
-    return false;
 }
 
 bool Colorbuffer::isColorbuffer() const

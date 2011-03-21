@@ -128,10 +128,9 @@ class Colorbuffer : public RenderbufferStorage
     virtual GLsizei getWidth() const;
     virtual GLsizei getHeight() const;
     virtual GLenum getInternalFormat() const;
+    virtual GLenum getType() const;
 
     virtual D3DFORMAT getD3DFormat() const;
-
-    bool isFloatingPoint() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Colorbuffer);

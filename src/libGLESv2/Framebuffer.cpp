@@ -319,8 +319,8 @@ GLenum Framebuffer::completeness()
                 return GL_FRAMEBUFFER_UNSUPPORTED;
             }
 
-            if (colorbuffer->isFloatingPoint() && (!getContext()->supportsFloatRenderableTextures() || 
-                                                   !getContext()->supportsHalfFloatRenderableTextures()))
+            if ((colorbuffer->getType() == GL_FLOAT && !getContext()->supportsFloatRenderableTextures()) || 
+                (colorbuffer->getType() == GL_HALF_FLOAT_OES && !getContext()->supportsHalfFloatRenderableTextures()))
             {
                 return GL_FRAMEBUFFER_UNSUPPORTED;
             }
