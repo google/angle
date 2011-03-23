@@ -6,6 +6,7 @@
   'target_defaults': {
     'defines': [
       'ANGLE_DISABLE_TRACE',
+      'ANGLE_COMPILE_OPTIMIZATION_LEVEL=D3DCOMPILE_OPTIMIZATION_LEVEL0',
     ],
   },
   'targets': [
@@ -188,9 +189,6 @@
                 'd3dx9.lib',
                 'd3dcompiler.lib',
               ],
-              # Import at least one symbol from D3DCompiler_x.dll to force a
-              # static dependency.
-              'ForceSymbolReferences': ['_D3DCompile@44'],
             }
           },
         },

@@ -15,6 +15,10 @@
 #include "libGLESv2/Shader.h"
 #include "libGLESv2/utilities.h"
 
+#if !defined(ANGLE_COMPILE_OPTIMIZATION_LEVEL)
+#define ANGLE_COMPILE_OPTIMIZATION_LEVEL D3DCOMPILE_OPTIMIZATION_LEVEL3
+#endif
+
 namespace gl
 {
 unsigned int Program::mCurrentSerial = 1;
@@ -933,44 +937,38 @@ void Program::applyUniforms()
 }
 
 // Compiles the HLSL code of the attached shaders into executable binaries
-ID3DXBuffer *Program::compileToBinary(const char *hlsl, const char *profile, ID3DXConstantTable **constantTable)
+ID3D10Blob *Program::compileToBinary(const char *hlsl, const char *profile, ID3DXConstantTable **constantTable)
 {
     if (!hlsl)
     {
         return NULL;
     }
 
-    ID3DXBuffer *binary = NULL;
-    ID3DXBuffer *errorMessage = NULL;
-
     DWORD result;
+    UINT flags = 0;
+    std::string sourceText;
     if (perfActive())
     {
-        DWORD flags = D3DXSHADER_DEBUG;
-#ifndef NDEBUG
-        flags |= D3DXSHADER_SKIPOPTIMIZATION;
+        flags |= D3DCOMPILE_DEBUG;
+#ifdef NDEBUG
+        flags |= ANGLE_COMPILE_OPTIMIZATION_LEVEL;
+#else
+        flags |= D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
 
         std::string sourcePath = getTempPath();
-        std::string sourceText = std::string("#line 2 \"") + sourcePath + std::string("\"\n\n") + std::string(hlsl);
+        sourceText = std::string("#line 2 \"") + sourcePath + std::string("\"\n\n") + std::string(hlsl);
         writeFile(sourcePath.c_str(), sourceText.c_str(), sourceText.size());
-        
-        result = D3DXCompileShader(sourceText.c_str(), sourceText.size(), NULL, NULL, "main", profile, flags, &binary, &errorMessage, constantTable);
     }
     else
     {
-        result = D3DXCompileShader(hlsl, (UINT)strlen(hlsl), NULL, NULL, "main", profile, 0, &binary, &errorMessage, constantTable);
+        flags |= ANGLE_COMPILE_OPTIMIZATION_LEVEL;
+        sourceText = hlsl;
     }
 
-    if (SUCCEEDED(result))
-    {
-        return binary;
-    }
-
-    if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
-    {
-        return error(GL_OUT_OF_MEMORY, (ID3DXBuffer*)NULL);
-    }
+    ID3D10Blob *binary = NULL;
+    ID3D10Blob *errorMessage = NULL;
+    result = D3DCompile(hlsl, strlen(hlsl), NULL, NULL, NULL, "main", profile, flags, 0, &binary, &errorMessage);
 
     if (errorMessage)
     {
@@ -979,9 +977,37 @@ ID3DXBuffer *Program::compileToBinary(const char *hlsl, const char *profile, ID3
         appendToInfoLog("%s\n", message);
         TRACE("\n%s", hlsl);
         TRACE("\n%s", message);
+
+        errorMessage->Release();
+        errorMessage = NULL;
     }
 
-    return NULL;
+
+    if (FAILED(result))
+    {
+        if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+        {
+            error(GL_OUT_OF_MEMORY);
+        }
+
+        return NULL;
+    }
+
+    result = D3DXGetShaderConstantTable(static_cast<const DWORD*>(binary->GetBufferPointer()), constantTable);
+
+    if (FAILED(result))
+    {
+        if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+        {
+            error(GL_OUT_OF_MEMORY);
+        }
+
+        binary->Release();
+
+        return NULL;
+    }
+
+    return binary;
 }
 
 // Packs varyings into generic varying registers, using the algorithm from [OpenGL ES Shading Language 1.00 rev. 17] appendix A section 7 page 111
@@ -1497,8 +1523,8 @@ void Program::link()
     const char *vertexProfile = context->supportsShaderModel3() ? "vs_3_0" : "vs_2_0";
     const char *pixelProfile = context->supportsShaderModel3() ? "ps_3_0" : "ps_2_0";
 
-    ID3DXBuffer *vertexBinary = compileToBinary(mVertexHLSL.c_str(), vertexProfile, &mConstantTableVS);
-    ID3DXBuffer *pixelBinary = compileToBinary(mPixelHLSL.c_str(), pixelProfile, &mConstantTablePS);
+    ID3D10Blob *vertexBinary = compileToBinary(mVertexHLSL.c_str(), vertexProfile, &mConstantTableVS);
+    ID3D10Blob *pixelBinary = compileToBinary(mPixelHLSL.c_str(), pixelProfile, &mConstantTablePS);
 
     if (vertexBinary && pixelBinary)
     {

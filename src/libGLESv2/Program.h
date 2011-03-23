@@ -11,6 +11,7 @@
 #define LIBGLESV2_PROGRAM_H_
 
 #include <d3dx9.h>
+#include <d3dcompiler.h>
 #include <string>
 #include <vector>
 #include <set>
@@ -129,7 +130,7 @@ class Program
   private:
     DISALLOW_COPY_AND_ASSIGN(Program);
 
-    ID3DXBuffer *compileToBinary(const char *hlsl, const char *profile, ID3DXConstantTable **constantTable);
+    ID3D10Blob *compileToBinary(const char *hlsl, const char *profile, ID3DXConstantTable **constantTable);
     void unlink(bool destroy = false);
 
     int packVaryings(const Varying *packing[][4]);
