@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="d3d9.lib D3dx9.lib"
+				AdditionalDependencies="d3d9.lib D3dx9.lib d3dcompiler.lib"
 				LinkIncremental="2"
 				ModuleDefinitionFile="libGLESv2.def"
 				GenerateDebugInformation="true"
@@ -140,7 +140,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="d3d9.lib D3dx9.lib"
+				AdditionalDependencies="d3d9.lib D3dx9.lib d3dcompiler.lib"
 				LinkIncremental="1"
 				IgnoreAllDefaultLibraries="false"
 				ModuleDefinitionFile="libGLESv2.def"
