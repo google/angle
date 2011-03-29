@@ -61,12 +61,11 @@ class Texture : public RefCountObject
     virtual GLsizei getHeight() const = 0;
     virtual GLenum getInternalFormat() const = 0;
     virtual GLenum getType() const = 0;
+    virtual D3DFORMAT getD3DFormat() const = 0;
 
     virtual bool isComplete() const = 0;
     virtual bool isCompressed() const = 0;
-    bool isRenderableFormat() const;
 
-    D3DFORMAT getD3DFormat() const;
     IDirect3DBaseTexture9 *getTexture();
     virtual Renderbuffer *getRenderbuffer(GLenum target) = 0;
 
@@ -89,6 +88,9 @@ class Texture : public RefCountObject
         Image();
         ~Image();
 
+        bool isRenderable() const;
+        D3DFORMAT getD3DFormat() const;
+
         GLsizei width;
         GLsizei height;
         GLenum format;
@@ -99,13 +101,11 @@ class Texture : public RefCountObject
         IDirect3DSurface9 *surface;
     };
 
-    static D3DFORMAT selectFormat(GLenum format, GLenum type);
-
     void setImage(GLint unpackAlignment, const void *pixels, Image *image);
     bool subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *image);
     void setCompressedImage(GLsizei imageSize, const void *pixels, Image *image);
     bool subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels, Image *image);
-    void copyNonRenderable(Image *image, GLenum format, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, IDirect3DSurface9 *renderTarget);
+    void copyNonRenderable(Image *image, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, IDirect3DSurface9 *renderTarget);
 
     GLint creationLevels(GLsizei width, GLsizei height, GLint maxlevel) const;
     GLint creationLevels(GLsizei size, GLint maxlevel) const;
@@ -199,6 +199,7 @@ class Texture2D : public Texture
     virtual GLsizei getHeight() const;
     virtual GLenum getInternalFormat() const;
     virtual GLenum getType() const;
+    virtual D3DFORMAT getD3DFormat() const;
 
     void setImage(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void setCompressedImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels);
@@ -246,6 +247,7 @@ class TextureCubeMap : public Texture
     virtual GLsizei getHeight() const;
     virtual GLenum getInternalFormat() const;
     virtual GLenum getType() const;
+    virtual D3DFORMAT getD3DFormat() const;
 
     void setImagePosX(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void setImageNegX(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);

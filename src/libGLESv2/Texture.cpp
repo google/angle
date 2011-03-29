@@ -39,6 +39,62 @@ Texture::Image::~Image()
     }
 }
 
+bool Texture::Image::isRenderable() const
+{    
+    switch(getD3DFormat())
+    {
+      case D3DFMT_L8:
+      case D3DFMT_A8L8:
+      case D3DFMT_DXT1:
+        return false;
+      case D3DFMT_A8R8G8B8:
+      case D3DFMT_X8R8G8B8:
+      case D3DFMT_A16B16G16R16F:
+      case D3DFMT_A32B32G32R32F:
+        return true;
+      default:
+        UNREACHABLE();
+    }
+
+    return false;
+}
+
+D3DFORMAT Texture::Image::getD3DFormat() const
+{
+    if (format == GL_COMPRESSED_RGB_S3TC_DXT1_EXT ||
+        format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT)
+    {
+        return D3DFMT_DXT1;
+    }
+    else if (type == GL_FLOAT)
+    {
+        return D3DFMT_A32B32G32R32F;
+    }
+    else if (type == GL_HALF_FLOAT_OES)
+    {
+        return D3DFMT_A16B16G16R16F;
+    }
+    else if (type == GL_UNSIGNED_BYTE)
+    {
+        if (format == GL_LUMINANCE && getContext()->supportsLuminanceTextures())
+        {
+            return D3DFMT_L8;
+        }
+        else if (format == GL_LUMINANCE_ALPHA && getContext()->supportsLuminanceAlphaTextures())
+        {
+            return D3DFMT_A8L8;
+        }
+        else if (format == GL_RGB)
+        {
+            return D3DFMT_X8R8G8B8;
+        }
+
+        return D3DFMT_A8R8G8B8;
+    }
+
+    return D3DFMT_A8R8G8B8;
+}
+
 Texture::Texture(GLuint id) : RefCountObject(id), mSerial(issueSerial())
 {
     mMinFilter = GL_NEAREST_MIPMAP_LINEAR;
@@ -166,65 +222,6 @@ GLenum Texture::getWrapS() const
 GLenum Texture::getWrapT() const
 {
     return mWrapT;
-}
-
-bool Texture::isRenderableFormat() const
-{
-    D3DFORMAT format = getD3DFormat();
-    
-    switch(format)
-    {
-      case D3DFMT_L8:
-      case D3DFMT_A8L8:
-      case D3DFMT_DXT1:
-        return false;
-      case D3DFMT_A8R8G8B8:
-      case D3DFMT_X8R8G8B8:
-      case D3DFMT_A16B16G16R16F:
-      case D3DFMT_A32B32G32R32F:
-        return true;
-      default:
-        UNREACHABLE();
-    }
-
-    return false;
-}
-
-// Selects an internal Direct3D 9 format for storing an Image
-D3DFORMAT Texture::selectFormat(GLenum format, GLenum type)
-{
-    if (format == GL_COMPRESSED_RGB_S3TC_DXT1_EXT ||
-        format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT)
-    {
-        return D3DFMT_DXT1;
-    }
-    else if (type == GL_FLOAT)
-    {
-        return D3DFMT_A32B32G32R32F;
-    }
-    else if (type == GL_HALF_FLOAT_OES)
-    {
-        return D3DFMT_A16B16G16R16F;
-    }
-    else if (type == GL_UNSIGNED_BYTE)
-    {
-        if (format == GL_LUMINANCE && getContext()->supportsLuminanceTextures())
-        {
-            return D3DFMT_L8;
-        }
-        else if (format == GL_LUMINANCE_ALPHA && getContext()->supportsLuminanceAlphaTextures())
-        {
-            return D3DFMT_A8L8;
-        }
-        else if (format == GL_RGB)
-        {
-            return D3DFMT_X8R8G8B8;
-        }
-
-        return D3DFMT_A8R8G8B8;
-    }
-
-    return D3DFMT_A8R8G8B8;
 }
 
 // Store the pixel rectangle designated by xoffset,yoffset,width,height with pixels stored as format/type at input
@@ -807,7 +804,7 @@ void Texture::createSurface(Image *image)
             levelToFetch = upsampleCount;
         }
 
-        HRESULT result = getDevice()->CreateTexture(requestWidth, requestHeight, levelToFetch + 1, NULL, selectFormat(image->format, image->type),
+        HRESULT result = getDevice()->CreateTexture(requestWidth, requestHeight, levelToFetch + 1, NULL, image->getD3DFormat(),
                                                     D3DPOOL_SYSTEMMEM, &newTexture, NULL);
 
         if (FAILED(result))
@@ -961,7 +958,7 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GL
 }
 
 // This implements glCopyTex[Sub]Image2D for non-renderable internal texture formats
-void Texture::copyNonRenderable(Image *image, GLenum format, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, IDirect3DSurface9 *renderTarget)
+void Texture::copyNonRenderable(Image *image, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, IDirect3DSurface9 *renderTarget)
 {
     IDirect3DDevice9 *device = getDevice();
     IDirect3DSurface9 *surface = NULL;
@@ -1032,7 +1029,7 @@ void Texture::copyNonRenderable(Image *image, GLenum format, GLint xoffset, GLin
         {
           case D3DFMT_X8R8G8B8:
           case D3DFMT_A8R8G8B8:
-            switch(getD3DFormat())
+            switch(image->getD3DFormat())
             {
               case D3DFMT_L8:
                 for(int y = 0; y < height; y++)
@@ -1064,7 +1061,7 @@ void Texture::copyNonRenderable(Image *image, GLenum format, GLint xoffset, GLin
             }
             break;
           case D3DFMT_R5G6B5:
-            switch(getD3DFormat())
+            switch(image->getD3DFormat())
             {
               case D3DFMT_L8:
                 for(int y = 0; y < height; y++)
@@ -1084,7 +1081,7 @@ void Texture::copyNonRenderable(Image *image, GLenum format, GLint xoffset, GLin
             }
             break;
           case D3DFMT_A1R5G5B5:
-            switch(getD3DFormat())
+            switch(image->getD3DFormat())
             {
               case D3DFMT_L8:
                 for(int y = 0; y < height; y++)
@@ -1128,11 +1125,6 @@ void Texture::copyNonRenderable(Image *image, GLenum format, GLint xoffset, GLin
     image->surface->UnlockRect();
     surface->UnlockRect();
     surface->Release();
-}
-
-D3DFORMAT Texture::getD3DFormat() const
-{
-    return selectFormat(getInternalFormat(), getType());
 }
 
 IDirect3DBaseTexture9 *Texture::getTexture()
@@ -1240,6 +1232,11 @@ GLenum Texture2D::getInternalFormat() const
 GLenum Texture2D::getType() const
 {
     return mImageArray[0].type;
+}
+
+D3DFORMAT Texture2D::getD3DFormat() const
+{
+    return mImageArray[0].getD3DFormat();
 }
 
 void Texture2D::redefineTexture(GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type)
@@ -1358,9 +1355,9 @@ void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei 
 
     redefineTexture(level, format, width, height, GL_UNSIGNED_BYTE);
    
-    if (!isRenderableFormat())
+    if (!mImageArray[level].isRenderable())
     {
-        copyNonRenderable(&mImageArray[level], format, 0, 0, x, y, width, height, renderTarget);
+        copyNonRenderable(&mImageArray[level], 0, 0, x, y, width, height, renderTarget);
     }
     else
     {
@@ -1403,11 +1400,11 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
         return error(GL_OUT_OF_MEMORY);
     }
 
-    redefineTexture(0, mImageArray[0].format, mImageArray[0].width, mImageArray[0].height, GL_UNSIGNED_BYTE);
+    redefineTexture(level, mImageArray[level].format, mImageArray[level].width, mImageArray[level].height, GL_UNSIGNED_BYTE);
    
-    if (!isRenderableFormat() || (!mTexture && !isComplete()))
+    if (!mImageArray[level].isRenderable() || (!mTexture && !isComplete()))
     {
-        copyNonRenderable(&mImageArray[level], getInternalFormat(), xoffset, yoffset, x, y, width, height, renderTarget);
+        copyNonRenderable(&mImageArray[level], xoffset, yoffset, x, y, width, height, renderTarget);
     }
     else
     {
@@ -1474,7 +1471,6 @@ bool Texture2D::isComplete() const
         }
     }
 
-
     if ((getWrapS() != GL_CLAMP_TO_EDGE && !isPow2(width))
         || (getWrapT() != GL_CLAMP_TO_EDGE && !isPow2(height)))
     {
@@ -1531,7 +1527,7 @@ IDirect3DBaseTexture9 *Texture2D::getBaseTexture() const
 void Texture2D::createTexture()
 {
     IDirect3DDevice9 *device = getDevice();
-    D3DFORMAT format = selectFormat(mImageArray[0].format, mImageArray[0].type);
+    D3DFORMAT format = mImageArray[0].getD3DFormat();
     GLint levels = creationLevels(mImageArray[0].width, mImageArray[0].height, 0);
 
     IDirect3DTexture9 *texture = NULL;
@@ -1589,7 +1585,7 @@ void Texture2D::convertToRenderTarget()
     {
         egl::Display *display = getDisplay();
         IDirect3DDevice9 *device = getDevice();
-        D3DFORMAT format = selectFormat(mImageArray[0].format, mImageArray[0].type);
+        D3DFORMAT format = mImageArray[0].getD3DFormat();
         GLint levels = creationLevels(mImageArray[0].width, mImageArray[0].height, 0);
 
         HRESULT result = device->CreateTexture(mImageArray[0].width, mImageArray[0].height, levels, D3DUSAGE_RENDERTARGET, format, D3DPOOL_DEFAULT, &texture, NULL);
@@ -1812,6 +1808,11 @@ GLenum TextureCubeMap::getType() const
     return mImageArray[0][0].type;
 }
 
+D3DFORMAT TextureCubeMap::getD3DFormat() const
+{
+    return mImageArray[0][0].getD3DFormat();
+}
+
 void TextureCubeMap::setImagePosX(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
     setImage(0, level, width, height, format, type, unpackAlignment, pixels);
@@ -1989,7 +1990,7 @@ IDirect3DBaseTexture9 *TextureCubeMap::getBaseTexture() const
 void TextureCubeMap::createTexture()
 {
     IDirect3DDevice9 *device = getDevice();
-    D3DFORMAT format = selectFormat(mImageArray[0][0].format, mImageArray[0][0].type);
+    D3DFORMAT format = mImageArray[0][0].getD3DFormat();
     GLint levels = creationLevels(mImageArray[0][0].width, 0);
 
     IDirect3DCubeTexture9 *texture = NULL;
@@ -2049,7 +2050,7 @@ void TextureCubeMap::convertToRenderTarget()
     {
         egl::Display *display = getDisplay();
         IDirect3DDevice9 *device = getDevice();
-        D3DFORMAT format = selectFormat(mImageArray[0][0].format, mImageArray[0][0].type);
+        D3DFORMAT format = mImageArray[0][0].getD3DFormat();
         GLint levels = creationLevels(mImageArray[0][0].width, 0);
 
         HRESULT result = device->CreateCubeTexture(mImageArray[0][0].width, levels, D3DUSAGE_RENDERTARGET, format, D3DPOOL_DEFAULT, &texture, NULL);
@@ -2196,9 +2197,9 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint 
     unsigned int faceindex = faceIndex(target);
     redefineTexture(faceindex, level, format, width, height, GL_UNSIGNED_BYTE);
 
-    if (!isRenderableFormat() || (!mTexture && !isComplete()))
+    if (!mImageArray[faceindex][level].isRenderable())
     {
-        copyNonRenderable(&mImageArray[faceindex][level], format, 0, 0, x, y, width, height, renderTarget);
+        copyNonRenderable(&mImageArray[faceindex][level], 0, 0, x, y, width, height, renderTarget);
     }
     else
     {
@@ -2260,11 +2261,11 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
     }
 
     unsigned int faceindex = faceIndex(target);
-    redefineTexture(0, 0, mImageArray[0][0].format, mImageArray[0][0].width, mImageArray[0][0].height, GL_UNSIGNED_BYTE);
+    redefineTexture(faceindex, level, mImageArray[faceindex][level].format, mImageArray[faceindex][level].width, mImageArray[faceindex][level].height, GL_UNSIGNED_BYTE);
    
-    if (!isRenderableFormat())
+    if (!mImageArray[faceindex][level].isRenderable() || (!mTexture && !isComplete()))
     {
-        copyNonRenderable(&mImageArray[faceindex][level], getInternalFormat(), 0, 0, x, y, width, height, renderTarget);
+        copyNonRenderable(&mImageArray[faceindex][level], 0, 0, x, y, width, height, renderTarget);
     }
     else
     {
