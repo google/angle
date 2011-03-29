@@ -193,7 +193,7 @@ class Texture2D : public Texture
 
     ~Texture2D();
 
-    GLenum getTarget() const;
+    virtual GLenum getTarget() const;
 
     virtual GLsizei getWidth() const;
     virtual GLsizei getHeight() const;
@@ -207,8 +207,8 @@ class Texture2D : public Texture
     void copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
     void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
 
-    bool isComplete() const;
-    bool isCompressed() const;
+    virtual bool isComplete() const;
+    virtual bool isCompressed() const;
 
     virtual void generateMipmaps();
 
@@ -259,10 +259,10 @@ class TextureCubeMap : public Texture
     void subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void subImageCompressed(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels);
     void copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
-    void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
+    virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
 
-    bool isComplete() const;
-    bool isCompressed() const;
+    virtual bool isComplete() const;
+    virtual bool isCompressed() const;
 
     virtual void generateMipmaps();
 

@@ -59,8 +59,8 @@ class StreamingIndexBuffer : public IndexBuffer
     StreamingIndexBuffer(IDirect3DDevice9 *device, UINT initialSize, D3DFORMAT format);
     ~StreamingIndexBuffer();
 
-    void *map(UINT requiredSpace, UINT *offset);
-    void reserveSpace(UINT requiredSpace, GLenum type);
+    virtual void *map(UINT requiredSpace, UINT *offset);
+    virtual void reserveSpace(UINT requiredSpace, GLenum type);
 
   private:
     UINT mWritePosition;
@@ -72,8 +72,8 @@ class StaticIndexBuffer : public IndexBuffer
     explicit StaticIndexBuffer(IDirect3DDevice9 *device);
     ~StaticIndexBuffer();
 
-    void *map(UINT requiredSpace, UINT *offset);
-    void reserveSpace(UINT requiredSpace, GLenum type);
+    virtual void *map(UINT requiredSpace, UINT *offset);
+    virtual void reserveSpace(UINT requiredSpace, GLenum type);
 
     bool lookupType(GLenum type);
     UINT lookupRange(intptr_t offset, GLsizei count, UINT *minIndex, UINT *maxIndex);   // Returns the offset into the index buffer, or -1 if not found
