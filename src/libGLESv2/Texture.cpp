@@ -957,174 +957,187 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GL
     return true;
 }
 
-// This implements glCopyTex[Sub]Image2D for non-renderable internal texture formats
-void Texture::copyNonRenderable(Image *image, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, IDirect3DSurface9 *renderTarget)
+// This implements glCopyTex[Sub]Image2D for non-renderable internal texture formats and incomplete textures
+void Texture::copyToImage(Image *image, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, IDirect3DSurface9 *renderTarget)
 {
+    if (!image->surface)
+    {
+        createSurface(image);
+
+        if (!image->surface)
+        {
+            ERR("Failed to create an image surface.");
+            return error(GL_OUT_OF_MEMORY);
+        }
+    }
+
     IDirect3DDevice9 *device = getDevice();
-    IDirect3DSurface9 *surface = NULL;
+    IDirect3DSurface9 *renderTargetData = NULL;
     D3DSURFACE_DESC description;
     renderTarget->GetDesc(&description);
     
-    HRESULT result = device->CreateOffscreenPlainSurface(description.Width, description.Height, description.Format, D3DPOOL_SYSTEMMEM, &surface, NULL);
+    HRESULT result = device->CreateOffscreenPlainSurface(description.Width, description.Height, description.Format, D3DPOOL_SYSTEMMEM, &renderTargetData, NULL);
 
-    if (!SUCCEEDED(result))
+    if (FAILED(result))
     {
         ERR("Could not create matching destination surface.");
         return error(GL_OUT_OF_MEMORY);
     }
 
-    result = device->GetRenderTargetData(renderTarget, surface);
+    result = device->GetRenderTargetData(renderTarget, renderTargetData);
 
-    if (!SUCCEEDED(result))
+    if (FAILED(result))
     {
         ERR("GetRenderTargetData unexpectedly failed.");
-        surface->Release();
+        renderTargetData->Release();
         return error(GL_OUT_OF_MEMORY);
     }
 
-    D3DLOCKED_RECT sourceLock = {0};
     RECT sourceRect = transformPixelRect(x, y, width, height, description.Height);
-    result = surface->LockRect(&sourceLock, &sourceRect, 0);
-
-    if (FAILED(result))
-    {
-        ERR("Failed to lock the source surface (rectangle might be invalid).");
-        surface->UnlockRect();
-        surface->Release();
-        return error(GL_OUT_OF_MEMORY);
-    }
-
-    if (!image->surface)
-    {
-        createSurface(image);
-    }
-
-    if (image->surface == NULL)
-    {
-        ERR("Failed to create an image surface.");
-        surface->UnlockRect();
-        surface->Release();
-        return error(GL_OUT_OF_MEMORY); 
-    }
-
-    D3DLOCKED_RECT destLock = {0};
     int destYOffset = transformPixelYOffset(yoffset, height, image->height);
     RECT destRect = {xoffset, destYOffset, xoffset + width, destYOffset + height};
-    result = image->surface->LockRect(&destLock, &destRect, 0);
-    
-    if (FAILED(result))
-    {
-        ERR("Failed to lock the destination surface (rectangle might be invalid).");
-        surface->UnlockRect();
-        surface->Release();
-        return error(GL_OUT_OF_MEMORY);
-    }
 
-    if (destLock.pBits && sourceLock.pBits)
+    if (image->isRenderable())
     {
-        unsigned char *source = (unsigned char*)sourceLock.pBits;
-        unsigned char *dest = (unsigned char*)destLock.pBits;
-
-        switch (description.Format)
+        result = D3DXLoadSurfaceFromSurface(image->surface, NULL, &destRect, renderTargetData, NULL, &sourceRect, D3DX_FILTER_BOX, 0);
+        
+        if (FAILED(result))
         {
-          case D3DFMT_X8R8G8B8:
-          case D3DFMT_A8R8G8B8:
-            switch(image->getD3DFormat())
-            {
-              case D3DFMT_L8:
-                for(int y = 0; y < height; y++)
-                {
-                    for(int x = 0; x < width; x++)
-                    {
-                        dest[x] = source[x * 4 + 2];
-                    }
+            ERR("Copying surfaces unexpectedly failed.");
+            renderTargetData->Release();
+            return error(GL_OUT_OF_MEMORY);
+        }
+    }
+    else
+    {
+        D3DLOCKED_RECT sourceLock = {0};
+        result = renderTargetData->LockRect(&sourceLock, &sourceRect, 0);
 
-                    source += sourceLock.Pitch;
-                    dest += destLock.Pitch;
-                }
-                break;
-              case D3DFMT_A8L8:
-                for(int y = 0; y < height; y++)
-                {
-                    for(int x = 0; x < width; x++)
-                    {
-                        dest[x * 2 + 0] = source[x * 4 + 2];
-                        dest[x * 2 + 1] = source[x * 4 + 3];
-                    }
-
-                    source += sourceLock.Pitch;
-                    dest += destLock.Pitch;
-                }
-                break;
-              default:
-                UNREACHABLE();
-            }
-            break;
-          case D3DFMT_R5G6B5:
-            switch(image->getD3DFormat())
-            {
-              case D3DFMT_L8:
-                for(int y = 0; y < height; y++)
-                {
-                    for(int x = 0; x < width; x++)
-                    {
-                        unsigned char red = source[x * 2 + 1] & 0xF8;
-                        dest[x] = red | (red >> 5);
-                    }
-
-                    source += sourceLock.Pitch;
-                    dest += destLock.Pitch;
-                }
-                break;
-              default:
-                UNREACHABLE();
-            }
-            break;
-          case D3DFMT_A1R5G5B5:
-            switch(image->getD3DFormat())
-            {
-              case D3DFMT_L8:
-                for(int y = 0; y < height; y++)
-                {
-                    for(int x = 0; x < width; x++)
-                    {
-                        unsigned char red = source[x * 2 + 1] & 0x7C;
-                        dest[x] = (red << 1) | (red >> 4);
-                    }
-
-                    source += sourceLock.Pitch;
-                    dest += destLock.Pitch;
-                }
-                break;
-              case D3DFMT_A8L8:
-                for(int y = 0; y < height; y++)
-                {
-                    for(int x = 0; x < width; x++)
-                    {
-                        unsigned char red = source[x * 2 + 1] & 0x7C;
-                        dest[x * 2 + 0] = (red << 1) | (red >> 4);
-                        dest[x * 2 + 1] = (signed char)source[x * 2 + 1] >> 7;
-                    }
-
-                    source += sourceLock.Pitch;
-                    dest += destLock.Pitch;
-                }
-                break;
-              default:
-                UNREACHABLE();
-            }
-            break;
-          default:
-            UNREACHABLE();
+        if (FAILED(result))
+        {
+            ERR("Failed to lock the source surface (rectangle might be invalid).");
+            renderTargetData->Release();
+            return error(GL_OUT_OF_MEMORY);
         }
 
-        image->dirty = true;
-        mDirtyImage = true;
+        D3DLOCKED_RECT destLock = {0};
+        result = image->surface->LockRect(&destLock, &destRect, 0);
+        
+        if (FAILED(result))
+        {
+            ERR("Failed to lock the destination surface (rectangle might be invalid).");
+            renderTargetData->UnlockRect();
+            renderTargetData->Release();
+            return error(GL_OUT_OF_MEMORY);
+        }
+
+        if (destLock.pBits && sourceLock.pBits)
+        {
+            unsigned char *source = (unsigned char*)sourceLock.pBits;
+            unsigned char *dest = (unsigned char*)destLock.pBits;
+
+            switch (description.Format)
+            {
+              case D3DFMT_X8R8G8B8:
+              case D3DFMT_A8R8G8B8:
+                switch(image->getD3DFormat())
+                {
+                  case D3DFMT_L8:
+                    for(int y = 0; y < height; y++)
+                    {
+                        for(int x = 0; x < width; x++)
+                        {
+                            dest[x] = source[x * 4 + 2];
+                        }
+
+                        source += sourceLock.Pitch;
+                        dest += destLock.Pitch;
+                    }
+                    break;
+                  case D3DFMT_A8L8:
+                    for(int y = 0; y < height; y++)
+                    {
+                        for(int x = 0; x < width; x++)
+                        {
+                            dest[x * 2 + 0] = source[x * 4 + 2];
+                            dest[x * 2 + 1] = source[x * 4 + 3];
+                        }
+
+                        source += sourceLock.Pitch;
+                        dest += destLock.Pitch;
+                    }
+                    break;
+                  default:
+                    UNREACHABLE();
+                }
+                break;
+              case D3DFMT_R5G6B5:
+                switch(image->getD3DFormat())
+                {
+                  case D3DFMT_L8:
+                    for(int y = 0; y < height; y++)
+                    {
+                        for(int x = 0; x < width; x++)
+                        {
+                            unsigned char red = source[x * 2 + 1] & 0xF8;
+                            dest[x] = red | (red >> 5);
+                        }
+
+                        source += sourceLock.Pitch;
+                        dest += destLock.Pitch;
+                    }
+                    break;
+                  default:
+                    UNREACHABLE();
+                }
+                break;
+              case D3DFMT_A1R5G5B5:
+                switch(image->getD3DFormat())
+                {
+                  case D3DFMT_L8:
+                    for(int y = 0; y < height; y++)
+                    {
+                        for(int x = 0; x < width; x++)
+                        {
+                            unsigned char red = source[x * 2 + 1] & 0x7C;
+                            dest[x] = (red << 1) | (red >> 4);
+                        }
+
+                        source += sourceLock.Pitch;
+                        dest += destLock.Pitch;
+                    }
+                    break;
+                  case D3DFMT_A8L8:
+                    for(int y = 0; y < height; y++)
+                    {
+                        for(int x = 0; x < width; x++)
+                        {
+                            unsigned char red = source[x * 2 + 1] & 0x7C;
+                            dest[x * 2 + 0] = (red << 1) | (red >> 4);
+                            dest[x * 2 + 1] = (signed char)source[x * 2 + 1] >> 7;
+                        }
+
+                        source += sourceLock.Pitch;
+                        dest += destLock.Pitch;
+                    }
+                    break;
+                  default:
+                    UNREACHABLE();
+                }
+                break;
+              default:
+                UNREACHABLE();
+            }
+        }
+
+        image->surface->UnlockRect();
+        renderTargetData->UnlockRect();
     }
 
-    image->surface->UnlockRect();
-    surface->UnlockRect();
-    surface->Release();
+    renderTargetData->Release();
+
+    image->dirty = true;
+    mDirtyImage = true;
 }
 
 IDirect3DBaseTexture9 *Texture::getTexture()
@@ -1357,7 +1370,7 @@ void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei 
    
     if (!mImageArray[level].isRenderable())
     {
-        copyNonRenderable(&mImageArray[level], 0, 0, x, y, width, height, renderTarget);
+        copyToImage(&mImageArray[level], 0, 0, x, y, width, height, renderTarget);
     }
     else
     {
@@ -1404,7 +1417,7 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
    
     if (!mImageArray[level].isRenderable() || (!mTexture && !isComplete()))
     {
-        copyNonRenderable(&mImageArray[level], xoffset, yoffset, x, y, width, height, renderTarget);
+        copyToImage(&mImageArray[level], xoffset, yoffset, x, y, width, height, renderTarget);
     }
     else
     {
@@ -2199,7 +2212,7 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint 
 
     if (!mImageArray[faceindex][level].isRenderable())
     {
-        copyNonRenderable(&mImageArray[faceindex][level], 0, 0, x, y, width, height, renderTarget);
+        copyToImage(&mImageArray[faceindex][level], 0, 0, x, y, width, height, renderTarget);
     }
     else
     {
@@ -2265,7 +2278,7 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
    
     if (!mImageArray[faceindex][level].isRenderable() || (!mTexture && !isComplete()))
     {
-        copyNonRenderable(&mImageArray[faceindex][level], 0, 0, x, y, width, height, renderTarget);
+        copyToImage(&mImageArray[faceindex][level], 0, 0, x, y, width, height, renderTarget);
     }
     else
     {
