@@ -11,6 +11,8 @@
 #include "common/debug.h"
 #include "common/version.h"
 #include "libGLESv2/Context.h"
+#include "libGLESv2/mathutil.h"
+#include "libGLESv2/Texture.h"
 
 #include "libEGL/main.h"
 #include "libEGL/Display.h"
@@ -392,6 +394,8 @@ EGLSurface __stdcall eglCreatePbufferSurface(EGLDisplay dpy, EGLConfig config, c
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
         EGLint width = 0, height = 0;
+        EGLenum textureFormat = EGL_NO_TEXTURE;
+        EGLenum textureTarget = EGL_NO_TEXTURE;
 
         if (!validate(display, config))
         {
@@ -415,10 +419,23 @@ EGLSurface __stdcall eglCreatePbufferSurface(EGLDisplay dpy, EGLConfig config, c
                       UNIMPLEMENTED(); // FIXME
                     break;
                   case EGL_TEXTURE_FORMAT:
+                    switch (attrib_list[1])
+                    {
+                      case EGL_NO_TEXTURE:
+                      case EGL_TEXTURE_RGB:
+                      case EGL_TEXTURE_RGBA:
+                        textureFormat = attrib_list[1];
+                        break;
+                      default:
+                        return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
+                    }
+                    break;
                   case EGL_TEXTURE_TARGET:
                     switch (attrib_list[1])
                     {
                       case EGL_NO_TEXTURE:
+                      case EGL_TEXTURE_2D:
+                        textureTarget = attrib_list[1];
                         break;
                       default:
                         return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
@@ -440,10 +457,47 @@ EGLSurface __stdcall eglCreatePbufferSurface(EGLDisplay dpy, EGLConfig config, c
             }
         }
 
-        if (width == 0 || height == 0)
-          return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
+        if (width < 0 || height < 0)
+        {
+            return error(EGL_BAD_PARAMETER, EGL_NO_SURFACE);
+        }
 
-        EGLSurface surface = (EGLSurface)display->createOffscreenSurface(width, height, config);
+        if (width == 0 || height == 0)
+        {
+            return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
+        }
+
+        if (textureFormat != EGL_NO_TEXTURE && !display->getNonPow2TextureSupport() && (!gl::isPow2(width) || !gl::isPow2(height)))
+        {
+            return error(EGL_BAD_MATCH, EGL_NO_SURFACE);
+        }
+
+        if ((textureFormat != EGL_NO_TEXTURE && textureTarget == EGL_NO_TEXTURE) ||
+            (textureFormat == EGL_NO_TEXTURE && textureTarget != EGL_NO_TEXTURE))
+        {
+            return error(EGL_BAD_MATCH, EGL_NO_SURFACE);
+        }
+
+        EGLint surfaceTypeValue;
+        EGLint bindToTextureRGBValue;
+        EGLint bindToTextureRGBAValue;
+
+        display->getConfigAttrib(config, EGL_SURFACE_TYPE, &surfaceTypeValue);
+        display->getConfigAttrib(config, EGL_BIND_TO_TEXTURE_RGB, &bindToTextureRGBValue);
+        display->getConfigAttrib(config, EGL_BIND_TO_TEXTURE_RGBA, &bindToTextureRGBAValue);
+
+        if (!(surfaceTypeValue & EGL_PBUFFER_BIT))
+        {
+            return error(EGL_BAD_MATCH, EGL_NO_SURFACE);
+        }
+
+        if ((textureFormat == EGL_TEXTURE_RGB && bindToTextureRGBValue != EGL_TRUE) ||
+            (textureFormat == EGL_TEXTURE_RGBA && bindToTextureRGBAValue != EGL_TRUE))
+        {
+            return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
+        }
+
+        EGLSurface surface = (EGLSurface)display->createOffscreenSurface(width, height, config, textureFormat, textureTarget);
 
         return success(surface);
     }
@@ -779,15 +833,36 @@ EGLBoolean __stdcall eglBindTexImage(EGLDisplay dpy, EGLSurface surface, EGLint 
     try
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
+        egl::Surface *surf = static_cast<egl::Surface*>(surface);
 
         if (!validate(display))
         {
             return EGL_FALSE;
         }
 
-        // FIXME - need implementation
+        if (buffer != EGL_BACK_BUFFER)
+        {
+            return error(EGL_BAD_PARAMETER, EGL_FALSE);
+        }
 
-        return success(EGL_FALSE);
+        if (surface == EGL_NO_SURFACE || surf->getWindowHandle())
+        {
+            return error(EGL_BAD_SURFACE, EGL_FALSE);
+        }
+
+        if (surf->getBoundTexture())
+        {
+            return error(EGL_BAD_ACCESS, EGL_FALSE);
+        }
+
+        if (surf->getTextureFormat() == EGL_NO_TEXTURE)
+        {
+            return error(EGL_BAD_MATCH, EGL_FALSE);
+        }
+
+        glBindTexImage(surf);
+
+        return success(EGL_TRUE);
     }
     catch(std::bad_alloc&)
     {
@@ -804,15 +879,36 @@ EGLBoolean __stdcall eglReleaseTexImage(EGLDisplay dpy, EGLSurface surface, EGLi
     try
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
+        egl::Surface *surf = static_cast<egl::Surface*>(surface);
 
         if (!validate(display))
         {
             return EGL_FALSE;
         }
 
-        // FIXME - need implementation
+        if (buffer != EGL_BACK_BUFFER)
+        {
+            return error(EGL_BAD_PARAMETER, EGL_FALSE);
+        }
 
-        return success(EGL_FALSE);
+        if (surface == EGL_NO_SURFACE || surf->getWindowHandle())
+        {
+            return error(EGL_BAD_SURFACE, EGL_FALSE);
+        }
+
+        if (surf->getTextureFormat() == EGL_NO_TEXTURE)
+        {
+            return error(EGL_BAD_MATCH, EGL_FALSE);
+        }
+
+        gl::Texture2D *texture = surf->getBoundTexture();
+
+        if (texture)
+        {
+            texture->releaseTexImage();
+        }
+
+        return success(EGL_TRUE);
     }
     catch(std::bad_alloc&)
     {

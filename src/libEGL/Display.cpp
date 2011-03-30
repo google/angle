@@ -412,11 +412,11 @@ Surface *Display::createWindowSurface(HWND window, EGLConfig config)
     return surface;
 }
 
-Surface *Display::createOffscreenSurface(int width, int height, EGLConfig config)
+Surface *Display::createOffscreenSurface(int width, int height, EGLConfig config, EGLenum textureFormat, EGLenum textureTarget)
 {
     const Config *configuration = mConfigSet.get(config);
 
-    Surface *surface = new Surface(this, configuration, width, height);
+    Surface *surface = new Surface(this, configuration, width, height, textureFormat, textureTarget);
     mSurfaceSet.insert(surface);
 
     return surface;
@@ -635,6 +635,11 @@ bool Display::getLuminanceAlphaTextureSupport()
     mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
 
     return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_A8L8));
+}
+
+bool Display::getNonPow2TextureSupport()
+{
+    return !(mDeviceCaps.TextureCaps & (D3DPTEXTURECAPS_POW2 | D3DPTEXTURECAPS_NONPOW2CONDITIONAL));
 }
 
 D3DPOOL Display::getBufferPool(DWORD usage) const

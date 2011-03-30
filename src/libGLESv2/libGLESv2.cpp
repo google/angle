@@ -5701,4 +5701,29 @@ __eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *
     return NULL;
 }
 
+void __stdcall glBindTexImage(egl::Surface *surface)
+{
+    EVENT("(egl::Surface* surface = 0x%0.8p)",
+          surface);
+
+    try
+    {
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            gl::Texture2D *textureObject = context->getTexture2D();
+
+            if (textureObject)
+            {
+                textureObject->bindTexImage(surface);
+            }
+        }
+    }
+    catch(std::bad_alloc&)
+    {
+        return error(GL_OUT_OF_MEMORY);
+    }
+}
+
 }

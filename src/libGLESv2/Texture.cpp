@@ -16,6 +16,8 @@
 
 #include "common/debug.h"
 
+#include "libEGL/Display.h"
+
 #include "libGLESv2/main.h"
 #include "libGLESv2/mathutil.h"
 #include "libGLESv2/utilities.h"
@@ -1209,6 +1211,7 @@ unsigned int Texture::issueSerial()
 Texture2D::Texture2D(GLuint id) : Texture(id)
 {
     mTexture = NULL;
+    mSurface = NULL;
 }
 
 Texture2D::~Texture2D()
@@ -1219,6 +1222,12 @@ Texture2D::~Texture2D()
     {
         mTexture->Release();
         mTexture = NULL;
+    }
+
+    if (mSurface)
+    {
+        mSurface->setBoundTexture(NULL);
+        mSurface = NULL;
     }
 }
 
@@ -1252,7 +1261,7 @@ D3DFORMAT Texture2D::getD3DFormat() const
     return mImageArray[0].getD3DFormat();
 }
 
-void Texture2D::redefineTexture(GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type)
+void Texture2D::redefineTexture(GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type, bool forceRedefine)
 {
     GLsizei textureWidth = mImageArray[0].width;
     GLsizei textureHeight = mImageArray[0].height;
@@ -1273,7 +1282,7 @@ void Texture2D::redefineTexture(GLint level, GLenum format, GLsizei width, GLsiz
     bool heightOkay = (textureHeight >> level == height) || (textureHeight >> level == 0 && height == 1);
     bool textureOkay = (widthOkay && heightOkay && textureFormat == format && textureType == type);
 
-    if (!textureOkay)   // Purge all the levels and the texture.
+    if (!textureOkay || forceRedefine || mSurface)   // Purge all the levels and the texture.
     {
         for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
         {
@@ -1292,19 +1301,58 @@ void Texture2D::redefineTexture(GLint level, GLenum format, GLsizei width, GLsiz
             mDirtyImage = true;
             mIsRenderable = false;
         }
+
+        if (mSurface)
+        {
+            mSurface->setBoundTexture(NULL);
+            mSurface = NULL;
+        }
     }
 }
 
 void Texture2D::setImage(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    redefineTexture(level, format, width, height, type);
+    redefineTexture(level, format, width, height, type, false);
 
     Texture::setImage(unpackAlignment, pixels, &mImageArray[level]);
 }
 
+void Texture2D::bindTexImage(egl::Surface *surface)
+{
+    GLenum format;
+
+    switch(surface->getFormat())
+    {
+      case D3DFMT_A8R8G8B8:
+        format = GL_RGBA;
+        break;
+      case D3DFMT_X8R8G8B8:
+        format = GL_RGB;
+        break;
+      default:
+        UNIMPLEMENTED();
+        return;
+    }
+
+    redefineTexture(0, format, surface->getWidth(), surface->getHeight(), GL_UNSIGNED_BYTE, true);
+
+    IDirect3DTexture9 *texture = surface->getOffscreenTexture();
+
+    mTexture = texture;
+    mDirtyImage = true;
+    mIsRenderable = true;
+    mSurface = surface;
+    mSurface->setBoundTexture(this);
+}
+
+void Texture2D::releaseTexImage()
+{
+    redefineTexture(0, GL_RGB, 0, 0, GL_UNSIGNED_BYTE, true);
+}
+
 void Texture2D::setCompressedImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels)
 {
-    redefineTexture(level, format, width, height, GL_UNSIGNED_BYTE);
+    redefineTexture(level, format, width, height, GL_UNSIGNED_BYTE, false);
 
     Texture::setCompressedImage(imageSize, pixels, &mImageArray[level]);
 }
@@ -1366,7 +1414,7 @@ void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei 
         return error(GL_OUT_OF_MEMORY);
     }
 
-    redefineTexture(level, format, width, height, GL_UNSIGNED_BYTE);
+    redefineTexture(level, format, width, height, GL_UNSIGNED_BYTE, false);
    
     if (!mImageArray[level].isRenderable())
     {
@@ -1413,7 +1461,7 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
         return error(GL_OUT_OF_MEMORY);
     }
 
-    redefineTexture(level, mImageArray[level].format, mImageArray[level].width, mImageArray[level].height, GL_UNSIGNED_BYTE);
+    redefineTexture(level, mImageArray[level].format, mImageArray[level].width, mImageArray[level].height, GL_UNSIGNED_BYTE, false);
    
     if (!mImageArray[level].isRenderable() || (!mTexture && !isComplete()))
     {
