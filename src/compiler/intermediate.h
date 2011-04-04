@@ -279,7 +279,8 @@ public:
             init(aInit),
             cond(aCond),
             expr(aExpr),
-            body(aBody) { }
+            body(aBody),
+            unrollFlag(false) { }
 
     virtual TIntermLoop* getAsLoopNode() { return this; }
     virtual void traverse(TIntermTraverser*);
@@ -290,12 +291,17 @@ public:
     TIntermTyped* getExpression() { return expr; }
     TIntermNode* getBody() { return body; }
 
+    void setUnrollFlag(bool flag) { unrollFlag = flag; }
+    bool getUnrollFlag() { return unrollFlag; }
+
 protected:
     TLoopType type;
     TIntermNode* init;  // for-loop initialization
     TIntermTyped* cond; // loop exit condition
     TIntermTyped* expr; // for-loop expression
     TIntermNode* body;  // loop body
+
+    bool unrollFlag; // Whether the loop should be unrolled or not.
 };
 
 //

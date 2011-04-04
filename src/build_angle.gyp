@@ -100,6 +100,8 @@
       ],
       'sources': [
         'compiler/CodeGenGLSL.cpp',
+        'compiler/ForLoopUnroll.cpp',
+        'compiler/ForLoopUnroll.h',
         'compiler/OutputGLSL.cpp',
         'compiler/OutputGLSL.h',
         'compiler/TranslatorGLSL.cpp',
