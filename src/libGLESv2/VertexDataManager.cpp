@@ -26,12 +26,17 @@ namespace
 namespace gl
 {
 
-VertexDataManager::VertexDataManager(Context *context, IDirect3DDevice9 *device) : mContext(context), mDevice(device)
+VertexDataManager::VertexDataManager(Context *context, IDirect3DDevice9 *device) : mContext(context), mDevice(device), mMaxLru(0)
 {
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
     {
         mDirtyCurrentValue[i] = true;
         mCurrentValueBuffer[i] = NULL;
+    }
+    for (int i = 0; i < NUM_VERTEX_DECL_CACHE_ENTRIES; i++)
+    {
+        mVertexDeclCache[i].vertexDeclaration = NULL;
+        mVertexDeclCache[i].lruCount = 0;
     }
 
     const D3DCAPS9 &caps = context->getDeviceCaps();
@@ -47,6 +52,13 @@ VertexDataManager::~VertexDataManager()
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
     {
         delete mCurrentValueBuffer[i];
+    }
+    for (int i = 0; i < NUM_VERTEX_DECL_CACHE_ENTRIES; i++)
+    {
+        if (mVertexDeclCache[i].vertexDeclaration)
+        {
+            mVertexDeclCache[i].vertexDeclaration->Release();
+        }
     }
 }
 
@@ -509,7 +521,7 @@ unsigned int VertexDataManager::typeIndex(GLenum type) const
 
 void VertexDataManager::setupAttributes(const TranslatedAttribute *attributes)
 {
-    D3DVERTEXELEMENT9 elements[MAX_VERTEX_ATTRIBS];
+    D3DVERTEXELEMENT9 elements[MAX_VERTEX_ATTRIBS + 1];
     D3DVERTEXELEMENT9 *element = &elements[0];
 
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
@@ -529,12 +541,39 @@ void VertexDataManager::setupAttributes(const TranslatedAttribute *attributes)
     }
 
     static const D3DVERTEXELEMENT9 end = D3DDECL_END();
-    *element = end;
+    *(element++) = end;
 
-    IDirect3DVertexDeclaration9 *vertexDeclaration;
-    mDevice->CreateVertexDeclaration(elements, &vertexDeclaration);
-    mDevice->SetVertexDeclaration(vertexDeclaration);
-    vertexDeclaration->Release();
+    for (int i = 0; i < NUM_VERTEX_DECL_CACHE_ENTRIES; i++)
+    {
+        VertexDeclCacheEntry *entry = &mVertexDeclCache[i];
+        if (memcmp(entry->cachedElements, elements, (element - elements) * sizeof(D3DVERTEXELEMENT9)) == 0 && entry->vertexDeclaration)
+        {
+            entry->lruCount = ++mMaxLru;
+            mDevice->SetVertexDeclaration(entry->vertexDeclaration);
+            return;
+        }
+    }
+
+    VertexDeclCacheEntry *lastCache = mVertexDeclCache;
+
+    for (int i = 0; i < NUM_VERTEX_DECL_CACHE_ENTRIES; i++)
+    {
+        if (mVertexDeclCache[i].lruCount < lastCache->lruCount)
+        {
+            lastCache = &mVertexDeclCache[i];
+        }
+    }
+
+    if (lastCache->vertexDeclaration != NULL)
+    {
+        lastCache->vertexDeclaration->Release();
+        lastCache->vertexDeclaration = NULL;
+    }
+
+    memcpy(lastCache->cachedElements, elements, (element - elements) * sizeof(D3DVERTEXELEMENT9));
+    mDevice->CreateVertexDeclaration(elements, &lastCache->vertexDeclaration);
+    mDevice->SetVertexDeclaration(lastCache->vertexDeclaration);
+    lastCache->lruCount = ++mMaxLru;
 }
 
 VertexBuffer::VertexBuffer(IDirect3DDevice9 *device, std::size_t size, DWORD usageFlags) : mDevice(device), mVertexBuffer(NULL)

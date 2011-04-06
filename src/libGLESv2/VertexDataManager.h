@@ -163,6 +163,17 @@ class VertexDataManager
 
     unsigned int typeIndex(GLenum type) const;
     const FormatConverter &formatConverter(const VertexAttribute &attribute) const;
+
+    UINT mMaxLru;
+
+    enum { NUM_VERTEX_DECL_CACHE_ENTRIES = 16 };
+
+    struct VertexDeclCacheEntry
+    {
+        D3DVERTEXELEMENT9 cachedElements[MAX_VERTEX_ATTRIBS + 1];
+        UINT lruCount;
+        IDirect3DVertexDeclaration9 *vertexDeclaration;
+    } mVertexDeclCache[NUM_VERTEX_DECL_CACHE_ENTRIES];
 };
 
 }
