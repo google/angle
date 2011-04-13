@@ -30,10 +30,22 @@ IndexDataManager::IndexDataManager(Context *context, IDirect3DDevice9 *device) :
     if (context->supports32bitIndices())
     {
         mStreamingBufferInt = new StreamingIndexBuffer(mDevice, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX32);
+
+        if (!mStreamingBufferInt)
+        {
+            // Don't leave it in a half-initialized state
+            delete mStreamingBufferShort;
+            mStreamingBufferShort = NULL;
+        }
     }
     else
     {
         mStreamingBufferInt = NULL;
+    }
+
+    if (!mStreamingBufferShort)
+    {
+        ERR("Failed to allocate the streaming index buffer(s).");
     }
 }
 
@@ -98,6 +110,11 @@ void computeRange(GLenum type, const void *indices, GLsizei count, GLuint *minIn
 
 GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, Buffer *buffer, const void *indices, TranslatedIndexData *translated)
 {
+    if (!mStreamingBufferShort)
+    {
+        return GL_OUT_OF_MEMORY;
+    }
+
     D3DFORMAT format = (type == GL_UNSIGNED_INT) ? D3DFMT_INDEX32 : D3DFMT_INDEX16;
     intptr_t offset = reinterpret_cast<intptr_t>(indices);
     bool alignedOffset = false;

@@ -38,6 +38,11 @@ VertexDataManager::VertexDataManager(Context *context, IDirect3DDevice9 *device)
     checkVertexCaps(caps.DeclTypes);
 
     mStreamingBuffer = new StreamingVertexBuffer(mDevice, INITIAL_STREAM_BUFFER_SIZE);
+
+    if (!mStreamingBuffer)
+    {
+        ERR("Failed to allocate the streaming vertex buffer.");
+    }
 }
 
 VertexDataManager::~VertexDataManager()
@@ -103,7 +108,11 @@ UINT VertexDataManager::writeAttributeData(ArrayVertexBuffer *vertexBuffer, GLin
 
 GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, TranslatedAttribute *translated)
 {
-    GLenum error = GL_NO_ERROR;
+    if (!mStreamingBuffer)
+    {
+        return GL_OUT_OF_MEMORY;
+    }
+
     const VertexAttributeArray &attribs = mContext->getVertexAttributes();
     Program *program = mContext->getCurrentProgram();
 
@@ -112,60 +121,33 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
         translated[attributeIndex].active = (program->getSemanticIndex(attributeIndex) != -1);
     }
 
-    // Determine the required storage size per used buffer
+    // Determine the required storage size per used buffer, and invalidate static buffers that don't contain matching attributes
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
     {
-        Buffer *buffer = attribs[i].mBoundBuffer.get();
-
-        if (translated[i].active && attribs[i].mArrayEnabled && (buffer || attribs[i].mPointer))
+        if (translated[i].active && attribs[i].mArrayEnabled)
         {
+            Buffer *buffer = attribs[i].mBoundBuffer.get();
             StaticVertexBuffer *staticBuffer = buffer ? buffer->getVertexBuffer() : NULL;
 
-            if (staticBuffer && staticBuffer->size() == 0)
+            if (staticBuffer)
             {
-                int totalCount = buffer->size() / attribs[i].stride();
-                staticBuffer->addRequiredSpace(spaceRequired(attribs[i], totalCount));
-            }
-            else if (!staticBuffer || staticBuffer->lookupAttribute(attribs[i]) == -1)
-            {
-                if (mStreamingBuffer)
+                if (staticBuffer->size() == 0)
                 {
-                    mStreamingBuffer->addRequiredSpace(spaceRequired(attribs[i], count));
+                    int totalCount = buffer->size() / attribs[i].stride();
+                    staticBuffer->addRequiredSpace(spaceRequired(attribs[i], totalCount));
                 }
-            }
-        }
-    }
-
-    // Invalidate static buffers if the attribute formats no longer match
-    for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
-    {
-        Buffer *buffer = attribs[i].mBoundBuffer.get();
-
-        if (translated[i].active && attribs[i].mArrayEnabled && buffer)
-        {
-            StaticVertexBuffer *staticBuffer = buffer->getVertexBuffer();
-
-            if (staticBuffer && staticBuffer->size() != 0)
-            {
-                bool matchingAttributes = true;
-
-                for (int j = 0; j < MAX_VERTEX_ATTRIBS; j++)
+                else if (staticBuffer->lookupAttribute(attribs[i]) == -1)
                 {
-                    if (translated[j].active && attribs[j].mArrayEnabled && attribs[j].mBoundBuffer.get() == buffer)
-                    {
-                        if (staticBuffer->lookupAttribute(attribs[j]) == -1)
-                        {
-                            matchingAttributes = false;
-                            break;
-                        }
-                    }
-                }
-
-                if (!matchingAttributes && mStreamingBuffer)
-                {
+                    // This static buffer doesn't have matching attributes, so fall back to using the streaming buffer
                     mStreamingBuffer->addRequiredSpaceFor(staticBuffer);
                     buffer->invalidateStaticData();
-                }
+
+                    mStreamingBuffer->addRequiredSpace(spaceRequired(attribs[i], count));
+                }    
+            }
+            else
+            {
+                mStreamingBuffer->addRequiredSpace(spaceRequired(attribs[i], count));
             }
         }
     }
@@ -173,10 +155,9 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
     // Reserve the required space per used buffer
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
     {
-        Buffer *buffer = attribs[i].mBoundBuffer.get();
-
-        if (translated[i].active && attribs[i].mArrayEnabled && (buffer || attribs[i].mPointer))
+        if (translated[i].active && attribs[i].mArrayEnabled)
         {
+            Buffer *buffer = attribs[i].mBoundBuffer.get();
             ArrayVertexBuffer *staticBuffer = buffer ? buffer->getVertexBuffer() : NULL;
             ArrayVertexBuffer *vertexBuffer = staticBuffer ? staticBuffer : mStreamingBuffer;
 
