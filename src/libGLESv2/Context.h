@@ -218,6 +218,28 @@ struct State
     GLint packAlignment;
 };
 
+// Helper class to construct and cache vertex declarations
+class VertexDeclarationCache
+{
+  public:
+    VertexDeclarationCache();
+    ~VertexDeclarationCache();
+
+    GLenum applyDeclaration(TranslatedAttribute attributes[], Program *program);
+
+  private:
+    UINT mMaxLru;
+
+    enum { NUM_VERTEX_DECL_CACHE_ENTRIES = 16 };
+
+    struct VertexDeclCacheEntry
+    {
+        D3DVERTEXELEMENT9 cachedElements[MAX_VERTEX_ATTRIBS + 1];
+        UINT lruCount;
+        IDirect3DVertexDeclaration9 *vertexDeclaration;
+    } mVertexDeclCache[NUM_VERTEX_DECL_CACHE_ENTRIES];
+};
+
 class Context
 {
   public:
@@ -527,16 +549,7 @@ class Context
 
     ResourceManager *mResourceManager;
 
-    UINT mMaxLru;
-
-    enum { NUM_VERTEX_DECL_CACHE_ENTRIES = 16 };
-
-    struct VertexDeclCacheEntry
-    {
-        D3DVERTEXELEMENT9 cachedElements[MAX_VERTEX_ATTRIBS + 1];
-        UINT lruCount;
-        IDirect3DVertexDeclaration9 *vertexDeclaration;
-    } mVertexDeclCache[NUM_VERTEX_DECL_CACHE_ENTRIES];
+    VertexDeclarationCache mVertexDeclarationCache;
 };
 }
 
