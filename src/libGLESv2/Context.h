@@ -439,8 +439,6 @@ class Context
   private:
     DISALLOW_COPY_AND_ASSIGN(Context);
 
-    void lookupAttributeMapping(TranslatedAttribute *attributes);
-
     void detachBuffer(GLuint buffer);
     void detachTexture(GLuint texture);
     void detachFramebuffer(GLuint framebuffer);
@@ -453,7 +451,7 @@ class Context
 
     const egl::Config *const mConfig;
 
-    State   mState;
+    State mState;
 
     BindingPointer<Texture2D> mTexture2DZero;
     BindingPointer<TextureCubeMap> mTextureCubeMapZero;
@@ -528,6 +526,17 @@ class Context
     D3DCAPS9 mDeviceCaps;
 
     ResourceManager *mResourceManager;
+
+    UINT mMaxLru;
+
+    enum { NUM_VERTEX_DECL_CACHE_ENTRIES = 16 };
+
+    struct VertexDeclCacheEntry
+    {
+        D3DVERTEXELEMENT9 cachedElements[MAX_VERTEX_ATTRIBS + 1];
+        UINT lruCount;
+        IDirect3DVertexDeclaration9 *vertexDeclaration;
+    } mVertexDeclCache[NUM_VERTEX_DECL_CACHE_ENTRIES];
 };
 }
 

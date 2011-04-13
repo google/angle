@@ -34,7 +34,7 @@
 namespace gl
 {
 Context::Context(const egl::Config *config, const gl::Context *shareContext)
-    : mConfig(config)
+    : mConfig(config), mMaxLru(0)
 {
     setClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -154,6 +154,12 @@ Context::Context(const egl::Config *config, const gl::Context *shareContext)
     mMaxSupportedSamples = 0;
     mMaskedClearSavedState = NULL;
     markAllStateDirty();
+
+    for (int i = 0; i < NUM_VERTEX_DECL_CACHE_ENTRIES; i++)
+    {
+        mVertexDeclCache[i].vertexDeclaration = NULL;
+        mVertexDeclCache[i].lruCount = 0;
+    }
 }
 
 Context::~Context()
@@ -219,6 +225,14 @@ Context::~Context()
     }
 
     mResourceManager->release();
+
+    for (int i = 0; i < NUM_VERTEX_DECL_CACHE_ENTRIES; i++)
+    {
+        if (mVertexDeclCache[i].vertexDeclaration)
+        {
+            mVertexDeclCache[i].vertexDeclaration->Release();
+        }
+    }
 }
 
 void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
@@ -1953,31 +1967,72 @@ void Context::applyState(GLenum drawMode)
     mFrontFaceDirty = false;
 }
 
-// Fill in the semanticIndex field of the array of TranslatedAttributes based on the active GLSL program.
-void Context::lookupAttributeMapping(TranslatedAttribute *attributes)
-{
-    for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
-    {
-        if (attributes[i].active)
-        {
-            attributes[i].semanticIndex = getCurrentProgram()->getSemanticIndex(i);
-        }
-    }
-}
-
 GLenum Context::applyVertexBuffer(GLint first, GLsizei count)
 {
-    TranslatedAttribute translated[MAX_VERTEX_ATTRIBS];
+    TranslatedAttribute attributes[MAX_VERTEX_ATTRIBS];
 
-    GLenum err = mVertexDataManager->prepareVertexData(first, count, translated);
+    GLenum err = mVertexDataManager->prepareVertexData(first, count, attributes);
     if (err != GL_NO_ERROR)
     {
         return err;
     }
 
-    lookupAttributeMapping(translated);
+    IDirect3DDevice9 *device = getDevice();
+    Program *program = getCurrentProgram();
 
-    mVertexDataManager->setupAttributes(translated);
+    D3DVERTEXELEMENT9 elements[MAX_VERTEX_ATTRIBS + 1];
+    D3DVERTEXELEMENT9 *element = &elements[0];
+
+    for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
+    {
+        if (attributes[i].active)
+        {
+            device->SetStreamSource(i, attributes[i].vertexBuffer, attributes[i].offset, attributes[i].stride);
+
+            element->Stream = i;
+            element->Offset = 0;
+            element->Type = attributes[i].type;
+            element->Method = D3DDECLMETHOD_DEFAULT;
+            element->Usage = D3DDECLUSAGE_TEXCOORD;
+            element->UsageIndex = program->getSemanticIndex(i);
+            element++;
+        }
+    }
+
+    static const D3DVERTEXELEMENT9 end = D3DDECL_END();
+    *(element++) = end;
+
+    for (int i = 0; i < NUM_VERTEX_DECL_CACHE_ENTRIES; i++)
+    {
+        VertexDeclCacheEntry *entry = &mVertexDeclCache[i];
+        if (memcmp(entry->cachedElements, elements, (element - elements) * sizeof(D3DVERTEXELEMENT9)) == 0 && entry->vertexDeclaration)
+        {
+            entry->lruCount = ++mMaxLru;
+            device->SetVertexDeclaration(entry->vertexDeclaration);
+            return GL_NO_ERROR;
+        }
+    }
+
+    VertexDeclCacheEntry *lastCache = mVertexDeclCache;
+
+    for (int i = 0; i < NUM_VERTEX_DECL_CACHE_ENTRIES; i++)
+    {
+        if (mVertexDeclCache[i].lruCount < lastCache->lruCount)
+        {
+            lastCache = &mVertexDeclCache[i];
+        }
+    }
+
+    if (lastCache->vertexDeclaration != NULL)
+    {
+        lastCache->vertexDeclaration->Release();
+        lastCache->vertexDeclaration = NULL;
+    }
+
+    memcpy(lastCache->cachedElements, elements, (element - elements) * sizeof(D3DVERTEXELEMENT9));
+    device->CreateVertexDeclaration(elements, &lastCache->vertexDeclaration);
+    device->SetVertexDeclaration(lastCache->vertexDeclaration);
+    lastCache->lruCount = ++mMaxLru;
 
     return GL_NO_ERROR;
 }
