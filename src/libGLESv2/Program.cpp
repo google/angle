@@ -186,12 +186,9 @@ GLuint Program::getAttributeLocation(const char *name)
 
 int Program::getSemanticIndex(int attributeIndex)
 {
-    if (attributeIndex >= 0 && attributeIndex < MAX_VERTEX_ATTRIBS)
-    {
-        return mSemanticIndex[attributeIndex];
-    }
-
-    return -1;
+    ASSERT(attributeIndex >= 0 && attributeIndex < MAX_VERTEX_ATTRIBS);
+    
+    return mSemanticIndex[attributeIndex];
 }
 
 // Returns the index of the texture unit corresponding to a Direct3D 9 sampler

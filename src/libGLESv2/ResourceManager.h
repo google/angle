@@ -13,7 +13,7 @@
 #define GL_APICALL
 #include <GLES2/gl2.h>
 
-#include <map>
+#include <hash_map>
 
 #include "common/angleutils.h"
 
@@ -71,19 +71,19 @@ class ResourceManager
 
     std::size_t mRefCount;
 
-    typedef std::map<GLuint, Buffer*> BufferMap;
+    typedef stdext::hash_map<GLuint, Buffer*> BufferMap;
     BufferMap mBufferMap;
 
-    typedef std::map<GLuint, Shader*> ShaderMap;
+    typedef stdext::hash_map<GLuint, Shader*> ShaderMap;
     ShaderMap mShaderMap;
 
-    typedef std::map<GLuint, Program*> ProgramMap;
+    typedef stdext::hash_map<GLuint, Program*> ProgramMap;
     ProgramMap mProgramMap;
 
-    typedef std::map<GLuint, Texture*> TextureMap;
+    typedef stdext::hash_map<GLuint, Texture*> TextureMap;
     TextureMap mTextureMap;
 
-    typedef std::map<GLuint, Renderbuffer*> RenderbufferMap;
+    typedef stdext::hash_map<GLuint, Renderbuffer*> RenderbufferMap;
     RenderbufferMap mRenderbufferMap;
 };
 
