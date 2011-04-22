@@ -175,9 +175,12 @@ void Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
         return error(EGL_BAD_ALLOC);
     }
 
-    result = device->CreateDepthStencilSurface(presentParameters.BackBufferWidth, presentParameters.BackBufferHeight,
-                                               presentParameters.AutoDepthStencilFormat, presentParameters.MultiSampleType,
-                                               presentParameters.MultiSampleQuality, FALSE, &mDepthStencil, NULL);
+    if (mConfig->mDepthStencilFormat != D3DFMT_UNKNOWN)
+    {
+        result = device->CreateDepthStencilSurface(presentParameters.BackBufferWidth, presentParameters.BackBufferHeight,
+                                                   presentParameters.AutoDepthStencilFormat, presentParameters.MultiSampleType,
+                                                   presentParameters.MultiSampleQuality, FALSE, &mDepthStencil, NULL);
+    }
 
     if (FAILED(result))
     {

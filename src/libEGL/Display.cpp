@@ -144,6 +144,7 @@ bool Display::initialize()
 
         const D3DFORMAT depthStencilFormats[] =
         {
+            D3DFMT_UNKNOWN,
         //  D3DFMT_D16_LOCKABLE,
             D3DFMT_D32,
         //  D3DFMT_D15S1,
@@ -171,11 +172,19 @@ bool Display::initialize()
                 for (int depthStencilIndex = 0; depthStencilIndex < sizeof(depthStencilFormats) / sizeof(D3DFORMAT); depthStencilIndex++)
                 {
                     D3DFORMAT depthStencilFormat = depthStencilFormats[depthStencilIndex];
-                    HRESULT result = mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_SURFACE, depthStencilFormat);
+                    HRESULT result = D3D_OK;
+                    
+                    if(depthStencilFormat != D3DFMT_UNKNOWN)
+                    {
+                        result = mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_SURFACE, depthStencilFormat);
+                    }
 
                     if (SUCCEEDED(result))
                     {
-                        HRESULT result = mD3d9->CheckDepthStencilMatch(mAdapter, mDeviceType, currentDisplayMode.Format, renderTargetFormat, depthStencilFormat);
+                        if(depthStencilFormat != D3DFMT_UNKNOWN)
+                        {
+                            result = mD3d9->CheckDepthStencilMatch(mAdapter, mDeviceType, currentDisplayMode.Format, renderTargetFormat, depthStencilFormat);
+                        }
 
                         if (SUCCEEDED(result))
                         {

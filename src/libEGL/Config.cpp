@@ -118,6 +118,10 @@ void Config::set(D3DDISPLAYMODE displayMode, EGLint minInterval, EGLint maxInter
 
     switch (depthStencilFormat)
     {
+      case D3DFMT_UNKNOWN:
+        mDepthSize = 0;
+        mStencilSize = 0;
+        break;
 //    case D3DFMT_D16_LOCKABLE:
 //      mDepthSize = 16;
 //      mStencilSize = 0;
