@@ -127,7 +127,7 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
         if (translated[i].active && attribs[i].mArrayEnabled)
         {
             Buffer *buffer = attribs[i].mBoundBuffer.get();
-            StaticVertexBuffer *staticBuffer = buffer ? buffer->getVertexBuffer() : NULL;
+            StaticVertexBuffer *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
 
             if (staticBuffer)
             {
@@ -158,7 +158,7 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
         if (translated[i].active && attribs[i].mArrayEnabled)
         {
             Buffer *buffer = attribs[i].mBoundBuffer.get();
-            ArrayVertexBuffer *staticBuffer = buffer ? buffer->getVertexBuffer() : NULL;
+            ArrayVertexBuffer *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
             ArrayVertexBuffer *vertexBuffer = staticBuffer ? staticBuffer : mStreamingBuffer;
 
             if (vertexBuffer)
@@ -173,10 +173,10 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
     {
         if (translated[i].active)
         {
-            Buffer *buffer = attribs[i].mBoundBuffer.get();
-
             if (attribs[i].mArrayEnabled)
             {
+                Buffer *buffer = attribs[i].mBoundBuffer.get();
+
                 if (!buffer && attribs[i].mPointer == NULL)
                 {
                     // This is an application error that would normally result in a crash, but we catch it and return an error
@@ -186,7 +186,7 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
 
                 const FormatConverter &converter = formatConverter(attribs[i]);
 
-                StaticVertexBuffer *staticBuffer = buffer ? buffer->getVertexBuffer() : NULL;
+                StaticVertexBuffer *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
                 ArrayVertexBuffer *vertexBuffer = staticBuffer ? staticBuffer : static_cast<ArrayVertexBuffer*>(mStreamingBuffer);
 
                 UINT streamOffset = -1;
@@ -238,6 +238,19 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
                 translated[i].type = D3DDECLTYPE_FLOAT4;
                 translated[i].stride = 0;
                 translated[i].offset = 0;
+            }
+        }
+    }
+
+    for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
+    {
+        if (translated[i].active && attribs[i].mArrayEnabled)
+        {
+            Buffer *buffer = attribs[i].mBoundBuffer.get();
+
+            if (buffer)
+            {
+                buffer->promoteStaticUsage(count * attribs[i].typeSize());
             }
         }
     }

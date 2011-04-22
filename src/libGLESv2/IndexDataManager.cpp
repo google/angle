@@ -139,7 +139,7 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, Buffer *bu
 
     StreamingIndexBuffer *streamingBuffer = (type == GL_UNSIGNED_INT) ? mStreamingBufferInt : mStreamingBufferShort;
 
-    StaticIndexBuffer *staticBuffer = buffer ? buffer->getIndexBuffer() : NULL;
+    StaticIndexBuffer *staticBuffer = buffer ? buffer->getStaticIndexBuffer() : NULL;
     IndexBuffer *indexBuffer = streamingBuffer;
     UINT streamOffset = 0;
 
@@ -201,6 +201,11 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, Buffer *bu
 
     translated->indexBuffer = indexBuffer->getBuffer();
     translated->startIndex = streamOffset / indexSize(format);
+
+    if (buffer)
+    {
+        buffer->promoteStaticUsage(count * typeSize(type));
+    }
 
     return GL_NO_ERROR;
 }
