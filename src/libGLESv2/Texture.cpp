@@ -1436,11 +1436,13 @@ void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei 
             sourceRect.top = clamp(sourceRect.top, 0, source->getColorbuffer()->getHeight());
             sourceRect.right = clamp(sourceRect.right, 0, source->getColorbuffer()->getWidth());
             sourceRect.bottom = clamp(sourceRect.bottom, 0, source->getColorbuffer()->getHeight());
+
+            GLint destYOffset = transformPixelYOffset(0, height, mImageArray[level].height);
             
             IDirect3DSurface9 *dest;
             HRESULT hr = mTexture->GetSurfaceLevel(level, &dest);
 
-            getBlitter()->formatConvert(source->getRenderTarget(), sourceRect, format, 0, 0, dest);
+            getBlitter()->copy(source->getRenderTarget(), sourceRect, format, 0, destYOffset, dest);
             dest->Release();
         }
     }
@@ -1489,7 +1491,7 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
             IDirect3DSurface9 *dest;
             HRESULT hr = mTexture->GetSurfaceLevel(level, &dest);
 
-            getBlitter()->formatConvert(source->getRenderTarget(), sourceRect, mImageArray[0].format, xoffset, destYOffset, dest);
+            getBlitter()->copy(source->getRenderTarget(), sourceRect, mImageArray[0].format, xoffset, destYOffset, dest);
             dest->Release();
         }
     }
@@ -2281,9 +2283,11 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint 
             sourceRect.right = clamp(sourceRect.right, 0, source->getColorbuffer()->getWidth());
             sourceRect.bottom = clamp(sourceRect.bottom, 0, source->getColorbuffer()->getHeight());
 
+            GLint destYOffset = transformPixelYOffset(0, height, mImageArray[faceindex][level].width);
+
             IDirect3DSurface9 *dest = getCubeMapSurface(target, level);
 
-            getBlitter()->formatConvert(source->getRenderTarget(), sourceRect, format, 0, 0, dest);
+            getBlitter()->copy(source->getRenderTarget(), sourceRect, format, 0, destYOffset, dest);
             dest->Release();
         }
     }
@@ -2349,7 +2353,7 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
 
             IDirect3DSurface9 *dest = getCubeMapSurface(target, level);
 
-            getBlitter()->formatConvert(source->getRenderTarget(), sourceRect, mImageArray[0][0].format, xoffset, destYOffset, dest);
+            getBlitter()->copy(source->getRenderTarget(), sourceRect, mImageArray[0][0].format, xoffset, destYOffset, dest);
             dest->Release();
         }
     }
