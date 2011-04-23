@@ -882,16 +882,17 @@ bool TParseContext::nonInitConstErrorCheck(int line, TString& identifier, TPubli
 //
 // Returns true if there was an error.
 //
-bool TParseContext::nonInitErrorCheck(int line, TString& identifier, TPublicType& type)
+bool TParseContext::nonInitErrorCheck(int line, TString& identifier, TPublicType& type, TVariable*& variable)
 {
     if (reservedErrorCheck(line, identifier))
         recover();
 
-    TVariable* variable = new TVariable(&identifier, TType(type));
+    variable = new TVariable(&identifier, TType(type));
 
     if (! symbolTable.insert(*variable)) {
         error(line, "redefinition", variable->getName().c_str(), "");
         delete variable;
+        variable = 0;
         return true;
     }
 

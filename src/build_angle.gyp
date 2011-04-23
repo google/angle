@@ -41,6 +41,8 @@
         'compiler/intermOut.cpp',
         'compiler/IntermTraverse.cpp',
         'compiler/localintermediate.h',
+        'compiler/MapLongVariableNames.cpp',
+        'compiler/MapLongVariableNames.h',
         'compiler/MMap.h',
         'compiler/osinclude.h',
         'compiler/parseConst.cpp',
