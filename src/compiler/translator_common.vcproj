@@ -234,6 +234,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MapLongVariableNames.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\ossource_win.cpp"
 				>
 			</File>
@@ -369,6 +373,10 @@
 			</File>
 			<File
 				RelativePath=".\localintermediate.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MapLongVariableNames.h"
 				>
 			</File>
 			<File
