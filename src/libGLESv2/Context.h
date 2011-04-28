@@ -18,6 +18,7 @@
 #include <d3d9.h>
 
 #include <map>
+#include <hash_map>
 
 #include "common/angleutils.h"
 #include "libGLESv2/ResourceManager.h"
@@ -479,11 +480,11 @@ class Context
     BindingPointer<Texture2D> mTexture2DZero;
     BindingPointer<TextureCubeMap> mTextureCubeMapZero;
 
-    typedef std::map<GLuint, Framebuffer*> FramebufferMap;
+    typedef stdext::hash_map<GLuint, Framebuffer*> FramebufferMap;
     FramebufferMap mFramebufferMap;
     HandleAllocator mFramebufferHandleAllocator;
 
-    typedef std::map<GLuint, Fence*> FenceMap;
+    typedef stdext::hash_map<GLuint, Fence*> FenceMap;
     FenceMap mFenceMap;
     HandleAllocator mFenceHandleAllocator;
 
