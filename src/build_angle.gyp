@@ -165,6 +165,8 @@
             'libGLESv2/Fence.h',
             'libGLESv2/Framebuffer.cpp',
             'libGLESv2/Framebuffer.h',
+            'libGLESv2/HandleAllocator.cpp',
+            'libGLESv2/HandleAllocator.h',
             'libGLESv2/libGLESv2.cpp',
             'libGLESv2/libGLESv2.def',
             'libGLESv2/main.cpp',

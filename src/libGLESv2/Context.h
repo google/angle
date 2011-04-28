@@ -21,6 +21,7 @@
 
 #include "common/angleutils.h"
 #include "libGLESv2/ResourceManager.h"
+#include "libGLESv2/HandleAllocator.h"
 #include "libGLESv2/RefCountObject.h"
 
 namespace egl
@@ -480,9 +481,11 @@ class Context
 
     typedef std::map<GLuint, Framebuffer*> FramebufferMap;
     FramebufferMap mFramebufferMap;
+    HandleAllocator mFramebufferHandleAllocator;
 
     typedef std::map<GLuint, Fence*> FenceMap;
     FenceMap mFenceMap;
+    HandleAllocator mFenceHandleAllocator;
 
     void initExtensionString();
     std::string mExtensionString;

@@ -209,6 +209,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\HandleAllocator.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\IndexDataManager.cpp"
 				>
 			</File>
@@ -288,6 +292,10 @@
 			</File>
 			<File
 				RelativePath="..\..\include\GLES2\gl2platform.h"
+				>
+			</File>
+			<File
+				RelativePath=".\HandleAllocator.h"
 				>
 			</File>
 			<File

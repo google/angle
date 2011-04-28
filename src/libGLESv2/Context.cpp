@@ -35,6 +35,8 @@ namespace gl
 {
 Context::Context(const egl::Config *config, const gl::Context *shareContext) : mConfig(config)
 {
+    mFenceHandleAllocator.setBaseHandle(0);
+
     setClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
     mState.depthClearValue = 1.0f;
@@ -818,12 +820,7 @@ GLuint Context::createRenderbuffer()
 // Returns an unused framebuffer name
 GLuint Context::createFramebuffer()
 {
-    unsigned int handle = 1;
-
-    while (mFramebufferMap.find(handle) != mFramebufferMap.end())
-    {
-        handle++;
-    }
+    GLuint handle = mFramebufferHandleAllocator.allocate();
 
     mFramebufferMap[handle] = NULL;
 
@@ -832,12 +829,7 @@ GLuint Context::createFramebuffer()
 
 GLuint Context::createFence()
 {
-    unsigned int handle = 0;
-
-    while (mFenceMap.find(handle) != mFenceMap.end())
-    {
-        handle++;
-    }
+    GLuint handle = mFenceHandleAllocator.allocate();
 
     mFenceMap[handle] = new Fence;
 
@@ -892,6 +884,7 @@ void Context::deleteFramebuffer(GLuint framebuffer)
     {
         detachFramebuffer(framebuffer);
 
+        mFramebufferHandleAllocator.release(framebufferObject->first);
         delete framebufferObject->second;
         mFramebufferMap.erase(framebufferObject);
     }
@@ -903,6 +896,7 @@ void Context::deleteFence(GLuint fence)
 
     if (fenceObject != mFenceMap.end())
     {
+        mFenceHandleAllocator.release(fenceObject->first);
         delete fenceObject->second;
         mFenceMap.erase(fenceObject);
     }

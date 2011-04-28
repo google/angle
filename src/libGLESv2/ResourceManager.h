@@ -16,6 +16,7 @@
 #include <hash_map>
 
 #include "common/angleutils.h"
+#include "libGLESv2/HandleAllocator.h"
 
 namespace gl
 {
@@ -73,18 +74,22 @@ class ResourceManager
 
     typedef stdext::hash_map<GLuint, Buffer*> BufferMap;
     BufferMap mBufferMap;
+    HandleAllocator mBufferHandleAllocator;
 
     typedef stdext::hash_map<GLuint, Shader*> ShaderMap;
     ShaderMap mShaderMap;
 
     typedef stdext::hash_map<GLuint, Program*> ProgramMap;
     ProgramMap mProgramMap;
+    HandleAllocator mProgramShaderHandleAllocator;
 
     typedef stdext::hash_map<GLuint, Texture*> TextureMap;
     TextureMap mTextureMap;
+    HandleAllocator mTextureHandleAllocator;
 
     typedef stdext::hash_map<GLuint, Renderbuffer*> RenderbufferMap;
     RenderbufferMap mRenderbufferMap;
+    HandleAllocator mRenderbufferHandleAllocator;
 };
 
 }
