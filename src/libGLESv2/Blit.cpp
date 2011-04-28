@@ -155,16 +155,23 @@ void Blit::initGeometry()
 
     IDirect3DDevice9 *device = getDevice();
 
-    HRESULT hr = device->CreateVertexBuffer(sizeof(quad), D3DUSAGE_WRITEONLY, 0, D3DPOOL_DEFAULT, &mQuadVertexBuffer, NULL);
+    HRESULT result = device->CreateVertexBuffer(sizeof(quad), D3DUSAGE_WRITEONLY, 0, D3DPOOL_DEFAULT, &mQuadVertexBuffer, NULL);
 
-    if (FAILED(hr))
+    if (FAILED(result))
     {
-        ASSERT(hr == D3DERR_OUTOFVIDEOMEMORY || hr == E_OUTOFMEMORY);
+        ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
         return error(GL_OUT_OF_MEMORY);
     }
 
-    void *lockPtr;
-    mQuadVertexBuffer->Lock(0, 0, &lockPtr, 0);
+    void *lockPtr = NULL;
+    result = mQuadVertexBuffer->Lock(0, 0, &lockPtr, 0);
+
+    if (FAILED(result) || lockPtr == NULL)
+    {
+        ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
+        return error(GL_OUT_OF_MEMORY);
+    }
+
     memcpy(lockPtr, quad, sizeof(quad));
     mQuadVertexBuffer->Unlock();
 
@@ -174,10 +181,11 @@ void Blit::initGeometry()
         D3DDECL_END()
     };
 
-    hr = device->CreateVertexDeclaration(elements, &mQuadVertexDeclaration);
-    if (FAILED(hr))
+    result = device->CreateVertexDeclaration(elements, &mQuadVertexDeclaration);
+
+    if (FAILED(result))
     {
-        ASSERT(hr == D3DERR_OUTOFVIDEOMEMORY || hr == E_OUTOFMEMORY);
+        ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
         return error(GL_OUT_OF_MEMORY);
     }
 }
