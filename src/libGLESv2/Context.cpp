@@ -31,6 +31,11 @@
 #undef near
 #undef far
 
+namespace
+{
+    enum { CLOSING_INDEX_BUFFER_SIZE = 4096 };
+}
+
 namespace gl
 {
 Context::Context(const egl::Config *config, const gl::Context *shareContext) : mConfig(config)
@@ -141,6 +146,7 @@ Context::Context(const egl::Config *config, const gl::Context *shareContext) : m
     mVertexDataManager = NULL;
     mIndexDataManager = NULL;
     mBlit = NULL;
+    mClosingIB = NULL;
 
     mInvalidEnum = false;
     mInvalidValue = false;
@@ -213,6 +219,7 @@ Context::~Context()
     delete mVertexDataManager;
     delete mIndexDataManager;
     delete mBlit;
+    delete mClosingIB;
 
     if (mMaskedClearSavedState)
     {
@@ -2744,49 +2751,57 @@ void Context::drawClosingLine(unsigned int first, unsigned int last)
 {
     IDirect3DDevice9 *device = getDevice();
     IDirect3DIndexBuffer9 *indexBuffer = NULL;
-    HRESULT result = D3DERR_INVALIDCALL;
+    bool succeeded = false;
+    UINT offset;
 
     if (supports32bitIndices())
     {
-        result = device->CreateIndexBuffer(8, D3DUSAGE_WRITEONLY, D3DFMT_INDEX32, D3DPOOL_DEFAULT, &indexBuffer, 0);
+        const int spaceNeeded = 2 * sizeof(unsigned int);
 
-        if (SUCCEEDED(result))
+        if (!mClosingIB)
         {
-            unsigned int *data;
-            result = indexBuffer->Lock(0, 0, (void**)&data, 0);
+            mClosingIB = new StreamingIndexBuffer(device, CLOSING_INDEX_BUFFER_SIZE, D3DFMT_INDEX32);
+        }
 
-            if (SUCCEEDED(result))
-            {
-                data[0] = last;
-                data[1] = first;
-            }
+        mClosingIB->reserveSpace(spaceNeeded, GL_UNSIGNED_INT);
+
+        unsigned int *data = static_cast<unsigned int*>(mClosingIB->map(spaceNeeded, &offset));
+        if (data)
+        {
+            data[0] = last;
+            data[1] = first;
+            mClosingIB->unmap();
+            offset /= 4;
+            succeeded = true;
         }
     }
     else
     {
-        result = device->CreateIndexBuffer(4, D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_DEFAULT, &indexBuffer, 0);
+        const int spaceNeeded = 2 * sizeof(unsigned short);
 
-        if (SUCCEEDED(result))
+        if (!mClosingIB)
         {
-            unsigned short *data;
-            result = indexBuffer->Lock(0, 0, (void**)&data, 0);
+            mClosingIB = new StreamingIndexBuffer(device, CLOSING_INDEX_BUFFER_SIZE, D3DFMT_INDEX16);
+        }
 
-            if (SUCCEEDED(result))
-            {
-                data[0] = last;
-                data[1] = first;
-            }
+        mClosingIB->reserveSpace(spaceNeeded, GL_UNSIGNED_SHORT);
+
+        unsigned short *data = static_cast<unsigned short*>(mClosingIB->map(spaceNeeded, &offset));
+        if (data)
+        {
+            data[0] = last;
+            data[1] = first;
+            mClosingIB->unmap();
+            offset /= 2;
+            succeeded = true;
         }
     }
     
-    if (SUCCEEDED(result))
+    if (succeeded)
     {
-        indexBuffer->Unlock();
-        device->SetIndices(indexBuffer);
+        device->SetIndices(mClosingIB->getBuffer());
 
-        device->DrawIndexedPrimitive(D3DPT_LINELIST, 0, 0, 2, 0, 1);
-
-        indexBuffer->Release();
+        device->DrawIndexedPrimitive(D3DPT_LINELIST, 0, 0, 2, offset, 1);
     }
     else
     {

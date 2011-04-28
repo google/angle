@@ -48,6 +48,7 @@ class Renderbuffer;
 class RenderbufferStorage;
 class Colorbuffer;
 class Depthbuffer;
+class StreamingIndexBuffer;
 class Stencilbuffer;
 class DepthStencilbuffer;
 class VertexDataManager;
@@ -495,6 +496,8 @@ class Context
     IndexDataManager *mIndexDataManager;
 
     Blit *mBlit;
+
+    StreamingIndexBuffer *mClosingIB;
     
     BindingPointer<Texture> mIncompleteTextures[SAMPLER_TYPE_COUNT];
 
