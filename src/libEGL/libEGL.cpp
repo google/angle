@@ -11,7 +11,6 @@
 #include "common/debug.h"
 #include "common/version.h"
 #include "libGLESv2/Context.h"
-#include "libGLESv2/mathutil.h"
 #include "libGLESv2/Texture.h"
 
 #include "libEGL/main.h"
@@ -339,43 +338,7 @@ EGLSurface __stdcall eglCreateWindowSurface(EGLDisplay dpy, EGLConfig config, EG
             return error(EGL_BAD_NATIVE_WINDOW, EGL_NO_SURFACE);
         }
 
-        if (attrib_list)
-        {
-            while (*attrib_list != EGL_NONE)
-            {
-                switch (attrib_list[0])
-                {
-                  case EGL_RENDER_BUFFER:
-                    switch (attrib_list[1])
-                    {
-                      case EGL_BACK_BUFFER:
-                        break;
-                      case EGL_SINGLE_BUFFER:
-                        return error(EGL_BAD_MATCH, EGL_NO_SURFACE);   // Rendering directly to front buffer not supported
-                      default:
-                        return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
-                    }
-                    break;
-                  case EGL_VG_COLORSPACE:
-                    return error(EGL_BAD_MATCH, EGL_NO_SURFACE);
-                  case EGL_VG_ALPHA_FORMAT:
-                    return error(EGL_BAD_MATCH, EGL_NO_SURFACE);
-                  default:
-                    return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
-                }
-
-                attrib_list += 2;
-            }
-        }
-
-        if (display->hasExistingWindowSurface(window))
-        {
-            return error(EGL_BAD_ALLOC, EGL_NO_SURFACE);
-        }
-
-        EGLSurface surface = (EGLSurface)display->createWindowSurface(window, config);
-
-        return success(surface);
+        return display->createWindowSurface(window, config, attrib_list);
     }
     catch(std::bad_alloc&)
     {
@@ -393,113 +356,13 @@ EGLSurface __stdcall eglCreatePbufferSurface(EGLDisplay dpy, EGLConfig config, c
     try
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
-        EGLint width = 0, height = 0;
-        EGLenum textureFormat = EGL_NO_TEXTURE;
-        EGLenum textureTarget = EGL_NO_TEXTURE;
 
         if (!validate(display, config))
         {
             return EGL_NO_SURFACE;
         }
 
-        if (attrib_list)
-        {
-            while (*attrib_list != EGL_NONE)
-            {
-                switch (attrib_list[0])
-                {
-                  case EGL_WIDTH:
-                    width = attrib_list[1];
-                    break;
-                  case EGL_HEIGHT:
-                    height = attrib_list[1];
-                    break;
-                  case EGL_LARGEST_PBUFFER:
-                    if (attrib_list[1] != EGL_FALSE)
-                      UNIMPLEMENTED(); // FIXME
-                    break;
-                  case EGL_TEXTURE_FORMAT:
-                    switch (attrib_list[1])
-                    {
-                      case EGL_NO_TEXTURE:
-                      case EGL_TEXTURE_RGB:
-                      case EGL_TEXTURE_RGBA:
-                        textureFormat = attrib_list[1];
-                        break;
-                      default:
-                        return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
-                    }
-                    break;
-                  case EGL_TEXTURE_TARGET:
-                    switch (attrib_list[1])
-                    {
-                      case EGL_NO_TEXTURE:
-                      case EGL_TEXTURE_2D:
-                        textureTarget = attrib_list[1];
-                        break;
-                      default:
-                        return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
-                    }
-                    break;
-                  case EGL_MIPMAP_TEXTURE:
-                    if (attrib_list[1] != EGL_FALSE)
-                      return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
-                    break;
-                  case EGL_VG_COLORSPACE:
-                    return error(EGL_BAD_MATCH, EGL_NO_SURFACE);
-                  case EGL_VG_ALPHA_FORMAT:
-                    return error(EGL_BAD_MATCH, EGL_NO_SURFACE);
-                  default:
-                    return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
-                }
-
-                attrib_list += 2;
-            }
-        }
-
-        if (width < 0 || height < 0)
-        {
-            return error(EGL_BAD_PARAMETER, EGL_NO_SURFACE);
-        }
-
-        if (width == 0 || height == 0)
-        {
-            return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
-        }
-
-        if (textureFormat != EGL_NO_TEXTURE && !display->getNonPow2TextureSupport() && (!gl::isPow2(width) || !gl::isPow2(height)))
-        {
-            return error(EGL_BAD_MATCH, EGL_NO_SURFACE);
-        }
-
-        if ((textureFormat != EGL_NO_TEXTURE && textureTarget == EGL_NO_TEXTURE) ||
-            (textureFormat == EGL_NO_TEXTURE && textureTarget != EGL_NO_TEXTURE))
-        {
-            return error(EGL_BAD_MATCH, EGL_NO_SURFACE);
-        }
-
-        EGLint surfaceTypeValue;
-        EGLint bindToTextureRGBValue;
-        EGLint bindToTextureRGBAValue;
-
-        display->getConfigAttrib(config, EGL_SURFACE_TYPE, &surfaceTypeValue);
-        display->getConfigAttrib(config, EGL_BIND_TO_TEXTURE_RGB, &bindToTextureRGBValue);
-        display->getConfigAttrib(config, EGL_BIND_TO_TEXTURE_RGBA, &bindToTextureRGBAValue);
-
-        if (!(surfaceTypeValue & EGL_PBUFFER_BIT))
-        {
-            return error(EGL_BAD_MATCH, EGL_NO_SURFACE);
-        }
-
-        if ((textureFormat == EGL_TEXTURE_RGB && bindToTextureRGBValue != EGL_TRUE) ||
-            (textureFormat == EGL_TEXTURE_RGBA && bindToTextureRGBAValue != EGL_TRUE))
-        {
-            return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
-        }
-
-        EGLSurface surface = (EGLSurface)display->createOffscreenSurface(width, height, config, textureFormat, textureTarget);
-
-        return success(surface);
+        return display->createOffscreenSurface(config, attrib_list);
     }
     catch(std::bad_alloc&)
     {

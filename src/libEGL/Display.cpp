@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "common/debug.h"
+#include "libGLESv2/mathutil.h"
 
 #include "libEGL/main.h"
 
@@ -411,24 +412,148 @@ bool Display::resetDevice()
     return true;
 }
 
-Surface *Display::createWindowSurface(HWND window, EGLConfig config)
+EGLSurface Display::createWindowSurface(HWND window, EGLConfig config, const EGLint *attribList)
 {
     const Config *configuration = mConfigSet.get(config);
+
+    if (attribList)
+    {
+        while (*attribList != EGL_NONE)
+        {
+            switch (attribList[0])
+            {
+              case EGL_RENDER_BUFFER:
+                switch (attribList[1])
+                {
+                  case EGL_BACK_BUFFER:
+                    break;
+                  case EGL_SINGLE_BUFFER:
+                    return error(EGL_BAD_MATCH, EGL_NO_SURFACE);   // Rendering directly to front buffer not supported
+                  default:
+                    return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
+                }
+                break;
+              case EGL_VG_COLORSPACE:
+                return error(EGL_BAD_MATCH, EGL_NO_SURFACE);
+              case EGL_VG_ALPHA_FORMAT:
+                return error(EGL_BAD_MATCH, EGL_NO_SURFACE);
+              default:
+                return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
+            }
+
+            attribList += 2;
+        }
+    }
+
+    if (hasExistingWindowSurface(window))
+    {
+        return error(EGL_BAD_ALLOC, EGL_NO_SURFACE);
+    }
 
     Surface *surface = new Surface(this, configuration, window);
     mSurfaceSet.insert(surface);
 
-    return surface;
+    return success(surface);
 }
 
-Surface *Display::createOffscreenSurface(int width, int height, EGLConfig config, EGLenum textureFormat, EGLenum textureTarget)
+EGLSurface Display::createOffscreenSurface(EGLConfig config, const EGLint *attribList)
 {
+    EGLint width = 0, height = 0;
+    EGLenum textureFormat = EGL_NO_TEXTURE;
+    EGLenum textureTarget = EGL_NO_TEXTURE;
     const Config *configuration = mConfigSet.get(config);
+
+    if (attribList)
+    {
+        while (*attribList != EGL_NONE)
+        {
+            switch (attribList[0])
+            {
+              case EGL_WIDTH:
+                width = attribList[1];
+                break;
+              case EGL_HEIGHT:
+                height = attribList[1];
+                break;
+              case EGL_LARGEST_PBUFFER:
+                if (attribList[1] != EGL_FALSE)
+                  UNIMPLEMENTED(); // FIXME
+                break;
+              case EGL_TEXTURE_FORMAT:
+                switch (attribList[1])
+                {
+                  case EGL_NO_TEXTURE:
+                  case EGL_TEXTURE_RGB:
+                  case EGL_TEXTURE_RGBA:
+                    textureFormat = attribList[1];
+                    break;
+                  default:
+                    return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
+                }
+                break;
+              case EGL_TEXTURE_TARGET:
+                switch (attribList[1])
+                {
+                  case EGL_NO_TEXTURE:
+                  case EGL_TEXTURE_2D:
+                    textureTarget = attribList[1];
+                    break;
+                  default:
+                    return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
+                }
+                break;
+              case EGL_MIPMAP_TEXTURE:
+                if (attribList[1] != EGL_FALSE)
+                  return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
+                break;
+              case EGL_VG_COLORSPACE:
+                return error(EGL_BAD_MATCH, EGL_NO_SURFACE);
+              case EGL_VG_ALPHA_FORMAT:
+                return error(EGL_BAD_MATCH, EGL_NO_SURFACE);
+              default:
+                return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
+            }
+
+            attribList += 2;
+        }
+    }
+
+    if (width < 0 || height < 0)
+    {
+        return error(EGL_BAD_PARAMETER, EGL_NO_SURFACE);
+    }
+
+    if (width == 0 || height == 0)
+    {
+        return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
+    }
+
+    if (textureFormat != EGL_NO_TEXTURE && !getNonPow2TextureSupport() && (!gl::isPow2(width) || !gl::isPow2(height)))
+    {
+        return error(EGL_BAD_MATCH, EGL_NO_SURFACE);
+    }
+
+    if ((textureFormat != EGL_NO_TEXTURE && textureTarget == EGL_NO_TEXTURE) ||
+        (textureFormat == EGL_NO_TEXTURE && textureTarget != EGL_NO_TEXTURE))
+    {
+        return error(EGL_BAD_MATCH, EGL_NO_SURFACE);
+    }
+
+    if (!(configuration->mSurfaceType & EGL_PBUFFER_BIT))
+    {
+        return error(EGL_BAD_MATCH, EGL_NO_SURFACE);
+    }
+
+    if ((textureFormat == EGL_TEXTURE_RGB && configuration->mBindToTextureRGB != EGL_TRUE) ||
+        (textureFormat == EGL_TEXTURE_RGBA && configuration->mBindToTextureRGBA != EGL_TRUE))
+    {
+        return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
+    }
 
     Surface *surface = new Surface(this, configuration, width, height, textureFormat, textureTarget);
     mSurfaceSet.insert(surface);
 
-    return surface;
+    return success(surface);
 }
 
 EGLContext Display::createContext(EGLConfig configHandle, const gl::Context *shareContext)
