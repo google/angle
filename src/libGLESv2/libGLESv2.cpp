@@ -4751,16 +4751,6 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
                     return error(GL_INVALID_OPERATION);
                 }
 
-                if (texture->isCompressed())
-                {
-                    return error(GL_INVALID_OPERATION);
-                }
-
-                if (format != texture->getInternalFormat())
-                {
-                    return error(GL_INVALID_OPERATION);
-                }
-
                 texture->subImage(target, level, xoffset, yoffset, width, height, format, type, context->getUnpackAlignment(), pixels);
             }
             else

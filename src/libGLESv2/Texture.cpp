@@ -884,6 +884,18 @@ bool Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
         return false;
     }
 
+    if (IsCompressed(image->format))
+    {
+        error(GL_INVALID_OPERATION);
+        return false;
+    }
+
+    if (format != image->format)
+    {
+        error(GL_INVALID_OPERATION);
+        return false;
+    }
+
     if (!image->surface)
     {
         createSurface(image);
