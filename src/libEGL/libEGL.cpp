@@ -17,7 +17,7 @@
 #include "libEGL/Display.h"
 
 
-bool validate(egl::Display *display)
+bool validateDisplay(egl::Display *display)
 {
     if (display == EGL_NO_DISPLAY)
     {
@@ -32,9 +32,9 @@ bool validate(egl::Display *display)
     return true;
 }
 
-bool validate(egl::Display *display, EGLConfig config)
+bool validateConfig(egl::Display *display, EGLConfig config)
 {
-    if (!validate(display))
+    if (!validateDisplay(display))
     {
         return false;
     }
@@ -47,9 +47,9 @@ bool validate(egl::Display *display, EGLConfig config)
     return true;
 }
 
-bool validate(egl::Display *display, gl::Context *context)
+bool validateContext(egl::Display *display, gl::Context *context)
 {
-    if (!validate(display))
+    if (!validateDisplay(display))
     {
         return false;
     }
@@ -62,9 +62,9 @@ bool validate(egl::Display *display, gl::Context *context)
     return true;
 }
 
-bool validate(egl::Display *display, egl::Surface *surface)
+bool validateSurface(egl::Display *display, egl::Surface *surface)
 {
-    if (!validate(display))
+    if (!validateDisplay(display))
     {
         return false;
     }
@@ -185,7 +185,7 @@ const char *__stdcall eglQueryString(EGLDisplay dpy, EGLint name)
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
 
-        if (!validate(display))
+        if (!validateDisplay(display))
         {
             return NULL;
         }
@@ -222,7 +222,7 @@ EGLBoolean __stdcall eglGetConfigs(EGLDisplay dpy, EGLConfig *configs, EGLint co
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
 
-        if (!validate(display))
+        if (!validateDisplay(display))
         {
             return EGL_FALSE;
         }
@@ -259,7 +259,7 @@ EGLBoolean __stdcall eglChooseConfig(EGLDisplay dpy, const EGLint *attrib_list, 
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
 
-        if (!validate(display))
+        if (!validateDisplay(display))
         {
             return EGL_FALSE;
         }
@@ -297,7 +297,7 @@ EGLBoolean __stdcall eglGetConfigAttrib(EGLDisplay dpy, EGLConfig config, EGLint
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
 
-        if (!validate(display, config))
+        if (!validateConfig(display, config))
         {
             return EGL_FALSE;
         }
@@ -326,7 +326,7 @@ EGLSurface __stdcall eglCreateWindowSurface(EGLDisplay dpy, EGLConfig config, EG
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
 
-        if (!validate(display, config))
+        if (!validateConfig(display, config))
         {
             return EGL_NO_SURFACE;
         }
@@ -357,7 +357,7 @@ EGLSurface __stdcall eglCreatePbufferSurface(EGLDisplay dpy, EGLConfig config, c
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
 
-        if (!validate(display, config))
+        if (!validateConfig(display, config))
         {
             return EGL_NO_SURFACE;
         }
@@ -381,7 +381,7 @@ EGLSurface __stdcall eglCreatePixmapSurface(EGLDisplay dpy, EGLConfig config, EG
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
 
-        if (!validate(display, config))
+        if (!validateConfig(display, config))
         {
             return EGL_NO_SURFACE;
         }
@@ -405,8 +405,9 @@ EGLBoolean __stdcall eglDestroySurface(EGLDisplay dpy, EGLSurface surface)
     try
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
+        egl::Surface *eglSurface = static_cast<egl::Surface*>(surface);
 
-        if (!validate(display))
+        if (!validateSurface(display, eglSurface))
         {
             return EGL_FALSE;
         }
@@ -436,8 +437,9 @@ EGLBoolean __stdcall eglQuerySurface(EGLDisplay dpy, EGLSurface surface, EGLint 
     try
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
+        egl::Surface *eglSurface = (egl::Surface*)surface;
 
-        if (!validate(display))
+        if (!validateSurface(display, eglSurface))
         {
             return EGL_FALSE;
         }
@@ -446,8 +448,6 @@ EGLBoolean __stdcall eglQuerySurface(EGLDisplay dpy, EGLSurface surface, EGLint 
         {
             return error(EGL_BAD_SURFACE, EGL_FALSE);
         }
-
-        egl::Surface *eglSurface = (egl::Surface*)surface;
 
         switch (attribute)
         {
@@ -521,8 +521,9 @@ EGLBoolean __stdcall eglQuerySurfacePointerANGLE(EGLDisplay dpy, EGLSurface surf
     try
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
+        egl::Surface *eglSurface = (egl::Surface*)surface;
 
-        if (!validate(display))
+        if (!validateSurface(display, eglSurface))
         {
             return EGL_FALSE;
         }
@@ -531,8 +532,6 @@ EGLBoolean __stdcall eglQuerySurfacePointerANGLE(EGLDisplay dpy, EGLSurface surf
         {
             return error(EGL_BAD_SURFACE, EGL_FALSE);
         }
-
-        egl::Surface *eglSurface = (egl::Surface*)surface;
 
         switch (attribute)
         {
@@ -646,7 +645,7 @@ EGLSurface __stdcall eglCreatePbufferFromClientBuffer(EGLDisplay dpy, EGLenum bu
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
 
-        if (!validate(display, config))
+        if (!validateConfig(display, config))
         {
             return EGL_NO_SURFACE;
         }
@@ -671,8 +670,9 @@ EGLBoolean __stdcall eglSurfaceAttrib(EGLDisplay dpy, EGLSurface surface, EGLint
     try
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
+        egl::Surface *eglSurface = static_cast<egl::Surface*>(surface);
 
-        if (!validate(display))
+        if (!validateSurface(display, eglSurface))
         {
             return EGL_FALSE;
         }
@@ -696,9 +696,9 @@ EGLBoolean __stdcall eglBindTexImage(EGLDisplay dpy, EGLSurface surface, EGLint 
     try
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
-        egl::Surface *surf = static_cast<egl::Surface*>(surface);
+        egl::Surface *eglSurface = static_cast<egl::Surface*>(surface);
 
-        if (!validate(display))
+        if (!validateSurface(display, eglSurface))
         {
             return EGL_FALSE;
         }
@@ -708,22 +708,22 @@ EGLBoolean __stdcall eglBindTexImage(EGLDisplay dpy, EGLSurface surface, EGLint 
             return error(EGL_BAD_PARAMETER, EGL_FALSE);
         }
 
-        if (surface == EGL_NO_SURFACE || surf->getWindowHandle())
+        if (surface == EGL_NO_SURFACE || eglSurface->getWindowHandle())
         {
             return error(EGL_BAD_SURFACE, EGL_FALSE);
         }
 
-        if (surf->getBoundTexture())
+        if (eglSurface->getBoundTexture())
         {
             return error(EGL_BAD_ACCESS, EGL_FALSE);
         }
 
-        if (surf->getTextureFormat() == EGL_NO_TEXTURE)
+        if (eglSurface->getTextureFormat() == EGL_NO_TEXTURE)
         {
             return error(EGL_BAD_MATCH, EGL_FALSE);
         }
 
-        glBindTexImage(surf);
+        glBindTexImage(eglSurface);
 
         return success(EGL_TRUE);
     }
@@ -742,9 +742,9 @@ EGLBoolean __stdcall eglReleaseTexImage(EGLDisplay dpy, EGLSurface surface, EGLi
     try
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
-        egl::Surface *surf = static_cast<egl::Surface*>(surface);
+        egl::Surface *eglSurface = static_cast<egl::Surface*>(surface);
 
-        if (!validate(display))
+        if (!validateSurface(display, eglSurface))
         {
             return EGL_FALSE;
         }
@@ -754,17 +754,17 @@ EGLBoolean __stdcall eglReleaseTexImage(EGLDisplay dpy, EGLSurface surface, EGLi
             return error(EGL_BAD_PARAMETER, EGL_FALSE);
         }
 
-        if (surface == EGL_NO_SURFACE || surf->getWindowHandle())
+        if (surface == EGL_NO_SURFACE || eglSurface->getWindowHandle())
         {
             return error(EGL_BAD_SURFACE, EGL_FALSE);
         }
 
-        if (surf->getTextureFormat() == EGL_NO_TEXTURE)
+        if (eglSurface->getTextureFormat() == EGL_NO_TEXTURE)
         {
             return error(EGL_BAD_MATCH, EGL_FALSE);
         }
 
-        gl::Texture2D *texture = surf->getBoundTexture();
+        gl::Texture2D *texture = eglSurface->getBoundTexture();
 
         if (texture)
         {
@@ -789,7 +789,7 @@ EGLBoolean __stdcall eglSwapInterval(EGLDisplay dpy, EGLint interval)
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
 
-        if (!validate(display))
+        if (!validateDisplay(display))
         {
             return EGL_FALSE;
         }
@@ -844,7 +844,7 @@ EGLContext __stdcall eglCreateContext(EGLDisplay dpy, EGLConfig config, EGLConte
 
         egl::Display *display = static_cast<egl::Display*>(dpy);
 
-        if (!validate(display, config))
+        if (!validateConfig(display, config))
         {
             return EGL_NO_CONTEXT;
         }
@@ -868,8 +868,9 @@ EGLBoolean __stdcall eglDestroyContext(EGLDisplay dpy, EGLContext ctx)
     try
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
+        gl::Context *context = static_cast<gl::Context*>(ctx);
 
-        if (!validate(display))
+        if (!validateContext(display, context))
         {
             return EGL_FALSE;
         }
@@ -879,7 +880,7 @@ EGLBoolean __stdcall eglDestroyContext(EGLDisplay dpy, EGLContext ctx)
             return error(EGL_BAD_CONTEXT, EGL_FALSE);
         }
 
-        display->destroyContext((gl::Context*)ctx);
+        display->destroyContext(context);
 
         return success(EGL_TRUE);
     }
@@ -907,13 +908,13 @@ EGLBoolean __stdcall eglMakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface 
             return error(EGL_CONTEXT_LOST, EGL_FALSE);
         }
 
-        if (ctx != EGL_NO_CONTEXT && !validate(display, context))
+        if (ctx != EGL_NO_CONTEXT && !validateContext(display, context))
         {
             return EGL_FALSE;
         }
 
-        if ((draw != EGL_NO_SURFACE && !validate(display, static_cast<egl::Surface*>(draw))) ||
-            (read != EGL_NO_SURFACE && !validate(display, static_cast<egl::Surface*>(read))))
+        if ((draw != EGL_NO_SURFACE && !validateSurface(display, static_cast<egl::Surface*>(draw))) ||
+            (read != EGL_NO_SURFACE && !validateSurface(display, static_cast<egl::Surface*>(read))))
         {
             return EGL_FALSE;
         }
@@ -923,11 +924,26 @@ EGLBoolean __stdcall eglMakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface 
             UNIMPLEMENTED();   // FIXME
         }
 
+        egl::Surface* previousDraw = static_cast<egl::Surface*>(egl::getCurrentDrawSurface());
+        egl::Surface* previousRead = static_cast<egl::Surface*>(egl::getCurrentReadSurface());
+
         egl::setCurrentDisplay(dpy);
         egl::setCurrentDrawSurface(draw);
         egl::setCurrentReadSurface(read);
 
         glMakeCurrent(context, display, static_cast<egl::Surface*>(draw));
+
+        // If the previous surfaces are still current, this might just flag
+        // them as pending destruction again, deferring destruction to a future
+        // eglMakeCurrent or eglTerminate call.
+        if (previousDraw && previousDraw->isPendingDestroy())
+        {
+            eglDestroySurface(dpy, previousDraw);
+        }
+        if (previousRead && previousRead != previousDraw && previousRead->isPendingDestroy())
+        {
+            eglDestroySurface(dpy, previousRead);
+        }
 
         return success(EGL_TRUE);
     }
@@ -1012,8 +1028,9 @@ EGLBoolean __stdcall eglQueryContext(EGLDisplay dpy, EGLContext ctx, EGLint attr
     try
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
+        gl::Context *context = static_cast<gl::Context*>(ctx);
 
-        if (!validate(display))
+        if (!validateContext(display, context))
         {
             return EGL_FALSE;
         }
@@ -1073,8 +1090,9 @@ EGLBoolean __stdcall eglSwapBuffers(EGLDisplay dpy, EGLSurface surface)
     try
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
+        egl::Surface *eglSurface = (egl::Surface*)surface;
 
-        if (!validate(display))
+        if (!validateSurface(display, eglSurface))
         {
             return EGL_FALSE;
         }
@@ -1083,8 +1101,6 @@ EGLBoolean __stdcall eglSwapBuffers(EGLDisplay dpy, EGLSurface surface)
         {
             return error(EGL_BAD_SURFACE, EGL_FALSE);
         }
-
-        egl::Surface *eglSurface = (egl::Surface*)surface;
 
         if (eglSurface->swap())
         {
@@ -1106,8 +1122,9 @@ EGLBoolean __stdcall eglCopyBuffers(EGLDisplay dpy, EGLSurface surface, EGLNativ
     try
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
+        egl::Surface *eglSurface = static_cast<egl::Surface*>(surface);
 
-        if (!validate(display))
+        if (!validateSurface(display, eglSurface))
         {
             return EGL_FALSE;
         }

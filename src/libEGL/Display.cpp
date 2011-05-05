@@ -589,8 +589,15 @@ EGLContext Display::createContext(EGLConfig configHandle, const gl::Context *sha
 
 void Display::destroySurface(egl::Surface *surface)
 {
-    delete surface;
-    mSurfaceSet.erase(surface);
+    if (surface == egl::getCurrentDrawSurface() || surface == egl::getCurrentReadSurface())
+    {
+        surface->setPendingDestroy();
+    }
+    else
+    {
+        delete surface;
+        mSurfaceSet.erase(surface);
+    }
 }
 
 void Display::destroyContext(gl::Context *context)
@@ -624,7 +631,7 @@ bool Display::isValidContext(gl::Context *context)
 
 bool Display::isValidSurface(egl::Surface *surface)
 {
-    return mSurfaceSet.find(surface) != mSurfaceSet.end();
+    return mSurfaceSet.find(surface) != mSurfaceSet.end() && !surface->isPendingDestroy();
 }
 
 bool Display::hasExistingWindowSurface(HWND window)
