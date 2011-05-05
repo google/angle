@@ -44,11 +44,20 @@ void HandleAllocator::release(GLuint handle)
 {
     if (handle == mNextValue - 1)
     {
-        ASSERT(mBaseValue < mNextValue);
-        mNextValue--;
-        return;
+        // Don't drop below base value
+        if(mNextValue > mBaseValue)
+        {
+            mNextValue--;
+        }
     }
-    mFreeValues.push_back(handle);
+    else
+    {
+        // Only free handles that we own - don't drop below the base value
+        if (handle >= mBaseValue)
+        {
+            mFreeValues.push_back(handle);
+        }
+    }
 }
 
 }
