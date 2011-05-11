@@ -191,7 +191,7 @@ Context::~Context()
         mMultiSampleSupport.erase(mMultiSampleSupport.begin());
     }
 
-    for (int type = 0; type < SAMPLER_TYPE_COUNT; type++)
+    for (int type = 0; type < TEXTURE_TYPE_COUNT; type++)
     {
         for (int sampler = 0; sampler < MAX_TEXTURE_IMAGE_UNITS; sampler++)
         {
@@ -199,7 +199,7 @@ Context::~Context()
         }
     }
 
-    for (int type = 0; type < SAMPLER_TYPE_COUNT; type++)
+    for (int type = 0; type < TEXTURE_TYPE_COUNT; type++)
     {
         mIncompleteTextures[type].set(NULL);
     }
@@ -961,16 +961,16 @@ void Context::bindElementArrayBuffer(unsigned int buffer)
 
 void Context::bindTexture2D(GLuint texture)
 {
-    mResourceManager->checkTextureAllocation(texture, SAMPLER_2D);
+    mResourceManager->checkTextureAllocation(texture, TEXTURE_2D);
 
-    mState.samplerTexture[SAMPLER_2D][mState.activeSampler].set(getTexture(texture));
+    mState.samplerTexture[TEXTURE_2D][mState.activeSampler].set(getTexture(texture));
 }
 
 void Context::bindTextureCubeMap(GLuint texture)
 {
-    mResourceManager->checkTextureAllocation(texture, SAMPLER_CUBE);
+    mResourceManager->checkTextureAllocation(texture, TEXTURE_CUBE);
 
-    mState.samplerTexture[SAMPLER_CUBE][mState.activeSampler].set(getTexture(texture));
+    mState.samplerTexture[TEXTURE_CUBE][mState.activeSampler].set(getTexture(texture));
 }
 
 void Context::bindReadFramebuffer(GLuint framebuffer)
@@ -1079,15 +1079,15 @@ Program *Context::getCurrentProgram()
 
 Texture2D *Context::getTexture2D()
 {
-    return static_cast<Texture2D*>(getSamplerTexture(mState.activeSampler, SAMPLER_2D));
+    return static_cast<Texture2D*>(getSamplerTexture(mState.activeSampler, TEXTURE_2D));
 }
 
 TextureCubeMap *Context::getTextureCubeMap()
 {
-    return static_cast<TextureCubeMap*>(getSamplerTexture(mState.activeSampler, SAMPLER_CUBE));
+    return static_cast<TextureCubeMap*>(getSamplerTexture(mState.activeSampler, TEXTURE_CUBE));
 }
 
-Texture *Context::getSamplerTexture(unsigned int sampler, SamplerType type)
+Texture *Context::getSamplerTexture(unsigned int sampler, TextureType type)
 {
     GLuint texid = mState.samplerTexture[type][sampler].id();
 
@@ -1096,8 +1096,8 @@ Texture *Context::getSamplerTexture(unsigned int sampler, SamplerType type)
         switch (type)
         {
           default: UNREACHABLE();
-          case SAMPLER_2D: return mTexture2DZero.get();
-          case SAMPLER_CUBE: return mTextureCubeMapZero.get();
+          case TEXTURE_2D: return mTexture2DZero.get();
+          case TEXTURE_CUBE: return mTextureCubeMapZero.get();
         }
     }
 
@@ -1384,7 +1384,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
                 return false;
             }
 
-            *params = mState.samplerTexture[SAMPLER_2D][mState.activeSampler].id();
+            *params = mState.samplerTexture[TEXTURE_2D][mState.activeSampler].id();
         }
         break;
       case GL_TEXTURE_BINDING_CUBE_MAP:
@@ -1395,7 +1395,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
                 return false;
             }
 
-            *params = mState.samplerTexture[SAMPLER_CUBE][mState.activeSampler].id();
+            *params = mState.samplerTexture[TEXTURE_CUBE][mState.activeSampler].id();
         }
         break;
       default:
@@ -2012,7 +2012,7 @@ void Context::applyTextures()
         int textureUnit = programObject->getSamplerMapping(sampler);
         if (textureUnit != -1)
         {
-            SamplerType textureType = programObject->getSamplerType(sampler);
+            TextureType textureType = programObject->getSamplerTextureType(sampler);
 
             Texture *texture = getSamplerTexture(textureUnit, textureType);
 
@@ -3070,7 +3070,7 @@ void Context::detachTexture(GLuint texture)
     // If a texture object is deleted, it is as if all texture units which are bound to that texture object are
     // rebound to texture object zero
 
-    for (int type = 0; type < SAMPLER_TYPE_COUNT; type++)
+    for (int type = 0; type < TEXTURE_TYPE_COUNT; type++)
     {
         for (int sampler = 0; sampler < MAX_TEXTURE_IMAGE_UNITS; sampler++)
         {
@@ -3147,7 +3147,7 @@ void Context::detachRenderbuffer(GLuint renderbuffer)
     }
 }
 
-Texture *Context::getIncompleteTexture(SamplerType type)
+Texture *Context::getIncompleteTexture(TextureType type)
 {
     Texture *t = mIncompleteTextures[type].get();
 
@@ -3159,9 +3159,9 @@ Texture *Context::getIncompleteTexture(SamplerType type)
         {
           default:
             UNREACHABLE();
-            // default falls through to SAMPLER_2D
+            // default falls through to TEXTURE_2D
 
-          case SAMPLER_2D:
+          case TEXTURE_2D:
             {
                 Texture2D *incomplete2d = new Texture2D(Texture::INCOMPLETE_TEXTURE_ID);
                 incomplete2d->setImage(0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, 1, color);
@@ -3169,7 +3169,7 @@ Texture *Context::getIncompleteTexture(SamplerType type)
             }
             break;
 
-          case SAMPLER_CUBE:
+          case TEXTURE_CUBE:
             {
               TextureCubeMap *incompleteCube = new TextureCubeMap(Texture::INCOMPLETE_TEXTURE_ID);
 

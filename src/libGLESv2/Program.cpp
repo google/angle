@@ -212,12 +212,12 @@ GLint Program::getSamplerMapping(unsigned int samplerIndex)
     return -1;
 }
 
-SamplerType Program::getSamplerType(unsigned int samplerIndex)
+TextureType Program::getSamplerTextureType(unsigned int samplerIndex)
 {
     assert(samplerIndex < sizeof(mSamplers)/sizeof(mSamplers[0]));
     assert(mSamplers[samplerIndex].active);
 
-    return mSamplers[samplerIndex].type;
+    return mSamplers[samplerIndex].textureType;
 }
 
 GLint Program::getUniformLocation(const char *name, bool decorated)
@@ -1688,7 +1688,7 @@ bool Program::defineUniform(const D3DXHANDLE &constantHandle, const D3DXCONSTANT
             ASSERT(samplerIndex < sizeof(mSamplers)/sizeof(mSamplers[0]));
 
             mSamplers[samplerIndex].active = true;
-            mSamplers[samplerIndex].type = (constantDescription.Type == D3DXPT_SAMPLERCUBE) ? SAMPLER_CUBE : SAMPLER_2D;
+            mSamplers[samplerIndex].textureType = (constantDescription.Type == D3DXPT_SAMPLERCUBE) ? TEXTURE_CUBE : TEXTURE_2D;
             mSamplers[samplerIndex].logicalTextureUnit = 0;
         }
     }
@@ -2790,19 +2790,19 @@ bool Program::validateSamplers() const
     // if any two active samplers in a program are of different types, but refer to the same
     // texture image unit, and this is the current program, then ValidateProgram will fail, and
     // DrawArrays and DrawElements will issue the INVALID_OPERATION error.
-    std::map<int, SamplerType> samplerMap; 
+    std::map<int, TextureType> samplerMap; 
     for (unsigned int i = 0; i < MAX_TEXTURE_IMAGE_UNITS; ++i)
     {
         if (mSamplers[i].active)
         {
             if (samplerMap.find(mSamplers[i].logicalTextureUnit) != samplerMap.end())
             {
-                if (mSamplers[i].type != samplerMap[mSamplers[i].logicalTextureUnit])
+                if (mSamplers[i].textureType != samplerMap[mSamplers[i].logicalTextureUnit])
                     return false;
             }
             else
             {
-                samplerMap[mSamplers[i].logicalTextureUnit] = mSamplers[i].type;
+                samplerMap[mSamplers[i].logicalTextureUnit] = mSamplers[i].textureType;
             }
         }
     }

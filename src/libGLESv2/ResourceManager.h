@@ -26,12 +26,12 @@ class Program;
 class Texture;
 class Renderbuffer;
 
-enum SamplerType
+enum TextureType
 {
-    SAMPLER_2D,
-    SAMPLER_CUBE,
+    TEXTURE_2D,
+    TEXTURE_CUBE,
 
-    SAMPLER_TYPE_COUNT
+    TEXTURE_TYPE_COUNT
 };
 
 class ResourceManager
@@ -64,7 +64,7 @@ class ResourceManager
     void setRenderbuffer(GLuint handle, Renderbuffer *renderbuffer);
 
     void checkBufferAllocation(unsigned int buffer);
-    void checkTextureAllocation(GLuint texture, SamplerType type);
+    void checkTextureAllocation(GLuint texture, TextureType type);
     void checkRenderbufferAllocation(GLuint renderbuffer);
 
   private:

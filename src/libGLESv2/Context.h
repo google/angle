@@ -215,7 +215,7 @@ struct State
     GLuint currentProgram;
 
     VertexAttribute vertexAttribute[MAX_VERTEX_ATTRIBS];
-    BindingPointer<Texture> samplerTexture[SAMPLER_TYPE_COUNT][MAX_TEXTURE_IMAGE_UNITS];
+    BindingPointer<Texture> samplerTexture[TEXTURE_TYPE_COUNT][MAX_TEXTURE_IMAGE_UNITS];
 
     GLint unpackAlignment;
     GLint packAlignment;
@@ -395,7 +395,7 @@ class Context
     Program *getCurrentProgram();
     Texture2D *getTexture2D();
     TextureCubeMap *getTextureCubeMap();
-    Texture *getSamplerTexture(unsigned int sampler, SamplerType type);
+    Texture *getSamplerTexture(unsigned int sampler, TextureType type);
     Framebuffer *getReadFramebuffer();
     Framebuffer *getDrawFramebuffer();
 
@@ -471,7 +471,7 @@ class Context
     void detachFramebuffer(GLuint framebuffer);
     void detachRenderbuffer(GLuint renderbuffer);
 
-    Texture *getIncompleteTexture(SamplerType type);
+    Texture *getIncompleteTexture(TextureType type);
 
     bool cullSkipsDraw(GLenum drawMode);
     bool isTriangleMode(GLenum drawMode);
@@ -501,7 +501,7 @@ class Context
 
     StreamingIndexBuffer *mClosingIB;
     
-    BindingPointer<Texture> mIncompleteTextures[SAMPLER_TYPE_COUNT];
+    BindingPointer<Texture> mIncompleteTextures[TEXTURE_TYPE_COUNT];
 
     // Recorded errors
     bool mInvalidEnum;

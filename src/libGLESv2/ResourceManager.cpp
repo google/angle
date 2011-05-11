@@ -282,17 +282,17 @@ void ResourceManager::checkBufferAllocation(unsigned int buffer)
     }
 }
 
-void ResourceManager::checkTextureAllocation(GLuint texture, SamplerType type)
+void ResourceManager::checkTextureAllocation(GLuint texture, TextureType type)
 {
     if (!getTexture(texture) && texture != 0)
     {
         Texture *textureObject;
 
-        if (type == SAMPLER_2D)
+        if (type == TEXTURE_2D)
         {
             textureObject = new Texture2D(texture);
         }
-        else if (type == SAMPLER_CUBE)
+        else if (type == TEXTURE_CUBE)
         {
             textureObject = new TextureCubeMap(texture);
         }
