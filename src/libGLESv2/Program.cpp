@@ -191,8 +191,8 @@ int Program::getSemanticIndex(int attributeIndex)
     return mSemanticIndex[attributeIndex];
 }
 
-// Returns the index of the texture unit corresponding to a Direct3D 9 sampler
-// index referenced in the compiled HLSL shader
+// Returns the index of the texture image unit (0-19) corresponding to a Direct3D 9 sampler
+// index (0-15 for the pixel shader and 0-3 for the vertex shader).
 GLint Program::getSamplerMapping(SamplerType type, unsigned int samplerIndex)
 {
     GLint logicalTextureUnit = -1;
@@ -226,6 +226,8 @@ GLint Program::getSamplerMapping(SamplerType type, unsigned int samplerIndex)
     return -1;
 }
 
+// Returns the texture type for a given Direct3D 9 sampler type and
+// index (0-15 for the pixel shader and 0-3 for the vertex shader).
 TextureType Program::getSamplerTextureType(SamplerType type, unsigned int samplerIndex)
 {
     switch (type)

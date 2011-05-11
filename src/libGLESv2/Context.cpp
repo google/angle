@@ -2017,16 +2017,19 @@ void Context::applyTextures()
     }
 }
 
+// For each Direct3D 9 sampler of either the pixel or vertex stage,
+// looks up the corresponding OpenGL texture image unit and texture type,
+// and sets the texture and its addressing/filtering state (or NULL when inactive).
 void Context::applyTextures(SamplerType type)
 {
     IDirect3DDevice9 *device = getDevice();
     Program *programObject = getCurrentProgram();
 
-    int samplerCount = (type == SAMPLER_PIXEL) ? MAX_TEXTURE_IMAGE_UNITS : MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF;
+    int samplerCount = (type == SAMPLER_PIXEL) ? MAX_TEXTURE_IMAGE_UNITS : MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF;   // Range of Direct3D 9 samplers of given sampler type
 
     for (int samplerIndex = 0; samplerIndex < samplerCount; samplerIndex++)
     {
-        int textureUnit = programObject->getSamplerMapping(type, samplerIndex);
+        int textureUnit = programObject->getSamplerMapping(type, samplerIndex);   // OpenGL texture image unit index
         int d3dSampler = (type == SAMPLER_PIXEL) ? samplerIndex : D3DVERTEXTEXTURESAMPLER0 + samplerIndex;
         unsigned int *appliedTextureSerial = (type == SAMPLER_PIXEL) ? mAppliedTextureSerialPS : mAppliedTextureSerialVS;
 
