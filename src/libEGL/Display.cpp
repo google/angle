@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2011 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -614,7 +614,7 @@ void Display::destroyContext(gl::Context *context)
     }
 }
 
-bool Display::isInitialized()
+bool Display::isInitialized() const
 {
     return mD3d9 != NULL && mConfigSet.size() > 0;
 }
@@ -852,6 +852,25 @@ void Display::initExtensionString()
 const char *Display::getExtensionString() const
 {
     return mExtensionString.c_str();
+}
+
+// Only Direct3D 10 ready devices support all the necessary vertex texture formats.
+// We test this using D3D9 by checking support for the R16F format.
+bool Display::getVertexTextureSupport() const
+{
+    return false;   // Disabled until full VTF support is implemented
+
+    if (!isInitialized() || mDeviceCaps.PixelShaderVersion < D3DPS_VERSION(3, 0))
+    {
+        return false;
+    }
+
+    D3DDISPLAYMODE currentDisplayMode;
+    mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
+
+    HRESULT result = mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_QUERY_VERTEXTEXTURE, D3DRTYPE_TEXTURE, D3DFMT_R16F);
+
+    return SUCCEEDED(result);
 }
 
 }

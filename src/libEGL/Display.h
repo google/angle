@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2011 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -49,7 +49,7 @@ class Display
     void destroySurface(egl::Surface *surface);
     void destroyContext(gl::Context *context);
 
-    bool isInitialized();
+    bool isInitialized() const;
     bool isValidConfig(EGLConfig config);
     bool isValidContext(gl::Context *context);
     bool isValidSurface(egl::Surface *surface);
@@ -69,6 +69,7 @@ class Display
     virtual bool getLuminanceTextureSupport();
     virtual bool getLuminanceAlphaTextureSupport();
     virtual bool getNonPow2TextureSupport();
+    virtual bool getVertexTextureSupport() const;
     virtual D3DPOOL getBufferPool(DWORD usage) const;
 
     bool isD3d9ExDevice() { return mD3d9Ex != NULL; }
