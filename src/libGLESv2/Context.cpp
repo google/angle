@@ -1746,7 +1746,7 @@ void Context::applyState(GLenum drawMode)
 
     if (mDepthStateDirty)
     {
-        if (mState.depthTest && framebufferObject->getDepthbufferType() != GL_NONE)
+        if (mState.depthTest)
         {
             device->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
             device->SetRenderState(D3DRS_ZFUNC, es2dx::ConvertComparison(mState.depthFunc));
