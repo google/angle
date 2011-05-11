@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2011 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -62,9 +62,9 @@ enum
     MAX_VERTEX_UNIFORM_VECTORS = 256 - 2,   // 256 is the minimum for SM2, and in practice the maximum for DX9. Reserve space for dx_HalfPixelSize and dx_DepthRange.
     MAX_VARYING_VECTORS_SM2 = 8,
     MAX_VARYING_VECTORS_SM3 = 10,
-    MAX_COMBINED_TEXTURE_IMAGE_UNITS = 16,
-    MAX_VERTEX_TEXTURE_IMAGE_UNITS = 0,
     MAX_TEXTURE_IMAGE_UNITS = 16,
+    MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF = 4,   // For devices supporting vertex texture fetch
+    MAX_COMBINED_TEXTURE_IMAGE_UNITS_VTF = MAX_TEXTURE_IMAGE_UNITS + MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF,    
     MAX_FRAGMENT_UNIFORM_VECTORS_SM2 = 32 - 3,    // Reserve space for dx_Viewport, dx_Depth, and dx_DepthRange. dx_PointOrLines and dx_FrontCCW use separate bool registers.
     MAX_FRAGMENT_UNIFORM_VECTORS_SM3 = 224 - 3,
     MAX_DRAW_BUFFERS = 1,
@@ -433,6 +433,8 @@ class Context
 
     bool supportsShaderModel3() const;
     int getMaximumVaryingVectors() const;
+    int getMaximumVertexTextureImageUnits() const;
+    int getMaximumCombinedTextureImageUnits() const;
     int getMaximumFragmentUniformVectors() const;
     int getMaximumRenderbufferDimension() const;
     int getMaximumTextureDimension() const;
@@ -518,6 +520,7 @@ class Context
     bool mDepthStencilInitialized;
 
     bool mSupportsShaderModel3;
+    bool mSupportsVertexTexture;
     int  mMaxRenderbufferDimension;
     int  mMaxTextureDimension;
     int  mMaxCubeTextureDimension;
