@@ -31,7 +31,14 @@ enum TextureType
     TEXTURE_2D,
     TEXTURE_CUBE,
 
-    TEXTURE_TYPE_COUNT
+    TEXTURE_TYPE_COUNT,
+    TEXTURE_UNKNOWN
+};
+
+enum SamplerType
+{
+    SAMPLER_PIXEL,
+    SAMPLER_VERTEX
 };
 
 class ResourceManager

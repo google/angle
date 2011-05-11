@@ -330,7 +330,12 @@ void Context::markAllStateDirty()
 {
     for (int t = 0; t < MAX_TEXTURE_IMAGE_UNITS; t++)
     {
-        mAppliedTextureSerial[t] = 0;
+        mAppliedTextureSerialPS[t] = 0;
+    }
+
+    for (int t = 0; t < MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF; t++)
+    {
+        mAppliedTextureSerialVS[t] = 0;
     }
 
     mAppliedProgramSerial = 0;
@@ -2004,63 +2009,78 @@ void Context::applyShaders()
 // Applies the textures and sampler states to the Direct3D 9 device
 void Context::applyTextures()
 {
+    applyTextures(SAMPLER_PIXEL);
+
+    if (mSupportsVertexTexture)
+    {
+        applyTextures(SAMPLER_VERTEX);
+    }
+}
+
+void Context::applyTextures(SamplerType type)
+{
     IDirect3DDevice9 *device = getDevice();
     Program *programObject = getCurrentProgram();
 
-    for (int sampler = 0; sampler < MAX_TEXTURE_IMAGE_UNITS; sampler++)
+    int samplerCount = (type == SAMPLER_PIXEL) ? MAX_TEXTURE_IMAGE_UNITS : MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF;
+
+    for (int samplerIndex = 0; samplerIndex < samplerCount; samplerIndex++)
     {
-        int textureUnit = programObject->getSamplerMapping(sampler);
+        int textureUnit = programObject->getSamplerMapping(type, samplerIndex);
+        int d3dSampler = (type == SAMPLER_PIXEL) ? samplerIndex : D3DVERTEXTEXTURESAMPLER0 + samplerIndex;
+        unsigned int *appliedTextureSerial = (type == SAMPLER_PIXEL) ? mAppliedTextureSerialPS : mAppliedTextureSerialVS;
+
         if (textureUnit != -1)
         {
-            TextureType textureType = programObject->getSamplerTextureType(sampler);
+            TextureType textureType = programObject->getSamplerTextureType(type, samplerIndex);
 
             Texture *texture = getSamplerTexture(textureUnit, textureType);
 
-            if (mAppliedTextureSerial[sampler] != texture->getSerial() || texture->isDirtyParameter() || texture->isDirtyImage())
+            if (appliedTextureSerial[samplerIndex] != texture->getSerial() || texture->isDirtyParameter() || texture->isDirtyImage())
             {
                 IDirect3DBaseTexture9 *d3dTexture = texture->getTexture();
 
                 if (d3dTexture)
                 {
-                    if (mAppliedTextureSerial[sampler] != texture->getSerial() || texture->isDirtyParameter())
+                    if (appliedTextureSerial[samplerIndex] != texture->getSerial() || texture->isDirtyParameter())
                     {
                         GLenum wrapS = texture->getWrapS();
                         GLenum wrapT = texture->getWrapT();
                         GLenum minFilter = texture->getMinFilter();
                         GLenum magFilter = texture->getMagFilter();
 
-                        device->SetSamplerState(sampler, D3DSAMP_ADDRESSU, es2dx::ConvertTextureWrap(wrapS));
-                        device->SetSamplerState(sampler, D3DSAMP_ADDRESSV, es2dx::ConvertTextureWrap(wrapT));
+                        device->SetSamplerState(d3dSampler, D3DSAMP_ADDRESSU, es2dx::ConvertTextureWrap(wrapS));
+                        device->SetSamplerState(d3dSampler, D3DSAMP_ADDRESSV, es2dx::ConvertTextureWrap(wrapT));
 
-                        device->SetSamplerState(sampler, D3DSAMP_MAGFILTER, es2dx::ConvertMagFilter(magFilter));
+                        device->SetSamplerState(d3dSampler, D3DSAMP_MAGFILTER, es2dx::ConvertMagFilter(magFilter));
                         D3DTEXTUREFILTERTYPE d3dMinFilter, d3dMipFilter;
                         es2dx::ConvertMinFilter(minFilter, &d3dMinFilter, &d3dMipFilter);
-                        device->SetSamplerState(sampler, D3DSAMP_MINFILTER, d3dMinFilter);
-                        device->SetSamplerState(sampler, D3DSAMP_MIPFILTER, d3dMipFilter);
+                        device->SetSamplerState(d3dSampler, D3DSAMP_MINFILTER, d3dMinFilter);
+                        device->SetSamplerState(d3dSampler, D3DSAMP_MIPFILTER, d3dMipFilter);
                     }
 
-                    if (mAppliedTextureSerial[sampler] != texture->getSerial() || texture->isDirtyImage())
+                    if (appliedTextureSerial[samplerIndex] != texture->getSerial() || texture->isDirtyImage())
                     {
-                        device->SetTexture(sampler, d3dTexture);
+                        device->SetTexture(d3dSampler, d3dTexture);
                     }
                 }
                 else
                 {
-                    device->SetTexture(sampler, getIncompleteTexture(textureType)->getTexture());
+                    device->SetTexture(d3dSampler, getIncompleteTexture(textureType)->getTexture());
                 }
 
-                mAppliedTextureSerial[sampler] = texture->getSerial();
+                appliedTextureSerial[samplerIndex] = texture->getSerial();
                 texture->resetDirty();
             }
         }
         else
         {
-            if (mAppliedTextureSerial[sampler] != 0)
+            if (appliedTextureSerial[samplerIndex] != 0)
             {
-                device->SetTexture(sampler, NULL);
-                mAppliedTextureSerial[sampler] = 0;
+                device->SetTexture(d3dSampler, NULL);
+                appliedTextureSerial[samplerIndex] = 0;
             }
-        }   
+        }
     }
 }
 

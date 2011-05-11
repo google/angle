@@ -72,8 +72,8 @@ class Program
     GLuint getAttributeLocation(const char *name);
     int getSemanticIndex(int attributeIndex);
 
-    GLint getSamplerMapping(unsigned int samplerIndex);
-    TextureType getSamplerTextureType(unsigned int samplerIndex);
+    GLint getSamplerMapping(SamplerType type, unsigned int samplerIndex);
+    TextureType getSamplerTextureType(SamplerType type, unsigned int samplerIndex);
 
     GLint getUniformLocation(const char *name, bool decorated);
     bool setUniform1fv(GLint location, GLsizei count, const GLfloat *v);
@@ -191,7 +191,8 @@ class Program
         TextureType textureType;
     };
 
-    Sampler mSamplers[MAX_TEXTURE_IMAGE_UNITS];
+    Sampler mSamplersPS[MAX_TEXTURE_IMAGE_UNITS];
+    Sampler mSamplersVS[MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF];
 
     typedef std::vector<Uniform*> UniformArray;
     UniformArray mUniforms;

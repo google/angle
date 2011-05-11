@@ -405,13 +405,6 @@ class Context
 
     bool getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams);
 
-    bool applyRenderTarget(bool ignoreViewport);
-    void applyState(GLenum drawMode);
-    GLenum applyVertexBuffer(GLint first, GLsizei count);
-    GLenum applyIndexBuffer(const void *indices, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo);
-    void applyShaders();
-    void applyTextures();
-
     void readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, void* pixels);
     void clear(GLbitfield mask);
     void drawArrays(GLenum mode, GLint first, GLsizei count);
@@ -466,6 +459,14 @@ class Context
   private:
     DISALLOW_COPY_AND_ASSIGN(Context);
 
+    bool applyRenderTarget(bool ignoreViewport);
+    void applyState(GLenum drawMode);
+    GLenum applyVertexBuffer(GLint first, GLsizei count);
+    GLenum applyIndexBuffer(const void *indices, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo);
+    void applyShaders();
+    void applyTextures();
+    void applyTextures(SamplerType type);
+
     void detachBuffer(GLuint buffer);
     void detachTexture(GLuint texture);
     void detachFramebuffer(GLuint framebuffer);
@@ -512,7 +513,8 @@ class Context
 
     bool mHasBeenCurrent;
 
-    unsigned int mAppliedTextureSerial[MAX_TEXTURE_IMAGE_UNITS];
+    unsigned int mAppliedTextureSerialPS[MAX_TEXTURE_IMAGE_UNITS];
+    unsigned int mAppliedTextureSerialVS[MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF];
     unsigned int mAppliedProgramSerial;
     unsigned int mAppliedRenderTargetSerial;
     unsigned int mAppliedDepthbufferSerial;

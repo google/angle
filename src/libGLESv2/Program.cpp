@@ -193,15 +193,29 @@ int Program::getSemanticIndex(int attributeIndex)
 
 // Returns the index of the texture unit corresponding to a Direct3D 9 sampler
 // index referenced in the compiled HLSL shader
-GLint Program::getSamplerMapping(unsigned int samplerIndex)
+GLint Program::getSamplerMapping(SamplerType type, unsigned int samplerIndex)
 {
-    assert(samplerIndex < sizeof(mSamplers)/sizeof(mSamplers[0]));
-
     GLint logicalTextureUnit = -1;
 
-    if (mSamplers[samplerIndex].active)
+    switch (type)
     {
-        logicalTextureUnit = mSamplers[samplerIndex].logicalTextureUnit;
+      case SAMPLER_PIXEL:
+        ASSERT(samplerIndex < sizeof(mSamplersPS)/sizeof(mSamplersPS[0]));
+
+        if (mSamplersPS[samplerIndex].active)
+        {
+            logicalTextureUnit = mSamplersPS[samplerIndex].logicalTextureUnit;
+        }
+        break;
+      case SAMPLER_VERTEX:
+        ASSERT(samplerIndex < sizeof(mSamplersVS)/sizeof(mSamplersVS[0]));
+
+        if (mSamplersVS[samplerIndex].active)
+        {
+            logicalTextureUnit = mSamplersVS[samplerIndex].logicalTextureUnit;
+        }
+        break;
+      default: UNREACHABLE();
     }
 
     if (logicalTextureUnit >= 0 && logicalTextureUnit < MAX_TEXTURE_IMAGE_UNITS)
@@ -212,12 +226,22 @@ GLint Program::getSamplerMapping(unsigned int samplerIndex)
     return -1;
 }
 
-TextureType Program::getSamplerTextureType(unsigned int samplerIndex)
+TextureType Program::getSamplerTextureType(SamplerType type, unsigned int samplerIndex)
 {
-    assert(samplerIndex < sizeof(mSamplers)/sizeof(mSamplers[0]));
-    assert(mSamplers[samplerIndex].active);
+    switch (type)
+    {
+      case SAMPLER_PIXEL:
+        ASSERT(samplerIndex < sizeof(mSamplersPS)/sizeof(mSamplersPS[0]));
+        ASSERT(mSamplersPS[samplerIndex].active);
+        return mSamplersPS[samplerIndex].textureType;
+      case SAMPLER_VERTEX:
+        ASSERT(samplerIndex < sizeof(mSamplersVS)/sizeof(mSamplersVS[0]));
+        ASSERT(mSamplersVS[samplerIndex].active);
+        return mSamplersVS[samplerIndex].textureType;
+      default: UNREACHABLE();
+    }
 
-    return mSamplers[samplerIndex].textureType;
+    return TEXTURE_2D;
 }
 
 GLint Program::getUniformLocation(const char *name, bool decorated)
@@ -1666,7 +1690,8 @@ bool Program::linkUniforms(ID3DXConstantTable *constantTable)
     for (unsigned int constantIndex = 0; constantIndex < constantTableDescription.Constants; constantIndex++)
     {
         D3DXHANDLE constantHandle = constantTable->GetConstant(0, constantIndex);
-        constantTable->GetConstantDesc(constantHandle, &constantDescription, &descriptionCount);
+        HRESULT result = constantTable->GetConstantDesc(constantHandle, &constantDescription, &descriptionCount);
+        ASSERT(SUCCEEDED(result));
 
         if (!defineUniform(constantHandle, constantDescription))
         {
@@ -1685,11 +1710,21 @@ bool Program::defineUniform(const D3DXHANDLE &constantHandle, const D3DXCONSTANT
     {
         for (unsigned int samplerIndex = constantDescription.RegisterIndex; samplerIndex < constantDescription.RegisterIndex + constantDescription.RegisterCount; samplerIndex++)
         {
-            ASSERT(samplerIndex < sizeof(mSamplers)/sizeof(mSamplers[0]));
-
-            mSamplers[samplerIndex].active = true;
-            mSamplers[samplerIndex].textureType = (constantDescription.Type == D3DXPT_SAMPLERCUBE) ? TEXTURE_CUBE : TEXTURE_2D;
-            mSamplers[samplerIndex].logicalTextureUnit = 0;
+            if (mConstantTablePS->GetConstantByName(NULL, constantDescription.Name) != NULL)
+            {
+                ASSERT(samplerIndex < sizeof(mSamplersPS)/sizeof(mSamplersPS[0]));
+                mSamplersPS[samplerIndex].active = true;
+                mSamplersPS[samplerIndex].textureType = (constantDescription.Type == D3DXPT_SAMPLERCUBE) ? TEXTURE_CUBE : TEXTURE_2D;
+                mSamplersPS[samplerIndex].logicalTextureUnit = 0;
+            }
+            
+            if (mConstantTableVS->GetConstantByName(NULL, constantDescription.Name) != NULL)
+            {
+                ASSERT(samplerIndex < sizeof(mSamplersVS)/sizeof(mSamplersVS[0]));
+                mSamplersVS[samplerIndex].active = true;
+                mSamplersVS[samplerIndex].textureType = (constantDescription.Type == D3DXPT_SAMPLERCUBE) ? TEXTURE_CUBE : TEXTURE_2D;
+                mSamplersVS[samplerIndex].logicalTextureUnit = 0;    
+            }
         }
     }
 
@@ -1706,7 +1741,8 @@ bool Program::defineUniform(const D3DXHANDLE &constantHandle, const D3DXCONSTANT
                     D3DXCONSTANT_DESC fieldDescription;
                     UINT descriptionCount = 1;
 
-                    mConstantTablePS->GetConstantDesc(fieldHandle, &fieldDescription, &descriptionCount);
+                    HRESULT result = mConstantTablePS->GetConstantDesc(fieldHandle, &fieldDescription, &descriptionCount);
+                    ASSERT(SUCCEEDED(result));
 
                     std::string structIndex = (constantDescription.Elements > 1) ? ("[" + str(arrayIndex) + "]") : "";
 
@@ -2239,11 +2275,7 @@ bool Program::applyUniform1iv(GLint location, GLsizei count, const GLint *v)
         D3DXCONSTANT_DESC constantDescription;
         UINT descriptionCount = 1;
         HRESULT result = mConstantTablePS->GetConstantDesc(constantPS, &constantDescription, &descriptionCount);
-
-        if (FAILED(result))
-        {
-            return false;
-        }
+        ASSERT(SUCCEEDED(result));
 
         if (constantDescription.RegisterSet == D3DXRS_SAMPLER)
         {
@@ -2255,23 +2287,43 @@ bool Program::applyUniform1iv(GLint location, GLsizei count, const GLint *v)
 
                 if (samplerIndex < MAX_TEXTURE_IMAGE_UNITS)
                 {
-                    ASSERT(mSamplers[samplerIndex].active);
-                    mSamplers[samplerIndex].logicalTextureUnit = v[i];
+                    ASSERT(mSamplersPS[samplerIndex].active);
+                    mSamplersPS[samplerIndex].logicalTextureUnit = v[i];
                 }
             }
-
-            return true;
         }
-    }
-
-    if (constantPS)
-    {
-        mConstantTablePS->SetIntArray(device, constantPS, v, count);
+        else
+        {
+            mConstantTablePS->SetIntArray(device, constantPS, v, count);
+        }
     }
 
     if (constantVS)
     {
-        mConstantTableVS->SetIntArray(device, constantVS, v, count);
+        D3DXCONSTANT_DESC constantDescription;
+        UINT descriptionCount = 1;
+        HRESULT result = mConstantTableVS->GetConstantDesc(constantVS, &constantDescription, &descriptionCount);
+        ASSERT(SUCCEEDED(result));
+
+        if (constantDescription.RegisterSet == D3DXRS_SAMPLER)
+        {
+            unsigned int firstIndex = mConstantTableVS->GetSamplerIndex(constantVS);
+
+            for (int i = 0; i < count; i++)
+            {
+                unsigned int samplerIndex = firstIndex + i;
+
+                if (samplerIndex < MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF)
+                {
+                    ASSERT(mSamplersVS[samplerIndex].active);
+                    mSamplersVS[samplerIndex].logicalTextureUnit = v[i];
+                }
+            }
+        }
+        else
+        {
+            mConstantTableVS->SetIntArray(device, constantVS, v, count);
+        }
     }
 
     return true;
@@ -2468,7 +2520,12 @@ void Program::unlink(bool destroy)
 
     for (int index = 0; index < MAX_TEXTURE_IMAGE_UNITS; index++)
     {
-        mSamplers[index].active = false;
+        mSamplersPS[index].active = false;
+    }
+
+    for (int index = 0; index < MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF; index++)
+    {
+        mSamplersVS[index].active = false;
     }
 
     while (!mUniforms.empty())
@@ -2790,19 +2847,52 @@ bool Program::validateSamplers() const
     // if any two active samplers in a program are of different types, but refer to the same
     // texture image unit, and this is the current program, then ValidateProgram will fail, and
     // DrawArrays and DrawElements will issue the INVALID_OPERATION error.
-    std::map<int, TextureType> samplerMap; 
+
+    TextureType textureUnitType[MAX_COMBINED_TEXTURE_IMAGE_UNITS_VTF];
+
+    for (unsigned int i = 0; i < MAX_COMBINED_TEXTURE_IMAGE_UNITS_VTF; ++i)
+    {
+        textureUnitType[i] = TEXTURE_UNKNOWN;
+    }
+
     for (unsigned int i = 0; i < MAX_TEXTURE_IMAGE_UNITS; ++i)
     {
-        if (mSamplers[i].active)
+        if (mSamplersPS[i].active)
         {
-            if (samplerMap.find(mSamplers[i].logicalTextureUnit) != samplerMap.end())
+            int unit = mSamplersPS[i].logicalTextureUnit;
+            ASSERT(unit >= 0 && unit < MAX_COMBINED_TEXTURE_IMAGE_UNITS_VTF);
+
+            if (textureUnitType[unit] != TEXTURE_UNKNOWN)
             {
-                if (mSamplers[i].textureType != samplerMap[mSamplers[i].logicalTextureUnit])
+                if (mSamplersPS[i].textureType != textureUnitType[unit])
+                {
                     return false;
+                }
             }
             else
             {
-                samplerMap[mSamplers[i].logicalTextureUnit] = mSamplers[i].textureType;
+                textureUnitType[unit] = mSamplersPS[i].textureType;
+            }
+        }
+    }
+
+    for (unsigned int i = 0; i < MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF; ++i)
+    {
+        if (mSamplersVS[i].active)
+        {
+            int unit = mSamplersVS[i].logicalTextureUnit;
+            ASSERT(unit >= 0 && unit < MAX_COMBINED_TEXTURE_IMAGE_UNITS_VTF);
+
+            if (textureUnitType[unit] != TEXTURE_UNKNOWN)
+            {
+                if (mSamplersVS[i].textureType != textureUnitType[unit])
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                textureUnitType[unit] = mSamplersVS[i].textureType;
             }
         }
     }
