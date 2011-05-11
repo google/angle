@@ -2604,7 +2604,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
     applyShaders();
     applyTextures();
 
-    if (!getCurrentProgram()->validateSamplers())
+    if (!getCurrentProgram()->validateSamplers(false))
     {
         return error(GL_INVALID_OPERATION);
     }
@@ -2671,7 +2671,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void *
     applyShaders();
     applyTextures();
 
-    if (!getCurrentProgram()->validateSamplers())
+    if (!getCurrentProgram()->validateSamplers(false))
     {
         return error(GL_INVALID_OPERATION);
     }

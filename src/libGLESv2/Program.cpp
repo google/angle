@@ -2844,9 +2844,8 @@ void Program::validate()
     else
     {
         applyUniforms();
-        if (!validateSamplers())
+        if (!validateSamplers(true))
         {
-            appendToInfoLog("Samplers of conflicting types refer to the same texture image unit.");
             mValidated = false;
         }
         else
@@ -2856,12 +2855,13 @@ void Program::validate()
     }
 }
 
-bool Program::validateSamplers() const
+bool Program::validateSamplers(bool logErrors)
 {
     // if any two active samplers in a program are of different types, but refer to the same
     // texture image unit, and this is the current program, then ValidateProgram will fail, and
     // DrawArrays and DrawElements will issue the INVALID_OPERATION error.
 
+    const int maxCombinedTextureImageUnits = getContext()->getMaximumCombinedTextureImageUnits();
     TextureType textureUnitType[MAX_COMBINED_TEXTURE_IMAGE_UNITS_VTF];
 
     for (unsigned int i = 0; i < MAX_COMBINED_TEXTURE_IMAGE_UNITS_VTF; ++i)
@@ -2874,12 +2874,26 @@ bool Program::validateSamplers() const
         if (mSamplersPS[i].active)
         {
             int unit = mSamplersPS[i].logicalTextureUnit;
-            ASSERT(unit >= 0 && unit < MAX_COMBINED_TEXTURE_IMAGE_UNITS_VTF);
+            
+            if (unit < 0 || unit >= maxCombinedTextureImageUnits)
+            {
+                if (logErrors)
+                {
+                    appendToInfoLog("Sampler uniform (%d) exceeds MAX_COMBINED_TEXTURE_IMAGE_UNITS (%d)", unit, maxCombinedTextureImageUnits);
+                }
+
+                return false;
+            }
 
             if (textureUnitType[unit] != TEXTURE_UNKNOWN)
             {
                 if (mSamplersPS[i].textureType != textureUnitType[unit])
                 {
+                    if (logErrors)
+                    {
+                        appendToInfoLog("Samplers of conflicting types refer to the same texture image unit (%d).", unit);
+                    }
+
                     return false;
                 }
             }
@@ -2895,12 +2909,26 @@ bool Program::validateSamplers() const
         if (mSamplersVS[i].active)
         {
             int unit = mSamplersVS[i].logicalTextureUnit;
-            ASSERT(unit >= 0 && unit < MAX_COMBINED_TEXTURE_IMAGE_UNITS_VTF);
+            
+            if (unit < 0 || unit >= maxCombinedTextureImageUnits)
+            {
+                if (logErrors)
+                {
+                    appendToInfoLog("Sampler uniform (%d) exceeds MAX_COMBINED_TEXTURE_IMAGE_UNITS (%d)", unit, maxCombinedTextureImageUnits);
+                }
+
+                return false;
+            }
 
             if (textureUnitType[unit] != TEXTURE_UNKNOWN)
             {
                 if (mSamplersVS[i].textureType != textureUnitType[unit])
                 {
+                    if (logErrors)
+                    {
+                        appendToInfoLog("Samplers of conflicting types refer to the same texture image unit (%d).", unit);
+                    }
+
                     return false;
                 }
             }

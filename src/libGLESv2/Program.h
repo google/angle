@@ -122,7 +122,7 @@ class Program
     bool isFlaggedForDeletion() const;
 
     void validate();
-    bool validateSamplers() const;
+    bool validateSamplers(bool logErrors);
     bool isValidated() const;
 
     unsigned int getSerial() const;
