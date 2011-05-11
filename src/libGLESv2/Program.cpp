@@ -1712,18 +1712,32 @@ bool Program::defineUniform(const D3DXHANDLE &constantHandle, const D3DXCONSTANT
         {
             if (mConstantTablePS->GetConstantByName(NULL, constantDescription.Name) != NULL)
             {
-                ASSERT(samplerIndex < sizeof(mSamplersPS)/sizeof(mSamplersPS[0]));
-                mSamplersPS[samplerIndex].active = true;
-                mSamplersPS[samplerIndex].textureType = (constantDescription.Type == D3DXPT_SAMPLERCUBE) ? TEXTURE_CUBE : TEXTURE_2D;
-                mSamplersPS[samplerIndex].logicalTextureUnit = 0;
+                if (samplerIndex < MAX_TEXTURE_IMAGE_UNITS)
+                {
+                    mSamplersPS[samplerIndex].active = true;
+                    mSamplersPS[samplerIndex].textureType = (constantDescription.Type == D3DXPT_SAMPLERCUBE) ? TEXTURE_CUBE : TEXTURE_2D;
+                    mSamplersPS[samplerIndex].logicalTextureUnit = 0;
+                }
+                else
+                {
+                    appendToInfoLog("Pixel shader sampler count exceeds MAX_TEXTURE_IMAGE_UNITS (%d).", MAX_TEXTURE_IMAGE_UNITS);
+                    return false;
+                }
             }
             
             if (mConstantTableVS->GetConstantByName(NULL, constantDescription.Name) != NULL)
             {
-                ASSERT(samplerIndex < sizeof(mSamplersVS)/sizeof(mSamplersVS[0]));
-                mSamplersVS[samplerIndex].active = true;
-                mSamplersVS[samplerIndex].textureType = (constantDescription.Type == D3DXPT_SAMPLERCUBE) ? TEXTURE_CUBE : TEXTURE_2D;
-                mSamplersVS[samplerIndex].logicalTextureUnit = 0;    
+                if (samplerIndex < getContext()->getMaximumVertexTextureImageUnits())
+                {
+                    mSamplersVS[samplerIndex].active = true;
+                    mSamplersVS[samplerIndex].textureType = (constantDescription.Type == D3DXPT_SAMPLERCUBE) ? TEXTURE_CUBE : TEXTURE_2D;
+                    mSamplersVS[samplerIndex].logicalTextureUnit = 0;
+                }
+                else
+                {
+                    appendToInfoLog("Vertex shader sampler count exceeds MAX_VERTEX_TEXTURE_IMAGE_UNITS (%d).", getContext()->getMaximumVertexTextureImageUnits());
+                    return false;
+                }
             }
         }
     }
