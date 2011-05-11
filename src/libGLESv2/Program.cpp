@@ -1456,8 +1456,8 @@ bool Program::linkVaryings()
     {
         mPixelHLSL += "    float rhw = 1.0 / input.gl_FragCoord.w;\n";
         if (sm3) {
-            mPixelHLSL += "    gl_FragCoord.x = input.dx_VPos.x;\n"
-                          "    gl_FragCoord.y = 2.0 * dx_Viewport.y - input.dx_VPos.y;\n";
+            mPixelHLSL += "    gl_FragCoord.x = input.dx_VPos.x + 0.5;\n"
+                          "    gl_FragCoord.y = 2.0 * dx_Viewport.y - input.dx_VPos.y - 0.5;\n";
         } else {
             mPixelHLSL += "    gl_FragCoord.x = (input.gl_FragCoord.x * rhw) * dx_Viewport.x + dx_Viewport.z;\n"
                           "    gl_FragCoord.y = -(input.gl_FragCoord.y * rhw) * dx_Viewport.y + dx_Viewport.w;\n";
