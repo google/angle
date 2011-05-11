@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2011 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -218,7 +218,7 @@ GLint Program::getSamplerMapping(SamplerType type, unsigned int samplerIndex)
       default: UNREACHABLE();
     }
 
-    if (logicalTextureUnit >= 0 && logicalTextureUnit < MAX_TEXTURE_IMAGE_UNITS)
+    if (logicalTextureUnit >= 0 && logicalTextureUnit < getContext()->getMaximumCombinedTextureImageUnits())
     {
         return logicalTextureUnit;
     }

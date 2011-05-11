@@ -215,7 +215,7 @@ struct State
     GLuint currentProgram;
 
     VertexAttribute vertexAttribute[MAX_VERTEX_ATTRIBS];
-    BindingPointer<Texture> samplerTexture[TEXTURE_TYPE_COUNT][MAX_TEXTURE_IMAGE_UNITS];
+    BindingPointer<Texture> samplerTexture[TEXTURE_TYPE_COUNT][MAX_COMBINED_TEXTURE_IMAGE_UNITS_VTF];
 
     GLint unpackAlignment;
     GLint packAlignment;

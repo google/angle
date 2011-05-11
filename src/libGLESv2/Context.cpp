@@ -193,7 +193,7 @@ Context::~Context()
 
     for (int type = 0; type < TEXTURE_TYPE_COUNT; type++)
     {
-        for (int sampler = 0; sampler < MAX_TEXTURE_IMAGE_UNITS; sampler++)
+        for (int sampler = 0; sampler < MAX_COMBINED_TEXTURE_IMAGE_UNITS_VTF; sampler++)
         {
             mState.samplerTexture[type][sampler].set(NULL);
         }
@@ -1383,7 +1383,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
         break;
       case GL_TEXTURE_BINDING_2D:
         {
-            if (mState.activeSampler < 0 || mState.activeSampler > gl::MAX_TEXTURE_IMAGE_UNITS - 1)
+            if (mState.activeSampler < 0 || mState.activeSampler > getMaximumCombinedTextureImageUnits() - 1)
             {
                 error(GL_INVALID_OPERATION);
                 return false;
@@ -1394,7 +1394,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
         break;
       case GL_TEXTURE_BINDING_CUBE_MAP:
         {
-            if (mState.activeSampler < 0 || mState.activeSampler > gl::MAX_TEXTURE_IMAGE_UNITS - 1)
+            if (mState.activeSampler < 0 || mState.activeSampler > getMaximumCombinedTextureImageUnits() - 1)
             {
                 error(GL_INVALID_OPERATION);
                 return false;
@@ -3092,7 +3092,7 @@ void Context::detachTexture(GLuint texture)
 
     for (int type = 0; type < TEXTURE_TYPE_COUNT; type++)
     {
-        for (int sampler = 0; sampler < MAX_TEXTURE_IMAGE_UNITS; sampler++)
+        for (int sampler = 0; sampler < MAX_COMBINED_TEXTURE_IMAGE_UNITS_VTF; sampler++)
         {
             if (mState.samplerTexture[type][sampler].id() == texture)
             {

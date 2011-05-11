@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2011 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -37,15 +37,15 @@ void __stdcall glActiveTexture(GLenum texture)
 
     try
     {
-        if (texture < GL_TEXTURE0 || texture > GL_TEXTURE0 + gl::MAX_TEXTURE_IMAGE_UNITS - 1)
-        {
-            return error(GL_INVALID_ENUM);
-        }
-
         gl::Context *context = gl::getContext();
 
         if (context)
         {
+            if (texture < GL_TEXTURE0 || texture > GL_TEXTURE0 + context->getMaximumCombinedTextureImageUnits() - 1)
+            {
+                return error(GL_INVALID_ENUM);
+            }
+
             context->setActiveSampler(texture - GL_TEXTURE0);
         }
     }
