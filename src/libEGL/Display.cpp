@@ -858,8 +858,6 @@ const char *Display::getExtensionString() const
 // We test this using D3D9 by checking support for the R16F format.
 bool Display::getVertexTextureSupport() const
 {
-    return false;   // Disabled until full VTF support is implemented
-
     if (!isInitialized() || mDeviceCaps.PixelShaderVersion < D3DPS_VERSION(3, 0))
     {
         return false;
