@@ -195,7 +195,7 @@ int Program::getSemanticIndex(int attributeIndex)
 // index (0-15 for the pixel shader and 0-3 for the vertex shader).
 GLint Program::getSamplerMapping(SamplerType type, unsigned int samplerIndex)
 {
-    GLint logicalTextureUnit = -1;
+    GLuint logicalTextureUnit = -1;
 
     switch (type)
     {
@@ -2863,7 +2863,7 @@ bool Program::validateSamplers(bool logErrors)
     // texture image unit, and this is the current program, then ValidateProgram will fail, and
     // DrawArrays and DrawElements will issue the INVALID_OPERATION error.
 
-    const int maxCombinedTextureImageUnits = getContext()->getMaximumCombinedTextureImageUnits();
+    const unsigned int maxCombinedTextureImageUnits = getContext()->getMaximumCombinedTextureImageUnits();
     TextureType textureUnitType[MAX_COMBINED_TEXTURE_IMAGE_UNITS_VTF];
 
     for (unsigned int i = 0; i < MAX_COMBINED_TEXTURE_IMAGE_UNITS_VTF; ++i)
@@ -2875,9 +2875,9 @@ bool Program::validateSamplers(bool logErrors)
     {
         if (mSamplersPS[i].active)
         {
-            int unit = mSamplersPS[i].logicalTextureUnit;
+            unsigned int unit = mSamplersPS[i].logicalTextureUnit;
             
-            if (unit < 0 || unit >= maxCombinedTextureImageUnits)
+            if (unit >= maxCombinedTextureImageUnits)
             {
                 if (logErrors)
                 {
@@ -2910,9 +2910,9 @@ bool Program::validateSamplers(bool logErrors)
     {
         if (mSamplersVS[i].active)
         {
-            int unit = mSamplersVS[i].logicalTextureUnit;
+            unsigned int unit = mSamplersVS[i].logicalTextureUnit;
             
-            if (unit < 0 || unit >= maxCombinedTextureImageUnits)
+            if (unit >= maxCombinedTextureImageUnits)
             {
                 if (logErrors)
                 {

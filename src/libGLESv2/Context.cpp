@@ -729,7 +729,7 @@ void Context::setDepthMask(bool mask)
     }
 }
 
-void Context::setActiveSampler(int active)
+void Context::setActiveSampler(unsigned int active)
 {
     mState.activeSampler = active;
 }
@@ -2943,12 +2943,12 @@ int Context::getMaximumVaryingVectors() const
     return mSupportsShaderModel3 ? MAX_VARYING_VECTORS_SM3 : MAX_VARYING_VECTORS_SM2;
 }
 
-int Context::getMaximumVertexTextureImageUnits() const
+unsigned int Context::getMaximumVertexTextureImageUnits() const
 {
     return mSupportsVertexTexture ? MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF : 0;
 }
 
-int Context::getMaximumCombinedTextureImageUnits() const
+unsigned int Context::getMaximumCombinedTextureImageUnits() const
 {
     return MAX_TEXTURE_IMAGE_UNITS + getMaximumVertexTextureImageUnits();
 }

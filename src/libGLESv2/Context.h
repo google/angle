@@ -206,7 +206,7 @@ struct State
     bool colorMaskAlpha;
     bool depthMask;
 
-    int activeSampler;   // Active texture unit selector - GL_TEXTURE0
+    unsigned int activeSampler;   // Active texture unit selector - GL_TEXTURE0
     BindingPointer<Buffer> arrayBuffer;
     BindingPointer<Buffer> elementArrayBuffer;
     GLuint readFramebuffer;
@@ -323,7 +323,7 @@ class Context
     void setColorMask(bool red, bool green, bool blue, bool alpha);
     void setDepthMask(bool mask);
 
-    void setActiveSampler(int active);
+    void setActiveSampler(unsigned int active);
 
     GLuint getReadFramebufferHandle() const;
     GLuint getDrawFramebufferHandle() const;
@@ -426,8 +426,8 @@ class Context
 
     bool supportsShaderModel3() const;
     int getMaximumVaryingVectors() const;
-    int getMaximumVertexTextureImageUnits() const;
-    int getMaximumCombinedTextureImageUnits() const;
+    unsigned int getMaximumVertexTextureImageUnits() const;
+    unsigned int getMaximumCombinedTextureImageUnits() const;
     int getMaximumFragmentUniformVectors() const;
     int getMaximumRenderbufferDimension() const;
     int getMaximumTextureDimension() const;
