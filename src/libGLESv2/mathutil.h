@@ -9,6 +9,7 @@
 #ifndef LIBGLESV2_MATHUTIL_H_
 #define LIBGLESV2_MATHUTIL_H_
 
+#include <intrin.h>
 #include <math.h>
 #include <windows.h>
 
@@ -87,6 +88,31 @@ inline GLenum adjustWinding(GLenum winding)
 {
     ASSERT(winding == GL_CW || winding == GL_CCW);
     return winding == GL_CW ? GL_CCW : GL_CW;
+}
+
+inline bool supportsSSE2()
+{
+    static bool checked = false;
+    static bool supports = false;
+
+    if (checked)
+    {
+        return supports;
+    }
+
+    int info[4];
+    __cpuid(info, 0);
+    
+    if (info[0] >= 1)
+    {
+        __cpuid(info, 1);
+
+        supports = (info[3] >> 26) & 1;
+    }
+
+    checked = true;
+
+    return supports;
 }
 }
 

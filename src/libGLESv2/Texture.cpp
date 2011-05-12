@@ -13,6 +13,7 @@
 #include <d3dx9tex.h>
 
 #include <algorithm>
+#include <intrin.h>
 
 #include "common/debug.h"
 
@@ -252,7 +253,14 @@ void Texture::loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei
             loadRGBUByteImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
             break;
           case GL_RGBA:
-            loadRGBAUByteImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            if (supportsSSE2())
+            {
+                loadRGBAUByteImageDataSSE2(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            }
+            else
+            {
+                loadRGBAUByteImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            }
             break;
           case GL_BGRA_EXT:
             loadBGRAImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
@@ -614,22 +622,62 @@ void Texture::loadRGBHalfFloatImageData(GLint xoffset, GLint yoffset, GLsizei wi
     }
 }
 
-void Texture::loadRGBAUByteImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                     int inputPitch, const void *input, size_t outputPitch, void *output) const
+void Texture::loadRGBAUByteImageDataSSE2(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                         int inputPitch, const void *input, size_t outputPitch, void *output) const
 {
-    const unsigned char *source = NULL;
-    unsigned char *dest = NULL;
+    const unsigned int *source = NULL;
+    unsigned int *dest = NULL;
+    __m128i brMask = _mm_set1_epi32(0x00ff00ff);
 
     for (int y = 0; y < height; y++)
     {
-        source = static_cast<const unsigned char*>(input) + y * inputPitch;
-        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
+        source = reinterpret_cast<const unsigned int*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = reinterpret_cast<unsigned int*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4);
+        int x = 0;
+
+        // Make output writes aligned
+        for (x = 0; ((reinterpret_cast<intptr_t>(&dest[x]) & 15) != 0) && x < width; x++)
+        {
+            unsigned int rgba = source[x];
+            dest[x] = (_rotl(rgba, 16) & 0x00ff00ff) | (rgba & 0xff00ff00);
+        }
+
+        for (; x + 3 < width; x += 4)
+        {
+            __m128i sourceData = _mm_loadu_si128(reinterpret_cast<const __m128i*>(&source[x]));
+            // Mask out g and a, which don't change
+            __m128i gaComponents = _mm_andnot_si128(brMask, sourceData);
+            // Mask out b and r
+            __m128i brComponents = _mm_and_si128(sourceData, brMask);
+            // Swap b and r
+            __m128i brSwapped = _mm_shufflehi_epi16(_mm_shufflelo_epi16(brComponents, _MM_SHUFFLE(2, 3, 0, 1)), _MM_SHUFFLE(2, 3, 0, 1));
+            __m128i result = _mm_or_si128(gaComponents, brSwapped);
+            _mm_store_si128(reinterpret_cast<__m128i*>(&dest[x]), result);
+        }
+
+        // Perform leftover writes
+        for (; x < width; x++)
+        {
+            unsigned int rgba = source[x];
+            dest[x] = (_rotl(rgba, 16) & 0x00ff00ff) | (rgba & 0xff00ff00);
+        }
+    }
+}
+
+void Texture::loadRGBAUByteImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                     int inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned int *source = NULL;
+    unsigned int *dest = NULL;
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const unsigned int*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = reinterpret_cast<unsigned int*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4);
+
         for (int x = 0; x < width; x++)
         {
-            dest[4 * x + 0] = source[x * 4 + 2];
-            dest[4 * x + 1] = source[x * 4 + 1];
-            dest[4 * x + 2] = source[x * 4 + 0];
-            dest[4 * x + 3] = source[x * 4 + 3];
+            unsigned int rgba = source[x];
+            dest[x] = (_rotl(rgba, 16) & 0x00ff00ff) | (rgba & 0xff00ff00);
         }
     }
 }
