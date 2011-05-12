@@ -41,17 +41,15 @@ Surface::Surface(Display *display, const Config *config, HWND window)
     mIsPendingDestroy = false;
 
     subclassWindow();
-    resetSwapChain();
 }
 
-Surface::Surface(Display *display, const Config *config, EGLint width, EGLint height, EGLenum textureFormat, EGLenum textureType)
-    : mDisplay(display), mWindow(NULL), mConfig(config), mWidth(width), mHeight(height)
+Surface::Surface(Display *display, const Config *config, HANDLE shareHandle, EGLint width, EGLint height, EGLenum textureFormat, EGLenum textureType)
+    : mDisplay(display), mWindow(NULL), mConfig(config), mShareHandle(shareHandle), mWidth(width), mHeight(height)
 {
     mSwapChain = NULL;
     mDepthStencil = NULL;
     mRenderTarget = NULL;
     mOffscreenTexture = NULL;
-    mShareHandle = NULL;
     mWindowSubclassed = false;
     mTexture = NULL;
     mTextureFormat = textureFormat;
@@ -64,14 +62,18 @@ Surface::Surface(Display *display, const Config *config, EGLint width, EGLint he
     setSwapInterval(1);
 
     mIsPendingDestroy = false;
-
-    resetSwapChain(width, height);
 }
 
 Surface::~Surface()
 {
     unsubclassWindow();
     release();
+}
+
+bool Surface::initialize()
+{
+    ASSERT(!mSwapChain && !mOffscreenTexture && !mDepthStencil);
+    return resetSwapChain();
 }
 
 void Surface::release()
@@ -107,11 +109,11 @@ void Surface::release()
     }
 }
 
-void Surface::resetSwapChain()
+bool Surface::resetSwapChain()
 {
-    if (!mWindow) {
-        resetSwapChain(mWidth, mHeight);
-        return;
+    if (!mWindow)
+    {
+        return resetSwapChain(mWidth, mHeight);
     }
 
     RECT windowRect;
@@ -120,19 +122,19 @@ void Surface::resetSwapChain()
         ASSERT(false);
 
         ERR("Could not retrieve the window dimensions");
-        return;
+        return false;
     }
 
-    resetSwapChain(windowRect.right - windowRect.left, windowRect.bottom - windowRect.top);
+    return resetSwapChain(windowRect.right - windowRect.left, windowRect.bottom - windowRect.top);
 }
 
-void Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
+bool Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
 {
     IDirect3DDevice9 *device = mDisplay->getDevice();
 
     if (device == NULL)
     {
-        return;
+        return false;
     }
 
     // Evict all non-render target textures to system memory and release all resources
@@ -176,7 +178,7 @@ void Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
 
         ERR("Could not create additional swap chains or offscreen surfaces: %08lX", result);
         release();
-        return error(EGL_BAD_ALLOC);
+        return error(false, EGL_BAD_ALLOC);
     }
 
     if (mConfig->mDepthStencilFormat != D3DFMT_UNKNOWN)
@@ -192,7 +194,7 @@ void Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
 
         ERR("Could not create depthstencil surface for new swap chain: %08lX", result);
         release();
-        return error(EGL_BAD_ALLOC);
+        return error(false, EGL_BAD_ALLOC);
     }
 
     if (mWindow) {
@@ -206,6 +208,7 @@ void Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
     mHeight = presentParameters.BackBufferHeight;
 
     mPresentIntervalDirty = false;
+    return true;
 }
 
 HWND Surface::getWindowHandle()

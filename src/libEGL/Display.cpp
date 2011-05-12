@@ -451,12 +451,19 @@ EGLSurface Display::createWindowSurface(HWND window, EGLConfig config, const EGL
     }
 
     Surface *surface = new Surface(this, configuration, window);
+
+    if (!surface->initialize())
+    {
+        delete surface;
+        return EGL_NO_SURFACE;
+    }
+
     mSurfaceSet.insert(surface);
 
     return success(surface);
 }
 
-EGLSurface Display::createOffscreenSurface(EGLConfig config, const EGLint *attribList)
+EGLSurface Display::createOffscreenSurface(EGLConfig config, HANDLE shareHandle, const EGLint *attribList)
 {
     EGLint width = 0, height = 0;
     EGLenum textureFormat = EGL_NO_TEXTURE;
@@ -550,7 +557,14 @@ EGLSurface Display::createOffscreenSurface(EGLConfig config, const EGLint *attri
         return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
     }
 
-    Surface *surface = new Surface(this, configuration, width, height, textureFormat, textureTarget);
+    Surface *surface = new Surface(this, configuration, shareHandle, width, height, textureFormat, textureTarget);
+
+    if (!surface->initialize())
+    {
+        delete surface;
+        return EGL_NO_SURFACE;
+    }
+
     mSurfaceSet.insert(surface);
 
     return success(surface);

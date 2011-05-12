@@ -31,12 +31,13 @@ class Surface
 {
   public:
     Surface(Display *display, const egl::Config *config, HWND window);
-    Surface(Display *display, const egl::Config *config, EGLint width, EGLint height, EGLenum textureFormat, EGLenum textureTarget);
+    Surface(Display *display, const egl::Config *config, HANDLE shareHandle, EGLint width, EGLint height, EGLenum textureFormat, EGLenum textureTarget);
 
     ~Surface();
 
+    bool initialize();
     void release();
-    void resetSwapChain();
+    bool resetSwapChain();
 
     HWND getWindowHandle();
     bool swap();
@@ -77,7 +78,7 @@ private:
 
     void subclassWindow();
     void unsubclassWindow();
-    void resetSwapChain(int backbufferWidth, int backbufferHeight);
+    bool resetSwapChain(int backbufferWidth, int backbufferHeight);
     static DWORD convertInterval(EGLint interval);
 
     const HWND mWindow;            // Window that the surface is created for.

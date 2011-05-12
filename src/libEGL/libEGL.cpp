@@ -362,7 +362,7 @@ EGLSurface __stdcall eglCreatePbufferSurface(EGLDisplay dpy, EGLConfig config, c
             return EGL_NO_SURFACE;
         }
 
-        return display->createOffscreenSurface(config, attrib_list);
+        return display->createOffscreenSurface(config, NULL, attrib_list);
     }
     catch(std::bad_alloc&)
     {
@@ -650,9 +650,12 @@ EGLSurface __stdcall eglCreatePbufferFromClientBuffer(EGLDisplay dpy, EGLenum bu
             return EGL_NO_SURFACE;
         }
 
-        UNIMPLEMENTED();   // FIXME
+        if (buftype != EGL_D3D_TEXTURE_2D_SHARE_HANDLE_ANGLE || !buffer)
+        {
+            return error(EGL_BAD_PARAMETER, EGL_NO_SURFACE);
+        }
 
-        return success(EGL_NO_SURFACE);
+        return display->createOffscreenSurface(config, (HANDLE)buffer, attrib_list);
     }
     catch(std::bad_alloc&)
     {
