@@ -854,6 +854,7 @@ void Display::initExtensionString()
 
     if (isD3d9ExDevice()) {
         mExtensionString += "EGL_ANGLE_surface_d3d_texture_2d_share_handle ";
+        mExtensionString += "EGL_ANGLE_d3d_share_handle_client_buffer ";
     }
 
     std::string::size_type end = mExtensionString.find_last_not_of(' ');

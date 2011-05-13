@@ -178,7 +178,7 @@ bool Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
 
         ERR("Could not create additional swap chains or offscreen surfaces: %08lX", result);
         release();
-        return error(false, EGL_BAD_ALLOC);
+        return error(EGL_BAD_ALLOC, false);
     }
 
     if (mConfig->mDepthStencilFormat != D3DFMT_UNKNOWN)
@@ -194,7 +194,7 @@ bool Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
 
         ERR("Could not create depthstencil surface for new swap chain: %08lX", result);
         release();
-        return error(false, EGL_BAD_ALLOC);
+        return error(EGL_BAD_ALLOC, false);
     }
 
     if (mWindow) {
