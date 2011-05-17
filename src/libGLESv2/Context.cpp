@@ -2697,48 +2697,77 @@ void Context::finish()
     egl::Display *display = getDisplay();
     IDirect3DDevice9 *device = getDevice();
     IDirect3DQuery9 *occlusionQuery = NULL;
+    HRESULT result;
 
-    HRESULT result = device->CreateQuery(D3DQUERYTYPE_OCCLUSION, &occlusionQuery);
-
-    if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+    result = device->CreateQuery(D3DQUERYTYPE_OCCLUSION, &occlusionQuery);
+    if (FAILED(result))
     {
-        return error(GL_OUT_OF_MEMORY);
+        ERR("CreateQuery failed hr=%x\n", result);
+        if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+        {
+            return error(GL_OUT_OF_MEMORY);
+        }
+        ASSERT(false);
+        return;
     }
 
-    ASSERT(SUCCEEDED(result));
-
-    if (occlusionQuery)
+    IDirect3DStateBlock9 *savedState = NULL;
+    result = device->CreateStateBlock(D3DSBT_ALL, &savedState);
+    if (FAILED(result))
     {
-        IDirect3DStateBlock9 *savedState = NULL;
-        device->CreateStateBlock(D3DSBT_ALL, &savedState);
-
-        HRESULT result = occlusionQuery->Issue(D3DISSUE_BEGIN);
-        ASSERT(SUCCEEDED(result));
-
-        // Render something outside the render target
-        device->SetPixelShader(NULL);
-        device->SetVertexShader(NULL);
-        device->SetFVF(D3DFVF_XYZRHW);
-        float data[4] = {-1.0f, -1.0f, -1.0f, 1.0f};
-        display->startScene();
-        device->DrawPrimitiveUP(D3DPT_POINTLIST, 1, data, sizeof(data));
-
-        result = occlusionQuery->Issue(D3DISSUE_END);
-        ASSERT(SUCCEEDED(result));
-
-        while (occlusionQuery->GetData(NULL, 0, D3DGETDATA_FLUSH) == S_FALSE)
-        {
-            // Keep polling, but allow other threads to do something useful first
-            Sleep(0);
-        }
-
+        ERR("CreateStateBlock failed hr=%x\n", result);
         occlusionQuery->Release();
 
-        if (savedState)
+        if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
         {
-            savedState->Apply();
-            savedState->Release();
+            return error(GL_OUT_OF_MEMORY);
         }
+        ASSERT(false);
+        return;
+    }
+
+    result = occlusionQuery->Issue(D3DISSUE_BEGIN);
+    if (FAILED(result))
+    {
+        ERR("occlusionQuery->Issue(BEGIN) failed hr=%x\n", result);
+        occlusionQuery->Release();
+        savedState->Release();
+        ASSERT(false);
+        return;
+    }
+
+    // Render something outside the render target
+    device->SetPixelShader(NULL);
+    device->SetVertexShader(NULL);
+    device->SetFVF(D3DFVF_XYZRHW);
+    float data[4] = {-1.0f, -1.0f, -1.0f, 1.0f};
+    display->startScene();
+    device->DrawPrimitiveUP(D3DPT_POINTLIST, 1, data, sizeof(data));
+
+    result = occlusionQuery->Issue(D3DISSUE_END);
+    if (FAILED(result))
+    {
+        ERR("occlusionQuery->Issue(END) failed hr=%x\n", result);
+        occlusionQuery->Release();
+        savedState->Apply();
+        savedState->Release();
+        ASSERT(false);
+        return;
+    }
+
+    while ((result = occlusionQuery->GetData(NULL, 0, D3DGETDATA_FLUSH)) == S_FALSE)
+    {
+        // Keep polling, but allow other threads to do something useful first
+        Sleep(0);
+    }
+
+    occlusionQuery->Release();
+    savedState->Apply();
+    savedState->Release();
+
+    if (result == D3DERR_DEVICELOST)
+    {
+        error(GL_OUT_OF_MEMORY);
     }
 }
 
@@ -2746,28 +2775,35 @@ void Context::flush()
 {
     IDirect3DDevice9 *device = getDevice();
     IDirect3DQuery9 *eventQuery = NULL;
+    HRESULT result;
 
-    HRESULT result = device->CreateQuery(D3DQUERYTYPE_EVENT, &eventQuery);
-
-    if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+    result = device->CreateQuery(D3DQUERYTYPE_EVENT, &eventQuery);
+    if (FAILED(result))
     {
-        return error(GL_OUT_OF_MEMORY);
+        ERR("CreateQuery failed hr=%x\n", result);
+        if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+        {
+            return error(GL_OUT_OF_MEMORY);
+        }
+        ASSERT(false);
+        return;
     }
 
-    ASSERT(SUCCEEDED(result));
-
-    if (eventQuery)
+    result = eventQuery->Issue(D3DISSUE_END);
+    if (FAILED(result))
     {
-        HRESULT result = eventQuery->Issue(D3DISSUE_END);
-        ASSERT(SUCCEEDED(result));
-
-        result = eventQuery->GetData(NULL, 0, D3DGETDATA_FLUSH);
+        ERR("eventQuery->Issue(END) failed hr=%x\n", result);
+        ASSERT(false);
         eventQuery->Release();
+        return;
+    }
 
-        if (result == D3DERR_DEVICELOST)
-        {
-            error(GL_OUT_OF_MEMORY);
-        }
+    result = eventQuery->GetData(NULL, 0, D3DGETDATA_FLUSH);
+    eventQuery->Release();
+
+    if (result == D3DERR_DEVICELOST)
+    {
+        error(GL_OUT_OF_MEMORY);
     }
 }
 
