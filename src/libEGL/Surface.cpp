@@ -145,7 +145,14 @@ bool Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
     D3DPRESENT_PARAMETERS presentParameters = {0};
     HRESULT result;
 
+    bool useFlipEx = LOWORD(GetVersion()) >= 0x61;
+
     presentParameters.AutoDepthStencilFormat = mConfig->mDepthStencilFormat;
+    // We set BackBufferCount = 1 even when we use D3DSWAPEFFECT_FLIPEX.
+    // We do this because DirectX docs are a bit vague whether to set this to 1
+    // or 2. The runtime seems to accept 1, so we speculate that either it is
+    // forcing it to 2 without telling us, or better, doing something smart
+    // behind the scenes knowing that we don't need more.
     presentParameters.BackBufferCount = 1;
     presentParameters.BackBufferFormat = mConfig->mRenderTargetFormat;
     presentParameters.EnableAutoDepthStencil = FALSE;
@@ -154,7 +161,11 @@ bool Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
     presentParameters.MultiSampleQuality = 0;                  // FIXME: Unimplemented
     presentParameters.MultiSampleType = D3DMULTISAMPLE_NONE;   // FIXME: Unimplemented
     presentParameters.PresentationInterval = mPresentInterval;
-    presentParameters.SwapEffect = D3DSWAPEFFECT_DISCARD;
+    // Use flipEx on Win7 or greater.
+    if(useFlipEx)
+      presentParameters.SwapEffect = D3DSWAPEFFECT_FLIPEX;
+    else
+      presentParameters.SwapEffect = D3DSWAPEFFECT_DISCARD;
     presentParameters.Windowed = TRUE;
     presentParameters.BackBufferWidth = backbufferWidth;
     presentParameters.BackBufferHeight = backbufferHeight;
