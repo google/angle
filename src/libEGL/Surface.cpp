@@ -145,7 +145,7 @@ bool Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
     D3DPRESENT_PARAMETERS presentParameters = {0};
     HRESULT result;
 
-    bool useFlipEx = LOWORD(GetVersion()) >= 0x61;
+    bool useFlipEx = (LOWORD(GetVersion()) >= 0x61) && mDisplay->isD3d9ExDevice();
 
     presentParameters.AutoDepthStencilFormat = mConfig->mDepthStencilFormat;
     // We set BackBufferCount = 1 even when we use D3DSWAPEFFECT_FLIPEX.
