@@ -38,8 +38,6 @@ Surface::Surface(Display *display, const Config *config, HWND window)
     mSwapInterval = -1;
     setSwapInterval(1);
 
-    mIsPendingDestroy = false;
-
     subclassWindow();
 }
 
@@ -60,8 +58,6 @@ Surface::Surface(Display *display, const Config *config, HANDLE shareHandle, EGL
     mSwapBehavior = EGL_BUFFER_PRESERVED;
     mSwapInterval = -1;
     setSwapInterval(1);
-
-    mIsPendingDestroy = false;
 }
 
 Surface::~Surface()
@@ -324,7 +320,6 @@ DWORD Surface::convertInterval(EGLint interval)
     return D3DPRESENT_INTERVAL_DEFAULT;
 }
 
-
 bool Surface::swap()
 {
     if (mSwapChain)
@@ -430,13 +425,4 @@ D3DFORMAT Surface::getFormat() const
 {
     return mConfig->mRenderTargetFormat;
 }
-
-void Surface::setPendingDestroy() {
-    mIsPendingDestroy = true;
-}
-
-bool Surface::isPendingDestroy() const {
-    return mIsPendingDestroy;
-}
-
 }
