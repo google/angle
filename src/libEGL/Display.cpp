@@ -581,6 +581,12 @@ EGLContext Display::createContext(EGLConfig configHandle, const gl::Context *sha
     }
     else if (isDeviceLost())   // Lost device
     {
+        // Release surface resources to make the Reset() succeed
+        for (SurfaceSet::iterator surface = mSurfaceSet.begin(); surface != mSurfaceSet.end(); surface++)
+        {
+            (*surface)->release();
+        }
+
         if (!resetDevice())
         {
             return NULL;
@@ -611,14 +617,6 @@ void Display::destroyContext(gl::Context *context)
 {
     glDestroyContext(context);
     mContextSet.erase(context);
-
-    if (mContextSet.empty() && mDevice && isDeviceLost())   // Last context of a lost device
-    {
-        for (SurfaceSet::iterator surface = mSurfaceSet.begin(); surface != mSurfaceSet.end(); surface++)
-        {
-            (*surface)->release();
-        }	
-    }
 }
 
 bool Display::isInitialized() const
