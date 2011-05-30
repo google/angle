@@ -243,6 +243,7 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 
         mSupportsShaderModel3 = mDeviceCaps.PixelShaderVersion == D3DPS_VERSION(3, 0);
         mSupportsVertexTexture = display->getVertexTextureSupport();
+        mSupportsNonPower2Texture = display->getNonPower2TextureSupport();
 
         mMaxTextureDimension = std::min(std::min((int)mDeviceCaps.MaxTextureWidth, (int)mDeviceCaps.MaxTextureHeight),
                                         (int)gl::IMPLEMENTATION_MAX_TEXTURE_SIZE);
@@ -3098,6 +3099,11 @@ bool Context::supports32bitIndices() const
     return mSupports32bitIndices;
 }
 
+bool Context::supportsNonPower2Texture() const
+{
+    return mSupportsNonPower2Texture;
+}
+
 void Context::detachBuffer(GLuint buffer)
 {
     // [OpenGL ES 2.0.24] section 2.9 page 22:
@@ -3333,6 +3339,11 @@ void Context::initExtensionString()
     if (supports32bitIndices())
     {
         mExtensionString += "GL_OES_element_index_uint ";
+    }
+
+    if (supportsNonPower2Texture())
+    {
+        mExtensionString += "GL_OES_texture_npot ";
     }
 
     std::string::size_type end = mExtensionString.find_last_not_of(' ');

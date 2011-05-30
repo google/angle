@@ -1242,7 +1242,7 @@ unsigned int Texture::getSerial() const
 
 GLint Texture::creationLevels(GLsizei width, GLsizei height, GLint maxlevel) const
 {
-    if (isPow2(width) && isPow2(height))
+    if ((isPow2(width) && isPow2(height)) || getContext()->supportsNonPower2Texture())
     {
         return maxlevel;
     }
@@ -1594,17 +1594,25 @@ bool Texture2D::isComplete() const
         }
     }
 
-    if ((getWrapS() != GL_CLAMP_TO_EDGE && !isPow2(width))
-        || (getWrapT() != GL_CLAMP_TO_EDGE && !isPow2(height)))
+    bool npot = getContext()->supportsNonPower2Texture();
+
+    if (!npot)
     {
-        return false;
+        if ((getWrapS() != GL_CLAMP_TO_EDGE && !isPow2(width)) ||
+            (getWrapT() != GL_CLAMP_TO_EDGE && !isPow2(height)))
+        {
+            return false;
+        }
     }
 
     if (mipmapping)
     {
-        if (!isPow2(width) || !isPow2(height))
+        if (!npot)
         {
-            return false;
+            if (!isPow2(width) || !isPow2(height))
+            {
+                return false;
+            }
         }
 
         int q = log2(std::max(width, height));
@@ -1781,9 +1789,12 @@ void Texture2D::convertToRenderTarget()
 
 void Texture2D::generateMipmaps()
 {
-    if (!isPow2(mImageArray[0].width) || !isPow2(mImageArray[0].height))
+    if (!getContext()->supportsNonPower2Texture())
     {
-        return error(GL_INVALID_OPERATION);
+        if (!isPow2(mImageArray[0].width) || !isPow2(mImageArray[0].height))
+        {
+            return error(GL_INVALID_OPERATION);
+        }
     }
 
     // Purge array levels 1 through q and reset them to represent the generated mipmap levels.
@@ -2063,11 +2074,24 @@ bool TextureCubeMap::isComplete() const
         }
     }
 
-    if (mipmapping)
+    bool npot = getContext()->supportsNonPower2Texture();
+
+    if (!npot)
     {
-        if (!isPow2(size) && (getWrapS() != GL_CLAMP_TO_EDGE || getWrapT() != GL_CLAMP_TO_EDGE))
+        if ((getWrapS() != GL_CLAMP_TO_EDGE || getWrapT() != GL_CLAMP_TO_EDGE) && !isPow2(size))
         {
             return false;
+        }
+    }
+
+    if (mipmapping)
+    {
+        if (!npot)
+        {
+            if (!isPow2(size))
+            {
+                return false;
+            }
         }
 
         int q = log2(size);
@@ -2440,9 +2464,17 @@ bool TextureCubeMap::isCubeComplete() const
 
 void TextureCubeMap::generateMipmaps()
 {
-    if (!isPow2(mImageArray[0][0].width) || !isCubeComplete())
+    if (!isCubeComplete())
     {
         return error(GL_INVALID_OPERATION);
+    }
+
+    if (!getContext()->supportsNonPower2Texture())
+    {
+        if (!isPow2(mImageArray[0][0].width))
+        {
+            return error(GL_INVALID_OPERATION);
+        }
     }
 
     // Purge array levels 1 through q and reset them to represent the generated mipmap levels.

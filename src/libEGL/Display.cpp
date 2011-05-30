@@ -535,7 +535,7 @@ EGLSurface Display::createOffscreenSurface(EGLConfig config, HANDLE shareHandle,
         return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
     }
 
-    if (textureFormat != EGL_NO_TEXTURE && !getNonPow2TextureSupport() && (!gl::isPow2(width) || !gl::isPow2(height)))
+    if (textureFormat != EGL_NO_TEXTURE && !getNonPower2TextureSupport() && (!gl::isPow2(width) || !gl::isPow2(height)))
     {
         return error(EGL_BAD_MATCH, EGL_NO_SURFACE);
     }
@@ -783,11 +783,6 @@ bool Display::getLuminanceAlphaTextureSupport()
     return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_A8L8));
 }
 
-bool Display::getNonPow2TextureSupport()
-{
-    return !(mDeviceCaps.TextureCaps & (D3DPTEXTURECAPS_POW2 | D3DPTEXTURECAPS_NONPOW2CONDITIONAL));
-}
-
 D3DPOOL Display::getBufferPool(DWORD usage) const
 {
     if (mD3d9Ex != NULL)
@@ -875,6 +870,13 @@ bool Display::getVertexTextureSupport() const
     HRESULT result = mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_QUERY_VERTEXTEXTURE, D3DRTYPE_TEXTURE, D3DFMT_R16F);
 
     return SUCCEEDED(result);
+}
+
+bool Display::getNonPower2TextureSupport() const
+{
+    return !(mDeviceCaps.TextureCaps & D3DPTEXTURECAPS_POW2) &&
+           !(mDeviceCaps.TextureCaps & D3DPTEXTURECAPS_CUBEMAP_POW2) &&
+           !(mDeviceCaps.TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL);
 }
 
 }
