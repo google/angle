@@ -89,13 +89,6 @@
           'sources': ['compiler/ossource_win.cpp'],
         }, { # else: posix
           'sources': ['compiler/ossource_posix.cpp'],
-          'all_dependent_settings': {
-            'link_settings': {
-              'libraries': [
-                '-lpthread',
-              ],
-            },
-          },
         }],
       ],
     },

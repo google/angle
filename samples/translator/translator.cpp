@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
     argc--;
     argv++;
     for (; (argc >= 1) && (failCode == ESuccess); argc--, argv++) {
-        if (argv[0][0] == '-' || argv[0][0] == '/') {
+        if (argv[0][0] == '-') {
             switch (argv[0][1]) {
             case 'i': compileOptions |= SH_INTERMEDIATE_TREE; break;
             case 'm': compileOptions |= SH_MAP_LONG_VARIABLE_NAMES; break;
