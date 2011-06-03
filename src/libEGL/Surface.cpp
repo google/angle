@@ -343,7 +343,7 @@ bool Surface::swap()
             return error(EGL_BAD_ALLOC, false);
         }
 
-        if (result == D3DERR_DEVICELOST)
+        if (result == D3DERR_DEVICELOST || result == D3DERR_DEVICEHUNG || result == D3DERR_DEVICEREMOVED)
         {
             return error(EGL_CONTEXT_LOST, false);
         }
