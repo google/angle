@@ -143,6 +143,16 @@ bool Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
 
     bool useFlipEx = (LOWORD(GetVersion()) >= 0x61) && mDisplay->isD3d9ExDevice();
 
+    // FlipEx causes unseemly stretching when resizing windows AND when one
+    // draws outside of the WM_PAINT callback. While this is seldom a problem in
+    // single process applications, it is particuarly noticeable in multi-process
+    // applications. Therefore, if we find that the creator process of our window
+    // is not the current process, disable use of FlipEx.
+    DWORD windowPID;
+    GetWindowThreadProcessId(mWindow, &windowPID);
+    if(windowPID != GetCurrentProcessId())
+      useFlipEx = false;
+
     presentParameters.AutoDepthStencilFormat = mConfig->mDepthStencilFormat;
     // We set BackBufferCount = 1 even when we use D3DSWAPEFFECT_FLIPEX.
     // We do this because DirectX docs are a bit vague whether to set this to 1
