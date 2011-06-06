@@ -18,8 +18,16 @@
 
 #include "libEGL/main.h"
 
-#define REF_RAST 0        // Can also be enabled by defining FORCE_REF_RAST in the project's predefined macros
-#define ENABLE_D3D9EX 1   // Enables use of the IDirect3D9Ex interface, when available
+// Can also be enabled by defining FORCE_REF_RAST in the project's predefined macros
+#define REF_RAST 0
+
+// The "Debug This Pixel..." feature in PIX often fails when using the
+// D3D9Ex interfaces.  In order to get debug pixel to work on a Vista/Win 7
+// machine, define "ANGLE_ENABLE_D3D9EX=0" in your project file.
+#if !defined(ANGLE_ENABLE_D3D9EX)
+// Enables use of the IDirect3D9Ex interface, when available
+#define ANGLE_ENABLE_D3D9EX 1
+#endif // !defined(ANGLE_ENABLE_D3D9EX)
 
 namespace egl
 {
@@ -70,7 +78,7 @@ bool Display::initialize()
     // Use Direct3D9Ex if available. Among other things, this version is less
     // inclined to report a lost context, for example when the user switches
     // desktop. Direct3D9Ex is available in Windows Vista and later if suitable drivers are available.
-    if (ENABLE_D3D9EX && Direct3DCreate9ExPtr && SUCCEEDED(Direct3DCreate9ExPtr(D3D_SDK_VERSION, &mD3d9Ex)))
+    if (ANGLE_ENABLE_D3D9EX && Direct3DCreate9ExPtr && SUCCEEDED(Direct3DCreate9ExPtr(D3D_SDK_VERSION, &mD3d9Ex)))
     {
         ASSERT(mD3d9Ex);
         mD3d9Ex->QueryInterface(IID_IDirect3D9, reinterpret_cast<void**>(&mD3d9));
