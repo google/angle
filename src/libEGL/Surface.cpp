@@ -18,6 +18,8 @@
 #include "libEGL/main.h"
 #include "libEGL/Display.h"
 
+#include <dwmapi.h>
+
 namespace egl
 {
 Surface::Surface(Display *display, const Config *config, HWND window) 
@@ -69,7 +71,29 @@ Surface::~Surface()
 bool Surface::initialize()
 {
     ASSERT(!mSwapChain && !mOffscreenTexture && !mDepthStencil);
-    return resetSwapChain();
+
+    if (!resetSwapChain())
+      return false;
+
+    // Modify present parameters for this window, if we are composited,
+    // to minimize the amount of queuing done by DWM between our calls to
+    // present and the actual screen.
+    if (mWindow && (LOWORD(GetVersion()) >= 0x60)) {
+      BOOL isComposited;
+      HRESULT result = DwmIsCompositionEnabled(&isComposited);
+      if (SUCCEEDED(result) && isComposited) {
+        DWM_PRESENT_PARAMETERS presentParams;
+        memset(&presentParams, 0, sizeof(presentParams));
+        presentParams.cbSize = sizeof(DWM_PRESENT_PARAMETERS);
+        presentParams.cBuffer = 2;
+
+        result = DwmSetPresentParameters(mWindow, &presentParams);
+        if (FAILED(result))
+          ERR("Unable to set present parameters: %081X", result);
+      }
+    }
+
+    return true;
 }
 
 void Surface::release()
@@ -142,16 +166,6 @@ bool Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
     HRESULT result;
 
     bool useFlipEx = (LOWORD(GetVersion()) >= 0x61) && mDisplay->isD3d9ExDevice();
-
-    // FlipEx causes unseemly stretching when resizing windows AND when one
-    // draws outside of the WM_PAINT callback. While this is seldom a problem in
-    // single process applications, it is particuarly noticeable in multi-process
-    // applications. Therefore, if we find that the creator process of our window
-    // is not the current process, disable use of FlipEx.
-    DWORD windowPID;
-    GetWindowThreadProcessId(mWindow, &windowPID);
-    if(windowPID != GetCurrentProcessId())
-      useFlipEx = false;
 
     presentParameters.AutoDepthStencilFormat = mConfig->mDepthStencilFormat;
     // We set BackBufferCount = 1 even when we use D3DSWAPEFFECT_FLIPEX.
