@@ -251,11 +251,14 @@ HWND Surface::getWindowHandle()
 #define kSurfaceProperty _TEXT("Egl::SurfaceOwner")
 #define kParentWndProc _TEXT("Egl::SurfaceParentWndProc")
 
-static LRESULT CALLBACK SurfaceWindowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam) {
-  if (message == WM_SIZE) {
+static LRESULT CALLBACK SurfaceWindowProc(HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam)
+{
+  if (message == WM_SIZE)
+  {
       Surface* surf = reinterpret_cast<Surface*>(GetProp(hwnd, kSurfaceProperty));
-      if(surf) {
-        surf->checkForOutOfDateSwapChain();
+      if(surf)
+      {
+          surf->checkForOutOfDateSwapChain();
       }
   }
   WNDPROC prevWndFunc = reinterpret_cast<WNDPROC >(GetProp(hwnd, kParentWndProc));
@@ -264,42 +267,55 @@ static LRESULT CALLBACK SurfaceWindowProc(HWND hwnd, UINT message, WPARAM wparam
 
 void Surface::subclassWindow()
 {
-  if (!mWindow)
-    return;
+    if (!mWindow)
+    {
+        return;
+    }
 
-  SetLastError(0);
-  LONG oldWndProc = SetWindowLong(mWindow, GWL_WNDPROC, reinterpret_cast<LONG>(SurfaceWindowProc));
-  if(oldWndProc == 0 && GetLastError() != ERROR_SUCCESS) {
-    mWindowSubclassed = false;
-    return;
-  }
+    DWORD processId;
+    DWORD threadId = GetWindowThreadProcessId(mWindow, &processId);
+    if (processId != GetCurrentProcessId() || threadId != GetCurrentThreadId())
+    {
+        return;
+    }
 
-  SetProp(mWindow, kSurfaceProperty, reinterpret_cast<HANDLE>(this));
-  SetProp(mWindow, kParentWndProc, reinterpret_cast<HANDLE>(oldWndProc));
-  mWindowSubclassed = true;
+    SetLastError(0);
+    LONG oldWndProc = SetWindowLong(mWindow, GWL_WNDPROC, reinterpret_cast<LONG>(SurfaceWindowProc));
+    if(oldWndProc == 0 && GetLastError() != ERROR_SUCCESS)
+    {
+        mWindowSubclassed = false;
+        return;
+    }
+
+    SetProp(mWindow, kSurfaceProperty, reinterpret_cast<HANDLE>(this));
+    SetProp(mWindow, kParentWndProc, reinterpret_cast<HANDLE>(oldWndProc));
+    mWindowSubclassed = true;
 }
 
 void Surface::unsubclassWindow()
 {
-  if(!mWindowSubclassed)
-    return;
+    if(!mWindowSubclassed)
+    {
+        return;
+    }
 
-  // un-subclass
-  LONG parentWndFunc = reinterpret_cast<LONG>(GetProp(mWindow, kParentWndProc));
+    // un-subclass
+    LONG parentWndFunc = reinterpret_cast<LONG>(GetProp(mWindow, kParentWndProc));
 
-  // Check the windowproc is still SurfaceWindowProc.
-  // If this assert fails, then it is likely the application has subclassed the
-  // hwnd as well and did not unsubclass before destroying its EGL context. The
-  // application should be modified to either subclass before initializing the
-  // EGL context, or to unsubclass before destroying the EGL context.
-  if(parentWndFunc) {
-    LONG prevWndFunc = SetWindowLong(mWindow, GWL_WNDPROC, parentWndFunc);
-    ASSERT(prevWndFunc == reinterpret_cast<LONG>(SurfaceWindowProc));
-  }
+    // Check the windowproc is still SurfaceWindowProc.
+    // If this assert fails, then it is likely the application has subclassed the
+    // hwnd as well and did not unsubclass before destroying its EGL context. The
+    // application should be modified to either subclass before initializing the
+    // EGL context, or to unsubclass before destroying the EGL context.
+    if(parentWndFunc)
+    {
+        LONG prevWndFunc = SetWindowLong(mWindow, GWL_WNDPROC, parentWndFunc);
+        ASSERT(prevWndFunc == reinterpret_cast<LONG>(SurfaceWindowProc));
+    }
 
-  RemoveProp(mWindow, kSurfaceProperty);
-  RemoveProp(mWindow, kParentWndProc);
-  mWindowSubclassed = false;
+    RemoveProp(mWindow, kSurfaceProperty);
+    RemoveProp(mWindow, kParentWndProc);
+    mWindowSubclassed = false;
 }
 
 bool Surface::checkForOutOfDateSwapChain()
