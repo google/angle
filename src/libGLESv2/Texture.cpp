@@ -1488,8 +1488,6 @@ void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei 
         {
             convertToRenderTarget();
         }
-        
-        updateTexture();
 
         if (width != 0 && height != 0 && level < levelCount())
         {
@@ -2356,8 +2354,6 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint 
         {
             convertToRenderTarget();
         }
-        
-        updateTexture();
 
         ASSERT(width == height);
 
