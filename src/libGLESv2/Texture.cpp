@@ -1367,6 +1367,8 @@ void Texture2D::redefineTexture(GLint level, GLenum format, GLsizei width, GLsiz
             mSurface->setBoundTexture(NULL);
             mSurface = NULL;
         }
+
+        mColorbufferProxy.set(NULL);
     }
 }
 
