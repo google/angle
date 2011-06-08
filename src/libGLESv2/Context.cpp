@@ -1869,6 +1869,7 @@ void Context::applyState(GLenum drawMode)
         }
 
         mStencilStateDirty = false;
+        mFrontFaceDirty = false;
     }
 
     if (mMaskStateDirty)
@@ -1903,48 +1904,41 @@ void Context::applyState(GLenum drawMode)
 
     if (mSampleStateDirty)
     {
-        if (framebufferObject->isMultisample())
+        if (mState.sampleAlphaToCoverage)
         {
-            if (mState.sampleAlphaToCoverage)
-            {
-                FIXME("Sample alpha to coverage is unimplemented.");
-            }
+            FIXME("Sample alpha to coverage is unimplemented.");
+        }
 
-            device->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, TRUE);
-            if (mState.sampleCoverage)
+        device->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, TRUE);
+        if (mState.sampleCoverage)
+        {
+            unsigned int mask = 0;
+            if (mState.sampleCoverageValue != 0)
             {
-                unsigned int mask = 0;
-                if (mState.sampleCoverageValue != 0)
+                float threshold = 0.5f;
+
+                for (int i = 0; i < framebufferObject->getSamples(); ++i)
                 {
-                    float threshold = 0.5f;
+                    mask <<= 1;
 
-                    for (int i = 0; i < framebufferObject->getSamples(); ++i)
+                    if ((i + 1) * mState.sampleCoverageValue >= threshold)
                     {
-                        mask <<= 1;
-
-                        if ((i + 1) * mState.sampleCoverageValue >= threshold)
-                        {
-                            threshold += 1.0f;
-                            mask |= 1;
-                        }
+                        threshold += 1.0f;
+                        mask |= 1;
                     }
                 }
-                
-                if (mState.sampleCoverageInvert)
-                {
-                    mask = ~mask;
-                }
-
-                device->SetRenderState(D3DRS_MULTISAMPLEMASK, mask);
             }
-            else
+            
+            if (mState.sampleCoverageInvert)
             {
-                device->SetRenderState(D3DRS_MULTISAMPLEMASK, 0xFFFFFFFF);
+                mask = ~mask;
             }
+
+            device->SetRenderState(D3DRS_MULTISAMPLEMASK, mask);
         }
         else
         {
-            device->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, FALSE);
+            device->SetRenderState(D3DRS_MULTISAMPLEMASK, 0xFFFFFFFF);
         }
 
         mSampleStateDirty = false;
@@ -1956,8 +1950,6 @@ void Context::applyState(GLenum drawMode)
 
         mDitherStateDirty = false;
     }
-
-    mFrontFaceDirty = false;
 }
 
 GLenum Context::applyVertexBuffer(GLint first, GLsizei count)
