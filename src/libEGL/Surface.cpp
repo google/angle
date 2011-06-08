@@ -175,7 +175,7 @@ bool Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
     DWORD windowPID;
     GetWindowThreadProcessId(mWindow, &windowPID);
     if(windowPID != GetCurrentProcessId())
-      useFlipEx = false;
+    useFlipEx = false;
 
     presentParameters.AutoDepthStencilFormat = mConfig->mDepthStencilFormat;
     // We set BackBufferCount = 1 even when we use D3DSWAPEFFECT_FLIPEX.
