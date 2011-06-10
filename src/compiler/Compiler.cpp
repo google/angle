@@ -215,3 +215,8 @@ int TCompiler::getMappedNameMaxLength() const
 {
     return MAX_IDENTIFIER_NAME_SIZE + 1;
 }
+
+const TExtensionBehavior& TCompiler::getExtensionBehavior() const
+{
+    return extensionBehavior;
+}

@@ -17,7 +17,7 @@ extern "C" {
 
 // Version number for shader translation API.
 // It is incremented everytime the API changes.
-#define SH_VERSION 104
+#define SH_VERSION 105
 
 //
 // The names of the following enums have been derived by replacing GL prefix
@@ -34,6 +34,12 @@ typedef enum {
   SH_GLES2_SPEC = 0x8B40,
   SH_WEBGL_SPEC = 0x8B41
 } ShShaderSpec;
+
+typedef enum {
+  SH_ESSL_OUTPUT = 0x8B45,
+  SH_GLSL_OUTPUT = 0x8B46,
+  SH_HLSL_OUTPUT = 0x8B47
+} ShShaderOutput;
 
 typedef enum {
   SH_NONE           = 0,
@@ -128,13 +134,17 @@ typedef void* ShHandle;
 //
 // Driver calls these to create and destroy compiler objects.
 //
-// Returns the handle of constructed compiler.
+// Returns the handle of constructed compiler, null if the requested compiler is
+// not supported.
 // Parameters:
 // type: Specifies the type of shader - SH_FRAGMENT_SHADER or SH_VERTEX_SHADER.
 // spec: Specifies the language spec the compiler must conform to -
 //       SH_GLES2_SPEC or SH_WEBGL_SPEC.
+// output: Specifies the output code type - SH_ESSL_OUTPUT, SH_GLSL_OUTPUT,
+//         or SH_HLSL_OUTPUT.
 // resources: Specifies the built-in resources.
 ShHandle ShConstructCompiler(ShShaderType type, ShShaderSpec spec,
+                             ShShaderOutput output,
                              const ShBuiltInResources* resources);
 void ShDestruct(ShHandle handle);
 

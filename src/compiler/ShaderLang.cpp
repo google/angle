@@ -110,12 +110,13 @@ void ShInitBuiltInResources(ShBuiltInResources* resources)
 // Driver calls these to create and destroy compiler objects.
 //
 ShHandle ShConstructCompiler(ShShaderType type, ShShaderSpec spec,
+                             ShShaderOutput output,
                              const ShBuiltInResources* resources)
 {
     if (!InitThread())
         return 0;
 
-    TShHandleBase* base = static_cast<TShHandleBase*>(ConstructCompiler(type, spec));
+    TShHandleBase* base = static_cast<TShHandleBase*>(ConstructCompiler(type, spec, output));
     TCompiler* compiler = base->getAsCompiler();
     if (compiler == 0)
         return 0;

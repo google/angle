@@ -75,6 +75,8 @@ protected:
     void mapLongVariableNames(TIntermNode* root);
     // Translate to object code.
     virtual void translate(TIntermNode* root) = 0;
+    // Get built-in extensions with default behavior.
+    const TExtensionBehavior& getExtensionBehavior() const;
 
 private:
     ShShaderType shaderType;
@@ -104,7 +106,8 @@ private:
 // destroy the machine dependent objects, which contain the
 // above machine independent information.
 //
-TCompiler* ConstructCompiler(ShShaderType type, ShShaderSpec spec);
+TCompiler* ConstructCompiler(
+    ShShaderType type, ShShaderSpec spec, ShShaderOutput output);
 void DeleteCompiler(TCompiler*);
 
 #endif // _SHHANDLE_INCLUDED_
