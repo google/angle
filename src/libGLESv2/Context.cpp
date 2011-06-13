@@ -2854,7 +2854,7 @@ void Context::drawClosingLine(unsigned int first, unsigned int last)
     {
         device->SetIndices(mClosingIB->getBuffer());
 
-        device->DrawIndexedPrimitive(D3DPT_LINELIST, 0, 0, 2, offset, 1);
+        device->DrawIndexedPrimitive(D3DPT_LINELIST, 0, 0, last, offset, 1);
     }
     else
     {
