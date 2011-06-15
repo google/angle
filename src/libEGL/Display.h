@@ -60,6 +60,7 @@ class Display
 
     virtual IDirect3DDevice9 *getDevice();
     virtual D3DCAPS9 getDeviceCaps();
+    virtual D3DADAPTER_IDENTIFIER9 *getAdapterIdentifier();
     bool isDeviceLost();
     virtual void getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray);
     virtual bool getCompressedTextureSupport();
@@ -91,6 +92,7 @@ class Display
     IDirect3DDevice9 *mDevice;
     IDirect3DDevice9Ex *mDeviceEx;  // Might be null if D3D9Ex is not supported.
     D3DCAPS9 mDeviceCaps;
+    D3DADAPTER_IDENTIFIER9 mAdapterIdentifier;
     HWND mDeviceWindow;
 
     bool mSceneStarted;

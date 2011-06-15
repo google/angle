@@ -141,6 +141,8 @@ bool Display::initialize()
         if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_THREE)     {mMinSwapInterval = std::min(mMinSwapInterval, 3); mMaxSwapInterval = std::max(mMaxSwapInterval, 3);}
         if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_FOUR)      {mMinSwapInterval = std::min(mMinSwapInterval, 4); mMaxSwapInterval = std::max(mMaxSwapInterval, 4);}
 
+        mD3d9->GetAdapterIdentifier(mAdapter, 0, &mAdapterIdentifier);
+
         const D3DFORMAT renderTargetFormats[] =
         {
             D3DFMT_A1R5G5B5,
@@ -686,6 +688,11 @@ IDirect3DDevice9 *Display::getDevice()
 D3DCAPS9 Display::getDeviceCaps()
 {
     return mDeviceCaps;
+}
+
+D3DADAPTER_IDENTIFIER9 *Display::getAdapterIdentifier()
+{
+    return &mAdapterIdentifier;
 }
 
 bool Display::isDeviceLost()

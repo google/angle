@@ -1737,6 +1737,15 @@ void Context::applyState(GLenum drawMode)
     GLint alwaysFront = !isTriangleMode(drawMode);
     programObject->setUniform1iv(pointsOrLines, 1, &alwaysFront);
 
+    egl::Display *display = getDisplay();
+    D3DADAPTER_IDENTIFIER9 *identifier = display->getAdapterIdentifier();
+    bool zeroColorMaskAllowed = identifier->VendorId != 0x1002;
+    // Apparently some ATI cards have a bug where a draw with a zero color
+    // write mask can cause later draws to have incorrect results. Instead,
+    // set a nonzero color write mask but modify the blend state so that no
+    // drawing is done.
+    // http://code.google.com/p/angleproject/issues/detail?id=169
+
     if (mCullStateDirty || mFrontFaceDirty)
     {
         if (mState.cullFace)
@@ -1764,6 +1773,12 @@ void Context::applyState(GLenum drawMode)
         }
 
         mDepthStateDirty = false;
+    }
+
+    if (!zeroColorMaskAllowed && (mMaskStateDirty || mBlendStateDirty))
+    {
+        mBlendStateDirty = true;
+        mMaskStateDirty = true;
     }
 
     if (mBlendStateDirty)
@@ -1874,8 +1889,22 @@ void Context::applyState(GLenum drawMode)
 
     if (mMaskStateDirty)
     {
-        device->SetRenderState(D3DRS_COLORWRITEENABLE, es2dx::ConvertColorMask(mState.colorMaskRed, mState.colorMaskGreen, 
-                                                                               mState.colorMaskBlue, mState.colorMaskAlpha));
+        int colorMask = es2dx::ConvertColorMask(mState.colorMaskRed, mState.colorMaskGreen, 
+                                                mState.colorMaskBlue, mState.colorMaskAlpha);
+        if (colorMask == 0 && !zeroColorMaskAllowed)
+        {
+            // Enable green channel, but set blending so nothing will be drawn.
+            device->SetRenderState(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_GREEN);
+            device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+
+            device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ZERO);
+            device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
+            device->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+        }
+        else
+        {
+            device->SetRenderState(D3DRS_COLORWRITEENABLE, colorMask);
+        }
         device->SetRenderState(D3DRS_ZWRITEENABLE, mState.depthMask ? TRUE : FALSE);
 
         mMaskStateDirty = false;
