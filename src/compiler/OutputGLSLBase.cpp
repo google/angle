@@ -136,12 +136,7 @@ void TOutputGLSLBase::writeFunctionParameters(const TIntermSequence& args)
         ASSERT(arg != NULL);
 
         const TType& type = arg->getType();
-        TQualifier qualifier = type.getQualifier();
-        // TODO(alokp): Validate qualifier for function arguments.
-        if ((qualifier != EvqTemporary) && (qualifier != EvqGlobal))
-            out << type.getQualifierString() << " ";
-
-        out << getTypeName(type);
+        writeVariableType(type);
 
         const TString& name = arg->getSymbol();
         if (!name.empty())
@@ -475,9 +470,8 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate* node)
         case EOpFunction: {
             // Function definition.
             ASSERT(visit == PreVisit);
-            TString returnType = getTypeName(node->getType());
-            TString functionName = TFunction::unmangleName(node->getName());
-            out << returnType << " " << functionName;
+            writeVariableType(node->getType());
+            out << " " << TFunction::unmangleName(node->getName());
 
             incrementDepth();
             // Function definition node contains one or two children nodes
