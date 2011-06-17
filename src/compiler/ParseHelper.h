@@ -30,8 +30,8 @@ struct TPragma {
 // they can be passed to the parser without needing a global.
 //
 struct TParseContext {
-    TParseContext(TSymbolTable& symt, TExtensionBehavior& ext, TIntermediate& interm, ShShaderType type, ShShaderSpec spec, int options, const char* sourcePath, TInfoSink& is) :
-            intermediate(interm), symbolTable(symt), extensionBehavior(ext), infoSink(is), shaderType(type), shaderSpec(spec), compileOptions(options), sourcePath(sourcePath), treeRoot(0),
+    TParseContext(TSymbolTable& symt, TExtensionBehavior& ext, TIntermediate& interm, ShShaderType type, ShShaderSpec spec, int options, bool checksPrecErrors, const char* sourcePath, TInfoSink& is) :
+            intermediate(interm), symbolTable(symt), extensionBehavior(ext), infoSink(is), shaderType(type), shaderSpec(spec), compileOptions(options), checksPrecisionErrors(checksPrecErrors), sourcePath(sourcePath), treeRoot(0),
             recoveredFromError(false), numErrors(0), lexAfterType(false), loopNestingLevel(0),
             inTypeParen(false), scanner(NULL), contextPragma(true, false) {  }
     TIntermediate& intermediate; // to hold and build a parse tree
@@ -50,6 +50,7 @@ struct TParseContext {
     bool inTypeParen;            // true if in parentheses, looking only for an identifier
     const TType* currentFunctionType;  // the return type of the function that's currently being parsed
     bool functionReturnsValue;   // true if a non-void function has a return
+    bool checksPrecisionErrors;  // true if an error will be generated when a variable is declared without precision, explicit or implicit.
 
     void error(TSourceLoc loc, const char *reason, const char* token,
                const char* extraInfoFormat, ...);

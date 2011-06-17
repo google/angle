@@ -261,6 +261,8 @@ void TParseContext::binaryOpError(int line, const char* op, TString left, TStrin
 }
 
 bool TParseContext::precisionErrorCheck(int line, TPrecision precision, TBasicType type){
+    if (!checksPrecisionErrors)
+        return false;
     switch( type ){
     case EbtFloat:
         if( precision == EbpUndefined ){

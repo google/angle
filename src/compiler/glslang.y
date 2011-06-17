@@ -591,17 +591,10 @@ function_call_header
 // Grammar Note:  Constructors look like functions, but are recognized as types.
 
 function_identifier
-    : type_specifier {
+    : type_specifier_nonarray {
         //
         // Constructor
         //
-        if ($1.array) {
-            // Constructors for arrays are not allowed.
-            context->error($1.line, "cannot construct this type", "array", "");
-            context->recover();
-            $1.setArray(false);
-        }
-
         TOperator op = EOpNull;
         if ($1.userDef) {
             op = EOpConstructStruct;
@@ -1176,13 +1169,6 @@ parameter_type_specifier
 init_declarator_list
     : single_declaration {
         $$ = $1;
-        
-        if ($$.type.precision == EbpUndefined) {
-            $$.type.precision = context->symbolTable.getDefaultPrecision($1.type.type);
-            if (context->precisionErrorCheck($1.line, $$.type.precision, $1.type.type)) {
-                context->recover();
-            }
-        }
     }
     | init_declarator_list COMMA IDENTIFIER {
         TIntermSymbol* symbol = context->intermediate.addSymbol(0, *$3.string, TType($1.type), $3.line);
@@ -1490,6 +1476,13 @@ type_qualifier
 type_specifier
     : type_specifier_no_prec {
         $$ = $1;
+
+        if ($$.precision == EbpUndefined) {
+            $$.precision = context->symbolTable.getDefaultPrecision($1.type);
+            if (context->precisionErrorCheck($1.line, $$.precision, $1.type)) {
+                context->recover();
+            }
+        }
     }
     | precision_qualifier type_specifier_no_prec {
         $$ = $2;
@@ -1693,6 +1686,7 @@ struct_declaration
             type->setBasicType($1.type);
             type->setNominalSize($1.size);
             type->setMatrix($1.matrix);
+            type->setPrecision($1.precision);
 
             // don't allow arrays of arrays
             if (type->isArray()) {

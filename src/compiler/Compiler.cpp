@@ -18,7 +18,9 @@ bool InitializeSymbolTable(
 {
     TIntermediate intermediate(infoSink);
     TExtensionBehavior extBehavior;
-    TParseContext parseContext(symbolTable, extBehavior, intermediate, type, spec, 0, NULL, infoSink);
+    // The builtins deliberately don't specify precisions for the function
+    // arguments and return types. For that reason we don't try to check them.
+    TParseContext parseContext(symbolTable, extBehavior, intermediate, type, spec, 0, false, NULL, infoSink);
 
     GlobalParseContext = &parseContext;
 
@@ -127,7 +129,7 @@ bool TCompiler::compile(const char* const shaderStrings[],
 
     TIntermediate intermediate(infoSink);
     TParseContext parseContext(symbolTable, extensionBehavior, intermediate,
-                               shaderType, shaderSpec, compileOptions,
+                               shaderType, shaderSpec, compileOptions, true,
                                sourcePath, infoSink);
     GlobalParseContext = &parseContext;
 
