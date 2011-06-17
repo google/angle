@@ -67,13 +67,15 @@ bool MapLongVariableNames::visitSelection(Visit, TIntermSelection*)
     return true;
 }
 
-bool MapLongVariableNames::visitAggregate(Visit, TIntermAggregate* node)
+bool MapLongVariableNames::visitAggregate(Visit, TIntermAggregate*)
 {
     return true;
 }
 
-bool MapLongVariableNames::visitLoop(Visit, TIntermLoop*)
+bool MapLongVariableNames::visitLoop(Visit, TIntermLoop* node)
 {
+    if (node->getInit())
+        node->getInit()->traverse(this);
     return true;
 }
 
