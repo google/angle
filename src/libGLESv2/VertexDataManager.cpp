@@ -55,14 +55,14 @@ VertexDataManager::~VertexDataManager()
     }
 }
 
-UINT VertexDataManager::writeAttributeData(ArrayVertexBuffer *vertexBuffer, GLint start, GLsizei count, const VertexAttribute &attribute)
+std::size_t VertexDataManager::writeAttributeData(ArrayVertexBuffer *vertexBuffer, GLint start, GLsizei count, const VertexAttribute &attribute)
 {
     Buffer *buffer = attribute.mBoundBuffer.get();
 
     int inputStride = attribute.stride();
     int elementSize = attribute.typeSize();
     const FormatConverter &converter = formatConverter(attribute);
-    UINT streamOffset = 0;
+    std::size_t streamOffset = 0;
 
     void *output = NULL;
     
@@ -189,7 +189,7 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
                 StaticVertexBuffer *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
                 ArrayVertexBuffer *vertexBuffer = staticBuffer ? staticBuffer : static_cast<ArrayVertexBuffer*>(mStreamingBuffer);
 
-                UINT streamOffset = -1;
+                std::size_t streamOffset = -1;
 
                 if (staticBuffer)
                 {
@@ -662,7 +662,7 @@ StaticVertexBuffer::~StaticVertexBuffer()
 {
 }
 
-void *StaticVertexBuffer::map(const VertexAttribute &attribute, std::size_t requiredSpace, UINT *streamOffset)
+void *StaticVertexBuffer::map(const VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset)
 {
     void *mapPtr = NULL;
 

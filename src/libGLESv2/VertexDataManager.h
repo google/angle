@@ -35,7 +35,7 @@ struct TranslatedAttribute
 class VertexBuffer
 {
   public:
-    VertexBuffer(IDirect3DDevice9 *device, UINT size, DWORD usageFlags);
+    VertexBuffer(IDirect3DDevice9 *device, std::size_t size, DWORD usageFlags);
     virtual ~VertexBuffer();
 
     void unmap();
@@ -60,28 +60,28 @@ class ConstantVertexBuffer : public VertexBuffer
 class ArrayVertexBuffer : public VertexBuffer
 {
   public:
-    ArrayVertexBuffer(IDirect3DDevice9 *device, UINT size, DWORD usageFlags);
+    ArrayVertexBuffer(IDirect3DDevice9 *device, std::size_t size, DWORD usageFlags);
     ~ArrayVertexBuffer();
 
-    UINT size() const { return mBufferSize; }
-    virtual void *map(const VertexAttribute &attribute, UINT requiredSpace, UINT *streamOffset) = 0;
+    std::size_t size() const { return mBufferSize; }
+    virtual void *map(const VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset) = 0;
     virtual void reserveRequiredSpace() = 0;
     void addRequiredSpace(UINT requiredSpace);
     void addRequiredSpaceFor(ArrayVertexBuffer *buffer);
 
   protected:
-    UINT mBufferSize;
-    UINT mWritePosition;
-    UINT mRequiredSpace;
+    std::size_t mBufferSize;
+    std::size_t mWritePosition;
+    std::size_t mRequiredSpace;
 };
 
 class StreamingVertexBuffer : public ArrayVertexBuffer
 {
   public:
-    StreamingVertexBuffer(IDirect3DDevice9 *device, UINT initialSize);
+    StreamingVertexBuffer(IDirect3DDevice9 *device, std::size_t initialSize);
     ~StreamingVertexBuffer();
 
-    void *map(const VertexAttribute &attribute, UINT requiredSpace, UINT *streamOffset);
+    void *map(const VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset);
     void reserveRequiredSpace();
 };
 
@@ -91,7 +91,7 @@ class StaticVertexBuffer : public ArrayVertexBuffer
     explicit StaticVertexBuffer(IDirect3DDevice9 *device);
     ~StaticVertexBuffer();
 
-    void *map(const VertexAttribute &attribute, UINT requiredSpace, UINT *streamOffset);
+    void *map(const VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset);
     void reserveRequiredSpace();
 
     UINT lookupAttribute(const VertexAttribute &attribute);   // Returns the offset into the vertex buffer, or -1 if not found
@@ -104,7 +104,7 @@ class StaticVertexBuffer : public ArrayVertexBuffer
         bool normalized;
         int attributeOffset;
 
-        UINT streamOffset;
+        std::size_t streamOffset;
     };
 
     std::vector<VertexElement> mCache;
@@ -123,8 +123,8 @@ class VertexDataManager
   private:
     DISALLOW_COPY_AND_ASSIGN(VertexDataManager);
 
-    UINT spaceRequired(const VertexAttribute &attrib, std::size_t count) const;
-    UINT writeAttributeData(ArrayVertexBuffer *vertexBuffer, GLint start, GLsizei count, const VertexAttribute &attribute);
+    std::size_t spaceRequired(const VertexAttribute &attrib, std::size_t count) const;
+    std::size_t writeAttributeData(ArrayVertexBuffer *vertexBuffer, GLint start, GLsizei count, const VertexAttribute &attribute);
 
     Context *const mContext;
     IDirect3DDevice9 *const mDevice;
