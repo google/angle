@@ -297,8 +297,11 @@ void Display::startScene()
     if (!mSceneStarted)
     {
         long result = mDevice->BeginScene();
-        ASSERT(SUCCEEDED(result));
-        mSceneStarted = true;
+        if (SUCCEEDED(result)) {
+            // This is defensive checking against the device being
+            // lost at unexpected times.
+            mSceneStarted = true;
+        }
     }
 }
 
@@ -306,8 +309,9 @@ void Display::endScene()
 {
     if (mSceneStarted)
     {
-        long result = mDevice->EndScene();
-        ASSERT(SUCCEEDED(result));
+        // EndScene can fail if the device was lost, for example due
+        // to a TDR during a draw call.
+        mDevice->EndScene();
         mSceneStarted = false;
     }
 }

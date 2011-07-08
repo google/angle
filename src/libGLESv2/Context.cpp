@@ -2158,8 +2158,11 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum
 
         switch (result)
         {
+          // It turns out that D3D will sometimes produce more error
+          // codes than those documented.
           case D3DERR_DRIVERINTERNALERROR:
           case D3DERR_DEVICELOST:
+          case D3DERR_DEVICEHUNG:
             return error(GL_OUT_OF_MEMORY);
           default:
             UNREACHABLE();
