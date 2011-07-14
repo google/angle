@@ -29,8 +29,6 @@ namespace egl
 class Display
 {
   public:
-    Display(HDC deviceContext);
-
     ~Display();
 
     bool initialize();
@@ -38,6 +36,8 @@ class Display
 
     virtual void startScene();
     virtual void endScene();
+
+    static egl::Display *getDisplay(EGLNativeDisplayType displayId);
 
     bool getConfigs(EGLConfig *configs, const EGLint *attribList, EGLint configSize, EGLint *numConfig);
     bool getConfigAttrib(EGLConfig config, EGLint attribute, EGLint *value);
@@ -79,8 +79,11 @@ class Display
   private:
     DISALLOW_COPY_AND_ASSIGN(Display);
 
+    Display(EGLNativeDisplayType displayId, HDC deviceContext, bool software);
+
     D3DPRESENT_PARAMETERS getDefaultPresentParameters();
 
+    EGLNativeDisplayType mDisplayId;
     const HDC mDc;
 
     HMODULE mD3d9Module;
@@ -98,6 +101,7 @@ class Display
     bool mSceneStarted;
     EGLint mMaxSwapInterval;
     EGLint mMinSwapInterval;
+    bool mSoftwareDevice;
     
     typedef std::set<Surface*> SurfaceSet;
     SurfaceSet mSurfaceSet;
