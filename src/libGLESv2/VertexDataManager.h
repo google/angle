@@ -93,7 +93,7 @@ class StaticVertexBuffer : public ArrayVertexBuffer
     void *map(const VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset);
     void reserveRequiredSpace();
 
-    UINT lookupAttribute(const VertexAttribute &attribute);   // Returns the offset into the vertex buffer, or -1 if not found
+    std::size_t lookupAttribute(const VertexAttribute &attribute);   // Returns the offset into the vertex buffer, or -1 if not found
 
   private:
     struct VertexElement

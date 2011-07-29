@@ -719,7 +719,7 @@ void StaticVertexBuffer::reserveRequiredSpace()
     mRequiredSpace = 0;
 }
 
-UINT StaticVertexBuffer::lookupAttribute(const VertexAttribute &attribute)
+std::size_t StaticVertexBuffer::lookupAttribute(const VertexAttribute &attribute)
 {
     for (unsigned int element = 0; element < mCache.size(); element++)
     {
