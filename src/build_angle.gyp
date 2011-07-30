@@ -24,6 +24,8 @@
         'compiler/ConstantUnion.h',
         'compiler/debug.cpp',
         'compiler/debug.h',
+        'compiler/DetectRecursion.cpp',
+        'compiler/DetectRecursion.h',
         'compiler/glslang.h',
         'compiler/glslang_lex.cpp',
         'compiler/glslang_tab.cpp',
