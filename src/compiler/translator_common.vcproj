@@ -291,6 +291,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DetectRecursion.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\glslang.l"
 				>
 				<FileConfiguration
@@ -518,6 +522,10 @@
 			</File>
 			<File
 				RelativePath=".\debug.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DetectRecursion.h"
 				>
 			</File>
 			<File
