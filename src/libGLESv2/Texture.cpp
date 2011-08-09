@@ -2255,6 +2255,9 @@ void TextureCubeMap::convertToRenderTarget()
 
                         return error(GL_OUT_OF_MEMORY);
                     }
+
+                    source->Release();
+                    dest->Release();
                 }
             }
         }
