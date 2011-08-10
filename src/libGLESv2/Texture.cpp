@@ -71,11 +71,11 @@ D3DFORMAT Texture::Image::getD3DFormat() const
     {
         return D3DFMT_DXT1;
     }
-    else if (type == GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE)
+    else if (format == GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE)
     {
         return D3DFMT_DXT3;
     }
-    else if (type == GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE)
+    else if (format == GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE)
     {
         return D3DFMT_DXT5;
     }
@@ -877,10 +877,10 @@ static void FlipCopyDXT5BlockFull(const unsigned int* source, unsigned int* dest
   destBytes[1] = sourceBytes[1];
   destBytes[2] = line_3_2 & 0xff;
   destBytes[3] = (line_3_2 & 0xff00) >> 8;
-  destBytes[4] = (line_3_2 & 0xff0000) >> 8;
+  destBytes[4] = (line_3_2 & 0xff0000) >> 16;
   destBytes[5] = line_1_0 & 0xff;
   destBytes[6] = (line_1_0 & 0xff00) >> 8;
-  destBytes[7] = (line_1_0 & 0xff0000) >> 8;
+  destBytes[7] = (line_1_0 & 0xff0000) >> 16;
 
   // And flip the DXT1 block using the above function.
   FlipCopyDXT1BlockFull(source + 2, dest + 2);
@@ -1036,7 +1036,7 @@ void Texture::loadDXT5ImageData(GLint xoffset, GLint yoffset, GLsizei width, GLs
             break;
         default:
             ASSERT(height % 4 == 0);
-            for (int y = 0; y < height; ++y)
+            for (int y = 0; y < height / 4; ++y)
             {
                 const unsigned int *source = reinterpret_cast<const unsigned int*>(static_cast<const unsigned char*>(input) + y * inputPitch);
                 unsigned int *dest = reinterpret_cast<unsigned int*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 16);
