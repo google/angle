@@ -437,7 +437,9 @@ class Context
     int getNearestSupportedSamples(D3DFORMAT format, int requested) const;
     const char *getExtensionString() const;
     bool supportsEventQueries() const;
-    bool supportsCompressedTextures() const;
+    bool supportsDXT1Textures() const;
+    bool supportsDXT3Textures() const;
+    bool supportsDXT5Textures() const;
     bool supportsFloatTextures() const;
     bool supportsFloatLinearFilter() const;
     bool supportsFloatRenderableTextures() const;
@@ -532,7 +534,9 @@ class Context
     std::map<D3DFORMAT, bool *> mMultiSampleSupport;
     GLsizei mMaxSupportedSamples;
     bool mSupportsEventQueries;
-    bool mSupportsCompressedTextures;
+    bool mSupportsDXT1Textures;
+    bool mSupportsDXT3Textures;
+    bool mSupportsDXT5Textures;
     bool mSupportsFloatTextures;
     bool mSupportsFloatLinearFilter;
     bool mSupportsFloatRenderableTextures;
@@ -542,6 +546,7 @@ class Context
     bool mSupportsLuminanceTextures;
     bool mSupportsLuminanceAlphaTextures;
     bool mSupports32bitIndices;
+    int mNumCompressedTextureFormats;
 
     // state caching flags
     bool mClearStateDirty;

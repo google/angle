@@ -773,12 +773,28 @@ void Display::getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray)
     }
 }
 
-bool Display::getCompressedTextureSupport()
+bool Display::getDXT1TextureSupport()
 {
     D3DDISPLAYMODE currentDisplayMode;
     mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
 
     return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT1));
+}
+
+bool Display::getDXT3TextureSupport()
+{
+    D3DDISPLAYMODE currentDisplayMode;
+    mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
+
+    return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT3));
+}
+
+bool Display::getDXT5TextureSupport()
+{
+    D3DDISPLAYMODE currentDisplayMode;
+    mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
+
+    return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT5));
 }
 
 bool Display::getFloatTextureSupport(bool *filtering, bool *renderable)

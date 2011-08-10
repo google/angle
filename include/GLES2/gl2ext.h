@@ -207,6 +207,16 @@ typedef void* GLeglImageOES;
 #define GL_MAX_SAMPLES_ANGLE                                    0x8D57
 #endif
 
+/* GL_ANGLE_texture_compression_dxt3 */
+#ifndef GL_ANGLE_texture_compression_dxt3
+#define GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE                      0x83F2
+#endif
+
+/* GL_ANGLE_texture_compression_dxt5 */
+#ifndef GL_ANGLE_texture_compression_dxt5
+#define GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE                      0x83F3
+#endif
+
 /*------------------------------------------------------------------------*
  * APPLE extension tokens
  *------------------------------------------------------------------------*/
@@ -788,6 +798,16 @@ typedef void (GL_APIENTRYP PFNGLBLITFRAMEBUFFERANGLEPROC) (GLint srcX0, GLint sr
 GL_APICALL void GL_APIENTRY glRenderbufferStorageMultisampleANGLE (GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height);
 #endif
 typedef void (GL_APIENTRYP PFNGLRENDERBUFFERSTORAGEMULTISAMPLEANGLEPROC) (GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height);
+#endif
+
+/* GL_ANGLE_texture_compression_dxt3 */
+#ifndef GL_ANGLE_texture_compression_dxt3
+#define GL_ANGLE_texture_compression_dxt3 1
+#endif
+
+/* GL_ANGLE_texture_compression_dxt5 */
+#ifndef GL_ANGLE_texture_compression_dxt5
+#define GL_ANGLE_texture_compression_dxt5 1
 #endif
 
 /*------------------------------------------------------------------------*

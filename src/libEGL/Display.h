@@ -63,7 +63,9 @@ class Display
     virtual D3DADAPTER_IDENTIFIER9 *getAdapterIdentifier();
     bool isDeviceLost();
     virtual void getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray);
-    virtual bool getCompressedTextureSupport();
+    virtual bool getDXT1TextureSupport();
+    virtual bool getDXT3TextureSupport();
+    virtual bool getDXT5TextureSupport();
     virtual bool getEventQuerySupport();
     virtual bool getFloatTextureSupport(bool *filtering, bool *renderable);
     virtual bool getHalfFloatTextureSupport(bool *filtering, bool *renderable);

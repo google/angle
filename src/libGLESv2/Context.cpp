@@ -156,8 +156,11 @@ Context::Context(const egl::Config *config, const gl::Context *shareContext) : m
 
     mHasBeenCurrent = false;
 
-    mSupportsCompressedTextures = false;
+    mSupportsDXT1Textures = false;
+    mSupportsDXT3Textures = false;
+    mSupportsDXT5Textures = false;
     mSupportsEventQueries = false;
+    mNumCompressedTextureFormats = 0;
     mMaxSupportedSamples = 0;
     mMaskedClearSavedState = NULL;
     markAllStateDirty();
@@ -280,13 +283,29 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         mMaxSupportedSamples = max;
 
         mSupportsEventQueries = display->getEventQuerySupport();
-        mSupportsCompressedTextures = display->getCompressedTextureSupport();
+        mSupportsDXT1Textures = display->getDXT1TextureSupport();
+        mSupportsDXT3Textures = display->getDXT3TextureSupport();
+        mSupportsDXT5Textures = display->getDXT5TextureSupport();
         mSupportsFloatTextures = display->getFloatTextureSupport(&mSupportsFloatLinearFilter, &mSupportsFloatRenderableTextures);
         mSupportsHalfFloatTextures = display->getHalfFloatTextureSupport(&mSupportsHalfFloatLinearFilter, &mSupportsHalfFloatRenderableTextures);
         mSupportsLuminanceTextures = display->getLuminanceTextureSupport();
         mSupportsLuminanceAlphaTextures = display->getLuminanceAlphaTextureSupport();
 
         mSupports32bitIndices = mDeviceCaps.MaxVertexIndex >= (1 << 16);
+
+        mNumCompressedTextureFormats = 0;
+        if (supportsDXT1Textures())
+        {
+            mNumCompressedTextureFormats += 2;
+        }
+        if (supportsDXT3Textures())
+        {
+            mNumCompressedTextureFormats += 1;
+        }
+        if (supportsDXT5Textures())
+        {
+            mNumCompressedTextureFormats += 1;
+        }
 
         initExtensionString();
 
@@ -1240,18 +1259,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_MAX_TEXTURE_SIZE:                 *params = getMaximumTextureDimension();         break;
       case GL_MAX_CUBE_MAP_TEXTURE_SIZE:        *params = getMaximumCubeTextureDimension();     break;
       case GL_NUM_COMPRESSED_TEXTURE_FORMATS:   
-        {
-            if (supportsCompressedTextures())
-            {
-                // at current, only GL_COMPRESSED_RGB_S3TC_DXT1_EXT and 
-                // GL_COMPRESSED_RGBA_S3TC_DXT1_EXT are supported
-                *params = 2;
-            }
-            else
-            {
-                *params = 0;
-            }
-        }
+        params[0] = mNumCompressedTextureFormats;
         break;
       case GL_MAX_SAMPLES_ANGLE:
         {
@@ -1307,10 +1315,18 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
         break;
       case GL_COMPRESSED_TEXTURE_FORMATS:
         {
-            if (supportsCompressedTextures())
+            if (supportsDXT1Textures())
             {
-                params[0] = GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
-                params[1] = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+                *params++ = GL_COMPRESSED_RGB_S3TC_DXT1_EXT;
+                *params++ = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+            }
+            if (supportsDXT3Textures())
+            {
+                *params++ = GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE;
+            }
+            if (supportsDXT5Textures())
+            {
+                *params++ = GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE;
             }
         }
         break;
@@ -1422,7 +1438,12 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
     // application.
     switch (pname)
     {
-      case GL_COMPRESSED_TEXTURE_FORMATS: /* no compressed texture formats are supported */ 
+      case GL_COMPRESSED_TEXTURE_FORMATS:
+        {
+            *type = GL_INT;
+            *numParams = mNumCompressedTextureFormats;
+        }
+        break;
       case GL_SHADER_BINARY_FORMATS:
         {
             *type = GL_INT;
@@ -3053,9 +3074,19 @@ bool Context::supportsEventQueries() const
     return mSupportsEventQueries;
 }
 
-bool Context::supportsCompressedTextures() const
+bool Context::supportsDXT1Textures() const
 {
-    return mSupportsCompressedTextures;
+    return mSupportsDXT1Textures;
+}
+
+bool Context::supportsDXT3Textures() const
+{
+    return mSupportsDXT3Textures;
+}
+
+bool Context::supportsDXT5Textures() const
+{
+    return mSupportsDXT5Textures;
 }
 
 bool Context::supportsFloatTextures() const
@@ -3330,9 +3361,19 @@ void Context::initExtensionString()
         mExtensionString += "GL_NV_fence ";
     }
 
-    if (supportsCompressedTextures())
+    if (supportsDXT1Textures())
     {
         mExtensionString += "GL_EXT_texture_compression_dxt1 ";
+    }
+
+    if (supportsDXT3Textures())
+    {
+        mExtensionString += "GL_ANGLE_texture_compression_dxt3 ";
+    }
+
+    if (supportsDXT5Textures())
+    {
+        mExtensionString += "GL_ANGLE_texture_compression_dxt5 ";
     }
 
     if (supportsFloatTextures())
