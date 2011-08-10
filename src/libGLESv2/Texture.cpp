@@ -898,7 +898,7 @@ static void FlipCopyDXT5BlockHalf(const unsigned int* source, unsigned int* dest
   destBytes[1] = sourceBytes[1];
   destBytes[2] = line_1_0 & 0xff;
   destBytes[3] = (line_1_0 & 0xff00) >> 8;
-  destBytes[4] = (line_1_0 & 0xff0000) >> 8;
+  destBytes[4] = (line_1_0 & 0xff0000) >> 16;
   FlipCopyDXT1BlockHalf(source + 2, dest + 2);
 }
 
