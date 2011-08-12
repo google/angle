@@ -943,6 +943,12 @@ bool TParseContext::extensionErrorCheck(int line, const TString& extension)
     return false;
 }
 
+bool TParseContext::supportsExtension(const char* extension)
+{
+    TExtensionBehavior::const_iterator iter = extensionBehavior.find(extension);
+    return (iter != extensionBehavior.end());
+}
+
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Non-Errors.

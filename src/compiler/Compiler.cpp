@@ -19,6 +19,7 @@ bool InitializeSymbolTable(
 {
     TIntermediate intermediate(infoSink);
     TExtensionBehavior extBehavior;
+    InitExtensionBehavior(resources, extBehavior);
     // The builtins deliberately don't specify precisions for the function
     // arguments and return types. For that reason we don't try to check them.
     TParseContext parseContext(symbolTable, extBehavior, intermediate, type, spec, 0, false, NULL, infoSink);

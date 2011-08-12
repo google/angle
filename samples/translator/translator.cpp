@@ -53,6 +53,7 @@ void GenerateResources(ShBuiltInResources* resources)
     resources->MaxDrawBuffers = 1;
 
     resources->OES_standard_derivatives = 0;
+    resources->OES_EGL_image_external = 0;
 }
 
 int main(int argc, char* argv[])
@@ -94,6 +95,7 @@ int main(int argc, char* argv[])
                     failCode = EFailUsage;
                 }
                 break;
+            case 'a': resources.OES_EGL_image_external = 1; break;
             default: failCode = EFailUsage;
             }
         } else {
@@ -174,7 +176,7 @@ int main(int argc, char* argv[])
 //
 void usage()
 {
-    printf("Usage: translate [-i -m -o -u -b=e -b=g -b=h] file1 file2 ...\n"
+    printf("Usage: translate [-i -m -o -u -b=e -b=g -b=h -a] file1 file2 ...\n"
         "Where: filename : filename ending in .frag or .vert\n"
         "       -i       : print intermediate tree\n"
         "       -m       : map long variable names\n"
@@ -182,7 +184,8 @@ void usage()
         "       -u       : print active attribs and uniforms\n"
         "       -b=e     : output GLSL ES code (this is by default)\n"
         "       -b=g     : output GLSL code\n"
-        "       -b=h     : output HLSL code\n");
+        "       -b=h     : output HLSL code\n"
+        "       -a       : enable GL_OES_EGL_image_external\n");
 }
 
 //

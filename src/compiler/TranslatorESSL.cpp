@@ -28,7 +28,9 @@ void TranslatorESSL::writeExtensionBehavior() {
     const TExtensionBehavior& extensionBehavior = getExtensionBehavior();
     for (TExtensionBehavior::const_iterator iter = extensionBehavior.begin();
          iter != extensionBehavior.end(); ++iter) {
-        sink << "#extension " << iter->first << " : "
-             << getBehaviorString(iter->second) << "\n";
+        if (iter->second != EBhUndefined) {
+            sink << "#extension " << iter->first << " : "
+                 << getBehaviorString(iter->second) << "\n";
+        }
     }
 }

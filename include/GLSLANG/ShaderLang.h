@@ -115,6 +115,7 @@ typedef struct
     // Extensions.
     // Set to 1 to enable the extension, else 0.
     int OES_standard_derivatives;
+    int OES_EGL_image_external;
 } ShBuiltInResources;
 
 //
