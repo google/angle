@@ -196,7 +196,6 @@ bool TParseContext::parseMatrixFields(const TString& compString, int matSize, TM
 //
 void TParseContext::recover()
 {
-    recoveredFromError = true;
 }
 
 //
