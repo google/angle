@@ -457,8 +457,8 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate* node)
         case EOpPrototype: {
             // Function declaration.
             ASSERT(visit == PreVisit);
-            TString returnType = getTypeName(node->getType());
-            out << returnType << " " << node->getName();
+            writeVariableType(node->getType());
+            out << " " << node->getName();
 
             out << "(";
             writeFunctionParameters(node->getSequence());
