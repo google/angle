@@ -308,6 +308,7 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         }
 
         initExtensionString();
+        initRendererString();
 
         mState.viewportX = 0;
         mState.viewportY = 0;
@@ -3421,6 +3422,21 @@ void Context::initExtensionString()
 const char *Context::getExtensionString() const
 {
     return mExtensionString.c_str();
+}
+
+void Context::initRendererString()
+{
+    egl::Display *display = getDisplay();
+    D3DADAPTER_IDENTIFIER9 *identifier = display->getAdapterIdentifier();
+
+    mRendererString = "ANGLE (";
+    mRendererString += identifier->Description;
+    mRendererString += ")";
+}
+
+const char *Context::getRendererString() const
+{
+    return mRendererString.c_str();
 }
 
 void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, 

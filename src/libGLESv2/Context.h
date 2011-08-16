@@ -436,6 +436,7 @@ class Context
     GLsizei getMaxSupportedSamples() const;
     int getNearestSupportedSamples(D3DFORMAT format, int requested) const;
     const char *getExtensionString() const;
+    const char *getRendererString() const;
     bool supportsEventQueries() const;
     bool supportsDXT1Textures() const;
     bool supportsDXT3Textures() const;
@@ -480,6 +481,9 @@ class Context
     bool cullSkipsDraw(GLenum drawMode);
     bool isTriangleMode(GLenum drawMode);
 
+    void initExtensionString();
+    void initRendererString();
+
     const egl::Config *const mConfig;
 
     State mState;
@@ -495,8 +499,8 @@ class Context
     FenceMap mFenceMap;
     HandleAllocator mFenceHandleAllocator;
 
-    void initExtensionString();
     std::string mExtensionString;
+    std::string mRendererString;
 
     VertexDataManager *mVertexDataManager;
     IndexDataManager *mIndexDataManager;
