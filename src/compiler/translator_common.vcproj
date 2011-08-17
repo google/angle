@@ -295,6 +295,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ForLoopUnroll.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\glslang.l"
 				>
 				<FileConfiguration
@@ -526,6 +530,10 @@
 			</File>
 			<File
 				RelativePath=".\DetectRecursion.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ForLoopUnroll.h"
 				>
 			</File>
 			<File
