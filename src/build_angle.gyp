@@ -26,6 +26,8 @@
         'compiler/debug.h',
         'compiler/DetectRecursion.cpp',
         'compiler/DetectRecursion.h',
+        'compiler/ForLoopUnroll.cpp',
+        'compiler/ForLoopUnroll.h',
         'compiler/glslang.h',
         'compiler/glslang_lex.cpp',
         'compiler/glslang_tab.cpp',
@@ -103,8 +105,6 @@
       ],
       'sources': [
         'compiler/CodeGenGLSL.cpp',
-        'compiler/ForLoopUnroll.cpp',
-        'compiler/ForLoopUnroll.h',
         'compiler/OutputESSL.cpp',
         'compiler/OutputESSL.h',        
         'compiler/OutputGLSLBase.cpp',
