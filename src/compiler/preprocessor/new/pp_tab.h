@@ -56,9 +56,9 @@
      HASH_VERSION = 272,
      HASH_LINE = 273,
      SPACE = 274,
-     IDENTIFIER = 275,
-     INTEGER_CONSTANT = 276,
-     FLOAT_CONSTANT = 277
+     INT_CONSTANT = 275,
+     FLOAT_CONSTANT = 276,
+     IDENTIFIER = 277
    };
 #endif
 /* Tokens.  */
@@ -79,9 +79,9 @@
 #define HASH_VERSION 272
 #define HASH_LINE 273
 #define SPACE 274
-#define IDENTIFIER 275
-#define INTEGER_CONSTANT 276
-#define FLOAT_CONSTANT 277
+#define INT_CONSTANT 275
+#define FLOAT_CONSTANT 276
+#define IDENTIFIER 277
 
 
 
@@ -91,6 +91,8 @@ typedef union YYSTYPE
 
 {
     int ival;
+    std::string* sval;
+    std::vector<std::string*>* slist;
     pp::Token* tval;
     pp::TokenVector* tlist;
 }

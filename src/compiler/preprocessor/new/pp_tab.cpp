@@ -91,9 +91,9 @@
      HASH_VERSION = 272,
      HASH_LINE = 273,
      SPACE = 274,
-     IDENTIFIER = 275,
-     INTEGER_CONSTANT = 276,
-     FLOAT_CONSTANT = 277
+     INT_CONSTANT = 275,
+     FLOAT_CONSTANT = 276,
+     IDENTIFIER = 277
    };
 #endif
 /* Tokens.  */
@@ -114,9 +114,9 @@
 #define HASH_VERSION 272
 #define HASH_LINE 273
 #define SPACE 274
-#define IDENTIFIER 275
-#define INTEGER_CONSTANT 276
-#define FLOAT_CONSTANT 277
+#define INT_CONSTANT 275
+#define FLOAT_CONSTANT 276
+#define IDENTIFIER 277
 
 
 
@@ -162,6 +162,8 @@ typedef union YYSTYPE
 
 {
     int ival;
+    std::string* sval;
+    std::vector<std::string*>* slist;
     pp::Token* tval;
     pp::TokenVector* tlist;
 }
@@ -198,11 +200,11 @@ static void yyerror(YYLTYPE* llocp,
 static void defineMacro(pp::Context* context,
                         YYLTYPE* llocp,
                         pp::Macro::Type type,
-                        pp::Token* identifier,
-                        pp::TokenVector* parameters,
+                        const std::string* identifier,
+                        std::vector<std::string*>* parameters,
                         pp::TokenVector* replacements);
-static void undefineMacro(pp::Context* context, pp::Token* identifier);
-static bool isMacroDefined(pp::Context* context, pp::Token* identifier);
+static void undefineMacro(pp::Context* context, const std::string* identifier);
+static bool isMacroDefined(pp::Context* context, const std::string* identifier);
 static void pushConditionalBlock(pp::Context* context, bool condition);
 static void popConditionalBlock(pp::Context* context);
 
@@ -495,16 +497,16 @@ static const yytype_int8 yyrhs[] =
 {
       49,     0,    -1,    -1,    49,    50,    -1,    51,    -1,    52,
       -1,    23,    -1,    57,    23,    -1,     3,    23,    -1,     4,
-      20,    53,    23,    -1,     5,    20,    24,    56,    25,    53,
-      23,    -1,     6,    20,    23,    -1,     7,    54,    23,    -1,
-       8,    20,    23,    -1,     9,    20,    23,    -1,    11,    54,
+      22,    53,    23,    -1,     5,    22,    24,    56,    25,    53,
+      23,    -1,     6,    22,    23,    -1,     7,    54,    23,    -1,
+       8,    22,    23,    -1,     9,    22,    23,    -1,    11,    54,
       23,    -1,    10,    23,    -1,    12,    23,    -1,    14,    23,
       -1,    15,    23,    -1,    16,    23,    -1,    17,    23,    -1,
       18,    23,    -1,    -1,    57,    -1,    55,    -1,    54,    55,
-      -1,    13,    20,    -1,    13,    24,    20,    25,    -1,    58,
-      -1,    -1,    20,    -1,    56,    26,    20,    -1,    58,    -1,
-      57,    58,    -1,    20,    -1,    21,    -1,    22,    -1,    19,
-      -1,    59,    -1,    27,    -1,    28,    -1,    29,    -1,    30,
+      -1,    13,    22,    -1,    13,    24,    22,    25,    -1,    58,
+      -1,    -1,    22,    -1,    56,    26,    22,    -1,    58,    -1,
+      57,    58,    -1,    59,    -1,    19,    -1,    20,    -1,    21,
+      -1,    22,    -1,    27,    -1,    28,    -1,    29,    -1,    30,
       -1,    24,    -1,    25,    -1,    31,    -1,    32,    -1,    33,
       -1,    34,    -1,    35,    -1,    36,    -1,    37,    -1,    38,
       -1,    39,    -1,    40,    -1,    41,    -1,    42,    -1,    43,
@@ -515,13 +517,13 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    71,    71,    73,    77,    78,    82,    83,    87,    88,
-      91,    94,    97,   100,   103,   106,   108,   110,   113,   114,
-     115,   116,   117,   121,   122,   126,   130,   137,   139,   141,
-     145,   146,   150,   157,   162,   169,   170,   171,   172,   173,
-     177,   178,   179,   180,   181,   182,   183,   184,   185,   186,
-     187,   188,   189,   190,   191,   192,   193,   194,   195,   196,
-     197,   198,   199,   200
+       0,    74,    74,    76,    80,    86,    90,    91,    95,    96,
+      99,   102,   105,   108,   111,   114,   116,   118,   121,   122,
+     123,   124,   125,   129,   130,   134,   138,   145,   147,   149,
+     153,   154,   158,   165,   169,   176,   179,   182,   185,   188,
+     194,   195,   196,   197,   198,   199,   200,   201,   202,   203,
+     204,   205,   206,   207,   208,   209,   210,   211,   212,   213,
+     214,   215,   216,   217
 };
 #endif
 
@@ -534,12 +536,12 @@ static const char *const yytname[] =
   "HASH_DEFINE_FUNC", "HASH_UNDEF", "HASH_IF", "HASH_IFDEF", "HASH_IFNDEF",
   "HASH_ELSE", "HASH_ELIF", "HASH_ENDIF", "DEFINED", "HASH_ERROR",
   "HASH_PRAGMA", "HASH_EXTENSION", "HASH_VERSION", "HASH_LINE", "SPACE",
-  "IDENTIFIER", "INTEGER_CONSTANT", "FLOAT_CONSTANT", "'\\n'", "'('",
-  "')'", "','", "'['", "']'", "'<'", "'>'", "'{'", "'}'", "'.'", "'+'",
-  "'-'", "'/'", "'*'", "'%'", "'^'", "'|'", "'&'", "'~'", "'='", "'!'",
-  "':'", "';'", "'?'", "$accept", "input", "line", "text_line",
-  "control_line", "replacement_token_list", "conditional_token_list",
-  "conditional_token", "parameter_list", "token_list", "token", "operator", 0
+  "INT_CONSTANT", "FLOAT_CONSTANT", "IDENTIFIER", "'\\n'", "'('", "')'",
+  "','", "'['", "']'", "'<'", "'>'", "'{'", "'}'", "'.'", "'+'", "'-'",
+  "'/'", "'*'", "'%'", "'^'", "'|'", "'&'", "'~'", "'='", "'!'", "':'",
+  "';'", "'?'", "$accept", "input", "line", "text_line", "control_line",
+  "replacement_token_list", "conditional_token_list", "conditional_token",
+  "parameter_list", "token_list", "token", "operator", 0
 };
 #endif
 
@@ -586,11 +588,11 @@ static const yytype_uint8 yyr2[] =
 static const yytype_uint8 yydefact[] =
 {
        2,     0,     1,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,     0,    38,    35,
-      36,    37,     6,    44,    45,    62,    40,    41,    42,    43,
+       0,     0,     0,     0,     0,     0,     0,     0,    36,    37,
+      38,    39,     6,    44,    45,    62,    40,    41,    42,    43,
       46,    47,    48,    49,    50,    51,    52,    53,    54,    55,
       56,    57,    58,    59,    60,    61,    63,     3,     4,     5,
-       0,    33,    39,     8,    23,     0,     0,     0,     0,    25,
+       0,    33,    35,     8,    23,     0,     0,     0,     0,    25,
       29,     0,     0,    16,     0,    17,    18,    19,    20,    21,
       22,     7,    34,     0,    24,    30,    11,    27,     0,    12,
       26,    13,    14,    15,     9,    31,     0,     0,    23,     0,
@@ -606,26 +608,26 @@ static const yytype_int8 yydefgoto[] =
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -28
+#define YYPACT_NINF -29
 static const yytype_int16 yypact[] =
 {
-     -28,     1,   -28,    -9,    32,    34,    37,   139,    38,    39,
-      40,   139,    41,    42,    43,    44,    45,    46,   -28,   -28,
-     -28,   -28,   -28,   -28,   -28,   -28,   -28,   -28,   -28,   -28,
-     -28,   -28,   -28,   -28,   -28,   -28,   -28,   -28,   -28,   -28,
-     -28,   -28,   -28,   -28,   -28,   -28,   -28,   -28,   -28,   -28,
-     168,   -28,   -28,   -28,   197,    36,    47,    31,    69,   -28,
-     -28,    48,    49,   -28,   104,   -28,   -28,   -28,   -28,   -28,
-     -28,   -28,   -28,    51,   197,    55,   -28,   -28,    56,   -28,
-     -28,   -28,   -28,   -28,   -28,   -28,   -23,    52,   197,    58,
-     -28,    57,   -28,   -28
+     -29,     1,   -29,    -9,    29,    33,    35,   139,    36,    37,
+      38,   139,    39,    40,    41,    42,    43,    44,   -29,   -29,
+     -29,   -29,   -29,   -29,   -29,   -29,   -29,   -29,   -29,   -29,
+     -29,   -29,   -29,   -29,   -29,   -29,   -29,   -29,   -29,   -29,
+     -29,   -29,   -29,   -29,   -29,   -29,   -29,   -29,   -29,   -29,
+     168,   -29,   -29,   -29,   197,    45,    47,    30,    69,   -29,
+     -29,    48,    49,   -29,   104,   -29,   -29,   -29,   -29,   -29,
+     -29,   -29,   -29,    51,   197,    46,   -29,   -29,    53,   -29,
+     -29,   -29,   -29,   -29,   -29,   -29,   -23,    52,   197,    54,
+     -29,    55,   -29,   -29
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -28,   -28,   -28,   -28,   -28,   -27,    68,    -8,   -28,    61,
-      -1,   -28
+     -29,   -29,   -29,   -29,   -29,   -28,    68,    -8,   -29,    79,
+      -1,   -29
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -640,10 +642,10 @@ static const yytype_uint8 yytable[] =
       18,    19,    20,    21,    22,    23,    24,    25,    26,    27,
       28,    29,    30,    31,    32,    33,    34,    35,    36,    37,
       38,    39,    40,    41,    42,    43,    44,    45,    46,    72,
-      80,    77,    54,    51,    55,    78,    80,    56,    61,    62,
-      75,    91,    50,    63,    65,    66,    67,    68,    69,    70,
-      76,    81,    82,    72,    84,    85,    87,    90,    92,    64,
-      93,     0,    57,     0,     0,     0,     0,    51,    18,    19,
+      80,    54,    77,    51,    78,    55,    80,    56,    61,    62,
+      91,    63,    65,    66,    67,    68,    69,    70,    85,    75,
+      76,    81,    82,    72,    84,    87,    92,    90,    93,    64,
+      50,     0,    57,     0,     0,     0,     0,    51,    18,    19,
       20,    21,    79,    23,    24,    25,    26,    27,    28,    29,
       30,    31,    32,    33,    34,    35,    36,    37,    38,    39,
       40,    41,    42,    43,    44,    45,    46,    57,     0,     0,
@@ -669,10 +671,10 @@ static const yytype_int8 yycheck[] =
       19,    20,    21,    22,    23,    24,    25,    26,    27,    28,
       29,    30,    31,    32,    33,    34,    35,    36,    37,    38,
       39,    40,    41,    42,    43,    44,    45,    46,    47,    50,
-      58,    20,    20,    54,    20,    24,    64,    20,    20,    20,
-      24,    88,     1,    23,    23,    23,    23,    23,    23,    23,
-      23,    23,    23,    74,    23,    20,    20,    25,    20,    11,
-      23,    -1,    13,    -1,    -1,    -1,    -1,    88,    19,    20,
+      58,    22,    22,    54,    24,    22,    64,    22,    22,    22,
+      88,    23,    23,    23,    23,    23,    23,    23,    22,    24,
+      23,    23,    23,    74,    23,    22,    22,    25,    23,    11,
+       1,    -1,    13,    -1,    -1,    -1,    -1,    88,    19,    20,
       21,    22,    23,    24,    25,    26,    27,    28,    29,    30,
       31,    32,    33,    34,    35,    36,    37,    38,    39,    40,
       41,    42,    43,    44,    45,    46,    47,    13,    -1,    -1,
@@ -700,11 +702,11 @@ static const yytype_uint8 yystos[] =
       21,    22,    23,    24,    25,    26,    27,    28,    29,    30,
       31,    32,    33,    34,    35,    36,    37,    38,    39,    40,
       41,    42,    43,    44,    45,    46,    47,    50,    51,    52,
-      57,    58,    59,    23,    20,    20,    20,    13,    54,    55,
-      58,    20,    20,    23,    54,    23,    23,    23,    23,    23,
-      23,    23,    58,    53,    57,    24,    23,    20,    24,    23,
-      55,    23,    23,    23,    23,    20,    56,    20,    25,    26,
-      25,    53,    20,    23
+      57,    58,    59,    23,    22,    22,    22,    13,    54,    55,
+      58,    22,    22,    23,    54,    23,    23,    23,    23,    23,
+      23,    23,    58,    53,    57,    24,    23,    22,    24,    23,
+      55,    23,    23,    23,    23,    22,    56,    22,    25,    26,
+      25,    53,    22,    23
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -1546,7 +1548,17 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-        case 6:
+        case 4:
+
+    {
+        // TODO(alokp): Expand macros.
+        pp::TokenVector* out = context->output;
+        out->insert(out->end(), (yyvsp[(1) - (1)].tlist)->begin(), (yyvsp[(1) - (1)].tlist)->end());
+        delete (yyvsp[(1) - (1)].tlist);
+    ;}
+    break;
+
+  case 6:
 
     { (yyval.tlist) = NULL; ;}
     break;
@@ -1559,21 +1571,21 @@ yyreduce:
   case 9:
 
     {
-        defineMacro(context, & (yylsp[(2) - (4)]), pp::Macro::kTypeObj, (yyvsp[(2) - (4)].tval), NULL, (yyvsp[(3) - (4)].tlist));
+        defineMacro(context, & (yylsp[(2) - (4)]), pp::Macro::kTypeObj, (yyvsp[(2) - (4)].sval), NULL, (yyvsp[(3) - (4)].tlist));
     ;}
     break;
 
   case 10:
 
     {
-        defineMacro(context, & (yylsp[(2) - (7)]), pp::Macro::kTypeFunc, (yyvsp[(2) - (7)].tval), (yyvsp[(4) - (7)].tlist), (yyvsp[(6) - (7)].tlist));
+        defineMacro(context, & (yylsp[(2) - (7)]), pp::Macro::kTypeFunc, (yyvsp[(2) - (7)].sval), (yyvsp[(4) - (7)].slist), (yyvsp[(6) - (7)].tlist));
     ;}
     break;
 
   case 11:
 
     {
-        undefineMacro(context, (yyvsp[(2) - (3)].tval));
+        undefineMacro(context, (yyvsp[(2) - (3)].sval));
     ;}
     break;
 
@@ -1587,14 +1599,14 @@ yyreduce:
   case 13:
 
     {
-        pushConditionalBlock(context, isMacroDefined(context, (yyvsp[(2) - (3)].tval)));
+        pushConditionalBlock(context, isMacroDefined(context, (yyvsp[(2) - (3)].sval)));
     ;}
     break;
 
   case 14:
 
     {
-        pushConditionalBlock(context, !isMacroDefined(context, (yyvsp[(2) - (3)].tval)));
+        pushConditionalBlock(context, !isMacroDefined(context, (yyvsp[(2) - (3)].sval)));
     ;}
     break;
 
@@ -1652,29 +1664,28 @@ yyreduce:
 
   case 30:
 
-    { (yyval.tlist) = NULL; ;}
+    { (yyval.slist) = NULL; ;}
     break;
 
   case 31:
 
     {
-        (yyval.tlist) = new pp::TokenVector;
-        (yyval.tlist)->push_back((yyvsp[(1) - (1)].tval));
+        (yyval.slist) = new std::vector<std::string*>();
+        (yyval.slist)->push_back((yyvsp[(1) - (1)].sval));
     ;}
     break;
 
   case 32:
 
     {
-        (yyval.tlist) = (yyvsp[(1) - (3)].tlist);
-        (yyval.tlist)->push_back((yyvsp[(3) - (3)].tval));
+        (yyval.slist) = (yyvsp[(1) - (3)].slist);
+        (yyval.slist)->push_back((yyvsp[(3) - (3)].sval));
     ;}
     break;
 
   case 33:
 
     {
-        //context->ppData.skipWS = false;
         (yyval.tlist) = new pp::TokenVector;
         (yyval.tlist)->push_back((yyvsp[(1) - (1)].tval));
     ;}
@@ -1688,14 +1699,39 @@ yyreduce:
     ;}
     break;
 
+  case 35:
+
+    {
+        (yyval.tval) = new pp::Token((yylsp[(1) - (1)]).first_line, (yyvsp[(1) - (1)].ival), NULL);
+    ;}
+    break;
+
+  case 36:
+
+    {
+        (yyval.tval) = new pp::Token((yylsp[(1) - (1)]).first_line, SPACE, NULL);
+    ;}
+    break;
+
+  case 37:
+
+    {
+        (yyval.tval) = new pp::Token((yylsp[(1) - (1)]).first_line, INT_CONSTANT, (yyvsp[(1) - (1)].sval));
+    ;}
+    break;
+
   case 38:
 
-    { (yyval.tval) = new pp::Token((yylsp[(1) - (1)]).first_line, SPACE); ;}
+    {
+        (yyval.tval) = new pp::Token((yylsp[(1) - (1)]).first_line, FLOAT_CONSTANT, (yyvsp[(1) - (1)].sval));
+    ;}
     break;
 
   case 39:
 
-    { (yyval.tval) = new pp::Token((yylsp[(1) - (1)]).first_line, (yyvsp[(1) - (1)].ival)); ;}
+    {
+        (yyval.tval) = new pp::Token((yylsp[(1) - (1)]).first_line, IDENTIFIER, (yyvsp[(1) - (1)].sval));
+    ;}
     break;
 
   case 40:
@@ -2050,17 +2086,17 @@ void yyerror(YYLTYPE* llocp, pp::Context* context, const char* reason)
 void defineMacro(pp::Context* context,
                  YYLTYPE* llocp,
                  pp::Macro::Type type,
-                 pp::Token* identifier,
-                 pp::TokenVector* parameters,
+                 const std::string* identifier,
+                 std::vector<std::string*>* parameters,
                  pp::TokenVector* replacements)
 {
 }
 
-void undefineMacro(pp::Context* context, pp::Token* identifier)
+void undefineMacro(pp::Context* context, const std::string* identifier)
 {
 }
 
-bool isMacroDefined(pp::Context* context, pp::Token* identifier)
+bool isMacroDefined(pp::Context* context, const std::string* identifier)
 {
     return false;
 }

@@ -36,6 +36,8 @@ WHICH GENERATES THE GLSL ES PARSER.
 
 %union {
     int ival;
+    std::string* sval;
+    std::vector<std::string*>* slist;
     pp::Token* tval;
     pp::TokenVector* tlist;
 }
@@ -49,11 +51,11 @@ static void yyerror(YYLTYPE* llocp,
 static void defineMacro(pp::Context* context,
                         YYLTYPE* llocp,
                         pp::Macro::Type type,
-                        pp::Token* identifier,
-                        pp::TokenVector* parameters,
+                        const std::string* identifier,
+                        std::vector<std::string*>* parameters,
                         pp::TokenVector* replacements);
-static void undefineMacro(pp::Context* context, pp::Token* identifier);
-static bool isMacroDefined(pp::Context* context, pp::Token* identifier);
+static void undefineMacro(pp::Context* context, const std::string* identifier);
+static bool isMacroDefined(pp::Context* context, const std::string* identifier);
 static void pushConditionalBlock(pp::Context* context, bool condition);
 static void popConditionalBlock(pp::Context* context);
 %}
@@ -62,10 +64,11 @@ static void popConditionalBlock(pp::Context* context);
 %token HASH_IF HASH_IFDEF HASH_IFNDEF HASH_ELSE HASH_ELIF HASH_ENDIF DEFINED
 %token HASH_ERROR HASH_PRAGMA HASH_EXTENSION HASH_VERSION HASH_LINE
 %token SPACE
-%token <tval> IDENTIFIER INTEGER_CONSTANT FLOAT_CONSTANT
+%token <sval> INT_CONSTANT FLOAT_CONSTANT IDENTIFIER
 %type <ival> operator
+%type <slist> parameter_list
 %type <tval> conditional_token token
-%type <tlist> text_line parameter_list replacement_token_list conditional_token_list token_list
+%type <tlist> text_line replacement_token_list conditional_token_list token_list
 %%
 
 input
@@ -74,7 +77,12 @@ input
 ;
 
 line
-    : text_line
+    : text_line {
+        // TODO(alokp): Expand macros.
+        pp::TokenVector* out = context->output;
+        out->insert(out->end(), $1->begin(), $1->end());
+        delete $1;
+    }
     | control_line
 ;
 
@@ -144,7 +152,7 @@ conditional_token
 parameter_list
     : /* empty */ { $$ = NULL; }
     | IDENTIFIER {
-        $$ = new pp::TokenVector;
+        $$ = new std::vector<std::string*>();
         $$->push_back($1);
     }
     | parameter_list ',' IDENTIFIER {
@@ -155,7 +163,6 @@ parameter_list
 
 token_list
     : token {
-        //context->ppData.skipWS = false;
         $$ = new pp::TokenVector;
         $$->push_back($1);
     }
@@ -166,11 +173,21 @@ token_list
 ;
 
 token
-    : IDENTIFIER
-    | INTEGER_CONSTANT
-    | FLOAT_CONSTANT
-    | SPACE { $$ = new pp::Token(@1.first_line, SPACE); }
-    | operator { $$ = new pp::Token(@1.first_line, $1); }
+    : operator {
+        $$ = new pp::Token(@1.first_line, $1, NULL);
+    }
+    | SPACE {
+        $$ = new pp::Token(@1.first_line, SPACE, NULL);
+    }
+    | INT_CONSTANT {
+        $$ = new pp::Token(@1.first_line, INT_CONSTANT, $1);
+    }
+    | FLOAT_CONSTANT {
+        $$ = new pp::Token(@1.first_line, FLOAT_CONSTANT, $1);
+    }
+    | IDENTIFIER {
+        $$ = new pp::Token(@1.first_line, IDENTIFIER, $1);
+    }
 ;
 
 operator
@@ -209,17 +226,17 @@ void yyerror(YYLTYPE* llocp, pp::Context* context, const char* reason)
 void defineMacro(pp::Context* context,
                  YYLTYPE* llocp,
                  pp::Macro::Type type,
-                 pp::Token* identifier,
-                 pp::TokenVector* parameters,
+                 const std::string* identifier,
+                 std::vector<std::string*>* parameters,
                  pp::TokenVector* replacements)
 {
 }
 
-void undefineMacro(pp::Context* context, pp::Token* identifier)
+void undefineMacro(pp::Context* context, const std::string* identifier)
 {
 }
 
-bool isMacroDefined(pp::Context* context, pp::Token* identifier)
+bool isMacroDefined(pp::Context* context, const std::string* identifier)
 {
     return false;
 }

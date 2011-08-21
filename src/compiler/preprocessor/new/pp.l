@@ -34,7 +34,7 @@ IF YOU MODIFY THIS FILE YOU ALSO NEED TO RUN generate_parser.sh.
         yylloc->first_column = yycolumn + 1;  \
         yycolumn += yyleng;                   \
     } while(0);
-    
+
 #define YY_INPUT(buf, result, maxSize) \
     result = readInput(yyextra, buf, maxSize);
 
@@ -55,6 +55,10 @@ PUNCTUATOR  [][<>(){}.+-/*%^|&~=!:;,?]
 DECIMAL_CONSTANT      [1-9][0-9]*
 OCTAL_CONSTANT        0[0-7]*
 HEXADECIMAL_CONSTANT  0[xX][0-9a-fA-F]+
+
+DIGIT                [0-9]
+EXPONENT_PART        [eE][+-]?{DIGIT}+
+FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 
 %%
 
@@ -79,13 +83,18 @@ HEXADECIMAL_CONSTANT  0[xX][0-9a-fA-F]+
 {HASH}line { return HASH_LINE; }
 
 {IDENTIFIER} {
-    yylval->tval = new pp::Token(yylineno, IDENTIFIER, std::string(yytext, yyleng));
+    yylval->sval = new std::string(yytext, yyleng);
     return IDENTIFIER;
 }
 
 {DECIMAL_CONSTANT}|{OCTAL_CONSTANT}|{HEXADECIMAL_CONSTANT} {
-    yylval->tval = new pp::Token(yylineno, INTEGER_CONSTANT, std::string(yytext, yyleng));
-    return INTEGER_CONSTANT;
+    yylval->sval = new std::string(yytext, yyleng);
+    return INT_CONSTANT;
+}
+
+({DIGIT}+{EXPONENT_PART})|({FRACTIONAL_CONSTANT}{EXPONENT_PART}?) {
+    yylval->sval = new std::string(yytext, yyleng);
+    return FLOAT_CONSTANT;
 }
 
 {PUNCTUATOR} { return yytext[0]; }
