@@ -16,6 +16,7 @@
 
 #include "GLSLANG/ShaderLang.h"
 
+#include "compiler/BuiltInFunctionEmulator.h"
 #include "compiler/ExtensionBehavior.h"
 #include "compiler/InfoSink.h"
 #include "compiler/SymbolTable.h"
@@ -80,6 +81,8 @@ protected:
     // Get built-in extensions with default behavior.
     const TExtensionBehavior& getExtensionBehavior() const;
 
+    const BuiltInFunctionEmulator& getBuiltInFunctionEmulator() const;
+
 private:
     ShShaderType shaderType;
     ShShaderSpec shaderSpec;
@@ -89,6 +92,8 @@ private:
     TSymbolTable symbolTable;
     // Built-in extensions with default behavior.
     TExtensionBehavior extensionBehavior;
+
+    BuiltInFunctionEmulator builtInFunctionEmulator;
 
     // Results of compilation.
     TInfoSink infoSink;  // Output sink.

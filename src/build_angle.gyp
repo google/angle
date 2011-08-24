@@ -19,6 +19,8 @@
       ],
       'sources': [
         'compiler/BaseTypes.h',
+        'compiler/BuiltInFunctionEmulator.cpp',
+        'compiler/BuiltInFunctionEmulator.h',
         'compiler/Common.h',
         'compiler/Compiler.cpp',
         'compiler/ConstantUnion.h',

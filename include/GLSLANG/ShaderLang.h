@@ -82,7 +82,10 @@ typedef enum {
   SH_LINE_DIRECTIVES         = 0x0010,
   SH_SOURCE_PATH             = 0x0020,
   SH_MAP_LONG_VARIABLE_NAMES = 0x0040,
-  SH_UNROLL_FOR_LOOP_WITH_INTEGER_INDEX = 0x0080
+  SH_UNROLL_FOR_LOOP_WITH_INTEGER_INDEX = 0x0080,
+
+  // This is needed only as a workaround for certain OpenGL driver bugs.
+  SH_EMULATE_BUILT_IN_FUNCTIONS = 0x0100
 } ShCompileOptions;
 
 //

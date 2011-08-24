@@ -18,6 +18,10 @@ void TranslatorESSL::translate(TIntermNode* root) {
     // Write built-in extension behaviors.
     writeExtensionBehavior();
 
+    // Write emulated built-in functions if needed.
+    getBuiltInFunctionEmulator().OutputEmulatedFunctionDefinition(
+        sink, getShaderType() == SH_FRAGMENT_SHADER);
+
     // Write translated shader.
     TOutputESSL outputESSL(sink);
     root->traverse(&outputESSL);

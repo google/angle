@@ -283,6 +283,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\BuiltInFunctionEmulator.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Compiler.cpp"
 				>
 			</File>
@@ -514,6 +518,10 @@
 			>
 			<File
 				RelativePath=".\BaseTypes.h"
+				>
+			</File>
+			<File
+				RelativePath=".\BuiltInFunctionEmulator.h"
 				>
 			</File>
 			<File

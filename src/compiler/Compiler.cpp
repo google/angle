@@ -4,6 +4,7 @@
 // found in the LICENSE file.
 //
 
+#include "compiler/BuiltInFunctionEmulator.h"
 #include "compiler/DetectRecursion.h"
 #include "compiler/ForLoopUnroll.h"
 #include "compiler/Initialize.h"
@@ -160,6 +161,10 @@ bool TCompiler::compile(const char* const shaderStrings[],
         if (success && (compileOptions & SH_UNROLL_FOR_LOOP_WITH_INTEGER_INDEX))
             ForLoopUnroll::MarkForLoopsWithIntegerIndicesForUnrolling(root);
 
+        // Built-in function emulation needs to happen after validateLimitations pass.
+        if (success && (compileOptions & SH_EMULATE_BUILT_IN_FUNCTIONS))
+            builtInFunctionEmulator.MarkBuiltInFunctionsForEmulation(root);
+
         // Call mapLongVariableNames() before collectAttribsUniforms() so in
         // collectAttribsUniforms() we already have the mapped symbol names and
         // we could composite mapped and original variable names.
@@ -250,4 +255,9 @@ int TCompiler::getMappedNameMaxLength() const
 const TExtensionBehavior& TCompiler::getExtensionBehavior() const
 {
     return extensionBehavior;
+}
+
+const BuiltInFunctionEmulator& TCompiler::getBuiltInFunctionEmulator() const
+{
+    return builtInFunctionEmulator;
 }
