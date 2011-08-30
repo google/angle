@@ -571,7 +571,6 @@ IF YOU MODIFY THIS FILE YOU ALSO NEED TO RUN generate_parser.sh.
 #include "compiler/debug.h"
 #include "Context.h"
 #include "pp_tab.h"
-#include "Preprocessor.h"
 
 #define YY_USER_ACTION                        \
     do {                                      \
@@ -581,9 +580,7 @@ IF YOU MODIFY THIS FILE YOU ALSO NEED TO RUN generate_parser.sh.
     } while(0);
 
 #define YY_INPUT(buf, result, maxSize) \
-    result = readInput(yyextra, buf, maxSize);
-
-static int readInput(pp::Context* context, char* buf, int maxSize);
+    result = yyextra->readInput(buf, maxSize);
 
 #define INITIAL 0
 
@@ -2224,24 +2221,23 @@ void ppfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-int readInput(pp::Context* context, char* buf, int maxSize)
-{
-    yyscan_t lexer = context->lexer;
-    ASSERT(lexer);
+namespace pp {
 
+int Context::readInput(char* buf, int maxSize)
+{
     int nread = YY_NULL;
-    while (!context->input.eof() &&
-           (context->input.error() == pp::Input::kErrorNone) &&
+    while (!mInput->eof() &&
+           (mInput->error() == pp::Input::kErrorNone) &&
            (nread == YY_NULL))
     {
         int line = 0, file = 0;
-        pp::Token::decodeLocation(ppget_lineno(lexer), &line, &file);
-        file = context->input.stringIndex();
-        ppset_lineno(pp::Token::encodeLocation(line, file),lexer);
+        pp::Token::decodeLocation(ppget_lineno(mLexer), &line, &file);
+        file = mInput->stringIndex();
+        ppset_lineno(pp::Token::encodeLocation(line, file),mLexer);
 
-        nread = context->input.read(buf, maxSize);
+        nread = mInput->read(buf, maxSize);
 
-        if (context->input.error() == pp::Input::kErrorUnexpectedEOF)
+        if (mInput->error() == pp::Input::kErrorUnexpectedEOF)
         {
             // TODO(alokp): Report error.
         }
@@ -2249,27 +2245,23 @@ int readInput(pp::Context* context, char* buf, int maxSize)
     return nread;
 }
 
-namespace pp {
-
-bool Preprocessor::initLexer(Context* context)
+bool Context::initLexer()
 {
-    ASSERT(context->lexer == NULL);
+    ASSERT(mLexer == NULL);
 
-    yyscan_t lexer = 0;
-    if (pplex_init_extra(context,&lexer))
+    if (pplex_init_extra(this,&mLexer))
         return false;
 
-    context->lexer = lexer;
-    pprestart(0,lexer);
+    pprestart(0,mLexer);
     return true;
 }
 
-void Preprocessor::destroyLexer(Context* context)
+void Context::destroyLexer()
 {
-    ASSERT(context->lexer);
+    ASSERT(mLexer);
 
-    pplex_destroy(context->lexer);
-    context->lexer = 0;
+    pplex_destroy(mLexer);
+    mLexer = NULL;
 }
 
 }  // namespace pp
