@@ -87,12 +87,28 @@ class StaticIndexBuffer : public IndexBuffer
         intptr_t offset;
         GLsizei count;
 
+        bool operator<(const IndexRange& rhs) const
+        {
+            if (offset != rhs.offset)
+            {
+                return offset < rhs.offset;
+            }
+            if (count != rhs.count)
+            {
+                return count < rhs.count;
+            }
+            return false;
+        }
+    };
+
+    struct IndexResult
+    {
         UINT minIndex;
         UINT maxIndex;
         UINT streamOffset;
     };
 
-    std::vector<IndexRange> mCache;
+    std::map<IndexRange, IndexResult> mCache;
 };
 
 class IndexDataManager

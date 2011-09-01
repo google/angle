@@ -381,24 +381,25 @@ bool StaticIndexBuffer::lookupType(GLenum type)
 
 UINT StaticIndexBuffer::lookupRange(intptr_t offset, GLsizei count, UINT *minIndex, UINT *maxIndex)
 {
-    for (unsigned int range = 0; range < mCache.size(); range++)
-    {
-        if (mCache[range].offset == offset && mCache[range].count == count)
-        {
-            *minIndex = mCache[range].minIndex;
-            *maxIndex = mCache[range].maxIndex;
+    IndexRange range = {offset, count};
 
-            return mCache[range].streamOffset;
-        }
+    std::map<IndexRange, IndexResult>::iterator res = mCache.find(range);
+    
+    if (res == mCache.end())
+    {
+        return -1;
     }
 
-    return -1;
+    *minIndex = res->second.minIndex;
+    *maxIndex = res->second.maxIndex;
+    return res->second.streamOffset;
 }
 
 void StaticIndexBuffer::addRange(intptr_t offset, GLsizei count, UINT minIndex, UINT maxIndex, UINT streamOffset)
 {
-    IndexRange indexRange = {offset, count, minIndex, maxIndex, streamOffset};
-    mCache.push_back(indexRange);
+    IndexRange indexRange = {offset, count};
+    IndexResult indexResult = {minIndex, maxIndex, streamOffset};
+    mCache[indexRange] = indexResult;
 }
 
 }
