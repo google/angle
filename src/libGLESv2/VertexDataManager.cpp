@@ -21,6 +21,8 @@
 namespace
 {
     enum { INITIAL_STREAM_BUFFER_SIZE = 1024*1024 };
+    // This has to be at least 4k or else it fails on ATI cards.
+    enum { CONSTANT_VERTEX_BUFFER_SIZE = 4096 };
 }
 
 namespace gl
@@ -33,6 +35,7 @@ VertexDataManager::VertexDataManager(Context *context, IDirect3DDevice9 *device)
     {
         mDirtyCurrentValue[i] = true;
         mCurrentValueBuffer[i] = NULL;
+        mCurrentValueOffsets[i] = 0;
     }
 
     const D3DCAPS9 &caps = context->getDeviceCaps();
@@ -242,11 +245,28 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
             }
             else
             {
+                if (!mCurrentValueBuffer[i])
+                {
+                    mCurrentValueBuffer[i] = new StreamingVertexBuffer(mDevice, CONSTANT_VERTEX_BUFFER_SIZE);
+                }
+
+                StreamingVertexBuffer *buffer = mCurrentValueBuffer[i];
+
                 if (mDirtyCurrentValue[i])
                 {
-                    delete mCurrentValueBuffer[i];
-                    mCurrentValueBuffer[i] = new ConstantVertexBuffer(mDevice, attribs[i].mCurrentValue[0], attribs[i].mCurrentValue[1], attribs[i].mCurrentValue[2], attribs[i].mCurrentValue[3]);
-                    mDirtyCurrentValue[i] = false;
+                    const int requiredSpace = 4 * sizeof(float);
+                    buffer->addRequiredSpace(requiredSpace);
+                    buffer->reserveRequiredSpace();
+                    float *data = static_cast<float*>(buffer->map(VertexAttribute(), requiredSpace, &mCurrentValueOffsets[i]));
+                    if (data)
+                    {
+                        data[0] = attribs[i].mCurrentValue[0];
+                        data[1] = attribs[i].mCurrentValue[1];
+                        data[2] = attribs[i].mCurrentValue[2];
+                        data[3] = attribs[i].mCurrentValue[3];
+                        buffer->unmap();
+                        mDirtyCurrentValue[i] = false;
+                    }
                 }
 
                 translated[i].vertexBuffer = mCurrentValueBuffer[i]->getBuffer();
@@ -254,7 +274,7 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
 
                 translated[i].type = D3DDECLTYPE_FLOAT4;
                 translated[i].stride = 0;
-                translated[i].offset = 0;
+                translated[i].offset = mCurrentValueOffsets[i];
             }
         }
     }
@@ -562,37 +582,6 @@ unsigned int VertexBuffer::getSerial() const
 unsigned int VertexBuffer::issueSerial()
 {
     return mCurrentSerial++;
-}
-
-ConstantVertexBuffer::ConstantVertexBuffer(IDirect3DDevice9 *device, float x, float y, float z, float w) : VertexBuffer(device, 4 * sizeof(float), D3DUSAGE_WRITEONLY)
-{
-    void *buffer = NULL;
-
-    if (mVertexBuffer)
-    {
-        HRESULT result = mVertexBuffer->Lock(0, 0, &buffer, 0);
-     
-        if (FAILED(result))
-        {
-            ERR("Lock failed with error 0x%08x", result);
-        }
-    }
-
-    if (buffer)
-    {
-        float *vector = (float*)buffer;
-
-        vector[0] = x;
-        vector[1] = y;
-        vector[2] = z;
-        vector[3] = w;
-
-        mVertexBuffer->Unlock();
-    }
-}
-
-ConstantVertexBuffer::~ConstantVertexBuffer()
-{
 }
 
 ArrayVertexBuffer::ArrayVertexBuffer(IDirect3DDevice9 *device, std::size_t size, DWORD usageFlags) : VertexBuffer(device, size, usageFlags)

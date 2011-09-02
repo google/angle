@@ -56,13 +56,6 @@ class VertexBuffer
     DISALLOW_COPY_AND_ASSIGN(VertexBuffer);
 };
 
-class ConstantVertexBuffer : public VertexBuffer
-{
-  public:
-    ConstantVertexBuffer(IDirect3DDevice9 *device, float x, float y, float z, float w);
-    ~ConstantVertexBuffer();
-};
-
 class ArrayVertexBuffer : public VertexBuffer
 {
   public:
@@ -137,7 +130,8 @@ class VertexDataManager
     StreamingVertexBuffer *mStreamingBuffer;
 
     bool mDirtyCurrentValue[MAX_VERTEX_ATTRIBS];
-    ConstantVertexBuffer *mCurrentValueBuffer[MAX_VERTEX_ATTRIBS];
+    StreamingVertexBuffer *mCurrentValueBuffer[MAX_VERTEX_ATTRIBS];
+    UINT mCurrentValueOffsets[MAX_VERTEX_ATTRIBS];
 
     // Attribute format conversion
     struct FormatConverter
