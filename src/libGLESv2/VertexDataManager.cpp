@@ -25,6 +25,7 @@ namespace
 
 namespace gl
 {
+unsigned int VertexBuffer::mCurrentSerial = 1;
 
 VertexDataManager::VertexDataManager(Context *context, IDirect3DDevice9 *device) : mContext(context), mDevice(device)
 {
@@ -234,6 +235,7 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
                 }
 
                 translated[i].vertexBuffer = vertexBuffer->getBuffer();
+                translated[i].serial = vertexBuffer->getSerial();
                 translated[i].type = converter.d3dDeclType;
                 translated[i].stride = converter.outputElementSize;
                 translated[i].offset = streamOffset;
@@ -248,6 +250,7 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
                 }
 
                 translated[i].vertexBuffer = mCurrentValueBuffer[i]->getBuffer();
+                translated[i].serial = mCurrentValueBuffer[i]->getSerial();
 
                 translated[i].type = D3DDECLTYPE_FLOAT4;
                 translated[i].stride = 0;
@@ -521,6 +524,7 @@ VertexBuffer::VertexBuffer(IDirect3DDevice9 *device, std::size_t size, DWORD usa
     {
         D3DPOOL pool = getDisplay()->getBufferPool(usageFlags);
         HRESULT result = device->CreateVertexBuffer(size, usageFlags, 0, pool, &mVertexBuffer, NULL);
+        mSerial = issueSerial();
         
         if (FAILED(result))
         {
@@ -548,6 +552,16 @@ void VertexBuffer::unmap()
 IDirect3DVertexBuffer9 *VertexBuffer::getBuffer() const
 {
     return mVertexBuffer;
+}
+
+unsigned int VertexBuffer::getSerial() const
+{
+    return mSerial;
+}
+
+unsigned int VertexBuffer::issueSerial()
+{
+    return mCurrentSerial++;
 }
 
 ConstantVertexBuffer::ConstantVertexBuffer(IDirect3DDevice9 *device, float x, float y, float z, float w) : VertexBuffer(device, 4 * sizeof(float), D3DUSAGE_WRITEONLY)
@@ -640,6 +654,7 @@ void StreamingVertexBuffer::reserveRequiredSpace()
 
         D3DPOOL pool = getDisplay()->getBufferPool(D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY);
         HRESULT result = mDevice->CreateVertexBuffer(mBufferSize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, 0, pool, &mVertexBuffer, NULL);
+        mSerial = issueSerial();
     
         if (FAILED(result))
         {
@@ -702,7 +717,8 @@ void StaticVertexBuffer::reserveRequiredSpace()
     {
         D3DPOOL pool = getDisplay()->getBufferPool(D3DUSAGE_WRITEONLY);
         HRESULT result = mDevice->CreateVertexBuffer(mRequiredSpace, D3DUSAGE_WRITEONLY, 0, pool, &mVertexBuffer, NULL);
-    
+        mSerial = issueSerial();
+
         if (FAILED(result))
         {
             ERR("Out of memory allocating a vertex buffer of size %lu.", mRequiredSpace);

@@ -363,7 +363,12 @@ void Context::markAllStateDirty()
     mAppliedRenderTargetSerial = 0;
     mAppliedDepthbufferSerial = 0;
     mAppliedStencilbufferSerial = 0;
+    mAppliedIBSerial = 0;
     mDepthStencilInitialized = false;
+    mViewportInitialized = false;
+    mRenderTargetDescInitialized = false;
+
+    mVertexDeclarationCache.markStateDirty();
 
     mClearStateDirty = true;
     mCullStateDirty = true;
@@ -1618,12 +1623,14 @@ bool Context::applyRenderTarget(bool ignoreViewport)
 
     IDirect3DSurface9 *depthStencil = NULL;
 
+    bool renderTargetChanged = false;
     unsigned int renderTargetSerial = framebufferObject->getRenderTargetSerial();
     if (renderTargetSerial != mAppliedRenderTargetSerial)
     {
         device->SetRenderTarget(0, renderTarget);
         mAppliedRenderTargetSerial = renderTargetSerial;
         mScissorStateDirty = true; // Scissor area must be clamped to render target's size-- this is different for different render targets.
+        renderTargetChanged = true;
     }
 
     unsigned int depthbufferSerial = 0;
@@ -1661,9 +1668,13 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         mDepthStencilInitialized = true;
     }
 
+    if (!mRenderTargetDescInitialized || renderTargetChanged)
+    {
+        renderTarget->GetDesc(&mRenderTargetDesc);
+        mRenderTargetDescInitialized = true;
+    }
+
     D3DVIEWPORT9 viewport;
-    D3DSURFACE_DESC desc;
-    renderTarget->GetDesc(&desc);
 
     float zNear = clamp01(mState.zNear);
     float zFar = clamp01(mState.zFar);
@@ -1672,18 +1683,18 @@ bool Context::applyRenderTarget(bool ignoreViewport)
     {
         viewport.X = 0;
         viewport.Y = 0;
-        viewport.Width = desc.Width;
-        viewport.Height = desc.Height;
+        viewport.Width = mRenderTargetDesc.Width;
+        viewport.Height = mRenderTargetDesc.Height;
         viewport.MinZ = 0.0f;
         viewport.MaxZ = 1.0f;
     }
     else
     {
-        RECT rect = transformPixelRect(mState.viewportX, mState.viewportY, mState.viewportWidth, mState.viewportHeight, desc.Height);
-        viewport.X = clamp(rect.left, 0L, static_cast<LONG>(desc.Width));
-        viewport.Y = clamp(rect.top, 0L, static_cast<LONG>(desc.Height));
-        viewport.Width = clamp(rect.right - rect.left, 0L, static_cast<LONG>(desc.Width) - static_cast<LONG>(viewport.X));
-        viewport.Height = clamp(rect.bottom - rect.top, 0L, static_cast<LONG>(desc.Height) - static_cast<LONG>(viewport.Y));
+        RECT rect = transformPixelRect(mState.viewportX, mState.viewportY, mState.viewportWidth, mState.viewportHeight, mRenderTargetDesc.Height);
+        viewport.X = clamp(rect.left, 0L, static_cast<LONG>(mRenderTargetDesc.Width));
+        viewport.Y = clamp(rect.top, 0L, static_cast<LONG>(mRenderTargetDesc.Height));
+        viewport.Width = clamp(rect.right - rect.left, 0L, static_cast<LONG>(mRenderTargetDesc.Width) - static_cast<LONG>(viewport.X));
+        viewport.Height = clamp(rect.bottom - rect.top, 0L, static_cast<LONG>(mRenderTargetDesc.Height) - static_cast<LONG>(viewport.Y));
         viewport.MinZ = zNear;
         viewport.MaxZ = zFar;
     }
@@ -1693,17 +1704,22 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         return false;   // Nothing to render
     }
 
-    device->SetViewport(&viewport);
+    if (!mViewportInitialized || memcmp(&viewport, &mSetViewport, sizeof mSetViewport) != 0)
+    {
+        device->SetViewport(&viewport);
+        mSetViewport = viewport;
+        mViewportInitialized = true;
+    }
 
     if (mScissorStateDirty)
     {
         if (mState.scissorTest)
         {
-            RECT rect = transformPixelRect(mState.scissorX, mState.scissorY, mState.scissorWidth, mState.scissorHeight, desc.Height);
-            rect.left = clamp(rect.left, 0L, static_cast<LONG>(desc.Width));
-            rect.top = clamp(rect.top, 0L, static_cast<LONG>(desc.Height));
-            rect.right = clamp(rect.right, 0L, static_cast<LONG>(desc.Width));
-            rect.bottom = clamp(rect.bottom, 0L, static_cast<LONG>(desc.Height));
+            RECT rect = transformPixelRect(mState.scissorX, mState.scissorY, mState.scissorWidth, mState.scissorHeight, mRenderTargetDesc.Height);
+            rect.left = clamp(rect.left, 0L, static_cast<LONG>(mRenderTargetDesc.Width));
+            rect.top = clamp(rect.top, 0L, static_cast<LONG>(mRenderTargetDesc.Height));
+            rect.right = clamp(rect.right, 0L, static_cast<LONG>(mRenderTargetDesc.Width));
+            rect.bottom = clamp(rect.bottom, 0L, static_cast<LONG>(mRenderTargetDesc.Height));
             device->SetScissorRect(&rect);
             device->SetRenderState(D3DRS_SCISSORTESTENABLE, TRUE);
         }
@@ -2024,7 +2040,11 @@ GLenum Context::applyIndexBuffer(const void *indices, GLsizei count, GLenum mode
 
     if (err == GL_NO_ERROR)
     {
-        device->SetIndices(indexInfo->indexBuffer);
+        if (indexInfo->serial != mAppliedIBSerial)
+        {
+            device->SetIndices(indexInfo->indexBuffer);
+            mAppliedIBSerial = indexInfo->serial;
+        }
     }
 
     return err;
@@ -2035,14 +2055,13 @@ void Context::applyShaders()
 {
     IDirect3DDevice9 *device = getDevice();
     Program *programObject = getCurrentProgram();
-    IDirect3DVertexShader9 *vertexShader = programObject->getVertexShader();
-    IDirect3DPixelShader9 *pixelShader = programObject->getPixelShader();
-
-    device->SetVertexShader(vertexShader);
-    device->SetPixelShader(pixelShader);
-
     if (programObject->getSerial() != mAppliedProgramSerial)
     {
+        IDirect3DVertexShader9 *vertexShader = programObject->getVertexShader();
+        IDirect3DPixelShader9 *pixelShader = programObject->getPixelShader();
+
+        device->SetPixelShader(pixelShader);
+        device->SetVertexShader(vertexShader);
         programObject->dirtyAllUniforms();
         mAppliedProgramSerial = programObject->getSerial();
     }
@@ -2907,6 +2926,7 @@ void Context::drawClosingLine(unsigned int first, unsigned int last)
     if (succeeded)
     {
         device->SetIndices(mClosingIB->getBuffer());
+        mAppliedIBSerial = mClosingIB->getSerial();
 
         device->DrawIndexedPrimitive(D3DPT_LINELIST, 0, 0, last, offset, 1);
     }
@@ -3744,7 +3764,15 @@ GLenum VertexDeclarationCache::applyDeclaration(TranslatedAttribute attributes[]
     {
         if (attributes[i].active)
         {
-            device->SetStreamSource(i, attributes[i].vertexBuffer, attributes[i].offset, attributes[i].stride);
+            if (mAppliedVBs[i].serial != attributes[i].serial ||
+                mAppliedVBs[i].stride != attributes[i].stride ||
+                mAppliedVBs[i].offset != attributes[i].offset)
+            {
+                device->SetStreamSource(i, attributes[i].vertexBuffer, attributes[i].offset, attributes[i].stride);
+                mAppliedVBs[i].serial = attributes[i].serial;
+                mAppliedVBs[i].stride = attributes[i].stride;
+                mAppliedVBs[i].offset = attributes[i].offset;
+            }
 
             element->Stream = i;
             element->Offset = 0;
@@ -3765,8 +3793,12 @@ GLenum VertexDeclarationCache::applyDeclaration(TranslatedAttribute attributes[]
         if (memcmp(entry->cachedElements, elements, (element - elements) * sizeof(D3DVERTEXELEMENT9)) == 0 && entry->vertexDeclaration)
         {
             entry->lruCount = ++mMaxLru;
-            device->SetVertexDeclaration(entry->vertexDeclaration);
-            
+            if(entry->vertexDeclaration != mLastSetVDecl)
+            {
+                device->SetVertexDeclaration(entry->vertexDeclaration);
+                mLastSetVDecl = entry->vertexDeclaration;
+            }
+
             return GL_NO_ERROR;
         }
     }
@@ -3785,14 +3817,27 @@ GLenum VertexDeclarationCache::applyDeclaration(TranslatedAttribute attributes[]
     {
         lastCache->vertexDeclaration->Release();
         lastCache->vertexDeclaration = NULL;
+        // mLastSetVDecl is set to the replacement, so we don't have to worry
+        // about it.
     }
 
     memcpy(lastCache->cachedElements, elements, (element - elements) * sizeof(D3DVERTEXELEMENT9));
     device->CreateVertexDeclaration(elements, &lastCache->vertexDeclaration);
     device->SetVertexDeclaration(lastCache->vertexDeclaration);
+    mLastSetVDecl = lastCache->vertexDeclaration;
     lastCache->lruCount = ++mMaxLru;
 
     return GL_NO_ERROR;
+}
+
+void VertexDeclarationCache::markStateDirty()
+{
+    for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
+    {
+        mAppliedVBs[i].serial = 0;
+    }
+
+    mLastSetVDecl = NULL;
 }
 
 }

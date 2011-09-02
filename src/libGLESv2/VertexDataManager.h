@@ -30,6 +30,7 @@ struct TranslatedAttribute
     UINT stride;   // 0 means not to advance the read pointer at all
 
     IDirect3DVertexBuffer9 *vertexBuffer;
+    unsigned int serial;
 };
 
 class VertexBuffer
@@ -41,10 +42,15 @@ class VertexBuffer
     void unmap();
 
     IDirect3DVertexBuffer9 *getBuffer() const;
+    unsigned int getSerial() const;
 
   protected:
     IDirect3DDevice9 *const mDevice;
     IDirect3DVertexBuffer9 *mVertexBuffer;
+
+    unsigned int mSerial;
+    static unsigned int issueSerial();
+    static unsigned int mCurrentSerial;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(VertexBuffer);

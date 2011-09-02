@@ -22,6 +22,7 @@ namespace
 
 namespace gl
 {
+unsigned int IndexBuffer::mCurrentSerial = 1;
 
 IndexDataManager::IndexDataManager(Context *context, IDirect3DDevice9 *device) : mDevice(device)
 {
@@ -200,6 +201,7 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, Buffer *bu
     }
 
     translated->indexBuffer = indexBuffer->getBuffer();
+    translated->serial = indexBuffer->getSerial();
     translated->startIndex = streamOffset / indexSize(format);
 
     if (buffer)
@@ -232,6 +234,7 @@ IndexBuffer::IndexBuffer(IDirect3DDevice9 *device, UINT size, D3DFORMAT format) 
     {
         D3DPOOL pool = getDisplay()->getBufferPool(D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY);
         HRESULT result = device->CreateIndexBuffer(size, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, format, pool, &mIndexBuffer, NULL);
+        mSerial = issueSerial();
 
         if (FAILED(result))
         {
@@ -251,6 +254,16 @@ IndexBuffer::~IndexBuffer()
 IDirect3DIndexBuffer9 *IndexBuffer::getBuffer() const
 {
     return mIndexBuffer;
+}
+
+unsigned int IndexBuffer::getSerial() const
+{
+    return mSerial;
+}
+
+unsigned int IndexBuffer::issueSerial()
+{
+    return mCurrentSerial++;
 }
 
 void IndexBuffer::unmap()
@@ -305,6 +318,7 @@ void StreamingIndexBuffer::reserveSpace(UINT requiredSpace, GLenum type)
 
         D3DPOOL pool = getDisplay()->getBufferPool(D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY);
         HRESULT result = mDevice->CreateIndexBuffer(mBufferSize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, type == GL_UNSIGNED_INT ? D3DFMT_INDEX32 : D3DFMT_INDEX16, pool, &mIndexBuffer, NULL);
+        mSerial = issueSerial();
     
         if (FAILED(result))
         {
@@ -358,6 +372,7 @@ void StaticIndexBuffer::reserveSpace(UINT requiredSpace, GLenum type)
     {
         D3DPOOL pool = getDisplay()->getBufferPool(D3DUSAGE_WRITEONLY);
         HRESULT result = mDevice->CreateIndexBuffer(requiredSpace, D3DUSAGE_WRITEONLY, type == GL_UNSIGNED_INT ? D3DFMT_INDEX32 : D3DFMT_INDEX16, pool, &mIndexBuffer, NULL);
+        mSerial = issueSerial();
     
         if (FAILED(result))
         {
