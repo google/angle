@@ -515,6 +515,11 @@ EGLSurface Display::createWindowSurface(HWND window, EGLConfig config, const EGL
         return error(EGL_BAD_ALLOC, EGL_NO_SURFACE);
     }
 
+    if (isDeviceLost()) {
+        if (!restoreLostDevice())
+            return EGL_NO_SURFACE;
+    }
+
     Surface *surface = new Surface(this, configuration, window);
 
     if (!surface->initialize())
@@ -622,6 +627,11 @@ EGLSurface Display::createOffscreenSurface(EGLConfig config, HANDLE shareHandle,
         return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
     }
 
+    if (isDeviceLost()) {
+        if (!restoreLostDevice())
+            return EGL_NO_SURFACE;
+    }
+
     Surface *surface = new Surface(this, configuration, shareHandle, width, height, textureFormat, textureTarget);
 
     if (!surface->initialize())
@@ -646,22 +656,8 @@ EGLContext Display::createContext(EGLConfig configHandle, const gl::Context *sha
     }
     else if (isDeviceLost())   // Lost device
     {
-        // Release surface resources to make the Reset() succeed
-        for (SurfaceSet::iterator surface = mSurfaceSet.begin(); surface != mSurfaceSet.end(); surface++)
-        {
-            (*surface)->release();
-        }
-
-        if (!resetDevice())
-        {
+        if (!restoreLostDevice())
             return NULL;
-        }
-
-        // Restore any surfaces that may have been lost
-        for (SurfaceSet::iterator surface = mSurfaceSet.begin(); surface != mSurfaceSet.end(); surface++)
-        {
-            (*surface)->resetSwapChain();
-        }
     }
 
     const egl::Config *config = mConfigSet.get(configHandle);
@@ -671,6 +667,29 @@ EGLContext Display::createContext(EGLConfig configHandle, const gl::Context *sha
 
     return context;
 }
+
+bool Display::restoreLostDevice()
+{
+    // Release surface resources to make the Reset() succeed
+    for (SurfaceSet::iterator surface = mSurfaceSet.begin(); surface != mSurfaceSet.end(); surface++)
+    {
+        (*surface)->release();
+    }
+
+    if (!resetDevice())
+    {
+        return false;
+    }
+
+    // Restore any surfaces that may have been lost
+    for (SurfaceSet::iterator surface = mSurfaceSet.begin(); surface != mSurfaceSet.end(); surface++)
+    {
+        (*surface)->resetSwapChain();
+    }
+
+    return true;
+}
+
 
 void Display::destroySurface(egl::Surface *surface)
 {
