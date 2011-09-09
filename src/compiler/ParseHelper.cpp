@@ -929,7 +929,8 @@ bool TParseContext::extensionErrorCheck(int line, const TString& extension)
         error(line, "extension", extension.c_str(), "is not supported");
         return true;
     }
-    if (iter->second == EBhDisable) {
+    // In GLSL ES, an extension's default behavior is "disable".
+    if (iter->second == EBhDisable || iter->second == EBhUndefined) {
         error(line, "extension", extension.c_str(), "is disabled");
         return true;
     }
