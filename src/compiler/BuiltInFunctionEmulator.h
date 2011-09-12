@@ -7,6 +7,8 @@
 #ifndef COMPILIER_BUILT_IN_FUNCTION_EMULATOR_H_
 #define COMPILIER_BUILT_IN_FUNCTION_EMULATOR_H_
 
+#include "GLSLANG/ShaderLang.h"
+
 #include "compiler/InfoSink.h"
 #include "compiler/intermediate.h"
 
@@ -15,11 +17,16 @@
 // emulated in certain os/drivers, assuming they are no more than 32.
 //
 enum TBuiltInFunctionGroup {
-    TFunctionGroupNormalize      = 1 << 0,
-    TFunctionGroupAbs            = 1 << 1,
-    TFunctionGroupSign           = 1 << 2,
-    TFunctionGroupAll            =
-        TFunctionGroupNormalize | TFunctionGroupAbs | TFunctionGroupSign
+    TFunctionGroupAbs            = 1 << 0,  // NVIDIA Win/Mac
+    TFunctionGroupAtan           = 1 << 1,  // NVIDIA Win/Mac
+    TFunctionGroupCos            = 1 << 2,  // ATI Mac
+    TFunctionGroupMod            = 1 << 3,  // NVIDIA Win/Mac
+    TFunctionGroupSign           = 1 << 4,  // NVIDIA Win/Mac
+    TFunctionGroupAll            = TFunctionGroupAbs |
+                                   TFunctionGroupAtan |
+                                   TFunctionGroupCos |
+                                   TFunctionGroupMod |
+                                   TFunctionGroupSign
 };
 
 //
@@ -29,7 +36,7 @@ enum TBuiltInFunctionGroup {
 //
 class BuiltInFunctionEmulator {
 public:
-    BuiltInFunctionEmulator();
+    BuiltInFunctionEmulator(ShShaderType shaderType);
 
     // functionGroupMask is a bitmap of TBuiltInFunctionGroup.
     // We only emulate functions that are marked by this mask and are actually
@@ -42,10 +49,9 @@ public:
     // becomes an no-op.
     // Returns true if the function call needs to be replaced with an emulated
     // one.
-    // TODO(zmo): for now, an operator and a return type is enough to identify
-    // the function we want to emulate.  Should make this more flexible to
-    // handle any functions.
-    bool SetFunctionCalled(TOperator op, const TType& returnType);
+    bool SetFunctionCalled(TOperator op, const TType& param);
+    bool SetFunctionCalled(
+        TOperator op, const TType& param1, const TType& param2);
 
     // Output function emulation definition.  This should be before any other
     // shader source.
@@ -61,14 +67,30 @@ private:
     // Built-in functions.
     //
     enum TBuiltInFunction {
-        TFunctionNormalize1 = 0,  // float normalize(float);
-        TFunctionNormalize2,  // vec2 normalize(vec2);
-        TFunctionNormalize3,  // vec3 normalize(vec3);
-        TFunctionNormalize4,  // fec4 normalize(vec4);
-        TFunctionAbs1,  // float abs(float);
+        TFunctionAbs1 = 0,  // float abs(float);
         TFunctionAbs2,  // vec2 abs(vec2);
         TFunctionAbs3,  // vec3 abs(vec3);
         TFunctionAbs4,  // vec4 abs(vec4);
+
+        TFunctionAtan1,  // float atan(float);
+        TFunctionAtan2,  // vec2 atan(vec2);
+        TFunctionAtan3,  // vec3 atan(vec3);
+        TFunctionAtan4,  // vec4 atan(vec4);
+        TFunctionAtan1_1,  // float atan(float, float);
+        TFunctionAtan2_2,  // vec2 atan(vec2, vec2);
+        TFunctionAtan3_3,  // vec3 atan(vec3, vec2);
+        TFunctionAtan4_4,  // vec4 atan(vec4, vec2);
+
+        TFunctionCos1,  // float cos(float);
+        TFunctionCos2,  // vec2 cos(vec2);
+        TFunctionCos3,  // vec3 cos(vec3);
+        TFunctionCos4,  // vec4 cos(vec4);
+
+        TFunctionMod1_1,  // float mod(float, float);
+        TFunctionMod2_2,  // vec2 mod(vec2, vec2);
+        TFunctionMod3_3,  // vec3 mod(vec3, vec3);
+        TFunctionMod4_4,  // vec4 mod(vec4, vec4);
+
         TFunctionSign1,  // float sign(float);
         TFunctionSign2,  // vec2 sign(vec2);
         TFunctionSign3,  // vec3 sign(vec3);
@@ -76,11 +98,16 @@ private:
         TFunctionUnknown
     };
 
-    // Same TODO as SetFunctionCalled.
-    TBuiltInFunction IdentifyFunction(TOperator op, const TType& returnType);
+    TBuiltInFunction IdentifyFunction(TOperator op, const TType& param);
+    TBuiltInFunction IdentifyFunction(
+        TOperator op, const TType& param1, const TType& param2);
+
+    bool SetFunctionCalled(TBuiltInFunction function);
 
     TVector<TBuiltInFunction> mFunctions;
     unsigned int mFunctionGroupMask;  // a bitmap of TBuiltInFunctionGroup.
+
+    const bool* mFunctionMask;  // a boolean flag for each function.
 };
 
 #endif  // COMPILIER_BUILT_IN_FUNCTION_EMULATOR_H_

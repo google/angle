@@ -88,7 +88,8 @@ TShHandleBase::~TShHandleBase() {
 
 TCompiler::TCompiler(ShShaderType type, ShShaderSpec spec)
     : shaderType(type),
-      shaderSpec(spec) 
+      shaderSpec(spec),
+      builtInFunctionEmulator(type)
 {
 }
 
