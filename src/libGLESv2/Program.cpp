@@ -24,6 +24,7 @@
 namespace gl
 {
 unsigned int Program::mCurrentSerial = 1;
+const char *fakepath = "C:\\fakepath";
 
 std::string str(int i)
 {
@@ -993,7 +994,7 @@ ID3D10Blob *Program::compileToBinary(const char *hlsl, const char *profile, ID3D
 
     ID3D10Blob *binary = NULL;
     ID3D10Blob *errorMessage = NULL;
-    result = D3DCompile(hlsl, strlen(hlsl), NULL, NULL, NULL, "main", profile, flags, 0, &binary, &errorMessage);
+    result = D3DCompile(hlsl, strlen(hlsl), fakepath, NULL, NULL, "main", profile, flags, 0, &binary, &errorMessage);
 
     if (errorMessage)
     {
@@ -1006,7 +1007,6 @@ ID3D10Blob *Program::compileToBinary(const char *hlsl, const char *profile, ID3D
         errorMessage->Release();
         errorMessage = NULL;
     }
-
 
     if (FAILED(result))
     {
@@ -2448,29 +2448,22 @@ bool Program::applyUniform4iv(GLint location, GLsizei count, const GLint *v)
 
 
 // append a santized message to the program info log.
-// The D3D compiler includes the current working directory
-// in some of the warning or error messages, so lets remove
-// any occurrances of those that we find in the log.
+// The D3D compiler includes a fake file path in some of the warning or error 
+// messages, so lets remove all occurrences of this fake file path from the log.
 void Program::appendToInfoLogSanitized(const char *message)
 {
     std::string msg(message);
-    CHAR path[MAX_PATH] = "";
-    size_t len;
 
-    len = GetCurrentDirectoryA(MAX_PATH, path);
-    if (len > 0 && len < MAX_PATH)
+    size_t found;
+    do
     {
-        size_t found;
-        do {
-            found = msg.find(path);
-            if (found != std::string::npos)
-            {
-                // the +1 here is intentional so that we remove
-                // the trailing '\' that occurs after the path
-                msg.erase(found, len+1);
-            }
-        } while (found != std::string::npos);
+        found = msg.find(fakepath);
+        if (found != std::string::npos)
+        {
+            msg.erase(found, strlen(fakepath));
+        }
     }
+    while (found != std::string::npos);
 
     appendToInfoLog("%s\n", msg.c_str());
 }
