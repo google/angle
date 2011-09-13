@@ -24,26 +24,25 @@ class Macro
         kTypeObj,
         kTypeFunc
     };
-    typedef std::vector<std::string*> ParameterVector;
 
     // Takes ownership of pointer parameters.
     Macro(Type type,
-          std::string* identifier,
-          ParameterVector* parameters,
+          std::string* name,
+          TokenVector* parameters,
           TokenVector* replacements);
     ~Macro();
 
     Type type() const { return mType; }
-    const std::string* identifier() const { return mIdentifier; }
-    const ParameterVector* parameters() const { return mParameters; }
+    const std::string* identifier() const { return mName; }
+    const TokenVector* parameters() const { return mParameters; }
     const TokenVector* replacements() const { return mReplacements; }
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Macro);
 
     Type mType;
-    std::string* mIdentifier;
-    ParameterVector* mParameters;
+    std::string* mName;
+    TokenVector* mParameters;
     TokenVector* mReplacements;
 };
 

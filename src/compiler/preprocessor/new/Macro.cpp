@@ -14,11 +14,11 @@ namespace pp
 {
 
 Macro::Macro(Type type,
-             std::string* identifier,
-             ParameterVector* parameters,
+             std::string* name,
+             TokenVector* parameters,
              TokenVector* replacements)
     : mType(type),
-      mIdentifier(identifier),
+      mName(name),
       mParameters(parameters),
       mReplacements(replacements)
 {
@@ -26,7 +26,7 @@ Macro::Macro(Type type,
 
 Macro::~Macro()
 {
-    delete mIdentifier;
+    delete mName;
 
     if (mParameters)
     {

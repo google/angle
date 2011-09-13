@@ -33,11 +33,11 @@ class Context
 
     bool defineMacro(pp::Token::Location location,
                      pp::Macro::Type type,
-                     std::string* identifier,
-                     pp::Macro::ParameterVector* parameters,
+                     std::string* name,
+                     pp::TokenVector* parameters,
                      pp::TokenVector* replacements);
-    bool undefineMacro(const std::string* identifier);
-    bool isMacroDefined(const std::string* identifier);
+    bool undefineMacro(const std::string* name);
+    bool isMacroDefined(const std::string* name);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Context);
@@ -46,7 +46,7 @@ class Context
     void reset();
     bool initLexer();
     void destroyLexer();
-    void defineBuiltInMacro(const std::string& identifier, int value);
+    void defineBuiltInMacro(const std::string& name, int value);
     bool parse();
 
     void* mLexer;  // Lexer handle.

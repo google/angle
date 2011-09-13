@@ -36,6 +36,8 @@ IF YOU MODIFY THIS FILE YOU ALSO NEED TO RUN generate_parser.sh.
 
 #define YY_INPUT(buf, result, maxSize) \
     result = yyextra->readInput(buf, maxSize);
+    
+static std::string* extractMacroName(const char* str, int len);
 %}
 
 %option noyywrap nounput never-interactive
@@ -61,9 +63,15 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 
 {HASH} { return HASH; }
 
-{HASH}define { return HASH_DEFINE_OBJ; }
-{HASH}define{HSPACE}+/{IDENTIFIER}"(" { return HASH_DEFINE_FUNC; }
-{HASH}undef { return HASH_UNDEF; }
+{HASH}define{HSPACE}+{IDENTIFIER}/[ \t\n] {
+    yylval->sval = extractMacroName(yytext, yyleng);
+    return HASH_DEFINE_OBJ;
+}
+{HASH}define{HSPACE}+{IDENTIFIER}/"(" {
+    yylval->sval = extractMacroName(yytext, yyleng);
+    return HASH_DEFINE_FUNC;
+}
+{HASH}undef{HSPACE}+ { return HASH_UNDEF; }
 
 {HASH}if { return HASH_IF; }
 {HASH}ifdef { return HASH_IFDEF; }
@@ -96,7 +104,7 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 
 {PUNCTUATOR} { return yytext[0]; }
 
-{HSPACE}+ { return SPACE; }
+[ \t\v\f]+ { /* Ignore whitespace */ }
 
 \n {
     ++yylineno; yycolumn = 0;
@@ -106,6 +114,25 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 <*><<EOF>>     { yyterminate(); }
 
 %%
+
+std::string* extractMacroName(const char* str, int len)
+{
+    // The input string is of the form {HASH}define{HSPACE}+{IDENTIFIER}
+    // We just need to find the last HSPACE.
+    ASSERT(str && (len > 8));  // strlen("#define ") == 8;
+
+    std::string* name = NULL;
+    for (int i = len - 1; i >= 0; --i)
+    {
+        if ((str[i] == ' ') || (str[i] == '\t'))
+        {
+            name = new std::string(str + i + 1, len - i - 1);
+            break;
+        }
+    }
+    ASSERT(name);
+    return name;
+}
 
 namespace pp {
 

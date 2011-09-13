@@ -13,6 +13,21 @@
 #include "stl_utils.h"
 #include "token_type.h"
 
+static bool isMacroNameReserved(const std::string* name)
+{
+    ASSERT(name);
+
+    // Names prefixed with "GL_" are reserved.
+    if (name->substr(0, 3) == "GL_")
+        return true;
+
+    // Names containing two consecutive underscores are reserved.
+    if (name->find("__") != std::string::npos)
+        return true;
+
+    return false;
+}
+
 namespace pp
 {
 
@@ -58,18 +73,29 @@ bool Context::process(int count,
 
 bool Context::defineMacro(pp::Token::Location location,
                           pp::Macro::Type type,
-                          std::string* identifier,
-                          pp::Macro::ParameterVector* parameters,
+                          std::string* name,
+                          pp::TokenVector* parameters,
                           pp::TokenVector* replacements)
 {
-    // TODO(alokp): Check for reserved macro names and duplicate macros.
-    mMacros[*identifier] = new Macro(type, identifier, parameters, replacements);
+    std::auto_ptr<Macro> macro(new Macro(type, name, parameters, replacements));
+    if (isMacroNameReserved(name))
+    {
+        // TODO(alokp): Report error.
+        return false;
+    }
+    if (isMacroDefined(name))
+    {
+        // TODO(alokp): Report error.
+        return false;
+    }
+
+    mMacros[*name] = macro.release();
     return true;
 }
 
-bool Context::undefineMacro(const std::string* identifier)
+bool Context::undefineMacro(const std::string* name)
 {
-    MacroSet::iterator iter = mMacros.find(*identifier);
+    MacroSet::iterator iter = mMacros.find(*name);
     if (iter == mMacros.end())
     {
         // TODO(alokp): Report error.
@@ -79,9 +105,9 @@ bool Context::undefineMacro(const std::string* identifier)
     return true;
 }
 
-bool Context::isMacroDefined(const std::string* identifier)
+bool Context::isMacroDefined(const std::string* name)
 {
-    return mMacros.find(*identifier) != mMacros.end();
+    return mMacros.find(*name) != mMacros.end();
 }
 
 // Reset to initialized state.
@@ -96,17 +122,17 @@ void Context::reset()
     mOutput = NULL;
 }
 
-void Context::defineBuiltInMacro(const std::string& identifier, int value)
+void Context::defineBuiltInMacro(const std::string& name, int value)
 {
     std::ostringstream stream;
     stream << value;
     Token* token = new Token(0, INT_CONSTANT, new std::string(stream.str()));
     TokenVector* replacements = new pp::TokenVector(1, token);
 
-    mMacros[identifier] = new Macro(Macro::kTypeObj,
-                                    new std::string(identifier),
-                                    NULL,
-                                    replacements);
+    mMacros[name] = new Macro(Macro::kTypeObj,
+                              new std::string(name),
+                              NULL,
+                              replacements);
 }
 
 }  // namespace pp
