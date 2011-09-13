@@ -775,10 +775,12 @@ bool Display::isDeviceLost()
     {
         return FAILED(mDeviceEx->CheckDeviceState(NULL));
     }
-    else
+    else if(mDevice)
     {
         return FAILED(mDevice->TestCooperativeLevel());
     }
+
+    return false;   // No device yet, so no reset required
 }
 
 void Display::getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray)
