@@ -209,6 +209,8 @@ void TCompiler::clearResults()
 
     attribs.clear();
     uniforms.clear();
+
+    builtInFunctionEmulator.Cleanup();
 }
 
 bool TCompiler::detectRecursion(TIntermNode* root)
