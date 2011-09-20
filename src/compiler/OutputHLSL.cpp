@@ -136,7 +136,7 @@ void OutputHLSL::header()
                 {
                     if (mReferencedUniforms.find(name.c_str()) != mReferencedUniforms.end())
                     {
-                        uniforms += "uniform " + typeString(type) + " " + decorate(name) + arrayString(type) + ";\n";
+                        uniforms += "uniform " + typeString(type) + " " + decorateUniform(name, type.isArray()) + arrayString(type) + ";\n";
                     }
                 }
                 else if (qualifier == EvqVaryingIn || qualifier == EvqInvariantVaryingIn)
@@ -300,7 +300,7 @@ void OutputHLSL::header()
                 {
                     if (mReferencedUniforms.find(name.c_str()) != mReferencedUniforms.end())
                     {
-                        uniforms += "uniform " + typeString(type) + " " + decorate(name) + arrayString(type) + ";\n";
+                        uniforms += "uniform " + typeString(type) + " " + decorateUniform(name, type.isArray()) + arrayString(type) + ";\n";
                     }
                 }
                 else if (qualifier == EvqAttribute)
@@ -729,17 +729,22 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
         if (qualifier == EvqUniform)
         {
             mReferencedUniforms.insert(name.c_str());
+            out << decorateUniform(name, node->isArray());
         }
         else if (qualifier == EvqAttribute)
         {
             mReferencedAttributes.insert(name.c_str());
+            out << decorate(name);
         }
         else if (qualifier == EvqVaryingOut || qualifier == EvqInvariantVaryingOut || qualifier == EvqVaryingIn || qualifier == EvqInvariantVaryingIn)
         {
             mReferencedVaryings.insert(name.c_str());
+            out << decorate(name);
         }
-
-        out << decorate(name);
+        else
+        {
+            out << decorate(name);
+        }
     }
 }
 
@@ -2341,9 +2346,17 @@ TString OutputHLSL::decorate(const TString &string)
     {
         return "_" + string;
     }
-    else
+    
+    return string;
+}
+
+TString OutputHLSL::decorateUniform(const TString &string, bool array)
+{
+    if (array)
     {
-        return string;
+        return "ar_" + string;   // Allows identifying arrays of size 1
     }
+    
+    return decorate(string);
 }
 }

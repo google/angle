@@ -34,7 +34,7 @@ std::string str(int i)
 }
 
 Uniform::Uniform(GLenum type, const std::string &_name, unsigned int arraySize)
-    : type(type), _name(_name), name(Program::undecorate(_name)), arraySize(arraySize)
+    : type(type), _name(_name), name(Program::undecorateUniform(_name)), arraySize(arraySize)
 {
     int bytes = UniformTypeSize(type) * arraySize;
     data = new unsigned char[bytes];
@@ -50,11 +50,11 @@ Uniform::~Uniform()
 
 bool Uniform::isArray()
 {
-    return arraySize != 1;   // FIXME: Arrays can be of size 1
+    return _name.substr(0, 3) == "ar_";
 }
 
 UniformLocation::UniformLocation(const std::string &_name, unsigned int element, unsigned int index) 
-    : name(Program::undecorate(_name)), element(element), index(index)
+    : name(Program::undecorateUniform(_name)), element(element), index(index)
 {
 }
 
@@ -1282,7 +1282,7 @@ bool Program::linkVaryings()
           default:  UNREACHABLE();
         }
 
-        mVertexHLSL += decorate(attribute->name) + " : TEXCOORD" + str(semanticIndex) + ";\n";
+        mVertexHLSL += decorateAttribute(attribute->name) + " : TEXCOORD" + str(semanticIndex) + ";\n";
 
         semanticIndex += VariableRowCount(attribute->type);
     }
@@ -1317,14 +1317,14 @@ bool Program::linkVaryings()
 
     for (AttributeArray::iterator attribute = mVertexShader->mAttributes.begin(); attribute != mVertexShader->mAttributes.end(); attribute++)
     {
-        mVertexHLSL += "    " + decorate(attribute->name) + " = ";
+        mVertexHLSL += "    " + decorateAttribute(attribute->name) + " = ";
 
         if (VariableRowCount(attribute->type) > 1)   // Matrix
         {
             mVertexHLSL += "transpose";
         }
 
-        mVertexHLSL += "(input." + decorate(attribute->name) + ");\n";
+        mVertexHLSL += "(input." + decorateAttribute(attribute->name) + ");\n";
     }
 
     mVertexHLSL += "\n"
@@ -1903,7 +1903,7 @@ Uniform *Program::createUniform(const D3DXCONSTANT_DESC &constantDescription, st
 }
 
 // This method needs to match OutputHLSL::decorate
-std::string Program::decorate(const std::string &name)
+std::string Program::decorateAttribute(const std::string &name)
 {
     if (name.substr(0, 3) != "gl_" && name.substr(0, 3) != "dx_")
     {
@@ -1913,11 +1913,15 @@ std::string Program::decorate(const std::string &name)
     return name;
 }
 
-std::string Program::undecorate(const std::string &_name)
+std::string Program::undecorateUniform(const std::string &_name)
 {
     if (_name.substr(0, 1) == "_")
     {
         return _name.substr(1);
+    }
+    else if (_name.substr(0, 3) == "ar_")
+    {
+        return _name.substr(3);
     }
     
     return _name;

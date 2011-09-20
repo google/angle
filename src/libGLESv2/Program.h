@@ -130,6 +130,9 @@ class Program
 
     unsigned int getSerial() const;
 
+    static std::string decorateAttribute(const std::string &name);    // Prepend an underscore
+    static std::string undecorateUniform(const std::string &_name);   // Remove leading underscore
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Program);
 
@@ -167,9 +170,6 @@ class Program
     void appendToInfoLogSanitized(const char *message);
     void appendToInfoLog(const char *info, ...);
     void resetInfoLog();
-
-    static std::string decorate(const std::string &name);      // Prepend an underscore
-    static std::string undecorate(const std::string &_name);   // Remove leading underscore
 
     static unsigned int issueSerial();
 
