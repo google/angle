@@ -50,7 +50,7 @@ Uniform::~Uniform()
 
 bool Uniform::isArray()
 {
-    return _name.substr(0, 3) == "ar_";
+    return _name.compare(0, 3, "ar_") == 0;
 }
 
 UniformLocation::UniformLocation(const std::string &_name, unsigned int element, unsigned int index) 
@@ -1905,7 +1905,7 @@ Uniform *Program::createUniform(const D3DXCONSTANT_DESC &constantDescription, st
 // This method needs to match OutputHLSL::decorate
 std::string Program::decorateAttribute(const std::string &name)
 {
-    if (name.substr(0, 3) != "gl_" && name.substr(0, 3) != "dx_")
+    if (name.compare(0, 3, "gl_") != 0 && name.compare(0, 3, "dx_") != 0)
     {
         return "_" + name;
     }
@@ -1915,11 +1915,11 @@ std::string Program::decorateAttribute(const std::string &name)
 
 std::string Program::undecorateUniform(const std::string &_name)
 {
-    if (_name.substr(0, 1) == "_")
+    if (_name[0] == '_')
     {
         return _name.substr(1);
     }
-    else if (_name.substr(0, 3) == "ar_")
+    else if (_name.compare(0, 3, "ar_") == 0)
     {
         return _name.substr(3);
     }
@@ -2778,7 +2778,7 @@ void Program::getActiveUniform(GLuint index, GLsizei bufsize, GLsizei *length, G
     unsigned int uniform;
     for (uniform = 0; uniform < mUniforms.size(); uniform++)
     {
-        if (mUniforms[uniform]->name.substr(0, 3) == "dx_")
+        if (mUniforms[uniform]->name.compare(0, 3, "dx_") == 0)
         {
             continue;
         }
@@ -2823,7 +2823,7 @@ GLint Program::getActiveUniformCount()
     unsigned int numUniforms = mUniforms.size();
     for (unsigned int uniformIndex = 0; uniformIndex < numUniforms; uniformIndex++)
     {
-        if (mUniforms[uniformIndex]->name.substr(0, 3) != "dx_")
+        if (mUniforms[uniformIndex]->name.compare(0, 3, "dx_") != 0)
         {
             count++;
         }
@@ -2839,7 +2839,7 @@ GLint Program::getActiveUniformMaxLength()
     unsigned int numUniforms = mUniforms.size();
     for (unsigned int uniformIndex = 0; uniformIndex < numUniforms; uniformIndex++)
     {
-        if (!mUniforms[uniformIndex]->name.empty() && mUniforms[uniformIndex]->name.substr(0, 3) != "dx_")
+        if (!mUniforms[uniformIndex]->name.empty() && mUniforms[uniformIndex]->name.compare(0, 3, "dx_") != 0)
         {
             int length = (int)(mUniforms[uniformIndex]->name.length() + 1);
             if (mUniforms[uniformIndex]->isArray())

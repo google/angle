@@ -2342,7 +2342,7 @@ TString OutputHLSL::structLookup(const TString &typeName)
 
 TString OutputHLSL::decorate(const TString &string)
 {
-    if (string.substr(0, 3) != "gl_" && string.substr(0, 3) != "dx_")
+    if (string.compare(0, 3, "gl_") != 0 && string.compare(0, 3, "dx_") != 0)
     {
         return "_" + string;
     }
