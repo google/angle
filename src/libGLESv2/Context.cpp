@@ -2529,6 +2529,7 @@ void Context::clear(GLbitfield mask)
             device->SetPixelShader(NULL);
             device->SetVertexShader(NULL);
             device->SetFVF(D3DFVF_XYZRHW | D3DFVF_DIFFUSE);
+            device->SetStreamSource(0, NULL, 0, 0);
             device->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, TRUE);
             device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
             device->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TFACTOR);
