@@ -1615,7 +1615,7 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
     }
 
     outputLineDirective(node->getLine());
-    out << "}\n";
+    out << ";}\n";
 
     if (node->getType() == ELoopDoWhile)
     {
@@ -1849,7 +1849,7 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
                 }
 
                 outputLineDirective(node->getLine());
-                out << "}\n";
+                out << ";}\n";
 
                 initial += 255 * increment;
                 iterations -= 255;
