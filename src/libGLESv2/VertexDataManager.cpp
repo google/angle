@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2011 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -690,7 +690,7 @@ void *StaticVertexBuffer::map(const VertexAttribute &attribute, std::size_t requ
         }
 
         int attributeOffset = attribute.mOffset % attribute.stride();
-        VertexElement element = {attribute.mType, attribute.mSize, attribute.mNormalized, attributeOffset, mWritePosition};
+        VertexElement element = {attribute.mType, attribute.mSize, attribute.stride(), attribute.mNormalized, attributeOffset, mWritePosition};
         mCache.push_back(element);
 
         *streamOffset = mWritePosition;
@@ -728,7 +728,10 @@ std::size_t StaticVertexBuffer::lookupAttribute(const VertexAttribute &attribute
 {
     for (unsigned int element = 0; element < mCache.size(); element++)
     {
-        if (mCache[element].type == attribute.mType &&  mCache[element].size == attribute.mSize && mCache[element].normalized == attribute.mNormalized)
+        if (mCache[element].type == attribute.mType &&
+            mCache[element].size == attribute.mSize &&
+            mCache[element].stride == attribute.stride() &&
+            mCache[element].normalized == attribute.mNormalized)
         {
             if (mCache[element].attributeOffset == attribute.mOffset % attribute.stride())
             {
