@@ -943,17 +943,24 @@ D3DPRESENT_PARAMETERS Display::getDefaultPresentParameters()
 
 void Display::initExtensionString()
 {
-    mExtensionString += "EGL_ANGLE_query_surface_pointer ";
     HMODULE swiftShader = GetModuleHandle(TEXT("swiftshader_d3d9.dll"));
+    bool isd3d9ex = isD3d9ExDevice();
+
+    mExtensionString = "";
+
+    if (isd3d9ex) {
+        mExtensionString += "EGL_ANGLE_d3d_share_handle_client_buffer ";
+    }
+
+    mExtensionString += "EGL_ANGLE_query_surface_pointer ";
 
     if (swiftShader)
     {
       mExtensionString += "EGL_ANGLE_software_display ";
     }
 
-    if (isD3d9ExDevice()) {
+    if (isd3d9ex) {
         mExtensionString += "EGL_ANGLE_surface_d3d_texture_2d_share_handle ";
-        mExtensionString += "EGL_ANGLE_d3d_share_handle_client_buffer ";
     }
 
     std::string::size_type end = mExtensionString.find_last_not_of(' ');
