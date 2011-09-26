@@ -2050,14 +2050,7 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
     typedef std::vector<TType> ParameterArray;
     ParameterArray ctorParameters;
 
-    if (parameters)
-    {
-        for (TIntermSequence::const_iterator parameter = parameters->begin(); parameter != parameters->end(); parameter++)
-        {
-            ctorParameters.push_back((*parameter)->getAsTyped()->getType());
-        }
-    }
-    else if (type.getStruct())
+    if (type.getStruct())
     {
         mStructNames.insert(decorate(name));
 
@@ -2084,6 +2077,13 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
         for (unsigned int i = 0; i < fields.size(); i++)
         {
             ctorParameters.push_back(*fields[i].type);
+        }
+    }
+    else if (parameters)
+    {
+        for (TIntermSequence::const_iterator parameter = parameters->begin(); parameter != parameters->end(); parameter++)
+        {
+            ctorParameters.push_back((*parameter)->getAsTyped()->getType());
         }
     }
     else UNREACHABLE();
