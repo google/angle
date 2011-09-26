@@ -3369,68 +3369,76 @@ void Context::setVertexAttrib(GLuint index, const GLfloat *values)
     mVertexDataManager->dirtyCurrentValue(index);
 }
 
+// keep list sorted in following order
+// OES extensions
+// EXT extensions
+// Vendor extensions
 void Context::initExtensionString()
 {
+    mExtensionString = "";
+
+    // OES extensions
+    if (supports32bitIndices())
+    {
+        mExtensionString += "GL_OES_element_index_uint ";
+    }
+
     mExtensionString += "GL_OES_packed_depth_stencil ";
-    mExtensionString += "GL_EXT_texture_format_BGRA8888 ";
-    mExtensionString += "GL_EXT_read_format_bgra ";
-    mExtensionString += "GL_ANGLE_framebuffer_blit ";
     mExtensionString += "GL_OES_rgb8_rgba8 ";
     mExtensionString += "GL_OES_standard_derivatives ";
 
-    if (supportsEventQueries())
+    if (supportsHalfFloatTextures())
     {
-        mExtensionString += "GL_NV_fence ";
+        mExtensionString += "GL_OES_texture_half_float ";
     }
+    if (supportsHalfFloatLinearFilter())
+    {
+        mExtensionString += "GL_OES_texture_half_float_linear ";
+    }
+    if (supportsFloatTextures())
+    {
+        mExtensionString += "GL_OES_texture_float ";
+    }
+    if (supportsFloatLinearFilter())
+    {
+        mExtensionString += "GL_OES_texture_float_linear ";
+    }
+
+    if (supportsNonPower2Texture())
+    {
+        mExtensionString += "GL_OES_texture_npot ";
+    }
+
+    // Multi-vendor (EXT) extensions
+    mExtensionString += "GL_EXT_read_format_bgra ";
 
     if (supportsDXT1Textures())
     {
         mExtensionString += "GL_EXT_texture_compression_dxt1 ";
     }
 
-    if (supportsDXT3Textures())
-    {
-        mExtensionString += "GL_ANGLE_texture_compression_dxt3 ";
-    }
+    mExtensionString += "GL_EXT_texture_format_BGRA8888 ";
 
-    if (supportsDXT5Textures())
-    {
-        mExtensionString += "GL_ANGLE_texture_compression_dxt5 ";
-    }
-
-    if (supportsFloatTextures())
-    {
-        mExtensionString += "GL_OES_texture_float ";
-    }
-
-    if (supportsHalfFloatTextures())
-    {
-        mExtensionString += "GL_OES_texture_half_float ";
-    }
-
-    if (supportsFloatLinearFilter())
-    {
-        mExtensionString += "GL_OES_texture_float_linear ";
-    }
-
-    if (supportsHalfFloatLinearFilter())
-    {
-        mExtensionString += "GL_OES_texture_half_float_linear ";
-    }
-
+    // ANGLE-specific extensions
+    mExtensionString += "GL_ANGLE_framebuffer_blit ";
     if (getMaxSupportedSamples() != 0)
     {
         mExtensionString += "GL_ANGLE_framebuffer_multisample ";
     }
 
-    if (supports32bitIndices())
+    if (supportsDXT3Textures())
     {
-        mExtensionString += "GL_OES_element_index_uint ";
+        mExtensionString += "GL_ANGLE_texture_compression_dxt3 ";
+    }
+    if (supportsDXT5Textures())
+    {
+        mExtensionString += "GL_ANGLE_texture_compression_dxt5 ";
     }
 
-    if (supportsNonPower2Texture())
+    // Other vendor-specific extensions
+    if (supportsEventQueries())
     {
-        mExtensionString += "GL_OES_texture_npot ";
+        mExtensionString += "GL_NV_fence ";
     }
 
     std::string::size_type end = mExtensionString.find_last_not_of(' ');
