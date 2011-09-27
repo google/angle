@@ -94,7 +94,7 @@ private:
 
     bool SetFunctionCalled(TBuiltInFunction function);
 
-    TVector<TBuiltInFunction> mFunctions;
+    std::vector<TBuiltInFunction> mFunctions;
 
     const bool* mFunctionMask;  // a boolean flag for each function.
     const char** mFunctionSource;
