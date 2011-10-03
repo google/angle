@@ -3089,6 +3089,9 @@ void __stdcall glGetShaderiv(GLuint shader, GLenum pname, GLint* params)
               case GL_SHADER_SOURCE_LENGTH:
                 *params = shaderObject->getSourceLength();
                 return;
+              case GL_TRANSLATED_SHADER_SOURCE_LENGTH_ANGLE:
+                *params = shaderObject->getTranslatedSourceLength();
+                return;
               default:
                 return error(GL_INVALID_ENUM);
             }
@@ -3201,6 +3204,38 @@ void __stdcall glGetShaderSource(GLuint shader, GLsizei bufsize, GLsizei* length
             }
 
             shaderObject->getSource(bufsize, length, source);
+        }
+    }
+    catch(std::bad_alloc&)
+    {
+        return error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glGetTranslatedShaderSourceANGLE(GLuint shader, GLsizei bufsize, GLsizei* length, GLchar* source)
+{
+    EVENT("(GLuint shader = %d, GLsizei bufsize = %d, GLsizei* length = 0x%0.8p, GLchar* source = 0x%0.8p)",
+          shader, bufsize, length, source);
+
+    try
+    {
+        if (bufsize < 0)
+        {
+            return error(GL_INVALID_VALUE);
+        }
+
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            gl::Shader *shaderObject = context->getShader(shader);
+
+            if (!shaderObject)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            shaderObject->getTranslatedSource(bufsize, length, source);
         }
     }
     catch(std::bad_alloc&)
@@ -5769,6 +5804,7 @@ __eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *
         {"glGetFenceivNV", (__eglMustCastToProperFunctionPointerType)glGetFenceivNV},
         {"glFinishFenceNV", (__eglMustCastToProperFunctionPointerType)glFinishFenceNV},
         {"glSetFenceNV", (__eglMustCastToProperFunctionPointerType)glSetFenceNV},
+        {"glGetTranslatedShaderSourceANGLE", (__eglMustCastToProperFunctionPointerType)glGetTranslatedShaderSourceANGLE},
     };
 
     for (int ext = 0; ext < sizeof(glExtensions) / sizeof(Extension); ext++)

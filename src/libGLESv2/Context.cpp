@@ -3434,6 +3434,7 @@ void Context::initExtensionString()
     {
         mExtensionString += "GL_ANGLE_texture_compression_dxt5 ";
     }
+    mExtensionString += "GL_ANGLE_translated_shader_source ";
 
     // Other vendor-specific extensions
     if (supportsEventQueries())
