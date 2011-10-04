@@ -1987,7 +1987,7 @@ void __stdcall glFramebufferRenderbuffer(GLenum target, GLenum attachment, GLenu
     try
     {
         if ((target != GL_FRAMEBUFFER && target != GL_DRAW_FRAMEBUFFER_ANGLE && target != GL_READ_FRAMEBUFFER_ANGLE)
-            || renderbuffertarget != GL_RENDERBUFFER)
+            || (renderbuffertarget != GL_RENDERBUFFER && renderbuffer != 0))
         {
             return error(GL_INVALID_ENUM);
         }
@@ -2003,13 +2003,13 @@ void __stdcall glFramebufferRenderbuffer(GLenum target, GLenum attachment, GLenu
                 framebuffer = context->getReadFramebuffer();
                 framebufferHandle = context->getReadFramebufferHandle();
             }
-            else 
+            else
             {
                 framebuffer = context->getDrawFramebuffer();
                 framebufferHandle = context->getDrawFramebufferHandle();
             }
 
-            if (framebufferHandle == 0 || !framebuffer)
+            if (!framebuffer || (framebufferHandle == 0 && renderbuffer != 0))
             {
                 return error(GL_INVALID_OPERATION);
             }
