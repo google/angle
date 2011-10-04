@@ -144,8 +144,6 @@ bool Program::detachShader(Shader *shader)
     }
     else UNREACHABLE();
 
-    unlink();
-
     return true;
 }
 
@@ -2515,7 +2513,7 @@ void Program::resetInfoLog()
     }
 }
 
-// Returns the program object to an unlinked state, after detaching a shader, before re-linking, or at destruction
+// Returns the program object to an unlinked state, before re-linking, or at destruction
 void Program::unlink(bool destroy)
 {
     if (destroy)   // Object being destructed
