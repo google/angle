@@ -32,7 +32,7 @@ bool UnfoldSelect::visitSelection(Visit visit, TIntermSelection *node)
     {
         int i = mTemporaryIndex++;
 
-        out << mOutputHLSL->typeString(node->getType()) << " t" << i << ";\n";
+        out << mOutputHLSL->typeString(node->getType()) << " s" << i << ";\n";
 
         node->getCondition()->traverse(this);
         out << "if(";
@@ -40,14 +40,14 @@ bool UnfoldSelect::visitSelection(Visit visit, TIntermSelection *node)
         out << ")\n"
                "{\n";
         node->getTrueBlock()->traverse(this);
-        out << "    t" << i << " = ";
+        out << "    s" << i << " = ";
         node->getTrueBlock()->traverse(mOutputHLSL);
         out << ";\n"
                "}\n"
                "else\n"
                "{\n";
         node->getFalseBlock()->traverse(this);
-        out << "    t" << i << " = ";
+        out << "    s" << i << " = ";
         node->getFalseBlock()->traverse(mOutputHLSL);
         out << ";\n"
                "}\n";
