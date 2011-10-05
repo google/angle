@@ -23,8 +23,8 @@ Status
 
 Version
 
-    Last Modified Date: Septemper 29, 2011
-    Author Revision: 1
+    Last Modified Date: October 5, 2011
+    Author Revision: 2
 
 Number
 
@@ -64,7 +64,7 @@ New Tokens
 
     Accepted by the <pname> parameter of GetShaderiv:
 
-    TRANSLATED_SHADER_SOURCE_LENGTH_ANGLE              0x6900
+    TRANSLATED_SHADER_SOURCE_LENGTH_ANGLE              0x93A0
 
 Additions to Chapter 6 of the OpenGL ES 2.0 Specification (State and State
 Requests)
@@ -105,9 +105,14 @@ Requests)
 
 Issues
 
-    1) 0x6900 is temporarily assigned to TRANSLATED_SHADER_SOURCE_LENGTH_ANGLE.
+    1) What enum value should be used for TRANSLATED_SHADER_SOURCE_LENGTH_ANGLE?
+
+      RESOLVED: The first draft used a temporary enum value. This been replaced
+      with a enum allocated from the ANGLE range of GL enums. 
 
 Revision History
 
-    Revision 1, 2011/09/29
+    Revision 1, 2011/09/29, zmo
       - first draft
+    Revision 2, 2011/10/05, dgkoch
+      - assigned enum

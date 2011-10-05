@@ -219,7 +219,7 @@ typedef void* GLeglImageOES;
 
 /* GL_ANGLE_translated_shader_source */
 #ifndef GL_ANGLE_translated_shader_source
-#define GL_TRANSLATED_SHADER_SOURCE_LENGTH_ANGLE                0x6900
+#define GL_TRANSLATED_SHADER_SOURCE_LENGTH_ANGLE                0x93A0
 #endif
 
 /*------------------------------------------------------------------------*
@@ -815,6 +815,7 @@ typedef void (GL_APIENTRYP PFNGLRENDERBUFFERSTORAGEMULTISAMPLEANGLEPROC) (GLenum
 #define GL_ANGLE_texture_compression_dxt5 1
 #endif
 
+/* GL_ANGLE_translated_shader_source */
 #ifndef GL_ANGLE_translated_shader_source
 #define GL_ANGLE_translated_shader_source 1
 #ifdef GL_GLEXT_PROTOTYPES
