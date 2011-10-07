@@ -381,6 +381,7 @@ void Context::markAllStateDirty()
     mSampleStateDirty = true;
     mDitherStateDirty = true;
     mFrontFaceDirty = true;
+    mCachedCurrentProgram = NULL;
 }
 
 void Context::setClearColor(float red, float green, float blue, float alpha)
@@ -893,6 +894,7 @@ void Context::deleteShader(GLuint shader)
 void Context::deleteProgram(GLuint program)
 {
     mResourceManager->deleteProgram(program);
+    mCachedCurrentProgram = NULL;
 }
 
 void Context::deleteTexture(GLuint texture)
@@ -1040,6 +1042,7 @@ void Context::useProgram(GLuint program)
     {
         Program *newProgram = mResourceManager->getProgram(program);
         Program *oldProgram = mResourceManager->getProgram(priorProgram);
+        mCachedCurrentProgram = NULL;
 
         if (newProgram)
         {
@@ -1105,7 +1108,11 @@ Buffer *Context::getElementArrayBuffer()
 
 Program *Context::getCurrentProgram()
 {
-    return mResourceManager->getProgram(mState.currentProgram);
+    if (!mCachedCurrentProgram)
+    {
+        mCachedCurrentProgram = mResourceManager->getProgram(mState.currentProgram);
+    }
+    return mCachedCurrentProgram;
 }
 
 Texture2D *Context::getTexture2D()

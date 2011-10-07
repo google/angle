@@ -544,6 +544,7 @@ class Context
     D3DVIEWPORT9 mSetViewport;
     bool mRenderTargetDescInitialized;
     D3DSURFACE_DESC mRenderTargetDesc;
+    Program *mCachedCurrentProgram;
 
     bool mSupportsShaderModel3;
     bool mSupportsVertexTexture;
