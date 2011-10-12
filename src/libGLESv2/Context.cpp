@@ -381,6 +381,7 @@ void Context::markAllStateDirty()
     mSampleStateDirty = true;
     mDitherStateDirty = true;
     mFrontFaceDirty = true;
+    mDxUniformsDirty = true;
     mCachedCurrentProgram = NULL;
 }
 
@@ -1043,6 +1044,7 @@ void Context::useProgram(GLuint program)
         Program *newProgram = mResourceManager->getProgram(program);
         Program *oldProgram = mResourceManager->getProgram(priorProgram);
         mCachedCurrentProgram = NULL;
+        mDxUniformsDirty = true;
 
         if (newProgram)
         {
@@ -1725,6 +1727,7 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         device->SetViewport(&viewport);
         mSetViewport = viewport;
         mViewportInitialized = true;
+        mDxUniformsDirty = true;
     }
 
     if (mScissorStateDirty)
@@ -1747,7 +1750,7 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         mScissorStateDirty = false;
     }
 
-    if (mState.currentProgram)
+    if (mState.currentProgram && mDxUniformsDirty)
     {
         Program *programObject = getCurrentProgram();
 
@@ -1768,6 +1771,7 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         GLint depthRange = programObject->getDxDepthRangeLocation();
         GLfloat nearFarDiff[3] = {zNear, zFar, zFar - zNear};
         programObject->setUniform3fv(depthRange, 1, nearFarDiff);
+        mDxUniformsDirty = false;
     }
 
     return true;
