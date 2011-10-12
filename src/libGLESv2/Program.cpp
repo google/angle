@@ -920,15 +920,8 @@ void Program::dirtyAllUniforms()
 // Applies all the uniforms set for this program object to the Direct3D 9 device
 void Program::applyUniforms()
 {
-    unsigned int numUniforms = mUniformIndex.size();
-    for (unsigned int location = 0; location < numUniforms; location++)
-    {
-        if (mUniformIndex[location].element != 0)
-        {
-            continue;
-        }
-
-        Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
+    for (std::vector<Uniform*>::iterator ub = mUniforms.begin(), ue = mUniforms.end(); ub != ue; ++ub) {
+        Uniform *targetUniform = *ub;
 
         if (targetUniform->dirty)
         {
@@ -939,23 +932,23 @@ void Program::applyUniforms()
 
             switch (targetUniform->type)
             {
-              case GL_BOOL:       applyUniform1bv(location, arraySize, b);       break;
-              case GL_BOOL_VEC2:  applyUniform2bv(location, arraySize, b);       break;
-              case GL_BOOL_VEC3:  applyUniform3bv(location, arraySize, b);       break;
-              case GL_BOOL_VEC4:  applyUniform4bv(location, arraySize, b);       break;
-              case GL_FLOAT:      applyUniform1fv(location, arraySize, f);       break;
-              case GL_FLOAT_VEC2: applyUniform2fv(location, arraySize, f);       break;
-              case GL_FLOAT_VEC3: applyUniform3fv(location, arraySize, f);       break;
-              case GL_FLOAT_VEC4: applyUniform4fv(location, arraySize, f);       break;
-              case GL_FLOAT_MAT2: applyUniformMatrix2fv(location, arraySize, f); break;
-              case GL_FLOAT_MAT3: applyUniformMatrix3fv(location, arraySize, f); break;
-              case GL_FLOAT_MAT4: applyUniformMatrix4fv(location, arraySize, f); break;
+              case GL_BOOL:       applyUniform1bv(targetUniform, arraySize, b);       break;
+              case GL_BOOL_VEC2:  applyUniform2bv(targetUniform, arraySize, b);       break;
+              case GL_BOOL_VEC3:  applyUniform3bv(targetUniform, arraySize, b);       break;
+              case GL_BOOL_VEC4:  applyUniform4bv(targetUniform, arraySize, b);       break;
+              case GL_FLOAT:      applyUniform1fv(targetUniform, arraySize, f);       break;
+              case GL_FLOAT_VEC2: applyUniform2fv(targetUniform, arraySize, f);       break;
+              case GL_FLOAT_VEC3: applyUniform3fv(targetUniform, arraySize, f);       break;
+              case GL_FLOAT_VEC4: applyUniform4fv(targetUniform, arraySize, f);       break;
+              case GL_FLOAT_MAT2: applyUniformMatrix2fv(targetUniform, arraySize, f); break;
+              case GL_FLOAT_MAT3: applyUniformMatrix3fv(targetUniform, arraySize, f); break;
+              case GL_FLOAT_MAT4: applyUniformMatrix4fv(targetUniform, arraySize, f); break;
               case GL_SAMPLER_2D:
               case GL_SAMPLER_CUBE:
-              case GL_INT:        applyUniform1iv(location, arraySize, i);       break;
-              case GL_INT_VEC2:   applyUniform2iv(location, arraySize, i);       break;
-              case GL_INT_VEC3:   applyUniform3iv(location, arraySize, i);       break;
-              case GL_INT_VEC4:   applyUniform4iv(location, arraySize, i);       break;
+              case GL_INT:        applyUniform1iv(targetUniform, arraySize, i);       break;
+              case GL_INT_VEC2:   applyUniform2iv(targetUniform, arraySize, i);       break;
+              case GL_INT_VEC3:   applyUniform3iv(targetUniform, arraySize, i);       break;
+              case GL_INT_VEC4:   applyUniform4iv(targetUniform, arraySize, i);       break;
               default:
                 UNREACHABLE();
             }
@@ -1925,7 +1918,7 @@ std::string Program::undecorateUniform(const std::string &_name)
     return _name;
 }
 
-bool Program::applyUniform1bv(GLint location, GLsizei count, const GLboolean *v)
+bool Program::applyUniform1bv(Uniform *targetUniform, GLsizei count, const GLboolean *v)
 {
     BOOL *vector = new BOOL[count];
     for (int i = 0; i < count; i++)
@@ -1935,8 +1928,6 @@ bool Program::applyUniform1bv(GLint location, GLsizei count, const GLboolean *v)
         else 
             vector[i] = 1;
     }
-
-    Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
 
     D3DXHANDLE constantPS;
     D3DXHANDLE constantVS;
@@ -1959,7 +1950,7 @@ bool Program::applyUniform1bv(GLint location, GLsizei count, const GLboolean *v)
     return true;
 }
 
-bool Program::applyUniform2bv(GLint location, GLsizei count, const GLboolean *v)
+bool Program::applyUniform2bv(Uniform *targetUniform, GLsizei count, const GLboolean *v)
 {
     D3DXVECTOR4 *vector = new D3DXVECTOR4[count];
 
@@ -1970,8 +1961,6 @@ bool Program::applyUniform2bv(GLint location, GLsizei count, const GLboolean *v)
 
         v += 2;
     }
-
-    Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
 
     D3DXHANDLE constantPS;
     D3DXHANDLE constantVS;
@@ -1993,7 +1982,7 @@ bool Program::applyUniform2bv(GLint location, GLsizei count, const GLboolean *v)
     return true;
 }
 
-bool Program::applyUniform3bv(GLint location, GLsizei count, const GLboolean *v)
+bool Program::applyUniform3bv(Uniform *targetUniform, GLsizei count, const GLboolean *v)
 {
     D3DXVECTOR4 *vector = new D3DXVECTOR4[count];
 
@@ -2006,8 +1995,6 @@ bool Program::applyUniform3bv(GLint location, GLsizei count, const GLboolean *v)
         v += 3;
     }
 
-    Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
-
     D3DXHANDLE constantPS;
     D3DXHANDLE constantVS;
     getConstantHandles(targetUniform, &constantPS, &constantVS);
@@ -2028,7 +2015,7 @@ bool Program::applyUniform3bv(GLint location, GLsizei count, const GLboolean *v)
     return true;
 }
 
-bool Program::applyUniform4bv(GLint location, GLsizei count, const GLboolean *v)
+bool Program::applyUniform4bv(Uniform *targetUniform, GLsizei count, const GLboolean *v)
 {
     D3DXVECTOR4 *vector = new D3DXVECTOR4[count];
 
@@ -2041,8 +2028,6 @@ bool Program::applyUniform4bv(GLint location, GLsizei count, const GLboolean *v)
 
         v += 3;
     }
-
-    Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
 
     D3DXHANDLE constantPS;
     D3DXHANDLE constantVS;
@@ -2064,10 +2049,8 @@ bool Program::applyUniform4bv(GLint location, GLsizei count, const GLboolean *v)
     return true;
 }
 
-bool Program::applyUniform1fv(GLint location, GLsizei count, const GLfloat *v)
+bool Program::applyUniform1fv(Uniform *targetUniform, GLsizei count, const GLfloat *v)
 {
-    Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
-
     D3DXHANDLE constantPS;
     D3DXHANDLE constantVS;
     getConstantHandles(targetUniform, &constantPS, &constantVS);
@@ -2086,7 +2069,7 @@ bool Program::applyUniform1fv(GLint location, GLsizei count, const GLfloat *v)
     return true;
 }
 
-bool Program::applyUniform2fv(GLint location, GLsizei count, const GLfloat *v)
+bool Program::applyUniform2fv(Uniform *targetUniform, GLsizei count, const GLfloat *v)
 {
     D3DXVECTOR4 *vector = new D3DXVECTOR4[count];
 
@@ -2097,8 +2080,6 @@ bool Program::applyUniform2fv(GLint location, GLsizei count, const GLfloat *v)
         v += 2;
     }
 
-    Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
-
     D3DXHANDLE constantPS;
     D3DXHANDLE constantVS;
     getConstantHandles(targetUniform, &constantPS, &constantVS);
@@ -2119,7 +2100,7 @@ bool Program::applyUniform2fv(GLint location, GLsizei count, const GLfloat *v)
     return true;
 }
 
-bool Program::applyUniform3fv(GLint location, GLsizei count, const GLfloat *v)
+bool Program::applyUniform3fv(Uniform *targetUniform, GLsizei count, const GLfloat *v)
 {
     D3DXVECTOR4 *vector = new D3DXVECTOR4[count];
 
@@ -2130,8 +2111,6 @@ bool Program::applyUniform3fv(GLint location, GLsizei count, const GLfloat *v)
         v += 3;
     }
 
-    Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
-
     D3DXHANDLE constantPS;
     D3DXHANDLE constantVS;
     getConstantHandles(targetUniform, &constantPS, &constantVS);
@@ -2152,10 +2131,8 @@ bool Program::applyUniform3fv(GLint location, GLsizei count, const GLfloat *v)
     return true;
 }
 
-bool Program::applyUniform4fv(GLint location, GLsizei count, const GLfloat *v)
+bool Program::applyUniform4fv(Uniform *targetUniform, GLsizei count, const GLfloat *v)
 {
-    Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
-
     D3DXHANDLE constantPS;
     D3DXHANDLE constantVS;
     getConstantHandles(targetUniform, &constantPS, &constantVS);
@@ -2174,7 +2151,7 @@ bool Program::applyUniform4fv(GLint location, GLsizei count, const GLfloat *v)
     return true;
 }
 
-bool Program::applyUniformMatrix2fv(GLint location, GLsizei count, const GLfloat *value)
+bool Program::applyUniformMatrix2fv(Uniform *targetUniform, GLsizei count, const GLfloat *value)
 {
     D3DXMATRIX *matrix = new D3DXMATRIX[count];
 
@@ -2188,8 +2165,6 @@ bool Program::applyUniformMatrix2fv(GLint location, GLsizei count, const GLfloat
         value += 4;
     }
 
-    Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
-
     D3DXHANDLE constantPS;
     D3DXHANDLE constantVS;
     getConstantHandles(targetUniform, &constantPS, &constantVS);
@@ -2210,7 +2185,7 @@ bool Program::applyUniformMatrix2fv(GLint location, GLsizei count, const GLfloat
     return true;
 }
 
-bool Program::applyUniformMatrix3fv(GLint location, GLsizei count, const GLfloat *value)
+bool Program::applyUniformMatrix3fv(Uniform *targetUniform, GLsizei count, const GLfloat *value)
 {
     D3DXMATRIX *matrix = new D3DXMATRIX[count];
 
@@ -2224,8 +2199,6 @@ bool Program::applyUniformMatrix3fv(GLint location, GLsizei count, const GLfloat
         value += 9;
     }
 
-    Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
-
     D3DXHANDLE constantPS;
     D3DXHANDLE constantVS;
     getConstantHandles(targetUniform, &constantPS, &constantVS);
@@ -2246,7 +2219,7 @@ bool Program::applyUniformMatrix3fv(GLint location, GLsizei count, const GLfloat
     return true;
 }
 
-bool Program::applyUniformMatrix4fv(GLint location, GLsizei count, const GLfloat *value)
+bool Program::applyUniformMatrix4fv(Uniform *targetUniform, GLsizei count, const GLfloat *value)
 {
     D3DXMATRIX *matrix = new D3DXMATRIX[count];
 
@@ -2260,8 +2233,6 @@ bool Program::applyUniformMatrix4fv(GLint location, GLsizei count, const GLfloat
         value += 16;
     }
 
-    Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
-
     D3DXHANDLE constantPS;
     D3DXHANDLE constantVS;
     getConstantHandles(targetUniform, &constantPS, &constantVS);
@@ -2282,10 +2253,8 @@ bool Program::applyUniformMatrix4fv(GLint location, GLsizei count, const GLfloat
     return true;
 }
 
-bool Program::applyUniform1iv(GLint location, GLsizei count, const GLint *v)
+bool Program::applyUniform1iv(Uniform *targetUniform, GLsizei count, const GLint *v)
 {
-    Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
-
     D3DXHANDLE constantPS;
     D3DXHANDLE constantVS;
     getConstantHandles(targetUniform, &constantPS, &constantVS);
@@ -2350,7 +2319,7 @@ bool Program::applyUniform1iv(GLint location, GLsizei count, const GLint *v)
     return true;
 }
 
-bool Program::applyUniform2iv(GLint location, GLsizei count, const GLint *v)
+bool Program::applyUniform2iv(Uniform *targetUniform, GLsizei count, const GLint *v)
 {
     D3DXVECTOR4 *vector = new D3DXVECTOR4[count];
 
@@ -2361,8 +2330,6 @@ bool Program::applyUniform2iv(GLint location, GLsizei count, const GLint *v)
         v += 2;
     }
 
-    Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
-
     D3DXHANDLE constantPS;
     D3DXHANDLE constantVS;
     getConstantHandles(targetUniform, &constantPS, &constantVS);
@@ -2383,7 +2350,7 @@ bool Program::applyUniform2iv(GLint location, GLsizei count, const GLint *v)
     return true;
 }
 
-bool Program::applyUniform3iv(GLint location, GLsizei count, const GLint *v)
+bool Program::applyUniform3iv(Uniform *targetUniform, GLsizei count, const GLint *v)
 {
     D3DXVECTOR4 *vector = new D3DXVECTOR4[count];
 
@@ -2394,8 +2361,6 @@ bool Program::applyUniform3iv(GLint location, GLsizei count, const GLint *v)
         v += 3;
     }
 
-    Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
-
     D3DXHANDLE constantPS;
     D3DXHANDLE constantVS;
     getConstantHandles(targetUniform, &constantPS, &constantVS);
@@ -2416,7 +2381,7 @@ bool Program::applyUniform3iv(GLint location, GLsizei count, const GLint *v)
     return true;
 }
 
-bool Program::applyUniform4iv(GLint location, GLsizei count, const GLint *v)
+bool Program::applyUniform4iv(Uniform *targetUniform, GLsizei count, const GLint *v)
 {
     D3DXVECTOR4 *vector = new D3DXVECTOR4[count];
 
@@ -2426,8 +2391,6 @@ bool Program::applyUniform4iv(GLint location, GLsizei count, const GLint *v)
 
         v += 4;
     }
-
-    Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
 
     D3DXHANDLE constantPS;
     D3DXHANDLE constantVS;
