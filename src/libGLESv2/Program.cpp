@@ -202,7 +202,7 @@ int Program::getSemanticIndex(int attributeIndex)
 // index (0-15 for the pixel shader and 0-3 for the vertex shader).
 GLint Program::getSamplerMapping(SamplerType type, unsigned int samplerIndex)
 {
-    GLuint logicalTextureUnit = -1;
+    GLint logicalTextureUnit = -1;
 
     switch (type)
     {
@@ -225,7 +225,7 @@ GLint Program::getSamplerMapping(SamplerType type, unsigned int samplerIndex)
       default: UNREACHABLE();
     }
 
-    if (logicalTextureUnit >= 0 && logicalTextureUnit < getContext()->getMaximumCombinedTextureImageUnits())
+    if (logicalTextureUnit >= 0 && logicalTextureUnit < (GLint)getContext()->getMaximumCombinedTextureImageUnits())
     {
         return logicalTextureUnit;
     }

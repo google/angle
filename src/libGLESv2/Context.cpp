@@ -1621,19 +1621,19 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         return error(GL_INVALID_FRAMEBUFFER_OPERATION, false);
     }
 
-    IDirect3DSurface9 *renderTarget = framebufferObject->getRenderTarget();
-
-    if (!renderTarget)
-    {
-        return false;   // Context must be lost
-    }
-
+    IDirect3DSurface9 *renderTarget = NULL;
     IDirect3DSurface9 *depthStencil = NULL;
 
     bool renderTargetChanged = false;
     unsigned int renderTargetSerial = framebufferObject->getRenderTargetSerial();
     if (renderTargetSerial != mAppliedRenderTargetSerial)
     {
+        renderTarget = framebufferObject->getRenderTarget();
+
+        if (!renderTarget)
+        {
+            return false;   // Context must be lost
+        }
         device->SetRenderTarget(0, renderTarget);
         mAppliedRenderTargetSerial = renderTargetSerial;
         mScissorStateDirty = true; // Scissor area must be clamped to render target's size-- this is different for different render targets.
@@ -1677,6 +1677,15 @@ bool Context::applyRenderTarget(bool ignoreViewport)
 
     if (!mRenderTargetDescInitialized || renderTargetChanged)
     {
+        if (!renderTarget)
+        {
+            renderTarget = framebufferObject->getRenderTarget();
+
+            if (!renderTarget)
+            {
+                return false;   // Context must be lost
+            }
+        }
         renderTarget->GetDesc(&mRenderTargetDesc);
         mRenderTargetDescInitialized = true;
     }
@@ -2096,12 +2105,13 @@ void Context::applyTextures(SamplerType type)
     Program *programObject = getCurrentProgram();
 
     int samplerCount = (type == SAMPLER_PIXEL) ? MAX_TEXTURE_IMAGE_UNITS : MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF;   // Range of Direct3D 9 samplers of given sampler type
+    unsigned int *appliedTextureSerial = (type == SAMPLER_PIXEL) ? mAppliedTextureSerialPS : mAppliedTextureSerialVS;
+    int d3dSamplerOffset = (type == SAMPLER_PIXEL) ? 0 : D3DVERTEXTEXTURESAMPLER0;
 
     for (int samplerIndex = 0; samplerIndex < samplerCount; samplerIndex++)
     {
         int textureUnit = programObject->getSamplerMapping(type, samplerIndex);   // OpenGL texture image unit index
-        int d3dSampler = (type == SAMPLER_PIXEL) ? samplerIndex : D3DVERTEXTEXTURESAMPLER0 + samplerIndex;
-        unsigned int *appliedTextureSerial = (type == SAMPLER_PIXEL) ? mAppliedTextureSerialPS : mAppliedTextureSerialVS;
+        int d3dSampler = samplerIndex + d3dSamplerOffset;
 
         if (textureUnit != -1)
         {
