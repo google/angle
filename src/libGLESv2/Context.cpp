@@ -976,7 +976,7 @@ Framebuffer *Context::getReadFramebuffer()
 
 Framebuffer *Context::getDrawFramebuffer()
 {
-    return getFramebuffer(mState.drawFramebuffer);
+    return mBoundDrawFramebuffer;
 }
 
 void Context::bindArrayBuffer(unsigned int buffer)
@@ -1025,6 +1025,8 @@ void Context::bindDrawFramebuffer(GLuint framebuffer)
     }
 
     mState.drawFramebuffer = framebuffer;
+
+    mBoundDrawFramebuffer = getFramebuffer(framebuffer);
 }
 
 void Context::bindRenderbuffer(GLuint renderbuffer)
@@ -1062,6 +1064,10 @@ void Context::setFramebufferZero(Framebuffer *buffer)
 {
     delete mFramebufferMap[0];
     mFramebufferMap[0] = buffer;
+    if (mState.drawFramebuffer == 0)
+    {
+        mBoundDrawFramebuffer = buffer;
+    }
 }
 
 void Context::setRenderbufferStorage(RenderbufferStorage *renderbuffer)

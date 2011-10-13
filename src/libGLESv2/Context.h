@@ -546,6 +546,7 @@ class Context
     D3DSURFACE_DESC mRenderTargetDesc;
     bool mDxUniformsDirty;
     Program *mCachedCurrentProgram;
+    Framebuffer *mBoundDrawFramebuffer;
 
     bool mSupportsShaderModel3;
     bool mSupportsVertexTexture;
