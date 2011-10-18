@@ -198,6 +198,21 @@ int Program::getSemanticIndex(int attributeIndex)
     return mSemanticIndex[attributeIndex];
 }
 
+// Returns one more than the highest sampler index used.
+GLint Program::getUsedSamplerRange(SamplerType type)
+{
+    switch (type)
+    {
+      case SAMPLER_PIXEL:
+        return mUsedPixelSamplerRange;
+      case SAMPLER_VERTEX:
+        return mUsedVertexSamplerRange;
+      default:
+        UNREACHABLE();
+        return 0;
+    }
+}
+
 // Returns the index of the texture image unit (0-19) corresponding to a Direct3D 9 sampler
 // index (0-15 for the pixel shader and 0-3 for the vertex shader).
 GLint Program::getSamplerMapping(SamplerType type, unsigned int samplerIndex)
@@ -1717,6 +1732,7 @@ bool Program::defineUniform(const D3DXHANDLE &constantHandle, const D3DXCONSTANT
                     mSamplersPS[samplerIndex].active = true;
                     mSamplersPS[samplerIndex].textureType = (constantDescription.Type == D3DXPT_SAMPLERCUBE) ? TEXTURE_CUBE : TEXTURE_2D;
                     mSamplersPS[samplerIndex].logicalTextureUnit = 0;
+                    mUsedPixelSamplerRange = std::max(samplerIndex + 1, mUsedPixelSamplerRange);
                 }
                 else
                 {
@@ -1732,6 +1748,7 @@ bool Program::defineUniform(const D3DXHANDLE &constantHandle, const D3DXCONSTANT
                     mSamplersVS[samplerIndex].active = true;
                     mSamplersVS[samplerIndex].textureType = (constantDescription.Type == D3DXPT_SAMPLERCUBE) ? TEXTURE_CUBE : TEXTURE_2D;
                     mSamplersVS[samplerIndex].logicalTextureUnit = 0;
+                    mUsedVertexSamplerRange = std::max(samplerIndex + 1, mUsedVertexSamplerRange);
                 }
                 else
                 {
@@ -2534,6 +2551,9 @@ void Program::unlink(bool destroy)
         mSamplersVS[index].active = false;
     }
 
+    mUsedVertexSamplerRange = 0;
+    mUsedPixelSamplerRange = 0;
+
     while (!mUniforms.empty())
     {
         delete mUniforms.back();
@@ -2861,7 +2881,7 @@ bool Program::validateSamplers(bool logErrors)
         textureUnitType[i] = TEXTURE_UNKNOWN;
     }
 
-    for (unsigned int i = 0; i < MAX_TEXTURE_IMAGE_UNITS; ++i)
+    for (unsigned int i = 0; i < mUsedPixelSamplerRange; ++i)
     {
         if (mSamplersPS[i].active)
         {
@@ -2896,7 +2916,7 @@ bool Program::validateSamplers(bool logErrors)
         }
     }
 
-    for (unsigned int i = 0; i < MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF; ++i)
+    for (unsigned int i = 0; i < mUsedVertexSamplerRange; ++i)
     {
         if (mSamplersVS[i].active)
         {

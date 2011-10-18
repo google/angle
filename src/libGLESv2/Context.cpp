@@ -2117,8 +2117,9 @@ void Context::applyTextures(SamplerType type)
     int samplerCount = (type == SAMPLER_PIXEL) ? MAX_TEXTURE_IMAGE_UNITS : MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF;   // Range of Direct3D 9 samplers of given sampler type
     unsigned int *appliedTextureSerial = (type == SAMPLER_PIXEL) ? mAppliedTextureSerialPS : mAppliedTextureSerialVS;
     int d3dSamplerOffset = (type == SAMPLER_PIXEL) ? 0 : D3DVERTEXTEXTURESAMPLER0;
+    int samplerRange = programObject->getUsedSamplerRange(type);
 
-    for (int samplerIndex = 0; samplerIndex < samplerCount; samplerIndex++)
+    for (int samplerIndex = 0; samplerIndex < samplerRange; samplerIndex++)
     {
         int textureUnit = programObject->getSamplerMapping(type, samplerIndex);   // OpenGL texture image unit index
         int d3dSampler = samplerIndex + d3dSamplerOffset;
@@ -2173,6 +2174,15 @@ void Context::applyTextures(SamplerType type)
                 device->SetTexture(d3dSampler, NULL);
                 appliedTextureSerial[samplerIndex] = 0;
             }
+        }
+    }
+
+    for (int samplerIndex = samplerRange; samplerIndex < samplerCount; samplerIndex++)
+    {
+        if (appliedTextureSerial[samplerIndex] != 0)
+        {
+            device->SetTexture(samplerIndex + d3dSamplerOffset, NULL);
+            appliedTextureSerial[samplerIndex] = 0;
         }
     }
 }

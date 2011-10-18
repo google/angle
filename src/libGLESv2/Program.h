@@ -77,6 +77,7 @@ class Program
 
     GLint getSamplerMapping(SamplerType type, unsigned int samplerIndex);
     TextureType getSamplerTextureType(SamplerType type, unsigned int samplerIndex);
+    GLint getUsedSamplerRange(SamplerType type);
 
     GLint getUniformLocation(std::string name);
     bool setUniform1fv(GLint location, GLsizei count, const GLfloat *v);
@@ -197,6 +198,8 @@ class Program
 
     Sampler mSamplersPS[MAX_TEXTURE_IMAGE_UNITS];
     Sampler mSamplersVS[MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF];
+    GLuint mUsedVertexSamplerRange;
+    GLuint mUsedPixelSamplerRange;
 
     typedef std::vector<Uniform*> UniformArray;
     UniformArray mUniforms;
