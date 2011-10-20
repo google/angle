@@ -42,9 +42,15 @@ struct Uniform
     unsigned char *data;
     bool dirty;
 
-    D3DXHANDLE vsHandle;
-    D3DXHANDLE psHandle;
-    bool handlesSet;
+    struct RegisterInfo
+    {
+        int registerSet;
+        int registerIndex;
+        int registerCount;
+    };
+
+    RegisterInfo ps;
+    RegisterInfo vs;
 };
 
 // Struct used for correlating uniforms/elements of uniform arrays to handles
@@ -150,23 +156,15 @@ class Program
     bool defineUniform(const D3DXHANDLE &constantHandle, const D3DXCONSTANT_DESC &constantDescription, std::string name = "");
     bool defineUniform(const D3DXCONSTANT_DESC &constantDescription, std::string &name);
     Uniform *createUniform(const D3DXCONSTANT_DESC &constantDescription, std::string &name);
-    bool applyUniform1bv(Uniform *targetUniform, GLsizei count, const GLboolean *v);
-    bool applyUniform2bv(Uniform *targetUniform, GLsizei count, const GLboolean *v);
-    bool applyUniform3bv(Uniform *targetUniform, GLsizei count, const GLboolean *v);
-    bool applyUniform4bv(Uniform *targetUniform, GLsizei count, const GLboolean *v);
-    bool applyUniform1fv(Uniform *targetUniform, GLsizei count, const GLfloat *v);
-    bool applyUniform2fv(Uniform *targetUniform, GLsizei count, const GLfloat *v);
-    bool applyUniform3fv(Uniform *targetUniform, GLsizei count, const GLfloat *v);
-    bool applyUniform4fv(Uniform *targetUniform, GLsizei count, const GLfloat *v);
-    bool applyUniformMatrix2fv(Uniform *targetUniform, GLsizei count, const GLfloat *value);
-    bool applyUniformMatrix3fv(Uniform *targetUniform, GLsizei count, const GLfloat *value);
-    bool applyUniformMatrix4fv(Uniform *targetUniform, GLsizei count, const GLfloat *value);
+    bool applyUniformnfv(Uniform *targetUniform, const GLfloat *v);
     bool applyUniform1iv(Uniform *targetUniform, GLsizei count, const GLint *v);
     bool applyUniform2iv(Uniform *targetUniform, GLsizei count, const GLint *v);
     bool applyUniform3iv(Uniform *targetUniform, GLsizei count, const GLint *v);
     bool applyUniform4iv(Uniform *targetUniform, GLsizei count, const GLint *v);
+    void applyUniformniv(Uniform *targetUniform, GLsizei count, const D3DXVECTOR4 *vector);
+    void applyUniformnbv(Uniform *targetUniform, GLsizei count, int width, const GLboolean *v);
 
-    void getConstantHandles(Uniform *targetUniform, D3DXHANDLE *constantPS, D3DXHANDLE *constantVS);
+    void initializeConstantHandles(Uniform *targetUniform, Uniform::RegisterInfo *rs, ID3DXConstantTable *constantTable);
 
     void appendToInfoLogSanitized(const char *message);
     void appendToInfoLog(const char *info, ...);

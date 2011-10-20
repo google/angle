@@ -40,7 +40,6 @@ Uniform::Uniform(GLenum type, const std::string &_name, unsigned int arraySize)
     data = new unsigned char[bytes];
     memset(data, 0, bytes);
     dirty = true;
-    handlesSet = false;
 }
 
 Uniform::~Uniform()
@@ -313,8 +312,17 @@ bool Program::setUniform1fv(GLint location, GLsizei count, const GLfloat* v)
 
         count = std::min(arraySize - (int)mUniformIndex[location].element, count);
 
-        memcpy(targetUniform->data + mUniformIndex[location].element * sizeof(GLfloat),
-               v, sizeof(GLfloat) * count);
+        GLfloat *target = (GLfloat*)targetUniform->data + mUniformIndex[location].element * 4;
+
+        for (int i = 0; i < count; i++)
+        {
+            target[0] = v[0];
+            target[1] = 0;
+            target[2] = 0;
+            target[3] = 0;
+            target += 4;
+            v += 1;
+        }
     }
     else if (targetUniform->type == GL_BOOL)
     {
@@ -370,8 +378,17 @@ bool Program::setUniform2fv(GLint location, GLsizei count, const GLfloat *v)
 
         count = std::min(arraySize - (int)mUniformIndex[location].element, count);
 
-        memcpy(targetUniform->data + mUniformIndex[location].element * sizeof(GLfloat) * 2,
-               v, 2 * sizeof(GLfloat) * count);
+        GLfloat *target = (GLfloat*)targetUniform->data + mUniformIndex[location].element * 4;
+
+        for (int i = 0; i < count; i++)
+        {
+            target[0] = v[0];
+            target[1] = v[1];
+            target[2] = 0;
+            target[3] = 0;
+            target += 4;
+            v += 2;
+        }
     }
     else if (targetUniform->type == GL_BOOL_VEC2)
     {
@@ -428,8 +445,17 @@ bool Program::setUniform3fv(GLint location, GLsizei count, const GLfloat *v)
 
         count = std::min(arraySize - (int)mUniformIndex[location].element, count);
 
-        memcpy(targetUniform->data + mUniformIndex[location].element * sizeof(GLfloat) * 3,
-               v, 3 * sizeof(GLfloat) * count);
+        GLfloat *target = (GLfloat*)targetUniform->data + mUniformIndex[location].element * 4;
+
+        for (int i = 0; i < count; i++)
+        {
+            target[0] = v[0];
+            target[1] = v[1];
+            target[2] = v[2];
+            target[3] = 0;
+            target += 4;
+            v += 3;
+        }
     }
     else if (targetUniform->type == GL_BOOL_VEC3)
     {
@@ -523,6 +549,37 @@ bool Program::setUniform4fv(GLint location, GLsizei count, const GLfloat *v)
     return true;
 }
 
+template<typename T, int targetWidth, int targetHeight, int srcWidth, int srcHeight>
+void transposeMatrix(T *target, const GLfloat *value)
+{
+    int copyWidth = std::min(targetWidth, srcWidth);
+    int copyHeight = std::min(targetHeight, srcHeight);
+
+    for (int x = 0; x < copyWidth; x++)
+    {
+        for (int y = 0; y < copyHeight; y++)
+        {
+            target[x * targetWidth + y] = value[y * srcWidth + x];
+        }
+    }
+    // clear unfilled right side
+    for (int y = 0; y < copyHeight; y++)
+    {
+        for (int x = srcWidth; x < targetWidth; x++)
+        {
+            target[y * targetWidth + x] = 0;
+        }
+    }
+    // clear unfilled bottom.
+    for (int y = srcHeight; y < targetHeight; y++)
+    {
+        for (int x = 0; x < targetWidth; x++)
+        {
+            target[y * targetWidth + x] = 0;
+        }
+    }
+}
+
 bool Program::setUniformMatrix2fv(GLint location, GLsizei count, const GLfloat *value)
 {
     if (location < 0 || location >= (int)mUniformIndex.size())
@@ -545,8 +602,13 @@ bool Program::setUniformMatrix2fv(GLint location, GLsizei count, const GLfloat *
 
     count = std::min(arraySize - (int)mUniformIndex[location].element, count);
 
-    memcpy(targetUniform->data + mUniformIndex[location].element * sizeof(GLfloat) * 4,
-           value, 4 * sizeof(GLfloat) * count);
+    GLfloat *target = (GLfloat*)targetUniform->data + mUniformIndex[location].element * 8;
+    for (int i = 0; i < count; i++)
+    {
+        transposeMatrix<GLfloat,4,2,2,2>(target, value);
+        target += 8;
+        value += 4;
+    }
 
     return true;
 }
@@ -573,11 +635,17 @@ bool Program::setUniformMatrix3fv(GLint location, GLsizei count, const GLfloat *
 
     count = std::min(arraySize - (int)mUniformIndex[location].element, count);
 
-    memcpy(targetUniform->data + mUniformIndex[location].element * sizeof(GLfloat) * 9,
-           value, 9 * sizeof(GLfloat) * count);
+    GLfloat *target = (GLfloat*)targetUniform->data + mUniformIndex[location].element * 12;
+    for (int i = 0; i < count; i++)
+    {
+        transposeMatrix<GLfloat,4,3,3,3>(target, value);
+        target += 12;
+        value += 9;
+    }
 
     return true;
 }
+
 
 bool Program::setUniformMatrix4fv(GLint location, GLsizei count, const GLfloat *value)
 {
@@ -601,8 +669,13 @@ bool Program::setUniformMatrix4fv(GLint location, GLsizei count, const GLfloat *
 
     count = std::min(arraySize - (int)mUniformIndex[location].element, count);
 
-    memcpy(targetUniform->data + mUniformIndex[location].element * sizeof(GLfloat) * 16,
-           value, 16 * sizeof(GLfloat) * count);
+    GLfloat *target = (GLfloat*)(targetUniform->data + mUniformIndex[location].element * sizeof(GLfloat) * 16);
+    for (int i = 0; i < count; i++)
+    {
+        transposeMatrix<GLfloat,4,4,4,4>(target, value);
+        target += 16;
+        value += 16;
+    }
 
     return true;
 }
@@ -846,35 +919,51 @@ bool Program::getUniformfv(GLint location, GLfloat *params)
 
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
 
-    unsigned int count = UniformComponentCount(targetUniform->type);
-
-    switch (UniformComponentType(targetUniform->type))
+    switch (targetUniform->type)
     {
-      case GL_BOOL:
+      case GL_FLOAT_MAT2:
+        transposeMatrix<GLfloat,2,2,4,2>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 8);
+        break;
+      case GL_FLOAT_MAT3:
+        transposeMatrix<GLfloat,3,3,4,3>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 12);
+        break;
+      case GL_FLOAT_MAT4:
+        transposeMatrix<GLfloat,4,4,4,4>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 16);
+        break;
+      default:
         {
-            GLboolean *boolParams = (GLboolean*)targetUniform->data + mUniformIndex[location].element * count;
+            unsigned int count = UniformComponentCount(targetUniform->type);
+            unsigned int internalCount = UniformInternalComponentCount(targetUniform->type);
 
-            for (unsigned int i = 0; i < count; ++i)
+            switch (UniformComponentType(targetUniform->type))
             {
-                params[i] = (boolParams[i] == GL_FALSE) ? 0.0f : 1.0f;
+              case GL_BOOL:
+                {
+                    GLboolean *boolParams = (GLboolean*)targetUniform->data + mUniformIndex[location].element * internalCount;
+
+                    for (unsigned int i = 0; i < count; ++i)
+                    {
+                        params[i] = (boolParams[i] == GL_FALSE) ? 0.0f : 1.0f;
+                    }
+                }
+                break;
+              case GL_FLOAT:
+                memcpy(params, targetUniform->data + mUniformIndex[location].element * internalCount * sizeof(GLfloat),
+                       count * sizeof(GLfloat));
+                break;
+              case GL_INT:
+                {
+                    GLint *intParams = (GLint*)targetUniform->data + mUniformIndex[location].element * internalCount;
+
+                    for (unsigned int i = 0; i < count; ++i)
+                    {
+                        params[i] = (float)intParams[i];
+                    }
+                }
+                break;
+              default: UNREACHABLE();
             }
         }
-        break;
-      case GL_FLOAT:
-        memcpy(params, targetUniform->data + mUniformIndex[location].element * count * sizeof(GLfloat),
-               count * sizeof(GLfloat));
-        break;
-      case GL_INT:
-        {
-            GLint *intParams = (GLint*)targetUniform->data + mUniformIndex[location].element * count;
-
-            for (unsigned int i = 0; i < count; ++i)
-            {
-                params[i] = (float)intParams[i];
-            }
-        }
-        break;
-      default: UNREACHABLE();
     }
 
     return true;
@@ -889,35 +978,57 @@ bool Program::getUniformiv(GLint location, GLint *params)
 
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
 
-    unsigned int count = UniformComponentCount(targetUniform->type);
-
-    switch (UniformComponentType(targetUniform->type))
+    switch (targetUniform->type)
     {
-      case GL_BOOL:
+      case GL_FLOAT_MAT2:
         {
-            GLboolean *boolParams = targetUniform->data + mUniformIndex[location].element * count;
-
-            for (unsigned int i = 0; i < count; ++i)
-            {
-                params[i] = (GLint)boolParams[i];
-            }
+            transposeMatrix<GLint,2,2,4,2>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 8);
         }
         break;
-      case GL_FLOAT:
+      case GL_FLOAT_MAT3:
         {
-            GLfloat *floatParams = (GLfloat*)targetUniform->data + mUniformIndex[location].element * count;
-
-            for (unsigned int i = 0; i < count; ++i)
-            {
-                params[i] = (GLint)floatParams[i];
-            }
+            transposeMatrix<GLint,3,3,4,3>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 12);
         }
         break;
-      case GL_INT:
-        memcpy(params, targetUniform->data + mUniformIndex[location].element * count * sizeof(GLint),
-               count * sizeof(GLint));
+      case GL_FLOAT_MAT4:
+        {
+            transposeMatrix<GLint,4,4,4,4>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 16);
+        }
         break;
-      default: UNREACHABLE();
+      default:
+        {
+            unsigned int count = UniformComponentCount(targetUniform->type);
+            unsigned int internalCount = UniformInternalComponentCount(targetUniform->type);
+
+            switch (UniformComponentType(targetUniform->type))
+            {
+              case GL_BOOL:
+                {
+                    GLboolean *boolParams = targetUniform->data + mUniformIndex[location].element * internalCount;
+
+                    for (unsigned int i = 0; i < count; ++i)
+                    {
+                        params[i] = (GLint)boolParams[i];
+                    }
+                }
+                break;
+              case GL_FLOAT:
+                {
+                    GLfloat *floatParams = (GLfloat*)targetUniform->data + mUniformIndex[location].element * internalCount;
+
+                    for (unsigned int i = 0; i < count; ++i)
+                    {
+                        params[i] = (GLint)floatParams[i];
+                    }
+                }
+                break;
+              case GL_INT:
+                memcpy(params, targetUniform->data + mUniformIndex[location].element * internalCount * sizeof(GLint),
+                       count * sizeof(GLint));
+                break;
+              default: UNREACHABLE();
+            }
+        }
     }
 
     return true;
@@ -947,17 +1058,17 @@ void Program::applyUniforms()
 
             switch (targetUniform->type)
             {
-              case GL_BOOL:       applyUniform1bv(targetUniform, arraySize, b);       break;
-              case GL_BOOL_VEC2:  applyUniform2bv(targetUniform, arraySize, b);       break;
-              case GL_BOOL_VEC3:  applyUniform3bv(targetUniform, arraySize, b);       break;
-              case GL_BOOL_VEC4:  applyUniform4bv(targetUniform, arraySize, b);       break;
-              case GL_FLOAT:      applyUniform1fv(targetUniform, arraySize, f);       break;
-              case GL_FLOAT_VEC2: applyUniform2fv(targetUniform, arraySize, f);       break;
-              case GL_FLOAT_VEC3: applyUniform3fv(targetUniform, arraySize, f);       break;
-              case GL_FLOAT_VEC4: applyUniform4fv(targetUniform, arraySize, f);       break;
-              case GL_FLOAT_MAT2: applyUniformMatrix2fv(targetUniform, arraySize, f); break;
-              case GL_FLOAT_MAT3: applyUniformMatrix3fv(targetUniform, arraySize, f); break;
-              case GL_FLOAT_MAT4: applyUniformMatrix4fv(targetUniform, arraySize, f); break;
+              case GL_BOOL:       applyUniformnbv(targetUniform, arraySize, 1, b);    break;
+              case GL_BOOL_VEC2:  applyUniformnbv(targetUniform, arraySize, 2, b);    break;
+              case GL_BOOL_VEC3:  applyUniformnbv(targetUniform, arraySize, 3, b);    break;
+              case GL_BOOL_VEC4:  applyUniformnbv(targetUniform, arraySize, 4, b);    break;
+              case GL_FLOAT:
+              case GL_FLOAT_VEC2:
+              case GL_FLOAT_VEC3:
+              case GL_FLOAT_VEC4:
+              case GL_FLOAT_MAT2:
+              case GL_FLOAT_MAT3:
+              case GL_FLOAT_MAT4: applyUniformnfv(targetUniform, f);                  break;
               case GL_SAMPLER_2D:
               case GL_SAMPLER_CUBE:
               case GL_INT:        applyUniform1iv(targetUniform, arraySize, i);       break;
@@ -1824,6 +1935,9 @@ bool Program::defineUniform(const D3DXCONSTANT_DESC &constantDescription, std::s
         }
     }
 
+    initializeConstantHandles(uniform, &uniform->ps, mConstantTablePS);
+    initializeConstantHandles(uniform, &uniform->vs, mConstantTableVS);
+
     mUniforms.push_back(uniform);
     unsigned int uniformIndex = mUniforms.size() - 1;
 
@@ -1935,358 +2049,107 @@ std::string Program::undecorateUniform(const std::string &_name)
     return _name;
 }
 
-bool Program::applyUniform1bv(Uniform *targetUniform, GLsizei count, const GLboolean *v)
+void Program::applyUniformnbv(Uniform *targetUniform, GLsizei count, int width, const GLboolean *v)
 {
-    BOOL *vector = new BOOL[count];
-    for (int i = 0; i < count; i++)
-    {
-        if (v[i] == GL_FALSE)
-            vector[i] = 0;
-        else 
-            vector[i] = 1;
-    }
-
-    D3DXHANDLE constantPS;
-    D3DXHANDLE constantVS;
-    getConstantHandles(targetUniform, &constantPS, &constantVS);
-
     IDirect3DDevice9 *device = getDevice();
 
-    if (constantPS)
+    float *vector = NULL;
+    BOOL *boolVector = NULL;
+
+    if (targetUniform->ps.registerCount && targetUniform->ps.registerSet == D3DXRS_FLOAT4 ||
+        targetUniform->vs.registerCount && targetUniform->vs.registerSet == D3DXRS_FLOAT4)
     {
-        mConstantTablePS->SetBoolArray(device, constantPS, vector, count);
+        vector = new float[4 * count];
+
+        for (int i = 0; i < count; i++)
+        {
+            for (int j = 0; j < 4; j++)
+            {
+                if (j < width)
+                {
+                    vector[i * 4 + j] = (v[i * width + j] == GL_FALSE) ? 0.0f : 1.0f;
+                }
+                else
+                {
+                    vector[i * 4 + j] = 0.0f;
+                }
+            }
+        }
     }
 
-    if (constantVS)
+    if (targetUniform->ps.registerCount && targetUniform->ps.registerSet == D3DXRS_BOOL ||
+        targetUniform->vs.registerCount && targetUniform->vs.registerSet == D3DXRS_BOOL)
     {
-        mConstantTableVS->SetBoolArray(device, constantVS, vector, count);
+        boolVector = new BOOL[count * width];
+        for (int i = 0; i < count * width; i++)
+        {
+            boolVector[i] = v[i] != GL_FALSE;
+        }
+    }
+
+    if (targetUniform->ps.registerCount)
+    {
+        if (targetUniform->ps.registerSet == D3DXRS_FLOAT4)
+        {
+            device->SetPixelShaderConstantF(targetUniform->ps.registerIndex, vector, targetUniform->ps.registerCount);
+        }
+        else if (targetUniform->ps.registerSet == D3DXRS_BOOL)
+        {
+            device->SetPixelShaderConstantB(targetUniform->ps.registerIndex, boolVector, targetUniform->ps.registerCount);
+        }
+        else UNREACHABLE();
+    }
+
+    if (targetUniform->vs.registerCount)
+    {
+        if (targetUniform->vs.registerSet == D3DXRS_FLOAT4)
+        {
+            device->SetVertexShaderConstantF(targetUniform->vs.registerIndex, vector, targetUniform->vs.registerCount);
+        }
+        else if (targetUniform->vs.registerSet == D3DXRS_BOOL)
+        {
+            device->SetVertexShaderConstantB(targetUniform->vs.registerIndex, boolVector, targetUniform->vs.registerCount);
+        }
+        else UNREACHABLE();
     }
 
     delete [] vector;
-
-    return true;
+    delete [] boolVector;
 }
 
-bool Program::applyUniform2bv(Uniform *targetUniform, GLsizei count, const GLboolean *v)
+bool Program::applyUniformnfv(Uniform *targetUniform, const GLfloat *v)
 {
-    D3DXVECTOR4 *vector = new D3DXVECTOR4[count];
-
-    for (int i = 0; i < count; i++)
-    {
-        vector[i] = D3DXVECTOR4((v[0] == GL_FALSE ? 0.0f : 1.0f),
-                                (v[1] == GL_FALSE ? 0.0f : 1.0f), 0, 0);
-
-        v += 2;
-    }
-
-    D3DXHANDLE constantPS;
-    D3DXHANDLE constantVS;
-    getConstantHandles(targetUniform, &constantPS, &constantVS);
     IDirect3DDevice9 *device = getDevice();
 
-    if (constantPS)
+    if (targetUniform->ps.registerCount)
     {
-        mConstantTablePS->SetVectorArray(device, constantPS, vector, count);
+        device->SetPixelShaderConstantF(targetUniform->ps.registerIndex, v, targetUniform->ps.registerCount);
     }
 
-    if (constantVS)
+    if (targetUniform->vs.registerCount)
     {
-        mConstantTableVS->SetVectorArray(device, constantVS, vector, count);
+        device->SetVertexShaderConstantF(targetUniform->vs.registerIndex, v, targetUniform->vs.registerCount);
     }
-
-    delete[] vector;
-
-    return true;
-}
-
-bool Program::applyUniform3bv(Uniform *targetUniform, GLsizei count, const GLboolean *v)
-{
-    D3DXVECTOR4 *vector = new D3DXVECTOR4[count];
-
-    for (int i = 0; i < count; i++)
-    {
-        vector[i] = D3DXVECTOR4((v[0] == GL_FALSE ? 0.0f : 1.0f),
-                                (v[1] == GL_FALSE ? 0.0f : 1.0f), 
-                                (v[2] == GL_FALSE ? 0.0f : 1.0f), 0);
-
-        v += 3;
-    }
-
-    D3DXHANDLE constantPS;
-    D3DXHANDLE constantVS;
-    getConstantHandles(targetUniform, &constantPS, &constantVS);
-    IDirect3DDevice9 *device = getDevice();
-
-    if (constantPS)
-    {
-        mConstantTablePS->SetVectorArray(device, constantPS, vector, count);
-    }
-
-    if (constantVS)
-    {
-        mConstantTableVS->SetVectorArray(device, constantVS, vector, count);
-    }
-
-    delete[] vector;
-
-    return true;
-}
-
-bool Program::applyUniform4bv(Uniform *targetUniform, GLsizei count, const GLboolean *v)
-{
-    D3DXVECTOR4 *vector = new D3DXVECTOR4[count];
-
-    for (int i = 0; i < count; i++)
-    {
-        vector[i] = D3DXVECTOR4((v[0] == GL_FALSE ? 0.0f : 1.0f),
-                                (v[1] == GL_FALSE ? 0.0f : 1.0f), 
-                                (v[2] == GL_FALSE ? 0.0f : 1.0f), 
-                                (v[3] == GL_FALSE ? 0.0f : 1.0f));
-
-        v += 3;
-    }
-
-    D3DXHANDLE constantPS;
-    D3DXHANDLE constantVS;
-    getConstantHandles(targetUniform, &constantPS, &constantVS);
-    IDirect3DDevice9 *device = getDevice();
-
-    if (constantPS)
-    {
-        mConstantTablePS->SetVectorArray(device, constantPS, vector, count);
-    }
-
-    if (constantVS)
-    {
-        mConstantTableVS->SetVectorArray(device, constantVS, vector, count);
-    }
-
-    delete [] vector;
-
-    return true;
-}
-
-bool Program::applyUniform1fv(Uniform *targetUniform, GLsizei count, const GLfloat *v)
-{
-    D3DXHANDLE constantPS;
-    D3DXHANDLE constantVS;
-    getConstantHandles(targetUniform, &constantPS, &constantVS);
-    IDirect3DDevice9 *device = getDevice();
-
-    if (constantPS)
-    {
-        mConstantTablePS->SetFloatArray(device, constantPS, v, count);
-    }
-
-    if (constantVS)
-    {
-        mConstantTableVS->SetFloatArray(device, constantVS, v, count);
-    }
-
-    return true;
-}
-
-bool Program::applyUniform2fv(Uniform *targetUniform, GLsizei count, const GLfloat *v)
-{
-    D3DXVECTOR4 *vector = new D3DXVECTOR4[count];
-
-    for (int i = 0; i < count; i++)
-    {
-        vector[i] = D3DXVECTOR4(v[0], v[1], 0, 0);
-
-        v += 2;
-    }
-
-    D3DXHANDLE constantPS;
-    D3DXHANDLE constantVS;
-    getConstantHandles(targetUniform, &constantPS, &constantVS);
-    IDirect3DDevice9 *device = getDevice();
-
-    if (constantPS)
-    {
-        mConstantTablePS->SetVectorArray(device, constantPS, vector, count);
-    }
-
-    if (constantVS)
-    {
-        mConstantTableVS->SetVectorArray(device, constantVS, vector, count);
-    }
-
-    delete[] vector;
-
-    return true;
-}
-
-bool Program::applyUniform3fv(Uniform *targetUniform, GLsizei count, const GLfloat *v)
-{
-    D3DXVECTOR4 *vector = new D3DXVECTOR4[count];
-
-    for (int i = 0; i < count; i++)
-    {
-        vector[i] = D3DXVECTOR4(v[0], v[1], v[2], 0);
-
-        v += 3;
-    }
-
-    D3DXHANDLE constantPS;
-    D3DXHANDLE constantVS;
-    getConstantHandles(targetUniform, &constantPS, &constantVS);
-    IDirect3DDevice9 *device = getDevice();
-
-    if (constantPS)
-    {
-        mConstantTablePS->SetVectorArray(device, constantPS, vector, count);
-    }
-
-    if (constantVS)
-    {
-        mConstantTableVS->SetVectorArray(device, constantVS, vector, count);
-    }
-
-    delete[] vector;
-
-    return true;
-}
-
-bool Program::applyUniform4fv(Uniform *targetUniform, GLsizei count, const GLfloat *v)
-{
-    D3DXHANDLE constantPS;
-    D3DXHANDLE constantVS;
-    getConstantHandles(targetUniform, &constantPS, &constantVS);
-    IDirect3DDevice9 *device = getDevice();
-
-    if (constantPS)
-    {
-        mConstantTablePS->SetVectorArray(device, constantPS, (D3DXVECTOR4*)v, count);
-    }
-
-    if (constantVS)
-    {
-        mConstantTableVS->SetVectorArray(device, constantVS, (D3DXVECTOR4*)v, count);
-    }
-
-    return true;
-}
-
-bool Program::applyUniformMatrix2fv(Uniform *targetUniform, GLsizei count, const GLfloat *value)
-{
-    D3DXMATRIX *matrix = new D3DXMATRIX[count];
-
-    for (int i = 0; i < count; i++)
-    {
-        matrix[i] = D3DXMATRIX(value[0], value[2], 0, 0,
-                               value[1], value[3], 0, 0,
-                               0,        0,        1, 0,
-                               0,        0,        0, 1);
-
-        value += 4;
-    }
-
-    D3DXHANDLE constantPS;
-    D3DXHANDLE constantVS;
-    getConstantHandles(targetUniform, &constantPS, &constantVS);
-    IDirect3DDevice9 *device = getDevice();
-
-    if (constantPS)
-    {
-        mConstantTablePS->SetMatrixTransposeArray(device, constantPS, matrix, count);
-    }
-
-    if (constantVS)
-    {
-        mConstantTableVS->SetMatrixTransposeArray(device, constantVS, matrix, count);
-    }
-
-    delete[] matrix;
-
-    return true;
-}
-
-bool Program::applyUniformMatrix3fv(Uniform *targetUniform, GLsizei count, const GLfloat *value)
-{
-    D3DXMATRIX *matrix = new D3DXMATRIX[count];
-
-    for (int i = 0; i < count; i++)
-    {
-        matrix[i] = D3DXMATRIX(value[0], value[3], value[6], 0,
-                               value[1], value[4], value[7], 0,
-                               value[2], value[5], value[8], 0,
-                               0,        0,        0,        1);
-
-        value += 9;
-    }
-
-    D3DXHANDLE constantPS;
-    D3DXHANDLE constantVS;
-    getConstantHandles(targetUniform, &constantPS, &constantVS);
-    IDirect3DDevice9 *device = getDevice();
-
-    if (constantPS)
-    {
-        mConstantTablePS->SetMatrixTransposeArray(device, constantPS, matrix, count);
-    }
-
-    if (constantVS)
-    {
-        mConstantTableVS->SetMatrixTransposeArray(device, constantVS, matrix, count);
-    }
-
-    delete[] matrix;
-
-    return true;
-}
-
-bool Program::applyUniformMatrix4fv(Uniform *targetUniform, GLsizei count, const GLfloat *value)
-{
-    D3DXMATRIX *matrix = new D3DXMATRIX[count];
-
-    for (int i = 0; i < count; i++)
-    {
-        matrix[i] = D3DXMATRIX(value[0], value[4], value[8],  value[12],
-                               value[1], value[5], value[9],  value[13],
-                               value[2], value[6], value[10], value[14],
-                               value[3], value[7], value[11], value[15]);
-
-        value += 16;
-    }
-
-    D3DXHANDLE constantPS;
-    D3DXHANDLE constantVS;
-    getConstantHandles(targetUniform, &constantPS, &constantVS);
-    IDirect3DDevice9 *device = getDevice();
-
-    if (constantPS)
-    {
-        mConstantTablePS->SetMatrixTransposeArray(device, constantPS, matrix, count);
-    }
-
-    if (constantVS)
-    {
-        mConstantTableVS->SetMatrixTransposeArray(device, constantVS, matrix, count);
-    }
-
-    delete[] matrix;
 
     return true;
 }
 
 bool Program::applyUniform1iv(Uniform *targetUniform, GLsizei count, const GLint *v)
 {
-    D3DXHANDLE constantPS;
-    D3DXHANDLE constantVS;
-    getConstantHandles(targetUniform, &constantPS, &constantVS);
+    D3DXVECTOR4 *vector = new D3DXVECTOR4[count];
+
+    for (int i = 0; i < count; i++)
+    {
+        vector[i] = D3DXVECTOR4((float)v[i], 0, 0, 0);
+    }
+
     IDirect3DDevice9 *device = getDevice();
 
-    if (constantPS)
+    if (targetUniform->ps.registerCount)
     {
-        D3DXCONSTANT_DESC constantDescription;
-        UINT descriptionCount = 1;
-        HRESULT result = mConstantTablePS->GetConstantDesc(constantPS, &constantDescription, &descriptionCount);
-        ASSERT(SUCCEEDED(result));
-
-        if (constantDescription.RegisterSet == D3DXRS_SAMPLER)
+        if (targetUniform->ps.registerSet == D3DXRS_SAMPLER)
         {
-            unsigned int firstIndex = mConstantTablePS->GetSamplerIndex(constantPS);
+            unsigned int firstIndex = targetUniform->ps.registerIndex;
 
             for (int i = 0; i < count; i++)
             {
@@ -2301,20 +2164,16 @@ bool Program::applyUniform1iv(Uniform *targetUniform, GLsizei count, const GLint
         }
         else
         {
-            mConstantTablePS->SetIntArray(device, constantPS, v, count);
+            ASSERT(targetUniform->ps.registerSet == D3DXRS_FLOAT4);
+            device->SetPixelShaderConstantF(targetUniform->ps.registerIndex, (const float*)vector, targetUniform->ps.registerCount);
         }
     }
 
-    if (constantVS)
+    if (targetUniform->vs.registerCount)
     {
-        D3DXCONSTANT_DESC constantDescription;
-        UINT descriptionCount = 1;
-        HRESULT result = mConstantTableVS->GetConstantDesc(constantVS, &constantDescription, &descriptionCount);
-        ASSERT(SUCCEEDED(result));
-
-        if (constantDescription.RegisterSet == D3DXRS_SAMPLER)
+        if (targetUniform->vs.registerSet == D3DXRS_SAMPLER)
         {
-            unsigned int firstIndex = mConstantTableVS->GetSamplerIndex(constantVS);
+            unsigned int firstIndex = targetUniform->vs.registerIndex;
 
             for (int i = 0; i < count; i++)
             {
@@ -2329,9 +2188,12 @@ bool Program::applyUniform1iv(Uniform *targetUniform, GLsizei count, const GLint
         }
         else
         {
-            mConstantTableVS->SetIntArray(device, constantVS, v, count);
+            ASSERT(targetUniform->vs.registerSet == D3DXRS_FLOAT4);
+            device->SetVertexShaderConstantF(targetUniform->vs.registerIndex, (const float *)vector, targetUniform->vs.registerCount);
         }
     }
+
+    delete [] vector;
 
     return true;
 }
@@ -2347,20 +2209,7 @@ bool Program::applyUniform2iv(Uniform *targetUniform, GLsizei count, const GLint
         v += 2;
     }
 
-    D3DXHANDLE constantPS;
-    D3DXHANDLE constantVS;
-    getConstantHandles(targetUniform, &constantPS, &constantVS);
-    IDirect3DDevice9 *device = getDevice();
-
-    if (constantPS)
-    {
-        mConstantTablePS->SetVectorArray(device, constantPS, vector, count);
-    }
-
-    if (constantVS)
-    {
-        mConstantTableVS->SetVectorArray(device, constantVS, vector, count);
-    }
+    applyUniformniv(targetUniform, count, vector);
 
     delete[] vector;
 
@@ -2378,20 +2227,7 @@ bool Program::applyUniform3iv(Uniform *targetUniform, GLsizei count, const GLint
         v += 3;
     }
 
-    D3DXHANDLE constantPS;
-    D3DXHANDLE constantVS;
-    getConstantHandles(targetUniform, &constantPS, &constantVS);
-    IDirect3DDevice9 *device = getDevice();
-
-    if (constantPS)
-    {
-        mConstantTablePS->SetVectorArray(device, constantPS, vector, count);
-    }
-
-    if (constantVS)
-    {
-        mConstantTableVS->SetVectorArray(device, constantVS, vector, count);
-    }
+    applyUniformniv(targetUniform, count, vector);
 
     delete[] vector;
 
@@ -2409,26 +2245,29 @@ bool Program::applyUniform4iv(Uniform *targetUniform, GLsizei count, const GLint
         v += 4;
     }
 
-    D3DXHANDLE constantPS;
-    D3DXHANDLE constantVS;
-    getConstantHandles(targetUniform, &constantPS, &constantVS);
-    IDirect3DDevice9 *device = getDevice();
-
-    if (constantPS)
-    {
-        mConstantTablePS->SetVectorArray(device, constantPS, vector, count);
-    }
-
-    if (constantVS)
-    {
-        mConstantTableVS->SetVectorArray(device, constantVS, vector, count);
-    }
+    applyUniformniv(targetUniform, count, vector);
 
     delete [] vector;
 
     return true;
 }
 
+void Program::applyUniformniv(Uniform *targetUniform, GLsizei count, const D3DXVECTOR4 *vector)
+{
+    IDirect3DDevice9 *device = getDevice();
+
+    if (targetUniform->ps.registerCount)
+    {
+        ASSERT(targetUniform->ps.registerSet == D3DXRS_FLOAT4);
+        device->SetPixelShaderConstantF(targetUniform->ps.registerIndex, (const float *)vector, targetUniform->ps.registerCount);
+    }
+
+    if (targetUniform->vs.registerCount)
+    {
+        ASSERT(targetUniform->vs.registerSet == D3DXRS_FLOAT4);
+        device->SetVertexShaderConstantF(targetUniform->vs.registerIndex, (const float *)vector, targetUniform->vs.registerCount);
+    }
+}
 
 // append a santized message to the program info log.
 // The D3D compiler includes a fake file path in some of the warning or error 
@@ -2954,17 +2793,23 @@ bool Program::validateSamplers(bool logErrors)
     return true;
 }
 
-void Program::getConstantHandles(Uniform *targetUniform, D3DXHANDLE *constantPS, D3DXHANDLE *constantVS)
+void Program::initializeConstantHandles(Uniform *targetUniform, Uniform::RegisterInfo *ri, ID3DXConstantTable *constantTable)
 {
-    if (!targetUniform->handlesSet)
+    D3DXHANDLE handle = constantTable->GetConstantByName(0, targetUniform->_name.c_str());
+    if (handle)
     {
-        targetUniform->psHandle = mConstantTablePS->GetConstantByName(0, targetUniform->_name.c_str());
-        targetUniform->vsHandle = mConstantTableVS->GetConstantByName(0, targetUniform->_name.c_str());
-        targetUniform->handlesSet = true;
+        UINT descriptionCount = 1;
+        D3DXCONSTANT_DESC constantDescription;
+        HRESULT result = constantTable->GetConstantDesc(handle, &constantDescription, &descriptionCount);
+        ASSERT(SUCCEEDED(result));
+        ri->registerIndex = constantDescription.RegisterIndex;
+        ri->registerCount = constantDescription.RegisterCount;
+        ri->registerSet = constantDescription.RegisterSet;
     }
-
-    *constantPS = targetUniform->psHandle;
-    *constantVS = targetUniform->vsHandle;
+    else
+    {
+        ri->registerCount = 0;
+    }
 }
 
 GLint Program::getDxDepthRangeLocation() const
