@@ -132,7 +132,7 @@ class VertexDataManager
 
     bool mDirtyCurrentValue[MAX_VERTEX_ATTRIBS];
     StreamingVertexBuffer *mCurrentValueBuffer[MAX_VERTEX_ATTRIBS];
-    UINT mCurrentValueOffsets[MAX_VERTEX_ATTRIBS];
+    std::size_t mCurrentValueOffsets[MAX_VERTEX_ATTRIBS];
 
     // Attribute format conversion
     struct FormatConverter
