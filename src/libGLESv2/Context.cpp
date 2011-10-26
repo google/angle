@@ -2178,7 +2178,7 @@ void Context::applyTextures(SamplerType type)
     {
         if (appliedTextureSerial[samplerIndex] != 0)
         {
-            device->SetTexture(samplerIndex + d3dSamplerOffset, NULL);
+            mDevice->SetTexture(samplerIndex + d3dSamplerOffset, NULL);
             appliedTextureSerial[samplerIndex] = 0;
         }
     }
