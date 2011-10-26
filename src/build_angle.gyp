@@ -79,6 +79,7 @@
         'compiler/preprocessor/cpp.c',
         'compiler/preprocessor/cpp.h',
         'compiler/preprocessor/cppstruct.c',
+        'compiler/preprocessor/length_limits.h',
         'compiler/preprocessor/memory.c',
         'compiler/preprocessor/memory.h',
         'compiler/preprocessor/parser.h',
