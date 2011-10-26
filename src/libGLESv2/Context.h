@@ -228,7 +228,7 @@ class VertexDeclarationCache
     VertexDeclarationCache();
     ~VertexDeclarationCache();
 
-    GLenum applyDeclaration(TranslatedAttribute attributes[], Program *program);
+    GLenum applyDeclaration(IDirect3DDevice9 *device, TranslatedAttribute attributes[], Program *program);
 
     void markStateDirty();
 
@@ -497,6 +497,8 @@ class Context
     void initRendererString();
 
     const egl::Config *const mConfig;
+    egl::Display *mDisplay;
+    IDirect3DDevice9 *mDevice;
 
     State mState;
 
