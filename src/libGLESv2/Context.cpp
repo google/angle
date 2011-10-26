@@ -2785,84 +2785,8 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void *
     }
 }
 
-void Context::finish()
-{
-    IDirect3DQuery9 *occlusionQuery = NULL;
-    HRESULT result;
-
-    result = mDevice->CreateQuery(D3DQUERYTYPE_OCCLUSION, &occlusionQuery);
-    if (FAILED(result))
-    {
-        ERR("CreateQuery failed hr=%x\n", result);
-        if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
-        {
-            return error(GL_OUT_OF_MEMORY);
-        }
-        ASSERT(false);
-        return;
-    }
-
-    IDirect3DStateBlock9 *savedState = NULL;
-    result = mDevice->CreateStateBlock(D3DSBT_ALL, &savedState);
-    if (FAILED(result))
-    {
-        ERR("CreateStateBlock failed hr=%x\n", result);
-        occlusionQuery->Release();
-
-        if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
-        {
-            return error(GL_OUT_OF_MEMORY);
-        }
-        ASSERT(false);
-        return;
-    }
-
-    result = occlusionQuery->Issue(D3DISSUE_BEGIN);
-    if (FAILED(result))
-    {
-        ERR("occlusionQuery->Issue(BEGIN) failed hr=%x\n", result);
-        occlusionQuery->Release();
-        savedState->Release();
-        ASSERT(false);
-        return;
-    }
-
-    // Render something outside the render target
-    mDevice->SetPixelShader(NULL);
-    mDevice->SetVertexShader(NULL);
-    mDevice->SetFVF(D3DFVF_XYZRHW);
-    float data[4] = {-1.0f, -1.0f, -1.0f, 1.0f};
-    mDisplay->startScene();
-    mDevice->DrawPrimitiveUP(D3DPT_POINTLIST, 1, data, sizeof(data));
-
-    result = occlusionQuery->Issue(D3DISSUE_END);
-    if (FAILED(result))
-    {
-        ERR("occlusionQuery->Issue(END) failed hr=%x\n", result);
-        occlusionQuery->Release();
-        savedState->Apply();
-        savedState->Release();
-        ASSERT(false);
-        return;
-    }
-
-    while ((result = occlusionQuery->GetData(NULL, 0, D3DGETDATA_FLUSH)) == S_FALSE)
-    {
-        // Keep polling, but allow other threads to do something useful first
-        Sleep(0);
-    }
-
-    occlusionQuery->Release();
-    savedState->Apply();
-    savedState->Release();
-
-    if (result == D3DERR_DEVICELOST)
-    {
-        error(GL_OUT_OF_MEMORY);
-    }
-}
-
-void Context::flush()
+// Implements glFlush when block is false, glFinish when block is true
+void Context::sync(bool block)
 {
     IDirect3DQuery9 *eventQuery = NULL;
     HRESULT result;
@@ -2888,7 +2812,18 @@ void Context::flush()
         return;
     }
 
-    result = eventQuery->GetData(NULL, 0, D3DGETDATA_FLUSH);
+    do
+    {
+        result = eventQuery->GetData(NULL, 0, D3DGETDATA_FLUSH);
+
+        if(block && result == S_FALSE)
+        {
+            // Keep polling, but allow other threads to do something useful first
+            Sleep(0);
+        }
+    }
+    while(block && result == S_FALSE);
+
     eventQuery->Release();
 
     if (result == D3DERR_DEVICELOST)
