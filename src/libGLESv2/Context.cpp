@@ -290,8 +290,8 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         mSupportsDXT1Textures = mDisplay->getDXT1TextureSupport();
         mSupportsDXT3Textures = mDisplay->getDXT3TextureSupport();
         mSupportsDXT5Textures = mDisplay->getDXT5TextureSupport();
-        mSupportsFloatTextures = mDisplay->getFloatTextureSupport(&mSupportsFloatLinearFilter, &mSupportsFloatRenderableTextures);
-        mSupportsHalfFloatTextures = mDisplay->getHalfFloatTextureSupport(&mSupportsHalfFloatLinearFilter, &mSupportsHalfFloatRenderableTextures);
+        mSupportsFloat32Textures = mDisplay->getFloat32TextureSupport(&mSupportsFloat32LinearFilter, &mSupportsFloat32RenderableTextures);
+        mSupportsFloat16Textures = mDisplay->getFloat16TextureSupport(&mSupportsFloat16LinearFilter, &mSupportsFloat16RenderableTextures);
         mSupportsLuminanceTextures = mDisplay->getLuminanceTextureSupport();
         mSupportsLuminanceAlphaTextures = mDisplay->getLuminanceAlphaTextureSupport();
 
@@ -3068,34 +3068,34 @@ bool Context::supportsDXT5Textures() const
     return mSupportsDXT5Textures;
 }
 
-bool Context::supportsFloatTextures() const
+bool Context::supportsFloat32Textures() const
 {
-    return mSupportsFloatTextures;
+    return mSupportsFloat32Textures;
 }
 
-bool Context::supportsFloatLinearFilter() const
+bool Context::supportsFloat32LinearFilter() const
 {
-    return mSupportsFloatLinearFilter;
+    return mSupportsFloat32LinearFilter;
 }
 
-bool Context::supportsFloatRenderableTextures() const
+bool Context::supportsFloat32RenderableTextures() const
 {
-    return mSupportsFloatRenderableTextures;
+    return mSupportsFloat32RenderableTextures;
 }
 
-bool Context::supportsHalfFloatTextures() const
+bool Context::supportsFloat16Textures() const
 {
-    return mSupportsHalfFloatTextures;
+    return mSupportsFloat16Textures;
 }
 
-bool Context::supportsHalfFloatLinearFilter() const
+bool Context::supportsFloat16LinearFilter() const
 {
-    return mSupportsHalfFloatLinearFilter;
+    return mSupportsFloat16LinearFilter;
 }
 
-bool Context::supportsHalfFloatRenderableTextures() const
+bool Context::supportsFloat16RenderableTextures() const
 {
-    return mSupportsHalfFloatRenderableTextures;
+    return mSupportsFloat16RenderableTextures;
 }
 
 int Context::getMaximumRenderbufferDimension() const
@@ -3344,19 +3344,19 @@ void Context::initExtensionString()
     mExtensionString += "GL_OES_rgb8_rgba8 ";
     mExtensionString += "GL_OES_standard_derivatives ";
 
-    if (supportsHalfFloatTextures())
+    if (supportsFloat16Textures())
     {
         mExtensionString += "GL_OES_texture_half_float ";
     }
-    if (supportsHalfFloatLinearFilter())
+    if (supportsFloat16LinearFilter())
     {
         mExtensionString += "GL_OES_texture_half_float_linear ";
     }
-    if (supportsFloatTextures())
+    if (supportsFloat32Textures())
     {
         mExtensionString += "GL_OES_texture_float ";
     }
-    if (supportsFloatLinearFilter())
+    if (supportsFloat32LinearFilter())
     {
         mExtensionString += "GL_OES_texture_float_linear ";
     }

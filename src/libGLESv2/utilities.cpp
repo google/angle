@@ -853,6 +853,50 @@ unsigned int GetDepthSize(D3DFORMAT depthFormat)
     }
 }
 
+bool IsFloat32Format(D3DFORMAT surfaceFormat)
+{
+    switch(surfaceFormat)
+    {
+      case D3DFMT_R16F:
+      case D3DFMT_G16R16F:
+      case D3DFMT_A16B16G16R16F:
+        return false;
+      case D3DFMT_R32F:
+      case D3DFMT_G32R32F:
+      case D3DFMT_A32B32G32R32F:
+        return true;
+      case D3DFMT_A8R8G8B8:
+      case D3DFMT_X8R8G8B8:
+      case D3DFMT_A1R5G5B5:
+      case D3DFMT_R5G6B5:
+        return false;
+      default: UNREACHABLE();
+    }
+    return false;
+}
+
+bool IsFloat16Format(D3DFORMAT surfaceFormat)
+{
+    switch(surfaceFormat)
+    {
+      case D3DFMT_R16F:
+      case D3DFMT_G16R16F:
+      case D3DFMT_A16B16G16R16F:
+        return true;
+      case D3DFMT_R32F:
+      case D3DFMT_G32R32F:
+      case D3DFMT_A32B32G32R32F:
+        return false;
+      case D3DFMT_A8R8G8B8:
+      case D3DFMT_X8R8G8B8:
+      case D3DFMT_A1R5G5B5:
+      case D3DFMT_R5G6B5:
+        return false;
+      default: UNREACHABLE();
+    }
+    return false;
+}
+
 GLsizei GetSamplesFromMultisampleType(D3DMULTISAMPLE_TYPE type)
 {
     if (type == D3DMULTISAMPLE_NONMASKABLE)

@@ -74,6 +74,8 @@ GLuint GetGreenSize(D3DFORMAT colorFormat);
 GLuint GetBlueSize(D3DFORMAT colorFormat);
 GLuint GetDepthSize(D3DFORMAT depthFormat);
 GLuint GetStencilSize(D3DFORMAT stencilFormat);
+bool IsFloat32Format(D3DFORMAT surfaceFormat);
+bool IsFloat16Format(D3DFORMAT surfaceFormat);
 
 GLsizei GetSamplesFromMultisampleType(D3DMULTISAMPLE_TYPE type);
 

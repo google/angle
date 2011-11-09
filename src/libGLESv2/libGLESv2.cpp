@@ -4648,14 +4648,14 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
 
             if (type == GL_FLOAT)
             {
-                if (!context->supportsFloatTextures())
+                if (!context->supportsFloat32Textures())
                 {
                     return error(GL_INVALID_ENUM);
                 }
             }
             else if (type == GL_HALF_FLOAT_OES)
             {
-                if (!context->supportsHalfFloatTextures())
+                if (!context->supportsFloat16Textures())
                 {
                     return error(GL_INVALID_ENUM);
                 }
@@ -4834,14 +4834,14 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
 
             if (format == GL_FLOAT)
             {
-                if (!context->supportsFloatTextures())
+                if (!context->supportsFloat32Textures())
                 {
                     return error(GL_INVALID_ENUM);
                 }
             }
             else if (format == GL_HALF_FLOAT_OES)
             {
-                if (!context->supportsHalfFloatTextures())
+                if (!context->supportsFloat16Textures())
                 {
                     return error(GL_INVALID_ENUM);
                 }

@@ -67,8 +67,8 @@ class Display
     virtual bool getDXT3TextureSupport();
     virtual bool getDXT5TextureSupport();
     virtual bool getEventQuerySupport();
-    virtual bool getFloatTextureSupport(bool *filtering, bool *renderable);
-    virtual bool getHalfFloatTextureSupport(bool *filtering, bool *renderable);
+    virtual bool getFloat32TextureSupport(bool *filtering, bool *renderable);
+    virtual bool getFloat16TextureSupport(bool *filtering, bool *renderable);
     virtual bool getLuminanceTextureSupport();
     virtual bool getLuminanceAlphaTextureSupport();
     virtual bool getVertexTextureSupport() const;
