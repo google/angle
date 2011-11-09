@@ -29,19 +29,19 @@ Renderbuffer::~Renderbuffer()
     delete mStorage;
 }
 
-bool Renderbuffer::isColorbuffer() const
+Colorbuffer *Renderbuffer::getColorbuffer()
 {
-    return mStorage->isColorbuffer();
+    return mStorage->getColorbuffer();
 }
 
-bool Renderbuffer::isDepthbuffer() const
+DepthStencilbuffer *Renderbuffer::getDepthbuffer()
 {
-    return mStorage->isDepthbuffer();
+    return mStorage->getDepthbuffer();
 }
 
-bool Renderbuffer::isStencilbuffer() const
+DepthStencilbuffer *Renderbuffer::getStencilbuffer()
 {
-    return mStorage->isStencilbuffer();
+    return mStorage->getStencilbuffer();
 }
 
 IDirect3DSurface9 *Renderbuffer::getRenderTarget()
@@ -130,19 +130,19 @@ RenderbufferStorage::~RenderbufferStorage()
 {
 }
 
-bool RenderbufferStorage::isColorbuffer() const
+Colorbuffer *RenderbufferStorage::getColorbuffer()
 {
-    return false;
+    return NULL;
 }
 
-bool RenderbufferStorage::isDepthbuffer() const
+DepthStencilbuffer *RenderbufferStorage::getDepthbuffer()
 {
-    return false;
+    return NULL;
 }
 
-bool RenderbufferStorage::isStencilbuffer() const
+DepthStencilbuffer *RenderbufferStorage::getStencilbuffer()
 {
-    return false;
+    return NULL;
 }
 
 IDirect3DSurface9 *RenderbufferStorage::getRenderTarget()
@@ -345,9 +345,9 @@ D3DFORMAT Colorbuffer::getD3DFormat() const
     return mD3DFormat;
 }
 
-bool Colorbuffer::isColorbuffer() const
+Colorbuffer *Colorbuffer::getColorbuffer()
 {
-    return true;
+    return this;
 }
 
 IDirect3DSurface9 *Colorbuffer::getRenderTarget()
@@ -427,14 +427,14 @@ DepthStencilbuffer::~DepthStencilbuffer()
     }
 }
 
-bool DepthStencilbuffer::isDepthbuffer() const
+DepthStencilbuffer *DepthStencilbuffer::getDepthbuffer()
 {
-    return true;
+    return this;
 }
 
-bool DepthStencilbuffer::isStencilbuffer() const
+DepthStencilbuffer *DepthStencilbuffer::getStencilbuffer()
 {
-    return true;
+    return this;
 }
 
 IDirect3DSurface9 *DepthStencilbuffer::getDepthStencil()
@@ -466,14 +466,14 @@ Depthbuffer::~Depthbuffer()
 {
 }
 
-bool Depthbuffer::isDepthbuffer() const
+DepthStencilbuffer *Depthbuffer::getDepthbuffer()
 {
-    return true;
+    return this;
 }
 
-bool Depthbuffer::isStencilbuffer() const
+DepthStencilbuffer *Depthbuffer::getStencilbuffer()
 {
-    return false;
+    return NULL;
 }
 
 Stencilbuffer::Stencilbuffer(IDirect3DSurface9 *depthStencil) : DepthStencilbuffer(depthStencil)
@@ -500,13 +500,13 @@ Stencilbuffer::~Stencilbuffer()
 {
 }
 
-bool Stencilbuffer::isDepthbuffer() const
+DepthStencilbuffer *Stencilbuffer::getDepthbuffer()
 {
-    return false;
+    return NULL;
 }
 
-bool Stencilbuffer::isStencilbuffer() const
+DepthStencilbuffer *Stencilbuffer::getStencilbuffer()
 {
-    return true;
+    return this;
 }
 }

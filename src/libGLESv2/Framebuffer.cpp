@@ -183,44 +183,38 @@ unsigned int Framebuffer::getStencilbufferSerial()
 
 Colorbuffer *Framebuffer::getColorbuffer()
 {
-    Renderbuffer *rb = mColorbufferPointer.get();
+    Renderbuffer *renderbuffer = mColorbufferPointer.get();
 
-    if (rb != NULL && rb->isColorbuffer())
+    if (renderbuffer)
     {
-        return static_cast<Colorbuffer*>(rb->getStorage());
+        return renderbuffer->getColorbuffer();
     }
-    else
-    {
-        return NULL;
-    }
+    
+    return NULL;
 }
 
 DepthStencilbuffer *Framebuffer::getDepthbuffer()
 {
-    Renderbuffer *rb = mDepthbufferPointer.get();
+    Renderbuffer *renderbuffer = mDepthbufferPointer.get();
 
-    if (rb != NULL && rb->isDepthbuffer())
+    if (renderbuffer)
     {
-        return static_cast<DepthStencilbuffer*>(rb->getStorage());
+        return renderbuffer->getDepthbuffer();
     }
-    else
-    {
-        return NULL;
-    }
+
+    return NULL;
 }
 
 DepthStencilbuffer *Framebuffer::getStencilbuffer()
 {
-    Renderbuffer *rb = mStencilbufferPointer.get();
+    Renderbuffer *renderbuffer = mStencilbufferPointer.get();
 
-    if (rb != NULL && rb->isStencilbuffer())
+    if (renderbuffer)
     {
-        return static_cast<DepthStencilbuffer*>(rb->getStorage());
+        return renderbuffer->getStencilbuffer();
     }
-    else
-    {
-        return NULL;
-    }
+    
+    return NULL;
 }
 
 GLenum Framebuffer::getColorbufferType()

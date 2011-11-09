@@ -22,6 +22,8 @@
 namespace gl
 {
 class Texture;
+class Colorbuffer;
+class DepthStencilbuffer;
 
 // A class derived from RenderbufferStorage is created whenever glRenderbufferStorage
 // is called. The specific concrete type depends on whether the internal format is
@@ -33,9 +35,9 @@ class RenderbufferStorage
 
     virtual ~RenderbufferStorage() = 0;
 
-    virtual bool isColorbuffer() const;
-    virtual bool isDepthbuffer() const;
-    virtual bool isStencilbuffer() const;
+    virtual Colorbuffer *getColorbuffer();
+    virtual DepthStencilbuffer *getDepthbuffer();
+    virtual DepthStencilbuffer *getStencilbuffer();
 
     virtual IDirect3DSurface9 *getRenderTarget();
     virtual IDirect3DSurface9 *getDepthStencil();
@@ -82,9 +84,9 @@ class Renderbuffer : public RefCountObject
 
     ~Renderbuffer();
 
-    bool isColorbuffer() const;
-    bool isDepthbuffer() const;
-    bool isStencilbuffer() const;
+    Colorbuffer *getColorbuffer();
+    DepthStencilbuffer *getDepthbuffer();
+    DepthStencilbuffer *getStencilbuffer();
 
     IDirect3DSurface9 *getRenderTarget();
     IDirect3DSurface9 *getDepthStencil();
@@ -121,7 +123,7 @@ class Colorbuffer : public RenderbufferStorage
 
     virtual ~Colorbuffer();
 
-    virtual bool isColorbuffer() const;
+    virtual Colorbuffer *getColorbuffer();
 
     virtual IDirect3DSurface9 *getRenderTarget();
 
@@ -148,8 +150,8 @@ class DepthStencilbuffer : public RenderbufferStorage
 
     ~DepthStencilbuffer();
 
-    virtual bool isDepthbuffer() const;
-    virtual bool isStencilbuffer() const;
+    virtual DepthStencilbuffer *getDepthbuffer();
+    virtual DepthStencilbuffer *getStencilbuffer();
 
     virtual IDirect3DSurface9 *getDepthStencil();
 
@@ -166,8 +168,8 @@ class Depthbuffer : public DepthStencilbuffer
 
     virtual ~Depthbuffer();
 
-    virtual bool isDepthbuffer() const;
-    virtual bool isStencilbuffer() const;
+    virtual DepthStencilbuffer *getDepthbuffer();
+    virtual DepthStencilbuffer *getStencilbuffer();
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Depthbuffer);
@@ -181,8 +183,8 @@ class Stencilbuffer : public DepthStencilbuffer
 
     virtual ~Stencilbuffer();
 
-    virtual bool isDepthbuffer() const;
-    virtual bool isStencilbuffer() const;
+    virtual DepthStencilbuffer *getDepthbuffer();
+    virtual DepthStencilbuffer *getStencilbuffer();
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Stencilbuffer);
