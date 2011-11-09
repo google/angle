@@ -94,6 +94,16 @@ Context *getContext()
     return current->context;
 }
 
+Context *getNonLostContext()
+{
+    Context *context = getContext();
+    
+    if (context && !context->isContextLost())
+        return context;
+
+    return NULL;
+}
+
 egl::Display *getDisplay()
 {
     Current *current = (Current*)TlsGetValue(currentTLS);

@@ -29,6 +29,7 @@ struct Current
 void makeCurrent(Context *context, egl::Display *display, egl::Surface *surface);
 
 Context *getContext();
+Context *getNonLostContext();
 egl::Display *getDisplay();
 
 IDirect3DDevice9 *getDevice();
