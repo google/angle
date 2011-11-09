@@ -255,7 +255,7 @@ bool Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
         ERR("Could not create additional swap chains or offscreen surfaces: %08lX", result);
         release();
 
-        if(result == D3DERR_DEVICELOST)
+        if(isDeviceLostError(result))
         {
             return error(EGL_CONTEXT_LOST, false);
         }
@@ -421,12 +421,12 @@ bool Surface::swap()
 
         HRESULT result = mSwapChain->Present(NULL, NULL, NULL, NULL, 0);
 
-        if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY || result == D3DERR_DRIVERINTERNALERROR)
+        if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
         {
             return error(EGL_BAD_ALLOC, false);
         }
 
-        if (result == D3DERR_DEVICELOST || result == D3DERR_DEVICEHUNG || result == D3DERR_DEVICEREMOVED)
+        if (isDeviceLostError(result))
         {
             return error(EGL_CONTEXT_LOST, false);
         }

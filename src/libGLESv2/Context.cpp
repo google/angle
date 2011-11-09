@@ -2229,18 +2229,16 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum
     {
         systemSurface->Release();
 
-        switch (result)
-        {
-          // It turns out that D3D will sometimes produce more error
-          // codes than those documented.
-          case D3DERR_DRIVERINTERNALERROR:
-          case D3DERR_DEVICELOST:
-          case D3DERR_DEVICEHUNG:
+        // It turns out that D3D will sometimes produce more error
+        // codes than those documented.
+        if (checkDeviceLost(result))
             return error(GL_OUT_OF_MEMORY);
-          default:
+        else
+        {
             UNREACHABLE();
-            return;   // No sensible error to generate
+            return;
         }
+
     }
 
     D3DLOCKED_RECT lock;
@@ -2826,7 +2824,7 @@ void Context::sync(bool block)
 
     eventQuery->Release();
 
-    if (result == D3DERR_DEVICELOST)
+    if (checkDeviceLost(result))
     {
         error(GL_OUT_OF_MEMORY);
     }
