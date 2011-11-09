@@ -295,16 +295,16 @@ class TextureCubeMap : public Texture
     virtual void convertToRenderTarget();
     virtual IDirect3DSurface9 *getRenderTarget(GLenum target);
 
-    // face is one of the GL_TEXTURE_CUBE_MAP_* enumerants.
+    // target is one of the GL_TEXTURE_CUBE_MAP_* enumerants.
     // Returns NULL if the call underlying Direct3D call fails.
-    IDirect3DSurface9 *getCubeMapSurface(GLenum face, unsigned int level);
+    IDirect3DSurface9 *getCubeMapSurface(GLenum target, unsigned int level);
 
     static unsigned int faceIndex(GLenum face);
 
     bool isCubeComplete() const;
 
     void setImage(int faceIndex, GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
-    void commitRect(GLenum faceTarget, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
+    void commitRect(int faceIndex, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
     void redefineTexture(int faceIndex, GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type);
 
     Image mImageArray[6][IMPLEMENTATION_MAX_TEXTURE_LEVELS];

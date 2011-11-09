@@ -1658,10 +1658,7 @@ void Texture2D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei wi
             Image *image = &mImageArray[level];
 
             RECT sourceRect = transformPixelRect(xoffset, yoffset, width, height, image->height);;
-
-            POINT destPoint;
-            destPoint.x = sourceRect.left;
-            destPoint.y = sourceRect.top;
+            POINT destPoint = {sourceRect.left, sourceRect.top};
 
             result = getDevice()->UpdateSurface(image->surface, &sourceRect, destLevel, &destPoint);
             ASSERT(SUCCEEDED(result));
@@ -1907,28 +1904,15 @@ void Texture2D::createTexture()
 
 void Texture2D::updateTexture()
 {
-    IDirect3DDevice9 *device = getDevice();
-
     int levels = levelCount();
 
     for (int level = 0; level < levels; level++)
     {
-        if (mImageArray[level].surface && mImageArray[level].dirty)
+        Image *image = &mImageArray[level];
+
+        if (image->surface && image->dirty)
         {
-            IDirect3DSurface9 *levelSurface = NULL;
-            HRESULT result = mTexture->GetSurfaceLevel(level, &levelSurface);
-
-            ASSERT(SUCCEEDED(result));
-
-            if (SUCCEEDED(result))
-            {
-                result = device->UpdateSurface(mImageArray[level].surface, NULL, levelSurface, NULL);
-                ASSERT(SUCCEEDED(result));
-
-                levelSurface->Release();
-
-                mImageArray[level].dirty = false;
-            }
+            commitRect(level, 0, 0, mImageArray[level].width, mImageArray[level].height);
         }
     }
 }
@@ -2209,14 +2193,13 @@ void TextureCubeMap::setCompressedImage(GLenum face, GLint level, GLenum format,
     Texture::setCompressedImage(imageSize, pixels, &mImageArray[faceIndex(face)][level]);
 }
 
-void TextureCubeMap::commitRect(GLenum faceTarget, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
+void TextureCubeMap::commitRect(int face, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
-    int face = faceIndex(faceTarget);
     ASSERT(mImageArray[face][level].surface != NULL);
 
     if (level < levelCount())
     {
-        IDirect3DSurface9 *destLevel = getCubeMapSurface(faceTarget, level);
+        IDirect3DSurface9 *destLevel = getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level);
         ASSERT(destLevel != NULL);
 
         if (destLevel != NULL)
@@ -2224,10 +2207,7 @@ void TextureCubeMap::commitRect(GLenum faceTarget, GLint level, GLint xoffset, G
             Image *image = &mImageArray[face][level];
 
             RECT sourceRect = transformPixelRect(xoffset, yoffset, width, height, image->height);;
-
-            POINT destPoint;
-            destPoint.x = sourceRect.left;
-            destPoint.y = sourceRect.top;
+            POINT destPoint = {sourceRect.left, sourceRect.top};
 
             HRESULT result = getDevice()->UpdateSurface(image->surface, &sourceRect, destLevel, &destPoint);
             ASSERT(SUCCEEDED(result));
@@ -2243,7 +2223,7 @@ void TextureCubeMap::subImage(GLenum target, GLint level, GLint xoffset, GLint y
 {
     if (Texture::subImage(xoffset, yoffset, width, height, format, type, unpackAlignment, pixels, &mImageArray[faceIndex(target)][level]))
     {
-        commitRect(target, level, xoffset, yoffset, width, height);
+        commitRect(faceIndex(target), level, xoffset, yoffset, width, height);
     }
 }
 
@@ -2251,7 +2231,7 @@ void TextureCubeMap::subImageCompressed(GLenum target, GLint level, GLint xoffse
 {
     if (Texture::subImageCompressed(xoffset, yoffset, width, height, format, imageSize, pixels, &mImageArray[faceIndex(target)][level]))
     {
-        commitRect(target, level, xoffset, yoffset, width, height);
+        commitRect(faceIndex(target), level, xoffset, yoffset, width, height);
     }
 }
 
@@ -2386,8 +2366,6 @@ void TextureCubeMap::createTexture()
 
 void TextureCubeMap::updateTexture()
 {
-    IDirect3DDevice9 *device = getDevice();
-
     for (int face = 0; face < 6; face++)
     {
         int levels = levelCount();
@@ -2397,18 +2375,7 @@ void TextureCubeMap::updateTexture()
 
             if (image->surface && image->dirty)
             {
-                IDirect3DSurface9 *levelSurface = getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level);
-                ASSERT(levelSurface != NULL);
-
-                if (levelSurface != NULL)
-                {
-                    HRESULT result = device->UpdateSurface(image->surface, NULL, levelSurface, NULL);
-                    ASSERT(SUCCEEDED(result));
-
-                    levelSurface->Release();
-
-                    image->dirty = false;
-                }
+                commitRect(face, level, 0, 0, image->width, image->height);
             }
         }
     }
@@ -2605,7 +2572,7 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint 
     }
 }
 
-IDirect3DSurface9 *TextureCubeMap::getCubeMapSurface(GLenum face, unsigned int level)
+IDirect3DSurface9 *TextureCubeMap::getCubeMapSurface(GLenum target, unsigned int level)
 {
     if (mTexture == NULL)
     {
@@ -2615,7 +2582,7 @@ IDirect3DSurface9 *TextureCubeMap::getCubeMapSurface(GLenum face, unsigned int l
 
     IDirect3DSurface9 *surface = NULL;
 
-    HRESULT hr = mTexture->GetCubeMapSurface(es2dx::ConvertCubeFace(face), level, &surface);
+    HRESULT hr = mTexture->GetCubeMapSurface(es2dx::ConvertCubeFace(target), level, &surface);
 
     return (SUCCEEDED(hr)) ? surface : NULL;
 }
