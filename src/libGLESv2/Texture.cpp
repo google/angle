@@ -1050,9 +1050,9 @@ void Texture::loadDXT5ImageData(GLint xoffset, GLint yoffset, GLsizei width, GLs
     }
 }
 
-void Texture::createSurface(Image *image)
+void Texture::Image::createSurface()
 {
-    if(image->surface)
+    if(surface)
     {
         return;
     }
@@ -1060,12 +1060,12 @@ void Texture::createSurface(Image *image)
     IDirect3DTexture9 *newTexture = NULL;
     IDirect3DSurface9 *newSurface = NULL;
 
-    if (image->width != 0 && image->height != 0)
+    if (width != 0 && height != 0)
     {
         int levelToFetch = 0;
-        GLsizei requestWidth = image->width;
-        GLsizei requestHeight = image->height;
-        if (IsCompressed(image->format) && (image->width % 4 != 0 || image->height % 4 != 0))
+        GLsizei requestWidth = width;
+        GLsizei requestHeight = height;
+        if (IsCompressed(format) && (width % 4 != 0 || height % 4 != 0))
         {
             bool isMult4 = false;
             int upsampleCount = 0;
@@ -1082,7 +1082,7 @@ void Texture::createSurface(Image *image)
             levelToFetch = upsampleCount;
         }
 
-        HRESULT result = getDevice()->CreateTexture(requestWidth, requestHeight, levelToFetch + 1, NULL, image->getD3DFormat(),
+        HRESULT result = getDevice()->CreateTexture(requestWidth, requestHeight, levelToFetch + 1, NULL, getD3DFormat(),
                                                     D3DPOOL_SYSTEMMEM, &newTexture, NULL);
 
         if (FAILED(result))
@@ -1095,12 +1095,12 @@ void Texture::createSurface(Image *image)
         newTexture->Release();
     }
 
-    image->surface = newSurface;
+    surface = newSurface;
 }
 
 void Texture::setImage(GLint unpackAlignment, const void *pixels, Image *image)
 {
-    createSurface(image);
+    image->createSurface();
 
     if (pixels != NULL && image->surface != NULL)
     {
@@ -1125,7 +1125,7 @@ void Texture::setImage(GLint unpackAlignment, const void *pixels, Image *image)
 
 void Texture::setCompressedImage(GLsizei imageSize, const void *pixels, Image *image)
 {
-    createSurface(image);
+    image->createSurface();
 
     if (pixels != NULL && image->surface != NULL)
     {
@@ -1167,10 +1167,7 @@ bool Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
         return false;
     }
 
-    if (!image->surface)
-    {
-        createSurface(image);
-    }
+    image->createSurface();
 
     if (pixels != NULL && image->surface != NULL)
     {
@@ -1209,10 +1206,7 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GL
         return false;
     }
 
-    if (!image->surface)
-    {
-        createSurface(image);
-    }
+    image->createSurface();
 
     if (pixels != NULL && image->surface != NULL)
     {
@@ -1245,15 +1239,12 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GL
 // This implements glCopyTex[Sub]Image2D for non-renderable internal texture formats and incomplete textures
 void Texture::copyToImage(Image *image, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, IDirect3DSurface9 *renderTarget)
 {
+    image->createSurface();
+
     if (!image->surface)
     {
-        createSurface(image);
-
-        if (!image->surface)
-        {
-            ERR("Failed to create an image surface.");
-            return error(GL_OUT_OF_MEMORY);
-        }
+        ERR("Failed to create an image surface.");
+        return error(GL_OUT_OF_MEMORY);
     }
 
     IDirect3DDevice9 *device = getDevice();
@@ -1563,7 +1554,7 @@ void Texture2D::redefineTexture(GLint level, GLenum format, GLsizei width, GLsiz
         mImageArray[level].dirty = true;
     }
 
-    createSurface(&mImageArray[level]);
+    mImageArray[level].createSurface();
 
     if (!mTexture)
     {
@@ -2057,7 +2048,7 @@ void Texture2D::generateMipmaps()
     {
         for (unsigned int i = 1; i <= q; i++)
         {
-            createSurface(&mImageArray[i]);
+            mImageArray[i].createSurface();
             
             if (mImageArray[i].surface == NULL)
             {
@@ -2504,7 +2495,7 @@ void TextureCubeMap::redefineTexture(int face, GLint level, GLenum format, GLsiz
         mImageArray[face][level].dirty = true;
     }
 
-    createSurface(&mImageArray[face][level]);
+    mImageArray[face][level].createSurface();
 
     if (!mTexture)
     {
@@ -2731,7 +2722,7 @@ void TextureCubeMap::generateMipmaps()
         {
             for (unsigned int i = 1; i <= q; i++)
             {
-                createSurface(&mImageArray[f][i]);
+                mImageArray[f][i].createSurface();
                 if (mImageArray[f][i].surface == NULL)
                 {
                     return error(GL_OUT_OF_MEMORY);

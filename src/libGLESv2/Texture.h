@@ -93,6 +93,8 @@ class Texture : public RefCountObject
         Image();
         ~Image();
 
+        void createSurface();
+
         bool isRenderable() const;
         D3DFORMAT getD3DFormat() const;
 
@@ -120,8 +122,6 @@ class Texture : public RefCountObject
     virtual void updateTexture() = 0;
     virtual void convertToRenderTarget() = 0;
     virtual IDirect3DSurface9 *getRenderTarget(GLenum target) = 0;
-
-    void createSurface(Image *image);
 
     Blit *getBlitter();
 
