@@ -457,15 +457,19 @@ bool Display::createDevice()
 bool Display::resetDevice()
 {
     D3DPRESENT_PARAMETERS presentParameters = getDefaultPresentParameters();
-    HRESULT result;
+    HRESULT result = mDevice->TestCooperativeLevel();
     
-    do
+    while (result == D3DERR_DEVICELOST)
     {
-        Sleep(0);   // Give the graphics driver some CPU time
+        Sleep(100);   // Give the graphics driver some CPU time
 
+        result = mDevice->TestCooperativeLevel();
+    }
+
+    if (result == D3DERR_DEVICENOTRESET)
+    {
         result = mDevice->Reset(&presentParameters);
     }
-    while (result == D3DERR_DEVICELOST);
 
     if (FAILED(result))
     {
