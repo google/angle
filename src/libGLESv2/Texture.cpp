@@ -114,9 +114,9 @@ Texture::Texture(GLuint id) : RefCountObject(id), mSerial(issueSerial())
     mMagFilter = GL_LINEAR;
     mWrapS = GL_REPEAT;
     mWrapT = GL_REPEAT;
-    mDirtyParameter = true;
+    mDirtyParameters = true;
     
-    mDirtyImage = true;
+    mDirtyImages = true;
     
     mIsRenderable = false;
 }
@@ -146,7 +146,7 @@ bool Texture::setMinFilter(GLenum filter)
             if (mMinFilter != filter)
             {
                 mMinFilter = filter;
-                mDirtyParameter = true;
+                mDirtyParameters = true;
             }
             return true;
         }
@@ -166,7 +166,7 @@ bool Texture::setMagFilter(GLenum filter)
             if (mMagFilter != filter)
             {
                 mMagFilter = filter;
-                mDirtyParameter = true;
+                mDirtyParameters = true;
             }
             return true;
         }
@@ -187,7 +187,7 @@ bool Texture::setWrapS(GLenum wrap)
             if (mWrapS != wrap)
             {
                 mWrapS = wrap;
-                mDirtyParameter = true;
+                mDirtyParameters = true;
             }
             return true;
         }
@@ -208,7 +208,7 @@ bool Texture::setWrapT(GLenum wrap)
             if (mWrapT != wrap)
             {
                 mWrapT = wrap;
-                mDirtyParameter = true;
+                mDirtyParameters = true;
             }
             return true;
         }
@@ -1119,7 +1119,7 @@ void Texture::setImage(GLint unpackAlignment, const void *pixels, Image *image)
         }
 
         image->dirty = true;
-        mDirtyImage = true;
+        mDirtyImages = true;
     }
 }
 
@@ -1143,7 +1143,7 @@ void Texture::setCompressedImage(GLsizei imageSize, const void *pixels, Image *i
         }
 
         image->dirty = true;
-        mDirtyImage = true;
+        mDirtyImages = true;
     }
 }
 
@@ -1186,7 +1186,7 @@ bool Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
         }
 
         image->dirty = true;
-        mDirtyImage = true;
+        mDirtyImages = true;
     }
 
     return true;
@@ -1230,7 +1230,7 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GL
         }
 
         image->dirty = true;
-        mDirtyImage = true;
+        mDirtyImages = true;
     }
 
     return true;
@@ -1413,7 +1413,7 @@ void Texture::copyToImage(Image *image, GLint xoffset, GLint yoffset, GLint x, G
     renderTargetData->Release();
 
     image->dirty = true;
-    mDirtyImage = true;
+    mDirtyImages = true;
 }
 
 IDirect3DBaseTexture9 *Texture::getTexture()
@@ -1433,20 +1433,20 @@ IDirect3DBaseTexture9 *Texture::getTexture()
     return getBaseTexture();
 }
 
-bool Texture::isDirtyParameter() const
+bool Texture::hasDirtyParameters() const
 {
-    return mDirtyParameter;
+    return mDirtyParameters;
 }
 
-bool Texture::isDirtyImage() const
+bool Texture::hasDirtyImages() const
 {
-    return mDirtyImage;
+    return mDirtyImages;
 }
 
 void Texture::resetDirty()
 {
-    mDirtyParameter = false;
-    mDirtyImage = false;
+    mDirtyParameters = false;
+    mDirtyImages = false;
 }
 
 unsigned int Texture::getSerial() const
@@ -1577,13 +1577,10 @@ void Texture2D::redefineImage(GLint level, GLenum format, GLsizei width, GLsizei
             mImageArray[i].dirty = true;
         }
 
-        if (mTexture != NULL)
-        {
-            mTexture->Release();
-            mTexture = NULL;
-            mDirtyImage = true;
-            mIsRenderable = false;
-        }
+        mTexture->Release();
+        mTexture = NULL;
+        mDirtyImages = true;
+        mIsRenderable = false;
 
         if (mSurface)
         {
@@ -1624,7 +1621,7 @@ void Texture2D::bindTexImage(egl::Surface *surface)
     IDirect3DTexture9 *texture = surface->getOffscreenTexture();
 
     mTexture = texture;
-    mDirtyImage = true;
+    mDirtyImages = true;
     mIsRenderable = true;
     mSurface = surface;
     mSurface->setBoundTexture(this);
@@ -1896,7 +1893,7 @@ void Texture2D::createTexture()
     }
 
     mTexture = texture;
-    mDirtyImage = true;
+    mDirtyImages = true;
     mIsRenderable = false;
 }
 
@@ -1990,7 +1987,7 @@ void Texture2D::convertToRenderTarget()
     }
 
     mTexture = texture;
-    mDirtyImage = true;
+    mDirtyImages = true;
     mIsRenderable = true;
 }
 
@@ -2358,7 +2355,7 @@ void TextureCubeMap::createTexture()
     }
 
     mTexture = texture;
-    mDirtyImage = true;
+    mDirtyImages = true;
     mIsRenderable = false;
 }
 
@@ -2457,7 +2454,7 @@ void TextureCubeMap::convertToRenderTarget()
     }
 
     mTexture = texture;
-    mDirtyImage = true;
+    mDirtyImages = true;
     mIsRenderable = true;
 }
 
@@ -2506,13 +2503,10 @@ void TextureCubeMap::redefineImage(int face, GLint level, GLenum format, GLsizei
             }
         }
 
-        if (mTexture != NULL)
-        {
-            mTexture->Release();
-            mTexture = NULL;
-            mDirtyImage = true;
-            mIsRenderable = false;
-        }
+        mTexture->Release();
+        mTexture = NULL;
+        mDirtyImages = true;
+        mIsRenderable = false;
     }
 }
 

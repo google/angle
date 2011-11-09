@@ -77,8 +77,8 @@ class Texture : public RefCountObject
     virtual void generateMipmaps() = 0;
     virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source) = 0;
 
-    bool isDirtyParameter() const;
-    bool isDirtyImage() const;
+    bool hasDirtyParameters() const;
+    bool hasDirtyImages() const;
     void resetDirty();
     unsigned int getSerial() const;
 
@@ -132,9 +132,9 @@ class Texture : public RefCountObject
     GLenum mMagFilter;
     GLenum mWrapS;
     GLenum mWrapT;
-    bool mDirtyParameter;
+    bool mDirtyParameters;
 
-    bool mDirtyImage;
+    bool mDirtyImages;
 
     bool mIsRenderable;
 
