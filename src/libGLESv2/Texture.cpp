@@ -100,6 +100,7 @@ void Image::createSurface()
         if (FAILED(result))
         {
             ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
+            ERR("Creating image surface failed.");
             return error(GL_OUT_OF_MEMORY);
         }
 
@@ -200,6 +201,13 @@ D3DFORMAT Image::getD3DFormat() const
     }
 
     return D3DFMT_A8R8G8B8;
+}
+
+IDirect3DSurface9 *Image::getSurface()
+{
+    createSurface();
+
+    return mSurface;
 }
 
 Texture::Texture(GLuint id) : RefCountObject(id), mSerial(issueSerial())
@@ -1146,18 +1154,16 @@ void Texture::loadDXT5ImageData(GLint xoffset, GLint yoffset, GLsizei width, GLs
 
 void Texture::setImage(GLint unpackAlignment, const void *pixels, Image *image)
 {
-    image->createSurface();
-
-    if (pixels != NULL && image->getSurface() != NULL)
+    if (pixels != NULL)
     {
-        D3DSURFACE_DESC description;
-        image->getSurface()->GetDesc(&description);
-
         D3DLOCKED_RECT locked;
         HRESULT result = image->lock(&locked, NULL);
 
         if (SUCCEEDED(result))
         {
+            D3DSURFACE_DESC description;
+            image->getSurface()->GetDesc(&description);
+
             loadImageData(0, 0, image->getWidth(), image->getHeight(), image->getFormat(), image->getType(), unpackAlignment, pixels, locked.Pitch, locked.pBits, &description);
             image->unlock();
         }
@@ -1169,9 +1175,7 @@ void Texture::setImage(GLint unpackAlignment, const void *pixels, Image *image)
 
 void Texture::setCompressedImage(GLsizei imageSize, const void *pixels, Image *image)
 {
-    image->createSurface();
-
-    if (pixels != NULL && image->getSurface() != NULL)
+    if (pixels != NULL)
     {
         D3DLOCKED_RECT locked;
         HRESULT result = image->lock(&locked, NULL);
@@ -1209,18 +1213,16 @@ bool Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
         return false;
     }
 
-    image->createSurface();
-
-    if (pixels != NULL && image->getSurface() != NULL)
+    if (pixels != NULL)
     {
-        D3DSURFACE_DESC description;
-        image->getSurface()->GetDesc(&description);
-
         D3DLOCKED_RECT locked;
         HRESULT result = image->lock(&locked, NULL);
 
         if (SUCCEEDED(result))
         {
+            D3DSURFACE_DESC description;
+            image->getSurface()->GetDesc(&description);
+
             loadImageData(xoffset, transformPixelYOffset(yoffset, height, image->getHeight()), width, height, format, type, unpackAlignment, pixels, locked.Pitch, locked.pBits, &description);
             image->unlock();
         }
@@ -1275,14 +1277,6 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GL
 // This implements glCopyTex[Sub]Image2D for non-renderable internal texture formats and incomplete textures
 void Texture::copyToImage(Image *image, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, IDirect3DSurface9 *renderTarget)
 {
-    image->createSurface();
-
-    if (!image->getSurface())
-    {
-        ERR("Failed to create an image surface.");
-        return error(GL_OUT_OF_MEMORY);
-    }
-
     IDirect3DDevice9 *device = getDevice();
     IDirect3DSurface9 *renderTargetData = NULL;
     D3DSURFACE_DESC description;
@@ -2061,8 +2055,6 @@ void Texture2D::generateMipmaps()
     {
         for (unsigned int i = 1; i <= q; i++)
         {
-            mImageArray[i].createSurface();
-            
             if (mImageArray[i].getSurface() == NULL)
             {
                 return error(GL_OUT_OF_MEMORY);
@@ -2713,7 +2705,6 @@ void TextureCubeMap::generateMipmaps()
         {
             for (unsigned int i = 1; i <= q; i++)
             {
-                mImageArray[f][i].createSurface();
                 if (mImageArray[f][i].getSurface() == NULL)
                 {
                     return error(GL_OUT_OF_MEMORY);

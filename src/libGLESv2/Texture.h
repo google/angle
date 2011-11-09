@@ -50,7 +50,6 @@ class Image
     ~Image();
 
     void redefine(GLenum format, GLsizei width, GLsizei height, GLenum type);
-    void createSurface();
     void markDirty() {mDirty = true;}
     void markClean() {mDirty = false;}
 
@@ -65,10 +64,12 @@ class Image
     GLenum getFormat() const {return mFormat;}
     GLenum getType() const {return mType;}
     bool isDirty() const {return mSurface && mDirty;}
-    IDirect3DSurface9 *getSurface() {return mSurface;}
+    IDirect3DSurface9 *getSurface();
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Image);
+
+    void createSurface();
 
     GLsizei mWidth;
     GLsizei mHeight;
