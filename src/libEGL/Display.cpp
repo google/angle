@@ -667,7 +667,7 @@ EGLSurface Display::createOffscreenSurface(EGLConfig config, HANDLE shareHandle,
     return success(surface);
 }
 
-EGLContext Display::createContext(EGLConfig configHandle, const gl::Context *shareContext)
+EGLContext Display::createContext(EGLConfig configHandle, const gl::Context *shareContext, bool notifyResets, bool robustAccess)
 {
     if (!mDevice)
     {
@@ -684,7 +684,7 @@ EGLContext Display::createContext(EGLConfig configHandle, const gl::Context *sha
 
     const egl::Config *config = mConfigSet.get(configHandle);
 
-    gl::Context *context = glCreateContext(config, shareContext);
+    gl::Context *context = glCreateContext(config, shareContext, notifyResets, robustAccess);
     mContextSet.insert(context);
     mDeviceLost = false;
 

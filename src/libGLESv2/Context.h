@@ -258,7 +258,7 @@ class VertexDeclarationCache
 class Context
 {
   public:
-    Context(const egl::Config *config, const gl::Context *shareContext);
+    Context(const egl::Config *config, const gl::Context *shareContext, bool notifyResets, bool robustAccess);
 
     ~Context();
 
@@ -438,6 +438,7 @@ class Context
 
     GLenum getError();
     GLenum getResetStatus();
+    virtual bool isResetNotificationEnabled();
 
     bool supportsShaderModel3() const;
     int getMaximumVaryingVectors() const;
@@ -539,6 +540,8 @@ class Context
     bool mHasBeenCurrent;
     bool mContextLost;
     GLenum mResetStatus;
+    GLenum mResetStrategy;
+    bool mRobustAccess;
 
     unsigned int mAppliedTextureSerialPS[MAX_TEXTURE_IMAGE_UNITS];
     unsigned int mAppliedTextureSerialVS[MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF];
@@ -607,7 +610,7 @@ class Context
 extern "C"
 {
 // Exported functions for use by EGL
-gl::Context *glCreateContext(const egl::Config *config, const gl::Context *shareContext);
+gl::Context *glCreateContext(const egl::Config *config, const gl::Context *shareContext, bool notifyResets, bool robustAccess);
 void glDestroyContext(gl::Context *context);
 void glMakeCurrent(gl::Context *context, egl::Display *display, egl::Surface *surface);
 gl::Context *glGetCurrentContext();

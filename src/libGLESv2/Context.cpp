@@ -38,8 +38,10 @@ namespace
 
 namespace gl
 {
-Context::Context(const egl::Config *config, const gl::Context *shareContext) : mConfig(config)
+Context::Context(const egl::Config *config, const gl::Context *shareContext, bool notifyResets, bool robustAccess) : mConfig(config)
 {
+    ASSERT(robustAccess == false);   // Unimplemented
+
     mDisplay = NULL;
     mDevice = NULL;
 
@@ -160,6 +162,8 @@ Context::Context(const egl::Config *config, const gl::Context *shareContext) : m
     mHasBeenCurrent = false;
     mContextLost = false;
     mResetStatus = GL_NO_ERROR;
+    mResetStrategy = (notifyResets ? GL_LOSE_CONTEXT_ON_RESET_EXT : GL_NO_RESET_NOTIFICATION_EXT);
+    mRobustAccess = robustAccess;
 
     mSupportsDXT1Textures = false;
     mSupportsDXT3Textures = false;
@@ -393,7 +397,8 @@ void Context::markAllStateDirty()
 
 void Context::markContextLost()
 {
-    mResetStatus = GL_UNKNOWN_CONTEXT_RESET_EXT;
+    if (mResetStrategy == GL_LOSE_CONTEXT_ON_RESET_EXT)
+        mResetStatus = GL_UNKNOWN_CONTEXT_RESET_EXT;
     mContextLost = true;
 }
 
@@ -1171,24 +1176,25 @@ bool Context::getBooleanv(GLenum pname, GLboolean *params)
 {
     switch (pname)
     {
-      case GL_SHADER_COMPILER:          *params = GL_TRUE;                          break;
-      case GL_SAMPLE_COVERAGE_INVERT:   *params = mState.sampleCoverageInvert;      break;
-      case GL_DEPTH_WRITEMASK:          *params = mState.depthMask;                 break;
+      case GL_SHADER_COMPILER:           *params = GL_TRUE;                            break;
+      case GL_SAMPLE_COVERAGE_INVERT:    *params = mState.sampleCoverageInvert;        break;
+      case GL_DEPTH_WRITEMASK:           *params = mState.depthMask;                   break;
       case GL_COLOR_WRITEMASK:
         params[0] = mState.colorMaskRed;
         params[1] = mState.colorMaskGreen;
         params[2] = mState.colorMaskBlue;
         params[3] = mState.colorMaskAlpha;
         break;
-      case GL_CULL_FACE:                *params = mState.cullFace;                  break;
-      case GL_POLYGON_OFFSET_FILL:      *params = mState.polygonOffsetFill;         break;
-      case GL_SAMPLE_ALPHA_TO_COVERAGE: *params = mState.sampleAlphaToCoverage;     break;
-      case GL_SAMPLE_COVERAGE:          *params = mState.sampleCoverage;            break;
-      case GL_SCISSOR_TEST:             *params = mState.scissorTest;               break;
-      case GL_STENCIL_TEST:             *params = mState.stencilTest;               break;
-      case GL_DEPTH_TEST:               *params = mState.depthTest;                 break;
-      case GL_BLEND:                    *params = mState.blend;                     break;
-      case GL_DITHER:                   *params = mState.dither;                    break;
+      case GL_CULL_FACE:                 *params = mState.cullFace;                    break;
+      case GL_POLYGON_OFFSET_FILL:       *params = mState.polygonOffsetFill;           break;
+      case GL_SAMPLE_ALPHA_TO_COVERAGE:  *params = mState.sampleAlphaToCoverage;       break;
+      case GL_SAMPLE_COVERAGE:           *params = mState.sampleCoverage;              break;
+      case GL_SCISSOR_TEST:              *params = mState.scissorTest;                 break;
+      case GL_STENCIL_TEST:              *params = mState.stencilTest;                 break;
+      case GL_DEPTH_TEST:                *params = mState.depthTest;                   break;
+      case GL_BLEND:                     *params = mState.blend;                       break;
+      case GL_DITHER:                    *params = mState.dither;                      break;
+      case GL_CONTEXT_ROBUST_ACCESS_EXT: *params = mRobustAccess ? GL_TRUE : GL_FALSE; break;
       default:
         return false;
     }
@@ -1458,6 +1464,9 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
             *params = mState.samplerTexture[TEXTURE_CUBE][mState.activeSampler].id();
         }
         break;
+      case GL_RESET_NOTIFICATION_STRATEGY_EXT:
+        *params = mResetStrategy;
+        break;
       default:
         return false;
     }
@@ -1547,6 +1556,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_IMPLEMENTATION_COLOR_READ_FORMAT:
       case GL_TEXTURE_BINDING_2D:
       case GL_TEXTURE_BINDING_CUBE_MAP:
+      case GL_RESET_NOTIFICATION_STRATEGY_EXT:
         {
             *type = GL_INT;
             *numParams = 1;
@@ -1590,6 +1600,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_DEPTH_TEST:
       case GL_BLEND:
       case GL_DITHER:
+      case GL_CONTEXT_ROBUST_ACCESS_EXT:
         {
             *type = GL_BOOL;
             *numParams = 1;
@@ -3030,6 +3041,11 @@ GLenum Context::getResetStatus()
     return status;
 }
 
+bool Context::isResetNotificationEnabled()
+{
+    return (mResetStrategy == GL_LOSE_CONTEXT_ON_RESET_EXT);
+}
+
 bool Context::supportsShaderModel3() const
 {
     return mSupportsShaderModel3;
@@ -3841,9 +3857,9 @@ void VertexDeclarationCache::markStateDirty()
 
 extern "C"
 {
-gl::Context *glCreateContext(const egl::Config *config, const gl::Context *shareContext)
+gl::Context *glCreateContext(const egl::Config *config, const gl::Context *shareContext, bool notifyResets, bool robustAccess)
 {
-    return new gl::Context(config, shareContext);
+    return new gl::Context(config, shareContext, notifyResets, robustAccess);
 }
 
 void glDestroyContext(gl::Context *context)

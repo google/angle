@@ -44,7 +44,7 @@ class Display
 
     EGLSurface createWindowSurface(HWND window, EGLConfig config, const EGLint *attribList);
     EGLSurface createOffscreenSurface(EGLConfig config, HANDLE shareHandle, const EGLint *attribList);
-    EGLContext createContext(EGLConfig configHandle, const gl::Context *shareContext);
+    EGLContext createContext(EGLConfig configHandle, const gl::Context *shareContext, bool notifyResets, bool robustAccess);
 
     void destroySurface(egl::Surface *surface);
     void destroyContext(gl::Context *context);

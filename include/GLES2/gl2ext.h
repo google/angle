@@ -330,6 +330,10 @@ typedef void* GLeglImageOES;
 #define GL_GUILTY_CONTEXT_RESET_EXT                             0x8253
 #define GL_INNOCENT_CONTEXT_RESET_EXT                           0x8254
 #define GL_UNKNOWN_CONTEXT_RESET_EXT                            0x8255
+#define GL_CONTEXT_ROBUST_ACCESS_EXT                            0x90F3
+#define GL_RESET_NOTIFICATION_STRATEGY_EXT                      0x8256
+#define GL_LOSE_CONTEXT_ON_RESET_EXT                            0x8252
+#define GL_NO_RESET_NOTIFICATION_EXT                            0x8261
 #endif
 
 /*------------------------------------------------------------------------*
