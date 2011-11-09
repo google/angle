@@ -1555,12 +1555,14 @@ D3DFORMAT Texture2D::getD3DFormat() const
     return mImageArray[0].getD3DFormat();
 }
 
-void Texture2D::redefineImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type, bool forceRedefine)
+void Texture2D::redefineImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type)
 {
     GLsizei textureWidth = mImageArray[0].getWidth();
     GLsizei textureHeight = mImageArray[0].getHeight();
     GLenum textureFormat = mImageArray[0].getFormat();
     GLenum textureType = mImageArray[0].getType();
+
+    releaseTexImage();
 
     mImageArray[level].redefine(format, width, height, type);
 
@@ -1573,7 +1575,7 @@ void Texture2D::redefineImage(GLint level, GLenum format, GLsizei width, GLsizei
     bool heightOkay = (textureHeight >> level == height) || (textureHeight >> level == 0 && height == 1);
     bool textureOkay = (widthOkay && heightOkay && textureFormat == format && textureType == type);
 
-    if (!textureOkay || forceRedefine || mSurface)
+    if (!textureOkay)
     {
         for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
         {
@@ -1583,26 +1585,21 @@ void Texture2D::redefineImage(GLint level, GLenum format, GLsizei width, GLsizei
         mTexture->Release();
         mTexture = NULL;
         mDirtyImages = true;
-
-        if (mSurface)
-        {
-            mSurface->setBoundTexture(NULL);
-            mSurface = NULL;
-        }
-
         mColorbufferProxy.set(NULL);
     }
 }
 
 void Texture2D::setImage(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    redefineImage(level, format, width, height, type, false);
+    redefineImage(level, format, width, height, type);
 
     Texture::setImage(unpackAlignment, pixels, &mImageArray[level]);
 }
 
 void Texture2D::bindTexImage(egl::Surface *surface)
 {
+    releaseTexImage();
+
     GLenum format;
 
     switch(surface->getFormat())
@@ -1618,11 +1615,9 @@ void Texture2D::bindTexImage(egl::Surface *surface)
         return;
     }
 
-    redefineImage(0, format, surface->getWidth(), surface->getHeight(), GL_UNSIGNED_BYTE, true);
+    mImageArray[0].redefine(format, surface->getWidth(), surface->getHeight(), GL_UNSIGNED_BYTE);
 
-    IDirect3DTexture9 *texture = surface->getOffscreenTexture();
-
-    mTexture = texture;
+    mTexture = surface->getOffscreenTexture();
     mDirtyImages = true;
     mIsRenderable = true;
     mSurface = surface;
@@ -1631,12 +1626,27 @@ void Texture2D::bindTexImage(egl::Surface *surface)
 
 void Texture2D::releaseTexImage()
 {
-    redefineImage(0, GL_RGB, 0, 0, GL_UNSIGNED_BYTE, true);
+    if (mSurface)
+    {
+        mSurface->setBoundTexture(NULL);
+        mSurface = NULL;
+
+        if (mTexture)
+        {
+            mTexture->Release();
+            mTexture = NULL;
+        }
+
+        for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
+        {
+            mImageArray[i].redefine(GL_RGBA, 0, 0, GL_UNSIGNED_BYTE);
+        }
+    }
 }
 
 void Texture2D::setCompressedImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels)
 {
-    redefineImage(level, format, width, height, GL_UNSIGNED_BYTE, false);
+    redefineImage(level, format, width, height, GL_UNSIGNED_BYTE);
 
     Texture::setCompressedImage(imageSize, pixels, &mImageArray[level]);
 }
@@ -1695,7 +1705,7 @@ void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei 
         return error(GL_OUT_OF_MEMORY);
     }
 
-    redefineImage(level, format, width, height, GL_UNSIGNED_BYTE, false);
+    redefineImage(level, format, width, height, GL_UNSIGNED_BYTE);
    
     if (!mImageArray[level].isRenderable())
     {
@@ -2009,10 +2019,10 @@ void Texture2D::generateMipmaps()
     unsigned int q = log2(std::max(mImageArray[0].getWidth(), mImageArray[0].getHeight()));
     for (unsigned int i = 1; i <= q; i++)
     {
-        mImageArray[i].redefine(mImageArray[0].getFormat(),
-                                std::max(mImageArray[0].getWidth() >> i, 1),
-                                std::max(mImageArray[0].getHeight() >> i, 1),
-                                mImageArray[0].getType());
+        redefineImage(i, mImageArray[0].getFormat(), 
+                         std::max(mImageArray[0].getWidth() >> i, 1),
+                         std::max(mImageArray[0].getHeight() >> i, 1),
+                         mImageArray[0].getType());
     }
 
     if (mTexture && mIsRenderable)
@@ -2652,10 +2662,10 @@ void TextureCubeMap::generateMipmaps()
     {
         for (unsigned int i = 1; i <= q; i++)
         {
-            mImageArray[f][i].redefine(mImageArray[f][0].getFormat(),
-                                       std::max(mImageArray[f][0].getWidth() >> i, 1),
-                                       std::max(mImageArray[f][0].getWidth() >> i, 1),
-                                       mImageArray[f][0].getType());
+            redefineImage(f, i, mImageArray[f][0].getFormat(),
+                                std::max(mImageArray[f][0].getWidth() >> i, 1),
+                                std::max(mImageArray[f][0].getWidth() >> i, 1),
+                                mImageArray[f][0].getType());
         }
     }
 

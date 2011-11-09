@@ -257,7 +257,7 @@ class Texture2D : public Texture
     virtual void convertToRenderTarget();
     virtual IDirect3DSurface9 *getRenderTarget(GLenum target);
 
-    void redefineImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type, bool force);
+    void redefineImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type);
     void commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
 
     Image mImageArray[IMPLEMENTATION_MAX_TEXTURE_LEVELS];
