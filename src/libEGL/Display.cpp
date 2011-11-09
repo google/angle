@@ -457,26 +457,43 @@ bool Display::createDevice()
 bool Display::resetDevice()
 {
     D3DPRESENT_PARAMETERS presentParameters = getDefaultPresentParameters();
-    HRESULT result = mDevice->TestCooperativeLevel();
-    
-    while (result == D3DERR_DEVICELOST)
-    {
-        Sleep(100);   // Give the graphics driver some CPU time
 
-        result = mDevice->TestCooperativeLevel();
-    }
+    HRESULT result = D3D_OK;
+    bool lost = isDeviceLost();
+    int attempts = 3;    
 
-    if (result == D3DERR_DEVICENOTRESET)
+    while (lost && attempts > 0)
     {
-        result = mDevice->Reset(&presentParameters);
+        if (mDeviceEx)
+        {
+            Sleep(500);   // Give the graphics driver some CPU time
+            result = mDeviceEx->ResetEx(&presentParameters, NULL);
+        }
+        else
+        {
+            result = mDevice->TestCooperativeLevel();
+            
+            while (result == D3DERR_DEVICELOST)
+            {
+                Sleep(100);   // Give the graphics driver some CPU time
+                result = mDevice->TestCooperativeLevel();
+            }
+
+            if (result == D3DERR_DEVICENOTRESET)
+            {
+                result = mDevice->Reset(&presentParameters);
+            }
+        }
+
+        lost = isDeviceLost();
+        attempts --;
     }
 
     if (FAILED(result))
     {
+        ERR("Reset/ResetEx failed multiple times: 0x%08X", result);
         return error(EGL_BAD_ALLOC, false);
     }
-
-    ASSERT(SUCCEEDED(result));
 
     return true;
 }

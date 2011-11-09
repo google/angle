@@ -106,7 +106,7 @@ bool Surface::initialize()
 
         result = DwmSetPresentParameters(mWindow, &presentParams);
         if (FAILED(result))
-          ERR("Unable to set present parameters: %081X", result);
+          ERR("Unable to set present parameters: 0x%08X", result);
       }
     }
 
@@ -268,7 +268,7 @@ bool Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY || result == D3DERR_INVALIDCALL);
 
-        ERR("Could not create depthstencil surface for new swap chain: %08lX", result);
+        ERR("Could not create depthstencil surface for new swap chain: 0x%08X", result);
         release();
         return error(EGL_BAD_ALLOC, false);
     }
