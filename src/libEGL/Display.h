@@ -61,7 +61,7 @@ class Display
     virtual IDirect3DDevice9 *getDevice();
     virtual D3DCAPS9 getDeviceCaps();
     virtual D3DADAPTER_IDENTIFIER9 *getAdapterIdentifier();
-    bool isDeviceLost();
+    bool testDeviceLost();
     virtual void getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray);
     virtual bool getDXT1TextureSupport();
     virtual bool getDXT3TextureSupport();
@@ -74,6 +74,9 @@ class Display
     virtual bool getVertexTextureSupport() const;
     virtual bool getNonPower2TextureSupport() const;
     virtual D3DPOOL getBufferPool(DWORD usage) const;
+
+    virtual void notifyDeviceLost();
+    bool isDeviceLost();
 
     bool isD3d9ExDevice() { return mD3d9Ex != NULL; }
     const char *getExtensionString() const;
@@ -114,6 +117,7 @@ class Display
 
     typedef std::set<gl::Context*> ContextSet;
     ContextSet mContextSet;
+    bool mDeviceLost;
 
     bool createDevice();
     bool resetDevice();

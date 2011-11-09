@@ -257,7 +257,8 @@ bool Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
 
         if(isDeviceLostError(result))
         {
-            return error(EGL_CONTEXT_LOST, false);
+            mDisplay->notifyDeviceLost();
+            return false;
         }
         else
         {
@@ -428,7 +429,8 @@ bool Surface::swap()
 
         if (isDeviceLostError(result))
         {
-            return error(EGL_CONTEXT_LOST, false);
+            mDisplay->notifyDeviceLost();
+            return false;
         }
 
         ASSERT(SUCCEEDED(result));

@@ -88,6 +88,7 @@ Display::Display(EGLNativeDisplayType displayId, HDC deviceContext, bool softwar
     mMaxSwapInterval = 1;
     mSoftwareDevice = software;
     mDisplayId = displayId;
+    mDeviceLost = false;
 }
 
 Display::~Display()
@@ -304,7 +305,7 @@ void Display::terminate()
     if (mDevice)
     {
         // If the device is lost, reset it first to prevent leaving the driver in an unstable state
-        if (isDeviceLost())
+        if (testDeviceLost())
         {
             resetDevice();
         }
@@ -459,7 +460,7 @@ bool Display::resetDevice()
     D3DPRESENT_PARAMETERS presentParameters = getDefaultPresentParameters();
 
     HRESULT result = D3D_OK;
-    bool lost = isDeviceLost();
+    bool lost = testDeviceLost();
     int attempts = 3;    
 
     while (lost && attempts > 0)
@@ -485,7 +486,7 @@ bool Display::resetDevice()
             }
         }
 
-        lost = isDeviceLost();
+        lost = testDeviceLost();
         attempts --;
     }
 
@@ -536,7 +537,7 @@ EGLSurface Display::createWindowSurface(HWND window, EGLConfig config, const EGL
         return error(EGL_BAD_ALLOC, EGL_NO_SURFACE);
     }
 
-    if (isDeviceLost()) {
+    if (testDeviceLost()) {
         if (!restoreLostDevice())
             return EGL_NO_SURFACE;
     }
@@ -648,7 +649,7 @@ EGLSurface Display::createOffscreenSurface(EGLConfig config, HANDLE shareHandle,
         return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
     }
 
-    if (isDeviceLost()) {
+    if (testDeviceLost()) {
         if (!restoreLostDevice())
             return EGL_NO_SURFACE;
     }
@@ -675,7 +676,7 @@ EGLContext Display::createContext(EGLConfig configHandle, const gl::Context *sha
             return NULL;
         }
     }
-    else if (isDeviceLost())   // Lost device
+    else if (testDeviceLost())   // Lost device
     {
         if (!restoreLostDevice())
             return NULL;
@@ -685,6 +686,7 @@ EGLContext Display::createContext(EGLConfig configHandle, const gl::Context *sha
 
     gl::Context *context = glCreateContext(config, shareContext);
     mContextSet.insert(context);
+    mDeviceLost = false;
 
     return context;
 }
@@ -722,6 +724,21 @@ void Display::destroyContext(gl::Context *context)
 {
     glDestroyContext(context);
     mContextSet.erase(context);
+}
+
+void Display::notifyDeviceLost()
+{
+    for (ContextSet::iterator context = mContextSet.begin(); context != mContextSet.end(); context++)
+    {
+        (*context)->markContextLost();
+    }
+    mDeviceLost = true;
+    error(EGL_CONTEXT_LOST);
+}
+
+bool Display::isDeviceLost()
+{
+    return mDeviceLost;
 }
 
 bool Display::isInitialized() const
@@ -790,7 +807,7 @@ D3DADAPTER_IDENTIFIER9 *Display::getAdapterIdentifier()
     return &mAdapterIdentifier;
 }
 
-bool Display::isDeviceLost()
+bool Display::testDeviceLost()
 {
     if (mDeviceEx)
     {

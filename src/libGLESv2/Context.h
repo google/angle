@@ -266,6 +266,9 @@ class Context
 
     void markAllStateDirty();
 
+    virtual void markContextLost();
+    bool isContextLost();
+
     // State manipulation
     void setClearColor(float red, float green, float blue, float alpha);
 
@@ -531,7 +534,9 @@ class Context
     bool mOutOfMemory;
     bool mInvalidFramebufferOperation;
 
+    // Current/lost context flags
     bool mHasBeenCurrent;
+    bool mContextLost;
 
     unsigned int mAppliedTextureSerialPS[MAX_TEXTURE_IMAGE_UNITS];
     unsigned int mAppliedTextureSerialVS[MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF];

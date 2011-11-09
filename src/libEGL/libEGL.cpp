@@ -895,7 +895,13 @@ EGLBoolean __stdcall eglMakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface 
         gl::Context *context = static_cast<gl::Context*>(ctx);
         IDirect3DDevice9 *device = display->getDevice();
 
-        if (!device || display->isDeviceLost())
+        if (!device || display->testDeviceLost())
+        {
+            display->notifyDeviceLost();
+            return EGL_FALSE;
+        }
+
+        if (display->isDeviceLost())
         {
             return error(EGL_CONTEXT_LOST, EGL_FALSE);
         }
@@ -1077,6 +1083,11 @@ EGLBoolean __stdcall eglSwapBuffers(EGLDisplay dpy, EGLSurface surface)
             return EGL_FALSE;
         }
 
+        if (display->isDeviceLost())
+        {
+            return error(EGL_CONTEXT_LOST, EGL_FALSE);
+        }
+
         if (surface == EGL_NO_SURFACE)
         {
             return error(EGL_BAD_SURFACE, EGL_FALSE);
@@ -1107,6 +1118,11 @@ EGLBoolean __stdcall eglCopyBuffers(EGLDisplay dpy, EGLSurface surface, EGLNativ
         if (!validateSurface(display, eglSurface))
         {
             return EGL_FALSE;
+        }
+
+        if (display->isDeviceLost())
+        {
+            return error(EGL_CONTEXT_LOST, EGL_FALSE);
         }
 
         UNIMPLEMENTED();   // FIXME

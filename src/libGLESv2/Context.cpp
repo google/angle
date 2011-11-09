@@ -158,6 +158,7 @@ Context::Context(const egl::Config *config, const gl::Context *shareContext) : m
     mInvalidFramebufferOperation = false;
 
     mHasBeenCurrent = false;
+    mContextLost = false;
 
     mSupportsDXT1Textures = false;
     mSupportsDXT3Textures = false;
@@ -387,6 +388,16 @@ void Context::markAllStateDirty()
     mFrontFaceDirty = true;
     mDxUniformsDirty = true;
     mCachedCurrentProgram = NULL;
+}
+
+void Context::markContextLost()
+{
+    mContextLost = true;
+}
+
+bool Context::isContextLost()
+{
+    return mContextLost;
 }
 
 void Context::setClearColor(float red, float green, float blue, float alpha)

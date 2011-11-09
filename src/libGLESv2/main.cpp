@@ -114,6 +114,8 @@ bool checkDeviceLost(HRESULT errorCode)
 
     if (isDeviceLostError(errorCode))
     {
+        display = gl::getDisplay();
+        display->notifyDeviceLost();
         return true;
     }
     return false;
