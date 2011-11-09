@@ -184,8 +184,8 @@ class Texture : public RefCountObject
     void setCompressedImage(GLsizei imageSize, const void *pixels, Image *image);
     bool subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels, Image *image);
 
-    GLint creationLevels(GLsizei width, GLsizei height, GLint maxlevel) const;
-    GLint creationLevels(GLsizei size, GLint maxlevel) const;
+    GLint creationLevels(GLsizei width, GLsizei height) const;
+    GLint creationLevels(GLsizei size) const;
 
     virtual IDirect3DBaseTexture9 *getBaseTexture() const = 0;
     virtual void createTexture() = 0;

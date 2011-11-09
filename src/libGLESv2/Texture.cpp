@@ -1480,11 +1480,11 @@ unsigned int Texture::getSerial() const
     return mSerial;
 }
 
-GLint Texture::creationLevels(GLsizei width, GLsizei height, GLint maxlevel) const
+GLint Texture::creationLevels(GLsizei width, GLsizei height) const
 {
     if ((isPow2(width) && isPow2(height)) || getContext()->supportsNonPower2Texture())
     {
-        return maxlevel;
+        return 0;   // Maximum number of levels
     }
     else
     {
@@ -1493,9 +1493,9 @@ GLint Texture::creationLevels(GLsizei width, GLsizei height, GLint maxlevel) con
     }
 }
 
-GLint Texture::creationLevels(GLsizei size, GLint maxlevel) const
+GLint Texture::creationLevels(GLsizei size) const
 {
-    return creationLevels(size, size, maxlevel);
+    return creationLevels(size, size);
 }
 
 int Texture::levelCount() const
@@ -1887,7 +1887,7 @@ void Texture2D::createTexture()
 {
     IDirect3DDevice9 *device = getDevice();
     D3DFORMAT format = mImageArray[0].getD3DFormat();
-    GLint levels = creationLevels(mImageArray[0].getWidth(), mImageArray[0].getHeight(), 0);
+    GLint levels = creationLevels(mImageArray[0].getWidth(), mImageArray[0].getHeight());
 
     IDirect3DTexture9 *texture = NULL;
     HRESULT result = device->CreateTexture(mImageArray[0].getWidth(), mImageArray[0].getHeight(), levels, 0, format, D3DPOOL_DEFAULT, &texture, NULL);
@@ -1934,7 +1934,7 @@ void Texture2D::convertToRenderTarget()
         egl::Display *display = getDisplay();
         IDirect3DDevice9 *device = getDevice();
         D3DFORMAT format = mImageArray[0].getD3DFormat();
-        GLint levels = creationLevels(mImageArray[0].getWidth(), mImageArray[0].getHeight(), 0);
+        GLint levels = creationLevels(mImageArray[0].getWidth(), mImageArray[0].getHeight());
 
         HRESULT result = device->CreateTexture(mImageArray[0].getWidth(), mImageArray[0].getHeight(), levels, D3DUSAGE_RENDERTARGET, format, D3DPOOL_DEFAULT, &texture, NULL);
 
