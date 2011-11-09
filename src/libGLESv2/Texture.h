@@ -207,12 +207,11 @@ class Texture : public RefCountObject
 
     bool mIsRenderable;
 
-  private:
-    DISALLOW_COPY_AND_ASSIGN(Texture);
-
+    unsigned int mSerial;
     static unsigned int issueSerial();
 
-    const unsigned int mSerial;
+  private:
+    DISALLOW_COPY_AND_ASSIGN(Texture);
 
     static unsigned int mCurrentSerial;
 };

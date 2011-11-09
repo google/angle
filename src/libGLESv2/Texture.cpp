@@ -1195,8 +1195,10 @@ void Image::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, 
     mDirty = true;
 }
 
-Texture::Texture(GLuint id) : RefCountObject(id), mSerial(issueSerial())
+Texture::Texture(GLuint id) : RefCountObject(id)
 {
+    mSerial = 0;
+
     mMinFilter = GL_NEAREST_MIPMAP_LINEAR;
     mMagFilter = GL_LINEAR;
     mWrapS = GL_REPEAT;
@@ -1584,6 +1586,7 @@ void Texture2D::redefineImage(GLint level, GLenum format, GLsizei width, GLsizei
 
         mTexture->Release();
         mTexture = NULL;
+        mSerial = 0;
         mDirtyImages = true;
         mColorbufferProxy.set(NULL);
     }
@@ -1618,6 +1621,7 @@ void Texture2D::bindTexImage(egl::Surface *surface)
     mImageArray[0].redefine(format, surface->getWidth(), surface->getHeight(), GL_UNSIGNED_BYTE);
 
     mTexture = surface->getOffscreenTexture();
+    mSerial = issueSerial();
     mDirtyImages = true;
     mIsRenderable = true;
     mSurface = surface;
@@ -1635,6 +1639,7 @@ void Texture2D::releaseTexImage()
         {
             mTexture->Release();
             mTexture = NULL;
+            mSerial = 0;
         }
 
         for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
@@ -1907,6 +1912,7 @@ void Texture2D::createTexture()
     }
 
     mTexture = texture;
+    mSerial = issueSerial();
     mDirtyImages = true;
     mIsRenderable = false;
 }
@@ -2001,6 +2007,7 @@ void Texture2D::convertToRenderTarget()
     }
 
     mTexture = texture;
+    mSerial = issueSerial();
     mDirtyImages = true;
     mIsRenderable = true;
 }
@@ -2355,6 +2362,7 @@ void TextureCubeMap::createTexture()
     }
 
     mTexture = texture;
+    mSerial = issueSerial();
     mDirtyImages = true;
     mIsRenderable = false;
 }
@@ -2454,6 +2462,7 @@ void TextureCubeMap::convertToRenderTarget()
     }
 
     mTexture = texture;
+    mSerial = issueSerial();
     mDirtyImages = true;
     mIsRenderable = true;
 }
@@ -2505,6 +2514,7 @@ void TextureCubeMap::redefineImage(int face, GLint level, GLenum format, GLsizei
 
         mTexture->Release();
         mTexture = NULL;
+        mSerial = 0;
         mDirtyImages = true;
     }
 }
