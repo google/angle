@@ -250,11 +250,19 @@ bool Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
 
     if (FAILED(result))
     {
-        ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY || result == D3DERR_INVALIDCALL);
+        ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY || result == D3DERR_INVALIDCALL || result == D3DERR_DEVICELOST);
 
         ERR("Could not create additional swap chains or offscreen surfaces: %08lX", result);
         release();
-        return error(EGL_BAD_ALLOC, false);
+
+        if(result == D3DERR_DEVICELOST)
+        {
+            return error(EGL_CONTEXT_LOST, false);
+        }
+        else
+        {
+            return error(EGL_BAD_ALLOC, false);
+        }
     }
 
     if (mConfig->mDepthStencilFormat != D3DFMT_UNKNOWN)
