@@ -54,6 +54,9 @@ class Image
     void markDirty() {mDirty = true;}
     void markClean() {mDirty = false;}
 
+    HRESULT lock(D3DLOCKED_RECT *lockedRect, const RECT *rect);
+    void unlock();
+
     bool isRenderable() const;
     D3DFORMAT getD3DFormat() const;
 
@@ -61,7 +64,7 @@ class Image
     GLsizei getHeight() const {return mHeight;}
     GLenum getFormat() const {return mFormat;}
     GLenum getType() const {return mType;}
-    bool isDirty() const {return mDirty;}
+    bool isDirty() const {return mSurface && mDirty;}
     IDirect3DSurface9 *getSurface() {return mSurface;}
 
   private:

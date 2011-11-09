@@ -107,6 +107,32 @@ void Image::createSurface()
     mSurface = newSurface;
 }
 
+HRESULT Image::lock(D3DLOCKED_RECT *lockedRect, const RECT *rect)
+{
+    createSurface();
+
+    HRESULT result = D3DERR_INVALIDCALL;
+
+    if (mSurface)
+    {
+        result = mSurface->LockRect(lockedRect, rect, 0);
+        ASSERT(SUCCEEDED(result));
+
+        mDirty = true;
+    }
+
+    return result;
+}
+
+void Image::unlock()
+{
+    if (mSurface)
+    {
+        HRESULT result = mSurface->UnlockRect();
+        ASSERT(SUCCEEDED(result));
+    }
+}
+
 bool Image::isRenderable() const
 {    
     switch(getD3DFormat())
@@ -1125,14 +1151,12 @@ void Texture::setImage(GLint unpackAlignment, const void *pixels, Image *image)
         image->getSurface()->GetDesc(&description);
 
         D3DLOCKED_RECT locked;
-        HRESULT result = image->getSurface()->LockRect(&locked, NULL, 0);
-
-        ASSERT(SUCCEEDED(result));
+        HRESULT result = image->lock(&locked, NULL);
 
         if (SUCCEEDED(result))
         {
             loadImageData(0, 0, image->getWidth(), image->getHeight(), image->getFormat(), image->getType(), unpackAlignment, pixels, locked.Pitch, locked.pBits, &description);
-            image->getSurface()->UnlockRect();
+            image->unlock();
         }
 
         image->markDirty();
@@ -1147,16 +1171,14 @@ void Texture::setCompressedImage(GLsizei imageSize, const void *pixels, Image *i
     if (pixels != NULL && image->getSurface() != NULL)
     {
         D3DLOCKED_RECT locked;
-        HRESULT result = image->getSurface()->LockRect(&locked, NULL, 0);
-
-        ASSERT(SUCCEEDED(result));
+        HRESULT result = image->lock(&locked, NULL);
 
         if (SUCCEEDED(result))
         {
             int inputPitch = ComputeCompressedPitch(image->getWidth(), image->getFormat());
             int inputSize = ComputeCompressedSize(image->getWidth(), image->getHeight(), image->getFormat());
             loadCompressedImageData(0, 0, image->getWidth(), image->getHeight(), -inputPitch, static_cast<const char*>(pixels) + inputSize - inputPitch, locked.Pitch, locked.pBits);
-            image->getSurface()->UnlockRect();
+            image->unlock();
         }
 
         image->markDirty();
@@ -1192,14 +1214,12 @@ bool Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
         image->getSurface()->GetDesc(&description);
 
         D3DLOCKED_RECT locked;
-        HRESULT result = image->getSurface()->LockRect(&locked, NULL, 0);
-
-        ASSERT(SUCCEEDED(result));
+        HRESULT result = image->lock(&locked, NULL);
 
         if (SUCCEEDED(result))
         {
             loadImageData(xoffset, transformPixelYOffset(yoffset, height, image->getHeight()), width, height, format, type, unpackAlignment, pixels, locked.Pitch, locked.pBits, &description);
-            image->getSurface()->UnlockRect();
+            image->unlock();
         }
 
         image->markDirty();
@@ -1223,9 +1243,7 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GL
         return false;
     }
 
-    image->createSurface();
-
-    if (pixels != NULL && image->getSurface() != NULL)
+    if (pixels != NULL)
     {
         RECT updateRegion;
         updateRegion.left = xoffset;
@@ -1234,16 +1252,14 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GL
         updateRegion.top = yoffset;
 
         D3DLOCKED_RECT locked;
-        HRESULT result = image->getSurface()->LockRect(&locked, &updateRegion, 0);
-
-        ASSERT(SUCCEEDED(result));
+        HRESULT result = image->lock(&locked, &updateRegion);
 
         if (SUCCEEDED(result))
         {
             int inputPitch = ComputeCompressedPitch(width, format);
             int inputSize = ComputeCompressedSize(width, height, format);
             loadCompressedImageData(xoffset, transformPixelYOffset(yoffset, height, image->getHeight()), width, height, -inputPitch, static_cast<const char*>(pixels) + inputSize - inputPitch, locked.Pitch, locked.pBits);
-            image->getSurface()->UnlockRect();
+            image->unlock();
         }
 
         image->markDirty();
@@ -1314,7 +1330,7 @@ void Texture::copyToImage(Image *image, GLint xoffset, GLint yoffset, GLint x, G
         }
 
         D3DLOCKED_RECT destLock = {0};
-        result = image->getSurface()->LockRect(&destLock, &destRect, 0);
+        result = image->lock(&destLock, &destRect);
         
         if (FAILED(result))
         {
@@ -1423,7 +1439,7 @@ void Texture::copyToImage(Image *image, GLint xoffset, GLint yoffset, GLint x, G
             }
         }
 
-        image->getSurface()->UnlockRect();
+        image->unlock();
         renderTargetData->UnlockRect();
     }
 
@@ -1905,7 +1921,7 @@ void Texture2D::updateTexture()
     {
         Image *image = &mImageArray[level];
 
-        if (image->getSurface() && image->isDirty())
+        if (image->isDirty())
         {
             commitRect(level, 0, 0, mImageArray[level].getWidth(), mImageArray[level].getHeight());
         }
@@ -2362,7 +2378,7 @@ void TextureCubeMap::updateTexture()
         {
             Image *image = &mImageArray[face][level];
 
-            if (image->getSurface() && image->isDirty())
+            if (image->isDirty())
             {
                 commitRect(face, level, 0, 0, image->getWidth(), image->getHeight());
             }
