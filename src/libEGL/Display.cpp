@@ -1017,6 +1017,10 @@ void Display::initExtensionString()
 
     mExtensionString = "";
 
+    // Multi-vendor (EXT) extensions
+    mExtensionString += "EGL_EXT_create_context_robustness ";
+
+    // ANGLE-specific extensions
     if (isd3d9ex) {
         mExtensionString += "EGL_ANGLE_d3d_share_handle_client_buffer ";
     }

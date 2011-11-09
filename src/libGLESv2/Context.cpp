@@ -3420,6 +3420,7 @@ void Context::initExtensionString()
 
     // Multi-vendor (EXT) extensions
     mExtensionString += "GL_EXT_read_format_bgra ";
+    mExtensionString += "GL_EXT_robustness ";
 
     if (supportsDXT1Textures())
     {
