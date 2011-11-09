@@ -159,6 +159,7 @@ Context::Context(const egl::Config *config, const gl::Context *shareContext) : m
 
     mHasBeenCurrent = false;
     mContextLost = false;
+    mResetStatus = GL_NO_ERROR;
 
     mSupportsDXT1Textures = false;
     mSupportsDXT3Textures = false;
@@ -392,6 +393,7 @@ void Context::markAllStateDirty()
 
 void Context::markContextLost()
 {
+    mResetStatus = GL_UNKNOWN_CONTEXT_RESET_EXT;
     mContextLost = true;
 }
 
@@ -3001,6 +3003,31 @@ GLenum Context::getError()
     }
 
     return GL_NO_ERROR;
+}
+
+GLenum Context::getResetStatus()
+{
+    if (mResetStatus == GL_NO_ERROR)
+    {
+        bool lost = mDisplay->testDeviceLost();
+
+        if (lost)
+        {
+            mDisplay->notifyDeviceLost();   // Sets mResetStatus
+        }
+    }
+
+    GLenum status = mResetStatus;
+
+    if (mResetStatus != GL_NO_ERROR)
+    {
+        if (mDisplay->testDeviceResettable())
+        {
+            mResetStatus = GL_NO_ERROR;
+        }
+    }
+    
+    return status;
 }
 
 bool Context::supportsShaderModel3() const

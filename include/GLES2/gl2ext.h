@@ -325,6 +325,13 @@ typedef void* GLeglImageOES;
 #define GL_UNPACK_SKIP_PIXELS                                   0x0CF4
 #endif
 
+/* GL_EXT_robustness */
+#ifndef GL_EXT_robustness
+#define GL_GUILTY_CONTEXT_RESET_EXT                             0x8253
+#define GL_INNOCENT_CONTEXT_RESET_EXT                           0x8254
+#define GL_UNKNOWN_CONTEXT_RESET_EXT                            0x8255
+#endif
+
 /*------------------------------------------------------------------------*
  * DMP extension tokens
  *------------------------------------------------------------------------*/
@@ -929,6 +936,15 @@ typedef void (GL_APIENTRYP PFNGLMULTIDRAWELEMENTSEXTPROC) (GLenum mode, const GL
 /* GL_EXT_unpack_subimage */
 #ifndef GL_EXT_unpack_subimage
 #define GL_EXT_unpack_subimage 1
+#endif
+
+/* GL_EXT_robustness */
+#ifndef GL_EXT_robustness
+#define GL_EXT_robustness 1
+#ifdef GL_GLEXT_PROTOTYPES
+GL_APICALL GLenum GL_APIENTRY glGetGraphicsResetStatusEXT (void);
+#endif
+typedef GLenum (GL_APIENTRYP PFNGLGETGRAPHICSRESETSTATUSEXTPROC) (void);
 #endif
 
 /*------------------------------------------------------------------------*

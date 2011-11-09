@@ -437,6 +437,7 @@ class Context
     void recordInvalidFramebufferOperation();
 
     GLenum getError();
+    GLenum getResetStatus();
 
     bool supportsShaderModel3() const;
     int getMaximumVaryingVectors() const;
@@ -537,6 +538,7 @@ class Context
     // Current/lost context flags
     bool mHasBeenCurrent;
     bool mContextLost;
+    GLenum mResetStatus;
 
     unsigned int mAppliedTextureSerialPS[MAX_TEXTURE_IMAGE_UNITS];
     unsigned int mAppliedTextureSerialVS[MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF];

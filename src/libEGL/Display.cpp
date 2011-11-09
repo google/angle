@@ -813,12 +813,35 @@ bool Display::testDeviceLost()
     {
         return FAILED(mDeviceEx->CheckDeviceState(NULL));
     }
-    else if(mDevice)
+    else if (mDevice)
     {
         return FAILED(mDevice->TestCooperativeLevel());
     }
 
     return false;   // No device yet, so no reset required
+}
+
+bool Display::testDeviceResettable()
+{
+    HRESULT status = D3D_OK;
+
+    if (mDeviceEx)
+    {
+        status = mDeviceEx->CheckDeviceState(NULL);
+    }
+    else if (mDevice)
+    {
+        status = mDevice->TestCooperativeLevel();
+    }
+
+    switch (status)
+    {
+      case D3DERR_DEVICENOTRESET:
+      case D3DERR_DEVICEHUNG:
+        return true;
+      default:
+        return false;
+    }
 }
 
 void Display::getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray)

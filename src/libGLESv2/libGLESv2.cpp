@@ -2850,6 +2850,27 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
     }
 }
 
+GLenum __stdcall glGetGraphicsResetStatusEXT(void)
+{
+    EVENT("()");
+
+    try
+    {
+        gl::Context *context = gl::getContext();
+
+        if (context)
+        {
+            return context->getResetStatus();
+        }
+
+        return GL_NO_ERROR;
+    }
+    catch(std::bad_alloc&)
+    {
+        return GL_OUT_OF_MEMORY;
+    }
+}
+
 void __stdcall glGetIntegerv(GLenum pname, GLint* params)
 {
     EVENT("(GLenum pname = 0x%X, GLint* params = 0x%0.8p)", pname, params);
@@ -5802,6 +5823,7 @@ __eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *
         {"glRenderbufferStorageMultisampleANGLE", (__eglMustCastToProperFunctionPointerType)glRenderbufferStorageMultisampleANGLE},
         {"glDeleteFencesNV", (__eglMustCastToProperFunctionPointerType)glDeleteFencesNV},
         {"glGenFencesNV", (__eglMustCastToProperFunctionPointerType)glGenFencesNV},
+        {"glGetGraphicsResetStatusEXT", (__eglMustCastToProperFunctionPointerType)glGetGraphicsResetStatusEXT},
         {"glIsFenceNV", (__eglMustCastToProperFunctionPointerType)glIsFenceNV},
         {"glTestFenceNV", (__eglMustCastToProperFunctionPointerType)glTestFenceNV},
         {"glGetFenceivNV", (__eglMustCastToProperFunctionPointerType)glGetFenceivNV},
@@ -5820,6 +5842,8 @@ __eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *
 
     return NULL;
 }
+
+// Non-public functions used by EGL
 
 void __stdcall glBindTexImage(egl::Surface *surface)
 {

@@ -61,7 +61,8 @@ class Display
     virtual IDirect3DDevice9 *getDevice();
     virtual D3DCAPS9 getDeviceCaps();
     virtual D3DADAPTER_IDENTIFIER9 *getAdapterIdentifier();
-    bool testDeviceLost();
+    virtual bool testDeviceLost();
+    virtual bool testDeviceResettable();
     virtual void getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray);
     virtual bool getDXT1TextureSupport();
     virtual bool getDXT3TextureSupport();
