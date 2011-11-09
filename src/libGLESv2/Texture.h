@@ -66,6 +66,58 @@ class Image
     bool isDirty() const {return mSurface && mDirty;}
     IDirect3DSurface9 *getSurface();
 
+    void loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type,
+                  GLint unpackAlignment, const void *input, std::size_t outputPitch, void *output) const;
+
+    void loadAlphaData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                       int inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadAlphaFloatData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                            int inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadAlphaHalfFloatData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                int inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadLuminanceData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                           int inputPitch, const void *input, size_t outputPitch, void *output, bool native) const;
+    void loadLuminanceFloatData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                int inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadLuminanceHalfFloatData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                    int inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadLuminanceAlphaData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                int inputPitch, const void *input, size_t outputPitch, void *output, bool native) const;
+    void loadLuminanceAlphaFloatData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                     int inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadLuminanceAlphaHalfFloatData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                         int inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadRGBUByteData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                          int inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadRGB565Data(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                        int inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadRGBFloatData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                          int inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadRGBHalfFloatData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                              int inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadRGBAUByteDataSSE2(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                               int inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadRGBAUByteData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                           int inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadRGBA4444Data(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                          int inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadRGBA5551Data(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                          int inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadRGBAFloatData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                           int inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadRGBAHalfFloatData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                               int inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadBGRAData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                      int inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadCompressedData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                            int inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadDXT1Data(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                      int inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadDXT3Data(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                      int inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadDXT5Data(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                      int inputPitch, const void *input, size_t outputPitch, void *output) const;
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Image);
 
@@ -156,58 +208,6 @@ class Texture : public RefCountObject
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture);
-
-    void loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type,
-                       GLint unpackAlignment, const void *input, std::size_t outputPitch, void *output, D3DFORMAT targetFormat) const;
-
-    void loadAlphaImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                            int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadAlphaFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                 int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadAlphaHalfFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                     int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadLuminanceImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                int inputPitch, const void *input, size_t outputPitch, void *output, bool native) const;
-    void loadLuminanceFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                     int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadLuminanceHalfFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                         int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadLuminanceAlphaImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                     int inputPitch, const void *input, size_t outputPitch, void *output, bool native) const;
-    void loadLuminanceAlphaFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                          int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadLuminanceAlphaHalfFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                              int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadRGBUByteImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                               int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadRGB565ImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                             int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadRGBFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                               int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadRGBHalfFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                   int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadRGBAUByteImageDataSSE2(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                    int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadRGBAUByteImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadRGBA4444ImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                               int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadRGBA5551ImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                               int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadRGBAFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadRGBAHalfFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                    int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadBGRAImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                           int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadCompressedImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                 int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadDXT1ImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                           int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadDXT3ImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                           int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadDXT5ImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                           int inputPitch, const void *input, size_t outputPitch, void *output) const;
 
     static unsigned int issueSerial();
 

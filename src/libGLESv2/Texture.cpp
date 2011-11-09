@@ -210,6 +210,819 @@ IDirect3DSurface9 *Image::getSurface()
     return mSurface;
 }
 
+// Store the pixel rectangle designated by xoffset,yoffset,width,height with pixels stored as format/type at input
+// into the target pixel rectangle at output with outputPitch bytes in between each line.
+void Image::loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type,
+                     GLint unpackAlignment, const void *input, size_t outputPitch, void *output) const
+{
+    GLsizei inputPitch = -ComputePitch(width, format, type, unpackAlignment);
+    input = ((char*)input) - inputPitch * (height - 1);
+
+    switch (type)
+    {
+      case GL_UNSIGNED_BYTE:
+        switch (format)
+        {
+          case GL_ALPHA:
+            loadAlphaData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          case GL_LUMINANCE:
+            loadLuminanceData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output, getD3DFormat() == D3DFMT_L8);
+            break;
+          case GL_LUMINANCE_ALPHA:
+            loadLuminanceAlphaData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output, getD3DFormat() == D3DFMT_A8L8);
+            break;
+          case GL_RGB:
+            loadRGBUByteData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          case GL_RGBA:
+            if (supportsSSE2())
+            {
+                loadRGBAUByteDataSSE2(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            }
+            else
+            {
+                loadRGBAUByteData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            }
+            break;
+          case GL_BGRA_EXT:
+            loadBGRAData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          default: UNREACHABLE();
+        }
+        break;
+      case GL_UNSIGNED_SHORT_5_6_5:
+        switch (format)
+        {
+          case GL_RGB:
+            loadRGB565Data(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          default: UNREACHABLE();
+        }
+        break;
+      case GL_UNSIGNED_SHORT_4_4_4_4:
+        switch (format)
+        {
+          case GL_RGBA:
+            loadRGBA4444Data(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          default: UNREACHABLE();
+        }
+        break;
+      case GL_UNSIGNED_SHORT_5_5_5_1:
+        switch (format)
+        {
+          case GL_RGBA:
+            loadRGBA5551Data(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          default: UNREACHABLE();
+        }
+        break;
+      case GL_FLOAT:
+        switch (format)
+        {
+          // float textures are converted to RGBA, not BGRA, as they're stored that way in D3D
+          case GL_ALPHA:
+            loadAlphaFloatData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          case GL_LUMINANCE:
+            loadLuminanceFloatData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          case GL_LUMINANCE_ALPHA:
+            loadLuminanceAlphaFloatData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          case GL_RGB:
+            loadRGBFloatData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          case GL_RGBA:
+            loadRGBAFloatData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          default: UNREACHABLE();
+        }
+        break;
+      case GL_HALF_FLOAT_OES:
+        switch (format)
+        {
+          // float textures are converted to RGBA, not BGRA, as they're stored that way in D3D
+          case GL_ALPHA:
+            loadAlphaHalfFloatData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          case GL_LUMINANCE:
+            loadLuminanceHalfFloatData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          case GL_LUMINANCE_ALPHA:
+            loadLuminanceAlphaHalfFloatData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          case GL_RGB:
+            loadRGBHalfFloatData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          case GL_RGBA:
+            loadRGBAHalfFloatData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+            break;
+          default: UNREACHABLE();
+        }
+        break;
+      default: UNREACHABLE();
+    }
+}
+
+void Image::loadAlphaData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                          int inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned char *source = NULL;
+    unsigned char *dest = NULL;
+    
+    for (int y = 0; y < height; y++)
+    {
+        source = static_cast<const unsigned char*>(input) + y * inputPitch;
+        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
+        for (int x = 0; x < width; x++)
+        {
+            dest[4 * x + 0] = 0;
+            dest[4 * x + 1] = 0;
+            dest[4 * x + 2] = 0;
+            dest[4 * x + 3] = source[x];
+        }
+    }
+}
+
+void Image::loadAlphaFloatData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                               int inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const float *source = NULL;
+    float *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const float*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = reinterpret_cast<float*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch  + xoffset * 16);
+        for (int x = 0; x < width; x++)
+        {
+            dest[4 * x + 0] = 0;
+            dest[4 * x + 1] = 0;
+            dest[4 * x + 2] = 0;
+            dest[4 * x + 3] = source[x];
+        }
+    }
+}
+
+void Image::loadAlphaHalfFloatData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                   int inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned short *source = NULL;
+    unsigned short *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = reinterpret_cast<unsigned short*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 8);
+        for (int x = 0; x < width; x++)
+        {
+            dest[4 * x + 0] = 0;
+            dest[4 * x + 1] = 0;
+            dest[4 * x + 2] = 0;
+            dest[4 * x + 3] = source[x];
+        }
+    }
+}
+
+void Image::loadLuminanceData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                              int inputPitch, const void *input, size_t outputPitch, void *output, bool native) const
+{
+    const int destBytesPerPixel = native? 1: 4;
+    const unsigned char *source = NULL;
+    unsigned char *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = static_cast<const unsigned char*>(input) + y * inputPitch;
+        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * destBytesPerPixel;
+
+        if (!native)   // BGRA8 destination format
+        {
+            for (int x = 0; x < width; x++)
+            {
+                dest[4 * x + 0] = source[x];
+                dest[4 * x + 1] = source[x];
+                dest[4 * x + 2] = source[x];
+                dest[4 * x + 3] = 0xFF;
+            }
+        }
+        else   // L8 destination format
+        {
+            memcpy(dest, source, width);
+        }
+    }
+}
+
+void Image::loadLuminanceFloatData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                   int inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const float *source = NULL;
+    float *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const float*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = reinterpret_cast<float*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch  + xoffset * 16);
+        for (int x = 0; x < width; x++)
+        {
+            dest[4 * x + 0] = source[x];
+            dest[4 * x + 1] = source[x];
+            dest[4 * x + 2] = source[x];
+            dest[4 * x + 3] = 1.0f;
+        }
+    }
+}
+
+void Image::loadLuminanceHalfFloatData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                       int inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned short *source = NULL;
+    unsigned short *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = reinterpret_cast<unsigned short*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 8);
+        for (int x = 0; x < width; x++)
+        {
+            dest[4 * x + 0] = source[x];
+            dest[4 * x + 1] = source[x];
+            dest[4 * x + 2] = source[x];
+            dest[4 * x + 3] = 0x3C00; // SEEEEEMMMMMMMMMM, S = 0, E = 15, M = 0: 16bit flpt representation of 1
+        }
+    }
+}
+
+void Image::loadLuminanceAlphaData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                   int inputPitch, const void *input, size_t outputPitch, void *output, bool native) const
+{
+    const int destBytesPerPixel = native? 2: 4;
+    const unsigned char *source = NULL;
+    unsigned char *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = static_cast<const unsigned char*>(input) + y * inputPitch;
+        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * destBytesPerPixel;
+        
+        if (!native)   // BGRA8 destination format
+        {
+            for (int x = 0; x < width; x++)
+            {
+                dest[4 * x + 0] = source[2*x+0];
+                dest[4 * x + 1] = source[2*x+0];
+                dest[4 * x + 2] = source[2*x+0];
+                dest[4 * x + 3] = source[2*x+1];
+            }
+        }
+        else
+        {
+            memcpy(dest, source, width * 2);
+        }
+    }
+}
+
+void Image::loadLuminanceAlphaFloatData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                        int inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const float *source = NULL;
+    float *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const float*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = reinterpret_cast<float*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch  + xoffset * 16);
+        for (int x = 0; x < width; x++)
+        {
+            dest[4 * x + 0] = source[2*x+0];
+            dest[4 * x + 1] = source[2*x+0];
+            dest[4 * x + 2] = source[2*x+0];
+            dest[4 * x + 3] = source[2*x+1];
+        }
+    }
+}
+
+void Image::loadLuminanceAlphaHalfFloatData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                            int inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned short *source = NULL;
+    unsigned short *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = reinterpret_cast<unsigned short*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 8);
+        for (int x = 0; x < width; x++)
+        {
+            dest[4 * x + 0] = source[2*x+0];
+            dest[4 * x + 1] = source[2*x+0];
+            dest[4 * x + 2] = source[2*x+0];
+            dest[4 * x + 3] = source[2*x+1];
+        }
+    }
+}
+
+void Image::loadRGBUByteData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                             int inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned char *source = NULL;
+    unsigned char *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = static_cast<const unsigned char*>(input) + y * inputPitch;
+        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
+        for (int x = 0; x < width; x++)
+        {
+            dest[4 * x + 0] = source[x * 3 + 2];
+            dest[4 * x + 1] = source[x * 3 + 1];
+            dest[4 * x + 2] = source[x * 3 + 0];
+            dest[4 * x + 3] = 0xFF;
+        }
+    }
+}
+
+void Image::loadRGB565Data(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                           int inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned short *source = NULL;
+    unsigned char *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
+        for (int x = 0; x < width; x++)
+        {
+            unsigned short rgba = source[x];
+            dest[4 * x + 0] = ((rgba & 0x001F) << 3) | ((rgba & 0x001F) >> 2);
+            dest[4 * x + 1] = ((rgba & 0x07E0) >> 3) | ((rgba & 0x07E0) >> 9);
+            dest[4 * x + 2] = ((rgba & 0xF800) >> 8) | ((rgba & 0xF800) >> 13);
+            dest[4 * x + 3] = 0xFF;
+        }
+    }
+}
+
+void Image::loadRGBFloatData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                             int inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const float *source = NULL;
+    float *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const float*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = reinterpret_cast<float*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch  + xoffset * 16);
+        for (int x = 0; x < width; x++)
+        {
+            dest[4 * x + 0] = source[x * 3 + 0];
+            dest[4 * x + 1] = source[x * 3 + 1];
+            dest[4 * x + 2] = source[x * 3 + 2];
+            dest[4 * x + 3] = 1.0f;
+        }
+    }
+}
+
+void Image::loadRGBHalfFloatData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                 int inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned short *source = NULL;
+    unsigned short *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = reinterpret_cast<unsigned short*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch  + xoffset * 8);
+        for (int x = 0; x < width; x++)
+        {
+            dest[4 * x + 0] = source[x * 3 + 0];
+            dest[4 * x + 1] = source[x * 3 + 1];
+            dest[4 * x + 2] = source[x * 3 + 2];
+            dest[4 * x + 3] = 0x3C00; // SEEEEEMMMMMMMMMM, S = 0, E = 15, M = 0: 16bit flpt representation of 1
+        }
+    }
+}
+
+void Image::loadRGBAUByteDataSSE2(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                  int inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned int *source = NULL;
+    unsigned int *dest = NULL;
+    __m128i brMask = _mm_set1_epi32(0x00ff00ff);
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const unsigned int*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = reinterpret_cast<unsigned int*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4);
+        int x = 0;
+
+        // Make output writes aligned
+        for (x = 0; ((reinterpret_cast<intptr_t>(&dest[x]) & 15) != 0) && x < width; x++)
+        {
+            unsigned int rgba = source[x];
+            dest[x] = (_rotl(rgba, 16) & 0x00ff00ff) | (rgba & 0xff00ff00);
+        }
+
+        for (; x + 3 < width; x += 4)
+        {
+            __m128i sourceData = _mm_loadu_si128(reinterpret_cast<const __m128i*>(&source[x]));
+            // Mask out g and a, which don't change
+            __m128i gaComponents = _mm_andnot_si128(brMask, sourceData);
+            // Mask out b and r
+            __m128i brComponents = _mm_and_si128(sourceData, brMask);
+            // Swap b and r
+            __m128i brSwapped = _mm_shufflehi_epi16(_mm_shufflelo_epi16(brComponents, _MM_SHUFFLE(2, 3, 0, 1)), _MM_SHUFFLE(2, 3, 0, 1));
+            __m128i result = _mm_or_si128(gaComponents, brSwapped);
+            _mm_store_si128(reinterpret_cast<__m128i*>(&dest[x]), result);
+        }
+
+        // Perform leftover writes
+        for (; x < width; x++)
+        {
+            unsigned int rgba = source[x];
+            dest[x] = (_rotl(rgba, 16) & 0x00ff00ff) | (rgba & 0xff00ff00);
+        }
+    }
+}
+
+void Image::loadRGBAUByteData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                              int inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned int *source = NULL;
+    unsigned int *dest = NULL;
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const unsigned int*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = reinterpret_cast<unsigned int*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4);
+
+        for (int x = 0; x < width; x++)
+        {
+            unsigned int rgba = source[x];
+            dest[x] = (_rotl(rgba, 16) & 0x00ff00ff) | (rgba & 0xff00ff00);
+        }
+    }
+}
+
+void Image::loadRGBA4444Data(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                             int inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned short *source = NULL;
+    unsigned char *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
+        for (int x = 0; x < width; x++)
+        {
+            unsigned short rgba = source[x];
+            dest[4 * x + 0] = ((rgba & 0x00F0) << 0) | ((rgba & 0x00F0) >> 4);
+            dest[4 * x + 1] = ((rgba & 0x0F00) >> 4) | ((rgba & 0x0F00) >> 8);
+            dest[4 * x + 2] = ((rgba & 0xF000) >> 8) | ((rgba & 0xF000) >> 12);
+            dest[4 * x + 3] = ((rgba & 0x000F) << 4) | ((rgba & 0x000F) >> 0);
+        }
+    }
+}
+
+void Image::loadRGBA5551Data(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                             int inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned short *source = NULL;
+    unsigned char *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
+        for (int x = 0; x < width; x++)
+        {
+            unsigned short rgba = source[x];
+            dest[4 * x + 0] = ((rgba & 0x003E) << 2) | ((rgba & 0x003E) >> 3);
+            dest[4 * x + 1] = ((rgba & 0x07C0) >> 3) | ((rgba & 0x07C0) >> 8);
+            dest[4 * x + 2] = ((rgba & 0xF800) >> 8) | ((rgba & 0xF800) >> 13);
+            dest[4 * x + 3] = (rgba & 0x0001) ? 0xFF : 0;
+        }
+    }
+}
+
+void Image::loadRGBAFloatData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                              int inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const float *source = NULL;
+    float *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const float*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = reinterpret_cast<float*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch  + xoffset * 16);
+        memcpy(dest, source, width * 16);
+    }
+}
+
+void Image::loadRGBAHalfFloatData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                                  int inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned char *source = NULL;
+    unsigned char *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = static_cast<const unsigned char*>(input) + y * inputPitch;
+        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch  + xoffset * 8;
+        memcpy(dest, source, width * 8);
+    }
+}
+
+void Image::loadBGRAData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                         int inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned char *source = NULL;
+    unsigned char *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = static_cast<const unsigned char*>(input) + y * inputPitch;
+        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
+        memcpy(dest, source, width*4);
+    }
+}
+
+void Image::loadCompressedData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                               int inputPitch, const void *input, size_t outputPitch, void *output) const {
+    switch (getD3DFormat())
+    {
+        case D3DFMT_DXT1:
+          loadDXT1Data(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+          break;
+        case D3DFMT_DXT3:
+          loadDXT3Data(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+          break;
+        case D3DFMT_DXT5:
+          loadDXT5Data(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
+          break;
+    }
+}
+
+static void FlipCopyDXT1BlockFull(const unsigned int* source, unsigned int* dest) {
+  // A DXT1 block layout is:
+  // [0-1] color0.
+  // [2-3] color1.
+  // [4-7] color bitmap, 2 bits per pixel.
+  // So each of the 4-7 bytes represents one line, flipping a block is just
+  // flipping those bytes.
+
+  // First 32-bits is two RGB565 colors shared by tile and does not need to be modified.
+  dest[0] = source[0];
+
+  // Second 32-bits contains 4 rows of 4 2-bit interpolants between the colors. All rows should be flipped.
+  dest[1] = (source[1] >> 24) |
+            ((source[1] << 8) & 0x00FF0000) |
+            ((source[1] >> 8) & 0x0000FF00) |
+            (source[1] << 24);
+}
+
+// Flips the first 2 lines of a DXT1 block in the y direction.
+static void FlipCopyDXT1BlockHalf(const unsigned int* source, unsigned int* dest) {
+  // See layout above.
+  dest[0] = source[0];
+  dest[1] = ((source[1] << 8) & 0x0000FF00) |
+            ((source[1] >> 8) & 0x000000FF);
+}
+
+// Flips a full DXT3 block in the y direction.
+static void FlipCopyDXT3BlockFull(const unsigned int* source, unsigned int* dest) {
+  // A DXT3 block layout is:
+  // [0-7]  alpha bitmap, 4 bits per pixel.
+  // [8-15] a DXT1 block.
+
+  // First and Second 32 bits are 4bit per pixel alpha and need to be flipped.
+  dest[0] = (source[1] >> 16) | (source[1] << 16);
+  dest[1] = (source[0] >> 16) | (source[0] << 16);
+
+  // And flip the DXT1 block using the above function.
+  FlipCopyDXT1BlockFull(source + 2, dest + 2);
+}
+
+// Flips the first 2 lines of a DXT3 block in the y direction.
+static void FlipCopyDXT3BlockHalf(const unsigned int* source, unsigned int* dest) {
+  // See layout above.
+  dest[0] = (source[1] >> 16) | (source[1] << 16);
+  FlipCopyDXT1BlockHalf(source + 2, dest + 2);
+}
+
+// Flips a full DXT5 block in the y direction.
+static void FlipCopyDXT5BlockFull(const unsigned int* source, unsigned int* dest) {
+  // A DXT5 block layout is:
+  // [0]    alpha0.
+  // [1]    alpha1.
+  // [2-7]  alpha bitmap, 3 bits per pixel.
+  // [8-15] a DXT1 block.
+
+  // The alpha bitmap doesn't easily map lines to bytes, so we have to
+  // interpret it correctly.  Extracted from
+  // http://www.opengl.org/registry/specs/EXT/texture_compression_s3tc.txt :
+  //
+  //   The 6 "bits" bytes of the block are decoded into one 48-bit integer:
+  //
+  //     bits = bits_0 + 256 * (bits_1 + 256 * (bits_2 + 256 * (bits_3 +
+  //                   256 * (bits_4 + 256 * bits_5))))
+  //
+  //   bits is a 48-bit unsigned integer, from which a three-bit control code
+  //   is extracted for a texel at location (x,y) in the block using:
+  //
+  //       code(x,y) = bits[3*(4*y+x)+1..3*(4*y+x)+0]
+  //
+  //   where bit 47 is the most significant and bit 0 is the least
+  //   significant bit.
+  const unsigned char* sourceBytes = static_cast<const unsigned char*>(static_cast<const void*>(source));
+  unsigned char* destBytes = static_cast<unsigned char*>(static_cast<void*>(dest));
+  unsigned int line_0_1 = sourceBytes[2] + 256 * (sourceBytes[3] + 256 * sourceBytes[4]);
+  unsigned int line_2_3 = sourceBytes[5] + 256 * (sourceBytes[6] + 256 * sourceBytes[7]);
+  // swap lines 0 and 1 in line_0_1.
+  unsigned int line_1_0 = ((line_0_1 & 0x000fff) << 12) |
+                          ((line_0_1 & 0xfff000) >> 12);
+  // swap lines 2 and 3 in line_2_3.
+  unsigned int line_3_2 = ((line_2_3 & 0x000fff) << 12) |
+                          ((line_2_3 & 0xfff000) >> 12);
+  destBytes[0] = sourceBytes[0];
+  destBytes[1] = sourceBytes[1];
+  destBytes[2] = line_3_2 & 0xff;
+  destBytes[3] = (line_3_2 & 0xff00) >> 8;
+  destBytes[4] = (line_3_2 & 0xff0000) >> 16;
+  destBytes[5] = line_1_0 & 0xff;
+  destBytes[6] = (line_1_0 & 0xff00) >> 8;
+  destBytes[7] = (line_1_0 & 0xff0000) >> 16;
+
+  // And flip the DXT1 block using the above function.
+  FlipCopyDXT1BlockFull(source + 2, dest + 2);
+}
+
+// Flips the first 2 lines of a DXT5 block in the y direction.
+static void FlipCopyDXT5BlockHalf(const unsigned int* source, unsigned int* dest) {
+  // See layout above.
+  const unsigned char* sourceBytes = static_cast<const unsigned char*>(static_cast<const void*>(source));
+  unsigned char* destBytes = static_cast<unsigned char*>(static_cast<void*>(dest));
+  unsigned int line_0_1 = sourceBytes[2] + 256 * (sourceBytes[3] + 256 * sourceBytes[4]);
+  unsigned int line_1_0 = ((line_0_1 & 0x000fff) << 12) |
+                          ((line_0_1 & 0xfff000) >> 12);
+  destBytes[0] = sourceBytes[0];
+  destBytes[1] = sourceBytes[1];
+  destBytes[2] = line_1_0 & 0xff;
+  destBytes[3] = (line_1_0 & 0xff00) >> 8;
+  destBytes[4] = (line_1_0 & 0xff0000) >> 16;
+  FlipCopyDXT1BlockHalf(source + 2, dest + 2);
+}
+
+void Image::loadDXT1Data(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                         int inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    ASSERT(xoffset % 4 == 0);
+    ASSERT(yoffset % 4 == 0);
+    ASSERT(width % 4 == 0 || width == 2 || width == 1);
+    ASSERT(inputPitch % 8 == 0);
+    ASSERT(outputPitch % 8 == 0);
+
+    const unsigned int *source = reinterpret_cast<const unsigned int*>(input);
+    unsigned int *dest = reinterpret_cast<unsigned int*>(output);
+
+    // Round width up in case it is less than 4.
+    int blocksAcross = (width + 3) / 4;
+    int intsAcross = blocksAcross * 2;
+
+    switch (height)
+    {
+        case 1:
+            for (int x = 0; x < intsAcross; x += 2)
+            {
+                // just copy the block
+                dest[x] = source[x];
+                dest[x + 1] = source[x + 1];
+            }
+            break;
+        case 2:
+            for (int x = 0; x < intsAcross; x += 2)
+            {
+                FlipCopyDXT1BlockHalf(source + x, dest + x);
+            }
+            break;
+        default:
+            ASSERT(height % 4 == 0);
+            for (int y = 0; y < height / 4; ++y)
+            {
+                const unsigned int *source = reinterpret_cast<const unsigned int*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+                unsigned int *dest = reinterpret_cast<unsigned int*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 8);
+
+                for (int x = 0; x < intsAcross; x += 2)
+                {
+                    FlipCopyDXT1BlockFull(source + x, dest + x);
+                }
+            }
+            break;
+    }
+}
+
+void Image::loadDXT3Data(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                         int inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    ASSERT(xoffset % 4 == 0);
+    ASSERT(yoffset % 4 == 0);
+    ASSERT(width % 4 == 0 || width == 2 || width == 1);
+    ASSERT(inputPitch % 16 == 0);
+    ASSERT(outputPitch % 16 == 0);
+
+    const unsigned int *source = reinterpret_cast<const unsigned int*>(input);
+    unsigned int *dest = reinterpret_cast<unsigned int*>(output);
+
+    // Round width up in case it is less than 4.
+    int blocksAcross = (width + 3) / 4;
+    int intsAcross = blocksAcross * 4;
+
+    switch (height)
+    {
+        case 1:
+            for (int x = 0; x < intsAcross; x += 4)
+            {
+                // just copy the block
+                dest[x] = source[x];
+                dest[x + 1] = source[x + 1];
+                dest[x + 2] = source[x + 2];
+                dest[x + 3] = source[x + 3];
+            }
+            break;
+        case 2:
+            for (int x = 0; x < intsAcross; x += 4)
+            {
+                FlipCopyDXT3BlockHalf(source + x, dest + x);
+            }
+            break;
+        default:
+            ASSERT(height % 4 == 0);
+            for (int y = 0; y < height / 4; ++y)
+            {
+                const unsigned int *source = reinterpret_cast<const unsigned int*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+                unsigned int *dest = reinterpret_cast<unsigned int*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 16);
+
+                for (int x = 0; x < intsAcross; x += 4)
+                {
+                  FlipCopyDXT3BlockFull(source + x, dest + x);
+                }
+            }
+            break;
+    }
+}
+
+void Image::loadDXT5Data(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+                         int inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    ASSERT(xoffset % 4 == 0);
+    ASSERT(yoffset % 4 == 0);
+    ASSERT(width % 4 == 0 || width == 2 || width == 1);
+    ASSERT(inputPitch % 16 == 0);
+    ASSERT(outputPitch % 16 == 0);
+
+    const unsigned int *source = reinterpret_cast<const unsigned int*>(input);
+    unsigned int *dest = reinterpret_cast<unsigned int*>(output);
+
+    // Round width up in case it is less than 4.
+    int blocksAcross = (width + 3) / 4;
+    int intsAcross = blocksAcross * 4;
+
+    switch (height)
+    {
+        case 1:
+            for (int x = 0; x < intsAcross; x += 4)
+            {
+                // just copy the block
+                dest[x] = source[x];
+                dest[x + 1] = source[x + 1];
+                dest[x + 2] = source[x + 2];
+                dest[x + 3] = source[x + 3];
+            }
+            break;
+        case 2:
+            for (int x = 0; x < intsAcross; x += 4)
+            {
+                FlipCopyDXT5BlockHalf(source + x, dest + x);
+            }
+            break;
+        default:
+            ASSERT(height % 4 == 0);
+            for (int y = 0; y < height / 4; ++y)
+            {
+                const unsigned int *source = reinterpret_cast<const unsigned int*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+                unsigned int *dest = reinterpret_cast<unsigned int*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 16);
+
+                for (int x = 0; x < intsAcross; x += 4)
+                {
+                    FlipCopyDXT5BlockFull(source + x, dest + x);
+                }
+            }
+            break;
+    }
+}
+
 Texture::Texture(GLuint id) : RefCountObject(id), mSerial(issueSerial())
 {
     mMinFilter = GL_NEAREST_MIPMAP_LINEAR;
@@ -339,819 +1152,6 @@ GLenum Texture::getWrapT() const
     return mWrapT;
 }
 
-// Store the pixel rectangle designated by xoffset,yoffset,width,height with pixels stored as format/type at input
-// into the target pixel rectangle at output with outputPitch bytes in between each line.
-void Texture::loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type,
-                            GLint unpackAlignment, const void *input, size_t outputPitch, void *output, D3DFORMAT targetFormat) const
-{
-    GLsizei inputPitch = -ComputePitch(width, format, type, unpackAlignment);
-    input = ((char*)input) - inputPitch * (height - 1);
-
-    switch (type)
-    {
-      case GL_UNSIGNED_BYTE:
-        switch (format)
-        {
-          case GL_ALPHA:
-            loadAlphaImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
-            break;
-          case GL_LUMINANCE:
-            loadLuminanceImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output, targetFormat == D3DFMT_L8);
-            break;
-          case GL_LUMINANCE_ALPHA:
-            loadLuminanceAlphaImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output, targetFormat == D3DFMT_A8L8);
-            break;
-          case GL_RGB:
-            loadRGBUByteImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
-            break;
-          case GL_RGBA:
-            if (supportsSSE2())
-            {
-                loadRGBAUByteImageDataSSE2(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
-            }
-            else
-            {
-                loadRGBAUByteImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
-            }
-            break;
-          case GL_BGRA_EXT:
-            loadBGRAImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
-            break;
-          default: UNREACHABLE();
-        }
-        break;
-      case GL_UNSIGNED_SHORT_5_6_5:
-        switch (format)
-        {
-          case GL_RGB:
-            loadRGB565ImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
-            break;
-          default: UNREACHABLE();
-        }
-        break;
-      case GL_UNSIGNED_SHORT_4_4_4_4:
-        switch (format)
-        {
-          case GL_RGBA:
-            loadRGBA4444ImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
-            break;
-          default: UNREACHABLE();
-        }
-        break;
-      case GL_UNSIGNED_SHORT_5_5_5_1:
-        switch (format)
-        {
-          case GL_RGBA:
-            loadRGBA5551ImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
-            break;
-          default: UNREACHABLE();
-        }
-        break;
-      case GL_FLOAT:
-        switch (format)
-        {
-          // float textures are converted to RGBA, not BGRA, as they're stored that way in D3D
-          case GL_ALPHA:
-            loadAlphaFloatImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
-            break;
-          case GL_LUMINANCE:
-            loadLuminanceFloatImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
-            break;
-          case GL_LUMINANCE_ALPHA:
-            loadLuminanceAlphaFloatImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
-            break;
-          case GL_RGB:
-            loadRGBFloatImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
-            break;
-          case GL_RGBA:
-            loadRGBAFloatImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
-            break;
-          default: UNREACHABLE();
-        }
-        break;
-      case GL_HALF_FLOAT_OES:
-        switch (format)
-        {
-          // float textures are converted to RGBA, not BGRA, as they're stored that way in D3D
-          case GL_ALPHA:
-            loadAlphaHalfFloatImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
-            break;
-          case GL_LUMINANCE:
-            loadLuminanceHalfFloatImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
-            break;
-          case GL_LUMINANCE_ALPHA:
-            loadLuminanceAlphaHalfFloatImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
-            break;
-          case GL_RGB:
-            loadRGBHalfFloatImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
-            break;
-          case GL_RGBA:
-            loadRGBAHalfFloatImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
-            break;
-          default: UNREACHABLE();
-        }
-        break;
-      default: UNREACHABLE();
-    }
-}
-
-void Texture::loadAlphaImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                 int inputPitch, const void *input, size_t outputPitch, void *output) const
-{
-    const unsigned char *source = NULL;
-    unsigned char *dest = NULL;
-    
-    for (int y = 0; y < height; y++)
-    {
-        source = static_cast<const unsigned char*>(input) + y * inputPitch;
-        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
-        for (int x = 0; x < width; x++)
-        {
-            dest[4 * x + 0] = 0;
-            dest[4 * x + 1] = 0;
-            dest[4 * x + 2] = 0;
-            dest[4 * x + 3] = source[x];
-        }
-    }
-}
-
-void Texture::loadAlphaFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                      int inputPitch, const void *input, size_t outputPitch, void *output) const
-{
-    const float *source = NULL;
-    float *dest = NULL;
-
-    for (int y = 0; y < height; y++)
-    {
-        source = reinterpret_cast<const float*>(static_cast<const unsigned char*>(input) + y * inputPitch);
-        dest = reinterpret_cast<float*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch  + xoffset * 16);
-        for (int x = 0; x < width; x++)
-        {
-            dest[4 * x + 0] = 0;
-            dest[4 * x + 1] = 0;
-            dest[4 * x + 2] = 0;
-            dest[4 * x + 3] = source[x];
-        }
-    }
-}
-
-void Texture::loadAlphaHalfFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                          int inputPitch, const void *input, size_t outputPitch, void *output) const
-{
-    const unsigned short *source = NULL;
-    unsigned short *dest = NULL;
-
-    for (int y = 0; y < height; y++)
-    {
-        source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputPitch);
-        dest = reinterpret_cast<unsigned short*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 8);
-        for (int x = 0; x < width; x++)
-        {
-            dest[4 * x + 0] = 0;
-            dest[4 * x + 1] = 0;
-            dest[4 * x + 2] = 0;
-            dest[4 * x + 3] = source[x];
-        }
-    }
-}
-
-void Texture::loadLuminanceImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                     int inputPitch, const void *input, size_t outputPitch, void *output, bool native) const
-{
-    const int destBytesPerPixel = native? 1: 4;
-    const unsigned char *source = NULL;
-    unsigned char *dest = NULL;
-
-    for (int y = 0; y < height; y++)
-    {
-        source = static_cast<const unsigned char*>(input) + y * inputPitch;
-        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * destBytesPerPixel;
-
-        if (!native)   // BGRA8 destination format
-        {
-            for (int x = 0; x < width; x++)
-            {
-                dest[4 * x + 0] = source[x];
-                dest[4 * x + 1] = source[x];
-                dest[4 * x + 2] = source[x];
-                dest[4 * x + 3] = 0xFF;
-            }
-        }
-        else   // L8 destination format
-        {
-            memcpy(dest, source, width);
-        }
-    }
-}
-
-void Texture::loadLuminanceFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                          int inputPitch, const void *input, size_t outputPitch, void *output) const
-{
-    const float *source = NULL;
-    float *dest = NULL;
-
-    for (int y = 0; y < height; y++)
-    {
-        source = reinterpret_cast<const float*>(static_cast<const unsigned char*>(input) + y * inputPitch);
-        dest = reinterpret_cast<float*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch  + xoffset * 16);
-        for (int x = 0; x < width; x++)
-        {
-            dest[4 * x + 0] = source[x];
-            dest[4 * x + 1] = source[x];
-            dest[4 * x + 2] = source[x];
-            dest[4 * x + 3] = 1.0f;
-        }
-    }
-}
-
-void Texture::loadLuminanceHalfFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                                   int inputPitch, const void *input, size_t outputPitch, void *output) const
-{
-    const unsigned short *source = NULL;
-    unsigned short *dest = NULL;
-
-    for (int y = 0; y < height; y++)
-    {
-        source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputPitch);
-        dest = reinterpret_cast<unsigned short*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 8);
-        for (int x = 0; x < width; x++)
-        {
-            dest[4 * x + 0] = source[x];
-            dest[4 * x + 1] = source[x];
-            dest[4 * x + 2] = source[x];
-            dest[4 * x + 3] = 0x3C00; // SEEEEEMMMMMMMMMM, S = 0, E = 15, M = 0: 16bit flpt representation of 1
-        }
-    }
-}
-
-void Texture::loadLuminanceAlphaImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                          int inputPitch, const void *input, size_t outputPitch, void *output, bool native) const
-{
-    const int destBytesPerPixel = native? 2: 4;
-    const unsigned char *source = NULL;
-    unsigned char *dest = NULL;
-
-    for (int y = 0; y < height; y++)
-    {
-        source = static_cast<const unsigned char*>(input) + y * inputPitch;
-        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * destBytesPerPixel;
-        
-        if (!native)   // BGRA8 destination format
-        {
-            for (int x = 0; x < width; x++)
-            {
-                dest[4 * x + 0] = source[2*x+0];
-                dest[4 * x + 1] = source[2*x+0];
-                dest[4 * x + 2] = source[2*x+0];
-                dest[4 * x + 3] = source[2*x+1];
-            }
-        }
-        else
-        {
-            memcpy(dest, source, width * 2);
-        }
-    }
-}
-
-void Texture::loadLuminanceAlphaFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                               int inputPitch, const void *input, size_t outputPitch, void *output) const
-{
-    const float *source = NULL;
-    float *dest = NULL;
-
-    for (int y = 0; y < height; y++)
-    {
-        source = reinterpret_cast<const float*>(static_cast<const unsigned char*>(input) + y * inputPitch);
-        dest = reinterpret_cast<float*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch  + xoffset * 16);
-        for (int x = 0; x < width; x++)
-        {
-            dest[4 * x + 0] = source[2*x+0];
-            dest[4 * x + 1] = source[2*x+0];
-            dest[4 * x + 2] = source[2*x+0];
-            dest[4 * x + 3] = source[2*x+1];
-        }
-    }
-}
-
-void Texture::loadLuminanceAlphaHalfFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                                   int inputPitch, const void *input, size_t outputPitch, void *output) const
-{
-    const unsigned short *source = NULL;
-    unsigned short *dest = NULL;
-
-    for (int y = 0; y < height; y++)
-    {
-        source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputPitch);
-        dest = reinterpret_cast<unsigned short*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 8);
-        for (int x = 0; x < width; x++)
-        {
-            dest[4 * x + 0] = source[2*x+0];
-            dest[4 * x + 1] = source[2*x+0];
-            dest[4 * x + 2] = source[2*x+0];
-            dest[4 * x + 3] = source[2*x+1];
-        }
-    }
-}
-
-void Texture::loadRGBUByteImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                    int inputPitch, const void *input, size_t outputPitch, void *output) const
-{
-    const unsigned char *source = NULL;
-    unsigned char *dest = NULL;
-
-    for (int y = 0; y < height; y++)
-    {
-        source = static_cast<const unsigned char*>(input) + y * inputPitch;
-        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
-        for (int x = 0; x < width; x++)
-        {
-            dest[4 * x + 0] = source[x * 3 + 2];
-            dest[4 * x + 1] = source[x * 3 + 1];
-            dest[4 * x + 2] = source[x * 3 + 0];
-            dest[4 * x + 3] = 0xFF;
-        }
-    }
-}
-
-void Texture::loadRGB565ImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                  int inputPitch, const void *input, size_t outputPitch, void *output) const
-{
-    const unsigned short *source = NULL;
-    unsigned char *dest = NULL;
-
-    for (int y = 0; y < height; y++)
-    {
-        source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputPitch);
-        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
-        for (int x = 0; x < width; x++)
-        {
-            unsigned short rgba = source[x];
-            dest[4 * x + 0] = ((rgba & 0x001F) << 3) | ((rgba & 0x001F) >> 2);
-            dest[4 * x + 1] = ((rgba & 0x07E0) >> 3) | ((rgba & 0x07E0) >> 9);
-            dest[4 * x + 2] = ((rgba & 0xF800) >> 8) | ((rgba & 0xF800) >> 13);
-            dest[4 * x + 3] = 0xFF;
-        }
-    }
-}
-
-void Texture::loadRGBFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                    int inputPitch, const void *input, size_t outputPitch, void *output) const
-{
-    const float *source = NULL;
-    float *dest = NULL;
-
-    for (int y = 0; y < height; y++)
-    {
-        source = reinterpret_cast<const float*>(static_cast<const unsigned char*>(input) + y * inputPitch);
-        dest = reinterpret_cast<float*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch  + xoffset * 16);
-        for (int x = 0; x < width; x++)
-        {
-            dest[4 * x + 0] = source[x * 3 + 0];
-            dest[4 * x + 1] = source[x * 3 + 1];
-            dest[4 * x + 2] = source[x * 3 + 2];
-            dest[4 * x + 3] = 1.0f;
-        }
-    }
-}
-
-void Texture::loadRGBHalfFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                        int inputPitch, const void *input, size_t outputPitch, void *output) const
-{
-    const unsigned short *source = NULL;
-    unsigned short *dest = NULL;
-
-    for (int y = 0; y < height; y++)
-    {
-        source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputPitch);
-        dest = reinterpret_cast<unsigned short*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch  + xoffset * 8);
-        for (int x = 0; x < width; x++)
-        {
-            dest[4 * x + 0] = source[x * 3 + 0];
-            dest[4 * x + 1] = source[x * 3 + 1];
-            dest[4 * x + 2] = source[x * 3 + 2];
-            dest[4 * x + 3] = 0x3C00; // SEEEEEMMMMMMMMMM, S = 0, E = 15, M = 0: 16bit flpt representation of 1
-        }
-    }
-}
-
-void Texture::loadRGBAUByteImageDataSSE2(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                         int inputPitch, const void *input, size_t outputPitch, void *output) const
-{
-    const unsigned int *source = NULL;
-    unsigned int *dest = NULL;
-    __m128i brMask = _mm_set1_epi32(0x00ff00ff);
-
-    for (int y = 0; y < height; y++)
-    {
-        source = reinterpret_cast<const unsigned int*>(static_cast<const unsigned char*>(input) + y * inputPitch);
-        dest = reinterpret_cast<unsigned int*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4);
-        int x = 0;
-
-        // Make output writes aligned
-        for (x = 0; ((reinterpret_cast<intptr_t>(&dest[x]) & 15) != 0) && x < width; x++)
-        {
-            unsigned int rgba = source[x];
-            dest[x] = (_rotl(rgba, 16) & 0x00ff00ff) | (rgba & 0xff00ff00);
-        }
-
-        for (; x + 3 < width; x += 4)
-        {
-            __m128i sourceData = _mm_loadu_si128(reinterpret_cast<const __m128i*>(&source[x]));
-            // Mask out g and a, which don't change
-            __m128i gaComponents = _mm_andnot_si128(brMask, sourceData);
-            // Mask out b and r
-            __m128i brComponents = _mm_and_si128(sourceData, brMask);
-            // Swap b and r
-            __m128i brSwapped = _mm_shufflehi_epi16(_mm_shufflelo_epi16(brComponents, _MM_SHUFFLE(2, 3, 0, 1)), _MM_SHUFFLE(2, 3, 0, 1));
-            __m128i result = _mm_or_si128(gaComponents, brSwapped);
-            _mm_store_si128(reinterpret_cast<__m128i*>(&dest[x]), result);
-        }
-
-        // Perform leftover writes
-        for (; x < width; x++)
-        {
-            unsigned int rgba = source[x];
-            dest[x] = (_rotl(rgba, 16) & 0x00ff00ff) | (rgba & 0xff00ff00);
-        }
-    }
-}
-
-void Texture::loadRGBAUByteImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                     int inputPitch, const void *input, size_t outputPitch, void *output) const
-{
-    const unsigned int *source = NULL;
-    unsigned int *dest = NULL;
-    for (int y = 0; y < height; y++)
-    {
-        source = reinterpret_cast<const unsigned int*>(static_cast<const unsigned char*>(input) + y * inputPitch);
-        dest = reinterpret_cast<unsigned int*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4);
-
-        for (int x = 0; x < width; x++)
-        {
-            unsigned int rgba = source[x];
-            dest[x] = (_rotl(rgba, 16) & 0x00ff00ff) | (rgba & 0xff00ff00);
-        }
-    }
-}
-
-void Texture::loadRGBA4444ImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                    int inputPitch, const void *input, size_t outputPitch, void *output) const
-{
-    const unsigned short *source = NULL;
-    unsigned char *dest = NULL;
-
-    for (int y = 0; y < height; y++)
-    {
-        source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputPitch);
-        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
-        for (int x = 0; x < width; x++)
-        {
-            unsigned short rgba = source[x];
-            dest[4 * x + 0] = ((rgba & 0x00F0) << 0) | ((rgba & 0x00F0) >> 4);
-            dest[4 * x + 1] = ((rgba & 0x0F00) >> 4) | ((rgba & 0x0F00) >> 8);
-            dest[4 * x + 2] = ((rgba & 0xF000) >> 8) | ((rgba & 0xF000) >> 12);
-            dest[4 * x + 3] = ((rgba & 0x000F) << 4) | ((rgba & 0x000F) >> 0);
-        }
-    }
-}
-
-void Texture::loadRGBA5551ImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                    int inputPitch, const void *input, size_t outputPitch, void *output) const
-{
-    const unsigned short *source = NULL;
-    unsigned char *dest = NULL;
-
-    for (int y = 0; y < height; y++)
-    {
-        source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputPitch);
-        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
-        for (int x = 0; x < width; x++)
-        {
-            unsigned short rgba = source[x];
-            dest[4 * x + 0] = ((rgba & 0x003E) << 2) | ((rgba & 0x003E) >> 3);
-            dest[4 * x + 1] = ((rgba & 0x07C0) >> 3) | ((rgba & 0x07C0) >> 8);
-            dest[4 * x + 2] = ((rgba & 0xF800) >> 8) | ((rgba & 0xF800) >> 13);
-            dest[4 * x + 3] = (rgba & 0x0001) ? 0xFF : 0;
-        }
-    }
-}
-
-void Texture::loadRGBAFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                     int inputPitch, const void *input, size_t outputPitch, void *output) const
-{
-    const float *source = NULL;
-    float *dest = NULL;
-
-    for (int y = 0; y < height; y++)
-    {
-        source = reinterpret_cast<const float*>(static_cast<const unsigned char*>(input) + y * inputPitch);
-        dest = reinterpret_cast<float*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch  + xoffset * 16);
-        memcpy(dest, source, width * 16);
-    }
-}
-
-void Texture::loadRGBAHalfFloatImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                        int inputPitch, const void *input, size_t outputPitch, void *output) const
-{
-    const unsigned char *source = NULL;
-    unsigned char *dest = NULL;
-
-    for (int y = 0; y < height; y++)
-    {
-        source = static_cast<const unsigned char*>(input) + y * inputPitch;
-        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch  + xoffset * 8;
-        memcpy(dest, source, width * 8);
-    }
-}
-
-void Texture::loadBGRAImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                int inputPitch, const void *input, size_t outputPitch, void *output) const
-{
-    const unsigned char *source = NULL;
-    unsigned char *dest = NULL;
-
-    for (int y = 0; y < height; y++)
-    {
-        source = static_cast<const unsigned char*>(input) + y * inputPitch;
-        dest = static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 4;
-        memcpy(dest, source, width*4);
-    }
-}
-
-void Texture::loadCompressedImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                      int inputPitch, const void *input, size_t outputPitch, void *output) const {
-    switch (getD3DFormat())
-    {
-        case D3DFMT_DXT1:
-          loadDXT1ImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
-          break;
-        case D3DFMT_DXT3:
-          loadDXT3ImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
-          break;
-        case D3DFMT_DXT5:
-          loadDXT5ImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
-          break;
-    }
-}
-
-static void FlipCopyDXT1BlockFull(const unsigned int* source, unsigned int* dest) {
-  // A DXT1 block layout is:
-  // [0-1] color0.
-  // [2-3] color1.
-  // [4-7] color bitmap, 2 bits per pixel.
-  // So each of the 4-7 bytes represents one line, flipping a block is just
-  // flipping those bytes.
-
-  // First 32-bits is two RGB565 colors shared by tile and does not need to be modified.
-  dest[0] = source[0];
-
-  // Second 32-bits contains 4 rows of 4 2-bit interpolants between the colors. All rows should be flipped.
-  dest[1] = (source[1] >> 24) |
-            ((source[1] << 8) & 0x00FF0000) |
-            ((source[1] >> 8) & 0x0000FF00) |
-            (source[1] << 24);
-}
-
-// Flips the first 2 lines of a DXT1 block in the y direction.
-static void FlipCopyDXT1BlockHalf(const unsigned int* source, unsigned int* dest) {
-  // See layout above.
-  dest[0] = source[0];
-  dest[1] = ((source[1] << 8) & 0x0000FF00) |
-            ((source[1] >> 8) & 0x000000FF);
-}
-
-// Flips a full DXT3 block in the y direction.
-static void FlipCopyDXT3BlockFull(const unsigned int* source, unsigned int* dest) {
-  // A DXT3 block layout is:
-  // [0-7]  alpha bitmap, 4 bits per pixel.
-  // [8-15] a DXT1 block.
-
-  // First and Second 32 bits are 4bit per pixel alpha and need to be flipped.
-  dest[0] = (source[1] >> 16) | (source[1] << 16);
-  dest[1] = (source[0] >> 16) | (source[0] << 16);
-
-  // And flip the DXT1 block using the above function.
-  FlipCopyDXT1BlockFull(source + 2, dest + 2);
-}
-
-// Flips the first 2 lines of a DXT3 block in the y direction.
-static void FlipCopyDXT3BlockHalf(const unsigned int* source, unsigned int* dest) {
-  // See layout above.
-  dest[0] = (source[1] >> 16) | (source[1] << 16);
-  FlipCopyDXT1BlockHalf(source + 2, dest + 2);
-}
-
-// Flips a full DXT5 block in the y direction.
-static void FlipCopyDXT5BlockFull(const unsigned int* source, unsigned int* dest) {
-  // A DXT5 block layout is:
-  // [0]    alpha0.
-  // [1]    alpha1.
-  // [2-7]  alpha bitmap, 3 bits per pixel.
-  // [8-15] a DXT1 block.
-
-  // The alpha bitmap doesn't easily map lines to bytes, so we have to
-  // interpret it correctly.  Extracted from
-  // http://www.opengl.org/registry/specs/EXT/texture_compression_s3tc.txt :
-  //
-  //   The 6 "bits" bytes of the block are decoded into one 48-bit integer:
-  //
-  //     bits = bits_0 + 256 * (bits_1 + 256 * (bits_2 + 256 * (bits_3 +
-  //                   256 * (bits_4 + 256 * bits_5))))
-  //
-  //   bits is a 48-bit unsigned integer, from which a three-bit control code
-  //   is extracted for a texel at location (x,y) in the block using:
-  //
-  //       code(x,y) = bits[3*(4*y+x)+1..3*(4*y+x)+0]
-  //
-  //   where bit 47 is the most significant and bit 0 is the least
-  //   significant bit.
-  const unsigned char* sourceBytes = static_cast<const unsigned char*>(static_cast<const void*>(source));
-  unsigned char* destBytes = static_cast<unsigned char*>(static_cast<void*>(dest));
-  unsigned int line_0_1 = sourceBytes[2] + 256 * (sourceBytes[3] + 256 * sourceBytes[4]);
-  unsigned int line_2_3 = sourceBytes[5] + 256 * (sourceBytes[6] + 256 * sourceBytes[7]);
-  // swap lines 0 and 1 in line_0_1.
-  unsigned int line_1_0 = ((line_0_1 & 0x000fff) << 12) |
-                          ((line_0_1 & 0xfff000) >> 12);
-  // swap lines 2 and 3 in line_2_3.
-  unsigned int line_3_2 = ((line_2_3 & 0x000fff) << 12) |
-                          ((line_2_3 & 0xfff000) >> 12);
-  destBytes[0] = sourceBytes[0];
-  destBytes[1] = sourceBytes[1];
-  destBytes[2] = line_3_2 & 0xff;
-  destBytes[3] = (line_3_2 & 0xff00) >> 8;
-  destBytes[4] = (line_3_2 & 0xff0000) >> 16;
-  destBytes[5] = line_1_0 & 0xff;
-  destBytes[6] = (line_1_0 & 0xff00) >> 8;
-  destBytes[7] = (line_1_0 & 0xff0000) >> 16;
-
-  // And flip the DXT1 block using the above function.
-  FlipCopyDXT1BlockFull(source + 2, dest + 2);
-}
-
-// Flips the first 2 lines of a DXT5 block in the y direction.
-static void FlipCopyDXT5BlockHalf(const unsigned int* source, unsigned int* dest) {
-  // See layout above.
-  const unsigned char* sourceBytes = static_cast<const unsigned char*>(static_cast<const void*>(source));
-  unsigned char* destBytes = static_cast<unsigned char*>(static_cast<void*>(dest));
-  unsigned int line_0_1 = sourceBytes[2] + 256 * (sourceBytes[3] + 256 * sourceBytes[4]);
-  unsigned int line_1_0 = ((line_0_1 & 0x000fff) << 12) |
-                          ((line_0_1 & 0xfff000) >> 12);
-  destBytes[0] = sourceBytes[0];
-  destBytes[1] = sourceBytes[1];
-  destBytes[2] = line_1_0 & 0xff;
-  destBytes[3] = (line_1_0 & 0xff00) >> 8;
-  destBytes[4] = (line_1_0 & 0xff0000) >> 16;
-  FlipCopyDXT1BlockHalf(source + 2, dest + 2);
-}
-
-void Texture::loadDXT1ImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                      int inputPitch, const void *input, size_t outputPitch, void *output) const
-{
-    ASSERT(xoffset % 4 == 0);
-    ASSERT(yoffset % 4 == 0);
-    ASSERT(width % 4 == 0 || width == 2 || width == 1);
-    ASSERT(inputPitch % 8 == 0);
-    ASSERT(outputPitch % 8 == 0);
-
-    const unsigned int *source = reinterpret_cast<const unsigned int*>(input);
-    unsigned int *dest = reinterpret_cast<unsigned int*>(output);
-
-    // Round width up in case it is less than 4.
-    int blocksAcross = (width + 3) / 4;
-    int intsAcross = blocksAcross * 2;
-
-    switch (height)
-    {
-        case 1:
-            for (int x = 0; x < intsAcross; x += 2)
-            {
-                // just copy the block
-                dest[x] = source[x];
-                dest[x + 1] = source[x + 1];
-            }
-            break;
-        case 2:
-            for (int x = 0; x < intsAcross; x += 2)
-            {
-                FlipCopyDXT1BlockHalf(source + x, dest + x);
-            }
-            break;
-        default:
-            ASSERT(height % 4 == 0);
-            for (int y = 0; y < height / 4; ++y)
-            {
-                const unsigned int *source = reinterpret_cast<const unsigned int*>(static_cast<const unsigned char*>(input) + y * inputPitch);
-                unsigned int *dest = reinterpret_cast<unsigned int*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 8);
-
-                for (int x = 0; x < intsAcross; x += 2)
-                {
-                    FlipCopyDXT1BlockFull(source + x, dest + x);
-                }
-            }
-            break;
-    }
-}
-
-void Texture::loadDXT3ImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                int inputPitch, const void *input, size_t outputPitch, void *output) const
-{
-    ASSERT(xoffset % 4 == 0);
-    ASSERT(yoffset % 4 == 0);
-    ASSERT(width % 4 == 0 || width == 2 || width == 1);
-    ASSERT(inputPitch % 16 == 0);
-    ASSERT(outputPitch % 16 == 0);
-
-    const unsigned int *source = reinterpret_cast<const unsigned int*>(input);
-    unsigned int *dest = reinterpret_cast<unsigned int*>(output);
-
-    // Round width up in case it is less than 4.
-    int blocksAcross = (width + 3) / 4;
-    int intsAcross = blocksAcross * 4;
-
-    switch (height)
-    {
-        case 1:
-            for (int x = 0; x < intsAcross; x += 4)
-            {
-                // just copy the block
-                dest[x] = source[x];
-                dest[x + 1] = source[x + 1];
-                dest[x + 2] = source[x + 2];
-                dest[x + 3] = source[x + 3];
-            }
-            break;
-        case 2:
-            for (int x = 0; x < intsAcross; x += 4)
-            {
-                FlipCopyDXT3BlockHalf(source + x, dest + x);
-            }
-            break;
-        default:
-            ASSERT(height % 4 == 0);
-            for (int y = 0; y < height / 4; ++y)
-            {
-                const unsigned int *source = reinterpret_cast<const unsigned int*>(static_cast<const unsigned char*>(input) + y * inputPitch);
-                unsigned int *dest = reinterpret_cast<unsigned int*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 16);
-
-                for (int x = 0; x < intsAcross; x += 4)
-                {
-                  FlipCopyDXT3BlockFull(source + x, dest + x);
-                }
-            }
-            break;
-    }
-}
-
-void Texture::loadDXT5ImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                                int inputPitch, const void *input, size_t outputPitch, void *output) const
-{
-    ASSERT(xoffset % 4 == 0);
-    ASSERT(yoffset % 4 == 0);
-    ASSERT(width % 4 == 0 || width == 2 || width == 1);
-    ASSERT(inputPitch % 16 == 0);
-    ASSERT(outputPitch % 16 == 0);
-
-    const unsigned int *source = reinterpret_cast<const unsigned int*>(input);
-    unsigned int *dest = reinterpret_cast<unsigned int*>(output);
-
-    // Round width up in case it is less than 4.
-    int blocksAcross = (width + 3) / 4;
-    int intsAcross = blocksAcross * 4;
-
-    switch (height)
-    {
-        case 1:
-            for (int x = 0; x < intsAcross; x += 4)
-            {
-                // just copy the block
-                dest[x] = source[x];
-                dest[x + 1] = source[x + 1];
-                dest[x + 2] = source[x + 2];
-                dest[x + 3] = source[x + 3];
-            }
-            break;
-        case 2:
-            for (int x = 0; x < intsAcross; x += 4)
-            {
-                FlipCopyDXT5BlockHalf(source + x, dest + x);
-            }
-            break;
-        default:
-            ASSERT(height % 4 == 0);
-            for (int y = 0; y < height / 4; ++y)
-            {
-                const unsigned int *source = reinterpret_cast<const unsigned int*>(static_cast<const unsigned char*>(input) + y * inputPitch);
-                unsigned int *dest = reinterpret_cast<unsigned int*>(static_cast<unsigned char*>(output) + (y + yoffset) * outputPitch + xoffset * 16);
-
-                for (int x = 0; x < intsAcross; x += 4)
-                {
-                    FlipCopyDXT5BlockFull(source + x, dest + x);
-                }
-            }
-            break;
-    }
-}
-
 void Texture::setImage(GLint unpackAlignment, const void *pixels, Image *image)
 {
     if (pixels != NULL)
@@ -1161,7 +1161,7 @@ void Texture::setImage(GLint unpackAlignment, const void *pixels, Image *image)
 
         if (SUCCEEDED(result))
         {
-            loadImageData(0, 0, image->getWidth(), image->getHeight(), image->getFormat(), image->getType(), unpackAlignment, pixels, locked.Pitch, locked.pBits, image->getD3DFormat());
+            image->loadData(0, 0, image->getWidth(), image->getHeight(), image->getFormat(), image->getType(), unpackAlignment, pixels, locked.Pitch, locked.pBits);
             image->unlock();
         }
 
@@ -1181,7 +1181,7 @@ void Texture::setCompressedImage(GLsizei imageSize, const void *pixels, Image *i
         {
             int inputPitch = ComputeCompressedPitch(image->getWidth(), image->getFormat());
             int inputSize = ComputeCompressedSize(image->getWidth(), image->getHeight(), image->getFormat());
-            loadCompressedImageData(0, 0, image->getWidth(), image->getHeight(), -inputPitch, static_cast<const char*>(pixels) + inputSize - inputPitch, locked.Pitch, locked.pBits);
+            image->loadCompressedData(0, 0, image->getWidth(), image->getHeight(), -inputPitch, static_cast<const char*>(pixels) + inputSize - inputPitch, locked.Pitch, locked.pBits);
             image->unlock();
         }
 
@@ -1217,7 +1217,7 @@ bool Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
 
         if (SUCCEEDED(result))
         {
-            loadImageData(xoffset, transformPixelYOffset(yoffset, height, image->getHeight()), width, height, format, type, unpackAlignment, pixels, locked.Pitch, locked.pBits, image->getD3DFormat());
+            image->loadData(xoffset, transformPixelYOffset(yoffset, height, image->getHeight()), width, height, format, type, unpackAlignment, pixels, locked.Pitch, locked.pBits);
             image->unlock();
         }
 
@@ -1257,7 +1257,7 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GL
         {
             int inputPitch = ComputeCompressedPitch(width, format);
             int inputSize = ComputeCompressedSize(width, height, format);
-            loadCompressedImageData(xoffset, transformPixelYOffset(yoffset, height, image->getHeight()), width, height, -inputPitch, static_cast<const char*>(pixels) + inputSize - inputPitch, locked.Pitch, locked.pBits);
+            image->loadCompressedData(xoffset, transformPixelYOffset(yoffset, height, image->getHeight()), width, height, -inputPitch, static_cast<const char*>(pixels) + inputSize - inputPitch, locked.Pitch, locked.pBits);
             image->unlock();
         }
 
