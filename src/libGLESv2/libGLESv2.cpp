@@ -1092,7 +1092,7 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
                 return error(GL_INVALID_OPERATION);
             }
 
-            gl::Colorbuffer *source = framebuffer->getColorbuffer();
+            gl::Renderbuffer *source = framebuffer->getColorbuffer();
             GLenum colorbufferFormat = source->getInternalFormat();
 
             // [OpenGL ES 2.0.24] table 3.9
@@ -1246,7 +1246,7 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
                 return error(GL_INVALID_OPERATION);
             }
 
-            gl::Colorbuffer *source = framebuffer->getColorbuffer();
+            gl::Renderbuffer *source = framebuffer->getColorbuffer();
             GLenum colorbufferFormat = source->getInternalFormat();
             gl::Texture *texture = NULL;
 

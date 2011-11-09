@@ -177,7 +177,7 @@ class Texture : public RefCountObject
     static const GLuint INCOMPLETE_TEXTURE_ID = static_cast<GLuint>(-1);   // Every texture takes an id at creation time. The value is arbitrary because it is never registered with the resource manager.
 
   protected:
-    friend class Colorbuffer;
+    friend class RenderbufferTexture;
 
     void setImage(GLint unpackAlignment, const void *pixels, Image *image);
     bool subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *image);

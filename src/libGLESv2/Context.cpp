@@ -1375,7 +1375,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_ALPHA_BITS:
         {
             gl::Framebuffer *framebuffer = getDrawFramebuffer();
-            gl::Colorbuffer *colorbuffer = framebuffer->getColorbuffer();
+            gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer();
 
             if (colorbuffer)
             {
@@ -1396,7 +1396,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_DEPTH_BITS:
         {
             gl::Framebuffer *framebuffer = getDrawFramebuffer();
-            gl::DepthStencilbuffer *depthbuffer = framebuffer->getDepthbuffer();
+            gl::Renderbuffer *depthbuffer = framebuffer->getDepthbuffer();
 
             if (depthbuffer)
             {
@@ -1411,7 +1411,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_STENCIL_BITS:
         {
             gl::Framebuffer *framebuffer = getDrawFramebuffer();
-            gl::DepthStencilbuffer *stencilbuffer = framebuffer->getStencilbuffer();
+            gl::Renderbuffer *stencilbuffer = framebuffer->getStencilbuffer();
 
             if (stencilbuffer)
             {
@@ -1911,7 +1911,7 @@ void Context::applyState(GLenum drawMode)
             }
 
             // get the maximum size of the stencil ref
-            gl::DepthStencilbuffer *stencilbuffer = framebufferObject->getStencilbuffer();
+            gl::Renderbuffer *stencilbuffer = framebufferObject->getStencilbuffer();
             GLuint maxStencil = (1 << stencilbuffer->getStencilSize()) - 1;
 
             mDevice->SetRenderState(adjustedFrontFace == GL_CCW ? D3DRS_STENCILWRITEMASK : D3DRS_CCW_STENCILWRITEMASK, mState.stencilWritemask);
@@ -1978,7 +1978,7 @@ void Context::applyState(GLenum drawMode)
     {
         if (mState.polygonOffsetFill)
         {
-            gl::DepthStencilbuffer *depthbuffer = framebufferObject->getDepthbuffer();
+            gl::Renderbuffer *depthbuffer = framebufferObject->getDepthbuffer();
             if (depthbuffer)
             {
                 mDevice->SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, *((DWORD*)&mState.polygonOffsetFactor));
@@ -3616,8 +3616,8 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
 
     if (mask & (GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT))
     {
-        DepthStencilbuffer *readDSBuffer = NULL;
-        DepthStencilbuffer *drawDSBuffer = NULL;
+        Renderbuffer *readDSBuffer = NULL;
+        Renderbuffer *drawDSBuffer = NULL;
 
         // We support OES_packed_depth_stencil, and do not support a separately attached depth and stencil buffer, so if we have
         // both a depth and stencil buffer, it will be the same buffer.

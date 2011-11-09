@@ -1622,6 +1622,7 @@ void Texture2D::bindTexImage(egl::Surface *surface)
 
     mTexture = surface->getOffscreenTexture();
     mSerial = issueSerial();
+    mColorbufferProxy.set(NULL);
     mDirtyImages = true;
     mIsRenderable = true;
     mSurface = surface;
@@ -1640,6 +1641,7 @@ void Texture2D::releaseTexImage()
             mTexture->Release();
             mTexture = NULL;
             mSerial = 0;
+            mColorbufferProxy.set(NULL);
         }
 
         for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
@@ -1913,6 +1915,7 @@ void Texture2D::createTexture()
 
     mTexture = texture;
     mSerial = issueSerial();
+    mColorbufferProxy.set(NULL);
     mDirtyImages = true;
     mIsRenderable = false;
 }
@@ -2008,6 +2011,7 @@ void Texture2D::convertToRenderTarget()
 
     mTexture = texture;
     mSerial = issueSerial();
+    mColorbufferProxy.set(NULL);
     mDirtyImages = true;
     mIsRenderable = true;
 }
@@ -2081,7 +2085,7 @@ Renderbuffer *Texture2D::getRenderbuffer(GLenum target)
 
     if (mColorbufferProxy.get() == NULL)
     {
-        mColorbufferProxy.set(new Renderbuffer(id(), new Colorbuffer(this, target)));
+        mColorbufferProxy.set(new Renderbuffer(id(), new RenderbufferTexture(this, target)));
     }
 
     return mColorbufferProxy.get();
@@ -2363,6 +2367,7 @@ void TextureCubeMap::createTexture()
 
     mTexture = texture;
     mSerial = issueSerial();
+    for(int face = 0; face < 6; face++) mFaceProxies[face].set(NULL);
     mDirtyImages = true;
     mIsRenderable = false;
 }
@@ -2463,6 +2468,7 @@ void TextureCubeMap::convertToRenderTarget()
 
     mTexture = texture;
     mSerial = issueSerial();
+    for(int face = 0; face < 6; face++) mFaceProxies[face].set(NULL);
     mDirtyImages = true;
     mIsRenderable = true;
 }
@@ -2515,6 +2521,7 @@ void TextureCubeMap::redefineImage(int face, GLint level, GLenum format, GLsizei
         mTexture->Release();
         mTexture = NULL;
         mSerial = 0;
+        for(int face = 0; face < 6; face++) mFaceProxies[face].set(NULL);
         mDirtyImages = true;
     }
 }
@@ -2733,7 +2740,7 @@ Renderbuffer *TextureCubeMap::getRenderbuffer(GLenum target)
 
     if (mFaceProxies[face].get() == NULL)
     {
-        mFaceProxies[face].set(new Renderbuffer(id(), new Colorbuffer(this, target)));
+        mFaceProxies[face].set(new Renderbuffer(id(), new RenderbufferTexture(this, target)));
     }
 
     return mFaceProxies[face].get();
