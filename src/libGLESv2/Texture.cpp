@@ -30,16 +30,81 @@ namespace gl
 unsigned int Texture::mCurrentSerial = 1;
 
 Image::Image()
-  : width(0), height(0), dirty(false), surface(NULL), format(GL_NONE), type(GL_UNSIGNED_BYTE)
+  : mWidth(0), mHeight(0), mDirty(false), mSurface(NULL), mFormat(GL_NONE), mType(GL_UNSIGNED_BYTE)
 {
 }
 
 Image::~Image()
 {
-    if (surface)
+    if (mSurface)
     {
-        surface->Release();
+        mSurface->Release();
     }
+}
+
+void Image::redefine(GLenum format, GLsizei width, GLsizei height, GLenum type)
+{
+    mWidth = width;
+    mHeight = height;
+    mFormat = format;
+    mType = type;
+
+    if (mSurface)
+    {
+        mSurface->Release();
+        mSurface = NULL;
+        mDirty = true;
+    }
+
+    createSurface();
+}
+
+void Image::createSurface()
+{
+    if(mSurface)
+    {
+        return;
+    }
+
+    IDirect3DTexture9 *newTexture = NULL;
+    IDirect3DSurface9 *newSurface = NULL;
+
+    if (mWidth != 0 && mHeight != 0)
+    {
+        int levelToFetch = 0;
+        GLsizei requestWidth = mWidth;
+        GLsizei requestHeight = mHeight;
+        if (IsCompressed(mFormat) && (mWidth % 4 != 0 || mHeight % 4 != 0))
+        {
+            bool isMult4 = false;
+            int upsampleCount = 0;
+            while (!isMult4)
+            {
+                requestWidth <<= 1;
+                requestHeight <<= 1;
+                upsampleCount++;
+                if (requestWidth % 4 == 0 && requestHeight % 4 == 0)
+                {
+                    isMult4 = true;
+                }
+            }
+            levelToFetch = upsampleCount;
+        }
+
+        HRESULT result = getDevice()->CreateTexture(requestWidth, requestHeight, levelToFetch + 1, NULL, getD3DFormat(),
+                                                    D3DPOOL_SYSTEMMEM, &newTexture, NULL);
+
+        if (FAILED(result))
+        {
+            ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
+            return error(GL_OUT_OF_MEMORY);
+        }
+
+        newTexture->GetSurfaceLevel(levelToFetch, &newSurface);
+        newTexture->Release();
+    }
+
+    mSurface = newSurface;
 }
 
 bool Image::isRenderable() const
@@ -66,38 +131,38 @@ bool Image::isRenderable() const
 
 D3DFORMAT Image::getD3DFormat() const
 {
-    if (format == GL_COMPRESSED_RGB_S3TC_DXT1_EXT ||
-        format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT)
+    if (mFormat == GL_COMPRESSED_RGB_S3TC_DXT1_EXT ||
+        mFormat == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT)
     {
         return D3DFMT_DXT1;
     }
-    else if (format == GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE)
+    else if (mFormat == GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE)
     {
         return D3DFMT_DXT3;
     }
-    else if (format == GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE)
+    else if (mFormat == GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE)
     {
         return D3DFMT_DXT5;
     }
-    else if (type == GL_FLOAT)
+    else if (mType == GL_FLOAT)
     {
         return D3DFMT_A32B32G32R32F;
     }
-    else if (type == GL_HALF_FLOAT_OES)
+    else if (mType == GL_HALF_FLOAT_OES)
     {
         return D3DFMT_A16B16G16R16F;
     }
-    else if (type == GL_UNSIGNED_BYTE)
+    else if (mType == GL_UNSIGNED_BYTE)
     {
-        if (format == GL_LUMINANCE && getContext()->supportsLuminanceTextures())
+        if (mFormat == GL_LUMINANCE && getContext()->supportsLuminanceTextures())
         {
             return D3DFMT_L8;
         }
-        else if (format == GL_LUMINANCE_ALPHA && getContext()->supportsLuminanceAlphaTextures())
+        else if (mFormat == GL_LUMINANCE_ALPHA && getContext()->supportsLuminanceAlphaTextures())
         {
             return D3DFMT_A8L8;
         }
-        else if (format == GL_RGB)
+        else if (mFormat == GL_RGB)
         {
             return D3DFMT_X8R8G8B8;
         }
@@ -1050,75 +1115,27 @@ void Texture::loadDXT5ImageData(GLint xoffset, GLint yoffset, GLsizei width, GLs
     }
 }
 
-void Image::createSurface()
-{
-    if(surface)
-    {
-        return;
-    }
-
-    IDirect3DTexture9 *newTexture = NULL;
-    IDirect3DSurface9 *newSurface = NULL;
-
-    if (width != 0 && height != 0)
-    {
-        int levelToFetch = 0;
-        GLsizei requestWidth = width;
-        GLsizei requestHeight = height;
-        if (IsCompressed(format) && (width % 4 != 0 || height % 4 != 0))
-        {
-            bool isMult4 = false;
-            int upsampleCount = 0;
-            while (!isMult4)
-            {
-                requestWidth <<= 1;
-                requestHeight <<= 1;
-                upsampleCount++;
-                if (requestWidth % 4 == 0 && requestHeight % 4 == 0)
-                {
-                    isMult4 = true;
-                }
-            }
-            levelToFetch = upsampleCount;
-        }
-
-        HRESULT result = getDevice()->CreateTexture(requestWidth, requestHeight, levelToFetch + 1, NULL, getD3DFormat(),
-                                                    D3DPOOL_SYSTEMMEM, &newTexture, NULL);
-
-        if (FAILED(result))
-        {
-            ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-            return error(GL_OUT_OF_MEMORY);
-        }
-
-        newTexture->GetSurfaceLevel(levelToFetch, &newSurface);
-        newTexture->Release();
-    }
-
-    surface = newSurface;
-}
-
 void Texture::setImage(GLint unpackAlignment, const void *pixels, Image *image)
 {
     image->createSurface();
 
-    if (pixels != NULL && image->surface != NULL)
+    if (pixels != NULL && image->getSurface() != NULL)
     {
         D3DSURFACE_DESC description;
-        image->surface->GetDesc(&description);
+        image->getSurface()->GetDesc(&description);
 
         D3DLOCKED_RECT locked;
-        HRESULT result = image->surface->LockRect(&locked, NULL, 0);
+        HRESULT result = image->getSurface()->LockRect(&locked, NULL, 0);
 
         ASSERT(SUCCEEDED(result));
 
         if (SUCCEEDED(result))
         {
-            loadImageData(0, 0, image->width, image->height, image->format, image->type, unpackAlignment, pixels, locked.Pitch, locked.pBits, &description);
-            image->surface->UnlockRect();
+            loadImageData(0, 0, image->getWidth(), image->getHeight(), image->getFormat(), image->getType(), unpackAlignment, pixels, locked.Pitch, locked.pBits, &description);
+            image->getSurface()->UnlockRect();
         }
 
-        image->dirty = true;
+        image->markDirty();
         mDirtyImages = true;
     }
 }
@@ -1127,41 +1144,41 @@ void Texture::setCompressedImage(GLsizei imageSize, const void *pixels, Image *i
 {
     image->createSurface();
 
-    if (pixels != NULL && image->surface != NULL)
+    if (pixels != NULL && image->getSurface() != NULL)
     {
         D3DLOCKED_RECT locked;
-        HRESULT result = image->surface->LockRect(&locked, NULL, 0);
+        HRESULT result = image->getSurface()->LockRect(&locked, NULL, 0);
 
         ASSERT(SUCCEEDED(result));
 
         if (SUCCEEDED(result))
         {
-            int inputPitch = ComputeCompressedPitch(image->width, image->format);
-            int inputSize = ComputeCompressedSize(image->width, image->height, image->format);
-            loadCompressedImageData(0, 0, image->width, image->height, -inputPitch, static_cast<const char*>(pixels) + inputSize - inputPitch, locked.Pitch, locked.pBits);
-            image->surface->UnlockRect();
+            int inputPitch = ComputeCompressedPitch(image->getWidth(), image->getFormat());
+            int inputSize = ComputeCompressedSize(image->getWidth(), image->getHeight(), image->getFormat());
+            loadCompressedImageData(0, 0, image->getWidth(), image->getHeight(), -inputPitch, static_cast<const char*>(pixels) + inputSize - inputPitch, locked.Pitch, locked.pBits);
+            image->getSurface()->UnlockRect();
         }
 
-        image->dirty = true;
+        image->markDirty();
         mDirtyImages = true;
     }
 }
 
 bool Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *image)
 {
-    if (width + xoffset > image->width || height + yoffset > image->height)
+    if (width + xoffset > image->getWidth() || height + yoffset > image->getHeight())
     {
         error(GL_INVALID_VALUE);
         return false;
     }
 
-    if (IsCompressed(image->format))
+    if (IsCompressed(image->getFormat()))
     {
         error(GL_INVALID_OPERATION);
         return false;
     }
 
-    if (format != image->format)
+    if (format != image->getFormat())
     {
         error(GL_INVALID_OPERATION);
         return false;
@@ -1169,23 +1186,23 @@ bool Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
 
     image->createSurface();
 
-    if (pixels != NULL && image->surface != NULL)
+    if (pixels != NULL && image->getSurface() != NULL)
     {
         D3DSURFACE_DESC description;
-        image->surface->GetDesc(&description);
+        image->getSurface()->GetDesc(&description);
 
         D3DLOCKED_RECT locked;
-        HRESULT result = image->surface->LockRect(&locked, NULL, 0);
+        HRESULT result = image->getSurface()->LockRect(&locked, NULL, 0);
 
         ASSERT(SUCCEEDED(result));
 
         if (SUCCEEDED(result))
         {
-            loadImageData(xoffset, transformPixelYOffset(yoffset, height, image->height), width, height, format, type, unpackAlignment, pixels, locked.Pitch, locked.pBits, &description);
-            image->surface->UnlockRect();
+            loadImageData(xoffset, transformPixelYOffset(yoffset, height, image->getHeight()), width, height, format, type, unpackAlignment, pixels, locked.Pitch, locked.pBits, &description);
+            image->getSurface()->UnlockRect();
         }
 
-        image->dirty = true;
+        image->markDirty();
         mDirtyImages = true;
     }
 
@@ -1194,7 +1211,7 @@ bool Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
 
 bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels, Image *image)
 {
-    if (width + xoffset > image->width || height + yoffset > image->height)
+    if (width + xoffset > image->getWidth() || height + yoffset > image->getHeight())
     {
         error(GL_INVALID_VALUE);
         return false;
@@ -1208,7 +1225,7 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GL
 
     image->createSurface();
 
-    if (pixels != NULL && image->surface != NULL)
+    if (pixels != NULL && image->getSurface() != NULL)
     {
         RECT updateRegion;
         updateRegion.left = xoffset;
@@ -1217,7 +1234,7 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GL
         updateRegion.top = yoffset;
 
         D3DLOCKED_RECT locked;
-        HRESULT result = image->surface->LockRect(&locked, &updateRegion, 0);
+        HRESULT result = image->getSurface()->LockRect(&locked, &updateRegion, 0);
 
         ASSERT(SUCCEEDED(result));
 
@@ -1225,11 +1242,11 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GL
         {
             int inputPitch = ComputeCompressedPitch(width, format);
             int inputSize = ComputeCompressedSize(width, height, format);
-            loadCompressedImageData(xoffset, transformPixelYOffset(yoffset, height, image->height), width, height, -inputPitch, static_cast<const char*>(pixels) + inputSize - inputPitch, locked.Pitch, locked.pBits);
-            image->surface->UnlockRect();
+            loadCompressedImageData(xoffset, transformPixelYOffset(yoffset, height, image->getHeight()), width, height, -inputPitch, static_cast<const char*>(pixels) + inputSize - inputPitch, locked.Pitch, locked.pBits);
+            image->getSurface()->UnlockRect();
         }
 
-        image->dirty = true;
+        image->markDirty();
         mDirtyImages = true;
     }
 
@@ -1241,7 +1258,7 @@ void Texture::copyToImage(Image *image, GLint xoffset, GLint yoffset, GLint x, G
 {
     image->createSurface();
 
-    if (!image->surface)
+    if (!image->getSurface())
     {
         ERR("Failed to create an image surface.");
         return error(GL_OUT_OF_MEMORY);
@@ -1270,12 +1287,12 @@ void Texture::copyToImage(Image *image, GLint xoffset, GLint yoffset, GLint x, G
     }
 
     RECT sourceRect = transformPixelRect(x, y, width, height, description.Height);
-    int destYOffset = transformPixelYOffset(yoffset, height, image->height);
+    int destYOffset = transformPixelYOffset(yoffset, height, image->getHeight());
     RECT destRect = {xoffset, destYOffset, xoffset + width, destYOffset + height};
 
     if (image->isRenderable())
     {
-        result = D3DXLoadSurfaceFromSurface(image->surface, NULL, &destRect, renderTargetData, NULL, &sourceRect, D3DX_FILTER_BOX, 0);
+        result = D3DXLoadSurfaceFromSurface(image->getSurface(), NULL, &destRect, renderTargetData, NULL, &sourceRect, D3DX_FILTER_BOX, 0);
         
         if (FAILED(result))
         {
@@ -1297,7 +1314,7 @@ void Texture::copyToImage(Image *image, GLint xoffset, GLint yoffset, GLint x, G
         }
 
         D3DLOCKED_RECT destLock = {0};
-        result = image->surface->LockRect(&destLock, &destRect, 0);
+        result = image->getSurface()->LockRect(&destLock, &destRect, 0);
         
         if (FAILED(result))
         {
@@ -1406,13 +1423,13 @@ void Texture::copyToImage(Image *image, GLint xoffset, GLint yoffset, GLint x, G
             }
         }
 
-        image->surface->UnlockRect();
+        image->getSurface()->UnlockRect();
         renderTargetData->UnlockRect();
     }
 
     renderTargetData->Release();
 
-    image->dirty = true;
+    image->markDirty();
     mDirtyImages = true;
 }
 
@@ -1512,22 +1529,22 @@ GLenum Texture2D::getTarget() const
 
 GLsizei Texture2D::getWidth() const
 {
-    return mImageArray[0].width;
+    return mImageArray[0].getWidth();
 }
 
 GLsizei Texture2D::getHeight() const
 {
-    return mImageArray[0].height;
+    return mImageArray[0].getHeight();
 }
 
 GLenum Texture2D::getInternalFormat() const
 {
-    return mImageArray[0].format;
+    return mImageArray[0].getFormat();
 }
 
 GLenum Texture2D::getType() const
 {
-    return mImageArray[0].type;
+    return mImageArray[0].getType();
 }
 
 D3DFORMAT Texture2D::getD3DFormat() const
@@ -1535,29 +1552,12 @@ D3DFORMAT Texture2D::getD3DFormat() const
     return mImageArray[0].getD3DFormat();
 }
 
-void Image::redefine(GLenum format, GLsizei width, GLsizei height, GLenum type)
-{
-    this->width = width;
-    this->height = height;
-    this->format = format;
-    this->type = type;
-
-    if (surface)
-    {
-        surface->Release();
-        surface = NULL;
-        dirty = true;
-    }
-
-    createSurface();
-}
-
 void Texture2D::redefineImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type, bool forceRedefine)
 {
-    GLsizei textureWidth = mImageArray[0].width;
-    GLsizei textureHeight = mImageArray[0].height;
-    GLenum textureFormat = mImageArray[0].format;
-    GLenum textureType = mImageArray[0].type;
+    GLsizei textureWidth = mImageArray[0].getWidth();
+    GLsizei textureHeight = mImageArray[0].getHeight();
+    GLenum textureFormat = mImageArray[0].getFormat();
+    GLenum textureType = mImageArray[0].getType();
 
     mImageArray[level].redefine(format, width, height, type);
 
@@ -1574,7 +1574,7 @@ void Texture2D::redefineImage(GLint level, GLenum format, GLsizei width, GLsizei
     {
         for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
         {
-            mImageArray[i].dirty = true;
+            mImageArray[i].markDirty();
         }
 
         mTexture->Release();
@@ -1641,7 +1641,7 @@ void Texture2D::setCompressedImage(GLint level, GLenum format, GLsizei width, GL
 
 void Texture2D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
-    ASSERT(mImageArray[level].surface != NULL);
+    ASSERT(mImageArray[level].getSurface() != NULL);
 
     if (level < levelCount())
     {
@@ -1654,15 +1654,15 @@ void Texture2D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei wi
         {
             Image *image = &mImageArray[level];
 
-            RECT sourceRect = transformPixelRect(xoffset, yoffset, width, height, image->height);;
+            RECT sourceRect = transformPixelRect(xoffset, yoffset, width, height, image->getHeight());;
             POINT destPoint = {sourceRect.left, sourceRect.top};
 
-            result = getDevice()->UpdateSurface(image->surface, &sourceRect, destLevel, &destPoint);
+            result = getDevice()->UpdateSurface(image->getSurface(), &sourceRect, destLevel, &destPoint);
             ASSERT(SUCCEEDED(result));
 
             destLevel->Release();
 
-            image->dirty = false;
+            image->markClean();
         }
     }
 }
@@ -1706,7 +1706,7 @@ void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei 
             convertToRenderTarget();
         }
         
-        mImageArray[level].dirty = false;
+        mImageArray[level].markClean();
 
         if (width != 0 && height != 0 && level < levelCount())
         {
@@ -1716,7 +1716,7 @@ void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei 
             sourceRect.right = clamp(sourceRect.right, 0, source->getColorbuffer()->getWidth());
             sourceRect.bottom = clamp(sourceRect.bottom, 0, source->getColorbuffer()->getHeight());
 
-            GLint destYOffset = transformPixelYOffset(0, height, mImageArray[level].height);
+            GLint destYOffset = transformPixelYOffset(0, height, mImageArray[level].getHeight());
             
             IDirect3DSurface9 *dest;
             HRESULT hr = mTexture->GetSurfaceLevel(level, &dest);
@@ -1729,7 +1729,7 @@ void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei 
 
 void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
 {
-    if (xoffset + width > mImageArray[level].width || yoffset + height > mImageArray[level].height)
+    if (xoffset + width > mImageArray[level].getWidth() || yoffset + height > mImageArray[level].getHeight())
     {
         return error(GL_INVALID_VALUE);
     }
@@ -1763,12 +1763,12 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
             sourceRect.right = clamp(sourceRect.right, 0, source->getColorbuffer()->getWidth());
             sourceRect.bottom = clamp(sourceRect.bottom, 0, source->getColorbuffer()->getHeight());
 
-            GLint destYOffset = transformPixelYOffset(yoffset, height, mImageArray[level].height);
+            GLint destYOffset = transformPixelYOffset(yoffset, height, mImageArray[level].getHeight());
 
             IDirect3DSurface9 *dest;
             HRESULT hr = mTexture->GetSurfaceLevel(level, &dest);
 
-            getBlitter()->copy(source->getRenderTarget(), sourceRect, mImageArray[0].format, xoffset, destYOffset, dest);
+            getBlitter()->copy(source->getRenderTarget(), sourceRect, mImageArray[0].getFormat(), xoffset, destYOffset, dest);
             dest->Release();
         }
     }
@@ -1777,8 +1777,8 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
 // Tests for GL texture object completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
 bool Texture2D::isComplete() const
 {
-    GLsizei width = mImageArray[0].width;
-    GLsizei height = mImageArray[0].height;
+    GLsizei width = mImageArray[0].getWidth();
+    GLsizei height = mImageArray[0].getHeight();
 
     if (width <= 0 || height <= 0)
     {
@@ -1836,22 +1836,22 @@ bool Texture2D::isComplete() const
 
         for (int level = 1; level <= q; level++)
         {
-            if (mImageArray[level].format != mImageArray[0].format)
+            if (mImageArray[level].getFormat() != mImageArray[0].getFormat())
             {
                 return false;
             }
 
-            if (mImageArray[level].type != mImageArray[0].type)
+            if (mImageArray[level].getType() != mImageArray[0].getType())
             {
                 return false;
             }
 
-            if (mImageArray[level].width != std::max(1, width >> level))
+            if (mImageArray[level].getWidth() != std::max(1, width >> level))
             {
                 return false;
             }
 
-            if (mImageArray[level].height != std::max(1, height >> level))
+            if (mImageArray[level].getHeight() != std::max(1, height >> level))
             {
                 return false;
             }
@@ -1876,10 +1876,10 @@ void Texture2D::createTexture()
 {
     IDirect3DDevice9 *device = getDevice();
     D3DFORMAT format = mImageArray[0].getD3DFormat();
-    GLint levels = creationLevels(mImageArray[0].width, mImageArray[0].height, 0);
+    GLint levels = creationLevels(mImageArray[0].getWidth(), mImageArray[0].getHeight(), 0);
 
     IDirect3DTexture9 *texture = NULL;
-    HRESULT result = device->CreateTexture(mImageArray[0].width, mImageArray[0].height, levels, 0, format, D3DPOOL_DEFAULT, &texture, NULL);
+    HRESULT result = device->CreateTexture(mImageArray[0].getWidth(), mImageArray[0].getHeight(), levels, 0, format, D3DPOOL_DEFAULT, &texture, NULL);
 
     if (FAILED(result))
     {
@@ -1905,9 +1905,9 @@ void Texture2D::updateTexture()
     {
         Image *image = &mImageArray[level];
 
-        if (image->surface && image->dirty)
+        if (image->getSurface() && image->isDirty())
         {
-            commitRect(level, 0, 0, mImageArray[level].width, mImageArray[level].height);
+            commitRect(level, 0, 0, mImageArray[level].getWidth(), mImageArray[level].getHeight());
         }
     }
 }
@@ -1916,14 +1916,14 @@ void Texture2D::convertToRenderTarget()
 {
     IDirect3DTexture9 *texture = NULL;
 
-    if (mImageArray[0].width != 0 && mImageArray[0].height != 0)
+    if (mImageArray[0].getWidth() != 0 && mImageArray[0].getHeight() != 0)
     {
         egl::Display *display = getDisplay();
         IDirect3DDevice9 *device = getDevice();
         D3DFORMAT format = mImageArray[0].getD3DFormat();
-        GLint levels = creationLevels(mImageArray[0].width, mImageArray[0].height, 0);
+        GLint levels = creationLevels(mImageArray[0].getWidth(), mImageArray[0].getHeight(), 0);
 
-        HRESULT result = device->CreateTexture(mImageArray[0].width, mImageArray[0].height, levels, D3DUSAGE_RENDERTARGET, format, D3DPOOL_DEFAULT, &texture, NULL);
+        HRESULT result = device->CreateTexture(mImageArray[0].getWidth(), mImageArray[0].getHeight(), levels, D3DUSAGE_RENDERTARGET, format, D3DPOOL_DEFAULT, &texture, NULL);
 
         if (FAILED(result))
         {
@@ -1995,26 +1995,20 @@ void Texture2D::generateMipmaps()
 {
     if (!getContext()->supportsNonPower2Texture())
     {
-        if (!isPow2(mImageArray[0].width) || !isPow2(mImageArray[0].height))
+        if (!isPow2(mImageArray[0].getWidth()) || !isPow2(mImageArray[0].getHeight()))
         {
             return error(GL_INVALID_OPERATION);
         }
     }
 
     // Purge array levels 1 through q and reset them to represent the generated mipmap levels.
-    unsigned int q = log2(std::max(mImageArray[0].width, mImageArray[0].height));
+    unsigned int q = log2(std::max(mImageArray[0].getWidth(), mImageArray[0].getHeight()));
     for (unsigned int i = 1; i <= q; i++)
     {
-        if (mImageArray[i].surface != NULL)
-        {
-            mImageArray[i].surface->Release();
-            mImageArray[i].surface = NULL;
-        }
-
-        mImageArray[i].width = std::max(mImageArray[0].width >> i, 1);
-        mImageArray[i].height = std::max(mImageArray[0].height >> i, 1);
-        mImageArray[i].format = mImageArray[0].format;
-        mImageArray[i].type = mImageArray[0].type;
+        mImageArray[i].redefine(mImageArray[0].getFormat(),
+                                std::max(mImageArray[0].getWidth() >> i, 1),
+                                std::max(mImageArray[0].getHeight() >> i, 1),
+                                mImageArray[0].getType());
     }
 
     if (mIsRenderable)
@@ -2041,7 +2035,7 @@ void Texture2D::generateMipmaps()
             if (upper != NULL) upper->Release();
             if (lower != NULL) lower->Release();
 
-            mImageArray[i].dirty = false;
+            mImageArray[i].markClean();
         }
     }
     else
@@ -2050,17 +2044,17 @@ void Texture2D::generateMipmaps()
         {
             mImageArray[i].createSurface();
             
-            if (mImageArray[i].surface == NULL)
+            if (mImageArray[i].getSurface() == NULL)
             {
                 return error(GL_OUT_OF_MEMORY);
             }
 
-            if (FAILED(D3DXLoadSurfaceFromSurface(mImageArray[i].surface, NULL, NULL, mImageArray[i - 1].surface, NULL, NULL, D3DX_FILTER_BOX, 0)))
+            if (FAILED(D3DXLoadSurfaceFromSurface(mImageArray[i].getSurface(), NULL, NULL, mImageArray[i - 1].getSurface(), NULL, NULL, D3DX_FILTER_BOX, 0)))
             {
                 ERR(" failed to load filter %d to %d.", i - 1, i);
             }
 
-            mImageArray[i].dirty = true;
+            mImageArray[i].markDirty();
         }
     }
 }
@@ -2128,22 +2122,22 @@ GLenum TextureCubeMap::getTarget() const
 
 GLsizei TextureCubeMap::getWidth() const
 {
-    return mImageArray[0][0].width;
+    return mImageArray[0][0].getWidth();
 }
 
 GLsizei TextureCubeMap::getHeight() const
 {
-    return mImageArray[0][0].height;
+    return mImageArray[0][0].getHeight();
 }
 
 GLenum TextureCubeMap::getInternalFormat() const
 {
-    return mImageArray[0][0].format;
+    return mImageArray[0][0].getFormat();
 }
 
 GLenum TextureCubeMap::getType() const
 {
-    return mImageArray[0][0].type;
+    return mImageArray[0][0].getType();
 }
 
 D3DFORMAT TextureCubeMap::getD3DFormat() const
@@ -2190,7 +2184,7 @@ void TextureCubeMap::setCompressedImage(GLenum face, GLint level, GLenum format,
 
 void TextureCubeMap::commitRect(int face, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
-    ASSERT(mImageArray[face][level].surface != NULL);
+    ASSERT(mImageArray[face][level].getSurface() != NULL);
 
     if (level < levelCount())
     {
@@ -2201,15 +2195,15 @@ void TextureCubeMap::commitRect(int face, GLint level, GLint xoffset, GLint yoff
         {
             Image *image = &mImageArray[face][level];
 
-            RECT sourceRect = transformPixelRect(xoffset, yoffset, width, height, image->height);;
+            RECT sourceRect = transformPixelRect(xoffset, yoffset, width, height, image->getHeight());;
             POINT destPoint = {sourceRect.left, sourceRect.top};
 
-            HRESULT result = getDevice()->UpdateSurface(image->surface, &sourceRect, destLevel, &destPoint);
+            HRESULT result = getDevice()->UpdateSurface(image->getSurface(), &sourceRect, destLevel, &destPoint);
             ASSERT(SUCCEEDED(result));
 
             destLevel->Release();
 
-            image->dirty = false;
+            image->markClean();
         }
     }
 }
@@ -2233,7 +2227,7 @@ void TextureCubeMap::subImageCompressed(GLenum target, GLint level, GLint xoffse
 // Tests for GL texture object completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
 bool TextureCubeMap::isComplete() const
 {
-    int size = mImageArray[0][0].width;
+    int size = mImageArray[0][0].getWidth();
 
     if (size <= 0)
     {
@@ -2259,7 +2253,7 @@ bool TextureCubeMap::isComplete() const
 
     for (int face = 0; face < 6; face++)
     {
-        if (mImageArray[face][0].width != size || mImageArray[face][0].height != size)
+        if (mImageArray[face][0].getWidth() != size || mImageArray[face][0].getHeight() != size)
         {
             return false;
         }
@@ -2300,22 +2294,22 @@ bool TextureCubeMap::isComplete() const
         {
             for (int level = 1; level <= q; level++)
             {
-                if (mImageArray[face][level].format != mImageArray[0][0].format)
+                if (mImageArray[face][level].getFormat() != mImageArray[0][0].getFormat())
                 {
                     return false;
                 }
 
-                if (mImageArray[face][level].type != mImageArray[0][0].type)
+                if (mImageArray[face][level].getType() != mImageArray[0][0].getType())
                 {
                     return false;
                 }
 
-                if (mImageArray[face][level].width != std::max(1, size >> level))
+                if (mImageArray[face][level].getWidth() != std::max(1, size >> level))
                 {
                     return false;
                 }
 
-                ASSERT(mImageArray[face][level].height == mImageArray[face][level].width);
+                ASSERT(mImageArray[face][level].getHeight() == mImageArray[face][level].getWidth());
             }
         }
     }
@@ -2338,10 +2332,10 @@ void TextureCubeMap::createTexture()
 {
     IDirect3DDevice9 *device = getDevice();
     D3DFORMAT format = mImageArray[0][0].getD3DFormat();
-    GLint levels = creationLevels(mImageArray[0][0].width, 0);
+    GLint levels = creationLevels(mImageArray[0][0].getWidth(), 0);
 
     IDirect3DCubeTexture9 *texture = NULL;
-    HRESULT result = device->CreateCubeTexture(mImageArray[0][0].width, levels, 0, format, D3DPOOL_DEFAULT, &texture, NULL);
+    HRESULT result = device->CreateCubeTexture(mImageArray[0][0].getWidth(), levels, 0, format, D3DPOOL_DEFAULT, &texture, NULL);
 
     if (FAILED(result))
     {
@@ -2368,9 +2362,9 @@ void TextureCubeMap::updateTexture()
         {
             Image *image = &mImageArray[face][level];
 
-            if (image->surface && image->dirty)
+            if (image->getSurface() && image->isDirty())
             {
-                commitRect(face, level, 0, 0, image->width, image->height);
+                commitRect(face, level, 0, 0, image->getWidth(), image->getHeight());
             }
         }
     }
@@ -2380,14 +2374,14 @@ void TextureCubeMap::convertToRenderTarget()
 {
     IDirect3DCubeTexture9 *texture = NULL;
 
-    if (mImageArray[0][0].width != 0)
+    if (mImageArray[0][0].getWidth() != 0)
     {
         egl::Display *display = getDisplay();
         IDirect3DDevice9 *device = getDevice();
         D3DFORMAT format = mImageArray[0][0].getD3DFormat();
-        GLint levels = creationLevels(mImageArray[0][0].width, 0);
+        GLint levels = creationLevels(mImageArray[0][0].getWidth(), 0);
 
-        HRESULT result = device->CreateCubeTexture(mImageArray[0][0].width, levels, D3DUSAGE_RENDERTARGET, format, D3DPOOL_DEFAULT, &texture, NULL);
+        HRESULT result = device->CreateCubeTexture(mImageArray[0][0].getWidth(), levels, D3DUSAGE_RENDERTARGET, format, D3DPOOL_DEFAULT, &texture, NULL);
 
         if (FAILED(result))
         {
@@ -2478,10 +2472,10 @@ unsigned int TextureCubeMap::faceIndex(GLenum face)
 
 void TextureCubeMap::redefineImage(int face, GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type)
 {
-    GLsizei textureWidth = mImageArray[0][0].width;
-    GLsizei textureHeight = mImageArray[0][0].height;
-    GLenum textureFormat = mImageArray[0][0].format;
-    GLenum textureType = mImageArray[0][0].type;
+    GLsizei textureWidth = mImageArray[0][0].getWidth();
+    GLsizei textureHeight = mImageArray[0][0].getHeight();
+    GLenum textureFormat = mImageArray[0][0].getFormat();
+    GLenum textureType = mImageArray[0][0].getType();
 
     mImageArray[face][level].redefine(format, width, height, type);
 
@@ -2499,7 +2493,7 @@ void TextureCubeMap::redefineImage(int face, GLint level, GLenum format, GLsizei
         {
             for (int f = 0; f < 6; f++)
             {
-                mImageArray[f][i].dirty = true;
+                mImageArray[f][i].markDirty();
             }
         }
 
@@ -2534,7 +2528,7 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint 
             convertToRenderTarget();
         }
         
-        mImageArray[faceindex][level].dirty = false;
+        mImageArray[faceindex][level].markClean();
 
         ASSERT(width == height);
 
@@ -2546,7 +2540,7 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint 
             sourceRect.right = clamp(sourceRect.right, 0, source->getColorbuffer()->getWidth());
             sourceRect.bottom = clamp(sourceRect.bottom, 0, source->getColorbuffer()->getHeight());
 
-            GLint destYOffset = transformPixelYOffset(0, height, mImageArray[faceindex][level].width);
+            GLint destYOffset = transformPixelYOffset(0, height, mImageArray[faceindex][level].getWidth());
 
             IDirect3DSurface9 *dest = getCubeMapSurface(target, level);
 
@@ -2573,7 +2567,7 @@ IDirect3DSurface9 *TextureCubeMap::getCubeMapSurface(GLenum target, unsigned int
 
 void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
 {
-    GLsizei size = mImageArray[faceIndex(target)][level].width;
+    GLsizei size = mImageArray[faceIndex(target)][level].getWidth();
 
     if (xoffset + width > size || yoffset + height > size)
     {
@@ -2611,11 +2605,11 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
             sourceRect.right = clamp(sourceRect.right, 0, source->getColorbuffer()->getWidth());
             sourceRect.bottom = clamp(sourceRect.bottom, 0, source->getColorbuffer()->getHeight());
 
-            GLint destYOffset = transformPixelYOffset(yoffset, height, mImageArray[faceindex][level].width);
+            GLint destYOffset = transformPixelYOffset(yoffset, height, mImageArray[faceindex][level].getWidth());
 
             IDirect3DSurface9 *dest = getCubeMapSurface(target, level);
 
-            getBlitter()->copy(source->getRenderTarget(), sourceRect, mImageArray[0][0].format, xoffset, destYOffset, dest);
+            getBlitter()->copy(source->getRenderTarget(), sourceRect, mImageArray[0][0].getFormat(), xoffset, destYOffset, dest);
             dest->Release();
         }
     }
@@ -2623,15 +2617,15 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
 
 bool TextureCubeMap::isCubeComplete() const
 {
-    if (mImageArray[0][0].width == 0)
+    if (mImageArray[0][0].getWidth() == 0)
     {
         return false;
     }
 
     for (unsigned int f = 1; f < 6; f++)
     {
-        if (mImageArray[f][0].width != mImageArray[0][0].width
-            || mImageArray[f][0].format != mImageArray[0][0].format)
+        if (mImageArray[f][0].getWidth() != mImageArray[0][0].getWidth()
+            || mImageArray[f][0].getFormat() != mImageArray[0][0].getFormat())
         {
             return false;
         }
@@ -2649,28 +2643,22 @@ void TextureCubeMap::generateMipmaps()
 
     if (!getContext()->supportsNonPower2Texture())
     {
-        if (!isPow2(mImageArray[0][0].width))
+        if (!isPow2(mImageArray[0][0].getWidth()))
         {
             return error(GL_INVALID_OPERATION);
         }
     }
 
     // Purge array levels 1 through q and reset them to represent the generated mipmap levels.
-    unsigned int q = log2(mImageArray[0][0].width);
+    unsigned int q = log2(mImageArray[0][0].getWidth());
     for (unsigned int f = 0; f < 6; f++)
     {
         for (unsigned int i = 1; i <= q; i++)
         {
-            if (mImageArray[f][i].surface != NULL)
-            {
-                mImageArray[f][i].surface->Release();
-                mImageArray[f][i].surface = NULL;
-            }
-
-            mImageArray[f][i].width = std::max(mImageArray[f][0].width >> i, 1);
-            mImageArray[f][i].height = mImageArray[f][i].width;
-            mImageArray[f][i].format = mImageArray[f][0].format;
-            mImageArray[f][i].type = mImageArray[f][0].type;
+            mImageArray[f][i].redefine(mImageArray[f][0].getFormat(),
+                                       std::max(mImageArray[f][0].getWidth() >> i, 1),
+                                       std::max(mImageArray[f][0].getWidth() >> i, 1),
+                                       mImageArray[f][0].getType());
         }
     }
 
@@ -2696,7 +2684,7 @@ void TextureCubeMap::generateMipmaps()
                 if (upper != NULL) upper->Release();
                 if (lower != NULL) lower->Release();
 
-                mImageArray[f][i].dirty = false;
+                mImageArray[f][i].markClean();
             }
         }
     }
@@ -2707,17 +2695,17 @@ void TextureCubeMap::generateMipmaps()
             for (unsigned int i = 1; i <= q; i++)
             {
                 mImageArray[f][i].createSurface();
-                if (mImageArray[f][i].surface == NULL)
+                if (mImageArray[f][i].getSurface() == NULL)
                 {
                     return error(GL_OUT_OF_MEMORY);
                 }
 
-                if (FAILED(D3DXLoadSurfaceFromSurface(mImageArray[f][i].surface, NULL, NULL, mImageArray[f][i - 1].surface, NULL, NULL, D3DX_FILTER_BOX, 0)))
+                if (FAILED(D3DXLoadSurfaceFromSurface(mImageArray[f][i].getSurface(), NULL, NULL, mImageArray[f][i - 1].getSurface(), NULL, NULL, D3DX_FILTER_BOX, 0)))
                 {
                     ERR(" failed to load filter %d to %d.", i - 1, i);
                 }
 
-                mImageArray[f][i].dirty = true;
+                mImageArray[f][i].markDirty();
             }
         }
     }

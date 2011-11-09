@@ -43,25 +43,38 @@ enum
     IMPLEMENTATION_MAX_TEXTURE_LEVELS = 15   // 1+log2 of MAX_TEXTURE_SIZE
 };
 
-struct Image
+class Image
 {
+  public:
     Image();
     ~Image();
 
     void redefine(GLenum format, GLsizei width, GLsizei height, GLenum type);
     void createSurface();
+    void markDirty() {mDirty = true;}
+    void markClean() {mDirty = false;}
 
     bool isRenderable() const;
     D3DFORMAT getD3DFormat() const;
 
-    GLsizei width;
-    GLsizei height;
-    GLenum format;
-    GLenum type;
+    GLsizei getWidth() const {return mWidth;}
+    GLsizei getHeight() const {return mHeight;}
+    GLenum getFormat() const {return mFormat;}
+    GLenum getType() const {return mType;}
+    bool isDirty() const {return mDirty;}
+    IDirect3DSurface9 *getSurface() {return mSurface;}
 
-    bool dirty;
+  private:
+    DISALLOW_COPY_AND_ASSIGN(Image);
 
-    IDirect3DSurface9 *surface;
+    GLsizei mWidth;
+    GLsizei mHeight;
+    GLenum mFormat;
+    GLenum mType;
+
+    bool mDirty;
+
+    IDirect3DSurface9 *mSurface;
 };
 
 class Texture : public RefCountObject
