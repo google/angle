@@ -29,12 +29,12 @@ namespace gl
 {
 unsigned int Texture::mCurrentSerial = 1;
 
-Texture::Image::Image()
+Image::Image()
   : width(0), height(0), dirty(false), surface(NULL), format(GL_NONE), type(GL_UNSIGNED_BYTE)
 {
 }
 
-Texture::Image::~Image()
+Image::~Image()
 {
     if (surface)
     {
@@ -42,7 +42,7 @@ Texture::Image::~Image()
     }
 }
 
-bool Texture::Image::isRenderable() const
+bool Image::isRenderable() const
 {    
     switch(getD3DFormat())
     {
@@ -64,7 +64,7 @@ bool Texture::Image::isRenderable() const
     return false;
 }
 
-D3DFORMAT Texture::Image::getD3DFormat() const
+D3DFORMAT Image::getD3DFormat() const
 {
     if (format == GL_COMPRESSED_RGB_S3TC_DXT1_EXT ||
         format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT)
@@ -1050,7 +1050,7 @@ void Texture::loadDXT5ImageData(GLint xoffset, GLint yoffset, GLsizei width, GLs
     }
 }
 
-void Texture::Image::createSurface()
+void Image::createSurface()
 {
     if(surface)
     {
@@ -1535,7 +1535,7 @@ D3DFORMAT Texture2D::getD3DFormat() const
     return mImageArray[0].getD3DFormat();
 }
 
-void Texture::Image::redefine(GLenum format, GLsizei width, GLsizei height, GLenum type)
+void Image::redefine(GLenum format, GLsizei width, GLsizei height, GLenum type)
 {
     this->width = width;
     this->height = height;

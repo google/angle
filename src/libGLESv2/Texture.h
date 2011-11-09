@@ -43,6 +43,27 @@ enum
     IMPLEMENTATION_MAX_TEXTURE_LEVELS = 15   // 1+log2 of MAX_TEXTURE_SIZE
 };
 
+struct Image
+{
+    Image();
+    ~Image();
+
+    void redefine(GLenum format, GLsizei width, GLsizei height, GLenum type);
+    void createSurface();
+
+    bool isRenderable() const;
+    D3DFORMAT getD3DFormat() const;
+
+    GLsizei width;
+    GLsizei height;
+    GLenum format;
+    GLenum type;
+
+    bool dirty;
+
+    IDirect3DSurface9 *surface;
+};
+
 class Texture : public RefCountObject
 {
   public:
@@ -86,28 +107,6 @@ class Texture : public RefCountObject
 
   protected:
     friend class Colorbuffer;
-
-    // Helper structure representing a single image layer
-    struct Image
-    {
-        Image();
-        ~Image();
-
-        void redefine(GLenum format, GLsizei width, GLsizei height, GLenum type);
-        void createSurface();
-
-        bool isRenderable() const;
-        D3DFORMAT getD3DFormat() const;
-
-        GLsizei width;
-        GLsizei height;
-        GLenum format;
-        GLenum type;
-
-        bool dirty;
-
-        IDirect3DSurface9 *surface;
-    };
 
     void setImage(GLint unpackAlignment, const void *pixels, Image *image);
     bool subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *image);
