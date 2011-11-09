@@ -1052,6 +1052,11 @@ void Texture::loadDXT5ImageData(GLint xoffset, GLint yoffset, GLsizei width, GLs
 
 void Texture::createSurface(Image *image)
 {
+    if(image->surface)
+    {
+        return;
+    }
+
     IDirect3DTexture9 *newTexture = NULL;
     IDirect3DSurface9 *newSurface = NULL;
 
@@ -1088,11 +1093,6 @@ void Texture::createSurface(Image *image)
 
         newTexture->GetSurfaceLevel(levelToFetch, &newSurface);
         newTexture->Release();
-    }
-
-    if (image->surface)
-    {
-        image->surface->Release();
     }
 
     image->surface = newSurface;
@@ -1556,6 +1556,15 @@ void Texture2D::redefineTexture(GLint level, GLenum format, GLsizei width, GLsiz
     mImageArray[level].format = format;
     mImageArray[level].type = type;
 
+    if (mImageArray[level].surface != NULL)
+    {
+        mImageArray[level].surface->Release();
+        mImageArray[level].surface = NULL;
+        mImageArray[level].dirty = true;
+    }
+
+    createSurface(&mImageArray[level]);
+
     if (!mTexture)
     {
         return;
@@ -1565,16 +1574,11 @@ void Texture2D::redefineTexture(GLint level, GLenum format, GLsizei width, GLsiz
     bool heightOkay = (textureHeight >> level == height) || (textureHeight >> level == 0 && height == 1);
     bool textureOkay = (widthOkay && heightOkay && textureFormat == format && textureType == type);
 
-    if (!textureOkay || forceRedefine || mSurface)   // Purge all the levels and the texture.
+    if (!textureOkay || forceRedefine || mSurface)
     {
         for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
         {
-            if (mImageArray[i].surface != NULL)
-            {
-                mImageArray[i].surface->Release();
-                mImageArray[i].surface = NULL;
-                mImageArray[i].dirty = true;
-            }
+            mImageArray[i].dirty = true;
         }
 
         if (mTexture != NULL)
@@ -2493,6 +2497,15 @@ void TextureCubeMap::redefineTexture(int face, GLint level, GLenum format, GLsiz
     mImageArray[face][level].format = format;
     mImageArray[face][level].type = type;
 
+    if (mImageArray[face][level].surface != NULL)
+    {
+        mImageArray[face][level].surface->Release();
+        mImageArray[face][level].surface = NULL;
+        mImageArray[face][level].dirty = true;
+    }
+
+    createSurface(&mImageArray[face][level]);
+
     if (!mTexture)
     {
         return;
@@ -2501,18 +2514,13 @@ void TextureCubeMap::redefineTexture(int face, GLint level, GLenum format, GLsiz
     bool sizeOkay = (textureWidth >> level == width);
     bool textureOkay = (sizeOkay && textureFormat == format && textureType == type);
 
-    if (!textureOkay)   // Purge all the levels and the texture.
+    if (!textureOkay)
     {
         for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
         {
             for (int f = 0; f < 6; f++)
             {
-                if (mImageArray[f][i].surface != NULL)
-                {
-                    mImageArray[f][i].surface->Release();
-                    mImageArray[f][i].surface = NULL;
-                    mImageArray[f][i].dirty = true;
-                }
+                mImageArray[f][i].dirty = true;
             }
         }
 
