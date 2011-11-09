@@ -7,6 +7,7 @@
 // main.cpp: DLL entry point and management of thread-local data.
 
 #include "libGLESv2/main.h"
+#include "libGLESv2/utilities.h"
 
 #include "common/debug.h"
 #include "libEGL/Surface.h"
@@ -105,6 +106,17 @@ IDirect3DDevice9 *getDevice()
     egl::Display *display = getDisplay();
 
     return display->getDevice();
+}
+
+bool checkDeviceLost(HRESULT errorCode)
+{
+    egl::Display *display = NULL;
+
+    if (isDeviceLostError(errorCode))
+    {
+        return true;
+    }
+    return false;
 }
 }
 

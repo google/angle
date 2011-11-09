@@ -32,6 +32,8 @@ Context *getContext();
 egl::Display *getDisplay();
 
 IDirect3DDevice9 *getDevice();
+
+bool checkDeviceLost(HRESULT errorCode);
 }
 
 void error(GLenum errorCode);
