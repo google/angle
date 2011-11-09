@@ -537,7 +537,8 @@ EGLSurface Display::createWindowSurface(HWND window, EGLConfig config, const EGL
         return error(EGL_BAD_ALLOC, EGL_NO_SURFACE);
     }
 
-    if (testDeviceLost()) {
+    if (testDeviceLost()) 
+    {
         if (!restoreLostDevice())
             return EGL_NO_SURFACE;
     }
@@ -649,7 +650,8 @@ EGLSurface Display::createOffscreenSurface(EGLConfig config, HANDLE shareHandle,
         return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
     }
 
-    if (testDeviceLost()) {
+    if (testDeviceLost()) 
+    {
         if (!restoreLostDevice())
             return EGL_NO_SURFACE;
     }
@@ -693,6 +695,12 @@ EGLContext Display::createContext(EGLConfig configHandle, const gl::Context *sha
 
 bool Display::restoreLostDevice()
 {
+    for (ContextSet::iterator ctx = mContextSet.begin(); ctx != mContextSet.end(); ctx++)
+    {
+        if ((*ctx)->isResetNotificationEnabled())
+            return false;   // If reset notifications have been requested, application must delete all contexts first
+    }
+ 
     // Release surface resources to make the Reset() succeed
     for (SurfaceSet::iterator surface = mSurfaceSet.begin(); surface != mSurfaceSet.end(); surface++)
     {

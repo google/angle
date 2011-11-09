@@ -866,7 +866,10 @@ EGLContext __stdcall eglCreateContext(EGLDisplay dpy, EGLConfig config, EGLConte
 
         EGLContext context = display->createContext(config, static_cast<gl::Context*>(share_context), reset_notification, robust_access);
 
-        return success(context);
+        if (context)
+            return success(context);
+        else
+            return error(EGL_CONTEXT_LOST, EGL_NO_CONTEXT);
     }
     catch(std::bad_alloc&)
     {
