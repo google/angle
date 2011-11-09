@@ -109,6 +109,7 @@ void Image::createSurface()
     }
 
     mSurface = newSurface;
+    mDirty = false;
 }
 
 HRESULT Image::lock(D3DLOCKED_RECT *lockedRect, const RECT *rect)
@@ -1165,7 +1166,6 @@ void Texture::setImage(GLint unpackAlignment, const void *pixels, Image *image)
             image->unlock();
         }
 
-        image->markDirty();
         mDirtyImages = true;
     }
 }
@@ -1185,7 +1185,6 @@ void Texture::setCompressedImage(GLsizei imageSize, const void *pixels, Image *i
             image->unlock();
         }
 
-        image->markDirty();
         mDirtyImages = true;
     }
 }
@@ -1221,7 +1220,6 @@ bool Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
             image->unlock();
         }
 
-        image->markDirty();
         mDirtyImages = true;
     }
 
@@ -1261,7 +1259,6 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GL
             image->unlock();
         }
 
-        image->markDirty();
         mDirtyImages = true;
     }
 
