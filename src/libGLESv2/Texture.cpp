@@ -342,7 +342,7 @@ GLenum Texture::getWrapT() const
 // Store the pixel rectangle designated by xoffset,yoffset,width,height with pixels stored as format/type at input
 // into the target pixel rectangle at output with outputPitch bytes in between each line.
 void Texture::loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type,
-                            GLint unpackAlignment, const void *input, size_t outputPitch, void *output, D3DSURFACE_DESC *description) const
+                            GLint unpackAlignment, const void *input, size_t outputPitch, void *output, D3DFORMAT targetFormat) const
 {
     GLsizei inputPitch = -ComputePitch(width, format, type, unpackAlignment);
     input = ((char*)input) - inputPitch * (height - 1);
@@ -356,10 +356,10 @@ void Texture::loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei
             loadAlphaImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
             break;
           case GL_LUMINANCE:
-            loadLuminanceImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output, description->Format == D3DFMT_L8);
+            loadLuminanceImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output, targetFormat == D3DFMT_L8);
             break;
           case GL_LUMINANCE_ALPHA:
-            loadLuminanceAlphaImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output, description->Format == D3DFMT_A8L8);
+            loadLuminanceAlphaImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output, targetFormat == D3DFMT_A8L8);
             break;
           case GL_RGB:
             loadRGBUByteImageData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
@@ -1161,10 +1161,7 @@ void Texture::setImage(GLint unpackAlignment, const void *pixels, Image *image)
 
         if (SUCCEEDED(result))
         {
-            D3DSURFACE_DESC description;
-            image->getSurface()->GetDesc(&description);
-
-            loadImageData(0, 0, image->getWidth(), image->getHeight(), image->getFormat(), image->getType(), unpackAlignment, pixels, locked.Pitch, locked.pBits, &description);
+            loadImageData(0, 0, image->getWidth(), image->getHeight(), image->getFormat(), image->getType(), unpackAlignment, pixels, locked.Pitch, locked.pBits, image->getD3DFormat());
             image->unlock();
         }
 
@@ -1220,10 +1217,7 @@ bool Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
 
         if (SUCCEEDED(result))
         {
-            D3DSURFACE_DESC description;
-            image->getSurface()->GetDesc(&description);
-
-            loadImageData(xoffset, transformPixelYOffset(yoffset, height, image->getHeight()), width, height, format, type, unpackAlignment, pixels, locked.Pitch, locked.pBits, &description);
+            loadImageData(xoffset, transformPixelYOffset(yoffset, height, image->getHeight()), width, height, format, type, unpackAlignment, pixels, locked.Pitch, locked.pBits, image->getD3DFormat());
             image->unlock();
         }
 

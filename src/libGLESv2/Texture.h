@@ -158,7 +158,7 @@ class Texture : public RefCountObject
     DISALLOW_COPY_AND_ASSIGN(Texture);
 
     void loadImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type,
-                       GLint unpackAlignment, const void *input, std::size_t outputPitch, void *output, D3DSURFACE_DESC *description) const;
+                       GLint unpackAlignment, const void *input, std::size_t outputPitch, void *output, D3DFORMAT targetFormat) const;
 
     void loadAlphaImageData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                             int inputPitch, const void *input, size_t outputPitch, void *output) const;
