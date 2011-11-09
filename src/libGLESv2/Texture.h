@@ -49,7 +49,7 @@ class Image
     Image();
     ~Image();
 
-    void redefine(GLenum format, GLsizei width, GLsizei height, GLenum type);
+    bool redefine(GLenum format, GLsizei width, GLsizei height, GLenum type);
     void markDirty() {mDirty = true;}
     void markClean() {mDirty = false;}
 

@@ -42,24 +42,28 @@ Image::~Image()
     }
 }
 
-void Image::redefine(GLenum format, GLsizei width, GLsizei height, GLenum type)
+bool Image::redefine(GLenum format, GLsizei width, GLsizei height, GLenum type)
 {
     if (mWidth != width ||
         mHeight != height ||
         mFormat != format ||
         mType != type)
     {
+        mWidth = width;
+        mHeight = height;
+        mFormat = format;
+        mType = type;
+
         if (mSurface)
         {
             mSurface->Release();
             mSurface = NULL;
         }
+
+        return true;
     }
 
-    mWidth = width;
-    mHeight = height;
-    mFormat = format;
-    mType = type;
+    return false;
 }
 
 void Image::createSurface()
@@ -1559,25 +1563,11 @@ D3DFORMAT Texture2D::getD3DFormat() const
 
 void Texture2D::redefineImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type)
 {
-    GLsizei textureWidth = mImageArray[0].getWidth();
-    GLsizei textureHeight = mImageArray[0].getHeight();
-    GLenum textureFormat = mImageArray[0].getFormat();
-    GLenum textureType = mImageArray[0].getType();
-
     releaseTexImage();
 
-    mImageArray[level].redefine(format, width, height, type);
+    bool redefined = mImageArray[level].redefine(format, width, height, type);
 
-    if (!mTexture)
-    {
-        return;
-    }
-
-    bool widthOkay = (textureWidth >> level == width) || (textureWidth >> level == 0 && width == 1);
-    bool heightOkay = (textureHeight >> level == height) || (textureHeight >> level == 0 && height == 1);
-    bool textureOkay = (widthOkay && heightOkay && textureFormat == format && textureType == type);
-
-    if (!textureOkay)
+    if (mTexture && redefined)
     {
         for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
         {
@@ -2493,22 +2483,9 @@ unsigned int TextureCubeMap::faceIndex(GLenum face)
 
 void TextureCubeMap::redefineImage(int face, GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type)
 {
-    GLsizei textureWidth = mImageArray[0][0].getWidth();
-    GLsizei textureHeight = mImageArray[0][0].getHeight();
-    GLenum textureFormat = mImageArray[0][0].getFormat();
-    GLenum textureType = mImageArray[0][0].getType();
+    bool redefined = mImageArray[face][level].redefine(format, width, height, type);
 
-    mImageArray[face][level].redefine(format, width, height, type);
-
-    if (!mTexture)
-    {
-        return;
-    }
-
-    bool sizeOkay = (textureWidth >> level == width);
-    bool textureOkay = (sizeOkay && textureFormat == format && textureType == type);
-
-    if (!textureOkay)
+    if (mTexture && redefined)
     {
         for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
         {
