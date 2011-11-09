@@ -1583,7 +1583,6 @@ void Texture2D::redefineImage(GLint level, GLenum format, GLsizei width, GLsizei
         mTexture->Release();
         mTexture = NULL;
         mDirtyImages = true;
-        mIsRenderable = false;
 
         if (mSurface)
         {
@@ -2016,14 +2015,8 @@ void Texture2D::generateMipmaps()
                                 mImageArray[0].getType());
     }
 
-    if (mIsRenderable)
+    if (mTexture && mIsRenderable)
     {
-        if (mTexture == NULL)
-        {
-            ERR(" failed because mTexture was null.");
-            return;
-        }
-
         for (unsigned int i = 1; i <= q; i++)
         {
             IDirect3DSurface9 *upper = NULL;
@@ -2081,7 +2074,7 @@ IDirect3DSurface9 *Texture2D::getRenderTarget(GLenum target)
 {
     ASSERT(target == GL_TEXTURE_2D);
 
-    if (!mIsRenderable)
+    if (!mTexture || !mIsRenderable)
     {
         convertToRenderTarget();
     }
@@ -2503,7 +2496,6 @@ void TextureCubeMap::redefineImage(int face, GLint level, GLenum format, GLsizei
         mTexture->Release();
         mTexture = NULL;
         mDirtyImages = true;
-        mIsRenderable = false;
     }
 }
 
@@ -2667,13 +2659,8 @@ void TextureCubeMap::generateMipmaps()
         }
     }
 
-    if (mIsRenderable)
+    if (mTexture && mIsRenderable)
     {
-        if (mTexture == NULL)
-        {
-            return;
-        }
-
         for (unsigned int f = 0; f < 6; f++)
         {
             for (unsigned int i = 1; i <= q; i++)
@@ -2736,7 +2723,7 @@ IDirect3DSurface9 *TextureCubeMap::getRenderTarget(GLenum target)
 {
     ASSERT(IsCubemapTextureTarget(target));
 
-    if (!mIsRenderable)
+    if (!mTexture || !mIsRenderable)
     {
         convertToRenderTarget();
     }
