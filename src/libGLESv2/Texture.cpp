@@ -1745,8 +1745,6 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
         return error(GL_OUT_OF_MEMORY);
     }
 
-    redefineImage(level, mImageArray[level].format, mImageArray[level].width, mImageArray[level].height, GL_UNSIGNED_BYTE, false);
-   
     if (!mImageArray[level].isRenderable() || (!mTexture && !isComplete()))
     {
         copyToImage(&mImageArray[level], xoffset, yoffset, x, y, width, height, renderTarget);
@@ -2597,8 +2595,7 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
     }
 
     unsigned int faceindex = faceIndex(target);
-    redefineImage(faceindex, level, mImageArray[faceindex][level].format, mImageArray[faceindex][level].width, mImageArray[faceindex][level].height, GL_UNSIGNED_BYTE);
-   
+
     if (!mImageArray[faceindex][level].isRenderable() || (!mTexture && !isComplete()))
     {
         copyToImage(&mImageArray[faceindex][level], 0, 0, x, y, width, height, renderTarget);
