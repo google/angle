@@ -66,7 +66,7 @@ class Image
     bool isDirty() const {return mSurface && mDirty;}
     IDirect3DSurface9 *getSurface();
 
-    void loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type,
+    void loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum type,
                   GLint unpackAlignment, const void *input, std::size_t outputPitch, void *output) const;
 
     void loadAlphaData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
@@ -236,7 +236,7 @@ class Texture2D : public Texture
     void subImage(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels);
     void copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
-    void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
+    virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
 
     virtual bool isComplete() const;
     virtual bool isCompressed() const;

@@ -212,16 +212,16 @@ IDirect3DSurface9 *Image::getSurface()
 
 // Store the pixel rectangle designated by xoffset,yoffset,width,height with pixels stored as format/type at input
 // into the target pixel rectangle at output with outputPitch bytes in between each line.
-void Image::loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type,
+void Image::loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum type,
                      GLint unpackAlignment, const void *input, size_t outputPitch, void *output) const
 {
-    GLsizei inputPitch = -ComputePitch(width, format, type, unpackAlignment);
+    GLsizei inputPitch = -ComputePitch(width, mFormat, type, unpackAlignment);
     input = ((char*)input) - inputPitch * (height - 1);
 
     switch (type)
     {
       case GL_UNSIGNED_BYTE:
-        switch (format)
+        switch (mFormat)
         {
           case GL_ALPHA:
             loadAlphaData(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
@@ -252,7 +252,7 @@ void Image::loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height
         }
         break;
       case GL_UNSIGNED_SHORT_5_6_5:
-        switch (format)
+        switch (mFormat)
         {
           case GL_RGB:
             loadRGB565Data(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
@@ -261,7 +261,7 @@ void Image::loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height
         }
         break;
       case GL_UNSIGNED_SHORT_4_4_4_4:
-        switch (format)
+        switch (mFormat)
         {
           case GL_RGBA:
             loadRGBA4444Data(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
@@ -270,7 +270,7 @@ void Image::loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height
         }
         break;
       case GL_UNSIGNED_SHORT_5_5_5_1:
-        switch (format)
+        switch (mFormat)
         {
           case GL_RGBA:
             loadRGBA5551Data(xoffset, yoffset, width, height, inputPitch, input, outputPitch, output);
@@ -279,7 +279,7 @@ void Image::loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height
         }
         break;
       case GL_FLOAT:
-        switch (format)
+        switch (mFormat)
         {
           // float textures are converted to RGBA, not BGRA, as they're stored that way in D3D
           case GL_ALPHA:
@@ -301,7 +301,7 @@ void Image::loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height
         }
         break;
       case GL_HALF_FLOAT_OES:
-        switch (format)
+        switch (mFormat)
         {
           // float textures are converted to RGBA, not BGRA, as they're stored that way in D3D
           case GL_ALPHA:
@@ -1161,7 +1161,7 @@ void Texture::setImage(GLint unpackAlignment, const void *pixels, Image *image)
 
         if (SUCCEEDED(result))
         {
-            image->loadData(0, 0, image->getWidth(), image->getHeight(), image->getFormat(), image->getType(), unpackAlignment, pixels, locked.Pitch, locked.pBits);
+            image->loadData(0, 0, image->getWidth(), image->getHeight(), image->getType(), unpackAlignment, pixels, locked.Pitch, locked.pBits);
             image->unlock();
         }
 
@@ -1217,7 +1217,7 @@ bool Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
 
         if (SUCCEEDED(result))
         {
-            image->loadData(xoffset, transformPixelYOffset(yoffset, height, image->getHeight()), width, height, format, type, unpackAlignment, pixels, locked.Pitch, locked.pBits);
+            image->loadData(xoffset, transformPixelYOffset(yoffset, height, image->getHeight()), width, height, type, unpackAlignment, pixels, locked.Pitch, locked.pBits);
             image->unlock();
         }
 
