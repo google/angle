@@ -44,19 +44,22 @@ Image::~Image()
 
 void Image::redefine(GLenum format, GLsizei width, GLsizei height, GLenum type)
 {
+    if (mWidth != width ||
+        mHeight != height ||
+        mFormat != format ||
+        mType != type)
+    {
+        if (mSurface)
+        {
+            mSurface->Release();
+            mSurface = NULL;
+        }
+    }
+
     mWidth = width;
     mHeight = height;
     mFormat = format;
     mType = type;
-
-    if (mSurface)
-    {
-        mSurface->Release();
-        mSurface = NULL;
-        mDirty = true;
-    }
-
-    createSurface();
 }
 
 void Image::createSurface()
