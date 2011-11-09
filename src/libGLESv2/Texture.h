@@ -93,6 +93,7 @@ class Texture : public RefCountObject
         Image();
         ~Image();
 
+        void redefine(GLenum format, GLsizei width, GLsizei height, GLenum type);
         void createSurface();
 
         bool isRenderable() const;
@@ -239,7 +240,7 @@ class Texture2D : public Texture
     virtual void convertToRenderTarget();
     virtual IDirect3DSurface9 *getRenderTarget(GLenum target);
 
-    void redefineTexture(GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type, bool force);
+    void redefineImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type, bool force);
     void commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
 
     Image mImageArray[IMPLEMENTATION_MAX_TEXTURE_LEVELS];
@@ -305,7 +306,7 @@ class TextureCubeMap : public Texture
 
     void setImage(int faceIndex, GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void commitRect(int faceIndex, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
-    void redefineTexture(int faceIndex, GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type);
+    void redefineImage(int faceIndex, GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type);
 
     Image mImageArray[6][IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
