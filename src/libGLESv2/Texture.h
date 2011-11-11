@@ -142,12 +142,18 @@ class TextureStorage
 
     virtual ~TextureStorage();
 
-    bool isRenderable();
+    bool isRenderable() const;
+    unsigned int getSerial() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage);
 
-    bool mIsRenderable;
+    const bool mIsRenderable;
+
+    const unsigned int mSerial;
+    static unsigned int issueSerial();
+
+    static unsigned int mCurrentSerial;
 };
 
 class Texture : public RefCountObject
@@ -220,13 +226,10 @@ class Texture : public RefCountObject
 
     bool mDirtyImages;
 
-    unsigned int mSerial;
-    static unsigned int issueSerial();
-
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture);
 
-    static unsigned int mCurrentSerial;
+    virtual TextureStorage *getStorage() const = 0;
 };
 
 class TextureStorage2D : public TextureStorage
@@ -285,6 +288,7 @@ class Texture2D : public Texture
     virtual void updateTexture();
     virtual void convertToRenderTarget();
     virtual IDirect3DSurface9 *getRenderTarget(GLenum target);
+    virtual TextureStorage *getStorage() const;
 
     void redefineImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type);
     void commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
@@ -357,6 +361,7 @@ class TextureCubeMap : public Texture
     virtual void updateTexture();
     virtual void convertToRenderTarget();
     virtual IDirect3DSurface9 *getRenderTarget(GLenum target);
+    virtual TextureStorage *getStorage() const;
 
     static unsigned int faceIndex(GLenum face);
 
