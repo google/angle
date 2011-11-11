@@ -715,7 +715,10 @@ EGLBoolean __stdcall eglBindTexImage(EGLDisplay dpy, EGLSurface surface, EGLint 
             return error(EGL_BAD_MATCH, EGL_FALSE);
         }
 
-        glBindTexImage(eglSurface);
+        if (!glBindTexImage(eglSurface))
+        {
+            return error(EGL_BAD_MATCH, EGL_FALSE);
+        }
 
         return success(EGL_TRUE);
     }

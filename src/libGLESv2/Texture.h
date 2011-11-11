@@ -49,7 +49,7 @@ class Image
     Image();
     ~Image();
 
-    bool redefine(GLenum format, GLsizei width, GLsizei height, GLenum type);
+    bool redefine(GLenum format, GLsizei width, GLsizei height, GLenum type, bool forceRelease);
     void markDirty() {mDirty = true;}
     void markClean() {mDirty = false;}
 
@@ -279,6 +279,7 @@ class Texture2D : public Texture
     void subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels);
     void copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
     virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
+    void storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height);
 
     virtual bool isComplete() const;
     virtual bool isCompressed() const;
@@ -357,6 +358,7 @@ class TextureCubeMap : public Texture
     void subImageCompressed(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels);
     void copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
     virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
+    void storage(GLsizei levels, GLenum internalformat, GLsizei size);
 
     virtual bool isComplete() const;
     virtual bool isCompressed() const;

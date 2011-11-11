@@ -42,12 +42,13 @@ Image::~Image()
     }
 }
 
-bool Image::redefine(GLenum format, GLsizei width, GLsizei height, GLenum type)
+bool Image::redefine(GLenum format, GLsizei width, GLsizei height, GLenum type, bool forceRelease)
 {
     if (mWidth != width ||
         mHeight != height ||
         mFormat != format ||
-        mType != type)
+        mType != type ||
+        forceRelease)
     {
         mWidth = width;
         mHeight = height;
@@ -1637,7 +1638,7 @@ void Texture2D::redefineImage(GLint level, GLenum format, GLsizei width, GLsizei
 {
     releaseTexImage();
 
-    bool redefined = mImageArray[level].redefine(format, width, height, type);
+    bool redefined = mImageArray[level].redefine(format, width, height, type, false);
 
     if (mTexture && redefined)
     {
@@ -1678,7 +1679,7 @@ void Texture2D::bindTexImage(egl::Surface *surface)
         return;
     }
 
-    mImageArray[0].redefine(format, surface->getWidth(), surface->getHeight(), GL_UNSIGNED_BYTE);
+    mImageArray[0].redefine(format, surface->getWidth(), surface->getHeight(), GL_UNSIGNED_BYTE, true);
 
     delete mTexture;
     mTexture = new TextureStorage2D(surface->getOffscreenTexture());
@@ -1703,7 +1704,7 @@ void Texture2D::releaseTexImage()
 
         for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
         {
-            mImageArray[i].redefine(GL_RGBA, 0, 0, GL_UNSIGNED_BYTE);
+            mImageArray[i].redefine(GL_RGBA, 0, 0, GL_UNSIGNED_BYTE, true);
         }
     }
 }
@@ -1855,6 +1856,28 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
     }
 
     renderTarget->Release();
+}
+
+void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height)
+{
+    GLenum format = gl::ExtractFormat(internalformat);
+    GLenum type = gl::ExtractType(internalformat);
+
+    delete mTexture;
+    mTexture = new TextureStorage2D(levels, mImageArray[0].getD3DFormat(), width, height, false);
+    mImmutable = true;
+
+    for (int level = 0; level < levels; level++)
+    {
+        mImageArray[level].redefine(format, width, height, type, true);
+        width = std::max(1, width >> 1);
+        height = std::max(1, height >> 1);
+    }
+
+    for (int level = levels; level < IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
+    {
+        mImageArray[level].redefine(GL_NONE, 0, 0, GL_UNSIGNED_BYTE, true);
+    }
 }
 
 // Tests for GL texture object completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
@@ -2507,7 +2530,7 @@ unsigned int TextureCubeMap::faceIndex(GLenum face)
 
 void TextureCubeMap::redefineImage(int face, GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type)
 {
-    bool redefined = mImageArray[face][level].redefine(format, width, height, type);
+    bool redefined = mImageArray[face][level].redefine(format, width, height, type, false);
 
     if (mTexture && redefined)
     {
@@ -2632,6 +2655,33 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
     }
 
     renderTarget->Release();
+}
+
+void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size)
+{
+    GLenum format = gl::ExtractFormat(internalformat);
+    GLenum type = gl::ExtractType(internalformat);
+
+    delete mTexture;
+    mTexture = new TextureStorageCubeMap(levels, mImageArray[0][0].getD3DFormat(), size, false);
+    mImmutable = true;
+
+    for (int level = 0; level < IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
+    {
+        for (int face = 0; face < 6; face++)
+        {
+            mImageArray[face][level].redefine(format, size, size, type, true);
+            size = std::max(1, size >> 1);
+        }
+    }
+
+    for (int level = levels; level < IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
+    {
+        for (int face = 0; face < 6; face++)
+        {
+            mImageArray[face][level].redefine(GL_NONE, 0, 0, GL_UNSIGNED_BYTE, true);
+        }
+    }
 }
 
 bool TextureCubeMap::isCubeComplete() const

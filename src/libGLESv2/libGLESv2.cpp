@@ -860,6 +860,11 @@ void __stdcall glCompressedTexImage2D(GLenum target, GLint level, GLenum interna
                     return error(GL_INVALID_OPERATION);
                 }
 
+                if (texture->isImmutable())
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
                 texture->setCompressedImage(level, internalformat, width, height, imageSize, data);
             }
             else
@@ -867,6 +872,11 @@ void __stdcall glCompressedTexImage2D(GLenum target, GLint level, GLenum interna
                 gl::TextureCubeMap *texture = context->getTextureCubeMap();
 
                 if (!texture)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                if (texture->isImmutable())
                 {
                     return error(GL_INVALID_OPERATION);
                 }
@@ -1175,6 +1185,11 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
                     return error(GL_INVALID_OPERATION);
                 }
 
+                if (texture->isImmutable())
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
                 texture->copyImage(level, internalformat, x, y, width, height, framebuffer);
             }
             else if (gl::IsCubemapTextureTarget(target))
@@ -1182,6 +1197,11 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
                 gl::TextureCubeMap *texture = context->getTextureCubeMap();
 
                 if (!texture)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                if (texture->isImmutable())
                 {
                     return error(GL_INVALID_OPERATION);
                 }
@@ -4700,6 +4720,11 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
                     return error(GL_INVALID_OPERATION);
                 }
 
+                if (texture->isImmutable())
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
                 texture->setImage(level, width, height, format, type, context->getUnpackAlignment(), pixels);
             }
             else
@@ -4707,6 +4732,11 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
                 gl::TextureCubeMap *texture = context->getTextureCubeMap();
 
                 if (!texture)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                if (texture->isImmutable())
                 {
                     return error(GL_INVALID_OPERATION);
                 }
@@ -4816,6 +4846,94 @@ void __stdcall glTexParameteri(GLenum target, GLenum pname, GLint param)
 void __stdcall glTexParameteriv(GLenum target, GLenum pname, const GLint* params)
 {
     glTexParameteri(target, pname, *params);
+}
+
+void __stdcall glTexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height)
+{
+    EVENT("(GLenum target = 0x%X, GLsizei levels = %d, GLenum internalformat = 0x%X, GLsizei width = %d, GLsizei height = %d)",
+           target, levels, internalformat, width, height);
+
+    try
+    {
+        if (target != GL_TEXTURE_2D && target != GL_TEXTURE_CUBE_MAP)
+        {
+            return error(GL_INVALID_ENUM);
+        }
+
+        if (width < 1 || height < 1 || levels < 1)
+        {
+            return error(GL_INVALID_VALUE);
+        }
+
+        if (target == GL_TEXTURE_CUBE_MAP && width != height)
+        {
+            return error(GL_INVALID_VALUE);
+        }
+
+        if (levels > gl::log2(std::max(width, height)) + 1)
+        {
+            return error(GL_INVALID_OPERATION);
+        }
+
+        GLenum format = gl::ExtractFormat(internalformat);
+        GLenum type = gl::ExtractType(internalformat);
+
+        if (format == GL_NONE || type == GL_NONE)
+        {
+            return error(GL_INVALID_ENUM);
+        }
+
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (levels != 1 && !context->supportsNonPower2Texture())
+            {
+                if (!gl::isPow2(width) || !gl::isPow2(height))
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+            }
+
+            if (target == GL_TEXTURE_2D)
+            {
+                gl::Texture2D *texture = context->getTexture2D();
+
+                if (!texture || texture->id() == 0)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                if (texture->isImmutable())
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                texture->storage(levels, internalformat, width, height);
+            }
+            else if (target == GL_TEXTURE_CUBE_MAP)
+            {
+                gl::TextureCubeMap *texture = context->getTextureCubeMap();
+
+                if (!texture || texture->id() == 0)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                if (texture->isImmutable())
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+
+                texture->storage(levels, internalformat, width);
+            }
+            else UNREACHABLE();
+        }
+    }
+    catch(std::bad_alloc&)
+    {
+        return error(GL_OUT_OF_MEMORY);
+    }
 }
 
 void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
@@ -5851,7 +5969,7 @@ __eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *
 
 // Non-public functions used by EGL
 
-void __stdcall glBindTexImage(egl::Surface *surface)
+bool __stdcall glBindTexImage(egl::Surface *surface)
 {
     EVENT("(egl::Surface* surface = 0x%0.8p)",
           surface);
@@ -5864,6 +5982,11 @@ void __stdcall glBindTexImage(egl::Surface *surface)
         {
             gl::Texture2D *textureObject = context->getTexture2D();
 
+            if (textureObject->isImmutable())
+            {
+                return false;
+            }
+
             if (textureObject)
             {
                 textureObject->bindTexImage(surface);
@@ -5872,8 +5995,10 @@ void __stdcall glBindTexImage(egl::Surface *surface)
     }
     catch(std::bad_alloc&)
     {
-        return error(GL_OUT_OF_MEMORY);
+        return error(GL_OUT_OF_MEMORY, false);
     }
+
+    return true;
 }
 
 }

@@ -339,6 +339,9 @@ typedef void* GLeglImageOES;
 /* GL_EXT_texture_storage */
 #ifndef GL_EXT_texture_storage
 #define GL_TEXTURE_IMMUTABLE_FORMAT_EXT                         0x912F
+#define GL_ALPHA8_EXT                                           0x803C
+#define GL_LUMINANCE8_EXT                                       0x8040
+#define GL_LUMINANCE8_ALPHA8_EXT                                0x8045
 #endif
 
 /*------------------------------------------------------------------------*
