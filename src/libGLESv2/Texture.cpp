@@ -1884,7 +1884,7 @@ void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GL
     GLenum type = gl::ExtractType(internalformat);
 
     delete mTexture;
-    mTexture = new TextureStorage2D(levels, mImageArray[0].getD3DFormat(), width, height, false);
+    mTexture = new TextureStorage2D(levels, mImageArray[0].getD3DFormat(), width, height, mUsage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
     mImmutable = true;
 
     for (int level = 0; level < levels; level++)
@@ -2006,7 +2006,7 @@ void Texture2D::createTexture()
     D3DFORMAT format = mImageArray[0].getD3DFormat();
 
     delete mTexture;
-    mTexture = new TextureStorage2D(levels, format, width, height, false);
+    mTexture = new TextureStorage2D(levels, format, width, height, mUsage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
     
     mDirtyImages = true;
 }
@@ -2453,7 +2453,7 @@ void TextureCubeMap::createTexture()
     D3DFORMAT format = mImageArray[0][0].getD3DFormat();
 
     delete mTexture;
-    mTexture = new TextureStorageCubeMap(levels, format, size, false);
+    mTexture = new TextureStorageCubeMap(levels, format, size, mUsage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
     
     mDirtyImages = true;
 }
@@ -2683,7 +2683,7 @@ void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size
     GLenum type = gl::ExtractType(internalformat);
 
     delete mTexture;
-    mTexture = new TextureStorageCubeMap(levels, mImageArray[0][0].getD3DFormat(), size, false);
+    mTexture = new TextureStorageCubeMap(levels, mImageArray[0][0].getD3DFormat(), size, mUsage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
     mImmutable = true;
 
     for (int level = 0; level < IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
