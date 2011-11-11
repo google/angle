@@ -170,11 +170,13 @@ class Texture : public RefCountObject
     bool setMagFilter(GLenum filter);
     bool setWrapS(GLenum wrap);
     bool setWrapT(GLenum wrap);
+    bool setUsage(GLenum usage);
 
     GLenum getMinFilter() const;
     GLenum getMagFilter() const;
     GLenum getWrapS() const;
     GLenum getWrapT() const;
+    GLenum getUsage() const;
 
     virtual GLsizei getWidth() const = 0;
     virtual GLsizei getHeight() const = 0;
@@ -227,6 +229,7 @@ class Texture : public RefCountObject
     GLenum mWrapS;
     GLenum mWrapT;
     bool mDirtyParameters;
+    GLenum mUsage;
 
     bool mDirtyImages;
 

@@ -3361,6 +3361,9 @@ void __stdcall glGetTexParameterfv(GLenum target, GLenum pname, GLfloat* params)
               case GL_TEXTURE_IMMUTABLE_FORMAT_EXT:
                 *params = (GLfloat)(texture->isImmutable() ? GL_TRUE : GL_FALSE);
                 break;
+              case GL_TEXTURE_USAGE_ANGLE:
+                *params = (GLfloat)texture->getUsage();
+                break;
               default:
                 return error(GL_INVALID_ENUM);
             }
@@ -3412,6 +3415,9 @@ void __stdcall glGetTexParameteriv(GLenum target, GLenum pname, GLint* params)
                 break;
               case GL_TEXTURE_IMMUTABLE_FORMAT_EXT:
                 *params = texture->isImmutable() ? GL_TRUE : GL_FALSE;
+                break;
+              case GL_TEXTURE_USAGE_ANGLE:
+                *params = texture->getUsage();
                 break;
               default:
                 return error(GL_INVALID_ENUM);
@@ -4828,6 +4834,12 @@ void __stdcall glTexParameteri(GLenum target, GLenum pname, GLint param)
                 break;
               case GL_TEXTURE_MAG_FILTER:
                 if (!texture->setMagFilter((GLenum)param))
+                {
+                    return error(GL_INVALID_ENUM);
+                }
+                break;
+              case GL_TEXTURE_USAGE_ANGLE:
+                if (!texture->setUsage((GLenum)param))
                 {
                     return error(GL_INVALID_ENUM);
                 }

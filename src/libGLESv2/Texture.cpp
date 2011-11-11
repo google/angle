@@ -1230,6 +1230,7 @@ Texture::Texture(GLuint id) : RefCountObject(id)
     mWrapS = GL_REPEAT;
     mWrapT = GL_REPEAT;
     mDirtyParameters = true;
+    mUsage = GL_NONE;
     
     mDirtyImages = true;
 
@@ -1332,6 +1333,20 @@ bool Texture::setWrapT(GLenum wrap)
     }
 }
 
+// Returns true on successful usage state update (valid enum parameter)
+bool Texture::setUsage(GLenum usage)
+{
+    switch (usage)
+    {
+      case GL_NONE:
+      case GL_FRAMEBUFFER_ATTACHMENT_ANGLE:
+        mUsage = usage;
+        return true;
+      default:
+        return false;
+    }
+}
+
 GLenum Texture::getMinFilter() const
 {
     return mMinFilter;
@@ -1350,6 +1365,11 @@ GLenum Texture::getWrapS() const
 GLenum Texture::getWrapT() const
 {
     return mWrapT;
+}
+
+GLenum Texture::getUsage() const
+{
+    return mUsage;
 }
 
 void Texture::setImage(GLint unpackAlignment, const void *pixels, Image *image)
