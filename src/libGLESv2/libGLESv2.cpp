@@ -3338,6 +3338,9 @@ void __stdcall glGetTexParameterfv(GLenum target, GLenum pname, GLfloat* params)
               case GL_TEXTURE_WRAP_T:
                 *params = (GLfloat)texture->getWrapT();
                 break;
+              case GL_TEXTURE_IMMUTABLE_FORMAT_EXT:
+                *params = (GLfloat)(texture->isImmutable() ? GL_TRUE : GL_FALSE);
+                break;
               default:
                 return error(GL_INVALID_ENUM);
             }
@@ -3386,6 +3389,9 @@ void __stdcall glGetTexParameteriv(GLenum target, GLenum pname, GLint* params)
                 break;
               case GL_TEXTURE_WRAP_T:
                 *params = texture->getWrapT();
+                break;
+              case GL_TEXTURE_IMMUTABLE_FORMAT_EXT:
+                *params = texture->isImmutable() ? GL_TRUE : GL_FALSE;
                 break;
               default:
                 return error(GL_INVALID_ENUM);

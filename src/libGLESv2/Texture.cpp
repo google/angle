@@ -1231,6 +1231,8 @@ Texture::Texture(GLuint id) : RefCountObject(id)
     mDirtyParameters = true;
     
     mDirtyImages = true;
+
+    mImmutable = false;
 }
 
 Texture::~Texture()
@@ -1504,6 +1506,11 @@ unsigned int Texture::getRenderTargetSerial(GLenum target) const
 {
     TextureStorage *texture = getStorage();
     return texture ? texture->getRenderTargetSerial(target) : 0;
+}
+
+bool Texture::isImmutable() const
+{
+    return mImmutable;
 }
 
 GLint Texture::creationLevels(GLsizei width, GLsizei height) const

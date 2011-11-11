@@ -336,6 +336,11 @@ typedef void* GLeglImageOES;
 #define GL_NO_RESET_NOTIFICATION_EXT                            0x8261
 #endif
 
+/* GL_EXT_texture_storage */
+#ifndef GL_EXT_texture_storage
+#define GL_TEXTURE_IMMUTABLE_FORMAT_EXT                         0x912F
+#endif
+
 /*------------------------------------------------------------------------*
  * DMP extension tokens
  *------------------------------------------------------------------------*/
@@ -949,6 +954,11 @@ typedef void (GL_APIENTRYP PFNGLMULTIDRAWELEMENTSEXTPROC) (GLenum mode, const GL
 GL_APICALL GLenum GL_APIENTRY glGetGraphicsResetStatusEXT (void);
 #endif
 typedef GLenum (GL_APIENTRYP PFNGLGETGRAPHICSRESETSTATUSEXTPROC) (void);
+#endif
+
+/* GL_EXT_texture_storage */
+#ifndef GL_EXT_texture_storage
+#define GL_EXT_texture_storage 1
 #endif
 
 /*------------------------------------------------------------------------*
