@@ -3428,6 +3428,7 @@ void Context::initExtensionString()
     }
 
     mExtensionString += "GL_EXT_texture_format_BGRA8888 ";
+    mExtensionString += "GL_EXT_texture_storage ";
 
     // ANGLE-specific extensions
     mExtensionString += "GL_ANGLE_framebuffer_blit ";

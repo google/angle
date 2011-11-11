@@ -6009,6 +6009,7 @@ __eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *
         {"glFinishFenceNV", (__eglMustCastToProperFunctionPointerType)glFinishFenceNV},
         {"glSetFenceNV", (__eglMustCastToProperFunctionPointerType)glSetFenceNV},
         {"glGetTranslatedShaderSourceANGLE", (__eglMustCastToProperFunctionPointerType)glGetTranslatedShaderSourceANGLE},
+        {"glTexStorage2DEXT", (__eglMustCastToProperFunctionPointerType)glTexStorage2DEXT},
     };
 
     for (int ext = 0; ext < sizeof(glExtensions) / sizeof(Extension); ext++)
