@@ -390,6 +390,17 @@ GLenum ExtractFormat(GLenum internalformat)
       case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:   return GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
       case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE: return GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE;
       case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE: return GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE;
+      case GL_RGBA32F_EXT:                     return GL_RGBA;
+      case GL_RGB32F_EXT:                      return GL_RGB;
+      case GL_ALPHA32F_EXT:                    return GL_ALPHA;
+      case GL_LUMINANCE32F_EXT:                return GL_LUMINANCE;
+      case GL_LUMINANCE_ALPHA32F_EXT:          return GL_LUMINANCE_ALPHA;
+      case GL_RGBA16F_EXT:                     return GL_RGBA;
+      case GL_RGB16F_EXT:                      return GL_RGB;
+      case GL_ALPHA16F_EXT:                    return GL_ALPHA;
+      case GL_LUMINANCE16F_EXT:                return GL_LUMINANCE;
+      case GL_LUMINANCE_ALPHA16F_EXT:          return GL_LUMINANCE_ALPHA;
+      case GL_BGRA8_EXT:                       return GL_BGRA_EXT;
       default:                                 return GL_NONE;   // Unsupported
     }
 }
@@ -410,6 +421,17 @@ GLenum ExtractType(GLenum internalformat)
       case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:   return GL_UNSIGNED_BYTE;
       case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE: return GL_UNSIGNED_BYTE;
       case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE: return GL_UNSIGNED_BYTE;
+      case GL_RGBA32F_EXT:                     return GL_FLOAT;
+      case GL_RGB32F_EXT:                      return GL_FLOAT;
+      case GL_ALPHA32F_EXT:                    return GL_FLOAT;
+      case GL_LUMINANCE32F_EXT:                return GL_FLOAT;
+      case GL_LUMINANCE_ALPHA32F_EXT:          return GL_FLOAT;
+      case GL_RGBA16F_EXT:                     return GL_HALF_FLOAT_OES;
+      case GL_RGB16F_EXT:                      return GL_HALF_FLOAT_OES;
+      case GL_ALPHA16F_EXT:                    return GL_HALF_FLOAT_OES;
+      case GL_LUMINANCE16F_EXT:                return GL_HALF_FLOAT_OES;
+      case GL_LUMINANCE_ALPHA16F_EXT:          return GL_HALF_FLOAT_OES;
+      case GL_BGRA8_EXT:                       return GL_UNSIGNED_BYTE;
       default:                                 return GL_NONE;   // Unsupported
     }
 }

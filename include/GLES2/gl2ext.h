@@ -342,6 +342,23 @@ typedef void* GLeglImageOES;
 #define GL_ALPHA8_EXT                                           0x803C
 #define GL_LUMINANCE8_EXT                                       0x8040
 #define GL_LUMINANCE8_ALPHA8_EXT                                0x8045
+/* OES_texture_float dependent internal formats */
+#define GL_RGBA32F_EXT                                          0x8814  /* reuse tokens from ARB_texture_float */
+#define GL_RGB32F_EXT                                           0x8815
+#define GL_ALPHA32F_EXT                                         0x8816
+#define GL_LUMINANCE32F_EXT                                     0x8818
+#define GL_LUMINANCE_ALPHA32F_EXT                               0x8819
+/* OES_texture_half_float dependent internal formats */
+#define GL_RGBA16F_EXT                                          0x881A /* reuse tokens from ARB_texture_float */
+#define GL_RGB16F_EXT                                           0x881B
+#define GL_ALPHA16F_EXT                                         0x881C
+#define GL_LUMINANCE16F_EXT                                     0x881E
+#define GL_LUMINANCE_ALPHA16F_EXT                               0x881F
+/* EXT_texture_type_2_10_10_10_REV dependent internal formats */
+#define GL_RGB10_A2_EXT                                         0x8059  /* reuse tokens from EXT_texture */
+#define GL_RGB10_EXT                                            0x8052
+/* EXT_texture_format_BGRA8888 dependent internal formats */
+#define GL_BGRA8_EXT                                            0x93A1
 #endif
 
 /*------------------------------------------------------------------------*

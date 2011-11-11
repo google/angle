@@ -4916,6 +4916,26 @@ void __stdcall glTexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalf
                     return error(GL_INVALID_ENUM);
                 }
                 break;
+              case GL_RGBA32F_EXT:
+              case GL_RGB32F_EXT:
+              case GL_ALPHA32F_EXT:
+              case GL_LUMINANCE32F_EXT:
+              case GL_LUMINANCE_ALPHA32F_EXT:
+                if (!context->supportsFloat32Textures())
+                {
+                    return error(GL_INVALID_ENUM);
+                }
+                break;
+              case GL_RGBA16F_EXT:
+              case GL_RGB16F_EXT:
+              case GL_ALPHA16F_EXT:
+              case GL_LUMINANCE16F_EXT:
+              case GL_LUMINANCE_ALPHA16F_EXT:
+                if (!context->supportsFloat16Textures())
+                {
+                    return error(GL_INVALID_ENUM);
+                }
+                break;
             }
 
             if (target == GL_TEXTURE_2D)
