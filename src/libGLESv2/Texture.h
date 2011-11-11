@@ -303,7 +303,7 @@ class TextureStorageCubeMap : public TextureStorage
 
     virtual ~TextureStorageCubeMap();
 
-    IDirect3DSurface9 *getCubeMapSurface(int face, int level);
+    IDirect3DSurface9 *getCubeMapSurface(GLenum faceTarget, int level);
     IDirect3DBaseTexture9 *getBaseTexture() const;
 
   private:
@@ -356,10 +356,6 @@ class TextureCubeMap : public Texture
     virtual void updateTexture();
     virtual void convertToRenderTarget();
     virtual IDirect3DSurface9 *getRenderTarget(GLenum target);
-
-    // target is one of the GL_TEXTURE_CUBE_MAP_* enumerants.
-    // Returns NULL if the call underlying Direct3D call fails.
-    IDirect3DSurface9 *getCubeMapSurface(GLenum target, unsigned int level);
 
     static unsigned int faceIndex(GLenum face);
 
