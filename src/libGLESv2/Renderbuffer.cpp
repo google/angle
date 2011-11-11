@@ -16,9 +16,9 @@
 
 namespace gl
 {
-unsigned int RenderbufferInterface::mCurrentSerial = 1;
+unsigned int RenderbufferStorage::mCurrentSerial = 1;
 
-RenderbufferInterface::RenderbufferInterface() : mSerial(issueSerial())
+RenderbufferInterface::RenderbufferInterface()
 {
 }
 
@@ -50,16 +50,6 @@ GLuint RenderbufferInterface::getDepthSize() const
 GLuint RenderbufferInterface::getStencilSize() const
 {
     return dx2es::GetStencilSize(getD3DFormat());
-}
-
-unsigned int RenderbufferInterface::getSerial() const
-{
-    return mSerial;
-}
-
-unsigned int RenderbufferInterface::issueSerial()
-{
-    return mCurrentSerial++;
 }
 
 RenderbufferTexture::RenderbufferTexture(Texture *texture, GLenum target) : mTexture(texture), mTarget(target)
@@ -94,15 +84,20 @@ GLenum RenderbufferTexture::getInternalFormat() const
 {
     return mTexture->getInternalFormat();
 }
- 
+
+D3DFORMAT RenderbufferTexture::getD3DFormat() const
+{
+    return mTexture->getD3DFormat();
+}
+
 GLsizei RenderbufferTexture::getSamples() const
 {
     return 0;
 }
 
-D3DFORMAT RenderbufferTexture::getD3DFormat() const
+unsigned int RenderbufferTexture::getSerial() const
 {
-    return mTexture->getD3DFormat();
+    return mTexture->getRenderTargetSerial(mTarget);
 }
 
 Renderbuffer::Renderbuffer(GLuint id, RenderbufferInterface *instance) : RefCountObject(id)
@@ -194,7 +189,7 @@ void Renderbuffer::setStorage(RenderbufferStorage *newStorage)
     mInstance = newStorage;
 }
 
-RenderbufferStorage::RenderbufferStorage()
+RenderbufferStorage::RenderbufferStorage() : mSerial(issueSerial())
 {
     mWidth = 0;
     mHeight = 0;
@@ -232,14 +227,31 @@ GLenum RenderbufferStorage::getInternalFormat() const
     return mInternalFormat;
 }
 
+D3DFORMAT RenderbufferStorage::getD3DFormat() const
+{
+    return mD3DFormat;
+}
+
 GLsizei RenderbufferStorage::getSamples() const
 {
     return mSamples;
 }
 
-D3DFORMAT RenderbufferStorage::getD3DFormat() const
+unsigned int RenderbufferStorage::getSerial() const
 {
-    return mD3DFormat;
+    return mSerial;
+}
+
+unsigned int RenderbufferStorage::issueSerial()
+{
+    return mCurrentSerial++;
+}
+
+unsigned int RenderbufferStorage::issueCubeSerials()
+{
+    unsigned int firstSerial = mCurrentSerial;
+    mCurrentSerial += 6;
+    return firstSerial;
 }
 
 Colorbuffer::Colorbuffer(IDirect3DSurface9 *renderTarget) : mRenderTarget(renderTarget)

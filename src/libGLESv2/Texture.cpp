@@ -27,7 +27,7 @@
 
 namespace gl
 {
-unsigned int TextureStorage::mCurrentSerial = 1;
+unsigned int TextureStorage::mCurrentTextureSerial = 1;
 
 Image::Image()
   : mWidth(0), mHeight(0), mDirty(false), mSurface(NULL), mFormat(GL_NONE), mType(GL_UNSIGNED_BYTE)
@@ -1199,7 +1199,7 @@ void Image::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, 
     mDirty = true;
 }
 
-TextureStorage::TextureStorage(bool renderable) : mIsRenderable(renderable), mSerial(issueSerial())
+TextureStorage::TextureStorage(bool renderable) : mIsRenderable(renderable), mTextureSerial(issueTextureSerial())
 {
 }
 
@@ -1212,14 +1212,14 @@ bool TextureStorage::isRenderable() const
     return mIsRenderable;
 }
 
-unsigned int TextureStorage::getSerial() const
+unsigned int TextureStorage::getTextureSerial() const
 {
-    return mSerial;
+    return mTextureSerial;
 }
 
-unsigned int TextureStorage::issueSerial()
+unsigned int TextureStorage::issueTextureSerial()
 {
-    return mCurrentSerial++;
+    return mCurrentTextureSerial++;
 }
 
 Texture::Texture(GLuint id) : RefCountObject(id)
@@ -1494,10 +1494,16 @@ void Texture::resetDirty()
     mDirtyImages = false;
 }
 
-unsigned int Texture::getSerial() const
+unsigned int Texture::getTextureSerial() const
 {
     TextureStorage *texture = getStorage();
-    return texture ? texture->getSerial() : 0;
+    return texture ? texture->getTextureSerial() : 0;
+}
+
+unsigned int Texture::getRenderTargetSerial(GLenum target) const
+{
+    TextureStorage *texture = getStorage();
+    return texture ? texture->getRenderTargetSerial(target) : 0;
 }
 
 GLint Texture::creationLevels(GLsizei width, GLsizei height) const
@@ -1523,12 +1529,12 @@ int Texture::levelCount() const
     return getBaseTexture() ? getBaseTexture()->GetLevelCount() : 0;
 }
 
-TextureStorage2D::TextureStorage2D(IDirect3DTexture9 *surfaceTexture) : TextureStorage(true)
+TextureStorage2D::TextureStorage2D(IDirect3DTexture9 *surfaceTexture) : TextureStorage(true), mRenderTargetSerial(RenderbufferStorage::issueSerial())
 {
     mTexture = surfaceTexture;
 }
 
-TextureStorage2D::TextureStorage2D(int levels, D3DFORMAT format, int width, int height, bool renderable) : TextureStorage(renderable)
+TextureStorage2D::TextureStorage2D(int levels, D3DFORMAT format, int width, int height, bool renderable) : TextureStorage(renderable), mRenderTargetSerial(RenderbufferStorage::issueSerial())
 {
     IDirect3DDevice9 *device = getDevice();
 
@@ -1563,6 +1569,11 @@ IDirect3DSurface9 *TextureStorage2D::getSurfaceLevel(int level)
 IDirect3DBaseTexture9 *TextureStorage2D::getBaseTexture() const
 {
     return mTexture;
+}
+
+unsigned int TextureStorage2D::getRenderTargetSerial(GLenum target) const
+{
+    return mRenderTargetSerial;
 }
 
 Texture2D::Texture2D(GLuint id) : Texture(id)
@@ -1631,7 +1642,6 @@ void Texture2D::redefineImage(GLint level, GLenum format, GLsizei width, GLsizei
         delete mTexture;
         mTexture = NULL;
         mDirtyImages = true;
-        mColorbufferProxy.set(NULL);
     }
 }
 
@@ -1665,7 +1675,7 @@ void Texture2D::bindTexImage(egl::Surface *surface)
 
     delete mTexture;
     mTexture = new TextureStorage2D(surface->getOffscreenTexture());
-    mColorbufferProxy.set(NULL);
+
     mDirtyImages = true;
     mSurface = surface;
     mSurface->setBoundTexture(this);
@@ -1682,7 +1692,6 @@ void Texture2D::releaseTexImage()
         {
             delete mTexture;
             mTexture = NULL;
-            mColorbufferProxy.set(NULL);
         }
 
         for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
@@ -1949,7 +1958,6 @@ void Texture2D::createTexture()
     delete mTexture;
     mTexture = new TextureStorage2D(levels, format, width, height, false);
     
-    mColorbufferProxy.set(NULL);
     mDirtyImages = true;
 }
 
@@ -2017,7 +2025,7 @@ void Texture2D::convertToRenderTarget()
 
     delete mTexture;
     mTexture = newTexture;
-    mColorbufferProxy.set(NULL);
+
     mDirtyImages = true;
 }
 
@@ -2117,7 +2125,7 @@ TextureStorage *Texture2D::getStorage() const
     return mTexture;
 }
 
-TextureStorageCubeMap::TextureStorageCubeMap(int levels, D3DFORMAT format, int size, bool renderable) : TextureStorage(renderable)
+TextureStorageCubeMap::TextureStorageCubeMap(int levels, D3DFORMAT format, int size, bool renderable) : TextureStorage(renderable), mFirstRenderTargetSerial(RenderbufferStorage::issueCubeSerials())
 {
     IDirect3DDevice9 *device = getDevice();
 
@@ -2154,6 +2162,11 @@ IDirect3DBaseTexture9 *TextureStorageCubeMap::getBaseTexture() const
     return mTexture;
 }
 
+unsigned int TextureStorageCubeMap::getRenderTargetSerial(GLenum target) const
+{
+    return mFirstRenderTargetSerial + TextureCubeMap::faceIndex(target);
+}
+
 TextureCubeMap::TextureCubeMap(GLuint id) : Texture(id)
 {
     mTexture = NULL;
@@ -2167,6 +2180,7 @@ TextureCubeMap::~TextureCubeMap()
     }
 
     delete mTexture;
+    mTexture = NULL;
 }
 
 GLenum TextureCubeMap::getTarget() const
@@ -2391,7 +2405,6 @@ void TextureCubeMap::createTexture()
     delete mTexture;
     mTexture = new TextureStorageCubeMap(levels, format, size, false);
     
-    for(int face = 0; face < 6; face++) mFaceProxies[face].set(NULL);
     mDirtyImages = true;
 }
 
@@ -2464,7 +2477,6 @@ void TextureCubeMap::convertToRenderTarget()
     delete mTexture;
     mTexture = newTexture;
 
-    for(int face = 0; face < 6; face++) mFaceProxies[face].set(NULL);
     mDirtyImages = true;
 }
 
@@ -2503,7 +2515,6 @@ void TextureCubeMap::redefineImage(int face, GLint level, GLenum format, GLsizei
         delete mTexture;
         mTexture = NULL;
 
-        for(int face = 0; face < 6; face++) mFaceProxies[face].set(NULL);
         mDirtyImages = true;
     }
 }

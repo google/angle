@@ -143,17 +143,18 @@ class TextureStorage
     virtual ~TextureStorage();
 
     bool isRenderable() const;
-    unsigned int getSerial() const;
+    unsigned int getTextureSerial() const;
+    virtual unsigned int getRenderTargetSerial(GLenum target) const = 0;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage);
 
     const bool mIsRenderable;
 
-    const unsigned int mSerial;
-    static unsigned int issueSerial();
+    const unsigned int mTextureSerial;
+    static unsigned int issueTextureSerial();
 
-    static unsigned int mCurrentSerial;
+    static unsigned int mCurrentTextureSerial;
 };
 
 class Texture : public RefCountObject
@@ -193,7 +194,8 @@ class Texture : public RefCountObject
     bool hasDirtyParameters() const;
     bool hasDirtyImages() const;
     void resetDirty();
-    unsigned int getSerial() const;
+    unsigned int getTextureSerial() const;
+    unsigned int getRenderTargetSerial(GLenum target) const;
 
     static const GLuint INCOMPLETE_TEXTURE_ID = static_cast<GLuint>(-1);   // Every texture takes an id at creation time. The value is arbitrary because it is never registered with the resource manager.
 
@@ -243,10 +245,13 @@ class TextureStorage2D : public TextureStorage
     IDirect3DSurface9 *getSurfaceLevel(int level);
     IDirect3DBaseTexture9 *getBaseTexture() const;
 
+    virtual unsigned int getRenderTargetSerial(GLenum target) const;
+
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage2D);
 
     IDirect3DTexture9 *mTexture;
+    const unsigned int mRenderTargetSerial;
 };
 
 class Texture2D : public Texture
@@ -311,10 +316,13 @@ class TextureStorageCubeMap : public TextureStorage
     IDirect3DSurface9 *getCubeMapSurface(GLenum faceTarget, int level);
     IDirect3DBaseTexture9 *getBaseTexture() const;
 
+    virtual unsigned int getRenderTargetSerial(GLenum target) const;
+
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorageCubeMap);
 
     IDirect3DCubeTexture9 *mTexture;
+    const unsigned int mFirstRenderTargetSerial;
 };
 
 class TextureCubeMap : public Texture
@@ -353,6 +361,8 @@ class TextureCubeMap : public Texture
 
     virtual Renderbuffer *getRenderbuffer(GLenum target);
 
+    static unsigned int faceIndex(GLenum face);
+
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureCubeMap);
 
@@ -362,8 +372,6 @@ class TextureCubeMap : public Texture
     virtual void convertToRenderTarget();
     virtual IDirect3DSurface9 *getRenderTarget(GLenum target);
     virtual TextureStorage *getStorage() const;
-
-    static unsigned int faceIndex(GLenum face);
 
     bool isCubeComplete() const;
 

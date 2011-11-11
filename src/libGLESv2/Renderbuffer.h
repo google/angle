@@ -48,16 +48,10 @@ class RenderbufferInterface
     GLuint getDepthSize() const;
     GLuint getStencilSize() const;
 
-    unsigned int getSerial() const;
+    virtual unsigned int getSerial() const = 0;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(RenderbufferInterface);
-
-    static unsigned int issueSerial();
-
-    const unsigned int mSerial;
-
-    static unsigned int mCurrentSerial;
 };
 
 class RenderbufferTexture : public RenderbufferInterface
@@ -70,11 +64,13 @@ class RenderbufferTexture : public RenderbufferInterface
     IDirect3DSurface9 *getRenderTarget();
     IDirect3DSurface9 *getDepthStencil();
 
-    GLsizei getWidth() const;
-    GLsizei getHeight() const;
-    GLenum getInternalFormat() const;
-    D3DFORMAT getD3DFormat() const;
-    GLsizei getSamples() const;
+    virtual GLsizei getWidth() const;
+    virtual GLsizei getHeight() const;
+    virtual GLenum getInternalFormat() const;
+    virtual D3DFORMAT getD3DFormat() const;
+    virtual GLsizei getSamples() const;
+
+    virtual unsigned int getSerial() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(RenderbufferTexture);
@@ -102,6 +98,11 @@ class RenderbufferStorage : public RenderbufferInterface
     virtual D3DFORMAT getD3DFormat() const;
     virtual GLsizei getSamples() const;
 
+    virtual unsigned int getSerial() const;
+
+    static unsigned int issueSerial();
+    static unsigned int issueCubeSerials();
+
   protected:
     GLsizei mWidth;
     GLsizei mHeight;
@@ -111,6 +112,10 @@ class RenderbufferStorage : public RenderbufferInterface
 
   private:
     DISALLOW_COPY_AND_ASSIGN(RenderbufferStorage);
+
+    const unsigned int mSerial;
+
+    static unsigned int mCurrentSerial;
 };
 
 // Renderbuffer implements the GL renderbuffer object.
