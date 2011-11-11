@@ -135,6 +135,21 @@ class Image
     IDirect3DSurface9 *mSurface;
 };
 
+class TextureStorage
+{
+  public:
+    explicit TextureStorage(bool renderable);
+
+    virtual ~TextureStorage();
+
+    bool isRenderable();
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(TextureStorage);
+
+    bool mIsRenderable;
+};
+
 class Texture : public RefCountObject
 {
   public:
@@ -205,8 +220,6 @@ class Texture : public RefCountObject
 
     bool mDirtyImages;
 
-    bool mIsRenderable;
-
     unsigned int mSerial;
     static unsigned int issueSerial();
 
@@ -214,6 +227,22 @@ class Texture : public RefCountObject
     DISALLOW_COPY_AND_ASSIGN(Texture);
 
     static unsigned int mCurrentSerial;
+};
+
+class TextureStorage2D : public TextureStorage
+{
+  public:
+    TextureStorage2D(IDirect3DTexture9 *texture, bool renderable);
+
+    virtual ~TextureStorage2D();
+
+    IDirect3DSurface9 *getSurfaceLevel(int level);
+    IDirect3DBaseTexture9 *getBaseTexture() const;
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(TextureStorage2D);
+
+    IDirect3DTexture9 *mTexture;
 };
 
 class Texture2D : public Texture
@@ -261,10 +290,26 @@ class Texture2D : public Texture
 
     Image mImageArray[IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
-    IDirect3DTexture9 *mTexture;
+    TextureStorage2D *mTexture;
     egl::Surface *mSurface;
 
     BindingPointer<Renderbuffer> mColorbufferProxy;
+};
+
+class TextureStorageCubeMap : public TextureStorage
+{
+  public:
+    TextureStorageCubeMap(IDirect3DCubeTexture9 *texture, bool renderable);
+
+    virtual ~TextureStorageCubeMap();
+
+    IDirect3DSurface9 *getCubeMapSurface(int face, int level);
+    IDirect3DBaseTexture9 *getBaseTexture() const;
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(TextureStorageCubeMap);
+
+    IDirect3DCubeTexture9 *mTexture;
 };
 
 class TextureCubeMap : public Texture
@@ -326,7 +371,7 @@ class TextureCubeMap : public Texture
 
     Image mImageArray[6][IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
-    IDirect3DCubeTexture9 *mTexture;
+    TextureStorageCubeMap *mTexture;
 
     BindingPointer<Renderbuffer> mFaceProxies[6];
 };
