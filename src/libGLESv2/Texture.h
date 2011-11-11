@@ -232,7 +232,8 @@ class Texture : public RefCountObject
 class TextureStorage2D : public TextureStorage
 {
   public:
-    TextureStorage2D(IDirect3DTexture9 *texture, bool renderable);
+    explicit TextureStorage2D(IDirect3DTexture9 *surfaceTexture);
+    TextureStorage2D(int levels, D3DFORMAT format, int width, int height, bool renderable);
 
     virtual ~TextureStorage2D();
 
@@ -299,7 +300,7 @@ class Texture2D : public Texture
 class TextureStorageCubeMap : public TextureStorage
 {
   public:
-    TextureStorageCubeMap(IDirect3DCubeTexture9 *texture, bool renderable);
+    TextureStorageCubeMap(int levels, D3DFORMAT format, int size, bool renderable);
 
     virtual ~TextureStorageCubeMap();
 

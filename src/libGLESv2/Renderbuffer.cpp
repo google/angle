@@ -305,6 +305,11 @@ Colorbuffer::~Colorbuffer()
 
 IDirect3DSurface9 *Colorbuffer::getRenderTarget()
 {
+    if (mRenderTarget)
+    {
+        mRenderTarget->AddRef();
+    }
+
     return mRenderTarget;
 }
 

@@ -1519,9 +1519,23 @@ unsigned int Texture::issueSerial()
     return mCurrentSerial++;
 }
 
-TextureStorage2D::TextureStorage2D(IDirect3DTexture9 *texture, bool renderable) : TextureStorage(renderable)
+TextureStorage2D::TextureStorage2D(IDirect3DTexture9 *surfaceTexture) : TextureStorage(true)
 {
-    mTexture = texture;
+    mTexture = surfaceTexture;
+}
+
+TextureStorage2D::TextureStorage2D(int levels, D3DFORMAT format, int width, int height, bool renderable) : TextureStorage(renderable)
+{
+    IDirect3DDevice9 *device = getDevice();
+
+    mTexture = NULL;
+    HRESULT result = device->CreateTexture(width, height, levels, renderable ? D3DUSAGE_RENDERTARGET : 0, format, D3DPOOL_DEFAULT, &mTexture, NULL);
+
+    if (FAILED(result))
+    {
+        ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
+        error(GL_OUT_OF_MEMORY);
+    }
 }
 
 TextureStorage2D::~TextureStorage2D()
@@ -1647,7 +1661,7 @@ void Texture2D::bindTexImage(egl::Surface *surface)
     mImageArray[0].redefine(format, surface->getWidth(), surface->getHeight(), GL_UNSIGNED_BYTE);
 
     delete mTexture;
-    mTexture = new TextureStorage2D(surface->getOffscreenTexture(), true);
+    mTexture = new TextureStorage2D(surface->getOffscreenTexture());
     mSerial = issueSerial();
     mColorbufferProxy.set(NULL);
     mDirtyImages = true;
@@ -1763,10 +1777,15 @@ void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei 
             
             IDirect3DSurface9 *dest = mTexture->getSurfaceLevel(level);
 
-            getBlitter()->copy(source->getRenderTarget(), sourceRect, format, 0, destYOffset, dest);
-            dest->Release();
+            if (dest)
+            {
+                getBlitter()->copy(renderTarget, sourceRect, format, 0, destYOffset, dest);
+                dest->Release();
+            }
         }
     }
+
+    renderTarget->Release();
 }
 
 void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
@@ -1810,10 +1829,15 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
 
             IDirect3DSurface9 *dest = mTexture->getSurfaceLevel(level);
 
-            getBlitter()->copy(source->getRenderTarget(), sourceRect, mImageArray[0].getFormat(), xoffset, destYOffset, dest);
-            dest->Release();
+            if (dest)
+            {
+                getBlitter()->copy(renderTarget, sourceRect, mImageArray[0].getFormat(), xoffset, destYOffset, dest);
+                dest->Release();
+            }
         }
     }
+
+    renderTarget->Release();
 }
 
 // Tests for GL texture object completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
@@ -1916,21 +1940,14 @@ IDirect3DBaseTexture9 *Texture2D::getBaseTexture() const
 // Constructs a Direct3D 9 texture resource from the texture images
 void Texture2D::createTexture()
 {
-    IDirect3DDevice9 *device = getDevice();
+    GLsizei width = mImageArray[0].getWidth();
+    GLsizei height = mImageArray[0].getHeight();
+    GLint levels = creationLevels(width, height);
     D3DFORMAT format = mImageArray[0].getD3DFormat();
-    GLint levels = creationLevels(mImageArray[0].getWidth(), mImageArray[0].getHeight());
-
-    IDirect3DTexture9 *texture = NULL;
-    HRESULT result = device->CreateTexture(mImageArray[0].getWidth(), mImageArray[0].getHeight(), levels, 0, format, D3DPOOL_DEFAULT, &texture, NULL);
-
-    if (FAILED(result))
-    {
-        ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-        return error(GL_OUT_OF_MEMORY);
-    }
 
     delete mTexture;
-    mTexture = new TextureStorage2D(texture, false);
+    mTexture = new TextureStorage2D(levels, format, width, height, false);
+    
     mSerial = issueSerial();
     mColorbufferProxy.set(NULL);
     mDirtyImages = true;
@@ -1957,46 +1974,43 @@ void Texture2D::convertToRenderTarget()
 
     if (mImageArray[0].getWidth() != 0 && mImageArray[0].getHeight() != 0)
     {
-        egl::Display *display = getDisplay();
-        IDirect3DDevice9 *device = getDevice();
+        GLsizei width = mImageArray[0].getWidth();
+        GLsizei height = mImageArray[0].getHeight();
+        GLint levels = creationLevels(width, height);
         D3DFORMAT format = mImageArray[0].getD3DFormat();
-        GLint levels = creationLevels(mImageArray[0].getWidth(), mImageArray[0].getHeight());
 
-        IDirect3DTexture9 *texture2D = NULL;
-        HRESULT result = device->CreateTexture(mImageArray[0].getWidth(), mImageArray[0].getHeight(), levels, D3DUSAGE_RENDERTARGET, format, D3DPOOL_DEFAULT, &texture2D, NULL);
-
-        if (FAILED(result))
-        {
-            ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-            return error(GL_OUT_OF_MEMORY);
-        }
-
-        newTexture = new TextureStorage2D(texture2D, true);
+        newTexture = new TextureStorage2D(levels, format, width, height, true);
 
         if (mTexture != NULL)
         {
+            egl::Display *display = getDisplay();
+            IDirect3DDevice9 *device = display->getDevice();
+
             int levels = levelCount();
             for (int i = 0; i < levels; i++)
             {
                 IDirect3DSurface9 *source = mTexture->getSurfaceLevel(i);
                 IDirect3DSurface9 *dest = newTexture->getSurfaceLevel(i);
 
-                display->endScene();
-                result = device->StretchRect(source, NULL, dest, NULL, D3DTEXF_NONE);
-
-                if (FAILED(result))
+                if (source && dest)
                 {
-                    ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
+                    display->endScene();
+                    HRESULT result = device->StretchRect(source, NULL, dest, NULL, D3DTEXF_NONE);
 
-                    delete newTexture;
-                    source->Release();
-                    dest->Release();
+                    if (FAILED(result))
+                    {
+                        ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
 
-                    return error(GL_OUT_OF_MEMORY);
+                        delete newTexture;
+                        source->Release();
+                        dest->Release();
+
+                        return error(GL_OUT_OF_MEMORY);
+                    }
                 }
 
-                source->Release();
-                dest->Release();
+                if (source) source->Release();
+                if (dest) dest->Release();
             }
         }
     }
@@ -2096,14 +2110,21 @@ IDirect3DSurface9 *Texture2D::getRenderTarget(GLenum target)
 
     updateTexture();
     
-    IDirect3DSurface9 *renderTarget = mTexture->getSurfaceLevel(0);
-
-    return renderTarget;
+    return mTexture->getSurfaceLevel(0);
 }
 
-TextureStorageCubeMap::TextureStorageCubeMap(IDirect3DCubeTexture9 *texture, bool renderable) : TextureStorage(renderable)
+TextureStorageCubeMap::TextureStorageCubeMap(int levels, D3DFORMAT format, int size, bool renderable) : TextureStorage(renderable)
 {
-    mTexture = texture;
+    IDirect3DDevice9 *device = getDevice();
+
+    mTexture = NULL;
+    HRESULT result = device->CreateCubeTexture(size, levels, renderable ? D3DUSAGE_RENDERTARGET : 0, format, D3DPOOL_DEFAULT, &mTexture, NULL);
+
+    if (FAILED(result))
+    {
+        ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
+        error(GL_OUT_OF_MEMORY);
+    }
 }
 
 TextureStorageCubeMap::~TextureStorageCubeMap()
@@ -2359,21 +2380,13 @@ IDirect3DBaseTexture9 *TextureCubeMap::getBaseTexture() const
 // Constructs a Direct3D 9 texture resource from the texture images, or returns an existing one
 void TextureCubeMap::createTexture()
 {
-    IDirect3DDevice9 *device = getDevice();
+    GLsizei size = mImageArray[0][0].getWidth();
+    GLint levels = creationLevels(size, 0);
     D3DFORMAT format = mImageArray[0][0].getD3DFormat();
-    GLint levels = creationLevels(mImageArray[0][0].getWidth(), 0);
-
-    IDirect3DCubeTexture9 *texture = NULL;
-    HRESULT result = device->CreateCubeTexture(mImageArray[0][0].getWidth(), levels, 0, format, D3DPOOL_DEFAULT, &texture, NULL);
-
-    if (FAILED(result))
-    {
-        ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-        return error(GL_OUT_OF_MEMORY);
-    }
 
     delete mTexture;
-    mTexture = new TextureStorageCubeMap(texture, false);
+    mTexture = new TextureStorageCubeMap(levels, format, size, false);
+    
     mSerial = issueSerial();
     for(int face = 0; face < 6; face++) mFaceProxies[face].set(NULL);
     mDirtyImages = true;
@@ -2402,24 +2415,17 @@ void TextureCubeMap::convertToRenderTarget()
 
     if (mImageArray[0][0].getWidth() != 0)
     {
-        egl::Display *display = getDisplay();
-        IDirect3DDevice9 *device = getDevice();
+        GLsizei size = mImageArray[0][0].getWidth();
+        GLint levels = creationLevels(size, 0);
         D3DFORMAT format = mImageArray[0][0].getD3DFormat();
-        GLint levels = creationLevels(mImageArray[0][0].getWidth(), 0);
 
-        IDirect3DCubeTexture9 *cubeTexture = NULL;
-        HRESULT result = device->CreateCubeTexture(mImageArray[0][0].getWidth(), levels, D3DUSAGE_RENDERTARGET, format, D3DPOOL_DEFAULT, &cubeTexture, NULL);
-
-        if (FAILED(result))
-        {
-            ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-            return error(GL_OUT_OF_MEMORY);
-        }
-
-        newTexture = new TextureStorageCubeMap(cubeTexture, true);
+        newTexture = new TextureStorageCubeMap(levels, format, size, true);
 
         if (mTexture != NULL)
         {
+            egl::Display *display = getDisplay();
+            IDirect3DDevice9 *device = display->getDevice();
+
             int levels = levelCount();
             for (int f = 0; f < 6; f++)
             {
@@ -2428,22 +2434,25 @@ void TextureCubeMap::convertToRenderTarget()
                     IDirect3DSurface9 *source = mTexture->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i);
                     IDirect3DSurface9 *dest = newTexture->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i);
 
-                    display->endScene();
-                    result = device->StretchRect(source, NULL, dest, NULL, D3DTEXF_NONE);
-
-                    if (FAILED(result))
+                    if (source && dest)
                     {
-                        ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
+                        display->endScene();
+                        HRESULT result = device->StretchRect(source, NULL, dest, NULL, D3DTEXF_NONE);
 
-                        delete newTexture;
-                        source->Release();
-                        dest->Release();
+                        if (FAILED(result))
+                        {
+                            ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
 
-                        return error(GL_OUT_OF_MEMORY);
+                            delete newTexture;
+                            source->Release();
+                            dest->Release();
+
+                            return error(GL_OUT_OF_MEMORY);
+                        }
                     }
 
-                    source->Release();
-                    dest->Release();
+                    if (source) source->Release();
+                    if (dest) dest->Release();
                 }
             }
         }
@@ -2537,10 +2546,15 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint 
 
             IDirect3DSurface9 *dest = mTexture->getCubeMapSurface(target, level);
 
-            getBlitter()->copy(source->getRenderTarget(), sourceRect, format, 0, destYOffset, dest);
-            dest->Release();
+            if (dest)
+            {
+                getBlitter()->copy(renderTarget, sourceRect, format, 0, destYOffset, dest);
+                dest->Release();
+            }
         }
     }
+
+    renderTarget->Release();
 }
 
 void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
@@ -2588,10 +2602,15 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
 
             IDirect3DSurface9 *dest = mTexture->getCubeMapSurface(target, level);
 
-            getBlitter()->copy(source->getRenderTarget(), sourceRect, mImageArray[0][0].getFormat(), xoffset, destYOffset, dest);
-            dest->Release();
+            if (dest)
+            {
+                getBlitter()->copy(renderTarget, sourceRect, mImageArray[0][0].getFormat(), xoffset, destYOffset, dest);
+                dest->Release();
+            }
         }
     }
+
+    renderTarget->Release();
 }
 
 bool TextureCubeMap::isCubeComplete() const
