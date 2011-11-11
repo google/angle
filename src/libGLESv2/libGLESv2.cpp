@@ -4895,6 +4895,29 @@ void __stdcall glTexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalf
                 }
             }
 
+            switch (internalformat)
+            {
+              case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
+              case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
+                if (!context->supportsDXT1Textures())
+                {
+                    return error(GL_INVALID_ENUM);
+                }
+                break;
+              case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
+                if (!context->supportsDXT3Textures())
+                {
+                    return error(GL_INVALID_ENUM);
+                }
+                break;
+              case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
+                if (!context->supportsDXT5Textures())
+                {
+                    return error(GL_INVALID_ENUM);
+                }
+                break;
+            }
+
             if (target == GL_TEXTURE_2D)
             {
                 gl::Texture2D *texture = context->getTexture2D();
