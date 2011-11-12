@@ -66,6 +66,9 @@ class Image
     bool isDirty() const {return mSurface && mDirty;}
     IDirect3DSurface9 *getSurface();
 
+    void setManagedSurface(IDirect3DSurface9 *surface);
+    void updateSurface(IDirect3DSurface9 *dest, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
+
     void loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum type,
                   GLint unpackAlignment, const void *input, std::size_t outputPitch, void *output) const;
 
@@ -131,6 +134,7 @@ class Image
     GLenum mType;
 
     bool mDirty;
+    bool mManaged;
 
     IDirect3DSurface9 *mSurface;
 };
@@ -143,13 +147,15 @@ class TextureStorage
     virtual ~TextureStorage();
 
     bool isRenderable() const;
+    bool isManaged() const;
     unsigned int getTextureSerial() const;
     virtual unsigned int getRenderTargetSerial(GLenum target) const = 0;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage);
 
-    const bool mIsRenderable;
+    const bool mRenderable;
+    const bool mManaged;
 
     const unsigned int mTextureSerial;
     static unsigned int issueTextureSerial();
@@ -220,9 +226,10 @@ class Texture : public RefCountObject
     virtual void convertToRenderTarget() = 0;
     virtual IDirect3DSurface9 *getRenderTarget(GLenum target) = 0;
 
-    Blit *getBlitter();
-
     int levelCount() const;
+
+    static Blit *getBlitter();
+    static bool copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *source, bool fromManaged);
 
     GLenum mMinFilter;
     GLenum mMagFilter;

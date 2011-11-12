@@ -30,8 +30,16 @@ namespace gl
 unsigned int TextureStorage::mCurrentTextureSerial = 1;
 
 Image::Image()
-  : mWidth(0), mHeight(0), mDirty(false), mSurface(NULL), mFormat(GL_NONE), mType(GL_UNSIGNED_BYTE)
 {
+    mWidth = 0; 
+    mHeight = 0;
+    mFormat = GL_NONE;
+    mType = GL_UNSIGNED_BYTE;
+
+    mSurface = NULL;
+
+    mDirty = false;
+    mManaged = false;
 }
 
 Image::~Image()
@@ -214,6 +222,40 @@ IDirect3DSurface9 *Image::getSurface()
     createSurface();
 
     return mSurface;
+}
+
+void Image::setManagedSurface(IDirect3DSurface9 *surface)
+{
+    if (mSurface)
+    {
+        D3DXLoadSurfaceFromSurface(surface, NULL, NULL, mSurface, NULL, NULL, D3DX_FILTER_BOX, 0);
+        mSurface->Release();
+    }
+
+    mSurface = surface;
+    mManaged = true;
+}
+
+void Image::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
+{
+    IDirect3DSurface9 *sourceSurface = getSurface();
+
+    if (sourceSurface != destSurface)
+    {
+        RECT rect = transformPixelRect(xoffset, yoffset, width, height, mHeight);
+
+        if (mManaged)
+        {
+            HRESULT result = D3DXLoadSurfaceFromSurface(destSurface, NULL, &rect, sourceSurface, NULL, &rect, D3DX_FILTER_BOX, 0);
+            ASSERT(SUCCEEDED(result));
+        }
+        else
+        {
+            POINT point = {rect.left, rect.top};
+            HRESULT result = getDevice()->UpdateSurface(sourceSurface, &rect, destSurface, &point);
+            ASSERT(SUCCEEDED(result));
+        }
+    }
 }
 
 // Store the pixel rectangle designated by xoffset,yoffset,width,height with pixels stored as format/type at input
@@ -1200,7 +1242,8 @@ void Image::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, 
     mDirty = true;
 }
 
-TextureStorage::TextureStorage(bool renderable) : mIsRenderable(renderable), mTextureSerial(issueTextureSerial())
+TextureStorage::TextureStorage(bool renderable)
+    : mRenderable(renderable), mManaged(getDisplay()->getBufferPool(renderable) == D3DPOOL_MANAGED), mTextureSerial(issueTextureSerial())
 {
 }
 
@@ -1210,7 +1253,12 @@ TextureStorage::~TextureStorage()
 
 bool TextureStorage::isRenderable() const
 {
-    return mIsRenderable;
+    return mRenderable;
+}
+
+bool TextureStorage::isManaged() const
+{
+    return mManaged;
 }
 
 unsigned int TextureStorage::getTextureSerial() const
@@ -1239,12 +1287,6 @@ Texture::Texture(GLuint id) : RefCountObject(id)
 
 Texture::~Texture()
 {
-}
-
-Blit *Texture::getBlitter()
-{
-    Context *context = getContext();
-    return context->getBlitter();
 }
 
 // Returns true on successful filter state update (valid enum parameter)
@@ -1557,6 +1599,41 @@ int Texture::levelCount() const
     return getBaseTexture() ? getBaseTexture()->GetLevelCount() : 0;
 }
 
+Blit *Texture::getBlitter()
+{
+    Context *context = getContext();
+    return context->getBlitter();
+}
+
+bool Texture::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *source, bool fromManaged)
+{
+    if (source && dest)
+    {
+        HRESULT result;
+
+        if (fromManaged)
+        {
+            result = D3DXLoadSurfaceFromSurface(dest, NULL, NULL, source, NULL, NULL, D3DX_FILTER_BOX, 0);
+        }
+        else
+        {
+            egl::Display *display = getDisplay();
+            IDirect3DDevice9 *device = display->getDevice();
+
+            display->endScene();
+            result = device->StretchRect(source, NULL, dest, NULL, D3DTEXF_NONE);
+        }
+
+        if (FAILED(result))
+        {
+            ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
+            return false;
+        }
+    }
+
+    return true;
+}
+
 TextureStorage2D::TextureStorage2D(IDirect3DTexture9 *surfaceTexture) : TextureStorage(true), mRenderTargetSerial(RenderbufferStorage::issueSerial())
 {
     mTexture = surfaceTexture;
@@ -1748,15 +1825,9 @@ void Texture2D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei wi
         if (destLevel)
         {
             Image *image = &mImageArray[level];
-
-            RECT sourceRect = transformPixelRect(xoffset, yoffset, width, height, image->getHeight());
-            POINT destPoint = {sourceRect.left, sourceRect.top};
-
-            HRESULT result = getDevice()->UpdateSurface(image->getSurface(), &sourceRect, destLevel, &destPoint);
-            ASSERT(SUCCEEDED(result));
+            image->updateSurface(destLevel, xoffset, yoffset, width, height);
 
             destLevel->Release();
-
             image->markClean();
         }
     }
@@ -2005,10 +2076,22 @@ void Texture2D::createTexture()
     GLsizei height = mImageArray[0].getHeight();
     GLint levels = creationLevels(width, height);
     D3DFORMAT format = mImageArray[0].getD3DFormat();
+    bool renderable = (mUsage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
 
     delete mTexture;
-    mTexture = new TextureStorage2D(levels, format, width, height, mUsage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
+    mTexture = new TextureStorage2D(levels, format, width, height, renderable);
     
+    if (mTexture->isManaged())
+    {
+        int levels = levelCount();
+
+        for (int level = 0; level < levels; level++)
+        {
+            IDirect3DSurface9 *surface = mTexture->getSurfaceLevel(level);
+            mImageArray[level].setManagedSurface(surface);
+        }
+    }
+
     mDirtyImages = true;
 }
 
@@ -2042,30 +2125,18 @@ void Texture2D::convertToRenderTarget()
 
         if (mTexture != NULL)
         {
-            egl::Display *display = getDisplay();
-            IDirect3DDevice9 *device = display->getDevice();
-
             int levels = levelCount();
             for (int i = 0; i < levels; i++)
             {
                 IDirect3DSurface9 *source = mTexture->getSurfaceLevel(i);
                 IDirect3DSurface9 *dest = newTexture->getSurfaceLevel(i);
 
-                if (source && dest)
-                {
-                    display->endScene();
-                    HRESULT result = device->StretchRect(source, NULL, dest, NULL, D3DTEXF_NONE);
-
-                    if (FAILED(result))
-                    {
-                        ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-
-                        delete newTexture;
-                        source->Release();
-                        dest->Release();
-
-                        return error(GL_OUT_OF_MEMORY);
-                    }
+                if (!copyToRenderTarget(dest, source, mTexture->isManaged()))
+                {   
+                   delete newTexture;
+                   source->Release();
+                   dest->Release();
+                   return error(GL_OUT_OF_MEMORY);
                 }
 
                 if (source) source->Release();
@@ -2314,15 +2385,9 @@ void TextureCubeMap::commitRect(int face, GLint level, GLint xoffset, GLint yoff
         if (destLevel != NULL)
         {
             Image *image = &mImageArray[face][level];
-
-            RECT sourceRect = transformPixelRect(xoffset, yoffset, width, height, image->getHeight());
-            POINT destPoint = {sourceRect.left, sourceRect.top};
-
-            HRESULT result = getDevice()->UpdateSurface(image->getSurface(), &sourceRect, destLevel, &destPoint);
-            ASSERT(SUCCEEDED(result));
+            image->updateSurface(destLevel, xoffset, yoffset, width, height);
 
             destLevel->Release();
-
             image->markClean();
         }
     }
@@ -2453,9 +2518,24 @@ void TextureCubeMap::createTexture()
     GLsizei size = mImageArray[0][0].getWidth();
     GLint levels = creationLevels(size, 0);
     D3DFORMAT format = mImageArray[0][0].getD3DFormat();
+    bool renderable = (mUsage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
 
     delete mTexture;
-    mTexture = new TextureStorageCubeMap(levels, format, size, mUsage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
+    mTexture = new TextureStorageCubeMap(levels, format, size, renderable);
+
+    if (mTexture->isManaged())
+    {
+        int levels = levelCount();
+
+        for (int face = 0; face < 6; face++)
+        {
+            for (int level = 0; level < levels; level++)
+            {
+                IDirect3DSurface9 *surface = mTexture->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level);
+                mImageArray[face][level].setManagedSurface(surface);
+            }
+        }
+    }
     
     mDirtyImages = true;
 }
@@ -2502,21 +2582,12 @@ void TextureCubeMap::convertToRenderTarget()
                     IDirect3DSurface9 *source = mTexture->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i);
                     IDirect3DSurface9 *dest = newTexture->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i);
 
-                    if (source && dest)
+                    if (!copyToRenderTarget(dest, source, mTexture->isManaged()))
                     {
-                        display->endScene();
-                        HRESULT result = device->StretchRect(source, NULL, dest, NULL, D3DTEXF_NONE);
-
-                        if (FAILED(result))
-                        {
-                            ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-
-                            delete newTexture;
-                            source->Release();
-                            dest->Release();
-
-                            return error(GL_OUT_OF_MEMORY);
-                        }
+                       delete newTexture;
+                       source->Release();
+                       dest->Release();
+                       return error(GL_OUT_OF_MEMORY);
                     }
 
                     if (source) source->Release();
