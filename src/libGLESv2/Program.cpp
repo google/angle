@@ -36,7 +36,7 @@ std::string str(int i)
 Uniform::Uniform(GLenum type, const std::string &_name, unsigned int arraySize)
     : type(type), _name(_name), name(Program::undecorateUniform(_name)), arraySize(arraySize)
 {
-    int bytes = UniformTypeSize(type) * arraySize;
+    int bytes = UniformInternalSize(type) * arraySize;
     data = new unsigned char[bytes];
     memset(data, 0, bytes);
     dirty = true;

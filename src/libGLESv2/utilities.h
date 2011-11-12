@@ -24,7 +24,7 @@ struct Color;
 int UniformExternalComponentCount(GLenum type);
 int UniformInternalComponentCount(GLenum type);
 GLenum UniformComponentType(GLenum type);
-size_t UniformTypeSize(GLenum type);
+size_t UniformInternalSize(GLenum type);
 int VariableRowCount(GLenum type);
 int VariableColumnCount(GLenum type);
 

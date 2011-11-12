@@ -135,7 +135,7 @@ size_t UniformComponentSize(GLenum type)
     return 0;
 }
 
-size_t UniformTypeSize(GLenum type)
+size_t UniformInternalSize(GLenum type)
 {
     return UniformComponentSize(UniformComponentType(type)) * UniformInternalComponentCount(type);
 }
