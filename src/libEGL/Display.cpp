@@ -976,6 +976,23 @@ D3DPOOL Display::getBufferPool(DWORD usage) const
     return D3DPOOL_DEFAULT;
 }
 
+D3DPOOL Display::getTexturePool(bool renderable) const
+{
+    if (mD3d9Ex != NULL)
+    {
+        return D3DPOOL_DEFAULT;
+    }
+    else
+    {
+        if (!renderable)
+        {
+            return D3DPOOL_MANAGED;
+        }
+    }
+
+    return D3DPOOL_DEFAULT;
+}
+
 bool Display::getEventQuerySupport()
 {
     IDirect3DQuery9 *query;

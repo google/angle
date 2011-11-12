@@ -75,6 +75,7 @@ class Display
     virtual bool getVertexTextureSupport() const;
     virtual bool getNonPower2TextureSupport() const;
     virtual D3DPOOL getBufferPool(DWORD usage) const;
+    virtual D3DPOOL getTexturePool(bool renderable) const;
 
     virtual void notifyDeviceLost();
     bool isDeviceLost();

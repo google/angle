@@ -1564,10 +1564,11 @@ TextureStorage2D::TextureStorage2D(IDirect3DTexture9 *surfaceTexture) : TextureS
 
 TextureStorage2D::TextureStorage2D(int levels, D3DFORMAT format, int width, int height, bool renderable) : TextureStorage(renderable), mRenderTargetSerial(RenderbufferStorage::issueSerial())
 {
-    IDirect3DDevice9 *device = getDevice();
+    egl::Display *display = getDisplay();
+    IDirect3DDevice9 *device = display->getDevice();
 
     mTexture = NULL;
-    HRESULT result = device->CreateTexture(width, height, levels, renderable ? D3DUSAGE_RENDERTARGET : 0, format, D3DPOOL_DEFAULT, &mTexture, NULL);
+    HRESULT result = device->CreateTexture(width, height, levels, renderable ? D3DUSAGE_RENDERTARGET : 0, format, display->getTexturePool(renderable), &mTexture, NULL);
 
     if (FAILED(result))
     {
@@ -2177,10 +2178,11 @@ TextureStorage *Texture2D::getStorage() const
 
 TextureStorageCubeMap::TextureStorageCubeMap(int levels, D3DFORMAT format, int size, bool renderable) : TextureStorage(renderable), mFirstRenderTargetSerial(RenderbufferStorage::issueCubeSerials())
 {
-    IDirect3DDevice9 *device = getDevice();
+    egl::Display *display = getDisplay();
+    IDirect3DDevice9 *device = display->getDevice();
 
     mTexture = NULL;
-    HRESULT result = device->CreateCubeTexture(size, levels, renderable ? D3DUSAGE_RENDERTARGET : 0, format, D3DPOOL_DEFAULT, &mTexture, NULL);
+    HRESULT result = device->CreateCubeTexture(size, levels, renderable ? D3DUSAGE_RENDERTARGET : 0, format, display->getTexturePool(renderable), &mTexture, NULL);
 
     if (FAILED(result))
     {
