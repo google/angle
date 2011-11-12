@@ -911,7 +911,7 @@ bool Program::setUniform4iv(GLint location, GLsizei count, const GLint *v)
     return true;
 }
 
-bool Program::getUniformfv(GLint location, GLfloat *params)
+bool Program::getUniformfv(GLint location, GLsizei *bufSize, GLfloat *params)
 {
     if (location < 0 || location >= (int)mUniformIndex.size())
     {
@@ -919,6 +919,16 @@ bool Program::getUniformfv(GLint location, GLfloat *params)
     }
 
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
+
+    // sized queries -- ensure the provided buffer is large enough
+    if (bufSize)
+    {
+        int requiredBytes = UniformExternalSize(targetUniform->type);
+        if (*bufSize < requiredBytes)
+        {
+            return false;
+        }
+    }
 
     switch (targetUniform->type)
     {
@@ -970,7 +980,7 @@ bool Program::getUniformfv(GLint location, GLfloat *params)
     return true;
 }
 
-bool Program::getUniformiv(GLint location, GLint *params)
+bool Program::getUniformiv(GLint location, GLsizei *bufSize, GLint *params)
 {
     if (location < 0 || location >= (int)mUniformIndex.size())
     {
@@ -978,6 +988,16 @@ bool Program::getUniformiv(GLint location, GLint *params)
     }
 
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
+
+    // sized queries -- ensure the provided buffer is large enough
+    if (bufSize)
+    {
+        int requiredBytes = UniformExternalSize(targetUniform->type);
+        if (*bufSize < requiredBytes)
+        {
+            return false;
+        }
+    }
 
     switch (targetUniform->type)
     {

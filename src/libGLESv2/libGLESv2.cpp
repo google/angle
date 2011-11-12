@@ -3470,6 +3470,46 @@ void __stdcall glGetTexParameteriv(GLenum target, GLenum pname, GLint* params)
     }
 }
 
+void __stdcall glGetnUniformfvEXT(GLuint program, GLint location, GLsizei bufSize, GLfloat* params)
+{
+    EVENT("(GLuint program = %d, GLint location = %d, GLsizei bufSize = %d, GLfloat* params = 0x%0.8p)",
+          program, location, bufSize, params);
+
+    try
+    {
+        if (bufSize < 0)
+        {
+            return error(GL_INVALID_VALUE);
+        }
+
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (program == 0)
+            {
+                return error(GL_INVALID_VALUE);
+            }
+
+            gl::Program *programObject = context->getProgram(program);
+
+            if (!programObject || !programObject->isLinked())
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            if (!programObject->getUniformfv(location, &bufSize, params))
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+        }
+    }
+    catch(std::bad_alloc&)
+    {
+        return error(GL_OUT_OF_MEMORY);
+    }
+}
+
 void __stdcall glGetUniformfv(GLuint program, GLint location, GLfloat* params)
 {
     EVENT("(GLuint program = %d, GLint location = %d, GLfloat* params = 0x%0.8p)", program, location, params);
@@ -3492,7 +3532,52 @@ void __stdcall glGetUniformfv(GLuint program, GLint location, GLfloat* params)
                 return error(GL_INVALID_OPERATION);
             }
 
-            if (!programObject->getUniformfv(location, params))
+            if (!programObject->getUniformfv(location, NULL, params))
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+        }
+    }
+    catch(std::bad_alloc&)
+    {
+        return error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glGetnUniformivEXT(GLuint program, GLint location, GLsizei bufSize, GLint* params)
+{
+    EVENT("(GLuint program = %d, GLint location = %d, GLsizei bufSize = %d, GLint* params = 0x%0.8p)", 
+          program, location, bufSize, params);
+
+    try
+    {
+        if (bufSize < 0)
+        {
+            return error(GL_INVALID_VALUE);
+        }
+
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (program == 0)
+            {
+                return error(GL_INVALID_VALUE);
+            }
+
+            gl::Program *programObject = context->getProgram(program);
+
+            if (!programObject || !programObject->isLinked())
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            if (!programObject)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            if (!programObject->getUniformiv(location, &bufSize, params))
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -3531,7 +3616,7 @@ void __stdcall glGetUniformiv(GLuint program, GLint location, GLint* params)
                 return error(GL_INVALID_OPERATION);
             }
 
-            if (!programObject->getUniformiv(location, params))
+            if (!programObject->getUniformiv(location, NULL, params))
             {
                 return error(GL_INVALID_OPERATION);
             }
