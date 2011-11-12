@@ -140,6 +140,11 @@ size_t UniformInternalSize(GLenum type)
     return UniformComponentSize(UniformComponentType(type)) * UniformInternalComponentCount(type);
 }
 
+size_t UniformExternalSize(GLenum type)
+{
+    return UniformComponentSize(UniformComponentType(type)) * UniformExternalComponentCount(type);
+}
+
 int VariableRowCount(GLenum type)
 {
     switch (type)
