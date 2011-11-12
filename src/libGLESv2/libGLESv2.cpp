@@ -6131,7 +6131,6 @@ __eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *
         {"glRenderbufferStorageMultisampleANGLE", (__eglMustCastToProperFunctionPointerType)glRenderbufferStorageMultisampleANGLE},
         {"glDeleteFencesNV", (__eglMustCastToProperFunctionPointerType)glDeleteFencesNV},
         {"glGenFencesNV", (__eglMustCastToProperFunctionPointerType)glGenFencesNV},
-        {"glGetGraphicsResetStatusEXT", (__eglMustCastToProperFunctionPointerType)glGetGraphicsResetStatusEXT},
         {"glIsFenceNV", (__eglMustCastToProperFunctionPointerType)glIsFenceNV},
         {"glTestFenceNV", (__eglMustCastToProperFunctionPointerType)glTestFenceNV},
         {"glGetFenceivNV", (__eglMustCastToProperFunctionPointerType)glGetFenceivNV},
@@ -6139,6 +6138,10 @@ __eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *
         {"glSetFenceNV", (__eglMustCastToProperFunctionPointerType)glSetFenceNV},
         {"glGetTranslatedShaderSourceANGLE", (__eglMustCastToProperFunctionPointerType)glGetTranslatedShaderSourceANGLE},
         {"glTexStorage2DEXT", (__eglMustCastToProperFunctionPointerType)glTexStorage2DEXT},
+        {"glGetGraphicsResetStatusEXT", (__eglMustCastToProperFunctionPointerType)glGetGraphicsResetStatusEXT},
+        {"glReadnPixelsEXT", (__eglMustCastToProperFunctionPointerType)glReadnPixelsEXT},
+        {"glGetnUniformfvEXT", (__eglMustCastToProperFunctionPointerType)glGetnUniformfvEXT},
+        {"glGetnUniformivEXT", (__eglMustCastToProperFunctionPointerType)glGetnUniformivEXT},
     };
 
     for (int ext = 0; ext < sizeof(glExtensions) / sizeof(Extension); ext++)
