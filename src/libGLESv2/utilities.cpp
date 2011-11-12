@@ -20,7 +20,8 @@
 namespace gl
 {
 
-int UniformComponentCount(GLenum type)
+// This is how much data the application expects for a uniform
+int UniformExternalComponentCount(GLenum type)
 {
     switch (type)
     {

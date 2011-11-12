@@ -21,7 +21,7 @@ namespace gl
 
 struct Color;
 
-int UniformComponentCount(GLenum type);
+int UniformExternalComponentCount(GLenum type);
 int UniformInternalComponentCount(GLenum type);
 GLenum UniformComponentType(GLenum type);
 size_t UniformTypeSize(GLenum type);

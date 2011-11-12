@@ -933,7 +933,7 @@ bool Program::getUniformfv(GLint location, GLfloat *params)
         break;
       default:
         {
-            unsigned int count = UniformComponentCount(targetUniform->type);
+            unsigned int count = UniformExternalComponentCount(targetUniform->type);
             unsigned int internalCount = UniformInternalComponentCount(targetUniform->type);
 
             switch (UniformComponentType(targetUniform->type))
@@ -998,7 +998,7 @@ bool Program::getUniformiv(GLint location, GLint *params)
         break;
       default:
         {
-            unsigned int count = UniformComponentCount(targetUniform->type);
+            unsigned int count = UniformExternalComponentCount(targetUniform->type);
             unsigned int internalCount = UniformInternalComponentCount(targetUniform->type);
 
             switch (UniformComponentType(targetUniform->type))
