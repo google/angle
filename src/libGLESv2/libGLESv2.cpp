@@ -53,6 +53,46 @@ bool validImageSize(GLint level, GLsizei width, GLsizei height)
     return false;
 }
 
+// check for combinations of format and type that are valid for ReadPixels
+bool validReadFormatType(GLenum format, GLenum type)
+{
+    switch (format)
+    {
+      case GL_RGBA:
+        switch (type)
+        {
+          case GL_UNSIGNED_BYTE:
+            break;
+          default:
+            return false;
+        }
+        break;
+      case GL_BGRA_EXT:
+        switch (type)
+        {
+          case GL_UNSIGNED_BYTE:
+          case GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT:
+          case GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT:
+            break;
+          default:
+            return false;
+        }
+        break;
+      case gl::IMPLEMENTATION_COLOR_READ_FORMAT:
+        switch (type)
+        {
+          case gl::IMPLEMENTATION_COLOR_READ_TYPE:
+            break;
+          default:
+            return false;
+        }
+        break;
+      default:
+        return false;
+    }
+    return true;
+}
+
 extern "C"
 {
 
@@ -4054,7 +4094,41 @@ void __stdcall glPolygonOffset(GLfloat factor, GLfloat units)
     }
 }
 
-void __stdcall glReadPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid* pixels)
+void __stdcall glReadnPixelsEXT(GLint x, GLint y, GLsizei width, GLsizei height,
+                                GLenum format, GLenum type, GLsizei bufSize,
+                                GLvoid *data)
+{
+    EVENT("(GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei height = %d, "
+          "GLenum format = 0x%X, GLenum type = 0x%X, GLsizei bufSize = 0x%d, GLvoid *data = 0x%0.8p)",
+          x, y, width, height, format, type, bufSize, data);
+
+    try
+    {
+        if (width < 0 || height < 0 || bufSize < 0)
+        {
+            return error(GL_INVALID_VALUE);
+        }
+
+        if (!validReadFormatType(format, type))
+        {
+            return error(GL_INVALID_OPERATION);
+        }
+
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            context->readPixels(x, y, width, height, format, type, &bufSize, data);
+        }
+    }
+    catch(std::bad_alloc&)
+    {
+        return error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glReadPixels(GLint x, GLint y, GLsizei width, GLsizei height,
+                            GLenum format, GLenum type, GLvoid* pixels)
 {
     EVENT("(GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei height = %d, "
           "GLenum format = 0x%X, GLenum type = 0x%X, GLvoid* pixels = 0x%0.8p)",
@@ -4067,38 +4141,8 @@ void __stdcall glReadPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLe
             return error(GL_INVALID_VALUE);
         }
 
-        switch (format)
+        if (!validReadFormatType(format, type))
         {
-          case GL_RGBA:
-            switch (type)
-            {
-              case GL_UNSIGNED_BYTE:
-                break;
-              default:
-                return error(GL_INVALID_OPERATION);
-            }
-            break;
-          case GL_BGRA_EXT:
-            switch (type)
-            {
-              case GL_UNSIGNED_BYTE:
-              case GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT:
-              case GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT:
-                break;
-              default:
-                return error(GL_INVALID_OPERATION);
-            }
-            break;
-          case gl::IMPLEMENTATION_COLOR_READ_FORMAT:
-            switch (type)
-            {
-              case gl::IMPLEMENTATION_COLOR_READ_TYPE:
-                break;
-              default:
-                return error(GL_INVALID_OPERATION);
-            }
-            break;
-          default:
             return error(GL_INVALID_OPERATION);
         }
 
@@ -4106,7 +4150,7 @@ void __stdcall glReadPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLe
 
         if (context)
         {
-            context->readPixels(x, y, width, height, format, type, pixels);
+            context->readPixels(x, y, width, height, format, type, NULL, pixels);
         }
     }
     catch(std::bad_alloc&)

@@ -2208,7 +2208,8 @@ void Context::applyTextures(SamplerType type)
     }
 }
 
-void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, void* pixels)
+void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
+                         GLenum format, GLenum type, GLsizei *bufSize, void* pixels)
 {
     Framebuffer *framebuffer = getReadFramebuffer();
 
@@ -2220,6 +2221,17 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum
     if (getReadFramebufferHandle() != 0 && framebuffer->getSamples() != 0)
     {
         return error(GL_INVALID_OPERATION);
+    }
+
+    GLsizei outputPitch = ComputePitch(width, format, type, mState.packAlignment);
+    // sized query sanity check
+    if (bufSize)
+    {
+        int requiredSize = outputPitch * height;
+        if (requiredSize > *bufSize)
+        {
+            return error(GL_INVALID_OPERATION);
+        }
     }
 
     IDirect3DSurface9 *renderTarget = framebuffer->getRenderTarget();
@@ -2286,7 +2298,6 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum
     unsigned char *dest = (unsigned char*)pixels;
     unsigned short *dest16 = (unsigned short*)pixels;
     int inputPitch = -lock.Pitch;
-    GLsizei outputPitch = ComputePitch(width, format, type, mState.packAlignment);
 
     for (int j = 0; j < rect.bottom - rect.top; j++)
     {
