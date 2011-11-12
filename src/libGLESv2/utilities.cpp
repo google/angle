@@ -126,7 +126,7 @@ size_t UniformComponentSize(GLenum type)
 {
     switch(type)
     {
-      case GL_BOOL:  return sizeof(GLboolean);
+      case GL_BOOL:  return sizeof(GLint);
       case GL_FLOAT: return sizeof(GLfloat);
       case GL_INT:   return sizeof(GLint);
       default:       UNREACHABLE();
