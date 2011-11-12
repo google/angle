@@ -560,7 +560,7 @@ void transposeMatrix(T *target, const GLfloat *value)
     {
         for (int y = 0; y < copyHeight; y++)
         {
-            target[x * targetWidth + y] = value[y * srcWidth + x];
+            target[x * targetWidth + y] = (T)value[y * srcWidth + x];
         }
     }
     // clear unfilled right side
@@ -568,7 +568,7 @@ void transposeMatrix(T *target, const GLfloat *value)
     {
         for (int x = srcWidth; x < targetWidth; x++)
         {
-            target[y * targetWidth + x] = 0;
+            target[y * targetWidth + x] = (T)0;
         }
     }
     // clear unfilled bottom.
@@ -576,7 +576,7 @@ void transposeMatrix(T *target, const GLfloat *value)
     {
         for (int x = 0; x < targetWidth; x++)
         {
-            target[y * targetWidth + x] = 0;
+            target[y * targetWidth + x] = (T)0;
         }
     }
 }
