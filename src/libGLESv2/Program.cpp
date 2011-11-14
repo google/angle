@@ -1854,10 +1854,15 @@ bool Program::defineUniform(const D3DXHANDLE &constantHandle, const D3DXCONSTANT
 {
     if (constantDescription.RegisterSet == D3DXRS_SAMPLER)
     {
-        for (unsigned int samplerIndex = constantDescription.RegisterIndex; samplerIndex < constantDescription.RegisterIndex + constantDescription.RegisterCount; samplerIndex++)
+        for (unsigned int i = 0; i < constantDescription.RegisterCount; i++)
         {
-            if (mConstantTablePS->GetConstantByName(NULL, constantDescription.Name) != NULL)
+            D3DXHANDLE psConstant = mConstantTablePS->GetConstantByName(NULL, constantDescription.Name);
+            D3DXHANDLE vsConstant = mConstantTableVS->GetConstantByName(NULL, constantDescription.Name);
+
+            if (psConstant)
             {
+                unsigned int samplerIndex = mConstantTablePS->GetSamplerIndex(psConstant) + i;
+
                 if (samplerIndex < MAX_TEXTURE_IMAGE_UNITS)
                 {
                     mSamplersPS[samplerIndex].active = true;
@@ -1872,8 +1877,10 @@ bool Program::defineUniform(const D3DXHANDLE &constantHandle, const D3DXCONSTANT
                 }
             }
             
-            if (mConstantTableVS->GetConstantByName(NULL, constantDescription.Name) != NULL)
+            if (vsConstant)
             {
+                unsigned int samplerIndex = mConstantTableVS->GetSamplerIndex(vsConstant) + i;
+
                 if (samplerIndex < getContext()->getMaximumVertexTextureImageUnits())
                 {
                     mSamplersVS[samplerIndex].active = true;
