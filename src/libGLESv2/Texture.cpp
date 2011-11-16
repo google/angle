@@ -2042,6 +2042,11 @@ bool Texture2D::isSamplerComplete() const
 // Tests for 2D texture (mipmap) completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
 bool Texture2D::isMipmapComplete() const
 {
+    if (isImmutable())
+    {
+        return true;
+    }
+
     GLsizei width = mImageArray[0].getWidth();
     GLsizei height = mImageArray[0].getHeight();
 
@@ -2509,6 +2514,11 @@ bool TextureCubeMap::isCubeComplete() const
 
 bool TextureCubeMap::isMipmapCubeComplete() const
 {
+    if (isImmutable())
+    {
+        return true;
+    }
+
     if (!isCubeComplete())
     {
         return false;
