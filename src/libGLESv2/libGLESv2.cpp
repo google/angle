@@ -5011,7 +5011,7 @@ void __stdcall glTexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalf
             return error(GL_INVALID_VALUE);
         }
 
-        if (levels > gl::log2(std::max(width, height)) + 1)
+        if (levels != 1 && levels != gl::log2(std::max(width, height)) + 1)
         {
             return error(GL_INVALID_OPERATION);
         }
