@@ -1528,7 +1528,7 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GL
 
 IDirect3DBaseTexture9 *Texture::getTexture()
 {
-    if (!isComplete())
+    if (!isSamplerComplete())
     {
         return NULL;
     }
@@ -1913,7 +1913,7 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
         return error(GL_OUT_OF_MEMORY);
     }
 
-    if (!mImageArray[level].isRenderable() || (!mTexture && !isComplete()))
+    if (!mImageArray[level].isRenderable() || (!mTexture && !isSamplerComplete()))
     {
         mImageArray[level].copy(xoffset, yoffset, x, y, width, height, renderTarget);
         mDirtyImages = true;
@@ -1972,8 +1972,8 @@ void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GL
     }
 }
 
-// Tests for GL texture object completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
-bool Texture2D::isComplete() const
+// Tests for 2D texture sampling completeness. [OpenGL ES 2.0.24] section 3.8.2 page 85.
+bool Texture2D::isSamplerComplete() const
 {
     GLsizei width = mImageArray[0].getWidth();
     GLsizei height = mImageArray[0].getHeight();
@@ -1997,7 +1997,7 @@ bool Texture2D::isComplete() const
       case GL_LINEAR_MIPMAP_LINEAR:
         mipmapping = true;
         break;
-     default: UNREACHABLE();
+      default: UNREACHABLE();
     }
 
     if ((getInternalFormat() == GL_FLOAT && !getContext()->supportsFloat32LinearFilter()) ||
@@ -2009,9 +2009,9 @@ bool Texture2D::isComplete() const
         }
     }
 
-    bool npot = getContext()->supportsNonPower2Texture();
+    bool npotSupport = getContext()->supportsNonPower2Texture();
 
-    if (!npot)
+    if (!npotSupport)
     {
         if ((getWrapS() != GL_CLAMP_TO_EDGE && !isPow2(width)) ||
             (getWrapT() != GL_CLAMP_TO_EDGE && !isPow2(height)))
@@ -2022,7 +2022,7 @@ bool Texture2D::isComplete() const
 
     if (mipmapping)
     {
-        if (!npot)
+        if (!npotSupport)
         {
             if (!isPow2(width) || !isPow2(height))
             {
@@ -2030,29 +2030,48 @@ bool Texture2D::isComplete() const
             }
         }
 
-        int q = log2(std::max(width, height));
-
-        for (int level = 1; level <= q; level++)
+        if (!isMipmapComplete())
         {
-            if (mImageArray[level].getFormat() != mImageArray[0].getFormat())
-            {
-                return false;
-            }
+            return false;
+        }
+    }
 
-            if (mImageArray[level].getType() != mImageArray[0].getType())
-            {
-                return false;
-            }
+    return true;
+}
 
-            if (mImageArray[level].getWidth() != std::max(1, width >> level))
-            {
-                return false;
-            }
+// Tests for 2D texture (mipmap) completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
+bool Texture2D::isMipmapComplete() const
+{
+    GLsizei width = mImageArray[0].getWidth();
+    GLsizei height = mImageArray[0].getHeight();
 
-            if (mImageArray[level].getHeight() != std::max(1, height >> level))
-            {
-                return false;
-            }
+    if (width <= 0 || height <= 0)
+    {
+        return false;
+    }
+
+    int q = log2(std::max(width, height));
+
+    for (int level = 1; level <= q; level++)
+    {
+        if (mImageArray[level].getFormat() != mImageArray[0].getFormat())
+        {
+            return false;
+        }
+
+        if (mImageArray[level].getType() != mImageArray[0].getType())
+        {
+            return false;
+        }
+
+        if (mImageArray[level].getWidth() != std::max(1, width >> level))
+        {
+            return false;
+        }
+
+        if (mImageArray[level].getHeight() != std::max(1, height >> level))
+        {
+            return false;
         }
     }
 
@@ -2409,15 +2428,10 @@ void TextureCubeMap::subImageCompressed(GLenum target, GLint level, GLint xoffse
     }
 }
 
-// Tests for GL texture object completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
-bool TextureCubeMap::isComplete() const
+// Tests for cube map sampling completeness. [OpenGL ES 2.0.24] section 3.8.2 page 86.
+bool TextureCubeMap::isSamplerComplete() const
 {
     int size = mImageArray[0][0].getWidth();
-
-    if (size <= 0)
-    {
-        return false;
-    }
 
     bool mipmapping;
 
@@ -2436,14 +2450,6 @@ bool TextureCubeMap::isComplete() const
       default: UNREACHABLE();
     }
 
-    for (int face = 0; face < 6; face++)
-    {
-        if (mImageArray[face][0].getWidth() != size || mImageArray[face][0].getHeight() != size)
-        {
-            return false;
-        }
-    }
-
     if ((getInternalFormat() == GL_FLOAT && !getContext()->supportsFloat32LinearFilter()) ||
         (getInternalFormat() == GL_HALF_FLOAT_OES && !getContext()->supportsFloat16LinearFilter()))
     {
@@ -2453,48 +2459,82 @@ bool TextureCubeMap::isComplete() const
         }
     }
 
-    bool npot = getContext()->supportsNonPower2Texture();
-
-    if (!npot)
+    if (!isPow2(size) && !getContext()->supportsNonPower2Texture())
     {
-        if ((getWrapS() != GL_CLAMP_TO_EDGE || getWrapT() != GL_CLAMP_TO_EDGE) && !isPow2(size))
+        if (getWrapS() != GL_CLAMP_TO_EDGE || getWrapT() != GL_CLAMP_TO_EDGE || mipmapping)
         {
             return false;
         }
     }
 
-    if (mipmapping)
+    if (!mipmapping)
     {
-        if (!npot)
+        if (!isCubeComplete())
         {
-            if (!isPow2(size))
+            return false;
+        }
+    }
+    else
+    {
+        if (!isMipmapCubeComplete())   // Also tests for isCubeComplete()
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+// Tests for cube texture completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
+bool TextureCubeMap::isCubeComplete() const
+{
+    if (mImageArray[0][0].getWidth() <= 0 || mImageArray[0][0].getHeight() != mImageArray[0][0].getWidth())
+    {
+        return false;
+    }
+
+    for (unsigned int face = 1; face < 6; face++)
+    {
+        if (mImageArray[face][0].getWidth() != mImageArray[0][0].getWidth() ||
+            mImageArray[face][0].getWidth() != mImageArray[0][0].getHeight() ||
+            mImageArray[face][0].getFormat() != mImageArray[0][0].getFormat() ||
+            mImageArray[face][0].getType() != mImageArray[0][0].getType())
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool TextureCubeMap::isMipmapCubeComplete() const
+{
+    if (!isCubeComplete())
+    {
+        return false;
+    }
+
+    GLsizei size = mImageArray[0][0].getWidth();
+
+    int q = log2(size);
+
+    for (int face = 0; face < 6; face++)
+    {
+        for (int level = 1; level <= q; level++)
+        {
+            if (mImageArray[face][level].getFormat() != mImageArray[0][0].getFormat())
             {
                 return false;
             }
-        }
 
-        int q = log2(size);
-
-        for (int face = 0; face < 6; face++)
-        {
-            for (int level = 1; level <= q; level++)
+            if (mImageArray[face][level].getType() != mImageArray[0][0].getType())
             {
-                if (mImageArray[face][level].getFormat() != mImageArray[0][0].getFormat())
-                {
-                    return false;
-                }
+                return false;
+            }
 
-                if (mImageArray[face][level].getType() != mImageArray[0][0].getType())
-                {
-                    return false;
-                }
-
-                if (mImageArray[face][level].getWidth() != std::max(1, size >> level))
-                {
-                    return false;
-                }
-
-                ASSERT(mImageArray[face][level].getHeight() == mImageArray[face][level].getWidth());
+            if (mImageArray[face][level].getWidth() != std::max(1, size >> level))
+            {
+                return false;
             }
         }
     }
@@ -2713,7 +2753,7 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
 
     unsigned int faceindex = faceIndex(target);
 
-    if (!mImageArray[faceindex][level].isRenderable() || (!mTexture && !isComplete()))
+    if (!mImageArray[faceindex][level].isRenderable() || (!mTexture && !isSamplerComplete()))
     {
         mImageArray[faceindex][level].copy(0, 0, x, y, width, height, renderTarget);
         mDirtyImages = true;
@@ -2775,25 +2815,6 @@ void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size
             mImageArray[face][level].redefine(GL_NONE, 0, 0, GL_UNSIGNED_BYTE, true);
         }
     }
-}
-
-bool TextureCubeMap::isCubeComplete() const
-{
-    if (mImageArray[0][0].getWidth() == 0)
-    {
-        return false;
-    }
-
-    for (unsigned int f = 1; f < 6; f++)
-    {
-        if (mImageArray[f][0].getWidth() != mImageArray[0][0].getWidth()
-            || mImageArray[f][0].getFormat() != mImageArray[0][0].getFormat())
-        {
-            return false;
-        }
-    }
-
-    return true;
 }
 
 void TextureCubeMap::generateMipmaps()

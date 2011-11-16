@@ -190,7 +190,7 @@ class Texture : public RefCountObject
     virtual GLenum getType() const = 0;
     virtual D3DFORMAT getD3DFormat() const = 0;
 
-    virtual bool isComplete() const = 0;
+    virtual bool isSamplerComplete() const = 0;
     virtual bool isCompressed() const = 0;
 
     IDirect3DBaseTexture9 *getTexture();
@@ -291,7 +291,7 @@ class Texture2D : public Texture
     virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
     void storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height);
 
-    virtual bool isComplete() const;
+    virtual bool isSamplerComplete() const;
     virtual bool isCompressed() const;
     virtual void bindTexImage(egl::Surface *surface);
     virtual void releaseTexImage();
@@ -309,6 +309,8 @@ class Texture2D : public Texture
     virtual void convertToRenderTarget();
     virtual IDirect3DSurface9 *getRenderTarget(GLenum target);
     virtual TextureStorage *getStorage() const;
+
+    bool isMipmapComplete() const;
 
     void redefineImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type);
     void commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
@@ -370,7 +372,7 @@ class TextureCubeMap : public Texture
     virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
     void storage(GLsizei levels, GLenum internalformat, GLsizei size);
 
-    virtual bool isComplete() const;
+    virtual bool isSamplerComplete() const;
     virtual bool isCompressed() const;
 
     virtual void generateMipmaps();
@@ -390,6 +392,7 @@ class TextureCubeMap : public Texture
     virtual TextureStorage *getStorage() const;
 
     bool isCubeComplete() const;
+    bool isMipmapCubeComplete() const;
 
     void setImage(int faceIndex, GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void commitRect(int faceIndex, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
