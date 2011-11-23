@@ -4154,6 +4154,10 @@ void __stdcall glPixelStorei(GLenum pname, GLint param)
                 context->setPackAlignment(param);
                 break;
 
+              case GL_PACK_REVERSE_ROW_ORDER_ANGLE:
+                context->setPackReverseRowOrder(param != 0);
+                break;
+
               default:
                 return error(GL_INVALID_ENUM);
             }

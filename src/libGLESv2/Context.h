@@ -219,6 +219,7 @@ struct State
 
     GLint unpackAlignment;
     GLint packAlignment;
+    bool packReverseRowOrder;
 };
 
 // Helper class to construct and cache vertex declarations
@@ -359,6 +360,9 @@ class Context
 
     void setPackAlignment(GLint alignment);
     GLint getPackAlignment() const;
+
+    void setPackReverseRowOrder(bool reverseRowOrder);
+    bool getPackReverseRowOrder() const;
 
     // These create  and destroy methods are merely pass-throughs to 
     // ResourceManager, which owns these object types
