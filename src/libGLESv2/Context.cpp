@@ -2797,7 +2797,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
 
         if (mode == GL_LINE_LOOP)   // Draw the last segment separately
         {
-            drawClosingLine(first, first + count - 1);
+            drawClosingLine(0, count - 1, 0);
         }
     }
 }
@@ -2862,7 +2862,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void *
 
         if (mode == GL_LINE_LOOP)   // Draw the last segment separately
         {
-            drawClosingLine(count, type, indices);
+            drawClosingLine(count, type, indices, indexInfo.minIndex);
         }
     }
 }
@@ -2914,7 +2914,7 @@ void Context::sync(bool block)
     }
 }
 
-void Context::drawClosingLine(unsigned int first, unsigned int last)
+void Context::drawClosingLine(unsigned int first, unsigned int last, int minIndex)
 {
     IDirect3DIndexBuffer9 *indexBuffer = NULL;
     bool succeeded = false;
@@ -2968,7 +2968,7 @@ void Context::drawClosingLine(unsigned int first, unsigned int last)
         mDevice->SetIndices(mClosingIB->getBuffer());
         mAppliedIBSerial = mClosingIB->getSerial();
 
-        mDevice->DrawIndexedPrimitive(D3DPT_LINELIST, 0, 0, last, offset, 1);
+        mDevice->DrawIndexedPrimitive(D3DPT_LINELIST, -minIndex, minIndex, last, offset, 1);
     }
     else
     {
@@ -2977,7 +2977,7 @@ void Context::drawClosingLine(unsigned int first, unsigned int last)
     }
 }
 
-void Context::drawClosingLine(GLsizei count, GLenum type, const void *indices)
+void Context::drawClosingLine(GLsizei count, GLenum type, const void *indices, int minIndex)
 {
     unsigned int first = 0;
     unsigned int last = 0;
@@ -3006,7 +3006,7 @@ void Context::drawClosingLine(GLsizei count, GLenum type, const void *indices)
       default: UNREACHABLE();
     }
 
-    drawClosingLine(first, last);
+    drawClosingLine(first, last, minIndex);
 }
 
 void Context::recordInvalidEnum()

@@ -431,8 +431,8 @@ class Context
     void sync(bool block);   // flush/finish
 
 	// Draw the last segment of a line loop
-    void drawClosingLine(unsigned int first, unsigned int last);
-    void drawClosingLine(GLsizei count, GLenum type, const void *indices);
+    void drawClosingLine(unsigned int first, unsigned int last, int minIndex);
+    void drawClosingLine(GLsizei count, GLenum type, const void *indices, int minIndex);
 
     void recordInvalidEnum();
     void recordInvalidValue();
