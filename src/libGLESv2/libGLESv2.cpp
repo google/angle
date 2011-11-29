@@ -1036,8 +1036,8 @@ void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
                     return error(GL_INVALID_OPERATION);
                 }
 
-                if ((width % 4 != 0 && width != texture->getWidth()) || 
-                    (height % 4 != 0 && height != texture->getHeight()))
+                if ((width % 4 != 0 && width != texture->getWidth(0)) || 
+                    (height % 4 != 0 && height != texture->getHeight(0)))
                 {
                     return error(GL_INVALID_OPERATION);
                 }
@@ -1058,8 +1058,8 @@ void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
                     return error(GL_INVALID_OPERATION);
                 }
 
-                if ((width % 4 != 0 && width != texture->getWidth()) || 
-                    (height % 4 != 0 && height != texture->getHeight()))
+                if ((width % 4 != 0 && width != texture->getWidth(0)) || 
+                    (height % 4 != 0 && height != texture->getHeight(0)))
                 {
                     return error(GL_INVALID_OPERATION);
                 }
