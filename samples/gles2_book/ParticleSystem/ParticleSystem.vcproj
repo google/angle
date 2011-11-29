@@ -91,7 +91,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="xcopy /D /Y smoke.tga $(outDir)"
+				CommandLine="xcopy /D /Y smoke.tga &quot;$(outDir)&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -168,7 +168,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="xcopy /D /Y smoke.tga $(outDir)"
+				CommandLine="xcopy /D /Y smoke.tga &quot;$(outDir)&quot;"
 			/>
 		</Configuration>
 	</Configurations>

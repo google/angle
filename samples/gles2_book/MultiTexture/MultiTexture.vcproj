@@ -91,7 +91,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="xcopy /D /Y basemap.tga $(OutDir)&#x0D;&#x0A;xcopy /D /Y lightmap.tga $(OutDir)"
+				CommandLine="xcopy /D /Y basemap.tga &quot;$(OutDir)&quot;&#x0D;&#x0A;xcopy /D /Y lightmap.tga &quot;$(OutDir)&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -168,7 +168,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="xcopy /D /Y basemap.tga $(OutDir)&#x0D;&#x0A;xcopy /D /Y lightmap.tga $(OutDir)"
+				CommandLine="xcopy /D /Y basemap.tga &quot;$(OutDir)&quot;&#x0D;&#x0A;xcopy /D /Y lightmap.tga &quot;$(OutDir)&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>
