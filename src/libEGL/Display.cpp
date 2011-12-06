@@ -503,6 +503,7 @@ bool Display::resetDevice()
 EGLSurface Display::createWindowSurface(HWND window, EGLConfig config, const EGLint *attribList)
 {
     const Config *configuration = mConfigSet.get(config);
+    EGLint postSubBufferSupported = EGL_FALSE;
 
     if (attribList)
     {
@@ -520,6 +521,9 @@ EGLSurface Display::createWindowSurface(HWND window, EGLConfig config, const EGL
                   default:
                     return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
                 }
+                break;
+              case EGL_POST_SUB_BUFFER_SUPPORTED_NV:
+                postSubBufferSupported = attribList[1];
                 break;
               case EGL_VG_COLORSPACE:
                 return error(EGL_BAD_MATCH, EGL_NO_SURFACE);
@@ -544,7 +548,7 @@ EGLSurface Display::createWindowSurface(HWND window, EGLConfig config, const EGL
             return EGL_NO_SURFACE;
     }
 
-    Surface *surface = new Surface(this, configuration, window);
+    Surface *surface = new Surface(this, configuration, window, postSubBufferSupported);
 
     if (!surface->initialize())
     {
@@ -1039,7 +1043,8 @@ void Display::initExtensionString()
     mExtensionString += "EGL_EXT_create_context_robustness ";
 
     // ANGLE-specific extensions
-    if (isd3d9ex) {
+    if (isd3d9ex)
+    {
         mExtensionString += "EGL_ANGLE_d3d_share_handle_client_buffer ";
     }
 
@@ -1047,12 +1052,15 @@ void Display::initExtensionString()
 
     if (swiftShader)
     {
-      mExtensionString += "EGL_ANGLE_software_display ";
+        mExtensionString += "EGL_ANGLE_software_display ";
     }
 
-    if (isd3d9ex) {
+    if (isd3d9ex)
+    {
         mExtensionString += "EGL_ANGLE_surface_d3d_texture_2d_share_handle ";
     }
+
+    mExtensionString += "EGL_NV_post_sub_buffer";
 
     std::string::size_type end = mExtensionString.find_last_not_of(' ');
     if (end != std::string::npos)
