@@ -2293,6 +2293,8 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
 
     result = mDevice->GetRenderTargetData(renderTarget, systemSurface);
 
+    renderTarget->Release();
+
     if (FAILED(result))
     {
         systemSurface->Release();
@@ -2608,6 +2610,8 @@ void Context::clear(GLbitfield mask)
 
     D3DSURFACE_DESC desc;
     renderTarget->GetDesc(&desc);
+
+    renderTarget->Release();
 
     bool alphaUnmasked = (dx2es::GetAlphaSize(desc.Format) == 0) || mState.colorMaskAlpha;
 
@@ -3791,8 +3795,14 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
 
         if (blitRenderTarget)
         {
-            HRESULT result = mDevice->StretchRect(readFramebuffer->getRenderTarget(), &sourceTrimmedRect, 
-                                                 drawFramebuffer->getRenderTarget(), &destTrimmedRect, D3DTEXF_NONE);
+            IDirect3DSurface9* readRenderTarget = readFramebuffer->getRenderTarget();
+            IDirect3DSurface9* drawRenderTarget = drawFramebuffer->getRenderTarget();
+
+            HRESULT result = mDevice->StretchRect(readRenderTarget, &sourceTrimmedRect, 
+                                                  drawRenderTarget, &destTrimmedRect, D3DTEXF_NONE);
+
+            readRenderTarget->Release();
+            drawRenderTarget->Release();
 
             if (FAILED(result))
             {
