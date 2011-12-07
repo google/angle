@@ -1656,7 +1656,10 @@ TextureStorage2D::TextureStorage2D(int levels, D3DFORMAT format, int width, int 
 
 TextureStorage2D::~TextureStorage2D()
 {
-    mTexture->Release();
+    if (mTexture)
+    {
+        mTexture->Release();
+    }
 }
 
 IDirect3DSurface9 *TextureStorage2D::getSurfaceLevel(int level)
@@ -2294,7 +2297,10 @@ TextureStorageCubeMap::TextureStorageCubeMap(int levels, D3DFORMAT format, int s
 
 TextureStorageCubeMap::~TextureStorageCubeMap()
 {
-    mTexture->Release();
+    if (mTexture)
+    {
+        mTexture->Release();
+    }
 }
 
 IDirect3DSurface9 *TextureStorageCubeMap::getCubeMapSurface(GLenum faceTarget, int level)
