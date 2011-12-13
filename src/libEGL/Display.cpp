@@ -447,13 +447,21 @@ bool Display::createDevice()
         ASSERT(SUCCEEDED(result));
     }
 
+    initializeDevice();
+
+    return true;
+}
+
+// do any one-time device initialization
+// NOTE: this is also needed after a device lost/reset
+// to reset the scene status and ensure the default states are reset.
+void Display::initializeDevice()
+{
     // Permanent non-default states
     mDevice->SetRenderState(D3DRS_POINTSPRITEENABLE, TRUE);
     mDevice->SetRenderState(D3DRS_LASTPIXEL, FALSE);
 
     mSceneStarted = false;
-
-    return true;
 }
 
 bool Display::resetDevice()
@@ -496,6 +504,9 @@ bool Display::resetDevice()
         ERR("Reset/ResetEx failed multiple times: 0x%08X", result);
         return error(EGL_BAD_ALLOC, false);
     }
+
+    // reset device defaults
+    initializeDevice();
 
     return true;
 }
