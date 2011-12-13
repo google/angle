@@ -3492,7 +3492,10 @@ void Context::initExtensionString()
     }
 
     mExtensionString += "GL_EXT_texture_format_BGRA8888 ";
-    mExtensionString += "GL_EXT_texture_storage ";
+    // Temporarily disabled until 
+    // http://code.google.com/p/angleproject/issues/detail?id=266
+    // is resolved.
+    //    mExtensionString += "GL_EXT_texture_storage ";
 
     // ANGLE-specific extensions
     mExtensionString += "GL_ANGLE_framebuffer_blit ";
