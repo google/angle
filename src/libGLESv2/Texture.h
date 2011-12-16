@@ -157,7 +157,7 @@ class TextureStorage
     DISALLOW_COPY_AND_ASSIGN(TextureStorage);
 
     const bool mRenderable;
-    const bool mManaged;
+    const D3DPOOL mD3DPool;
 
     const unsigned int mTextureSerial;
     static unsigned int issueTextureSerial();

@@ -1264,7 +1264,7 @@ void Image::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, 
 
 TextureStorage::TextureStorage(bool renderable)
     : mRenderable(renderable),
-      mManaged(getDisplay()->getTexturePool(renderable) == D3DPOOL_MANAGED),
+      mD3DPool(getDisplay()->getTexturePool(renderable)),
       mTextureSerial(issueTextureSerial())
 {
 }
@@ -1280,7 +1280,7 @@ bool TextureStorage::isRenderable() const
 
 bool TextureStorage::isManaged() const
 {
-    return mManaged;
+    return (mD3DPool == D3DPOOL_MANAGED);
 }
 
 unsigned int TextureStorage::getTextureSerial() const
