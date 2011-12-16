@@ -136,6 +136,7 @@ class Image
     bool mDirty;
 
     D3DPOOL mD3DPool;   // can only be D3DPOOL_SYSTEMMEM or D3DPOOL_MANAGED since it needs to be lockable.
+    D3DFORMAT mD3DFormat;
 
     IDirect3DSurface9 *mSurface;
 };

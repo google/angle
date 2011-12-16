@@ -85,6 +85,7 @@ Image::Image()
     mDirty = false;
 
     mD3DPool = D3DPOOL_SYSTEMMEM;
+    mD3DFormat = D3DFMT_UNKNOWN;
 }
 
 Image::~Image()
@@ -107,6 +108,8 @@ bool Image::redefine(GLenum format, GLsizei width, GLsizei height, GLenum type, 
         mHeight = height;
         mFormat = format;
         mType = type;
+        // compute the d3d format that will be used
+        mD3DFormat = ConvertTextureFormatType(mFormat, mType);
 
         if (mSurface)
         {
@@ -222,7 +225,11 @@ bool Image::isRenderable() const
 
 D3DFORMAT Image::getD3DFormat() const
 {
-    return ConvertTextureFormatType(mFormat, mType);
+    // this should only happen if the image hasn't been redefined first
+    // which would be a bug by the caller
+    ASSERT(mD3DFormat != D3DFMT_UNKNOWN);
+
+    return mD3DFormat;
 }
 
 IDirect3DSurface9 *Image::getSurface()
