@@ -173,40 +173,40 @@ bool Image::isRenderable() const
     return false;
 }
 
-D3DFORMAT Image::getD3DFormat() const
+static D3DFORMAT ConvertTextureFormatType(GLenum format, GLenum type)
 {
-    if (mFormat == GL_COMPRESSED_RGB_S3TC_DXT1_EXT ||
-        mFormat == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT)
+    if (format == GL_COMPRESSED_RGB_S3TC_DXT1_EXT ||
+        format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT)
     {
         return D3DFMT_DXT1;
     }
-    else if (mFormat == GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE)
+    else if (format == GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE)
     {
         return D3DFMT_DXT3;
     }
-    else if (mFormat == GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE)
+    else if (format == GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE)
     {
         return D3DFMT_DXT5;
     }
-    else if (mType == GL_FLOAT)
+    else if (type == GL_FLOAT)
     {
         return D3DFMT_A32B32G32R32F;
     }
-    else if (mType == GL_HALF_FLOAT_OES)
+    else if (type == GL_HALF_FLOAT_OES)
     {
         return D3DFMT_A16B16G16R16F;
     }
-    else if (mType == GL_UNSIGNED_BYTE)
+    else if (type == GL_UNSIGNED_BYTE)
     {
-        if (mFormat == GL_LUMINANCE && getContext()->supportsLuminanceTextures())
+        if (format == GL_LUMINANCE && getContext()->supportsLuminanceTextures())
         {
             return D3DFMT_L8;
         }
-        else if (mFormat == GL_LUMINANCE_ALPHA && getContext()->supportsLuminanceAlphaTextures())
+        else if (format == GL_LUMINANCE_ALPHA && getContext()->supportsLuminanceAlphaTextures())
         {
             return D3DFMT_A8L8;
         }
-        else if (mFormat == GL_RGB)
+        else if (format == GL_RGB)
         {
             return D3DFMT_X8R8G8B8;
         }
@@ -215,6 +215,11 @@ D3DFORMAT Image::getD3DFormat() const
     }
 
     return D3DFMT_A8R8G8B8;
+}
+
+D3DFORMAT Image::getD3DFormat() const
+{
+    return ConvertTextureFormatType(mFormat, mType);
 }
 
 IDirect3DSurface9 *Image::getSurface()
