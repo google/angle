@@ -2868,6 +2868,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void *
 // Implements glFlush when block is false, glFinish when block is true
 void Context::sync(bool block)
 {
+    egl::Display *display = getDisplay();
     IDirect3DQuery9 *eventQuery = NULL;
     HRESULT result;
 
@@ -2900,6 +2901,13 @@ void Context::sync(bool block)
         {
             // Keep polling, but allow other threads to do something useful first
             Sleep(0);
+            // explicitly check for device loss
+            // some drivers seem to return S_FALSE even if the device is lost
+            // instead of D3DERR_DEVICELOST like they should
+            if (display->testDeviceLost())
+            {
+                result = D3DERR_DEVICELOST;
+            }
         }
     }
     while(block && result == S_FALSE);
