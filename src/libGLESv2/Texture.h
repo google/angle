@@ -150,6 +150,7 @@ class TextureStorage
 
     bool isRenderable() const;
     bool isManaged() const;
+    D3DPOOL getPool() const;
     unsigned int getTextureSerial() const;
     virtual unsigned int getRenderTargetSerial(GLenum target) const = 0;
 
