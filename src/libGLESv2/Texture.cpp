@@ -123,6 +123,7 @@ void Image::createSurface()
 
     mSurface = newSurface;
     mDirty = false;
+    mManaged = false;
 }
 
 HRESULT Image::lock(D3DLOCKED_RECT *lockedRect, const RECT *rect)
@@ -1987,6 +1988,17 @@ void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GL
     {
         mImageArray[level].redefine(GL_NONE, 0, 0, GL_UNSIGNED_BYTE, true);
     }
+
+    if (mTexture->isManaged())
+    {
+        int levels = levelCount();
+
+        for (int level = 0; level < levels; level++)
+        {
+            IDirect3DSurface9 *surface = mTexture->getSurfaceLevel(level);
+            mImageArray[level].setManagedSurface(surface);
+        }
+    }
 }
 
 // Tests for 2D texture sampling completeness. [OpenGL ES 2.0.24] section 3.8.2 page 85.
@@ -2612,7 +2624,7 @@ void TextureCubeMap::createTexture()
             }
         }
     }
-    
+
     mDirtyImages = true;
 }
 
@@ -2836,7 +2848,7 @@ void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size
     mTexture = new TextureStorageCubeMap(levels, d3dfmt, size, mUsage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
     mImmutable = true;
 
-    for (int level = 0; level < IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
+    for (int level = 0; level < levels; level++)
     {
         for (int face = 0; face < 6; face++)
         {
@@ -2850,6 +2862,20 @@ void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size
         for (int face = 0; face < 6; face++)
         {
             mImageArray[face][level].redefine(GL_NONE, 0, 0, GL_UNSIGNED_BYTE, true);
+        }
+    }
+
+    if (mTexture->isManaged())
+    {
+        int levels = levelCount();
+
+        for (int face = 0; face < 6; face++)
+        {
+            for (int level = 0; level < levels; level++)
+            {
+                IDirect3DSurface9 *surface = mTexture->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level);
+                mImageArray[face][level].setManagedSurface(surface);
+            }
         }
     }
 }
