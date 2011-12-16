@@ -1990,9 +1990,10 @@ void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GL
     GLenum format = gl::ExtractFormat(internalformat);
     GLenum type = gl::ExtractType(internalformat);
     D3DFORMAT d3dfmt = ConvertTextureFormatType(format, type);
+    const bool renderable = (mUsage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
 
     delete mTexStorage;
-    mTexStorage = new TextureStorage2D(levels, d3dfmt, width, height, mUsage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
+    mTexStorage = new TextureStorage2D(levels, d3dfmt, width, height, renderable);
     mImmutable = true;
 
     for (int level = 0; level < levels; level++)
@@ -2147,7 +2148,7 @@ void Texture2D::createTexture()
     GLsizei height = mImageArray[0].getHeight();
     GLint levels = creationLevels(width, height);
     D3DFORMAT format = mImageArray[0].getD3DFormat();
-    bool renderable = (mUsage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
+    const bool renderable = (mUsage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
 
     delete mTexStorage;
     mTexStorage = new TextureStorage2D(levels, format, width, height, renderable);
@@ -2623,7 +2624,7 @@ void TextureCubeMap::createTexture()
     GLsizei size = mImageArray[0][0].getWidth();
     GLint levels = creationLevels(size, 0);
     D3DFORMAT format = mImageArray[0][0].getD3DFormat();
-    bool renderable = (mUsage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
+    const bool renderable = (mUsage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
 
     delete mTexStorage;
     mTexStorage = new TextureStorageCubeMap(levels, format, size, renderable);
@@ -2860,9 +2861,10 @@ void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size
     GLenum format = gl::ExtractFormat(internalformat);
     GLenum type = gl::ExtractType(internalformat);
     D3DFORMAT d3dfmt = ConvertTextureFormatType(format, type);
+    const bool renderable = (mUsage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
 
     delete mTexStorage;
-    mTexStorage = new TextureStorageCubeMap(levels, d3dfmt, size, mUsage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
+    mTexStorage = new TextureStorageCubeMap(levels, d3dfmt, size, renderable);
     mImmutable = true;
 
     for (int level = 0; level < levels; level++)
