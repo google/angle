@@ -39,7 +39,8 @@ Image::Image()
     mSurface = NULL;
 
     mDirty = false;
-    mManaged = false;
+
+    mD3DPool = D3DPOOL_SYSTEMMEM;
 }
 
 Image::~Image()
@@ -84,6 +85,7 @@ void Image::createSurface()
 
     IDirect3DTexture9 *newTexture = NULL;
     IDirect3DSurface9 *newSurface = NULL;
+    const D3DPOOL poolToUse = D3DPOOL_SYSTEMMEM;
 
     if (mWidth != 0 && mHeight != 0)
     {
@@ -108,7 +110,7 @@ void Image::createSurface()
         }
 
         HRESULT result = getDevice()->CreateTexture(requestWidth, requestHeight, levelToFetch + 1, NULL, getD3DFormat(),
-                                                    D3DPOOL_SYSTEMMEM, &newTexture, NULL);
+                                                    poolToUse, &newTexture, NULL);
 
         if (FAILED(result))
         {
@@ -123,7 +125,7 @@ void Image::createSurface()
 
     mSurface = newSurface;
     mDirty = false;
-    mManaged = false;
+    mD3DPool = poolToUse;
 }
 
 HRESULT Image::lock(D3DLOCKED_RECT *lockedRect, const RECT *rect)
@@ -238,8 +240,12 @@ void Image::setManagedSurface(IDirect3DSurface9 *surface)
         mSurface->Release();
     }
 
+    D3DSURFACE_DESC desc;
+    surface->GetDesc(&desc);
+    ASSERT(desc.Pool == D3DPOOL_MANAGED);
+
     mSurface = surface;
-    mManaged = true;
+    mD3DPool = desc.Pool;
 }
 
 void Image::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
@@ -250,13 +256,14 @@ void Image::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint y
     {
         RECT rect = transformPixelRect(xoffset, yoffset, width, height, mHeight);
 
-        if (mManaged)
+        if (mD3DPool == D3DPOOL_MANAGED)
         {
             HRESULT result = D3DXLoadSurfaceFromSurface(destSurface, NULL, &rect, sourceSurface, NULL, &rect, D3DX_FILTER_BOX, 0);
             ASSERT(SUCCEEDED(result));
         }
         else
         {
+            // UpdateSurface: source must be SYSTEMMEM, dest must be DEFAULT pools 
             POINT point = {rect.left, rect.top};
             HRESULT result = getDevice()->UpdateSurface(sourceSurface, &rect, destSurface, &point);
             ASSERT(SUCCEEDED(result));

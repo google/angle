@@ -134,7 +134,8 @@ class Image
     GLenum mType;
 
     bool mDirty;
-    bool mManaged;
+
+    D3DPOOL mD3DPool;   // can only be D3DPOOL_SYSTEMMEM or D3DPOOL_MANAGED since it needs to be lockable.
 
     IDirect3DSurface9 *mSurface;
 };
