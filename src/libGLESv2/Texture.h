@@ -319,7 +319,7 @@ class Texture2D : public Texture
 
     Image mImageArray[IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
-    TextureStorage2D *mTexture;
+    TextureStorage2D *mTexStorage;
     egl::Surface *mSurface;
 
     BindingPointer<Renderbuffer> mColorbufferProxy;
@@ -402,7 +402,7 @@ class TextureCubeMap : public Texture
 
     Image mImageArray[6][IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
-    TextureStorageCubeMap *mTexture;
+    TextureStorageCubeMap *mTexStorage;
 
     BindingPointer<Renderbuffer> mFaceProxies[6];
 };
