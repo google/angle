@@ -73,6 +73,28 @@ static D3DFORMAT ConvertTextureFormatType(GLenum format, GLenum type)
     return D3DFMT_A8R8G8B8;
 }
 
+static bool IsTextureFormatRenderable(D3DFORMAT format)
+{
+    switch(format)
+    {
+      case D3DFMT_L8:
+      case D3DFMT_A8L8:
+      case D3DFMT_DXT1:
+      case D3DFMT_DXT3:
+      case D3DFMT_DXT5:
+        return false;
+      case D3DFMT_A8R8G8B8:
+      case D3DFMT_X8R8G8B8:
+      case D3DFMT_A16B16G16R16F:
+      case D3DFMT_A32B32G32R32F:
+        return true;
+      default:
+        UNREACHABLE();
+    }
+
+    return false;
+}
+
 Image::Image()
 {
     mWidth = 0; 
@@ -201,26 +223,9 @@ void Image::unlock()
     }
 }
 
-bool Image::isRenderable() const
+bool Image::isRenderableFormat() const
 {    
-    switch(getD3DFormat())
-    {
-      case D3DFMT_L8:
-      case D3DFMT_A8L8:
-      case D3DFMT_DXT1:
-      case D3DFMT_DXT3:
-      case D3DFMT_DXT5:
-        return false;
-      case D3DFMT_A8R8G8B8:
-      case D3DFMT_X8R8G8B8:
-      case D3DFMT_A16B16G16R16F:
-      case D3DFMT_A32B32G32R32F:
-        return true;
-      default:
-        UNREACHABLE();
-    }
-
-    return false;
+    return IsTextureFormatRenderable(getD3DFormat());
 }
 
 D3DFORMAT Image::getD3DFormat() const
@@ -1120,7 +1125,7 @@ void Image::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, 
     int destYOffset = transformPixelYOffset(yoffset, height, mHeight);
     RECT destRect = {xoffset, destYOffset, xoffset + width, destYOffset + height};
 
-    if (isRenderable())
+    if (isRenderableFormat())
     {
         result = D3DXLoadSurfaceFromSurface(getSurface(), NULL, &destRect, renderTargetData, NULL, &sourceRect, D3DX_FILTER_BOX, 0);
         
@@ -1896,7 +1901,7 @@ void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei 
 
     redefineImage(level, format, width, height, GL_UNSIGNED_BYTE);
    
-    if (!mImageArray[level].isRenderable())
+    if (!mImageArray[level].isRenderableFormat())
     {
         mImageArray[level].copy(0, 0, x, y, width, height, renderTarget);
         mDirtyImages = true;
@@ -1948,7 +1953,7 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
         return error(GL_OUT_OF_MEMORY);
     }
 
-    if (!mImageArray[level].isRenderable() || (!mTexStorage && !isSamplerComplete()))
+    if (!mImageArray[level].isRenderableFormat() || (!mTexStorage && !isSamplerComplete()))
     {
         mImageArray[level].copy(xoffset, yoffset, x, y, width, height, renderTarget);
         mDirtyImages = true;
@@ -2761,7 +2766,7 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint 
     unsigned int faceindex = faceIndex(target);
     redefineImage(faceindex, level, format, width, height, GL_UNSIGNED_BYTE);
 
-    if (!mImageArray[faceindex][level].isRenderable())
+    if (!mImageArray[faceindex][level].isRenderableFormat())
     {
         mImageArray[faceindex][level].copy(0, 0, x, y, width, height, renderTarget);
         mDirtyImages = true;
@@ -2819,7 +2824,7 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
 
     unsigned int faceindex = faceIndex(target);
 
-    if (!mImageArray[faceindex][level].isRenderable() || (!mTexStorage && !isSamplerComplete()))
+    if (!mImageArray[faceindex][level].isRenderableFormat() || (!mTexStorage && !isSamplerComplete()))
     {
         mImageArray[faceindex][level].copy(0, 0, x, y, width, height, renderTarget);
         mDirtyImages = true;

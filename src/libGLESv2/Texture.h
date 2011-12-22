@@ -56,7 +56,7 @@ class Image
     HRESULT lock(D3DLOCKED_RECT *lockedRect, const RECT *rect);
     void unlock();
 
-    bool isRenderable() const;
+    bool isRenderableFormat() const;
     D3DFORMAT getD3DFormat() const;
 
     GLsizei getWidth() const {return mWidth;}
