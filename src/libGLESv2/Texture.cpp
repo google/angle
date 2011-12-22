@@ -1267,9 +1267,9 @@ void Image::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, 
     mDirty = true;
 }
 
-TextureStorage::TextureStorage(bool renderable)
-    : mRenderable(renderable),
-      mD3DPool(getDisplay()->getTexturePool(renderable)),
+TextureStorage::TextureStorage(bool renderTarget)
+    : mRenderTarget(renderTarget),
+      mD3DPool(getDisplay()->getTexturePool(mRenderTarget)),
       mTextureSerial(issueTextureSerial())
 {
 }
@@ -1278,9 +1278,9 @@ TextureStorage::~TextureStorage()
 {
 }
 
-bool TextureStorage::isRenderable() const
+bool TextureStorage::isRenderTarget() const
 {
-    return mRenderable;
+    return mRenderTarget;
 }
 
 bool TextureStorage::isManaged() const
@@ -1671,12 +1671,13 @@ TextureStorage2D::TextureStorage2D(IDirect3DTexture9 *surfaceTexture) : TextureS
     mTexture = surfaceTexture;
 }
 
-TextureStorage2D::TextureStorage2D(int levels, D3DFORMAT format, int width, int height, bool renderable) : TextureStorage(renderable), mRenderTargetSerial(RenderbufferStorage::issueSerial())
+TextureStorage2D::TextureStorage2D(int levels, D3DFORMAT format, int width, int height, bool renderTarget)
+    : TextureStorage(renderTarget), mRenderTargetSerial(RenderbufferStorage::issueSerial())
 {
     IDirect3DDevice9 *device = getDevice();
 
     mTexture = NULL;
-    HRESULT result = device->CreateTexture(width, height, levels, renderable ? D3DUSAGE_RENDERTARGET : 0, format, getPool(), &mTexture, NULL);
+    HRESULT result = device->CreateTexture(width, height, levels, isRenderTarget() ? D3DUSAGE_RENDERTARGET : 0, format, getPool(), &mTexture, NULL);
 
     if (FAILED(result))
     {
@@ -1908,7 +1909,7 @@ void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei 
     }
     else
     {
-        if (!mTexStorage || !mTexStorage->isRenderable())
+        if (!mTexStorage || !mTexStorage->isRenderTarget())
         {
             convertToRenderTarget();
         }
@@ -1960,7 +1961,7 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
     }
     else
     {
-        if (!mTexStorage || !mTexStorage->isRenderable())
+        if (!mTexStorage || !mTexStorage->isRenderTarget())
         {
             convertToRenderTarget();
         }
@@ -2248,7 +2249,7 @@ void Texture2D::generateMipmaps()
                          mImageArray[0].getType());
     }
 
-    if (mTexStorage && mTexStorage->isRenderable())
+    if (mTexStorage && mTexStorage->isRenderTarget())
     {
         for (unsigned int i = 1; i <= q; i++)
         {
@@ -2304,7 +2305,7 @@ IDirect3DSurface9 *Texture2D::getRenderTarget(GLenum target)
 {
     ASSERT(target == GL_TEXTURE_2D);
 
-    if (!mTexStorage || !mTexStorage->isRenderable())
+    if (!mTexStorage || !mTexStorage->isRenderTarget())
     {
         convertToRenderTarget();
     }
@@ -2324,12 +2325,13 @@ TextureStorage *Texture2D::getStorage() const
     return mTexStorage;
 }
 
-TextureStorageCubeMap::TextureStorageCubeMap(int levels, D3DFORMAT format, int size, bool renderable) : TextureStorage(renderable), mFirstRenderTargetSerial(RenderbufferStorage::issueCubeSerials())
+TextureStorageCubeMap::TextureStorageCubeMap(int levels, D3DFORMAT format, int size, bool renderTarget)
+    : TextureStorage(renderTarget), mFirstRenderTargetSerial(RenderbufferStorage::issueCubeSerials())
 {
     IDirect3DDevice9 *device = getDevice();
 
     mTexture = NULL;
-    HRESULT result = device->CreateCubeTexture(size, levels, renderable ? D3DUSAGE_RENDERTARGET : 0, format, getPool(), &mTexture, NULL);
+    HRESULT result = device->CreateCubeTexture(size, levels, isRenderTarget() ? D3DUSAGE_RENDERTARGET : 0, format, getPool(), &mTexture, NULL);
 
     if (FAILED(result))
     {
@@ -2773,7 +2775,7 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint 
     }
     else
     {
-        if (!mTexStorage || !mTexStorage->isRenderable())
+        if (!mTexStorage || !mTexStorage->isRenderTarget())
         {
             convertToRenderTarget();
         }
@@ -2831,7 +2833,7 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
     }
     else
     {
-        if (!mTexStorage || !mTexStorage->isRenderable())
+        if (!mTexStorage || !mTexStorage->isRenderTarget())
         {
             convertToRenderTarget();
         }
@@ -2932,7 +2934,7 @@ void TextureCubeMap::generateMipmaps()
         }
     }
 
-    if (mTexStorage && mTexStorage->isRenderable())
+    if (mTexStorage && mTexStorage->isRenderTarget())
     {
         for (unsigned int f = 0; f < 6; f++)
         {
@@ -2996,7 +2998,7 @@ IDirect3DSurface9 *TextureCubeMap::getRenderTarget(GLenum target)
 {
     ASSERT(IsCubemapTextureTarget(target));
 
-    if (!mTexStorage || !mTexStorage->isRenderable())
+    if (!mTexStorage || !mTexStorage->isRenderTarget())
     {
         convertToRenderTarget();
     }

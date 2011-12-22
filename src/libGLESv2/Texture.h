@@ -144,11 +144,11 @@ class Image
 class TextureStorage
 {
   public:
-    explicit TextureStorage(bool renderable);
+    explicit TextureStorage(bool renderTarget);
 
     virtual ~TextureStorage();
 
-    bool isRenderable() const;
+    bool isRenderTarget() const;
     bool isManaged() const;
     D3DPOOL getPool() const;
     unsigned int getTextureSerial() const;
@@ -157,7 +157,7 @@ class TextureStorage
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage);
 
-    const bool mRenderable;
+    const bool mRenderTarget;
     const D3DPOOL mD3DPool;
 
     const unsigned int mTextureSerial;
@@ -255,7 +255,7 @@ class TextureStorage2D : public TextureStorage
 {
   public:
     explicit TextureStorage2D(IDirect3DTexture9 *surfaceTexture);
-    TextureStorage2D(int levels, D3DFORMAT format, int width, int height, bool renderable);
+    TextureStorage2D(int levels, D3DFORMAT format, int width, int height, bool renderTarget);
 
     virtual ~TextureStorage2D();
 
@@ -329,7 +329,7 @@ class Texture2D : public Texture
 class TextureStorageCubeMap : public TextureStorage
 {
   public:
-    TextureStorageCubeMap(int levels, D3DFORMAT format, int size, bool renderable);
+    TextureStorageCubeMap(int levels, D3DFORMAT format, int size, bool renderTarget);
 
     virtual ~TextureStorageCubeMap();
 
