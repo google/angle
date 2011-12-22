@@ -1565,9 +1565,10 @@ IDirect3DBaseTexture9 *Texture::getTexture()
         return NULL;
     }
 
-    if (!getBaseTexture())
+    // ensure the underlying texture is created
+    if (getStorage(false) == NULL)
     {
-        createTexture();
+        return NULL;
     }
 
     updateTexture();
@@ -1591,15 +1592,15 @@ void Texture::resetDirty()
     mDirtyImages = false;
 }
 
-unsigned int Texture::getTextureSerial() const
+unsigned int Texture::getTextureSerial()
 {
-    TextureStorage *texture = getStorage();
+    TextureStorage *texture = getStorage(false);
     return texture ? texture->getTextureSerial() : 0;
 }
 
-unsigned int Texture::getRenderTargetSerial(GLenum target) const
+unsigned int Texture::getRenderTargetSerial(GLenum target)
 {
-    TextureStorage *texture = getStorage();
+    TextureStorage *texture = getStorage(true);
     return texture ? texture->getRenderTargetSerial(target) : 0;
 }
 
@@ -2305,12 +2306,8 @@ IDirect3DSurface9 *Texture2D::getRenderTarget(GLenum target)
 {
     ASSERT(target == GL_TEXTURE_2D);
 
-    if (!mTexStorage || !mTexStorage->isRenderTarget())
-    {
-        convertToRenderTarget();
-    }
-
-    if (mTexStorage == NULL)
+    // ensure the underlying texture is created
+    if (getStorage(true) == NULL)
     {
         return NULL;
     }
@@ -2320,8 +2317,20 @@ IDirect3DSurface9 *Texture2D::getRenderTarget(GLenum target)
     return mTexStorage->getSurfaceLevel(0);
 }
 
-TextureStorage *Texture2D::getStorage() const
+TextureStorage *Texture2D::getStorage(bool renderTarget)
 {
+    if (!mTexStorage || (renderTarget && !mTexStorage->isRenderTarget()))
+    {
+        if (renderTarget)
+        {
+            convertToRenderTarget();
+        }
+        else
+        {
+            createTexture();
+        }
+    }
+
     return mTexStorage;
 }
 
@@ -2998,12 +3007,8 @@ IDirect3DSurface9 *TextureCubeMap::getRenderTarget(GLenum target)
 {
     ASSERT(IsCubemapTextureTarget(target));
 
-    if (!mTexStorage || !mTexStorage->isRenderTarget())
-    {
-        convertToRenderTarget();
-    }
-
-    if (mTexStorage == NULL)
+    // ensure the underlying texture is created
+    if (getStorage(true) == NULL)
     {
         return NULL;
     }
@@ -3013,8 +3018,20 @@ IDirect3DSurface9 *TextureCubeMap::getRenderTarget(GLenum target)
     return mTexStorage->getCubeMapSurface(target, 0);
 }
 
-TextureStorage *TextureCubeMap::getStorage() const
+TextureStorage *TextureCubeMap::getStorage(bool renderTarget)
 {
+    if (!mTexStorage || (renderTarget && !mTexStorage->isRenderTarget()))
+    {
+        if (renderTarget)
+        {
+            convertToRenderTarget();
+        }
+        else
+        {
+            createTexture();
+        }
+    }
+
     return mTexStorage;
 }
 

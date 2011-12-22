@@ -205,8 +205,8 @@ class Texture : public RefCountObject
     bool hasDirtyParameters() const;
     bool hasDirtyImages() const;
     void resetDirty();
-    unsigned int getTextureSerial() const;
-    unsigned int getRenderTargetSerial(GLenum target) const;
+    unsigned int getTextureSerial();
+    unsigned int getRenderTargetSerial(GLenum target);
 
     bool isImmutable() const;
 
@@ -248,7 +248,7 @@ class Texture : public RefCountObject
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture);
 
-    virtual TextureStorage *getStorage() const = 0;
+    virtual TextureStorage *getStorage(bool renderTarget) = 0;
 };
 
 class TextureStorage2D : public TextureStorage
@@ -311,7 +311,7 @@ class Texture2D : public Texture
     virtual void updateTexture();
     virtual void convertToRenderTarget();
     virtual IDirect3DSurface9 *getRenderTarget(GLenum target);
-    virtual TextureStorage *getStorage() const;
+    virtual TextureStorage *getStorage(bool renderTarget);
 
     bool isMipmapComplete() const;
 
@@ -392,7 +392,7 @@ class TextureCubeMap : public Texture
     virtual void updateTexture();
     virtual void convertToRenderTarget();
     virtual IDirect3DSurface9 *getRenderTarget(GLenum target);
-    virtual TextureStorage *getStorage() const;
+    virtual TextureStorage *getStorage(bool renderTarget);
 
     bool isCubeComplete() const;
     bool isMipmapCubeComplete() const;
