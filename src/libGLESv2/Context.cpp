@@ -1798,11 +1798,13 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         GLfloat xy[2] = {1.0f / viewport.Width, -1.0f / viewport.Height};
         programObject->setUniform2fv(halfPixelSize, 1, xy);
 
-        GLint viewport = programObject->getDxViewportLocation();
-        GLfloat whxy[4] = {mState.viewportWidth / 2.0f, mState.viewportHeight / 2.0f, 
+        // These values are used for computing gl_FragCoord in Program::linkVaryings(). The approach depends on Shader Model 3.0 support.
+        GLint coord = programObject->getDxCoordLocation();
+        float h = mSupportsShaderModel3 ? mRenderTargetDesc.Height : mState.viewportHeight / 2.0f;
+        GLfloat whxy[4] = {mState.viewportWidth / 2.0f, h, 
                           (float)mState.viewportX + mState.viewportWidth / 2.0f, 
                           (float)mState.viewportY + mState.viewportHeight / 2.0f};
-        programObject->setUniform4fv(viewport, 1, whxy);
+        programObject->setUniform4fv(coord, 1, whxy);
 
         GLint depth = programObject->getDxDepthLocation();
         GLfloat dz[2] = {(zFar - zNear) / 2.0f, (zNear + zFar) / 2.0f};
