@@ -2598,18 +2598,7 @@ void Context::clear(GLbitfield mask)
     float depth = clamp01(mState.depthClearValue);
     int stencil = mState.stencilClearValue & 0x000000FF;
 
-    IDirect3DSurface9 *renderTarget = framebufferObject->getRenderTarget();
-    if (!renderTarget)
-    {
-        return;   // Context must be lost, return silently
-    }
-
-    D3DSURFACE_DESC desc;
-    renderTarget->GetDesc(&desc);
-    renderTarget->Release();
-    renderTarget = NULL;
-
-    bool alphaUnmasked = (dx2es::GetAlphaSize(desc.Format) == 0) || mState.colorMaskAlpha;
+    bool alphaUnmasked = (dx2es::GetAlphaSize(mRenderTargetDesc.Format) == 0) || mState.colorMaskAlpha;
 
     const bool needMaskedStencilClear = (flags & D3DCLEAR_STENCIL) &&
                                         (mState.stencilWritemask & stencilUnmasked) != stencilUnmasked;
@@ -2710,12 +2699,12 @@ void Context::clear(GLbitfield mask)
 
         float quad[4][4];   // A quadrilateral covering the target, aligned to match the edges
         quad[0][0] = -0.5f;
-        quad[0][1] = desc.Height - 0.5f;
+        quad[0][1] = mRenderTargetDesc.Height - 0.5f;
         quad[0][2] = 0.0f;
         quad[0][3] = 1.0f;
 
-        quad[1][0] = desc.Width - 0.5f;
-        quad[1][1] = desc.Height - 0.5f;
+        quad[1][0] = mRenderTargetDesc.Width - 0.5f;
+        quad[1][1] = mRenderTargetDesc.Height - 0.5f;
         quad[1][2] = 0.0f;
         quad[1][3] = 1.0f;
 
@@ -2724,7 +2713,7 @@ void Context::clear(GLbitfield mask)
         quad[2][2] = 0.0f;
         quad[2][3] = 1.0f;
 
-        quad[3][0] = desc.Width - 0.5f;
+        quad[3][0] = mRenderTargetDesc.Width - 0.5f;
         quad[3][1] = -0.5f;
         quad[3][2] = 0.0f;
         quad[3][3] = 1.0f;
