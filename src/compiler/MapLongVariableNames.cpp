@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2011 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -37,6 +37,7 @@ void MapLongVariableNames::visitSymbol(TIntermSymbol* symbol)
           case EvqVaryingOut:
           case EvqInvariantVaryingIn:
           case EvqInvariantVaryingOut:
+          case EvqUniform:
             symbol->setSymbol(
                 mapVaryingLongName(symbol->getSymbol()));
             break;
