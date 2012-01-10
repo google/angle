@@ -2859,56 +2859,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void *
 // Implements glFlush when block is false, glFinish when block is true
 void Context::sync(bool block)
 {
-    egl::Display *display = getDisplay();
-    IDirect3DQuery9 *eventQuery = NULL;
-    HRESULT result;
-
-    result = mDevice->CreateQuery(D3DQUERYTYPE_EVENT, &eventQuery);
-    if (FAILED(result))
-    {
-        ERR("CreateQuery failed hr=%x\n", result);
-        if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
-        {
-            return error(GL_OUT_OF_MEMORY);
-        }
-        ASSERT(false);
-        return;
-    }
-
-    result = eventQuery->Issue(D3DISSUE_END);
-    if (FAILED(result))
-    {
-        ERR("eventQuery->Issue(END) failed hr=%x\n", result);
-        ASSERT(false);
-        eventQuery->Release();
-        return;
-    }
-
-    do
-    {
-        result = eventQuery->GetData(NULL, 0, D3DGETDATA_FLUSH);
-
-        if(block && result == S_FALSE)
-        {
-            // Keep polling, but allow other threads to do something useful first
-            Sleep(0);
-            // explicitly check for device loss
-            // some drivers seem to return S_FALSE even if the device is lost
-            // instead of D3DERR_DEVICELOST like they should
-            if (display->testDeviceLost())
-            {
-                result = D3DERR_DEVICELOST;
-            }
-        }
-    }
-    while(block && result == S_FALSE);
-
-    eventQuery->Release();
-
-    if (checkDeviceLost(result))
-    {
-        error(GL_OUT_OF_MEMORY);
-    }
+    mDisplay->sync(block);
 }
 
 void Context::drawClosingLine(unsigned int first, unsigned int last, int minIndex)

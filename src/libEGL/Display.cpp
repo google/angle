@@ -16,6 +16,7 @@
 
 #include "common/debug.h"
 #include "libGLESv2/mathutil.h"
+#include "libGLESv2/utilities.h"
 
 #include "libEGL/main.h"
 
@@ -75,6 +76,7 @@ Display::Display(EGLNativeDisplayType displayId, HDC deviceContext, bool softwar
     mDevice = NULL;
     mDeviceEx = NULL;
     mDeviceWindow = NULL;
+    mEventQuery = NULL;
 
     mAdapter = D3DADAPTER_DEFAULT;
 
@@ -302,6 +304,12 @@ void Display::terminate()
         destroyContext(*mContextSet.begin());
     }
 
+    if (mEventQuery)
+    {
+        mEventQuery->Release();
+        mEventQuery = NULL;
+    }
+
     if (mDevice)
     {
         // If the device is lost, reset it first to prevent leaving the driver in an unstable state
@@ -460,6 +468,12 @@ void Display::initializeDevice()
     // Permanent non-default states
     mDevice->SetRenderState(D3DRS_POINTSPRITEENABLE, TRUE);
     mDevice->SetRenderState(D3DRS_LASTPIXEL, FALSE);
+
+    // Leave mEventQuery null if CreateQuery fails. This will prevent sync from
+    // working correctly but otherwise mEventQuery is expected to be null when
+    // queries are not supported.
+    ASSERT(!mEventQuery);
+    mDevice->CreateQuery(D3DQUERYTYPE_EVENT, &mEventQuery);
 
     mSceneStarted = false;
 }
@@ -723,6 +737,12 @@ bool Display::restoreLostDevice()
         (*surface)->release();
     }
 
+    if (mEventQuery)
+    {
+        mEventQuery->Release();
+        mEventQuery = NULL;
+    }
+
     if (!resetDevice())
     {
         return false;
@@ -865,6 +885,43 @@ bool Display::testDeviceResettable()
         return true;
       default:
         return false;
+    }
+}
+
+void Display::sync(bool block)
+{
+    HRESULT result;
+
+    if (!mEventQuery)
+    {
+        return;
+    }
+
+    result = mEventQuery->Issue(D3DISSUE_END);
+    ASSERT(SUCCEEDED(result));
+
+    do
+    {
+        result = mEventQuery->GetData(NULL, 0, D3DGETDATA_FLUSH);
+
+        if(block && result == S_FALSE)
+        {
+            // Keep polling, but allow other threads to do something useful first
+            Sleep(0);
+            // explicitly check for device loss
+            // some drivers seem to return S_FALSE even if the device is lost
+            // instead of D3DERR_DEVICELOST like they should
+            if (testDeviceLost())
+            {
+                result = D3DERR_DEVICELOST;
+            }
+        }
+    }
+    while(block && result == S_FALSE);
+
+    if (isDeviceLostError(result))
+    {
+        notifyDeviceLost();
     }
 }
 
