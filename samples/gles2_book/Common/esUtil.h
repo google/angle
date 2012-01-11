@@ -21,6 +21,7 @@
 //  Includes
 //
 #include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
@@ -95,6 +96,13 @@ typedef struct
 
 extern PFNEGLPOSTSUBBUFFERNVPROC eglPostSubBufferNV;
 
+extern PFNGLDELETEFENCESNVPROC glDeleteFencesNV;
+extern PFNGLGENFENCESNVPROC glGenFencesNV;
+extern PFNGLGETFENCEIVNVPROC glGetFenceivNV;
+extern PFNGLISFENCENVPROC glIsFenceNV;
+extern PFNGLFINISHFENCENVPROC glFinishFenceNV;
+extern PFNGLSETFENCENVPROC glSetFenceNV;
+extern PFNGLTESTFENCENVPROC glTestFenceNV;
 
 ///
 //  Public Functions

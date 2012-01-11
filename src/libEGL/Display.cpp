@@ -76,7 +76,6 @@ Display::Display(EGLNativeDisplayType displayId, HDC deviceContext, bool softwar
     mDevice = NULL;
     mDeviceEx = NULL;
     mDeviceWindow = NULL;
-    mEventQuery = NULL;
 
     mAdapter = D3DADAPTER_DEFAULT;
 
@@ -304,10 +303,10 @@ void Display::terminate()
         destroyContext(*mContextSet.begin());
     }
 
-    if (mEventQuery)
+    while (!mEventQueryPool.empty())
     {
-        mEventQuery->Release();
-        mEventQuery = NULL;
+        mEventQueryPool.back()->Release();
+        mEventQueryPool.pop_back();
     }
 
     if (mDevice)
@@ -468,12 +467,6 @@ void Display::initializeDevice()
     // Permanent non-default states
     mDevice->SetRenderState(D3DRS_POINTSPRITEENABLE, TRUE);
     mDevice->SetRenderState(D3DRS_LASTPIXEL, FALSE);
-
-    // Leave mEventQuery null if CreateQuery fails. This will prevent sync from
-    // working correctly but otherwise mEventQuery is expected to be null when
-    // queries are not supported.
-    ASSERT(!mEventQuery);
-    mDevice->CreateQuery(D3DQUERYTYPE_EVENT, &mEventQuery);
 
     mSceneStarted = false;
 }
@@ -737,10 +730,10 @@ bool Display::restoreLostDevice()
         (*surface)->release();
     }
 
-    if (mEventQuery)
+    while (!mEventQueryPool.empty())
     {
-        mEventQuery->Release();
-        mEventQuery = NULL;
+        mEventQueryPool.back()->Release();
+        mEventQueryPool.pop_back();
     }
 
     if (!resetDevice())
@@ -892,17 +885,18 @@ void Display::sync(bool block)
 {
     HRESULT result;
 
-    if (!mEventQuery)
+    IDirect3DQuery9* query = allocateEventQuery();
+    if (!query)
     {
         return;
     }
 
-    result = mEventQuery->Issue(D3DISSUE_END);
+    result = query->Issue(D3DISSUE_END);
     ASSERT(SUCCEEDED(result));
 
     do
     {
-        result = mEventQuery->GetData(NULL, 0, D3DGETDATA_FLUSH);
+        result = query->GetData(NULL, 0, D3DGETDATA_FLUSH);
 
         if(block && result == S_FALSE)
         {
@@ -919,9 +913,41 @@ void Display::sync(bool block)
     }
     while(block && result == S_FALSE);
 
+    freeEventQuery(query);
+
     if (isDeviceLostError(result))
     {
         notifyDeviceLost();
+    }
+}
+
+IDirect3DQuery9* Display::allocateEventQuery()
+{
+    IDirect3DQuery9 *query = NULL;
+
+    if (mEventQueryPool.empty())
+    {
+        HRESULT result = mDevice->CreateQuery(D3DQUERYTYPE_EVENT, &query);
+        ASSERT(SUCCEEDED(result));
+    }
+    else
+    {
+        query = mEventQueryPool.back();
+        mEventQueryPool.pop_back();
+    }
+
+    return query;
+}
+
+void Display::freeEventQuery(IDirect3DQuery9* query)
+{
+    if (mEventQueryPool.size() > 1000)
+    {
+        query->Release();
+    }
+    else
+    {
+        mEventQueryPool.push_back(query);
     }
 }
 
@@ -1068,14 +1094,16 @@ D3DPOOL Display::getTexturePool(bool renderable) const
 
 bool Display::getEventQuerySupport()
 {
-    IDirect3DQuery9 *query;
-    HRESULT result = mDevice->CreateQuery(D3DQUERYTYPE_EVENT, &query);
-    if (SUCCEEDED(result))
+    IDirect3DQuery9 *query = allocateEventQuery();
+    if (query)
     {
-        query->Release();
+        freeEventQuery(query);
+        return true;
     }
-
-    return result != D3DERR_NOTAVAILABLE;
+    else
+    {
+        return false;
+    }
 }
 
 D3DPRESENT_PARAMETERS Display::getDefaultPresentParameters()

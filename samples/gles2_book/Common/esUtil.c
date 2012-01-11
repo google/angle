@@ -33,6 +33,13 @@
 
 PFNEGLPOSTSUBBUFFERNVPROC eglPostSubBufferNV;
 
+PFNGLDELETEFENCESNVPROC glDeleteFencesNV;
+PFNGLGENFENCESNVPROC glGenFencesNV;
+PFNGLGETFENCEIVNVPROC glGetFenceivNV;
+PFNGLISFENCENVPROC glIsFenceNV;
+PFNGLFINISHFENCENVPROC glFinishFenceNV;
+PFNGLSETFENCENVPROC glSetFenceNV;
+PFNGLTESTFENCENVPROC glTestFenceNV;
 
 ///
 // CreateEGLContext()
@@ -67,6 +74,14 @@ EGLBoolean CreateEGLContext ( EGLNativeWindowType hWnd, EGLDisplay* eglDisplay,
 
    // Bind to extensions
    eglPostSubBufferNV = (PFNEGLPOSTSUBBUFFERNVPROC) eglGetProcAddress("eglPostSubBufferNV");
+
+   glDeleteFencesNV = (PFNGLDELETEFENCESNVPROC) eglGetProcAddress("glDeleteFencesNV");
+   glGenFencesNV = (PFNGLGENFENCESNVPROC) eglGetProcAddress("glGenFencesNV");
+   glGetFenceivNV = (PFNGLGETFENCEIVNVPROC) eglGetProcAddress("glGetFenceivNV");
+   glIsFenceNV = (PFNGLISFENCENVPROC) eglGetProcAddress("glIsFenceNV");
+   glFinishFenceNV = (PFNGLFINISHFENCENVPROC) eglGetProcAddress("glFinishFenceNV");
+   glSetFenceNV = (PFNGLSETFENCENVPROC) eglGetProcAddress("glSetFenceNV");
+   glTestFenceNV = (PFNGLTESTFENCENVPROC) eglGetProcAddress("glTestFenceNV");
 
    // Get configs
    if ( !eglGetConfigs(display, NULL, 0, &numConfigs) )
