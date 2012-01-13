@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2011 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -89,12 +89,15 @@ TShHandleBase::~TShHandleBase() {
 TCompiler::TCompiler(ShShaderType type, ShShaderSpec spec)
     : shaderType(type),
       shaderSpec(spec),
-      builtInFunctionEmulator(type)
+      builtInFunctionEmulator(type),
+      longNameMapper(NULL)
 {
 }
 
 TCompiler::~TCompiler()
 {
+    if (longNameMapper)
+        longNameMapper->Release();
 }
 
 bool TCompiler::Init(const ShBuiltInResources& resources)
@@ -246,8 +249,9 @@ void TCompiler::collectAttribsUniforms(TIntermNode* root)
 
 void TCompiler::mapLongVariableNames(TIntermNode* root)
 {
-    MapLongVariableNames map(varyingLongNameMap);
-    root->traverse(&map);
+    if (longNameMapper == NULL)
+        longNameMapper = MapLongVariableNames::GetInstance();
+    root->traverse(longNameMapper);
 }
 
 int TCompiler::getMappedNameMaxLength() const

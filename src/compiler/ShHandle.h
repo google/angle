@@ -22,6 +22,7 @@
 #include "compiler/SymbolTable.h"
 #include "compiler/VariableInfo.h"
 
+class MapLongVariableNames;
 class TCompiler;
 
 //
@@ -100,8 +101,8 @@ private:
     TVariableInfoList attribs;  // Active attributes in the compiled shader.
     TVariableInfoList uniforms;  // Active uniforms in the compiled shader.
 
-    // Pair of long varying varibale name <originalName, mappedName>.
-    std::map<std::string, std::string> varyingLongNameMap;
+    // Local instance of the ref-counted singleton.
+    MapLongVariableNames* longNameMapper;
 };
 
 //
