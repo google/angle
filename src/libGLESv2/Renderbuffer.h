@@ -75,7 +75,7 @@ class RenderbufferTexture : public RenderbufferInterface
   private:
     DISALLOW_COPY_AND_ASSIGN(RenderbufferTexture);
 
-    Texture *mTexture;
+    BindingPointer <Texture> mTexture;
     GLenum mTarget;
 };
 

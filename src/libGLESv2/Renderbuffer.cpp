@@ -52,12 +52,14 @@ GLuint RenderbufferInterface::getStencilSize() const
     return dx2es::GetStencilSize(getD3DFormat());
 }
 
-RenderbufferTexture::RenderbufferTexture(Texture *texture, GLenum target) : mTexture(texture), mTarget(target)
+RenderbufferTexture::RenderbufferTexture(Texture *texture, GLenum target) : mTarget(target)
 {
+    mTexture.set(texture);
 }
 
 RenderbufferTexture::~RenderbufferTexture()
 {
+    mTexture.set(NULL);
 }
 
 IDirect3DSurface9 *RenderbufferTexture::getRenderTarget()
