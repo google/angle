@@ -8,49 +8,24 @@
 
 namespace {
 
-TString mapLongName(int id, const TString& name, bool global)
+TString mapLongName(int id, const TString& name, bool isVarying)
 {
     ASSERT(name.size() > MAX_SHORTENED_IDENTIFIER_SIZE);
     TStringStream stream;
     stream << "webgl_";
-    if (global)
-        stream << "g";
+    if (isVarying)
+        stream << "v";
     stream << id << "_";
     stream << name.substr(0, MAX_SHORTENED_IDENTIFIER_SIZE - stream.str().size());
     return stream.str();
 }
 
-MapLongVariableNames* gMapLongVariableNamesInstance = NULL;
-
 }  // anonymous namespace
 
-MapLongVariableNames::MapLongVariableNames()
-    : refCount(0)
+MapLongVariableNames::MapLongVariableNames(
+    std::map<std::string, std::string>& varyingLongNameMap)
+    : mVaryingLongNameMap(varyingLongNameMap)
 {
-}
-
-MapLongVariableNames::~MapLongVariableNames()
-{
-}
-
-// static
-MapLongVariableNames* MapLongVariableNames::GetInstance()
-{
-    if (gMapLongVariableNamesInstance == NULL)
-        gMapLongVariableNamesInstance = new MapLongVariableNames;
-    gMapLongVariableNamesInstance->refCount++;
-    return gMapLongVariableNamesInstance;
-}
-
-void MapLongVariableNames::Release()
-{
-    ASSERT(gMapLongVariableNamesInstance == this);
-    ASSERT(refCount > 0);
-    refCount--;
-    if (refCount == 0) {
-        delete gMapLongVariableNamesInstance;
-        gMapLongVariableNamesInstance = NULL;
-    }
 }
 
 void MapLongVariableNames::visitSymbol(TIntermSymbol* symbol)
@@ -64,7 +39,7 @@ void MapLongVariableNames::visitSymbol(TIntermSymbol* symbol)
           case EvqInvariantVaryingOut:
           case EvqUniform:
             symbol->setSymbol(
-                mapLongGlobalName(symbol->getSymbol()));
+                mapVaryingLongName(symbol->getSymbol()));
             break;
           default:
             symbol->setSymbol(
@@ -81,15 +56,15 @@ bool MapLongVariableNames::visitLoop(Visit, TIntermLoop* node)
     return true;
 }
 
-TString MapLongVariableNames::mapLongGlobalName(const TString& name)
+TString MapLongVariableNames::mapVaryingLongName(const TString& name)
 {
-    std::map<std::string, std::string>::const_iterator it = longGlobalNameMap.find(name.c_str());
-    if (it != longGlobalNameMap.end())
+    std::map<std::string, std::string>::const_iterator it = mVaryingLongNameMap.find(name.c_str());
+    if (it != mVaryingLongNameMap.end())
         return (*it).second.c_str();
 
-    int id = longGlobalNameMap.size();
+    int id = mVaryingLongNameMap.size();
     TString mappedName = mapLongName(id, name, true);
-    longGlobalNameMap.insert(
+    mVaryingLongNameMap.insert(
         std::map<std::string, std::string>::value_type(name.c_str(), mappedName.c_str()));
     return mappedName;
 }
