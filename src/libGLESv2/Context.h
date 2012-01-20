@@ -55,6 +55,7 @@ class VertexDataManager;
 class IndexDataManager;
 class Blit;
 class Fence;
+class Query;
 
 enum
 {
@@ -71,6 +72,14 @@ enum
 
     IMPLEMENTATION_COLOR_READ_FORMAT = GL_RGB,
     IMPLEMENTATION_COLOR_READ_TYPE = GL_UNSIGNED_SHORT_5_6_5
+};
+
+enum QueryType
+{
+    QUERY_ANY_SAMPLES_PASSED,
+    QUERY_ANY_SAMPLES_PASSED_CONSERVATIVE,
+
+    QUERY_TYPE_COUNT
 };
 
 const float ALIASED_LINE_WIDTH_RANGE_MIN = 1.0f;
@@ -216,6 +225,7 @@ struct State
 
     VertexAttribute vertexAttribute[MAX_VERTEX_ATTRIBS];
     BindingPointer<Texture> samplerTexture[TEXTURE_TYPE_COUNT][MAX_COMBINED_TEXTURE_IMAGE_UNITS_VTF];
+    BindingPointer<Query> activeQuery[QUERY_TYPE_COUNT];
 
     GLint unpackAlignment;
     GLint packAlignment;
@@ -347,6 +357,8 @@ class Context
 
     GLuint getArrayBufferHandle() const;
 
+    GLuint getActiveQuery(GLenum target) const;
+
     void setEnableVertexAttribArray(unsigned int attribNum, bool enabled);
     const VertexAttribute &getVertexAttribState(unsigned int attribNum);
     void setVertexAttribState(unsigned int attribNum, Buffer *boundBuffer, GLint size, GLenum type,
@@ -385,6 +397,10 @@ class Context
     // Fences are owned by the Context.
     GLuint createFence();
     void deleteFence(GLuint fence);
+    
+    // Queries are owned by the Context;
+    GLuint createQuery();
+    void deleteQuery(GLuint query);
 
     void bindArrayBuffer(GLuint buffer);
     void bindElementArrayBuffer(GLuint buffer);
@@ -394,6 +410,9 @@ class Context
     void bindDrawFramebuffer(GLuint framebuffer);
     void bindRenderbuffer(GLuint renderbuffer);
     void useProgram(GLuint program);
+
+    void beginQuery(GLenum target, GLuint query);
+    void endQuery(GLenum target);
 
     void setFramebufferZero(Framebuffer *framebuffer);
 
@@ -408,6 +427,7 @@ class Context
     Texture *getTexture(GLuint handle);
     Framebuffer *getFramebuffer(GLuint handle);
     Renderbuffer *getRenderbuffer(GLuint handle);
+    Query *getQuery(GLuint handle, bool create, GLenum type);
 
     Buffer *getArrayBuffer();
     Buffer *getElementArrayBuffer();
@@ -458,6 +478,7 @@ class Context
     const char *getExtensionString() const;
     const char *getRendererString() const;
     bool supportsEventQueries() const;
+    bool supportsOcclusionQueries() const;
     bool supportsDXT1Textures() const;
     bool supportsDXT3Textures() const;
     bool supportsDXT5Textures() const;
@@ -521,6 +542,10 @@ class Context
     FenceMap mFenceMap;
     HandleAllocator mFenceHandleAllocator;
 
+    typedef stdext::hash_map<GLuint, Query*> QueryMap;
+    QueryMap mQueryMap;
+    HandleAllocator mQueryHandleAllocator;
+
     std::string mExtensionString;
     std::string mRendererString;
 
@@ -573,6 +598,7 @@ class Context
     std::map<D3DFORMAT, bool *> mMultiSampleSupport;
     GLsizei mMaxSupportedSamples;
     bool mSupportsEventQueries;
+    bool mSupportsOcclusionQueries;
     bool mSupportsDXT1Textures;
     bool mSupportsDXT3Textures;
     bool mSupportsDXT5Textures;

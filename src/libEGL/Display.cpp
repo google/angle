@@ -1194,4 +1194,25 @@ bool Display::getNonPower2TextureSupport() const
            !(mDeviceCaps.TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL);
 }
 
+bool Display::getOcclusionQuerySupport() const
+{
+    if (!isInitialized())
+    {
+        return false;
+    }
+
+    IDirect3DQuery9 *query = NULL;
+    HRESULT result = mDevice->CreateQuery(D3DQUERYTYPE_OCCLUSION, &query);
+    
+    if (SUCCEEDED(result) && query)
+    {
+        query->Release();
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 }
