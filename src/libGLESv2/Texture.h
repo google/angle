@@ -17,10 +17,10 @@
 #include <GLES2/gl2.h>
 #include <d3d9.h>
 
-#include "libGLESv2/Renderbuffer.h"
-#include "libGLESv2/RefCountObject.h"
-#include "libGLESv2/utilities.h"
 #include "common/debug.h"
+#include "common/RefCountObject.h"
+#include "libGLESv2/Renderbuffer.h"
+#include "libGLESv2/utilities.h"
 
 namespace egl
 {

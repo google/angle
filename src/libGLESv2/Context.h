@@ -21,9 +21,9 @@
 #include <hash_map>
 
 #include "common/angleutils.h"
+#include "common/RefCountObject.h"
 #include "libGLESv2/ResourceManager.h"
 #include "libGLESv2/HandleAllocator.h"
-#include "libGLESv2/RefCountObject.h"
 
 namespace egl
 {
