@@ -1022,7 +1022,7 @@ void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
 
     try
     {
-        if (!gl::IsTextureTarget(target))
+        if (!gl::IsInternalTextureTarget(target))
         {
             return error(GL_INVALID_ENUM);
         }
@@ -1311,7 +1311,7 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
 
     try
     {
-        if (!gl::IsTextureTarget(target))
+        if (!gl::IsInternalTextureTarget(target))
         {
             return error(GL_INVALID_ENUM);
         }
@@ -2976,7 +2976,7 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
             {
                 attachmentObjectType = attachmentType;
             }
-            else if (gl::IsTextureTarget(attachmentType))
+            else if (gl::IsInternalTextureTarget(attachmentType))
             {
                 attachmentObjectType = GL_TEXTURE;
             }
@@ -5392,7 +5392,7 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
 
     try
     {
-        if (!gl::IsTextureTarget(target))
+        if (!gl::IsInternalTextureTarget(target))
         {
             return error(GL_INVALID_ENUM);
         }
