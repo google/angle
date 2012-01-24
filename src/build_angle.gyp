@@ -13,6 +13,9 @@
     {
       'target_name': 'translator_common',
       'type': 'static_library',
+      'variables': {
+        'warn_as_error': 0,
+      },
       'include_dirs': [
         '.',
         '../include',
