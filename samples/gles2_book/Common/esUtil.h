@@ -94,7 +94,12 @@ typedef struct
 //  Extensions
 //
 
+extern PFNEGLCREATEIMAGEKHRPROC eglCreateImageKHR;
+extern PFNEGLDESTROYIMAGEKHRPROC eglDestroyImageKHR;
+
 extern PFNEGLPOSTSUBBUFFERNVPROC eglPostSubBufferNV;
+
+extern PFNGLEGLIMAGETARGETTEXTURE2DOESPROC glEGLImageTargetTexture2DOES;
 
 extern PFNGLDELETEFENCESNVPROC glDeleteFencesNV;
 extern PFNGLGENFENCESNVPROC glGenFencesNV;
