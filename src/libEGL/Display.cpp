@@ -1001,7 +1001,7 @@ bool Display::getFloat32TextureSupport(bool *filtering, bool *renderable)
                   SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET,
                                                      D3DRTYPE_CUBETEXTURE, D3DFMT_A32B32G32R32F));
 
-    if (!filtering && !renderable)
+    if (!*filtering && !*renderable)
     {
         return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, 
                                                   D3DRTYPE_TEXTURE, D3DFMT_A32B32G32R32F)) &&
@@ -1029,7 +1029,7 @@ bool Display::getFloat16TextureSupport(bool *filtering, bool *renderable)
                  SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET,
                                                     D3DRTYPE_CUBETEXTURE, D3DFMT_A16B16G16R16F));
 
-    if (!filtering && !renderable)
+    if (!*filtering && !*renderable)
     {
         return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, 
                                                   D3DRTYPE_TEXTURE, D3DFMT_A16B16G16R16F)) &&
