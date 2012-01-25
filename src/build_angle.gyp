@@ -3,6 +3,9 @@
 # found in the LICENSE file.
 
 {
+  'variables': {
+    'chromium_code': 1,
+  },
   'target_defaults': {
     'defines': [
       'ANGLE_DISABLE_TRACE',
@@ -13,9 +16,6 @@
     {
       'target_name': 'translator_common',
       'type': 'static_library',
-      'variables': {
-        'warn_as_error': 0,
-      },
       'include_dirs': [
         '.',
         '../include',

@@ -1726,12 +1726,8 @@ yydestruct (yymsg, yytype, yyvaluep, context)
     yymsg = "Deleting";
   YY_SYMBOL_PRINT (yymsg, yytype, yyvaluep, yylocationp);
 
-  switch (yytype)
-    {
-
-      default:
-	break;
-    }
+  // Delete any automatically generated switch with no cases code that appears
+  // here. It will produce a warning (and therefore an error) in MSVC.
 }
 
 /* Prevent warnings from -Wmissing-prototypes.  */

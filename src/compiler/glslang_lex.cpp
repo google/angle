@@ -3130,6 +3130,8 @@ void updateExtensionBehavior(const char* extName, const char* behavior)
                 msg = TString("extension '") + extName + "' is not supported";
                 context->infoSink.info.message(EPrefixWarning, msg.c_str(), yylineno); 
                 break;
+            default:
+                break;
             }
             return;
         } else
