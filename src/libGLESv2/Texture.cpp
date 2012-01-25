@@ -2577,7 +2577,9 @@ bool TextureCubeMap::isSamplerComplete() const
       case GL_LINEAR_MIPMAP_LINEAR:
         mipmapping = true;
         break;
-      default: UNREACHABLE();
+      default:
+        UNREACHABLE();
+        return false;
     }
 
     if ((getInternalFormat() == GL_FLOAT && !getContext()->supportsFloat32LinearFilter()) ||
@@ -2746,9 +2748,6 @@ void TextureCubeMap::convertToRenderTarget()
 
         if (mTexStorage != NULL)
         {
-            egl::Display *display = getDisplay();
-            IDirect3DDevice9 *device = display->getDevice();
-
             int levels = levelCount();
             for (int f = 0; f < 6; f++)
             {

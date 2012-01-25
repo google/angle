@@ -24,9 +24,13 @@ WHICH GENERATES THE GLSL ES PARSER (glslang_tab.cpp AND glslang_tab.h).
 
 // Ignore errors in auto-generated code.
 #if defined(__GNUC__)
+#pragma GCC diagnostic ignored "-Wunused-function"
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #elif defined(_MSC_VER)
 #pragma warning(disable: 4065)
+#pragma warning(disable: 4189)
+#pragma warning(disable: 4505)
+#pragma warning(disable: 4701)
 #endif
 
 #include "compiler/SymbolTable.h"

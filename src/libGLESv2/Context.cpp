@@ -1192,6 +1192,7 @@ void Context::beginQuery(GLenum target, GLuint query)
         break;
       default: 
         ASSERT(false);
+        return;
     }
 
     Query *queryObject = getQuery(query, true, target);
@@ -1229,6 +1230,7 @@ void Context::endQuery(GLenum target)
         break;
       default: 
         ASSERT(false);
+        return;
     }
 
     Query *queryObject = mState.activeQuery[qType].get();
@@ -2432,7 +2434,7 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
     HRESULT result;
     IDirect3DSurface9 *systemSurface = NULL;
     bool directToPixels = getPackReverseRowOrder() && getPackAlignment() <= 4 && mDisplay->isD3d9ExDevice() &&
-                          x == 0 && y == 0 && width == desc.Width && height == desc.Height &&
+                          x == 0 && y == 0 && UINT(width) == desc.Width && UINT(height) == desc.Height &&
                           desc.Format == D3DFMT_A8R8G8B8 && format == GL_BGRA_EXT && type == GL_UNSIGNED_BYTE;
     if (directToPixels)
     {
@@ -2615,6 +2617,7 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
               default:
                 UNIMPLEMENTED();   // FIXME
                 UNREACHABLE();
+                return;
             }
 
             switch (format)
@@ -3033,7 +3036,6 @@ void Context::sync(bool block)
 
 void Context::drawClosingLine(unsigned int first, unsigned int last, int minIndex)
 {
-    IDirect3DIndexBuffer9 *indexBuffer = NULL;
     bool succeeded = false;
     UINT offset;
 

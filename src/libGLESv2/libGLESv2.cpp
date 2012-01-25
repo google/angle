@@ -2980,7 +2980,11 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
             {
                 attachmentObjectType = GL_TEXTURE;
             }
-            else UNREACHABLE();
+            else
+            {
+                UNREACHABLE();
+                return;
+            }
 
             switch (pname)
             {
@@ -3558,8 +3562,6 @@ const GLubyte* __stdcall glGetString(GLenum name)
     {
         return error(GL_OUT_OF_MEMORY, (GLubyte*)NULL);
     }
-
-    return NULL;
 }
 
 void __stdcall glGetTexParameterfv(GLenum target, GLenum pname, GLfloat* params)

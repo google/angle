@@ -1032,8 +1032,6 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
 
 bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
 {
-    TInfoSinkBase &out = mBody;
-
     switch (node->getOp())
     {
       case EOpNegative:         outputTriplet(visit, "(-", "", ")");  break;
@@ -1110,7 +1108,6 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
 
 bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 {
-    ShShaderType shaderType = mContext.shaderType;
     TInfoSinkBase &out = mBody;
 
     switch (node->getOp())
@@ -1839,7 +1836,6 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
 
             while (iterations > 0)
             {
-                int remainder = (limit - initial) % increment;
                 int clampedLimit = initial + increment * std::min(255, iterations);
 
                 // for(int index = initial; index < clampedLimit; index += increment)

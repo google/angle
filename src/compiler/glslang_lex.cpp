@@ -9,14 +9,18 @@
 
 // Ignore errors in auto-generated code.
 #if defined(__GNUC__)
+#pragma GCC diagnostic ignored "-Wunused-function"
 #pragma GCC diagnostic ignored "-Wunused-variable"
 #elif defined(_MSC_VER)
 #pragma warning(disable: 4065)
+#pragma warning(disable: 4189)
+#pragma warning(disable: 4505)
+#pragma warning(disable: 4701)
 #endif
 
 
 
-#line 20 "./glslang_lex.cpp"
+#line 24 "./glslang_lex.cpp"
 
 #define  YY_INT_ALIGNED short int
 

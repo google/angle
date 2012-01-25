@@ -270,7 +270,7 @@ TextureType Program::getSamplerTextureType(SamplerType type, unsigned int sample
 
 GLint Program::getUniformLocation(std::string name)
 {
-    int subscript = 0;
+    unsigned int subscript = 0;
 
     // Strip any trailing array operator and retrieve the subscript
     size_t open = name.find_last_of('[');
