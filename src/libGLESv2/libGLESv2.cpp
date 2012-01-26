@@ -4932,7 +4932,7 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
             return error(GL_INVALID_VALUE);
         }
 
-        if (internalformat != format)
+        if (internalformat != GLint(format))
         {
             return error(GL_INVALID_OPERATION);
         }

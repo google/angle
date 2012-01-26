@@ -1902,7 +1902,7 @@ bool Program::defineUniform(const D3DXHANDLE &constantHandle, const D3DXCONSTANT
     }
 }
 
-bool Program::defineUniform(const D3DXCONSTANT_DESC &constantDescription, std::string &_name)
+bool Program::defineUniform(const D3DXCONSTANT_DESC &constantDescription, const std::string &_name)
 {
     Uniform *uniform = createUniform(constantDescription, _name);
 
@@ -1943,7 +1943,7 @@ bool Program::defineUniform(const D3DXCONSTANT_DESC &constantDescription, std::s
     return true;
 }
 
-Uniform *Program::createUniform(const D3DXCONSTANT_DESC &constantDescription, std::string &_name)
+Uniform *Program::createUniform(const D3DXCONSTANT_DESC &constantDescription, const std::string &_name)
 {
     if (constantDescription.Rows == 1)   // Vectors and scalars
     {

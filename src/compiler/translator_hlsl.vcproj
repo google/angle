@@ -51,7 +51,7 @@
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
-				DisableSpecificWarnings="4100;4127;4189;4239;4244;4245;4389;4512;4702;4718"
+				DisableSpecificWarnings="4100;4127;4189;4239;4244;4245;4389;4512;4702"
 				DebugInformationFormat="4"
 				WarnAsError="true"
 			/>
@@ -117,7 +117,7 @@
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
-				DisableSpecificWarnings="4100;4127;4189;4239;4244;4245;4389;4512;4702;4718"
+				DisableSpecificWarnings="4100;4127;4189;4239;4244;4245;4389;4512;4702"
 				DebugInformationFormat="3"
 				WarnAsError="true"
 			/>
@@ -182,7 +182,7 @@
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
-				DisableSpecificWarnings="4100;4127;4189;4239;4244;4245;4389;4512;4702;4718"
+				DisableSpecificWarnings="4100;4127;4189;4239;4244;4245;4389;4512;4702"
 				DebugInformationFormat="3"
 				WarnAsError="true"
 			/>
@@ -249,7 +249,7 @@
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
-				DisableSpecificWarnings="4100;4127;4189;4239;4244;4245;4389;4512;4702;4718"
+				DisableSpecificWarnings="4100;4127;4189;4239;4244;4245;4389;4512;4702"
 				DebugInformationFormat="3"
 				WarnAsError="true"
 			/>

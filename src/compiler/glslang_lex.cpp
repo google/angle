@@ -11,6 +11,7 @@
 #if defined(__GNUC__)
 #pragma GCC diagnostic ignored "-Wunused-function"
 #pragma GCC diagnostic ignored "-Wunused-variable"
+#pragma GCC diagnostic ignored "-Wswitch-enum"
 #elif defined(_MSC_VER)
 #pragma warning(disable: 4065)
 #pragma warning(disable: 4189)
@@ -20,7 +21,7 @@
 
 
 
-#line 24 "./glslang_lex.cpp"
+#line 25 "./glslang_lex.cpp"
 
 #define  YY_INT_ALIGNED short int
 
