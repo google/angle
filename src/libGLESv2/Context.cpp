@@ -32,11 +32,6 @@
 #undef near
 #undef far
 
-namespace
-{
-    enum { CLOSING_INDEX_BUFFER_SIZE = 4096 };
-}
-
 namespace gl
 {
 Context::Context(const egl::Config *config, const gl::Context *shareContext, bool notifyResets, bool robustAccess) : mConfig(config)
@@ -153,7 +148,7 @@ Context::Context(const egl::Config *config, const gl::Context *shareContext, boo
     mVertexDataManager = NULL;
     mIndexDataManager = NULL;
     mBlit = NULL;
-    mClosingIB = NULL;
+    mLineLoopIB = NULL;
 
     mInvalidEnum = false;
     mInvalidValue = false;
@@ -244,7 +239,7 @@ Context::~Context()
     delete mVertexDataManager;
     delete mIndexDataManager;
     delete mBlit;
-    delete mClosingIB;
+    delete mLineLoopIB;
 
     if (mMaskedClearSavedState)
     {
@@ -2964,11 +2959,11 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
     {
         mDisplay->startScene();
         
-        if (instances == 0)
+        if (mode == GL_LINE_LOOP)
         {
-            mDevice->DrawPrimitive(primitiveType, 0, primitiveCount);
+            drawLineLoop(count, GL_NONE, NULL, 0);
         }
-        else
+        else if (instances > 0)
         {
             StaticIndexBuffer *countingIB = mIndexDataManager->getCountingIndices(count);
             if (countingIB)
@@ -2987,10 +2982,9 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
                 return error(GL_OUT_OF_MEMORY);
             }
         }
-
-        if (mode == GL_LINE_LOOP)   // Draw the last segment separately
+        else   // Regular case
         {
-            drawClosingLine(0, count - 1, 0);
+            mDevice->DrawPrimitive(primitiveType, 0, primitiveCount);
         }
     }
 }
@@ -3051,11 +3045,13 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
     {
         mDisplay->startScene();
 
-        mDevice->DrawIndexedPrimitive(primitiveType, -(INT)indexInfo.minIndex, indexInfo.minIndex, vertexCount, indexInfo.startIndex, primitiveCount);
-
-        if (mode == GL_LINE_LOOP)   // Draw the last segment separately
+        if (mode == GL_LINE_LOOP)
         {
-            drawClosingLine(count, type, indices, indexInfo.minIndex);
+            drawLineLoop(count, type, indices, indexInfo.minIndex);   
+        }
+        else
+        {
+            mDevice->DrawIndexedPrimitive(primitiveType, -(INT)indexInfo.minIndex, indexInfo.minIndex, vertexCount, indexInfo.startIndex, primitiveCount);
         }
     }
 }
@@ -3066,98 +3062,149 @@ void Context::sync(bool block)
     mDisplay->sync(block);
 }
 
-void Context::drawClosingLine(unsigned int first, unsigned int last, int minIndex)
+void Context::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex)
 {
-    bool succeeded = false;
-    UINT offset;
-
-    if (supports32bitIndices())
-    {
-        const int spaceNeeded = 2 * sizeof(unsigned int);
-
-        if (!mClosingIB)
-        {
-            mClosingIB = new StreamingIndexBuffer(mDevice, CLOSING_INDEX_BUFFER_SIZE, D3DFMT_INDEX32);
-        }
-
-        mClosingIB->reserveSpace(spaceNeeded, GL_UNSIGNED_INT);
-
-        unsigned int *data = static_cast<unsigned int*>(mClosingIB->map(spaceNeeded, &offset));
-        if (data)
-        {
-            data[0] = last;
-            data[1] = first;
-            mClosingIB->unmap();
-            offset /= 4;
-            succeeded = true;
-        }
-    }
-    else
-    {
-        const int spaceNeeded = 2 * sizeof(unsigned short);
-
-        if (!mClosingIB)
-        {
-            mClosingIB = new StreamingIndexBuffer(mDevice, CLOSING_INDEX_BUFFER_SIZE, D3DFMT_INDEX16);
-        }
-
-        mClosingIB->reserveSpace(spaceNeeded, GL_UNSIGNED_SHORT);
-
-        unsigned short *data = static_cast<unsigned short*>(mClosingIB->map(spaceNeeded, &offset));
-        if (data)
-        {
-            data[0] = last;
-            data[1] = first;
-            mClosingIB->unmap();
-            offset /= 2;
-            succeeded = true;
-        }
-    }
-    
-    if (succeeded)
-    {
-        mDevice->SetIndices(mClosingIB->getBuffer());
-        mAppliedIBSerial = mClosingIB->getSerial();
-
-        mDevice->DrawIndexedPrimitive(D3DPT_LINELIST, -minIndex, minIndex, last, offset, 1);
-    }
-    else
-    {
-        ERR("Could not create an index buffer for closing a line loop.");
-        error(GL_OUT_OF_MEMORY);
-    }
-}
-
-void Context::drawClosingLine(GLsizei count, GLenum type, const GLvoid *indices, int minIndex)
-{
-    unsigned int first = 0;
-    unsigned int last = 0;
-
-    if (mState.elementArrayBuffer.get())
+    // Get the raw indices for an indexed draw
+    if (type != GL_NONE && mState.elementArrayBuffer.get())
     {
         Buffer *indexBuffer = mState.elementArrayBuffer.get();
         intptr_t offset = reinterpret_cast<intptr_t>(indices);
         indices = static_cast<const GLubyte*>(indexBuffer->data()) + offset;
     }
 
-    switch (type)
-    {
-      case GL_UNSIGNED_BYTE:
-        first = static_cast<const GLubyte*>(indices)[0];
-        last = static_cast<const GLubyte*>(indices)[count - 1];
-        break;
-      case GL_UNSIGNED_SHORT:
-        first = static_cast<const GLushort*>(indices)[0];
-        last = static_cast<const GLushort*>(indices)[count - 1];
-        break;
-      case GL_UNSIGNED_INT:
-        first = static_cast<const GLuint*>(indices)[0];
-        last = static_cast<const GLuint*>(indices)[count - 1];
-        break;
-      default: UNREACHABLE();
-    }
+    UINT startIndex = 0;
+    bool succeeded = false;
 
-    drawClosingLine(first, last, minIndex);
+    if (supports32bitIndices())
+    {
+        const int spaceNeeded = (count + 1) * sizeof(unsigned int);
+
+        if (!mLineLoopIB)
+        {
+            mLineLoopIB = new StreamingIndexBuffer(mDevice, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX32);
+        }
+
+        if (mLineLoopIB)
+        {
+            mLineLoopIB->reserveSpace(spaceNeeded, GL_UNSIGNED_INT);
+
+            UINT offset = 0;
+            unsigned int *data = static_cast<unsigned int*>(mLineLoopIB->map(spaceNeeded, &offset));
+            startIndex = offset / 4;
+            
+            if (data)
+            {
+                switch (type)
+                {
+                  case GL_NONE:   // Non-indexed draw
+                    for (int i = 0; i < count; i++)
+                    {
+                        data[i] = i;
+                    }
+                    data[count] = 0;
+                    break;
+                  case GL_UNSIGNED_BYTE:
+                    for (int i = 0; i < count; i++)
+                    {
+                        data[i] = static_cast<const GLubyte*>(indices)[i];
+                    }
+                    data[count] = static_cast<const GLubyte*>(indices)[0];
+                    break;
+                  case GL_UNSIGNED_SHORT:
+                    for (int i = 0; i < count; i++)
+                    {
+                        data[i] = static_cast<const GLushort*>(indices)[i];
+                    }
+                    data[count] = static_cast<const GLushort*>(indices)[0];
+                    break;
+                  case GL_UNSIGNED_INT:
+                    for (int i = 0; i < count; i++)
+                    {
+                        data[i] = static_cast<const GLuint*>(indices)[i];
+                    }
+                    data[count] = static_cast<const GLuint*>(indices)[0];
+                    break;
+                  default: UNREACHABLE();
+                }
+
+                mLineLoopIB->unmap();
+                succeeded = true;
+            }
+        }
+    }
+    else
+    {
+        const int spaceNeeded = (count + 1) * sizeof(unsigned short);
+
+        if (!mLineLoopIB)
+        {
+            mLineLoopIB = new StreamingIndexBuffer(mDevice, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX16);
+        }
+
+        if (mLineLoopIB)
+        {
+            mLineLoopIB->reserveSpace(spaceNeeded, GL_UNSIGNED_SHORT);
+
+            UINT offset = 0;
+            unsigned short *data = static_cast<unsigned short*>(mLineLoopIB->map(spaceNeeded, &offset));
+            startIndex = offset / 2;
+            
+            if (data)
+            {
+                switch (type)
+                {
+                  case GL_NONE:   // Non-indexed draw
+                    for (int i = 0; i < count; i++)
+                    {
+                        data[i] = i;
+                    }
+                    data[count] = 0;
+                    break;
+                  case GL_UNSIGNED_BYTE:
+                    for (int i = 0; i < count; i++)
+                    {
+                        data[i] = static_cast<const GLubyte*>(indices)[i];
+                    }
+                    data[count] = static_cast<const GLubyte*>(indices)[0];
+                    break;
+                  case GL_UNSIGNED_SHORT:
+                    for (int i = 0; i < count; i++)
+                    {
+                        data[i] = static_cast<const GLushort*>(indices)[i];
+                    }
+                    data[count] = static_cast<const GLushort*>(indices)[0];
+                    break;
+                  case GL_UNSIGNED_INT:
+                    for (int i = 0; i < count; i++)
+                    {
+                        data[i] = static_cast<const GLuint*>(indices)[i];
+                    }
+                    data[count] = static_cast<const GLuint*>(indices)[0];
+                    break;
+                  default: UNREACHABLE();
+                }
+
+                mLineLoopIB->unmap();
+                succeeded = true;
+            }
+        }
+    }
+    
+    if (succeeded)
+    {
+        if (mAppliedIBSerial != mLineLoopIB->getSerial())
+        {
+            mDevice->SetIndices(mLineLoopIB->getBuffer());
+            mAppliedIBSerial = mLineLoopIB->getSerial();
+        }
+
+        mDevice->DrawIndexedPrimitive(D3DPT_LINESTRIP, -minIndex, minIndex, count, startIndex, count);
+    }
+    else
+    {
+        ERR("Could not create a looping index buffer for GL_LINE_LOOP.");
+        return error(GL_OUT_OF_MEMORY);
+    }
 }
 
 void Context::recordInvalidEnum()

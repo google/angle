@@ -457,9 +457,7 @@ class Context
     void drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLsizei instances);
     void sync(bool block);   // flush/finish
 
-	// Draw the last segment of a line loop
-    void drawClosingLine(unsigned int first, unsigned int last, int minIndex);
-    void drawClosingLine(GLsizei count, GLenum type, const GLvoid *indices, int minIndex);
+    void drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex);
 
     void recordInvalidEnum();
     void recordInvalidValue();
@@ -561,7 +559,7 @@ class Context
 
     Blit *mBlit;
 
-    StreamingIndexBuffer *mClosingIB;
+    StreamingIndexBuffer *mLineLoopIB;
     
     BindingPointer<Texture> mIncompleteTextures[TEXTURE_TYPE_COUNT];
 

@@ -15,11 +15,6 @@
 #include "libGLESv2/mathutil.h"
 #include "libGLESv2/main.h"
 
-namespace
-{
-    enum { INITIAL_INDEX_BUFFER_SIZE = 4096 * sizeof(GLuint) };
-}
-
 namespace gl
 {
 unsigned int IndexBuffer::mCurrentSerial = 1;

@@ -18,6 +18,11 @@
 
 #include "libGLESv2/Context.h"
 
+namespace
+{
+    enum { INITIAL_INDEX_BUFFER_SIZE = 4096 * sizeof(GLuint) };
+}
+
 namespace gl
 {
 
