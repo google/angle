@@ -100,7 +100,10 @@ std::size_t VertexDataManager::writeAttributeData(ArrayVertexBuffer *vertexBuffe
         input = static_cast<const char*>(attribute.mPointer);
     }
 
-    input += inputStride * start;
+    if (instances == 0 || attribute.mDivisor == 0)
+    {
+        input += inputStride * start;
+    }
 
     if (converter.identity && inputStride == elementSize)
     {
@@ -230,7 +233,12 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
 
                     if (streamOffset != -1)
                     {
-                        streamOffset += (start + attribs[i].mOffset / attribs[i].stride()) * converter.outputElementSize;
+                        streamOffset += (attribs[i].mOffset / attribs[i].stride()) * converter.outputElementSize;
+
+                        if (instances == 0 || attribs[i].mDivisor == 0)
+                        {
+                            streamOffset += start * converter.outputElementSize;
+                        }
                     }
                 }
                 else
