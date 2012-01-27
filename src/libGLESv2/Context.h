@@ -497,6 +497,7 @@ class Context
     bool supportsLuminanceAlphaTextures() const;
     bool supports32bitIndices() const;
     bool supportsNonPower2Texture() const;
+    bool supportsInstancing() const;
 
     void blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, 
                          GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
@@ -596,6 +597,7 @@ class Context
     bool mSupportsShaderModel3;
     bool mSupportsVertexTexture;
     bool mSupportsNonPower2Texture;
+    bool mSupportsInstancing;
     int  mMaxRenderbufferDimension;
     int  mMaxTextureDimension;
     int  mMaxCubeTextureDimension;

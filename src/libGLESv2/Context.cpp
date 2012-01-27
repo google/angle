@@ -262,9 +262,10 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         mIndexDataManager = new IndexDataManager(this, mDevice);
         mBlit = new Blit(this);
 
-        mSupportsShaderModel3 = mDeviceCaps.PixelShaderVersion == D3DPS_VERSION(3, 0);
+        mSupportsShaderModel3 = mDeviceCaps.PixelShaderVersion >= D3DPS_VERSION(3, 0);
         mSupportsVertexTexture = mDisplay->getVertexTextureSupport();
         mSupportsNonPower2Texture = mDisplay->getNonPower2TextureSupport();
+        mSupportsInstancing = mDisplay->getInstancingSupport();
 
         mMaxTextureDimension = std::min(std::min((int)mDeviceCaps.MaxTextureWidth, (int)mDeviceCaps.MaxTextureHeight),
                                         (int)gl::IMPLEMENTATION_MAX_TEXTURE_SIZE);
@@ -3461,6 +3462,11 @@ bool Context::supportsNonPower2Texture() const
     return mSupportsNonPower2Texture;
 }
 
+bool Context::supportsInstancing() const
+{
+    return mSupportsInstancing;
+}
+
 void Context::detachBuffer(GLuint buffer)
 {
     // [OpenGL ES 2.0.24] section 2.9 page 22:
@@ -3720,7 +3726,7 @@ void Context::initExtensionString()
         mExtensionString += "GL_ANGLE_framebuffer_multisample ";
     }
 
-    if (supportsShaderModel3())
+    if (supportsInstancing())
     {
         mExtensionString += "GL_ANGLE_instanced_arrays ";
     }
