@@ -3720,6 +3720,11 @@ void Context::initExtensionString()
         mExtensionString += "GL_ANGLE_framebuffer_multisample ";
     }
 
+    if (supportsShaderModel3())
+    {
+        mExtensionString += "GL_ANGLE_instanced_arrays ";
+    }
+
     mExtensionString += "GL_ANGLE_pack_reverse_row_order ";
 
     if (supportsDXT3Textures())

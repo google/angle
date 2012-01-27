@@ -3329,7 +3329,6 @@ void __stdcall glGetQueryObjectuivEXT(GLuint id, GLenum pname, GLuint *params)
 
         if (context)
         {
-
             gl::Query *queryObject = context->getQuery(id, false, GL_NONE);
 
             if (!queryObject)
@@ -6497,6 +6496,9 @@ __eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *
         {"glEndQueryEXT", (__eglMustCastToProperFunctionPointerType)glEndQueryEXT},
         {"glGetQueryivEXT", (__eglMustCastToProperFunctionPointerType)glGetQueryivEXT},
         {"glGetQueryObjectuivEXT", (__eglMustCastToProperFunctionPointerType)glGetQueryObjectuivEXT},
+        {"glVertexAttribDivisorANGLE", (__eglMustCastToProperFunctionPointerType)glVertexAttribDivisorANGLE},
+        {"glDrawArraysInstancedANGLE", (__eglMustCastToProperFunctionPointerType)glDrawArraysInstancedANGLE},
+        {"glDrawElementsInstancedANGLE", (__eglMustCastToProperFunctionPointerType)glDrawElementsInstancedANGLE},
     };
 
     for (int ext = 0; ext < sizeof(glExtensions) / sizeof(Extension); ext++)
