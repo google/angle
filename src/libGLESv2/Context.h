@@ -244,7 +244,7 @@ class VertexDeclarationCache
     VertexDeclarationCache();
     ~VertexDeclarationCache();
 
-    GLenum applyDeclaration(IDirect3DDevice9 *device, TranslatedAttribute attributes[], Program *program, GLsizei instances);
+    GLenum applyDeclaration(IDirect3DDevice9 *device, TranslatedAttribute attributes[], Program *program, GLsizei instances, GLsizei *repeatDraw);
 
     void markStateDirty();
 
@@ -511,7 +511,7 @@ class Context
 
     bool applyRenderTarget(bool ignoreViewport);
     void applyState(GLenum drawMode);
-    GLenum applyVertexBuffer(GLint first, GLsizei count, GLsizei instances);
+    GLenum applyVertexBuffer(GLint first, GLsizei count, GLsizei instances, GLsizei *repeatDraw);
     GLenum applyIndexBuffer(const GLvoid *indices, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo);
     void applyShaders();
     void applyTextures();

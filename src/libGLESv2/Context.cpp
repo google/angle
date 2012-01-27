@@ -2245,7 +2245,7 @@ void Context::applyState(GLenum drawMode)
     }
 }
 
-GLenum Context::applyVertexBuffer(GLint first, GLsizei count, GLsizei instances)
+GLenum Context::applyVertexBuffer(GLint first, GLsizei count, GLsizei instances, GLsizei *repeatDraw)
 {
     TranslatedAttribute attributes[MAX_VERTEX_ATTRIBS];
 
@@ -2255,7 +2255,7 @@ GLenum Context::applyVertexBuffer(GLint first, GLsizei count, GLsizei instances)
         return err;
     }
 
-    return mVertexDeclarationCache.applyDeclaration(mDevice, attributes, getCurrentProgram(), instances);
+    return mVertexDeclarationCache.applyDeclaration(mDevice, attributes, getCurrentProgram(), instances, repeatDraw);
 }
 
 // Applies the indices and element array bindings to the Direct3D 9 device
@@ -2941,7 +2941,8 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
 
     applyState(mode);
 
-    GLenum err = applyVertexBuffer(first, count, instances);
+    GLsizei repeatDraw = 1;
+    GLenum err = applyVertexBuffer(first, count, instances, &repeatDraw);
     if (err != GL_NO_ERROR)
     {
         return error(err);
@@ -2974,7 +2975,10 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
                     mAppliedIBSerial = countingIB->getSerial();
                 }
 
-                mDevice->DrawIndexedPrimitive(primitiveType, 0, 0, count, 0, primitiveCount);
+                for (int i = 0; i < repeatDraw; i++)
+                {
+                    mDevice->DrawIndexedPrimitive(primitiveType, 0, 0, count, 0, primitiveCount);
+                }
             }
             else
             {
@@ -3027,7 +3031,8 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
     }
 
     GLsizei vertexCount = indexInfo.maxIndex - indexInfo.minIndex + 1;
-    err = applyVertexBuffer(indexInfo.minIndex, vertexCount, instances);
+    GLsizei repeatDraw = 1;
+    err = applyVertexBuffer(indexInfo.minIndex, vertexCount, instances, &repeatDraw);
     if (err != GL_NO_ERROR)
     {
         return error(err);
@@ -3051,7 +3056,10 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
         }
         else
         {
-            mDevice->DrawIndexedPrimitive(primitiveType, -(INT)indexInfo.minIndex, indexInfo.minIndex, vertexCount, indexInfo.startIndex, primitiveCount);
+            for (int i = 0; i < repeatDraw; i++)
+            {
+                mDevice->DrawIndexedPrimitive(primitiveType, -(INT)indexInfo.minIndex, indexInfo.minIndex, vertexCount, indexInfo.startIndex, primitiveCount);
+            }
         }
     }
 }
@@ -4055,19 +4063,35 @@ VertexDeclarationCache::~VertexDeclarationCache()
     }
 }
 
-GLenum VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, TranslatedAttribute attributes[], Program *program, GLsizei instances)
+GLenum VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, TranslatedAttribute attributes[], Program *program, GLsizei instances, GLsizei *repeatDraw)
 {
+    *repeatDraw = 1;
+
     int indexedAttribute = MAX_VERTEX_ATTRIBS;
+    int instancedAttribute = MAX_VERTEX_ATTRIBS;
 
     if (instances > 0)
     {
         // Find an indexed attribute to be mapped to D3D stream 0
         for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
         {
-            if (attributes[i].active && attributes[i].divisor == 0)
+            if (attributes[i].active)
             {
-                indexedAttribute = i;
-                break;
+                if (indexedAttribute == MAX_VERTEX_ATTRIBS)
+                {
+                    if (attributes[i].divisor == 0)
+                    {
+                        indexedAttribute = i;
+                    }
+                }
+                else if (instancedAttribute == MAX_VERTEX_ATTRIBS)
+                {
+                    if (attributes[i].divisor != 0)
+                    {
+                        instancedAttribute = i;
+                    }
+                }
+                else break;   // Found both an indexed and instanced attribute
             }
         }
 
@@ -4088,28 +4112,36 @@ GLenum VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, Transl
 
             if (instances > 0)
             {
-                if (i == indexedAttribute)
+                // Due to a bug on ATI cards we can't enable instancing when none of the attributes are instanced.
+                if (instancedAttribute == MAX_VERTEX_ATTRIBS)
                 {
-                    stream = 0;
-                }
-                else if (i == 0)
-                {
-                    stream = indexedAttribute;
-                }
-
-                UINT frequency = 1;
-                
-                if (attributes[i].divisor == 0)
-                {
-                    frequency = D3DSTREAMSOURCE_INDEXEDDATA | instances;
+                    *repeatDraw = instances;
                 }
                 else
                 {
-                    frequency = D3DSTREAMSOURCE_INSTANCEDATA | attributes[i].divisor;
+                    if (i == indexedAttribute)
+                    {
+                        stream = 0;
+                    }
+                    else if (i == 0)
+                    {
+                        stream = indexedAttribute;
+                    }
+
+                    UINT frequency = 1;
+                    
+                    if (attributes[i].divisor == 0)
+                    {
+                        frequency = D3DSTREAMSOURCE_INDEXEDDATA | instances;
+                    }
+                    else
+                    {
+                        frequency = D3DSTREAMSOURCE_INSTANCEDATA | attributes[i].divisor;
+                    }
+                    
+                    device->SetStreamSourceFreq(stream, frequency);
+                    mInstancingEnabled = true;
                 }
-                
-                device->SetStreamSourceFreq(stream, frequency);
-                mInstancingEnabled = true;
             }
 
             if (mAppliedVBs[stream].serial != attributes[i].serial ||
@@ -4132,7 +4164,7 @@ GLenum VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, Transl
         }
     }
 
-    if (instances == 0)
+    if (instances == 0 || instancedAttribute == MAX_VERTEX_ATTRIBS)
     {
         if (mInstancingEnabled)
         {
