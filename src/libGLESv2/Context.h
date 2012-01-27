@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2011 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -244,7 +244,7 @@ class VertexDeclarationCache
     VertexDeclarationCache();
     ~VertexDeclarationCache();
 
-    GLenum applyDeclaration(IDirect3DDevice9 *device, TranslatedAttribute attributes[], Program *program);
+    GLenum applyDeclaration(IDirect3DDevice9 *device, TranslatedAttribute attributes[], Program *program, GLsizei instances);
 
     void markStateDirty();
 
@@ -262,6 +262,7 @@ class VertexDeclarationCache
 
     VBData mAppliedVBs[MAX_VERTEX_ATTRIBS];
     IDirect3DVertexDeclaration9 *mLastSetVDecl;
+    bool mInstancingEnabled;
 
     struct VertexDeclCacheEntry
     {
@@ -452,10 +453,8 @@ class Context
 
     void readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLsizei *bufSize, void* pixels);
     void clear(GLbitfield mask);
-    void drawArrays(GLenum mode, GLint first, GLsizei count);
-    void drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices);
-    void drawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei primcount);
-    void drawElementsInstanced(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLsizei primcount);
+    void drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instances);
+    void drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLsizei instances);
     void sync(bool block);   // flush/finish
 
 	// Draw the last segment of a line loop
@@ -514,7 +513,7 @@ class Context
 
     bool applyRenderTarget(bool ignoreViewport);
     void applyState(GLenum drawMode);
-    GLenum applyVertexBuffer(GLint first, GLsizei count);
+    GLenum applyVertexBuffer(GLint first, GLsizei count, GLsizei instances);
     GLenum applyIndexBuffer(const GLvoid *indices, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo);
     void applyShaders();
     void applyTextures();

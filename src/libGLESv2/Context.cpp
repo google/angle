@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2011 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -2250,7 +2250,7 @@ void Context::applyState(GLenum drawMode)
     }
 }
 
-GLenum Context::applyVertexBuffer(GLint first, GLsizei count)
+GLenum Context::applyVertexBuffer(GLint first, GLsizei count, GLsizei instances)
 {
     TranslatedAttribute attributes[MAX_VERTEX_ATTRIBS];
 
@@ -2260,7 +2260,7 @@ GLenum Context::applyVertexBuffer(GLint first, GLsizei count)
         return err;
     }
 
-    return mVertexDeclarationCache.applyDeclaration(mDevice, attributes, getCurrentProgram());
+    return mVertexDeclarationCache.applyDeclaration(mDevice, attributes, getCurrentProgram(), instances);
 }
 
 // Applies the indices and element array bindings to the Direct3D 9 device
@@ -2810,6 +2810,11 @@ void Context::clear(GLbitfield mask)
             mDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TFACTOR);
             mDevice->SetRenderState(D3DRS_TEXTUREFACTOR, color);
             mDevice->SetRenderState(D3DRS_MULTISAMPLEMASK, 0xFFFFFFFF);
+            
+            for(int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
+            {
+                mDevice->SetStreamSourceFreq(i, 1);
+            }
 
             hr = mDevice->EndStateBlock(&mMaskedClearSavedState);
             ASSERT(SUCCEEDED(hr) || hr == D3DERR_OUTOFVIDEOMEMORY || hr == E_OUTOFMEMORY);
@@ -2869,6 +2874,11 @@ void Context::clear(GLbitfield mask)
         mDevice->SetRenderState(D3DRS_TEXTUREFACTOR, color);
         mDevice->SetRenderState(D3DRS_MULTISAMPLEMASK, 0xFFFFFFFF);
 
+        for(int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
+        {
+            mDevice->SetStreamSourceFreq(i, 1);
+        }
+
         float quad[4][4];   // A quadrilateral covering the target, aligned to match the edges
         quad[0][0] = -0.5f;
         quad[0][1] = mRenderTargetDesc.Height - 0.5f;
@@ -2911,7 +2921,7 @@ void Context::clear(GLbitfield mask)
     }
 }
 
-void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
+void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instances)
 {
     if (!mState.currentProgram)
     {
@@ -2936,7 +2946,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
 
     applyState(mode);
 
-    GLenum err = applyVertexBuffer(first, count);
+    GLenum err = applyVertexBuffer(first, count, instances);
     if (err != GL_NO_ERROR)
     {
         return error(err);
@@ -2963,7 +2973,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
     }
 }
 
-void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices)
+void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLsizei instances)
 {
     if (!mState.currentProgram)
     {
@@ -3001,7 +3011,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
     }
 
     GLsizei vertexCount = indexInfo.maxIndex - indexInfo.minIndex + 1;
-    err = applyVertexBuffer(indexInfo.minIndex, vertexCount);
+    err = applyVertexBuffer(indexInfo.minIndex, vertexCount, instances);
     if (err != GL_NO_ERROR)
     {
         return error(err);
@@ -3026,20 +3036,6 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
             drawClosingLine(count, type, indices, indexInfo.minIndex);
         }
     }
-}
-
-void Context::drawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei primcount)
-{
-    UNIMPLEMENTED();   // TODO
-
-    drawArrays(mode, first, count);
-}
-
-void Context::drawElementsInstanced(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLsizei primcount)
-{
-    UNIMPLEMENTED();   // TODO
-
-    drawElements(mode, count, type, indices);
 }
 
 // Implements glFlush when block is false, glFinish when block is true
@@ -3990,8 +3986,28 @@ VertexDeclarationCache::~VertexDeclarationCache()
     }
 }
 
-GLenum VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, TranslatedAttribute attributes[], Program *program)
+GLenum VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, TranslatedAttribute attributes[], Program *program, GLsizei instances)
 {
+    int indexedAttribute = MAX_VERTEX_ATTRIBS;
+
+    if (instances > 0)
+    {
+        // Find an indexed attribute to be mapped to D3D stream 0
+        for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
+        {
+            if (attributes[i].active && attributes[i].divisor == 0)
+            {
+                indexedAttribute = i;
+                break;
+            }
+        }
+
+        if (indexedAttribute == MAX_VERTEX_ATTRIBS)
+        {
+            return GL_INVALID_OPERATION;
+        }
+    }
+
     D3DVERTEXELEMENT9 elements[MAX_VERTEX_ATTRIBS + 1];
     D3DVERTEXELEMENT9 *element = &elements[0];
 
@@ -3999,23 +4015,64 @@ GLenum VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, Transl
     {
         if (attributes[i].active)
         {
-            if (mAppliedVBs[i].serial != attributes[i].serial ||
-                mAppliedVBs[i].stride != attributes[i].stride ||
-                mAppliedVBs[i].offset != attributes[i].offset)
+            int stream = i;
+
+            if (instances > 0)
             {
-                device->SetStreamSource(i, attributes[i].vertexBuffer, attributes[i].offset, attributes[i].stride);
-                mAppliedVBs[i].serial = attributes[i].serial;
-                mAppliedVBs[i].stride = attributes[i].stride;
-                mAppliedVBs[i].offset = attributes[i].offset;
+                if (i == indexedAttribute)
+                {
+                    stream = 0;
+                }
+                else if (i == 0)
+                {
+                    stream = indexedAttribute;
+                }
+
+                UINT frequency = 1;
+                
+                if (attributes[i].divisor == 0)
+                {
+                    frequency = D3DSTREAMSOURCE_INDEXEDDATA | instances;
+                }
+                else
+                {
+                    frequency = D3DSTREAMSOURCE_INSTANCEDATA | attributes[i].divisor;
+                }
+                
+                device->SetStreamSourceFreq(stream, frequency);
+                mInstancingEnabled = true;
             }
 
-            element->Stream = i;
+            if (mAppliedVBs[stream].serial != attributes[i].serial ||
+                mAppliedVBs[stream].stride != attributes[i].stride ||
+                mAppliedVBs[stream].offset != attributes[i].offset)
+            {
+                device->SetStreamSource(stream, attributes[i].vertexBuffer, attributes[i].offset, attributes[i].stride);
+                mAppliedVBs[stream].serial = attributes[i].serial;
+                mAppliedVBs[stream].stride = attributes[i].stride;
+                mAppliedVBs[stream].offset = attributes[i].offset;
+            }
+
+            element->Stream = stream;
             element->Offset = 0;
             element->Type = attributes[i].type;
             element->Method = D3DDECLMETHOD_DEFAULT;
             element->Usage = D3DDECLUSAGE_TEXCOORD;
             element->UsageIndex = program->getSemanticIndex(i);
             element++;
+        }
+    }
+
+    if (instances == 0)
+    {
+        if (mInstancingEnabled)
+        {
+            for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
+            {
+                device->SetStreamSourceFreq(i, 1);
+            }
+
+            mInstancingEnabled = false;
         }
     }
 
@@ -4073,6 +4130,7 @@ void VertexDeclarationCache::markStateDirty()
     }
 
     mLastSetVDecl = NULL;
+    mInstancingEnabled = true;   // Forces it to be disabled when not used
 }
 
 }

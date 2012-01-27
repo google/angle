@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2011 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -245,6 +245,8 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
 
                 translated[i].vertexBuffer = vertexBuffer->getBuffer();
                 translated[i].serial = vertexBuffer->getSerial();
+                translated[i].divisor = attribs[i].mDivisor;
+
                 translated[i].type = converter.d3dDeclType;
                 translated[i].stride = converter.outputElementSize;
                 translated[i].offset = streamOffset;
@@ -277,6 +279,7 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
 
                 translated[i].vertexBuffer = mCurrentValueBuffer[i]->getBuffer();
                 translated[i].serial = mCurrentValueBuffer[i]->getSerial();
+                translated[i].divisor = 0;
 
                 translated[i].type = D3DDECLTYPE_FLOAT4;
                 translated[i].stride = 0;

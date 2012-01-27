@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2011 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -1943,7 +1943,7 @@ void __stdcall glDrawArrays(GLenum mode, GLint first, GLsizei count)
 
         if (context)
         {
-            context->drawArrays(mode, first, count);
+            context->drawArrays(mode, first, count, 0);
         }
     }
     catch(std::bad_alloc&)
@@ -1963,11 +1963,14 @@ void __stdcall glDrawArraysInstancedANGLE(GLenum mode, GLint first, GLsizei coun
             return error(GL_INVALID_VALUE);
         }
 
-        gl::Context *context = gl::getNonLostContext();
-
-        if (context)
+        if (primcount > 0)
         {
-            context->drawArraysInstanced(mode, first, count, primcount);
+            gl::Context *context = gl::getNonLostContext();
+
+            if (context)
+            {
+                context->drawArrays(mode, first, count, primcount);
+            }
         }
     }
     catch(std::bad_alloc&)
@@ -2007,7 +2010,7 @@ void __stdcall glDrawElements(GLenum mode, GLsizei count, GLenum type, const GLv
                 return error(GL_INVALID_ENUM);
             }
         
-            context->drawElements(mode, count, type, indices);
+            context->drawElements(mode, count, type, indices, 0);
         }
     }
     catch(std::bad_alloc&)
@@ -2028,26 +2031,29 @@ void __stdcall glDrawElementsInstancedANGLE(GLenum mode, GLsizei count, GLenum t
             return error(GL_INVALID_VALUE);
         }
 
-        gl::Context *context = gl::getNonLostContext();
-
-        if (context)
+        if (primcount > 0)
         {
-            switch (type)
+            gl::Context *context = gl::getNonLostContext();
+
+            if (context)
             {
-              case GL_UNSIGNED_BYTE:
-              case GL_UNSIGNED_SHORT:
-                break;
-              case GL_UNSIGNED_INT:
-                if (!context->supports32bitIndices())
+                switch (type)
                 {
-                    return error(GL_INVALID_ENUM);    
+                  case GL_UNSIGNED_BYTE:
+                  case GL_UNSIGNED_SHORT:
+                    break;
+                  case GL_UNSIGNED_INT:
+                    if (!context->supports32bitIndices())
+                    {
+                        return error(GL_INVALID_ENUM);    
+                    }
+                    break;
+                  default:
+                    return error(GL_INVALID_ENUM);
                 }
-                break;
-              default:
-                return error(GL_INVALID_ENUM);
+            
+                context->drawElements(mode, count, type, indices, primcount);
             }
-        
-            context->drawElementsInstanced(mode, count, type, indices, primcount);
         }
     }
     catch(std::bad_alloc&)
