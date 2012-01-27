@@ -104,7 +104,7 @@ struct Color
 class VertexAttribute
 {
   public:
-    VertexAttribute() : mType(GL_FLOAT), mSize(0), mNormalized(false), mStride(0), mPointer(NULL), mArrayEnabled(false)
+    VertexAttribute() : mType(GL_FLOAT), mSize(0), mNormalized(false), mStride(0), mPointer(NULL), mArrayEnabled(false), mDivisor(0)
     {
         mCurrentValue[0] = 0.0f;
         mCurrentValue[1] = 0.0f;
@@ -147,6 +147,7 @@ class VertexAttribute
 
     bool mArrayEnabled;   // From glEnable/DisableVertexAttribArray
     float mCurrentValue[4];   // From glVertexAttrib
+    unsigned int mDivisor;
 };
 
 typedef VertexAttribute VertexAttributeArray[MAX_VERTEX_ATTRIBS];
@@ -423,6 +424,7 @@ class Context
     void setRenderbufferStorage(RenderbufferStorage *renderbuffer);
 
     void setVertexAttrib(GLuint index, const GLfloat *values);
+    void setVertexAttribDivisor(GLuint index, GLuint divisor);
 
     Buffer *getBuffer(GLuint handle);
     Fence *getFence(GLuint handle);
@@ -451,12 +453,14 @@ class Context
     void readPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLsizei *bufSize, void* pixels);
     void clear(GLbitfield mask);
     void drawArrays(GLenum mode, GLint first, GLsizei count);
-    void drawElements(GLenum mode, GLsizei count, GLenum type, const void *indices);
+    void drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices);
+    void drawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei primcount);
+    void drawElementsInstanced(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLsizei primcount);
     void sync(bool block);   // flush/finish
 
 	// Draw the last segment of a line loop
     void drawClosingLine(unsigned int first, unsigned int last, int minIndex);
-    void drawClosingLine(GLsizei count, GLenum type, const void *indices, int minIndex);
+    void drawClosingLine(GLsizei count, GLenum type, const GLvoid *indices, int minIndex);
 
     void recordInvalidEnum();
     void recordInvalidValue();
@@ -511,7 +515,7 @@ class Context
     bool applyRenderTarget(bool ignoreViewport);
     void applyState(GLenum drawMode);
     GLenum applyVertexBuffer(GLint first, GLsizei count);
-    GLenum applyIndexBuffer(const void *indices, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo);
+    GLenum applyIndexBuffer(const GLvoid *indices, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo);
     void applyShaders();
     void applyTextures();
     void applyTextures(SamplerType type);

@@ -1952,6 +1952,30 @@ void __stdcall glDrawArrays(GLenum mode, GLint first, GLsizei count)
     }
 }
 
+void __stdcall glDrawArraysInstancedANGLE(GLenum mode, GLint first, GLsizei count, GLsizei primcount)
+{
+    EVENT("(GLenum mode = 0x%X, GLint first = %d, GLsizei count = %d, GLsizei primcount = %d)", mode, first, count, primcount);
+
+    try
+    {
+        if (count < 0 || first < 0 || primcount < 0)
+        {
+            return error(GL_INVALID_VALUE);
+        }
+
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            context->drawArraysInstanced(mode, first, count, primcount);
+        }
+    }
+    catch(std::bad_alloc&)
+    {
+        return error(GL_OUT_OF_MEMORY);
+    }
+}
+
 void __stdcall glDrawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid* indices)
 {
     EVENT("(GLenum mode = 0x%X, GLsizei count = %d, GLenum type = 0x%X, const GLvoid* indices = 0x%0.8p)",
@@ -1984,6 +2008,46 @@ void __stdcall glDrawElements(GLenum mode, GLsizei count, GLenum type, const GLv
             }
         
             context->drawElements(mode, count, type, indices);
+        }
+    }
+    catch(std::bad_alloc&)
+    {
+        return error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glDrawElementsInstancedANGLE(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLsizei primcount)
+{
+    EVENT("(GLenum mode = 0x%X, GLsizei count = %d, GLenum type = 0x%X, const GLvoid* indices = 0x%0.8p, GLsizei primcount = %d)",
+          mode, count, type, indices, primcount);
+
+    try
+    {
+        if (count < 0 || primcount < 0)
+        {
+            return error(GL_INVALID_VALUE);
+        }
+
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            switch (type)
+            {
+              case GL_UNSIGNED_BYTE:
+              case GL_UNSIGNED_SHORT:
+                break;
+              case GL_UNSIGNED_INT:
+                if (!context->supports32bitIndices())
+                {
+                    return error(GL_INVALID_ENUM);    
+                }
+                break;
+              default:
+                return error(GL_INVALID_ENUM);
+            }
+        
+            context->drawElementsInstanced(mode, count, type, indices, primcount);
         }
     }
     catch(std::bad_alloc&)
@@ -3920,6 +3984,9 @@ void __stdcall glGetVertexAttribfv(GLuint index, GLenum pname, GLfloat* params)
                     params[i] = attribState.mCurrentValue[i];
                 }
                 break;
+              case GL_VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE:
+                *params = (GLfloat)attribState.mDivisor;
+                break;
               default: return error(GL_INVALID_ENUM);
             }
         }
@@ -3973,6 +4040,9 @@ void __stdcall glGetVertexAttribiv(GLuint index, GLenum pname, GLint* params)
                     float currentValue = attribState.mCurrentValue[i];
                     params[i] = (GLint)(currentValue > 0.0f ? floor(currentValue + 0.5f) : ceil(currentValue - 0.5f));
                 }
+                break;
+              case GL_VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE:
+                *params = (GLint)attribState.mDivisor;
                 break;
               default: return error(GL_INVALID_ENUM);
             }
@@ -6217,6 +6287,30 @@ void __stdcall glVertexAttrib4fv(GLuint index, const GLfloat* values)
         if (context)
         {
             context->setVertexAttrib(index, values);
+        }
+    }
+    catch(std::bad_alloc&)
+    {
+        return error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glVertexAttribDivisorANGLE(GLuint index, GLuint divisor)
+{
+    EVENT("(GLuint index = %d, GLuint divisor = %d)", index, divisor);
+
+    try
+    {
+        if (index >= gl::MAX_VERTEX_ATTRIBS)
+        {
+            return error(GL_INVALID_VALUE);
+        }
+
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            context->setVertexAttribDivisor(index, divisor);
         }
     }
     catch(std::bad_alloc&)

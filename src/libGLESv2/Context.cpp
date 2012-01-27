@@ -2264,7 +2264,7 @@ GLenum Context::applyVertexBuffer(GLint first, GLsizei count)
 }
 
 // Applies the indices and element array bindings to the Direct3D 9 device
-GLenum Context::applyIndexBuffer(const void *indices, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo)
+GLenum Context::applyIndexBuffer(const GLvoid *indices, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo)
 {
     GLenum err = mIndexDataManager->prepareIndexData(type, count, mState.elementArrayBuffer.get(), indices, indexInfo);
 
@@ -2963,7 +2963,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
     }
 }
 
-void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void *indices)
+void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices)
 {
     if (!mState.currentProgram)
     {
@@ -3026,6 +3026,20 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void *
             drawClosingLine(count, type, indices, indexInfo.minIndex);
         }
     }
+}
+
+void Context::drawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei primcount)
+{
+    UNIMPLEMENTED();   // TODO
+
+    drawArrays(mode, first, count);
+}
+
+void Context::drawElementsInstanced(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLsizei primcount)
+{
+    UNIMPLEMENTED();   // TODO
+
+    drawElements(mode, count, type, indices);
 }
 
 // Implements glFlush when block is false, glFinish when block is true
@@ -3096,7 +3110,7 @@ void Context::drawClosingLine(unsigned int first, unsigned int last, int minInde
     }
 }
 
-void Context::drawClosingLine(GLsizei count, GLenum type, const void *indices, int minIndex)
+void Context::drawClosingLine(GLsizei count, GLenum type, const GLvoid *indices, int minIndex)
 {
     unsigned int first = 0;
     unsigned int last = 0;
@@ -3560,6 +3574,13 @@ void Context::setVertexAttrib(GLuint index, const GLfloat *values)
     mState.vertexAttribute[index].mCurrentValue[3] = values[3];
 
     mVertexDataManager->dirtyCurrentValue(index);
+}
+
+void Context::setVertexAttribDivisor(GLuint index, GLuint divisor)
+{
+    ASSERT(index < gl::MAX_VERTEX_ATTRIBS);
+
+    mState.vertexAttribute[index].mDivisor = divisor;
 }
 
 // keep list sorted in following order

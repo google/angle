@@ -92,7 +92,7 @@ void computeRange(const IndexType *indices, GLsizei count, GLuint *minIndex, GLu
     }
 }
 
-void computeRange(GLenum type, const void *indices, GLsizei count, GLuint *minIndex, GLuint *maxIndex)
+void computeRange(GLenum type, const GLvoid *indices, GLsizei count, GLuint *minIndex, GLuint *maxIndex)
 {
     if (type == GL_UNSIGNED_BYTE)
     {
@@ -109,7 +109,7 @@ void computeRange(GLenum type, const void *indices, GLsizei count, GLuint *minIn
     else UNREACHABLE();
 }
 
-GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, Buffer *buffer, const void *indices, TranslatedIndexData *translated)
+GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, Buffer *buffer, const GLvoid *indices, TranslatedIndexData *translated)
 {
     if (!mStreamingBufferShort)
     {

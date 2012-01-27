@@ -123,7 +123,7 @@ class IndexDataManager
     IndexDataManager(Context *context, IDirect3DDevice9 *evice);
     virtual ~IndexDataManager();
 
-    GLenum prepareIndexData(GLenum type, GLsizei count, Buffer *arrayElementBuffer, const void *indices, TranslatedIndexData *translated);
+    GLenum prepareIndexData(GLenum type, GLsizei count, Buffer *arrayElementBuffer, const GLvoid *indices, TranslatedIndexData *translated);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(IndexDataManager);
