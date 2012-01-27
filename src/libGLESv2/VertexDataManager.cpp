@@ -65,7 +65,7 @@ VertexDataManager::~VertexDataManager()
     }
 }
 
-std::size_t VertexDataManager::writeAttributeData(ArrayVertexBuffer *vertexBuffer, GLint start, GLsizei count, const VertexAttribute &attribute)
+std::size_t VertexDataManager::writeAttributeData(ArrayVertexBuffer *vertexBuffer, GLint start, GLsizei count, const VertexAttribute &attribute, GLsizei instances)
 {
     Buffer *buffer = attribute.mBoundBuffer.get();
 
@@ -78,7 +78,7 @@ std::size_t VertexDataManager::writeAttributeData(ArrayVertexBuffer *vertexBuffe
     
     if (vertexBuffer)
     {
-        output = vertexBuffer->map(attribute, spaceRequired(attribute, count), &streamOffset);
+        output = vertexBuffer->map(attribute, spaceRequired(attribute, count, instances), &streamOffset);
     }
 
     if (output == NULL)
@@ -116,7 +116,7 @@ std::size_t VertexDataManager::writeAttributeData(ArrayVertexBuffer *vertexBuffe
     return streamOffset;
 }
 
-GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, TranslatedAttribute *translated)
+GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, TranslatedAttribute *translated, GLsizei instances)
 {
     if (!mStreamingBuffer)
     {
@@ -144,7 +144,7 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
                 if (staticBuffer->size() == 0)
                 {
                     int totalCount = elementsInBuffer(attribs[i], buffer->size());
-                    staticBuffer->addRequiredSpace(spaceRequired(attribs[i], totalCount));
+                    staticBuffer->addRequiredSpace(spaceRequired(attribs[i], totalCount, 0));
                 }
                 else if (staticBuffer->lookupAttribute(attribs[i]) == -1)
                 {
@@ -159,19 +159,19 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
 
                             if (staticBuffer == previousStaticBuffer)
                             {
-                                mStreamingBuffer->addRequiredSpace(spaceRequired(attribs[previous], count));
+                                mStreamingBuffer->addRequiredSpace(spaceRequired(attribs[previous], count, instances));
                             }
                         }
                     }
 
-                    mStreamingBuffer->addRequiredSpace(spaceRequired(attribs[i], count));
+                    mStreamingBuffer->addRequiredSpace(spaceRequired(attribs[i], count, instances));
 
                     buffer->invalidateStaticData();
                 }    
             }
             else
             {
-                mStreamingBuffer->addRequiredSpace(spaceRequired(attribs[i], count));
+                mStreamingBuffer->addRequiredSpace(spaceRequired(attribs[i], count, instances));
             }
         }
     }
@@ -225,7 +225,7 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
                         int totalCount = elementsInBuffer(attribs[i], buffer->size());
                         int startIndex = attribs[i].mOffset / attribs[i].stride();
 
-                        streamOffset = writeAttributeData(staticBuffer, -startIndex, totalCount, attribs[i]);
+                        streamOffset = writeAttributeData(staticBuffer, -startIndex, totalCount, attribs[i], 0);
                     }
 
                     if (streamOffset != -1)
@@ -235,7 +235,7 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
                 }
                 else
                 {
-                    streamOffset = writeAttributeData(mStreamingBuffer, start, count, attribs[i]);
+                    streamOffset = writeAttributeData(mStreamingBuffer, start, count, attribs[i], instances);
                 }
 
                 if (streamOffset == -1)
@@ -304,9 +304,18 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
     return GL_NO_ERROR;
 }
 
-std::size_t VertexDataManager::spaceRequired(const VertexAttribute &attrib, std::size_t count) const
+std::size_t VertexDataManager::spaceRequired(const VertexAttribute &attrib, std::size_t count, GLsizei instances) const
 {
-    return formatConverter(attrib).outputElementSize * count;
+    size_t elementSize = formatConverter(attrib).outputElementSize;
+
+    if (instances == 0 || attrib.mDivisor == 0)
+    {
+        return elementSize * count;
+    }
+    else
+    {
+        return elementSize * ((instances + attrib.mDivisor - 1) / attrib.mDivisor);
+    }
 }
 
 // Mapping from OpenGL-ES vertex attrib type to D3D decl type:

@@ -118,13 +118,13 @@ class VertexDataManager
 
     void dirtyCurrentValue(int index) { mDirtyCurrentValue[index] = true; }
 
-    GLenum prepareVertexData(GLint start, GLsizei count, TranslatedAttribute *outAttribs);
+    GLenum prepareVertexData(GLint start, GLsizei count, TranslatedAttribute *outAttribs, GLsizei instances);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(VertexDataManager);
 
-    std::size_t spaceRequired(const VertexAttribute &attrib, std::size_t count) const;
-    std::size_t writeAttributeData(ArrayVertexBuffer *vertexBuffer, GLint start, GLsizei count, const VertexAttribute &attribute);
+    std::size_t spaceRequired(const VertexAttribute &attrib, std::size_t count, GLsizei instances) const;
+    std::size_t writeAttributeData(ArrayVertexBuffer *vertexBuffer, GLint start, GLsizei count, const VertexAttribute &attribute, GLsizei instances);
 
     Context *const mContext;
     IDirect3DDevice9 *const mDevice;

@@ -2254,7 +2254,7 @@ GLenum Context::applyVertexBuffer(GLint first, GLsizei count, GLsizei instances)
 {
     TranslatedAttribute attributes[MAX_VERTEX_ATTRIBS];
 
-    GLenum err = mVertexDataManager->prepareVertexData(first, count, attributes);
+    GLenum err = mVertexDataManager->prepareVertexData(first, count, attributes, instances);
     if (err != GL_NO_ERROR)
     {
         return err;
