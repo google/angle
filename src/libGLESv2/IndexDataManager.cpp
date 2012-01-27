@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -48,12 +48,15 @@ IndexDataManager::IndexDataManager(Context *context, IDirect3DDevice9 *device) :
     {
         ERR("Failed to allocate the streaming index buffer(s).");
     }
+
+    mCountingBuffer = NULL;
 }
 
 IndexDataManager::~IndexDataManager()
 {
     delete mStreamingBufferShort;
     delete mStreamingBufferInt;
+    delete mCountingBuffer;
 }
 
 void convertIndices(GLenum type, const void *input, GLsizei count, void *output)
@@ -226,6 +229,61 @@ std::size_t IndexDataManager::typeSize(GLenum type) const
       case GL_UNSIGNED_BYTE:  return sizeof(GLubyte);
       default: UNREACHABLE(); return sizeof(GLushort);
     }
+}
+
+StaticIndexBuffer *IndexDataManager::getCountingIndices(GLsizei count)
+{
+    if (count <= 65536)   // 16-bit indices
+    {
+        const unsigned int spaceNeeded = count * sizeof(unsigned short);
+
+        if (!mCountingBuffer || mCountingBuffer->size() < spaceNeeded)
+        {
+            delete mCountingBuffer;
+            mCountingBuffer = new StaticIndexBuffer(mDevice);
+            mCountingBuffer->reserveSpace(spaceNeeded, GL_UNSIGNED_SHORT);
+
+            UINT offset;
+            unsigned short *data = static_cast<unsigned short*>(mCountingBuffer->map(spaceNeeded, &offset));
+        
+            if (data)
+            {
+                for(int i = 0; i < count; i++)
+                {
+                    data[i] = i;
+                }
+
+                mCountingBuffer->unmap();
+            }
+        }
+    }
+    else if (mStreamingBufferInt)   // 32-bit indices supported
+    {
+        const unsigned int spaceNeeded = count * sizeof(unsigned int);
+
+        if (!mCountingBuffer || mCountingBuffer->size() < spaceNeeded)
+        {
+            delete mCountingBuffer;
+            mCountingBuffer = new StaticIndexBuffer(mDevice);
+            mCountingBuffer->reserveSpace(spaceNeeded, GL_UNSIGNED_INT);
+
+            UINT offset;
+            unsigned int *data = static_cast<unsigned int*>(mCountingBuffer->map(spaceNeeded, &offset));
+        
+            if (data)
+            {
+                for(int i = 0; i < count; i++)
+                {
+                    data[i] = i;
+                }
+                
+                mCountingBuffer->unmap();
+            }
+        }
+    }
+    else return NULL;
+    
+    return mCountingBuffer;
 }
 
 IndexBuffer::IndexBuffer(IDirect3DDevice9 *device, UINT size, D3DFORMAT format) : mDevice(device), mBufferSize(size), mIndexBuffer(NULL)

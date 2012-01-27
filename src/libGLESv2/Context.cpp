@@ -2964,7 +2964,29 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
     {
         mDisplay->startScene();
         
-        mDevice->DrawPrimitive(primitiveType, 0, primitiveCount);
+        if (instances == 0)
+        {
+            mDevice->DrawPrimitive(primitiveType, 0, primitiveCount);
+        }
+        else
+        {
+            StaticIndexBuffer *countingIB = mIndexDataManager->getCountingIndices(count);
+            if (countingIB)
+            {
+                if (mAppliedIBSerial != countingIB->getSerial())
+                {
+                    mDevice->SetIndices(countingIB->getBuffer());
+                    mAppliedIBSerial = countingIB->getSerial();
+                }
+
+                mDevice->DrawIndexedPrimitive(primitiveType, 0, 0, count, 0, primitiveCount);
+            }
+            else
+            {
+                ERR("Could not create a counting index buffer for glDrawArraysInstanced.");
+                return error(GL_OUT_OF_MEMORY);
+            }
+        }
 
         if (mode == GL_LINE_LOOP)   // Draw the last segment separately
         {

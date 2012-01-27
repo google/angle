@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -124,6 +124,7 @@ class IndexDataManager
     virtual ~IndexDataManager();
 
     GLenum prepareIndexData(GLenum type, GLsizei count, Buffer *arrayElementBuffer, const GLvoid *indices, TranslatedIndexData *translated);
+    StaticIndexBuffer *getCountingIndices(GLsizei count);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(IndexDataManager);
@@ -135,6 +136,7 @@ class IndexDataManager
 
     StreamingIndexBuffer *mStreamingBufferShort;
     StreamingIndexBuffer *mStreamingBufferInt;
+    StaticIndexBuffer *mCountingBuffer;
 };
 
 }
