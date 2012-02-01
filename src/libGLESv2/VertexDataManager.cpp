@@ -517,14 +517,20 @@ public:
         { TRANSLATION_FOR_TYPE_NORM_SIZE(type, true, 1), TRANSLATION_FOR_TYPE_NORM_SIZE(type, true, 2), TRANSLATION_FOR_TYPE_NORM_SIZE(type, true, 3), TRANSLATION_FOR_TYPE_NORM_SIZE(type, true, 4) },     \
     }
 
+#define TRANSLATIONS_FOR_TYPE_NO_NORM(type)                                                                                                                                                                 \
+    {                                                                                                                                                                                                       \
+        { TRANSLATION_FOR_TYPE_NORM_SIZE(type, false, 1), TRANSLATION_FOR_TYPE_NORM_SIZE(type, false, 2), TRANSLATION_FOR_TYPE_NORM_SIZE(type, false, 3), TRANSLATION_FOR_TYPE_NORM_SIZE(type, false, 4) }, \
+        { TRANSLATION_FOR_TYPE_NORM_SIZE(type, false, 1), TRANSLATION_FOR_TYPE_NORM_SIZE(type, false, 2), TRANSLATION_FOR_TYPE_NORM_SIZE(type, false, 3), TRANSLATION_FOR_TYPE_NORM_SIZE(type, false, 4) }, \
+    }
+
 const VertexDataManager::TranslationDescription VertexDataManager::mPossibleTranslations[NUM_GL_VERTEX_ATTRIB_TYPES][2][4] = // [GL types as enumerated by typeIndex()][normalized][size-1]
 {
     TRANSLATIONS_FOR_TYPE(GL_BYTE),
     TRANSLATIONS_FOR_TYPE(GL_UNSIGNED_BYTE),
     TRANSLATIONS_FOR_TYPE(GL_SHORT),
     TRANSLATIONS_FOR_TYPE(GL_UNSIGNED_SHORT),
-    TRANSLATIONS_FOR_TYPE(GL_FIXED),
-    TRANSLATIONS_FOR_TYPE(GL_FLOAT)
+    TRANSLATIONS_FOR_TYPE_NO_NORM(GL_FIXED),
+    TRANSLATIONS_FOR_TYPE_NO_NORM(GL_FLOAT)
 };
 
 void VertexDataManager::checkVertexCaps(DWORD declTypes)
