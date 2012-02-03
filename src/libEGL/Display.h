@@ -86,8 +86,9 @@ class Display
     virtual void notifyDeviceLost();
     bool isDeviceLost();
 
-    bool isD3d9ExDevice() { return mD3d9Ex != NULL; }
+    bool isD3d9ExDevice() const { return mD3d9Ex != NULL; }
     const char *getExtensionString() const;
+    bool shareHandleSupported() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Display);
