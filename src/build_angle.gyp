@@ -128,34 +128,34 @@
         'compiler/VersionGLSL.h',
       ],
     },
-    {
-      'target_name': 'translator_hlsl',
-      'type': '<(component)',
-      'dependencies': ['translator_common'],
-      'include_dirs': [
-        '.',
-        '../include',
-      ],
-      'defines': [
-        'COMPILER_IMPLEMENTATION',
-      ],
-      'sources': [
-        'compiler/ShaderLang.cpp',
-        'compiler/CodeGenHLSL.cpp',
-        'compiler/OutputHLSL.cpp',
-        'compiler/OutputHLSL.h',
-        'compiler/TranslatorHLSL.cpp',
-        'compiler/TranslatorHLSL.h',
-        'compiler/UnfoldSelect.cpp',
-        'compiler/UnfoldSelect.h',
-        'compiler/SearchSymbol.cpp',
-        'compiler/SearchSymbol.h',
-      ],
-    },
   ],
   'conditions': [
     ['OS=="win"', {
       'targets': [
+        {
+          'target_name': 'translator_hlsl',
+          'type': '<(component)',
+          'dependencies': ['translator_common'],
+          'include_dirs': [
+            '.',
+            '../include',
+          ],
+          'defines': [
+            'COMPILER_IMPLEMENTATION',
+          ],
+          'sources': [
+            'compiler/ShaderLang.cpp',
+            'compiler/CodeGenHLSL.cpp',
+            'compiler/OutputHLSL.cpp',
+            'compiler/OutputHLSL.h',
+            'compiler/TranslatorHLSL.cpp',
+            'compiler/TranslatorHLSL.h',
+            'compiler/UnfoldSelect.cpp',
+            'compiler/UnfoldSelect.h',
+            'compiler/SearchSymbol.cpp',
+            'compiler/SearchSymbol.h',
+          ],
+        },
         {
           'target_name': 'libGLESv2',
           'type': 'shared_library',
