@@ -288,6 +288,12 @@ bool Display::initialize()
 
     mDeviceWindow = CreateWindowEx(WS_EX_NOACTIVATE, className, windowName, WS_DISABLED | WS_POPUP, 0, 0, 1, 1, HWND_MESSAGE, NULL, GetModuleHandle(NULL), NULL);
 
+    if (!createDevice())
+    {
+        terminate();
+        return false;
+    }
+
     return true;
 }
 
