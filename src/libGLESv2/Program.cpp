@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2011 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -1145,7 +1145,7 @@ int Program::packVaryings(const Varying *packing[][4])
     Context *context = getContext();
     const int maxVaryingVectors = context->getMaximumVaryingVectors();
 
-    for (VaryingList::iterator varying = mFragmentShader->varyings.begin(); varying != mFragmentShader->varyings.end(); varying++)
+    for (VaryingList::iterator varying = mFragmentShader->mVaryings.begin(); varying != mFragmentShader->mVaryings.end(); varying++)
     {
         int n = VariableRowCount(varying->type) * varying->size;
         int m = VariableColumnCount(varying->type);
@@ -1296,13 +1296,13 @@ bool Program::linkVaryings()
     }
 
     // Reset the varying register assignments
-    for (VaryingList::iterator fragVar = mFragmentShader->varyings.begin(); fragVar != mFragmentShader->varyings.end(); fragVar++)
+    for (VaryingList::iterator fragVar = mFragmentShader->mVaryings.begin(); fragVar != mFragmentShader->mVaryings.end(); fragVar++)
     {
         fragVar->reg = -1;
         fragVar->col = -1;
     }
 
-    for (VaryingList::iterator vtxVar = mVertexShader->varyings.begin(); vtxVar != mVertexShader->varyings.end(); vtxVar++)
+    for (VaryingList::iterator vtxVar = mVertexShader->mVaryings.begin(); vtxVar != mVertexShader->mVaryings.end(); vtxVar++)
     {
         vtxVar->reg = -1;
         vtxVar->col = -1;
@@ -1329,11 +1329,11 @@ bool Program::linkVaryings()
         return false;
     }
 
-    for (VaryingList::iterator input = mFragmentShader->varyings.begin(); input != mFragmentShader->varyings.end(); input++)
+    for (VaryingList::iterator input = mFragmentShader->mVaryings.begin(); input != mFragmentShader->mVaryings.end(); input++)
     {
         bool matched = false;
 
-        for (VaryingList::iterator output = mVertexShader->varyings.begin(); output != mVertexShader->varyings.end(); output++)
+        for (VaryingList::iterator output = mVertexShader->mVaryings.begin(); output != mVertexShader->mVaryings.end(); output++)
         {
             if (output->name == input->name)
             {
@@ -1444,7 +1444,7 @@ bool Program::linkVaryings()
         mVertexHLSL += "    output.gl_FragCoord = gl_Position;\n";
     }
 
-    for (VaryingList::iterator varying = mVertexShader->varyings.begin(); varying != mVertexShader->varyings.end(); varying++)
+    for (VaryingList::iterator varying = mVertexShader->mVaryings.begin(); varying != mVertexShader->mVaryings.end(); varying++)
     {
         if (varying->reg >= 0)
         {
@@ -1512,7 +1512,7 @@ bool Program::linkVaryings()
     mPixelHLSL += "struct PS_INPUT\n"
                   "{\n";
     
-    for (VaryingList::iterator varying = mFragmentShader->varyings.begin(); varying != mFragmentShader->varyings.end(); varying++)
+    for (VaryingList::iterator varying = mFragmentShader->mVaryings.begin(); varying != mFragmentShader->mVaryings.end(); varying++)
     {
         if (varying->reg >= 0)
         {
@@ -1588,7 +1588,7 @@ bool Program::linkVaryings()
         mPixelHLSL += "    gl_FrontFacing = dx_PointsOrLines || (dx_FrontCCW ? (input.vFace >= 0.0) : (input.vFace <= 0.0));\n";
     }
 
-    for (VaryingList::iterator varying = mFragmentShader->varyings.begin(); varying != mFragmentShader->varyings.end(); varying++)
+    for (VaryingList::iterator varying = mFragmentShader->mVaryings.begin(); varying != mFragmentShader->mVaryings.end(); varying++)
     {
         if (varying->reg >= 0)
         {

@@ -83,7 +83,7 @@ class Shader
     static GLenum parseType(const std::string &type);
     static bool compareVarying(const Varying &x, const Varying &y);
 
-    VaryingList varyings;
+    VaryingList mVaryings;
 
     bool mUsesFragCoord;
     bool mUsesFrontFacing;

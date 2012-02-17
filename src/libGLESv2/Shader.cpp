@@ -282,7 +282,7 @@ void Shader::parseVaryings()
                 *array = '\0';
             }
 
-            varyings.push_back(Varying(parseType(varyingType), varyingName, size, array != NULL));
+            mVaryings.push_back(Varying(parseType(varyingType), varyingName, size, array != NULL));
 
             input = strstr(input, ";") + 2;
         }
@@ -547,6 +547,6 @@ void FragmentShader::compile()
 {
     compileToHLSL(mFragmentCompiler);
     parseVaryings();
-    varyings.sort(compareVarying);
+    mVaryings.sort(compareVarying);
 }
 }
