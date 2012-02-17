@@ -62,6 +62,7 @@ class Shader
     void getTranslatedSource(GLsizei bufSize, GLsizei *length, char *buffer);
 
     virtual void compile() = 0;
+    virtual void uncompile();
     bool isCompiled();
     const char *getHLSL();
 
@@ -134,6 +135,7 @@ class VertexShader : public Shader
 
     virtual GLenum getType();
     virtual void compile();
+    virtual void uncompile();
     int getSemanticIndex(const std::string &attributeName);
 
   private:

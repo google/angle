@@ -27,6 +27,8 @@ Shader::Shader(ResourceManager *manager, GLuint handle) : mHandle(handle), mReso
     mHlsl = NULL;
     mInfoLog = NULL;
 
+    uncompile();
+
     // Perform a one-time initialization of the shader compiler (or after being destructed by releaseCompiler)
     if (!mFragmentCompiler)
     {
@@ -294,36 +296,53 @@ void Shader::parseVaryings()
     }
 }
 
-void Shader::compileToHLSL(void *compiler)
+// initialize/clean up previous state
+void Shader::uncompile()
 {
-    if (isCompiled() || !mSource)
-    {
-        return;
-    }
-
+    // set by compileToHLSL
+    delete[] mHlsl;
+    mHlsl = NULL;
     delete[] mInfoLog;
     mInfoLog = NULL;
+
+    // set by parseVaryings
+    mVaryings.clear();
+
+    mUsesFragCoord = false;
+    mUsesFrontFacing = false;
+    mUsesPointSize = false;
+    mUsesPointCoord = false;
+}
+
+void Shader::compileToHLSL(void *compiler)
+{
+    // ensure we don't pass a NULL source to the compiler
+    char *source = "\0";
+    if (mSource)
+    {
+        source = mSource;
+    }
 
     int compileOptions = SH_OBJECT_CODE;
     std::string sourcePath;
     if (perfActive())
     {
         sourcePath = getTempPath();
-        writeFile(sourcePath.c_str(), mSource, strlen(mSource));
+        writeFile(sourcePath.c_str(), source, strlen(source));
         compileOptions |= SH_LINE_DIRECTIVES;
     }
 
     int result;
     if (sourcePath.empty())
     {
-        result = ShCompile(compiler, &mSource, 1, compileOptions);
+        result = ShCompile(compiler, &source, 1, compileOptions);
     }
     else
     {
         const char* sourceStrings[2] =
         {
             sourcePath.c_str(),
-            mSource
+            source
         };
 
         result = ShCompile(compiler, sourceStrings, 2, compileOptions | SH_SOURCE_PATH);
@@ -478,8 +497,18 @@ GLenum VertexShader::getType()
     return GL_VERTEX_SHADER;
 }
 
+void VertexShader::uncompile()
+{
+    Shader::uncompile();
+
+    // set by ParseAttributes
+    mAttributes.clear();
+};
+
 void VertexShader::compile()
 {
+    uncompile();
+
     compileToHLSL(mVertexCompiler);
     parseAttributes();
     parseVaryings();
@@ -545,6 +574,8 @@ GLenum FragmentShader::getType()
 
 void FragmentShader::compile()
 {
+    uncompile();
+
     compileToHLSL(mFragmentCompiler);
     parseVaryings();
     mVaryings.sort(compareVarying);
