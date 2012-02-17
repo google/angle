@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -506,9 +506,10 @@ int VertexShader::getSemanticIndex(const std::string &attributeName)
 
 void VertexShader::parseAttributes()
 {
-    if (mHlsl)
+    const char *hlsl = getHLSL();
+    if (hlsl)
     {
-        const char *input = strstr(mHlsl, "// Attributes") + 14;
+        const char *input = strstr(hlsl, "// Attributes") + 14;
 
         while(true)
         {
