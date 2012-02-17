@@ -28,33 +28,7 @@ Shader::Shader(ResourceManager *manager, GLuint handle) : mHandle(handle), mReso
     mInfoLog = NULL;
 
     uncompile();
-
-    // Perform a one-time initialization of the shader compiler (or after being destructed by releaseCompiler)
-    if (!mFragmentCompiler)
-    {
-        int result = ShInitialize();
-
-        if (result)
-        {
-            ShBuiltInResources resources;
-            ShInitBuiltInResources(&resources);
-            Context *context = getContext();
-
-            resources.MaxVertexAttribs = MAX_VERTEX_ATTRIBS;
-            resources.MaxVertexUniformVectors = MAX_VERTEX_UNIFORM_VECTORS;
-            resources.MaxVaryingVectors = context->getMaximumVaryingVectors();
-            resources.MaxVertexTextureImageUnits = context->getMaximumVertexTextureImageUnits();
-            resources.MaxCombinedTextureImageUnits = context->getMaximumCombinedTextureImageUnits();
-            resources.MaxTextureImageUnits = MAX_TEXTURE_IMAGE_UNITS;
-            resources.MaxFragmentUniformVectors = context->getMaximumFragmentUniformVectors();
-            resources.MaxDrawBuffers = MAX_DRAW_BUFFERS;
-            resources.OES_standard_derivatives = 1;
-            // resources.OES_EGL_image_external = getDisplay()->isD3d9ExDevice() ? 1 : 0; // TODO: commented out until the extension is actually supported.
-
-            mFragmentCompiler = ShConstructCompiler(SH_FRAGMENT_SHADER, SH_GLES2_SPEC, SH_HLSL_OUTPUT, &resources);
-            mVertexCompiler = ShConstructCompiler(SH_VERTEX_SHADER, SH_GLES2_SPEC, SH_HLSL_OUTPUT, &resources);
-        }
-    }
+    initializeCompiler();
 
     mRefCount = 0;
     mDeleteStatus = false;
@@ -246,6 +220,36 @@ void Shader::flagForDeletion()
     mDeleteStatus = true;
 }
 
+// Perform a one-time initialization of the shader compiler (or after being destructed by releaseCompiler)
+void Shader::initializeCompiler()
+{
+    if (!mFragmentCompiler)
+    {
+        int result = ShInitialize();
+
+        if (result)
+        {
+            ShBuiltInResources resources;
+            ShInitBuiltInResources(&resources);
+            Context *context = getContext();
+
+            resources.MaxVertexAttribs = MAX_VERTEX_ATTRIBS;
+            resources.MaxVertexUniformVectors = MAX_VERTEX_UNIFORM_VECTORS;
+            resources.MaxVaryingVectors = context->getMaximumVaryingVectors();
+            resources.MaxVertexTextureImageUnits = context->getMaximumVertexTextureImageUnits();
+            resources.MaxCombinedTextureImageUnits = context->getMaximumCombinedTextureImageUnits();
+            resources.MaxTextureImageUnits = MAX_TEXTURE_IMAGE_UNITS;
+            resources.MaxFragmentUniformVectors = context->getMaximumFragmentUniformVectors();
+            resources.MaxDrawBuffers = MAX_DRAW_BUFFERS;
+            resources.OES_standard_derivatives = 1;
+            // resources.OES_EGL_image_external = getDisplay()->isD3d9ExDevice() ? 1 : 0; // TODO: commented out until the extension is actually supported.
+
+            mFragmentCompiler = ShConstructCompiler(SH_FRAGMENT_SHADER, SH_GLES2_SPEC, SH_HLSL_OUTPUT, &resources);
+            mVertexCompiler = ShConstructCompiler(SH_VERTEX_SHADER, SH_GLES2_SPEC, SH_HLSL_OUTPUT, &resources);
+        }
+    }
+}
+
 void Shader::releaseCompiler()
 {
     ShDestruct(mFragmentCompiler);
@@ -322,6 +326,9 @@ void Shader::compileToHLSL(void *compiler)
     {
         source = mSource;
     }
+
+    // ensure the compiler is loaded
+    initializeCompiler();
 
     int compileOptions = SH_OBJECT_CODE;
     std::string sourcePath;

@@ -97,6 +97,8 @@ class Shader
   private:
     DISALLOW_COPY_AND_ASSIGN(Shader);
 
+    void initializeCompiler();
+
     const GLuint mHandle;
     unsigned int mRefCount;     // Number of program objects this shader is attached to
     bool mDeleteStatus;         // Flag to indicate that the shader can be deleted when no longer in use
