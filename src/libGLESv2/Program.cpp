@@ -2456,11 +2456,8 @@ void Program::getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog)
 
     if (mInfoLog)
     {
-        while (index < bufSize - 1 && index < (int)strlen(mInfoLog))
-        {
-            infoLog[index] = mInfoLog[index];
-            index++;
-        }
+        index = std::min(bufSize - 1, (int)strlen(mInfoLog));
+        memcpy(infoLog, mInfoLog, index);
     }
 
     if (bufSize)
