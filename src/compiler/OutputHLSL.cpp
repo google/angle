@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2011 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -67,7 +67,10 @@ OutputHLSL::OutputHLSL(TParseContext &context) : TIntermTraverser(true, true, tr
     mUsesEqualBVec2 = false;
     mUsesEqualBVec3 = false;
     mUsesEqualBVec4 = false;
-    mUsesAtan2 = false;
+    mUsesAtan2_1 = false;
+    mUsesAtan2_2 = false;
+    mUsesAtan2_3 = false;
+    mUsesAtan2_4 = false;
 
     mScopeDepth = 0;
 
@@ -703,12 +706,45 @@ void OutputHLSL::header()
                "}\n";
     }
 
-    if (mUsesAtan2)
+    if (mUsesAtan2_1)
     {
         out << "float atanyx(float y, float x)\n"
                "{\n"
                "    if(x == 0 && y == 0) x = 1;\n"   // Avoid producing a NaN
                "    return atan2(y, x);\n"
+               "}\n";
+    }
+
+    if (mUsesAtan2_2)
+    {
+        out << "float2 atanyx(float2 y, float2 x)\n"
+               "{\n"
+               "    if(x[0] == 0 && y[0] == 0) x[0] = 1;\n"
+               "    if(x[1] == 0 && y[1] == 0) x[1] = 1;\n"
+               "    return float2(atan2(y[0], x[0]), atan2(y[1], x[1]));\n"
+               "}\n";
+    }
+
+    if (mUsesAtan2_3)
+    {
+        out << "float3 atanyx(float3 y, float3 x)\n"
+               "{\n"
+               "    if(x[0] == 0 && y[0] == 0) x[0] = 1;\n"
+               "    if(x[1] == 0 && y[1] == 0) x[1] = 1;\n"
+               "    if(x[2] == 0 && y[2] == 0) x[2] = 1;\n"
+               "    return float3(atan2(y[0], x[0]), atan2(y[1], x[1]), atan2(y[2], x[2]));\n"
+               "}\n";
+    }
+
+    if (mUsesAtan2_4)
+    {
+        out << "float4 atanyx(float4 y, float4 x)\n"
+               "{\n"
+               "    if(x[0] == 0 && y[0] == 0) x[0] = 1;\n"
+               "    if(x[1] == 0 && y[1] == 0) x[1] = 1;\n"
+               "    if(x[2] == 0 && y[2] == 0) x[2] = 1;\n"
+               "    if(x[3] == 0 && y[3] == 0) x[3] = 1;\n"
+               "    return float4(atan2(y[0], x[0]), atan2(y[1], x[1]), atan2(y[2], x[2]), atan2(y[3], x[3]));\n"
                "}\n";
     }
 }
@@ -1494,7 +1530,14 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpPow:              outputTriplet(visit, "pow(", ", ", ")");               break;
       case EOpAtan:
         ASSERT(node->getSequence().size() == 2);   // atan(x) is a unary operator
-        mUsesAtan2 = true;
+        switch (node->getSequence()[0]->getAsTyped()->getNominalSize())
+        {
+          case 1: mUsesAtan2_1 = true; break;
+          case 2: mUsesAtan2_2 = true; break;
+          case 3: mUsesAtan2_3 = true; break;
+          case 4: mUsesAtan2_4 = true; break;
+          default: UNREACHABLE();
+        }
         outputTriplet(visit, "atanyx(", ", ", ")");
         break;
       case EOpMin:           outputTriplet(visit, "min(", ", ", ")");           break;
