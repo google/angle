@@ -228,7 +228,7 @@ std::size_t IndexDataManager::typeSize(GLenum type) const
 
 StaticIndexBuffer *IndexDataManager::getCountingIndices(GLsizei count)
 {
-    if (count < 65536)   // 16-bit indices
+    if (count <= 65536)   // 16-bit indices
     {
         const unsigned int spaceNeeded = count * sizeof(unsigned short);
 
