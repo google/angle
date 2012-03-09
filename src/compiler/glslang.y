@@ -141,7 +141,7 @@ extern void yyerror(TParseContext* context, const char* reason);
 %type <interm.intermNode> declaration external_declaration
 %type <interm.intermNode> for_init_statement compound_statement_no_new_scope
 %type <interm.nodePair> selection_rest_statement for_rest_statement
-%type <interm.intermNode> iteration_statement jump_statement statement_no_new_scope
+%type <interm.intermNode> iteration_statement jump_statement statement_no_new_scope statement_with_scope
 %type <interm> single_declaration init_declarator_list
 
 %type <interm> parameter_declaration parameter_declarator parameter_type_specifier
@@ -1812,6 +1812,11 @@ statement_no_new_scope
     | simple_statement                { $$ = $1; }
     ;
 
+statement_with_scope
+	: { context->symbolTable.push(); } compound_statement_no_new_scope { context->symbolTable.pop(); $$ = $2; }
+	| { context->symbolTable.push(); } simple_statement                { context->symbolTable.pop(); $$ = $2; }
+	;
+
 compound_statement_no_new_scope
     // Statement that doesn't create a new scope, for selection_statement, iteration_statement
     : LEFT_BRACE RIGHT_BRACE {
@@ -1849,11 +1854,11 @@ selection_statement
     ;
 
 selection_rest_statement
-    : statement ELSE statement {
+    : statement_with_scope ELSE statement_with_scope {
         $$.node1 = $1;
         $$.node2 = $3;
     }
-    | statement {
+    | statement_with_scope {
         $$.node1 = $1;
         $$.node2 = 0;
     }
@@ -1890,7 +1895,7 @@ iteration_statement
         $$ = context->intermediate.addLoop(ELoopWhile, 0, $4, 0, $6, $1.line);
         --context->loopNestingLevel;
     }
-    | DO { ++context->loopNestingLevel; } statement WHILE LEFT_PAREN expression RIGHT_PAREN SEMICOLON {
+    | DO { ++context->loopNestingLevel; } statement_with_scope WHILE LEFT_PAREN expression RIGHT_PAREN SEMICOLON {
         if (context->boolErrorCheck($8.line, $6))
             context->recover();
 
