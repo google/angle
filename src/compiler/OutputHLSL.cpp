@@ -1635,14 +1635,14 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
 
     if (node->getType() == ELoopDoWhile)
     {
-        out << "do\n";
+        out << "{do\n";
 
         outputLineDirective(node->getLine());
         out << "{\n";
     }
     else
     {
-        out << "for(";
+        out << "{for(";
         
         if (node->getInit())
         {
@@ -1687,7 +1687,7 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
         out << ")";
     }
 
-    out << ";\n";
+    out << "};\n";
 
     return false;
 }
