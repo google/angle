@@ -1183,6 +1183,12 @@ init_declarator_list
         $$ = $1;
     }
     | init_declarator_list COMMA IDENTIFIER {
+        if ($1.type.type == EbtInvariant && !$3.symbol)
+        {
+            context->error($3.line, "undeclared identifier declared as invariant", $3.string->c_str(), "");
+            context->recover();
+        }
+
         TIntermSymbol* symbol = context->intermediate.addSymbol(0, *$3.string, TType($1.type), $3.line);
         $$.intermAggregate = context->intermediate.growAggregate($1.intermNode, symbol, $3.line);
         
@@ -1347,8 +1353,21 @@ single_declaration
     }
     | INVARIANT IDENTIFIER {
         VERTEX_ONLY("invariant declaration", $1.line);
-        $$.qualifier = EvqInvariantVaryingOut;
-        $$.intermAggregate = 0;
+        if (context->globalErrorCheck($1.line, context->symbolTable.atGlobalLevel(), "invariant varying"))
+            context->recover();
+        $$.type.setBasic(EbtInvariant, EvqInvariantVaryingOut, $2.line);
+        if (!$2.symbol)
+        {
+            context->error($2.line, "undeclared identifier declared as invariant", $2.string->c_str(), "");
+            context->recover();
+            
+            $$.intermAggregate = 0;
+        }
+        else
+        {
+            TIntermSymbol *symbol = context->intermediate.addSymbol(0, *$2.string, TType($$.type), $2.line);
+            $$.intermAggregate = context->intermediate.makeAggregate(symbol, $2.line);
+        }
     }
 
 //
@@ -1813,9 +1832,9 @@ statement_no_new_scope
     ;
 
 statement_with_scope
-	: { context->symbolTable.push(); } compound_statement_no_new_scope { context->symbolTable.pop(); $$ = $2; }
-	| { context->symbolTable.push(); } simple_statement                { context->symbolTable.pop(); $$ = $2; }
-	;
+    : { context->symbolTable.push(); } compound_statement_no_new_scope { context->symbolTable.pop(); $$ = $2; }
+    | { context->symbolTable.push(); } simple_statement                { context->symbolTable.pop(); $$ = $2; }
+    ;
 
 compound_statement_no_new_scope
     // Statement that doesn't create a new scope, for selection_statement, iteration_statement

@@ -666,18 +666,18 @@ static const yytype_uint16 yyrline[] =
      898,   915,   916,   929,   930,   931,   932,   933,   937,   940,
      951,   959,   984,   989,   996,  1032,  1035,  1042,  1050,  1071,
     1090,  1101,  1130,  1135,  1145,  1150,  1160,  1163,  1166,  1169,
-    1175,  1182,  1185,  1201,  1219,  1243,  1266,  1270,  1288,  1296,
-    1328,  1348,  1424,  1433,  1456,  1459,  1465,  1473,  1481,  1489,
-    1499,  1506,  1509,  1512,  1518,  1521,  1536,  1540,  1544,  1548,
-    1557,  1562,  1567,  1572,  1577,  1582,  1587,  1592,  1597,  1602,
-    1608,  1614,  1620,  1625,  1630,  1639,  1648,  1653,  1666,  1666,
-    1680,  1680,  1689,  1692,  1707,  1743,  1747,  1753,  1761,  1777,
-    1781,  1785,  1786,  1792,  1793,  1794,  1795,  1796,  1800,  1801,
-    1801,  1801,  1811,  1812,  1816,  1816,  1817,  1817,  1822,  1825,
-    1835,  1838,  1844,  1845,  1849,  1857,  1861,  1871,  1876,  1893,
-    1893,  1898,  1898,  1905,  1905,  1913,  1916,  1922,  1925,  1931,
-    1935,  1942,  1949,  1956,  1963,  1974,  1983,  1987,  1994,  1997,
-    2003,  2003
+    1175,  1182,  1185,  1207,  1225,  1249,  1272,  1276,  1294,  1302,
+    1334,  1354,  1443,  1452,  1475,  1478,  1484,  1492,  1500,  1508,
+    1518,  1525,  1528,  1531,  1537,  1540,  1555,  1559,  1563,  1567,
+    1576,  1581,  1586,  1591,  1596,  1601,  1606,  1611,  1616,  1621,
+    1627,  1633,  1639,  1644,  1649,  1658,  1667,  1672,  1685,  1685,
+    1699,  1699,  1708,  1711,  1726,  1762,  1766,  1772,  1780,  1796,
+    1800,  1804,  1805,  1811,  1812,  1813,  1814,  1815,  1819,  1820,
+    1820,  1820,  1830,  1831,  1835,  1835,  1836,  1836,  1841,  1844,
+    1854,  1857,  1863,  1864,  1868,  1876,  1880,  1890,  1895,  1912,
+    1912,  1917,  1917,  1924,  1924,  1932,  1935,  1941,  1944,  1950,
+    1954,  1961,  1968,  1975,  1982,  1993,  2002,  2006,  2013,  2016,
+    2022,  2022
 };
 #endif
 
@@ -3316,6 +3316,12 @@ yyreduce:
   case 92:
 
     {
+        if ((yyvsp[(1) - (3)].interm).type.type == EbtInvariant && !(yyvsp[(3) - (3)].lex).symbol)
+        {
+            context->error((yyvsp[(3) - (3)].lex).line, "undeclared identifier declared as invariant", (yyvsp[(3) - (3)].lex).string->c_str(), "");
+            context->recover();
+        }
+
         TIntermSymbol* symbol = context->intermediate.addSymbol(0, *(yyvsp[(3) - (3)].lex).string, TType((yyvsp[(1) - (3)].interm).type), (yyvsp[(3) - (3)].lex).line);
         (yyval.interm).intermAggregate = context->intermediate.growAggregate((yyvsp[(1) - (3)].interm).intermNode, symbol, (yyvsp[(3) - (3)].lex).line);
         
@@ -3513,8 +3519,21 @@ yyreduce:
 
     {
         VERTEX_ONLY("invariant declaration", (yyvsp[(1) - (2)].lex).line);
-        (yyval.interm).qualifier = EvqInvariantVaryingOut;
-        (yyval.interm).intermAggregate = 0;
+        if (context->globalErrorCheck((yyvsp[(1) - (2)].lex).line, context->symbolTable.atGlobalLevel(), "invariant varying"))
+            context->recover();
+        (yyval.interm).type.setBasic(EbtInvariant, EvqInvariantVaryingOut, (yyvsp[(2) - (2)].lex).line);
+        if (!(yyvsp[(2) - (2)].lex).symbol)
+        {
+            context->error((yyvsp[(2) - (2)].lex).line, "undeclared identifier declared as invariant", (yyvsp[(2) - (2)].lex).string->c_str(), "");
+            context->recover();
+            
+            (yyval.interm).intermAggregate = 0;
+        }
+        else
+        {
+            TIntermSymbol *symbol = context->intermediate.addSymbol(0, *(yyvsp[(2) - (2)].lex).string, TType((yyval.interm).type), (yyvsp[(2) - (2)].lex).line);
+            (yyval.interm).intermAggregate = context->intermediate.makeAggregate(symbol, (yyvsp[(2) - (2)].lex).line);
+        }
     }
     break;
 
