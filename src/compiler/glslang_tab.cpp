@@ -664,20 +664,20 @@ static const yytype_uint16 yyrline[] =
      760,   771,   775,   776,   786,   796,   806,   819,   820,   830,
      843,   847,   851,   855,   856,   869,   870,   883,   884,   897,
      898,   915,   916,   929,   930,   931,   932,   933,   937,   940,
-     951,   959,   984,   989,   996,  1032,  1035,  1042,  1050,  1071,
-    1090,  1101,  1130,  1135,  1145,  1150,  1160,  1163,  1166,  1169,
-    1175,  1182,  1185,  1207,  1225,  1249,  1272,  1276,  1294,  1302,
-    1334,  1354,  1443,  1452,  1475,  1478,  1484,  1492,  1500,  1508,
-    1518,  1525,  1528,  1531,  1537,  1540,  1555,  1559,  1563,  1567,
-    1576,  1581,  1586,  1591,  1596,  1601,  1606,  1611,  1616,  1621,
-    1627,  1633,  1639,  1644,  1649,  1658,  1667,  1672,  1685,  1685,
-    1699,  1699,  1708,  1711,  1726,  1762,  1766,  1772,  1780,  1796,
-    1800,  1804,  1805,  1811,  1812,  1813,  1814,  1815,  1819,  1820,
-    1820,  1820,  1830,  1831,  1835,  1835,  1836,  1836,  1841,  1844,
-    1854,  1857,  1863,  1864,  1868,  1876,  1880,  1890,  1895,  1912,
-    1912,  1917,  1917,  1924,  1924,  1932,  1935,  1941,  1944,  1950,
-    1954,  1961,  1968,  1975,  1982,  1993,  2002,  2006,  2013,  2016,
-    2022,  2022
+     951,   959,   986,   991,   998,  1036,  1039,  1046,  1054,  1075,
+    1096,  1107,  1136,  1141,  1151,  1156,  1166,  1169,  1172,  1175,
+    1181,  1188,  1191,  1213,  1231,  1255,  1278,  1282,  1300,  1308,
+    1340,  1360,  1449,  1458,  1481,  1484,  1490,  1498,  1506,  1514,
+    1524,  1531,  1534,  1537,  1543,  1546,  1561,  1565,  1569,  1573,
+    1582,  1587,  1592,  1597,  1602,  1607,  1612,  1617,  1622,  1627,
+    1633,  1639,  1645,  1650,  1655,  1664,  1673,  1678,  1691,  1691,
+    1705,  1705,  1714,  1717,  1732,  1768,  1772,  1778,  1786,  1802,
+    1806,  1810,  1811,  1817,  1818,  1819,  1820,  1821,  1825,  1826,
+    1826,  1826,  1836,  1837,  1841,  1841,  1842,  1842,  1847,  1850,
+    1860,  1863,  1869,  1870,  1874,  1882,  1886,  1896,  1901,  1918,
+    1918,  1923,  1923,  1930,  1930,  1938,  1941,  1947,  1950,  1956,
+    1960,  1967,  1974,  1981,  1988,  1999,  2008,  2012,  2019,  2022,
+    2028,  2028
 };
 #endif
 
@@ -3069,6 +3069,8 @@ yyreduce:
         
         prototype->setOp(EOpPrototype);
         (yyval.interm.intermNode) = prototype;
+
+        context->symbolTable.pop();
     }
     break;
 
@@ -3122,7 +3124,9 @@ yyreduce:
         (yyval.interm).function = (yyvsp[(1) - (2)].interm.function);
         (yyval.interm).line = (yyvsp[(2) - (2)].lex).line;
 
-        context->symbolTable.insert(*(yyval.interm).function);
+        // We're at the inner scope level of the function's arguments and body statement.
+        // Add the function prototype to the surrounding scope instead.
+        context->symbolTable.getOuterLevel()->insert(*(yyval.interm).function);
     }
     break;
 
@@ -3190,6 +3194,8 @@ yyreduce:
         TType type((yyvsp[(1) - (3)].interm.type));
         function = new TFunction((yyvsp[(2) - (3)].lex).string, type);
         (yyval.interm.function) = function;
+        
+        context->symbolTable.push();
     }
     break;
 
@@ -4445,11 +4451,6 @@ yyreduce:
         }
 
         //
-        // New symbol table scope for body of function plus its arguments
-        //
-        context->symbolTable.push();
-
-        //
         // Remember the return type for later checking for RETURN statements.
         //
         context->currentFunctionType = &(prevDec->getReturnType());
@@ -4505,7 +4506,7 @@ yyreduce:
             context->error((yyvsp[(1) - (3)].interm).line, "function does not return a value:", "", (yyvsp[(1) - (3)].interm).function->getName().c_str());
             context->recover();
         }
-        context->symbolTable.pop();
+        
         (yyval.interm.intermNode) = context->intermediate.growAggregate((yyvsp[(1) - (3)].interm).intermAggregate, (yyvsp[(3) - (3)].interm.intermNode), 0);
         context->intermediate.setAggregateOperator((yyval.interm.intermNode), EOpFunction, (yyvsp[(1) - (3)].interm).line);
         (yyval.interm.intermNode)->getAsAggregate()->setName((yyvsp[(1) - (3)].interm).function->getMangledName().c_str());
@@ -4519,6 +4520,8 @@ yyreduce:
 
         if ((yyvsp[(3) - (3)].interm.intermNode) && (yyvsp[(3) - (3)].interm.intermNode)->getAsAggregate())
             (yyval.interm.intermNode)->getAsAggregate()->setEndLine((yyvsp[(3) - (3)].interm.intermNode)->getAsAggregate()->getEndLine());
+
+        context->symbolTable.pop();
     }
     break;
 

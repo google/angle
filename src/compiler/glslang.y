@@ -980,6 +980,8 @@ declaration
         
         prototype->setOp(EOpPrototype);
         $$ = prototype;
+
+        context->symbolTable.pop();
     }
     | init_declarator_list SEMICOLON {
         if ($1.intermAggregate)
@@ -1024,7 +1026,9 @@ function_prototype
         $$.function = $1;
         $$.line = $2.line;
 
-        context->symbolTable.insert(*$$.function);
+        // We're at the inner scope level of the function's arguments and body statement.
+        // Add the function prototype to the surrounding scope instead.
+        context->symbolTable.getOuterLevel()->insert(*$$.function);
     }
     ;
 
@@ -1082,6 +1086,8 @@ function_header
         TType type($1);
         function = new TFunction($2.string, type);
         $$ = function;
+        
+        context->symbolTable.push();
     }
     ;
 
@@ -2051,11 +2057,6 @@ function_definition
         }
 
         //
-        // New symbol table scope for body of function plus its arguments
-        //
-        context->symbolTable.push();
-
-        //
         // Remember the return type for later checking for RETURN statements.
         //
         context->currentFunctionType = &(prevDec->getReturnType());
@@ -2107,7 +2108,7 @@ function_definition
             context->error($1.line, "function does not return a value:", "", $1.function->getName().c_str());
             context->recover();
         }
-        context->symbolTable.pop();
+        
         $$ = context->intermediate.growAggregate($1.intermAggregate, $3, 0);
         context->intermediate.setAggregateOperator($$, EOpFunction, $1.line);
         $$->getAsAggregate()->setName($1.function->getMangledName().c_str());
@@ -2121,6 +2122,8 @@ function_definition
 
         if ($3 && $3->getAsAggregate())
             $$->getAsAggregate()->setEndLine($3->getAsAggregate()->getEndLine());
+
+        context->symbolTable.pop();
     }
     ;
 
