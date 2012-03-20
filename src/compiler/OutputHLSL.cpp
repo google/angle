@@ -1312,6 +1312,11 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
                     if (symbol)
                     {
+                        if (symbol->getType().getStruct())
+                        {
+                            addConstructor(symbol->getType(), scopedStruct(symbol->getType().getTypeName()), NULL);
+                        }
+
                         out << argumentString(symbol);
 
                         if (i < arguments.size() - 1)
