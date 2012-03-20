@@ -2106,6 +2106,11 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
         return;   // Nameless structures don't have constructors
     }
 
+    if (type.getStruct() && mStructNames.find(decorate(name)) != mStructNames.end())
+    {
+        return;   // Already added
+    }
+
     TType ctorType = type;
     ctorType.clearArrayness();
     ctorType.setPrecision(EbpHigh);
