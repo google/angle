@@ -1689,10 +1689,10 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
 
         node->getCondition()->traverse(this);
 
-        out << ")";
+        out << ");";
     }
 
-    out << "};\n";
+    out << "}\n";
 
     return false;
 }
