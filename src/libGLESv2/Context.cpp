@@ -940,7 +940,7 @@ GLuint Context::createFence()
 {
     GLuint handle = mFenceHandleAllocator.allocate();
 
-    mFenceMap[handle] = new Fence;
+    mFenceMap[handle] = new Fence(mDisplay);
 
     return handle;
 }
