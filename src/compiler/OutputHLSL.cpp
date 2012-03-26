@@ -1285,7 +1285,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             return false;
         }
         break;
-      case EOpComma:            outputTriplet(visit, "", ", ", "");                break;
+      case EOpComma:            outputTriplet(visit, "(", ", ", ")");                break;
       case EOpFunction:
         {
             TString name = TFunction::unmangleName(node->getName());
