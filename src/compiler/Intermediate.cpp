@@ -656,6 +656,7 @@ TIntermTyped* TIntermediate::addSelection(TIntermTyped* cond, TIntermTyped* true
     // Make a selection node.
     //
     TIntermSelection* node = new TIntermSelection(cond, trueBlock, falseBlock, trueBlock->getType());
+    node->getTypePointer()->setQualifier(EvqTemporary);
     node->setLine(line);
 
     return node;
