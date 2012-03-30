@@ -552,8 +552,10 @@ IF YOU MODIFY THIS FILE YOU ALSO NEED TO RUN generate_parser.sh.
 */
 
 #include "compiler/debug.h"
-#include "Context.h"
-#include "pp_tab.h"
+#include "Input.h"
+#include "Lexer.h"
+#include "Token.h"
+#include "token_type.h"
 
 #define YY_USER_ACTION                        \
     do {                                      \
@@ -563,13 +565,14 @@ IF YOU MODIFY THIS FILE YOU ALSO NEED TO RUN generate_parser.sh.
     } while(0);
 
 #define YY_INPUT(buf, result, maxSize) \
-    result = yyextra->readInput(buf, maxSize);
-    
+    result = readInput(buf, maxSize, yyscanner);
+
+static int readInput(char* buf, int maxSize, yyscan_t scanner);
 static std::string* extractMacroName(const char* str, int len);
 
 #define INITIAL 0
 
-#define YY_EXTRA_TYPE pp::Context*
+#define YY_EXTRA_TYPE pp::Input*
 
 /* Holds the entire state of the reentrant scanner. */
 struct yyguts_t
@@ -688,12 +691,6 @@ static int input (yyscan_t yyscanner );
 
 #endif
 
-    static void yy_push_state (int new_state ,yyscan_t yyscanner);
-    
-    static void yy_pop_state (yyscan_t yyscanner );
-    
-    static int yy_top_state (yyscan_t yyscanner );
-    
 /* Amount of stuff to slurp up with each read. */
 #ifndef YY_READ_BUF_SIZE
 #define YY_READ_BUF_SIZE 8192
@@ -1790,46 +1787,6 @@ YY_BUFFER_STATE pp_scan_bytes  (yyconst char * yybytes, int  _yybytes_len , yysc
 	return b;
 }
 
-    static void yy_push_state (int  new_state , yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-	if ( yyg->yy_start_stack_ptr >= yyg->yy_start_stack_depth )
-		{
-		yy_size_t new_size;
-
-		yyg->yy_start_stack_depth += YY_START_STACK_INCR;
-		new_size = yyg->yy_start_stack_depth * sizeof( int );
-
-		if ( ! yyg->yy_start_stack )
-			yyg->yy_start_stack = (int *) ppalloc(new_size ,yyscanner );
-
-		else
-			yyg->yy_start_stack = (int *) pprealloc((void *) yyg->yy_start_stack,new_size ,yyscanner );
-
-		if ( ! yyg->yy_start_stack )
-			YY_FATAL_ERROR( "out of memory expanding start-condition stack" );
-		}
-
-	yyg->yy_start_stack[yyg->yy_start_stack_ptr++] = YY_START;
-
-	BEGIN(new_state);
-}
-
-    static void yy_pop_state  (yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-	if ( --yyg->yy_start_stack_ptr < 0 )
-		YY_FATAL_ERROR( "start-condition stack underflow" );
-
-	BEGIN(yyg->yy_start_stack[yyg->yy_start_stack_ptr]);
-}
-
-    static int yy_top_state  (yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-	return yyg->yy_start_stack[yyg->yy_start_stack_ptr - 1];
-}
-
 #ifndef YY_EXIT_FAILURE
 #define YY_EXIT_FAILURE 2
 #endif
@@ -2202,6 +2159,29 @@ void ppfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
+int readInput(char* buf, int maxSize, yyscan_t scanner)
+{
+    int nread = YY_NULL;
+    pp::Input* input = ppget_extra(scanner);
+    while (!input->eof() &&
+           (input->error() == pp::Input::kErrorNone) &&
+           (nread == YY_NULL))
+    {
+        int line = 0, file = 0;
+        pp::Token::decodeLocation(ppget_lineno(scanner), &line, &file);
+        file = input->stringIndex();
+        ppset_lineno(pp::Token::encodeLocation(line, file),scanner);
+
+        nread = input->read(buf, maxSize);
+
+        if (input->error() == pp::Input::kErrorUnexpectedEOF)
+        {
+            // TODO(alokp): Report error.
+        }
+    }
+    return nread;
+}
+
 std::string* extractMacroName(const char* str, int len)
 {
     // The input string is of the form {HASH}define{HSPACE}+{IDENTIFIER}
@@ -2223,45 +2203,27 @@ std::string* extractMacroName(const char* str, int len)
 
 namespace pp {
 
-int Context::readInput(char* buf, int maxSize)
+int Lexer::lex(YYSTYPE* lvalp, YYLTYPE* llocp)
 {
-    int nread = YY_NULL;
-    while (!mInput->eof() &&
-           (mInput->error() == pp::Input::kErrorNone) &&
-           (nread == YY_NULL))
-    {
-        int line = 0, file = 0;
-        pp::Token::decodeLocation(ppget_lineno(mLexer), &line, &file);
-        file = mInput->stringIndex();
-        ppset_lineno(pp::Token::encodeLocation(line, file),mLexer);
-
-        nread = mInput->read(buf, maxSize);
-
-        if (mInput->error() == pp::Input::kErrorUnexpectedEOF)
-        {
-            // TODO(alokp): Report error.
-        }
-    }
-    return nread;
+    return pplex(lvalp,llocp,mHandle);
 }
 
-bool Context::initLexer()
+bool Lexer::initLexer()
 {
-    ASSERT(mLexer == NULL);
-
-    if (pplex_init_extra(this,&mLexer))
+    if ((mHandle == NULL) && pplex_init_extra(mInput.get(),&mHandle))
         return false;
 
-    pprestart(0,mLexer);
+    pprestart(0,mHandle);
     return true;
 }
 
-void Context::destroyLexer()
+void Lexer::destroyLexer()
 {
-    ASSERT(mLexer);
+    if (mHandle == NULL)
+        return;
 
-    pplex_destroy(mLexer);
-    mLexer = NULL;
+    pplex_destroy(mHandle);
+    mHandle = NULL;
 }
 
 }  // namespace pp

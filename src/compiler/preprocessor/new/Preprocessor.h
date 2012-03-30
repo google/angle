@@ -21,8 +21,6 @@ class Preprocessor
     Preprocessor();
     ~Preprocessor();
 
-    bool init();
-
     bool process(int count, const char* const string[], const int length[]);
     TokenIterator begin() const { return mTokens.begin(); }
     TokenIterator end() const { return mTokens.end(); }

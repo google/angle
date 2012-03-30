@@ -24,8 +24,10 @@ IF YOU MODIFY THIS FILE YOU ALSO NEED TO RUN generate_parser.sh.
 
 %{
 #include "compiler/debug.h"
-#include "Context.h"
-#include "pp_tab.h"
+#include "Input.h"
+#include "Lexer.h"
+#include "Token.h"
+#include "token_type.h"
 
 #define YY_USER_ACTION                        \
     do {                                      \
@@ -35,16 +37,16 @@ IF YOU MODIFY THIS FILE YOU ALSO NEED TO RUN generate_parser.sh.
     } while(0);
 
 #define YY_INPUT(buf, result, maxSize) \
-    result = yyextra->readInput(buf, maxSize);
-    
+    result = readInput(buf, maxSize, yyscanner);
+
+static int readInput(char* buf, int maxSize, yyscan_t scanner);
 static std::string* extractMacroName(const char* str, int len);
 %}
 
 %option noyywrap nounput never-interactive
 %option yylineno reentrant bison-bridge bison-locations
-%option stack
 %option prefix="pp"
-%option extra-type="pp::Context*"
+%option extra-type="pp::Input*"
 
 HSPACE      [ \t]
 HASH        ^{HSPACE}*#{HSPACE}*
@@ -115,6 +117,29 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 
 %%
 
+int readInput(char* buf, int maxSize, yyscan_t scanner)
+{
+    int nread = YY_NULL;
+    pp::Input* input = yyget_extra(scanner);
+    while (!input->eof() &&
+           (input->error() == pp::Input::kErrorNone) &&
+           (nread == YY_NULL))
+    {
+        int line = 0, file = 0;
+        pp::Token::decodeLocation(yyget_lineno(scanner), &line, &file);
+        file = input->stringIndex();
+        yyset_lineno(pp::Token::encodeLocation(line, file), scanner);
+
+        nread = input->read(buf, maxSize);
+
+        if (input->error() == pp::Input::kErrorUnexpectedEOF)
+        {
+            // TODO(alokp): Report error.
+        }
+    }
+    return nread;
+}
+
 std::string* extractMacroName(const char* str, int len)
 {
     // The input string is of the form {HASH}define{HSPACE}+{IDENTIFIER}
@@ -136,45 +161,27 @@ std::string* extractMacroName(const char* str, int len)
 
 namespace pp {
 
-int Context::readInput(char* buf, int maxSize)
+int Lexer::lex(YYSTYPE* lvalp, YYLTYPE* llocp)
 {
-    int nread = YY_NULL;
-    while (!mInput->eof() &&
-           (mInput->error() == pp::Input::kErrorNone) &&
-           (nread == YY_NULL))
-    {
-        int line = 0, file = 0;
-        pp::Token::decodeLocation(yyget_lineno(mLexer), &line, &file);
-        file = mInput->stringIndex();
-        yyset_lineno(pp::Token::encodeLocation(line, file), mLexer);
-
-        nread = mInput->read(buf, maxSize);
-
-        if (mInput->error() == pp::Input::kErrorUnexpectedEOF)
-        {
-            // TODO(alokp): Report error.
-        }
-    }
-    return nread;
+    return yylex(lvalp, llocp, mHandle);
 }
 
-bool Context::initLexer()
+bool Lexer::initLexer()
 {
-    ASSERT(mLexer == NULL);
-
-    if (yylex_init_extra(this, &mLexer))
+    if ((mHandle == NULL) && yylex_init_extra(mInput.get(), &mHandle))
         return false;
 
-    yyrestart(0, mLexer);
+    yyrestart(0, mHandle);
     return true;
 }
 
-void Context::destroyLexer()
+void Lexer::destroyLexer()
 {
-    ASSERT(mLexer);
+    if (mHandle == NULL)
+        return;
 
-    yylex_destroy(mLexer);
-    mLexer = NULL;
+    yylex_destroy(mHandle);
+    mHandle = NULL;
 }
 
 }  // namespace pp
