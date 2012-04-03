@@ -23,24 +23,21 @@ IF YOU MODIFY THIS FILE YOU ALSO NEED TO RUN generate_parser.sh.
 }
 
 %{
-#include "compiler/debug.h"
 #include "Input.h"
 #include "Lexer.h"
-#include "Token.h"
-#include "token_type.h"
 
-#define YY_USER_ACTION                        \
-    do {                                      \
-        yylloc->first_line = yylineno;        \
-        yylloc->first_column = yycolumn + 1;  \
-        yycolumn += yyleng;                   \
+typedef std::string YYSTYPE;
+typedef pp::Token::Location YYLTYPE;
+
+#define YY_USER_ACTION           \
+    do {                         \
+        yylloc->line = yylineno; \
     } while(0);
 
 #define YY_INPUT(buf, result, maxSize) \
     result = readInput(buf, maxSize, yyscanner);
 
 static int readInput(char* buf, int maxSize, yyscan_t scanner);
-static std::string* extractMacroName(const char* str, int len);
 %}
 
 %option noyywrap nounput never-interactive
@@ -48,8 +45,6 @@ static std::string* extractMacroName(const char* str, int len);
 %option prefix="pp"
 %option extra-type="pp::Input*"
 
-HSPACE      [ \t]
-HASH        ^{HSPACE}*#{HSPACE}*
 IDENTIFIER  [_a-zA-Z][_a-zA-Z0-9]*
 PUNCTUATOR  [][<>(){}.+-/*%^|&~=!:;,?]
 
@@ -63,45 +58,23 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 
 %%
 
-{HASH} { return HASH; }
-
-{HASH}define{HSPACE}+{IDENTIFIER}/[ \t\n] {
-    yylval->sval = extractMacroName(yytext, yyleng);
-    return HASH_DEFINE_OBJ;
+# {
+    return yytext[0];
 }
-{HASH}define{HSPACE}+{IDENTIFIER}/"(" {
-    yylval->sval = extractMacroName(yytext, yyleng);
-    return HASH_DEFINE_FUNC;
-}
-{HASH}undef{HSPACE}+ { return HASH_UNDEF; }
-
-{HASH}if { return HASH_IF; }
-{HASH}ifdef { return HASH_IFDEF; }
-{HASH}ifndef { return HASH_IFNDEF; }
-{HASH}else { return HASH_ELSE; }
-{HASH}elif { return HASH_ELIF; }
-{HASH}endif { return HASH_ENDIF; }
-"defined" { return DEFINED; }
-
-{HASH}error { return HASH_ERROR; }
-{HASH}pragma { return HASH_PRAGMA; }
-{HASH}extension { return HASH_EXTENSION; }
-{HASH}version { return HASH_VERSION; }
-{HASH}line { return HASH_LINE; }
 
 {IDENTIFIER} {
-    yylval->sval = new std::string(yytext, yyleng);
-    return IDENTIFIER;
+    yylval->assign(yytext, yyleng);
+    return pp::Token::IDENTIFIER;
 }
 
 {DECIMAL_CONSTANT}|{OCTAL_CONSTANT}|{HEXADECIMAL_CONSTANT} {
-    yylval->sval = new std::string(yytext, yyleng);
-    return INT_CONSTANT;
+    yylval->assign(yytext, yyleng);
+    return pp::Token::CONST_INT;
 }
 
 ({DIGIT}+{EXPONENT_PART})|({FRACTIONAL_CONSTANT}{EXPONENT_PART}?) {
-    yylval->sval = new std::string(yytext, yyleng);
-    return FLOAT_CONSTANT;
+    yylval->assign(yytext, yyleng);
+    return pp::Token::CONST_FLOAT;
 }
 
 {PUNCTUATOR} { return yytext[0]; }
@@ -125,45 +98,17 @@ int readInput(char* buf, int maxSize, yyscan_t scanner)
            (input->error() == pp::Input::kErrorNone) &&
            (nread == YY_NULL))
     {
-        int line = 0, file = 0;
-        pp::Token::decodeLocation(yyget_lineno(scanner), &line, &file);
-        file = input->stringIndex();
-        yyset_lineno(pp::Token::encodeLocation(line, file), scanner);
-
         nread = input->read(buf, maxSize);
-
-        if (input->error() == pp::Input::kErrorUnexpectedEOF)
-        {
-            // TODO(alokp): Report error.
-        }
     }
     return nread;
 }
 
-std::string* extractMacroName(const char* str, int len)
-{
-    // The input string is of the form {HASH}define{HSPACE}+{IDENTIFIER}
-    // We just need to find the last HSPACE.
-    ASSERT(str && (len > 8));  // strlen("#define ") == 8;
-
-    std::string* name = NULL;
-    for (int i = len - 1; i >= 0; --i)
-    {
-        if ((str[i] == ' ') || (str[i] == '\t'))
-        {
-            name = new std::string(str + i + 1, len - i - 1);
-            break;
-        }
-    }
-    ASSERT(name);
-    return name;
-}
-
 namespace pp {
 
-int Lexer::lex(YYSTYPE* lvalp, YYLTYPE* llocp)
+int Lexer::lex(Token* token)
 {
-    return yylex(lvalp, llocp, mHandle);
+    token->type = yylex(&token->value, &token->location, mHandle);
+    return token->type;
 }
 
 bool Lexer::initLexer()

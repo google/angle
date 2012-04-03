@@ -10,8 +10,7 @@
 #include <memory>
 #include "common/angleutils.h"
 
-struct YYLTYPE;
-union YYSTYPE;
+#include "Token.h"
 
 namespace pp
 {
@@ -26,7 +25,7 @@ class Lexer
 
     bool init(int count, const char* const string[], const int length[]);
 
-    int lex(YYSTYPE* lvalp, YYLTYPE* llocp);
+    int lex(Token* token);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Lexer);
@@ -38,5 +37,5 @@ class Lexer
 };
 
 }  // namespace pp
-#endif  // COMPILER_PREPROCESSOR_BUFFER_LEXER_H_
+#endif  // COMPILER_PREPROCESSOR_LEXER_H_
 

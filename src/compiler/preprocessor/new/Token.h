@@ -8,41 +8,40 @@
 #define COMPILER_PREPROCESSOR_TOKEN_H_
 
 #include <string>
-#include <vector>
-
-#include "common/angleutils.h"
 
 namespace pp
 {
 
-class Token
+struct Token
 {
-  public:
-    typedef int Location;
-    static Location encodeLocation(int line, int file);
-    static void decodeLocation(Location loc, int* line, int* file);
+    enum Type
+    {
+        IDENTIFIER = 258,
 
-    // Takes ownership of string.
-    Token(Location location, int type, std::string* value);
-    ~Token();
+        CONST_INT,
+        CONST_FLOAT,
 
-    Location location() const { return mLocation; }
-    int type() const { return mType; }
-    const std::string* value() const { return mValue; }
+        OP_LEFT_SHIFT,
+        OP_RIGHT_SHIFT,
+        OP_LESS_EQUAL,
+        OP_GREATER_EQUAL,
+        OP_EQUAL,
+        OP_NOT_EQUAL,
+        OP_AND_AND,
+        OP_OR_OR
+    };
+    struct Location
+    {
+        int line;
+        int string;
+    };
 
-  private:
-    DISALLOW_COPY_AND_ASSIGN(Token);
-
-    Location mLocation;
-    int mType;
-    std::string* mValue;
+    int type;
+    Location location;
+    std::string value;
 };
-
-typedef std::vector<Token*> TokenVector;
-typedef TokenVector::const_iterator TokenIterator;
 
 extern std::ostream& operator<<(std::ostream& out, const Token& token);
 
 }  // namepsace pp
 #endif  // COMPILER_PREPROCESSOR_TOKEN_H_
-
