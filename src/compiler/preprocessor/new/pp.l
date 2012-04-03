@@ -77,6 +77,28 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
     return pp::Token::CONST_FLOAT;
 }
 
+"++"  { return pp::Token::OP_INC; }
+"--"  { return pp::Token::OP_DEC; }
+"<<"  { return pp::Token::OP_LEFT; }
+">>"  { return pp::Token::OP_RIGHT; }
+"<="  { return pp::Token::OP_LE; }
+">="  { return pp::Token::OP_GE; }
+"=="  { return pp::Token::OP_EQ; }
+"!="  { return pp::Token::OP_NE; }
+"&&"  { return pp::Token::OP_AND; }
+"^^"  { return pp::Token::OP_XOR; }
+"||"  { return pp::Token::OP_OR; }
+"+="  {  return pp::Token::OP_ADD_ASSIGN; }
+"-="  {  return pp::Token::OP_SUB_ASSIGN; }
+"*="  {  return pp::Token::OP_MUL_ASSIGN; }
+"/="  {  return pp::Token::OP_DIV_ASSIGN; }
+"%="  {  return pp::Token::OP_MOD_ASSIGN; }
+"<<=" {  return pp::Token::OP_LEFT_ASSIGN; }
+">>=" {  return pp::Token::OP_RIGHT_ASSIGN; }
+"&="  {  return pp::Token::OP_AND_ASSIGN; }
+"^="  {  return pp::Token::OP_XOR_ASSIGN; }
+"|="  {  return pp::Token::OP_OR_ASSIGN; }
+
 {PUNCTUATOR} { return yytext[0]; }
 
 [ \t\v\f]+ { /* Ignore whitespace */ }

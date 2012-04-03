@@ -21,14 +21,27 @@ struct Token
         CONST_INT,
         CONST_FLOAT,
 
-        OP_LEFT_SHIFT,
-        OP_RIGHT_SHIFT,
-        OP_LESS_EQUAL,
-        OP_GREATER_EQUAL,
-        OP_EQUAL,
-        OP_NOT_EQUAL,
-        OP_AND_AND,
-        OP_OR_OR
+        OP_INC,
+        OP_DEC,
+        OP_LEFT,
+        OP_RIGHT,
+        OP_LE,
+        OP_GE,
+        OP_EQ,
+        OP_NE,
+        OP_AND,
+        OP_XOR,
+        OP_OR,
+        OP_ADD_ASSIGN,
+        OP_SUB_ASSIGN,
+        OP_MUL_ASSIGN,
+        OP_DIV_ASSIGN,
+        OP_MOD_ASSIGN,
+        OP_LEFT_ASSIGN,
+        OP_RIGHT_ASSIGN,
+        OP_AND_ASSIGN,
+        OP_XOR_ASSIGN,
+        OP_OR_ASSIGN
     };
     struct Location
     {
