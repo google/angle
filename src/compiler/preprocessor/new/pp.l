@@ -32,6 +32,7 @@ typedef pp::Token::Location YYLTYPE;
 #define YY_USER_ACTION           \
     do {                         \
         yylloc->line = yylineno; \
+        yylloc->string = 0;      \
     } while(0);
 
 #define YY_INPUT(buf, result, maxSize) \
@@ -100,15 +101,10 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 "|="  {  return pp::Token::OP_OR_ASSIGN; }
 
 {PUNCTUATOR} { return yytext[0]; }
+[ \t\v\f]+   { /* Ignore whitespace */ }
+\n           { return yytext[0]; }
 
-[ \t\v\f]+ { /* Ignore whitespace */ }
-
-\n {
-    ++yylineno; yycolumn = 0;
-    return yytext[0];
-}
-
-<*><<EOF>>     { yyterminate(); }
+<*><<EOF>>   { yyterminate(); }
 
 %%
 

@@ -1,4 +1,4 @@
-#line 16 "./src/compiler/preprocessor/new/pp.l"
+#line 16 "./pp.l"
 //
 // Copyright (c) 2011 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -9,7 +9,7 @@
 
 
 
-#line 13 "./src/compiler/preprocessor/new/pp_lex.cpp"
+#line 13 "./pp_lex.cpp"
 
 #define  YY_INT_ALIGNED short int
 
@@ -524,6 +524,7 @@ typedef pp::Token::Location YYLTYPE;
 #define YY_USER_ACTION           \
     do {                         \
         yylloc->line = yylineno; \
+        yylloc->string = 0;      \
     } while(0);
 
 #define YY_INPUT(buf, result, maxSize) \
@@ -973,10 +974,7 @@ YY_RULE_SETUP
 case 28:
 /* rule 28 can match eol */
 YY_RULE_SETUP
-{
-    ++yylineno; yycolumn = 0;
-    return yytext[0];
-}
+{ return yytext[0]; }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
 { yyterminate(); }
