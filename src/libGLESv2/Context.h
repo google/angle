@@ -251,7 +251,7 @@ class VertexDeclarationCache
   private:
     UINT mMaxLru;
 
-    enum { NUM_VERTEX_DECL_CACHE_ENTRIES = 16 };
+    enum { NUM_VERTEX_DECL_CACHE_ENTRIES = 32 };
 
     struct VBData
     {
