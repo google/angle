@@ -1,4 +1,4 @@
-#line 17 "./glslang.l"
+#line 17 "./compiler/glslang.l"
 //
 // Copyright (c) 2010 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -21,7 +21,7 @@
 
 
 
-#line 25 "./glslang_lex.cpp"
+#line 25 "./compiler/glslang_lex.cpp"
 
 #define  YY_INT_ALIGNED short int
 
@@ -3202,19 +3202,15 @@ int glslang_finalize(TParseContext* context) {
     return yylex_destroy(scanner);
 }
 
-void glslang_scan(int count, const char* const string[], const int length[],
-                  TParseContext* context) {
+int glslang_scan(int count, const char* const string[], const int length[],
+                 TParseContext* context) {
     yyrestart(NULL,context->scanner);
     yyset_lineno(EncodeSourceLoc(0, 1),context->scanner);
     context->AfterEOF = false;
     
     // Init preprocessor.
     cpp->pC = context;
-    cpp->PaWhichStr = 0;
-    cpp->PaArgv     = string;
-    cpp->PaArgc     = count;
-    cpp->PaStrLen   = length;
     cpp->pastFirstStatement = 0;
-    ScanFromString(string[0]);
+    return InitScannerInput(cpp, count, string, length);
 }
 

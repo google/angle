@@ -1490,8 +1490,9 @@ int PaParseStrings(int count, const char* const string[], const int length[],
     if (glslang_initialize(context))
         return 1;
 
-    glslang_scan(count, string, length, context);
-    int error = glslang_parse(context);
+    int error = glslang_scan(count, string, length, context);
+    if (!error)
+        error = glslang_parse(context);
 
     glslang_finalize(context);
     FinalizePreprocessor();
