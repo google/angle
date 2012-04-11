@@ -4,6 +4,9 @@
 // found in the LICENSE file.
 //
 
+#include <stdlib.h>
+#include <string.h>
+
 extern "C" {
 #include "compiler/preprocessor/lexer_glue.h"
 #include "compiler/preprocessor/slglobals.h"

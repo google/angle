@@ -2922,7 +2922,7 @@ void CPPShInfoLogMsg(const char *msg)
     context->recover();
 }
 
-void CPPErrorToInfoLog(char *msg)
+void CPPErrorToInfoLog(const char *msg)
 {
     SETUP_CONTEXT(cpp);
     context->error(yylineno, msg, "", "");
