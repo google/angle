@@ -2031,16 +2031,26 @@ std::string Program::decorateAttribute(const std::string &name)
 
 std::string Program::undecorateUniform(const std::string &_name)
 {
-    if (_name[0] == '_')
+    std::string name = _name;
+    
+    // Remove any structure field decoration
+    size_t pos = 0;
+    while ((pos = name.find("._", pos)) != std::string::npos)
     {
-        return _name.substr(1);
+        name.replace(pos, 2, ".");
     }
-    else if (_name.compare(0, 3, "ar_") == 0)
+
+    // Remove the leading decoration
+    if (name[0] == '_')
     {
-        return _name.substr(3);
+        return name.substr(1);
+    }
+    else if (name.compare(0, 3, "ar_") == 0)
+    {
+        return name.substr(3);
     }
     
-    return _name;
+    return name;
 }
 
 void Program::applyUniformnbv(Uniform *targetUniform, GLsizei count, int width, const GLboolean *v)

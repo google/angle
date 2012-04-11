@@ -33,6 +33,7 @@ class OutputHLSL : public TIntermTraverser
     static TString initializer(const TType &type);
     static TString decorate(const TString &string);                      // Prepends an underscore to avoid naming clashes
     static TString decorateUniform(const TString &string, const TType &type);
+    static TString decorateField(const TString &string, const TType &structure);
 
   protected:
     void header();

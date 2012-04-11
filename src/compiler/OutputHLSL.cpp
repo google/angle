@@ -897,7 +897,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
       case EOpIndexDirectStruct:
         if (visit == InVisit)
         {
-            out << "." + node->getType().getFieldName();
+            out << "." + decorateField(node->getType().getFieldName(), node->getLeft()->getType());
 
             return false;
         }
@@ -973,9 +973,9 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
                 const TType *fieldType = (*fields)[i].type;
 
                 node->getLeft()->traverse(this);
-                out << "." + fieldType->getFieldName() + " == ";
+                out << "." + decorateField(fieldType->getFieldName(), node->getLeft()->getType()) + " == ";
                 node->getRight()->traverse(this);
-                out << "." + fieldType->getFieldName();
+                out << "." + decorateField(fieldType->getFieldName(), node->getLeft()->getType());
 
                 if (i < fields->size() - 1)
                 {
@@ -2012,7 +2012,7 @@ TString OutputHLSL::typeString(const TType &type)
             {
                 const TType &field = *fields[i].type;
 
-                string += "    " + typeString(field) + " " + field.getFieldName() + arrayString(field) + ";\n";
+                string += "    " + typeString(field) + " " + decorate(field.getFieldName()) + arrayString(field) + ";\n";
             }
 
             string += "} ";
@@ -2135,7 +2135,7 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
         {
             const TType &field = *fields[i].type;
 
-            structure += "    " + typeString(field) + " " + field.getFieldName() + arrayString(field) + ";\n";
+            structure += "    " + typeString(field) + " " + decorateField(field.getFieldName(), type) + arrayString(field) + ";\n";
         }
 
         structure += "};\n";
@@ -2433,5 +2433,15 @@ TString OutputHLSL::decorateUniform(const TString &string, const TType &type)
     }
     
     return decorate(string);
+}
+
+TString OutputHLSL::decorateField(const TString &string, const TType &structure)
+{
+    if (structure.getTypeName().compare(0, 3, "gl_") != 0)
+    {
+        return decorate(string);
+    }
+
+    return string;
 }
 }
