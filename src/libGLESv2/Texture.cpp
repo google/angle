@@ -264,7 +264,7 @@ void Image::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint y
 {
     IDirect3DSurface9 *sourceSurface = getSurface();
 
-    if (sourceSurface != destSurface)
+    if (sourceSurface && sourceSurface != destSurface)
     {
         RECT rect = transformPixelRect(xoffset, yoffset, width, height, mHeight);
 
