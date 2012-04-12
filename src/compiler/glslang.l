@@ -1,6 +1,6 @@
 /*
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -15,7 +15,7 @@ WHICH GENERATES THE GLSL ES LEXER (glslang_lex.cpp).
 
 %top{
 //
-// Copyright (c) 2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -159,6 +159,7 @@ O           [0-7]
 "extern"       { return reserved_word(yyscanner); }
 "external"     { return reserved_word(yyscanner); }
 "interface"    { return reserved_word(yyscanner); }
+"flat"         { return reserved_word(yyscanner); }
 
 "long"         { return reserved_word(yyscanner); }
 "short"        { return reserved_word(yyscanner); }
@@ -166,6 +167,7 @@ O           [0-7]
 "half"         { return reserved_word(yyscanner); }
 "fixed"        { return reserved_word(yyscanner); }
 "unsigned"     { return reserved_word(yyscanner); }
+"superp"       { return reserved_word(yyscanner); }
 
 "input"        { return reserved_word(yyscanner); }
 "output"       { return reserved_word(yyscanner); }
@@ -173,12 +175,21 @@ O           [0-7]
 "hvec2"        { return reserved_word(yyscanner); }
 "hvec3"        { return reserved_word(yyscanner); }
 "hvec4"        { return reserved_word(yyscanner); }
-"fvec2"        { return reserved_word(yyscanner); }
-"fvec3"        { return reserved_word(yyscanner); }
-"fvec4"        { return reserved_word(yyscanner); }
 "dvec2"        { return reserved_word(yyscanner); }
 "dvec3"        { return reserved_word(yyscanner); }
 "dvec4"        { return reserved_word(yyscanner); }
+"fvec2"        { return reserved_word(yyscanner); }
+"fvec3"        { return reserved_word(yyscanner); }
+"fvec4"        { return reserved_word(yyscanner); }
+
+"sampler1D"    { return reserved_word(yyscanner); }
+"sampler3D"    { return reserved_word(yyscanner); }
+
+"sampler1DShadow" { return reserved_word(yyscanner); }
+"sampler2DShadow" { return reserved_word(yyscanner); }
+
+"sampler3DRect" { return reserved_word(yyscanner); }
+"sampler2DRectShadow" { return reserved_word(yyscanner); }
 
 "sizeof"       { return reserved_word(yyscanner); }
 "cast"         { return reserved_word(yyscanner); }
