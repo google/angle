@@ -7,6 +7,7 @@
 #ifndef COMPILER_PREPROCESSOR_TOKEN_H_
 #define COMPILER_PREPROCESSOR_TOKEN_H_
 
+#include <ostream>
 #include <string>
 
 namespace pp
