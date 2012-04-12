@@ -101,7 +101,7 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 "|="  {  return pp::Token::OP_OR_ASSIGN; }
 
 {PUNCTUATOR} { return yytext[0]; }
-[ \t\v\f]+   { /* Ignore whitespace */ }
+[ \t\v\f]+   { return ' '; }
 \n           { return yytext[0]; }
 
 <*><<EOF>>   { yyterminate(); }
@@ -126,6 +126,14 @@ namespace pp {
 int Lexer::lex(Token* token)
 {
     token->type = yylex(&token->value, &token->location, mHandle);
+    while (token->type == ' ')
+    {
+        mLeadingSpace = true;
+        token->type = yylex(&token->value, &token->location, mHandle);
+    }
+    token->setHasLeadingSpace(mLeadingSpace);
+    mLeadingSpace = false;
+
     return token->type;
 }
 

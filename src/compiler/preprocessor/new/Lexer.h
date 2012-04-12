@@ -33,6 +33,7 @@ class Lexer
     void destroyLexer();
 
     void* mHandle;  // Lexer handle.
+    bool mLeadingSpace;
     std::auto_ptr<Input> mInput;  // Input buffer.
 };
 

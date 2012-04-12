@@ -21,6 +21,8 @@
         'compiler/preprocessor/new/Lexer.cpp',
         'compiler/preprocessor/new/Lexer.h',
         'compiler/preprocessor/new/pp_lex.cpp',
+        'compiler/preprocessor/new/Preprocessor.cpp',
+        'compiler/preprocessor/new/Preprocessor.h',
         'compiler/preprocessor/new/Token.cpp',
         'compiler/preprocessor/new/Token.h',
       ],

@@ -969,7 +969,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-{ /* Ignore whitespace */ }
+{ return ' '; }
 	YY_BREAK
 case 28:
 /* rule 28 can match eol */
@@ -2143,6 +2143,14 @@ namespace pp {
 int Lexer::lex(Token* token)
 {
     token->type = pplex(&token->value,&token->location,mHandle);
+    while (token->type == ' ')
+    {
+        mLeadingSpace = true;
+        token->type = pplex(&token->value,&token->location,mHandle);
+    }
+    token->setHasLeadingSpace(mLeadingSpace);
+    mLeadingSpace = false;
+
     return token->type;
 }
 
