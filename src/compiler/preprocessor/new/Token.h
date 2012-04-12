@@ -43,13 +43,43 @@ struct Token
         OP_XOR_ASSIGN,
         OP_OR_ASSIGN
     };
+    enum Flags
+    {
+        HAS_LEADING_SPACE = 1 << 0
+    };
     struct Location
     {
+        Location() : line(0), string(0) { }
+        bool equals(const Location& other) const
+        {
+            return (line == other.line) && (string == other.string);
+        }
+
         int line;
         int string;
     };
 
+    Token() : type(0), flags(0) { }
+
+    bool equals(const Token& other) const
+    {
+        return (type == other.type) &&
+               (flags == other.flags) &&
+               (location.equals(other.location)) &&
+               (value == other.value);
+    }
+
+    bool hasLeadingSpace() const { return (flags & HAS_LEADING_SPACE) != 0; }
+    void setHasLeadingSpace(bool space)
+    {
+        if (space)
+            flags |= HAS_LEADING_SPACE;
+        else
+            flags &= ~HAS_LEADING_SPACE;
+    }
+
     int type;
+    int flags;
     Location location;
     std::string value;
 };

@@ -8,8 +8,8 @@
 #define COMPILER_PREPROCESSOR_LEXER_H_
 
 #include <memory>
-#include "common/angleutils.h"
 
+#include "pp_utils.h"
 #include "Token.h"
 
 namespace pp
@@ -28,7 +28,7 @@ class Lexer
     int lex(Token* token);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(Lexer);
+    PP_DISALLOW_COPY_AND_ASSIGN(Lexer);
     bool initLexer();
     void destroyLexer();
 

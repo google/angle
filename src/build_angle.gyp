@@ -11,8 +11,24 @@
   },
   'targets': [
     {
+      'target_name': 'preprocessor',
+      'type': 'static_library',
+      'include_dirs': [
+      ],
+      'sources': [
+        'compiler/preprocessor/new/Input.cpp',
+        'compiler/preprocessor/new/Input.h',
+        'compiler/preprocessor/new/Lexer.cpp',
+        'compiler/preprocessor/new/Lexer.h',
+        'compiler/preprocessor/new/pp_lex.cpp',
+        'compiler/preprocessor/new/Token.cpp',
+        'compiler/preprocessor/new/Token.h',
+      ],
+    },
+    {
       'target_name': 'translator_common',
       'type': 'static_library',
+      'dependencies': ['preprocessor'],
       'include_dirs': [
         '.',
         '../include',
@@ -73,14 +89,6 @@
         'compiler/ValidateLimitations.h',
         'compiler/VariableInfo.cpp',
         'compiler/VariableInfo.h',
-        # New Preprocessor
-        'compiler/preprocessor/new/Input.cpp',
-        'compiler/preprocessor/new/Input.h',
-        'compiler/preprocessor/new/Lexer.cpp',
-        'compiler/preprocessor/new/Lexer.h',
-        'compiler/preprocessor/new/pp_lex.cpp',
-        'compiler/preprocessor/new/Token.cpp',
-        'compiler/preprocessor/new/Token.h',
         # Old preprocessor
         'compiler/preprocessor/atom.c',
         'compiler/preprocessor/atom.h',
