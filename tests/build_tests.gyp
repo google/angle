@@ -16,14 +16,20 @@
       ],
     },
     {
-      'target_name': 'pp_tests',
+      'target_name': 'preprocessor_tests',
       'type': 'executable',
-      'dependencies': ['gtest'],
+      'dependencies': [
+        '../src/build_angle.gyp:preprocessor',
+        'gtest',
+      ],
       'include_dirs': [
+        '../src/compiler/preprocessor/new',
         '../third_party/googletest/include',
       ],
       'sources': [
         '../third_party/googletest/src/gtest_main.cc',
+        'preprocessor_tests/token_test.cpp',
+        'preprocessor_tests/space_test.cpp',
       ],
     },
   ],
