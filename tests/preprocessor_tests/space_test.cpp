@@ -51,7 +51,8 @@ INSTANTIATE_TEST_CASE_P(SingleSpaceChar,
 // This test fixture tests the processing of a string containing consecutive
 // whitespace characters. All tests in this fixture are ran with all possible
 // combinations of whitespace characters allowed in GLSL.
-class SpaceStringTest : public testing::TestWithParam< std::tr1::tuple<char, char, char> >
+typedef std::tr1::tuple<char, char, char> SpaceStringParams;
+class SpaceStringTest : public testing::TestWithParam<SpaceStringParams>
 {
 };
 

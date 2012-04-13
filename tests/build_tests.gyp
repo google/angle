@@ -28,6 +28,7 @@
       ],
       'sources': [
         '../third_party/googletest/src/gtest_main.cc',
+        'preprocessor_tests/number_test.cpp',
         'preprocessor_tests/token_test.cpp',
         'preprocessor_tests/space_test.cpp',
       ],
