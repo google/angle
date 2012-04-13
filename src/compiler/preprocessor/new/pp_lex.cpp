@@ -517,6 +517,7 @@ IF YOU MODIFY THIS FILE YOU ALSO NEED TO RUN generate_parser.sh.
 
 #include "Input.h"
 #include "Lexer.h"
+#include "Token.h"
 
 typedef std::string YYSTYPE;
 typedef pp::Token::Location YYLTYPE;

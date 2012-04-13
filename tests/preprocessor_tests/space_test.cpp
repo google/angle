@@ -6,6 +6,7 @@
 
 #include "gtest/gtest.h"
 #include "Preprocessor.h"
+#include "Token.h"
 
 // Whitespace characters allowed in GLSL.
 // Note that newline characters (\n) will be tested separately.

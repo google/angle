@@ -10,12 +10,12 @@
 #include <memory>
 
 #include "pp_utils.h"
-#include "Token.h"
 
 namespace pp
 {
 
 class Input;
+struct Token;
 
 class Lexer
 {
