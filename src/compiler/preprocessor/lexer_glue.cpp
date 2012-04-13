@@ -13,6 +13,7 @@ extern "C" {
 #include "compiler/preprocessor/scanner.h"
 }
 #include "compiler/preprocessor/new/Lexer.h"
+#include "compiler/preprocessor/new/Token.h"
 
 struct InputSrcLexer
 {
