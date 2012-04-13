@@ -60,9 +60,7 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 
 %%
 
-# {
-    return yytext[0];
-}
+# { return yytext[0]; }
 
 {IDENTIFIER} {
     yylval->assign(yytext, yyleng);
