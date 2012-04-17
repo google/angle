@@ -24,8 +24,8 @@ Lexer::~Lexer()
 
 bool Lexer::init(int count, const char* const string[], const int length[])
 {
-    assert((count >=0) && (string != NULL));
-    if ((count < 0) || (string == NULL))
+    assert((count >= 0) && (string));
+    if ((count < 0) || (!string))
         return false;
 
     mInput.reset(new Input(count, string, length));
