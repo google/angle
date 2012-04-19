@@ -8,6 +8,33 @@
 #include "Preprocessor.h"
 #include "Token.h"
 
+#if GTEST_HAS_PARAM_TEST
+
+class InvalidNumberTest : public testing::TestWithParam<const char*>
+{
+};
+
+TEST_P(InvalidNumberTest, InvalidNumberIdentified)
+{
+    const char* str = GetParam();
+
+    pp::Token token;
+    pp::Preprocessor preprocessor;
+    ASSERT_TRUE(preprocessor.init(1, &str, 0));
+    EXPECT_EQ(pp::Token::INVALID_NUMBER, preprocessor.lex(&token));
+    EXPECT_EQ(pp::Token::INVALID_NUMBER, token.type);
+    EXPECT_STREQ(str, token.value.c_str());
+}
+
+INSTANTIATE_TEST_CASE_P(InvalidIntegers, InvalidNumberTest,
+                        testing::Values("1a", "08", "0xG"));
+
+
+INSTANTIATE_TEST_CASE_P(InvalidFloats, InvalidNumberTest,
+                        testing::Values("1eg", "0.a", "0.1.2", ".0a", ".0.1"));
+
+#endif  // GTEST_HAS_PARAM_TEST
+
 #if GTEST_HAS_COMBINE
 
 typedef std::tr1::tuple<const char*, char> IntegerParams;

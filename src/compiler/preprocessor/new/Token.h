@@ -17,6 +17,13 @@ struct Token
 {
     enum Type
     {
+        // Token IDs for error conditions are negative.
+        INVALID_CHARACTER = -1,
+        INVALID_NUMBER = -2,
+
+        // Indicates EOF.
+        LAST = 0,
+
         IDENTIFIER = 258,
 
         CONST_INT,

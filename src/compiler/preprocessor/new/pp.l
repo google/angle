@@ -77,6 +77,13 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
     return pp::Token::CONST_FLOAT;
 }
 
+    /* Anything that starts with a {DIGIT} or .{DIGIT} must be a number. */
+    /* Rule to catch all invalid integers and floats. */
+({DIGIT}+[_a-zA-Z0-9.]*)|("."{DIGIT}+[_a-zA-Z0-9.]*) {
+    yylval->assign(yytext, yyleng);
+    return pp::Token::INVALID_NUMBER;
+}
+
 "++"  { return pp::Token::OP_INC; }
 "--"  { return pp::Token::OP_DEC; }
 "<<"  { return pp::Token::OP_LEFT; }
@@ -102,6 +109,11 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 {PUNCTUATOR} { return yytext[0]; }
 [ \t\v\f]+   { return ' '; }
 \n           { return yytext[0]; }
+
+. {
+    yylval->push_back(yytext[0]);
+    return pp::Token::INVALID_CHARACTER;
+}
 
 <*><<EOF>>   { yyterminate(); }
 
