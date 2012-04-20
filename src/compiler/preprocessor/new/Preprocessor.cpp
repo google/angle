@@ -18,7 +18,14 @@ bool Preprocessor::init(int count,
 
 int Preprocessor::lex(Token* token)
 {
-    return mLexer.lex(token);
+    int ret = mLexer.lex(token);
+    // TODO(alokp): Handle preprocessor directives. Ignore them for now.
+    while ((ret == '\n') || (ret == '#'))
+    {
+        ret = mLexer.lex(token);
+    }
+
+    return ret;
 }
 
 }  // namespace pp
