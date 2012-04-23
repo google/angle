@@ -43,10 +43,11 @@ static int readInput(char* buf, int maxSize, yyscan_t scanner);
 %}
 
 %option noyywrap nounput never-interactive
-%option yylineno reentrant bison-bridge bison-locations
+%option reentrant bison-bridge bison-locations
 %option prefix="pp"
 %option extra-type="pp::Input*"
 
+NEWLINE     "\n"|"\r"|"\r\n"
 IDENTIFIER  [_a-zA-Z][_a-zA-Z0-9]*
 PUNCTUATOR  [][<>(){}.+-/*%^|&~=!:;,?]
 
@@ -108,7 +109,11 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 
 {PUNCTUATOR} { return yytext[0]; }
 [ \t\v\f]+   { return ' '; }
-\n           { return yytext[0]; }
+
+{NEWLINE} {
+    ++yylineno;
+    return '\n';
+}
 
 . {
     yylval->push_back(yytext[0]);
