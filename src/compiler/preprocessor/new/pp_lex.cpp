@@ -334,9 +334,6 @@ void ppfree (void * ,yyscan_t yyscanner );
 
 /* Begin user sect3 */
 
-#define ppwrap(n) 1
-#define YY_SKIP_YYWRAP
-
 typedef unsigned char YY_CHAR;
 
 typedef int yy_state_type;
@@ -520,10 +517,9 @@ typedef pp::Token::Location YYLTYPE;
         yylloc->string = 0;      \
     } while(0);
 
-#define YY_INPUT(buf, result, maxSize) \
-    result = readInput(buf, maxSize, yyscanner);
-
-static int readInput(char* buf, int maxSize, yyscan_t scanner);
+// Suppress the default implementation of YY_INPUT which generated
+// compiler warnings.
+#define YY_INPUT
 
 #define INITIAL 0
 
@@ -970,7 +966,7 @@ YY_RULE_SETUP
 case 30:
 YY_RULE_SETUP
 {
-    yylval->push_back(yytext[0]);
+    yylval->assign(yytext, yyleng);
     return pp::Token::INVALID_CHARACTER;
 }
 	YY_BREAK
@@ -2116,41 +2112,59 @@ void ppfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-int readInput(char* buf, int maxSize, yyscan_t scanner)
+int ppwrap(yyscan_t scanner)
 {
-    int nread = YY_NULL;
     pp::Input* input = ppget_extra(scanner);
-    while (!input->eof() &&
-           (input->error() == pp::Input::kErrorNone) &&
-           (nread == YY_NULL))
+
+    // Delete the current buffer before switching to the next one.
+    YY_BUFFER_STATE buffer = static_cast<YY_BUFFER_STATE>(input->buffer);
+    if (buffer != NULL)
     {
-        nread = input->read(buf, maxSize);
+        pp_delete_buffer(buffer,scanner);
+        input->buffer = NULL;
     }
-    return nread;
+
+    int index = std::min(input->index + 1, input->count);
+    if (index == input->count)
+        return 1;  // EOF reached.
+
+    int length = input->length ? input->length[index] : -1;
+    if (length < 0)  // NULL terminated string.
+        buffer = pp_scan_string(input->string[index],scanner);
+    else
+        buffer = pp_scan_bytes(input->string[index],length,scanner);
+
+    // TODO(alokp): Increment token location.
+    input->index = index;
+    input->buffer = buffer;
+    return 0;
 }
 
 namespace pp {
 
 int Lexer::lex(Token* token)
 {
+    bool leadingSpace = false;
     token->type = pplex(&token->value,&token->location,mHandle);
     while (token->type == ' ')
     {
-        mLeadingSpace = true;
+        leadingSpace = true;
         token->type = pplex(&token->value,&token->location,mHandle);
     }
-    token->setHasLeadingSpace(mLeadingSpace);
-    mLeadingSpace = false;
+    token->setHasLeadingSpace(leadingSpace);
 
     return token->type;
 }
 
 bool Lexer::initLexer()
 {
-    if ((mHandle == NULL) && pplex_init_extra(mInput.get(),&mHandle))
+    if ((mHandle == NULL) && pplex_init_extra(&mInput,&mHandle))
         return false;
 
-    pprestart(0,mHandle);
+    // Setup first scan string.
+    mInput.index = -1;
+    ppwrap(mHandle);
+
     return true;
 }
 
@@ -2159,6 +2173,13 @@ void Lexer::destroyLexer()
     if (mHandle == NULL)
         return;
 
+    YY_BUFFER_STATE buffer = static_cast<YY_BUFFER_STATE>(mInput.buffer);
+    if (buffer != NULL)
+    {
+        pp_delete_buffer(buffer,mHandle);
+        mInput.buffer = NULL;
+    }
+ 
     pplex_destroy(mHandle);
     mHandle = NULL;
 }

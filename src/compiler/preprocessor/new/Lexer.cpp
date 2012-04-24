@@ -8,27 +8,30 @@
 
 #include <cassert>
 
-#include "Input.h"
-
 namespace pp
 {
 
-Lexer::Lexer() : mHandle(0), mLeadingSpace(false)
+Lexer::Lexer() : mHandle(0)
 {
 }
 
 Lexer::~Lexer()
 {
     destroyLexer();
+
+    // Make sure the lexer and associated buffer are deleted.
+    assert(mHandle == 0);
+    assert(mInput.buffer == 0);
 }
 
 bool Lexer::init(int count, const char* const string[], const int length[])
 {
-    assert((count >= 0) && (string));
-    if ((count < 0) || (!string))
-        return false;
+    assert((count >= 0) && string);
 
-    mInput.reset(new Input(count, string, length));
+    mInput.count = count;
+    mInput.string = string;
+    mInput.length = length;
+
     return initLexer();
 }
 

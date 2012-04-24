@@ -36,13 +36,12 @@ typedef pp::Token::Location YYLTYPE;
         yylloc->string = 0;      \
     } while(0);
 
-#define YY_INPUT(buf, result, maxSize) \
-    result = readInput(buf, maxSize, yyscanner);
-
-static int readInput(char* buf, int maxSize, yyscan_t scanner);
+// Suppress the default implementation of YY_INPUT which generated
+// compiler warnings.
+#define YY_INPUT
 %}
 
-%option noyywrap nounput never-interactive
+%option nounput never-interactive
 %option reentrant bison-bridge bison-locations
 %option prefix="pp"
 %option extra-type="pp::Input*"
@@ -116,7 +115,7 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 }
 
 . {
-    yylval->push_back(yytext[0]);
+    yylval->assign(yytext, yyleng);
     return pp::Token::INVALID_CHARACTER;
 }
 
@@ -124,41 +123,59 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 
 %%
 
-int readInput(char* buf, int maxSize, yyscan_t scanner)
+int ppwrap(yyscan_t scanner)
 {
-    int nread = YY_NULL;
     pp::Input* input = yyget_extra(scanner);
-    while (!input->eof() &&
-           (input->error() == pp::Input::kErrorNone) &&
-           (nread == YY_NULL))
+
+    // Delete the current buffer before switching to the next one.
+    YY_BUFFER_STATE buffer = static_cast<YY_BUFFER_STATE>(input->buffer);
+    if (buffer != NULL)
     {
-        nread = input->read(buf, maxSize);
+        yy_delete_buffer(buffer, scanner);
+        input->buffer = NULL;
     }
-    return nread;
+
+    int index = std::min(input->index + 1, input->count);
+    if (index == input->count)
+        return 1;  // EOF reached.
+
+    int length = input->length ? input->length[index] : -1;
+    if (length < 0)  // NULL terminated string.
+        buffer = yy_scan_string(input->string[index], scanner);
+    else
+        buffer = yy_scan_bytes(input->string[index], length, scanner);
+
+    // TODO(alokp): Increment token location.
+    input->index = index;
+    input->buffer = buffer;
+    return 0;
 }
 
 namespace pp {
 
 int Lexer::lex(Token* token)
 {
+    bool leadingSpace = false;
     token->type = yylex(&token->value, &token->location, mHandle);
     while (token->type == ' ')
     {
-        mLeadingSpace = true;
+        leadingSpace = true;
         token->type = yylex(&token->value, &token->location, mHandle);
     }
-    token->setHasLeadingSpace(mLeadingSpace);
-    mLeadingSpace = false;
+    token->setHasLeadingSpace(leadingSpace);
 
     return token->type;
 }
 
 bool Lexer::initLexer()
 {
-    if ((mHandle == NULL) && yylex_init_extra(mInput.get(), &mHandle))
+    if ((mHandle == NULL) && yylex_init_extra(&mInput, &mHandle))
         return false;
 
-    yyrestart(0, mHandle);
+    // Setup first scan string.
+    mInput.index = -1;
+    ppwrap(mHandle);
+
     return true;
 }
 
@@ -167,6 +184,13 @@ void Lexer::destroyLexer()
     if (mHandle == NULL)
         return;
 
+    YY_BUFFER_STATE buffer = static_cast<YY_BUFFER_STATE>(mInput.buffer);
+    if (buffer != NULL)
+    {
+        yy_delete_buffer(buffer, mHandle);
+        mInput.buffer = NULL;
+    }
+ 
     yylex_destroy(mHandle);
     mHandle = NULL;
 }

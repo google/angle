@@ -7,14 +7,12 @@
 #ifndef COMPILER_PREPROCESSOR_LEXER_H_
 #define COMPILER_PREPROCESSOR_LEXER_H_
 
-#include <memory>
-
+#include "Input.h"
 #include "pp_utils.h"
 
 namespace pp
 {
 
-class Input;
 struct Token;
 
 class Lexer
@@ -33,8 +31,7 @@ class Lexer
     void destroyLexer();
 
     void* mHandle;  // Lexer handle.
-    bool mLeadingSpace;
-    std::auto_ptr<Input> mInput;  // Input buffer.
+    Input mInput;  // Input buffer.
 };
 
 }  // namespace pp
