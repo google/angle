@@ -35,22 +35,24 @@ TEST_P(IdentifierTest, IdentifierIdentified)
     PreprocessAndVerifyIdentifier(str.c_str());
 }
 
+#define CLOSED_RANGE(x, y) testing::Range(x, static_cast<char>((y) + 1))
+
 // Test string: '_'
 INSTANTIATE_TEST_CASE_P(SingleLetter_Underscore,
                         IdentifierTest,
                         testing::Combine(testing::Values('_'),
                                          testing::Values('\0')));
 
-// Test string: [a-f]
-INSTANTIATE_TEST_CASE_P(SingleLetter_a_f,
+// Test string: [a-z]
+INSTANTIATE_TEST_CASE_P(SingleLetter_a_z,
                         IdentifierTest,
-                        testing::Combine(testing::Range('a', 'f'),
+                        testing::Combine(CLOSED_RANGE('a', 'z'),
                                          testing::Values('\0')));
 
-// Test string: [A-F]
-INSTANTIATE_TEST_CASE_P(SingleLetter_A_F,
+// Test string: [A-Z]
+INSTANTIATE_TEST_CASE_P(SingleLetter_A_Z,
                         IdentifierTest,
-                        testing::Combine(testing::Range('A', 'F'),
+                        testing::Combine(CLOSED_RANGE('A', 'Z'),
                                          testing::Values('\0')));
 
 // Test string: "__"
@@ -59,71 +61,71 @@ INSTANTIATE_TEST_CASE_P(DoubleLetter_Underscore_Underscore,
                         testing::Combine(testing::Values('_'),
                                          testing::Values('_')));
 
-// Test string: "_"[a-f]
-INSTANTIATE_TEST_CASE_P(DoubleLetter_Underscore_a_f,
+// Test string: "_"[a-z]
+INSTANTIATE_TEST_CASE_P(DoubleLetter_Underscore_a_z,
                         IdentifierTest,
                         testing::Combine(testing::Values('_'),
-                                         testing::Range('a', 'f')));
+                                         CLOSED_RANGE('a', 'z')));
 
-// Test string: "_"[A-F]
-INSTANTIATE_TEST_CASE_P(DoubleLetter_Underscore_A_F,
+// Test string: "_"[A-Z]
+INSTANTIATE_TEST_CASE_P(DoubleLetter_Underscore_A_Z,
                         IdentifierTest,
                         testing::Combine(testing::Values('_'),
-                                         testing::Range('A', 'F')));
+                                         CLOSED_RANGE('A', 'Z')));
 
 // Test string: "_"[0-9]
 INSTANTIATE_TEST_CASE_P(DoubleLetter_Underscore_0_9,
                         IdentifierTest,
                         testing::Combine(testing::Values('_'),
-                                         testing::Range('0', '9')));
+                                         CLOSED_RANGE('0', '9')));
 
-// Test string: [a-f]"_"
-INSTANTIATE_TEST_CASE_P(DoubleLetter_a_f_Underscore,
+// Test string: [a-z]"_"
+INSTANTIATE_TEST_CASE_P(DoubleLetter_a_z_Underscore,
                         IdentifierTest,
-                        testing::Combine(testing::Range('a', 'f'),
+                        testing::Combine(CLOSED_RANGE('a', 'z'),
                                          testing::Values('_')));
 
-// Test string: [a-f][a-f]
-INSTANTIATE_TEST_CASE_P(DoubleLetter_a_f_a_f,
+// Test string: [a-z][a-z]
+INSTANTIATE_TEST_CASE_P(DoubleLetter_a_z_a_z,
                         IdentifierTest,
-                        testing::Combine(testing::Range('a', 'f'),
-                                         testing::Range('a', 'f')));
+                        testing::Combine(CLOSED_RANGE('a', 'z'),
+                                         CLOSED_RANGE('a', 'z')));
 
-// Test string: [a-f][A-f]
-INSTANTIATE_TEST_CASE_P(DoubleLetter_a_f_A_F,
+// Test string: [a-z][A-Z]
+INSTANTIATE_TEST_CASE_P(DoubleLetter_a_z_A_Z,
                         IdentifierTest,
-                        testing::Combine(testing::Range('a', 'f'),
-                                         testing::Range('A', 'F')));
+                        testing::Combine(CLOSED_RANGE('a', 'z'),
+                                         CLOSED_RANGE('A', 'Z')));
 
-// Test string: [a-f][0-9]
-INSTANTIATE_TEST_CASE_P(DoubleLetter_a_f_0_9,
+// Test string: [a-z][0-9]
+INSTANTIATE_TEST_CASE_P(DoubleLetter_a_z_0_9,
                         IdentifierTest,
-                        testing::Combine(testing::Range('a', 'f'),
-                                         testing::Range('0', '9')));
+                        testing::Combine(CLOSED_RANGE('a', 'z'),
+                                         CLOSED_RANGE('0', '9')));
 
-// Test string: [A-F]"_"
-INSTANTIATE_TEST_CASE_P(DoubleLetter_A_F_Underscore,
+// Test string: [A-Z]"_"
+INSTANTIATE_TEST_CASE_P(DoubleLetter_A_Z_Underscore,
                         IdentifierTest,
-                        testing::Combine(testing::Range('A', 'F'),
+                        testing::Combine(CLOSED_RANGE('A', 'Z'),
                                          testing::Values('_')));
 
-// Test string: [A-F][a-f]
-INSTANTIATE_TEST_CASE_P(DoubleLetter_A_F_a_f,
+// Test string: [A-Z][a-z]
+INSTANTIATE_TEST_CASE_P(DoubleLetter_A_Z_a_z,
                         IdentifierTest,
-                        testing::Combine(testing::Range('A', 'F'),
-                                         testing::Range('a', 'f')));
+                        testing::Combine(CLOSED_RANGE('A', 'Z'),
+                                         CLOSED_RANGE('a', 'z')));
 
-// Test string: [A-F][A-F]
-INSTANTIATE_TEST_CASE_P(DoubleLetter_A_F_A_F,
+// Test string: [A-Z][A-Z]
+INSTANTIATE_TEST_CASE_P(DoubleLetter_A_Z_A_Z,
                         IdentifierTest,
-                        testing::Combine(testing::Range('A', 'F'),
-                                         testing::Range('A', 'F')));
+                        testing::Combine(CLOSED_RANGE('A', 'Z'),
+                                         CLOSED_RANGE('A', 'Z')));
 
-// Test string: [A-F][0-9]
-INSTANTIATE_TEST_CASE_P(DoubleLetter_A_F_0_9,
+// Test string: [A-Z][0-9]
+INSTANTIATE_TEST_CASE_P(DoubleLetter_A_Z_0_9,
                         IdentifierTest,
-                        testing::Combine(testing::Range('A', 'F'),
-                                         testing::Range('0', '9')));
+                        testing::Combine(CLOSED_RANGE('A', 'Z'),
+                                         CLOSED_RANGE('0', '9')));
 
 #endif  // GTEST_HAS_COMBINE
 

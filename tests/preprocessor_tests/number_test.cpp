@@ -56,30 +56,32 @@ TEST_P(IntegerTest, IntegerIdentified)
     EXPECT_STREQ(cstr, token.value.c_str());
 }
 
+#define CLOSED_RANGE(x, y) testing::Range(x, static_cast<char>((y) + 1))
+
 INSTANTIATE_TEST_CASE_P(DecimalInteger,
                         IntegerTest,
                         testing::Combine(testing::Values(""),
-                                         testing::Range('0', '9')));
+                                         CLOSED_RANGE('0', '9')));
 
 INSTANTIATE_TEST_CASE_P(OctalInteger,
                         IntegerTest,
                         testing::Combine(testing::Values("0"),
-                                         testing::Range('0', '7')));
+                                         CLOSED_RANGE('0', '7')));
 
 INSTANTIATE_TEST_CASE_P(HexadecimalInteger_0_9,
                         IntegerTest,
                         testing::Combine(testing::Values("0x"),
-                                         testing::Range('0', '9')));
+                                         CLOSED_RANGE('0', '9')));
 
 INSTANTIATE_TEST_CASE_P(HexadecimalInteger_a_f,
                         IntegerTest,
                         testing::Combine(testing::Values("0x"),
-                                         testing::Range('a', 'f')));
+                                         CLOSED_RANGE('a', 'f')));
 
 INSTANTIATE_TEST_CASE_P(HexadecimalInteger_A_F,
                         IntegerTest,
                         testing::Combine(testing::Values("0x"),
-                                         testing::Range('A', 'F')));
+                                         CLOSED_RANGE('A', 'F')));
 
 static void PreprocessAndVerifyFloat(const char* str)
 {
@@ -111,10 +113,10 @@ TEST_P(FloatScientificTest, FloatIdentified)
 
 INSTANTIATE_TEST_CASE_P(FloatScientific,
                         FloatScientificTest,
-                        testing::Combine(testing::Range('0', '9'),
+                        testing::Combine(CLOSED_RANGE('0', '9'),
                                          testing::Values('e', 'E'),
                                          testing::Values("", "+", "-"),
-                                         testing::Range('0', '9')));
+                                         CLOSED_RANGE('0', '9')));
 
 typedef std::tr1::tuple<char, char> FloatFractionParams;
 class FloatFractionTest : public testing::TestWithParam<FloatFractionParams>
@@ -142,17 +144,17 @@ TEST_P(FloatFractionTest, FloatIdentified)
 
 INSTANTIATE_TEST_CASE_P(FloatFraction_X_X,
                         FloatFractionTest,
-                        testing::Combine(testing::Range('0', '9'),
-                                         testing::Range('0', '9')));
+                        testing::Combine(CLOSED_RANGE('0', '9'),
+                                         CLOSED_RANGE('0', '9')));
 
 INSTANTIATE_TEST_CASE_P(FloatFraction_0_X,
                         FloatFractionTest,
                         testing::Combine(testing::Values('\0'),
-                                         testing::Range('0', '9')));
+                                         CLOSED_RANGE('0', '9')));
 
 INSTANTIATE_TEST_CASE_P(FloatFraction_X_0,
                         FloatFractionTest,
-                        testing::Combine(testing::Range('0', '9'),
+                        testing::Combine(CLOSED_RANGE('0', '9'),
                                          testing::Values('\0')));
 
 #endif  // GTEST_HAS_COMBINE
