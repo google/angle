@@ -29,7 +29,7 @@ const char *fakepath = "C:\\fakepath";
 std::string str(int i)
 {
     char buffer[20];
-    sprintf(buffer, "%d", i);
+    snprintf(buffer, sizeof(buffer), "%d", i);
     return buffer;
 }
 

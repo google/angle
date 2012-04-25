@@ -892,7 +892,7 @@ void PredefineIntMacro(const char *name, int value) {
 
     macro.body = NewTokenStream(name, macros->pool);
     val.sc_int = value;
-    sprintf(val.symbol_name, "%d", value);
+    snprintf(val.symbol_name, MAX_SYMBOL_NAME_LEN+1, "%d", value);
     RecordToken(macro.body, CPP_INTCONSTANT, &val);
     atom = LookUpAddString(atable, name);
     symbol = AddSymbol(&location, macros, atom, MACRO_S);
@@ -989,13 +989,13 @@ int MacroExpand(int atom, yystypepp * yylvalpp)
     const char *message;
 	if (atom == __LINE__Atom) {
         yylvalpp->sc_int = GetLineNumber();
-        sprintf(yylvalpp->symbol_name,"%d",yylvalpp->sc_int);
+        snprintf(yylvalpp->symbol_name, MAX_SYMBOL_NAME_LEN+1, "%d", yylvalpp->sc_int);
         UngetToken(CPP_INTCONSTANT, yylvalpp);
         return 1;
     }
     if (atom == __FILE__Atom) {
         yylvalpp->sc_int = GetStringNumber();
-        sprintf(yylvalpp->symbol_name,"%d",yylvalpp->sc_int);
+        snprintf(yylvalpp->symbol_name, MAX_SYMBOL_NAME_LEN+1, "%d", yylvalpp->sc_int);
         UngetToken(CPP_INTCONSTANT, yylvalpp);
         return 1;
     }
