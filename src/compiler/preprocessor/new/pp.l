@@ -45,8 +45,9 @@ typedef pp::Token::Location YYLTYPE;
 %option reentrant bison-bridge bison-locations
 %option prefix="pp"
 %option extra-type="pp::Input*"
+%x COMMENT
 
-NEWLINE     "\n"|"\r"|"\r\n"
+NEWLINE     \n|\r|\r\n
 IDENTIFIER  [_a-zA-Z][_a-zA-Z0-9]*
 PUNCTUATOR  [][<>(){}.+-/*%^|&~=!:;,?]
 
@@ -59,6 +60,17 @@ EXPONENT_PART        [eE][+-]?{DIGIT}+
 FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 
 %%
+
+    /* Line comment */
+"//"[^\r\n]*
+
+    /* Block comment */
+"/*"                              { BEGIN(COMMENT); }
+<COMMENT>[^*\r\n]*
+<COMMENT>[^*\r\n]*{NEWLINE}       { ++yylineno; return '\n'; }
+<COMMENT>"*"+[^*/\r\n]*
+<COMMENT>"*"+[^*/\r\n]*{NEWLINE}  { ++yylineno; return '\n'; }
+<COMMENT>"*"+"/"                  { BEGIN(INITIAL); return ' '; }
 
 # { return yytext[0]; }
 
