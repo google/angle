@@ -27,18 +27,40 @@ IF YOU MODIFY THIS FILE YOU ALSO NEED TO RUN generate_parser.sh.
 #include "Lexer.h"
 #include "Token.h"
 
+// Token location (file and line) is encoded into a single int so that
+// we can use yylineno macro.
+
+const unsigned int kLocationLineSize = 16;  // in bits.
+const unsigned int kLocationLineMask = (1 << kLocationLineSize) - 1;
+
+static int location(int file, int line)
+{
+    return (file << kLocationLineSize) | (line & kLocationLineMask);
+}
+
+static int locationFile(int loc)
+{
+    return loc >> kLocationLineSize;
+}
+
+static int locationLine(int loc)
+{
+    return loc & kLocationLineMask;
+}
+
 typedef std::string YYSTYPE;
 typedef pp::Token::Location YYLTYPE;
 
-#define YY_USER_ACTION           \
-    do {                         \
-        yylloc->file = 0;        \
-        yylloc->line = yylineno; \
+#define YY_USER_ACTION                          \
+    do {                                        \
+        yylloc->file = locationFile(yylineno);  \
+        yylloc->line = locationLine(yylineno);  \
     } while(0);
 
 // Suppress the default implementation of YY_INPUT which generated
 // compiler warnings.
 #define YY_INPUT
+
 %}
 
 %option nounput never-interactive
@@ -139,10 +161,15 @@ int ppwrap(yyscan_t scanner)
 {
     pp::Input* input = yyget_extra(scanner);
 
+    int file = -1;
     // Delete the current buffer before switching to the next one.
     YY_BUFFER_STATE buffer = static_cast<YY_BUFFER_STATE>(input->buffer);
     if (buffer != NULL)
     {
+        // Save the current token location before they get lost when the
+        // current input buffer is deleted.
+        file = locationFile(yyget_lineno(scanner));
+
         yy_delete_buffer(buffer, scanner);
         input->buffer = NULL;
     }
@@ -157,7 +184,10 @@ int ppwrap(yyscan_t scanner)
     else
         buffer = yy_scan_bytes(input->string[index], length, scanner);
 
-    // TODO(alokp): Increment token location.
+    // Increment file number and reset line number.
+    // This can be done only after we have created a new input buffer.
+    yyset_lineno(location(file + 1, 1), scanner);
+
     input->index = index;
     input->buffer = buffer;
     return 0;
