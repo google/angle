@@ -11,6 +11,7 @@
 #endif
 #include <stdio.h>
 
+#include "common/angleutils.h"
 #include "compiler/InitializeGlobals.h"
 #include "compiler/osinclude.h"
 

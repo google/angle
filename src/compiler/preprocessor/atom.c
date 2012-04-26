@@ -50,6 +50,7 @@ NVIDIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <stdio.h>
 #include <string.h>
 
+#include "common/angleutils.h"
 #include "compiler/debug.h"
 #include "compiler/preprocessor/slglobals.h"
 

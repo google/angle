@@ -16,8 +16,9 @@
 #include "compiler/SymbolTable.h"
 
 #include <stdio.h>
-
 #include <algorithm>
+
+#include "common/angleutils.h"
 
 //
 // TType helper function needs a place to live.
