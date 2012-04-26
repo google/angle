@@ -32,8 +32,8 @@ typedef pp::Token::Location YYLTYPE;
 
 #define YY_USER_ACTION           \
     do {                         \
+        yylloc->file = 0;        \
         yylloc->line = yylineno; \
-        yylloc->string = 0;      \
     } while(0);
 
 // Suppress the default implementation of YY_INPUT which generated

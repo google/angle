@@ -57,14 +57,14 @@ struct Token
     };
     struct Location
     {
-        Location() : line(0), string(0) { }
+        Location() : file(0), line(0) { }
         bool equals(const Location& other) const
         {
-            return (line == other.line) && (string == other.string);
+            return (file == other.file) && (line == other.line);
         }
 
+        int file;
         int line;
-        int string;
     };
 
     Token() : type(0), flags(0) { }

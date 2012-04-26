@@ -128,7 +128,7 @@ static int lex(InputSrc* in, yystypepp* yylvalpp)
         break;
     }
     SetLineNumber(token.location.line);
-    SetStringNumber(token.location.string);
+    SetStringNumber(token.location.file);
     return ret;
 }
 
