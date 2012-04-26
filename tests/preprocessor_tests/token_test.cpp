@@ -13,7 +13,7 @@ TEST(TokenTest, DefaultConstructor)
     EXPECT_EQ(0, token.type);
     EXPECT_EQ(0, token.flags);
     EXPECT_EQ(0, token.location.line);
-    EXPECT_EQ(0, token.location.string);
+    EXPECT_EQ(0, token.location.file);
     EXPECT_STREQ("", token.value.c_str());
 }
 
@@ -23,14 +23,14 @@ TEST(TokenTest, Assignment)
     token.type = 1;
     token.flags = 1;
     token.location.line = 1;
-    token.location.string = 1;
+    token.location.file = 1;
     token.value.assign("foo");
 
     token = pp::Token();
     EXPECT_EQ(0, token.type);
     EXPECT_EQ(0, token.flags);
     EXPECT_EQ(0, token.location.line);
-    EXPECT_EQ(0, token.location.string);
+    EXPECT_EQ(0, token.location.file);
     EXPECT_STREQ("", token.value.c_str());
 }
 
@@ -51,9 +51,9 @@ TEST(TokenTest, Equals)
     EXPECT_FALSE(token.equals(pp::Token()));
     token.location.line = 0;
 
-    token.location.string = 1;
+    token.location.file = 1;
     EXPECT_FALSE(token.equals(pp::Token()));
-    token.location.string = 0;
+    token.location.file = 0;
 
     token.value.assign("foo");
     EXPECT_FALSE(token.equals(pp::Token()));
