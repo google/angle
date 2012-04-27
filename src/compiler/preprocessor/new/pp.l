@@ -87,12 +87,14 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 "//"[^\r\n]*
 
     /* Block comment */
-"/*"                              { BEGIN(COMMENT); }
-<COMMENT>[^*\r\n]*
-<COMMENT>[^*\r\n]*{NEWLINE}       { ++yylineno; return '\n'; }
-<COMMENT>"*"+[^*/\r\n]*
-<COMMENT>"*"+[^*/\r\n]*{NEWLINE}  { ++yylineno; return '\n'; }
-<COMMENT>"*"+"/"                  { BEGIN(INITIAL); return ' '; }
+    /* Line breaks are just counted - not returned. */
+    /* The comment is replaced by a single space. */ 
+"/*"                { BEGIN(COMMENT); }
+<COMMENT>[^*\r\n]+
+<COMMENT>"*"
+<COMMENT>{NEWLINE}  { ++yylineno; }
+<COMMENT><<EOF>>    { return pp::Token::EOF_IN_COMMENT; }
+<COMMENT>"*/"       { BEGIN(INITIAL); return ' '; }
 
 # { return yytext[0]; }
 
@@ -153,7 +155,7 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
     return pp::Token::INVALID_CHARACTER;
 }
 
-<*><<EOF>>   { yyterminate(); }
+<<EOF>>   { yyterminate(); }
 
 %%
 

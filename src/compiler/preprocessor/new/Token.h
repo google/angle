@@ -20,6 +20,7 @@ struct Token
         // Token IDs for error conditions are negative.
         INVALID_CHARACTER = -1,
         INVALID_NUMBER = -2,
+        EOF_IN_COMMENT = -3,
 
         // Indicates EOF.
         LAST = 0,

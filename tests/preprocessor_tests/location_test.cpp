@@ -79,6 +79,21 @@ TEST(LocationTest, NewlineInsideCommentCounted)
     PreprocessAndVerifyLocation(1, &str, 0, loc);
 }
 
+TEST(LocationTest, ErrorLocationAfterComment)
+{
+    const char* str = "/*\n\n*/@";
+
+    pp::Token token;
+    pp::Preprocessor preprocessor;
+    ASSERT_TRUE(preprocessor.init(1, &str, 0));
+    EXPECT_EQ(pp::Token::INVALID_CHARACTER, preprocessor.lex(&token));
+    EXPECT_EQ(pp::Token::INVALID_CHARACTER, token.type);
+    EXPECT_STREQ("@", token.value.c_str());
+
+    EXPECT_EQ(0, token.location.file);
+    EXPECT_EQ(3, token.location.line);
+}
+
 // The location of a token straddling two or more strings is that of the
 // first character of the token.
 
