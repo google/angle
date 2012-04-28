@@ -1172,12 +1172,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             {
                 outputLineDirective((*sit)->getLine());
 
-                if (isSingleStatement(*sit))
-                {
-                    mUnfoldSelect->traverse(*sit);
-                }
-
-                (*sit)->traverse(this);
+                traverseStatements(*sit);
 
                 out << ";\n";
             }
@@ -1601,11 +1596,11 @@ bool OutputHLSL::visitSelection(Visit visit, TIntermSelection *node)
 
         if (node->getTrueBlock())
         {
-            node->getTrueBlock()->traverse(this);
+            traverseStatements(node->getTrueBlock());
         }
 
         outputLineDirective(node->getLine());
-        out << ";}\n";
+        out << ";\n}\n";
 
         if (node->getFalseBlock())
         {
@@ -1615,10 +1610,10 @@ bool OutputHLSL::visitSelection(Visit visit, TIntermSelection *node)
             out << "{\n";
 
             outputLineDirective(node->getFalseBlock()->getLine());
-            node->getFalseBlock()->traverse(this);
+            traverseStatements(node->getFalseBlock());
 
             outputLineDirective(node->getFalseBlock()->getLine());
-            out << ";}\n";
+            out << ";\n}\n";
         }
     }
 
@@ -1677,7 +1672,7 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
 
     if (node->getBody())
     {
-        node->getBody()->traverse(this);
+        traverseStatements(node->getBody());
     }
 
     outputLineDirective(node->getLine());
@@ -1731,6 +1726,16 @@ bool OutputHLSL::visitBranch(Visit visit, TIntermBranch *node)
     }
 
     return true;
+}
+
+void OutputHLSL::traverseStatements(TIntermNode *node)
+{
+    if (isSingleStatement(node))
+    {
+        mUnfoldSelect->traverse(node);
+    }
+
+    node->traverse(this);
 }
 
 bool OutputHLSL::isSingleStatement(TIntermNode *node)

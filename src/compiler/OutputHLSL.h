@@ -48,6 +48,7 @@ class OutputHLSL : public TIntermTraverser
     bool visitLoop(Visit visit, TIntermLoop*);
     bool visitBranch(Visit visit, TIntermBranch*);
 
+    void traverseStatements(TIntermNode *node);
     bool isSingleStatement(TIntermNode *node);
     bool handleExcessiveLoop(TIntermLoop *node);
     void outputTriplet(Visit visit, const TString &preString, const TString &inString, const TString &postString);
