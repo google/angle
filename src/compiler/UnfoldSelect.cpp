@@ -1,9 +1,11 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// UnfoldSelect is an AST traverser to output the select operator ?: as if-else statements
+// UnfoldSelect is an AST traverser to output short-circuiting operators as if-else statements.
+// The results are assigned to s# temporaries, which are used by the main translator instead of
+// the original expression.
 //
 
 #include "compiler/UnfoldSelect.h"
@@ -25,10 +27,84 @@ void UnfoldSelect::traverse(TIntermNode *node)
     mTemporaryIndex = rewindIndex;
 }
 
+bool UnfoldSelect::visitBinary(Visit visit, TIntermBinary *node)
+{
+    TInfoSinkBase &out = mOutputHLSL->getBodyStream();
+
+    switch (node->getOp())
+    {
+      case EOpLogicalOr:
+        // "x || y" is equivalent to "x ? true : y", which unfolds to "bool s; if(x) s = true; else s = y;",
+        // and then further simplifies down to "bool s = x; if(!s) s = y;".
+        {
+            int i = mTemporaryIndex;
+
+            out << "bool s" << i << ";\n";
+
+            out << "{\n";
+
+            mTemporaryIndex = i + 1;
+            node->getLeft()->traverse(this);
+            out << "s" << i << " = ";
+            mTemporaryIndex = i + 1;
+            node->getLeft()->traverse(mOutputHLSL);
+            out << ";\n";
+            out << "if(!s" << i << ")\n"
+                   "{\n";
+            mTemporaryIndex = i + 1;
+            node->getRight()->traverse(this);
+            out << "    s" << i << " = ";
+            mTemporaryIndex = i + 1;
+            node->getRight()->traverse(mOutputHLSL);
+            out << ";\n"
+                   "}\n";
+
+            out << "}\n";
+
+            mTemporaryIndex = i + 1;
+        }
+        return false;
+      case EOpLogicalAnd:
+        // "x && y" is equivalent to "x ? y : false", which unfolds to "bool s; if(x) s = y; else s = false;",
+        // and then further simplifies down to "bool s = x; if(s) s = y;".
+        {
+            int i = mTemporaryIndex;
+
+            out << "bool s" << i << ";\n";
+
+            out << "{\n";
+
+            mTemporaryIndex = i + 1;
+            node->getLeft()->traverse(this);
+            out << "s" << i << " = ";
+            mTemporaryIndex = i + 1;
+            node->getLeft()->traverse(mOutputHLSL);
+            out << ";\n";
+            out << "if(s" << i << ")\n"
+                   "{\n";
+            mTemporaryIndex = i + 1;
+            node->getRight()->traverse(this);
+            out << "    s" << i << " = ";
+            mTemporaryIndex = i + 1;
+            node->getRight()->traverse(mOutputHLSL);
+            out << ";\n"
+                   "}\n";
+
+            out << "}\n";
+
+            mTemporaryIndex = i + 1;
+        }
+        return false;
+    }
+
+    return true;
+}
+
 bool UnfoldSelect::visitSelection(Visit visit, TIntermSelection *node)
 {
     TInfoSinkBase &out = mOutputHLSL->getBodyStream();
 
+    // Unfold "b ? x : y" into "type s; if(b) s = x; else s = y;"
     if (node->usesTernaryOperator())
     {
         int i = mTemporaryIndex;

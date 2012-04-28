@@ -1055,12 +1055,16 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
       case EOpVectorTimesMatrix: outputTriplet(visit, "mul(", ", transpose(", "))"); break;
       case EOpMatrixTimesVector: outputTriplet(visit, "mul(transpose(", "), ", ")"); break;
       case EOpMatrixTimesMatrix: outputTriplet(visit, "transpose(mul(transpose(", "), transpose(", ")))"); break;
-      case EOpLogicalOr:         outputTriplet(visit, "(", " || ", ")");  break;
+      case EOpLogicalOr:
+        out << "s" << mUnfoldSelect->getNextTemporaryIndex();
+        return false;
       case EOpLogicalXor:
         mUsesXor = true;
         outputTriplet(visit, "xor(", ", ", ")");
         break;
-      case EOpLogicalAnd:        outputTriplet(visit, "(", " && ", ")");  break;
+      case EOpLogicalAnd:
+        out << "s" << mUnfoldSelect->getNextTemporaryIndex();
+        return false;
       default: UNREACHABLE();
     }
 
