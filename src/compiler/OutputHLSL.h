@@ -15,7 +15,7 @@
 
 namespace sh
 {
-class UnfoldSelect;
+class UnfoldShortCircuit;
 
 class OutputHLSL : public TIntermTraverser
 {
@@ -64,7 +64,7 @@ class OutputHLSL : public TIntermTraverser
     TString structLookup(const TString &typeName);
 
     TParseContext &mContext;
-    UnfoldSelect *mUnfoldSelect;
+    UnfoldShortCircuit *mUnfoldShortCircuit;
     bool mInsideFunction;
 
     // Output streams

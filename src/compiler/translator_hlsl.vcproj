@@ -307,7 +307,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\UnfoldSelect.cpp"
+				RelativePath=".\UnfoldShortCircuit.cpp"
 				>
 			</File>
 		</Filter>
@@ -329,7 +329,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\UnfoldSelect.h"
+				RelativePath=".\UnfoldShortCircuit.h"
 				>
 			</File>
 		</Filter>

@@ -1,4 +1,4 @@
-# Copyright (c) 2010 The ANGLE Project Authors. All rights reserved.
+# Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
@@ -171,8 +171,8 @@
             'compiler/OutputHLSL.h',
             'compiler/TranslatorHLSL.cpp',
             'compiler/TranslatorHLSL.h',
-            'compiler/UnfoldSelect.cpp',
-            'compiler/UnfoldSelect.h',
+            'compiler/UnfoldShortCircuit.cpp',
+            'compiler/UnfoldShortCircuit.h',
             'compiler/SearchSymbol.cpp',
             'compiler/SearchSymbol.h',
           ],

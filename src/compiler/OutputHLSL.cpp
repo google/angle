@@ -9,7 +9,7 @@
 #include "common/angleutils.h"
 #include "compiler/debug.h"
 #include "compiler/InfoSink.h"
-#include "compiler/UnfoldSelect.h"
+#include "compiler/UnfoldShortCircuit.h"
 #include "compiler/SearchSymbol.h"
 
 #include <stdio.h>
@@ -27,7 +27,7 @@ TString str(int i)
 
 OutputHLSL::OutputHLSL(TParseContext &context) : TIntermTraverser(true, true, true), mContext(context)
 {
-    mUnfoldSelect = new UnfoldSelect(context, this);
+    mUnfoldShortCircuit = new UnfoldShortCircuit(context, this);
     mInsideFunction = false;
 
     mUsesTexture2D = false;
@@ -80,7 +80,7 @@ OutputHLSL::OutputHLSL(TParseContext &context) : TIntermTraverser(true, true, tr
 
 OutputHLSL::~OutputHLSL()
 {
-    delete mUnfoldSelect;
+    delete mUnfoldShortCircuit;
 }
 
 void OutputHLSL::output()
@@ -1056,14 +1056,14 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
       case EOpMatrixTimesVector: outputTriplet(visit, "mul(transpose(", "), ", ")"); break;
       case EOpMatrixTimesMatrix: outputTriplet(visit, "transpose(mul(transpose(", "), transpose(", ")))"); break;
       case EOpLogicalOr:
-        out << "s" << mUnfoldSelect->getNextTemporaryIndex();
+        out << "s" << mUnfoldShortCircuit->getNextTemporaryIndex();
         return false;
       case EOpLogicalXor:
         mUsesXor = true;
         outputTriplet(visit, "xor(", ", ", ")");
         break;
       case EOpLogicalAnd:
-        out << "s" << mUnfoldSelect->getNextTemporaryIndex();
+        out << "s" << mUnfoldShortCircuit->getNextTemporaryIndex();
         return false;
       default: UNREACHABLE();
     }
@@ -1583,11 +1583,11 @@ bool OutputHLSL::visitSelection(Visit visit, TIntermSelection *node)
 
     if (node->usesTernaryOperator())
     {
-        out << "s" << mUnfoldSelect->getNextTemporaryIndex();
+        out << "s" << mUnfoldShortCircuit->getNextTemporaryIndex();
     }
     else  // if/else statement
     {
-        mUnfoldSelect->traverse(node->getCondition());
+        mUnfoldShortCircuit->traverse(node->getCondition());
 
         out << "if(";
 
@@ -1736,7 +1736,7 @@ void OutputHLSL::traverseStatements(TIntermNode *node)
 {
     if (isSingleStatement(node))
     {
-        mUnfoldSelect->traverse(node);
+        mUnfoldShortCircuit->traverse(node);
     }
 
     node->traverse(this);
