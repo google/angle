@@ -405,6 +405,11 @@ void Context::markAllStateDirty()
     mCachedCurrentProgram = NULL;
 }
 
+void Context::markDxUniformsDirty()
+{
+    mDxUniformsDirty = true;
+}
+
 void Context::markContextLost()
 {
     if (mResetStrategy == GL_LOSE_CONTEXT_ON_RESET_EXT)

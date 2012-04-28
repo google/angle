@@ -282,6 +282,7 @@ class Context
     void makeCurrent(egl::Display *display, egl::Surface *surface);
 
     void markAllStateDirty();
+    void markDxUniformsDirty();
 
     virtual void markContextLost();
     bool isContextLost();

@@ -1704,6 +1704,8 @@ void Program::link()
             mDxFrontCCWLocation = getUniformLocation("dx_FrontCCW");
             mDxPointsOrLinesLocation = getUniformLocation("dx_PointsOrLines");
 
+            context->markDxUniformsDirty();
+
             mLinked = true;   // Success
         }
     }
