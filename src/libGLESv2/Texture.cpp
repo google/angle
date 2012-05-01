@@ -306,7 +306,14 @@ void Image::loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height
         switch (mFormat)
         {
           case GL_ALPHA:
-            loadAlphaData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+            if (supportsSSE2())
+            {
+                loadAlphaDataSSE2(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+            }
+            else
+            {
+                loadAlphaData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+            }
             break;
           case GL_LUMINANCE:
             loadLuminanceData(width, height, inputPitch, input, locked.Pitch, locked.pBits, getD3DFormat() == D3DFMT_L8);
@@ -426,6 +433,46 @@ void Image::loadAlphaData(GLsizei width, GLsizei height,
             dest[4 * x + 1] = 0;
             dest[4 * x + 2] = 0;
             dest[4 * x + 3] = source[x];
+        }
+    }
+}
+
+void Image::loadAlphaDataSSE2(GLsizei width, GLsizei height,
+                              int inputPitch, const void *input, size_t outputPitch, void *output) const
+{
+    const unsigned char *source = NULL;
+    unsigned int *dest = NULL;
+    __m128i zeroWide = _mm_setzero_si128();
+
+    for (int y = 0; y < height; y++)
+    {
+        source = static_cast<const unsigned char*>(input) + y * inputPitch;
+        dest = reinterpret_cast<unsigned int*>(static_cast<unsigned char*>(output) + y * outputPitch);
+
+        int x;
+        // Make output writes aligned
+        for (x = 0; ((reinterpret_cast<intptr_t>(&dest[x]) & 0xF) != 0 && x < width); x++)
+        {
+            dest[x] = static_cast<unsigned int>(source[x]) << 24;
+        }
+
+        for (; x + 7 < width; x += 8)
+        {
+            __m128i sourceData = _mm_loadl_epi64(reinterpret_cast<const __m128i*>(&source[x]));
+            // Interleave each byte to 16bit, make the lower byte to zero
+            sourceData = _mm_unpacklo_epi8(zeroWide, sourceData);
+            // Interleave each 16bit to 32bit, make the lower 16bit to zero
+            __m128i lo = _mm_unpacklo_epi16(zeroWide, sourceData);
+            __m128i hi = _mm_unpackhi_epi16(zeroWide, sourceData);
+
+            _mm_store_si128(reinterpret_cast<__m128i*>(&dest[x]), lo);
+            _mm_store_si128(reinterpret_cast<__m128i*>(&dest[x + 4]), hi);
+        }
+
+        // Handle the remainder
+        for (; x < width; x++)
+        {
+            dest[x] = static_cast<unsigned int>(source[x]) << 24;
         }
     }
 }

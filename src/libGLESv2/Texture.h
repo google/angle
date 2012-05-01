@@ -71,6 +71,8 @@ class Image
 
     void loadAlphaData(GLsizei width, GLsizei height,
                        int inputPitch, const void *input, size_t outputPitch, void *output) const;
+    void loadAlphaDataSSE2(GLsizei width, GLsizei height,
+                           int inputPitch, const void *input, size_t outputPitch, void *output) const;
     void loadAlphaFloatData(GLsizei width, GLsizei height,
                             int inputPitch, const void *input, size_t outputPitch, void *output) const;
     void loadAlphaHalfFloatData(GLsizei width, GLsizei height,
