@@ -18,20 +18,14 @@ Lexer::Lexer() : mHandle(0)
 Lexer::~Lexer()
 {
     destroyLexer();
-
-    // Make sure the lexer and associated buffer are deleted.
-    assert(mHandle == 0);
-    assert(mInput.buffer == 0);
 }
 
 bool Lexer::init(int count, const char* const string[], const int length[])
 {
-    assert((count >= 0) && string);
+    if (count < 0) return false;
+    if ((count > 0) && (string == 0)) return false;
 
-    mInput.count = count;
-    mInput.string = string;
-    mInput.length = length;
-
+    mContext.input.reset(new Input(count, string, length));
     return initLexer();
 }
 

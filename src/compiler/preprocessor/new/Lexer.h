@@ -7,6 +7,8 @@
 #ifndef COMPILER_PREPROCESSOR_LEXER_H_
 #define COMPILER_PREPROCESSOR_LEXER_H_
 
+#include <memory>
+
 #include "Input.h"
 #include "pp_utils.h"
 
@@ -18,11 +20,19 @@ struct Token;
 class Lexer
 {
   public:
+    struct Context
+    {
+        std::auto_ptr<Input> input;
+        // The location where yytext points to. Token location should track
+        // scanLoc instead of Input::mReadLoc because they may not be the same
+        // if text is buffered up in the lexer input buffer.
+        Input::Location scanLoc;
+    };
+
     Lexer();
     ~Lexer();
 
     bool init(int count, const char* const string[], const int length[]);
-
     int lex(Token* token);
 
   private:
@@ -31,7 +41,7 @@ class Lexer
     void destroyLexer();
 
     void* mHandle;  // Lexer handle.
-    Input mInput;  // Input buffer.
+    Context mContext;  // Lexer extra.
 };
 
 }  // namespace pp

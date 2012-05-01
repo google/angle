@@ -7,22 +7,43 @@
 #ifndef COMPILER_PREPROCESSOR_INPUT_H_
 #define COMPILER_PREPROCESSOR_INPUT_H_
 
+#include "pp_utils.h"
+
 namespace pp
 {
 
-// Holds lexer input.
-struct Input
+// Holds and reads input for Lexer.
+class Input
 {
-    // Input.
-    int count;
-    const char* const* string;
-    const int* length;
-
-    // Current read position.
-    int index;  // Index of string currently being scanned.
-    void* buffer;  // Current buffer handle.
-
+  public:
     Input();
+    Input(int count, const char* const string[], const int length[]);
+    ~Input();
+
+    int count() const { return mCount; }
+    const char* string(int index) const { return mString[index]; }
+    int length(int index) const { return mLength[index]; }
+
+    int read(char* buf, int maxSize);
+
+    struct Location
+    {
+        int sIndex;  // String index;
+        int cIndex;  // Char index.
+
+        Location() : sIndex(0), cIndex(0) { }
+    };
+    const Location& readLoc() const { return mReadLoc; }
+
+  private:
+    PP_DISALLOW_COPY_AND_ASSIGN(Input);
+
+    // Input.
+    int mCount;
+    const char* const* mString;
+    int* mLength;
+
+    Location mReadLoc;
 };
 
 }  // namespace pp

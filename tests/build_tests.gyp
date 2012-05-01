@@ -31,6 +31,7 @@
         'preprocessor_tests/char_test.cpp',
         'preprocessor_tests/comment_test.cpp',
         'preprocessor_tests/identifier_test.cpp',
+        'preprocessor_tests/input_test.cpp',
         'preprocessor_tests/location_test.cpp',
         'preprocessor_tests/number_test.cpp',
         'preprocessor_tests/operator_test.cpp',

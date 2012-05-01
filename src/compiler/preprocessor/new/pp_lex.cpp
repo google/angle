@@ -334,6 +334,9 @@ void ppfree (void * ,yyscan_t yyscanner );
 
 /* Begin user sect3 */
 
+#define ppwrap(n) 1
+#define YY_SKIP_YYWRAP
+
 typedef unsigned char YY_CHAR;
 
 typedef int yy_state_type;
@@ -511,48 +514,42 @@ http://msdn.microsoft.com/en-us/library/2scxys89.aspx
 IF YOU MODIFY THIS FILE YOU ALSO NEED TO RUN generate_parser.sh.
 */
 
-#include "Input.h"
 #include "Lexer.h"
 #include "Token.h"
-
-// Token location (file and line) is encoded into a single int so that
-// we can use yylineno macro.
-
-const unsigned int kLocationLineSize = 16;  // in bits.
-const unsigned int kLocationLineMask = (1 << kLocationLineSize) - 1;
-
-static int location(int file, int line)
-{
-    return (file << kLocationLineSize) | (line & kLocationLineMask);
-}
-
-static int locationFile(int loc)
-{
-    return loc >> kLocationLineSize;
-}
-
-static int locationLine(int loc)
-{
-    return loc & kLocationLineMask;
-}
 
 typedef std::string YYSTYPE;
 typedef pp::Token::Location YYLTYPE;
 
-#define YY_USER_ACTION                          \
-    do {                                        \
-        yylloc->file = locationFile(yylineno);  \
-        yylloc->line = locationLine(yylineno);  \
+// Use the unused yycolumn variable to track file (string) number.
+#define yyfileno yycolumn
+
+#define YY_USER_INIT  \
+    do {              \
+        yyfileno = 0; \
+        yylineno = 1; \
     } while(0);
 
-// Suppress the default implementation of YY_INPUT which generated
-// compiler warnings.
-#define YY_INPUT
+#define YY_USER_ACTION                                            \
+    do {                                                          \
+        pp::Input* input = yyextra->input.get();                  \
+        pp::Input::Location* scanLoc = &yyextra->scanLoc;         \
+        while (scanLoc->cIndex >= input->length(scanLoc->sIndex)) \
+        {                                                         \
+            scanLoc->cIndex -= input->length(scanLoc->sIndex++);  \
+            ++yyfileno; yylineno = 1;                             \
+        }                                                         \
+        yylloc->file = yyfileno;                                  \
+        yylloc->line = yylineno;                                  \
+        scanLoc->cIndex += yyleng;                                \
+    } while(0);
+
+#define YY_INPUT(buf, result, maxSize) \
+    result = yyextra->input->read(buf, maxSize);
 
 #define INITIAL 0
 #define COMMENT 1
 
-#define YY_EXTRA_TYPE pp::Input*
+#define YY_EXTRA_TYPE pp::Lexer::Context*
 
 /* Holds the entire state of the reentrant scanner. */
 struct yyguts_t
@@ -2174,42 +2171,6 @@ void ppfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-int ppwrap(yyscan_t scanner)
-{
-    pp::Input* input = ppget_extra(scanner);
-
-    int file = -1;
-    // Delete the current buffer before switching to the next one.
-    YY_BUFFER_STATE buffer = static_cast<YY_BUFFER_STATE>(input->buffer);
-    if (buffer != NULL)
-    {
-        // Save the current token location before they get lost when the
-        // current input buffer is deleted.
-        file = locationFile(ppget_lineno(scanner));
-
-        pp_delete_buffer(buffer,scanner);
-        input->buffer = NULL;
-    }
-
-    int index = std::min(input->index + 1, input->count);
-    if (index == input->count)
-        return 1;  // EOF reached.
-
-    int length = input->length ? input->length[index] : -1;
-    if (length < 0)  // NULL terminated string.
-        buffer = pp_scan_string(input->string[index],scanner);
-    else
-        buffer = pp_scan_bytes(input->string[index],length,scanner);
-
-    // Increment file number and reset line number.
-    // This can be done only after we have created a new input buffer.
-    ppset_lineno(location(file + 1, 1),scanner);
-
-    input->index = index;
-    input->buffer = buffer;
-    return 0;
-}
-
 namespace pp {
 
 int Lexer::lex(Token* token)
@@ -2228,13 +2189,10 @@ int Lexer::lex(Token* token)
 
 bool Lexer::initLexer()
 {
-    if ((mHandle == NULL) && pplex_init_extra(&mInput,&mHandle))
+    if ((mHandle == NULL) && pplex_init_extra(&mContext,&mHandle))
         return false;
 
-    // Setup first scan string.
-    mInput.index = -1;
-    ppwrap(mHandle);
-
+    pprestart(0,mHandle);
     return true;
 }
 
@@ -2243,13 +2201,6 @@ void Lexer::destroyLexer()
     if (mHandle == NULL)
         return;
 
-    YY_BUFFER_STATE buffer = static_cast<YY_BUFFER_STATE>(mInput.buffer);
-    if (buffer != NULL)
-    {
-        pp_delete_buffer(buffer,mHandle);
-        mInput.buffer = NULL;
-    }
- 
     pplex_destroy(mHandle);
     mHandle = NULL;
 }
