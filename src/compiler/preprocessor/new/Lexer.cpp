@@ -25,7 +25,7 @@ bool Lexer::init(int count, const char* const string[], const int length[])
     if (count < 0) return false;
     if ((count > 0) && (string == 0)) return false;
 
-    mContext.input.reset(new Input(count, string, length));
+    mContext.input = Input(count, string, length);
     return initLexer();
 }
 

@@ -7,7 +7,7 @@
 #ifndef COMPILER_PREPROCESSOR_INPUT_H_
 #define COMPILER_PREPROCESSOR_INPUT_H_
 
-#include "pp_utils.h"
+#include <vector>
 
 namespace pp
 {
@@ -18,7 +18,6 @@ class Input
   public:
     Input();
     Input(int count, const char* const string[], const int length[]);
-    ~Input();
 
     int count() const { return mCount; }
     const char* string(int index) const { return mString[index]; }
@@ -36,12 +35,10 @@ class Input
     const Location& readLoc() const { return mReadLoc; }
 
   private:
-    PP_DISALLOW_COPY_AND_ASSIGN(Input);
-
     // Input.
     int mCount;
     const char* const* mString;
-    int* mLength;
+    std::vector<int> mLength;
 
     Location mReadLoc;
 };

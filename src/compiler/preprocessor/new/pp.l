@@ -40,7 +40,7 @@ typedef pp::Token::Location YYLTYPE;
 
 #define YY_USER_ACTION                                            \
     do {                                                          \
-        pp::Input* input = yyextra->input.get();                  \
+        pp::Input* input = &yyextra->input;                       \
         pp::Input::Location* scanLoc = &yyextra->scanLoc;         \
         while (scanLoc->cIndex >= input->length(scanLoc->sIndex)) \
         {                                                         \
@@ -53,7 +53,7 @@ typedef pp::Token::Location YYLTYPE;
     } while(0);
 
 #define YY_INPUT(buf, result, maxSize) \
-    result = yyextra->input->read(buf, maxSize);
+    result = yyextra->input.read(buf, maxSize);
 
 %}
 

@@ -22,7 +22,7 @@ class Lexer
   public:
     struct Context
     {
-        std::auto_ptr<Input> input;
+        Input input;
         // The location where yytext points to. Token location should track
         // scanLoc instead of Input::mReadLoc because they may not be the same
         // if text is buffered up in the lexer input buffer.

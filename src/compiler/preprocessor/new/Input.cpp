@@ -12,28 +12,21 @@
 namespace pp
 {
 
-Input::Input() : mCount(0), mString(0), mLength(0)
+Input::Input() : mCount(0), mString(0)
 {
 }
 
 Input::Input(int count, const char* const string[], const int length[]) :
     mCount(count),
-    mString(string),
-    mLength(0)
+    mString(string)
 {
     assert(mCount >= 0);
-    mLength = mCount > 0 ? new int[mCount] : 0;
+    mLength.reserve(mCount);
     for (int i = 0; i < mCount; ++i)
     {
-        mLength[i] = length ? length[i] : -1;
-        if (mLength[i] < 0)
-            mLength[i] = strlen(mString[i]);
+        int len = length ? length[i] : -1;
+        mLength.push_back(len < 0 ? strlen(mString[i]) : len);
     }
-}
-
-Input::~Input()
-{
-    if (mLength) delete [] mLength;
 }
 
 int Input::read(char* buf, int maxSize)
