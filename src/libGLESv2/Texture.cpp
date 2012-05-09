@@ -1701,15 +1701,19 @@ TextureStorage2D::TextureStorage2D(IDirect3DTexture9 *surfaceTexture) : TextureS
 TextureStorage2D::TextureStorage2D(int levels, D3DFORMAT format, int width, int height, bool renderTarget)
     : TextureStorage(renderTarget), mRenderTargetSerial(RenderbufferStorage::issueSerial())
 {
-    IDirect3DDevice9 *device = getDevice();
-
     mTexture = NULL;
-    HRESULT result = device->CreateTexture(width, height, levels, isRenderTarget() ? D3DUSAGE_RENDERTARGET : 0, format, getPool(), &mTexture, NULL);
-
-    if (FAILED(result))
+    // if the width or height is not positive this should be treated as an incomplete texture
+    // we handle that here by skipping the d3d texture creation
+    if (width > 0 && height > 0)
     {
-        ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-        error(GL_OUT_OF_MEMORY);
+        IDirect3DDevice9 *device = getDevice();
+        HRESULT result = device->CreateTexture(width, height, levels, isRenderTarget() ? D3DUSAGE_RENDERTARGET : 0, format, getPool(), &mTexture, NULL);
+
+        if (FAILED(result))
+        {
+            ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
+            error(GL_OUT_OF_MEMORY);
+        }
     }
 }
 
@@ -2382,15 +2386,19 @@ TextureStorage *Texture2D::getStorage(bool renderTarget)
 TextureStorageCubeMap::TextureStorageCubeMap(int levels, D3DFORMAT format, int size, bool renderTarget)
     : TextureStorage(renderTarget), mFirstRenderTargetSerial(RenderbufferStorage::issueCubeSerials())
 {
-    IDirect3DDevice9 *device = getDevice();
-
     mTexture = NULL;
-    HRESULT result = device->CreateCubeTexture(size, levels, isRenderTarget() ? D3DUSAGE_RENDERTARGET : 0, format, getPool(), &mTexture, NULL);
-
-    if (FAILED(result))
+    // if the size is not positive this should be treated as an incomplete texture
+    // we handle that here by skipping the d3d texture creation
+    if (size > 0)
     {
-        ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-        error(GL_OUT_OF_MEMORY);
+        IDirect3DDevice9 *device = getDevice();
+        HRESULT result = device->CreateCubeTexture(size, levels, isRenderTarget() ? D3DUSAGE_RENDERTARGET : 0, format, getPool(), &mTexture, NULL);
+
+        if (FAILED(result))
+        {
+            ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
+            error(GL_OUT_OF_MEMORY);
+        }
     }
 }
 
