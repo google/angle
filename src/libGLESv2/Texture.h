@@ -192,13 +192,7 @@ class Texture : public RefCountObject
     GLenum getWrapT() const;
     GLenum getUsage() const;
 
-    virtual GLsizei getWidth(GLint level) const = 0;
-    virtual GLsizei getHeight(GLint level) const = 0;
-    virtual GLenum getInternalFormat() const = 0;
-    virtual D3DFORMAT getD3DFormat() const = 0;
-
     virtual bool isSamplerComplete() const = 0;
-    virtual bool isCompressed() const = 0;
 
     IDirect3DBaseTexture9 *getTexture();
     virtual Renderbuffer *getRenderbuffer(GLenum target) = 0;
@@ -285,10 +279,11 @@ class Texture2D : public Texture
 
     virtual GLenum getTarget() const;
 
-    virtual GLsizei getWidth(GLint level) const;
-    virtual GLsizei getHeight(GLint level) const;
-    virtual GLenum getInternalFormat() const;
-    virtual D3DFORMAT getD3DFormat() const;
+    GLsizei getWidth(GLint level) const;
+    GLsizei getHeight(GLint level) const;
+    GLenum getInternalFormat() const;
+    D3DFORMAT getD3DFormat() const;
+    bool isCompressed() const;
 
     void setImage(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void setCompressedImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels);
@@ -299,7 +294,6 @@ class Texture2D : public Texture
     void storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height);
 
     virtual bool isSamplerComplete() const;
-    virtual bool isCompressed() const;
     virtual void bindTexImage(egl::Surface *surface);
     virtual void releaseTexImage();
 
@@ -370,10 +364,11 @@ class TextureCubeMap : public Texture
 
     virtual GLenum getTarget() const;
     
-    virtual GLsizei getWidth(GLint level) const;
-    virtual GLsizei getHeight(GLint level) const;
-    virtual GLenum getInternalFormat() const;
-    virtual D3DFORMAT getD3DFormat() const;
+    GLsizei getWidth(GLint level) const;
+    GLsizei getHeight(GLint level) const;
+    GLenum getInternalFormat() const;
+    D3DFORMAT getD3DFormat() const;
+    bool isCompressed() const;
 
     void setImagePosX(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void setImageNegX(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
@@ -391,7 +386,6 @@ class TextureCubeMap : public Texture
     void storage(GLsizei levels, GLenum internalformat, GLsizei size);
 
     virtual bool isSamplerComplete() const;
-    virtual bool isCompressed() const;
 
     virtual void generateMipmaps();
 
