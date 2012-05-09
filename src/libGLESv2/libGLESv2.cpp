@@ -2353,19 +2353,21 @@ void __stdcall glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum t
                     return error(GL_INVALID_OPERATION);
                 }
 
-                if (tex->isCompressed())
-                {
-                    return error(GL_INVALID_OPERATION);
-                }
-
                 switch (textarget)
                 {
                   case GL_TEXTURE_2D:
-                    if (tex->getTarget() != GL_TEXTURE_2D)
                     {
-                        return error(GL_INVALID_OPERATION);
+                        if (tex->getTarget() != GL_TEXTURE_2D)
+                        {
+                            return error(GL_INVALID_OPERATION);
+                        }
+                        gl::Texture2D *tex2d = static_cast<gl::Texture2D *>(tex);
+                        if (tex2d->isCompressed())
+                        {
+                            return error(GL_INVALID_OPERATION);
+                        }
+                        break;
                     }
-                    break;
 
                   case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
                   case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
@@ -2373,11 +2375,18 @@ void __stdcall glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum t
                   case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
                   case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
                   case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
-                    if (tex->getTarget() != GL_TEXTURE_CUBE_MAP)
                     {
-                        return error(GL_INVALID_OPERATION);
+                        if (tex->getTarget() != GL_TEXTURE_CUBE_MAP)
+                        {
+                            return error(GL_INVALID_OPERATION);
+                        }
+                        gl::TextureCubeMap *texcube = static_cast<gl::TextureCubeMap *>(tex);
+                        if (texcube->isCompressed())
+                        {
+                            return error(GL_INVALID_OPERATION);
+                        }
+                        break;
                     }
-                    break;
 
                   default:
                     return error(GL_INVALID_ENUM);
@@ -2487,28 +2496,37 @@ void __stdcall glGenerateMipmap(GLenum target)
 
         if (context)
         {
-            gl::Texture *texture;
-
             switch (target)
             {
               case GL_TEXTURE_2D:
-                texture = context->getTexture2D();
-                break;
+                {
+                    gl::Texture2D *tex2d = context->getTexture2D();
+
+                    if (tex2d->isCompressed())
+                    {
+                        return error(GL_INVALID_OPERATION);
+                    }
+
+                    tex2d->generateMipmaps();
+                    break;
+                }
 
               case GL_TEXTURE_CUBE_MAP:
-                texture = context->getTextureCubeMap();
-                break;
+                {
+                    gl::TextureCubeMap *texcube = context->getTextureCubeMap();
+
+                    if (texcube->isCompressed())
+                    {
+                        return error(GL_INVALID_OPERATION);
+                    }
+
+                    texcube->generateMipmaps();
+                    break;
+                }
 
               default:
                 return error(GL_INVALID_ENUM);
             }
-
-            if (texture->isCompressed())
-            {
-                return error(GL_INVALID_OPERATION);
-            }
-
-            texture->generateMipmaps();
         }
     }
     catch(std::bad_alloc&)
