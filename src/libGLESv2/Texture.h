@@ -217,8 +217,6 @@ class Texture : public RefCountObject
     static const GLuint INCOMPLETE_TEXTURE_ID = static_cast<GLuint>(-1);   // Every texture takes an id at creation time. The value is arbitrary because it is never registered with the resource manager.
 
   protected:
-    friend class RenderbufferTexture;
-
     void setImage(GLint unpackAlignment, const void *pixels, Image *image);
     bool subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *image);
     void setCompressedImage(GLsizei imageSize, const void *pixels, Image *image);
@@ -309,6 +307,10 @@ class Texture2D : public Texture
 
     virtual Renderbuffer *getRenderbuffer(GLenum target);
 
+  protected:
+    friend class RenderbufferTexture2D;
+    virtual IDirect3DSurface9 *getRenderTarget(GLenum target);
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture2D);
 
@@ -316,7 +318,6 @@ class Texture2D : public Texture
     virtual void createTexture();
     virtual void updateTexture();
     virtual void convertToRenderTarget();
-    virtual IDirect3DSurface9 *getRenderTarget(GLenum target);
     virtual TextureStorage *getStorage(bool renderTarget);
 
     bool isMipmapComplete() const;
@@ -398,6 +399,10 @@ class TextureCubeMap : public Texture
 
     static unsigned int faceIndex(GLenum face);
 
+  protected:
+    friend class RenderbufferTextureCubeMap;
+    virtual IDirect3DSurface9 *getRenderTarget(GLenum target);
+
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureCubeMap);
 
@@ -405,7 +410,6 @@ class TextureCubeMap : public Texture
     virtual void createTexture();
     virtual void updateTexture();
     virtual void convertToRenderTarget();
-    virtual IDirect3DSurface9 *getRenderTarget(GLenum target);
     virtual TextureStorage *getStorage(bool renderTarget);
 
     bool isCubeComplete() const;
