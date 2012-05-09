@@ -195,7 +195,6 @@ class Texture : public RefCountObject
     virtual GLsizei getWidth(GLint level) const = 0;
     virtual GLsizei getHeight(GLint level) const = 0;
     virtual GLenum getInternalFormat() const = 0;
-    virtual GLenum getType() const = 0;
     virtual D3DFORMAT getD3DFormat() const = 0;
 
     virtual bool isSamplerComplete() const = 0;
@@ -291,7 +290,6 @@ class Texture2D : public Texture
     virtual GLsizei getWidth(GLint level) const;
     virtual GLsizei getHeight(GLint level) const;
     virtual GLenum getInternalFormat() const;
-    virtual GLenum getType() const;
     virtual D3DFORMAT getD3DFormat() const;
 
     void setImage(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
@@ -374,7 +372,6 @@ class TextureCubeMap : public Texture
     virtual GLsizei getWidth(GLint level) const;
     virtual GLsizei getHeight(GLint level) const;
     virtual GLenum getInternalFormat() const;
-    virtual GLenum getType() const;
     virtual D3DFORMAT getD3DFormat() const;
 
     void setImagePosX(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);

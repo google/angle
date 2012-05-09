@@ -1807,11 +1807,6 @@ GLenum Texture2D::getInternalFormat() const
     return mImageArray[0].getFormat();
 }
 
-GLenum Texture2D::getType() const
-{
-    return mImageArray[0].getType();
-}
-
 D3DFORMAT Texture2D::getD3DFormat() const
 {
     return mImageArray[0].getD3DFormat();
@@ -2501,11 +2496,6 @@ GLsizei TextureCubeMap::getHeight(GLint level) const
 GLenum TextureCubeMap::getInternalFormat() const
 {
     return mImageArray[0][0].getFormat();
-}
-
-GLenum TextureCubeMap::getType() const
-{
-    return mImageArray[0][0].getType();
 }
 
 D3DFORMAT TextureCubeMap::getD3DFormat() const
