@@ -1569,12 +1569,6 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GL
         return false;
     }
 
-    if (format != getInternalFormat())
-    {
-        error(GL_INVALID_OPERATION);
-        return false;
-    }
-
     if (pixels != NULL)
     {
         image->loadCompressedData(xoffset, yoffset, width, height, pixels);

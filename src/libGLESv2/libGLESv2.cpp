@@ -1094,7 +1094,7 @@ void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
             if (target == GL_TEXTURE_2D)
             {
                 gl::Texture2D *texture = context->getTexture2D();
-                if (validateSubImageParams(true, width, height, xoffset, yoffset, level, GL_NONE, texture))
+                if (validateSubImageParams(true, width, height, xoffset, yoffset, level, format, texture))
                 {
                     texture->subImageCompressed(level, xoffset, yoffset, width, height, format, imageSize, data);
                 }
@@ -1102,7 +1102,7 @@ void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
             else if (gl::IsCubemapTextureTarget(target))
             {
                 gl::TextureCubeMap *texture = context->getTextureCubeMap();
-                if (validateSubImageParams(true, width, height, xoffset, yoffset, level, GL_NONE, texture))
+                if (validateSubImageParams(true, width, height, xoffset, yoffset, level, format, texture))
                 {
                     texture->subImageCompressed(target, level, xoffset, yoffset, width, height, format, imageSize, data);
                 }
