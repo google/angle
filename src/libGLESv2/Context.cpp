@@ -2332,14 +2332,15 @@ void Context::applyTextures(SamplerType type)
             TextureType textureType = programObject->getSamplerTextureType(type, samplerIndex);
 
             Texture *texture = getSamplerTexture(textureUnit, textureType);
+            unsigned int texSerial = texture->getTextureSerial();
 
-            if (appliedTextureSerial[samplerIndex] != texture->getTextureSerial() || texture->hasDirtyParameters() || texture->hasDirtyImages())
+            if (appliedTextureSerial[samplerIndex] != texSerial || texture->hasDirtyParameters() || texture->hasDirtyImages())
             {
                 IDirect3DBaseTexture9 *d3dTexture = texture->getTexture();
 
                 if (d3dTexture)
                 {
-                    if (appliedTextureSerial[samplerIndex] != texture->getTextureSerial() || texture->hasDirtyParameters())
+                    if (appliedTextureSerial[samplerIndex] != texSerial || texture->hasDirtyParameters())
                     {
                         GLenum wrapS = texture->getWrapS();
                         GLenum wrapT = texture->getWrapT();
@@ -2356,7 +2357,7 @@ void Context::applyTextures(SamplerType type)
                         mDevice->SetSamplerState(d3dSampler, D3DSAMP_MIPFILTER, d3dMipFilter);
                     }
 
-                    if (appliedTextureSerial[samplerIndex] != texture->getTextureSerial() || texture->hasDirtyImages())
+                    if (appliedTextureSerial[samplerIndex] != texSerial || texture->hasDirtyImages())
                     {
                         mDevice->SetTexture(d3dSampler, d3dTexture);
                     }
@@ -2366,7 +2367,7 @@ void Context::applyTextures(SamplerType type)
                     mDevice->SetTexture(d3dSampler, getIncompleteTexture(textureType)->getTexture());
                 }
 
-                appliedTextureSerial[samplerIndex] = texture->getTextureSerial();
+                appliedTextureSerial[samplerIndex] = texSerial;
                 texture->resetDirty();
             }
         }
