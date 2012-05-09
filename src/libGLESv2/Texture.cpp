@@ -1534,24 +1534,6 @@ void Texture::setCompressedImage(GLsizei imageSize, const void *pixels, Image *i
 
 bool Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *image)
 {
-    if (width + xoffset > image->getWidth() || height + yoffset > image->getHeight())
-    {
-        error(GL_INVALID_VALUE);
-        return false;
-    }
-
-    if (IsCompressed(image->getFormat()))
-    {
-        error(GL_INVALID_OPERATION);
-        return false;
-    }
-
-    if (format != image->getFormat())
-    {
-        error(GL_INVALID_OPERATION);
-        return false;
-    }
-
     if (pixels != NULL)
     {
         image->loadData(xoffset, yoffset, width, height, type, unpackAlignment, pixels);
@@ -1563,12 +1545,6 @@ bool Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
 
 bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels, Image *image)
 {
-    if (width + xoffset > image->getWidth() || height + yoffset > image->getHeight())
-    {
-        error(GL_INVALID_VALUE);
-        return false;
-    }
-
     if (pixels != NULL)
     {
         image->loadCompressedData(xoffset, yoffset, width, height, pixels);
