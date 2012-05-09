@@ -679,7 +679,7 @@ static int CPPpragma(yystypepp * yylvalpp)
 		case -1:
             // EOF
             CPPShInfoLogMsg("#pragma directive must end with a newline");			
-			return token;
+			goto freeMemoryAndReturnToken;
 		default:
 			SrcStrName[0] = token;
 			SrcStrName[1] = '\0';
@@ -691,6 +691,7 @@ static int CPPpragma(yystypepp * yylvalpp)
 
 	HandlePragma((const char**)allTokens, tokenCount);
 	
+freeMemoryAndReturnToken:
 	for (i = 0; i < tokenCount; ++i) {
 		free (allTokens[i]);
 	}
