@@ -92,7 +92,7 @@ bool validateSubImageParams2D(bool compressed, GLsizei width, GLsizei height,
 }
 
 bool validateSubImageParamsCube(bool compressed, GLsizei width, GLsizei height,
-                                GLint xoffset, GLint yoffset, GLint level, GLenum format,
+                                GLint xoffset, GLint yoffset, GLenum target, GLint level, GLenum format,
                                 gl::TextureCubeMap *texture)
 {
     if (!texture)
@@ -100,27 +100,27 @@ bool validateSubImageParamsCube(bool compressed, GLsizei width, GLsizei height,
         return error(GL_INVALID_OPERATION, false);
     }
 
-    if (compressed != texture->isCompressed())
+    if (compressed != texture->isCompressed(target, level))
     {
         return error(GL_INVALID_OPERATION, false);
     }
 
-    if (format != GL_NONE && format != texture->getInternalFormat())
+    if (format != GL_NONE && format != texture->getInternalFormat(target, level))
     {
         return error(GL_INVALID_OPERATION, false);
     }
 
     if (compressed)
     {
-        if ((width % 4 != 0 && width != texture->getWidth(0)) ||
-            (height % 4 != 0 && height != texture->getHeight(0)))
+        if ((width % 4 != 0 && width != texture->getWidth(target, 0)) ||
+            (height % 4 != 0 && height != texture->getHeight(target, 0)))
         {
             return error(GL_INVALID_OPERATION, false);
         }
     }
 
-    if (xoffset + width > texture->getWidth(level) ||
-        yoffset + height > texture->getHeight(level))
+    if (xoffset + width > texture->getWidth(target, level) ||
+        yoffset + height > texture->getHeight(target, level))
     {
         return error(GL_INVALID_VALUE, false);
     }
@@ -1141,7 +1141,7 @@ void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
             else if (gl::IsCubemapTextureTarget(target))
             {
                 gl::TextureCubeMap *texture = context->getTextureCubeMap();
-                if (validateSubImageParamsCube(true, width, height, xoffset, yoffset, level, format, texture))
+                if (validateSubImageParamsCube(true, width, height, xoffset, yoffset, target, level, format, texture))
                 {
                     texture->subImageCompressed(target, level, xoffset, yoffset, width, height, format, imageSize, data);
                 }
@@ -1411,11 +1411,11 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
             {
                 gl::TextureCubeMap *texcube = context->getTextureCubeMap();
 
-                if (!validateSubImageParamsCube(false, width, height, xoffset, yoffset, level, GL_NONE, texcube))
+                if (!validateSubImageParamsCube(false, width, height, xoffset, yoffset, target, level, GL_NONE, texcube))
                 {
                     return; // error already registered by validateSubImageParams
                 }
-                textureFormat = texcube->getInternalFormat();
+                textureFormat = texcube->getInternalFormat(target, level);
                 texture = texcube;
             }
             else UNREACHABLE();
@@ -2381,7 +2381,7 @@ void __stdcall glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum t
                             return error(GL_INVALID_OPERATION);
                         }
                         gl::TextureCubeMap *texcube = static_cast<gl::TextureCubeMap *>(tex);
-                        if (texcube->isCompressed())
+                        if (texcube->isCompressed(textarget, level))
                         {
                             return error(GL_INVALID_OPERATION);
                         }
@@ -2515,7 +2515,7 @@ void __stdcall glGenerateMipmap(GLenum target)
                 {
                     gl::TextureCubeMap *texcube = context->getTextureCubeMap();
 
-                    if (texcube->isCompressed())
+                    if (texcube->isCompressed(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0))
                     {
                         return error(GL_INVALID_OPERATION);
                     }
@@ -5594,7 +5594,7 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
             else if (gl::IsCubemapTextureTarget(target))
             {
                 gl::TextureCubeMap *texture = context->getTextureCubeMap();
-                if (validateSubImageParamsCube(false, width, height, xoffset, yoffset, level, format, texture))
+                if (validateSubImageParamsCube(false, width, height, xoffset, yoffset, target, level, format, texture))
                 {
                     texture->subImage(target, level, xoffset, yoffset, width, height, format, type, context->getUnpackAlignment(), pixels);
                 }

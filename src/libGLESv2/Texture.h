@@ -364,11 +364,11 @@ class TextureCubeMap : public Texture
 
     virtual GLenum getTarget() const;
     
-    GLsizei getWidth(GLint level) const;
-    GLsizei getHeight(GLint level) const;
-    GLenum getInternalFormat() const;
-    D3DFORMAT getD3DFormat() const;
-    bool isCompressed() const;
+    GLsizei getWidth(GLenum target, GLint level) const;
+    GLsizei getHeight(GLenum target, GLint level) const;
+    GLenum getInternalFormat(GLenum target, GLint level) const;
+    D3DFORMAT getD3DFormat(GLenum target, GLint level) const;
+    bool isCompressed(GLenum target, GLint level) const;
 
     void setImagePosX(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void setImageNegX(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);

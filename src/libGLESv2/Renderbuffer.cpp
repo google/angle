@@ -163,22 +163,22 @@ IDirect3DSurface9 *RenderbufferTextureCubeMap::getDepthStencil()
 
 GLsizei RenderbufferTextureCubeMap::getWidth() const
 {
-    return mTextureCubeMap->getWidth(0);
+    return mTextureCubeMap->getWidth(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0);
 }
 
 GLsizei RenderbufferTextureCubeMap::getHeight() const
 {
-    return mTextureCubeMap->getHeight(0);
+    return mTextureCubeMap->getHeight(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0);
 }
 
 GLenum RenderbufferTextureCubeMap::getInternalFormat() const
 {
-    return mTextureCubeMap->getInternalFormat();
+    return mTextureCubeMap->getInternalFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0);
 }
 
 D3DFORMAT RenderbufferTextureCubeMap::getD3DFormat() const
 {
-    return mTextureCubeMap->getD3DFormat();
+    return mTextureCubeMap->getD3DFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0);
 }
 
 GLsizei RenderbufferTextureCubeMap::getSamples() const

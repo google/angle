@@ -2483,30 +2483,36 @@ GLenum TextureCubeMap::getTarget() const
     return GL_TEXTURE_CUBE_MAP;
 }
 
-GLsizei TextureCubeMap::getWidth(GLint level) const
+GLsizei TextureCubeMap::getWidth(GLenum target, GLint level) const
 {
     if (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-        return mImageArray[0][level].getWidth();
+        return mImageArray[faceIndex(target)][level].getWidth();
     else
         return 0;
 }
 
-GLsizei TextureCubeMap::getHeight(GLint level) const
+GLsizei TextureCubeMap::getHeight(GLenum target, GLint level) const
 {
     if (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-        return mImageArray[0][level].getHeight();
+        return mImageArray[faceIndex(target)][level].getHeight();
     else
         return 0;
 }
 
-GLenum TextureCubeMap::getInternalFormat() const
+GLenum TextureCubeMap::getInternalFormat(GLenum target, GLint level) const
 {
-    return mImageArray[0][0].getFormat();
+    if (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS)
+        return mImageArray[faceIndex(target)][level].getFormat();
+    else
+        return GL_NONE;
 }
 
-D3DFORMAT TextureCubeMap::getD3DFormat() const
+D3DFORMAT TextureCubeMap::getD3DFormat(GLenum target, GLint level) const
 {
-    return mImageArray[0][0].getD3DFormat();
+    if (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS)
+        return mImageArray[faceIndex(target)][level].getD3DFormat();
+    else
+        return D3DFMT_UNKNOWN;
 }
 
 void TextureCubeMap::setImagePosX(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
@@ -2606,8 +2612,8 @@ bool TextureCubeMap::isSamplerComplete() const
         return false;
     }
 
-    if ((getInternalFormat() == GL_FLOAT && !getContext()->supportsFloat32LinearFilter()) ||
-        (getInternalFormat() == GL_HALF_FLOAT_OES && !getContext()->supportsFloat16LinearFilter()))
+    if ((getInternalFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0) == GL_FLOAT && !getContext()->supportsFloat32LinearFilter()) ||
+        (getInternalFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0) == GL_HALF_FLOAT_OES && !getContext()->supportsFloat16LinearFilter()))
     {
         if (mMagFilter != GL_NEAREST || (mMinFilter != GL_NEAREST && mMinFilter != GL_NEAREST_MIPMAP_NEAREST))
         {
@@ -2703,9 +2709,9 @@ bool TextureCubeMap::isMipmapCubeComplete() const
     return true;
 }
 
-bool TextureCubeMap::isCompressed() const
+bool TextureCubeMap::isCompressed(GLenum target, GLint level) const
 {
-    return IsCompressed(getInternalFormat());
+    return IsCompressed(getInternalFormat(target, level));
 }
 
 IDirect3DBaseTexture9 *TextureCubeMap::getBaseTexture() const
