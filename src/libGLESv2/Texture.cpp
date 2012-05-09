@@ -1802,14 +1802,20 @@ GLsizei Texture2D::getHeight(GLint level) const
         return 0;
 }
 
-GLenum Texture2D::getInternalFormat() const
+GLenum Texture2D::getInternalFormat(GLint level) const
 {
-    return mImageArray[0].getFormat();
+    if (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS)
+        return mImageArray[level].getFormat();
+    else
+        return GL_NONE;
 }
 
-D3DFORMAT Texture2D::getD3DFormat() const
+D3DFORMAT Texture2D::getD3DFormat(GLint level) const
 {
-    return mImageArray[0].getD3DFormat();
+    if (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS)
+        return mImageArray[level].getD3DFormat();
+    else
+        return D3DFMT_UNKNOWN;
 }
 
 void Texture2D::redefineImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type)
@@ -2093,8 +2099,8 @@ bool Texture2D::isSamplerComplete() const
       default: UNREACHABLE();
     }
 
-    if ((getInternalFormat() == GL_FLOAT && !getContext()->supportsFloat32LinearFilter()) ||
-        (getInternalFormat() == GL_HALF_FLOAT_OES && !getContext()->supportsFloat16LinearFilter()))
+    if ((getInternalFormat(0) == GL_FLOAT && !getContext()->supportsFloat32LinearFilter()) ||
+        (getInternalFormat(0) == GL_HALF_FLOAT_OES && !getContext()->supportsFloat16LinearFilter()))
     {
         if (mMagFilter != GL_NEAREST || (mMinFilter != GL_NEAREST && mMinFilter != GL_NEAREST_MIPMAP_NEAREST))
         {
@@ -2176,9 +2182,9 @@ bool Texture2D::isMipmapComplete() const
     return true;
 }
 
-bool Texture2D::isCompressed() const
+bool Texture2D::isCompressed(GLint level) const
 {
-    return IsCompressed(getInternalFormat());
+    return IsCompressed(getInternalFormat(level));
 }
 
 IDirect3DBaseTexture9 *Texture2D::getBaseTexture() const

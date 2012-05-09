@@ -63,12 +63,12 @@ bool validateSubImageParams2D(bool compressed, GLsizei width, GLsizei height,
         return error(GL_INVALID_OPERATION, false);
     }
 
-    if (compressed != texture->isCompressed())
+    if (compressed != texture->isCompressed(level))
     {
         return error(GL_INVALID_OPERATION, false);
     }
 
-    if (format != GL_NONE && format != texture->getInternalFormat())
+    if (format != GL_NONE && format != texture->getInternalFormat(level))
     {
         return error(GL_INVALID_OPERATION, false);
     }
@@ -1404,7 +1404,7 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
                 {
                     return; // error already registered by validateSubImageParams
                 }
-                textureFormat = tex2d->getInternalFormat();
+                textureFormat = tex2d->getInternalFormat(level);
                 texture = tex2d;
             }
             else if (gl::IsCubemapTextureTarget(target))
@@ -2362,7 +2362,7 @@ void __stdcall glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum t
                             return error(GL_INVALID_OPERATION);
                         }
                         gl::Texture2D *tex2d = static_cast<gl::Texture2D *>(tex);
-                        if (tex2d->isCompressed())
+                        if (tex2d->isCompressed(0))
                         {
                             return error(GL_INVALID_OPERATION);
                         }
@@ -2502,7 +2502,7 @@ void __stdcall glGenerateMipmap(GLenum target)
                 {
                     gl::Texture2D *tex2d = context->getTexture2D();
 
-                    if (tex2d->isCompressed())
+                    if (tex2d->isCompressed(0))
                     {
                         return error(GL_INVALID_OPERATION);
                     }

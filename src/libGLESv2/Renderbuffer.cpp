@@ -109,12 +109,12 @@ GLsizei RenderbufferTexture2D::getHeight() const
 
 GLenum RenderbufferTexture2D::getInternalFormat() const
 {
-    return mTexture2D->getInternalFormat();
+    return mTexture2D->getInternalFormat(0);
 }
 
 D3DFORMAT RenderbufferTexture2D::getD3DFormat() const
 {
-    return mTexture2D->getD3DFormat();
+    return mTexture2D->getD3DFormat(0);
 }
 
 GLsizei RenderbufferTexture2D::getSamples() const

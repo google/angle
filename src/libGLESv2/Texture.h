@@ -281,9 +281,9 @@ class Texture2D : public Texture
 
     GLsizei getWidth(GLint level) const;
     GLsizei getHeight(GLint level) const;
-    GLenum getInternalFormat() const;
-    D3DFORMAT getD3DFormat() const;
-    bool isCompressed() const;
+    GLenum getInternalFormat(GLint level) const;
+    D3DFORMAT getD3DFormat(GLint level) const;
+    bool isCompressed(GLint level) const;
 
     void setImage(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void setCompressedImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels);
