@@ -18,9 +18,16 @@ struct Token
     enum Type
     {
         // Token IDs for error conditions are negative.
-        INVALID_CHARACTER = -1,
-        INVALID_NUMBER = -2,
-        EOF_IN_COMMENT = -3,
+        INTERNAL_ERROR = -1,
+        OUT_OF_MEMORY = -2,
+        INVALID_CHARACTER = -3,
+        INVALID_NUMBER = -4,
+        INVALID_DIRECTIVE = -5,
+        INVALID_EXPRESSION = -6,
+        DIVISION_BY_ZERO = -7,
+        EOF_IN_COMMENT = -8,
+        EOF_IN_DIRECTIVE = -9,
+        UNEXPECTED_TOKEN_IN_DIRECTIVE = -10,
 
         // Indicates EOF.
         LAST = 0,
@@ -69,6 +76,14 @@ struct Token
     };
 
     Token() : type(0), flags(0) { }
+
+    void reset()
+    {
+        type = 0;
+        flags = 0;
+        location = Location();
+        value.clear();
+    }
 
     bool equals(const Token& other) const
     {

@@ -7,8 +7,9 @@
 #ifndef COMPILER_PREPROCESSOR_PREPROCESSOR_H_
 #define COMPILER_PREPROCESSOR_PREPROCESSOR_H_
 
-#include "Lexer.h"
-#include "pp_utils.h"
+#include "DirectiveParser.h"
+#include "MacroExpander.h"
+#include "Tokenizer.h"
 
 namespace pp
 {
@@ -16,7 +17,7 @@ namespace pp
 class Preprocessor
 {
   public:
-    Preprocessor() { }
+    Preprocessor();
 
     // count: specifies the number of elements in the string and length arrays.
     // string: specifies an array of pointers to strings.
@@ -33,7 +34,10 @@ class Preprocessor
 
   private:
     PP_DISALLOW_COPY_AND_ASSIGN(Preprocessor);
-    Lexer mLexer;
+
+    Tokenizer mTokenizer;
+    DirectiveParser mDirectiveParser;
+    MacroExpander mMacroExpander;
 };
 
 }  // namespace pp

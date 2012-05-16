@@ -16,15 +16,21 @@
       'include_dirs': [
       ],
       'sources': [
+        'compiler/preprocessor/new/DirectiveParser.cpp',
+        'compiler/preprocessor/new/DirectiveParser.h',
+        'compiler/preprocessor/new/ExpressionParser.cpp',
+        'compiler/preprocessor/new/ExpressionParser.h',
         'compiler/preprocessor/new/Input.cpp',
         'compiler/preprocessor/new/Input.h',
-        'compiler/preprocessor/new/Lexer.cpp',
         'compiler/preprocessor/new/Lexer.h',
-        'compiler/preprocessor/new/pp_lex.cpp',
+        'compiler/preprocessor/new/MacroExpander.cpp',
+        'compiler/preprocessor/new/MacroExpander.h',
         'compiler/preprocessor/new/Preprocessor.cpp',
         'compiler/preprocessor/new/Preprocessor.h',
         'compiler/preprocessor/new/Token.cpp',
         'compiler/preprocessor/new/Token.h',
+        'compiler/preprocessor/new/Tokenizer.cpp',
+        'compiler/preprocessor/new/Tokenizer.h',
       ],
     },
     {

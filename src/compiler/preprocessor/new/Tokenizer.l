@@ -23,7 +23,7 @@ IF YOU MODIFY THIS FILE YOU ALSO NEED TO RUN generate_parser.sh.
 }
 
 %{
-#include "Lexer.h"
+#include "Tokenizer.h"
 #include "Token.h"
 
 typedef std::string YYSTYPE;
@@ -32,10 +32,12 @@ typedef pp::Token::Location YYLTYPE;
 // Use the unused yycolumn variable to track file (string) number.
 #define yyfileno yycolumn
 
-#define YY_USER_INIT  \
-    do {              \
-        yyfileno = 0; \
-        yylineno = 1; \
+#define YY_USER_INIT                   \
+    do {                               \
+        yyfileno = 0;                  \
+        yylineno = 1;                  \
+        yyextra->leadingSpace = false; \
+        yyextra->lineStart = true;     \
     } while(0);
 
 #define YY_USER_ACTION                                            \
@@ -60,7 +62,7 @@ typedef pp::Token::Location YYLTYPE;
 %option noyywrap nounput never-interactive
 %option reentrant bison-bridge bison-locations
 %option prefix="pp"
-%option extra-type="pp::Lexer::Context*"
+%option extra-type="pp::Tokenizer::Context*"
 %x COMMENT
 
 NEWLINE     \n|\r|\r\n
@@ -88,9 +90,17 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 <COMMENT>"*"
 <COMMENT>{NEWLINE}  { ++yylineno; }
 <COMMENT><<EOF>>    { return pp::Token::EOF_IN_COMMENT; }
-<COMMENT>"*/"       { BEGIN(INITIAL); return ' '; }
+<COMMENT>"*/"       { yyextra->leadingSpace = true; BEGIN(INITIAL); }
 
-# { return yytext[0]; }
+# {
+    // # is only valid at start of line for preprocessor directives.
+    if (yyextra->lineStart) {
+        return yytext[0];
+    } else {
+        yylval->assign(yytext, yyleng);
+        return pp::Token::INVALID_CHARACTER;
+    }
+}
 
 {IDENTIFIER} {
     yylval->assign(yytext, yyleng);
@@ -137,7 +147,7 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 "|="  {  return pp::Token::OP_OR_ASSIGN; }
 
 {PUNCTUATOR} { return yytext[0]; }
-[ \t\v\f]+   { return ' '; }
+[ \t\v\f]+   { yyextra->leadingSpace = true; }
 
 {NEWLINE} {
     ++yylineno;
@@ -155,21 +165,34 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 
 namespace pp {
 
-int Lexer::lex(Token* token)
+Tokenizer::Tokenizer() : mHandle(0)
 {
-    bool leadingSpace = false;
-    token->type = yylex(&token->value, &token->location, mHandle);
-    while (token->type == ' ')
-    {
-        leadingSpace = true;
-        token->type = yylex(&token->value, &token->location, mHandle);
-    }
-    token->setHasLeadingSpace(leadingSpace);
-
-    return token->type;
 }
 
-bool Lexer::initLexer()
+Tokenizer::~Tokenizer()
+{
+    destroyScanner();
+}
+
+bool Tokenizer::init(int count, const char* const string[], const int length[])
+{
+    if (count < 0) return false;
+    if ((count > 0) && (string == 0)) return false;
+
+    mContext.input = Input(count, string, length);
+    return initScanner();
+}
+
+void Tokenizer::lex(Token* token)
+{
+    token->type = yylex(&token->value, &token->location, mHandle);
+
+    token->setHasLeadingSpace(mContext.leadingSpace);
+    mContext.leadingSpace = false;
+    mContext.lineStart = token->type == '\n';
+}
+
+bool Tokenizer::initScanner()
 {
     if ((mHandle == NULL) && yylex_init_extra(&mContext, &mHandle))
         return false;
@@ -178,7 +201,7 @@ bool Lexer::initLexer()
     return true;
 }
 
-void Lexer::destroyLexer()
+void Tokenizer::destroyScanner()
 {
     if (mHandle == NULL)
         return;

@@ -6,26 +6,27 @@
 
 #include "Preprocessor.h"
 
+#include "Token.h"
+
 namespace pp
 {
+
+Preprocessor::Preprocessor() : mDirectiveParser(&mTokenizer),
+                               mMacroExpander(&mDirectiveParser)
+{
+}
 
 bool Preprocessor::init(int count,
                         const char* const string[],
                         const int length[])
 {
-    return mLexer.init(count, string, length);
+    return mTokenizer.init(count, string, length);
 }
 
 int Preprocessor::lex(Token* token)
 {
-    int ret = mLexer.lex(token);
-    // TODO(alokp): Handle preprocessor directives. Ignore them for now.
-    while ((ret == '\n') || (ret == '#'))
-    {
-        ret = mLexer.lex(token);
-    }
-
-    return ret;
+    mMacroExpander.lex(token);
+    return token->type;
 }
 
 }  // namespace pp
