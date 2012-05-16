@@ -16,18 +16,32 @@
       ],
     },
     {
+      'target_name': 'gmock',
+      'type': 'static_library',
+      'include_dirs': [
+        '../third_party/googlemock',
+        '../third_party/googlemock/include',
+        '../third_party/googletest/include',
+      ],
+      'sources': [
+        '../third_party/googlemock/src/gmock-all.cc',
+      ],
+    },
+    {
       'target_name': 'preprocessor_tests',
       'type': 'executable',
       'dependencies': [
         '../src/build_angle.gyp:preprocessor',
         'gtest',
+        'gmock',
       ],
       'include_dirs': [
         '../src/compiler/preprocessor/new',
         '../third_party/googletest/include',
+        '../third_party/googlemock/include',
       ],
       'sources': [
-        '../third_party/googletest/src/gtest_main.cc',
+        '../third_party/googlemock/src/gmock_main.cc',
         'preprocessor_tests/char_test.cpp',
         'preprocessor_tests/comment_test.cpp',
         'preprocessor_tests/identifier_test.cpp',
