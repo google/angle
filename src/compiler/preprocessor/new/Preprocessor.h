@@ -14,10 +14,12 @@
 namespace pp
 {
 
+class Diagnostics;
+
 class Preprocessor
 {
   public:
-    Preprocessor();
+    Preprocessor(Diagnostics* diagnostics);
 
     // count: specifies the number of elements in the string and length arrays.
     // string: specifies an array of pointers to strings.
@@ -30,11 +32,12 @@ class Preprocessor
     // is null terminated.
     bool init(int count, const char* const string[], const int length[]);
 
-    int lex(Token* token);
+    void lex(Token* token);
 
   private:
     PP_DISALLOW_COPY_AND_ASSIGN(Preprocessor);
 
+    Diagnostics* mDiagnostics;
     Tokenizer mTokenizer;
     DirectiveParser mDirectiveParser;
     MacroExpander mMacroExpander;

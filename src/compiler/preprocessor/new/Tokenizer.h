@@ -14,11 +14,15 @@
 namespace pp
 {
 
+class Diagnostics;
+
 class Tokenizer : public Lexer
 {
   public:
     struct Context
     {
+        Diagnostics* diagnostics;
+
         Input input;
         // The location where yytext points to. Token location should track
         // scanLoc instead of Input::mReadLoc because they may not be the same
@@ -29,7 +33,7 @@ class Tokenizer : public Lexer
         bool lineStart;
     };
 
-    Tokenizer();
+    Tokenizer(Diagnostics* diagnostics);
     ~Tokenizer();
 
     bool init(int count, const char* const string[], const int length[]);

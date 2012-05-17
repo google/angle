@@ -13,16 +13,20 @@
 namespace pp
 {
 
+class Diagnostics;
+
 class MacroExpander : public Lexer
 {
   public:
-    MacroExpander(Lexer* lexer);
+    MacroExpander(Lexer* lexer, Diagnostics* diagnostics);
 
     virtual void lex(Token* token);
 
   private:
     PP_DISALLOW_COPY_AND_ASSIGN(MacroExpander);
+
     Lexer* mLexer;
+    Diagnostics* mDiagnostics;
 };
 
 }  // namespace pp

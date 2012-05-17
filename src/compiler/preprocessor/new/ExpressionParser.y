@@ -30,12 +30,14 @@ WHICH GENERATES THE GLSL ES preprocessor expression parser.
 #include <cassert>
 #include <sstream>
 
+#include "Diagnostics.h"
 #include "Lexer.h"
 #include "Token.h"
 
 namespace {
 struct Context
 {
+    pp::Diagnostics* diagnostics;
     pp::Lexer* lexer;
     pp::Token* token;
     int* result;
@@ -126,8 +128,10 @@ expression
         if ($3 == 0) {
             std::stringstream stream;
             stream << $1 << " % " << $3;
-            context->token->type = pp::Token::DIVISION_BY_ZERO;
-            context->token->value = stream.str();
+            std::string text = stream.str();
+            context->diagnostics->report(pp::Diagnostics::DIVISION_BY_ZERO,
+                                         context->token->location,
+                                         text.c_str());
             YYABORT;
         } else {
             $$ = $1 % $3;
@@ -137,8 +141,10 @@ expression
         if ($3 == 0) {
             std::stringstream stream;
             stream << $1 << " / " << $3;
-            context->token->type = pp::Token::DIVISION_BY_ZERO;
-            context->token->value = stream.str();
+            std::string text = stream.str();
+            context->diagnostics->report(pp::Diagnostics::DIVISION_BY_ZERO,
+                                         context->token->location,
+                                         text.c_str());
             YYABORT;
         } else {
             $$ = $1 / $3;
@@ -212,15 +218,23 @@ int yylex(int* lvalp, Context* context)
 
 void yyerror(Context* context, const char* reason)
 {
-    context->token->type = pp::Token::INVALID_EXPRESSION;
-    context->token->value = reason;
+    context->diagnostics->report(pp::Diagnostics::INVALID_EXPRESSION,
+                                 context->token->location,
+                                 reason);
 }
 
 namespace pp {
 
+ExpressionParser::ExpressionParser(Lexer* lexer, Diagnostics* diagnostics) :
+    mLexer(lexer),
+    mDiagnostics(diagnostics)
+{
+}
+
 bool ExpressionParser::parse(Token* token, int* result)
 {
     Context context;
+    context.diagnostics = mDiagnostics;
     context.lexer = mLexer;
     context.token = token;
     context.result = result;
@@ -232,17 +246,15 @@ bool ExpressionParser::parse(Token* token, int* result)
         break;
 
       case 2:
-        token->type = pp::Token::OUT_OF_MEMORY;
-        token->value.clear();
+        mDiagnostics->report(Diagnostics::OUT_OF_MEMORY, token->location, "");
         break;
 
       default:
         assert(false);
-        token->type = pp::Token::INTERNAL_ERROR;
-        token->value.clear();
+        mDiagnostics->report(Diagnostics::INTERNAL_ERROR, token->location, "");
         break;
     }
-    
+
     return ret == 0;
 }
 

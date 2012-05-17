@@ -24,10 +24,12 @@ IF YOU MODIFY THIS FILE YOU ALSO NEED TO RUN generate_parser.sh.
 
 %{
 #include "Tokenizer.h"
+
+#include "Diagnostics.h"
 #include "Token.h"
 
 typedef std::string YYSTYPE;
-typedef pp::Token::Location YYLTYPE;
+typedef pp::SourceLocation YYLTYPE;
 
 // Use the unused yycolumn variable to track file (string) number.
 #define yyfileno yycolumn
@@ -85,20 +87,28 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
     /* Block comment */
     /* Line breaks are just counted - not returned. */
     /* The comment is replaced by a single space. */ 
-"/*"                { BEGIN(COMMENT); }
+"/*" { BEGIN(COMMENT); }
 <COMMENT>[^*\r\n]+
 <COMMENT>"*"
-<COMMENT>{NEWLINE}  { ++yylineno; }
-<COMMENT><<EOF>>    { return pp::Token::EOF_IN_COMMENT; }
-<COMMENT>"*/"       { yyextra->leadingSpace = true; BEGIN(INITIAL); }
+<COMMENT>{NEWLINE} { ++yylineno; }
+<COMMENT><<EOF>> {
+    yyextra->diagnostics->report(pp::Diagnostics::EOF_IN_COMMENT,
+        pp::SourceLocation(yyfileno, yylineno), "");
+    yyterminate();
+}
+<COMMENT>"*/" {
+    yyextra->leadingSpace = true;
+    BEGIN(INITIAL);
+}
 
 # {
     // # is only valid at start of line for preprocessor directives.
     if (yyextra->lineStart) {
         return yytext[0];
     } else {
-        yylval->assign(yytext, yyleng);
-        return pp::Token::INVALID_CHARACTER;
+        yyextra->diagnostics->report(pp::Diagnostics::INVALID_CHARACTER,
+                                     pp::SourceLocation(yyfileno, yylineno),
+                                     std::string(yytext, yyleng));
     }
 }
 
@@ -120,8 +130,9 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
     /* Anything that starts with a {DIGIT} or .{DIGIT} must be a number. */
     /* Rule to catch all invalid integers and floats. */
 ({DIGIT}+[_a-zA-Z0-9.]*)|("."{DIGIT}+[_a-zA-Z0-9.]*) {
-    yylval->assign(yytext, yyleng);
-    return pp::Token::INVALID_NUMBER;
+    yyextra->diagnostics->report(pp::Diagnostics::INVALID_NUMBER,
+                                 pp::SourceLocation(yyfileno, yylineno),
+                                 std::string(yytext, yyleng));
 }
 
 "++"  { return pp::Token::OP_INC; }
@@ -155,8 +166,9 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 }
 
 . {
-    yylval->assign(yytext, yyleng);
-    return pp::Token::INVALID_CHARACTER;
+    yyextra->diagnostics->report(pp::Diagnostics::INVALID_CHARACTER,
+                                 pp::SourceLocation(yyfileno, yylineno),
+                                 std::string(yytext, yyleng));
 }
 
 <<EOF>>   { yyterminate(); }
@@ -165,8 +177,9 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 
 namespace pp {
 
-Tokenizer::Tokenizer() : mHandle(0)
+Tokenizer::Tokenizer(Diagnostics* diagnostics) : mHandle(0)
 {
+    mContext.diagnostics = diagnostics;
 }
 
 Tokenizer::~Tokenizer()

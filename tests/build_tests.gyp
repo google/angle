@@ -47,6 +47,7 @@
         'preprocessor_tests/identifier_test.cpp',
         'preprocessor_tests/input_test.cpp',
         'preprocessor_tests/location_test.cpp',
+        'preprocessor_tests/MockDiagnostics.h',
         'preprocessor_tests/number_test.cpp',
         'preprocessor_tests/operator_test.cpp',
         'preprocessor_tests/token_test.cpp',

@@ -16,6 +16,8 @@
       'include_dirs': [
       ],
       'sources': [
+        'compiler/preprocessor/new/Diagnostics.cpp',
+        'compiler/preprocessor/new/Diagnostics.h',
         'compiler/preprocessor/new/DirectiveParser.cpp',
         'compiler/preprocessor/new/DirectiveParser.h',
         'compiler/preprocessor/new/ExpressionParser.cpp',
@@ -27,6 +29,7 @@
         'compiler/preprocessor/new/MacroExpander.h',
         'compiler/preprocessor/new/Preprocessor.cpp',
         'compiler/preprocessor/new/Preprocessor.h',
+        'compiler/preprocessor/new/SourceLocation.h',
         'compiler/preprocessor/new/Token.cpp',
         'compiler/preprocessor/new/Token.h',
         'compiler/preprocessor/new/Tokenizer.cpp',

@@ -515,10 +515,12 @@ IF YOU MODIFY THIS FILE YOU ALSO NEED TO RUN generate_parser.sh.
 */
 
 #include "Tokenizer.h"
+
+#include "Diagnostics.h"
 #include "Token.h"
 
 typedef std::string YYSTYPE;
-typedef pp::Token::Location YYLTYPE;
+typedef pp::SourceLocation YYLTYPE;
 
 // Use the unused yycolumn variable to track file (string) number.
 #define yyfileno yycolumn
@@ -884,11 +886,18 @@ YY_RULE_SETUP
 { ++yylineno; }
 	YY_BREAK
 case YY_STATE_EOF(COMMENT):
-{ return pp::Token::EOF_IN_COMMENT; }
+{
+    yyextra->diagnostics->report(pp::Diagnostics::EOF_IN_COMMENT,
+        pp::SourceLocation(yyfileno, yylineno), "");
+    yyterminate();
+}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-{ yyextra->leadingSpace = true; BEGIN(INITIAL); }
+{
+    yyextra->leadingSpace = true;
+    BEGIN(INITIAL);
+}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
@@ -897,8 +906,9 @@ YY_RULE_SETUP
     if (yyextra->lineStart) {
         return yytext[0];
     } else {
-        yylval->assign(yytext, yyleng);
-        return pp::Token::INVALID_CHARACTER;
+        yyextra->diagnostics->report(pp::Diagnostics::INVALID_CHARACTER,
+                                     pp::SourceLocation(yyfileno, yylineno),
+                                     std::string(yytext, yyleng));
     }
 }
 	YY_BREAK
@@ -928,8 +938,9 @@ YY_RULE_SETUP
 case 11:
 YY_RULE_SETUP
 {
-    yylval->assign(yytext, yyleng);
-    return pp::Token::INVALID_NUMBER;
+    yyextra->diagnostics->report(pp::Diagnostics::INVALID_NUMBER,
+                                 pp::SourceLocation(yyfileno, yylineno),
+                                 std::string(yytext, yyleng));
 }
 	YY_BREAK
 case 12:
@@ -1035,8 +1046,9 @@ YY_RULE_SETUP
 case 36:
 YY_RULE_SETUP
 {
-    yylval->assign(yytext, yyleng);
-    return pp::Token::INVALID_CHARACTER;
+    yyextra->diagnostics->report(pp::Diagnostics::INVALID_CHARACTER,
+                                 pp::SourceLocation(yyfileno, yylineno),
+                                 std::string(yytext, yyleng));
 }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
@@ -2183,8 +2195,9 @@ void ppfree (void * ptr , yyscan_t yyscanner)
 
 namespace pp {
 
-Tokenizer::Tokenizer() : mHandle(0)
+Tokenizer::Tokenizer(Diagnostics* diagnostics) : mHandle(0)
 {
+    mContext.diagnostics = diagnostics;
 }
 
 Tokenizer::~Tokenizer()

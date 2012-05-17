@@ -8,6 +8,7 @@
 
 #include <cassert>
 
+#include "Diagnostics.h"
 #include "ExpressionParser.h"
 #include "MacroExpander.h"
 #include "Token.h"
@@ -47,6 +48,13 @@ class DefinedParser : public Lexer
   private:
     Lexer* mLexer;
 };
+
+DirectiveParser::DirectiveParser(Tokenizer* tokenizer,
+                                 Diagnostics* diagnostics) :
+    mTokenizer(tokenizer),
+    mDiagnostics(diagnostics)
+{
+}
 
 void DirectiveParser::lex(Token* token)
 {
@@ -91,16 +99,24 @@ void DirectiveParser::parseDirective(Token* token)
         else if (token->value == kDirectiveLine)
             parseLine(token);
         else
-            token->type = pp::Token::INVALID_DIRECTIVE;
+            mDiagnostics->report(Diagnostics::INVALID_DIRECTIVE,
+                                 token->location,
+                                 token->value.c_str());
     }
+
+    if ((token->type != '\n') && (token->type != 0))
+        mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN_IN_DIRECTIVE,
+                             token->location,
+                             token->value.c_str());
 
     while (token->type != '\n')
     {
         if (token->type == 0) {
-            //token->type = pp::Token::EOF_IN_DIRECTIVE;
+            mDiagnostics->report(Diagnostics::EOF_IN_DIRECTIVE,
+                                 token->location,
+                                 token->value.c_str());
             break;
         }
-        //token->type = pp::Token::INVALID_DIRECTIVE;
         mTokenizer->lex(token);
     }
 }
@@ -125,8 +141,8 @@ void DirectiveParser::parseIf(Token* token)
     assert(token->value == kDirectiveIf);
 
     DefinedParser definedParser(mTokenizer);
-    MacroExpander macroExpander(&definedParser);
-    ExpressionParser expressionParser(&macroExpander);
+    MacroExpander macroExpander(&definedParser, mDiagnostics);
+    ExpressionParser expressionParser(&macroExpander, mDiagnostics);
     macroExpander.lex(token);
 
     int expression = 0;
@@ -207,7 +223,7 @@ void DirectiveParser::parseLine(Token* token)
 {
     // TODO(alokp): Implement me.
     assert(token->value == kDirectiveLine);
-    MacroExpander macroExpander(mTokenizer);
+    MacroExpander macroExpander(mTokenizer, mDiagnostics);
     macroExpander.lex(token);
 }
 

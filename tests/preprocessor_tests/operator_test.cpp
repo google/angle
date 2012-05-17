@@ -5,6 +5,8 @@
 //
 
 #include "gtest/gtest.h"
+
+#include "MockDiagnostics.h"
 #include "Preprocessor.h"
 #include "Token.h"
 
@@ -24,10 +26,12 @@ TEST_P(OperatorTest, Identified)
 {
     OperatorTestParam param = GetParam();
 
-    pp::Token token;
-    pp::Preprocessor preprocessor;
+    MockDiagnostics diagnostics;
+    pp::Preprocessor preprocessor(&diagnostics);
     ASSERT_TRUE(preprocessor.init(1, &param.str, 0));
-    EXPECT_EQ(param.op, preprocessor.lex(&token));
+
+    pp::Token token;
+    preprocessor.lex(&token);
     EXPECT_EQ(param.op, token.type);
 }
 

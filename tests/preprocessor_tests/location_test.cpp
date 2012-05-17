@@ -5,18 +5,21 @@
 //
 
 #include "gtest/gtest.h"
+#include "MockDiagnostics.h"
 #include "Preprocessor.h"
 #include "Token.h"
 
 static void PreprocessAndVerifyLocation(int count,
                                         const char* const string[],
                                         const int length[],
-                                        pp::Token::Location location)
+                                        const pp::SourceLocation& location)
 {
-    pp::Token token;
-    pp::Preprocessor preprocessor;
+    MockDiagnostics diagnostics;
+    pp::Preprocessor preprocessor(&diagnostics);
     ASSERT_TRUE(preprocessor.init(count, string, length));
-    EXPECT_EQ(pp::Token::IDENTIFIER, preprocessor.lex(&token));
+
+    pp::Token token;
+    preprocessor.lex(&token);
     EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
     EXPECT_STREQ("foo", token.value.c_str());
 
@@ -27,7 +30,7 @@ static void PreprocessAndVerifyLocation(int count,
 TEST(LocationTest, String0_Line1)
 {
     const char* str = "foo";
-    pp::Token::Location loc;
+    pp::SourceLocation loc;
     loc.file = 0;
     loc.line = 1;
 
@@ -38,7 +41,7 @@ TEST(LocationTest, String0_Line1)
 TEST(LocationTest, String0_Line2)
 {
     const char* str = "\nfoo";
-    pp::Token::Location loc;
+    pp::SourceLocation loc;
     loc.file = 0;
     loc.line = 2;
 
@@ -49,7 +52,7 @@ TEST(LocationTest, String0_Line2)
 TEST(LocationTest, String1_Line1)
 {
     const char* const str[] = {"\n\n", "foo"};
-    pp::Token::Location loc;
+    pp::SourceLocation loc;
     loc.file = 1;
     loc.line = 1;
 
@@ -60,7 +63,7 @@ TEST(LocationTest, String1_Line1)
 TEST(LocationTest, String1_Line2)
 {
     const char* const str[] = {"\n\n", "\nfoo"};
-    pp::Token::Location loc;
+    pp::SourceLocation loc;
     loc.file = 1;
     loc.line = 2;
 
@@ -71,7 +74,7 @@ TEST(LocationTest, String1_Line2)
 TEST(LocationTest, NewlineInsideCommentCounted)
 {
     const char* str = "/*\n\n*/foo";
-    pp::Token::Location loc;
+    pp::SourceLocation loc;
     loc.file = 0;
     loc.line = 3;
 
@@ -83,15 +86,16 @@ TEST(LocationTest, ErrorLocationAfterComment)
 {
     const char* str = "/*\n\n*/@";
 
-    pp::Token token;
-    pp::Preprocessor preprocessor;
+    MockDiagnostics diagnostics;
+    pp::Preprocessor preprocessor(&diagnostics);
     ASSERT_TRUE(preprocessor.init(1, &str, 0));
-    EXPECT_EQ(pp::Token::INVALID_CHARACTER, preprocessor.lex(&token));
-    EXPECT_EQ(pp::Token::INVALID_CHARACTER, token.type);
-    EXPECT_STREQ("@", token.value.c_str());
 
-    EXPECT_EQ(0, token.location.file);
-    EXPECT_EQ(3, token.location.line);
+    pp::Diagnostics::ID id(pp::Diagnostics::INVALID_CHARACTER);
+    pp::SourceLocation loc(0, 3);
+    EXPECT_CALL(diagnostics, print(id, loc, "@"));
+
+    pp::Token token;
+    preprocessor.lex(&token);
 }
 
 // The location of a token straddling two or more strings is that of the
@@ -100,7 +104,7 @@ TEST(LocationTest, ErrorLocationAfterComment)
 TEST(LocationTest, TokenStraddlingTwoStrings)
 {
     const char* const str[] = {"f", "oo"};
-    pp::Token::Location loc;
+    pp::SourceLocation loc;
     loc.file = 0;
     loc.line = 1;
 
@@ -111,7 +115,7 @@ TEST(LocationTest, TokenStraddlingTwoStrings)
 TEST(LocationTest, TokenStraddlingThreeStrings)
 {
     const char* const str[] = {"f", "o", "o"};
-    pp::Token::Location loc;
+    pp::SourceLocation loc;
     loc.file = 0;
     loc.line = 1;
 

@@ -11,8 +11,11 @@
 namespace pp
 {
 
-Preprocessor::Preprocessor() : mDirectiveParser(&mTokenizer),
-                               mMacroExpander(&mDirectiveParser)
+Preprocessor::Preprocessor(Diagnostics* diagnostics) :
+    mDiagnostics(diagnostics),
+    mTokenizer(mDiagnostics),
+    mDirectiveParser(&mTokenizer, mDiagnostics),
+    mMacroExpander(&mDirectiveParser, mDiagnostics)
 {
 }
 
@@ -23,10 +26,9 @@ bool Preprocessor::init(int count,
     return mTokenizer.init(count, string, length);
 }
 
-int Preprocessor::lex(Token* token)
+void Preprocessor::lex(Token* token)
 {
     mMacroExpander.lex(token);
-    return token->type;
 }
 
 }  // namespace pp

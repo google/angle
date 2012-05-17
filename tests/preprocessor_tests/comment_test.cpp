@@ -5,6 +5,8 @@
 //
 
 #include "gtest/gtest.h"
+
+#include "MockDiagnostics.h"
 #include "Preprocessor.h"
 #include "Token.h"
 
@@ -16,10 +18,12 @@ TEST_P(CommentTest, CommentIgnored)
 {
     const char* str = GetParam();
 
-    pp::Token token;
-    pp::Preprocessor preprocessor;
+    MockDiagnostics diagnostics;
+    pp::Preprocessor preprocessor(&diagnostics);
     ASSERT_TRUE(preprocessor.init(1, &str, 0));
-    EXPECT_EQ(pp::Token::LAST, preprocessor.lex(&token));
+
+    pp::Token token;
+    preprocessor.lex(&token);
     EXPECT_EQ(pp::Token::LAST, token.type);
 }
 
@@ -42,10 +46,12 @@ TEST(BlockComment, CommentReplacedWithSpace)
 {
     const char* str = "/*foo*/bar";
 
-    pp::Token token;
-    pp::Preprocessor preprocessor;
+    MockDiagnostics diagnostics;
+    pp::Preprocessor preprocessor(&diagnostics);
     ASSERT_TRUE(preprocessor.init(1, &str, 0));
-    EXPECT_EQ(pp::Token::IDENTIFIER, preprocessor.lex(&token));
+
+    pp::Token token;
+    preprocessor.lex(&token);
     EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
     EXPECT_STREQ("bar", token.value.c_str());
     EXPECT_TRUE(token.hasLeadingSpace());
@@ -55,9 +61,13 @@ TEST(BlockComment, UnterminatedComment)
 {
     const char* str = "/*foo";
 
-    pp::Token token;
-    pp::Preprocessor preprocessor;
+    MockDiagnostics diagnostics;
+    pp::Preprocessor preprocessor(&diagnostics);
     ASSERT_TRUE(preprocessor.init(1, &str, 0));
-    EXPECT_EQ(pp::Token::EOF_IN_COMMENT, preprocessor.lex(&token));
-    EXPECT_EQ(pp::Token::EOF_IN_COMMENT, token.type);
+
+    using testing::_;
+    EXPECT_CALL(diagnostics, print(pp::Diagnostics::EOF_IN_COMMENT, _, _));
+
+    pp::Token token;
+    preprocessor.lex(&token);
 }

@@ -5,6 +5,8 @@
 //
 
 #include "gtest/gtest.h"
+
+#include "MockDiagnostics.h"
 #include "Preprocessor.h"
 #include "Token.h"
 
@@ -18,12 +20,15 @@ TEST_P(InvalidNumberTest, InvalidNumberIdentified)
 {
     const char* str = GetParam();
 
-    pp::Token token;
-    pp::Preprocessor preprocessor;
+    MockDiagnostics diagnostics;
+    pp::Preprocessor preprocessor(&diagnostics);
     ASSERT_TRUE(preprocessor.init(1, &str, 0));
-    EXPECT_EQ(pp::Token::INVALID_NUMBER, preprocessor.lex(&token));
-    EXPECT_EQ(pp::Token::INVALID_NUMBER, token.type);
-    EXPECT_STREQ(str, token.value.c_str());
+
+    using testing::_;
+    EXPECT_CALL(diagnostics, print(pp::Diagnostics::INVALID_NUMBER, _, str));
+
+    pp::Token token;
+    preprocessor.lex(&token);
 }
 
 INSTANTIATE_TEST_CASE_P(InvalidIntegers, InvalidNumberTest,
@@ -48,10 +53,12 @@ TEST_P(IntegerTest, IntegerIdentified)
     str.push_back(std::tr1::get<1>(GetParam()));  // digit.
     const char* cstr = str.c_str();
 
-    pp::Token token;
-    pp::Preprocessor preprocessor;
+    MockDiagnostics diagnostics;
+    pp::Preprocessor preprocessor(&diagnostics);
     ASSERT_TRUE(preprocessor.init(1, &cstr, 0));
-    EXPECT_EQ(pp::Token::CONST_INT, preprocessor.lex(&token));
+
+    pp::Token token;
+    preprocessor.lex(&token);
     EXPECT_EQ(pp::Token::CONST_INT, token.type);
     EXPECT_STREQ(cstr, token.value.c_str());
 }
@@ -85,10 +92,12 @@ INSTANTIATE_TEST_CASE_P(HexadecimalInteger_A_F,
 
 static void PreprocessAndVerifyFloat(const char* str)
 {
-    pp::Token token;
-    pp::Preprocessor preprocessor;
+    MockDiagnostics diagnostics;
+    pp::Preprocessor preprocessor(&diagnostics);
     ASSERT_TRUE(preprocessor.init(1, &str, 0));
-    EXPECT_EQ(pp::Token::CONST_FLOAT, preprocessor.lex(&token));
+
+    pp::Token token;
+    preprocessor.lex(&token);
     EXPECT_EQ(pp::Token::CONST_FLOAT, token.type);
     EXPECT_STREQ(str, token.value.c_str());
 }

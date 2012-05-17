@@ -5,6 +5,8 @@
 //
 
 #include "gtest/gtest.h"
+
+#include "MockDiagnostics.h"
 #include "Preprocessor.h"
 #include "Token.h"
 
@@ -29,11 +31,13 @@ TEST_P(SpaceCharTest, SpaceIgnored)
     str.append(identifier);
     const char* cstr = str.c_str();
 
-    pp::Token token;
-    pp::Preprocessor preprocessor;
+    MockDiagnostics diagnostics;
+    pp::Preprocessor preprocessor(&diagnostics);
     ASSERT_TRUE(preprocessor.init(1, &cstr, 0));
+
+    pp::Token token;
     // Identifier "foo" is returned after ignoring the whitespace characters.
-    EXPECT_EQ(pp::Token::IDENTIFIER, preprocessor.lex(&token));
+    preprocessor.lex(&token);
     EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
     EXPECT_STREQ(identifier, token.value.c_str());
     // The whitespace character is however recorded with the next token.
@@ -66,11 +70,13 @@ TEST_P(SpaceStringTest, SpaceIgnored)
     str.append(identifier);
     const char* cstr = str.c_str();
 
-    pp::Token token;
-    pp::Preprocessor preprocessor;
+    MockDiagnostics diagnostics;
+    pp::Preprocessor preprocessor(&diagnostics);
     ASSERT_TRUE(preprocessor.init(1, &cstr, 0));
+
+    pp::Token token;
+    preprocessor.lex(&token);
     // Identifier "foo" is returned after ignoring the whitespace characters.
-    EXPECT_EQ(pp::Token::IDENTIFIER, preprocessor.lex(&token));
     EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
     EXPECT_STREQ(identifier, token.value.c_str());
     // The whitespace character is however recorded with the next token.
@@ -93,23 +99,24 @@ TEST(SpaceTest, LeadingSpace)
     const char* str = " foo+ -bar";
 
     pp::Token token;
-    pp::Preprocessor preprocessor;
+    MockDiagnostics diagnostics;
+    pp::Preprocessor preprocessor(&diagnostics);
     ASSERT_TRUE(preprocessor.init(1, &str, 0));
 
-    EXPECT_EQ(pp::Token::IDENTIFIER, preprocessor.lex(&token));
+    preprocessor.lex(&token);
     EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
     EXPECT_STREQ("foo", token.value.c_str());
     EXPECT_TRUE(token.hasLeadingSpace());
 
-    EXPECT_EQ('+', preprocessor.lex(&token));
+    preprocessor.lex(&token);
     EXPECT_EQ('+', token.type);
     EXPECT_FALSE(token.hasLeadingSpace());
 
-    EXPECT_EQ('-', preprocessor.lex(&token));
+    preprocessor.lex(&token);
     EXPECT_EQ('-', token.type);
     EXPECT_TRUE(token.hasLeadingSpace());
 
-    EXPECT_EQ(pp::Token::IDENTIFIER, preprocessor.lex(&token));
+    preprocessor.lex(&token);
     EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
     EXPECT_STREQ("bar", token.value.c_str());
     EXPECT_FALSE(token.hasLeadingSpace());

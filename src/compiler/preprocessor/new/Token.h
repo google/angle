@@ -10,6 +10,8 @@
 #include <ostream>
 #include <string>
 
+#include "SourceLocation.h"
+
 namespace pp
 {
 
@@ -17,20 +19,7 @@ struct Token
 {
     enum Type
     {
-        // Token IDs for error conditions are negative.
-        INTERNAL_ERROR = -1,
-        OUT_OF_MEMORY = -2,
-        INVALID_CHARACTER = -3,
-        INVALID_NUMBER = -4,
-        INVALID_DIRECTIVE = -5,
-        INVALID_EXPRESSION = -6,
-        DIVISION_BY_ZERO = -7,
-        EOF_IN_COMMENT = -8,
-        EOF_IN_DIRECTIVE = -9,
-        UNEXPECTED_TOKEN_IN_DIRECTIVE = -10,
-
-        // Indicates EOF.
-        LAST = 0,
+        LAST = 0,  // EOF.
 
         IDENTIFIER = 258,
 
@@ -63,17 +52,6 @@ struct Token
     {
         HAS_LEADING_SPACE = 1 << 0
     };
-    struct Location
-    {
-        Location() : file(0), line(0) { }
-        bool equals(const Location& other) const
-        {
-            return (file == other.file) && (line == other.line);
-        }
-
-        int file;
-        int line;
-    };
 
     Token() : type(0), flags(0) { }
 
@@ -81,7 +59,7 @@ struct Token
     {
         type = 0;
         flags = 0;
-        location = Location();
+        location = SourceLocation();
         value.clear();
     }
 
@@ -104,7 +82,7 @@ struct Token
 
     int type;
     int flags;
-    Location location;
+    SourceLocation location;
     std::string value;
 };
 

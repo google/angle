@@ -12,13 +12,14 @@
 namespace pp
 {
 
+class Diagnostics;
 class Lexer;
 struct Token;
 
 class ExpressionParser
 {
   public:
-    ExpressionParser(Lexer* lexer) : mLexer(lexer) { }
+    ExpressionParser(Lexer* lexer, Diagnostics* diagnostics);
 
     bool parse(Token* token, int* result);
 
@@ -26,6 +27,7 @@ class ExpressionParser
     PP_DISALLOW_COPY_AND_ASSIGN(ExpressionParser);
 
     Lexer* mLexer;
+    Diagnostics* mDiagnostics;
 };
 
 }  // namespace pp

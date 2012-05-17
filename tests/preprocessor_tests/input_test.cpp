@@ -5,27 +5,33 @@
 //
 
 #include "gtest/gtest.h"
+
+#include "MockDiagnostics.h"
 #include "Preprocessor.h"
 #include "Token.h"
 
 TEST(InputTest, NegativeCount)
 {
-    pp::Preprocessor preprocessor;
+    MockDiagnostics diagnostics;
+    pp::Preprocessor preprocessor(&diagnostics);
     EXPECT_FALSE(preprocessor.init(-1, NULL, NULL));
 }
 
 TEST(InputTest, ZeroCount)
 {
-    pp::Token token;
-    pp::Preprocessor preprocessor;
+    MockDiagnostics diagnostics;
+    pp::Preprocessor preprocessor(&diagnostics);
     EXPECT_TRUE(preprocessor.init(0, NULL, NULL));
-    EXPECT_EQ(pp::Token::LAST, preprocessor.lex(&token));
+
+    pp::Token token;
+    preprocessor.lex(&token);
     EXPECT_EQ(pp::Token::LAST, token.type);
 }
 
 TEST(InputTest, NullString)
 {
-    pp::Preprocessor preprocessor;
+    MockDiagnostics diagnostics;
+    pp::Preprocessor preprocessor(&diagnostics);
     EXPECT_FALSE(preprocessor.init(1, NULL, NULL));
 }
 

@@ -8,6 +8,8 @@
 #include <climits>
 
 #include "gtest/gtest.h"
+
+#include "MockDiagnostics.h"
 #include "Preprocessor.h"
 #include "Token.h"
 
@@ -23,9 +25,23 @@ static const char kPunctuators[] = {
 static const int kNumPunctuators =
     sizeof(kPunctuators) / sizeof(kPunctuators[0]);
 
+bool isPunctuator(char c)
+{
+    static const char* kPunctuatorBeg = kPunctuators;
+    static const char* kPunctuatorEnd = kPunctuators + kNumPunctuators;
+    return std::find(kPunctuatorBeg, kPunctuatorEnd, c) != kPunctuatorEnd;
+}
+
 static const char kWhitespaces[] = {' ', '\t', '\v', '\f', '\n', '\r'};
 static const int kNumWhitespaces =
     sizeof(kWhitespaces) / sizeof(kWhitespaces[0]);
+
+bool isWhitespace(char c)
+{
+    static const char* kWhitespaceBeg = kWhitespaces;
+    static const char* kWhitespaceEnd = kWhitespaces + kNumWhitespaces;
+    return std::find(kWhitespaceBeg, kWhitespaceEnd, c) != kWhitespaceEnd;
+}
 
 TEST_P(CharTest, Identified)
 {
@@ -33,71 +49,51 @@ TEST_P(CharTest, Identified)
     const char* cstr = str.c_str();
     int length = 1;
 
-    pp::Preprocessor preprocessor;
+    MockDiagnostics diagnostics;
+    pp::Preprocessor preprocessor(&diagnostics);
     // Note that we pass the length param as well because the invalid
     // string may contain the null character.
     ASSERT_TRUE(preprocessor.init(1, &cstr, &length));
 
-    pp::Token token;
-    int ret = preprocessor.lex(&token);
+    int expectedType = pp::Token::LAST;
+    std::string expectedValue;
 
-    // Handle identifier.
-    if ((cstr[0] == '_') ||
-        ((cstr[0] >= 'a') && (cstr[0] <= 'z')) ||
-        ((cstr[0] >= 'A') && (cstr[0] <= 'Z')))
-    {
-        EXPECT_EQ(pp::Token::IDENTIFIER, ret);
-        EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
-        EXPECT_EQ(cstr[0], token.value[0]);
-        return;
-    }
-
-    // Handle numbers.
-    if (cstr[0] >= '0' && cstr[0] <= '9')
-    {
-        EXPECT_EQ(pp::Token::CONST_INT, ret);
-        EXPECT_EQ(pp::Token::CONST_INT, token.type);
-        EXPECT_EQ(cstr[0], token.value[0]);
-        return;
-    }
-
-    // Handle punctuators.
-    const char* lastIter = kPunctuators + kNumPunctuators;
-    const char* iter = std::find(kPunctuators, lastIter, cstr[0]);
-    if (iter != lastIter)
-    {
-        EXPECT_EQ(cstr[0], ret);
-        EXPECT_EQ(cstr[0], token.type);
-        EXPECT_TRUE(token.value.empty());
-        return;
-    }
-
-    // Handle whitespace.
-    lastIter = kWhitespaces + kNumWhitespaces;
-    iter = std::find(kWhitespaces, lastIter, cstr[0]);
-    if (iter != lastIter)
-    {
-        // Whitespace is ignored.
-        EXPECT_EQ(pp::Token::LAST, ret);
-        EXPECT_EQ(pp::Token::LAST, token.type);
-        EXPECT_TRUE(token.value.empty());
-        return;
-    }
-
-    // Handle number sign.
-    if (cstr[0] == '#')
+    if (str[0] == '#')
     {
         // Lone '#' is ignored.
-        EXPECT_EQ(pp::Token::LAST, ret);
-        EXPECT_EQ(pp::Token::LAST, token.type);
-        EXPECT_TRUE(token.value.empty());
-        return;
+    }
+    else if ((str[0] == '_') ||
+             ((str[0] >= 'a') && (str[0] <= 'z')) ||
+             ((str[0] >= 'A') && (str[0] <= 'Z')))
+    {
+        expectedType = pp::Token::IDENTIFIER;
+        expectedValue = str;
+    }
+    else if (str[0] >= '0' && str[0] <= '9')
+    {
+        expectedType = pp::Token::CONST_INT;
+        expectedValue = str;
+    }
+    else if (isPunctuator(str[0]))
+    {
+        expectedType = str[0];
+    }
+    else if (isWhitespace(str[0]))
+    {
+        // Whitespace is ignored.
+    }
+    else
+    {
+        // Everything else is invalid.
+        using testing::_;
+        EXPECT_CALL(diagnostics,
+            print(pp::Diagnostics::INVALID_CHARACTER, _, str));
     }
 
-    // Everything else is invalid.
-    EXPECT_EQ(pp::Token::INVALID_CHARACTER, ret);
-    EXPECT_EQ(pp::Token::INVALID_CHARACTER, token.type);
-    EXPECT_EQ(cstr[0], token.value[0]);
+    pp::Token token;
+    preprocessor.lex(&token);
+    EXPECT_EQ(expectedType, token.type);
+    EXPECT_EQ(expectedValue, token.value);
 };
 
 // Note +1 for the max-value in range. It is there because the max-value

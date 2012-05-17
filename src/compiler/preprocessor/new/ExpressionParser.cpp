@@ -93,12 +93,14 @@
 #include <cassert>
 #include <sstream>
 
+#include "Diagnostics.h"
 #include "Lexer.h"
 #include "Token.h"
 
 namespace {
 struct Context
 {
+    pp::Diagnostics* diagnostics;
     pp::Lexer* lexer;
     pp::Token* token;
     int* result;
@@ -454,9 +456,9 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    72,    72,    79,    80,    83,    86,    89,    92,    95,
-      98,   101,   104,   107,   110,   113,   116,   119,   122,   125,
-     136,   147,   150,   153,   156,   159,   162
+       0,    74,    74,    81,    82,    85,    88,    91,    94,    97,
+     100,   103,   106,   109,   112,   115,   118,   121,   124,   127,
+     140,   153,   156,   159,   162,   165,   168
 };
 #endif
 
@@ -1539,8 +1541,10 @@ yyreduce:
         if ((yyvsp[(3) - (3)]) == 0) {
             std::stringstream stream;
             stream << (yyvsp[(1) - (3)]) << " % " << (yyvsp[(3) - (3)]);
-            context->token->type = pp::Token::DIVISION_BY_ZERO;
-            context->token->value = stream.str();
+            std::string text = stream.str();
+            context->diagnostics->report(pp::Diagnostics::DIVISION_BY_ZERO,
+                                         context->token->location,
+                                         text.c_str());
             YYABORT;
         } else {
             (yyval) = (yyvsp[(1) - (3)]) % (yyvsp[(3) - (3)]);
@@ -1554,8 +1558,10 @@ yyreduce:
         if ((yyvsp[(3) - (3)]) == 0) {
             std::stringstream stream;
             stream << (yyvsp[(1) - (3)]) << " / " << (yyvsp[(3) - (3)]);
-            context->token->type = pp::Token::DIVISION_BY_ZERO;
-            context->token->value = stream.str();
+            std::string text = stream.str();
+            context->diagnostics->report(pp::Diagnostics::DIVISION_BY_ZERO,
+                                         context->token->location,
+                                         text.c_str());
             YYABORT;
         } else {
             (yyval) = (yyvsp[(1) - (3)]) / (yyvsp[(3) - (3)]);
@@ -1865,15 +1871,23 @@ int yylex(int* lvalp, Context* context)
 
 void yyerror(Context* context, const char* reason)
 {
-    context->token->type = pp::Token::INVALID_EXPRESSION;
-    context->token->value = reason;
+    context->diagnostics->report(pp::Diagnostics::INVALID_EXPRESSION,
+                                 context->token->location,
+                                 reason);
 }
 
 namespace pp {
 
+ExpressionParser::ExpressionParser(Lexer* lexer, Diagnostics* diagnostics) :
+    mLexer(lexer),
+    mDiagnostics(diagnostics)
+{
+}
+
 bool ExpressionParser::parse(Token* token, int* result)
 {
     Context context;
+    context.diagnostics = mDiagnostics;
     context.lexer = mLexer;
     context.token = token;
     context.result = result;
@@ -1885,17 +1899,15 @@ bool ExpressionParser::parse(Token* token, int* result)
         break;
 
       case 2:
-        token->type = pp::Token::OUT_OF_MEMORY;
-        token->value.clear();
+        mDiagnostics->report(Diagnostics::OUT_OF_MEMORY, token->location, "");
         break;
 
       default:
         assert(false);
-        token->type = pp::Token::INTERNAL_ERROR;
-        token->value.clear();
+        mDiagnostics->report(Diagnostics::INTERNAL_ERROR, token->location, "");
         break;
     }
-    
+
     return ret == 0;
 }
 

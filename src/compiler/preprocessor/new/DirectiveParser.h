@@ -13,12 +13,13 @@
 namespace pp
 {
 
+class Diagnostics;
 class Tokenizer;
 
 class DirectiveParser : public Lexer
 {
   public:
-    DirectiveParser(Tokenizer* tokenizer) : mTokenizer(tokenizer) { }
+    DirectiveParser(Tokenizer* tokenizer, Diagnostics* diagnostics);
 
     virtual void lex(Token* token);
 
@@ -41,6 +42,7 @@ class DirectiveParser : public Lexer
     void parseLine(Token* token);
 
     Tokenizer* mTokenizer;
+    Diagnostics* mDiagnostics;
 };
 
 }  // namespace pp
