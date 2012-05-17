@@ -24,6 +24,7 @@
         'compiler/preprocessor/new/ExpressionParser.h',
         'compiler/preprocessor/new/Input.cpp',
         'compiler/preprocessor/new/Input.h',
+        'compiler/preprocessor/new/Lexer.cpp',
         'compiler/preprocessor/new/Lexer.h',
         'compiler/preprocessor/new/MacroExpander.cpp',
         'compiler/preprocessor/new/MacroExpander.h',

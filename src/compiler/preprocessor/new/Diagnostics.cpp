@@ -11,6 +11,10 @@
 namespace pp
 {
 
+Diagnostics::~Diagnostics()
+{
+}
+
 void Diagnostics::report(ID id,
                          const SourceLocation& loc,
                          const std::string& text)

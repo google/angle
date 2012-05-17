@@ -7,9 +7,6 @@
 #ifndef COMPILER_PREPROCESSOR_LEXER_H_
 #define COMPILER_PREPROCESSOR_LEXER_H_
 
-#include <cassert>
-#include <vector>
-
 namespace pp
 {
 
@@ -18,6 +15,8 @@ struct Token;
 class Lexer
 {
   public:
+    virtual ~Lexer();
+
     virtual void lex(Token* token) = 0;
 };
 

@@ -12,12 +12,25 @@ extern "C" {
 #include "compiler/preprocessor/slglobals.h"
 #include "compiler/preprocessor/scanner.h"
 }
-#include "compiler/preprocessor/new/Lexer.h"
+#include "compiler/preprocessor/new/Diagnostics.h"
 #include "compiler/preprocessor/new/Token.h"
+#include "compiler/preprocessor/new/Tokenizer.h"
+
+class Diagnostics : public pp::Diagnostics
+{
+protected:
+    virtual void print(ID id,
+                       const pp::SourceLocation& loc,
+                       const std::string& text)
+    {
+        // TODO(alokp): Implement me.
+    }
+};
 
 struct InputSrcLexer
 {
     InputSrc base;
+    pp::Diagnostics* diagnostics;
     pp::Lexer* lexer;
 };
 
@@ -36,12 +49,14 @@ static int lex(InputSrc* in, yystypepp* yylvalpp)
 {
     InputSrcLexer* src = ((InputSrcLexer *)in);
 
+    int ret = 0;
     pp::Token token;
-    int ret = src->lexer->lex(&token);
-    switch (ret)
+    src->lexer->lex(&token);
+    switch (token.type)
     {
     case 0:  // EOF
         delete src->lexer;
+        delete src->diagnostics;
         free(src);
         cpp->currentInput = 0;
         ret = EOF;
@@ -134,10 +149,12 @@ static int lex(InputSrc* in, yystypepp* yylvalpp)
 
 InputSrc* LexerInputSrc(int count, const char* const string[], const int length[])
 {
-    pp::Lexer* lexer = new pp::Lexer;
+    Diagnostics* diagnostics = new Diagnostics;
+    pp::Tokenizer* lexer = new pp::Tokenizer(diagnostics);
     if (!lexer->init(count, string, length))
     {
         delete lexer;
+        delete diagnostics;
         return 0;
     }
 
@@ -145,6 +162,7 @@ InputSrc* LexerInputSrc(int count, const char* const string[], const int length[
     memset(in, 0, sizeof(InputSrcLexer));
     in->base.line = 1;
     in->base.scan = lex;
+    in->diagnostics = diagnostics;
     in->lexer = lexer;
 
     return &in->base;

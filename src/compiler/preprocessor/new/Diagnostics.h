@@ -38,6 +38,8 @@ class Diagnostics
         WARNING_END
     };
 
+    virtual ~Diagnostics();
+
     void report(ID id, const SourceLocation& loc, const std::string& text);
 
   protected:
