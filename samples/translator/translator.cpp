@@ -26,7 +26,7 @@ enum TFailCode {
 static void usage();
 static ShShaderType FindShaderType(const char* fileName);
 static bool CompileFile(char* fileName, ShHandle compiler, int compileOptions);
-static void LogMsg(char* msg, const char* name, const int num, const char* logName);
+static void LogMsg(const char* msg, const char* name, const int num, const char* logName);
 static void PrintActiveVariables(ShHandle compiler, ShShaderInfo varType, bool mapLongVariableNames);
 
 // If NUM_SOURCE_STRINGS is set to a value > 1, the input file data is
@@ -243,7 +243,7 @@ bool CompileFile(char* fileName, ShHandle compiler, int compileOptions)
     return ret ? true : false;
 }
 
-void LogMsg(char* msg, const char* name, const int num, const char* logName)
+void LogMsg(const char* msg, const char* name, const int num, const char* logName)
 {
     printf("#### %s %s %d %s ####\n", msg, name, num, logName);
 }
@@ -272,7 +272,7 @@ void PrintActiveVariables(ShHandle compiler, ShShaderInfo varType, bool mapLongV
 
     int activeVars = 0, size = 0;
     ShDataType type = SH_NONE;
-    char* typeName = NULL;
+    const char* typeName = NULL;
     ShGetInfo(compiler, varType, &activeVars);
     for (int i = 0; i < activeVars; ++i) {
         switch (varType) {
