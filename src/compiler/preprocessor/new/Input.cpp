@@ -8,6 +8,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cstring>
 
 namespace pp
 {

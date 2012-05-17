@@ -44,14 +44,14 @@ TEST(InputTest, DefaultConstructor)
 
 TEST(InputTest, NullLength)
 {
-    char* str[] = {"foo"};
+    const char* str[] = {"foo"};
     pp::Input input(1, str, NULL);
     EXPECT_EQ(3, input.length(0));
 }
 
 TEST(InputTest, NegativeLength)
 {
-    char* str[] = {"foo"};
+    const char* str[] = {"foo"};
     int length[] = {-1};
     pp::Input input(1, str, length);
     EXPECT_EQ(3, input.length(0));
@@ -59,7 +59,7 @@ TEST(InputTest, NegativeLength)
 
 TEST(InputTest, ActualLength)
 {
-    char* str[] = {"foobar"};
+    const char* str[] = {"foobar"};
     int length[] = {3};
     pp::Input input(1, str, length);
     // Note that strlen(str[0]) != length[0].
@@ -69,7 +69,7 @@ TEST(InputTest, ActualLength)
 
 TEST(InputTest, String)
 {
-    char* str[] = {"foo"};
+    const char* str[] = {"foo"};
     pp::Input input(1, str, NULL);
     EXPECT_STREQ(str[0], input.string(0));
 }
@@ -77,7 +77,7 @@ TEST(InputTest, String)
 TEST(InputTest, ReadSingleString)
 {
     int count = 1;
-    char* str[] = {"foo"};
+    const char* str[] = {"foo"};
     char buf[4] = {'\0', '\0', '\0', '\0'};
 
     int maxSize = 1;
@@ -114,7 +114,7 @@ TEST(InputTest, ReadSingleString)
 TEST(InputTest, ReadMultipleStrings)
 {
     int count = 3;
-    char* str[] = {"f", "o", "o"};
+    const char* str[] = {"f", "o", "o"};
     char buf[4] = {'\0', '\0', '\0', '\0'};
 
     int maxSize = 1;
@@ -151,7 +151,7 @@ TEST(InputTest, ReadMultipleStrings)
 TEST(InputTest, ReadStringsWithLength)
 {
     int count = 2;
-    char* str[] = {"foo", "bar"};
+    const char* str[] = {"foo", "bar"};
     // Note that the length for the first string is 2 which is less than
     // strlen(str[0]. We want to make sure that the last character is ignored.
     int length[] = {2, 3};
