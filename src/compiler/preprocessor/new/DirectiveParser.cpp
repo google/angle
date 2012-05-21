@@ -30,6 +30,19 @@ static const std::string kDirectiveVersion("version");
 static const std::string kDirectiveLine("line");
 }  // namespace
 
+static bool isMacroNameReserved(const std::string& name)
+{
+    // Names prefixed with "GL_" are reserved.
+    if (name.substr(0, 3) == "GL_")
+        return true;
+
+    // Names containing two consecutive underscores are reserved.
+    if (name.find("__") != std::string::npos)
+        return true;
+
+    return false;
+}
+
 namespace pp
 {
 
@@ -50,8 +63,10 @@ class DefinedParser : public Lexer
 };
 
 DirectiveParser::DirectiveParser(Tokenizer* tokenizer,
+                                 MacroSet* macroSet,
                                  Diagnostics* diagnostics) :
     mTokenizer(tokenizer),
+    mMacroSet(macroSet),
     mDiagnostics(diagnostics)
 {
 }
@@ -98,23 +113,19 @@ void DirectiveParser::parseDirective(Token* token)
             parseVersion(token);
         else if (token->value == kDirectiveLine)
             parseLine(token);
-        else
-            mDiagnostics->report(Diagnostics::INVALID_DIRECTIVE,
-                                 token->location,
-                                 token->value.c_str());
     }
 
     if ((token->type != '\n') && (token->type != 0))
         mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN_IN_DIRECTIVE,
                              token->location,
-                             token->value.c_str());
+                             token->value);
 
     while (token->type != '\n')
     {
         if (token->type == 0) {
             mDiagnostics->report(Diagnostics::EOF_IN_DIRECTIVE,
                                  token->location,
-                                 token->value.c_str());
+                                 token->value);
             break;
         }
         mTokenizer->lex(token);
@@ -123,15 +134,90 @@ void DirectiveParser::parseDirective(Token* token)
 
 void DirectiveParser::parseDefine(Token* token)
 {
-    // TODO(alokp): Implement me.
     assert(token->value == kDirectiveDefine);
+
     mTokenizer->lex(token);
+    if (token->type != pp::Token::IDENTIFIER)
+    {
+        mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN_IN_DIRECTIVE,
+                             token->location,
+                             token->value);
+        return;
+    }
+    if (isMacroNameReserved(token->value))
+    {
+        mDiagnostics->report(Diagnostics::MACRO_NAME_RESERVED,
+                             token->location,
+                             token->value);
+        return;
+    }
+
+    Macro macro;
+    macro.type = Macro::kTypeObj;
+    macro.name = token->value;
+
+    mTokenizer->lex(token);
+    if (token->type == '(' && !token->hasLeadingSpace())
+    {
+        // Function-like macro. Collect arguments.
+        macro.type = Macro::kTypeFunc;
+        do {
+            mTokenizer->lex(token);
+            if (token->type != pp::Token::IDENTIFIER)
+                break;
+            macro.parameters.push_back(token->value);
+
+            mTokenizer->lex(token);  // Get comma.
+        } while (token->type == ',');
+
+        if (token->type != ')')
+        {
+            mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN_IN_DIRECTIVE,
+                                 token->location,
+                                 token->value);
+            return;
+        }
+    }
+
+    while ((token->type != '\n') && (token->type != pp::Token::LAST))
+    {
+        // Reset the token location because it is unnecessary in replacement
+        // list. Resetting it also allows us to reuse Token::equals() to
+        // compare macros.
+        token->location = SourceLocation();
+        macro.replacements.push_back(*token);
+        mTokenizer->lex(token);
+    }
+
+    // Check for macro redefinition.
+    MacroSet::const_iterator iter = mMacroSet->find(macro.name);
+    if (iter != mMacroSet->end() && !macro.equals(iter->second))
+    {
+        mDiagnostics->report(Diagnostics::MACRO_REDEFINED,
+                             token->location,
+                             macro.name);
+        return;
+    }
+    mMacroSet->insert(std::make_pair(macro.name, macro));
 }
 
 void DirectiveParser::parseUndef(Token* token)
 {
-    // TODO(alokp): Implement me.
     assert(token->value == kDirectiveUndef);
+
+    mTokenizer->lex(token);
+    if (token->type != pp::Token::IDENTIFIER)
+    {
+        mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN_IN_DIRECTIVE,
+                             token->location,
+                             token->value);
+        return;
+    }
+
+    MacroSet::const_iterator iter = mMacroSet->find(token->value);
+    if (iter != mMacroSet->end())
+        mMacroSet->erase(iter);
+
     mTokenizer->lex(token);
 }
 
@@ -141,7 +227,7 @@ void DirectiveParser::parseIf(Token* token)
     assert(token->value == kDirectiveIf);
 
     DefinedParser definedParser(mTokenizer);
-    MacroExpander macroExpander(&definedParser, mDiagnostics);
+    MacroExpander macroExpander(&definedParser, mMacroSet, mDiagnostics);
     ExpressionParser expressionParser(&macroExpander, mDiagnostics);
     macroExpander.lex(token);
 
@@ -223,7 +309,7 @@ void DirectiveParser::parseLine(Token* token)
 {
     // TODO(alokp): Implement me.
     assert(token->value == kDirectiveLine);
-    MacroExpander macroExpander(mTokenizer, mDiagnostics);
+    MacroExpander macroExpander(mTokenizer, mMacroSet, mDiagnostics);
     macroExpander.lex(token);
 }
 

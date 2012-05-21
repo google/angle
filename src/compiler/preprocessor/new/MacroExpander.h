@@ -8,6 +8,7 @@
 #define COMPILER_PREPROCESSOR_MACRO_EXPANDER_H_
 
 #include "Lexer.h"
+#include "Macro.h"
 #include "pp_utils.h"
 
 namespace pp
@@ -18,7 +19,7 @@ class Diagnostics;
 class MacroExpander : public Lexer
 {
   public:
-    MacroExpander(Lexer* lexer, Diagnostics* diagnostics);
+    MacroExpander(Lexer* lexer, MacroSet* macroSet, Diagnostics* diagnostics);
 
     virtual void lex(Token* token);
 
@@ -26,6 +27,7 @@ class MacroExpander : public Lexer
     PP_DISALLOW_COPY_AND_ASSIGN(MacroExpander);
 
     Lexer* mLexer;
+    MacroSet* mMacroSet;
     Diagnostics* mDiagnostics;
 };
 

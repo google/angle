@@ -8,6 +8,7 @@
 #define COMPILER_PREPROCESSOR_PREPROCESSOR_H_
 
 #include "DirectiveParser.h"
+#include "Macro.h"
 #include "MacroExpander.h"
 #include "Tokenizer.h"
 
@@ -38,6 +39,8 @@ class Preprocessor
     PP_DISALLOW_COPY_AND_ASSIGN(Preprocessor);
 
     Diagnostics* mDiagnostics;
+
+    MacroSet mMacroSet;
     Tokenizer mTokenizer;
     DirectiveParser mDirectiveParser;
     MacroExpander mMacroExpander;

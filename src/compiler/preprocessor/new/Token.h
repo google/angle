@@ -67,7 +67,7 @@ struct Token
     {
         return (type == other.type) &&
                (flags == other.flags) &&
-               (location.equals(other.location)) &&
+               (location == other.location) &&
                (value == other.value);
     }
 
@@ -85,6 +85,16 @@ struct Token
     SourceLocation location;
     std::string value;
 };
+
+inline bool operator==(const Token& lhs, const Token& rhs)
+{
+    return lhs.equals(rhs);
+}
+
+inline bool operator!=(const Token& lhs, const Token& rhs)
+{
+    return !lhs.equals(rhs);
+}
 
 extern std::ostream& operator<<(std::ostream& out, const Token& token);
 

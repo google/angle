@@ -14,8 +14,8 @@ namespace pp
 Preprocessor::Preprocessor(Diagnostics* diagnostics) :
     mDiagnostics(diagnostics),
     mTokenizer(mDiagnostics),
-    mDirectiveParser(&mTokenizer, mDiagnostics),
-    mMacroExpander(&mDirectiveParser, mDiagnostics)
+    mDirectiveParser(&mTokenizer, &mMacroSet, mDiagnostics),
+    mMacroExpander(&mDirectiveParser, &mMacroSet, mDiagnostics)
 {
 }
 

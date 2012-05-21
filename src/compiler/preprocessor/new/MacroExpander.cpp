@@ -9,8 +9,11 @@
 namespace pp
 {
 
-MacroExpander::MacroExpander(Lexer* lexer, Diagnostics* diagnostics) :
+MacroExpander::MacroExpander(Lexer* lexer,
+                             MacroSet* macroSet,
+                             Diagnostics* diagnostics) :
     mLexer(lexer),
+    mMacroSet(macroSet),
     mDiagnostics(diagnostics)
 {
 }

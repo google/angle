@@ -8,6 +8,7 @@
 #define COMPILER_PREPROCESSOR_DIRECTIVE_PARSER_H_
 
 #include "Lexer.h"
+#include "Macro.h"
 #include "pp_utils.h"
 
 namespace pp
@@ -19,7 +20,9 @@ class Tokenizer;
 class DirectiveParser : public Lexer
 {
   public:
-    DirectiveParser(Tokenizer* tokenizer, Diagnostics* diagnostics);
+    DirectiveParser(Tokenizer* tokenizer,
+                    MacroSet* macroSet,
+                    Diagnostics* diagnostics);
 
     virtual void lex(Token* token);
 
@@ -42,6 +45,7 @@ class DirectiveParser : public Lexer
     void parseLine(Token* token);
 
     Tokenizer* mTokenizer;
+    MacroSet* mMacroSet;
     Diagnostics* mDiagnostics;
 };
 
