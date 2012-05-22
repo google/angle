@@ -33,6 +33,7 @@ TEST_P(OperatorTest, Identified)
     pp::Token token;
     preprocessor.lex(&token);
     EXPECT_EQ(param.op, token.type);
+    EXPECT_EQ(param.str, token.value);
 }
 
 static const OperatorTestParam kOperators[] = {

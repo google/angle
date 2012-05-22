@@ -91,11 +91,6 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 <COMMENT>[^*\r\n]+
 <COMMENT>"*"
 <COMMENT>{NEWLINE} { ++yylineno; }
-<COMMENT><<EOF>> {
-    yyextra->diagnostics->report(pp::Diagnostics::EOF_IN_COMMENT,
-        pp::SourceLocation(yyfileno, yylineno), "");
-    yyterminate();
-}
 <COMMENT>"*/" {
     yyextra->leadingSpace = true;
     BEGIN(INITIAL);
@@ -104,6 +99,7 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 # {
     // # is only valid at start of line for preprocessor directives.
     if (yyextra->lineStart) {
+        yylval->assign(1, yytext[0]);
         return yytext[0];
     } else {
         yyextra->diagnostics->report(pp::Diagnostics::INVALID_CHARACTER,
@@ -135,33 +131,101 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
                                  std::string(yytext, yyleng));
 }
 
-"++"  { return pp::Token::OP_INC; }
-"--"  { return pp::Token::OP_DEC; }
-"<<"  { return pp::Token::OP_LEFT; }
-">>"  { return pp::Token::OP_RIGHT; }
-"<="  { return pp::Token::OP_LE; }
-">="  { return pp::Token::OP_GE; }
-"=="  { return pp::Token::OP_EQ; }
-"!="  { return pp::Token::OP_NE; }
-"&&"  { return pp::Token::OP_AND; }
-"^^"  { return pp::Token::OP_XOR; }
-"||"  { return pp::Token::OP_OR; }
-"+="  {  return pp::Token::OP_ADD_ASSIGN; }
-"-="  {  return pp::Token::OP_SUB_ASSIGN; }
-"*="  {  return pp::Token::OP_MUL_ASSIGN; }
-"/="  {  return pp::Token::OP_DIV_ASSIGN; }
-"%="  {  return pp::Token::OP_MOD_ASSIGN; }
-"<<=" {  return pp::Token::OP_LEFT_ASSIGN; }
-">>=" {  return pp::Token::OP_RIGHT_ASSIGN; }
-"&="  {  return pp::Token::OP_AND_ASSIGN; }
-"^="  {  return pp::Token::OP_XOR_ASSIGN; }
-"|="  {  return pp::Token::OP_OR_ASSIGN; }
+"++" {
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_INC;
+}
+"--" {
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_DEC;
+}
+"<<" {
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_LEFT;
+}
+">>" {
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_RIGHT;
+}
+"<=" {
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_LE;
+}
+">=" {
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_GE;
+}
+"==" {
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_EQ;
+}
+"!=" {
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_NE;
+}
+"&&" {
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_AND;
+}
+"^^" {
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_XOR;
+}
+"||" {
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_OR;
+}
+"+=" {
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_ADD_ASSIGN;
+}
+"-=" {
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_SUB_ASSIGN;
+}
+"*=" {
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_MUL_ASSIGN;
+}
+"/=" {
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_DIV_ASSIGN;
+}
+"%=" {
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_MOD_ASSIGN;
+}
+"<<=" {
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_LEFT_ASSIGN;
+}
+">>=" {
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_RIGHT_ASSIGN;
+}
+"&=" {
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_AND_ASSIGN;
+}
+"^=" {
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_XOR_ASSIGN;
+}
+"|=" {
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_OR_ASSIGN;
+}
 
-{PUNCTUATOR} { return yytext[0]; }
+{PUNCTUATOR} {
+    yylval->assign(1, yytext[0]);
+    return yytext[0];
+}
+
 [ \t\v\f]+   { yyextra->leadingSpace = true; }
 
 {NEWLINE} {
     ++yylineno;
+    yylval->assign(1, '\n');
     return '\n';
 }
 
@@ -171,7 +235,16 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
                                  std::string(yytext, yyleng));
 }
 
-<<EOF>>   { yyterminate(); }
+<*><<EOF>> {
+    if (YY_START == COMMENT)
+    {
+        yyextra->diagnostics->report(pp::Diagnostics::EOF_IN_COMMENT,
+                                     pp::SourceLocation(yyfileno, yylineno),
+                                     "");
+    }
+    yylval->clear();
+    yyterminate();
+}
 
 %%
 

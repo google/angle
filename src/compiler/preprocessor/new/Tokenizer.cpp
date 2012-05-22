@@ -885,13 +885,6 @@ case 5:
 YY_RULE_SETUP
 { ++yylineno; }
 	YY_BREAK
-case YY_STATE_EOF(COMMENT):
-{
-    yyextra->diagnostics->report(pp::Diagnostics::EOF_IN_COMMENT,
-        pp::SourceLocation(yyfileno, yylineno), "");
-    yyterminate();
-}
-	YY_BREAK
 case 6:
 YY_RULE_SETUP
 {
@@ -904,6 +897,7 @@ YY_RULE_SETUP
 {
     // # is only valid at start of line for preprocessor directives.
     if (yyextra->lineStart) {
+        yylval->assign(1, yytext[0]);
         return yytext[0];
     } else {
         yyextra->diagnostics->report(pp::Diagnostics::INVALID_CHARACTER,
@@ -945,91 +939,157 @@ YY_RULE_SETUP
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-{ return pp::Token::OP_INC; }
+{
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_INC;
+}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-{ return pp::Token::OP_DEC; }
+{
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_DEC;
+}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-{ return pp::Token::OP_LEFT; }
+{
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_LEFT;
+}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-{ return pp::Token::OP_RIGHT; }
+{
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_RIGHT;
+}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-{ return pp::Token::OP_LE; }
+{
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_LE;
+}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-{ return pp::Token::OP_GE; }
+{
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_GE;
+}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-{ return pp::Token::OP_EQ; }
+{
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_EQ;
+}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-{ return pp::Token::OP_NE; }
+{
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_NE;
+}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-{ return pp::Token::OP_AND; }
+{
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_AND;
+}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-{ return pp::Token::OP_XOR; }
+{
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_XOR;
+}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-{ return pp::Token::OP_OR; }
+{
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_OR;
+}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-{  return pp::Token::OP_ADD_ASSIGN; }
+{
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_ADD_ASSIGN;
+}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-{  return pp::Token::OP_SUB_ASSIGN; }
+{
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_SUB_ASSIGN;
+}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-{  return pp::Token::OP_MUL_ASSIGN; }
+{
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_MUL_ASSIGN;
+}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-{  return pp::Token::OP_DIV_ASSIGN; }
+{
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_DIV_ASSIGN;
+}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-{  return pp::Token::OP_MOD_ASSIGN; }
+{
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_MOD_ASSIGN;
+}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-{  return pp::Token::OP_LEFT_ASSIGN; }
+{
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_LEFT_ASSIGN;
+}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-{  return pp::Token::OP_RIGHT_ASSIGN; }
+{
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_RIGHT_ASSIGN;
+}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-{  return pp::Token::OP_AND_ASSIGN; }
+{
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_AND_ASSIGN;
+}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-{  return pp::Token::OP_XOR_ASSIGN; }
+{
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_XOR_ASSIGN;
+}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-{  return pp::Token::OP_OR_ASSIGN; }
+{
+    yylval->assign(yytext, yyleng);
+    return pp::Token::OP_OR_ASSIGN;
+}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-{ return yytext[0]; }
+{
+    yylval->assign(1, yytext[0]);
+    return yytext[0];
+}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
@@ -1040,6 +1100,7 @@ case 35:
 YY_RULE_SETUP
 {
     ++yylineno;
+    yylval->assign(1, '\n');
     return '\n';
 }
 	YY_BREAK
@@ -1052,7 +1113,17 @@ YY_RULE_SETUP
 }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
-{ yyterminate(); }
+case YY_STATE_EOF(COMMENT):
+{
+    if (YY_START == COMMENT)
+    {
+        yyextra->diagnostics->report(pp::Diagnostics::EOF_IN_COMMENT,
+                                     pp::SourceLocation(yyfileno, yylineno),
+                                     "");
+    }
+    yylval->clear();
+    yyterminate();
+}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP

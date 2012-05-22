@@ -77,6 +77,7 @@ TEST_P(CharTest, Identified)
     else if (isPunctuator(str[0]))
     {
         expectedType = str[0];
+        expectedValue = str;
     }
     else if (isWhitespace(str[0]))
     {

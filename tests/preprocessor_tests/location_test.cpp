@@ -21,7 +21,7 @@ static void PreprocessAndVerifyLocation(int count,
     pp::Token token;
     preprocessor.lex(&token);
     EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
-    EXPECT_STREQ("foo", token.value.c_str());
+    EXPECT_EQ("foo", token.value);
 
     EXPECT_EQ(location.file, token.location.file);
     EXPECT_EQ(location.line, token.location.line);

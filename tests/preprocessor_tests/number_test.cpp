@@ -60,7 +60,7 @@ TEST_P(IntegerTest, IntegerIdentified)
     pp::Token token;
     preprocessor.lex(&token);
     EXPECT_EQ(pp::Token::CONST_INT, token.type);
-    EXPECT_STREQ(cstr, token.value.c_str());
+    EXPECT_EQ(str, token.value);
 }
 
 #define CLOSED_RANGE(x, y) testing::Range(x, static_cast<char>((y) + 1))
@@ -99,7 +99,7 @@ static void PreprocessAndVerifyFloat(const char* str)
     pp::Token token;
     preprocessor.lex(&token);
     EXPECT_EQ(pp::Token::CONST_FLOAT, token.type);
-    EXPECT_STREQ(str, token.value.c_str());
+    EXPECT_EQ(str, token.value);
 }
 
 typedef std::tr1::tuple<char, char, const char*, char> FloatScientificParams;

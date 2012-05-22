@@ -19,7 +19,7 @@ static void PreprocessAndVerifyIdentifier(const char* str)
     pp::Token token;
     preprocessor.lex(&token);
     EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
-    EXPECT_STREQ(str, token.value.c_str());
+    EXPECT_EQ(str, token.value);
 }
 
 #if GTEST_HAS_COMBINE

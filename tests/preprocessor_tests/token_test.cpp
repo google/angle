@@ -14,7 +14,7 @@ TEST(TokenTest, DefaultConstructor)
     EXPECT_EQ(0, token.flags);
     EXPECT_EQ(0, token.location.line);
     EXPECT_EQ(0, token.location.file);
-    EXPECT_STREQ("", token.value.c_str());
+    EXPECT_EQ("", token.value);
 }
 
 TEST(TokenTest, Assignment)
@@ -31,7 +31,7 @@ TEST(TokenTest, Assignment)
     EXPECT_EQ(0, token.flags);
     EXPECT_EQ(0, token.location.line);
     EXPECT_EQ(0, token.location.file);
-    EXPECT_STREQ("", token.value.c_str());
+    EXPECT_EQ("", token.value);
 }
 
 TEST(TokenTest, Equals)
@@ -79,11 +79,11 @@ TEST(TokenTest, Write)
     std::stringstream out1;
     out1 << token;
     EXPECT_TRUE(out1.good());
-    EXPECT_STREQ("foo", out1.str().c_str());
+    EXPECT_EQ("foo", out1.str());
 
     token.setHasLeadingSpace(true);
     std::stringstream out2;
     out2 << token;
     EXPECT_TRUE(out2.good());
-    EXPECT_STREQ(" foo", out2.str().c_str());
+    EXPECT_EQ(" foo", out2.str());
 }

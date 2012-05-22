@@ -39,7 +39,7 @@ TEST_P(SpaceCharTest, SpaceIgnored)
     // Identifier "foo" is returned after ignoring the whitespace characters.
     preprocessor.lex(&token);
     EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
-    EXPECT_STREQ(identifier, token.value.c_str());
+    EXPECT_EQ(identifier, token.value);
     // The whitespace character is however recorded with the next token.
     EXPECT_TRUE(token.hasLeadingSpace());
 }
@@ -78,7 +78,7 @@ TEST_P(SpaceStringTest, SpaceIgnored)
     preprocessor.lex(&token);
     // Identifier "foo" is returned after ignoring the whitespace characters.
     EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
-    EXPECT_STREQ(identifier, token.value.c_str());
+    EXPECT_EQ(identifier, token.value);
     // The whitespace character is however recorded with the next token.
     EXPECT_TRUE(token.hasLeadingSpace());
 }
@@ -105,7 +105,7 @@ TEST(SpaceTest, LeadingSpace)
 
     preprocessor.lex(&token);
     EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
-    EXPECT_STREQ("foo", token.value.c_str());
+    EXPECT_EQ("foo", token.value);
     EXPECT_TRUE(token.hasLeadingSpace());
 
     preprocessor.lex(&token);
@@ -118,6 +118,6 @@ TEST(SpaceTest, LeadingSpace)
 
     preprocessor.lex(&token);
     EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
-    EXPECT_STREQ("bar", token.value.c_str());
+    EXPECT_EQ("bar", token.value);
     EXPECT_FALSE(token.hasLeadingSpace());
 }
