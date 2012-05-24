@@ -10,6 +10,7 @@
 #include "gtest/gtest.h"
 
 #include "MockDiagnostics.h"
+#include "MockDirectiveHandler.h"
 #include "Preprocessor.h"
 #include "Token.h"
 
@@ -50,7 +51,8 @@ TEST_P(CharTest, Identified)
     int length = 1;
 
     MockDiagnostics diagnostics;
-    pp::Preprocessor preprocessor(&diagnostics);
+    MockDirectiveHandler directiveHandler;
+    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
     // Note that we pass the length param as well because the invalid
     // string may contain the null character.
     ASSERT_TRUE(preprocessor.init(1, &cstr, &length));

@@ -36,6 +36,7 @@ class Diagnostics
         ERROR_END,
 
         WARNING_BEGIN,
+        UNRECOGNIZED_PRAGMA,
         WARNING_END
     };
 

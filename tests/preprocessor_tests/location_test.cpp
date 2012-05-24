@@ -5,7 +5,9 @@
 //
 
 #include "gtest/gtest.h"
+
 #include "MockDiagnostics.h"
+#include "MockDirectiveHandler.h"
 #include "Preprocessor.h"
 #include "Token.h"
 
@@ -15,7 +17,8 @@ static void PreprocessAndVerifyLocation(int count,
                                         const pp::SourceLocation& location)
 {
     MockDiagnostics diagnostics;
-    pp::Preprocessor preprocessor(&diagnostics);
+    MockDirectiveHandler directiveHandler;
+    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
     ASSERT_TRUE(preprocessor.init(count, string, length));
 
     pp::Token token;
@@ -87,7 +90,8 @@ TEST(LocationTest, ErrorLocationAfterComment)
     const char* str = "/*\n\n*/@";
 
     MockDiagnostics diagnostics;
-    pp::Preprocessor preprocessor(&diagnostics);
+    MockDirectiveHandler directiveHandler;
+    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
     ASSERT_TRUE(preprocessor.init(1, &str, 0));
 
     pp::Diagnostics::ID id(pp::Diagnostics::INVALID_CHARACTER);

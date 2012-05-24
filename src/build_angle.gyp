@@ -18,6 +18,8 @@
       'sources': [
         'compiler/preprocessor/new/Diagnostics.cpp',
         'compiler/preprocessor/new/Diagnostics.h',
+        'compiler/preprocessor/new/DirectiveHandler.cpp',
+        'compiler/preprocessor/new/DirectiveHandler.h',
         'compiler/preprocessor/new/DirectiveParser.cpp',
         'compiler/preprocessor/new/DirectiveParser.h',
         'compiler/preprocessor/new/ExpressionParser.cpp',

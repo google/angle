@@ -11,11 +11,11 @@
 namespace pp
 {
 
-Preprocessor::Preprocessor(Diagnostics* diagnostics) :
-    mDiagnostics(diagnostics),
-    mTokenizer(mDiagnostics),
-    mDirectiveParser(&mTokenizer, &mMacroSet, mDiagnostics),
-    mMacroExpander(&mDirectiveParser, &mMacroSet, mDiagnostics)
+Preprocessor::Preprocessor(Diagnostics* diagnostics,
+                           DirectiveHandler* directiveHandler) :
+    mTokenizer(diagnostics),
+    mDirectiveParser(&mTokenizer, &mMacroSet, diagnostics, directiveHandler),
+    mMacroExpander(&mDirectiveParser, &mMacroSet, diagnostics)
 {
 }
 

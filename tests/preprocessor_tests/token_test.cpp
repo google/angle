@@ -5,6 +5,7 @@
 //
 
 #include "gtest/gtest.h"
+
 #include "Token.h"
 
 TEST(TokenTest, DefaultConstructor)

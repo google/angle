@@ -7,20 +7,23 @@
 #include "gtest/gtest.h"
 
 #include "MockDiagnostics.h"
+#include "MockDirectiveHandler.h"
 #include "Preprocessor.h"
 #include "Token.h"
 
 TEST(InputTest, NegativeCount)
 {
     MockDiagnostics diagnostics;
-    pp::Preprocessor preprocessor(&diagnostics);
+    MockDirectiveHandler directiveHandler;
+    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
     EXPECT_FALSE(preprocessor.init(-1, NULL, NULL));
 }
 
 TEST(InputTest, ZeroCount)
 {
     MockDiagnostics diagnostics;
-    pp::Preprocessor preprocessor(&diagnostics);
+    MockDirectiveHandler directiveHandler;
+    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
     EXPECT_TRUE(preprocessor.init(0, NULL, NULL));
 
     pp::Token token;
@@ -31,7 +34,8 @@ TEST(InputTest, ZeroCount)
 TEST(InputTest, NullString)
 {
     MockDiagnostics diagnostics;
-    pp::Preprocessor preprocessor(&diagnostics);
+    MockDirectiveHandler directiveHandler;
+    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
     EXPECT_FALSE(preprocessor.init(1, NULL, NULL));
 }
 

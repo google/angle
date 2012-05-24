@@ -7,13 +7,15 @@
 #include "gtest/gtest.h"
 
 #include "MockDiagnostics.h"
+#include "MockDirectiveHandler.h"
 #include "Preprocessor.h"
 #include "Token.h"
 
 static void PreprocessAndVerifyIdentifier(const char* str)
 {
     MockDiagnostics diagnostics;
-    pp::Preprocessor preprocessor(&diagnostics);
+    MockDirectiveHandler directiveHandler;
+    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
     ASSERT_TRUE(preprocessor.init(1, &str, 0));
 
     pp::Token token;

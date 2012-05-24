@@ -7,6 +7,7 @@
 #include "gtest/gtest.h"
 
 #include "MockDiagnostics.h"
+#include "MockDirectiveHandler.h"
 #include "Preprocessor.h"
 #include "Token.h"
 
@@ -32,7 +33,8 @@ TEST_P(SpaceCharTest, SpaceIgnored)
     const char* cstr = str.c_str();
 
     MockDiagnostics diagnostics;
-    pp::Preprocessor preprocessor(&diagnostics);
+    MockDirectiveHandler directiveHandler;
+    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
     ASSERT_TRUE(preprocessor.init(1, &cstr, 0));
 
     pp::Token token;
@@ -71,7 +73,8 @@ TEST_P(SpaceStringTest, SpaceIgnored)
     const char* cstr = str.c_str();
 
     MockDiagnostics diagnostics;
-    pp::Preprocessor preprocessor(&diagnostics);
+    MockDirectiveHandler directiveHandler;
+    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
     ASSERT_TRUE(preprocessor.init(1, &cstr, 0));
 
     pp::Token token;
@@ -100,7 +103,8 @@ TEST(SpaceTest, LeadingSpace)
 
     pp::Token token;
     MockDiagnostics diagnostics;
-    pp::Preprocessor preprocessor(&diagnostics);
+    MockDirectiveHandler directiveHandler;
+    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
     ASSERT_TRUE(preprocessor.init(1, &str, 0));
 
     preprocessor.lex(&token);

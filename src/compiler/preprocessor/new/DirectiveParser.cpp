@@ -7,8 +7,10 @@
 #include "DirectiveParser.h"
 
 #include <cassert>
+#include <sstream>
 
 #include "Diagnostics.h"
+#include "DirectiveHandler.h"
 #include "ExpressionParser.h"
 #include "MacroExpander.h"
 #include "Token.h"
@@ -64,10 +66,12 @@ class DefinedParser : public Lexer
 
 DirectiveParser::DirectiveParser(Tokenizer* tokenizer,
                                  MacroSet* macroSet,
-                                 Diagnostics* diagnostics) :
+                                 Diagnostics* diagnostics,
+                                 DirectiveHandler* directiveHandler) :
     mTokenizer(tokenizer),
     mMacroSet(macroSet),
-    mDiagnostics(diagnostics)
+    mDiagnostics(diagnostics),
+    mDirectiveHandler(directiveHandler)
 {
 }
 
@@ -279,16 +283,73 @@ void DirectiveParser::parseEndif(Token* token)
 
 void DirectiveParser::parseError(Token* token)
 {
-    // TODO(alokp): Implement me.
     assert(token->value == kDirectiveError);
+
+    std::stringstream stream;
     mTokenizer->lex(token);
+    while ((token->type != '\n') && (token->type != pp::Token::LAST))
+    {
+        stream << *token;
+        mTokenizer->lex(token);
+    }
+    mDirectiveHandler->handleError(token->location, stream.str());
 }
 
+// Parses pragma of form: #pragma name[(value)].
 void DirectiveParser::parsePragma(Token* token)
 {
-    // TODO(alokp): Implement me.
     assert(token->value == kDirectivePragma);
+
+    enum State
+    {
+        PRAGMA_NAME,
+        LEFT_PAREN,
+        PRAGMA_VALUE,
+        RIGHT_PAREN
+    };
+
+    bool valid = true;
+    std::string name, value;
+    int state = PRAGMA_NAME;
+
     mTokenizer->lex(token);
+    while ((token->type != '\n') && (token->type != pp::Token::LAST))
+    {
+        switch(state++)
+        {
+          case PRAGMA_NAME:
+            name = token->value;
+            valid = valid && (token->type == pp::Token::IDENTIFIER);
+            break;
+          case LEFT_PAREN:
+            valid = valid && (token->type == '(');
+            break;
+          case PRAGMA_VALUE:
+            value = token->value;
+            valid = valid && (token->type == pp::Token::IDENTIFIER);
+            break;
+          case RIGHT_PAREN:
+            valid = valid && (token->type == ')');
+            break;
+          default:
+            valid = false;
+            break;
+        }
+        mTokenizer->lex(token);
+    }
+
+    valid = valid && ((state == PRAGMA_NAME) ||     // Empty pragma.
+                      (state == LEFT_PAREN) ||      // Without value.
+                      (state == RIGHT_PAREN + 1));  // With value.
+    if (!valid)
+    {
+        mDiagnostics->report(Diagnostics::UNRECOGNIZED_PRAGMA,
+                             token->location, name);
+    }
+    else if (state > PRAGMA_NAME)  // Do not notify for empty pragma.
+    {
+        mDirectiveHandler->handlePragma(token->location, name, value);
+    }
 }
 
 void DirectiveParser::parseExtension(Token* token)

@@ -7,6 +7,7 @@
 #include "gtest/gtest.h"
 
 #include "MockDiagnostics.h"
+#include "MockDirectiveHandler.h"
 #include "Preprocessor.h"
 #include "Token.h"
 
@@ -21,7 +22,8 @@ TEST_P(InvalidNumberTest, InvalidNumberIdentified)
     const char* str = GetParam();
 
     MockDiagnostics diagnostics;
-    pp::Preprocessor preprocessor(&diagnostics);
+    MockDirectiveHandler directiveHandler;
+    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
     ASSERT_TRUE(preprocessor.init(1, &str, 0));
 
     using testing::_;
@@ -54,7 +56,8 @@ TEST_P(IntegerTest, IntegerIdentified)
     const char* cstr = str.c_str();
 
     MockDiagnostics diagnostics;
-    pp::Preprocessor preprocessor(&diagnostics);
+    MockDirectiveHandler directiveHandler;
+    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
     ASSERT_TRUE(preprocessor.init(1, &cstr, 0));
 
     pp::Token token;
@@ -93,7 +96,8 @@ INSTANTIATE_TEST_CASE_P(HexadecimalInteger_A_F,
 static void PreprocessAndVerifyFloat(const char* str)
 {
     MockDiagnostics diagnostics;
-    pp::Preprocessor preprocessor(&diagnostics);
+    MockDirectiveHandler directiveHandler;
+    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
     ASSERT_TRUE(preprocessor.init(1, &str, 0));
 
     pp::Token token;

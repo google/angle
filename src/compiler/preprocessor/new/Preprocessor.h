@@ -16,11 +16,12 @@ namespace pp
 {
 
 class Diagnostics;
+class DirectiveHandler;
 
 class Preprocessor
 {
   public:
-    Preprocessor(Diagnostics* diagnostics);
+    Preprocessor(Diagnostics* diagnostics, DirectiveHandler* directiveHandler);
 
     // count: specifies the number of elements in the string and length arrays.
     // string: specifies an array of pointers to strings.
@@ -37,8 +38,6 @@ class Preprocessor
 
   private:
     PP_DISALLOW_COPY_AND_ASSIGN(Preprocessor);
-
-    Diagnostics* mDiagnostics;
 
     MacroSet mMacroSet;
     Tokenizer mTokenizer;
