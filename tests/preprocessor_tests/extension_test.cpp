@@ -113,9 +113,9 @@ TEST_P(InvalidExtensionTest, Identified)
 static const ExtensionTestParam kParams[] = {
     {"#extension\n", pp::Diagnostics::INVALID_EXTENSION_DIRECTIVE},
     {"#extension 1\n", pp::Diagnostics::INVALID_EXTENSION_NAME},
-    {"#extension foo bar\n", pp::Diagnostics::UNEXPECTED_TOKEN_IN_DIRECTIVE},
+    {"#extension foo bar\n", pp::Diagnostics::UNEXPECTED_TOKEN},
     {"#extension foo : \n", pp::Diagnostics::INVALID_EXTENSION_DIRECTIVE},
     {"#extension foo : 1\n", pp::Diagnostics::INVALID_EXTENSION_BEHAVIOR},
-    {"#extension foo : bar baz\n", pp::Diagnostics::UNEXPECTED_TOKEN_IN_DIRECTIVE}
+    {"#extension foo : bar baz\n", pp::Diagnostics::UNEXPECTED_TOKEN}
 };
 INSTANTIATE_TEST_CASE_P(All, InvalidExtensionTest, testing::ValuesIn(kParams));

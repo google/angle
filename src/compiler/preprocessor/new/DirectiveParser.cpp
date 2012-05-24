@@ -120,7 +120,7 @@ void DirectiveParser::parseDirective(Token* token)
     }
 
     if ((token->type != '\n') && (token->type != 0))
-        mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN_IN_DIRECTIVE,
+        mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN,
                              token->location,
                              token->value);
 
@@ -143,7 +143,7 @@ void DirectiveParser::parseDefine(Token* token)
     mTokenizer->lex(token);
     if (token->type != Token::IDENTIFIER)
     {
-        mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN_IN_DIRECTIVE,
+        mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN,
                              token->location,
                              token->value);
         return;
@@ -176,7 +176,7 @@ void DirectiveParser::parseDefine(Token* token)
 
         if (token->type != ')')
         {
-            mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN_IN_DIRECTIVE,
+            mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN,
                                  token->location,
                                  token->value);
             return;
@@ -212,7 +212,7 @@ void DirectiveParser::parseUndef(Token* token)
     mTokenizer->lex(token);
     if (token->type != Token::IDENTIFIER)
     {
-        mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN_IN_DIRECTIVE,
+        mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN,
                              token->location,
                              token->value);
         return;
@@ -384,7 +384,7 @@ void DirectiveParser::parseExtension(Token* token)
           case COLON:
             if (valid && (token->type != ':'))
             {
-                mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN_IN_DIRECTIVE,
+                mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN,
                                      token->location, token->value);
                 valid = false;
             }
@@ -401,7 +401,7 @@ void DirectiveParser::parseExtension(Token* token)
           default:
             if (valid)
             {
-                mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN_IN_DIRECTIVE,
+                mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN,
                                      token->location, token->value);
                 valid = false;
             }
@@ -449,7 +449,7 @@ void DirectiveParser::parseVersion(Token* token)
           default:
             if (valid)
             {
-                mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN_IN_DIRECTIVE,
+                mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN,
                                      token->location, token->value);
                 valid = false;
             }
