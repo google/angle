@@ -89,7 +89,7 @@ void DirectiveParser::parseDirective(Token* token)
     assert(token->type == '#');
 
     mTokenizer->lex(token);
-    if (token->type == pp::Token::IDENTIFIER)
+    if (token->type == Token::IDENTIFIER)
     {
         if (token->value == kDirectiveDefine)
             parseDefine(token);
@@ -141,7 +141,7 @@ void DirectiveParser::parseDefine(Token* token)
     assert(token->value == kDirectiveDefine);
 
     mTokenizer->lex(token);
-    if (token->type != pp::Token::IDENTIFIER)
+    if (token->type != Token::IDENTIFIER)
     {
         mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN_IN_DIRECTIVE,
                              token->location,
@@ -167,7 +167,7 @@ void DirectiveParser::parseDefine(Token* token)
         macro.type = Macro::kTypeFunc;
         do {
             mTokenizer->lex(token);
-            if (token->type != pp::Token::IDENTIFIER)
+            if (token->type != Token::IDENTIFIER)
                 break;
             macro.parameters.push_back(token->value);
 
@@ -183,7 +183,7 @@ void DirectiveParser::parseDefine(Token* token)
         }
     }
 
-    while ((token->type != '\n') && (token->type != pp::Token::LAST))
+    while ((token->type != '\n') && (token->type != Token::LAST))
     {
         // Reset the token location because it is unnecessary in replacement
         // list. Resetting it also allows us to reuse Token::equals() to
@@ -210,7 +210,7 @@ void DirectiveParser::parseUndef(Token* token)
     assert(token->value == kDirectiveUndef);
 
     mTokenizer->lex(token);
-    if (token->type != pp::Token::IDENTIFIER)
+    if (token->type != Token::IDENTIFIER)
     {
         mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN_IN_DIRECTIVE,
                              token->location,
@@ -287,7 +287,7 @@ void DirectiveParser::parseError(Token* token)
 
     std::stringstream stream;
     mTokenizer->lex(token);
-    while ((token->type != '\n') && (token->type != pp::Token::LAST))
+    while ((token->type != '\n') && (token->type != Token::LAST))
     {
         stream << *token;
         mTokenizer->lex(token);
@@ -313,20 +313,20 @@ void DirectiveParser::parsePragma(Token* token)
     int state = PRAGMA_NAME;
 
     mTokenizer->lex(token);
-    while ((token->type != '\n') && (token->type != pp::Token::LAST))
+    while ((token->type != '\n') && (token->type != Token::LAST))
     {
         switch(state++)
         {
           case PRAGMA_NAME:
             name = token->value;
-            valid = valid && (token->type == pp::Token::IDENTIFIER);
+            valid = valid && (token->type == Token::IDENTIFIER);
             break;
           case LEFT_PAREN:
             valid = valid && (token->type == '(');
             break;
           case PRAGMA_VALUE:
             value = token->value;
-            valid = valid && (token->type == pp::Token::IDENTIFIER);
+            valid = valid && (token->type == Token::IDENTIFIER);
             break;
           case RIGHT_PAREN:
             valid = valid && (token->type == ')');
@@ -354,16 +354,117 @@ void DirectiveParser::parsePragma(Token* token)
 
 void DirectiveParser::parseExtension(Token* token)
 {
-    // TODO(alokp): Implement me.
     assert(token->value == kDirectiveExtension);
+
+    enum State
+    {
+        EXT_NAME,
+        COLON,
+        EXT_BEHAVIOR
+    };
+
+    bool valid = true;
+    std::string name, behavior;
+    int state = EXT_NAME;
+
     mTokenizer->lex(token);
+    while ((token->type != '\n') && (token->type != Token::LAST))
+    {
+        switch (state++)
+        {
+          case EXT_NAME:
+            if (valid && (token->type != Token::IDENTIFIER))
+            {
+                mDiagnostics->report(Diagnostics::INVALID_EXTENSION_NAME,
+                                     token->location, token->value);
+                valid = false;
+            }
+            if (valid) name = token->value;
+            break;
+          case COLON:
+            if (valid && (token->type != ':'))
+            {
+                mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN_IN_DIRECTIVE,
+                                     token->location, token->value);
+                valid = false;
+            }
+            break;
+          case EXT_BEHAVIOR:
+            if (valid && (token->type != Token::IDENTIFIER))
+            {
+                mDiagnostics->report(Diagnostics::INVALID_EXTENSION_BEHAVIOR,
+                                     token->location, token->value);
+                valid = false;
+            }
+            if (valid) behavior = token->value;
+            break;
+          default:
+            if (valid)
+            {
+                mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN_IN_DIRECTIVE,
+                                     token->location, token->value);
+                valid = false;
+            }
+            break;
+        }
+        mTokenizer->lex(token);
+    }
+    if (valid && (state != EXT_BEHAVIOR + 1))
+    {
+        mDiagnostics->report(Diagnostics::INVALID_EXTENSION_DIRECTIVE,
+                             token->location, token->value);
+        valid = false;
+    }
+    if (valid)
+        mDirectiveHandler->handleExtension(token->location, name, behavior);
 }
 
 void DirectiveParser::parseVersion(Token* token)
 {
-    // TODO(alokp): Implement me.
     assert(token->value == kDirectiveVersion);
+
+    enum State
+    {
+        VERSION_NUMBER
+    };
+
+    bool valid = true;
+    int version = 0;
+    int state = VERSION_NUMBER;
+
     mTokenizer->lex(token);
+    while ((token->type != '\n') && (token->type != Token::LAST))
+    {
+        switch (state++)
+        {
+          case VERSION_NUMBER:
+            if (valid && (token->type != Token::CONST_INT))
+            {
+                mDiagnostics->report(Diagnostics::INVALID_VERSION_NUMBER,
+                                     token->location, token->value);
+                valid = false;
+            }
+            if (valid) version = atoi(token->value.c_str());
+            break;
+          default:
+            if (valid)
+            {
+                mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN_IN_DIRECTIVE,
+                                     token->location, token->value);
+                valid = false;
+            }
+            break;
+        }
+        mTokenizer->lex(token);
+    }
+    if (valid && (state != VERSION_NUMBER + 1))
+    {
+        mDiagnostics->report(Diagnostics::INVALID_VERSION_DIRECTIVE,
+                             token->location, token->value);
+        valid = false;
+    }
+    if (valid)
+        mDirectiveHandler->handleVersion(token->location, version);
 }
 
 void DirectiveParser::parseLine(Token* token)

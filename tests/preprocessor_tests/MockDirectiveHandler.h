@@ -20,6 +20,14 @@ class MockDirectiveHandler : public pp::DirectiveHandler
         void(const pp::SourceLocation& loc,
              const std::string& name,
              const std::string& value));
+
+    MOCK_METHOD3(handleExtension,
+        void(const pp::SourceLocation& loc,
+             const std::string& name,
+             const std::string& behavior));
+
+    MOCK_METHOD2(handleVersion,
+        void(const pp::SourceLocation& loc, int version));
 };
 
 #endif  // PREPROCESSOR_TESTS_MOCK_DIRECTIVE_HANDLER_H_
