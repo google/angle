@@ -4,35 +4,26 @@
 // found in the LICENSE file.
 //
 
-#include "gtest/gtest.h"
-
-#include "MockDiagnostics.h"
-#include "MockDirectiveHandler.h"
-#include "Preprocessor.h"
+#include "PreprocessorTest.h"
 #include "Token.h"
 
-class PragmaTest : public testing::Test
+class PragmaTest : public PreprocessorTest
 {
 protected:
-    PragmaTest() : mPreprocessor(&mDiagnostics, &mDirectiveHandler) { }
-
-    void lex()
+    void preprocess(const char* str)
     {
+        ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
+
         pp::Token token;
         mPreprocessor.lex(&token);
         EXPECT_EQ(pp::Token::LAST, token.type);
         EXPECT_EQ("", token.value);
     }
-
-    MockDiagnostics mDiagnostics;
-    MockDirectiveHandler mDirectiveHandler;
-    pp::Preprocessor mPreprocessor;
 };
 
 TEST_F(PragmaTest, EmptyName)
 {
     const char* str = "#pragma\n";
-    ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
 
     using testing::_;
     // No handlePragma calls.
@@ -40,13 +31,12 @@ TEST_F(PragmaTest, EmptyName)
     // No error or warning.
     EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
 
-    lex();
+    preprocess(str);
 }
 
 TEST_F(PragmaTest, EmptyValue)
 {
     const char* str = "#pragma foo\n";
-    ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
 
     using testing::_;
     EXPECT_CALL(mDirectiveHandler,
@@ -54,13 +44,12 @@ TEST_F(PragmaTest, EmptyValue)
     // No error or warning.
     EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
 
-    lex();
+    preprocess(str);
 }
 
 TEST_F(PragmaTest, NameValue)
 {
     const char* str = "#pragma foo(bar)\n";
-    ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
 
     using testing::_;
     EXPECT_CALL(mDirectiveHandler,
@@ -68,7 +57,7 @@ TEST_F(PragmaTest, NameValue)
     // No error or warning.
     EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
 
-    lex();
+    preprocess(str);
 }
 
 TEST_F(PragmaTest, Comments)
@@ -88,7 +77,6 @@ TEST_F(PragmaTest, Comments)
                       "/*foo*/"
                       "//foo"
                       "\n";
-    ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
 
     using testing::_;
     EXPECT_CALL(mDirectiveHandler,
@@ -96,13 +84,12 @@ TEST_F(PragmaTest, Comments)
     // No error or warning.
     EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
 
-    lex();
+    preprocess(str);
 }
 
 TEST_F(PragmaTest, MissingNewline)
 {
     const char* str = "#pragma foo(bar)";
-    ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
 
     using testing::_;
     // Pragma successfully parsed.
@@ -111,8 +98,10 @@ TEST_F(PragmaTest, MissingNewline)
     // Error reported about EOF.
     EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::EOF_IN_DIRECTIVE, _, _));
 
-    lex();
+    preprocess(str);
 }
+
+#if GTEST_HAS_PARAM_TEST
 
 class InvalidPragmaTest : public PragmaTest,
                           public testing::WithParamInterface<const char*>
@@ -122,7 +111,6 @@ class InvalidPragmaTest : public PragmaTest,
 TEST_P(InvalidPragmaTest, Identified)
 {
     const char* str = GetParam();
-    ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
 
     using testing::_;
     // No handlePragma calls.
@@ -132,7 +120,7 @@ TEST_P(InvalidPragmaTest, Identified)
                 print(pp::Diagnostics::UNRECOGNIZED_PRAGMA,
                       pp::SourceLocation(0, 1), _));
 
-    lex();
+    preprocess(str);
 }
 
 INSTANTIATE_TEST_CASE_P(All, InvalidPragmaTest, testing::Values(
@@ -142,3 +130,5 @@ INSTANTIATE_TEST_CASE_P(All, InvalidPragmaTest, testing::Values(
     "#pragma foo(bar\n",         // Missing right paren.
     "#pragma foo bar\n",         // Missing parens.
     "#pragma foo(bar) baz\n"));  // Extra tokens.
+
+#endif  // GTEST_HAS_PARAM_TEST

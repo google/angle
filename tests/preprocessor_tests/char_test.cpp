@@ -7,16 +7,13 @@
 #include <algorithm>
 #include <climits>
 
-#include "gtest/gtest.h"
-
-#include "MockDiagnostics.h"
-#include "MockDirectiveHandler.h"
-#include "Preprocessor.h"
+#include "PreprocessorTest.h"
 #include "Token.h"
 
 #if GTEST_HAS_PARAM_TEST
 
-class CharTest : public testing::TestWithParam<int>
+class CharTest : public PreprocessorTest,
+                 public testing::WithParamInterface<int>
 {
 };
 
@@ -50,12 +47,9 @@ TEST_P(CharTest, Identified)
     const char* cstr = str.c_str();
     int length = 1;
 
-    MockDiagnostics diagnostics;
-    MockDirectiveHandler directiveHandler;
-    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
     // Note that we pass the length param as well because the invalid
     // string may contain the null character.
-    ASSERT_TRUE(preprocessor.init(1, &cstr, &length));
+    ASSERT_TRUE(mPreprocessor.init(1, &cstr, &length));
 
     int expectedType = pp::Token::LAST;
     std::string expectedValue;
@@ -89,12 +83,12 @@ TEST_P(CharTest, Identified)
     {
         // Everything else is invalid.
         using testing::_;
-        EXPECT_CALL(diagnostics,
+        EXPECT_CALL(mDiagnostics,
             print(pp::Diagnostics::INVALID_CHARACTER, _, str));
     }
 
     pp::Token token;
-    preprocessor.lex(&token);
+    mPreprocessor.lex(&token);
     EXPECT_EQ(expectedType, token.type);
     EXPECT_EQ(expectedValue, token.value);
 };

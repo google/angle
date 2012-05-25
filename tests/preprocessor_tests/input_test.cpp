@@ -4,39 +4,30 @@
 // found in the LICENSE file.
 //
 
-#include "gtest/gtest.h"
-
-#include "MockDiagnostics.h"
-#include "MockDirectiveHandler.h"
-#include "Preprocessor.h"
+#include "PreprocessorTest.h"
 #include "Token.h"
 
-TEST(InputTest, NegativeCount)
+class InitTest : public PreprocessorTest
 {
-    MockDiagnostics diagnostics;
-    MockDirectiveHandler directiveHandler;
-    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
-    EXPECT_FALSE(preprocessor.init(-1, NULL, NULL));
+};
+
+TEST_F(InitTest, NegativeCount)
+{
+    EXPECT_FALSE(mPreprocessor.init(-1, NULL, NULL));
 }
 
-TEST(InputTest, ZeroCount)
+TEST_F(InitTest, ZeroCount)
 {
-    MockDiagnostics diagnostics;
-    MockDirectiveHandler directiveHandler;
-    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
-    EXPECT_TRUE(preprocessor.init(0, NULL, NULL));
+    EXPECT_TRUE(mPreprocessor.init(0, NULL, NULL));
 
     pp::Token token;
-    preprocessor.lex(&token);
+    mPreprocessor.lex(&token);
     EXPECT_EQ(pp::Token::LAST, token.type);
 }
 
-TEST(InputTest, NullString)
+TEST_F(InitTest, NullString)
 {
-    MockDiagnostics diagnostics;
-    MockDirectiveHandler directiveHandler;
-    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
-    EXPECT_FALSE(preprocessor.init(1, NULL, NULL));
+    EXPECT_FALSE(mPreprocessor.init(1, NULL, NULL));
 }
 
 TEST(InputTest, DefaultConstructor)

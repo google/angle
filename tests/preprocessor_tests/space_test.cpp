@@ -4,12 +4,26 @@
 // found in the LICENSE file.
 //
 
-#include "gtest/gtest.h"
-
-#include "MockDiagnostics.h"
-#include "MockDirectiveHandler.h"
-#include "Preprocessor.h"
+#include "PreprocessorTest.h"
 #include "Token.h"
+
+class SpaceTest : public PreprocessorTest
+{
+  protected:
+    void preprocess(const std::string& str)
+    {
+        const char* cstr = str.c_str();
+        ASSERT_TRUE(mPreprocessor.init(1, &cstr, 0));
+
+        pp::Token token;
+        // "foo" is returned after ignoring the whitespace characters.
+        mPreprocessor.lex(&token);
+        EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
+        EXPECT_EQ("foo", token.value);
+        // The whitespace character is however recorded with the next token.
+        EXPECT_TRUE(token.hasLeadingSpace());
+    }
+};
 
 // Whitespace characters allowed in GLSL.
 // Note that newline characters (\n) will be tested separately.
@@ -20,30 +34,18 @@ static const char kSpaceChars[] = {' ', '\t', '\v', '\f'};
 // This test fixture tests the processing of a single whitespace character.
 // All tests in this fixture are ran with all possible whitespace character
 // allowed in GLSL.
-class SpaceCharTest : public testing::TestWithParam<char>
+class SpaceCharTest : public SpaceTest,
+                      public testing::WithParamInterface<char>
 {
 };
 
 TEST_P(SpaceCharTest, SpaceIgnored)
 {
     // Construct test string with the whitespace char before "foo".
-    const char* identifier = "foo";
     std::string str(1, GetParam());
-    str.append(identifier);
-    const char* cstr = str.c_str();
-
-    MockDiagnostics diagnostics;
-    MockDirectiveHandler directiveHandler;
-    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
-    ASSERT_TRUE(preprocessor.init(1, &cstr, 0));
-
-    pp::Token token;
-    // Identifier "foo" is returned after ignoring the whitespace characters.
-    preprocessor.lex(&token);
-    EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
-    EXPECT_EQ(identifier, token.value);
-    // The whitespace character is however recorded with the next token.
-    EXPECT_TRUE(token.hasLeadingSpace());
+    str.append("foo");
+    
+    preprocess(str);
 }
 
 INSTANTIATE_TEST_CASE_P(SingleSpaceChar,
@@ -58,32 +60,21 @@ INSTANTIATE_TEST_CASE_P(SingleSpaceChar,
 // whitespace characters. All tests in this fixture are ran with all possible
 // combinations of whitespace characters allowed in GLSL.
 typedef std::tr1::tuple<char, char, char> SpaceStringParams;
-class SpaceStringTest : public testing::TestWithParam<SpaceStringParams>
+class SpaceStringTest : public SpaceTest,
+                        public testing::WithParamInterface<SpaceStringParams>
 {
 };
 
 TEST_P(SpaceStringTest, SpaceIgnored)
 {
     // Construct test string with the whitespace char before "foo".
-    const char* identifier = "foo";
-    std::string str(1, std::tr1::get<0>(GetParam()));
+    std::string str;
+    str.push_back(std::tr1::get<0>(GetParam()));
     str.push_back(std::tr1::get<1>(GetParam()));
     str.push_back(std::tr1::get<2>(GetParam()));
-    str.append(identifier);
-    const char* cstr = str.c_str();
+    str.append("foo");
 
-    MockDiagnostics diagnostics;
-    MockDirectiveHandler directiveHandler;
-    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
-    ASSERT_TRUE(preprocessor.init(1, &cstr, 0));
-
-    pp::Token token;
-    preprocessor.lex(&token);
-    // Identifier "foo" is returned after ignoring the whitespace characters.
-    EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
-    EXPECT_EQ(identifier, token.value);
-    // The whitespace character is however recorded with the next token.
-    EXPECT_TRUE(token.hasLeadingSpace());
+    preprocess(str);
 }
 
 INSTANTIATE_TEST_CASE_P(SpaceCharCombination,
@@ -97,30 +88,26 @@ INSTANTIATE_TEST_CASE_P(SpaceCharCombination,
 // The tests above make sure that the space char is recorded in the
 // next token. This test makes sure that a token is not incorrectly marked
 // to have leading space.
-TEST(SpaceTest, LeadingSpace)
+TEST_F(SpaceTest, LeadingSpace)
 {
     const char* str = " foo+ -bar";
+    ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
 
     pp::Token token;
-    MockDiagnostics diagnostics;
-    MockDirectiveHandler directiveHandler;
-    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
-    ASSERT_TRUE(preprocessor.init(1, &str, 0));
-
-    preprocessor.lex(&token);
+    mPreprocessor.lex(&token);
     EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
     EXPECT_EQ("foo", token.value);
     EXPECT_TRUE(token.hasLeadingSpace());
 
-    preprocessor.lex(&token);
+    mPreprocessor.lex(&token);
     EXPECT_EQ('+', token.type);
     EXPECT_FALSE(token.hasLeadingSpace());
 
-    preprocessor.lex(&token);
+    mPreprocessor.lex(&token);
     EXPECT_EQ('-', token.type);
     EXPECT_TRUE(token.hasLeadingSpace());
 
-    preprocessor.lex(&token);
+    mPreprocessor.lex(&token);
     EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
     EXPECT_EQ("bar", token.value);
     EXPECT_FALSE(token.hasLeadingSpace());

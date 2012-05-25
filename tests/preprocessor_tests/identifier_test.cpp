@@ -4,132 +4,145 @@
 // found in the LICENSE file.
 //
 
-#include "gtest/gtest.h"
-
-#include "MockDiagnostics.h"
-#include "MockDirectiveHandler.h"
-#include "Preprocessor.h"
+#include "PreprocessorTest.h"
 #include "Token.h"
 
-static void PreprocessAndVerifyIdentifier(const char* str)
+class IdentifierTest : public PreprocessorTest
 {
-    MockDiagnostics diagnostics;
-    MockDirectiveHandler directiveHandler;
-    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
-    ASSERT_TRUE(preprocessor.init(1, &str, 0));
+protected:
+    void preprocess(const std::string& str)
+    {
+        const char* cstr = str.c_str();
+        ASSERT_TRUE(mPreprocessor.init(1, &cstr, 0));
 
-    pp::Token token;
-    preprocessor.lex(&token);
-    EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
-    EXPECT_EQ(str, token.value);
+        pp::Token token;
+        mPreprocessor.lex(&token);
+        EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
+        EXPECT_EQ(str, token.value);
+    }
+};
+
+#if GTEST_HAS_PARAM_TEST
+
+#define CLOSED_RANGE(x, y) testing::Range(x, static_cast<char>((y) + 1))
+
+class SingleLetterIdentifierTest : public IdentifierTest,
+                                   public testing::WithParamInterface<char>
+{
+};
+
+// This test covers identifier names of form [_a-zA-Z].
+TEST_P(SingleLetterIdentifierTest, Identified)
+{
+    std::string str(1, GetParam());
+    preprocess(str);
 }
+
+// Test string: '_'
+INSTANTIATE_TEST_CASE_P(Underscore,
+                        SingleLetterIdentifierTest,
+                        testing::Values('_'));
+
+// Test string: [a-z]
+INSTANTIATE_TEST_CASE_P(a_z,
+                        SingleLetterIdentifierTest,
+                        CLOSED_RANGE('a', 'z'));
+
+// Test string: [A-Z]
+INSTANTIATE_TEST_CASE_P(A_Z,
+                        SingleLetterIdentifierTest,
+                        CLOSED_RANGE('A', 'Z'));
+
+#endif  // GTEST_HAS_PARAM_TEST
 
 #if GTEST_HAS_COMBINE
 
 typedef std::tr1::tuple<char, char> IdentifierParams;
-class IdentifierTest : public testing::TestWithParam<IdentifierParams>
+class DoubleLetterIdentifierTest :
+    public IdentifierTest,
+    public testing::WithParamInterface<IdentifierParams>
 {
 };
 
-// This test covers identifier names of form [_a-zA-Z][_a-zA-Z0-9]?.
-TEST_P(IdentifierTest, IdentifierIdentified)
+// This test covers identifier names of form [_a-zA-Z][_a-zA-Z0-9].
+TEST_P(DoubleLetterIdentifierTest, Identified)
 {
-    std::string str(1, std::tr1::get<0>(GetParam()));
-    char c = std::tr1::get<1>(GetParam());
-    if (c != '\0') str.push_back(c);
+    std::string str;
+    str.push_back(std::tr1::get<0>(GetParam()));
+    str.push_back(std::tr1::get<1>(GetParam()));
 
-    PreprocessAndVerifyIdentifier(str.c_str());
+    preprocess(str);
 }
 
-#define CLOSED_RANGE(x, y) testing::Range(x, static_cast<char>((y) + 1))
-
-// Test string: '_'
-INSTANTIATE_TEST_CASE_P(SingleLetter_Underscore,
-                        IdentifierTest,
-                        testing::Combine(testing::Values('_'),
-                                         testing::Values('\0')));
-
-// Test string: [a-z]
-INSTANTIATE_TEST_CASE_P(SingleLetter_a_z,
-                        IdentifierTest,
-                        testing::Combine(CLOSED_RANGE('a', 'z'),
-                                         testing::Values('\0')));
-
-// Test string: [A-Z]
-INSTANTIATE_TEST_CASE_P(SingleLetter_A_Z,
-                        IdentifierTest,
-                        testing::Combine(CLOSED_RANGE('A', 'Z'),
-                                         testing::Values('\0')));
-
 // Test string: "__"
-INSTANTIATE_TEST_CASE_P(DoubleLetter_Underscore_Underscore,
-                        IdentifierTest,
+INSTANTIATE_TEST_CASE_P(Underscore_Underscore,
+                        DoubleLetterIdentifierTest,
                         testing::Combine(testing::Values('_'),
                                          testing::Values('_')));
 
 // Test string: "_"[a-z]
-INSTANTIATE_TEST_CASE_P(DoubleLetter_Underscore_a_z,
-                        IdentifierTest,
+INSTANTIATE_TEST_CASE_P(Underscore_a_z,
+                        DoubleLetterIdentifierTest,
                         testing::Combine(testing::Values('_'),
                                          CLOSED_RANGE('a', 'z')));
 
 // Test string: "_"[A-Z]
-INSTANTIATE_TEST_CASE_P(DoubleLetter_Underscore_A_Z,
-                        IdentifierTest,
+INSTANTIATE_TEST_CASE_P(Underscore_A_Z,
+                        DoubleLetterIdentifierTest,
                         testing::Combine(testing::Values('_'),
                                          CLOSED_RANGE('A', 'Z')));
 
 // Test string: "_"[0-9]
-INSTANTIATE_TEST_CASE_P(DoubleLetter_Underscore_0_9,
-                        IdentifierTest,
+INSTANTIATE_TEST_CASE_P(Underscore_0_9,
+                        DoubleLetterIdentifierTest,
                         testing::Combine(testing::Values('_'),
                                          CLOSED_RANGE('0', '9')));
 
 // Test string: [a-z]"_"
-INSTANTIATE_TEST_CASE_P(DoubleLetter_a_z_Underscore,
-                        IdentifierTest,
+INSTANTIATE_TEST_CASE_P(a_z_Underscore,
+                        DoubleLetterIdentifierTest,
                         testing::Combine(CLOSED_RANGE('a', 'z'),
                                          testing::Values('_')));
 
 // Test string: [a-z][a-z]
-INSTANTIATE_TEST_CASE_P(DoubleLetter_a_z_a_z,
-                        IdentifierTest,
+INSTANTIATE_TEST_CASE_P(a_z_a_z,
+                        DoubleLetterIdentifierTest,
                         testing::Combine(CLOSED_RANGE('a', 'z'),
                                          CLOSED_RANGE('a', 'z')));
 
 // Test string: [a-z][A-Z]
-INSTANTIATE_TEST_CASE_P(DoubleLetter_a_z_A_Z,
-                        IdentifierTest,
+INSTANTIATE_TEST_CASE_P(a_z_A_Z,
+                        DoubleLetterIdentifierTest,
                         testing::Combine(CLOSED_RANGE('a', 'z'),
                                          CLOSED_RANGE('A', 'Z')));
 
 // Test string: [a-z][0-9]
-INSTANTIATE_TEST_CASE_P(DoubleLetter_a_z_0_9,
-                        IdentifierTest,
+INSTANTIATE_TEST_CASE_P(a_z_0_9,
+                        DoubleLetterIdentifierTest,
                         testing::Combine(CLOSED_RANGE('a', 'z'),
                                          CLOSED_RANGE('0', '9')));
 
 // Test string: [A-Z]"_"
-INSTANTIATE_TEST_CASE_P(DoubleLetter_A_Z_Underscore,
-                        IdentifierTest,
+INSTANTIATE_TEST_CASE_P(A_Z_Underscore,
+                        DoubleLetterIdentifierTest,
                         testing::Combine(CLOSED_RANGE('A', 'Z'),
                                          testing::Values('_')));
 
 // Test string: [A-Z][a-z]
-INSTANTIATE_TEST_CASE_P(DoubleLetter_A_Z_a_z,
-                        IdentifierTest,
+INSTANTIATE_TEST_CASE_P(A_Z_a_z,
+                        DoubleLetterIdentifierTest,
                         testing::Combine(CLOSED_RANGE('A', 'Z'),
                                          CLOSED_RANGE('a', 'z')));
 
 // Test string: [A-Z][A-Z]
-INSTANTIATE_TEST_CASE_P(DoubleLetter_A_Z_A_Z,
-                        IdentifierTest,
+INSTANTIATE_TEST_CASE_P(A_Z_A_Z,
+                        DoubleLetterIdentifierTest,
                         testing::Combine(CLOSED_RANGE('A', 'Z'),
                                          CLOSED_RANGE('A', 'Z')));
 
 // Test string: [A-Z][0-9]
-INSTANTIATE_TEST_CASE_P(DoubleLetter_A_Z_0_9,
-                        IdentifierTest,
+INSTANTIATE_TEST_CASE_P(A_Z_0_9,
+                        DoubleLetterIdentifierTest,
                         testing::Combine(CLOSED_RANGE('A', 'Z'),
                                          CLOSED_RANGE('0', '9')));
 
@@ -137,7 +150,7 @@ INSTANTIATE_TEST_CASE_P(DoubleLetter_A_Z_0_9,
 
 // The tests above cover one-letter and various combinations of two-letter
 // identifier names. This test covers all characters in a single string.
-TEST(IdentifierTestAllCharacters, IdentifierIdentified)
+TEST_F(IdentifierTest, AllLetters)
 {
     std::string str;
     for (int c = 'a'; c <= 'z'; ++c)
@@ -153,5 +166,5 @@ TEST(IdentifierTestAllCharacters, IdentifierIdentified)
     for (int c = '0'; c <= '9'; ++c)
         str.push_back(c);
 
-    PreprocessAndVerifyIdentifier(str.c_str());
+    preprocess(str);
 }

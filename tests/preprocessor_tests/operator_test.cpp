@@ -4,11 +4,7 @@
 // found in the LICENSE file.
 //
 
-#include "gtest/gtest.h"
-
-#include "MockDiagnostics.h"
-#include "MockDirectiveHandler.h"
-#include "Preprocessor.h"
+#include "PreprocessorTest.h"
 #include "Token.h"
 
 #if GTEST_HAS_PARAM_TEST
@@ -19,7 +15,8 @@ struct OperatorTestParam
     int op;
 };
 
-class OperatorTest : public testing::TestWithParam<OperatorTestParam>
+class OperatorTest : public PreprocessorTest,
+                     public testing::WithParamInterface<OperatorTestParam>
 {
 };
 
@@ -27,13 +24,10 @@ TEST_P(OperatorTest, Identified)
 {
     OperatorTestParam param = GetParam();
 
-    MockDiagnostics diagnostics;
-    MockDirectiveHandler directiveHandler;
-    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
-    ASSERT_TRUE(preprocessor.init(1, &param.str, 0));
+    ASSERT_TRUE(mPreprocessor.init(1, &param.str, 0));
 
     pp::Token token;
-    preprocessor.lex(&token);
+    mPreprocessor.lex(&token);
     EXPECT_EQ(param.op, token.type);
     EXPECT_EQ(param.str, token.value);
 }

@@ -4,18 +4,12 @@
 // found in the LICENSE file.
 //
 
-#include "gtest/gtest.h"
-
-#include "MockDiagnostics.h"
-#include "MockDirectiveHandler.h"
-#include "Preprocessor.h"
+#include "PreprocessorTest.h"
 #include "Token.h"
 
-class VersionTest : public testing::Test
+class VersionTest : public PreprocessorTest
 {
-protected:
-    VersionTest() : mPreprocessor(&mDiagnostics, &mDirectiveHandler) { }
-
+  protected:
     void lex()
     {
         pp::Token token;
@@ -23,10 +17,6 @@ protected:
         EXPECT_EQ(pp::Token::LAST, token.type);
         EXPECT_EQ("", token.value);
     }
-
-    MockDiagnostics mDiagnostics;
-    MockDirectiveHandler mDirectiveHandler;
-    pp::Preprocessor mPreprocessor;
 };
 
 TEST_F(VersionTest, Valid)
@@ -80,6 +70,8 @@ TEST_F(VersionTest, MissingNewline)
     lex();
 }
 
+#if GTEST_HAS_PARAM_TEST
+
 struct VersionTestParam
 {
     const char* str;
@@ -112,3 +104,5 @@ static const VersionTestParam kParams[] = {
 };
 
 INSTANTIATE_TEST_CASE_P(All, InvalidVersionTest, testing::ValuesIn(kParams));
+
+#endif // GTEST_HAS_PARAM_TEST

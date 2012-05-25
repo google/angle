@@ -4,35 +4,26 @@
 // found in the LICENSE file.
 //
 
-#include "gtest/gtest.h"
-
-#include "MockDiagnostics.h"
-#include "MockDirectiveHandler.h"
-#include "Preprocessor.h"
+#include "PreprocessorTest.h"
 #include "Token.h"
 
-class ExtensionTest : public testing::Test
+class ExtensionTest : public PreprocessorTest
 {
 protected:
-    ExtensionTest() : mPreprocessor(&mDiagnostics, &mDirectiveHandler) { }
-
-    void lex()
+    void preprocess(const char* str)
     {
+        ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
+
         pp::Token token;
         mPreprocessor.lex(&token);
         EXPECT_EQ(pp::Token::LAST, token.type);
         EXPECT_EQ("", token.value);
     }
-
-    MockDiagnostics mDiagnostics;
-    MockDirectiveHandler mDirectiveHandler;
-    pp::Preprocessor mPreprocessor;
 };
 
 TEST_F(ExtensionTest, Valid)
 {
     const char* str = "#extension foo : bar\n";
-    ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
 
     using testing::_;
     EXPECT_CALL(mDirectiveHandler,
@@ -40,7 +31,7 @@ TEST_F(ExtensionTest, Valid)
     // No error or warning.
     EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
 
-    lex();
+    preprocess(str);
 }
 
 TEST_F(ExtensionTest, Comments)
@@ -58,7 +49,6 @@ TEST_F(ExtensionTest, Comments)
                       "/*foo*/"
                       "//foo"
                       "\n";
-    ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
 
     using testing::_;
     EXPECT_CALL(mDirectiveHandler,
@@ -66,13 +56,12 @@ TEST_F(ExtensionTest, Comments)
     // No error or warning.
     EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
 
-    lex();
+    preprocess(str);
 }
 
 TEST_F(ExtensionTest, MissingNewline)
 {
     const char* str = "#extension foo : bar";
-    ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
 
     using testing::_;
     // Directive successfully parsed.
@@ -81,8 +70,10 @@ TEST_F(ExtensionTest, MissingNewline)
     // Error reported about EOF.
     EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::EOF_IN_DIRECTIVE, _, _));
 
-    lex();
+    preprocess(str);
 }
+
+#if GTEST_HAS_PARAM_TEST
 
 struct ExtensionTestParam
 {
@@ -99,7 +90,6 @@ class InvalidExtensionTest : public ExtensionTest,
 TEST_P(InvalidExtensionTest, Identified)
 {
     ExtensionTestParam param = GetParam();
-    ASSERT_TRUE(mPreprocessor.init(1, &param.str, NULL));
 
     using testing::_;
     // No handleExtension call.
@@ -107,7 +97,7 @@ TEST_P(InvalidExtensionTest, Identified)
     // Invalid extension directive call.
     EXPECT_CALL(mDiagnostics, print(param.id, pp::SourceLocation(0, 1), _));
 
-    lex();
+    preprocess(param.str);
 }
 
 static const ExtensionTestParam kParams[] = {
@@ -119,3 +109,5 @@ static const ExtensionTestParam kParams[] = {
     {"#extension foo : bar baz\n", pp::Diagnostics::UNEXPECTED_TOKEN}
 };
 INSTANTIATE_TEST_CASE_P(All, InvalidExtensionTest, testing::ValuesIn(kParams));
+
+#endif  // GTEST_HAS_PARAM_TEST

@@ -4,14 +4,13 @@
 // found in the LICENSE file.
 //
 
-#include "gtest/gtest.h"
-
-#include "MockDiagnostics.h"
-#include "MockDirectiveHandler.h"
-#include "Preprocessor.h"
+#include "PreprocessorTest.h"
 #include "Token.h"
 
-class CommentTest : public testing::TestWithParam<const char*>
+#if GTEST_HAS_PARAM_TEST
+
+class CommentTest : public PreprocessorTest,
+                    public testing::WithParamInterface<const char*>
 {
 };
 
@@ -19,13 +18,10 @@ TEST_P(CommentTest, CommentIgnored)
 {
     const char* str = GetParam();
 
-    MockDiagnostics diagnostics;
-    MockDirectiveHandler directiveHandler;
-    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
-    ASSERT_TRUE(preprocessor.init(1, &str, 0));
+    ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
 
     pp::Token token;
-    preprocessor.lex(&token);
+    mPreprocessor.lex(&token);
     EXPECT_EQ(pp::Token::LAST, token.type);
 }
 
@@ -44,34 +40,34 @@ INSTANTIATE_TEST_CASE_P(BlockComment, CommentTest,
                                         "/***/",     // With lone '*'.
                                         "/*\"*/"));  // Invalid character.
 
-TEST(BlockComment, CommentReplacedWithSpace)
+#endif  // GTEST_HAS_PARAM_TEST
+
+class BlockCommentTest : public PreprocessorTest
+{
+};
+
+TEST_F(BlockCommentTest, CommentReplacedWithSpace)
 {
     const char* str = "/*foo*/bar";
 
-    MockDiagnostics diagnostics;
-    MockDirectiveHandler directiveHandler;
-    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
-    ASSERT_TRUE(preprocessor.init(1, &str, 0));
+    ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
 
     pp::Token token;
-    preprocessor.lex(&token);
+    mPreprocessor.lex(&token);
     EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
     EXPECT_EQ("bar", token.value);
     EXPECT_TRUE(token.hasLeadingSpace());
 }
 
-TEST(BlockComment, UnterminatedComment)
+TEST_F(BlockCommentTest, UnterminatedComment)
 {
     const char* str = "/*foo";
 
-    MockDiagnostics diagnostics;
-    MockDirectiveHandler directiveHandler;
-    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
-    ASSERT_TRUE(preprocessor.init(1, &str, 0));
+    ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
 
     using testing::_;
-    EXPECT_CALL(diagnostics, print(pp::Diagnostics::EOF_IN_COMMENT, _, _));
+    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::EOF_IN_COMMENT, _, _));
 
     pp::Token token;
-    preprocessor.lex(&token);
+    mPreprocessor.lex(&token);
 }

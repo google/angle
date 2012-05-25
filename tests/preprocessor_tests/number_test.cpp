@@ -4,33 +4,26 @@
 // found in the LICENSE file.
 //
 
-#include "gtest/gtest.h"
-
-#include "MockDiagnostics.h"
-#include "MockDirectiveHandler.h"
-#include "Preprocessor.h"
+#include "PreprocessorTest.h"
 #include "Token.h"
 
 #if GTEST_HAS_PARAM_TEST
 
-class InvalidNumberTest : public testing::TestWithParam<const char*>
+class InvalidNumberTest : public PreprocessorTest,
+                          public testing::WithParamInterface<const char*>
 {
 };
 
 TEST_P(InvalidNumberTest, InvalidNumberIdentified)
 {
     const char* str = GetParam();
-
-    MockDiagnostics diagnostics;
-    MockDirectiveHandler directiveHandler;
-    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
-    ASSERT_TRUE(preprocessor.init(1, &str, 0));
+    ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
 
     using testing::_;
-    EXPECT_CALL(diagnostics, print(pp::Diagnostics::INVALID_NUMBER, _, str));
+    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::INVALID_NUMBER, _, str));
 
     pp::Token token;
-    preprocessor.lex(&token);
+    mPreprocessor.lex(&token);
 }
 
 INSTANTIATE_TEST_CASE_P(InvalidIntegers, InvalidNumberTest,
@@ -45,23 +38,21 @@ INSTANTIATE_TEST_CASE_P(InvalidFloats, InvalidNumberTest,
 #if GTEST_HAS_COMBINE
 
 typedef std::tr1::tuple<const char*, char> IntegerParams;
-class IntegerTest : public testing::TestWithParam<IntegerParams>
+class IntegerTest : public PreprocessorTest,
+                    public testing::WithParamInterface<IntegerParams>
 {
 };
 
-TEST_P(IntegerTest, IntegerIdentified)
+TEST_P(IntegerTest, Identified)
 {
     std::string str(std::tr1::get<0>(GetParam()));  // prefix.
     str.push_back(std::tr1::get<1>(GetParam()));  // digit.
     const char* cstr = str.c_str();
 
-    MockDiagnostics diagnostics;
-    MockDirectiveHandler directiveHandler;
-    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
-    ASSERT_TRUE(preprocessor.init(1, &cstr, 0));
+    ASSERT_TRUE(mPreprocessor.init(1, &cstr, 0));
 
     pp::Token token;
-    preprocessor.lex(&token);
+    mPreprocessor.lex(&token);
     EXPECT_EQ(pp::Token::CONST_INT, token.type);
     EXPECT_EQ(str, token.value);
 }
@@ -93,21 +84,25 @@ INSTANTIATE_TEST_CASE_P(HexadecimalInteger_A_F,
                         testing::Combine(testing::Values("0x"),
                                          CLOSED_RANGE('A', 'F')));
 
-static void PreprocessAndVerifyFloat(const char* str)
+class FloatTest : public PreprocessorTest
 {
-    MockDiagnostics diagnostics;
-    MockDirectiveHandler directiveHandler;
-    pp::Preprocessor preprocessor(&diagnostics, &directiveHandler);
-    ASSERT_TRUE(preprocessor.init(1, &str, 0));
+  protected:
+    void preprocess(const std::string& str)
+    {
+        const char* cstr = str.c_str();
+        ASSERT_TRUE(mPreprocessor.init(1, &cstr, 0));
 
-    pp::Token token;
-    preprocessor.lex(&token);
-    EXPECT_EQ(pp::Token::CONST_FLOAT, token.type);
-    EXPECT_EQ(str, token.value);
-}
+        pp::Token token;
+        mPreprocessor.lex(&token);
+        EXPECT_EQ(pp::Token::CONST_FLOAT, token.type);
+        EXPECT_EQ(str, token.value);
+    }
+};
 
 typedef std::tr1::tuple<char, char, const char*, char> FloatScientificParams;
-class FloatScientificTest : public testing::TestWithParam<FloatScientificParams>
+class FloatScientificTest :
+    public FloatTest,
+    public testing::WithParamInterface<FloatScientificParams>
 {
 };
 
@@ -121,7 +116,7 @@ TEST_P(FloatScientificTest, FloatIdentified)
     str.push_back(std::tr1::get<3>(GetParam()));  // exponent [0-9].
 
     SCOPED_TRACE("FloatScientificTest");
-    PreprocessAndVerifyFloat(str.c_str());
+    preprocess(str);
 }
 
 INSTANTIATE_TEST_CASE_P(FloatScientific,
@@ -132,7 +127,9 @@ INSTANTIATE_TEST_CASE_P(FloatScientific,
                                          CLOSED_RANGE('0', '9')));
 
 typedef std::tr1::tuple<char, char> FloatFractionParams;
-class FloatFractionTest : public testing::TestWithParam<FloatFractionParams>
+class FloatFractionTest :
+    public FloatTest,
+    public testing::WithParamInterface<FloatFractionParams>
 {
 };
 
@@ -152,7 +149,7 @@ TEST_P(FloatFractionTest, FloatIdentified)
         str.push_back(fraction);
 
     SCOPED_TRACE("FloatFractionTest");
-    PreprocessAndVerifyFloat(str.c_str());
+    preprocess(str);
 }
 
 INSTANTIATE_TEST_CASE_P(FloatFraction_X_X,
@@ -174,9 +171,8 @@ INSTANTIATE_TEST_CASE_P(FloatFraction_X_0,
 
 // In the tests above we have tested individual parts of a float separately.
 // This test has all parts of a float.
-
-TEST(FloatFractionScientificTest, FloatIdentified)
+TEST_F(FloatTest, FractionScientific)
 {
-    SCOPED_TRACE("FloatFractionScientificTest");
-    PreprocessAndVerifyFloat("0.1e+2");
+    SCOPED_TRACE("FractionScientific");
+    preprocess("0.1e+2");
 }
