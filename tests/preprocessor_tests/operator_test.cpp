@@ -7,8 +7,6 @@
 #include "PreprocessorTest.h"
 #include "Token.h"
 
-#if GTEST_HAS_PARAM_TEST
-
 struct OperatorTestParam
 {
     const char* str;
@@ -80,4 +78,3 @@ static const OperatorTestParam kOperators[] = {
 INSTANTIATE_TEST_CASE_P(All, OperatorTest,
                         testing::ValuesIn(kOperators));
 
-#endif  // GTEST_HAS_PARAM_TEST

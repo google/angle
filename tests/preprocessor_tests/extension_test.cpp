@@ -73,8 +73,6 @@ TEST_F(ExtensionTest, MissingNewline)
     preprocess(str);
 }
 
-#if GTEST_HAS_PARAM_TEST
-
 struct ExtensionTestParam
 {
     const char* str;
@@ -109,5 +107,3 @@ static const ExtensionTestParam kParams[] = {
     {"#extension foo : bar baz\n", pp::Diagnostics::UNEXPECTED_TOKEN}
 };
 INSTANTIATE_TEST_CASE_P(All, InvalidExtensionTest, testing::ValuesIn(kParams));
-
-#endif  // GTEST_HAS_PARAM_TEST

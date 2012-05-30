@@ -29,8 +29,6 @@ class SpaceTest : public PreprocessorTest
 // Note that newline characters (\n) will be tested separately.
 static const char kSpaceChars[] = {' ', '\t', '\v', '\f'};
 
-#if GTEST_HAS_PARAM_TEST
-
 // This test fixture tests the processing of a single whitespace character.
 // All tests in this fixture are ran with all possible whitespace character
 // allowed in GLSL.
@@ -51,10 +49,6 @@ TEST_P(SpaceCharTest, SpaceIgnored)
 INSTANTIATE_TEST_CASE_P(SingleSpaceChar,
                         SpaceCharTest,
                         testing::ValuesIn(kSpaceChars));
-
-#endif  // GTEST_HAS_PARAM_TEST
-
-#if GTEST_HAS_COMBINE
 
 // This test fixture tests the processing of a string containing consecutive
 // whitespace characters. All tests in this fixture are ran with all possible
@@ -82,8 +76,6 @@ INSTANTIATE_TEST_CASE_P(SpaceCharCombination,
                         testing::Combine(testing::ValuesIn(kSpaceChars),
                                          testing::ValuesIn(kSpaceChars),
                                          testing::ValuesIn(kSpaceChars)));
-
-#endif  // GTEST_HAS_COMBINE
 
 // The tests above make sure that the space char is recorded in the
 // next token. This test makes sure that a token is not incorrectly marked

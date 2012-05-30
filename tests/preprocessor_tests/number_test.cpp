@@ -7,7 +7,7 @@
 #include "PreprocessorTest.h"
 #include "Token.h"
 
-#if GTEST_HAS_PARAM_TEST
+#define CLOSED_RANGE(x, y) testing::Range(x, static_cast<char>((y) + 1))
 
 class InvalidNumberTest : public PreprocessorTest,
                           public testing::WithParamInterface<const char*>
@@ -33,10 +33,6 @@ INSTANTIATE_TEST_CASE_P(InvalidIntegers, InvalidNumberTest,
 INSTANTIATE_TEST_CASE_P(InvalidFloats, InvalidNumberTest,
                         testing::Values("1eg", "0.a", "0.1.2", ".0a", ".0.1"));
 
-#endif  // GTEST_HAS_PARAM_TEST
-
-#if GTEST_HAS_COMBINE
-
 typedef std::tr1::tuple<const char*, char> IntegerParams;
 class IntegerTest : public PreprocessorTest,
                     public testing::WithParamInterface<IntegerParams>
@@ -56,8 +52,6 @@ TEST_P(IntegerTest, Identified)
     EXPECT_EQ(pp::Token::CONST_INT, token.type);
     EXPECT_EQ(str, token.value);
 }
-
-#define CLOSED_RANGE(x, y) testing::Range(x, static_cast<char>((y) + 1))
 
 INSTANTIATE_TEST_CASE_P(DecimalInteger,
                         IntegerTest,
@@ -166,8 +160,6 @@ INSTANTIATE_TEST_CASE_P(FloatFraction_X_0,
                         FloatFractionTest,
                         testing::Combine(CLOSED_RANGE('0', '9'),
                                          testing::Values('\0')));
-
-#endif  // GTEST_HAS_COMBINE
 
 // In the tests above we have tested individual parts of a float separately.
 // This test has all parts of a float.

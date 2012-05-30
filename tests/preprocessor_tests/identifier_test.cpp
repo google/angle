@@ -7,6 +7,8 @@
 #include "PreprocessorTest.h"
 #include "Token.h"
 
+#define CLOSED_RANGE(x, y) testing::Range(x, static_cast<char>((y) + 1))
+
 class IdentifierTest : public PreprocessorTest
 {
 protected:
@@ -21,10 +23,6 @@ protected:
         EXPECT_EQ(str, token.value);
     }
 };
-
-#if GTEST_HAS_PARAM_TEST
-
-#define CLOSED_RANGE(x, y) testing::Range(x, static_cast<char>((y) + 1))
 
 class SingleLetterIdentifierTest : public IdentifierTest,
                                    public testing::WithParamInterface<char>
@@ -52,10 +50,6 @@ INSTANTIATE_TEST_CASE_P(a_z,
 INSTANTIATE_TEST_CASE_P(A_Z,
                         SingleLetterIdentifierTest,
                         CLOSED_RANGE('A', 'Z'));
-
-#endif  // GTEST_HAS_PARAM_TEST
-
-#if GTEST_HAS_COMBINE
 
 typedef std::tr1::tuple<char, char> IdentifierParams;
 class DoubleLetterIdentifierTest :
@@ -145,8 +139,6 @@ INSTANTIATE_TEST_CASE_P(A_Z_0_9,
                         DoubleLetterIdentifierTest,
                         testing::Combine(CLOSED_RANGE('A', 'Z'),
                                          CLOSED_RANGE('0', '9')));
-
-#endif  // GTEST_HAS_COMBINE
 
 // The tests above cover one-letter and various combinations of two-letter
 // identifier names. This test covers all characters in a single string.

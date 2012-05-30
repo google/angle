@@ -10,8 +10,6 @@
 #include "PreprocessorTest.h"
 #include "Token.h"
 
-#if GTEST_HAS_PARAM_TEST
-
 class CharTest : public PreprocessorTest,
                  public testing::WithParamInterface<int>
 {
@@ -98,4 +96,3 @@ TEST_P(CharTest, Identified)
 INSTANTIATE_TEST_CASE_P(All, CharTest,
                         testing::Range(CHAR_MIN, CHAR_MAX + 1));
 
-#endif  // GTEST_HAS_PARAM_TEST

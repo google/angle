@@ -70,8 +70,6 @@ TEST_F(VersionTest, MissingNewline)
     lex();
 }
 
-#if GTEST_HAS_PARAM_TEST
-
 struct VersionTestParam
 {
     const char* str;
@@ -104,5 +102,3 @@ static const VersionTestParam kParams[] = {
 };
 
 INSTANTIATE_TEST_CASE_P(All, InvalidVersionTest, testing::ValuesIn(kParams));
-
-#endif // GTEST_HAS_PARAM_TEST

@@ -7,8 +7,6 @@
 #include "PreprocessorTest.h"
 #include "Token.h"
 
-#if GTEST_HAS_PARAM_TEST
-
 class CommentTest : public PreprocessorTest,
                     public testing::WithParamInterface<const char*>
 {
@@ -39,8 +37,6 @@ INSTANTIATE_TEST_CASE_P(BlockComment, CommentTest,
                                         "/*/**/",    // Nested block comment.
                                         "/***/",     // With lone '*'.
                                         "/*\"*/"));  // Invalid character.
-
-#endif  // GTEST_HAS_PARAM_TEST
 
 class BlockCommentTest : public PreprocessorTest
 {

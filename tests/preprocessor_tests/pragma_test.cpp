@@ -101,8 +101,6 @@ TEST_F(PragmaTest, MissingNewline)
     preprocess(str);
 }
 
-#if GTEST_HAS_PARAM_TEST
-
 class InvalidPragmaTest : public PragmaTest,
                           public testing::WithParamInterface<const char*>
 {
@@ -130,5 +128,3 @@ INSTANTIATE_TEST_CASE_P(All, InvalidPragmaTest, testing::Values(
     "#pragma foo(bar\n",         // Missing right paren.
     "#pragma foo bar\n",         // Missing parens.
     "#pragma foo(bar) baz\n"));  // Extra tokens.
-
-#endif  // GTEST_HAS_PARAM_TEST
