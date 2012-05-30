@@ -126,6 +126,19 @@
         'compiler/preprocessor/symbols.h',
         'compiler/preprocessor/tokens.c',
         'compiler/preprocessor/tokens.h',
+        # Dependency graph
+        'compiler/depgraph/DependencyGraph.cpp',
+        'compiler/depgraph/DependencyGraph.h',
+        'compiler/depgraph/DependencyGraphBuilder.cpp',
+        'compiler/depgraph/DependencyGraphBuilder.h',
+        'compiler/depgraph/DependencyGraphOutput.cpp',
+        'compiler/depgraph/DependencyGraphOutput.h',
+        'compiler/depgraph/DependencyGraphTraverse.cpp',
+        # Timing restrictions
+        'compiler/timing/RestrictFragmentShaderTiming.cpp',
+        'compiler/timing/RestrictFragmentShaderTiming.h',
+        'compiler/timing/RestrictVertexShaderTiming.cpp',
+        'compiler/timing/RestrictVertexShaderTiming.h',
       ],
       'conditions': [
         ['OS=="win"', {

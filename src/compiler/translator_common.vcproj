@@ -518,6 +518,38 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="depgraph"
+				>
+				<File
+					RelativePath=".\depgraph\DependencyGraph.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\depgraph\DependencyGraphBuilder.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\depgraph\DependencyGraphOutput.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\depgraph\DependencyGraphTraverse.cpp"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="timing"
+				>
+				<File
+					RelativePath=".\timing\RestrictFragmentShaderTiming.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\timing\RestrictVertexShaderTiming.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -693,6 +725,34 @@
 				>
 				<File
 					RelativePath=".\glslang_tab.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="timing"
+				>
+				<File
+					RelativePath=".\timing\RestrictFragmentShaderTiming.h"
+					>
+				</File>
+				<File
+					RelativePath=".\timing\RestrictVertexShaderTiming.h"
+					>
+				</File>
+			</Filter>
+			<Filter
+				Name="depgraph"
+				>
+				<File
+					RelativePath=".\depgraph\DependencyGraph.h"
+					>
+				</File>
+				<File
+					RelativePath=".\depgraph\DependencyGraphBuilder.h"
+					>
+				</File>
+				<File
+					RelativePath=".\depgraph\DependencyGraphOutput.h"
 					>
 				</File>
 			</Filter>

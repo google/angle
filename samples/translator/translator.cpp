@@ -67,6 +67,7 @@ int main(int argc, char* argv[])
     char* buffer = 0;
     int bufferLen = 0;
     int numAttribs = 0, numUniforms = 0;
+    ShShaderSpec spec = SH_GLES2_SPEC;
     ShShaderOutput output = SH_ESSL_OUTPUT;
 
     ShInitialize();
@@ -85,6 +86,17 @@ int main(int argc, char* argv[])
             case 'u': compileOptions |= SH_ATTRIBUTES_UNIFORMS; break;
             case 'l': compileOptions |= SH_UNROLL_FOR_LOOP_WITH_INTEGER_INDEX; break;
             case 'e': compileOptions |= SH_EMULATE_BUILT_IN_FUNCTIONS; break;
+            case 'd': compileOptions |= SH_DEPENDENCY_GRAPH; break;
+            case 't': compileOptions |= SH_TIMING_RESTRICTIONS; break;
+            case 's':
+                if (argv[0][2] == '=') {
+                    switch (argv[0][3]) {
+                        case 'e': spec = SH_GLES2_SPEC; break;
+                        case 'w': spec = SH_WEBGL_SPEC; break;
+                        default: failCode = EFailUsage;
+                    }                    
+                }
+                break;
             case 'b':
                 if (argv[0][2] == '=') {
                     switch (argv[0][3]) {
@@ -116,13 +128,13 @@ int main(int argc, char* argv[])
             case SH_VERTEX_SHADER:
                 if (vertexCompiler == 0)
                     vertexCompiler = ShConstructCompiler(
-                        SH_VERTEX_SHADER, SH_GLES2_SPEC, output, &resources);
+                        SH_VERTEX_SHADER, spec, output, &resources);
                 compiler = vertexCompiler;
                 break;
             case SH_FRAGMENT_SHADER:
                 if (fragmentCompiler == 0)
                     fragmentCompiler = ShConstructCompiler(
-                        SH_FRAGMENT_SHADER, SH_GLES2_SPEC, output, &resources);
+                        SH_FRAGMENT_SHADER, spec, output, &resources);
                 compiler = fragmentCompiler;
                 break;
             default: break;
@@ -196,6 +208,10 @@ void usage()
         "       -u       : print active attribs and uniforms\n"
         "       -l       : unroll for-loops with integer indices\n"
         "       -e       : emulate certain built-in functions (workaround for driver bugs)\n"
+        "       -t       : enforce experimental timing restrictions\n"
+        "       -d       : print dependency graph used to enforce timing restrictions\n"
+        "       -s=e     : use GLES2 spec (this is by default)\n"
+        "       -s=w     : use WebGL spec\n"
         "       -b=e     : output GLSL ES code (this is by default)\n"
         "       -b=g     : output GLSL code\n"
         "       -b=h     : output HLSL code\n"

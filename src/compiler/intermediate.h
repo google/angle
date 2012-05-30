@@ -452,7 +452,7 @@ public:
     const TString& getName() const { return name; }
 
     void setUserDefined() { userDefined = true; }
-    bool isUserDefined() { return userDefined; }
+    bool isUserDefined() const { return userDefined; }
 
     void setOptimize(bool o) { optimize = o; }
     bool getOptimize() { return optimize; }
