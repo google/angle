@@ -7,6 +7,7 @@
 #include "DirectiveParser.h"
 
 #include <cassert>
+#include <cstdlib>
 #include <sstream>
 
 #include "Diagnostics.h"
@@ -218,7 +219,7 @@ void DirectiveParser::parseUndef(Token* token)
         return;
     }
 
-    MacroSet::const_iterator iter = mMacroSet->find(token->value);
+    MacroSet::iterator iter = mMacroSet->find(token->value);
     if (iter != mMacroSet->end())
         mMacroSet->erase(iter);
 

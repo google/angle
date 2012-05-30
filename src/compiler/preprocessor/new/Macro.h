@@ -35,4 +35,4 @@ struct Macro
 typedef std::map<std::string, Macro> MacroSet;
 
 }  // namespace pp
-#endif COMPILER_PREPROCESSOR_MACRO_H_
+#endif  // COMPILER_PREPROCESSOR_MACRO_H_
