@@ -10,8 +10,10 @@
 class VersionTest : public PreprocessorTest
 {
   protected:
-    void lex()
+    void preprocess(const char* str)
     {
+        ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
+
         pp::Token token;
         mPreprocessor.lex(&token);
         EXPECT_EQ(pp::Token::LAST, token.type);
@@ -22,7 +24,6 @@ class VersionTest : public PreprocessorTest
 TEST_F(VersionTest, Valid)
 {
     const char* str = "#version 200\n";
-    ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
 
     using testing::_;
     EXPECT_CALL(mDirectiveHandler,
@@ -30,7 +31,7 @@ TEST_F(VersionTest, Valid)
     // No error or warning.
     EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
 
-    lex();
+    preprocess(str);
 }
 
 TEST_F(VersionTest, CommentsIgnored)
@@ -44,7 +45,6 @@ TEST_F(VersionTest, CommentsIgnored)
                       "/*foo*/"
                       "//foo"
                       "\n";
-    ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
 
     using testing::_;
     EXPECT_CALL(mDirectiveHandler,
@@ -52,13 +52,12 @@ TEST_F(VersionTest, CommentsIgnored)
     // No error or warning.
     EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
 
-    lex();
+    preprocess(str);
 }
 
 TEST_F(VersionTest, MissingNewline)
 {
     const char* str = "#version 200";
-    ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
 
     using testing::_;
     // Directive successfully parsed.
@@ -67,7 +66,7 @@ TEST_F(VersionTest, MissingNewline)
     // Error reported about EOF.
     EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::EOF_IN_DIRECTIVE, _, _));
 
-    lex();
+    preprocess(str);
 }
 
 struct VersionTestParam
@@ -84,7 +83,6 @@ class InvalidVersionTest : public VersionTest,
 TEST_P(InvalidVersionTest, Identified)
 {
     VersionTestParam param = GetParam();
-    ASSERT_TRUE(mPreprocessor.init(1, &param.str, NULL));
 
     using testing::_;
     // No handleVersion call.
@@ -92,7 +90,7 @@ TEST_P(InvalidVersionTest, Identified)
     // Invalid version directive call.
     EXPECT_CALL(mDiagnostics, print(param.id, pp::SourceLocation(0, 1), _));
 
-    lex();
+    preprocess(param.str);
 }
 
 static const VersionTestParam kParams[] = {
