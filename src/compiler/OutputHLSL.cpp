@@ -39,6 +39,12 @@ OutputHLSL::OutputHLSL(TParseContext &context) : TIntermTraverser(true, true, tr
     mUsesTextureCube = false;
     mUsesTextureCube_bias = false;
     mUsesTextureCubeLod = false;
+    mUsesTexture2DLod0 = false;
+    mUsesTexture2DLod0_bias = false;
+    mUsesTexture2DProjLod0 = false;
+    mUsesTexture2DProjLod0_bias = false;
+    mUsesTextureCubeLod0 = false;
+    mUsesTextureCubeLod0_bias = false;
     mUsesDepthRange = false;
     mUsesFragCoord = false;
     mUsesPointCoord = false;
@@ -280,6 +286,72 @@ void OutputHLSL::header()
             out << "float4 gl_textureCube(samplerCUBE s, float3 t, float bias)\n"
                    "{\n"
                    "    return texCUBEbias(s, float4(t.x, -t.y, t.z, bias));\n"
+                   "}\n"
+                   "\n";
+        }
+
+        // These *Lod0 intrinsics are not available in GL fragment shaders.
+        // They are used to sample using discontinuous texture coordinates.
+        if (mUsesTexture2DLod0)
+        {
+            out << "float4 gl_texture2DLod0(sampler2D s, float2 t)\n"
+                   "{\n"
+                   "    return tex2Dlod(s, float4(t.x, 1 - t.y, 0, 0));\n"
+                   "}\n"
+                   "\n";
+        }
+
+        if (mUsesTexture2DLod0_bias)
+        {
+            out << "float4 gl_texture2DLod0(sampler2D s, float2 t, float bias)\n"
+                   "{\n"
+                   "    return tex2Dlod(s, float4(t.x, 1 - t.y, 0, 0));\n"
+                   "}\n"
+                   "\n";
+        }
+
+        if (mUsesTexture2DProjLod0)
+        {
+            out << "float4 gl_texture2DProjLod0(sampler2D s, float3 t)\n"
+                   "{\n"
+                   "    return tex2Dlod(s, float4(t.x / t.z, 1 - t.y / t.z, 0, 0));\n"
+                   "}\n"
+                   "\n"
+                   "float4 gl_texture2DProjLod(sampler2D s, float4 t)\n"
+                   "{\n"
+                   "    return tex2Dlod(s, float4(t.x / t.w, 1 - t.y / t.w, 0, 0));\n"
+                   "}\n"
+                   "\n";
+        }
+
+        if (mUsesTexture2DProjLod0_bias)
+        {
+            out << "float4 gl_texture2DProjLod0_bias(sampler2D s, float3 t, float bias)\n"
+                   "{\n"
+                   "    return tex2Dlod(s, float4(t.x / t.z, 1 - t.y / t.z, 0, 0));\n"
+                   "}\n"
+                   "\n"
+                   "float4 gl_texture2DProjLod_bias(sampler2D s, float4 t, float bias)\n"
+                   "{\n"
+                   "    return tex2Dlod(s, float4(t.x / t.w, 1 - t.y / t.w, 0, 0));\n"
+                   "}\n"
+                   "\n";
+        }
+
+        if (mUsesTextureCubeLod0)
+        {
+            out << "float4 gl_textureCubeLod0(samplerCUBE s, float3 t)\n"
+                   "{\n"
+                   "    return texCUBElod(s, float4(t.x, -t.y, t.z, 0));\n"
+                   "}\n"
+                   "\n";
+        }
+
+        if (mUsesTextureCubeLod0_bias)
+        {
+            out << "float4 gl_textureCubeLod0(samplerCUBE s, float3 t, float bias)\n"
+                   "{\n"
+                   "    return texCUBElod(s, float4(t.x, -t.y, t.z, 0));\n"
                    "}\n"
                    "\n";
         }
