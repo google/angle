@@ -795,6 +795,7 @@ D3DFORMAT ConvertRenderbufferFormat(GLenum format)
 {
     switch (format)
     {
+      case GL_NONE:                 return D3DFMT_NULL;
       case GL_RGBA4:
       case GL_RGB5_A1:
       case GL_RGBA8_OES:            return D3DFMT_A8R8G8B8;

@@ -306,6 +306,7 @@ class Texture2D : public Texture
   protected:
     friend class RenderbufferTexture2D;
     virtual IDirect3DSurface9 *getRenderTarget(GLenum target);
+    virtual IDirect3DSurface9 *getDepthStencil(GLenum target);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture2D);

@@ -98,7 +98,7 @@ IDirect3DSurface9 *RenderbufferTexture2D::getRenderTarget()
 // caller must Release() the returned surface
 IDirect3DSurface9 *RenderbufferTexture2D::getDepthStencil()
 {
-    return NULL;
+    return mTexture2D->getDepthStencil(mTarget);
 }
 
 GLsizei RenderbufferTexture2D::getWidth() const

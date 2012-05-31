@@ -2374,6 +2374,33 @@ IDirect3DSurface9 *Texture2D::getRenderTarget(GLenum target)
 
     updateTexture();
     
+    // ensure this is NOT a depth texture
+    if (isDepth(0))
+    {
+        return NULL;
+    }
+    return mTexStorage->getSurfaceLevel(0);
+}
+
+// Increments refcount on surface.
+// caller must Release() the returned surface
+IDirect3DSurface9 *Texture2D::getDepthStencil(GLenum target)
+{
+    ASSERT(target == GL_TEXTURE_2D);
+
+    // ensure the underlying texture is created
+    if (getStorage(true) == NULL)
+    {
+        return NULL;
+    }
+
+    updateTexture();
+
+    // ensure this is actually a depth texture
+    if (!isDepth(0))
+    {
+        return NULL;
+    }
     return mTexStorage->getSurfaceLevel(0);
 }
 

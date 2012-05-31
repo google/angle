@@ -1841,13 +1841,31 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         return error(GL_INVALID_FRAMEBUFFER_OPERATION, false);
     }
 
+    // if there is no color attachment we must synthesize a NULL colorattachment
+    // to keep the D3D runtime happy.  This should only be possible if depth texturing.
+    Renderbuffer *renderbufferObject = NULL;
+    if (framebufferObject->getColorbufferType() != GL_NONE)
+    {
+        renderbufferObject = framebufferObject->getColorbuffer();
+    }
+    else
+    {
+        renderbufferObject = framebufferObject->getNullColorbuffer();
+    }
+    if (!renderbufferObject)
+    {
+        ERR("unable to locate renderbuffer for FBO.");
+        return false;
+    }
+
     bool renderTargetChanged = false;
-    unsigned int renderTargetSerial = framebufferObject->getRenderTargetSerial();
+    unsigned int renderTargetSerial = renderbufferObject->getSerial();
     if (renderTargetSerial != mAppliedRenderTargetSerial)
     {
-        IDirect3DSurface9 *renderTarget = framebufferObject->getRenderTarget();
+        IDirect3DSurface9 *renderTarget = renderbufferObject->getRenderTarget();
         if (!renderTarget)
         {
+            ERR("render target pointer unexpectedly null.");
             return false;   // Context must be lost
         }
         mDevice->SetRenderTarget(0, renderTarget);
@@ -1862,25 +1880,27 @@ bool Context::applyRenderTarget(bool ignoreViewport)
     unsigned int stencilbufferSerial = 0;
     if (framebufferObject->getDepthbufferType() != GL_NONE)
     {
-        depthStencil = framebufferObject->getDepthbuffer()->getDepthStencil();
+        Renderbuffer *depthbuffer = framebufferObject->getDepthbuffer();
+        depthStencil = depthbuffer->getDepthStencil();
         if (!depthStencil)
         {
             ERR("Depth stencil pointer unexpectedly null.");
             return false;
         }
         
-        depthbufferSerial = framebufferObject->getDepthbuffer()->getSerial();
+        depthbufferSerial = depthbuffer->getSerial();
     }
     else if (framebufferObject->getStencilbufferType() != GL_NONE)
     {
-        depthStencil = framebufferObject->getStencilbuffer()->getDepthStencil();
+        Renderbuffer *stencilbuffer = framebufferObject->getStencilbuffer();
+        depthStencil = stencilbuffer->getDepthStencil();
         if (!depthStencil)
         {
             ERR("Depth stencil pointer unexpectedly null.");
             return false;
         }
         
-        stencilbufferSerial = framebufferObject->getStencilbuffer()->getSerial();
+        stencilbufferSerial = stencilbuffer->getSerial();
     }
 
     if (depthbufferSerial != mAppliedDepthbufferSerial ||
@@ -1900,7 +1920,7 @@ bool Context::applyRenderTarget(bool ignoreViewport)
 
     if (!mRenderTargetDescInitialized || renderTargetChanged)
     {
-        IDirect3DSurface9 *renderTarget = framebufferObject->getRenderTarget();
+        IDirect3DSurface9 *renderTarget = renderbufferObject->getRenderTarget();
         if (!renderTarget)
         {
             return false;   // Context must be lost
