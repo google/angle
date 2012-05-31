@@ -4,6 +4,8 @@
 // found in the LICENSE file.
 //
 
+#pragma warning(disable: 4718)
+
 #include "compiler/depgraph/DependencyGraph.h"
 #include "compiler/depgraph/DependencyGraphBuilder.h"
 

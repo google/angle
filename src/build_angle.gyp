@@ -161,8 +161,6 @@
       ],
       'sources': [
         'compiler/CodeGenGLSL.cpp',
-        'compiler/DetectDiscontinuity.cpp',
-        'compiler/DetectDiscontinuity.h',
         'compiler/OutputESSL.cpp',
         'compiler/OutputESSL.h',        
         'compiler/OutputGLSLBase.cpp',
@@ -195,6 +193,8 @@
           ],
           'sources': [
             'compiler/ShaderLang.cpp',
+            'compiler/DetectDiscontinuity.cpp',
+            'compiler/DetectDiscontinuity.h',
             'compiler/CodeGenHLSL.cpp',
             'compiler/OutputHLSL.cpp',
             'compiler/OutputHLSL.h',
