@@ -95,6 +95,17 @@ static bool IsTextureFormatRenderable(D3DFORMAT format)
     return false;
 }
 
+static inline DWORD GetTextureUsage(bool rendertarget, D3DFORMAT fmt)
+{
+    DWORD usage = 0;
+
+    if(rendertarget)
+    {
+        usage |= D3DUSAGE_RENDERTARGET;
+    }
+    return usage;
+}
+
 Image::Image()
 {
     mWidth = 0; 
@@ -1677,7 +1688,8 @@ TextureStorage2D::TextureStorage2D(int levels, D3DFORMAT format, int width, int 
     if (width > 0 && height > 0)
     {
         IDirect3DDevice9 *device = getDevice();
-        HRESULT result = device->CreateTexture(width, height, levels, isRenderTarget() ? D3DUSAGE_RENDERTARGET : 0, format, getPool(), &mTexture, NULL);
+        DWORD usage = GetTextureUsage(isRenderTarget(), format);
+        HRESULT result = device->CreateTexture(width, height, levels, usage, format, getPool(), &mTexture, NULL);
 
         if (FAILED(result))
         {
@@ -2368,7 +2380,8 @@ TextureStorageCubeMap::TextureStorageCubeMap(int levels, D3DFORMAT format, int s
     if (size > 0)
     {
         IDirect3DDevice9 *device = getDevice();
-        HRESULT result = device->CreateCubeTexture(size, levels, isRenderTarget() ? D3DUSAGE_RENDERTARGET : 0, format, getPool(), &mTexture, NULL);
+        DWORD usage = GetTextureUsage(isRenderTarget(), format);
+        HRESULT result = device->CreateCubeTexture(size, levels, usage, format, getPool(), &mTexture, NULL);
 
         if (FAILED(result))
         {
