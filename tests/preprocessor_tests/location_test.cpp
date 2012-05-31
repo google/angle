@@ -35,7 +35,7 @@ TEST_F(LocationTest, String0_Line1)
     loc.line = 1;
 
     SCOPED_TRACE("String0_Line1");
-    preprocess(1, &str, 0, loc);
+    preprocess(1, &str, NULL, loc);
 }
 
 TEST_F(LocationTest, String0_Line2)
@@ -46,7 +46,7 @@ TEST_F(LocationTest, String0_Line2)
     loc.line = 2;
 
     SCOPED_TRACE("String0_Line2");
-    preprocess(1, &str, 0, loc);
+    preprocess(1, &str, NULL, loc);
 }
 
 TEST_F(LocationTest, String1_Line1)
@@ -57,7 +57,7 @@ TEST_F(LocationTest, String1_Line1)
     loc.line = 1;
 
     SCOPED_TRACE("String1_Line1");
-    preprocess(2, str, 0, loc);
+    preprocess(2, str, NULL, loc);
 }
 
 TEST_F(LocationTest, String1_Line2)
@@ -68,7 +68,7 @@ TEST_F(LocationTest, String1_Line2)
     loc.line = 2;
 
     SCOPED_TRACE("String1_Line2");
-    preprocess(2, str, 0, loc);
+    preprocess(2, str, NULL, loc);
 }
 
 TEST_F(LocationTest, NewlineInsideCommentCounted)
@@ -79,14 +79,14 @@ TEST_F(LocationTest, NewlineInsideCommentCounted)
     loc.line = 3;
 
     SCOPED_TRACE("NewlineInsideCommentCounted");
-    preprocess(1, &str, 0, loc);
+    preprocess(1, &str, NULL, loc);
 }
 
 TEST_F(LocationTest, ErrorLocationAfterComment)
 {
     const char* str = "/*\n\n*/@";
 
-    ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
+    ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
     EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::INVALID_CHARACTER,
                                     pp::SourceLocation(0, 3),
                                     "@"));
@@ -106,7 +106,7 @@ TEST_F(LocationTest, TokenStraddlingTwoStrings)
     loc.line = 1;
 
     SCOPED_TRACE("TokenStraddlingTwoStrings");
-    preprocess(2, str, 0, loc);
+    preprocess(2, str, NULL, loc);
 }
 
 TEST_F(LocationTest, TokenStraddlingThreeStrings)
@@ -117,7 +117,61 @@ TEST_F(LocationTest, TokenStraddlingThreeStrings)
     loc.line = 1;
 
     SCOPED_TRACE("TokenStraddlingThreeStrings");
-    preprocess(3, str, 0, loc);
+    preprocess(3, str, NULL, loc);
+}
+
+TEST_F(LocationTest, EndOfFileWithoutNewline)
+{
+    const char* const str[] = {"foo"};
+    ASSERT_TRUE(mPreprocessor.init(1, str, NULL));
+
+    pp::Token token;
+    mPreprocessor.lex(&token);
+    EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
+    EXPECT_EQ("foo", token.value);
+    EXPECT_EQ(0, token.location.file);
+    EXPECT_EQ(1, token.location.line);
+
+    mPreprocessor.lex(&token);
+    EXPECT_EQ(pp::Token::LAST, token.type);
+    EXPECT_EQ(0, token.location.file);
+    EXPECT_EQ(1, token.location.line);
+}
+
+TEST_F(LocationTest, EndOfFileAfterNewline)
+{
+    const char* const str[] = {"foo\n"};
+    ASSERT_TRUE(mPreprocessor.init(1, str, NULL));
+
+    pp::Token token;
+    mPreprocessor.lex(&token);
+    EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
+    EXPECT_EQ("foo", token.value);
+    EXPECT_EQ(0, token.location.file);
+    EXPECT_EQ(1, token.location.line);
+
+    mPreprocessor.lex(&token);
+    EXPECT_EQ(pp::Token::LAST, token.type);
+    EXPECT_EQ(0, token.location.file);
+    EXPECT_EQ(2, token.location.line);
+}
+
+TEST_F(LocationTest, EndOfFileAfterEmptyString)
+{
+    const char* const str[] = {"foo\n", "\n", ""};
+    ASSERT_TRUE(mPreprocessor.init(3, str, NULL));
+
+    pp::Token token;
+    mPreprocessor.lex(&token);
+    EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
+    EXPECT_EQ("foo", token.value);
+    EXPECT_EQ(0, token.location.file);
+    EXPECT_EQ(1, token.location.line);
+
+    mPreprocessor.lex(&token);
+    EXPECT_EQ(pp::Token::LAST, token.type);
+    EXPECT_EQ(2, token.location.file);
+    EXPECT_EQ(1, token.location.line);
 }
 
 // TODO(alokp): Add tests for #line directives.

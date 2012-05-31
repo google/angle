@@ -42,18 +42,20 @@ typedef pp::SourceLocation YYLTYPE;
         yyextra->lineStart = true;     \
     } while(0);
 
-#define YY_USER_ACTION                                            \
-    do {                                                          \
-        pp::Input* input = &yyextra->input;                       \
-        pp::Input::Location* scanLoc = &yyextra->scanLoc;         \
-        while (scanLoc->cIndex >= input->length(scanLoc->sIndex)) \
-        {                                                         \
-            scanLoc->cIndex -= input->length(scanLoc->sIndex++);  \
-            ++yyfileno; yylineno = 1;                             \
-        }                                                         \
-        yylloc->file = yyfileno;                                  \
-        yylloc->line = yylineno;                                  \
-        scanLoc->cIndex += yyleng;                                \
+#define YY_USER_ACTION                                              \
+    do                                                              \
+    {                                                               \
+        pp::Input* input = &yyextra->input;                         \
+        pp::Input::Location* scanLoc = &yyextra->scanLoc;           \
+        while ((scanLoc->sIndex < input->count()) &&                \
+               (scanLoc->cIndex >= input->length(scanLoc->sIndex))) \
+        {                                                           \
+            scanLoc->cIndex -= input->length(scanLoc->sIndex++);    \
+            ++yyfileno; yylineno = 1;                               \
+        }                                                           \
+        yylloc->file = yyfileno;                                    \
+        yylloc->line = yylineno;                                    \
+        scanLoc->cIndex += yyleng;                                  \
     } while(0);
 
 #define YY_INPUT(buf, result, maxSize) \
@@ -236,13 +238,28 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 }
 
 <*><<EOF>> {
+    // YY_USER_ACTION is not invoked for handling EOF.
+    // Set the location for EOF token manually.
+    pp::Input* input = &yyextra->input;
+    pp::Input::Location* scanLoc = &yyextra->scanLoc;
+    int sIndexMax = std::max(0, input->count() - 1);
+    if (scanLoc->sIndex != sIndexMax)
+    {
+        // We can only reach here if there are empty strings at the
+        // end of the input.
+        scanLoc->sIndex = sIndexMax; scanLoc->cIndex = 0;
+        yyfileno = sIndexMax; yylineno = 1;
+    }
+    yylloc->file = yyfileno;
+    yylloc->line = yylineno;
+    yylval->clear();
+
     if (YY_START == COMMENT)
     {
         yyextra->diagnostics->report(pp::Diagnostics::EOF_IN_COMMENT,
                                      pp::SourceLocation(yyfileno, yylineno),
                                      "");
     }
-    yylval->clear();
     yyterminate();
 }
 
@@ -273,9 +290,11 @@ void Tokenizer::lex(Token* token)
 {
     token->type = yylex(&token->value, &token->location, mHandle);
 
+    token->setAtStartOfLine(mContext.lineStart);
+    mContext.lineStart = token->type == '\n';
+
     token->setHasLeadingSpace(mContext.leadingSpace);
     mContext.leadingSpace = false;
-    mContext.lineStart = token->type == '\n';
 }
 
 bool Tokenizer::initScanner()

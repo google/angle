@@ -50,35 +50,22 @@ struct Token
     };
     enum Flags
     {
-        HAS_LEADING_SPACE = 1 << 0
+        AT_START_OF_LINE  = 1 << 0,
+        HAS_LEADING_SPACE = 1 << 1
     };
 
     Token() : type(0), flags(0) { }
 
-    void reset()
-    {
-        type = 0;
-        flags = 0;
-        location = SourceLocation();
-        value.clear();
-    }
+    void reset();
+    bool equals(const Token& other) const;
 
-    bool equals(const Token& other) const
-    {
-        return (type == other.type) &&
-               (flags == other.flags) &&
-               (location == other.location) &&
-               (value == other.value);
-    }
+    // Returns true if this is the first token on line.
+    // It disregards any leading whitespace.
+    bool atStartOfLine() const { return (flags & AT_START_OF_LINE) != 0; }
+    void setAtStartOfLine(bool start);
 
     bool hasLeadingSpace() const { return (flags & HAS_LEADING_SPACE) != 0; }
-    void setHasLeadingSpace(bool space)
-    {
-        if (space)
-            flags |= HAS_LEADING_SPACE;
-        else
-            flags &= ~HAS_LEADING_SPACE;
-    }
+    void setHasLeadingSpace(bool space);
 
     int type;
     int flags;
