@@ -3759,6 +3759,11 @@ void Context::initExtensionString()
     mExtensionString += "GL_EXT_texture_storage ";
 
     // ANGLE-specific extensions
+    if (supportsDepthTextures())
+    {
+        mExtensionString += "GL_ANGLE_depth_texture ";
+    }
+
     mExtensionString += "GL_ANGLE_framebuffer_blit ";
     if (getMaxSupportedSamples() != 0)
     {
