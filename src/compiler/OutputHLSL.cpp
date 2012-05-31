@@ -1290,59 +1290,54 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         {
             TString name = TFunction::unmangleName(node->getName());
 
-            if (visit == PreVisit)
+            out << typeString(node->getType()) << " ";
+
+            if (name == "main")
             {
-                out << typeString(node->getType()) << " ";
-
-                if (name == "main")
-                {
-                    out << "gl_main(";
-                }
-                else
-                {
-                    out << decorate(name) << "(";
-                }
-
-                TIntermSequence &sequence = node->getSequence();
-                TIntermSequence &arguments = sequence[0]->getAsAggregate()->getSequence();
-
-                for (unsigned int i = 0; i < arguments.size(); i++)
-                {
-                    TIntermSymbol *symbol = arguments[i]->getAsSymbolNode();
-
-                    if (symbol)
-                    {
-                        if (symbol->getType().getStruct())
-                        {
-                            addConstructor(symbol->getType(), scopedStruct(symbol->getType().getTypeName()), NULL);
-                        }
-
-                        out << argumentString(symbol);
-
-                        if (i < arguments.size() - 1)
-                        {
-                            out << ", ";
-                        }
-                    }
-                    else UNREACHABLE();
-                }
-
-                sequence.erase(sequence.begin());
-
-                out << ")\n";
-                
-                outputLineDirective(node->getLine());
-                out << "{\n";
-                
-                mInsideFunction = true;
+                out << "gl_main(";
             }
-            else if (visit == PostVisit)
+            else
             {
-                outputLineDirective(node->getEndLine());
-                out << "}\n";
+                out << decorate(name) << "(";
+            }
 
+            TIntermSequence &sequence = node->getSequence();
+            TIntermSequence &arguments = sequence[0]->getAsAggregate()->getSequence();
+
+            for (unsigned int i = 0; i < arguments.size(); i++)
+            {
+                TIntermSymbol *symbol = arguments[i]->getAsSymbolNode();
+
+                if (symbol)
+                {
+                    if (symbol->getType().getStruct())
+                    {
+                        addConstructor(symbol->getType(), scopedStruct(symbol->getType().getTypeName()), NULL);
+                    }
+
+                    out << argumentString(symbol);
+
+                    if (i < arguments.size() - 1)
+                    {
+                        out << ", ";
+                    }
+                }
+                else UNREACHABLE();
+            }
+
+            out << ")\n"
+                "{\n";
+            
+            if (sequence.size() > 1)
+            {
+                mInsideFunction = true;
+                sequence[1]->traverse(this);
                 mInsideFunction = false;
             }
+            
+            out << "}\n";
+
+            return false;
         }
         break;
       case EOpFunctionCall:
