@@ -10,29 +10,110 @@
 
 #include "compiler/DetectDiscontinuity.h"
 
+#include "compiler/ParseHelper.h"
+
 namespace sh
 {
-bool DetectDiscontinuity::traverse(TIntermNode *node)
+bool DetectLoopDiscontinuity::traverse(TIntermNode *node)
 {
-    mDiscontinuity = false;
+    mLoopDiscontinuity = false;
     node->traverse(this);
-    return mDiscontinuity;
+    return mLoopDiscontinuity;
 }
 
-bool DetectDiscontinuity::visitBranch(Visit visit, TIntermBranch *node)
+bool DetectLoopDiscontinuity::visitBranch(Visit visit, TIntermBranch *node)
 {
+    if (mLoopDiscontinuity)
+    {
+        return false;
+    }
+
     switch (node->getFlowOp())
     {
       case EOpKill:
         break;
       case EOpBreak:
       case EOpContinue:
-        mDiscontinuity = true;
+        mLoopDiscontinuity = true;
       case EOpReturn:
         break;
       default: UNREACHABLE();
     }
 
-    return !mDiscontinuity;
+    return !mLoopDiscontinuity;
+}
+
+bool DetectLoopDiscontinuity::visitAggregate(Visit visit, TIntermAggregate *node)
+{
+    return !mLoopDiscontinuity;
+}
+
+bool containsLoopDiscontinuity(TIntermNode *node)
+{
+    DetectLoopDiscontinuity detectLoopDiscontinuity;
+    return detectLoopDiscontinuity.traverse(node);
+}
+
+bool DetectGradientOperation::traverse(TIntermNode *node)
+{
+    mGradientOperation = false;
+    node->traverse(this);
+    return mGradientOperation;
+}
+
+bool DetectGradientOperation::visitUnary(Visit visit, TIntermUnary *node)
+{
+    if (mGradientOperation)
+    {
+        return false;
+    }
+
+    switch (node->getOp())
+    {
+      case EOpDFdx:
+      case EOpDFdy:
+        mGradientOperation = true;
+      default:
+        break;
+    }
+
+    return !mGradientOperation;
+}
+
+bool DetectGradientOperation::visitAggregate(Visit visit, TIntermAggregate *node)
+{
+    if (mGradientOperation)
+    {
+        return false;
+    }
+
+    if (node->getOp() == EOpFunctionCall)
+    {
+        if (!node->isUserDefined())
+        {
+            TString name = TFunction::unmangleName(node->getName());
+
+            if (name == "texture2D" ||
+                name == "texture2DProj" ||
+                name == "textureCube")
+            {
+                mGradientOperation = true;
+            }
+        }
+        else
+        {
+            // When a user defined function is called, we have to
+            // conservatively assume it to contain gradient operations
+            mGradientOperation = true;
+        }
+    }
+
+    return !mGradientOperation;
+}
+
+bool containsGradientOperation(TIntermNode *node)
+{
+    DetectGradientOperation detectGradientOperation;
+    return detectGradientOperation.traverse(node);
 }
 }

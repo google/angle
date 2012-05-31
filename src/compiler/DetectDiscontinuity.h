@@ -15,22 +15,36 @@
 
 namespace sh
 {
-class DetectDiscontinuity : public TIntermTraverser
+// Checks whether a loop can run for a variable number of iterations
+class DetectLoopDiscontinuity : public TIntermTraverser
 {
   public:
     bool traverse(TIntermNode *node);
 
   protected:
     bool visitBranch(Visit visit, TIntermBranch *node);
+    bool visitAggregate(Visit visit, TIntermAggregate *node);
 
-    bool mDiscontinuity;
+    bool mLoopDiscontinuity;
 };
 
-bool containsDiscontinuity(TIntermNode *node)
+bool containsLoopDiscontinuity(TIntermNode *node);
+
+// Checks for intrinsic functions which compute gradients
+class DetectGradientOperation : public TIntermTraverser
 {
-    DetectDiscontinuity detectDiscontinuity;
-    return detectDiscontinuity.traverse(node);
-}
+  public:
+    bool traverse(TIntermNode *node);
+
+  protected:
+    bool visitUnary(Visit visit, TIntermUnary *node);
+    bool visitAggregate(Visit visit, TIntermAggregate *node);
+
+    bool mGradientOperation;
+};
+
+bool containsGradientOperation(TIntermNode *node);
+
 }
 
 #endif   // COMPILER_DETECTDISCONTINUITY_H_
