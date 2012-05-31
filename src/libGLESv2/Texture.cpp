@@ -31,8 +31,12 @@ unsigned int TextureStorage::mCurrentTextureSerial = 1;
 
 static D3DFORMAT ConvertTextureFormatType(GLenum format, GLenum type)
 {
-    if (format == GL_COMPRESSED_RGB_S3TC_DXT1_EXT ||
-        format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT)
+    if (IsDepthTexture(format))
+    {
+        return D3DFMT_INTZ;
+    }
+    else if (format == GL_COMPRESSED_RGB_S3TC_DXT1_EXT ||
+             format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT)
     {
         return D3DFMT_DXT1;
     }
@@ -75,6 +79,10 @@ static D3DFORMAT ConvertTextureFormatType(GLenum format, GLenum type)
 
 static bool IsTextureFormatRenderable(D3DFORMAT format)
 {
+    if (format == D3DFMT_INTZ)
+    {
+        return true;
+    }
     switch(format)
     {
       case D3DFMT_L8:
@@ -99,7 +107,11 @@ static inline DWORD GetTextureUsage(D3DFORMAT d3dfmt, GLenum glusage, bool force
 {
     DWORD d3dusage = 0;
 
-    if(forceRenderable || (IsTextureFormatRenderable(d3dfmt) && (glusage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE)))
+    if (d3dfmt == D3DFMT_INTZ)
+    {
+        d3dusage |= D3DUSAGE_DEPTHSTENCIL;
+    }
+    else if(forceRenderable || (IsTextureFormatRenderable(d3dfmt) && (glusage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE)))
     {
         d3dusage |= D3DUSAGE_RENDERTARGET;
     }
@@ -166,6 +178,8 @@ void Image::createSurface()
     IDirect3DTexture9 *newTexture = NULL;
     IDirect3DSurface9 *newSurface = NULL;
     const D3DPOOL poolToUse = D3DPOOL_SYSTEMMEM;
+    const D3DFORMAT d3dFormat = getD3DFormat();
+    ASSERT(d3dFormat != D3DFMT_INTZ); // We should never get here for depth textures
 
     if (mWidth != 0 && mHeight != 0)
     {
@@ -189,7 +203,7 @@ void Image::createSurface()
             levelToFetch = upsampleCount;
         }
 
-        HRESULT result = getDevice()->CreateTexture(requestWidth, requestHeight, levelToFetch + 1, NULL, getD3DFormat(),
+        HRESULT result = getDevice()->CreateTexture(requestWidth, requestHeight, levelToFetch + 1, NULL, d3dFormat,
                                                     poolToUse, &newTexture, NULL);
 
         if (FAILED(result))
