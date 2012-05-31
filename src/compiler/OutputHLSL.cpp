@@ -1215,9 +1215,36 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
       case EOpFract:            outputTriplet(visit, "frac(", "", ")");      break;
       case EOpLength:           outputTriplet(visit, "length(", "", ")");    break;
       case EOpNormalize:        outputTriplet(visit, "normalize(", "", ")"); break;
-      case EOpDFdx:             outputTriplet(visit, "ddx(", "", ")");       break;
-      case EOpDFdy:             outputTriplet(visit, "(-ddy(", "", "))");    break;
-      case EOpFwidth:           outputTriplet(visit, "fwidth(", "", ")");    break;        
+      case EOpDFdx:
+        if(mInsideDiscontinuousLoop || mOutputLod0Function)
+        {
+            outputTriplet(visit, "(", "", ", 0.0)");
+        }
+        else
+        {
+            outputTriplet(visit, "ddx(", "", ")");
+        }
+        break;
+      case EOpDFdy:
+        if(mInsideDiscontinuousLoop || mOutputLod0Function)
+        {
+            outputTriplet(visit, "(", "", ", 0.0)");
+        }
+        else
+        {
+           outputTriplet(visit, "(-ddy(", "", "))");
+        }
+        break;
+      case EOpFwidth:
+        if(mInsideDiscontinuousLoop || mOutputLod0Function)
+        {
+            outputTriplet(visit, "(", "", ", 0.0)");
+        }
+        else
+        {
+            outputTriplet(visit, "fwidth(", "", ")");
+        }
+        break;
       case EOpAny:              outputTriplet(visit, "any(", "", ")");       break;
       case EOpAll:              outputTriplet(visit, "all(", "", ")");       break;
       default: UNREACHABLE();
