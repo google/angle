@@ -11,6 +11,7 @@
 #include "compiler/InfoSink.h"
 #include "compiler/UnfoldShortCircuit.h"
 #include "compiler/SearchSymbol.h"
+#include "compiler/DetectDiscontinuity.h"
 
 #include <stdio.h>
 #include <algorithm>
@@ -82,6 +83,9 @@ OutputHLSL::OutputHLSL(TParseContext &context) : TIntermTraverser(true, true, tr
     mScopeDepth = 0;
 
     mUniqueIndex = 0;
+
+    mContainsLoopDiscontinuity = false;
+    mOutputLod0Function = false;
 }
 
 OutputHLSL::~OutputHLSL()
@@ -91,6 +95,8 @@ OutputHLSL::~OutputHLSL()
 
 void OutputHLSL::output()
 {
+    mContainsLoopDiscontinuity = containsLoopDiscontinuity(mContext.treeRoot);
+
     mContext.treeRoot->traverse(this);   // Output the body first to determine what has to go in the header
     header();
 
@@ -1370,7 +1376,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             }
             else
             {
-                out << decorate(name) << "(";
+                out << decorate(name) << (mOutputLod0Function ? "Lod0(" : "(");
             }
 
             TIntermSequence &sequence = node->getSequence();
@@ -1408,6 +1414,16 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             }
             
             out << "}\n";
+
+            if (mContainsLoopDiscontinuity && !mOutputLod0Function)
+            {
+                if (name != "main" && containsGradientOperation(node))
+                {
+                    mOutputLod0Function = true;
+                    node->traverse(this);
+                    mOutputLod0Function = false;
+                }
+            }
 
             return false;
         }
