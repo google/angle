@@ -51,9 +51,9 @@
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
-				DisableSpecificWarnings="4100;4127;4189;4239;4244;4245;4512;4702"
-				DebugInformationFormat="4"
 				WarnAsError="true"
+				DebugInformationFormat="4"
+				DisableSpecificWarnings="4100;4127;4189;4239;4244;4245;4512;4702"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -117,9 +117,9 @@
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
-				DisableSpecificWarnings="4100;4127;4189;4239;4244;4245;4512;4702"
-				DebugInformationFormat="3"
 				WarnAsError="true"
+				DebugInformationFormat="3"
+				DisableSpecificWarnings="4100;4127;4189;4239;4244;4245;4512;4702"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -295,6 +295,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DetectDiscontinuity.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\OutputHLSL.cpp"
 				>
 			</File>
@@ -316,6 +320,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\DetectDiscontinuity.h"
+				>
+			</File>
 			<File
 				RelativePath=".\OutputHLSL.h"
 				>
