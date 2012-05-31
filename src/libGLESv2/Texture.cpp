@@ -2163,6 +2163,11 @@ bool Texture2D::isCompressed(GLint level) const
     return IsCompressed(getInternalFormat(level));
 }
 
+bool Texture2D::isDepth(GLint level) const
+{
+    return IsDepthTexture(getInternalFormat(level));
+}
+
 IDirect3DBaseTexture9 *Texture2D::getBaseTexture() const
 {
     return mTexStorage ? mTexStorage->getBaseTexture() : NULL;

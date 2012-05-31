@@ -1297,6 +1297,19 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
                     return error(GL_INVALID_ENUM);
                 }
                 break;
+              case GL_DEPTH_COMPONENT:
+              case GL_DEPTH_COMPONENT16:
+              case GL_DEPTH_COMPONENT32_OES:
+              case GL_DEPTH_STENCIL_OES:
+              case GL_DEPTH24_STENCIL8_OES:
+                  if (context->supportsDepthTextures())
+                  {
+                      return error(GL_INVALID_OPERATION);
+                  }
+                  else
+                  {
+                      return error(GL_INVALID_ENUM);
+                  }
               default:
                 return error(GL_INVALID_ENUM);
             }
@@ -1460,6 +1473,9 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
               case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
               case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
               case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
+                return error(GL_INVALID_OPERATION);
+              case GL_DEPTH_COMPONENT:
+              case GL_DEPTH_STENCIL_OES:
                 return error(GL_INVALID_OPERATION);
               default:
                 return error(GL_INVALID_OPERATION);
@@ -2503,6 +2519,10 @@ void __stdcall glGenerateMipmap(GLenum target)
                     gl::Texture2D *tex2d = context->getTexture2D();
 
                     if (tex2d->isCompressed(0))
+                    {
+                        return error(GL_INVALID_OPERATION);
+                    }
+                    if (tex2d->isDepth(0))
                     {
                         return error(GL_INVALID_OPERATION);
                     }
@@ -5236,6 +5256,15 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
                 {
                     return error(GL_INVALID_VALUE);
                 }
+                if (target != GL_TEXTURE_2D)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+                // OES_depth_texture supports loading depth data, but ANGLE_depth_texture does not
+                if (pixels != NULL)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
                 break;
               default:
                 break;
@@ -5514,6 +5543,10 @@ void __stdcall glTexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalf
                 {
                     return error(GL_INVALID_ENUM);
                 }
+                if (target != GL_TEXTURE_2D)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
                 break;
               default:
                 break;
@@ -5624,6 +5657,12 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
                 {
                     return error(GL_INVALID_ENUM);
                 }
+                if (target != GL_TEXTURE_2D)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+                // OES_depth_texture supports loading depth data, but ANGLE_depth_texture does not
+                return error(GL_INVALID_OPERATION);
             }
 
             if (target == GL_TEXTURE_2D)
