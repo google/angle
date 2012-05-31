@@ -993,6 +993,16 @@ bool IsFloat16Format(D3DFORMAT surfaceFormat)
     return false;
 }
 
+bool IsDepthFormat(D3DFORMAT surfaceFormat)
+{
+    return (surfaceFormat == D3DFMT_INTZ);
+}
+
+bool IsStencilFormat(D3DFORMAT surfaceFormat)
+{
+    return (surfaceFormat == D3DFMT_INTZ);
+}
+
 GLsizei GetSamplesFromMultisampleType(D3DMULTISAMPLE_TYPE type)
 {
     if (type == D3DMULTISAMPLE_NONMASKABLE)
