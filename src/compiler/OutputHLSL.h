@@ -143,6 +143,7 @@ class OutputHLSL : public TIntermTraverser
 
     bool mContainsLoopDiscontinuity;
     bool mOutputLod0Function;
+    bool mInsideDiscontinuousLoop;
 };
 }
 

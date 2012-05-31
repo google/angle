@@ -86,6 +86,7 @@ OutputHLSL::OutputHLSL(TParseContext &context) : TIntermTraverser(true, true, tr
 
     mContainsLoopDiscontinuity = false;
     mOutputLod0Function = false;
+    mInsideDiscontinuousLoop = false;
 }
 
 OutputHLSL::~OutputHLSL()
@@ -1433,54 +1434,106 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             if (visit == PreVisit)
             {
                 TString name = TFunction::unmangleName(node->getName());
+                bool lod0 = mInsideDiscontinuousLoop || mOutputLod0Function;
 
                 if (node->isUserDefined())
                 {
-                    out << decorate(name) << "(";
+                    out << decorate(name) << (lod0 ? "Lod0(" : "(");
                 }
                 else
                 {
                     if (name == "texture2D")
                     {
-                        if (node->getSequence().size() == 2)
+                        if (!lod0)
                         {
-                            mUsesTexture2D = true;
-                        }
-                        else if (node->getSequence().size() == 3)
-                        {
-                            mUsesTexture2D_bias = true;
-                        }
-                        else UNREACHABLE();
+                            if (node->getSequence().size() == 2)
+                            {
+                                mUsesTexture2D = true;
+                            }
+                            else if (node->getSequence().size() == 3)
+                            {
+                                mUsesTexture2D_bias = true;
+                            }
+                            else UNREACHABLE();
 
-                        out << "gl_texture2D(";
+                            out << "gl_texture2D(";
+                        }
+                        else
+                        {
+                            if (node->getSequence().size() == 2)
+                            {
+                                mUsesTexture2DLod0 = true;
+                            }
+                            else if (node->getSequence().size() == 3)
+                            {
+                                mUsesTexture2DLod0_bias = true;
+                            }
+                            else UNREACHABLE();
+
+                            out << "gl_texture2DLod0(";
+                        }
                     }
                     else if (name == "texture2DProj")
                     {
-                        if (node->getSequence().size() == 2)
+                        if (!lod0)
                         {
-                            mUsesTexture2DProj = true;
-                        }
-                        else if (node->getSequence().size() == 3)
-                        {
-                            mUsesTexture2DProj_bias = true;
-                        }
-                        else UNREACHABLE();
+                            if (node->getSequence().size() == 2)
+                            {
+                                mUsesTexture2DProj = true;
+                            }
+                            else if (node->getSequence().size() == 3)
+                            {
+                                mUsesTexture2DProj_bias = true;
+                            }
+                            else UNREACHABLE();
 
-                        out << "gl_texture2DProj(";
+                            out << "gl_texture2DProj(";
+                        }
+                        else
+                        {
+                            if (node->getSequence().size() == 2)
+                            {
+                                mUsesTexture2DProjLod0 = true;
+                            }
+                            else if (node->getSequence().size() == 3)
+                            {
+                                mUsesTexture2DProjLod0_bias = true;
+                            }
+                            else UNREACHABLE();
+
+                            out << "gl_texture2DProjLod0(";
+                        }
                     }
                     else if (name == "textureCube")
                     {
-                        if (node->getSequence().size() == 2)
+                        if (!lod0)
                         {
-                            mUsesTextureCube = true;
-                        }
-                        else if (node->getSequence().size() == 3)
-                        {
-                            mUsesTextureCube_bias = true;
-                        }
-                        else UNREACHABLE();
+                            if (node->getSequence().size() == 2)
+                            {
+                                mUsesTextureCube = true;
+                            }
+                            else if (node->getSequence().size() == 3)
+                            {
+                                mUsesTextureCube_bias = true;
+                            }
+                            else UNREACHABLE();
 
-                        out << "gl_textureCube(";
+                            out << "gl_textureCube(";
+                        }
+                        else
+                        {
+                            if (node->getSequence().size() == 2)
+                            {
+                                mUsesTextureCubeLod0 = true;
+                            }
+                            else if (node->getSequence().size() == 3)
+                            {
+                                mUsesTextureCubeLod0_bias = true;
+                            }
+                            else UNREACHABLE();
+
+                            out << "gl_textureCubeLod0(";
+                        }
                     }
                     else if (name == "texture2DLod")
                     {
@@ -1714,6 +1767,13 @@ void OutputHLSL::visitConstantUnion(TIntermConstantUnion *node)
 
 bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
 {
+    bool wasDiscontinuous = mInsideDiscontinuousLoop;
+
+    if (!mInsideDiscontinuousLoop)
+    {
+        mInsideDiscontinuousLoop = containsLoopDiscontinuity(node);
+    }
+
     if (handleExcessiveLoop(node))
     {
         return false;
@@ -1776,6 +1836,8 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
     }
 
     out << "}\n";
+
+    mInsideDiscontinuousLoop = wasDiscontinuous;
 
     return false;
 }
