@@ -82,7 +82,7 @@ class Display
     virtual bool getOcclusionQuerySupport() const;
     virtual bool getInstancingSupport() const;
     virtual D3DPOOL getBufferPool(DWORD usage) const;
-    virtual D3DPOOL getTexturePool(bool renderable) const;
+    virtual D3DPOOL getTexturePool(DWORD usage) const;
 
     virtual void notifyDeviceLost();
     bool isDeviceLost();

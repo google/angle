@@ -1346,9 +1346,9 @@ void Image::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, 
     mDirty = true;
 }
 
-TextureStorage::TextureStorage(bool renderTarget)
-    : mRenderTarget(renderTarget),
-      mD3DPool(getDisplay()->getTexturePool(mRenderTarget)),
+TextureStorage::TextureStorage(DWORD usage)
+    : mD3DUsage(usage),
+      mD3DPool(getDisplay()->getTexturePool(usage)),
       mTextureSerial(issueTextureSerial())
 {
 }
@@ -1359,7 +1359,7 @@ TextureStorage::~TextureStorage()
 
 bool TextureStorage::isRenderTarget() const
 {
-    return mRenderTarget;
+    return (mD3DUsage & (D3DUSAGE_RENDERTARGET | D3DUSAGE_DEPTHSTENCIL)) != 0;
 }
 
 bool TextureStorage::isManaged() const
@@ -1370,6 +1370,11 @@ bool TextureStorage::isManaged() const
 D3DPOOL TextureStorage::getPool() const
 {
     return mD3DPool;
+}
+
+DWORD TextureStorage::getUsage() const
+{
+    return mD3DUsage;
 }
 
 unsigned int TextureStorage::getTextureSerial() const
@@ -1674,13 +1679,13 @@ bool Texture::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *sou
     return true;
 }
 
-TextureStorage2D::TextureStorage2D(IDirect3DTexture9 *surfaceTexture) : TextureStorage(true), mRenderTargetSerial(RenderbufferStorage::issueSerial())
+TextureStorage2D::TextureStorage2D(IDirect3DTexture9 *surfaceTexture) : TextureStorage(D3DUSAGE_RENDERTARGET), mRenderTargetSerial(RenderbufferStorage::issueSerial())
 {
     mTexture = surfaceTexture;
 }
 
-TextureStorage2D::TextureStorage2D(int levels, D3DFORMAT format, int width, int height, bool renderTarget)
-    : TextureStorage(renderTarget), mRenderTargetSerial(RenderbufferStorage::issueSerial())
+TextureStorage2D::TextureStorage2D(int levels, D3DFORMAT format, DWORD usage, int width, int height)
+    : TextureStorage(usage), mRenderTargetSerial(RenderbufferStorage::issueSerial())
 {
     mTexture = NULL;
     // if the width or height is not positive this should be treated as an incomplete texture
@@ -1688,8 +1693,7 @@ TextureStorage2D::TextureStorage2D(int levels, D3DFORMAT format, int width, int 
     if (width > 0 && height > 0)
     {
         IDirect3DDevice9 *device = getDevice();
-        DWORD usage = GetTextureUsage(isRenderTarget(), format);
-        HRESULT result = device->CreateTexture(width, height, levels, usage, format, getPool(), &mTexture, NULL);
+        HRESULT result = device->CreateTexture(width, height, levels, getUsage(), format, getPool(), &mTexture, NULL);
 
         if (FAILED(result))
         {
@@ -2030,9 +2034,10 @@ void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GL
     GLenum type = gl::ExtractType(internalformat);
     D3DFORMAT d3dfmt = ConvertTextureFormatType(format, type);
     const bool renderTarget = IsTextureFormatRenderable(d3dfmt) && (mUsage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
+    DWORD usage = GetTextureUsage(renderTarget, d3dfmt);
 
     delete mTexStorage;
-    mTexStorage = new TextureStorage2D(levels, d3dfmt, width, height, renderTarget);
+    mTexStorage = new TextureStorage2D(levels, d3dfmt, usage, width, height);
     mImmutable = true;
 
     for (int level = 0; level < levels; level++)
@@ -2193,9 +2198,10 @@ void Texture2D::createTexture()
     GLint levels = creationLevels(width, height);
     D3DFORMAT format = mImageArray[0].getD3DFormat();
     const bool renderTarget = IsTextureFormatRenderable(format) && (mUsage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
+    DWORD usage = GetTextureUsage(renderTarget, format);
 
     delete mTexStorage;
-    mTexStorage = new TextureStorage2D(levels, format, width, height, renderTarget);
+    mTexStorage = new TextureStorage2D(levels, format, usage, width, height);
     
     if (mTexStorage->isManaged())
     {
@@ -2236,8 +2242,9 @@ void Texture2D::convertToRenderTarget()
         GLsizei height = mImageArray[0].getHeight();
         GLint levels = creationLevels(width, height);
         D3DFORMAT format = mImageArray[0].getD3DFormat();
+        DWORD usage = GetTextureUsage(true, format);
 
-        newTexStorage = new TextureStorage2D(levels, format, width, height, true);
+        newTexStorage = new TextureStorage2D(levels, format, usage, width, height);
 
         if (mTexStorage != NULL)
         {
@@ -2371,8 +2378,8 @@ TextureStorage *Texture2D::getStorage(bool renderTarget)
     return mTexStorage;
 }
 
-TextureStorageCubeMap::TextureStorageCubeMap(int levels, D3DFORMAT format, int size, bool renderTarget)
-    : TextureStorage(renderTarget), mFirstRenderTargetSerial(RenderbufferStorage::issueCubeSerials())
+TextureStorageCubeMap::TextureStorageCubeMap(int levels, D3DFORMAT format, DWORD usage, int size)
+    : TextureStorage(usage), mFirstRenderTargetSerial(RenderbufferStorage::issueCubeSerials())
 {
     mTexture = NULL;
     // if the size is not positive this should be treated as an incomplete texture
@@ -2380,8 +2387,7 @@ TextureStorageCubeMap::TextureStorageCubeMap(int levels, D3DFORMAT format, int s
     if (size > 0)
     {
         IDirect3DDevice9 *device = getDevice();
-        DWORD usage = GetTextureUsage(isRenderTarget(), format);
-        HRESULT result = device->CreateCubeTexture(size, levels, usage, format, getPool(), &mTexture, NULL);
+        HRESULT result = device->CreateCubeTexture(size, levels, getUsage(), format, getPool(), &mTexture, NULL);
 
         if (FAILED(result))
         {
@@ -2720,9 +2726,10 @@ void TextureCubeMap::createTexture()
     GLint levels = creationLevels(size, 0);
     D3DFORMAT format = mImageArray[0][0].getD3DFormat();
     const bool renderTarget = IsTextureFormatRenderable(format) && (mUsage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
+    DWORD usage = GetTextureUsage(renderTarget, format);
 
     delete mTexStorage;
-    mTexStorage = new TextureStorageCubeMap(levels, format, size, renderTarget);
+    mTexStorage = new TextureStorageCubeMap(levels, format, usage, size);
 
     if (mTexStorage->isManaged())
     {
@@ -2767,8 +2774,9 @@ void TextureCubeMap::convertToRenderTarget()
         GLsizei size = mImageArray[0][0].getWidth();
         GLint levels = creationLevels(size, 0);
         D3DFORMAT format = mImageArray[0][0].getD3DFormat();
+        DWORD usage = GetTextureUsage(true, format);
 
-        newTexStorage = new TextureStorageCubeMap(levels, format, size, true);
+        newTexStorage = new TextureStorageCubeMap(levels, format, usage, size);
 
         if (mTexStorage != NULL)
         {
@@ -2954,9 +2962,10 @@ void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size
     GLenum type = gl::ExtractType(internalformat);
     D3DFORMAT d3dfmt = ConvertTextureFormatType(format, type);
     const bool renderTarget = IsTextureFormatRenderable(d3dfmt) && (mUsage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
+    DWORD usage = GetTextureUsage(renderTarget, d3dfmt);
 
     delete mTexStorage;
-    mTexStorage = new TextureStorageCubeMap(levels, d3dfmt, size, renderTarget);
+    mTexStorage = new TextureStorageCubeMap(levels, d3dfmt, usage, size);
     mImmutable = true;
 
     for (int level = 0; level < levels; level++)

@@ -1097,7 +1097,7 @@ D3DPOOL Display::getBufferPool(DWORD usage) const
     return D3DPOOL_DEFAULT;
 }
 
-D3DPOOL Display::getTexturePool(bool renderable) const
+D3DPOOL Display::getTexturePool(DWORD usage) const
 {
     if (mD3d9Ex != NULL)
     {
@@ -1105,7 +1105,7 @@ D3DPOOL Display::getTexturePool(bool renderable) const
     }
     else
     {
-        if (!renderable)
+        if (!(usage & (D3DUSAGE_DEPTHSTENCIL | D3DUSAGE_RENDERTARGET)))
         {
             return D3DPOOL_MANAGED;
         }
