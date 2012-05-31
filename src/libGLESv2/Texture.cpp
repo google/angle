@@ -1725,6 +1725,8 @@ TextureStorage2D::~TextureStorage2D()
     }
 }
 
+// Increments refcount on surface.
+// caller must Release() the returned surface
 IDirect3DSurface9 *TextureStorage2D::getSurfaceLevel(int level)
 {
     IDirect3DSurface9 *surface = NULL;
@@ -2269,8 +2271,8 @@ void Texture2D::convertToRenderTarget()
                 if (!copyToRenderTarget(dest, source, mTexStorage->isManaged()))
                 {   
                    delete newTexStorage;
-                   source->Release();
-                   dest->Release();
+                   if (source) source->Release();
+                   if (dest) dest->Release();
                    return error(GL_OUT_OF_MEMORY);
                 }
 
@@ -2358,6 +2360,8 @@ Renderbuffer *Texture2D::getRenderbuffer(GLenum target)
     return mColorbufferProxy;
 }
 
+// Increments refcount on surface.
+// caller must Release() the returned surface
 IDirect3DSurface9 *Texture2D::getRenderTarget(GLenum target)
 {
     ASSERT(target == GL_TEXTURE_2D);
@@ -2417,6 +2421,8 @@ TextureStorageCubeMap::~TextureStorageCubeMap()
     }
 }
 
+// Increments refcount on surface.
+// caller must Release() the returned surface
 IDirect3DSurface9 *TextureStorageCubeMap::getCubeMapSurface(GLenum faceTarget, int level)
 {
     IDirect3DSurface9 *surface = NULL;
@@ -2802,8 +2808,8 @@ void TextureCubeMap::convertToRenderTarget()
                     if (!copyToRenderTarget(dest, source, mTexStorage->isManaged()))
                     {
                        delete newTexStorage;
-                       source->Release();
-                       dest->Release();
+                       if (source) source->Release();
+                       if (dest) dest->Release();
                        return error(GL_OUT_OF_MEMORY);
                     }
 
@@ -3098,6 +3104,8 @@ Renderbuffer *TextureCubeMap::getRenderbuffer(GLenum target)
     return mFaceProxies[face];
 }
 
+// Increments refcount on surface.
+// caller must Release() the returned surface
 IDirect3DSurface9 *TextureCubeMap::getRenderTarget(GLenum target)
 {
     ASSERT(IsCubemapTextureTarget(target));

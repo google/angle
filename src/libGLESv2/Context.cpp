@@ -1893,6 +1893,11 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         mDepthStencilInitialized = true;
     }
 
+    if (depthStencil)
+    {
+        depthStencil->Release();
+    }
+
     if (!mRenderTargetDescInitialized || renderTargetChanged)
     {
         IDirect3DSurface9 *renderTarget = framebufferObject->getRenderTarget();
@@ -2458,6 +2463,7 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
         if (FAILED(result))
         {
             ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
+            renderTarget->Release();
             return error(GL_OUT_OF_MEMORY);
         }
     }
@@ -2745,6 +2751,7 @@ void Context::clear(GLbitfield mask)
             
             D3DSURFACE_DESC desc;
             depthStencil->GetDesc(&desc);
+            depthStencil->Release();
 
             unsigned int stencilSize = dx2es::GetStencilSize(desc.Format);
             stencilUnmasked = (0x1 << stencilSize) - 1;
@@ -4055,7 +4062,13 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
 
         if (blitDepthStencil)
         {
-            HRESULT result = mDevice->StretchRect(readFramebuffer->getDepthStencil(), NULL, drawFramebuffer->getDepthStencil(), NULL, D3DTEXF_NONE);
+            IDirect3DSurface9* readDepthStencil = readFramebuffer->getDepthStencil();
+            IDirect3DSurface9* drawDepthStencil = drawFramebuffer->getDepthStencil();
+
+            HRESULT result = mDevice->StretchRect(readDepthStencil, NULL, drawDepthStencil, NULL, D3DTEXF_NONE);
+
+            readDepthStencil->Release();
+            drawDepthStencil->Release();
 
             if (FAILED(result))
             {

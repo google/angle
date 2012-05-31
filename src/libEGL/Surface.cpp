@@ -565,6 +565,8 @@ EGLint Surface::isPostSubBufferSupported() const
     return mPostSubBufferSupported;
 }
 
+// Increments refcount on surface.
+// caller must Release() the returned surface
 IDirect3DSurface9 *Surface::getRenderTarget()
 {
     if (mRenderTarget)
@@ -575,6 +577,8 @@ IDirect3DSurface9 *Surface::getRenderTarget()
     return mRenderTarget;
 }
 
+// Increments refcount on surface.
+// caller must Release() the returned surface
 IDirect3DSurface9 *Surface::getDepthStencil()
 {
     if (mDepthStencil)
