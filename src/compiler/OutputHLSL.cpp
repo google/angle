@@ -1769,9 +1769,11 @@ bool OutputHLSL::isSingleStatement(TIntermNode *node)
     return true;
 }
 
-// Handle loops with more than 255 iterations (unsupported by D3D9) by splitting them
+// Handle loops with more than 254 iterations (unsupported by D3D9) by splitting them
+// (The D3D documentation says 255 iterations, but the compiler complains at anything more than 254).
 bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
 {
+    const int MAX_LOOP_ITERATIONS = 254;
     TInfoSinkBase &out = mBody;
 
     // Parse loops of the form:
@@ -1887,14 +1889,14 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
         {
             int iterations = (limit - initial) / increment;
 
-            if (iterations <= 255)
+            if (iterations <= MAX_LOOP_ITERATIONS)
             {
                 return false;   // Not an excessive loop
             }
 
             while (iterations > 0)
             {
-                int clampedLimit = initial + increment * std::min(255, iterations);
+                int clampedLimit = initial + increment * std::min(MAX_LOOP_ITERATIONS, iterations);
 
                 // for(int index = initial; index < clampedLimit; index += increment)
 
@@ -1925,8 +1927,8 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
                 outputLineDirective(node->getLine());
                 out << ";}\n";
 
-                initial += 255 * increment;
-                iterations -= 255;
+                initial += MAX_LOOP_ITERATIONS * increment;
+                iterations -= MAX_LOOP_ITERATIONS;
             }
 
             return true;
