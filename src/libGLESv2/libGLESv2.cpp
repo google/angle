@@ -5623,11 +5623,6 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
             return error(GL_INVALID_ENUM);
         }
 
-        if (width == 0 || height == 0 || pixels == NULL)
-        {
-            return;
-        }
-
         gl::Context *context = gl::getNonLostContext();
 
         if (context)
@@ -5663,6 +5658,11 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
                 }
                 // OES_depth_texture supports loading depth data, but ANGLE_depth_texture does not
                 return error(GL_INVALID_OPERATION);
+            }
+
+            if (width == 0 || height == 0 || pixels == NULL)
+            {
+                return;
             }
 
             if (target == GL_TEXTURE_2D)
