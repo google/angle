@@ -78,6 +78,7 @@ class Display
     virtual bool getLuminanceAlphaTextureSupport();
     virtual bool getVertexTextureSupport() const;
     virtual bool getNonPower2TextureSupport() const;
+    virtual bool getDepthTextureSupport() const;
     virtual bool getOcclusionQuerySupport() const;
     virtual bool getInstancingSupport() const;
     virtual D3DPOOL getBufferPool(DWORD usage) const;

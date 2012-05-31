@@ -310,6 +310,7 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         mSupportsFloat16Textures = mDisplay->getFloat16TextureSupport(&mSupportsFloat16LinearFilter, &mSupportsFloat16RenderableTextures);
         mSupportsLuminanceTextures = mDisplay->getLuminanceTextureSupport();
         mSupportsLuminanceAlphaTextures = mDisplay->getLuminanceAlphaTextureSupport();
+        mSupportsDepthTextures = mDisplay->getDepthTextureSupport();
 
         mSupports32bitIndices = mDeviceCaps.MaxVertexIndex >= (1 << 16);
 
@@ -3456,6 +3457,11 @@ bool Context::supportsLuminanceTextures() const
 bool Context::supportsLuminanceAlphaTextures() const
 {
     return mSupportsLuminanceAlphaTextures;
+}
+
+bool Context::supportsDepthTextures() const
+{
+    return mSupportsDepthTextures;
 }
 
 bool Context::supports32bitIndices() const

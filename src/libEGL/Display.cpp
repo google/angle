@@ -992,6 +992,22 @@ bool Display::getDXT5TextureSupport()
     return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT5));
 }
 
+// we use INTZ for depth textures in Direct3D9
+// we also want NULL texture support to ensure the we can make depth-only FBOs
+// see http://aras-p.info/texts/D3D9GPUHacks.html
+bool Display::getDepthTextureSupport() const
+{
+    D3DDISPLAYMODE currentDisplayMode;
+    mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
+
+    bool intz = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format,
+                                                   D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_TEXTURE, D3DFMT_INTZ));
+    bool null = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format,
+                                                   D3DUSAGE_RENDERTARGET, D3DRTYPE_SURFACE, D3DFMT_NULL));
+
+    return intz && null;
+}
+
 bool Display::getFloat32TextureSupport(bool *filtering, bool *renderable)
 {
     D3DDISPLAYMODE currentDisplayMode;
