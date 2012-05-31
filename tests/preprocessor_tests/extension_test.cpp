@@ -9,21 +9,12 @@
 
 class ExtensionTest : public PreprocessorTest
 {
-protected:
-    void preprocess(const char* str)
-    {
-        ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
-
-        pp::Token token;
-        mPreprocessor.lex(&token);
-        EXPECT_EQ(pp::Token::LAST, token.type);
-        EXPECT_EQ("", token.value);
-    }
 };
 
 TEST_F(ExtensionTest, Valid)
 {
     const char* str = "#extension foo : bar\n";
+    const char* expected = "\n";
 
     using testing::_;
     EXPECT_CALL(mDirectiveHandler,
@@ -31,7 +22,7 @@ TEST_F(ExtensionTest, Valid)
     // No error or warning.
     EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
 
-    preprocess(str);
+    preprocess(str, expected);
 }
 
 TEST_F(ExtensionTest, Comments)
@@ -49,6 +40,7 @@ TEST_F(ExtensionTest, Comments)
                       "/*foo*/"
                       "//foo"
                       "\n";
+    const char* expected = "\n";
 
     using testing::_;
     EXPECT_CALL(mDirectiveHandler,
@@ -56,12 +48,13 @@ TEST_F(ExtensionTest, Comments)
     // No error or warning.
     EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
 
-    preprocess(str);
+    preprocess(str, expected);
 }
 
 TEST_F(ExtensionTest, MissingNewline)
 {
     const char* str = "#extension foo : bar";
+    const char* expected = "";
 
     using testing::_;
     // Directive successfully parsed.
@@ -70,7 +63,7 @@ TEST_F(ExtensionTest, MissingNewline)
     // Error reported about EOF.
     EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::EOF_IN_DIRECTIVE, _, _));
 
-    preprocess(str);
+    preprocess(str, expected);
 }
 
 struct ExtensionTestParam
@@ -88,6 +81,7 @@ class InvalidExtensionTest : public ExtensionTest,
 TEST_P(InvalidExtensionTest, Identified)
 {
     ExtensionTestParam param = GetParam();
+    const char* expected = "\n";
 
     using testing::_;
     // No handleExtension call.
@@ -95,7 +89,7 @@ TEST_P(InvalidExtensionTest, Identified)
     // Invalid extension directive call.
     EXPECT_CALL(mDiagnostics, print(param.id, pp::SourceLocation(0, 1), _));
 
-    preprocess(param.str);
+    preprocess(param.str, expected);
 }
 
 static const ExtensionTestParam kParams[] = {

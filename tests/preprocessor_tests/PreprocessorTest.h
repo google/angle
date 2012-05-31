@@ -18,6 +18,10 @@ class PreprocessorTest : public testing::Test
   protected:
     PreprocessorTest() : mPreprocessor(&mDiagnostics, &mDirectiveHandler) { }
 
+    // Preprocesses the input string and verifies that it matches
+    // expected output.
+    void preprocess(const char* input, const char* expected);
+
     MockDiagnostics mDiagnostics;
     MockDirectiveHandler mDirectiveHandler;
     pp::Preprocessor mPreprocessor;

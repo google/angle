@@ -9,33 +9,25 @@
 
 class ErrorTest : public PreprocessorTest
 {
-  protected:
-    void preprocess(const char* str)
-    {
-        ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
-
-        pp::Token token;
-        mPreprocessor.lex(&token);
-        EXPECT_EQ(pp::Token::LAST, token.type);
-        EXPECT_EQ("", token.value);
-    }
 };
 
 TEST_F(ErrorTest, Empty)
 {
     const char* str = "#error\n";
+    const char* expected = "\n";
 
     using testing::_;
     EXPECT_CALL(mDirectiveHandler, handleError(pp::SourceLocation(0, 1), ""));
     // No error or warning.
     EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
 
-    preprocess(str);
+    preprocess(str, expected);
 }
 
 TEST_F(ErrorTest, OneTokenMessage)
 {
     const char* str = "#error foo\n";
+    const char* expected = "\n";
 
     using testing::_;
     EXPECT_CALL(mDirectiveHandler,
@@ -43,12 +35,13 @@ TEST_F(ErrorTest, OneTokenMessage)
     // No error or warning.
     EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
 
-    preprocess(str);
+    preprocess(str, expected);
 }
 
 TEST_F(ErrorTest, TwoTokenMessage)
 {
     const char* str = "#error foo bar\n";
+    const char* expected = "\n";
 
     using testing::_;
     EXPECT_CALL(mDirectiveHandler,
@@ -56,7 +49,7 @@ TEST_F(ErrorTest, TwoTokenMessage)
     // No error or warning.
     EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
 
-    preprocess(str);
+    preprocess(str, expected);
 }
 
 TEST_F(ErrorTest, Comments)
@@ -72,6 +65,7 @@ TEST_F(ErrorTest, Comments)
                       "/*foo*/"
                       "//foo"
                       "\n";
+    const char* expected = "\n";
 
     using testing::_;
     EXPECT_CALL(mDirectiveHandler,
@@ -79,12 +73,13 @@ TEST_F(ErrorTest, Comments)
     // No error or warning.
     EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
 
-    preprocess(str);
+    preprocess(str, expected);
 }
 
 TEST_F(ErrorTest, MissingNewline)
 {
     const char* str = "#error foo";
+    const char* expected = "";
 
     using testing::_;
     // Directive successfully parsed.
@@ -93,5 +88,5 @@ TEST_F(ErrorTest, MissingNewline)
     // Error reported about EOF.
     EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::EOF_IN_DIRECTIVE, _, _));
 
-    preprocess(str);
+    preprocess(str, expected);
 }

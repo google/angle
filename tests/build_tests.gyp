@@ -54,6 +54,7 @@
         'preprocessor_tests/number_test.cpp',
         'preprocessor_tests/operator_test.cpp',
         'preprocessor_tests/pragma_test.cpp',
+        'preprocessor_tests/PreprocessorTest.cpp',
         'preprocessor_tests/PreprocessorTest.h',
         'preprocessor_tests/space_test.cpp',
         'preprocessor_tests/token_test.cpp',

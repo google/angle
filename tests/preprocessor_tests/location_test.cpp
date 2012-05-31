@@ -10,10 +10,10 @@
 class LocationTest : public PreprocessorTest
 {
 protected:
-    void preprocess(int count,
-                    const char* const string[],
-                    const int length[],
-                    const pp::SourceLocation& location)
+    void expectLocation(int count,
+                        const char* const string[],
+                        const int length[],
+                        const pp::SourceLocation& location)
     {
         ASSERT_TRUE(mPreprocessor.init(count, string, length));
 
@@ -35,7 +35,7 @@ TEST_F(LocationTest, String0_Line1)
     loc.line = 1;
 
     SCOPED_TRACE("String0_Line1");
-    preprocess(1, &str, NULL, loc);
+    expectLocation(1, &str, NULL, loc);
 }
 
 TEST_F(LocationTest, String0_Line2)
@@ -46,7 +46,7 @@ TEST_F(LocationTest, String0_Line2)
     loc.line = 2;
 
     SCOPED_TRACE("String0_Line2");
-    preprocess(1, &str, NULL, loc);
+    expectLocation(1, &str, NULL, loc);
 }
 
 TEST_F(LocationTest, String1_Line1)
@@ -57,7 +57,7 @@ TEST_F(LocationTest, String1_Line1)
     loc.line = 1;
 
     SCOPED_TRACE("String1_Line1");
-    preprocess(2, str, NULL, loc);
+    expectLocation(2, str, NULL, loc);
 }
 
 TEST_F(LocationTest, String1_Line2)
@@ -68,7 +68,7 @@ TEST_F(LocationTest, String1_Line2)
     loc.line = 2;
 
     SCOPED_TRACE("String1_Line2");
-    preprocess(2, str, NULL, loc);
+    expectLocation(2, str, NULL, loc);
 }
 
 TEST_F(LocationTest, NewlineInsideCommentCounted)
@@ -79,7 +79,7 @@ TEST_F(LocationTest, NewlineInsideCommentCounted)
     loc.line = 3;
 
     SCOPED_TRACE("NewlineInsideCommentCounted");
-    preprocess(1, &str, NULL, loc);
+    expectLocation(1, &str, NULL, loc);
 }
 
 TEST_F(LocationTest, ErrorLocationAfterComment)
@@ -106,7 +106,7 @@ TEST_F(LocationTest, TokenStraddlingTwoStrings)
     loc.line = 1;
 
     SCOPED_TRACE("TokenStraddlingTwoStrings");
-    preprocess(2, str, NULL, loc);
+    expectLocation(2, str, NULL, loc);
 }
 
 TEST_F(LocationTest, TokenStraddlingThreeStrings)
@@ -117,7 +117,7 @@ TEST_F(LocationTest, TokenStraddlingThreeStrings)
     loc.line = 1;
 
     SCOPED_TRACE("TokenStraddlingThreeStrings");
-    preprocess(3, str, NULL, loc);
+    expectLocation(3, str, NULL, loc);
 }
 
 TEST_F(LocationTest, EndOfFileWithoutNewline)

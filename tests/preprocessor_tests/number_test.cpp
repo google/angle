@@ -81,7 +81,7 @@ INSTANTIATE_TEST_CASE_P(HexadecimalInteger_A_F,
 class FloatTest : public PreprocessorTest
 {
   protected:
-    void preprocess(const std::string& str)
+    void expectFloat(const std::string& str)
     {
         const char* cstr = str.c_str();
         ASSERT_TRUE(mPreprocessor.init(1, &cstr, 0));
@@ -110,7 +110,7 @@ TEST_P(FloatScientificTest, FloatIdentified)
     str.push_back(std::tr1::get<3>(GetParam()));  // exponent [0-9].
 
     SCOPED_TRACE("FloatScientificTest");
-    preprocess(str);
+    expectFloat(str);
 }
 
 INSTANTIATE_TEST_CASE_P(FloatScientific,
@@ -143,7 +143,7 @@ TEST_P(FloatFractionTest, FloatIdentified)
         str.push_back(fraction);
 
     SCOPED_TRACE("FloatFractionTest");
-    preprocess(str);
+    expectFloat(str);
 }
 
 INSTANTIATE_TEST_CASE_P(FloatFraction_X_X,
@@ -166,5 +166,5 @@ INSTANTIATE_TEST_CASE_P(FloatFraction_X_0,
 TEST_F(FloatTest, FractionScientific)
 {
     SCOPED_TRACE("FractionScientific");
-    preprocess("0.1e+2");
+    expectFloat("0.1e+2");
 }

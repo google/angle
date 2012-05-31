@@ -9,21 +9,12 @@
 
 class PragmaTest : public PreprocessorTest
 {
-protected:
-    void preprocess(const char* str)
-    {
-        ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
-
-        pp::Token token;
-        mPreprocessor.lex(&token);
-        EXPECT_EQ(pp::Token::LAST, token.type);
-        EXPECT_EQ("", token.value);
-    }
 };
 
 TEST_F(PragmaTest, EmptyName)
 {
     const char* str = "#pragma\n";
+    const char* expected = "\n";
 
     using testing::_;
     // No handlePragma calls.
@@ -31,12 +22,13 @@ TEST_F(PragmaTest, EmptyName)
     // No error or warning.
     EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
 
-    preprocess(str);
+    preprocess(str, expected);
 }
 
 TEST_F(PragmaTest, EmptyValue)
 {
     const char* str = "#pragma foo\n";
+    const char* expected = "\n";
 
     using testing::_;
     EXPECT_CALL(mDirectiveHandler,
@@ -44,12 +36,13 @@ TEST_F(PragmaTest, EmptyValue)
     // No error or warning.
     EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
 
-    preprocess(str);
+    preprocess(str, expected);
 }
 
 TEST_F(PragmaTest, NameValue)
 {
     const char* str = "#pragma foo(bar)\n";
+    const char* expected = "\n";
 
     using testing::_;
     EXPECT_CALL(mDirectiveHandler,
@@ -57,7 +50,7 @@ TEST_F(PragmaTest, NameValue)
     // No error or warning.
     EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
 
-    preprocess(str);
+    preprocess(str, expected);
 }
 
 TEST_F(PragmaTest, Comments)
@@ -77,6 +70,7 @@ TEST_F(PragmaTest, Comments)
                       "/*foo*/"
                       "//foo"
                       "\n";
+    const char* expected = "\n";
 
     using testing::_;
     EXPECT_CALL(mDirectiveHandler,
@@ -84,12 +78,13 @@ TEST_F(PragmaTest, Comments)
     // No error or warning.
     EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
 
-    preprocess(str);
+    preprocess(str, expected);
 }
 
 TEST_F(PragmaTest, MissingNewline)
 {
     const char* str = "#pragma foo(bar)";
+    const char* expected = "";
 
     using testing::_;
     // Pragma successfully parsed.
@@ -98,7 +93,7 @@ TEST_F(PragmaTest, MissingNewline)
     // Error reported about EOF.
     EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::EOF_IN_DIRECTIVE, _, _));
 
-    preprocess(str);
+    preprocess(str, expected);
 }
 
 class InvalidPragmaTest : public PragmaTest,
@@ -109,6 +104,7 @@ class InvalidPragmaTest : public PragmaTest,
 TEST_P(InvalidPragmaTest, Identified)
 {
     const char* str = GetParam();
+    const char* expected = "\n";
 
     using testing::_;
     // No handlePragma calls.
@@ -118,7 +114,7 @@ TEST_P(InvalidPragmaTest, Identified)
                 print(pp::Diagnostics::UNRECOGNIZED_PRAGMA,
                       pp::SourceLocation(0, 1), _));
 
-    preprocess(str);
+    preprocess(str, expected);
 }
 
 INSTANTIATE_TEST_CASE_P(All, InvalidPragmaTest, testing::Values(

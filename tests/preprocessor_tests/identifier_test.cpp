@@ -12,7 +12,7 @@
 class IdentifierTest : public PreprocessorTest
 {
 protected:
-    void preprocess(const std::string& str)
+    void expectIdentifier(const std::string& str)
     {
         const char* cstr = str.c_str();
         ASSERT_TRUE(mPreprocessor.init(1, &cstr, 0));
@@ -33,7 +33,7 @@ class SingleLetterIdentifierTest : public IdentifierTest,
 TEST_P(SingleLetterIdentifierTest, Identified)
 {
     std::string str(1, GetParam());
-    preprocess(str);
+    expectIdentifier(str);
 }
 
 // Test string: '_'
@@ -65,7 +65,7 @@ TEST_P(DoubleLetterIdentifierTest, Identified)
     str.push_back(std::tr1::get<0>(GetParam()));
     str.push_back(std::tr1::get<1>(GetParam()));
 
-    preprocess(str);
+    expectIdentifier(str);
 }
 
 // Test string: "__"
@@ -158,5 +158,5 @@ TEST_F(IdentifierTest, AllLetters)
     for (int c = '0'; c <= '9'; ++c)
         str.push_back(c);
 
-    preprocess(str);
+    expectIdentifier(str);
 }

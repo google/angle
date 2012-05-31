@@ -10,7 +10,7 @@
 class SpaceTest : public PreprocessorTest
 {
   protected:
-    void preprocess(const std::string& str)
+    void expectSpace(const std::string& str)
     {
         const char* cstr = str.c_str();
         ASSERT_TRUE(mPreprocessor.init(1, &cstr, 0));
@@ -42,8 +42,8 @@ TEST_P(SpaceCharTest, SpaceIgnored)
     // Construct test string with the whitespace char before "foo".
     std::string str(1, GetParam());
     str.append("foo");
-    
-    preprocess(str);
+
+    expectSpace(str);
 }
 
 INSTANTIATE_TEST_CASE_P(SingleSpaceChar,
@@ -68,7 +68,7 @@ TEST_P(SpaceStringTest, SpaceIgnored)
     str.push_back(std::tr1::get<2>(GetParam()));
     str.append("foo");
 
-    preprocess(str);
+    expectSpace(str);
 }
 
 INSTANTIATE_TEST_CASE_P(SpaceCharCombination,
