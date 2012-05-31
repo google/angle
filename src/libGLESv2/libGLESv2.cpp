@@ -5131,6 +5131,25 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
           case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
           case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
             break; 
+          case GL_DEPTH_COMPONENT:
+            switch (type)
+            {
+              case GL_UNSIGNED_SHORT:
+              case GL_UNSIGNED_INT:
+                break;
+              default:
+                return error(GL_INVALID_ENUM);
+            }
+            break;
+          case GL_DEPTH_STENCIL_OES:
+            switch (type)
+            {
+              case GL_UNSIGNED_INT_24_8_OES:
+                break;
+              default:
+                return error(GL_INVALID_ENUM);
+            }
+            break;
           default:
             return error(GL_INVALID_VALUE);
         }
@@ -5209,6 +5228,13 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
                 else
                 {
                     return error(GL_INVALID_ENUM);
+                }
+                break;
+              case GL_DEPTH_COMPONENT:
+              case GL_DEPTH_STENCIL_OES:
+                if (!context->supportsDepthTextures())
+                {
+                    return error(GL_INVALID_VALUE);
                 }
                 break;
               default:
@@ -5481,6 +5507,16 @@ void __stdcall glTexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalf
                     return error(GL_INVALID_ENUM);
                 }
                 break;
+              case GL_DEPTH_COMPONENT16:
+              case GL_DEPTH_COMPONENT32_OES:
+              case GL_DEPTH24_STENCIL8_OES:
+                if (!context->supportsDepthTextures())
+                {
+                    return error(GL_INVALID_ENUM);
+                }
+                break;
+              default:
+                break;
             }
 
             if (target == GL_TEXTURE_2D)
@@ -5578,6 +5614,13 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
             else if (format == GL_HALF_FLOAT_OES)
             {
                 if (!context->supportsFloat16Textures())
+                {
+                    return error(GL_INVALID_ENUM);
+                }
+            }
+            else if (gl::IsDepthTexture(format))
+            {
+                if (!context->supportsDepthTextures())
                 {
                     return error(GL_INVALID_ENUM);
                 }

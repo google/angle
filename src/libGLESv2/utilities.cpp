@@ -274,6 +274,17 @@ bool IsCompressed(GLenum format)
     }
 }
 
+bool IsDepthTexture(GLenum format)
+{
+    if (format == GL_DEPTH_COMPONENT ||
+        format == GL_DEPTH_STENCIL_OES)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 // Returns the size, in bytes, of a single texel in an Image
 int ComputePixelSize(GLenum format, GLenum type)
 {
@@ -294,7 +305,11 @@ int ComputePixelSize(GLenum format, GLenum type)
       case GL_UNSIGNED_SHORT_4_4_4_4:
       case GL_UNSIGNED_SHORT_5_5_5_1:
       case GL_UNSIGNED_SHORT_5_6_5:
+      case GL_UNSIGNED_SHORT:
         return sizeof(unsigned short);
+      case GL_UNSIGNED_INT:
+      case GL_UNSIGNED_INT_24_8_OES:
+        return sizeof(unsigned int);
       case GL_FLOAT:
         switch (format)
         {
@@ -375,6 +390,13 @@ bool CheckTextureFormatType(GLenum format, GLenum type)
       case GL_UNSIGNED_SHORT_5_6_5:
         return (format == GL_RGB);
 
+      case GL_UNSIGNED_SHORT:
+      case GL_UNSIGNED_INT:
+        return (format == GL_DEPTH_COMPONENT);
+
+      case GL_UNSIGNED_INT_24_8_OES:
+        return (format == GL_DEPTH_STENCIL_OES);
+
       default:
         return false;
     }
@@ -407,6 +429,9 @@ GLenum ExtractFormat(GLenum internalformat)
       case GL_LUMINANCE16F_EXT:                return GL_LUMINANCE;
       case GL_LUMINANCE_ALPHA16F_EXT:          return GL_LUMINANCE_ALPHA;
       case GL_BGRA8_EXT:                       return GL_BGRA_EXT;
+      case GL_DEPTH_COMPONENT16:               return GL_DEPTH_COMPONENT;
+      case GL_DEPTH_COMPONENT32_OES:           return GL_DEPTH_COMPONENT;
+      case GL_DEPTH24_STENCIL8_OES:            return GL_DEPTH_STENCIL_OES;
       default:                                 return GL_NONE;   // Unsupported
     }
 }
@@ -438,6 +463,9 @@ GLenum ExtractType(GLenum internalformat)
       case GL_LUMINANCE16F_EXT:                return GL_HALF_FLOAT_OES;
       case GL_LUMINANCE_ALPHA16F_EXT:          return GL_HALF_FLOAT_OES;
       case GL_BGRA8_EXT:                       return GL_UNSIGNED_BYTE;
+      case GL_DEPTH_COMPONENT16:               return GL_UNSIGNED_SHORT;
+      case GL_DEPTH_COMPONENT32_OES:           return GL_UNSIGNED_INT;
+      case GL_DEPTH24_STENCIL8_OES:            return GL_UNSIGNED_INT_24_8_OES;
       default:                                 return GL_NONE;   // Unsupported
     }
 }
