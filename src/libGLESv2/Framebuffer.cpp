@@ -243,6 +243,7 @@ bool Framebuffer::hasStencil()
 
 GLenum Framebuffer::completeness()
 {
+    gl::Context *context = gl::getContext();
     int width = 0;
     int height = 0;
     int samples = -1;
@@ -270,23 +271,27 @@ GLenum Framebuffer::completeness()
         }
         else if (IsInternalTextureTarget(mColorbufferType))
         {
-            if (IsCompressed(colorbuffer->getInternalFormat()))
+            GLenum internalformat = colorbuffer->getInternalFormat();
+            D3DFORMAT d3dformat = colorbuffer->getD3DFormat();
+
+            if (IsCompressed(internalformat) ||
+                internalformat == GL_LUMINANCE ||
+                internalformat == GL_LUMINANCE_ALPHA)
             {
                 return GL_FRAMEBUFFER_UNSUPPORTED;
             }
 
-            if ((dx2es::IsFloat32Format(colorbuffer->getD3DFormat()) && !getContext()->supportsFloat32RenderableTextures()) || 
-                (dx2es::IsFloat16Format(colorbuffer->getD3DFormat()) && !getContext()->supportsFloat16RenderableTextures()))
-            {
-                return GL_FRAMEBUFFER_UNSUPPORTED;
-            }
-
-            if (colorbuffer->getInternalFormat() == GL_LUMINANCE || colorbuffer->getInternalFormat() == GL_LUMINANCE_ALPHA)
+            if ((dx2es::IsFloat32Format(d3dformat) && !context->supportsFloat32RenderableTextures()) ||
+                (dx2es::IsFloat16Format(d3dformat) && !context->supportsFloat16RenderableTextures()))
             {
                 return GL_FRAMEBUFFER_UNSUPPORTED;
             }
         }
-        else UNREACHABLE();
+        else
+        {
+            UNREACHABLE();
+            return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
+        }
 
         width = colorbuffer->getWidth();
         height = colorbuffer->getHeight();
