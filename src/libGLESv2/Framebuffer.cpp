@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -305,6 +305,7 @@ GLenum Framebuffer::completeness()
             D3DFORMAT d3dformat = colorbuffer->getD3DFormat();
 
             if (IsCompressed(internalformat) ||
+                internalformat == GL_ALPHA ||
                 internalformat == GL_LUMINANCE ||
                 internalformat == GL_LUMINANCE_ALPHA)
             {
