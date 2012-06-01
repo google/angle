@@ -1445,7 +1445,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
             if (mContainsLoopDiscontinuity && !mOutputLod0Function)
             {
-                if (name != "main" && containsGradientOperation(node))
+                if (name != "main")
                 {
                     mOutputLod0Function = true;
                     node->traverse(this);
