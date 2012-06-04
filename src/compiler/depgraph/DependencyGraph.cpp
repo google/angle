@@ -23,17 +23,6 @@ TDependencyGraph::~TDependencyGraph()
     }
 }
 
-TGraphSymbol* TDependencyGraph::getGlobalSymbolByName(const TString& name) const
-{
-    TSymbolNameMap::const_iterator iter = mGlobalSymbolMap.find(name);
-    if (iter == mGlobalSymbolMap.end())
-        return NULL;
-
-    TSymbolNamePair pair = *iter;
-    TGraphSymbol* symbol = pair.second;
-    return symbol;
-}
-
 TGraphArgument* TDependencyGraph::createArgument(TIntermAggregate* intermFunctionCall,
                                                  int argumentNumber)
 {
@@ -51,7 +40,7 @@ TGraphFunctionCall* TDependencyGraph::createFunctionCall(TIntermAggregate* inter
     return functionCall;
 }
 
-TGraphSymbol* TDependencyGraph::getOrCreateSymbol(TIntermSymbol* intermSymbol, bool isGlobalSymbol)
+TGraphSymbol* TDependencyGraph::getOrCreateSymbol(TIntermSymbol* intermSymbol)
 {
     TSymbolIdMap::const_iterator iter = mSymbolIdMap.find(intermSymbol->getId());
 
@@ -67,12 +56,9 @@ TGraphSymbol* TDependencyGraph::getOrCreateSymbol(TIntermSymbol* intermSymbol, b
         TSymbolIdPair pair(intermSymbol->getId(), symbol);
         mSymbolIdMap.insert(pair);
 
-        if (isGlobalSymbol) {
-            // We map all symbols in the global scope by name, so traversers of the graph can
-            // quickly start searches at global symbols with specific names.
-            TSymbolNamePair pair(intermSymbol->getSymbol(), symbol);
-            mGlobalSymbolMap.insert(pair);
-        }
+        // We save all sampler symbols in a collection, so we can start graph traversals from them quickly.
+        if (IsSampler(intermSymbol->getBasicType()))
+            mSamplerSymbols.push_back(symbol);
     }
 
     return symbol;

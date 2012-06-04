@@ -165,12 +165,8 @@ bool TCompiler::compile(const char* const shaderStrings[],
         if (success && (compileOptions & SH_VALIDATE_LOOP_INDEXING))
             success = validateLimitations(root);
 
-        // FIXME(mvujovic): For now, we only consider "u_texture" to be a potentially unsafe symbol.
-        // If we end up using timing restrictions in WebGL and CSS Shaders, we should expose an API
-        // to pass in the names of other potentially unsafe symbols (e.g. uniforms referencing 
-        // cross-domain textures).
         if (success && (compileOptions & SH_TIMING_RESTRICTIONS))
-            success = enforceTimingRestrictions(root, "u_texture", (compileOptions & SH_DEPENDENCY_GRAPH) != 0);
+            success = enforceTimingRestrictions(root, (compileOptions & SH_DEPENDENCY_GRAPH) != 0);
 
         // Unroll for-loop markup needs to happen after validateLimitations pass.
         if (success && (compileOptions & SH_UNROLL_FOR_LOOP_WITH_INTEGER_INDEX))
@@ -252,9 +248,7 @@ bool TCompiler::validateLimitations(TIntermNode* root) {
     return validate.numErrors() == 0;
 }
 
-bool TCompiler::enforceTimingRestrictions(TIntermNode* root,
-                                          const TString& restrictedSymbol,
-                                          bool outputGraph)
+bool TCompiler::enforceTimingRestrictions(TIntermNode* root, bool outputGraph)
 {
     if (shaderSpec != SH_WEBGL_SPEC) {
         infoSink.info << "Timing restrictions must be enforced under the WebGL spec.";
@@ -265,7 +259,7 @@ bool TCompiler::enforceTimingRestrictions(TIntermNode* root,
         TDependencyGraph graph(root);
 
         // Output any errors first.
-        bool success = enforceFragmentShaderTimingRestrictions(graph, restrictedSymbol);
+        bool success = enforceFragmentShaderTimingRestrictions(graph);
         
         // Then, output the dependency graph.
         if (outputGraph) {
@@ -276,22 +270,20 @@ bool TCompiler::enforceTimingRestrictions(TIntermNode* root,
         return success;
     }
     else {
-        return enforceVertexShaderTimingRestrictions(root, restrictedSymbol);
+        return enforceVertexShaderTimingRestrictions(root);
     }
 }
 
-bool TCompiler::enforceFragmentShaderTimingRestrictions(const TDependencyGraph& graph,
-                                                        const TString& restrictedSymbol)
+bool TCompiler::enforceFragmentShaderTimingRestrictions(const TDependencyGraph& graph)
 {
-    RestrictFragmentShaderTiming restrictor(infoSink.info, restrictedSymbol);
+    RestrictFragmentShaderTiming restrictor(infoSink.info);
     restrictor.enforceRestrictions(graph);
     return restrictor.numErrors() == 0;
 }
 
-bool TCompiler::enforceVertexShaderTimingRestrictions(TIntermNode* root,
-                                                      const TString& restrictedSymbol)
+bool TCompiler::enforceVertexShaderTimingRestrictions(TIntermNode* root)
 {
-    RestrictVertexShaderTiming restrictor(infoSink.info, restrictedSymbol);
+    RestrictVertexShaderTiming restrictor(infoSink.info);
     restrictor.enforceRestrictions(root);
     return restrictor.numErrors() == 0;
 }

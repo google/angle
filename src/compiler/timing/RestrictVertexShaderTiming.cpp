@@ -8,23 +8,10 @@
 
 void RestrictVertexShaderTiming::visitSymbol(TIntermSymbol* node)
 {
-    if (node->getQualifier() == EvqUniform &&
-        node->getBasicType() == EbtSampler2D &&
-        node->getSymbol() == mRestrictedSymbol) {
-        mFoundRestrictedSymbol = true;
+    if (IsSampler(node->getBasicType())) {
+        ++mNumErrors;
         mSink.prefix(EPrefixError);
         mSink.location(node->getLine());
-        mSink << "Definition of a uniform sampler2D by the name '" << mRestrictedSymbol
-              << "' is not permitted in vertex shaders.\n";
+        mSink << "Samplers are not permitted in vertex shaders.\n";
     }
-}
-
-bool RestrictVertexShaderTiming::visitAggregate(Visit visit, TIntermAggregate* node)
-{
-    // Don't keep exploring if we've found the restricted symbol, and don't explore anything besides
-    // the global scope (i.e. don't explore function definitions).
-    if (mFoundRestrictedSymbol || node->getOp() == EOpFunction)
-        return false;
-
-    return true;
 }

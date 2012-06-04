@@ -25,6 +25,7 @@ class TDependencyGraphOutput;
 
 typedef std::set<TGraphNode*> TGraphNodeSet;
 typedef std::vector<TGraphNode*> TGraphNodeVector;
+typedef std::vector<TGraphSymbol*> TGraphSymbolVector;
 typedef std::vector<TGraphFunctionCall*> TFunctionCallVector;
 
 //
@@ -142,6 +143,16 @@ public:
     TGraphNodeVector::const_iterator begin() const { return mAllNodes.begin(); }
     TGraphNodeVector::const_iterator end() const { return mAllNodes.end(); }
 
+    TGraphSymbolVector::const_iterator beginSamplerSymbols() const
+    {
+        return mSamplerSymbols.begin();
+    }
+
+    TGraphSymbolVector::const_iterator endSamplerSymbols() const
+    {
+        return mSamplerSymbols.end();
+    }
+
     TFunctionCallVector::const_iterator beginUserDefinedFunctionCalls() const
     {
         return mUserDefinedFunctionCalls.begin();
@@ -152,12 +163,9 @@ public:
         return mUserDefinedFunctionCalls.end();
     }
 
-    // Returns NULL if the symbol is not found.
-    TGraphSymbol* getGlobalSymbolByName(const TString& name) const;
-
     TGraphArgument* createArgument(TIntermAggregate* intermFunctionCall, int argumentNumber);
     TGraphFunctionCall* createFunctionCall(TIntermAggregate* intermFunctionCall);
-    TGraphSymbol* getOrCreateSymbol(TIntermSymbol* intermSymbol, bool isGlobalSymbol);
+    TGraphSymbol* getOrCreateSymbol(TIntermSymbol* intermSymbol);
     TGraphSelection* createSelection(TIntermSelection* intermSelection);
     TGraphLoop* createLoop(TIntermLoop* intermLoop);
     TGraphLogicalOp* createLogicalOp(TIntermBinary* intermLogicalOp);
@@ -165,13 +173,10 @@ private:
     typedef TMap<int, TGraphSymbol*> TSymbolIdMap;
     typedef std::pair<int, TGraphSymbol*> TSymbolIdPair;
 
-    typedef TMap<TString, TGraphSymbol*> TSymbolNameMap;
-    typedef std::pair<TString, TGraphSymbol*> TSymbolNamePair;
-
-    TSymbolIdMap mSymbolIdMap;
-    TSymbolNameMap mGlobalSymbolMap;
-    TFunctionCallVector mUserDefinedFunctionCalls;
     TGraphNodeVector mAllNodes;
+    TGraphSymbolVector mSamplerSymbols;
+    TFunctionCallVector mUserDefinedFunctionCalls;
+    TSymbolIdMap mSymbolIdMap;
 };
 
 //

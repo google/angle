@@ -16,26 +16,18 @@ class TInfoSinkBase;
 
 class RestrictVertexShaderTiming : public TIntermTraverser {
 public:
-    RestrictVertexShaderTiming(TInfoSinkBase& sink, const TString& restrictedSymbol)
+    RestrictVertexShaderTiming(TInfoSinkBase& sink)
         : TIntermTraverser(true, false, false)
         , mSink(sink)
-        , mRestrictedSymbol(restrictedSymbol)
-        , mFoundRestrictedSymbol(false) {}
+        , mNumErrors(0) {}
 
     void enforceRestrictions(TIntermNode* root) { root->traverse(this); }
-    int numErrors() { return mFoundRestrictedSymbol ? 1 : 0; }
+    int numErrors() { return mNumErrors; }
 
     virtual void visitSymbol(TIntermSymbol*);
-    virtual bool visitBinary(Visit visit, TIntermBinary*) { return false; }
-    virtual bool visitUnary(Visit visit, TIntermUnary*) { return false; }
-    virtual bool visitSelection(Visit visit, TIntermSelection*) { return false; }
-    virtual bool visitAggregate(Visit visit, TIntermAggregate*);
-    virtual bool visitLoop(Visit visit, TIntermLoop*) { return false; };
-    virtual bool visitBranch(Visit visit, TIntermBranch*) { return false; };
 private:
     TInfoSinkBase& mSink;
-    const TString mRestrictedSymbol;
-    bool mFoundRestrictedSymbol;
+    int mNumErrors;
 };
 
 #endif  // COMPILER_TIMING_RESTRICT_VERTEX_SHADER_TIMING_H_

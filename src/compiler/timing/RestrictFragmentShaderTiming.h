@@ -16,9 +16,8 @@ class TInfoSinkBase;
 
 class RestrictFragmentShaderTiming : TDependencyGraphTraverser {
 public:
-    RestrictFragmentShaderTiming(TInfoSinkBase& sink, const TString& restrictedSymbol)
+    RestrictFragmentShaderTiming(TInfoSinkBase& sink)
         : mSink(sink)
-        , mRestrictedSymbol(restrictedSymbol)
         , mNumErrors(0) {}
 
     void enforceRestrictions(const TDependencyGraph& graph);
@@ -34,7 +33,6 @@ private:
     void validateUserDefinedFunctionCallUsage(const TDependencyGraph& graph);
 
 	TInfoSinkBase& mSink;
-    const TString mRestrictedSymbol;
     int mNumErrors;
 };
 

@@ -164,8 +164,7 @@ private:
 
     TDependencyGraphBuilder(TDependencyGraph* graph)
         : TIntermTraverser(true, false, false)
-        , mGraph(graph)
-        , mIsGlobalScope(true) {}
+        , mGraph(graph) {}
     void build(TIntermNode* intermNode) { intermNode->traverse(this); }
 
     void connectMultipleNodesToSingleNode(TParentNodeSet* nodes, TGraphNode* node) const;
@@ -180,7 +179,6 @@ private:
     TDependencyGraph* mGraph;
     TNodeSetStack mNodeSets;
     TSymbolStack mLeftmostSymbols;
-    bool mIsGlobalScope;
 };
 
 #endif  // COMPILER_DEPGRAPH_DEPENDENCY_GRAPH_BUILDER_H

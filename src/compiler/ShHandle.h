@@ -81,16 +81,12 @@ protected:
     // Translate to object code.
     virtual void translate(TIntermNode* root) = 0;
     // Returns true if the shader passes the restrictions that aim to prevent timing attacks.
-    bool enforceTimingRestrictions(TIntermNode* root,
-                                   const TString& restrictedSymbol,
-                                   bool outputGraph);
-    // Returns true if the shader does not define the restricted symbol.
-    bool enforceVertexShaderTimingRestrictions(TIntermNode* root,
-                                               const TString& restrictedSymbol);
-    // Returns true if the shader does not use the restricted symbol to affect control flow or in
-    // operations whose time can depend on the input values.
-    bool enforceFragmentShaderTimingRestrictions(const TDependencyGraph& graph,
-                                                 const TString& restrictedSymbol);
+    bool enforceTimingRestrictions(TIntermNode* root, bool outputGraph);
+    // Returns true if the shader does not use samplers.
+    bool enforceVertexShaderTimingRestrictions(TIntermNode* root);
+    // Returns true if the shader does not use sampler dependent values to affect control 
+    // flow or in operations whose time can depend on the input values.
+    bool enforceFragmentShaderTimingRestrictions(const TDependencyGraph& graph);
     // Get built-in extensions with default behavior.
     const TExtensionBehavior& getExtensionBehavior() const;
 

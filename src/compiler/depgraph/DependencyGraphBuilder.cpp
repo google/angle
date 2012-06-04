@@ -31,18 +31,11 @@ bool TDependencyGraphBuilder::visitAggregate(Visit visit, TIntermAggregate* inte
 
 void TDependencyGraphBuilder::visitFunctionDefinition(TIntermAggregate* intermAggregate)
 {
-    // Function defintions should only exist in the global scope.
-    ASSERT(mIsGlobalScope);
-
     // Currently, we do not support user defined functions.
     if (intermAggregate->getName() != "main(")
         return;
 
-    mIsGlobalScope = false;
-
     visitAggregateChildren(intermAggregate);
-
-    mIsGlobalScope = true;
 }
 
 // Takes an expression like "f(x)" and creates a dependency graph like
@@ -93,7 +86,7 @@ void TDependencyGraphBuilder::visitSymbol(TIntermSymbol* intermSymbol)
 {
     // Push this symbol into the set of dependent symbols for the current assignment or condition
     // that we are traversing.
-    TGraphSymbol* symbol = mGraph->getOrCreateSymbol(intermSymbol, mIsGlobalScope);
+    TGraphSymbol* symbol = mGraph->getOrCreateSymbol(intermSymbol);
     mNodeSets.insertIntoTopSet(symbol);
 
     // If this symbol is the current leftmost symbol under an assignment, replace the previous
