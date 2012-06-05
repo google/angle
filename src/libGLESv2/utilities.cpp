@@ -348,60 +348,6 @@ bool IsInternalTextureTarget(GLenum target)
     return target == GL_TEXTURE_2D || IsCubemapTextureTarget(target);
 }
 
-// Verify that format/type are one of the combinations from table 3.4.
-bool CheckTextureFormatType(GLenum format, GLenum type)
-{
-    switch (type)
-    {
-      case GL_UNSIGNED_BYTE:
-        switch (format)
-        {
-          case GL_RGBA:
-          case GL_BGRA_EXT:
-          case GL_RGB:
-          case GL_ALPHA:
-          case GL_LUMINANCE:
-          case GL_LUMINANCE_ALPHA:
-            return true;
-
-          default:
-            return false;
-        }
-
-      case GL_FLOAT:
-      case GL_HALF_FLOAT_OES:
-        switch (format)
-        {
-          case GL_RGBA:
-          case GL_RGB:
-          case GL_ALPHA:
-          case GL_LUMINANCE:
-          case GL_LUMINANCE_ALPHA:
-            return true;
-
-          default:
-            return false;
-        }
-
-      case GL_UNSIGNED_SHORT_4_4_4_4:
-      case GL_UNSIGNED_SHORT_5_5_5_1:
-        return (format == GL_RGBA);
-
-      case GL_UNSIGNED_SHORT_5_6_5:
-        return (format == GL_RGB);
-
-      case GL_UNSIGNED_SHORT:
-      case GL_UNSIGNED_INT:
-        return (format == GL_DEPTH_COMPONENT);
-
-      case GL_UNSIGNED_INT_24_8_OES:
-        return (format == GL_DEPTH_STENCIL_OES);
-
-      default:
-        return false;
-    }
-}
-
 GLenum ExtractFormat(GLenum internalformat)
 {
     switch (internalformat)

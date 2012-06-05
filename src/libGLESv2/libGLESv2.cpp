@@ -54,6 +54,99 @@ bool validImageSize(GLint level, GLsizei width, GLsizei height)
     return false;
 }
 
+// Verify that format/type are one of the combinations from table 3.4.
+bool checkTextureFormatType(GLenum format, GLenum type)
+{
+    // validate <format> by itself (used as secondary key below)
+    switch (format)
+    {
+      case GL_RGBA:
+      case GL_BGRA_EXT:
+      case GL_RGB:
+      case GL_ALPHA:
+      case GL_LUMINANCE:
+      case GL_LUMINANCE_ALPHA:
+      case GL_DEPTH_COMPONENT:
+      case GL_DEPTH_STENCIL_OES:
+        break;
+      default:
+        return error(GL_INVALID_ENUM, false);
+    }
+
+    // invalid <type> -> sets INVALID_ENUM
+    // invalid <format>+<type> combination -> sets INVALID_OPERATION
+    switch (type)
+    {
+      case GL_UNSIGNED_BYTE:
+        switch (format)
+        {
+          case GL_RGBA:
+          case GL_BGRA_EXT:
+          case GL_RGB:
+          case GL_ALPHA:
+          case GL_LUMINANCE:
+          case GL_LUMINANCE_ALPHA:
+            return true;
+          default:
+            return error(GL_INVALID_OPERATION, false);
+        }
+
+      case GL_FLOAT:
+      case GL_HALF_FLOAT_OES:
+        switch (format)
+        {
+          case GL_RGBA:
+          case GL_RGB:
+          case GL_ALPHA:
+          case GL_LUMINANCE:
+          case GL_LUMINANCE_ALPHA:
+            return true;
+          default:
+            return error(GL_INVALID_OPERATION, false);
+        }
+
+      case GL_UNSIGNED_SHORT_4_4_4_4:
+      case GL_UNSIGNED_SHORT_5_5_5_1:
+        switch (format)
+        {
+          case GL_RGBA:
+            return true;
+          default:
+            return error(GL_INVALID_OPERATION, false);
+        }
+
+      case GL_UNSIGNED_SHORT_5_6_5:
+        switch (format)
+        {
+          case GL_RGB:
+            return true;
+          default:
+            return error(GL_INVALID_OPERATION, false);
+        }
+
+      case GL_UNSIGNED_SHORT:
+      case GL_UNSIGNED_INT:
+        switch (format)
+        {
+          case GL_DEPTH_COMPONENT:
+            return true;
+          default:
+            return error(GL_INVALID_OPERATION, false);
+        }
+
+      case GL_UNSIGNED_INT_24_8_OES:
+        switch (format)
+        {
+          case GL_DEPTH_STENCIL_OES:
+            return true;
+          default:
+            return error(GL_INVALID_OPERATION, false);
+        }
+
+      default:
+        return error(GL_INVALID_ENUM, false);
+    }
+}
 bool validateSubImageParams2D(bool compressed, GLsizei width, GLsizei height,
                               GLint xoffset, GLint yoffset, GLint level, GLenum format,
                               gl::Texture2D *texture)
@@ -5638,9 +5731,9 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
             return error(GL_INVALID_VALUE);
         }
 
-        if (!gl::CheckTextureFormatType(format, type))
+        if (!checkTextureFormatType(format, type))
         {
-            return error(GL_INVALID_ENUM);
+            return; // error is set by helper function
         }
 
         gl::Context *context = gl::getNonLostContext();

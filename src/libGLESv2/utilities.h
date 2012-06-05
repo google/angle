@@ -42,7 +42,6 @@ bool IsCompressed(GLenum format);
 bool IsDepthTexture(GLenum format);
 bool IsCubemapTextureTarget(GLenum target);
 bool IsInternalTextureTarget(GLenum target);
-bool CheckTextureFormatType(GLenum format, GLenum type);
 GLenum ExtractFormat(GLenum internalformat);
 GLenum ExtractType(GLenum internalformat);
 
