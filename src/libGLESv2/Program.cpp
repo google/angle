@@ -2061,8 +2061,7 @@ void Program::applyUniformnbv(Uniform *targetUniform, GLsizei count, int width, 
     float vector[D3D9_MAX_FLOAT_CONSTANTS * 4];
     BOOL boolVector[D3D9_MAX_BOOL_CONSTANTS];
 
-    if (targetUniform->ps.registerCount && targetUniform->ps.float4Index >= 0 ||
-        targetUniform->vs.registerCount && targetUniform->vs.float4Index >= 0)
+    if (targetUniform->ps.float4Index >= 0 || targetUniform->vs.float4Index >= 0)
     {
         ASSERT(count <= D3D9_MAX_FLOAT_CONSTANTS);
         for (int i = 0; i < count; i++)
@@ -2081,8 +2080,7 @@ void Program::applyUniformnbv(Uniform *targetUniform, GLsizei count, int width, 
         }
     }
 
-    if (targetUniform->ps.registerCount && targetUniform->ps.boolIndex >= 0 ||
-        targetUniform->vs.registerCount && targetUniform->vs.boolIndex >= 0)
+    if (targetUniform->ps.boolIndex >= 0 || targetUniform->vs.boolIndex >= 0)
     {
         int psCount = targetUniform->ps.boolIndex >= 0 ? targetUniform->ps.registerCount : 0;
         int vsCount = targetUniform->vs.boolIndex >= 0 ? targetUniform->vs.registerCount : 0;
@@ -2094,30 +2092,24 @@ void Program::applyUniformnbv(Uniform *targetUniform, GLsizei count, int width, 
         }
     }
 
-    if (targetUniform->ps.registerCount)
+    if (targetUniform->ps.float4Index >= 0)
     {
-        if (targetUniform->ps.float4Index >= 0)
-        {
-            mDevice->SetPixelShaderConstantF(targetUniform->ps.float4Index, vector, targetUniform->ps.registerCount);
-        }
-        
-        if (targetUniform->ps.boolIndex >= 0)
-        {
-            mDevice->SetPixelShaderConstantB(targetUniform->ps.boolIndex, boolVector, targetUniform->ps.registerCount);
-        }
+        mDevice->SetPixelShaderConstantF(targetUniform->ps.float4Index, vector, targetUniform->ps.registerCount);
     }
-
-    if (targetUniform->vs.registerCount)
-    {
-        if (targetUniform->vs.float4Index >= 0)
-        {
-            mDevice->SetVertexShaderConstantF(targetUniform->vs.float4Index, vector, targetUniform->vs.registerCount);
-        }
         
-        if (targetUniform->vs.boolIndex >= 0)
-        {
-            mDevice->SetVertexShaderConstantB(targetUniform->vs.boolIndex, boolVector, targetUniform->vs.registerCount);
-        }
+    if (targetUniform->ps.boolIndex >= 0)
+    {
+        mDevice->SetPixelShaderConstantB(targetUniform->ps.boolIndex, boolVector, targetUniform->ps.registerCount);
+    }
+    
+    if (targetUniform->vs.float4Index >= 0)
+    {
+        mDevice->SetVertexShaderConstantF(targetUniform->vs.float4Index, vector, targetUniform->vs.registerCount);
+    }
+        
+    if (targetUniform->vs.boolIndex >= 0)
+    {
+        mDevice->SetVertexShaderConstantB(targetUniform->vs.boolIndex, boolVector, targetUniform->vs.registerCount);
     }
 }
 
