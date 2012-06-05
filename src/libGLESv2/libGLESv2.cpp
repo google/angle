@@ -5097,6 +5097,26 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
             return error(GL_INVALID_OPERATION);
         }
 
+        // validate <type> by itself (used as secondary key below)
+        switch (type)
+        {
+          case GL_UNSIGNED_BYTE:
+          case GL_UNSIGNED_SHORT_5_6_5:
+          case GL_UNSIGNED_SHORT_4_4_4_4:
+          case GL_UNSIGNED_SHORT_5_5_5_1:
+          case GL_UNSIGNED_SHORT:
+          case GL_UNSIGNED_INT:
+          case GL_UNSIGNED_INT_24_8_OES:
+          case GL_HALF_FLOAT_OES:
+          case GL_FLOAT:
+            break;
+          default:
+            return error(GL_INVALID_ENUM);
+        }
+
+        // validate <format> + <type> combinations
+        // - invalid <format> -> sets INVALID_ENUM
+        // - invalid <format>+<type> combination -> sets INVALID_OPERATION
         switch (format)
         {
           case GL_ALPHA:
@@ -5109,7 +5129,7 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
               case GL_HALF_FLOAT_OES:
                 break;
               default:
-                return error(GL_INVALID_ENUM);
+                return error(GL_INVALID_OPERATION);
             }
             break;
           case GL_RGB:
@@ -5121,7 +5141,7 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
               case GL_HALF_FLOAT_OES:
                 break;
               default:
-                return error(GL_INVALID_ENUM);
+                return error(GL_INVALID_OPERATION);
             }
             break;
           case GL_RGBA:
@@ -5134,7 +5154,7 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
               case GL_HALF_FLOAT_OES:
                 break;
               default:
-                return error(GL_INVALID_ENUM);
+                return error(GL_INVALID_OPERATION);
             }
             break;
           case GL_BGRA_EXT:
@@ -5143,7 +5163,7 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
               case GL_UNSIGNED_BYTE:
                 break;
               default:
-                return error(GL_INVALID_ENUM);
+                return error(GL_INVALID_OPERATION);
             }
             break;
           case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:  // error cases for compressed textures are handled below
@@ -5158,7 +5178,7 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
               case GL_UNSIGNED_INT:
                 break;
               default:
-                return error(GL_INVALID_ENUM);
+                return error(GL_INVALID_OPERATION);
             }
             break;
           case GL_DEPTH_STENCIL_OES:
@@ -5167,11 +5187,11 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
               case GL_UNSIGNED_INT_24_8_OES:
                 break;
               default:
-                return error(GL_INVALID_ENUM);
+                return error(GL_INVALID_OPERATION);
             }
             break;
           default:
-            return error(GL_INVALID_VALUE);
+            return error(GL_INVALID_ENUM);
         }
 
         if (border != 0)
