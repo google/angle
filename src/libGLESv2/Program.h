@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2011 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -44,8 +44,18 @@ struct Uniform
 
     struct RegisterInfo
     {
-        int registerSet;
-        int registerIndex;
+        RegisterInfo()
+        {
+            float4Index = -1;
+            samplerIndex = -1;
+            boolIndex = -1;
+            registerCount = 0;
+        }
+
+        int float4Index;
+        int samplerIndex;
+        int boolIndex;
+
         int registerCount;
     };
 

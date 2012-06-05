@@ -2060,8 +2060,8 @@ void Program::applyUniformnbv(Uniform *targetUniform, GLsizei count, int width, 
     float vector[D3D9_MAX_FLOAT_CONSTANTS * 4];
     BOOL boolVector[D3D9_MAX_BOOL_CONSTANTS];
 
-    if (targetUniform->ps.registerCount && targetUniform->ps.registerSet == D3DXRS_FLOAT4 ||
-        targetUniform->vs.registerCount && targetUniform->vs.registerSet == D3DXRS_FLOAT4)
+    if (targetUniform->ps.registerCount && targetUniform->ps.float4Index >= 0 ||
+        targetUniform->vs.registerCount && targetUniform->vs.float4Index >= 0)
     {
         ASSERT(count <= D3D9_MAX_FLOAT_CONSTANTS);
         for (int i = 0; i < count; i++)
@@ -2080,11 +2080,11 @@ void Program::applyUniformnbv(Uniform *targetUniform, GLsizei count, int width, 
         }
     }
 
-    if (targetUniform->ps.registerCount && targetUniform->ps.registerSet == D3DXRS_BOOL ||
-        targetUniform->vs.registerCount && targetUniform->vs.registerSet == D3DXRS_BOOL)
+    if (targetUniform->ps.registerCount && targetUniform->ps.boolIndex >= 0 ||
+        targetUniform->vs.registerCount && targetUniform->vs.boolIndex >= 0)
     {
-        int psCount = targetUniform->ps.registerSet == D3DXRS_BOOL ? targetUniform->ps.registerCount : 0;
-        int vsCount = targetUniform->vs.registerSet == D3DXRS_BOOL ? targetUniform->vs.registerCount : 0;
+        int psCount = targetUniform->ps.boolIndex >= 0 ? targetUniform->ps.registerCount : 0;
+        int vsCount = targetUniform->vs.boolIndex >= 0 ? targetUniform->vs.registerCount : 0;
         int copyCount = std::min(count * width, std::max(psCount, vsCount));
         ASSERT(copyCount <= D3D9_MAX_BOOL_CONSTANTS);
         for (int i = 0; i < copyCount; i++)
@@ -2095,28 +2095,28 @@ void Program::applyUniformnbv(Uniform *targetUniform, GLsizei count, int width, 
 
     if (targetUniform->ps.registerCount)
     {
-        if (targetUniform->ps.registerSet == D3DXRS_FLOAT4)
+        if (targetUniform->ps.float4Index >= 0)
         {
-            mDevice->SetPixelShaderConstantF(targetUniform->ps.registerIndex, vector, targetUniform->ps.registerCount);
+            mDevice->SetPixelShaderConstantF(targetUniform->ps.float4Index, vector, targetUniform->ps.registerCount);
         }
-        else if (targetUniform->ps.registerSet == D3DXRS_BOOL)
+        
+        if (targetUniform->ps.boolIndex >= 0)
         {
-            mDevice->SetPixelShaderConstantB(targetUniform->ps.registerIndex, boolVector, targetUniform->ps.registerCount);
+            mDevice->SetPixelShaderConstantB(targetUniform->ps.boolIndex, boolVector, targetUniform->ps.registerCount);
         }
-        else UNREACHABLE();
     }
 
     if (targetUniform->vs.registerCount)
     {
-        if (targetUniform->vs.registerSet == D3DXRS_FLOAT4)
+        if (targetUniform->vs.float4Index >= 0)
         {
-            mDevice->SetVertexShaderConstantF(targetUniform->vs.registerIndex, vector, targetUniform->vs.registerCount);
+            mDevice->SetVertexShaderConstantF(targetUniform->vs.float4Index, vector, targetUniform->vs.registerCount);
         }
-        else if (targetUniform->vs.registerSet == D3DXRS_BOOL)
+        
+        if (targetUniform->vs.boolIndex >= 0)
         {
-            mDevice->SetVertexShaderConstantB(targetUniform->vs.registerIndex, boolVector, targetUniform->vs.registerCount);
+            mDevice->SetVertexShaderConstantB(targetUniform->vs.boolIndex, boolVector, targetUniform->vs.registerCount);
         }
-        else UNREACHABLE();
     }
 }
 
@@ -2124,12 +2124,12 @@ bool Program::applyUniformnfv(Uniform *targetUniform, const GLfloat *v)
 {
     if (targetUniform->ps.registerCount)
     {
-        mDevice->SetPixelShaderConstantF(targetUniform->ps.registerIndex, v, targetUniform->ps.registerCount);
+        mDevice->SetPixelShaderConstantF(targetUniform->ps.float4Index, v, targetUniform->ps.registerCount);
     }
 
     if (targetUniform->vs.registerCount)
     {
-        mDevice->SetVertexShaderConstantF(targetUniform->vs.registerIndex, v, targetUniform->vs.registerCount);
+        mDevice->SetVertexShaderConstantF(targetUniform->vs.float4Index, v, targetUniform->vs.registerCount);
     }
 
     return true;
@@ -2147,9 +2147,9 @@ bool Program::applyUniform1iv(Uniform *targetUniform, GLsizei count, const GLint
 
     if (targetUniform->ps.registerCount)
     {
-        if (targetUniform->ps.registerSet == D3DXRS_SAMPLER)
+        if (targetUniform->ps.samplerIndex >= 0)
         {
-            unsigned int firstIndex = targetUniform->ps.registerIndex;
+            unsigned int firstIndex = targetUniform->ps.samplerIndex;
 
             for (int i = 0; i < count; i++)
             {
@@ -2164,16 +2164,16 @@ bool Program::applyUniform1iv(Uniform *targetUniform, GLsizei count, const GLint
         }
         else
         {
-            ASSERT(targetUniform->ps.registerSet == D3DXRS_FLOAT4);
-            mDevice->SetPixelShaderConstantF(targetUniform->ps.registerIndex, (const float*)vector, targetUniform->ps.registerCount);
+            ASSERT(targetUniform->ps.float4Index >= 0);
+            mDevice->SetPixelShaderConstantF(targetUniform->ps.float4Index, (const float*)vector, targetUniform->ps.registerCount);
         }
     }
 
     if (targetUniform->vs.registerCount)
     {
-        if (targetUniform->vs.registerSet == D3DXRS_SAMPLER)
+        if (targetUniform->vs.samplerIndex >= 0)
         {
-            unsigned int firstIndex = targetUniform->vs.registerIndex;
+            unsigned int firstIndex = targetUniform->vs.samplerIndex;
 
             for (int i = 0; i < count; i++)
             {
@@ -2188,8 +2188,8 @@ bool Program::applyUniform1iv(Uniform *targetUniform, GLsizei count, const GLint
         }
         else
         {
-            ASSERT(targetUniform->vs.registerSet == D3DXRS_FLOAT4);
-            mDevice->SetVertexShaderConstantF(targetUniform->vs.registerIndex, (const float *)vector, targetUniform->vs.registerCount);
+            ASSERT(targetUniform->vs.float4Index >= 0);
+            mDevice->SetVertexShaderConstantF(targetUniform->vs.float4Index, (const float *)vector, targetUniform->vs.registerCount);
         }
     }
 
@@ -2251,14 +2251,14 @@ void Program::applyUniformniv(Uniform *targetUniform, GLsizei count, const D3DXV
 {
     if (targetUniform->ps.registerCount)
     {
-        ASSERT(targetUniform->ps.registerSet == D3DXRS_FLOAT4);
-        mDevice->SetPixelShaderConstantF(targetUniform->ps.registerIndex, (const float *)vector, targetUniform->ps.registerCount);
+        ASSERT(targetUniform->ps.float4Index >= 0);
+        mDevice->SetPixelShaderConstantF(targetUniform->ps.float4Index, (const float *)vector, targetUniform->ps.registerCount);
     }
 
     if (targetUniform->vs.registerCount)
     {
-        ASSERT(targetUniform->vs.registerSet == D3DXRS_FLOAT4);
-        mDevice->SetVertexShaderConstantF(targetUniform->vs.registerIndex, (const float *)vector, targetUniform->vs.registerCount);
+        ASSERT(targetUniform->vs.float4Index >= 0);
+        mDevice->SetVertexShaderConstantF(targetUniform->vs.float4Index, (const float *)vector, targetUniform->vs.registerCount);
     }
 }
 
@@ -2792,9 +2792,17 @@ void Program::initializeConstantHandles(Uniform *targetUniform, Uniform::Registe
         D3DXCONSTANT_DESC constantDescription;
         HRESULT result = constantTable->GetConstantDesc(handle, &constantDescription, &descriptionCount);
         ASSERT(SUCCEEDED(result));
-        ri->registerIndex = constantDescription.RegisterIndex;
+
+        switch(constantDescription.RegisterSet)
+        {
+          case D3DXRS_BOOL:    ri->boolIndex = constantDescription.RegisterIndex;    break;
+          case D3DXRS_FLOAT4:  ri->float4Index = constantDescription.RegisterIndex;  break;
+          case D3DXRS_SAMPLER: ri->samplerIndex = constantDescription.RegisterIndex; break;
+          default: UNREACHABLE();
+        }
+        
+        ASSERT(ri->registerCount == 0 || ri->registerCount == (int)constantDescription.RegisterCount);
         ri->registerCount = constantDescription.RegisterCount;
-        ri->registerSet = constantDescription.RegisterSet;
     }
     else
     {
