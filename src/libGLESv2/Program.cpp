@@ -1921,19 +1921,16 @@ bool Program::defineUniform(GLenum shader, const D3DXCONSTANT_DESC &constantDesc
     if (location >= 0)
     {
         delete uniform;
-
-        if (mUniforms[mUniformIndex[location].index]->type != type)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        uniform = mUniforms[mUniformIndex[location].index];
     }
 
     if (shader == GL_FRAGMENT_SHADER) uniform->ps.set(constantDescription);
     if (shader == GL_VERTEX_SHADER)   uniform->vs.set(constantDescription);
+
+    if (location >= 0)
+    {
+        return uniform->type == type;
+    }
 
     mUniforms.push_back(uniform);
     unsigned int uniformIndex = mUniforms.size() - 1;
