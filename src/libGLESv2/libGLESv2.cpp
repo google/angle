@@ -5373,8 +5373,9 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
                 {
                     return error(GL_INVALID_OPERATION);
                 }
-                // OES_depth_texture supports loading depth data, but ANGLE_depth_texture does not
-                if (pixels != NULL)
+                // OES_depth_texture supports loading depth data and multiple levels,
+                // but ANGLE_depth_texture does not
+                if (pixels != NULL || level != 0)
                 {
                     return error(GL_INVALID_OPERATION);
                 }
@@ -5657,6 +5658,11 @@ void __stdcall glTexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalf
                     return error(GL_INVALID_ENUM);
                 }
                 if (target != GL_TEXTURE_2D)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+                // ANGLE_depth_texture only supports 1-level textures
+                if (levels != 1)
                 {
                     return error(GL_INVALID_OPERATION);
                 }
