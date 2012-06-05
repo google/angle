@@ -52,6 +52,20 @@ struct Uniform
             registerCount = 0;
         }
 
+        void set(const D3DXCONSTANT_DESC &constantDescription)
+        {
+            switch(constantDescription.RegisterSet)
+            {
+              case D3DXRS_BOOL:    boolIndex = constantDescription.RegisterIndex;    break;
+              case D3DXRS_FLOAT4:  float4Index = constantDescription.RegisterIndex;  break;
+              case D3DXRS_SAMPLER: samplerIndex = constantDescription.RegisterIndex; break;
+              default: UNREACHABLE();
+            }
+            
+            ASSERT(registerCount == 0 || registerCount == (int)constantDescription.RegisterCount);
+            registerCount = constantDescription.RegisterCount;
+        }
+
         int float4Index;
         int samplerIndex;
         int boolIndex;
@@ -162,9 +176,9 @@ class Program
     bool linkAttributes();
     int getAttributeBinding(const std::string &name);
 
-    bool linkUniforms(ID3DXConstantTable *constantTable);
-    bool defineUniform(const D3DXHANDLE &constantHandle, const D3DXCONSTANT_DESC &constantDescription, std::string name = "");
-    bool defineUniform(const D3DXCONSTANT_DESC &constantDescription, const std::string &name);
+    bool linkUniforms(GLenum shader, ID3DXConstantTable *constantTable);
+    bool defineUniform(GLenum shader, const D3DXHANDLE &constantHandle, const D3DXCONSTANT_DESC &constantDescription, std::string name = "");
+    bool defineUniform(GLenum shader, const D3DXCONSTANT_DESC &constantDescription, const std::string &name);
     Uniform *createUniform(const D3DXCONSTANT_DESC &constantDescription, const std::string &name);
     bool applyUniformnfv(Uniform *targetUniform, const GLfloat *v);
     bool applyUniform1iv(Uniform *targetUniform, GLsizei count, const GLint *v);
@@ -173,8 +187,6 @@ class Program
     bool applyUniform4iv(Uniform *targetUniform, GLsizei count, const GLint *v);
     void applyUniformniv(Uniform *targetUniform, GLsizei count, const D3DXVECTOR4 *vector);
     void applyUniformnbv(Uniform *targetUniform, GLsizei count, int width, const GLboolean *v);
-
-    void initializeConstantHandles(Uniform *targetUniform, Uniform::RegisterInfo *rs, ID3DXConstantTable *constantTable);
 
     void appendToInfoLogSanitized(const char *message);
     void appendToInfoLog(const char *info, ...);

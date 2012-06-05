@@ -1685,12 +1685,12 @@ void Program::link()
                 return;
             }
 
-            if (!linkUniforms(mConstantTablePS))
+            if (!linkUniforms(GL_FRAGMENT_SHADER, mConstantTablePS))
             {
                 return;
             }
 
-            if (!linkUniforms(mConstantTableVS))
+            if (!linkUniforms(GL_VERTEX_SHADER, mConstantTableVS))
             {
                 return;
             }
@@ -1794,21 +1794,22 @@ int Program::getAttributeBinding(const std::string &name)
     return -1;
 }
 
-bool Program::linkUniforms(ID3DXConstantTable *constantTable)
+bool Program::linkUniforms(GLenum shader, ID3DXConstantTable *constantTable)
 {
     D3DXCONSTANTTABLE_DESC constantTableDescription;
-    D3DXCONSTANT_DESC constantDescription;
-    UINT descriptionCount = 1;
 
     constantTable->GetDesc(&constantTableDescription);
 
     for (unsigned int constantIndex = 0; constantIndex < constantTableDescription.Constants; constantIndex++)
     {
         D3DXHANDLE constantHandle = constantTable->GetConstant(0, constantIndex);
+
+        D3DXCONSTANT_DESC constantDescription;
+        UINT descriptionCount = 1;
         HRESULT result = constantTable->GetConstantDesc(constantHandle, &constantDescription, &descriptionCount);
         ASSERT(SUCCEEDED(result));
 
-        if (!defineUniform(constantHandle, constantDescription))
+        if (!defineUniform(shader, constantHandle, constantDescription))
         {
             return false;
         }
@@ -1819,7 +1820,7 @@ bool Program::linkUniforms(ID3DXConstantTable *constantTable)
 
 // Adds the description of a constant found in the binary shader to the list of uniforms
 // Returns true if succesful (uniform not already defined)
-bool Program::defineUniform(const D3DXHANDLE &constantHandle, const D3DXCONSTANT_DESC &constantDescription, std::string name)
+bool Program::defineUniform(GLenum shader, const D3DXHANDLE &constantHandle, const D3DXCONSTANT_DESC &constantDescription, std::string name)
 {
     if (constantDescription.RegisterSet == D3DXRS_SAMPLER)
     {
@@ -1884,7 +1885,7 @@ bool Program::defineUniform(const D3DXHANDLE &constantHandle, const D3DXCONSTANT
 
                     std::string structIndex = (constantDescription.Elements > 1) ? ("[" + str(arrayIndex) + "]") : "";
 
-                    if (!defineUniform(fieldHandle, fieldDescription, name + constantDescription.Name + structIndex + "."))
+                    if (!defineUniform(shader, fieldHandle, fieldDescription, name + constantDescription.Name + structIndex + "."))
                     {
                         return false;
                     }
@@ -1897,14 +1898,14 @@ bool Program::defineUniform(const D3DXHANDLE &constantHandle, const D3DXCONSTANT
       case D3DXPC_VECTOR:
       case D3DXPC_MATRIX_COLUMNS:
       case D3DXPC_OBJECT:
-        return defineUniform(constantDescription, name + constantDescription.Name);
+        return defineUniform(shader, constantDescription, name + constantDescription.Name);
       default:
         UNREACHABLE();
         return false;
     }
 }
 
-bool Program::defineUniform(const D3DXCONSTANT_DESC &constantDescription, const std::string &_name)
+bool Program::defineUniform(GLenum shader, const D3DXCONSTANT_DESC &constantDescription, const std::string &_name)
 {
     Uniform *uniform = createUniform(constantDescription, _name);
 
@@ -1931,8 +1932,8 @@ bool Program::defineUniform(const D3DXCONSTANT_DESC &constantDescription, const 
         }
     }
 
-    initializeConstantHandles(uniform, &uniform->ps, mConstantTablePS);
-    initializeConstantHandles(uniform, &uniform->vs, mConstantTableVS);
+    if (shader == GL_FRAGMENT_SHADER) uniform->ps.set(constantDescription);
+    if (shader == GL_VERTEX_SHADER)   uniform->vs.set(constantDescription);
 
     mUniforms.push_back(uniform);
     unsigned int uniformIndex = mUniforms.size() - 1;
@@ -2781,33 +2782,6 @@ bool Program::validateSamplers(bool logErrors)
     }
 
     return true;
-}
-
-void Program::initializeConstantHandles(Uniform *targetUniform, Uniform::RegisterInfo *ri, ID3DXConstantTable *constantTable)
-{
-    D3DXHANDLE handle = constantTable->GetConstantByName(0, targetUniform->_name.c_str());
-    if (handle)
-    {
-        UINT descriptionCount = 1;
-        D3DXCONSTANT_DESC constantDescription;
-        HRESULT result = constantTable->GetConstantDesc(handle, &constantDescription, &descriptionCount);
-        ASSERT(SUCCEEDED(result));
-
-        switch(constantDescription.RegisterSet)
-        {
-          case D3DXRS_BOOL:    ri->boolIndex = constantDescription.RegisterIndex;    break;
-          case D3DXRS_FLOAT4:  ri->float4Index = constantDescription.RegisterIndex;  break;
-          case D3DXRS_SAMPLER: ri->samplerIndex = constantDescription.RegisterIndex; break;
-          default: UNREACHABLE();
-        }
-        
-        ASSERT(ri->registerCount == 0 || ri->registerCount == (int)constantDescription.RegisterCount);
-        ri->registerCount = constantDescription.RegisterCount;
-    }
-    else
-    {
-        ri->registerCount = 0;
-    }
 }
 
 GLint Program::getDxDepthRangeLocation() const
