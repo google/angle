@@ -33,6 +33,14 @@ std::string str(int i)
     return buffer;
 }
 
+AttributeBindings::AttributeBindings()
+{
+}
+
+AttributeBindings::~AttributeBindings()
+{
+}
+
 Uniform::Uniform(GLenum type, const std::string &_name, unsigned int arraySize)
     : type(type), _name(_name), name(Program::undecorateUniform(_name)), arraySize(arraySize)
 {
@@ -162,7 +170,7 @@ IDirect3DVertexShader9 *Program::getVertexShader()
     return mVertexExecutable;
 }
 
-void Program::bindAttributeLocation(GLuint index, const char *name)
+void AttributeBindings::bindAttributeLocation(GLuint index, const char *name)
 {
     if (index < MAX_VERTEX_ATTRIBS)
     {
@@ -173,6 +181,11 @@ void Program::bindAttributeLocation(GLuint index, const char *name)
 
         mAttributeBinding[index].insert(name);
     }
+}
+
+void Program::bindAttributeLocation(GLuint index, const char *name)
+{
+    mAttributeBindings.bindAttributeLocation(index, name);
 }
 
 GLuint Program::getAttributeLocation(const char *name)
@@ -1140,12 +1153,12 @@ ID3D10Blob *Program::compileToBinary(const char *hlsl, const char *profile, ID3D
 
 // Packs varyings into generic varying registers, using the algorithm from [OpenGL ES Shading Language 1.00 rev. 17] appendix A section 7 page 111
 // Returns the number of used varying registers, or -1 if unsuccesful
-int Program::packVaryings(const Varying *packing[][4])
+int Program::packVaryings(const Varying *packing[][4], FragmentShader *fragmentShader)
 {
     Context *context = getContext();
     const int maxVaryingVectors = context->getMaximumVaryingVectors();
 
-    for (VaryingList::iterator varying = mFragmentShader->mVaryings.begin(); varying != mFragmentShader->mVaryings.end(); varying++)
+    for (VaryingList::iterator varying = fragmentShader->mVaryings.begin(); varying != fragmentShader->mVaryings.end(); varying++)
     {
         int n = VariableRowCount(varying->type) * varying->size;
         int m = VariableColumnCount(varying->type);
@@ -1288,21 +1301,21 @@ int Program::packVaryings(const Varying *packing[][4])
     return registers;
 }
 
-bool Program::linkVaryings()
+bool Program::linkVaryings(std::string& pixelHLSL, std::string& vertexHLSL, FragmentShader *fragmentShader, VertexShader *vertexShader)
 {
-    if (mPixelHLSL.empty() || mVertexHLSL.empty())
+    if (pixelHLSL.empty() || vertexHLSL.empty())
     {
         return false;
     }
 
     // Reset the varying register assignments
-    for (VaryingList::iterator fragVar = mFragmentShader->mVaryings.begin(); fragVar != mFragmentShader->mVaryings.end(); fragVar++)
+    for (VaryingList::iterator fragVar = fragmentShader->mVaryings.begin(); fragVar != fragmentShader->mVaryings.end(); fragVar++)
     {
         fragVar->reg = -1;
         fragVar->col = -1;
     }
 
-    for (VaryingList::iterator vtxVar = mVertexShader->mVaryings.begin(); vtxVar != mVertexShader->mVaryings.end(); vtxVar++)
+    for (VaryingList::iterator vtxVar = vertexShader->mVaryings.begin(); vtxVar != vertexShader->mVaryings.end(); vtxVar++)
     {
         vtxVar->reg = -1;
         vtxVar->col = -1;
@@ -1310,7 +1323,7 @@ bool Program::linkVaryings()
 
     // Map the varyings to the register file
     const Varying *packing[MAX_VARYING_VECTORS_SM3][4] = {NULL};
-    int registers = packVaryings(packing);
+    int registers = packVaryings(packing, fragmentShader);
 
     if (registers < 0)
     {
@@ -1322,18 +1335,18 @@ bool Program::linkVaryings()
     const bool sm3 = context->supportsShaderModel3();
     const int maxVaryingVectors = context->getMaximumVaryingVectors();
 
-    if (registers == maxVaryingVectors && mFragmentShader->mUsesFragCoord)
+    if (registers == maxVaryingVectors && fragmentShader->mUsesFragCoord)
     {
         appendToInfoLog("No varying registers left to support gl_FragCoord");
 
         return false;
     }
 
-    for (VaryingList::iterator input = mFragmentShader->mVaryings.begin(); input != mFragmentShader->mVaryings.end(); input++)
+    for (VaryingList::iterator input = fragmentShader->mVaryings.begin(); input != fragmentShader->mVaryings.end(); input++)
     {
         bool matched = false;
 
-        for (VaryingList::iterator output = mVertexShader->mVaryings.begin(); output != mVertexShader->mVaryings.end(); output++)
+        for (VaryingList::iterator output = vertexShader->mVaryings.begin(); output != vertexShader->mVaryings.end(); output++)
         {
             if (output->name == input->name)
             {
@@ -1362,30 +1375,30 @@ bool Program::linkVaryings()
 
     std::string varyingSemantic = (sm3 ? "COLOR" : "TEXCOORD");
 
-    mVertexHLSL += "struct VS_INPUT\n"
+    vertexHLSL += "struct VS_INPUT\n"
                    "{\n";
 
     int semanticIndex = 0;
-    for (AttributeArray::iterator attribute = mVertexShader->mAttributes.begin(); attribute != mVertexShader->mAttributes.end(); attribute++)
+    for (AttributeArray::iterator attribute = vertexShader->mAttributes.begin(); attribute != vertexShader->mAttributes.end(); attribute++)
     {
         switch (attribute->type)
         {
-          case GL_FLOAT:      mVertexHLSL += "    float ";    break;
-          case GL_FLOAT_VEC2: mVertexHLSL += "    float2 ";   break;
-          case GL_FLOAT_VEC3: mVertexHLSL += "    float3 ";   break;
-          case GL_FLOAT_VEC4: mVertexHLSL += "    float4 ";   break;
-          case GL_FLOAT_MAT2: mVertexHLSL += "    float2x2 "; break;
-          case GL_FLOAT_MAT3: mVertexHLSL += "    float3x3 "; break;
-          case GL_FLOAT_MAT4: mVertexHLSL += "    float4x4 "; break;
+          case GL_FLOAT:      vertexHLSL += "    float ";    break;
+          case GL_FLOAT_VEC2: vertexHLSL += "    float2 ";   break;
+          case GL_FLOAT_VEC3: vertexHLSL += "    float3 ";   break;
+          case GL_FLOAT_VEC4: vertexHLSL += "    float4 ";   break;
+          case GL_FLOAT_MAT2: vertexHLSL += "    float2x2 "; break;
+          case GL_FLOAT_MAT3: vertexHLSL += "    float3x3 "; break;
+          case GL_FLOAT_MAT4: vertexHLSL += "    float4x4 "; break;
           default:  UNREACHABLE();
         }
 
-        mVertexHLSL += decorateAttribute(attribute->name) + " : TEXCOORD" + str(semanticIndex) + ";\n";
+        vertexHLSL += decorateAttribute(attribute->name) + " : TEXCOORD" + str(semanticIndex) + ";\n";
 
         semanticIndex += VariableRowCount(attribute->type);
     }
 
-    mVertexHLSL += "};\n"
+    vertexHLSL += "};\n"
                    "\n"
                    "struct VS_OUTPUT\n"
                    "{\n"
@@ -1395,37 +1408,37 @@ bool Program::linkVaryings()
     {
         int registerSize = packing[r][3] ? 4 : (packing[r][2] ? 3 : (packing[r][1] ? 2 : 1));
 
-        mVertexHLSL += "    float" + str(registerSize) + " v" + str(r) + " : " + varyingSemantic + str(r) + ";\n";
+        vertexHLSL += "    float" + str(registerSize) + " v" + str(r) + " : " + varyingSemantic + str(r) + ";\n";
     }
 
-    if (mFragmentShader->mUsesFragCoord)
+    if (fragmentShader->mUsesFragCoord)
     {
-        mVertexHLSL += "    float4 gl_FragCoord : " + varyingSemantic + str(registers) + ";\n";
+        vertexHLSL += "    float4 gl_FragCoord : " + varyingSemantic + str(registers) + ";\n";
     }
 
-    if (mVertexShader->mUsesPointSize && sm3)
+    if (vertexShader->mUsesPointSize && sm3)
     {
-        mVertexHLSL += "    float gl_PointSize : PSIZE;\n";
+        vertexHLSL += "    float gl_PointSize : PSIZE;\n";
     }
 
-    mVertexHLSL += "};\n"
+    vertexHLSL += "};\n"
                    "\n"
                    "VS_OUTPUT main(VS_INPUT input)\n"
                    "{\n";
 
-    for (AttributeArray::iterator attribute = mVertexShader->mAttributes.begin(); attribute != mVertexShader->mAttributes.end(); attribute++)
+    for (AttributeArray::iterator attribute = vertexShader->mAttributes.begin(); attribute != vertexShader->mAttributes.end(); attribute++)
     {
-        mVertexHLSL += "    " + decorateAttribute(attribute->name) + " = ";
+        vertexHLSL += "    " + decorateAttribute(attribute->name) + " = ";
 
         if (VariableRowCount(attribute->type) > 1)   // Matrix
         {
-            mVertexHLSL += "transpose";
+            vertexHLSL += "transpose";
         }
 
-        mVertexHLSL += "(input." + decorateAttribute(attribute->name) + ");\n";
+        vertexHLSL += "(input." + decorateAttribute(attribute->name) + ");\n";
     }
 
-    mVertexHLSL += "\n"
+    vertexHLSL += "\n"
                    "    gl_main();\n"
                    "\n"
                    "    VS_OUTPUT output;\n"
@@ -1434,17 +1447,17 @@ bool Program::linkVaryings()
                    "    output.gl_Position.z = (gl_Position.z + gl_Position.w) * 0.5;\n"
                    "    output.gl_Position.w = gl_Position.w;\n";
 
-    if (mVertexShader->mUsesPointSize && sm3)
+    if (vertexShader->mUsesPointSize && sm3)
     {
-        mVertexHLSL += "    output.gl_PointSize = clamp(gl_PointSize, 1.0, " + str((int)ALIASED_POINT_SIZE_RANGE_MAX_SM3) + ");\n";
+        vertexHLSL += "    output.gl_PointSize = clamp(gl_PointSize, 1.0, " + str((int)ALIASED_POINT_SIZE_RANGE_MAX_SM3) + ");\n";
     }
 
-    if (mFragmentShader->mUsesFragCoord)
+    if (fragmentShader->mUsesFragCoord)
     {
-        mVertexHLSL += "    output.gl_FragCoord = gl_Position;\n";
+        vertexHLSL += "    output.gl_FragCoord = gl_Position;\n";
     }
 
-    for (VaryingList::iterator varying = mVertexShader->mVaryings.begin(); varying != mVertexShader->mVaryings.end(); varying++)
+    for (VaryingList::iterator varying = vertexShader->mVaryings.begin(); varying != vertexShader->mVaryings.end(); varying++)
     {
         if (varying->reg >= 0)
         {
@@ -1455,7 +1468,7 @@ bool Program::linkVaryings()
                 for (int j = 0; j < rows; j++)
                 {
                     int r = varying->reg + i * rows + j;
-                    mVertexHLSL += "    output.v" + str(r);
+                    vertexHLSL += "    output.v" + str(r);
 
                     bool sharedRegister = false;   // Register used by multiple varyings
                     
@@ -1470,7 +1483,7 @@ bool Program::linkVaryings()
 
                     if(sharedRegister)
                     {
-                        mVertexHLSL += ".";
+                        vertexHLSL += ".";
 
                         for (int x = 0; x < 4; x++)
                         {
@@ -1478,41 +1491,41 @@ bool Program::linkVaryings()
                             {
                                 switch(x)
                                 {
-                                  case 0: mVertexHLSL += "x"; break;
-                                  case 1: mVertexHLSL += "y"; break;
-                                  case 2: mVertexHLSL += "z"; break;
-                                  case 3: mVertexHLSL += "w"; break;
+                                  case 0: vertexHLSL += "x"; break;
+                                  case 1: vertexHLSL += "y"; break;
+                                  case 2: vertexHLSL += "z"; break;
+                                  case 3: vertexHLSL += "w"; break;
                                 }
                             }
                         }
                     }
 
-                    mVertexHLSL += " = " + varying->name;
+                    vertexHLSL += " = " + varying->name;
                     
                     if (varying->array)
                     {
-                        mVertexHLSL += "[" + str(i) + "]";
+                        vertexHLSL += "[" + str(i) + "]";
                     }
 
                     if (rows > 1)
                     {
-                        mVertexHLSL += "[" + str(j) + "]";
+                        vertexHLSL += "[" + str(j) + "]";
                     }
                     
-                    mVertexHLSL += ";\n";
+                    vertexHLSL += ";\n";
                 }
             }
         }
     }
 
-    mVertexHLSL += "\n"
+    vertexHLSL += "\n"
                    "    return output;\n"
                    "}\n";
 
-    mPixelHLSL += "struct PS_INPUT\n"
+    pixelHLSL += "struct PS_INPUT\n"
                   "{\n";
     
-    for (VaryingList::iterator varying = mFragmentShader->mVaryings.begin(); varying != mFragmentShader->mVaryings.end(); varying++)
+    for (VaryingList::iterator varying = fragmentShader->mVaryings.begin(); varying != fragmentShader->mVaryings.end(); varying++)
     {
         if (varying->reg >= 0)
         {
@@ -1522,32 +1535,32 @@ bool Program::linkVaryings()
                 for (int j = 0; j < rows; j++)
                 {
                     std::string n = str(varying->reg + i * rows + j);
-                    mPixelHLSL += "    float4 v" + n + " : " + varyingSemantic + n + ";\n";
+                    pixelHLSL += "    float4 v" + n + " : " + varyingSemantic + n + ";\n";
                 }
             }
         }
         else UNREACHABLE();
     }
 
-    if (mFragmentShader->mUsesFragCoord)
+    if (fragmentShader->mUsesFragCoord)
     {
-        mPixelHLSL += "    float4 gl_FragCoord : " + varyingSemantic + str(registers) + ";\n";
+        pixelHLSL += "    float4 gl_FragCoord : " + varyingSemantic + str(registers) + ";\n";
         if (sm3) {
-            mPixelHLSL += "    float2 dx_VPos : VPOS;\n";
+            pixelHLSL += "    float2 dx_VPos : VPOS;\n";
         }
     }
 
-    if (mFragmentShader->mUsesPointCoord && sm3)
+    if (fragmentShader->mUsesPointCoord && sm3)
     {
-        mPixelHLSL += "    float2 gl_PointCoord : TEXCOORD0;\n";
+        pixelHLSL += "    float2 gl_PointCoord : TEXCOORD0;\n";
     }
 
-    if (mFragmentShader->mUsesFrontFacing)
+    if (fragmentShader->mUsesFrontFacing)
     {
-        mPixelHLSL += "    float vFace : VFACE;\n";
+        pixelHLSL += "    float vFace : VFACE;\n";
     }
 
-    mPixelHLSL += "};\n"
+    pixelHLSL += "};\n"
                   "\n"
                   "struct PS_OUTPUT\n"
                   "{\n"
@@ -1557,38 +1570,38 @@ bool Program::linkVaryings()
                   "PS_OUTPUT main(PS_INPUT input)\n"
                   "{\n";
 
-    if (mFragmentShader->mUsesFragCoord)
+    if (fragmentShader->mUsesFragCoord)
     {
-        mPixelHLSL += "    float rhw = 1.0 / input.gl_FragCoord.w;\n";
+        pixelHLSL += "    float rhw = 1.0 / input.gl_FragCoord.w;\n";
         
         if (sm3)
         {
             // dx_Coord.y contains the render target height. See Context::applyRenderTarget()
-            mPixelHLSL += "    gl_FragCoord.x = input.dx_VPos.x + 0.5;\n"
+            pixelHLSL += "    gl_FragCoord.x = input.dx_VPos.x + 0.5;\n"
                           "    gl_FragCoord.y = dx_Coord.y - input.dx_VPos.y - 0.5;\n";
         }
         else
         {
             // dx_Coord contains the viewport width/2, height/2, center.x and center.y. See Context::applyRenderTarget()
-            mPixelHLSL += "    gl_FragCoord.x = (input.gl_FragCoord.x * rhw) * dx_Coord.x + dx_Coord.z;\n"
+            pixelHLSL += "    gl_FragCoord.x = (input.gl_FragCoord.x * rhw) * dx_Coord.x + dx_Coord.z;\n"
                           "    gl_FragCoord.y = -(input.gl_FragCoord.y * rhw) * dx_Coord.y + dx_Coord.w;\n";
         }
         
-        mPixelHLSL += "    gl_FragCoord.z = (input.gl_FragCoord.z * rhw) * dx_Depth.x + dx_Depth.y;\n"
+        pixelHLSL += "    gl_FragCoord.z = (input.gl_FragCoord.z * rhw) * dx_Depth.x + dx_Depth.y;\n"
                       "    gl_FragCoord.w = rhw;\n";
     }
 
-    if (mFragmentShader->mUsesPointCoord && sm3)
+    if (fragmentShader->mUsesPointCoord && sm3)
     {
-        mPixelHLSL += "    gl_PointCoord = input.gl_PointCoord;\n";
+        pixelHLSL += "    gl_PointCoord = input.gl_PointCoord;\n";
     }
 
-    if (mFragmentShader->mUsesFrontFacing)
+    if (fragmentShader->mUsesFrontFacing)
     {
-        mPixelHLSL += "    gl_FrontFacing = dx_PointsOrLines || (dx_FrontCCW ? (input.vFace >= 0.0) : (input.vFace <= 0.0));\n";
+        pixelHLSL += "    gl_FrontFacing = dx_PointsOrLines || (dx_FrontCCW ? (input.vFace >= 0.0) : (input.vFace <= 0.0));\n";
     }
 
-    for (VaryingList::iterator varying = mFragmentShader->mVaryings.begin(); varying != mFragmentShader->mVaryings.end(); varying++)
+    for (VaryingList::iterator varying = fragmentShader->mVaryings.begin(); varying != fragmentShader->mVaryings.end(); varying++)
     {
         if (varying->reg >= 0)
         {
@@ -1598,26 +1611,26 @@ bool Program::linkVaryings()
                 for (int j = 0; j < rows; j++)
                 {
                     std::string n = str(varying->reg + i * rows + j);
-                    mPixelHLSL += "    " + varying->name;
+                    pixelHLSL += "    " + varying->name;
 
                     if (varying->array)
                     {
-                        mPixelHLSL += "[" + str(i) + "]";
+                        pixelHLSL += "[" + str(i) + "]";
                     }
 
                     if (rows > 1)
                     {
-                        mPixelHLSL += "[" + str(j) + "]";
+                        pixelHLSL += "[" + str(j) + "]";
                     }
 
-                    mPixelHLSL += " = input.v" + n + ";\n";
+                    pixelHLSL += " = input.v" + n + ";\n";
                 }
             }
         }
         else UNREACHABLE();
     }
 
-    mPixelHLSL += "\n"
+    pixelHLSL += "\n"
                   "    gl_main();\n"
                   "\n"
                   "    PS_OUTPUT output;\n"                 
@@ -1634,22 +1647,27 @@ bool Program::linkVaryings()
 // a list of uniforms
 void Program::link()
 {
+    link(mAttributeBindings, mFragmentShader, mVertexShader);
+}
+
+void Program::link(const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader)
+{
     unlink();
 
-    if (!mFragmentShader || !mFragmentShader->isCompiled())
+    if (!fragmentShader || !fragmentShader->isCompiled())
     {
         return;
     }
 
-    if (!mVertexShader || !mVertexShader->isCompiled())
+    if (!vertexShader || !vertexShader->isCompiled())
     {
         return;
     }
 
-    mPixelHLSL = mFragmentShader->getHLSL();
-    mVertexHLSL = mVertexShader->getHLSL();
+    std::string pixelHLSL = fragmentShader->getHLSL();
+    std::string vertexHLSL = vertexShader->getHLSL();
 
-    if (!linkVaryings())
+    if (!linkVaryings(pixelHLSL, vertexHLSL, fragmentShader, vertexShader))
     {
         return;
     }
@@ -1658,8 +1676,8 @@ void Program::link()
     const char *vertexProfile = context->supportsShaderModel3() ? "vs_3_0" : "vs_2_0";
     const char *pixelProfile = context->supportsShaderModel3() ? "ps_3_0" : "ps_2_0";
 
-    ID3D10Blob *vertexBinary = compileToBinary(mVertexHLSL.c_str(), vertexProfile, &mConstantTableVS);
-    ID3D10Blob *pixelBinary = compileToBinary(mPixelHLSL.c_str(), pixelProfile, &mConstantTablePS);
+    ID3D10Blob *vertexBinary = compileToBinary(vertexHLSL.c_str(), vertexProfile, &mConstantTableVS);
+    ID3D10Blob *pixelBinary = compileToBinary(pixelHLSL.c_str(), pixelProfile, &mConstantTablePS);
 
     if (vertexBinary && pixelBinary)
     {
@@ -1680,7 +1698,7 @@ void Program::link()
 
         if (mVertexExecutable && mPixelExecutable)
         {
-            if (!linkAttributes())
+            if (!linkAttributes(attributeBindings, fragmentShader, vertexShader))
             {
                 return;
             }
@@ -1712,14 +1730,14 @@ void Program::link()
 }
 
 // Determines the mapping between GL attributes and Direct3D 9 vertex stream usage indices
-bool Program::linkAttributes()
+bool Program::linkAttributes(const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader)
 {
     unsigned int usedLocations = 0;
 
     // Link attributes that have a binding location
     for (AttributeArray::iterator attribute = mVertexShader->mAttributes.begin(); attribute != mVertexShader->mAttributes.end(); attribute++)
     {
-        int location = getAttributeBinding(attribute->name);
+        int location = attributeBindings.getAttributeBinding(attribute->name);
 
         if (location != -1)   // Set by glBindAttribLocation
         {
@@ -1749,7 +1767,7 @@ bool Program::linkAttributes()
     // Link attributes that don't have a binding location
     for (AttributeArray::iterator attribute = mVertexShader->mAttributes.begin(); attribute != mVertexShader->mAttributes.end(); attribute++)
     {
-        int location = getAttributeBinding(attribute->name);
+        int location = attributeBindings.getAttributeBinding(attribute->name);
 
         if (location == -1)   // Not set by glBindAttribLocation
         {
@@ -1781,7 +1799,7 @@ bool Program::linkAttributes()
     return true;
 }
 
-int Program::getAttributeBinding(const std::string &name)
+int AttributeBindings::getAttributeBinding(const std::string &name) const
 {
     for (int location = 0; location < MAX_VERTEX_ATTRIBS; location++)
     {
@@ -2390,9 +2408,6 @@ void Program::unlink(bool destroy)
     mDxPointsOrLinesLocation = -1;
 
     mUniformIndex.clear();
-
-    mPixelHLSL.clear();
-    mVertexHLSL.clear();
 
     delete[] mInfoLog;
     mInfoLog = NULL;

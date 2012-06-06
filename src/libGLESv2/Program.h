@@ -25,6 +25,19 @@ class ResourceManager;
 class FragmentShader;
 class VertexShader;
 
+class AttributeBindings
+{
+  public:
+    AttributeBindings();
+    ~AttributeBindings();
+
+    void bindAttributeLocation(GLuint index, const char *name);
+    int getAttributeBinding(const std::string &name) const;
+
+  private:
+    std::set<std::string> mAttributeBinding[MAX_VERTEX_ATTRIBS];
+};
+
 // Helper struct representing a single shader uniform
 struct Uniform
 {
@@ -136,6 +149,7 @@ class Program
     void applyUniforms();
 
     void link();
+    void link(const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader);
     bool isLinked();
     int getInfoLogLength() const;
     void getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog);
@@ -170,11 +184,10 @@ class Program
     ID3D10Blob *compileToBinary(const char *hlsl, const char *profile, ID3DXConstantTable **constantTable);
     void unlink(bool destroy = false);
 
-    int packVaryings(const Varying *packing[][4]);
-    bool linkVaryings();
+    int packVaryings(const Varying *packing[][4], FragmentShader *fragmentShader);
+    bool linkVaryings(std::string& pixelHLSL, std::string& vertexHLSL, FragmentShader *fragmentShader, VertexShader *vertexShader);
 
-    bool linkAttributes();
-    int getAttributeBinding(const std::string &name);
+    bool linkAttributes(const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader);
 
     bool linkUniforms(GLenum shader, ID3DXConstantTable *constantTable);
     bool defineUniform(GLenum shader, const D3DXHANDLE &constantHandle, const D3DXCONSTANT_DESC &constantDescription, std::string name = "");
@@ -198,15 +211,12 @@ class Program
     FragmentShader *mFragmentShader;
     VertexShader *mVertexShader;
 
-    std::string mPixelHLSL;
-    std::string mVertexHLSL;
-
     IDirect3DPixelShader9 *mPixelExecutable;
     IDirect3DVertexShader9 *mVertexExecutable;
     ID3DXConstantTable *mConstantTablePS;
     ID3DXConstantTable *mConstantTableVS;
 
-    std::set<std::string> mAttributeBinding[MAX_VERTEX_ATTRIBS];
+    AttributeBindings mAttributeBindings;
     Attribute mLinkedAttribute[MAX_VERTEX_ATTRIBS];
     int mSemanticIndex[MAX_VERTEX_ATTRIBS];
 
