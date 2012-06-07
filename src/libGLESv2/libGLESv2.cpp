@@ -2937,12 +2937,13 @@ int __stdcall glGetAttribLocation(GLuint program, const GLchar* name)
                 }
             }
 
-            if (!programObject->isLinked())
+            gl::ProgramBinary *programBinary = programObject->getProgramBinary();
+            if (!programBinary)
             {
                 return error(GL_INVALID_OPERATION, -1);
             }
 
-            return programObject->getAttributeLocation(name);
+            return programBinary->getAttributeLocation(name);
         }
     }
     catch(std::bad_alloc&)
@@ -3396,7 +3397,7 @@ void __stdcall glGetProgramiv(GLuint program, GLenum pname, GLint* params)
                 *params = programObject->isFlaggedForDeletion();
                 return;
               case GL_LINK_STATUS:
-                *params = programObject->isLinked();
+                *params = programObject->getProgramBinary() != NULL;
                 return;
               case GL_VALIDATE_STATUS:
                 *params = programObject->isValidated();
@@ -3944,12 +3945,18 @@ void __stdcall glGetnUniformfvEXT(GLuint program, GLint location, GLsizei bufSiz
 
             gl::Program *programObject = context->getProgram(program);
 
-            if (!programObject || !programObject->isLinked())
+            if (!programObject)
             {
                 return error(GL_INVALID_OPERATION);
             }
 
-            if (!programObject->getUniformfv(location, &bufSize, params))
+            gl::ProgramBinary *programBinary = programObject->getProgramBinary();
+            if (!programBinary)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            if (!programBinary->getUniformfv(location, &bufSize, params))
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -3978,12 +3985,18 @@ void __stdcall glGetUniformfv(GLuint program, GLint location, GLfloat* params)
 
             gl::Program *programObject = context->getProgram(program);
 
-            if (!programObject || !programObject->isLinked())
+            if (!programObject)
             {
                 return error(GL_INVALID_OPERATION);
             }
 
-            if (!programObject->getUniformfv(location, NULL, params))
+            gl::ProgramBinary *programBinary = programObject->getProgramBinary();
+            if (!programBinary)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            if (!programBinary->getUniformfv(location, NULL, params))
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -4018,17 +4031,18 @@ void __stdcall glGetnUniformivEXT(GLuint program, GLint location, GLsizei bufSiz
 
             gl::Program *programObject = context->getProgram(program);
 
-            if (!programObject || !programObject->isLinked())
-            {
-                return error(GL_INVALID_OPERATION);
-            }
-
             if (!programObject)
             {
                 return error(GL_INVALID_OPERATION);
             }
 
-            if (!programObject->getUniformiv(location, &bufSize, params))
+            gl::ProgramBinary *programBinary = programObject->getProgramBinary();
+            if (!programBinary)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            if (!programBinary->getUniformiv(location, &bufSize, params))
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -4057,17 +4071,18 @@ void __stdcall glGetUniformiv(GLuint program, GLint location, GLint* params)
 
             gl::Program *programObject = context->getProgram(program);
 
-            if (!programObject || !programObject->isLinked())
-            {
-                return error(GL_INVALID_OPERATION);
-            }
-
             if (!programObject)
             {
                 return error(GL_INVALID_OPERATION);
             }
 
-            if (!programObject->getUniformiv(location, NULL, params))
+            gl::ProgramBinary *programBinary = programObject->getProgramBinary();
+            if (!programBinary)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            if (!programBinary->getUniformiv(location, NULL, params))
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -4108,12 +4123,13 @@ int __stdcall glGetUniformLocation(GLuint program, const GLchar* name)
                 }
             }
 
-            if (!programObject->isLinked())
+            gl::ProgramBinary *programBinary = programObject->getProgramBinary();
+            if (!programBinary)
             {
                 return error(GL_INVALID_OPERATION, -1);
             }
 
-            return programObject->getUniformLocation(name);
+            return programBinary->getUniformLocation(name);
         }
     }
     catch(std::bad_alloc&)
@@ -5844,7 +5860,13 @@ void __stdcall glUniform1fv(GLint location, GLsizei count, const GLfloat* v)
                 return error(GL_INVALID_OPERATION);
             }
 
-            if (!program->setUniform1fv(location, count, v))
+            gl::ProgramBinary *programBinary = program->getProgramBinary();
+            if (!programBinary)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            if (!programBinary->setUniform1fv(location, count, v))
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -5888,7 +5910,13 @@ void __stdcall glUniform1iv(GLint location, GLsizei count, const GLint* v)
                 return error(GL_INVALID_OPERATION);
             }
 
-            if (!program->setUniform1iv(location, count, v))
+            gl::ProgramBinary *programBinary = program->getProgramBinary();
+            if (!programBinary)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            if (!programBinary->setUniform1iv(location, count, v))
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -5934,7 +5962,13 @@ void __stdcall glUniform2fv(GLint location, GLsizei count, const GLfloat* v)
                 return error(GL_INVALID_OPERATION);
             }
 
-            if (!program->setUniform2fv(location, count, v))
+            gl::ProgramBinary *programBinary = program->getProgramBinary();
+            if (!programBinary)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            if (!programBinary->setUniform2fv(location, count, v))
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -5980,7 +6014,13 @@ void __stdcall glUniform2iv(GLint location, GLsizei count, const GLint* v)
                 return error(GL_INVALID_OPERATION);
             }
 
-            if (!program->setUniform2iv(location, count, v))
+            gl::ProgramBinary *programBinary = program->getProgramBinary();
+            if (!programBinary)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            if (!programBinary->setUniform2iv(location, count, v))
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -6026,7 +6066,13 @@ void __stdcall glUniform3fv(GLint location, GLsizei count, const GLfloat* v)
                 return error(GL_INVALID_OPERATION);
             }
 
-            if (!program->setUniform3fv(location, count, v))
+            gl::ProgramBinary *programBinary = program->getProgramBinary();
+            if (!programBinary)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            if (!programBinary->setUniform3fv(location, count, v))
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -6072,7 +6118,13 @@ void __stdcall glUniform3iv(GLint location, GLsizei count, const GLint* v)
                 return error(GL_INVALID_OPERATION);
             }
 
-            if (!program->setUniform3iv(location, count, v))
+            gl::ProgramBinary *programBinary = program->getProgramBinary();
+            if (!programBinary)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            if (!programBinary->setUniform3iv(location, count, v))
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -6118,7 +6170,13 @@ void __stdcall glUniform4fv(GLint location, GLsizei count, const GLfloat* v)
                 return error(GL_INVALID_OPERATION);
             }
 
-            if (!program->setUniform4fv(location, count, v))
+            gl::ProgramBinary *programBinary = program->getProgramBinary();
+            if (!programBinary)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            if (!programBinary->setUniform4fv(location, count, v))
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -6164,7 +6222,13 @@ void __stdcall glUniform4iv(GLint location, GLsizei count, const GLint* v)
                 return error(GL_INVALID_OPERATION);
             }
 
-            if (!program->setUniform4iv(location, count, v))
+            gl::ProgramBinary *programBinary = program->getProgramBinary();
+            if (!programBinary)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            if (!programBinary->setUniform4iv(location, count, v))
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -6204,7 +6268,13 @@ void __stdcall glUniformMatrix2fv(GLint location, GLsizei count, GLboolean trans
                 return error(GL_INVALID_OPERATION);
             }
 
-            if (!program->setUniformMatrix2fv(location, count, value))
+            gl::ProgramBinary *programBinary = program->getProgramBinary();
+            if (!programBinary)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            if (!programBinary->setUniformMatrix2fv(location, count, value))
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -6244,7 +6314,13 @@ void __stdcall glUniformMatrix3fv(GLint location, GLsizei count, GLboolean trans
                 return error(GL_INVALID_OPERATION);
             }
 
-            if (!program->setUniformMatrix3fv(location, count, value))
+            gl::ProgramBinary *programBinary = program->getProgramBinary();
+            if (!programBinary)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            if (!programBinary->setUniformMatrix3fv(location, count, value))
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -6284,7 +6360,13 @@ void __stdcall glUniformMatrix4fv(GLint location, GLsizei count, GLboolean trans
                 return error(GL_INVALID_OPERATION);
             }
 
-            if (!program->setUniformMatrix4fv(location, count, value))
+            gl::ProgramBinary *programBinary = program->getProgramBinary();
+            if (!programBinary)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            if (!programBinary->setUniformMatrix4fv(location, count, value))
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -6320,7 +6402,7 @@ void __stdcall glUseProgram(GLuint program)
                 }
             }
 
-            if (program != 0 && !programObject->isLinked())
+            if (program != 0 && !programObject->getProgramBinary())
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -6358,7 +6440,13 @@ void __stdcall glValidateProgram(GLuint program)
                 }
             }
 
-            programObject->validate();
+            gl::ProgramBinary *programBinary = programObject->getProgramBinary();
+            if (!programBinary)
+            {
+                return;
+            }
+
+            programBinary->validate();
         }
     }
     catch(std::bad_alloc&)

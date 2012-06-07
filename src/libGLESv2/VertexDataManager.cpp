@@ -128,10 +128,11 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
 
     const VertexAttributeArray &attribs = mContext->getVertexAttributes();
     Program *program = mContext->getCurrentProgram();
+    ProgramBinary *programBinary = program->getProgramBinary();
 
     for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
     {
-        translated[attributeIndex].active = (program->getSemanticIndex(attributeIndex) != -1);
+        translated[attributeIndex].active = (programBinary->getSemanticIndex(attributeIndex) != -1);
     }
 
     // Determine the required storage size per used buffer, and invalidate static buffers that don't contain matching attributes

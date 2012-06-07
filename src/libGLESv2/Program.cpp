@@ -42,7 +42,7 @@ AttributeBindings::~AttributeBindings()
 }
 
 Uniform::Uniform(GLenum type, const std::string &_name, unsigned int arraySize)
-    : type(type), _name(_name), name(Program::undecorateUniform(_name)), arraySize(arraySize)
+    : type(type), _name(_name), name(ProgramBinary::undecorateUniform(_name)), arraySize(arraySize)
 {
     int bytes = UniformInternalSize(type) * arraySize;
     data = new unsigned char[bytes];
@@ -61,15 +61,13 @@ bool Uniform::isArray()
 }
 
 UniformLocation::UniformLocation(const std::string &_name, unsigned int element, unsigned int index) 
-    : name(Program::undecorateUniform(_name)), element(element), index(index)
+    : name(ProgramBinary::undecorateUniform(_name)), element(element), index(index)
 {
 }
 
-Program::Program(ResourceManager *manager, GLuint handle) : mResourceManager(manager), mHandle(handle), mSerial(issueSerial())
+ProgramBinary::ProgramBinary()
 {
     mDevice = getDevice();
-    mFragmentShader = NULL;
-    mVertexShader = NULL;
 
     mPixelExecutable = NULL;
     mVertexExecutable = NULL;
@@ -79,10 +77,38 @@ Program::Program(ResourceManager *manager, GLuint handle) : mResourceManager(man
     mInfoLog = NULL;
     mValidated = false;
 
-    unlink();
+    for (int index = 0; index < MAX_VERTEX_ATTRIBS; index++)
+    {
+        mSemanticIndex[index] = -1;
+    }
 
+    for (int index = 0; index < MAX_TEXTURE_IMAGE_UNITS; index++)
+    {
+        mSamplersPS[index].active = false;
+    }
+
+    for (int index = 0; index < MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF; index++)
+    {
+        mSamplersVS[index].active = false;
+    }
+
+    mUsedVertexSamplerRange = 0;
+    mUsedPixelSamplerRange = 0;
+
+    mDxDepthRangeLocation = -1;
+    mDxDepthLocation = -1;
+    mDxCoordLocation = -1;
+    mDxHalfPixelSizeLocation = -1;
+    mDxFrontCCWLocation = -1;
+    mDxPointsOrLinesLocation = -1;
+}
+
+Program::Program(ResourceManager *manager, GLuint handle) : mResourceManager(manager), mHandle(handle), mSerial(issueSerial())
+{
+    mFragmentShader = NULL;
+    mVertexShader = NULL;
+    mProgramBinary = NULL;
     mDeleteStatus = false;
-
     mRefCount = 0;
 }
 
@@ -99,6 +125,37 @@ Program::~Program()
     {
         mFragmentShader->release();
     }
+}
+
+ProgramBinary::~ProgramBinary()
+{
+    if (mPixelExecutable)
+    {
+        mPixelExecutable->Release();
+    }
+
+    if (mVertexExecutable)
+    {
+        mVertexExecutable->Release();
+    }
+
+    if (mConstantTablePS)
+    {
+        mConstantTablePS->Release();
+    }
+
+    if (mConstantTableVS)
+    {
+        mConstantTableVS->Release();
+    }
+
+    while (!mUniforms.empty())
+    {
+        delete mUniforms.back();
+        mUniforms.pop_back();
+    }
+
+    delete[] mInfoLog;
 }
 
 bool Program::attachShader(Shader *shader)
@@ -160,12 +217,12 @@ int Program::getAttachedShadersCount() const
     return (mVertexShader ? 1 : 0) + (mFragmentShader ? 1 : 0);
 }
 
-IDirect3DPixelShader9 *Program::getPixelShader()
+IDirect3DPixelShader9 *ProgramBinary::getPixelShader()
 {
     return mPixelExecutable;
 }
 
-IDirect3DVertexShader9 *Program::getVertexShader()
+IDirect3DVertexShader9 *ProgramBinary::getVertexShader()
 {
     return mVertexExecutable;
 }
@@ -188,7 +245,7 @@ void Program::bindAttributeLocation(GLuint index, const char *name)
     mAttributeBindings.bindAttributeLocation(index, name);
 }
 
-GLuint Program::getAttributeLocation(const char *name)
+GLuint ProgramBinary::getAttributeLocation(const char *name)
 {
     if (name)
     {
@@ -204,7 +261,7 @@ GLuint Program::getAttributeLocation(const char *name)
     return -1;
 }
 
-int Program::getSemanticIndex(int attributeIndex)
+int ProgramBinary::getSemanticIndex(int attributeIndex)
 {
     ASSERT(attributeIndex >= 0 && attributeIndex < MAX_VERTEX_ATTRIBS);
     
@@ -212,7 +269,7 @@ int Program::getSemanticIndex(int attributeIndex)
 }
 
 // Returns one more than the highest sampler index used.
-GLint Program::getUsedSamplerRange(SamplerType type)
+GLint ProgramBinary::getUsedSamplerRange(SamplerType type)
 {
     switch (type)
     {
@@ -228,7 +285,7 @@ GLint Program::getUsedSamplerRange(SamplerType type)
 
 // Returns the index of the texture image unit (0-19) corresponding to a Direct3D 9 sampler
 // index (0-15 for the pixel shader and 0-3 for the vertex shader).
-GLint Program::getSamplerMapping(SamplerType type, unsigned int samplerIndex)
+GLint ProgramBinary::getSamplerMapping(SamplerType type, unsigned int samplerIndex)
 {
     GLint logicalTextureUnit = -1;
 
@@ -263,7 +320,7 @@ GLint Program::getSamplerMapping(SamplerType type, unsigned int samplerIndex)
 
 // Returns the texture type for a given Direct3D 9 sampler type and
 // index (0-15 for the pixel shader and 0-3 for the vertex shader).
-TextureType Program::getSamplerTextureType(SamplerType type, unsigned int samplerIndex)
+TextureType ProgramBinary::getSamplerTextureType(SamplerType type, unsigned int samplerIndex)
 {
     switch (type)
     {
@@ -281,7 +338,7 @@ TextureType Program::getSamplerTextureType(SamplerType type, unsigned int sample
     return TEXTURE_2D;
 }
 
-GLint Program::getUniformLocation(std::string name)
+GLint ProgramBinary::getUniformLocation(std::string name)
 {
     unsigned int subscript = 0;
 
@@ -307,7 +364,7 @@ GLint Program::getUniformLocation(std::string name)
     return -1;
 }
 
-bool Program::setUniform1fv(GLint location, GLsizei count, const GLfloat* v)
+bool ProgramBinary::setUniform1fv(GLint location, GLsizei count, const GLfloat* v)
 {
     if (location < 0 || location >= (int)mUniformIndex.size())
     {
@@ -368,7 +425,7 @@ bool Program::setUniform1fv(GLint location, GLsizei count, const GLfloat* v)
     return true;
 }
 
-bool Program::setUniform2fv(GLint location, GLsizei count, const GLfloat *v)
+bool ProgramBinary::setUniform2fv(GLint location, GLsizei count, const GLfloat *v)
 {
     if (location < 0 || location >= (int)mUniformIndex.size())
     {
@@ -430,7 +487,7 @@ bool Program::setUniform2fv(GLint location, GLsizei count, const GLfloat *v)
     return true;
 }
 
-bool Program::setUniform3fv(GLint location, GLsizei count, const GLfloat *v)
+bool ProgramBinary::setUniform3fv(GLint location, GLsizei count, const GLfloat *v)
 {
     if (location < 0 || location >= (int)mUniformIndex.size())
     {
@@ -491,7 +548,7 @@ bool Program::setUniform3fv(GLint location, GLsizei count, const GLfloat *v)
     return true;
 }
 
-bool Program::setUniform4fv(GLint location, GLsizei count, const GLfloat *v)
+bool ProgramBinary::setUniform4fv(GLint location, GLsizei count, const GLfloat *v)
 {
     if (location < 0 || location >= (int)mUniformIndex.size())
     {
@@ -574,7 +631,7 @@ void transposeMatrix(T *target, const GLfloat *value)
     }
 }
 
-bool Program::setUniformMatrix2fv(GLint location, GLsizei count, const GLfloat *value)
+bool ProgramBinary::setUniformMatrix2fv(GLint location, GLsizei count, const GLfloat *value)
 {
     if (location < 0 || location >= (int)mUniformIndex.size())
     {
@@ -607,7 +664,7 @@ bool Program::setUniformMatrix2fv(GLint location, GLsizei count, const GLfloat *
     return true;
 }
 
-bool Program::setUniformMatrix3fv(GLint location, GLsizei count, const GLfloat *value)
+bool ProgramBinary::setUniformMatrix3fv(GLint location, GLsizei count, const GLfloat *value)
 {
     if (location < 0 || location >= (int)mUniformIndex.size())
     {
@@ -641,7 +698,7 @@ bool Program::setUniformMatrix3fv(GLint location, GLsizei count, const GLfloat *
 }
 
 
-bool Program::setUniformMatrix4fv(GLint location, GLsizei count, const GLfloat *value)
+bool ProgramBinary::setUniformMatrix4fv(GLint location, GLsizei count, const GLfloat *value)
 {
     if (location < 0 || location >= (int)mUniformIndex.size())
     {
@@ -674,7 +731,7 @@ bool Program::setUniformMatrix4fv(GLint location, GLsizei count, const GLfloat *
     return true;
 }
 
-bool Program::setUniform1iv(GLint location, GLsizei count, const GLint *v)
+bool ProgramBinary::setUniform1iv(GLint location, GLsizei count, const GLint *v)
 {
     if (location < 0 || location >= (int)mUniformIndex.size())
     {
@@ -728,7 +785,7 @@ bool Program::setUniform1iv(GLint location, GLsizei count, const GLint *v)
     return true;
 }
 
-bool Program::setUniform2iv(GLint location, GLsizei count, const GLint *v)
+bool ProgramBinary::setUniform2iv(GLint location, GLsizei count, const GLint *v)
 {
     if (location < 0 || location >= (int)mUniformIndex.size())
     {
@@ -780,7 +837,7 @@ bool Program::setUniform2iv(GLint location, GLsizei count, const GLint *v)
     return true;
 }
 
-bool Program::setUniform3iv(GLint location, GLsizei count, const GLint *v)
+bool ProgramBinary::setUniform3iv(GLint location, GLsizei count, const GLint *v)
 {
     if (location < 0 || location >= (int)mUniformIndex.size())
     {
@@ -832,7 +889,7 @@ bool Program::setUniform3iv(GLint location, GLsizei count, const GLint *v)
     return true;
 }
 
-bool Program::setUniform4iv(GLint location, GLsizei count, const GLint *v)
+bool ProgramBinary::setUniform4iv(GLint location, GLsizei count, const GLint *v)
 {
     if (location < 0 || location >= (int)mUniformIndex.size())
     {
@@ -884,7 +941,7 @@ bool Program::setUniform4iv(GLint location, GLsizei count, const GLint *v)
     return true;
 }
 
-bool Program::getUniformfv(GLint location, GLsizei *bufSize, GLfloat *params)
+bool ProgramBinary::getUniformfv(GLint location, GLsizei *bufSize, GLfloat *params)
 {
     if (location < 0 || location >= (int)mUniformIndex.size())
     {
@@ -953,7 +1010,7 @@ bool Program::getUniformfv(GLint location, GLsizei *bufSize, GLfloat *params)
     return true;
 }
 
-bool Program::getUniformiv(GLint location, GLsizei *bufSize, GLint *params)
+bool ProgramBinary::getUniformiv(GLint location, GLsizei *bufSize, GLint *params)
 {
     if (location < 0 || location >= (int)mUniformIndex.size())
     {
@@ -1028,7 +1085,7 @@ bool Program::getUniformiv(GLint location, GLsizei *bufSize, GLint *params)
     return true;
 }
 
-void Program::dirtyAllUniforms()
+void ProgramBinary::dirtyAllUniforms()
 {
     unsigned int numUniforms = mUniforms.size();
     for (unsigned int index = 0; index < numUniforms; index++)
@@ -1038,7 +1095,7 @@ void Program::dirtyAllUniforms()
 }
 
 // Applies all the uniforms set for this program object to the Direct3D 9 device
-void Program::applyUniforms()
+void ProgramBinary::applyUniforms()
 {
     for (std::vector<Uniform*>::iterator ub = mUniforms.begin(), ue = mUniforms.end(); ub != ue; ++ub) {
         Uniform *targetUniform = *ub;
@@ -1079,7 +1136,7 @@ void Program::applyUniforms()
 }
 
 // Compiles the HLSL code of the attached shaders into executable binaries
-ID3D10Blob *Program::compileToBinary(const char *hlsl, const char *profile, ID3DXConstantTable **constantTable)
+ID3D10Blob *ProgramBinary::compileToBinary(const char *hlsl, const char *profile, ID3DXConstantTable **constantTable)
 {
     if (!hlsl)
     {
@@ -1153,7 +1210,7 @@ ID3D10Blob *Program::compileToBinary(const char *hlsl, const char *profile, ID3D
 
 // Packs varyings into generic varying registers, using the algorithm from [OpenGL ES Shading Language 1.00 rev. 17] appendix A section 7 page 111
 // Returns the number of used varying registers, or -1 if unsuccesful
-int Program::packVaryings(const Varying *packing[][4], FragmentShader *fragmentShader)
+int ProgramBinary::packVaryings(const Varying *packing[][4], FragmentShader *fragmentShader)
 {
     Context *context = getContext();
     const int maxVaryingVectors = context->getMaximumVaryingVectors();
@@ -1301,7 +1358,7 @@ int Program::packVaryings(const Varying *packing[][4], FragmentShader *fragmentS
     return registers;
 }
 
-bool Program::linkVaryings(std::string& pixelHLSL, std::string& vertexHLSL, FragmentShader *fragmentShader, VertexShader *vertexShader)
+bool ProgramBinary::linkVaryings(std::string& pixelHLSL, std::string& vertexHLSL, FragmentShader *fragmentShader, VertexShader *vertexShader)
 {
     if (pixelHLSL.empty() || vertexHLSL.empty())
     {
@@ -1647,21 +1704,25 @@ bool Program::linkVaryings(std::string& pixelHLSL, std::string& vertexHLSL, Frag
 // a list of uniforms
 void Program::link()
 {
-    link(mAttributeBindings, mFragmentShader, mVertexShader);
+    unlink(false);
+
+    mProgramBinary = new ProgramBinary;
+    if (!mProgramBinary->link(mAttributeBindings, mFragmentShader, mVertexShader))
+    {
+        unlink(false);
+    }
 }
 
-void Program::link(const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader)
+bool ProgramBinary::link(const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader)
 {
-    unlink();
-
     if (!fragmentShader || !fragmentShader->isCompiled())
     {
-        return;
+        return false;
     }
 
     if (!vertexShader || !vertexShader->isCompiled())
     {
-        return;
+        return false;
     }
 
     std::string pixelHLSL = fragmentShader->getHLSL();
@@ -1669,7 +1730,7 @@ void Program::link(const AttributeBindings &attributeBindings, FragmentShader *f
 
     if (!linkVaryings(pixelHLSL, vertexHLSL, fragmentShader, vertexShader))
     {
-        return;
+        return false;
     }
 
     Context *context = getContext();
@@ -1686,7 +1747,7 @@ void Program::link(const AttributeBindings &attributeBindings, FragmentShader *f
 
         if (vertexResult == D3DERR_OUTOFVIDEOMEMORY || vertexResult == E_OUTOFMEMORY || pixelResult == D3DERR_OUTOFVIDEOMEMORY || pixelResult == E_OUTOFMEMORY)
         {
-            return error(GL_OUT_OF_MEMORY);
+            return error(GL_OUT_OF_MEMORY, false);
         }
 
         ASSERT(SUCCEEDED(vertexResult) && SUCCEEDED(pixelResult));
@@ -1700,17 +1761,17 @@ void Program::link(const AttributeBindings &attributeBindings, FragmentShader *f
         {
             if (!linkAttributes(attributeBindings, fragmentShader, vertexShader))
             {
-                return;
+                return false;
             }
 
             if (!linkUniforms(GL_FRAGMENT_SHADER, mConstantTablePS))
             {
-                return;
+                return false;
             }
 
             if (!linkUniforms(GL_VERTEX_SHADER, mConstantTableVS))
             {
-                return;
+                return false;
             }
 
             // these uniforms are searched as already-decorated because gl_ and dx_
@@ -1724,18 +1785,20 @@ void Program::link(const AttributeBindings &attributeBindings, FragmentShader *f
 
             context->markDxUniformsDirty();
 
-            mLinked = true;   // Success
+            return true;
         }
     }
+
+    return false;
 }
 
 // Determines the mapping between GL attributes and Direct3D 9 vertex stream usage indices
-bool Program::linkAttributes(const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader)
+bool ProgramBinary::linkAttributes(const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader)
 {
     unsigned int usedLocations = 0;
 
     // Link attributes that have a binding location
-    for (AttributeArray::iterator attribute = mVertexShader->mAttributes.begin(); attribute != mVertexShader->mAttributes.end(); attribute++)
+    for (AttributeArray::iterator attribute = vertexShader->mAttributes.begin(); attribute != vertexShader->mAttributes.end(); attribute++)
     {
         int location = attributeBindings.getAttributeBinding(attribute->name);
 
@@ -1765,7 +1828,7 @@ bool Program::linkAttributes(const AttributeBindings &attributeBindings, Fragmen
     }
 
     // Link attributes that don't have a binding location
-    for (AttributeArray::iterator attribute = mVertexShader->mAttributes.begin(); attribute != mVertexShader->mAttributes.end(); attribute++)
+    for (AttributeArray::iterator attribute = vertexShader->mAttributes.begin(); attribute != vertexShader->mAttributes.end(); attribute++)
     {
         int location = attributeBindings.getAttributeBinding(attribute->name);
 
@@ -1787,7 +1850,7 @@ bool Program::linkAttributes(const AttributeBindings &attributeBindings, Fragmen
 
     for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; )
     {
-        int index = mVertexShader->getSemanticIndex(mLinkedAttribute[attributeIndex].name);
+        int index = vertexShader->getSemanticIndex(mLinkedAttribute[attributeIndex].name);
         int rows = std::max(VariableRowCount(mLinkedAttribute[attributeIndex].type), 1);
 
         for (int r = 0; r < rows; r++)
@@ -1812,7 +1875,7 @@ int AttributeBindings::getAttributeBinding(const std::string &name) const
     return -1;
 }
 
-bool Program::linkUniforms(GLenum shader, ID3DXConstantTable *constantTable)
+bool ProgramBinary::linkUniforms(GLenum shader, ID3DXConstantTable *constantTable)
 {
     D3DXCONSTANTTABLE_DESC constantTableDescription;
 
@@ -1838,7 +1901,7 @@ bool Program::linkUniforms(GLenum shader, ID3DXConstantTable *constantTable)
 
 // Adds the description of a constant found in the binary shader to the list of uniforms
 // Returns true if succesful (uniform not already defined)
-bool Program::defineUniform(GLenum shader, const D3DXHANDLE &constantHandle, const D3DXCONSTANT_DESC &constantDescription, std::string name)
+bool ProgramBinary::defineUniform(GLenum shader, const D3DXHANDLE &constantHandle, const D3DXCONSTANT_DESC &constantDescription, std::string name)
 {
     if (constantDescription.RegisterSet == D3DXRS_SAMPLER)
     {
@@ -1923,7 +1986,7 @@ bool Program::defineUniform(GLenum shader, const D3DXHANDLE &constantHandle, con
     }
 }
 
-bool Program::defineUniform(GLenum shader, const D3DXCONSTANT_DESC &constantDescription, const std::string &_name)
+bool ProgramBinary::defineUniform(GLenum shader, const D3DXCONSTANT_DESC &constantDescription, const std::string &_name)
 {
     Uniform *uniform = createUniform(constantDescription, _name);
 
@@ -1961,7 +2024,7 @@ bool Program::defineUniform(GLenum shader, const D3DXCONSTANT_DESC &constantDesc
     return true;
 }
 
-Uniform *Program::createUniform(const D3DXCONSTANT_DESC &constantDescription, const std::string &_name)
+Uniform *ProgramBinary::createUniform(const D3DXCONSTANT_DESC &constantDescription, const std::string &_name)
 {
     if (constantDescription.Rows == 1)   // Vectors and scalars
     {
@@ -2037,7 +2100,7 @@ Uniform *Program::createUniform(const D3DXCONSTANT_DESC &constantDescription, co
 }
 
 // This method needs to match OutputHLSL::decorate
-std::string Program::decorateAttribute(const std::string &name)
+std::string ProgramBinary::decorateAttribute(const std::string &name)
 {
     if (name.compare(0, 3, "gl_") != 0 && name.compare(0, 3, "dx_") != 0)
     {
@@ -2047,7 +2110,7 @@ std::string Program::decorateAttribute(const std::string &name)
     return name;
 }
 
-std::string Program::undecorateUniform(const std::string &_name)
+std::string ProgramBinary::undecorateUniform(const std::string &_name)
 {
     std::string name = _name;
     
@@ -2071,7 +2134,7 @@ std::string Program::undecorateUniform(const std::string &_name)
     return name;
 }
 
-void Program::applyUniformnbv(Uniform *targetUniform, GLsizei count, int width, const GLboolean *v)
+void ProgramBinary::applyUniformnbv(Uniform *targetUniform, GLsizei count, int width, const GLboolean *v)
 {
     float vector[D3D9_MAX_FLOAT_CONSTANTS * 4];
     BOOL boolVector[D3D9_MAX_BOOL_CONSTANTS];
@@ -2128,7 +2191,7 @@ void Program::applyUniformnbv(Uniform *targetUniform, GLsizei count, int width, 
     }
 }
 
-bool Program::applyUniformnfv(Uniform *targetUniform, const GLfloat *v)
+bool ProgramBinary::applyUniformnfv(Uniform *targetUniform, const GLfloat *v)
 {
     if (targetUniform->ps.registerCount)
     {
@@ -2143,7 +2206,7 @@ bool Program::applyUniformnfv(Uniform *targetUniform, const GLfloat *v)
     return true;
 }
 
-bool Program::applyUniform1iv(Uniform *targetUniform, GLsizei count, const GLint *v)
+bool ProgramBinary::applyUniform1iv(Uniform *targetUniform, GLsizei count, const GLint *v)
 {
     ASSERT(count <= D3D9_MAX_FLOAT_CONSTANTS);
     D3DXVECTOR4 vector[D3D9_MAX_FLOAT_CONSTANTS];
@@ -2204,7 +2267,7 @@ bool Program::applyUniform1iv(Uniform *targetUniform, GLsizei count, const GLint
     return true;
 }
 
-bool Program::applyUniform2iv(Uniform *targetUniform, GLsizei count, const GLint *v)
+bool ProgramBinary::applyUniform2iv(Uniform *targetUniform, GLsizei count, const GLint *v)
 {
     ASSERT(count <= D3D9_MAX_FLOAT_CONSTANTS);
     D3DXVECTOR4 vector[D3D9_MAX_FLOAT_CONSTANTS];
@@ -2221,7 +2284,7 @@ bool Program::applyUniform2iv(Uniform *targetUniform, GLsizei count, const GLint
     return true;
 }
 
-bool Program::applyUniform3iv(Uniform *targetUniform, GLsizei count, const GLint *v)
+bool ProgramBinary::applyUniform3iv(Uniform *targetUniform, GLsizei count, const GLint *v)
 {
     ASSERT(count <= D3D9_MAX_FLOAT_CONSTANTS);
     D3DXVECTOR4 vector[D3D9_MAX_FLOAT_CONSTANTS];
@@ -2238,7 +2301,7 @@ bool Program::applyUniform3iv(Uniform *targetUniform, GLsizei count, const GLint
     return true;
 }
 
-bool Program::applyUniform4iv(Uniform *targetUniform, GLsizei count, const GLint *v)
+bool ProgramBinary::applyUniform4iv(Uniform *targetUniform, GLsizei count, const GLint *v)
 {
     ASSERT(count <= D3D9_MAX_FLOAT_CONSTANTS);
     D3DXVECTOR4 vector[D3D9_MAX_FLOAT_CONSTANTS];
@@ -2255,7 +2318,7 @@ bool Program::applyUniform4iv(Uniform *targetUniform, GLsizei count, const GLint
     return true;
 }
 
-void Program::applyUniformniv(Uniform *targetUniform, GLsizei count, const D3DXVECTOR4 *vector)
+void ProgramBinary::applyUniformniv(Uniform *targetUniform, GLsizei count, const D3DXVECTOR4 *vector)
 {
     if (targetUniform->ps.registerCount)
     {
@@ -2273,7 +2336,7 @@ void Program::applyUniformniv(Uniform *targetUniform, GLsizei count, const D3DXV
 // append a santized message to the program info log.
 // The D3D compiler includes a fake file path in some of the warning or error 
 // messages, so lets remove all occurrences of this fake file path from the log.
-void Program::appendToInfoLogSanitized(const char *message)
+void ProgramBinary::appendToInfoLogSanitized(const char *message)
 {
     std::string msg(message);
 
@@ -2291,7 +2354,7 @@ void Program::appendToInfoLogSanitized(const char *message)
     appendToInfoLog("%s\n", msg.c_str());
 }
 
-void Program::appendToInfoLog(const char *format, ...)
+void ProgramBinary::appendToInfoLog(const char *format, ...)
 {
     if (!format)
     {
@@ -2324,7 +2387,7 @@ void Program::appendToInfoLog(const char *format, ...)
     }
 }
 
-void Program::resetInfoLog()
+void ProgramBinary::resetInfoLog()
 {
     if (mInfoLog)
     {
@@ -2351,76 +2414,19 @@ void Program::unlink(bool destroy)
         }
     }
 
-    if (mPixelExecutable)
+    if (mProgramBinary)
     {
-        mPixelExecutable->Release();
-        mPixelExecutable = NULL;
+        delete mProgramBinary;
+        mProgramBinary = NULL;
     }
-
-    if (mVertexExecutable)
-    {
-        mVertexExecutable->Release();
-        mVertexExecutable = NULL;
-    }
-
-    if (mConstantTablePS)
-    {
-        mConstantTablePS->Release();
-        mConstantTablePS = NULL;
-    }
-
-    if (mConstantTableVS)
-    {
-        mConstantTableVS->Release();
-        mConstantTableVS = NULL;
-    }
-
-    for (int index = 0; index < MAX_VERTEX_ATTRIBS; index++)
-    {
-        mLinkedAttribute[index].name.clear();
-        mSemanticIndex[index] = -1;
-    }
-
-    for (int index = 0; index < MAX_TEXTURE_IMAGE_UNITS; index++)
-    {
-        mSamplersPS[index].active = false;
-    }
-
-    for (int index = 0; index < MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF; index++)
-    {
-        mSamplersVS[index].active = false;
-    }
-
-    mUsedVertexSamplerRange = 0;
-    mUsedPixelSamplerRange = 0;
-
-    while (!mUniforms.empty())
-    {
-        delete mUniforms.back();
-        mUniforms.pop_back();
-    }
-
-    mDxDepthRangeLocation = -1;
-    mDxDepthLocation = -1;
-    mDxCoordLocation = -1;
-    mDxHalfPixelSizeLocation = -1;
-    mDxFrontCCWLocation = -1;
-    mDxPointsOrLinesLocation = -1;
-
-    mUniformIndex.clear();
-
-    delete[] mInfoLog;
-    mInfoLog = NULL;
-
-    mLinked = false;
 }
 
-bool Program::isLinked()
+ProgramBinary* Program::getProgramBinary()
 {
-    return mLinked;
+    return mProgramBinary;
 }
 
-bool Program::isValidated() const 
+bool ProgramBinary::isValidated() const 
 {
     return mValidated;
 }
@@ -2455,7 +2461,7 @@ unsigned int Program::issueSerial()
     return mCurrentSerial++;
 }
 
-int Program::getInfoLogLength() const
+int ProgramBinary::getInfoLogLength() const
 {
     if (!mInfoLog)
     {
@@ -2467,7 +2473,19 @@ int Program::getInfoLogLength() const
     }
 }
 
-void Program::getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog)
+int Program::getInfoLogLength() const
+{
+    if (mProgramBinary)
+    {
+        return mProgramBinary->getInfoLogLength();
+    }
+    else
+    {
+       return 0;
+    }
+}
+
+void ProgramBinary::getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog)
 {
     int index = 0;
 
@@ -2485,6 +2503,26 @@ void Program::getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog)
     if (length)
     {
         *length = index;
+    }
+}
+
+void Program::getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog)
+{
+    if (mProgramBinary)
+    {
+        return mProgramBinary->getInfoLog(bufSize, length, infoLog);
+    }
+    else
+    {
+        if (bufSize > 0)
+        {
+            infoLog[0] = '\0';
+        }
+
+        if (length)
+        {
+            *length = 0;
+        }
     }
 }
 
@@ -2518,7 +2556,7 @@ void Program::getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shade
     }
 }
 
-void Program::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name)
+void ProgramBinary::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name)
 {
     // Skip over inactive attributes
     unsigned int activeAttribute = 0;
@@ -2556,7 +2594,30 @@ void Program::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length,
     *type = mLinkedAttribute[attribute].type;
 }
 
-GLint Program::getActiveAttributeCount()
+void Program::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name)
+{
+    if (mProgramBinary)
+    {
+        mProgramBinary->getActiveAttribute(index, bufsize, length, size, type, name);
+    }
+    else
+    {
+        if (bufsize > 0)
+        {
+            name[0] = '\0';
+        }
+        
+        if (length)
+        {
+            *length = 0;
+        }
+
+        *type = GL_NONE;
+        *size = 1;
+    }
+}
+
+GLint ProgramBinary::getActiveAttributeCount()
 {
     int count = 0;
 
@@ -2571,7 +2632,19 @@ GLint Program::getActiveAttributeCount()
     return count;
 }
 
-GLint Program::getActiveAttributeMaxLength()
+GLint Program::getActiveAttributeCount()
+{
+    if (mProgramBinary)
+    {
+        return mProgramBinary->getActiveAttributeCount();
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+GLint ProgramBinary::getActiveAttributeMaxLength()
 {
     int maxLength = 0;
 
@@ -2586,7 +2659,19 @@ GLint Program::getActiveAttributeMaxLength()
     return maxLength;
 }
 
-void Program::getActiveUniform(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name)
+GLint Program::getActiveAttributeMaxLength()
+{
+    if (mProgramBinary)
+    {
+        return mProgramBinary->getActiveAttributeMaxLength();
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+void ProgramBinary::getActiveUniform(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name)
 {
     // Skip over internal uniforms
     unsigned int activeUniform = 0;
@@ -2631,7 +2716,30 @@ void Program::getActiveUniform(GLuint index, GLsizei bufsize, GLsizei *length, G
     *type = mUniforms[uniform]->type;
 }
 
-GLint Program::getActiveUniformCount()
+void Program::getActiveUniform(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name)
+{
+    if (mProgramBinary)
+    {
+        return mProgramBinary->getActiveUniform(index, bufsize, length, size, type, name);
+    }
+    else
+    {
+        if (bufsize > 0)
+        {
+            name[0] = '\0';
+        }
+
+        if (length)
+        {
+            *length = 0;
+        }
+
+        *size = 0;
+        *type = GL_NONE;
+    }
+}
+
+GLint ProgramBinary::getActiveUniformCount()
 {
     int count = 0;
 
@@ -2647,7 +2755,19 @@ GLint Program::getActiveUniformCount()
     return count;
 }
 
-GLint Program::getActiveUniformMaxLength()
+GLint Program::getActiveUniformCount()
+{
+    if (mProgramBinary)
+    {
+        return mProgramBinary->getActiveUniformCount();
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+GLint ProgramBinary::getActiveUniformMaxLength()
 {
     int maxLength = 0;
 
@@ -2668,6 +2788,18 @@ GLint Program::getActiveUniformMaxLength()
     return maxLength;
 }
 
+GLint Program::getActiveUniformMaxLength()
+{
+    if (mProgramBinary)
+    {
+        return mProgramBinary->getActiveUniformMaxLength();
+    }
+    else
+    {
+        return 0;
+    }
+}
+
 void Program::flagForDeletion()
 {
     mDeleteStatus = true;
@@ -2678,30 +2810,34 @@ bool Program::isFlaggedForDeletion() const
     return mDeleteStatus;
 }
 
-void Program::validate()
+bool Program::isValidated() const
+{
+    if (mProgramBinary)
+    {
+        return mProgramBinary->isValidated();
+    }
+    else
+    {
+        return false;
+    }
+}
+
+void ProgramBinary::validate()
 {
     resetInfoLog();
 
-    if (!isLinked()) 
+    applyUniforms();
+    if (!validateSamplers(true))
     {
-        appendToInfoLog("Program has not been successfully linked.");
         mValidated = false;
     }
     else
     {
-        applyUniforms();
-        if (!validateSamplers(true))
-        {
-            mValidated = false;
-        }
-        else
-        {
-            mValidated = true;
-        }
+        mValidated = true;
     }
 }
 
-bool Program::validateSamplers(bool logErrors)
+bool ProgramBinary::validateSamplers(bool logErrors)
 {
     // if any two active samplers in a program are of different types, but refer to the same
     // texture image unit, and this is the current program, then ValidateProgram will fail, and
@@ -2788,32 +2924,32 @@ bool Program::validateSamplers(bool logErrors)
     return true;
 }
 
-GLint Program::getDxDepthRangeLocation() const
+GLint ProgramBinary::getDxDepthRangeLocation() const
 {
     return mDxDepthRangeLocation;
 }
 
-GLint Program::getDxDepthLocation() const
+GLint ProgramBinary::getDxDepthLocation() const
 {
     return mDxDepthLocation;
 }
 
-GLint Program::getDxCoordLocation() const
+GLint ProgramBinary::getDxCoordLocation() const
 {
     return mDxCoordLocation;
 }
 
-GLint Program::getDxHalfPixelSizeLocation() const
+GLint ProgramBinary::getDxHalfPixelSizeLocation() const
 {
     return mDxHalfPixelSizeLocation;
 }
 
-GLint Program::getDxFrontCCWLocation() const
+GLint ProgramBinary::getDxFrontCCWLocation() const
 {
     return mDxFrontCCWLocation;
 }
 
-GLint Program::getDxPointsOrLinesLocation() const
+GLint ProgramBinary::getDxPointsOrLinesLocation() const
 {
     return mDxPointsOrLinesLocation;
 }

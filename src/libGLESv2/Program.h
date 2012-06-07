@@ -100,21 +100,16 @@ struct UniformLocation
     unsigned int index;
 };
 
-class Program
+// This is the result of linking a program. It is the state that would be passed to ProgramBinary.
+class ProgramBinary
 {
   public:
-    Program(ResourceManager *manager, GLuint handle);
-
-    ~Program();
-
-    bool attachShader(Shader *shader);
-    bool detachShader(Shader *shader);
-    int getAttachedShadersCount() const;
+    ProgramBinary();
+    ~ProgramBinary();
 
     IDirect3DPixelShader9 *getPixelShader();
     IDirect3DVertexShader9 *getVertexShader();
 
-    void bindAttributeLocation(GLuint index, const char *name);
     GLuint getAttributeLocation(const char *name);
     int getSemanticIndex(int attributeIndex);
 
@@ -148,9 +143,7 @@ class Program
     void dirtyAllUniforms();
     void applyUniforms();
 
-    void link();
-    void link(const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader);
-    bool isLinked();
+    bool link(const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader);
     int getInfoLogLength() const;
     void getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog);
     void getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shaders);
@@ -163,26 +156,17 @@ class Program
     GLint getActiveUniformCount();
     GLint getActiveUniformMaxLength();
 
-    void addRef();
-    void release();
-    unsigned int getRefCount() const;
-    void flagForDeletion();
-    bool isFlaggedForDeletion() const;
-
     void validate();
     bool validateSamplers(bool logErrors);
     bool isValidated() const;
-
-    unsigned int getSerial() const;
 
     static std::string decorateAttribute(const std::string &name);    // Prepend an underscore
     static std::string undecorateUniform(const std::string &_name);   // Remove leading underscore
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(Program);
+    DISALLOW_COPY_AND_ASSIGN(ProgramBinary);
 
     ID3D10Blob *compileToBinary(const char *hlsl, const char *profile, ID3DXConstantTable **constantTable);
-    void unlink(bool destroy = false);
 
     int packVaryings(const Varying *packing[][4], FragmentShader *fragmentShader);
     bool linkVaryings(std::string& pixelHLSL, std::string& vertexHLSL, FragmentShader *fragmentShader, VertexShader *vertexShader);
@@ -208,15 +192,14 @@ class Program
     static unsigned int issueSerial();
 
     IDirect3DDevice9 *mDevice;
-    FragmentShader *mFragmentShader;
-    VertexShader *mVertexShader;
 
     IDirect3DPixelShader9 *mPixelExecutable;
     IDirect3DVertexShader9 *mVertexExecutable;
+
+    // These are only used during linking.
     ID3DXConstantTable *mConstantTablePS;
     ID3DXConstantTable *mConstantTableVS;
 
-    AttributeBindings mAttributeBindings;
     Attribute mLinkedAttribute[MAX_VERTEX_ATTRIBS];
     int mSemanticIndex[MAX_VERTEX_ATTRIBS];
 
@@ -244,10 +227,62 @@ class Program
     GLint mDxFrontCCWLocation;
     GLint mDxPointsOrLinesLocation;
 
-    bool mLinked;
-    bool mDeleteStatus;   // Flag to indicate that the program can be deleted when no longer in use
     char *mInfoLog;
     bool mValidated;
+};
+
+class Program
+{
+  public:
+    Program(ResourceManager *manager, GLuint handle);
+
+    ~Program();
+
+    bool attachShader(Shader *shader);
+    bool detachShader(Shader *shader);
+    int getAttachedShadersCount() const;
+
+    void bindAttributeLocation(GLuint index, const char *name);
+
+    void link();
+    ProgramBinary *getProgramBinary();
+
+    int getInfoLogLength() const;
+    void getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog);
+    void getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shaders);
+
+    void getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name);
+    GLint getActiveAttributeCount();
+    GLint getActiveAttributeMaxLength();
+
+    void getActiveUniform(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name);
+    GLint getActiveUniformCount();
+    GLint getActiveUniformMaxLength();
+
+    void addRef();
+    void release();
+    unsigned int getRefCount() const;
+    void flagForDeletion();
+    bool isFlaggedForDeletion() const;
+
+    bool isValidated() const;
+
+    unsigned int getSerial() const;
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(Program);
+
+    void unlink(bool destroy = false);
+
+    static unsigned int issueSerial();
+
+    FragmentShader *mFragmentShader;
+    VertexShader *mVertexShader;
+
+    AttributeBindings mAttributeBindings;
+
+    ProgramBinary* mProgramBinary;
+    bool mDeleteStatus;   // Flag to indicate that the program can be deleted when no longer in use
 
     unsigned int mRefCount;
 

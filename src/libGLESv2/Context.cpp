@@ -1991,26 +1991,27 @@ bool Context::applyRenderTarget(bool ignoreViewport)
     if (mState.currentProgram && mDxUniformsDirty)
     {
         Program *programObject = getCurrentProgram();
+        ProgramBinary *programBinary = programObject->getProgramBinary();
 
-        GLint halfPixelSize = programObject->getDxHalfPixelSizeLocation();
+        GLint halfPixelSize = programBinary->getDxHalfPixelSizeLocation();
         GLfloat xy[2] = {1.0f / viewport.Width, -1.0f / viewport.Height};
-        programObject->setUniform2fv(halfPixelSize, 1, xy);
+        programBinary->setUniform2fv(halfPixelSize, 1, xy);
 
         // These values are used for computing gl_FragCoord in Program::linkVaryings(). The approach depends on Shader Model 3.0 support.
-        GLint coord = programObject->getDxCoordLocation();
+        GLint coord = programBinary->getDxCoordLocation();
         float h = mSupportsShaderModel3 ? mRenderTargetDesc.Height : mState.viewportHeight / 2.0f;
         GLfloat whxy[4] = {mState.viewportWidth / 2.0f, h, 
                           (float)mState.viewportX + mState.viewportWidth / 2.0f, 
                           (float)mState.viewportY + mState.viewportHeight / 2.0f};
-        programObject->setUniform4fv(coord, 1, whxy);
+        programBinary->setUniform4fv(coord, 1, whxy);
 
-        GLint depth = programObject->getDxDepthLocation();
+        GLint depth = programBinary->getDxDepthLocation();
         GLfloat dz[2] = {(zFar - zNear) / 2.0f, (zNear + zFar) / 2.0f};
-        programObject->setUniform2fv(depth, 1, dz);
+        programBinary->setUniform2fv(depth, 1, dz);
 
-        GLint depthRange = programObject->getDxDepthRangeLocation();
+        GLint depthRange = programBinary->getDxDepthRangeLocation();
         GLfloat nearFarDiff[3] = {zNear, zFar, zFar - zNear};
-        programObject->setUniform3fv(depthRange, 1, nearFarDiff);
+        programBinary->setUniform3fv(depthRange, 1, nearFarDiff);
         mDxUniformsDirty = false;
     }
 
@@ -2021,18 +2022,19 @@ bool Context::applyRenderTarget(bool ignoreViewport)
 void Context::applyState(GLenum drawMode)
 {
     Program *programObject = getCurrentProgram();
+    ProgramBinary *programBinary = programObject->getProgramBinary();
 
     Framebuffer *framebufferObject = getDrawFramebuffer();
 
     GLenum adjustedFrontFace = adjustWinding(mState.frontFace);
 
-    GLint frontCCW = programObject->getDxFrontCCWLocation();
+    GLint frontCCW = programBinary->getDxFrontCCWLocation();
     GLint ccw = (adjustedFrontFace == GL_CCW);
-    programObject->setUniform1iv(frontCCW, 1, &ccw);
+    programBinary->setUniform1iv(frontCCW, 1, &ccw);
 
-    GLint pointsOrLines = programObject->getDxPointsOrLinesLocation();
+    GLint pointsOrLines = programBinary->getDxPointsOrLinesLocation();
     GLint alwaysFront = !isTriangleMode(drawMode);
-    programObject->setUniform1iv(pointsOrLines, 1, &alwaysFront);
+    programBinary->setUniform1iv(pointsOrLines, 1, &alwaysFront);
 
     D3DADAPTER_IDENTIFIER9 *identifier = mDisplay->getAdapterIdentifier();
     bool zeroColorMaskAllowed = identifier->VendorId != 0x1002;
@@ -2311,18 +2313,20 @@ GLenum Context::applyIndexBuffer(const GLvoid *indices, GLsizei count, GLenum mo
 void Context::applyShaders()
 {
     Program *programObject = getCurrentProgram();
+    ProgramBinary *programBinary = programObject->getProgramBinary();
+
     if (programObject->getSerial() != mAppliedProgramSerial)
     {
-        IDirect3DVertexShader9 *vertexShader = programObject->getVertexShader();
-        IDirect3DPixelShader9 *pixelShader = programObject->getPixelShader();
+        IDirect3DVertexShader9 *vertexShader = programBinary->getVertexShader();
+        IDirect3DPixelShader9 *pixelShader = programBinary->getPixelShader();
 
         mDevice->SetPixelShader(pixelShader);
         mDevice->SetVertexShader(vertexShader);
-        programObject->dirtyAllUniforms();
+        programBinary->dirtyAllUniforms();
         mAppliedProgramSerial = programObject->getSerial();
     }
 
-    programObject->applyUniforms();
+    programBinary->applyUniforms();
 }
 
 // Applies the textures and sampler states to the Direct3D 9 device
@@ -2342,20 +2346,21 @@ void Context::applyTextures()
 void Context::applyTextures(SamplerType type)
 {
     Program *programObject = getCurrentProgram();
+    ProgramBinary *programBinary = programObject->getProgramBinary();
 
     int samplerCount = (type == SAMPLER_PIXEL) ? MAX_TEXTURE_IMAGE_UNITS : MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF;   // Range of Direct3D 9 samplers of given sampler type
     unsigned int *appliedTextureSerial = (type == SAMPLER_PIXEL) ? mAppliedTextureSerialPS : mAppliedTextureSerialVS;
     int d3dSamplerOffset = (type == SAMPLER_PIXEL) ? 0 : D3DVERTEXTEXTURESAMPLER0;
-    int samplerRange = programObject->getUsedSamplerRange(type);
+    int samplerRange = programBinary->getUsedSamplerRange(type);
 
     for (int samplerIndex = 0; samplerIndex < samplerRange; samplerIndex++)
     {
-        int textureUnit = programObject->getSamplerMapping(type, samplerIndex);   // OpenGL texture image unit index
+        int textureUnit = programBinary->getSamplerMapping(type, samplerIndex);   // OpenGL texture image unit index
         int d3dSampler = samplerIndex + d3dSamplerOffset;
 
         if (textureUnit != -1)
         {
-            TextureType textureType = programObject->getSamplerTextureType(type, samplerIndex);
+            TextureType textureType = programBinary->getSamplerTextureType(type, samplerIndex);
 
             Texture *texture = getSamplerTexture(textureUnit, textureType);
             unsigned int texSerial = texture->getTextureSerial();
@@ -2986,7 +2991,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
     applyShaders();
     applyTextures();
 
-    if (!getCurrentProgram()->validateSamplers(false))
+    if (!getCurrentProgram()->getProgramBinary()->validateSamplers(false))
     {
         return error(GL_INVALID_OPERATION);
     }
@@ -3076,7 +3081,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
     applyShaders();
     applyTextures();
 
-    if (!getCurrentProgram()->validateSamplers(false))
+    if (!getCurrentProgram()->getProgramBinary()->validateSamplers(false))
     {
         return error(GL_INVALID_OPERATION);
     }
@@ -4165,6 +4170,8 @@ GLenum VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, Transl
     D3DVERTEXELEMENT9 elements[MAX_VERTEX_ATTRIBS + 1];
     D3DVERTEXELEMENT9 *element = &elements[0];
 
+    ProgramBinary *programBinary = program->getProgramBinary();
+
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
     {
         if (attributes[i].active)
@@ -4220,7 +4227,7 @@ GLenum VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, Transl
             element->Type = attributes[i].type;
             element->Method = D3DDECLMETHOD_DEFAULT;
             element->Usage = D3DDECLUSAGE_TEXCOORD;
-            element->UsageIndex = program->getSemanticIndex(i);
+            element->UsageIndex = programBinary->getSemanticIndex(i);
             element++;
         }
     }
