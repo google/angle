@@ -93,8 +93,11 @@ int main(int argc, char* argv[])
                     switch (argv[0][3]) {
                         case 'e': spec = SH_GLES2_SPEC; break;
                         case 'w': spec = SH_WEBGL_SPEC; break;
+                        case 'c': spec = SH_CSS_SHADERS_SPEC; break;
                         default: failCode = EFailUsage;
                     }                    
+                } else {
+                    failCode = EFailUsage;
                 }
                 break;
             case 'b':
@@ -212,6 +215,7 @@ void usage()
         "       -d       : print dependency graph used to enforce timing restrictions\n"
         "       -s=e     : use GLES2 spec (this is by default)\n"
         "       -s=w     : use WebGL spec\n"
+        "       -s=c     : use CSS Shaders spec\n"
         "       -b=e     : output GLSL ES code (this is by default)\n"
         "       -b=g     : output GLSL code\n"
         "       -b=h     : output HLSL code\n"

@@ -452,13 +452,17 @@ bool TParseContext::reservedErrorCheck(int line, const TString& identifier)
             error(line, reservedErrMsg, "gl_", "");
             return true;
         }
-        if (shaderSpec == SH_WEBGL_SPEC) {
+        if (isWebGLBasedSpec(shaderSpec)) {
             if (identifier.compare(0, 6, "webgl_") == 0) {
                 error(line, reservedErrMsg, "webgl_", "");
                 return true;
             }
             if (identifier.compare(0, 7, "_webgl_") == 0) {
                 error(line, reservedErrMsg, "_webgl_", "");
+                return true;
+            }
+            if (shaderSpec == SH_CSS_SHADERS_SPEC && identifier.compare(0, 4, "css_") == 0) {
+                error(line, reservedErrMsg, "css_", "");
                 return true;
             }
         }
@@ -1451,7 +1455,7 @@ const int kWebGLMaxStructNesting = 4;
 
 bool TParseContext::structNestingErrorCheck(TSourceLoc line, const TType& fieldType)
 {
-    if (shaderSpec != SH_WEBGL_SPEC) {
+    if (!isWebGLBasedSpec(shaderSpec)) {
         return false;
     }
 

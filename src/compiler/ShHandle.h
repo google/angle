@@ -27,6 +27,12 @@ class TCompiler;
 class TDependencyGraph;
 
 //
+// Helper function to identify specs that are based on the WebGL spec,
+// like the CSS Shaders spec.
+//
+bool isWebGLBasedSpec(ShShaderSpec spec);
+
+//
 // The base class used to back handles returned to the driver.
 //
 class TShHandleBase {
@@ -71,6 +77,8 @@ protected:
     void clearResults();
     // Return true if function recursion is detected.
     bool detectRecursion(TIntermNode* root);
+    // Rewrites a shader's intermediate tree according to the CSS Shaders spec.
+    void rewriteCSSShader(TIntermNode* root);
     // Returns true if the given shader does not exceed the minimum
     // functionality mandated in GLSL 1.0 spec Appendix A.
     bool validateLimitations(TIntermNode* root);

@@ -95,6 +95,7 @@
         'compiler/QualifierAlive.h',
         'compiler/RemoveTree.cpp',
         'compiler/RemoveTree.h',
+        'compiler/RenameFunction.h',
         'compiler/ShHandle.h',
         'compiler/SymbolTable.cpp',
         'compiler/SymbolTable.h',
