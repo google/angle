@@ -22,6 +22,7 @@
 #include "libGLESv2/Fence.h"
 #include "libGLESv2/FrameBuffer.h"
 #include "libGLESv2/Program.h"
+#include "libGLESv2/ProgramBinary.h"
 #include "libGLESv2/Query.h"
 #include "libGLESv2/RenderBuffer.h"
 #include "libGLESv2/Shader.h"

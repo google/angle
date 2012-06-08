@@ -247,6 +247,8 @@
             'libGLESv2/mathutil.h',
             'libGLESv2/Program.cpp',
             'libGLESv2/Program.h',
+            'libGLESv2/ProgramBinary.cpp',
+            'libGLESv2/ProgramBinary.h',
             'libGLESv2/Query.h',
             'libGLESv2/Query.cpp',
             'libGLESv2/Renderbuffer.cpp',
