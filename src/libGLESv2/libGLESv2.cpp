@@ -3421,6 +3421,9 @@ void __stdcall glGetProgramiv(GLuint program, GLenum pname, GLint* params)
               case GL_ACTIVE_UNIFORM_MAX_LENGTH:
                 *params = programObject->getActiveUniformMaxLength();
                 return;
+              case GL_PROGRAM_BINARY_LENGTH_OES:
+                *params = 0;
+                return;
               default:
                 return error(GL_INVALID_ENUM);
             }
@@ -6818,6 +6821,79 @@ void __stdcall glTexImage3DOES(GLenum target, GLint level, GLenum internalformat
     }
 }
 
+void __stdcall glGetProgramBinaryOES(GLuint program, GLsizei bufSize, GLsizei *length, 
+                                     GLenum *binaryFormat, void *binary)
+{
+    EVENT("(GLenum program = 0x%X, bufSize = %s, length = 0x%0.8p, binaryFormat = 0x%0.8p, binary = 0x%0.8p)",
+          program, bufSize, length, binaryFormat, binary);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            gl::Program *programObject = context->getProgram(program);
+
+            if (!programObject)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            gl::ProgramBinary *programBinary = programObject->getProgramBinary();
+
+            if (!programBinary)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            *binaryFormat = GL_PROGRAM_BINARY_ANGLE;
+
+            if (length)
+            {
+                *length = 0;
+            }
+        }
+    }
+    catch(std::bad_alloc&)
+    {
+        return error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glProgramBinaryOES(GLuint program, GLenum binaryFormat,
+                                  const void *binary, GLint length)
+{
+    EVENT("(GLenum program = 0x%X, binaryFormat = 0x%x, binary = 0x%0.8p, length = %d)",
+          program, binaryFormat, binary, length);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (binaryFormat != GL_PROGRAM_BINARY_ANGLE)
+            {
+                return error(GL_INVALID_ENUM);
+            }
+
+            gl::Program *programObject = context->getProgram(program);
+
+            if (!programObject)
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
+            programObject->setProgramBinary(NULL);
+        }
+    }
+    catch(std::bad_alloc&)
+    {
+        return error(GL_OUT_OF_MEMORY);
+    }
+}
+
 __eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *procname)
 {
     struct Extension
@@ -6854,7 +6930,8 @@ __eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *
         {"glVertexAttribDivisorANGLE", (__eglMustCastToProperFunctionPointerType)glVertexAttribDivisorANGLE},
         {"glDrawArraysInstancedANGLE", (__eglMustCastToProperFunctionPointerType)glDrawArraysInstancedANGLE},
         {"glDrawElementsInstancedANGLE", (__eglMustCastToProperFunctionPointerType)glDrawElementsInstancedANGLE},
-    };
+        {"glGetProgramBinaryOES", (__eglMustCastToProperFunctionPointerType)glGetProgramBinaryOES},
+        {"glProgramBinaryOES", (__eglMustCastToProperFunctionPointerType)glProgramBinaryOES},    };
 
     for (int ext = 0; ext < sizeof(glExtensions) / sizeof(Extension); ext++)
     {

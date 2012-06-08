@@ -50,6 +50,7 @@ class Program
     void bindAttributeLocation(GLuint index, const char *name);
 
     void link();
+    void setProgramBinary(ProgramBinary *programBinary);
     ProgramBinary *getProgramBinary();
 
     int getInfoLogLength() const;

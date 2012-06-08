@@ -1653,6 +1653,12 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_RESET_NOTIFICATION_STRATEGY_EXT:
         *params = mResetStrategy;
         break;
+      case GL_NUM_PROGRAM_BINARY_FORMATS_OES:
+        *params = 1;
+        break;
+      case GL_PROGRAM_BINARY_FORMATS_OES:
+        *params = GL_PROGRAM_BINARY_ANGLE;
+        break;
       default:
         return false;
     }
@@ -1744,6 +1750,8 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_TEXTURE_BINDING_2D:
       case GL_TEXTURE_BINDING_CUBE_MAP:
       case GL_RESET_NOTIFICATION_STRATEGY_EXT:
+      case GL_NUM_PROGRAM_BINARY_FORMATS_OES:
+      case GL_PROGRAM_BINARY_FORMATS_OES:
         {
             *type = GL_INT;
             *numParams = 1;
@@ -3722,6 +3730,7 @@ void Context::initExtensionString()
     }
 
     mExtensionString += "GL_OES_packed_depth_stencil ";
+    //mExtensionString += "GL_OES_get_program_binary ";
     mExtensionString += "GL_OES_rgb8_rgba8 ";
     mExtensionString += "GL_OES_standard_derivatives ";
 

@@ -188,6 +188,12 @@ ProgramBinary* Program::getProgramBinary()
     return mProgramBinary;
 }
 
+void Program::setProgramBinary(ProgramBinary *programBinary)
+{
+    unlink(false);
+    mProgramBinary = programBinary;
+}
+
 void Program::release()
 {
     mRefCount--;
