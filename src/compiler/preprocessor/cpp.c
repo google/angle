@@ -784,7 +784,6 @@ int readCPPline(yystypepp * yylvalpp)
 {
     int token = cpp->currentInput->scan(cpp->currentInput, yylvalpp);
     const char *message;
-    int isVersion = 0;
 
     if (token == CPP_IDENTIFIER) {
         if (yylvalpp->sc_ident == defineAtom) {
@@ -861,7 +860,6 @@ int readCPPline(yystypepp * yylvalpp)
              token = CPPerror(yylvalpp);
         } else if (yylvalpp->sc_ident == versionAtom) {
             token = CPPversion(yylvalpp);
-            isVersion = 1;
         } else if (yylvalpp->sc_ident == extensionAtom) {
             token = CPPextension(yylvalpp);
         } else {
