@@ -23,13 +23,17 @@ struct Macro
         kTypeObj,
         kTypeFunc
     };
+    typedef std::vector<std::string> Parameters;
+    typedef std::vector<Token> Replacements;
 
+    Macro() : disabled(false), type(kTypeObj) { }
     bool equals(const Macro& other) const;
 
+    mutable bool disabled;
     Type type;
     std::string name;
-    std::vector<std::string> parameters;
-    std::vector<Token> replacements;
+    Parameters parameters;
+    Replacements replacements;
 };
 
 typedef std::map<std::string, Macro> MacroSet;

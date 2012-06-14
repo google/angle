@@ -50,8 +50,9 @@ struct Token
     };
     enum Flags
     {
-        AT_START_OF_LINE  = 1 << 0,
-        HAS_LEADING_SPACE = 1 << 1
+        AT_START_OF_LINE   = 1 << 0,
+        HAS_LEADING_SPACE  = 1 << 1,
+        EXPANSION_DISABLED = 1 << 2
     };
 
     Token() : type(0), flags(0) { }
@@ -67,8 +68,11 @@ struct Token
     bool hasLeadingSpace() const { return (flags & HAS_LEADING_SPACE) != 0; }
     void setHasLeadingSpace(bool space);
 
+    bool expansionDisabled() const { return (flags & EXPANSION_DISABLED) != 0; }
+    void setExpansionDisabled(bool disable);
+
     int type;
-    int flags;
+    unsigned int flags;
     SourceLocation location;
     std::string value;
 };

@@ -41,6 +41,14 @@ void Token::setHasLeadingSpace(bool space)
         flags &= ~HAS_LEADING_SPACE;
 }
 
+void Token::setExpansionDisabled(bool disable)
+{
+    if (disable)
+        flags |= EXPANSION_DISABLED;
+    else
+        flags &= ~EXPANSION_DISABLED;
+}
+
 std::ostream& operator<<(std::ostream& out, const Token& token)
 {
     if (token.hasLeadingSpace())

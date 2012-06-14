@@ -120,11 +120,6 @@ void DirectiveParser::parseDirective(Token* token)
             parseLine(token);
     }
 
-    if ((token->type != '\n') && (token->type != 0))
-        mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN,
-                             token->location,
-                             token->value);
-
     while (token->type != '\n')
     {
         if (token->type == 0) {
@@ -172,7 +167,7 @@ void DirectiveParser::parseDefine(Token* token)
                 break;
             macro.parameters.push_back(token->value);
 
-            mTokenizer->lex(token);  // Get comma.
+            mTokenizer->lex(token);  // Get ','.
         } while (token->type == ',');
 
         if (token->type != ')')
@@ -182,6 +177,7 @@ void DirectiveParser::parseDefine(Token* token)
                                  token->value);
             return;
         }
+        mTokenizer->lex(token);  // Get ')'.
     }
 
     while ((token->type != '\n') && (token->type != Token::LAST))
@@ -192,6 +188,12 @@ void DirectiveParser::parseDefine(Token* token)
         token->location = SourceLocation();
         macro.replacements.push_back(*token);
         mTokenizer->lex(token);
+    }
+    if (!macro.replacements.empty())
+    {
+        // Whitespace preceding the replacement list is not considered part of
+        // the replacement list for either form of macro.
+        macro.replacements.front().setHasLeadingSpace(false);
     }
 
     // Check for macro redefinition.

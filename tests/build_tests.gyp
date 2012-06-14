@@ -44,6 +44,7 @@
         '../third_party/googlemock/src/gmock_main.cc',
         'preprocessor_tests/char_test.cpp',
         'preprocessor_tests/comment_test.cpp',
+        'preprocessor_tests/define_test.cpp',
         'preprocessor_tests/error_test.cpp',
         'preprocessor_tests/extension_test.cpp',
         'preprocessor_tests/identifier_test.cpp',

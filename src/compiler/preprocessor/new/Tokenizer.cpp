@@ -2305,6 +2305,7 @@ bool Tokenizer::init(int count, const char* const string[], const int length[])
 void Tokenizer::lex(Token* token)
 {
     token->type = pplex(&token->value,&token->location,mHandle);
+    token->flags = 0;
 
     token->setAtStartOfLine(mContext.lineStart);
     mContext.lineStart = token->type == '\n';
