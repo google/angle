@@ -17,6 +17,8 @@ class TDiagnostics : public pp::Diagnostics
     TDiagnostics(TInfoSink& infoSink);
     virtual ~TDiagnostics();
 
+    TInfoSink& infoSink() { return mInfoSink; }
+
     void writeInfo(Severity severity,
                    const pp::SourceLocation& loc,
                    const std::string& reason,

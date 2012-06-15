@@ -101,8 +101,8 @@ void OutputHLSL::output()
     mContext.treeRoot->traverse(this);   // Output the body first to determine what has to go in the header
     header();
 
-    mContext.infoSink.obj << mHeader.c_str();
-    mContext.infoSink.obj << mBody.c_str();
+    mContext.infoSink().obj << mHeader.c_str();
+    mContext.infoSink().obj << mBody.c_str();
 }
 
 TInfoSinkBase &OutputHLSL::getBodyStream()

@@ -67,6 +67,7 @@ struct TParseContext {
     bool initPreprocessor();
     void destroyPreprocessor();
 
+    TInfoSink& infoSink() { return diagnostics.infoSink(); }
     void error(TSourceLoc loc, const char *reason, const char* token,
                const char* extraInfoFormat, ...);
     void warning(TSourceLoc loc, const char* reason, const char* token,
