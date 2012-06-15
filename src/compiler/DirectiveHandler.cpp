@@ -8,7 +8,7 @@
 
 #include <sstream>
 
-#include "compiler/Debug.h"
+#include "compiler/debug.h"
 #include "compiler/Diagnostics.h"
 
 static TBehavior getBehavior(const std::string& str)
