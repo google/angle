@@ -37,6 +37,10 @@ class Tokenizer : public Lexer
     ~Tokenizer();
 
     bool init(int count, const char* const string[], const int length[]);
+
+    void setFileNumber(int file);
+    void setLineNumber(int line);
+
     virtual void lex(Token* token);
 
   private:

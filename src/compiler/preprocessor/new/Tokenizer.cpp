@@ -2302,6 +2302,18 @@ bool Tokenizer::init(int count, const char* const string[], const int length[])
     return initScanner();
 }
 
+void Tokenizer::setFileNumber(int file)
+{
+    // We use column number as file number.
+    // See macro yyfileno.
+    ppset_column(file,mHandle);
+}
+
+void Tokenizer::setLineNumber(int line)
+{
+    ppset_lineno(line,mHandle);
+}
+
 void Tokenizer::lex(Token* token)
 {
     token->type = pplex(&token->value,&token->location,mHandle);

@@ -286,6 +286,18 @@ bool Tokenizer::init(int count, const char* const string[], const int length[])
     return initScanner();
 }
 
+void Tokenizer::setFileNumber(int file)
+{
+    // We use column number as file number.
+    // See macro yyfileno.
+    yyset_column(file, mHandle);
+}
+
+void Tokenizer::setLineNumber(int line)
+{
+    yyset_lineno(line, mHandle);
+}
+
 void Tokenizer::lex(Token* token)
 {
     token->type = yylex(&token->value, &token->location, mHandle);

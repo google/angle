@@ -19,6 +19,11 @@ struct SourceLocation;
 class Diagnostics
 {
   public:
+    enum Severity
+    {
+        ERROR,
+        WARNING
+    };
     enum ID
     {
         ERROR_BEGIN,
@@ -41,6 +46,9 @@ class Diagnostics
         INVALID_EXTENSION_DIRECTIVE,
         INVALID_VERSION_NUMBER,
         INVALID_VERSION_DIRECTIVE,
+        INVALID_LINE_NUMBER,
+        INVALID_FILE_NUMBER,
+        INVALID_LINE_DIRECTIVE,
         ERROR_END,
 
         WARNING_BEGIN,
@@ -53,11 +61,6 @@ class Diagnostics
     void report(ID id, const SourceLocation& loc, const std::string& text);
 
   protected:
-    enum Severity
-    {
-        ERROR,
-        WARNING
-    };
     Severity severity(ID id);
 
     virtual void print(ID id,

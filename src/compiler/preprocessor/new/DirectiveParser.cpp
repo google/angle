@@ -472,10 +472,65 @@ void DirectiveParser::parseVersion(Token* token)
 
 void DirectiveParser::parseLine(Token* token)
 {
-    // TODO(alokp): Implement me.
     assert(token->value == kDirectiveLine);
+
+    enum State
+    {
+        LINE_NUMBER,
+        FILE_NUMBER
+    };
+
+    bool valid = true;
+    int line = 0, file = 0;
+    int state = LINE_NUMBER;
+
     MacroExpander macroExpander(mTokenizer, mMacroSet, mDiagnostics);
     macroExpander.lex(token);
+    while ((token->type != '\n') && (token->type != Token::LAST))
+    {
+        switch (state++)
+        {
+          case LINE_NUMBER:
+            if (valid && (token->type != Token::CONST_INT))
+            {
+                mDiagnostics->report(Diagnostics::INVALID_LINE_NUMBER,
+                                     token->location, token->value);
+                valid = false;
+            }
+            if (valid) line = atoi(token->value.c_str());
+            break;
+          case FILE_NUMBER:
+            if (valid && (token->type != Token::CONST_INT))
+            {
+                mDiagnostics->report(Diagnostics::INVALID_FILE_NUMBER,
+                                     token->location, token->value);
+                valid = false;
+            }
+            if (valid) file = atoi(token->value.c_str());
+            break;
+          default:
+            if (valid)
+            {
+                mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN,
+                                     token->location, token->value);
+                valid = false;
+            }
+            break;
+        }
+        macroExpander.lex(token);
+    }
+
+    if (valid && (state != FILE_NUMBER) && (state != FILE_NUMBER + 1))
+    {
+        mDiagnostics->report(Diagnostics::INVALID_LINE_DIRECTIVE,
+                             token->location, token->value);
+        valid = false;
+    }
+    if (valid)
+    {
+        mTokenizer->setLineNumber(line);
+        if (state == FILE_NUMBER + 1) mTokenizer->setFileNumber(file);
+    }
 }
 
 }  // namespace pp

@@ -30,9 +30,7 @@ protected:
 TEST_F(LocationTest, String0_Line1)
 {
     const char* str = "foo";
-    pp::SourceLocation loc;
-    loc.file = 0;
-    loc.line = 1;
+    pp::SourceLocation loc(0, 1);
 
     SCOPED_TRACE("String0_Line1");
     expectLocation(1, &str, NULL, loc);
@@ -41,9 +39,7 @@ TEST_F(LocationTest, String0_Line1)
 TEST_F(LocationTest, String0_Line2)
 {
     const char* str = "\nfoo";
-    pp::SourceLocation loc;
-    loc.file = 0;
-    loc.line = 2;
+    pp::SourceLocation loc(0, 2);
 
     SCOPED_TRACE("String0_Line2");
     expectLocation(1, &str, NULL, loc);
@@ -52,9 +48,7 @@ TEST_F(LocationTest, String0_Line2)
 TEST_F(LocationTest, String1_Line1)
 {
     const char* const str[] = {"\n\n", "foo"};
-    pp::SourceLocation loc;
-    loc.file = 1;
-    loc.line = 1;
+    pp::SourceLocation loc(1, 1);
 
     SCOPED_TRACE("String1_Line1");
     expectLocation(2, str, NULL, loc);
@@ -63,9 +57,7 @@ TEST_F(LocationTest, String1_Line1)
 TEST_F(LocationTest, String1_Line2)
 {
     const char* const str[] = {"\n\n", "\nfoo"};
-    pp::SourceLocation loc;
-    loc.file = 1;
-    loc.line = 2;
+    pp::SourceLocation loc(1, 2);
 
     SCOPED_TRACE("String1_Line2");
     expectLocation(2, str, NULL, loc);
@@ -74,9 +66,7 @@ TEST_F(LocationTest, String1_Line2)
 TEST_F(LocationTest, NewlineInsideCommentCounted)
 {
     const char* str = "/*\n\n*/foo";
-    pp::SourceLocation loc;
-    loc.file = 0;
-    loc.line = 3;
+    pp::SourceLocation loc(0, 3);
 
     SCOPED_TRACE("NewlineInsideCommentCounted");
     expectLocation(1, &str, NULL, loc);
@@ -101,9 +91,7 @@ TEST_F(LocationTest, ErrorLocationAfterComment)
 TEST_F(LocationTest, TokenStraddlingTwoStrings)
 {
     const char* const str[] = {"f", "oo"};
-    pp::SourceLocation loc;
-    loc.file = 0;
-    loc.line = 1;
+    pp::SourceLocation loc(0, 1);
 
     SCOPED_TRACE("TokenStraddlingTwoStrings");
     expectLocation(2, str, NULL, loc);
@@ -112,9 +100,7 @@ TEST_F(LocationTest, TokenStraddlingTwoStrings)
 TEST_F(LocationTest, TokenStraddlingThreeStrings)
 {
     const char* const str[] = {"f", "o", "o"};
-    pp::SourceLocation loc;
-    loc.file = 0;
-    loc.line = 1;
+    pp::SourceLocation loc(0, 1);
 
     SCOPED_TRACE("TokenStraddlingThreeStrings");
     expectLocation(3, str, NULL, loc);
@@ -174,4 +160,121 @@ TEST_F(LocationTest, EndOfFileAfterEmptyString)
     EXPECT_EQ(1, token.location.line);
 }
 
-// TODO(alokp): Add tests for #line directives.
+TEST_F(LocationTest, ValidLineDirective1)
+{
+    const char* str = "#line 10\n"
+                      "foo";
+    pp::SourceLocation loc(0, 10);
+
+    SCOPED_TRACE("ValidLineDirective1");
+    expectLocation(1, &str, NULL, loc);
+}
+
+TEST_F(LocationTest, ValidLineDirective2)
+{
+    const char* str = "#line 10 20\n"
+                      "foo";
+    pp::SourceLocation loc(20, 10);
+
+    SCOPED_TRACE("ValidLineDirective2");
+    expectLocation(1, &str, NULL, loc);
+}
+
+TEST_F(LocationTest, LineDirectiveCommentsIgnored)
+{
+    const char* str = "/* bar */"
+                      "#"
+                      "/* bar */"
+                      "line"
+                      "/* bar */"
+                      "10"
+                      "/* bar */"
+                      "20"
+                      "/* bar */"
+                      "// bar   "
+                      "\n"
+                      "foo";
+    pp::SourceLocation loc(20, 10);
+
+    SCOPED_TRACE("LineDirectiveCommentsIgnored");
+    expectLocation(1, &str, NULL, loc);
+}
+
+TEST_F(LocationTest, LineDirectiveWithMacro)
+{
+    const char* str = "#define L 10\n"
+                      "#define F(x) x\n"
+                      "#line L F(20)\n"
+                      "foo";
+    pp::SourceLocation loc(20, 10);
+
+    SCOPED_TRACE("LineDirectiveWithMacro");
+    expectLocation(1, &str, NULL, loc);
+}
+
+TEST_F(LocationTest, LineDirectiveNewlineBeforeStringBreak)
+{
+    const char* const str[] = {"#line 10 20\n", "foo"};
+    // String number is incremented after it is set by the line directive.
+    // Also notice that line number is reset after the string break.
+    pp::SourceLocation loc(21, 1);
+
+    SCOPED_TRACE("LineDirectiveNewlineBeforeStringBreak");
+    expectLocation(2, str, NULL, loc);
+}
+
+TEST_F(LocationTest, LineDirectiveNewlineAfterStringBreak)
+{
+    const char* const str[] = {"#line 10 20", "\nfoo"};
+    // String number is incremented before it is set by the line directive.
+    pp::SourceLocation loc(20, 10);
+
+    SCOPED_TRACE("LineDirectiveNewlineAfterStringBreak");
+    expectLocation(2, str, NULL, loc);
+}
+
+TEST_F(LocationTest, LineDirectiveMissingNewline)
+{
+    const char* str = "#line 10";
+    ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
+
+    using testing::_;
+    // Error reported about EOF.
+    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::EOF_IN_DIRECTIVE, _, _));
+
+    pp::Token token;
+    mPreprocessor.lex(&token);
+}
+
+struct LineTestParam
+{
+    const char* str;
+    pp::Diagnostics::ID id;
+};
+
+class InvalidLineTest : public LocationTest,
+                        public testing::WithParamInterface<LineTestParam>
+{
+};
+
+TEST_P(InvalidLineTest, Identified)
+{
+    LineTestParam param = GetParam();
+    ASSERT_TRUE(mPreprocessor.init(1, &param.str, NULL));
+
+    using testing::_;
+    // Invalid line directive call.
+    EXPECT_CALL(mDiagnostics, print(param.id, pp::SourceLocation(0, 1), _));
+
+    pp::Token token;
+    mPreprocessor.lex(&token);
+}
+
+static const LineTestParam kParams[] = {
+    {"#line\n", pp::Diagnostics::INVALID_LINE_DIRECTIVE},
+    {"#line foo\n", pp::Diagnostics::INVALID_LINE_NUMBER},
+    {"#line 10 foo\n", pp::Diagnostics::INVALID_FILE_NUMBER},
+    {"#line 10 20 foo\n", pp::Diagnostics::UNEXPECTED_TOKEN}
+};
+
+INSTANTIATE_TEST_CASE_P(All, InvalidLineTest, testing::ValuesIn(kParams));
