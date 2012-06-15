@@ -7,6 +7,7 @@
 #ifndef COMPILER_PREPROCESSOR_MACRO_EXPANDER_H_
 #define COMPILER_PREPROCESSOR_MACRO_EXPANDER_H_
 
+#include <memory>
 #include <vector>
 
 #include "Lexer.h"
