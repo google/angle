@@ -10,24 +10,12 @@
 #include <stdio.h>
 
 #include "compiler/glslang.h"
-#include "compiler/osinclude.h"
-#include "compiler/InitializeParseContext.h"
+#include "compiler/preprocessor/new/SourceLocation.h"
 
 extern "C" {
 extern int InitPreprocessor();
 extern int FinalizePreprocessor();
 extern void PredefineIntMacro(const char *name, int value);
-}
-
-static void ReportInfo(TInfoSinkBase& sink,
-                       TPrefixType type, TSourceLoc loc,
-                       const char* reason, const char* token, 
-                       const char* extraInfo)
-{
-    /* VC++ format: file(linenum) : error #: 'token' : extrainfo */
-    sink.prefix(type);
-    sink.location(loc);
-    sink << "'" << token <<  "' : " << reason << " " << extraInfo << "\n";
 }
 
 static void DefineExtensionMacros(const TExtensionBehavior& extBehavior)
@@ -36,6 +24,26 @@ static void DefineExtensionMacros(const TExtensionBehavior& extBehavior)
          iter != extBehavior.end(); ++iter) {
         PredefineIntMacro(iter->first.c_str(), 1);
     }
+}
+
+///////////////////////////////////////////////////////////////////////
+//
+// Preprocessor
+//
+////////////////////////////////////////////////////////////////////////
+
+bool TParseContext::initPreprocessor()
+{
+    if (InitPreprocessor())
+        return false;
+
+    DefineExtensionMacros(directiveHandler.extBehavior());
+    return true;
+}
+
+void TParseContext::destroyPreprocessor()
+{
+    FinalizePreprocessor();
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -210,7 +218,10 @@ void TParseContext::error(TSourceLoc loc,
     va_start(marker, extraInfoFormat);
     vsnprintf(extraInfo, sizeof(extraInfo), extraInfoFormat, marker);
 
-    ReportInfo(infoSink.info, EPrefixError, loc, reason, token, extraInfo);
+    pp::SourceLocation srcLoc;
+    DecodeSourceLoc(loc, &srcLoc.file, &srcLoc.line);
+    diagnostics.writeInfo(pp::Diagnostics::ERROR,
+                          srcLoc, reason, token, extraInfo);
 
     va_end(marker);
     ++numErrors;
@@ -224,9 +235,17 @@ void TParseContext::warning(TSourceLoc loc,
     va_start(marker, extraInfoFormat);
     vsnprintf(extraInfo, sizeof(extraInfo), extraInfoFormat, marker);
 
-    ReportInfo(infoSink.info, EPrefixWarning, loc, reason, token, extraInfo);
+    pp::SourceLocation srcLoc;
+    DecodeSourceLoc(loc, &srcLoc.file, &srcLoc.line);
+    diagnostics.writeInfo(pp::Diagnostics::WARNING,
+                          srcLoc, reason, token, extraInfo);
 
     va_end(marker);
+}
+
+void TParseContext::trace(const char* str)
+{
+    diagnostics.writeDebug(str);
 }
 
 //
@@ -830,10 +849,7 @@ bool TParseContext::arraySetMaxSize(TIntermSymbol *node, TType* type, int size, 
     // its an error
     if (node->getSymbol() == "gl_FragData") {
         TSymbol* fragData = symbolTable.find("gl_MaxDrawBuffers", &builtIn);
-        if (fragData == 0) {
-            infoSink.info.message(EPrefixInternalError, "gl_MaxDrawBuffers not defined", line);
-            return true;
-        }
+        ASSERT(fragData);
 
         int fragDataValue = static_cast<TVariable*>(fragData)->getConstPointer()[0].getIConst();
         if (fragDataValue <= size) {
@@ -926,8 +942,9 @@ bool TParseContext::paramErrorCheck(int line, TQualifier qualifier, TQualifier p
 
 bool TParseContext::extensionErrorCheck(int line, const TString& extension)
 {
-    TExtensionBehavior::const_iterator iter = extensionBehavior.find(extension);
-    if (iter == extensionBehavior.end()) {
+    const TExtensionBehavior& extBehavior = directiveHandler.extBehavior();
+    TExtensionBehavior::const_iterator iter = extBehavior.find(extension.c_str());
+    if (iter == extBehavior.end()) {
         error(line, "extension", extension.c_str(), "is not supported");
         return true;
     }
@@ -937,8 +954,7 @@ bool TParseContext::extensionErrorCheck(int line, const TString& extension)
         return true;
     }
     if (iter->second == EBhWarn) {
-        TString msg = "extension " + extension + " is being used";
-        infoSink.info.message(EPrefixWarning, msg.c_str(), line);
+        warning(line, "extension", extension.c_str(), "is being used");
         return false;
     }
 
@@ -947,8 +963,23 @@ bool TParseContext::extensionErrorCheck(int line, const TString& extension)
 
 bool TParseContext::supportsExtension(const char* extension)
 {
-    TExtensionBehavior::const_iterator iter = extensionBehavior.find(extension);
-    return (iter != extensionBehavior.end());
+    const TExtensionBehavior& extBehavior = directiveHandler.extBehavior();
+    TExtensionBehavior::const_iterator iter = extBehavior.find(extension);
+    return (iter != extBehavior.end());
+}
+
+void TParseContext::handleExtensionDirective(int line, const char* extName, const char* behavior)
+{
+    pp::SourceLocation loc;
+    DecodeSourceLoc(line, &loc.file, &loc.line);
+    directiveHandler.handleExtension(loc, extName, behavior);
+}
+
+void TParseContext::handlePragmaDirective(int line, const char* name, const char* value)
+{
+    pp::SourceLocation loc;
+    DecodeSourceLoc(line, &loc.file, &loc.line);
+    directiveHandler.handlePragma(loc, name, value);
 }
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -1295,11 +1326,9 @@ TIntermTyped* TParseContext::addConstVectorNode(TVectorFields& fields, TIntermTy
     ConstantUnion *unionArray;
     if (tempConstantNode) {
         unionArray = tempConstantNode->getUnionArrayPointer();
+        ASSERT(unionArray);
 
-        if (!unionArray) {  // this error message should never be raised
-            infoSink.info.message(EPrefixInternalError, "ConstantUnion not initialized in addConstVectorNode function", line);
-            recover();
-
+        if (!unionArray) {
             return node;
         }
     } else { // The node has to be either a symbol node or an aggregate node or a tempConstant node, else, its an error
@@ -1484,10 +1513,8 @@ int PaParseStrings(int count, const char* const string[], const int length[],
     if ((count == 0) || (string == NULL))
         return 1;
 
-    // setup preprocessor.
-    if (InitPreprocessor())
+    if (!context->initPreprocessor())
         return 1;
-    DefineExtensionMacros(context->extensionBehavior);
 
     if (glslang_initialize(context))
         return 1;
@@ -1496,94 +1523,11 @@ int PaParseStrings(int count, const char* const string[], const int length[],
     if (!error)
         error = glslang_parse(context);
 
-    glslang_finalize(context);
-    FinalizePreprocessor();
+    glslang_finalize(context);    
+    context->destroyPreprocessor();
+
     return (error == 0) && (context->numErrors == 0) ? 0 : 1;
 }
 
-OS_TLSIndex GlobalParseContextIndex = OS_INVALID_TLS_INDEX;
 
-bool InitializeParseContextIndex()
-{
-    if (GlobalParseContextIndex != OS_INVALID_TLS_INDEX) {
-        assert(0 && "InitializeParseContextIndex(): Parse Context already initalised");
-        return false;
-    }
-
-    //
-    // Allocate a TLS index.
-    //
-    GlobalParseContextIndex = OS_AllocTLSIndex();
-    
-    if (GlobalParseContextIndex == OS_INVALID_TLS_INDEX) {
-        assert(0 && "InitializeParseContextIndex(): Parse Context already initalised");
-        return false;
-    }
-
-    return true;
-}
-
-bool FreeParseContextIndex()
-{
-    OS_TLSIndex tlsiIndex = GlobalParseContextIndex;
-
-    if (GlobalParseContextIndex == OS_INVALID_TLS_INDEX) {
-        assert(0 && "FreeParseContextIndex(): Parse Context index not initalised");
-        return false;
-    }
-
-    GlobalParseContextIndex = OS_INVALID_TLS_INDEX;
-
-    return OS_FreeTLSIndex(tlsiIndex);
-}
-
-bool InitializeGlobalParseContext()
-{
-    if (GlobalParseContextIndex == OS_INVALID_TLS_INDEX) {
-        assert(0 && "InitializeGlobalParseContext(): Parse Context index not initalised");
-        return false;
-    }
-
-    TThreadParseContext *lpParseContext = static_cast<TThreadParseContext *>(OS_GetTLSValue(GlobalParseContextIndex));
-    if (lpParseContext != 0) {
-        assert(0 && "InitializeParseContextIndex(): Parse Context already initalised");
-        return false;
-    }
-
-    TThreadParseContext *lpThreadData = new TThreadParseContext();
-    if (lpThreadData == 0) {
-        assert(0 && "InitializeGlobalParseContext(): Unable to create thread parse context");
-        return false;
-    }
-
-    lpThreadData->lpGlobalParseContext = 0;
-    OS_SetTLSValue(GlobalParseContextIndex, lpThreadData);
-
-    return true;
-}
-
-bool FreeParseContext()
-{
-    if (GlobalParseContextIndex == OS_INVALID_TLS_INDEX) {
-        assert(0 && "FreeParseContext(): Parse Context index not initalised");
-        return false;
-    }
-
-    TThreadParseContext *lpParseContext = static_cast<TThreadParseContext *>(OS_GetTLSValue(GlobalParseContextIndex));
-    if (lpParseContext)
-        delete lpParseContext;
-
-    return true;
-}
-
-TParseContextPointer& GetGlobalParseContext()
-{
-    //
-    // Minimal error checking for speed
-    //
-
-    TThreadParseContext *lpParseContext = static_cast<TThreadParseContext *>(OS_GetTLSValue(GlobalParseContextIndex));
-
-    return lpParseContext->lpGlobalParseContext;
-}
 

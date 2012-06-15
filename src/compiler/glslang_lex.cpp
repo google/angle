@@ -1,4 +1,4 @@
-#line 17 "./compiler/glslang.l"
+#line 17 "./glslang.l"
 //
 // Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -21,7 +21,7 @@
 
 
 
-#line 25 "./compiler/glslang_lex.cpp"
+#line 25 "./glslang_lex.cpp"
 
 #define  YY_INT_ALIGNED short int
 
@@ -2959,7 +2959,7 @@ extern "C" {
 void CPPDebugLogMsg(const char *msg)
 {
     SETUP_CONTEXT(cpp);
-    context->infoSink.debug.message(EPrefixNone, msg);
+    context->trace(msg);
 }
 
 void CPPWarningToInfoLog(const char *msg)
@@ -3033,85 +3033,12 @@ void DecLineNumber()
 void HandlePragma(const char **tokens, int numTokens)
 {
     SETUP_CONTEXT(cpp);
-    if (!strcmp(tokens[0], "optimize")) {
-        if (numTokens != 4) {
-            CPPShInfoLogMsg("optimize pragma syntax is incorrect");
-            return;
-        }
-        
-        if (strcmp(tokens[1], "(")) {
-            CPPShInfoLogMsg("\"(\" expected after 'optimize' keyword");
-            return;
-        }
-            
-        if (!strcmp(tokens[2], "on"))
-            context->contextPragma.optimize = true;
-        else if (!strcmp(tokens[2], "off"))
-            context->contextPragma.optimize = false;
-        else {
-            CPPShInfoLogMsg("\"on\" or \"off\" expected after '(' for 'optimize' pragma");
-            return;
-        }
-        
-        if (strcmp(tokens[3], ")")) {
-            CPPShInfoLogMsg("\")\" expected to end 'optimize' pragma");
-            return;
-        }
-    } else if (!strcmp(tokens[0], "debug")) {
-        if (numTokens != 4) {
-            CPPShInfoLogMsg("debug pragma syntax is incorrect");
-            return;
-        }
-        
-        if (strcmp(tokens[1], "(")) {
-            CPPShInfoLogMsg("\"(\" expected after 'debug' keyword");
-            return;
-        }
-            
-        if (!strcmp(tokens[2], "on"))
-            context->contextPragma.debug = true;
-        else if (!strcmp(tokens[2], "off"))
-            context->contextPragma.debug = false;
-        else {
-            CPPShInfoLogMsg("\"on\" or \"off\" expected after '(' for 'debug' pragma");
-            return;
-        }
-        
-        if (strcmp(tokens[3], ")")) {
-            CPPShInfoLogMsg("\")\" expected to end 'debug' pragma");
-            return;
-        }
-    } else {
-#ifdef PRAGMA_TABLE
-        //
-        // implementation specific pragma
-        // use ((TParseContext *)cpp->pC)->contextPragma.pragmaTable to store the information about pragma
-        // For now, just ignore the pragma that the implementation cannot recognize
-        // An Example of one such implementation for a pragma that has a syntax like
-        // #pragma pragmaname(pragmavalue)
-        // This implementation stores the current pragmavalue against the pragma name in pragmaTable.
-        //        
-        if (numTokens == 4 && !strcmp(tokens[1], "(") && !strcmp(tokens[3], ")")) {              
-            TPragmaTable& pragmaTable = ((TParseContext *)cpp->pC)->contextPragma.pragmaTable;
-            TPragmaTable::iterator iter;
-            iter = pragmaTable.find(TString(tokens[0]));
-            if (iter != pragmaTable.end()) {
-                iter->second = tokens[2];
-            } else {
-                pragmaTable[ tokens[0] ] = tokens[2];
-            }        
-        } else if (numTokens >= 2) {
-            TPragmaTable& pragmaTable = ((TParseContext *)cpp->pC)->contextPragma.pragmaTable;
-            TPragmaTable::iterator iter;
-            iter = pragmaTable.find(TString(tokens[0]));
-            if (iter != pragmaTable.end()) {
-                iter->second = tokens[1];
-            } else {
-                pragmaTable[ tokens[0] ] = tokens[1];
-            }
-        }
-#endif // PRAGMA_TABLE
-    }
+
+    if (numTokens != 4) return;
+    if (strcmp(tokens[1], "(") != 0) return;
+    if (strcmp(tokens[3], ")") != 0) return;
+
+    context->handlePragmaDirective(yylineno, tokens[0], tokens[2]);
 }
 
 void StoreStr(char *string)
@@ -3136,58 +3063,10 @@ void ResetTString(void)
     context->HashErrMsg = "";
 }
 
-TBehavior GetBehavior(const char* behavior)
-{
-    if (!strcmp("require", behavior))
-        return EBhRequire;
-    else if (!strcmp("enable", behavior))
-        return EBhEnable;
-    else if (!strcmp("disable", behavior))
-        return EBhDisable;
-    else if (!strcmp("warn", behavior))
-        return EBhWarn;
-    else {
-        CPPShInfoLogMsg((TString("behavior '") + behavior + "' is not supported").c_str());
-        return EBhDisable;
-    }        
-}
-
 void updateExtensionBehavior(const char* extName, const char* behavior)
 {
     SETUP_CONTEXT(cpp);
-    TBehavior behaviorVal = GetBehavior(behavior);
-    TMap<TString, TBehavior>:: iterator iter;
-    TString msg;
-    
-    // special cased for all extension
-    if (!strcmp(extName, "all")) {
-        if (behaviorVal == EBhRequire || behaviorVal == EBhEnable) {
-            CPPShInfoLogMsg("extension 'all' cannot have 'require' or 'enable' behavior");  
-            return;
-        } else {
-            for (iter = context->extensionBehavior.begin(); iter != context->extensionBehavior.end(); ++iter)
-                iter->second = behaviorVal;
-        }        
-    } else {
-        iter = context->extensionBehavior.find(TString(extName));
-        if (iter == context->extensionBehavior.end()) {
-            switch (behaviorVal) {
-            case EBhRequire:
-                CPPShInfoLogMsg((TString("extension '") + extName + "' is not supported").c_str());  
-                break;
-            case EBhEnable:
-            case EBhWarn:
-            case EBhDisable:
-                msg = TString("extension '") + extName + "' is not supported";
-                context->infoSink.info.message(EPrefixWarning, msg.c_str(), yylineno); 
-                break;
-            default:
-                break;
-            }
-            return;
-        } else
-            iter->second = behaviorVal;
-    }
+    context->handleExtensionDirective(yylineno, extName, behavior);
 }
 }  // extern "C"
 

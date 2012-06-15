@@ -8,6 +8,7 @@
 #include "compiler/DetectRecursion.h"
 #include "compiler/ForLoopUnroll.h"
 #include "compiler/Initialize.h"
+#include "compiler/InitializeParseContext.h"
 #include "compiler/MapLongVariableNames.h"
 #include "compiler/ParseHelper.h"
 #include "compiler/RenameFunction.h"

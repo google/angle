@@ -4514,9 +4514,8 @@ yyreduce:
 
         // store the pragma information for debug and optimize and other vendor specific
         // information. This information can be queried from the parse tree
-        (yyval.interm.intermNode)->getAsAggregate()->setOptimize(context->contextPragma.optimize);
-        (yyval.interm.intermNode)->getAsAggregate()->setDebug(context->contextPragma.debug);
-        (yyval.interm.intermNode)->getAsAggregate()->addToPragmaTable(context->contextPragma.pragmaTable);
+        (yyval.interm.intermNode)->getAsAggregate()->setOptimize(context->pragma().optimize);
+        (yyval.interm.intermNode)->getAsAggregate()->setDebug(context->pragma().debug);
 
         if ((yyvsp[(3) - (3)].interm.intermNode) && (yyvsp[(3) - (3)].interm.intermNode)->getAsAggregate())
             (yyval.interm.intermNode)->getAsAggregate()->setEndLine((yyvsp[(3) - (3)].interm.intermNode)->getAsAggregate()->getEndLine());

@@ -2116,9 +2116,8 @@ function_definition
 
         // store the pragma information for debug and optimize and other vendor specific
         // information. This information can be queried from the parse tree
-        $$->getAsAggregate()->setOptimize(context->contextPragma.optimize);
-        $$->getAsAggregate()->setDebug(context->contextPragma.debug);
-        $$->getAsAggregate()->addToPragmaTable(context->contextPragma.pragmaTable);
+        $$->getAsAggregate()->setOptimize(context->pragma().optimize);
+        $$->getAsAggregate()->setDebug(context->pragma().debug);
 
         if ($3 && $3->getAsAggregate())
             $$->getAsAggregate()->setEndLine($3->getAsAggregate()->getEndLine());

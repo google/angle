@@ -6,7 +6,8 @@
 #ifndef _PARSER_HELPER_INCLUDED_
 #define _PARSER_HELPER_INCLUDED_
 
-#include "compiler/ExtensionBehavior.h"
+#include "compiler/Diagnostics.h"
+#include "compiler/DirectiveHandler.h"
 #include "compiler/localintermediate.h"
 #include "compiler/ShHandle.h"
 #include "compiler/SymbolTable.h"
@@ -18,13 +19,6 @@ struct TMatrixFields {
     int col;
 };
 
-struct TPragma {
-    TPragma(bool o, bool d) : optimize(o), debug(d) { }
-    bool optimize;
-    bool debug;
-    TPragmaTable pragmaTable;
-};
-
 //
 // The following are extra variables needed during parsing, grouped together so
 // they can be passed to the parser without needing a global.
@@ -33,8 +27,8 @@ struct TParseContext {
     TParseContext(TSymbolTable& symt, TExtensionBehavior& ext, TIntermediate& interm, ShShaderType type, ShShaderSpec spec, int options, bool checksPrecErrors, const char* sourcePath, TInfoSink& is) :
             intermediate(interm),
             symbolTable(symt),
-            extensionBehavior(ext),
-            infoSink(is),
+            diagnostics(is),
+            directiveHandler(ext, diagnostics),
             shaderType(type),
             shaderSpec(spec),
             compileOptions(options),
@@ -48,12 +42,11 @@ struct TParseContext {
             currentFunctionType(NULL),
             functionReturnsValue(false),
             checksPrecisionErrors(checksPrecErrors),
-            contextPragma(true, false),
             scanner(NULL) {  }
     TIntermediate& intermediate; // to hold and build a parse tree
     TSymbolTable& symbolTable;   // symbol table that goes with the language currently being parsed
-    TExtensionBehavior& extensionBehavior;  // mapping between supported extensions and current behavior.
-    TInfoSink& infoSink;
+    TDiagnostics diagnostics;
+    TDirectiveHandler directiveHandler;
     ShShaderType shaderType;              // vertex or fragment language (future: pack or unpack)
     ShShaderSpec shaderSpec;              // The language specification compiler conforms to - GLES2 or WebGL.
     int compileOptions;
@@ -67,15 +60,18 @@ struct TParseContext {
     const TType* currentFunctionType;  // the return type of the function that's currently being parsed
     bool functionReturnsValue;   // true if a non-void function has a return
     bool checksPrecisionErrors;  // true if an error will be generated when a variable is declared without precision, explicit or implicit.
-    struct TPragma contextPragma;
     TString HashErrMsg;
     bool AfterEOF;
     void* scanner;
+
+    bool initPreprocessor();
+    void destroyPreprocessor();
 
     void error(TSourceLoc loc, const char *reason, const char* token,
                const char* extraInfoFormat, ...);
     void warning(TSourceLoc loc, const char* reason, const char* token,
                  const char* extraInfoFormat, ...);
+    void trace(const char* str);
     void recover();
 
     bool parseVectorFields(const TString&, int vecSize, TVectorFields&, int line);
@@ -105,7 +101,12 @@ struct TParseContext {
     bool nonInitErrorCheck(int line, TString& identifier, TPublicType& type, TVariable*& variable);
     bool paramErrorCheck(int line, TQualifier qualifier, TQualifier paramQualifier, TType* type);
     bool extensionErrorCheck(int line, const TString&);
+
     bool supportsExtension(const char* extension);
+    void handleExtensionDirective(int line, const char* extName, const char* behavior);
+
+    const TPragma& pragma() const { return directiveHandler.pragma(); }
+    void handlePragmaDirective(int line, const char* name, const char* value);
 
     bool containsSampler(TType& type);
     bool areAllChildConst(TIntermAggregate* aggrNode);
@@ -134,14 +135,5 @@ struct TParseContext {
 
 int PaParseStrings(int count, const char* const string[], const int length[],
                    TParseContext* context);
-
-typedef TParseContext* TParseContextPointer;
-extern TParseContextPointer& GetGlobalParseContext();
-#define GlobalParseContext GetGlobalParseContext()
-
-typedef struct TThreadParseContextRec
-{
-    TParseContext *lpGlobalParseContext;
-} TThreadParseContext;
 
 #endif // _PARSER_HELPER_INCLUDED_
