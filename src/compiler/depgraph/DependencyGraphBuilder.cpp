@@ -6,12 +6,6 @@
 
 #include "compiler/depgraph/DependencyGraphBuilder.h"
 
-TDependencyGraphBuilder::TLeftmostSymbolMaintainer::TSubtreePlaceholder
-    TDependencyGraphBuilder::TLeftmostSymbolMaintainer::kLeftSubtree;
-
-TDependencyGraphBuilder::TLeftmostSymbolMaintainer::TSubtreePlaceholder
-    TDependencyGraphBuilder::TLeftmostSymbolMaintainer::kRightSubtree;
-
 void TDependencyGraphBuilder::build(TIntermNode* node, TDependencyGraph* graph)
 {
     TDependencyGraphBuilder builder(graph);
@@ -91,8 +85,7 @@ void TDependencyGraphBuilder::visitSymbol(TIntermSymbol* intermSymbol)
 
     // If this symbol is the current leftmost symbol under an assignment, replace the previous
     // leftmost symbol with this symbol.
-    if (!mLeftmostSymbols.empty() && mLeftmostSymbols.top() !=
-        &TLeftmostSymbolMaintainer::kRightSubtree) {
+    if (!mLeftmostSymbols.empty() && mLeftmostSymbols.top() != &mRightSubtree) {
         mLeftmostSymbols.pop();
         mLeftmostSymbols.push(symbol);
     }
@@ -123,18 +116,18 @@ void TDependencyGraphBuilder::visitAssignment(TIntermBinary* intermAssignment)
         TNodeSetMaintainer nodeSetMaintainer(this);
 
         {
-            TLeftmostSymbolMaintainer leftmostSymbolMaintainer(this, TLeftmostSymbolMaintainer::kLeftSubtree);
+            TLeftmostSymbolMaintainer leftmostSymbolMaintainer(this, mLeftSubtree);
             intermLeft->traverse(this);
             leftmostSymbol = mLeftmostSymbols.top();
 
             // After traversing the left subtree of this assignment, we should have found a real
             // leftmost symbol, and the leftmost symbol should not be a placeholder.
-            ASSERT(leftmostSymbol != &TLeftmostSymbolMaintainer::kLeftSubtree);
-            ASSERT(leftmostSymbol != &TLeftmostSymbolMaintainer::kRightSubtree);
+            ASSERT(leftmostSymbol != &mLeftSubtree);
+            ASSERT(leftmostSymbol != &mRightSubtree);
         }
 
         if (TIntermTyped* intermRight = intermAssignment->getRight()) {
-            TLeftmostSymbolMaintainer leftmostSymbolMaintainer(this, TLeftmostSymbolMaintainer::kRightSubtree);
+            TLeftmostSymbolMaintainer leftmostSymbolMaintainer(this, mRightSubtree);
             intermRight->traverse(this);
         }
 
@@ -164,7 +157,7 @@ void TDependencyGraphBuilder::visitLogicalOp(TIntermBinary* intermLogicalOp)
     }
 
     if (TIntermTyped* intermRight = intermLogicalOp->getRight()) {
-        TLeftmostSymbolMaintainer leftmostSymbolMaintainer(this, TLeftmostSymbolMaintainer::kRightSubtree);
+        TLeftmostSymbolMaintainer leftmostSymbolMaintainer(this, mRightSubtree);
         intermRight->traverse(this);
     }
 }
@@ -175,7 +168,7 @@ void TDependencyGraphBuilder::visitBinaryChildren(TIntermBinary* intermBinary)
         intermLeft->traverse(this);
 
     if (TIntermTyped* intermRight = intermBinary->getRight()) {
-        TLeftmostSymbolMaintainer leftmostSymbolMaintainer(this, TLeftmostSymbolMaintainer::kRightSubtree);
+        TLeftmostSymbolMaintainer leftmostSymbolMaintainer(this, mRightSubtree);
         intermRight->traverse(this);
     }
 }

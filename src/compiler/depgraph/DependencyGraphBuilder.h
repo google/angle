@@ -135,15 +135,7 @@ private:
     //
     class TLeftmostSymbolMaintainer {
     public:
-        class TSubtreePlaceholder : public TGraphSymbol {
-        public:
-            TSubtreePlaceholder() : TGraphSymbol(NULL) {}
-        };
-
-        static TSubtreePlaceholder kLeftSubtree;
-        static TSubtreePlaceholder kRightSubtree;
-
-        TLeftmostSymbolMaintainer(TDependencyGraphBuilder* factory, TSubtreePlaceholder& subtree)
+        TLeftmostSymbolMaintainer(TDependencyGraphBuilder* factory, TGraphSymbol& subtree)
             : leftmostSymbols(factory->mLeftmostSymbols)
         {
             needsPlaceholderSymbol = leftmostSymbols.empty() || leftmostSymbols.top() != &subtree;
@@ -164,6 +156,8 @@ private:
 
     TDependencyGraphBuilder(TDependencyGraph* graph)
         : TIntermTraverser(true, false, false)
+        , mLeftSubtree(NULL)
+        , mRightSubtree(NULL)
         , mGraph(graph) {}
     void build(TIntermNode* intermNode) { intermNode->traverse(this); }
 
@@ -175,6 +169,9 @@ private:
     void visitFunctionDefinition(TIntermAggregate*);
     void visitFunctionCall(TIntermAggregate* intermFunctionCall);
     void visitAggregateChildren(TIntermAggregate*);
+
+    TGraphSymbol mLeftSubtree;
+    TGraphSymbol mRightSubtree;
 
     TDependencyGraph* mGraph;
     TNodeSetStack mNodeSets;
