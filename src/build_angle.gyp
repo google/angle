@@ -7,6 +7,7 @@
     'defines': [
       'ANGLE_DISABLE_TRACE',
       'ANGLE_COMPILE_OPTIMIZATION_LEVEL=D3DCOMPILE_OPTIMIZATION_LEVEL0',
+      'ANGLE_USE_NEW_PREPROCESSOR=0',
     ],
   },
   'targets': [
@@ -32,6 +33,7 @@
         'compiler/preprocessor/new/Macro.h',
         'compiler/preprocessor/new/MacroExpander.cpp',
         'compiler/preprocessor/new/MacroExpander.h',
+        'compiler/preprocessor/new/pp_utils.h',
         'compiler/preprocessor/new/Preprocessor.cpp',
         'compiler/preprocessor/new/Preprocessor.h',
         'compiler/preprocessor/new/SourceLocation.h',

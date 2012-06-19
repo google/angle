@@ -8,17 +8,40 @@
 
 #include <sstream>
 
+#include "DirectiveParser.h"
+#include "Macro.h"
+#include "MacroExpander.h"
 #include "Token.h"
+#include "Tokenizer.h"
 
 namespace pp
 {
 
-Preprocessor::Preprocessor(Diagnostics* diagnostics,
-                           DirectiveHandler* directiveHandler) :
-    mTokenizer(diagnostics),
-    mDirectiveParser(&mTokenizer, &mMacroSet, diagnostics, directiveHandler),
-    mMacroExpander(&mDirectiveParser, &mMacroSet, diagnostics)
+struct PreprocessorImpl
 {
+    MacroSet macroSet;
+    Tokenizer tokenizer;
+    DirectiveParser directiveParser;
+    MacroExpander macroExpander;
+
+    PreprocessorImpl(Diagnostics* diagnostics,
+                     DirectiveHandler* directiveHandler) :
+        tokenizer(diagnostics),
+        directiveParser(&tokenizer, &macroSet, diagnostics, directiveHandler),
+        macroExpander(&directiveParser, &macroSet, diagnostics)
+    {
+    }
+};
+
+Preprocessor::Preprocessor(Diagnostics* diagnostics,
+                           DirectiveHandler* directiveHandler)
+{
+    mImpl = new PreprocessorImpl(diagnostics, directiveHandler);
+}
+
+Preprocessor::~Preprocessor()
+{
+    delete mImpl;
 }
 
 bool Preprocessor::init(int count,
@@ -33,10 +56,10 @@ bool Preprocessor::init(int count,
     predefineMacro("__VERSION__", kGLSLVersion);
     predefineMacro("GL_ES", 1);
 
-    return mTokenizer.init(count, string, length);
+    return mImpl->tokenizer.init(count, string, length);
 }
 
-void Preprocessor::predefineMacro(const std::string& name, int value)
+void Preprocessor::predefineMacro(const char* name, int value)
 {
     std::stringstream stream;
     stream << value;
@@ -51,12 +74,12 @@ void Preprocessor::predefineMacro(const std::string& name, int value)
     macro.name = name;
     macro.replacements.push_back(token);
 
-    mMacroSet[name] = macro;
+    mImpl->macroSet[name] = macro;
 }
 
 void Preprocessor::lex(Token* token)
 {
-    mMacroExpander.lex(token);
+    mImpl->macroExpander.lex(token);
 }
 
 }  // namespace pp

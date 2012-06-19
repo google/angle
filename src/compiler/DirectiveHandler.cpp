@@ -27,7 +27,7 @@ static TBehavior getBehavior(const std::string& str)
 
 TDirectiveHandler::TDirectiveHandler(TExtensionBehavior& extBehavior,
                                      TDiagnostics& diagnostics)
-    : mExtBehavior(extBehavior),
+    : mExtensionBehavior(extBehavior),
       mDiagnostics(diagnostics)
 {
 }
@@ -113,15 +113,15 @@ void TDirectiveHandler::handleExtension(const pp::SourceLocation& loc,
         }
         else
         {
-            for (TExtensionBehavior::iterator iter = mExtBehavior.begin();
-                 iter != mExtBehavior.end(); ++iter)
+            for (TExtensionBehavior::iterator iter = mExtensionBehavior.begin();
+                 iter != mExtensionBehavior.end(); ++iter)
                 iter->second = behaviorVal;
         }
         return;
     }
 
-    TExtensionBehavior::iterator iter = mExtBehavior.find(name);
-    if (iter != mExtBehavior.end())
+    TExtensionBehavior::iterator iter = mExtensionBehavior.find(name);
+    if (iter != mExtensionBehavior.end())
     {
         iter->second = behaviorVal;
         return;

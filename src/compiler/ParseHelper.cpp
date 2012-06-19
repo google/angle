@@ -12,40 +12,6 @@
 #include "compiler/glslang.h"
 #include "compiler/preprocessor/new/SourceLocation.h"
 
-extern "C" {
-extern int InitPreprocessor();
-extern int FinalizePreprocessor();
-extern void PredefineIntMacro(const char *name, int value);
-}
-
-static void DefineExtensionMacros(const TExtensionBehavior& extBehavior)
-{
-    for (TExtensionBehavior::const_iterator iter = extBehavior.begin();
-         iter != extBehavior.end(); ++iter) {
-        PredefineIntMacro(iter->first.c_str(), 1);
-    }
-}
-
-///////////////////////////////////////////////////////////////////////
-//
-// Preprocessor
-//
-////////////////////////////////////////////////////////////////////////
-
-bool TParseContext::initPreprocessor()
-{
-    if (InitPreprocessor())
-        return false;
-
-    DefineExtensionMacros(directiveHandler.extBehavior());
-    return true;
-}
-
-void TParseContext::destroyPreprocessor()
-{
-    FinalizePreprocessor();
-}
-
 ///////////////////////////////////////////////////////////////////////
 //
 // Sub- vector and matrix fields
@@ -942,7 +908,7 @@ bool TParseContext::paramErrorCheck(int line, TQualifier qualifier, TQualifier p
 
 bool TParseContext::extensionErrorCheck(int line, const TString& extension)
 {
-    const TExtensionBehavior& extBehavior = directiveHandler.extBehavior();
+    const TExtensionBehavior& extBehavior = extensionBehavior();
     TExtensionBehavior::const_iterator iter = extBehavior.find(extension.c_str());
     if (iter == extBehavior.end()) {
         error(line, "extension", extension.c_str(), "is not supported");
@@ -963,9 +929,9 @@ bool TParseContext::extensionErrorCheck(int line, const TString& extension)
 
 bool TParseContext::supportsExtension(const char* extension)
 {
-    const TExtensionBehavior& extBehavior = directiveHandler.extBehavior();
-    TExtensionBehavior::const_iterator iter = extBehavior.find(extension);
-    return (iter != extBehavior.end());
+    const TExtensionBehavior& extbehavior = extensionBehavior();
+    TExtensionBehavior::const_iterator iter = extbehavior.find(extension);
+    return (iter != extbehavior.end());
 }
 
 void TParseContext::handleExtensionDirective(int line, const char* extName, const char* behavior)
@@ -1513,9 +1479,6 @@ int PaParseStrings(int count, const char* const string[], const int length[],
     if ((count == 0) || (string == NULL))
         return 1;
 
-    if (!context->initPreprocessor())
-        return 1;
-
     if (glslang_initialize(context))
         return 1;
 
@@ -1523,8 +1486,7 @@ int PaParseStrings(int count, const char* const string[], const int length[],
     if (!error)
         error = glslang_parse(context);
 
-    glslang_finalize(context);    
-    context->destroyPreprocessor();
+    glslang_finalize(context);
 
     return (error == 0) && (context->numErrors == 0) ? 0 : 1;
 }

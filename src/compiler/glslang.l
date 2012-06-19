@@ -38,6 +38,7 @@ WHICH GENERATES THE GLSL ES LEXER (glslang_lex.cpp).
 %{
 #include "compiler/glslang.h"
 #include "compiler/ParseHelper.h"
+#include "compiler/preprocessor/new/Token.h"
 #include "compiler/util.h"
 #include "glslang_tab.h"
 
@@ -271,9 +272,14 @@ O           [0-7]
 
 %%
 
+#if !ANGLE_USE_NEW_PREPROCESSOR
 extern "C" {
 // Preprocessor interface.
 #include "compiler/preprocessor/preprocess.h"
+
+extern int InitPreprocessor();
+extern int FinalizePreprocessor();
+extern void PredefineIntMacro(const char *name, int value);
 
 #define SETUP_CONTEXT(pp) \
     TParseContext* context = (TParseContext*) pp->pC; \
@@ -393,17 +399,27 @@ void updateExtensionBehavior(const char* extName, const char* behavior)
     context->handleExtensionDirective(yylineno, extName, behavior);
 }
 }  // extern "C"
+#endif  // !ANGLE_USE_NEW_PREPROCESSOR
 
 int string_input(char* buf, int max_size, yyscan_t yyscanner) {
-    int len;
+    int len = 0;
 
-    if ((len = yylex_CPP(buf, max_size)) == 0)
-        return 0;
-    if (len >= max_size) 
-        YY_FATAL_ERROR("input buffer overflow, can't enlarge buffer because scanner uses REJECT");
+#if ANGLE_USE_NEW_PREPROCESSOR
+    pp::Token token;
+    yyget_extra(yyscanner)->preprocessor.lex(&token);
+    len = token.type == pp::Token::LAST ? 0 : token.value.size();
+    if ((len > 0) && (len < max_size))
+        memcpy(buf, token.value.c_str(), len);
+    yyset_lineno(EncodeSourceLoc(token.location.file, token.location.line), yyscanner);
+#else
+    len = yylex_CPP(buf, max_size);
+#endif  // ANGLE_USE_NEW_PREPROCESSOR
 
-    buf[len] = ' ';
-    return len+1;
+    if (len >= max_size)
+        YY_FATAL_ERROR("Input buffer overflow");
+    else if (len > 0)
+        buf[len++] = ' ';
+    return len;
 }
 
 int check_type(yyscan_t yyscanner) {
@@ -455,7 +471,12 @@ int glslang_finalize(TParseContext* context) {
     if (scanner == NULL) return 0;
     
     context->scanner = NULL;
-    return yylex_destroy(scanner);
+    yylex_destroy(scanner);
+
+#if !ANGLE_USE_NEW_PREPROCESSOR
+    FinalizePreprocessor();
+#endif
+    return 0;
 }
 
 int glslang_scan(int count, const char* const string[], const int length[],
@@ -463,10 +484,30 @@ int glslang_scan(int count, const char* const string[], const int length[],
     yyrestart(NULL, context->scanner);
     yyset_lineno(EncodeSourceLoc(0, 1), context->scanner);
     context->AfterEOF = false;
-    
-    // Init preprocessor.
+
+    // Initialize preprocessor.
+#if ANGLE_USE_NEW_PREPROCESSOR
+    if (!context->preprocessor.init(count, string, length))
+        return 1;
+#else
+    if (InitPreprocessor())
+        return 1;
     cpp->pC = context;
     cpp->pastFirstStatement = 0;
-    return InitScannerInput(cpp, count, string, length);
+    if (InitScannerInput(cpp, count, string, length))
+        return 1;
+#endif  // ANGLE_USE_NEW_PREPROCESSOR
+
+    // Define extension macros.
+    const TExtensionBehavior& extBehavior = context->extensionBehavior();
+    for (TExtensionBehavior::const_iterator iter = extBehavior.begin();
+         iter != extBehavior.end(); ++iter) {
+#if ANGLE_USE_NEW_PREPROCESSOR
+        context->preprocessor.predefineMacro(iter->first, 1);
+#else
+        PredefineIntMacro(iter->first.c_str(), 1);
+#endif
+    }
+    return 0;
 }
 

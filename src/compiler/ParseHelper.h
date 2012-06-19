@@ -9,6 +9,7 @@
 #include "compiler/Diagnostics.h"
 #include "compiler/DirectiveHandler.h"
 #include "compiler/localintermediate.h"
+#include "compiler/preprocessor/new/Preprocessor.h"
 #include "compiler/ShHandle.h"
 #include "compiler/SymbolTable.h"
 
@@ -27,8 +28,6 @@ struct TParseContext {
     TParseContext(TSymbolTable& symt, TExtensionBehavior& ext, TIntermediate& interm, ShShaderType type, ShShaderSpec spec, int options, bool checksPrecErrors, const char* sourcePath, TInfoSink& is) :
             intermediate(interm),
             symbolTable(symt),
-            diagnostics(is),
-            directiveHandler(ext, diagnostics),
             shaderType(type),
             shaderSpec(spec),
             compileOptions(options),
@@ -42,11 +41,12 @@ struct TParseContext {
             currentFunctionType(NULL),
             functionReturnsValue(false),
             checksPrecisionErrors(checksPrecErrors),
+            diagnostics(is),
+            directiveHandler(ext, diagnostics),
+            preprocessor(&diagnostics, &directiveHandler),
             scanner(NULL) {  }
     TIntermediate& intermediate; // to hold and build a parse tree
     TSymbolTable& symbolTable;   // symbol table that goes with the language currently being parsed
-    TDiagnostics diagnostics;
-    TDirectiveHandler directiveHandler;
     ShShaderType shaderType;              // vertex or fragment language (future: pack or unpack)
     ShShaderSpec shaderSpec;              // The language specification compiler conforms to - GLES2 or WebGL.
     int compileOptions;
@@ -62,10 +62,10 @@ struct TParseContext {
     bool checksPrecisionErrors;  // true if an error will be generated when a variable is declared without precision, explicit or implicit.
     TString HashErrMsg;
     bool AfterEOF;
+    TDiagnostics diagnostics;
+    TDirectiveHandler directiveHandler;
+    pp::Preprocessor preprocessor;
     void* scanner;
-
-    bool initPreprocessor();
-    void destroyPreprocessor();
 
     TInfoSink& infoSink() { return diagnostics.infoSink(); }
     void error(TSourceLoc loc, const char *reason, const char* token,
@@ -103,6 +103,7 @@ struct TParseContext {
     bool paramErrorCheck(int line, TQualifier qualifier, TQualifier paramQualifier, TType* type);
     bool extensionErrorCheck(int line, const TString&);
 
+    const TExtensionBehavior& extensionBehavior() const { return directiveHandler.extensionBehavior(); }
     bool supportsExtension(const char* extension);
     void handleExtensionDirective(int line, const char* extName, const char* behavior);
 

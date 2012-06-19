@@ -21,7 +21,7 @@ class TDirectiveHandler : public pp::DirectiveHandler
     virtual ~TDirectiveHandler();
 
     const TPragma& pragma() const { return mPragma; }
-    const TExtensionBehavior& extBehavior() const { return mExtBehavior; }
+    const TExtensionBehavior& extensionBehavior() const { return mExtensionBehavior; }
 
     virtual void handleError(const pp::SourceLocation& loc,
                              const std::string& msg);
@@ -39,7 +39,7 @@ class TDirectiveHandler : public pp::DirectiveHandler
 
   private:
     TPragma mPragma;
-    TExtensionBehavior& mExtBehavior;
+    TExtensionBehavior& mExtensionBehavior;
     TDiagnostics& mDiagnostics;
 };
 

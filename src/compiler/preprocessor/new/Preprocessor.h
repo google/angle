@@ -7,21 +7,21 @@
 #ifndef COMPILER_PREPROCESSOR_PREPROCESSOR_H_
 #define COMPILER_PREPROCESSOR_PREPROCESSOR_H_
 
-#include "DirectiveParser.h"
-#include "Macro.h"
-#include "MacroExpander.h"
-#include "Tokenizer.h"
+#include "pp_utils.h"
 
 namespace pp
 {
 
 class Diagnostics;
 class DirectiveHandler;
+struct PreprocessorImpl;
+struct Token;
 
 class Preprocessor
 {
   public:
     Preprocessor(Diagnostics* diagnostics, DirectiveHandler* directiveHandler);
+    ~Preprocessor();
 
     // count: specifies the number of elements in the string and length arrays.
     // string: specifies an array of pointers to strings.
@@ -34,17 +34,14 @@ class Preprocessor
     // is null terminated.
     bool init(int count, const char* const string[], const int length[]);
     // Adds a pre-defined macro.
-    void predefineMacro(const std::string& name, int value);
+    void predefineMacro(const char* name, int value);
 
     void lex(Token* token);
 
   private:
     PP_DISALLOW_COPY_AND_ASSIGN(Preprocessor);
 
-    MacroSet mMacroSet;
-    Tokenizer mTokenizer;
-    DirectiveParser mDirectiveParser;
-    MacroExpander mMacroExpander;
+    PreprocessorImpl* mImpl;
 };
 
 }  // namespace pp
