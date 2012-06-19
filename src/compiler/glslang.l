@@ -503,7 +503,7 @@ int glslang_scan(int count, const char* const string[], const int length[],
     for (TExtensionBehavior::const_iterator iter = extBehavior.begin();
          iter != extBehavior.end(); ++iter) {
 #if ANGLE_USE_NEW_PREPROCESSOR
-        context->preprocessor.predefineMacro(iter->first, 1);
+        context->preprocessor.predefineMacro(iter->first.c_str(), 1);
 #else
         PredefineIntMacro(iter->first.c_str(), 1);
 #endif
