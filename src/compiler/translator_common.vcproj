@@ -120,7 +120,7 @@
 				WarnAsError="true"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4100;4127;4189;4239;4244;4245;4512;4702;4718"
+				DisableSpecificWarnings="4100;4127;4189;4239;4244;4245;4267;4512;4702;4718"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -251,7 +251,7 @@
 				WarnAsError="true"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
-				DisableSpecificWarnings="4100;4127;4189;4239;4244;4245;4512;4702;4718"
+				DisableSpecificWarnings="4100;4127;4189;4239;4244;4245;4267;4512;4702;4718"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
