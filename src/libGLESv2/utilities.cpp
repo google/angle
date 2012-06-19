@@ -769,6 +769,10 @@ namespace dx2es
 
 unsigned int GetStencilSize(D3DFORMAT stencilFormat)
 {
+    if (stencilFormat == D3DFMT_INTZ)
+    {
+        return 8;
+    }
     switch(stencilFormat)
     {
       case D3DFMT_D24FS8:
@@ -879,6 +883,10 @@ unsigned int GetBlueSize(D3DFORMAT colorFormat)
 
 unsigned int GetDepthSize(D3DFORMAT depthFormat)
 {
+    if (depthFormat == D3DFMT_INTZ)
+    {
+        return 24;
+    }
     switch (depthFormat)
     {
       case D3DFMT_D16_LOCKABLE:  return 16;
@@ -976,6 +984,10 @@ GLenum ConvertBackBufferFormat(D3DFORMAT format)
 
 GLenum ConvertDepthStencilFormat(D3DFORMAT format)
 {
+    if (format == D3DFMT_INTZ)
+    {
+        return GL_DEPTH24_STENCIL8_OES;
+    }
     switch (format)
     {
       case D3DFMT_D16:
