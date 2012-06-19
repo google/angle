@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -82,8 +82,8 @@ GLuint GetDepthSize(D3DFORMAT depthFormat);
 GLuint GetStencilSize(D3DFORMAT stencilFormat);
 bool IsFloat32Format(D3DFORMAT surfaceFormat);
 bool IsFloat16Format(D3DFORMAT surfaceFormat);
-bool IsDepthFormat(D3DFORMAT surfaceFormat);
-bool IsStencilFormat(D3DFORMAT surfaceFormat);
+bool IsDepthTextureFormat(D3DFORMAT surfaceFormat);
+bool IsStencilTextureFormat(D3DFORMAT surfaceFormat);
 
 GLsizei GetSamplesFromMultisampleType(D3DMULTISAMPLE_TYPE type);
 

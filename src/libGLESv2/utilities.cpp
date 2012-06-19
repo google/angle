@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -948,12 +948,12 @@ bool IsFloat16Format(D3DFORMAT surfaceFormat)
     return false;
 }
 
-bool IsDepthFormat(D3DFORMAT surfaceFormat)
+bool IsDepthTextureFormat(D3DFORMAT surfaceFormat)
 {
     return (surfaceFormat == D3DFMT_INTZ);
 }
 
-bool IsStencilFormat(D3DFORMAT surfaceFormat)
+bool IsStencilTextureFormat(D3DFORMAT surfaceFormat)
 {
     return (surfaceFormat == D3DFMT_INTZ);
 }

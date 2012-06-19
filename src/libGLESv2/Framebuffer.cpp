@@ -318,7 +318,7 @@ GLenum Framebuffer::completeness()
                 return GL_FRAMEBUFFER_UNSUPPORTED;
             }
 
-            if (dx2es::IsDepthFormat(d3dformat) || dx2es::IsStencilFormat(d3dformat))
+            if (dx2es::IsDepthTextureFormat(d3dformat) || dx2es::IsStencilTextureFormat(d3dformat))
             {
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
@@ -369,7 +369,7 @@ GLenum Framebuffer::completeness()
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
 
-            if (!dx2es::IsDepthFormat(d3dformat))
+            if (!dx2es::IsDepthTextureFormat(d3dformat))
             {
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
@@ -429,7 +429,7 @@ GLenum Framebuffer::completeness()
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
 
-            if (!dx2es::IsStencilFormat(d3dformat))
+            if (!dx2es::IsStencilTextureFormat(d3dformat))
             {
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
