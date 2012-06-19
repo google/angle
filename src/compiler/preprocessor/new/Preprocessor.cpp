@@ -6,6 +6,8 @@
 
 #include "Preprocessor.h"
 
+#include <sstream>
+
 #include "Token.h"
 
 namespace pp
@@ -23,7 +25,33 @@ bool Preprocessor::init(int count,
                         const char* const string[],
                         const int length[])
 {
+    static const int kGLSLVersion = 100;
+
+    // Add standard pre-defined macros.
+    predefineMacro("__LINE__", 0);
+    predefineMacro("__FILE__", 0);
+    predefineMacro("__VERSION__", kGLSLVersion);
+    predefineMacro("GL_ES", 1);
+
     return mTokenizer.init(count, string, length);
+}
+
+void Preprocessor::predefineMacro(const std::string& name, int value)
+{
+    std::stringstream stream;
+    stream << value;
+
+    Token token;
+    token.type = Token::CONST_INT;
+    token.value = stream.str();
+
+    Macro macro;
+    macro.predefined = true;
+    macro.type = Macro::kTypeObj;
+    macro.name = name;
+    macro.replacements.push_back(token);
+
+    mMacroSet[name] = macro;
 }
 
 void Preprocessor::lex(Token* token)

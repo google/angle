@@ -26,6 +26,45 @@ TEST_F(DefineTest, NonIdentifier)
     preprocess(input, expected);
 };
 
+TEST_F(DefineTest, RedefinePredefined)
+{
+    const char* input = "#define __LINE__ 10\n"
+                        "__LINE__\n"
+                        "#define __FILE__ 20\n"
+                        "__FILE__\n"
+                        "#define __VERSION__ 200\n"
+                        "__VERSION__\n"
+                        "#define GL_ES 0\n"
+                        "GL_ES\n";
+    const char* expected = "\n"
+                           "2\n"
+                           "\n"
+                           "0\n"
+                           "\n"
+                           "100\n"
+                           "\n"
+                           "1\n";
+
+    EXPECT_CALL(mDiagnostics,
+                print(pp::Diagnostics::MACRO_PREDEFINED_REDEFINED,
+                      pp::SourceLocation(0, 1),
+                      "__LINE__"));
+    EXPECT_CALL(mDiagnostics,
+                print(pp::Diagnostics::MACRO_PREDEFINED_REDEFINED,
+                      pp::SourceLocation(0, 3),
+                      "__FILE__"));
+    EXPECT_CALL(mDiagnostics,
+                print(pp::Diagnostics::MACRO_PREDEFINED_REDEFINED,
+                      pp::SourceLocation(0, 5),
+                      "__VERSION__"));
+    EXPECT_CALL(mDiagnostics,
+                print(pp::Diagnostics::MACRO_PREDEFINED_REDEFINED,
+                      pp::SourceLocation(0, 7),
+                      "GL_ES"));
+
+    preprocess(input, expected);
+}
+
 TEST_F(DefineTest, ReservedUnderScore1)
 {
     const char* input = "#define __foo bar\n"
@@ -693,6 +732,45 @@ TEST_F(DefineTest, Undef)
     preprocess(input, expected);
 }
 
+TEST_F(DefineTest, UndefPredefined)
+{
+    const char* input = "#undef __LINE__\n"
+                        "__LINE__\n"
+                        "#undef __FILE__\n"
+                        "__FILE__\n"
+                        "#undef __VERSION__\n"
+                        "__VERSION__\n"
+                        "#undef GL_ES\n"
+                        "GL_ES\n";
+    const char* expected = "\n"
+                           "2\n"
+                           "\n"
+                           "0\n"
+                           "\n"
+                           "100\n"
+                           "\n"
+                           "1\n";
+
+    EXPECT_CALL(mDiagnostics,
+                print(pp::Diagnostics::MACRO_PREDEFINED_UNDEFINED,
+                      pp::SourceLocation(0, 1),
+                      "__LINE__"));
+    EXPECT_CALL(mDiagnostics,
+                print(pp::Diagnostics::MACRO_PREDEFINED_UNDEFINED,
+                      pp::SourceLocation(0, 3),
+                      "__FILE__"));
+    EXPECT_CALL(mDiagnostics,
+                print(pp::Diagnostics::MACRO_PREDEFINED_UNDEFINED,
+                      pp::SourceLocation(0, 5),
+                      "__VERSION__"));
+    EXPECT_CALL(mDiagnostics,
+                print(pp::Diagnostics::MACRO_PREDEFINED_UNDEFINED,
+                      pp::SourceLocation(0, 7),
+                      "GL_ES"));
+
+    preprocess(input, expected);
+}
+
 TEST_F(DefineTest, UndefRedefine)
 {
     const char* input = "#define foo 1\n"
@@ -753,3 +831,63 @@ TEST_F(DefineTest, C99Example)
     preprocess(input, expected);
 }
 
+TEST_F(DefineTest, Predefined_GL_ES)
+{
+    const char* input = "GL_ES\n";
+    const char* expected = "1\n";
+
+    preprocess(input, expected);
+}
+
+TEST_F(DefineTest, Predefined_VERSION)
+{
+    const char* input = "__VERSION__\n";
+    const char* expected = "100\n";
+
+    preprocess(input, expected);
+}
+
+TEST_F(DefineTest, Predefined_LINE1)
+{
+    const char* str = "\n\n__LINE__";
+    ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
+
+    pp::Token token;
+    mPreprocessor.lex(&token);
+    EXPECT_EQ(pp::Token::CONST_INT, token.type);
+    EXPECT_EQ("3", token.value);
+}
+
+TEST_F(DefineTest, Predefined_LINE2)
+{
+    const char* str = "#line 10\n"
+                      "__LINE__\n";
+    ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
+
+    pp::Token token;
+    mPreprocessor.lex(&token);
+    EXPECT_EQ(pp::Token::CONST_INT, token.type);
+    EXPECT_EQ("10", token.value);
+}
+
+TEST_F(DefineTest, Predefined_FILE1)
+{
+    const char* const str[] = {"", "", "__FILE__"};
+    ASSERT_TRUE(mPreprocessor.init(3, str, NULL));
+
+    pp::Token token;
+    mPreprocessor.lex(&token);
+    EXPECT_EQ(pp::Token::CONST_INT, token.type);
+    EXPECT_EQ("2", token.value);
+}
+
+TEST_F(DefineTest, Predefined_FILE2)
+{
+    const char* const str[] = {"#line 10 20\n", "__FILE__"};
+    ASSERT_TRUE(mPreprocessor.init(2, str, NULL));
+
+    pp::Token token;
+    mPreprocessor.lex(&token);
+    EXPECT_EQ(pp::Token::CONST_INT, token.type);
+    EXPECT_EQ("21", token.value);
+}

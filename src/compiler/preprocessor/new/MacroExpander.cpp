@@ -8,6 +8,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <sstream>
 
 #include "Diagnostics.h"
 #include "Token.h"
@@ -57,8 +58,7 @@ MacroExpander::MacroExpander(Lexer* lexer,
 
 MacroExpander::~MacroExpander()
 {
-    assert(!mReserveToken.get());
-    assert(mContextStack.empty());
+    while (!mContextStack.empty()) popMacro();
 }
 
 void MacroExpander::lex(Token* token)
@@ -185,10 +185,32 @@ bool MacroExpander::expandMacro(const Macro& macro,
                                 const Token& identifier,
                                 std::vector<Token>* replacements)
 {
+    replacements->clear();
     if (macro.type == Macro::kTypeObj)
     {
         replacements->assign(macro.replacements.begin(),
                              macro.replacements.end());
+
+        if (macro.predefined)
+        {
+            static const std::string kLine = "__LINE__";
+            static const std::string kFile = "__FILE__";
+
+            assert(replacements->size() == 1);
+            Token& repl = replacements->front();
+            if (macro.name == kLine)
+            {
+                std::stringstream stream;
+                stream << identifier.location.line;
+                repl.value = stream.str();
+            }
+            else if (macro.name == kFile)
+            {
+                std::stringstream stream;
+                stream << identifier.location.file;
+                repl.value = stream.str();
+            }
+        }
     }
     else
     {

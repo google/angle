@@ -200,13 +200,34 @@ TEST_F(LocationTest, LineDirectiveCommentsIgnored)
     expectLocation(1, &str, NULL, loc);
 }
 
-TEST_F(LocationTest, LineDirectiveWithMacro)
+TEST_F(LocationTest, LineDirectiveWithMacro1)
 {
     const char* str = "#define L 10\n"
                       "#define F(x) x\n"
                       "#line L F(20)\n"
                       "foo";
     pp::SourceLocation loc(20, 10);
+
+    SCOPED_TRACE("LineDirectiveWithMacro1");
+    expectLocation(1, &str, NULL, loc);
+}
+
+TEST_F(LocationTest, LineDirectiveWithMacro2)
+{
+    const char* str = "#define LOC 10 20\n"
+                      "#line LOC\n"
+                      "foo";
+    pp::SourceLocation loc(20, 10);
+
+    SCOPED_TRACE("LineDirectiveWithMacro2");
+    expectLocation(1, &str, NULL, loc);
+}
+
+TEST_F(LocationTest, LineDirectiveWithPredefinedMacro)
+{
+    const char* str = "#line __LINE__ __FILE__\n"
+                      "foo";
+    pp::SourceLocation loc(0, 1);
 
     SCOPED_TRACE("LineDirectiveWithMacro");
     expectLocation(1, &str, NULL, loc);

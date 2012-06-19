@@ -33,6 +33,8 @@ class Preprocessor
     // corresponding string or a value less than 0 to indicate that the string
     // is null terminated.
     bool init(int count, const char* const string[], const int length[]);
+    // Adds a pre-defined macro.
+    void predefineMacro(const std::string& name, int value);
 
     void lex(Token* token);
 

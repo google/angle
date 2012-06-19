@@ -46,6 +46,13 @@ static bool isMacroNameReserved(const std::string& name)
     return false;
 }
 
+static bool isMacroPredefined(const std::string& name,
+                              const pp::MacroSet& macroSet)
+{
+    pp::MacroSet::const_iterator iter = macroSet.find(name);
+    return iter != macroSet.end() ? iter->second.predefined : false;
+}
+
 namespace pp
 {
 
@@ -140,15 +147,19 @@ void DirectiveParser::parseDefine(Token* token)
     if (token->type != Token::IDENTIFIER)
     {
         mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN,
-                             token->location,
-                             token->value);
+                             token->location, token->value);
+        return;
+    }
+    if (isMacroPredefined(token->value, *mMacroSet))
+    {
+        mDiagnostics->report(Diagnostics::MACRO_PREDEFINED_REDEFINED,
+                             token->location, token->value);
         return;
     }
     if (isMacroNameReserved(token->value))
     {
         mDiagnostics->report(Diagnostics::MACRO_NAME_RESERVED,
-                             token->location,
-                             token->value);
+                             token->location, token->value);
         return;
     }
 
@@ -216,14 +227,23 @@ void DirectiveParser::parseUndef(Token* token)
     if (token->type != Token::IDENTIFIER)
     {
         mDiagnostics->report(Diagnostics::UNEXPECTED_TOKEN,
-                             token->location,
-                             token->value);
+                             token->location, token->value);
         return;
     }
 
     MacroSet::iterator iter = mMacroSet->find(token->value);
     if (iter != mMacroSet->end())
-        mMacroSet->erase(iter);
+    {
+        if (iter->second.predefined)
+        {
+            mDiagnostics->report(Diagnostics::MACRO_PREDEFINED_UNDEFINED,
+                                 token->location, token->value);
+        }
+        else
+        {
+            mMacroSet->erase(iter);
+        }
+    }
 
     mTokenizer->lex(token);
 }
