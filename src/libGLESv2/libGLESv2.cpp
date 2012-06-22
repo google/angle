@@ -6444,13 +6444,7 @@ void __stdcall glValidateProgram(GLuint program)
                 }
             }
 
-            gl::ProgramBinary *programBinary = programObject->getProgramBinary();
-            if (!programBinary)
-            {
-                return;
-            }
-
-            programBinary->validate();
+            programObject->validate();
         }
     }
     catch(std::bad_alloc&)

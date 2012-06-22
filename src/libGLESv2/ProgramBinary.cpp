@@ -24,8 +24,6 @@
 
 namespace gl
 {
-const char *fakepath = "C:\\fakepath";
-
 std::string str(int i)
 {
     char buffer[20];
@@ -66,7 +64,6 @@ ProgramBinary::ProgramBinary()
     mConstantTablePS = NULL;
     mConstantTableVS = NULL;
 
-    mInfoLog = NULL;
     mValidated = false;
 
     for (int index = 0; index < MAX_VERTEX_ATTRIBS; index++)
@@ -122,8 +119,6 @@ ProgramBinary::~ProgramBinary()
         delete mUniforms.back();
         mUniforms.pop_back();
     }
-
-    delete[] mInfoLog;
 }
 
 IDirect3DPixelShader9 *ProgramBinary::getPixelShader()
@@ -1027,7 +1022,7 @@ void ProgramBinary::applyUniforms()
 }
 
 // Compiles the HLSL code of the attached shaders into executable binaries
-ID3D10Blob *ProgramBinary::compileToBinary(const char *hlsl, const char *profile, ID3DXConstantTable **constantTable)
+ID3D10Blob *ProgramBinary::compileToBinary(InfoLog &infoLog, const char *hlsl, const char *profile, ID3DXConstantTable **constantTable)
 {
     if (!hlsl)
     {
@@ -1058,13 +1053,13 @@ ID3D10Blob *ProgramBinary::compileToBinary(const char *hlsl, const char *profile
 
     ID3D10Blob *binary = NULL;
     ID3D10Blob *errorMessage = NULL;
-    result = D3DCompile(hlsl, strlen(hlsl), fakepath, NULL, NULL, "main", profile, flags, 0, &binary, &errorMessage);
+    result = D3DCompile(hlsl, strlen(hlsl), g_fakepath, NULL, NULL, "main", profile, flags, 0, &binary, &errorMessage);
 
     if (errorMessage)
     {
         const char *message = (const char*)errorMessage->GetBufferPointer();
 
-        appendToInfoLogSanitized(message);
+        infoLog.appendSanitized(message);
         TRACE("\n%s", hlsl);
         TRACE("\n%s", message);
 
@@ -1101,7 +1096,7 @@ ID3D10Blob *ProgramBinary::compileToBinary(const char *hlsl, const char *profile
 
 // Packs varyings into generic varying registers, using the algorithm from [OpenGL ES Shading Language 1.00 rev. 17] appendix A section 7 page 111
 // Returns the number of used varying registers, or -1 if unsuccesful
-int ProgramBinary::packVaryings(const Varying *packing[][4], FragmentShader *fragmentShader)
+int ProgramBinary::packVaryings(InfoLog &infoLog, const Varying *packing[][4], FragmentShader *fragmentShader)
 {
     Context *context = getContext();
     const int maxVaryingVectors = context->getMaximumVaryingVectors();
@@ -1229,7 +1224,7 @@ int ProgramBinary::packVaryings(const Varying *packing[][4], FragmentShader *fra
 
         if (!success)
         {
-            appendToInfoLog("Could not pack varying %s", varying->name.c_str());
+            infoLog.append("Could not pack varying %s", varying->name.c_str());
 
             return -1;
         }
@@ -1249,7 +1244,7 @@ int ProgramBinary::packVaryings(const Varying *packing[][4], FragmentShader *fra
     return registers;
 }
 
-bool ProgramBinary::linkVaryings(std::string& pixelHLSL, std::string& vertexHLSL, FragmentShader *fragmentShader, VertexShader *vertexShader)
+bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::string& vertexHLSL, FragmentShader *fragmentShader, VertexShader *vertexShader)
 {
     if (pixelHLSL.empty() || vertexHLSL.empty())
     {
@@ -1271,7 +1266,7 @@ bool ProgramBinary::linkVaryings(std::string& pixelHLSL, std::string& vertexHLSL
 
     // Map the varyings to the register file
     const Varying *packing[MAX_VARYING_VECTORS_SM3][4] = {NULL};
-    int registers = packVaryings(packing, fragmentShader);
+    int registers = packVaryings(infoLog, packing, fragmentShader);
 
     if (registers < 0)
     {
@@ -1285,7 +1280,7 @@ bool ProgramBinary::linkVaryings(std::string& pixelHLSL, std::string& vertexHLSL
 
     if (registers == maxVaryingVectors && fragmentShader->mUsesFragCoord)
     {
-        appendToInfoLog("No varying registers left to support gl_FragCoord");
+        infoLog.append("No varying registers left to support gl_FragCoord");
 
         return false;
     }
@@ -1300,7 +1295,7 @@ bool ProgramBinary::linkVaryings(std::string& pixelHLSL, std::string& vertexHLSL
             {
                 if (output->type != input->type || output->size != input->size)
                 {
-                    appendToInfoLog("Type of vertex varying %s does not match that of the fragment varying", output->name.c_str());
+                    infoLog.append("Type of vertex varying %s does not match that of the fragment varying", output->name.c_str());
 
                     return false;
                 }
@@ -1315,7 +1310,7 @@ bool ProgramBinary::linkVaryings(std::string& pixelHLSL, std::string& vertexHLSL
 
         if (!matched)
         {
-            appendToInfoLog("Fragment varying %s does not match any vertex varying", input->name.c_str());
+            infoLog.append("Fragment varying %s does not match any vertex varying", input->name.c_str());
 
             return false;
         }
@@ -1590,7 +1585,7 @@ bool ProgramBinary::linkVaryings(std::string& pixelHLSL, std::string& vertexHLSL
     return true;
 }
 
-bool ProgramBinary::link(const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader)
+bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader)
 {
     if (!fragmentShader || !fragmentShader->isCompiled())
     {
@@ -1605,7 +1600,7 @@ bool ProgramBinary::link(const AttributeBindings &attributeBindings, FragmentSha
     std::string pixelHLSL = fragmentShader->getHLSL();
     std::string vertexHLSL = vertexShader->getHLSL();
 
-    if (!linkVaryings(pixelHLSL, vertexHLSL, fragmentShader, vertexShader))
+    if (!linkVaryings(infoLog, pixelHLSL, vertexHLSL, fragmentShader, vertexShader))
     {
         return false;
     }
@@ -1614,8 +1609,8 @@ bool ProgramBinary::link(const AttributeBindings &attributeBindings, FragmentSha
     const char *vertexProfile = context->supportsShaderModel3() ? "vs_3_0" : "vs_2_0";
     const char *pixelProfile = context->supportsShaderModel3() ? "ps_3_0" : "ps_2_0";
 
-    ID3D10Blob *vertexBinary = compileToBinary(vertexHLSL.c_str(), vertexProfile, &mConstantTableVS);
-    ID3D10Blob *pixelBinary = compileToBinary(pixelHLSL.c_str(), pixelProfile, &mConstantTablePS);
+    ID3D10Blob *vertexBinary = compileToBinary(infoLog, vertexHLSL.c_str(), vertexProfile, &mConstantTableVS);
+    ID3D10Blob *pixelBinary = compileToBinary(infoLog, pixelHLSL.c_str(), pixelProfile, &mConstantTablePS);
 
     if (vertexBinary && pixelBinary)
     {
@@ -1636,17 +1631,17 @@ bool ProgramBinary::link(const AttributeBindings &attributeBindings, FragmentSha
 
         if (mVertexExecutable && mPixelExecutable)
         {
-            if (!linkAttributes(attributeBindings, fragmentShader, vertexShader))
+            if (!linkAttributes(infoLog, attributeBindings, fragmentShader, vertexShader))
             {
                 return false;
             }
 
-            if (!linkUniforms(GL_FRAGMENT_SHADER, mConstantTablePS))
+            if (!linkUniforms(infoLog, GL_FRAGMENT_SHADER, mConstantTablePS))
             {
                 return false;
             }
 
-            if (!linkUniforms(GL_VERTEX_SHADER, mConstantTableVS))
+            if (!linkUniforms(infoLog, GL_VERTEX_SHADER, mConstantTableVS))
             {
                 return false;
             }
@@ -1670,7 +1665,7 @@ bool ProgramBinary::link(const AttributeBindings &attributeBindings, FragmentSha
 }
 
 // Determines the mapping between GL attributes and Direct3D 9 vertex stream usage indices
-bool ProgramBinary::linkAttributes(const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader)
+bool ProgramBinary::linkAttributes(InfoLog &infoLog, const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader)
 {
     unsigned int usedLocations = 0;
 
@@ -1692,7 +1687,7 @@ bool ProgramBinary::linkAttributes(const AttributeBindings &attributeBindings, F
 
             if (rows + location > MAX_VERTEX_ATTRIBS)
             {
-                appendToInfoLog("Active attribute (%s) at location %d is too big to fit", attribute->name.c_str(), location);
+                infoLog.append("Active attribute (%s) at location %d is too big to fit", attribute->name.c_str(), location);
 
                 return false;
             }
@@ -1716,7 +1711,7 @@ bool ProgramBinary::linkAttributes(const AttributeBindings &attributeBindings, F
 
             if (availableIndex == -1 || availableIndex + rows > MAX_VERTEX_ATTRIBS)
             {
-                appendToInfoLog("Too many active attributes (%s)", attribute->name.c_str());
+                infoLog.append("Too many active attributes (%s)", attribute->name.c_str());
 
                 return false;   // Fail to link
             }
@@ -1739,7 +1734,7 @@ bool ProgramBinary::linkAttributes(const AttributeBindings &attributeBindings, F
     return true;
 }
 
-bool ProgramBinary::linkUniforms(GLenum shader, ID3DXConstantTable *constantTable)
+bool ProgramBinary::linkUniforms(InfoLog &infoLog, GLenum shader, ID3DXConstantTable *constantTable)
 {
     D3DXCONSTANTTABLE_DESC constantTableDescription;
 
@@ -1754,7 +1749,7 @@ bool ProgramBinary::linkUniforms(GLenum shader, ID3DXConstantTable *constantTabl
         HRESULT result = constantTable->GetConstantDesc(constantHandle, &constantDescription, &descriptionCount);
         ASSERT(SUCCEEDED(result));
 
-        if (!defineUniform(shader, constantHandle, constantDescription))
+        if (!defineUniform(infoLog, shader, constantHandle, constantDescription))
         {
             return false;
         }
@@ -1765,7 +1760,7 @@ bool ProgramBinary::linkUniforms(GLenum shader, ID3DXConstantTable *constantTabl
 
 // Adds the description of a constant found in the binary shader to the list of uniforms
 // Returns true if succesful (uniform not already defined)
-bool ProgramBinary::defineUniform(GLenum shader, const D3DXHANDLE &constantHandle, const D3DXCONSTANT_DESC &constantDescription, std::string name)
+bool ProgramBinary::defineUniform(InfoLog &infoLog, GLenum shader, const D3DXHANDLE &constantHandle, const D3DXCONSTANT_DESC &constantDescription, std::string name)
 {
     if (constantDescription.RegisterSet == D3DXRS_SAMPLER)
     {
@@ -1787,7 +1782,7 @@ bool ProgramBinary::defineUniform(GLenum shader, const D3DXHANDLE &constantHandl
                 }
                 else
                 {
-                    appendToInfoLog("Pixel shader sampler count exceeds MAX_TEXTURE_IMAGE_UNITS (%d).", MAX_TEXTURE_IMAGE_UNITS);
+                    infoLog.append("Pixel shader sampler count exceeds MAX_TEXTURE_IMAGE_UNITS (%d).", MAX_TEXTURE_IMAGE_UNITS);
                     return false;
                 }
             }
@@ -1805,7 +1800,7 @@ bool ProgramBinary::defineUniform(GLenum shader, const D3DXHANDLE &constantHandl
                 }
                 else
                 {
-                    appendToInfoLog("Vertex shader sampler count exceeds MAX_VERTEX_TEXTURE_IMAGE_UNITS (%d).", getContext()->getMaximumVertexTextureImageUnits());
+                    infoLog.append("Vertex shader sampler count exceeds MAX_VERTEX_TEXTURE_IMAGE_UNITS (%d).", getContext()->getMaximumVertexTextureImageUnits());
                     return false;
                 }
             }
@@ -1830,7 +1825,7 @@ bool ProgramBinary::defineUniform(GLenum shader, const D3DXHANDLE &constantHandl
 
                     std::string structIndex = (constantDescription.Elements > 1) ? ("[" + str(arrayIndex) + "]") : "";
 
-                    if (!defineUniform(shader, fieldHandle, fieldDescription, name + constantDescription.Name + structIndex + "."))
+                    if (!defineUniform(infoLog, shader, fieldHandle, fieldDescription, name + constantDescription.Name + structIndex + "."))
                     {
                         return false;
                     }
@@ -2197,105 +2192,9 @@ void ProgramBinary::applyUniformniv(Uniform *targetUniform, GLsizei count, const
     }
 }
 
-// append a santized message to the program info log.
-// The D3D compiler includes a fake file path in some of the warning or error 
-// messages, so lets remove all occurrences of this fake file path from the log.
-void ProgramBinary::appendToInfoLogSanitized(const char *message)
-{
-    std::string msg(message);
-
-    size_t found;
-    do
-    {
-        found = msg.find(fakepath);
-        if (found != std::string::npos)
-        {
-            msg.erase(found, strlen(fakepath));
-        }
-    }
-    while (found != std::string::npos);
-
-    appendToInfoLog("%s\n", msg.c_str());
-}
-
-void ProgramBinary::appendToInfoLog(const char *format, ...)
-{
-    if (!format)
-    {
-        return;
-    }
-
-    char info[1024];
-
-    va_list vararg;
-    va_start(vararg, format);
-    vsnprintf(info, sizeof(info), format, vararg);
-    va_end(vararg);
-
-    size_t infoLength = strlen(info);
-
-    if (!mInfoLog)
-    {
-        mInfoLog = new char[infoLength + 1];
-        strcpy(mInfoLog, info);
-    }
-    else
-    {
-        size_t logLength = strlen(mInfoLog);
-        char *newLog = new char[logLength + infoLength + 1];
-        strcpy(newLog, mInfoLog);
-        strcpy(newLog + logLength, info);
-
-        delete[] mInfoLog;
-        mInfoLog = newLog;
-    }
-}
-
-void ProgramBinary::resetInfoLog()
-{
-    if (mInfoLog)
-    {
-        delete [] mInfoLog;
-        mInfoLog = NULL;
-    }
-}
-
 bool ProgramBinary::isValidated() const 
 {
     return mValidated;
-}
-
-int ProgramBinary::getInfoLogLength() const
-{
-    if (!mInfoLog)
-    {
-        return 0;
-    }
-    else
-    {
-       return strlen(mInfoLog) + 1;
-    }
-}
-
-void ProgramBinary::getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog)
-{
-    int index = 0;
-
-    if (bufSize > 0)
-    {
-        if (mInfoLog)
-        {
-            index = std::min(bufSize - 1, (int)strlen(mInfoLog));
-            memcpy(infoLog, mInfoLog, index);
-        }
-
-        infoLog[index] = '\0';
-    }
-
-    if (length)
-    {
-        *length = index;
-    }
 }
 
 void ProgramBinary::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name)
@@ -2448,12 +2347,10 @@ GLint ProgramBinary::getActiveUniformMaxLength()
     return maxLength;
 }
 
-void ProgramBinary::validate()
+void ProgramBinary::validate(InfoLog &infoLog)
 {
-    resetInfoLog();
-
     applyUniforms();
-    if (!validateSamplers(true))
+    if (!validateSamplers(&infoLog))
     {
         mValidated = false;
     }
@@ -2463,7 +2360,7 @@ void ProgramBinary::validate()
     }
 }
 
-bool ProgramBinary::validateSamplers(bool logErrors)
+bool ProgramBinary::validateSamplers(InfoLog *infoLog)
 {
     // if any two active samplers in a program are of different types, but refer to the same
     // texture image unit, and this is the current program, then ValidateProgram will fail, and
@@ -2485,9 +2382,9 @@ bool ProgramBinary::validateSamplers(bool logErrors)
             
             if (unit >= maxCombinedTextureImageUnits)
             {
-                if (logErrors)
+                if (infoLog)
                 {
-                    appendToInfoLog("Sampler uniform (%d) exceeds MAX_COMBINED_TEXTURE_IMAGE_UNITS (%d)", unit, maxCombinedTextureImageUnits);
+                    infoLog->append("Sampler uniform (%d) exceeds MAX_COMBINED_TEXTURE_IMAGE_UNITS (%d)", unit, maxCombinedTextureImageUnits);
                 }
 
                 return false;
@@ -2497,9 +2394,9 @@ bool ProgramBinary::validateSamplers(bool logErrors)
             {
                 if (mSamplersPS[i].textureType != textureUnitType[unit])
                 {
-                    if (logErrors)
+                    if (infoLog)
                     {
-                        appendToInfoLog("Samplers of conflicting types refer to the same texture image unit (%d).", unit);
+                        infoLog->append("Samplers of conflicting types refer to the same texture image unit (%d).", unit);
                     }
 
                     return false;
@@ -2520,9 +2417,9 @@ bool ProgramBinary::validateSamplers(bool logErrors)
             
             if (unit >= maxCombinedTextureImageUnits)
             {
-                if (logErrors)
+                if (infoLog)
                 {
-                    appendToInfoLog("Sampler uniform (%d) exceeds MAX_COMBINED_TEXTURE_IMAGE_UNITS (%d)", unit, maxCombinedTextureImageUnits);
+                    infoLog->append("Sampler uniform (%d) exceeds MAX_COMBINED_TEXTURE_IMAGE_UNITS (%d)", unit, maxCombinedTextureImageUnits);
                 }
 
                 return false;
@@ -2532,9 +2429,9 @@ bool ProgramBinary::validateSamplers(bool logErrors)
             {
                 if (mSamplersVS[i].textureType != textureUnitType[unit])
                 {
-                    if (logErrors)
+                    if (infoLog)
                     {
-                        appendToInfoLog("Samplers of conflicting types refer to the same texture image unit (%d).", unit);
+                        infoLog->append("Samplers of conflicting types refer to the same texture image unit (%d).", unit);
                     }
 
                     return false;

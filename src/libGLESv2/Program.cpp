@@ -20,6 +20,8 @@
 
 namespace gl
 {
+const char * const g_fakepath = "C:\\fakepath";
+
 unsigned int Program::mCurrentSerial = 1;
 
 AttributeBindings::AttributeBindings()
@@ -28,6 +30,112 @@ AttributeBindings::AttributeBindings()
 
 AttributeBindings::~AttributeBindings()
 {
+}
+
+InfoLog::InfoLog() : mInfoLog(NULL)
+{
+}
+
+InfoLog::~InfoLog()
+{
+    delete[] mInfoLog;
+}
+
+
+int InfoLog::getLength() const
+{
+    if (!mInfoLog)
+    {
+        return 0;
+    }
+    else
+    {
+       return strlen(mInfoLog) + 1;
+    }
+}
+
+void InfoLog::getLog(GLsizei bufSize, GLsizei *length, char *infoLog)
+{
+    int index = 0;
+
+    if (bufSize > 0)
+    {
+        if (mInfoLog)
+        {
+            index = std::min(bufSize - 1, (int)strlen(mInfoLog));
+            memcpy(infoLog, mInfoLog, index);
+        }
+
+        infoLog[index] = '\0';
+    }
+
+    if (length)
+    {
+        *length = index;
+    }
+}
+
+// append a santized message to the program info log.
+// The D3D compiler includes a fake file path in some of the warning or error 
+// messages, so lets remove all occurrences of this fake file path from the log.
+void InfoLog::appendSanitized(const char *message)
+{
+    std::string msg(message);
+
+    size_t found;
+    do
+    {
+        found = msg.find(g_fakepath);
+        if (found != std::string::npos)
+        {
+            msg.erase(found, strlen(g_fakepath));
+        }
+    }
+    while (found != std::string::npos);
+
+    append("%s\n", msg.c_str());
+}
+
+void InfoLog::append(const char *format, ...)
+{
+    if (!format)
+    {
+        return;
+    }
+
+    char info[1024];
+
+    va_list vararg;
+    va_start(vararg, format);
+    vsnprintf(info, sizeof(info), format, vararg);
+    va_end(vararg);
+
+    size_t infoLength = strlen(info);
+
+    if (!mInfoLog)
+    {
+        mInfoLog = new char[infoLength + 1];
+        strcpy(mInfoLog, info);
+    }
+    else
+    {
+        size_t logLength = strlen(mInfoLog);
+        char *newLog = new char[logLength + infoLength + 1];
+        strcpy(newLog, mInfoLog);
+        strcpy(newLog + logLength, info);
+
+        delete[] mInfoLog;
+        mInfoLog = newLog;
+    }
+}
+
+void InfoLog::reset()
+{
+    if (mInfoLog)
+    {
+        delete [] mInfoLog;
+        mInfoLog = NULL;
+    }
 }
 
 Program::Program(ResourceManager *manager, GLuint handle) : mResourceManager(manager), mHandle(handle), mSerial(issueSerial())
@@ -138,8 +246,10 @@ void Program::link()
 {
     unlink(false);
 
+    mInfoLog.reset();
+
     mProgramBinary = new ProgramBinary;
-    if (!mProgramBinary->link(mAttributeBindings, mFragmentShader, mVertexShader))
+    if (!mProgramBinary->link(mInfoLog, mAttributeBindings, mFragmentShader, mVertexShader))
     {
         unlink(false);
     }
@@ -226,34 +336,12 @@ unsigned int Program::issueSerial()
 
 int Program::getInfoLogLength() const
 {
-    if (mProgramBinary)
-    {
-        return mProgramBinary->getInfoLogLength();
-    }
-    else
-    {
-       return 0;
-    }
+    return mInfoLog.getLength();
 }
 
 void Program::getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog)
 {
-    if (mProgramBinary)
-    {
-        return mProgramBinary->getInfoLog(bufSize, length, infoLog);
-    }
-    else
-    {
-        if (bufSize > 0)
-        {
-            infoLog[0] = '\0';
-        }
-
-        if (length)
-        {
-            *length = 0;
-        }
-    }
+    return mInfoLog.getLog(bufSize, length, infoLog);
 }
 
 void Program::getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shaders)
@@ -388,6 +476,20 @@ void Program::flagForDeletion()
 bool Program::isFlaggedForDeletion() const
 {
     return mDeleteStatus;
+}
+
+void Program::validate()
+{
+    mInfoLog.reset();
+
+    if (mProgramBinary)
+    {
+        mProgramBinary->validate(mInfoLog);
+    }
+    else
+    {
+        mInfoLog.append("Program has not been successfully linked.");
+    }
 }
 
 bool Program::isValidated() const

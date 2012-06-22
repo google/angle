@@ -23,6 +23,8 @@ class ResourceManager;
 class FragmentShader;
 class VertexShader;
 
+extern const char * const g_fakepath;
+
 class AttributeBindings
 {
   public:
@@ -34,6 +36,23 @@ class AttributeBindings
 
   private:
     std::set<std::string> mAttributeBinding[MAX_VERTEX_ATTRIBS];
+};
+
+class InfoLog
+{
+  public:
+    InfoLog();
+    ~InfoLog();
+
+    int getLength() const;
+    void getLog(GLsizei bufSize, GLsizei *length, char *infoLog);
+
+    void appendSanitized(const char *message);
+    void append(const char *info, ...);
+    void reset();
+  private:
+    DISALLOW_COPY_AND_ASSIGN(InfoLog);
+    char *mInfoLog;
 };
 
 class Program
@@ -71,6 +90,7 @@ class Program
     void flagForDeletion();
     bool isFlaggedForDeletion() const;
 
+    void validate();
     bool isValidated() const;
 
     unsigned int getSerial() const;
@@ -98,6 +118,8 @@ class Program
 
     ResourceManager *mResourceManager;
     const GLuint mHandle;
+
+    InfoLog mInfoLog;
 };
 }
 

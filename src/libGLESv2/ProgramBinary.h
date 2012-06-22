@@ -128,9 +128,7 @@ class ProgramBinary
     void dirtyAllUniforms();
     void applyUniforms();
 
-    bool link(const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader);
-    int getInfoLogLength() const;
-    void getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog);
+    bool link(InfoLog &infoLog, const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader);
     void getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shaders);
 
     void getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name);
@@ -141,8 +139,8 @@ class ProgramBinary
     GLint getActiveUniformCount();
     GLint getActiveUniformMaxLength();
 
-    void validate();
-    bool validateSamplers(bool logErrors);
+    void validate(InfoLog &infoLog);
+    bool validateSamplers(InfoLog *infoLog);
     bool isValidated() const;
 
     static std::string decorateAttribute(const std::string &name);    // Prepend an underscore
@@ -151,15 +149,15 @@ class ProgramBinary
   private:
     DISALLOW_COPY_AND_ASSIGN(ProgramBinary);
 
-    ID3D10Blob *compileToBinary(const char *hlsl, const char *profile, ID3DXConstantTable **constantTable);
+    ID3D10Blob *compileToBinary(InfoLog &infoLog, const char *hlsl, const char *profile, ID3DXConstantTable **constantTable);
 
-    int packVaryings(const Varying *packing[][4], FragmentShader *fragmentShader);
-    bool linkVaryings(std::string& pixelHLSL, std::string& vertexHLSL, FragmentShader *fragmentShader, VertexShader *vertexShader);
+    int packVaryings(InfoLog &infoLog, const Varying *packing[][4], FragmentShader *fragmentShader);
+    bool linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::string& vertexHLSL, FragmentShader *fragmentShader, VertexShader *vertexShader);
 
-    bool linkAttributes(const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader);
+    bool linkAttributes(InfoLog &infoLog, const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader);
 
-    bool linkUniforms(GLenum shader, ID3DXConstantTable *constantTable);
-    bool defineUniform(GLenum shader, const D3DXHANDLE &constantHandle, const D3DXCONSTANT_DESC &constantDescription, std::string name = "");
+    bool linkUniforms(InfoLog &infoLog, GLenum shader, ID3DXConstantTable *constantTable);
+    bool defineUniform(InfoLog &infoLog, GLenum shader, const D3DXHANDLE &constantHandle, const D3DXCONSTANT_DESC &constantDescription, std::string name = "");
     bool defineUniform(GLenum shader, const D3DXCONSTANT_DESC &constantDescription, const std::string &name);
     Uniform *createUniform(const D3DXCONSTANT_DESC &constantDescription, const std::string &name);
     bool applyUniformnfv(Uniform *targetUniform, const GLfloat *v);
@@ -169,12 +167,6 @@ class ProgramBinary
     bool applyUniform4iv(Uniform *targetUniform, GLsizei count, const GLint *v);
     void applyUniformniv(Uniform *targetUniform, GLsizei count, const D3DXVECTOR4 *vector);
     void applyUniformnbv(Uniform *targetUniform, GLsizei count, int width, const GLboolean *v);
-
-    void appendToInfoLogSanitized(const char *message);
-    void appendToInfoLog(const char *info, ...);
-    void resetInfoLog();
-
-    static unsigned int issueSerial();
 
     IDirect3DDevice9 *mDevice;
 
@@ -212,7 +204,6 @@ class ProgramBinary
     GLint mDxFrontCCWLocation;
     GLint mDxPointsOrLinesLocation;
 
-    char *mInfoLog;
     bool mValidated;
 };
 }
