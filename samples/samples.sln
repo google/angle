@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C++ Express 2008
+# Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "esUtil", "gles2_book\Common\esUtil.vcproj", "{47C93F52-AB4E-4FF9-8D4F-B38CD60A183F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{B5871A7A-968C-42E3-A33B-981E6F448E78} = {B5871A7A-968C-42E3-A33B-981E6F448E78}
@@ -72,11 +72,16 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "essl_to_hlsl", "translator\
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "translator_common", "..\src\compiler\translator_common.vcproj", "{5B3A6DB8-1E7E-40D7-92B9-DA8AAE619FAD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AEB79EF2-8F63-292B-1DD2-F41859121AF4} = {AEB79EF2-8F63-292B-1DD2-F41859121AF4}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PostSubBuffer", "gles2_book\PostSubBuffer\PostSubBuffer.vcproj", "{667CE95F-5DD8-4495-8C18-5CA8A175B12D}"
 	ProjectSection(ProjectDependencies) = postProject
 		{47C93F52-AB4E-4FF9-8D4F-B38CD60A183F} = {47C93F52-AB4E-4FF9-8D4F-B38CD60A183F}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "preprocessor", "..\src\preprocessor.vcproj", "{AEB79EF2-8F63-292B-1DD2-F41859121AF4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -148,6 +153,10 @@ Global
 		{667CE95F-5DD8-4495-8C18-5CA8A175B12D}.Debug|Win32.Build.0 = Debug|Win32
 		{667CE95F-5DD8-4495-8C18-5CA8A175B12D}.Release|Win32.ActiveCfg = Release|Win32
 		{667CE95F-5DD8-4495-8C18-5CA8A175B12D}.Release|Win32.Build.0 = Release|Win32
+		{AEB79EF2-8F63-292B-1DD2-F41859121AF4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AEB79EF2-8F63-292B-1DD2-F41859121AF4}.Debug|Win32.Build.0 = Debug|Win32
+		{AEB79EF2-8F63-292B-1DD2-F41859121AF4}.Release|Win32.ActiveCfg = Release|Win32
+		{AEB79EF2-8F63-292B-1DD2-F41859121AF4}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
