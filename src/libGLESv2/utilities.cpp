@@ -612,9 +612,6 @@ D3DCUBEMAP_FACES ConvertCubeFace(GLenum cubeFace)
 {
     D3DCUBEMAP_FACES face = D3DCUBEMAP_FACE_POSITIVE_X;
 
-    // Map a cube map texture target to the corresponding  D3D surface index. Note that the
-    // Y faces are swapped because the Y coordinate to the texture lookup intrinsic functions
-    // are negated in the pixel shader.
     switch (cubeFace)
     {
       case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
@@ -624,10 +621,10 @@ D3DCUBEMAP_FACES ConvertCubeFace(GLenum cubeFace)
         face = D3DCUBEMAP_FACE_NEGATIVE_X;
         break;
       case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-        face = D3DCUBEMAP_FACE_NEGATIVE_Y;
+        face = D3DCUBEMAP_FACE_POSITIVE_Y;
         break;
       case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-        face = D3DCUBEMAP_FACE_POSITIVE_Y;
+        face = D3DCUBEMAP_FACE_NEGATIVE_Y;
         break;
       case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
         face = D3DCUBEMAP_FACE_POSITIVE_Z;

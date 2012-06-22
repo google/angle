@@ -1955,11 +1955,10 @@ bool Context::applyRenderTarget(bool ignoreViewport)
     }
     else
     {
-        RECT rect = transformPixelRect(mState.viewportX, mState.viewportY, mState.viewportWidth, mState.viewportHeight, mRenderTargetDesc.Height);
-        viewport.X = clamp(rect.left, 0L, static_cast<LONG>(mRenderTargetDesc.Width));
-        viewport.Y = clamp(rect.top, 0L, static_cast<LONG>(mRenderTargetDesc.Height));
-        viewport.Width = clamp(rect.right - rect.left, 0L, static_cast<LONG>(mRenderTargetDesc.Width) - static_cast<LONG>(viewport.X));
-        viewport.Height = clamp(rect.bottom - rect.top, 0L, static_cast<LONG>(mRenderTargetDesc.Height) - static_cast<LONG>(viewport.Y));
+        viewport.X = clamp(mState.viewportX, 0L, static_cast<LONG>(mRenderTargetDesc.Width));
+        viewport.Y = clamp(mState.viewportY, 0L, static_cast<LONG>(mRenderTargetDesc.Height));
+        viewport.Width = clamp(mState.viewportWidth, 0L, static_cast<LONG>(mRenderTargetDesc.Width) - static_cast<LONG>(viewport.X));
+        viewport.Height = clamp(mState.viewportHeight, 0L, static_cast<LONG>(mRenderTargetDesc.Height) - static_cast<LONG>(viewport.Y));
         viewport.MinZ = zNear;
         viewport.MaxZ = zFar;
     }
@@ -1981,11 +1980,11 @@ bool Context::applyRenderTarget(bool ignoreViewport)
     {
         if (mState.scissorTest)
         {
-            RECT rect = transformPixelRect(mState.scissorX, mState.scissorY, mState.scissorWidth, mState.scissorHeight, mRenderTargetDesc.Height);
-            rect.left = clamp(rect.left, 0L, static_cast<LONG>(mRenderTargetDesc.Width));
-            rect.top = clamp(rect.top, 0L, static_cast<LONG>(mRenderTargetDesc.Height));
-            rect.right = clamp(rect.right, 0L, static_cast<LONG>(mRenderTargetDesc.Width));
-            rect.bottom = clamp(rect.bottom, 0L, static_cast<LONG>(mRenderTargetDesc.Height));
+            RECT rect;
+            rect.left = clamp(mState.scissorX, 0L, static_cast<LONG>(mRenderTargetDesc.Width));
+            rect.top = clamp(mState.scissorY, 0L, static_cast<LONG>(mRenderTargetDesc.Height));
+            rect.right = clamp(mState.scissorX + mState.scissorWidth, 0L, static_cast<LONG>(mRenderTargetDesc.Width));
+            rect.bottom = clamp(mState.scissorY + mState.scissorHeight, 0L, static_cast<LONG>(mRenderTargetDesc.Height));
             mDevice->SetScissorRect(&rect);
             mDevice->SetRenderState(D3DRS_SCISSORTESTENABLE, TRUE);
         }
@@ -2006,10 +2005,9 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         GLfloat xy[2] = {1.0f / viewport.Width, -1.0f / viewport.Height};
         programBinary->setUniform2fv(halfPixelSize, 1, xy);
 
-        // These values are used for computing gl_FragCoord in Program::linkVaryings(). The approach depends on Shader Model 3.0 support.
+        // These values are used for computing gl_FragCoord in Program::linkVaryings().
         GLint coord = programBinary->getDxCoordLocation();
-        float h = mSupportsShaderModel3 ? mRenderTargetDesc.Height : mState.viewportHeight / 2.0f;
-        GLfloat whxy[4] = {mState.viewportWidth / 2.0f, h, 
+        GLfloat whxy[4] = {mState.viewportWidth / 2.0f, mState.viewportHeight / 2.0f, 
                           (float)mState.viewportX + mState.viewportWidth / 2.0f, 
                           (float)mState.viewportY + mState.viewportHeight / 2.0f};
         programBinary->setUniform4fv(coord, 1, whxy);
@@ -2035,10 +2033,8 @@ void Context::applyState(GLenum drawMode)
 
     Framebuffer *framebufferObject = getDrawFramebuffer();
 
-    GLenum adjustedFrontFace = adjustWinding(mState.frontFace);
-
     GLint frontCCW = programBinary->getDxFrontCCWLocation();
-    GLint ccw = (adjustedFrontFace == GL_CCW);
+    GLint ccw = (mState.frontFace == GL_CCW);
     programBinary->setUniform1iv(frontCCW, 1, &ccw);
 
     GLint pointsOrLines = programBinary->getDxPointsOrLinesLocation();
@@ -2057,7 +2053,7 @@ void Context::applyState(GLenum drawMode)
     {
         if (mState.cullFace)
         {
-            mDevice->SetRenderState(D3DRS_CULLMODE, es2dx::ConvertCullMode(mState.cullMode, adjustedFrontFace));
+            mDevice->SetRenderState(D3DRS_CULLMODE, es2dx::ConvertCullMode(mState.cullMode, mState.frontFace));
         }
         else
         {
@@ -2157,32 +2153,32 @@ void Context::applyState(GLenum drawMode)
             gl::Renderbuffer *stencilbuffer = framebufferObject->getStencilbuffer();
             GLuint maxStencil = (1 << stencilbuffer->getStencilSize()) - 1;
 
-            mDevice->SetRenderState(adjustedFrontFace == GL_CCW ? D3DRS_STENCILWRITEMASK : D3DRS_CCW_STENCILWRITEMASK, mState.stencilWritemask);
-            mDevice->SetRenderState(adjustedFrontFace == GL_CCW ? D3DRS_STENCILFUNC : D3DRS_CCW_STENCILFUNC, 
+            mDevice->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILWRITEMASK : D3DRS_CCW_STENCILWRITEMASK, mState.stencilWritemask);
+            mDevice->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILFUNC : D3DRS_CCW_STENCILFUNC, 
                                    es2dx::ConvertComparison(mState.stencilFunc));
 
-            mDevice->SetRenderState(adjustedFrontFace == GL_CCW ? D3DRS_STENCILREF : D3DRS_CCW_STENCILREF, (mState.stencilRef < (GLint)maxStencil) ? mState.stencilRef : maxStencil);
-            mDevice->SetRenderState(adjustedFrontFace == GL_CCW ? D3DRS_STENCILMASK : D3DRS_CCW_STENCILMASK, mState.stencilMask);
+            mDevice->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILREF : D3DRS_CCW_STENCILREF, (mState.stencilRef < (GLint)maxStencil) ? mState.stencilRef : maxStencil);
+            mDevice->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILMASK : D3DRS_CCW_STENCILMASK, mState.stencilMask);
 
-            mDevice->SetRenderState(adjustedFrontFace == GL_CCW ? D3DRS_STENCILFAIL : D3DRS_CCW_STENCILFAIL, 
+            mDevice->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILFAIL : D3DRS_CCW_STENCILFAIL, 
                                    es2dx::ConvertStencilOp(mState.stencilFail));
-            mDevice->SetRenderState(adjustedFrontFace == GL_CCW ? D3DRS_STENCILZFAIL : D3DRS_CCW_STENCILZFAIL, 
+            mDevice->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILZFAIL : D3DRS_CCW_STENCILZFAIL, 
                                    es2dx::ConvertStencilOp(mState.stencilPassDepthFail));
-            mDevice->SetRenderState(adjustedFrontFace == GL_CCW ? D3DRS_STENCILPASS : D3DRS_CCW_STENCILPASS, 
+            mDevice->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILPASS : D3DRS_CCW_STENCILPASS, 
                                    es2dx::ConvertStencilOp(mState.stencilPassDepthPass));
 
-            mDevice->SetRenderState(adjustedFrontFace == GL_CW ? D3DRS_STENCILWRITEMASK : D3DRS_CCW_STENCILWRITEMASK, mState.stencilBackWritemask);
-            mDevice->SetRenderState(adjustedFrontFace == GL_CW ? D3DRS_STENCILFUNC : D3DRS_CCW_STENCILFUNC, 
+            mDevice->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILWRITEMASK : D3DRS_CCW_STENCILWRITEMASK, mState.stencilBackWritemask);
+            mDevice->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILFUNC : D3DRS_CCW_STENCILFUNC, 
                                    es2dx::ConvertComparison(mState.stencilBackFunc));
 
-            mDevice->SetRenderState(adjustedFrontFace == GL_CW ? D3DRS_STENCILREF : D3DRS_CCW_STENCILREF, (mState.stencilBackRef < (GLint)maxStencil) ? mState.stencilBackRef : maxStencil);
-            mDevice->SetRenderState(adjustedFrontFace == GL_CW ? D3DRS_STENCILMASK : D3DRS_CCW_STENCILMASK, mState.stencilBackMask);
+            mDevice->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILREF : D3DRS_CCW_STENCILREF, (mState.stencilBackRef < (GLint)maxStencil) ? mState.stencilBackRef : maxStencil);
+            mDevice->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILMASK : D3DRS_CCW_STENCILMASK, mState.stencilBackMask);
 
-            mDevice->SetRenderState(adjustedFrontFace == GL_CW ? D3DRS_STENCILFAIL : D3DRS_CCW_STENCILFAIL, 
+            mDevice->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILFAIL : D3DRS_CCW_STENCILFAIL, 
                                    es2dx::ConvertStencilOp(mState.stencilBackFail));
-            mDevice->SetRenderState(adjustedFrontFace == GL_CW ? D3DRS_STENCILZFAIL : D3DRS_CCW_STENCILZFAIL, 
+            mDevice->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILZFAIL : D3DRS_CCW_STENCILZFAIL, 
                                    es2dx::ConvertStencilOp(mState.stencilBackPassDepthFail));
-            mDevice->SetRenderState(adjustedFrontFace == GL_CW ? D3DRS_STENCILPASS : D3DRS_CCW_STENCILPASS, 
+            mDevice->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILPASS : D3DRS_CCW_STENCILPASS, 
                                    es2dx::ConvertStencilOp(mState.stencilBackPassDepthPass));
         }
         else
@@ -2475,7 +2471,7 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
 
     HRESULT result;
     IDirect3DSurface9 *systemSurface = NULL;
-    bool directToPixels = getPackReverseRowOrder() && getPackAlignment() <= 4 && mDisplay->isD3d9ExDevice() &&
+    bool directToPixels = !getPackReverseRowOrder() && getPackAlignment() <= 4 && mDisplay->isD3d9ExDevice() &&
                           x == 0 && y == 0 && UINT(width) == desc.Width && UINT(height) == desc.Height &&
                           desc.Format == D3DFMT_A8R8G8B8 && format == GL_BGRA_EXT && type == GL_UNSIGNED_BYTE;
     if (directToPixels)
@@ -2528,13 +2524,13 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
         return;
     }
 
-    D3DLOCKED_RECT lock;
-    RECT rect = transformPixelRect(x, y, width, height, desc.Height);
-    rect.left = clamp(rect.left, 0L, static_cast<LONG>(desc.Width));
-    rect.top = clamp(rect.top, 0L, static_cast<LONG>(desc.Height));
-    rect.right = clamp(rect.right, 0L, static_cast<LONG>(desc.Width));
-    rect.bottom = clamp(rect.bottom, 0L, static_cast<LONG>(desc.Height));
+    RECT rect;
+    rect.left = clamp(x, 0L, static_cast<LONG>(desc.Width));
+    rect.top = clamp(y, 0L, static_cast<LONG>(desc.Height));
+    rect.right = clamp(x + width, 0L, static_cast<LONG>(desc.Width));
+    rect.bottom = clamp(y + height, 0L, static_cast<LONG>(desc.Height));
 
+    D3DLOCKED_RECT lock;
     result = systemSurface->LockRect(&lock, &rect, D3DLOCK_READONLY);
 
     if (FAILED(result))
@@ -2552,13 +2548,13 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
     int inputPitch;
     if (getPackReverseRowOrder())
     {
-        source = (unsigned char*)lock.pBits;
-        inputPitch = lock.Pitch;
+        source = ((unsigned char*)lock.pBits) + lock.Pitch * (rect.bottom - rect.top - 1);
+        inputPitch = -lock.Pitch;
     }
     else
     {
-        source = ((unsigned char*)lock.pBits) + lock.Pitch * (rect.bottom - rect.top - 1);
-        inputPitch = -lock.Pitch;
+        source = (unsigned char*)lock.pBits;
+        inputPitch = lock.Pitch;
     }
 
     for (int j = 0; j < rect.bottom - rect.top; j++)
@@ -3879,17 +3875,17 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
 
     if (srcY0 < srcY1)
     {
-        sourceRect.top = readBufferHeight - srcY1;
-        destRect.top = drawBufferHeight - dstY1;
-        sourceRect.bottom = readBufferHeight - srcY0;
-        destRect.bottom = drawBufferHeight - dstY0;
+        sourceRect.bottom = srcY1;
+        destRect.bottom = dstY1;
+        sourceRect.top = srcY0;
+        destRect.top = dstY0;
     }
     else
     {
-        sourceRect.top = readBufferHeight - srcY0;
-        destRect.top = drawBufferHeight - dstY0;
-        sourceRect.bottom = readBufferHeight - srcY1;
-        destRect.bottom = drawBufferHeight - dstY1;
+        sourceRect.bottom = srcY0;
+        destRect.bottom = dstY0;
+        sourceRect.top = srcY1;
+        destRect.top = dstY1;
     }
 
     RECT sourceScissoredRect = sourceRect;

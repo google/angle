@@ -1391,7 +1391,7 @@ bool ProgramBinary::linkVaryings(std::string& pixelHLSL, std::string& vertexHLSL
                    "\n"
                    "    VS_OUTPUT output;\n"
                    "    output.gl_Position.x = gl_Position.x - dx_HalfPixelSize.x * gl_Position.w;\n"
-                   "    output.gl_Position.y = gl_Position.y - dx_HalfPixelSize.y * gl_Position.w;\n"
+                   "    output.gl_Position.y = -(gl_Position.y + dx_HalfPixelSize.y * gl_Position.w);\n"
                    "    output.gl_Position.z = (gl_Position.z + gl_Position.w) * 0.5;\n"
                    "    output.gl_Position.w = gl_Position.w;\n";
 
@@ -1524,15 +1524,14 @@ bool ProgramBinary::linkVaryings(std::string& pixelHLSL, std::string& vertexHLSL
         
         if (sm3)
         {
-            // dx_Coord.y contains the render target height. See Context::applyRenderTarget()
             pixelHLSL += "    gl_FragCoord.x = input.dx_VPos.x + 0.5;\n"
-                          "    gl_FragCoord.y = dx_Coord.y - input.dx_VPos.y - 0.5;\n";
+                          "    gl_FragCoord.y = input.dx_VPos.y + 0.5;\n";
         }
         else
         {
             // dx_Coord contains the viewport width/2, height/2, center.x and center.y. See Context::applyRenderTarget()
             pixelHLSL += "    gl_FragCoord.x = (input.gl_FragCoord.x * rhw) * dx_Coord.x + dx_Coord.z;\n"
-                          "    gl_FragCoord.y = -(input.gl_FragCoord.y * rhw) * dx_Coord.y + dx_Coord.w;\n";
+                          "    gl_FragCoord.y = (input.gl_FragCoord.y * rhw) * dx_Coord.y + dx_Coord.w;\n";
         }
         
         pixelHLSL += "    gl_FragCoord.z = (input.gl_FragCoord.z * rhw) * dx_Depth.x + dx_Depth.y;\n"
@@ -1541,7 +1540,8 @@ bool ProgramBinary::linkVaryings(std::string& pixelHLSL, std::string& vertexHLSL
 
     if (fragmentShader->mUsesPointCoord && sm3)
     {
-        pixelHLSL += "    gl_PointCoord = input.gl_PointCoord;\n";
+        pixelHLSL += "    gl_PointCoord.x = input.gl_PointCoord.x;\n";
+        pixelHLSL += "    gl_PointCoord.y = 1.0 - input.gl_PointCoord.y;\n";
     }
 
     if (fragmentShader->mUsesFrontFacing)

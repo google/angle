@@ -291,7 +291,11 @@ void Image::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint y
 
     if (sourceSurface && sourceSurface != destSurface)
     {
-        RECT rect = transformPixelRect(xoffset, yoffset, width, height, mHeight);
+        RECT rect;
+        rect.left = xoffset;
+        rect.top = yoffset;
+        rect.right = xoffset + width;
+        rect.bottom = yoffset + height;
 
         if (mD3DPool == D3DPOOL_MANAGED)
         {
@@ -309,11 +313,15 @@ void Image::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint y
 }
 
 // Store the pixel rectangle designated by xoffset,yoffset,width,height with pixels stored as format/type at input
-// into the target pixel rectangle at locked.pBits with locked.Pitch bytes in between each line.
+// into the target pixel rectangle.
 void Image::loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum type,
                      GLint unpackAlignment, const void *input)
 {
-    RECT lockRect = transformPixelRect(xoffset, yoffset, width, height, mHeight);
+    RECT lockRect =
+    {
+        xoffset, yoffset,
+        xoffset + width, yoffset + height
+    };
 
     D3DLOCKED_RECT locked;
     HRESULT result = lock(&locked, &lockRect);
@@ -322,8 +330,7 @@ void Image::loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height
         return;
     }
 
-    GLsizei inputPitch = -ComputePitch(width, mFormat, type, unpackAlignment);
-    input = ((char*)input) - inputPitch * (height - 1);
+    GLsizei inputPitch = ComputePitch(width, mFormat, type, unpackAlignment);
 
     switch (type)
     {
@@ -908,7 +915,10 @@ void Image::loadCompressedData(GLint xoffset, GLint yoffset, GLsizei width, GLsi
     ASSERT(xoffset % 4 == 0);
     ASSERT(yoffset % 4 == 0);
 
-    RECT lockRect = transformPixelRect(xoffset, yoffset, width, height, mHeight);
+    RECT lockRect = {
+        xoffset, yoffset,
+        xoffset + width, yoffset + height
+    };
 
     D3DLOCKED_RECT locked;
     HRESULT result = lock(&locked, &lockRect);
@@ -917,276 +927,15 @@ void Image::loadCompressedData(GLint xoffset, GLint yoffset, GLsizei width, GLsi
         return;
     }
 
-    GLsizei inputPitch = -ComputeCompressedPitch(width, mFormat);
     GLsizei inputSize = ComputeCompressedSize(width, height, mFormat);
-    input = ((char*)input) + inputSize + inputPitch;
-
-    switch (getD3DFormat())
+    GLsizei inputPitch = ComputeCompressedPitch(width, mFormat);
+    int rows = inputSize / inputPitch;
+    for (int i = 0; i < rows; ++i)
     {
-        case D3DFMT_DXT1:
-          loadDXT1Data(width, height, inputPitch, input, locked.Pitch, locked.pBits);
-          break;
-        case D3DFMT_DXT3:
-          loadDXT3Data(width, height, inputPitch, input, locked.Pitch, locked.pBits);
-          break;
-        case D3DFMT_DXT5:
-          loadDXT5Data(width, height, inputPitch, input, locked.Pitch, locked.pBits);
-          break;
+        memcpy((void*)((BYTE*)locked.pBits + i * locked.Pitch), (void*)((BYTE*)input + i * inputPitch), inputPitch);
     }
 
     unlock();
-}
-
-static void FlipCopyDXT1BlockFull(const unsigned int* source, unsigned int* dest) {
-  // A DXT1 block layout is:
-  // [0-1] color0.
-  // [2-3] color1.
-  // [4-7] color bitmap, 2 bits per pixel.
-  // So each of the 4-7 bytes represents one line, flipping a block is just
-  // flipping those bytes.
-
-  // First 32-bits is two RGB565 colors shared by tile and does not need to be modified.
-  dest[0] = source[0];
-
-  // Second 32-bits contains 4 rows of 4 2-bit interpolants between the colors. All rows should be flipped.
-  dest[1] = (source[1] >> 24) |
-            ((source[1] << 8) & 0x00FF0000) |
-            ((source[1] >> 8) & 0x0000FF00) |
-            (source[1] << 24);
-}
-
-// Flips the first 2 lines of a DXT1 block in the y direction.
-static void FlipCopyDXT1BlockHalf(const unsigned int* source, unsigned int* dest) {
-  // See layout above.
-  dest[0] = source[0];
-  dest[1] = ((source[1] << 8) & 0x0000FF00) |
-            ((source[1] >> 8) & 0x000000FF);
-}
-
-// Flips a full DXT3 block in the y direction.
-static void FlipCopyDXT3BlockFull(const unsigned int* source, unsigned int* dest) {
-  // A DXT3 block layout is:
-  // [0-7]  alpha bitmap, 4 bits per pixel.
-  // [8-15] a DXT1 block.
-
-  // First and Second 32 bits are 4bit per pixel alpha and need to be flipped.
-  dest[0] = (source[1] >> 16) | (source[1] << 16);
-  dest[1] = (source[0] >> 16) | (source[0] << 16);
-
-  // And flip the DXT1 block using the above function.
-  FlipCopyDXT1BlockFull(source + 2, dest + 2);
-}
-
-// Flips the first 2 lines of a DXT3 block in the y direction.
-static void FlipCopyDXT3BlockHalf(const unsigned int* source, unsigned int* dest) {
-  // See layout above.
-  dest[0] = (source[1] >> 16) | (source[1] << 16);
-  FlipCopyDXT1BlockHalf(source + 2, dest + 2);
-}
-
-// Flips a full DXT5 block in the y direction.
-static void FlipCopyDXT5BlockFull(const unsigned int* source, unsigned int* dest) {
-  // A DXT5 block layout is:
-  // [0]    alpha0.
-  // [1]    alpha1.
-  // [2-7]  alpha bitmap, 3 bits per pixel.
-  // [8-15] a DXT1 block.
-
-  // The alpha bitmap doesn't easily map lines to bytes, so we have to
-  // interpret it correctly.  Extracted from
-  // http://www.opengl.org/registry/specs/EXT/texture_compression_s3tc.txt :
-  //
-  //   The 6 "bits" bytes of the block are decoded into one 48-bit integer:
-  //
-  //     bits = bits_0 + 256 * (bits_1 + 256 * (bits_2 + 256 * (bits_3 +
-  //                   256 * (bits_4 + 256 * bits_5))))
-  //
-  //   bits is a 48-bit unsigned integer, from which a three-bit control code
-  //   is extracted for a texel at location (x,y) in the block using:
-  //
-  //       code(x,y) = bits[3*(4*y+x)+1..3*(4*y+x)+0]
-  //
-  //   where bit 47 is the most significant and bit 0 is the least
-  //   significant bit.
-  const unsigned char* sourceBytes = static_cast<const unsigned char*>(static_cast<const void*>(source));
-  unsigned char* destBytes = static_cast<unsigned char*>(static_cast<void*>(dest));
-  unsigned int line_0_1 = sourceBytes[2] + 256 * (sourceBytes[3] + 256 * sourceBytes[4]);
-  unsigned int line_2_3 = sourceBytes[5] + 256 * (sourceBytes[6] + 256 * sourceBytes[7]);
-  // swap lines 0 and 1 in line_0_1.
-  unsigned int line_1_0 = ((line_0_1 & 0x000fff) << 12) |
-                          ((line_0_1 & 0xfff000) >> 12);
-  // swap lines 2 and 3 in line_2_3.
-  unsigned int line_3_2 = ((line_2_3 & 0x000fff) << 12) |
-                          ((line_2_3 & 0xfff000) >> 12);
-  destBytes[0] = sourceBytes[0];
-  destBytes[1] = sourceBytes[1];
-  destBytes[2] = line_3_2 & 0xff;
-  destBytes[3] = (line_3_2 & 0xff00) >> 8;
-  destBytes[4] = (line_3_2 & 0xff0000) >> 16;
-  destBytes[5] = line_1_0 & 0xff;
-  destBytes[6] = (line_1_0 & 0xff00) >> 8;
-  destBytes[7] = (line_1_0 & 0xff0000) >> 16;
-
-  // And flip the DXT1 block using the above function.
-  FlipCopyDXT1BlockFull(source + 2, dest + 2);
-}
-
-// Flips the first 2 lines of a DXT5 block in the y direction.
-static void FlipCopyDXT5BlockHalf(const unsigned int* source, unsigned int* dest) {
-  // See layout above.
-  const unsigned char* sourceBytes = static_cast<const unsigned char*>(static_cast<const void*>(source));
-  unsigned char* destBytes = static_cast<unsigned char*>(static_cast<void*>(dest));
-  unsigned int line_0_1 = sourceBytes[2] + 256 * (sourceBytes[3] + 256 * sourceBytes[4]);
-  unsigned int line_1_0 = ((line_0_1 & 0x000fff) << 12) |
-                          ((line_0_1 & 0xfff000) >> 12);
-  destBytes[0] = sourceBytes[0];
-  destBytes[1] = sourceBytes[1];
-  destBytes[2] = line_1_0 & 0xff;
-  destBytes[3] = (line_1_0 & 0xff00) >> 8;
-  destBytes[4] = (line_1_0 & 0xff0000) >> 16;
-  FlipCopyDXT1BlockHalf(source + 2, dest + 2);
-}
-
-void Image::loadDXT1Data(GLsizei width, GLsizei height,
-                         int inputPitch, const void *input, size_t outputPitch, void *output) const
-{
-    ASSERT(width % 4 == 0 || width == 2 || width == 1);
-    ASSERT(inputPitch % 8 == 0);
-    ASSERT(outputPitch % 8 == 0);
-
-    const unsigned int *source = reinterpret_cast<const unsigned int*>(input);
-    unsigned int *dest = reinterpret_cast<unsigned int*>(output);
-
-    // Round width up in case it is less than 4.
-    int blocksAcross = (width + 3) / 4;
-    int intsAcross = blocksAcross * 2;
-
-    switch (height)
-    {
-        case 1:
-            for (int x = 0; x < intsAcross; x += 2)
-            {
-                // just copy the block
-                dest[x] = source[x];
-                dest[x + 1] = source[x + 1];
-            }
-            break;
-        case 2:
-            for (int x = 0; x < intsAcross; x += 2)
-            {
-                FlipCopyDXT1BlockHalf(source + x, dest + x);
-            }
-            break;
-        default:
-            ASSERT(height % 4 == 0);
-            for (int y = 0; y < height / 4; ++y)
-            {
-                const unsigned int *source = reinterpret_cast<const unsigned int*>(static_cast<const unsigned char*>(input) + y * inputPitch);
-                unsigned int *dest = reinterpret_cast<unsigned int*>(static_cast<unsigned char*>(output) + y * outputPitch);
-
-                for (int x = 0; x < intsAcross; x += 2)
-                {
-                    FlipCopyDXT1BlockFull(source + x, dest + x);
-                }
-            }
-            break;
-    }
-}
-
-void Image::loadDXT3Data(GLsizei width, GLsizei height,
-                         int inputPitch, const void *input, size_t outputPitch, void *output) const
-{
-    ASSERT(width % 4 == 0 || width == 2 || width == 1);
-    ASSERT(inputPitch % 16 == 0);
-    ASSERT(outputPitch % 16 == 0);
-
-    const unsigned int *source = reinterpret_cast<const unsigned int*>(input);
-    unsigned int *dest = reinterpret_cast<unsigned int*>(output);
-
-    // Round width up in case it is less than 4.
-    int blocksAcross = (width + 3) / 4;
-    int intsAcross = blocksAcross * 4;
-
-    switch (height)
-    {
-        case 1:
-            for (int x = 0; x < intsAcross; x += 4)
-            {
-                // just copy the block
-                dest[x] = source[x];
-                dest[x + 1] = source[x + 1];
-                dest[x + 2] = source[x + 2];
-                dest[x + 3] = source[x + 3];
-            }
-            break;
-        case 2:
-            for (int x = 0; x < intsAcross; x += 4)
-            {
-                FlipCopyDXT3BlockHalf(source + x, dest + x);
-            }
-            break;
-        default:
-            ASSERT(height % 4 == 0);
-            for (int y = 0; y < height / 4; ++y)
-            {
-                const unsigned int *source = reinterpret_cast<const unsigned int*>(static_cast<const unsigned char*>(input) + y * inputPitch);
-                unsigned int *dest = reinterpret_cast<unsigned int*>(static_cast<unsigned char*>(output) + y * outputPitch);
-
-                for (int x = 0; x < intsAcross; x += 4)
-                {
-                  FlipCopyDXT3BlockFull(source + x, dest + x);
-                }
-            }
-            break;
-    }
-}
-
-void Image::loadDXT5Data(GLsizei width, GLsizei height,
-                         int inputPitch, const void *input, size_t outputPitch, void *output) const
-{
-    ASSERT(width % 4 == 0 || width == 2 || width == 1);
-    ASSERT(inputPitch % 16 == 0);
-    ASSERT(outputPitch % 16 == 0);
-
-    const unsigned int *source = reinterpret_cast<const unsigned int*>(input);
-    unsigned int *dest = reinterpret_cast<unsigned int*>(output);
-
-    // Round width up in case it is less than 4.
-    int blocksAcross = (width + 3) / 4;
-    int intsAcross = blocksAcross * 4;
-
-    switch (height)
-    {
-        case 1:
-            for (int x = 0; x < intsAcross; x += 4)
-            {
-                // just copy the block
-                dest[x] = source[x];
-                dest[x + 1] = source[x + 1];
-                dest[x + 2] = source[x + 2];
-                dest[x + 3] = source[x + 3];
-            }
-            break;
-        case 2:
-            for (int x = 0; x < intsAcross; x += 4)
-            {
-                FlipCopyDXT5BlockHalf(source + x, dest + x);
-            }
-            break;
-        default:
-            ASSERT(height % 4 == 0);
-            for (int y = 0; y < height / 4; ++y)
-            {
-                const unsigned int *source = reinterpret_cast<const unsigned int*>(static_cast<const unsigned char*>(input) + y * inputPitch);
-                unsigned int *dest = reinterpret_cast<unsigned int*>(static_cast<unsigned char*>(output) + y * outputPitch);
-
-                for (int x = 0; x < intsAcross; x += 4)
-                {
-                    FlipCopyDXT5BlockFull(source + x, dest + x);
-                }
-            }
-            break;
-    }
 }
 
 // This implements glCopyTex[Sub]Image2D for non-renderable internal texture formats and incomplete textures
@@ -1214,9 +963,8 @@ void Image::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, 
         return error(GL_OUT_OF_MEMORY);
     }
 
-    RECT sourceRect = transformPixelRect(x, y, width, height, description.Height);
-    int destYOffset = transformPixelYOffset(yoffset, height, mHeight);
-    RECT destRect = {xoffset, destYOffset, xoffset + width, destYOffset + height};
+    RECT sourceRect = {x, y, x + width, y + height};
+    RECT destRect = {xoffset, yoffset, xoffset + width, yoffset + height};
 
     if (isRenderableFormat())
     {
@@ -1971,19 +1719,17 @@ void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei 
 
         if (width != 0 && height != 0 && level < levelCount())
         {
-            RECT sourceRect = transformPixelRect(x, y, width, height, source->getColorbuffer()->getHeight());
-            sourceRect.left = clamp(sourceRect.left, 0, source->getColorbuffer()->getWidth());
-            sourceRect.top = clamp(sourceRect.top, 0, source->getColorbuffer()->getHeight());
-            sourceRect.right = clamp(sourceRect.right, 0, source->getColorbuffer()->getWidth());
-            sourceRect.bottom = clamp(sourceRect.bottom, 0, source->getColorbuffer()->getHeight());
-
-            GLint destYOffset = transformPixelYOffset(0, height, mImageArray[level].getHeight());
+            RECT sourceRect;
+            sourceRect.left = x;
+            sourceRect.right = x + width;
+            sourceRect.top = y;
+            sourceRect.bottom = y + height;
             
             IDirect3DSurface9 *dest = mTexStorage->getSurfaceLevel(level);
 
             if (dest)
             {
-                getBlitter()->copy(renderTarget, sourceRect, format, 0, destYOffset, dest);
+                getBlitter()->copy(renderTarget, sourceRect, format, 0, 0, dest);
                 dest->Release();
             }
         }
@@ -2023,19 +1769,18 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
 
         if (level < levelCount())
         {
-            RECT sourceRect = transformPixelRect(x, y, width, height, source->getColorbuffer()->getHeight());
-            sourceRect.left = clamp(sourceRect.left, 0, source->getColorbuffer()->getWidth());
-            sourceRect.top = clamp(sourceRect.top, 0, source->getColorbuffer()->getHeight());
-            sourceRect.right = clamp(sourceRect.right, 0, source->getColorbuffer()->getWidth());
-            sourceRect.bottom = clamp(sourceRect.bottom, 0, source->getColorbuffer()->getHeight());
+            RECT sourceRect;
+            sourceRect.left = x;
+            sourceRect.right = x + width;
+            sourceRect.top = y;
+            sourceRect.bottom = y + height;
 
-            GLint destYOffset = transformPixelYOffset(yoffset, height, mImageArray[level].getHeight());
 
             IDirect3DSurface9 *dest = mTexStorage->getSurfaceLevel(level);
 
             if (dest)
             {
-                getBlitter()->copy(renderTarget, sourceRect, mImageArray[0].getFormat(), xoffset, destYOffset, dest);
+                getBlitter()->copy(renderTarget, sourceRect, mImageArray[0].getFormat(), xoffset, yoffset, dest);
                 dest->Release();
             }
         }
@@ -2923,19 +2668,17 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint 
 
         if (width > 0 && level < levelCount())
         {
-            RECT sourceRect = transformPixelRect(x, y, width, height, source->getColorbuffer()->getHeight());
-            sourceRect.left = clamp(sourceRect.left, 0, source->getColorbuffer()->getWidth());
-            sourceRect.top = clamp(sourceRect.top, 0, source->getColorbuffer()->getHeight());
-            sourceRect.right = clamp(sourceRect.right, 0, source->getColorbuffer()->getWidth());
-            sourceRect.bottom = clamp(sourceRect.bottom, 0, source->getColorbuffer()->getHeight());
-
-            GLint destYOffset = transformPixelYOffset(0, height, mImageArray[faceindex][level].getWidth());
+            RECT sourceRect;
+            sourceRect.left = x;
+            sourceRect.right = x + width;
+            sourceRect.top = y;
+            sourceRect.bottom = y + height;
 
             IDirect3DSurface9 *dest = mTexStorage->getCubeMapSurface(target, level);
 
             if (dest)
             {
-                getBlitter()->copy(renderTarget, sourceRect, format, 0, destYOffset, dest);
+                getBlitter()->copy(renderTarget, sourceRect, format, 0, 0, dest);
                 dest->Release();
             }
         }
@@ -2979,19 +2722,17 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
 
         if (level < levelCount())
         {
-            RECT sourceRect = transformPixelRect(x, y, width, height, source->getColorbuffer()->getHeight());
-            sourceRect.left = clamp(sourceRect.left, 0, source->getColorbuffer()->getWidth());
-            sourceRect.top = clamp(sourceRect.top, 0, source->getColorbuffer()->getHeight());
-            sourceRect.right = clamp(sourceRect.right, 0, source->getColorbuffer()->getWidth());
-            sourceRect.bottom = clamp(sourceRect.bottom, 0, source->getColorbuffer()->getHeight());
-
-            GLint destYOffset = transformPixelYOffset(yoffset, height, mImageArray[faceindex][level].getWidth());
+            RECT sourceRect;
+            sourceRect.left = x;
+            sourceRect.right = x + width;
+            sourceRect.top = y;
+            sourceRect.bottom = y + height;
 
             IDirect3DSurface9 *dest = mTexStorage->getCubeMapSurface(target, level);
 
             if (dest)
             {
-                getBlitter()->copy(renderTarget, sourceRect, mImageArray[0][0].getFormat(), xoffset, destYOffset, dest);
+                getBlitter()->copy(renderTarget, sourceRect, mImageArray[0][0].getFormat(), xoffset, yoffset, dest);
                 dest->Release();
             }
         }

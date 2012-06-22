@@ -113,12 +113,6 @@ class Image
                       int inputPitch, const void *input, size_t outputPitch, void *output) const;
     void loadCompressedData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                             const void *input);
-    void loadDXT1Data(GLsizei width, GLsizei height,
-                      int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadDXT3Data(GLsizei width, GLsizei height,
-                      int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadDXT5Data(GLsizei width, GLsizei height,
-                      int inputPitch, const void *input, size_t outputPitch, void *output) const;
 
     void copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, IDirect3DSurface9 *renderTarget);
 
