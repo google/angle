@@ -1112,7 +1112,7 @@ EGLBoolean __stdcall eglPostSubBufferNV(EGLDisplay dpy, EGLSurface surface, EGLi
         {
             return error(EGL_BAD_PARAMETER, EGL_FALSE);
         }
-        
+
         egl::Display *display = static_cast<egl::Display*>(dpy);
         egl::Surface *eglSurface = static_cast<egl::Surface*>(surface);
 
