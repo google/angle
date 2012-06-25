@@ -117,6 +117,7 @@ int main(int argc, char* argv[])
                     switch (argv[0][3]) {
                     case 'i': resources.OES_EGL_image_external = 1; break;
                     case 'd': resources.OES_standard_derivatives = 1; break;
+                    case 'r': resources.ARB_texture_rectangle = 1; break;
                     default: failCode = EFailUsage;
                     }
                 } else {
@@ -220,7 +221,8 @@ void usage()
         "       -b=g     : output GLSL code\n"
         "       -b=h     : output HLSL code\n"
         "       -x=i     : enable GL_OES_EGL_image_external\n"
-        "       -x=d     : enable GL_OES_EGL_standard_derivatives\n");
+        "       -x=d     : enable GL_OES_EGL_standard_derivatives\n"
+        "       -x=r     : enable ARB_texture_rectangle\n");
 }
 
 //

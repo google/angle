@@ -16,10 +16,7 @@ class TInfoSinkBase;
 
 class RestrictFragmentShaderTiming : TDependencyGraphTraverser {
 public:
-    RestrictFragmentShaderTiming(TInfoSinkBase& sink)
-        : mSink(sink)
-        , mNumErrors(0) {}
-
+    RestrictFragmentShaderTiming(TInfoSinkBase& sink);
     void enforceRestrictions(const TDependencyGraph& graph);
     int numErrors() const { return mNumErrors; }
 
@@ -31,9 +28,13 @@ public:
 private:
     void beginError(const TIntermNode* node);
     void validateUserDefinedFunctionCallUsage(const TDependencyGraph& graph);
+    bool isSamplingOp(const TIntermAggregate* intermFunctionCall) const;
 
-	TInfoSinkBase& mSink;
+    TInfoSinkBase& mSink;
     int mNumErrors;
+
+    typedef std::set<TString> StringSet;
+    StringSet mSamplingOps;
 };
 
 #endif  // COMPILER_TIMING_RESTRICT_FRAGMENT_SHADER_TIMING_H_
