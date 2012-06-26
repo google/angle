@@ -91,11 +91,22 @@
 #include "ExpressionParser.h"
 
 #include <cassert>
+#include <cstdlib>
 #include <sstream>
 
 #include "Diagnostics.h"
 #include "Lexer.h"
 #include "Token.h"
+
+#if defined(_MSC_VER)
+typedef __int64 YYSTYPE;
+#define strtoll _strtoi64
+#else
+#include <stdint.h>
+typedef intmax_t YYSTYPE;
+#endif  // _MSC_VER
+#define YYSTYPE_IS_TRIVIAL 1
+#define YYSTYPE_IS_DECLARED 1
 
 namespace {
 struct Context
@@ -108,7 +119,7 @@ struct Context
 }  // namespace
 
 
-static int yylex(int* lvalp, Context* context);
+static int yylex(YYSTYPE* lvalp, Context* context);
 static void yyerror(Context* context, const char* reason);
 
 
@@ -456,9 +467,9 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    74,    74,    81,    82,    85,    88,    91,    94,    97,
-     100,   103,   106,   109,   112,   115,   118,   121,   124,   127,
-     140,   153,   156,   159,   162,   165,   168
+       0,    85,    85,    92,    93,    96,    99,   102,   105,   108,
+     111,   114,   117,   120,   123,   126,   129,   132,   135,   138,
+     151,   164,   167,   170,   173,   176,   179
 };
 #endif
 
@@ -1425,7 +1436,7 @@ yyreduce:
         case 2:
 
     {
-        *(context->result) = (yyvsp[(1) - (1)]);
+        *(context->result) = static_cast<int>((yyvsp[(1) - (1)]));
         YYACCEPT;
     }
     break;
@@ -1825,7 +1836,7 @@ yyreturn:
 
 
 
-int yylex(int* lvalp, Context* context)
+int yylex(YYSTYPE* lvalp, Context* context)
 {
     int type = 0;
 
@@ -1833,7 +1844,7 @@ int yylex(int* lvalp, Context* context)
     switch (token->type)
     {
       case pp::Token::CONST_INT:
-        *lvalp = atoi(token->value.c_str());
+        *lvalp = strtoll(token->value.c_str(), NULL, 0);
         type = CONST_INT;
         break;
 

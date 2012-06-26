@@ -48,6 +48,7 @@
         'preprocessor_tests/error_test.cpp',
         'preprocessor_tests/extension_test.cpp',
         'preprocessor_tests/identifier_test.cpp',
+        'preprocessor_tests/if_test.cpp',
         'preprocessor_tests/input_test.cpp',
         'preprocessor_tests/location_test.cpp',
         'preprocessor_tests/MockDiagnostics.h',

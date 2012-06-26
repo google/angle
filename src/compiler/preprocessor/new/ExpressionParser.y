@@ -28,11 +28,22 @@ WHICH GENERATES THE GLSL ES preprocessor expression parser.
 #include "ExpressionParser.h"
 
 #include <cassert>
+#include <cstdlib>
 #include <sstream>
 
 #include "Diagnostics.h"
 #include "Lexer.h"
 #include "Token.h"
+
+#if defined(_MSC_VER)
+typedef __int64 YYSTYPE;
+#define strtoll _strtoi64
+#else
+#include <stdint.h>
+typedef intmax_t YYSTYPE;
+#endif  // _MSC_VER
+#define YYSTYPE_IS_TRIVIAL 1
+#define YYSTYPE_IS_DECLARED 1
 
 namespace {
 struct Context
@@ -51,7 +62,7 @@ struct Context
 %lex-param {Context *context}
 
 %{
-static int yylex(int* lvalp, Context* context);
+static int yylex(YYSTYPE* lvalp, Context* context);
 static void yyerror(Context* context, const char* reason);
 %}
 
@@ -72,7 +83,7 @@ static void yyerror(Context* context, const char* reason);
 
 input
     : expression {
-        *(context->result) = $1;
+        *(context->result) = static_cast<int>($1);
         YYACCEPT;
     }
 ;
@@ -172,7 +183,7 @@ expression
 
 %%
 
-int yylex(int* lvalp, Context* context)
+int yylex(YYSTYPE* lvalp, Context* context)
 {
     int type = 0;
 
@@ -180,7 +191,7 @@ int yylex(int* lvalp, Context* context)
     switch (token->type)
     {
       case pp::Token::CONST_INT:
-        *lvalp = atoi(token->value.c_str());
+        *lvalp = strtoll(token->value.c_str(), NULL, 0);
         type = CONST_INT;
         break;
 

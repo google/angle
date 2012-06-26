@@ -10,6 +10,7 @@
 #include "Lexer.h"
 #include "Macro.h"
 #include "pp_utils.h"
+#include "SourceLocation.h"
 
 namespace pp
 {
@@ -46,6 +47,29 @@ class DirectiveParser : public Lexer
     void parseVersion(Token* token);
     void parseLine(Token* token);
 
+    bool skipping() const;
+    void parseConditionalIf(Token* token);
+    int parseExpressionIf(Token* token);
+    int parseExpressionIfdef(Token* token);
+
+    struct ConditionalBlock
+    {
+        std::string type;
+        SourceLocation location;
+        bool skipBlock;
+        bool skipGroup;
+        bool foundValidGroup;
+        bool foundElseGroup;
+
+        ConditionalBlock() :
+            skipBlock(false),
+            skipGroup(false),
+            foundValidGroup(false),
+            foundElseGroup(false)
+        {
+        }
+    };
+    std::vector<ConditionalBlock> mConditionalStack;
     Tokenizer* mTokenizer;
     MacroSet* mMacroSet;
     Diagnostics* mDiagnostics;
