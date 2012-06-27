@@ -100,14 +100,8 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 
 # {
     // # is only valid at start of line for preprocessor directives.
-    if (yyextra->lineStart) {
-        yylval->assign(1, yytext[0]);
-        return yytext[0];
-    } else {
-        yyextra->diagnostics->report(pp::Diagnostics::INVALID_CHARACTER,
-                                     pp::SourceLocation(yyfileno, yylineno),
-                                     std::string(yytext, yyleng));
-    }
+    yylval->assign(1, yytext[0]);
+    return yyextra->lineStart ? pp::Token::PP_HASH : pp::Token::PP_OTHER;
 }
 
 {IDENTIFIER} {
@@ -128,9 +122,8 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
     /* Anything that starts with a {DIGIT} or .{DIGIT} must be a number. */
     /* Rule to catch all invalid integers and floats. */
 ({DIGIT}+[_a-zA-Z0-9.]*)|("."{DIGIT}+[_a-zA-Z0-9.]*) {
-    yyextra->diagnostics->report(pp::Diagnostics::INVALID_NUMBER,
-                                 pp::SourceLocation(yyfileno, yylineno),
-                                 std::string(yytext, yyleng));
+    yylval->assign(yytext, yyleng);
+    return pp::Token::PP_NUMBER;
 }
 
 "++" {
@@ -232,9 +225,8 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 }
 
 . {
-    yyextra->diagnostics->report(pp::Diagnostics::INVALID_CHARACTER,
-                                 pp::SourceLocation(yyfileno, yylineno),
-                                 std::string(yytext, yyleng));
+    yylval->assign(1, yytext[0]);
+    return pp::Token::PP_OTHER;
 }
 
 <*><<EOF>> {

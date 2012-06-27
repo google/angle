@@ -46,7 +46,14 @@ struct Token
         OP_RIGHT_ASSIGN,
         OP_AND_ASSIGN,
         OP_XOR_ASSIGN,
-        OP_OR_ASSIGN
+        OP_OR_ASSIGN,
+
+        // Preprocessing token types.
+        // These types are used by the preprocessor internally.
+        // Preprocessor clients must not depend or check for them.
+        PP_HASH,
+        PP_NUMBER,
+        PP_OTHER
     };
     enum Flags
     {

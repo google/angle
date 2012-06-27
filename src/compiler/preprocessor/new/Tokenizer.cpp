@@ -898,14 +898,8 @@ case 7:
 YY_RULE_SETUP
 {
     // # is only valid at start of line for preprocessor directives.
-    if (yyextra->lineStart) {
-        yylval->assign(1, yytext[0]);
-        return yytext[0];
-    } else {
-        yyextra->diagnostics->report(pp::Diagnostics::INVALID_CHARACTER,
-                                     pp::SourceLocation(yyfileno, yylineno),
-                                     std::string(yytext, yyleng));
-    }
+    yylval->assign(1, yytext[0]);
+    return yyextra->lineStart ? pp::Token::PP_HASH : pp::Token::PP_OTHER;
 }
 	YY_BREAK
 case 8:
@@ -934,9 +928,8 @@ YY_RULE_SETUP
 case 11:
 YY_RULE_SETUP
 {
-    yyextra->diagnostics->report(pp::Diagnostics::INVALID_NUMBER,
-                                 pp::SourceLocation(yyfileno, yylineno),
-                                 std::string(yytext, yyleng));
+    yylval->assign(yytext, yyleng);
+    return pp::Token::PP_NUMBER;
 }
 	YY_BREAK
 case 12:
@@ -1109,9 +1102,8 @@ YY_RULE_SETUP
 case 36:
 YY_RULE_SETUP
 {
-    yyextra->diagnostics->report(pp::Diagnostics::INVALID_CHARACTER,
-                                 pp::SourceLocation(yyfileno, yylineno),
-                                 std::string(yytext, yyleng));
+    yylval->assign(1, yytext[0]);
+    return pp::Token::PP_OTHER;
 }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):

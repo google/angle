@@ -221,7 +221,7 @@ void DirectiveParser::lex(Token* token)
     {
         mTokenizer->lex(token);
 
-        if (token->type == '#')
+        if (token->type == Token::PP_HASH)
         {
             parseDirective(token);
         }
@@ -242,7 +242,7 @@ void DirectiveParser::lex(Token* token)
 
 void DirectiveParser::parseDirective(Token* token)
 {
-    assert(token->type == '#');
+    assert(token->type == Token::PP_HASH);
 
     mTokenizer->lex(token);
     DirectiveType directive = getDirective(token);

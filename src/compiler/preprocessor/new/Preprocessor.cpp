@@ -6,8 +6,10 @@
 
 #include "Preprocessor.h"
 
+#include <cassert>
 #include <sstream>
 
+#include "Diagnostics.h"
 #include "DirectiveParser.h"
 #include "Macro.h"
 #include "MacroExpander.h"
@@ -19,16 +21,18 @@ namespace pp
 
 struct PreprocessorImpl
 {
+    Diagnostics* diagnostics;
     MacroSet macroSet;
     Tokenizer tokenizer;
     DirectiveParser directiveParser;
     MacroExpander macroExpander;
 
-    PreprocessorImpl(Diagnostics* diagnostics,
+    PreprocessorImpl(Diagnostics* diag,
                      DirectiveHandler* directiveHandler) :
-        tokenizer(diagnostics),
-        directiveParser(&tokenizer, &macroSet, diagnostics, directiveHandler),
-        macroExpander(&directiveParser, &macroSet, diagnostics)
+        diagnostics(diag),
+        tokenizer(diag),
+        directiveParser(&tokenizer, &macroSet, diag, directiveHandler),
+        macroExpander(&directiveParser, &macroSet, diag)
     {
     }
 };
@@ -79,7 +83,31 @@ void Preprocessor::predefineMacro(const char* name, int value)
 
 void Preprocessor::lex(Token* token)
 {
-    mImpl->macroExpander.lex(token);
+    bool validToken = false;
+    while (!validToken)
+    {
+        mImpl->macroExpander.lex(token);
+        switch (token->type)
+        {
+          // We should not be returning internal preprocessing tokens.
+          // Convert preprocessing tokens to compiler tokens or report
+          // diagnostics.
+          case Token::PP_HASH:
+            assert(false);
+            break;
+          case Token::PP_NUMBER:
+            mImpl->diagnostics->report(Diagnostics::INVALID_NUMBER,
+                                       token->location, token->value);
+            break;
+          case Token::PP_OTHER:
+            mImpl->diagnostics->report(Diagnostics::INVALID_CHARACTER,
+                                       token->location, token->value);
+            break;
+          default:
+            validToken = true;
+            break;
+        }
+    }
 }
 
 }  // namespace pp
