@@ -308,7 +308,7 @@ struct AtomTable_Rec {
     int size;
 };
 
-static AtomTable latable = { { 0 } };
+static AtomTable latable = { { NULL, 0, 0 }, { NULL, 0, 0, {0} }, NULL, NULL, 0, 0 };
 AtomTable *atable = &latable;
 
 static int AddAtomFixed(AtomTable *atable, const char *s, int atom);

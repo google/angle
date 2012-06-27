@@ -519,6 +519,11 @@ IF YOU MODIFY THIS FILE YOU ALSO NEED TO RUN generate_parser.sh.
 #include "Diagnostics.h"
 #include "Token.h"
 
+#if defined(__GNUC__)
+// Triggered by the auto-generated yy_fatal_error function.
+#pragma GCC diagnostic ignored "-Wmissing-noreturn"
+#endif
+
 typedef std::string YYSTYPE;
 typedef pp::SourceLocation YYLTYPE;
 

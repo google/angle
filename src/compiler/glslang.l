@@ -205,7 +205,7 @@ O           [0-7]
 
 0[xX]{H}+         { yylval->lex.i = strtol(yytext, 0, 0); return(INTCONSTANT); }
 0{O}+             { yylval->lex.i = strtol(yytext, 0, 0); return(INTCONSTANT); }
-0{D}+             { context->error(yylineno, "Invalid Octal number.", yytext, "", ""); context->recover(); return 0;}
+0{D}+             { context->error(yylineno, "Invalid Octal number.", yytext); context->recover(); return 0;}
 {D}+              { yylval->lex.i = strtol(yytext, 0, 0); return(INTCONSTANT); }
 
 {D}+{E}           { yylval->lex.f = static_cast<float>(atof_dot(yytext)); return(FLOATCONSTANT); }
@@ -295,20 +295,20 @@ void CPPDebugLogMsg(const char *msg)
 void CPPWarningToInfoLog(const char *msg)
 {
     SETUP_CONTEXT(cpp);
-    context->warning(yylineno, msg, "", "");
+    context->warning(yylineno, msg, "");
 }
 
 void CPPShInfoLogMsg(const char *msg)
 {
     SETUP_CONTEXT(cpp);
-    context->error(yylineno, msg, "", "");
+    context->error(yylineno, msg, "");
     context->recover();
 }
 
 void CPPErrorToInfoLog(const char *msg)
 {
     SETUP_CONTEXT(cpp);
-    context->error(yylineno, msg, "", "");
+    context->error(yylineno, msg, "");
     context->recover();
 }
 
@@ -371,7 +371,7 @@ void HandlePragma(const char **tokens, int numTokens)
     context->handlePragmaDirective(yylineno, tokens[0], tokens[2]);
 }
 
-void StoreStr(char *string)
+void StoreStr(const char *string)
 {
     SETUP_CONTEXT(cpp);
     TString strSrc;
@@ -450,9 +450,9 @@ void yyerror(TParseContext* context, const char* reason) {
     struct yyguts_t* yyg = (struct yyguts_t*) context->scanner;
 
     if (context->AfterEOF) {
-        context->error(yylineno, reason, "unexpected EOF", "");
+        context->error(yylineno, reason, "unexpected EOF");
     } else {
-        context->error(yylineno, reason, yytext, "");
+        context->error(yylineno, reason, yytext);
     }
     context->recover();
 }

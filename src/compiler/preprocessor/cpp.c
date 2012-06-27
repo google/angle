@@ -884,10 +884,10 @@ void FreeMacro(MacroSymbol *s) {
 }
 
 void PredefineIntMacro(const char *name, int value) {
-    SourceLoc location = {0};
+    SourceLoc location = {0, 0};
     Symbol *symbol = NULL;
-    MacroSymbol macro = {0};
-    yystypepp val = {0};
+    MacroSymbol macro = {0, NULL, NULL, 0, 0};
+    yystypepp val = {0, 0.0, 0, {0}};
     int atom = 0;
 
     macro.body = NewTokenStream(name, macros->pool);

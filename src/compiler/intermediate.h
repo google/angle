@@ -531,6 +531,7 @@ public:
             postVisit(postVisit),
             rightToLeft(rightToLeft),
             depth(0) {}
+    virtual ~TIntermTraverser() {};
 
     virtual void visitSymbol(TIntermSymbol*) {}
     virtual void visitConstantUnion(TIntermConstantUnion*) {}

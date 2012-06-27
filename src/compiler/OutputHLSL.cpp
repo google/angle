@@ -2235,6 +2235,8 @@ TString OutputHLSL::typeString(const TType &type)
             return "samplerCUBE";
           case EbtSamplerExternalOES:
             return "sampler2D";
+          default:
+            break;
         }
     }
 

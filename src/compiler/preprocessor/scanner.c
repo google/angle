@@ -75,7 +75,7 @@ static int eof_scan(InputSrc *is, yystypepp * yylvalpp)
 
 static void noop(InputSrc *in, int ch, yystypepp * yylvalpp) {}
 
-static InputSrc eof_inputsrc = { 0, &eof_scan, &eof_scan, &noop };
+static InputSrc eof_inputsrc = { 0, &eof_scan, &eof_scan, &noop, 0, 0 };
 
 static int byte_scan(InputSrc *, yystypepp * yylvalpp);
 

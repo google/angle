@@ -69,9 +69,9 @@ struct TParseContext {
 
     TInfoSink& infoSink() { return diagnostics.infoSink(); }
     void error(TSourceLoc loc, const char *reason, const char* token,
-               const char* extraInfoFormat, ...);
+               const char* extraInfo="");
     void warning(TSourceLoc loc, const char* reason, const char* token,
-                 const char* extraInfoFormat, ...);
+                 const char* extraInfo="");
     void trace(const char* str);
     void recover();
 
