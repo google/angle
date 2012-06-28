@@ -620,6 +620,34 @@ TEST_F(IfTest, MissingExpression)
     mPreprocessor.lex(&token);
 }
 
+TEST_F(IfTest, DivisionByZero)
+{
+    const char* str = "#if 1 / (3 - (1 + 2))\n"
+                      "#endif\n";
+    ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
+
+    EXPECT_CALL(mDiagnostics,
+                print(pp::Diagnostics::DIVISION_BY_ZERO,
+                      pp::SourceLocation(0, 1), "1 / 0"));
+
+    pp::Token token;
+    mPreprocessor.lex(&token);
+}
+
+TEST_F(IfTest, ModuloByZero)
+{
+    const char* str = "#if 1 % (3 - (1 + 2))\n"
+                      "#endif\n";
+    ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
+
+    EXPECT_CALL(mDiagnostics,
+                print(pp::Diagnostics::DIVISION_BY_ZERO,
+                      pp::SourceLocation(0, 1), "1 % 0"));
+
+    pp::Token token;
+    mPreprocessor.lex(&token);
+}
+
 TEST_F(IfTest, UndefinedMacro)
 {
     const char* str = "#if UNDEFINED\n"
