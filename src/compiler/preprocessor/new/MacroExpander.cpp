@@ -200,13 +200,13 @@ bool MacroExpander::expandMacro(const Macro& macro,
             Token& repl = replacements->front();
             if (macro.name == kLine)
             {
-                std::stringstream stream;
+                std::ostringstream stream;
                 stream << identifier.location.line;
                 repl.text = stream.str();
             }
             else if (macro.name == kFile)
             {
-                std::stringstream stream;
+                std::ostringstream stream;
                 stream << identifier.location.file;
                 repl.text = stream.str();
             }

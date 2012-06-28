@@ -65,7 +65,7 @@ bool Preprocessor::init(int count,
 
 void Preprocessor::predefineMacro(const char* name, int value)
 {
-    std::stringstream stream;
+    std::ostringstream stream;
     stream << value;
 
     Token token;
