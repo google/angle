@@ -19,7 +19,7 @@ class SpaceTest : public PreprocessorTest
         // "foo" is returned after ignoring the whitespace characters.
         mPreprocessor.lex(&token);
         EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
-        EXPECT_EQ("foo", token.value);
+        EXPECT_EQ("foo", token.text);
         // The whitespace character is however recorded with the next token.
         EXPECT_TRUE(token.hasLeadingSpace());
     }
@@ -88,7 +88,7 @@ TEST_F(SpaceTest, LeadingSpace)
     pp::Token token;
     mPreprocessor.lex(&token);
     EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
-    EXPECT_EQ("foo", token.value);
+    EXPECT_EQ("foo", token.text);
     EXPECT_TRUE(token.hasLeadingSpace());
 
     mPreprocessor.lex(&token);
@@ -101,6 +101,6 @@ TEST_F(SpaceTest, LeadingSpace)
 
     mPreprocessor.lex(&token);
     EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
-    EXPECT_EQ("bar", token.value);
+    EXPECT_EQ("bar", token.text);
     EXPECT_FALSE(token.hasLeadingSpace());
 }

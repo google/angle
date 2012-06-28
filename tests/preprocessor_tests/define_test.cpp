@@ -855,7 +855,7 @@ TEST_F(DefineTest, Predefined_LINE1)
     pp::Token token;
     mPreprocessor.lex(&token);
     EXPECT_EQ(pp::Token::CONST_INT, token.type);
-    EXPECT_EQ("3", token.value);
+    EXPECT_EQ("3", token.text);
 }
 
 TEST_F(DefineTest, Predefined_LINE2)
@@ -867,7 +867,7 @@ TEST_F(DefineTest, Predefined_LINE2)
     pp::Token token;
     mPreprocessor.lex(&token);
     EXPECT_EQ(pp::Token::CONST_INT, token.type);
-    EXPECT_EQ("10", token.value);
+    EXPECT_EQ("10", token.text);
 }
 
 TEST_F(DefineTest, Predefined_FILE1)
@@ -878,7 +878,7 @@ TEST_F(DefineTest, Predefined_FILE1)
     pp::Token token;
     mPreprocessor.lex(&token);
     EXPECT_EQ(pp::Token::CONST_INT, token.type);
-    EXPECT_EQ("2", token.value);
+    EXPECT_EQ("2", token.text);
 }
 
 TEST_F(DefineTest, Predefined_FILE2)
@@ -889,5 +889,5 @@ TEST_F(DefineTest, Predefined_FILE2)
     pp::Token token;
     mPreprocessor.lex(&token);
     EXPECT_EQ(pp::Token::CONST_INT, token.type);
-    EXPECT_EQ("21", token.value);
+    EXPECT_EQ("21", token.text);
 }

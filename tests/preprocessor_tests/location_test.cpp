@@ -20,7 +20,7 @@ protected:
         pp::Token token;
         mPreprocessor.lex(&token);
         EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
-        EXPECT_EQ("foo", token.value);
+        EXPECT_EQ("foo", token.text);
 
         EXPECT_EQ(location.file, token.location.file);
         EXPECT_EQ(location.line, token.location.line);
@@ -114,7 +114,7 @@ TEST_F(LocationTest, EndOfFileWithoutNewline)
     pp::Token token;
     mPreprocessor.lex(&token);
     EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
-    EXPECT_EQ("foo", token.value);
+    EXPECT_EQ("foo", token.text);
     EXPECT_EQ(0, token.location.file);
     EXPECT_EQ(1, token.location.line);
 
@@ -132,7 +132,7 @@ TEST_F(LocationTest, EndOfFileAfterNewline)
     pp::Token token;
     mPreprocessor.lex(&token);
     EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
-    EXPECT_EQ("foo", token.value);
+    EXPECT_EQ("foo", token.text);
     EXPECT_EQ(0, token.location.file);
     EXPECT_EQ(1, token.location.line);
 
@@ -150,7 +150,7 @@ TEST_F(LocationTest, EndOfFileAfterEmptyString)
     pp::Token token;
     mPreprocessor.lex(&token);
     EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
-    EXPECT_EQ("foo", token.value);
+    EXPECT_EQ("foo", token.text);
     EXPECT_EQ(0, token.location.file);
     EXPECT_EQ(1, token.location.line);
 

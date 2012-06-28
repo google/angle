@@ -1846,7 +1846,7 @@ int yylex(YYSTYPE* lvalp, Context* context)
     switch (token->type)
     {
       case pp::Token::CONST_INT:
-        *lvalp = strtoll(token->value.c_str(), NULL, 0);
+        *lvalp = strtoll(token->text.c_str(), NULL, 0);
         type = CONST_INT;
         break;
 

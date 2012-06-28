@@ -2313,7 +2313,7 @@ void Tokenizer::setLineNumber(int line)
 
 void Tokenizer::lex(Token* token)
 {
-    token->type = pplex(&token->value,&token->location,mHandle);
+    token->type = pplex(&token->text,&token->location,mHandle);
     token->flags = 0;
 
     token->setAtStartOfLine(mContext.lineStart);

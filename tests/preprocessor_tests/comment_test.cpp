@@ -51,7 +51,7 @@ TEST_F(BlockCommentTest, CommentReplacedWithSpace)
     pp::Token token;
     mPreprocessor.lex(&token);
     EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
-    EXPECT_EQ("bar", token.value);
+    EXPECT_EQ("bar", token.text);
     EXPECT_TRUE(token.hasLeadingSpace());
 }
 

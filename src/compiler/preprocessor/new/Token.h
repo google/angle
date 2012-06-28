@@ -81,7 +81,7 @@ struct Token
     int type;
     unsigned int flags;
     SourceLocation location;
-    std::string value;
+    std::string text;
 };
 
 inline bool operator==(const Token& lhs, const Token& rhs)

@@ -407,9 +407,9 @@ int string_input(char* buf, int max_size, yyscan_t yyscanner) {
 #if ANGLE_USE_NEW_PREPROCESSOR
     pp::Token token;
     yyget_extra(yyscanner)->preprocessor.lex(&token);
-    len = token.type == pp::Token::LAST ? 0 : token.value.size();
+    len = token.type == pp::Token::LAST ? 0 : token.text.size();
     if ((len > 0) && (len < max_size))
-        memcpy(buf, token.value.c_str(), len);
+        memcpy(buf, token.text.c_str(), len);
     yyset_lineno(EncodeSourceLoc(token.location.file, token.location.line), yyscanner);
 #else
     len = yylex_CPP(buf, max_size);

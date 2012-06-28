@@ -20,7 +20,7 @@ protected:
         pp::Token token;
         mPreprocessor.lex(&token);
         EXPECT_EQ(pp::Token::IDENTIFIER, token.type);
-        EXPECT_EQ(str, token.value);
+        EXPECT_EQ(str, token.text);
     }
 };
 

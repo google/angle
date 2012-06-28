@@ -14,7 +14,7 @@ void Token::reset()
     type = 0;
     flags = 0;
     location = SourceLocation();
-    value.clear();
+    text.clear();
 }
 
 bool Token::equals(const Token& other) const
@@ -22,7 +22,7 @@ bool Token::equals(const Token& other) const
     return (type == other.type) &&
            (flags == other.flags) &&
            (location == other.location) &&
-           (value == other.value);
+           (text == other.text);
 }
 
 void Token::setAtStartOfLine(bool start)
@@ -54,7 +54,7 @@ std::ostream& operator<<(std::ostream& out, const Token& token)
     if (token.hasLeadingSpace())
         out << " ";
 
-    out << token.value;
+    out << token.text;
     return out;
 }
 

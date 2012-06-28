@@ -70,7 +70,7 @@ void Preprocessor::predefineMacro(const char* name, int value)
 
     Token token;
     token.type = Token::CONST_INT;
-    token.value = stream.str();
+    token.text = stream.str();
 
     Macro macro;
     macro.predefined = true;
@@ -97,11 +97,11 @@ void Preprocessor::lex(Token* token)
             break;
           case Token::PP_NUMBER:
             mImpl->diagnostics->report(Diagnostics::INVALID_NUMBER,
-                                       token->location, token->value);
+                                       token->location, token->text);
             break;
           case Token::PP_OTHER:
             mImpl->diagnostics->report(Diagnostics::INVALID_CHARACTER,
-                                       token->location, token->value);
+                                       token->location, token->text);
             break;
           default:
             validToken = true;

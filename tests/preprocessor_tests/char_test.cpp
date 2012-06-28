@@ -88,7 +88,7 @@ TEST_P(CharTest, Identified)
     pp::Token token;
     mPreprocessor.lex(&token);
     EXPECT_EQ(expectedType, token.type);
-    EXPECT_EQ(expectedValue, token.value);
+    EXPECT_EQ(expectedValue, token.text);
 };
 
 // Note +1 for the max-value in range. It is there because the max-value

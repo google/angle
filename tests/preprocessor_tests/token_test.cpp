@@ -15,7 +15,7 @@ TEST(TokenTest, DefaultConstructor)
     EXPECT_EQ(0, token.flags);
     EXPECT_EQ(0, token.location.line);
     EXPECT_EQ(0, token.location.file);
-    EXPECT_EQ("", token.value);
+    EXPECT_EQ("", token.text);
 }
 
 TEST(TokenTest, Assignment)
@@ -25,14 +25,14 @@ TEST(TokenTest, Assignment)
     token.flags = 1;
     token.location.line = 1;
     token.location.file = 1;
-    token.value.assign("foo");
+    token.text.assign("foo");
 
     token = pp::Token();
     EXPECT_EQ(0, token.type);
     EXPECT_EQ(0, token.flags);
     EXPECT_EQ(0, token.location.line);
     EXPECT_EQ(0, token.location.file);
-    EXPECT_EQ("", token.value);
+    EXPECT_EQ("", token.text);
 }
 
 TEST(TokenTest, Equals)
@@ -56,9 +56,9 @@ TEST(TokenTest, Equals)
     EXPECT_FALSE(token.equals(pp::Token()));
     token.location.file = 0;
 
-    token.value.assign("foo");
+    token.text.assign("foo");
     EXPECT_FALSE(token.equals(pp::Token()));
-    token.value.clear();
+    token.text.clear();
 
     EXPECT_TRUE(token.equals(pp::Token()));
 }
@@ -76,7 +76,7 @@ TEST(TokenTest, HasLeadingSpace)
 TEST(TokenTest, Write)
 {
     pp::Token token;
-    token.value.assign("foo");
+    token.text.assign("foo");
     std::stringstream out1;
     out1 << token;
     EXPECT_TRUE(out1.good());

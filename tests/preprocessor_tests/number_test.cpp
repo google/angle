@@ -50,7 +50,7 @@ TEST_P(IntegerTest, Identified)
     pp::Token token;
     mPreprocessor.lex(&token);
     EXPECT_EQ(pp::Token::CONST_INT, token.type);
-    EXPECT_EQ(str, token.value);
+    EXPECT_EQ(str, token.text);
 }
 
 INSTANTIATE_TEST_CASE_P(DecimalInteger,
@@ -89,7 +89,7 @@ class FloatTest : public PreprocessorTest
         pp::Token token;
         mPreprocessor.lex(&token);
         EXPECT_EQ(pp::Token::CONST_FLOAT, token.type);
-        EXPECT_EQ(str, token.value);
+        EXPECT_EQ(str, token.text);
     }
 };
 

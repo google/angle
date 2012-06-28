@@ -297,7 +297,7 @@ void Tokenizer::setLineNumber(int line)
 
 void Tokenizer::lex(Token* token)
 {
-    token->type = yylex(&token->value, &token->location, mHandle);
+    token->type = yylex(&token->text, &token->location, mHandle);
     token->flags = 0;
 
     token->setAtStartOfLine(mContext.lineStart);

@@ -73,7 +73,7 @@ void MacroExpander::lex(Token* token)
         if (token->expansionDisabled())
             break;
 
-        MacroSet::const_iterator iter = mMacroSet->find(token->value);
+        MacroSet::const_iterator iter = mMacroSet->find(token->text);
         if (iter == mMacroSet->end())
             break;
 
@@ -152,7 +152,7 @@ bool MacroExpander::pushMacro(const Macro& macro, const Token& identifier)
     assert(!macro.disabled);
     assert(!identifier.expansionDisabled());
     assert(identifier.type == Token::IDENTIFIER);
-    assert(identifier.value == macro.name);
+    assert(identifier.text == macro.name);
 
     std::vector<Token> replacements;
     if (!expandMacro(macro, identifier, &replacements))
@@ -202,13 +202,13 @@ bool MacroExpander::expandMacro(const Macro& macro,
             {
                 std::stringstream stream;
                 stream << identifier.location.line;
-                repl.value = stream.str();
+                repl.text = stream.str();
             }
             else if (macro.name == kFile)
             {
                 std::stringstream stream;
                 stream << identifier.location.file;
-                repl.value = stream.str();
+                repl.text = stream.str();
             }
         }
     }
@@ -254,7 +254,7 @@ bool MacroExpander::collectMacroArgs(const Macro& macro,
         if (token.type == Token::LAST)
         {
             mDiagnostics->report(Diagnostics::MACRO_UNTERMINATED_INVOCATION,
-                                 identifier.location, identifier.value);
+                                 identifier.location, identifier.text);
             // Do not lose EOF token.
             ungetToken(token);
             return false;
@@ -303,7 +303,7 @@ bool MacroExpander::collectMacroArgs(const Macro& macro,
         Diagnostics::ID id = args->size() < macro.parameters.size() ?
             Diagnostics::MACRO_TOO_FEW_ARGS :
             Diagnostics::MACRO_TOO_MANY_ARGS;
-        mDiagnostics->report(id, identifier.location, identifier.value);
+        mDiagnostics->report(id, identifier.location, identifier.text);
         return false;
     }
 
@@ -344,7 +344,7 @@ void MacroExpander::replaceMacroParams(const Macro& macro,
         // There is no need to search for macro params every time.
         // The param index can be cached with the replacement token.
         Macro::Parameters::const_iterator iter = std::find(
-            macro.parameters.begin(), macro.parameters.end(), repl.value);
+            macro.parameters.begin(), macro.parameters.end(), repl.text);
         if (iter == macro.parameters.end())
         {
             replacements->push_back(repl);
