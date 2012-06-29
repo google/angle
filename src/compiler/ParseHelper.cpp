@@ -184,7 +184,6 @@ void TParseContext::error(TSourceLoc loc,
     diagnostics.writeInfo(pp::Diagnostics::ERROR,
                           srcLoc, reason, token, extraInfo);
 
-    ++numErrors;
 }
 
 void TParseContext::warning(TSourceLoc loc,
@@ -1510,7 +1509,7 @@ int PaParseStrings(int count, const char* const string[], const int length[],
 
     glslang_finalize(context);
 
-    return (error == 0) && (context->numErrors == 0) ? 0 : 1;
+    return (error == 0) && (context->numErrors() == 0) ? 0 : 1;
 }
 
 

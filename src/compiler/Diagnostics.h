@@ -19,6 +19,9 @@ class TDiagnostics : public pp::Diagnostics
 
     TInfoSink& infoSink() { return mInfoSink; }
 
+    int numErrors() const { return mNumErrors; }
+    int numWarnings() const { return mNumWarnings; }
+
     void writeInfo(Severity severity,
                    const pp::SourceLocation& loc,
                    const std::string& reason,
@@ -34,6 +37,8 @@ class TDiagnostics : public pp::Diagnostics
 
   private:
     TInfoSink& mInfoSink;
+    int mNumErrors;
+    int mNumWarnings;
 };
 
 #endif  // COMPILER_DIAGNOSTICS_H_

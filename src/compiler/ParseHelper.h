@@ -33,7 +33,6 @@ struct TParseContext {
             compileOptions(options),
             sourcePath(sourcePath),
             treeRoot(0),
-            numErrors(0),
             lexAfterType(false),
             loopNestingLevel(0),
             structNestingLevel(0),
@@ -52,7 +51,6 @@ struct TParseContext {
     int compileOptions;
     const char* sourcePath;      // Path of source file or NULL.
     TIntermNode* treeRoot;       // root of parse tree being created
-    int numErrors;
     bool lexAfterType;           // true if we've recognized a type, so can only be looking for an identifier
     int loopNestingLevel;        // 0 if outside all loops
     int structNestingLevel;      // incremented while parsing a struct declaration
@@ -67,6 +65,7 @@ struct TParseContext {
     pp::Preprocessor preprocessor;
     void* scanner;
 
+    int numErrors() const { return diagnostics.numErrors(); }
     TInfoSink& infoSink() { return diagnostics.infoSink(); }
     void error(TSourceLoc loc, const char *reason, const char* token,
                const char* extraInfo="");
