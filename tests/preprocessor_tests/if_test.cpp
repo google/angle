@@ -648,6 +648,48 @@ TEST_F(IfTest, ModuloByZero)
     mPreprocessor.lex(&token);
 }
 
+TEST_F(IfTest, DecIntegerOverflow)
+{
+    const char* str = "#if 4294967296\n"
+                      "#endif\n";
+    ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
+
+    EXPECT_CALL(mDiagnostics,
+                print(pp::Diagnostics::INTEGER_OVERFLOW,
+                      pp::SourceLocation(0, 1), "4294967296"));
+
+    pp::Token token;
+    mPreprocessor.lex(&token);
+}
+
+TEST_F(IfTest, OctIntegerOverflow)
+{
+    const char* str = "#if 077777777777\n"
+                      "#endif\n";
+    ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
+
+    EXPECT_CALL(mDiagnostics,
+                print(pp::Diagnostics::INTEGER_OVERFLOW,
+                      pp::SourceLocation(0, 1), "077777777777"));
+
+    pp::Token token;
+    mPreprocessor.lex(&token);
+}
+
+TEST_F(IfTest, HexIntegerOverflow)
+{
+    const char* str = "#if 0xfffffffff\n"
+                      "#endif\n";
+    ASSERT_TRUE(mPreprocessor.init(1, &str, 0));
+
+    EXPECT_CALL(mDiagnostics,
+                print(pp::Diagnostics::INTEGER_OVERFLOW,
+                      pp::SourceLocation(0, 1), "0xfffffffff"));
+
+    pp::Token token;
+    mPreprocessor.lex(&token);
+}
+
 TEST_F(IfTest, UndefinedMacro)
 {
     const char* str = "#if UNDEFINED\n"

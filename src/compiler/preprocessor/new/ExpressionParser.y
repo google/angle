@@ -30,7 +30,6 @@ WHICH GENERATES THE GLSL ES preprocessor expression parser.
 #include "ExpressionParser.h"
 
 #include <cassert>
-#include <cstdlib>
 #include <sstream>
 
 #include "Diagnostics.h"
@@ -39,7 +38,6 @@ WHICH GENERATES THE GLSL ES preprocessor expression parser.
 
 #if defined(_MSC_VER)
 typedef __int64 YYSTYPE;
-#define strtoll _strtoi64
 #else
 #include <stdint.h>
 typedef intmax_t YYSTYPE;
@@ -139,7 +137,7 @@ expression
     }
     | expression '%' expression {
         if ($3 == 0) {
-            std::stringstream stream;
+            std::ostringstream stream;
             stream << $1 << " % " << $3;
             std::string text = stream.str();
             context->diagnostics->report(pp::Diagnostics::DIVISION_BY_ZERO,
@@ -152,7 +150,7 @@ expression
     }
     | expression '/' expression {
         if ($3 == 0) {
-            std::stringstream stream;
+            std::ostringstream stream;
             stream << $1 << " / " << $3;
             std::string text = stream.str();
             context->diagnostics->report(pp::Diagnostics::DIVISION_BY_ZERO,
@@ -193,10 +191,17 @@ int yylex(YYSTYPE* lvalp, Context* context)
     switch (token->type)
     {
       case pp::Token::CONST_INT:
-        *lvalp = strtoll(token->text.c_str(), NULL, 0);
+      {
+        unsigned int val = 0;
+        if (!token->uValue(&val))
+        {
+            context->diagnostics->report(pp::Diagnostics::INTEGER_OVERFLOW,
+                                         token->location, token->text);
+        }
+        *lvalp = static_cast<YYSTYPE>(val);
         type = CONST_INT;
         break;
-
+      }
       case pp::Token::OP_OR: type = OP_OR; break;
       case pp::Token::OP_AND: type = OP_AND; break;
       case pp::Token::OP_NE: type = OP_NE; break;

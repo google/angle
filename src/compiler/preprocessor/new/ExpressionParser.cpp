@@ -93,7 +93,6 @@
 #include "ExpressionParser.h"
 
 #include <cassert>
-#include <cstdlib>
 #include <sstream>
 
 #include "Diagnostics.h"
@@ -102,7 +101,6 @@
 
 #if defined(_MSC_VER)
 typedef __int64 YYSTYPE;
-#define strtoll _strtoi64
 #else
 #include <stdint.h>
 typedef intmax_t YYSTYPE;
@@ -469,9 +467,9 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    87,    87,    94,    95,    98,   101,   104,   107,   110,
-     113,   116,   119,   122,   125,   128,   131,   134,   137,   140,
-     153,   166,   169,   172,   175,   178,   181
+       0,    85,    85,    92,    93,    96,    99,   102,   105,   108,
+     111,   114,   117,   120,   123,   126,   129,   132,   135,   138,
+     151,   164,   167,   170,   173,   176,   179
 };
 #endif
 
@@ -1552,7 +1550,7 @@ yyreduce:
 
     {
         if ((yyvsp[(3) - (3)]) == 0) {
-            std::stringstream stream;
+            std::ostringstream stream;
             stream << (yyvsp[(1) - (3)]) << " % " << (yyvsp[(3) - (3)]);
             std::string text = stream.str();
             context->diagnostics->report(pp::Diagnostics::DIVISION_BY_ZERO,
@@ -1569,7 +1567,7 @@ yyreduce:
 
     {
         if ((yyvsp[(3) - (3)]) == 0) {
-            std::stringstream stream;
+            std::ostringstream stream;
             stream << (yyvsp[(1) - (3)]) << " / " << (yyvsp[(3) - (3)]);
             std::string text = stream.str();
             context->diagnostics->report(pp::Diagnostics::DIVISION_BY_ZERO,
@@ -1846,10 +1844,17 @@ int yylex(YYSTYPE* lvalp, Context* context)
     switch (token->type)
     {
       case pp::Token::CONST_INT:
-        *lvalp = strtoll(token->text.c_str(), NULL, 0);
+      {
+        unsigned int val = 0;
+        if (!token->uValue(&val))
+        {
+            context->diagnostics->report(pp::Diagnostics::INTEGER_OVERFLOW,
+                                         token->location, token->text);
+        }
+        *lvalp = static_cast<YYSTYPE>(val);
         type = CONST_INT;
         break;
-
+      }
       case pp::Token::OP_OR: type = OP_OR; break;
       case pp::Token::OP_AND: type = OP_AND; break;
       case pp::Token::OP_NE: type = OP_NE; break;

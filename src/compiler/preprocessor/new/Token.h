@@ -78,6 +78,12 @@ struct Token
     bool expansionDisabled() const { return (flags & EXPANSION_DISABLED) != 0; }
     void setExpansionDisabled(bool disable);
 
+    // Converts text into numeric value for CONST_INT and CONST_FLOAT token.
+    // Returns false if the parsed value cannot fit into an int or float.
+    bool iValue(int* value) const;
+    bool uValue(unsigned int* value) const;
+    bool fValue(float* value) const;
+
     int type;
     unsigned int flags;
     SourceLocation location;

@@ -550,7 +550,7 @@ void DirectiveParser::parseError(Token* token)
 {
     assert(getDirective(token) == DIRECTIVE_ERROR);
 
-    std::stringstream stream;
+    std::ostringstream stream;
     mTokenizer->lex(token);
     while ((token->type != '\n') && (token->type != Token::LAST))
     {
@@ -709,7 +709,12 @@ void DirectiveParser::parseVersion(Token* token)
                                      token->location, token->text);
                 valid = false;
             }
-            if (valid) version = atoi(token->text.c_str());
+            if (valid && !token->iValue(&version))
+            {
+                mDiagnostics->report(Diagnostics::INTEGER_OVERFLOW,
+                                     token->location, token->text);
+                valid = false;
+            }
             break;
           default:
             if (valid)
@@ -759,7 +764,12 @@ void DirectiveParser::parseLine(Token* token)
                                      token->location, token->text);
                 valid = false;
             }
-            if (valid) line = atoi(token->text.c_str());
+            if (valid && !token->iValue(&line))
+            {
+                mDiagnostics->report(Diagnostics::INTEGER_OVERFLOW,
+                                     token->location, token->text);
+                valid = false;
+            }
             break;
           case FILE_NUMBER:
             if (valid && (token->type != Token::CONST_INT))
@@ -768,7 +778,12 @@ void DirectiveParser::parseLine(Token* token)
                                      token->location, token->text);
                 valid = false;
             }
-            if (valid) file = atoi(token->text.c_str());
+            if (valid && !token->iValue(&file))
+            {
+                mDiagnostics->report(Diagnostics::INTEGER_OVERFLOW,
+                                     token->location, token->text);
+                valid = false;
+            }
             break;
           default:
             if (valid)

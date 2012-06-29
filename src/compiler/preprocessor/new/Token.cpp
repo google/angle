@@ -6,6 +6,28 @@
 
 #include "Token.h"
 
+#include <cassert>
+#include <sstream>
+
+template<typename IntType>
+static bool atoi_t(const std::string& str, IntType* value)
+{
+    std::ios::fmtflags base = std::ios::dec;
+    if ((str.size() >= 2) && (str[0] == '0') && (tolower(str[1]) == 'x'))
+    {
+        base = std::ios::hex;
+    }
+    else if ((str.size() >= 1) && (str[0] == '0'))
+    {
+        base = std::ios::oct;
+    }
+
+    std::istringstream stream(str);
+    stream.setf(base, std::ios::basefield);
+    stream >> (*value);
+    return !stream.fail();
+}
+
 namespace pp
 {
 
@@ -47,6 +69,28 @@ void Token::setExpansionDisabled(bool disable)
         flags |= EXPANSION_DISABLED;
     else
         flags &= ~EXPANSION_DISABLED;
+}
+
+bool Token::iValue(int* value) const
+{
+    assert(type == CONST_INT);
+    return atoi_t(text, value);
+}
+
+bool Token::uValue(unsigned int* value) const
+{
+    assert(type == CONST_INT);
+    return atoi_t(text, value);
+}
+
+bool Token::fValue(float* value) const
+{
+    assert(type == CONST_FLOAT);
+
+    std::istringstream stream(text);
+    stream.imbue(std::locale("C"));
+    stream >> (*value);
+    return !stream.fail();
 }
 
 std::ostream& operator<<(std::ostream& out, const Token& token)

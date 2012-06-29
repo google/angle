@@ -48,6 +48,12 @@ std::string Diagnostics::message(ID id)
           return "invalid character";
       case INVALID_NUMBER:
           return "invalid number";
+      case INTEGER_OVERFLOW:
+          return "integer overflow";
+      case FLOAT_OVERFLOW:
+          return "float overflow";
+      case IDENTIFIER_OVERFLOW:
+          return "identifier buffer overflow";
       case INVALID_EXPRESSION:
           return "invalid expression";
       case DIVISION_BY_ZERO:

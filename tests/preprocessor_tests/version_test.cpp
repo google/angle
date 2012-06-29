@@ -90,7 +90,8 @@ TEST_P(InvalidVersionTest, Identified)
 static const VersionTestParam kParams[] = {
     {"#version\n", pp::Diagnostics::INVALID_VERSION_DIRECTIVE},
     {"#version foo\n", pp::Diagnostics::INVALID_VERSION_NUMBER},
-    {"#version 100 foo\n", pp::Diagnostics::UNEXPECTED_TOKEN}
+    {"#version 100 foo\n", pp::Diagnostics::UNEXPECTED_TOKEN},
+    {"#version 0xffffffff\n", pp::Diagnostics::INTEGER_OVERFLOW}
 };
 
 INSTANTIATE_TEST_CASE_P(All, InvalidVersionTest, testing::ValuesIn(kParams));

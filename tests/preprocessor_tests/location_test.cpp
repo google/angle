@@ -295,7 +295,9 @@ static const LineTestParam kParams[] = {
     {"#line\n", pp::Diagnostics::INVALID_LINE_DIRECTIVE},
     {"#line foo\n", pp::Diagnostics::INVALID_LINE_NUMBER},
     {"#line 10 foo\n", pp::Diagnostics::INVALID_FILE_NUMBER},
-    {"#line 10 20 foo\n", pp::Diagnostics::UNEXPECTED_TOKEN}
+    {"#line 10 20 foo\n", pp::Diagnostics::UNEXPECTED_TOKEN},
+    {"#line 0xffffffff\n", pp::Diagnostics::INTEGER_OVERFLOW},
+    {"#line 10 0xffffffff\n", pp::Diagnostics::INTEGER_OVERFLOW}
 };
 
 INSTANTIATE_TEST_CASE_P(All, InvalidLineTest, testing::ValuesIn(kParams));
