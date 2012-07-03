@@ -37,7 +37,6 @@ class Diagnostics
         INVALID_EXPRESSION,
         DIVISION_BY_ZERO,
         EOF_IN_COMMENT,
-        EOF_IN_DIRECTIVE,
         UNEXPECTED_TOKEN,
         DIRECTIVE_INVALID_NAME,
         MACRO_NAME_RESERVED,
@@ -65,6 +64,7 @@ class Diagnostics
         ERROR_END,
 
         WARNING_BEGIN,
+        EOF_IN_DIRECTIVE,
         CONDITIONAL_UNEXPECTED_TOKEN,
         UNRECOGNIZED_PRAGMA,
         WARNING_END

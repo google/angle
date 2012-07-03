@@ -60,8 +60,6 @@ std::string Diagnostics::message(ID id)
           return "division by zero";
       case EOF_IN_COMMENT:
           return "unexpected end of file found in comment";
-      case EOF_IN_DIRECTIVE:
-          return "unexpected end of file found in directive";
       case UNEXPECTED_TOKEN:
           return "unexpected token";
       case DIRECTIVE_INVALID_NAME:
@@ -113,6 +111,8 @@ std::string Diagnostics::message(ID id)
           return "invalid line directive";
       // Errors end.
       // Warnings begin.
+      case EOF_IN_DIRECTIVE:
+          return "unexpected end of file found in directive";
       case CONDITIONAL_UNEXPECTED_TOKEN:
           return "unexpected token after conditional expression";
       case UNRECOGNIZED_PRAGMA:
