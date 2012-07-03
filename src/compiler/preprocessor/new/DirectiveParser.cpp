@@ -347,6 +347,12 @@ void DirectiveParser::parseDefine(Token* token)
                              token->location, token->text);
         return;
     }
+    if (token->text.size() > Token::kMaxIdentifierLength)
+    {
+        mDiagnostics->report(Diagnostics::IDENTIFIER_OVERFLOW,
+                             token->location, token->text);
+        return;
+    }
 
     Macro macro;
     macro.type = Macro::kTypeObj;

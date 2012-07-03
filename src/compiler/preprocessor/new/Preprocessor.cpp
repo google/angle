@@ -125,14 +125,13 @@ void Preprocessor::lex(Token* token)
           }
           case Token::IDENTIFIER:
           {
-            static const int kMaxIdentifierLength = 256;
-            if (token->text.size() > kMaxIdentifierLength)
+            if (token->text.size() > Token::kMaxIdentifierLength)
             {
                 // Do not mark the token as invalid.
                 // Just emit the diagnostic and clamp string length.
                 mImpl->diagnostics->report(Diagnostics::IDENTIFIER_OVERFLOW,
                                            token->location, token->text);
-                token->text.erase(kMaxIdentifierLength);
+                token->text.erase(Token::kMaxIdentifierLength);
             }
             validToken = true;
             break;
