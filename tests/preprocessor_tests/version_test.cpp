@@ -62,6 +62,138 @@ TEST_F(VersionTest, MissingNewline)
     preprocess(str, expected);
 }
 
+TEST_F(VersionTest, AfterComments)
+{
+    const char* str = "/* block comment acceptable */\n"
+                      "// line comment acceptable\n"
+                      "#version 200\n";
+    const char* expected = "\n\n\n";
+
+    using testing::_;
+    // Directive successfully parsed.
+    EXPECT_CALL(mDirectiveHandler,
+                handleVersion(pp::SourceLocation(0, 3), 200));
+    // No error or warning.
+    EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
+    
+    preprocess(str, expected);
+}
+
+TEST_F(VersionTest, AfterWhitespace)
+{
+    const char* str = "\n"
+                      "\n"
+                      "#version 200\n";
+    const char* expected = "\n\n\n";
+
+    using testing::_;
+    // Directive successfully parsed.
+    EXPECT_CALL(mDirectiveHandler,
+                handleVersion(pp::SourceLocation(0, 3), 200));
+    // No error or warning.
+    EXPECT_CALL(mDiagnostics, print(_, _, _)).Times(0);
+    
+    preprocess(str, expected);
+}
+
+TEST_F(VersionTest, AfterValidToken)
+{
+    const char* str = "foo\n"
+                      "#version 200\n";
+    ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
+
+    using testing::_;
+    EXPECT_CALL(mDiagnostics,
+                print(pp::Diagnostics::VERSION_NOT_FIRST_STATEMENT,
+                      pp::SourceLocation(0, 2), _));
+
+    pp::Token token;
+    do
+    {
+        mPreprocessor.lex(&token);
+    } while (token.type != pp::Token::LAST);
+}
+
+TEST_F(VersionTest, AfterInvalidToken)
+{
+    const char* str = "$\n"
+                      "#version 200\n";
+    ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
+
+    using testing::_;
+    EXPECT_CALL(mDiagnostics,
+                print(pp::Diagnostics::INVALID_CHARACTER,
+                      pp::SourceLocation(0, 1), "$"));
+    EXPECT_CALL(mDiagnostics,
+                print(pp::Diagnostics::VERSION_NOT_FIRST_STATEMENT,
+                      pp::SourceLocation(0, 2), _));
+
+    pp::Token token;
+    do
+    {
+        mPreprocessor.lex(&token);
+    } while (token.type != pp::Token::LAST);
+}
+
+TEST_F(VersionTest, AfterValidDirective)
+{
+    const char* str = "#\n"
+                      "#version 200\n";
+    ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
+
+    using testing::_;
+    EXPECT_CALL(mDiagnostics,
+                print(pp::Diagnostics::VERSION_NOT_FIRST_STATEMENT,
+                      pp::SourceLocation(0, 2), _));
+
+    pp::Token token;
+    do
+    {
+        mPreprocessor.lex(&token);
+    } while (token.type != pp::Token::LAST);
+}
+
+TEST_F(VersionTest, AfterInvalidDirective)
+{
+    const char* str = "#foo\n"
+                      "#version 200\n";
+    ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
+
+    using testing::_;
+    EXPECT_CALL(mDiagnostics,
+                print(pp::Diagnostics::DIRECTIVE_INVALID_NAME,
+                      pp::SourceLocation(0, 1), "foo"));
+    EXPECT_CALL(mDiagnostics,
+                print(pp::Diagnostics::VERSION_NOT_FIRST_STATEMENT,
+                      pp::SourceLocation(0, 2), _));
+
+    pp::Token token;
+    do
+    {
+        mPreprocessor.lex(&token);
+    } while (token.type != pp::Token::LAST);
+}
+
+TEST_F(VersionTest, AfterExcludedBlock)
+{
+    const char* str = "#if 0\n"
+                      "foo\n"
+                      "#endif\n"
+                      "#version 200\n";
+    ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
+
+    using testing::_;
+    EXPECT_CALL(mDiagnostics,
+                print(pp::Diagnostics::VERSION_NOT_FIRST_STATEMENT,
+                      pp::SourceLocation(0, 4), _));
+
+    pp::Token token;
+    do
+    {
+        mPreprocessor.lex(&token);
+    } while (token.type != pp::Token::LAST);
+}
+
 struct VersionTestParam
 {
     const char* str;

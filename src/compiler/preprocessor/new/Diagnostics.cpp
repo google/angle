@@ -102,6 +102,9 @@ std::string Diagnostics::message(ID id)
           return "invalid version number";
       case INVALID_VERSION_DIRECTIVE:
           return "invalid version directive";
+      case VERSION_NOT_FIRST_STATEMENT:
+        return "#version directive must occur before anything else, "
+               "except for comments and white space";
       case INVALID_LINE_NUMBER:
           return "invalid line number";
       case INVALID_FILE_NUMBER:

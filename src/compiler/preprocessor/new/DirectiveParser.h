@@ -69,6 +69,7 @@ class DirectiveParser : public Lexer
         {
         }
     };
+    bool mPastFirstStatement;
     std::vector<ConditionalBlock> mConditionalStack;
     Tokenizer* mTokenizer;
     MacroSet* mMacroSet;

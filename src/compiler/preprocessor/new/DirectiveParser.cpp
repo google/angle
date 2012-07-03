@@ -208,6 +208,7 @@ DirectiveParser::DirectiveParser(Tokenizer* tokenizer,
                                  MacroSet* macroSet,
                                  Diagnostics* diagnostics,
                                  DirectiveHandler* directiveHandler) :
+    mPastFirstStatement(false),
     mTokenizer(tokenizer),
     mMacroSet(macroSet),
     mDiagnostics(diagnostics),
@@ -224,6 +225,7 @@ void DirectiveParser::lex(Token* token)
         if (token->type == Token::PP_HASH)
         {
             parseDirective(token);
+            mPastFirstStatement = true;
         }
 
         if (token->type == Token::LAST)
@@ -238,6 +240,8 @@ void DirectiveParser::lex(Token* token)
         }
 
     } while (skipping() || (token->type == '\n'));
+
+    mPastFirstStatement = true;
 }
 
 void DirectiveParser::parseDirective(Token* token)
@@ -245,6 +249,12 @@ void DirectiveParser::parseDirective(Token* token)
     assert(token->type == Token::PP_HASH);
 
     mTokenizer->lex(token);
+    if (isEOD(token))
+    {
+        // Empty Directive.
+        return;
+    }
+
     DirectiveType directive = getDirective(token);
 
     // While in an excluded conditional block/group,
@@ -687,6 +697,14 @@ void DirectiveParser::parseExtension(Token* token)
 void DirectiveParser::parseVersion(Token* token)
 {
     assert(getDirective(token) == DIRECTIVE_VERSION);
+
+    if (mPastFirstStatement)
+    {
+        mDiagnostics->report(Diagnostics::VERSION_NOT_FIRST_STATEMENT,
+                             token->location, token->text);
+        skipUntilEOD(mTokenizer, token);
+        return;
+    }
 
     enum State
     {
