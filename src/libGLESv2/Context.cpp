@@ -264,6 +264,7 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         mBlit = new Blit(this);
 
         mSupportsShaderModel3 = mDeviceCaps.PixelShaderVersion >= D3DPS_VERSION(3, 0);
+        mMaximumPointSize = mDeviceCaps.MaxPointSize;
         mSupportsVertexTexture = mDisplay->getVertexTextureSupport();
         mSupportsNonPower2Texture = mDisplay->getNonPower2TextureSupport();
         mSupportsInstancing = mDisplay->getInstancingSupport();
@@ -1406,7 +1407,7 @@ bool Context::getFloatv(GLenum pname, GLfloat *params)
         break;
       case GL_ALIASED_POINT_SIZE_RANGE:
         params[0] = gl::ALIASED_POINT_SIZE_RANGE_MIN;
-        params[1] = supportsShaderModel3() ? gl::ALIASED_POINT_SIZE_RANGE_MAX_SM3 : gl::ALIASED_POINT_SIZE_RANGE_MAX_SM2;
+        params[1] = getMaximumPointSize();
         break;
       case GL_DEPTH_RANGE:
         params[0] = mState.zNear;
@@ -3360,6 +3361,11 @@ bool Context::isResetNotificationEnabled()
 bool Context::supportsShaderModel3() const
 {
     return mSupportsShaderModel3;
+}
+
+float Context::getMaximumPointSize() const
+{
+    return mSupportsShaderModel3 ? mMaximumPointSize : ALIASED_POINT_SIZE_RANGE_MAX_SM2;
 }
 
 int Context::getMaximumVaryingVectors() const

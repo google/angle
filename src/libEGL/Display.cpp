@@ -474,6 +474,15 @@ void Display::initializeDevice()
     mDevice->SetRenderState(D3DRS_POINTSPRITEENABLE, TRUE);
     mDevice->SetRenderState(D3DRS_LASTPIXEL, FALSE);
 
+    if (mDeviceCaps.PixelShaderVersion >= D3DPS_VERSION(3, 0))
+    {
+        mDevice->SetRenderState(D3DRS_POINTSIZE_MAX, (DWORD&)mDeviceCaps.MaxPointSize);
+    }
+    else
+    {
+        mDevice->SetRenderState(D3DRS_POINTSIZE_MAX, 0x3F800000);   // 1.0f
+    }
+
     mSceneStarted = false;
 }
 

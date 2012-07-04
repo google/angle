@@ -1392,7 +1392,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
 
     if (vertexShader->mUsesPointSize && sm3)
     {
-        vertexHLSL += "    output.gl_PointSize = clamp(gl_PointSize, 1.0, " + str((int)ALIASED_POINT_SIZE_RANGE_MAX_SM3) + ");\n";
+        vertexHLSL += "    output.gl_PointSize = gl_PointSize;\n";
     }
 
     if (fragmentShader->mUsesFragCoord)

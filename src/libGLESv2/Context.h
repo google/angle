@@ -90,7 +90,6 @@ const float ALIASED_LINE_WIDTH_RANGE_MIN = 1.0f;
 const float ALIASED_LINE_WIDTH_RANGE_MAX = 1.0f;
 const float ALIASED_POINT_SIZE_RANGE_MIN = 1.0f;
 const float ALIASED_POINT_SIZE_RANGE_MAX_SM2 = 1.0f;
-const float ALIASED_POINT_SIZE_RANGE_MAX_SM3 = 64.0f;
 
 struct Color
 {
@@ -471,6 +470,7 @@ class Context
     virtual bool isResetNotificationEnabled();
 
     bool supportsShaderModel3() const;
+    float getMaximumPointSize() const;
     int getMaximumVaryingVectors() const;
     unsigned int getMaximumVertexTextureImageUnits() const;
     unsigned int getMaximumCombinedTextureImageUnits() const;
@@ -597,6 +597,7 @@ class Context
     Framebuffer *mBoundDrawFramebuffer;
 
     bool mSupportsShaderModel3;
+    float mMaximumPointSize;
     bool mSupportsVertexTexture;
     bool mSupportsNonPower2Texture;
     bool mSupportsInstancing;
