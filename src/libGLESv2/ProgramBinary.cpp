@@ -1316,7 +1316,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
         }
     }
 
-    std::string varyingSemantic = (sm3 ? "COLOR" : "TEXCOORD");
+    std::string varyingSemantic = (vertexShader->mUsesPointSize && sm3 ? "COLOR" : "TEXCOORD");
 
     vertexHLSL += "struct VS_INPUT\n"
                    "{\n";
