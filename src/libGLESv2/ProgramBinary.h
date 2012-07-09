@@ -10,6 +10,10 @@
 #ifndef LIBGLESV2_PROGRAM_BINARY_H_
 #define LIBGLESV2_PROGRAM_BINARY_H_
 
+#define GL_APICALL
+#include <gles2/gl2.h>
+#include <gles2/gl2ext.h>
+
 #include <d3dx9.h>
 #include <d3dcompiler.h>
 #include <string>
@@ -78,6 +82,10 @@ struct Uniform
 // Struct used for correlating uniforms/elements of uniform arrays to handles
 struct UniformLocation
 {
+    UniformLocation()
+    {
+    }
+
     UniformLocation(const std::string &_name, unsigned int element, unsigned int index);
 
     std::string name;
@@ -127,6 +135,10 @@ class ProgramBinary
 
     void dirtyAllUniforms();
     void applyUniforms();
+
+    bool load(InfoLog &infoLog, const void *binary, GLsizei length);
+    bool save(void* binary, GLsizei bufSize, GLsizei *length);
+    GLint getLength();
 
     bool link(InfoLog &infoLog, const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader);
     void getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shaders);
@@ -182,6 +194,8 @@ class ProgramBinary
 
     struct Sampler
     {
+        Sampler();
+
         bool active;
         GLint logicalTextureUnit;
         TextureType textureType;

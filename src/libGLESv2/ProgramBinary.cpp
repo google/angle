@@ -7,10 +7,13 @@
 // Program.cpp: Implements the gl::Program class. Implements GL program objects
 // and related functionality. [OpenGL ES 2.0.24] section 2.10.3 page 28.
 
+#include <sstream>
+
 #include "libGLESv2/Program.h"
 #include "libGLESv2/ProgramBinary.h"
 
 #include "common/debug.h"
+#include "common/version.h"
 
 #include "libGLESv2/main.h"
 #include "libGLESv2/Shader.h"
@@ -1585,6 +1588,291 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
     return true;
 }
 
+bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
+{
+    std::istringstream stream((const char*) binary, length);
+    stream >> std::boolalpha;
+
+    int format = 0;
+    stream >> format;
+    if (format != GL_PROGRAM_BINARY_ANGLE)
+    {
+        infoLog.append("Invalid program binary format.");
+        return false;
+    }
+
+    int version = 0;
+    stream >> version;
+    if (version != BUILD_REVISION)
+    {
+        infoLog.append("Invalid program binary version.");
+        return false;
+    }
+
+    for (int i = 0; i < MAX_VERTEX_ATTRIBS; ++i)
+    {
+        stream >> mLinkedAttribute[i].type;
+        std::string name;
+        stream >> name;
+        mLinkedAttribute[i].name = name.substr(1, name.length() - 2);
+        stream >> mSemanticIndex[i];
+    }
+
+    for (unsigned int i = 0; i < MAX_TEXTURE_IMAGE_UNITS; ++i)
+    {
+        stream >> mSamplersPS[i].active;
+        stream >> mSamplersPS[i].logicalTextureUnit;
+        
+        int textureType;
+        stream >> textureType;
+        mSamplersPS[i].textureType = (TextureType) textureType;
+    }
+
+    for (unsigned int i = 0; i < MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF; ++i)
+    {
+        stream >> mSamplersVS[i].active;
+        stream >> mSamplersVS[i].logicalTextureUnit;
+        
+        int textureType;
+        stream >> textureType;
+        mSamplersVS[i].textureType = (TextureType) textureType;
+    }
+
+    stream >> mUsedVertexSamplerRange;
+    stream >> mUsedPixelSamplerRange;
+
+    unsigned int size;
+    stream >> size;
+    if (!stream.good())
+    {
+        infoLog.append("Invalid program binary.");
+        return false;
+    }
+
+    mUniforms.resize(size);
+    for (unsigned int i = 0; i < size; ++i)
+    {
+        GLenum type;
+        std::string _name;
+        unsigned int arraySize;
+
+        stream >> type >> _name >> arraySize;
+
+        mUniforms[i] = new Uniform(type, _name.substr(1, _name.length() - 2), arraySize);
+        
+        stream >> mUniforms[i]->ps.float4Index;
+        stream >> mUniforms[i]->ps.samplerIndex;
+        stream >> mUniforms[i]->ps.boolIndex;
+        stream >> mUniforms[i]->ps.registerCount;
+
+        stream >> mUniforms[i]->vs.float4Index;
+        stream >> mUniforms[i]->vs.samplerIndex;
+        stream >> mUniforms[i]->vs.boolIndex;
+        stream >> mUniforms[i]->vs.registerCount;
+    }
+
+    stream >> size;
+    if (!stream.good())
+    {
+        infoLog.append("Invalid program binary.");
+        return false;
+    }
+
+    mUniformIndex.resize(size);
+    for (unsigned int i = 0; i < size; ++i)
+    {
+        std::string name;
+        stream >> name;
+        mUniformIndex[i].name = name.substr(1, name.length() - 2);
+        stream >> mUniformIndex[i].element;
+        stream >> mUniformIndex[i].index;
+    }
+
+    stream >> mDxDepthRangeLocation;
+    stream >> mDxDepthLocation;
+    stream >> mDxCoordLocation;
+    stream >> mDxHalfPixelSizeLocation;
+    stream >> mDxFrontCCWLocation;
+    stream >> mDxPointsOrLinesLocation;
+
+    unsigned int pixelShaderSize;
+    stream >> pixelShaderSize;
+
+    unsigned int vertexShaderSize;
+    stream >> vertexShaderSize;
+
+    // Skip final newline.
+    stream.ignore(1);
+
+    const char *ptr = (const char*) binary + stream.tellg();
+
+    const D3DCAPS9 *binaryIdentifier = (const D3DCAPS9*) ptr;
+    ptr += sizeof(GUID);
+
+    D3DADAPTER_IDENTIFIER9 *currentIdentifier = getDisplay()->getAdapterIdentifier();
+    if (memcmp(&currentIdentifier->DeviceIdentifier, binaryIdentifier, sizeof(GUID)) != 0)
+    {
+        infoLog.append("Invalid program binary.");
+        return false;
+    }
+
+    const char *pixelShaderFunction = ptr;
+    ptr += pixelShaderSize;
+
+    const char *vertexShaderFunction = ptr;
+    ptr += vertexShaderSize;
+
+    HRESULT result = mDevice->CreatePixelShader(reinterpret_cast<const DWORD*>(pixelShaderFunction), &mPixelExecutable);
+    if (FAILED(result))
+    {
+        infoLog.append("Could not create pixel shader.");
+        return false;
+    }
+
+    result = mDevice->CreateVertexShader(reinterpret_cast<const DWORD*>(vertexShaderFunction), &mVertexExecutable);
+    if (FAILED(result))
+    {
+        infoLog.append("Could not create vertex shader.");
+        mPixelExecutable->Release();
+        mPixelExecutable = NULL;
+        return false;
+    }
+
+    return true;
+}
+
+bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
+{
+    std::ostringstream stream;
+    stream << std::boolalpha;
+
+    stream << GL_PROGRAM_BINARY_ANGLE << std::endl;
+    stream << BUILD_REVISION << std::endl;
+
+    for (unsigned int i = 0; i < MAX_VERTEX_ATTRIBS; ++i)
+    {
+        stream << mLinkedAttribute[i].type << std::endl;
+        stream << "\"" << mLinkedAttribute[i].name << "\"" << std::endl;
+        stream << mSemanticIndex[i] << std::endl << std::endl;
+    }
+
+    for (unsigned int i = 0; i < MAX_TEXTURE_IMAGE_UNITS; ++i)
+    {
+        stream << mSamplersPS[i].active << std::endl;
+        stream << mSamplersPS[i].logicalTextureUnit << std::endl;
+        stream << (int) mSamplersPS[i].textureType << std::endl << std::endl;
+    }
+
+    for (unsigned int i = 0; i < MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF; ++i)
+    {
+        stream << mSamplersVS[i].active << std::endl;
+        stream << mSamplersVS[i].logicalTextureUnit << std::endl;
+        stream << (int) mSamplersVS[i].textureType << std::endl << std::endl;
+    }
+
+    stream << mUsedVertexSamplerRange << std::endl;
+    stream << mUsedPixelSamplerRange << std::endl << std::endl;
+
+    stream << mUniforms.size() << std::endl;
+    for (unsigned int i = 0; i < mUniforms.size(); ++i)
+    {
+        stream << mUniforms[i]->type << std::endl;
+        stream << "\"" << mUniforms[i]->_name << "\"" << std::endl;
+        stream << mUniforms[i]->arraySize << std::endl << std::endl;
+
+        stream << mUniforms[i]->ps.float4Index << std::endl;
+        stream << mUniforms[i]->ps.samplerIndex << std::endl;
+        stream << mUniforms[i]->ps.boolIndex << std::endl;
+        stream << mUniforms[i]->ps.registerCount << std::endl;
+
+        stream << mUniforms[i]->vs.float4Index << std::endl;
+        stream << mUniforms[i]->vs.samplerIndex << std::endl;
+        stream << mUniforms[i]->vs.boolIndex << std::endl;
+        stream << mUniforms[i]->vs.registerCount << std::endl;
+    }
+
+    stream << mUniformIndex.size() << std::endl;
+    for (unsigned int i = 0; i < mUniformIndex.size(); ++i)
+    {
+        stream << "\"" << mUniformIndex[i].name << "\"" << std::endl;
+        stream << mUniformIndex[i].element << std::endl;
+        stream << mUniformIndex[i].index << std::endl << std::endl;
+    }
+
+    stream << mDxDepthRangeLocation << std::endl;
+    stream << mDxDepthLocation << std::endl;
+    stream << mDxCoordLocation << std::endl;
+    stream << mDxHalfPixelSizeLocation << std::endl;
+    stream << mDxFrontCCWLocation << std::endl;
+    stream << mDxPointsOrLinesLocation << std::endl;
+
+    UINT pixelShaderSize;
+    HRESULT result = mPixelExecutable->GetFunction(NULL, &pixelShaderSize);
+    ASSERT(SUCCEEDED(result));
+    stream << pixelShaderSize << std::endl;
+
+    UINT vertexShaderSize;
+    result = mVertexExecutable->GetFunction(NULL, &vertexShaderSize);
+    ASSERT(SUCCEEDED(result));
+    stream << vertexShaderSize << std::endl;
+
+    std::string text = stream.str();
+
+    D3DADAPTER_IDENTIFIER9 *identifier = getDisplay()->getAdapterIdentifier();
+
+    GLsizei totalLength = text.length() + sizeof(GUID) + pixelShaderSize + vertexShaderSize;
+    if (totalLength > bufSize)
+    {
+        if (length)
+        {
+            *length = 0;
+        }
+
+        return false;
+    }
+
+    if (binary)
+    {
+        char *ptr = (char*) binary;
+
+        memcpy(ptr, text.c_str(), text.length());
+        ptr += text.length();
+
+        memcpy(ptr, &identifier->DeviceIdentifier, sizeof(GUID));
+        ptr += sizeof(GUID);
+
+        result = mPixelExecutable->GetFunction(ptr, &pixelShaderSize);
+        ASSERT(SUCCEEDED(result));
+        ptr += pixelShaderSize;
+
+        result = mVertexExecutable->GetFunction(ptr, &vertexShaderSize);
+        ASSERT(SUCCEEDED(result));
+        ptr += vertexShaderSize;
+
+        ASSERT(ptr - totalLength == binary);
+    }
+
+    if (length)
+    {
+        *length = totalLength;
+    }
+
+    return true;
+}
+
+GLint ProgramBinary::getLength()
+{
+    GLint length;
+    if (save(NULL, INT_MAX, &length))
+    {
+        return length;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
 bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader)
 {
     if (!fragmentShader || !fragmentShader->isCompiled())
@@ -2475,6 +2763,10 @@ GLint ProgramBinary::getDxFrontCCWLocation() const
 GLint ProgramBinary::getDxPointsOrLinesLocation() const
 {
     return mDxPointsOrLinesLocation;
+}
+
+ProgramBinary::Sampler::Sampler() : active(false), logicalTextureUnit(0), textureType(TEXTURE_2D)
+{
 }
 
 }

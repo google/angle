@@ -3422,7 +3422,7 @@ void __stdcall glGetProgramiv(GLuint program, GLenum pname, GLint* params)
                 *params = programObject->getActiveUniformMaxLength();
                 return;
               case GL_PROGRAM_BINARY_LENGTH_OES:
-                *params = 0;
+                *params = programObject->getProgramBinaryLength();
                 return;
               default:
                 return error(GL_INVALID_ENUM);
@@ -6818,7 +6818,7 @@ void __stdcall glTexImage3DOES(GLenum target, GLint level, GLenum internalformat
 void __stdcall glGetProgramBinaryOES(GLuint program, GLsizei bufSize, GLsizei *length, 
                                      GLenum *binaryFormat, void *binary)
 {
-    EVENT("(GLenum program = 0x%X, bufSize = %s, length = 0x%0.8p, binaryFormat = 0x%0.8p, binary = 0x%0.8p)",
+    EVENT("(GLenum program = 0x%X, bufSize = %d, length = 0x%0.8p, binaryFormat = 0x%0.8p, binary = 0x%0.8p)",
           program, bufSize, length, binaryFormat, binary);
 
     try
@@ -6841,12 +6841,12 @@ void __stdcall glGetProgramBinaryOES(GLuint program, GLsizei bufSize, GLsizei *l
                 return error(GL_INVALID_OPERATION);
             }
 
-            *binaryFormat = GL_PROGRAM_BINARY_ANGLE;
-
-            if (length)
+            if (!programBinary->save(binary, bufSize, length))
             {
-                *length = 0;
+                return error(GL_INVALID_OPERATION);
             }
+
+            *binaryFormat = GL_PROGRAM_BINARY_ANGLE;
         }
     }
     catch(std::bad_alloc&)
@@ -6879,7 +6879,7 @@ void __stdcall glProgramBinaryOES(GLuint program, GLenum binaryFormat,
                 return error(GL_INVALID_OPERATION);
             }
 
-            programObject->setProgramBinary(NULL);
+            programObject->setProgramBinary(binary, length);
         }
     }
     catch(std::bad_alloc&)

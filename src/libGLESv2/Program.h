@@ -69,7 +69,7 @@ class Program
     void bindAttributeLocation(GLuint index, const char *name);
 
     void link();
-    void setProgramBinary(ProgramBinary *programBinary);
+    void setProgramBinary(const void *binary, GLsizei length);
     ProgramBinary *getProgramBinary();
 
     int getInfoLogLength() const;
@@ -94,6 +94,8 @@ class Program
     bool isValidated() const;
 
     unsigned int getSerial() const;
+
+    GLint getProgramBinaryLength() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Program);

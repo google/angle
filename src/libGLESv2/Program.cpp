@@ -298,10 +298,18 @@ ProgramBinary* Program::getProgramBinary()
     return mProgramBinary;
 }
 
-void Program::setProgramBinary(ProgramBinary *programBinary)
+void Program::setProgramBinary(const void *binary, GLsizei length)
 {
     unlink(false);
-    mProgramBinary = programBinary;
+
+    mInfoLog.reset();
+
+    mProgramBinary = new ProgramBinary;
+    if (!mProgramBinary->load(mInfoLog, binary, length))
+    {
+        delete mProgramBinary;
+        mProgramBinary = NULL;
+    }
 }
 
 void Program::release()
@@ -327,6 +335,18 @@ unsigned int Program::getRefCount() const
 unsigned int Program::getSerial() const
 {
     return mSerial;
+}
+
+GLint Program::getProgramBinaryLength() const
+{
+    if (mProgramBinary)
+    {
+        return mProgramBinary->getLength();
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 unsigned int Program::issueSerial()
