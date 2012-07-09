@@ -13,7 +13,9 @@ template<typename IntType>
 static bool atoi_t(const std::string& str, IntType* value)
 {
     std::ios::fmtflags base = std::ios::dec;
-    if ((str.size() >= 2) && (str[0] == '0') && (tolower(str[1]) == 'x'))
+    if ((str.size() >= 2) &&
+        (str[0] == '0') &&
+        ((str[1] == 'x') || (str[1] == 'X')))
     {
         base = std::ios::hex;
     }

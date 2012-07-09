@@ -65,17 +65,17 @@ INSTANTIATE_TEST_CASE_P(OctalInteger,
 
 INSTANTIATE_TEST_CASE_P(HexadecimalInteger_0_9,
                         IntegerTest,
-                        testing::Combine(testing::Values("0x"),
+                        testing::Combine(testing::Values("0x", "0X"),
                                          CLOSED_RANGE('0', '9')));
 
 INSTANTIATE_TEST_CASE_P(HexadecimalInteger_a_f,
                         IntegerTest,
-                        testing::Combine(testing::Values("0x"),
+                        testing::Combine(testing::Values("0x", "0X"),
                                          CLOSED_RANGE('a', 'f')));
 
 INSTANTIATE_TEST_CASE_P(HexadecimalInteger_A_F,
                         IntegerTest,
-                        testing::Combine(testing::Values("0x"),
+                        testing::Combine(testing::Values("0x", "0X"),
                                          CLOSED_RANGE('A', 'F')));
 
 class FloatTest : public PreprocessorTest
