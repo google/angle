@@ -2948,9 +2948,8 @@ void yyfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-#if !ANGLE_USE_NEW_PREPROCESSOR
+// Old preprocessor interface.
 extern "C" {
-// Preprocessor interface.
 #include "compiler/preprocessor/preprocess.h"
 
 extern int InitPreprocessor();
@@ -3075,7 +3074,6 @@ void updateExtensionBehavior(const char* extName, const char* behavior)
     context->handleExtensionDirective(yylineno, extName, behavior);
 }
 }  // extern "C"
-#endif  // !ANGLE_USE_NEW_PREPROCESSOR
 
 int string_input(char* buf, int max_size, yyscan_t yyscanner) {
     int len = 0;
