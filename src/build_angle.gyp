@@ -234,6 +234,7 @@
             'libGLESv2/vertexconversion.h',
             'libGLESv2/VertexDataManager.cpp',
             'libGLESv2/VertexDataManager.h',
+            'libGLESv2/BinaryStream.h',
             'libGLESv2/Blit.cpp',
             'libGLESv2/Blit.h',
             'libGLESv2/Buffer.cpp',
