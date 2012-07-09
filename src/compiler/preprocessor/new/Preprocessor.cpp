@@ -123,19 +123,6 @@ void Preprocessor::lex(Token* token)
             validToken = true;
             break;
           }
-          case Token::IDENTIFIER:
-          {
-            if (token->text.size() > Token::kMaxIdentifierLength)
-            {
-                // Do not mark the token as invalid.
-                // Just emit the diagnostic and clamp string length.
-                mImpl->diagnostics->report(Diagnostics::IDENTIFIER_OVERFLOW,
-                                           token->location, token->text);
-                token->text.erase(Token::kMaxIdentifierLength);
-            }
-            validToken = true;
-            break;
-          }
           case Token::PP_NUMBER:
             mImpl->diagnostics->report(Diagnostics::INVALID_NUMBER,
                                        token->location, token->text);

@@ -33,7 +33,7 @@ class Diagnostics
         INVALID_NUMBER,
         INTEGER_OVERFLOW,
         FLOAT_OVERFLOW,
-        IDENTIFIER_OVERFLOW,
+        TOKEN_TOO_LONG,
         INVALID_EXPRESSION,
         DIVISION_BY_ZERO,
         EOF_IN_COMMENT,

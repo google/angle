@@ -264,6 +264,10 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
 
 namespace pp {
 
+// TODO(alokp): Maximum token length should ideally be specified by
+// the preprocessor client, i.e., the compiler.
+const size_t Tokenizer::kMaxTokenLength = 256;
+
 Tokenizer::Tokenizer(Diagnostics* diagnostics) : mHandle(0)
 {
     mContext.diagnostics = diagnostics;
@@ -298,6 +302,13 @@ void Tokenizer::setLineNumber(int line)
 void Tokenizer::lex(Token* token)
 {
     token->type = yylex(&token->text, &token->location, mHandle);
+    if (token->text.size() > kMaxTokenLength)
+    {
+        mContext.diagnostics->report(Diagnostics::TOKEN_TOO_LONG,
+                                     token->location, token->text);
+        token->text.erase(kMaxTokenLength);
+    }
+
     token->flags = 0;
 
     token->setAtStartOfLine(mContext.lineStart);

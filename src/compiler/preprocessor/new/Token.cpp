@@ -31,10 +31,6 @@ static bool atoi_t(const std::string& str, IntType* value)
 namespace pp
 {
 
-// TODO(alokp): This should be specified by preprocessor client,
-// i.e., the compiler.
-const size_t Token::kMaxIdentifierLength = 256;
-
 void Token::reset()
 {
     type = 0;

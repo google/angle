@@ -61,7 +61,6 @@ struct Token
         HAS_LEADING_SPACE  = 1 << 1,
         EXPANSION_DISABLED = 1 << 2
     };
-    static const size_t kMaxIdentifierLength;
 
     Token() : type(0), flags(0) { }
 

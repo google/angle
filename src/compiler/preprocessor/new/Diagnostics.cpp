@@ -52,8 +52,8 @@ std::string Diagnostics::message(ID id)
           return "integer overflow";
       case FLOAT_OVERFLOW:
           return "float overflow";
-      case IDENTIFIER_OVERFLOW:
-          return "identifier buffer overflow";
+      case TOKEN_TOO_LONG:
+          return "token too long";
       case INVALID_EXPRESSION:
           return "invalid expression";
       case DIVISION_BY_ZERO:
