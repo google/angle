@@ -7,6 +7,9 @@
 #include "Token.h"
 
 #include <cassert>
+#include <cerrno>
+#include <cfloat>
+#include <cstdlib>
 #include <sstream>
 
 template<typename IntType>
@@ -89,10 +92,18 @@ bool Token::fValue(float* value) const
 {
     assert(type == CONST_FLOAT);
 
-    std::istringstream stream(text);
-    stream.imbue(std::locale("C"));
-    stream >> (*value);
-    return !stream.fail();
+    errno = 0;
+    double dValue = strtod(text.c_str(), NULL);
+    // Note that we do not need to check for negative numbers because the
+    // minus sign is never part of the token.
+    if ((errno == ERANGE) || (dValue > FLT_MAX))
+    {
+        errno = 0;
+        *value = FLT_MAX;
+        return false;
+    }
+    *value = static_cast<float>(dValue);
+    return true;
 }
 
 std::ostream& operator<<(std::ostream& out, const Token& token)
