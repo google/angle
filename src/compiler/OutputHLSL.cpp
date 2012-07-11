@@ -2078,13 +2078,18 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
             index->traverse(this);
             out << " = false;\n";
 
+            bool firstLoopFragment = true;
+
             while (iterations > 0)
             {
                 int clampedLimit = initial + increment * std::min(MAX_LOOP_ITERATIONS, iterations);
 
-                out << "if(!Break";
-                index->traverse(this);
-                out << ") {\n";
+                if (!firstLoopFragment)
+                {
+                    out << "if(!Break";
+                    index->traverse(this);
+                    out << ") {\n";
+                }
                 
                 // for(int index = initial; index < clampedLimit; index += increment)
 
@@ -2113,7 +2118,14 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
                 }
 
                 outputLineDirective(node->getLine());
-                out << ";}}\n";
+                out << ";}\n";
+
+                if (!firstLoopFragment)
+                {
+                    out << "}\n";
+                }
+
+                firstLoopFragment = false;
 
                 initial += MAX_LOOP_ITERATIONS * increment;
                 iterations -= MAX_LOOP_ITERATIONS;
