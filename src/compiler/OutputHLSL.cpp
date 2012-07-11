@@ -2052,6 +2052,8 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
                 return false;   // Not an excessive loop
             }
 
+            out << "{";
+
             while (iterations > 0)
             {
                 int clampedLimit = initial + increment * std::min(MAX_LOOP_ITERATIONS, iterations);
@@ -2088,6 +2090,8 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
                 initial += MAX_LOOP_ITERATIONS * increment;
                 iterations -= MAX_LOOP_ITERATIONS;
             }
+            
+            out << "}";
 
             return true;
         }
