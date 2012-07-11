@@ -87,6 +87,8 @@ OutputHLSL::OutputHLSL(TParseContext &context) : TIntermTraverser(true, true, tr
     mContainsLoopDiscontinuity = false;
     mOutputLod0Function = false;
     mInsideDiscontinuousLoop = false;
+
+    mExcessiveLoopIndex = NULL;
 }
 
 OutputHLSL::~OutputHLSL()
@@ -2052,6 +2054,9 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
                 return false;   // Not an excessive loop
             }
 
+            TIntermSymbol *restoreIndex = mExcessiveLoopIndex;
+            mExcessiveLoopIndex = index;
+
             out << "{int ";
             index->traverse(this);
             out << ";\n";
@@ -2094,6 +2099,8 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
             }
             
             out << "}";
+
+            mExcessiveLoopIndex = restoreIndex;
 
             return true;
         }
