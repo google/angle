@@ -2052,7 +2052,9 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
                 return false;   // Not an excessive loop
             }
 
-            out << "{";
+            out << "{int ";
+            index->traverse(this);
+            out << ";\n";
 
             while (iterations > 0)
             {
@@ -2060,7 +2062,7 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
 
                 // for(int index = initial; index < clampedLimit; index += increment)
 
-                out << "for(int ";
+                out << "for(";
                 index->traverse(this);
                 out << " = ";
                 out << initial;
