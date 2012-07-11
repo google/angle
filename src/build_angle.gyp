@@ -33,6 +33,7 @@
         'compiler/preprocessor/new/Macro.h',
         'compiler/preprocessor/new/MacroExpander.cpp',
         'compiler/preprocessor/new/MacroExpander.h',
+        'compiler/preprocessor/new/numeric_lex.h',
         'compiler/preprocessor/new/pp_utils.h',
         'compiler/preprocessor/new/Preprocessor.cpp',
         'compiler/preprocessor/new/Preprocessor.h',

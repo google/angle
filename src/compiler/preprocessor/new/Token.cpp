@@ -7,31 +7,8 @@
 #include "Token.h"
 
 #include <cassert>
-#include <cerrno>
-#include <cfloat>
-#include <cstdlib>
-#include <sstream>
 
-template<typename IntType>
-static bool atoi_t(const std::string& str, IntType* value)
-{
-    std::ios::fmtflags base = std::ios::dec;
-    if ((str.size() >= 2) &&
-        (str[0] == '0') &&
-        ((str[1] == 'x') || (str[1] == 'X')))
-    {
-        base = std::ios::hex;
-    }
-    else if ((str.size() >= 1) && (str[0] == '0'))
-    {
-        base = std::ios::oct;
-    }
-
-    std::istringstream stream(str);
-    stream.setf(base, std::ios::basefield);
-    stream >> (*value);
-    return !stream.fail();
-}
+#include "numeric_lex.h"
 
 namespace pp
 {
@@ -79,31 +56,19 @@ void Token::setExpansionDisabled(bool disable)
 bool Token::iValue(int* value) const
 {
     assert(type == CONST_INT);
-    return atoi_t(text, value);
+    return numeric_lex_int(text, value);
 }
 
 bool Token::uValue(unsigned int* value) const
 {
     assert(type == CONST_INT);
-    return atoi_t(text, value);
+    return numeric_lex_int(text, value);
 }
 
 bool Token::fValue(float* value) const
 {
     assert(type == CONST_FLOAT);
-
-    errno = 0;
-    double dValue = strtod(text.c_str(), NULL);
-    // Note that we do not need to check for negative numbers because the
-    // minus sign is never part of the token.
-    if ((errno == ERANGE) || (dValue > FLT_MAX))
-    {
-        errno = 0;
-        *value = FLT_MAX;
-        return false;
-    }
-    *value = static_cast<float>(dValue);
-    return true;
+    return numeric_lex_float(text, value);
 }
 
 std::ostream& operator<<(std::ostream& out, const Token& token)

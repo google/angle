@@ -369,6 +369,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\numeric_lex.h"
+				>
+			</File>
+			<File
 				RelativePath=".\pp_utils.h"
 				>
 			</File>
