@@ -1864,7 +1864,21 @@ bool OutputHLSL::visitBranch(Visit visit, TIntermBranch *node)
     switch (node->getFlowOp())
     {
       case EOpKill:     outputTriplet(visit, "discard;\n", "", "");  break;
-      case EOpBreak:    outputTriplet(visit, "break;\n", "", "");    break;
+      case EOpBreak:
+        if (visit == PreVisit)
+        {
+            if (mExcessiveLoopIndex)
+            {
+                out << "{Break";
+                mExcessiveLoopIndex->traverse(this);
+                out << " = true; break;}\n";
+            }
+            else
+            {
+                out << "break;\n";
+            }
+        }
+        break;
       case EOpContinue: outputTriplet(visit, "continue;\n", "", ""); break;
       case EOpReturn:
         if (visit == PreVisit)
@@ -2059,12 +2073,19 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
 
             out << "{int ";
             index->traverse(this);
-            out << ";\n";
+            out << ";\n"
+                   "bool Break";
+            index->traverse(this);
+            out << " = false;\n";
 
             while (iterations > 0)
             {
                 int clampedLimit = initial + increment * std::min(MAX_LOOP_ITERATIONS, iterations);
 
+                out << "if(!Break";
+                index->traverse(this);
+                out << ") {\n";
+                
                 // for(int index = initial; index < clampedLimit; index += increment)
 
                 out << "for(";
@@ -2092,7 +2113,7 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
                 }
 
                 outputLineDirective(node->getLine());
-                out << ";}\n";
+                out << ";}}\n";
 
                 initial += MAX_LOOP_ITERATIONS * increment;
                 iterations -= MAX_LOOP_ITERATIONS;
