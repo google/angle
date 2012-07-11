@@ -4428,6 +4428,15 @@ yyreduce:
 
     {
         TFunction* function = (yyvsp[(1) - (1)].interm).function;
+        
+        const TSymbol *builtIn = context->symbolTable.findBuiltIn(function->getMangledName());
+        
+        if (builtIn)
+        {
+            context->error((yyvsp[(1) - (1)].interm).line, "built-in functions cannot be redefined", function->getName().c_str());
+            context->recover();
+        }
+        
         TFunction* prevDec = static_cast<TFunction*>(context->symbolTable.find(function->getMangledName()));
         //
         // Note:  'prevDec' could be 'function' if this is the first time we've seen function
