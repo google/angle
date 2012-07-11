@@ -2090,6 +2090,11 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
                     index->traverse(this);
                     out << ") {\n";
                 }
+
+                if (iterations <= MAX_LOOP_ITERATIONS)   // Last loop fragment
+                {
+                    mExcessiveLoopIndex = NULL;   // Stops setting the Break flag
+                }
                 
                 // for(int index = initial; index < clampedLimit; index += increment)
 
