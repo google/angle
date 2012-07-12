@@ -80,6 +80,11 @@ class BinaryInputStream
         mOffset += length;
     }
 
+    size_t offset() const
+    {
+        return mOffset;
+    }
+
     bool error() const
     {
         return mError;
@@ -132,29 +137,14 @@ class BinaryOutputStream
         write(v.c_str(), length);
     }
 
-    bool getData(void *buffer, size_t bufSize, size_t *length)
+    size_t length() const
     {
-        if (bufSize < mData.size())
-        {
-            if (length)
-            {
-                *length = 0;
-            }
+        return mData.size();
+    }
 
-            return false;
-        }
-
-        if (length)
-        {
-            *length = mData.size();
-        }
-
-        if (mData.size())
-        {
-            memcpy(buffer, &mData[0], mData.size());
-        }
-
-        return true;
+    const void* data() const
+    {
+        return mData.size() ? &mData[0] : NULL;
     }
 
   private:

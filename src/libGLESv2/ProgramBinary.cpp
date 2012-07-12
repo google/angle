@@ -7,8 +7,7 @@
 // Program.cpp: Implements the gl::Program class. Implements GL program objects
 // and related functionality. [OpenGL ES 2.0.24] section 2.10.3 page 28.
 
-#include <sstream>
-
+#include "libGLESv2/BinaryStream.h"
 #include "libGLESv2/Program.h"
 #include "libGLESv2/ProgramBinary.h"
 
@@ -1590,11 +1589,10 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
 
 bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
 {
-    std::istringstream stream((const char*) binary, length);
-    stream >> std::boolalpha;
+    BinaryInputStream stream(binary, length);
 
     int format = 0;
-    stream >> format;
+    stream.read(&format);
     if (format != GL_PROGRAM_BINARY_ANGLE)
     {
         infoLog.append("Invalid program binary format.");
@@ -1602,7 +1600,7 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
     }
 
     int version = 0;
-    stream >> version;
+    stream.read(&version);
     if (version != BUILD_REVISION)
     {
         infoLog.append("Invalid program binary version.");
@@ -1611,39 +1609,39 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
 
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; ++i)
     {
-        stream >> mLinkedAttribute[i].type;
+        stream.read(&mLinkedAttribute[i].type);
         std::string name;
-        stream >> name;
-        mLinkedAttribute[i].name = name.substr(1, name.length() - 2);
-        stream >> mSemanticIndex[i];
+        stream.read(&name);
+        mLinkedAttribute[i].name = name;
+        stream.read(&mSemanticIndex[i]);
     }
 
     for (unsigned int i = 0; i < MAX_TEXTURE_IMAGE_UNITS; ++i)
     {
-        stream >> mSamplersPS[i].active;
-        stream >> mSamplersPS[i].logicalTextureUnit;
+        stream.read(&mSamplersPS[i].active);
+        stream.read(&mSamplersPS[i].logicalTextureUnit);
         
         int textureType;
-        stream >> textureType;
+        stream.read(&textureType);
         mSamplersPS[i].textureType = (TextureType) textureType;
     }
 
     for (unsigned int i = 0; i < MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF; ++i)
     {
-        stream >> mSamplersVS[i].active;
-        stream >> mSamplersVS[i].logicalTextureUnit;
+        stream.read(&mSamplersVS[i].active);
+        stream.read(&mSamplersVS[i].logicalTextureUnit);
         
         int textureType;
-        stream >> textureType;
+        stream.read(&textureType);
         mSamplersVS[i].textureType = (TextureType) textureType;
     }
 
-    stream >> mUsedVertexSamplerRange;
-    stream >> mUsedPixelSamplerRange;
+    stream.read(&mUsedVertexSamplerRange);
+    stream.read(&mUsedPixelSamplerRange);
 
     unsigned int size;
-    stream >> size;
-    if (!stream.good())
+    stream.read(&size);
+    if (stream.error())
     {
         infoLog.append("Invalid program binary.");
         return false;
@@ -1656,23 +1654,25 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
         std::string _name;
         unsigned int arraySize;
 
-        stream >> type >> _name >> arraySize;
+        stream.read(&type);
+        stream.read(&_name);
+        stream.read(&arraySize);
 
-        mUniforms[i] = new Uniform(type, _name.substr(1, _name.length() - 2), arraySize);
+        mUniforms[i] = new Uniform(type, _name, arraySize);
         
-        stream >> mUniforms[i]->ps.float4Index;
-        stream >> mUniforms[i]->ps.samplerIndex;
-        stream >> mUniforms[i]->ps.boolIndex;
-        stream >> mUniforms[i]->ps.registerCount;
+        stream.read(&mUniforms[i]->ps.float4Index);
+        stream.read(&mUniforms[i]->ps.samplerIndex);
+        stream.read(&mUniforms[i]->ps.boolIndex);
+        stream.read(&mUniforms[i]->ps.registerCount);
 
-        stream >> mUniforms[i]->vs.float4Index;
-        stream >> mUniforms[i]->vs.samplerIndex;
-        stream >> mUniforms[i]->vs.boolIndex;
-        stream >> mUniforms[i]->vs.registerCount;
+        stream.read(&mUniforms[i]->vs.float4Index);
+        stream.read(&mUniforms[i]->vs.samplerIndex);
+        stream.read(&mUniforms[i]->vs.boolIndex);
+        stream.read(&mUniforms[i]->vs.registerCount);
     }
 
-    stream >> size;
-    if (!stream.good())
+    stream.read(&size);
+    if (stream.error())
     {
         infoLog.append("Invalid program binary.");
         return false;
@@ -1681,30 +1681,25 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
     mUniformIndex.resize(size);
     for (unsigned int i = 0; i < size; ++i)
     {
-        std::string name;
-        stream >> name;
-        mUniformIndex[i].name = name.substr(1, name.length() - 2);
-        stream >> mUniformIndex[i].element;
-        stream >> mUniformIndex[i].index;
+        stream.read(&mUniformIndex[i].name);
+        stream.read(&mUniformIndex[i].element);
+        stream.read(&mUniformIndex[i].index);
     }
 
-    stream >> mDxDepthRangeLocation;
-    stream >> mDxDepthLocation;
-    stream >> mDxCoordLocation;
-    stream >> mDxHalfPixelSizeLocation;
-    stream >> mDxFrontCCWLocation;
-    stream >> mDxPointsOrLinesLocation;
+    stream.read(&mDxDepthRangeLocation);
+    stream.read(&mDxDepthLocation);
+    stream.read(&mDxCoordLocation);
+    stream.read(&mDxHalfPixelSizeLocation);
+    stream.read(&mDxFrontCCWLocation);
+    stream.read(&mDxPointsOrLinesLocation);
 
     unsigned int pixelShaderSize;
-    stream >> pixelShaderSize;
+    stream.read(&pixelShaderSize);
 
     unsigned int vertexShaderSize;
-    stream >> vertexShaderSize;
+    stream.read(&vertexShaderSize);
 
-    // Skip final newline.
-    stream.ignore(1);
-
-    const char *ptr = (const char*) binary + stream.tellg();
+    const char *ptr = (const char*) binary + stream.offset();
 
     const D3DCAPS9 *binaryIdentifier = (const D3DCAPS9*) ptr;
     ptr += sizeof(GUID);
@@ -1743,84 +1738,84 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
 
 bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
 {
-    std::ostringstream stream;
-    stream << std::boolalpha;
+    BinaryOutputStream stream;
 
-    stream << GL_PROGRAM_BINARY_ANGLE << std::endl;
-    stream << BUILD_REVISION << std::endl;
+    stream.write(GL_PROGRAM_BINARY_ANGLE);
+    stream.write(BUILD_REVISION);
 
     for (unsigned int i = 0; i < MAX_VERTEX_ATTRIBS; ++i)
     {
-        stream << mLinkedAttribute[i].type << std::endl;
-        stream << "\"" << mLinkedAttribute[i].name << "\"" << std::endl;
-        stream << mSemanticIndex[i] << std::endl << std::endl;
+        stream.write(mLinkedAttribute[i].type);
+        stream.write(mLinkedAttribute[i].name);
+        stream.write(mSemanticIndex[i]);
     }
 
     for (unsigned int i = 0; i < MAX_TEXTURE_IMAGE_UNITS; ++i)
     {
-        stream << mSamplersPS[i].active << std::endl;
-        stream << mSamplersPS[i].logicalTextureUnit << std::endl;
-        stream << (int) mSamplersPS[i].textureType << std::endl << std::endl;
+        stream.write(mSamplersPS[i].active);
+        stream.write(mSamplersPS[i].logicalTextureUnit);
+        stream.write((int) mSamplersPS[i].textureType);
     }
 
     for (unsigned int i = 0; i < MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF; ++i)
     {
-        stream << mSamplersVS[i].active << std::endl;
-        stream << mSamplersVS[i].logicalTextureUnit << std::endl;
-        stream << (int) mSamplersVS[i].textureType << std::endl << std::endl;
+        stream.write(mSamplersVS[i].active);
+        stream.write(mSamplersVS[i].logicalTextureUnit);
+        stream.write((int) mSamplersVS[i].textureType);
     }
 
-    stream << mUsedVertexSamplerRange << std::endl;
-    stream << mUsedPixelSamplerRange << std::endl << std::endl;
+    stream.write(mUsedVertexSamplerRange);
+    stream.write(mUsedPixelSamplerRange);
 
-    stream << mUniforms.size() << std::endl;
+    stream.write(mUniforms.size());
     for (unsigned int i = 0; i < mUniforms.size(); ++i)
     {
-        stream << mUniforms[i]->type << std::endl;
-        stream << "\"" << mUniforms[i]->_name << "\"" << std::endl;
-        stream << mUniforms[i]->arraySize << std::endl << std::endl;
+        stream.write(mUniforms[i]->type);
+        stream.write(mUniforms[i]->_name);
+        stream.write(mUniforms[i]->arraySize);
 
-        stream << mUniforms[i]->ps.float4Index << std::endl;
-        stream << mUniforms[i]->ps.samplerIndex << std::endl;
-        stream << mUniforms[i]->ps.boolIndex << std::endl;
-        stream << mUniforms[i]->ps.registerCount << std::endl;
+        stream.write(mUniforms[i]->ps.float4Index);
+        stream.write(mUniforms[i]->ps.samplerIndex);
+        stream.write(mUniforms[i]->ps.boolIndex);
+        stream.write(mUniforms[i]->ps.registerCount);
 
-        stream << mUniforms[i]->vs.float4Index << std::endl;
-        stream << mUniforms[i]->vs.samplerIndex << std::endl;
-        stream << mUniforms[i]->vs.boolIndex << std::endl;
-        stream << mUniforms[i]->vs.registerCount << std::endl;
+        stream.write(mUniforms[i]->vs.float4Index);
+        stream.write(mUniforms[i]->vs.samplerIndex);
+        stream.write(mUniforms[i]->vs.boolIndex);
+        stream.write(mUniforms[i]->vs.registerCount);
     }
 
-    stream << mUniformIndex.size() << std::endl;
+    stream.write(mUniformIndex.size());
     for (unsigned int i = 0; i < mUniformIndex.size(); ++i)
     {
-        stream << "\"" << mUniformIndex[i].name << "\"" << std::endl;
-        stream << mUniformIndex[i].element << std::endl;
-        stream << mUniformIndex[i].index << std::endl << std::endl;
+        stream.write(mUniformIndex[i].name);
+        stream.write(mUniformIndex[i].element);
+        stream.write(mUniformIndex[i].index);
     }
 
-    stream << mDxDepthRangeLocation << std::endl;
-    stream << mDxDepthLocation << std::endl;
-    stream << mDxCoordLocation << std::endl;
-    stream << mDxHalfPixelSizeLocation << std::endl;
-    stream << mDxFrontCCWLocation << std::endl;
-    stream << mDxPointsOrLinesLocation << std::endl;
+    stream.write(mDxDepthRangeLocation);
+    stream.write(mDxDepthLocation);
+    stream.write(mDxCoordLocation);
+    stream.write(mDxHalfPixelSizeLocation);
+    stream.write(mDxFrontCCWLocation);
+    stream.write(mDxPointsOrLinesLocation);
 
     UINT pixelShaderSize;
     HRESULT result = mPixelExecutable->GetFunction(NULL, &pixelShaderSize);
     ASSERT(SUCCEEDED(result));
-    stream << pixelShaderSize << std::endl;
+    stream.write(pixelShaderSize);
 
     UINT vertexShaderSize;
     result = mVertexExecutable->GetFunction(NULL, &vertexShaderSize);
     ASSERT(SUCCEEDED(result));
-    stream << vertexShaderSize << std::endl;
-
-    std::string text = stream.str();
+    stream.write(vertexShaderSize);
 
     D3DADAPTER_IDENTIFIER9 *identifier = getDisplay()->getAdapterIdentifier();
 
-    GLsizei totalLength = text.length() + sizeof(GUID) + pixelShaderSize + vertexShaderSize;
+    GLsizei streamLength = stream.length();
+    const void *streamData = stream.data();
+
+    GLsizei totalLength = streamLength + sizeof(GUID) + pixelShaderSize + vertexShaderSize;
     if (totalLength > bufSize)
     {
         if (length)
@@ -1835,8 +1830,8 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
     {
         char *ptr = (char*) binary;
 
-        memcpy(ptr, text.c_str(), text.length());
-        ptr += text.length();
+        memcpy(ptr, streamData, streamLength);
+        ptr += streamLength;
 
         memcpy(ptr, &identifier->DeviceIdentifier, sizeof(GUID));
         ptr += sizeof(GUID);
