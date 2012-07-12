@@ -3732,7 +3732,7 @@ void Context::initExtensionString()
     }
 
     mExtensionString += "GL_OES_packed_depth_stencil ";
-    //mExtensionString += "GL_OES_get_program_binary ";
+    mExtensionString += "GL_OES_get_program_binary ";
     mExtensionString += "GL_OES_rgb8_rgba8 ";
     mExtensionString += "GL_OES_standard_derivatives ";
 
