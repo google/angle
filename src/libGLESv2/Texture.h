@@ -150,6 +150,10 @@ class TextureStorage
     DWORD getUsage() const;
     unsigned int getTextureSerial() const;
     virtual unsigned int getRenderTargetSerial(GLenum target) const = 0;
+    int getLodOffset() const;
+
+  protected:
+    int mLodOffset;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage);
@@ -204,6 +208,7 @@ class Texture : public RefCountObject
     unsigned int getRenderTargetSerial(GLenum target);
 
     bool isImmutable() const;
+    int getLodOffset();
 
     static const GLuint INCOMPLETE_TEXTURE_ID = static_cast<GLuint>(-1);   // Every texture takes an id at creation time. The value is arbitrary because it is never registered with the resource manager.
 

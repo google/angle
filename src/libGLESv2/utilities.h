@@ -84,6 +84,7 @@ bool IsFloat32Format(D3DFORMAT surfaceFormat);
 bool IsFloat16Format(D3DFORMAT surfaceFormat);
 bool IsDepthTextureFormat(D3DFORMAT surfaceFormat);
 bool IsStencilTextureFormat(D3DFORMAT surfaceFormat);
+bool IsCompressedD3DFormat(D3DFORMAT format);
 
 GLsizei GetSamplesFromMultisampleType(D3DMULTISAMPLE_TYPE type);
 

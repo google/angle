@@ -118,6 +118,26 @@ static inline DWORD GetTextureUsage(D3DFORMAT d3dfmt, GLenum glusage, bool force
     return d3dusage;
 }
 
+static void MakeValidSize(bool isImage, bool isCompressed, GLsizei *requestWidth, GLsizei *requestHeight, int *levelOffset) {
+    int upsampleCount = 0;
+
+    if (isCompressed)
+    {
+        // Don't expand the size of full textures that are at least 4x4
+        // already.
+        if (isImage || *requestWidth < 4 || *requestHeight < 4)
+        {
+            while (*requestWidth % 4 != 0 || *requestHeight % 4 != 0)
+            {
+                *requestWidth <<= 1;
+                *requestHeight <<= 1;
+                upsampleCount++;
+            }
+        }
+    }
+    *levelOffset = upsampleCount;
+}
+
 Image::Image()
 {
     mWidth = 0; 
@@ -186,22 +206,7 @@ void Image::createSurface()
         int levelToFetch = 0;
         GLsizei requestWidth = mWidth;
         GLsizei requestHeight = mHeight;
-        if (IsCompressed(mFormat) && (mWidth % 4 != 0 || mHeight % 4 != 0))
-        {
-            bool isMult4 = false;
-            int upsampleCount = 0;
-            while (!isMult4)
-            {
-                requestWidth <<= 1;
-                requestHeight <<= 1;
-                upsampleCount++;
-                if (requestWidth % 4 == 0 && requestHeight % 4 == 0)
-                {
-                    isMult4 = true;
-                }
-            }
-            levelToFetch = upsampleCount;
-        }
+        MakeValidSize(true, IsCompressed(mFormat), &requestWidth, &requestHeight, &levelToFetch);
 
         HRESULT result = getDevice()->CreateTexture(requestWidth, requestHeight, levelToFetch + 1, NULL, d3dFormat,
                                                     poolToUse, &newTexture, NULL);
@@ -1111,7 +1116,8 @@ void Image::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, 
 TextureStorage::TextureStorage(DWORD usage)
     : mD3DUsage(usage),
       mD3DPool(getDisplay()->getTexturePool(usage)),
-      mTextureSerial(issueTextureSerial())
+      mTextureSerial(issueTextureSerial()),
+      mLodOffset(0)
 {
 }
 
@@ -1147,6 +1153,11 @@ unsigned int TextureStorage::getTextureSerial() const
 unsigned int TextureStorage::issueTextureSerial()
 {
     return mCurrentTextureSerial++;
+}
+
+int TextureStorage::getLodOffset() const
+{
+    return mLodOffset;
 }
 
 Texture::Texture(GLuint id) : RefCountObject(id)
@@ -1405,6 +1416,12 @@ bool Texture::isImmutable() const
     return mImmutable;
 }
 
+int Texture::getLodOffset()
+{
+    TextureStorage *texture = getStorage(false);
+    return texture ? texture->getLodOffset() : 0;
+}
+
 GLint Texture::creationLevels(GLsizei width, GLsizei height) const
 {
     if ((isPow2(width) && isPow2(height)) || getContext()->supportsNonPower2Texture())
@@ -1477,7 +1494,8 @@ TextureStorage2D::TextureStorage2D(int levels, D3DFORMAT format, DWORD usage, in
     if (width > 0 && height > 0)
     {
         IDirect3DDevice9 *device = getDevice();
-        HRESULT result = device->CreateTexture(width, height, levels, getUsage(), format, getPool(), &mTexture, NULL);
+        MakeValidSize(false, dx2es::IsCompressedD3DFormat(format), &width, &height, &mLodOffset);
+        HRESULT result = device->CreateTexture(width, height, levels + mLodOffset, getUsage(), format, getPool(), &mTexture, NULL);
 
         if (FAILED(result))
         {
@@ -1503,7 +1521,7 @@ IDirect3DSurface9 *TextureStorage2D::getSurfaceLevel(int level)
 
     if (mTexture)
     {
-        HRESULT result = mTexture->GetSurfaceLevel(level, &surface);
+        HRESULT result = mTexture->GetSurfaceLevel(level + mLodOffset, &surface);
         ASSERT(SUCCEEDED(result));
     }
 
@@ -2197,7 +2215,9 @@ TextureStorageCubeMap::TextureStorageCubeMap(int levels, D3DFORMAT format, DWORD
     if (size > 0)
     {
         IDirect3DDevice9 *device = getDevice();
-        HRESULT result = device->CreateCubeTexture(size, levels, getUsage(), format, getPool(), &mTexture, NULL);
+        int height = size;
+        MakeValidSize(false, dx2es::IsCompressedD3DFormat(format), &size, &height, &mLodOffset);
+        HRESULT result = device->CreateCubeTexture(size, levels + mLodOffset, getUsage(), format, getPool(), &mTexture, NULL);
 
         if (FAILED(result))
         {
@@ -2223,7 +2243,7 @@ IDirect3DSurface9 *TextureStorageCubeMap::getCubeMapSurface(GLenum faceTarget, i
 
     if (mTexture)
     {
-        HRESULT result = mTexture->GetCubeMapSurface(es2dx::ConvertCubeFace(faceTarget), level, &surface);
+        HRESULT result = mTexture->GetCubeMapSurface(es2dx::ConvertCubeFace(faceTarget), level + mLodOffset, &surface);
         ASSERT(SUCCEEDED(result));
     }
 

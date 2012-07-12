@@ -2410,6 +2410,7 @@ void Context::applyTextures(SamplerType type)
                         es2dx::ConvertMinFilter(minFilter, &d3dMinFilter, &d3dMipFilter, maxAnisotropy);
                         mDevice->SetSamplerState(d3dSampler, D3DSAMP_MINFILTER, d3dMinFilter);
                         mDevice->SetSamplerState(d3dSampler, D3DSAMP_MIPFILTER, d3dMipFilter);
+                        mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAXMIPLEVEL, texture->getLodOffset());
 
                         if (supportsTextureFilterAnisotropy())
                         {

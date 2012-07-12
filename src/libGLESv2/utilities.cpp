@@ -965,6 +965,21 @@ bool IsStencilTextureFormat(D3DFORMAT surfaceFormat)
     return (surfaceFormat == D3DFMT_INTZ);
 }
 
+bool IsCompressedD3DFormat(D3DFORMAT surfaceFormat)
+{
+    switch(surfaceFormat)
+    {
+      case D3DFMT_DXT1:
+      case D3DFMT_DXT2:
+      case D3DFMT_DXT3:
+      case D3DFMT_DXT4:
+      case D3DFMT_DXT5:
+        return true;
+      default:
+        return false;
+    }
+}
+
 GLsizei GetSamplesFromMultisampleType(D3DMULTISAMPLE_TYPE type)
 {
     if (type == D3DMULTISAMPLE_NONMASKABLE)
