@@ -63,8 +63,8 @@ D3DTEXTUREADDRESS ConvertTextureWrap(GLenum wrap);
 D3DCULL ConvertCullMode(GLenum cullFace, GLenum frontFace);
 D3DCUBEMAP_FACES ConvertCubeFace(GLenum cubeFace);
 DWORD ConvertColorMask(bool red, bool green, bool blue, bool alpha);
-D3DTEXTUREFILTERTYPE ConvertMagFilter(GLenum magFilter);
-void ConvertMinFilter(GLenum minFilter, D3DTEXTUREFILTERTYPE *d3dMinFilter, D3DTEXTUREFILTERTYPE *d3dMipFilter);
+D3DTEXTUREFILTERTYPE ConvertMagFilter(GLenum magFilter, float maxAnisotropy);
+void ConvertMinFilter(GLenum minFilter, D3DTEXTUREFILTERTYPE *d3dMinFilter, D3DTEXTUREFILTERTYPE *d3dMipFilter, float maxAnisotropy);
 bool ConvertPrimitiveType(GLenum primitiveType, GLsizei elementCount,
                           D3DPRIMITIVETYPE *d3dPrimitiveType, int *d3dPrimitiveCount);
 D3DFORMAT ConvertRenderbufferFormat(GLenum format);

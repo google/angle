@@ -3860,6 +3860,13 @@ void __stdcall glGetTexParameterfv(GLenum target, GLenum pname, GLfloat* params)
               case GL_TEXTURE_USAGE_ANGLE:
                 *params = (GLfloat)texture->getUsage();
                 break;
+              case GL_TEXTURE_MAX_ANISOTROPY_EXT:
+                if (!context->supportsTextureFilterAnisotropy())
+                {
+                    return error(GL_INVALID_ENUM);
+                }
+                *params = (GLfloat)texture->getMaxAnisotropy();
+                break;
               default:
                 return error(GL_INVALID_ENUM);
             }
@@ -3914,6 +3921,13 @@ void __stdcall glGetTexParameteriv(GLenum target, GLenum pname, GLint* params)
                 break;
               case GL_TEXTURE_USAGE_ANGLE:
                 *params = texture->getUsage();
+                break;
+              case GL_TEXTURE_MAX_ANISOTROPY_EXT:
+                if (!context->supportsTextureFilterAnisotropy())
+                {
+                    return error(GL_INVALID_ENUM);
+                }
+                *params = (GLint)texture->getMaxAnisotropy();
                 break;
               default:
                 return error(GL_INVALID_ENUM);
@@ -5482,12 +5496,84 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
 
 void __stdcall glTexParameterf(GLenum target, GLenum pname, GLfloat param)
 {
-    glTexParameteri(target, pname, (GLint)param);
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint param = %f)", target, pname, param);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            gl::Texture *texture;
+
+            switch (target)
+            {
+              case GL_TEXTURE_2D:
+                texture = context->getTexture2D();
+                break;
+              case GL_TEXTURE_CUBE_MAP:
+                texture = context->getTextureCubeMap();
+                break;
+              default:
+                return error(GL_INVALID_ENUM);
+            }
+
+            switch (pname)
+            {
+              case GL_TEXTURE_WRAP_S:
+                if (!texture->setWrapS((GLenum)param))
+                {
+                    return error(GL_INVALID_ENUM);
+                }
+                break;
+              case GL_TEXTURE_WRAP_T:
+                if (!texture->setWrapT((GLenum)param))
+                {
+                    return error(GL_INVALID_ENUM);
+                }
+                break;
+              case GL_TEXTURE_MIN_FILTER:
+                if (!texture->setMinFilter((GLenum)param))
+                {
+                    return error(GL_INVALID_ENUM);
+                }
+                break;
+              case GL_TEXTURE_MAG_FILTER:
+                if (!texture->setMagFilter((GLenum)param))
+                {
+                    return error(GL_INVALID_ENUM);
+                }
+                break;
+              case GL_TEXTURE_USAGE_ANGLE:
+                if (!texture->setUsage((GLenum)param))
+                {
+                    return error(GL_INVALID_ENUM);
+                }
+                break;
+              case GL_TEXTURE_MAX_ANISOTROPY_EXT:
+                if (!context->supportsTextureFilterAnisotropy())
+                {
+                    return error(GL_INVALID_ENUM);
+                }
+                if (!texture->setMaxAnisotropy((float)param, context->getTextureMaxAnisotropy()))
+                {
+                    return error(GL_INVALID_VALUE);
+                }
+                break;
+              default:
+                return error(GL_INVALID_ENUM);
+            }
+        }
+    }
+    catch(std::bad_alloc&)
+    {
+        return error(GL_OUT_OF_MEMORY);
+    }
 }
 
 void __stdcall glTexParameterfv(GLenum target, GLenum pname, const GLfloat* params)
 {
-    glTexParameteri(target, pname, (GLint)*params);
+    glTexParameterf(target, pname, (GLfloat)*params);
 }
 
 void __stdcall glTexParameteri(GLenum target, GLenum pname, GLint param)
@@ -5544,6 +5630,16 @@ void __stdcall glTexParameteri(GLenum target, GLenum pname, GLint param)
                 if (!texture->setUsage((GLenum)param))
                 {
                     return error(GL_INVALID_ENUM);
+                }
+                break;
+              case GL_TEXTURE_MAX_ANISOTROPY_EXT:
+                if (!context->supportsTextureFilterAnisotropy())
+                {
+                    return error(GL_INVALID_ENUM);
+                }
+                if (!texture->setMaxAnisotropy((float)param, context->getTextureMaxAnisotropy()))
+                {
+                    return error(GL_INVALID_VALUE);
                 }
                 break;
               default:

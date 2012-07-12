@@ -646,8 +646,13 @@ DWORD ConvertColorMask(bool red, bool green, bool blue, bool alpha)
            (alpha ? D3DCOLORWRITEENABLE_ALPHA : 0);
 }
 
-D3DTEXTUREFILTERTYPE ConvertMagFilter(GLenum magFilter)
+D3DTEXTUREFILTERTYPE ConvertMagFilter(GLenum magFilter, float maxAnisotropy)
 {
+    if (maxAnisotropy > 1.0f)
+    {
+        return D3DTEXF_ANISOTROPIC;
+    }
+
     D3DTEXTUREFILTERTYPE d3dMagFilter = D3DTEXF_POINT;
     switch (magFilter)
     {
@@ -659,7 +664,7 @@ D3DTEXTUREFILTERTYPE ConvertMagFilter(GLenum magFilter)
     return d3dMagFilter;
 }
 
-void ConvertMinFilter(GLenum minFilter, D3DTEXTUREFILTERTYPE *d3dMinFilter, D3DTEXTUREFILTERTYPE *d3dMipFilter)
+void ConvertMinFilter(GLenum minFilter, D3DTEXTUREFILTERTYPE *d3dMinFilter, D3DTEXTUREFILTERTYPE *d3dMipFilter, float maxAnisotropy)
 {
     switch (minFilter)
     {
@@ -691,6 +696,11 @@ void ConvertMinFilter(GLenum minFilter, D3DTEXTUREFILTERTYPE *d3dMinFilter, D3DT
         *d3dMinFilter = D3DTEXF_POINT;
         *d3dMipFilter = D3DTEXF_NONE;
         UNREACHABLE();
+    }
+
+    if (maxAnisotropy > 1.0f)
+    {
+        *d3dMinFilter = D3DTEXF_ANISOTROPIC;
     }
 }
 

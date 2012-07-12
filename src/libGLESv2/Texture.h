@@ -179,12 +179,14 @@ class Texture : public RefCountObject
     bool setMagFilter(GLenum filter);
     bool setWrapS(GLenum wrap);
     bool setWrapT(GLenum wrap);
+    bool setMaxAnisotropy(float textureMaxAnisotropy, float contextMaxAnisotropy);
     bool setUsage(GLenum usage);
 
     GLenum getMinFilter() const;
     GLenum getMagFilter() const;
     GLenum getWrapS() const;
     GLenum getWrapT() const;
+    float getMaxAnisotropy() const;
     GLenum getUsage() const;
 
     virtual bool isSamplerComplete() const = 0;
@@ -229,6 +231,7 @@ class Texture : public RefCountObject
     GLenum mMagFilter;
     GLenum mWrapS;
     GLenum mWrapT;
+    float mMaxAnisotropy;
     bool mDirtyParameters;
     GLenum mUsage;
 

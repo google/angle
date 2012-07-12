@@ -1157,6 +1157,7 @@ Texture::Texture(GLuint id) : RefCountObject(id)
     mWrapT = GL_REPEAT;
     mDirtyParameters = true;
     mUsage = GL_NONE;
+    mMaxAnisotropy = 1.0f;
     
     mDirtyImages = true;
 
@@ -1253,6 +1254,22 @@ bool Texture::setWrapT(GLenum wrap)
     }
 }
 
+// Returns true on successful max anisotropy update (valid anisotropy value)
+bool Texture::setMaxAnisotropy(float textureMaxAnisotropy, float contextMaxAnisotropy)
+{
+    textureMaxAnisotropy = std::min(textureMaxAnisotropy, contextMaxAnisotropy);
+    if (textureMaxAnisotropy < 1.0f)
+    {
+        return false;
+    }
+    if (mMaxAnisotropy != textureMaxAnisotropy)
+    {
+        mMaxAnisotropy = textureMaxAnisotropy;
+        mDirtyParameters = true;
+    }
+    return true;
+}
+
 // Returns true on successful usage state update (valid enum parameter)
 bool Texture::setUsage(GLenum usage)
 {
@@ -1285,6 +1302,11 @@ GLenum Texture::getWrapS() const
 GLenum Texture::getWrapT() const
 {
     return mWrapT;
+}
+
+float Texture::getMaxAnisotropy() const
+{
+    return mMaxAnisotropy;
 }
 
 GLenum Texture::getUsage() const

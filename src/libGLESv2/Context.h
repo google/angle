@@ -500,6 +500,9 @@ class Context
     bool supports32bitIndices() const;
     bool supportsNonPower2Texture() const;
     bool supportsInstancing() const;
+    bool supportsTextureFilterAnisotropy() const;
+
+    float getTextureMaxAnisotropy() const;
 
     void blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, 
                          GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
@@ -605,6 +608,7 @@ class Context
     int  mMaxTextureDimension;
     int  mMaxCubeTextureDimension;
     int  mMaxTextureLevel;
+    float mMaxTextureAnisotropy;
     std::map<D3DFORMAT, bool *> mMultiSampleSupport;
     GLsizei mMaxSupportedSamples;
     bool mSupportsEventQueries;
@@ -622,6 +626,7 @@ class Context
     bool mSupportsLuminanceAlphaTextures;
     bool mSupportsDepthTextures;
     bool mSupports32bitIndices;
+    bool mSupportsTextureFilterAnisotropy;
     int mNumCompressedTextureFormats;
 
     // state caching flags

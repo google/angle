@@ -1089,6 +1089,16 @@ bool Display::getLuminanceAlphaTextureSupport()
     return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_A8L8));
 }
 
+float Display::getTextureFilterAnisotropySupport() const
+{
+    // Must support a minimum of 2:1 anisotropy for max anisotropy to be considered supported, per the spec
+    if ((mDeviceCaps.RasterCaps & D3DPRASTERCAPS_ANISOTROPY) && (mDeviceCaps.MaxAnisotropy >= 2))
+    {
+        return mDeviceCaps.MaxAnisotropy;
+    }
+    return 1.0f;
+}
+
 D3DPOOL Display::getBufferPool(DWORD usage) const
 {
     if (mD3d9Ex != NULL)

@@ -274,8 +274,9 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         mMaxCubeTextureDimension = std::min(mMaxTextureDimension, (int)gl::IMPLEMENTATION_MAX_CUBE_MAP_TEXTURE_SIZE);
         mMaxRenderbufferDimension = mMaxTextureDimension;
         mMaxTextureLevel = log2(mMaxTextureDimension) + 1;
-        TRACE("MaxTextureDimension=%d, MaxCubeTextureDimension=%d, MaxRenderbufferDimension=%d, MaxTextureLevel=%d",
-              mMaxTextureDimension, mMaxCubeTextureDimension, mMaxRenderbufferDimension, mMaxTextureLevel);
+        mMaxTextureAnisotropy = mDisplay->getTextureFilterAnisotropySupport();
+        TRACE("MaxTextureDimension=%d, MaxCubeTextureDimension=%d, MaxRenderbufferDimension=%d, MaxTextureLevel=%d, MaxTextureAnisotropy=%f",
+              mMaxTextureDimension, mMaxCubeTextureDimension, mMaxRenderbufferDimension, mMaxTextureLevel, mMaxTextureAnisotropy);
 
         const D3DFORMAT renderBufferFormats[] =
         {
@@ -313,6 +314,7 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         mSupportsLuminanceTextures = mDisplay->getLuminanceTextureSupport();
         mSupportsLuminanceAlphaTextures = mDisplay->getLuminanceAlphaTextureSupport();
         mSupportsDepthTextures = mDisplay->getDepthTextureSupport();
+        mSupportsTextureFilterAnisotropy = mMaxTextureAnisotropy >= 2.0f;
 
         mSupports32bitIndices = mDeviceCaps.MaxVertexIndex >= (1 << 16);
 
@@ -1425,6 +1427,13 @@ bool Context::getFloatv(GLenum pname, GLfloat *params)
         params[2] = mState.blendColor.blue;
         params[3] = mState.blendColor.alpha;
         break;
+      case GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT:
+        if (!supportsTextureFilterAnisotropy())
+        {
+            return false;
+        }
+        *params = mMaxTextureAnisotropy;
+        break;
       default:
         return false;
     }
@@ -1832,6 +1841,14 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
             *type = GL_FLOAT;
             *numParams = 4;
         }
+        break;
+      case GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT:
+        if (!supportsTextureFilterAnisotropy())
+        {
+            return false;
+        }
+        *type = GL_FLOAT;
+        *numParams = 1;
         break;
       default:
         return false;
@@ -2383,15 +2400,21 @@ void Context::applyTextures(SamplerType type)
                         GLenum wrapT = texture->getWrapT();
                         GLenum minFilter = texture->getMinFilter();
                         GLenum magFilter = texture->getMagFilter();
+                        float maxAnisotropy = texture->getMaxAnisotropy();
 
                         mDevice->SetSamplerState(d3dSampler, D3DSAMP_ADDRESSU, es2dx::ConvertTextureWrap(wrapS));
                         mDevice->SetSamplerState(d3dSampler, D3DSAMP_ADDRESSV, es2dx::ConvertTextureWrap(wrapT));
 
-                        mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAGFILTER, es2dx::ConvertMagFilter(magFilter));
+                        mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAGFILTER, es2dx::ConvertMagFilter(magFilter, maxAnisotropy));
                         D3DTEXTUREFILTERTYPE d3dMinFilter, d3dMipFilter;
-                        es2dx::ConvertMinFilter(minFilter, &d3dMinFilter, &d3dMipFilter);
+                        es2dx::ConvertMinFilter(minFilter, &d3dMinFilter, &d3dMipFilter, maxAnisotropy);
                         mDevice->SetSamplerState(d3dSampler, D3DSAMP_MINFILTER, d3dMinFilter);
                         mDevice->SetSamplerState(d3dSampler, D3DSAMP_MIPFILTER, d3dMipFilter);
+
+                        if (supportsTextureFilterAnisotropy())
+                        {
+                            mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAXANISOTROPY, (DWORD)maxAnisotropy);
+                        }
                     }
 
                     if (appliedTextureSerial[samplerIndex] != texSerial || texture->hasDirtyImages())
@@ -3522,6 +3545,16 @@ bool Context::supportsInstancing() const
     return mSupportsInstancing;
 }
 
+bool Context::supportsTextureFilterAnisotropy() const
+{
+    return mSupportsTextureFilterAnisotropy;
+}
+
+float Context::getTextureMaxAnisotropy() const
+{
+    return mMaxTextureAnisotropy;
+}
+
 void Context::detachBuffer(GLuint buffer)
 {
     // [OpenGL ES 2.0.24] section 2.9 page 22:
@@ -3770,6 +3803,11 @@ void Context::initExtensionString()
     if (supportsDXT1Textures())
     {
         mExtensionString += "GL_EXT_texture_compression_dxt1 ";
+    }
+
+    if (supportsTextureFilterAnisotropy())
+    {
+        mExtensionString += "GL_EXT_texture_filter_anisotropic ";
     }
 
     mExtensionString += "GL_EXT_texture_format_BGRA8888 ";
