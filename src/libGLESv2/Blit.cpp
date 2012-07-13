@@ -192,10 +192,11 @@ void Blit::initGeometry()
 
 template <class D3DShaderType>
 bool Blit::setShader(ShaderId source, const char *profile,
-                     HRESULT (WINAPI IDirect3DDevice9::*createShader)(const DWORD *, D3DShaderType**),
+                     D3DShaderType *(egl::Display::*createShader)(const DWORD *, size_t length),
                      HRESULT (WINAPI IDirect3DDevice9::*setShader)(D3DShaderType*))
 {
-    IDirect3DDevice9 *device = getDevice();
+    egl::Display *display = getDisplay();
+    IDirect3DDevice9 *device = display->getDevice();
 
     D3DShaderType *shader;
 
@@ -205,6 +206,7 @@ bool Blit::setShader(ShaderId source, const char *profile,
     }
     else
     {
+        // FIXME: Complile these shaders offline and embed the byte code in the module.
         ID3DXBuffer *shaderCode;
         HRESULT hr = D3DXCompileShader(mShaderSource[source], strlen(mShaderSource[source]), NULL, NULL, "main", profile, 0, &shaderCode, NULL, NULL);
 
@@ -214,7 +216,7 @@ bool Blit::setShader(ShaderId source, const char *profile,
             return false;
         }
 
-        hr = (device->*createShader)(static_cast<const DWORD*>(shaderCode->GetBufferPointer()), &shader);
+        shader = (display->*createShader)(static_cast<const DWORD*>(shaderCode->GetBufferPointer()), shaderCode->GetBufferSize());
         if (FAILED(hr))
         {
             shaderCode->Release();
@@ -240,12 +242,12 @@ bool Blit::setShader(ShaderId source, const char *profile,
 
 bool Blit::setVertexShader(ShaderId shader)
 {
-    return setShader<IDirect3DVertexShader9>(shader, mContext->supportsShaderModel3() ? "vs_3_0" : "vs_2_0", &IDirect3DDevice9::CreateVertexShader, &IDirect3DDevice9::SetVertexShader);
+    return setShader<IDirect3DVertexShader9>(shader, mContext->supportsShaderModel3() ? "vs_3_0" : "vs_2_0", &egl::Display::createVertexShader, &IDirect3DDevice9::SetVertexShader);
 }
 
 bool Blit::setPixelShader(ShaderId shader)
 {
-    return setShader<IDirect3DPixelShader9>(shader, mContext->supportsShaderModel3() ? "ps_3_0" : "ps_2_0", &IDirect3DDevice9::CreatePixelShader, &IDirect3DDevice9::SetPixelShader);
+    return setShader<IDirect3DPixelShader9>(shader, mContext->supportsShaderModel3() ? "ps_3_0" : "ps_2_0", &egl::Display::createPixelShader, &IDirect3DDevice9::SetPixelShader);
 }
 
 RECT Blit::getSurfaceRect(IDirect3DSurface9 *surface) const

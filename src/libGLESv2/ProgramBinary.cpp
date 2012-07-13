@@ -1717,15 +1717,15 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
     const char *vertexShaderFunction = ptr;
     ptr += vertexShaderSize;
 
-    HRESULT result = mDevice->CreatePixelShader(reinterpret_cast<const DWORD*>(pixelShaderFunction), &mPixelExecutable);
-    if (FAILED(result))
+    mPixelExecutable = getDisplay()->createPixelShader(reinterpret_cast<const DWORD*>(pixelShaderFunction), pixelShaderSize);
+    if (!mPixelExecutable)
     {
         infoLog.append("Could not create pixel shader.");
         return false;
     }
 
-    result = mDevice->CreateVertexShader(reinterpret_cast<const DWORD*>(vertexShaderFunction), &mVertexExecutable);
-    if (FAILED(result))
+    mVertexExecutable = getDisplay()->createVertexShader(reinterpret_cast<const DWORD*>(vertexShaderFunction), vertexShaderSize);
+    if (!mVertexExecutable)
     {
         infoLog.append("Could not create vertex shader.");
         mPixelExecutable->Release();
@@ -1897,51 +1897,52 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
 
     if (vertexBinary && pixelBinary)
     {
-        HRESULT vertexResult = mDevice->CreateVertexShader((DWORD*)vertexBinary->GetBufferPointer(), &mVertexExecutable);
-        HRESULT pixelResult = mDevice->CreatePixelShader((DWORD*)pixelBinary->GetBufferPointer(), &mPixelExecutable);
-
-        if (vertexResult == D3DERR_OUTOFVIDEOMEMORY || vertexResult == E_OUTOFMEMORY || pixelResult == D3DERR_OUTOFVIDEOMEMORY || pixelResult == E_OUTOFMEMORY)
+        mVertexExecutable = getDisplay()->createVertexShader((DWORD*)vertexBinary->GetBufferPointer(), vertexBinary->GetBufferSize());
+        if (!mVertexExecutable)
         {
             return error(GL_OUT_OF_MEMORY, false);
         }
 
-        ASSERT(SUCCEEDED(vertexResult) && SUCCEEDED(pixelResult));
+        mPixelExecutable = getDisplay()->createPixelShader((DWORD*)pixelBinary->GetBufferPointer(), pixelBinary->GetBufferSize());
+        if (!mPixelExecutable)
+        {
+            mVertexExecutable->Release();
+            mVertexExecutable = NULL;
+            return error(GL_OUT_OF_MEMORY, false);
+        }
 
         vertexBinary->Release();
         pixelBinary->Release();
         vertexBinary = NULL;
         pixelBinary = NULL;
 
-        if (mVertexExecutable && mPixelExecutable)
+        if (!linkAttributes(infoLog, attributeBindings, fragmentShader, vertexShader))
         {
-            if (!linkAttributes(infoLog, attributeBindings, fragmentShader, vertexShader))
-            {
-                return false;
-            }
-
-            if (!linkUniforms(infoLog, GL_FRAGMENT_SHADER, mConstantTablePS))
-            {
-                return false;
-            }
-
-            if (!linkUniforms(infoLog, GL_VERTEX_SHADER, mConstantTableVS))
-            {
-                return false;
-            }
-
-            // these uniforms are searched as already-decorated because gl_ and dx_
-            // are reserved prefixes, and do not receive additional decoration
-            mDxDepthRangeLocation = getUniformLocation("dx_DepthRange");
-            mDxDepthLocation = getUniformLocation("dx_Depth");
-            mDxCoordLocation = getUniformLocation("dx_Coord");
-            mDxHalfPixelSizeLocation = getUniformLocation("dx_HalfPixelSize");
-            mDxFrontCCWLocation = getUniformLocation("dx_FrontCCW");
-            mDxPointsOrLinesLocation = getUniformLocation("dx_PointsOrLines");
-
-            context->markDxUniformsDirty();
-
-            return true;
+            return false;
         }
+
+        if (!linkUniforms(infoLog, GL_FRAGMENT_SHADER, mConstantTablePS))
+        {
+            return false;
+        }
+
+        if (!linkUniforms(infoLog, GL_VERTEX_SHADER, mConstantTableVS))
+        {
+            return false;
+        }
+
+        // these uniforms are searched as already-decorated because gl_ and dx_
+        // are reserved prefixes, and do not receive additional decoration
+        mDxDepthRangeLocation = getUniformLocation("dx_DepthRange");
+        mDxDepthLocation = getUniformLocation("dx_Depth");
+        mDxCoordLocation = getUniformLocation("dx_Coord");
+        mDxHalfPixelSizeLocation = getUniformLocation("dx_HalfPixelSize");
+        mDxFrontCCWLocation = getUniformLocation("dx_FrontCCW");
+        mDxPointsOrLinesLocation = getUniformLocation("dx_PointsOrLines");
+
+        context->markDxUniformsDirty();
+
+        return true;
     }
 
     return false;

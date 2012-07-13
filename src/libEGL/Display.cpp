@@ -294,6 +294,9 @@ bool Display::initialize()
         return false;
     }
 
+    mVertexShaderCache.initialize(mDevice);
+    mPixelShaderCache.initialize(mDevice);
+
     return true;
 }
 
@@ -314,6 +317,9 @@ void Display::terminate()
         mEventQueryPool.back()->Release();
         mEventQueryPool.pop_back();
     }
+
+    mVertexShaderCache.clear();
+    mPixelShaderCache.clear();
 
     if (mDevice)
     {
@@ -750,6 +756,9 @@ bool Display::restoreLostDevice()
         mEventQueryPool.back()->Release();
         mEventQueryPool.pop_back();
     }
+
+    mVertexShaderCache.clear();
+    mPixelShaderCache.clear();
 
     if (!resetDevice())
     {
@@ -1214,6 +1223,16 @@ bool Display::shareHandleSupported() const
 {
     // PIX doesn't seem to support using share handles, so disable them.
     return isD3d9ExDevice() && !gl::perfActive();
+}
+
+IDirect3DVertexShader9 *Display::createVertexShader(const DWORD *function, size_t length)
+{
+    return mVertexShaderCache.create(function, length);
+}
+
+IDirect3DPixelShader9 *Display::createPixelShader(const DWORD *function, size_t length)
+{
+    return mPixelShaderCache.create(function, length);
 }
 
 // Only Direct3D 10 ready devices support all the necessary vertex texture formats.
