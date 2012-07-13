@@ -149,16 +149,16 @@ static void yyerror(Context* context, const char* reason);
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     CONST_INT = 258,
-     OP_OR = 259,
-     OP_AND = 260,
-     OP_NE = 261,
-     OP_EQ = 262,
-     OP_GE = 263,
-     OP_LE = 264,
-     OP_RIGHT = 265,
-     OP_LEFT = 266,
-     UNARY = 267
+     TOK_CONST_INT = 258,
+     TOK_OP_OR = 259,
+     TOK_OP_AND = 260,
+     TOK_OP_NE = 261,
+     TOK_OP_EQ = 262,
+     TOK_OP_GE = 263,
+     TOK_OP_LE = 264,
+     TOK_OP_RIGHT = 265,
+     TOK_OP_LEFT = 266,
+     TOK_UNARY = 267
    };
 #endif
 
@@ -478,10 +478,11 @@ static const yytype_uint8 yyrline[] =
    First, the terminals, then, starting at YYNTOKENS, nonterminals.  */
 static const char *const yytname[] =
 {
-  "$end", "error", "$undefined", "CONST_INT", "OP_OR", "OP_AND", "'|'",
-  "'^'", "'&'", "OP_NE", "OP_EQ", "'<'", "'>'", "OP_GE", "OP_LE",
-  "OP_RIGHT", "OP_LEFT", "'+'", "'-'", "'*'", "'/'", "'%'", "UNARY", "'!'",
-  "'~'", "'('", "')'", "$accept", "input", "expression", 0
+  "$end", "error", "$undefined", "TOK_CONST_INT", "TOK_OP_OR",
+  "TOK_OP_AND", "'|'", "'^'", "'&'", "TOK_OP_NE", "TOK_OP_EQ", "'<'",
+  "'>'", "TOK_OP_GE", "TOK_OP_LE", "TOK_OP_RIGHT", "TOK_OP_LEFT", "'+'",
+  "'-'", "'*'", "'/'", "'%'", "TOK_UNARY", "'!'", "'~'", "'('", "')'",
+  "$accept", "input", "expression", 0
 };
 #endif
 
@@ -1852,17 +1853,17 @@ int yylex(YYSTYPE* lvalp, Context* context)
                                          token->location, token->text);
         }
         *lvalp = static_cast<YYSTYPE>(val);
-        type = CONST_INT;
+        type = TOK_CONST_INT;
         break;
       }
-      case pp::Token::OP_OR: type = OP_OR; break;
-      case pp::Token::OP_AND: type = OP_AND; break;
-      case pp::Token::OP_NE: type = OP_NE; break;
-      case pp::Token::OP_EQ: type = OP_EQ; break;
-      case pp::Token::OP_GE: type = OP_GE; break;
-      case pp::Token::OP_LE: type = OP_LE; break;
-      case pp::Token::OP_RIGHT: type = OP_RIGHT; break;
-      case pp::Token::OP_LEFT: type = OP_LEFT; break;
+      case pp::Token::OP_OR: type = TOK_OP_OR; break;
+      case pp::Token::OP_AND: type = TOK_OP_AND; break;
+      case pp::Token::OP_NE: type = TOK_OP_NE; break;
+      case pp::Token::OP_EQ: type = TOK_OP_EQ; break;
+      case pp::Token::OP_GE: type = TOK_OP_GE; break;
+      case pp::Token::OP_LE: type = TOK_OP_LE; break;
+      case pp::Token::OP_RIGHT: type = TOK_OP_RIGHT; break;
+      case pp::Token::OP_LEFT: type = TOK_OP_LEFT; break;
       case '|': type = '|'; break;
       case '^': type = '^'; break;
       case '&': type = '&'; break;

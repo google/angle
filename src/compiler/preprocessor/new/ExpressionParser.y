@@ -56,7 +56,7 @@ struct Context
 }  // namespace
 %}
 
-%define api.pure
+%pure-parser
 %name-prefix="pp"
 %parse-param {Context *context}
 %lex-param {Context *context}
@@ -66,18 +66,18 @@ static int yylex(YYSTYPE* lvalp, Context* context);
 static void yyerror(Context* context, const char* reason);
 %}
 
-%token CONST_INT
-%left OP_OR
-%left OP_AND
+%token TOK_CONST_INT
+%left TOK_OP_OR
+%left TOK_OP_AND
 %left '|'
 %left '^'
 %left '&'
-%left OP_EQ OP_NE
-%left '<' '>' OP_LE OP_GE
-%left OP_LEFT OP_RIGHT
+%left TOK_OP_EQ TOK_OP_NE
+%left '<' '>' TOK_OP_LE TOK_OP_GE
+%left TOK_OP_LEFT TOK_OP_RIGHT
 %left '+' '-'
 %left '*' '/' '%'
-%right UNARY
+%right TOK_UNARY
 
 %%
 
@@ -89,11 +89,11 @@ input
 ;
 
 expression
-    : CONST_INT
-    | expression OP_OR expression {
+    : TOK_CONST_INT
+    | expression TOK_OP_OR expression {
         $$ = $1 || $3;
     }
-    | expression OP_AND expression {
+    | expression TOK_OP_AND expression {
         $$ = $1 && $3;
     }
     | expression '|' expression {
@@ -105,16 +105,16 @@ expression
     | expression '&' expression {
         $$ = $1 & $3;
     }
-    | expression OP_NE expression {
+    | expression TOK_OP_NE expression {
         $$ = $1 != $3;
     }
-    | expression OP_EQ expression {
+    | expression TOK_OP_EQ expression {
         $$ = $1 == $3;
     }
-    | expression OP_GE expression {
+    | expression TOK_OP_GE expression {
         $$ = $1 >= $3;
     }
-    | expression OP_LE expression {
+    | expression TOK_OP_LE expression {
         $$ = $1 <= $3;
     }
     | expression '>' expression {
@@ -123,10 +123,10 @@ expression
     | expression '<' expression {
         $$ = $1 < $3;
     }
-    | expression OP_RIGHT expression {
+    | expression TOK_OP_RIGHT expression {
         $$ = $1 >> $3;
     }
-    | expression OP_LEFT expression {
+    | expression TOK_OP_LEFT expression {
         $$ = $1 << $3;
     }
     | expression '-' expression {
@@ -164,16 +164,16 @@ expression
     | expression '*' expression {
         $$ = $1 * $3;
     }
-    | '!' expression %prec UNARY {
+    | '!' expression %prec TOK_UNARY {
         $$ = ! $2;
     }
-    | '~' expression %prec UNARY {
+    | '~' expression %prec TOK_UNARY {
         $$ = ~ $2;
     }
-    | '-' expression %prec UNARY {
+    | '-' expression %prec TOK_UNARY {
         $$ = - $2;
     }
-    | '+' expression %prec UNARY {
+    | '+' expression %prec TOK_UNARY {
         $$ = + $2;
     }
     | '(' expression ')' {
@@ -199,17 +199,17 @@ int yylex(YYSTYPE* lvalp, Context* context)
                                          token->location, token->text);
         }
         *lvalp = static_cast<YYSTYPE>(val);
-        type = CONST_INT;
+        type = TOK_CONST_INT;
         break;
       }
-      case pp::Token::OP_OR: type = OP_OR; break;
-      case pp::Token::OP_AND: type = OP_AND; break;
-      case pp::Token::OP_NE: type = OP_NE; break;
-      case pp::Token::OP_EQ: type = OP_EQ; break;
-      case pp::Token::OP_GE: type = OP_GE; break;
-      case pp::Token::OP_LE: type = OP_LE; break;
-      case pp::Token::OP_RIGHT: type = OP_RIGHT; break;
-      case pp::Token::OP_LEFT: type = OP_LEFT; break;
+      case pp::Token::OP_OR: type = TOK_OP_OR; break;
+      case pp::Token::OP_AND: type = TOK_OP_AND; break;
+      case pp::Token::OP_NE: type = TOK_OP_NE; break;
+      case pp::Token::OP_EQ: type = TOK_OP_EQ; break;
+      case pp::Token::OP_GE: type = TOK_OP_GE; break;
+      case pp::Token::OP_LE: type = TOK_OP_LE; break;
+      case pp::Token::OP_RIGHT: type = TOK_OP_RIGHT; break;
+      case pp::Token::OP_LEFT: type = TOK_OP_LEFT; break;
       case '|': type = '|'; break;
       case '^': type = '^'; break;
       case '&': type = '&'; break;
