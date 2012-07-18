@@ -58,7 +58,10 @@ MacroExpander::MacroExpander(Lexer* lexer,
 
 MacroExpander::~MacroExpander()
 {
-    while (!mContextStack.empty()) popMacro();
+    for (size_t i = 0; i < mContextStack.size(); ++i)
+    {
+        delete mContextStack[i];
+    }
 }
 
 void MacroExpander::lex(Token* token)
