@@ -7,6 +7,7 @@
 #ifndef COMPILER_PREPROCESSOR_MACRO_EXPANDER_H_
 #define COMPILER_PREPROCESSOR_MACRO_EXPANDER_H_
 
+#include <cassert>
 #include <memory>
 #include <vector>
 
@@ -58,7 +59,7 @@ class MacroExpander : public Lexer
         MacroContext() : macro(0), index(0) { }
         bool empty() const { return index == replacements.size(); }
         const Token& get() { return replacements[index++]; }
-        void unget() { --index; }
+        void unget() { assert(index > 0); --index; }
     };
 
     Lexer* mLexer;

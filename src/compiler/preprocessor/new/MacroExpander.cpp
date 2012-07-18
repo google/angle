@@ -7,7 +7,6 @@
 #include "MacroExpander.h"
 
 #include <algorithm>
-#include <cassert>
 #include <sstream>
 
 #include "Diagnostics.h"
@@ -129,7 +128,6 @@ void MacroExpander::ungetToken(const Token& token)
     {
         MacroContext* context = mContextStack.back();
         context->unget();
-        assert(context->index >= 0);
         assert(context->replacements[context->index] == token);
     }
     else
