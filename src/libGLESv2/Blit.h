@@ -69,8 +69,6 @@ class Blit
         SHADER_COUNT
     };
 
-    static const char * const mShaderSource[];
-
     // This actually contains IDirect3DVertexShader9 or IDirect3DPixelShader9 casted to IUnknown.
     IUnknown *mCompiledShaders[SHADER_COUNT];
 
