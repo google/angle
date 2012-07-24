@@ -1163,6 +1163,20 @@ void Context::useProgram(GLuint program)
     }
 }
 
+void Context::linkProgram(GLuint program)
+{
+    Program *programObject = mResourceManager->getProgram(program);
+
+    programObject->link();
+}
+
+void Context::setProgramBinary(GLuint program, const void *binary, GLint length)
+{
+    Program *programObject = mResourceManager->getProgram(program);
+
+    programObject->setProgramBinary(binary, length);
+}
+
 void Context::beginQuery(GLenum target, GLuint query)
 {
     // From EXT_occlusion_query_boolean: If BeginQueryEXT is called with an <id>  

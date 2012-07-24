@@ -4632,7 +4632,7 @@ void __stdcall glLinkProgram(GLuint program)
                 }
             }
 
-            programObject->link();
+            context->linkProgram(program);
         }
     }
     catch(std::bad_alloc&)
@@ -6898,7 +6898,7 @@ void __stdcall glProgramBinaryOES(GLuint program, GLenum binaryFormat,
                 return error(GL_INVALID_OPERATION);
             }
 
-            programObject->setProgramBinary(binary, length);
+            context->setProgramBinary(program, binary, length);
         }
     }
     catch(std::bad_alloc&)

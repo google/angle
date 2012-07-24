@@ -417,6 +417,8 @@ class Context
     void bindDrawFramebuffer(GLuint framebuffer);
     void bindRenderbuffer(GLuint renderbuffer);
     void useProgram(GLuint program);
+    void linkProgram(GLuint program);
+    void setProgramBinary(GLuint program, const void *binary, GLint length);
 
     void beginQuery(GLenum target, GLuint query);
     void endQuery(GLenum target);
