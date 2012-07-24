@@ -983,7 +983,6 @@ void Context::deleteShader(GLuint shader)
 void Context::deleteProgram(GLuint program)
 {
     mResourceManager->deleteProgram(program);
-    mCachedCurrentProgramBinary = NULL;
 }
 
 void Context::deleteTexture(GLuint texture)
