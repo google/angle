@@ -1167,14 +1167,31 @@ void Context::linkProgram(GLuint program)
 {
     Program *programObject = mResourceManager->getProgram(program);
 
-    programObject->link();
+    bool linked = programObject->link();
+
+    // if the current program was relinked successfully we
+    // need to install the new executables
+    if (linked && program == mState.currentProgram)
+    {
+        mCurrentProgramBinary = programObject->getProgramBinary();
+        mDxUniformsDirty = true;
+    }
 }
 
 void Context::setProgramBinary(GLuint program, const void *binary, GLint length)
 {
     Program *programObject = mResourceManager->getProgram(program);
 
-    programObject->setProgramBinary(binary, length);
+    bool loaded = programObject->setProgramBinary(binary, length);
+
+    // if the current program was reloaded successfully we
+    // need to install the new executables
+    if (loaded && program == mState.currentProgram)
+    {
+        mCurrentProgramBinary = programObject->getProgramBinary();
+        mDxUniformsDirty = true;
+    }
+
 }
 
 void Context::beginQuery(GLenum target, GLuint query)
