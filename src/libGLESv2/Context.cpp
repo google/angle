@@ -141,6 +141,7 @@ Context::Context(const egl::Config *config, const gl::Context *shareContext, boo
     bindRenderbuffer(0);
 
     mState.currentProgram = 0;
+    mCurrentProgramBinary = NULL;
 
     mState.packAlignment = 4;
     mState.unpackAlignment = 4;
@@ -185,6 +186,7 @@ Context::~Context()
         }
         mState.currentProgram = 0;
     }
+    mCurrentProgramBinary = NULL;
 
     while (!mFramebufferMap.empty())
     {
@@ -407,7 +409,6 @@ void Context::markAllStateDirty()
     mDitherStateDirty = true;
     mFrontFaceDirty = true;
     mDxUniformsDirty = true;
-    mCachedCurrentProgramBinary = NULL;
 }
 
 void Context::markDxUniformsDirty()
@@ -1146,12 +1147,13 @@ void Context::useProgram(GLuint program)
     {
         Program *newProgram = mResourceManager->getProgram(program);
         Program *oldProgram = mResourceManager->getProgram(priorProgram);
-        mCachedCurrentProgramBinary = NULL;
+        mCurrentProgramBinary = NULL;
         mDxUniformsDirty = true;
 
         if (newProgram)
         {
             newProgram->addRef();
+            mCurrentProgramBinary = newProgram->getProgramBinary();
         }
         
         if (oldProgram)
@@ -1325,12 +1327,7 @@ Buffer *Context::getElementArrayBuffer()
 
 ProgramBinary *Context::getCurrentProgramBinary()
 {
-    if (!mCachedCurrentProgramBinary)
-    {
-        Program *program = mResourceManager->getProgram(mState.currentProgram);
-        mCachedCurrentProgramBinary = program->getProgramBinary();
-    }
-    return mCachedCurrentProgramBinary;
+    return mCurrentProgramBinary;
 }
 
 Texture2D *Context::getTexture2D()

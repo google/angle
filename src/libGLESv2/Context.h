@@ -597,7 +597,7 @@ class Context
     bool mRenderTargetDescInitialized;
     D3DSURFACE_DESC mRenderTargetDesc;
     bool mDxUniformsDirty;
-    ProgramBinary *mCachedCurrentProgramBinary;
+    ProgramBinary *mCurrentProgramBinary;
     Framebuffer *mBoundDrawFramebuffer;
 
     bool mSupportsShaderModel3;
