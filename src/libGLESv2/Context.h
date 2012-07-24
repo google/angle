@@ -40,6 +40,7 @@ struct TranslatedIndexData;
 class Buffer;
 class Shader;
 class Program;
+class ProgramBinary;
 class Texture;
 class Texture2D;
 class TextureCubeMap;
@@ -243,7 +244,7 @@ class VertexDeclarationCache
     VertexDeclarationCache();
     ~VertexDeclarationCache();
 
-    GLenum applyDeclaration(IDirect3DDevice9 *device, TranslatedAttribute attributes[], Program *program, GLsizei instances, GLsizei *repeatDraw);
+    GLenum applyDeclaration(IDirect3DDevice9 *device, TranslatedAttribute attributes[], ProgramBinary *programBinary, GLsizei instances, GLsizei *repeatDraw);
 
     void markStateDirty();
 

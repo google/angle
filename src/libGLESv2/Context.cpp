@@ -2312,7 +2312,8 @@ GLenum Context::applyVertexBuffer(GLint first, GLsizei count, GLsizei instances,
         return err;
     }
 
-    return mVertexDeclarationCache.applyDeclaration(mDevice, attributes, getCurrentProgram(), instances, repeatDraw);
+    ProgramBinary *programBinary = getCurrentProgram()->getProgramBinary();
+    return mVertexDeclarationCache.applyDeclaration(mDevice, attributes, programBinary, instances, repeatDraw);
 }
 
 // Applies the indices and element array bindings to the Direct3D 9 device
@@ -4180,7 +4181,7 @@ VertexDeclarationCache::~VertexDeclarationCache()
     }
 }
 
-GLenum VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, TranslatedAttribute attributes[], Program *program, GLsizei instances, GLsizei *repeatDraw)
+GLenum VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, TranslatedAttribute attributes[], ProgramBinary *programBinary, GLsizei instances, GLsizei *repeatDraw)
 {
     *repeatDraw = 1;
 
@@ -4220,8 +4221,6 @@ GLenum VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, Transl
 
     D3DVERTEXELEMENT9 elements[MAX_VERTEX_ATTRIBS + 1];
     D3DVERTEXELEMENT9 *element = &elements[0];
-
-    ProgramBinary *programBinary = program->getProgramBinary();
 
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
     {
