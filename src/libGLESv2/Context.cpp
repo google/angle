@@ -141,7 +141,7 @@ Context::Context(const egl::Config *config, const gl::Context *shareContext, boo
     bindRenderbuffer(0);
 
     mState.currentProgram = 0;
-    mCurrentProgramBinary = NULL;
+    mCurrentProgramBinary.set(NULL);
 
     mState.packAlignment = 4;
     mState.unpackAlignment = 4;
@@ -186,7 +186,7 @@ Context::~Context()
         }
         mState.currentProgram = 0;
     }
-    mCurrentProgramBinary = NULL;
+    mCurrentProgramBinary.set(NULL);
 
     while (!mFramebufferMap.empty())
     {
@@ -1147,13 +1147,13 @@ void Context::useProgram(GLuint program)
     {
         Program *newProgram = mResourceManager->getProgram(program);
         Program *oldProgram = mResourceManager->getProgram(priorProgram);
-        mCurrentProgramBinary = NULL;
+        mCurrentProgramBinary.set(NULL);
         mDxUniformsDirty = true;
 
         if (newProgram)
         {
             newProgram->addRef();
-            mCurrentProgramBinary = newProgram->getProgramBinary();
+            mCurrentProgramBinary.set(newProgram->getProgramBinary());
         }
         
         if (oldProgram)
@@ -1173,7 +1173,7 @@ void Context::linkProgram(GLuint program)
     // need to install the new executables
     if (linked && program == mState.currentProgram)
     {
-        mCurrentProgramBinary = programObject->getProgramBinary();
+        mCurrentProgramBinary.set(programObject->getProgramBinary());
         mDxUniformsDirty = true;
     }
 }
@@ -1188,7 +1188,7 @@ void Context::setProgramBinary(GLuint program, const void *binary, GLint length)
     // need to install the new executables
     if (loaded && program == mState.currentProgram)
     {
-        mCurrentProgramBinary = programObject->getProgramBinary();
+        mCurrentProgramBinary.set(programObject->getProgramBinary());
         mDxUniformsDirty = true;
     }
 
@@ -1358,7 +1358,7 @@ Buffer *Context::getElementArrayBuffer()
 
 ProgramBinary *Context::getCurrentProgramBinary()
 {
-    return mCurrentProgramBinary;
+    return mCurrentProgramBinary.get();
 }
 
 Texture2D *Context::getTexture2D()

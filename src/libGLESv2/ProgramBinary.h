@@ -94,7 +94,7 @@ struct UniformLocation
 };
 
 // This is the result of linking a program. It is the state that would be passed to ProgramBinary.
-class ProgramBinary
+class ProgramBinary : public RefCountObject
 {
   public:
     ProgramBinary();

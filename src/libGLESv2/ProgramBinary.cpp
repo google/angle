@@ -59,7 +59,7 @@ UniformLocation::UniformLocation(const std::string &_name, unsigned int element,
 
 unsigned int ProgramBinary::mCurrentSerial = 1;
 
-ProgramBinary::ProgramBinary() : mSerial(issueSerial())
+ProgramBinary::ProgramBinary() : RefCountObject(0), mSerial(issueSerial())
 {
     mDevice = getDevice();
 

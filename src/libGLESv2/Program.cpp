@@ -140,7 +140,7 @@ Program::Program(ResourceManager *manager, GLuint handle) : mResourceManager(man
 {
     mFragmentShader = NULL;
     mVertexShader = NULL;
-    mProgramBinary = NULL;
+    mProgramBinary.set(NULL);
     mDeleteStatus = false;
     mLinked = false;
     mRefCount = 0;
@@ -247,7 +247,7 @@ bool Program::link()
 
     mInfoLog.reset();
 
-    mProgramBinary = new ProgramBinary;
+    mProgramBinary.set(new ProgramBinary());
     mLinked = mProgramBinary->link(mInfoLog, mAttributeBindings, mFragmentShader, mVertexShader);
 
     return mLinked;
@@ -284,11 +284,7 @@ void Program::unlink(bool destroy)
         }
     }
 
-    if (mProgramBinary)
-    {
-        delete mProgramBinary;
-        mProgramBinary = NULL;
-    }
+    mProgramBinary.set(NULL);
     mLinked = false;
 }
 
@@ -299,7 +295,7 @@ bool Program::isLinked()
 
 ProgramBinary* Program::getProgramBinary()
 {
-    return mProgramBinary;
+    return mProgramBinary.get();
 }
 
 bool Program::setProgramBinary(const void *binary, GLsizei length)
@@ -308,12 +304,11 @@ bool Program::setProgramBinary(const void *binary, GLsizei length)
 
     mInfoLog.reset();
 
-    mProgramBinary = new ProgramBinary;
+    mProgramBinary.set(new ProgramBinary());
     mLinked = mProgramBinary->load(mInfoLog, binary, length);
     if (!mLinked)
     {
-        delete mProgramBinary;
-        mProgramBinary = NULL;
+        mProgramBinary.set(NULL);
     }
 
     return mLinked;
@@ -341,9 +336,10 @@ unsigned int Program::getRefCount() const
 
 GLint Program::getProgramBinaryLength() const
 {
-    if (mProgramBinary)
+    ProgramBinary *programBinary = mProgramBinary.get();
+    if (programBinary)
     {
-        return mProgramBinary->getLength();
+        return programBinary->getLength();
     }
     else
     {
@@ -393,9 +389,10 @@ void Program::getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shade
 
 void Program::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name)
 {
-    if (mProgramBinary)
+    ProgramBinary *programBinary = getProgramBinary();
+    if (programBinary)
     {
-        mProgramBinary->getActiveAttribute(index, bufsize, length, size, type, name);
+        programBinary->getActiveAttribute(index, bufsize, length, size, type, name);
     }
     else
     {
@@ -416,9 +413,10 @@ void Program::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length,
 
 GLint Program::getActiveAttributeCount()
 {
-    if (mProgramBinary)
+    ProgramBinary *programBinary = getProgramBinary();
+    if (programBinary)
     {
-        return mProgramBinary->getActiveAttributeCount();
+        return programBinary->getActiveAttributeCount();
     }
     else
     {
@@ -428,9 +426,10 @@ GLint Program::getActiveAttributeCount()
 
 GLint Program::getActiveAttributeMaxLength()
 {
-    if (mProgramBinary)
+    ProgramBinary *programBinary = getProgramBinary();
+    if (programBinary)
     {
-        return mProgramBinary->getActiveAttributeMaxLength();
+        return programBinary->getActiveAttributeMaxLength();
     }
     else
     {
@@ -440,9 +439,10 @@ GLint Program::getActiveAttributeMaxLength()
 
 void Program::getActiveUniform(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name)
 {
-    if (mProgramBinary)
+    ProgramBinary *programBinary = getProgramBinary();
+    if (programBinary)
     {
-        return mProgramBinary->getActiveUniform(index, bufsize, length, size, type, name);
+        return programBinary->getActiveUniform(index, bufsize, length, size, type, name);
     }
     else
     {
@@ -463,9 +463,10 @@ void Program::getActiveUniform(GLuint index, GLsizei bufsize, GLsizei *length, G
 
 GLint Program::getActiveUniformCount()
 {
-    if (mProgramBinary)
+    ProgramBinary *programBinary = getProgramBinary();
+    if (programBinary)
     {
-        return mProgramBinary->getActiveUniformCount();
+        return programBinary->getActiveUniformCount();
     }
     else
     {
@@ -475,9 +476,10 @@ GLint Program::getActiveUniformCount()
 
 GLint Program::getActiveUniformMaxLength()
 {
-    if (mProgramBinary)
+    ProgramBinary *programBinary = getProgramBinary();
+    if (programBinary)
     {
-        return mProgramBinary->getActiveUniformMaxLength();
+        return programBinary->getActiveUniformMaxLength();
     }
     else
     {
@@ -499,9 +501,10 @@ void Program::validate()
 {
     mInfoLog.reset();
 
-    if (isLinked() && mProgramBinary)
+    ProgramBinary *programBinary = getProgramBinary();
+    if (isLinked() && programBinary)
     {
-        mProgramBinary->validate(mInfoLog);
+        programBinary->validate(mInfoLog);
     }
     else
     {
@@ -511,9 +514,10 @@ void Program::validate()
 
 bool Program::isValidated() const
 {
-    if (mProgramBinary)
+    ProgramBinary *programBinary = mProgramBinary.get();
+    if (programBinary)
     {
-        return mProgramBinary->isValidated();
+        return programBinary->isValidated();
     }
     else
     {

@@ -106,7 +106,7 @@ class Program
 
     AttributeBindings mAttributeBindings;
 
-    ProgramBinary* mProgramBinary;
+    BindingPointer<ProgramBinary> mProgramBinary;
     bool mLinked;
     bool mDeleteStatus;   // Flag to indicate that the program can be deleted when no longer in use
 
