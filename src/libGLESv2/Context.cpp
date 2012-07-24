@@ -407,7 +407,7 @@ void Context::markAllStateDirty()
     mDitherStateDirty = true;
     mFrontFaceDirty = true;
     mDxUniformsDirty = true;
-    mCachedCurrentProgram = NULL;
+    mCachedCurrentProgramBinary = NULL;
 }
 
 void Context::markDxUniformsDirty()
@@ -983,7 +983,7 @@ void Context::deleteShader(GLuint shader)
 void Context::deleteProgram(GLuint program)
 {
     mResourceManager->deleteProgram(program);
-    mCachedCurrentProgram = NULL;
+    mCachedCurrentProgramBinary = NULL;
 }
 
 void Context::deleteTexture(GLuint texture)
@@ -1147,7 +1147,7 @@ void Context::useProgram(GLuint program)
     {
         Program *newProgram = mResourceManager->getProgram(program);
         Program *oldProgram = mResourceManager->getProgram(priorProgram);
-        mCachedCurrentProgram = NULL;
+        mCachedCurrentProgramBinary = NULL;
         mDxUniformsDirty = true;
 
         if (newProgram)
@@ -1324,13 +1324,14 @@ Buffer *Context::getElementArrayBuffer()
     return mState.elementArrayBuffer.get();
 }
 
-Program *Context::getCurrentProgram()
+ProgramBinary *Context::getCurrentProgramBinary()
 {
-    if (!mCachedCurrentProgram)
+    if (!mCachedCurrentProgramBinary)
     {
-        mCachedCurrentProgram = mResourceManager->getProgram(mState.currentProgram);
+        Program *program = mResourceManager->getProgram(mState.currentProgram);
+        mCachedCurrentProgramBinary = program->getProgramBinary();
     }
-    return mCachedCurrentProgram;
+    return mCachedCurrentProgramBinary;
 }
 
 Texture2D *Context::getTexture2D()
@@ -2016,8 +2017,7 @@ bool Context::applyRenderTarget(bool ignoreViewport)
 
     if (mState.currentProgram && mDxUniformsDirty)
     {
-        Program *programObject = getCurrentProgram();
-        ProgramBinary *programBinary = programObject->getProgramBinary();
+        ProgramBinary *programBinary = getCurrentProgramBinary();
 
         GLint halfPixelSize = programBinary->getDxHalfPixelSizeLocation();
         GLfloat xy[2] = {1.0f / viewport.Width, -1.0f / viewport.Height};
@@ -2046,8 +2046,7 @@ bool Context::applyRenderTarget(bool ignoreViewport)
 // Applies the fixed-function state (culling, depth test, alpha blending, stenciling, etc) to the Direct3D 9 device
 void Context::applyState(GLenum drawMode)
 {
-    Program *programObject = getCurrentProgram();
-    ProgramBinary *programBinary = programObject->getProgramBinary();
+    ProgramBinary *programBinary = getCurrentProgramBinary();
 
     Framebuffer *framebufferObject = getDrawFramebuffer();
 
@@ -2312,7 +2311,7 @@ GLenum Context::applyVertexBuffer(GLint first, GLsizei count, GLsizei instances,
         return err;
     }
 
-    ProgramBinary *programBinary = getCurrentProgram()->getProgramBinary();
+    ProgramBinary *programBinary = getCurrentProgramBinary();
     return mVertexDeclarationCache.applyDeclaration(mDevice, attributes, programBinary, instances, repeatDraw);
 }
 
@@ -2336,8 +2335,7 @@ GLenum Context::applyIndexBuffer(const GLvoid *indices, GLsizei count, GLenum mo
 // Applies the shaders and shader constants to the Direct3D 9 device
 void Context::applyShaders()
 {
-    Program *programObject = getCurrentProgram();
-    ProgramBinary *programBinary = programObject->getProgramBinary();
+    ProgramBinary *programBinary = getCurrentProgramBinary();
 
     if (programBinary->getSerial() != mAppliedProgramBinarySerial)
     {
@@ -2369,8 +2367,7 @@ void Context::applyTextures()
 // and sets the texture and its addressing/filtering state (or NULL when inactive).
 void Context::applyTextures(SamplerType type)
 {
-    Program *programObject = getCurrentProgram();
-    ProgramBinary *programBinary = programObject->getProgramBinary();
+    ProgramBinary *programBinary = getCurrentProgramBinary();
 
     int samplerCount = (type == SAMPLER_PIXEL) ? MAX_TEXTURE_IMAGE_UNITS : MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF;   // Range of Direct3D 9 samplers of given sampler type
     unsigned int *appliedTextureSerial = (type == SAMPLER_PIXEL) ? mAppliedTextureSerialPS : mAppliedTextureSerialVS;
@@ -3022,7 +3019,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
     applyShaders();
     applyTextures();
 
-    if (!getCurrentProgram()->getProgramBinary()->validateSamplers(NULL))
+    if (!getCurrentProgramBinary()->validateSamplers(NULL))
     {
         return error(GL_INVALID_OPERATION);
     }
@@ -3112,7 +3109,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
     applyShaders();
     applyTextures();
 
-    if (!getCurrentProgram()->getProgramBinary()->validateSamplers(false))
+    if (!getCurrentProgramBinary()->validateSamplers(false))
     {
         return error(GL_INVALID_OPERATION);
     }

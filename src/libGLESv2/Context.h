@@ -439,7 +439,7 @@ class Context
 
     Buffer *getArrayBuffer();
     Buffer *getElementArrayBuffer();
-    Program *getCurrentProgram();
+    ProgramBinary *getCurrentProgramBinary();
     Texture2D *getTexture2D();
     TextureCubeMap *getTextureCubeMap();
     Texture *getSamplerTexture(unsigned int sampler, TextureType type);
@@ -597,7 +597,7 @@ class Context
     bool mRenderTargetDescInitialized;
     D3DSURFACE_DESC mRenderTargetDesc;
     bool mDxUniformsDirty;
-    Program *mCachedCurrentProgram;
+    ProgramBinary *mCachedCurrentProgramBinary;
     Framebuffer *mBoundDrawFramebuffer;
 
     bool mSupportsShaderModel3;

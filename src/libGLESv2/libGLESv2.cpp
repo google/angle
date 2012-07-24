@@ -5953,14 +5953,7 @@ void __stdcall glUniform1fv(GLint location, GLsizei count, const GLfloat* v)
 
         if (context)
         {
-            gl::Program *program = context->getCurrentProgram();
-
-            if (!program)
-            {
-                return error(GL_INVALID_OPERATION);
-            }
-
-            gl::ProgramBinary *programBinary = program->getProgramBinary();
+            gl::ProgramBinary *programBinary = context->getCurrentProgramBinary();
             if (!programBinary)
             {
                 return error(GL_INVALID_OPERATION);
@@ -6003,14 +5996,7 @@ void __stdcall glUniform1iv(GLint location, GLsizei count, const GLint* v)
 
         if (context)
         {
-            gl::Program *program = context->getCurrentProgram();
-
-            if (!program)
-            {
-                return error(GL_INVALID_OPERATION);
-            }
-
-            gl::ProgramBinary *programBinary = program->getProgramBinary();
+            gl::ProgramBinary *programBinary = context->getCurrentProgramBinary();
             if (!programBinary)
             {
                 return error(GL_INVALID_OPERATION);
@@ -6055,14 +6041,7 @@ void __stdcall glUniform2fv(GLint location, GLsizei count, const GLfloat* v)
 
         if (context)
         {
-            gl::Program *program = context->getCurrentProgram();
-
-            if (!program)
-            {
-                return error(GL_INVALID_OPERATION);
-            }
-
-            gl::ProgramBinary *programBinary = program->getProgramBinary();
+            gl::ProgramBinary *programBinary = context->getCurrentProgramBinary();
             if (!programBinary)
             {
                 return error(GL_INVALID_OPERATION);
@@ -6107,14 +6086,7 @@ void __stdcall glUniform2iv(GLint location, GLsizei count, const GLint* v)
 
         if (context)
         {
-            gl::Program *program = context->getCurrentProgram();
-
-            if (!program)
-            {
-                return error(GL_INVALID_OPERATION);
-            }
-
-            gl::ProgramBinary *programBinary = program->getProgramBinary();
+            gl::ProgramBinary *programBinary = context->getCurrentProgramBinary();
             if (!programBinary)
             {
                 return error(GL_INVALID_OPERATION);
@@ -6159,14 +6131,7 @@ void __stdcall glUniform3fv(GLint location, GLsizei count, const GLfloat* v)
 
         if (context)
         {
-            gl::Program *program = context->getCurrentProgram();
-
-            if (!program)
-            {
-                return error(GL_INVALID_OPERATION);
-            }
-
-            gl::ProgramBinary *programBinary = program->getProgramBinary();
+            gl::ProgramBinary *programBinary = context->getCurrentProgramBinary();
             if (!programBinary)
             {
                 return error(GL_INVALID_OPERATION);
@@ -6211,14 +6176,7 @@ void __stdcall glUniform3iv(GLint location, GLsizei count, const GLint* v)
 
         if (context)
         {
-            gl::Program *program = context->getCurrentProgram();
-
-            if (!program)
-            {
-                return error(GL_INVALID_OPERATION);
-            }
-
-            gl::ProgramBinary *programBinary = program->getProgramBinary();
+            gl::ProgramBinary *programBinary = context->getCurrentProgramBinary();
             if (!programBinary)
             {
                 return error(GL_INVALID_OPERATION);
@@ -6263,14 +6221,7 @@ void __stdcall glUniform4fv(GLint location, GLsizei count, const GLfloat* v)
 
         if (context)
         {
-            gl::Program *program = context->getCurrentProgram();
-
-            if (!program)
-            {
-                return error(GL_INVALID_OPERATION);
-            }
-
-            gl::ProgramBinary *programBinary = program->getProgramBinary();
+            gl::ProgramBinary *programBinary = context->getCurrentProgramBinary();
             if (!programBinary)
             {
                 return error(GL_INVALID_OPERATION);
@@ -6315,14 +6266,7 @@ void __stdcall glUniform4iv(GLint location, GLsizei count, const GLint* v)
 
         if (context)
         {
-            gl::Program *program = context->getCurrentProgram();
-
-            if (!program)
-            {
-                return error(GL_INVALID_OPERATION);
-            }
-
-            gl::ProgramBinary *programBinary = program->getProgramBinary();
+            gl::ProgramBinary *programBinary = context->getCurrentProgramBinary();
             if (!programBinary)
             {
                 return error(GL_INVALID_OPERATION);
@@ -6361,14 +6305,7 @@ void __stdcall glUniformMatrix2fv(GLint location, GLsizei count, GLboolean trans
 
         if (context)
         {
-            gl::Program *program = context->getCurrentProgram();
-
-            if (!program)
-            {
-                return error(GL_INVALID_OPERATION);
-            }
-
-            gl::ProgramBinary *programBinary = program->getProgramBinary();
+            gl::ProgramBinary *programBinary = context->getCurrentProgramBinary();
             if (!programBinary)
             {
                 return error(GL_INVALID_OPERATION);
@@ -6407,14 +6344,7 @@ void __stdcall glUniformMatrix3fv(GLint location, GLsizei count, GLboolean trans
 
         if (context)
         {
-            gl::Program *program = context->getCurrentProgram();
-
-            if (!program)
-            {
-                return error(GL_INVALID_OPERATION);
-            }
-
-            gl::ProgramBinary *programBinary = program->getProgramBinary();
+            gl::ProgramBinary *programBinary = context->getCurrentProgramBinary();
             if (!programBinary)
             {
                 return error(GL_INVALID_OPERATION);
@@ -6453,14 +6383,7 @@ void __stdcall glUniformMatrix4fv(GLint location, GLsizei count, GLboolean trans
 
         if (context)
         {
-            gl::Program *program = context->getCurrentProgram();
-
-            if (!program)
-            {
-                return error(GL_INVALID_OPERATION);
-            }
-
-            gl::ProgramBinary *programBinary = program->getProgramBinary();
+            gl::ProgramBinary *programBinary = context->getCurrentProgramBinary();
             if (!programBinary)
             {
                 return error(GL_INVALID_OPERATION);

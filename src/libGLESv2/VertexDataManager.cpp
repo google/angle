@@ -128,8 +128,7 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
     }
 
     const VertexAttributeArray &attribs = mContext->getVertexAttributes();
-    Program *program = mContext->getCurrentProgram();
-    ProgramBinary *programBinary = program->getProgramBinary();
+    ProgramBinary *programBinary = mContext->getCurrentProgramBinary();
 
     for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
     {
