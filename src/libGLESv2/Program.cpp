@@ -22,8 +22,6 @@ namespace gl
 {
 const char * const g_fakepath = "C:\\fakepath";
 
-unsigned int Program::mCurrentSerial = 1;
-
 AttributeBindings::AttributeBindings()
 {
 }
@@ -138,7 +136,7 @@ void InfoLog::reset()
     }
 }
 
-Program::Program(ResourceManager *manager, GLuint handle) : mResourceManager(manager), mHandle(handle), mSerial(issueSerial())
+Program::Program(ResourceManager *manager, GLuint handle) : mResourceManager(manager), mHandle(handle)
 {
     mFragmentShader = NULL;
     mVertexShader = NULL;
@@ -332,11 +330,6 @@ unsigned int Program::getRefCount() const
     return mRefCount;
 }
 
-unsigned int Program::getSerial() const
-{
-    return mSerial;
-}
-
 GLint Program::getProgramBinaryLength() const
 {
     if (mProgramBinary)
@@ -347,11 +340,6 @@ GLint Program::getProgramBinaryLength() const
     {
         return 0;
     }
-}
-
-unsigned int Program::issueSerial()
-{
-    return mCurrentSerial++;
 }
 
 int Program::getInfoLogLength() const

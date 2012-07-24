@@ -93,16 +93,12 @@ class Program
     void validate();
     bool isValidated() const;
 
-    unsigned int getSerial() const;
-
     GLint getProgramBinaryLength() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Program);
 
     void unlink(bool destroy = false);
-
-    static unsigned int issueSerial();
 
     FragmentShader *mFragmentShader;
     VertexShader *mVertexShader;
@@ -113,10 +109,6 @@ class Program
     bool mDeleteStatus;   // Flag to indicate that the program can be deleted when no longer in use
 
     unsigned int mRefCount;
-
-    const unsigned int mSerial;
-
-    static unsigned int mCurrentSerial;
 
     ResourceManager *mResourceManager;
     const GLuint mHandle;
