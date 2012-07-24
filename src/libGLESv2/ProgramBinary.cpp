@@ -57,7 +57,9 @@ UniformLocation::UniformLocation(const std::string &_name, unsigned int element,
 {
 }
 
-ProgramBinary::ProgramBinary()
+unsigned int ProgramBinary::mCurrentSerial = 1;
+
+ProgramBinary::ProgramBinary() : mSerial(issueSerial())
 {
     mDevice = getDevice();
 
@@ -121,6 +123,16 @@ ProgramBinary::~ProgramBinary()
         delete mUniforms.back();
         mUniforms.pop_back();
     }
+}
+
+unsigned int ProgramBinary::getSerial() const
+{
+    return mSerial;
+}
+
+unsigned int ProgramBinary::issueSerial()
+{
+    return mCurrentSerial++;
 }
 
 IDirect3DPixelShader9 *ProgramBinary::getPixelShader()

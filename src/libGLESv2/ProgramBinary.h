@@ -155,6 +155,8 @@ class ProgramBinary
     bool validateSamplers(InfoLog *infoLog);
     bool isValidated() const;
 
+    unsigned int getSerial() const;
+
     static std::string decorateAttribute(const std::string &name);    // Prepend an underscore
     static std::string undecorateUniform(const std::string &_name);   // Remove leading underscore
 
@@ -219,6 +221,11 @@ class ProgramBinary
     GLint mDxPointsOrLinesLocation;
 
     bool mValidated;
+
+    const unsigned int mSerial;
+
+    static unsigned int issueSerial();
+    static unsigned int mCurrentSerial;
 };
 }
 
