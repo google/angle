@@ -68,8 +68,8 @@ class Program
 
     void bindAttributeLocation(GLuint index, const char *name);
 
-    void link();
-    void setProgramBinary(const void *binary, GLsizei length);
+    bool link();
+    bool setProgramBinary(const void *binary, GLsizei length);
     ProgramBinary *getProgramBinary();
 
     int getInfoLogLength() const;

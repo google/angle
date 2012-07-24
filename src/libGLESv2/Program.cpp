@@ -240,7 +240,7 @@ void Program::bindAttributeLocation(GLuint index, const char *name)
 // Links the HLSL code of the vertex and pixel shader by matching up their varyings,
 // compiling them into binaries, determining the attribute mappings, and collecting
 // a list of uniforms
-void Program::link()
+bool Program::link()
 {
     unlink(false);
 
@@ -250,7 +250,11 @@ void Program::link()
     if (!mProgramBinary->link(mInfoLog, mAttributeBindings, mFragmentShader, mVertexShader))
     {
         unlink(false);
+
+        return false;
     }
+
+    return true;
 }
 
 int AttributeBindings::getAttributeBinding(const std::string &name) const
@@ -296,7 +300,7 @@ ProgramBinary* Program::getProgramBinary()
     return mProgramBinary;
 }
 
-void Program::setProgramBinary(const void *binary, GLsizei length)
+bool Program::setProgramBinary(const void *binary, GLsizei length)
 {
     unlink(false);
 
@@ -307,7 +311,11 @@ void Program::setProgramBinary(const void *binary, GLsizei length)
     {
         delete mProgramBinary;
         mProgramBinary = NULL;
+
+        return false;
     }
+
+    return true;
 }
 
 void Program::release()
