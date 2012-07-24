@@ -384,7 +384,7 @@ void Context::markAllStateDirty()
         mAppliedTextureSerialVS[t] = 0;
     }
 
-    mAppliedProgramSerial = 0;
+    mAppliedProgramBinarySerial = 0;
     mAppliedRenderTargetSerial = 0;
     mAppliedDepthbufferSerial = 0;
     mAppliedStencilbufferSerial = 0;
@@ -2339,7 +2339,7 @@ void Context::applyShaders()
     Program *programObject = getCurrentProgram();
     ProgramBinary *programBinary = programObject->getProgramBinary();
 
-    if (programObject->getSerial() != mAppliedProgramSerial)
+    if (programBinary->getSerial() != mAppliedProgramBinarySerial)
     {
         IDirect3DVertexShader9 *vertexShader = programBinary->getVertexShader();
         IDirect3DPixelShader9 *pixelShader = programBinary->getPixelShader();
@@ -2347,7 +2347,7 @@ void Context::applyShaders()
         mDevice->SetPixelShader(pixelShader);
         mDevice->SetVertexShader(vertexShader);
         programBinary->dirtyAllUniforms();
-        mAppliedProgramSerial = programObject->getSerial();
+        mAppliedProgramBinarySerial = programBinary->getSerial();
     }
 
     programBinary->applyUniforms();
