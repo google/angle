@@ -142,6 +142,7 @@ Program::Program(ResourceManager *manager, GLuint handle) : mResourceManager(man
     mVertexShader = NULL;
     mProgramBinary = NULL;
     mDeleteStatus = false;
+    mLinked = false;
     mRefCount = 0;
 }
 
@@ -247,14 +248,9 @@ bool Program::link()
     mInfoLog.reset();
 
     mProgramBinary = new ProgramBinary;
-    if (!mProgramBinary->link(mInfoLog, mAttributeBindings, mFragmentShader, mVertexShader))
-    {
-        unlink(false);
+    mLinked = mProgramBinary->link(mInfoLog, mAttributeBindings, mFragmentShader, mVertexShader);
 
-        return false;
-    }
-
-    return true;
+    return mLinked;
 }
 
 int AttributeBindings::getAttributeBinding(const std::string &name) const
@@ -293,6 +289,12 @@ void Program::unlink(bool destroy)
         delete mProgramBinary;
         mProgramBinary = NULL;
     }
+    mLinked = false;
+}
+
+bool Program::isLinked()
+{
+    return mLinked;
 }
 
 ProgramBinary* Program::getProgramBinary()
@@ -307,15 +309,14 @@ bool Program::setProgramBinary(const void *binary, GLsizei length)
     mInfoLog.reset();
 
     mProgramBinary = new ProgramBinary;
-    if (!mProgramBinary->load(mInfoLog, binary, length))
+    mLinked = mProgramBinary->load(mInfoLog, binary, length);
+    if (!mLinked)
     {
         delete mProgramBinary;
         mProgramBinary = NULL;
-
-        return false;
     }
 
-    return true;
+    return mLinked;
 }
 
 void Program::release()
@@ -498,7 +499,7 @@ void Program::validate()
 {
     mInfoLog.reset();
 
-    if (mProgramBinary)
+    if (isLinked() && mProgramBinary)
     {
         mProgramBinary->validate(mInfoLog);
     }

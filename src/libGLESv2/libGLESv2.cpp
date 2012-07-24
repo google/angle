@@ -2939,7 +2939,7 @@ int __stdcall glGetAttribLocation(GLuint program, const GLchar* name)
             }
 
             gl::ProgramBinary *programBinary = programObject->getProgramBinary();
-            if (!programBinary)
+            if (!programObject->isLinked() || !programBinary)
             {
                 return error(GL_INVALID_OPERATION, -1);
             }
@@ -3398,7 +3398,7 @@ void __stdcall glGetProgramiv(GLuint program, GLenum pname, GLint* params)
                 *params = programObject->isFlaggedForDeletion();
                 return;
               case GL_LINK_STATUS:
-                *params = programObject->getProgramBinary() != NULL;
+                *params = programObject->isLinked();
                 return;
               case GL_VALIDATE_STATUS:
                 *params = programObject->isValidated();
@@ -3963,7 +3963,7 @@ void __stdcall glGetnUniformfvEXT(GLuint program, GLint location, GLsizei bufSiz
 
             gl::Program *programObject = context->getProgram(program);
 
-            if (!programObject)
+            if (!programObject || !programObject->isLinked())
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -4003,7 +4003,7 @@ void __stdcall glGetUniformfv(GLuint program, GLint location, GLfloat* params)
 
             gl::Program *programObject = context->getProgram(program);
 
-            if (!programObject)
+            if (!programObject || !programObject->isLinked())
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -4049,7 +4049,7 @@ void __stdcall glGetnUniformivEXT(GLuint program, GLint location, GLsizei bufSiz
 
             gl::Program *programObject = context->getProgram(program);
 
-            if (!programObject)
+            if (!programObject || !programObject->isLinked())
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -4089,7 +4089,7 @@ void __stdcall glGetUniformiv(GLuint program, GLint location, GLint* params)
 
             gl::Program *programObject = context->getProgram(program);
 
-            if (!programObject)
+            if (!programObject || !programObject->isLinked())
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -4142,7 +4142,7 @@ int __stdcall glGetUniformLocation(GLuint program, const GLchar* name)
             }
 
             gl::ProgramBinary *programBinary = programObject->getProgramBinary();
-            if (!programBinary)
+            if (!programObject->isLinked() || !programBinary)
             {
                 return error(GL_INVALID_OPERATION, -1);
             }
@@ -6425,7 +6425,7 @@ void __stdcall glUseProgram(GLuint program)
                 }
             }
 
-            if (program != 0 && !programObject->getProgramBinary())
+            if (program != 0 && !programObject->isLinked())
             {
                 return error(GL_INVALID_OPERATION);
             }
@@ -6848,7 +6848,7 @@ void __stdcall glGetProgramBinaryOES(GLuint program, GLsizei bufSize, GLsizei *l
         {
             gl::Program *programObject = context->getProgram(program);
 
-            if (!programObject)
+            if (!programObject || !programObject->isLinked())
             {
                 return error(GL_INVALID_OPERATION);
             }

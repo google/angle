@@ -69,6 +69,7 @@ class Program
     void bindAttributeLocation(GLuint index, const char *name);
 
     bool link();
+    bool isLinked();
     bool setProgramBinary(const void *binary, GLsizei length);
     ProgramBinary *getProgramBinary();
 
@@ -106,6 +107,7 @@ class Program
     AttributeBindings mAttributeBindings;
 
     ProgramBinary* mProgramBinary;
+    bool mLinked;
     bool mDeleteStatus;   // Flag to indicate that the program can be deleted when no longer in use
 
     unsigned int mRefCount;
