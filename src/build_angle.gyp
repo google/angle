@@ -43,16 +43,6 @@
         'compiler/preprocessor/new/Tokenizer.cpp',
         'compiler/preprocessor/new/Tokenizer.h',
       ],
-      'conditions': [
-        ['OS=="mac"', {
-          'xcode_settings': {
-            'WARNING_CFLAGS': ['<@(gcc_or_clang_warnings)']
-          },
-        }],
-        ['OS=="linux"', {
-          'cflags': ['<@(gcc_or_clang_warnings)']
-        }],
-      ],
     },
     {
       'target_name': 'translator_common',
@@ -164,14 +154,6 @@
         }, { # else: posix
           'sources': ['compiler/ossource_posix.cpp'],
         }],
-        ['OS=="mac"', {
-          'xcode_settings': {
-            'WARNING_CFLAGS': ['<@(gcc_or_clang_warnings)']
-          },
-        }],
-        ['OS=="linux"', {
-          'cflags': ['<@(gcc_or_clang_warnings)']
-        }],
       ],
     },
     {
@@ -200,16 +182,6 @@
         'compiler/TranslatorGLSL.h',
         'compiler/VersionGLSL.cpp',
         'compiler/VersionGLSL.h',
-      ],
-      'conditions': [
-        ['OS=="mac"', {
-          'xcode_settings': {
-            'WARNING_CFLAGS': ['<@(gcc_or_clang_warnings)']
-          },
-        }],
-        ['OS=="linux"', {
-          'cflags': ['<@(gcc_or_clang_warnings)']
-        }],
       ],
     },
   ],
