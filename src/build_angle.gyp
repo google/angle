@@ -3,6 +3,9 @@
 # found in the LICENSE file.
 
 {
+  'variables': {
+    'angle_code': 1,
+  },
   'target_defaults': {
     'defines': [
       'ANGLE_DISABLE_TRACE',
