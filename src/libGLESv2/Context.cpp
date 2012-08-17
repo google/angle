@@ -369,6 +369,10 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
     {
         depthStencil->Release();
     }
+
+    // Reset pixel shader to null to work around a bug that only happens with Intel GPUs.
+    // http://crbug.com/110343
+    mDevice->SetPixelShader(NULL);
     
     markAllStateDirty();
 }
