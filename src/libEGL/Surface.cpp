@@ -290,9 +290,18 @@ bool Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
         presentParameters.BackBufferHeight = backbufferHeight;
 
         // http://crbug.com/140239
-        // Some AMD GPUs / drivers appear to round swap chain surfaces to a multiple of 64 pixels in width.
-        // This rounds the width up rather than down.
-        presentParameters.BackBufferWidth = (presentParameters.BackBufferWidth + 63) / 64 * 64;
+        // http://crbug.com/143434
+        //
+        // Some AMD/Intel switchable systems / drivers appear to round swap chain surfaces to a multiple of 64 pixels in width
+        // when using the integrated Intel. This rounds the width up rather than down.
+        //
+        // Some non-switchable AMD GPUs / drivers do not respect the source rectangle to Present. Therefore, when the vendor ID
+        // is not Intel, the back buffer width must be exactly the same width as the window or horizontal scaling will occur.
+        D3DADAPTER_IDENTIFIER9* adapterIdentifier = mDisplay->getAdapterIdentifier();
+        if (adapterIdentifier->VendorId == VENDOR_ID_INTEL)
+        {
+            presentParameters.BackBufferWidth = (presentParameters.BackBufferWidth + 63) / 64 * 64;
+        }
 
         result = device->CreateAdditionalSwapChain(&presentParameters, &mSwapChain);
 
