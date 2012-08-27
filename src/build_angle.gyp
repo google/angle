@@ -270,6 +270,7 @@
             'libGLESv2/Shader.cpp',
             'libGLESv2/Shader.h',
             'libGLESv2/Texture.cpp',
+            'libGLESv2/TextureSSE2.cpp',
             'libGLESv2/Texture.h',
             'libGLESv2/utilities.cpp',
             'libGLESv2/utilities.h',
