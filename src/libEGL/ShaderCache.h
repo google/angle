@@ -42,7 +42,7 @@ class ShaderCache
     ShaderObject *create(const DWORD *function, size_t length)
     {
         std::string key(reinterpret_cast<const char*>(function), length);
-        Map::iterator it = mMap.find(key);
+        typename Map::iterator it = mMap.find(key);
         if (it != mMap.end())
         {
             it->second->AddRef();
@@ -71,7 +71,7 @@ class ShaderCache
 
     void clear()
     {
-        for (Map::iterator it = mMap.begin(); it != mMap.end(); ++it)
+        for (typename Map::iterator it = mMap.begin(); it != mMap.end(); ++it)
         {
             it->second->Release();
         }
