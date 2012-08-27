@@ -11,7 +11,12 @@
 #define LIBEGL_SHADER_CACHE_H_
 
 #include <d3d9.h>
+
+#ifdef _MSC_VER
 #include <hash_map>
+#else
+#include <unordered_map>
+#endif
 
 namespace egl
 {
@@ -89,7 +94,15 @@ class ShaderCache
         return mDevice->CreatePixelShader(function, shader);
     }
 
-    typedef stdext::hash_map<std::string, ShaderObject*> Map;
+#ifndef HASH_MAP
+# ifdef _MSC_VER
+#  define HASH_MAP stdext::hash_map
+# else
+#  define HASH_MAP std::unordered_map
+# endif
+#endif
+
+    typedef HASH_MAP<std::string, ShaderObject*> Map;
     Map mMap;
 
     IDirect3DDevice9 *mDevice;
