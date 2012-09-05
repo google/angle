@@ -15,6 +15,17 @@
 
 namespace gl
 {
+struct Vector4
+{
+    Vector4() {}
+    Vector4(float x, float y, float z, float w) : x(x), y(y), z(z), w(w) {}
+
+    float x;
+    float y;
+    float z;
+    float w;
+};
+
 inline bool isPow2(int x)
 {
     return (x & (x - 1)) == 0 && (x != 0);

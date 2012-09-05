@@ -373,6 +373,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\D3DConstantTable.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Fence.cpp"
 				>
 			</File>
@@ -464,6 +468,10 @@
 			</File>
 			<File
 				RelativePath=".\Context.h"
+				>
+			</File>
+			<File
+				RelativePath=".\D3DConstantTable.h"
 				>
 			</File>
 			<File
