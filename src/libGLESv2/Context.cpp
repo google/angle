@@ -2697,14 +2697,10 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
               case D3DFMT_A16B16G16R16F:
                 {
                     // float formats in D3D are stored rgba, rather than the other way round
-                    float abgr[4];
-
-                    D3DXFloat16To32Array(abgr, (D3DXFLOAT16*)(source + 8 * i + j * inputPitch), 4);
-
-                    a = abgr[3];
-                    b = abgr[2];
-                    g = abgr[1];
-                    r = abgr[0];
+                    r = float16ToFloat32(*((unsigned short*)(source + 8 * i + j * inputPitch) + 0));
+                    g = float16ToFloat32(*((unsigned short*)(source + 8 * i + j * inputPitch) + 1));
+                    b = float16ToFloat32(*((unsigned short*)(source + 8 * i + j * inputPitch) + 2));
+                    a = float16ToFloat32(*((unsigned short*)(source + 8 * i + j * inputPitch) + 3));
                 }
                 break;
               default:

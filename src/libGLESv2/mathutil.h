@@ -94,6 +94,9 @@ inline bool supportsSSE2()
 
     return supports;
 }
+
+float float16ToFloat32(unsigned short h);
+
 }
 
 #endif   // LIBGLESV2_MATHUTIL_H_

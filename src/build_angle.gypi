@@ -247,6 +247,7 @@
             'libGLESv2/Context.h',
             'libGLESv2/Fence.cpp',
             'libGLESv2/Fence.h',
+            'libGLESv2/Float16ToFloat32.cpp',
             'libGLESv2/Framebuffer.cpp',
             'libGLESv2/Framebuffer.h',
             'libGLESv2/HandleAllocator.cpp',

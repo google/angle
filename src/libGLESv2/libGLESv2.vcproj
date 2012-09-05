@@ -377,6 +377,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Float16ToFloat32.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Framebuffer.cpp"
 				>
 			</File>
