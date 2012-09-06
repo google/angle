@@ -227,7 +227,7 @@ class Texture : public RefCountObject
     virtual void convertToRenderTarget() = 0;
     virtual IDirect3DSurface9 *getRenderTarget(GLenum target) = 0;
 
-    int levelCount() const;
+    int levelCount();
 
     static Blit *getBlitter();
     static bool copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *source, bool fromManaged);

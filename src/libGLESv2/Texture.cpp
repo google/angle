@@ -1357,9 +1357,9 @@ GLint Texture::creationLevels(GLsizei size) const
     return creationLevels(size, size);
 }
 
-int Texture::levelCount() const
+int Texture::levelCount()
 {
-    return getBaseTexture() ? getBaseTexture()->GetLevelCount() : 0;
+    return getBaseTexture() ? getBaseTexture()->GetLevelCount() - getLodOffset() : 0;
 }
 
 Blit *Texture::getBlitter()
