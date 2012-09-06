@@ -245,6 +245,8 @@
             'libGLESv2/Buffer.h',
             'libGLESv2/Context.cpp',
             'libGLESv2/Context.h',
+            'libGLESv2/D3DConstantTable.cpp',
+            'libGLESv2/D3DConstantTable.h',
             'libGLESv2/Fence.cpp',
             'libGLESv2/Fence.h',
             'libGLESv2/Float16ToFloat32.cpp',
