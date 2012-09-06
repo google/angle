@@ -2093,7 +2093,7 @@ bool ProgramBinary::defineUniform(InfoLog &infoLog, GLenum shader, const D3DCons
                 {
                     const D3DConstant *fieldConstant = constant->structMembers[arrayIndex][field];
 
-                    std::string structIndex = (fieldConstant->elements > 1) ? ("[" + str(arrayIndex) + "]") : "";
+                    std::string structIndex = (constant->elements > 1) ? ("[" + str(arrayIndex) + "]") : "";
 
                     if (!defineUniform(infoLog, shader, fieldConstant, name + constant->name + structIndex + "."))
                     {
