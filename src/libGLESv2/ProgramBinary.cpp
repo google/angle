@@ -176,6 +176,11 @@ GLint ProgramBinary::getUsedSamplerRange(SamplerType type)
     }
 }
 
+bool ProgramBinary::usesPointSize() const
+{
+    return mUsesPointSize;
+}
+
 // Returns the index of the texture image unit (0-19) corresponding to a Direct3D 9 sampler
 // index (0-15 for the pixel shader and 0-3 for the vertex shader).
 GLint ProgramBinary::getSamplerMapping(SamplerType type, unsigned int samplerIndex)
@@ -1319,7 +1324,8 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
         }
     }
 
-    std::string varyingSemantic = (vertexShader->mUsesPointSize && sm3 ? "COLOR" : "TEXCOORD");
+    mUsesPointSize = vertexShader->mUsesPointSize;
+    std::string varyingSemantic = (mUsesPointSize && sm3) ? "COLOR" : "TEXCOORD";
 
     vertexHLSL += "struct VS_INPUT\n"
                    "{\n";

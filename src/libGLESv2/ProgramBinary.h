@@ -110,6 +110,7 @@ class ProgramBinary : public RefCountObject
     GLint getSamplerMapping(SamplerType type, unsigned int samplerIndex);
     TextureType getSamplerTextureType(SamplerType type, unsigned int samplerIndex);
     GLint getUsedSamplerRange(SamplerType type);
+    bool usesPointSize() const;
 
     GLint getUniformLocation(std::string name);
     bool setUniform1fv(GLint location, GLsizei count, const GLfloat *v);
@@ -208,6 +209,7 @@ class ProgramBinary : public RefCountObject
     Sampler mSamplersVS[MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF];
     GLuint mUsedVertexSamplerRange;
     GLuint mUsedPixelSamplerRange;
+    bool mUsesPointSize;
 
     typedef std::vector<Uniform*> UniformArray;
     UniformArray mUniforms;

@@ -3051,7 +3051,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
         return error(GL_INVALID_OPERATION);
     }
 
-    if (!cullSkipsDraw(mode))
+    if (!skipDraw(mode))
     {
         mDisplay->startScene();
         
@@ -3141,7 +3141,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
         return error(GL_INVALID_OPERATION);
     }
 
-    if (!cullSkipsDraw(mode))
+    if (!skipDraw(mode))
     {
         mDisplay->startScene();
 
@@ -3733,9 +3733,31 @@ Texture *Context::getIncompleteTexture(TextureType type)
     return t;
 }
 
-bool Context::cullSkipsDraw(GLenum drawMode)
+bool Context::skipDraw(GLenum drawMode)
 {
-    return mState.cullFace && mState.cullMode == GL_FRONT_AND_BACK && isTriangleMode(drawMode);
+    if (drawMode == GL_POINTS)
+    {
+        // ProgramBinary assumes non-point rendering if gl_PointSize isn't written,
+        // which affects varying interpolation. Since the value of gl_PointSize is
+        // undefined when not written, just skip drawing to avoid unexpected results.
+        if (!getCurrentProgramBinary()->usesPointSize())
+        {
+            // This is stictly speaking not an error, but developers should be 
+            // notified of risking undefined behavior.
+            ERR("Point rendering without writing to gl_PointSize.");
+
+            return true;
+        }
+    }
+    else if (isTriangleMode(drawMode))
+    {
+        if (mState.cullFace && mState.cullMode == GL_FRONT_AND_BACK)
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 bool Context::isTriangleMode(GLenum drawMode)
