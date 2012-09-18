@@ -1412,7 +1412,7 @@ TextureStorage2D::TextureStorage2D(int levels, D3DFORMAT format, DWORD usage, in
     {
         IDirect3DDevice9 *device = getDevice();
         MakeValidSize(false, dx2es::IsCompressedD3DFormat(format), &width, &height, &mLodOffset);
-        HRESULT result = device->CreateTexture(width, height, levels + mLodOffset, getUsage(), format, getPool(), &mTexture, NULL);
+        HRESULT result = device->CreateTexture(width, height, levels ? levels + mLodOffset : 0, getUsage(), format, getPool(), &mTexture, NULL);
 
         if (FAILED(result))
         {
@@ -2138,7 +2138,7 @@ TextureStorageCubeMap::TextureStorageCubeMap(int levels, D3DFORMAT format, DWORD
         IDirect3DDevice9 *device = getDevice();
         int height = size;
         MakeValidSize(false, dx2es::IsCompressedD3DFormat(format), &size, &height, &mLodOffset);
-        HRESULT result = device->CreateCubeTexture(size, levels + mLodOffset, getUsage(), format, getPool(), &mTexture, NULL);
+        HRESULT result = device->CreateCubeTexture(size, levels ? levels + mLodOffset : 0, getUsage(), format, getPool(), &mTexture, NULL);
 
         if (FAILED(result))
         {
@@ -2480,7 +2480,7 @@ void TextureCubeMap::createTexture()
     if (!(size > 0))
         return; // do not attempt to create d3d textures for nonexistant data
 
-    GLint levels = creationLevels(size, 0);
+    GLint levels = creationLevels(size);
     D3DFORMAT d3dfmt = mImageArray[0][0].getD3DFormat();
     DWORD d3dusage = GetTextureUsage(d3dfmt, mUsage, false);
 
@@ -2528,7 +2528,7 @@ void TextureCubeMap::convertToRenderTarget()
     if (mImageArray[0][0].getWidth() != 0)
     {
         GLsizei size = mImageArray[0][0].getWidth();
-        GLint levels = creationLevels(size, 0);
+        GLint levels = creationLevels(size);
         D3DFORMAT d3dfmt = mImageArray[0][0].getD3DFormat();
         DWORD d3dusage = GetTextureUsage(d3dfmt, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true);
 
