@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -1432,7 +1432,7 @@ TextureStorage2D::~TextureStorage2D()
 
 // Increments refcount on surface.
 // caller must Release() the returned surface
-IDirect3DSurface9 *TextureStorage2D::getSurfaceLevel(int level)
+IDirect3DSurface9 *TextureStorage2D::getSurfaceLevel(int level, bool dirty)
 {
     IDirect3DSurface9 *surface = NULL;
 
@@ -1441,7 +1441,8 @@ IDirect3DSurface9 *TextureStorage2D::getSurfaceLevel(int level)
         HRESULT result = mTexture->GetSurfaceLevel(level + mLodOffset, &surface);
         ASSERT(SUCCEEDED(result));
 
-        if (level != 0)
+        // With managed textures the driver needs to be informed of updates to the lower mipmap levels
+        if (level != 0 && isManaged() && dirty)
         {
             mTexture->AddDirtyRect(NULL);
         }
@@ -1624,7 +1625,7 @@ void Texture2D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei wi
 
     if (level < levelCount())
     {
-        IDirect3DSurface9 *destLevel = mTexStorage->getSurfaceLevel(level);
+        IDirect3DSurface9 *destLevel = mTexStorage->getSurfaceLevel(level, true);
 
         if (destLevel)
         {
@@ -1687,7 +1688,7 @@ void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei 
             sourceRect.top = y;
             sourceRect.bottom = y + height;
             
-            IDirect3DSurface9 *dest = mTexStorage->getSurfaceLevel(level);
+            IDirect3DSurface9 *dest = mTexStorage->getSurfaceLevel(level, true);
 
             if (dest)
             {
@@ -1737,8 +1738,7 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
             sourceRect.top = y;
             sourceRect.bottom = y + height;
 
-
-            IDirect3DSurface9 *dest = mTexStorage->getSurfaceLevel(level);
+            IDirect3DSurface9 *dest = mTexStorage->getSurfaceLevel(level, true);
 
             if (dest)
             {
@@ -1780,7 +1780,7 @@ void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GL
 
         for (int level = 0; level < levels; level++)
         {
-            IDirect3DSurface9 *surface = mTexStorage->getSurfaceLevel(level);
+            IDirect3DSurface9 *surface = mTexStorage->getSurfaceLevel(level, false);
             mImageArray[level].setManagedSurface(surface);
         }
     }
@@ -1934,7 +1934,7 @@ void Texture2D::createTexture()
 
         for (int level = 0; level < levels; level++)
         {
-            IDirect3DSurface9 *surface = mTexStorage->getSurfaceLevel(level);
+            IDirect3DSurface9 *surface = mTexStorage->getSurfaceLevel(level, false);
             mImageArray[level].setManagedSurface(surface);
         }
     }
@@ -1976,8 +1976,8 @@ void Texture2D::convertToRenderTarget()
             int levels = levelCount();
             for (int i = 0; i < levels; i++)
             {
-                IDirect3DSurface9 *source = mTexStorage->getSurfaceLevel(i);
-                IDirect3DSurface9 *dest = newTexStorage->getSurfaceLevel(i);
+                IDirect3DSurface9 *source = mTexStorage->getSurfaceLevel(i, false);
+                IDirect3DSurface9 *dest = newTexStorage->getSurfaceLevel(i, true);
 
                 if (!copyToRenderTarget(dest, source, mTexStorage->isManaged()))
                 {   
@@ -2023,8 +2023,8 @@ void Texture2D::generateMipmaps()
     {
         for (unsigned int i = 1; i <= q; i++)
         {
-            IDirect3DSurface9 *upper = mTexStorage->getSurfaceLevel(i - 1);
-            IDirect3DSurface9 *lower = mTexStorage->getSurfaceLevel(i);
+            IDirect3DSurface9 *upper = mTexStorage->getSurfaceLevel(i - 1, false);
+            IDirect3DSurface9 *lower = mTexStorage->getSurfaceLevel(i, true);
 
             if (upper != NULL && lower != NULL)
             {
@@ -2090,7 +2090,7 @@ IDirect3DSurface9 *Texture2D::getRenderTarget(GLenum target)
     {
         return NULL;
     }
-    return mTexStorage->getSurfaceLevel(0);
+    return mTexStorage->getSurfaceLevel(0, false);
 }
 
 // Increments refcount on surface.
@@ -2112,7 +2112,7 @@ IDirect3DSurface9 *Texture2D::getDepthStencil(GLenum target)
     {
         return NULL;
     }
-    return mTexStorage->getSurfaceLevel(0);
+    return mTexStorage->getSurfaceLevel(0, false);
 }
 
 TextureStorage *Texture2D::getStorage(bool renderTarget)
@@ -2163,7 +2163,7 @@ TextureStorageCubeMap::~TextureStorageCubeMap()
 
 // Increments refcount on surface.
 // caller must Release() the returned surface
-IDirect3DSurface9 *TextureStorageCubeMap::getCubeMapSurface(GLenum faceTarget, int level)
+IDirect3DSurface9 *TextureStorageCubeMap::getCubeMapSurface(GLenum faceTarget, int level, bool dirty)
 {
     IDirect3DSurface9 *surface = NULL;
 
@@ -2173,7 +2173,8 @@ IDirect3DSurface9 *TextureStorageCubeMap::getCubeMapSurface(GLenum faceTarget, i
         HRESULT result = mTexture->GetCubeMapSurface(face, level + mLodOffset, &surface);
         ASSERT(SUCCEEDED(result));
 
-        if (level != 0)
+        // With managed textures the driver needs to be informed of updates to the lower mipmap levels
+        if (level != 0 && isManaged() && dirty)
         {
             mTexture->AddDirtyRect(face, NULL);
         }
@@ -2322,7 +2323,7 @@ void TextureCubeMap::commitRect(int face, GLint level, GLint xoffset, GLint yoff
 
     if (level < levelCount())
     {
-        IDirect3DSurface9 *destLevel = mTexStorage->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level);
+        IDirect3DSurface9 *destLevel = mTexStorage->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level, true);
         ASSERT(destLevel != NULL);
 
         if (destLevel != NULL)
@@ -2506,7 +2507,7 @@ void TextureCubeMap::createTexture()
         {
             for (int level = 0; level < levels; level++)
             {
-                IDirect3DSurface9 *surface = mTexStorage->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level);
+                IDirect3DSurface9 *surface = mTexStorage->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level, false);
                 mImageArray[face][level].setManagedSurface(surface);
             }
         }
@@ -2552,8 +2553,8 @@ void TextureCubeMap::convertToRenderTarget()
             {
                 for (int i = 0; i < levels; i++)
                 {
-                    IDirect3DSurface9 *source = mTexStorage->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i);
-                    IDirect3DSurface9 *dest = newTexStorage->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i);
+                    IDirect3DSurface9 *source = mTexStorage->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i, false);
+                    IDirect3DSurface9 *dest = newTexStorage->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i, true);
 
                     if (!copyToRenderTarget(dest, source, mTexStorage->isManaged()))
                     {
@@ -2652,7 +2653,7 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint 
             sourceRect.top = y;
             sourceRect.bottom = y + height;
 
-            IDirect3DSurface9 *dest = mTexStorage->getCubeMapSurface(target, level);
+            IDirect3DSurface9 *dest = mTexStorage->getCubeMapSurface(target, level, true);
 
             if (dest)
             {
@@ -2706,7 +2707,7 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
             sourceRect.top = y;
             sourceRect.bottom = y + height;
 
-            IDirect3DSurface9 *dest = mTexStorage->getCubeMapSurface(target, level);
+            IDirect3DSurface9 *dest = mTexStorage->getCubeMapSurface(target, level, true);
 
             if (dest)
             {
@@ -2755,7 +2756,7 @@ void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size
         {
             for (int level = 0; level < levels; level++)
             {
-                IDirect3DSurface9 *surface = mTexStorage->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level);
+                IDirect3DSurface9 *surface = mTexStorage->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level, false);
                 mImageArray[face][level].setManagedSurface(surface);
             }
         }
@@ -2796,8 +2797,8 @@ void TextureCubeMap::generateMipmaps()
         {
             for (unsigned int i = 1; i <= q; i++)
             {
-                IDirect3DSurface9 *upper = mTexStorage->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i-1);
-                IDirect3DSurface9 *lower = mTexStorage->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i);
+                IDirect3DSurface9 *upper = mTexStorage->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i - 1, false);
+                IDirect3DSurface9 *lower = mTexStorage->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i, true);
 
                 if (upper != NULL && lower != NULL)
                 {
@@ -2864,7 +2865,7 @@ IDirect3DSurface9 *TextureCubeMap::getRenderTarget(GLenum target)
 
     updateTexture();
     
-    return mTexStorage->getCubeMapSurface(target, 0);
+    return mTexStorage->getCubeMapSurface(target, 0, false);
 }
 
 TextureStorage *TextureCubeMap::getStorage(bool renderTarget)
