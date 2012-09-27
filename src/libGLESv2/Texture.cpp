@@ -1440,6 +1440,11 @@ IDirect3DSurface9 *TextureStorage2D::getSurfaceLevel(int level)
     {
         HRESULT result = mTexture->GetSurfaceLevel(level + mLodOffset, &surface);
         ASSERT(SUCCEEDED(result));
+
+        if (level != 0)
+        {
+            mTexture->AddDirtyRect(NULL);
+        }
     }
 
     return surface;
@@ -2164,8 +2169,14 @@ IDirect3DSurface9 *TextureStorageCubeMap::getCubeMapSurface(GLenum faceTarget, i
 
     if (mTexture)
     {
-        HRESULT result = mTexture->GetCubeMapSurface(es2dx::ConvertCubeFace(faceTarget), level + mLodOffset, &surface);
+        D3DCUBEMAP_FACES face = es2dx::ConvertCubeFace(faceTarget);
+        HRESULT result = mTexture->GetCubeMapSurface(face, level + mLodOffset, &surface);
         ASSERT(SUCCEEDED(result));
+
+        if (level != 0)
+        {
+            mTexture->AddDirtyRect(face, NULL);
+        }
     }
 
     return surface;
