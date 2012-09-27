@@ -247,15 +247,6 @@ bool validReadFormatType(GLenum format, GLenum type)
             return false;
         }
         break;
-      case gl::IMPLEMENTATION_COLOR_READ_FORMAT:
-        switch (type)
-        {
-          case gl::IMPLEMENTATION_COLOR_READ_TYPE:
-            break;
-          default:
-            return false;
-        }
-        break;
       default:
         return false;
     }
@@ -4720,15 +4711,23 @@ void __stdcall glReadnPixelsEXT(GLint x, GLint y, GLsizei width, GLsizei height,
             return error(GL_INVALID_VALUE);
         }
 
-        if (!validReadFormatType(format, type))
-        {
-            return error(GL_INVALID_OPERATION);
-        }
-
         gl::Context *context = gl::getNonLostContext();
 
         if (context)
         {
+            GLenum currentFormat, currentType;
+    
+            // Failure in getCurrentReadFormatType indicates that no color attachment is currently bound,
+            // and attempting to read back if that's the case is an error. The error will be registered
+            // by getCurrentReadFormat.
+            if (!context->getCurrentReadFormatType(&currentFormat, &currentType))
+                return;
+
+            if (!(currentFormat == format && currentType == type) && !validReadFormatType(format, type))
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
             context->readPixels(x, y, width, height, format, type, &bufSize, data);
         }
     }
@@ -4752,15 +4751,23 @@ void __stdcall glReadPixels(GLint x, GLint y, GLsizei width, GLsizei height,
             return error(GL_INVALID_VALUE);
         }
 
-        if (!validReadFormatType(format, type))
-        {
-            return error(GL_INVALID_OPERATION);
-        }
-
         gl::Context *context = gl::getNonLostContext();
 
         if (context)
         {
+            GLenum currentFormat, currentType;
+    
+            // Failure in getCurrentReadFormatType indicates that no color attachment is currently bound,
+            // and attempting to read back if that's the case is an error. The error will be registered
+            // by getCurrentReadFormat.
+            if (!context->getCurrentReadFormatType(&currentFormat, &currentType))
+                return;
+
+            if (!(currentFormat == format && currentType == type) && !validReadFormatType(format, type))
+            {
+                return error(GL_INVALID_OPERATION);
+            }
+
             context->readPixels(x, y, width, height, format, type, NULL, pixels);
         }
     }

@@ -88,6 +88,7 @@ bool IsCompressedD3DFormat(D3DFORMAT format);
 
 GLsizei GetSamplesFromMultisampleType(D3DMULTISAMPLE_TYPE type);
 
+bool ConvertReadBufferFormat(D3DFORMAT d3dformat, GLenum *format, GLenum *type);
 GLenum ConvertBackBufferFormat(D3DFORMAT format);
 GLenum ConvertDepthStencilFormat(D3DFORMAT format);
 

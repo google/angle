@@ -1576,8 +1576,19 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
             }
         }
         break;
-      case GL_IMPLEMENTATION_COLOR_READ_TYPE:   *params = gl::IMPLEMENTATION_COLOR_READ_TYPE;   break;
-      case GL_IMPLEMENTATION_COLOR_READ_FORMAT: *params = gl::IMPLEMENTATION_COLOR_READ_FORMAT; break;
+      case GL_IMPLEMENTATION_COLOR_READ_TYPE:
+      case GL_IMPLEMENTATION_COLOR_READ_FORMAT:
+        {
+            GLenum format, type;
+            if (getCurrentReadFormatType(&format, &type))
+            {
+                if (pname == GL_IMPLEMENTATION_COLOR_READ_FORMAT)
+                    *params = format;
+                else
+                    *params = type;
+            }
+        }
+        break;
       case GL_MAX_VIEWPORT_DIMS:
         {
             int maxDimension = std::max(getMaximumRenderbufferDimension(), getMaximumTextureDimension());
@@ -2611,18 +2622,51 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
         inputPitch = lock.Pitch;
     }
 
+    unsigned int fastPixelSize = 0;
+
+    if (desc.Format == D3DFMT_A8R8G8B8 &&
+        format == GL_BGRA_EXT &&
+        type == GL_UNSIGNED_BYTE)
+    {
+        fastPixelSize = 4;
+    }
+    else if ((desc.Format == D3DFMT_A4R4G4B4 &&
+             format == GL_BGRA_EXT &&
+             type == GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT) ||
+             (desc.Format == D3DFMT_A1R5G5B5 &&
+             format == GL_BGRA_EXT &&
+             type == GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT))
+    {
+        fastPixelSize = 2;
+    }
+    else if (desc.Format == D3DFMT_A16B16G16R16F &&
+             format == GL_RGBA &&
+             type == GL_HALF_FLOAT_OES)
+    {
+        fastPixelSize = 8;
+    }
+    else if (desc.Format == D3DFMT_A32B32G32R32F &&
+             format == GL_RGBA &&
+             type == GL_FLOAT)
+    {
+        fastPixelSize = 16;
+    }
+
     for (int j = 0; j < rect.bottom - rect.top; j++)
     {
-        if (desc.Format == D3DFMT_A8R8G8B8 &&
-            format == GL_BGRA_EXT &&
-            type == GL_UNSIGNED_BYTE)
+        if (fastPixelSize != 0)
         {
-            // Fast path for EXT_read_format_bgra, given
-            // an RGBA source buffer.  Note that buffers with no
-            // alpha go through the slow path below.
+            // Fast path for formats which require no translation:
+            // D3DFMT_A8R8G8B8 to BGRA/UNSIGNED_BYTE
+            // D3DFMT_A4R4G4B4 to BGRA/UNSIGNED_SHORT_4_4_4_4_REV_EXT
+            // D3DFMT_A1R5G5B5 to BGRA/UNSIGNED_SHORT_1_5_5_5_REV_EXT
+            // D3DFMT_A16B16G16R16F to RGBA/HALF_FLOAT_OES
+            // D3DFMT_A32B32G32R32F to RGBA/FLOAT
+            // 
+            // Note that buffers with no alpha go through the slow path below.
             memcpy(dest + j * outputPitch,
                    source + j * inputPitch,
-                   (rect.right - rect.left) * 4);
+                   (rect.right - rect.left) * fastPixelSize);
             continue;
         }
 
@@ -2763,14 +2807,19 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
                   default: UNREACHABLE();
                 }
                 break;
-              case GL_RGB:   // IMPLEMENTATION_COLOR_READ_FORMAT
+              case GL_RGB:
                 switch (type)
                 {
-                  case GL_UNSIGNED_SHORT_5_6_5:   // IMPLEMENTATION_COLOR_READ_TYPE
+                  case GL_UNSIGNED_SHORT_5_6_5:
                     dest16[i + j * outputPitch / sizeof(unsigned short)] = 
                         ((unsigned short)(31 * b + 0.5f) << 0) |
                         ((unsigned short)(63 * g + 0.5f) << 5) |
                         ((unsigned short)(31 * r + 0.5f) << 11);
+                    break;
+                  case GL_UNSIGNED_BYTE:
+                    dest[3 * i + j * outputPitch + 0] = (unsigned char)(255 * r + 0.5f);
+                    dest[3 * i + j * outputPitch + 1] = (unsigned char)(255 * g + 0.5f);
+                    dest[3 * i + j * outputPitch + 2] = (unsigned char)(255 * b + 0.5f);
                     break;
                   default: UNREACHABLE();
                 }
@@ -3579,6 +3628,29 @@ bool Context::supportsTextureFilterAnisotropy() const
 float Context::getTextureMaxAnisotropy() const
 {
     return mMaxTextureAnisotropy;
+}
+
+bool Context::getCurrentReadFormatType(GLenum *format, GLenum *type)
+{
+    Framebuffer *framebuffer = getReadFramebuffer();
+    if (!framebuffer || framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
+    {
+        return error(GL_INVALID_OPERATION, false);
+    }
+
+    Renderbuffer *renderbuffer = framebuffer->getColorbuffer();
+    if (!renderbuffer)
+    {
+        return error(GL_INVALID_OPERATION, false);
+    }
+
+    if(!dx2es::ConvertReadBufferFormat(renderbuffer->getD3DFormat(), format, type))
+    {
+        ASSERT(false);
+        return false;
+    }
+
+    return true;
 }
 
 void Context::detachBuffer(GLuint buffer)

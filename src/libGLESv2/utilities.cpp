@@ -988,6 +988,46 @@ GLsizei GetSamplesFromMultisampleType(D3DMULTISAMPLE_TYPE type)
         return type;
 }
 
+bool ConvertReadBufferFormat(D3DFORMAT d3dformat, GLenum *format, GLenum *type)
+{
+    switch (d3dformat)
+    {
+      case D3DFMT_A8R8G8B8:
+        *type = GL_UNSIGNED_BYTE;
+        *format = GL_BGRA_EXT;
+        break;
+      case D3DFMT_X8R8G8B8:
+        *type = GL_UNSIGNED_BYTE;
+        *format = GL_RGB;
+        break;
+      case D3DFMT_R5G6B5:
+        *type = GL_UNSIGNED_SHORT_5_6_5;
+        *format = GL_RGB;
+        break;
+      case D3DFMT_A16B16G16R16F:
+        *type = GL_HALF_FLOAT_OES;
+        *format = GL_RGBA;
+        break;
+      case D3DFMT_A32B32G32R32F:
+        *type = GL_FLOAT;
+        *format = GL_RGBA;
+        break;
+      case D3DFMT_A4R4G4B4:
+        *type = GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT;
+        *format = GL_BGRA_EXT;
+        break;
+      case D3DFMT_A1R5G5B5:
+        *type = GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT;
+        *format = GL_BGRA_EXT;
+        break;
+      default:
+        *type = GL_NONE;
+        *format = GL_NONE;
+        return false;
+    }
+    return true;
+}
+
 GLenum ConvertBackBufferFormat(D3DFORMAT format)
 {
     switch (format)

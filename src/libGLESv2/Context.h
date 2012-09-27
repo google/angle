@@ -78,10 +78,7 @@ enum
     MAX_COMBINED_TEXTURE_IMAGE_UNITS_VTF = MAX_TEXTURE_IMAGE_UNITS + MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF,    
     MAX_FRAGMENT_UNIFORM_VECTORS_SM2 = 32 - 3,    // Reserve space for dx_Coord, dx_Depth, and dx_DepthRange. dx_PointOrLines and dx_FrontCCW use separate bool registers.
     MAX_FRAGMENT_UNIFORM_VECTORS_SM3 = 224 - 3,
-    MAX_DRAW_BUFFERS = 1,
-
-    IMPLEMENTATION_COLOR_READ_FORMAT = GL_RGB,
-    IMPLEMENTATION_COLOR_READ_TYPE = GL_UNSIGNED_SHORT_5_6_5
+    MAX_DRAW_BUFFERS = 1
 };
 
 enum QueryType
@@ -509,6 +506,8 @@ class Context
     bool supportsNonPower2Texture() const;
     bool supportsInstancing() const;
     bool supportsTextureFilterAnisotropy() const;
+
+    bool getCurrentReadFormatType(GLenum *format, GLenum *type);
 
     float getTextureMaxAnisotropy() const;
 
