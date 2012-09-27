@@ -49,7 +49,10 @@ Uniform::~Uniform()
 
 bool Uniform::isArray()
 {
-    return _name.compare(0, 3, "ar_") == 0;
+    size_t dot = _name.find_last_of('.');
+    if (dot == std::string::npos) dot = -1;
+
+    return _name.compare(dot + 1, dot + 4, "ar_") == 0;
 }
 
 UniformLocation::UniformLocation(const std::string &_name, unsigned int element, unsigned int index) 
