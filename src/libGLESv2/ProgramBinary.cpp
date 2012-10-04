@@ -1044,7 +1044,7 @@ ID3D10Blob *ProgramBinary::compileToBinary(InfoLog &infoLog, const char *hlsl, c
         return NULL;
     }
 
-    DWORD result;
+    DWORD result = NOERROR;
     UINT flags = 0;
     std::string sourceText;
     if (perfActive())
@@ -1066,43 +1066,74 @@ ID3D10Blob *ProgramBinary::compileToBinary(InfoLog &infoLog, const char *hlsl, c
         sourceText = hlsl;
     }
 
-    ID3D10Blob *binary = NULL;
-    ID3D10Blob *errorMessage = NULL;
-    result = D3DCompile(hlsl, strlen(hlsl), g_fakepath, NULL, NULL, "main", profile, flags, 0, &binary, &errorMessage);
-
-    if (errorMessage)
+    // Sometimes D3DCompile will fail with the default compilation flags for complicated shaders when it would otherwise pass with alternative options.
+    // Try the default flags first and if compilation fails, try some alternatives. 
+    const static UINT extraFlags[] =
     {
-        const char *message = (const char*)errorMessage->GetBufferPointer();
+        0,
+        D3DCOMPILE_AVOID_FLOW_CONTROL,
+        D3DCOMPILE_PREFER_FLOW_CONTROL
+    };
 
-        infoLog.appendSanitized(message);
-        TRACE("\n%s", hlsl);
-        TRACE("\n%s", message);
-
-        errorMessage->Release();
-        errorMessage = NULL;
-    }
-
-    if (FAILED(result))
+    const static char * const extraFlagNames[] =
     {
-        if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+        "default",
+        "avoid flow control",
+        "prefer flow control"
+    };
+
+    for (int i = 0; i < sizeof(extraFlags) / sizeof(UINT); ++i)
+    {
+        ID3D10Blob *errorMessage = NULL;
+        ID3D10Blob *binary = NULL;
+        result = D3DCompile(hlsl, strlen(hlsl), g_fakepath, NULL, NULL, "main", profile, flags | extraFlags[i], 0, &binary, &errorMessage);
+
+        if (errorMessage)
         {
-            error(GL_OUT_OF_MEMORY);
+            const char *message = (const char*)errorMessage->GetBufferPointer();
+
+            infoLog.appendSanitized(message);
+            TRACE("\n%s", hlsl);
+            TRACE("\n%s", message);
+
+            errorMessage->Release();
+            errorMessage = NULL;
         }
 
-        return NULL;
-    }
+        if (SUCCEEDED(result))
+        {
+            D3DConstantTable *table = new D3DConstantTable(binary->GetBufferPointer(), binary->GetBufferSize());
+            if (table->error())
+            {
+                delete table;
+                binary->Release();
+                return NULL;
+            }
+
+            *constantTable = table;
     
-    D3DConstantTable *table = new D3DConstantTable(binary->GetBufferPointer(), binary->GetBufferSize());
-    if (table->error())
-    {
-        delete table;
-        binary->Release();
-        return NULL;
+            return binary;
+        }
+        else
+        {
+            if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+            {
+                return error(GL_OUT_OF_MEMORY, (ID3D10Blob*) NULL);
+            }
+
+            infoLog.append("Warning: D3D shader compilation failed with ");
+            infoLog.append(extraFlagNames[i]);
+            infoLog.append(" flags.");
+            if (i + 1 < sizeof(extraFlagNames) / sizeof(char*))
+            {
+                infoLog.append(" Retrying with ");
+                infoLog.append(extraFlagNames[i + 1]);
+                infoLog.append(".\n");
+            }
+        }
     }
 
-    *constantTable = table;
-    
-    return binary;
+    return NULL;
 }
 
 // Packs varyings into generic varying registers, using the algorithm from [OpenGL ES Shading Language 1.00 rev. 17] appendix A section 7 page 111
