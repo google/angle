@@ -60,8 +60,7 @@ New Tokens
 
         MAX_COLOR_ATTACHMENTS_ANGLE                  0x8CDF
 
-    Accepted by the <pname> parameters of GetIntegerv, GetFloatv,
-    and GetDoublev:
+    Accepted by the <pname> parameters of GetIntegerv and GetFloatv:
 
         MAX_DRAW_BUFFERS_ANGLE                  0x8824
         DRAW_BUFFER0_ANGLE                      0x8825
@@ -147,8 +146,8 @@ Changes to Chapter 4 of the OpenGL ES 2.0 Specification (Per-Fragment
 Operations and the Frame Buffer)
 
     Insert Table 4.3 (and renumber subsequent tables): Arguments to
-    DrawBuffers and ReadBuffer when the context is bound to a
-    framebuffer object, and the buffers they indicate. <i> in
+    DrawBuffersANGLE when the context is bound to a framebuffer
+    object, and the buffers they indicate. <i> in
     COLOR_ATTACHMENT<i>_ANGLE may range from zero to the value of
     MAX_COLOR_ATTACHMENTS_ANGLE minus one.
 
@@ -167,7 +166,7 @@ Operations and the Frame Buffer)
     single buffered surfaces or into the back buffer for back buffered
     surfaces as determined when making the context current. To control
     the color buffer into which each of the fragment color values is
-    written, DrawBuffers is used.
+    written, DrawBuffersANGLE is used.
 
     The command
 
@@ -222,20 +221,21 @@ Operations and the Frame Buffer)
     is NONE and any buffer at a higher index is anything other than
     NONE, DrawBuffersANGLE will generate the error INVALID_OPERATION.
 
-    If a fragment shader writes to "gl_FragColor", DrawBuffers specifies
-    a set of draw buffers into which the color written to "gl_FragColor"
-    is written. If a fragment shader writes to "gl_FragData",
-    DrawBuffers specifies a set of draw buffers into which each of the
-    multiple output colors defined by these variables are separately
-    written. If a fragment shader writes to neither "gl_FragColor" nor
-    "gl_FragData" the values of the fragment colors following shader
-    execution are undefined, and may differ for each fragment color.
+    If a fragment shader writes to "gl_FragColor", DrawBuffersANGLE
+    specifies a set of draw buffers into which the color written to
+    "gl_FragColor" is written. If a fragment shader writes to
+    "gl_FragData", DrawBuffersANGLE specifies a set of draw buffers
+    into which each of the multiple output colors defined by these
+    variables are separately written. If a fragment shader writes to
+    neither "gl_FragColor" nor "gl_FragData" the values of the
+    fragment colors following shader execution are undefined, and may
+    differ for each fragment color.
 
-    Indicating a buffer or buffers using DrawBuffers causes subsequent
-    pixel color value writes to affect the indicated buffers. If the GL
-    is bound to a framebuffer object and a draw buffer selects an
-    attachment that has no image attached, then that fragment color is
-    not written to any buffer.
+    Indicating a buffer or buffers using DrawBuffersANGLE causes
+    subsequent pixel color value writes to affect the indicated
+    buffers. If the GL is bound to a framebuffer object and a draw
+    buffer selects an attachment that has no image attached, then that
+    fragment color is not written to any buffer.
 
     Specifying NONE as the draw buffer for a fragment color will inhibit
     that fragment color from being written to any buffer.
