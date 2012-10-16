@@ -277,14 +277,14 @@ Changes to Chapter 3 of the OpenGL ES Shading Language 1.0.17 Specification (Bas
 
     Add a new section:
 
-    3.4.1 GL_ANGLE_draw_buffers Extension
+    3.4.1 GL_ANGLE_multiple_render_targets Extension
 
-    To use the GL_ANGLE_draw_buffers extension in a shader it must be
-    enabled using the #extension directive.
+    To use the GL_ANGLE_multiple_render_targets extension in a shader it
+    must be enabled using the #extension directive.
 
-    The shading language preprocessor #define GL_ANGLE_draw_buffers will
-    be defined to 1, if the GL_ANGLE_draw_buffers extension is
-    supported.
+    The shading language preprocessor #define
+    GL_ANGLE_multiple_render_targets will be defined to 1, if the
+    GL_ANGLE_multiple_render_targets extension is supported.
 
 New State
 
