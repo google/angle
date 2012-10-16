@@ -13,6 +13,10 @@ Contributors
     Contributors to the OpenGL ES 2.0 specification
     Contributors to the OpenGLSL ES 1.0.17 specification
     Contributors to the OpenGL ES 3.0 specification
+    Nicolas Capens, TransGaming Inc.
+    Daniel Koch, TransGaming Inc.
+    Alastair Patrick, Google Inc.
+    Members of the WebGL working group
 
 Contact
 
@@ -47,8 +51,7 @@ Overview
 
     This extension is similar to the combination of the GL_NV_draw_buffers
     and GL_NV_fbo_color_attachments extensions, but imposes certain
-    restrictions informed both by the OpenGL ES 3.0 API as well as the
-    current implementation of the ANGLE library.
+    restrictions informed by the OpenGL ES 3.0 API.
 
 New Procedures and Functions
 
@@ -217,9 +220,7 @@ Operations and the Frame Buffer)
     in <bufs> must be COLOR_ATTACHMENT<i>_ANGLE or NONE. Specifying a
     buffer out of order, BACK, or COLOR_ATTACHMENT<m>_ANGLE where <m> is
     greater than or equal to the value of MAX_COLOR_ATTACHMENTS_ANGLE,
-    will generate the error INVALID_OPERATION. If the buffer at index 0
-    is NONE and any buffer at a higher index is anything other than
-    NONE, DrawBuffersANGLE will generate the error INVALID_OPERATION.
+    will generate the error INVALID_OPERATION.
 
     If a fragment shader writes to "gl_FragColor", DrawBuffersANGLE
     specifies a set of draw buffers into which the color written to
@@ -310,9 +311,3 @@ New State
 Issues
 
     See ARB_draw_buffers for relevant issues.
-
-    1. Why does DrawBuffersANGLE restrict draw buffer index 0 to be
-       non-NULL if any of the other buffers are non-NULL?
-
-       RESOLVED: In order to conform to D3D9 restrictions for
-       implementation in ANGLE.
