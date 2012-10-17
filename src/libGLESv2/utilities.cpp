@@ -288,6 +288,17 @@ bool IsDepthTexture(GLenum format)
     return false;
 }
 
+bool IsStencilTexture(GLenum format)
+{
+    if (format == GL_DEPTH_STENCIL_OES ||
+        format == GL_DEPTH24_STENCIL8_OES)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 // Returns the size, in bytes, of a single texel in an Image
 int ComputePixelSize(GLint internalformat)
 {
@@ -548,6 +559,36 @@ bool IsStencilRenderable(GLenum internalformat)
     }
 
     return false;
+}
+
+bool IsFloat32Format(GLint internalformat)
+{
+    switch (internalformat)
+    {
+      case GL_RGBA32F_EXT:
+      case GL_RGB32F_EXT:
+      case GL_ALPHA32F_EXT:
+      case GL_LUMINANCE32F_EXT:
+      case GL_LUMINANCE_ALPHA32F_EXT:
+        return true;
+      default:
+        return false;
+    }
+}
+
+bool IsFloat16Format(GLint internalformat)
+{
+    switch (internalformat)
+    {
+      case GL_RGBA16F_EXT:
+      case GL_RGB16F_EXT:
+      case GL_ALPHA16F_EXT:
+      case GL_LUMINANCE16F_EXT:
+      case GL_LUMINANCE_ALPHA16F_EXT:
+        return true;
+      default:
+        return false;
+    }
 }
 
 }
@@ -980,60 +1021,6 @@ unsigned int GetDepthSize(D3DFORMAT depthFormat)
     //case D3DFMT_S8_LOCKABLE:   return 0;    // D3D9Ex only
       default:                   return 0;
     }
-}
-
-bool IsFloat32Format(D3DFORMAT surfaceFormat)
-{
-    switch(surfaceFormat)
-    {
-      case D3DFMT_R16F:
-      case D3DFMT_G16R16F:
-      case D3DFMT_A16B16G16R16F:
-        return false;
-      case D3DFMT_R32F:
-      case D3DFMT_G32R32F:
-      case D3DFMT_A32B32G32R32F:
-        return true;
-      case D3DFMT_A8R8G8B8:
-      case D3DFMT_X8R8G8B8:
-      case D3DFMT_A1R5G5B5:
-      case D3DFMT_R5G6B5:
-        return false;
-      default: UNREACHABLE();
-    }
-    return false;
-}
-
-bool IsFloat16Format(D3DFORMAT surfaceFormat)
-{
-    switch(surfaceFormat)
-    {
-      case D3DFMT_R16F:
-      case D3DFMT_G16R16F:
-      case D3DFMT_A16B16G16R16F:
-        return true;
-      case D3DFMT_R32F:
-      case D3DFMT_G32R32F:
-      case D3DFMT_A32B32G32R32F:
-        return false;
-      case D3DFMT_A8R8G8B8:
-      case D3DFMT_X8R8G8B8:
-      case D3DFMT_A1R5G5B5:
-      case D3DFMT_R5G6B5:
-        return false;
-      default: UNREACHABLE();
-    }
-    return false;
-}
-
-bool IsDepthTextureFormat(D3DFORMAT surfaceFormat)
-{
-    return (surfaceFormat == D3DFMT_INTZ);
-}
-
-bool IsStencilTextureFormat(D3DFORMAT surfaceFormat)
-{
-    return (surfaceFormat == D3DFMT_INTZ);
 }
 
 bool IsCompressedD3DFormat(D3DFORMAT surfaceFormat)

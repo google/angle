@@ -40,6 +40,7 @@ GLsizei ComputeCompressedPitch(GLsizei width, GLenum format);
 GLsizei ComputeCompressedSize(GLsizei width, GLsizei height, GLenum format);
 bool IsCompressed(GLenum format);
 bool IsDepthTexture(GLenum format);
+bool IsStencilTexture(GLenum format);
 bool IsCubemapTextureTarget(GLenum target);
 bool IsInternalTextureTarget(GLenum target);
 GLint ConvertSizedInternalFormat(GLenum format, GLenum type);
@@ -50,6 +51,8 @@ bool IsColorRenderable(GLenum internalformat);
 bool IsDepthRenderable(GLenum internalformat);
 bool IsStencilRenderable(GLenum internalformat);
 
+bool IsFloat32Format(GLint internalformat);
+bool IsFloat16Format(GLint internalformat);
 }
 
 namespace es2dx
@@ -81,10 +84,6 @@ GLuint GetGreenSize(D3DFORMAT colorFormat);
 GLuint GetBlueSize(D3DFORMAT colorFormat);
 GLuint GetDepthSize(D3DFORMAT depthFormat);
 GLuint GetStencilSize(D3DFORMAT stencilFormat);
-bool IsFloat32Format(D3DFORMAT surfaceFormat);
-bool IsFloat16Format(D3DFORMAT surfaceFormat);
-bool IsDepthTextureFormat(D3DFORMAT surfaceFormat);
-bool IsStencilTextureFormat(D3DFORMAT surfaceFormat);
 bool IsCompressedD3DFormat(D3DFORMAT format);
 
 GLsizei GetSamplesFromMultisampleType(D3DMULTISAMPLE_TYPE type);
