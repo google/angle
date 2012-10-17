@@ -113,6 +113,9 @@
     <ClCompile Include="VariableInfo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="VariablePacker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="preprocessor\atom.c">
       <Filter>Source Files\preprocessor</Filter>
     </ClCompile>
@@ -254,6 +257,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="VariableInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VariablePacker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="preprocessor\atom.h">

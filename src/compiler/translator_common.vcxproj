@@ -164,6 +164,7 @@
     <ClCompile Include="util.cpp" />
     <ClCompile Include="ValidateLimitations.cpp" />
     <ClCompile Include="VariableInfo.cpp" />
+    <ClCompile Include="VariablePacker.cpp" />
     <ClCompile Include="preprocessor\atom.c" />
     <ClCompile Include="preprocessor\cpp.c" />
     <ClCompile Include="preprocessor\cppstruct.c" />
@@ -263,6 +264,7 @@
     <ClInclude Include="util.h" />
     <ClInclude Include="ValidateLimitations.h" />
     <ClInclude Include="VariableInfo.h" />
+    <ClInclude Include="VariablePacker.h" />
     <ClInclude Include="preprocessor\atom.h" />
     <ClInclude Include="preprocessor\compile.h" />
     <ClInclude Include="preprocessor\cpp.h" />

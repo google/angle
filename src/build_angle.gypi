@@ -118,6 +118,8 @@
         'compiler/ValidateLimitations.h',
         'compiler/VariableInfo.cpp',
         'compiler/VariableInfo.h',
+        'compiler/VariablePacker.cpp',
+        'compiler/VariablePacker.h',
         # Old preprocessor
         'compiler/preprocessor/atom.c',
         'compiler/preprocessor/atom.h',
