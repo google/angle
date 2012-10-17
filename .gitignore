@@ -6,4 +6,4 @@ Release
 *.vcproj.*
 *.vcxproj.user
 patches-*
-
+*.target.mk
