@@ -1,8 +1,9 @@
 Debug
 Release
+*.sdf
 *.ncb
 *.suo
 *.vcproj.*
-*.vcxproj.*
+*.vcxproj.user
 patches-*
 
