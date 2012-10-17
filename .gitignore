@@ -3,5 +3,6 @@ Release
 *.ncb
 *.suo
 *.vcproj.*
+*.vcxproj.*
 patches-*
 
