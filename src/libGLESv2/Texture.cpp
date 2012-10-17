@@ -325,10 +325,30 @@ void Image::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint y
         rect.right = xoffset + width;
         rect.bottom = yoffset + height;
 
-        // UpdateSurface: source must be SYSTEMMEM, dest must be DEFAULT pools 
         POINT point = {rect.left, rect.top};
-        HRESULT result = getDevice()->UpdateSurface(sourceSurface, &rect, destSurface, &point);
-        ASSERT(SUCCEEDED(result));
+
+        if (mD3DPool == D3DPOOL_MANAGED)
+        {
+            D3DSURFACE_DESC desc;
+            sourceSurface->GetDesc(&desc);
+
+            IDirect3DSurface9 *surf = 0;
+            HRESULT result = getDevice()->CreateOffscreenPlainSurface(desc.Width, desc.Height, desc.Format, D3DPOOL_SYSTEMMEM, &surf, NULL);
+
+            if (SUCCEEDED(result))
+            {
+                CopyLockableSurfaces(surf, sourceSurface);
+                result = getDevice()->UpdateSurface(surf, &rect, destSurface, &point);
+                ASSERT(SUCCEEDED(result));
+                surf->Release();
+            }
+        }
+        else
+        {
+            // UpdateSurface: source must be SYSTEMMEM, dest must be DEFAULT pools
+            HRESULT result = getDevice()->UpdateSurface(sourceSurface, &rect, destSurface, &point);
+            ASSERT(SUCCEEDED(result));
+        }
     }
 }
 
@@ -1197,7 +1217,6 @@ void GenerateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 *sourceSurfac
     ASSERT(SUCCEEDED(result));
 
     ASSERT(sourceDesc.Format == destDesc.Format);
-    ASSERT(sourceDesc.Pool == destDesc.Pool);
     ASSERT(sourceDesc.Width == 1 || sourceDesc.Width / 2 == destDesc.Width);
     ASSERT(sourceDesc.Height == 1 || sourceDesc.Height / 2 == destDesc.Height);
 
