@@ -10,8 +10,6 @@
 
 #include "libGLESv2/Texture.h"
 
-#include <d3dx9tex.h>
-
 #include <algorithm>
 
 #include "common/debug.h"
@@ -1066,6 +1064,185 @@ void Image::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, 
     mDirty = true;
 }
 
+namespace
+{
+struct L8
+{
+    unsigned char L;
+
+    static void average(L8 *dst, const L8 *src1, const L8 *src2)
+    {
+        dst->L = ((src1->L ^ src2->L) >> 1) + (src1->L & src2->L);
+    }
+};
+
+struct A8L8
+{
+    unsigned char L;
+    unsigned char A;
+
+    static void average(A8L8 *dst, const A8L8 *src1, const A8L8 *src2)
+    {
+        *(unsigned short*)dst = (((*(unsigned short*)src1 ^ *(unsigned short*)src2) & 0xFEFE) >> 1) + (*(unsigned short*)src1 & *(unsigned short*)src2);
+    }
+};
+
+struct A8R8G8B8
+{
+    unsigned char B;
+    unsigned char G;
+    unsigned char R;
+    unsigned char A;
+
+    static void average(A8R8G8B8 *dst, const A8R8G8B8 *src1, const A8R8G8B8 *src2)
+    {
+        *(unsigned int*)dst = (((*(unsigned int*)src1 ^ *(unsigned int*)src2) & 0xFEFEFEFE) >> 1) + (*(unsigned int*)src1 & *(unsigned int*)src2);
+    }
+};
+
+struct A16B16G16R16F
+{
+    unsigned short R;
+    unsigned short G;
+    unsigned short B;
+    unsigned short A;
+
+    static void average(A16B16G16R16F *dst, const A16B16G16R16F *src1, const A16B16G16R16F *src2)
+    {
+        dst->R = float32ToFloat16((float16ToFloat32(src1->R) + float16ToFloat32(src2->R)) * 0.5f);
+        dst->G = float32ToFloat16((float16ToFloat32(src1->G) + float16ToFloat32(src2->G)) * 0.5f);
+        dst->B = float32ToFloat16((float16ToFloat32(src1->B) + float16ToFloat32(src2->B)) * 0.5f);
+        dst->A = float32ToFloat16((float16ToFloat32(src1->A) + float16ToFloat32(src2->A)) * 0.5f);
+    }
+};
+
+struct A32B32G32R32F
+{
+    float R;
+    float G;
+    float B;
+    float A;
+
+    static void average(A32B32G32R32F *dst, const A32B32G32R32F *src1, const A32B32G32R32F *src2)
+    {
+        dst->R = (src1->R + src2->R) * 0.5f;
+        dst->G = (src1->G + src2->G) * 0.5f;
+        dst->B = (src1->B + src2->B) * 0.5f;
+        dst->A = (src1->A + src2->A) * 0.5f;
+    }
+};
+
+template <typename T>
+void GenerateMip(unsigned int sourceWidth, unsigned int sourceHeight,
+                 const unsigned char *sourceData, int sourcePitch,
+                 unsigned char *destData, int destPitch)
+{
+    unsigned int mipWidth = std::max(1U, sourceWidth >> 1);
+    unsigned int mipHeight = std::max(1U, sourceHeight >> 1);
+
+    if (sourceHeight == 1)
+    {
+        ASSERT(sourceWidth != 1);
+
+        const T *src = (const T*)sourceData;
+        T *dst = (T*)destData;
+
+        for (unsigned int x = 0; x < mipWidth; x++)
+        {
+            T::average(&dst[x], &src[x * 2], &src[x * 2 + 1]);
+        }
+    }
+    else if (sourceWidth == 1)
+    {
+        ASSERT(sourceHeight != 1);
+
+        for (unsigned int y = 0; y < mipHeight; y++)
+        {
+            const T *src0 = (const T*)(sourceData + y * 2 * sourcePitch);
+            const T *src1 = (const T*)(sourceData + y * 2 * sourcePitch + sourcePitch);
+            T *dst = (T*)(destData + y * destPitch);
+
+            T::average(dst, src0, src1);
+        }
+    }
+    else
+    {
+        for (unsigned int y = 0; y < mipHeight; y++)
+        {
+            const T *src0 = (const T*)(sourceData + y * 2 * sourcePitch);
+            const T *src1 = (const T*)(sourceData + y * 2 * sourcePitch + sourcePitch);
+            T *dst = (T*)(destData + y * destPitch);
+
+            for (unsigned int x = 0; x < mipWidth; x++)
+            {
+                T tmp0;
+                T tmp1;
+
+                T::average(&tmp0, &src0[x * 2], &src0[x * 2 + 1]);
+                T::average(&tmp1, &src1[x * 2], &src1[x * 2 + 1]);
+                T::average(&dst[x], &tmp0, &tmp1);
+            }
+        }
+    }
+}
+
+void GenerateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 *sourceSurface)
+{
+    D3DSURFACE_DESC destDesc;
+    HRESULT result = destSurface->GetDesc(&destDesc);
+    ASSERT(SUCCEEDED(result));
+
+    D3DSURFACE_DESC sourceDesc;
+    result = sourceSurface->GetDesc(&sourceDesc);
+    ASSERT(SUCCEEDED(result));
+
+    ASSERT(sourceDesc.Format == destDesc.Format);
+    ASSERT(sourceDesc.Pool == destDesc.Pool);
+    ASSERT(sourceDesc.Width == 1 || sourceDesc.Width / 2 == destDesc.Width);
+    ASSERT(sourceDesc.Height == 1 || sourceDesc.Height / 2 == destDesc.Height);
+
+    D3DLOCKED_RECT sourceLocked = {0};
+    result = sourceSurface->LockRect(&sourceLocked, NULL, D3DLOCK_READONLY);
+    ASSERT(SUCCEEDED(result));
+
+    D3DLOCKED_RECT destLocked = {0};
+    result = destSurface->LockRect(&destLocked, NULL, 0);
+    ASSERT(SUCCEEDED(result));
+
+    const unsigned char *sourceData = reinterpret_cast<const unsigned char*>(sourceLocked.pBits);
+    unsigned char *destData = reinterpret_cast<unsigned char*>(destLocked.pBits);
+
+    if (sourceData && destData)
+    {
+        switch (sourceDesc.Format)
+        {
+          case D3DFMT_L8:
+            GenerateMip<L8>(sourceDesc.Width, sourceDesc.Height, sourceData, sourceLocked.Pitch, destData, destLocked.Pitch);
+            break;
+          case D3DFMT_A8L8:
+            GenerateMip<A8L8>(sourceDesc.Width, sourceDesc.Height, sourceData, sourceLocked.Pitch, destData, destLocked.Pitch);
+            break;
+          case D3DFMT_A8R8G8B8:
+          case D3DFMT_X8R8G8B8:
+            GenerateMip<A8R8G8B8>(sourceDesc.Width, sourceDesc.Height, sourceData, sourceLocked.Pitch, destData, destLocked.Pitch);
+            break;
+          case D3DFMT_A16B16G16R16F:
+            GenerateMip<A16B16G16R16F>(sourceDesc.Width, sourceDesc.Height, sourceData, sourceLocked.Pitch, destData, destLocked.Pitch);
+            break;
+          case D3DFMT_A32B32G32R32F:
+            GenerateMip<A32B32G32R32F>(sourceDesc.Width, sourceDesc.Height, sourceData, sourceLocked.Pitch, destData, destLocked.Pitch);
+            break;
+          default:
+            UNREACHABLE();
+            break;
+        }
+
+        destSurface->UnlockRect();
+        sourceSurface->UnlockRect();
+    }
+}
+}
+
 TextureStorage::TextureStorage(DWORD usage)
     : mD3DUsage(usage),
       mD3DPool(getDisplay()->getTexturePool(usage)),
@@ -2090,10 +2267,7 @@ void Texture2D::generateMipmaps()
                 return error(GL_OUT_OF_MEMORY);
             }
 
-            if (FAILED(D3DXLoadSurfaceFromSurface(mImageArray[i].getSurface(), NULL, NULL, mImageArray[i - 1].getSurface(), NULL, NULL, D3DX_FILTER_BOX, 0)))
-            {
-                ERR(" failed to load filter %d to %d.", i - 1, i);
-            }
+            GenerateMip(mImageArray[i].getSurface(), mImageArray[i - 1].getSurface());
 
             mImageArray[i].markDirty();
         }
@@ -2861,10 +3035,7 @@ void TextureCubeMap::generateMipmaps()
                     return error(GL_OUT_OF_MEMORY);
                 }
 
-                if (FAILED(D3DXLoadSurfaceFromSurface(mImageArray[f][i].getSurface(), NULL, NULL, mImageArray[f][i - 1].getSurface(), NULL, NULL, D3DX_FILTER_BOX, 0)))
-                {
-                    ERR(" failed to load filter %d to %d.", i - 1, i);
-                }
+                GenerateMip(mImageArray[f][i].getSurface(), mImageArray[f][i - 1].getSurface());
 
                 mImageArray[f][i].markDirty();
             }
