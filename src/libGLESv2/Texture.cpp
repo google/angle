@@ -28,49 +28,47 @@ namespace gl
 {
 unsigned int TextureStorage::mCurrentTextureSerial = 1;
 
-static D3DFORMAT ConvertTextureFormatType(GLenum format, GLenum type)
+static D3DFORMAT ConvertTextureFormatType(GLint internalformat)
 {
-    if (IsDepthTexture(format))
+    switch (internalformat)
     {
+      case GL_DEPTH_COMPONENT16:
+      case GL_DEPTH_COMPONENT32_OES:
+      case GL_DEPTH24_STENCIL8_OES:
         return D3DFMT_INTZ;
-    }
-    else if (format == GL_COMPRESSED_RGB_S3TC_DXT1_EXT ||
-             format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT)
-    {
+      case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
+      case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
         return D3DFMT_DXT1;
-    }
-    else if (format == GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE)
-    {
+      case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
         return D3DFMT_DXT3;
-    }
-    else if (format == GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE)
-    {
+      case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
         return D3DFMT_DXT5;
-    }
-    else if (type == GL_FLOAT)
-    {
+      case GL_RGBA32F_EXT:
+      case GL_RGB32F_EXT:
+      case GL_ALPHA32F_EXT:
+      case GL_LUMINANCE32F_EXT:
+      case GL_LUMINANCE_ALPHA32F_EXT:
         return D3DFMT_A32B32G32R32F;
-    }
-    else if (type == GL_HALF_FLOAT_OES)
-    {
+      case GL_RGBA16F_EXT:
+      case GL_RGB16F_EXT:
+      case GL_ALPHA16F_EXT:
+      case GL_LUMINANCE16F_EXT:
+      case GL_LUMINANCE_ALPHA16F_EXT:
         return D3DFMT_A16B16G16R16F;
-    }
-    else if (type == GL_UNSIGNED_BYTE)
-    {
-        if (format == GL_LUMINANCE && getContext()->supportsLuminanceTextures())
+      case GL_LUMINANCE8_EXT:
+        if (getContext()->supportsLuminanceTextures())
         {
             return D3DFMT_L8;
         }
-        else if (format == GL_LUMINANCE_ALPHA && getContext()->supportsLuminanceAlphaTextures())
+        break;
+      case GL_LUMINANCE8_ALPHA8_EXT:
+        if (getContext()->supportsLuminanceAlphaTextures())
         {
             return D3DFMT_A8L8;
         }
-        else if (format == GL_RGB)
-        {
-            return D3DFMT_X8R8G8B8;
-        }
-
-        return D3DFMT_A8R8G8B8;
+        break;
+      case GL_RGB8_OES:
+        return D3DFMT_X8R8G8B8;
     }
 
     return D3DFMT_A8R8G8B8;
@@ -141,8 +139,7 @@ Image::Image()
 {
     mWidth = 0; 
     mHeight = 0;
-    mFormat = GL_NONE;
-    mType = GL_UNSIGNED_BYTE;
+    mInternalFormat = GL_NONE;
 
     mSurface = NULL;
 
@@ -160,20 +157,18 @@ Image::~Image()
     }
 }
 
-bool Image::redefine(GLenum format, GLsizei width, GLsizei height, GLenum type, bool forceRelease)
+bool Image::redefine(GLint internalformat, GLsizei width, GLsizei height, bool forceRelease)
 {
     if (mWidth != width ||
         mHeight != height ||
-        mFormat != format ||
-        mType != type ||
+        mInternalFormat != internalformat ||
         forceRelease)
     {
         mWidth = width;
         mHeight = height;
-        mFormat = format;
-        mType = type;
+        mInternalFormat = internalformat;
         // compute the d3d format that will be used
-        mD3DFormat = ConvertTextureFormatType(mFormat, mType);
+        mD3DFormat = ConvertTextureFormatType(internalformat);
 
         if (mSurface)
         {
@@ -205,7 +200,7 @@ void Image::createSurface()
         int levelToFetch = 0;
         GLsizei requestWidth = mWidth;
         GLsizei requestHeight = mHeight;
-        MakeValidSize(true, IsCompressed(mFormat), &requestWidth, &requestHeight, &levelToFetch);
+        MakeValidSize(true, IsCompressed(mInternalFormat), &requestWidth, &requestHeight, &levelToFetch);
 
         HRESULT result = getDevice()->CreateTexture(requestWidth, requestHeight, levelToFetch + 1, NULL, d3dFormat,
                                                     poolToUse, &newTexture, NULL);
@@ -318,7 +313,7 @@ void Image::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint y
 
 // Store the pixel rectangle designated by xoffset,yoffset,width,height with pixels stored as format/type at input
 // into the target pixel rectangle.
-void Image::loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum type,
+void Image::loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                      GLint unpackAlignment, const void *input)
 {
     RECT lockRect =
@@ -334,120 +329,84 @@ void Image::loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height
         return;
     }
 
-    GLsizei inputPitch = ComputePitch(width, mFormat, type, unpackAlignment);
 
-    switch (type)
+    GLsizei inputPitch = ComputePitch(width, mInternalFormat, unpackAlignment);
+
+    switch (mInternalFormat)
     {
-      case GL_UNSIGNED_BYTE:
-        switch (mFormat)
+      case GL_ALPHA8_EXT:
+        if (supportsSSE2())
         {
-          case GL_ALPHA:
-            if (supportsSSE2())
-            {
-                loadAlphaDataSSE2(width, height, inputPitch, input, locked.Pitch, locked.pBits);
-            }
-            else
-            {
-                loadAlphaData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
-            }
-            break;
-          case GL_LUMINANCE:
-            loadLuminanceData(width, height, inputPitch, input, locked.Pitch, locked.pBits, getD3DFormat() == D3DFMT_L8);
-            break;
-          case GL_LUMINANCE_ALPHA:
-            loadLuminanceAlphaData(width, height, inputPitch, input, locked.Pitch, locked.pBits, getD3DFormat() == D3DFMT_A8L8);
-            break;
-          case GL_RGB:
-            loadRGBUByteData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
-            break;
-          case GL_RGBA:
-            if (supportsSSE2())
-            {
-                loadRGBAUByteDataSSE2(width, height, inputPitch, input, locked.Pitch, locked.pBits);
-            }
-            else
-            {
-                loadRGBAUByteData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
-            }
-            break;
-          case GL_BGRA_EXT:
-            loadBGRAData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
-            break;
-          default: UNREACHABLE();
+            loadAlphaDataSSE2(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        }
+        else
+        {
+            loadAlphaData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         }
         break;
-      case GL_UNSIGNED_SHORT_5_6_5:
-        switch (mFormat)
+      case GL_LUMINANCE8_EXT:
+        loadLuminanceData(width, height, inputPitch, input, locked.Pitch, locked.pBits, getD3DFormat() == D3DFMT_L8);
+        break;
+      case GL_ALPHA32F_EXT:
+        loadAlphaFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        break;
+      case GL_LUMINANCE32F_EXT:
+        loadLuminanceFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        break;
+      case GL_ALPHA16F_EXT:
+        loadAlphaHalfFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        break;
+      case GL_LUMINANCE16F_EXT:
+        loadLuminanceHalfFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        break;
+      case GL_LUMINANCE8_ALPHA8_EXT:
+        loadLuminanceAlphaData(width, height, inputPitch, input, locked.Pitch, locked.pBits, getD3DFormat() == D3DFMT_A8L8);
+        break;
+      case GL_LUMINANCE_ALPHA32F_EXT:
+        loadLuminanceAlphaFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        break;
+      case GL_LUMINANCE_ALPHA16F_EXT:
+        loadLuminanceAlphaHalfFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        break;
+      case GL_RGB8_OES:
+        loadRGBUByteData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        break;
+      case GL_RGB565:
+        loadRGB565Data(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        break;
+      case GL_RGBA8_OES:
+        if (supportsSSE2())
         {
-          case GL_RGB:
-            loadRGB565Data(width, height, inputPitch, input, locked.Pitch, locked.pBits);
-            break;
-          default: UNREACHABLE();
+            loadRGBAUByteDataSSE2(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        }
+        else
+        {
+            loadRGBAUByteData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         }
         break;
-      case GL_UNSIGNED_SHORT_4_4_4_4:
-        switch (mFormat)
-        {
-          case GL_RGBA:
-            loadRGBA4444Data(width, height, inputPitch, input, locked.Pitch, locked.pBits);
-            break;
-          default: UNREACHABLE();
-        }
+      case GL_RGBA4:
+        loadRGBA4444Data(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         break;
-      case GL_UNSIGNED_SHORT_5_5_5_1:
-        switch (mFormat)
-        {
-          case GL_RGBA:
-            loadRGBA5551Data(width, height, inputPitch, input, locked.Pitch, locked.pBits);
-            break;
-          default: UNREACHABLE();
-        }
+      case GL_RGB5_A1:
+        loadRGBA5551Data(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         break;
-      case GL_FLOAT:
-        switch (mFormat)
-        {
-          // float textures are converted to RGBA, not BGRA, as they're stored that way in D3D
-          case GL_ALPHA:
-            loadAlphaFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
-            break;
-          case GL_LUMINANCE:
-            loadLuminanceFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
-            break;
-          case GL_LUMINANCE_ALPHA:
-            loadLuminanceAlphaFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
-            break;
-          case GL_RGB:
-            loadRGBFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
-            break;
-          case GL_RGBA:
-            loadRGBAFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
-            break;
-          default: UNREACHABLE();
-        }
+      case GL_BGRA8_EXT:
+        loadBGRAData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         break;
-      case GL_HALF_FLOAT_OES:
-        switch (mFormat)
-        {
-          // float textures are converted to RGBA, not BGRA, as they're stored that way in D3D
-          case GL_ALPHA:
-            loadAlphaHalfFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
-            break;
-          case GL_LUMINANCE:
-            loadLuminanceHalfFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
-            break;
-          case GL_LUMINANCE_ALPHA:
-            loadLuminanceAlphaHalfFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
-            break;
-          case GL_RGB:
-            loadRGBHalfFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
-            break;
-          case GL_RGBA:
-            loadRGBAHalfFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
-            break;
-          default: UNREACHABLE();
-        }
+      // float textures are converted to RGBA, not BGRA, as they're stored that way in D3D
+      case GL_RGB32F_EXT:
+        loadRGBFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         break;
-      default: UNREACHABLE();
+      case GL_RGB16F_EXT:
+        loadRGBHalfFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        break;
+      case GL_RGBA32F_EXT:
+        loadRGBAFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        break;
+      case GL_RGBA16F_EXT:
+        loadRGBAHalfFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        break;
+      default: UNREACHABLE(); 
     }
 
     unlock();
@@ -849,8 +808,8 @@ void Image::loadCompressedData(GLint xoffset, GLint yoffset, GLsizei width, GLsi
         return;
     }
 
-    GLsizei inputSize = ComputeCompressedSize(width, height, mFormat);
-    GLsizei inputPitch = ComputeCompressedPitch(width, mFormat);
+    GLsizei inputSize = ComputeCompressedSize(width, height, mInternalFormat);
+    GLsizei inputPitch = ComputeCompressedPitch(width, mInternalFormat);
     int rows = inputSize / inputPitch;
     for (int i = 0; i < rows; ++i)
     {
@@ -1246,7 +1205,7 @@ void Texture::setImage(GLint unpackAlignment, const void *pixels, Image *image)
 {
     if (pixels != NULL)
     {
-        image->loadData(0, 0, image->getWidth(), image->getHeight(), image->getType(), unpackAlignment, pixels);
+        image->loadData(0, 0, image->getWidth(), image->getHeight(), unpackAlignment, pixels);
         mDirtyImages = true;
     }
 }
@@ -1264,7 +1223,7 @@ bool Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
 {
     if (pixels != NULL)
     {
-        image->loadData(xoffset, yoffset, width, height, type, unpackAlignment, pixels);
+        image->loadData(xoffset, yoffset, width, height, unpackAlignment, pixels);
         mDirtyImages = true;
     }
 
@@ -1524,7 +1483,7 @@ GLsizei Texture2D::getHeight(GLint level) const
 GLenum Texture2D::getInternalFormat(GLint level) const
 {
     if (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-        return mImageArray[level].getFormat();
+        return mImageArray[level].getInternalFormat();
     else
         return GL_NONE;
 }
@@ -1537,11 +1496,11 @@ D3DFORMAT Texture2D::getD3DFormat(GLint level) const
         return D3DFMT_UNKNOWN;
 }
 
-void Texture2D::redefineImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type)
+void Texture2D::redefineImage(GLint level, GLint internalformat, GLsizei width, GLsizei height)
 {
     releaseTexImage();
 
-    bool redefined = mImageArray[level].redefine(format, width, height, type, false);
+    bool redefined = mImageArray[level].redefine(internalformat, width, height, false);
 
     if (mTexStorage && redefined)
     {
@@ -1558,7 +1517,8 @@ void Texture2D::redefineImage(GLint level, GLenum format, GLsizei width, GLsizei
 
 void Texture2D::setImage(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    redefineImage(level, format, width, height, type);
+    GLint internalformat = ConvertSizedInternalFormat(format, type);
+    redefineImage(level, internalformat, width, height);
 
     Texture::setImage(unpackAlignment, pixels, &mImageArray[level]);
 }
@@ -1567,22 +1527,22 @@ void Texture2D::bindTexImage(egl::Surface *surface)
 {
     releaseTexImage();
 
-    GLenum format;
+    GLint internalformat;
 
     switch(surface->getFormat())
     {
       case D3DFMT_A8R8G8B8:
-        format = GL_RGBA;
+        internalformat = GL_RGBA8_OES;
         break;
       case D3DFMT_X8R8G8B8:
-        format = GL_RGB;
+        internalformat = GL_RGB8_OES;
         break;
       default:
         UNIMPLEMENTED();
         return;
     }
 
-    mImageArray[0].redefine(format, surface->getWidth(), surface->getHeight(), GL_UNSIGNED_BYTE, true);
+    mImageArray[0].redefine(internalformat, surface->getWidth(), surface->getHeight(), true);
 
     delete mTexStorage;
     mTexStorage = new TextureStorage2D(surface->getOffscreenTexture());
@@ -1607,14 +1567,15 @@ void Texture2D::releaseTexImage()
 
         for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
         {
-            mImageArray[i].redefine(GL_RGBA, 0, 0, GL_UNSIGNED_BYTE, true);
+            mImageArray[i].redefine(GL_RGBA8_OES, 0, 0, true);
         }
     }
 }
 
 void Texture2D::setCompressedImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels)
 {
-    redefineImage(level, format, width, height, GL_UNSIGNED_BYTE);
+    // compressed formats don't have separate sized internal formats-- we can just use the compressed format directly
+    redefineImage(level, format, width, height);
 
     Texture::setCompressedImage(imageSize, pixels, &mImageArray[level]);
 }
@@ -1664,7 +1625,8 @@ void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei 
         return error(GL_OUT_OF_MEMORY);
     }
 
-    redefineImage(level, format, width, height, GL_UNSIGNED_BYTE);
+    GLint internalformat = ConvertSizedInternalFormat(format, GL_UNSIGNED_BYTE);
+    redefineImage(level, internalformat, width, height);
    
     if (!mImageArray[level].isRenderableFormat())
     {
@@ -1742,7 +1704,9 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
 
             if (dest)
             {
-                getBlitter()->copy(renderTarget, sourceRect, mImageArray[0].getFormat(), xoffset, yoffset, dest);
+                getBlitter()->copy(renderTarget, sourceRect, 
+                                   gl::ExtractFormat(mImageArray[0].getInternalFormat()),
+                                   xoffset, yoffset, dest);
                 dest->Release();
             }
         }
@@ -1753,9 +1717,7 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
 
 void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height)
 {
-    GLenum format = gl::ExtractFormat(internalformat);
-    GLenum type = gl::ExtractType(internalformat);
-    D3DFORMAT d3dfmt = ConvertTextureFormatType(format, type);
+    D3DFORMAT d3dfmt = ConvertTextureFormatType(internalformat);
     DWORD d3dusage = GetTextureUsage(d3dfmt, mUsage, false);
 
     delete mTexStorage;
@@ -1764,14 +1726,14 @@ void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GL
 
     for (int level = 0; level < levels; level++)
     {
-        mImageArray[level].redefine(format, width, height, type, true);
+        mImageArray[level].redefine(internalformat, width, height, true);
         width = std::max(1, width >> 1);
         height = std::max(1, height >> 1);
     }
 
     for (int level = levels; level < IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
     {
-        mImageArray[level].redefine(GL_NONE, 0, 0, GL_UNSIGNED_BYTE, true);
+        mImageArray[level].redefine(GL_NONE, 0, 0, true);
     }
 
     if (mTexStorage->isManaged())
@@ -1814,8 +1776,8 @@ bool Texture2D::isSamplerComplete() const
       default: UNREACHABLE();
     }
 
-    if ((getInternalFormat(0) == GL_FLOAT && !getContext()->supportsFloat32LinearFilter()) ||
-        (getInternalFormat(0) == GL_HALF_FLOAT_OES && !getContext()->supportsFloat16LinearFilter()))
+    if ((gl::ExtractType(getInternalFormat(0)) == GL_FLOAT && !getContext()->supportsFloat32LinearFilter()) ||
+        (gl::ExtractType(getInternalFormat(0)) == GL_HALF_FLOAT_OES && !getContext()->supportsFloat16LinearFilter()))
     {
         if (mMagFilter != GL_NEAREST || (mMinFilter != GL_NEAREST && mMinFilter != GL_NEAREST_MIPMAP_NEAREST))
         {
@@ -1873,12 +1835,7 @@ bool Texture2D::isMipmapComplete() const
 
     for (int level = 1; level <= q; level++)
     {
-        if (mImageArray[level].getFormat() != mImageArray[0].getFormat())
-        {
-            return false;
-        }
-
-        if (mImageArray[level].getType() != mImageArray[0].getType())
+        if (mImageArray[level].getInternalFormat() != mImageArray[0].getInternalFormat())
         {
             return false;
         }
@@ -2013,10 +1970,9 @@ void Texture2D::generateMipmaps()
     unsigned int q = log2(std::max(mImageArray[0].getWidth(), mImageArray[0].getHeight()));
     for (unsigned int i = 1; i <= q; i++)
     {
-        redefineImage(i, mImageArray[0].getFormat(), 
+        redefineImage(i, mImageArray[0].getInternalFormat(), 
                          std::max(mImageArray[0].getWidth() >> i, 1),
-                         std::max(mImageArray[0].getHeight() >> i, 1),
-                         mImageArray[0].getType());
+                         std::max(mImageArray[0].getHeight() >> i, 1));
     }
 
     if (mTexStorage && mTexStorage->isRenderTarget())
@@ -2267,7 +2223,7 @@ GLsizei TextureCubeMap::getHeight(GLenum target, GLint level) const
 GLenum TextureCubeMap::getInternalFormat(GLenum target, GLint level) const
 {
     if (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-        return mImageArray[faceIndex(target)][level].getFormat();
+        return mImageArray[faceIndex(target)][level].getInternalFormat();
     else
         return GL_NONE;
 }
@@ -2312,7 +2268,8 @@ void TextureCubeMap::setImageNegZ(GLint level, GLsizei width, GLsizei height, GL
 
 void TextureCubeMap::setCompressedImage(GLenum face, GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels)
 {
-    redefineImage(faceIndex(face), level, format, width, height, GL_UNSIGNED_BYTE);
+    // compressed formats don't have separate sized internal formats-- we can just use the compressed format directly
+    redefineImage(faceIndex(face), level, format, width, height);
 
     Texture::setCompressedImage(imageSize, pixels, &mImageArray[faceIndex(face)][level]);
 }
@@ -2377,8 +2334,8 @@ bool TextureCubeMap::isSamplerComplete() const
         return false;
     }
 
-    if ((getInternalFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0) == GL_FLOAT && !getContext()->supportsFloat32LinearFilter()) ||
-        (getInternalFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0) == GL_HALF_FLOAT_OES && !getContext()->supportsFloat16LinearFilter()))
+    if ((gl::ExtractType(getInternalFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0)) == GL_FLOAT && !getContext()->supportsFloat32LinearFilter()) ||
+        (gl::ExtractType(getInternalFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0) == GL_HALF_FLOAT_OES) && !getContext()->supportsFloat16LinearFilter()))
     {
         if (mMagFilter != GL_NEAREST || (mMinFilter != GL_NEAREST && mMinFilter != GL_NEAREST_MIPMAP_NEAREST))
         {
@@ -2424,8 +2381,7 @@ bool TextureCubeMap::isCubeComplete() const
     {
         if (mImageArray[face][0].getWidth() != mImageArray[0][0].getWidth() ||
             mImageArray[face][0].getWidth() != mImageArray[0][0].getHeight() ||
-            mImageArray[face][0].getFormat() != mImageArray[0][0].getFormat() ||
-            mImageArray[face][0].getType() != mImageArray[0][0].getType())
+            mImageArray[face][0].getInternalFormat() != mImageArray[0][0].getInternalFormat())
         {
             return false;
         }
@@ -2454,12 +2410,7 @@ bool TextureCubeMap::isMipmapCubeComplete() const
     {
         for (int level = 1; level <= q; level++)
         {
-            if (mImageArray[face][level].getFormat() != mImageArray[0][0].getFormat())
-            {
-                return false;
-            }
-
-            if (mImageArray[face][level].getType() != mImageArray[0][0].getType())
+            if (mImageArray[face][level].getInternalFormat() != mImageArray[0][0].getInternalFormat())
             {
                 return false;
             }
@@ -2579,7 +2530,8 @@ void TextureCubeMap::convertToRenderTarget()
 
 void TextureCubeMap::setImage(int faceIndex, GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    redefineImage(faceIndex, level, format, width, height, type);
+    GLint internalformat = ConvertSizedInternalFormat(format, type);
+    redefineImage(faceIndex, level, internalformat, width, height);
 
     Texture::setImage(unpackAlignment, pixels, &mImageArray[faceIndex][level]);
 }
@@ -2595,9 +2547,9 @@ unsigned int TextureCubeMap::faceIndex(GLenum face)
     return face - GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 }
 
-void TextureCubeMap::redefineImage(int face, GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type)
+void TextureCubeMap::redefineImage(int face, GLint level, GLint internalformat, GLsizei width, GLsizei height)
 {
-    bool redefined = mImageArray[face][level].redefine(format, width, height, type, false);
+    bool redefined = mImageArray[face][level].redefine(internalformat, width, height, false);
 
     if (mTexStorage && redefined)
     {
@@ -2627,7 +2579,8 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint 
     }
 
     unsigned int faceindex = faceIndex(target);
-    redefineImage(faceindex, level, format, width, height, GL_UNSIGNED_BYTE);
+    GLint internalformat = gl::ConvertSizedInternalFormat(format, GL_UNSIGNED_BYTE);
+    redefineImage(faceindex, level, internalformat, width, height);
 
     if (!mImageArray[faceindex][level].isRenderableFormat())
     {
@@ -2711,7 +2664,7 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
 
             if (dest)
             {
-                getBlitter()->copy(renderTarget, sourceRect, mImageArray[0][0].getFormat(), xoffset, yoffset, dest);
+                getBlitter()->copy(renderTarget, sourceRect, gl::ExtractFormat(mImageArray[0][0].getInternalFormat()), xoffset, yoffset, dest);
                 dest->Release();
             }
         }
@@ -2722,9 +2675,7 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
 
 void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size)
 {
-    GLenum format = gl::ExtractFormat(internalformat);
-    GLenum type = gl::ExtractType(internalformat);
-    D3DFORMAT d3dfmt = ConvertTextureFormatType(format, type);
+    D3DFORMAT d3dfmt = ConvertTextureFormatType(internalformat);
     DWORD d3dusage = GetTextureUsage(d3dfmt, mUsage, false);
 
     delete mTexStorage;
@@ -2735,7 +2686,7 @@ void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size
     {
         for (int face = 0; face < 6; face++)
         {
-            mImageArray[face][level].redefine(format, size, size, type, true);
+            mImageArray[face][level].redefine(internalformat, size, size, true);
             size = std::max(1, size >> 1);
         }
     }
@@ -2744,7 +2695,7 @@ void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size
     {
         for (int face = 0; face < 6; face++)
         {
-            mImageArray[face][level].redefine(GL_NONE, 0, 0, GL_UNSIGNED_BYTE, true);
+            mImageArray[face][level].redefine(GL_NONE, 0, 0, true);
         }
     }
 
@@ -2784,10 +2735,9 @@ void TextureCubeMap::generateMipmaps()
     {
         for (unsigned int i = 1; i <= q; i++)
         {
-            redefineImage(f, i, mImageArray[f][0].getFormat(),
+            redefineImage(f, i, mImageArray[f][0].getInternalFormat(),
                                 std::max(mImageArray[f][0].getWidth() >> i, 1),
-                                std::max(mImageArray[f][0].getWidth() >> i, 1),
-                                mImageArray[f][0].getType());
+                                std::max(mImageArray[f][0].getWidth() >> i, 1));
         }
     }
 

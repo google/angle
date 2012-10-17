@@ -34,14 +34,15 @@ int VariableColumnCount(GLenum type);
 
 int AllocateFirstFreeBits(unsigned int *bits, unsigned int allocationSize, unsigned int bitsSize);
 
-int ComputePixelSize(GLenum format, GLenum type);
-GLsizei ComputePitch(GLsizei width, GLenum format, GLenum type, GLint alignment);
+int ComputePixelSize(GLint internalformat);
+GLsizei ComputePitch(GLsizei width, GLint internalformat, GLint alignment);
 GLsizei ComputeCompressedPitch(GLsizei width, GLenum format);
 GLsizei ComputeCompressedSize(GLsizei width, GLsizei height, GLenum format);
 bool IsCompressed(GLenum format);
 bool IsDepthTexture(GLenum format);
 bool IsCubemapTextureTarget(GLenum target);
 bool IsInternalTextureTarget(GLenum target);
+GLint ConvertSizedInternalFormat(GLenum format, GLenum type);
 GLenum ExtractFormat(GLenum internalformat);
 GLenum ExtractType(GLenum internalformat);
 

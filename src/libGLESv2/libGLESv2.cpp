@@ -148,8 +148,9 @@ bool checkTextureFormatType(GLenum format, GLenum type)
         return error(GL_INVALID_ENUM, false);
     }
 }
+
 bool validateSubImageParams2D(bool compressed, GLsizei width, GLsizei height,
-                              GLint xoffset, GLint yoffset, GLint level, GLenum format,
+                              GLint xoffset, GLint yoffset, GLint level, GLenum format, GLenum type,
                               gl::Texture2D *texture)
 {
     if (!texture)
@@ -162,9 +163,13 @@ bool validateSubImageParams2D(bool compressed, GLsizei width, GLsizei height,
         return error(GL_INVALID_OPERATION, false);
     }
 
-    if (format != GL_NONE && format != texture->getInternalFormat(level))
+    if (format != GL_NONE)
     {
-        return error(GL_INVALID_OPERATION, false);
+        GLenum internalformat = gl::ConvertSizedInternalFormat(format, type);
+        if (internalformat != texture->getInternalFormat(level))
+        {
+            return error(GL_INVALID_OPERATION, false);
+        }
     }
 
     if (compressed)
@@ -186,7 +191,7 @@ bool validateSubImageParams2D(bool compressed, GLsizei width, GLsizei height,
 }
 
 bool validateSubImageParamsCube(bool compressed, GLsizei width, GLsizei height,
-                                GLint xoffset, GLint yoffset, GLenum target, GLint level, GLenum format,
+                                GLint xoffset, GLint yoffset, GLenum target, GLint level, GLenum format, GLenum type,
                                 gl::TextureCubeMap *texture)
 {
     if (!texture)
@@ -199,9 +204,13 @@ bool validateSubImageParamsCube(bool compressed, GLsizei width, GLsizei height,
         return error(GL_INVALID_OPERATION, false);
     }
 
-    if (format != GL_NONE && format != texture->getInternalFormat(target, level))
+    if (format != GL_NONE)
     {
-        return error(GL_INVALID_OPERATION, false);
+        GLenum internalformat = gl::ConvertSizedInternalFormat(format, type);
+        if (internalformat != texture->getInternalFormat(target, level))
+        {
+            return error(GL_INVALID_OPERATION, false);
+        }
     }
 
     if (compressed)
@@ -1218,7 +1227,7 @@ void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
             if (target == GL_TEXTURE_2D)
             {
                 gl::Texture2D *texture = context->getTexture2D();
-                if (validateSubImageParams2D(true, width, height, xoffset, yoffset, level, format, texture))
+                if (validateSubImageParams2D(true, width, height, xoffset, yoffset, level, format, GL_NONE, texture))
                 {
                     texture->subImageCompressed(level, xoffset, yoffset, width, height, format, imageSize, data);
                 }
@@ -1226,7 +1235,7 @@ void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
             else if (gl::IsCubemapTextureTarget(target))
             {
                 gl::TextureCubeMap *texture = context->getTextureCubeMap();
-                if (validateSubImageParamsCube(true, width, height, xoffset, yoffset, target, level, format, texture))
+                if (validateSubImageParamsCube(true, width, height, xoffset, yoffset, target, level, format, GL_NONE, texture))
                 {
                     texture->subImageCompressed(target, level, xoffset, yoffset, width, height, format, imageSize, data);
                 }
@@ -1319,8 +1328,7 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
             switch (internalformat)
             {
               case GL_ALPHA:
-                if (colorbufferFormat != GL_ALPHA &&
-                    colorbufferFormat != GL_RGBA &&
+                if (colorbufferFormat != GL_ALPHA8_EXT &&
                     colorbufferFormat != GL_RGBA4 &&
                     colorbufferFormat != GL_RGB5_A1 &&
                     colorbufferFormat != GL_RGBA8_OES)
@@ -1329,11 +1337,17 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
                 }
                 break;
               case GL_LUMINANCE:
-              case GL_RGB:
-                if (colorbufferFormat != GL_RGB &&
-                    colorbufferFormat != GL_RGB565 &&
+                if (colorbufferFormat != GL_RGB565 &&
                     colorbufferFormat != GL_RGB8_OES &&
-                    colorbufferFormat != GL_RGBA &&
+                    colorbufferFormat != GL_RGBA4 &&
+                    colorbufferFormat != GL_RGB5_A1 &&
+                    colorbufferFormat != GL_RGBA8_OES)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+              case GL_RGB:
+                if (colorbufferFormat != GL_RGB565 &&
+                    colorbufferFormat != GL_RGB8_OES &&
                     colorbufferFormat != GL_RGBA4 &&
                     colorbufferFormat != GL_RGB5_A1 &&
                     colorbufferFormat != GL_RGBA8_OES)
@@ -1343,8 +1357,7 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
                 break;
               case GL_LUMINANCE_ALPHA:
               case GL_RGBA:
-                if (colorbufferFormat != GL_RGBA &&
-                    colorbufferFormat != GL_RGBA4 &&
+                if (colorbufferFormat != GL_RGBA4 &&
                     colorbufferFormat != GL_RGB5_A1 &&
                     colorbufferFormat != GL_RGBA8_OES)
                  {
@@ -1498,22 +1511,22 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
             {
                 gl::Texture2D *tex2d = context->getTexture2D();
 
-                if (!validateSubImageParams2D(false, width, height, xoffset, yoffset, level, GL_NONE, tex2d))
+                if (!validateSubImageParams2D(false, width, height, xoffset, yoffset, level, GL_NONE, GL_NONE, tex2d))
                 {
                     return; // error already registered by validateSubImageParams
                 }
-                textureFormat = tex2d->getInternalFormat(level);
+                textureFormat = gl::ExtractFormat(tex2d->getInternalFormat(level));
                 texture = tex2d;
             }
             else if (gl::IsCubemapTextureTarget(target))
             {
                 gl::TextureCubeMap *texcube = context->getTextureCubeMap();
 
-                if (!validateSubImageParamsCube(false, width, height, xoffset, yoffset, target, level, GL_NONE, texcube))
+                if (!validateSubImageParamsCube(false, width, height, xoffset, yoffset, target, level, GL_NONE, GL_NONE, texcube))
                 {
                     return; // error already registered by validateSubImageParams
                 }
-                textureFormat = texcube->getInternalFormat(target, level);
+                textureFormat = gl::ExtractFormat(texcube->getInternalFormat(target, level));
                 texture = texcube;
             }
             else UNREACHABLE();
@@ -1522,8 +1535,7 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
             switch (textureFormat)
             {
               case GL_ALPHA:
-                if (colorbufferFormat != GL_ALPHA &&
-                    colorbufferFormat != GL_RGBA &&
+                if (colorbufferFormat != GL_ALPHA8_EXT &&
                     colorbufferFormat != GL_RGBA4 &&
                     colorbufferFormat != GL_RGB5_A1 &&
                     colorbufferFormat != GL_RGBA8_OES)
@@ -1532,9 +1544,7 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
                 }
                 break;
               case GL_LUMINANCE:
-              case GL_RGB:
-                if (colorbufferFormat != GL_RGB &&
-                    colorbufferFormat != GL_RGB565 &&
+                if (colorbufferFormat != GL_RGB565 &&
                     colorbufferFormat != GL_RGB8_OES &&
                     colorbufferFormat != GL_RGBA &&
                     colorbufferFormat != GL_RGBA4 &&
@@ -1544,10 +1554,19 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
                     return error(GL_INVALID_OPERATION);
                 }
                 break;
+              case GL_RGB:
+                if (colorbufferFormat != GL_RGB565 &&
+                    colorbufferFormat != GL_RGB8_OES &&
+                    colorbufferFormat != GL_RGBA4 &&
+                    colorbufferFormat != GL_RGB5_A1 &&
+                    colorbufferFormat != GL_RGBA8_OES)
+                {
+                    return error(GL_INVALID_OPERATION);
+                }
+                break;
               case GL_LUMINANCE_ALPHA:
               case GL_RGBA:
-                if (colorbufferFormat != GL_RGBA &&
-                    colorbufferFormat != GL_RGBA4 &&
+                if (colorbufferFormat != GL_RGBA4 &&
                     colorbufferFormat != GL_RGB5_A1 &&
                     colorbufferFormat != GL_RGBA8_OES)
                 {
@@ -5910,7 +5929,7 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
             if (target == GL_TEXTURE_2D)
             {
                 gl::Texture2D *texture = context->getTexture2D();
-                if (validateSubImageParams2D(false, width, height, xoffset, yoffset, level, format, texture))
+                if (validateSubImageParams2D(false, width, height, xoffset, yoffset, level, format, type, texture))
                 {
                     texture->subImage(level, xoffset, yoffset, width, height, format, type, context->getUnpackAlignment(), pixels);
                 }
@@ -5918,7 +5937,7 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
             else if (gl::IsCubemapTextureTarget(target))
             {
                 gl::TextureCubeMap *texture = context->getTextureCubeMap();
-                if (validateSubImageParamsCube(false, width, height, xoffset, yoffset, target, level, format, texture))
+                if (validateSubImageParamsCube(false, width, height, xoffset, yoffset, target, level, format, type, texture))
                 {
                     texture->subImage(target, level, xoffset, yoffset, width, height, format, type, context->getUnpackAlignment(), pixels);
                 }

@@ -2507,7 +2507,7 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
         return error(GL_INVALID_OPERATION);
     }
 
-    GLsizei outputPitch = ComputePitch(width, format, type, mState.packAlignment);
+    GLsizei outputPitch = ComputePitch(width, ConvertSizedInternalFormat(format, type), mState.packAlignment);
     // sized query sanity check
     if (bufSize)
     {

@@ -49,7 +49,7 @@ class Image
     Image();
     ~Image();
 
-    bool redefine(GLenum format, GLsizei width, GLsizei height, GLenum type, bool forceRelease);
+    bool redefine(GLint internalformat, GLsizei width, GLsizei height, bool forceRelease);
     void markDirty() {mDirty = true;}
     void markClean() {mDirty = false;}
 
@@ -58,15 +58,14 @@ class Image
 
     GLsizei getWidth() const {return mWidth;}
     GLsizei getHeight() const {return mHeight;}
-    GLenum getFormat() const {return mFormat;}
-    GLenum getType() const {return mType;}
+    GLenum getInternalFormat() const {return mInternalFormat;}
     bool isDirty() const {return mSurface && mDirty;}
     IDirect3DSurface9 *getSurface();
 
     void setManagedSurface(IDirect3DSurface9 *surface);
     void updateSurface(IDirect3DSurface9 *dest, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
 
-    void loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum type,
+    void loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                   GLint unpackAlignment, const void *input);
 
     void loadAlphaData(GLsizei width, GLsizei height,
@@ -126,8 +125,7 @@ class Image
 
     GLsizei mWidth;
     GLsizei mHeight;
-    GLenum mFormat;
-    GLenum mType;
+    GLint mInternalFormat;
 
     bool mDirty;
 
@@ -321,7 +319,7 @@ class Texture2D : public Texture
 
     bool isMipmapComplete() const;
 
-    void redefineImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type);
+    void redefineImage(GLint level, GLint internalformat, GLsizei width, GLsizei height);
     void commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
 
     Image mImageArray[IMPLEMENTATION_MAX_TEXTURE_LEVELS];
@@ -416,7 +414,7 @@ class TextureCubeMap : public Texture
 
     void setImage(int faceIndex, GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void commitRect(int faceIndex, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
-    void redefineImage(int faceIndex, GLint level, GLenum format, GLsizei width, GLsizei height, GLenum type);
+    void redefineImage(int faceIndex, GLint level, GLint internalformat, GLsizei width, GLsizei height);
 
     Image mImageArray[6][IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 

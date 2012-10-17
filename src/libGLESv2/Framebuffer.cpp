@@ -301,13 +301,14 @@ GLenum Framebuffer::completeness()
         }
         else if (IsInternalTextureTarget(mColorbufferType))
         {
-            GLenum internalformat = colorbuffer->getInternalFormat();
+            GLint internalformat = colorbuffer->getInternalFormat();
+            GLenum format = gl::ExtractFormat(internalformat);
             D3DFORMAT d3dformat = colorbuffer->getD3DFormat();
 
-            if (IsCompressed(internalformat) ||
-                internalformat == GL_ALPHA ||
-                internalformat == GL_LUMINANCE ||
-                internalformat == GL_LUMINANCE_ALPHA)
+            if (IsCompressed(format) ||
+                format == GL_ALPHA ||
+                format == GL_LUMINANCE ||
+                format == GL_LUMINANCE_ALPHA)
             {
                 return GL_FRAMEBUFFER_UNSUPPORTED;
             }
