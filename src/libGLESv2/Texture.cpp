@@ -68,6 +68,7 @@ static D3DFORMAT ConvertTextureInternalFormat(GLint internalformat)
         }
         break;
       case GL_RGB8_OES:
+      case GL_RGB565:
         return D3DFMT_X8R8G8B8;
     }
 
