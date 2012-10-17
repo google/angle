@@ -297,18 +297,10 @@ void Image::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint y
         rect.right = xoffset + width;
         rect.bottom = yoffset + height;
 
-        if (mD3DPool == D3DPOOL_MANAGED)
-        {
-            HRESULT result = D3DXLoadSurfaceFromSurface(destSurface, NULL, &rect, sourceSurface, NULL, &rect, D3DX_FILTER_BOX, 0);
-            ASSERT(SUCCEEDED(result));
-        }
-        else
-        {
-            // UpdateSurface: source must be SYSTEMMEM, dest must be DEFAULT pools 
-            POINT point = {rect.left, rect.top};
-            HRESULT result = getDevice()->UpdateSurface(sourceSurface, &rect, destSurface, &point);
-            ASSERT(SUCCEEDED(result));
-        }
+        // UpdateSurface: source must be SYSTEMMEM, dest must be DEFAULT pools 
+        POINT point = {rect.left, rect.top};
+        HRESULT result = getDevice()->UpdateSurface(sourceSurface, &rect, destSurface, &point);
+        ASSERT(SUCCEEDED(result));
     }
 }
 
