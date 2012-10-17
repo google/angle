@@ -312,6 +312,8 @@ int ComputePixelSize(GLint internalformat)
       case GL_RGBA32F_EXT:                      return sizeof(float) * 4;
       case GL_RGBA16F_EXT:                      return sizeof(unsigned short) * 4;
       case GL_BGRA8_EXT:                        return sizeof(unsigned char) * 4;
+      case GL_BGRA4_REV:                        return sizeof(unsigned short);
+      case GL_BGR5_A1_REV:                      return sizeof(unsigned short);
       default: UNREACHABLE();
     }
 
@@ -384,8 +386,9 @@ GLint ConvertSizedInternalFormat(GLenum format, GLenum type)
       case GL_BGRA_EXT:
         switch (type)
         {
-            // Are there sized internal formats for the packed BGRA types?
           case GL_UNSIGNED_BYTE:                    return GL_BGRA8_EXT;
+          case GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT:   return GL_BGRA4_REV;
+          case GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT:   return GL_BGR5_A1_REV;
           default:                                  UNIMPLEMENTED();
         }
         break;
