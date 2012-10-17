@@ -11,6 +11,7 @@
 #include "common/debug.h"
 
 #include "libGLESv2/main.h"
+#include "libGLESv2/utilities.h"
 
 namespace
 {
@@ -216,7 +217,8 @@ bool Blit::copy(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum destFo
     source->GetDesc(&sourceDesc);
     dest->GetDesc(&destDesc);
 
-    if (sourceDesc.Format == destDesc.Format && destDesc.Usage & D3DUSAGE_RENDERTARGET)   // Can use StretchRect
+    if (sourceDesc.Format == destDesc.Format && destDesc.Usage & D3DUSAGE_RENDERTARGET &&
+        dx2es::IsFormatChannelEquivalent(destDesc.Format, destFormat))   // Can use StretchRect
     {
         RECT destRect = {xoffset, yoffset, xoffset + (sourceRect.right - sourceRect.left), yoffset + (sourceRect.bottom - sourceRect.top)};
         HRESULT result = device->StretchRect(source, &sourceRect, dest, &destRect, D3DTEXF_POINT);

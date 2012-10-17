@@ -990,6 +990,33 @@ GLsizei GetSamplesFromMultisampleType(D3DMULTISAMPLE_TYPE type)
         return type;
 }
 
+bool IsFormatChannelEquivalent(D3DFORMAT d3dformat, GLenum format)
+{
+    switch (d3dformat)
+    {
+      case D3DFMT_L8:
+        return (format == GL_LUMINANCE);
+      case D3DFMT_A8L8:
+        return (format == GL_LUMINANCE_ALPHA);
+      case D3DFMT_DXT1:
+        return (format == GL_COMPRESSED_RGBA_S3TC_DXT1_EXT || format == GL_COMPRESSED_RGB_S3TC_DXT1_EXT);
+      case D3DFMT_DXT3:
+        return (format == GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE);
+      case D3DFMT_DXT5:
+        return (format == GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE);
+      case D3DFMT_A8R8G8B8:
+      case D3DFMT_A16B16G16R16F:
+      case D3DFMT_A32B32G32R32F:
+        return (format == GL_RGBA || format == GL_BGRA_EXT);
+      case D3DFMT_X8R8G8B8:
+        return (format == GL_RGB);
+      default:
+        if (d3dformat == D3DFMT_INTZ && gl::IsDepthTexture(format))
+            return true;
+        return false;
+    }
+}
+
 bool ConvertReadBufferFormat(D3DFORMAT d3dformat, GLenum *format, GLenum *type)
 {
     switch (d3dformat)
