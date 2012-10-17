@@ -78,13 +78,13 @@ D3DMULTISAMPLE_TYPE GetMultisampleTypeFromSamples(GLsizei samples);
 
 namespace dx2es
 {
+
 GLuint GetAlphaSize(D3DFORMAT colorFormat);
 GLuint GetRedSize(D3DFORMAT colorFormat);
 GLuint GetGreenSize(D3DFORMAT colorFormat);
 GLuint GetBlueSize(D3DFORMAT colorFormat);
 GLuint GetDepthSize(D3DFORMAT depthFormat);
 GLuint GetStencilSize(D3DFORMAT stencilFormat);
-bool IsCompressedD3DFormat(D3DFORMAT format);
 
 GLsizei GetSamplesFromMultisampleType(D3DMULTISAMPLE_TYPE type);
 
@@ -93,6 +93,12 @@ bool ConvertReadBufferFormat(D3DFORMAT d3dformat, GLenum *format, GLenum *type);
 GLenum ConvertBackBufferFormat(D3DFORMAT format);
 GLenum ConvertDepthStencilFormat(D3DFORMAT format);
 
+}
+
+namespace dx
+{
+bool IsCompressedFormat(D3DFORMAT format);
+size_t ComputeRowSize(D3DFORMAT format, unsigned int width);
 }
 
 std::string getTempPath();

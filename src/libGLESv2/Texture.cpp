@@ -116,7 +116,8 @@ static inline DWORD GetTextureUsage(D3DFORMAT d3dfmt, GLenum glusage, bool force
     return d3dusage;
 }
 
-static void MakeValidSize(bool isImage, bool isCompressed, GLsizei *requestWidth, GLsizei *requestHeight, int *levelOffset) {
+static void MakeValidSize(bool isImage, bool isCompressed, GLsizei *requestWidth, GLsizei *requestHeight, int *levelOffset)
+{
     int upsampleCount = 0;
 
     if (isCompressed)
@@ -134,6 +135,34 @@ static void MakeValidSize(bool isImage, bool isCompressed, GLsizei *requestWidth
         }
     }
     *levelOffset = upsampleCount;
+}
+
+static void CopyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface9 *source)
+{
+    D3DLOCKED_RECT sourceLock = {0};
+    D3DLOCKED_RECT destLock = {0};
+    
+    source->LockRect(&sourceLock, NULL, 0);
+    dest->LockRect(&destLock, NULL, 0);
+    
+    if (sourceLock.pBits && destLock.pBits)
+    {
+        D3DSURFACE_DESC desc;
+        source->GetDesc(&desc);
+
+        int rows = dx::IsCompressedFormat(desc.Format) ? desc.Height / 4 : desc.Height;
+        int bytes = dx::ComputeRowSize(desc.Format, desc.Width);
+        ASSERT(bytes <= sourceLock.Pitch && bytes <= destLock.Pitch);
+
+        for(int i = 0; i < rows; i++)
+        {
+            memcpy((char*)destLock.pBits + destLock.Pitch * i, (char*)sourceLock.pBits + sourceLock.Pitch * i, bytes);
+        }
+
+        source->UnlockRect();
+        dest->UnlockRect();
+    }
+    else UNREACHABLE();
 }
 
 Image::Image()
@@ -273,7 +302,8 @@ void Image::setManagedSurface(IDirect3DSurface9 *surface)
 {
     if (mSurface)
     {
-        D3DXLoadSurfaceFromSurface(surface, NULL, NULL, mSurface, NULL, NULL, D3DX_FILTER_BOX, 0);
+        CopyLockableSurfaces(surface, mSurface);
+
         mSurface->Release();
     }
 
@@ -1363,7 +1393,7 @@ TextureStorage2D::TextureStorage2D(int levels, D3DFORMAT format, DWORD usage, in
     if (width > 0 && height > 0)
     {
         IDirect3DDevice9 *device = getDevice();
-        MakeValidSize(false, dx2es::IsCompressedD3DFormat(format), &width, &height, &mLodOffset);
+        MakeValidSize(false, dx::IsCompressedFormat(format), &width, &height, &mLodOffset);
         HRESULT result = device->CreateTexture(width, height, levels ? levels + mLodOffset : 0, getUsage(), format, getPool(), &mTexture, NULL);
 
         if (FAILED(result))
@@ -2091,7 +2121,7 @@ TextureStorageCubeMap::TextureStorageCubeMap(int levels, D3DFORMAT format, DWORD
     {
         IDirect3DDevice9 *device = getDevice();
         int height = size;
-        MakeValidSize(false, dx2es::IsCompressedD3DFormat(format), &size, &height, &mLodOffset);
+        MakeValidSize(false, dx::IsCompressedFormat(format), &size, &height, &mLodOffset);
         HRESULT result = device->CreateCubeTexture(size, levels ? levels + mLodOffset : 0, getUsage(), format, getPool(), &mTexture, NULL);
 
         if (FAILED(result))

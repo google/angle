@@ -248,15 +248,13 @@ GLsizei ComputeCompressedSize(GLsizei width, GLsizei height, GLenum internalform
     {
       case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
       case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
-        return 8 * (GLsizei)ceil((float)width / 4.0f) * (GLsizei)ceil((float)height / 4.0f);
-        break;
+        return 8 * ((width + 3) / 4) * ((height + 3) / 4);
       case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
       case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
-        return 16 * (GLsizei)ceil((float)width / 4.0f) * (GLsizei)ceil((float)height / 4.0f);
+        return 16 * ((width + 3) / 4) * ((height + 3) / 4);
       default:
         return 0;
     }
-
 }
 
 bool IsCompressed(GLenum format)
@@ -1023,21 +1021,6 @@ unsigned int GetDepthSize(D3DFORMAT depthFormat)
     }
 }
 
-bool IsCompressedD3DFormat(D3DFORMAT surfaceFormat)
-{
-    switch(surfaceFormat)
-    {
-      case D3DFMT_DXT1:
-      case D3DFMT_DXT2:
-      case D3DFMT_DXT3:
-      case D3DFMT_DXT4:
-      case D3DFMT_DXT5:
-        return true;
-      default:
-        return false;
-    }
-}
-
 GLsizei GetSamplesFromMultisampleType(D3DMULTISAMPLE_TYPE type)
 {
     if (type == D3DMULTISAMPLE_NONMASKABLE)
@@ -1147,6 +1130,56 @@ GLenum ConvertDepthStencilFormat(D3DFORMAT format)
     }
 
     return GL_DEPTH24_STENCIL8_OES;
+}
+
+}
+
+namespace dx
+{
+
+bool IsCompressedFormat(D3DFORMAT surfaceFormat)
+{
+    switch(surfaceFormat)
+    {
+      case D3DFMT_DXT1:
+      case D3DFMT_DXT2:
+      case D3DFMT_DXT3:
+      case D3DFMT_DXT4:
+      case D3DFMT_DXT5:
+        return true;
+      default:
+        return false;
+    }
+}
+
+size_t ComputeRowSize(D3DFORMAT format, unsigned int width)
+{
+    if (format == D3DFMT_INTZ)
+    {
+        return 4 * width;
+    }
+    switch (format)
+    {
+      case D3DFMT_L8:
+          return 1 * width;
+      case D3DFMT_A8L8:
+          return 2 * width;
+      case D3DFMT_X8R8G8B8:
+      case D3DFMT_A8R8G8B8:
+        return 4 * width;
+      case D3DFMT_A16B16G16R16F:
+        return 8 * width;
+      case D3DFMT_A32B32G32R32F:
+        return 16 * width;
+      case D3DFMT_DXT1:
+        return 8 * ((width + 3) / 4);
+      case D3DFMT_DXT3:
+      case D3DFMT_DXT5:
+        return 16 * ((width + 3) / 4);
+      default:
+        UNREACHABLE();
+        return 0;
+    }
 }
 
 }
