@@ -298,19 +298,21 @@ IDirect3DSurface9 *Image::getSurface()
 
 void Image::setManagedSurface(IDirect3DSurface9 *surface)
 {
-    if (mSurface)
-    {
-        CopyLockableSurfaces(surface, mSurface);
-
-        mSurface->Release();
-    }
-
     D3DSURFACE_DESC desc;
     surface->GetDesc(&desc);
     ASSERT(desc.Pool == D3DPOOL_MANAGED);
 
-    mSurface = surface;
-    mD3DPool = desc.Pool;
+    if ((GLsizei)desc.Width == mWidth && (GLsizei)desc.Height == mHeight)
+    {
+        if (mSurface)
+        {
+            CopyLockableSurfaces(surface, mSurface);
+            mSurface->Release();
+        }
+
+        mSurface = surface;
+        mD3DPool = desc.Pool;
+    }
 }
 
 void Image::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
