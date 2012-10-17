@@ -870,142 +870,196 @@ void Image::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, 
     RECT sourceRect = {x, y, x + width, y + height};
     RECT destRect = {xoffset, yoffset, xoffset + width, yoffset + height};
 
-    if (isRenderableFormat())
+    D3DLOCKED_RECT sourceLock = {0};
+    result = renderTargetData->LockRect(&sourceLock, &sourceRect, 0);
+
+    if (FAILED(result))
     {
-        result = D3DXLoadSurfaceFromSurface(getSurface(), NULL, &destRect, renderTargetData, NULL, &sourceRect, D3DX_FILTER_BOX, 0);
-        
-        if (FAILED(result))
-        {
-            ERR("Copying surfaces unexpectedly failed.");
-            renderTargetData->Release();
-            return error(GL_OUT_OF_MEMORY);
-        }
+        ERR("Failed to lock the source surface (rectangle might be invalid).");
+        renderTargetData->Release();
+        return error(GL_OUT_OF_MEMORY);
     }
-    else
+
+    D3DLOCKED_RECT destLock = {0};
+    result = lock(&destLock, &destRect);
+    
+    if (FAILED(result))
     {
-        D3DLOCKED_RECT sourceLock = {0};
-        result = renderTargetData->LockRect(&sourceLock, &sourceRect, 0);
+        ERR("Failed to lock the destination surface (rectangle might be invalid).");
+        renderTargetData->UnlockRect();
+        renderTargetData->Release();
+        return error(GL_OUT_OF_MEMORY);
+    }
 
-        if (FAILED(result))
+    if (destLock.pBits && sourceLock.pBits)
+    {
+        unsigned char *source = (unsigned char*)sourceLock.pBits;
+        unsigned char *dest = (unsigned char*)destLock.pBits;
+
+        switch (description.Format)
         {
-            ERR("Failed to lock the source surface (rectangle might be invalid).");
-            renderTargetData->Release();
-            return error(GL_OUT_OF_MEMORY);
-        }
-
-        D3DLOCKED_RECT destLock = {0};
-        result = lock(&destLock, &destRect);
-        
-        if (FAILED(result))
-        {
-            ERR("Failed to lock the destination surface (rectangle might be invalid).");
-            renderTargetData->UnlockRect();
-            renderTargetData->Release();
-            return error(GL_OUT_OF_MEMORY);
-        }
-
-        if (destLock.pBits && sourceLock.pBits)
-        {
-            unsigned char *source = (unsigned char*)sourceLock.pBits;
-            unsigned char *dest = (unsigned char*)destLock.pBits;
-
-            switch (description.Format)
+          case D3DFMT_X8R8G8B8:
+          case D3DFMT_A8R8G8B8:
+            switch(getD3DFormat())
             {
               case D3DFMT_X8R8G8B8:
               case D3DFMT_A8R8G8B8:
-                switch(getD3DFormat())
+                for(int y = 0; y < height; y++)
                 {
-                  case D3DFMT_L8:
-                    for(int y = 0; y < height; y++)
-                    {
-                        for(int x = 0; x < width; x++)
-                        {
-                            dest[x] = source[x * 4 + 2];
-                        }
+                    memcpy(dest, source, 4 * width);
 
-                        source += sourceLock.Pitch;
-                        dest += destLock.Pitch;
-                    }
-                    break;
-                  case D3DFMT_A8L8:
-                    for(int y = 0; y < height; y++)
-                    {
-                        for(int x = 0; x < width; x++)
-                        {
-                            dest[x * 2 + 0] = source[x * 4 + 2];
-                            dest[x * 2 + 1] = source[x * 4 + 3];
-                        }
-
-                        source += sourceLock.Pitch;
-                        dest += destLock.Pitch;
-                    }
-                    break;
-                  default:
-                    UNREACHABLE();
+                    source += sourceLock.Pitch;
+                    dest += destLock.Pitch;
                 }
                 break;
-              case D3DFMT_R5G6B5:
-                switch(getD3DFormat())
+              case D3DFMT_L8:
+                for(int y = 0; y < height; y++)
                 {
-                  case D3DFMT_L8:
-                    for(int y = 0; y < height; y++)
+                    for(int x = 0; x < width; x++)
                     {
-                        for(int x = 0; x < width; x++)
-                        {
-                            unsigned char red = source[x * 2 + 1] & 0xF8;
-                            dest[x] = red | (red >> 5);
-                        }
-
-                        source += sourceLock.Pitch;
-                        dest += destLock.Pitch;
+                        dest[x] = source[x * 4 + 2];
                     }
-                    break;
-                  default:
-                    UNREACHABLE();
+
+                    source += sourceLock.Pitch;
+                    dest += destLock.Pitch;
                 }
                 break;
-              case D3DFMT_A1R5G5B5:
-                switch(getD3DFormat())
+              case D3DFMT_A8L8:
+                for(int y = 0; y < height; y++)
                 {
-                  case D3DFMT_L8:
-                    for(int y = 0; y < height; y++)
+                    for(int x = 0; x < width; x++)
                     {
-                        for(int x = 0; x < width; x++)
-                        {
-                            unsigned char red = source[x * 2 + 1] & 0x7C;
-                            dest[x] = (red << 1) | (red >> 4);
-                        }
-
-                        source += sourceLock.Pitch;
-                        dest += destLock.Pitch;
+                        dest[x * 2 + 0] = source[x * 4 + 2];
+                        dest[x * 2 + 1] = source[x * 4 + 3];
                     }
-                    break;
-                  case D3DFMT_A8L8:
-                    for(int y = 0; y < height; y++)
-                    {
-                        for(int x = 0; x < width; x++)
-                        {
-                            unsigned char red = source[x * 2 + 1] & 0x7C;
-                            dest[x * 2 + 0] = (red << 1) | (red >> 4);
-                            dest[x * 2 + 1] = (signed char)source[x * 2 + 1] >> 7;
-                        }
 
-                        source += sourceLock.Pitch;
-                        dest += destLock.Pitch;
-                    }
-                    break;
-                  default:
-                    UNREACHABLE();
+                    source += sourceLock.Pitch;
+                    dest += destLock.Pitch;
                 }
                 break;
               default:
                 UNREACHABLE();
             }
-        }
+            break;
+          case D3DFMT_R5G6B5:
+            switch(getD3DFormat())
+            {
+              case D3DFMT_X8R8G8B8:
+                for(int y = 0; y < height; y++)
+                {
+                    for(int x = 0; x < width; x++)
+                    {
+                        unsigned short rgb = ((unsigned short*)source)[x];
+                        unsigned char red = (rgb & 0xF800) >> 8;
+                        unsigned char green = (rgb & 0x07E0) >> 3;
+                        unsigned char blue = (rgb & 0x001F) << 3;
+                        dest[x + 0] = blue | (blue >> 5);
+                        dest[x + 1] = green | (green >> 6);
+                        dest[x + 2] = red | (red >> 5);
+                        dest[x + 3] = 0xFF;
+                    }
 
-        unlock();
-        renderTargetData->UnlockRect();
+                    source += sourceLock.Pitch;
+                    dest += destLock.Pitch;
+                }
+                break;
+              case D3DFMT_L8:
+                for(int y = 0; y < height; y++)
+                {
+                    for(int x = 0; x < width; x++)
+                    {
+                        unsigned char red = source[x * 2 + 1] & 0xF8;
+                        dest[x] = red | (red >> 5);
+                    }
+
+                    source += sourceLock.Pitch;
+                    dest += destLock.Pitch;
+                }
+                break;
+              default:
+                UNREACHABLE();
+            }
+            break;
+          case D3DFMT_A1R5G5B5:
+            switch(getD3DFormat())
+            {
+              case D3DFMT_X8R8G8B8:
+                for(int y = 0; y < height; y++)
+                {
+                    for(int x = 0; x < width; x++)
+                    {
+                        unsigned short argb = ((unsigned short*)source)[x];
+                        unsigned char red = (argb & 0x7C00) >> 7;
+                        unsigned char green = (argb & 0x03E0) >> 2;
+                        unsigned char blue = (argb & 0x001F) << 3;
+                        dest[x + 0] = blue | (blue >> 5);
+                        dest[x + 1] = green | (green >> 5);
+                        dest[x + 2] = red | (red >> 5);
+                        dest[x + 3] = 0xFF;
+                    }
+
+                    source += sourceLock.Pitch;
+                    dest += destLock.Pitch;
+                }
+                break;
+              case D3DFMT_A8R8G8B8:
+                for(int y = 0; y < height; y++)
+                {
+                    for(int x = 0; x < width; x++)
+                    {
+                        unsigned short argb = ((unsigned short*)source)[x];
+                        unsigned char red = (argb & 0x7C00) >> 7;
+                        unsigned char green = (argb & 0x03E0) >> 2;
+                        unsigned char blue = (argb & 0x001F) << 3;
+                        unsigned char alpha = (signed short)argb >> 15;
+                        dest[x + 0] = blue | (blue >> 5);
+                        dest[x + 1] = green | (green >> 5);
+                        dest[x + 2] = red | (red >> 5);
+                        dest[x + 3] = alpha;
+                    }
+
+                    source += sourceLock.Pitch;
+                    dest += destLock.Pitch;
+                }
+                break;
+              case D3DFMT_L8:
+                for(int y = 0; y < height; y++)
+                {
+                    for(int x = 0; x < width; x++)
+                    {
+                        unsigned char red = source[x * 2 + 1] & 0x7C;
+                        dest[x] = (red << 1) | (red >> 4);
+                    }
+
+                    source += sourceLock.Pitch;
+                    dest += destLock.Pitch;
+                }
+                break;
+              case D3DFMT_A8L8:
+                for(int y = 0; y < height; y++)
+                {
+                    for(int x = 0; x < width; x++)
+                    {
+                        unsigned char red = source[x * 2 + 1] & 0x7C;
+                        dest[x * 2 + 0] = (red << 1) | (red >> 4);
+                        dest[x * 2 + 1] = (signed char)source[x * 2 + 1] >> 7;
+                    }
+
+                    source += sourceLock.Pitch;
+                    dest += destLock.Pitch;
+                }
+                break;
+              default:
+                UNREACHABLE();
+            }
+            break;
+          default:
+            UNREACHABLE();
+        }
     }
+
+    unlock();
+    renderTargetData->UnlockRect();
 
     renderTargetData->Release();
 
