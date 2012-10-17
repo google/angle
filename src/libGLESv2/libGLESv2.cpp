@@ -1337,14 +1337,6 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
                 }
                 break;
               case GL_LUMINANCE:
-                if (colorbufferFormat != GL_RGB565 &&
-                    colorbufferFormat != GL_RGB8_OES &&
-                    colorbufferFormat != GL_RGBA4 &&
-                    colorbufferFormat != GL_RGB5_A1 &&
-                    colorbufferFormat != GL_RGBA8_OES)
-                {
-                    return error(GL_INVALID_OPERATION);
-                }
               case GL_RGB:
                 if (colorbufferFormat != GL_RGB565 &&
                     colorbufferFormat != GL_RGB8_OES &&
@@ -1544,16 +1536,6 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
                 }
                 break;
               case GL_LUMINANCE:
-                if (colorbufferFormat != GL_RGB565 &&
-                    colorbufferFormat != GL_RGB8_OES &&
-                    colorbufferFormat != GL_RGBA &&
-                    colorbufferFormat != GL_RGBA4 &&
-                    colorbufferFormat != GL_RGB5_A1 &&
-                    colorbufferFormat != GL_RGBA8_OES)
-                {
-                    return error(GL_INVALID_OPERATION);
-                }
-                break;
               case GL_RGB:
                 if (colorbufferFormat != GL_RGB565 &&
                     colorbufferFormat != GL_RGB8_OES &&

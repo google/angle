@@ -28,7 +28,7 @@ namespace gl
 {
 unsigned int TextureStorage::mCurrentTextureSerial = 1;
 
-static D3DFORMAT ConvertTextureFormatType(GLint internalformat)
+static D3DFORMAT ConvertTextureInternalFormat(GLint internalformat)
 {
     switch (internalformat)
     {
@@ -168,7 +168,7 @@ bool Image::redefine(GLint internalformat, GLsizei width, GLsizei height, bool f
         mHeight = height;
         mInternalFormat = internalformat;
         // compute the d3d format that will be used
-        mD3DFormat = ConvertTextureFormatType(internalformat);
+        mD3DFormat = ConvertTextureInternalFormat(internalformat);
 
         if (mSurface)
         {
@@ -1717,7 +1717,7 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
 
 void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height)
 {
-    D3DFORMAT d3dfmt = ConvertTextureFormatType(internalformat);
+    D3DFORMAT d3dfmt = ConvertTextureInternalFormat(internalformat);
     DWORD d3dusage = GetTextureUsage(d3dfmt, mUsage, false);
 
     delete mTexStorage;
@@ -1776,8 +1776,8 @@ bool Texture2D::isSamplerComplete() const
       default: UNREACHABLE();
     }
 
-    if ((gl::ExtractType(getInternalFormat(0)) == GL_FLOAT && !getContext()->supportsFloat32LinearFilter()) ||
-        (gl::ExtractType(getInternalFormat(0)) == GL_HALF_FLOAT_OES && !getContext()->supportsFloat16LinearFilter()))
+    if ((IsFloat32Format(getInternalFormat(0)) && !getContext()->supportsFloat32LinearFilter()) ||
+        (IsFloat16Format(getInternalFormat(0)) && !getContext()->supportsFloat16LinearFilter()))
     {
         if (mMagFilter != GL_NEAREST || (mMinFilter != GL_NEAREST && mMinFilter != GL_NEAREST_MIPMAP_NEAREST))
         {
@@ -2675,7 +2675,7 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
 
 void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size)
 {
-    D3DFORMAT d3dfmt = ConvertTextureFormatType(internalformat);
+    D3DFORMAT d3dfmt = ConvertTextureInternalFormat(internalformat);
     DWORD d3dusage = GetTextureUsage(d3dfmt, mUsage, false);
 
     delete mTexStorage;
