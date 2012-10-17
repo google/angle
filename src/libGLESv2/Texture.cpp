@@ -1354,11 +1354,22 @@ bool Texture::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *sou
 {
     if (source && dest)
     {
-        HRESULT result;
+        HRESULT result = D3DERR_OUTOFVIDEOMEMORY;
 
         if (fromManaged)
         {
-            result = D3DXLoadSurfaceFromSurface(dest, NULL, NULL, source, NULL, NULL, D3DX_FILTER_BOX, 0);
+            D3DSURFACE_DESC desc;
+            source->GetDesc(&desc);
+
+            IDirect3DSurface9 *surf = 0;
+            result = getDevice()->CreateOffscreenPlainSurface(desc.Width, desc.Height, desc.Format, D3DPOOL_SYSTEMMEM, &surf, NULL);
+
+            if (SUCCEEDED(result))
+            {
+                CopyLockableSurfaces(surf, source);
+                result = getDevice()->UpdateSurface(surf, NULL, dest, NULL);
+                surf->Release();
+            }
         }
         else
         {
