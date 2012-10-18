@@ -13,6 +13,7 @@
 #define LIBGLESV2_D3DCONSTANTTABLE_H_
 
 #include <vector>
+#include <string>
 
 #include "common/angleutils.h"
 
