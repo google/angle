@@ -56,22 +56,22 @@ namespace gl
 
 print "const static unsigned g_mantissa[2048] = {"
 for i in range(0, 2048):
-    print "    %08x," % convertMantissa(i)
+    print "    %#010x," % convertMantissa(i)
 print "};\n"
 
 print "const static unsigned g_exponent[64] = {"
 for i in range(0, 64):
-    print "    %08x," % convertExponent(i)
+    print "    %#010x," % convertExponent(i)
 print "};\n"
 
 print "const static unsigned g_offset[64] = {"
 for i in range(0, 64):
-    print "    %08x," % convertOffset(i)
+    print "    %#010x," % convertOffset(i)
 print "};\n"
 
 print """float float16ToFloat32(unsigned short h)
 {
-    unsigned i32 = =g_mantissa[g_offset[h >> 10] + (h & 0x3ff)] + g_exponent[h >> 10];
+    unsigned i32 = g_mantissa[g_offset[h >> 10] + (h & 0x3ff)] + g_exponent[h >> 10];
     return *(float*) &i32;
 }
 }
