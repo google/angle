@@ -147,6 +147,7 @@
     <ClCompile Include="Tokenizer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\length_limits.h" />
     <ClInclude Include="Diagnostics.h" />
     <ClInclude Include="DirectiveHandler.h" />
     <ClInclude Include="DirectiveParser.h" />

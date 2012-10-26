@@ -5,9 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Source Files\preprocessor">
-      <UniqueIdentifier>{07ca6c97-7c56-487a-9d31-734b9a8cbaf9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\generated">
       <UniqueIdentifier>{eb8da157-b29c-43c3-880d-54679e176dc5}</UniqueIdentifier>
     </Filter>
@@ -20,9 +17,6 @@
     <Filter Include="Header Files">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Header Files\preprocessor">
-      <UniqueIdentifier>{6df3c7a8-5701-4e69-b75e-d81cb0961cec}</UniqueIdentifier>
     </Filter>
     <Filter Include="Header Files\generated">
       <UniqueIdentifier>{094f7115-35d3-4c63-870c-ab5f393dc2c2}</UniqueIdentifier>
@@ -115,27 +109,6 @@
     </ClCompile>
     <ClCompile Include="VariablePacker.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="preprocessor\atom.c">
-      <Filter>Source Files\preprocessor</Filter>
-    </ClCompile>
-    <ClCompile Include="preprocessor\cpp.c">
-      <Filter>Source Files\preprocessor</Filter>
-    </ClCompile>
-    <ClCompile Include="preprocessor\cppstruct.c">
-      <Filter>Source Files\preprocessor</Filter>
-    </ClCompile>
-    <ClCompile Include="preprocessor\memory.c">
-      <Filter>Source Files\preprocessor</Filter>
-    </ClCompile>
-    <ClCompile Include="preprocessor\scanner.c">
-      <Filter>Source Files\preprocessor</Filter>
-    </ClCompile>
-    <ClCompile Include="preprocessor\symbols.c">
-      <Filter>Source Files\preprocessor</Filter>
-    </ClCompile>
-    <ClCompile Include="preprocessor\tokens.c">
-      <Filter>Source Files\preprocessor</Filter>
     </ClCompile>
     <ClCompile Include="glslang_lex.cpp">
       <Filter>Source Files\generated</Filter>
@@ -261,39 +234,6 @@
     </ClInclude>
     <ClInclude Include="VariablePacker.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="preprocessor\atom.h">
-      <Filter>Header Files\preprocessor</Filter>
-    </ClInclude>
-    <ClInclude Include="preprocessor\compile.h">
-      <Filter>Header Files\preprocessor</Filter>
-    </ClInclude>
-    <ClInclude Include="preprocessor\cpp.h">
-      <Filter>Header Files\preprocessor</Filter>
-    </ClInclude>
-    <ClInclude Include="preprocessor\length_limits.h">
-      <Filter>Header Files\preprocessor</Filter>
-    </ClInclude>
-    <ClInclude Include="preprocessor\memory.h">
-      <Filter>Header Files\preprocessor</Filter>
-    </ClInclude>
-    <ClInclude Include="preprocessor\parser.h">
-      <Filter>Header Files\preprocessor</Filter>
-    </ClInclude>
-    <ClInclude Include="preprocessor\preprocess.h">
-      <Filter>Header Files\preprocessor</Filter>
-    </ClInclude>
-    <ClInclude Include="preprocessor\scanner.h">
-      <Filter>Header Files\preprocessor</Filter>
-    </ClInclude>
-    <ClInclude Include="preprocessor\slglobals.h">
-      <Filter>Header Files\preprocessor</Filter>
-    </ClInclude>
-    <ClInclude Include="preprocessor\symbols.h">
-      <Filter>Header Files\preprocessor</Filter>
-    </ClInclude>
-    <ClInclude Include="preprocessor\tokens.h">
-      <Filter>Header Files\preprocessor</Filter>
     </ClInclude>
     <ClInclude Include="glslang_tab.h">
       <Filter>Header Files\generated</Filter>
