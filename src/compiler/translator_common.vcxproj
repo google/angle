@@ -266,7 +266,7 @@
     <ClInclude Include="depgraph\DependencyGraphOutput.h" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="preprocessor\new\preprocessor.vcxproj">
+    <ProjectReference Include="preprocessor\preprocessor.vcxproj">
       <Project>{fbe32df3-0fb0-4f2f-a424-2c21bd7bc325}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <Private>true</Private>

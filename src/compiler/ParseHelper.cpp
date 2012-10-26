@@ -10,7 +10,7 @@
 #include <stdio.h>
 
 #include "compiler/glslang.h"
-#include "compiler/preprocessor/new/SourceLocation.h"
+#include "compiler/preprocessor/SourceLocation.h"
 
 ///////////////////////////////////////////////////////////////////////
 //

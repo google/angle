@@ -9,7 +9,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "translator_hlsl", "compiler
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "translator_common", "compiler\translator_common.vcxproj", "{5B3A6DB8-1E7E-40D7-92B9-DA8AAE619FAD}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "preprocessor", "compiler\preprocessor\new\preprocessor.vcxproj", "{FBE32DF3-0FB0-4F2F-A424-2C21BD7BC325}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "preprocessor", "compiler\preprocessor\preprocessor.vcxproj", "{FBE32DF3-0FB0-4F2F-A424-2C21BD7BC325}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

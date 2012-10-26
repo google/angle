@@ -9,7 +9,7 @@
 #include "compiler/Diagnostics.h"
 #include "compiler/DirectiveHandler.h"
 #include "compiler/localintermediate.h"
-#include "compiler/preprocessor/new/Preprocessor.h"
+#include "compiler/preprocessor/Preprocessor.h"
 #include "compiler/ShHandle.h"
 #include "compiler/SymbolTable.h"
 

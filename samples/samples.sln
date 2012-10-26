@@ -32,7 +32,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "translator_common", "..\src
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PostSubBuffer", "gles2_book\PostSubBuffer\PostSubBuffer.vcxproj", "{667CE95F-5DD8-4495-8C18-5CA8A175B12D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "preprocessor", "..\src\compiler\preprocessor\new\preprocessor.vcxproj", "{FBE32DF3-0FB0-4F2F-A424-2C21BD7BC325}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "preprocessor", "..\src\compiler\preprocessor\preprocessor.vcxproj", "{FBE32DF3-0FB0-4F2F-A424-2C21BD7BC325}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

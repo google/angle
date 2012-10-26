@@ -8,7 +8,7 @@
 
 #include "compiler/debug.h"
 #include "compiler/InfoSink.h"
-#include "compiler/preprocessor/new/SourceLocation.h"
+#include "compiler/preprocessor/SourceLocation.h"
 
 TDiagnostics::TDiagnostics(TInfoSink& infoSink) :
     mInfoSink(infoSink),
