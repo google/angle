@@ -400,18 +400,12 @@ void updateExtensionBehavior(const char* extName, const char* behavior)
 }  // extern "C"
 
 int string_input(char* buf, int max_size, yyscan_t yyscanner) {
-    int len = 0;
-
-#if ANGLE_USE_NEW_PREPROCESSOR
     pp::Token token;
     yyget_extra(yyscanner)->preprocessor.lex(&token);
-    len = token.type == pp::Token::LAST ? 0 : token.text.size();
+    int len = token.type == pp::Token::LAST ? 0 : token.text.size();
     if ((len > 0) && (len < max_size))
         memcpy(buf, token.text.c_str(), len);
     yyset_lineno(EncodeSourceLoc(token.location.file, token.location.line), yyscanner);
-#else
-    len = yylex_CPP(buf, max_size);
-#endif  // ANGLE_USE_NEW_PREPROCESSOR
 
     if (len >= max_size)
         YY_FATAL_ERROR("Input buffer overflow");
@@ -471,9 +465,6 @@ int glslang_finalize(TParseContext* context) {
     context->scanner = NULL;
     yylex_destroy(scanner);
 
-#if !ANGLE_USE_NEW_PREPROCESSOR
-    FinalizePreprocessor();
-#endif
     return 0;
 }
 
@@ -484,27 +475,14 @@ int glslang_scan(int count, const char* const string[], const int length[],
     context->AfterEOF = false;
 
     // Initialize preprocessor.
-#if ANGLE_USE_NEW_PREPROCESSOR
     if (!context->preprocessor.init(count, string, length))
         return 1;
-#else
-    if (InitPreprocessor())
-        return 1;
-    cpp->pC = context;
-    cpp->pastFirstStatement = 0;
-    if (InitScannerInput(cpp, count, string, length))
-        return 1;
-#endif  // ANGLE_USE_NEW_PREPROCESSOR
 
     // Define extension macros.
     const TExtensionBehavior& extBehavior = context->extensionBehavior();
     for (TExtensionBehavior::const_iterator iter = extBehavior.begin();
          iter != extBehavior.end(); ++iter) {
-#if ANGLE_USE_NEW_PREPROCESSOR
         context->preprocessor.predefineMacro(iter->first.c_str(), 1);
-#else
-        PredefineIntMacro(iter->first.c_str(), 1);
-#endif
     }
     return 0;
 }
