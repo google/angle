@@ -1476,6 +1476,23 @@ GLenum Texture::getUsage() const
     return mUsage;
 }
 
+bool Texture::isMipmapFiltered() const
+{
+    switch (mMinFilter)
+    {
+      case GL_NEAREST:
+      case GL_LINEAR:
+        return false;
+      case GL_NEAREST_MIPMAP_NEAREST:
+      case GL_LINEAR_MIPMAP_NEAREST:
+      case GL_NEAREST_MIPMAP_LINEAR:
+      case GL_LINEAR_MIPMAP_LINEAR:
+        return true;
+      default: UNREACHABLE();
+        return false;
+    }
+}
+
 void Texture::setImage(GLint unpackAlignment, const void *pixels, Image *image)
 {
     if (pixels != NULL)
@@ -2045,22 +2062,7 @@ bool Texture2D::isSamplerComplete() const
         return false;
     }
 
-    bool mipmapping = false;
-
-    switch (mMinFilter)
-    {
-      case GL_NEAREST:
-      case GL_LINEAR:
-        mipmapping = false;
-        break;
-      case GL_NEAREST_MIPMAP_NEAREST:
-      case GL_LINEAR_MIPMAP_NEAREST:
-      case GL_NEAREST_MIPMAP_LINEAR:
-      case GL_LINEAR_MIPMAP_LINEAR:
-        mipmapping = true;
-        break;
-      default: UNREACHABLE();
-    }
+    bool mipmapping = isMipmapFiltered();
 
     if ((IsFloat32Format(getInternalFormat(0)) && !getContext()->supportsFloat32LinearFilter()) ||
         (IsFloat16Format(getInternalFormat(0)) && !getContext()->supportsFloat16LinearFilter()))
@@ -2187,7 +2189,9 @@ void Texture2D::createTexture()
 
 void Texture2D::updateTexture()
 {
-    int levels = levelCount();
+    bool mipmapping = (isMipmapFiltered() && isMipmapComplete());
+
+    int levels = (mipmapping ? levelCount() : 1);
 
     for (int level = 0; level < levels; level++)
     {
@@ -2598,24 +2602,7 @@ bool TextureCubeMap::isSamplerComplete() const
 {
     int size = mImageArray[0][0].getWidth();
 
-    bool mipmapping;
-
-    switch (mMinFilter)
-    {
-      case GL_NEAREST:
-      case GL_LINEAR:
-        mipmapping = false;
-        break;
-      case GL_NEAREST_MIPMAP_NEAREST:
-      case GL_LINEAR_MIPMAP_NEAREST:
-      case GL_NEAREST_MIPMAP_LINEAR:
-      case GL_LINEAR_MIPMAP_LINEAR:
-        mipmapping = true;
-        break;
-      default:
-        UNREACHABLE();
-        return false;
-    }
+    bool mipmapping = isMipmapFiltered();
 
     if ((gl::ExtractType(getInternalFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0)) == GL_FLOAT && !getContext()->supportsFloat32LinearFilter()) ||
         (gl::ExtractType(getInternalFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0) == GL_HALF_FLOAT_OES) && !getContext()->supportsFloat16LinearFilter()))
@@ -2752,9 +2739,12 @@ void TextureCubeMap::createTexture()
 
 void TextureCubeMap::updateTexture()
 {
+    bool mipmapping = isMipmapFiltered() && isMipmapCubeComplete();
+
     for (int face = 0; face < 6; face++)
     {
-        int levels = levelCount();
+        int levels = (mipmapping ? levelCount() : 1);
+
         for (int level = 0; level < levels; level++)
         {
             Image *image = &mImageArray[face][level];

@@ -190,6 +190,7 @@ class Texture : public RefCountObject
     GLenum getWrapT() const;
     float getMaxAnisotropy() const;
     GLenum getUsage() const;
+    bool isMipmapFiltered() const;
 
     virtual bool isSamplerComplete() const = 0;
 
