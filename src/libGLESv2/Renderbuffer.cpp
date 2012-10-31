@@ -379,14 +379,13 @@ unsigned int RenderbufferStorage::issueCubeSerials()
     return firstSerial;
 }
 
-Colorbuffer::Colorbuffer(IDirect3DSurface9 *renderTarget) : mRenderTarget(renderTarget)
+Colorbuffer::Colorbuffer(renderer::SwapChain *swapChain)
 {
-    if (renderTarget)
+    mRenderTarget = swapChain->getRenderTarget();
+    if (mRenderTarget)
     {
-        renderTarget->AddRef();
-
         D3DSURFACE_DESC description;
-        renderTarget->GetDesc(&description);
+        mRenderTarget->GetDesc(&description);
 
         mWidth = description.Width;
         mHeight = description.Height;

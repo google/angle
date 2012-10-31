@@ -19,6 +19,8 @@
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
 
+#include "renderer/SwapChain.h"
+
 namespace gl
 {
 class Texture2D;
@@ -199,7 +201,7 @@ class Renderbuffer : public RefCountObject
 class Colorbuffer : public RenderbufferStorage
 {
   public:
-    explicit Colorbuffer(IDirect3DSurface9 *renderTarget);
+    explicit Colorbuffer(renderer::SwapChain *swapChain);
     Colorbuffer(GLsizei width, GLsizei height, GLenum format, GLsizei samples);
 
     virtual ~Colorbuffer();

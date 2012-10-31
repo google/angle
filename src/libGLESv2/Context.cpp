@@ -319,19 +319,13 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
     // Wrap the existing Direct3D 9 resources into GL objects and assign them to the '0' names
     // D3D9_REPLACE
     renderer::SwapChain *swapchain = surface->getSwapChain();
-    IDirect3DSurface9 *defaultRenderTarget = swapchain->getRenderTarget();
     IDirect3DSurface9 *depthStencil = swapchain->getDepthStencil();
 
-    Colorbuffer *colorbufferZero = new Colorbuffer(defaultRenderTarget);
+    Colorbuffer *colorbufferZero = new Colorbuffer(swapchain);
     DepthStencilbuffer *depthStencilbufferZero = new DepthStencilbuffer(depthStencil);
     Framebuffer *framebufferZero = new DefaultFramebuffer(colorbufferZero, depthStencilbufferZero);
 
     setFramebufferZero(framebufferZero);
-
-    if (defaultRenderTarget)
-    {
-        defaultRenderTarget->Release();
-    }
 
     if (depthStencil)
     {
