@@ -78,10 +78,7 @@ enum
     MAX_COMBINED_TEXTURE_IMAGE_UNITS_VTF = MAX_TEXTURE_IMAGE_UNITS + MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF,    
     MAX_FRAGMENT_UNIFORM_VECTORS_SM2 = 32 - 3,    // Reserve space for dx_Coord, dx_Depth, and dx_DepthRange. dx_PointOrLines and dx_FrontCCW use separate bool registers.
     MAX_FRAGMENT_UNIFORM_VECTORS_SM3 = 224 - 3,
-    MAX_DRAW_BUFFERS = 1,
-
-    GL_BGRA4_ANGLEX = 0x6ABC,
-    GL_BGR5_A1_ANGLEX = 0x6ABD
+    MAX_DRAW_BUFFERS = 1
 };
 
 enum QueryType

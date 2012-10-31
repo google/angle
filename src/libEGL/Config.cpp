@@ -13,39 +13,38 @@
 #include <algorithm>
 #include <vector>
 
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+
 #include "common/debug.h"
 
 using namespace std;
 
 namespace egl
 {
-Config::Config(D3DDISPLAYMODE displayMode, EGLint minInterval, EGLint maxInterval, D3DFORMAT renderTargetFormat, D3DFORMAT depthStencilFormat, EGLint multiSample, EGLint texWidth, EGLint texHeight)
-    : mDisplayMode(displayMode), mRenderTargetFormat(renderTargetFormat), mDepthStencilFormat(depthStencilFormat), mMultiSample(multiSample)
+Config::Config(EGLenum displayFormat, EGLint displayWidth, EGLint displayHeight, EGLint minInterval, EGLint maxInterval, 
+               EGLenum renderTargetFormat, EGLenum depthStencilFormat, EGLint multiSample, EGLint texWidth, EGLint texHeight)
+    : mDisplayFormat(displayFormat), mDisplayWidth(displayWidth), mDisplayHeight(displayHeight), mRenderTargetFormat(renderTargetFormat), mDepthStencilFormat(depthStencilFormat),
+      mMultiSample(multiSample)
 {
-    set(displayMode, minInterval, maxInterval, renderTargetFormat, depthStencilFormat, multiSample, texWidth, texHeight);
+    set(minInterval, maxInterval, renderTargetFormat, depthStencilFormat, multiSample, texWidth, texHeight);
 }
 
-void Config::set(D3DDISPLAYMODE displayMode, EGLint minInterval, EGLint maxInterval, D3DFORMAT renderTargetFormat, D3DFORMAT depthStencilFormat, EGLint multiSample, EGLint texWidth, EGLint texHeight)
+void Config::set(EGLint minInterval, EGLint maxInterval, EGLenum renderTargetFormat, EGLenum depthStencilFormat,
+                 EGLint multiSample, EGLint texWidth, EGLint texHeight)
 {
     mBindToTextureRGB = EGL_FALSE;
     mBindToTextureRGBA = EGL_FALSE;
     switch (renderTargetFormat)
     {
-      case D3DFMT_A1R5G5B5:
+      case GL_RGB5_A1:
         mBufferSize = 16;
         mRedSize = 5;
         mGreenSize = 5;
         mBlueSize = 5;
         mAlphaSize = 1;
         break;
-      case D3DFMT_A2R10G10B10:
-        mBufferSize = 32;
-        mRedSize = 10;
-        mGreenSize = 10;
-        mBlueSize = 10;
-        mAlphaSize = 2;
-        break;
-      case D3DFMT_A8R8G8B8:
+      case GL_RGBA8_OES:
         mBufferSize = 32;
         mRedSize = 8;
         mGreenSize = 8;
@@ -53,14 +52,14 @@ void Config::set(D3DDISPLAYMODE displayMode, EGLint minInterval, EGLint maxInter
         mAlphaSize = 8;
         mBindToTextureRGBA = true;
         break;
-      case D3DFMT_R5G6B5:
+      case GL_RGB565:
         mBufferSize = 16;
         mRedSize = 5;
         mGreenSize = 6;
         mBlueSize = 5;
         mAlphaSize = 0;
         break;
-      case D3DFMT_X8R8G8B8:
+      case GL_RGB8_OES:
         mBufferSize = 32;
         mRedSize = 8;
         mGreenSize = 8;
@@ -75,52 +74,32 @@ void Config::set(D3DDISPLAYMODE displayMode, EGLint minInterval, EGLint maxInter
     mLuminanceSize = 0;
     mAlphaMaskSize = 0;
     mColorBufferType = EGL_RGB_BUFFER;
-    mConfigCaveat = (displayMode.Format == renderTargetFormat) ? EGL_NONE : EGL_SLOW_CONFIG;
+    mConfigCaveat = (mDisplayFormat == renderTargetFormat) ? EGL_NONE : EGL_SLOW_CONFIG;
     mConfigID = 0;
     mConformant = EGL_OPENGL_ES2_BIT;
 
     switch (depthStencilFormat)
     {
-      case D3DFMT_UNKNOWN:
+      case GL_NONE:
         mDepthSize = 0;
         mStencilSize = 0;
         break;
-//    case D3DFMT_D16_LOCKABLE:
-//      mDepthSize = 16;
-//      mStencilSize = 0;
-//      break;
-      case D3DFMT_D32:
+      case GL_DEPTH_COMPONENT32_OES:
         mDepthSize = 32;
         mStencilSize = 0;
         break;
-      case D3DFMT_D15S1:
-        mDepthSize = 15;
-        mStencilSize = 1;
-        break;
-      case D3DFMT_D24S8:
+      case GL_DEPTH24_STENCIL8_OES:
         mDepthSize = 24;
         mStencilSize = 8;
         break;
-      case D3DFMT_D24X8:
+      case GL_DEPTH_COMPONENT24_OES:
         mDepthSize = 24;
         mStencilSize = 0;
         break;
-      case D3DFMT_D24X4S4:
-        mDepthSize = 24;
-        mStencilSize = 4;
-        break;
-      case D3DFMT_D16:
+      case GL_DEPTH_COMPONENT16:
         mDepthSize = 16;
         mStencilSize = 0;
         break;
-//    case D3DFMT_D32F_LOCKABLE:
-//      mDepthSize = 32;
-//      mStencilSize = 0;
-//      break;
-//    case D3DFMT_D24FS8:
-//      mDepthSize = 24;
-//      mStencilSize = 8;
-//      break;
       default:
         UNREACHABLE();
     }
@@ -251,10 +230,11 @@ ConfigSet::ConfigSet()
 {
 }
 
-void ConfigSet::add(D3DDISPLAYMODE displayMode, EGLint minSwapInterval, EGLint maxSwapInterval, D3DFORMAT renderTargetFormat, D3DFORMAT depthStencilFormat, EGLint multiSample, EGLint texWidth, EGLint texHeight)
+void ConfigSet::add(EGLenum displayFormat, EGLint displayWidth, EGLint displayHeight, EGLint minSwapInterval, EGLint maxSwapInterval,
+                    EGLenum renderTargetFormat, EGLenum depthStencilFormat,EGLint multiSample, EGLint texWidth, EGLint texHeight)
 {
-    Config config(displayMode, minSwapInterval, maxSwapInterval, renderTargetFormat, depthStencilFormat, multiSample, texWidth, texHeight);
-
+    Config config(displayFormat, displayWidth, displayHeight, minSwapInterval, maxSwapInterval, renderTargetFormat, depthStencilFormat,
+                  multiSample, texWidth, texHeight);
     mSet.insert(config);
 }
 

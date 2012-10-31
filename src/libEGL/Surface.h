@@ -59,7 +59,7 @@ class Surface
 
     virtual EGLenum getTextureFormat() const;
     virtual EGLenum getTextureTarget() const;
-    virtual D3DFORMAT getFormat() const;
+    virtual EGLenum getFormat() const;
 
     virtual void setBoundTexture(gl::Texture2D *texture);
     virtual gl::Texture2D *getBoundTexture() const;

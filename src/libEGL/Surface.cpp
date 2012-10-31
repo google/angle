@@ -228,7 +228,7 @@ bool Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
     }
 
     result = device->CreateTexture(backbufferWidth, backbufferHeight, 1, D3DUSAGE_RENDERTARGET,
-                                   mConfig->mRenderTargetFormat, D3DPOOL_DEFAULT, &mOffscreenTexture, pShareHandle);
+                                   ConvertRenderbufferFormat(mConfig->mRenderTargetFormat), D3DPOOL_DEFAULT, &mOffscreenTexture, pShareHandle);
 
     if (FAILED(result))
     {
@@ -280,9 +280,9 @@ bool Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
     if (mWindow)
     {
         D3DPRESENT_PARAMETERS presentParameters = {0};
-        presentParameters.AutoDepthStencilFormat = mConfig->mDepthStencilFormat;
+        presentParameters.AutoDepthStencilFormat = ConvertRenderbufferFormat(mConfig->mDepthStencilFormat);
         presentParameters.BackBufferCount = 1;
-        presentParameters.BackBufferFormat = mConfig->mRenderTargetFormat;
+        presentParameters.BackBufferFormat = ConvertRenderbufferFormat(mConfig->mRenderTargetFormat);
         presentParameters.EnableAutoDepthStencil = FALSE;
         presentParameters.Flags = 0;
         presentParameters.hDeviceWindow = getWindowHandle();
@@ -334,7 +334,8 @@ bool Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
 
     if (mConfig->mDepthStencilFormat != D3DFMT_UNKNOWN)
     {
-        result = device->CreateDepthStencilSurface(backbufferWidth, backbufferHeight, mConfig->mDepthStencilFormat, D3DMULTISAMPLE_NONE,
+        result = device->CreateDepthStencilSurface(backbufferWidth, backbufferHeight, 
+                                                   ConvertRenderbufferFormat(mConfig->mDepthStencilFormat), D3DMULTISAMPLE_NONE,
                                                    0, FALSE, &mDepthStencil, NULL);
 
         if (FAILED(result))
@@ -689,7 +690,7 @@ gl::Texture2D *Surface::getBoundTexture() const
     return mTexture;
 }
 
-D3DFORMAT Surface::getFormat() const
+EGLenum Surface::getFormat() const
 {
     return mConfig->mRenderTargetFormat;
 }

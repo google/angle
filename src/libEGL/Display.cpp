@@ -16,7 +16,6 @@
 
 #include "common/debug.h"
 #include "libGLESv2/mathutil.h"
-#include "libGLESv2/utilities.h"
 
 #include "libEGL/main.h"
 
@@ -60,6 +59,8 @@ GLenum ConvertDepthStencilFormat(D3DFORMAT format)
         return GL_DEPTH_COMPONENT16;
       case D3DFMT_D24S8:
         return GL_DEPTH24_STENCIL8_OES;
+      case D3DFMT_UNKNOWN:
+        return GL_NONE;  // This case diverges from the one in utilities-- but this function gets removed imminently.
       default:
         UNREACHABLE();
     }
@@ -215,7 +216,8 @@ bool Display::initialize()
                     {
                         // FIXME: enumerate multi-sampling
 
-                        configSet.add(currentDisplayMode, mMinSwapInterval, mMaxSwapInterval, renderTargetFormat, depthStencilFormat, 0,
+                        configSet.add(ConvertBackBufferFormat(currentDisplayMode.Format), currentDisplayMode.Width, currentDisplayMode.Height, mMinSwapInterval, mMaxSwapInterval, 
+                                      ConvertBackBufferFormat(renderTargetFormat), ConvertDepthStencilFormat(depthStencilFormat), 0,
                                       mRenderer->getMaxTextureWidth(), mRenderer->getMaxTextureHeight());
                     }
                 }

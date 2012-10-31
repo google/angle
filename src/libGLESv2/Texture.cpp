@@ -1835,20 +1835,7 @@ void Texture2D::bindTexImage(egl::Surface *surface)
 {
     releaseTexImage();
 
-    GLint internalformat;
-
-    switch(surface->getFormat())
-    {
-      case D3DFMT_A8R8G8B8:
-        internalformat = GL_RGBA8_OES;
-        break;
-      case D3DFMT_X8R8G8B8:
-        internalformat = GL_RGB8_OES;
-        break;
-      default:
-        UNIMPLEMENTED();
-        return;
-    }
+    GLint internalformat = surface->getFormat();
 
     mImageArray[0].redefine(internalformat, surface->getWidth(), surface->getHeight(), true);
 

@@ -13,7 +13,6 @@
 
 #define EGLAPI
 #include <EGL/egl.h>
-#include <d3d9.h>
 
 #include <set>
 
@@ -26,15 +25,19 @@ class Display;
 class Config
 {
   public:
-    Config(D3DDISPLAYMODE displayMode, EGLint minSwapInterval, EGLint maxSwapInterval, D3DFORMAT renderTargetFormat, D3DFORMAT depthStencilFormat, EGLint multiSample, EGLint texWidth, EGLint texHeight);
+    Config(EGLenum displayFormat, EGLint displayWidth, EGLint displayHeight, EGLint minSwapInterval, EGLint maxSwapInterval, 
+           EGLenum renderTargetFormat, EGLenum depthStencilFormat, EGLint multiSample, EGLint texWidth, EGLint texHeight);
 
-    void set(D3DDISPLAYMODE displayMode, EGLint minSwapInterval, EGLint maxSwapInterval, D3DFORMAT renderTargetFormat, D3DFORMAT depthStencilFormat, EGLint multiSample, EGLint texWidth, EGLint texHeight);
+    void set(EGLint minSwapInterval, EGLint maxSwapInterval, EGLenum renderTargetFormat, EGLenum depthStencilFormat,
+             EGLint multiSample, EGLint texWidth, EGLint texHeight);
     EGLConfig getHandle() const;
 
-    const D3DDISPLAYMODE mDisplayMode;
-    const D3DFORMAT mRenderTargetFormat;
-    const D3DFORMAT mDepthStencilFormat;
+    const EGLenum mRenderTargetFormat;
+    const EGLenum mDepthStencilFormat;
     const EGLint mMultiSample;
+    const EGLint mDisplayWidth;
+    const EGLint mDisplayHeight;
+    const EGLenum mDisplayFormat;
 
     EGLint mBufferSize;              // Depth of the color buffer
     EGLint mRedSize;                 // Bits of Red in the color buffer
@@ -98,7 +101,8 @@ class ConfigSet
   public:
     ConfigSet();
 
-    void add(D3DDISPLAYMODE displayMode, EGLint minSwapInterval, EGLint maxSwapInterval, D3DFORMAT renderTargetFormat, D3DFORMAT depthStencilFormat, EGLint multiSample, EGLint texWidth, EGLint texHeight);
+    void add(EGLenum displayFormat, EGLint displayWidth, EGLint displayHeight, EGLint minSwapInterval, EGLint maxSwapInterval,
+             EGLenum renderTargetFormat, EGLenum depthStencilFormat, EGLint multiSample, EGLint texWidth, EGLint texHeight);
     size_t size() const;
     bool getConfigs(EGLConfig *configs, const EGLint *attribList, EGLint configSize, EGLint *numConfig);
     const egl::Config *get(EGLConfig configHandle);
