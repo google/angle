@@ -111,16 +111,14 @@ class Texture : public RefCountObject
     GLint creationLevels(GLsizei width, GLsizei height) const;
     GLint creationLevels(GLsizei size) const;
 
-    virtual IDirect3DBaseTexture9 *getBaseTexture() const = 0;
     virtual void createTexture() = 0;
     virtual void updateTexture() = 0;
     virtual void convertToRenderTarget() = 0;
     virtual IDirect3DSurface9 *getRenderTarget(GLenum target) = 0;
 
-    int levelCount();
+    virtual int levelCount() = 0;
 
     static Blit *getBlitter();
-    static bool copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *source, bool fromManaged);
 
     SamplerState mSamplerState;
     bool mDirtyParameters;
@@ -175,11 +173,11 @@ class Texture2D : public Texture
     friend class RenderbufferTexture2D;
     virtual IDirect3DSurface9 *getRenderTarget(GLenum target);
     virtual IDirect3DSurface9 *getDepthStencil(GLenum target);
+    virtual int levelCount();
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture2D);
 
-    virtual IDirect3DBaseTexture9 *getBaseTexture() const;
     virtual void createTexture();
     virtual void updateTexture();
     virtual void convertToRenderTarget();
@@ -248,11 +246,11 @@ class TextureCubeMap : public Texture
   protected:
     friend class RenderbufferTextureCubeMap;
     virtual IDirect3DSurface9 *getRenderTarget(GLenum target);
+    virtual int levelCount();
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureCubeMap);
 
-    virtual IDirect3DBaseTexture9 *getBaseTexture() const;
     virtual void createTexture();
     virtual void updateTexture();
     virtual void convertToRenderTarget();

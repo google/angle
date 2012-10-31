@@ -502,54 +502,10 @@ GLint Texture::creationLevels(GLsizei size) const
     return creationLevels(size, size);
 }
 
-int Texture::levelCount()
-{
-    return getBaseTexture() ? getBaseTexture()->GetLevelCount() - getLodOffset() : 0;
-}
-
 Blit *Texture::getBlitter()
 {
     Context *context = getContext();
     return context->getBlitter();
-}
-
-bool Texture::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *source, bool fromManaged)
-{
-    if (source && dest)
-    {
-        HRESULT result = D3DERR_OUTOFVIDEOMEMORY;
-        renderer::Renderer9 *renderer = getDisplay()->getRenderer();
-        IDirect3DDevice9 *device = renderer->getDevice(); // D3D9_REPLACE
-
-        if (fromManaged)
-        {
-            D3DSURFACE_DESC desc;
-            source->GetDesc(&desc);
-
-            IDirect3DSurface9 *surf = 0;
-            result = device->CreateOffscreenPlainSurface(desc.Width, desc.Height, desc.Format, D3DPOOL_SYSTEMMEM, &surf, NULL);
-
-            if (SUCCEEDED(result))
-            {
-                Image::CopyLockableSurfaces(surf, source);
-                result = device->UpdateSurface(surf, NULL, dest, NULL);
-                surf->Release();
-            }
-        }
-        else
-        {
-            renderer->endScene();
-            result = device->StretchRect(source, NULL, dest, NULL, D3DTEXF_NONE);
-        }
-
-        if (FAILED(result))
-        {
-            ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-            return false;
-        }
-    }
-
-    return true;
 }
 
 Texture2D::Texture2D(GLuint id) : Texture(id)
@@ -961,11 +917,6 @@ bool Texture2D::isDepth(GLint level) const
     return IsDepthTexture(getInternalFormat(level));
 }
 
-IDirect3DBaseTexture9 *Texture2D::getBaseTexture() const
-{
-    return mTexStorage ? mTexStorage->getBaseTexture() : NULL;
-}
-
 // Constructs a native texture resource from the texture images
 void Texture2D::createTexture()
 {
@@ -1026,22 +977,10 @@ void Texture2D::convertToRenderTarget()
 
         if (mTexStorage != NULL)
         {
-            int levels = levelCount();
-            for (int i = 0; i < levels; i++)
-            {
-                IDirect3DSurface9 *source = mTexStorage->getSurfaceLevel(i, false);
-                IDirect3DSurface9 *dest = newTexStorage->getSurfaceLevel(i, true);
-
-                if (!copyToRenderTarget(dest, source, mTexStorage->isManaged()))
-                {   
-                   delete newTexStorage;
-                   if (source) source->Release();
-                   if (dest) dest->Release();
-                   return error(GL_OUT_OF_MEMORY);
-                }
-
-                if (source) source->Release();
-                if (dest) dest->Release();
+            if (!TextureStorage2D::copyToRenderTarget(newTexStorage, mTexStorage))
+            {   
+                delete newTexStorage;
+                return error(GL_OUT_OF_MEMORY);
             }
         }
     }
@@ -1162,6 +1101,11 @@ IDirect3DSurface9 *Texture2D::getDepthStencil(GLenum target)
         return NULL;
     }
     return mTexStorage->getSurfaceLevel(0, false);
+}
+
+int Texture2D::levelCount()
+{
+    return mTexStorage ? mTexStorage->levelCount() - getLodOffset() : 0;
 }
 
 TextureStorage *Texture2D::getStorage(bool renderTarget)
@@ -1438,11 +1382,6 @@ bool TextureCubeMap::isCompressed(GLenum target, GLint level) const
     return IsCompressed(getInternalFormat(target, level));
 }
 
-IDirect3DBaseTexture9 *TextureCubeMap::getBaseTexture() const
-{
-    return mTexStorage ? mTexStorage->getBaseTexture() : NULL;
-}
-
 // Constructs a native texture resource from the texture images, or returns an existing one
 void TextureCubeMap::createTexture()
 {
@@ -1507,25 +1446,10 @@ void TextureCubeMap::convertToRenderTarget()
 
         if (mTexStorage != NULL)
         {
-            int levels = levelCount();
-            for (int f = 0; f < 6; f++)
+            if (!TextureStorageCubeMap::copyToRenderTarget(newTexStorage, mTexStorage))
             {
-                for (int i = 0; i < levels; i++)
-                {
-                    IDirect3DSurface9 *source = mTexStorage->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i, false);
-                    IDirect3DSurface9 *dest = newTexStorage->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i, true);
-
-                    if (!copyToRenderTarget(dest, source, mTexStorage->isManaged()))
-                    {
-                       delete newTexStorage;
-                       if (source) source->Release();
-                       if (dest) dest->Release();
-                       return error(GL_OUT_OF_MEMORY);
-                    }
-
-                    if (source) source->Release();
-                    if (dest) dest->Release();
-                }
+                delete newTexStorage;
+                return error(GL_OUT_OF_MEMORY);
             }
         }
     }
@@ -1817,6 +1741,11 @@ IDirect3DSurface9 *TextureCubeMap::getRenderTarget(GLenum target)
     updateTexture();
     
     return mTexStorage->getCubeMapSurface(target, 0, false);
+}
+
+int TextureCubeMap::levelCount()
+{
+    return mTexStorage ? mTexStorage->levelCount() - getLodOffset() : 0;
 }
 
 TextureStorage *TextureCubeMap::getStorage(bool renderTarget)
