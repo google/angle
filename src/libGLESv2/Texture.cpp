@@ -1317,13 +1317,14 @@ int TextureStorage::getLodOffset() const
 
 Texture::Texture(GLuint id) : RefCountObject(id)
 {
-    mMinFilter = GL_NEAREST_MIPMAP_LINEAR;
-    mMagFilter = GL_LINEAR;
-    mWrapS = GL_REPEAT;
-    mWrapT = GL_REPEAT;
+    mSamplerState.minFilter = GL_NEAREST_MIPMAP_LINEAR;
+    mSamplerState.magFilter = GL_LINEAR;
+    mSamplerState.wrapS = GL_REPEAT;
+    mSamplerState.wrapT = GL_REPEAT;
+    mSamplerState.maxAnisotropy = 1.0f;
+    mSamplerState.lodOffset = 0;
     mDirtyParameters = true;
     mUsage = GL_NONE;
-    mMaxAnisotropy = 1.0f;
     
     mDirtyImages = true;
 
@@ -1346,9 +1347,9 @@ bool Texture::setMinFilter(GLenum filter)
       case GL_NEAREST_MIPMAP_LINEAR:
       case GL_LINEAR_MIPMAP_LINEAR:
         {
-            if (mMinFilter != filter)
+            if (mSamplerState.minFilter != filter)
             {
-                mMinFilter = filter;
+                mSamplerState.minFilter = filter;
                 mDirtyParameters = true;
             }
             return true;
@@ -1366,9 +1367,9 @@ bool Texture::setMagFilter(GLenum filter)
       case GL_NEAREST:
       case GL_LINEAR:
         {
-            if (mMagFilter != filter)
+            if (mSamplerState.magFilter != filter)
             {
-                mMagFilter = filter;
+                mSamplerState.magFilter = filter;
                 mDirtyParameters = true;
             }
             return true;
@@ -1387,9 +1388,9 @@ bool Texture::setWrapS(GLenum wrap)
       case GL_CLAMP_TO_EDGE:
       case GL_MIRRORED_REPEAT:
         {
-            if (mWrapS != wrap)
+            if (mSamplerState.wrapS != wrap)
             {
-                mWrapS = wrap;
+                mSamplerState.wrapS = wrap;
                 mDirtyParameters = true;
             }
             return true;
@@ -1408,9 +1409,9 @@ bool Texture::setWrapT(GLenum wrap)
       case GL_CLAMP_TO_EDGE:
       case GL_MIRRORED_REPEAT:
         {
-            if (mWrapT != wrap)
+            if (mSamplerState.wrapT != wrap)
             {
-                mWrapT = wrap;
+                mSamplerState.wrapT = wrap;
                 mDirtyParameters = true;
             }
             return true;
@@ -1428,9 +1429,9 @@ bool Texture::setMaxAnisotropy(float textureMaxAnisotropy, float contextMaxAniso
     {
         return false;
     }
-    if (mMaxAnisotropy != textureMaxAnisotropy)
+    if (mSamplerState.maxAnisotropy != textureMaxAnisotropy)
     {
-        mMaxAnisotropy = textureMaxAnisotropy;
+        mSamplerState.maxAnisotropy = textureMaxAnisotropy;
         mDirtyParameters = true;
     }
     return true;
@@ -1452,27 +1453,39 @@ bool Texture::setUsage(GLenum usage)
 
 GLenum Texture::getMinFilter() const
 {
-    return mMinFilter;
+    return mSamplerState.minFilter;
 }
 
 GLenum Texture::getMagFilter() const
 {
-    return mMagFilter;
+    return mSamplerState.magFilter;
 }
 
 GLenum Texture::getWrapS() const
 {
-    return mWrapS;
+    return mSamplerState.wrapS;
 }
 
 GLenum Texture::getWrapT() const
 {
-    return mWrapT;
+    return mSamplerState.wrapT;
 }
 
 float Texture::getMaxAnisotropy() const
 {
-    return mMaxAnisotropy;
+    return mSamplerState.maxAnisotropy;
+}
+
+int Texture::getLodOffset()
+{
+    TextureStorage *texture = getStorage(false);
+    return texture ? texture->getLodOffset() : 0;
+}
+
+void Texture::getSamplerState(SamplerState *sampler)
+{
+    *sampler = mSamplerState;
+    sampler->lodOffset = getLodOffset();
 }
 
 GLenum Texture::getUsage() const
@@ -1482,7 +1495,7 @@ GLenum Texture::getUsage() const
 
 bool Texture::isMipmapFiltered() const
 {
-    switch (mMinFilter)
+    switch (mSamplerState.minFilter)
     {
       case GL_NEAREST:
       case GL_LINEAR:
@@ -1586,12 +1599,6 @@ unsigned int Texture::getRenderTargetSerial(GLenum target)
 bool Texture::isImmutable() const
 {
     return mImmutable;
-}
-
-int Texture::getLodOffset()
-{
-    TextureStorage *texture = getStorage(false);
-    return texture ? texture->getLodOffset() : 0;
 }
 
 GLint Texture::creationLevels(GLsizei width, GLsizei height) const
@@ -2071,7 +2078,8 @@ bool Texture2D::isSamplerComplete() const
     if ((IsFloat32Format(getInternalFormat(0)) && !getContext()->supportsFloat32LinearFilter()) ||
         (IsFloat16Format(getInternalFormat(0)) && !getContext()->supportsFloat16LinearFilter()))
     {
-        if (mMagFilter != GL_NEAREST || (mMinFilter != GL_NEAREST && mMinFilter != GL_NEAREST_MIPMAP_NEAREST))
+        if (mSamplerState.magFilter != GL_NEAREST ||
+            (mSamplerState.minFilter != GL_NEAREST && mSamplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST))
         {
             return false;
         }
@@ -2081,8 +2089,8 @@ bool Texture2D::isSamplerComplete() const
 
     if (!npotSupport)
     {
-        if ((getWrapS() != GL_CLAMP_TO_EDGE && !isPow2(width)) ||
-            (getWrapT() != GL_CLAMP_TO_EDGE && !isPow2(height)))
+        if ((mSamplerState.wrapS != GL_CLAMP_TO_EDGE && !isPow2(width)) ||
+            (mSamplerState.wrapT != GL_CLAMP_TO_EDGE && !isPow2(height)))
         {
             return false;
         }
@@ -2611,7 +2619,8 @@ bool TextureCubeMap::isSamplerComplete() const
     if ((gl::ExtractType(getInternalFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0)) == GL_FLOAT && !getContext()->supportsFloat32LinearFilter()) ||
         (gl::ExtractType(getInternalFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0) == GL_HALF_FLOAT_OES) && !getContext()->supportsFloat16LinearFilter()))
     {
-        if (mMagFilter != GL_NEAREST || (mMinFilter != GL_NEAREST && mMinFilter != GL_NEAREST_MIPMAP_NEAREST))
+        if (mSamplerState.magFilter != GL_NEAREST ||
+            (mSamplerState.minFilter != GL_NEAREST && mSamplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST))
         {
             return false;
         }
@@ -2619,7 +2628,7 @@ bool TextureCubeMap::isSamplerComplete() const
 
     if (!isPow2(size) && !getContext()->supportsNonPower2Texture())
     {
-        if (getWrapS() != GL_CLAMP_TO_EDGE || getWrapT() != GL_CLAMP_TO_EDGE || mipmapping)
+        if (mSamplerState.wrapS != GL_CLAMP_TO_EDGE || mSamplerState.wrapT != GL_CLAMP_TO_EDGE || mipmapping)
         {
             return false;
         }

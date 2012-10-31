@@ -43,6 +43,16 @@ enum
     IMPLEMENTATION_MAX_TEXTURE_LEVELS = 15   // 1+log2 of MAX_TEXTURE_SIZE
 };
 
+struct SamplerState
+{
+    GLenum minFilter;
+    GLenum magFilter;
+    GLenum wrapS;
+    GLenum wrapT;
+    float maxAnisotropy;
+    int lodOffset;
+};
+
 class Image
 {
   public:
@@ -189,6 +199,8 @@ class Texture : public RefCountObject
     GLenum getWrapS() const;
     GLenum getWrapT() const;
     float getMaxAnisotropy() const;
+    int getLodOffset();
+    void getSamplerState(SamplerState *sampler);
     GLenum getUsage() const;
     bool isMipmapFiltered() const;
 
@@ -207,7 +219,6 @@ class Texture : public RefCountObject
     unsigned int getRenderTargetSerial(GLenum target);
 
     bool isImmutable() const;
-    int getLodOffset();
 
     static const GLuint INCOMPLETE_TEXTURE_ID = static_cast<GLuint>(-1);   // Every texture takes an id at creation time. The value is arbitrary because it is never registered with the resource manager.
 
@@ -231,11 +242,7 @@ class Texture : public RefCountObject
     static Blit *getBlitter();
     static bool copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *source, bool fromManaged);
 
-    GLenum mMinFilter;
-    GLenum mMagFilter;
-    GLenum mWrapS;
-    GLenum mWrapT;
-    float mMaxAnisotropy;
+    SamplerState mSamplerState;
     bool mDirtyParameters;
     GLenum mUsage;
 
