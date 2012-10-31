@@ -80,7 +80,7 @@ bool Image::redefine(GLint internalformat, GLsizei width, GLsizei height, bool f
         mHeight = height;
         mInternalFormat = internalformat;
         // compute the d3d format that will be used
-        mD3DFormat = Texture::ConvertTextureInternalFormat(internalformat);
+        mD3DFormat = TextureStorage::ConvertTextureInternalFormat(internalformat);
         mActualFormat = dx2es::GetEquivalentFormat(mD3DFormat);
 
         if (mSurface)
@@ -164,7 +164,7 @@ void Image::unlock()
 
 bool Image::isRenderableFormat() const
 {    
-    return Texture::IsTextureFormatRenderable(getD3DFormat());
+    return TextureStorage::IsTextureFormatRenderable(getD3DFormat());
 }
 
 GLenum Image::getActualFormat() const

@@ -62,9 +62,6 @@ class Texture : public RefCountObject
 
     virtual ~Texture();
 
-    static D3DFORMAT ConvertTextureInternalFormat(GLint internalformat);
-    static bool IsTextureFormatRenderable(D3DFORMAT format);
-
     virtual void addProxyRef(const Renderbuffer *proxy) = 0;
     virtual void releaseProxy(const Renderbuffer *proxy) = 0;
 

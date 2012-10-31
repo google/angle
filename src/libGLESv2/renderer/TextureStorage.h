@@ -27,6 +27,10 @@ class TextureStorage
 
     virtual ~TextureStorage();
 
+    static DWORD GetTextureUsage(D3DFORMAT d3dfmt, GLenum glusage, bool forceRenderable);
+    static bool IsTextureFormatRenderable(D3DFORMAT format);
+    static D3DFORMAT ConvertTextureInternalFormat(GLint internalformat);
+
     bool isRenderTarget() const;
     bool isManaged() const;
     D3DPOOL getPool() const;

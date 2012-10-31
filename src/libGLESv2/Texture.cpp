@@ -24,20 +24,6 @@
 
 namespace gl
 {
-static inline DWORD GetTextureUsage(D3DFORMAT d3dfmt, GLenum glusage, bool forceRenderable)
-{
-    DWORD d3dusage = 0;
-
-    if (d3dfmt == D3DFMT_INTZ)
-    {
-        d3dusage |= D3DUSAGE_DEPTHSTENCIL;
-    }
-    else if(forceRenderable || (Texture::IsTextureFormatRenderable(d3dfmt) && (glusage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE)))
-    {
-        d3dusage |= D3DUSAGE_RENDERTARGET;
-    }
-    return d3dusage;
-}
 
 namespace
 {
@@ -235,79 +221,6 @@ Texture::Texture(GLuint id) : RefCountObject(id)
 
 Texture::~Texture()
 {
-}
-
-D3DFORMAT Texture::ConvertTextureInternalFormat(GLint internalformat)
-{
-    switch (internalformat)
-    {
-      case GL_DEPTH_COMPONENT16:
-      case GL_DEPTH_COMPONENT32_OES:
-      case GL_DEPTH24_STENCIL8_OES:
-        return D3DFMT_INTZ;
-      case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
-      case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
-        return D3DFMT_DXT1;
-      case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
-        return D3DFMT_DXT3;
-      case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
-        return D3DFMT_DXT5;
-      case GL_RGBA32F_EXT:
-      case GL_RGB32F_EXT:
-      case GL_ALPHA32F_EXT:
-      case GL_LUMINANCE32F_EXT:
-      case GL_LUMINANCE_ALPHA32F_EXT:
-        return D3DFMT_A32B32G32R32F;
-      case GL_RGBA16F_EXT:
-      case GL_RGB16F_EXT:
-      case GL_ALPHA16F_EXT:
-      case GL_LUMINANCE16F_EXT:
-      case GL_LUMINANCE_ALPHA16F_EXT:
-        return D3DFMT_A16B16G16R16F;
-      case GL_LUMINANCE8_EXT:
-        if (getContext()->supportsLuminanceTextures())
-        {
-            return D3DFMT_L8;
-        }
-        break;
-      case GL_LUMINANCE8_ALPHA8_EXT:
-        if (getContext()->supportsLuminanceAlphaTextures())
-        {
-            return D3DFMT_A8L8;
-        }
-        break;
-      case GL_RGB8_OES:
-      case GL_RGB565:
-        return D3DFMT_X8R8G8B8;
-    }
-
-    return D3DFMT_A8R8G8B8;
-}
-
-bool Texture::IsTextureFormatRenderable(D3DFORMAT format)
-{
-    if (format == D3DFMT_INTZ)
-    {
-        return true;
-    }
-    switch(format)
-    {
-      case D3DFMT_L8:
-      case D3DFMT_A8L8:
-      case D3DFMT_DXT1:
-      case D3DFMT_DXT3:
-      case D3DFMT_DXT5:
-        return false;
-      case D3DFMT_A8R8G8B8:
-      case D3DFMT_X8R8G8B8:
-      case D3DFMT_A16B16G16R16F:
-      case D3DFMT_A32B32G32R32F:
-        return true;
-      default:
-        UNREACHABLE();
-    }
-
-    return false;
 }
 
 // Returns true on successful filter state update (valid enum parameter)
@@ -925,8 +838,8 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
 
 void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height)
 {
-    D3DFORMAT d3dfmt = ConvertTextureInternalFormat(internalformat);
-    DWORD d3dusage = GetTextureUsage(d3dfmt, mUsage, false);
+    D3DFORMAT d3dfmt = TextureStorage::ConvertTextureInternalFormat(internalformat);
+    DWORD d3dusage = TextureStorage::GetTextureUsage(d3dfmt, mUsage, false);
 
     delete mTexStorage;
     mTexStorage = new TextureStorage2D(levels, d3dfmt, d3dusage, width, height);
@@ -1074,7 +987,7 @@ void Texture2D::createTexture()
 
     GLint levels = creationLevels(width, height);
     D3DFORMAT d3dfmt = mImageArray[0].getD3DFormat();
-    DWORD d3dusage = GetTextureUsage(d3dfmt, mUsage, false);
+    DWORD d3dusage = TextureStorage::GetTextureUsage(d3dfmt, mUsage, false);
 
     delete mTexStorage;
     mTexStorage = new TextureStorage2D(levels, d3dfmt, d3dusage, width, height);
@@ -1120,7 +1033,7 @@ void Texture2D::convertToRenderTarget()
         GLsizei height = mImageArray[0].getHeight();
         GLint levels = creationLevels(width, height);
         D3DFORMAT d3dfmt = mImageArray[0].getD3DFormat();
-        DWORD d3dusage = GetTextureUsage(d3dfmt, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true);
+        DWORD d3dusage = TextureStorage::GetTextureUsage(d3dfmt, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true);
 
         newTexStorage = new TextureStorage2D(levels, d3dfmt, d3dusage, width, height);
 
@@ -1561,7 +1474,7 @@ void TextureCubeMap::createTexture()
 
     GLint levels = creationLevels(size);
     D3DFORMAT d3dfmt = mImageArray[0][0].getD3DFormat();
-    DWORD d3dusage = GetTextureUsage(d3dfmt, mUsage, false);
+    DWORD d3dusage = TextureStorage::GetTextureUsage(d3dfmt, mUsage, false);
 
     delete mTexStorage;
     mTexStorage = new TextureStorageCubeMap(levels, d3dfmt, d3dusage, size);
@@ -1612,7 +1525,7 @@ void TextureCubeMap::convertToRenderTarget()
         GLsizei size = mImageArray[0][0].getWidth();
         GLint levels = creationLevels(size);
         D3DFORMAT d3dfmt = mImageArray[0][0].getD3DFormat();
-        DWORD d3dusage = GetTextureUsage(d3dfmt, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true);
+        DWORD d3dusage = TextureStorage::GetTextureUsage(d3dfmt, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true);
 
         newTexStorage = new TextureStorageCubeMap(levels, d3dfmt, d3dusage, size);
 
@@ -1794,8 +1707,8 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
 
 void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size)
 {
-    D3DFORMAT d3dfmt = ConvertTextureInternalFormat(internalformat);
-    DWORD d3dusage = GetTextureUsage(d3dfmt, mUsage, false);
+    D3DFORMAT d3dfmt = TextureStorage::ConvertTextureInternalFormat(internalformat);
+    DWORD d3dusage = TextureStorage::GetTextureUsage(d3dfmt, mUsage, false);
 
     delete mTexStorage;
     mTexStorage = new TextureStorageCubeMap(levels, d3dfmt, d3dusage, size);
