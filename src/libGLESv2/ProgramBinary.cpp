@@ -1746,9 +1746,8 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
     const D3DCAPS9 *binaryIdentifier = (const D3DCAPS9*) ptr;
     ptr += sizeof(GUID);
 
-    // D3D9_REPLACE
-    D3DADAPTER_IDENTIFIER9 *currentIdentifier = mRenderer->getAdapterIdentifier();
-    if (memcmp(&currentIdentifier->DeviceIdentifier, binaryIdentifier, sizeof(GUID)) != 0)
+    GUID identifier = mRenderer->getAdapterIdentifier();
+    if (memcmp(&identifier, binaryIdentifier, sizeof(GUID)) != 0)
     {
         infoLog.append("Invalid program binary.");
         return false;
@@ -1853,8 +1852,7 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
     ASSERT(SUCCEEDED(result));
     stream.write(vertexShaderSize);
 
-    // D3D9_REPLACE
-    D3DADAPTER_IDENTIFIER9 *identifier = mRenderer->getAdapterIdentifier();
+    GUID identifier = mRenderer->getAdapterIdentifier();
 
     GLsizei streamLength = stream.length();
     const void *streamData = stream.data();
@@ -1877,7 +1875,7 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
         memcpy(ptr, streamData, streamLength);
         ptr += streamLength;
 
-        memcpy(ptr, &identifier->DeviceIdentifier, sizeof(GUID));
+        memcpy(ptr, &identifier, sizeof(GUID));
         ptr += sizeof(GUID);
 
         result = mPixelExecutable->GetFunction(ptr, &pixelShaderSize);

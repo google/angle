@@ -209,8 +209,7 @@ EGLint SwapChain::reset(int backbufferWidth, int backbufferHeight, EGLint swapIn
         //
         // Some non-switchable AMD GPUs / drivers do not respect the source rectangle to Present. Therefore, when the vendor ID
         // is not Intel, the back buffer width must be exactly the same width as the window or horizontal scaling will occur.
-        D3DADAPTER_IDENTIFIER9* adapterIdentifier = mRenderer->getAdapterIdentifier();
-        if (adapterIdentifier->VendorId == VENDOR_ID_INTEL)
+        if (mRenderer->getAdapterVendor() == VENDOR_ID_INTEL)
         {
             presentParameters.BackBufferWidth = (presentParameters.BackBufferWidth + 63) / 64 * 64;
         }

@@ -683,6 +683,21 @@ bool Renderer::resetDevice()
     return true;
 }
 
+DWORD Renderer::getAdapterVendor() const
+{
+    return mAdapterIdentifier.VendorId;
+}
+
+const char *Renderer::getAdapterDescription() const
+{
+    return mAdapterIdentifier.Description;
+}
+
+GUID Renderer::getAdapterIdentifier() const
+{
+    return mAdapterIdentifier.DeviceIdentifier;
+}
+
 void Renderer::getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray)
 {
     for (int multiSampleIndex = 0; multiSampleIndex <= D3DMULTISAMPLE_16_SAMPLES; multiSampleIndex++)

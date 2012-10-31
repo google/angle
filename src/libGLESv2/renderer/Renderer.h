@@ -102,7 +102,9 @@ class Renderer
 
     // Renderer capabilities
     virtual IDirect3DDevice9 *getDevice() {return mDevice;};  // D3D9_REPLACE
-    virtual D3DADAPTER_IDENTIFIER9 *getAdapterIdentifier() {return &mAdapterIdentifier;}; // D3D9_REPLACE
+    virtual DWORD getAdapterVendor() const;
+    virtual const char *getAdapterDescription() const;
+    virtual GUID getAdapterIdentifier() const;
     virtual bool isD3d9ExDevice() const { return mD3d9Ex != NULL; } // D3D9_REMOVE
 
     virtual bool getDXT1TextureSupport();

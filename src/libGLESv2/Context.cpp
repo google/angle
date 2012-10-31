@@ -2056,8 +2056,7 @@ void Context::applyState(GLenum drawMode)
     GLint alwaysFront = !isTriangleMode(drawMode);
     programBinary->setUniform1iv(pointsOrLines, 1, &alwaysFront);
 
-    D3DADAPTER_IDENTIFIER9 *identifier = mRenderer->getAdapterIdentifier();
-    bool zeroColorMaskAllowed = identifier->VendorId != 0x1002;
+    bool zeroColorMaskAllowed = mRenderer->getAdapterVendor() != VENDOR_ID_AMD;
     // Apparently some ATI cards have a bug where a draw with a zero color
     // write mask can cause later draws to have incorrect results. Instead,
     // set a nonzero color write mask but modify the blend state so that no
@@ -3893,10 +3892,8 @@ const char *Context::getExtensionString() const
 
 void Context::initRendererString()
 {
-    D3DADAPTER_IDENTIFIER9 *identifier = mRenderer->getAdapterIdentifier();
-
     mRendererString = "ANGLE (";
-    mRendererString += identifier->Description;
+    mRendererString += mRenderer->getAdapterDescription();
     mRendererString += ")";
 }
 
