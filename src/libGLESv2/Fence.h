@@ -14,11 +14,7 @@
 #include <d3d9.h>
 
 #include "common/angleutils.h"
-
-namespace egl
-{
-class Display;
-}
+#include "libGLESv2/renderer/Renderer.h"
 
 namespace gl
 {
@@ -26,7 +22,7 @@ namespace gl
 class Fence
 {
   public:
-    explicit Fence(egl::Display* display);
+    explicit Fence(renderer::Renderer *renderer);
     virtual ~Fence();
 
     GLboolean isFence();
@@ -38,8 +34,8 @@ class Fence
   private:
     DISALLOW_COPY_AND_ASSIGN(Fence);
 
-    egl::Display* mDisplay;
-    IDirect3DQuery9* mQuery;
+    renderer::Renderer *mRenderer;
+    IDirect3DQuery9* mQuery;  // D3D9_REPLACE
     GLenum mCondition;
     GLboolean mStatus;
 };

@@ -13,9 +13,9 @@
 namespace gl
 {
 
-Fence::Fence(egl::Display* display)
+Fence::Fence(renderer::Renderer *renderer)
 {
-    mDisplay = display;
+    mRenderer = renderer;
     mQuery = NULL;
     mCondition = GL_NONE;
     mStatus = GL_FALSE;
@@ -25,7 +25,7 @@ Fence::~Fence()
 {
     if (mQuery != NULL)
     {
-        mDisplay->freeEventQuery(mQuery);
+        mRenderer->freeEventQuery(mQuery);
     }
 }
 
@@ -36,11 +36,12 @@ GLboolean Fence::isFence()
     return mQuery != NULL;
 }
 
+// D3D9_REPLACE
 void Fence::setFence(GLenum condition)
 {
     if (!mQuery)
     {
-        mQuery = mDisplay->allocateEventQuery();
+        mQuery = mRenderer->allocateEventQuery();
         if (!mQuery)
         {
             return error(GL_OUT_OF_MEMORY);
@@ -54,6 +55,7 @@ void Fence::setFence(GLenum condition)
     mStatus = GL_FALSE;
 }
 
+// D3D9_REPLACE
 GLboolean Fence::testFence()
 {
     if (mQuery == NULL)
@@ -106,7 +108,7 @@ void Fence::getFenceiv(GLenum pname, GLint *params)
                 return;
             }
             
-            HRESULT result = mQuery->GetData(NULL, 0, 0);
+            HRESULT result = mQuery->GetData(NULL, 0, 0); // D3D9_REPLACE
             
             if (checkDeviceLost(result))
             {

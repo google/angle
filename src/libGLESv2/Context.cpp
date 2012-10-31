@@ -956,7 +956,7 @@ GLuint Context::createFence()
 {
     GLuint handle = mFenceHandleAllocator.allocate();
 
-    mFenceMap[handle] = new Fence(mDisplay);
+    mFenceMap[handle] = new Fence(mRenderer);
 
     return handle;
 }
@@ -1344,7 +1344,7 @@ Query *Context::getQuery(unsigned int handle, bool create, GLenum type)
     {
         if (!query->second && create)
         {
-            query->second = new Query(handle, type);
+            query->second = new Query(mRenderer, handle, type);
             query->second->addRef();
         }
         return query->second;
@@ -3212,7 +3212,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
 // Implements glFlush when block is false, glFinish when block is true
 void Context::sync(bool block)
 {
-    mDisplay->sync(block);
+    mRenderer->sync(block);
 }
 
 void Context::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex)
@@ -4500,9 +4500,9 @@ gl::Context *glGetCurrentContext()
     return gl::getContext();
 }
 
-renderer::Renderer *glCreateRenderer(HMODULE hModule, HDC hDc)
+renderer::Renderer *glCreateRenderer(egl::Display *display, HMODULE hModule, HDC hDc)
 {
-    return new renderer::Renderer(hModule, hDc);
+    return new renderer::Renderer(display, hModule, hDc);
 }
 
 void glDestroyRenderer(renderer::Renderer *renderer)

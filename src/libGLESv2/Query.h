@@ -15,6 +15,7 @@
 
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
+#include "libGLESv2/renderer/Renderer.h"
 
 namespace gl
 {
@@ -22,7 +23,7 @@ namespace gl
 class Query : public RefCountObject
 {
   public:
-    Query(GLuint id, GLenum type);
+    Query(renderer::Renderer *renderer, GLuint id, GLenum type);
     virtual ~Query();
 
     void begin();
@@ -35,9 +36,11 @@ class Query : public RefCountObject
   private:
     DISALLOW_COPY_AND_ASSIGN(Query);
 
+    renderer::Renderer *mRenderer;
+
     GLboolean testQuery();
 
-    IDirect3DQuery9* mQuery;
+    IDirect3DQuery9* mQuery; // D3D9_REPLACE
     GLenum mType;
     GLboolean mStatus;
     GLint mResult;

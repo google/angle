@@ -10,6 +10,9 @@
 #ifndef LIBGLESV2_RENDERER_RENDERER_H_
 #define LIBGLESV2_RENDERER_RENDERER_H_
 
+#include <set>
+#include <vector>
+
 #include "common/angleutils.h"
 #define GL_APICALL
 #include <GLES2/gl2.h>
@@ -32,13 +35,18 @@ inline int getComparableOSVersion()
     return MAKEWORD(minorVersion, majorVersion);
 }
 
+namespace egl
+{
+class Display;
+}
+
 namespace renderer
 {
 
 class Renderer
 {
   public:
-    Renderer(HMODULE hModule, HDC hDc);
+    Renderer(egl::Display *display, HMODULE hModule, HDC hDc);
     virtual ~Renderer();
 
     virtual EGLint initialize();
@@ -46,6 +54,10 @@ class Renderer
 
     virtual void startScene();
     virtual void endScene();
+
+    virtual void sync(bool block);
+    virtual IDirect3DQuery9* allocateEventQuery();
+    virtual void freeEventQuery(IDirect3DQuery9* query);
 
 #if 0
     // resource creation
@@ -103,11 +115,13 @@ class Renderer
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer);
 
+    egl::Display *mDisplay;
     const HDC mDc;
     HMODULE mD3d9Module;
 
     void initializeDevice();
     D3DPRESENT_PARAMETERS getDefaultPresentParameters();
+    void releaseDeviceResources();
 
     UINT mAdapter;
     D3DDEVTYPE mDeviceType;
@@ -124,6 +138,9 @@ class Renderer
 
     bool mSceneStarted;
     bool mSupportsNonPower2Textures;
+
+    // A pool of event queries that are currently unused.
+    std::vector<IDirect3DQuery9*> mEventQueryPool;
 };
 
 }

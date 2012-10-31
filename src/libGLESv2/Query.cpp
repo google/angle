@@ -13,8 +13,9 @@
 namespace gl
 {
 
-Query::Query(GLuint id, GLenum type) : RefCountObject(id)
+Query::Query(renderer::Renderer *renderer, GLuint id, GLenum type) : RefCountObject(id)
 { 
+    mRenderer = renderer;
     mQuery = NULL;
     mStatus = GL_FALSE;
     mResult = GL_FALSE;
@@ -35,7 +36,7 @@ void Query::begin()
     if (mQuery == NULL)
     {
         // D3D9_REPLACE
-        if (FAILED(getDevice()->CreateQuery(D3DQUERYTYPE_OCCLUSION, &mQuery)))
+        if (FAILED(mRenderer->getDevice()->CreateQuery(D3DQUERYTYPE_OCCLUSION, &mQuery)))
         {
             return error(GL_OUT_OF_MEMORY);
         }
@@ -69,9 +70,9 @@ GLuint Query::getResult()
             // explicitly check for device loss
             // some drivers seem to return S_FALSE even if the device is lost
             // instead of D3DERR_DEVICELOST like they should
-            if (gl::getDisplay()->getRenderer()->testDeviceLost()) // D3D9_REPLACE
+            if (mRenderer->testDeviceLost())
             {
-                gl::getDisplay()->notifyDeviceLost();
+                gl::getDisplay()->notifyDeviceLost(); // D3D9_REPLACE
                 return error(GL_OUT_OF_MEMORY, 0);
             }
         }

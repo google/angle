@@ -59,9 +59,6 @@ class Display
     EGLint getMaxSwapInterval();
 
     renderer::Renderer *getRenderer() { return mRenderer; };
-    virtual void sync(bool block);
-    virtual IDirect3DQuery9* allocateEventQuery();
-    virtual void freeEventQuery(IDirect3DQuery9* query);
 
     virtual void notifyDeviceLost();
 
@@ -79,9 +76,6 @@ class Display
 
     EGLNativeDisplayType mDisplayId;
     const HDC mDc;
-
-    // A pool of event queries that are currently unused.
-    std::vector<IDirect3DQuery9*> mEventQueryPool;
 
     VertexShaderCache mVertexShaderCache;
     PixelShaderCache mPixelShaderCache;

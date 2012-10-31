@@ -680,7 +680,7 @@ gl::Context *glCreateContext(const egl::Config *config, const gl::Context *share
 void glDestroyContext(gl::Context *context);
 void glMakeCurrent(gl::Context *context, egl::Display *display, egl::Surface *surface);
 gl::Context *glGetCurrentContext();
-renderer::Renderer *glCreateRenderer(HMODULE hModule, HDC hDc);
+renderer::Renderer *glCreateRenderer(egl::Display *display, HMODULE hModule, HDC hDc);
 void glDestroyRenderer(renderer::Renderer *renderer);
 
 __eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *procname);

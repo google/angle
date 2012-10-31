@@ -101,7 +101,7 @@ bool Display::initialize()
         return false;
     }
 
-    mRenderer = glCreateRenderer(hModule, mDc);
+    mRenderer = glCreateRenderer(this, hModule, mDc);
     EGLint status = EGL_BAD_ALLOC;
     if (mRenderer)
         status = mRenderer->initialize();
@@ -228,12 +228,6 @@ void Display::terminate()
     while (!mContextSet.empty())
     {
         destroyContext(*mContextSet.begin());
-    }
-
-    while (!mEventQueryPool.empty())
-    {
-        mEventQueryPool.back()->Release();
-        mEventQueryPool.pop_back();
     }
 
     mVertexShaderCache.clear();
@@ -503,12 +497,6 @@ bool Display::restoreLostDevice()
         (*surface)->release();
     }
 
-    while (!mEventQueryPool.empty())
-    {
-        mEventQueryPool.back()->Release();
-        mEventQueryPool.pop_back();
-    }
-
     mVertexShaderCache.clear();
     mPixelShaderCache.clear();
 
@@ -591,80 +579,6 @@ EGLint Display::getMaxSwapInterval()
 {
     return mMaxSwapInterval;
 }
-
-// D3D9_REPLACE
-void Display::sync(bool block)
-{
-    HRESULT result;
-
-    IDirect3DQuery9* query = allocateEventQuery();
-    if (!query)
-    {
-        return;
-    }
-
-    result = query->Issue(D3DISSUE_END);
-    ASSERT(SUCCEEDED(result));
-
-    do
-    {
-        result = query->GetData(NULL, 0, D3DGETDATA_FLUSH);
-
-        if(block && result == S_FALSE)
-        {
-            // Keep polling, but allow other threads to do something useful first
-            Sleep(0);
-            // explicitly check for device loss
-            // some drivers seem to return S_FALSE even if the device is lost
-            // instead of D3DERR_DEVICELOST like they should
-            if (mRenderer->testDeviceLost())
-            {
-                result = D3DERR_DEVICELOST;
-            }
-        }
-    }
-    while(block && result == S_FALSE);
-
-    freeEventQuery(query);
-
-    if (isDeviceLostError(result))
-    {
-        notifyDeviceLost();
-    }
-}
-
-// D3D9_REPLACE
-IDirect3DQuery9* Display::allocateEventQuery()
-{
-    IDirect3DQuery9 *query = NULL;
-
-    if (mEventQueryPool.empty())
-    {
-        HRESULT result = mRenderer->getDevice()->CreateQuery(D3DQUERYTYPE_EVENT, &query);
-        ASSERT(SUCCEEDED(result));
-    }
-    else
-    {
-        query = mEventQueryPool.back();
-        mEventQueryPool.pop_back();
-    }
-
-    return query;
-}
-
-// D3D9_REPLACE
-void Display::freeEventQuery(IDirect3DQuery9* query)
-{
-    if (mEventQueryPool.size() > 1000)
-    {
-        query->Release();
-    }
-    else
-    {
-        mEventQueryPool.push_back(query);
-    }
-}
-
 
 void Display::initExtensionString()
 {

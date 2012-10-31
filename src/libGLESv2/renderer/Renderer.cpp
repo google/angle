@@ -11,6 +11,8 @@
 #include "common/debug.h"
 #include "libGLESv2/utilities.h"
 
+#include "libEGL/Display.h"
+
 // Can also be enabled by defining FORCE_REF_RAST in the project's predefined macros
 #define REF_RAST 0
 
@@ -25,8 +27,9 @@
 namespace renderer
 {
 
-Renderer::Renderer(HMODULE hModule, HDC hDc): mDc(hDc)
+Renderer::Renderer(egl::Display *display, HMODULE hModule, HDC hDc): mDc(hDc)
 {
+    mDisplay = display;
     mD3d9Module = hModule;
 
     mD3d9 = NULL;
@@ -48,6 +51,8 @@ Renderer::Renderer(HMODULE hModule, HDC hDc): mDc(hDc)
 
 Renderer::~Renderer()
 {
+    releaseDeviceResources();
+
     if (mDevice)
     {
         // If the device is lost, reset it first to prevent leaving the driver in an unstable state
@@ -266,6 +271,89 @@ void Renderer::endScene()
     }
 }
 
+// D3D9_REPLACE
+void Renderer::sync(bool block)
+{
+    HRESULT result;
+
+    IDirect3DQuery9* query = allocateEventQuery();
+    if (!query)
+    {
+        return;
+    }
+
+    result = query->Issue(D3DISSUE_END);
+    ASSERT(SUCCEEDED(result));
+
+    do
+    {
+        result = query->GetData(NULL, 0, D3DGETDATA_FLUSH);
+
+        if(block && result == S_FALSE)
+        {
+            // Keep polling, but allow other threads to do something useful first
+            Sleep(0);
+            // explicitly check for device loss
+            // some drivers seem to return S_FALSE even if the device is lost
+            // instead of D3DERR_DEVICELOST like they should
+            if (testDeviceLost())
+            {
+                result = D3DERR_DEVICELOST;
+            }
+        }
+    }
+    while(block && result == S_FALSE);
+
+    freeEventQuery(query);
+
+    if (isDeviceLostError(result))
+    {
+        mDisplay->notifyDeviceLost();
+    }
+}
+
+// D3D9_REPLACE
+IDirect3DQuery9* Renderer::allocateEventQuery()
+{
+    IDirect3DQuery9 *query = NULL;
+
+    if (mEventQueryPool.empty())
+    {
+        HRESULT result = mDevice->CreateQuery(D3DQUERYTYPE_EVENT, &query);
+        ASSERT(SUCCEEDED(result));
+    }
+    else
+    {
+        query = mEventQueryPool.back();
+        mEventQueryPool.pop_back();
+    }
+
+    return query;
+}
+
+// D3D9_REPLACE
+void Renderer::freeEventQuery(IDirect3DQuery9* query)
+{
+    if (mEventQueryPool.size() > 1000)
+    {
+        query->Release();
+    }
+    else
+    {
+        mEventQueryPool.push_back(query);
+    }
+}
+
+void Renderer::releaseDeviceResources()
+{
+    while (!mEventQueryPool.empty())
+    {
+        mEventQueryPool.back()->Release();
+        mEventQueryPool.pop_back();
+    }
+}
+
+
 void Renderer::markDeviceLost()
 {
     mDeviceLost = true;
@@ -331,6 +419,8 @@ bool Renderer::testDeviceResettable()
 
 bool Renderer::resetDevice()
 {
+    releaseDeviceResources();
+
     D3DPRESENT_PARAMETERS presentParameters = getDefaultPresentParameters();
 
     HRESULT result = D3D_OK;
@@ -511,7 +601,6 @@ float Renderer::getTextureFilterAnisotropySupport() const
 
 bool Renderer::getEventQuerySupport()
 {
-#if 0 // D3D9_REPLACE
     IDirect3DQuery9 *query = allocateEventQuery();
     if (query)
     {
@@ -522,7 +611,6 @@ bool Renderer::getEventQuerySupport()
     {
         return false;
     }
-#endif
     return true;
 }
 
