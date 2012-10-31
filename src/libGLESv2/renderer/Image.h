@@ -27,6 +27,7 @@ class Image
     Image();
     ~Image();
 
+    static void GenerateMipmap(Image *dest, Image *source);
     static void Image::CopyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface9 *source);
 
     bool redefine(GLint internalformat, GLsizei width, GLsizei height, bool forceRelease);

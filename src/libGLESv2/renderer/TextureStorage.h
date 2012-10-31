@@ -24,6 +24,7 @@ class SwapChain;
 
 namespace gl
 {
+class Blit;
 
 class TextureStorage
 {
@@ -35,6 +36,7 @@ class TextureStorage
     static DWORD GetTextureUsage(D3DFORMAT d3dfmt, GLenum glusage, bool forceRenderable);
     static bool IsTextureFormatRenderable(D3DFORMAT format);
     static D3DFORMAT ConvertTextureInternalFormat(GLint internalformat);
+    static Blit *getBlitter();
 
     bool isRenderTarget() const;
     bool isManaged() const;
@@ -75,6 +77,7 @@ class TextureStorage2D : public TextureStorage
 
     IDirect3DSurface9 *getSurfaceLevel(int level, bool dirty);
     virtual IDirect3DBaseTexture9 *getBaseTexture() const;
+    void generateMipmap(int level);
 
     virtual unsigned int getRenderTargetSerial(GLenum target) const;
 
@@ -96,6 +99,7 @@ class TextureStorageCubeMap : public TextureStorage
 
     IDirect3DSurface9 *getCubeMapSurface(GLenum faceTarget, int level, bool dirty);
     virtual IDirect3DBaseTexture9 *getBaseTexture() const;
+    void generateMipmap(int face, int level);
 
     virtual unsigned int getRenderTargetSerial(GLenum target) const;
 

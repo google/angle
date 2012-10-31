@@ -11,6 +11,7 @@
 #include "libGLESv2/main.h"
 #include "libGLESv2/renderer/TextureStorage.h"
 #include "libGLESv2/renderer/SwapChain.h"
+#include "libGLESv2/Blit.h"
 
 #include "common/debug.h"
 
@@ -116,6 +117,12 @@ D3DFORMAT TextureStorage::ConvertTextureInternalFormat(GLint internalformat)
     }
 
     return D3DFMT_A8R8G8B8;
+}
+
+Blit *TextureStorage::getBlitter()
+{
+    Context *context = getContext();
+    return context->getBlitter();
 }
 
 bool TextureStorage::isRenderTarget() const
@@ -279,6 +286,20 @@ IDirect3DSurface9 *TextureStorage2D::getSurfaceLevel(int level, bool dirty)
     return surface;
 }
 
+void TextureStorage2D::generateMipmap(int level)
+{
+    IDirect3DSurface9 *upper = getSurfaceLevel(level - 1, false);
+    IDirect3DSurface9 *lower = getSurfaceLevel(level, true);
+
+    if (upper != NULL && lower != NULL)
+    {
+        getBlitter()->boxFilter(upper, lower);
+    }
+
+    if (upper != NULL) upper->Release();
+    if (lower != NULL) lower->Release();
+}
+
 IDirect3DBaseTexture9 *TextureStorage2D::getBaseTexture() const
 {
     return mTexture;
@@ -368,6 +389,20 @@ IDirect3DSurface9 *TextureStorageCubeMap::getCubeMapSurface(GLenum faceTarget, i
     }
 
     return surface;
+}
+
+void TextureStorageCubeMap::generateMipmap(int face, int level)
+{
+    IDirect3DSurface9 *upper = getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level - 1, false);
+    IDirect3DSurface9 *lower = getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level, true);
+
+    if (upper != NULL && lower != NULL)
+    {
+        getBlitter()->boxFilter(upper, lower);
+    }
+
+    if (upper != NULL) upper->Release();
+    if (lower != NULL) lower->Release();
 }
 
 IDirect3DBaseTexture9 *TextureStorageCubeMap::getBaseTexture() const
