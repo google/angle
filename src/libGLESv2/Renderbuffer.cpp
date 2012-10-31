@@ -14,6 +14,8 @@
 #include "libGLESv2/Texture.h"
 #include "libGLESv2/utilities.h"
 
+#include "libGLESv2/renderer/renderer9_utils.h" // D3D9_REPLACE
+
 namespace gl
 {
 unsigned int RenderbufferStorage::mCurrentSerial = 1;

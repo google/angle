@@ -16,9 +16,6 @@
 
 #include <string>
 
-const D3DFORMAT D3DFMT_INTZ = ((D3DFORMAT)(MAKEFOURCC('I','N','T','Z')));
-const D3DFORMAT D3DFMT_NULL = ((D3DFORMAT)(MAKEFOURCC('N','U','L','L')));
-
 namespace gl
 {
 
@@ -61,53 +58,6 @@ GLuint GetGreenSize(GLenum colorFormat);
 GLuint GetBlueSize(GLenum colorFormat);
 GLuint GetDepthSize(GLenum depthFormat);
 GLuint GetStencilSize(GLenum stencilFormat);
-}
-
-namespace es2dx
-{
-
-D3DCMPFUNC ConvertComparison(GLenum comparison);
-D3DCOLOR ConvertColor(gl::Color color);
-D3DBLEND ConvertBlendFunc(GLenum blend);
-D3DBLENDOP ConvertBlendOp(GLenum blendOp);
-D3DSTENCILOP ConvertStencilOp(GLenum stencilOp);
-D3DTEXTUREADDRESS ConvertTextureWrap(GLenum wrap);
-D3DCULL ConvertCullMode(GLenum cullFace, GLenum frontFace);
-D3DCUBEMAP_FACES ConvertCubeFace(GLenum cubeFace);
-DWORD ConvertColorMask(bool red, bool green, bool blue, bool alpha);
-D3DTEXTUREFILTERTYPE ConvertMagFilter(GLenum magFilter, float maxAnisotropy);
-void ConvertMinFilter(GLenum minFilter, D3DTEXTUREFILTERTYPE *d3dMinFilter, D3DTEXTUREFILTERTYPE *d3dMipFilter, float maxAnisotropy);
-bool ConvertPrimitiveType(GLenum primitiveType, GLsizei elementCount,
-                          D3DPRIMITIVETYPE *d3dPrimitiveType, int *d3dPrimitiveCount);
-D3DFORMAT ConvertRenderbufferFormat(GLenum format);
-D3DMULTISAMPLE_TYPE GetMultisampleTypeFromSamples(GLsizei samples);
-
-}
-
-namespace dx2es
-{
-
-GLuint GetAlphaSize(D3DFORMAT colorFormat);
-GLuint GetRedSize(D3DFORMAT colorFormat);
-GLuint GetGreenSize(D3DFORMAT colorFormat);
-GLuint GetBlueSize(D3DFORMAT colorFormat);
-GLuint GetDepthSize(D3DFORMAT depthFormat);
-GLuint GetStencilSize(D3DFORMAT stencilFormat);
-
-GLsizei GetSamplesFromMultisampleType(D3DMULTISAMPLE_TYPE type);
-
-bool IsFormatChannelEquivalent(D3DFORMAT d3dformat, GLenum format);
-bool ConvertReadBufferFormat(D3DFORMAT d3dformat, GLenum *format, GLenum *type);
-GLenum ConvertBackBufferFormat(D3DFORMAT format);
-GLenum ConvertDepthStencilFormat(D3DFORMAT format);
-GLenum GetEquivalentFormat(D3DFORMAT format);
-
-}
-
-namespace dx
-{
-bool IsCompressedFormat(D3DFORMAT format);
-size_t ComputeRowSize(D3DFORMAT format, unsigned int width);
 }
 
 std::string getTempPath();

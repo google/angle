@@ -257,6 +257,8 @@
             'libGLESv2/renderer/Renderer.h',
             'libGLESv2/renderer/Renderer9.cpp',
             'libGLESv2/renderer/Renderer9.h',
+            'libGLESv2/renderer/renderer9_utils.cpp',
+            'libGLESv2/renderer/renderer9_utils.h',
             'libGLESv2/renderer/ShaderCache.h',
             'libGLESv2/renderer/SwapChain.cpp',
             'libGLESv2/renderer/SwapChain.h',

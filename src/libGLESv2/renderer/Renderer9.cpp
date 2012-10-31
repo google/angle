@@ -10,6 +10,7 @@
 #include "common/debug.h"
 #include "libGLESv2/utilities.h"
 #include "libGLESv2/renderer/Renderer9.h"
+#include "libGLESv2/renderer/renderer9_utils.h"
 #include "libGLESv2/renderer/TextureStorage.h"
 
 #include "libEGL/Config.h"

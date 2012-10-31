@@ -17,6 +17,8 @@
 #include "libGLESv2/Texture.h"
 #include "libGLESv2/Framebuffer.h"
 
+#include "libGLESv2/renderer/renderer9_utils.h"
+
 namespace gl
 {
 

@@ -13,6 +13,8 @@
 #include "libGLESv2/renderer/SwapChain.h"
 #include "libGLESv2/Blit.h"
 
+#include "libGLESv2/renderer/renderer9_utils.h"
+
 #include "common/debug.h"
 
 namespace gl
