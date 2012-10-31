@@ -54,6 +54,13 @@ bool IsStencilRenderable(GLenum internalformat);
 
 bool IsFloat32Format(GLint internalformat);
 bool IsFloat16Format(GLint internalformat);
+
+GLuint GetAlphaSize(GLenum colorFormat);
+GLuint GetRedSize(GLenum colorFormat);
+GLuint GetGreenSize(GLenum colorFormat);
+GLuint GetBlueSize(GLenum colorFormat);
+GLuint GetDepthSize(GLenum depthFormat);
+GLuint GetStencilSize(GLenum stencilFormat);
 }
 
 namespace es2dx

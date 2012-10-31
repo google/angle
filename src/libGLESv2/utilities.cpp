@@ -610,6 +610,124 @@ bool IsFloat16Format(GLint internalformat)
     }
 }
 
+unsigned int GetAlphaSize(GLenum colorFormat)
+{
+    switch (colorFormat)
+    {
+      case GL_RGBA16F_EXT:
+        return 16;
+      case GL_RGBA32F_EXT:
+        return 32;
+      case GL_RGBA4:
+        return 4;
+      case GL_RGBA8_OES:
+      case GL_BGRA8_EXT:
+        return 8;
+      case GL_RGB5_A1:
+        return 1;
+      case GL_RGB8_OES:
+      case GL_RGB565:
+      case GL_RGB32F_EXT:
+      case GL_RGB16F_EXT:
+        return 0;
+      default:
+        return 0;
+    }
+}
+
+unsigned int GetRedSize(GLenum colorFormat)
+{
+    switch (colorFormat)
+    {
+      case GL_RGBA16F_EXT:
+      case GL_RGB16F_EXT:
+        return 16;
+      case GL_RGBA32F_EXT:
+      case GL_RGB32F_EXT:
+        return 32;
+      case GL_RGBA4:
+        return 4;
+      case GL_RGBA8_OES:
+      case GL_BGRA8_EXT:
+      case GL_RGB8_OES:
+        return 8;
+      case GL_RGB5_A1:
+      case GL_RGB565:
+        return 5;
+      default:
+        return 0;
+    }
+}
+
+unsigned int GetGreenSize(GLenum colorFormat)
+{
+    switch (colorFormat)
+    {
+      case GL_RGBA16F_EXT:
+      case GL_RGB16F_EXT:
+        return 16;
+      case GL_RGBA32F_EXT:
+      case GL_RGB32F_EXT:
+        return 32;
+      case GL_RGBA4:
+        return 4;
+      case GL_RGBA8_OES:
+      case GL_BGRA8_EXT:
+      case GL_RGB8_OES:
+        return 8;
+      case GL_RGB5_A1:
+        return 5;
+      case GL_RGB565:
+        return 6;
+      default:
+        return 0;
+    }
+}
+
+unsigned int GetBlueSize(GLenum colorFormat)
+{
+    switch (colorFormat)
+    {
+      case GL_RGBA16F_EXT:
+      case GL_RGB16F_EXT:
+        return 16;
+      case GL_RGBA32F_EXT:
+      case GL_RGB32F_EXT:
+        return 32;
+      case GL_RGBA4:
+        return 4;
+      case GL_RGBA8_OES:
+      case GL_BGRA8_EXT:
+      case GL_RGB8_OES:
+        return 8;
+      case GL_RGB5_A1:
+      case GL_RGB565:
+        return 5;
+      default:
+        return 0;
+    }
+}
+
+unsigned int GetDepthSize(GLenum depthFormat)
+{
+    switch (depthFormat)
+    {
+      case GL_DEPTH_COMPONENT16:        return 16;
+      case GL_DEPTH_COMPONENT32_OES:    return 32;
+      case GL_DEPTH24_STENCIL8_OES:     return 24;
+      default:                          return 0;
+    }
+}
+
+unsigned int GetStencilSize(GLenum stencilFormat)
+{
+    switch (stencilFormat)
+    {
+      case GL_DEPTH24_STENCIL8_OES:     return 8;
+      default:                          return 0;
+    }
+}
+
 }
 
 namespace es2dx
