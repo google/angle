@@ -375,8 +375,6 @@ class Context
                               bool normalized, GLsizei stride, const void *pointer);
     const void *getVertexAttribPointer(unsigned int attribNum) const;
 
-    const VertexAttributeArray &getVertexAttributes();
-
     void setUnpackAlignment(GLint alignment);
     GLint getUnpackAlignment() const;
 

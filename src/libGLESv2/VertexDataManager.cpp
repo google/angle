@@ -37,7 +37,7 @@ int elementsInBuffer(const VertexAttribute &attribute, int size)
     return (size - attribute.mOffset % stride + (stride - attribute.typeSize())) / stride;
 }
 
-VertexDataManager::VertexDataManager(Context *context, renderer::Renderer9 *renderer) : mContext(context), mRenderer(renderer)
+VertexDataManager::VertexDataManager(renderer::Renderer9 *renderer) : mRenderer(renderer)
 {
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
     {
@@ -121,15 +121,12 @@ std::size_t VertexDataManager::writeAttributeData(ArrayVertexBuffer *vertexBuffe
     return streamOffset;
 }
 
-GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, TranslatedAttribute *translated, GLsizei instances)
+GLenum VertexDataManager::prepareVertexData(const VertexAttributeArray &attribs, ProgramBinary *programBinary, GLint start, GLsizei count, TranslatedAttribute *translated, GLsizei instances)
 {
     if (!mStreamingBuffer)
     {
         return GL_OUT_OF_MEMORY;
     }
-
-    const VertexAttributeArray &attribs = mContext->getVertexAttributes();
-    ProgramBinary *programBinary = mContext->getCurrentProgramBinary();
 
     for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
     {

@@ -113,12 +113,12 @@ class StaticVertexBuffer : public ArrayVertexBuffer
 class VertexDataManager
 {
   public:
-    VertexDataManager(Context *context, renderer::Renderer9 *renderer);
+    VertexDataManager(renderer::Renderer9 *renderer);
     virtual ~VertexDataManager();
 
     void dirtyCurrentValue(int index) { mDirtyCurrentValue[index] = true; }
 
-    GLenum prepareVertexData(GLint start, GLsizei count, TranslatedAttribute *outAttribs, GLsizei instances);
+    GLenum prepareVertexData(const VertexAttributeArray &attribs, ProgramBinary *programBinary, GLint start, GLsizei count, TranslatedAttribute *outAttribs, GLsizei instances);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(VertexDataManager);
@@ -126,7 +126,6 @@ class VertexDataManager
     std::size_t spaceRequired(const VertexAttribute &attrib, std::size_t count, GLsizei instances) const;
     std::size_t writeAttributeData(ArrayVertexBuffer *vertexBuffer, GLint start, GLsizei count, const VertexAttribute &attribute, GLsizei instances);
 
-    Context *const mContext;
     renderer::Renderer9 *const mRenderer;   // D3D9_REPLACE
 
     StreamingVertexBuffer *mStreamingBuffer;

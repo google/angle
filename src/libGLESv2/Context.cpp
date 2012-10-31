@@ -253,8 +253,8 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 
     if (!mHasBeenCurrent)
     {
-        mVertexDataManager = new VertexDataManager(this, mRenderer);
-        mIndexDataManager = new IndexDataManager(this, mRenderer);
+        mVertexDataManager = new VertexDataManager(mRenderer);
+        mIndexDataManager = new IndexDataManager(mRenderer);
         mBlit = new Blit(mRenderer);
 
         mSupportsShaderModel3 = mRenderer->getShaderModel3Support();
@@ -835,11 +835,6 @@ void Context::setVertexAttribState(unsigned int attribNum, Buffer *boundBuffer, 
 const void *Context::getVertexAttribPointer(unsigned int attribNum) const
 {
     return mState.vertexAttribute[attribNum].mPointer;
-}
-
-const VertexAttributeArray &Context::getVertexAttributes()
-{
-    return mState.vertexAttribute;
 }
 
 void Context::setPackAlignment(GLint alignment)
@@ -2302,13 +2297,13 @@ GLenum Context::applyVertexBuffer(GLint first, GLsizei count, GLsizei instances,
 {
     TranslatedAttribute attributes[MAX_VERTEX_ATTRIBS];
 
-    GLenum err = mVertexDataManager->prepareVertexData(first, count, attributes, instances);
+    ProgramBinary *programBinary = getCurrentProgramBinary();
+    GLenum err = mVertexDataManager->prepareVertexData(mState.vertexAttribute, programBinary, first, count, attributes, instances);
     if (err != GL_NO_ERROR)
     {
         return err;
     }
-
-    ProgramBinary *programBinary = getCurrentProgramBinary();
+    
     return mVertexDeclarationCache.applyDeclaration(mDevice, attributes, programBinary, instances, repeatDraw);
 }
 

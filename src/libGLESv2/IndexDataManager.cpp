@@ -19,11 +19,11 @@ namespace gl
 {
 unsigned int IndexBuffer::mCurrentSerial = 1;
 
-IndexDataManager::IndexDataManager(Context *context, renderer::Renderer9 *renderer) : mRenderer(renderer)
+IndexDataManager::IndexDataManager(renderer::Renderer9 *renderer) : mRenderer(renderer)
 {
     mStreamingBufferShort = new StreamingIndexBuffer(mRenderer, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX16);
 
-    if (context->supports32bitIndices())
+    if (renderer->get32BitIndexSupport())
     {
         mStreamingBufferInt = new StreamingIndexBuffer(mRenderer, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX32);
 

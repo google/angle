@@ -125,7 +125,7 @@ class StaticIndexBuffer : public IndexBuffer
 class IndexDataManager
 {
   public:
-    IndexDataManager(Context *context, renderer::Renderer9 *renderer);
+    IndexDataManager(renderer::Renderer9 *renderer);
     virtual ~IndexDataManager();
 
     GLenum prepareIndexData(GLenum type, GLsizei count, Buffer *arrayElementBuffer, const GLvoid *indices, TranslatedIndexData *translated);
