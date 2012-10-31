@@ -32,6 +32,7 @@ class Image
 
     bool isRenderableFormat() const;
     D3DFORMAT getD3DFormat() const;
+    GLenum getActualFormat() const;
 
     GLsizei getWidth() const {return mWidth;}
     GLsizei getHeight() const {return mHeight;}
@@ -108,6 +109,7 @@ class Image
 
     D3DPOOL mD3DPool;   // can only be D3DPOOL_SYSTEMMEM or D3DPOOL_MANAGED since it needs to be lockable.
     D3DFORMAT mD3DFormat;
+    GLenum mActualFormat;
 
     IDirect3DSurface9 *mSurface;
 };

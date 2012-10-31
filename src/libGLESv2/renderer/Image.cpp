@@ -30,6 +30,7 @@ Image::Image()
 
     mD3DPool = D3DPOOL_SYSTEMMEM;
     mD3DFormat = D3DFMT_UNKNOWN;
+    mActualFormat = GL_NONE;
 }
 
 Image::~Image()
@@ -80,6 +81,7 @@ bool Image::redefine(GLint internalformat, GLsizei width, GLsizei height, bool f
         mInternalFormat = internalformat;
         // compute the d3d format that will be used
         mD3DFormat = Texture::ConvertTextureInternalFormat(internalformat);
+        mActualFormat = dx2es::GetEquivalentFormat(mD3DFormat);
 
         if (mSurface)
         {
@@ -163,6 +165,11 @@ void Image::unlock()
 bool Image::isRenderableFormat() const
 {    
     return Texture::IsTextureFormatRenderable(getD3DFormat());
+}
+
+GLenum Image::getActualFormat() const
+{
+    return mActualFormat;
 }
 
 D3DFORMAT Image::getD3DFormat() const

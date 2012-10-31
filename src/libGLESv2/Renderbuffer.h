@@ -45,7 +45,7 @@ class RenderbufferInterface
     virtual GLsizei getWidth() const = 0;
     virtual GLsizei getHeight() const = 0;
     virtual GLenum getInternalFormat() const = 0;
-    virtual D3DFORMAT getD3DFormat() const = 0;
+    virtual GLenum getActualFormat() const = 0;
     virtual GLsizei getSamples() const = 0;
 
     GLuint getRedSize() const;
@@ -77,7 +77,7 @@ class RenderbufferTexture2D : public RenderbufferInterface
     virtual GLsizei getWidth() const;
     virtual GLsizei getHeight() const;
     virtual GLenum getInternalFormat() const;
-    virtual D3DFORMAT getD3DFormat() const;
+    virtual GLenum getActualFormat() const;
     virtual GLsizei getSamples() const;
 
     virtual unsigned int getSerial() const;
@@ -105,7 +105,7 @@ class RenderbufferTextureCubeMap : public RenderbufferInterface
     virtual GLsizei getWidth() const;
     virtual GLsizei getHeight() const;
     virtual GLenum getInternalFormat() const;
-    virtual D3DFORMAT getD3DFormat() const;
+    virtual GLenum getActualFormat() const;
     virtual GLsizei getSamples() const;
 
     virtual unsigned int getSerial() const;
@@ -133,7 +133,7 @@ class RenderbufferStorage : public RenderbufferInterface
     virtual GLsizei getWidth() const;
     virtual GLsizei getHeight() const;
     virtual GLenum getInternalFormat() const;
-    virtual D3DFORMAT getD3DFormat() const;
+    virtual GLenum getActualFormat() const;
     virtual GLsizei getSamples() const;
 
     virtual unsigned int getSerial() const;
@@ -145,6 +145,7 @@ class RenderbufferStorage : public RenderbufferInterface
     GLsizei mWidth;
     GLsizei mHeight;
     GLenum mInternalFormat;
+    GLenum mActualFormat;
     D3DFORMAT mD3DFormat;
     GLsizei mSamples;
 
@@ -179,7 +180,7 @@ class Renderbuffer : public RefCountObject
     GLsizei getWidth() const;
     GLsizei getHeight() const;
     GLenum getInternalFormat() const;
-    D3DFORMAT getD3DFormat() const;
+    GLenum getActualFormat() const;
     GLuint getRedSize() const;
     GLuint getGreenSize() const;
     GLuint getBlueSize() const;

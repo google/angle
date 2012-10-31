@@ -1273,6 +1273,35 @@ GLenum ConvertDepthStencilFormat(D3DFORMAT format)
     return GL_DEPTH24_STENCIL8_OES;
 }
 
+GLenum GetEquivalentFormat(D3DFORMAT format)
+{
+    if (format == D3DFMT_INTZ)
+        return GL_DEPTH24_STENCIL8_OES;
+    if (format == D3DFMT_NULL)
+        return GL_NONE;
+
+    switch (format)
+    {
+      case D3DFMT_A4R4G4B4:             return GL_RGBA4;
+      case D3DFMT_A8R8G8B8:             return GL_RGBA8_OES;
+      case D3DFMT_A1R5G5B5:             return GL_RGB5_A1;
+      case D3DFMT_R5G6B5:               return GL_RGB565;
+      case D3DFMT_X8R8G8B8:             return GL_RGB8_OES;
+      case D3DFMT_D16:                  return GL_DEPTH_COMPONENT16;
+      case D3DFMT_D24S8:                return GL_DEPTH24_STENCIL8_OES;
+      case D3DFMT_UNKNOWN:              return GL_NONE;
+      case D3DFMT_DXT1:                 return GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+      case D3DFMT_DXT3:                 return GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE;
+      case D3DFMT_DXT5:                 return GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE;
+      case D3DFMT_A32B32G32R32F:        return GL_RGBA32F_EXT;
+      case D3DFMT_A16B16G16R16F:        return GL_RGBA16F_EXT;
+      case D3DFMT_L8:                   return GL_LUMINANCE8_EXT;
+      case D3DFMT_A8L8:                 return GL_LUMINANCE8_ALPHA8_EXT;
+      default:              UNREACHABLE();
+        return GL_NONE;
+    }
+}
+
 }
 
 namespace dx

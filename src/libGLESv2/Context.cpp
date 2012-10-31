@@ -3547,11 +3547,8 @@ bool Context::getCurrentReadFormatType(GLenum *format, GLenum *type)
         return error(GL_INVALID_OPERATION, false);
     }
 
-    if(!dx2es::ConvertReadBufferFormat(renderbuffer->getD3DFormat(), format, type))
-    {
-        ASSERT(false);
-        return false;
-    }
+    *format = gl::ExtractFormat(renderbuffer->getActualFormat()); 
+    *type = gl::ExtractType(renderbuffer->getActualFormat());
 
     return true;
 }
@@ -4071,7 +4068,7 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
         const bool validDrawType = drawFramebuffer->getColorbufferType() == GL_TEXTURE_2D ||
             drawFramebuffer->getColorbufferType() == GL_RENDERBUFFER;
         if (!validReadType || !validDrawType ||
-            readFramebuffer->getColorbuffer()->getD3DFormat() != drawFramebuffer->getColorbuffer()->getD3DFormat())
+            readFramebuffer->getColorbuffer()->getActualFormat() != drawFramebuffer->getColorbuffer()->getActualFormat())
         {
             ERR("Color buffer format conversion in BlitFramebufferANGLE not supported by this implementation");
             return error(GL_INVALID_OPERATION);
@@ -4099,7 +4096,7 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
             if (readFramebuffer->getDepthbuffer() && drawFramebuffer->getDepthbuffer())
             {
                 if (readFramebuffer->getDepthbufferType() != drawFramebuffer->getDepthbufferType() ||
-                    readFramebuffer->getDepthbuffer()->getD3DFormat() != drawFramebuffer->getDepthbuffer()->getD3DFormat())
+                    readFramebuffer->getDepthbuffer()->getActualFormat() != drawFramebuffer->getDepthbuffer()->getActualFormat())
                 {
                     return error(GL_INVALID_OPERATION);
                 }
@@ -4115,7 +4112,7 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
             if (readFramebuffer->getStencilbuffer() && drawFramebuffer->getStencilbuffer())
             {
                 if (readFramebuffer->getStencilbufferType() != drawFramebuffer->getStencilbufferType() ||
-                    readFramebuffer->getStencilbuffer()->getD3DFormat() != drawFramebuffer->getStencilbuffer()->getD3DFormat())
+                    readFramebuffer->getStencilbuffer()->getActualFormat() != drawFramebuffer->getStencilbuffer()->getActualFormat())
                 {
                     return error(GL_INVALID_OPERATION);
                 }

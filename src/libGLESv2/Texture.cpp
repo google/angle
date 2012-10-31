@@ -708,10 +708,10 @@ GLenum Texture2D::getInternalFormat(GLint level) const
         return GL_NONE;
 }
 
-D3DFORMAT Texture2D::getD3DFormat(GLint level) const
+GLenum Texture2D::getActualFormat(GLint level) const
 {
     if (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-        return mImageArray[level].getD3DFormat();
+        return mImageArray[level].getActualFormat();
     else
         return D3DFMT_UNKNOWN;
 }
@@ -1360,10 +1360,10 @@ GLenum TextureCubeMap::getInternalFormat(GLenum target, GLint level) const
         return GL_NONE;
 }
 
-D3DFORMAT TextureCubeMap::getD3DFormat(GLenum target, GLint level) const
+GLenum TextureCubeMap::getActualFormat(GLenum target, GLint level) const
 {
     if (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-        return mImageArray[faceIndex(target)][level].getD3DFormat();
+        return mImageArray[faceIndex(target)][level].getActualFormat();
     else
         return D3DFMT_UNKNOWN;
 }

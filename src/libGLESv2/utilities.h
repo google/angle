@@ -100,6 +100,7 @@ bool IsFormatChannelEquivalent(D3DFORMAT d3dformat, GLenum format);
 bool ConvertReadBufferFormat(D3DFORMAT d3dformat, GLenum *format, GLenum *type);
 GLenum ConvertBackBufferFormat(D3DFORMAT format);
 GLenum ConvertDepthStencilFormat(D3DFORMAT format);
+GLenum GetEquivalentFormat(D3DFORMAT format);
 
 }
 

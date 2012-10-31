@@ -154,7 +154,7 @@ class Texture2D : public Texture
     GLsizei getWidth(GLint level) const;
     GLsizei getHeight(GLint level) const;
     GLenum getInternalFormat(GLint level) const;
-    D3DFORMAT getD3DFormat(GLint level) const;
+    GLenum getActualFormat(GLint level) const;
     bool isCompressed(GLint level) const;
     bool isDepth(GLint level) const;
 
@@ -222,7 +222,7 @@ class TextureCubeMap : public Texture
     GLsizei getWidth(GLenum target, GLint level) const;
     GLsizei getHeight(GLenum target, GLint level) const;
     GLenum getInternalFormat(GLenum target, GLint level) const;
-    D3DFORMAT getD3DFormat(GLenum target, GLint level) const;
+    GLenum getActualFormat(GLenum target, GLint level) const;
     bool isCompressed(GLenum target, GLint level) const;
 
     void setImagePosX(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);

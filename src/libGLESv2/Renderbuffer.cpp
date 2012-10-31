@@ -35,32 +35,32 @@ void RenderbufferInterface::releaseProxy(const Renderbuffer *proxy)
 
 GLuint RenderbufferInterface::getRedSize() const
 {
-    return dx2es::GetRedSize(getD3DFormat());
+    return gl::GetRedSize(getActualFormat());
 }
 
 GLuint RenderbufferInterface::getGreenSize() const
 {
-    return dx2es::GetGreenSize(getD3DFormat());
+    return gl::GetGreenSize(getActualFormat());
 }
 
 GLuint RenderbufferInterface::getBlueSize() const
 {
-    return dx2es::GetBlueSize(getD3DFormat());
+    return gl::GetBlueSize(getActualFormat());
 }
 
 GLuint RenderbufferInterface::getAlphaSize() const
 {
-    return dx2es::GetAlphaSize(getD3DFormat());
+    return gl::GetAlphaSize(getActualFormat());
 }
 
 GLuint RenderbufferInterface::getDepthSize() const
 {
-    return dx2es::GetDepthSize(getD3DFormat());
+    return gl::GetDepthSize(getActualFormat());
 }
 
 GLuint RenderbufferInterface::getStencilSize() const
 {
-    return dx2es::GetStencilSize(getD3DFormat());
+    return gl::GetStencilSize(getActualFormat());
 }
 
 ///// RenderbufferTexture2D Implementation ////////
@@ -116,9 +116,9 @@ GLenum RenderbufferTexture2D::getInternalFormat() const
     return mTexture2D->getInternalFormat(0);
 }
 
-D3DFORMAT RenderbufferTexture2D::getD3DFormat() const
+GLenum RenderbufferTexture2D::getActualFormat() const
 {
-    return mTexture2D->getD3DFormat(0);
+    return mTexture2D->getActualFormat(0);
 }
 
 GLsizei RenderbufferTexture2D::getSamples() const
@@ -184,9 +184,9 @@ GLenum RenderbufferTextureCubeMap::getInternalFormat() const
     return mTextureCubeMap->getInternalFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0);
 }
 
-D3DFORMAT RenderbufferTextureCubeMap::getD3DFormat() const
+GLenum RenderbufferTextureCubeMap::getActualFormat() const
 {
-    return mTextureCubeMap->getD3DFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0);
+    return mTextureCubeMap->getActualFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0);
 }
 
 GLsizei RenderbufferTextureCubeMap::getSamples() const
@@ -257,9 +257,9 @@ GLenum Renderbuffer::getInternalFormat() const
     return mInstance->getInternalFormat();
 }
 
-D3DFORMAT Renderbuffer::getD3DFormat() const
+GLenum Renderbuffer::getActualFormat() const
 {
-    return mInstance->getD3DFormat();
+    return mInstance->getActualFormat();
 }
 
 GLuint Renderbuffer::getRedSize() const
@@ -316,6 +316,7 @@ RenderbufferStorage::RenderbufferStorage() : mSerial(issueSerial())
     mHeight = 0;
     mInternalFormat = GL_RGBA4;
     mD3DFormat = D3DFMT_A8R8G8B8;
+    mActualFormat = GL_RGBA8_OES;
     mSamples = 0;
 }
 
@@ -352,9 +353,9 @@ GLenum RenderbufferStorage::getInternalFormat() const
     return mInternalFormat;
 }
 
-D3DFORMAT RenderbufferStorage::getD3DFormat() const
+GLenum RenderbufferStorage::getActualFormat() const
 {
-    return mD3DFormat;
+    return mActualFormat;
 }
 
 GLsizei RenderbufferStorage::getSamples() const
@@ -391,6 +392,7 @@ Colorbuffer::Colorbuffer(renderer::SwapChain *swapChain)
         mHeight = description.Height;
         mInternalFormat = dx2es::ConvertBackBufferFormat(description.Format);
         mD3DFormat = description.Format;
+        mActualFormat = dx2es::GetEquivalentFormat(mD3DFormat);
         mSamples = dx2es::GetSamplesFromMultisampleType(description.MultiSampleType);
     }
 }
@@ -429,6 +431,7 @@ Colorbuffer::Colorbuffer(int width, int height, GLenum format, GLsizei samples) 
     mHeight = height;
     mInternalFormat = format;
     mD3DFormat = requestedFormat;
+    mActualFormat = dx2es::GetEquivalentFormat(mD3DFormat);
     mSamples = supportedSamples;
 }
 
@@ -465,6 +468,7 @@ DepthStencilbuffer::DepthStencilbuffer(renderer::SwapChain *swapChain)
         mInternalFormat = dx2es::ConvertDepthStencilFormat(description.Format);
         mSamples = dx2es::GetSamplesFromMultisampleType(description.MultiSampleType); 
         mD3DFormat = description.Format;
+        mActualFormat = dx2es::GetEquivalentFormat(mD3DFormat);
     }
 }
 
@@ -503,6 +507,7 @@ DepthStencilbuffer::DepthStencilbuffer(int width, int height, GLsizei samples)
     mHeight = height;
     mInternalFormat = GL_DEPTH24_STENCIL8_OES;
     mD3DFormat = D3DFMT_D24S8;
+    mActualFormat = GL_DEPTH24_STENCIL8_OES;
     mSamples = supportedSamples;
 }
 
