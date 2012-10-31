@@ -25,43 +25,6 @@ Config::Config(D3DDISPLAYMODE displayMode, EGLint minInterval, EGLint maxInterva
     set(displayMode, minInterval, maxInterval, renderTargetFormat, depthStencilFormat, multiSample, texWidth, texHeight);
 }
 
-void Config::setDefaults()
-{
-    mBufferSize = 0;
-    mRedSize = 0;
-    mGreenSize = 0;
-    mBlueSize = 0;
-    mLuminanceSize = 0;
-    mAlphaSize = 0;
-    mAlphaMaskSize = 0;
-    mBindToTextureRGB = EGL_DONT_CARE;
-    mBindToTextureRGBA = EGL_DONT_CARE;
-    mColorBufferType = EGL_RGB_BUFFER;
-    mConfigCaveat = EGL_DONT_CARE;
-    mConfigID = EGL_DONT_CARE;
-    mConformant = 0;
-    mDepthSize = 0;
-    mLevel = 0;
-    mMatchNativePixmap = EGL_NONE;
-    mMaxPBufferWidth = 0;
-    mMaxPBufferHeight = 0;
-    mMaxPBufferPixels = 0;
-    mMaxSwapInterval = EGL_DONT_CARE;
-    mMinSwapInterval = EGL_DONT_CARE;
-    mNativeRenderable = EGL_DONT_CARE;
-    mNativeVisualID = 0;
-    mNativeVisualType = EGL_DONT_CARE;
-    mRenderableType = EGL_OPENGL_ES_BIT;
-    mSampleBuffers = 0;
-    mSamples = 0;
-    mStencilSize = 0;
-    mSurfaceType = EGL_WINDOW_BIT;
-    mTransparentType = EGL_NONE;
-    mTransparentRedValue = EGL_DONT_CARE;
-    mTransparentGreenValue = EGL_DONT_CARE;
-    mTransparentBlueValue = EGL_DONT_CARE;
-}
-
 void Config::set(D3DDISPLAYMODE displayMode, EGLint minInterval, EGLint maxInterval, D3DFORMAT renderTargetFormat, D3DFORMAT depthStencilFormat, EGLint multiSample, EGLint texWidth, EGLint texHeight)
 {
     mBindToTextureRGB = EGL_FALSE;
