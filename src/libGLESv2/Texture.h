@@ -206,7 +206,7 @@ class Texture : public RefCountObject
 
     virtual bool isSamplerComplete() const = 0;
 
-    IDirect3DBaseTexture9 *getTexture();
+    IDirect3DBaseTexture9 *getD3DTexture();  // D3D9_REPLACE
     virtual Renderbuffer *getRenderbuffer(GLenum target) = 0;
 
     virtual void generateMipmaps() = 0;

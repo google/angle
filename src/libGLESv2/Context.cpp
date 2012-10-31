@@ -2415,13 +2415,11 @@ void Context::applyTextures(SamplerType type)
 
     int samplerCount = (type == SAMPLER_PIXEL) ? MAX_TEXTURE_IMAGE_UNITS : MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF;   // Range of Direct3D 9 samplers of given sampler type
     unsigned int *appliedTextureSerial = (type == SAMPLER_PIXEL) ? mAppliedTextureSerialPS : mAppliedTextureSerialVS;
-    int d3dSamplerOffset = (type == SAMPLER_PIXEL) ? 0 : D3DVERTEXTEXTURESAMPLER0;
     int samplerRange = programBinary->getUsedSamplerRange(type);
 
     for (int samplerIndex = 0; samplerIndex < samplerRange; samplerIndex++)
     {
         int textureUnit = programBinary->getSamplerMapping(type, samplerIndex);   // OpenGL texture image unit index
-        int d3dSampler = samplerIndex + d3dSamplerOffset;
 
         if (textureUnit != -1)
         {
@@ -2432,9 +2430,7 @@ void Context::applyTextures(SamplerType type)
 
             if (appliedTextureSerial[samplerIndex] != texSerial || texture->hasDirtyParameters() || texture->hasDirtyImages())
             {
-                IDirect3DBaseTexture9 *d3dTexture = texture->getTexture();
-
-                if (d3dTexture)
+                if (texture->isSamplerComplete())
                 {
                     if (appliedTextureSerial[samplerIndex] != texSerial || texture->hasDirtyParameters())
                     {
@@ -2446,12 +2442,12 @@ void Context::applyTextures(SamplerType type)
 
                     if (appliedTextureSerial[samplerIndex] != texSerial || texture->hasDirtyImages())
                     {
-                        mDevice->SetTexture(d3dSampler, d3dTexture);
+                        mRenderer->setTexture(type, samplerIndex, texture);
                     }
                 }
                 else
                 {
-                    mDevice->SetTexture(d3dSampler, getIncompleteTexture(textureType)->getTexture());
+                    mRenderer->setTexture(type, samplerIndex, getIncompleteTexture(textureType));
                 }
 
                 appliedTextureSerial[samplerIndex] = texSerial;
@@ -2462,7 +2458,7 @@ void Context::applyTextures(SamplerType type)
         {
             if (appliedTextureSerial[samplerIndex] != 0)
             {
-                mDevice->SetTexture(d3dSampler, NULL);
+                mRenderer->setTexture(type, samplerIndex, NULL);
                 appliedTextureSerial[samplerIndex] = 0;
             }
         }
@@ -2472,7 +2468,7 @@ void Context::applyTextures(SamplerType type)
     {
         if (appliedTextureSerial[samplerIndex] != 0)
         {
-            mDevice->SetTexture(samplerIndex + d3dSamplerOffset, NULL);
+            mRenderer->setTexture(type, samplerIndex, NULL);
             appliedTextureSerial[samplerIndex] = 0;
         }
     }

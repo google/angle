@@ -74,13 +74,13 @@ class Renderer
     virtual void *createVertexbuffer();
 
     // state setup
-    virtual void applyTexture();
     virtual void applyShaders();
     virtual void applyConstants();
     virtual void applyRenderTargets();
     virtual void applyState();
 #endif
     virtual void setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &sampler);
+    virtual void setTexture(gl::SamplerType type, int index, gl::Texture *texture);
 
     // lost device
     virtual void markDeviceLost();

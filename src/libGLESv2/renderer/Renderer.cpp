@@ -381,6 +381,24 @@ void Renderer::setSamplerState(gl::SamplerType type, int index, const gl::Sample
     }
 }
 
+void Renderer::setTexture(gl::SamplerType type, int index, gl::Texture *texture)
+{
+    int d3dSamplerOffset = (type == gl::SAMPLER_PIXEL) ? 0 : D3DVERTEXTEXTURESAMPLER0;
+    int d3dSampler = index + d3dSamplerOffset;
+    IDirect3DBaseTexture9 *d3dTexture = NULL;
+
+    if (texture)
+    {
+        d3dTexture = texture->getD3DTexture();
+        // If we get NULL back from getTexture here, something went wrong
+        // in the texture class and we're unexpectedly missing the d3d texture
+        ASSERT(d3dTexture != NULL);
+    }
+
+    mDevice->SetTexture(d3dSampler, d3dTexture);
+}
+
+
 void Renderer::releaseDeviceResources()
 {
     while (!mEventQueryPool.empty())
