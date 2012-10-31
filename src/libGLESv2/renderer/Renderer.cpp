@@ -573,6 +573,12 @@ bool Renderer::getInstancingSupport() const
     return mDeviceCaps.PixelShaderVersion >= D3DPS_VERSION(3, 0);
 }
 
+bool Renderer::getShareHandleSupport() const
+{
+    // PIX doesn't seem to support using share handles, so disable them.
+    // D3D9_REPLACE
+    return isD3d9ExDevice() && !gl::perfActive();
+}
 
 D3DPOOL Renderer::getBufferPool(DWORD usage) const
 {

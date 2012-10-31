@@ -204,7 +204,7 @@ bool Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
 
     mShareHandle = NULL;
     HANDLE *pShareHandle = NULL;
-    if (!mWindow && mDisplay->shareHandleSupported())
+    if (!mWindow && renderer->getShareHandleSupport())
     {
         pShareHandle = &mShareHandle;
     }

@@ -95,6 +95,7 @@ class Renderer
     virtual bool getOcclusionQuerySupport() const;
     virtual bool getInstancingSupport() const;
     virtual float getTextureFilterAnisotropySupport() const;
+    virtual bool getShareHandleSupport() const;
 
     virtual D3DPOOL getBufferPool(DWORD usage) const;
     virtual D3DPOOL getTexturePool(DWORD usage) const;

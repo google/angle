@@ -66,7 +66,6 @@ class Display
     virtual void notifyDeviceLost();
 
     const char *getExtensionString() const;
-    bool shareHandleSupported() const;
 
     virtual IDirect3DVertexShader9 *createVertexShader(const DWORD *function, size_t length);
     virtual IDirect3DPixelShader9 *createPixelShader(const DWORD *function, size_t length);

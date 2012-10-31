@@ -669,6 +669,7 @@ void Display::freeEventQuery(IDirect3DQuery9* query)
 void Display::initExtensionString()
 {
     HMODULE swiftShader = GetModuleHandle(TEXT("swiftshader_d3d9.dll"));
+    bool shareHandleSupported = mRenderer->getShareHandleSupport();
 
     mExtensionString = "";
 
@@ -676,7 +677,7 @@ void Display::initExtensionString()
     mExtensionString += "EGL_EXT_create_context_robustness ";
 
     // ANGLE-specific extensions
-    if (shareHandleSupported())
+    if (shareHandleSupported)
     {
         mExtensionString += "EGL_ANGLE_d3d_share_handle_client_buffer ";
     }
@@ -688,7 +689,7 @@ void Display::initExtensionString()
         mExtensionString += "EGL_ANGLE_software_display ";
     }
 
-    if (shareHandleSupported())
+    if (shareHandleSupported)
     {
         mExtensionString += "EGL_ANGLE_surface_d3d_texture_2d_share_handle ";
     }
@@ -705,13 +706,6 @@ void Display::initExtensionString()
 const char *Display::getExtensionString() const
 {
     return mExtensionString.c_str();
-}
-
-bool Display::shareHandleSupported() const 
-{
-    // PIX doesn't seem to support using share handles, so disable them.
-    // D3D9_REPLACE
-    return mRenderer->isD3d9ExDevice() && !gl::perfActive();
 }
 
 IDirect3DVertexShader9 *Display::createVertexShader(const DWORD *function, size_t length)
