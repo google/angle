@@ -4,11 +4,11 @@
 // found in the LICENSE file.
 //
 
-// Display.h: Defines egl::ShaderCache, a cache of Direct3D shader objects
+// ShaderCache: Defines renderer::ShaderCache, a cache of Direct3D shader objects
 // keyed by their byte code.
 
-#ifndef LIBEGL_SHADER_CACHE_H_
-#define LIBEGL_SHADER_CACHE_H_
+#ifndef LIBGLESV2_RENDERER_SHADER_CACHE_H_
+#define LIBGLESV2_RENDERER_SHADER_CACHE_H_
 
 #include <d3d9.h>
 
@@ -18,7 +18,9 @@
 #include <unordered_map>
 #endif
 
-namespace egl
+#include "common/debug.h"
+
+namespace renderer
 {
 template <typename ShaderObject>
 class ShaderCache
@@ -48,7 +50,7 @@ class ShaderCache
             it->second->AddRef();
             return it->second;
         }
-        
+
         ShaderObject *shader;
         HRESULT result = createShader(function, &shader);
         if (FAILED(result))
@@ -113,4 +115,4 @@ typedef ShaderCache<IDirect3DPixelShader9> PixelShaderCache;
 
 }
 
-#endif   // LIBEGL_SHADER_CACHE_H_
+#endif   // LIBGLESV2_RENDERER_SHADER_CACHE_H_

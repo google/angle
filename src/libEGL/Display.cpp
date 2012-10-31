@@ -212,9 +212,6 @@ bool Display::initialize()
 
     initExtensionString();
 
-    mVertexShaderCache.initialize(device);
-    mPixelShaderCache.initialize(device);
-
     return true;
 }
 
@@ -229,9 +226,6 @@ void Display::terminate()
     {
         destroyContext(*mContextSet.begin());
     }
-
-    mVertexShaderCache.clear();
-    mPixelShaderCache.clear();
 
     glDestroyRenderer(mRenderer);
     mRenderer = NULL;
@@ -497,9 +491,6 @@ bool Display::restoreLostDevice()
         (*surface)->release();
     }
 
-    mVertexShaderCache.clear();
-    mPixelShaderCache.clear();
-
     if (!mRenderer->resetDevice())
     {
         return error(EGL_BAD_ALLOC, false);
@@ -620,16 +611,6 @@ void Display::initExtensionString()
 const char *Display::getExtensionString() const
 {
     return mExtensionString.c_str();
-}
-
-IDirect3DVertexShader9 *Display::createVertexShader(const DWORD *function, size_t length)
-{
-    return mVertexShaderCache.create(function, length);
-}
-
-IDirect3DPixelShader9 *Display::createPixelShader(const DWORD *function, size_t length)
-{
-    return mPixelShaderCache.create(function, length);
 }
 
 

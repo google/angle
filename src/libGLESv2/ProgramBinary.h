@@ -184,10 +184,11 @@ class ProgramBinary : public RefCountObject
     void applyUniformniv(Uniform *targetUniform, GLsizei count, const Vector4 *vector);
     void applyUniformnbv(Uniform *targetUniform, GLsizei count, int width, const GLboolean *v);
 
-    IDirect3DDevice9 *mDevice;
+    renderer::Renderer *mRenderer;
+    IDirect3DDevice9 *mDevice; // D3D9_REPLACE
 
-    IDirect3DPixelShader9 *mPixelExecutable;
-    IDirect3DVertexShader9 *mVertexExecutable;
+    IDirect3DPixelShader9 *mPixelExecutable; // D3D9_REPLACE
+    IDirect3DVertexShader9 *mVertexExecutable; // D3D9_REPLACE
 
     // These are only used during linking.
     D3DConstantTable *mConstantTablePS;

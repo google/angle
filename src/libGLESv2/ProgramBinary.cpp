@@ -64,7 +64,8 @@ unsigned int ProgramBinary::mCurrentSerial = 1;
 
 ProgramBinary::ProgramBinary() : RefCountObject(0), mSerial(issueSerial())
 {
-    mDevice = getDevice(); // D3D9_REPLACE
+    mRenderer = getDisplay()->getRenderer();
+    mDevice = mRenderer->getDevice(); // D3D9_REPLACE
 
     mPixelExecutable = NULL;
     mVertexExecutable = NULL;
@@ -1746,7 +1747,7 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
     ptr += sizeof(GUID);
 
     // D3D9_REPLACE
-    D3DADAPTER_IDENTIFIER9 *currentIdentifier = getDisplay()->getRenderer()->getAdapterIdentifier();
+    D3DADAPTER_IDENTIFIER9 *currentIdentifier = mRenderer->getAdapterIdentifier();
     if (memcmp(&currentIdentifier->DeviceIdentifier, binaryIdentifier, sizeof(GUID)) != 0)
     {
         infoLog.append("Invalid program binary.");
@@ -1759,14 +1760,14 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
     const char *vertexShaderFunction = ptr;
     ptr += vertexShaderSize;
 
-    mPixelExecutable = getDisplay()->createPixelShader(reinterpret_cast<const DWORD*>(pixelShaderFunction), pixelShaderSize);
+    mPixelExecutable = mRenderer->createPixelShader(reinterpret_cast<const DWORD*>(pixelShaderFunction), pixelShaderSize);
     if (!mPixelExecutable)
     {
         infoLog.append("Could not create pixel shader.");
         return false;
     }
 
-    mVertexExecutable = getDisplay()->createVertexShader(reinterpret_cast<const DWORD*>(vertexShaderFunction), vertexShaderSize);
+    mVertexExecutable = mRenderer->createVertexShader(reinterpret_cast<const DWORD*>(vertexShaderFunction), vertexShaderSize);
     if (!mVertexExecutable)
     {
         infoLog.append("Could not create vertex shader.");
@@ -1853,7 +1854,7 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
     stream.write(vertexShaderSize);
 
     // D3D9_REPLACE
-    D3DADAPTER_IDENTIFIER9 *identifier = getDisplay()->getRenderer()->getAdapterIdentifier();
+    D3DADAPTER_IDENTIFIER9 *identifier = mRenderer->getAdapterIdentifier();
 
     GLsizei streamLength = stream.length();
     const void *streamData = stream.data();
@@ -1940,13 +1941,13 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
 
     if (vertexBinary && pixelBinary)
     {
-        mVertexExecutable = getDisplay()->createVertexShader((DWORD*)vertexBinary->GetBufferPointer(), vertexBinary->GetBufferSize());
+        mVertexExecutable = mRenderer->createVertexShader((DWORD*)vertexBinary->GetBufferPointer(), vertexBinary->GetBufferSize());
         if (!mVertexExecutable)
         {
             return error(GL_OUT_OF_MEMORY, false);
         }
 
-        mPixelExecutable = getDisplay()->createPixelShader((DWORD*)pixelBinary->GetBufferPointer(), pixelBinary->GetBufferSize());
+        mPixelExecutable = mRenderer->createPixelShader((DWORD*)pixelBinary->GetBufferPointer(), pixelBinary->GetBufferSize());
         if (!mPixelExecutable)
         {
             mVertexExecutable->Release();

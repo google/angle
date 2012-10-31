@@ -24,7 +24,6 @@
 #include "libGLESv2/renderer/Renderer.h"
 
 #include "libEGL/Config.h"
-#include "libEGL/ShaderCache.h"
 #include "libEGL/Surface.h"
 
 namespace egl
@@ -64,9 +63,6 @@ class Display
 
     const char *getExtensionString() const;
 
-    virtual IDirect3DVertexShader9 *createVertexShader(const DWORD *function, size_t length);
-    virtual IDirect3DPixelShader9 *createPixelShader(const DWORD *function, size_t length);
-
   private:
     DISALLOW_COPY_AND_ASSIGN(Display);
 
@@ -76,9 +72,6 @@ class Display
 
     EGLNativeDisplayType mDisplayId;
     const HDC mDc;
-
-    VertexShaderCache mVertexShaderCache;
-    PixelShaderCache mPixelShaderCache;
 
     EGLint mMaxSwapInterval;
     EGLint mMinSwapInterval;

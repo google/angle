@@ -169,6 +169,9 @@
     <ClInclude Include="renderer\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\ShaderCache.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="libGLESv2.def">

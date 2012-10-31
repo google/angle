@@ -13,7 +13,6 @@
 #include <set>
 #include <vector>
 
-#include "common/angleutils.h"
 #define GL_APICALL
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
@@ -21,6 +20,9 @@
 #include <EGL/egl.h>
 
 #include <d3d9.h>  // D3D9_REPLACE
+
+#include "common/angleutils.h"
+#include "libGLESv2/renderer/ShaderCache.h"
 
 const int versionWindowsVista = MAKEWORD(0x00, 0x06);
 const int versionWindows7 = MAKEWORD(0x01, 0x06);
@@ -59,10 +61,10 @@ class Renderer
     virtual IDirect3DQuery9* allocateEventQuery();
     virtual void freeEventQuery(IDirect3DQuery9* query);
 
-#if 0
     // resource creation
-    virtual void *createVertexShader(const DWORD *function, size_t length);
-    virtual void *createPixelShader(const DWORD *function, size_t length);
+    virtual IDirect3DVertexShader9 *createVertexShader(const DWORD *function, size_t length); // D3D9_REPLACE
+    virtual IDirect3DPixelShader9 *createPixelShader(const DWORD *function, size_t length); // D3D9_REPLACE
+#if 0
     virtual void *createTexture2D();
     virtual void *createTextureCube();
     virtual void *createQuery();;
@@ -141,6 +143,8 @@ class Renderer
 
     // A pool of event queries that are currently unused.
     std::vector<IDirect3DQuery9*> mEventQueryPool;
+    VertexShaderCache mVertexShaderCache;
+    PixelShaderCache mPixelShaderCache;
 };
 
 }

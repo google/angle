@@ -264,7 +264,7 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 
         mVertexDataManager = new VertexDataManager(this, mDevice);
         mIndexDataManager = new IndexDataManager(this, mDevice);
-        mBlit = new Blit(this);
+        mBlit = new Blit(mRenderer);
 
         mSupportsShaderModel3 = mDeviceCaps.PixelShaderVersion >= D3DPS_VERSION(3, 0);
         mMaximumPointSize = mDeviceCaps.MaxPointSize;

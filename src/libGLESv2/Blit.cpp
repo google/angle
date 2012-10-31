@@ -42,8 +42,8 @@ const size_t g_shaderSize[] =
 
 namespace gl
 {
-Blit::Blit(Context *context)
-  : mContext(context), mQuadVertexBuffer(NULL), mQuadVertexDeclaration(NULL), mSavedRenderTarget(NULL), mSavedDepthStencil(NULL), mSavedStateBlock(NULL)
+Blit::Blit(renderer::Renderer *renderer)
+  : mRenderer(renderer), mQuadVertexBuffer(NULL), mQuadVertexDeclaration(NULL), mSavedRenderTarget(NULL), mSavedDepthStencil(NULL), mSavedStateBlock(NULL)
 {
     initGeometry();
     memset(mCompiledShaders, 0, sizeof(mCompiledShaders));
@@ -75,7 +75,7 @@ void Blit::initGeometry()
          1,  1
     };
 
-    IDirect3DDevice9 *device = getDevice();
+    IDirect3DDevice9 *device = mRenderer->getDevice();
 
     HRESULT result = device->CreateVertexBuffer(sizeof(quad), D3DUSAGE_WRITEONLY, 0, D3DPOOL_DEFAULT, &mQuadVertexBuffer, NULL);
 
@@ -114,11 +114,10 @@ void Blit::initGeometry()
 
 template <class D3DShaderType>
 bool Blit::setShader(ShaderId source, const char *profile,
-                     D3DShaderType *(egl::Display::*createShader)(const DWORD *, size_t length),
+                     D3DShaderType *(renderer::Renderer::*createShader)(const DWORD *, size_t length),
                      HRESULT (WINAPI IDirect3DDevice9::*setShader)(D3DShaderType*))
 {
-    egl::Display *display = getDisplay();
-    IDirect3DDevice9 *device = display->getRenderer()->getDevice(); // D3D9_REPLACE
+    IDirect3DDevice9 *device = mRenderer->getDevice(); // D3D9_REPLACE
 
     D3DShaderType *shader;
 
@@ -131,7 +130,7 @@ bool Blit::setShader(ShaderId source, const char *profile,
         const BYTE* shaderCode = g_shaderCode[source];
         size_t shaderSize = g_shaderSize[source];
 
-        shader = (display->*createShader)(reinterpret_cast<const DWORD*>(shaderCode), shaderSize);
+        shader = (mRenderer->*createShader)(reinterpret_cast<const DWORD*>(shaderCode), shaderSize);
         if (!shader)
         {
             ERR("Failed to create shader for blit operation");
@@ -154,12 +153,12 @@ bool Blit::setShader(ShaderId source, const char *profile,
 
 bool Blit::setVertexShader(ShaderId shader)
 {
-    return setShader<IDirect3DVertexShader9>(shader, "vs_2_0", &egl::Display::createVertexShader, &IDirect3DDevice9::SetVertexShader);
+    return setShader<IDirect3DVertexShader9>(shader, "vs_2_0", &renderer::Renderer::createVertexShader, &IDirect3DDevice9::SetVertexShader);
 }
 
 bool Blit::setPixelShader(ShaderId shader)
 {
-    return setShader<IDirect3DPixelShader9>(shader, "ps_2_0", &egl::Display::createPixelShader, &IDirect3DDevice9::SetPixelShader);
+    return setShader<IDirect3DPixelShader9>(shader, "ps_2_0", &renderer::Renderer::createPixelShader, &IDirect3DDevice9::SetPixelShader);
 }
 
 RECT Blit::getSurfaceRect(IDirect3DSurface9 *surface) const
@@ -185,7 +184,7 @@ bool Blit::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
     }
 
     // D3D9_REPLACE
-    IDirect3DDevice9 *device = getDevice();
+    IDirect3DDevice9 *device = mRenderer->getDevice();
 
     saveState();
 
@@ -213,7 +212,7 @@ bool Blit::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
 bool Blit::copy(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, IDirect3DSurface9 *dest)
 {
     // D3D9_REPLACE
-    IDirect3DDevice9 *device = getDevice();
+    IDirect3DDevice9 *device = mRenderer->getDevice();
 
     D3DSURFACE_DESC sourceDesc;
     D3DSURFACE_DESC destDesc;
@@ -249,7 +248,7 @@ bool Blit::formatConvert(IDirect3DSurface9 *source, const RECT &sourceRect, GLen
     }
 
     // D3D9_REPLACE
-    IDirect3DDevice9 *device = getDevice();
+    IDirect3DDevice9 *device = mRenderer->getDevice();
 
     saveState();
 
@@ -329,7 +328,7 @@ bool Blit::setFormatConvertShaders(GLenum destFormat)
         break;
     }
 
-    getDevice()->SetPixelShaderConstantF(0, psConst0, 1);
+    mRenderer->getDevice()->SetPixelShaderConstantF(0, psConst0, 1); // D3D9_REPLACE
 
     return true;
 }
@@ -342,9 +341,7 @@ IDirect3DTexture9 *Blit::copySurfaceToTexture(IDirect3DSurface9 *surface, const 
         return NULL;
     }
 
-    egl::Display *display = getDisplay();
-    renderer::Renderer *renderer = display->getRenderer();
-    IDirect3DDevice9 *device = renderer->getDevice(); // D3D9_REPLACE
+    IDirect3DDevice9 *device = mRenderer->getDevice(); // D3D9_REPLACE
 
     D3DSURFACE_DESC sourceDesc;
     surface->GetDesc(&sourceDesc);
@@ -369,7 +366,7 @@ IDirect3DTexture9 *Blit::copySurfaceToTexture(IDirect3DSurface9 *surface, const 
         return error(GL_OUT_OF_MEMORY, (IDirect3DTexture9*)NULL);
     }
 
-    renderer->endScene();
+    mRenderer->endScene();
     result = device->StretchRect(surface, &sourceRect, textureSurface, NULL, D3DTEXF_NONE);
 
     textureSurface->Release();
@@ -386,7 +383,7 @@ IDirect3DTexture9 *Blit::copySurfaceToTexture(IDirect3DSurface9 *surface, const 
 
 void Blit::setViewport(const RECT &sourceRect, GLint xoffset, GLint yoffset)
 {
-    IDirect3DDevice9 *device = getDevice(); // D3D9_REPLACE
+    IDirect3DDevice9 *device = mRenderer->getDevice(); // D3D9_REPLACE
 
     D3DVIEWPORT9 vp;
     vp.X      = xoffset;
@@ -404,7 +401,7 @@ void Blit::setViewport(const RECT &sourceRect, GLint xoffset, GLint yoffset)
 // D3D9_REPLACE
 void Blit::setCommonBlitState()
 {
-    IDirect3DDevice9 *device = getDevice();
+    IDirect3DDevice9 *device = mRenderer->getDevice();
 
     device->SetDepthStencilSurface(NULL);
 
@@ -435,21 +432,19 @@ void Blit::setCommonBlitState()
 // D3D9_REPLACE
 void Blit::render()
 {
-    egl::Display *display = getDisplay();
-    renderer::Renderer *renderer = display->getRenderer();
-    IDirect3DDevice9 *device = renderer->getDevice();
+    IDirect3DDevice9 *device = mRenderer->getDevice();
 
     HRESULT hr = device->SetStreamSource(0, mQuadVertexBuffer, 0, 2 * sizeof(float));
     hr = device->SetVertexDeclaration(mQuadVertexDeclaration);
 
-    renderer->startScene();
+    mRenderer->startScene();
     hr = device->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
 }
 
 // D3D9_REPLACE
 void Blit::saveState()
 {
-    IDirect3DDevice9 *device = getDevice();
+    IDirect3DDevice9 *device = mRenderer->getDevice();
 
     HRESULT hr;
 
@@ -502,7 +497,7 @@ void Blit::saveState()
 // D3D9_REPLACE
 void Blit::restoreState()
 {
-    IDirect3DDevice9 *device = getDevice();
+    IDirect3DDevice9 *device = mRenderer->getDevice();
 
     device->SetDepthStencilSurface(mSavedDepthStencil);
     if (mSavedDepthStencil != NULL)

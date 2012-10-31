@@ -274,6 +274,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="..\common\RefCountObject.h" />
     <ClInclude Include="Renderbuffer.h" />
     <ClInclude Include="renderer\Renderer.h" />
+    <ClInclude Include="renderer\ShaderCache.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Shader.h" />

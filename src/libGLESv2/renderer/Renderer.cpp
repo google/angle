@@ -199,6 +199,9 @@ EGLint Renderer::initialize()
         ASSERT(SUCCEEDED(result));
     }
 
+    mVertexShaderCache.initialize(mDevice);
+    mPixelShaderCache.initialize(mDevice);
+
     initializeDevice();
 
     return EGL_SUCCESS;
@@ -344,6 +347,16 @@ void Renderer::freeEventQuery(IDirect3DQuery9* query)
     }
 }
 
+IDirect3DVertexShader9 *Renderer::createVertexShader(const DWORD *function, size_t length)
+{
+    return mVertexShaderCache.create(function, length);
+}
+
+IDirect3DPixelShader9 *Renderer::createPixelShader(const DWORD *function, size_t length)
+{
+    return mPixelShaderCache.create(function, length);
+}
+
 void Renderer::releaseDeviceResources()
 {
     while (!mEventQueryPool.empty())
@@ -351,6 +364,9 @@ void Renderer::releaseDeviceResources()
         mEventQueryPool.back()->Release();
         mEventQueryPool.pop_back();
     }
+
+    mVertexShaderCache.clear();
+    mPixelShaderCache.clear();
 }
 
 
