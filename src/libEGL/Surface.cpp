@@ -23,6 +23,24 @@
 namespace egl
 {
 
+// D3D9_REMOVE - Temporary duplication of this conversion function until remainder of d3d types are stripped
+D3DFORMAT ConvertRenderbufferFormat(GLenum format)
+{
+    switch (format)
+    {
+      case GL_NONE:                 return D3DFMT_NULL;
+      case GL_RGBA4:
+      case GL_RGB5_A1:
+      case GL_RGBA8_OES:            return D3DFMT_A8R8G8B8;
+      case GL_RGB565:               return D3DFMT_R5G6B5;
+      case GL_RGB8_OES:             return D3DFMT_X8R8G8B8;
+      case GL_DEPTH_COMPONENT16:
+      case GL_STENCIL_INDEX8:
+      case GL_DEPTH24_STENCIL8_OES: return D3DFMT_D24S8;
+      default: UNREACHABLE();       return D3DFMT_A8R8G8B8;
+    }
+}
+
 Surface::Surface(Display *display, const Config *config, HWND window, EGLint postSubBufferSupported) 
     : mDisplay(display), mConfig(config), mWindow(window), mPostSubBufferSupported(postSubBufferSupported)
 {
@@ -211,6 +229,7 @@ bool Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
 
     result = device->CreateTexture(backbufferWidth, backbufferHeight, 1, D3DUSAGE_RENDERTARGET,
                                    mConfig->mRenderTargetFormat, D3DPOOL_DEFAULT, &mOffscreenTexture, pShareHandle);
+
     if (FAILED(result))
     {
         ERR("Could not create offscreen texture: %08lX", result);
