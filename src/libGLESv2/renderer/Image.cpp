@@ -188,6 +188,16 @@ IDirect3DSurface9 *Image::getSurface()
     return mSurface;
 }
 
+void Image::setManagedSurface(TextureStorage2D *storage, int level)
+{
+    setManagedSurface(storage->getSurfaceLevel(level, false));
+}
+
+void Image::setManagedSurface(TextureStorageCubeMap *storage, int face, int level)
+{
+    setManagedSurface(storage->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level, false));
+}
+
 void Image::setManagedSurface(IDirect3DSurface9 *surface)
 {
     D3DSURFACE_DESC desc;
@@ -207,8 +217,21 @@ void Image::setManagedSurface(IDirect3DSurface9 *surface)
     }
 }
 
-void Image::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
+bool Image::updateSurface(TextureStorage2D *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
+    return updateSurface(storage->getSurfaceLevel(level, true), xoffset, yoffset, width, height);
+}
+
+bool Image::updateSurface(TextureStorageCubeMap *storage, int face, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
+{
+    return updateSurface(storage->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level, true), xoffset, yoffset, width, height);
+}
+
+bool Image::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
+{
+    if (!destSurface)
+        return false;
+
     IDirect3DSurface9 *sourceSurface = getSurface();
 
     if (sourceSurface && sourceSurface != destSurface)
@@ -245,6 +268,9 @@ void Image::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint y
             ASSERT(SUCCEEDED(result));
         }
     }
+
+    destSurface->Release();
+    return true;
 }
 
 // Store the pixel rectangle designated by xoffset,yoffset,width,height with pixels stored as format/type at input

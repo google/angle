@@ -707,14 +707,9 @@ void Texture2D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei wi
 
     if (level < levelCount())
     {
-        IDirect3DSurface9 *destLevel = mTexStorage->getSurfaceLevel(level, true);
-
-        if (destLevel)
+        Image *image = &mImageArray[level];
+        if (image->updateSurface(mTexStorage, level, xoffset, yoffset, width, height))
         {
-            Image *image = &mImageArray[level];
-            image->updateSurface(destLevel, xoffset, yoffset, width, height);
-
-            destLevel->Release();
             image->markClean();
         }
     }
@@ -860,8 +855,7 @@ void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GL
 
         for (int level = 0; level < levels; level++)
         {
-            IDirect3DSurface9 *surface = mTexStorage->getSurfaceLevel(level, false);
-            mImageArray[level].setManagedSurface(surface);
+            mImageArray[level].setManagedSurface(mTexStorage, level);
         }
     }
 }
@@ -994,8 +988,7 @@ void Texture2D::createTexture()
 
         for (int level = 0; level < levels; level++)
         {
-            IDirect3DSurface9 *surface = mTexStorage->getSurfaceLevel(level, false);
-            mImageArray[level].setManagedSurface(surface);
+            mImageArray[level].setManagedSurface(mTexStorage, level);
         }
     }
 
@@ -1320,17 +1313,9 @@ void TextureCubeMap::commitRect(int face, GLint level, GLint xoffset, GLint yoff
 
     if (level < levelCount())
     {
-        IDirect3DSurface9 *destLevel = mTexStorage->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level, true);
-        ASSERT(destLevel != NULL);
-
-        if (destLevel != NULL)
-        {
-            Image *image = &mImageArray[face][level];
-            image->updateSurface(destLevel, xoffset, yoffset, width, height);
-
-            destLevel->Release();
+        Image *image = &mImageArray[face][level];
+        if (image->updateSurface(mTexStorage, face, level, xoffset, yoffset, width, height))
             image->markClean();
-        }
     }
 }
 
@@ -1481,8 +1466,7 @@ void TextureCubeMap::createTexture()
         {
             for (int level = 0; level < levels; level++)
             {
-                IDirect3DSurface9 *surface = mTexStorage->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level, false);
-                mImageArray[face][level].setManagedSurface(surface);
+                mImageArray[face][level].setManagedSurface(mTexStorage, face, level);
             }
         }
     }
@@ -1729,8 +1713,7 @@ void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size
         {
             for (int level = 0; level < levels; level++)
             {
-                IDirect3DSurface9 *surface = mTexStorage->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level, false);
-                mImageArray[face][level].setManagedSurface(surface);
+                mImageArray[face][level].setManagedSurface(mTexStorage, face, level);
             }
         }
     }

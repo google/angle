@@ -18,6 +18,9 @@
 
 namespace gl
 {
+class TextureStorage2D;
+class TextureStorageCubeMap;
+
 class Image
 {
   public:
@@ -40,8 +43,10 @@ class Image
     bool isDirty() const {return mSurface && mDirty;}
     IDirect3DSurface9 *getSurface();
 
-    void setManagedSurface(IDirect3DSurface9 *surface);
-    void updateSurface(IDirect3DSurface9 *dest, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
+    void setManagedSurface(TextureStorage2D *storage, int level);
+    void setManagedSurface(TextureStorageCubeMap *storage, int face, int level);
+    bool updateSurface(TextureStorage2D *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
+    bool updateSurface(TextureStorageCubeMap *storage, int face, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
 
     void loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                   GLint unpackAlignment, const void *input);
@@ -97,6 +102,8 @@ class Image
     DISALLOW_COPY_AND_ASSIGN(Image);
 
     void createSurface();
+    void setManagedSurface(IDirect3DSurface9 *surface);
+    bool updateSurface(IDirect3DSurface9 *dest, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
 
     HRESULT lock(D3DLOCKED_RECT *lockedRect, const RECT *rect);
     void unlock();
