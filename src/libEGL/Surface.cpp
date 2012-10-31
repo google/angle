@@ -145,6 +145,7 @@ bool Surface::resetSwapChain()
     {
         glDestroySwapChain(mSwapChain);
         mSwapChain = NULL;
+        return false;
     }
 
     return true;
