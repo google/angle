@@ -68,7 +68,8 @@ void SwapChain::release()
         mOffscreenTexture = NULL;
     }
 
-    mShareHandle = NULL;
+    if (mWindow)
+        mShareHandle = NULL;
 }
 
 static DWORD convertInterval(EGLint interval)
@@ -128,7 +129,6 @@ EGLint SwapChain::reset(int backbufferWidth, int backbufferHeight, EGLint swapIn
         mDepthStencil = NULL;
     }
 
-    mShareHandle = NULL;
     HANDLE *pShareHandle = NULL;
     if (!mWindow && mRenderer->getShareHandleSupport())
     {
