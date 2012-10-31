@@ -1125,6 +1125,8 @@ GLenum ConvertDepthStencilFormat(D3DFORMAT format)
         return GL_DEPTH_COMPONENT16;
       case D3DFMT_D24S8:
         return GL_DEPTH24_STENCIL8_OES;
+      case D3DFMT_UNKNOWN:
+        return GL_NONE;
       default:
         UNREACHABLE();
     }
