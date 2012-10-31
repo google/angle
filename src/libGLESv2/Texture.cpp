@@ -231,7 +231,8 @@ void Image::createSurface()
         MakeValidSize(true, IsCompressed(mInternalFormat), &requestWidth, &requestHeight, &levelToFetch);
 
         // D3D9_REPLACE
-        HRESULT result = getDevice()->CreateTexture(requestWidth, requestHeight, levelToFetch + 1, NULL, d3dFormat,
+        IDirect3DDevice9 *device = getDisplay()->getRenderer()->getDevice();
+        HRESULT result = device->CreateTexture(requestWidth, requestHeight, levelToFetch + 1, NULL, d3dFormat,
                                                     poolToUse, &newTexture, NULL);
 
         if (FAILED(result))
@@ -350,7 +351,8 @@ void Image::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint y
         {
             // UpdateSurface: source must be SYSTEMMEM, dest must be DEFAULT pools
             // D3D9_REPLACE
-            HRESULT result = getDevice()->UpdateSurface(sourceSurface, &rect, destSurface, &point);
+            IDirect3DDevice9 *device = getDisplay()->getRenderer()->getDevice();
+            HRESULT result = device->UpdateSurface(sourceSurface, &rect, destSurface, &point);
             ASSERT(SUCCEEDED(result));
         }
     }
@@ -867,7 +869,7 @@ void Image::loadCompressedData(GLint xoffset, GLint yoffset, GLsizei width, GLsi
 // This implements glCopyTex[Sub]Image2D for non-renderable internal texture formats and incomplete textures
 void Image::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, IDirect3DSurface9 *renderTarget)
 {
-    IDirect3DDevice9 *device = getDevice(); // D3D9_REPLACE
+    IDirect3DDevice9 *device = getDisplay()->getRenderer()->getDevice(); // D3D9_REPLACE
     IDirect3DSurface9 *renderTargetData = NULL;
     D3DSURFACE_DESC description;
     renderTarget->GetDesc(&description);
@@ -1644,8 +1646,7 @@ bool Texture::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *sou
         }
         else
         {
-            egl::Display *display = getDisplay();
-            renderer::Renderer *renderer = display->getRenderer();
+            renderer::Renderer *renderer = getDisplay()->getRenderer();
             IDirect3DDevice9 *device = renderer->getDevice(); // D3D9_REPLACE
 
             renderer->endScene();
@@ -1675,7 +1676,7 @@ TextureStorage2D::TextureStorage2D(int levels, D3DFORMAT format, DWORD usage, in
     // we handle that here by skipping the d3d texture creation
     if (width > 0 && height > 0)
     {
-        IDirect3DDevice9 *device = getDevice(); // D3D9_REPLACE
+        IDirect3DDevice9 *device = getDisplay()->getRenderer()->getDevice(); // D3D9_REPLACE
         MakeValidSize(false, dx::IsCompressedFormat(format), &width, &height, &mLodOffset);
         HRESULT result = device->CreateTexture(width, height, levels ? levels + mLodOffset : 0, getUsage(), format, getPool(), &mTexture, NULL);
 
@@ -2386,7 +2387,7 @@ TextureStorageCubeMap::TextureStorageCubeMap(int levels, D3DFORMAT format, DWORD
     // we handle that here by skipping the d3d texture creation
     if (size > 0)
     {
-        IDirect3DDevice9 *device = getDevice(); // D3D9_REPLACE
+        IDirect3DDevice9 *device = getDisplay()->getRenderer()->getDevice(); // D3D9_REPLACE
         int height = size;
         MakeValidSize(false, dx::IsCompressedFormat(format), &size, &height, &mLodOffset);
         HRESULT result = device->CreateCubeTexture(size, levels ? levels + mLodOffset : 0, getUsage(), format, getPool(), &mTexture, NULL);

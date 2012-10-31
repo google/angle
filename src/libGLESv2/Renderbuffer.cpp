@@ -398,7 +398,7 @@ Colorbuffer::Colorbuffer(IDirect3DSurface9 *renderTarget) : mRenderTarget(render
 
 Colorbuffer::Colorbuffer(int width, int height, GLenum format, GLsizei samples) : mRenderTarget(NULL)
 {
-    IDirect3DDevice9 *device = getDevice();
+    IDirect3DDevice9 *device = getDisplay()->getRenderer()->getDevice(); // D3D9_REPLACE
 
     D3DFORMAT requestedFormat = es2dx::ConvertRenderbufferFormat(format);
     int supportedSamples = getContext()->getNearestSupportedSamples(requestedFormat, samples);
@@ -471,7 +471,7 @@ DepthStencilbuffer::DepthStencilbuffer(IDirect3DSurface9 *depthStencil) : mDepth
 
 DepthStencilbuffer::DepthStencilbuffer(int width, int height, GLsizei samples)
 {
-    IDirect3DDevice9 *device = getDevice();
+    IDirect3DDevice9 *device = getDisplay()->getRenderer()->getDevice(); // D3D9_REPLACE
 
     mDepthStencil = NULL;
     

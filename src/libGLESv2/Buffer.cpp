@@ -19,6 +19,7 @@ namespace gl
 
 Buffer::Buffer(GLuint id) : RefCountObject(id)
 {
+    mRenderer = getDisplay()->getRenderer();
     mContents = NULL;
     mSize = 0;
     mUsage = GL_DYNAMIC_DRAW;
@@ -61,8 +62,8 @@ void Buffer::bufferData(const void *data, GLsizeiptr size, GLenum usage)
 
     if (usage == GL_STATIC_DRAW)
     {
-        mStaticVertexBuffer = new StaticVertexBuffer(getDevice());
-        mStaticIndexBuffer = new StaticIndexBuffer(getDevice());
+        mStaticVertexBuffer = new StaticVertexBuffer(mRenderer->getDevice()); // D3D9_REPLACE
+        mStaticIndexBuffer = new StaticIndexBuffer(mRenderer->getDevice()); // D3D9_REPLACE
     }
 }
 
@@ -108,8 +109,8 @@ void Buffer::promoteStaticUsage(int dataSize)
 
         if (mUnmodifiedDataUse > 3 * mSize)
         {
-            mStaticVertexBuffer = new StaticVertexBuffer(getDevice());
-            mStaticIndexBuffer = new StaticIndexBuffer(getDevice());
+            mStaticVertexBuffer = new StaticVertexBuffer(mRenderer->getDevice()); // D3D9_REPLACE
+            mStaticIndexBuffer = new StaticIndexBuffer(mRenderer->getDevice()); // D3D9_REPLACE
         }
     }
 }

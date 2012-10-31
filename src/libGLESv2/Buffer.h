@@ -19,6 +19,7 @@
 
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
+#include "libGLESv2/renderer/Renderer.h"
 
 namespace gl
 {
@@ -47,6 +48,7 @@ class Buffer : public RefCountObject
   private:
     DISALLOW_COPY_AND_ASSIGN(Buffer);
 
+    renderer::Renderer *mRenderer;
     GLubyte *mContents;
     GLsizeiptr mSize;
     GLenum mUsage;
