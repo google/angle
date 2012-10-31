@@ -134,6 +134,9 @@ class Renderer
 
     void getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray); // D3D9_REPLACE
 
+    static const D3DFORMAT mRenderTargetFormats[];
+    static const D3DFORMAT mDepthStencilFormats[];
+
     egl::Display *mDisplay;
     const HDC mDc;
     HMODULE mD3d9Module;

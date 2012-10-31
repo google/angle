@@ -26,6 +26,29 @@
 
 namespace renderer
 {
+const D3DFORMAT Renderer::mRenderTargetFormats[] =
+    {
+        D3DFMT_A1R5G5B5,
+    //  D3DFMT_A2R10G10B10,   // The color_ramp conformance test uses ReadPixels with UNSIGNED_BYTE causing it to think that rendering skipped a colour value.
+        D3DFMT_A8R8G8B8,
+        D3DFMT_R5G6B5,
+    //  D3DFMT_X1R5G5B5,      // Has no compatible OpenGL ES renderbuffer format
+        D3DFMT_X8R8G8B8
+    };
+
+const D3DFORMAT Renderer::mDepthStencilFormats[] =
+    {
+        D3DFMT_UNKNOWN,
+    //  D3DFMT_D16_LOCKABLE,
+        D3DFMT_D32,
+    //  D3DFMT_D15S1,
+        D3DFMT_D24S8,
+        D3DFMT_D24X8,
+    //  D3DFMT_D24X4S4,
+        D3DFMT_D16,
+    //  D3DFMT_D32F_LOCKABLE,
+    //  D3DFMT_D24FS8
+    };
 
 Renderer::Renderer(egl::Display *display, HMODULE hModule, HDC hDc): mDc(hDc)
 {
@@ -207,20 +230,30 @@ EGLint Renderer::initialize()
         mMaxSwapInterval = std::max(mMaxSwapInterval, 4);
     }
 
-    const D3DFORMAT renderBufferFormats[] =
-    {
-        D3DFMT_A8R8G8B8,
-        D3DFMT_X8R8G8B8,
-        D3DFMT_R5G6B5,
-        D3DFMT_D24S8
-    };
-
     int max = 0;
-    for (int i = 0; i < sizeof(renderBufferFormats) / sizeof(D3DFORMAT); ++i)
+    for (int i = 0; i < sizeof(mRenderTargetFormats) / sizeof(D3DFORMAT); ++i)
     {
         bool *multisampleArray = new bool[D3DMULTISAMPLE_16_SAMPLES + 1];
-        getMultiSampleSupport(renderBufferFormats[i], multisampleArray);
-        mMultiSampleSupport[renderBufferFormats[i]] = multisampleArray;
+        getMultiSampleSupport(mRenderTargetFormats[i], multisampleArray);
+        mMultiSampleSupport[mRenderTargetFormats[i]] = multisampleArray;
+
+        for (int j = D3DMULTISAMPLE_16_SAMPLES; j >= 0; --j)
+        {
+            if (multisampleArray[j] && j != D3DMULTISAMPLE_NONMASKABLE && j > max)
+            {
+                max = j;
+            }
+        }
+    }
+
+    for (int i = 0; i < sizeof(mDepthStencilFormats) / sizeof(D3DFORMAT); ++i)
+    {
+        if (mDepthStencilFormats[i] == D3DFMT_UNKNOWN)
+            continue;
+
+        bool *multisampleArray = new bool[D3DMULTISAMPLE_16_SAMPLES + 1];
+        getMultiSampleSupport(mDepthStencilFormats[i], multisampleArray);
+        mMultiSampleSupport[mDepthStencilFormats[i]] = multisampleArray;
 
         for (int j = D3DMULTISAMPLE_16_SAMPLES; j >= 0; --j)
         {
@@ -852,6 +885,8 @@ int Renderer::getNearestSupportedSamples(D3DFORMAT format, int requested) const
     std::map<D3DFORMAT, bool *>::const_iterator itr = mMultiSampleSupport.find(format);
     if (itr == mMultiSampleSupport.end())
     {
+        if (format == D3DFMT_UNKNOWN)
+            return 0;
         return -1;
     }
 
