@@ -51,7 +51,7 @@ struct ConfigDesc
 class Renderer
 {
   public:
-    Renderer(egl::Display *display) : mDisplay(display) {};
+    explicit Renderer(egl::Display *display) : mDisplay(display) {};
     virtual ~Renderer() {};
 
     virtual EGLint initialize() = 0;
@@ -108,6 +108,10 @@ class Renderer
 
   protected:
     egl::Display *mDisplay;
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(Renderer);
+
 };
 
 }

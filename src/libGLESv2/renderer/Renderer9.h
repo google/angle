@@ -56,7 +56,7 @@ class Renderer9 : public Renderer
 #if 0
     void *createTexture2D();
     void *createTextureCube();
-    void *createQuery();;
+    void *createQuery();
     void *createIndexBuffer();
     void *createVertexbuffer();
 
