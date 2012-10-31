@@ -80,7 +80,7 @@ class Renderer
     // lost device
     virtual void markDeviceLost();
     virtual bool isDeviceLost();
-    virtual bool testDeviceLost();
+    virtual bool testDeviceLost(bool notify);
     virtual bool testDeviceResettable();
 
     // Renderer capabilities

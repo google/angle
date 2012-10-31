@@ -421,6 +421,7 @@ void Context::markDxUniformsDirty()
     mDxUniformsDirty = true;
 }
 
+// NOTE: this function should not assume that this context is current!
 void Context::markContextLost()
 {
     if (mResetStrategy == GL_LOSE_CONTEXT_ON_RESET_EXT)
@@ -3431,12 +3432,9 @@ GLenum Context::getResetStatus()
 {
     if (mResetStatus == GL_NO_ERROR)
     {
-        bool lost = mRenderer->testDeviceLost();
-
-        if (lost)
-        {
-            mDisplay->notifyDeviceLost();   // Sets mResetStatus
-        }
+        // mResetStatus will be set by the markContextLost callback
+        // in the case a notification is sent
+        mRenderer->testDeviceLost(true);
     }
 
     GLenum status = mResetStatus;

@@ -331,7 +331,7 @@ EGLSurface Display::createWindowSurface(HWND window, EGLConfig config, const EGL
         return error(EGL_BAD_ALLOC, EGL_NO_SURFACE);
     }
 
-    if (mRenderer->testDeviceLost())
+    if (mRenderer->testDeviceLost(false))
     {
         if (!restoreLostDevice())
             return EGL_NO_SURFACE;
@@ -444,7 +444,7 @@ EGLSurface Display::createOffscreenSurface(EGLConfig config, HANDLE shareHandle,
         return error(EGL_BAD_ATTRIBUTE, EGL_NO_SURFACE);
     }
 
-    if (mRenderer->testDeviceLost())
+    if (mRenderer->testDeviceLost(false))
     {
         if (!restoreLostDevice())
             return EGL_NO_SURFACE;
@@ -469,7 +469,7 @@ EGLContext Display::createContext(EGLConfig configHandle, const gl::Context *sha
     {
         return NULL;
     }
-    else if (mRenderer->testDeviceLost())   // Lost device
+    else if (mRenderer->testDeviceLost(false))   // Lost device
     {
         if (!restoreLostDevice())
             return NULL;

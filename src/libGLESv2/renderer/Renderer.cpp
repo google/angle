@@ -56,7 +56,7 @@ Renderer::~Renderer()
     if (mDevice)
     {
         // If the device is lost, reset it first to prevent leaving the driver in an unstable state
-        if (testDeviceLost())
+        if (testDeviceLost(false))
         {
             resetDevice();
         }
@@ -296,7 +296,7 @@ void Renderer::sync(bool block)
             // explicitly check for device loss
             // some drivers seem to return S_FALSE even if the device is lost
             // instead of D3DERR_DEVICELOST like they should
-            if (testDeviceLost())
+            if (testDeviceLost(false))
             {
                 result = D3DERR_DEVICELOST;
             }
@@ -364,7 +364,8 @@ bool Renderer::isDeviceLost()
     return mDeviceLost;
 }
 
-bool Renderer::testDeviceLost()
+// set notify to true to broadcast a message to all contexts of the device loss
+bool Renderer::testDeviceLost(bool notify)
 {
     bool isLost = false;
 
@@ -389,6 +390,10 @@ bool Renderer::testDeviceLost()
         // Note that we don't want to clear the device loss status here
         // -- this needs to be done by resetDevice
         mDeviceLost = true;
+        if (notify)
+        {
+            mDisplay->notifyDeviceLost();
+        }
     }
 
     return isLost;
@@ -424,7 +429,7 @@ bool Renderer::resetDevice()
     D3DPRESENT_PARAMETERS presentParameters = getDefaultPresentParameters();
 
     HRESULT result = D3D_OK;
-    bool lost = testDeviceLost();
+    bool lost = testDeviceLost(false);
     int attempts = 3;
 
     while (lost && attempts > 0)
@@ -449,7 +454,7 @@ bool Renderer::resetDevice()
             }
         }
 
-        lost = testDeviceLost();
+        lost = testDeviceLost(false);
         attempts --;
     }
 

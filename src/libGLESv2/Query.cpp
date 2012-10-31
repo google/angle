@@ -70,9 +70,8 @@ GLuint Query::getResult()
             // explicitly check for device loss
             // some drivers seem to return S_FALSE even if the device is lost
             // instead of D3DERR_DEVICELOST like they should
-            if (mRenderer->testDeviceLost())
+            if (mRenderer->testDeviceLost(true))
             {
-                gl::getDisplay()->notifyDeviceLost(); // D3D9_REPLACE
                 return error(GL_OUT_OF_MEMORY, 0);
             }
         }
