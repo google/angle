@@ -53,9 +53,9 @@ const D3DFORMAT Renderer9::mDepthStencilFormats[] =
     //  D3DFMT_D24FS8
     };
 
-Renderer9::Renderer9(egl::Display *display, HMODULE hModule, HDC hDc) : Renderer(display), mDc(hDc)
+Renderer9::Renderer9(egl::Display *display, HDC hDc, bool softwareDevice) : Renderer(display), mDc(hDc), mSoftwareDevice(softwareDevice)
 {
-    mD3d9Module = hModule;
+    mD3d9Module = NULL;
 
     mD3d9 = NULL;
     mD3d9Ex = NULL;
@@ -130,6 +130,21 @@ Renderer9::~Renderer9()
 
 EGLint Renderer9::initialize()
 {
+    if (mSoftwareDevice)
+    {
+        mD3d9Module = GetModuleHandle(TEXT("swiftshader_d3d9.dll"));
+    }
+    else
+    {
+        mD3d9Module = GetModuleHandle(TEXT("d3d9.dll"));
+    }
+
+    if (mD3d9Module == NULL)
+    {
+        ERR("No D3D9 module found - aborting!\n");
+        return EGL_NOT_INITIALIZED;
+    }
+
     typedef HRESULT (WINAPI *Direct3DCreate9ExFunc)(UINT, IDirect3D9Ex**);
     Direct3DCreate9ExFunc Direct3DCreate9ExPtr = reinterpret_cast<Direct3DCreate9ExFunc>(GetProcAddress(mD3d9Module, "Direct3DCreate9Ex"));
 

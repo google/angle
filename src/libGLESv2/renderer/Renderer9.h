@@ -32,7 +32,7 @@ namespace renderer
 class Renderer9 : public Renderer
 {
   public:
-    Renderer9(egl::Display *display, HMODULE hModule, HDC hDc);
+    Renderer9(egl::Display *display, HDC hDc, bool softwareDevice);
     virtual ~Renderer9();
 
     virtual EGLint initialize();
@@ -131,6 +131,7 @@ class Renderer9 : public Renderer
 
     UINT mAdapter;
     D3DDEVTYPE mDeviceType;
+    bool mSoftwareDevice;   // FIXME: Deprecate
     IDirect3D9 *mD3d9;  // Always valid after successful initialization.
     IDirect3D9Ex *mD3d9Ex;  // Might be null if D3D9Ex is not supported.
     IDirect3DDevice9 *mDevice;

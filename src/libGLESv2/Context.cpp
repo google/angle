@@ -4400,23 +4400,7 @@ gl::Context *glGetCurrentContext()
 
 renderer::Renderer *glCreateRenderer(egl::Display *display, HDC hDc, bool softwareDevice)
 {
-    HMODULE hModule = NULL;
-    
-    if (softwareDevice)
-    {
-        hModule = GetModuleHandle(TEXT("swiftshader_d3d9.dll"));
-    }
-    else
-    {
-        hModule = GetModuleHandle(TEXT("d3d9.dll"));
-    }
-
-    if (hModule == NULL)
-    {
-        return NULL;
-    }
-
-    return new renderer::Renderer9(display, hModule, hDc);  // D3D9_REPLACE
+    return new renderer::Renderer9(display, hDc, softwareDevice);  // D3D9_REPLACE
 }
 
 void glDestroyRenderer(renderer::Renderer *renderer)
