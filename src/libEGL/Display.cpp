@@ -59,8 +59,6 @@ egl::Display *Display::getDisplay(EGLNativeDisplayType displayId)
 Display::Display(EGLNativeDisplayType displayId, HDC deviceContext, bool software) : mDc(deviceContext)
 {
 
-    mMinSwapInterval = 1;
-    mMaxSwapInterval = 1;
     mSoftwareDevice = software;
     mDisplayId = displayId;
     mRenderer = NULL;
@@ -110,16 +108,18 @@ bool Display::initialize()
         return error(status, false);
     }
 
-    mMinSwapInterval = mRenderer->getMinSwapInterval();
-    mMaxSwapInterval = mRenderer->getMaxSwapInterval();
+    EGLint minSwapInterval = mRenderer->getMinSwapInterval();
+    EGLint maxSwapInterval = mRenderer->getMaxSwapInterval();
+    EGLint maxTextureWidth = mRenderer->getMaxTextureWidth();
+    EGLint maxTextureHeight = mRenderer->getMaxTextureHeight();
 
     renderer::ConfigDesc *descList;
     int numConfigs = mRenderer->generateConfigs(&descList);
     ConfigSet configSet;
 
     for (int i = 0; i < numConfigs; ++i)
-        configSet.add(descList[i], mMinSwapInterval, mMaxSwapInterval, 
-                      mRenderer->getMaxTextureWidth(), mRenderer->getMaxTextureHeight());
+        configSet.add(descList[i], minSwapInterval, maxSwapInterval,
+                      maxTextureWidth, maxTextureHeight);
 
     // Give the sorted configs a unique ID and store them internally
     EGLint index = 1;
@@ -488,16 +488,6 @@ bool Display::hasExistingWindowSurface(HWND window)
     }
 
     return false;
-}
-
-EGLint Display::getMinSwapInterval()
-{
-    return mMinSwapInterval;
-}
-
-EGLint Display::getMaxSwapInterval()
-{
-    return mMaxSwapInterval;
 }
 
 void Display::initExtensionString()

@@ -27,6 +27,7 @@ namespace egl
 Surface::Surface(Display *display, const Config *config, HWND window, EGLint postSubBufferSupported) 
     : mDisplay(display), mConfig(config), mWindow(window), mPostSubBufferSupported(postSubBufferSupported)
 {
+    mRenderer = mDisplay->getRenderer();
     mSwapChain = NULL;
     mShareHandle = NULL;
     mTexture = NULL;
@@ -47,6 +48,7 @@ Surface::Surface(Display *display, const Config *config, HWND window, EGLint pos
 Surface::Surface(Display *display, const Config *config, HANDLE shareHandle, EGLint width, EGLint height, EGLenum textureFormat, EGLenum textureType)
     : mDisplay(display), mWindow(NULL), mConfig(config), mShareHandle(shareHandle), mWidth(width), mHeight(height), mPostSubBufferSupported(EGL_FALSE)
 {
+    mRenderer = mDisplay->getRenderer();
     mSwapChain = NULL;
     mWindowSubclassed = false;
     mTexture = NULL;
@@ -132,7 +134,7 @@ bool Surface::resetSwapChain()
         height = mHeight;
     }
 
-    mSwapChain = glCreateSwapChain(mDisplay->getRenderer(), mWindow, mShareHandle,
+    mSwapChain = glCreateSwapChain(mRenderer, mWindow, mShareHandle,
                                    mConfig->mRenderTargetFormat, mConfig->mDepthStencilFormat);
     if (!mSwapChain)
     {
@@ -358,8 +360,8 @@ void Surface::setSwapInterval(EGLint interval)
     }
     
     mSwapInterval = interval;
-    mSwapInterval = std::max(mSwapInterval, mDisplay->getMinSwapInterval());
-    mSwapInterval = std::min(mSwapInterval, mDisplay->getMaxSwapInterval());
+    mSwapInterval = std::max(mSwapInterval, mRenderer->getMinSwapInterval());
+    mSwapInterval = std::min(mSwapInterval, mRenderer->getMaxSwapInterval());
 
     mSwapIntervalDirty = true;
 }

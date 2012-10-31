@@ -54,9 +54,6 @@ class Display
     bool isValidSurface(egl::Surface *surface);
     bool hasExistingWindowSurface(HWND window);
 
-    EGLint getMinSwapInterval();
-    EGLint getMaxSwapInterval();
-
     renderer::Renderer *getRenderer() { return mRenderer; };
 
     virtual void notifyDeviceLost();
@@ -73,8 +70,6 @@ class Display
     EGLNativeDisplayType mDisplayId;
     const HDC mDc;
 
-    EGLint mMaxSwapInterval;
-    EGLint mMinSwapInterval;
     bool mSoftwareDevice;
     
     typedef std::set<Surface*> SurfaceSet;
