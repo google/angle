@@ -577,8 +577,7 @@ VertexBuffer::VertexBuffer(renderer::Renderer9 *renderer, std::size_t size, DWOR
     if (size > 0)
     {
         // D3D9_REPLACE
-        D3DPOOL pool = mRenderer->getBufferPool(usageFlags);
-        HRESULT result = mRenderer->getDevice()->CreateVertexBuffer(size, usageFlags, 0, pool, &mVertexBuffer, NULL);
+        HRESULT result = mRenderer->createVertexBuffer(size, usageFlags,&mVertexBuffer);
         mSerial = issueSerial();
         
         if (FAILED(result))
@@ -677,8 +676,7 @@ void StreamingVertexBuffer::reserveRequiredSpace()
         mBufferSize = std::max(mRequiredSpace, 3 * mBufferSize / 2);   // 1.5 x mBufferSize is arbitrary and should be checked to see we don't have too many reallocations.
 
         // D3D9_REPLACE
-        D3DPOOL pool = mRenderer->getBufferPool(D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY);
-        HRESULT result = mRenderer->getDevice()->CreateVertexBuffer(mBufferSize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, 0, pool, &mVertexBuffer, NULL);
+        HRESULT result = mRenderer->createVertexBuffer(mBufferSize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, &mVertexBuffer);
         mSerial = issueSerial();
     
         if (FAILED(result))
@@ -741,8 +739,7 @@ void StaticVertexBuffer::reserveRequiredSpace()
     if (!mVertexBuffer && mBufferSize == 0)
     {
         // D3D9_REPLACE
-        D3DPOOL pool = mRenderer->getBufferPool(D3DUSAGE_WRITEONLY);
-        HRESULT result = mRenderer->getDevice()->CreateVertexBuffer(mRequiredSpace, D3DUSAGE_WRITEONLY, 0, pool, &mVertexBuffer, NULL);
+        HRESULT result = mRenderer->createVertexBuffer(mRequiredSpace, D3DUSAGE_WRITEONLY, &mVertexBuffer);
         mSerial = issueSerial();
 
         if (FAILED(result))

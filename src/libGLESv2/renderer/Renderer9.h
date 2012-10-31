@@ -49,8 +49,10 @@ class Renderer9 : public Renderer
     void freeEventQuery(IDirect3DQuery9* query);
 
     // resource creation
-    IDirect3DVertexShader9 *createVertexShader(const DWORD *function, size_t length); // D3D9_REPLACE
-    IDirect3DPixelShader9 *createPixelShader(const DWORD *function, size_t length); // D3D9_REPLACE
+    IDirect3DVertexShader9 *createVertexShader(const DWORD *function, size_t length);
+    IDirect3DPixelShader9 *createPixelShader(const DWORD *function, size_t length);
+    HRESULT createVertexBuffer(UINT Length, DWORD Usage, IDirect3DVertexBuffer9 **ppVertexBuffer);
+    HRESULT createIndexBuffer(UINT Length, DWORD Usage, D3DFORMAT Format, IDirect3DIndexBuffer9 **ppIndexBuffer);
 #if 0
     void *createTexture2D();
     void *createTextureCube();
@@ -108,13 +110,14 @@ class Renderer9 : public Renderer
     virtual GLsizei getMaxSupportedSamples() const;
     int getNearestSupportedSamples(D3DFORMAT format, int requested) const;
 
-    D3DPOOL getBufferPool(DWORD usage) const;
     D3DPOOL getTexturePool(DWORD usage) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer9);
 
     void getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray); // D3D9_REPLACE
+
+    D3DPOOL getBufferPool(DWORD usage) const;
 
     static const D3DFORMAT mRenderTargetFormats[];
     static const D3DFORMAT mDepthStencilFormats[];

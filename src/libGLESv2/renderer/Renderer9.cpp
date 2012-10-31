@@ -513,6 +513,17 @@ IDirect3DPixelShader9 *Renderer9::createPixelShader(const DWORD *function, size_
     return mPixelShaderCache.create(function, length);
 }
 
+HRESULT Renderer9::createVertexBuffer(UINT Length, DWORD Usage, IDirect3DVertexBuffer9 **ppVertexBuffer)
+{
+    D3DPOOL Pool = getBufferPool(Usage);
+    return mDevice->CreateVertexBuffer(Length, Usage, 0, Pool, ppVertexBuffer, NULL);
+}
+
+HRESULT Renderer9::createIndexBuffer(UINT Length, DWORD Usage, D3DFORMAT Format, IDirect3DIndexBuffer9 **ppIndexBuffer)
+{
+    D3DPOOL Pool = getBufferPool(Usage);
+    return mDevice->CreateIndexBuffer(Length, Usage, Format, Pool, ppIndexBuffer, NULL);
+}
 
 void Renderer9::setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &samplerState)
 {
