@@ -667,7 +667,7 @@ gl::Context *glCreateContext(const gl::Context *shareContext, bool notifyResets,
 void glDestroyContext(gl::Context *context);
 void glMakeCurrent(gl::Context *context, egl::Display *display, egl::Surface *surface);
 gl::Context *glGetCurrentContext();
-renderer::Renderer9 *glCreateRenderer(egl::Display *display, HMODULE hModule, HDC hDc);  // D3D9_REPLACE
+renderer::Renderer *glCreateRenderer(egl::Display *display, HDC hDc, bool softwareDevice);
 void glDestroyRenderer(renderer::Renderer *renderer);
 renderer::SwapChain *glCreateSwapChain(renderer::Renderer9 *renderer, HWND window, HANDLE shareHandle,
                                        GLenum backBufferFormat, GLenum depthBufferFormat);  // D3D9_REPLACE

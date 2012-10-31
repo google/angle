@@ -83,22 +83,7 @@ bool Display::initialize()
         return true;
     }
 
-    HMODULE hModule = NULL;
-    if (mSoftwareDevice)
-    {
-      hModule = GetModuleHandle(TEXT("swiftshader_d3d9.dll"));
-    } 
-    else
-    {
-      hModule = GetModuleHandle(TEXT("d3d9.dll"));
-    }
-    if (hModule == NULL)
-    {
-        terminate();
-        return false;
-    }
-
-    mRenderer = glCreateRenderer(this, hModule, mDc);
+    mRenderer = glCreateRenderer(this, mDc, mSoftwareDevice);
     EGLint status = EGL_BAD_ALLOC;
     if (mRenderer)
         status = mRenderer->initialize();

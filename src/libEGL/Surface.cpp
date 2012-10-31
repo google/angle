@@ -27,7 +27,7 @@ namespace egl
 Surface::Surface(Display *display, const Config *config, HWND window, EGLint postSubBufferSupported) 
     : mDisplay(display), mConfig(config), mWindow(window), mPostSubBufferSupported(postSubBufferSupported)
 {
-    mRenderer = mDisplay->getRenderer();
+    mRenderer = mDisplay->getRenderer9();
     mSwapChain = NULL;
     mShareHandle = NULL;
     mTexture = NULL;
@@ -48,7 +48,7 @@ Surface::Surface(Display *display, const Config *config, HWND window, EGLint pos
 Surface::Surface(Display *display, const Config *config, HANDLE shareHandle, EGLint width, EGLint height, EGLenum textureFormat, EGLenum textureType)
     : mDisplay(display), mWindow(NULL), mConfig(config), mShareHandle(shareHandle), mWidth(width), mHeight(height), mPostSubBufferSupported(EGL_FALSE)
 {
-    mRenderer = mDisplay->getRenderer();
+    mRenderer = mDisplay->getRenderer9();
     mSwapChain = NULL;
     mWindowSubclassed = false;
     mTexture = NULL;

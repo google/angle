@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -401,7 +401,7 @@ Colorbuffer::Colorbuffer(renderer::SwapChain *swapChain)
 
 Colorbuffer::Colorbuffer(int width, int height, GLenum format, GLsizei samples) : mRenderTarget(NULL)
 {
-    renderer::Renderer9 *renderer = getDisplay()->getRenderer();
+    renderer::Renderer9 *renderer = getDisplay()->getRenderer9();
     IDirect3DDevice9 *device = renderer->getDevice(); // D3D9_REPLACE
 
     D3DFORMAT requestedFormat = es2dx::ConvertRenderbufferFormat(format);
@@ -476,7 +476,7 @@ DepthStencilbuffer::DepthStencilbuffer(renderer::SwapChain *swapChain)
 
 DepthStencilbuffer::DepthStencilbuffer(int width, int height, GLsizei samples)
 {
-    renderer::Renderer9 *renderer = getDisplay()->getRenderer();
+    renderer::Renderer9 *renderer = getDisplay()->getRenderer9();
     IDirect3DDevice9 *device = renderer->getDevice(); // D3D9_REPLACE
 
     mDepthStencil = NULL;

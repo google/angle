@@ -64,7 +64,7 @@ unsigned int ProgramBinary::mCurrentSerial = 1;
 
 ProgramBinary::ProgramBinary() : RefCountObject(0), mSerial(issueSerial())
 {
-    mRenderer = getDisplay()->getRenderer();
+    mRenderer = getDisplay()->getRenderer9();
     mDevice = mRenderer->getDevice(); // D3D9_REPLACE
 
     mPixelExecutable = NULL;

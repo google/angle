@@ -54,7 +54,8 @@ class Display
     bool isValidSurface(egl::Surface *surface);
     bool hasExistingWindowSurface(HWND window);
 
-    renderer::Renderer9 *getRenderer() { return mRenderer; };
+    renderer::Renderer *getRenderer() { return mRenderer; };
+    renderer::Renderer9 *getRenderer9() { assert(dynamic_cast<renderer::Renderer9*>(mRenderer) != NULL); return static_cast<renderer::Renderer9*>(mRenderer); };   // D3D9_REPLACE
 
     virtual void notifyDeviceLost();
 
@@ -80,7 +81,7 @@ class Display
     typedef std::set<gl::Context*> ContextSet;
     ContextSet mContextSet;
 
-    renderer::Renderer9 *mRenderer;   // D3D9_REPLACE
+    renderer::Renderer *mRenderer;
 
     void initExtensionString();
     std::string mExtensionString;

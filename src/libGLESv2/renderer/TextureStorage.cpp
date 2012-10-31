@@ -23,7 +23,7 @@ unsigned int TextureStorage::mCurrentTextureSerial = 1;
 
 TextureStorage::TextureStorage(DWORD usage)
     : mD3DUsage(usage),
-      mD3DPool(getDisplay()->getRenderer()->getTexturePool(usage)), // D3D9_REPLACE
+      mD3DPool(getDisplay()->getRenderer9()->getTexturePool(usage)), // D3D9_REPLACE
       mTextureSerial(issueTextureSerial()),
       mLodOffset(0)
 {
@@ -172,7 +172,7 @@ bool TextureStorage::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurfac
     if (source && dest)
     {
         HRESULT result = D3DERR_OUTOFVIDEOMEMORY;
-        renderer::Renderer9 *renderer = getDisplay()->getRenderer();
+        renderer::Renderer9 *renderer = getDisplay()->getRenderer9();
         IDirect3DDevice9 *device = renderer->getDevice(); // D3D9_REPLACE
 
         if (fromManaged)
@@ -221,7 +221,7 @@ TextureStorage2D::TextureStorage2D(int levels, GLenum internalformat, GLenum usa
     // we handle that here by skipping the d3d texture creation
     if (width > 0 && height > 0)
     {
-        IDirect3DDevice9 *device = getDisplay()->getRenderer()->getDevice(); // D3D9_REPLACE
+        IDirect3DDevice9 *device = getDisplay()->getRenderer9()->getDevice(); // D3D9_REPLACE
         MakeValidSize(false, gl::IsCompressed(internalformat), &width, &height, &mLodOffset);
         HRESULT result = device->CreateTexture(width, height, levels ? levels + mLodOffset : 0, getUsage(),
                                                ConvertTextureInternalFormat(internalformat), getPool(), &mTexture, NULL);
@@ -321,7 +321,7 @@ TextureStorageCubeMap::TextureStorageCubeMap(int levels, GLenum internalformat, 
     // we handle that here by skipping the d3d texture creation
     if (size > 0)
     {
-        IDirect3DDevice9 *device = getDisplay()->getRenderer()->getDevice(); // D3D9_REPLACE
+        IDirect3DDevice9 *device = getDisplay()->getRenderer9()->getDevice(); // D3D9_REPLACE
         int height = size;
         MakeValidSize(false, gl::IsCompressed(internalformat), &size, &height, &mLodOffset);
         HRESULT result = device->CreateCubeTexture(size, levels ? levels + mLodOffset : 0, getUsage(),

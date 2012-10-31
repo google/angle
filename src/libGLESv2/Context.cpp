@@ -249,7 +249,7 @@ Context::~Context()
 void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 {
     mDisplay = display;
-    mRenderer = mDisplay->getRenderer();
+    mRenderer = mDisplay->getRenderer9();
     mDevice = mRenderer->getDevice(); // D3D9_REMOVE
 
     if (!mHasBeenCurrent)
@@ -4398,8 +4398,24 @@ gl::Context *glGetCurrentContext()
     return gl::getContext();
 }
 
-renderer::Renderer9 *glCreateRenderer(egl::Display *display, HMODULE hModule, HDC hDc)
+renderer::Renderer *glCreateRenderer(egl::Display *display, HDC hDc, bool softwareDevice)
 {
+    HMODULE hModule = NULL;
+    
+    if (softwareDevice)
+    {
+        hModule = GetModuleHandle(TEXT("swiftshader_d3d9.dll"));
+    }
+    else
+    {
+        hModule = GetModuleHandle(TEXT("d3d9.dll"));
+    }
+
+    if (hModule == NULL)
+    {
+        return NULL;
+    }
+
     return new renderer::Renderer9(display, hModule, hDc);  // D3D9_REPLACE
 }
 
