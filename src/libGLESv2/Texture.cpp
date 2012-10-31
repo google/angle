@@ -438,18 +438,17 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GL
     return true;
 }
 
-// D3D9_REPLACE
-IDirect3DBaseTexture9 *Texture::getD3DTexture()
+TextureStorage *Texture::getNativeTexture()
 {
     // ensure the underlying texture is created
-    if (getStorage(false) == NULL)
+
+    TextureStorage *storage = getStorage(false);
+    if (storage)
     {
-        return NULL;
+        updateTexture();
     }
 
-    updateTexture();
-
-    return getBaseTexture();
+    return storage;
 }
 
 bool Texture::hasDirtyParameters() const

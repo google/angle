@@ -10,6 +10,7 @@
 #include "common/debug.h"
 #include "libGLESv2/utilities.h"
 #include "libGLESv2/renderer/Renderer9.h"
+#include "libGLESv2/renderer/TextureStorage.h"
 
 #include "libEGL/Config.h"
 #include "libEGL/Display.h"
@@ -553,8 +554,12 @@ void Renderer9::setTexture(gl::SamplerType type, int index, gl::Texture *texture
 
     if (texture)
     {
-        d3dTexture = texture->getD3DTexture();
-        // If we get NULL back from getTexture here, something went wrong
+        gl::TextureStorage *texStorage = texture->getNativeTexture();
+        if (texStorage)
+        {
+            d3dTexture = texStorage->getBaseTexture();
+        }
+        // If we get NULL back from getBaseTexture here, something went wrong
         // in the texture class and we're unexpectedly missing the d3d texture
         ASSERT(d3dTexture != NULL);
     }
