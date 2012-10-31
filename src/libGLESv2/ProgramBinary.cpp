@@ -64,7 +64,7 @@ unsigned int ProgramBinary::mCurrentSerial = 1;
 
 ProgramBinary::ProgramBinary() : RefCountObject(0), mSerial(issueSerial())
 {
-    mDevice = getDevice();
+    mDevice = getDevice(); // D3D9_REPLACE
 
     mPixelExecutable = NULL;
     mVertexExecutable = NULL;
@@ -1745,7 +1745,8 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
     const D3DCAPS9 *binaryIdentifier = (const D3DCAPS9*) ptr;
     ptr += sizeof(GUID);
 
-    D3DADAPTER_IDENTIFIER9 *currentIdentifier = getDisplay()->getAdapterIdentifier();
+    // D3D9_REPLACE
+    D3DADAPTER_IDENTIFIER9 *currentIdentifier = getDisplay()->getRenderer()->getAdapterIdentifier();
     if (memcmp(&currentIdentifier->DeviceIdentifier, binaryIdentifier, sizeof(GUID)) != 0)
     {
         infoLog.append("Invalid program binary.");
@@ -1851,7 +1852,8 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
     ASSERT(SUCCEEDED(result));
     stream.write(vertexShaderSize);
 
-    D3DADAPTER_IDENTIFIER9 *identifier = getDisplay()->getAdapterIdentifier();
+    // D3D9_REPLACE
+    D3DADAPTER_IDENTIFIER9 *identifier = getDisplay()->getRenderer()->getAdapterIdentifier();
 
     GLsizei streamLength = stream.length();
     const void *streamData = stream.data();

@@ -34,6 +34,7 @@ void Query::begin()
 {
     if (mQuery == NULL)
     {
+        // D3D9_REPLACE
         if (FAILED(getDevice()->CreateQuery(D3DQUERYTYPE_OCCLUSION, &mQuery)))
         {
             return error(GL_OUT_OF_MEMORY);
@@ -68,7 +69,7 @@ GLuint Query::getResult()
             // explicitly check for device loss
             // some drivers seem to return S_FALSE even if the device is lost
             // instead of D3DERR_DEVICELOST like they should
-            if (gl::getDisplay()->testDeviceLost())
+            if (gl::getDisplay()->getRenderer()->testDeviceLost()) // D3D9_REPLACE
             {
                 gl::getDisplay()->notifyDeviceLost();
                 return error(GL_OUT_OF_MEMORY, 0);

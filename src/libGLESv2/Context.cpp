@@ -255,11 +255,12 @@ Context::~Context()
 void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 {
     mDisplay = display;
-    mDevice = mDisplay->getDevice();
+    mRenderer = mDisplay->getRenderer();
+    mDevice = mRenderer->getDevice(); // D3D9_REMOVE
 
     if (!mHasBeenCurrent)
     {
-        mDeviceCaps = mDisplay->getDeviceCaps();
+        mDeviceCaps = mRenderer->getDeviceCaps(); // D3D9_REMOVE
 
         mVertexDataManager = new VertexDataManager(this, mDevice);
         mIndexDataManager = new IndexDataManager(this, mDevice);
@@ -267,16 +268,16 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 
         mSupportsShaderModel3 = mDeviceCaps.PixelShaderVersion >= D3DPS_VERSION(3, 0);
         mMaximumPointSize = mDeviceCaps.MaxPointSize;
-        mSupportsVertexTexture = mDisplay->getVertexTextureSupport();
-        mSupportsNonPower2Texture = mDisplay->getNonPower2TextureSupport();
-        mSupportsInstancing = mDisplay->getInstancingSupport();
+        mSupportsVertexTexture = mRenderer->getVertexTextureSupport();
+        mSupportsNonPower2Texture = mRenderer->getNonPower2TextureSupport();
+        mSupportsInstancing = mRenderer->getInstancingSupport();
 
         mMaxTextureDimension = std::min(std::min((int)mDeviceCaps.MaxTextureWidth, (int)mDeviceCaps.MaxTextureHeight),
                                         (int)gl::IMPLEMENTATION_MAX_TEXTURE_SIZE);
         mMaxCubeTextureDimension = std::min(mMaxTextureDimension, (int)gl::IMPLEMENTATION_MAX_CUBE_MAP_TEXTURE_SIZE);
         mMaxRenderbufferDimension = mMaxTextureDimension;
         mMaxTextureLevel = log2(mMaxTextureDimension) + 1;
-        mMaxTextureAnisotropy = mDisplay->getTextureFilterAnisotropySupport();
+        mMaxTextureAnisotropy = mRenderer->getTextureFilterAnisotropySupport();
         TRACE("MaxTextureDimension=%d, MaxCubeTextureDimension=%d, MaxRenderbufferDimension=%d, MaxTextureLevel=%d, MaxTextureAnisotropy=%f",
               mMaxTextureDimension, mMaxCubeTextureDimension, mMaxRenderbufferDimension, mMaxTextureLevel, mMaxTextureAnisotropy);
 
@@ -292,7 +293,7 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         for (int i = 0; i < sizeof(renderBufferFormats) / sizeof(D3DFORMAT); ++i)
         {
             bool *multisampleArray = new bool[D3DMULTISAMPLE_16_SAMPLES + 1];
-            mDisplay->getMultiSampleSupport(renderBufferFormats[i], multisampleArray);
+            mRenderer->getMultiSampleSupport(renderBufferFormats[i], multisampleArray);
             mMultiSampleSupport[renderBufferFormats[i]] = multisampleArray;
 
             for (int j = D3DMULTISAMPLE_16_SAMPLES; j >= 0; --j)
@@ -306,16 +307,16 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 
         mMaxSupportedSamples = max;
 
-        mSupportsEventQueries = mDisplay->getEventQuerySupport();
-        mSupportsOcclusionQueries = mDisplay->getOcclusionQuerySupport();
-        mSupportsDXT1Textures = mDisplay->getDXT1TextureSupport();
-        mSupportsDXT3Textures = mDisplay->getDXT3TextureSupport();
-        mSupportsDXT5Textures = mDisplay->getDXT5TextureSupport();
-        mSupportsFloat32Textures = mDisplay->getFloat32TextureSupport(&mSupportsFloat32LinearFilter, &mSupportsFloat32RenderableTextures);
-        mSupportsFloat16Textures = mDisplay->getFloat16TextureSupport(&mSupportsFloat16LinearFilter, &mSupportsFloat16RenderableTextures);
-        mSupportsLuminanceTextures = mDisplay->getLuminanceTextureSupport();
-        mSupportsLuminanceAlphaTextures = mDisplay->getLuminanceAlphaTextureSupport();
-        mSupportsDepthTextures = mDisplay->getDepthTextureSupport();
+        mSupportsEventQueries = mRenderer->getEventQuerySupport();
+        mSupportsOcclusionQueries = mRenderer->getOcclusionQuerySupport();
+        mSupportsDXT1Textures = mRenderer->getDXT1TextureSupport();
+        mSupportsDXT3Textures = mRenderer->getDXT3TextureSupport();
+        mSupportsDXT5Textures = mRenderer->getDXT5TextureSupport();
+        mSupportsFloat32Textures = mRenderer->getFloat32TextureSupport(&mSupportsFloat32LinearFilter, &mSupportsFloat32RenderableTextures);
+        mSupportsFloat16Textures = mRenderer->getFloat16TextureSupport(&mSupportsFloat16LinearFilter, &mSupportsFloat16RenderableTextures);
+        mSupportsLuminanceTextures = mRenderer->getLuminanceTextureSupport();
+        mSupportsLuminanceAlphaTextures = mRenderer->getLuminanceAlphaTextureSupport();
+        mSupportsDepthTextures = mRenderer->getDepthTextureSupport();
         mSupportsTextureFilterAnisotropy = mMaxTextureAnisotropy >= 2.0f;
 
         mSupports32bitIndices = mDeviceCaps.MaxVertexIndex >= (1 << 16);
@@ -2100,7 +2101,7 @@ void Context::applyState(GLenum drawMode)
     GLint alwaysFront = !isTriangleMode(drawMode);
     programBinary->setUniform1iv(pointsOrLines, 1, &alwaysFront);
 
-    D3DADAPTER_IDENTIFIER9 *identifier = mDisplay->getAdapterIdentifier();
+    D3DADAPTER_IDENTIFIER9 *identifier = mRenderer->getAdapterIdentifier();
     bool zeroColorMaskAllowed = identifier->VendorId != 0x1002;
     // Apparently some ATI cards have a bug where a draw with a zero color
     // write mask can cause later draws to have incorrect results. Instead,
@@ -2536,7 +2537,7 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
 
     HRESULT result;
     IDirect3DSurface9 *systemSurface = NULL;
-    bool directToPixels = !getPackReverseRowOrder() && getPackAlignment() <= 4 && mDisplay->isD3d9ExDevice() &&
+    bool directToPixels = !getPackReverseRowOrder() && getPackAlignment() <= 4 && mRenderer->isD3d9ExDevice() &&
                           x == 0 && y == 0 && UINT(width) == desc.Width && UINT(height) == desc.Height &&
                           desc.Format == D3DFMT_A8R8G8B8 && format == GL_BGRA_EXT && type == GL_UNSIGNED_BYTE;
     if (directToPixels)
@@ -3039,7 +3040,7 @@ void Context::clear(GLbitfield mask)
         quad[3][2] = 0.0f;
         quad[3][3] = 1.0f;
 
-        mDisplay->startScene();
+        mRenderer->startScene();
         mDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, quad, sizeof(float[4]));
 
         if (flags & D3DCLEAR_ZBUFFER)
@@ -3102,7 +3103,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
 
     if (!skipDraw(mode))
     {
-        mDisplay->startScene();
+        mRenderer->startScene();
         
         if (mode == GL_LINE_LOOP)
         {
@@ -3192,7 +3193,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
 
     if (!skipDraw(mode))
     {
-        mDisplay->startScene();
+        mRenderer->startScene();
 
         if (mode == GL_LINE_LOOP)
         {
@@ -3430,7 +3431,7 @@ GLenum Context::getResetStatus()
 {
     if (mResetStatus == GL_NO_ERROR)
     {
-        bool lost = mDisplay->testDeviceLost();
+        bool lost = mRenderer->testDeviceLost();
 
         if (lost)
         {
@@ -3442,7 +3443,7 @@ GLenum Context::getResetStatus()
 
     if (mResetStatus != GL_NO_ERROR)
     {
-        if (mDisplay->testDeviceResettable())
+        if (mRenderer->testDeviceResettable())
         {
             mResetStatus = GL_NO_ERROR;
         }
@@ -3984,7 +3985,7 @@ const char *Context::getExtensionString() const
 
 void Context::initRendererString()
 {
-    D3DADAPTER_IDENTIFIER9 *identifier = mDisplay->getAdapterIdentifier();
+    D3DADAPTER_IDENTIFIER9 *identifier = mRenderer->getAdapterIdentifier();
 
     mRendererString = "ANGLE (";
     mRendererString += identifier->Description;
@@ -4240,7 +4241,7 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
 
     if (blitRenderTarget || blitDepthStencil)
     {
-        mDisplay->endScene();
+        mRenderer->endScene();
 
         if (blitRenderTarget)
         {
@@ -4498,4 +4499,15 @@ gl::Context *glGetCurrentContext()
 {
     return gl::getContext();
 }
+
+renderer::Renderer *glCreateRenderer(HMODULE hModule, HDC hDc)
+{
+    return new renderer::Renderer(hModule, hDc);
+}
+
+void glDestroyRenderer(renderer::Renderer *renderer)
+{
+    delete renderer;
+}
+
 }

@@ -21,23 +21,11 @@
 #include <vector>
 
 #include "libGLESv2/Context.h"
+#include "libGLESv2/renderer/Renderer.h"
 
 #include "libEGL/Config.h"
 #include "libEGL/ShaderCache.h"
 #include "libEGL/Surface.h"
-
-const int versionWindowsVista = MAKEWORD(0x00, 0x06);
-const int versionWindows7 = MAKEWORD(0x01, 0x06);
-
-// Return the version of the operating system in a format suitable for ordering
-// comparison.
-inline int getComparableOSVersion()
-{
-    DWORD version = GetVersion();
-    int majorVersion = LOBYTE(LOWORD(version));
-    int minorVersion = HIBYTE(LOWORD(version));
-    return MAKEWORD(minorVersion, majorVersion);
-}
 
 namespace egl
 {
@@ -48,9 +36,6 @@ class Display
 
     bool initialize();
     void terminate();
-
-    virtual void startScene();
-    virtual void endScene();
 
     static egl::Display *getDisplay(EGLNativeDisplayType displayId);
 
@@ -73,36 +58,13 @@ class Display
     EGLint getMinSwapInterval();
     EGLint getMaxSwapInterval();
 
-    virtual IDirect3DDevice9 *getDevice();
-    virtual D3DCAPS9 getDeviceCaps();
-    virtual D3DADAPTER_IDENTIFIER9 *getAdapterIdentifier();
-    virtual bool testDeviceLost();
-    virtual bool testDeviceResettable();
+    renderer::Renderer *getRenderer() { return mRenderer; };
     virtual void sync(bool block);
     virtual IDirect3DQuery9* allocateEventQuery();
     virtual void freeEventQuery(IDirect3DQuery9* query);
-    virtual void getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray);
-    virtual bool getDXT1TextureSupport();
-    virtual bool getDXT3TextureSupport();
-    virtual bool getDXT5TextureSupport();
-    virtual bool getEventQuerySupport();
-    virtual bool getFloat32TextureSupport(bool *filtering, bool *renderable);
-    virtual bool getFloat16TextureSupport(bool *filtering, bool *renderable);
-    virtual bool getLuminanceTextureSupport();
-    virtual bool getLuminanceAlphaTextureSupport();
-    virtual bool getVertexTextureSupport() const;
-    virtual bool getNonPower2TextureSupport() const;
-    virtual bool getDepthTextureSupport() const;
-    virtual bool getOcclusionQuerySupport() const;
-    virtual bool getInstancingSupport() const;
-    virtual float getTextureFilterAnisotropySupport() const;
-    virtual D3DPOOL getBufferPool(DWORD usage) const;
-    virtual D3DPOOL getTexturePool(DWORD usage) const;
 
     virtual void notifyDeviceLost();
-    bool isDeviceLost();
 
-    bool isD3d9ExDevice() const { return mD3d9Ex != NULL; }
     const char *getExtensionString() const;
     bool shareHandleSupported() const;
 
@@ -114,21 +76,10 @@ class Display
 
     Display(EGLNativeDisplayType displayId, HDC deviceContext, bool software);
 
-    D3DPRESENT_PARAMETERS getDefaultPresentParameters();
-
     bool restoreLostDevice();
 
     EGLNativeDisplayType mDisplayId;
     const HDC mDc;
-
-    HMODULE mD3d9Module;
-    
-    UINT mAdapter;
-    D3DDEVTYPE mDeviceType;
-    IDirect3D9 *mD3d9;  // Always valid after successful initialization.
-    IDirect3D9Ex *mD3d9Ex;  // Might be null if D3D9Ex is not supported.
-    IDirect3DDevice9 *mDevice;
-    IDirect3DDevice9Ex *mDeviceEx;  // Might be null if D3D9Ex is not supported.
 
     // A pool of event queries that are currently unused.
     std::vector<IDirect3DQuery9*> mEventQueryPool;
@@ -136,15 +87,9 @@ class Display
     VertexShaderCache mVertexShaderCache;
     PixelShaderCache mPixelShaderCache;
 
-    D3DCAPS9 mDeviceCaps;
-    D3DADAPTER_IDENTIFIER9 mAdapterIdentifier;
-    HWND mDeviceWindow;
-
-    bool mSceneStarted;
     EGLint mMaxSwapInterval;
     EGLint mMinSwapInterval;
     bool mSoftwareDevice;
-    bool mSupportsNonPower2Textures;
     
     typedef std::set<Surface*> SurfaceSet;
     SurfaceSet mSurfaceSet;
@@ -153,11 +98,8 @@ class Display
 
     typedef std::set<gl::Context*> ContextSet;
     ContextSet mContextSet;
-    bool mDeviceLost;
 
-    bool createDevice();
-    void initializeDevice();
-    bool resetDevice();
+    renderer::Renderer *mRenderer;
 
     void initExtensionString();
     std::string mExtensionString;

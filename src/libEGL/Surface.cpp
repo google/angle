@@ -159,9 +159,11 @@ bool Surface::resetSwapChain()
     return resetSwapChain(windowRect.right - windowRect.left, windowRect.bottom - windowRect.top);
 }
 
+// D3D9_REPLACE
 bool Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
 {
-    IDirect3DDevice9 *device = mDisplay->getDevice();
+    renderer::Renderer *renderer = mDisplay->getRenderer();
+    IDirect3DDevice9 *device = renderer->getDevice();
 
     if (device == NULL)
     {
@@ -248,7 +250,7 @@ bool Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
             rect.bottom = backbufferHeight;
         }
 
-        mDisplay->endScene();
+        renderer->endScene();
 
         result = device->StretchRect(oldRenderTarget, &rect, mRenderTarget, &rect, D3DTEXF_NONE);
         ASSERT(SUCCEEDED(result));
@@ -281,7 +283,7 @@ bool Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
         //
         // Some non-switchable AMD GPUs / drivers do not respect the source rectangle to Present. Therefore, when the vendor ID
         // is not Intel, the back buffer width must be exactly the same width as the window or horizontal scaling will occur.
-        D3DADAPTER_IDENTIFIER9* adapterIdentifier = mDisplay->getAdapterIdentifier();
+        D3DADAPTER_IDENTIFIER9* adapterIdentifier = renderer->getAdapterIdentifier();
         if (adapterIdentifier->VendorId == VENDOR_ID_INTEL)
         {
             presentParameters.BackBufferWidth = (presentParameters.BackBufferWidth + 63) / 64 * 64;
@@ -364,7 +366,8 @@ bool Surface::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
         return true;
     }
 
-    IDirect3DDevice9 *device = mDisplay->getDevice();
+    renderer::Renderer *renderer = mDisplay->getRenderer();
+    IDirect3DDevice9 *device = renderer->getDevice();
 
     // Disable all pipeline operations
     device->SetRenderState(D3DRS_ZENABLE, D3DZB_FALSE);
@@ -411,9 +414,9 @@ bool Surface::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
                         {x2, y2, 0.0f, 1.0f, u2, v1},
                         {x1, y2, 0.0f, 1.0f, u1, v1}};   // x, y, z, rhw, u, v
 
-    mDisplay->startScene();
+    renderer->startScene();
     device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, quad, 6 * sizeof(float));
-    mDisplay->endScene();
+    renderer->endScene();
 
     device->SetTexture(0, NULL);
 

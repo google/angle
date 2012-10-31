@@ -64,6 +64,7 @@ Blit::~Blit()
     }
 }
 
+// D3D9_REPLACE
 void Blit::initGeometry()
 {
     static const float quad[] =
@@ -117,7 +118,7 @@ bool Blit::setShader(ShaderId source, const char *profile,
                      HRESULT (WINAPI IDirect3DDevice9::*setShader)(D3DShaderType*))
 {
     egl::Display *display = getDisplay();
-    IDirect3DDevice9 *device = display->getDevice();
+    IDirect3DDevice9 *device = display->getRenderer()->getDevice(); // D3D9_REPLACE
 
     D3DShaderType *shader;
 
@@ -183,6 +184,7 @@ bool Blit::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
         return false;
     }
 
+    // D3D9_REPLACE
     IDirect3DDevice9 *device = getDevice();
 
     saveState();
@@ -210,6 +212,7 @@ bool Blit::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
 
 bool Blit::copy(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, IDirect3DSurface9 *dest)
 {
+    // D3D9_REPLACE
     IDirect3DDevice9 *device = getDevice();
 
     D3DSURFACE_DESC sourceDesc;
@@ -245,6 +248,7 @@ bool Blit::formatConvert(IDirect3DSurface9 *source, const RECT &sourceRect, GLen
         return false;
     }
 
+    // D3D9_REPLACE
     IDirect3DDevice9 *device = getDevice();
 
     saveState();
@@ -330,6 +334,7 @@ bool Blit::setFormatConvertShaders(GLenum destFormat)
     return true;
 }
 
+// D3D9_REPLACE
 IDirect3DTexture9 *Blit::copySurfaceToTexture(IDirect3DSurface9 *surface, const RECT &sourceRect)
 {
     if (!surface)
@@ -338,7 +343,8 @@ IDirect3DTexture9 *Blit::copySurfaceToTexture(IDirect3DSurface9 *surface, const 
     }
 
     egl::Display *display = getDisplay();
-    IDirect3DDevice9 *device = getDevice();
+    renderer::Renderer *renderer = display->getRenderer();
+    IDirect3DDevice9 *device = renderer->getDevice(); // D3D9_REPLACE
 
     D3DSURFACE_DESC sourceDesc;
     surface->GetDesc(&sourceDesc);
@@ -363,7 +369,7 @@ IDirect3DTexture9 *Blit::copySurfaceToTexture(IDirect3DSurface9 *surface, const 
         return error(GL_OUT_OF_MEMORY, (IDirect3DTexture9*)NULL);
     }
 
-    display->endScene();
+    renderer->endScene();
     result = device->StretchRect(surface, &sourceRect, textureSurface, NULL, D3DTEXF_NONE);
 
     textureSurface->Release();
@@ -380,7 +386,7 @@ IDirect3DTexture9 *Blit::copySurfaceToTexture(IDirect3DSurface9 *surface, const 
 
 void Blit::setViewport(const RECT &sourceRect, GLint xoffset, GLint yoffset)
 {
-    IDirect3DDevice9 *device = getDevice();
+    IDirect3DDevice9 *device = getDevice(); // D3D9_REPLACE
 
     D3DVIEWPORT9 vp;
     vp.X      = xoffset;
@@ -395,6 +401,7 @@ void Blit::setViewport(const RECT &sourceRect, GLint xoffset, GLint yoffset)
     device->SetVertexShaderConstantF(0, halfPixelAdjust, 1);
 }
 
+// D3D9_REPLACE
 void Blit::setCommonBlitState()
 {
     IDirect3DDevice9 *device = getDevice();
@@ -425,18 +432,21 @@ void Blit::setCommonBlitState()
     }
 }
 
+// D3D9_REPLACE
 void Blit::render()
 {
     egl::Display *display = getDisplay();
-    IDirect3DDevice9 *device = getDevice();
+    renderer::Renderer *renderer = display->getRenderer();
+    IDirect3DDevice9 *device = renderer->getDevice();
 
     HRESULT hr = device->SetStreamSource(0, mQuadVertexBuffer, 0, 2 * sizeof(float));
     hr = device->SetVertexDeclaration(mQuadVertexDeclaration);
 
-    display->startScene();
+    renderer->startScene();
     hr = device->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
 }
 
+// D3D9_REPLACE
 void Blit::saveState()
 {
     IDirect3DDevice9 *device = getDevice();
@@ -489,6 +499,7 @@ void Blit::saveState()
     }
 }
 
+// D3D9_REPLACE
 void Blit::restoreState()
 {
     IDirect3DDevice9 *device = getDevice();

@@ -251,6 +251,8 @@
             'libGLESv2/Query.cpp',
             'libGLESv2/Renderbuffer.cpp',
             'libGLESv2/Renderbuffer.h',
+            'libGLESv2/renderer/Renderer.cpp',
+            'libGLESv2/renderer/Renderer.h',
             'libGLESv2/ResourceManager.cpp',
             'libGLESv2/ResourceManager.h',
             'libGLESv2/Shader.cpp',
@@ -268,6 +270,7 @@
                 'd3d9.lib',
                 'd3dx9.lib',
                 'd3dcompiler.lib',
+                'dxguid.lib',
               ],
             }
           },
@@ -304,7 +307,6 @@
               'AdditionalLibraryDirectories': ['$(DXSDK_DIR)/lib/x86'],
               'AdditionalDependencies': [
                 'd3d9.lib',
-                'dxguid.lib',
                 'dwmapi.lib',
               ],
               'DelayLoadDLLs': [

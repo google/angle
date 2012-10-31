@@ -120,11 +120,12 @@ egl::Display *getDisplay()
     return current->display;
 }
 
+// D3D9_REPLACE
 IDirect3DDevice9 *getDevice()
 {
     egl::Display *display = getDisplay();
 
-    return display->getDevice();
+    return display->getRenderer()->getDevice();
 }
 
 bool checkDeviceLost(HRESULT errorCode)

@@ -285,7 +285,8 @@ IndexBuffer::IndexBuffer(IDirect3DDevice9 *device, UINT size, D3DFORMAT format) 
 {
     if (size > 0)
     {
-        D3DPOOL pool = getDisplay()->getBufferPool(D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY);
+        // D3D9_REPLACE
+        D3DPOOL pool = getDisplay()->getRenderer()->getBufferPool(D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY);
         HRESULT result = device->CreateIndexBuffer(size, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, format, pool, &mIndexBuffer, NULL);
         mSerial = issueSerial();
 
@@ -369,7 +370,8 @@ void StreamingIndexBuffer::reserveSpace(UINT requiredSpace, GLenum type)
 
         mBufferSize = std::max(requiredSpace, 2 * mBufferSize);
 
-        D3DPOOL pool = getDisplay()->getBufferPool(D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY);
+        // D3D9_REPLACE
+        D3DPOOL pool = getDisplay()->getRenderer()->getBufferPool(D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY);
         HRESULT result = mDevice->CreateIndexBuffer(mBufferSize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, type == GL_UNSIGNED_INT ? D3DFMT_INDEX32 : D3DFMT_INDEX16, pool, &mIndexBuffer, NULL);
         mSerial = issueSerial();
     
@@ -423,7 +425,8 @@ void StaticIndexBuffer::reserveSpace(UINT requiredSpace, GLenum type)
 {
     if (!mIndexBuffer && mBufferSize == 0)
     {
-        D3DPOOL pool = getDisplay()->getBufferPool(D3DUSAGE_WRITEONLY);
+        // D3D9_REPLACE
+        D3DPOOL pool = getDisplay()->getRenderer()->getBufferPool(D3DUSAGE_WRITEONLY);
         HRESULT result = mDevice->CreateIndexBuffer(requiredSpace, D3DUSAGE_WRITEONLY, type == GL_UNSIGNED_INT ? D3DFMT_INDEX32 : D3DFMT_INDEX16, pool, &mIndexBuffer, NULL);
         mSerial = issueSerial();
     

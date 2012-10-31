@@ -45,6 +45,7 @@ VertexDataManager::VertexDataManager(Context *context, IDirect3DDevice9 *device)
         mCurrentValueOffsets[i] = 0;
     }
 
+    // D3D9_REPLACE
     const D3DCAPS9 &caps = context->getDeviceCaps();
     checkVertexCaps(caps.DeclTypes);
 
@@ -575,7 +576,8 @@ VertexBuffer::VertexBuffer(IDirect3DDevice9 *device, std::size_t size, DWORD usa
 {
     if (size > 0)
     {
-        D3DPOOL pool = getDisplay()->getBufferPool(usageFlags);
+        // D3D9_REPLACE
+        D3DPOOL pool = getDisplay()->getRenderer()->getBufferPool(usageFlags);
         HRESULT result = device->CreateVertexBuffer(size, usageFlags, 0, pool, &mVertexBuffer, NULL);
         mSerial = issueSerial();
         
@@ -674,7 +676,8 @@ void StreamingVertexBuffer::reserveRequiredSpace()
 
         mBufferSize = std::max(mRequiredSpace, 3 * mBufferSize / 2);   // 1.5 x mBufferSize is arbitrary and should be checked to see we don't have too many reallocations.
 
-        D3DPOOL pool = getDisplay()->getBufferPool(D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY);
+        // D3D9_REPLACE
+        D3DPOOL pool = getDisplay()->getRenderer()->getBufferPool(D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY);
         HRESULT result = mDevice->CreateVertexBuffer(mBufferSize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, 0, pool, &mVertexBuffer, NULL);
         mSerial = issueSerial();
     
@@ -737,7 +740,8 @@ void StaticVertexBuffer::reserveRequiredSpace()
 {
     if (!mVertexBuffer && mBufferSize == 0)
     {
-        D3DPOOL pool = getDisplay()->getBufferPool(D3DUSAGE_WRITEONLY);
+        // D3D9_REPLACE
+        D3DPOOL pool = getDisplay()->getRenderer()->getBufferPool(D3DUSAGE_WRITEONLY);
         HRESULT result = mDevice->CreateVertexBuffer(mRequiredSpace, D3DUSAGE_WRITEONLY, 0, pool, &mVertexBuffer, NULL);
         mSerial = issueSerial();
 

@@ -29,6 +29,7 @@
 #include "common/RefCountObject.h"
 #include "libGLESv2/ResourceManager.h"
 #include "libGLESv2/HandleAllocator.h"
+#include "libGLESv2/renderer/Renderer.h"
 
 namespace egl
 {
@@ -549,6 +550,7 @@ class Context
     const egl::Config *const mConfig;
     egl::Display *mDisplay;
     IDirect3DDevice9 *mDevice;
+    renderer::Renderer *mRenderer;
 
     State mState;
 
@@ -678,6 +680,9 @@ gl::Context *glCreateContext(const egl::Config *config, const gl::Context *share
 void glDestroyContext(gl::Context *context);
 void glMakeCurrent(gl::Context *context, egl::Display *display, egl::Surface *surface);
 gl::Context *glGetCurrentContext();
+renderer::Renderer *glCreateRenderer(HMODULE hModule, HDC hDc);
+void glDestroyRenderer(renderer::Renderer *renderer);
+
 __eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *procname);
 bool __stdcall glBindTexImage(egl::Surface *surface);
 }
