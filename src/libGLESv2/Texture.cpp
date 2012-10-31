@@ -330,6 +330,7 @@ void Image::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint y
         rect.bottom = yoffset + height;
 
         POINT point = {rect.left, rect.top};
+        IDirect3DDevice9 *device = getDisplay()->getRenderer()->getDevice();  // D3D9_REPLACE
 
         if (mD3DPool == D3DPOOL_MANAGED)
         {
@@ -337,12 +338,12 @@ void Image::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint y
             sourceSurface->GetDesc(&desc);
 
             IDirect3DSurface9 *surf = 0;
-            HRESULT result = getDevice()->CreateOffscreenPlainSurface(desc.Width, desc.Height, desc.Format, D3DPOOL_SYSTEMMEM, &surf, NULL);
+            HRESULT result = device->CreateOffscreenPlainSurface(desc.Width, desc.Height, desc.Format, D3DPOOL_SYSTEMMEM, &surf, NULL);
 
             if (SUCCEEDED(result))
             {
                 CopyLockableSurfaces(surf, sourceSurface);
-                result = getDevice()->UpdateSurface(surf, &rect, destSurface, &point);
+                result = device->UpdateSurface(surf, &rect, destSurface, &point);
                 ASSERT(SUCCEEDED(result));
                 surf->Release();
             }
@@ -350,8 +351,6 @@ void Image::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint y
         else
         {
             // UpdateSurface: source must be SYSTEMMEM, dest must be DEFAULT pools
-            // D3D9_REPLACE
-            IDirect3DDevice9 *device = getDisplay()->getRenderer()->getDevice();
             HRESULT result = device->UpdateSurface(sourceSurface, &rect, destSurface, &point);
             ASSERT(SUCCEEDED(result));
         }
@@ -1631,6 +1630,8 @@ bool Texture::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *sou
     if (source && dest)
     {
         HRESULT result = D3DERR_OUTOFVIDEOMEMORY;
+        renderer::Renderer *renderer = getDisplay()->getRenderer();
+        IDirect3DDevice9 *device = renderer->getDevice(); // D3D9_REPLACE
 
         if (fromManaged)
         {
@@ -1638,20 +1639,17 @@ bool Texture::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *sou
             source->GetDesc(&desc);
 
             IDirect3DSurface9 *surf = 0;
-            result = getDevice()->CreateOffscreenPlainSurface(desc.Width, desc.Height, desc.Format, D3DPOOL_SYSTEMMEM, &surf, NULL);
+            result = device->CreateOffscreenPlainSurface(desc.Width, desc.Height, desc.Format, D3DPOOL_SYSTEMMEM, &surf, NULL);
 
             if (SUCCEEDED(result))
             {
                 CopyLockableSurfaces(surf, source);
-                result = getDevice()->UpdateSurface(surf, NULL, dest, NULL);
+                result = device->UpdateSurface(surf, NULL, dest, NULL);
                 surf->Release();
             }
         }
         else
         {
-            renderer::Renderer *renderer = getDisplay()->getRenderer();
-            IDirect3DDevice9 *device = renderer->getDevice(); // D3D9_REPLACE
-
             renderer->endScene();
             result = device->StretchRect(source, NULL, dest, NULL, D3DTEXF_NONE);
         }
