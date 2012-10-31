@@ -11,13 +11,13 @@
 
 #include "common/debug.h"
 #include "libGLESv2/utilities.h"
-#include "libGLESv2/renderer/Renderer.h"
+#include "libGLESv2/renderer/Renderer9.h"   // D3D9_REPLACE
 #include "libGLESv2/Context.h"
 
 namespace renderer
 {
 
-SwapChain::SwapChain(Renderer *renderer, HWND window, HANDLE shareHandle,
+SwapChain::SwapChain(Renderer9 *renderer, HWND window, HANDLE shareHandle,
                      GLenum backBufferFormat, GLenum depthBufferFormat)
     : mRenderer(renderer), mWindow(window), mShareHandle(shareHandle),
       mBackBufferFormat(backBufferFormat), mDepthBufferFormat(depthBufferFormat)

@@ -543,7 +543,7 @@ class Context
 
     egl::Display *mDisplay;
     IDirect3DDevice9 *mDevice;
-    renderer::Renderer *mRenderer;
+    renderer::Renderer9 *mRenderer;  // D3D9_REPLACE
 
     State mState;
 
@@ -669,10 +669,10 @@ gl::Context *glCreateContext(const gl::Context *shareContext, bool notifyResets,
 void glDestroyContext(gl::Context *context);
 void glMakeCurrent(gl::Context *context, egl::Display *display, egl::Surface *surface);
 gl::Context *glGetCurrentContext();
-renderer::Renderer *glCreateRenderer(egl::Display *display, HMODULE hModule, HDC hDc);
+renderer::Renderer9 *glCreateRenderer(egl::Display *display, HMODULE hModule, HDC hDc);  // D3D9_REPLACE
 void glDestroyRenderer(renderer::Renderer *renderer);
-renderer::SwapChain *glCreateSwapChain(renderer::Renderer *renderer, HWND window, HANDLE shareHandle,
-                                       GLenum backBufferFormat, GLenum depthBufferFormat);
+renderer::SwapChain *glCreateSwapChain(renderer::Renderer9 *renderer, HWND window, HANDLE shareHandle,
+                                       GLenum backBufferFormat, GLenum depthBufferFormat);  // D3D9_REPLACE
 void glDestroySwapChain(renderer::SwapChain *swapChain);
 
 __eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *procname);

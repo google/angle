@@ -4405,9 +4405,9 @@ gl::Context *glGetCurrentContext()
     return gl::getContext();
 }
 
-renderer::Renderer *glCreateRenderer(egl::Display *display, HMODULE hModule, HDC hDc)
+renderer::Renderer9 *glCreateRenderer(egl::Display *display, HMODULE hModule, HDC hDc)
 {
-    return new renderer::Renderer(display, hModule, hDc);
+    return new renderer::Renderer9(display, hModule, hDc);  // D3D9_REPLACE
 }
 
 void glDestroyRenderer(renderer::Renderer *renderer)
@@ -4415,7 +4415,7 @@ void glDestroyRenderer(renderer::Renderer *renderer)
     delete renderer;
 }
 
-renderer::SwapChain *glCreateSwapChain(renderer::Renderer *renderer, HWND window, HANDLE shareHandle,
+renderer::SwapChain *glCreateSwapChain(renderer::Renderer9 *renderer, HWND window, HANDLE shareHandle,
                                        GLenum backBufferFormat, GLenum depthBufferFormat)
 {
     return new renderer::SwapChain(renderer, window, shareHandle, backBufferFormat, depthBufferFormat);

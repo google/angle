@@ -14,7 +14,7 @@
 #include <d3d9.h>
 
 #include "common/angleutils.h"
-#include "libGLESv2/renderer/Renderer.h"
+#include "libGLESv2/renderer/Renderer9.h"
 
 namespace gl
 {
@@ -22,7 +22,7 @@ namespace gl
 class Fence
 {
   public:
-    explicit Fence(renderer::Renderer *renderer);
+    explicit Fence(renderer::Renderer9 *renderer);
     virtual ~Fence();
 
     GLboolean isFence();
@@ -34,7 +34,7 @@ class Fence
   private:
     DISALLOW_COPY_AND_ASSIGN(Fence);
 
-    renderer::Renderer *mRenderer;
+    renderer::Renderer9 *mRenderer;  // D3D9_REPLACE
     IDirect3DQuery9* mQuery;  // D3D9_REPLACE
     GLenum mCondition;
     GLboolean mStatus;

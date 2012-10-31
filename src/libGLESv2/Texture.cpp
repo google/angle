@@ -1630,7 +1630,7 @@ bool Texture::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *sou
     if (source && dest)
     {
         HRESULT result = D3DERR_OUTOFVIDEOMEMORY;
-        renderer::Renderer *renderer = getDisplay()->getRenderer();
+        renderer::Renderer9 *renderer = getDisplay()->getRenderer();
         IDirect3DDevice9 *device = renderer->getDevice(); // D3D9_REPLACE
 
         if (fromManaged)

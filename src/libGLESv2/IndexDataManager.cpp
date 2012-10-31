@@ -19,7 +19,7 @@ namespace gl
 {
 unsigned int IndexBuffer::mCurrentSerial = 1;
 
-IndexDataManager::IndexDataManager(Context *context, renderer::Renderer *renderer) : mRenderer(renderer)
+IndexDataManager::IndexDataManager(Context *context, renderer::Renderer9 *renderer) : mRenderer(renderer)
 {
     mStreamingBufferShort = new StreamingIndexBuffer(mRenderer, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX16);
 
@@ -281,7 +281,7 @@ StaticIndexBuffer *IndexDataManager::getCountingIndices(GLsizei count)
     return mCountingBuffer;
 }
 
-IndexBuffer::IndexBuffer(renderer::Renderer *renderer, UINT size, D3DFORMAT format) : mRenderer(renderer), mBufferSize(size), mIndexBuffer(NULL)
+IndexBuffer::IndexBuffer(renderer::Renderer9 *renderer, UINT size, D3DFORMAT format) : mRenderer(renderer), mBufferSize(size), mIndexBuffer(NULL)
 {
     if (size > 0)
     {
@@ -328,7 +328,7 @@ void IndexBuffer::unmap()
     }
 }
 
-StreamingIndexBuffer::StreamingIndexBuffer(renderer::Renderer *renderer, UINT initialSize, D3DFORMAT format) : IndexBuffer(renderer, initialSize, format)
+StreamingIndexBuffer::StreamingIndexBuffer(renderer::Renderer9 *renderer, UINT initialSize, D3DFORMAT format) : IndexBuffer(renderer, initialSize, format)
 {
     mWritePosition = 0;
 }
@@ -392,7 +392,7 @@ void StreamingIndexBuffer::reserveSpace(UINT requiredSpace, GLenum type)
     }
 }
 
-StaticIndexBuffer::StaticIndexBuffer(renderer::Renderer *renderer) : IndexBuffer(renderer, 0, D3DFMT_UNKNOWN)
+StaticIndexBuffer::StaticIndexBuffer(renderer::Renderer9 *renderer) : IndexBuffer(renderer, 0, D3DFMT_UNKNOWN)
 {
     mCacheType = GL_NONE;
 }

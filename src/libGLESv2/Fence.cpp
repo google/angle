@@ -13,7 +13,7 @@
 namespace gl
 {
 
-Fence::Fence(renderer::Renderer *renderer)
+Fence::Fence(renderer::Renderer9 *renderer)
 {
     mRenderer = renderer;
     mQuery = NULL;

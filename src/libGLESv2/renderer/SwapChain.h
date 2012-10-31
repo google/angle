@@ -16,18 +16,18 @@
 #define EGLAPI
 #include <EGL/egl.h>
 
-#include "common/angleutils.h"
+#include <d3d9.h>  // D3D9_REPLACE
 
-#include <d3d9.h> // D3D9_REPLACE
+#include "common/angleutils.h"
 
 namespace renderer
 {
-class Renderer;
+class Renderer9;   // D3D9_REPLACE
 
 class SwapChain
 {
   public:
-    SwapChain(Renderer *renderer, HWND window, HANDLE shareHandle,
+    SwapChain(Renderer9 *renderer, HWND window, HANDLE shareHandle,
               GLenum backBufferFormat, GLenum depthBufferFormat);
     virtual ~SwapChain();
 
@@ -45,7 +45,7 @@ class SwapChain
 
     void release();
 
-    Renderer *mRenderer;
+    Renderer9 *mRenderer;   // D3D9_REPLACE
     EGLint mHeight;
     EGLint mWidth;
 

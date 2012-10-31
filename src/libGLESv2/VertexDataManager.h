@@ -37,7 +37,7 @@ struct TranslatedAttribute
 class VertexBuffer
 {
   public:
-    VertexBuffer(renderer::Renderer *renderer, std::size_t size, DWORD usageFlags);
+    VertexBuffer(renderer::Renderer9 *renderer, std::size_t size, DWORD usageFlags);
     virtual ~VertexBuffer();
 
     void unmap();
@@ -46,7 +46,7 @@ class VertexBuffer
     unsigned int getSerial() const;
 
   protected:
-    renderer::Renderer *const mRenderer;
+    renderer::Renderer9 *const mRenderer;   // D3D9_REPLACE
     IDirect3DVertexBuffer9 *mVertexBuffer;
 
     unsigned int mSerial;
@@ -60,7 +60,7 @@ class VertexBuffer
 class ArrayVertexBuffer : public VertexBuffer
 {
   public:
-    ArrayVertexBuffer(renderer::Renderer *renderer, std::size_t size, DWORD usageFlags);
+    ArrayVertexBuffer(renderer::Renderer9 *renderer, std::size_t size, DWORD usageFlags);
     ~ArrayVertexBuffer();
 
     std::size_t size() const { return mBufferSize; }
@@ -77,7 +77,7 @@ class ArrayVertexBuffer : public VertexBuffer
 class StreamingVertexBuffer : public ArrayVertexBuffer
 {
   public:
-    StreamingVertexBuffer(renderer::Renderer *renderer, std::size_t initialSize);
+    StreamingVertexBuffer(renderer::Renderer9 *renderer, std::size_t initialSize);
     ~StreamingVertexBuffer();
 
     void *map(const VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset);
@@ -87,7 +87,7 @@ class StreamingVertexBuffer : public ArrayVertexBuffer
 class StaticVertexBuffer : public ArrayVertexBuffer
 {
   public:
-    explicit StaticVertexBuffer(renderer::Renderer *renderer);
+    explicit StaticVertexBuffer(renderer::Renderer9 *renderer);
     ~StaticVertexBuffer();
 
     void *map(const VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset);
@@ -113,7 +113,7 @@ class StaticVertexBuffer : public ArrayVertexBuffer
 class VertexDataManager
 {
   public:
-    VertexDataManager(Context *context, renderer::Renderer *renderer);
+    VertexDataManager(Context *context, renderer::Renderer9 *renderer);
     virtual ~VertexDataManager();
 
     void dirtyCurrentValue(int index) { mDirtyCurrentValue[index] = true; }
@@ -127,7 +127,7 @@ class VertexDataManager
     std::size_t writeAttributeData(ArrayVertexBuffer *vertexBuffer, GLint start, GLsizei count, const VertexAttribute &attribute, GLsizei instances);
 
     Context *const mContext;
-    renderer::Renderer *const mRenderer;
+    renderer::Renderer9 *const mRenderer;   // D3D9_REPLACE
 
     StreamingVertexBuffer *mStreamingBuffer;
 

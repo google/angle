@@ -11,6 +11,7 @@
 
 #include "common/debug.h"
 
+#include "libGLESv2/renderer/Renderer9.h"
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/Program.h"
 #include "libGLESv2/ProgramBinary.h"
@@ -36,7 +37,7 @@ int elementsInBuffer(const VertexAttribute &attribute, int size)
     return (size - attribute.mOffset % stride + (stride - attribute.typeSize())) / stride;
 }
 
-VertexDataManager::VertexDataManager(Context *context, renderer::Renderer *renderer) : mContext(context), mRenderer(renderer)
+VertexDataManager::VertexDataManager(Context *context, renderer::Renderer9 *renderer) : mContext(context), mRenderer(renderer)
 {
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
     {
@@ -571,7 +572,7 @@ unsigned int VertexDataManager::typeIndex(GLenum type) const
     }
 }
 
-VertexBuffer::VertexBuffer(renderer::Renderer *renderer, std::size_t size, DWORD usageFlags) : mRenderer(renderer), mVertexBuffer(NULL)
+VertexBuffer::VertexBuffer(renderer::Renderer9 *renderer, std::size_t size, DWORD usageFlags) : mRenderer(renderer), mVertexBuffer(NULL)
 {
     if (size > 0)
     {
@@ -618,7 +619,7 @@ unsigned int VertexBuffer::issueSerial()
     return mCurrentSerial++;
 }
 
-ArrayVertexBuffer::ArrayVertexBuffer(renderer::Renderer *renderer, std::size_t size, DWORD usageFlags) : VertexBuffer(renderer, size, usageFlags)
+ArrayVertexBuffer::ArrayVertexBuffer(renderer::Renderer9 *renderer, std::size_t size, DWORD usageFlags) : VertexBuffer(renderer, size, usageFlags)
 {
     mBufferSize = size;
     mWritePosition = 0;
@@ -634,7 +635,7 @@ void ArrayVertexBuffer::addRequiredSpace(UINT requiredSpace)
     mRequiredSpace += requiredSpace;
 }
 
-StreamingVertexBuffer::StreamingVertexBuffer(renderer::Renderer *renderer, std::size_t initialSize) : ArrayVertexBuffer(renderer, initialSize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY)
+StreamingVertexBuffer::StreamingVertexBuffer(renderer::Renderer9 *renderer, std::size_t initialSize) : ArrayVertexBuffer(renderer, initialSize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY)
 {
 }
 
@@ -702,7 +703,7 @@ void StreamingVertexBuffer::reserveRequiredSpace()
     mRequiredSpace = 0;
 }
 
-StaticVertexBuffer::StaticVertexBuffer(renderer::Renderer *renderer) : ArrayVertexBuffer(renderer, 0, D3DUSAGE_WRITEONLY)
+StaticVertexBuffer::StaticVertexBuffer(renderer::Renderer9 *renderer) : ArrayVertexBuffer(renderer, 0, D3DUSAGE_WRITEONLY)
 {
 }
 

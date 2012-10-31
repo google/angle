@@ -19,7 +19,7 @@
 
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
-#include "libGLESv2/renderer/Renderer.h"
+#include "libGLESv2/renderer/Renderer9.h"
 
 namespace gl
 {
@@ -48,7 +48,7 @@ class Buffer : public RefCountObject
   private:
     DISALLOW_COPY_AND_ASSIGN(Buffer);
 
-    renderer::Renderer *mRenderer;
+    renderer::Renderer9 *mRenderer;  // D3D9_REPLACE
     GLubyte *mContents;
     GLsizeiptr mSize;
     GLenum mUsage;

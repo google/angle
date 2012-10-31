@@ -27,7 +27,7 @@ class Context;
 class Blit
 {
   public:
-    explicit Blit(renderer::Renderer *renderer);
+    explicit Blit(renderer::Renderer9 *renderer);
     ~Blit();
 
     // Copy from source surface to dest surface.
@@ -44,7 +44,7 @@ class Blit
     bool boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest);
 
   private:
-    renderer::Renderer *mRenderer;
+    renderer::Renderer9 *mRenderer;
 
     IDirect3DVertexBuffer9 *mQuadVertexBuffer;
     IDirect3DVertexDeclaration9 *mQuadVertexDeclaration;
@@ -74,7 +74,7 @@ class Blit
 
     template <class D3DShaderType>
     bool setShader(ShaderId source, const char *profile,
-                   D3DShaderType *(renderer::Renderer::*createShader)(const DWORD *, size_t length),
+                   D3DShaderType *(renderer::Renderer9::*createShader)(const DWORD *, size_t length),
                    HRESULT (WINAPI IDirect3DDevice9::*setShader)(D3DShaderType*));
 
     bool setVertexShader(ShaderId shader);

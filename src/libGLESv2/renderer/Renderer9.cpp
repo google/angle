@@ -7,9 +7,9 @@
 // Renderer.cpp: Implements a back-end specific class that hides the details of the
 // implementation-specific renderer.
 
-#include "libGLESv2/renderer/Renderer.h"
 #include "common/debug.h"
 #include "libGLESv2/utilities.h"
+#include "libGLESv2/renderer/Renderer9.h"
 
 #include "libEGL/Config.h"
 #include "libEGL/Display.h"
@@ -27,7 +27,7 @@
 
 namespace renderer
 {
-const D3DFORMAT Renderer::mRenderTargetFormats[] =
+const D3DFORMAT Renderer9::mRenderTargetFormats[] =
     {
         D3DFMT_A1R5G5B5,
     //  D3DFMT_A2R10G10B10,   // The color_ramp conformance test uses ReadPixels with UNSIGNED_BYTE causing it to think that rendering skipped a colour value.
@@ -37,7 +37,7 @@ const D3DFORMAT Renderer::mRenderTargetFormats[] =
         D3DFMT_X8R8G8B8
     };
 
-const D3DFORMAT Renderer::mDepthStencilFormats[] =
+const D3DFORMAT Renderer9::mDepthStencilFormats[] =
     {
         D3DFMT_UNKNOWN,
     //  D3DFMT_D16_LOCKABLE,
@@ -51,9 +51,8 @@ const D3DFORMAT Renderer::mDepthStencilFormats[] =
     //  D3DFMT_D24FS8
     };
 
-Renderer::Renderer(egl::Display *display, HMODULE hModule, HDC hDc): mDc(hDc)
+Renderer9::Renderer9(egl::Display *display, HMODULE hModule, HDC hDc) : Renderer(display), mDc(hDc)
 {
-    mDisplay = display;
     mD3d9Module = hModule;
 
     mD3d9 = NULL;
@@ -75,7 +74,7 @@ Renderer::Renderer(egl::Display *display, HMODULE hModule, HDC hDc): mDc(hDc)
     mMaxSupportedSamples = 0;
 }
 
-Renderer::~Renderer()
+Renderer9::~Renderer9()
 {
     releaseDeviceResources();
 
@@ -127,7 +126,7 @@ Renderer::~Renderer()
     }
 }
 
-EGLint Renderer::initialize()
+EGLint Renderer9::initialize()
 {
     typedef HRESULT (WINAPI *Direct3DCreate9ExFunc)(UINT, IDirect3D9Ex**);
     Direct3DCreate9ExFunc Direct3DCreate9ExPtr = reinterpret_cast<Direct3DCreate9ExFunc>(GetProcAddress(mD3d9Module, "Direct3DCreate9Ex"));
@@ -309,7 +308,7 @@ EGLint Renderer::initialize()
 // do any one-time device initialization
 // NOTE: this is also needed after a device lost/reset
 // to reset the scene status and ensure the default states are reset.
-void Renderer::initializeDevice()
+void Renderer9::initializeDevice()
 {
     // Permanent non-default states
     mDevice->SetRenderState(D3DRS_POINTSPRITEENABLE, TRUE);
@@ -327,7 +326,7 @@ void Renderer::initializeDevice()
     mSceneStarted = false;
 }
 
-D3DPRESENT_PARAMETERS Renderer::getDefaultPresentParameters()
+D3DPRESENT_PARAMETERS Renderer9::getDefaultPresentParameters()
 {
     D3DPRESENT_PARAMETERS presentParameters = {0};
 
@@ -349,7 +348,7 @@ D3DPRESENT_PARAMETERS Renderer::getDefaultPresentParameters()
     return presentParameters;
 }
 
-int Renderer::generateConfigs(ConfigDesc **configDescList)
+int Renderer9::generateConfigs(ConfigDesc **configDescList)
 {
     D3DDISPLAYMODE currentDisplayMode;
     mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
@@ -402,12 +401,12 @@ int Renderer::generateConfigs(ConfigDesc **configDescList)
     return numConfigs;
 }
 
-void Renderer::deleteConfigs(ConfigDesc *configDescList)
+void Renderer9::deleteConfigs(ConfigDesc *configDescList)
 {
     delete [] (configDescList);
 }
 
-void Renderer::startScene()
+void Renderer9::startScene()
 {
     if (!mSceneStarted)
     {
@@ -420,7 +419,7 @@ void Renderer::startScene()
     }
 }
 
-void Renderer::endScene()
+void Renderer9::endScene()
 {
     if (mSceneStarted)
     {
@@ -432,7 +431,7 @@ void Renderer::endScene()
 }
 
 // D3D9_REPLACE
-void Renderer::sync(bool block)
+void Renderer9::sync(bool block)
 {
     HRESULT result;
 
@@ -473,7 +472,7 @@ void Renderer::sync(bool block)
 }
 
 // D3D9_REPLACE
-IDirect3DQuery9* Renderer::allocateEventQuery()
+IDirect3DQuery9* Renderer9::allocateEventQuery()
 {
     IDirect3DQuery9 *query = NULL;
 
@@ -492,7 +491,7 @@ IDirect3DQuery9* Renderer::allocateEventQuery()
 }
 
 // D3D9_REPLACE
-void Renderer::freeEventQuery(IDirect3DQuery9* query)
+void Renderer9::freeEventQuery(IDirect3DQuery9* query)
 {
     if (mEventQueryPool.size() > 1000)
     {
@@ -504,18 +503,18 @@ void Renderer::freeEventQuery(IDirect3DQuery9* query)
     }
 }
 
-IDirect3DVertexShader9 *Renderer::createVertexShader(const DWORD *function, size_t length)
+IDirect3DVertexShader9 *Renderer9::createVertexShader(const DWORD *function, size_t length)
 {
     return mVertexShaderCache.create(function, length);
 }
 
-IDirect3DPixelShader9 *Renderer::createPixelShader(const DWORD *function, size_t length)
+IDirect3DPixelShader9 *Renderer9::createPixelShader(const DWORD *function, size_t length)
 {
     return mPixelShaderCache.create(function, length);
 }
 
 
-void Renderer::setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &samplerState)
+void Renderer9::setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &samplerState)
 {
     int d3dSamplerOffset = (type == gl::SAMPLER_PIXEL) ? 0 : D3DVERTEXTEXTURESAMPLER0;
     int d3dSampler = index + d3dSamplerOffset;
@@ -535,7 +534,7 @@ void Renderer::setSamplerState(gl::SamplerType type, int index, const gl::Sample
     }
 }
 
-void Renderer::setTexture(gl::SamplerType type, int index, gl::Texture *texture)
+void Renderer9::setTexture(gl::SamplerType type, int index, gl::Texture *texture)
 {
     int d3dSamplerOffset = (type == gl::SAMPLER_PIXEL) ? 0 : D3DVERTEXTEXTURESAMPLER0;
     int d3dSampler = index + d3dSamplerOffset;
@@ -553,7 +552,7 @@ void Renderer::setTexture(gl::SamplerType type, int index, gl::Texture *texture)
 }
 
 
-void Renderer::releaseDeviceResources()
+void Renderer9::releaseDeviceResources()
 {
     while (!mEventQueryPool.empty())
     {
@@ -566,18 +565,18 @@ void Renderer::releaseDeviceResources()
 }
 
 
-void Renderer::markDeviceLost()
+void Renderer9::markDeviceLost()
 {
     mDeviceLost = true;
 }
 
-bool Renderer::isDeviceLost()
+bool Renderer9::isDeviceLost()
 {
     return mDeviceLost;
 }
 
 // set notify to true to broadcast a message to all contexts of the device loss
-bool Renderer::testDeviceLost(bool notify)
+bool Renderer9::testDeviceLost(bool notify)
 {
     bool isLost = false;
 
@@ -611,7 +610,7 @@ bool Renderer::testDeviceLost(bool notify)
     return isLost;
 }
 
-bool Renderer::testDeviceResettable()
+bool Renderer9::testDeviceResettable()
 {
     HRESULT status = D3D_OK;
 
@@ -634,7 +633,7 @@ bool Renderer::testDeviceResettable()
     }
 }
 
-bool Renderer::resetDevice()
+bool Renderer9::resetDevice()
 {
     releaseDeviceResources();
 
@@ -683,22 +682,22 @@ bool Renderer::resetDevice()
     return true;
 }
 
-DWORD Renderer::getAdapterVendor() const
+DWORD Renderer9::getAdapterVendor() const
 {
     return mAdapterIdentifier.VendorId;
 }
 
-const char *Renderer::getAdapterDescription() const
+const char *Renderer9::getAdapterDescription() const
 {
     return mAdapterIdentifier.Description;
 }
 
-GUID Renderer::getAdapterIdentifier() const
+GUID Renderer9::getAdapterIdentifier() const
 {
     return mAdapterIdentifier.DeviceIdentifier;
 }
 
-void Renderer::getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray)
+void Renderer9::getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray)
 {
     for (int multiSampleIndex = 0; multiSampleIndex <= D3DMULTISAMPLE_16_SAMPLES; multiSampleIndex++)
     {
@@ -709,7 +708,7 @@ void Renderer::getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray)
     }
 }
 
-bool Renderer::getDXT1TextureSupport()
+bool Renderer9::getDXT1TextureSupport()
 {
     D3DDISPLAYMODE currentDisplayMode;
     mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
@@ -717,7 +716,7 @@ bool Renderer::getDXT1TextureSupport()
     return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT1));
 }
 
-bool Renderer::getDXT3TextureSupport()
+bool Renderer9::getDXT3TextureSupport()
 {
     D3DDISPLAYMODE currentDisplayMode;
     mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
@@ -725,7 +724,7 @@ bool Renderer::getDXT3TextureSupport()
     return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT3));
 }
 
-bool Renderer::getDXT5TextureSupport()
+bool Renderer9::getDXT5TextureSupport()
 {
     D3DDISPLAYMODE currentDisplayMode;
     mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
@@ -736,7 +735,7 @@ bool Renderer::getDXT5TextureSupport()
 // we use INTZ for depth textures in Direct3D9
 // we also want NULL texture support to ensure the we can make depth-only FBOs
 // see http://aras-p.info/texts/D3D9GPUHacks.html
-bool Renderer::getDepthTextureSupport() const
+bool Renderer9::getDepthTextureSupport() const
 {
     D3DDISPLAYMODE currentDisplayMode;
     mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
@@ -749,7 +748,7 @@ bool Renderer::getDepthTextureSupport() const
     return intz && null;
 }
 
-bool Renderer::getFloat32TextureSupport(bool *filtering, bool *renderable)
+bool Renderer9::getFloat32TextureSupport(bool *filtering, bool *renderable)
 {
     D3DDISPLAYMODE currentDisplayMode;
     mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
@@ -777,7 +776,7 @@ bool Renderer::getFloat32TextureSupport(bool *filtering, bool *renderable)
     }
 }
 
-bool Renderer::getFloat16TextureSupport(bool *filtering, bool *renderable)
+bool Renderer9::getFloat16TextureSupport(bool *filtering, bool *renderable)
 {
     D3DDISPLAYMODE currentDisplayMode;
     mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
@@ -805,7 +804,7 @@ bool Renderer::getFloat16TextureSupport(bool *filtering, bool *renderable)
     }
 }
 
-bool Renderer::getLuminanceTextureSupport()
+bool Renderer9::getLuminanceTextureSupport()
 {
     D3DDISPLAYMODE currentDisplayMode;
     mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
@@ -813,7 +812,7 @@ bool Renderer::getLuminanceTextureSupport()
     return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_L8));
 }
 
-bool Renderer::getLuminanceAlphaTextureSupport()
+bool Renderer9::getLuminanceAlphaTextureSupport()
 {
     D3DDISPLAYMODE currentDisplayMode;
     mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
@@ -821,12 +820,12 @@ bool Renderer::getLuminanceAlphaTextureSupport()
     return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_A8L8));
 }
 
-bool Renderer::getTextureFilterAnisotropySupport() const
+bool Renderer9::getTextureFilterAnisotropySupport() const
 {
     return mSupportsTextureFilterAnisotropy;
 }
 
-float Renderer::getTextureMaxAnisotropy() const
+float Renderer9::getTextureMaxAnisotropy() const
 {
     if (mSupportsTextureFilterAnisotropy)
     {
@@ -835,7 +834,7 @@ float Renderer::getTextureMaxAnisotropy() const
     return 1.0f;
 }
 
-bool Renderer::getEventQuerySupport()
+bool Renderer9::getEventQuerySupport()
 {
     IDirect3DQuery9 *query = allocateEventQuery();
     if (query)
@@ -852,7 +851,7 @@ bool Renderer::getEventQuerySupport()
 
 // Only Direct3D 10 ready devices support all the necessary vertex texture formats.
 // We test this using D3D9 by checking support for the R16F format.
-bool Renderer::getVertexTextureSupport() const
+bool Renderer9::getVertexTextureSupport() const
 {
     if (!mDevice || mDeviceCaps.PixelShaderVersion < D3DPS_VERSION(3, 0))
     {
@@ -867,12 +866,12 @@ bool Renderer::getVertexTextureSupport() const
     return SUCCEEDED(result);
 }
 
-bool Renderer::getNonPower2TextureSupport() const
+bool Renderer9::getNonPower2TextureSupport() const
 {
     return mSupportsNonPower2Textures;
 }
 
-bool Renderer::getOcclusionQuerySupport() const
+bool Renderer9::getOcclusionQuerySupport() const
 {
     if (!mDevice)
     {
@@ -892,64 +891,64 @@ bool Renderer::getOcclusionQuerySupport() const
     }
 }
 
-bool Renderer::getInstancingSupport() const
+bool Renderer9::getInstancingSupport() const
 {
     return mDeviceCaps.PixelShaderVersion >= D3DPS_VERSION(3, 0);
 }
 
-bool Renderer::getShareHandleSupport() const
+bool Renderer9::getShareHandleSupport() const
 {
     // PIX doesn't seem to support using share handles, so disable them.
     // D3D9_REPLACE
     return (mD3d9Ex != NULL) && !gl::perfActive();
 }
 
-bool Renderer::getShaderModel3Support() const
+bool Renderer9::getShaderModel3Support() const
 {
     return mDeviceCaps.PixelShaderVersion >= D3DPS_VERSION(3, 0);
 }
 
-float Renderer::getMaxPointSize() const
+float Renderer9::getMaxPointSize() const
 {
     return mDeviceCaps.MaxPointSize;
 }
 
-int Renderer::getMaxTextureWidth() const
+int Renderer9::getMaxTextureWidth() const
 {
     return (int)mDeviceCaps.MaxTextureWidth;
 }
 
-int Renderer::getMaxTextureHeight() const
+int Renderer9::getMaxTextureHeight() const
 {
     return (int)mDeviceCaps.MaxTextureHeight;
 }
 
-bool Renderer::get32BitIndexSupport() const
+bool Renderer9::get32BitIndexSupport() const
 {
     return mDeviceCaps.MaxVertexIndex >= (1 << 16);
 }
 
-DWORD Renderer::getCapsDeclTypes() const
+DWORD Renderer9::getCapsDeclTypes() const
 {
     return mDeviceCaps.DeclTypes;
 }
 
-int Renderer::getMinSwapInterval() const
+int Renderer9::getMinSwapInterval() const
 {
     return mMinSwapInterval;
 }
 
-int Renderer::getMaxSwapInterval() const
+int Renderer9::getMaxSwapInterval() const
 {
     return mMaxSwapInterval;
 }
 
-int Renderer::getMaxSupportedSamples() const
+int Renderer9::getMaxSupportedSamples() const
 {
     return mMaxSupportedSamples;
 }
 
-int Renderer::getNearestSupportedSamples(D3DFORMAT format, int requested) const
+int Renderer9::getNearestSupportedSamples(D3DFORMAT format, int requested) const
 {
     if (requested == 0)
     {
@@ -975,7 +974,7 @@ int Renderer::getNearestSupportedSamples(D3DFORMAT format, int requested) const
     return -1;
 }
 
-D3DPOOL Renderer::getBufferPool(DWORD usage) const
+D3DPOOL Renderer9::getBufferPool(DWORD usage) const
 {
     if (mD3d9Ex != NULL)
     {
@@ -992,7 +991,7 @@ D3DPOOL Renderer::getBufferPool(DWORD usage) const
     return D3DPOOL_DEFAULT;
 }
 
-D3DPOOL Renderer::getTexturePool(DWORD usage) const
+D3DPOOL Renderer9::getTexturePool(DWORD usage) const
 {
     if (mD3d9Ex != NULL)
     {

@@ -83,10 +83,10 @@
     <ClCompile Include="VertexDataManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\Renderer.cpp">
+    <ClCompile Include="renderer\SwapChain.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\SwapChain.cpp">
+    <ClCompile Include="renderer\Renderer9.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
   </ItemGroup>
@@ -182,6 +182,9 @@
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="renderer\SwapChain.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\Renderer9.h">
       <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>

@@ -21,7 +21,7 @@
 #include <vector>
 
 #include "libGLESv2/Context.h"
-#include "libGLESv2/renderer/Renderer.h"
+#include "libGLESv2/renderer/Renderer9.h"
 
 #include "libEGL/Config.h"
 #include "libEGL/Surface.h"
@@ -54,7 +54,7 @@ class Display
     bool isValidSurface(egl::Surface *surface);
     bool hasExistingWindowSurface(HWND window);
 
-    renderer::Renderer *getRenderer() { return mRenderer; };
+    renderer::Renderer9 *getRenderer() { return mRenderer; };
 
     virtual void notifyDeviceLost();
 
@@ -80,7 +80,7 @@ class Display
     typedef std::set<gl::Context*> ContextSet;
     ContextSet mContextSet;
 
-    renderer::Renderer *mRenderer;
+    renderer::Renderer9 *mRenderer;   // D3D9_REPLACE
 
     void initExtensionString();
     std::string mExtensionString;

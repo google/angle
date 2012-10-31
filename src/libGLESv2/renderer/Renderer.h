@@ -10,22 +10,14 @@
 #ifndef LIBGLESV2_RENDERER_RENDERER_H_
 #define LIBGLESV2_RENDERER_RENDERER_H_
 
-#include <set>
-#include <map>
-#include <vector>
-
 #define GL_APICALL
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #define EGLAPI
 #include <EGL/egl.h>
 
-#include <d3d9.h>  // D3D9_REPLACE
-
-#include "common/angleutils.h"
-#include "libGLESv2/renderer/ShaderCache.h"
-#include "libGLESv2/EnumTypes.h"
 #include "libGLESv2/Texture.h"
+#include "libGLESv2/EnumTypes.h"
 
 const int versionWindowsVista = MAKEWORD(0x00, 0x06);
 const int versionWindows7 = MAKEWORD(0x01, 0x06);
@@ -59,127 +51,63 @@ struct ConfigDesc
 class Renderer
 {
   public:
-    Renderer(egl::Display *display, HMODULE hModule, HDC hDc);
-    virtual ~Renderer();
+    Renderer(egl::Display *display) : mDisplay(display) {};
+    virtual ~Renderer() {};
 
-    virtual EGLint initialize();
-    virtual bool resetDevice();
+    virtual EGLint initialize() = 0;
+    virtual bool resetDevice() = 0;
 
-    virtual int generateConfigs(ConfigDesc **configDescList);
-    virtual void deleteConfigs(ConfigDesc *configDescList);
+    virtual int generateConfigs(ConfigDesc **configDescList) = 0;
+    virtual void deleteConfigs(ConfigDesc *configDescList) = 0;
 
-    virtual void startScene();
-    virtual void endScene();
+    virtual void startScene() = 0;
+    virtual void endScene() = 0;
 
-    virtual void sync(bool block);
-    virtual IDirect3DQuery9* allocateEventQuery();
-    virtual void freeEventQuery(IDirect3DQuery9* query);
+    virtual void sync(bool block) = 0;
 
-    // resource creation
-    virtual IDirect3DVertexShader9 *createVertexShader(const DWORD *function, size_t length); // D3D9_REPLACE
-    virtual IDirect3DPixelShader9 *createPixelShader(const DWORD *function, size_t length); // D3D9_REPLACE
-#if 0
-    virtual void *createTexture2D();
-    virtual void *createTextureCube();
-    virtual void *createQuery();;
-    virtual void *createIndexBuffer();
-    virtual void *createVertexbuffer();
-
-    // state setup
-    virtual void applyShaders();
-    virtual void applyConstants();
-    virtual void applyRenderTargets();
-    virtual void applyState();
-#endif
-    virtual void setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &sampler);
-    virtual void setTexture(gl::SamplerType type, int index, gl::Texture *texture);
+    virtual void setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &sampler) = 0;
+    virtual void setTexture(gl::SamplerType type, int index, gl::Texture *texture) = 0;
 
     // lost device
-    virtual void markDeviceLost();
-    virtual bool isDeviceLost();
-    virtual bool testDeviceLost(bool notify);
-    virtual bool testDeviceResettable();
+    virtual void markDeviceLost() = 0;
+    virtual bool isDeviceLost() = 0;
+    virtual bool testDeviceLost(bool notify) = 0;
+    virtual bool testDeviceResettable() = 0;
 
     // Renderer capabilities
-    virtual IDirect3DDevice9 *getDevice() {return mDevice;};  // D3D9_REPLACE
-    virtual DWORD getAdapterVendor() const;
-    virtual const char *getAdapterDescription() const;
-    virtual GUID getAdapterIdentifier() const;
+    virtual DWORD getAdapterVendor() const = 0;
+    virtual const char *getAdapterDescription() const = 0;
+    virtual GUID getAdapterIdentifier() const = 0;
 
-    virtual bool getDXT1TextureSupport();
-    virtual bool getDXT3TextureSupport();
-    virtual bool getDXT5TextureSupport();
-    virtual bool getEventQuerySupport();
-    virtual bool getFloat32TextureSupport(bool *filtering, bool *renderable);
-    virtual bool getFloat16TextureSupport(bool *filtering, bool *renderable);
-    virtual bool getLuminanceTextureSupport();
-    virtual bool getLuminanceAlphaTextureSupport();
-    virtual bool getVertexTextureSupport() const;
-    virtual bool getNonPower2TextureSupport() const;
-    virtual bool getDepthTextureSupport() const;
-    virtual bool getOcclusionQuerySupport() const;
-    virtual bool getInstancingSupport() const;
-    virtual bool getTextureFilterAnisotropySupport() const;
-    virtual float getTextureMaxAnisotropy() const;
-    virtual bool getShareHandleSupport() const;
+    virtual bool getDXT1TextureSupport() = 0;
+    virtual bool getDXT3TextureSupport() = 0;
+    virtual bool getDXT5TextureSupport() = 0;
+    virtual bool getEventQuerySupport() = 0;
+    virtual bool getFloat32TextureSupport(bool *filtering, bool *renderable) = 0;
+    virtual bool getFloat16TextureSupport(bool *filtering, bool *renderable) = 0;
+    virtual bool getLuminanceTextureSupport() = 0;
+    virtual bool getLuminanceAlphaTextureSupport() = 0;
+    virtual bool getVertexTextureSupport() const = 0;
+    virtual bool getNonPower2TextureSupport() const = 0;
+    virtual bool getDepthTextureSupport() const = 0;
+    virtual bool getOcclusionQuerySupport() const = 0;
+    virtual bool getInstancingSupport() const = 0;
+    virtual bool getTextureFilterAnisotropySupport() const = 0;
+    virtual float getTextureMaxAnisotropy() const = 0;
+    virtual bool getShareHandleSupport() const = 0;
 
-    virtual bool getShaderModel3Support() const;
-    virtual float getMaxPointSize() const;
-    virtual int getMaxTextureWidth() const;
-    virtual int getMaxTextureHeight() const;
-    virtual bool get32BitIndexSupport() const;
-    virtual DWORD getCapsDeclTypes() const; // D3D9_REPLACE
-    virtual int getMinSwapInterval() const;
-    virtual int getMaxSwapInterval() const;
+    virtual bool getShaderModel3Support() const = 0;
+    virtual float getMaxPointSize() const = 0;
+    virtual int getMaxTextureWidth() const = 0;
+    virtual int getMaxTextureHeight() const = 0;
+    virtual bool get32BitIndexSupport() const = 0;
+    virtual int getMinSwapInterval() const = 0;
+    virtual int getMaxSwapInterval() const = 0;
 
-    virtual GLsizei getMaxSupportedSamples() const;
-    virtual int getNearestSupportedSamples(D3DFORMAT format, int requested) const;
+    virtual GLsizei getMaxSupportedSamples() const = 0;
 
-    virtual D3DPOOL getBufferPool(DWORD usage) const;
-    virtual D3DPOOL getTexturePool(DWORD usage) const;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(Renderer);
-
-    void getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray); // D3D9_REPLACE
-
-    static const D3DFORMAT mRenderTargetFormats[];
-    static const D3DFORMAT mDepthStencilFormats[];
-
+  protected:
     egl::Display *mDisplay;
-    const HDC mDc;
-    HMODULE mD3d9Module;
-
-    void initializeDevice();
-    D3DPRESENT_PARAMETERS getDefaultPresentParameters();
-    void releaseDeviceResources();
-
-    UINT mAdapter;
-    D3DDEVTYPE mDeviceType;
-    IDirect3D9 *mD3d9;  // Always valid after successful initialization.
-    IDirect3D9Ex *mD3d9Ex;  // Might be null if D3D9Ex is not supported.
-    IDirect3DDevice9 *mDevice;
-    IDirect3DDevice9Ex *mDeviceEx;  // Might be null if D3D9Ex is not supported.
-
-    HWND mDeviceWindow;
-
-    bool mDeviceLost;
-    D3DCAPS9 mDeviceCaps;
-    D3DADAPTER_IDENTIFIER9 mAdapterIdentifier;
-
-    bool mSceneStarted;
-    bool mSupportsNonPower2Textures;
-    bool mSupportsTextureFilterAnisotropy;
-    int mMinSwapInterval;
-    int mMaxSwapInterval;
-
-    std::map<D3DFORMAT, bool *> mMultiSampleSupport;
-    GLsizei mMaxSupportedSamples;
-
-    // A pool of event queries that are currently unused.
-    std::vector<IDirect3DQuery9*> mEventQueryPool;
-    VertexShaderCache mVertexShaderCache;
-    PixelShaderCache mPixelShaderCache;
 };
 
 }
