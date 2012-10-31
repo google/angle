@@ -20,6 +20,7 @@
 #include "common/debug.h"
 #include "common/RefCountObject.h"
 #include "libGLESv2/renderer/Image.h"
+#include "libGLESv2/renderer/TextureStorage.h"
 #include "libGLESv2/Renderbuffer.h"
 #include "libGLESv2/utilities.h"
 
@@ -52,38 +53,6 @@ struct SamplerState
     GLenum wrapT;
     float maxAnisotropy;
     int lodOffset;
-};
-
-
-
-class TextureStorage
-{
-  public:
-    explicit TextureStorage(DWORD usage);
-
-    virtual ~TextureStorage();
-
-    bool isRenderTarget() const;
-    bool isManaged() const;
-    D3DPOOL getPool() const;
-    DWORD getUsage() const;
-    unsigned int getTextureSerial() const;
-    virtual unsigned int getRenderTargetSerial(GLenum target) const = 0;
-    int getLodOffset() const;
-
-  protected:
-    int mLodOffset;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(TextureStorage);
-
-    const DWORD mD3DUsage;
-    const D3DPOOL mD3DPool;
-
-    const unsigned int mTextureSerial;
-    static unsigned int issueTextureSerial();
-
-    static unsigned int mCurrentTextureSerial;
 };
 
 class Texture : public RefCountObject
@@ -170,26 +139,6 @@ class Texture : public RefCountObject
     virtual TextureStorage *getStorage(bool renderTarget) = 0;
 };
 
-class TextureStorage2D : public TextureStorage
-{
-  public:
-    explicit TextureStorage2D(IDirect3DTexture9 *surfaceTexture);
-    TextureStorage2D(int levels, D3DFORMAT format, DWORD usage, int width, int height);
-
-    virtual ~TextureStorage2D();
-
-    IDirect3DSurface9 *getSurfaceLevel(int level, bool dirty);
-    IDirect3DBaseTexture9 *getBaseTexture() const;
-
-    virtual unsigned int getRenderTargetSerial(GLenum target) const;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(TextureStorage2D);
-
-    IDirect3DTexture9 *mTexture;
-    const unsigned int mRenderTargetSerial;
-};
-
 class Texture2D : public Texture
 {
   public:
@@ -256,25 +205,6 @@ class Texture2D : public Texture
     // the count drops to zero, but will not cause deletion of the Renderbuffer.
     Renderbuffer *mColorbufferProxy;
     unsigned int mProxyRefs;
-};
-
-class TextureStorageCubeMap : public TextureStorage
-{
-  public:
-    TextureStorageCubeMap(int levels, D3DFORMAT format, DWORD usage, int size);
-
-    virtual ~TextureStorageCubeMap();
-
-    IDirect3DSurface9 *getCubeMapSurface(GLenum faceTarget, int level, bool dirty);
-    IDirect3DBaseTexture9 *getBaseTexture() const;
-
-    virtual unsigned int getRenderTargetSerial(GLenum target) const;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(TextureStorageCubeMap);
-
-    IDirect3DCubeTexture9 *mTexture;
-    const unsigned int mFirstRenderTargetSerial;
 };
 
 class TextureCubeMap : public Texture
