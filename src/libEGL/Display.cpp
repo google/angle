@@ -28,46 +28,6 @@ namespace
     DisplayMap displays;
 }
 
-// D3D9_REMOVE - Temporary duplication of this conversion function until remainder of d3d types are stripped
-GLenum ConvertBackBufferFormat(D3DFORMAT format)
-{
-    switch (format)
-    {
-      case D3DFMT_A4R4G4B4: return GL_RGBA4;
-      case D3DFMT_A8R8G8B8: return GL_RGBA8_OES;
-      case D3DFMT_A1R5G5B5: return GL_RGB5_A1;
-      case D3DFMT_R5G6B5:   return GL_RGB565;
-      case D3DFMT_X8R8G8B8: return GL_RGB8_OES;
-      default:
-        UNREACHABLE();
-    }
-
-    return GL_RGBA4;
-}
-
-// D3D9_REMOVE - Temporary duplication of this conversion function until remainder of d3d types are stripped
-GLenum ConvertDepthStencilFormat(D3DFORMAT format)
-{
-    if (format == D3DFMT_INTZ)
-    {
-        return GL_DEPTH24_STENCIL8_OES;
-    }
-    switch (format)
-    {
-      case D3DFMT_D16:
-      case D3DFMT_D24X8:
-        return GL_DEPTH_COMPONENT16;
-      case D3DFMT_D24S8:
-        return GL_DEPTH24_STENCIL8_OES;
-      case D3DFMT_UNKNOWN:
-        return GL_NONE;  // This case diverges from the one in utilities-- but this function gets removed imminently.
-      default:
-        UNREACHABLE();
-    }
-
-    return GL_DEPTH24_STENCIL8_OES;
-}
-
 egl::Display *Display::getDisplay(EGLNativeDisplayType displayId)
 {
     if (displays.find(displayId) != displays.end())
@@ -149,82 +109,17 @@ bool Display::initialize()
         terminate();
         return error(status, false);
     }
-    IDirect3D9 *d3d9 = mRenderer->getD3D(); // D3D9_REPLACE
-    UINT adapter = mRenderer->getAdapter(); // D3D9_REPLACE
-    D3DDEVTYPE deviceType = mRenderer->getDeviceType(); // D3D9_REPLACE
-    IDirect3DDevice9 *device = mRenderer->getDevice(); // D3D9_REPLACE
 
     mMinSwapInterval = mRenderer->getMinSwapInterval();
     mMaxSwapInterval = mRenderer->getMaxSwapInterval();
 
-    // START D3D9_REPLACE
-    const D3DFORMAT renderTargetFormats[] =
-    {
-        D3DFMT_A1R5G5B5,
-    //  D3DFMT_A2R10G10B10,   // The color_ramp conformance test uses ReadPixels with UNSIGNED_BYTE causing it to think that rendering skipped a colour value.
-        D3DFMT_A8R8G8B8,
-        D3DFMT_R5G6B5,
-    //  D3DFMT_X1R5G5B5,      // Has no compatible OpenGL ES renderbuffer format
-        D3DFMT_X8R8G8B8
-    };
-
-    const D3DFORMAT depthStencilFormats[] =
-    {
-        D3DFMT_UNKNOWN,
-    //  D3DFMT_D16_LOCKABLE,
-        D3DFMT_D32,
-    //  D3DFMT_D15S1,
-        D3DFMT_D24S8,
-        D3DFMT_D24X8,
-    //  D3DFMT_D24X4S4,
-        D3DFMT_D16,
-    //  D3DFMT_D32F_LOCKABLE,
-    //  D3DFMT_D24FS8
-    };
-
-    D3DDISPLAYMODE currentDisplayMode;
-    d3d9->GetAdapterDisplayMode(adapter, &currentDisplayMode);
-
+    renderer::ConfigDesc *descList;
+    int numConfigs = mRenderer->generateConfigs(&descList);
     ConfigSet configSet;
 
-    for (int formatIndex = 0; formatIndex < sizeof(renderTargetFormats) / sizeof(D3DFORMAT); formatIndex++)
-    {
-        D3DFORMAT renderTargetFormat = renderTargetFormats[formatIndex];
-
-        HRESULT result = d3d9->CheckDeviceFormat(adapter, deviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET, D3DRTYPE_SURFACE, renderTargetFormat);
-
-        if (SUCCEEDED(result))
-        {
-            for (int depthStencilIndex = 0; depthStencilIndex < sizeof(depthStencilFormats) / sizeof(D3DFORMAT); depthStencilIndex++)
-            {
-                D3DFORMAT depthStencilFormat = depthStencilFormats[depthStencilIndex];
-                HRESULT result = D3D_OK;
-                    
-                if(depthStencilFormat != D3DFMT_UNKNOWN)
-                {
-                    result = d3d9->CheckDeviceFormat(adapter, deviceType, currentDisplayMode.Format, D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_SURFACE, depthStencilFormat);
-                }
-
-                if (SUCCEEDED(result))
-                {
-                    if(depthStencilFormat != D3DFMT_UNKNOWN)
-                    {
-                        result = d3d9->CheckDepthStencilMatch(adapter, deviceType, currentDisplayMode.Format, renderTargetFormat, depthStencilFormat);
-                    }
-
-                    if (SUCCEEDED(result))
-                    {
-                        // FIXME: enumerate multi-sampling
-
-                        configSet.add(ConvertBackBufferFormat(currentDisplayMode.Format), currentDisplayMode.Width, currentDisplayMode.Height, mMinSwapInterval, mMaxSwapInterval, 
-                                      ConvertBackBufferFormat(renderTargetFormat), ConvertDepthStencilFormat(depthStencilFormat), 0,
-                                      mRenderer->getMaxTextureWidth(), mRenderer->getMaxTextureHeight());
-                    }
-                }
-            }
-        }
-    }
-    // END D3D9_REPLACE
+    for (int i = 0; i < numConfigs; ++i)
+        configSet.add(descList[i], mMinSwapInterval, mMaxSwapInterval, 
+                      mRenderer->getMaxTextureWidth(), mRenderer->getMaxTextureHeight());
 
     // Give the sorted configs a unique ID and store them internally
     EGLint index = 1;
@@ -236,6 +131,9 @@ bool Display::initialize()
 
         mConfigSet.mSet.insert(configuration);
     }
+
+    mRenderer->deleteConfigs(descList);
+    descList = NULL;
 
     if (!isInitialized())
     {

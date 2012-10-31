@@ -22,20 +22,12 @@ using namespace std;
 
 namespace egl
 {
-Config::Config(EGLenum displayFormat, EGLint displayWidth, EGLint displayHeight, EGLint minInterval, EGLint maxInterval, 
-               EGLenum renderTargetFormat, EGLenum depthStencilFormat, EGLint multiSample, EGLint texWidth, EGLint texHeight)
-    : mDisplayFormat(displayFormat), mDisplayWidth(displayWidth), mDisplayHeight(displayHeight), mRenderTargetFormat(renderTargetFormat), mDepthStencilFormat(depthStencilFormat),
-      mMultiSample(multiSample)
-{
-    set(minInterval, maxInterval, renderTargetFormat, depthStencilFormat, multiSample, texWidth, texHeight);
-}
-
-void Config::set(EGLint minInterval, EGLint maxInterval, EGLenum renderTargetFormat, EGLenum depthStencilFormat,
-                 EGLint multiSample, EGLint texWidth, EGLint texHeight)
+Config::Config(renderer::ConfigDesc desc, EGLint minInterval, EGLint maxInterval, EGLint texWidth, EGLint texHeight)
+    : mRenderTargetFormat(desc.renderTargetFormat), mDepthStencilFormat(desc.depthStencilFormat), mMultiSample(desc.multiSample)
 {
     mBindToTextureRGB = EGL_FALSE;
     mBindToTextureRGBA = EGL_FALSE;
-    switch (renderTargetFormat)
+    switch (desc.renderTargetFormat)
     {
       case GL_RGB5_A1:
         mBufferSize = 16;
@@ -74,11 +66,11 @@ void Config::set(EGLint minInterval, EGLint maxInterval, EGLenum renderTargetFor
     mLuminanceSize = 0;
     mAlphaMaskSize = 0;
     mColorBufferType = EGL_RGB_BUFFER;
-    mConfigCaveat = (mDisplayFormat == renderTargetFormat) ? EGL_NONE : EGL_SLOW_CONFIG;
+    mConfigCaveat = (desc.fastConfig) ? EGL_NONE : EGL_SLOW_CONFIG;
     mConfigID = 0;
     mConformant = EGL_OPENGL_ES2_BIT;
 
-    switch (depthStencilFormat)
+    switch (desc.depthStencilFormat)
     {
       case GL_NONE:
         mDepthSize = 0;
@@ -115,8 +107,8 @@ void Config::set(EGLint minInterval, EGLint maxInterval, EGLenum renderTargetFor
     mNativeVisualID = 0;
     mNativeVisualType = 0;
     mRenderableType = EGL_OPENGL_ES2_BIT;
-    mSampleBuffers = multiSample ? 1 : 0;
-    mSamples = multiSample;
+    mSampleBuffers = desc.multiSample ? 1 : 0;
+    mSamples = desc.multiSample;
     mSurfaceType = EGL_PBUFFER_BIT | EGL_WINDOW_BIT | EGL_SWAP_BEHAVIOR_PRESERVED_BIT;
     mTransparentType = EGL_NONE;
     mTransparentRedValue = 0;
@@ -230,11 +222,9 @@ ConfigSet::ConfigSet()
 {
 }
 
-void ConfigSet::add(EGLenum displayFormat, EGLint displayWidth, EGLint displayHeight, EGLint minSwapInterval, EGLint maxSwapInterval,
-                    EGLenum renderTargetFormat, EGLenum depthStencilFormat,EGLint multiSample, EGLint texWidth, EGLint texHeight)
+void ConfigSet::add(renderer::ConfigDesc desc, EGLint minSwapInterval, EGLint maxSwapInterval, EGLint texWidth, EGLint texHeight)
 {
-    Config config(displayFormat, displayWidth, displayHeight, minSwapInterval, maxSwapInterval, renderTargetFormat, depthStencilFormat,
-                  multiSample, texWidth, texHeight);
+    Config config(desc, minSwapInterval, maxSwapInterval, texWidth, texHeight);
     mSet.insert(config);
 }
 

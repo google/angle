@@ -16,6 +16,7 @@
 
 #include <set>
 
+#include "libGLESv2/renderer/Renderer.h"
 #include "common/angleutils.h"
 
 namespace egl
@@ -25,19 +26,13 @@ class Display;
 class Config
 {
   public:
-    Config(EGLenum displayFormat, EGLint displayWidth, EGLint displayHeight, EGLint minSwapInterval, EGLint maxSwapInterval, 
-           EGLenum renderTargetFormat, EGLenum depthStencilFormat, EGLint multiSample, EGLint texWidth, EGLint texHeight);
+    Config(renderer::ConfigDesc desc, EGLint minSwapInterval, EGLint maxSwapInterval, EGLint texWidth, EGLint texHeight);
 
-    void set(EGLint minSwapInterval, EGLint maxSwapInterval, EGLenum renderTargetFormat, EGLenum depthStencilFormat,
-             EGLint multiSample, EGLint texWidth, EGLint texHeight);
     EGLConfig getHandle() const;
 
-    const EGLenum mRenderTargetFormat;
-    const EGLenum mDepthStencilFormat;
-    const EGLint mMultiSample;
-    const EGLint mDisplayWidth;
-    const EGLint mDisplayHeight;
-    const EGLenum mDisplayFormat;
+    const GLenum mRenderTargetFormat;
+    const GLenum mDepthStencilFormat;
+    const GLint mMultiSample;
 
     EGLint mBufferSize;              // Depth of the color buffer
     EGLint mRedSize;                 // Bits of Red in the color buffer
@@ -101,8 +96,7 @@ class ConfigSet
   public:
     ConfigSet();
 
-    void add(EGLenum displayFormat, EGLint displayWidth, EGLint displayHeight, EGLint minSwapInterval, EGLint maxSwapInterval,
-             EGLenum renderTargetFormat, EGLenum depthStencilFormat, EGLint multiSample, EGLint texWidth, EGLint texHeight);
+    void add(renderer::ConfigDesc desc, EGLint minSwapInterval, EGLint maxSwapInterval, EGLint texWidth, EGLint texHeight);
     size_t size() const;
     bool getConfigs(EGLConfig *configs, const EGLint *attribList, EGLint configSize, EGLint *numConfig);
     const egl::Config *get(EGLConfig configHandle);

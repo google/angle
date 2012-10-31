@@ -48,6 +48,14 @@ class Display;
 namespace renderer
 {
 
+struct ConfigDesc
+{
+    GLenum  renderTargetFormat;
+    GLenum  depthStencilFormat;
+    GLint   multiSample;
+    bool    fastConfig;
+};
+
 class Renderer
 {
   public:
@@ -56,6 +64,9 @@ class Renderer
 
     virtual EGLint initialize();
     virtual bool resetDevice();
+
+    virtual int generateConfigs(ConfigDesc **configDescList);
+    virtual void deleteConfigs(ConfigDesc *configDescList);
 
     virtual void startScene();
     virtual void endScene();
@@ -92,9 +103,6 @@ class Renderer
     // Renderer capabilities
     virtual IDirect3DDevice9 *getDevice() {return mDevice;};  // D3D9_REPLACE
     virtual D3DADAPTER_IDENTIFIER9 *getAdapterIdentifier() {return &mAdapterIdentifier;}; // D3D9_REPLACE
-    virtual IDirect3D9 *getD3D() {return mD3d9;}; // D3D9_REMOVE
-    virtual UINT getAdapter() {return mAdapter;}; // D3D9_REMOVE
-    virtual D3DDEVTYPE getDeviceType() {return mDeviceType;}; // D3D9_REMOVE
     virtual bool isD3d9ExDevice() const { return mD3d9Ex != NULL; } // D3D9_REMOVE
 
     virtual bool getDXT1TextureSupport();

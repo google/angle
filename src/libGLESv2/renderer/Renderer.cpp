@@ -11,6 +11,7 @@
 #include "common/debug.h"
 #include "libGLESv2/utilities.h"
 
+#include "libEGL/Config.h"
 #include "libEGL/Display.h"
 
 // Can also be enabled by defining FORCE_REF_RAST in the project's predefined macros
@@ -346,6 +347,64 @@ D3DPRESENT_PARAMETERS Renderer::getDefaultPresentParameters()
     presentParameters.Windowed = TRUE;
 
     return presentParameters;
+}
+
+int Renderer::generateConfigs(ConfigDesc **configDescList)
+{
+    D3DDISPLAYMODE currentDisplayMode;
+    mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
+
+    int numRenderFormats = sizeof(mRenderTargetFormats) / sizeof(mRenderTargetFormats[0]);
+    int numDepthFormats = sizeof(mDepthStencilFormats) / sizeof(mDepthStencilFormats[0]);
+    (*configDescList) = new ConfigDesc[numRenderFormats * numDepthFormats];
+    int numConfigs = 0;
+
+    for (int formatIndex = 0; formatIndex < numRenderFormats; formatIndex++)
+    {
+        D3DFORMAT renderTargetFormat = mRenderTargetFormats[formatIndex];
+
+        HRESULT result = mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET, D3DRTYPE_SURFACE, renderTargetFormat);
+
+        if (SUCCEEDED(result))
+        {
+            for (int depthStencilIndex = 0; depthStencilIndex < numDepthFormats; depthStencilIndex++)
+            {
+                D3DFORMAT depthStencilFormat = mDepthStencilFormats[depthStencilIndex];
+                HRESULT result = D3D_OK;
+
+                if(depthStencilFormat != D3DFMT_UNKNOWN)
+                {
+                    result = mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_SURFACE, depthStencilFormat);
+                }
+
+                if (SUCCEEDED(result))
+                {
+                    if(depthStencilFormat != D3DFMT_UNKNOWN)
+                    {
+                        result = mD3d9->CheckDepthStencilMatch(mAdapter, mDeviceType, currentDisplayMode.Format, renderTargetFormat, depthStencilFormat);
+                    }
+
+                    if (SUCCEEDED(result))
+                    {
+                        ConfigDesc newConfig;
+                        newConfig.renderTargetFormat = dx2es::ConvertBackBufferFormat(renderTargetFormat);
+                        newConfig.depthStencilFormat = dx2es::ConvertDepthStencilFormat(depthStencilFormat);
+                        newConfig.multiSample = 0; // FIXME: enumerate multi-sampling
+                        newConfig.fastConfig = (currentDisplayMode.Format == renderTargetFormat);
+
+                        (*configDescList)[numConfigs++] = newConfig;
+                    }
+                }
+            }
+        }
+    }
+
+    return numConfigs;
+}
+
+void Renderer::deleteConfigs(ConfigDesc *configDescList)
+{
+    delete [] (configDescList);
 }
 
 void Renderer::startScene()
