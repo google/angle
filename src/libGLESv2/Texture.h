@@ -19,6 +19,7 @@
 
 #include "common/debug.h"
 #include "common/RefCountObject.h"
+#include "libGLESv2/renderer/Image.h"
 #include "libGLESv2/Renderbuffer.h"
 #include "libGLESv2/utilities.h"
 
@@ -53,97 +54,7 @@ struct SamplerState
     int lodOffset;
 };
 
-class Image
-{
-  public:
-    Image();
-    ~Image();
 
-    bool redefine(GLint internalformat, GLsizei width, GLsizei height, bool forceRelease);
-    void markDirty() {mDirty = true;}
-    void markClean() {mDirty = false;}
-
-    bool isRenderableFormat() const;
-    D3DFORMAT getD3DFormat() const;
-
-    GLsizei getWidth() const {return mWidth;}
-    GLsizei getHeight() const {return mHeight;}
-    GLenum getInternalFormat() const {return mInternalFormat;}
-    bool isDirty() const {return mSurface && mDirty;}
-    IDirect3DSurface9 *getSurface();
-
-    void setManagedSurface(IDirect3DSurface9 *surface);
-    void updateSurface(IDirect3DSurface9 *dest, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
-
-    void loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                  GLint unpackAlignment, const void *input);
-
-    void loadAlphaData(GLsizei width, GLsizei height,
-                       int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadAlphaDataSSE2(GLsizei width, GLsizei height,
-                           int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadAlphaFloatData(GLsizei width, GLsizei height,
-                            int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadAlphaHalfFloatData(GLsizei width, GLsizei height,
-                                int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadLuminanceData(GLsizei width, GLsizei height,
-                           int inputPitch, const void *input, size_t outputPitch, void *output, bool native) const;
-    void loadLuminanceFloatData(GLsizei width, GLsizei height,
-                                int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadLuminanceHalfFloatData(GLsizei width, GLsizei height,
-                                    int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadLuminanceAlphaData(GLsizei width, GLsizei height,
-                                int inputPitch, const void *input, size_t outputPitch, void *output, bool native) const;
-    void loadLuminanceAlphaFloatData(GLsizei width, GLsizei height,
-                                     int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadLuminanceAlphaHalfFloatData(GLsizei width, GLsizei height,
-                                         int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadRGBUByteData(GLsizei width, GLsizei height,
-                          int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadRGB565Data(GLsizei width, GLsizei height,
-                        int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadRGBFloatData(GLsizei width, GLsizei height,
-                          int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadRGBHalfFloatData(GLsizei width, GLsizei height,
-                              int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadRGBAUByteDataSSE2(GLsizei width, GLsizei height,
-                               int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadRGBAUByteData(GLsizei width, GLsizei height,
-                           int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadRGBA4444Data(GLsizei width, GLsizei height,
-                          int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadRGBA5551Data(GLsizei width, GLsizei height,
-                          int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadRGBAFloatData(GLsizei width, GLsizei height,
-                           int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadRGBAHalfFloatData(GLsizei width, GLsizei height,
-                               int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadBGRAData(GLsizei width, GLsizei height,
-                      int inputPitch, const void *input, size_t outputPitch, void *output) const;
-    void loadCompressedData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                            const void *input);
-
-    void copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, IDirect3DSurface9 *renderTarget);
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(Image);
-
-    void createSurface();
-
-    HRESULT lock(D3DLOCKED_RECT *lockedRect, const RECT *rect);
-    void unlock();
-
-    GLsizei mWidth;
-    GLsizei mHeight;
-    GLint mInternalFormat;
-
-    bool mDirty;
-
-    D3DPOOL mD3DPool;   // can only be D3DPOOL_SYSTEMMEM or D3DPOOL_MANAGED since it needs to be lockable.
-    D3DFORMAT mD3DFormat;
-
-    IDirect3DSurface9 *mSurface;
-};
 
 class TextureStorage
 {
@@ -181,6 +92,9 @@ class Texture : public RefCountObject
     explicit Texture(GLuint id);
 
     virtual ~Texture();
+
+    static D3DFORMAT ConvertTextureInternalFormat(GLint internalformat);
+    static bool IsTextureFormatRenderable(D3DFORMAT format);
 
     virtual void addProxyRef(const Renderbuffer *proxy) = 0;
     virtual void releaseProxy(const Renderbuffer *proxy) = 0;

@@ -252,6 +252,8 @@
             'libGLESv2/Query.cpp',
             'libGLESv2/Renderbuffer.cpp',
             'libGLESv2/Renderbuffer.h',
+            'libGLESv2/renderer/Image.cpp',
+            'libGLESv2/renderer/Image.h',
             'libGLESv2/renderer/Renderer.cpp',
             'libGLESv2/renderer/Renderer.h',
             'libGLESv2/renderer/ShaderCache.h',

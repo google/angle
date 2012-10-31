@@ -297,6 +297,27 @@ bool IsStencilTexture(GLenum format)
     return false;
 }
 
+void MakeValidSize(bool isImage, bool isCompressed, GLsizei *requestWidth, GLsizei *requestHeight, int *levelOffset)
+{
+    int upsampleCount = 0;
+
+    if (isCompressed)
+    {
+        // Don't expand the size of full textures that are at least 4x4
+        // already.
+        if (isImage || *requestWidth < 4 || *requestHeight < 4)
+        {
+            while (*requestWidth % 4 != 0 || *requestHeight % 4 != 0)
+            {
+                *requestWidth <<= 1;
+                *requestHeight <<= 1;
+                upsampleCount++;
+            }
+        }
+    }
+    *levelOffset = upsampleCount;
+}
+
 // Returns the size, in bytes, of a single texel in an Image
 int ComputePixelSize(GLint internalformat)
 {

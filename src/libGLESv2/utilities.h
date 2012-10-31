@@ -34,6 +34,7 @@ int VariableColumnCount(GLenum type);
 
 int AllocateFirstFreeBits(unsigned int *bits, unsigned int allocationSize, unsigned int bitsSize);
 
+void MakeValidSize(bool isImage, bool isCompressed, GLsizei *requestWidth, GLsizei *requestHeight, int *levelOffset);
 int ComputePixelSize(GLint internalformat);
 GLsizei ComputePitch(GLsizei width, GLint internalformat, GLint alignment);
 GLsizei ComputeCompressedPitch(GLsizei width, GLenum format);
