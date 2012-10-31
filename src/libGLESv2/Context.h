@@ -489,7 +489,6 @@ class Context
     int getMaximumCubeTextureDimension() const;
     int getMaximumTextureLevel() const;
     GLsizei getMaxSupportedSamples() const;
-    int getNearestSupportedSamples(D3DFORMAT format, int requested) const;
     const char *getExtensionString() const;
     const char *getRendererString() const;
     bool supportsEventQueries() const;

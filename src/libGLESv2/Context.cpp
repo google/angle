@@ -3435,11 +3435,6 @@ int Context::getMaxSupportedSamples() const
     return mRenderer->getMaxSupportedSamples();
 }
 
-int Context::getNearestSupportedSamples(D3DFORMAT format, int requested) const
-{
-    return mRenderer->getNearestSupportedSamples(format, requested);
-}
-
 bool Context::supportsEventQueries() const
 {
     return mSupportsEventQueries;

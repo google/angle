@@ -398,10 +398,11 @@ Colorbuffer::Colorbuffer(IDirect3DSurface9 *renderTarget) : mRenderTarget(render
 
 Colorbuffer::Colorbuffer(int width, int height, GLenum format, GLsizei samples) : mRenderTarget(NULL)
 {
-    IDirect3DDevice9 *device = getDisplay()->getRenderer()->getDevice(); // D3D9_REPLACE
+    renderer::Renderer *renderer = getDisplay()->getRenderer();
+    IDirect3DDevice9 *device = renderer->getDevice(); // D3D9_REPLACE
 
     D3DFORMAT requestedFormat = es2dx::ConvertRenderbufferFormat(format);
-    int supportedSamples = getContext()->getNearestSupportedSamples(requestedFormat, samples);
+    int supportedSamples = renderer->getNearestSupportedSamples(requestedFormat, samples);
 
     if (supportedSamples == -1)
     {
@@ -471,11 +472,12 @@ DepthStencilbuffer::DepthStencilbuffer(IDirect3DSurface9 *depthStencil) : mDepth
 
 DepthStencilbuffer::DepthStencilbuffer(int width, int height, GLsizei samples)
 {
-    IDirect3DDevice9 *device = getDisplay()->getRenderer()->getDevice(); // D3D9_REPLACE
+    renderer::Renderer *renderer = getDisplay()->getRenderer();
+    IDirect3DDevice9 *device = renderer->getDevice(); // D3D9_REPLACE
 
     mDepthStencil = NULL;
     
-    int supportedSamples = getContext()->getNearestSupportedSamples(D3DFMT_D24S8, samples);
+    int supportedSamples = renderer->getNearestSupportedSamples(D3DFMT_D24S8, samples);
 
     if (supportedSamples == -1)
     {
