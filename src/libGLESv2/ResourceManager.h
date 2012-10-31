@@ -20,6 +20,7 @@
 #endif
 
 #include "common/angleutils.h"
+#include "libGLESv2/EnumTypes.h"
 #include "libGLESv2/HandleAllocator.h"
 
 namespace gl
@@ -29,21 +30,6 @@ class Shader;
 class Program;
 class Texture;
 class Renderbuffer;
-
-enum TextureType
-{
-    TEXTURE_2D,
-    TEXTURE_CUBE,
-
-    TEXTURE_TYPE_COUNT,
-    TEXTURE_UNKNOWN
-};
-
-enum SamplerType
-{
-    SAMPLER_PIXEL,
-    SAMPLER_VERTEX
-};
 
 class ResourceManager
 {

@@ -277,7 +277,7 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         mMaxCubeTextureDimension = std::min(mMaxTextureDimension, (int)gl::IMPLEMENTATION_MAX_CUBE_MAP_TEXTURE_SIZE);
         mMaxRenderbufferDimension = mMaxTextureDimension;
         mMaxTextureLevel = log2(mMaxTextureDimension) + 1;
-        mMaxTextureAnisotropy = mRenderer->getTextureFilterAnisotropySupport();
+        mMaxTextureAnisotropy = mRenderer->getTextureMaxAnisotropy();
         TRACE("MaxTextureDimension=%d, MaxCubeTextureDimension=%d, MaxRenderbufferDimension=%d, MaxTextureLevel=%d, MaxTextureAnisotropy=%f",
               mMaxTextureDimension, mMaxCubeTextureDimension, mMaxRenderbufferDimension, mMaxTextureLevel, mMaxTextureAnisotropy);
 
@@ -317,7 +317,7 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         mSupportsLuminanceTextures = mRenderer->getLuminanceTextureSupport();
         mSupportsLuminanceAlphaTextures = mRenderer->getLuminanceAlphaTextureSupport();
         mSupportsDepthTextures = mRenderer->getDepthTextureSupport();
-        mSupportsTextureFilterAnisotropy = mMaxTextureAnisotropy >= 2.0f;
+        mSupportsTextureFilterAnisotropy = mRenderer->getTextureFilterAnisotropySupport();
 
         mSupports32bitIndices = mDeviceCaps.MaxVertexIndex >= (1 << 16);
 
@@ -2441,20 +2441,7 @@ void Context::applyTextures(SamplerType type)
                         SamplerState samplerState;
                         texture->getSamplerState(&samplerState);
 
-                        mDevice->SetSamplerState(d3dSampler, D3DSAMP_ADDRESSU, es2dx::ConvertTextureWrap(samplerState.wrapS));
-                        mDevice->SetSamplerState(d3dSampler, D3DSAMP_ADDRESSV, es2dx::ConvertTextureWrap(samplerState.wrapT));
-
-                        mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAGFILTER, es2dx::ConvertMagFilter(samplerState.magFilter, samplerState.maxAnisotropy));
-                        D3DTEXTUREFILTERTYPE d3dMinFilter, d3dMipFilter;
-                        es2dx::ConvertMinFilter(samplerState.minFilter, &d3dMinFilter, &d3dMipFilter, samplerState.maxAnisotropy);
-                        mDevice->SetSamplerState(d3dSampler, D3DSAMP_MINFILTER, d3dMinFilter);
-                        mDevice->SetSamplerState(d3dSampler, D3DSAMP_MIPFILTER, d3dMipFilter);
-                        mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAXMIPLEVEL, samplerState.lodOffset);
-
-                        if (supportsTextureFilterAnisotropy())
-                        {
-                            mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAXANISOTROPY, (DWORD)samplerState.maxAnisotropy);
-                        }
+                        mRenderer->setSamplerState(type, samplerIndex, samplerState);
                     }
 
                     if (appliedTextureSerial[samplerIndex] != texSerial || texture->hasDirtyImages())

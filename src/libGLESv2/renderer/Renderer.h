@@ -23,6 +23,8 @@
 
 #include "common/angleutils.h"
 #include "libGLESv2/renderer/ShaderCache.h"
+#include "libGLESv2/EnumTypes.h"
+#include "libGLESv2/Texture.h"
 
 const int versionWindowsVista = MAKEWORD(0x00, 0x06);
 const int versionWindows7 = MAKEWORD(0x01, 0x06);
@@ -78,6 +80,7 @@ class Renderer
     virtual void applyRenderTargets();
     virtual void applyState();
 #endif
+    virtual void setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &sampler);
 
     // lost device
     virtual void markDeviceLost();
@@ -108,7 +111,8 @@ class Renderer
     virtual bool getDepthTextureSupport() const;
     virtual bool getOcclusionQuerySupport() const;
     virtual bool getInstancingSupport() const;
-    virtual float getTextureFilterAnisotropySupport() const;
+    virtual bool getTextureFilterAnisotropySupport() const;
+    virtual float getTextureMaxAnisotropy() const;
     virtual bool getShareHandleSupport() const;
 
     virtual D3DPOOL getBufferPool(DWORD usage) const;
@@ -140,6 +144,7 @@ class Renderer
 
     bool mSceneStarted;
     bool mSupportsNonPower2Textures;
+    bool mSupportsTextureFilterAnisotropy;
 
     // A pool of event queries that are currently unused.
     std::vector<IDirect3DQuery9*> mEventQueryPool;

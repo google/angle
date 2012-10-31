@@ -168,6 +168,9 @@ EGLint Renderer::initialize()
         !(mDeviceCaps.TextureCaps & D3DPTEXTURECAPS_NONPOW2CONDITIONAL) &&
         !(getComparableOSVersion() < versionWindowsVista && mAdapterIdentifier.VendorId == VENDOR_ID_AMD);
 
+    // Must support a minimum of 2:1 anisotropy for max anisotropy to be considered supported, per the spec
+    mSupportsTextureFilterAnisotropy = ((mDeviceCaps.RasterCaps & D3DPRASTERCAPS_ANISOTROPY) && (mDeviceCaps.MaxAnisotropy >= 2));
+
     static const TCHAR windowName[] = TEXT("AngleHiddenWindow");
     static const TCHAR className[] = TEXT("STATIC");
 
@@ -355,6 +358,27 @@ IDirect3DVertexShader9 *Renderer::createVertexShader(const DWORD *function, size
 IDirect3DPixelShader9 *Renderer::createPixelShader(const DWORD *function, size_t length)
 {
     return mPixelShaderCache.create(function, length);
+}
+
+
+void Renderer::setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &samplerState)
+{
+    int d3dSamplerOffset = (type == gl::SAMPLER_PIXEL) ? 0 : D3DVERTEXTEXTURESAMPLER0;
+    int d3dSampler = index + d3dSamplerOffset;
+
+    mDevice->SetSamplerState(d3dSampler, D3DSAMP_ADDRESSU, es2dx::ConvertTextureWrap(samplerState.wrapS));
+    mDevice->SetSamplerState(d3dSampler, D3DSAMP_ADDRESSV, es2dx::ConvertTextureWrap(samplerState.wrapT));
+
+    mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAGFILTER, es2dx::ConvertMagFilter(samplerState.magFilter, samplerState.maxAnisotropy));
+    D3DTEXTUREFILTERTYPE d3dMinFilter, d3dMipFilter;
+    es2dx::ConvertMinFilter(samplerState.minFilter, &d3dMinFilter, &d3dMipFilter, samplerState.maxAnisotropy);
+    mDevice->SetSamplerState(d3dSampler, D3DSAMP_MINFILTER, d3dMinFilter);
+    mDevice->SetSamplerState(d3dSampler, D3DSAMP_MIPFILTER, d3dMipFilter);
+    mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAXMIPLEVEL, samplerState.lodOffset);
+    if (mSupportsTextureFilterAnisotropy)
+    {
+        mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAXANISOTROPY, (DWORD)samplerState.maxAnisotropy);
+    }
 }
 
 void Renderer::releaseDeviceResources()
@@ -610,10 +634,14 @@ bool Renderer::getLuminanceAlphaTextureSupport()
     return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_A8L8));
 }
 
-float Renderer::getTextureFilterAnisotropySupport() const
+bool Renderer::getTextureFilterAnisotropySupport() const
 {
-    // Must support a minimum of 2:1 anisotropy for max anisotropy to be considered supported, per the spec
-    if ((mDeviceCaps.RasterCaps & D3DPRASTERCAPS_ANISOTROPY) && (mDeviceCaps.MaxAnisotropy >= 2))
+    return mSupportsTextureFilterAnisotropy;
+}
+
+float Renderer::getTextureMaxAnisotropy() const
+{
+    if (mSupportsTextureFilterAnisotropy)
     {
         return mDeviceCaps.MaxAnisotropy;
     }
