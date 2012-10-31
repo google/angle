@@ -666,7 +666,7 @@ void Texture2D::bindTexImage(egl::Surface *surface)
 
     delete mTexStorage;
     renderer::SwapChain *swapchain = surface->getSwapChain();  // D3D9_REPLACE
-    mTexStorage = new TextureStorage2D(swapchain->getOffscreenTexture());
+    mTexStorage = new TextureStorage2D(swapchain);
 
     mDirtyImages = true;
     mSurface = surface;

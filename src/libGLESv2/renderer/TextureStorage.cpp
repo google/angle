@@ -10,6 +10,7 @@
 
 #include "libGLESv2/main.h"
 #include "libGLESv2/renderer/TextureStorage.h"
+#include "libGLESv2/renderer/SwapChain.h"
 
 #include "common/debug.h"
 
@@ -152,8 +153,9 @@ int TextureStorage::getLodOffset() const
     return mLodOffset;
 }
 
-TextureStorage2D::TextureStorage2D(IDirect3DTexture9 *surfaceTexture) : TextureStorage(D3DUSAGE_RENDERTARGET), mRenderTargetSerial(RenderbufferStorage::issueSerial())
+TextureStorage2D::TextureStorage2D(renderer::SwapChain *swapchain) : TextureStorage(D3DUSAGE_RENDERTARGET), mRenderTargetSerial(RenderbufferStorage::issueSerial())
 {
+    IDirect3DTexture9 *surfaceTexture = swapchain->getOffscreenTexture();
     mTexture = surfaceTexture;
 }
 
