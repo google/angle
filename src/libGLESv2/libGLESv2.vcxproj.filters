@@ -9,6 +9,9 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
+    <Filter Include="Renderer">
+      <UniqueIdentifier>{93a76964-77a3-4b20-a6f5-e14e762d4e14}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Blit.cpp">
@@ -81,7 +84,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="renderer\Renderer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\SwapChain.cpp">
+      <Filter>Renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -166,11 +172,17 @@
     <ClInclude Include="VertexDataManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\Renderer.h">
+    <ClInclude Include="EnumTypes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="renderer\ShaderCache.h">
-      <Filter>Header Files</Filter>
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\Renderer.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\SwapChain.h">
+      <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -255,6 +255,8 @@
             'libGLESv2/renderer/Renderer.cpp',
             'libGLESv2/renderer/Renderer.h',
             'libGLESv2/renderer/ShaderCache.h',
+            'libGLESv2/renderer/SwapChain.cpp',
+            'libGLESv2/renderer/SwapChain.h',
             'libGLESv2/ResourceManager.cpp',
             'libGLESv2/ResourceManager.h',
             'libGLESv2/Shader.cpp',

@@ -317,8 +317,10 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
     }
 
     // Wrap the existing Direct3D 9 resources into GL objects and assign them to the '0' names
-    IDirect3DSurface9 *defaultRenderTarget = surface->getRenderTarget();
-    IDirect3DSurface9 *depthStencil = surface->getDepthStencil();
+    // D3D9_REPLACE
+    renderer::SwapChain *swapchain = surface->getSwapChain();
+    IDirect3DSurface9 *defaultRenderTarget = swapchain->getRenderTarget();
+    IDirect3DSurface9 *depthStencil = swapchain->getDepthStencil();
 
     Colorbuffer *colorbufferZero = new Colorbuffer(defaultRenderTarget);
     DepthStencilbuffer *depthStencilbufferZero = new DepthStencilbuffer(depthStencil);
@@ -4428,5 +4430,17 @@ void glDestroyRenderer(renderer::Renderer *renderer)
 {
     delete renderer;
 }
+
+renderer::SwapChain *glCreateSwapChain(renderer::Renderer *renderer, HWND window, HANDLE shareHandle,
+                                       GLenum backBufferFormat, GLenum depthBufferFormat)
+{
+    return new renderer::SwapChain(renderer, window, shareHandle, backBufferFormat, depthBufferFormat);
+}
+
+void glDestroySwapChain(renderer::SwapChain *swapChain)
+{
+    delete swapChain;
+}
+
 
 }

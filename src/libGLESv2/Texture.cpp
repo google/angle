@@ -1840,7 +1840,8 @@ void Texture2D::bindTexImage(egl::Surface *surface)
     mImageArray[0].redefine(internalformat, surface->getWidth(), surface->getHeight(), true);
 
     delete mTexStorage;
-    mTexStorage = new TextureStorage2D(surface->getOffscreenTexture());
+    renderer::SwapChain *swapchain = surface->getSwapChain();  // D3D9_REPLACE
+    mTexStorage = new TextureStorage2D(swapchain->getOffscreenTexture());
 
     mDirtyImages = true;
     mSurface = surface;

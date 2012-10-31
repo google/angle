@@ -182,3 +182,5 @@ EXPORTS
     glBindTexImage                  @158 NONAME
     glCreateRenderer                @177 NONAME
     glDestroyRenderer               @178 NONAME
+    glCreateSwapChain               @179 NONAME
+    glDestroySwapChain              @180 NONAME

@@ -30,6 +30,7 @@
 #include "libGLESv2/ResourceManager.h"
 #include "libGLESv2/HandleAllocator.h"
 #include "libGLESv2/renderer/Renderer.h"
+#include "libGLESv2/renderer/SwapChain.h"
 
 namespace egl
 {
@@ -670,6 +671,9 @@ void glMakeCurrent(gl::Context *context, egl::Display *display, egl::Surface *su
 gl::Context *glGetCurrentContext();
 renderer::Renderer *glCreateRenderer(egl::Display *display, HMODULE hModule, HDC hDc);
 void glDestroyRenderer(renderer::Renderer *renderer);
+renderer::SwapChain *glCreateSwapChain(renderer::Renderer *renderer, HWND window, HANDLE shareHandle,
+                                       GLenum backBufferFormat, GLenum depthBufferFormat);
+void glDestroySwapChain(renderer::SwapChain *swapChain);
 
 __eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *procname);
 bool __stdcall glBindTexImage(egl::Surface *surface);

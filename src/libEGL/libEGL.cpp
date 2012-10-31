@@ -504,7 +504,10 @@ EGLBoolean __stdcall eglQuerySurfacePointerANGLE(EGLDisplay dpy, EGLSurface surf
         switch (attribute)
         {
           case EGL_D3D_TEXTURE_2D_SHARE_HANDLE_ANGLE:
-            *value = (void*) eglSurface->getShareHandle();
+            {
+                renderer::SwapChain *swapchain = eglSurface->getSwapChain();
+                *value = (void*) (swapchain ? swapchain->getShareHandle() : NULL);
+            }
             break;
           default:
             return error(EGL_BAD_ATTRIBUTE, EGL_FALSE);
