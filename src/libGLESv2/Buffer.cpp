@@ -62,7 +62,7 @@ void Buffer::bufferData(const void *data, GLsizeiptr size, GLenum usage)
 
     if (usage == GL_STATIC_DRAW)
     {
-        mStaticVertexBuffer = new StaticVertexBuffer(mRenderer->getDevice()); // D3D9_REPLACE
+        mStaticVertexBuffer = new StaticVertexBuffer(mRenderer);
         mStaticIndexBuffer = new StaticIndexBuffer(mRenderer->getDevice()); // D3D9_REPLACE
     }
 }
@@ -109,7 +109,7 @@ void Buffer::promoteStaticUsage(int dataSize)
 
         if (mUnmodifiedDataUse > 3 * mSize)
         {
-            mStaticVertexBuffer = new StaticVertexBuffer(mRenderer->getDevice()); // D3D9_REPLACE
+            mStaticVertexBuffer = new StaticVertexBuffer(mRenderer);
             mStaticIndexBuffer = new StaticIndexBuffer(mRenderer->getDevice()); // D3D9_REPLACE
         }
     }

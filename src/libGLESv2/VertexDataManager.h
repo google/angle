@@ -37,7 +37,7 @@ struct TranslatedAttribute
 class VertexBuffer
 {
   public:
-    VertexBuffer(IDirect3DDevice9 *device, std::size_t size, DWORD usageFlags);
+    VertexBuffer(renderer::Renderer *renderer, std::size_t size, DWORD usageFlags);
     virtual ~VertexBuffer();
 
     void unmap();
@@ -46,7 +46,7 @@ class VertexBuffer
     unsigned int getSerial() const;
 
   protected:
-    IDirect3DDevice9 *const mDevice;
+    renderer::Renderer *const mRenderer;
     IDirect3DVertexBuffer9 *mVertexBuffer;
 
     unsigned int mSerial;
@@ -60,7 +60,7 @@ class VertexBuffer
 class ArrayVertexBuffer : public VertexBuffer
 {
   public:
-    ArrayVertexBuffer(IDirect3DDevice9 *device, std::size_t size, DWORD usageFlags);
+    ArrayVertexBuffer(renderer::Renderer *renderer, std::size_t size, DWORD usageFlags);
     ~ArrayVertexBuffer();
 
     std::size_t size() const { return mBufferSize; }
@@ -77,7 +77,7 @@ class ArrayVertexBuffer : public VertexBuffer
 class StreamingVertexBuffer : public ArrayVertexBuffer
 {
   public:
-    StreamingVertexBuffer(IDirect3DDevice9 *device, std::size_t initialSize);
+    StreamingVertexBuffer(renderer::Renderer *renderer, std::size_t initialSize);
     ~StreamingVertexBuffer();
 
     void *map(const VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset);
@@ -87,7 +87,7 @@ class StreamingVertexBuffer : public ArrayVertexBuffer
 class StaticVertexBuffer : public ArrayVertexBuffer
 {
   public:
-    explicit StaticVertexBuffer(IDirect3DDevice9 *device);
+    explicit StaticVertexBuffer(renderer::Renderer *renderer);
     ~StaticVertexBuffer();
 
     void *map(const VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset);
@@ -113,7 +113,7 @@ class StaticVertexBuffer : public ArrayVertexBuffer
 class VertexDataManager
 {
   public:
-    VertexDataManager(Context *context, renderer::Renderer *renderer, IDirect3DDevice9 *backend);
+    VertexDataManager(Context *context, renderer::Renderer *renderer);
     virtual ~VertexDataManager();
 
     void dirtyCurrentValue(int index) { mDirtyCurrentValue[index] = true; }
@@ -127,7 +127,7 @@ class VertexDataManager
     std::size_t writeAttributeData(ArrayVertexBuffer *vertexBuffer, GLint start, GLsizei count, const VertexAttribute &attribute, GLsizei instances);
 
     Context *const mContext;
-    IDirect3DDevice9 *const mDevice;
+    renderer::Renderer *const mRenderer;
 
     StreamingVertexBuffer *mStreamingBuffer;
 

@@ -36,7 +36,7 @@ int elementsInBuffer(const VertexAttribute &attribute, int size)
     return (size - attribute.mOffset % stride + (stride - attribute.typeSize())) / stride;
 }
 
-VertexDataManager::VertexDataManager(Context *context, renderer::Renderer *renderer, IDirect3DDevice9 *device) : mContext(context), mDevice(device)
+VertexDataManager::VertexDataManager(Context *context, renderer::Renderer *renderer) : mContext(context), mRenderer(renderer)
 {
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
     {
@@ -48,7 +48,7 @@ VertexDataManager::VertexDataManager(Context *context, renderer::Renderer *rende
     // D3D9_REPLACE
     checkVertexCaps(renderer->getCapsDeclTypes());
 
-    mStreamingBuffer = new StreamingVertexBuffer(mDevice, INITIAL_STREAM_BUFFER_SIZE);
+    mStreamingBuffer = new StreamingVertexBuffer(renderer, INITIAL_STREAM_BUFFER_SIZE);
 
     if (!mStreamingBuffer)
     {
@@ -264,7 +264,7 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
             {
                 if (!mCurrentValueBuffer[i])
                 {
-                    mCurrentValueBuffer[i] = new StreamingVertexBuffer(mDevice, CONSTANT_VERTEX_BUFFER_SIZE);
+                    mCurrentValueBuffer[i] = new StreamingVertexBuffer(mRenderer, CONSTANT_VERTEX_BUFFER_SIZE);
                 }
 
                 StreamingVertexBuffer *buffer = mCurrentValueBuffer[i];
@@ -571,13 +571,13 @@ unsigned int VertexDataManager::typeIndex(GLenum type) const
     }
 }
 
-VertexBuffer::VertexBuffer(IDirect3DDevice9 *device, std::size_t size, DWORD usageFlags) : mDevice(device), mVertexBuffer(NULL)
+VertexBuffer::VertexBuffer(renderer::Renderer *renderer, std::size_t size, DWORD usageFlags) : mRenderer(renderer), mVertexBuffer(NULL)
 {
     if (size > 0)
     {
         // D3D9_REPLACE
-        D3DPOOL pool = getDisplay()->getRenderer()->getBufferPool(usageFlags);
-        HRESULT result = device->CreateVertexBuffer(size, usageFlags, 0, pool, &mVertexBuffer, NULL);
+        D3DPOOL pool = mRenderer->getBufferPool(usageFlags);
+        HRESULT result = mRenderer->getDevice()->CreateVertexBuffer(size, usageFlags, 0, pool, &mVertexBuffer, NULL);
         mSerial = issueSerial();
         
         if (FAILED(result))
@@ -618,7 +618,7 @@ unsigned int VertexBuffer::issueSerial()
     return mCurrentSerial++;
 }
 
-ArrayVertexBuffer::ArrayVertexBuffer(IDirect3DDevice9 *device, std::size_t size, DWORD usageFlags) : VertexBuffer(device, size, usageFlags)
+ArrayVertexBuffer::ArrayVertexBuffer(renderer::Renderer *renderer, std::size_t size, DWORD usageFlags) : VertexBuffer(renderer, size, usageFlags)
 {
     mBufferSize = size;
     mWritePosition = 0;
@@ -634,7 +634,7 @@ void ArrayVertexBuffer::addRequiredSpace(UINT requiredSpace)
     mRequiredSpace += requiredSpace;
 }
 
-StreamingVertexBuffer::StreamingVertexBuffer(IDirect3DDevice9 *device, std::size_t initialSize) : ArrayVertexBuffer(device, initialSize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY)
+StreamingVertexBuffer::StreamingVertexBuffer(renderer::Renderer *renderer, std::size_t initialSize) : ArrayVertexBuffer(renderer, initialSize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY)
 {
 }
 
@@ -676,8 +676,8 @@ void StreamingVertexBuffer::reserveRequiredSpace()
         mBufferSize = std::max(mRequiredSpace, 3 * mBufferSize / 2);   // 1.5 x mBufferSize is arbitrary and should be checked to see we don't have too many reallocations.
 
         // D3D9_REPLACE
-        D3DPOOL pool = getDisplay()->getRenderer()->getBufferPool(D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY);
-        HRESULT result = mDevice->CreateVertexBuffer(mBufferSize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, 0, pool, &mVertexBuffer, NULL);
+        D3DPOOL pool = mRenderer->getBufferPool(D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY);
+        HRESULT result = mRenderer->getDevice()->CreateVertexBuffer(mBufferSize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, 0, pool, &mVertexBuffer, NULL);
         mSerial = issueSerial();
     
         if (FAILED(result))
@@ -702,7 +702,7 @@ void StreamingVertexBuffer::reserveRequiredSpace()
     mRequiredSpace = 0;
 }
 
-StaticVertexBuffer::StaticVertexBuffer(IDirect3DDevice9 *device) : ArrayVertexBuffer(device, 0, D3DUSAGE_WRITEONLY)
+StaticVertexBuffer::StaticVertexBuffer(renderer::Renderer *renderer) : ArrayVertexBuffer(renderer, 0, D3DUSAGE_WRITEONLY)
 {
 }
 
@@ -740,8 +740,8 @@ void StaticVertexBuffer::reserveRequiredSpace()
     if (!mVertexBuffer && mBufferSize == 0)
     {
         // D3D9_REPLACE
-        D3DPOOL pool = getDisplay()->getRenderer()->getBufferPool(D3DUSAGE_WRITEONLY);
-        HRESULT result = mDevice->CreateVertexBuffer(mRequiredSpace, D3DUSAGE_WRITEONLY, 0, pool, &mVertexBuffer, NULL);
+        D3DPOOL pool = mRenderer->getBufferPool(D3DUSAGE_WRITEONLY);
+        HRESULT result = mRenderer->getDevice()->CreateVertexBuffer(mRequiredSpace, D3DUSAGE_WRITEONLY, 0, pool, &mVertexBuffer, NULL);
         mSerial = issueSerial();
 
         if (FAILED(result))

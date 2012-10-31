@@ -260,7 +260,7 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 
     if (!mHasBeenCurrent)
     {
-        mVertexDataManager = new VertexDataManager(this, mRenderer, mDevice);
+        mVertexDataManager = new VertexDataManager(this, mRenderer);
         mIndexDataManager = new IndexDataManager(this, mDevice);
         mBlit = new Blit(mRenderer);
 
