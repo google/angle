@@ -172,7 +172,7 @@ bool TextureStorage::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurfac
     if (source && dest)
     {
         HRESULT result = D3DERR_OUTOFVIDEOMEMORY;
-        renderer::Renderer9 *renderer = getDisplay()->getRenderer9();
+        rx::Renderer9 *renderer = getDisplay()->getRenderer9();
         IDirect3DDevice9 *device = renderer->getDevice(); // D3D9_REPLACE
 
         if (fromManaged)
@@ -206,7 +206,7 @@ bool TextureStorage::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurfac
     return true;
 } 
 
-TextureStorage2D::TextureStorage2D(renderer::SwapChain *swapchain) : TextureStorage(D3DUSAGE_RENDERTARGET), mRenderTargetSerial(RenderbufferStorage::issueSerial())
+TextureStorage2D::TextureStorage2D(rx::SwapChain *swapchain) : TextureStorage(D3DUSAGE_RENDERTARGET), mRenderTargetSerial(RenderbufferStorage::issueSerial())
 {
     IDirect3DTexture9 *surfaceTexture = swapchain->getOffscreenTexture();
     mTexture = surfaceTexture;

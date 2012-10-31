@@ -22,7 +22,7 @@ using namespace std;
 
 namespace egl
 {
-Config::Config(renderer::ConfigDesc desc, EGLint minInterval, EGLint maxInterval, EGLint texWidth, EGLint texHeight)
+Config::Config(rx::ConfigDesc desc, EGLint minInterval, EGLint maxInterval, EGLint texWidth, EGLint texHeight)
     : mRenderTargetFormat(desc.renderTargetFormat), mDepthStencilFormat(desc.depthStencilFormat), mMultiSample(desc.multiSample)
 {
     mBindToTextureRGB = EGL_FALSE;
@@ -222,7 +222,7 @@ ConfigSet::ConfigSet()
 {
 }
 
-void ConfigSet::add(renderer::ConfigDesc desc, EGLint minSwapInterval, EGLint maxSwapInterval, EGLint texWidth, EGLint texHeight)
+void ConfigSet::add(rx::ConfigDesc desc, EGLint minSwapInterval, EGLint maxSwapInterval, EGLint texWidth, EGLint texHeight)
 {
     Config config(desc, minSwapInterval, maxSwapInterval, texWidth, texHeight);
     mSet.insert(config);

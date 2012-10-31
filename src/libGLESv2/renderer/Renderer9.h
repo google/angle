@@ -26,7 +26,7 @@
 #include "libGLESv2/renderer/ShaderCache.h"
 #include "libGLESv2/renderer/Renderer.h"
 
-namespace renderer
+namespace rx
 {
 
 class Renderer9 : public Renderer

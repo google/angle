@@ -184,7 +184,7 @@ class ProgramBinary : public RefCountObject
     void applyUniformniv(Uniform *targetUniform, GLsizei count, const Vector4 *vector);
     void applyUniformnbv(Uniform *targetUniform, GLsizei count, int width, const GLboolean *v);
 
-    renderer::Renderer9 *mRenderer;   // D3D9_REPLACE
+    rx::Renderer9 *mRenderer;   // D3D9_REPLACE
     IDirect3DDevice9 *mDevice; // D3D9_REPLACE
 
     IDirect3DPixelShader9 *mPixelExecutable; // D3D9_REPLACE

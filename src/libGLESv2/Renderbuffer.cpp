@@ -382,7 +382,7 @@ unsigned int RenderbufferStorage::issueCubeSerials()
     return firstSerial;
 }
 
-Colorbuffer::Colorbuffer(renderer::SwapChain *swapChain)
+Colorbuffer::Colorbuffer(rx::SwapChain *swapChain)
 {
     mRenderTarget = swapChain->getRenderTarget();
     if (mRenderTarget)
@@ -401,7 +401,7 @@ Colorbuffer::Colorbuffer(renderer::SwapChain *swapChain)
 
 Colorbuffer::Colorbuffer(int width, int height, GLenum format, GLsizei samples) : mRenderTarget(NULL)
 {
-    renderer::Renderer9 *renderer = getDisplay()->getRenderer9();
+    rx::Renderer9 *renderer = getDisplay()->getRenderer9();
     IDirect3DDevice9 *device = renderer->getDevice(); // D3D9_REPLACE
 
     D3DFORMAT requestedFormat = es2dx::ConvertRenderbufferFormat(format);
@@ -457,7 +457,7 @@ IDirect3DSurface9 *Colorbuffer::getRenderTarget()
     return mRenderTarget;
 }
 
-DepthStencilbuffer::DepthStencilbuffer(renderer::SwapChain *swapChain)
+DepthStencilbuffer::DepthStencilbuffer(rx::SwapChain *swapChain)
 {
     mDepthStencil = swapChain->getDepthStencil();
     if (mDepthStencil)
@@ -476,7 +476,7 @@ DepthStencilbuffer::DepthStencilbuffer(renderer::SwapChain *swapChain)
 
 DepthStencilbuffer::DepthStencilbuffer(int width, int height, GLsizei samples)
 {
-    renderer::Renderer9 *renderer = getDisplay()->getRenderer9();
+    rx::Renderer9 *renderer = getDisplay()->getRenderer9();
     IDirect3DDevice9 *device = renderer->getDevice(); // D3D9_REPLACE
 
     mDepthStencil = NULL;

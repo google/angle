@@ -442,7 +442,7 @@ void Texture2D::bindTexImage(egl::Surface *surface)
     mImageArray[0].redefine(internalformat, surface->getWidth(), surface->getHeight(), true);
 
     delete mTexStorage;
-    renderer::SwapChain *swapchain = surface->getSwapChain();  // D3D9_REPLACE
+    rx::SwapChain *swapchain = surface->getSwapChain();  // D3D9_REPLACE
     mTexStorage = new TextureStorage2D(swapchain);
 
     mDirtyImages = true;

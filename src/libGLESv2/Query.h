@@ -23,7 +23,7 @@ namespace gl
 class Query : public RefCountObject
 {
   public:
-    Query(renderer::Renderer9 *renderer, GLuint id, GLenum type);
+    Query(rx::Renderer9 *renderer, GLuint id, GLenum type);
     virtual ~Query();
 
     void begin();
@@ -36,7 +36,7 @@ class Query : public RefCountObject
   private:
     DISALLOW_COPY_AND_ASSIGN(Query);
 
-    renderer::Renderer9 *mRenderer;   // D3D9_REPLACE
+    rx::Renderer9 *mRenderer;   // D3D9_REPLACE
 
     GLboolean testQuery();
 

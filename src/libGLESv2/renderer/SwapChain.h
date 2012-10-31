@@ -20,7 +20,7 @@
 
 #include "common/angleutils.h"
 
-namespace renderer
+namespace rx
 {
 class Renderer9;   // D3D9_REPLACE
 

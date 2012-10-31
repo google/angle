@@ -44,7 +44,7 @@ const size_t g_shaderSize[] =
 
 namespace gl
 {
-Blit::Blit(renderer::Renderer9 *renderer)
+Blit::Blit(rx::Renderer9 *renderer)
   : mRenderer(renderer), mQuadVertexBuffer(NULL), mQuadVertexDeclaration(NULL), mSavedRenderTarget(NULL), mSavedDepthStencil(NULL), mSavedStateBlock(NULL)
 {
     initGeometry();
@@ -116,7 +116,7 @@ void Blit::initGeometry()
 
 template <class D3DShaderType>
 bool Blit::setShader(ShaderId source, const char *profile,
-                     D3DShaderType *(renderer::Renderer9::*createShader)(const DWORD *, size_t length),
+                     D3DShaderType *(rx::Renderer9::*createShader)(const DWORD *, size_t length),
                      HRESULT (WINAPI IDirect3DDevice9::*setShader)(D3DShaderType*))
 {
     IDirect3DDevice9 *device = mRenderer->getDevice(); // D3D9_REPLACE
@@ -155,12 +155,12 @@ bool Blit::setShader(ShaderId source, const char *profile,
 
 bool Blit::setVertexShader(ShaderId shader)
 {
-    return setShader<IDirect3DVertexShader9>(shader, "vs_2_0", &renderer::Renderer9::createVertexShader, &IDirect3DDevice9::SetVertexShader);
+    return setShader<IDirect3DVertexShader9>(shader, "vs_2_0", &rx::Renderer9::createVertexShader, &IDirect3DDevice9::SetVertexShader);
 }
 
 bool Blit::setPixelShader(ShaderId shader)
 {
-    return setShader<IDirect3DPixelShader9>(shader, "ps_2_0", &renderer::Renderer9::createPixelShader, &IDirect3DDevice9::SetPixelShader);
+    return setShader<IDirect3DPixelShader9>(shader, "ps_2_0", &rx::Renderer9::createPixelShader, &IDirect3DDevice9::SetPixelShader);
 }
 
 RECT Blit::getSurfaceRect(IDirect3DSurface9 *surface) const

@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-// ShaderCache: Defines renderer::ShaderCache, a cache of Direct3D shader objects
+// ShaderCache: Defines rx::ShaderCache, a cache of Direct3D shader objects
 // keyed by their byte code.
 
 #ifndef LIBGLESV2_RENDERER_SHADER_CACHE_H_
@@ -20,7 +20,7 @@
 
 #include "common/debug.h"
 
-namespace renderer
+namespace rx
 {
 template <typename ShaderObject>
 class ShaderCache

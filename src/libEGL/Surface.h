@@ -20,7 +20,7 @@ namespace gl
 {
 class Texture2D;
 }
-namespace renderer
+namespace rx
 {
 class Renderer9;
 class SwapChain;
@@ -52,7 +52,7 @@ class Surface
 
     virtual EGLint isPostSubBufferSupported() const;
 
-    virtual renderer::SwapChain *getSwapChain() const;
+    virtual rx::SwapChain *getSwapChain() const;
 
     void setSwapInterval(EGLint interval);
     bool checkForOutOfDateSwapChain();   // Returns true if swapchain changed due to resize or interval update
@@ -68,10 +68,10 @@ private:
     DISALLOW_COPY_AND_ASSIGN(Surface);
 
     Display *const mDisplay;
-    renderer::Renderer9 *mRenderer;   // D3D9_REPLACE
+    rx::Renderer9 *mRenderer;   // D3D9_REPLACE
 
     HANDLE mShareHandle;
-    renderer::SwapChain *mSwapChain;
+    rx::SwapChain *mSwapChain;
 
     void subclassWindow();
     void unsubclassWindow();

@@ -13,7 +13,7 @@
 namespace gl
 {
 
-Query::Query(renderer::Renderer9 *renderer, GLuint id, GLenum type) : RefCountObject(id)
+Query::Query(rx::Renderer9 *renderer, GLuint id, GLenum type) : RefCountObject(id)
 { 
     mRenderer = renderer;
     mQuery = NULL;

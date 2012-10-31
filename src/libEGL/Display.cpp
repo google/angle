@@ -98,7 +98,7 @@ bool Display::initialize()
     EGLint maxTextureWidth = mRenderer->getMaxTextureWidth();
     EGLint maxTextureHeight = mRenderer->getMaxTextureHeight();
 
-    renderer::ConfigDesc *descList;
+    rx::ConfigDesc *descList;
     int numConfigs = mRenderer->generateConfigs(&descList);
     ConfigSet configSet;
 

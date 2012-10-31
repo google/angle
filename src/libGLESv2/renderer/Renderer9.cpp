@@ -27,7 +27,7 @@
 #define ANGLE_ENABLE_D3D9EX 1
 #endif // !defined(ANGLE_ENABLE_D3D9EX)
 
-namespace renderer
+namespace rx
 {
 const D3DFORMAT Renderer9::mRenderTargetFormats[] =
     {

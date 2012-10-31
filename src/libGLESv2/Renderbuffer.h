@@ -202,7 +202,7 @@ class Renderbuffer : public RefCountObject
 class Colorbuffer : public RenderbufferStorage
 {
   public:
-    explicit Colorbuffer(renderer::SwapChain *swapChain);
+    explicit Colorbuffer(rx::SwapChain *swapChain);
     Colorbuffer(GLsizei width, GLsizei height, GLenum format, GLsizei samples);
 
     virtual ~Colorbuffer();
@@ -218,7 +218,7 @@ class Colorbuffer : public RenderbufferStorage
 class DepthStencilbuffer : public RenderbufferStorage
 {
   public:
-    explicit DepthStencilbuffer(renderer::SwapChain *swapChain);
+    explicit DepthStencilbuffer(rx::SwapChain *swapChain);
     DepthStencilbuffer(GLsizei width, GLsizei height, GLsizei samples);
 
     ~DepthStencilbuffer();

@@ -37,7 +37,7 @@ namespace egl
 class Display;
 }
 
-namespace renderer
+namespace rx
 {
 
 struct ConfigDesc

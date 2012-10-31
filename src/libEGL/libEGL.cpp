@@ -505,7 +505,7 @@ EGLBoolean __stdcall eglQuerySurfacePointerANGLE(EGLDisplay dpy, EGLSurface surf
         {
           case EGL_D3D_TEXTURE_2D_SHARE_HANDLE_ANGLE:
             {
-                renderer::SwapChain *swapchain = eglSurface->getSwapChain();
+                rx::SwapChain *swapchain = eglSurface->getSwapChain();
                 *value = (void*) (swapchain ? swapchain->getShareHandle() : NULL);
             }
             break;
@@ -886,7 +886,7 @@ EGLBoolean __stdcall eglMakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface 
             return EGL_FALSE;
         }
 
-        renderer::Renderer *renderer = display->getRenderer();
+        rx::Renderer *renderer = display->getRenderer();
         if (renderer->testDeviceLost(true))
         {
             return EGL_FALSE;

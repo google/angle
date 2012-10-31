@@ -347,7 +347,7 @@ EGLint Surface::isPostSubBufferSupported() const
     return mPostSubBufferSupported;
 }
 
-renderer::SwapChain *Surface::getSwapChain() const
+rx::SwapChain *Surface::getSwapChain() const
 {
     return mSwapChain;
 }

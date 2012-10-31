@@ -17,7 +17,7 @@
 
 #include "common/debug.h"
 
-namespace renderer
+namespace rx
 {
 class SwapChain;
 }
@@ -68,7 +68,7 @@ class TextureStorage
 class TextureStorage2D : public TextureStorage
 {
   public:
-    explicit TextureStorage2D(renderer::SwapChain *swapchain);
+    explicit TextureStorage2D(rx::SwapChain *swapchain);
     TextureStorage2D(int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height);
 
     virtual ~TextureStorage2D();

@@ -15,7 +15,7 @@
 #include "libGLESv2/renderer/Renderer9.h"   // D3D9_REPLACE
 #include "libGLESv2/Context.h"
 
-namespace renderer
+namespace rx
 {
 
 SwapChain::SwapChain(Renderer9 *renderer, HWND window, HANDLE shareHandle,

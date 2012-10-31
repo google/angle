@@ -541,7 +541,7 @@ class Context
 
     egl::Display *mDisplay;
     IDirect3DDevice9 *mDevice;
-    renderer::Renderer9 *mRenderer;  // D3D9_REPLACE
+    rx::Renderer9 *mRenderer;  // D3D9_REPLACE
 
     State mState;
 
@@ -667,11 +667,11 @@ gl::Context *glCreateContext(const gl::Context *shareContext, bool notifyResets,
 void glDestroyContext(gl::Context *context);
 void glMakeCurrent(gl::Context *context, egl::Display *display, egl::Surface *surface);
 gl::Context *glGetCurrentContext();
-renderer::Renderer *glCreateRenderer(egl::Display *display, HDC hDc, bool softwareDevice);
-void glDestroyRenderer(renderer::Renderer *renderer);
-renderer::SwapChain *glCreateSwapChain(renderer::Renderer9 *renderer, HWND window, HANDLE shareHandle,
+rx::Renderer *glCreateRenderer(egl::Display *display, HDC hDc, bool softwareDevice);
+void glDestroyRenderer(rx::Renderer *renderer);
+rx::SwapChain *glCreateSwapChain(rx::Renderer9 *renderer, HWND window, HANDLE shareHandle,
                                        GLenum backBufferFormat, GLenum depthBufferFormat);  // D3D9_REPLACE
-void glDestroySwapChain(renderer::SwapChain *swapChain);
+void glDestroySwapChain(rx::SwapChain *swapChain);
 
 __eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *procname);
 bool __stdcall glBindTexImage(egl::Surface *surface);

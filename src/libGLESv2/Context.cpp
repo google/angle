@@ -318,7 +318,7 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
     }
 
     // Wrap the existing swapchain resources into GL objects and assign them to the '0' names
-    renderer::SwapChain *swapchain = surface->getSwapChain();
+    rx::SwapChain *swapchain = surface->getSwapChain();
 
     Colorbuffer *colorbufferZero = new Colorbuffer(swapchain);
     DepthStencilbuffer *depthStencilbufferZero = new DepthStencilbuffer(swapchain);
@@ -4398,23 +4398,23 @@ gl::Context *glGetCurrentContext()
     return gl::getContext();
 }
 
-renderer::Renderer *glCreateRenderer(egl::Display *display, HDC hDc, bool softwareDevice)
+rx::Renderer *glCreateRenderer(egl::Display *display, HDC hDc, bool softwareDevice)
 {
-    return new renderer::Renderer9(display, hDc, softwareDevice);  // D3D9_REPLACE
+    return new rx::Renderer9(display, hDc, softwareDevice);  // D3D9_REPLACE
 }
 
-void glDestroyRenderer(renderer::Renderer *renderer)
+void glDestroyRenderer(rx::Renderer *renderer)
 {
     delete renderer;
 }
 
-renderer::SwapChain *glCreateSwapChain(renderer::Renderer9 *renderer, HWND window, HANDLE shareHandle,
+rx::SwapChain *glCreateSwapChain(rx::Renderer9 *renderer, HWND window, HANDLE shareHandle,
                                        GLenum backBufferFormat, GLenum depthBufferFormat)
 {
-    return new renderer::SwapChain(renderer, window, shareHandle, backBufferFormat, depthBufferFormat);
+    return new rx::SwapChain(renderer, window, shareHandle, backBufferFormat, depthBufferFormat);
 }
 
-void glDestroySwapChain(renderer::SwapChain *swapChain)
+void glDestroySwapChain(rx::SwapChain *swapChain)
 {
     delete swapChain;
 }
