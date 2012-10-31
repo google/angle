@@ -350,7 +350,7 @@ void Image::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint y
         }
         else
         {
-            // UpdateSurface: source must be SYSTEMMEM, dest must be DEFAULT pools
+            // UpdateSurface: source must be SYSTEMMEM, dest must be DEFAULT pools 
             HRESULT result = device->UpdateSurface(sourceSurface, &rect, destSurface, &point);
             ASSERT(SUCCEEDED(result));
         }
