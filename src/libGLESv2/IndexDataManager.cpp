@@ -19,13 +19,13 @@ namespace gl
 {
 unsigned int IndexBuffer::mCurrentSerial = 1;
 
-IndexDataManager::IndexDataManager(Context *context, IDirect3DDevice9 *device) : mDevice(device)
+IndexDataManager::IndexDataManager(Context *context, renderer::Renderer *renderer) : mRenderer(renderer)
 {
-    mStreamingBufferShort = new StreamingIndexBuffer(mDevice, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX16);
+    mStreamingBufferShort = new StreamingIndexBuffer(mRenderer, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX16);
 
     if (context->supports32bitIndices())
     {
-        mStreamingBufferInt = new StreamingIndexBuffer(mDevice, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX32);
+        mStreamingBufferInt = new StreamingIndexBuffer(mRenderer, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX32);
 
         if (!mStreamingBufferInt)
         {
@@ -235,7 +235,7 @@ StaticIndexBuffer *IndexDataManager::getCountingIndices(GLsizei count)
         if (!mCountingBuffer || mCountingBuffer->size() < spaceNeeded)
         {
             delete mCountingBuffer;
-            mCountingBuffer = new StaticIndexBuffer(mDevice);
+            mCountingBuffer = new StaticIndexBuffer(mRenderer);
             mCountingBuffer->reserveSpace(spaceNeeded, GL_UNSIGNED_SHORT);
 
             UINT offset;
@@ -259,7 +259,7 @@ StaticIndexBuffer *IndexDataManager::getCountingIndices(GLsizei count)
         if (!mCountingBuffer || mCountingBuffer->size() < spaceNeeded)
         {
             delete mCountingBuffer;
-            mCountingBuffer = new StaticIndexBuffer(mDevice);
+            mCountingBuffer = new StaticIndexBuffer(mRenderer);
             mCountingBuffer->reserveSpace(spaceNeeded, GL_UNSIGNED_INT);
 
             UINT offset;
@@ -281,13 +281,13 @@ StaticIndexBuffer *IndexDataManager::getCountingIndices(GLsizei count)
     return mCountingBuffer;
 }
 
-IndexBuffer::IndexBuffer(IDirect3DDevice9 *device, UINT size, D3DFORMAT format) : mDevice(device), mBufferSize(size), mIndexBuffer(NULL)
+IndexBuffer::IndexBuffer(renderer::Renderer *renderer, UINT size, D3DFORMAT format) : mRenderer(renderer), mBufferSize(size), mIndexBuffer(NULL)
 {
     if (size > 0)
     {
         // D3D9_REPLACE
-        D3DPOOL pool = getDisplay()->getRenderer()->getBufferPool(D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY);
-        HRESULT result = device->CreateIndexBuffer(size, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, format, pool, &mIndexBuffer, NULL);
+        D3DPOOL pool = mRenderer->getBufferPool(D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY);
+        HRESULT result = mRenderer->getDevice()->CreateIndexBuffer(size, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, format, pool, &mIndexBuffer, NULL);
         mSerial = issueSerial();
 
         if (FAILED(result))
@@ -328,7 +328,7 @@ void IndexBuffer::unmap()
     }
 }
 
-StreamingIndexBuffer::StreamingIndexBuffer(IDirect3DDevice9 *device, UINT initialSize, D3DFORMAT format) : IndexBuffer(device, initialSize, format)
+StreamingIndexBuffer::StreamingIndexBuffer(renderer::Renderer *renderer, UINT initialSize, D3DFORMAT format) : IndexBuffer(renderer, initialSize, format)
 {
     mWritePosition = 0;
 }
@@ -371,8 +371,8 @@ void StreamingIndexBuffer::reserveSpace(UINT requiredSpace, GLenum type)
         mBufferSize = std::max(requiredSpace, 2 * mBufferSize);
 
         // D3D9_REPLACE
-        D3DPOOL pool = getDisplay()->getRenderer()->getBufferPool(D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY);
-        HRESULT result = mDevice->CreateIndexBuffer(mBufferSize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, type == GL_UNSIGNED_INT ? D3DFMT_INDEX32 : D3DFMT_INDEX16, pool, &mIndexBuffer, NULL);
+        D3DPOOL pool = mRenderer->getBufferPool(D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY);
+        HRESULT result = mRenderer->getDevice()->CreateIndexBuffer(mBufferSize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, type == GL_UNSIGNED_INT ? D3DFMT_INDEX32 : D3DFMT_INDEX16, pool, &mIndexBuffer, NULL);
         mSerial = issueSerial();
     
         if (FAILED(result))
@@ -392,7 +392,7 @@ void StreamingIndexBuffer::reserveSpace(UINT requiredSpace, GLenum type)
     }
 }
 
-StaticIndexBuffer::StaticIndexBuffer(IDirect3DDevice9 *device) : IndexBuffer(device, 0, D3DFMT_UNKNOWN)
+StaticIndexBuffer::StaticIndexBuffer(renderer::Renderer *renderer) : IndexBuffer(renderer, 0, D3DFMT_UNKNOWN)
 {
     mCacheType = GL_NONE;
 }
@@ -426,8 +426,8 @@ void StaticIndexBuffer::reserveSpace(UINT requiredSpace, GLenum type)
     if (!mIndexBuffer && mBufferSize == 0)
     {
         // D3D9_REPLACE
-        D3DPOOL pool = getDisplay()->getRenderer()->getBufferPool(D3DUSAGE_WRITEONLY);
-        HRESULT result = mDevice->CreateIndexBuffer(requiredSpace, D3DUSAGE_WRITEONLY, type == GL_UNSIGNED_INT ? D3DFMT_INDEX32 : D3DFMT_INDEX16, pool, &mIndexBuffer, NULL);
+        D3DPOOL pool = mRenderer->getBufferPool(D3DUSAGE_WRITEONLY);
+        HRESULT result = mRenderer->getDevice()->CreateIndexBuffer(requiredSpace, D3DUSAGE_WRITEONLY, type == GL_UNSIGNED_INT ? D3DFMT_INDEX32 : D3DFMT_INDEX16, pool, &mIndexBuffer, NULL);
         mSerial = issueSerial();
     
         if (FAILED(result))

@@ -39,7 +39,7 @@ struct TranslatedIndexData
 class IndexBuffer
 {
   public:
-    IndexBuffer(IDirect3DDevice9 *device, UINT size, D3DFORMAT format);
+    IndexBuffer(renderer::Renderer *renderer, UINT size, D3DFORMAT format);
     virtual ~IndexBuffer();
 
     UINT size() const { return mBufferSize; }
@@ -51,7 +51,7 @@ class IndexBuffer
     unsigned int getSerial() const;
 
   protected:
-    IDirect3DDevice9 *const mDevice;
+    renderer::Renderer *const mRenderer;
 
     IDirect3DIndexBuffer9 *mIndexBuffer;
     UINT mBufferSize;
@@ -67,7 +67,7 @@ class IndexBuffer
 class StreamingIndexBuffer : public IndexBuffer
 {
   public:
-    StreamingIndexBuffer(IDirect3DDevice9 *device, UINT initialSize, D3DFORMAT format);
+    StreamingIndexBuffer(renderer::Renderer *renderer, UINT initialSize, D3DFORMAT format);
     ~StreamingIndexBuffer();
 
     virtual void *map(UINT requiredSpace, UINT *offset);
@@ -80,7 +80,7 @@ class StreamingIndexBuffer : public IndexBuffer
 class StaticIndexBuffer : public IndexBuffer
 {
   public:
-    explicit StaticIndexBuffer(IDirect3DDevice9 *device);
+    explicit StaticIndexBuffer(renderer::Renderer *renderer);
     ~StaticIndexBuffer();
 
     virtual void *map(UINT requiredSpace, UINT *offset);
@@ -125,7 +125,7 @@ class StaticIndexBuffer : public IndexBuffer
 class IndexDataManager
 {
   public:
-    IndexDataManager(Context *context, IDirect3DDevice9 *evice);
+    IndexDataManager(Context *context, renderer::Renderer *renderer);
     virtual ~IndexDataManager();
 
     GLenum prepareIndexData(GLenum type, GLsizei count, Buffer *arrayElementBuffer, const GLvoid *indices, TranslatedIndexData *translated);
@@ -137,7 +137,7 @@ class IndexDataManager
     std::size_t typeSize(GLenum type) const;
     std::size_t indexSize(D3DFORMAT format) const;
 
-    IDirect3DDevice9 *const mDevice;
+    renderer::Renderer *const mRenderer;
 
     StreamingIndexBuffer *mStreamingBufferShort;
     StreamingIndexBuffer *mStreamingBufferInt;

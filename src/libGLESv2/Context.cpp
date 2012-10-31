@@ -261,7 +261,7 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
     if (!mHasBeenCurrent)
     {
         mVertexDataManager = new VertexDataManager(this, mRenderer);
-        mIndexDataManager = new IndexDataManager(this, mDevice);
+        mIndexDataManager = new IndexDataManager(this, mRenderer);
         mBlit = new Blit(mRenderer);
 
         mSupportsShaderModel3 = mRenderer->getShaderModel3Support();
@@ -3213,7 +3213,7 @@ void Context::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, in
 
         if (!mLineLoopIB)
         {
-            mLineLoopIB = new StreamingIndexBuffer(mDevice, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX32);
+            mLineLoopIB = new StreamingIndexBuffer(mRenderer, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX32);
         }
 
         if (mLineLoopIB)
@@ -3270,7 +3270,7 @@ void Context::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, in
 
         if (!mLineLoopIB)
         {
-            mLineLoopIB = new StreamingIndexBuffer(mDevice, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX16);
+            mLineLoopIB = new StreamingIndexBuffer(mRenderer, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX16);
         }
 
         if (mLineLoopIB)
