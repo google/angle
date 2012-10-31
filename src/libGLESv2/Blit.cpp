@@ -12,6 +12,7 @@
 
 #include "libGLESv2/main.h"
 #include "libGLESv2/utilities.h"
+#include "libGLESv2/Framebuffer.h"
 
 namespace
 {
@@ -209,9 +210,59 @@ bool Blit::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
     return true;
 }
 
-bool Blit::copy(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, IDirect3DSurface9 *dest)
+bool Blit::copy(Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorage2D *storage, GLint level)
 {
     // D3D9_REPLACE
+    IDirect3DSurface9 *source = framebuffer->getRenderTarget();
+    if (!source)
+    {
+        ERR("Failed to retrieve the render target.");
+        return error(GL_OUT_OF_MEMORY, false);
+    }
+
+    IDirect3DSurface9 *destSurface = storage->getSurfaceLevel(level, true);
+    bool result = false;
+        
+    if (destSurface)
+    {
+        result = copy(source, sourceRect, destFormat, xoffset, yoffset, destSurface);
+        destSurface->Release();
+    }
+
+    source->Release();
+    return result;
+}
+
+bool Blit::copy(Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorageCubeMap *storage, GLenum target, GLint level)
+{
+    // D3D9_REPLACE
+    IDirect3DSurface9 *source = framebuffer->getRenderTarget();
+    if (!source)
+    {
+        ERR("Failed to retrieve the render target.");
+        return error(GL_OUT_OF_MEMORY, false);
+    }
+
+    IDirect3DSurface9 *destSurface = storage->getCubeMapSurface(target, level, true);
+    bool result = false;
+
+    if (destSurface)
+    {
+        result = copy(source, sourceRect, destFormat, xoffset, yoffset, destSurface);
+        destSurface->Release();
+    }
+
+    source->Release();
+    return result;
+}
+
+bool Blit::copy(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, IDirect3DSurface9 *dest)
+{
+    if (!dest)
+    {
+        return false;
+    }
+
     IDirect3DDevice9 *device = mRenderer->getDevice();
 
     D3DSURFACE_DESC sourceDesc;
@@ -235,7 +286,6 @@ bool Blit::copy(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum destFo
     {
         return formatConvert(source, sourceRect, destFormat, xoffset, yoffset, dest);
     }
-
     return true;
 }
 

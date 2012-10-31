@@ -15,6 +15,7 @@
 #include "libGLESv2/mathutil.h"
 #include "libGLESv2/utilities.h"
 #include "libGLESv2/Texture.h"
+#include "libGLESv2/Framebuffer.h"
 
 namespace gl
 {
@@ -973,8 +974,16 @@ void Image::loadCompressedData(GLint xoffset, GLint yoffset, GLsizei width, GLsi
 }
 
 // This implements glCopyTex[Sub]Image2D for non-renderable internal texture formats and incomplete textures
-void Image::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, IDirect3DSurface9 *renderTarget)
+void Image::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
 {
+    IDirect3DSurface9 *renderTarget = source->getRenderTarget();
+
+    if (!renderTarget)
+    {
+        ERR("Failed to retrieve the render target.");
+        return error(GL_OUT_OF_MEMORY);
+    }
+
     IDirect3DDevice9 *device = getDisplay()->getRenderer()->getDevice(); // D3D9_REPLACE
     IDirect3DSurface9 *renderTargetData = NULL;
     D3DSURFACE_DESC description;
@@ -985,6 +994,7 @@ void Image::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, 
     if (FAILED(result))
     {
         ERR("Could not create matching destination surface.");
+        renderTarget->Release();
         return error(GL_OUT_OF_MEMORY);
     }
 
@@ -994,6 +1004,7 @@ void Image::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, 
     {
         ERR("GetRenderTargetData unexpectedly failed.");
         renderTargetData->Release();
+        renderTarget->Release();
         return error(GL_OUT_OF_MEMORY);
     }
 
@@ -1007,6 +1018,7 @@ void Image::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, 
     {
         ERR("Failed to lock the source surface (rectangle might be invalid).");
         renderTargetData->Release();
+        renderTarget->Release();
         return error(GL_OUT_OF_MEMORY);
     }
 
@@ -1018,6 +1030,7 @@ void Image::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, 
         ERR("Failed to lock the destination surface (rectangle might be invalid).");
         renderTargetData->UnlockRect();
         renderTargetData->Release();
+        renderTarget->Release();
         return error(GL_OUT_OF_MEMORY);
     }
 
@@ -1192,6 +1205,7 @@ void Image::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, 
     renderTargetData->UnlockRect();
 
     renderTargetData->Release();
+    renderTarget->Release();
 
     mDirty = true;
 }

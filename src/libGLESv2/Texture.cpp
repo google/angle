@@ -510,20 +510,12 @@ void Texture2D::subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GL
 
 void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
 {
-    IDirect3DSurface9 *renderTarget = source->getRenderTarget();
-
-    if (!renderTarget)
-    {
-        ERR("Failed to retrieve the render target.");
-        return error(GL_OUT_OF_MEMORY);
-    }
-
     GLint internalformat = ConvertSizedInternalFormat(format, GL_UNSIGNED_BYTE);
     redefineImage(level, internalformat, width, height);
    
     if (!mImageArray[level].isRenderableFormat())
     {
-        mImageArray[level].copy(0, 0, x, y, width, height, renderTarget);
+        mImageArray[level].copy(0, 0, x, y, width, height, source);
         mDirtyImages = true;
     }
     else
@@ -542,18 +534,11 @@ void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei 
             sourceRect.right = x + width;
             sourceRect.top = y;
             sourceRect.bottom = y + height;
-            
-            IDirect3DSurface9 *dest = mTexStorage->getSurfaceLevel(level, true);
 
-            if (dest)
-            {
-                getBlitter()->copy(renderTarget, sourceRect, format, 0, 0, dest);
-                dest->Release();
-            }
+            getBlitter()->copy(source, sourceRect, format, 0, 0, mTexStorage, level);
+
         }
     }
-
-    renderTarget->Release();
 }
 
 void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
@@ -563,17 +548,9 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
         return error(GL_INVALID_VALUE);
     }
 
-    IDirect3DSurface9 *renderTarget = source->getRenderTarget();
-
-    if (!renderTarget)
-    {
-        ERR("Failed to retrieve the render target.");
-        return error(GL_OUT_OF_MEMORY);
-    }
-
     if (!mImageArray[level].isRenderableFormat() || (!mTexStorage && !isSamplerComplete()))
     {
-        mImageArray[level].copy(xoffset, yoffset, x, y, width, height, renderTarget);
+        mImageArray[level].copy(xoffset, yoffset, x, y, width, height, source);
         mDirtyImages = true;
     }
     else
@@ -593,19 +570,11 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
             sourceRect.top = y;
             sourceRect.bottom = y + height;
 
-            IDirect3DSurface9 *dest = mTexStorage->getSurfaceLevel(level, true);
-
-            if (dest)
-            {
-                getBlitter()->copy(renderTarget, sourceRect, 
-                                   gl::ExtractFormat(mImageArray[0].getInternalFormat()),
-                                   xoffset, yoffset, dest);
-                dest->Release();
-            }
+            getBlitter()->copy(source, sourceRect, 
+                               gl::ExtractFormat(mImageArray[0].getInternalFormat()),
+                               xoffset, yoffset, mTexStorage, level);
         }
     }
-
-    renderTarget->Release();
 }
 
 void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height)
@@ -1308,21 +1277,13 @@ void TextureCubeMap::redefineImage(int face, GLint level, GLint internalformat, 
 
 void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
 {
-    IDirect3DSurface9 *renderTarget = source->getRenderTarget();
-
-    if (!renderTarget)
-    {
-        ERR("Failed to retrieve the render target.");
-        return error(GL_OUT_OF_MEMORY);
-    }
-
     unsigned int faceindex = faceIndex(target);
     GLint internalformat = gl::ConvertSizedInternalFormat(format, GL_UNSIGNED_BYTE);
     redefineImage(faceindex, level, internalformat, width, height);
 
     if (!mImageArray[faceindex][level].isRenderableFormat())
     {
-        mImageArray[faceindex][level].copy(0, 0, x, y, width, height, renderTarget);
+        mImageArray[faceindex][level].copy(0, 0, x, y, width, height, source);
         mDirtyImages = true;
     }
     else
@@ -1344,17 +1305,10 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint 
             sourceRect.top = y;
             sourceRect.bottom = y + height;
 
-            IDirect3DSurface9 *dest = mTexStorage->getCubeMapSurface(target, level, true);
+            getBlitter()->copy(source, sourceRect, format, 0, 0, mTexStorage, target, level);
 
-            if (dest)
-            {
-                getBlitter()->copy(renderTarget, sourceRect, format, 0, 0, dest);
-                dest->Release();
-            }
         }
     }
-
-    renderTarget->Release();
 }
 
 void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
@@ -1366,19 +1320,11 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
         return error(GL_INVALID_VALUE);
     }
 
-    IDirect3DSurface9 *renderTarget = source->getRenderTarget();
-
-    if (!renderTarget)
-    {
-        ERR("Failed to retrieve the render target.");
-        return error(GL_OUT_OF_MEMORY);
-    }
-
     unsigned int faceindex = faceIndex(target);
 
     if (!mImageArray[faceindex][level].isRenderableFormat() || (!mTexStorage && !isSamplerComplete()))
     {
-        mImageArray[faceindex][level].copy(0, 0, x, y, width, height, renderTarget);
+        mImageArray[faceindex][level].copy(0, 0, x, y, width, height, source);
         mDirtyImages = true;
     }
     else
@@ -1398,17 +1344,10 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
             sourceRect.top = y;
             sourceRect.bottom = y + height;
 
-            IDirect3DSurface9 *dest = mTexStorage->getCubeMapSurface(target, level, true);
+            getBlitter()->copy(source, sourceRect, gl::ExtractFormat(mImageArray[0][0].getInternalFormat()), xoffset, yoffset, mTexStorage, target, level);
 
-            if (dest)
-            {
-                getBlitter()->copy(renderTarget, sourceRect, gl::ExtractFormat(mImageArray[0][0].getInternalFormat()), xoffset, yoffset, dest);
-                dest->Release();
-            }
         }
     }
-
-    renderTarget->Release();
 }
 
 void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size)

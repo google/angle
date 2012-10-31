@@ -20,6 +20,7 @@ namespace gl
 {
 class TextureStorage2D;
 class TextureStorageCubeMap;
+class Framebuffer;
 
 class Image
 {
@@ -97,7 +98,7 @@ class Image
     void loadCompressedData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                             const void *input);
 
-    void copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, IDirect3DSurface9 *renderTarget);
+    void copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Image);
