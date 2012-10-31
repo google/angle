@@ -901,7 +901,7 @@ bool Renderer::getShareHandleSupport() const
 {
     // PIX doesn't seem to support using share handles, so disable them.
     // D3D9_REPLACE
-    return isD3d9ExDevice() && !gl::perfActive();
+    return (mD3d9Ex != NULL) && !gl::perfActive();
 }
 
 bool Renderer::getShaderModel3Support() const

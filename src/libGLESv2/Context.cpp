@@ -2471,7 +2471,7 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
 
     HRESULT result;
     IDirect3DSurface9 *systemSurface = NULL;
-    bool directToPixels = !getPackReverseRowOrder() && getPackAlignment() <= 4 && mRenderer->isD3d9ExDevice() &&
+    bool directToPixels = !getPackReverseRowOrder() && getPackAlignment() <= 4 && mRenderer->getShareHandleSupport() &&
                           x == 0 && y == 0 && UINT(width) == desc.Width && UINT(height) == desc.Height &&
                           desc.Format == D3DFMT_A8R8G8B8 && format == GL_BGRA_EXT && type == GL_UNSIGNED_BYTE;
     if (directToPixels)

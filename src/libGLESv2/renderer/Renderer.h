@@ -105,7 +105,6 @@ class Renderer
     virtual DWORD getAdapterVendor() const;
     virtual const char *getAdapterDescription() const;
     virtual GUID getAdapterIdentifier() const;
-    virtual bool isD3d9ExDevice() const { return mD3d9Ex != NULL; } // D3D9_REMOVE
 
     virtual bool getDXT1TextureSupport();
     virtual bool getDXT3TextureSupport();
