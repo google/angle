@@ -58,7 +58,7 @@ class TextureStorage2D : public TextureStorage
 {
   public:
     explicit TextureStorage2D(IDirect3DTexture9 *surfaceTexture);
-    TextureStorage2D(int levels, D3DFORMAT format, DWORD usage, int width, int height);
+    TextureStorage2D(int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height);
 
     virtual ~TextureStorage2D();
 
@@ -77,7 +77,7 @@ class TextureStorage2D : public TextureStorage
 class TextureStorageCubeMap : public TextureStorage
 {
   public:
-    TextureStorageCubeMap(int levels, D3DFORMAT format, DWORD usage, int size);
+    TextureStorageCubeMap(int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size);
 
     virtual ~TextureStorageCubeMap();
 

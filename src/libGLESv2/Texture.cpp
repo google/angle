@@ -838,11 +838,8 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
 
 void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height)
 {
-    D3DFORMAT d3dfmt = TextureStorage::ConvertTextureInternalFormat(internalformat);
-    DWORD d3dusage = TextureStorage::GetTextureUsage(d3dfmt, mUsage, false);
-
     delete mTexStorage;
-    mTexStorage = new TextureStorage2D(levels, d3dfmt, d3dusage, width, height);
+    mTexStorage = new TextureStorage2D(levels, internalformat, mUsage, false, width, height);
     mImmutable = true;
 
     for (int level = 0; level < levels; level++)
@@ -976,21 +973,20 @@ IDirect3DBaseTexture9 *Texture2D::getBaseTexture() const
     return mTexStorage ? mTexStorage->getBaseTexture() : NULL;
 }
 
-// Constructs a Direct3D 9 texture resource from the texture images
+// Constructs a native texture resource from the texture images
 void Texture2D::createTexture()
 {
     GLsizei width = mImageArray[0].getWidth();
     GLsizei height = mImageArray[0].getHeight();
 
     if (!(width > 0 && height > 0))
-        return; // do not attempt to create d3d textures for nonexistant data
+        return; // do not attempt to create native textures for nonexistant data
 
     GLint levels = creationLevels(width, height);
-    D3DFORMAT d3dfmt = mImageArray[0].getD3DFormat();
-    DWORD d3dusage = TextureStorage::GetTextureUsage(d3dfmt, mUsage, false);
+    GLenum internalformat = mImageArray[0].getInternalFormat();
 
     delete mTexStorage;
-    mTexStorage = new TextureStorage2D(levels, d3dfmt, d3dusage, width, height);
+    mTexStorage = new TextureStorage2D(levels, internalformat, mUsage, false, width, height);
     
     if (mTexStorage->isManaged())
     {
@@ -1032,10 +1028,9 @@ void Texture2D::convertToRenderTarget()
         GLsizei width = mImageArray[0].getWidth();
         GLsizei height = mImageArray[0].getHeight();
         GLint levels = creationLevels(width, height);
-        D3DFORMAT d3dfmt = mImageArray[0].getD3DFormat();
-        DWORD d3dusage = TextureStorage::GetTextureUsage(d3dfmt, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true);
+        GLenum internalformat = mImageArray[0].getInternalFormat();
 
-        newTexStorage = new TextureStorage2D(levels, d3dfmt, d3dusage, width, height);
+        newTexStorage = new TextureStorage2D(levels, internalformat, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true, width, height);
 
         if (mTexStorage != NULL)
         {
@@ -1464,20 +1459,19 @@ IDirect3DBaseTexture9 *TextureCubeMap::getBaseTexture() const
     return mTexStorage ? mTexStorage->getBaseTexture() : NULL;
 }
 
-// Constructs a Direct3D 9 texture resource from the texture images, or returns an existing one
+// Constructs a native texture resource from the texture images, or returns an existing one
 void TextureCubeMap::createTexture()
 {
     GLsizei size = mImageArray[0][0].getWidth();
 
     if (!(size > 0))
-        return; // do not attempt to create d3d textures for nonexistant data
+        return; // do not attempt to create native textures for nonexistant data
 
     GLint levels = creationLevels(size);
-    D3DFORMAT d3dfmt = mImageArray[0][0].getD3DFormat();
-    DWORD d3dusage = TextureStorage::GetTextureUsage(d3dfmt, mUsage, false);
+    GLenum internalformat = mImageArray[0][0].getInternalFormat();
 
     delete mTexStorage;
-    mTexStorage = new TextureStorageCubeMap(levels, d3dfmt, d3dusage, size);
+    mTexStorage = new TextureStorageCubeMap(levels, internalformat, mUsage, false, size);
 
     if (mTexStorage->isManaged())
     {
@@ -1524,10 +1518,9 @@ void TextureCubeMap::convertToRenderTarget()
     {
         GLsizei size = mImageArray[0][0].getWidth();
         GLint levels = creationLevels(size);
-        D3DFORMAT d3dfmt = mImageArray[0][0].getD3DFormat();
-        DWORD d3dusage = TextureStorage::GetTextureUsage(d3dfmt, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true);
+        GLenum internalformat = mImageArray[0][0].getInternalFormat();
 
-        newTexStorage = new TextureStorageCubeMap(levels, d3dfmt, d3dusage, size);
+        newTexStorage = new TextureStorageCubeMap(levels, internalformat, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true, size);
 
         if (mTexStorage != NULL)
         {
@@ -1707,11 +1700,8 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
 
 void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size)
 {
-    D3DFORMAT d3dfmt = TextureStorage::ConvertTextureInternalFormat(internalformat);
-    DWORD d3dusage = TextureStorage::GetTextureUsage(d3dfmt, mUsage, false);
-
     delete mTexStorage;
-    mTexStorage = new TextureStorageCubeMap(levels, d3dfmt, d3dusage, size);
+    mTexStorage = new TextureStorageCubeMap(levels, internalformat, mUsage, false, size);
     mImmutable = true;
 
     for (int level = 0; level < levels; level++)

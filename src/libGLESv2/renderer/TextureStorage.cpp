@@ -157,8 +157,9 @@ TextureStorage2D::TextureStorage2D(IDirect3DTexture9 *surfaceTexture) : TextureS
     mTexture = surfaceTexture;
 }
 
-TextureStorage2D::TextureStorage2D(int levels, D3DFORMAT format, DWORD usage, int width, int height)
-    : TextureStorage(usage), mRenderTargetSerial(RenderbufferStorage::issueSerial())
+TextureStorage2D::TextureStorage2D(int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height)
+    : TextureStorage(GetTextureUsage(ConvertTextureInternalFormat(internalformat), usage, forceRenderable)),
+      mRenderTargetSerial(RenderbufferStorage::issueSerial())
 {
     mTexture = NULL;
     // if the width or height is not positive this should be treated as an incomplete texture
@@ -166,8 +167,9 @@ TextureStorage2D::TextureStorage2D(int levels, D3DFORMAT format, DWORD usage, in
     if (width > 0 && height > 0)
     {
         IDirect3DDevice9 *device = getDisplay()->getRenderer()->getDevice(); // D3D9_REPLACE
-        MakeValidSize(false, dx::IsCompressedFormat(format), &width, &height, &mLodOffset);
-        HRESULT result = device->CreateTexture(width, height, levels ? levels + mLodOffset : 0, getUsage(), format, getPool(), &mTexture, NULL);
+        MakeValidSize(false, gl::IsCompressed(internalformat), &width, &height, &mLodOffset);
+        HRESULT result = device->CreateTexture(width, height, levels ? levels + mLodOffset : 0, getUsage(),
+                                               ConvertTextureInternalFormat(internalformat), getPool(), &mTexture, NULL);
 
         if (FAILED(result))
         {
@@ -216,8 +218,9 @@ unsigned int TextureStorage2D::getRenderTargetSerial(GLenum target) const
     return mRenderTargetSerial;
 }
 
-TextureStorageCubeMap::TextureStorageCubeMap(int levels, D3DFORMAT format, DWORD usage, int size)
-    : TextureStorage(usage), mFirstRenderTargetSerial(RenderbufferStorage::issueCubeSerials())
+TextureStorageCubeMap::TextureStorageCubeMap(int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
+    : TextureStorage(GetTextureUsage(ConvertTextureInternalFormat(internalformat), usage, forceRenderable)),
+      mFirstRenderTargetSerial(RenderbufferStorage::issueCubeSerials())
 {
     mTexture = NULL;
     // if the size is not positive this should be treated as an incomplete texture
@@ -226,8 +229,9 @@ TextureStorageCubeMap::TextureStorageCubeMap(int levels, D3DFORMAT format, DWORD
     {
         IDirect3DDevice9 *device = getDisplay()->getRenderer()->getDevice(); // D3D9_REPLACE
         int height = size;
-        MakeValidSize(false, dx::IsCompressedFormat(format), &size, &height, &mLodOffset);
-        HRESULT result = device->CreateCubeTexture(size, levels ? levels + mLodOffset : 0, getUsage(), format, getPool(), &mTexture, NULL);
+        MakeValidSize(false, gl::IsCompressed(internalformat), &size, &height, &mLodOffset);
+        HRESULT result = device->CreateCubeTexture(size, levels ? levels + mLodOffset : 0, getUsage(),
+                                                   ConvertTextureInternalFormat(internalformat), getPool(), &mTexture, NULL);
 
         if (FAILED(result))
         {
