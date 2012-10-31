@@ -260,19 +260,17 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 
     if (!mHasBeenCurrent)
     {
-        mDeviceCaps = mRenderer->getDeviceCaps(); // D3D9_REMOVE
-
-        mVertexDataManager = new VertexDataManager(this, mDevice);
+        mVertexDataManager = new VertexDataManager(this, mRenderer, mDevice);
         mIndexDataManager = new IndexDataManager(this, mDevice);
         mBlit = new Blit(mRenderer);
 
-        mSupportsShaderModel3 = mDeviceCaps.PixelShaderVersion >= D3DPS_VERSION(3, 0);
-        mMaximumPointSize = mDeviceCaps.MaxPointSize;
+        mSupportsShaderModel3 = mRenderer->getShaderModel3Support();
+        mMaximumPointSize = mRenderer->getMaxPointSize();
         mSupportsVertexTexture = mRenderer->getVertexTextureSupport();
         mSupportsNonPower2Texture = mRenderer->getNonPower2TextureSupport();
         mSupportsInstancing = mRenderer->getInstancingSupport();
 
-        mMaxTextureDimension = std::min(std::min((int)mDeviceCaps.MaxTextureWidth, (int)mDeviceCaps.MaxTextureHeight),
+        mMaxTextureDimension = std::min(std::min(mRenderer->getMaxTextureWidth(), mRenderer->getMaxTextureHeight()),
                                         (int)gl::IMPLEMENTATION_MAX_TEXTURE_SIZE);
         mMaxCubeTextureDimension = std::min(mMaxTextureDimension, (int)gl::IMPLEMENTATION_MAX_CUBE_MAP_TEXTURE_SIZE);
         mMaxRenderbufferDimension = mMaxTextureDimension;
@@ -319,7 +317,7 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         mSupportsDepthTextures = mRenderer->getDepthTextureSupport();
         mSupportsTextureFilterAnisotropy = mRenderer->getTextureFilterAnisotropySupport();
 
-        mSupports32bitIndices = mDeviceCaps.MaxVertexIndex >= (1 << 16);
+        mSupports32bitIndices = mRenderer->get32BitIndexSupport();
 
         mNumCompressedTextureFormats = 0;
         if (supportsDXT1Textures())

@@ -91,7 +91,6 @@ class Renderer
     // Renderer capabilities
     virtual IDirect3DDevice9 *getDevice() {return mDevice;};  // D3D9_REPLACE
     virtual D3DADAPTER_IDENTIFIER9 *getAdapterIdentifier() {return &mAdapterIdentifier;}; // D3D9_REPLACE
-    virtual D3DCAPS9 getDeviceCaps() {return mDeviceCaps;};       // D3D9_REMOVE
     virtual IDirect3D9 *getD3D() {return mD3d9;}; // D3D9_REMOVE
     virtual UINT getAdapter() {return mAdapter;}; // D3D9_REMOVE
     virtual D3DDEVTYPE getDeviceType() {return mDeviceType;}; // D3D9_REMOVE
@@ -114,6 +113,15 @@ class Renderer
     virtual bool getTextureFilterAnisotropySupport() const;
     virtual float getTextureMaxAnisotropy() const;
     virtual bool getShareHandleSupport() const;
+
+    virtual bool getShaderModel3Support() const;
+    virtual float getMaxPointSize() const;
+    virtual int getMaxTextureWidth() const;
+    virtual int getMaxTextureHeight() const;
+    virtual bool get32BitIndexSupport() const;
+    virtual DWORD getCapsDeclTypes() const; // D3D9_REPLACE
+    virtual int getMinSwapInterval() const;
+    virtual int getMaxSwapInterval() const;
 
     virtual D3DPOOL getBufferPool(DWORD usage) const;
     virtual D3DPOOL getTexturePool(DWORD usage) const;
@@ -145,6 +153,8 @@ class Renderer
     bool mSceneStarted;
     bool mSupportsNonPower2Textures;
     bool mSupportsTextureFilterAnisotropy;
+    int mMinSwapInterval;
+    int mMaxSwapInterval;
 
     // A pool of event queries that are currently unused.
     std::vector<IDirect3DQuery9*> mEventQueryPool;

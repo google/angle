@@ -113,7 +113,7 @@ class StaticVertexBuffer : public ArrayVertexBuffer
 class VertexDataManager
 {
   public:
-    VertexDataManager(Context *context, IDirect3DDevice9 *backend);
+    VertexDataManager(Context *context, renderer::Renderer *renderer, IDirect3DDevice9 *backend);
     virtual ~VertexDataManager();
 
     void dirtyCurrentValue(int index) { mDirtyCurrentValue[index] = true; }

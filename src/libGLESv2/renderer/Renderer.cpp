@@ -171,6 +171,35 @@ EGLint Renderer::initialize()
     // Must support a minimum of 2:1 anisotropy for max anisotropy to be considered supported, per the spec
     mSupportsTextureFilterAnisotropy = ((mDeviceCaps.RasterCaps & D3DPRASTERCAPS_ANISOTROPY) && (mDeviceCaps.MaxAnisotropy >= 2));
 
+    mMinSwapInterval = 4;
+    mMaxSwapInterval = 0;
+
+    if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_IMMEDIATE)
+    {
+        mMinSwapInterval = std::min(mMinSwapInterval, 0);
+        mMaxSwapInterval = std::max(mMaxSwapInterval, 0);
+    }
+    if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_ONE)
+    {
+        mMinSwapInterval = std::min(mMinSwapInterval, 1);
+        mMaxSwapInterval = std::max(mMaxSwapInterval, 1);
+    }
+    if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_TWO)
+    {
+        mMinSwapInterval = std::min(mMinSwapInterval, 2);
+        mMaxSwapInterval = std::max(mMaxSwapInterval, 2);
+    }
+    if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_THREE)
+    {
+        mMinSwapInterval = std::min(mMinSwapInterval, 3);
+        mMaxSwapInterval = std::max(mMaxSwapInterval, 3);
+    }
+    if (mDeviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_FOUR)
+    {
+        mMinSwapInterval = std::min(mMinSwapInterval, 4);
+        mMaxSwapInterval = std::max(mMaxSwapInterval, 4);
+    }
+
     static const TCHAR windowName[] = TEXT("AngleHiddenWindow");
     static const TCHAR className[] = TEXT("STATIC");
 
@@ -733,6 +762,46 @@ bool Renderer::getShareHandleSupport() const
     // PIX doesn't seem to support using share handles, so disable them.
     // D3D9_REPLACE
     return isD3d9ExDevice() && !gl::perfActive();
+}
+
+bool Renderer::getShaderModel3Support() const
+{
+    return mDeviceCaps.PixelShaderVersion >= D3DPS_VERSION(3, 0);
+}
+
+float Renderer::getMaxPointSize() const
+{
+    return mDeviceCaps.MaxPointSize;
+}
+
+int Renderer::getMaxTextureWidth() const
+{
+    return (int)mDeviceCaps.MaxTextureWidth;
+}
+
+int Renderer::getMaxTextureHeight() const
+{
+    return (int)mDeviceCaps.MaxTextureHeight;
+}
+
+bool Renderer::get32BitIndexSupport() const
+{
+    return mDeviceCaps.MaxVertexIndex >= (1 << 16);
+}
+
+DWORD Renderer::getCapsDeclTypes() const
+{
+    return mDeviceCaps.DeclTypes;
+}
+
+int Renderer::getMinSwapInterval() const
+{
+    return mMinSwapInterval;
+}
+
+int Renderer::getMaxSwapInterval() const
+{
+    return mMaxSwapInterval;
 }
 
 D3DPOOL Renderer::getBufferPool(DWORD usage) const

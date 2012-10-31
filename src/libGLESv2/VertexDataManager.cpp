@@ -36,7 +36,7 @@ int elementsInBuffer(const VertexAttribute &attribute, int size)
     return (size - attribute.mOffset % stride + (stride - attribute.typeSize())) / stride;
 }
 
-VertexDataManager::VertexDataManager(Context *context, IDirect3DDevice9 *device) : mContext(context), mDevice(device)
+VertexDataManager::VertexDataManager(Context *context, renderer::Renderer *renderer, IDirect3DDevice9 *device) : mContext(context), mDevice(device)
 {
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
     {
@@ -46,8 +46,7 @@ VertexDataManager::VertexDataManager(Context *context, IDirect3DDevice9 *device)
     }
 
     // D3D9_REPLACE
-    const D3DCAPS9 &caps = context->getDeviceCaps();
-    checkVertexCaps(caps.DeclTypes);
+    checkVertexCaps(renderer->getCapsDeclTypes());
 
     mStreamingBuffer = new StreamingVertexBuffer(mDevice, INITIAL_STREAM_BUFFER_SIZE);
 

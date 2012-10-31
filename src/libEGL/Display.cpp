@@ -110,22 +110,15 @@ bool Display::initialize()
         terminate();
         return error(status, false);
     }
-    D3DCAPS9 deviceCaps = mRenderer->getDeviceCaps();  // D3D9_REPLACE
     IDirect3D9 *d3d9 = mRenderer->getD3D(); // D3D9_REPLACE
     UINT adapter = mRenderer->getAdapter(); // D3D9_REPLACE
     D3DDEVTYPE deviceType = mRenderer->getDeviceType(); // D3D9_REPLACE
     IDirect3DDevice9 *device = mRenderer->getDevice(); // D3D9_REPLACE
 
-    mMinSwapInterval = 4;
-    mMaxSwapInterval = 0;
+    mMinSwapInterval = mRenderer->getMinSwapInterval();
+    mMaxSwapInterval = mRenderer->getMaxSwapInterval();
 
     // START D3D9_REPLACE
-    if (deviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_IMMEDIATE) {mMinSwapInterval = std::min(mMinSwapInterval, 0); mMaxSwapInterval = std::max(mMaxSwapInterval, 0);}
-    if (deviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_ONE)       {mMinSwapInterval = std::min(mMinSwapInterval, 1); mMaxSwapInterval = std::max(mMaxSwapInterval, 1);}
-    if (deviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_TWO)       {mMinSwapInterval = std::min(mMinSwapInterval, 2); mMaxSwapInterval = std::max(mMaxSwapInterval, 2);}
-    if (deviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_THREE)     {mMinSwapInterval = std::min(mMinSwapInterval, 3); mMaxSwapInterval = std::max(mMaxSwapInterval, 3);}
-    if (deviceCaps.PresentationIntervals & D3DPRESENT_INTERVAL_FOUR)      {mMinSwapInterval = std::min(mMinSwapInterval, 4); mMaxSwapInterval = std::max(mMaxSwapInterval, 4);}
-
     const D3DFORMAT renderTargetFormats[] =
     {
         D3DFMT_A1R5G5B5,
@@ -185,7 +178,7 @@ bool Display::initialize()
                         // FIXME: enumerate multi-sampling
 
                         configSet.add(currentDisplayMode, mMinSwapInterval, mMaxSwapInterval, renderTargetFormat, depthStencilFormat, 0,
-                                        deviceCaps.MaxTextureWidth, deviceCaps.MaxTextureHeight);
+                                      mRenderer->getMaxTextureWidth(), mRenderer->getMaxTextureHeight());
                     }
                 }
             }
