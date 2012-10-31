@@ -462,9 +462,7 @@ EGLContext Display::createContext(EGLConfig configHandle, const gl::Context *sha
             return NULL;
     }
 
-    const egl::Config *config = mConfigSet.get(configHandle);
-
-    gl::Context *context = glCreateContext(config, shareContext, notifyResets, robustAccess);
+    gl::Context *context = glCreateContext(shareContext, notifyResets, robustAccess);
     mContextSet.insert(context);
 
     return context;

@@ -35,7 +35,6 @@ namespace egl
 {
 class Display;
 class Surface;
-class Config;
 }
 
 namespace gl
@@ -281,7 +280,7 @@ class VertexDeclarationCache
 class Context
 {
   public:
-    Context(const egl::Config *config, const gl::Context *shareContext, bool notifyResets, bool robustAccess);
+    Context(const gl::Context *shareContext, bool notifyResets, bool robustAccess);
 
     ~Context();
 
@@ -544,7 +543,6 @@ class Context
     void initExtensionString();
     void initRendererString();
 
-    const egl::Config *const mConfig;
     egl::Display *mDisplay;
     IDirect3DDevice9 *mDevice;
     renderer::Renderer *mRenderer;
@@ -669,7 +667,7 @@ class Context
 extern "C"
 {
 // Exported functions for use by EGL
-gl::Context *glCreateContext(const egl::Config *config, const gl::Context *shareContext, bool notifyResets, bool robustAccess);
+gl::Context *glCreateContext(const gl::Context *shareContext, bool notifyResets, bool robustAccess);
 void glDestroyContext(gl::Context *context);
 void glMakeCurrent(gl::Context *context, egl::Display *display, egl::Surface *surface);
 gl::Context *glGetCurrentContext();

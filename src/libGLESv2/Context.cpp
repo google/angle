@@ -35,7 +35,7 @@
 
 namespace gl
 {
-Context::Context(const egl::Config *config, const gl::Context *shareContext, bool notifyResets, bool robustAccess) : mConfig(config)
+Context::Context(const gl::Context *shareContext, bool notifyResets, bool robustAccess)
 {
     ASSERT(robustAccess == false);   // Unimplemented
 
@@ -96,15 +96,15 @@ Context::Context(const egl::Config *config, const gl::Context *shareContext, boo
 
     mState.viewportX = 0;
     mState.viewportY = 0;
-    mState.viewportWidth = config->mDisplayMode.Width;
-    mState.viewportHeight = config->mDisplayMode.Height;
+    mState.viewportWidth = 0;
+    mState.viewportHeight = 0;
     mState.zNear = 0.0f;
     mState.zFar = 1.0f;
 
     mState.scissorX = 0;
     mState.scissorY = 0;
-    mState.scissorWidth = config->mDisplayMode.Width;
-    mState.scissorHeight = config->mDisplayMode.Height;
+    mState.scissorWidth = 0;
+    mState.scissorHeight = 0;
 
     mState.colorMaskRed = true;
     mState.colorMaskGreen = true;
@@ -4394,9 +4394,9 @@ void VertexDeclarationCache::markStateDirty()
 
 extern "C"
 {
-gl::Context *glCreateContext(const egl::Config *config, const gl::Context *shareContext, bool notifyResets, bool robustAccess)
+gl::Context *glCreateContext(const gl::Context *shareContext, bool notifyResets, bool robustAccess)
 {
-    return new gl::Context(config, shareContext, notifyResets, robustAccess);
+    return new gl::Context(shareContext, notifyResets, robustAccess);
 }
 
 void glDestroyContext(gl::Context *context)
