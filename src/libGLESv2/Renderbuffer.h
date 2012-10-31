@@ -217,7 +217,7 @@ class Colorbuffer : public RenderbufferStorage
 class DepthStencilbuffer : public RenderbufferStorage
 {
   public:
-    explicit DepthStencilbuffer(IDirect3DSurface9 *depthStencil);
+    explicit DepthStencilbuffer(renderer::SwapChain *swapChain);
     DepthStencilbuffer(GLsizei width, GLsizei height, GLsizei samples);
 
     ~DepthStencilbuffer();
@@ -234,7 +234,6 @@ class DepthStencilbuffer : public RenderbufferStorage
 class Depthbuffer : public DepthStencilbuffer
 {
   public:
-    explicit Depthbuffer(IDirect3DSurface9 *depthStencil);
     Depthbuffer(GLsizei width, GLsizei height, GLsizei samples);
 
     virtual ~Depthbuffer();
@@ -246,7 +245,6 @@ class Depthbuffer : public DepthStencilbuffer
 class Stencilbuffer : public DepthStencilbuffer
 {
   public:
-    explicit Stencilbuffer(IDirect3DSurface9 *depthStencil);
     Stencilbuffer(GLsizei width, GLsizei height, GLsizei samples);
 
     virtual ~Stencilbuffer();

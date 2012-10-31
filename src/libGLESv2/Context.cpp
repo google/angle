@@ -316,21 +316,14 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         mHasBeenCurrent = true;
     }
 
-    // Wrap the existing Direct3D 9 resources into GL objects and assign them to the '0' names
-    // D3D9_REPLACE
+    // Wrap the existing swapchain resources into GL objects and assign them to the '0' names
     renderer::SwapChain *swapchain = surface->getSwapChain();
-    IDirect3DSurface9 *depthStencil = swapchain->getDepthStencil();
 
     Colorbuffer *colorbufferZero = new Colorbuffer(swapchain);
-    DepthStencilbuffer *depthStencilbufferZero = new DepthStencilbuffer(depthStencil);
+    DepthStencilbuffer *depthStencilbufferZero = new DepthStencilbuffer(swapchain);
     Framebuffer *framebufferZero = new DefaultFramebuffer(colorbufferZero, depthStencilbufferZero);
 
     setFramebufferZero(framebufferZero);
-
-    if (depthStencil)
-    {
-        depthStencil->Release();
-    }
 
     // Reset pixel shader to null to work around a bug that only happens with Intel GPUs.
     // http://crbug.com/110343

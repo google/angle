@@ -452,14 +452,13 @@ IDirect3DSurface9 *Colorbuffer::getRenderTarget()
     return mRenderTarget;
 }
 
-DepthStencilbuffer::DepthStencilbuffer(IDirect3DSurface9 *depthStencil) : mDepthStencil(depthStencil)
+DepthStencilbuffer::DepthStencilbuffer(renderer::SwapChain *swapChain)
 {
-    if (depthStencil)
+    mDepthStencil = swapChain->getDepthStencil();
+    if (mDepthStencil)
     {
-        depthStencil->AddRef();
-
         D3DSURFACE_DESC description;
-        depthStencil->GetDesc(&description);
+        mDepthStencil->GetDesc(&description);
 
         mWidth = description.Width;
         mHeight = description.Height;
@@ -527,16 +526,6 @@ IDirect3DSurface9 *DepthStencilbuffer::getDepthStencil()
     return mDepthStencil;
 }
 
-Depthbuffer::Depthbuffer(IDirect3DSurface9 *depthStencil) : DepthStencilbuffer(depthStencil)
-{
-    if (depthStencil)
-    {
-        mInternalFormat = GL_DEPTH_COMPONENT16;   // If the renderbuffer parameters are queried, the calling function
-                                                  // will expect one of the valid renderbuffer formats for use in 
-                                                  // glRenderbufferStorage
-    }
-}
-
 Depthbuffer::Depthbuffer(int width, int height, GLsizei samples) : DepthStencilbuffer(width, height, samples)
 {
     if (mDepthStencil)
@@ -549,16 +538,6 @@ Depthbuffer::Depthbuffer(int width, int height, GLsizei samples) : DepthStencilb
 
 Depthbuffer::~Depthbuffer()
 {
-}
-
-Stencilbuffer::Stencilbuffer(IDirect3DSurface9 *depthStencil) : DepthStencilbuffer(depthStencil)
-{
-    if (depthStencil)
-    {
-        mInternalFormat = GL_STENCIL_INDEX8;   // If the renderbuffer parameters are queried, the calling function
-                                               // will expect one of the valid renderbuffer formats for use in 
-                                               // glRenderbufferStorage
-    }
 }
 
 Stencilbuffer::Stencilbuffer(int width, int height, GLsizei samples) : DepthStencilbuffer(width, height, samples)
