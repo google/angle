@@ -627,8 +627,6 @@ class Context
     int  mMaxCubeTextureDimension;
     int  mMaxTextureLevel;
     float mMaxTextureAnisotropy;
-    std::map<D3DFORMAT, bool *> mMultiSampleSupport;
-    GLsizei mMaxSupportedSamples;
     bool mSupportsEventQueries;
     bool mSupportsOcclusionQueries;
     bool mSupportsDXT1Textures;

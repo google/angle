@@ -47,6 +47,8 @@ Renderer::Renderer(egl::Display *display, HMODULE hModule, HDC hDc): mDc(hDc)
     #endif
 
     mDeviceLost = false;
+
+    mMaxSupportedSamples = 0;
 }
 
 Renderer::~Renderer()
@@ -94,6 +96,11 @@ Renderer::~Renderer()
         mD3d9Module = NULL;
     }
 
+    while (!mMultiSampleSupport.empty())
+    {
+        delete [] mMultiSampleSupport.begin()->second;
+        mMultiSampleSupport.erase(mMultiSampleSupport.begin());
+    }
 }
 
 EGLint Renderer::initialize()
@@ -199,6 +206,32 @@ EGLint Renderer::initialize()
         mMinSwapInterval = std::min(mMinSwapInterval, 4);
         mMaxSwapInterval = std::max(mMaxSwapInterval, 4);
     }
+
+    const D3DFORMAT renderBufferFormats[] =
+    {
+        D3DFMT_A8R8G8B8,
+        D3DFMT_X8R8G8B8,
+        D3DFMT_R5G6B5,
+        D3DFMT_D24S8
+    };
+
+    int max = 0;
+    for (int i = 0; i < sizeof(renderBufferFormats) / sizeof(D3DFORMAT); ++i)
+    {
+        bool *multisampleArray = new bool[D3DMULTISAMPLE_16_SAMPLES + 1];
+        getMultiSampleSupport(renderBufferFormats[i], multisampleArray);
+        mMultiSampleSupport[renderBufferFormats[i]] = multisampleArray;
+
+        for (int j = D3DMULTISAMPLE_16_SAMPLES; j >= 0; --j)
+        {
+            if (multisampleArray[j] && j != D3DMULTISAMPLE_NONMASKABLE && j > max)
+            {
+                max = j;
+            }
+        }
+    }
+
+    mMaxSupportedSamples = max;
 
     static const TCHAR windowName[] = TEXT("AngleHiddenWindow");
     static const TCHAR className[] = TEXT("STATIC");
@@ -802,6 +835,35 @@ int Renderer::getMinSwapInterval() const
 int Renderer::getMaxSwapInterval() const
 {
     return mMaxSwapInterval;
+}
+
+int Renderer::getMaxSupportedSamples() const
+{
+    return mMaxSupportedSamples;
+}
+
+int Renderer::getNearestSupportedSamples(D3DFORMAT format, int requested) const
+{
+    if (requested == 0)
+    {
+        return requested;
+    }
+
+    std::map<D3DFORMAT, bool *>::const_iterator itr = mMultiSampleSupport.find(format);
+    if (itr == mMultiSampleSupport.end())
+    {
+        return -1;
+    }
+
+    for (int i = requested; i <= D3DMULTISAMPLE_16_SAMPLES; ++i)
+    {
+        if (itr->second[i] && i != D3DMULTISAMPLE_NONMASKABLE)
+        {
+            return i;
+        }
+    }
+
+    return -1;
 }
 
 D3DPOOL Renderer::getBufferPool(DWORD usage) const

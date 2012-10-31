@@ -11,6 +11,7 @@
 #define LIBGLESV2_RENDERER_RENDERER_H_
 
 #include <set>
+#include <map>
 #include <vector>
 
 #define GL_APICALL
@@ -96,7 +97,6 @@ class Renderer
     virtual D3DDEVTYPE getDeviceType() {return mDeviceType;}; // D3D9_REMOVE
     virtual bool isD3d9ExDevice() const { return mD3d9Ex != NULL; } // D3D9_REMOVE
 
-    virtual void getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray); // D3D9_REPLACE
     virtual bool getDXT1TextureSupport();
     virtual bool getDXT3TextureSupport();
     virtual bool getDXT5TextureSupport();
@@ -123,11 +123,16 @@ class Renderer
     virtual int getMinSwapInterval() const;
     virtual int getMaxSwapInterval() const;
 
+    virtual GLsizei getMaxSupportedSamples() const;
+    virtual int getNearestSupportedSamples(D3DFORMAT format, int requested) const;
+
     virtual D3DPOOL getBufferPool(DWORD usage) const;
     virtual D3DPOOL getTexturePool(DWORD usage) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer);
+
+    void getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray); // D3D9_REPLACE
 
     egl::Display *mDisplay;
     const HDC mDc;
@@ -155,6 +160,9 @@ class Renderer
     bool mSupportsTextureFilterAnisotropy;
     int mMinSwapInterval;
     int mMaxSwapInterval;
+
+    std::map<D3DFORMAT, bool *> mMultiSampleSupport;
+    GLsizei mMaxSupportedSamples;
 
     // A pool of event queries that are currently unused.
     std::vector<IDirect3DQuery9*> mEventQueryPool;

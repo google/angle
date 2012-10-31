@@ -170,7 +170,6 @@ Context::Context(const egl::Config *config, const gl::Context *shareContext, boo
     mSupportsEventQueries = false;
     mSupportsOcclusionQueries = false;
     mNumCompressedTextureFormats = 0;
-    mMaxSupportedSamples = 0;
     mMaskedClearSavedState = NULL;
     markAllStateDirty();
 }
@@ -201,12 +200,6 @@ Context::~Context()
     while (!mQueryMap.empty())
     {
         deleteQuery(mQueryMap.begin()->first);
-    }
-
-    while (!mMultiSampleSupport.empty())
-    {
-        delete [] mMultiSampleSupport.begin()->second;
-        mMultiSampleSupport.erase(mMultiSampleSupport.begin());
     }
 
     for (int type = 0; type < TEXTURE_TYPE_COUNT; type++)
@@ -278,32 +271,6 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         mMaxTextureAnisotropy = mRenderer->getTextureMaxAnisotropy();
         TRACE("MaxTextureDimension=%d, MaxCubeTextureDimension=%d, MaxRenderbufferDimension=%d, MaxTextureLevel=%d, MaxTextureAnisotropy=%f",
               mMaxTextureDimension, mMaxCubeTextureDimension, mMaxRenderbufferDimension, mMaxTextureLevel, mMaxTextureAnisotropy);
-
-        const D3DFORMAT renderBufferFormats[] =
-        {
-            D3DFMT_A8R8G8B8,
-            D3DFMT_X8R8G8B8,
-            D3DFMT_R5G6B5,
-            D3DFMT_D24S8
-        };
-
-        int max = 0;
-        for (int i = 0; i < sizeof(renderBufferFormats) / sizeof(D3DFORMAT); ++i)
-        {
-            bool *multisampleArray = new bool[D3DMULTISAMPLE_16_SAMPLES + 1];
-            mRenderer->getMultiSampleSupport(renderBufferFormats[i], multisampleArray);
-            mMultiSampleSupport[renderBufferFormats[i]] = multisampleArray;
-
-            for (int j = D3DMULTISAMPLE_16_SAMPLES; j >= 0; --j)
-            {
-                if (multisampleArray[j] && j != D3DMULTISAMPLE_NONMASKABLE && j > max)
-                {
-                    max = j;
-                }
-            }
-        }
-
-        mMaxSupportedSamples = max;
 
         mSupportsEventQueries = mRenderer->getEventQuerySupport();
         mSupportsOcclusionQueries = mRenderer->getOcclusionQuerySupport();
@@ -3465,31 +3432,12 @@ int Context::getMaximumFragmentUniformVectors() const
 
 int Context::getMaxSupportedSamples() const
 {
-    return mMaxSupportedSamples;
+    return mRenderer->getMaxSupportedSamples();
 }
 
 int Context::getNearestSupportedSamples(D3DFORMAT format, int requested) const
 {
-    if (requested == 0)
-    {
-        return requested;
-    }
-
-    std::map<D3DFORMAT, bool *>::const_iterator itr = mMultiSampleSupport.find(format);
-    if (itr == mMultiSampleSupport.end())
-    {
-        return -1;
-    }
-
-    for (int i = requested; i <= D3DMULTISAMPLE_16_SAMPLES; ++i)
-    {
-        if (itr->second[i] && i != D3DMULTISAMPLE_NONMASKABLE)
-        {
-            return i;
-        }
-    }
-
-    return -1;
+    return mRenderer->getNearestSupportedSamples(format, requested);
 }
 
 bool Context::supportsEventQueries() const
