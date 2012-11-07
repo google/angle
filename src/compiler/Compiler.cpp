@@ -124,6 +124,8 @@ bool TCompiler::Init(const ShBuiltInResources& resources)
         return false;
     InitExtensionBehavior(resources, extensionBehavior);
 
+    hashFunction = resources.HashFunction;
+
     return true;
 }
 
