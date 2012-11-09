@@ -97,7 +97,7 @@
       <DisableSpecificWarnings>4100;4127;4189;4239;4244;4245;4512;4702;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>d3d9.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d9.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>libGLESv2.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -130,7 +130,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
       <DisableSpecificWarnings>4100;4127;4189;4239;4244;4245;4512;4702;4718;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>d3d9.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d9.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <ModuleDefinitionFile>libGLESv2.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -170,7 +170,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>d3d9.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d9.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>libGLESv2.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -206,7 +206,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>d3d9.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d9.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <ModuleDefinitionFile>libGLESv2.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>

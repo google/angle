@@ -9,6 +9,7 @@
   'target_defaults': {
     'defines': [
       'ANGLE_DISABLE_TRACE',
+      'ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ L"d3dcompiler_46.dll", L"d3dcompiler_43.dll" }',
     ],
   },
   'targets': [
@@ -266,8 +267,6 @@
               'AdditionalLibraryDirectories': ['$(DXSDK_DIR)/lib/x86'],
               'AdditionalDependencies': [
                 'd3d9.lib',
-                'd3dx9.lib',
-                'd3dcompiler.lib',
               ],
             }
           },
@@ -279,6 +278,7 @@
           'include_dirs': [
             '.',
             '../include',
+            '$(DXSDK_DIR)/include',
           ],
           'sources': [
             'common/angleutils.h',
