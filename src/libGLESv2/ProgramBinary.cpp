@@ -1086,7 +1086,7 @@ ID3D10Blob *ProgramBinary::compileToBinary(InfoLog &infoLog, const char *hlsl, c
     {
         ID3D10Blob *errorMessage = NULL;
         ID3D10Blob *binary = NULL;
-        result = getDisplay()->compileShaderSource(hlsl, profile, g_fakepath, flags | extraFlags[i], &binary, &errorMessage);
+        result = getDisplay()->compileShaderSource(hlsl, g_fakepath, profile, flags | extraFlags[i], &binary, &errorMessage);
         if (errorMessage)
         {
             const char *message = (const char*)errorMessage->GetBufferPointer();
