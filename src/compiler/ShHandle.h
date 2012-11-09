@@ -70,7 +70,8 @@ public:
     int getMappedNameMaxLength() const;
 
     ShHashFunction64 getHashFunction() const { return hashFunction; }
-    const NameMap& getNameMap() const { return nameMap; }
+    NameMap& getNameMap() { return nameMap; }
+    TSymbolTable& getSymbolTable() { return symbolTable; }
 
 protected:
     ShShaderType getShaderType() const { return shaderType; }
