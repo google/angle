@@ -20,7 +20,7 @@ Contributors
 
 Contact
 
-    TBD
+    Daniel Koch <daniel> <at> <transgaming> <dot> <com>
 
 Status
 
@@ -28,7 +28,8 @@ Status
 
 Version
 
-    TBD
+    Last Modified Data: November 13, 2012
+    Revision: #5
 
 Number
 
@@ -41,6 +42,7 @@ Dependencies
     The extension is written against the OpenGL ES 2.0 specification.
 
     ANGLE_framebuffer_blit affects the definition of this extension.
+    APPLE_framebuffer_multisample affects the definitin of this extension.
 
 Overview
 
@@ -119,7 +121,7 @@ Changes to Chapter 3 of the OpenGL ES 2.0 Specification (Rasterization)
     color, depth, and stencil values, are stored in this buffer. Samples
     contain separate color values for each fragment color. When the
     window system-provided framebuffer includes a multisample buffer, it
-    does not include depth or stencil buffers, even if the multi-sample
+    does not include depth or stencil buffers, even if the multisample
     buffer does not store depth or stencil values. Color buffers do
     coexist with the multisample buffer, however.
 
@@ -163,9 +165,9 @@ Operations and the Frame Buffer)
                                               point i
 
 
-    Replace Section 4.2.1, "Selecting a Buffer for Writing"
+    Replace Section 4.2.1, "Selecting a Buffer for Writing" with the following:
 
-    By default, color values are written into the front buffer for
+    "By default, color values are written into the front buffer for
     single buffered surfaces or into the back buffer for back buffered
     surfaces as determined when making the context current. To control
     the color buffer into which each of the fragment color values is
@@ -180,21 +182,12 @@ Operations and the Frame Buffer)
     to an array of symbolic constants specifying the buffer to which
     each fragment color is written.
 
-#if defined(GL_ANGLE_framebuffer_blit)
     Each buffer listed in <bufs> must be BACK, NONE, or one of the
     values from table 4.3. Further, acceptable values for the constants
     in <bufs> depend on whether the GL is using the default framebuffer
     (i.e., DRAW_FRAMEBUFFER_BINDING is zero), or a framebuffer object
     (i.e., DRAW_FRAMEBUFFER_BINDING is non-zero). For more information
     about framebuffer objects, see section 4.4.
-#else
-    Each buffer listed in <bufs> must be BACK, NONE, or one of the
-    values from table 4.3. Further, acceptable values for the constants
-    in <bufs> depend on whether the GL is using the default framebuffer
-    (i.e., FRAMEBUFFER_BINDING is zero), or a framebuffer object (i.e.,
-    FRAMEBUFFER_BINDING is non-zero). For more information about
-    framebuffer objects, see section 4.4.
-#endif
 
     If the GL is bound to the default framebuffer, then <n> must be 1
     and the constant must be BACK or NONE. When draw buffer zero is
@@ -203,7 +196,7 @@ Operations and the Frame Buffer)
     contexts. If DrawBuffersANGLE is supplied with a constant other than
     BACK and NONE, the error INVALID_OPERATION is generated.
 
-    If the GL is bound to a framebuffer object, then each of the
+    If the GL is bound to a draw framebuffer object, then each of the
     constants must be one of the values listed in table 4.3.
 
     In both cases, the draw buffers being defined correspond in order to
@@ -216,13 +209,13 @@ Operations and the Frame Buffer)
     INVALID_VALUE error is generated if <n> is greater than
     MAX_DRAW_BUFFERS_ANGLE.
 
-    If the GL is bound to a framebuffer object, the <i>th buffer listed
+    If the GL is bound to a draw framebuffer object, the <i>th buffer listed
     in <bufs> must be COLOR_ATTACHMENT<i>_ANGLE or NONE. Specifying a
     buffer out of order, BACK, or COLOR_ATTACHMENT<m>_ANGLE where <m> is
     greater than or equal to the value of MAX_COLOR_ATTACHMENTS_ANGLE,
     will generate the error INVALID_OPERATION.
 
-    If a fragment shader writes to "gl_FragColor", DrawBuffersANGLE
+    If a fragment shader writes to "gl_FragColor", DrawBuffersANGLE 
     specifies a set of draw buffers into which the color written to
     "gl_FragColor" is written. If a fragment shader writes to
     "gl_FragData", DrawBuffersANGLE specifies a set of draw buffers
@@ -234,12 +227,12 @@ Operations and the Frame Buffer)
 
     Indicating a buffer or buffers using DrawBuffersANGLE causes
     subsequent pixel color value writes to affect the indicated
-    buffers. If the GL is bound to a framebuffer object and a draw
+    buffers. If the GL is bound to a draw framebuffer object and a draw
     buffer selects an attachment that has no image attached, then that
-    fragment color is not written to any buffer.
+    fragment color is not written.
 
     Specifying NONE as the draw buffer for a fragment color will inhibit
-    that fragment color from being written to any buffer.
+    that fragment color from being written.
 
     The state required to handle color buffer selection for each
     framebuffer is an integer for each supported fragment color. For the
@@ -255,23 +248,24 @@ Operations and the Frame Buffer)
 
     The value of the draw buffer selected for fragment color <i> can be
     queried by calling GetIntegerv with the symbolic constant
-    DRAW_BUFFER<i>_ANGLE.
+    DRAW_BUFFER<i>_ANGLE."
 
     Replace the second paragraph of Section 4.4.1 (Binding and Managing
     Framebuffer Objects) with the following:
 
-    The namespace for framebuffer objects is the unsigned integers, with
+    "The namespace for framebuffer objects is the unsigned integers, with
     zero reserved by OpenGL ES to refer to the default framebuffer. A
     framebuffer object is created by binding an unused name to the
-    target FRAMEBUFFER. The binding is effected by calling
+    target FRAMEBUFFER, DRAW_FRAMEBUFFER, or READ_FRAMEBUFFER. The binding
+    is effected by calling
 
         void BindFramebuffer(enum target, uint framebuffer);
 
-    with target set to FRAMEBUFFER and framebuffer set to the unused
-    name.  The resulting framebuffer object is a new state vector. There
-    is a number of color attachment points, plus one each for the depth
-    and stencil attachment points. The number of color attachment points
-    is equal to the state of MAX_COLOR_ATTACHMENTS_ANGLE.
+    with <target> set the desired framebuffer target and <framebuffer> set 
+    to the unused name. The resulting framebuffer object is a new state 
+    vector. There is a number of color attachment points, plus one each
+    for the depth and stencil attachment points. The number of color attachment
+    points is equal to the value of MAX_COLOR_ATTACHMENTS_ANGLE."
 
 Changes to Chapter 3 of the OpenGL ES Shading Language 1.0.17 Specification (Basics)
 
@@ -286,28 +280,104 @@ Changes to Chapter 3 of the OpenGL ES Shading Language 1.0.17 Specification (Bas
     GL_ANGLE_multiple_render_targets will be defined to 1, if the
     GL_ANGLE_multiple_render_targets extension is supported.
 
+Dependencies on ANGLE_framebuffer_blit and APPLE_framebuffer_multisample:
+
+    If neither ANGLE_framebuffer_blit nor APPLE_framebuffer_multisample are
+    supported, then all references to "draw framebuffers" should be replaced
+    with references to "framebuffers". References to DRAW_FRAMEBUFFER_BINDING
+    should be replaced with references to FRAMEBUFFER_BINDING. References to
+    DRAW_FRAMEBUFFER and READ_FRAMEBUFFER should be removed.
+
+    If ANGLE_framebuffer_blit is supported, DRAW_FRAMEBUFFER_BINDING, DRAW_FRAMEBUFFER
+    and READ_FRAMEBUFFER all refer to corresponding _ANGLE suffixed names
+    (they have the same token values).
+
+    If APPLE_framebuffer_multisample is supported, DRAW_FRAMEBUFFER_BINDING,
+    DRAW_FRAMEBUFFER and READ_FRAMEBUFFER all refer to the corresponding _APPLE
+    suffixed names (they have the same token values).
+
+Errors
+
+    <TBD>
+
 New State
 
     Add Table 6.X Framebuffer (State per framebuffer object):
 
-        State                 Type Get Command  Initial Value Description 
-        ---------------       ---- ------------ ------------- -----------
-        DRAW_BUFFER<i>_ANGLE  Z10* GetIntegerv  see 4.2.1     Draw buffer selected 
-                                                              for fragment color i
-
-    Add the new Table 6.X "Framebuffer Dependent Values" :
-
-        State                   Type Get Command Min Value Description
-        -------------------     ---- ----------- --------- -----------
-        MAX_DRAW_BUFFERS_ANGLE  Z+   GetIntegerv 1         Maximum number of
-                                                           active draw buffers
+    State                 Type Get Command  Initial Value Description 
+    ---------------       ---- ------------ ------------- -----------
+    DRAW_BUFFER<i>_ANGLE  Z10* GetIntegerv  see 4.2.1     Draw buffer selected 
+							  for fragment color i
 
     Add to Table 6.18 (Implementation Dependent Values)
 
     Get value                    Type Get Cmnd    Minimum Value Description             Sec.
     ------------------------     ---- ----------- ------------- -----------             -----
+    MAX_DRAW_BUFFERS_ANGLE       Z+   GetIntegerv 1             Maximum number of       4.2.1
+                                                                active draw buffers
     MAX_COLOR_ATTACHMENTS_ANGLE  Z+   GetIntegerv 1             Number of framebuffer   4.4.1
                                                                 color attachment points
 Issues
 
     See ARB_draw_buffers for relevant issues.
+
+  1) Differences from NV_draw_buffers + NV_fbo_color_attachments?
+
+   - interactions with blit_framebuffer
+   - MAX limits are global instead of per-fbo (TBD - Issue 2)
+   - no broadcast from gl_FragColor (TBD - Issue 3)
+   - can be used to with default framebuffer to set NONE/BACK (TBD - Issue 4)
+
+   2) Should the MAX_DRAW_BUFFERS_ANGLE and MAX_COLOR_ATTACHMENTS_ANGLE limits
+    be per-framebuffer values or implementation dependent constants?
+
+    DISCUSSION: In ARB_draw_buffers this was per-context (see Issue 2).
+    EXT_framebuffer_object (and subsequently ARB_framebuffer_object, and GL 3.0
+    through GL 4.2) made these queries framebuffer-dependent. 
+    However GL in 4.3 and GLES 3.0, these limits were moved from 
+    framebuffer-dependent state to implementation-dependent state after
+    much discussion (Bug 7990).
+
+    NV_draw_buffers has MAX_DRAW_BUFFERS listed as per-framebuffer state,
+    but NV_fbo_color_attachments has MAX_COLOR_ATTACHMENTS as an 
+    implementation-dependent constant.
+
+    This is relevant because some implementations are not able to support 
+    multisampling in conjuction with multiple color attachments.  If the
+    query is per-framebuffer, they can report a maximum of one attachment
+    when there are multisampled attachments, but a higher limit when only
+    single-sampled attachments are present.
+
+   3) Should we support broadcast from gl_FragColor to all gl_FragData[x]
+    or should it be synonymous with gl_FragData[0]?
+
+    DISCUSSION: With NV_draw_buffers, writing to gl_FragColor writes to all
+    the enabled draw buffers (ie broadcast). In OpenGL ES 3.0 when using 
+    ESSL 1.0, gl_FragColor is equivalent to writing a single output to 
+    gl_FragData[0] and multiple outputs are not possible. When using ESSL 3.0,
+    only user-defined out variables may be used.
+
+    If broadcast is supported, some implementations may have to replace
+    writes to gl_FragColor with replicated writes to all possible gl_FragData
+    locations when this extension is enabled.
+
+   4) Should we allow DrawBuffersANGLE to be called when the default FBO is bound?
+
+    DISCUSSION: NV_draw_buffers specifies that DrawBuffersNV errors with 
+    INVALID_OPERATION when the default FBO is bound. OpenGL ES 3.0 allows
+    DrawBuffers to toggle between BACK and NONE on the default FBO.
+
+    An implementation that does not natively support disabling the drawbuffer
+    on the default FBO could emulate this by disabling color writes.
+
+
+Revision History
+
+    11/13/2012  dgkoch  add revision history
+                        add text from updated ES 3.0 spec
+                        add issues for discussion
+    10/16/2012  kbr     update name string
+    10/16/2012  kbr     remove restrition requiring draw buffer 0 to be non-NULL
+    10/12/2012  kbr     remove references to GetDoublev and ReadBuffer
+    10/11/2012  kbr     initial draft extension
+
