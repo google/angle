@@ -43,7 +43,7 @@ const size_t g_shaderSize[] =
 namespace gl
 {
 Blit::Blit(Context *context)
-  : mContext(context), mQuadVertexBuffer(NULL), mQuadVertexDeclaration(NULL), mSavedRenderTarget(NULL), mSavedDepthStencil(NULL), mSavedStateBlock(NULL)
+  : mContext(context), mQuadVertexBuffer(NULL), mQuadVertexDeclaration(NULL), mSavedStateBlock(NULL), mSavedRenderTarget(NULL), mSavedDepthStencil(NULL)
 {
     initGeometry();
     memset(mCompiledShaders, 0, sizeof(mCompiledShaders));

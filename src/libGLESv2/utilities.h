@@ -116,6 +116,6 @@ inline bool isDeviceLostError(HRESULT errorCode)
       default:
         return false;
     }
-};
+}
 
 #endif  // LIBGLESV2_UTILITIES_H

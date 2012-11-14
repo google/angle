@@ -257,7 +257,7 @@ bool Display::initialize()
 
         ConfigSet configSet;
 
-        for (int formatIndex = 0; formatIndex < sizeof(renderTargetFormats) / sizeof(D3DFORMAT); formatIndex++)
+        for (unsigned int formatIndex = 0; formatIndex < sizeof(renderTargetFormats) / sizeof(D3DFORMAT); formatIndex++)
         {
             D3DFORMAT renderTargetFormat = renderTargetFormats[formatIndex];
 
@@ -265,7 +265,7 @@ bool Display::initialize()
 
             if (SUCCEEDED(result))
             {
-                for (int depthStencilIndex = 0; depthStencilIndex < sizeof(depthStencilFormats) / sizeof(D3DFORMAT); depthStencilIndex++)
+                for (unsigned int depthStencilIndex = 0; depthStencilIndex < sizeof(depthStencilFormats) / sizeof(D3DFORMAT); depthStencilIndex++)
                 {
                     D3DFORMAT depthStencilFormat = depthStencilFormats[depthStencilIndex];
                     HRESULT result = D3D_OK;

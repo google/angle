@@ -289,7 +289,7 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         };
 
         int max = 0;
-        for (int i = 0; i < sizeof(renderBufferFormats) / sizeof(D3DFORMAT); ++i)
+        for (unsigned int i = 0; i < sizeof(renderBufferFormats) / sizeof(D3DFORMAT); ++i)
         {
             bool *multisampleArray = new bool[D3DMULTISAMPLE_16_SAMPLES + 1];
             mDisplay->getMultiSampleSupport(renderBufferFormats[i], multisampleArray);
@@ -1683,7 +1683,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
         break;
       case GL_TEXTURE_BINDING_2D:
         {
-            if (mState.activeSampler < 0 || mState.activeSampler > getMaximumCombinedTextureImageUnits() - 1)
+            if (mState.activeSampler > getMaximumCombinedTextureImageUnits() - 1)
             {
                 error(GL_INVALID_OPERATION);
                 return false;
@@ -1694,7 +1694,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
         break;
       case GL_TEXTURE_BINDING_CUBE_MAP:
         {
-            if (mState.activeSampler < 0 || mState.activeSampler > getMaximumCombinedTextureImageUnits() - 1)
+            if (mState.activeSampler > getMaximumCombinedTextureImageUnits() - 1)
             {
                 error(GL_INVALID_OPERATION);
                 return false;
@@ -3185,7 +3185,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
     applyShaders();
     applyTextures();
 
-    if (!getCurrentProgramBinary()->validateSamplers(false))
+    if (!getCurrentProgramBinary()->validateSamplers(NULL))
     {
         return error(GL_INVALID_OPERATION);
     }

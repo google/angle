@@ -1044,7 +1044,7 @@ ID3D10Blob *ProgramBinary::compileToBinary(InfoLog &infoLog, const char *hlsl, c
         return NULL;
     }
 
-    DWORD result = NOERROR;
+    HRESULT result = S_OK;
     UINT flags = 0;
     std::string sourceText;
     if (perfActive())

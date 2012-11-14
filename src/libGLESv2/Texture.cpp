@@ -230,7 +230,7 @@ void Image::createSurface()
         GLsizei requestHeight = mHeight;
         MakeValidSize(true, IsCompressed(mInternalFormat), &requestWidth, &requestHeight, &levelToFetch);
 
-        HRESULT result = getDevice()->CreateTexture(requestWidth, requestHeight, levelToFetch + 1, NULL, d3dFormat,
+        HRESULT result = getDevice()->CreateTexture(requestWidth, requestHeight, levelToFetch + 1, 0, d3dFormat,
                                                     poolToUse, &newTexture, NULL);
 
         if (FAILED(result))
@@ -1265,10 +1265,10 @@ void GenerateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 *sourceSurfac
 }
 
 TextureStorage::TextureStorage(DWORD usage)
-    : mD3DUsage(usage),
+    : mLodOffset(0),
+      mD3DUsage(usage),
       mD3DPool(getDisplay()->getTexturePool(usage)),
-      mTextureSerial(issueTextureSerial()),
-      mLodOffset(0)
+      mTextureSerial(issueTextureSerial())
 {
 }
 
