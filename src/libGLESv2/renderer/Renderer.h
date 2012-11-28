@@ -16,6 +16,8 @@
 #define EGLAPI
 #include <EGL/egl.h>
 
+#include <D3Dcompiler.h>
+
 #include "libGLESv2/Texture.h"
 #include "libGLESv2/angletypes.h"
 
@@ -65,8 +67,8 @@ struct ConfigDesc
 class Renderer
 {
   public:
-    explicit Renderer(egl::Display *display) : mDisplay(display) {};
-    virtual ~Renderer() {};
+    explicit Renderer(egl::Display *display);
+    virtual ~Renderer();
 
     virtual EGLint initialize() = 0;
     virtual bool resetDevice() = 0;
@@ -165,11 +167,16 @@ class Renderer
     virtual ShaderExecutable *compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, GLenum type) = 0;
 
   protected:
+    bool initializeCompiler();
+    ID3DBlob *compileToBinary(gl::InfoLog &infoLog, const char *hlsl, const char *profile, bool alternateFlags);
+
     egl::Display *mDisplay;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer);
 
+    HMODULE mD3dCompilerModule;
+    pD3DCompile mD3DCompileFunc;
 };
 
 }

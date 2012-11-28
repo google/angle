@@ -39,10 +39,6 @@
 #define ANGLE_ENABLE_D3D9EX 1
 #endif // !defined(ANGLE_ENABLE_D3D9EX)
 
-#if !defined(ANGLE_COMPILE_OPTIMIZATION_LEVEL)
-#define ANGLE_COMPILE_OPTIMIZATION_LEVEL D3DCOMPILE_OPTIMIZATION_LEVEL3
-#endif
-
 namespace rx
 {
 static const D3DFORMAT RenderTargetFormats[] =
@@ -72,8 +68,6 @@ static const D3DFORMAT DepthStencilFormats[] =
 Renderer9::Renderer9(egl::Display *display, HDC hDc, bool softwareDevice) : Renderer(display), mDc(hDc), mSoftwareDevice(softwareDevice)
 {
     mD3d9Module = NULL;
-
-    mD3dCompilerModule = NULL;
 
     mD3d9 = NULL;
     mD3d9Ex = NULL;
@@ -148,12 +142,6 @@ Renderer9::~Renderer9()
         mD3d9Module = NULL;
     }
 
-    if (mD3dCompilerModule)
-    {
-        FreeLibrary(mD3dCompilerModule);
-        mD3dCompilerModule = NULL;
-    }
-
     while (!mMultiSampleSupport.empty())
     {
         delete [] mMultiSampleSupport.begin()->second;
@@ -169,6 +157,11 @@ Renderer9 *Renderer9::makeRenderer9(Renderer *renderer)
 
 EGLint Renderer9::initialize()
 {
+    if (!initializeCompiler())
+    {
+        return EGL_NOT_INITIALIZED;
+    }
+
     if (mSoftwareDevice)
     {
         mD3d9Module = GetModuleHandle(TEXT("swiftshader_d3d9.dll"));
@@ -206,31 +199,6 @@ EGLint Renderer9::initialize()
         ERR("Could not create D3D9 device - aborting!\n");
         return EGL_NOT_INITIALIZED;
     }
-
-#if defined(ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES)
-    // Find a D3DCompiler module that had already been loaded based on a predefined list of versions.
-    static TCHAR* d3dCompilerNames[] = ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES;
-
-    for (int i = 0; i < sizeof(d3dCompilerNames) / sizeof(*d3dCompilerNames); ++i)
-    {
-        if (GetModuleHandleEx(0, d3dCompilerNames[i], &mD3dCompilerModule))
-        {
-            break;
-        }
-    }
-#else
-    // Load the version of the D3DCompiler DLL associated with the Direct3D version ANGLE was built with.
-    mD3dCompilerModule = LoadLibrary(D3DCOMPILER_DLL);
-#endif  // ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES
-
-    if (!mD3dCompilerModule)
-    {
-        terminate();
-        return false;
-    }
-
-    mD3DCompileFunc = reinterpret_cast<pD3DCompile>(GetProcAddress(mD3dCompilerModule, "D3DCompile"));
-    ASSERT(mD3DCompileFunc);
 
     if (mDc != NULL)
     {
@@ -2697,7 +2665,7 @@ ShaderExecutable *Renderer9::compileToExecutable(gl::InfoLog &infoLog, const cha
         return NULL;
     }
 
-    ID3DBlob *binary = compileToBinary(infoLog, shaderHLSL, profile);
+    ID3DBlob *binary = compileToBinary(infoLog, shaderHLSL, profile, true);
     if (!binary)
         return NULL;
 
@@ -2713,96 +2681,6 @@ ShaderExecutable *Renderer9::compileToExecutable(gl::InfoLog &infoLog, const cha
     binary->Release();
 
     return executable;
-}
-
-// Compiles the HLSL code of the attached shaders into executable binaries
-ID3DBlob *Renderer9::compileToBinary(gl::InfoLog &infoLog, const char *hlsl, const char *profile)
-{
-    if (!hlsl)
-    {
-        return NULL;
-    }
-
-    HRESULT result = S_OK;
-    UINT flags = 0;
-    std::string sourceText;
-    if (gl::perfActive())
-    {
-        flags |= D3DCOMPILE_DEBUG;
-#ifdef NDEBUG
-        flags |= ANGLE_COMPILE_OPTIMIZATION_LEVEL;
-#else
-        flags |= D3DCOMPILE_SKIP_OPTIMIZATION;
-#endif
-
-        std::string sourcePath = getTempPath();
-        sourceText = std::string("#line 2 \"") + sourcePath + std::string("\"\n\n") + std::string(hlsl);
-        writeFile(sourcePath.c_str(), sourceText.c_str(), sourceText.size());
-    }
-    else
-    {
-        flags |= ANGLE_COMPILE_OPTIMIZATION_LEVEL;
-        sourceText = hlsl;
-    }
-
-    // Sometimes D3DCompile will fail with the default compilation flags for complicated shaders when it would otherwise pass with alternative options.
-    // Try the default flags first and if compilation fails, try some alternatives.
-    const static UINT extraFlags[] =
-    {
-        0,
-        D3DCOMPILE_AVOID_FLOW_CONTROL,
-        D3DCOMPILE_PREFER_FLOW_CONTROL
-    };
-
-    const static char * const extraFlagNames[] =
-    {
-        "default",
-        "avoid flow control",
-        "prefer flow control"
-    };
-
-    for (int i = 0; i < sizeof(extraFlags) / sizeof(UINT); ++i)
-    {
-        ID3DBlob *errorMessage = NULL;
-        ID3DBlob *binary = NULL;
-        result = mD3DCompileFunc(hlsl, strlen(hlsl), gl::g_fakepath, NULL, NULL,
-                                 "main", profile, flags | extraFlags[i], 0, &binary, &errorMessage);
-        if (errorMessage)
-        {
-            const char *message = (const char*)errorMessage->GetBufferPointer();
-
-            infoLog.appendSanitized(message);
-            TRACE("\n%s", hlsl);
-            TRACE("\n%s", message);
-
-            errorMessage->Release();
-            errorMessage = NULL;
-        }
-
-        if (SUCCEEDED(result))
-        {
-            return binary;
-        }
-        else
-        {
-            if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
-            {
-                return error(GL_OUT_OF_MEMORY, (ID3DBlob*) NULL);
-            }
-
-            infoLog.append("Warning: D3D shader compilation failed with ");
-            infoLog.append(extraFlagNames[i]);
-            infoLog.append(" flags.");
-            if (i + 1 < sizeof(extraFlagNames) / sizeof(char*))
-            {
-                infoLog.append(" Retrying with ");
-                infoLog.append(extraFlagNames[i + 1]);
-                infoLog.append(".\n");
-            }
-        }
-    }
-
-    return NULL;
 }
 
 bool Renderer9::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)

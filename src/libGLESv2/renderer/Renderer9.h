@@ -20,7 +20,6 @@
 #include <EGL/egl.h>
 
 #include <d3d9.h>
-#include <D3Dcompiler.h>
 
 #include "common/angleutils.h"
 #include "libGLESv2/Context.h"
@@ -184,15 +183,10 @@ class Renderer9 : public Renderer
     void getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray);
     bool copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *source, bool fromManaged);
 
-    ID3DBlob *compileToBinary(gl::InfoLog &infoLog, const char *hlsl, const char *profile);
-
     D3DPOOL getBufferPool(DWORD usage) const;
 
     HMODULE mD3d9Module;
     HDC mDc;
-
-    HMODULE mD3dCompilerModule;
-    pD3DCompile mD3DCompileFunc;
 
     void initializeDevice();
     D3DPRESENT_PARAMETERS getDefaultPresentParameters();

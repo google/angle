@@ -144,12 +144,7 @@ class Renderer11 : public Renderer
     HMODULE mDxgiModule;
     HDC mDc;
 
-    HMODULE mD3dCompilerModule;
-    pD3DCompile mD3DCompileFunc;
-
     bool mDeviceLost;
-
-    ID3DBlob *compileToBinary(gl::InfoLog &infoLog, const char *hlsl, const char *profile);
 
     void initializeDevice();
     void releaseDeviceResources();
