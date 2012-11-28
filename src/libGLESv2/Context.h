@@ -59,7 +59,6 @@ class Depthbuffer;
 class StreamingIndexBuffer;
 class Stencilbuffer;
 class DepthStencilbuffer;
-class VertexDataManager;
 class IndexDataManager;
 class Fence;
 class Query;
@@ -145,8 +144,6 @@ class VertexAttribute
     unsigned int mDivisor;
 };
 
-typedef VertexAttribute VertexAttributeArray[MAX_VERTEX_ATTRIBS];
-
 // Helper structure to store all raw state
 struct State
 {
@@ -191,41 +188,6 @@ struct State
     GLint unpackAlignment;
     GLint packAlignment;
     bool packReverseRowOrder;
-};
-
-// Helper class to construct and cache vertex declarations
-class VertexDeclarationCache
-{
-  public:
-    VertexDeclarationCache();
-    ~VertexDeclarationCache();
-
-    GLenum applyDeclaration(IDirect3DDevice9 *device, TranslatedAttribute attributes[], ProgramBinary *programBinary, GLsizei instances, GLsizei *repeatDraw);
-
-    void markStateDirty();
-
-  private:
-    UINT mMaxLru;
-
-    enum { NUM_VERTEX_DECL_CACHE_ENTRIES = 32 };
-
-    struct VBData
-    {
-        unsigned int serial;
-        unsigned int stride;
-        unsigned int offset;
-    };
-
-    VBData mAppliedVBs[MAX_VERTEX_ATTRIBS];
-    IDirect3DVertexDeclaration9 *mLastSetVDecl;
-    bool mInstancingEnabled;
-
-    struct VertexDeclCacheEntry
-    {
-        D3DVERTEXELEMENT9 cachedElements[MAX_VERTEX_ATTRIBS + 1];
-        UINT lruCount;
-        IDirect3DVertexDeclaration9 *vertexDeclaration;
-    } mVertexDeclCache[NUM_VERTEX_DECL_CACHE_ENTRIES];
 };
 
 class Context
@@ -471,7 +433,6 @@ class Context
 
     bool applyRenderTarget(bool ignoreViewport);
     void applyState(GLenum drawMode);
-    GLenum applyVertexBuffer(ProgramBinary *programBinary, VertexAttributeArray &vertexAttributes, GLint first, GLsizei count, GLsizei instances, GLsizei *repeatDraw);
     GLenum applyIndexBuffer(const GLvoid *indices, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo);
     void applyShaders();
     void applyTextures();
@@ -521,7 +482,6 @@ class Context
     std::string mExtensionString;
     std::string mRendererString;
 
-    VertexDataManager *mVertexDataManager;
     IndexDataManager *mIndexDataManager;
 
     StreamingIndexBuffer *mLineLoopIB;
@@ -582,8 +542,6 @@ class Context
     IDirect3DStateBlock9 *mMaskedClearSavedState;
 
     ResourceManager *mResourceManager;
-
-    VertexDeclarationCache mVertexDeclarationCache;
 };
 }
 

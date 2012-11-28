@@ -40,6 +40,7 @@ class Display;
 namespace gl
 {
 class ProgramBinary;
+class VertexAttribute;
 }
 
 namespace rx
@@ -91,6 +92,8 @@ class Renderer
                              gl::ProgramBinary *currentProgram, bool forceSetUniforms) = 0;
 
     virtual bool applyRenderTarget(gl::Framebuffer *frameBuffer) = 0;
+
+    virtual GLenum applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], GLint first, GLsizei count, GLsizei instances, GLsizei *repeatDraw) = 0;
 
     virtual void clear(GLbitfield mask, const gl::Color &colorClear, float depthClear, int stencilClear,
                        gl::Framebuffer *frameBuffer) = 0;

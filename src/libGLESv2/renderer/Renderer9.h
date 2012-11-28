@@ -25,9 +25,50 @@
 #include "common/angleutils.h"
 #include "libGLESv2/renderer/ShaderCache.h"
 #include "libGLESv2/renderer/Renderer.h"
+#include "libGLESv2/Context.h"
+
+namespace gl
+{
+class VertexDataManager;
+}
 
 namespace rx
 {
+
+// Helper class to construct and cache vertex declarations
+class VertexDeclarationCache
+{
+  public:
+    VertexDeclarationCache();
+    ~VertexDeclarationCache();
+
+    GLenum applyDeclaration(IDirect3DDevice9 *device, gl::TranslatedAttribute attributes[], gl::ProgramBinary *programBinary, GLsizei instances, GLsizei *repeatDraw);
+
+    void markStateDirty();
+
+  private:
+    UINT mMaxLru;
+
+    enum { NUM_VERTEX_DECL_CACHE_ENTRIES = 32 };
+
+    struct VBData
+    {
+        unsigned int serial;
+        unsigned int stride;
+        unsigned int offset;
+    };
+
+    VBData mAppliedVBs[gl::MAX_VERTEX_ATTRIBS];
+    IDirect3DVertexDeclaration9 *mLastSetVDecl;
+    bool mInstancingEnabled;
+
+    struct VertexDeclCacheEntry
+    {
+        D3DVERTEXELEMENT9 cachedElements[gl::MAX_VERTEX_ATTRIBS + 1];
+        UINT lruCount;
+        IDirect3DVertexDeclaration9 *vertexDeclaration;
+    } mVertexDeclCache[NUM_VERTEX_DECL_CACHE_ENTRIES];
+};
 
 class Renderer9 : public Renderer
 {
@@ -84,6 +125,8 @@ class Renderer9 : public Renderer
                              gl::ProgramBinary *currentProgram, bool forceSetUniforms);
 
     virtual bool applyRenderTarget(gl::Framebuffer *frameBuffer);
+
+    virtual GLenum applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], GLint first, GLsizei count, GLsizei instances, GLsizei *repeatDraw);
 
     virtual void clear(GLbitfield mask, const gl::Color &colorClear, float depthClear, int stencilClear,
                        gl::Framebuffer *frameBuffer);
@@ -244,6 +287,9 @@ class Renderer9 : public Renderer
     std::vector<IDirect3DQuery9*> mEventQueryPool;
     VertexShaderCache mVertexShaderCache;
     PixelShaderCache mPixelShaderCache;
+
+    gl::VertexDataManager *mVertexDataManager;
+    VertexDeclarationCache mVertexDeclarationCache;
 };
 
 }

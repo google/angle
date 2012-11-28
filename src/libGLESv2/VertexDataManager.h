@@ -116,9 +116,7 @@ class VertexDataManager
     VertexDataManager(rx::Renderer9 *renderer);
     virtual ~VertexDataManager();
 
-    void dirtyCurrentValue(int index) { mDirtyCurrentValue[index] = true; }
-
-    GLenum prepareVertexData(const VertexAttributeArray &attribs, ProgramBinary *programBinary, GLint start, GLsizei count, TranslatedAttribute *outAttribs, GLsizei instances);
+    GLenum prepareVertexData(const VertexAttribute attribs[], ProgramBinary *programBinary, GLint start, GLsizei count, TranslatedAttribute *outAttribs, GLsizei instances);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(VertexDataManager);
@@ -130,7 +128,7 @@ class VertexDataManager
 
     StreamingVertexBuffer *mStreamingBuffer;
 
-    bool mDirtyCurrentValue[MAX_VERTEX_ATTRIBS];
+    float mCurrentValue[MAX_VERTEX_ATTRIBS][4];
     StreamingVertexBuffer *mCurrentValueBuffer[MAX_VERTEX_ATTRIBS];
     std::size_t mCurrentValueOffsets[MAX_VERTEX_ATTRIBS];
 

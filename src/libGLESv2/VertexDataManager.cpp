@@ -20,6 +20,8 @@
 #include "libGLESv2/vertexconversion.h"
 #include "libGLESv2/IndexDataManager.h"
 
+#include <limits>
+
 namespace
 {
     enum { INITIAL_STREAM_BUFFER_SIZE = 1024*1024 };
@@ -41,7 +43,10 @@ VertexDataManager::VertexDataManager(rx::Renderer9 *renderer) : mRenderer(render
 {
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
     {
-        mDirtyCurrentValue[i] = true;
+        mCurrentValue[i][0] = std::numeric_limits<float>::quiet_NaN();
+        mCurrentValue[i][1] = std::numeric_limits<float>::quiet_NaN();
+        mCurrentValue[i][2] = std::numeric_limits<float>::quiet_NaN();
+        mCurrentValue[i][3] = std::numeric_limits<float>::quiet_NaN();
         mCurrentValueBuffer[i] = NULL;
         mCurrentValueOffsets[i] = 0;
     }
@@ -121,7 +126,7 @@ std::size_t VertexDataManager::writeAttributeData(ArrayVertexBuffer *vertexBuffe
     return streamOffset;
 }
 
-GLenum VertexDataManager::prepareVertexData(const VertexAttributeArray &attribs, ProgramBinary *programBinary, GLint start, GLsizei count, TranslatedAttribute *translated, GLsizei instances)
+GLenum VertexDataManager::prepareVertexData(const VertexAttribute attribs[], ProgramBinary *programBinary, GLint start, GLsizei count, TranslatedAttribute *translated, GLsizei instances)
 {
     if (!mStreamingBuffer)
     {
@@ -267,7 +272,10 @@ GLenum VertexDataManager::prepareVertexData(const VertexAttributeArray &attribs,
 
                 StreamingVertexBuffer *buffer = mCurrentValueBuffer[i];
 
-                if (mDirtyCurrentValue[i])
+                if (mCurrentValue[i][0] != attribs[i].mCurrentValue[0] ||
+                    mCurrentValue[i][1] != attribs[i].mCurrentValue[1] ||
+                    mCurrentValue[i][2] != attribs[i].mCurrentValue[2] ||
+                    mCurrentValue[i][3] != attribs[i].mCurrentValue[3])
                 {
                     const int requiredSpace = 4 * sizeof(float);
                     buffer->addRequiredSpace(requiredSpace);
@@ -280,7 +288,11 @@ GLenum VertexDataManager::prepareVertexData(const VertexAttributeArray &attribs,
                         data[2] = attribs[i].mCurrentValue[2];
                         data[3] = attribs[i].mCurrentValue[3];
                         buffer->unmap();
-                        mDirtyCurrentValue[i] = false;
+
+                        mCurrentValue[i][0] = attribs[i].mCurrentValue[0];
+                        mCurrentValue[i][1] = attribs[i].mCurrentValue[1];
+                        mCurrentValue[i][2] = attribs[i].mCurrentValue[2];
+                        mCurrentValue[i][3] = attribs[i].mCurrentValue[3];
                     }
                 }
 
