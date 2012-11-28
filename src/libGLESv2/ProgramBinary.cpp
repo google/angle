@@ -1250,6 +1250,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
     mUsesPointSize = vertexShader->mUsesPointSize;
     std::string varyingSemantic = (mUsesPointSize && sm3) ? "COLOR" : "TEXCOORD";
     std::string targetSemantic = sm4 ? "SV_Target" : "COLOR";
+    std::string positionSemantic = sm4 ? "SV_POSITION" : "POSITION";
 
     vertexHLSL += "struct VS_INPUT\n"
                    "{\n";
@@ -1278,7 +1279,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
                    "\n"
                    "struct VS_OUTPUT\n"
                    "{\n"
-                   "    float4 gl_Position : POSITION;\n";
+                   "    float4 gl_Position : " + positionSemantic + ";\n";
 
     for (int r = 0; r < registers; r++)
     {
