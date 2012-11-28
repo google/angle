@@ -87,8 +87,7 @@ class Renderer
     virtual void setDepthStencilState(const gl::DepthStencilState &depthStencilState, int stencilRef,
                                       int stencilBackRef, bool frontFaceCCW, unsigned int stencilSize) = 0;
 
-    virtual void setScissorRectangle(const gl::Rectangle& scissor, unsigned int renderTargetWidth,
-                                     unsigned int renderTargetHeight) = 0;
+    virtual void setScissorRectangle(const gl::Rectangle &scissor) = 0;
     virtual bool setViewport(const gl::Rectangle& viewport, float zNear, float zFar,
                              unsigned int renderTargetWidth, unsigned int renderTargetHeight,
                              gl::ProgramBinary *currentProgram, bool forceSetUniforms) = 0;

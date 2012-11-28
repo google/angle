@@ -1761,8 +1761,7 @@ bool Context::applyRenderTarget(bool ignoreViewport)
     }
     mDxUniformsDirty = false;
 
-    mRenderer->setScissorRectangle(mState.scissor, static_cast<int>(mRenderTargetDesc.width),
-                                    static_cast<int>(mRenderTargetDesc.height));
+    mRenderer->setScissorRectangle(mState.scissor);
 
     return true;
 }

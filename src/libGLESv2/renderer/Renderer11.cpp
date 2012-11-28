@@ -350,25 +350,19 @@ void Renderer11::setDepthStencilState(const gl::DepthStencilState &depthStencilS
     mForceSetDepthStencilState = false;
 }
 
-void Renderer11::setScissorRectangle(const gl::Rectangle& scissor, unsigned int renderTargetWidth,
-                                     unsigned int renderTargetHeight)
+void Renderer11::setScissorRectangle(const gl::Rectangle &scissor)
 {
-    if (mForceSetScissor ||
-        renderTargetWidth != mCurRenderTargetWidth ||
-        renderTargetHeight != mCurRenderTargetHeight ||
-        memcmp(&scissor, &mCurScissor, sizeof(gl::Rectangle)) != 0)
+    if (mForceSetScissor || memcmp(&scissor, &mCurScissor, sizeof(gl::Rectangle)) != 0)
     {
         D3D11_RECT rect;
-        rect.left = gl::clamp(scissor.x, 0, static_cast<int>(renderTargetWidth));
-        rect.top = gl::clamp(scissor.y, 0, static_cast<int>(renderTargetHeight));
-        rect.right = gl::clamp(scissor.x + scissor.width, 0, static_cast<int>(renderTargetWidth));
-        rect.bottom = gl::clamp(scissor.y + scissor.height, 0, static_cast<int>(renderTargetHeight));
+        rect.left = gl::clamp(scissor.x, 0, static_cast<int>(mRenderTargetDesc.width));
+        rect.top = gl::clamp(scissor.y, 0, static_cast<int>(mRenderTargetDesc.height));
+        rect.right = gl::clamp(scissor.x + scissor.width, 0, static_cast<int>(mRenderTargetDesc.width));
+        rect.bottom = gl::clamp(scissor.y + scissor.height, 0, static_cast<int>(mRenderTargetDesc.height));
 
         mDeviceContext->RSSetScissorRects(1, &rect);
 
         mCurScissor = scissor;
-        mCurRenderTargetWidth = renderTargetWidth;
-        mCurRenderTargetHeight = renderTargetHeight;
     }
 
     mForceSetScissor = false;
