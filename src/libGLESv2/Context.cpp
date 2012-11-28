@@ -50,7 +50,7 @@ Context::Context(const gl::Context *shareContext, rx::Renderer *renderer, bool n
     mState.rasterizer.polygonOffsetFill = false;
     mState.rasterizer.polygonOffsetFactor = 0.0f;
     mState.rasterizer.polygonOffsetUnits = 0.0f;
-    mState.rasterizer.scissorTest = false;
+    mState.scissorTest = false;
     mState.scissor.x = 0;
     mState.scissor.y = 0;
     mState.scissor.width = 0;
@@ -523,12 +523,12 @@ void Context::setSampleCoverageParams(GLclampf value, bool invert)
 
 void Context::setScissorTest(bool enabled)
 {
-    mState.rasterizer.scissorTest = enabled;
+    mState.scissorTest = enabled;
 }
 
 bool Context::isScissorTestEnabled() const
 {
-    return mState.rasterizer.scissorTest;
+    return mState.scissorTest;
 }
 
 void Context::setDither(bool enabled)
@@ -1211,7 +1211,7 @@ bool Context::getBooleanv(GLenum pname, GLboolean *params)
       case GL_POLYGON_OFFSET_FILL:       *params = mState.rasterizer.polygonOffsetFill; break;
       case GL_SAMPLE_ALPHA_TO_COVERAGE:  *params = mState.blend.sampleAlphaToCoverage;  break;
       case GL_SAMPLE_COVERAGE:           *params = mState.sampleCoverage;               break;
-      case GL_SCISSOR_TEST:              *params = mState.rasterizer.scissorTest;       break;
+      case GL_SCISSOR_TEST:              *params = mState.scissorTest;                  break;
       case GL_STENCIL_TEST:              *params = mState.depthStencil.stencilTest;     break;
       case GL_DEPTH_TEST:                *params = mState.depthStencil.depthTest;       break;
       case GL_BLEND:                     *params = mState.blend.blend;                  break;
@@ -1723,7 +1723,7 @@ bool Context::applyRenderTarget(bool ignoreViewport)
     }
     mDxUniformsDirty = false;
 
-    mRenderer->setScissorRectangle(mState.scissor);
+    mRenderer->setScissorRectangle(mState.scissor, mState.scissorTest);
 
     return true;
 }
@@ -2738,7 +2738,7 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
     Rectangle sourceScissoredRect = sourceRect;
     Rectangle destScissoredRect = destRect;
 
-    if (mState.rasterizer.scissorTest)
+    if (mState.scissorTest)
     {
         // Only write to parts of the destination framebuffer which pass the scissor test.
         if (destRect.x < mState.scissor.x)

@@ -644,8 +644,6 @@ void Renderer9::setRasterizerState(const gl::RasterizerState &rasterState)
             mDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
         }
 
-        mDevice->SetRenderState(D3DRS_SCISSORTESTENABLE, rasterState.scissorTest ? TRUE : FALSE);
-
         if (rasterState.polygonOffsetFill)
         {
             if (mCurDepthSize > 0)
@@ -860,19 +858,27 @@ void Renderer9::setDepthStencilState(const gl::DepthStencilState &depthStencilSt
     mForceSetDepthStencilState = false;
 }
 
-void Renderer9::setScissorRectangle(const gl::Rectangle &scissor)
+void Renderer9::setScissorRectangle(const gl::Rectangle &scissor, bool enabled)
 {
-    bool scissorChanged = mForceSetScissor || memcmp(&scissor, &mCurScissor, sizeof(gl::Rectangle)) != 0;
+    bool scissorChanged = mForceSetScissor ||
+                          memcmp(&scissor, &mCurScissor, sizeof(gl::Rectangle)) != 0 ||
+                          enabled != mScissorEnabled;
 
     if (scissorChanged)
     {
-        RECT rect;
-        rect.left = gl::clamp(scissor.x, 0, static_cast<int>(mRenderTargetDesc.width));
-        rect.top = gl::clamp(scissor.y, 0, static_cast<int>(mRenderTargetDesc.height));
-        rect.right = gl::clamp(scissor.x + scissor.width, 0, static_cast<int>(mRenderTargetDesc.width));
-        rect.bottom = gl::clamp(scissor.y + scissor.height, 0, static_cast<int>(mRenderTargetDesc.height));
-        mDevice->SetScissorRect(&rect);
+        if (enabled)
+        {
+            RECT rect;
+            rect.left = gl::clamp(scissor.x, 0, static_cast<int>(mRenderTargetDesc.width));
+            rect.top = gl::clamp(scissor.y, 0, static_cast<int>(mRenderTargetDesc.height));
+            rect.right = gl::clamp(scissor.x + scissor.width, 0, static_cast<int>(mRenderTargetDesc.width));
+            rect.bottom = gl::clamp(scissor.y + scissor.height, 0, static_cast<int>(mRenderTargetDesc.height));
+            mDevice->SetScissorRect(&rect);
+        }
 
+        mDevice->SetRenderState(D3DRS_SCISSORTESTENABLE, enabled ? TRUE : FALSE);
+
+        mScissorEnabled = enabled;
         mCurScissor = scissor;
     }
 

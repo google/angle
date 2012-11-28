@@ -31,7 +31,7 @@ class RenderStateCache
     // Increments refcount on the returned blend state, Release() must be called.
     ID3D11BlendState *getBlendState(const gl::BlendState &blendState);
     ID3D11RasterizerState *getRasterizerState(const gl::RasterizerState &rasterState,
-                                              unsigned int depthSize);
+                                              bool scissorEnabled, unsigned int depthSize);
     ID3D11DepthStencilState* getDepthStencilState(const gl::DepthStencilState &dsState);
 
   private:
@@ -54,6 +54,7 @@ class RenderStateCache
     struct RasterizerStateKey
     {
         gl::RasterizerState rasterizerState;
+        bool scissorEnabled;
         unsigned int depthSize;
     };
     static std::size_t hashRasterizerState(const RasterizerStateKey &rasterState);

@@ -168,7 +168,7 @@ bool RenderStateCache::compareRasterizerStates(const RasterizerStateKey &a, cons
 }
 
 ID3D11RasterizerState *RenderStateCache::getRasterizerState(const gl::RasterizerState &rasterState,
-                                                            unsigned int depthSize)
+                                                            bool scissorEnabled, unsigned int depthSize)
 {
     if (!mDevice)
     {
@@ -178,6 +178,7 @@ ID3D11RasterizerState *RenderStateCache::getRasterizerState(const gl::Rasterizer
 
     RasterizerStateKey key;
     key.rasterizerState = rasterState;
+    key.scissorEnabled = scissorEnabled;
     key.depthSize = depthSize;
 
     RasterizerStateMap::iterator i = mRasterizerStateCache.find(key);
@@ -215,7 +216,7 @@ ID3D11RasterizerState *RenderStateCache::getRasterizerState(const gl::Rasterizer
         rasterDesc.DepthBiasClamp = 0.0f; // MSDN documentation of DepthBiasClamp implies a value of zero will preform no clamping, must be tested though.
         rasterDesc.SlopeScaledDepthBias = rasterState.polygonOffsetUnits;
         rasterDesc.DepthClipEnable = TRUE;
-        rasterDesc.ScissorEnable = rasterState.scissorTest ? TRUE : FALSE;
+        rasterDesc.ScissorEnable = scissorEnabled ? TRUE : FALSE;
         rasterDesc.MultisampleEnable = TRUE;
         rasterDesc.AntialiasedLineEnable = FALSE;
 

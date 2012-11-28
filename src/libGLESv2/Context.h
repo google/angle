@@ -145,6 +145,7 @@ struct State
     int stencilClearValue;
 
     RasterizerState rasterizer;
+    bool scissorTest;
     Rectangle scissor;
 
     BlendState blend;

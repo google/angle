@@ -269,10 +269,11 @@ void Renderer11::setRasterizerState(const gl::RasterizerState &rasterState)
 {
     if (mForceSetRasterState || memcmp(&rasterState, &mCurRasterState, sizeof(gl::RasterizerState)) != 0)
     {
-        ID3D11RasterizerState *dxRasterState = mStateCache.getRasterizerState(rasterState, mCurDepthSize);
+        ID3D11RasterizerState *dxRasterState = mStateCache.getRasterizerState(rasterState, mScissorEnabled,
+                                                                              mCurDepthSize);
         if (!dxRasterState)
         {
-            ERR("NULL blend state returned by RenderStateCache::getRasterizerState, setting the "
+            ERR("NULL blend state returned by RenderStateCache::getRasterizerState, setting the default"
                 "rasterizer state.");
         }
 
@@ -355,19 +356,29 @@ void Renderer11::setDepthStencilState(const gl::DepthStencilState &depthStencilS
     mForceSetDepthStencilState = false;
 }
 
-void Renderer11::setScissorRectangle(const gl::Rectangle &scissor)
+void Renderer11::setScissorRectangle(const gl::Rectangle &scissor, bool enabled)
 {
-    if (mForceSetScissor || memcmp(&scissor, &mCurScissor, sizeof(gl::Rectangle)) != 0)
+    if (mForceSetScissor || memcmp(&scissor, &mCurScissor, sizeof(gl::Rectangle)) != 0 ||
+        enabled != mScissorEnabled)
     {
-        D3D11_RECT rect;
-        rect.left = gl::clamp(scissor.x, 0, static_cast<int>(mRenderTargetDesc.width));
-        rect.top = gl::clamp(scissor.y, 0, static_cast<int>(mRenderTargetDesc.height));
-        rect.right = gl::clamp(scissor.x + scissor.width, 0, static_cast<int>(mRenderTargetDesc.width));
-        rect.bottom = gl::clamp(scissor.y + scissor.height, 0, static_cast<int>(mRenderTargetDesc.height));
+        if (enabled)
+        {
+            D3D11_RECT rect;
+            rect.left = gl::clamp(scissor.x, 0, static_cast<int>(mRenderTargetDesc.width));
+            rect.top = gl::clamp(scissor.y, 0, static_cast<int>(mRenderTargetDesc.height));
+            rect.right = gl::clamp(scissor.x + scissor.width, 0, static_cast<int>(mRenderTargetDesc.width));
+            rect.bottom = gl::clamp(scissor.y + scissor.height, 0, static_cast<int>(mRenderTargetDesc.height));
 
-        mDeviceContext->RSSetScissorRects(1, &rect);
+            mDeviceContext->RSSetScissorRects(1, &rect);
+        }
+
+        if (enabled != mScissorEnabled)
+        {
+            mForceSetRasterState = true;
+        }
 
         mCurScissor = scissor;
+        mScissorEnabled = enabled;
     }
 
     mForceSetScissor = false;
@@ -720,9 +731,9 @@ void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *
                 return;
             }
 
-            if (mCurScissor.x > 0 || mCurScissor.y > 0 ||
-                mCurScissor.x + mCurScissor.width < renderTarget->getWidth() ||
-                mCurScissor.y + mCurScissor.height < renderTarget->getHeight())
+            if (mScissorEnabled && (mCurScissor.x > 0 || mCurScissor.y > 0 ||
+                                    mCurScissor.x + mCurScissor.width < renderTarget->getWidth() ||
+                                    mCurScissor.y + mCurScissor.height < renderTarget->getHeight()))
             {
                 // TODO: clearing of subregion of render target
                 UNIMPLEMENTED();
@@ -769,9 +780,9 @@ void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *
                 return;
             }
 
-            if (mCurScissor.x > 0 || mCurScissor.y > 0 ||
-                mCurScissor.x + mCurScissor.width < renderTarget->getWidth() ||
-                mCurScissor.y + mCurScissor.height < renderTarget->getHeight())
+            if (mScissorEnabled && (mCurScissor.x > 0 || mCurScissor.y > 0 ||
+                                    mCurScissor.x + mCurScissor.width < renderTarget->getWidth() ||
+                                    mCurScissor.y + mCurScissor.height < renderTarget->getHeight()))
             {
                 // TODO: clearing of subregion of depth stencil view
                 UNIMPLEMENTED();
