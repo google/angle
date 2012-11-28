@@ -17,5 +17,12 @@ namespace d3d11_gl
 
 GLenum ConvertBackBufferFormat(DXGI_FORMAT format);
 GLenum ConvertDepthStencilFormat(DXGI_FORMAT format);
+GLenum ConvertRenderbufferFormat(DXGI_FORMAT format);
+GLenum ConvertTextureInternalFormat(DXGI_FORMAT format);
+}
 
+namespace gl_d3d11
+{
+DXGI_FORMAT ConvertRenderbufferFormat(GLenum format);
+DXGI_FORMAT ConvertTextureInternalFormat(GLenum internalformat);
 }
