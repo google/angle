@@ -24,6 +24,8 @@
 #include "libGLESv2/mathutil.h"
 #include "libGLESv2/Shader.h"
 
+#include "libGLESv2/renderer/ShaderExecutable9.h"
+
 namespace gl
 {
 class FragmentShader;
@@ -165,8 +167,6 @@ class ProgramBinary : public RefCountObject
 
   private:
     DISALLOW_COPY_AND_ASSIGN(ProgramBinary);
-
-    ID3D10Blob *compileToBinary(InfoLog &infoLog, const char *hlsl, const char *profile, D3DConstantTable **constantTable);
 
     int packVaryings(InfoLog &infoLog, const Varying *packing[][4], FragmentShader *fragmentShader);
     bool linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::string& vertexHLSL, FragmentShader *fragmentShader, VertexShader *vertexShader);

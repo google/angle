@@ -19,6 +19,8 @@
 #include "libGLESv2/Texture.h"
 #include "libGLESv2/angletypes.h"
 
+#include "libGLESv2/renderer/ShaderExecutable.h"
+
 const int versionWindowsVista = MAKEWORD(0x00, 0x06);
 const int versionWindows7 = MAKEWORD(0x01, 0x06);
 
@@ -39,6 +41,7 @@ class Display;
 
 namespace gl
 {
+class InfoLog;
 class ProgramBinary;
 class VertexAttribute;
 class Buffer;
@@ -141,6 +144,7 @@ class Renderer
 
     virtual GLsizei getMaxSupportedSamples() const = 0;
 
+    // Pixel operations
     virtual bool copyToRenderTarget(TextureStorage2D *dest, TextureStorage2D *source) = 0;
     virtual bool copyToRenderTarget(TextureStorageCubeMap *dest, TextureStorageCubeMap *source) = 0;
 
@@ -154,8 +158,12 @@ class Renderer
     virtual void readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,
                             GLsizei outputPitch, bool packReverseRowOrder, GLint packAlignment, void* pixels) = 0;
 
+    // RenderTarget creation
     virtual RenderTarget *createRenderTarget(SwapChain *swapChain, bool depth) = 0;
     virtual RenderTarget *createRenderTarget(int width, int height, GLenum format, GLsizei samples, bool depth) = 0;
+
+    // Shader operations
+    virtual ShaderExecutable *compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, GLenum type) = 0;
 
   protected:
     egl::Display *mDisplay;

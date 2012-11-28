@@ -18,6 +18,7 @@
 #include "libGLESv2/VertexDataManager.h"
 #include "libGLESv2/renderer/Renderer9.h"
 #include "libGLESv2/renderer/renderer9_utils.h"
+#include "libGLESv2/renderer/ShaderExecutable9.h"
 #include "libGLESv2/renderer/SwapChain9.h"
 #include "libGLESv2/renderer/TextureStorage.h"
 #include "libGLESv2/renderer/Image.h"
@@ -37,6 +38,10 @@
 // Enables use of the IDirect3D9Ex interface, when available
 #define ANGLE_ENABLE_D3D9EX 1
 #endif // !defined(ANGLE_ENABLE_D3D9EX)
+
+#if !defined(ANGLE_COMPILE_OPTIMIZATION_LEVEL)
+#define ANGLE_COMPILE_OPTIMIZATION_LEVEL D3DCOMPILE_OPTIMIZATION_LEVEL3
+#endif
 
 namespace rx
 {
@@ -2625,6 +2630,157 @@ RenderTarget *Renderer9::createRenderTarget(int width, int height, GLenum format
 {
     RenderTarget9 *renderTarget = new RenderTarget9(this, width, height, format, samples);
     return renderTarget;
+}
+
+ShaderExecutable *Renderer9::compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, GLenum type)
+{
+    const char *profile = NULL;
+
+    switch (type)
+    {
+      case GL_VERTEX_SHADER:
+        profile = getMajorShaderModel() >= 3 ? "vs_3_0" : "vs_2_0";
+        break;
+      case GL_FRAGMENT_SHADER:
+        profile = getMajorShaderModel() >= 3 ? "ps_3_0" : "ps_2_0";
+        break;
+      default:
+        UNREACHABLE();
+        return NULL;
+    }
+
+    gl::D3DConstantTable *constantTable = NULL;
+    ID3D10Blob *binary = compileToBinary(infoLog, shaderHLSL, profile, &constantTable);
+    if (!binary)
+        return NULL;
+
+    ShaderExecutable9 *executable = NULL;
+
+    switch (type)
+    {
+      case GL_VERTEX_SHADER:
+        {
+            IDirect3DVertexShader9 *vshader = createVertexShader((DWORD *)binary->GetBufferPointer(), binary->GetBufferSize());
+            if (vshader)
+            {
+                executable = new ShaderExecutable9(vshader, constantTable);
+            }
+        }
+        break;
+      case GL_FRAGMENT_SHADER:
+        {
+            IDirect3DPixelShader9 *pshader = createPixelShader((DWORD *)binary->GetBufferPointer(), binary->GetBufferSize());
+            if (pshader)
+            {
+                executable = new ShaderExecutable9(pshader, constantTable);
+            }
+        }
+        break;
+      default:
+        UNREACHABLE();
+        break;
+    }
+
+    return executable;
+}
+
+// Compiles the HLSL code of the attached shaders into executable binaries
+ID3D10Blob *Renderer9::compileToBinary(gl::InfoLog &infoLog, const char *hlsl, const char *profile, gl::D3DConstantTable **constantTable)
+{
+    if (!hlsl)
+    {
+        return NULL;
+    }
+
+    HRESULT result = S_OK;
+    UINT flags = 0;
+    std::string sourceText;
+    if (gl::perfActive())
+    {
+        flags |= D3DCOMPILE_DEBUG;
+#ifdef NDEBUG
+        flags |= ANGLE_COMPILE_OPTIMIZATION_LEVEL;
+#else
+        flags |= D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+
+        std::string sourcePath = getTempPath();
+        sourceText = std::string("#line 2 \"") + sourcePath + std::string("\"\n\n") + std::string(hlsl);
+        writeFile(sourcePath.c_str(), sourceText.c_str(), sourceText.size());
+    }
+    else
+    {
+        flags |= ANGLE_COMPILE_OPTIMIZATION_LEVEL;
+        sourceText = hlsl;
+    }
+
+    // Sometimes D3DCompile will fail with the default compilation flags for complicated shaders when it would otherwise pass with alternative options.
+    // Try the default flags first and if compilation fails, try some alternatives.
+    const static UINT extraFlags[] =
+    {
+        0,
+        D3DCOMPILE_AVOID_FLOW_CONTROL,
+        D3DCOMPILE_PREFER_FLOW_CONTROL
+    };
+
+    const static char * const extraFlagNames[] =
+    {
+        "default",
+        "avoid flow control",
+        "prefer flow control"
+    };
+
+    for (int i = 0; i < sizeof(extraFlags) / sizeof(UINT); ++i)
+    {
+        ID3D10Blob *errorMessage = NULL;
+        ID3D10Blob *binary = NULL;
+        result = compileShaderSource(hlsl, gl::g_fakepath, profile, flags | extraFlags[i], &binary, &errorMessage);
+
+        if (errorMessage)
+        {
+            const char *message = (const char*)errorMessage->GetBufferPointer();
+
+            infoLog.appendSanitized(message);
+            TRACE("\n%s", hlsl);
+            TRACE("\n%s", message);
+
+            errorMessage->Release();
+            errorMessage = NULL;
+        }
+
+        if (SUCCEEDED(result))
+        {
+            gl::D3DConstantTable *table = new gl::D3DConstantTable(binary->GetBufferPointer(), binary->GetBufferSize());
+            if (table->error())
+            {
+                delete table;
+                binary->Release();
+                return NULL;
+            }
+
+            *constantTable = table;
+            return binary;
+        }
+        else
+        {
+            if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+            {
+                return error(GL_OUT_OF_MEMORY, (ID3D10Blob*) NULL);
+            }
+
+            infoLog.append("Warning: D3D shader compilation failed with ");
+            infoLog.append(extraFlagNames[i]);
+            infoLog.append(" flags.");
+            if (i + 1 < sizeof(extraFlagNames) / sizeof(char*))
+            {
+                infoLog.append(" Retrying with ");
+                infoLog.append(extraFlagNames[i + 1]);
+                infoLog.append(".\n");
+            }
+        }
+    }
+
+    return NULL;
 }
 
 bool Renderer9::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)

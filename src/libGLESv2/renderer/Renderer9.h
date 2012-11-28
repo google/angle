@@ -31,6 +31,7 @@
 
 namespace gl
 {
+class D3DConstantTable;
 class VertexDataManager;
 class StreamingIndexBuffer;
 struct TranslatedAttribute;
@@ -151,6 +152,7 @@ class Renderer9 : public Renderer
     
     D3DFORMAT ConvertTextureInternalFormat(GLint internalformat);
 
+    // Pixel operations
     virtual bool copyToRenderTarget(TextureStorage2D *dest, TextureStorage2D *source);
     virtual bool copyToRenderTarget(TextureStorageCubeMap *dest, TextureStorageCubeMap *source);
 
@@ -164,9 +166,14 @@ class Renderer9 : public Renderer
     virtual void readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,
                             GLsizei outputPitch, bool packReverseRowOrder, GLint packAlignment, void* pixels);
 
+    // RenderTarget creation
     virtual RenderTarget *createRenderTarget(SwapChain *swapChain, bool depth);
     virtual RenderTarget *createRenderTarget(int width, int height, GLenum format, GLsizei samples, bool depth);
 
+    // Shader operations
+    virtual ShaderExecutable *compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, GLenum type);
+
+    // D3D9-renderer specific methods
     bool boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest);
 
     D3DPOOL getTexturePool(DWORD usage) const;
@@ -178,6 +185,8 @@ class Renderer9 : public Renderer
 
     void getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray);
     bool copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *source, bool fromManaged);
+
+    ID3D10Blob *compileToBinary(gl::InfoLog &infoLog, const char *hlsl, const char *profile, gl::D3DConstantTable **constantTable);
 
     D3DPOOL getBufferPool(DWORD usage) const;
 

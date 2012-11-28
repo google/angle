@@ -111,6 +111,7 @@ class Renderer11 : public Renderer
 
     virtual GLsizei getMaxSupportedSamples() const;
 
+    // Pixel operations
     virtual bool copyToRenderTarget(TextureStorage2D *dest, TextureStorage2D *source);
     virtual bool copyToRenderTarget(TextureStorageCubeMap *dest, TextureStorageCubeMap *source);
 
@@ -124,8 +125,12 @@ class Renderer11 : public Renderer
     virtual void readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,
                             GLsizei outputPitch, bool packReverseRowOrder, GLint packAlignment, void* pixels);
 
+    // RenderTarget creation
     virtual RenderTarget *createRenderTarget(SwapChain *swapChain, bool depth);
     virtual RenderTarget *createRenderTarget(int width, int height, GLenum format, GLsizei samples, bool depth);
+
+    // Shader operations
+    virtual ShaderExecutable *compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, GLenum type);
 
     // D3D11-renderer specific methods
     ID3D11Device *getDevice() { return mDevice; }

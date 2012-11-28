@@ -19,10 +19,6 @@
 
 #include <string>
 
-#if !defined(ANGLE_COMPILE_OPTIMIZATION_LEVEL)
-#define ANGLE_COMPILE_OPTIMIZATION_LEVEL D3DCOMPILE_OPTIMIZATION_LEVEL3
-#endif
-
 namespace gl
 {
 std::string str(int i)
@@ -1032,106 +1028,6 @@ void ProgramBinary::applyUniforms()
     }
 }
 
-// Compiles the HLSL code of the attached shaders into executable binaries
-ID3D10Blob *ProgramBinary::compileToBinary(InfoLog &infoLog, const char *hlsl, const char *profile, D3DConstantTable **constantTable)
-{
-    if (!hlsl)
-    {
-        return NULL;
-    }
-
-    HRESULT result = S_OK;
-    UINT flags = 0;
-    std::string sourceText;
-    if (perfActive())
-    {
-        flags |= D3DCOMPILE_DEBUG;
-#ifdef NDEBUG
-        flags |= ANGLE_COMPILE_OPTIMIZATION_LEVEL;
-#else
-        flags |= D3DCOMPILE_SKIP_OPTIMIZATION;
-#endif
-
-        std::string sourcePath = getTempPath();
-        sourceText = std::string("#line 2 \"") + sourcePath + std::string("\"\n\n") + std::string(hlsl);
-        writeFile(sourcePath.c_str(), sourceText.c_str(), sourceText.size());
-    }
-    else
-    {
-        flags |= ANGLE_COMPILE_OPTIMIZATION_LEVEL;
-        sourceText = hlsl;
-    }
-
-    // Sometimes D3DCompile will fail with the default compilation flags for complicated shaders when it would otherwise pass with alternative options.
-    // Try the default flags first and if compilation fails, try some alternatives. 
-    const static UINT extraFlags[] =
-    {
-        0,
-        D3DCOMPILE_AVOID_FLOW_CONTROL,
-        D3DCOMPILE_PREFER_FLOW_CONTROL
-    };
-
-    const static char * const extraFlagNames[] =
-    {
-        "default",
-        "avoid flow control",
-        "prefer flow control"
-    };
-
-    for (int i = 0; i < sizeof(extraFlags) / sizeof(UINT); ++i)
-    {
-        ID3D10Blob *errorMessage = NULL;
-        ID3D10Blob *binary = NULL;
-        result = mRenderer->compileShaderSource(hlsl, g_fakepath, profile, flags | extraFlags[i], &binary, &errorMessage);
-
-        if (errorMessage)
-        {
-            const char *message = (const char*)errorMessage->GetBufferPointer();
-
-            infoLog.appendSanitized(message);
-            TRACE("\n%s", hlsl);
-            TRACE("\n%s", message);
-
-            errorMessage->Release();
-            errorMessage = NULL;
-        }
-
-        if (SUCCEEDED(result))
-        {
-            D3DConstantTable *table = new D3DConstantTable(binary->GetBufferPointer(), binary->GetBufferSize());
-            if (table->error())
-            {
-                delete table;
-                binary->Release();
-                return NULL;
-            }
-
-            *constantTable = table;
-    
-            return binary;
-        }
-        else
-        {
-            if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
-            {
-                return error(GL_OUT_OF_MEMORY, (ID3D10Blob*) NULL);
-            }
-
-            infoLog.append("Warning: D3D shader compilation failed with ");
-            infoLog.append(extraFlagNames[i]);
-            infoLog.append(" flags.");
-            if (i + 1 < sizeof(extraFlagNames) / sizeof(char*))
-            {
-                infoLog.append(" Retrying with ");
-                infoLog.append(extraFlagNames[i + 1]);
-                infoLog.append(".\n");
-            }
-        }
-    }
-
-    return NULL;
-}
-
 // Packs varyings into generic varying registers, using the algorithm from [OpenGL ES Shading Language 1.00 rev. 17] appendix A section 7 page 111
 // Returns the number of used varying registers, or -1 if unsuccesful
 int ProgramBinary::packVaryings(InfoLog &infoLog, const Varying *packing[][4], FragmentShader *fragmentShader)
@@ -1925,19 +1821,18 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
         return false;
     }
 
-    const char *vertexProfile = mRenderer->getMajorShaderModel() >= 3 ? "vs_3_0" : "vs_2_0";
-    const char *pixelProfile = mRenderer->getMajorShaderModel() >= 3 ? "ps_3_0" : "ps_2_0";
-
     bool success = true;
     D3DConstantTable *constantTableVS = NULL;
     D3DConstantTable *constantTablePS = NULL;
-    ID3D10Blob *vertexBinary = compileToBinary(infoLog, vertexHLSL.c_str(), vertexProfile, &constantTableVS);
-    ID3D10Blob *pixelBinary = compileToBinary(infoLog, pixelHLSL.c_str(), pixelProfile, &constantTablePS);
+    rx::ShaderExecutable *vertexExecutable = mRenderer->compileToExecutable(infoLog, vertexHLSL.c_str(), GL_VERTEX_SHADER);
+    rx::ShaderExecutable *pixelExecutable = mRenderer->compileToExecutable(infoLog, pixelHLSL.c_str(), GL_FRAGMENT_SHADER);
 
-    if (vertexBinary && pixelBinary)
+    if (vertexExecutable && pixelExecutable)
     {
-        mVertexExecutable = mRenderer->createVertexShader((DWORD*)vertexBinary->GetBufferPointer(), vertexBinary->GetBufferSize());
-        mPixelExecutable = mRenderer->createPixelShader((DWORD*)pixelBinary->GetBufferPointer(), pixelBinary->GetBufferSize());
+        rx::ShaderExecutable9 *vshader9 = rx::ShaderExecutable9::makeShaderExecutable9(vertexExecutable);
+        rx::ShaderExecutable9 *pshader9 = rx::ShaderExecutable9::makeShaderExecutable9(pixelExecutable);
+        mVertexExecutable = vshader9->getVertexShader();
+        mPixelExecutable = pshader9->getPixelShader();
 
         if (!mPixelExecutable || !mVertexExecutable)
         {
@@ -1948,16 +1843,14 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
             infoLog.append("Failed to create D3D shaders.");
             success = false;
         }
+
+        constantTableVS = vshader9->getConstantTable();
+        constantTablePS = pshader9->getConstantTable();
     }
     else
     {
         success = false;
     }
-
-    if (vertexBinary) vertexBinary->Release();
-    if (pixelBinary) pixelBinary->Release();
-    vertexBinary = NULL;
-    pixelBinary = NULL;
 
     if (!linkAttributes(infoLog, attributeBindings, fragmentShader, vertexShader))
     {
@@ -1971,8 +1864,8 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
             success = false;
         }
     }
-    delete constantTableVS;
-    delete constantTablePS;
+    delete vertexExecutable;
+    delete pixelExecutable;
 
     // these uniforms are searched as already-decorated because gl_ and dx_
     // are reserved prefixes, and do not receive additional decoration
