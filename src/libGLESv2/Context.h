@@ -545,13 +545,8 @@ class Context
     unsigned int mAppliedTextureSerialPS[MAX_TEXTURE_IMAGE_UNITS];
     unsigned int mAppliedTextureSerialVS[MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF];
     unsigned int mAppliedProgramBinarySerial;
-    unsigned int mAppliedRenderTargetSerial;
-    unsigned int mAppliedDepthbufferSerial;
-    unsigned int mAppliedStencilbufferSerial;
     unsigned int mAppliedIBSerial;
-    bool mDepthStencilInitialized;
-    bool mRenderTargetDescInitialized;
-    rx::RenderTarget::Desc mRenderTargetDesc;
+    rx::RenderTarget::Desc mRenderTargetDesc; // D3D9_REPLACE
     bool mDxUniformsDirty;
     BindingPointer<ProgramBinary> mCurrentProgramBinary;
     Framebuffer *mBoundDrawFramebuffer;

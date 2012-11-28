@@ -347,12 +347,7 @@ void Context::markAllStateDirty()
     }
 
     mAppliedProgramBinarySerial = 0;
-    mAppliedRenderTargetSerial = 0;
-    mAppliedDepthbufferSerial = 0;
-    mAppliedStencilbufferSerial = 0;
     mAppliedIBSerial = 0;
-    mDepthStencilInitialized = false;
-    mRenderTargetDescInitialized = false;
 
     mVertexDeclarationCache.markStateDirty();
 
@@ -1752,9 +1747,10 @@ bool Context::applyRenderTarget(bool ignoreViewport)
 
     mRenderer->applyRenderTarget(framebufferObject);
 
-    // if there is no color attachment we must synthesize a NULL colorattachment
-    // to keep the D3D runtime happy.  This should only be possible if depth texturing.
-    Renderbuffer *renderbufferObject = NULL;
+    // storing the mRenderTargetDesc in Context will be removed once refactoring
+    // of clear is complete
+    // D3D9_REPLACE start
+    gl::Renderbuffer *renderbufferObject = NULL;
     if (framebufferObject->getColorbufferType() != GL_NONE)
     {
         renderbufferObject = framebufferObject->getColorbuffer();
@@ -1769,61 +1765,10 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         return false;
     }
 
-    bool renderTargetChanged = false;
-    unsigned int renderTargetSerial = renderbufferObject->getSerial();
-    if (renderTargetSerial != mAppliedRenderTargetSerial)
-    {
-        if (!mRenderer->setRenderTarget(renderbufferObject))
-        {
-            return false;   // Context must be lost
-        }
-        mAppliedRenderTargetSerial = renderTargetSerial;
-        renderTargetChanged = true;
-    }
-
-    Renderbuffer *depthStencil = NULL;
-    unsigned int depthbufferSerial = 0;
-    unsigned int stencilbufferSerial = 0;
-    if (framebufferObject->getDepthbufferType() != GL_NONE)
-    {
-        depthStencil = framebufferObject->getDepthbuffer();
-        if (!depthStencil)
-        {
-            ERR("Depth stencil pointer unexpectedly null.");
-            return false;
-        }
-        
-        depthbufferSerial = depthStencil->getSerial();
-    }
-    else if (framebufferObject->getStencilbufferType() != GL_NONE)
-    {
-        depthStencil = framebufferObject->getStencilbuffer();
-        if (!depthStencil)
-        {
-            ERR("Depth stencil pointer unexpectedly null.");
-            return false;
-        }
-        
-        stencilbufferSerial = depthStencil->getSerial();
-    }
-
-    if (depthbufferSerial != mAppliedDepthbufferSerial ||
-        stencilbufferSerial != mAppliedStencilbufferSerial ||
-        !mDepthStencilInitialized)
-    {
-        mRenderer->setDepthStencil(depthStencil);
-        mAppliedDepthbufferSerial = depthbufferSerial;
-        mAppliedStencilbufferSerial = stencilbufferSerial;
-        mDepthStencilInitialized = true;
-    }
-
-    if (!mRenderTargetDescInitialized || renderTargetChanged)
-    {
-        mRenderTargetDesc.width = renderbufferObject->getWidth();
-        mRenderTargetDesc.height = renderbufferObject->getHeight();
-        mRenderTargetDesc.format = renderbufferObject->getActualFormat();
-        mRenderTargetDescInitialized = true;
-    }
+    mRenderTargetDesc.width = renderbufferObject->getWidth();
+    mRenderTargetDesc.height = renderbufferObject->getHeight();
+    mRenderTargetDesc.format = renderbufferObject->getActualFormat();
+    // D3D9_REPLACE end
 
     Rectangle viewport = mState.viewport;
     float zNear = clamp01(mState.zNear);
