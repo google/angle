@@ -31,6 +31,8 @@ Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(
     mD3d11Module = NULL;
     mDxgiModule = NULL;
 
+    mDeviceLost = false;
+
     mDevice = NULL;
     mDeviceContext = NULL;
     mDxgiAdapter = NULL;
@@ -224,6 +226,16 @@ void Renderer11::sync(bool block)
     UNIMPLEMENTED();
 }
 
+SwapChain *Renderer11::createSwapChain(HWND window, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat)
+{
+    // TODO
+    UNIMPLEMENTED();
+
+    //return new rx::SwapChain(this, window, shareHandle, backBufferFormat, depthBufferFormat);
+
+    return NULL;
+}
+
 void Renderer11::setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &samplerState)
 {
     // TODO
@@ -298,7 +310,7 @@ bool Renderer11::testDeviceLost(bool notify)
     bool isLost = false;
 
     // TODO
-    UNIMPLEMENTED();
+    //UNIMPLEMENTED();
 
     if (isLost)
     {
@@ -484,7 +496,7 @@ bool Renderer11::getInstancingSupport() const
 bool Renderer11::getShareHandleSupport() const
 {
     // TODO
-    UNIMPLEMENTED();
+    //UNIMPLEMENTED();
 
     // PIX doesn't seem to support using share handles, so disable them.
     return false && !gl::perfActive();

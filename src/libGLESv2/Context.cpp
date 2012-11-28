@@ -4076,16 +4076,4 @@ gl::Context *glGetCurrentContext()
     return gl::getContext();
 }
 
-rx::SwapChain *glCreateSwapChain(rx::Renderer9 *renderer, HWND window, HANDLE shareHandle,
-                                       GLenum backBufferFormat, GLenum depthBufferFormat)
-{
-    return new rx::SwapChain(renderer, window, shareHandle, backBufferFormat, depthBufferFormat);
-}
-
-void glDestroySwapChain(rx::SwapChain *swapChain)
-{
-    delete swapChain;
-}
-
-
 }

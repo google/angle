@@ -502,6 +502,11 @@ void Renderer9::sync(bool block)
     }
 }
 
+SwapChain *Renderer9::createSwapChain(HWND window, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat)
+{
+    return new rx::SwapChain(this, window, shareHandle, backBufferFormat, depthBufferFormat);
+}
+
 // D3D9_REPLACE
 IDirect3DQuery9* Renderer9::allocateEventQuery()
 {

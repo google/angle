@@ -22,7 +22,7 @@ class Texture2D;
 }
 namespace rx
 {
-class Renderer9;
+class Renderer;
 class SwapChain;
 }
 
@@ -68,7 +68,7 @@ private:
     DISALLOW_COPY_AND_ASSIGN(Surface);
 
     Display *const mDisplay;
-    rx::Renderer9 *mRenderer;   // D3D9_REPLACE
+    rx::Renderer *mRenderer;
 
     HANDLE mShareHandle;
     rx::SwapChain *mSwapChain;

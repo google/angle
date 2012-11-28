@@ -28,7 +28,7 @@ namespace egl
 Surface::Surface(Display *display, const Config *config, HWND window, EGLint postSubBufferSupported) 
     : mDisplay(display), mConfig(config), mWindow(window), mPostSubBufferSupported(postSubBufferSupported)
 {
-    mRenderer = mDisplay->getRenderer9();
+    mRenderer = mDisplay->getRenderer();
     mSwapChain = NULL;
     mShareHandle = NULL;
     mTexture = NULL;
@@ -97,7 +97,7 @@ bool Surface::initialize()
 
 void Surface::release()
 {
-    glDestroySwapChain(mSwapChain);
+    delete mSwapChain;
     mSwapChain = NULL;
 
     if (mTexture)
@@ -135,8 +135,9 @@ bool Surface::resetSwapChain()
         height = mHeight;
     }
 
-    mSwapChain = glCreateSwapChain(mRenderer, mWindow, mShareHandle,
-                                   mConfig->mRenderTargetFormat, mConfig->mDepthStencilFormat);
+    mSwapChain = mRenderer->createSwapChain(mWindow, mShareHandle,
+                                            mConfig->mRenderTargetFormat,
+                                            mConfig->mDepthStencilFormat);
     if (!mSwapChain)
     {
         return error(EGL_BAD_ALLOC, false);
@@ -144,7 +145,7 @@ bool Surface::resetSwapChain()
 
     if (!resetSwapChain(width, height))
     {
-        glDestroySwapChain(mSwapChain);
+        delete mSwapChain;
         mSwapChain = NULL;
         return false;
     }
