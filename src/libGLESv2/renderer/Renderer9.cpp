@@ -65,6 +65,8 @@ Renderer9::Renderer9(egl::Display *display, HDC hDc, bool softwareDevice) : Rend
 {
     mD3d9Module = NULL;
 
+    mD3dCompilerModule = NULL;
+
     mD3d9 = NULL;
     mD3d9Ex = NULL;
     mDevice = NULL;
@@ -132,6 +134,12 @@ Renderer9::~Renderer9()
         mD3d9Module = NULL;
     }
 
+    if (mD3dCompilerModule)
+    {
+        FreeLibrary(mD3dCompilerModule);
+        mD3dCompilerModule = NULL;
+    }
+
     while (!mMultiSampleSupport.empty())
     {
         delete [] mMultiSampleSupport.begin()->second;
@@ -178,6 +186,32 @@ EGLint Renderer9::initialize()
         ERR("Could not create D3D9 device - aborting!\n");
         return EGL_NOT_INITIALIZED;
     }
+
+#if defined(ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES)
+    // Find a D3DCompiler module that had already been loaded based on a predefined list of versions.
+    static TCHAR* d3dCompilerNames[] = ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES;
+
+    for (int i = 0; i < sizeof(d3dCompilerNames) / sizeof(*d3dCompilerNames); ++i)
+    {
+        if (GetModuleHandleEx(0, d3dCompilerNames[i], &mD3dCompilerModule))
+        {
+            break;
+        }
+    }
+#else
+    // Load the version of the D3DCompiler DLL associated with the Direct3D version ANGLE was built with.
+    mD3dCompilerModule = LoadLibrary(D3DCOMPILER_DLL);
+#endif  // ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES
+
+    if (!mD3dCompilerModule)
+    {
+        terminate();
+        return false;
+    }
+
+    mD3DCompileFunc = reinterpret_cast<D3DCompileFunc>(GetProcAddress(mD3dCompilerModule, "D3DCompile"));
+    ASSERT(mD3DCompileFunc);
+
     if (mDc != NULL)
     {
     //  UNIMPLEMENTED();   // FIXME: Determine which adapter index the device context corresponds to
@@ -538,6 +572,12 @@ void Renderer9::freeEventQuery(IDirect3DQuery9* query)
     {
         mEventQueryPool.push_back(query);
     }
+}
+
+
+HRESULT Renderer9::compileShaderSource(const char* hlsl, const char* sourceName, const char* profile, DWORD flags, ID3DBlob** binary, ID3DBlob** errorMessage)
+{
+    return mD3DCompileFunc(hlsl, strlen(hlsl), sourceName, NULL, NULL, "main", profile, flags, 0, binary, errorMessage);
 }
 
 IDirect3DVertexShader9 *Renderer9::createVertexShader(const DWORD *function, size_t length)

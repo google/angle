@@ -1088,7 +1088,7 @@ ID3D10Blob *ProgramBinary::compileToBinary(InfoLog &infoLog, const char *hlsl, c
     {
         ID3D10Blob *errorMessage = NULL;
         ID3D10Blob *binary = NULL;
-        result = D3DCompile(hlsl, strlen(hlsl), g_fakepath, NULL, NULL, "main", profile, flags | extraFlags[i], 0, &binary, &errorMessage);
+        result = mRenderer->compileShaderSource(hlsl, g_fakepath, profile, flags | extraFlags[i], &binary, &errorMessage);
 
         if (errorMessage)
         {

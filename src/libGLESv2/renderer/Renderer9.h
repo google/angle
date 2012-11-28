@@ -20,6 +20,7 @@
 #include <EGL/egl.h>
 
 #include <d3d9.h>
+#include <D3Dcompiler.h>
 
 #include "common/angleutils.h"
 #include "libGLESv2/renderer/ShaderCache.h"
@@ -53,6 +54,7 @@ class Renderer9 : public Renderer
     // resource creation
     IDirect3DVertexShader9 *createVertexShader(const DWORD *function, size_t length);
     IDirect3DPixelShader9 *createPixelShader(const DWORD *function, size_t length);
+    HRESULT compileShaderSource(const char* hlsl, const char* sourceName, const char* profile, DWORD flags, ID3DBlob** binary, ID3DBlob** errorMessage);
     HRESULT createVertexBuffer(UINT Length, DWORD Usage, IDirect3DVertexBuffer9 **ppVertexBuffer);
     HRESULT createIndexBuffer(UINT Length, DWORD Usage, D3DFORMAT Format, IDirect3DIndexBuffer9 **ppIndexBuffer);
 #if 0
@@ -158,6 +160,21 @@ class Renderer9 : public Renderer
 
     HMODULE mD3d9Module;
     HDC mDc;
+
+    typedef HRESULT (WINAPI *D3DCompileFunc)(LPCVOID pSrcData,
+                                             SIZE_T SrcDataSize,
+                                             LPCSTR pSourceName,
+                                             CONST D3D_SHADER_MACRO* pDefines,
+                                             ID3DInclude* pInclude,
+                                             LPCSTR pEntrypoint,
+                                             LPCSTR pTarget,
+                                             UINT Flags1,
+                                             UINT Flags2,
+                                             ID3DBlob** ppCode,
+                                             ID3DBlob** ppErrorMsgs);
+
+    HMODULE mD3dCompilerModule;
+    D3DCompileFunc mD3DCompileFunc;
 
     void initializeDevice();
     D3DPRESENT_PARAMETERS getDefaultPresentParameters();
