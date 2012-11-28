@@ -278,6 +278,8 @@
             'libGLESv2/renderer/ShaderExecutable.h',
             'libGLESv2/renderer/ShaderExecutable9.cpp',
             'libGLESv2/renderer/ShaderExecutable9.h',
+            'libGLESv2/renderer/ShaderExecutable11.cpp',
+            'libGLESv2/renderer/ShaderExecutable11.h',
             'libGLESv2/renderer/SwapChain.h',
             'libGLESv2/renderer/SwapChain9.cpp',
             'libGLESv2/renderer/SwapChain9.h',
