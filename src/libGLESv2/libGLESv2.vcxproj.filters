@@ -131,6 +131,9 @@
     <ClCompile Include="renderer\VertexDeclarationCache.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\ShaderExecutable9.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinaryStream.h">
@@ -266,6 +269,12 @@
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="renderer\VertexDeclarationCache.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\ShaderExecutable.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\ShaderExecutable9.h">
       <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
