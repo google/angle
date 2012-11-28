@@ -69,8 +69,6 @@ ProgramBinary::ProgramBinary(rx::Renderer *renderer) : RefCountObject(0), mSeria
 
     mPixelExecutable = NULL;
     mVertexExecutable = NULL;
-    mConstantTablePS = NULL;
-    mConstantTableVS = NULL;
 
     mValidated = false;
 
@@ -111,9 +109,6 @@ ProgramBinary::~ProgramBinary()
     {
         mVertexExecutable->Release();
     }
-
-    delete mConstantTablePS;
-    delete mConstantTableVS;
 
     while (!mUniforms.empty())
     {
@@ -1933,56 +1928,65 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
     const char *vertexProfile = mRenderer->getMajorShaderModel() >= 3 ? "vs_3_0" : "vs_2_0";
     const char *pixelProfile = mRenderer->getMajorShaderModel() >= 3 ? "ps_3_0" : "ps_2_0";
 
-    ID3D10Blob *vertexBinary = compileToBinary(infoLog, vertexHLSL.c_str(), vertexProfile, &mConstantTableVS);
-    ID3D10Blob *pixelBinary = compileToBinary(infoLog, pixelHLSL.c_str(), pixelProfile, &mConstantTablePS);
+    bool success = true;
+    D3DConstantTable *constantTableVS = NULL;
+    D3DConstantTable *constantTablePS = NULL;
+    ID3D10Blob *vertexBinary = compileToBinary(infoLog, vertexHLSL.c_str(), vertexProfile, &constantTableVS);
+    ID3D10Blob *pixelBinary = compileToBinary(infoLog, pixelHLSL.c_str(), pixelProfile, &constantTablePS);
 
     if (vertexBinary && pixelBinary)
     {
         mVertexExecutable = mRenderer->createVertexShader((DWORD*)vertexBinary->GetBufferPointer(), vertexBinary->GetBufferSize());
-        if (!mVertexExecutable)
-        {
-            return error(GL_OUT_OF_MEMORY, false);
-        }
-
         mPixelExecutable = mRenderer->createPixelShader((DWORD*)pixelBinary->GetBufferPointer(), pixelBinary->GetBufferSize());
-        if (!mPixelExecutable)
+
+        if (!mPixelExecutable || !mVertexExecutable)
         {
-            mVertexExecutable->Release();
+            if (mVertexExecutable) mVertexExecutable->Release();
             mVertexExecutable = NULL;
-            return error(GL_OUT_OF_MEMORY, false);
+            if (mPixelExecutable) mPixelExecutable->Release();
+            mPixelExecutable = NULL;
+            infoLog.append("Failed to create D3D shaders.");
+            success = false;
         }
-
-        vertexBinary->Release();
-        pixelBinary->Release();
-        vertexBinary = NULL;
-        pixelBinary = NULL;
-
-        if (!linkAttributes(infoLog, attributeBindings, fragmentShader, vertexShader))
-        {
-            return false;
-        }
-
-        if (!linkUniforms(infoLog, mConstantTableVS, mConstantTablePS))
-        {
-            return false;
-        }
-
-        // these uniforms are searched as already-decorated because gl_ and dx_
-        // are reserved prefixes, and do not receive additional decoration
-        mDxDepthRangeLocation = getUniformLocation("dx_DepthRange");
-        mDxDepthLocation = getUniformLocation("dx_Depth");
-        mDxCoordLocation = getUniformLocation("dx_Coord");
-        mDxHalfPixelSizeLocation = getUniformLocation("dx_HalfPixelSize");
-        mDxFrontCCWLocation = getUniformLocation("dx_FrontCCW");
-        mDxPointsOrLinesLocation = getUniformLocation("dx_PointsOrLines");
-
-        Context *context = getContext();
-        context->markDxUniformsDirty();
-
-        return true;
+    }
+    else
+    {
+        success = false;
     }
 
-    return false;
+    if (vertexBinary) vertexBinary->Release();
+    if (pixelBinary) pixelBinary->Release();
+    vertexBinary = NULL;
+    pixelBinary = NULL;
+
+    if (!linkAttributes(infoLog, attributeBindings, fragmentShader, vertexShader))
+    {
+        success = false;
+    }
+
+    if (constantTableVS && constantTablePS)
+    {
+        if (!linkUniforms(infoLog, constantTableVS, constantTablePS))
+        {
+            success = false;
+        }
+    }
+    delete constantTableVS;
+    delete constantTablePS;
+
+    // these uniforms are searched as already-decorated because gl_ and dx_
+    // are reserved prefixes, and do not receive additional decoration
+    mDxDepthRangeLocation = getUniformLocation("dx_DepthRange");
+    mDxDepthLocation = getUniformLocation("dx_Depth");
+    mDxCoordLocation = getUniformLocation("dx_Coord");
+    mDxHalfPixelSizeLocation = getUniformLocation("dx_HalfPixelSize");
+    mDxFrontCCWLocation = getUniformLocation("dx_FrontCCW");
+    mDxPointsOrLinesLocation = getUniformLocation("dx_PointsOrLines");
+
+    Context *context = getContext();
+    context->markDxUniformsDirty();
+
+    return success;
 }
 
 // Determines the mapping between GL attributes and Direct3D 9 vertex stream usage indices

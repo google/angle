@@ -192,10 +192,6 @@ class ProgramBinary : public RefCountObject
     IDirect3DPixelShader9 *mPixelExecutable; // D3D9_REPLACE
     IDirect3DVertexShader9 *mVertexExecutable; // D3D9_REPLACE
 
-    // These are only used during linking.
-    D3DConstantTable *mConstantTablePS;
-    D3DConstantTable *mConstantTableVS;
-
     Attribute mLinkedAttribute[MAX_VERTEX_ATTRIBS];
     int mSemanticIndex[MAX_VERTEX_ATTRIBS];
 
