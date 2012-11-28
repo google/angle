@@ -21,6 +21,8 @@ D3D11_BLEND ConvertBlendFunc(GLenum glBlend);
 D3D11_BLEND_OP ConvertBlendOp(GLenum glBlendOp);
 UINT8 ConvertColorMask(bool maskRed, bool maskGreen, bool maskBlue, bool maskAlpha);
 
+D3D11_CULL_MODE ConvertCullMode(bool cullEnabled, GLenum cullMode);
+
 }
 
 namespace d3d11_gl

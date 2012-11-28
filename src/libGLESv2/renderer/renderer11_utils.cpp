@@ -78,6 +78,28 @@ UINT8 ConvertColorMask(bool red, bool green, bool blue, bool alpha)
     return mask;
 }
 
+D3D11_CULL_MODE ConvertCullMode(bool cullEnabled, GLenum cullMode)
+{
+    D3D11_CULL_MODE cull = D3D11_CULL_NONE;
+
+    if (cullEnabled)
+    {
+        switch (cullMode)
+        {
+          case GL_FRONT:            cull = D3D11_CULL_FRONT;    break;
+          case GL_BACK:             cull = D3D11_CULL_BACK;     break;
+          case GL_FRONT_AND_BACK:   cull = D3D11_CULL_NONE;     break;
+          default: UNREACHABLE();
+        }
+    }
+    else
+    {
+        cull = D3D11_CULL_NONE;
+    }
+
+    return cull;
+}
+
 }
 
 namespace d3d11_gl
