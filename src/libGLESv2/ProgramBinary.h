@@ -104,8 +104,8 @@ class ProgramBinary : public RefCountObject
     explicit ProgramBinary(rx::Renderer *renderer);
     ~ProgramBinary();
 
-    IDirect3DPixelShader9 *getPixelShader();
-    IDirect3DVertexShader9 *getVertexShader();
+    rx::ShaderExecutable *getPixelExecutable();
+    rx::ShaderExecutable *getVertexExecutable();
 
     GLuint getAttributeLocation(const char *name);
     int getSemanticIndex(int attributeIndex);
@@ -189,8 +189,8 @@ class ProgramBinary : public RefCountObject
     rx::Renderer9 *mRenderer;   // D3D9_REPLACE
     IDirect3DDevice9 *mDevice; // D3D9_REPLACE
 
-    IDirect3DPixelShader9 *mPixelExecutable; // D3D9_REPLACE
-    IDirect3DVertexShader9 *mVertexExecutable; // D3D9_REPLACE
+    rx::ShaderExecutable9 *mPixelExecutable; // D3D9_REPLACE
+    rx::ShaderExecutable9 *mVertexExecutable; // D3D9_REPLACE
 
     Attribute mLinkedAttribute[MAX_VERTEX_ATTRIBS];
     int mSemanticIndex[MAX_VERTEX_ATTRIBS];

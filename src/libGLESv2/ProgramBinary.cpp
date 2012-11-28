@@ -96,15 +96,8 @@ ProgramBinary::ProgramBinary(rx::Renderer *renderer) : RefCountObject(0), mSeria
 
 ProgramBinary::~ProgramBinary()
 {
-    if (mPixelExecutable)
-    {
-        mPixelExecutable->Release();
-    }
-
-    if (mVertexExecutable)
-    {
-        mVertexExecutable->Release();
-    }
+    delete mPixelExecutable;
+    delete mVertexExecutable;
 
     while (!mUniforms.empty())
     {
@@ -123,12 +116,12 @@ unsigned int ProgramBinary::issueSerial()
     return mCurrentSerial++;
 }
 
-IDirect3DPixelShader9 *ProgramBinary::getPixelShader()
+rx::ShaderExecutable *ProgramBinary::getPixelExecutable()
 {
     return mPixelExecutable;
 }
 
-IDirect3DVertexShader9 *ProgramBinary::getVertexShader()
+rx::ShaderExecutable *ProgramBinary::getVertexExecutable()
 {
     return mVertexExecutable;
 }
@@ -1650,21 +1643,26 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
     const char *vertexShaderFunction = ptr;
     ptr += vertexShaderSize;
 
-    mPixelExecutable = mRenderer->createPixelShader(reinterpret_cast<const DWORD*>(pixelShaderFunction), pixelShaderSize);
-    if (!mPixelExecutable)
+    rx::ShaderExecutable *executable;
+    executable = mRenderer->loadExecutable(reinterpret_cast<const DWORD*>(pixelShaderFunction),
+                                           pixelShaderSize, GL_FRAGMENT_SHADER, NULL);
+    if (!executable)
     {
         infoLog.append("Could not create pixel shader.");
         return false;
     }
+    mPixelExecutable = rx::ShaderExecutable9::makeShaderExecutable9(executable);
 
-    mVertexExecutable = mRenderer->createVertexShader(reinterpret_cast<const DWORD*>(vertexShaderFunction), vertexShaderSize);
-    if (!mVertexExecutable)
+    executable = mRenderer->loadExecutable(reinterpret_cast<const DWORD*>(vertexShaderFunction),
+                                           vertexShaderSize, GL_VERTEX_SHADER, NULL);
+    if (!executable)
     {
         infoLog.append("Could not create vertex shader.");
-        mPixelExecutable->Release();
+        delete mPixelExecutable;
         mPixelExecutable = NULL;
         return false;
     }
+    mVertexExecutable = rx::ShaderExecutable9::makeShaderExecutable9(executable);
 
     return true;
 }
@@ -1734,12 +1732,12 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
     stream.write(mDxPointsOrLinesLocation);
 
     UINT pixelShaderSize;
-    HRESULT result = mPixelExecutable->GetFunction(NULL, &pixelShaderSize);
+    HRESULT result = mPixelExecutable->getPixelShader()->GetFunction(NULL, &pixelShaderSize);
     ASSERT(SUCCEEDED(result));
     stream.write(pixelShaderSize);
 
     UINT vertexShaderSize;
-    result = mVertexExecutable->GetFunction(NULL, &vertexShaderSize);
+    result = mVertexExecutable->getVertexShader()->GetFunction(NULL, &vertexShaderSize);
     ASSERT(SUCCEEDED(result));
     stream.write(vertexShaderSize);
 
@@ -1769,11 +1767,11 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
         memcpy(ptr, &identifier, sizeof(GUID));
         ptr += sizeof(GUID);
 
-        result = mPixelExecutable->GetFunction(ptr, &pixelShaderSize);
+        result = mPixelExecutable->getPixelShader()->GetFunction(ptr, &pixelShaderSize);
         ASSERT(SUCCEEDED(result));
         ptr += pixelShaderSize;
 
-        result = mVertexExecutable->GetFunction(ptr, &vertexShaderSize);
+        result = mVertexExecutable->getVertexShader()->GetFunction(ptr, &vertexShaderSize);
         ASSERT(SUCCEEDED(result));
         ptr += vertexShaderSize;
 
@@ -1829,27 +1827,21 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
 
     if (vertexExecutable && pixelExecutable)
     {
-        rx::ShaderExecutable9 *vshader9 = rx::ShaderExecutable9::makeShaderExecutable9(vertexExecutable);
-        rx::ShaderExecutable9 *pshader9 = rx::ShaderExecutable9::makeShaderExecutable9(pixelExecutable);
-        mVertexExecutable = vshader9->getVertexShader();
-        mPixelExecutable = pshader9->getPixelShader();
+        mVertexExecutable = rx::ShaderExecutable9::makeShaderExecutable9(vertexExecutable);
+        mPixelExecutable = rx::ShaderExecutable9::makeShaderExecutable9(pixelExecutable);
 
-        if (!mPixelExecutable || !mVertexExecutable)
-        {
-            if (mVertexExecutable) mVertexExecutable->Release();
-            mVertexExecutable = NULL;
-            if (mPixelExecutable) mPixelExecutable->Release();
-            mPixelExecutable = NULL;
-            infoLog.append("Failed to create D3D shaders.");
-            success = false;
-        }
-
-        constantTableVS = vshader9->getConstantTable();
-        constantTablePS = pshader9->getConstantTable();
+        constantTableVS = mVertexExecutable->getConstantTable();
+        constantTablePS = mPixelExecutable->getConstantTable();
     }
     else
     {
+        infoLog.append("Failed to create D3D shaders.");
         success = false;
+
+        delete vertexExecutable;
+        vertexExecutable = NULL;
+        delete pixelExecutable;
+        pixelExecutable = NULL;
     }
 
     if (!linkAttributes(infoLog, attributeBindings, fragmentShader, vertexShader))
@@ -1864,8 +1856,6 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
             success = false;
         }
     }
-    delete vertexExecutable;
-    delete pixelExecutable;
 
     // these uniforms are searched as already-decorated because gl_ and dx_
     // are reserved prefixes, and do not receive additional decoration

@@ -50,23 +50,11 @@ ShaderExecutable9 *ShaderExecutable9::makeShaderExecutable9(ShaderExecutable *ex
 
 IDirect3DVertexShader9 *ShaderExecutable9::getVertexShader()
 {
-    // Caller is responsible for releasing the returned shader reference.
-    if (mVertexExecutable)
-    {
-        mVertexExecutable->AddRef();
-    }
-
     return mVertexExecutable;
 }
 
 IDirect3DPixelShader9 *ShaderExecutable9::getPixelShader()
 {
-    // Caller is responsible for releasing the returned shader reference.
-    if (mPixelExecutable)
-    {
-        mPixelExecutable->AddRef();
-    }
-
     return mPixelExecutable;
 }
 

@@ -1377,8 +1377,14 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
 
 void Renderer9::applyShaders(gl::ProgramBinary *programBinary)
 {
-    IDirect3DVertexShader9 *vertexShader = programBinary->getVertexShader();
-    IDirect3DPixelShader9 *pixelShader = programBinary->getPixelShader();
+    ShaderExecutable *vertexExe = programBinary->getVertexExecutable();
+    ShaderExecutable *pixelExe = programBinary->getPixelExecutable();
+
+    IDirect3DVertexShader9 *vertexShader = NULL;
+    if (vertexExe) vertexShader = ShaderExecutable9::makeShaderExecutable9(vertexExe)->getVertexShader();
+
+    IDirect3DPixelShader9 *pixelShader = NULL;
+    if (pixelExe) pixelShader = ShaderExecutable9::makeShaderExecutable9(pixelExe)->getPixelShader();
 
     mDevice->SetPixelShader(pixelShader);
     mDevice->SetVertexShader(vertexShader);
