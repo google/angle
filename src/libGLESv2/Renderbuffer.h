@@ -20,6 +20,7 @@
 #include "common/RefCountObject.h"
 
 #include "renderer/SwapChain.h"
+#include "renderer/RenderTarget.h"
 
 namespace rx
 {
@@ -151,7 +152,6 @@ class RenderbufferStorage : public RenderbufferInterface
     GLsizei mHeight;
     GLenum mInternalFormat;
     GLenum mActualFormat;
-    D3DFORMAT mD3DFormat;
     GLsizei mSamples;
 
   private:
@@ -217,7 +217,7 @@ class Colorbuffer : public RenderbufferStorage
   private:
     DISALLOW_COPY_AND_ASSIGN(Colorbuffer);
 
-    IDirect3DSurface9 *mRenderTarget;
+    rx::RenderTarget *mRenderTarget;
 };
 
 class DepthStencilbuffer : public RenderbufferStorage
@@ -231,7 +231,7 @@ class DepthStencilbuffer : public RenderbufferStorage
     virtual IDirect3DSurface9 *getDepthStencil();
 
   protected:
-    IDirect3DSurface9 *mDepthStencil;
+    rx::RenderTarget  *mDepthStencil;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(DepthStencilbuffer);
