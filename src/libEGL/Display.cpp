@@ -72,7 +72,7 @@ Display::~Display()
 
     if (thisDisplay != displays.end())
     {
-      displays.erase(thisDisplay);
+        displays.erase(thisDisplay);
     }
 }
 
@@ -84,13 +84,11 @@ bool Display::initialize()
     }
 
     mRenderer = glCreateRenderer(this, mDc, mSoftwareDevice);
-    EGLint status = EGL_BAD_ALLOC;
-    if (mRenderer)
-        status = mRenderer->initialize();
-    if (status != EGL_SUCCESS)
+    
+    if (!mRenderer)
     {
         terminate();
-        return error(status, false);
+        return error(EGL_NOT_INITIALIZED, false);
     }
 
     EGLint minSwapInterval = mRenderer->getMinSwapInterval();

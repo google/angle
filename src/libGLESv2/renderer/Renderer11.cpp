@@ -43,31 +43,55 @@ Renderer11::~Renderer11()
 
     if (mD3d11Module)
     {
+        FreeLibrary(mD3d11Module);
         mD3d11Module = NULL;
     }
 
     if (mDxgiModule)
     {
+        FreeLibrary(mDxgiModule);
         mDxgiModule = NULL;
     }
-
 }
 
 EGLint Renderer11::initialize()
 {
-
-    mDxgiModule = GetModuleHandle(TEXT("dxgi.dll"));
-    mD3d11Module = GetModuleHandle(TEXT("d3d11.dll"));
+    mDxgiModule = LoadLibrary(TEXT("dxgi.dll"));
+    mD3d11Module = LoadLibrary(TEXT("d3d11.dll"));
 
     if (mD3d11Module == NULL || mDxgiModule == NULL)
     {
-        ERR("No D3D11 or DXGI module found - aborting!\n");
+        ERR("Could not load D3D11 or DXGI library - aborting!\n");
         return EGL_NOT_INITIALIZED;
     }
 
-    // TODO: device creation, any one-time setup.
-    UNIMPLEMENTED();
+    PFN_D3D11_CREATE_DEVICE D3D11CreateDevice = (PFN_D3D11_CREATE_DEVICE)GetProcAddress(mD3d11Module, "D3D11CreateDevice");
 
+    if (D3D11CreateDevice == NULL)
+    {
+        ERR("Could not retrieve D3D11CreateDevice address - aborting!\n");
+        return EGL_NOT_INITIALIZED;
+    }
+
+    D3D_FEATURE_LEVEL featureLevel = D3D_FEATURE_LEVEL_10_0;
+
+    HRESULT result = D3D11CreateDevice(NULL,
+                                       D3D_DRIVER_TYPE_HARDWARE,
+                                       NULL,
+                                       NULL,
+                                       &featureLevel,
+                                       1,
+                                       D3D11_SDK_VERSION,
+                                       &mD3d11,
+                                       NULL,
+                                       &mDeviceContext);
+
+    if (!mD3d11 || FAILED(result))
+    {
+        ERR("Could not create D3D11 device - aborting!\n");
+        return EGL_NOT_INITIALIZED;   // Cleanup done by destructor through glDestroyRenderer
+    }
+    
     initializeDevice();
 
     return EGL_SUCCESS;
@@ -80,7 +104,7 @@ void Renderer11::initializeDevice()
 {
     // Permanent non-default states
     // TODO
-    UNIMPLEMENTED();
+    // UNIMPLEMENTED();
 }
 
 
@@ -128,7 +152,7 @@ void Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *textur
 void Renderer11::releaseDeviceResources()
 {
     // TODO
-    UNIMPLEMENTED();
+    // UNIMPLEMENTED();
 }
 
 void Renderer11::markDeviceLost()
