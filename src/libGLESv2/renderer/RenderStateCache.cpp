@@ -130,12 +130,12 @@ ID3D11BlendState *RenderStateCache::getBlendState(const gl::BlendState &blendSta
                 rtBlend.SrcBlendAlpha = gl_d3d11::ConvertBlendFunc(blendState.sourceBlendAlpha);
                 rtBlend.DestBlendAlpha = gl_d3d11::ConvertBlendFunc(blendState.destBlendAlpha);
                 rtBlend.BlendOpAlpha = gl_d3d11::ConvertBlendOp(blendState.blendEquationAlpha);
-
-                rtBlend.RenderTargetWriteMask = gl_d3d11::ConvertColorMask(blendState.colorMaskRed,
-                                                                           blendState.colorMaskGreen,
-                                                                           blendState.colorMaskBlue,
-                                                                           blendState.colorMaskAlpha);
             }
+
+            rtBlend.RenderTargetWriteMask = gl_d3d11::ConvertColorMask(blendState.colorMaskRed,
+                                                                       blendState.colorMaskGreen,
+                                                                       blendState.colorMaskBlue,
+                                                                       blendState.colorMaskAlpha);
         }
 
         ID3D11BlendState* dx11BlendState = NULL;
