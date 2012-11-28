@@ -28,7 +28,7 @@
 
 namespace rx
 {
-const D3DFORMAT Renderer9::mRenderTargetFormats[] =
+static const D3DFORMAT RenderTargetFormats[] =
     {
         D3DFMT_A1R5G5B5,
     //  D3DFMT_A2R10G10B10,   // The color_ramp conformance test uses ReadPixels with UNSIGNED_BYTE causing it to think that rendering skipped a colour value.
@@ -38,7 +38,7 @@ const D3DFORMAT Renderer9::mRenderTargetFormats[] =
         D3DFMT_X8R8G8B8
     };
 
-const D3DFORMAT Renderer9::mDepthStencilFormats[] =
+static const D3DFORMAT DepthStencilFormats[] =
     {
         D3DFMT_UNKNOWN,
     //  D3DFMT_D16_LOCKABLE,
@@ -247,11 +247,11 @@ EGLint Renderer9::initialize()
     }
 
     int max = 0;
-    for (int i = 0; i < sizeof(mRenderTargetFormats) / sizeof(D3DFORMAT); ++i)
+    for (int i = 0; i < sizeof(RenderTargetFormats) / sizeof(D3DFORMAT); ++i)
     {
         bool *multisampleArray = new bool[D3DMULTISAMPLE_16_SAMPLES + 1];
-        getMultiSampleSupport(mRenderTargetFormats[i], multisampleArray);
-        mMultiSampleSupport[mRenderTargetFormats[i]] = multisampleArray;
+        getMultiSampleSupport(RenderTargetFormats[i], multisampleArray);
+        mMultiSampleSupport[RenderTargetFormats[i]] = multisampleArray;
 
         for (int j = D3DMULTISAMPLE_16_SAMPLES; j >= 0; --j)
         {
@@ -262,14 +262,14 @@ EGLint Renderer9::initialize()
         }
     }
 
-    for (int i = 0; i < sizeof(mDepthStencilFormats) / sizeof(D3DFORMAT); ++i)
+    for (int i = 0; i < sizeof(DepthStencilFormats) / sizeof(D3DFORMAT); ++i)
     {
-        if (mDepthStencilFormats[i] == D3DFMT_UNKNOWN)
+        if (DepthStencilFormats[i] == D3DFMT_UNKNOWN)
             continue;
 
         bool *multisampleArray = new bool[D3DMULTISAMPLE_16_SAMPLES + 1];
-        getMultiSampleSupport(mDepthStencilFormats[i], multisampleArray);
-        mMultiSampleSupport[mDepthStencilFormats[i]] = multisampleArray;
+        getMultiSampleSupport(DepthStencilFormats[i], multisampleArray);
+        mMultiSampleSupport[DepthStencilFormats[i]] = multisampleArray;
 
         for (int j = D3DMULTISAMPLE_16_SAMPLES; j >= 0; --j)
         {
@@ -369,14 +369,14 @@ int Renderer9::generateConfigs(ConfigDesc **configDescList)
     D3DDISPLAYMODE currentDisplayMode;
     mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
 
-    int numRenderFormats = sizeof(mRenderTargetFormats) / sizeof(mRenderTargetFormats[0]);
-    int numDepthFormats = sizeof(mDepthStencilFormats) / sizeof(mDepthStencilFormats[0]);
+    int numRenderFormats = sizeof(RenderTargetFormats) / sizeof(RenderTargetFormats[0]);
+    int numDepthFormats = sizeof(DepthStencilFormats) / sizeof(DepthStencilFormats[0]);
     (*configDescList) = new ConfigDesc[numRenderFormats * numDepthFormats];
     int numConfigs = 0;
 
     for (int formatIndex = 0; formatIndex < numRenderFormats; formatIndex++)
     {
-        D3DFORMAT renderTargetFormat = mRenderTargetFormats[formatIndex];
+        D3DFORMAT renderTargetFormat = RenderTargetFormats[formatIndex];
 
         HRESULT result = mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET, D3DRTYPE_SURFACE, renderTargetFormat);
 
@@ -384,7 +384,7 @@ int Renderer9::generateConfigs(ConfigDesc **configDescList)
         {
             for (int depthStencilIndex = 0; depthStencilIndex < numDepthFormats; depthStencilIndex++)
             {
-                D3DFORMAT depthStencilFormat = mDepthStencilFormats[depthStencilIndex];
+                D3DFORMAT depthStencilFormat = DepthStencilFormats[depthStencilIndex];
                 HRESULT result = D3D_OK;
 
                 if(depthStencilFormat != D3DFMT_UNKNOWN)

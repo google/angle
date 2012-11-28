@@ -114,12 +114,9 @@ class Renderer9 : public Renderer
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer9);
 
-    void getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray); // D3D9_REPLACE
+    void getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray);
 
     D3DPOOL getBufferPool(DWORD usage) const;
-
-    static const D3DFORMAT mRenderTargetFormats[];
-    static const D3DFORMAT mDepthStencilFormats[];
 
     HMODULE mD3d9Module;
     HDC mDc;
