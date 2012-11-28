@@ -168,6 +168,12 @@ class Renderer11 : public Renderer
     unsigned int mCurRenderTargetWidth;
     unsigned int mCurRenderTargetHeight;
 
+    // Currently applied viewport
+    bool mForceSetViewport;
+    gl::Rectangle mCurViewport;
+    float mCurNear;
+    float mCurFar;
+
     ID3D11Device *mDevice;
     D3D_FEATURE_LEVEL mFeatureLevel;
     ID3D11DeviceContext *mDeviceContext;

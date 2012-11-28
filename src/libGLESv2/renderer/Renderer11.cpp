@@ -10,6 +10,8 @@
 #include "libGLESv2/main.h"
 #include "libGLESv2/utilities.h"
 #include "libGLESv2/mathutil.h"
+#include "libGLESv2/Program.h"
+#include "libGLESv2/ProgramBinary.h"
 #include "libGLESv2/renderer/Renderer11.h"
 #include "libGLESv2/renderer/RenderTarget11.h"
 #include "libGLESv2/renderer/renderer11_utils.h"
@@ -382,8 +384,55 @@ bool Renderer11::setViewport(const gl::Rectangle& viewport, float zNear, float z
                              unsigned int renderTargetWidth, unsigned int renderTargetHeight,
                              gl::ProgramBinary *currentProgram, bool forceSetUniforms)
 {
-    // TODO
-    UNIMPLEMENTED();
+    bool viewportChanged =  mForceSetViewport || memcmp(&viewport, &mCurViewport, sizeof(gl::Rectangle)) != 0 ||
+                            zNear != mCurNear || zFar != mCurFar;
+
+    D3D11_VIEWPORT dxViewport;
+    dxViewport.TopLeftX = gl::clamp(viewport.x, 0, static_cast<int>(renderTargetWidth));
+    dxViewport.TopLeftY = gl::clamp(viewport.y, 0, static_cast<int>(renderTargetHeight));
+    dxViewport.Width = gl::clamp(viewport.width, 0, static_cast<int>(renderTargetWidth) - static_cast<int>(dxViewport.TopLeftX));
+    dxViewport.Height = gl::clamp(viewport.height, 0, static_cast<int>(renderTargetHeight) - static_cast<int>(dxViewport.TopLeftY));
+    dxViewport.MinDepth = zNear;
+    dxViewport.MaxDepth = zFar;
+
+    if (dxViewport.Width <= 0 || dxViewport.Height <= 0)
+    {
+        return false;   // Nothing to render
+    }
+
+    if (viewportChanged)
+    {
+        mDeviceContext->RSSetViewports(1, &dxViewport);
+
+        mCurViewport = viewport;
+        mCurNear = zNear;
+        mCurFar = zFar;
+    }
+
+    if (currentProgram && (viewportChanged || forceSetUniforms))
+    {
+        GLint halfPixelSize = currentProgram->getDxHalfPixelSizeLocation();
+        GLfloat xy[2] = { 0.0f, 0.0f };
+        currentProgram->setUniform2fv(halfPixelSize, 1, xy);
+
+        // These values are used for computing gl_FragCoord in Program::linkVaryings().
+        GLint coord = currentProgram->getDxCoordLocation();
+        GLfloat whxy[4] = { viewport.width  * 0.5f,
+                            viewport.height * 0.5f,
+                            viewport.x + (viewport.width  * 0.5f),
+                            viewport.y + (viewport.height * 0.5f) };
+        currentProgram->setUniform4fv(coord, 1, whxy);
+
+        GLint depth = currentProgram->getDxDepthLocation();
+        GLfloat dz[2] = { (zFar - zNear) * 0.5f, (zNear + zFar) * 0.5f };
+        currentProgram->setUniform2fv(depth, 1, dz);
+
+        GLint depthRange = currentProgram->getDxDepthRangeLocation();
+        GLfloat nearFarDiff[3] = { zNear, zFar, zFar - zNear };
+        currentProgram->setUniform3fv(depthRange, 1, nearFarDiff);
+    }
+
+    mForceSetViewport = false;
     return true;
 }
 
@@ -393,6 +442,7 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *frameBuffer)
     UNIMPLEMENTED();
 
     mForceSetScissor = true;
+    mForceSetViewport = true;
 
     return true;
 }
@@ -423,6 +473,7 @@ void Renderer11::markAllStateDirty()
     mForceSetRasterState = true;
     mForceSetDepthStencilState = true;
     mForceSetScissor = true;
+    mForceSetViewport = true;
 }
 
 void Renderer11::releaseDeviceResources()
