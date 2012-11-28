@@ -52,46 +52,55 @@ Context::Context(const gl::Context *shareContext, rx::Renderer *renderer, bool n
     mState.depthClearValue = 1.0f;
     mState.stencilClearValue = 0;
 
-    mState.cullFace = false;
-    mState.cullMode = GL_BACK;
-    mState.frontFace = GL_CCW;
-    mState.depthTest = false;
-    mState.depthFunc = GL_LESS;
-    mState.blend = false;
-    mState.sourceBlendRGB = GL_ONE;
-    mState.sourceBlendAlpha = GL_ONE;
-    mState.destBlendRGB = GL_ZERO;
-    mState.destBlendAlpha = GL_ZERO;
-    mState.blendEquationRGB = GL_FUNC_ADD;
-    mState.blendEquationAlpha = GL_FUNC_ADD;
+    mState.rasterizer.cullFace = false;
+    mState.rasterizer.cullMode = GL_BACK;
+    mState.rasterizer.frontFace = GL_CCW;
+    mState.rasterizer.polygonOffsetFill = false;
+    mState.rasterizer.polygonOffsetFactor = 0.0f;
+    mState.rasterizer.polygonOffsetUnits = 0.0f;
+    mState.rasterizer.scissorTest = false;
+    mState.scissor.x = 0;
+    mState.scissor.y = 0;
+    mState.scissor.width = 0;
+    mState.scissor.height = 0;
+
+    mState.blend.blend = false;
+    mState.blend.sourceBlendRGB = GL_ONE;
+    mState.blend.sourceBlendAlpha = GL_ONE;
+    mState.blend.destBlendRGB = GL_ZERO;
+    mState.blend.destBlendAlpha = GL_ZERO;
+    mState.blend.blendEquationRGB = GL_FUNC_ADD;
+    mState.blend.blendEquationAlpha = GL_FUNC_ADD;
+    mState.blend.sampleAlphaToCoverage = false;
+    mState.blend.dither = true;
+
     mState.blendColor.red = 0;
     mState.blendColor.green = 0;
     mState.blendColor.blue = 0;
     mState.blendColor.alpha = 0;
-    mState.stencilTest = false;
-    mState.stencilFunc = GL_ALWAYS;
-    mState.stencilRef = 0;
-    mState.stencilMask = -1;
-    mState.stencilWritemask = -1;
-    mState.stencilBackFunc = GL_ALWAYS;
-    mState.stencilBackRef = 0;
-    mState.stencilBackMask = - 1;
-    mState.stencilBackWritemask = -1;
-    mState.stencilFail = GL_KEEP;
-    mState.stencilPassDepthFail = GL_KEEP;
-    mState.stencilPassDepthPass = GL_KEEP;
-    mState.stencilBackFail = GL_KEEP;
-    mState.stencilBackPassDepthFail = GL_KEEP;
-    mState.stencilBackPassDepthPass = GL_KEEP;
-    mState.polygonOffsetFill = false;
-    mState.polygonOffsetFactor = 0.0f;
-    mState.polygonOffsetUnits = 0.0f;
-    mState.sampleAlphaToCoverage = false;
+
+    mState.depthStencil.depthTest = false;
+    mState.depthStencil.depthFunc = GL_LESS;
+    mState.depthStencil.depthMask = true;
+    mState.depthStencil.stencilTest = false;
+    mState.depthStencil.stencilFunc = GL_ALWAYS;
+    mState.depthStencil.stencilRef = 0;
+    mState.depthStencil.stencilMask = -1;
+    mState.depthStencil.stencilWritemask = -1;
+    mState.depthStencil.stencilBackFunc = GL_ALWAYS;
+    mState.depthStencil.stencilBackRef = 0;
+    mState.depthStencil.stencilBackMask = - 1;
+    mState.depthStencil.stencilBackWritemask = -1;
+    mState.depthStencil.stencilFail = GL_KEEP;
+    mState.depthStencil.stencilPassDepthFail = GL_KEEP;
+    mState.depthStencil.stencilPassDepthPass = GL_KEEP;
+    mState.depthStencil.stencilBackFail = GL_KEEP;
+    mState.depthStencil.stencilBackPassDepthFail = GL_KEEP;
+    mState.depthStencil.stencilBackPassDepthPass = GL_KEEP;
+
     mState.sampleCoverage = false;
     mState.sampleCoverageValue = 1.0f;
     mState.sampleCoverageInvert = false;
-    mState.scissorTest = false;
-    mState.dither = true;
     mState.generateMipmapHint = GL_DONT_CARE;
     mState.fragmentShaderDerivativeHint = GL_DONT_CARE;
 
@@ -104,16 +113,10 @@ Context::Context(const gl::Context *shareContext, rx::Renderer *renderer, bool n
     mState.zNear = 0.0f;
     mState.zFar = 1.0f;
 
-    mState.scissorX = 0;
-    mState.scissorY = 0;
-    mState.scissorWidth = 0;
-    mState.scissorHeight = 0;
-
-    mState.colorMaskRed = true;
-    mState.colorMaskGreen = true;
-    mState.colorMaskBlue = true;
-    mState.colorMaskAlpha = true;
-    mState.depthMask = true;
+    mState.blend.colorMaskRed = true;
+    mState.blend.colorMaskGreen = true;
+    mState.blend.colorMaskBlue = true;
+    mState.blend.colorMaskAlpha = true;
 
     if (shareContext != NULL)
     {
@@ -306,10 +309,10 @@ void Context::makeCurrent(egl::Surface *surface)
         mState.viewportWidth = surface->getWidth();
         mState.viewportHeight = surface->getHeight();
 
-        mState.scissorX = 0;
-        mState.scissorY = 0;
-        mState.scissorWidth = surface->getWidth();
-        mState.scissorHeight = surface->getHeight();
+        mState.scissor.x = 0;
+        mState.scissor.y = 0;
+        mState.scissor.width = surface->getWidth();
+        mState.scissor.height = surface->getHeight();
 
         mHasBeenCurrent = true;
     }
@@ -406,55 +409,55 @@ void Context::setClearStencil(int stencil)
 
 void Context::setCullFace(bool enabled)
 {
-    if (mState.cullFace != enabled)
+    if (mState.rasterizer.cullFace != enabled)
     {
-        mState.cullFace = enabled;
+        mState.rasterizer.cullFace = enabled;
         mCullStateDirty = true;
     }
 }
 
 bool Context::isCullFaceEnabled() const
 {
-    return mState.cullFace;
+    return mState.rasterizer.cullFace;
 }
 
 void Context::setCullMode(GLenum mode)
 {
-    if (mState.cullMode != mode)
+    if (mState.rasterizer.cullMode != mode)
     {
-        mState.cullMode = mode;
+        mState.rasterizer.cullMode = mode;
         mCullStateDirty = true;
     }
 }
 
 void Context::setFrontFace(GLenum front)
 {
-    if (mState.frontFace != front)
+    if (mState.rasterizer.frontFace != front)
     {
-        mState.frontFace = front;
+        mState.rasterizer.frontFace = front;
         mFrontFaceDirty = true;
     }
 }
 
 void Context::setDepthTest(bool enabled)
 {
-    if (mState.depthTest != enabled)
+    if (mState.depthStencil.depthTest != enabled)
     {
-        mState.depthTest = enabled;
+        mState.depthStencil.depthTest = enabled;
         mDepthStateDirty = true;
     }
 }
 
 bool Context::isDepthTestEnabled() const
 {
-    return mState.depthTest;
+    return mState.depthStencil.depthTest;
 }
 
 void Context::setDepthFunc(GLenum depthFunc)
 {
-    if (mState.depthFunc != depthFunc)
+    if (mState.depthStencil.depthFunc != depthFunc)
     {
-        mState.depthFunc = depthFunc;
+        mState.depthStencil.depthFunc = depthFunc;
         mDepthStateDirty = true;
     }
 }
@@ -467,29 +470,29 @@ void Context::setDepthRange(float zNear, float zFar)
 
 void Context::setBlend(bool enabled)
 {
-    if (mState.blend != enabled)
+    if (mState.blend.blend != enabled)
     {
-        mState.blend = enabled;
+        mState.blend.blend = enabled;
         mBlendStateDirty = true;
     }
 }
 
 bool Context::isBlendEnabled() const
 {
-    return mState.blend;
+    return mState.blend.blend;
 }
 
 void Context::setBlendFactors(GLenum sourceRGB, GLenum destRGB, GLenum sourceAlpha, GLenum destAlpha)
 {
-    if (mState.sourceBlendRGB != sourceRGB ||
-        mState.sourceBlendAlpha != sourceAlpha ||
-        mState.destBlendRGB != destRGB ||
-        mState.destBlendAlpha != destAlpha)
+    if (mState.blend.sourceBlendRGB != sourceRGB ||
+        mState.blend.sourceBlendAlpha != sourceAlpha ||
+        mState.blend.destBlendRGB != destRGB ||
+        mState.blend.destBlendAlpha != destAlpha)
     {
-        mState.sourceBlendRGB = sourceRGB;
-        mState.destBlendRGB = destRGB;
-        mState.sourceBlendAlpha = sourceAlpha;
-        mState.destBlendAlpha = destAlpha;
+        mState.blend.sourceBlendRGB = sourceRGB;
+        mState.blend.destBlendRGB = destRGB;
+        mState.blend.sourceBlendAlpha = sourceAlpha;
+        mState.blend.destBlendAlpha = destAlpha;
         mBlendStateDirty = true;
     }
 }
@@ -511,137 +514,137 @@ void Context::setBlendColor(float red, float green, float blue, float alpha)
 
 void Context::setBlendEquation(GLenum rgbEquation, GLenum alphaEquation)
 {
-    if (mState.blendEquationRGB != rgbEquation ||
-        mState.blendEquationAlpha != alphaEquation)
+    if (mState.blend.blendEquationRGB != rgbEquation ||
+        mState.blend.blendEquationAlpha != alphaEquation)
     {
-        mState.blendEquationRGB = rgbEquation;
-        mState.blendEquationAlpha = alphaEquation;
+        mState.blend.blendEquationRGB = rgbEquation;
+        mState.blend.blendEquationAlpha = alphaEquation;
         mBlendStateDirty = true;
     }
 }
 
 void Context::setStencilTest(bool enabled)
 {
-    if (mState.stencilTest != enabled)
+    if (mState.depthStencil.stencilTest != enabled)
     {
-        mState.stencilTest = enabled;
+        mState.depthStencil.stencilTest = enabled;
         mStencilStateDirty = true;
     }
 }
 
 bool Context::isStencilTestEnabled() const
 {
-    return mState.stencilTest;
+    return mState.depthStencil.stencilTest;
 }
 
 void Context::setStencilParams(GLenum stencilFunc, GLint stencilRef, GLuint stencilMask)
 {
-    if (mState.stencilFunc != stencilFunc ||
-        mState.stencilRef != stencilRef ||
-        mState.stencilMask != stencilMask)
+    if (mState.depthStencil.stencilFunc != stencilFunc ||
+        mState.depthStencil.stencilRef != stencilRef ||
+        mState.depthStencil.stencilMask != stencilMask)
     {
-        mState.stencilFunc = stencilFunc;
-        mState.stencilRef = (stencilRef > 0) ? stencilRef : 0;
-        mState.stencilMask = stencilMask;
+        mState.depthStencil.stencilFunc = stencilFunc;
+        mState.depthStencil.stencilRef = (stencilRef > 0) ? stencilRef : 0;
+        mState.depthStencil.stencilMask = stencilMask;
         mStencilStateDirty = true;
     }
 }
 
 void Context::setStencilBackParams(GLenum stencilBackFunc, GLint stencilBackRef, GLuint stencilBackMask)
 {
-    if (mState.stencilBackFunc != stencilBackFunc ||
-        mState.stencilBackRef != stencilBackRef ||
-        mState.stencilBackMask != stencilBackMask)
+    if (mState.depthStencil.stencilBackFunc != stencilBackFunc ||
+        mState.depthStencil.stencilBackRef != stencilBackRef ||
+        mState.depthStencil.stencilBackMask != stencilBackMask)
     {
-        mState.stencilBackFunc = stencilBackFunc;
-        mState.stencilBackRef = (stencilBackRef > 0) ? stencilBackRef : 0;
-        mState.stencilBackMask = stencilBackMask;
+        mState.depthStencil.stencilBackFunc = stencilBackFunc;
+        mState.depthStencil.stencilBackRef = (stencilBackRef > 0) ? stencilBackRef : 0;
+        mState.depthStencil.stencilBackMask = stencilBackMask;
         mStencilStateDirty = true;
     }
 }
 
 void Context::setStencilWritemask(GLuint stencilWritemask)
 {
-    if (mState.stencilWritemask != stencilWritemask)
+    if (mState.depthStencil.stencilWritemask != stencilWritemask)
     {
-        mState.stencilWritemask = stencilWritemask;
+        mState.depthStencil.stencilWritemask = stencilWritemask;
         mStencilStateDirty = true;
     }
 }
 
 void Context::setStencilBackWritemask(GLuint stencilBackWritemask)
 {
-    if (mState.stencilBackWritemask != stencilBackWritemask)
+    if (mState.depthStencil.stencilBackWritemask != stencilBackWritemask)
     {
-        mState.stencilBackWritemask = stencilBackWritemask;
+        mState.depthStencil.stencilBackWritemask = stencilBackWritemask;
         mStencilStateDirty = true;
     }
 }
 
 void Context::setStencilOperations(GLenum stencilFail, GLenum stencilPassDepthFail, GLenum stencilPassDepthPass)
 {
-    if (mState.stencilFail != stencilFail ||
-        mState.stencilPassDepthFail != stencilPassDepthFail ||
-        mState.stencilPassDepthPass != stencilPassDepthPass)
+    if (mState.depthStencil.stencilFail != stencilFail ||
+        mState.depthStencil.stencilPassDepthFail != stencilPassDepthFail ||
+        mState.depthStencil.stencilPassDepthPass != stencilPassDepthPass)
     {
-        mState.stencilFail = stencilFail;
-        mState.stencilPassDepthFail = stencilPassDepthFail;
-        mState.stencilPassDepthPass = stencilPassDepthPass;
+        mState.depthStencil.stencilFail = stencilFail;
+        mState.depthStencil.stencilPassDepthFail = stencilPassDepthFail;
+        mState.depthStencil.stencilPassDepthPass = stencilPassDepthPass;
         mStencilStateDirty = true;
     }
 }
 
 void Context::setStencilBackOperations(GLenum stencilBackFail, GLenum stencilBackPassDepthFail, GLenum stencilBackPassDepthPass)
 {
-    if (mState.stencilBackFail != stencilBackFail ||
-        mState.stencilBackPassDepthFail != stencilBackPassDepthFail ||
-        mState.stencilBackPassDepthPass != stencilBackPassDepthPass)
+    if (mState.depthStencil.stencilBackFail != stencilBackFail ||
+        mState.depthStencil.stencilBackPassDepthFail != stencilBackPassDepthFail ||
+        mState.depthStencil.stencilBackPassDepthPass != stencilBackPassDepthPass)
     {
-        mState.stencilBackFail = stencilBackFail;
-        mState.stencilBackPassDepthFail = stencilBackPassDepthFail;
-        mState.stencilBackPassDepthPass = stencilBackPassDepthPass;
+        mState.depthStencil.stencilBackFail = stencilBackFail;
+        mState.depthStencil.stencilBackPassDepthFail = stencilBackPassDepthFail;
+        mState.depthStencil.stencilBackPassDepthPass = stencilBackPassDepthPass;
         mStencilStateDirty = true;
     }
 }
 
 void Context::setPolygonOffsetFill(bool enabled)
 {
-    if (mState.polygonOffsetFill != enabled)
+    if (mState.rasterizer.polygonOffsetFill != enabled)
     {
-        mState.polygonOffsetFill = enabled;
+        mState.rasterizer.polygonOffsetFill = enabled;
         mPolygonOffsetStateDirty = true;
     }
 }
 
 bool Context::isPolygonOffsetFillEnabled() const
 {
-    return mState.polygonOffsetFill;
+    return mState.rasterizer.polygonOffsetFill;
 
 }
 
 void Context::setPolygonOffsetParams(GLfloat factor, GLfloat units)
 {
-    if (mState.polygonOffsetFactor != factor ||
-        mState.polygonOffsetUnits != units)
+    if (mState.rasterizer.polygonOffsetFactor != factor ||
+        mState.rasterizer.polygonOffsetUnits != units)
     {
-        mState.polygonOffsetFactor = factor;
-        mState.polygonOffsetUnits = units;
+        mState.rasterizer.polygonOffsetFactor = factor;
+        mState.rasterizer.polygonOffsetUnits = units;
         mPolygonOffsetStateDirty = true;
     }
 }
 
 void Context::setSampleAlphaToCoverage(bool enabled)
 {
-    if (mState.sampleAlphaToCoverage != enabled)
+    if (mState.blend.sampleAlphaToCoverage != enabled)
     {
-        mState.sampleAlphaToCoverage = enabled;
+        mState.blend.sampleAlphaToCoverage = enabled;
         mSampleStateDirty = true;
     }
 }
 
 bool Context::isSampleAlphaToCoverageEnabled() const
 {
-    return mState.sampleAlphaToCoverage;
+    return mState.blend.sampleAlphaToCoverage;
 }
 
 void Context::setSampleCoverage(bool enabled)
@@ -671,30 +674,30 @@ void Context::setSampleCoverageParams(GLclampf value, bool invert)
 
 void Context::setScissorTest(bool enabled)
 {
-    if (mState.scissorTest != enabled)
+    if (mState.rasterizer.scissorTest != enabled)
     {
-        mState.scissorTest = enabled;
+        mState.rasterizer.scissorTest = enabled;
         mScissorStateDirty = true;
     }
 }
 
 bool Context::isScissorTestEnabled() const
 {
-    return mState.scissorTest;
+    return mState.rasterizer.scissorTest;
 }
 
 void Context::setDither(bool enabled)
 {
-    if (mState.dither != enabled)
+    if (mState.blend.dither != enabled)
     {
-        mState.dither = enabled;
+        mState.blend.dither = enabled;
         mDitherStateDirty = true;
     }
 }
 
 bool Context::isDitherEnabled() const
 {
-    return mState.dither;
+    return mState.blend.dither;
 }
 
 void Context::setLineWidth(GLfloat width)
@@ -725,35 +728,35 @@ void Context::setViewportParams(GLint x, GLint y, GLsizei width, GLsizei height)
 
 void Context::setScissorParams(GLint x, GLint y, GLsizei width, GLsizei height)
 {
-    if (mState.scissorX != x || mState.scissorY != y || 
-        mState.scissorWidth != width || mState.scissorHeight != height)
+    if (mState.scissor.x != x || mState.scissor.y != y ||
+        mState.scissor.width != width || mState.scissor.height != height)
     {
-        mState.scissorX = x;
-        mState.scissorY = y;
-        mState.scissorWidth = width;
-        mState.scissorHeight = height;
+        mState.scissor.x = x;
+        mState.scissor.y = y;
+        mState.scissor.width = width;
+        mState.scissor.height = height;
         mScissorStateDirty = true;
     }
 }
 
 void Context::setColorMask(bool red, bool green, bool blue, bool alpha)
 {
-    if (mState.colorMaskRed != red || mState.colorMaskGreen != green ||
-        mState.colorMaskBlue != blue || mState.colorMaskAlpha != alpha)
+    if (mState.blend.colorMaskRed != red || mState.blend.colorMaskGreen != green ||
+        mState.blend.colorMaskBlue != blue || mState.blend.colorMaskAlpha != alpha)
     {
-        mState.colorMaskRed = red;
-        mState.colorMaskGreen = green;
-        mState.colorMaskBlue = blue;
-        mState.colorMaskAlpha = alpha;
+        mState.blend.colorMaskRed = red;
+        mState.blend.colorMaskGreen = green;
+        mState.blend.colorMaskBlue = blue;
+        mState.blend.colorMaskAlpha = alpha;
         mMaskStateDirty = true;
     }
 }
 
 void Context::setDepthMask(bool mask)
 {
-    if (mState.depthMask != mask)
+    if (mState.depthStencil.depthMask != mask)
     {
-        mState.depthMask = mask;
+        mState.depthStencil.depthMask = mask;
         mMaskStateDirty = true;
     }
 }
@@ -1368,25 +1371,25 @@ bool Context::getBooleanv(GLenum pname, GLboolean *params)
 {
     switch (pname)
     {
-      case GL_SHADER_COMPILER:           *params = GL_TRUE;                            break;
-      case GL_SAMPLE_COVERAGE_INVERT:    *params = mState.sampleCoverageInvert;        break;
-      case GL_DEPTH_WRITEMASK:           *params = mState.depthMask;                   break;
+      case GL_SHADER_COMPILER:           *params = GL_TRUE;                             break;
+      case GL_SAMPLE_COVERAGE_INVERT:    *params = mState.sampleCoverageInvert;         break;
+      case GL_DEPTH_WRITEMASK:           *params = mState.depthStencil.depthMask;       break;
       case GL_COLOR_WRITEMASK:
-        params[0] = mState.colorMaskRed;
-        params[1] = mState.colorMaskGreen;
-        params[2] = mState.colorMaskBlue;
-        params[3] = mState.colorMaskAlpha;
+        params[0] = mState.blend.colorMaskRed;
+        params[1] = mState.blend.colorMaskGreen;
+        params[2] = mState.blend.colorMaskBlue;
+        params[3] = mState.blend.colorMaskAlpha;
         break;
-      case GL_CULL_FACE:                 *params = mState.cullFace;                    break;
-      case GL_POLYGON_OFFSET_FILL:       *params = mState.polygonOffsetFill;           break;
-      case GL_SAMPLE_ALPHA_TO_COVERAGE:  *params = mState.sampleAlphaToCoverage;       break;
-      case GL_SAMPLE_COVERAGE:           *params = mState.sampleCoverage;              break;
-      case GL_SCISSOR_TEST:              *params = mState.scissorTest;                 break;
-      case GL_STENCIL_TEST:              *params = mState.stencilTest;                 break;
-      case GL_DEPTH_TEST:                *params = mState.depthTest;                   break;
-      case GL_BLEND:                     *params = mState.blend;                       break;
-      case GL_DITHER:                    *params = mState.dither;                      break;
-      case GL_CONTEXT_ROBUST_ACCESS_EXT: *params = mRobustAccess ? GL_TRUE : GL_FALSE; break;
+      case GL_CULL_FACE:                 *params = mState.rasterizer.cullFace;          break;
+      case GL_POLYGON_OFFSET_FILL:       *params = mState.rasterizer.polygonOffsetFill; break;
+      case GL_SAMPLE_ALPHA_TO_COVERAGE:  *params = mState.blend.sampleAlphaToCoverage;  break;
+      case GL_SAMPLE_COVERAGE:           *params = mState.sampleCoverage;               break;
+      case GL_SCISSOR_TEST:              *params = mState.rasterizer.scissorTest;       break;
+      case GL_STENCIL_TEST:              *params = mState.depthStencil.stencilTest;     break;
+      case GL_DEPTH_TEST:                *params = mState.depthStencil.depthTest;       break;
+      case GL_BLEND:                     *params = mState.blend.blend;                  break;
+      case GL_DITHER:                    *params = mState.blend.dither;                 break;
+      case GL_CONTEXT_ROBUST_ACCESS_EXT: *params = mRobustAccess ? GL_TRUE : GL_FALSE;  break;
       default:
         return false;
     }
@@ -1402,11 +1405,11 @@ bool Context::getFloatv(GLenum pname, GLfloat *params)
     // case, this should make no difference to the calling application.
     switch (pname)
     {
-      case GL_LINE_WIDTH:               *params = mState.lineWidth;            break;
-      case GL_SAMPLE_COVERAGE_VALUE:    *params = mState.sampleCoverageValue;  break;
-      case GL_DEPTH_CLEAR_VALUE:        *params = mState.depthClearValue;      break;
-      case GL_POLYGON_OFFSET_FACTOR:    *params = mState.polygonOffsetFactor;  break;
-      case GL_POLYGON_OFFSET_UNITS:     *params = mState.polygonOffsetUnits;   break;
+      case GL_LINE_WIDTH:               *params = mState.lineWidth;                         break;
+      case GL_SAMPLE_COVERAGE_VALUE:    *params = mState.sampleCoverageValue;               break;
+      case GL_DEPTH_CLEAR_VALUE:        *params = mState.depthClearValue;                   break;
+      case GL_POLYGON_OFFSET_FACTOR:    *params = mState.rasterizer.polygonOffsetFactor;    break;
+      case GL_POLYGON_OFFSET_UNITS:     *params = mState.rasterizer.polygonOffsetUnits;     break;
       case GL_ALIASED_LINE_WIDTH_RANGE:
         params[0] = gl::ALIASED_LINE_WIDTH_RANGE_MIN;
         params[1] = gl::ALIASED_LINE_WIDTH_RANGE_MAX;
@@ -1477,27 +1480,27 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_GENERATE_MIPMAP_HINT:             *params = mState.generateMipmapHint;            break;
       case GL_FRAGMENT_SHADER_DERIVATIVE_HINT_OES: *params = mState.fragmentShaderDerivativeHint; break;
       case GL_ACTIVE_TEXTURE:                   *params = (mState.activeSampler + GL_TEXTURE0); break;
-      case GL_STENCIL_FUNC:                     *params = mState.stencilFunc;                   break;
-      case GL_STENCIL_REF:                      *params = mState.stencilRef;                    break;
-      case GL_STENCIL_VALUE_MASK:               *params = mState.stencilMask;                   break;
-      case GL_STENCIL_BACK_FUNC:                *params = mState.stencilBackFunc;               break;
-      case GL_STENCIL_BACK_REF:                 *params = mState.stencilBackRef;                break;
-      case GL_STENCIL_BACK_VALUE_MASK:          *params = mState.stencilBackMask;               break;
-      case GL_STENCIL_FAIL:                     *params = mState.stencilFail;                   break;
-      case GL_STENCIL_PASS_DEPTH_FAIL:          *params = mState.stencilPassDepthFail;          break;
-      case GL_STENCIL_PASS_DEPTH_PASS:          *params = mState.stencilPassDepthPass;          break;
-      case GL_STENCIL_BACK_FAIL:                *params = mState.stencilBackFail;               break;
-      case GL_STENCIL_BACK_PASS_DEPTH_FAIL:     *params = mState.stencilBackPassDepthFail;      break;
-      case GL_STENCIL_BACK_PASS_DEPTH_PASS:     *params = mState.stencilBackPassDepthPass;      break;
-      case GL_DEPTH_FUNC:                       *params = mState.depthFunc;                     break;
-      case GL_BLEND_SRC_RGB:                    *params = mState.sourceBlendRGB;                break;
-      case GL_BLEND_SRC_ALPHA:                  *params = mState.sourceBlendAlpha;              break;
-      case GL_BLEND_DST_RGB:                    *params = mState.destBlendRGB;                  break;
-      case GL_BLEND_DST_ALPHA:                  *params = mState.destBlendAlpha;                break;
-      case GL_BLEND_EQUATION_RGB:               *params = mState.blendEquationRGB;              break;
-      case GL_BLEND_EQUATION_ALPHA:             *params = mState.blendEquationAlpha;            break;
-      case GL_STENCIL_WRITEMASK:                *params = mState.stencilWritemask;              break;
-      case GL_STENCIL_BACK_WRITEMASK:           *params = mState.stencilBackWritemask;          break;
+      case GL_STENCIL_FUNC:                     *params = mState.depthStencil.stencilFunc;             break;
+      case GL_STENCIL_REF:                      *params = mState.depthStencil.stencilRef;              break;
+      case GL_STENCIL_VALUE_MASK:               *params = mState.depthStencil.stencilMask;             break;
+      case GL_STENCIL_BACK_FUNC:                *params = mState.depthStencil.stencilBackFunc;         break;
+      case GL_STENCIL_BACK_REF:                 *params = mState.depthStencil.stencilBackRef;          break;
+      case GL_STENCIL_BACK_VALUE_MASK:          *params = mState.depthStencil.stencilBackMask;         break;
+      case GL_STENCIL_FAIL:                     *params = mState.depthStencil.stencilFail;             break;
+      case GL_STENCIL_PASS_DEPTH_FAIL:          *params = mState.depthStencil.stencilPassDepthFail;    break;
+      case GL_STENCIL_PASS_DEPTH_PASS:          *params = mState.depthStencil.stencilPassDepthPass;    break;
+      case GL_STENCIL_BACK_FAIL:                *params = mState.depthStencil.stencilBackFail;         break;
+      case GL_STENCIL_BACK_PASS_DEPTH_FAIL:     *params = mState.depthStencil.stencilBackPassDepthFail; break;
+      case GL_STENCIL_BACK_PASS_DEPTH_PASS:     *params = mState.depthStencil.stencilBackPassDepthPass; break;
+      case GL_DEPTH_FUNC:                       *params = mState.depthStencil.depthFunc;               break;
+      case GL_BLEND_SRC_RGB:                    *params = mState.blend.sourceBlendRGB;                 break;
+      case GL_BLEND_SRC_ALPHA:                  *params = mState.blend.sourceBlendAlpha;               break;
+      case GL_BLEND_DST_RGB:                    *params = mState.blend.destBlendRGB;                   break;
+      case GL_BLEND_DST_ALPHA:                  *params = mState.blend.destBlendAlpha;                 break;
+      case GL_BLEND_EQUATION_RGB:               *params = mState.blend.blendEquationRGB;               break;
+      case GL_BLEND_EQUATION_ALPHA:             *params = mState.blend.blendEquationAlpha;             break;
+      case GL_STENCIL_WRITEMASK:                *params = mState.depthStencil.stencilWritemask;        break;
+      case GL_STENCIL_BACK_WRITEMASK:           *params = mState.depthStencil.stencilBackWritemask;    break;
       case GL_STENCIL_CLEAR_VALUE:              *params = mState.stencilClearValue;             break;
       case GL_SUBPIXEL_BITS:                    *params = 4;                                    break;
       case GL_MAX_TEXTURE_SIZE:                 *params = getMaximumTextureDimension();         break;
@@ -1592,13 +1595,13 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
         params[3] = mState.viewportHeight;
         break;
       case GL_SCISSOR_BOX:
-        params[0] = mState.scissorX;
-        params[1] = mState.scissorY;
-        params[2] = mState.scissorWidth;
-        params[3] = mState.scissorHeight;
+        params[0] = mState.scissor.x;
+        params[1] = mState.scissor.y;
+        params[2] = mState.scissor.width;
+        params[3] = mState.scissor.height;
         break;
-      case GL_CULL_FACE_MODE:                   *params = mState.cullMode;                 break;
-      case GL_FRONT_FACE:                       *params = mState.frontFace;                break;
+      case GL_CULL_FACE_MODE:                   *params = mState.rasterizer.cullMode;   break;
+      case GL_FRONT_FACE:                       *params = mState.rasterizer.frontFace;  break;
       case GL_RED_BITS:
       case GL_GREEN_BITS:
       case GL_BLUE_BITS:
@@ -1611,10 +1614,10 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
             {
                 switch (pname)
                 {
-                  case GL_RED_BITS:   *params = colorbuffer->getRedSize();   break;
-                  case GL_GREEN_BITS: *params = colorbuffer->getGreenSize(); break;
-                  case GL_BLUE_BITS:  *params = colorbuffer->getBlueSize();  break;
-                  case GL_ALPHA_BITS: *params = colorbuffer->getAlphaSize(); break;
+                  case GL_RED_BITS:   *params = colorbuffer->getRedSize();      break;
+                  case GL_GREEN_BITS: *params = colorbuffer->getGreenSize();    break;
+                  case GL_BLUE_BITS:  *params = colorbuffer->getBlueSize();     break;
+                  case GL_ALPHA_BITS: *params = colorbuffer->getAlphaSize();    break;
                 }
             }
             else
@@ -2011,21 +2014,8 @@ bool Context::applyRenderTarget(bool ignoreViewport)
 
     if (mScissorStateDirty)
     {
-        if (mState.scissorTest)
-        {
-            RECT rect;
-            rect.left = clamp(mState.scissorX, 0L, static_cast<LONG>(mRenderTargetDesc.Width));
-            rect.top = clamp(mState.scissorY, 0L, static_cast<LONG>(mRenderTargetDesc.Height));
-            rect.right = clamp(mState.scissorX + mState.scissorWidth, 0L, static_cast<LONG>(mRenderTargetDesc.Width));
-            rect.bottom = clamp(mState.scissorY + mState.scissorHeight, 0L, static_cast<LONG>(mRenderTargetDesc.Height));
-            mDevice->SetScissorRect(&rect);
-            mDevice->SetRenderState(D3DRS_SCISSORTESTENABLE, TRUE);
-        }
-        else
-        {
-            mDevice->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
-        }
-
+        mRenderer->setScissorRectangle(mState.scissor, static_cast<int>(mRenderTargetDesc.Width),
+                                       static_cast<int>(mRenderTargetDesc.Height));
         mScissorStateDirty = false;
     }
 
@@ -2054,6 +2044,8 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         mDxUniformsDirty = false;
     }
 
+    mRenderer->applyRenderTarget(framebufferObject);
+
     return true;
 }
 
@@ -2065,216 +2057,29 @@ void Context::applyState(GLenum drawMode)
     Framebuffer *framebufferObject = getDrawFramebuffer();
 
     GLint frontCCW = programBinary->getDxFrontCCWLocation();
-    GLint ccw = (mState.frontFace == GL_CCW);
+    GLint ccw = (mState.rasterizer.frontFace == GL_CCW);
     programBinary->setUniform1iv(frontCCW, 1, &ccw);
 
     GLint pointsOrLines = programBinary->getDxPointsOrLinesLocation();
     GLint alwaysFront = !isTriangleMode(drawMode);
     programBinary->setUniform1iv(pointsOrLines, 1, &alwaysFront);
 
-    bool zeroColorMaskAllowed = mRenderer->getAdapterVendor() != VENDOR_ID_AMD;
-    // Apparently some ATI cards have a bug where a draw with a zero color
-    // write mask can cause later draws to have incorrect results. Instead,
-    // set a nonzero color write mask but modify the blend state so that no
-    // drawing is done.
-    // http://code.google.com/p/angleproject/issues/detail?id=169
-
-    if (mCullStateDirty || mFrontFaceDirty)
+    if (mCullStateDirty || mFrontFaceDirty || mPolygonOffsetStateDirty)
     {
-        if (mState.cullFace)
-        {
-            mDevice->SetRenderState(D3DRS_CULLMODE, gl_d3d9::ConvertCullMode(mState.cullMode, mState.frontFace));
-        }
-        else
-        {
-            mDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-        }
+        const gl::Renderbuffer *depthbuffer = framebufferObject->getDepthbuffer();
+        unsigned int depthSize = depthbuffer ? depthbuffer->getDepthSize() : 0;
+
+        mRenderer->setRasterizerState(mState.rasterizer, depthSize);
 
         mCullStateDirty = false;
-    }
-
-    if (mDepthStateDirty)
-    {
-        if (mState.depthTest)
-        {
-            mDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
-            mDevice->SetRenderState(D3DRS_ZFUNC, gl_d3d9::ConvertComparison(mState.depthFunc));
-        }
-        else
-        {
-            mDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_FALSE);
-        }
-
-        mDepthStateDirty = false;
-    }
-
-    if (!zeroColorMaskAllowed && (mMaskStateDirty || mBlendStateDirty))
-    {
-        mBlendStateDirty = true;
-        mMaskStateDirty = true;
-    }
-
-    if (mBlendStateDirty)
-    {
-        if (mState.blend)
-        {
-            mDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-
-            if (mState.sourceBlendRGB != GL_CONSTANT_ALPHA && mState.sourceBlendRGB != GL_ONE_MINUS_CONSTANT_ALPHA &&
-                mState.destBlendRGB != GL_CONSTANT_ALPHA && mState.destBlendRGB != GL_ONE_MINUS_CONSTANT_ALPHA)
-            {
-                mDevice->SetRenderState(D3DRS_BLENDFACTOR, gl_d3d9::ConvertColor(mState.blendColor));
-            }
-            else
-            {
-                mDevice->SetRenderState(D3DRS_BLENDFACTOR, D3DCOLOR_RGBA(unorm<8>(mState.blendColor.alpha),
-                                                                        unorm<8>(mState.blendColor.alpha),
-                                                                        unorm<8>(mState.blendColor.alpha),
-                                                                        unorm<8>(mState.blendColor.alpha)));
-            }
-
-            mDevice->SetRenderState(D3DRS_SRCBLEND, gl_d3d9::ConvertBlendFunc(mState.sourceBlendRGB));
-            mDevice->SetRenderState(D3DRS_DESTBLEND, gl_d3d9::ConvertBlendFunc(mState.destBlendRGB));
-            mDevice->SetRenderState(D3DRS_BLENDOP, gl_d3d9::ConvertBlendOp(mState.blendEquationRGB));
-
-            if (mState.sourceBlendRGB != mState.sourceBlendAlpha || 
-                mState.destBlendRGB != mState.destBlendAlpha || 
-                mState.blendEquationRGB != mState.blendEquationAlpha)
-            {
-                mDevice->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, TRUE);
-
-                mDevice->SetRenderState(D3DRS_SRCBLENDALPHA, gl_d3d9::ConvertBlendFunc(mState.sourceBlendAlpha));
-                mDevice->SetRenderState(D3DRS_DESTBLENDALPHA, gl_d3d9::ConvertBlendFunc(mState.destBlendAlpha));
-                mDevice->SetRenderState(D3DRS_BLENDOPALPHA, gl_d3d9::ConvertBlendOp(mState.blendEquationAlpha));
-            }
-            else
-            {
-                mDevice->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, FALSE);
-            }
-        }
-        else
-        {
-            mDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-        }
-
-        mBlendStateDirty = false;
-    }
-
-    if (mStencilStateDirty || mFrontFaceDirty)
-    {
-        if (mState.stencilTest && framebufferObject->hasStencil())
-        {
-            mDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
-            mDevice->SetRenderState(D3DRS_TWOSIDEDSTENCILMODE, TRUE);
-
-            // FIXME: Unsupported by D3D9
-            const D3DRENDERSTATETYPE D3DRS_CCW_STENCILREF = D3DRS_STENCILREF;
-            const D3DRENDERSTATETYPE D3DRS_CCW_STENCILMASK = D3DRS_STENCILMASK;
-            const D3DRENDERSTATETYPE D3DRS_CCW_STENCILWRITEMASK = D3DRS_STENCILWRITEMASK;
-            if (mState.stencilWritemask != mState.stencilBackWritemask || 
-                mState.stencilRef != mState.stencilBackRef || 
-                mState.stencilMask != mState.stencilBackMask)
-            {
-                ERR("Separate front/back stencil writemasks, reference values, or stencil mask values are invalid under WebGL.");
-                return error(GL_INVALID_OPERATION);
-            }
-
-            // get the maximum size of the stencil ref
-            gl::Renderbuffer *stencilbuffer = framebufferObject->getStencilbuffer();
-            GLuint maxStencil = (1 << stencilbuffer->getStencilSize()) - 1;
-
-            mDevice->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILWRITEMASK : D3DRS_CCW_STENCILWRITEMASK, mState.stencilWritemask);
-            mDevice->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILFUNC : D3DRS_CCW_STENCILFUNC, 
-                                   gl_d3d9::ConvertComparison(mState.stencilFunc));
-
-            mDevice->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILREF : D3DRS_CCW_STENCILREF, (mState.stencilRef < (GLint)maxStencil) ? mState.stencilRef : maxStencil);
-            mDevice->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILMASK : D3DRS_CCW_STENCILMASK, mState.stencilMask);
-
-            mDevice->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILFAIL : D3DRS_CCW_STENCILFAIL, 
-                                   gl_d3d9::ConvertStencilOp(mState.stencilFail));
-            mDevice->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILZFAIL : D3DRS_CCW_STENCILZFAIL, 
-                                   gl_d3d9::ConvertStencilOp(mState.stencilPassDepthFail));
-            mDevice->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILPASS : D3DRS_CCW_STENCILPASS, 
-                                   gl_d3d9::ConvertStencilOp(mState.stencilPassDepthPass));
-
-            mDevice->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILWRITEMASK : D3DRS_CCW_STENCILWRITEMASK, mState.stencilBackWritemask);
-            mDevice->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILFUNC : D3DRS_CCW_STENCILFUNC, 
-                                   gl_d3d9::ConvertComparison(mState.stencilBackFunc));
-
-            mDevice->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILREF : D3DRS_CCW_STENCILREF, (mState.stencilBackRef < (GLint)maxStencil) ? mState.stencilBackRef : maxStencil);
-            mDevice->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILMASK : D3DRS_CCW_STENCILMASK, mState.stencilBackMask);
-
-            mDevice->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILFAIL : D3DRS_CCW_STENCILFAIL, 
-                                   gl_d3d9::ConvertStencilOp(mState.stencilBackFail));
-            mDevice->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILZFAIL : D3DRS_CCW_STENCILZFAIL, 
-                                   gl_d3d9::ConvertStencilOp(mState.stencilBackPassDepthFail));
-            mDevice->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILPASS : D3DRS_CCW_STENCILPASS, 
-                                   gl_d3d9::ConvertStencilOp(mState.stencilBackPassDepthPass));
-        }
-        else
-        {
-            mDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
-        }
-
-        mStencilStateDirty = false;
-        mFrontFaceDirty = false;
-    }
-
-    if (mMaskStateDirty)
-    {
-        int colorMask = gl_d3d9::ConvertColorMask(mState.colorMaskRed, mState.colorMaskGreen, 
-                                                mState.colorMaskBlue, mState.colorMaskAlpha);
-        if (colorMask == 0 && !zeroColorMaskAllowed)
-        {
-            // Enable green channel, but set blending so nothing will be drawn.
-            mDevice->SetRenderState(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_GREEN);
-            mDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-
-            mDevice->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_ZERO);
-            mDevice->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
-            mDevice->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
-        }
-        else
-        {
-            mDevice->SetRenderState(D3DRS_COLORWRITEENABLE, colorMask);
-        }
-        mDevice->SetRenderState(D3DRS_ZWRITEENABLE, mState.depthMask ? TRUE : FALSE);
-
-        mMaskStateDirty = false;
-    }
-
-    if (mPolygonOffsetStateDirty)
-    {
-        if (mState.polygonOffsetFill)
-        {
-            gl::Renderbuffer *depthbuffer = framebufferObject->getDepthbuffer();
-            if (depthbuffer)
-            {
-                mDevice->SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, *((DWORD*)&mState.polygonOffsetFactor));
-                float depthBias = ldexp(mState.polygonOffsetUnits, -(int)(depthbuffer->getDepthSize()));
-                mDevice->SetRenderState(D3DRS_DEPTHBIAS, *((DWORD*)&depthBias));
-            }
-        }
-        else
-        {
-            mDevice->SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, 0);
-            mDevice->SetRenderState(D3DRS_DEPTHBIAS, 0);
-        }
-
         mPolygonOffsetStateDirty = false;
     }
 
-    if (mSampleStateDirty)
+    if (mBlendStateDirty || mMaskStateDirty)
     {
-        if (mState.sampleAlphaToCoverage)
-        {
-            FIXME("Sample alpha to coverage is unimplemented.");
-        }
-
-        mDevice->SetRenderState(D3DRS_MULTISAMPLEANTIALIAS, TRUE);
+        unsigned int mask = 0;
         if (mState.sampleCoverage)
         {
-            unsigned int mask = 0;
             if (mState.sampleCoverageValue != 0)
             {
                 float threshold = 0.5f;
@@ -2295,22 +2100,27 @@ void Context::applyState(GLenum drawMode)
             {
                 mask = ~mask;
             }
-
-            mDevice->SetRenderState(D3DRS_MULTISAMPLEMASK, mask);
         }
         else
         {
-            mDevice->SetRenderState(D3DRS_MULTISAMPLEMASK, 0xFFFFFFFF);
+            mask = 0xFFFFFFFF;
         }
 
-        mSampleStateDirty = false;
+        mRenderer->setBlendState(mState.blend, mState.blendColor, mask);
+        mBlendStateDirty = false;
     }
 
-    if (mDitherStateDirty)
+    if (mStencilStateDirty || mFrontFaceDirty || mDepthStateDirty)
     {
-        mDevice->SetRenderState(D3DRS_DITHERENABLE, mState.dither ? TRUE : FALSE);
+        unsigned int stencilSize = framebufferObject->hasStencil() ? framebufferObject->getStencilbuffer()->getStencilSize() : 0;
 
-        mDitherStateDirty = false;
+        mRenderer->setDepthStencilState(mState.depthStencil,
+                                        mState.rasterizer.frontFace == GL_CCW,
+                                        stencilSize);
+
+        mDepthStateDirty = false;
+        mStencilStateDirty = false;
+        mFrontFaceDirty = false;
     }
 }
 
@@ -2809,7 +2619,7 @@ void Context::clear(GLbitfield mask)
     if (mask & GL_DEPTH_BUFFER_BIT)
     {
         mask &= ~GL_DEPTH_BUFFER_BIT;
-        if (mState.depthMask && framebufferObject->getDepthbufferType() != GL_NONE)
+        if (mState.depthStencil.depthMask && framebufferObject->getDepthbufferType() != GL_NONE)
         {
             flags |= D3DCLEAR_ZBUFFER;
         }
@@ -2860,13 +2670,14 @@ void Context::clear(GLbitfield mask)
     float depth = clamp01(mState.depthClearValue);
     int stencil = mState.stencilClearValue & 0x000000FF;
 
-    bool alphaUnmasked = (d3d9_gl::GetAlphaSize(mRenderTargetDesc.Format) == 0) || mState.colorMaskAlpha;
+
+    bool alphaUnmasked = (d3d9_gl::GetAlphaSize(mRenderTargetDesc.Format) == 0) || mState.blend.colorMaskAlpha;
 
     const bool needMaskedStencilClear = (flags & D3DCLEAR_STENCIL) &&
-                                        (mState.stencilWritemask & stencilUnmasked) != stencilUnmasked;
+                                        (mState.depthStencil.stencilWritemask & stencilUnmasked) != stencilUnmasked;
     const bool needMaskedColorClear = (flags & D3DCLEAR_TARGET) &&
-                                      !(mState.colorMaskRed && mState.colorMaskGreen &&
-                                        mState.colorMaskBlue && alphaUnmasked);
+                                      !(mState.blend.colorMaskRed && mState.blend.colorMaskGreen &&
+                                        mState.blend.colorMaskBlue && alphaUnmasked);
 
     if (needMaskedColorClear || needMaskedStencilClear)
     {
@@ -2929,7 +2740,11 @@ void Context::clear(GLbitfield mask)
 
         if (flags & D3DCLEAR_TARGET)
         {
-            mDevice->SetRenderState(D3DRS_COLORWRITEENABLE, gl_d3d9::ConvertColorMask(mState.colorMaskRed, mState.colorMaskGreen, mState.colorMaskBlue, mState.colorMaskAlpha));
+            mDevice->SetRenderState(D3DRS_COLORWRITEENABLE,
+                                    gl_d3d9::ConvertColorMask(mState.blend.colorMaskRed,
+                                                              mState.blend.colorMaskGreen,
+                                                              mState.blend.colorMaskBlue,
+                                                              mState.blend.colorMaskAlpha));
         }
         else
         {
@@ -2942,7 +2757,7 @@ void Context::clear(GLbitfield mask)
             mDevice->SetRenderState(D3DRS_TWOSIDEDSTENCILMODE, FALSE);
             mDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_ALWAYS);
             mDevice->SetRenderState(D3DRS_STENCILREF, stencil);
-            mDevice->SetRenderState(D3DRS_STENCILWRITEMASK, mState.stencilWritemask);
+            mDevice->SetRenderState(D3DRS_STENCILWRITEMASK, mState.depthStencil.stencilWritemask);
             mDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_REPLACE);
             mDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_REPLACE);
             mDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);
@@ -3744,7 +3559,7 @@ bool Context::skipDraw(GLenum drawMode)
     }
     else if (isTriangleMode(drawMode))
     {
-        if (mState.cullFace && mState.cullMode == GL_FRONT_AND_BACK)
+        if (mState.rasterizer.cullFace && mState.rasterizer.cullMode == GL_FRONT_AND_BACK)
         {
             return true;
         }
@@ -3974,36 +3789,36 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
     RECT sourceScissoredRect = sourceRect;
     RECT destScissoredRect = destRect;
 
-    if (mState.scissorTest)
+    if (mState.rasterizer.scissorTest)
     {
         // Only write to parts of the destination framebuffer which pass the scissor test
         // Please note: the destRect is now in D3D-style coordinates, so the *top* of the
         // rect will be checked against scissorY, rather than the bottom.
-        if (destRect.left < mState.scissorX)
+        if (destRect.left < mState.scissor.x)
         {
-            int xDiff = mState.scissorX - destRect.left;
-            destScissoredRect.left = mState.scissorX;
+            int xDiff = mState.scissor.x - destRect.left;
+            destScissoredRect.left = mState.scissor.x;
             sourceScissoredRect.left += xDiff;
         }
 
-        if (destRect.right > mState.scissorX + mState.scissorWidth)
+        if (destRect.right > mState.scissor.x + mState.scissor.width)
         {
-            int xDiff = destRect.right - (mState.scissorX + mState.scissorWidth);
-            destScissoredRect.right = mState.scissorX + mState.scissorWidth;
+            int xDiff = destRect.right - (mState.scissor.x + mState.scissor.width);
+            destScissoredRect.right = mState.scissor.x + mState.scissor.width;
             sourceScissoredRect.right -= xDiff;
         }
 
-        if (destRect.top < mState.scissorY)
+        if (destRect.top < mState.scissor.y)
         {
-            int yDiff = mState.scissorY - destRect.top;
-            destScissoredRect.top = mState.scissorY;
+            int yDiff = mState.scissor.y - destRect.top;
+            destScissoredRect.top = mState.scissor.y;
             sourceScissoredRect.top += yDiff;
         }
 
-        if (destRect.bottom > mState.scissorY + mState.scissorHeight)
+        if (destRect.bottom > mState.scissor.y + mState.scissor.height)
         {
-            int yDiff = destRect.bottom - (mState.scissorY + mState.scissorHeight);
-            destScissoredRect.bottom = mState.scissorY + mState.scissorHeight;
+            int yDiff = destRect.bottom - (mState.scissor.y + mState.scissor.height);
+            destScissoredRect.bottom = mState.scissor.y + mState.scissor.height;
             sourceScissoredRect.bottom -= yDiff;
         }
     }

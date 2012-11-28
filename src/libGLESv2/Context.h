@@ -154,43 +154,16 @@ struct State
     GLclampf depthClearValue;
     int stencilClearValue;
 
-    bool cullFace;
-    GLenum cullMode;
-    GLenum frontFace;
-    bool depthTest;
-    GLenum depthFunc;
-    bool blend;
-    GLenum sourceBlendRGB;
-    GLenum destBlendRGB;
-    GLenum sourceBlendAlpha;
-    GLenum destBlendAlpha;
-    GLenum blendEquationRGB;
-    GLenum blendEquationAlpha;
+    RasterizerState rasterizer;
+    Rectangle scissor;
+
+    BlendState blend;
     Color blendColor;
-    bool stencilTest;
-    GLenum stencilFunc;
-    GLint stencilRef;
-    GLuint stencilMask;
-    GLenum stencilFail;
-    GLenum stencilPassDepthFail;
-    GLenum stencilPassDepthPass;
-    GLuint stencilWritemask;
-    GLenum stencilBackFunc;
-    GLint stencilBackRef;
-    GLuint stencilBackMask;
-    GLenum stencilBackFail;
-    GLenum stencilBackPassDepthFail;
-    GLenum stencilBackPassDepthPass;
-    GLuint stencilBackWritemask;
-    bool polygonOffsetFill;
-    GLfloat polygonOffsetFactor;
-    GLfloat polygonOffsetUnits;
-    bool sampleAlphaToCoverage;
     bool sampleCoverage;
     GLclampf sampleCoverageValue;
     bool sampleCoverageInvert;
-    bool scissorTest;
-    bool dither;
+
+    DepthStencilState depthStencil;
 
     GLfloat lineWidth;
 
@@ -203,17 +176,6 @@ struct State
     GLsizei viewportHeight;
     float zNear;
     float zFar;
-
-    GLint scissorX;
-    GLint scissorY;
-    GLsizei scissorWidth;
-    GLsizei scissorHeight;
-
-    bool colorMaskRed;
-    bool colorMaskGreen;
-    bool colorMaskBlue;
-    bool colorMaskAlpha;
-    bool depthMask;
 
     unsigned int activeSampler;   // Active texture unit selector - GL_TEXTURE0
     BindingPointer<Buffer> arrayBuffer;
