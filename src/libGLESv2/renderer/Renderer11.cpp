@@ -717,8 +717,18 @@ void Renderer11::drawElements(GLenum mode, GLsizei count, GLenum type, const GLv
 
 void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
 {
-    // TODO
-    UNIMPLEMENTED();
+    ShaderExecutable *vertexExe = programBinary->getVertexExecutable();
+    ShaderExecutable *pixelExe = programBinary->getPixelExecutable();
+
+    ID3D11VertexShader *vertexShader = NULL;
+    if (vertexExe) vertexShader = ShaderExecutable11::makeShaderExecutable11(vertexExe)->getVertexShader();
+
+    ID3D11PixelShader *pixelShader = NULL;
+    if (pixelExe) pixelShader = ShaderExecutable11::makeShaderExecutable11(pixelExe)->getPixelShader();
+
+    mDeviceContext->PSSetShader(pixelShader, NULL, 0);
+    mDeviceContext->VSSetShader(vertexShader, NULL, 0);
+    programBinary->dirtyAllUniforms();
 }
 
 void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer)
