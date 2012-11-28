@@ -151,10 +151,14 @@ class Renderer11 : public Renderer
     RenderStateCache mStateCache;
 
     // current render target states
+    unsigned int mAppliedRenderTargetSerial;
+    unsigned int mAppliedDepthbufferSerial;
+    unsigned int mAppliedStencilbufferSerial;
     bool mDepthStencilInitialized;
     bool mRenderTargetDescInitialized;
     rx::RenderTarget::Desc mRenderTargetDesc;
     unsigned int mCurDepthSize;
+    unsigned int mCurStencilSize;
 
     // Currently applied blend state
     bool mForceSetBlendState;

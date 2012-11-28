@@ -12,6 +12,7 @@
 #include "libGLESv2/mathutil.h"
 #include "libGLESv2/Program.h"
 #include "libGLESv2/ProgramBinary.h"
+#include "libGLESv2/Framebuffer.h"
 #include "libGLESv2/renderer/Renderer11.h"
 #include "libGLESv2/renderer/RenderTarget11.h"
 #include "libGLESv2/renderer/renderer11_utils.h"
@@ -443,11 +444,153 @@ bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count)
 
 bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
 {
-    // TODO
-    UNIMPLEMENTED();
+    // Get the color render buffer and serial
+    gl::Renderbuffer *renderbufferObject = NULL;
+    unsigned int renderTargetSerial = 0;
+    if (framebuffer->getColorbufferType() != GL_NONE)
+    {
+        renderbufferObject = framebuffer->getColorbuffer();
 
-    mForceSetScissor = true;
-    mForceSetViewport = true;
+        if (!renderbufferObject)
+        {
+            ERR("render target pointer unexpectedly null.");
+            return;
+        }
+
+        renderTargetSerial = renderbufferObject->getSerial();
+    }
+
+    // Get the depth stencil render buffer and serials
+    gl::Renderbuffer *depthStencil = NULL;
+    unsigned int depthbufferSerial = 0;
+    unsigned int stencilbufferSerial = 0;
+    if (framebuffer->getDepthbufferType() != GL_NONE)
+    {
+        depthStencil = framebuffer->getDepthbuffer();
+        if (!depthStencil)
+        {
+            ERR("Depth stencil pointer unexpectedly null.");
+            return false;
+        }
+
+        depthbufferSerial = depthStencil->getSerial();
+    }
+    else if (framebuffer->getStencilbufferType() != GL_NONE)
+    {
+        depthStencil = framebuffer->getStencilbuffer();
+        if (!depthStencil)
+        {
+            ERR("Depth stencil pointer unexpectedly null.");
+            return false;
+        }
+
+        stencilbufferSerial = depthStencil->getSerial();
+    }
+
+    // Extract the render target dimensions and view
+    unsigned int renderTargetWidth = 0;
+    unsigned int renderTargetHeight = 0;
+    GLenum renderTargetFormat = 0;
+    ID3D11RenderTargetView* framebufferRTV = NULL;
+    if (renderbufferObject)
+    {
+        RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(renderbufferObject->getRenderTarget());
+        if (!renderTarget)
+        {
+            ERR("render target pointer unexpectedly null.");
+            return false;
+        }
+
+        framebufferRTV = renderTarget->getRenderTargetView();
+        if (!framebufferRTV)
+        {
+            ERR("render target view pointer unexpectedly null.");
+            return false;
+        }
+
+        renderTargetWidth = renderbufferObject->getWidth();
+        renderTargetHeight = renderbufferObject->getHeight();
+        renderTargetFormat = renderbufferObject->getActualFormat();
+    }
+
+    // Extract the depth stencil sizes and view
+    unsigned int depthSize = 0;
+    unsigned int stencilSize = 0;
+    ID3D11DepthStencilView* framebufferDSV = NULL;
+    if (depthStencil)
+    {
+        RenderTarget11 *depthStencilRenderTarget = RenderTarget11::makeRenderTarget11(depthStencil->getDepthStencil());
+        if (!depthStencilRenderTarget)
+        {
+            ERR("render target pointer unexpectedly null.");
+            if (framebufferRTV)
+            {
+                framebufferRTV->Release();
+            }
+            return false;
+        }
+
+        framebufferDSV = depthStencilRenderTarget->getDepthStencilView();
+        if (!framebufferDSV)
+        {
+            ERR("depth stencil view pointer unexpectedly null.");
+            if (framebufferRTV)
+            {
+                framebufferRTV->Release();
+            }
+            return false;
+        }
+
+        // If there is no render buffer, the width, height and format values come from
+        // the depth stencil
+        if (!renderbufferObject)
+        {
+            renderTargetWidth = depthStencil->getWidth();
+            renderTargetHeight = depthStencil->getHeight();
+            renderTargetFormat = depthStencil->getActualFormat();
+        }
+
+        depthSize = depthStencil->getDepthSize();
+        stencilSize = depthStencil->getStencilSize();
+    }
+
+    // Apply the render target and depth stencil
+    if (!mRenderTargetDescInitialized || !mDepthStencilInitialized ||
+        renderTargetSerial != mAppliedRenderTargetSerial ||
+        depthbufferSerial != mAppliedDepthbufferSerial ||
+        stencilbufferSerial != mAppliedStencilbufferSerial)
+    {
+        mDeviceContext->OMSetRenderTargets(1, &framebufferRTV, framebufferDSV);
+
+        mRenderTargetDesc.width = renderTargetWidth;
+        mRenderTargetDesc.height = renderTargetHeight;
+        mRenderTargetDesc.format = renderTargetFormat;
+        mForceSetViewport = true; // TODO: It may not be required to clamp the viewport in D3D11
+        mForceSetScissor = true; // TODO: It may not be required to clamp the scissor in D3D11
+
+        if (!mDepthStencilInitialized || depthSize != mCurDepthSize)
+        {
+            mCurDepthSize = depthSize;
+            mForceSetRasterState = true;
+        }
+
+        mCurStencilSize = stencilSize;
+
+        mAppliedRenderTargetSerial = renderTargetSerial;
+        mAppliedDepthbufferSerial = depthbufferSerial;
+        mAppliedStencilbufferSerial = stencilbufferSerial;
+        mRenderTargetDescInitialized = true;
+        mDepthStencilInitialized = true;
+    }
+
+    if (framebufferRTV)
+    {
+        framebufferRTV->Release();
+    }
+    if (framebufferDSV)
+    {
+        framebufferDSV->Release();
+    }
 
     return true;
 }
