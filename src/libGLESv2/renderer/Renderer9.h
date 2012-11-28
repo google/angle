@@ -144,9 +144,6 @@ class Renderer9 : public Renderer
     virtual void readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,
                             GLsizei outputPitch, bool packReverseRowOrder, GLint packAlignment, void* pixels);
 
-    virtual bool setRenderTarget(gl::Renderbuffer *renderbuffer);
-    virtual bool setDepthStencil(gl::Renderbuffer *renderbuffer);
-
     bool boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest);
 
     D3DPOOL getTexturePool(DWORD usage) const;

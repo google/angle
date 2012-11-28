@@ -2070,64 +2070,6 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
     systemSurface->Release();
 }
 
-bool Renderer9::setRenderTarget(gl::Renderbuffer *renderbuffer)
-{
-    IDirect3DSurface9 *renderTargetSurface = NULL;
-    
-    if (renderbuffer)
-    {
-        RenderTarget *renderTarget = renderbuffer->getRenderTarget();
-        if (renderTarget)
-        {
-            renderTargetSurface = renderTarget->getSurface();
-        }
-
-        if (!renderTargetSurface)
-        {
-            ERR("render target pointer unexpectedly null.");
-            return false;   // Context must be lost
-        }
-
-        mDevice->SetRenderTarget(0, renderTargetSurface);
-        renderTargetSurface->Release();
-    }
-    else
-    {
-        mDevice->SetRenderTarget(0, NULL);
-    }
-
-    return true;
-}
-
-bool Renderer9::setDepthStencil(gl::Renderbuffer *renderbuffer)
-{
-    IDirect3DSurface9 *depthStencilSurface = NULL;
-    
-    if (renderbuffer)
-    {
-        RenderTarget *depthStencil = renderbuffer->getDepthStencil();
-        
-        if (depthStencil)
-        {
-            depthStencilSurface = depthStencil->getSurface();
-        }
-
-        if (!depthStencilSurface)
-        {
-            ERR("depth stencil pointer unexpectedly null.");
-            return false;   // Context must be lost
-        }
-
-        mDevice->SetDepthStencilSurface(depthStencilSurface);
-        depthStencilSurface->Release();
-    }
-    else
-    {
-        mDevice->SetDepthStencilSurface(NULL);
-    }
-    return true;
-}
-
 bool Renderer9::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
 {
     return mBlit->boxFilter(source, dest);

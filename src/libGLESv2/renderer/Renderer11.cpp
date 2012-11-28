@@ -714,20 +714,6 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect,
     return false;
 }
 
-bool Renderer11::setRenderTarget(gl::Renderbuffer *renderbuffer)
-{
-    // TODO
-    UNIMPLEMENTED();
-    return false;
-}
-
-bool Renderer11::setDepthStencil(gl::Renderbuffer *renderbuffer)
-{
-    // TODO
-    UNIMPLEMENTED();
-    return false;
-}
-
 bool Renderer11::blitRect(gl::Framebuffer *readTarget, gl::Rectangle *readRect, gl::Framebuffer *drawTarget, gl::Rectangle *drawRect,
                           bool blitRenderTarget, bool blitDepthStencil)
 {

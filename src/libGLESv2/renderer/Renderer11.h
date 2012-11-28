@@ -119,9 +119,6 @@ class Renderer11 : public Renderer
     virtual void readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,
                             GLsizei outputPitch, bool packReverseRowOrder, GLint packAlignment, void* pixels);
 
-    virtual bool setRenderTarget(gl::Renderbuffer *renderbuffer);
-    virtual bool setDepthStencil(gl::Renderbuffer *renderbuffer);
-
     // D3D11-renderer specific methods
     ID3D11Device *getDevice() { return mDevice; }
     ID3D11DeviceContext *getDeviceContext() { return mDeviceContext; };
