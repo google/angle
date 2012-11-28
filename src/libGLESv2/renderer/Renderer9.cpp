@@ -865,6 +865,14 @@ void Renderer9::applyRenderTarget(gl::Framebuffer *frameBuffer)
     // TODO
 }
 
+void Renderer9::clear(GLbitfield mask, const gl::Color &colorClear, float depthClear, int stencilClear,
+                      gl::Framebuffer *frameBuffer)
+{
+    mForceSetDepthStencilState = true;
+
+    // TODO
+}
+
 void Renderer9::releaseDeviceResources()
 {
     while (!mEventQueryPool.empty())

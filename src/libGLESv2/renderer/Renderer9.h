@@ -79,6 +79,9 @@ class Renderer9 : public Renderer
 
     virtual void applyRenderTarget(gl::Framebuffer *frameBuffer);
 
+    virtual void clear(GLbitfield mask, const gl::Color &colorClear, float depthClear, int stencilClear,
+                       gl::Framebuffer *frameBuffer);
+
     // lost device
     virtual void markDeviceLost();
     virtual bool isDeviceLost();

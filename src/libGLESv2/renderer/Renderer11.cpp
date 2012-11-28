@@ -269,6 +269,13 @@ void Renderer11::applyRenderTarget(gl::Framebuffer *frameBuffer)
     UNIMPLEMENTED();
 }
 
+void Renderer11::clear(GLbitfield mask, const gl::Color &colorClear, float depthClear, int stencilClear,
+                       gl::Framebuffer *frameBuffer)
+{
+    // TODO
+    UNIMPLEMENTED();
+}
+
 void Renderer11::releaseDeviceResources()
 {
     // TODO

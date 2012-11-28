@@ -2824,6 +2824,9 @@ void Context::clear(GLbitfield mask)
     {
         mDevice->Clear(0, NULL, flags, color, depth, stencil);
     }
+
+    mRenderer->clear(mask, mState.colorClearValue, mState.depthClearValue, mState.stencilClearValue,
+                     framebufferObject);
 }
 
 void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instances)

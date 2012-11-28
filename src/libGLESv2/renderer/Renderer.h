@@ -82,6 +82,9 @@ class Renderer
 
     virtual void applyRenderTarget(gl::Framebuffer *frameBuffer) = 0;
 
+    virtual void clear(GLbitfield mask, const gl::Color &colorClear, float depthClear, int stencilClear,
+                       gl::Framebuffer *frameBuffer) = 0;
+
     // lost device
     virtual void markDeviceLost() = 0;
     virtual bool isDeviceLost() = 0;
