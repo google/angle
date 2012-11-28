@@ -17,6 +17,7 @@
 
 #include <dxgi.h>
 #include <d3d11.h>
+#include <D3Dcompiler.h>
 
 #include "common/angleutils.h"
 #include "libGLESv2/angletypes.h"
@@ -142,6 +143,9 @@ class Renderer11 : public Renderer
     HMODULE mD3d11Module;
     HMODULE mDxgiModule;
     HDC mDc;
+
+    HMODULE mD3dCompilerModule;
+    pD3DCompile mD3DCompileFunc;
 
     bool mDeviceLost;
 

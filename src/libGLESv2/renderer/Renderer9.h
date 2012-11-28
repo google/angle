@@ -191,20 +191,8 @@ class Renderer9 : public Renderer
     HMODULE mD3d9Module;
     HDC mDc;
 
-    typedef HRESULT (WINAPI *D3DCompileFunc)(LPCVOID pSrcData,
-                                             SIZE_T SrcDataSize,
-                                             LPCSTR pSourceName,
-                                             CONST D3D_SHADER_MACRO* pDefines,
-                                             ID3DInclude* pInclude,
-                                             LPCSTR pEntrypoint,
-                                             LPCSTR pTarget,
-                                             UINT Flags1,
-                                             UINT Flags2,
-                                             ID3DBlob** ppCode,
-                                             ID3DBlob** ppErrorMsgs);
-
     HMODULE mD3dCompilerModule;
-    D3DCompileFunc mD3DCompileFunc;
+    pD3DCompile mD3DCompileFunc;
 
     void initializeDevice();
     D3DPRESENT_PARAMETERS getDefaultPresentParameters();

@@ -37,6 +37,7 @@ Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(
 {
     mD3d11Module = NULL;
     mDxgiModule = NULL;
+    mD3dCompilerModule = NULL;
 
     mDeviceLost = false;
 
@@ -84,6 +85,12 @@ Renderer11::~Renderer11()
     {
         FreeLibrary(mDxgiModule);
         mDxgiModule = NULL;
+    }
+
+    if (mD3dCompilerModule)
+    {
+        FreeLibrary(mD3dCompilerModule);
+        mD3dCompilerModule = NULL;
     }
 }
 
@@ -170,6 +177,31 @@ EGLint Renderer11::initialize()
         ERR("Could not create DXGI factory - aborting!\n");
         return EGL_NOT_INITIALIZED;
     }
+
+#if defined(ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES)
+    // Find a D3DCompiler module that had already been loaded based on a predefined list of versions.
+    static TCHAR* d3dCompilerNames[] = ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES;
+
+    for (int i = 0; i < sizeof(d3dCompilerNames) / sizeof(*d3dCompilerNames); ++i)
+    {
+        if (GetModuleHandleEx(0, d3dCompilerNames[i], &mD3dCompilerModule))
+        {
+            break;
+        }
+    }
+#else
+    // Load the version of the D3DCompiler DLL associated with the Direct3D version ANGLE was built with.
+    mD3dCompilerModule = LoadLibrary(D3DCOMPILER_DLL);
+#endif  // ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES
+
+    if (!mD3dCompilerModule)
+    {
+        terminate();
+        return false;
+    }
+
+    mD3DCompileFunc = reinterpret_cast<pD3DCompile>(GetProcAddress(mD3dCompilerModule, "D3DCompile"));
+    ASSERT(mD3DCompileFunc);
 
     initializeDevice();
 

@@ -229,7 +229,7 @@ EGLint Renderer9::initialize()
         return false;
     }
 
-    mD3DCompileFunc = reinterpret_cast<D3DCompileFunc>(GetProcAddress(mD3dCompilerModule, "D3DCompile"));
+    mD3DCompileFunc = reinterpret_cast<pD3DCompile>(GetProcAddress(mD3dCompilerModule, "D3DCompile"));
     ASSERT(mD3DCompileFunc);
 
     if (mDc != NULL)
