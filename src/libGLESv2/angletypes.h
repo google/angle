@@ -100,6 +100,22 @@ struct DepthStencilState
     GLuint stencilBackWritemask;
 };
 
+struct ClearParameters
+{
+    GLbitfield mask;
+
+    Color colorClearValue;
+    bool colorMaskRed;
+    bool colorMaskGreen;
+    bool colorMaskBlue;
+    bool colorMaskAlpha;
+
+    float depthClearValue;
+
+    GLint stencilClearValue;
+    GLuint stencilWriteMask;
+};
+
 }
 
 #endif // LIBGLESV2_ANGLETYPES_H_
