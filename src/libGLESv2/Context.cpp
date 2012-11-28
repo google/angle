@@ -322,10 +322,6 @@ void Context::makeCurrent(egl::Surface *surface)
     Framebuffer *framebufferZero = new DefaultFramebuffer(mRenderer, colorbufferZero, depthStencilbufferZero);
 
     setFramebufferZero(framebufferZero);
-
-    // Reset pixel shader to null to work around a bug that only happens with Intel GPUs.
-    // http://crbug.com/110343
-    mDevice->SetPixelShader(NULL);
     
     markAllStateDirty();
 }
