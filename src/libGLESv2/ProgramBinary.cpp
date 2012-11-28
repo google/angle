@@ -1627,7 +1627,7 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
 
     const char *ptr = (const char*) binary + stream.offset();
 
-    const D3DCAPS9 *binaryIdentifier = (const D3DCAPS9*) ptr;
+    const GUID *binaryIdentifier = (const GUID *) ptr;
     ptr += sizeof(GUID);
 
     GUID identifier = mRenderer->getAdapterIdentifier();
