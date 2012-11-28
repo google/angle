@@ -4398,16 +4398,6 @@ gl::Context *glGetCurrentContext()
     return gl::getContext();
 }
 
-rx::Renderer *glCreateRenderer(egl::Display *display, HDC hDc, bool softwareDevice)
-{
-    return new rx::Renderer9(display, hDc, softwareDevice);  // D3D9_REPLACE
-}
-
-void glDestroyRenderer(rx::Renderer *renderer)
-{
-    delete renderer;
-}
-
 rx::SwapChain *glCreateSwapChain(rx::Renderer9 *renderer, HWND window, HANDLE shareHandle,
                                        GLenum backBufferFormat, GLenum depthBufferFormat)
 {

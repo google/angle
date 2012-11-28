@@ -245,6 +245,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClCompile Include="Query.cpp" />
     <ClCompile Include="..\common\RefCountObject.cpp" />
     <ClCompile Include="Renderbuffer.cpp" />
+    <ClCompile Include="renderer\Renderer.cpp" />
     <ClCompile Include="renderer\Renderer11.cpp" />
     <ClCompile Include="renderer\Renderer9.cpp" />
     <ClCompile Include="renderer\Image.cpp" />

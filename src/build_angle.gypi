@@ -254,6 +254,7 @@
             'libGLESv2/Renderbuffer.h',
             'libGLESv2/renderer/Image.cpp',
             'libGLESv2/renderer/Image.h',
+            'libGLESv2/renderer/Renderer.cpp',
             'libGLESv2/renderer/Renderer.h',
             'libGLESv2/renderer/Renderer11.cpp',
             'libGLESv2/renderer/Renderer11.h',
