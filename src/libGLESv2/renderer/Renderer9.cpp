@@ -79,6 +79,11 @@ Renderer9::Renderer9(egl::Display *display, HDC hDc, bool softwareDevice) : Rend
     mDeviceLost = false;
 
     mMaxSupportedSamples = 0;
+
+    mForceSetDepthStencilState = true;
+    mForceSetRasterState = true;
+    mForceSetBlendState = true;
+    mForceSetScissor = true;
 }
 
 Renderer9::~Renderer9()
@@ -133,11 +138,6 @@ Renderer9::~Renderer9()
         delete [] mMultiSampleSupport.begin()->second;
         mMultiSampleSupport.erase(mMultiSampleSupport.begin());
     }
-
-    mForceSetDepthStencilState = true;
-    mForceSetRasterState = true;
-    mForceSetBlendState = true;
-    mForceSetScissor = true;
 }
 
 EGLint Renderer9::initialize()

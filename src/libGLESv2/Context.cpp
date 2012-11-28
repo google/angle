@@ -1751,6 +1751,8 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         return error(GL_INVALID_FRAMEBUFFER_OPERATION, false);
     }
 
+    mRenderer->applyRenderTarget(framebufferObject);
+
     // if there is no color attachment we must synthesize a NULL colorattachment
     // to keep the D3D runtime happy.  This should only be possible if depth texturing.
     Renderbuffer *renderbufferObject = NULL;
@@ -1903,8 +1905,6 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         programBinary->setUniform3fv(depthRange, 1, nearFarDiff);
         mDxUniformsDirty = false;
     }
-
-    mRenderer->applyRenderTarget(framebufferObject);
 
     return true;
 }
