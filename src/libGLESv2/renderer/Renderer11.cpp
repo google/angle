@@ -500,16 +500,12 @@ bool Renderer11::get32BitIndexSupport() const
 
 int Renderer11::getMinSwapInterval() const
 {
-    // TODO
-    UNIMPLEMENTED();
-    return 1;
+    return 0;
 }
 
 int Renderer11::getMaxSwapInterval() const
 {
-    // TODO
-    UNIMPLEMENTED();
-    return 1;
+    return 4;
 }
 
 int Renderer11::getMaxSupportedSamples() const
