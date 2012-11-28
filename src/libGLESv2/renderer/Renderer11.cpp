@@ -648,6 +648,18 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
 
 GLenum Renderer11::applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], GLint first, GLsizei count, GLsizei instances)
 {
+    // TODO: Build the input layout from the (translated) attribute information
+    D3D11_INPUT_ELEMENT_DESC inputElementDescriptions[1] =
+    {
+        {"TEXCOORD", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
+    };
+
+    ID3D11InputLayout *inputLayout = NULL;
+    mDevice->CreateInputLayout(inputElementDescriptions, 1, NULL /*FIXME: vertex shader blob */, 0 /* FIXME: vertex shader size */, &inputLayout);
+    
+    mDeviceContext->IASetInputLayout(inputLayout);
+    inputLayout->Release();   // TODO: Build a cache of input layouts
+
     // TODO
     UNIMPLEMENTED();
 
