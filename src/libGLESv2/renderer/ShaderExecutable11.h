@@ -20,12 +20,10 @@ namespace rx
 class ShaderExecutable11 : public ShaderExecutable
 {
   public:
-    ShaderExecutable11(ID3D11PixelShader *executable);
-    ShaderExecutable11(ID3D11VertexShader *executable);
-    virtual ~ShaderExecutable11();
+    ShaderExecutable11(const void *function, size_t length, ID3D11PixelShader *executable);
+    ShaderExecutable11(const void *function, size_t length, ID3D11VertexShader *executable);
 
-    virtual bool getVertexFunction(void *pData, UINT *pSizeOfData);
-    virtual bool getPixelFunction(void *pData, UINT *pSizeOfData);
+    virtual ~ShaderExecutable11();
 
     static ShaderExecutable11 *makeShaderExecutable11(ShaderExecutable *executable);
 

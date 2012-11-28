@@ -14,14 +14,16 @@
 namespace rx
 {
 
-ShaderExecutable9::ShaderExecutable9(IDirect3DPixelShader9 *executable, gl::D3DConstantTable *constantTable)
+ShaderExecutable9::ShaderExecutable9(const void *function, size_t length, IDirect3DPixelShader9 *executable, gl::D3DConstantTable *constantTable)
+    : ShaderExecutable(function, length)
 {
     mPixelExecutable = executable;
     mVertexExecutable = NULL;
     mConstantTable = constantTable;
 }
 
-ShaderExecutable9::ShaderExecutable9(IDirect3DVertexShader9 *executable, gl::D3DConstantTable *constantTable)
+ShaderExecutable9::ShaderExecutable9(const void *function, size_t length, IDirect3DVertexShader9 *executable, gl::D3DConstantTable *constantTable)
+    : ShaderExecutable(function, length)
 {
     mVertexExecutable = executable;
     mPixelExecutable = NULL;
@@ -46,26 +48,6 @@ ShaderExecutable9 *ShaderExecutable9::makeShaderExecutable9(ShaderExecutable *ex
 {
     ASSERT(dynamic_cast<ShaderExecutable9*>(executable) != NULL);
     return static_cast<ShaderExecutable9*>(executable);
-}
-
-bool ShaderExecutable9::getVertexFunction(void *pData, UINT *pSizeOfData)
-{
-    HRESULT hr = D3DERR_INVALIDCALL;
-    if (mVertexExecutable)
-    {
-        hr = mVertexExecutable->GetFunction(pData, pSizeOfData);
-    }
-    return SUCCEEDED(hr);
-}
-
-bool ShaderExecutable9::getPixelFunction(void *pData, UINT *pSizeOfData)
-{
-    HRESULT hr = D3DERR_INVALIDCALL;
-    if (mPixelExecutable)
-    {
-        hr = mPixelExecutable->GetFunction(pData, pSizeOfData);
-    }
-    return SUCCEEDED(hr);
 }
 
 IDirect3DVertexShader9 *ShaderExecutable9::getVertexShader()

@@ -14,13 +14,15 @@
 namespace rx
 {
 
-ShaderExecutable11::ShaderExecutable11(ID3D11PixelShader *executable)
+ShaderExecutable11::ShaderExecutable11(const void *function, size_t length, ID3D11PixelShader *executable)
+    : ShaderExecutable(function, length)
 {
     mPixelExecutable = executable;
     mVertexExecutable = NULL;
 }
 
-ShaderExecutable11::ShaderExecutable11(ID3D11VertexShader *executable)
+ShaderExecutable11::ShaderExecutable11(const void *function, size_t length, ID3D11VertexShader *executable)
+    : ShaderExecutable(function, length)
 {
     mVertexExecutable = executable;
     mPixelExecutable = NULL;
@@ -42,20 +44,6 @@ ShaderExecutable11 *ShaderExecutable11::makeShaderExecutable11(ShaderExecutable 
 {
     ASSERT(dynamic_cast<ShaderExecutable11*>(executable) != NULL);
     return static_cast<ShaderExecutable11*>(executable);
-}
-
-bool ShaderExecutable11::getVertexFunction(void *pData, UINT *pSizeOfData)
-{
-    // TODO
-    UNIMPLEMENTED();
-    return false;
-}
-
-bool ShaderExecutable11::getPixelFunction(void *pData, UINT *pSizeOfData)
-{
-    // TODO
-    UNIMPLEMENTED();
-    return false;
 }
 
 ID3D11VertexShader *ShaderExecutable11::getVertexShader()

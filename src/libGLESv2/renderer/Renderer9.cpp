@@ -2647,7 +2647,7 @@ RenderTarget *Renderer9::createRenderTarget(int width, int height, GLenum format
     return renderTarget;
 }
 
-ShaderExecutable *Renderer9::loadExecutable(const DWORD *function, size_t length, GLenum type, void *data)
+ShaderExecutable *Renderer9::loadExecutable(const void *function, size_t length, GLenum type, void *data)
 {
     ShaderExecutable9 *executable = NULL;
     gl::D3DConstantTable *table = reinterpret_cast<gl::D3DConstantTable *>(data);
@@ -2656,19 +2656,19 @@ ShaderExecutable *Renderer9::loadExecutable(const DWORD *function, size_t length
     {
       case GL_VERTEX_SHADER:
         {
-            IDirect3DVertexShader9 *vshader = createVertexShader(function, length);
+            IDirect3DVertexShader9 *vshader = createVertexShader((DWORD*)function, length);
             if (vshader)
             {
-                executable = new ShaderExecutable9(vshader, table);
+                executable = new ShaderExecutable9(function, length, vshader, table);
             }
         }
         break;
       case GL_FRAGMENT_SHADER:
         {
-            IDirect3DPixelShader9 *pshader = createPixelShader(function, length);
+            IDirect3DPixelShader9 *pshader = createPixelShader((DWORD*)function, length);
             if (pshader)
             {
-                executable = new ShaderExecutable9(pshader, table);
+                executable = new ShaderExecutable9(function, length, pshader, table);
             }
         }
         break;
@@ -2702,7 +2702,7 @@ ShaderExecutable *Renderer9::compileToExecutable(gl::InfoLog &infoLog, const cha
     if (!binary)
         return NULL;
 
-    ShaderExecutable *executable = loadExecutable((DWORD *)binary->GetBufferPointer(), binary->GetBufferSize(), type, constantTable);
+    ShaderExecutable *executable = loadExecutable(binary->GetBufferPointer(), binary->GetBufferSize(), type, constantTable);
     binary->Release();
 
     return executable;

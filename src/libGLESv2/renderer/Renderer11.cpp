@@ -683,8 +683,10 @@ GLenum Renderer11::applyVertexBuffer(gl::ProgramBinary *programBinary, gl::Verte
         {"TEXCOORD", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
     };
 
+    ShaderExecutable *vertexExecutable = programBinary->getVertexExecutable();
+
     ID3D11InputLayout *inputLayout = NULL;
-    result = mDevice->CreateInputLayout(inputElementDescriptions, 1, NULL /*FIXME: vertex shader blob */, 0 /* FIXME: vertex shader size */, &inputLayout);
+    result = mDevice->CreateInputLayout(inputElementDescriptions, 1, vertexExecutable->getFunction(), vertexExecutable->getLength(), &inputLayout);
     ASSERT(SUCCEEDED(result));
     
     mDeviceContext->IASetInputLayout(inputLayout);
@@ -1178,7 +1180,7 @@ RenderTarget *Renderer11::createRenderTarget(int width, int height, GLenum forma
     return NULL;
 }
 
-ShaderExecutable *Renderer11::loadExecutable(const DWORD *function, size_t length, GLenum type, void *data)
+ShaderExecutable *Renderer11::loadExecutable(const void *function, size_t length, GLenum type, void *data)
 {
     ShaderExecutable11 *executable = NULL;
 
@@ -1192,7 +1194,7 @@ ShaderExecutable *Renderer11::loadExecutable(const DWORD *function, size_t lengt
 
             if (vshader)
             {
-                executable = new ShaderExecutable11(vshader);
+                executable = new ShaderExecutable11(function, length, vshader);
             }
         }
         break;
@@ -1204,7 +1206,7 @@ ShaderExecutable *Renderer11::loadExecutable(const DWORD *function, size_t lengt
 
             if (pshader)
             {
-                executable = new ShaderExecutable11(pshader);
+                executable = new ShaderExecutable11(function, length, pshader);
             }
         }
         break;

@@ -21,12 +21,9 @@ namespace rx
 class ShaderExecutable9 : public ShaderExecutable
 {
   public:
-    ShaderExecutable9(IDirect3DPixelShader9 *executable, gl::D3DConstantTable *constantTable);
-    ShaderExecutable9(IDirect3DVertexShader9 *executable, gl::D3DConstantTable *constantTable);
+    ShaderExecutable9(const void *function, size_t length, IDirect3DPixelShader9 *executable, gl::D3DConstantTable *constantTable);
+    ShaderExecutable9(const void *function, size_t length, IDirect3DVertexShader9 *executable, gl::D3DConstantTable *constantTable);
     virtual ~ShaderExecutable9();
-
-    virtual bool getVertexFunction(void *pData, UINT *pSizeOfData);
-    virtual bool getPixelFunction(void *pData, UINT *pSizeOfData);
 
     static ShaderExecutable9 *makeShaderExecutable9(ShaderExecutable *executable);
 

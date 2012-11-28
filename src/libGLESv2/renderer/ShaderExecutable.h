@@ -19,16 +19,34 @@ namespace rx
 class ShaderExecutable
 {
   public:
-    ShaderExecutable() {};
-    virtual ~ShaderExecutable() {};
+    ShaderExecutable(const void *function, size_t length) : mLength(length)
+    {
+        mFunction = new char[length];
+        memcpy(mFunction, function, length);
+    }
+    
+    virtual ~ShaderExecutable()
+    {
+        delete mFunction;
+    }
 
-    virtual bool getVertexFunction(void *pData, UINT *pSizeOfData) = 0;
-    virtual bool getPixelFunction(void *pData, UINT *pSizeOfData) = 0;
+    void *getFunction() const
+    {
+        return mFunction;
+    }
+
+    size_t getLength() const
+    {
+        return mLength;
+    }
 
     virtual gl::D3DConstantTable *getConstantTable() = 0; // D3D9_REMOVE
 
   private:
     DISALLOW_COPY_AND_ASSIGN(ShaderExecutable);
+
+    void *mFunction;
+    const size_t mLength;
 };
 
 }
