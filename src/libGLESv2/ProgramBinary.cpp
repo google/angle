@@ -1204,7 +1204,8 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
     }
 
     // Write the HLSL input/output declarations
-    const bool sm3 = mRenderer->getMajorShaderModel() >= 3;
+    const bool sm3 = (mRenderer->getMajorShaderModel() >= 3);
+    const bool sm4 = (mRenderer->getMajorShaderModel() >= 4);
     Context *context = getContext();
     const int maxVaryingVectors = context->getMaximumVaryingVectors();
 
@@ -1248,6 +1249,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
 
     mUsesPointSize = vertexShader->mUsesPointSize;
     std::string varyingSemantic = (mUsesPointSize && sm3) ? "COLOR" : "TEXCOORD";
+    std::string targetSemantic = sm4 ? "SV_Target" : "COLOR";
 
     vertexHLSL += "struct VS_INPUT\n"
                    "{\n";
@@ -1438,7 +1440,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
                   "\n"
                   "struct PS_OUTPUT\n"
                   "{\n"
-                  "    float4 gl_Color[1] : COLOR;\n"
+                  "    float4 gl_Color[1] : " + targetSemantic + ";\n"
                   "};\n"
                   "\n"
                   "PS_OUTPUT main(PS_INPUT input)\n"
