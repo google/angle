@@ -38,6 +38,14 @@ struct Color
     float alpha;
 };
 
+struct Rectangle
+{
+    int x;
+    int y;
+    int width;
+    int height;
+};
+
 struct RasterizerState
 {
     bool cullFace;
