@@ -2697,10 +2697,17 @@ ShaderExecutable *Renderer9::compileToExecutable(gl::InfoLog &infoLog, const cha
         return NULL;
     }
 
-    gl::D3DConstantTable *constantTable = NULL;
-    ID3DBlob *binary = compileToBinary(infoLog, shaderHLSL, profile, &constantTable);
+    ID3DBlob *binary = compileToBinary(infoLog, shaderHLSL, profile);
     if (!binary)
         return NULL;
+
+    gl::D3DConstantTable *constantTable = new gl::D3DConstantTable(binary->GetBufferPointer(), binary->GetBufferSize());
+    if (constantTable->error())
+    {
+        delete constantTable;
+        binary->Release();
+        return NULL;
+    }
 
     ShaderExecutable *executable = loadExecutable(binary->GetBufferPointer(), binary->GetBufferSize(), type, constantTable);
     binary->Release();
@@ -2709,7 +2716,7 @@ ShaderExecutable *Renderer9::compileToExecutable(gl::InfoLog &infoLog, const cha
 }
 
 // Compiles the HLSL code of the attached shaders into executable binaries
-ID3DBlob *Renderer9::compileToBinary(gl::InfoLog &infoLog, const char *hlsl, const char *profile, gl::D3DConstantTable **constantTable)
+ID3DBlob *Renderer9::compileToBinary(gl::InfoLog &infoLog, const char *hlsl, const char *profile)
 {
     if (!hlsl)
     {
@@ -2774,15 +2781,6 @@ ID3DBlob *Renderer9::compileToBinary(gl::InfoLog &infoLog, const char *hlsl, con
 
         if (SUCCEEDED(result))
         {
-            gl::D3DConstantTable *table = new gl::D3DConstantTable(binary->GetBufferPointer(), binary->GetBufferSize());
-            if (table->error())
-            {
-                delete table;
-                binary->Release();
-                return NULL;
-            }
-
-            *constantTable = table;
             return binary;
         }
         else
