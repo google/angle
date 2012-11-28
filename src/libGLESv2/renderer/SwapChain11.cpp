@@ -185,8 +185,8 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
         DXGI_SWAP_CHAIN_DESC swapChainDesc = {0};
         swapChainDesc.BufferCount = 2;
         swapChainDesc.BufferDesc.Format = gl_d3d11::ConvertRenderbufferFormat(mBackBufferFormat);
-        swapChainDesc.BufferDesc.Width = 1;
-        swapChainDesc.BufferDesc.Height = 1;
+        swapChainDesc.BufferDesc.Width = backbufferWidth;
+        swapChainDesc.BufferDesc.Height = backbufferHeight;
         swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
         swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
         swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
