@@ -1775,59 +1775,48 @@ bool Context::applyRenderTarget(bool ignoreViewport)
     unsigned int renderTargetSerial = renderbufferObject->getSerial();
     if (renderTargetSerial != mAppliedRenderTargetSerial)
     {
-        IDirect3DSurface9 *renderTarget = renderbufferObject->getRenderTarget();
-        if (!renderTarget)
+        if (!mRenderer->setRenderTarget(renderbufferObject))
         {
-            ERR("render target pointer unexpectedly null.");
             return false;   // Context must be lost
         }
-        mDevice->SetRenderTarget(0, renderTarget);
         mAppliedRenderTargetSerial = renderTargetSerial;
         renderTargetChanged = true;
-        renderTarget->Release();
     }
 
-    IDirect3DSurface9 *depthStencil = NULL;
+    Renderbuffer *depthStencil = NULL;
     unsigned int depthbufferSerial = 0;
     unsigned int stencilbufferSerial = 0;
     if (framebufferObject->getDepthbufferType() != GL_NONE)
     {
-        Renderbuffer *depthbuffer = framebufferObject->getDepthbuffer();
-        depthStencil = depthbuffer->getDepthStencil();
+        depthStencil = framebufferObject->getDepthbuffer();
         if (!depthStencil)
         {
             ERR("Depth stencil pointer unexpectedly null.");
             return false;
         }
         
-        depthbufferSerial = depthbuffer->getSerial();
+        depthbufferSerial = depthStencil->getSerial();
     }
     else if (framebufferObject->getStencilbufferType() != GL_NONE)
     {
-        Renderbuffer *stencilbuffer = framebufferObject->getStencilbuffer();
-        depthStencil = stencilbuffer->getDepthStencil();
+        depthStencil = framebufferObject->getStencilbuffer();
         if (!depthStencil)
         {
             ERR("Depth stencil pointer unexpectedly null.");
             return false;
         }
         
-        stencilbufferSerial = stencilbuffer->getSerial();
+        stencilbufferSerial = depthStencil->getSerial();
     }
 
     if (depthbufferSerial != mAppliedDepthbufferSerial ||
         stencilbufferSerial != mAppliedStencilbufferSerial ||
         !mDepthStencilInitialized)
     {
-        mDevice->SetDepthStencilSurface(depthStencil);
+        mRenderer->setDepthStencil(depthStencil);
         mAppliedDepthbufferSerial = depthbufferSerial;
         mAppliedStencilbufferSerial = stencilbufferSerial;
         mDepthStencilInitialized = true;
-    }
-
-    if (depthStencil)
-    {
-        depthStencil->Release();
     }
 
     if (!mRenderTargetDescInitialized || renderTargetChanged)
@@ -2105,7 +2094,7 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
         return error(GL_INVALID_OPERATION);
     }
 
-    GLsizei outputPitch = ComputePitch(width, ConvertSizedInternalFormat(format, type), mState.packAlignment);
+    GLsizei outputPitch = ComputePitch(width, ConvertSizedInternalFormat(format, type), getPackAlignment());
     // sized query sanity check
     if (bufSize)
     {
@@ -2116,320 +2105,7 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
         }
     }
 
-    IDirect3DSurface9 *renderTarget = framebuffer->getRenderTarget();
-    if (!renderTarget)
-    {
-        return;   // Context must be lost, return silently
-    }
-
-    D3DSURFACE_DESC desc;
-    renderTarget->GetDesc(&desc);
-
-    if (desc.MultiSampleType != D3DMULTISAMPLE_NONE)
-    {
-        UNIMPLEMENTED();   // FIXME: Requires resolve using StretchRect into non-multisampled render target
-        renderTarget->Release();
-        return error(GL_OUT_OF_MEMORY);
-    }
-
-    HRESULT result;
-    IDirect3DSurface9 *systemSurface = NULL;
-    bool directToPixels = !getPackReverseRowOrder() && getPackAlignment() <= 4 && mRenderer->getShareHandleSupport() &&
-                          x == 0 && y == 0 && UINT(width) == desc.Width && UINT(height) == desc.Height &&
-                          desc.Format == D3DFMT_A8R8G8B8 && format == GL_BGRA_EXT && type == GL_UNSIGNED_BYTE;
-    if (directToPixels)
-    {
-        // Use the pixels ptr as a shared handle to write directly into client's memory
-        result = mDevice->CreateOffscreenPlainSurface(desc.Width, desc.Height, desc.Format,
-                                                      D3DPOOL_SYSTEMMEM, &systemSurface, &pixels);
-        if (FAILED(result))
-        {
-            // Try again without the shared handle
-            directToPixels = false;
-        }
-    }
-
-    if (!directToPixels)
-    {
-        result = mDevice->CreateOffscreenPlainSurface(desc.Width, desc.Height, desc.Format,
-                                                      D3DPOOL_SYSTEMMEM, &systemSurface, NULL);
-        if (FAILED(result))
-        {
-            ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-            renderTarget->Release();
-            return error(GL_OUT_OF_MEMORY);
-        }
-    }
-
-    result = mDevice->GetRenderTargetData(renderTarget, systemSurface);
-    renderTarget->Release();
-    renderTarget = NULL;
-
-    if (FAILED(result))
-    {
-        systemSurface->Release();
-
-        // It turns out that D3D will sometimes produce more error
-        // codes than those documented.
-        if (checkDeviceLost(result))
-            return error(GL_OUT_OF_MEMORY);
-        else
-        {
-            UNREACHABLE();
-            return;
-        }
-
-    }
-
-    if (directToPixels)
-    {
-        systemSurface->Release();
-        return;
-    }
-
-    RECT rect;
-    rect.left = clamp(x, 0L, static_cast<LONG>(desc.Width));
-    rect.top = clamp(y, 0L, static_cast<LONG>(desc.Height));
-    rect.right = clamp(x + width, 0L, static_cast<LONG>(desc.Width));
-    rect.bottom = clamp(y + height, 0L, static_cast<LONG>(desc.Height));
-
-    D3DLOCKED_RECT lock;
-    result = systemSurface->LockRect(&lock, &rect, D3DLOCK_READONLY);
-
-    if (FAILED(result))
-    {
-        UNREACHABLE();
-        systemSurface->Release();
-
-        return;   // No sensible error to generate
-    }
-
-    unsigned char *dest = (unsigned char*)pixels;
-    unsigned short *dest16 = (unsigned short*)pixels;
-
-    unsigned char *source;
-    int inputPitch;
-    if (getPackReverseRowOrder())
-    {
-        source = ((unsigned char*)lock.pBits) + lock.Pitch * (rect.bottom - rect.top - 1);
-        inputPitch = -lock.Pitch;
-    }
-    else
-    {
-        source = (unsigned char*)lock.pBits;
-        inputPitch = lock.Pitch;
-    }
-
-    unsigned int fastPixelSize = 0;
-
-    if (desc.Format == D3DFMT_A8R8G8B8 &&
-        format == GL_BGRA_EXT &&
-        type == GL_UNSIGNED_BYTE)
-    {
-        fastPixelSize = 4;
-    }
-    else if ((desc.Format == D3DFMT_A4R4G4B4 &&
-             format == GL_BGRA_EXT &&
-             type == GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT) ||
-             (desc.Format == D3DFMT_A1R5G5B5 &&
-             format == GL_BGRA_EXT &&
-             type == GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT))
-    {
-        fastPixelSize = 2;
-    }
-    else if (desc.Format == D3DFMT_A16B16G16R16F &&
-             format == GL_RGBA &&
-             type == GL_HALF_FLOAT_OES)
-    {
-        fastPixelSize = 8;
-    }
-    else if (desc.Format == D3DFMT_A32B32G32R32F &&
-             format == GL_RGBA &&
-             type == GL_FLOAT)
-    {
-        fastPixelSize = 16;
-    }
-
-    for (int j = 0; j < rect.bottom - rect.top; j++)
-    {
-        if (fastPixelSize != 0)
-        {
-            // Fast path for formats which require no translation:
-            // D3DFMT_A8R8G8B8 to BGRA/UNSIGNED_BYTE
-            // D3DFMT_A4R4G4B4 to BGRA/UNSIGNED_SHORT_4_4_4_4_REV_EXT
-            // D3DFMT_A1R5G5B5 to BGRA/UNSIGNED_SHORT_1_5_5_5_REV_EXT
-            // D3DFMT_A16B16G16R16F to RGBA/HALF_FLOAT_OES
-            // D3DFMT_A32B32G32R32F to RGBA/FLOAT
-            // 
-            // Note that buffers with no alpha go through the slow path below.
-            memcpy(dest + j * outputPitch,
-                   source + j * inputPitch,
-                   (rect.right - rect.left) * fastPixelSize);
-            continue;
-        }
-
-        for (int i = 0; i < rect.right - rect.left; i++)
-        {
-            float r;
-            float g;
-            float b;
-            float a;
-
-            switch (desc.Format)
-            {
-              case D3DFMT_R5G6B5:
-                {
-                    unsigned short rgb = *(unsigned short*)(source + 2 * i + j * inputPitch);
-
-                    a = 1.0f;
-                    b = (rgb & 0x001F) * (1.0f / 0x001F);
-                    g = (rgb & 0x07E0) * (1.0f / 0x07E0);
-                    r = (rgb & 0xF800) * (1.0f / 0xF800);
-                }
-                break;
-              case D3DFMT_A1R5G5B5:
-                {
-                    unsigned short argb = *(unsigned short*)(source + 2 * i + j * inputPitch);
-
-                    a = (argb & 0x8000) ? 1.0f : 0.0f;
-                    b = (argb & 0x001F) * (1.0f / 0x001F);
-                    g = (argb & 0x03E0) * (1.0f / 0x03E0);
-                    r = (argb & 0x7C00) * (1.0f / 0x7C00);
-                }
-                break;
-              case D3DFMT_A8R8G8B8:
-                {
-                    unsigned int argb = *(unsigned int*)(source + 4 * i + j * inputPitch);
-
-                    a = (argb & 0xFF000000) * (1.0f / 0xFF000000);
-                    b = (argb & 0x000000FF) * (1.0f / 0x000000FF);
-                    g = (argb & 0x0000FF00) * (1.0f / 0x0000FF00);
-                    r = (argb & 0x00FF0000) * (1.0f / 0x00FF0000);
-                }
-                break;
-              case D3DFMT_X8R8G8B8:
-                {
-                    unsigned int xrgb = *(unsigned int*)(source + 4 * i + j * inputPitch);
-
-                    a = 1.0f;
-                    b = (xrgb & 0x000000FF) * (1.0f / 0x000000FF);
-                    g = (xrgb & 0x0000FF00) * (1.0f / 0x0000FF00);
-                    r = (xrgb & 0x00FF0000) * (1.0f / 0x00FF0000);
-                }
-                break;
-              case D3DFMT_A2R10G10B10:
-                {
-                    unsigned int argb = *(unsigned int*)(source + 4 * i + j * inputPitch);
-
-                    a = (argb & 0xC0000000) * (1.0f / 0xC0000000);
-                    b = (argb & 0x000003FF) * (1.0f / 0x000003FF);
-                    g = (argb & 0x000FFC00) * (1.0f / 0x000FFC00);
-                    r = (argb & 0x3FF00000) * (1.0f / 0x3FF00000);
-                }
-                break;
-              case D3DFMT_A32B32G32R32F:
-                {
-                    // float formats in D3D are stored rgba, rather than the other way round
-                    r = *((float*)(source + 16 * i + j * inputPitch) + 0);
-                    g = *((float*)(source + 16 * i + j * inputPitch) + 1);
-                    b = *((float*)(source + 16 * i + j * inputPitch) + 2);
-                    a = *((float*)(source + 16 * i + j * inputPitch) + 3);
-                }
-                break;
-              case D3DFMT_A16B16G16R16F:
-                {
-                    // float formats in D3D are stored rgba, rather than the other way round
-                    r = float16ToFloat32(*((unsigned short*)(source + 8 * i + j * inputPitch) + 0));
-                    g = float16ToFloat32(*((unsigned short*)(source + 8 * i + j * inputPitch) + 1));
-                    b = float16ToFloat32(*((unsigned short*)(source + 8 * i + j * inputPitch) + 2));
-                    a = float16ToFloat32(*((unsigned short*)(source + 8 * i + j * inputPitch) + 3));
-                }
-                break;
-              default:
-                UNIMPLEMENTED();   // FIXME
-                UNREACHABLE();
-                return;
-            }
-
-            switch (format)
-            {
-              case GL_RGBA:
-                switch (type)
-                {
-                  case GL_UNSIGNED_BYTE:
-                    dest[4 * i + j * outputPitch + 0] = (unsigned char)(255 * r + 0.5f);
-                    dest[4 * i + j * outputPitch + 1] = (unsigned char)(255 * g + 0.5f);
-                    dest[4 * i + j * outputPitch + 2] = (unsigned char)(255 * b + 0.5f);
-                    dest[4 * i + j * outputPitch + 3] = (unsigned char)(255 * a + 0.5f);
-                    break;
-                  default: UNREACHABLE();
-                }
-                break;
-              case GL_BGRA_EXT:
-                switch (type)
-                {
-                  case GL_UNSIGNED_BYTE:
-                    dest[4 * i + j * outputPitch + 0] = (unsigned char)(255 * b + 0.5f);
-                    dest[4 * i + j * outputPitch + 1] = (unsigned char)(255 * g + 0.5f);
-                    dest[4 * i + j * outputPitch + 2] = (unsigned char)(255 * r + 0.5f);
-                    dest[4 * i + j * outputPitch + 3] = (unsigned char)(255 * a + 0.5f);
-                    break;
-                  case GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT:
-                    // According to the desktop GL spec in the "Transfer of Pixel Rectangles" section
-                    // this type is packed as follows:
-                    //   15   14   13   12   11   10    9    8    7    6    5    4    3    2    1    0
-                    //  --------------------------------------------------------------------------------
-                    // |       4th         |        3rd         |        2nd        |   1st component   |
-                    //  --------------------------------------------------------------------------------
-                    // in the case of BGRA_EXT, B is the first component, G the second, and so forth.
-                    dest16[i + j * outputPitch / sizeof(unsigned short)] =
-                        ((unsigned short)(15 * a + 0.5f) << 12)|
-                        ((unsigned short)(15 * r + 0.5f) << 8) |
-                        ((unsigned short)(15 * g + 0.5f) << 4) |
-                        ((unsigned short)(15 * b + 0.5f) << 0);
-                    break;
-                  case GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT:
-                    // According to the desktop GL spec in the "Transfer of Pixel Rectangles" section
-                    // this type is packed as follows:
-                    //   15   14   13   12   11   10    9    8    7    6    5    4    3    2    1    0
-                    //  --------------------------------------------------------------------------------
-                    // | 4th |          3rd           |           2nd          |      1st component     |
-                    //  --------------------------------------------------------------------------------
-                    // in the case of BGRA_EXT, B is the first component, G the second, and so forth.
-                    dest16[i + j * outputPitch / sizeof(unsigned short)] =
-                        ((unsigned short)(     a + 0.5f) << 15) |
-                        ((unsigned short)(31 * r + 0.5f) << 10) |
-                        ((unsigned short)(31 * g + 0.5f) << 5) |
-                        ((unsigned short)(31 * b + 0.5f) << 0);
-                    break;
-                  default: UNREACHABLE();
-                }
-                break;
-              case GL_RGB:
-                switch (type)
-                {
-                  case GL_UNSIGNED_SHORT_5_6_5:
-                    dest16[i + j * outputPitch / sizeof(unsigned short)] = 
-                        ((unsigned short)(31 * b + 0.5f) << 0) |
-                        ((unsigned short)(63 * g + 0.5f) << 5) |
-                        ((unsigned short)(31 * r + 0.5f) << 11);
-                    break;
-                  case GL_UNSIGNED_BYTE:
-                    dest[3 * i + j * outputPitch + 0] = (unsigned char)(255 * r + 0.5f);
-                    dest[3 * i + j * outputPitch + 1] = (unsigned char)(255 * g + 0.5f);
-                    dest[3 * i + j * outputPitch + 2] = (unsigned char)(255 * b + 0.5f);
-                    break;
-                  default: UNREACHABLE();
-                }
-                break;
-              default: UNREACHABLE();
-            }
-        }
-    }
-
-    systemSurface->UnlockRect();
-
-    systemSurface->Release();
+    mRenderer->readPixels(framebuffer, x, y, width, height, format, type, outputPitch, getPackReverseRowOrder(), getPackAlignment(), pixels);
 }
 
 void Context::clear(GLbitfield mask)
@@ -3824,53 +3500,7 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
 
     if (blitRenderTarget || blitDepthStencil)
     {
-        mRenderer->endScene();
-
-        if (blitRenderTarget)
-        {
-            IDirect3DSurface9* readRenderTarget = readFramebuffer->getRenderTarget();
-            IDirect3DSurface9* drawRenderTarget = drawFramebuffer->getRenderTarget();
-
-            RECT finalSrcRect, finalDstRect; // TEMPORARY
-            finalSrcRect.left = sourceTrimmedRect.x;
-            finalSrcRect.right = sourceTrimmedRect.x + sourceTrimmedRect.width;
-            finalSrcRect.top = sourceTrimmedRect.y;
-            finalSrcRect.bottom = sourceTrimmedRect.y + sourceTrimmedRect.height;
-
-            finalDstRect.left = destTrimmedRect.x;
-            finalDstRect.right = destTrimmedRect.x + destTrimmedRect.width;
-            finalDstRect.top = destTrimmedRect.y;
-            finalDstRect.bottom = destTrimmedRect.y + destTrimmedRect.height;
-
-            HRESULT result = mDevice->StretchRect(readRenderTarget, &finalSrcRect, 
-                                                  drawRenderTarget, &finalDstRect, D3DTEXF_NONE);
-
-            readRenderTarget->Release();
-            drawRenderTarget->Release();
-
-            if (FAILED(result))
-            {
-                ERR("BlitFramebufferANGLE failed: StretchRect returned %x.", result);
-                return;
-            }
-        }
-
-        if (blitDepthStencil)
-        {
-            IDirect3DSurface9* readDepthStencil = readFramebuffer->getDepthStencil();
-            IDirect3DSurface9* drawDepthStencil = drawFramebuffer->getDepthStencil();
-
-            HRESULT result = mDevice->StretchRect(readDepthStencil, NULL, drawDepthStencil, NULL, D3DTEXF_NONE);
-
-            readDepthStencil->Release();
-            drawDepthStencil->Release();
-
-            if (FAILED(result))
-            {
-                ERR("BlitFramebufferANGLE failed: StretchRect returned %x.", result);
-                return;
-            }
-        }
+        mRenderer->blitRect(readFramebuffer, &sourceTrimmedRect, drawFramebuffer, &destTrimmedRect, blitRenderTarget, blitDepthStencil);
     }
 }
 

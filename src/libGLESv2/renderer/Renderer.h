@@ -133,6 +133,14 @@ class Renderer
     virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat,
                            GLint xoffset, GLint yoffset, TextureStorageCubeMap *storage, GLenum target, GLint level) = 0;
 
+    virtual bool blitRect(gl::Framebuffer *readTarget, gl::Rectangle *readRect, gl::Framebuffer *drawTarget, gl::Rectangle *drawRect,
+                          bool blitRenderTarget, bool blitDepthStencil) = 0;
+    virtual void readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,
+                            GLsizei outputPitch, bool packReverseRowOrder, GLint packAlignment, void* pixels) = 0;
+
+    virtual bool setRenderTarget(gl::Renderbuffer *renderbuffer) = 0;
+    virtual bool setDepthStencil(gl::Renderbuffer *renderbuffer) = 0;
+
   protected:
     egl::Display *mDisplay;
 

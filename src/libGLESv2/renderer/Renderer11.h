@@ -19,6 +19,7 @@
 #include <d3d11.h>
 
 #include "common/angleutils.h"
+#include "libGLESv2/angletypes.h"
 
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/renderer/RenderStateCache.h"
@@ -107,6 +108,14 @@ class Renderer11 : public Renderer
                            GLint xoffset, GLint yoffset, TextureStorage2D *storage, GLint level);
     virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat,
                            GLint xoffset, GLint yoffset, TextureStorageCubeMap *storage, GLenum target, GLint level);
+
+    virtual bool blitRect(gl::Framebuffer *readTarget, gl::Rectangle *readRect, gl::Framebuffer *drawTarget, gl::Rectangle *drawRect,
+                          bool blitRenderTarget, bool blitDepthStencil);
+    virtual void readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,
+                            GLsizei outputPitch, bool packReverseRowOrder, GLint packAlignment, void* pixels);
+
+    virtual bool setRenderTarget(gl::Renderbuffer *renderbuffer);
+    virtual bool setDepthStencil(gl::Renderbuffer *renderbuffer);
 
     // D3D11-renderer specific methods
     ID3D11Device *getDevice() { return mDevice; }

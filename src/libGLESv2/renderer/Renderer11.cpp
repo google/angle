@@ -703,4 +703,34 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect,
     return false;
 }
 
+bool Renderer11::setRenderTarget(gl::Renderbuffer *renderbuffer)
+{
+    // TODO
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool Renderer11::setDepthStencil(gl::Renderbuffer *renderbuffer)
+{
+    // TODO
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool Renderer11::blitRect(gl::Framebuffer *readTarget, gl::Rectangle *readRect, gl::Framebuffer *drawTarget, gl::Rectangle *drawRect,
+                          bool blitRenderTarget, bool blitDepthStencil)
+{
+    // TODO
+    UNIMPLEMENTED();
+    return false;
+}
+
+void Renderer11::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,
+                            GLsizei outputPitch, bool packReverseRowOrder, GLint packAlignment, void* pixels)
+{
+    // TODO
+    UNIMPLEMENTED();
+    return;
+}
+
 }
