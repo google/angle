@@ -11,7 +11,7 @@
 #define LIBGLESV2_RENDERER_SHADEREXECUTABLE_H_
 
 #include "common/angleutils.h"
-#include "libGLESv2/D3DConstantTable.h"
+#include "libGLESv2/renderer/D3DConstantTable.h"
 
 namespace rx
 {

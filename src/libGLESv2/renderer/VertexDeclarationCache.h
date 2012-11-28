@@ -10,7 +10,7 @@
 #define LIBGLESV2_RENDERER_VERTEXDECLARATIONCACHE_H_
 
 #include "libGLESv2/Context.h"
-#include "libGLESv2/VertexDataManager.h"
+#include "libGLESv2/renderer/VertexDataManager.h"
 
 namespace gl
 {

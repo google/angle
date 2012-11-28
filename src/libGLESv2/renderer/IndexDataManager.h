@@ -89,7 +89,7 @@ class StaticIndexBuffer : public IndexBuffer
 
   private:
     GLenum mCacheType;
-    
+
     struct IndexRange
     {
         intptr_t offset;

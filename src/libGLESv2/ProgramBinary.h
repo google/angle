@@ -19,7 +19,6 @@
 
 #include "libGLESv2/Program.h"
 #include "libGLESv2/Context.h"
-#include "libGLESv2/D3DConstantTable.h"
 #include "libGLESv2/mathutil.h"
 #include "libGLESv2/Shader.h"
 

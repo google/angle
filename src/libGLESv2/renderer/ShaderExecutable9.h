@@ -13,7 +13,7 @@
 #include <d3d9.h>
 
 #include "libGLESv2/renderer/ShaderExecutable.h"
-#include "libGLESv2/D3DConstantTable.h"
+#include "libGLESv2/renderer/D3DConstantTable.h"
 
 namespace rx
 {

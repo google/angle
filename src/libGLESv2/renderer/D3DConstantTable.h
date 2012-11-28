@@ -72,7 +72,7 @@ struct D3DConstant
         PT_VERTEXFRAGMENT,
         PT_UNSUPPORTED,
     };
-    
+
     D3DConstant(const char *base, const ctab::ConstantInfo *constantInfo);
     ~D3DConstant();
 
@@ -87,7 +87,7 @@ struct D3DConstant
     unsigned elements;
 
     // Array of structure members.
-    std::vector<std::vector<const D3DConstant*> > structMembers;    
+    std::vector<std::vector<const D3DConstant*> > structMembers;
 
   private:
     D3DConstant(const char *base, RegisterSet registerSet, unsigned registerIndex, const ctab::StructMemberInfo *memberInfo);

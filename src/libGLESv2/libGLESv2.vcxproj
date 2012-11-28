@@ -232,12 +232,10 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Context.cpp" />
     <ClCompile Include="..\common\debug.cpp" />
-    <ClCompile Include="D3DConstantTable.cpp" />
     <ClCompile Include="Fence.cpp" />
     <ClCompile Include="Float16ToFloat32.cpp" />
     <ClCompile Include="Framebuffer.cpp" />
     <ClCompile Include="HandleAllocator.cpp" />
-    <ClCompile Include="IndexDataManager.cpp" />
     <ClCompile Include="libGLESv2.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Program.cpp" />
@@ -246,6 +244,8 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClCompile Include="..\common\RefCountObject.cpp" />
     <ClCompile Include="Renderbuffer.cpp" />
     <ClCompile Include="renderer\Blit.cpp" />
+    <ClCompile Include="renderer\D3DConstantTable.cpp" />
+    <ClCompile Include="renderer\IndexDataManager.cpp" />
     <ClCompile Include="renderer\Renderer.cpp" />
     <ClCompile Include="renderer\Renderer11.cpp" />
     <ClCompile Include="renderer\renderer11_utils.cpp" />
@@ -260,13 +260,13 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClCompile Include="renderer\SwapChain11.cpp" />
     <ClCompile Include="renderer\SwapChain9.cpp" />
     <ClCompile Include="renderer\TextureStorage.cpp" />
+    <ClCompile Include="renderer\VertexDataManager.cpp" />
     <ClCompile Include="renderer\VertexDeclarationCache.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureSSE2.cpp" />
     <ClCompile Include="utilities.cpp" />
-    <ClCompile Include="VertexDataManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\third_party\murmurhash\MurmurHash3.h" />
@@ -274,14 +274,12 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="BinaryStream.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Context.h" />
-    <ClInclude Include="D3DConstantTable.h" />
     <ClInclude Include="Fence.h" />
     <ClInclude Include="Framebuffer.h" />
     <ClInclude Include="..\..\include\GLES2\gl2.h" />
     <ClInclude Include="..\..\include\GLES2\gl2ext.h" />
     <ClInclude Include="..\..\include\GLES2\gl2platform.h" />
     <ClInclude Include="HandleAllocator.h" />
-    <ClInclude Include="IndexDataManager.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="mathutil.h" />
     <ClInclude Include="Program.h" />
@@ -290,7 +288,9 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="..\common\RefCountObject.h" />
     <ClInclude Include="Renderbuffer.h" />
     <ClInclude Include="renderer\Blit.h" />
+    <ClInclude Include="renderer\D3DConstantTable.h" />
     <ClInclude Include="renderer\Image.h" />
+    <ClInclude Include="renderer\IndexDataManager.h" />
     <ClInclude Include="renderer\Renderer.h" />
     <ClInclude Include="renderer\Renderer11.h" />
     <ClInclude Include="renderer\renderer11_utils.h" />
@@ -308,6 +308,8 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="renderer\SwapChain11.h" />
     <ClInclude Include="renderer\SwapChain9.h" />
     <ClInclude Include="renderer\TextureStorage.h" />
+    <ClInclude Include="renderer\vertexconversion.h" />
+    <ClInclude Include="renderer\VertexDataManager.h" />
     <ClInclude Include="renderer\VertexDeclarationCache.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ResourceManager.h" />
@@ -315,8 +317,6 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="Texture.h" />
     <ClInclude Include="utilities.h" />
     <ClInclude Include="..\common\version.h" />
-    <ClInclude Include="vertexconversion.h" />
-    <ClInclude Include="VertexDataManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="libGLESv2.def" />

@@ -9,7 +9,7 @@
 // Restructures the constant table as a hierarchy of constants in the same
 // way as D3DX.
 
-#include "libGLESv2/D3DConstantTable.h"
+#include "libGLESv2/renderer/D3DConstantTable.h"
 
 #include <d3d9.h>
 #include <d3d9types.h>

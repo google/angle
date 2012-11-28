@@ -7,7 +7,7 @@
 // IndexDataManager.cpp: Defines the IndexDataManager, a class that
 // runs the Buffer translation process for index buffers.
 
-#include "libGLESv2/IndexDataManager.h"
+#include "libGLESv2/renderer/IndexDataManager.h"
 
 #include "common/debug.h"
 
@@ -173,13 +173,13 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, Buffer *bu
         }
 
         void *output = NULL;
-        
+
         if (indexBuffer)
         {
             indexBuffer->reserveSpace(convertCount * indexSize(format), type);
             output = indexBuffer->map(indexSize(format) * convertCount, &streamOffset);
         }
-        
+
         if (output == NULL)
         {
             ERR("Failed to map index buffer.");
@@ -240,7 +240,7 @@ StaticIndexBuffer *IndexDataManager::getCountingIndices(GLsizei count)
 
             UINT offset;
             unsigned short *data = static_cast<unsigned short*>(mCountingBuffer->map(spaceNeeded, &offset));
-        
+
             if (data)
             {
                 for(int i = 0; i < count; i++)
@@ -264,20 +264,20 @@ StaticIndexBuffer *IndexDataManager::getCountingIndices(GLsizei count)
 
             UINT offset;
             unsigned int *data = static_cast<unsigned int*>(mCountingBuffer->map(spaceNeeded, &offset));
-        
+
             if (data)
             {
                 for(int i = 0; i < count; i++)
                 {
                     data[i] = i;
                 }
-                
+
                 mCountingBuffer->unmap();
             }
         }
     }
     else return NULL;
-    
+
     return mCountingBuffer;
 }
 
@@ -343,7 +343,7 @@ void *StreamingIndexBuffer::map(UINT requiredSpace, UINT *offset)
     if (mIndexBuffer)
     {
         HRESULT result = mIndexBuffer->Lock(mWritePosition, requiredSpace, &mapPtr, D3DLOCK_NOOVERWRITE);
-     
+
         if (FAILED(result))
         {
             ERR(" Lock failed with error 0x%08x", result);
@@ -372,7 +372,7 @@ void StreamingIndexBuffer::reserveSpace(UINT requiredSpace, GLenum type)
         // D3D9_REPLACE
         HRESULT result = mRenderer->createIndexBuffer(mBufferSize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, type == GL_UNSIGNED_INT ? D3DFMT_INDEX32 : D3DFMT_INDEX16, &mIndexBuffer);
         mSerial = issueSerial();
-    
+
         if (FAILED(result))
         {
             ERR("Out of memory allocating a vertex buffer of size %lu.", mBufferSize);
@@ -406,7 +406,7 @@ void *StaticIndexBuffer::map(UINT requiredSpace, UINT *offset)
     if (mIndexBuffer)
     {
         HRESULT result = mIndexBuffer->Lock(0, requiredSpace, &mapPtr, 0);
-     
+
         if (FAILED(result))
         {
             ERR(" Lock failed with error 0x%08x", result);
@@ -426,7 +426,7 @@ void StaticIndexBuffer::reserveSpace(UINT requiredSpace, GLenum type)
         // D3D9_REPLACE
         HRESULT result = mRenderer->createIndexBuffer(requiredSpace, D3DUSAGE_WRITEONLY, type == GL_UNSIGNED_INT ? D3DFMT_INDEX32 : D3DFMT_INDEX16, &mIndexBuffer);
         mSerial = issueSerial();
-    
+
         if (FAILED(result))
         {
             ERR("Out of memory allocating a vertex buffer of size %lu.", mBufferSize);
@@ -452,7 +452,7 @@ UINT StaticIndexBuffer::lookupRange(intptr_t offset, GLsizei count, UINT *minInd
     IndexRange range = {offset, count};
 
     std::map<IndexRange, IndexResult>::iterator res = mCache.find(range);
-    
+
     if (res == mCache.end())
     {
         return -1;

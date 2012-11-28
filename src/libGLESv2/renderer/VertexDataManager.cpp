@@ -7,7 +7,7 @@
 // VertexDataManager.h: Defines the VertexDataManager, a class that
 // runs the Buffer translation process.
 
-#include "libGLESv2/VertexDataManager.h"
+#include "libGLESv2/renderer/VertexDataManager.h"
 
 #include "common/debug.h"
 
@@ -16,8 +16,8 @@
 #include "libGLESv2/ProgramBinary.h"
 #include "libGLESv2/main.h"
 
-#include "libGLESv2/vertexconversion.h"
-#include "libGLESv2/IndexDataManager.h"
+#include "libGLESv2/renderer/vertexconversion.h"
+#include "libGLESv2/renderer/IndexDataManager.h"
 
 #include <limits>
 
@@ -81,7 +81,7 @@ std::size_t VertexDataManager::writeAttributeData(ArrayVertexBuffer *vertexBuffe
     std::size_t streamOffset = 0;
 
     void *output = NULL;
-    
+
     if (vertexBuffer)
     {
         output = vertexBuffer->map(attribute, spaceRequired(attribute, count, instances), &streamOffset);
@@ -173,7 +173,7 @@ GLenum VertexDataManager::prepareVertexData(const VertexAttribute attribs[], Pro
                     mStreamingBuffer->addRequiredSpace(spaceRequired(attribs[i], count, instances));
 
                     buffer->invalidateStaticData();
-                }    
+                }
             }
             else
             {
@@ -349,7 +349,7 @@ std::size_t VertexDataManager::spaceRequired(const VertexAttribute &attrib, std:
 // FIXED (not in WebGL) FLOAT (FixedToFloat)
 // FLOAT                FLOAT (Identity)
 
-// GLToCType maps from GL type (as GLenum) to the C typedef. 
+// GLToCType maps from GL type (as GLenum) to the C typedef.
 template <GLenum GLType> struct GLToCType { };
 
 template <> struct GLToCType<GL_BYTE> { typedef GLbyte type; };
@@ -471,7 +471,7 @@ struct DefaultVertexValuesStage2
 template <class T> struct DefaultVertexValuesStage2<T, true>  : gl::NormalizedDefaultValues<T> { };
 template <class T> struct DefaultVertexValuesStage2<T, false> : gl::SimpleDefaultValues<T> { };
 
-// Work out the default value rule for a D3D type (expressed as the C type) and 
+// Work out the default value rule for a D3D type (expressed as the C type) and
 template <class T, bool normalized>
 struct DefaultVertexValues : DefaultVertexValuesStage2<T, normalized>
 {
@@ -587,7 +587,7 @@ VertexBuffer::VertexBuffer(rx::Renderer9 *renderer, std::size_t size, DWORD usag
         // D3D9_REPLACE
         HRESULT result = mRenderer->createVertexBuffer(size, usageFlags,&mVertexBuffer);
         mSerial = issueSerial();
-        
+
         if (FAILED(result))
         {
             ERR("Out of memory allocating a vertex buffer of size %lu.", size);
@@ -657,7 +657,7 @@ void *StreamingVertexBuffer::map(const VertexAttribute &attribute, std::size_t r
     if (mVertexBuffer)
     {
         HRESULT result = mVertexBuffer->Lock(mWritePosition, requiredSpace, &mapPtr, D3DLOCK_NOOVERWRITE);
-        
+
         if (FAILED(result))
         {
             ERR("Lock failed with error 0x%08x", result);
@@ -686,7 +686,7 @@ void StreamingVertexBuffer::reserveRequiredSpace()
         // D3D9_REPLACE
         HRESULT result = mRenderer->createVertexBuffer(mBufferSize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, &mVertexBuffer);
         mSerial = issueSerial();
-    
+
         if (FAILED(result))
         {
             ERR("Out of memory allocating a vertex buffer of size %lu.", mBufferSize);
@@ -724,7 +724,7 @@ void *StaticVertexBuffer::map(const VertexAttribute &attribute, std::size_t requ
     if (mVertexBuffer)
     {
         HRESULT result = mVertexBuffer->Lock(mWritePosition, requiredSpace, &mapPtr, 0);
-        
+
         if (FAILED(result))
         {
             ERR("Lock failed with error 0x%08x", result);

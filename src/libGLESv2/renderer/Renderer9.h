@@ -26,7 +26,7 @@
 #include "libGLESv2/renderer/ShaderCache.h"
 #include "libGLESv2/renderer/VertexDeclarationCache.h"
 #include "libGLESv2/renderer/Renderer.h"
-#include "libGLESv2/IndexDataManager.h"
+#include "libGLESv2/renderer/IndexDataManager.h"
 
 namespace gl
 {
