@@ -23,12 +23,12 @@ SwapChain11::SwapChain11(Renderer11 *renderer, HWND window, HANDLE shareHandle,
     : mRenderer(renderer), SwapChain(window, shareHandle, backBufferFormat, depthBufferFormat)
 {
     mSwapChain = NULL;
-    mBackBuffer = NULL;
-    mBackBufferView = NULL;
-    mRenderTargetView = NULL;
-    mDepthStencil = NULL;
-    mDepthStencilView = NULL;
+    mBackBufferTexture = NULL;
+    mBackBufferRTView = NULL;
     mOffscreenTexture = NULL;
+    mOffscreenRTView = NULL;
+    mDepthStencilTexture = NULL;
+    mDepthStencilDSView = NULL;
     mWidth = -1;
     mHeight = -1;
 }
@@ -46,40 +46,40 @@ void SwapChain11::release()
         mSwapChain = NULL;
     }
 
-    if (mBackBuffer)
+    if (mBackBufferTexture)
     {
-        mBackBuffer->Release();
-        mBackBuffer = NULL;
+        mBackBufferTexture->Release();
+        mBackBufferTexture = NULL;
     }
 
-    if (mBackBufferView)
+    if (mBackBufferRTView)
     {
-        mBackBufferView->Release();
-        mBackBufferView = NULL;
-    }
-    
-    if (mRenderTargetView)
-    {
-        mRenderTargetView->Release();
-        mRenderTargetView = NULL;
-    }
-
-    if (mDepthStencil)
-    {
-        mDepthStencil->Release();
-        mDepthStencil = NULL;
-    }
-
-    if (mDepthStencilView)
-    {
-        mDepthStencilView->Release();
-        mDepthStencilView = NULL;
+        mBackBufferRTView->Release();
+        mBackBufferRTView = NULL;
     }
 
     if (mOffscreenTexture)
     {
         mOffscreenTexture->Release();
         mOffscreenTexture = NULL;
+    }
+
+    if (mOffscreenRTView)
+    {
+        mOffscreenRTView->Release();
+        mOffscreenRTView = NULL;
+    }
+
+    if (mDepthStencilTexture)
+    {
+        mDepthStencilTexture->Release();
+        mDepthStencilTexture = NULL;
+    }
+
+    if (mDepthStencilDSView)
+    {
+        mDepthStencilDSView->Release();
+        mDepthStencilDSView = NULL;
     }
 
     if (mWindow)
@@ -103,22 +103,16 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
         mSwapChain = NULL;
     }
 
-    if (mBackBuffer)
+    if (mBackBufferTexture)
     {
-        mBackBuffer->Release();
-        mBackBuffer = NULL;
+        mBackBufferTexture->Release();
+        mBackBufferTexture = NULL;
     }
 
-    if (mBackBufferView)
+    if (mBackBufferRTView)
     {
-        mBackBufferView->Release();
-        mBackBufferView = NULL;
-    }
-
-    if (mRenderTargetView)   // TODO: Preserve the render target content
-    {
-        mRenderTargetView->Release();
-        mRenderTargetView = NULL;
+        mBackBufferRTView->Release();
+        mBackBufferRTView = NULL;
     }
 
     if (mOffscreenTexture)
@@ -127,16 +121,22 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
         mOffscreenTexture = NULL;
     }
 
-    if (mDepthStencil)
+    if (mOffscreenRTView)   // TODO: Preserve the render target content
     {
-        mDepthStencil->Release();
-        mDepthStencil = NULL;
+        mOffscreenRTView->Release();
+        mOffscreenRTView = NULL;
     }
 
-    if (mDepthStencilView)
+    if (mDepthStencilTexture)
     {
-        mDepthStencilView->Release();
-        mDepthStencilView = NULL;
+        mDepthStencilTexture->Release();
+        mDepthStencilTexture = NULL;
+    }
+
+    if (mDepthStencilDSView)
+    {
+        mDepthStencilDSView->Release();
+        mDepthStencilDSView = NULL;
     }
 
     HANDLE *pShareHandle = NULL;
@@ -175,7 +175,7 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
         }
     }
         
-    result = device->CreateRenderTargetView(mOffscreenTexture, NULL, &mRenderTargetView);
+    result = device->CreateRenderTargetView(mOffscreenTexture, NULL, &mOffscreenRTView);
     ASSERT(SUCCEEDED(result));
 
     if (mWindow)
@@ -215,10 +215,10 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
             }
         }
 
-        result = mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&mBackBuffer);
+        result = mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&mBackBufferTexture);
         ASSERT(SUCCEEDED(result));
 
-        result = device->CreateRenderTargetView(mBackBuffer, NULL, &mBackBufferView);
+        result = device->CreateRenderTargetView(mBackBufferTexture, NULL, &mBackBufferRTView);
         ASSERT(SUCCEEDED(result));
     }
 
@@ -237,7 +237,7 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
         depthStencilDesc.CPUAccessFlags = 0;
         depthStencilDesc.MiscFlags = 0;
 
-        result = device->CreateTexture2D(&depthStencilDesc, NULL, &mDepthStencil);
+        result = device->CreateTexture2D(&depthStencilDesc, NULL, &mDepthStencilTexture);
 
         if (FAILED(result))
         {
@@ -254,7 +254,7 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
             }
         }
 
-        result = device->CreateDepthStencilView(mDepthStencil, NULL, &mDepthStencilView);
+        result = device->CreateDepthStencilView(mDepthStencilTexture, NULL, &mDepthStencilDSView);
         ASSERT(SUCCEEDED(result));
     }
 
@@ -284,24 +284,24 @@ EGLint SwapChain11::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
 // caller must Release() the returned view
 ID3D11RenderTargetView *SwapChain11::getRenderTarget()
 {
-    if (mRenderTargetView)
+    if (mOffscreenRTView)
     {
-        mRenderTargetView->AddRef();
+        mOffscreenRTView->AddRef();
     }
 
-    return mRenderTargetView;
+    return mOffscreenRTView;
 }
 
 // Increments refcount on view.
 // caller must Release() the returned view
 ID3D11DepthStencilView *SwapChain11::getDepthStencil()
 {
-    if (mDepthStencilView)
+    if (mDepthStencilDSView)
     {
-        mDepthStencilView->AddRef();
+        mDepthStencilDSView->AddRef();
     }
 
-    return mDepthStencilView;
+    return mDepthStencilDSView;
 }
 
 // Increments refcount on texture.

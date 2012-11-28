@@ -47,12 +47,15 @@ class SwapChain11 : public SwapChain
     EGLint mWidth;
 
     IDXGISwapChain *mSwapChain;
-    ID3D11Texture2D *mBackBuffer;
-    ID3D11RenderTargetView *mBackBufferView;
-    ID3D11RenderTargetView *mRenderTargetView;
-    ID3D11Texture2D *mDepthStencil;
-    ID3D11DepthStencilView *mDepthStencilView;
+
+    ID3D11Texture2D *mBackBufferTexture;
+    ID3D11RenderTargetView *mBackBufferRTView;
+
     ID3D11Texture2D *mOffscreenTexture;
+    ID3D11RenderTargetView *mOffscreenRTView;
+
+    ID3D11Texture2D *mDepthStencilTexture;
+    ID3D11DepthStencilView *mDepthStencilDSView;
 };
 
 }
