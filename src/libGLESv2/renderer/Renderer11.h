@@ -21,6 +21,7 @@
 #include "common/angleutils.h"
 
 #include "libGLESv2/renderer/Renderer.h"
+#include "libGLESv2/renderer/RenderStateCache.h"
 
 namespace rx
 {
@@ -122,6 +123,14 @@ class Renderer11 : public Renderer
 
     void initializeDevice();
     void releaseDeviceResources();
+
+    RenderStateCache mStateCache;
+
+    // Currently applied blend state
+    bool mForceSetBlendState;
+    gl::BlendState mCurBlendState;
+    gl::Color mCurBlendColor;
+    unsigned int mCurSampleMask;
 
     ID3D11Device *mDevice;
     D3D_FEATURE_LEVEL mFeatureLevel;

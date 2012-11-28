@@ -37,6 +37,8 @@ Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(
     mDeviceContext = NULL;
     mDxgiAdapter = NULL;
     mDxgiFactory = NULL;
+
+    mForceSetBlendState = true;
 }
 
 Renderer11::~Renderer11()
@@ -160,6 +162,8 @@ EGLint Renderer11::initialize()
 // to reset the scene status and ensure the default states are reset.
 void Renderer11::initializeDevice()
 {
+    mStateCache.initialize(mDevice);
+
     // Permanent non-default states
     // TODO
     // UNIMPLEMENTED();
@@ -257,8 +261,31 @@ void Renderer11::setRasterizerState(const gl::RasterizerState &rasterState, unsi
 void Renderer11::setBlendState(const gl::BlendState &blendState, const gl::Color &blendColor,
                                unsigned int sampleMask)
 {
-    // TODO
-    UNIMPLEMENTED();
+    if (mForceSetBlendState ||
+        memcmp(&blendState, &mCurBlendState, sizeof(gl::BlendState)) != 0 ||
+        memcmp(&blendColor, &mCurBlendColor, sizeof(gl::Color)) != 0 ||
+        sampleMask != mCurSampleMask)
+    {
+        ID3D11BlendState *dxBlendState = mStateCache.getBlendState(blendState);
+        if (!dxBlendState)
+        {
+            ERR("NULL blend state returned by RenderStateCache::getBlendState, setting the default "
+                "blend state.");
+        }
+
+        const float blendColors[] = { blendColor.red, blendColor.green, blendColor.blue, blendColor.alpha };
+        mDeviceContext->OMSetBlendState(dxBlendState, blendColors, sampleMask);
+
+        if (dxBlendState)
+        {
+            dxBlendState->Release();
+        }
+        mCurBlendState = blendState;
+        mCurBlendColor = blendColor;
+        mCurSampleMask = sampleMask;
+    }
+
+    mForceSetBlendState = false;
 }
 
 void Renderer11::setDepthStencilState(const gl::DepthStencilState &depthStencilState, bool frontFaceCCW,
@@ -292,6 +319,7 @@ void Renderer11::releaseDeviceResources()
 {
     // TODO
     // UNIMPLEMENTED();
+    mStateCache.clear();
 }
 
 void Renderer11::markDeviceLost()
@@ -356,6 +384,8 @@ bool Renderer11::resetDevice()
     // reset device defaults
     initializeDevice();
     mDeviceLost = false;
+
+    mForceSetBlendState = true;
 
     return true;
 }
