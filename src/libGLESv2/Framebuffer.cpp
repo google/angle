@@ -202,6 +202,18 @@ Renderbuffer *Framebuffer::getStencilbuffer()
     return mStencilbufferPointer.get();
 }
 
+Renderbuffer *Framebuffer::getDepthOrStencilbuffer()
+{
+    Renderbuffer *depthstencilbuffer = mDepthbufferPointer.get();
+    
+    if (!depthstencilbuffer)
+    {
+        depthstencilbuffer = mStencilbufferPointer.get();
+    }
+
+    return depthstencilbuffer;
+}
+
 Renderbuffer *Framebuffer::getNullColorbuffer()
 {
     Renderbuffer *nullbuffer  = mNullColorbufferPointer.get();

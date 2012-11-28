@@ -54,6 +54,7 @@ class Framebuffer
     Renderbuffer *getColorbuffer();
     Renderbuffer *getDepthbuffer();
     Renderbuffer *getStencilbuffer();
+    Renderbuffer *getDepthOrStencilbuffer();
     Renderbuffer *getNullColorbuffer();
 
     GLenum getColorbufferType();
