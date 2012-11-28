@@ -75,4 +75,26 @@ RenderTarget11 *RenderTarget11::makeRenderTarget11(RenderTarget *target)
     return static_cast<rx::RenderTarget11*>(target);
 }
 
+// Adds reference, caller must call Release
+ID3D11RenderTargetView *RenderTarget11::getRenderTargetView() const
+{
+    if (mRenderTarget)
+    {
+        mRenderTarget->AddRef();
+    }
+
+    return mRenderTarget;
+}
+
+// Adds reference, caller must call Release
+ID3D11DepthStencilView *RenderTarget11::getDepthStencilView() const
+{
+    if (mDepthStencil)
+    {
+        mDepthStencil->AddRef();
+    }
+
+    return mDepthStencil;
+}
+
 }

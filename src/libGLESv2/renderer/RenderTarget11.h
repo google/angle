@@ -28,6 +28,12 @@ class RenderTarget11 : public RenderTarget
 
     static RenderTarget11 *makeRenderTarget11(RenderTarget *renderTarget);
 
+    // Adds reference, caller must call Release
+    ID3D11RenderTargetView *getRenderTargetView() const;
+
+    // Adds reference, caller must call Release
+    ID3D11DepthStencilView *getDepthStencilView() const;
+
   private:
     DISALLOW_COPY_AND_ASSIGN(RenderTarget11);
 
