@@ -108,7 +108,8 @@ class Renderer9 : public Renderer
 
     virtual GLsizei getMaxSupportedSamples() const;
     int getNearestSupportedSamples(D3DFORMAT format, int requested) const;
-
+    
+    D3DFORMAT ConvertTextureInternalFormat(GLint internalformat);
     D3DPOOL getTexturePool(DWORD usage) const;
 
   private:

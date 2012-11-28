@@ -19,7 +19,7 @@
 
 namespace rx
 {
-class Renderer;
+class Renderer9;
 class SwapChain;
 }
 
@@ -30,13 +30,12 @@ class Blit;
 class TextureStorage
 {
   public:
-    TextureStorage(rx::Renderer *renderer, DWORD usage);
+    TextureStorage(rx::Renderer9 *renderer, DWORD usage);
 
     virtual ~TextureStorage();
 
     static DWORD GetTextureUsage(D3DFORMAT d3dfmt, GLenum glusage, bool forceRenderable);
     static bool IsTextureFormatRenderable(D3DFORMAT format);
-    static D3DFORMAT ConvertTextureInternalFormat(GLint internalformat);
     static Blit *getBlitter();
 
     bool isRenderTarget() const;
@@ -60,7 +59,7 @@ class TextureStorage
     const DWORD mD3DUsage;
     const D3DPOOL mD3DPool;
 
-    rx::Renderer *mRenderer;
+    rx::Renderer9 *mRenderer;
 
     const unsigned int mTextureSerial;
     static unsigned int issueTextureSerial();
@@ -71,8 +70,8 @@ class TextureStorage
 class TextureStorage2D : public TextureStorage
 {
   public:
-    explicit TextureStorage2D(rx::Renderer *renderer, rx::SwapChain *swapchain);
-    TextureStorage2D(rx::Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height);
+    explicit TextureStorage2D(rx::Renderer9 *renderer, rx::SwapChain *swapchain);
+    TextureStorage2D(rx::Renderer9 *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height);
 
     virtual ~TextureStorage2D();
 
@@ -94,7 +93,7 @@ class TextureStorage2D : public TextureStorage
 class TextureStorageCubeMap : public TextureStorage
 {
   public:
-    TextureStorageCubeMap(rx::Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size);
+    TextureStorageCubeMap(rx::Renderer9 *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size);
 
     virtual ~TextureStorageCubeMap();
 

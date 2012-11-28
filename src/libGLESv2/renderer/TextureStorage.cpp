@@ -21,9 +21,9 @@ namespace gl
 {
 unsigned int TextureStorage::mCurrentTextureSerial = 1;
 
-TextureStorage::TextureStorage(rx::Renderer *renderer, DWORD usage)
+TextureStorage::TextureStorage(rx::Renderer9 *renderer, DWORD usage)
     : mD3DUsage(usage),
-      mD3DPool(getDisplay()->getRenderer9()->getTexturePool(usage)), // D3D9_REPLACE
+      mD3DPool(renderer->getTexturePool(usage)),
       mRenderer(renderer),
       mTextureSerial(issueTextureSerial()),
       mLodOffset(0)
@@ -73,53 +73,6 @@ bool TextureStorage::IsTextureFormatRenderable(D3DFORMAT format)
     }
 
     return false;
-}
-
-D3DFORMAT TextureStorage::ConvertTextureInternalFormat(GLint internalformat)
-{
-    switch (internalformat)
-    {
-      case GL_DEPTH_COMPONENT16:
-      case GL_DEPTH_COMPONENT32_OES:
-      case GL_DEPTH24_STENCIL8_OES:
-        return D3DFMT_INTZ;
-      case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
-      case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
-        return D3DFMT_DXT1;
-      case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
-        return D3DFMT_DXT3;
-      case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
-        return D3DFMT_DXT5;
-      case GL_RGBA32F_EXT:
-      case GL_RGB32F_EXT:
-      case GL_ALPHA32F_EXT:
-      case GL_LUMINANCE32F_EXT:
-      case GL_LUMINANCE_ALPHA32F_EXT:
-        return D3DFMT_A32B32G32R32F;
-      case GL_RGBA16F_EXT:
-      case GL_RGB16F_EXT:
-      case GL_ALPHA16F_EXT:
-      case GL_LUMINANCE16F_EXT:
-      case GL_LUMINANCE_ALPHA16F_EXT:
-        return D3DFMT_A16B16G16R16F;
-      case GL_LUMINANCE8_EXT:
-        if (getContext()->supportsLuminanceTextures())
-        {
-            return D3DFMT_L8;
-        }
-        break;
-      case GL_LUMINANCE8_ALPHA8_EXT:
-        if (getContext()->supportsLuminanceAlphaTextures())
-        {
-            return D3DFMT_A8L8;
-        }
-        break;
-      case GL_RGB8_OES:
-      case GL_RGB565:
-        return D3DFMT_X8R8G8B8;
-    }
-
-    return D3DFMT_A8R8G8B8;
 }
 
 Blit *TextureStorage::getBlitter()
@@ -207,14 +160,14 @@ bool TextureStorage::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurfac
     return true;
 } 
 
-TextureStorage2D::TextureStorage2D(rx::Renderer *renderer, rx::SwapChain *swapchain) : TextureStorage(renderer, D3DUSAGE_RENDERTARGET), mRenderTargetSerial(RenderbufferStorage::issueSerial())
+TextureStorage2D::TextureStorage2D(rx::Renderer9 *renderer, rx::SwapChain *swapchain) : TextureStorage(renderer, D3DUSAGE_RENDERTARGET), mRenderTargetSerial(RenderbufferStorage::issueSerial())
 {
     IDirect3DTexture9 *surfaceTexture = swapchain->getOffscreenTexture();
     mTexture = surfaceTexture;
 }
 
-TextureStorage2D::TextureStorage2D(rx::Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height)
-    : TextureStorage(renderer, GetTextureUsage(ConvertTextureInternalFormat(internalformat), usage, forceRenderable)),
+TextureStorage2D::TextureStorage2D(rx::Renderer9 *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height)
+    : TextureStorage(renderer, GetTextureUsage(renderer->ConvertTextureInternalFormat(internalformat), usage, forceRenderable)),
       mRenderTargetSerial(RenderbufferStorage::issueSerial())
 {
     mTexture = NULL;
@@ -222,10 +175,10 @@ TextureStorage2D::TextureStorage2D(rx::Renderer *renderer, int levels, GLenum in
     // we handle that here by skipping the d3d texture creation
     if (width > 0 && height > 0)
     {
-        IDirect3DDevice9 *device = getDisplay()->getRenderer9()->getDevice(); // D3D9_REPLACE
+        IDirect3DDevice9 *device = renderer->getDevice(); // D3D9_REPLACE
         MakeValidSize(false, gl::IsCompressed(internalformat), &width, &height, &mLodOffset);
         HRESULT result = device->CreateTexture(width, height, levels ? levels + mLodOffset : 0, getUsage(),
-                                               ConvertTextureInternalFormat(internalformat), getPool(), &mTexture, NULL);
+                                               renderer->ConvertTextureInternalFormat(internalformat), getPool(), &mTexture, NULL);
 
         if (FAILED(result))
         {
@@ -313,8 +266,8 @@ unsigned int TextureStorage2D::getRenderTargetSerial(GLenum target) const
     return mRenderTargetSerial;
 }
 
-TextureStorageCubeMap::TextureStorageCubeMap(rx::Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
-    : TextureStorage(renderer, GetTextureUsage(ConvertTextureInternalFormat(internalformat), usage, forceRenderable)),
+TextureStorageCubeMap::TextureStorageCubeMap(rx::Renderer9 *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
+    : TextureStorage(renderer, GetTextureUsage(renderer->ConvertTextureInternalFormat(internalformat), usage, forceRenderable)),
       mFirstRenderTargetSerial(RenderbufferStorage::issueCubeSerials())
 {
     mTexture = NULL;
@@ -322,11 +275,11 @@ TextureStorageCubeMap::TextureStorageCubeMap(rx::Renderer *renderer, int levels,
     // we handle that here by skipping the d3d texture creation
     if (size > 0)
     {
-        IDirect3DDevice9 *device = getDisplay()->getRenderer9()->getDevice(); // D3D9_REPLACE
+        IDirect3DDevice9 *device = renderer->getDevice();
         int height = size;
         MakeValidSize(false, gl::IsCompressed(internalformat), &size, &height, &mLodOffset);
         HRESULT result = device->CreateCubeTexture(size, levels ? levels + mLodOffset : 0, getUsage(),
-                                                   ConvertTextureInternalFormat(internalformat), getPool(), &mTexture, NULL);
+                                                   renderer->ConvertTextureInternalFormat(internalformat), getPool(), &mTexture, NULL);
 
         if (FAILED(result))
         {

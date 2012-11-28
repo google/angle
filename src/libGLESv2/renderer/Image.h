@@ -16,6 +16,11 @@
 
 #include "common/debug.h"
 
+namespace rx
+{
+class Renderer9;
+}
+
 namespace gl
 {
 class TextureStorage2D;
@@ -31,7 +36,7 @@ class Image
     static void GenerateMipmap(Image *dest, Image *source);
     static void Image::CopyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface9 *source);
 
-    bool redefine(GLint internalformat, GLsizei width, GLsizei height, bool forceRelease);
+    bool redefine(rx::Renderer9 *renderer, GLint internalformat, GLsizei width, GLsizei height, bool forceRelease);
     void markDirty() {mDirty = true;}
     void markClean() {mDirty = false;}
 

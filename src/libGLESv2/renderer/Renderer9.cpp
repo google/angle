@@ -1005,6 +1005,53 @@ int Renderer9::getNearestSupportedSamples(D3DFORMAT format, int requested) const
     return -1;
 }
 
+D3DFORMAT Renderer9::ConvertTextureInternalFormat(GLint internalformat)
+{
+    switch (internalformat)
+    {
+      case GL_DEPTH_COMPONENT16:
+      case GL_DEPTH_COMPONENT32_OES:
+      case GL_DEPTH24_STENCIL8_OES:
+        return D3DFMT_INTZ;
+      case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
+      case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
+        return D3DFMT_DXT1;
+      case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
+        return D3DFMT_DXT3;
+      case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
+        return D3DFMT_DXT5;
+      case GL_RGBA32F_EXT:
+      case GL_RGB32F_EXT:
+      case GL_ALPHA32F_EXT:
+      case GL_LUMINANCE32F_EXT:
+      case GL_LUMINANCE_ALPHA32F_EXT:
+        return D3DFMT_A32B32G32R32F;
+      case GL_RGBA16F_EXT:
+      case GL_RGB16F_EXT:
+      case GL_ALPHA16F_EXT:
+      case GL_LUMINANCE16F_EXT:
+      case GL_LUMINANCE_ALPHA16F_EXT:
+        return D3DFMT_A16B16G16R16F;
+      case GL_LUMINANCE8_EXT:
+        if (getLuminanceTextureSupport())
+        {
+            return D3DFMT_L8;
+        }
+        break;
+      case GL_LUMINANCE8_ALPHA8_EXT:
+        if (getLuminanceAlphaTextureSupport())
+        {
+            return D3DFMT_A8L8;
+        }
+        break;
+      case GL_RGB8_OES:
+      case GL_RGB565:
+        return D3DFMT_X8R8G8B8;
+    }
+
+    return D3DFMT_A8R8G8B8;
+}
+
 D3DPOOL Renderer9::getBufferPool(DWORD usage) const
 {
     if (mD3d9Ex != NULL)
