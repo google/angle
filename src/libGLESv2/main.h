@@ -48,7 +48,7 @@ const T &error(GLenum errorCode, const T &returnValue)
 extern "C"
 {
 // Exported functions for use by EGL
-gl::Context *glCreateContext(const gl::Context *shareContext, bool notifyResets, bool robustAccess);
+gl::Context *glCreateContext(const gl::Context *shareContext, rx::Renderer *renderer, bool notifyResets, bool robustAccess);
 void glDestroyContext(gl::Context *context);
 void glMakeCurrent(gl::Context *context, egl::Display *display, egl::Surface *surface);
 gl::Context *glGetCurrentContext();

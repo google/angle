@@ -278,7 +278,7 @@ class VertexDeclarationCache
 class Context
 {
   public:
-    Context(const gl::Context *shareContext, bool notifyResets, bool robustAccess);
+    Context(const gl::Context *shareContext, rx::Renderer *renderer, bool notifyResets, bool robustAccess);
 
     ~Context();
 

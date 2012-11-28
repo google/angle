@@ -36,9 +36,12 @@
 
 namespace gl
 {
-Context::Context(const gl::Context *shareContext, bool notifyResets, bool robustAccess)
+Context::Context(const gl::Context *shareContext, rx::Renderer *renderer, bool notifyResets, bool robustAccess)
 {
     ASSERT(robustAccess == false);   // Unimplemented
+
+    ASSERT(dynamic_cast<rx::Renderer9*>(renderer) != NULL); // D3D9_REPLACE
+    mRenderer = static_cast<rx::Renderer9*>(renderer);
 
     mDisplay = NULL;
     mDevice = NULL;
@@ -4373,9 +4376,9 @@ void VertexDeclarationCache::markStateDirty()
 
 extern "C"
 {
-gl::Context *glCreateContext(const gl::Context *shareContext, bool notifyResets, bool robustAccess)
+gl::Context *glCreateContext(const gl::Context *shareContext, rx::Renderer *renderer, bool notifyResets, bool robustAccess)
 {
-    return new gl::Context(shareContext, notifyResets, robustAccess);
+    return new gl::Context(shareContext, renderer, notifyResets, robustAccess);
 }
 
 void glDestroyContext(gl::Context *context)
