@@ -57,12 +57,8 @@ UniformLocation::UniformLocation(const std::string &_name, unsigned int element,
 
 unsigned int ProgramBinary::mCurrentSerial = 1;
 
-ProgramBinary::ProgramBinary(rx::Renderer *renderer) : RefCountObject(0), mSerial(issueSerial())
+ProgramBinary::ProgramBinary(rx::Renderer *renderer) : mRenderer(renderer), RefCountObject(0), mSerial(issueSerial())
 {
-    ASSERT(dynamic_cast<rx::Renderer9*>(renderer) != NULL); // D3D9_REPLACE
-    mRenderer = static_cast<rx::Renderer9*>(renderer);
-    mDevice = mRenderer->getDevice(); // D3D9_REPLACE
-
     mPixelExecutable = NULL;
     mVertexExecutable = NULL;
 
@@ -983,6 +979,13 @@ void ProgramBinary::dirtyAllUniforms()
 // Applies all the uniforms set for this program object to the Direct3D 9 device
 void ProgramBinary::applyUniforms()
 {
+    if (dynamic_cast<rx::Renderer9*>(mRenderer) == NULL)  // D3D9_REPLACE
+    {
+        return;   // UNIMPLEMENTED
+    }
+
+    IDirect3DDevice9 *device = rx::Renderer9::makeRenderer9(mRenderer)->getDevice(); // D3D9_REPLACE
+
     for (std::vector<Uniform*>::iterator ub = mUniforms.begin(), ue = mUniforms.end(); ub != ue; ++ub) {
         Uniform *targetUniform = *ub;
 
@@ -995,23 +998,23 @@ void ProgramBinary::applyUniforms()
 
             switch (targetUniform->type)
             {
-              case GL_BOOL:       applyUniformnbv(targetUniform, arraySize, 1, b);    break;
-              case GL_BOOL_VEC2:  applyUniformnbv(targetUniform, arraySize, 2, b);    break;
-              case GL_BOOL_VEC3:  applyUniformnbv(targetUniform, arraySize, 3, b);    break;
-              case GL_BOOL_VEC4:  applyUniformnbv(targetUniform, arraySize, 4, b);    break;
+              case GL_BOOL:       applyUniformnbv(device, targetUniform, arraySize, 1, b);    break;
+              case GL_BOOL_VEC2:  applyUniformnbv(device, targetUniform, arraySize, 2, b);    break;
+              case GL_BOOL_VEC3:  applyUniformnbv(device, targetUniform, arraySize, 3, b);    break;
+              case GL_BOOL_VEC4:  applyUniformnbv(device, targetUniform, arraySize, 4, b);    break;
               case GL_FLOAT:
               case GL_FLOAT_VEC2:
               case GL_FLOAT_VEC3:
               case GL_FLOAT_VEC4:
               case GL_FLOAT_MAT2:
               case GL_FLOAT_MAT3:
-              case GL_FLOAT_MAT4: applyUniformnfv(targetUniform, f);                  break;
+              case GL_FLOAT_MAT4: applyUniformnfv(device, targetUniform, f);                  break;
               case GL_SAMPLER_2D:
               case GL_SAMPLER_CUBE:
-              case GL_INT:        applyUniform1iv(targetUniform, arraySize, i);       break;
-              case GL_INT_VEC2:   applyUniform2iv(targetUniform, arraySize, i);       break;
-              case GL_INT_VEC3:   applyUniform3iv(targetUniform, arraySize, i);       break;
-              case GL_INT_VEC4:   applyUniform4iv(targetUniform, arraySize, i);       break;
+              case GL_INT:        applyUniform1iv(device, targetUniform, arraySize, i);       break;
+              case GL_INT_VEC2:   applyUniform2iv(device, targetUniform, arraySize, i);       break;
+              case GL_INT_VEC3:   applyUniform3iv(device, targetUniform, arraySize, i);       break;
+              case GL_INT_VEC4:   applyUniform4iv(device, targetUniform, arraySize, i);       break;
               default:
                 UNREACHABLE();
             }
@@ -2191,7 +2194,8 @@ std::string ProgramBinary::undecorateUniform(const std::string &_name)
     return name;
 }
 
-void ProgramBinary::applyUniformnbv(Uniform *targetUniform, GLsizei count, int width, const GLboolean *v)
+// D3D9_REPLACE begin
+void ProgramBinary::applyUniformnbv(IDirect3DDevice9 *device, Uniform *targetUniform, GLsizei count, int width, const GLboolean *v)
 {
     float vector[D3D9_MAX_FLOAT_CONSTANTS * 4];
     BOOL boolVector[D3D9_MAX_BOOL_CONSTANTS];
@@ -2229,41 +2233,41 @@ void ProgramBinary::applyUniformnbv(Uniform *targetUniform, GLsizei count, int w
 
     if (targetUniform->ps.float4Index >= 0)
     {
-        mDevice->SetPixelShaderConstantF(targetUniform->ps.float4Index, vector, targetUniform->ps.registerCount);
+        device->SetPixelShaderConstantF(targetUniform->ps.float4Index, vector, targetUniform->ps.registerCount);
     }
         
     if (targetUniform->ps.boolIndex >= 0)
     {
-        mDevice->SetPixelShaderConstantB(targetUniform->ps.boolIndex, boolVector, targetUniform->ps.registerCount);
+        device->SetPixelShaderConstantB(targetUniform->ps.boolIndex, boolVector, targetUniform->ps.registerCount);
     }
     
     if (targetUniform->vs.float4Index >= 0)
     {
-        mDevice->SetVertexShaderConstantF(targetUniform->vs.float4Index, vector, targetUniform->vs.registerCount);
+        device->SetVertexShaderConstantF(targetUniform->vs.float4Index, vector, targetUniform->vs.registerCount);
     }
         
     if (targetUniform->vs.boolIndex >= 0)
     {
-        mDevice->SetVertexShaderConstantB(targetUniform->vs.boolIndex, boolVector, targetUniform->vs.registerCount);
+        device->SetVertexShaderConstantB(targetUniform->vs.boolIndex, boolVector, targetUniform->vs.registerCount);
     }
 }
 
-bool ProgramBinary::applyUniformnfv(Uniform *targetUniform, const GLfloat *v)
+bool ProgramBinary::applyUniformnfv(IDirect3DDevice9 *device, Uniform *targetUniform, const GLfloat *v)
 {
     if (targetUniform->ps.registerCount)
     {
-        mDevice->SetPixelShaderConstantF(targetUniform->ps.float4Index, v, targetUniform->ps.registerCount);
+        device->SetPixelShaderConstantF(targetUniform->ps.float4Index, v, targetUniform->ps.registerCount);
     }
 
     if (targetUniform->vs.registerCount)
     {
-        mDevice->SetVertexShaderConstantF(targetUniform->vs.float4Index, v, targetUniform->vs.registerCount);
+        device->SetVertexShaderConstantF(targetUniform->vs.float4Index, v, targetUniform->vs.registerCount);
     }
 
     return true;
 }
 
-bool ProgramBinary::applyUniform1iv(Uniform *targetUniform, GLsizei count, const GLint *v)
+bool ProgramBinary::applyUniform1iv(IDirect3DDevice9 *device, Uniform *targetUniform, GLsizei count, const GLint *v)
 {
     ASSERT(count <= D3D9_MAX_FLOAT_CONSTANTS);
     Vector4 vector[D3D9_MAX_FLOAT_CONSTANTS];
@@ -2293,7 +2297,7 @@ bool ProgramBinary::applyUniform1iv(Uniform *targetUniform, GLsizei count, const
         else
         {
             ASSERT(targetUniform->ps.float4Index >= 0);
-            mDevice->SetPixelShaderConstantF(targetUniform->ps.float4Index, (const float*)vector, targetUniform->ps.registerCount);
+            device->SetPixelShaderConstantF(targetUniform->ps.float4Index, (const float*)vector, targetUniform->ps.registerCount);
         }
     }
 
@@ -2317,14 +2321,14 @@ bool ProgramBinary::applyUniform1iv(Uniform *targetUniform, GLsizei count, const
         else
         {
             ASSERT(targetUniform->vs.float4Index >= 0);
-            mDevice->SetVertexShaderConstantF(targetUniform->vs.float4Index, (const float *)vector, targetUniform->vs.registerCount);
+            device->SetVertexShaderConstantF(targetUniform->vs.float4Index, (const float *)vector, targetUniform->vs.registerCount);
         }
     }
 
     return true;
 }
 
-bool ProgramBinary::applyUniform2iv(Uniform *targetUniform, GLsizei count, const GLint *v)
+bool ProgramBinary::applyUniform2iv(IDirect3DDevice9 *device, Uniform *targetUniform, GLsizei count, const GLint *v)
 {
     ASSERT(count <= D3D9_MAX_FLOAT_CONSTANTS);
     Vector4 vector[D3D9_MAX_FLOAT_CONSTANTS];
@@ -2336,12 +2340,12 @@ bool ProgramBinary::applyUniform2iv(Uniform *targetUniform, GLsizei count, const
         v += 2;
     }
 
-    applyUniformniv(targetUniform, count, vector);
+    applyUniformniv(device, targetUniform, count, vector);
 
     return true;
 }
 
-bool ProgramBinary::applyUniform3iv(Uniform *targetUniform, GLsizei count, const GLint *v)
+bool ProgramBinary::applyUniform3iv(IDirect3DDevice9 *device, Uniform *targetUniform, GLsizei count, const GLint *v)
 {
     ASSERT(count <= D3D9_MAX_FLOAT_CONSTANTS);
     Vector4 vector[D3D9_MAX_FLOAT_CONSTANTS];
@@ -2353,12 +2357,12 @@ bool ProgramBinary::applyUniform3iv(Uniform *targetUniform, GLsizei count, const
         v += 3;
     }
 
-    applyUniformniv(targetUniform, count, vector);
+    applyUniformniv(device, targetUniform, count, vector);
 
     return true;
 }
 
-bool ProgramBinary::applyUniform4iv(Uniform *targetUniform, GLsizei count, const GLint *v)
+bool ProgramBinary::applyUniform4iv(IDirect3DDevice9 *device, Uniform *targetUniform, GLsizei count, const GLint *v)
 {
     ASSERT(count <= D3D9_MAX_FLOAT_CONSTANTS);
     Vector4 vector[D3D9_MAX_FLOAT_CONSTANTS];
@@ -2370,25 +2374,26 @@ bool ProgramBinary::applyUniform4iv(Uniform *targetUniform, GLsizei count, const
         v += 4;
     }
 
-    applyUniformniv(targetUniform, count, vector);
+    applyUniformniv(device, targetUniform, count, vector);
 
     return true;
 }
 
-void ProgramBinary::applyUniformniv(Uniform *targetUniform, GLsizei count, const Vector4 *vector)
+void ProgramBinary::applyUniformniv(IDirect3DDevice9 *device, Uniform *targetUniform, GLsizei count, const Vector4 *vector)
 {
     if (targetUniform->ps.registerCount)
     {
         ASSERT(targetUniform->ps.float4Index >= 0);
-        mDevice->SetPixelShaderConstantF(targetUniform->ps.float4Index, (const float *)vector, targetUniform->ps.registerCount);
+        device->SetPixelShaderConstantF(targetUniform->ps.float4Index, (const float *)vector, targetUniform->ps.registerCount);
     }
 
     if (targetUniform->vs.registerCount)
     {
         ASSERT(targetUniform->vs.float4Index >= 0);
-        mDevice->SetVertexShaderConstantF(targetUniform->vs.float4Index, (const float *)vector, targetUniform->vs.registerCount);
+        device->SetVertexShaderConstantF(targetUniform->vs.float4Index, (const float *)vector, targetUniform->vs.registerCount);
     }
 }
+// D3D9_REPLACE end
 
 bool ProgramBinary::isValidated() const 
 {

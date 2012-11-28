@@ -177,16 +177,15 @@ class ProgramBinary : public RefCountObject
                        D3DConstantTable *vsConstantTable, D3DConstantTable *psConstantTable);
     bool defineUniform(GLenum shader, const D3DConstant *constant, const std::string &name);
     Uniform *createUniform( const D3DConstant *constant, const std::string &name);
-    bool applyUniformnfv(Uniform *targetUniform, const GLfloat *v);
-    bool applyUniform1iv(Uniform *targetUniform, GLsizei count, const GLint *v);
-    bool applyUniform2iv(Uniform *targetUniform, GLsizei count, const GLint *v);
-    bool applyUniform3iv(Uniform *targetUniform, GLsizei count, const GLint *v);
-    bool applyUniform4iv(Uniform *targetUniform, GLsizei count, const GLint *v);
-    void applyUniformniv(Uniform *targetUniform, GLsizei count, const Vector4 *vector);
-    void applyUniformnbv(Uniform *targetUniform, GLsizei count, int width, const GLboolean *v);
+    bool applyUniformnfv(IDirect3DDevice9 *device, Uniform *targetUniform, const GLfloat *v);   // D3D9_REPLACE
+    bool applyUniform1iv(IDirect3DDevice9 *device, Uniform *targetUniform, GLsizei count, const GLint *v);
+    bool applyUniform2iv(IDirect3DDevice9 *device, Uniform *targetUniform, GLsizei count, const GLint *v);
+    bool applyUniform3iv(IDirect3DDevice9 *device, Uniform *targetUniform, GLsizei count, const GLint *v);
+    bool applyUniform4iv(IDirect3DDevice9 *device, Uniform *targetUniform, GLsizei count, const GLint *v);
+    void applyUniformniv(IDirect3DDevice9 *device, Uniform *targetUniform, GLsizei count, const Vector4 *vector);
+    void applyUniformnbv(IDirect3DDevice9 *device, Uniform *targetUniform, GLsizei count, int width, const GLboolean *v);
 
-    rx::Renderer9 *mRenderer;   // D3D9_REPLACE
-    IDirect3DDevice9 *mDevice; // D3D9_REPLACE
+    rx::Renderer *const mRenderer;
 
     rx::ShaderExecutable *mPixelExecutable;
     rx::ShaderExecutable *mVertexExecutable;
