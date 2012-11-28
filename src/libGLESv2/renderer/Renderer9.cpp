@@ -2698,7 +2698,7 @@ ShaderExecutable *Renderer9::compileToExecutable(gl::InfoLog &infoLog, const cha
     }
 
     gl::D3DConstantTable *constantTable = NULL;
-    ID3D10Blob *binary = compileToBinary(infoLog, shaderHLSL, profile, &constantTable);
+    ID3DBlob *binary = compileToBinary(infoLog, shaderHLSL, profile, &constantTable);
     if (!binary)
         return NULL;
 
@@ -2709,7 +2709,7 @@ ShaderExecutable *Renderer9::compileToExecutable(gl::InfoLog &infoLog, const cha
 }
 
 // Compiles the HLSL code of the attached shaders into executable binaries
-ID3D10Blob *Renderer9::compileToBinary(gl::InfoLog &infoLog, const char *hlsl, const char *profile, gl::D3DConstantTable **constantTable)
+ID3DBlob *Renderer9::compileToBinary(gl::InfoLog &infoLog, const char *hlsl, const char *profile, gl::D3DConstantTable **constantTable)
 {
     if (!hlsl)
     {
@@ -2756,8 +2756,8 @@ ID3D10Blob *Renderer9::compileToBinary(gl::InfoLog &infoLog, const char *hlsl, c
 
     for (int i = 0; i < sizeof(extraFlags) / sizeof(UINT); ++i)
     {
-        ID3D10Blob *errorMessage = NULL;
-        ID3D10Blob *binary = NULL;
+        ID3DBlob *errorMessage = NULL;
+        ID3DBlob *binary = NULL;
         result = mD3DCompileFunc(hlsl, strlen(hlsl), gl::g_fakepath, NULL, NULL,
                                  "main", profile, flags | extraFlags[i], 0, &binary, &errorMessage);
         if (errorMessage)
@@ -2789,7 +2789,7 @@ ID3D10Blob *Renderer9::compileToBinary(gl::InfoLog &infoLog, const char *hlsl, c
         {
             if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
             {
-                return error(GL_OUT_OF_MEMORY, (ID3D10Blob*) NULL);
+                return error(GL_OUT_OF_MEMORY, (ID3DBlob*) NULL);
             }
 
             infoLog.append("Warning: D3D shader compilation failed with ");

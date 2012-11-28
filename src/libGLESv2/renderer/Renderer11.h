@@ -149,6 +149,8 @@ class Renderer11 : public Renderer
 
     bool mDeviceLost;
 
+    ID3DBlob *compileToBinary(gl::InfoLog &infoLog, const char *hlsl, const char *profile);
+
     void initializeDevice();
     void releaseDeviceResources();
 

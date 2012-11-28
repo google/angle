@@ -184,7 +184,7 @@ class Renderer9 : public Renderer
     void getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray);
     bool copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *source, bool fromManaged);
 
-    ID3D10Blob *compileToBinary(gl::InfoLog &infoLog, const char *hlsl, const char *profile, gl::D3DConstantTable **constantTable);
+    ID3DBlob *compileToBinary(gl::InfoLog &infoLog, const char *hlsl, const char *profile, gl::D3DConstantTable **constantTable);
 
     D3DPOOL getBufferPool(DWORD usage) const;
 
