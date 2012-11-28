@@ -12,6 +12,7 @@
 #include "libGLESv2/renderer/renderer9_utils.h"
 #include "libGLESv2/renderer/TextureStorage.h"
 #include "libGLESv2/renderer/Image.h"
+#include "libGLESv2/renderer/Blit.h"
 
 #include "libEGL/Config.h"
 #include "libEGL/Display.h"
@@ -62,6 +63,7 @@ Renderer9::Renderer9(egl::Display *display, HDC hDc, bool softwareDevice) : Rend
     mDevice = NULL;
     mDeviceEx = NULL;
     mDeviceWindow = NULL;
+    mBlit = NULL;
 
     mAdapter = D3DADAPTER_DEFAULT;
 
@@ -79,6 +81,8 @@ Renderer9::Renderer9(egl::Display *display, HDC hDc, bool softwareDevice) : Rend
 Renderer9::~Renderer9()
 {
     releaseDeviceResources();
+    
+    delete mBlit;
 
     if (mDevice)
     {
@@ -318,6 +322,8 @@ EGLint Renderer9::initialize()
     mPixelShaderCache.initialize(mDevice);
 
     initializeDevice();
+
+    mBlit = new Blit(this);
 
     return EGL_SUCCESS;
 }
@@ -1121,6 +1127,23 @@ D3DPOOL Renderer9::getBufferPool(DWORD usage) const
     }
 
     return D3DPOOL_DEFAULT;
+}
+
+bool Renderer9::copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset,
+                          gl::TextureStorage2D *storage, GLint level)
+{
+    return mBlit->copy(framebuffer, sourceRect, destFormat, xoffset, yoffset, storage, level);
+}
+
+bool Renderer9::copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset,
+                          gl::TextureStorageCubeMap *storage, GLenum target, GLint level)
+{
+    return mBlit->copy(framebuffer, sourceRect, destFormat, xoffset, yoffset, storage, target, level);
+}
+
+bool Renderer9::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
+{
+    return mBlit->boxFilter(source, dest);
 }
 
 D3DPOOL Renderer9::getTexturePool(DWORD usage) const

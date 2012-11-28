@@ -14,9 +14,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Blit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Buffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -107,12 +104,12 @@
     <ClCompile Include="renderer\renderer11_utils.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\Blit.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinaryStream.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Blit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Buffer.h">
@@ -218,6 +215,9 @@
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="renderer\renderer11_utils.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\Blit.h">
       <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>

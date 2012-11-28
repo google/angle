@@ -11,7 +11,7 @@
 #include "libGLESv2/main.h"
 #include "libGLESv2/renderer/TextureStorage.h"
 #include "libGLESv2/renderer/SwapChain.h"
-#include "libGLESv2/Blit.h"
+#include "libGLESv2/renderer/Blit.h"
 
 #include "libGLESv2/renderer/renderer9_utils.h"
 
@@ -73,12 +73,6 @@ bool TextureStorage::IsTextureFormatRenderable(D3DFORMAT format)
     }
 
     return false;
-}
-
-Blit *TextureStorage::getBlitter()
-{
-    Context *context = getContext();
-    return context->getBlitter();
 }
 
 bool TextureStorage::isRenderTarget() const
@@ -185,7 +179,7 @@ void TextureStorage2D::generateMipmap(int level)
 
     if (upper != NULL && lower != NULL)
     {
-        getBlitter()->boxFilter(upper, lower);
+        mRenderer->boxFilter(upper, lower);
     }
 
     if (upper != NULL) upper->Release();
@@ -262,7 +256,7 @@ void TextureStorageCubeMap::generateMipmap(int face, int level)
 
     if (upper != NULL && lower != NULL)
     {
-        getBlitter()->boxFilter(upper, lower);
+        mRenderer->boxFilter(upper, lower);
     }
 
     if (upper != NULL) upper->Release();

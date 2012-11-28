@@ -6,13 +6,14 @@
 
 // Blit.cpp: Surface copy utility class.
 
-#include "libGLESv2/Blit.h"
+#include "libGLESv2/renderer/Blit.h"
 
 #include "common/debug.h"
 
 #include "libGLESv2/main.h"
 #include "libGLESv2/utilities.h"
 #include "libGLESv2/renderer/renderer9_utils.h" // D3D9_REPLACE
+#include "libGLESv2/renderer/TextureStorage.h"
 #include "libGLESv2/Framebuffer.h"
 
 namespace
@@ -42,7 +43,7 @@ const size_t g_shaderSize[] =
 };
 }
 
-namespace gl
+namespace rx
 {
 Blit::Blit(rx::Renderer9 *renderer)
   : mRenderer(renderer), mQuadVertexBuffer(NULL), mQuadVertexDeclaration(NULL), mSavedRenderTarget(NULL), mSavedDepthStencil(NULL), mSavedStateBlock(NULL)
@@ -211,7 +212,7 @@ bool Blit::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
     return true;
 }
 
-bool Blit::copy(Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorage2D *storage, GLint level)
+bool Blit::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, gl::TextureStorage2D *storage, GLint level)
 {
     // D3D9_REPLACE
     IDirect3DSurface9 *source = framebuffer->getRenderTarget();
@@ -234,7 +235,7 @@ bool Blit::copy(Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFor
     return result;
 }
 
-bool Blit::copy(Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorageCubeMap *storage, GLenum target, GLint level)
+bool Blit::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, gl::TextureStorageCubeMap *storage, GLenum target, GLint level)
 {
     // D3D9_REPLACE
     IDirect3DSurface9 *source = framebuffer->getRenderTarget();
@@ -474,7 +475,7 @@ void Blit::setCommonBlitState()
     RECT scissorRect = {0};   // Scissoring is disabled for flipping, but we need this to capture and restore the old rectangle
     device->SetScissorRect(&scissorRect);
 
-    for(int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
+    for(int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
         device->SetStreamSourceFreq(i, 1);
     }

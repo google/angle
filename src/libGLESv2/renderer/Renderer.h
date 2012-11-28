@@ -46,6 +46,8 @@ class TextureStorageCubeMap;
 namespace rx
 {
 
+class Blit;
+
 struct ConfigDesc
 {
     GLenum  renderTargetFormat;
@@ -114,6 +116,9 @@ class Renderer
 
     virtual bool copyToRenderTarget(gl::TextureStorage2D *dest, gl::TextureStorage2D *source) = 0;
     virtual bool copyToRenderTarget(gl::TextureStorageCubeMap *dest, gl::TextureStorageCubeMap *source) = 0;
+
+    virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, gl::TextureStorage2D *storage, GLint level) = 0;
+    virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, gl::TextureStorageCubeMap *storage, GLenum target, GLint level) = 0;
 
   protected:
     egl::Display *mDisplay;

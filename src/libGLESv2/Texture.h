@@ -36,7 +36,6 @@ class Renderer;
 
 namespace gl
 {
-class Blit;
 class Framebuffer;
 
 enum
@@ -122,8 +121,6 @@ class Texture : public RefCountObject
     virtual IDirect3DSurface9 *getRenderTarget(GLenum target) = 0;
 
     virtual int levelCount() = 0;
-
-    static Blit *getBlitter();
 
     rx::Renderer *mRenderer;
 

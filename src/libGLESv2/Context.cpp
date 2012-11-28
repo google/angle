@@ -17,7 +17,6 @@
 #include "libGLESv2/mathutil.h"
 #include "libGLESv2/utilities.h"
 #include "libGLESv2/renderer/renderer9_utils.h" // D3D9_REPLACE
-#include "libGLESv2/Blit.h"
 #include "libGLESv2/ResourceManager.h"
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/Fence.h"
@@ -153,7 +152,6 @@ Context::Context(const gl::Context *shareContext, rx::Renderer *renderer, bool n
 
     mVertexDataManager = NULL;
     mIndexDataManager = NULL;
-    mBlit = NULL;
     mLineLoopIB = NULL;
 
     mInvalidEnum = false;
@@ -238,7 +236,6 @@ Context::~Context()
 
     delete mVertexDataManager;
     delete mIndexDataManager;
-    delete mBlit;
     delete mLineLoopIB;
 
     if (mMaskedClearSavedState)
@@ -257,7 +254,6 @@ void Context::makeCurrent(egl::Surface *surface)
     {
         mVertexDataManager = new VertexDataManager(mRenderer);
         mIndexDataManager = new IndexDataManager(mRenderer);
-        mBlit = new Blit(mRenderer);
 
         mSupportsShaderModel3 = mRenderer->getShaderModel3Support();
         mMaximumPointSize = mRenderer->getMaxPointSize();

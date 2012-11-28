@@ -21,12 +21,11 @@ namespace rx
 {
 class Renderer9;
 class SwapChain;
+class Blit;
 }
 
 namespace gl
 {
-class Blit;
-
 class TextureStorage
 {
   public:
@@ -36,7 +35,6 @@ class TextureStorage
 
     static DWORD GetTextureUsage(D3DFORMAT d3dfmt, GLenum glusage, bool forceRenderable);
     static bool IsTextureFormatRenderable(D3DFORMAT format);
-    static Blit *getBlitter();
 
     bool isRenderTarget() const;
     bool isManaged() const;
@@ -50,14 +48,13 @@ class TextureStorage
 
   protected:
     int mLodOffset;
+    rx::Renderer9 *mRenderer;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage);
 
     const DWORD mD3DUsage;
     const D3DPOOL mD3DPool;
-
-    rx::Renderer9 *mRenderer;
 
     const unsigned int mTextureSerial;
     static unsigned int issueTextureSerial();

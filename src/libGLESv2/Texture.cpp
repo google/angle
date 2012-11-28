@@ -19,7 +19,7 @@
 #include "libGLESv2/main.h"
 #include "libGLESv2/mathutil.h"
 #include "libGLESv2/utilities.h"
-#include "libGLESv2/Blit.h"
+#include "libGLESv2/renderer/Blit.h"
 #include "libGLESv2/Framebuffer.h"
 
 namespace gl
@@ -326,12 +326,6 @@ GLint Texture::creationLevels(GLsizei size) const
     return creationLevels(size, size);
 }
 
-Blit *Texture::getBlitter()
-{
-    Context *context = getContext();
-    return context->getBlitter();
-}
-
 Texture2D::Texture2D(rx::Renderer *renderer, GLuint id) : Texture(renderer, id)
 {
     mTexStorage = NULL;
@@ -542,7 +536,7 @@ void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei 
             sourceRect.top = y;
             sourceRect.bottom = y + height;
 
-            getBlitter()->copy(source, sourceRect, format, 0, 0, mTexStorage, level);
+            mRenderer->copyImage(source, sourceRect, format, 0, 0, mTexStorage, level);
 
         }
     }
@@ -577,9 +571,9 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
             sourceRect.top = y;
             sourceRect.bottom = y + height;
 
-            getBlitter()->copy(source, sourceRect, 
-                               gl::ExtractFormat(mImageArray[0].getInternalFormat()),
-                               xoffset, yoffset, mTexStorage, level);
+            mRenderer->copyImage(source, sourceRect, 
+                                 gl::ExtractFormat(mImageArray[0].getInternalFormat()),
+                                 xoffset, yoffset, mTexStorage, level);
         }
     }
 }
@@ -1326,7 +1320,7 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint 
             sourceRect.top = y;
             sourceRect.bottom = y + height;
 
-            getBlitter()->copy(source, sourceRect, format, 0, 0, mTexStorage, target, level);
+            mRenderer->copyImage(source, sourceRect, format, 0, 0, mTexStorage, target, level);
 
         }
     }
@@ -1365,7 +1359,8 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
             sourceRect.top = y;
             sourceRect.bottom = y + height;
 
-            getBlitter()->copy(source, sourceRect, gl::ExtractFormat(mImageArray[0][0].getInternalFormat()), xoffset, yoffset, mTexStorage, target, level);
+            mRenderer->copyImage(source, sourceRect, gl::ExtractFormat(mImageArray[0][0].getInternalFormat()), 
+                                 xoffset, yoffset, mTexStorage, target, level);
 
         }
     }

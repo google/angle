@@ -114,6 +114,11 @@ class Renderer9 : public Renderer
     virtual bool copyToRenderTarget(gl::TextureStorage2D *dest, gl::TextureStorage2D *source);
     virtual bool copyToRenderTarget(gl::TextureStorageCubeMap *dest, gl::TextureStorageCubeMap *source);
 
+    virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, gl::TextureStorage2D *storage, GLint level);
+    virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, gl::TextureStorageCubeMap *storage, GLenum target, GLint level);
+
+    bool boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest);
+
     D3DPOOL getTexturePool(DWORD usage) const;
 
   private:
@@ -138,6 +143,8 @@ class Renderer9 : public Renderer
     IDirect3D9Ex *mD3d9Ex;  // Might be null if D3D9Ex is not supported.
     IDirect3DDevice9 *mDevice;
     IDirect3DDevice9Ex *mDeviceEx;  // Might be null if D3D9Ex is not supported.
+
+    Blit *mBlit;
 
     HWND mDeviceWindow;
 

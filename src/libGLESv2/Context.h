@@ -60,7 +60,6 @@ class Stencilbuffer;
 class DepthStencilbuffer;
 class VertexDataManager;
 class IndexDataManager;
-class Blit;
 class Fence;
 class Query;
 
@@ -513,8 +512,6 @@ class Context
                          GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
                          GLbitfield mask);
 
-    Blit *getBlitter() { return mBlit; }
-
   private:
     DISALLOW_COPY_AND_ASSIGN(Context);
 
@@ -573,8 +570,6 @@ class Context
 
     VertexDataManager *mVertexDataManager;
     IndexDataManager *mIndexDataManager;
-
-    Blit *mBlit;
 
     StreamingIndexBuffer *mLineLoopIB;
     
