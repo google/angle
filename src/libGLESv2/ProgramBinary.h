@@ -173,7 +173,7 @@ class ProgramBinary : public RefCountObject
 
     bool linkAttributes(InfoLog &infoLog, const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader);
 
-    bool linkUniforms(InfoLog &infoLog, GLenum shader, D3DConstantTable *constantTable);
+    bool linkUniforms(InfoLog &infoLog, D3DConstantTable *vsConstantTable, D3DConstantTable *psConstantTable);
     bool defineUniform(InfoLog &infoLog, GLenum shader, const D3DConstant *constant, const std::string &name,
                        D3DConstantTable *vsConstantTable, D3DConstantTable *psConstantTable);
     bool defineUniform(GLenum shader, const D3DConstant *constant, const std::string &name);

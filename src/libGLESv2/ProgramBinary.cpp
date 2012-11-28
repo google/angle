@@ -1962,12 +1962,7 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
             return false;
         }
 
-        if (!linkUniforms(infoLog, GL_FRAGMENT_SHADER, mConstantTablePS))
-        {
-            return false;
-        }
-
-        if (!linkUniforms(infoLog, GL_VERTEX_SHADER, mConstantTableVS))
+        if (!linkUniforms(infoLog, mConstantTableVS, mConstantTablePS))
         {
             return false;
         }
@@ -2060,18 +2055,27 @@ bool ProgramBinary::linkAttributes(InfoLog &infoLog, const AttributeBindings &at
     return true;
 }
 
-bool ProgramBinary::linkUniforms(InfoLog &infoLog, GLenum shader, D3DConstantTable *constantTable)
+bool ProgramBinary::linkUniforms(InfoLog &infoLog, D3DConstantTable *vsConstantTable, D3DConstantTable *psConstantTable)
 {
-    for (unsigned int constantIndex = 0; constantIndex < constantTable->constants(); constantIndex++)
+    for (unsigned int constantIndex = 0; constantIndex < psConstantTable->constants(); constantIndex++)
     {
-        const D3DConstant *constant = constantTable->getConstant(constantIndex);
+        const D3DConstant *constant = psConstantTable->getConstant(constantIndex);
 
-        if (!defineUniform(infoLog, shader, constant, "", mConstantTableVS, mConstantTablePS))
+        if (!defineUniform(infoLog, GL_FRAGMENT_SHADER, constant, "", vsConstantTable, psConstantTable))
         {
             return false;
         }
     }
 
+    for (unsigned int constantIndex = 0; constantIndex < vsConstantTable->constants(); constantIndex++)
+    {
+        const D3DConstant *constant = vsConstantTable->getConstant(constantIndex);
+
+        if (!defineUniform(infoLog, GL_VERTEX_SHADER, constant, "", vsConstantTable, psConstantTable))
+        {
+            return false;
+        }
+    }
     return true;
 }
 
