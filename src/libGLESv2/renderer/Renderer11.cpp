@@ -454,7 +454,7 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
         if (!renderbufferObject)
         {
             ERR("render target pointer unexpectedly null.");
-            return;
+            return false;
         }
 
         renderTargetSerial = renderbufferObject->getSerial();
