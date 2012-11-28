@@ -63,6 +63,8 @@ class Renderer11 : public Renderer
 
     virtual bool applyRenderTarget(gl::Framebuffer *frameBuffer);
 
+    virtual GLenum applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], GLint first, GLsizei count, GLsizei instances, GLsizei *repeatDraw);
+
     virtual void clear(GLbitfield mask, const gl::Color &colorClear, float depthClear, int stencilClear,
                        gl::Framebuffer *frameBuffer);
 

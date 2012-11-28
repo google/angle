@@ -23,7 +23,8 @@ rx::Renderer *glCreateRenderer(egl::Display *display, HDC hDc, bool softwareDevi
     rx::Renderer *renderer = NULL;
     EGLint status = EGL_BAD_ALLOC;
     
-    #if ANGLE_ENABLE_D3D11
+    if (ANGLE_ENABLE_D3D11)
+    {
         renderer = new rx::Renderer11(display, hDc);
     
         if (renderer)
@@ -38,7 +39,7 @@ rx::Renderer *glCreateRenderer(egl::Display *display, HDC hDc, bool softwareDevi
 
         // Failed to create a D3D11 renderer, try creating a D3D9 renderer
         delete renderer;
-    #endif
+    }
 
     renderer = new rx::Renderer9(display, hDc, softwareDevice);
     

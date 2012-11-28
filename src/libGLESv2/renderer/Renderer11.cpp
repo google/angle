@@ -390,6 +390,14 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *frameBuffer)
     return true;
 }
 
+GLenum Renderer11::applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], GLint first, GLsizei count, GLsizei instances, GLsizei *repeatDraw)
+{
+    // TODO
+    UNIMPLEMENTED();
+
+    return GL_OUT_OF_MEMORY;
+}
+
 void Renderer11::clear(GLbitfield mask, const gl::Color &colorClear, float depthClear, int stencilClear,
                        gl::Framebuffer *frameBuffer)
 {
