@@ -16,6 +16,13 @@
 namespace rx
 {
 
+// MSDN's documentation of ID3D11Device::CreateBlendState, ID3D11Device::CreateRasterizerState
+// and ID3D11Device::CreateDepthStencilState claims the maximum number of unique states of each
+// type an application can create is 4096
+const unsigned int RenderStateCache::kMaxBlendStates = 4096;
+const unsigned int RenderStateCache::kMaxRasterizerStates = 4096;
+const unsigned int RenderStateCache::kMaxDepthStencilStates = 4096;
+
 RenderStateCache::RenderStateCache() : mDevice(NULL), mCounter(0),
                                        mBlendStateCache(kMaxBlendStates, hashBlendState, compareBlendStates),
                                        mRasterizerStateCache(kMaxRasterizerStates, hashRasterizerState, compareRasterizerStates),
@@ -68,10 +75,6 @@ bool RenderStateCache::compareBlendStates(const gl::BlendState &a, const gl::Ble
 {
     return memcmp(&a, &b, sizeof(gl::BlendState)) == 0;
 }
-
-// MSDN's documentation of ID3D11Device::CreateBlendState claims the maximum number of
-// unique blend states an application can create is 4096
-const unsigned int RenderStateCache::kMaxBlendStates = 4096;
 
 ID3D11BlendState *RenderStateCache::getBlendState(const gl::BlendState &blendState)
 {
@@ -164,10 +167,6 @@ bool RenderStateCache::compareRasterizerStates(const RasterizerStateKey &a, cons
     return memcmp(&a, &b, sizeof(RasterizerStateKey)) == 0;
 }
 
-// MSDN's documentation of ID3D11Device::CreateRasterizerState  claims the maximum number of
-// unique rasterizer states an application can create is 4096
-const unsigned int RenderStateCache::kMaxRasterizerStates = 4096;
-
 ID3D11RasterizerState *RenderStateCache::getRasterizerState(const gl::RasterizerState &rasterState,
                                                             unsigned int depthSize)
 {
@@ -248,10 +247,6 @@ bool RenderStateCache::compareDepthStencilStates(const gl::DepthStencilState &a,
 {
     return memcmp(&a, &b, sizeof(gl::DepthStencilState)) == 0;
 }
-
-// MSDN's documentation of ID3D11Device::CreateDepthStencilState  claims the maximum number of
-// unique depth stencil states an application can create is 4096
-const unsigned int RenderStateCache::kMaxDepthStencilStates = 4096;
 
 ID3D11DepthStencilState* RenderStateCache::getDepthStencilState(const gl::DepthStencilState &dsState)
 {
