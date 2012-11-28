@@ -55,7 +55,7 @@ class Renderer11 : public Renderer
                                       int stencilBackRef, bool frontFaceCCW);
 
     virtual void setScissorRectangle(const gl::Rectangle &scissor);
-    virtual bool setViewport(const gl::Rectangle &viewport, float zNear, float zFar,
+    virtual bool setViewport(const gl::Rectangle &viewport, float zNear, float zFar, bool ignoreViewport,
                              gl::ProgramBinary *currentProgram, bool forceSetUniforms);
 
     virtual bool applyPrimitiveType(GLenum mode, GLsizei count);

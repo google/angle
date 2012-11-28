@@ -365,32 +365,45 @@ void Renderer11::setScissorRectangle(const gl::Rectangle &scissor)
     mForceSetScissor = false;
 }
 
-bool Renderer11::setViewport(const gl::Rectangle &viewport, float zNear, float zFar,
+bool Renderer11::setViewport(const gl::Rectangle &viewport, float zNear, float zFar, bool ignoreViewport,
                              gl::ProgramBinary *currentProgram, bool forceSetUniforms)
 {
-    bool viewportChanged =  mForceSetViewport || memcmp(&viewport, &mCurViewport, sizeof(gl::Rectangle)) != 0 ||
-                            zNear != mCurNear || zFar != mCurFar;
+    gl::Rectangle actualViewport = viewport;
+    float actualZNear = gl::clamp01(zNear);
+    float actualZFar = gl::clamp01(zFar);
+    if (ignoreViewport)
+    {
+        actualViewport.x = 0;
+        actualViewport.y = 0;
+        actualViewport.width = mRenderTargetDesc.width;
+        actualViewport.height = mRenderTargetDesc.height;
+        actualZNear = 0.0f;
+        actualZFar = 1.0f;
+    }
 
     D3D11_VIEWPORT dxViewport;
-    dxViewport.TopLeftX = gl::clamp(viewport.x, 0, static_cast<int>(mRenderTargetDesc.width));
-    dxViewport.TopLeftY = gl::clamp(viewport.y, 0, static_cast<int>(mRenderTargetDesc.height));
-    dxViewport.Width = gl::clamp(viewport.width, 0, static_cast<int>(mRenderTargetDesc.width) - static_cast<int>(dxViewport.TopLeftX));
-    dxViewport.Height = gl::clamp(viewport.height, 0, static_cast<int>(mRenderTargetDesc.height) - static_cast<int>(dxViewport.TopLeftY));
-    dxViewport.MinDepth = zNear;
-    dxViewport.MaxDepth = zFar;
+    dxViewport.TopLeftX = gl::clamp(actualViewport.x, 0, static_cast<int>(mRenderTargetDesc.width));
+    dxViewport.TopLeftY = gl::clamp(actualViewport.y, 0, static_cast<int>(mRenderTargetDesc.height));
+    dxViewport.Width = gl::clamp(actualViewport.width, 0, static_cast<int>(mRenderTargetDesc.width) - static_cast<int>(dxViewport.TopLeftX));
+    dxViewport.Height = gl::clamp(actualViewport.height, 0, static_cast<int>(mRenderTargetDesc.height) - static_cast<int>(dxViewport.TopLeftY));
+    dxViewport.MinDepth = actualZNear;
+    dxViewport.MaxDepth = actualZFar;
 
     if (dxViewport.Width <= 0 || dxViewport.Height <= 0)
     {
         return false;   // Nothing to render
     }
 
+    bool viewportChanged =  mForceSetViewport || memcmp(&actualViewport, &mCurViewport, sizeof(gl::Rectangle)) != 0 ||
+                            actualZNear != mCurNear || actualZFar != mCurFar;
+
     if (viewportChanged)
     {
         mDeviceContext->RSSetViewports(1, &dxViewport);
 
-        mCurViewport = viewport;
-        mCurNear = zNear;
-        mCurFar = zFar;
+        mCurViewport = actualViewport;
+        mCurNear = actualZNear;
+        mCurFar = actualZFar;
     }
 
     if (currentProgram && (viewportChanged || forceSetUniforms))
@@ -401,18 +414,18 @@ bool Renderer11::setViewport(const gl::Rectangle &viewport, float zNear, float z
 
         // These values are used for computing gl_FragCoord in Program::linkVaryings().
         GLint coord = currentProgram->getDxCoordLocation();
-        GLfloat whxy[4] = { viewport.width  * 0.5f,
-                            viewport.height * 0.5f,
-                            viewport.x + (viewport.width  * 0.5f),
-                            viewport.y + (viewport.height * 0.5f) };
+        GLfloat whxy[4] = { actualViewport.width  * 0.5f,
+                            actualViewport.height * 0.5f,
+                            actualViewport.x + (actualViewport.width  * 0.5f),
+                            actualViewport.y + (actualViewport.height * 0.5f) };
         currentProgram->setUniform4fv(coord, 1, whxy);
 
         GLint depth = currentProgram->getDxDepthLocation();
-        GLfloat dz[2] = { (zFar - zNear) * 0.5f, (zNear + zFar) * 0.5f };
+        GLfloat dz[2] = { (actualZFar - actualZNear) * 0.5f, (actualZNear + actualZFar) * 0.5f };
         currentProgram->setUniform2fv(depth, 1, dz);
 
         GLint depthRange = currentProgram->getDxDepthRangeLocation();
-        GLfloat nearFarDiff[3] = { zNear, zFar, zFar - zNear };
+        GLfloat nearFarDiff[3] = { actualZNear, actualZFar, actualZFar - actualZNear };
         currentProgram->setUniform3fv(depthRange, 1, nearFarDiff);
     }
 

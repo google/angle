@@ -1738,23 +1738,9 @@ bool Context::applyRenderTarget(bool ignoreViewport)
     mRenderTargetDesc.format = renderbufferObject->getActualFormat();
     // D3D9_REPLACE end
 
-    Rectangle viewport = mState.viewport;
-    float zNear = clamp01(mState.zNear);
-    float zFar = clamp01(mState.zFar);
-
-    if (ignoreViewport)
-    {
-        viewport.x = 0;
-        viewport.y = 0;
-        viewport.width = mRenderTargetDesc.width;
-        viewport.height = mRenderTargetDesc.height;
-        zNear = 0.0f;
-        zFar = 1.0f;
-    }
-
     ProgramBinary *programBinary = mState.currentProgram ? getCurrentProgramBinary() : NULL;
-
-    if (!mRenderer->setViewport(viewport, zNear, zFar, programBinary, mDxUniformsDirty))
+    if (!mRenderer->setViewport(mState.viewport, mState.zNear, mState.zFar, ignoreViewport,
+                                programBinary, mDxUniformsDirty))
     {
         return false;
     }
