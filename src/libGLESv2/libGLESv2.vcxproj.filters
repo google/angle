@@ -115,7 +115,10 @@
     </ClCompile>
     <ClCompile Include="renderer\RenderTarget9.cpp">
       <Filter>Renderer</Filter>
-    </ClInclude>
+    </ClCompile>
+    <ClCompile Include="renderer\RenderStateCache.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="..\third_party\murmurhash\MurmurHash3.cpp">
       <Filter>Third Party\MurmurHash</Filter>
     </ClCompile>
@@ -236,6 +239,9 @@
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="renderer\RenderTarget9.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\RenderStateCache.h">
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="..\third_party\murmurhash\MurmurHash3.h">
