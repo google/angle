@@ -30,7 +30,7 @@ RenderTarget9::RenderTarget9(Renderer *renderer, IDirect3DSurface9 *surface)
         mWidth = description.Width;
         mHeight = description.Height;
         
-        mInternalFormat = d3d9_gl::ConvertRenderTargetFormat(description.Format);
+        mInternalFormat = d3d9_gl::GetEquivalentFormat(description.Format);
         mActualFormat = d3d9_gl::GetEquivalentFormat(description.Format);
         mSamples = d3d9_gl::GetSamplesFromMultisampleType(description.MultiSampleType);
     }

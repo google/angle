@@ -21,6 +21,8 @@ namespace rx
 {
 class Renderer9;
 class SwapChain9;
+class RenderTarget;
+class RenderTarget9;
 class Blit;
 
 class TextureStorage
@@ -68,6 +70,7 @@ class TextureStorage2D : public TextureStorage
     virtual ~TextureStorage2D();
 
     IDirect3DSurface9 *getSurfaceLevel(int level, bool dirty);
+    RenderTarget *getRenderTarget() const;
     virtual IDirect3DBaseTexture9 *getBaseTexture() const;
     void generateMipmap(int level);
 
@@ -76,7 +79,10 @@ class TextureStorage2D : public TextureStorage
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage2D);
 
+    void initializeRenderTarget();
+
     IDirect3DTexture9 *mTexture;
+    RenderTarget9 *mRenderTarget;
     const unsigned int mRenderTargetSerial;
 };
 
@@ -88,6 +94,7 @@ class TextureStorageCubeMap : public TextureStorage
     virtual ~TextureStorageCubeMap();
 
     IDirect3DSurface9 *getCubeMapSurface(GLenum faceTarget, int level, bool dirty);
+    RenderTarget *getRenderTarget(GLenum faceTarget) const;
     virtual IDirect3DBaseTexture9 *getBaseTexture() const;
     void generateMipmap(int face, int level);
 
@@ -96,7 +103,10 @@ class TextureStorageCubeMap : public TextureStorage
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorageCubeMap);
 
+    void initializeRenderTarget();
+
     IDirect3DCubeTexture9 *mTexture;
+    RenderTarget9 *mRenderTarget[6];
     const unsigned int mFirstRenderTargetSerial;
 };
 

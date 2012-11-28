@@ -12,7 +12,7 @@
 #include "libGLESv2/renderer/TextureStorage.h"
 #include "libGLESv2/renderer/SwapChain9.h"
 #include "libGLESv2/renderer/Blit.h"
-
+#include "libGLESv2/renderer/RenderTarget9.h"
 #include "libGLESv2/renderer/renderer9_utils.h"
 
 #include "common/debug.h"
@@ -119,6 +119,8 @@ TextureStorage2D::TextureStorage2D(Renderer9 *renderer, rx::SwapChain9 *swapchai
 {
     IDirect3DTexture9 *surfaceTexture = swapchain->getOffscreenTexture();
     mTexture = surfaceTexture;
+
+    initializeRenderTarget();
 }
 
 TextureStorage2D::TextureStorage2D(Renderer9 *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height)
@@ -141,6 +143,8 @@ TextureStorage2D::TextureStorage2D(Renderer9 *renderer, int levels, GLenum inter
             error(GL_OUT_OF_MEMORY);
         }
     }
+
+    initializeRenderTarget();
 }
 
 TextureStorage2D::~TextureStorage2D()
@@ -149,6 +153,8 @@ TextureStorage2D::~TextureStorage2D()
     {
         mTexture->Release();
     }
+
+    delete mRenderTarget;
 }
 
 // Increments refcount on surface.
@@ -170,6 +176,11 @@ IDirect3DSurface9 *TextureStorage2D::getSurfaceLevel(int level, bool dirty)
     }
 
     return surface;
+}
+
+RenderTarget *TextureStorage2D::getRenderTarget() const
+{
+    return mRenderTarget;
 }
 
 void TextureStorage2D::generateMipmap(int level)
@@ -196,6 +207,20 @@ unsigned int TextureStorage2D::getRenderTargetSerial(GLenum target) const
     return mRenderTargetSerial;
 }
 
+void TextureStorage2D::initializeRenderTarget()
+{
+    if (mTexture != NULL && isRenderTarget())
+    {
+        IDirect3DSurface9 *surface = getSurfaceLevel(0, false);
+
+        mRenderTarget = new RenderTarget9(mRenderer, surface);
+    }
+    else
+    {
+        mRenderTarget = NULL;
+    }
+}
+
 TextureStorageCubeMap::TextureStorageCubeMap(Renderer9 *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
     : TextureStorage(renderer, GetTextureUsage(renderer->ConvertTextureInternalFormat(internalformat), usage, forceRenderable)),
       mFirstRenderTargetSerial(gl::RenderbufferStorage::issueCubeSerials())
@@ -217,6 +242,8 @@ TextureStorageCubeMap::TextureStorageCubeMap(Renderer9 *renderer, int levels, GL
             error(GL_OUT_OF_MEMORY);
         }
     }
+
+    initializeRenderTarget();
 }
 
 TextureStorageCubeMap::~TextureStorageCubeMap()
@@ -224,6 +251,11 @@ TextureStorageCubeMap::~TextureStorageCubeMap()
     if (mTexture)
     {
         mTexture->Release();
+    }
+
+    for (int i = 0; i < 6; ++i)
+    {
+        delete mRenderTarget[i];
     }
 }
 
@@ -249,6 +281,11 @@ IDirect3DSurface9 *TextureStorageCubeMap::getCubeMapSurface(GLenum faceTarget, i
     return surface;
 }
 
+RenderTarget *TextureStorageCubeMap::getRenderTarget(GLenum faceTarget) const
+{
+    return mRenderTarget[gl::TextureCubeMap::faceIndex(faceTarget)];
+}
+
 void TextureStorageCubeMap::generateMipmap(int face, int level)
 {
     IDirect3DSurface9 *upper = getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level - 1, false);
@@ -271,6 +308,28 @@ IDirect3DBaseTexture9 *TextureStorageCubeMap::getBaseTexture() const
 unsigned int TextureStorageCubeMap::getRenderTargetSerial(GLenum target) const
 {
     return mFirstRenderTargetSerial + gl::TextureCubeMap::faceIndex(target);
+}
+
+void TextureStorageCubeMap::initializeRenderTarget()
+{
+    if (mTexture != NULL && isRenderTarget())
+    {
+        IDirect3DSurface9 *surface = NULL;
+
+        for (int i = 0; i < 6; ++i)
+        {
+            surface = getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, false);
+
+            mRenderTarget[i] = new RenderTarget9(mRenderer, surface);
+        }
+    }
+    else
+    {
+        for (int i = 0; i < 6; ++i)
+        {
+            mRenderTarget[i] = NULL;
+        }
+    }
 }
 
 }
