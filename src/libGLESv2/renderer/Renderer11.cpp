@@ -473,10 +473,24 @@ bool Renderer11::setViewport(const gl::Rectangle &viewport, float zNear, float z
 
 bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count)
 {
-    // TODO
-    UNIMPLEMENTED();
+    mPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
 
-    return false;
+    switch (mode)
+    {
+      case GL_POINTS:         mPrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;   break;
+      case GL_LINES:          mPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_LINELIST;      break;
+      case GL_LINE_LOOP:      UNIMPLEMENTED();   /* TODO */                              break;
+      case GL_LINE_STRIP:     mPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;     break;
+      case GL_TRIANGLES:      mPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;  break;
+      case GL_TRIANGLE_STRIP: mPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP; break;
+      case GL_TRIANGLE_FAN:   UNIMPLEMENTED();   /* TODO */                              break;
+      default:
+        return error(GL_INVALID_ENUM, false);
+    }
+
+    mVertexCount = count;
+
+    return count > 0;
 }
 
 bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)

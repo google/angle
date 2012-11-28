@@ -192,6 +192,9 @@ class Renderer11 : public Renderer
     float mCurNear;
     float mCurFar;
 
+    D3D11_PRIMITIVE_TOPOLOGY mPrimitiveTopology;
+    UINT mVertexCount;
+
     ID3D11Device *mDevice;
     D3D_FEATURE_LEVEL mFeatureLevel;
     ID3D11DeviceContext *mDeviceContext;
