@@ -323,7 +323,7 @@ void Context::makeCurrent(egl::Surface *surface)
 
     Colorbuffer *colorbufferZero = new Colorbuffer(swapchain);
     DepthStencilbuffer *depthStencilbufferZero = new DepthStencilbuffer(swapchain);
-    Framebuffer *framebufferZero = new DefaultFramebuffer(colorbufferZero, depthStencilbufferZero);
+    Framebuffer *framebufferZero = new DefaultFramebuffer(mRenderer, colorbufferZero, depthStencilbufferZero);
 
     setFramebufferZero(framebufferZero);
 
@@ -1070,7 +1070,7 @@ void Context::bindReadFramebuffer(GLuint framebuffer)
 {
     if (!getFramebuffer(framebuffer))
     {
-        mFramebufferMap[framebuffer] = new Framebuffer();
+        mFramebufferMap[framebuffer] = new Framebuffer(mRenderer);
     }
 
     mState.readFramebuffer = framebuffer;
@@ -1080,7 +1080,7 @@ void Context::bindDrawFramebuffer(GLuint framebuffer)
 {
     if (!getFramebuffer(framebuffer))
     {
-        mFramebufferMap[framebuffer] = new Framebuffer();
+        mFramebufferMap[framebuffer] = new Framebuffer(mRenderer);
     }
 
     mState.drawFramebuffer = framebuffer;

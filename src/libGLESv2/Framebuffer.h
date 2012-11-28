@@ -17,6 +17,11 @@
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
 
+namespace rx
+{
+class Renderer;
+}
+
 namespace gl
 {
 class Renderbuffer;
@@ -28,7 +33,7 @@ class DepthStencilbuffer;
 class Framebuffer
 {
   public:
-    Framebuffer();
+    explicit Framebuffer(rx::Renderer *renderer);
 
     virtual ~Framebuffer();
 
@@ -76,6 +81,8 @@ class Framebuffer
 
     BindingPointer<Renderbuffer> mNullColorbufferPointer;
 
+    rx::Renderer *mRenderer;
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Framebuffer);
 
@@ -85,7 +92,7 @@ class Framebuffer
 class DefaultFramebuffer : public Framebuffer
 {
   public:
-    DefaultFramebuffer(Colorbuffer *colorbuffer, DepthStencilbuffer *depthStencil);
+    DefaultFramebuffer(rx::Renderer *Renderer, Colorbuffer *colorbuffer, DepthStencilbuffer *depthStencil);
 
     virtual GLenum completeness();
 
