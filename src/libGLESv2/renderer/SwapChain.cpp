@@ -138,7 +138,7 @@ EGLint SwapChain::reset(int backbufferWidth, int backbufferHeight, EGLint swapIn
     }
 
     result = device->CreateTexture(backbufferWidth, backbufferHeight, 1, D3DUSAGE_RENDERTARGET,
-                                   es2dx::ConvertRenderbufferFormat(mBackBufferFormat), D3DPOOL_DEFAULT,
+                                   gl_d3d9::ConvertRenderbufferFormat(mBackBufferFormat), D3DPOOL_DEFAULT,
                                    &mOffscreenTexture, pShareHandle);
     if (FAILED(result))
     {
@@ -189,9 +189,9 @@ EGLint SwapChain::reset(int backbufferWidth, int backbufferHeight, EGLint swapIn
     if (mWindow)
     {
         D3DPRESENT_PARAMETERS presentParameters = {0};
-        presentParameters.AutoDepthStencilFormat = es2dx::ConvertRenderbufferFormat(mDepthBufferFormat);
+        presentParameters.AutoDepthStencilFormat = gl_d3d9::ConvertRenderbufferFormat(mDepthBufferFormat);
         presentParameters.BackBufferCount = 1;
-        presentParameters.BackBufferFormat = es2dx::ConvertRenderbufferFormat(mBackBufferFormat);
+        presentParameters.BackBufferFormat = gl_d3d9::ConvertRenderbufferFormat(mBackBufferFormat);
         presentParameters.EnableAutoDepthStencil = FALSE;
         presentParameters.Flags = 0;
         presentParameters.hDeviceWindow = mWindow;
@@ -242,7 +242,7 @@ EGLint SwapChain::reset(int backbufferWidth, int backbufferHeight, EGLint swapIn
     if (mDepthBufferFormat != D3DFMT_UNKNOWN)
     {
         result = device->CreateDepthStencilSurface(backbufferWidth, backbufferHeight,
-                                                   es2dx::ConvertRenderbufferFormat(mDepthBufferFormat),
+                                                   gl_d3d9::ConvertRenderbufferFormat(mDepthBufferFormat),
                                                    D3DMULTISAMPLE_NONE, 0, FALSE, &mDepthStencil, NULL);
 
         if (FAILED(result))

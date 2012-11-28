@@ -20,7 +20,7 @@
 const D3DFORMAT D3DFMT_INTZ = ((D3DFORMAT)(MAKEFOURCC('I','N','T','Z')));
 const D3DFORMAT D3DFMT_NULL = ((D3DFORMAT)(MAKEFOURCC('N','U','L','L')));
 
-namespace es2dx
+namespace gl_d3d9
 {
 
 D3DCMPFUNC ConvertComparison(GLenum comparison);
@@ -41,7 +41,7 @@ D3DMULTISAMPLE_TYPE GetMultisampleTypeFromSamples(GLsizei samples);
 
 }
 
-namespace dx2es
+namespace d3d9_gl
 {
 
 GLuint GetAlphaSize(D3DFORMAT colorFormat);

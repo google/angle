@@ -13,7 +13,7 @@
 
 #include "common/debug.h"
 
-namespace es2dx
+namespace gl_d3d9
 {
 
 D3DCMPFUNC ConvertComparison(GLenum comparison)
@@ -303,7 +303,7 @@ D3DMULTISAMPLE_TYPE GetMultisampleTypeFromSamples(GLsizei samples)
 
 }
 
-namespace dx2es
+namespace d3d9_gl
 {
 
 unsigned int GetStencilSize(D3DFORMAT stencilFormat)

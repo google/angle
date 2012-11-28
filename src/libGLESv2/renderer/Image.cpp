@@ -277,7 +277,7 @@ bool Image::redefine(rx::Renderer9 *renderer, GLint internalformat, GLsizei widt
         mInternalFormat = internalformat;
         // compute the d3d format that will be used
         mD3DFormat = renderer->ConvertTextureInternalFormat(internalformat);
-        mActualFormat = dx2es::GetEquivalentFormat(mD3DFormat);
+        mActualFormat = d3d9_gl::GetEquivalentFormat(mD3DFormat);
 
         ASSERT(dynamic_cast<rx::Renderer9*>(renderer) != NULL); // D3D9_REPLACE
         mRenderer = static_cast<rx::Renderer9*>(renderer); // D3D9_REPLACE

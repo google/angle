@@ -235,7 +235,7 @@ IDirect3DSurface9 *TextureStorageCubeMap::getCubeMapSurface(GLenum faceTarget, i
 
     if (mTexture)
     {
-        D3DCUBEMAP_FACES face = es2dx::ConvertCubeFace(faceTarget);
+        D3DCUBEMAP_FACES face = gl_d3d9::ConvertCubeFace(faceTarget);
         HRESULT result = mTexture->GetCubeMapSurface(face, level + mLodOffset, &surface);
         ASSERT(SUCCEEDED(result));
 

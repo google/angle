@@ -409,8 +409,8 @@ int Renderer9::generateConfigs(ConfigDesc **configDescList)
                     if (SUCCEEDED(result))
                     {
                         ConfigDesc newConfig;
-                        newConfig.renderTargetFormat = dx2es::ConvertBackBufferFormat(renderTargetFormat);
-                        newConfig.depthStencilFormat = dx2es::ConvertDepthStencilFormat(depthStencilFormat);
+                        newConfig.renderTargetFormat = d3d9_gl::ConvertBackBufferFormat(renderTargetFormat);
+                        newConfig.depthStencilFormat = d3d9_gl::ConvertDepthStencilFormat(depthStencilFormat);
                         newConfig.multiSample = 0; // FIXME: enumerate multi-sampling
                         newConfig.fastConfig = (currentDisplayMode.Format == renderTargetFormat);
 
@@ -553,12 +553,12 @@ void Renderer9::setSamplerState(gl::SamplerType type, int index, const gl::Sampl
     int d3dSamplerOffset = (type == gl::SAMPLER_PIXEL) ? 0 : D3DVERTEXTEXTURESAMPLER0;
     int d3dSampler = index + d3dSamplerOffset;
 
-    mDevice->SetSamplerState(d3dSampler, D3DSAMP_ADDRESSU, es2dx::ConvertTextureWrap(samplerState.wrapS));
-    mDevice->SetSamplerState(d3dSampler, D3DSAMP_ADDRESSV, es2dx::ConvertTextureWrap(samplerState.wrapT));
+    mDevice->SetSamplerState(d3dSampler, D3DSAMP_ADDRESSU, gl_d3d9::ConvertTextureWrap(samplerState.wrapS));
+    mDevice->SetSamplerState(d3dSampler, D3DSAMP_ADDRESSV, gl_d3d9::ConvertTextureWrap(samplerState.wrapT));
 
-    mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAGFILTER, es2dx::ConvertMagFilter(samplerState.magFilter, samplerState.maxAnisotropy));
+    mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAGFILTER, gl_d3d9::ConvertMagFilter(samplerState.magFilter, samplerState.maxAnisotropy));
     D3DTEXTUREFILTERTYPE d3dMinFilter, d3dMipFilter;
-    es2dx::ConvertMinFilter(samplerState.minFilter, &d3dMinFilter, &d3dMipFilter, samplerState.maxAnisotropy);
+    gl_d3d9::ConvertMinFilter(samplerState.minFilter, &d3dMinFilter, &d3dMipFilter, samplerState.maxAnisotropy);
     mDevice->SetSamplerState(d3dSampler, D3DSAMP_MINFILTER, d3dMinFilter);
     mDevice->SetSamplerState(d3dSampler, D3DSAMP_MIPFILTER, d3dMipFilter);
     mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAXMIPLEVEL, samplerState.lodOffset);

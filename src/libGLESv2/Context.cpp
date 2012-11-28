@@ -2083,7 +2083,7 @@ void Context::applyState(GLenum drawMode)
     {
         if (mState.cullFace)
         {
-            mDevice->SetRenderState(D3DRS_CULLMODE, es2dx::ConvertCullMode(mState.cullMode, mState.frontFace));
+            mDevice->SetRenderState(D3DRS_CULLMODE, gl_d3d9::ConvertCullMode(mState.cullMode, mState.frontFace));
         }
         else
         {
@@ -2098,7 +2098,7 @@ void Context::applyState(GLenum drawMode)
         if (mState.depthTest)
         {
             mDevice->SetRenderState(D3DRS_ZENABLE, D3DZB_TRUE);
-            mDevice->SetRenderState(D3DRS_ZFUNC, es2dx::ConvertComparison(mState.depthFunc));
+            mDevice->SetRenderState(D3DRS_ZFUNC, gl_d3d9::ConvertComparison(mState.depthFunc));
         }
         else
         {
@@ -2123,7 +2123,7 @@ void Context::applyState(GLenum drawMode)
             if (mState.sourceBlendRGB != GL_CONSTANT_ALPHA && mState.sourceBlendRGB != GL_ONE_MINUS_CONSTANT_ALPHA &&
                 mState.destBlendRGB != GL_CONSTANT_ALPHA && mState.destBlendRGB != GL_ONE_MINUS_CONSTANT_ALPHA)
             {
-                mDevice->SetRenderState(D3DRS_BLENDFACTOR, es2dx::ConvertColor(mState.blendColor));
+                mDevice->SetRenderState(D3DRS_BLENDFACTOR, gl_d3d9::ConvertColor(mState.blendColor));
             }
             else
             {
@@ -2133,9 +2133,9 @@ void Context::applyState(GLenum drawMode)
                                                                         unorm<8>(mState.blendColor.alpha)));
             }
 
-            mDevice->SetRenderState(D3DRS_SRCBLEND, es2dx::ConvertBlendFunc(mState.sourceBlendRGB));
-            mDevice->SetRenderState(D3DRS_DESTBLEND, es2dx::ConvertBlendFunc(mState.destBlendRGB));
-            mDevice->SetRenderState(D3DRS_BLENDOP, es2dx::ConvertBlendOp(mState.blendEquationRGB));
+            mDevice->SetRenderState(D3DRS_SRCBLEND, gl_d3d9::ConvertBlendFunc(mState.sourceBlendRGB));
+            mDevice->SetRenderState(D3DRS_DESTBLEND, gl_d3d9::ConvertBlendFunc(mState.destBlendRGB));
+            mDevice->SetRenderState(D3DRS_BLENDOP, gl_d3d9::ConvertBlendOp(mState.blendEquationRGB));
 
             if (mState.sourceBlendRGB != mState.sourceBlendAlpha || 
                 mState.destBlendRGB != mState.destBlendAlpha || 
@@ -2143,9 +2143,9 @@ void Context::applyState(GLenum drawMode)
             {
                 mDevice->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, TRUE);
 
-                mDevice->SetRenderState(D3DRS_SRCBLENDALPHA, es2dx::ConvertBlendFunc(mState.sourceBlendAlpha));
-                mDevice->SetRenderState(D3DRS_DESTBLENDALPHA, es2dx::ConvertBlendFunc(mState.destBlendAlpha));
-                mDevice->SetRenderState(D3DRS_BLENDOPALPHA, es2dx::ConvertBlendOp(mState.blendEquationAlpha));
+                mDevice->SetRenderState(D3DRS_SRCBLENDALPHA, gl_d3d9::ConvertBlendFunc(mState.sourceBlendAlpha));
+                mDevice->SetRenderState(D3DRS_DESTBLENDALPHA, gl_d3d9::ConvertBlendFunc(mState.destBlendAlpha));
+                mDevice->SetRenderState(D3DRS_BLENDOPALPHA, gl_d3d9::ConvertBlendOp(mState.blendEquationAlpha));
             }
             else
             {
@@ -2185,31 +2185,31 @@ void Context::applyState(GLenum drawMode)
 
             mDevice->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILWRITEMASK : D3DRS_CCW_STENCILWRITEMASK, mState.stencilWritemask);
             mDevice->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILFUNC : D3DRS_CCW_STENCILFUNC, 
-                                   es2dx::ConvertComparison(mState.stencilFunc));
+                                   gl_d3d9::ConvertComparison(mState.stencilFunc));
 
             mDevice->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILREF : D3DRS_CCW_STENCILREF, (mState.stencilRef < (GLint)maxStencil) ? mState.stencilRef : maxStencil);
             mDevice->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILMASK : D3DRS_CCW_STENCILMASK, mState.stencilMask);
 
             mDevice->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILFAIL : D3DRS_CCW_STENCILFAIL, 
-                                   es2dx::ConvertStencilOp(mState.stencilFail));
+                                   gl_d3d9::ConvertStencilOp(mState.stencilFail));
             mDevice->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILZFAIL : D3DRS_CCW_STENCILZFAIL, 
-                                   es2dx::ConvertStencilOp(mState.stencilPassDepthFail));
+                                   gl_d3d9::ConvertStencilOp(mState.stencilPassDepthFail));
             mDevice->SetRenderState(mState.frontFace == GL_CCW ? D3DRS_STENCILPASS : D3DRS_CCW_STENCILPASS, 
-                                   es2dx::ConvertStencilOp(mState.stencilPassDepthPass));
+                                   gl_d3d9::ConvertStencilOp(mState.stencilPassDepthPass));
 
             mDevice->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILWRITEMASK : D3DRS_CCW_STENCILWRITEMASK, mState.stencilBackWritemask);
             mDevice->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILFUNC : D3DRS_CCW_STENCILFUNC, 
-                                   es2dx::ConvertComparison(mState.stencilBackFunc));
+                                   gl_d3d9::ConvertComparison(mState.stencilBackFunc));
 
             mDevice->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILREF : D3DRS_CCW_STENCILREF, (mState.stencilBackRef < (GLint)maxStencil) ? mState.stencilBackRef : maxStencil);
             mDevice->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILMASK : D3DRS_CCW_STENCILMASK, mState.stencilBackMask);
 
             mDevice->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILFAIL : D3DRS_CCW_STENCILFAIL, 
-                                   es2dx::ConvertStencilOp(mState.stencilBackFail));
+                                   gl_d3d9::ConvertStencilOp(mState.stencilBackFail));
             mDevice->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILZFAIL : D3DRS_CCW_STENCILZFAIL, 
-                                   es2dx::ConvertStencilOp(mState.stencilBackPassDepthFail));
+                                   gl_d3d9::ConvertStencilOp(mState.stencilBackPassDepthFail));
             mDevice->SetRenderState(mState.frontFace == GL_CW ? D3DRS_STENCILPASS : D3DRS_CCW_STENCILPASS, 
-                                   es2dx::ConvertStencilOp(mState.stencilBackPassDepthPass));
+                                   gl_d3d9::ConvertStencilOp(mState.stencilBackPassDepthPass));
         }
         else
         {
@@ -2222,7 +2222,7 @@ void Context::applyState(GLenum drawMode)
 
     if (mMaskStateDirty)
     {
-        int colorMask = es2dx::ConvertColorMask(mState.colorMaskRed, mState.colorMaskGreen, 
+        int colorMask = gl_d3d9::ConvertColorMask(mState.colorMaskRed, mState.colorMaskGreen, 
                                                 mState.colorMaskBlue, mState.colorMaskAlpha);
         if (colorMask == 0 && !zeroColorMaskAllowed)
         {
@@ -2833,7 +2833,7 @@ void Context::clear(GLbitfield mask)
             depthStencil->GetDesc(&desc);
             depthStencil->Release();
 
-            unsigned int stencilSize = dx2es::GetStencilSize(desc.Format);
+            unsigned int stencilSize = d3d9_gl::GetStencilSize(desc.Format);
             stencilUnmasked = (0x1 << stencilSize) - 1;
 
             if (stencilUnmasked != 0x0)
@@ -2860,7 +2860,7 @@ void Context::clear(GLbitfield mask)
     float depth = clamp01(mState.depthClearValue);
     int stencil = mState.stencilClearValue & 0x000000FF;
 
-    bool alphaUnmasked = (dx2es::GetAlphaSize(mRenderTargetDesc.Format) == 0) || mState.colorMaskAlpha;
+    bool alphaUnmasked = (d3d9_gl::GetAlphaSize(mRenderTargetDesc.Format) == 0) || mState.colorMaskAlpha;
 
     const bool needMaskedStencilClear = (flags & D3DCLEAR_STENCIL) &&
                                         (mState.stencilWritemask & stencilUnmasked) != stencilUnmasked;
@@ -2929,7 +2929,7 @@ void Context::clear(GLbitfield mask)
 
         if (flags & D3DCLEAR_TARGET)
         {
-            mDevice->SetRenderState(D3DRS_COLORWRITEENABLE, es2dx::ConvertColorMask(mState.colorMaskRed, mState.colorMaskGreen, mState.colorMaskBlue, mState.colorMaskAlpha));
+            mDevice->SetRenderState(D3DRS_COLORWRITEENABLE, gl_d3d9::ConvertColorMask(mState.colorMaskRed, mState.colorMaskGreen, mState.colorMaskBlue, mState.colorMaskAlpha));
         }
         else
         {
@@ -3021,7 +3021,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
     D3DPRIMITIVETYPE primitiveType;
     int primitiveCount;
 
-    if(!es2dx::ConvertPrimitiveType(mode, count, &primitiveType, &primitiveCount))
+    if(!gl_d3d9::ConvertPrimitiveType(mode, count, &primitiveType, &primitiveCount))
         return error(GL_INVALID_ENUM);
 
     if (primitiveCount <= 0)
@@ -3103,7 +3103,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
     D3DPRIMITIVETYPE primitiveType;
     int primitiveCount;
 
-    if(!es2dx::ConvertPrimitiveType(mode, count, &primitiveType, &primitiveCount))
+    if(!gl_d3d9::ConvertPrimitiveType(mode, count, &primitiveType, &primitiveCount))
         return error(GL_INVALID_ENUM);
 
     if (primitiveCount <= 0)

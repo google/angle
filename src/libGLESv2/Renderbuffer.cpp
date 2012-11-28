@@ -392,10 +392,10 @@ Colorbuffer::Colorbuffer(rx::Renderer *renderer, rx::SwapChain *swapChain)
 
         mWidth = description.Width;
         mHeight = description.Height;
-        mInternalFormat = dx2es::ConvertBackBufferFormat(description.Format);
+        mInternalFormat = d3d9_gl::ConvertBackBufferFormat(description.Format);
         mD3DFormat = description.Format;
-        mActualFormat = dx2es::GetEquivalentFormat(mD3DFormat);
-        mSamples = dx2es::GetSamplesFromMultisampleType(description.MultiSampleType);
+        mActualFormat = d3d9_gl::GetEquivalentFormat(mD3DFormat);
+        mSamples = d3d9_gl::GetSamplesFromMultisampleType(description.MultiSampleType);
     }
 }
 
@@ -405,7 +405,7 @@ Colorbuffer::Colorbuffer(rx::Renderer *renderer, int width, int height, GLenum f
     rx::Renderer9 *renderer9 = static_cast<rx::Renderer9*>(renderer); // D3D9_REPLACE
     IDirect3DDevice9 *device = renderer9->getDevice(); // D3D9_REPLACE
 
-    D3DFORMAT requestedFormat = es2dx::ConvertRenderbufferFormat(format);
+    D3DFORMAT requestedFormat = gl_d3d9::ConvertRenderbufferFormat(format);
     int supportedSamples = renderer9->getNearestSupportedSamples(requestedFormat, samples);
 
     if (supportedSamples == -1)
@@ -418,7 +418,7 @@ Colorbuffer::Colorbuffer(rx::Renderer *renderer, int width, int height, GLenum f
     if (width > 0 && height > 0)
     {
         HRESULT result = device->CreateRenderTarget(width, height, requestedFormat, 
-                                                    es2dx::GetMultisampleTypeFromSamples(supportedSamples), 0, FALSE, &mRenderTarget, NULL);
+                                                    gl_d3d9::GetMultisampleTypeFromSamples(supportedSamples), 0, FALSE, &mRenderTarget, NULL);
 
         if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
         {
@@ -434,7 +434,7 @@ Colorbuffer::Colorbuffer(rx::Renderer *renderer, int width, int height, GLenum f
     mHeight = height;
     mInternalFormat = format;
     mD3DFormat = requestedFormat;
-    mActualFormat = dx2es::GetEquivalentFormat(mD3DFormat);
+    mActualFormat = d3d9_gl::GetEquivalentFormat(mD3DFormat);
     mSamples = supportedSamples;
 }
 
@@ -468,10 +468,10 @@ DepthStencilbuffer::DepthStencilbuffer(rx::Renderer *renderer, rx::SwapChain *sw
 
         mWidth = description.Width;
         mHeight = description.Height;
-        mInternalFormat = dx2es::ConvertDepthStencilFormat(description.Format);
-        mSamples = dx2es::GetSamplesFromMultisampleType(description.MultiSampleType); 
+        mInternalFormat = d3d9_gl::ConvertDepthStencilFormat(description.Format);
+        mSamples = d3d9_gl::GetSamplesFromMultisampleType(description.MultiSampleType); 
         mD3DFormat = description.Format;
-        mActualFormat = dx2es::GetEquivalentFormat(mD3DFormat);
+        mActualFormat = d3d9_gl::GetEquivalentFormat(mD3DFormat);
     }
 }
 
@@ -494,7 +494,7 @@ DepthStencilbuffer::DepthStencilbuffer(rx::Renderer *renderer, int width, int he
 
     if (width > 0 && height > 0)
     {
-        HRESULT result = device->CreateDepthStencilSurface(width, height, D3DFMT_D24S8, es2dx::GetMultisampleTypeFromSamples(supportedSamples),
+        HRESULT result = device->CreateDepthStencilSurface(width, height, D3DFMT_D24S8, gl_d3d9::GetMultisampleTypeFromSamples(supportedSamples),
                                                            0, FALSE, &mDepthStencil, 0);
 
         if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
