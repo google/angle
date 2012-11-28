@@ -249,10 +249,8 @@ Context::~Context()
     mResourceManager->release();
 }
 
-void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
+void Context::makeCurrent(egl::Surface *surface)
 {
-    mDisplay = display;
-    mRenderer = mDisplay->getRenderer9();
     mDevice = mRenderer->getDevice(); // D3D9_REMOVE
 
     if (!mHasBeenCurrent)

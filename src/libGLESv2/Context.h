@@ -282,7 +282,7 @@ class Context
 
     ~Context();
 
-    void makeCurrent(egl::Display *display, egl::Surface *surface);
+    void makeCurrent(egl::Surface *surface);
 
     virtual void markAllStateDirty();
     void markDxUniformsDirty();

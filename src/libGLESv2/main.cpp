@@ -83,7 +83,7 @@ void makeCurrent(Context *context, egl::Display *display, egl::Surface *surface)
 
     if (context && display && surface)
     {
-        context->makeCurrent(display, surface);
+        context->makeCurrent(surface);
     }
 }
 
