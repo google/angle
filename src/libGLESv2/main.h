@@ -32,7 +32,6 @@ Context *getContext();
 Context *getNonLostContext();
 egl::Display *getDisplay();
 
-bool checkDeviceLost(HRESULT errorCode);
 }
 
 void error(GLenum errorCode);

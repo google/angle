@@ -121,18 +121,6 @@ egl::Display *getDisplay()
     return current->display;
 }
 
-bool checkDeviceLost(HRESULT errorCode)
-{
-    egl::Display *display = NULL;
-
-    if (isDeviceLostError(errorCode))
-    {
-        display = gl::getDisplay();
-        display->notifyDeviceLost();
-        return true;
-    }
-    return false;
-}
 }
 
 // Records an error code

@@ -16,6 +16,7 @@
 #include <d3d9.h>
 
 #include "libGLESv2/utilities.h"
+#include "libGLESv2/main.h"
 
 const D3DFORMAT D3DFMT_INTZ = ((D3DFORMAT)(MAKEFOURCC('I','N','T','Z')));
 const D3DFORMAT D3DFMT_NULL = ((D3DFORMAT)(MAKEFOURCC('N','U','L','L')));
@@ -76,5 +77,18 @@ inline bool isDeviceLostError(HRESULT errorCode)
         return false;
     }
 }
+
+inline bool checkDeviceLost(HRESULT errorCode)
+{
+    egl::Display *display = NULL;
+
+    if (isDeviceLostError(errorCode))
+    {
+        display = gl::getDisplay();
+        display->notifyDeviceLost();
+        return true;
+    }
+    return false;
+};
 
 #endif // LIBGLESV2_RENDERER_RENDERER9_UTILS_H

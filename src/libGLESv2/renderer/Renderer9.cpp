@@ -1890,7 +1890,7 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
 
         // It turns out that D3D will sometimes produce more error
         // codes than those documented.
-        if (gl::checkDeviceLost(result))
+        if (checkDeviceLost(result))
             return error(GL_OUT_OF_MEMORY);
         else
         {

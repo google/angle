@@ -8,7 +8,7 @@
 
 #include "libGLESv2/Query.h"
 
-#include "libGLESv2/main.h"
+#include "libGLESv2/renderer/renderer9_utils.h"
 
 namespace gl
 {
