@@ -2066,7 +2066,7 @@ bool ProgramBinary::linkUniforms(InfoLog &infoLog, GLenum shader, D3DConstantTab
     {
         const D3DConstant *constant = constantTable->getConstant(constantIndex);
 
-        if (!defineUniform(infoLog, shader, constant))
+        if (!defineUniform(infoLog, shader, constant, ""))
         {
             return false;
         }
@@ -2077,7 +2077,7 @@ bool ProgramBinary::linkUniforms(InfoLog &infoLog, GLenum shader, D3DConstantTab
 
 // Adds the description of a constant found in the binary shader to the list of uniforms
 // Returns true if succesful (uniform not already defined)
-bool ProgramBinary::defineUniform(InfoLog &infoLog, GLenum shader, const D3DConstant *constant, std::string name)
+bool ProgramBinary::defineUniform(InfoLog &infoLog, GLenum shader, const D3DConstant *constant, const std::string &name)
 {
     if (constant->registerSet == D3DConstant::RS_SAMPLER)
     {
