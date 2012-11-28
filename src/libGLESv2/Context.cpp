@@ -1854,12 +1854,10 @@ void Context::applyState(GLenum drawMode)
                                     mState.rasterizer.frontFace == GL_CCW, stencilSize);
 }
 
-GLenum Context::applyVertexBuffer(GLint first, GLsizei count, GLsizei instances, GLsizei *repeatDraw)
+GLenum Context::applyVertexBuffer(ProgramBinary *programBinary, VertexAttributeArray &vertexAttributes, GLint first, GLsizei count, GLsizei instances, GLsizei *repeatDraw)
 {
     TranslatedAttribute attributes[MAX_VERTEX_ATTRIBS];
-
-    ProgramBinary *programBinary = getCurrentProgramBinary();
-    GLenum err = mVertexDataManager->prepareVertexData(mState.vertexAttribute, programBinary, first, count, attributes, instances);
+    GLenum err = mVertexDataManager->prepareVertexData(vertexAttributes, programBinary, first, count, attributes, instances);
     if (err != GL_NO_ERROR)
     {
         return err;
@@ -2266,8 +2264,10 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
 
     applyState(mode);
 
+    ProgramBinary *programBinary = getCurrentProgramBinary();
+
     GLsizei repeatDraw = 1;
-    GLenum err = applyVertexBuffer(first, count, instances, &repeatDraw);
+    GLenum err = applyVertexBuffer(programBinary, mState.vertexAttribute, first, count, instances, &repeatDraw);
     if (err != GL_NO_ERROR)
     {
         return error(err);
@@ -2276,7 +2276,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
     applyShaders();
     applyTextures();
 
-    if (!getCurrentProgramBinary()->validateSamplers(NULL))
+    if (!programBinary->validateSamplers(NULL))
     {
         return error(GL_INVALID_OPERATION);
     }
@@ -2355,9 +2355,11 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
         return error(err);
     }
 
+    ProgramBinary *programBinary = getCurrentProgramBinary();
+
     GLsizei vertexCount = indexInfo.maxIndex - indexInfo.minIndex + 1;
     GLsizei repeatDraw = 1;
-    err = applyVertexBuffer(indexInfo.minIndex, vertexCount, instances, &repeatDraw);
+    err = applyVertexBuffer(programBinary, mState.vertexAttribute, indexInfo.minIndex, vertexCount, instances, &repeatDraw);
     if (err != GL_NO_ERROR)
     {
         return error(err);
@@ -2366,7 +2368,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
     applyShaders();
     applyTextures();
 
-    if (!getCurrentProgramBinary()->validateSamplers(NULL))
+    if (!programBinary->validateSamplers(NULL))
     {
         return error(GL_INVALID_OPERATION);
     }
