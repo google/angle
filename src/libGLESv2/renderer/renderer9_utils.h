@@ -52,6 +52,7 @@ GLsizei GetSamplesFromMultisampleType(D3DMULTISAMPLE_TYPE type);
 bool IsFormatChannelEquivalent(D3DFORMAT d3dformat, GLenum format);
 GLenum ConvertBackBufferFormat(D3DFORMAT format);
 GLenum ConvertDepthStencilFormat(D3DFORMAT format);
+GLenum ConvertRenderTargetFormat(D3DFORMAT format);
 GLenum GetEquivalentFormat(D3DFORMAT format);
 
 }

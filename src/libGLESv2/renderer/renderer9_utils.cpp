@@ -429,6 +429,34 @@ GLenum ConvertDepthStencilFormat(D3DFORMAT format)
     return GL_DEPTH24_STENCIL8_OES;
 }
 
+GLenum ConvertRenderTargetFormat(D3DFORMAT format)
+{
+    if (format == D3DFMT_INTZ)
+    {
+        return GL_DEPTH24_STENCIL8_OES;
+    }
+    
+    switch (format)
+    {
+      case D3DFMT_A4R4G4B4: return GL_RGBA4;
+      case D3DFMT_A8R8G8B8: return GL_RGBA8_OES;
+      case D3DFMT_A1R5G5B5: return GL_RGB5_A1;
+      case D3DFMT_R5G6B5:   return GL_RGB565;
+      case D3DFMT_X8R8G8B8: return GL_RGB8_OES;
+      case D3DFMT_D16:
+      case D3DFMT_D24X8:
+        return GL_DEPTH_COMPONENT16;
+      case D3DFMT_D24S8:
+        return GL_DEPTH24_STENCIL8_OES;
+      case D3DFMT_UNKNOWN:
+        return GL_NONE;
+      default:
+        UNREACHABLE();
+    }
+
+    return GL_RGBA4;
+}
+
 GLenum GetEquivalentFormat(D3DFORMAT format)
 {
     if (format == D3DFMT_INTZ)
