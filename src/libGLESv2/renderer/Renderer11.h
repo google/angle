@@ -105,6 +105,8 @@ class Renderer11 : public Renderer
     ID3D11Device *mDevice;
     D3D_FEATURE_LEVEL mFeatureLevel;
     ID3D11DeviceContext *mDeviceContext;
+    IDXGIAdapter *mDxgiAdapter;
+    IDXGIFactory1 *mDxgiFactory;
 };
 
 }

@@ -247,6 +247,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClCompile Include="Renderbuffer.cpp" />
     <ClCompile Include="renderer\Renderer.cpp" />
     <ClCompile Include="renderer\Renderer11.cpp" />
+    <ClCompile Include="renderer\renderer11_utils.cpp" />
     <ClCompile Include="renderer\Renderer9.cpp" />
     <ClCompile Include="renderer\Image.cpp" />
     <ClCompile Include="renderer\renderer9_utils.cpp" />
@@ -283,6 +284,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="renderer\Image.h" />
     <ClInclude Include="renderer\Renderer.h" />
     <ClInclude Include="renderer\Renderer11.h" />
+    <ClInclude Include="renderer\renderer11_utils.h" />
     <ClInclude Include="renderer\Renderer9.h" />
     <ClInclude Include="renderer\renderer9_utils.h" />
     <ClInclude Include="renderer\ShaderCache.h" />

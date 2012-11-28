@@ -258,6 +258,8 @@
             'libGLESv2/renderer/Renderer.h',
             'libGLESv2/renderer/Renderer11.cpp',
             'libGLESv2/renderer/Renderer11.h',
+            'libGLESv2/renderer/renderer11_utils.cpp',
+            'libGLESv2/renderer/renderer11_utils.h',
             'libGLESv2/renderer/Renderer9.cpp',
             'libGLESv2/renderer/Renderer9.h',
             'libGLESv2/renderer/renderer9_utils.cpp',

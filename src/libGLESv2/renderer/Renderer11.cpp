@@ -9,12 +9,22 @@
 #include "common/debug.h"
 #include "libGLESv2/utilities.h"
 #include "libGLESv2/renderer/Renderer11.h"
+#include "libGLESv2/renderer/renderer11_utils.h"
 
 #include "libEGL/Config.h"
 #include "libEGL/Display.h"
 
 namespace rx
 {
+static const DXGI_FORMAT RenderTargetFormats[] =
+    {
+        DXGI_FORMAT_R8G8B8A8_UNORM
+    };
+
+static const DXGI_FORMAT DepthStencilFormats[] =
+    {
+        DXGI_FORMAT_D24_UNORM_S8_UINT
+    };
 
 Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(hDc)
 {
@@ -23,11 +33,25 @@ Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(
 
     mDevice = NULL;
     mDeviceContext = NULL;
+    mDxgiAdapter = NULL;
+    mDxgiFactory = NULL;
 }
 
 Renderer11::~Renderer11()
 {
     releaseDeviceResources();
+
+    if (mDxgiFactory)
+    {
+        mDxgiFactory->Release();
+        mDxgiFactory = NULL;
+    }
+
+    if (mDxgiAdapter)
+    {
+        mDxgiAdapter->Release();
+        mDxgiAdapter = NULL;
+    }
 
     if (mDeviceContext)
     {
@@ -96,7 +120,34 @@ EGLint Renderer11::initialize()
         ERR("Could not create D3D11 device - aborting!\n");
         return EGL_NOT_INITIALIZED;   // Cleanup done by destructor through glDestroyRenderer
     }
-    
+
+    IDXGIDevice *dxgiDevice = NULL;
+    result = mDevice->QueryInterface(__uuidof(IDXGIDevice), (void**)&dxgiDevice);
+
+    if (FAILED(result))
+    {
+        ERR("Could not query DXGI device - aborting!\n");
+        return EGL_NOT_INITIALIZED;
+    }
+
+    result = dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void**)&mDxgiAdapter);
+
+    if (FAILED(result))
+    {
+        ERR("Could not retrieve DXGI adapter - aborting!\n");
+        return EGL_NOT_INITIALIZED;
+    }
+
+    dxgiDevice->Release();
+
+    result = mDxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&mDxgiFactory);
+
+    if (!mDxgiFactory || FAILED(result))
+    {
+        ERR("Could not create DXGI factory - aborting!\n");
+        return EGL_NOT_INITIALIZED;
+    }
+
     initializeDevice();
 
     return EGL_SUCCESS;
@@ -112,12 +163,44 @@ void Renderer11::initializeDevice()
     // UNIMPLEMENTED();
 }
 
-
 int Renderer11::generateConfigs(ConfigDesc **configDescList)
 {
-    // TODO
-    UNIMPLEMENTED();
-    return 0;
+    int numRenderFormats = sizeof(RenderTargetFormats) / sizeof(RenderTargetFormats[0]);
+    int numDepthFormats = sizeof(DepthStencilFormats) / sizeof(DepthStencilFormats[0]);
+    (*configDescList) = new ConfigDesc[numRenderFormats * numDepthFormats];
+    int numConfigs = 0;
+    
+    for (int formatIndex = 0; formatIndex < numRenderFormats; formatIndex++)
+    {
+        for (int depthStencilIndex = 0; depthStencilIndex < numDepthFormats; depthStencilIndex++)
+        {
+            DXGI_FORMAT renderTargetFormat = RenderTargetFormats[formatIndex];
+
+            UINT formatSupport = 0;
+            HRESULT result = mDevice->CheckFormatSupport(renderTargetFormat, &formatSupport);
+            
+            if (SUCCEEDED(result) && (formatSupport & D3D11_FORMAT_SUPPORT_RENDER_TARGET))
+            {
+                DXGI_FORMAT depthStencilFormat = DepthStencilFormats[depthStencilIndex];
+
+                UINT formatSupport = 0;
+                HRESULT result = mDevice->CheckFormatSupport(depthStencilFormat, &formatSupport);
+
+                if (SUCCEEDED(result) && (formatSupport & D3D11_FORMAT_SUPPORT_DEPTH_STENCIL))
+                {
+                    ConfigDesc newConfig;
+                    newConfig.renderTargetFormat = d3d11_gl::ConvertBackBufferFormat(renderTargetFormat);
+                    newConfig.depthStencilFormat = d3d11_gl::ConvertDepthStencilFormat(depthStencilFormat);
+                    newConfig.multiSample = 0;     // FIXME: enumerate multi-sampling
+                    newConfig.fastConfig = true;   // Assume all DX11 format conversions to be fast
+
+                    (*configDescList)[numConfigs++] = newConfig;
+                }
+            }
+        }
+    }
+
+    return numConfigs;
 }
 
 void Renderer11::deleteConfigs(ConfigDesc *configDescList)
