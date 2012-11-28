@@ -63,18 +63,4 @@ GLuint GetStencilSize(GLenum stencilFormat);
 std::string getTempPath();
 void writeFile(const char* path, const void* data, size_t size);
 
-inline bool isDeviceLostError(HRESULT errorCode)
-{
-    switch (errorCode)
-    {
-      case D3DERR_DRIVERINTERNALERROR:
-      case D3DERR_DEVICELOST:
-      case D3DERR_DEVICEHUNG:
-      case D3DERR_DEVICEREMOVED:
-        return true;
-      default:
-        return false;
-    }
-};
-
 #endif  // LIBGLESV2_UTILITIES_H

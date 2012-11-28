@@ -12,6 +12,7 @@
 #include "libGLESv2/mathutil.h"
 #include "libGLESv2/renderer/Renderer11.h"
 #include "libGLESv2/renderer/renderer11_utils.h"
+#include "libGLESv2/renderer/SwapChain11.h"
 
 #include "libEGL/Config.h"
 #include "libEGL/Display.h"
@@ -116,7 +117,11 @@ EGLint Renderer11::initialize()
     HRESULT result = D3D11CreateDevice(NULL,
                                        D3D_DRIVER_TYPE_HARDWARE,
                                        NULL,
-                                       0,   // D3D11_CREATE_DEVICE_DEBUG
+                                       #if defined(_DEBUG)
+                                       D3D11_CREATE_DEVICE_DEBUG,
+                                       #else
+                                       0,
+                                       #endif
                                        featureLevel,
                                        sizeof(featureLevel)/sizeof(featureLevel[0]),
                                        D3D11_SDK_VERSION,
@@ -237,12 +242,7 @@ void Renderer11::sync(bool block)
 
 SwapChain *Renderer11::createSwapChain(HWND window, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat)
 {
-    // TODO
-    UNIMPLEMENTED();
-
-    //return new rx::SwapChain(this, window, shareHandle, backBufferFormat, depthBufferFormat);
-
-    return NULL;
+    return new rx::SwapChain11(this, window, shareHandle, backBufferFormat, depthBufferFormat);
 }
 
 void Renderer11::setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &samplerState)

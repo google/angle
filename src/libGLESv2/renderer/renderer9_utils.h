@@ -63,4 +63,18 @@ bool IsCompressedFormat(D3DFORMAT format);
 size_t ComputeRowSize(D3DFORMAT format, unsigned int width);
 }
 
+inline bool isDeviceLostError(HRESULT errorCode)
+{
+    switch (errorCode)
+    {
+      case D3DERR_DRIVERINTERNALERROR:
+      case D3DERR_DEVICELOST:
+      case D3DERR_DEVICEHUNG:
+      case D3DERR_DEVICEREMOVED:
+        return true;
+      default:
+        return false;
+    }
+};
+
 #endif // LIBGLESV2_RENDERER_RENDERER9_UTILS_H

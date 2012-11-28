@@ -123,6 +123,7 @@ class Renderer11 : public Renderer
     // D3D11-renderer specific methods
     ID3D11Device *getDevice() { return mDevice; }
     ID3D11DeviceContext *getDeviceContext() { return mDeviceContext; };
+    IDXGIFactory *getDxgiFactory() { return mDxgiFactory; };
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer11);
@@ -165,7 +166,7 @@ class Renderer11 : public Renderer
     D3D_FEATURE_LEVEL mFeatureLevel;
     ID3D11DeviceContext *mDeviceContext;
     IDXGIAdapter *mDxgiAdapter;
-    IDXGIFactory1 *mDxgiFactory;
+    IDXGIFactory *mDxgiFactory;
 };
 
 }

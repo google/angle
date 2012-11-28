@@ -237,7 +237,7 @@ EGLint SwapChain9::reset(int backbufferWidth, int backbufferHeight, EGLint swapI
         ASSERT(SUCCEEDED(result));
     }
 
-    if (mDepthBufferFormat != D3DFMT_UNKNOWN)
+    if (mDepthBufferFormat != GL_NONE)
     {
         result = device->CreateDepthStencilSurface(backbufferWidth, backbufferHeight,
                                                    gl_d3d9::ConvertRenderbufferFormat(mDepthBufferFormat),

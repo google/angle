@@ -122,6 +122,9 @@
     <ClCompile Include="..\third_party\murmurhash\MurmurHash3.cpp">
       <Filter>Third Party\MurmurHash</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\SwapChain11.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinaryStream.h">
@@ -249,6 +252,9 @@
     </ClInclude>
     <ClInclude Include="..\third_party\murmurhash\MurmurHash3.h">
       <Filter>Third Party\MurmurHash</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\SwapChain11.h">
+      <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

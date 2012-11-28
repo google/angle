@@ -254,6 +254,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClCompile Include="renderer\renderer9_utils.cpp" />
     <ClCompile Include="renderer\RenderTarget9.cpp" />
     <ClCompile Include="renderer\RenderStateCache.cpp" />
+    <ClCompile Include="renderer\SwapChain11.cpp" />
     <ClCompile Include="renderer\SwapChain9.cpp" />
     <ClCompile Include="renderer\TextureStorage.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
@@ -296,6 +297,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="renderer\RenderStateCache.h" />
     <ClInclude Include="renderer\ShaderCache.h" />
     <ClInclude Include="renderer\SwapChain.h" />
+    <ClInclude Include="renderer\SwapChain11.h" />
     <ClInclude Include="renderer\SwapChain9.h" />
     <ClInclude Include="renderer\TextureStorage.h" />
     <ClInclude Include="resource.h" />

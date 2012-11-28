@@ -8,6 +8,7 @@
 
 #include "libGLESv2/main.h"
 #include "libGLESv2/utilities.h"
+#include "libGLESv2/renderer/renderer9_utils.h"   // D3D9_REPLACE
 
 #include "common/debug.h"
 #include "libEGL/Surface.h"
