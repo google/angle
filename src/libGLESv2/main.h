@@ -45,4 +45,21 @@ const T &error(GLenum errorCode, const T &returnValue)
     return returnValue;
 }
 
+extern "C"
+{
+// Exported functions for use by EGL
+gl::Context *glCreateContext(const gl::Context *shareContext, bool notifyResets, bool robustAccess);
+void glDestroyContext(gl::Context *context);
+void glMakeCurrent(gl::Context *context, egl::Display *display, egl::Surface *surface);
+gl::Context *glGetCurrentContext();
+rx::Renderer *glCreateRenderer(egl::Display *display, HDC hDc, bool softwareDevice);
+void glDestroyRenderer(rx::Renderer *renderer);
+rx::SwapChain *glCreateSwapChain(rx::Renderer9 *renderer, HWND window, HANDLE shareHandle,
+                                       GLenum backBufferFormat, GLenum depthBufferFormat);  // D3D9_REPLACE
+void glDestroySwapChain(rx::SwapChain *swapChain);
+
+__eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *procname);
+bool __stdcall glBindTexImage(egl::Surface *surface);
+}
+
 #endif   // LIBGLESV2_MAIN_H_

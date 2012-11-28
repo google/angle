@@ -14,6 +14,7 @@
 #include "libGLESv2/renderer/renderer9_utils.h" // D3D9_REPLACE
 #include "libGLESv2/renderer/Renderer9.h"   // D3D9_REPLACE
 #include "libGLESv2/Context.h"
+#include "libGLESv2/main.h"
 
 namespace rx
 {
