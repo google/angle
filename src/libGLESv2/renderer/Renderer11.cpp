@@ -21,7 +21,7 @@ Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(
     mD3d11Module = NULL;
     mDxgiModule = NULL;
 
-    mD3d11 = NULL;
+    mDevice = NULL;
     mDeviceContext = NULL;
 }
 
@@ -35,10 +35,10 @@ Renderer11::~Renderer11()
         mDeviceContext = NULL;
     }
 
-    if (mD3d11)
+    if (mDevice)
     {
-        mD3d11->Release();
-        mD3d11 = NULL;
+        mDevice->Release();
+        mDevice = NULL;
     }
 
     if (mD3d11Module)
@@ -72,21 +72,26 @@ EGLint Renderer11::initialize()
         ERR("Could not retrieve D3D11CreateDevice address - aborting!\n");
         return EGL_NOT_INITIALIZED;
     }
-
-    D3D_FEATURE_LEVEL featureLevel = D3D_FEATURE_LEVEL_10_0;
-
+    
+    D3D_FEATURE_LEVEL featureLevel[] = 
+    {
+        D3D_FEATURE_LEVEL_11_0,
+        D3D_FEATURE_LEVEL_10_1,
+        D3D_FEATURE_LEVEL_10_0,
+    };
+        
     HRESULT result = D3D11CreateDevice(NULL,
                                        D3D_DRIVER_TYPE_HARDWARE,
                                        NULL,
-                                       NULL,
-                                       &featureLevel,
-                                       1,
+                                       0,   // D3D11_CREATE_DEVICE_DEBUG
+                                       featureLevel,
+                                       sizeof(featureLevel)/sizeof(featureLevel[0]),
                                        D3D11_SDK_VERSION,
-                                       &mD3d11,
-                                       NULL,
+                                       &mDevice,
+                                       &mFeatureLevel,
                                        &mDeviceContext);
-
-    if (!mD3d11 || FAILED(result))
+    
+    if (!mDevice || FAILED(result))
     {
         ERR("Could not create D3D11 device - aborting!\n");
         return EGL_NOT_INITIALIZED;   // Cleanup done by destructor through glDestroyRenderer
@@ -379,23 +384,35 @@ float Renderer11::getMaxPointSize() const
 
 int Renderer11::getMaxTextureWidth() const
 {
-    // TODO
-    UNIMPLEMENTED();
-    return 1024;
+    switch (mFeatureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_0: return D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION;   // 16384
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0: return D3D10_REQ_TEXTURE2D_U_OR_V_DIMENSION;   // 8192
+      default: UNREACHABLE();      return 0;
+    }
 }
 
 int Renderer11::getMaxTextureHeight() const
 {
-    // TODO
-    UNIMPLEMENTED();
-    return 1024;
+    switch (mFeatureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_0: return D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION;   // 16384
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0: return D3D10_REQ_TEXTURE2D_U_OR_V_DIMENSION;   // 8192
+      default: UNREACHABLE();      return 0;
+    }
 }
 
 bool Renderer11::get32BitIndexSupport() const
 {
-    // TODO
-    UNIMPLEMENTED();
-    return true;
+    switch (mFeatureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_0: 
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0: return D3D10_REQ_DRAWINDEXED_INDEX_COUNT_2_TO_EXP >= 32;   // true
+      default: UNREACHABLE();      return false;
+    }
 }
 
 int Renderer11::getMinSwapInterval() const

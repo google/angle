@@ -84,7 +84,7 @@ class Renderer11 : public Renderer
     virtual GLsizei getMaxSupportedSamples() const;
 
     // D3D11-renderer specific methods
-    ID3D11Device *getDevice() { return mD3d11; }
+    ID3D11Device *getDevice() { return mDevice; }
     ID3D11DeviceContext *getDeviceContext() { return mDeviceContext; };
 
   private:
@@ -99,7 +99,8 @@ class Renderer11 : public Renderer
     void initializeDevice();
     void releaseDeviceResources();
 
-    ID3D11Device *mD3d11;
+    ID3D11Device *mDevice;
+    D3D_FEATURE_LEVEL mFeatureLevel;
     ID3D11DeviceContext *mDeviceContext;
 };
 
