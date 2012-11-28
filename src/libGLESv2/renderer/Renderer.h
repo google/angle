@@ -96,8 +96,7 @@ class Renderer
 
     virtual GLenum applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], GLint first, GLsizei count, GLsizei instances, GLsizei *repeatDraw) = 0;
 
-    virtual void clear(GLbitfield mask, const gl::Color &colorClear, float depthClear, int stencilClear,
-                       gl::Framebuffer *frameBuffer) = 0;
+    virtual void clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer) = 0;
 
     virtual void markAllStateDirty() = 0;
 

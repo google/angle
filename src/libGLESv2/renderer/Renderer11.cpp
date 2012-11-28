@@ -411,8 +411,7 @@ void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
     UNIMPLEMENTED();
 }
 
-void Renderer11::clear(GLbitfield mask, const gl::Color &colorClear, float depthClear, int stencilClear,
-                       gl::Framebuffer *frameBuffer)
+void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer)
 {
     // TODO
     UNIMPLEMENTED();

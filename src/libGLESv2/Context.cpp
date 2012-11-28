@@ -1998,6 +1998,7 @@ void Context::clear(GLbitfield mask)
     }
 
     DWORD flags = 0;
+    GLbitfield finalMask = 0;
 
     if (mask & GL_COLOR_BUFFER_BIT)
     {
@@ -2006,6 +2007,7 @@ void Context::clear(GLbitfield mask)
         if (framebufferObject->getColorbufferType() != GL_NONE)
         {
             flags |= D3DCLEAR_TARGET;
+            finalMask |= GL_COLOR_BUFFER_BIT;
         }
     }
 
@@ -2015,6 +2017,7 @@ void Context::clear(GLbitfield mask)
         if (mState.depthStencil.depthMask && framebufferObject->getDepthbufferType() != GL_NONE)
         {
             flags |= D3DCLEAR_ZBUFFER;
+            finalMask |= GL_DEPTH_BUFFER_BIT;
         }
     }
 
@@ -2038,6 +2041,7 @@ void Context::clear(GLbitfield mask)
             if (stencilUnmasked != 0x0)
             {
                 flags |= D3DCLEAR_STENCIL;
+                finalMask |= GL_STENCIL_BUFFER_BIT;
             }
         }
     }
@@ -2212,9 +2216,18 @@ void Context::clear(GLbitfield mask)
     {
         mDevice->Clear(0, NULL, flags, color, depth, stencil);
     }
+    ClearParameters clearParams;
+    clearParams.mask = finalMask;
+    clearParams.colorClearValue = mState.colorClearValue;
+    clearParams.colorMaskRed = mState.blend.colorMaskRed;
+    clearParams.colorMaskGreen = mState.blend.colorMaskGreen;
+    clearParams.colorMaskBlue = mState.blend.colorMaskBlue;
+    clearParams.colorMaskAlpha = mState.blend.colorMaskAlpha;
+    clearParams.depthClearValue = mState.depthClearValue;
+    clearParams.stencilClearValue = mState.stencilClearValue;
+    clearParams.stencilWriteMask = mState.depthStencil.stencilWritemask;
 
-    mRenderer->clear(mask, mState.colorClearValue, mState.depthClearValue, mState.stencilClearValue,
-                     framebufferObject);
+    mRenderer->clear(clearParams, framebufferObject);
 }
 
 void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instances)

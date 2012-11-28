@@ -1119,8 +1119,7 @@ void Renderer9::applyShaders(gl::ProgramBinary *programBinary)
     programBinary->dirtyAllUniforms();
 }
 
-void Renderer9::clear(GLbitfield mask, const gl::Color &colorClear, float depthClear, int stencilClear,
-                      gl::Framebuffer *frameBuffer)
+void Renderer9::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer)
 {
     mForceSetDepthStencilState = true;
 
