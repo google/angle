@@ -11,6 +11,7 @@
 #define LIBGLESV2_RENDERER_SHADEREXECUTABLE_H_
 
 #include "common/angleutils.h"
+#include "libGLESv2/D3DConstantTable.h"
 
 namespace rx
 {
@@ -23,6 +24,8 @@ class ShaderExecutable
 
     virtual bool getVertexFunction(void *pData, UINT *pSizeOfData) = 0;
     virtual bool getPixelFunction(void *pData, UINT *pSizeOfData) = 0;
+
+    virtual gl::D3DConstantTable *getConstantTable() = 0; // D3D9_REMOVE
 
   private:
     DISALLOW_COPY_AND_ASSIGN(ShaderExecutable);

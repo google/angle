@@ -32,7 +32,7 @@ class ShaderExecutable9 : public ShaderExecutable
 
     IDirect3DPixelShader9 *getPixelShader();
     IDirect3DVertexShader9 *getVertexShader();
-    gl::D3DConstantTable *getConstantTable();
+    virtual gl::D3DConstantTable *getConstantTable();
 
   private:
     DISALLOW_COPY_AND_ASSIGN(ShaderExecutable9);
