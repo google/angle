@@ -436,4 +436,18 @@ int Renderer11::getMaxSupportedSamples() const
     return 1;
 }
 
+bool Renderer11::copyToRenderTarget(gl::TextureStorage2D *dest, gl::TextureStorage2D *source)
+{
+    // TODO
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool Renderer11::copyToRenderTarget(gl::TextureStorageCubeMap *dest, gl::TextureStorageCubeMap *source)
+{
+    // TODO
+    UNIMPLEMENTED();
+    return false;
+}
+
 }
