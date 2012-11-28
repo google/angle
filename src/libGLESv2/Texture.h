@@ -15,7 +15,6 @@
 
 #define GL_APICALL
 #include <GLES2/gl2.h>
-#include <d3d9.h>
 
 #include "common/debug.h"
 #include "common/RefCountObject.h"
