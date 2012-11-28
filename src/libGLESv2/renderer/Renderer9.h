@@ -65,8 +65,6 @@ class Renderer9 : public Renderer
     // state setup
     void applyShaders();
     void applyConstants();
-    void applyRenderTargets();
-    void applyState();
 #endif
     virtual void setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &sampler);
     virtual void setTexture(gl::SamplerType type, int index, gl::Texture *texture);
@@ -79,6 +77,9 @@ class Renderer9 : public Renderer
 
     virtual void setScissorRectangle(const gl::Rectangle& scissor, unsigned int renderTargetWidth,
                                      unsigned int renderTargetHeight);
+    virtual bool setViewport(const gl::Rectangle& viewport, float zNear, float zFar,
+                             unsigned int renderTargetWidth, unsigned int renderTargetHeight,
+                             gl::ProgramBinary *currentProgram, bool forceSetUniforms);
 
     virtual void applyRenderTarget(gl::Framebuffer *frameBuffer);
 
@@ -204,6 +205,11 @@ class Renderer9 : public Renderer
     gl::Rectangle mCurScissor;
     unsigned int mCurRenderTargetWidth;
     unsigned int mCurRenderTargetHeight;
+
+    bool mForceSetViewport;
+    gl::Rectangle mCurViewport;
+    float mCurNear;
+    float mCurFar;
 
     bool mForceSetBlendState;
     gl::BlendState mCurBlendState;

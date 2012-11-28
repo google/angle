@@ -37,6 +37,11 @@ namespace egl
 class Display;
 }
 
+namespace gl
+{
+class ProgramBinary;
+}
+
 namespace rx
 {
 class TextureStorage2D;
@@ -81,6 +86,9 @@ class Renderer
 
     virtual void setScissorRectangle(const gl::Rectangle& scissor, unsigned int renderTargetWidth,
                                      unsigned int renderTargetHeight) = 0;
+    virtual bool setViewport(const gl::Rectangle& viewport, float zNear, float zFar,
+                             unsigned int renderTargetWidth, unsigned int renderTargetHeight,
+                             gl::ProgramBinary *currentProgram, bool forceSetUniforms) = 0;
 
     virtual void applyRenderTarget(gl::Framebuffer *frameBuffer) = 0;
 

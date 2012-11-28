@@ -374,6 +374,15 @@ void Renderer11::setScissorRectangle(const gl::Rectangle& scissor, unsigned int 
     mForceSetScissor = false;
 }
 
+bool Renderer11::setViewport(const gl::Rectangle& viewport, float zNear, float zFar,
+                             unsigned int renderTargetWidth, unsigned int renderTargetHeight,
+                             gl::ProgramBinary *currentProgram, bool forceSetUniforms)
+{
+    // TODO
+    UNIMPLEMENTED();
+    return true;
+}
+
 void Renderer11::applyRenderTarget(gl::Framebuffer *frameBuffer)
 {
     // TODO
