@@ -42,7 +42,6 @@ Context::Context(const gl::Context *shareContext, rx::Renderer *renderer, bool n
     ASSERT(dynamic_cast<rx::Renderer9*>(renderer) != NULL); // D3D9_REPLACE
     mRenderer = static_cast<rx::Renderer9*>(renderer);
 
-    mDisplay = NULL;
     mDevice = NULL;
 
     mFenceHandleAllocator.setBaseHandle(0);

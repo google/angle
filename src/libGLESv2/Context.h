@@ -493,7 +493,6 @@ class Context
     void initExtensionString();
     void initRendererString();
 
-    egl::Display *mDisplay;
     IDirect3DDevice9 *mDevice;
     rx::Renderer9 *mRenderer;  // D3D9_REPLACE
 
