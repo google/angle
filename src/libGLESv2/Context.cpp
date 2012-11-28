@@ -2121,7 +2121,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
 
     if (!skipDraw(mode))
     {
-        mRenderer->drawElements(mode, count, type, indices, mState.elementArrayBuffer.get());
+        mRenderer->drawElements(mode, count, type, indices, mState.elementArrayBuffer.get(), indexInfo);
     }
 }
 

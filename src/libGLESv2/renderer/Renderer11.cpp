@@ -467,7 +467,7 @@ void Renderer11::drawArrays(GLenum mode, GLsizei count, GLsizei instances)
     UNIMPLEMENTED();
 }
 
-void Renderer11::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer)
+void Renderer11::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer, const gl::TranslatedIndexData &indexInfo)
 {
     // TODO
     UNIMPLEMENTED();

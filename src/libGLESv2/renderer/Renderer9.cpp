@@ -1159,10 +1159,6 @@ GLenum Renderer9::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArr
     unsigned int serial;
     GLenum err = mIndexDataManager->prepareIndexData(type, count, elementArrayBuffer, indices, indexInfo, &indexBuffer, &serial);
 
-    mIndexInfo.minIndex = indexInfo->minIndex;
-    mIndexInfo.maxIndex = indexInfo->maxIndex;
-    mIndexInfo.startIndex = indexInfo->startIndex;
-
     if (err == GL_NO_ERROR)
     {
         if (serial != mAppliedIBSerial)
@@ -1211,20 +1207,20 @@ void Renderer9::drawArrays(GLenum mode, GLsizei count, GLsizei instances)
     }
 }
 
-void Renderer9::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer)
+void Renderer9::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer, const gl::TranslatedIndexData &indexInfo)
 {
     startScene();
 
     if (mode == GL_LINE_LOOP)
     {
-        drawLineLoop(count, type, indices, mIndexInfo.minIndex, elementArrayBuffer);
+        drawLineLoop(count, type, indices, indexInfo.minIndex, elementArrayBuffer);
     }
     else
     {
         for (int i = 0; i < mRepeatDraw; i++)
         {
-            GLsizei vertexCount = mIndexInfo.maxIndex - mIndexInfo.minIndex + 1;
-            mDevice->DrawIndexedPrimitive(mPrimitiveType, -(INT)mIndexInfo.minIndex, mIndexInfo.minIndex, vertexCount, mIndexInfo.startIndex, mPrimitiveCount);
+            GLsizei vertexCount = indexInfo.maxIndex - indexInfo.minIndex + 1;
+            mDevice->DrawIndexedPrimitive(mPrimitiveType, -(INT)indexInfo.minIndex, indexInfo.minIndex, vertexCount, indexInfo.startIndex, mPrimitiveCount);
         }
     }
 }
