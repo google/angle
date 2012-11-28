@@ -2145,7 +2145,7 @@ void Context::clear(GLbitfield mask)
         mask &= ~GL_STENCIL_BUFFER_BIT;
         if (framebufferObject->getStencilbufferType() != GL_NONE)
         {
-            IDirect3DSurface9 *depthStencil = framebufferObject->getStencilbuffer()->getDepthStencil();
+            IDirect3DSurface9 *depthStencil = framebufferObject->getStencilbuffer()->getDepthStencil()->getSurface();
             if (!depthStencil)
             {
                 ERR("Depth stencil pointer unexpectedly null.");

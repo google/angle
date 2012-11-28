@@ -91,16 +91,12 @@ void RenderbufferTexture2D::releaseProxy(const Renderbuffer *proxy)
     mTexture2D->releaseProxy(proxy);
 }
 
-// Increments refcount on surface.
-// caller must Release() the returned surface
-IDirect3DSurface9 *RenderbufferTexture2D::getRenderTarget()
+rx::RenderTarget *RenderbufferTexture2D::getRenderTarget()
 {
     return mTexture2D->getRenderTarget(mTarget);
 }
 
-// Increments refcount on surface.
-// caller must Release() the returned surface
-IDirect3DSurface9 *RenderbufferTexture2D::getDepthStencil()
+rx::RenderTarget *RenderbufferTexture2D::getDepthStencil()
 {
     return mTexture2D->getDepthStencil(mTarget);
 }
@@ -159,16 +155,12 @@ void RenderbufferTextureCubeMap::releaseProxy(const Renderbuffer *proxy)
     mTextureCubeMap->releaseProxy(proxy);
 }
 
-// Increments refcount on surface.
-// caller must Release() the returned surface
-IDirect3DSurface9 *RenderbufferTextureCubeMap::getRenderTarget()
+rx::RenderTarget *RenderbufferTextureCubeMap::getRenderTarget()
 {
     return mTextureCubeMap->getRenderTarget(mTarget);
 }
 
-// Increments refcount on surface.
-// caller must Release() the returned surface
-IDirect3DSurface9 *RenderbufferTextureCubeMap::getDepthStencil()
+rx::RenderTarget *RenderbufferTextureCubeMap::getDepthStencil()
 {
     return NULL;
 }
@@ -232,16 +224,12 @@ void Renderbuffer::release() const
     RefCountObject::release();
 }
 
-// Increments refcount on surface.
-// caller must Release() the returned surface
-IDirect3DSurface9 *Renderbuffer::getRenderTarget()
+rx::RenderTarget *Renderbuffer::getRenderTarget()
 {
     return mInstance->getRenderTarget();
 }
 
-// Increments refcount on surface.
-// caller must Release() the returned surface
-IDirect3DSurface9 *Renderbuffer::getDepthStencil()
+rx::RenderTarget *Renderbuffer::getDepthStencil()
 {
     return mInstance->getDepthStencil();
 }
@@ -327,16 +315,12 @@ RenderbufferStorage::~RenderbufferStorage()
 {
 }
 
-// Increments refcount on surface.
-// caller must Release() the returned surface
-IDirect3DSurface9 *RenderbufferStorage::getRenderTarget()
+rx::RenderTarget *RenderbufferStorage::getRenderTarget()
 {
     return NULL;
 }
 
-// Increments refcount on surface.
-// caller must Release() the returned surface
-IDirect3DSurface9 *RenderbufferStorage::getDepthStencil()
+rx::RenderTarget *RenderbufferStorage::getDepthStencil()
 {
     return NULL;
 }
@@ -420,13 +404,11 @@ Colorbuffer::~Colorbuffer()
     }
 }
 
-// Increments refcount on surface.
-// caller must Release() the returned surface
-IDirect3DSurface9 *Colorbuffer::getRenderTarget()
+rx::RenderTarget *Colorbuffer::getRenderTarget()
 {
     if (mRenderTarget)
     {
-        return mRenderTarget->getSurface();
+        return mRenderTarget;
     }
 
     return NULL;
@@ -466,13 +448,11 @@ DepthStencilbuffer::~DepthStencilbuffer()
     }
 }
 
-// Increments refcount on surface.
-// caller must Release() the returned surface
-IDirect3DSurface9 *DepthStencilbuffer::getDepthStencil()
+rx::RenderTarget *DepthStencilbuffer::getDepthStencil()
 {
     if (mDepthStencil)
     {
-        return mDepthStencil->getSurface();
+        return mDepthStencil;
     }
 
     return NULL;

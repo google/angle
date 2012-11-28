@@ -17,6 +17,7 @@
 #include "libGLESv2/renderer/TextureStorage.h"
 #include "libGLESv2/renderer/Image.h"
 #include "libGLESv2/renderer/Blit.h"
+#include "libGLESv2/renderer/RenderTarget9.h"
 
 #include "libEGL/Config.h"
 #include "libEGL/Display.h"
@@ -1446,8 +1447,36 @@ bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, gl::Rectangle *readRe
 
     if (blitRenderTarget)
     {
-        IDirect3DSurface9* readRenderTarget = readFramebuffer->getRenderTarget();
-        IDirect3DSurface9* drawRenderTarget = drawFramebuffer->getRenderTarget();
+        gl::Renderbuffer *readBuffer = readFramebuffer->getColorbuffer();
+        gl::Renderbuffer *drawBuffer = drawFramebuffer->getColorbuffer();
+        RenderTarget9 *readRenderTarget = NULL;
+        RenderTarget9 *drawRenderTarget = NULL;
+        IDirect3DSurface9* readSurface = NULL;
+        IDirect3DSurface9* drawSurface = NULL;
+
+        if (readBuffer)
+        {
+            readRenderTarget = RenderTarget9::makeRenderTarget9(readBuffer->getRenderTarget());
+        }
+        if (drawBuffer)
+        {
+            drawRenderTarget = RenderTarget9::makeRenderTarget9(drawBuffer->getRenderTarget());
+        }
+
+        if (readRenderTarget)
+        {
+            readSurface = readRenderTarget->getSurface();
+        }
+        if (drawRenderTarget)
+        {
+            drawSurface = drawRenderTarget->getSurface();
+        }
+
+        if (!readSurface || !drawSurface)
+        {
+            ERR("Failed to retrieve the render target.");
+            return error(GL_OUT_OF_MEMORY, false);
+        }
 
         RECT srcRect, dstRect;
         RECT *srcRectPtr = NULL;
@@ -1471,10 +1500,10 @@ bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, gl::Rectangle *readRe
             dstRectPtr = &dstRect;
         }
 
-        HRESULT result = mDevice->StretchRect(readRenderTarget, srcRectPtr, drawRenderTarget, dstRectPtr, D3DTEXF_NONE);
+        HRESULT result = mDevice->StretchRect(readSurface, srcRectPtr, drawSurface, dstRectPtr, D3DTEXF_NONE);
 
-        readRenderTarget->Release();
-        drawRenderTarget->Release();
+        readSurface->Release();
+        drawSurface->Release();
 
         if (FAILED(result))
         {
@@ -1485,13 +1514,41 @@ bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, gl::Rectangle *readRe
 
     if (blitDepthStencil)
     {
-        IDirect3DSurface9* readDepthStencil = readFramebuffer->getDepthStencil();
-        IDirect3DSurface9* drawDepthStencil = drawFramebuffer->getDepthStencil();
+        gl::Renderbuffer *readBuffer = readFramebuffer->getDepthOrStencilbuffer();
+        gl::Renderbuffer *drawBuffer = drawFramebuffer->getDepthOrStencilbuffer();
+        RenderTarget9 *readDepthStencil = NULL;
+        RenderTarget9 *drawDepthStencil = NULL;
+        IDirect3DSurface9* readSurface = NULL;
+        IDirect3DSurface9* drawSurface = NULL;
 
-        HRESULT result = mDevice->StretchRect(readDepthStencil, NULL, drawDepthStencil, NULL, D3DTEXF_NONE);
+        if (readBuffer)
+        {
+            readDepthStencil = RenderTarget9::makeRenderTarget9(readBuffer->getDepthStencil());
+        }
+        if (drawBuffer)
+        {
+            drawDepthStencil = RenderTarget9::makeRenderTarget9(drawBuffer->getDepthStencil());
+        }
 
-        readDepthStencil->Release();
-        drawDepthStencil->Release();
+        if (readDepthStencil)
+        {
+            readSurface = readDepthStencil->getSurface();
+        }
+        if (drawDepthStencil)
+        {
+            drawSurface = drawDepthStencil->getSurface();
+        }
+
+        if (!readSurface || !drawSurface)
+        {
+            ERR("Failed to retrieve the render target.");
+            return error(GL_OUT_OF_MEMORY, false);
+        }
+
+        HRESULT result = mDevice->StretchRect(readSurface, NULL, drawSurface, NULL, D3DTEXF_NONE);
+
+        readSurface->Release();
+        drawSurface->Release();
 
         if (FAILED(result))
         {
@@ -1506,19 +1563,33 @@ bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, gl::Rectangle *readRe
 void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, 
                            GLsizei outputPitch, bool packReverseRowOrder, GLint packAlignment, void* pixels)
 {
-    IDirect3DSurface9 *renderTarget = framebuffer->getRenderTarget();
-    if (!renderTarget)
+    RenderTarget9 *renderTarget = NULL;
+    IDirect3DSurface9 *surface = NULL;
+    gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer();
+
+    if (colorbuffer)
     {
-        return;   // Context must be lost, return silently
+        renderTarget = RenderTarget9::makeRenderTarget9(colorbuffer->getRenderTarget());
+    }
+    
+    if (renderTarget)
+    {
+        surface = renderTarget->getSurface();
+    }
+
+    if (!surface)
+    {
+        // context must be lost
+        return;
     }
 
     D3DSURFACE_DESC desc;
-    renderTarget->GetDesc(&desc);
+    surface->GetDesc(&desc);
 
     if (desc.MultiSampleType != D3DMULTISAMPLE_NONE)
     {
         UNIMPLEMENTED();   // FIXME: Requires resolve using StretchRect into non-multisampled render target
-        renderTarget->Release();
+        surface->Release();
         return error(GL_OUT_OF_MEMORY);
     }
 
@@ -1546,14 +1617,14 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
         if (FAILED(result))
         {
             ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-            renderTarget->Release();
+            surface->Release();
             return error(GL_OUT_OF_MEMORY);
         }
     }
 
-    result = mDevice->GetRenderTargetData(renderTarget, systemSurface);
-    renderTarget->Release();
-    renderTarget = NULL;
+    result = mDevice->GetRenderTargetData(surface, systemSurface);
+    surface->Release();
+    surface = NULL;
 
     if (FAILED(result))
     {
@@ -1824,19 +1895,24 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
 
 bool Renderer9::setRenderTarget(gl::Renderbuffer *renderbuffer)
 {
-    IDirect3DSurface9 *renderTarget = NULL;
+    IDirect3DSurface9 *renderTargetSurface = NULL;
     
     if (renderbuffer)
     {
-        renderTarget = renderbuffer->getRenderTarget();
-        if (!renderTarget)
+        RenderTarget *renderTarget = renderbuffer->getRenderTarget();
+        if (renderTarget)
+        {
+            renderTargetSurface = renderTarget->getSurface();
+        }
+
+        if (!renderTargetSurface)
         {
             ERR("render target pointer unexpectedly null.");
             return false;   // Context must be lost
         }
 
-        mDevice->SetRenderTarget(0, renderTarget);
-        renderTarget->Release();
+        mDevice->SetRenderTarget(0, renderTargetSurface);
+        renderTargetSurface->Release();
     }
     else
     {
@@ -1848,18 +1924,25 @@ bool Renderer9::setRenderTarget(gl::Renderbuffer *renderbuffer)
 
 bool Renderer9::setDepthStencil(gl::Renderbuffer *renderbuffer)
 {
-    IDirect3DSurface9 *depthStencil = NULL;
+    IDirect3DSurface9 *depthStencilSurface = NULL;
     
     if (renderbuffer)
     {
-        depthStencil = renderbuffer->getDepthStencil();
-        if (!depthStencil)
+        RenderTarget *depthStencil = renderbuffer->getDepthStencil();
+        
+        if (depthStencil)
+        {
+            depthStencilSurface = depthStencil->getSurface();
+        }
+
+        if (!depthStencilSurface)
         {
             ERR("depth stencil pointer unexpectedly null.");
             return false;   // Context must be lost
         }
-        mDevice->SetDepthStencilSurface(depthStencil);
-        depthStencil->Release();
+
+        mDevice->SetDepthStencilSurface(depthStencilSurface);
+        depthStencilSurface->Release();
     }
     else
     {

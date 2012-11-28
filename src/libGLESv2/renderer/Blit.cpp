@@ -14,6 +14,7 @@
 #include "libGLESv2/utilities.h"
 #include "libGLESv2/renderer/renderer9_utils.h" // D3D9_REPLACE
 #include "libGLESv2/renderer/TextureStorage.h"
+#include "libGLESv2/renderer/RenderTarget9.h"
 #include "libGLESv2/Framebuffer.h"
 
 namespace
@@ -215,7 +216,20 @@ bool Blit::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
 bool Blit::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorage2D *storage, GLint level)
 {
     // D3D9_REPLACE
-    IDirect3DSurface9 *source = framebuffer->getRenderTarget();
+    RenderTarget9 *renderTarget = NULL;
+    IDirect3DSurface9 *source = NULL;
+    gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer();
+
+    if (colorbuffer)
+    {
+        renderTarget = RenderTarget9::makeRenderTarget9(colorbuffer->getRenderTarget());
+    }
+    
+    if (renderTarget)
+    {
+        source = renderTarget->getSurface();
+    }
+
     if (!source)
     {
         ERR("Failed to retrieve the render target.");
@@ -238,7 +252,20 @@ bool Blit::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum des
 bool Blit::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorageCubeMap *storage, GLenum target, GLint level)
 {
     // D3D9_REPLACE
-    IDirect3DSurface9 *source = framebuffer->getRenderTarget();
+    RenderTarget9 *renderTarget = NULL;
+    IDirect3DSurface9 *source = NULL;
+    gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer();
+
+    if (colorbuffer)
+    {
+        renderTarget = RenderTarget9::makeRenderTarget9(colorbuffer->getRenderTarget());
+    }
+    
+    if (renderTarget)
+    {
+        source = renderTarget->getSurface();
+    }
+
     if (!source)
     {
         ERR("Failed to retrieve the render target.");

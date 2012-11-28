@@ -44,9 +44,6 @@ class Framebuffer
     void detachTexture(GLuint texture);
     void detachRenderbuffer(GLuint renderbuffer);
 
-    IDirect3DSurface9 *getRenderTarget();
-    IDirect3DSurface9 *getDepthStencil();
-
     unsigned int getRenderTargetSerial();
     unsigned int getDepthbufferSerial();
     unsigned int getStencilbufferSerial();

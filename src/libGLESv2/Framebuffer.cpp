@@ -130,39 +130,6 @@ unsigned int Framebuffer::getRenderTargetSerial()
     return 0;
 }
 
-// Increments refcount on surface.
-// caller must Release() the returned surface
-IDirect3DSurface9 *Framebuffer::getRenderTarget()
-{
-    Renderbuffer *colorbuffer = mColorbufferPointer.get();
-
-    if (colorbuffer)
-    {
-        return colorbuffer->getRenderTarget();
-    }
-
-    return NULL;
-}
-
-// Increments refcount on surface.
-// caller must Release() the returned surface
-IDirect3DSurface9 *Framebuffer::getDepthStencil()
-{
-    Renderbuffer *depthstencilbuffer = mDepthbufferPointer.get();
-    
-    if (!depthstencilbuffer)
-    {
-        depthstencilbuffer = mStencilbufferPointer.get();
-    }
-
-    if (depthstencilbuffer)
-    {
-        return depthstencilbuffer->getDepthStencil();
-    }
-
-    return NULL;
-}
-
 unsigned int Framebuffer::getDepthbufferSerial()
 {
     Renderbuffer *depthbuffer = mDepthbufferPointer.get();

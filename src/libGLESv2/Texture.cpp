@@ -843,9 +843,7 @@ Renderbuffer *Texture2D::getRenderbuffer(GLenum target)
     return mColorbufferProxy;
 }
 
-// Increments refcount on surface.
-// caller must Release() the returned surface
-IDirect3DSurface9 *Texture2D::getRenderTarget(GLenum target)
+rx::RenderTarget *Texture2D::getRenderTarget(GLenum target)
 {
     ASSERT(target == GL_TEXTURE_2D);
 
@@ -862,12 +860,10 @@ IDirect3DSurface9 *Texture2D::getRenderTarget(GLenum target)
     {
         return NULL;
     }
-    return mTexStorage->getSurfaceLevel(0, false);
+    return mTexStorage->getRenderTarget();
 }
 
-// Increments refcount on surface.
-// caller must Release() the returned surface
-IDirect3DSurface9 *Texture2D::getDepthStencil(GLenum target)
+rx::RenderTarget *Texture2D::getDepthStencil(GLenum target)
 {
     ASSERT(target == GL_TEXTURE_2D);
 
@@ -884,7 +880,7 @@ IDirect3DSurface9 *Texture2D::getDepthStencil(GLenum target)
     {
         return NULL;
     }
-    return mTexStorage->getSurfaceLevel(0, false);
+    return mTexStorage->getRenderTarget();
 }
 
 int Texture2D::levelCount()
@@ -1474,9 +1470,7 @@ Renderbuffer *TextureCubeMap::getRenderbuffer(GLenum target)
     return mFaceProxies[face];
 }
 
-// Increments refcount on surface.
-// caller must Release() the returned surface
-IDirect3DSurface9 *TextureCubeMap::getRenderTarget(GLenum target)
+rx::RenderTarget *TextureCubeMap::getRenderTarget(GLenum target)
 {
     ASSERT(IsCubemapTextureTarget(target));
 
@@ -1488,7 +1482,7 @@ IDirect3DSurface9 *TextureCubeMap::getRenderTarget(GLenum target)
 
     updateTexture();
     
-    return mTexStorage->getCubeMapSurface(target, 0, false);
+    return mTexStorage->getRenderTarget(target);
 }
 
 int TextureCubeMap::levelCount()

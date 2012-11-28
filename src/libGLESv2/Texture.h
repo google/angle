@@ -118,7 +118,7 @@ class Texture : public RefCountObject
     virtual void createTexture() = 0;
     virtual void updateTexture() = 0;
     virtual void convertToRenderTarget() = 0;
-    virtual IDirect3DSurface9 *getRenderTarget(GLenum target) = 0;
+    virtual rx::RenderTarget *getRenderTarget(GLenum target) = 0;
 
     virtual int levelCount() = 0;
 
@@ -175,8 +175,8 @@ class Texture2D : public Texture
 
   protected:
     friend class RenderbufferTexture2D;
-    virtual IDirect3DSurface9 *getRenderTarget(GLenum target);
-    virtual IDirect3DSurface9 *getDepthStencil(GLenum target);
+    virtual rx::RenderTarget *getRenderTarget(GLenum target);
+    virtual rx::RenderTarget *getDepthStencil(GLenum target);
     virtual int levelCount();
 
   private:
@@ -249,7 +249,7 @@ class TextureCubeMap : public Texture
 
   protected:
     friend class RenderbufferTextureCubeMap;
-    virtual IDirect3DSurface9 *getRenderTarget(GLenum target);
+    virtual rx::RenderTarget *getRenderTarget(GLenum target);
     virtual int levelCount();
 
   private:

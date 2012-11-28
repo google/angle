@@ -26,6 +26,7 @@ class RenderTarget9 : public RenderTarget
     RenderTarget9(Renderer *renderer, GLsizei width, GLsizei height, GLenum format, GLsizei samples);
     virtual ~RenderTarget9();
 
+    static RenderTarget9 *makeRenderTarget9(RenderTarget *renderTarget);
     IDirect3DSurface9 *getSurface();
 
   private:

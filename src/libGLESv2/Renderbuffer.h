@@ -45,8 +45,8 @@ class RenderbufferInterface
     virtual void addProxyRef(const Renderbuffer *proxy);
     virtual void releaseProxy(const Renderbuffer *proxy);
 
-    virtual IDirect3DSurface9 *getRenderTarget() = 0;
-    virtual IDirect3DSurface9 *getDepthStencil() = 0;
+    virtual rx::RenderTarget *getRenderTarget() = 0;
+    virtual rx::RenderTarget *getDepthStencil() = 0;
 
     virtual GLsizei getWidth() const = 0;
     virtual GLsizei getHeight() const = 0;
@@ -77,8 +77,8 @@ class RenderbufferTexture2D : public RenderbufferInterface
     void addProxyRef(const Renderbuffer *proxy);
     void releaseProxy(const Renderbuffer *proxy);
 
-    IDirect3DSurface9 *getRenderTarget();
-    IDirect3DSurface9 *getDepthStencil();
+    rx::RenderTarget *getRenderTarget();
+    rx::RenderTarget *getDepthStencil();
 
     virtual GLsizei getWidth() const;
     virtual GLsizei getHeight() const;
@@ -105,8 +105,8 @@ class RenderbufferTextureCubeMap : public RenderbufferInterface
     void addProxyRef(const Renderbuffer *proxy);
     void releaseProxy(const Renderbuffer *proxy);
 
-    IDirect3DSurface9 *getRenderTarget();
-    IDirect3DSurface9 *getDepthStencil();
+    rx::RenderTarget *getRenderTarget();
+    rx::RenderTarget *getDepthStencil();
 
     virtual GLsizei getWidth() const;
     virtual GLsizei getHeight() const;
@@ -133,8 +133,8 @@ class RenderbufferStorage : public RenderbufferInterface
 
     virtual ~RenderbufferStorage() = 0;
 
-    virtual IDirect3DSurface9 *getRenderTarget();
-    virtual IDirect3DSurface9 *getDepthStencil();
+    virtual rx::RenderTarget *getRenderTarget();
+    virtual rx::RenderTarget *getDepthStencil();
 
     virtual GLsizei getWidth() const;
     virtual GLsizei getHeight() const;
@@ -179,8 +179,8 @@ class Renderbuffer : public RefCountObject
     void addRef() const;
     void release() const;
 
-    IDirect3DSurface9 *getRenderTarget();
-    IDirect3DSurface9 *getDepthStencil();
+    rx::RenderTarget *getRenderTarget();
+    rx::RenderTarget *getDepthStencil();
 
     GLsizei getWidth() const;
     GLsizei getHeight() const;
@@ -212,7 +212,7 @@ class Colorbuffer : public RenderbufferStorage
 
     virtual ~Colorbuffer();
 
-    virtual IDirect3DSurface9 *getRenderTarget();
+    virtual rx::RenderTarget *getRenderTarget();
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Colorbuffer);
@@ -228,7 +228,7 @@ class DepthStencilbuffer : public RenderbufferStorage
 
     ~DepthStencilbuffer();
 
-    virtual IDirect3DSurface9 *getDepthStencil();
+    virtual rx::RenderTarget *getDepthStencil();
 
   protected:
     rx::RenderTarget  *mDepthStencil;

@@ -94,6 +94,12 @@ RenderTarget9::~RenderTarget9()
     }
 }
 
+RenderTarget9 *RenderTarget9::makeRenderTarget9(RenderTarget *target)
+{
+    ASSERT(dynamic_cast<rx::RenderTarget9*>(target) != NULL);
+    return static_cast<rx::RenderTarget9*>(target);
+}
+
 IDirect3DSurface9 *RenderTarget9::getSurface()
 {
     // Caller is responsible for releasing the returned surface reference.
