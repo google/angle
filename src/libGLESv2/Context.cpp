@@ -3592,146 +3592,157 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
     int drawBufferWidth = drawFramebuffer->getColorbuffer()->getWidth();
     int drawBufferHeight = drawFramebuffer->getColorbuffer()->getHeight();
 
-    RECT sourceRect;
-    RECT destRect;
+    Rectangle sourceRect;
+    Rectangle destRect;
 
     if (srcX0 < srcX1)
     {
-        sourceRect.left = srcX0;
-        sourceRect.right = srcX1;
-        destRect.left = dstX0;
-        destRect.right = dstX1;
+        sourceRect.x = srcX0;
+        destRect.x = dstX0;
+        sourceRect.width = srcX1 - srcX0;
+        destRect.width = dstX1 - dstX0;
     }
     else
     {
-        sourceRect.left = srcX1;
-        destRect.left = dstX1;
-        sourceRect.right = srcX0;
-        destRect.right = dstX0;
+        sourceRect.x = srcX1;
+        destRect.x = dstX1;
+        sourceRect.width = srcX0 - srcX1;
+        destRect.width = dstX0 - dstX1;
     }
 
     if (srcY0 < srcY1)
     {
-        sourceRect.bottom = srcY1;
-        destRect.bottom = dstY1;
-        sourceRect.top = srcY0;
-        destRect.top = dstY0;
+        sourceRect.height = srcY1 - srcY0;
+        destRect.height = dstY1 - dstY0;
+        sourceRect.y = srcY0;
+        destRect.y = dstY0;
     }
     else
     {
-        sourceRect.bottom = srcY0;
-        destRect.bottom = dstY0;
-        sourceRect.top = srcY1;
-        destRect.top = dstY1;
+        sourceRect.height = srcY0 - srcY1;
+        destRect.height = dstY0 - srcY1;
+        sourceRect.y = srcY1;
+        destRect.y = dstY1;
     }
 
-    RECT sourceScissoredRect = sourceRect;
-    RECT destScissoredRect = destRect;
+    Rectangle sourceScissoredRect = sourceRect;
+    Rectangle destScissoredRect = destRect;
 
     if (mState.rasterizer.scissorTest)
     {
-        // Only write to parts of the destination framebuffer which pass the scissor test
-        // Please note: the destRect is now in D3D-style coordinates, so the *top* of the
-        // rect will be checked against scissorY, rather than the bottom.
-        if (destRect.left < mState.scissor.x)
+        // Only write to parts of the destination framebuffer which pass the scissor test.
+        if (destRect.x < mState.scissor.x)
         {
-            int xDiff = mState.scissor.x - destRect.left;
-            destScissoredRect.left = mState.scissor.x;
-            sourceScissoredRect.left += xDiff;
+            int xDiff = mState.scissor.x - destRect.x;
+            destScissoredRect.x = mState.scissor.x;
+            destScissoredRect.width -= xDiff;
+            sourceScissoredRect.x += xDiff;
+            sourceScissoredRect.width -= xDiff;
+
         }
 
-        if (destRect.right > mState.scissor.x + mState.scissor.width)
+        if (destRect.x + destRect.width > mState.scissor.x + mState.scissor.width)
         {
-            int xDiff = destRect.right - (mState.scissor.x + mState.scissor.width);
-            destScissoredRect.right = mState.scissor.x + mState.scissor.width;
-            sourceScissoredRect.right -= xDiff;
+            int xDiff = (destRect.x + destRect.width) - (mState.scissor.x + mState.scissor.width);
+            destScissoredRect.width -= xDiff;
+            sourceScissoredRect.width -= xDiff;
         }
 
-        if (destRect.top < mState.scissor.y)
+        if (destRect.y < mState.scissor.y)
         {
-            int yDiff = mState.scissor.y - destRect.top;
-            destScissoredRect.top = mState.scissor.y;
-            sourceScissoredRect.top += yDiff;
+            int yDiff = mState.scissor.y - destRect.y;
+            destScissoredRect.y = mState.scissor.y;
+            destScissoredRect.height -= yDiff;
+            sourceScissoredRect.y += yDiff;
+            sourceScissoredRect.height -= yDiff;
         }
 
-        if (destRect.bottom > mState.scissor.y + mState.scissor.height)
+        if (destRect.y + destRect.height > mState.scissor.y + mState.scissor.height)
         {
-            int yDiff = destRect.bottom - (mState.scissor.y + mState.scissor.height);
-            destScissoredRect.bottom = mState.scissor.y + mState.scissor.height;
-            sourceScissoredRect.bottom -= yDiff;
+            int yDiff = (destRect.y + destRect.height) - (mState.scissor.y + mState.scissor.height);
+            destScissoredRect.height  -= yDiff;
+            sourceScissoredRect.height -= yDiff;
         }
     }
 
     bool blitRenderTarget = false;
     bool blitDepthStencil = false;
 
-    RECT sourceTrimmedRect = sourceScissoredRect;
-    RECT destTrimmedRect = destScissoredRect;
+    Rectangle sourceTrimmedRect = sourceScissoredRect;
+    Rectangle destTrimmedRect = destScissoredRect;
 
     // The source & destination rectangles also may need to be trimmed if they fall out of the bounds of 
     // the actual draw and read surfaces.
-    if (sourceTrimmedRect.left < 0)
+    if (sourceTrimmedRect.x < 0)
     {
-        int xDiff = 0 - sourceTrimmedRect.left;
-        sourceTrimmedRect.left = 0;
-        destTrimmedRect.left += xDiff;
+        int xDiff = 0 - sourceTrimmedRect.x;
+        sourceTrimmedRect.x = 0;
+        sourceTrimmedRect.width -= xDiff;
+        destTrimmedRect.x += xDiff;
+        destTrimmedRect.width -= xDiff;
     }
 
-    if (sourceTrimmedRect.right > readBufferWidth)
+    if (sourceTrimmedRect.x + sourceTrimmedRect.width > readBufferWidth)
     {
-        int xDiff = sourceTrimmedRect.right - readBufferWidth;
-        sourceTrimmedRect.right = readBufferWidth;
-        destTrimmedRect.right -= xDiff;
+        int xDiff = (sourceTrimmedRect.x + sourceTrimmedRect.width) - readBufferWidth;
+        sourceTrimmedRect.width -= xDiff;
+        destTrimmedRect.width -= xDiff;
     }
 
-    if (sourceTrimmedRect.top < 0)
+    if (sourceTrimmedRect.y < 0)
     {
-        int yDiff = 0 - sourceTrimmedRect.top;
-        sourceTrimmedRect.top = 0;
-        destTrimmedRect.top += yDiff;
+        int yDiff = 0 - sourceTrimmedRect.y;
+        sourceTrimmedRect.y = 0;
+        sourceTrimmedRect.height -= yDiff;
+        destTrimmedRect.y += yDiff;
+        destTrimmedRect.height -= yDiff;
     }
 
-    if (sourceTrimmedRect.bottom > readBufferHeight)
+    if (sourceTrimmedRect.y + sourceTrimmedRect.height > readBufferHeight)
     {
-        int yDiff = sourceTrimmedRect.bottom - readBufferHeight;
-        sourceTrimmedRect.bottom = readBufferHeight;
-        destTrimmedRect.bottom -= yDiff;
+        int yDiff = (sourceTrimmedRect.y + sourceTrimmedRect.height) - readBufferHeight;
+        sourceTrimmedRect.height -= yDiff;
+        destTrimmedRect.height -= yDiff;
     }
 
-    if (destTrimmedRect.left < 0)
+    if (destTrimmedRect.x < 0)
     {
-        int xDiff = 0 - destTrimmedRect.left;
-        destTrimmedRect.left = 0;
-        sourceTrimmedRect.left += xDiff;
+        int xDiff = 0 - destTrimmedRect.x;
+        destTrimmedRect.x = 0;
+        destTrimmedRect.width -= xDiff;
+        sourceTrimmedRect.x += xDiff;
+        sourceTrimmedRect.width -= xDiff;
     }
 
-    if (destTrimmedRect.right > drawBufferWidth)
+    if (destTrimmedRect.x + destTrimmedRect.width > drawBufferWidth)
     {
-        int xDiff = destTrimmedRect.right - drawBufferWidth;
-        destTrimmedRect.right = drawBufferWidth;
-        sourceTrimmedRect.right -= xDiff;
+        int xDiff = (destTrimmedRect.x + destTrimmedRect.width) - drawBufferWidth;
+        destTrimmedRect.width -= xDiff;
+        sourceTrimmedRect.width -= xDiff;
     }
 
-    if (destTrimmedRect.top < 0)
+    if (destTrimmedRect.y < 0)
     {
-        int yDiff = 0 - destTrimmedRect.top;
-        destTrimmedRect.top = 0;
-        sourceTrimmedRect.top += yDiff;
+        int yDiff = 0 - destTrimmedRect.y;
+        destTrimmedRect.y = 0;
+        destTrimmedRect.height -= yDiff;
+        sourceTrimmedRect.y += yDiff;
+        sourceTrimmedRect.height -= yDiff;
     }
 
-    if (destTrimmedRect.bottom > drawBufferHeight)
+    if (destTrimmedRect.y + destTrimmedRect.height > drawBufferHeight)
     {
-        int yDiff = destTrimmedRect.bottom - drawBufferHeight;
-        destTrimmedRect.bottom = drawBufferHeight;
-        sourceTrimmedRect.bottom -= yDiff;
+        int yDiff = (destTrimmedRect.y + destTrimmedRect.height) - drawBufferHeight;
+        destTrimmedRect.height -= yDiff;
+        sourceTrimmedRect.height -= yDiff;
     }
 
     bool partialBufferCopy = false;
-    if (sourceTrimmedRect.bottom - sourceTrimmedRect.top < readBufferHeight ||
-        sourceTrimmedRect.right - sourceTrimmedRect.left < readBufferWidth || 
-        destTrimmedRect.bottom - destTrimmedRect.top < drawBufferHeight ||
-        destTrimmedRect.right - destTrimmedRect.left < drawBufferWidth ||
-        sourceTrimmedRect.top != 0 || destTrimmedRect.top != 0 || sourceTrimmedRect.left != 0 || destTrimmedRect.left != 0)
+    if (sourceTrimmedRect.height < readBufferHeight ||
+        sourceTrimmedRect.width < readBufferWidth || 
+        destTrimmedRect.height < drawBufferHeight ||
+        destTrimmedRect.width < drawBufferWidth ||
+        sourceTrimmedRect.y != 0 || destTrimmedRect.y != 0 || sourceTrimmedRect.x != 0 || destTrimmedRect.x != 0)
     {
         partialBufferCopy = true;
     }
@@ -3820,8 +3831,19 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
             IDirect3DSurface9* readRenderTarget = readFramebuffer->getRenderTarget();
             IDirect3DSurface9* drawRenderTarget = drawFramebuffer->getRenderTarget();
 
-            HRESULT result = mDevice->StretchRect(readRenderTarget, &sourceTrimmedRect, 
-                                                  drawRenderTarget, &destTrimmedRect, D3DTEXF_NONE);
+            RECT finalSrcRect, finalDstRect; // TEMPORARY
+            finalSrcRect.left = sourceTrimmedRect.x;
+            finalSrcRect.right = sourceTrimmedRect.x + sourceTrimmedRect.width;
+            finalSrcRect.top = sourceTrimmedRect.y;
+            finalSrcRect.bottom = sourceTrimmedRect.y + sourceTrimmedRect.height;
+
+            finalDstRect.left = destTrimmedRect.x;
+            finalDstRect.right = destTrimmedRect.x + destTrimmedRect.width;
+            finalDstRect.top = destTrimmedRect.y;
+            finalDstRect.bottom = destTrimmedRect.y + destTrimmedRect.height;
+
+            HRESULT result = mDevice->StretchRect(readRenderTarget, &finalSrcRect, 
+                                                  drawRenderTarget, &finalDstRect, D3DTEXF_NONE);
 
             readRenderTarget->Release();
             drawRenderTarget->Release();
