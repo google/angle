@@ -1715,29 +1715,6 @@ bool Context::applyRenderTarget(bool ignoreViewport)
 
     mRenderer->applyRenderTarget(framebufferObject);
 
-    // storing the mRenderTargetDesc in Context will be removed once refactoring
-    // of clear is complete
-    // D3D9_REPLACE start
-    gl::Renderbuffer *renderbufferObject = NULL;
-    if (framebufferObject->getColorbufferType() != GL_NONE)
-    {
-        renderbufferObject = framebufferObject->getColorbuffer();
-    }
-    else
-    {
-        renderbufferObject = framebufferObject->getNullColorbuffer();
-    }
-    if (!renderbufferObject)
-    {
-        ERR("unable to locate renderbuffer for FBO.");
-        return false;
-    }
-
-    mRenderTargetDesc.width = renderbufferObject->getWidth();
-    mRenderTargetDesc.height = renderbufferObject->getHeight();
-    mRenderTargetDesc.format = renderbufferObject->getActualFormat();
-    // D3D9_REPLACE end
-
     ProgramBinary *programBinary = mState.currentProgram ? getCurrentProgramBinary() : NULL;
     if (!mRenderer->setViewport(mState.viewport, mState.zNear, mState.zFar, ignoreViewport,
                                 programBinary, mDxUniformsDirty))

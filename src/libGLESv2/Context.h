@@ -490,7 +490,6 @@ class Context
     unsigned int mAppliedTextureSerialPS[MAX_TEXTURE_IMAGE_UNITS];
     unsigned int mAppliedTextureSerialVS[MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF];
     unsigned int mAppliedProgramBinarySerial;
-    rx::RenderTarget::Desc mRenderTargetDesc;
     bool mDxUniformsDirty;
     BindingPointer<ProgramBinary> mCurrentProgramBinary;
     Framebuffer *mBoundDrawFramebuffer;
