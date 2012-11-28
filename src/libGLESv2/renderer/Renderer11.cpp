@@ -705,8 +705,7 @@ GLenum Renderer11::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementAr
 
 void Renderer11::drawArrays(GLenum mode, GLsizei count, GLsizei instances)
 {
-    // TODO
-    UNIMPLEMENTED();
+    mDeviceContext->Draw(count, 0);
 }
 
 void Renderer11::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer, const gl::TranslatedIndexData &indexInfo)
