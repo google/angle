@@ -21,6 +21,9 @@ class ShaderExecutable
     ShaderExecutable() {};
     virtual ~ShaderExecutable() {};
 
+    virtual bool getVertexFunction(void *pData, UINT *pSizeOfData) = 0;
+    virtual bool getPixelFunction(void *pData, UINT *pSizeOfData) = 0;
+
   private:
     DISALLOW_COPY_AND_ASSIGN(ShaderExecutable);
 };

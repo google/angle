@@ -25,6 +25,9 @@ class ShaderExecutable9 : public ShaderExecutable
     ShaderExecutable9(IDirect3DVertexShader9 *executable, gl::D3DConstantTable *constantTable);
     virtual ~ShaderExecutable9();
 
+    virtual bool getVertexFunction(void *pData, UINT *pSizeOfData);
+    virtual bool getPixelFunction(void *pData, UINT *pSizeOfData);
+
     static ShaderExecutable9 *makeShaderExecutable9(ShaderExecutable *executable);
 
     IDirect3DPixelShader9 *getPixelShader();

@@ -1732,13 +1732,13 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
     stream.write(mDxPointsOrLinesLocation);
 
     UINT pixelShaderSize;
-    HRESULT result = mPixelExecutable->getPixelShader()->GetFunction(NULL, &pixelShaderSize);
-    ASSERT(SUCCEEDED(result));
+    bool result = mPixelExecutable->getPixelFunction(NULL, &pixelShaderSize);
+    ASSERT(result);
     stream.write(pixelShaderSize);
 
     UINT vertexShaderSize;
-    result = mVertexExecutable->getVertexShader()->GetFunction(NULL, &vertexShaderSize);
-    ASSERT(SUCCEEDED(result));
+    result = mVertexExecutable->getVertexFunction(NULL, &vertexShaderSize);
+    ASSERT(result);
     stream.write(vertexShaderSize);
 
     GUID identifier = mRenderer->getAdapterIdentifier();
@@ -1767,12 +1767,12 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
         memcpy(ptr, &identifier, sizeof(GUID));
         ptr += sizeof(GUID);
 
-        result = mPixelExecutable->getPixelShader()->GetFunction(ptr, &pixelShaderSize);
-        ASSERT(SUCCEEDED(result));
+        result = mPixelExecutable->getPixelFunction(ptr, &pixelShaderSize);
+        ASSERT(result);
         ptr += pixelShaderSize;
 
-        result = mVertexExecutable->getVertexShader()->GetFunction(ptr, &vertexShaderSize);
-        ASSERT(SUCCEEDED(result));
+        result = mVertexExecutable->getVertexFunction(ptr, &vertexShaderSize);
+        ASSERT(result);
         ptr += vertexShaderSize;
 
         ASSERT(ptr - totalLength == binary);
