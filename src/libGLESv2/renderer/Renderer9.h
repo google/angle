@@ -68,6 +68,17 @@ class Renderer9 : public Renderer
     virtual void setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &sampler);
     virtual void setTexture(gl::SamplerType type, int index, gl::Texture *texture);
 
+    virtual void setRasterizerState(const gl::RasterizerState &rasterState, unsigned int depthSize);
+    virtual void setBlendState(const gl::BlendState &blendState, const gl::Color &blendColor,
+                               unsigned int sampleMask);
+    virtual void setDepthStencilState(const gl::DepthStencilState &depthStencilState, bool frontFaceCCW,
+                                      unsigned int stencilSize);
+
+    virtual void setScissorRectangle(const gl::Rectangle& scissor, unsigned int renderTargetWidth,
+                                     unsigned int renderTargetHeight);
+
+    virtual void applyRenderTarget(gl::Framebuffer *frameBuffer);
+
     // lost device
     virtual void markDeviceLost();
     virtual bool isDeviceLost();
@@ -160,6 +171,26 @@ class Renderer9 : public Renderer
 
     std::map<D3DFORMAT, bool *> mMultiSampleSupport;
     GLsizei mMaxSupportedSamples;
+
+    // previously set render states
+    bool mForceSetDepthStencilState;
+    gl::DepthStencilState mCurDepthStencilState;
+    bool mCurFrontFaceCCW;
+    unsigned int mCurStencilSize;
+
+    bool mForceSetRasterState;
+    gl::RasterizerState mCurRasterState;
+    unsigned int mCurDepthSize;
+
+    bool mForceSetScissor;
+    gl::Rectangle mCurScissor;
+    unsigned int mCurRenderTargetWidth;
+    unsigned int mCurRenderTargetHeight;
+
+    bool mForceSetBlendState;
+    gl::BlendState mCurBlendState;
+    gl::Color mCurBlendColor;
+    GLuint mCurSampleMask;
 
     // A pool of event queries that are currently unused.
     std::vector<IDirect3DQuery9*> mEventQueryPool;

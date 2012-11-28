@@ -236,6 +236,38 @@ void Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *textur
     UNIMPLEMENTED();
 }
 
+void Renderer11::setRasterizerState(const gl::RasterizerState &rasterState, unsigned int depthSize)
+{
+    // TODO
+    UNIMPLEMENTED();
+}
+
+void Renderer11::setBlendState(const gl::BlendState &blendState, const gl::Color &blendColor,
+                               unsigned int sampleMask)
+{
+    // TODO
+    UNIMPLEMENTED();
+}
+
+void Renderer11::setDepthStencilState(const gl::DepthStencilState &depthStencilState, bool frontFaceCCW,
+                                      unsigned int stencilSize)
+{
+    // TODO
+    UNIMPLEMENTED();
+}
+
+void Renderer11::setScissorRectangle(const gl::Rectangle& scissor, unsigned int renderTargetWidth,
+                                     unsigned int renderTargetHeight)
+{
+    // TODO
+    UNIMPLEMENTED();
+}
+
+void Renderer11::applyRenderTarget(gl::Framebuffer *frameBuffer)
+{
+    // TODO
+    UNIMPLEMENTED();
+}
 
 void Renderer11::releaseDeviceResources()
 {

@@ -71,6 +71,17 @@ class Renderer
     virtual void setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &sampler) = 0;
     virtual void setTexture(gl::SamplerType type, int index, gl::Texture *texture) = 0;
 
+    virtual void setRasterizerState(const gl::RasterizerState &rasterState, unsigned int depthSize) = 0;
+    virtual void setBlendState(const gl::BlendState &blendState, const gl::Color &blendColor,
+                               unsigned int sampleMask) = 0;
+    virtual void setDepthStencilState(const gl::DepthStencilState &depthStencilState, bool frontFaceCCW,
+                                      unsigned int stencilSize) = 0;
+
+    virtual void setScissorRectangle(const gl::Rectangle& scissor, unsigned int renderTargetWidth,
+                                     unsigned int renderTargetHeight) = 0;
+
+    virtual void applyRenderTarget(gl::Framebuffer *frameBuffer) = 0;
+
     // lost device
     virtual void markDeviceLost() = 0;
     virtual bool isDeviceLost() = 0;

@@ -45,6 +45,17 @@ class Renderer11 : public Renderer
     virtual void setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &sampler);
     virtual void setTexture(gl::SamplerType type, int index, gl::Texture *texture);
 
+    virtual void setRasterizerState(const gl::RasterizerState &rasterState, unsigned int depthSize);
+    virtual void setBlendState(const gl::BlendState &blendState, const gl::Color &blendColor,
+                               unsigned int sampleMask);
+    virtual void setDepthStencilState(const gl::DepthStencilState &depthStencilState, bool frontFaceCCW,
+                                      unsigned int stencilSize);
+
+    virtual void setScissorRectangle(const gl::Rectangle& scissor, unsigned int renderTargetWidth,
+                                     unsigned int renderTargetHeight);
+
+    virtual void applyRenderTarget(gl::Framebuffer *frameBuffer);
+
     // lost device
     virtual void markDeviceLost();
     virtual bool isDeviceLost();
