@@ -235,6 +235,7 @@ EGLint SwapChain9::reset(int backbufferWidth, int backbufferHeight, EGLint swapI
 
         result = mSwapChain->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &mBackBuffer);
         ASSERT(SUCCEEDED(result));
+        InvalidateRect(mWindow, NULL, FALSE);
     }
 
     if (mDepthBufferFormat != GL_NONE)
