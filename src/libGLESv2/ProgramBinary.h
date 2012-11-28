@@ -23,7 +23,7 @@
 #include "libGLESv2/mathutil.h"
 #include "libGLESv2/Shader.h"
 
-#include "libGLESv2/renderer/ShaderExecutable9.h"
+#include "libGLESv2/renderer/ShaderExecutable.h"
 
 namespace gl
 {
@@ -188,8 +188,8 @@ class ProgramBinary : public RefCountObject
     rx::Renderer9 *mRenderer;   // D3D9_REPLACE
     IDirect3DDevice9 *mDevice; // D3D9_REPLACE
 
-    rx::ShaderExecutable9 *mPixelExecutable; // D3D9_REPLACE
-    rx::ShaderExecutable9 *mVertexExecutable; // D3D9_REPLACE
+    rx::ShaderExecutable *mPixelExecutable;
+    rx::ShaderExecutable *mVertexExecutable;
 
     Attribute mLinkedAttribute[MAX_VERTEX_ATTRIBS];
     int mSemanticIndex[MAX_VERTEX_ATTRIBS];

@@ -1643,26 +1643,23 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
     const char *vertexShaderFunction = ptr;
     ptr += vertexShaderSize;
 
-    rx::ShaderExecutable *executable;
-    executable = mRenderer->loadExecutable(reinterpret_cast<const DWORD*>(pixelShaderFunction),
-                                           pixelShaderSize, GL_FRAGMENT_SHADER, NULL);
-    if (!executable)
+    mPixelExecutable = mRenderer->loadExecutable(reinterpret_cast<const DWORD*>(pixelShaderFunction),
+                                                 pixelShaderSize, GL_FRAGMENT_SHADER, NULL);
+    if (!mPixelExecutable)
     {
         infoLog.append("Could not create pixel shader.");
         return false;
     }
-    mPixelExecutable = rx::ShaderExecutable9::makeShaderExecutable9(executable);
 
-    executable = mRenderer->loadExecutable(reinterpret_cast<const DWORD*>(vertexShaderFunction),
-                                           vertexShaderSize, GL_VERTEX_SHADER, NULL);
-    if (!executable)
+    mVertexExecutable = mRenderer->loadExecutable(reinterpret_cast<const DWORD*>(vertexShaderFunction),
+                                                  vertexShaderSize, GL_VERTEX_SHADER, NULL);
+    if (!mVertexExecutable)
     {
         infoLog.append("Could not create vertex shader.");
         delete mPixelExecutable;
         mPixelExecutable = NULL;
         return false;
     }
-    mVertexExecutable = rx::ShaderExecutable9::makeShaderExecutable9(executable);
 
     return true;
 }
@@ -1822,14 +1819,12 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
     bool success = true;
     D3DConstantTable *constantTableVS = NULL;
     D3DConstantTable *constantTablePS = NULL;
-    rx::ShaderExecutable *vertexExecutable = mRenderer->compileToExecutable(infoLog, vertexHLSL.c_str(), GL_VERTEX_SHADER);
-    rx::ShaderExecutable *pixelExecutable = mRenderer->compileToExecutable(infoLog, pixelHLSL.c_str(), GL_FRAGMENT_SHADER);
+    mVertexExecutable = mRenderer->compileToExecutable(infoLog, vertexHLSL.c_str(), GL_VERTEX_SHADER);
+    mPixelExecutable = mRenderer->compileToExecutable(infoLog, pixelHLSL.c_str(), GL_FRAGMENT_SHADER);
 
-    if (vertexExecutable && pixelExecutable)
+    if (mVertexExecutable && mPixelExecutable)
     {
-        mVertexExecutable = rx::ShaderExecutable9::makeShaderExecutable9(vertexExecutable);
-        mPixelExecutable = rx::ShaderExecutable9::makeShaderExecutable9(pixelExecutable);
-
+        // D3D9_REPLACE
         constantTableVS = mVertexExecutable->getConstantTable();
         constantTablePS = mPixelExecutable->getConstantTable();
     }
@@ -1838,10 +1833,10 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
         infoLog.append("Failed to create D3D shaders.");
         success = false;
 
-        delete vertexExecutable;
-        vertexExecutable = NULL;
-        delete pixelExecutable;
-        pixelExecutable = NULL;
+        delete mVertexExecutable;
+        mVertexExecutable = NULL;
+        delete mPixelExecutable;
+        mPixelExecutable = NULL;
     }
 
     if (!linkAttributes(infoLog, attributeBindings, fragmentShader, vertexShader))
