@@ -54,7 +54,6 @@ class Display
     bool hasExistingWindowSurface(HWND window);
 
     rx::Renderer *getRenderer() { return mRenderer; };
-    rx::Renderer9 *getRenderer9() { assert(dynamic_cast<rx::Renderer9*>(mRenderer) != NULL); return static_cast<rx::Renderer9*>(mRenderer); };   // D3D9_REPLACE
 
     virtual void notifyDeviceLost();
 
