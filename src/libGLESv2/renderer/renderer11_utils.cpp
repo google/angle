@@ -11,6 +11,75 @@
 
 #include "common/debug.h"
 
+namespace gl_d3d11
+{
+
+D3D11_BLEND ConvertBlendFunc(GLenum glBlend)
+{
+    D3D11_BLEND d3dBlend = D3D11_BLEND_ZERO;
+
+    switch (glBlend)
+    {
+      case GL_ZERO:                     d3dBlend = D3D11_BLEND_ZERO;                break;
+      case GL_ONE:                      d3dBlend = D3D11_BLEND_ONE;                 break;
+      case GL_SRC_COLOR:                d3dBlend = D3D11_BLEND_SRC_COLOR;           break;
+      case GL_ONE_MINUS_SRC_COLOR:      d3dBlend = D3D11_BLEND_INV_SRC_COLOR;       break;
+      case GL_DST_COLOR:                d3dBlend = D3D11_BLEND_DEST_COLOR;          break;
+      case GL_ONE_MINUS_DST_COLOR:      d3dBlend = D3D11_BLEND_INV_DEST_COLOR;      break;
+      case GL_SRC_ALPHA:                d3dBlend = D3D11_BLEND_SRC_ALPHA;           break;
+      case GL_ONE_MINUS_SRC_ALPHA:      d3dBlend = D3D11_BLEND_INV_SRC_ALPHA;       break;
+      case GL_DST_ALPHA:                d3dBlend = D3D11_BLEND_DEST_ALPHA;          break;
+      case GL_ONE_MINUS_DST_ALPHA:      d3dBlend = D3D11_BLEND_INV_DEST_ALPHA;      break;
+      case GL_CONSTANT_COLOR:           d3dBlend = D3D11_BLEND_BLEND_FACTOR;        break;
+      case GL_ONE_MINUS_CONSTANT_COLOR: d3dBlend = D3D11_BLEND_INV_BLEND_FACTOR;    break;
+      case GL_CONSTANT_ALPHA:           d3dBlend = D3D11_BLEND_BLEND_FACTOR;        break;
+      case GL_ONE_MINUS_CONSTANT_ALPHA: d3dBlend = D3D11_BLEND_INV_BLEND_FACTOR;    break;
+      case GL_SRC_ALPHA_SATURATE:       d3dBlend = D3D11_BLEND_SRC_ALPHA_SAT;       break;
+      default: UNREACHABLE();
+    }
+
+    return d3dBlend;
+}
+
+D3D11_BLEND_OP ConvertBlendOp(GLenum glBlendOp)
+{
+    D3D11_BLEND_OP d3dBlendOp = D3D11_BLEND_OP_ADD;
+
+    switch (glBlendOp)
+    {
+      case GL_FUNC_ADD:              d3dBlendOp = D3D11_BLEND_OP_ADD;           break;
+      case GL_FUNC_SUBTRACT:         d3dBlendOp = D3D11_BLEND_OP_SUBTRACT;      break;
+      case GL_FUNC_REVERSE_SUBTRACT: d3dBlendOp = D3D11_BLEND_OP_REV_SUBTRACT;  break;
+      default: UNREACHABLE();
+    }
+
+    return d3dBlendOp;
+}
+
+UINT8 ConvertColorMask(bool red, bool green, bool blue, bool alpha)
+{
+    UINT8 mask = 0;
+    if (red)
+    {
+        mask |= D3D11_COLOR_WRITE_ENABLE_RED;
+    }
+    if (green)
+    {
+        mask |= D3D11_COLOR_WRITE_ENABLE_GREEN;
+    }
+    if (blue)
+    {
+        mask |= D3D11_COLOR_WRITE_ENABLE_BLUE;
+    }
+    if (alpha)
+    {
+        mask |= D3D11_COLOR_WRITE_ENABLE_ALPHA;
+    }
+    return mask;
+}
+
+}
+
 namespace d3d11_gl
 {
 
