@@ -4837,20 +4837,14 @@ void __stdcall glRenderbufferStorageMultisampleANGLE(GLenum target, GLsizei samp
             switch (internalformat)
             {
               case GL_DEPTH_COMPONENT16:
-                context->setRenderbufferStorage(new gl::Depthbuffer(width, height, samples));
-                break;
               case GL_RGBA4:
               case GL_RGB5_A1:
               case GL_RGB565:
               case GL_RGB8_OES:
               case GL_RGBA8_OES:
-                context->setRenderbufferStorage(new gl::Colorbuffer(width, height, internalformat, samples));
-                break;
               case GL_STENCIL_INDEX8:
-                context->setRenderbufferStorage(new gl::Stencilbuffer(width, height, samples));
-                break;
               case GL_DEPTH24_STENCIL8_OES:
-                context->setRenderbufferStorage(new gl::DepthStencilbuffer(width, height, samples));
+                context->setRenderbufferStorage(width, height, internalformat, samples);
                 break;
               default:
                 return error(GL_INVALID_ENUM);

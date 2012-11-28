@@ -29,7 +29,7 @@ class StaticIndexBuffer;
 class Buffer : public RefCountObject
 {
   public:
-    explicit Buffer(GLuint id);
+    Buffer(rx::Renderer *renderer, GLuint id);
 
     virtual ~Buffer();
 

@@ -98,7 +98,7 @@ struct UniformLocation
 class ProgramBinary : public RefCountObject
 {
   public:
-    ProgramBinary();
+    explicit ProgramBinary(rx::Renderer *renderer);
     ~ProgramBinary();
 
     IDirect3DPixelShader9 *getPixelShader();

@@ -21,6 +21,11 @@
 
 #include "renderer/SwapChain.h"
 
+namespace rx
+{
+class Renderer;
+}
+
 namespace gl
 {
 class Texture2D;
@@ -163,7 +168,7 @@ class RenderbufferStorage : public RenderbufferInterface
 class Renderbuffer : public RefCountObject
 {
   public:
-    Renderbuffer(GLuint id, RenderbufferInterface *storage);
+    Renderbuffer(rx::Renderer *renderer, GLuint id, RenderbufferInterface *storage);
 
     virtual ~Renderbuffer();
 
@@ -202,8 +207,8 @@ class Renderbuffer : public RefCountObject
 class Colorbuffer : public RenderbufferStorage
 {
   public:
-    explicit Colorbuffer(rx::SwapChain *swapChain);
-    Colorbuffer(GLsizei width, GLsizei height, GLenum format, GLsizei samples);
+    Colorbuffer(rx::Renderer *renderer, rx::SwapChain *swapChain);
+    Colorbuffer(rx::Renderer *renderer, GLsizei width, GLsizei height, GLenum format, GLsizei samples);
 
     virtual ~Colorbuffer();
 
@@ -218,8 +223,8 @@ class Colorbuffer : public RenderbufferStorage
 class DepthStencilbuffer : public RenderbufferStorage
 {
   public:
-    explicit DepthStencilbuffer(rx::SwapChain *swapChain);
-    DepthStencilbuffer(GLsizei width, GLsizei height, GLsizei samples);
+    DepthStencilbuffer(rx::Renderer *renderer, rx::SwapChain *swapChain);
+    DepthStencilbuffer(rx::Renderer *renderer, GLsizei width, GLsizei height, GLsizei samples);
 
     ~DepthStencilbuffer();
 
@@ -235,7 +240,7 @@ class DepthStencilbuffer : public RenderbufferStorage
 class Depthbuffer : public DepthStencilbuffer
 {
   public:
-    Depthbuffer(GLsizei width, GLsizei height, GLsizei samples);
+    Depthbuffer(rx::Renderer *renderer, GLsizei width, GLsizei height, GLsizei samples);
 
     virtual ~Depthbuffer();
 
@@ -246,7 +251,7 @@ class Depthbuffer : public DepthStencilbuffer
 class Stencilbuffer : public DepthStencilbuffer
 {
   public:
-    Stencilbuffer(GLsizei width, GLsizei height, GLsizei samples);
+    Stencilbuffer(rx::Renderer *renderer, GLsizei width, GLsizei height, GLsizei samples);
 
     virtual ~Stencilbuffer();
 

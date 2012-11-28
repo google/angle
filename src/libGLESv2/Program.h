@@ -57,7 +57,7 @@ class InfoLog
 class Program
 {
   public:
-    Program(ResourceManager *manager, GLuint handle);
+    Program(rx::Renderer *renderer, ResourceManager *manager, GLuint handle);
 
     ~Program();
 
@@ -112,6 +112,7 @@ class Program
     unsigned int mRefCount;
 
     ResourceManager *mResourceManager;
+    rx::Renderer *mRenderer;
     const GLuint mHandle;
 
     InfoLog mInfoLog;

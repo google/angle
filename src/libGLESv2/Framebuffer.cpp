@@ -219,7 +219,7 @@ Renderbuffer *Framebuffer::getNullColorbuffer()
     if (!nullbuffer ||
         width != nullbuffer->getWidth() || height != nullbuffer->getHeight())
     {
-        nullbuffer = new Renderbuffer(0, new Colorbuffer(width, height, GL_NONE, 0));
+        nullbuffer = new Renderbuffer(mRenderer, 0, new Colorbuffer(mRenderer, width, height, GL_NONE, 0));
         mNullColorbufferPointer.set(nullbuffer);
     }
 
@@ -477,9 +477,9 @@ GLenum Framebuffer::completeness()
 DefaultFramebuffer::DefaultFramebuffer(rx::Renderer *renderer, Colorbuffer *colorbuffer, DepthStencilbuffer *depthStencil)
     : Framebuffer(renderer)
 {
-    mColorbufferPointer.set(new Renderbuffer(0, colorbuffer));
+    mColorbufferPointer.set(new Renderbuffer(mRenderer, 0, colorbuffer));
 
-    Renderbuffer *depthStencilRenderbuffer = new Renderbuffer(0, depthStencil);
+    Renderbuffer *depthStencilRenderbuffer = new Renderbuffer(mRenderer, 0, depthStencil);
     mDepthbufferPointer.set(depthStencilRenderbuffer);
     mStencilbufferPointer.set(depthStencilRenderbuffer);
 

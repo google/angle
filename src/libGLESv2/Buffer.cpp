@@ -17,9 +17,10 @@
 namespace gl
 {
 
-Buffer::Buffer(GLuint id) : RefCountObject(id)
+Buffer::Buffer(rx::Renderer *renderer, GLuint id) : RefCountObject(id)
 {
-    mRenderer = getDisplay()->getRenderer9();
+    ASSERT(dynamic_cast<rx::Renderer9*>(renderer) != NULL); // D3D9_REPLACE
+    mRenderer = static_cast<rx::Renderer9*>(renderer);
     mContents = NULL;
     mSize = 0;
     mUsage = GL_DYNAMIC_DRAW;

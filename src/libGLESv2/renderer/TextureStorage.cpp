@@ -21,9 +21,10 @@ namespace gl
 {
 unsigned int TextureStorage::mCurrentTextureSerial = 1;
 
-TextureStorage::TextureStorage(DWORD usage)
+TextureStorage::TextureStorage(rx::Renderer *renderer, DWORD usage)
     : mD3DUsage(usage),
       mD3DPool(getDisplay()->getRenderer9()->getTexturePool(usage)), // D3D9_REPLACE
+      mRenderer(renderer),
       mTextureSerial(issueTextureSerial()),
       mLodOffset(0)
 {
@@ -206,14 +207,14 @@ bool TextureStorage::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurfac
     return true;
 } 
 
-TextureStorage2D::TextureStorage2D(rx::SwapChain *swapchain) : TextureStorage(D3DUSAGE_RENDERTARGET), mRenderTargetSerial(RenderbufferStorage::issueSerial())
+TextureStorage2D::TextureStorage2D(rx::Renderer *renderer, rx::SwapChain *swapchain) : TextureStorage(renderer, D3DUSAGE_RENDERTARGET), mRenderTargetSerial(RenderbufferStorage::issueSerial())
 {
     IDirect3DTexture9 *surfaceTexture = swapchain->getOffscreenTexture();
     mTexture = surfaceTexture;
 }
 
-TextureStorage2D::TextureStorage2D(int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height)
-    : TextureStorage(GetTextureUsage(ConvertTextureInternalFormat(internalformat), usage, forceRenderable)),
+TextureStorage2D::TextureStorage2D(rx::Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height)
+    : TextureStorage(renderer, GetTextureUsage(ConvertTextureInternalFormat(internalformat), usage, forceRenderable)),
       mRenderTargetSerial(RenderbufferStorage::issueSerial())
 {
     mTexture = NULL;
@@ -312,8 +313,8 @@ unsigned int TextureStorage2D::getRenderTargetSerial(GLenum target) const
     return mRenderTargetSerial;
 }
 
-TextureStorageCubeMap::TextureStorageCubeMap(int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
-    : TextureStorage(GetTextureUsage(ConvertTextureInternalFormat(internalformat), usage, forceRenderable)),
+TextureStorageCubeMap::TextureStorageCubeMap(rx::Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
+    : TextureStorage(renderer, GetTextureUsage(ConvertTextureInternalFormat(internalformat), usage, forceRenderable)),
       mFirstRenderTargetSerial(RenderbufferStorage::issueCubeSerials())
 {
     mTexture = NULL;

@@ -136,7 +136,7 @@ void InfoLog::reset()
     }
 }
 
-Program::Program(ResourceManager *manager, GLuint handle) : mResourceManager(manager), mHandle(handle)
+Program::Program(rx::Renderer *renderer, ResourceManager *manager, GLuint handle) : mResourceManager(manager), mHandle(handle)
 {
     mFragmentShader = NULL;
     mVertexShader = NULL;
@@ -144,6 +144,7 @@ Program::Program(ResourceManager *manager, GLuint handle) : mResourceManager(man
     mDeleteStatus = false;
     mLinked = false;
     mRefCount = 0;
+    mRenderer = renderer;
 }
 
 Program::~Program()
@@ -247,7 +248,7 @@ bool Program::link()
 
     mInfoLog.reset();
 
-    mProgramBinary.set(new ProgramBinary());
+    mProgramBinary.set(new ProgramBinary(mRenderer));
     mLinked = mProgramBinary->link(mInfoLog, mAttributeBindings, mFragmentShader, mVertexShader);
 
     return mLinked;
@@ -304,7 +305,7 @@ bool Program::setProgramBinary(const void *binary, GLsizei length)
 
     mInfoLog.reset();
 
-    mProgramBinary.set(new ProgramBinary());
+    mProgramBinary.set(new ProgramBinary(mRenderer));
     mLinked = mProgramBinary->load(mInfoLog, binary, length);
     if (!mLinked)
     {

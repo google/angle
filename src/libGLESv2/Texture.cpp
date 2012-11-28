@@ -445,7 +445,7 @@ void Texture2D::bindTexImage(egl::Surface *surface)
 
     delete mTexStorage;
     rx::SwapChain *swapchain = surface->getSwapChain();  // D3D9_REPLACE
-    mTexStorage = new TextureStorage2D(swapchain);
+    mTexStorage = new TextureStorage2D(mRenderer, swapchain);
 
     mDirtyImages = true;
     mSurface = surface;
@@ -582,7 +582,7 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
 void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height)
 {
     delete mTexStorage;
-    mTexStorage = new TextureStorage2D(levels, internalformat, mUsage, false, width, height);
+    mTexStorage = new TextureStorage2D(mRenderer, levels, internalformat, mUsage, false, width, height);
     mImmutable = true;
 
     for (int level = 0; level < levels; level++)
@@ -723,7 +723,7 @@ void Texture2D::createTexture()
     GLenum internalformat = mImageArray[0].getInternalFormat();
 
     delete mTexStorage;
-    mTexStorage = new TextureStorage2D(levels, internalformat, mUsage, false, width, height);
+    mTexStorage = new TextureStorage2D(mRenderer, levels, internalformat, mUsage, false, width, height);
     
     if (mTexStorage->isManaged())
     {
@@ -766,7 +766,7 @@ void Texture2D::convertToRenderTarget()
         GLint levels = creationLevels(width, height);
         GLenum internalformat = mImageArray[0].getInternalFormat();
 
-        newTexStorage = new TextureStorage2D(levels, internalformat, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true, width, height);
+        newTexStorage = new TextureStorage2D(mRenderer, levels, internalformat, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true, width, height);
 
         if (mTexStorage != NULL)
         {
@@ -830,7 +830,7 @@ Renderbuffer *Texture2D::getRenderbuffer(GLenum target)
 
     if (mColorbufferProxy == NULL)
     {
-        mColorbufferProxy = new Renderbuffer(id(), new RenderbufferTexture2D(this, target));
+        mColorbufferProxy = new Renderbuffer(mRenderer, id(), new RenderbufferTexture2D(this, target));
     }
 
     return mColorbufferProxy;
@@ -1171,7 +1171,7 @@ void TextureCubeMap::createTexture()
     GLenum internalformat = mImageArray[0][0].getInternalFormat();
 
     delete mTexStorage;
-    mTexStorage = new TextureStorageCubeMap(levels, internalformat, mUsage, false, size);
+    mTexStorage = new TextureStorageCubeMap(mRenderer, levels, internalformat, mUsage, false, size);
 
     if (mTexStorage->isManaged())
     {
@@ -1219,7 +1219,7 @@ void TextureCubeMap::convertToRenderTarget()
         GLint levels = creationLevels(size);
         GLenum internalformat = mImageArray[0][0].getInternalFormat();
 
-        newTexStorage = new TextureStorageCubeMap(levels, internalformat, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true, size);
+        newTexStorage = new TextureStorageCubeMap(mRenderer, levels, internalformat, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true, size);
 
         if (mTexStorage != NULL)
         {
@@ -1355,7 +1355,7 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
 void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size)
 {
     delete mTexStorage;
-    mTexStorage = new TextureStorageCubeMap(levels, internalformat, mUsage, false, size);
+    mTexStorage = new TextureStorageCubeMap(mRenderer, levels, internalformat, mUsage, false, size);
     mImmutable = true;
 
     for (int level = 0; level < levels; level++)
@@ -1451,7 +1451,7 @@ Renderbuffer *TextureCubeMap::getRenderbuffer(GLenum target)
 
     if (mFaceProxies[face] == NULL)
     {
-        mFaceProxies[face] = new Renderbuffer(id(), new RenderbufferTextureCubeMap(this, target));
+        mFaceProxies[face] = new Renderbuffer(mRenderer, id(), new RenderbufferTextureCubeMap(this, target));
     }
 
     return mFaceProxies[face];

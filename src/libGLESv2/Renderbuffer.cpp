@@ -203,7 +203,7 @@ unsigned int RenderbufferTextureCubeMap::getSerial() const
 
 ////// Renderbuffer Implementation //////
 
-Renderbuffer::Renderbuffer(GLuint id, RenderbufferInterface *instance) : RefCountObject(id)
+Renderbuffer::Renderbuffer(rx::Renderer *renderer, GLuint id, RenderbufferInterface *instance) : RefCountObject(id)
 {
     ASSERT(instance != NULL);
     mInstance = instance;
@@ -382,7 +382,7 @@ unsigned int RenderbufferStorage::issueCubeSerials()
     return firstSerial;
 }
 
-Colorbuffer::Colorbuffer(rx::SwapChain *swapChain)
+Colorbuffer::Colorbuffer(rx::Renderer *renderer, rx::SwapChain *swapChain)
 {
     mRenderTarget = swapChain->getRenderTarget();
     if (mRenderTarget)
@@ -399,13 +399,14 @@ Colorbuffer::Colorbuffer(rx::SwapChain *swapChain)
     }
 }
 
-Colorbuffer::Colorbuffer(int width, int height, GLenum format, GLsizei samples) : mRenderTarget(NULL)
+Colorbuffer::Colorbuffer(rx::Renderer *renderer, int width, int height, GLenum format, GLsizei samples) : mRenderTarget(NULL)
 {
-    rx::Renderer9 *renderer = getDisplay()->getRenderer9();
-    IDirect3DDevice9 *device = renderer->getDevice(); // D3D9_REPLACE
+    ASSERT(dynamic_cast<rx::Renderer9*>(renderer) != NULL); // D3D9_REPLACE
+    rx::Renderer9 *renderer9 = static_cast<rx::Renderer9*>(renderer); // D3D9_REPLACE
+    IDirect3DDevice9 *device = renderer9->getDevice(); // D3D9_REPLACE
 
     D3DFORMAT requestedFormat = es2dx::ConvertRenderbufferFormat(format);
-    int supportedSamples = renderer->getNearestSupportedSamples(requestedFormat, samples);
+    int supportedSamples = renderer9->getNearestSupportedSamples(requestedFormat, samples);
 
     if (supportedSamples == -1)
     {
@@ -457,7 +458,7 @@ IDirect3DSurface9 *Colorbuffer::getRenderTarget()
     return mRenderTarget;
 }
 
-DepthStencilbuffer::DepthStencilbuffer(rx::SwapChain *swapChain)
+DepthStencilbuffer::DepthStencilbuffer(rx::Renderer *renderer, rx::SwapChain *swapChain)
 {
     mDepthStencil = swapChain->getDepthStencil();
     if (mDepthStencil)
@@ -474,14 +475,15 @@ DepthStencilbuffer::DepthStencilbuffer(rx::SwapChain *swapChain)
     }
 }
 
-DepthStencilbuffer::DepthStencilbuffer(int width, int height, GLsizei samples)
+DepthStencilbuffer::DepthStencilbuffer(rx::Renderer *renderer, int width, int height, GLsizei samples)
 {
-    rx::Renderer9 *renderer = getDisplay()->getRenderer9();
-    IDirect3DDevice9 *device = renderer->getDevice(); // D3D9_REPLACE
+    ASSERT(dynamic_cast<rx::Renderer9*>(renderer) != NULL); // D3D9_REPLACE
+    rx::Renderer9 *renderer9 = static_cast<rx::Renderer9*>(renderer); // D3D9_REPLACE
+    IDirect3DDevice9 *device = renderer9->getDevice(); // D3D9_REPLACE
 
     mDepthStencil = NULL;
     
-    int supportedSamples = renderer->getNearestSupportedSamples(D3DFMT_D24S8, samples);
+    int supportedSamples = renderer9->getNearestSupportedSamples(D3DFMT_D24S8, samples);
 
     if (supportedSamples == -1)
     {
@@ -533,7 +535,7 @@ IDirect3DSurface9 *DepthStencilbuffer::getDepthStencil()
     return mDepthStencil;
 }
 
-Depthbuffer::Depthbuffer(int width, int height, GLsizei samples) : DepthStencilbuffer(width, height, samples)
+Depthbuffer::Depthbuffer(rx::Renderer *renderer, int width, int height, GLsizei samples) : DepthStencilbuffer(renderer, width, height, samples)
 {
     if (mDepthStencil)
     {
@@ -547,7 +549,7 @@ Depthbuffer::~Depthbuffer()
 {
 }
 
-Stencilbuffer::Stencilbuffer(int width, int height, GLsizei samples) : DepthStencilbuffer(width, height, samples)
+Stencilbuffer::Stencilbuffer(rx::Renderer *renderer, int width, int height, GLsizei samples) : DepthStencilbuffer(renderer, width, height, samples)
 {
     if (mDepthStencil)
     {

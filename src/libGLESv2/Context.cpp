@@ -321,8 +321,8 @@ void Context::makeCurrent(egl::Surface *surface)
     // Wrap the existing swapchain resources into GL objects and assign them to the '0' names
     rx::SwapChain *swapchain = surface->getSwapChain();
 
-    Colorbuffer *colorbufferZero = new Colorbuffer(swapchain);
-    DepthStencilbuffer *depthStencilbufferZero = new DepthStencilbuffer(swapchain);
+    Colorbuffer *colorbufferZero = new Colorbuffer(mRenderer, swapchain);
+    DepthStencilbuffer *depthStencilbufferZero = new DepthStencilbuffer(mRenderer, swapchain);
     Framebuffer *framebufferZero = new DefaultFramebuffer(mRenderer, colorbufferZero, depthStencilbufferZero);
 
     setFramebufferZero(framebufferZero);
@@ -1250,8 +1250,31 @@ void Context::setFramebufferZero(Framebuffer *buffer)
     }
 }
 
-void Context::setRenderbufferStorage(RenderbufferStorage *renderbuffer)
+void Context::setRenderbufferStorage(GLsizei width, GLsizei height, GLenum internalformat, GLsizei samples)
 {
+    RenderbufferStorage *renderbuffer = NULL;
+    switch (internalformat)
+    {
+      case GL_DEPTH_COMPONENT16:
+        renderbuffer = new gl::Depthbuffer(mRenderer, width, height, samples);
+        break;
+      case GL_RGBA4:
+      case GL_RGB5_A1:
+      case GL_RGB565:
+      case GL_RGB8_OES:
+      case GL_RGBA8_OES:
+        renderbuffer = new gl::Colorbuffer(mRenderer,width, height, internalformat, samples);
+        break;
+      case GL_STENCIL_INDEX8:
+        renderbuffer = new gl::Stencilbuffer(mRenderer, width, height, samples);
+        break;
+      case GL_DEPTH24_STENCIL8_OES:
+        renderbuffer = new gl::DepthStencilbuffer(mRenderer, width, height, samples);
+        break;
+      default:
+        UNREACHABLE(); return;
+    }
+
     Renderbuffer *renderbufferObject = mState.renderbuffer.get();
     renderbufferObject->setStorage(renderbuffer);
 }

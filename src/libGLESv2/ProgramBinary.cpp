@@ -62,9 +62,10 @@ UniformLocation::UniformLocation(const std::string &_name, unsigned int element,
 
 unsigned int ProgramBinary::mCurrentSerial = 1;
 
-ProgramBinary::ProgramBinary() : RefCountObject(0), mSerial(issueSerial())
+ProgramBinary::ProgramBinary(rx::Renderer *renderer) : RefCountObject(0), mSerial(issueSerial())
 {
-    mRenderer = getDisplay()->getRenderer9();
+    ASSERT(dynamic_cast<rx::Renderer9*>(renderer) != NULL); // D3D9_REPLACE
+    mRenderer = static_cast<rx::Renderer9*>(renderer);
     mDevice = mRenderer->getDevice(); // D3D9_REPLACE
 
     mPixelExecutable = NULL;

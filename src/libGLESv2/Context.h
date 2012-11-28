@@ -426,7 +426,7 @@ class Context
 
     void setFramebufferZero(Framebuffer *framebuffer);
 
-    void setRenderbufferStorage(RenderbufferStorage *renderbuffer);
+    void setRenderbufferStorage(GLsizei width, GLsizei height, GLenum internalformat, GLsizei samples);
 
     void setVertexAttrib(GLuint index, const GLfloat *values);
     void setVertexAttribDivisor(GLuint index, GLuint divisor);

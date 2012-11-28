@@ -19,6 +19,7 @@
 
 namespace rx
 {
+class Renderer;
 class SwapChain;
 }
 
@@ -29,7 +30,7 @@ class Blit;
 class TextureStorage
 {
   public:
-    explicit TextureStorage(DWORD usage);
+    TextureStorage(rx::Renderer *renderer, DWORD usage);
 
     virtual ~TextureStorage();
 
@@ -59,6 +60,8 @@ class TextureStorage
     const DWORD mD3DUsage;
     const D3DPOOL mD3DPool;
 
+    rx::Renderer *mRenderer;
+
     const unsigned int mTextureSerial;
     static unsigned int issueTextureSerial();
 
@@ -68,8 +71,8 @@ class TextureStorage
 class TextureStorage2D : public TextureStorage
 {
   public:
-    explicit TextureStorage2D(rx::SwapChain *swapchain);
-    TextureStorage2D(int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height);
+    explicit TextureStorage2D(rx::Renderer *renderer, rx::SwapChain *swapchain);
+    TextureStorage2D(rx::Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height);
 
     virtual ~TextureStorage2D();
 
@@ -91,7 +94,7 @@ class TextureStorage2D : public TextureStorage
 class TextureStorageCubeMap : public TextureStorage
 {
   public:
-    TextureStorageCubeMap(int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size);
+    TextureStorageCubeMap(rx::Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size);
 
     virtual ~TextureStorageCubeMap();
 
