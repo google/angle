@@ -167,7 +167,7 @@ COMPILER_EXPORT int ShFinalize();
 
 // The 64 bits hash function. The first parameter is the input string; the
 // second parameter is the string length.
-typedef khronos_uint64_t (*ShHashFunction64)(const char*, size_t);
+typedef khronos_uint64_t (*ShHashFunction64)(const char*, unsigned int);
 
 //
 // Implementation dependent built-in resources (constants and extensions).
