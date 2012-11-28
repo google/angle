@@ -61,7 +61,7 @@ class Renderer11 : public Renderer
                              unsigned int renderTargetWidth, unsigned int renderTargetHeight,
                              gl::ProgramBinary *currentProgram, bool forceSetUniforms);
 
-    virtual void applyRenderTarget(gl::Framebuffer *frameBuffer);
+    virtual bool applyRenderTarget(gl::Framebuffer *frameBuffer);
 
     virtual void clear(GLbitfield mask, const gl::Color &colorClear, float depthClear, int stencilClear,
                        gl::Framebuffer *frameBuffer);

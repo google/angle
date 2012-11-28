@@ -380,12 +380,14 @@ bool Renderer11::setViewport(const gl::Rectangle& viewport, float zNear, float z
     return true;
 }
 
-void Renderer11::applyRenderTarget(gl::Framebuffer *frameBuffer)
+bool Renderer11::applyRenderTarget(gl::Framebuffer *frameBuffer)
 {
     // TODO
     UNIMPLEMENTED();
 
     mForceSetScissor = true;
+
+    return true;
 }
 
 void Renderer11::clear(GLbitfield mask, const gl::Color &colorClear, float depthClear, int stencilClear,

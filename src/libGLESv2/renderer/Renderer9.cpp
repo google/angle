@@ -924,13 +924,15 @@ bool Renderer9::setViewport(const gl::Rectangle& viewport, float zNear, float zF
     return true;
 }
 
-void Renderer9::applyRenderTarget(gl::Framebuffer *frameBuffer)
+bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
 {
     // TODO: only set these when the rendertarget actually changes
     mForceSetScissor = true;
     mForceSetViewport = true;
 
     // TODO
+
+    return true;
 }
 
 void Renderer9::clear(GLbitfield mask, const gl::Color &colorClear, float depthClear, int stencilClear,

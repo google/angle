@@ -90,7 +90,7 @@ class Renderer
                              unsigned int renderTargetWidth, unsigned int renderTargetHeight,
                              gl::ProgramBinary *currentProgram, bool forceSetUniforms) = 0;
 
-    virtual void applyRenderTarget(gl::Framebuffer *frameBuffer) = 0;
+    virtual bool applyRenderTarget(gl::Framebuffer *frameBuffer) = 0;
 
     virtual void clear(GLbitfield mask, const gl::Color &colorClear, float depthClear, int stencilClear,
                        gl::Framebuffer *frameBuffer) = 0;
