@@ -17,7 +17,7 @@
 #include <EGL/egl.h>
 
 #include "libGLESv2/Texture.h"
-#include "libGLESv2/EnumTypes.h"
+#include "libGLESv2/angletypes.h"
 
 const int versionWindowsVista = MAKEWORD(0x00, 0x06);
 const int versionWindows7 = MAKEWORD(0x01, 0x06);

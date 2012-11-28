@@ -261,11 +261,11 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClCompile Include="VertexDataManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="angletypes.h" />
     <ClInclude Include="BinaryStream.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Context.h" />
     <ClInclude Include="D3DConstantTable.h" />
-    <ClInclude Include="EnumTypes.h" />
     <ClInclude Include="Fence.h" />
     <ClInclude Include="Framebuffer.h" />
     <ClInclude Include="..\..\include\GLES2\gl2.h" />

@@ -4,10 +4,10 @@
 // found in the LICENSE file.
 //
 
-// EnumTypes.h : Defines a variety of enum types that are used throughout libGLESv2
+// angletypes.h : Defines a variety of structures and enum types that are used throughout libGLESv2
 
-#ifndef LIBGLESV2_ENUMTYPES_H_
-#define LIBGLESV2_ENUMTYPES_H_
+#ifndef LIBGLESV2_ANGLETYPES_H_
+#define LIBGLESV2_ANGLETYPES_H_
 
 namespace gl
 {
@@ -29,4 +29,4 @@ enum SamplerType
 
 }
 
-#endif // LIBGLESV2_ENUMTYPES_H_
+#endif // LIBGLESV2_ANGLETYPES_H_

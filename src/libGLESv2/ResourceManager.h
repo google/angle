@@ -20,7 +20,7 @@
 #endif
 
 #include "common/angleutils.h"
-#include "libGLESv2/EnumTypes.h"
+#include "libGLESv2/angletypes.h"
 #include "libGLESv2/HandleAllocator.h"
 
 namespace rx

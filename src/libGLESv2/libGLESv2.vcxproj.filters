@@ -187,9 +187,6 @@
     <ClInclude Include="VertexDataManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EnumTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="renderer\ShaderCache.h">
       <Filter>Renderer</Filter>
     </ClInclude>
@@ -219,6 +216,9 @@
     </ClInclude>
     <ClInclude Include="renderer\Blit.h">
       <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="angletypes.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
