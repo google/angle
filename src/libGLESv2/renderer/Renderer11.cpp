@@ -16,6 +16,7 @@
 #include "libGLESv2/renderer/Renderer11.h"
 #include "libGLESv2/renderer/RenderTarget11.h"
 #include "libGLESv2/renderer/renderer11_utils.h"
+#include "libGLESv2/renderer/ShaderExecutable11.h"
 #include "libGLESv2/renderer/SwapChain11.h"
 
 #include "libEGL/Config.h"
@@ -1126,9 +1127,40 @@ RenderTarget *Renderer11::createRenderTarget(int width, int height, GLenum forma
 
 ShaderExecutable *Renderer11::loadExecutable(const DWORD *function, size_t length, GLenum type, void *data)
 {
-    // TODO
-    UNIMPLEMENTED();
-    return NULL;
+    ShaderExecutable11 *executable = NULL;
+
+    switch (type)
+    {
+      case GL_VERTEX_SHADER:
+        {
+            ID3D11VertexShader *vshader = NULL;
+            HRESULT result = mDevice->CreateVertexShader(function, length, NULL, &vshader);
+            ASSERT(SUCCEEDED(result));
+
+            if (vshader)
+            {
+                executable = new ShaderExecutable11(vshader);
+            }
+        }
+        break;
+      case GL_FRAGMENT_SHADER:
+        {
+            ID3D11PixelShader *pshader = NULL;
+            HRESULT result = mDevice->CreatePixelShader(function, length, NULL, &pshader);
+            ASSERT(SUCCEEDED(result));
+
+            if (pshader)
+            {
+                executable = new ShaderExecutable11(pshader);
+            }
+        }
+        break;
+      default:
+        UNREACHABLE();
+        break;
+    }
+
+    return executable;
 }
 
 ShaderExecutable *Renderer11::compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, GLenum type)
