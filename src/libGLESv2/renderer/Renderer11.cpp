@@ -7,6 +7,7 @@
 // Renderer11.cpp: Implements a back-end specific class for the D3D11 renderer.
 
 #include "common/debug.h"
+#include "libGLESv2/main.h"
 #include "libGLESv2/utilities.h"
 #include "libGLESv2/mathutil.h"
 #include "libGLESv2/renderer/Renderer11.h"
@@ -41,6 +42,7 @@ Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(
 
     mForceSetBlendState = true;
     mForceSetRasterState = true;
+    mForceSetDepthStencilState = true;
     mForceSetScissor = true;
 }
 
@@ -314,8 +316,38 @@ void Renderer11::setBlendState(const gl::BlendState &blendState, const gl::Color
 void Renderer11::setDepthStencilState(const gl::DepthStencilState &depthStencilState, int stencilRef,
                                       int stencilBackRef, bool frontFaceCCW, unsigned int stencilSize)
 {
-    // TODO
-    UNIMPLEMENTED();
+    if (mForceSetDepthStencilState ||
+        memcmp(&depthStencilState, &mCurDepthStencilState, sizeof(gl::DepthStencilState)) != 0 ||
+        stencilRef != mCurStencilRef || stencilBackRef != mCurStencilBackRef)
+    {
+        if (depthStencilState.stencilWritemask != depthStencilState.stencilBackWritemask ||
+            stencilRef != stencilBackRef ||
+            depthStencilState.stencilMask != depthStencilState.stencilBackMask)
+        {
+            ERR("Separate front/back stencil writemasks, reference values, or stencil mask values are "
+                "invalid under WebGL.");
+            return error(GL_INVALID_OPERATION);
+        }
+
+        ID3D11DepthStencilState *dxDepthStencilState = mStateCache.getDepthStencilState(depthStencilState);
+        if (!dxDepthStencilState)
+        {
+            ERR("NULL depth stencil state returned by RenderStateCache::getDepthStencilState, "
+                "setting the default depth stencil state.");
+        }
+
+        mDeviceContext->OMSetDepthStencilState(dxDepthStencilState, static_cast<UINT>(stencilRef));
+
+        if (dxDepthStencilState)
+        {
+            dxDepthStencilState->Release();
+        }
+        mCurDepthStencilState = depthStencilState;
+        mCurStencilRef = stencilRef;
+        mCurStencilBackRef = stencilBackRef;
+    }
+
+    mForceSetDepthStencilState = false;
 }
 
 void Renderer11::setScissorRectangle(const gl::Rectangle& scissor, unsigned int renderTargetWidth,
@@ -429,6 +461,7 @@ bool Renderer11::resetDevice()
 
     mForceSetBlendState = true;
     mForceSetRasterState = true;
+    mForceSetDepthStencilState = true;
     mForceSetScissor = true;
 
     return true;

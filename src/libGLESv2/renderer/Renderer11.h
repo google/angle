@@ -137,6 +137,12 @@ class Renderer11 : public Renderer
     gl::RasterizerState mCurRasterState;
     unsigned int mCurDepthSize;
 
+    // Currently applied depth stencil state
+    bool mForceSetDepthStencilState;
+    gl::DepthStencilState mCurDepthStencilState;
+    int mCurStencilRef;
+    int mCurStencilBackRef;
+
     // Currently applied scissor rectangle
     bool mForceSetScissor;
     gl::Rectangle mCurScissor;
