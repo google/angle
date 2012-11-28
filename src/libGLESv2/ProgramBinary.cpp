@@ -8,7 +8,6 @@
 // and related functionality. [OpenGL ES 2.0.24] section 2.10.3 page 28.
 
 #include "libGLESv2/BinaryStream.h"
-#include "libGLESv2/Program.h"
 #include "libGLESv2/ProgramBinary.h"
 
 #include "common/debug.h"

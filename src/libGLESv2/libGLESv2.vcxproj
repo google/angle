@@ -258,6 +258,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClCompile Include="renderer\SwapChain11.cpp" />
     <ClCompile Include="renderer\SwapChain9.cpp" />
     <ClCompile Include="renderer\TextureStorage.cpp" />
+    <ClCompile Include="renderer\VertexDeclarationCache.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -302,6 +303,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="renderer\SwapChain11.h" />
     <ClInclude Include="renderer\SwapChain9.h" />
     <ClInclude Include="renderer\TextureStorage.h" />
+    <ClInclude Include="renderer\VertexDeclarationCache.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Shader.h" />
