@@ -32,6 +32,7 @@ class RenderStateCache
     ID3D11BlendState *getBlendState(const gl::BlendState &blendState);
     ID3D11RasterizerState *getRasterizerState(const gl::RasterizerState &rasterState,
                                               unsigned int depthSize);
+    ID3D11DepthStencilState* getDepthStencilState(const gl::DepthStencilState &dsState);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(RenderStateCache);
@@ -64,6 +65,20 @@ class RenderStateCache
     typedef std::pair<ID3D11RasterizerState*, unsigned long long> RasterizerStateCounterPair;
     typedef std::unordered_map<RasterizerStateKey, RasterizerStateCounterPair, RasterizerStateHashFunction, RasterizerStateEqualityFunction> RasterizerStateMap;
     RasterizerStateMap mRasterizerStateCache;
+
+    // Depth stencil state cache
+    static std::size_t hashDepthStencilState(const gl::DepthStencilState &dsState);
+    static bool compareDepthStencilStates(const gl::DepthStencilState &a, const gl::DepthStencilState &b);
+    static const unsigned int kMaxDepthStencilStates;
+
+    typedef std::size_t (*DepthStencilStateHashFunction)(const gl::DepthStencilState &);
+    typedef bool (*DepthStencilStateEqualityFunction)(const gl::DepthStencilState &, const gl::DepthStencilState &);
+    typedef std::pair<ID3D11DepthStencilState*, unsigned long long> DepthStencilStateCounterPair;
+    typedef std::unordered_map<gl::DepthStencilState,
+                               DepthStencilStateCounterPair,
+                               DepthStencilStateHashFunction,
+                               DepthStencilStateEqualityFunction> DepthStencilStateMap;
+    DepthStencilStateMap mDepthStencilStateCache;
 
     ID3D11Device* mDevice;
 };

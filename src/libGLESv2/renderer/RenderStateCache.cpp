@@ -18,7 +18,8 @@ namespace rx
 
 RenderStateCache::RenderStateCache() : mDevice(NULL), mCounter(0),
                                        mBlendStateCache(kMaxBlendStates, hashBlendState, compareBlendStates),
-                                       mRasterizerStateCache(kMaxRasterizerStates, hashRasterizerState, compareRasterizerStates)
+                                       mRasterizerStateCache(kMaxRasterizerStates, hashRasterizerState, compareRasterizerStates),
+                                       mDepthStencilStateCache(kMaxDepthStencilStates, hashDepthStencilState, compareDepthStencilStates)
 {
 }
 
@@ -46,6 +47,12 @@ void RenderStateCache::clear()
         i->second.first->Release();
     }
     mRasterizerStateCache.clear();
+
+    for (DepthStencilStateMap::iterator i = mDepthStencilStateCache.begin(); i != mDepthStencilStateCache.end(); i++)
+    {
+        i->second.first->Release();
+    }
+    mDepthStencilStateCache.clear();
 }
 
 std::size_t RenderStateCache::hashBlendState(const gl::BlendState &blendState)
@@ -225,6 +232,90 @@ ID3D11RasterizerState *RenderStateCache::getRasterizerState(const gl::Rasterizer
 
         dx11RasterizerState->AddRef();
         return dx11RasterizerState;
+    }
+}
+
+std::size_t RenderStateCache::hashDepthStencilState(const gl::DepthStencilState &dsState)
+{
+    static const unsigned int seed = 0xABCDEF98;
+
+    std::size_t hash = 0;
+    MurmurHash3_x86_32(&dsState, sizeof(gl::DepthStencilState), seed, &hash);
+    return hash;
+}
+
+bool RenderStateCache::compareDepthStencilStates(const gl::DepthStencilState &a, const gl::DepthStencilState &b)
+{
+    return memcmp(&a, &b, sizeof(gl::DepthStencilState)) == 0;
+}
+
+// MSDN's documentation of ID3D11Device::CreateDepthStencilState  claims the maximum number of
+// unique depth stencil states an application can create is 4096
+const unsigned int RenderStateCache::kMaxDepthStencilStates = 4096;
+
+ID3D11DepthStencilState* RenderStateCache::getDepthStencilState(const gl::DepthStencilState &dsState)
+{
+    if (!mDevice)
+    {
+        ERR("RenderStateCache is not initialized.");
+        return NULL;
+    }
+
+    DepthStencilStateMap::iterator i = mDepthStencilStateCache.find(dsState);
+    if (i != mDepthStencilStateCache.end())
+    {
+        DepthStencilStateCounterPair &state = i->second;
+        state.first->AddRef();
+        state.second = mCounter++;
+        return state.first;
+    }
+    else
+    {
+        if (mDepthStencilStateCache.size() >= kMaxDepthStencilStates)
+        {
+            TRACE("Overflowed the limit of %u depth stencil states, removing the least recently used "
+                  "to make room.", kMaxDepthStencilStates);
+
+            DepthStencilStateMap::iterator leastRecentlyUsed = mDepthStencilStateCache.begin();
+            for (DepthStencilStateMap::iterator i = mDepthStencilStateCache.begin(); i != mDepthStencilStateCache.end(); i++)
+            {
+                if (i->second.second < leastRecentlyUsed->second.second)
+                {
+                    leastRecentlyUsed = i;
+                }
+            }
+            leastRecentlyUsed->second.first->Release();
+            mDepthStencilStateCache.erase(leastRecentlyUsed);
+        }
+
+        D3D11_DEPTH_STENCIL_DESC dsDesc = { 0 };
+        dsDesc.DepthEnable = dsState.depthTest ? TRUE : FALSE;
+        dsDesc.DepthWriteMask = gl_d3d11::ConvertDepthMask(dsState.depthMask);
+        dsDesc.DepthFunc = gl_d3d11::ConvertComparison(dsState.depthFunc);
+        dsDesc.StencilEnable = dsState.stencilTest ? TRUE : FALSE;
+        dsDesc.StencilReadMask = gl_d3d11::ConvertStencilMask(dsState.stencilMask);
+        dsDesc.StencilWriteMask = gl_d3d11::ConvertStencilMask(dsState.stencilWritemask);
+        dsDesc.FrontFace.StencilFailOp = gl_d3d11::ConvertStencilOp(dsState.stencilFail);
+        dsDesc.FrontFace.StencilDepthFailOp = gl_d3d11::ConvertStencilOp(dsState.stencilPassDepthFail);
+        dsDesc.FrontFace.StencilPassOp = gl_d3d11::ConvertStencilOp(dsState.stencilPassDepthPass);
+        dsDesc.FrontFace.StencilFunc = gl_d3d11::ConvertComparison(dsState.stencilFunc);
+        dsDesc.BackFace.StencilFailOp = gl_d3d11::ConvertStencilOp(dsState.stencilBackFail);
+        dsDesc.BackFace.StencilDepthFailOp = gl_d3d11::ConvertStencilOp(dsState.stencilBackPassDepthFail);
+        dsDesc.BackFace.StencilPassOp = gl_d3d11::ConvertStencilOp(dsState.stencilBackPassDepthPass);
+        dsDesc.BackFace.StencilFunc = gl_d3d11::ConvertComparison(dsState.stencilBackFunc);
+
+        ID3D11DepthStencilState* dx11DepthStencilState = NULL;
+        HRESULT result = mDevice->CreateDepthStencilState(&dsDesc, &dx11DepthStencilState);
+        if (FAILED(result) || !dx11DepthStencilState)
+        {
+            ERR("Unable to create a ID3D11DepthStencilState, HRESULT: 0x%X.", result);
+            return NULL;
+        }
+
+        mDepthStencilStateCache.insert(std::make_pair(dsState, std::make_pair(dx11DepthStencilState, mCounter++)));
+
+        dx11DepthStencilState->AddRef();
+        return dx11DepthStencilState;
     }
 }
 
