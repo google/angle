@@ -30,6 +30,8 @@ class RenderStateCache
 
     // Increments refcount on the returned blend state, Release() must be called.
     ID3D11BlendState *getBlendState(const gl::BlendState &blendState);
+    ID3D11RasterizerState *getRasterizerState(const gl::RasterizerState &rasterState,
+                                              unsigned int depthSize);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(RenderStateCache);
@@ -46,6 +48,22 @@ class RenderStateCache
     typedef std::pair<ID3D11BlendState*, unsigned long long> BlendStateCounterPair;
     typedef std::unordered_map<gl::BlendState, BlendStateCounterPair, BlendStateHashFunction, BlendStateEqualityFunction> BlendStateMap;
     BlendStateMap mBlendStateCache;
+
+    // Rasterizer state cache
+    struct RasterizerStateKey
+    {
+        gl::RasterizerState rasterizerState;
+        unsigned int depthSize;
+    };
+    static std::size_t hashRasterizerState(const RasterizerStateKey &rasterState);
+    static bool compareRasterizerStates(const RasterizerStateKey &a, const RasterizerStateKey &b);
+    static const unsigned int kMaxRasterizerStates;
+
+    typedef std::size_t (*RasterizerStateHashFunction)(const RasterizerStateKey &);
+    typedef bool (*RasterizerStateEqualityFunction)(const RasterizerStateKey &, const RasterizerStateKey &);
+    typedef std::pair<ID3D11RasterizerState*, unsigned long long> RasterizerStateCounterPair;
+    typedef std::unordered_map<RasterizerStateKey, RasterizerStateCounterPair, RasterizerStateHashFunction, RasterizerStateEqualityFunction> RasterizerStateMap;
+    RasterizerStateMap mRasterizerStateCache;
 
     ID3D11Device* mDevice;
 };

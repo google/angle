@@ -17,7 +17,8 @@ namespace rx
 {
 
 RenderStateCache::RenderStateCache() : mDevice(NULL), mCounter(0),
-                                       mBlendStateCache(kMaxBlendStates, hashBlendState, compareBlendStates)
+                                       mBlendStateCache(kMaxBlendStates, hashBlendState, compareBlendStates),
+                                       mRasterizerStateCache(kMaxRasterizerStates, hashRasterizerState, compareRasterizerStates)
 {
 }
 
@@ -39,6 +40,12 @@ void RenderStateCache::clear()
         i->second.first->Release();
     }
     mBlendStateCache.clear();
+
+    for (RasterizerStateMap::iterator i = mRasterizerStateCache.begin(); i != mRasterizerStateCache.end(); i++)
+    {
+        i->second.first->Release();
+    }
+    mRasterizerStateCache.clear();
 }
 
 std::size_t RenderStateCache::hashBlendState(const gl::BlendState &blendState)
@@ -133,6 +140,91 @@ ID3D11BlendState *RenderStateCache::getBlendState(const gl::BlendState &blendSta
 
         dx11BlendState->AddRef();
         return dx11BlendState;
+    }
+}
+
+std::size_t RenderStateCache::hashRasterizerState(const RasterizerStateKey &rasterState)
+{
+    static const unsigned int seed = 0xABCDEF98;
+
+    std::size_t hash = 0;
+    MurmurHash3_x86_32(&rasterState, sizeof(RasterizerStateKey), seed, &hash);
+    return hash;
+}
+
+bool RenderStateCache::compareRasterizerStates(const RasterizerStateKey &a, const RasterizerStateKey &b)
+{
+    return memcmp(&a, &b, sizeof(RasterizerStateKey)) == 0;
+}
+
+// MSDN's documentation of ID3D11Device::CreateRasterizerState  claims the maximum number of
+// unique rasterizer states an application can create is 4096
+const unsigned int RenderStateCache::kMaxRasterizerStates = 4096;
+
+ID3D11RasterizerState *RenderStateCache::getRasterizerState(const gl::RasterizerState &rasterState,
+                                                            unsigned int depthSize)
+{
+    if (!mDevice)
+    {
+        ERR("RenderStateCache is not initialized.");
+        return NULL;
+    }
+
+    RasterizerStateKey key;
+    key.rasterizerState = rasterState;
+    key.depthSize = depthSize;
+
+    RasterizerStateMap::iterator i = mRasterizerStateCache.find(key);
+    if (i != mRasterizerStateCache.end())
+    {
+        RasterizerStateCounterPair &state = i->second;
+        state.first->AddRef();
+        state.second = mCounter++;
+        return state.first;
+    }
+    else
+    {
+        if (mRasterizerStateCache.size() >= kMaxRasterizerStates)
+        {
+            TRACE("Overflowed the limit of %u rasterizer states, removing the least recently used "
+                  "to make room.", kMaxRasterizerStates);
+
+            RasterizerStateMap::iterator leastRecentlyUsed = mRasterizerStateCache.begin();
+            for (RasterizerStateMap::iterator i = mRasterizerStateCache.begin(); i != mRasterizerStateCache.end(); i++)
+            {
+                if (i->second.second < leastRecentlyUsed->second.second)
+                {
+                    leastRecentlyUsed = i;
+                }
+            }
+            leastRecentlyUsed->second.first->Release();
+            mRasterizerStateCache.erase(leastRecentlyUsed);
+        }
+
+        D3D11_RASTERIZER_DESC rasterDesc;
+        rasterDesc.FillMode = D3D11_FILL_SOLID;
+        rasterDesc.CullMode = gl_d3d11::ConvertCullMode(rasterState.cullFace, rasterState.cullMode);
+        rasterDesc.FrontCounterClockwise = (rasterState.frontFace == GL_CCW) ? TRUE : FALSE;
+        rasterDesc.DepthBias = ldexp(rasterState.polygonOffsetUnits, -static_cast<int>(depthSize));
+        rasterDesc.DepthBiasClamp = 0.0f; // MSDN documentation of DepthBiasClamp implies a value of zero will preform no clamping, must be tested though.
+        rasterDesc.SlopeScaledDepthBias = rasterState.polygonOffsetUnits;
+        rasterDesc.DepthClipEnable = TRUE;
+        rasterDesc.ScissorEnable = rasterState.scissorTest ? TRUE : FALSE;
+        rasterDesc.MultisampleEnable = TRUE;
+        rasterDesc.AntialiasedLineEnable = FALSE;
+
+        ID3D11RasterizerState* dx11RasterizerState = NULL;
+        HRESULT result = mDevice->CreateRasterizerState(&rasterDesc, &dx11RasterizerState);
+        if (FAILED(result) || !dx11RasterizerState)
+        {
+            ERR("Unable to create a ID3D11RasterizerState, HRESULT: 0x%X.", result);
+            return NULL;
+        }
+
+        mRasterizerStateCache.insert(std::make_pair(key, std::make_pair(dx11RasterizerState, mCounter++)));
+
+        dx11RasterizerState->AddRef();
+        return dx11RasterizerState;
     }
 }
 
