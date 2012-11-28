@@ -15,8 +15,7 @@ namespace gl
 
 Query::Query(rx::Renderer *renderer, GLuint id, GLenum type) : RefCountObject(id)
 { 
-    ASSERT(dynamic_cast<rx::Renderer9*>(renderer) != NULL); // D3D9_REPLACE
-    mRenderer = static_cast<rx::Renderer9*>(renderer);
+    mRenderer = rx::Renderer9::makeRenderer9(renderer);   // D3D9_REPLACE
 
     mQuery = NULL;
     mStatus = GL_FALSE;

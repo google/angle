@@ -15,8 +15,7 @@ namespace gl
 
 Fence::Fence(rx::Renderer *renderer)
 {
-    ASSERT(dynamic_cast<rx::Renderer9*>(renderer) != NULL); // D3D9_REPLACE
-    mRenderer = static_cast<rx::Renderer9*>(renderer);
+    mRenderer = rx::Renderer9::makeRenderer9(renderer);   // D3D9_REPLACE
 
     mQuery = NULL;
     mCondition = GL_NONE;
