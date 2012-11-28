@@ -83,12 +83,6 @@ Renderer9::Renderer9(egl::Display *display, HDC hDc, bool softwareDevice) : Rend
     mDeviceLost = false;
 
     mMaxSupportedSamples = 0;
-
-    mForceSetDepthStencilState = true;
-    mForceSetRasterState = true;
-    mForceSetBlendState = true;
-    mForceSetScissor = true;
-    mForceSetViewport = true;
 }
 
 Renderer9::~Renderer9()
@@ -358,6 +352,8 @@ void Renderer9::initializeDevice()
     {
         mDevice->SetRenderState(D3DRS_POINTSIZE_MAX, 0x3F800000);   // 1.0f
     }
+
+    markAllStateDirty();
 
     mSceneStarted = false;
 }
@@ -945,6 +941,15 @@ void Renderer9::clear(GLbitfield mask, const gl::Color &colorClear, float depthC
     // TODO
 }
 
+void Renderer9::markAllStateDirty()
+{
+    mForceSetDepthStencilState = true;
+    mForceSetRasterState = true;
+    mForceSetBlendState = true;
+    mForceSetScissor = true;
+    mForceSetViewport = true;
+}
+
 void Renderer9::releaseDeviceResources()
 {
     while (!mEventQueryPool.empty())
@@ -1071,11 +1076,6 @@ bool Renderer9::resetDevice()
     // reset device defaults
     initializeDevice();
     mDeviceLost = false;
-
-    mForceSetDepthStencilState = true;
-    mForceSetRasterState = true;
-    mForceSetBlendState = true;
-    mForceSetScissor = true;
 
     return true;
 }

@@ -40,11 +40,6 @@ Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(
     mDeviceContext = NULL;
     mDxgiAdapter = NULL;
     mDxgiFactory = NULL;
-
-    mForceSetBlendState = true;
-    mForceSetRasterState = true;
-    mForceSetDepthStencilState = true;
-    mForceSetScissor = true;
 }
 
 Renderer11::~Renderer11()
@@ -173,6 +168,8 @@ EGLint Renderer11::initialize()
 void Renderer11::initializeDevice()
 {
     mStateCache.initialize(mDevice);
+
+    markAllStateDirty();
 
     // Permanent non-default states
     // TODO
@@ -398,6 +395,14 @@ void Renderer11::clear(GLbitfield mask, const gl::Color &colorClear, float depth
     UNIMPLEMENTED();
 }
 
+void Renderer11::markAllStateDirty()
+{
+    mForceSetBlendState = true;
+    mForceSetRasterState = true;
+    mForceSetDepthStencilState = true;
+    mForceSetScissor = true;
+}
+
 void Renderer11::releaseDeviceResources()
 {
     // TODO
@@ -467,11 +472,6 @@ bool Renderer11::resetDevice()
     // reset device defaults
     initializeDevice();
     mDeviceLost = false;
-
-    mForceSetBlendState = true;
-    mForceSetRasterState = true;
-    mForceSetDepthStencilState = true;
-    mForceSetScissor = true;
 
     return true;
 }

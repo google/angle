@@ -66,6 +66,8 @@ class Renderer11 : public Renderer
     virtual void clear(GLbitfield mask, const gl::Color &colorClear, float depthClear, int stencilClear,
                        gl::Framebuffer *frameBuffer);
 
+    virtual void markAllStateDirty();
+
     // lost device
     virtual void markDeviceLost();
     virtual bool isDeviceLost();

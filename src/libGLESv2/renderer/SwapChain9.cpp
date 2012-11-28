@@ -342,6 +342,7 @@ EGLint SwapChain9::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
     {
         context->markAllStateDirty();
     }
+    mRenderer->markAllStateDirty();
 
     if (isDeviceLostError(result))
     {
