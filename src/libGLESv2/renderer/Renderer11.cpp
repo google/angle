@@ -10,6 +10,7 @@
 #include "libGLESv2/main.h"
 #include "libGLESv2/utilities.h"
 #include "libGLESv2/mathutil.h"
+#include "libGLESv2/Buffer.h"
 #include "libGLESv2/Program.h"
 #include "libGLESv2/ProgramBinary.h"
 #include "libGLESv2/Framebuffer.h"
@@ -648,6 +649,34 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
 
 GLenum Renderer11::applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], GLint first, GLsizei count, GLsizei instances)
 {
+    // TODO: Create/update vertex buffers for arbitrary GL attributes
+    ASSERT(vertexAttributes[0].mBoundBuffer.get() == 0);   // UNIMPLEMENTED();
+
+    UINT stride = vertexAttributes[0].mStride != 0 ? vertexAttributes[0].mStride : vertexAttributes[0].typeSize();
+    UINT size = stride * count;
+
+    D3D11_BUFFER_DESC vertexBufferDescription = {0};
+    vertexBufferDescription.ByteWidth = size;
+    vertexBufferDescription.Usage = D3D11_USAGE_DYNAMIC;
+    vertexBufferDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    vertexBufferDescription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    vertexBufferDescription.MiscFlags = 0;
+    vertexBufferDescription.StructureByteStride = 0;
+
+    ID3D11Buffer *vertexBuffer = NULL;
+    HRESULT result = mDevice->CreateBuffer(&vertexBufferDescription, NULL, &vertexBuffer);
+    ASSERT(SUCCEEDED(result));
+
+    D3D11_MAPPED_SUBRESOURCE map;
+    result = mDeviceContext->Map(vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+    ASSERT(SUCCEEDED(result));
+    memcpy(map.pData, vertexAttributes[0].mPointer, size);
+    mDeviceContext->Unmap(vertexBuffer, 0);
+
+    UINT offset = 0;
+    mDeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+    vertexBuffer->Release();
+
     // TODO: Build the input layout from the (translated) attribute information
     D3D11_INPUT_ELEMENT_DESC inputElementDescriptions[1] =
     {
@@ -655,15 +684,13 @@ GLenum Renderer11::applyVertexBuffer(gl::ProgramBinary *programBinary, gl::Verte
     };
 
     ID3D11InputLayout *inputLayout = NULL;
-    mDevice->CreateInputLayout(inputElementDescriptions, 1, NULL /*FIXME: vertex shader blob */, 0 /* FIXME: vertex shader size */, &inputLayout);
+    result = mDevice->CreateInputLayout(inputElementDescriptions, 1, NULL /*FIXME: vertex shader blob */, 0 /* FIXME: vertex shader size */, &inputLayout);
+    ASSERT(SUCCEEDED(result));
     
     mDeviceContext->IASetInputLayout(inputLayout);
     inputLayout->Release();   // TODO: Build a cache of input layouts
 
-    // TODO
-    UNIMPLEMENTED();
-
-    return GL_OUT_OF_MEMORY;
+    return GL_NO_ERROR;
 }
 
 GLenum Renderer11::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, gl::TranslatedIndexData *indexInfo)
