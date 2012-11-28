@@ -1109,6 +1109,16 @@ GLenum Renderer9::applyVertexBuffer(gl::ProgramBinary *programBinary, gl::Vertex
     return mVertexDeclarationCache.applyDeclaration(mDevice, attributes, programBinary, instances, repeatDraw);
 }
 
+void Renderer9::applyShaders(gl::ProgramBinary *programBinary)
+{
+    IDirect3DVertexShader9 *vertexShader = programBinary->getVertexShader();
+    IDirect3DPixelShader9 *pixelShader = programBinary->getPixelShader();
+
+    mDevice->SetPixelShader(pixelShader);
+    mDevice->SetVertexShader(vertexShader);
+    programBinary->dirtyAllUniforms();
+}
+
 void Renderer9::clear(GLbitfield mask, const gl::Color &colorClear, float depthClear, int stencilClear,
                       gl::Framebuffer *frameBuffer)
 {

@@ -405,6 +405,12 @@ GLenum Renderer11::applyVertexBuffer(gl::ProgramBinary *programBinary, gl::Verte
     return GL_OUT_OF_MEMORY;
 }
 
+void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
+{
+    // TODO
+    UNIMPLEMENTED();
+}
+
 void Renderer11::clear(GLbitfield mask, const gl::Color &colorClear, float depthClear, int stencilClear,
                        gl::Framebuffer *frameBuffer)
 {

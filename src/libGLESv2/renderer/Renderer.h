@@ -92,6 +92,7 @@ class Renderer
                              gl::ProgramBinary *currentProgram, bool forceSetUniforms) = 0;
 
     virtual bool applyRenderTarget(gl::Framebuffer *frameBuffer) = 0;
+    virtual void applyShaders(gl::ProgramBinary *programBinary) = 0;
 
     virtual GLenum applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], GLint first, GLsizei count, GLsizei instances, GLsizei *repeatDraw) = 0;
 

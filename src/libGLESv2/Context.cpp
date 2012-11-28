@@ -1873,15 +1873,10 @@ void Context::applyShaders()
 
     if (programBinary->getSerial() != mAppliedProgramBinarySerial)
     {
-        IDirect3DVertexShader9 *vertexShader = programBinary->getVertexShader();
-        IDirect3DPixelShader9 *pixelShader = programBinary->getPixelShader();
-
-        mDevice->SetPixelShader(pixelShader);
-        mDevice->SetVertexShader(vertexShader);
-        programBinary->dirtyAllUniforms();
+        mRenderer->applyShaders(programBinary);
         mAppliedProgramBinarySerial = programBinary->getSerial();
     }
-
+    
     programBinary->applyUniforms();
 }
 

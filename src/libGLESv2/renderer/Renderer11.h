@@ -64,6 +64,7 @@ class Renderer11 : public Renderer
                              gl::ProgramBinary *currentProgram, bool forceSetUniforms);
 
     virtual bool applyRenderTarget(gl::Framebuffer *frameBuffer);
+    virtual void applyShaders(gl::ProgramBinary *programBinary);
 
     virtual GLenum applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], GLint first, GLsizei count, GLsizei instances, GLsizei *repeatDraw);
 
