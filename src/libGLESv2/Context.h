@@ -41,10 +41,6 @@ class Surface;
 
 namespace gl
 {
-struct TranslatedAttribute;
-struct TranslatedIndexData;
-
-class Buffer;
 class Shader;
 class Program;
 class ProgramBinary;
@@ -56,10 +52,8 @@ class Renderbuffer;
 class RenderbufferStorage;
 class Colorbuffer;
 class Depthbuffer;
-class StreamingIndexBuffer;
 class Stencilbuffer;
 class DepthStencilbuffer;
-class IndexDataManager;
 class Fence;
 class Query;
 
@@ -376,8 +370,6 @@ class Context
     void drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLsizei instances);
     void sync(bool block);   // flush/finish
 
-    void drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex);
-
     void recordInvalidEnum();
     void recordInvalidValue();
     void recordInvalidOperation();
@@ -433,7 +425,6 @@ class Context
 
     bool applyRenderTarget(bool ignoreViewport);
     void applyState(GLenum drawMode);
-    GLenum applyIndexBuffer(const GLvoid *indices, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo);
     void applyShaders();
     void applyTextures();
     void applyTextures(SamplerType type);
@@ -481,10 +472,6 @@ class Context
 
     std::string mExtensionString;
     std::string mRendererString;
-
-    IndexDataManager *mIndexDataManager;
-
-    StreamingIndexBuffer *mLineLoopIB;
     
     BindingPointer<Texture> mIncompleteTextures[TEXTURE_TYPE_COUNT];
 
@@ -505,7 +492,6 @@ class Context
     unsigned int mAppliedTextureSerialPS[MAX_TEXTURE_IMAGE_UNITS];
     unsigned int mAppliedTextureSerialVS[MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF];
     unsigned int mAppliedProgramBinarySerial;
-    unsigned int mAppliedIBSerial;
     rx::RenderTarget::Desc mRenderTargetDesc; // D3D9_REPLACE
     bool mDxUniformsDirty;
     BindingPointer<ProgramBinary> mCurrentProgramBinary;

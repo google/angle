@@ -10,9 +10,11 @@
 #include "libGLESv2/main.h"
 #include "libGLESv2/utilities.h"
 #include "libGLESv2/mathutil.h"
+#include "libGLESv2/Buffer.h"
 #include "libGLESv2/Framebuffer.h"
 #include "libGLESv2/Program.h"
 #include "libGLESv2/ProgramBinary.h"
+#include "libGLESv2/IndexDataManager.h"
 #include "libGLESv2/VertexDataManager.h"
 #include "libGLESv2/renderer/Renderer9.h"
 #include "libGLESv2/renderer/renderer9_utils.h"
@@ -87,9 +89,13 @@ Renderer9::Renderer9(egl::Display *display, HDC hDc, bool softwareDevice) : Rend
 
     mMaxSupportedSamples = 0;
 
-    mVertexDataManager = NULL;
+    mAppliedIBSerial = 0;
 
     mMaskedClearSavedState = NULL;
+
+    mVertexDataManager = NULL;
+    mIndexDataManager = NULL;
+    mLineLoopIB = NULL;
 }
 
 Renderer9::~Renderer9()
@@ -398,9 +404,10 @@ void Renderer9::initializeDevice()
 
     mSceneStarted = false;
 
-    ASSERT(!mBlit && !mVertexDataManager);
+    ASSERT(!mBlit && !mVertexDataManager && !mIndexDataManager);
     mBlit = new Blit(this);
     mVertexDataManager = new gl::VertexDataManager(this);
+    mIndexDataManager = new gl::IndexDataManager(this);
 }
 
 D3DPRESENT_PARAMETERS Renderer9::getDefaultPresentParameters()
@@ -975,6 +982,45 @@ bool Renderer9::setViewport(const gl::Rectangle& viewport, float zNear, float zF
     return true;
 }
 
+bool Renderer9::applyPrimitiveType(GLenum mode, GLsizei count)
+{
+    switch (mode)
+    {
+      case GL_POINTS:
+        mPrimitiveType = D3DPT_POINTLIST;
+        mPrimitiveCount = count;
+        break;
+      case GL_LINES:
+        mPrimitiveType = D3DPT_LINELIST;
+        mPrimitiveCount = count / 2;
+        break;
+      case GL_LINE_LOOP:
+        mPrimitiveType = D3DPT_LINESTRIP;
+        mPrimitiveCount = count - 1;   // D3D doesn't support line loops, so we draw the last line separately
+        break;
+      case GL_LINE_STRIP:
+        mPrimitiveType = D3DPT_LINESTRIP;
+        mPrimitiveCount = count - 1;
+        break;
+      case GL_TRIANGLES:
+        mPrimitiveType = D3DPT_TRIANGLELIST;
+        mPrimitiveCount = count / 3;
+        break;
+      case GL_TRIANGLE_STRIP:
+        mPrimitiveType = D3DPT_TRIANGLESTRIP;
+        mPrimitiveCount = count - 2;
+        break;
+      case GL_TRIANGLE_FAN:
+        mPrimitiveType = D3DPT_TRIANGLEFAN;
+        mPrimitiveCount = count - 2;
+        break;
+      default:
+        return error(GL_INVALID_ENUM, false);
+    }
+
+    return mPrimitiveCount > 0;
+}
+
 bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
 {
     // if there is no color attachment we must synthesize a NULL colorattachment
@@ -1094,7 +1140,7 @@ bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
     return true;
 }
 
-GLenum Renderer9::applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], GLint first, GLsizei count, GLsizei instances, GLsizei *repeatDraw)
+GLenum Renderer9::applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], GLint first, GLsizei count, GLsizei instances)
 {
     gl::TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS];
     GLenum err = mVertexDataManager->prepareVertexData(vertexAttributes, programBinary, first, count, attributes, instances);
@@ -1103,7 +1149,229 @@ GLenum Renderer9::applyVertexBuffer(gl::ProgramBinary *programBinary, gl::Vertex
         return err;
     }
     
-    return mVertexDeclarationCache.applyDeclaration(mDevice, attributes, programBinary, instances, repeatDraw);
+    return mVertexDeclarationCache.applyDeclaration(mDevice, attributes, programBinary, instances, &mRepeatDraw);
+}
+
+// Applies the indices and element array bindings to the Direct3D 9 device
+GLenum Renderer9::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, gl::TranslatedIndexData *indexInfo)
+{
+    IDirect3DIndexBuffer9 *indexBuffer;
+    unsigned int serial;
+    GLenum err = mIndexDataManager->prepareIndexData(type, count, elementArrayBuffer, indices, indexInfo, &indexBuffer, &serial);
+
+    mIndexInfo.minIndex = indexInfo->minIndex;
+    mIndexInfo.maxIndex = indexInfo->maxIndex;
+    mIndexInfo.startIndex = indexInfo->startIndex;
+
+    if (err == GL_NO_ERROR)
+    {
+        if (serial != mAppliedIBSerial)
+        {
+            mDevice->SetIndices(indexBuffer);
+            mAppliedIBSerial = serial;
+        }
+    }
+
+    return err;
+}
+
+void Renderer9::drawArrays(GLenum mode, GLsizei count, GLsizei instances)
+{
+    startScene();
+        
+    if (mode == GL_LINE_LOOP)
+    {
+        drawLineLoop(count, GL_NONE, NULL, 0, NULL);
+    }
+    else if (instances > 0)
+    {
+        gl::StaticIndexBuffer *countingIB = mIndexDataManager->getCountingIndices(count);
+        if (countingIB)
+        {
+            if (mAppliedIBSerial != countingIB->getSerial())
+            {
+                mDevice->SetIndices(countingIB->getBuffer());
+                mAppliedIBSerial = countingIB->getSerial();
+            }
+
+            for (int i = 0; i < mRepeatDraw; i++)
+            {
+                mDevice->DrawIndexedPrimitive(mPrimitiveType, 0, 0, count, 0, mPrimitiveCount);
+            }
+        }
+        else
+        {
+            ERR("Could not create a counting index buffer for glDrawArraysInstanced.");
+            return error(GL_OUT_OF_MEMORY);
+        }
+    }
+    else   // Regular case
+    {
+        mDevice->DrawPrimitive(mPrimitiveType, 0, mPrimitiveCount);
+    }
+}
+
+void Renderer9::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer)
+{
+    startScene();
+
+    if (mode == GL_LINE_LOOP)
+    {
+        drawLineLoop(count, type, indices, mIndexInfo.minIndex, elementArrayBuffer);
+    }
+    else
+    {
+        for (int i = 0; i < mRepeatDraw; i++)
+        {
+            GLsizei vertexCount = mIndexInfo.maxIndex - mIndexInfo.minIndex + 1;
+            mDevice->DrawIndexedPrimitive(mPrimitiveType, -(INT)mIndexInfo.minIndex, mIndexInfo.minIndex, vertexCount, mIndexInfo.startIndex, mPrimitiveCount);
+        }
+    }
+}
+
+void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer)
+{
+    // Get the raw indices for an indexed draw
+    if (type != GL_NONE && elementArrayBuffer)
+    {
+        gl::Buffer *indexBuffer = elementArrayBuffer;
+        intptr_t offset = reinterpret_cast<intptr_t>(indices);
+        indices = static_cast<const GLubyte*>(indexBuffer->data()) + offset;
+    }
+
+    UINT startIndex = 0;
+    bool succeeded = false;
+
+    if (get32BitIndexSupport())
+    {
+        const int spaceNeeded = (count + 1) * sizeof(unsigned int);
+
+        if (!mLineLoopIB)
+        {
+            mLineLoopIB = new gl::StreamingIndexBuffer(this, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX32);
+        }
+
+        if (mLineLoopIB)
+        {
+            mLineLoopIB->reserveSpace(spaceNeeded, GL_UNSIGNED_INT);
+
+            UINT offset = 0;
+            unsigned int *data = static_cast<unsigned int*>(mLineLoopIB->map(spaceNeeded, &offset));
+            startIndex = offset / 4;
+            
+            if (data)
+            {
+                switch (type)
+                {
+                  case GL_NONE:   // Non-indexed draw
+                    for (int i = 0; i < count; i++)
+                    {
+                        data[i] = i;
+                    }
+                    data[count] = 0;
+                    break;
+                  case GL_UNSIGNED_BYTE:
+                    for (int i = 0; i < count; i++)
+                    {
+                        data[i] = static_cast<const GLubyte*>(indices)[i];
+                    }
+                    data[count] = static_cast<const GLubyte*>(indices)[0];
+                    break;
+                  case GL_UNSIGNED_SHORT:
+                    for (int i = 0; i < count; i++)
+                    {
+                        data[i] = static_cast<const GLushort*>(indices)[i];
+                    }
+                    data[count] = static_cast<const GLushort*>(indices)[0];
+                    break;
+                  case GL_UNSIGNED_INT:
+                    for (int i = 0; i < count; i++)
+                    {
+                        data[i] = static_cast<const GLuint*>(indices)[i];
+                    }
+                    data[count] = static_cast<const GLuint*>(indices)[0];
+                    break;
+                  default: UNREACHABLE();
+                }
+
+                mLineLoopIB->unmap();
+                succeeded = true;
+            }
+        }
+    }
+    else
+    {
+        const int spaceNeeded = (count + 1) * sizeof(unsigned short);
+
+        if (!mLineLoopIB)
+        {
+            mLineLoopIB = new gl::StreamingIndexBuffer(this, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX16);
+        }
+
+        if (mLineLoopIB)
+        {
+            mLineLoopIB->reserveSpace(spaceNeeded, GL_UNSIGNED_SHORT);
+
+            UINT offset = 0;
+            unsigned short *data = static_cast<unsigned short*>(mLineLoopIB->map(spaceNeeded, &offset));
+            startIndex = offset / 2;
+            
+            if (data)
+            {
+                switch (type)
+                {
+                  case GL_NONE:   // Non-indexed draw
+                    for (int i = 0; i < count; i++)
+                    {
+                        data[i] = i;
+                    }
+                    data[count] = 0;
+                    break;
+                  case GL_UNSIGNED_BYTE:
+                    for (int i = 0; i < count; i++)
+                    {
+                        data[i] = static_cast<const GLubyte*>(indices)[i];
+                    }
+                    data[count] = static_cast<const GLubyte*>(indices)[0];
+                    break;
+                  case GL_UNSIGNED_SHORT:
+                    for (int i = 0; i < count; i++)
+                    {
+                        data[i] = static_cast<const GLushort*>(indices)[i];
+                    }
+                    data[count] = static_cast<const GLushort*>(indices)[0];
+                    break;
+                  case GL_UNSIGNED_INT:
+                    for (int i = 0; i < count; i++)
+                    {
+                        data[i] = static_cast<const GLuint*>(indices)[i];
+                    }
+                    data[count] = static_cast<const GLuint*>(indices)[0];
+                    break;
+                  default: UNREACHABLE();
+                }
+
+                mLineLoopIB->unmap();
+                succeeded = true;
+            }
+        }
+    }
+    
+    if (succeeded)
+    {
+        if (mAppliedIBSerial != mLineLoopIB->getSerial())
+        {
+            mDevice->SetIndices(mLineLoopIB->getBuffer());
+            mAppliedIBSerial = mLineLoopIB->getSerial();
+        }
+
+        mDevice->DrawIndexedPrimitive(D3DPT_LINESTRIP, -minIndex, minIndex, count, startIndex, count);
+    }
+    else
+    {
+        ERR("Could not create a looping index buffer for GL_LINE_LOOP.");
+        return error(GL_OUT_OF_MEMORY);
+    }
 }
 
 void Renderer9::applyShaders(gl::ProgramBinary *programBinary)
@@ -1339,6 +1607,12 @@ void Renderer9::releaseDeviceResources()
 
     delete mVertexDataManager;
     mVertexDataManager = NULL;
+
+    delete mIndexDataManager;
+    mIndexDataManager = NULL;
+
+    delete mLineLoopIB;
+    mLineLoopIB = NULL;
 }
 
 

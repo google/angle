@@ -107,7 +107,7 @@ void computeRange(GLenum type, const GLvoid *indices, GLsizei count, GLuint *min
     else UNREACHABLE();
 }
 
-GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, Buffer *buffer, const GLvoid *indices, TranslatedIndexData *translated)
+GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, Buffer *buffer, const GLvoid *indices, TranslatedIndexData *translated, IDirect3DIndexBuffer9 **d3dIndexBuffer, unsigned int *serial)
 {
     if (!mStreamingBufferShort)
     {
@@ -198,8 +198,8 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, Buffer *bu
         }
     }
 
-    translated->indexBuffer = indexBuffer->getBuffer();
-    translated->serial = indexBuffer->getSerial();
+    *d3dIndexBuffer = indexBuffer->getBuffer();
+    *serial = indexBuffer->getSerial();
     translated->startIndex = streamOffset / indexSize(format);
 
     if (buffer)

@@ -236,46 +236,6 @@ void ConvertMinFilter(GLenum minFilter, D3DTEXTUREFILTERTYPE *d3dMinFilter, D3DT
     }
 }
 
-bool ConvertPrimitiveType(GLenum primitiveType, GLsizei elementCount,
-                          D3DPRIMITIVETYPE *d3dPrimitiveType, int *d3dPrimitiveCount)
-{
-    switch (primitiveType)
-    {
-      case GL_POINTS:
-        *d3dPrimitiveType = D3DPT_POINTLIST;
-        *d3dPrimitiveCount = elementCount;
-        break;
-      case GL_LINES:
-        *d3dPrimitiveType = D3DPT_LINELIST;
-        *d3dPrimitiveCount = elementCount / 2;
-        break;
-      case GL_LINE_LOOP:
-        *d3dPrimitiveType = D3DPT_LINESTRIP;
-        *d3dPrimitiveCount = elementCount - 1;   // D3D doesn't support line loops, so we draw the last line separately
-        break;
-      case GL_LINE_STRIP:
-        *d3dPrimitiveType = D3DPT_LINESTRIP;
-        *d3dPrimitiveCount = elementCount - 1;
-        break;
-      case GL_TRIANGLES:
-        *d3dPrimitiveType = D3DPT_TRIANGLELIST;
-        *d3dPrimitiveCount = elementCount / 3;
-        break;
-      case GL_TRIANGLE_STRIP:
-        *d3dPrimitiveType = D3DPT_TRIANGLESTRIP;
-        *d3dPrimitiveCount = elementCount - 2;
-        break;
-      case GL_TRIANGLE_FAN:
-        *d3dPrimitiveType = D3DPT_TRIANGLEFAN;
-        *d3dPrimitiveCount = elementCount - 2;
-        break;
-      default:
-        return false;
-    }
-
-    return true;
-}
-
 D3DFORMAT ConvertRenderbufferFormat(GLenum format)
 {
     switch (format)

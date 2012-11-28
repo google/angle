@@ -31,9 +31,6 @@ struct TranslatedIndexData
     UINT minIndex;
     UINT maxIndex;
     UINT startIndex;
-
-    IDirect3DIndexBuffer9 *indexBuffer;
-    unsigned int serial;
 };
 
 class IndexBuffer
@@ -128,7 +125,7 @@ class IndexDataManager
     IndexDataManager(rx::Renderer9 *renderer);
     virtual ~IndexDataManager();
 
-    GLenum prepareIndexData(GLenum type, GLsizei count, Buffer *arrayElementBuffer, const GLvoid *indices, TranslatedIndexData *translated);
+    GLenum prepareIndexData(GLenum type, GLsizei count, Buffer *arrayElementBuffer, const GLvoid *indices, TranslatedIndexData *translated, IDirect3DIndexBuffer9 **indexBuffer, unsigned int *serial);
     StaticIndexBuffer *getCountingIndices(GLsizei count);
 
   private:

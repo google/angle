@@ -230,16 +230,6 @@ void Renderer11::deleteConfigs(ConfigDesc *configDescList)
     delete [] (configDescList);
 }
 
-void Renderer11::startScene()
-{
-    // TODO: nop in d3d11?
-}
-
-void Renderer11::endScene()
-{
-    // TODO: nop in d3d11?
-}
-
 void Renderer11::sync(bool block)
 {
     // TODO
@@ -436,7 +426,15 @@ bool Renderer11::setViewport(const gl::Rectangle& viewport, float zNear, float z
     return true;
 }
 
-bool Renderer11::applyRenderTarget(gl::Framebuffer *frameBuffer)
+bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count)
+{
+    // TODO
+    UNIMPLEMENTED();
+
+    return false;
+}
+
+bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
 {
     // TODO
     UNIMPLEMENTED();
@@ -447,12 +445,32 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *frameBuffer)
     return true;
 }
 
-GLenum Renderer11::applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], GLint first, GLsizei count, GLsizei instances, GLsizei *repeatDraw)
+GLenum Renderer11::applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], GLint first, GLsizei count, GLsizei instances)
 {
     // TODO
     UNIMPLEMENTED();
 
     return GL_OUT_OF_MEMORY;
+}
+
+GLenum Renderer11::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, gl::TranslatedIndexData *indexInfo)
+{
+    // TODO
+    UNIMPLEMENTED();
+
+    return GL_OUT_OF_MEMORY;
+}
+
+void Renderer11::drawArrays(GLenum mode, GLsizei count, GLsizei instances)
+{
+    // TODO
+    UNIMPLEMENTED();
+}
+
+void Renderer11::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer)
+{
+    // TODO
+    UNIMPLEMENTED();
 }
 
 void Renderer11::applyShaders(gl::ProgramBinary *programBinary)

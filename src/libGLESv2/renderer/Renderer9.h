@@ -23,13 +23,17 @@
 #include <D3Dcompiler.h>
 
 #include "common/angleutils.h"
+#include "libGLESv2/Context.h"
 #include "libGLESv2/renderer/ShaderCache.h"
 #include "libGLESv2/renderer/VertexDeclarationCache.h"
 #include "libGLESv2/renderer/Renderer.h"
+#include "libGLESv2/IndexDataManager.h"
 
 namespace gl
 {
 class VertexDataManager;
+class StreamingIndexBuffer;
+struct TranslatedAttribute;
 }
 
 namespace rx
@@ -49,8 +53,8 @@ class Renderer9 : public Renderer
     virtual int generateConfigs(ConfigDesc **configDescList);
     virtual void deleteConfigs(ConfigDesc *configDescList);
 
-    virtual void startScene();
-    virtual void endScene();
+    void startScene();
+    void endScene();
 
     virtual void sync(bool block);
 
@@ -93,8 +97,12 @@ class Renderer9 : public Renderer
 
     virtual bool applyRenderTarget(gl::Framebuffer *frameBuffer);
     virtual void applyShaders(gl::ProgramBinary *programBinary);
+    virtual bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount);
+    virtual GLenum applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], GLint first, GLsizei count, GLsizei instances);
+    virtual GLenum applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, gl::TranslatedIndexData *indexInfo);
 
-    virtual GLenum applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], GLint first, GLsizei count, GLsizei instances, GLsizei *repeatDraw);
+    virtual void drawArrays(GLenum mode, GLsizei count, GLsizei instances);
+    virtual void drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer);
 
     virtual void clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer);
 
@@ -166,6 +174,8 @@ class Renderer9 : public Renderer
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer9);
 
+    void drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
+
     void getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray);
     bool copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *source, bool fromManaged);
 
@@ -208,6 +218,11 @@ class Renderer9 : public Renderer
     bool mDeviceLost;
     D3DCAPS9 mDeviceCaps;
     D3DADAPTER_IDENTIFIER9 mAdapterIdentifier;
+
+    D3DPRIMITIVETYPE mPrimitiveType;
+    int mPrimitiveCount;
+    GLsizei mRepeatDraw;
+    gl::TranslatedIndexData mIndexInfo;
 
     bool mSceneStarted;
     bool mSupportsNonPower2Textures;
@@ -255,6 +270,8 @@ class Renderer9 : public Renderer
     gl::Color mCurBlendColor;
     GLuint mCurSampleMask;
 
+    unsigned int mAppliedIBSerial;
+
     // A pool of event queries that are currently unused.
     std::vector<IDirect3DQuery9*> mEventQueryPool;
     VertexShaderCache mVertexShaderCache;
@@ -262,6 +279,9 @@ class Renderer9 : public Renderer
 
     gl::VertexDataManager *mVertexDataManager;
     VertexDeclarationCache mVertexDeclarationCache;
+
+    gl::IndexDataManager *mIndexDataManager;
+    gl::StreamingIndexBuffer *mLineLoopIB;
 };
 
 }
