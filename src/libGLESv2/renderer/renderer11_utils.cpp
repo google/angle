@@ -100,6 +100,55 @@ D3D11_CULL_MODE ConvertCullMode(bool cullEnabled, GLenum cullMode)
     return cull;
 }
 
+D3D11_COMPARISON_FUNC ConvertComparison(GLenum comparison)
+{
+    D3D11_COMPARISON_FUNC d3dComp = D3D11_COMPARISON_NEVER;
+    switch (comparison)
+    {
+      case GL_NEVER:    d3dComp = D3D11_COMPARISON_NEVER;           break;
+      case GL_ALWAYS:   d3dComp = D3D11_COMPARISON_ALWAYS;          break;
+      case GL_LESS:     d3dComp = D3D11_COMPARISON_LESS;            break;
+      case GL_LEQUAL:   d3dComp = D3D11_COMPARISON_LESS_EQUAL;      break;
+      case GL_EQUAL:    d3dComp = D3D11_COMPARISON_EQUAL;           break;
+      case GL_GREATER:  d3dComp = D3D11_COMPARISON_GREATER;         break;
+      case GL_GEQUAL:   d3dComp = D3D11_COMPARISON_GREATER_EQUAL;   break;
+      case GL_NOTEQUAL: d3dComp = D3D11_COMPARISON_NOT_EQUAL;       break;
+      default: UNREACHABLE();
+    }
+
+    return d3dComp;
+}
+
+D3D11_DEPTH_WRITE_MASK ConvertDepthMask(bool depthWriteEnabled)
+{
+    return depthWriteEnabled ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;
+}
+
+UINT8 ConvertStencilMask(GLuint stencilmask)
+{
+    return static_cast<UINT8>(stencilmask);
+}
+
+D3D11_STENCIL_OP ConvertStencilOp(GLenum stencilOp)
+{
+    D3D11_STENCIL_OP d3dStencilOp = D3D11_STENCIL_OP_KEEP;
+
+    switch (stencilOp)
+    {
+      case GL_ZERO:      d3dStencilOp = D3D11_STENCIL_OP_ZERO;      break;
+      case GL_KEEP:      d3dStencilOp = D3D11_STENCIL_OP_KEEP;      break;
+      case GL_REPLACE:   d3dStencilOp = D3D11_STENCIL_OP_REPLACE;   break;
+      case GL_INCR:      d3dStencilOp = D3D11_STENCIL_OP_INCR_SAT;  break;
+      case GL_DECR:      d3dStencilOp = D3D11_STENCIL_OP_DECR_SAT;  break;
+      case GL_INVERT:    d3dStencilOp = D3D11_STENCIL_OP_INVERT;    break;
+      case GL_INCR_WRAP: d3dStencilOp = D3D11_STENCIL_OP_INCR;      break;
+      case GL_DECR_WRAP: d3dStencilOp = D3D11_STENCIL_OP_DECR;      break;
+      default: UNREACHABLE();
+    }
+
+    return d3dStencilOp;
+}
+
 }
 
 namespace d3d11_gl

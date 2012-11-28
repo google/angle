@@ -23,6 +23,11 @@ UINT8 ConvertColorMask(bool maskRed, bool maskGreen, bool maskBlue, bool maskAlp
 
 D3D11_CULL_MODE ConvertCullMode(bool cullEnabled, GLenum cullMode);
 
+D3D11_COMPARISON_FUNC ConvertComparison(GLenum comparison);
+D3D11_DEPTH_WRITE_MASK ConvertDepthMask(bool depthWriteEnabled);
+UINT8 ConvertStencilMask(GLuint stencilmask);
+D3D11_STENCIL_OP ConvertStencilOp(GLenum stencilOp);
+
 }
 
 namespace d3d11_gl
