@@ -27,6 +27,13 @@ enum SamplerType
     SAMPLER_VERTEX
 };
 
+struct Color
+{
+    float red;
+    float green;
+    float blue;
+    float alpha;
+};
 }
 
 #endif // LIBGLESV2_ANGLETYPES_H_

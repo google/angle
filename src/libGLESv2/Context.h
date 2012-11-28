@@ -29,6 +29,7 @@
 #include "common/RefCountObject.h"
 #include "libGLESv2/ResourceManager.h"
 #include "libGLESv2/HandleAllocator.h"
+#include "libGLESv2/angletypes.h"
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/renderer/SwapChain.h"
 
@@ -93,14 +94,6 @@ const float ALIASED_LINE_WIDTH_RANGE_MIN = 1.0f;
 const float ALIASED_LINE_WIDTH_RANGE_MAX = 1.0f;
 const float ALIASED_POINT_SIZE_RANGE_MIN = 1.0f;
 const float ALIASED_POINT_SIZE_RANGE_MAX_SM2 = 1.0f;
-
-struct Color
-{
-    float red;
-    float green;
-    float blue;
-    float alpha;
-};
 
 // Helper structure describing a single vertex attribute
 class VertexAttribute
