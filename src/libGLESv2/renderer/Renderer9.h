@@ -4,8 +4,7 @@
 // found in the LICENSE file.
 //
 
-// Renderer.h: Defines a back-end specific class that hides the details of the
-// implementation-specific renderer.
+// Renderer9.h: Defines a back-end specific class for the D3D9 renderer.
 
 #ifndef LIBGLESV2_RENDERER_RENDERER9_H_
 #define LIBGLESV2_RENDERER_RENDERER9_H_
@@ -20,7 +19,7 @@
 #define EGLAPI
 #include <EGL/egl.h>
 
-#include <d3d9.h>  // D3D9_REPLACE
+#include <d3d9.h>
 
 #include "common/angleutils.h"
 #include "libGLESv2/renderer/ShaderCache.h"
@@ -76,7 +75,7 @@ class Renderer9 : public Renderer
     virtual bool testDeviceResettable();
 
     // Renderer capabilities
-    IDirect3DDevice9 *getDevice() {return mDevice;};  // D3D9_REPLACE
+    IDirect3DDevice9 *getDevice() { return mDevice; }
     virtual DWORD getAdapterVendor() const;
     virtual const char *getAdapterDescription() const;
     virtual GUID getAdapterIdentifier() const;

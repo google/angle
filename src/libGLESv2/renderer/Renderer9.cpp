@@ -4,8 +4,7 @@
 // found in the LICENSE file.
 //
 
-// Renderer.cpp: Implements a back-end specific class that hides the details of the
-// implementation-specific renderer.
+// Renderer9.cpp: Implements a back-end specific class for the D3D9 renderer.
 
 #include "common/debug.h"
 #include "libGLESv2/utilities.h"

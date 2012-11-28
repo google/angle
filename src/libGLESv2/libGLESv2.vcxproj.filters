@@ -98,6 +98,9 @@
     <ClCompile Include="renderer\renderer9_utils.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\Renderer11.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinaryStream.h">
@@ -203,6 +206,9 @@
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="renderer\renderer9_utils.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\Renderer11.h">
       <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
