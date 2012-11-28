@@ -631,8 +631,118 @@ void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
 
 void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer)
 {
-    // TODO
-    UNIMPLEMENTED();
+    if (clearParams.mask & GL_COLOR_BUFFER_BIT)
+    {
+        gl::Renderbuffer *renderbufferObject = frameBuffer->getColorbuffer();
+        if (renderbufferObject)
+        {
+            RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(renderbufferObject->getRenderTarget());
+            if (!renderTarget)
+            {
+                ERR("render target pointer unexpectedly null.");
+                return;
+            }
+
+            ID3D11RenderTargetView *framebufferRTV = renderTarget->getRenderTargetView();
+            if (!framebufferRTV)
+            {
+                ERR("render target view pointer unexpectedly null.");
+                return;
+            }
+
+            if (mCurScissor.x > 0 || mCurScissor.y > 0 ||
+                mCurScissor.x + mCurScissor.width < renderTarget->getWidth() ||
+                mCurScissor.y + mCurScissor.height < renderTarget->getHeight())
+            {
+                // TODO: clearing of subregion of render target
+                UNIMPLEMENTED();
+            }
+
+            bool alphaUnmasked = (gl::GetAlphaSize(mRenderTargetDesc.format) == 0) || clearParams.colorMaskAlpha;
+            const bool needMaskedColorClear = (clearParams.mask & GL_COLOR_BUFFER_BIT) &&
+                                              !(clearParams.colorMaskRed && clearParams.colorMaskGreen &&
+                                               clearParams.colorMaskBlue && alphaUnmasked);
+
+            if (needMaskedColorClear)
+            {
+                // TODO: masked color clearing
+                UNIMPLEMENTED();
+            }
+            else
+            {
+                const float clearValues[4] = { clearParams.colorClearValue.red,
+                                               clearParams.colorClearValue.green,
+                                               clearParams.colorClearValue.blue,
+                                               clearParams.colorClearValue.alpha };
+                mDeviceContext->ClearRenderTargetView(framebufferRTV, clearValues);
+            }
+
+            framebufferRTV->Release();
+        }
+    }
+    if (clearParams.mask & GL_DEPTH_BUFFER_BIT || clearParams.mask & GL_STENCIL_BUFFER_BIT)
+    {
+        gl::Renderbuffer *renderbufferObject = frameBuffer->getDepthOrStencilbuffer();
+        if (renderbufferObject)
+        {
+            RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(renderbufferObject->getRenderTarget());
+            if (!renderTarget)
+            {
+                ERR("render target pointer unexpectedly null.");
+                return;
+            }
+
+            ID3D11DepthStencilView *framebufferDSV = renderTarget->getDepthStencilView();
+            if (!framebufferDSV)
+            {
+                ERR("depth stencil view pointer unexpectedly null.");
+                return;
+            }
+
+            if (mCurScissor.x > 0 || mCurScissor.y > 0 ||
+                mCurScissor.x + mCurScissor.width < renderTarget->getWidth() ||
+                mCurScissor.y + mCurScissor.height < renderTarget->getHeight())
+            {
+                // TODO: clearing of subregion of depth stencil view
+                UNIMPLEMENTED();
+            }
+
+            unsigned int stencilUnmasked = 0x0;
+            if ((clearParams.mask & GL_STENCIL_BUFFER_BIT) && frameBuffer->hasStencil())
+            {
+                unsigned int stencilSize = gl::GetStencilSize(frameBuffer->getStencilbuffer()->getActualFormat());
+                stencilUnmasked = (0x1 << stencilSize) - 1;
+            }
+
+            const bool needMaskedStencilClear = (clearParams.mask & GL_STENCIL_BUFFER_BIT) &&
+                                                (clearParams.stencilWriteMask & stencilUnmasked) != stencilUnmasked;
+
+            if (needMaskedStencilClear)
+            {
+                // TODO: masked clearing of depth stencil
+                UNIMPLEMENTED();
+            }
+            else
+            {
+                UINT clearFlags = 0;
+                if (clearParams.mask & GL_DEPTH_BUFFER_BIT)
+                {
+                    clearFlags |= D3D11_CLEAR_DEPTH;
+                }
+                if (clearParams.mask & GL_STENCIL_BUFFER_BIT)
+                {
+                    clearFlags |= D3D11_CLEAR_STENCIL;
+                }
+
+                float depthClear = clearParams.depthClearValue;
+                UINT8 stencilClear = clearParams.stencilClearValue & 0x000000FF;
+
+                mDeviceContext->ClearDepthStencilView(framebufferDSV, clearFlags, depthClear, stencilClear);
+            }
+
+            framebufferDSV->Release();
+        }
+    }
 }
 
 void Renderer11::markAllStateDirty()
