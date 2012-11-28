@@ -357,9 +357,9 @@ void Renderer11::setScissorRectangle(const gl::Rectangle& scissor, unsigned int 
     {
         D3D11_RECT rect;
         rect.left = gl::clamp(scissor.x, 0, static_cast<int>(renderTargetWidth));
-        rect.top = gl::clamp(scissor.y, 0, static_cast<int>(renderTargetWidth));
+        rect.top = gl::clamp(scissor.y, 0, static_cast<int>(renderTargetHeight));
         rect.right = gl::clamp(scissor.x + scissor.width, 0, static_cast<int>(renderTargetWidth));
-        rect.bottom = gl::clamp(scissor.y + scissor.height, 0, static_cast<int>(renderTargetWidth));
+        rect.bottom = gl::clamp(scissor.y + scissor.height, 0, static_cast<int>(renderTargetHeight));
 
         mDeviceContext->RSSetScissorRects(1, &rect);
 
