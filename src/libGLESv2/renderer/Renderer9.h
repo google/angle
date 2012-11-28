@@ -128,8 +128,10 @@ class Renderer9 : public Renderer
     virtual bool copyToRenderTarget(TextureStorage2D *dest, TextureStorage2D *source);
     virtual bool copyToRenderTarget(TextureStorageCubeMap *dest, TextureStorageCubeMap *source);
 
-    virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorage2D *storage, GLint level);
-    virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorageCubeMap *storage, GLenum target, GLint level);
+    virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat,
+                           GLint xoffset, GLint yoffset, TextureStorage2D *storage, GLint level);
+    virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat,
+                           GLint xoffset, GLint yoffset, TextureStorageCubeMap *storage, GLenum target, GLint level);
 
     bool boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest);
 

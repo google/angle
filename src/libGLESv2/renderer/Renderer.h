@@ -126,8 +126,10 @@ class Renderer
     virtual bool copyToRenderTarget(TextureStorage2D *dest, TextureStorage2D *source) = 0;
     virtual bool copyToRenderTarget(TextureStorageCubeMap *dest, TextureStorageCubeMap *source) = 0;
 
-    virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorage2D *storage, GLint level) = 0;
-    virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorageCubeMap *storage, GLenum target, GLint level) = 0;
+    virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat,
+                           GLint xoffset, GLint yoffset, TextureStorage2D *storage, GLint level) = 0;
+    virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat,
+                           GLint xoffset, GLint yoffset, TextureStorageCubeMap *storage, GLenum target, GLint level) = 0;
 
   protected:
     egl::Display *mDisplay;

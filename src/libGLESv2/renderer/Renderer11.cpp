@@ -568,4 +568,20 @@ bool Renderer11::copyToRenderTarget(TextureStorageCubeMap *dest, TextureStorageC
     return false;
 }
 
+bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat,
+                           GLint xoffset, GLint yoffset, TextureStorage2D *storage, GLint level)
+{
+    // TODO
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat,
+                           GLint xoffset, GLint yoffset, TextureStorageCubeMap *storage, GLenum target, GLint level)
+{
+    // TODO
+    UNIMPLEMENTED();
+    return false;
+}
+
 }

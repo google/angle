@@ -1417,14 +1417,14 @@ D3DPOOL Renderer9::getBufferPool(DWORD usage) const
     return D3DPOOL_DEFAULT;
 }
 
-bool Renderer9::copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset,
-                          TextureStorage2D *storage, GLint level)
+bool Renderer9::copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat,
+                          GLint xoffset, GLint yoffset, TextureStorage2D *storage, GLint level)
 {
     return mBlit->copy(framebuffer, sourceRect, destFormat, xoffset, yoffset, storage, level);
 }
 
-bool Renderer9::copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset,
-                          TextureStorageCubeMap *storage, GLenum target, GLint level)
+bool Renderer9::copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat,
+                          GLint xoffset, GLint yoffset, TextureStorageCubeMap *storage, GLenum target, GLint level)
 {
     return mBlit->copy(framebuffer, sourceRect, destFormat, xoffset, yoffset, storage, target, level);
 }

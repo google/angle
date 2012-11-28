@@ -100,6 +100,11 @@ class Renderer11 : public Renderer
     virtual bool copyToRenderTarget(TextureStorage2D *dest, TextureStorage2D *source);
     virtual bool copyToRenderTarget(TextureStorageCubeMap *dest, TextureStorageCubeMap *source);
 
+    virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat,
+                           GLint xoffset, GLint yoffset, TextureStorage2D *storage, GLint level);
+    virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat,
+                           GLint xoffset, GLint yoffset, TextureStorageCubeMap *storage, GLenum target, GLint level);
+
     // D3D11-renderer specific methods
     ID3D11Device *getDevice() { return mDevice; }
     ID3D11DeviceContext *getDeviceContext() { return mDeviceContext; };
