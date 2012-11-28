@@ -228,6 +228,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\third_party\murmurhash\MurmurHash3.cpp" />
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Context.cpp" />
     <ClCompile Include="..\common\debug.cpp" />
@@ -262,6 +263,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClCompile Include="VertexDataManager.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\third_party\murmurhash\MurmurHash3.h" />
     <ClInclude Include="angletypes.h" />
     <ClInclude Include="BinaryStream.h" />
     <ClInclude Include="Buffer.h" />

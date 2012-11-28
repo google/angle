@@ -12,6 +12,12 @@
     <Filter Include="Renderer">
       <UniqueIdentifier>{93a76964-77a3-4b20-a6f5-e14e762d4e14}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Third Party">
+      <UniqueIdentifier>{dc1dac40-3563-41be-9e2d-c2588d8670fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Third Party\MurmurHash">
+      <UniqueIdentifier>{b0005d2f-9b4a-4659-a270-138811174f73}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Buffer.cpp">
@@ -109,6 +115,9 @@
     </ClCompile>
     <ClCompile Include="renderer\RenderTarget9.cpp">
       <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClCompile Include="..\third_party\murmurhash\MurmurHash3.cpp">
+      <Filter>Third Party\MurmurHash</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -228,6 +237,9 @@
     </ClInclude>
     <ClInclude Include="renderer\RenderTarget9.h">
       <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\third_party\murmurhash\MurmurHash3.h">
+      <Filter>Third Party\MurmurHash</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

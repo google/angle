@@ -210,6 +210,8 @@
             '$(DXSDK_DIR)/include',
           ],
           'sources': [
+            'third_party/murmurhash/MurmurHash3.h'
+            'third_party/murmurhash/MurmurHash3.cpp'
             'common/angleutils.h',
             'common/debug.cpp',
             'common/debug.h',
