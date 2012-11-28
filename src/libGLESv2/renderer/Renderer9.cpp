@@ -95,8 +95,6 @@ Renderer9::Renderer9(egl::Display *display, HDC hDc, bool softwareDevice) : Rend
 Renderer9::~Renderer9()
 {
     releaseDeviceResources();
-    
-    delete mBlit;
 
     if (mDevice)
     {
@@ -375,8 +373,6 @@ EGLint Renderer9::initialize()
 
     initializeDevice();
 
-    mBlit = new Blit(this);
-
     return EGL_SUCCESS;
 }
 
@@ -402,10 +398,9 @@ void Renderer9::initializeDevice()
 
     mSceneStarted = false;
 
-    if (!mVertexDataManager)
-    {
-        mVertexDataManager = new gl::VertexDataManager(this);
-    }
+    ASSERT(!mBlit && !mVertexDataManager);
+    mBlit = new Blit(this);
+    mVertexDataManager = new gl::VertexDataManager(this);
 }
 
 D3DPRESENT_PARAMETERS Renderer9::getDefaultPresentParameters()
@@ -1338,6 +1333,9 @@ void Renderer9::releaseDeviceResources()
 
     mVertexShaderCache.clear();
     mPixelShaderCache.clear();
+
+    delete mBlit;
+    mBlit = NULL;
 
     delete mVertexDataManager;
     mVertexDataManager = NULL;
