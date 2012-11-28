@@ -87,7 +87,7 @@ class Renderer9 : public Renderer
     virtual void setBlendState(const gl::BlendState &blendState, const gl::Color &blendColor,
                                unsigned int sampleMask);
     virtual void setDepthStencilState(const gl::DepthStencilState &depthStencilState, int stencilRef,
-                                      int stencilBackRef, bool frontFaceCCW, unsigned int stencilSize);
+                                      int stencilBackRef, bool frontFaceCCW);
 
     virtual void setScissorRectangle(const gl::Rectangle &scissor);
     virtual bool setViewport(const gl::Rectangle &viewport, float zNear, float zFar,
@@ -246,6 +246,7 @@ class Renderer9 : public Renderer
     bool mDepthStencilInitialized;
     bool mRenderTargetDescInitialized;
     rx::RenderTarget::Desc mRenderTargetDesc;
+    unsigned int mCurStencilSize;
     unsigned int mCurDepthSize;
 
     IDirect3DStateBlock9 *mMaskedClearSavedState;
@@ -256,7 +257,6 @@ class Renderer9 : public Renderer
     int mCurStencilRef;
     int mCurStencilBackRef;
     bool mCurFrontFaceCCW;
-    unsigned int mCurStencilSize;
 
     bool mForceSetRasterState;
     gl::RasterizerState mCurRasterState;

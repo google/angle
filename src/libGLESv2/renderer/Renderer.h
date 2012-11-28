@@ -85,7 +85,7 @@ class Renderer
     virtual void setBlendState(const gl::BlendState &blendState, const gl::Color &blendColor,
                                unsigned int sampleMask) = 0;
     virtual void setDepthStencilState(const gl::DepthStencilState &depthStencilState, int stencilRef,
-                                      int stencilBackRef, bool frontFaceCCW, unsigned int stencilSize) = 0;
+                                      int stencilBackRef, bool frontFaceCCW) = 0;
 
     virtual void setScissorRectangle(const gl::Rectangle &scissor) = 0;
     virtual bool setViewport(const gl::Rectangle &viewport, float zNear, float zFar,

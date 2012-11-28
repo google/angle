@@ -798,14 +798,13 @@ void Renderer9::setBlendState(const gl::BlendState &blendState, const gl::Color 
 }
 
 void Renderer9::setDepthStencilState(const gl::DepthStencilState &depthStencilState, int stencilRef,
-                                     int stencilBackRef, bool frontFaceCCW, unsigned int stencilSize)
+                                     int stencilBackRef, bool frontFaceCCW)
 {
     bool depthStencilStateChanged = mForceSetDepthStencilState ||
                                     memcmp(&depthStencilState, &mCurDepthStencilState, sizeof(gl::DepthStencilState)) != 0;
     bool stencilRefChanged = mForceSetDepthStencilState || stencilRef != mCurStencilRef ||
                              stencilBackRef != mCurStencilBackRef;
     bool frontFaceCCWChanged = mForceSetDepthStencilState || frontFaceCCW != mCurFrontFaceCCW;
-    bool stencilSizeChanged = mForceSetDepthStencilState || stencilSize != mCurStencilSize;
 
     if (depthStencilStateChanged)
     {
@@ -822,9 +821,9 @@ void Renderer9::setDepthStencilState(const gl::DepthStencilState &depthStencilSt
         mCurDepthStencilState = depthStencilState;
     }
 
-    if (depthStencilStateChanged || stencilRefChanged || frontFaceCCWChanged || stencilSizeChanged)
+    if (depthStencilStateChanged || stencilRefChanged || frontFaceCCWChanged)
     {
-        if (depthStencilState.stencilTest && stencilSize > 0)
+        if (depthStencilState.stencilTest && mCurStencilSize > 0)
         {
             mDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
             mDevice->SetRenderState(D3DRS_TWOSIDEDSTENCILMODE, TRUE);
@@ -842,7 +841,7 @@ void Renderer9::setDepthStencilState(const gl::DepthStencilState &depthStencilSt
             }
 
             // get the maximum size of the stencil ref
-            GLuint maxStencil = (1 << stencilSize) - 1;
+            unsigned int maxStencil = (1 << mCurStencilSize) - 1;
 
             mDevice->SetRenderState(frontFaceCCW ? D3DRS_STENCILWRITEMASK : D3DRS_CCW_STENCILWRITEMASK,
                                     depthStencilState.stencilWritemask);
@@ -888,7 +887,6 @@ void Renderer9::setDepthStencilState(const gl::DepthStencilState &depthStencilSt
         mCurStencilRef = stencilRef;
         mCurStencilBackRef = stencilBackRef;
         mCurFrontFaceCCW = frontFaceCCW;
-        mCurStencilSize = stencilSize;
     }
 
     mForceSetDepthStencilState = false;
@@ -1083,6 +1081,7 @@ bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
         !mDepthStencilInitialized)
     {
         unsigned int depthSize = 0;
+        unsigned int stencilSize = 0;
 
         // Apply the depth stencil on the device
         if (depthStencil)
@@ -1105,6 +1104,7 @@ bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
             depthStencilSurface->Release();
 
             depthSize = depthStencil->getDepthSize();
+            stencilSize = depthStencil->getStencilSize();
         }
         else
         {
@@ -1115,6 +1115,12 @@ bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
         {
             mCurDepthSize = depthSize;
             mForceSetRasterState = true;
+        }
+
+        if (!mDepthStencilInitialized || stencilSize != mCurStencilSize)
+        {
+            mCurStencilSize = stencilSize;
+            mForceSetDepthStencilState = true;
         }
 
         mAppliedDepthbufferSerial = depthbufferSerial;

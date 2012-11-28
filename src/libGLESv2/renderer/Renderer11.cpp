@@ -311,7 +311,7 @@ void Renderer11::setBlendState(const gl::BlendState &blendState, const gl::Color
 }
 
 void Renderer11::setDepthStencilState(const gl::DepthStencilState &depthStencilState, int stencilRef,
-                                      int stencilBackRef, bool frontFaceCCW, unsigned int stencilSize)
+                                      int stencilBackRef, bool frontFaceCCW)
 {
     if (mForceSetDepthStencilState ||
         memcmp(&depthStencilState, &mCurDepthStencilState, sizeof(gl::DepthStencilState)) != 0 ||

@@ -1812,9 +1812,8 @@ void Context::applyState(GLenum drawMode)
     }
     mRenderer->setBlendState(mState.blend, mState.blendColor, mask);
 
-    unsigned int stencilSize = framebufferObject->hasStencil() ? framebufferObject->getStencilbuffer()->getStencilSize() : 0;
     mRenderer->setDepthStencilState(mState.depthStencil, mState.stencilRef, mState.stencilBackRef,
-                                    mState.rasterizer.frontFace == GL_CCW, stencilSize);
+                                    mState.rasterizer.frontFace == GL_CCW);
 }
 
 // Applies the shaders and shader constants to the Direct3D 9 device
