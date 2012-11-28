@@ -379,7 +379,7 @@ class Context
     GLenum getResetStatus();
     virtual bool isResetNotificationEnabled();
 
-    bool supportsShaderModel3() const;
+    int getMajorShaderModel() const;
     float getMaximumPointSize() const;
     int getMaximumVaryingVectors() const;
     unsigned int getMaximumVertexTextureImageUnits() const;
@@ -495,7 +495,7 @@ class Context
     BindingPointer<ProgramBinary> mCurrentProgramBinary;
     Framebuffer *mBoundDrawFramebuffer;
 
-    bool mSupportsShaderModel3;
+    int mMajorShaderModel;
     float mMaximumPointSize;
     bool mSupportsVertexTexture;
     bool mSupportsNonPower2Texture;

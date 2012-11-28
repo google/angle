@@ -1317,7 +1317,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
     }
 
     // Write the HLSL input/output declarations
-    const bool sm3 = mRenderer->getShaderModel3Support();
+    const bool sm3 = mRenderer->getMajorShaderModel() >= 3;
     Context *context = getContext();
     const int maxVaryingVectors = context->getMaximumVaryingVectors();
 
@@ -1930,8 +1930,8 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
         return false;
     }
 
-    const char *vertexProfile = mRenderer->getShaderModel3Support() ? "vs_3_0" : "vs_2_0";
-    const char *pixelProfile = mRenderer->getShaderModel3Support() ? "ps_3_0" : "ps_2_0";
+    const char *vertexProfile = mRenderer->getMajorShaderModel() >= 3 ? "vs_3_0" : "vs_2_0";
+    const char *pixelProfile = mRenderer->getMajorShaderModel() >= 3 ? "ps_3_0" : "ps_2_0";
 
     ID3D10Blob *vertexBinary = compileToBinary(infoLog, vertexHLSL.c_str(), vertexProfile, &mConstantTableVS);
     ID3D10Blob *pixelBinary = compileToBinary(infoLog, pixelHLSL.c_str(), pixelProfile, &mConstantTablePS);

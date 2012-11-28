@@ -709,11 +709,15 @@ bool Renderer11::getShareHandleSupport() const
     return false && !gl::perfActive();
 }
 
-bool Renderer11::getShaderModel3Support() const
+int Renderer11::getMajorShaderModel() const
 {
-    // TODO
-    UNIMPLEMENTED();
-    return true;
+    switch (mFeatureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_0: return D3D11_SHADER_MAJOR_VERSION;   // 5
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0: return D3D10_SHADER_MAJOR_VERSION;   // 4
+      default: UNREACHABLE();      return 0;
+    }
 }
 
 float Renderer11::getMaxPointSize() const

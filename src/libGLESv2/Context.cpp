@@ -233,7 +233,7 @@ void Context::makeCurrent(egl::Surface *surface)
 {
     if (!mHasBeenCurrent)
     {
-        mSupportsShaderModel3 = mRenderer->getShaderModel3Support();
+        mMajorShaderModel = mRenderer->getMajorShaderModel();
         mMaximumPointSize = mRenderer->getMaxPointSize();
         mSupportsVertexTexture = mRenderer->getVertexTextureSupport();
         mSupportsNonPower2Texture = mRenderer->getNonPower2TextureSupport();
@@ -2213,19 +2213,19 @@ bool Context::isResetNotificationEnabled()
     return (mResetStrategy == GL_LOSE_CONTEXT_ON_RESET_EXT);
 }
 
-bool Context::supportsShaderModel3() const
+int Context::getMajorShaderModel() const
 {
-    return mSupportsShaderModel3;
+    return mMajorShaderModel;
 }
 
 float Context::getMaximumPointSize() const
 {
-    return mSupportsShaderModel3 ? mMaximumPointSize : ALIASED_POINT_SIZE_RANGE_MAX_SM2;
+    return mMajorShaderModel >= 3 ? mMaximumPointSize : ALIASED_POINT_SIZE_RANGE_MAX_SM2;
 }
 
 int Context::getMaximumVaryingVectors() const
 {
-    return mSupportsShaderModel3 ? MAX_VARYING_VECTORS_SM3 : MAX_VARYING_VECTORS_SM2;
+    return mMajorShaderModel >= 3 ? MAX_VARYING_VECTORS_SM3 : MAX_VARYING_VECTORS_SM2;
 }
 
 unsigned int Context::getMaximumVertexTextureImageUnits() const
@@ -2240,7 +2240,7 @@ unsigned int Context::getMaximumCombinedTextureImageUnits() const
 
 int Context::getMaximumFragmentUniformVectors() const
 {
-    return mSupportsShaderModel3 ? MAX_FRAGMENT_UNIFORM_VECTORS_SM3 : MAX_FRAGMENT_UNIFORM_VECTORS_SM2;
+    return mMajorShaderModel >= 3 ? MAX_FRAGMENT_UNIFORM_VECTORS_SM3 : MAX_FRAGMENT_UNIFORM_VECTORS_SM2;
 }
 
 int Context::getMaxSupportedSamples() const

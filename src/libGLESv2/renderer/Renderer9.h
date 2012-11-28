@@ -137,7 +137,7 @@ class Renderer9 : public Renderer
     virtual float getTextureMaxAnisotropy() const;
     virtual bool getShareHandleSupport() const;
 
-    virtual bool getShaderModel3Support() const;
+    virtual int getMajorShaderModel() const;
     virtual float getMaxPointSize() const;
     virtual int getMaxTextureWidth() const;
     virtual int getMaxTextureHeight() const;

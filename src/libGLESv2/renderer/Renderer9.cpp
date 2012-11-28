@@ -1950,9 +1950,9 @@ bool Renderer9::getShareHandleSupport() const
     return (mD3d9Ex != NULL) && !gl::perfActive();
 }
 
-bool Renderer9::getShaderModel3Support() const
+int Renderer9::getMajorShaderModel() const
 {
-    return mDeviceCaps.PixelShaderVersion >= D3DPS_VERSION(3, 0);
+    return D3DSHADER_VERSION_MAJOR(mDeviceCaps.PixelShaderVersion);
 }
 
 float Renderer9::getMaxPointSize() const
