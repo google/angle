@@ -926,11 +926,119 @@ bool Renderer9::setViewport(const gl::Rectangle& viewport, float zNear, float zF
 
 bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
 {
-    // TODO: only set these when the rendertarget actually changes
-    mForceSetScissor = true;
-    mForceSetViewport = true;
+    // if there is no color attachment we must synthesize a NULL colorattachment
+    // to keep the D3D runtime happy.  This should only be possible if depth texturing.
+    gl::Renderbuffer *renderbufferObject = NULL;
+    if (framebuffer->getColorbufferType() != GL_NONE)
+    {
+        renderbufferObject = framebuffer->getColorbuffer();
+    }
+    else
+    {
+        renderbufferObject = framebuffer->getNullColorbuffer();
+    }
+    if (!renderbufferObject)
+    {
+        ERR("unable to locate renderbuffer for FBO.");
+        return false;
+    }
 
-    // TODO
+    bool renderTargetChanged = false;
+    unsigned int renderTargetSerial = renderbufferObject->getSerial();
+    if (renderTargetSerial != mAppliedRenderTargetSerial)
+    {
+        // Apply the render target on the device
+        IDirect3DSurface9 *renderTargetSurface = NULL;
+
+        RenderTarget *renderTarget = renderbufferObject->getRenderTarget();
+        if (renderTarget)
+        {
+            renderTargetSurface = renderTarget->getSurface();
+        }
+
+        if (!renderTargetSurface)
+        {
+            ERR("render target pointer unexpectedly null.");
+            return false;   // Context must be lost
+        }
+
+        mDevice->SetRenderTarget(0, renderTargetSurface);
+        renderTargetSurface->Release();
+
+        mAppliedRenderTargetSerial = renderTargetSerial;
+        renderTargetChanged = true;
+    }
+
+    gl::Renderbuffer *depthStencil = NULL;
+    unsigned int depthbufferSerial = 0;
+    unsigned int stencilbufferSerial = 0;
+    if (framebuffer->getDepthbufferType() != GL_NONE)
+    {
+        depthStencil = framebuffer->getDepthbuffer();
+        if (!depthStencil)
+        {
+            ERR("Depth stencil pointer unexpectedly null.");
+            return false;
+        }
+
+        depthbufferSerial = depthStencil->getSerial();
+    }
+    else if (framebuffer->getStencilbufferType() != GL_NONE)
+    {
+        depthStencil = framebuffer->getStencilbuffer();
+        if (!depthStencil)
+        {
+            ERR("Depth stencil pointer unexpectedly null.");
+            return false;
+        }
+
+        stencilbufferSerial = depthStencil->getSerial();
+    }
+
+    if (depthbufferSerial != mAppliedDepthbufferSerial ||
+        stencilbufferSerial != mAppliedStencilbufferSerial ||
+        !mDepthStencilInitialized)
+    {
+        // Apply the depth stencil on the device
+        if (depthStencil)
+        {
+            IDirect3DSurface9 *depthStencilSurface = NULL;
+            RenderTarget *depthStencilRenderTarget = depthStencil->getDepthStencil();
+
+            if (depthStencilRenderTarget)
+            {
+                depthStencilSurface = depthStencilRenderTarget->getSurface();
+            }
+
+            if (!depthStencilSurface)
+            {
+                ERR("depth stencil pointer unexpectedly null.");
+                return false;   // Context must be lost
+            }
+
+            mDevice->SetDepthStencilSurface(depthStencilSurface);
+            depthStencilSurface->Release();
+        }
+        else
+        {
+            mDevice->SetDepthStencilSurface(NULL);
+        }
+
+        mAppliedDepthbufferSerial = depthbufferSerial;
+        mAppliedStencilbufferSerial = stencilbufferSerial;
+        mDepthStencilInitialized = true;
+    }
+
+    if (renderTargetChanged || !mRenderTargetDescInitialized)
+    {
+        mForceSetScissor = true;
+        mForceSetViewport = true;
+
+        mRenderTargetDesc.width = renderbufferObject->getWidth();
+        mRenderTargetDesc.height = renderbufferObject->getHeight();
+        mRenderTargetDesc.format = renderbufferObject->getActualFormat();
+        mRenderTargetDescInitialized = true;
+    }
 
     return true;
 }
@@ -945,6 +1053,12 @@ void Renderer9::clear(GLbitfield mask, const gl::Color &colorClear, float depthC
 
 void Renderer9::markAllStateDirty()
 {
+    mAppliedRenderTargetSerial = 0;
+    mAppliedDepthbufferSerial = 0;
+    mAppliedStencilbufferSerial = 0;
+    mDepthStencilInitialized = false;
+    mRenderTargetDescInitialized = false;
+
     mForceSetDepthStencilState = true;
     mForceSetRasterState = true;
     mForceSetBlendState = true;

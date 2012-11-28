@@ -191,6 +191,14 @@ class Renderer9 : public Renderer
     std::map<D3DFORMAT, bool *> mMultiSampleSupport;
     GLsizei mMaxSupportedSamples;
 
+    // current render target states
+    unsigned int mAppliedRenderTargetSerial;
+    unsigned int mAppliedDepthbufferSerial;
+    unsigned int mAppliedStencilbufferSerial;
+    bool mDepthStencilInitialized;
+    bool mRenderTargetDescInitialized;
+    rx::RenderTarget::Desc mRenderTargetDesc;
+
     // previously set render states
     bool mForceSetDepthStencilState;
     gl::DepthStencilState mCurDepthStencilState;
