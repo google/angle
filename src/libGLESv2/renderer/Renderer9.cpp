@@ -597,12 +597,6 @@ void Renderer9::freeEventQuery(IDirect3DQuery9* query)
     }
 }
 
-
-HRESULT Renderer9::compileShaderSource(const char* hlsl, const char* sourceName, const char* profile, DWORD flags, ID3DBlob** binary, ID3DBlob** errorMessage)
-{
-    return mD3DCompileFunc(hlsl, strlen(hlsl), sourceName, NULL, NULL, "main", profile, flags, 0, binary, errorMessage);
-}
-
 IDirect3DVertexShader9 *Renderer9::createVertexShader(const DWORD *function, size_t length)
 {
     return mVertexShaderCache.create(function, length);
@@ -2748,8 +2742,8 @@ ID3D10Blob *Renderer9::compileToBinary(gl::InfoLog &infoLog, const char *hlsl, c
     {
         ID3D10Blob *errorMessage = NULL;
         ID3D10Blob *binary = NULL;
-        result = compileShaderSource(hlsl, gl::g_fakepath, profile, flags | extraFlags[i], &binary, &errorMessage);
-
+        result = mD3DCompileFunc(hlsl, strlen(hlsl), gl::g_fakepath, NULL, NULL,
+                                 "main", profile, flags | extraFlags[i], 0, &binary, &errorMessage);
         if (errorMessage)
         {
             const char *message = (const char*)errorMessage->GetBufferPointer();

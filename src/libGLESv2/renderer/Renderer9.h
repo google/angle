@@ -67,7 +67,6 @@ class Renderer9 : public Renderer
     // resource creation
     IDirect3DVertexShader9 *createVertexShader(const DWORD *function, size_t length);
     IDirect3DPixelShader9 *createPixelShader(const DWORD *function, size_t length);
-    HRESULT compileShaderSource(const char* hlsl, const char* sourceName, const char* profile, DWORD flags, ID3DBlob** binary, ID3DBlob** errorMessage);
     HRESULT createVertexBuffer(UINT Length, DWORD Usage, IDirect3DVertexBuffer9 **ppVertexBuffer);
     HRESULT createIndexBuffer(UINT Length, DWORD Usage, D3DFORMAT Format, IDirect3DIndexBuffer9 **ppIndexBuffer);
 #if 0

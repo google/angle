@@ -14,7 +14,6 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 
-#include <d3dcompiler.h>
 #include <string>
 #include <vector>
 
