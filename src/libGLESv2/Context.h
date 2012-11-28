@@ -557,7 +557,7 @@ class Context
     bool mViewportInitialized;
     D3DVIEWPORT9 mSetViewport;
     bool mRenderTargetDescInitialized;
-    D3DSURFACE_DESC mRenderTargetDesc;
+    rx::RenderTarget::Desc mRenderTargetDesc;
     bool mDxUniformsDirty;
     BindingPointer<ProgramBinary> mCurrentProgramBinary;
     Framebuffer *mBoundDrawFramebuffer;

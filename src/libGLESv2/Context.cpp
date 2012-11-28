@@ -1832,14 +1832,10 @@ bool Context::applyRenderTarget(bool ignoreViewport)
 
     if (!mRenderTargetDescInitialized || renderTargetChanged)
     {
-        IDirect3DSurface9 *renderTarget = renderbufferObject->getRenderTarget();
-        if (!renderTarget)
-        {
-            return false;   // Context must be lost
-        }
-        renderTarget->GetDesc(&mRenderTargetDesc);
+        mRenderTargetDesc.width = renderbufferObject->getWidth();
+        mRenderTargetDesc.height = renderbufferObject->getHeight();
+        mRenderTargetDesc.format = renderbufferObject->getActualFormat();
         mRenderTargetDescInitialized = true;
-        renderTarget->Release();
     }
 
     D3DVIEWPORT9 viewport;
@@ -1851,17 +1847,17 @@ bool Context::applyRenderTarget(bool ignoreViewport)
     {
         viewport.X = 0;
         viewport.Y = 0;
-        viewport.Width = mRenderTargetDesc.Width;
-        viewport.Height = mRenderTargetDesc.Height;
+        viewport.Width = mRenderTargetDesc.width;
+        viewport.Height = mRenderTargetDesc.height;
         viewport.MinZ = 0.0f;
         viewport.MaxZ = 1.0f;
     }
     else
     {
-        viewport.X = clamp(mState.viewportX, 0L, static_cast<LONG>(mRenderTargetDesc.Width));
-        viewport.Y = clamp(mState.viewportY, 0L, static_cast<LONG>(mRenderTargetDesc.Height));
-        viewport.Width = clamp(mState.viewportWidth, 0L, static_cast<LONG>(mRenderTargetDesc.Width) - static_cast<LONG>(viewport.X));
-        viewport.Height = clamp(mState.viewportHeight, 0L, static_cast<LONG>(mRenderTargetDesc.Height) - static_cast<LONG>(viewport.Y));
+        viewport.X = clamp(mState.viewportX, 0L, static_cast<LONG>(mRenderTargetDesc.width));
+        viewport.Y = clamp(mState.viewportY, 0L, static_cast<LONG>(mRenderTargetDesc.height));
+        viewport.Width = clamp(mState.viewportWidth, 0L, static_cast<LONG>(mRenderTargetDesc.width) - static_cast<LONG>(viewport.X));
+        viewport.Height = clamp(mState.viewportHeight, 0L, static_cast<LONG>(mRenderTargetDesc.height) - static_cast<LONG>(viewport.Y));
         viewport.MinZ = zNear;
         viewport.MaxZ = zFar;
     }
@@ -1879,8 +1875,8 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         mDxUniformsDirty = true;
     }
 
-    mRenderer->setScissorRectangle(mState.scissor, static_cast<int>(mRenderTargetDesc.Width),
-                                    static_cast<int>(mRenderTargetDesc.Height));
+    mRenderer->setScissorRectangle(mState.scissor, static_cast<int>(mRenderTargetDesc.width),
+                                    static_cast<int>(mRenderTargetDesc.height));
 
     if (mState.currentProgram && mDxUniformsDirty)
     {
@@ -2512,7 +2508,7 @@ void Context::clear(GLbitfield mask)
     int stencil = mState.stencilClearValue & 0x000000FF;
 
 
-    bool alphaUnmasked = (d3d9_gl::GetAlphaSize(mRenderTargetDesc.Format) == 0) || mState.blend.colorMaskAlpha;
+    bool alphaUnmasked = (gl::GetAlphaSize(mRenderTargetDesc.format) == 0) || mState.blend.colorMaskAlpha;
 
     const bool needMaskedStencilClear = (flags & D3DCLEAR_STENCIL) &&
                                         (mState.depthStencil.stencilWritemask & stencilUnmasked) != stencilUnmasked;
@@ -2626,12 +2622,12 @@ void Context::clear(GLbitfield mask)
 
         float quad[4][4];   // A quadrilateral covering the target, aligned to match the edges
         quad[0][0] = -0.5f;
-        quad[0][1] = mRenderTargetDesc.Height - 0.5f;
+        quad[0][1] = mRenderTargetDesc.height - 0.5f;
         quad[0][2] = 0.0f;
         quad[0][3] = 1.0f;
 
-        quad[1][0] = mRenderTargetDesc.Width - 0.5f;
-        quad[1][1] = mRenderTargetDesc.Height - 0.5f;
+        quad[1][0] = mRenderTargetDesc.width - 0.5f;
+        quad[1][1] = mRenderTargetDesc.height - 0.5f;
         quad[1][2] = 0.0f;
         quad[1][3] = 1.0f;
 
@@ -2640,7 +2636,7 @@ void Context::clear(GLbitfield mask)
         quad[2][2] = 0.0f;
         quad[2][3] = 1.0f;
 
-        quad[3][0] = mRenderTargetDesc.Width - 0.5f;
+        quad[3][0] = mRenderTargetDesc.width - 0.5f;
         quad[3][1] = -0.5f;
         quad[3][2] = 0.0f;
         quad[3][3] = 1.0f;

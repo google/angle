@@ -31,6 +31,12 @@ class RenderTarget
 
     virtual IDirect3DSurface9 *getSurface() = 0; // D3D9_REPLACE - temporary pass-through function
 
+    struct Desc {
+        GLsizei width;
+        GLsizei height;
+        GLenum  format;
+    };
+
   protected:
     GLsizei mWidth;
     GLsizei mHeight;
