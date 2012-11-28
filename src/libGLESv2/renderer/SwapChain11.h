@@ -56,6 +56,13 @@ class SwapChain11 : public SwapChain
 
     ID3D11Texture2D *mDepthStencilTexture;
     ID3D11DepthStencilView *mDepthStencilDSView;
+    ID3D11ShaderResourceView *mOffscreenSRView;
+
+    ID3D11Buffer *mQuadVB;
+    ID3D11SamplerState *mPassThroughSampler;
+    ID3D11InputLayout *mPassThroughIL;
+    ID3D11VertexShader *mPassThroughVS;
+    ID3D11PixelShader *mPassThroughPS;
 };
 
 }

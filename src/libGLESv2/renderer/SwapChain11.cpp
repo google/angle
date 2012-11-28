@@ -15,8 +15,25 @@
 #include "libGLESv2/Context.h"
 #include "libGLESv2/main.h"
 
+#include "libGLESv2/shaders/passthrough11vs.h"
+#include "libGLESv2/shaders/passthrough11ps.h"
+
 namespace rx
 {
+
+struct QuadVertex
+{
+    float x, y;
+    float u, v;
+};
+
+static void setVertex(QuadVertex* vertex, float x, float y, float u, float v)
+{
+    vertex->x = x;
+    vertex->y = y;
+    vertex->u = u;
+    vertex->v = v;
+}
 
 SwapChain11::SwapChain11(Renderer11 *renderer, HWND window, HANDLE shareHandle,
                          GLenum backBufferFormat, GLenum depthBufferFormat)
@@ -27,6 +44,7 @@ SwapChain11::SwapChain11(Renderer11 *renderer, HWND window, HANDLE shareHandle,
     mBackBufferRTView = NULL;
     mOffscreenTexture = NULL;
     mOffscreenRTView = NULL;
+    mOffscreenSRView = NULL;
     mDepthStencilTexture = NULL;
     mDepthStencilDSView = NULL;
     mWidth = -1;
@@ -70,6 +88,12 @@ void SwapChain11::release()
         mOffscreenRTView = NULL;
     }
 
+    if (mOffscreenSRView)
+    {
+        mOffscreenSRView->Release();
+        mOffscreenSRView = NULL;
+    }
+
     if (mDepthStencilTexture)
     {
         mDepthStencilTexture->Release();
@@ -80,6 +104,36 @@ void SwapChain11::release()
     {
         mDepthStencilDSView->Release();
         mDepthStencilDSView = NULL;
+    }
+
+    if (mQuadVB)
+    {
+        mQuadVB->Release();
+        mQuadVB = NULL;
+    }
+
+    if (mPassThroughSampler)
+    {
+        mPassThroughSampler->Release();
+        mPassThroughSampler = NULL;
+    }
+
+    if (mPassThroughIL)
+    {
+        mPassThroughIL->Release();
+        mPassThroughIL = NULL;
+    }
+
+    if (mPassThroughVS)
+    {
+        mPassThroughVS->Release();
+        mPassThroughVS = NULL;
+    }
+
+    if (mPassThroughPS)
+    {
+        mPassThroughPS->Release();
+        mPassThroughPS = NULL;
     }
 
     if (mWindow)
@@ -127,6 +181,12 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
         mOffscreenRTView = NULL;
     }
 
+    if (mOffscreenSRView)
+    {
+        mOffscreenSRView->Release();
+        mOffscreenSRView = NULL;
+    }
+
     if (mDepthStencilTexture)
     {
         mDepthStencilTexture->Release();
@@ -154,7 +214,7 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
     offscreenTextureDesc.SampleDesc.Count = 1;
     offscreenTextureDesc.SampleDesc.Quality = 0;
     offscreenTextureDesc.Usage = D3D11_USAGE_DEFAULT;
-    offscreenTextureDesc.BindFlags = D3D11_BIND_RENDER_TARGET;
+    offscreenTextureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
     offscreenTextureDesc.CPUAccessFlags = 0;
     offscreenTextureDesc.MiscFlags = 0;   // D3D11_RESOURCE_MISC_SHARED
 
@@ -176,6 +236,9 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
     }
         
     result = device->CreateRenderTargetView(mOffscreenTexture, NULL, &mOffscreenRTView);
+    ASSERT(SUCCEEDED(result));
+
+    result = device->CreateShaderResourceView(mOffscreenTexture, NULL, &mOffscreenSRView);
     ASSERT(SUCCEEDED(result));
 
     if (mWindow)
@@ -258,6 +321,50 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
         ASSERT(SUCCEEDED(result));
     }
 
+    D3D11_BUFFER_DESC vbDesc;
+    vbDesc.ByteWidth = sizeof(QuadVertex) * 4;
+    vbDesc.Usage = D3D11_USAGE_DYNAMIC;
+    vbDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    vbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    vbDesc.MiscFlags = 0;
+    vbDesc.StructureByteStride = 0;
+
+    result = device->CreateBuffer(&vbDesc, NULL, &mQuadVB);
+    ASSERT(SUCCEEDED(result));
+
+    D3D11_SAMPLER_DESC samplerDesc;
+    samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+    samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+    samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+    samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+    samplerDesc.MipLODBias = 0.0f;
+    samplerDesc.MaxAnisotropy = 0;
+    samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+    samplerDesc.BorderColor[0] = 0.0f;
+    samplerDesc.BorderColor[1] = 0.0f;
+    samplerDesc.BorderColor[2] = 0.0f;
+    samplerDesc.BorderColor[3] = 0.0f;
+    samplerDesc.MinLOD = 0;
+    samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+    result = device->CreateSamplerState(&samplerDesc, &mPassThroughSampler);
+    ASSERT(SUCCEEDED(result));
+
+    D3D11_INPUT_ELEMENT_DESC quadLayout[] =
+    {
+        { "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 8, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+    };
+
+    result = device->CreateInputLayout(quadLayout, 2, g_VS_Passthrough, sizeof(g_VS_Passthrough), &mPassThroughIL);
+    ASSERT(SUCCEEDED(result));
+
+    result = device->CreateVertexShader(g_VS_Passthrough, sizeof(g_VS_Passthrough), NULL, &mPassThroughVS);
+    ASSERT(SUCCEEDED(result));
+
+    result = device->CreatePixelShader(g_PS_Passthrough, sizeof(g_PS_Passthrough), NULL, &mPassThroughPS);
+    ASSERT(SUCCEEDED(result));
+
     mWidth = backbufferWidth;
     mHeight = backbufferHeight;
 
@@ -273,9 +380,79 @@ EGLint SwapChain11::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
     }
 
     ID3D11Device *device = mRenderer->getDevice();
+    ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
 
-    // TODO
-    UNIMPLEMENTED();
+    // Set vertices
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    HRESULT result = deviceContext->Map(mQuadVB, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    if (FAILED(result))
+    {
+        return EGL_BAD_ACCESS;
+    }
+
+    QuadVertex *vertices = static_cast<QuadVertex*>(mappedResource.pData);
+
+    // Create a quad in homogeneous coordinates
+    float x1 = (x / mWidth) * 2.0f - 1.0f;
+    float y1 = ((mHeight - y - height) / mHeight) * 2.0f - 1.0f;
+    float x2 = ((x + width) / mWidth) * 2.0f - 1.0f;
+    float y2 = ((mHeight - y) / mHeight) * 2.0f - 1.0f;
+
+    float u1 = x / float(mWidth);
+    float v1 = y / float(mHeight);
+    float u2 = (x + width) / float(mWidth);
+    float v2 = (y + height) / float(mHeight);
+
+    setVertex(&vertices[0], x1, y1, u1, v1);
+    setVertex(&vertices[1], x1, y2, u1, v2);
+    setVertex(&vertices[2], x2, y1, u2, v1);
+    setVertex(&vertices[3], x2, y2, u2, v2);
+
+    deviceContext->Unmap(mQuadVB, 0);
+
+    static UINT stride = sizeof(QuadVertex);
+    static UINT startIdx = 0;
+    deviceContext->IASetVertexBuffers(0, 1, &mQuadVB, &stride, &startIdx);
+
+    // Apply state
+    deviceContext->OMSetDepthStencilState(NULL, 0xFFFFFFFF);
+
+    static const float blendFactor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    deviceContext->OMSetBlendState(NULL, blendFactor, 0xFFFFFFF);
+
+    deviceContext->RSSetState(NULL);
+
+    // Apply shaders
+    deviceContext->IASetInputLayout(mPassThroughIL);
+    deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    deviceContext->VSSetShader(mPassThroughVS, NULL, 0);
+    deviceContext->PSSetShader(mPassThroughPS, NULL, 0);
+
+    // Apply render targets
+    deviceContext->OMSetRenderTargets(1, &mBackBufferRTView, NULL);
+
+    // Apply textures
+    deviceContext->PSSetShaderResources(0, 1, &mOffscreenSRView);
+    deviceContext->PSSetSamplers(0, 1, &mPassThroughSampler);
+
+    // Draw
+    deviceContext->Draw(4, 0);
+    mSwapChain->Present(0, 0);
+
+    // Unbind
+    static ID3D11ShaderResourceView *const nullSRV = NULL;
+    deviceContext->PSSetShaderResources(0, 1, &nullSRV);
+
+    static ID3D11RenderTargetView *const nullRTV = NULL;
+    deviceContext->OMSetRenderTargets(1, &nullRTV, NULL);
+
+    // Mark context and renderer dirty flags
+    gl::Context *glContext = static_cast<gl::Context*>(glGetCurrentContext());
+    if (glContext)
+    {
+        glContext->markAllStateDirty();
+    }
+    mRenderer->markAllStateDirty();
 
     return EGL_SUCCESS;
 }
