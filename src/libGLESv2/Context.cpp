@@ -2006,7 +2006,6 @@ void Context::clear(GLbitfield mask)
 
         if (framebufferObject->getColorbufferType() != GL_NONE)
         {
-            flags |= D3DCLEAR_TARGET;
             finalMask |= GL_COLOR_BUFFER_BIT;
         }
     }
@@ -2016,12 +2015,9 @@ void Context::clear(GLbitfield mask)
         mask &= ~GL_DEPTH_BUFFER_BIT;
         if (mState.depthStencil.depthMask && framebufferObject->getDepthbufferType() != GL_NONE)
         {
-            flags |= D3DCLEAR_ZBUFFER;
             finalMask |= GL_DEPTH_BUFFER_BIT;
         }
     }
-
-    GLuint stencilUnmasked = 0x0;
 
     if (mask & GL_STENCIL_BUFFER_BIT)
     {
@@ -2035,12 +2031,8 @@ void Context::clear(GLbitfield mask)
                 return;
             }
 
-            unsigned int stencilSize = gl::GetStencilSize(depthStencil->getActualFormat());
-            stencilUnmasked = (0x1 << stencilSize) - 1;
-
-            if (stencilUnmasked != 0x0)
+            if (GetStencilSize(depthStencil->getActualFormat()) > 0)
             {
-                flags |= D3DCLEAR_STENCIL;
                 finalMask |= GL_STENCIL_BUFFER_BIT;
             }
         }
@@ -2056,166 +2048,6 @@ void Context::clear(GLbitfield mask)
         return;
     }
 
-    D3DCOLOR color = D3DCOLOR_ARGB(unorm<8>(mState.colorClearValue.alpha), 
-                                   unorm<8>(mState.colorClearValue.red), 
-                                   unorm<8>(mState.colorClearValue.green), 
-                                   unorm<8>(mState.colorClearValue.blue));
-    float depth = clamp01(mState.depthClearValue);
-    int stencil = mState.stencilClearValue & 0x000000FF;
-
-
-    bool alphaUnmasked = (gl::GetAlphaSize(mRenderTargetDesc.format) == 0) || mState.blend.colorMaskAlpha;
-
-    const bool needMaskedStencilClear = (flags & D3DCLEAR_STENCIL) &&
-                                        (mState.depthStencil.stencilWritemask & stencilUnmasked) != stencilUnmasked;
-    const bool needMaskedColorClear = (flags & D3DCLEAR_TARGET) &&
-                                      !(mState.blend.colorMaskRed && mState.blend.colorMaskGreen &&
-                                        mState.blend.colorMaskBlue && alphaUnmasked);
-
-    if (needMaskedColorClear || needMaskedStencilClear)
-    {
-        // State which is altered in all paths from this point to the clear call is saved.
-        // State which is altered in only some paths will be flagged dirty in the case that
-        //  that path is taken.
-        HRESULT hr;
-        if (mMaskedClearSavedState == NULL)
-        {
-            hr = mDevice->BeginStateBlock();
-            ASSERT(SUCCEEDED(hr) || hr == D3DERR_OUTOFVIDEOMEMORY || hr == E_OUTOFMEMORY);
-
-            mDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-            mDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
-            mDevice->SetRenderState(D3DRS_ZENABLE, FALSE);
-            mDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-            mDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-            mDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-            mDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-            mDevice->SetRenderState(D3DRS_CLIPPLANEENABLE, 0);
-            mDevice->SetRenderState(D3DRS_COLORWRITEENABLE, 0);
-            mDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
-            mDevice->SetPixelShader(NULL);
-            mDevice->SetVertexShader(NULL);
-            mDevice->SetFVF(D3DFVF_XYZRHW | D3DFVF_DIFFUSE);
-            mDevice->SetStreamSource(0, NULL, 0, 0);
-            mDevice->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, TRUE);
-            mDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
-            mDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TFACTOR);
-            mDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
-            mDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TFACTOR);
-            mDevice->SetRenderState(D3DRS_TEXTUREFACTOR, color);
-            mDevice->SetRenderState(D3DRS_MULTISAMPLEMASK, 0xFFFFFFFF);
-            
-            for(int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
-            {
-                mDevice->SetStreamSourceFreq(i, 1);
-            }
-
-            hr = mDevice->EndStateBlock(&mMaskedClearSavedState);
-            ASSERT(SUCCEEDED(hr) || hr == D3DERR_OUTOFVIDEOMEMORY || hr == E_OUTOFMEMORY);
-        }
-
-        ASSERT(mMaskedClearSavedState != NULL);
-
-        if (mMaskedClearSavedState != NULL)
-        {
-            hr = mMaskedClearSavedState->Capture();
-            ASSERT(SUCCEEDED(hr));
-        }
-
-        mDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-        mDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
-        mDevice->SetRenderState(D3DRS_ZENABLE, FALSE);
-        mDevice->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-        mDevice->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
-        mDevice->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
-        mDevice->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-        mDevice->SetRenderState(D3DRS_CLIPPLANEENABLE, 0);
-
-        if (flags & D3DCLEAR_TARGET)
-        {
-            mDevice->SetRenderState(D3DRS_COLORWRITEENABLE,
-                                    gl_d3d9::ConvertColorMask(mState.blend.colorMaskRed,
-                                                              mState.blend.colorMaskGreen,
-                                                              mState.blend.colorMaskBlue,
-                                                              mState.blend.colorMaskAlpha));
-        }
-        else
-        {
-            mDevice->SetRenderState(D3DRS_COLORWRITEENABLE, 0);
-        }
-
-        if (stencilUnmasked != 0x0 && (flags & D3DCLEAR_STENCIL))
-        {
-            mDevice->SetRenderState(D3DRS_STENCILENABLE, TRUE);
-            mDevice->SetRenderState(D3DRS_TWOSIDEDSTENCILMODE, FALSE);
-            mDevice->SetRenderState(D3DRS_STENCILFUNC, D3DCMP_ALWAYS);
-            mDevice->SetRenderState(D3DRS_STENCILREF, stencil);
-            mDevice->SetRenderState(D3DRS_STENCILWRITEMASK, mState.depthStencil.stencilWritemask);
-            mDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_REPLACE);
-            mDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_REPLACE);
-            mDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);
-        }
-        else
-        {
-            mDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
-        }
-
-        mDevice->SetPixelShader(NULL);
-        mDevice->SetVertexShader(NULL);
-        mDevice->SetFVF(D3DFVF_XYZRHW);
-        mDevice->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, TRUE);
-        mDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
-        mDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TFACTOR);
-        mDevice->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
-        mDevice->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TFACTOR);
-        mDevice->SetRenderState(D3DRS_TEXTUREFACTOR, color);
-        mDevice->SetRenderState(D3DRS_MULTISAMPLEMASK, 0xFFFFFFFF);
-
-        for(int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
-        {
-            mDevice->SetStreamSourceFreq(i, 1);
-        }
-
-        float quad[4][4];   // A quadrilateral covering the target, aligned to match the edges
-        quad[0][0] = -0.5f;
-        quad[0][1] = mRenderTargetDesc.height - 0.5f;
-        quad[0][2] = 0.0f;
-        quad[0][3] = 1.0f;
-
-        quad[1][0] = mRenderTargetDesc.width - 0.5f;
-        quad[1][1] = mRenderTargetDesc.height - 0.5f;
-        quad[1][2] = 0.0f;
-        quad[1][3] = 1.0f;
-
-        quad[2][0] = -0.5f;
-        quad[2][1] = -0.5f;
-        quad[2][2] = 0.0f;
-        quad[2][3] = 1.0f;
-
-        quad[3][0] = mRenderTargetDesc.width - 0.5f;
-        quad[3][1] = -0.5f;
-        quad[3][2] = 0.0f;
-        quad[3][3] = 1.0f;
-
-        mRenderer->startScene();
-        mDevice->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, quad, sizeof(float[4]));
-
-        if (flags & D3DCLEAR_ZBUFFER)
-        {
-            mDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
-            mDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-            mDevice->Clear(0, NULL, D3DCLEAR_ZBUFFER, color, depth, stencil);
-        }
-
-        if (mMaskedClearSavedState != NULL)
-        {
-            mMaskedClearSavedState->Apply();
-        }
-    }
-    else if (flags)
-    {
-        mDevice->Clear(0, NULL, flags, color, depth, stencil);
-    }
     ClearParameters clearParams;
     clearParams.mask = finalMask;
     clearParams.colorClearValue = mState.colorClearValue;
