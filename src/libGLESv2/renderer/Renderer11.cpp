@@ -158,6 +158,10 @@ EGLint Renderer11::initialize()
 
     dxgiDevice->Release();
 
+    mDxgiAdapter->GetDesc(&mAdapterDescription);
+    memset(mDescription, 0, sizeof(mDescription));
+    wcstombs(mDescription, mAdapterDescription.Description, sizeof(mDescription) - 1);
+
     result = mDxgiAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&mDxgiFactory);
 
     if (!mDxgiFactory || FAILED(result))
@@ -569,58 +573,54 @@ bool Renderer11::resetDevice()
 
 DWORD Renderer11::getAdapterVendor() const
 {
-    // TODO
-    UNIMPLEMENTED();
-    return 0;
+    return mAdapterDescription.VendorId;
 }
 
 const char *Renderer11::getAdapterDescription() const
 {
-    // TODO
-    UNIMPLEMENTED();
-    return "UNIMPLEMENTED";
+    return mDescription;
 }
 
 GUID Renderer11::getAdapterIdentifier() const
 {
     // TODO
-    UNIMPLEMENTED();
-    GUID foo = {};
+    // UNIMPLEMENTED();
+    GUID foo = {0};
     return foo;
 }
 
 bool Renderer11::getDXT1TextureSupport()
 {
     // TODO
-    UNIMPLEMENTED();
+    // UNIMPLEMENTED();
     return false;
 }
 
 bool Renderer11::getDXT3TextureSupport()
 {
     // TODO
-    UNIMPLEMENTED();
+    // UNIMPLEMENTED();
     return false;
 }
 
 bool Renderer11::getDXT5TextureSupport()
 {
     // TODO
-    UNIMPLEMENTED();
+    // UNIMPLEMENTED();
     return false;
 }
 
 bool Renderer11::getDepthTextureSupport() const
 {
     // TODO
-    UNIMPLEMENTED();
+    // UNIMPLEMENTED();
     return false;
 }
 
 bool Renderer11::getFloat32TextureSupport(bool *filtering, bool *renderable)
 {
     // TODO
-    UNIMPLEMENTED();
+    // UNIMPLEMENTED();
 
     *filtering = false;
     *renderable = false;
@@ -630,7 +630,7 @@ bool Renderer11::getFloat32TextureSupport(bool *filtering, bool *renderable)
 bool Renderer11::getFloat16TextureSupport(bool *filtering, bool *renderable)
 {
     // TODO
-    UNIMPLEMENTED();
+    // UNIMPLEMENTED();
 
     *filtering = false;
     *renderable = false;
@@ -640,70 +640,70 @@ bool Renderer11::getFloat16TextureSupport(bool *filtering, bool *renderable)
 bool Renderer11::getLuminanceTextureSupport()
 {
     // TODO
-    UNIMPLEMENTED();
+    // UNIMPLEMENTED();
     return false;
 }
 
 bool Renderer11::getLuminanceAlphaTextureSupport()
 {
     // TODO
-    UNIMPLEMENTED();
+    // UNIMPLEMENTED();
     return false;
 }
 
 bool Renderer11::getTextureFilterAnisotropySupport() const
 {
     // TODO
-    UNIMPLEMENTED();
+    // UNIMPLEMENTED();
     return false;
 }
 
 float Renderer11::getTextureMaxAnisotropy() const
 {
     // TODO
-    UNIMPLEMENTED();
+    // UNIMPLEMENTED();
     return 1.0f;
 }
 
 bool Renderer11::getEventQuerySupport()
 {
     // TODO
-    UNIMPLEMENTED();
+    // UNIMPLEMENTED();
     return false;
 }
 
 bool Renderer11::getVertexTextureSupport() const
 {
     // TODO
-    UNIMPLEMENTED();
+    // UNIMPLEMENTED();
     return false;
 }
 
 bool Renderer11::getNonPower2TextureSupport() const
 {
     // TODO
-    UNIMPLEMENTED();
+    // UNIMPLEMENTED();
     return false;
 }
 
 bool Renderer11::getOcclusionQuerySupport() const
 {
     // TODO
-    UNIMPLEMENTED();
+    // UNIMPLEMENTED();
     return false;
 }
 
 bool Renderer11::getInstancingSupport() const
 {
     // TODO
-    UNIMPLEMENTED();
+    // UNIMPLEMENTED();
     return false;
 }
 
 bool Renderer11::getShareHandleSupport() const
 {
     // TODO
-    //UNIMPLEMENTED();
+    // UNIMPLEMENTED();
 
     // PIX doesn't seem to support using share handles, so disable them.
     return false && !gl::perfActive();
@@ -723,7 +723,7 @@ int Renderer11::getMajorShaderModel() const
 float Renderer11::getMaxPointSize() const
 {
     // TODO
-    UNIMPLEMENTED();
+    // UNIMPLEMENTED();
     return 1.0f;
 }
 
@@ -773,7 +773,7 @@ int Renderer11::getMaxSwapInterval() const
 int Renderer11::getMaxSupportedSamples() const
 {
     // TODO
-    UNIMPLEMENTED();
+    // UNIMPLEMENTED();
     return 1;
 }
 
