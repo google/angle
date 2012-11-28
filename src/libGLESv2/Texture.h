@@ -29,6 +29,11 @@ namespace egl
 class Surface;
 }
 
+namespace rx
+{
+class Renderer;
+}
+
 namespace gl
 {
 class Blit;
@@ -58,7 +63,7 @@ struct SamplerState
 class Texture : public RefCountObject
 {
   public:
-    explicit Texture(GLuint id);
+    Texture(rx::Renderer *renderer, GLuint id);
 
     virtual ~Texture();
 
@@ -120,6 +125,8 @@ class Texture : public RefCountObject
 
     static Blit *getBlitter();
 
+    rx::Renderer *mRenderer;
+
     SamplerState mSamplerState;
     bool mDirtyParameters;
     GLenum mUsage;
@@ -137,7 +144,7 @@ class Texture : public RefCountObject
 class Texture2D : public Texture
 {
   public:
-    explicit Texture2D(GLuint id);
+    Texture2D(rx::Renderer *renderer, GLuint id);
 
     ~Texture2D();
 
@@ -205,7 +212,7 @@ class Texture2D : public Texture
 class TextureCubeMap : public Texture
 {
   public:
-    explicit TextureCubeMap(GLuint id);
+    TextureCubeMap(rx::Renderer *renderer, GLuint id);
 
     ~TextureCubeMap();
 

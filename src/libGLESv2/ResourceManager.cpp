@@ -14,12 +14,14 @@
 #include "libGLESv2/Renderbuffer.h"
 #include "libGLESv2/Shader.h"
 #include "libGLESv2/Texture.h"
+#include "libGLESv2/renderer/Renderer.h"
 
 namespace gl
 {
-ResourceManager::ResourceManager()
+ResourceManager::ResourceManager(rx::Renderer *renderer)
 {
     mRefCount = 1;
+    mRenderer = renderer;
 }
 
 ResourceManager::~ResourceManager()
@@ -290,11 +292,11 @@ void ResourceManager::checkTextureAllocation(GLuint texture, TextureType type)
 
         if (type == TEXTURE_2D)
         {
-            textureObject = new Texture2D(texture);
+            textureObject = new Texture2D(mRenderer, texture);
         }
         else if (type == TEXTURE_CUBE)
         {
-            textureObject = new TextureCubeMap(texture);
+            textureObject = new TextureCubeMap(mRenderer, texture);
         }
         else
         {

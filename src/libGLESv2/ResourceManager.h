@@ -23,6 +23,11 @@
 #include "libGLESv2/EnumTypes.h"
 #include "libGLESv2/HandleAllocator.h"
 
+namespace rx
+{
+class Renderer;
+}
+
 namespace gl
 {
 class Buffer;
@@ -34,7 +39,7 @@ class Renderbuffer;
 class ResourceManager
 {
   public:
-    ResourceManager();
+    explicit ResourceManager(rx::Renderer *renderer);
     ~ResourceManager();
 
     void addRef();
@@ -68,6 +73,7 @@ class ResourceManager
     DISALLOW_COPY_AND_ASSIGN(ResourceManager);
 
     std::size_t mRefCount;
+    rx::Renderer *mRenderer;
 
 #ifndef HASH_MAP
 # ifdef _MSC_VER

@@ -25,8 +25,10 @@
 namespace gl
 {
 
-Texture::Texture(GLuint id) : RefCountObject(id)
+Texture::Texture(rx::Renderer *renderer, GLuint id) : RefCountObject(id)
 {
+    mRenderer = renderer;
+
     mSamplerState.minFilter = GL_NEAREST_MIPMAP_LINEAR;
     mSamplerState.magFilter = GL_LINEAR;
     mSamplerState.wrapS = GL_REPEAT;
@@ -330,7 +332,7 @@ Blit *Texture::getBlitter()
     return context->getBlitter();
 }
 
-Texture2D::Texture2D(GLuint id) : Texture(id)
+Texture2D::Texture2D(rx::Renderer *renderer, GLuint id) : Texture(renderer, id)
 {
     mTexStorage = NULL;
     mSurface = NULL;
@@ -900,7 +902,7 @@ TextureStorage *Texture2D::getStorage(bool renderTarget)
     return mTexStorage;
 }
 
-TextureCubeMap::TextureCubeMap(GLuint id) : Texture(id)
+TextureCubeMap::TextureCubeMap(rx::Renderer *renderer, GLuint id) : Texture(renderer, id)
 {
     mTexStorage = NULL;
     for (int i = 0; i < 6; i++)

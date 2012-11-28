@@ -123,7 +123,7 @@ Context::Context(const gl::Context *shareContext, rx::Renderer *renderer, bool n
     }
     else
     {
-        mResourceManager = new ResourceManager();
+        mResourceManager = new ResourceManager(mRenderer);
     }
 
     // [OpenGL ES 2.0.24] section 3.7 page 83:
@@ -132,8 +132,8 @@ Context::Context(const gl::Context *shareContext, rx::Renderer *renderer, bool n
     // In order that access to these initial textures not be lost, they are treated as texture
     // objects all of whose names are 0.
 
-    mTexture2DZero.set(new Texture2D(0));
-    mTextureCubeMapZero.set(new TextureCubeMap(0));
+    mTexture2DZero.set(new Texture2D(mRenderer, 0));
+    mTextureCubeMapZero.set(new TextureCubeMap(mRenderer, 0));
 
     mState.activeSampler = 0;
     bindArrayBuffer(0);
@@ -3679,7 +3679,7 @@ Texture *Context::getIncompleteTexture(TextureType type)
 
           case TEXTURE_2D:
             {
-                Texture2D *incomplete2d = new Texture2D(Texture::INCOMPLETE_TEXTURE_ID);
+                Texture2D *incomplete2d = new Texture2D(mRenderer, Texture::INCOMPLETE_TEXTURE_ID);
                 incomplete2d->setImage(0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, 1, color);
                 t = incomplete2d;
             }
@@ -3687,7 +3687,7 @@ Texture *Context::getIncompleteTexture(TextureType type)
 
           case TEXTURE_CUBE:
             {
-              TextureCubeMap *incompleteCube = new TextureCubeMap(Texture::INCOMPLETE_TEXTURE_ID);
+              TextureCubeMap *incompleteCube = new TextureCubeMap(mRenderer, Texture::INCOMPLETE_TEXTURE_ID);
 
               incompleteCube->setImagePosX(0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, 1, color);
               incompleteCube->setImageNegX(0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, 1, color);
