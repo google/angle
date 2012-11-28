@@ -76,6 +76,8 @@ class Renderer9 : public Renderer
     Renderer9(egl::Display *display, HDC hDc, bool softwareDevice);
     virtual ~Renderer9();
 
+    static Renderer9 *makeRenderer9(Renderer *renderer);
+
     virtual EGLint initialize();
     virtual bool resetDevice();
 

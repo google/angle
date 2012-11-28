@@ -33,6 +33,8 @@ class Renderer11 : public Renderer
     Renderer11(egl::Display *display, HDC hDc);
     virtual ~Renderer11();
 
+    static Renderer11 *makeRenderer11(Renderer *renderer);
+
     virtual EGLint initialize();
     virtual bool resetDevice();
 

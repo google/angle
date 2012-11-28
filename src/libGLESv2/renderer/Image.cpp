@@ -280,8 +280,7 @@ bool Image::redefine(rx::Renderer9 *renderer, GLint internalformat, GLsizei widt
         mD3DFormat = renderer->ConvertTextureInternalFormat(internalformat);
         mActualFormat = d3d9_gl::GetEquivalentFormat(mD3DFormat);
 
-        ASSERT(dynamic_cast<rx::Renderer9*>(renderer) != NULL); // D3D9_REPLACE
-        mRenderer = static_cast<rx::Renderer9*>(renderer); // D3D9_REPLACE
+        mRenderer = Renderer9::makeRenderer9(renderer); // D3D9_REPLACE
 
         if (mSurface)
         {

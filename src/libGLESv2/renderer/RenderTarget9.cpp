@@ -18,8 +18,7 @@ namespace rx
 
 RenderTarget9::RenderTarget9(Renderer *renderer, IDirect3DSurface9 *surface)
 {
-    ASSERT(dynamic_cast<rx::Renderer9*>(renderer) != NULL);
-    mRenderer = static_cast<rx::Renderer9*>(renderer);
+    mRenderer = Renderer9::makeRenderer9(renderer);
     mRenderTarget = surface;
 
     if (mRenderTarget)
@@ -38,8 +37,7 @@ RenderTarget9::RenderTarget9(Renderer *renderer, IDirect3DSurface9 *surface)
 
 RenderTarget9::RenderTarget9(Renderer *renderer, GLsizei width, GLsizei height, GLenum format, GLsizei samples)
 {
-    ASSERT(dynamic_cast<rx::Renderer9*>(renderer) != NULL);
-    mRenderer = static_cast<rx::Renderer9*>(renderer);
+    mRenderer = Renderer9::makeRenderer9(renderer);
     mRenderTarget = NULL;
 
     D3DFORMAT requestedFormat = gl_d3d9::ConvertRenderbufferFormat(format);

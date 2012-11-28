@@ -83,6 +83,12 @@ Renderer11::~Renderer11()
     }
 }
 
+Renderer11 *Renderer11::makeRenderer11(Renderer *renderer)
+{
+    ASSERT(dynamic_cast<rx::Renderer11*>(renderer) != NULL);
+    return static_cast<rx::Renderer11*>(renderer);
+}
+
 EGLint Renderer11::initialize()
 {
     mDxgiModule = LoadLibrary(TEXT("dxgi.dll"));

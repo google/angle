@@ -150,6 +150,12 @@ Renderer9::~Renderer9()
     }
 }
 
+Renderer9 *Renderer9::makeRenderer9(Renderer *renderer)
+{
+    ASSERT(dynamic_cast<rx::Renderer9*>(renderer) != NULL);
+    return static_cast<rx::Renderer9*>(renderer);
+}
+
 EGLint Renderer9::initialize()
 {
     if (mSoftwareDevice)
