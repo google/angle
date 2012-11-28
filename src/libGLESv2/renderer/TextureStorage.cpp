@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-// TextureStorage.cpp: Implements the abstract gl::TextureStorage class and its concrete derived
+// TextureStorage.cpp: Implements the abstract rx::TextureStorage class and its concrete derived
 // classes TextureStorage2D and TextureStorageCubeMap, which act as the interface to the
 // D3D-side texture.
 
@@ -17,11 +17,11 @@
 
 #include "common/debug.h"
 
-namespace gl
+namespace rx
 {
 unsigned int TextureStorage::mCurrentTextureSerial = 1;
 
-TextureStorage::TextureStorage(rx::Renderer9 *renderer, DWORD usage)
+TextureStorage::TextureStorage(Renderer9 *renderer, DWORD usage)
     : mD3DUsage(usage),
       mD3DPool(renderer->getTexturePool(usage)),
       mRenderer(renderer),
@@ -115,15 +115,15 @@ int TextureStorage::levelCount()
     return getBaseTexture() ? getBaseTexture()->GetLevelCount() - getLodOffset() : 0;
 }
 
-TextureStorage2D::TextureStorage2D(rx::Renderer9 *renderer, rx::SwapChain *swapchain) : TextureStorage(renderer, D3DUSAGE_RENDERTARGET), mRenderTargetSerial(RenderbufferStorage::issueSerial())
+TextureStorage2D::TextureStorage2D(Renderer9 *renderer, rx::SwapChain *swapchain) : TextureStorage(renderer, D3DUSAGE_RENDERTARGET), mRenderTargetSerial(gl::RenderbufferStorage::issueSerial())
 {
     IDirect3DTexture9 *surfaceTexture = swapchain->getOffscreenTexture();
     mTexture = surfaceTexture;
 }
 
-TextureStorage2D::TextureStorage2D(rx::Renderer9 *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height)
+TextureStorage2D::TextureStorage2D(Renderer9 *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height)
     : TextureStorage(renderer, GetTextureUsage(renderer->ConvertTextureInternalFormat(internalformat), usage, forceRenderable)),
-      mRenderTargetSerial(RenderbufferStorage::issueSerial())
+      mRenderTargetSerial(gl::RenderbufferStorage::issueSerial())
 {
     mTexture = NULL;
     // if the width or height is not positive this should be treated as an incomplete texture
@@ -131,7 +131,7 @@ TextureStorage2D::TextureStorage2D(rx::Renderer9 *renderer, int levels, GLenum i
     if (width > 0 && height > 0)
     {
         IDirect3DDevice9 *device = renderer->getDevice(); // D3D9_REPLACE
-        MakeValidSize(false, gl::IsCompressed(internalformat), &width, &height, &mLodOffset);
+        gl::MakeValidSize(false, gl::IsCompressed(internalformat), &width, &height, &mLodOffset);
         HRESULT result = device->CreateTexture(width, height, levels ? levels + mLodOffset : 0, getUsage(),
                                                renderer->ConvertTextureInternalFormat(internalformat), getPool(), &mTexture, NULL);
 
@@ -196,9 +196,9 @@ unsigned int TextureStorage2D::getRenderTargetSerial(GLenum target) const
     return mRenderTargetSerial;
 }
 
-TextureStorageCubeMap::TextureStorageCubeMap(rx::Renderer9 *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
+TextureStorageCubeMap::TextureStorageCubeMap(Renderer9 *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
     : TextureStorage(renderer, GetTextureUsage(renderer->ConvertTextureInternalFormat(internalformat), usage, forceRenderable)),
-      mFirstRenderTargetSerial(RenderbufferStorage::issueCubeSerials())
+      mFirstRenderTargetSerial(gl::RenderbufferStorage::issueCubeSerials())
 {
     mTexture = NULL;
     // if the size is not positive this should be treated as an incomplete texture
@@ -207,7 +207,7 @@ TextureStorageCubeMap::TextureStorageCubeMap(rx::Renderer9 *renderer, int levels
     {
         IDirect3DDevice9 *device = renderer->getDevice();
         int height = size;
-        MakeValidSize(false, gl::IsCompressed(internalformat), &size, &height, &mLodOffset);
+        gl::MakeValidSize(false, gl::IsCompressed(internalformat), &size, &height, &mLodOffset);
         HRESULT result = device->CreateCubeTexture(size, levels ? levels + mLodOffset : 0, getUsage(),
                                                    renderer->ConvertTextureInternalFormat(internalformat), getPool(), &mTexture, NULL);
 
@@ -270,7 +270,7 @@ IDirect3DBaseTexture9 *TextureStorageCubeMap::getBaseTexture() const
 
 unsigned int TextureStorageCubeMap::getRenderTargetSerial(GLenum target) const
 {
-    return mFirstRenderTargetSerial + TextureCubeMap::faceIndex(target);
+    return mFirstRenderTargetSerial + gl::TextureCubeMap::faceIndex(target);
 }
 
 }

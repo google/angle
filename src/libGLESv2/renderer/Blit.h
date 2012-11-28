@@ -35,8 +35,8 @@ class Blit
 
     // Copy from source surface to dest surface.
     // sourceRect, xoffset, yoffset are in D3D coordinates (0,0 in upper-left)
-    bool copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, gl::TextureStorage2D *storage, GLint level);
-    bool copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, gl::TextureStorageCubeMap *storage, GLenum target, GLint level);
+    bool copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorage2D *storage, GLint level);
+    bool copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorageCubeMap *storage, GLenum target, GLint level);
 
     // Copy from source surface to dest surface.
     // sourceRect, xoffset, yoffset are in D3D coordinates (0,0 in upper-left)

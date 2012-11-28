@@ -190,7 +190,7 @@ float Texture::getMaxAnisotropy() const
 
 int Texture::getLodOffset()
 {
-    TextureStorage *texture = getStorage(false);
+    rx::TextureStorage *texture = getStorage(false);
     return texture ? texture->getLodOffset() : 0;
 }
 
@@ -222,7 +222,7 @@ bool Texture::isMipmapFiltered() const
     }
 }
 
-void Texture::setImage(GLint unpackAlignment, const void *pixels, Image *image)
+void Texture::setImage(GLint unpackAlignment, const void *pixels, rx::Image *image)
 {
     if (pixels != NULL)
     {
@@ -231,7 +231,7 @@ void Texture::setImage(GLint unpackAlignment, const void *pixels, Image *image)
     }
 }
 
-void Texture::setCompressedImage(GLsizei imageSize, const void *pixels, Image *image)
+void Texture::setCompressedImage(GLsizei imageSize, const void *pixels, rx::Image *image)
 {
     if (pixels != NULL)
     {
@@ -240,7 +240,7 @@ void Texture::setCompressedImage(GLsizei imageSize, const void *pixels, Image *i
     }
 }
 
-bool Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *image)
+bool Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, rx::Image *image)
 {
     if (pixels != NULL)
     {
@@ -251,7 +251,7 @@ bool Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
     return true;
 }
 
-bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels, Image *image)
+bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels, rx::Image *image)
 {
     if (pixels != NULL)
     {
@@ -262,11 +262,11 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GL
     return true;
 }
 
-TextureStorage *Texture::getNativeTexture()
+rx::TextureStorage *Texture::getNativeTexture()
 {
     // ensure the underlying texture is created
 
-    TextureStorage *storage = getStorage(false);
+    rx::TextureStorage *storage = getStorage(false);
     if (storage)
     {
         updateTexture();
@@ -293,13 +293,13 @@ void Texture::resetDirty()
 
 unsigned int Texture::getTextureSerial()
 {
-    TextureStorage *texture = getStorage(false);
+    rx::TextureStorage *texture = getStorage(false);
     return texture ? texture->getTextureSerial() : 0;
 }
 
 unsigned int Texture::getRenderTargetSerial(GLenum target)
 {
-    TextureStorage *texture = getStorage(true);
+    rx::TextureStorage *texture = getStorage(true);
     return texture ? texture->getRenderTargetSerial(target) : 0;
 }
 
@@ -442,7 +442,7 @@ void Texture2D::bindTexImage(egl::Surface *surface)
 
     delete mTexStorage;
     rx::SwapChain *swapchain = surface->getSwapChain();  // D3D9_REPLACE
-    mTexStorage = new TextureStorage2D(renderer9, swapchain);
+    mTexStorage = new rx::TextureStorage2D(renderer9, swapchain);
 
     mDirtyImages = true;
     mSurface = surface;
@@ -485,7 +485,7 @@ void Texture2D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei wi
 
     if (level < levelCount())
     {
-        Image *image = &mImageArray[level];
+        rx::Image *image = &mImageArray[level];
         if (image->updateSurface(mTexStorage, level, xoffset, yoffset, width, height))
         {
             image->markClean();
@@ -583,7 +583,7 @@ void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GL
     delete mTexStorage;
     assert(dynamic_cast<rx::Renderer9*>(mRenderer) != NULL);                // D3D9_REPLACE
     rx::Renderer9 *renderer9 = static_cast<rx::Renderer9*>(mRenderer);      // D3D9_REPLACE
-    mTexStorage = new TextureStorage2D(renderer9, levels, internalformat, mUsage, false, width, height);
+    mTexStorage = new rx::TextureStorage2D(renderer9, levels, internalformat, mUsage, false, width, height);
     mImmutable = true;
 
     for (int level = 0; level < levels; level++)
@@ -727,7 +727,7 @@ void Texture2D::createTexture()
     delete mTexStorage;
     assert(dynamic_cast<rx::Renderer9*>(mRenderer) != NULL);                // D3D9_REPLACE
     rx::Renderer9 *renderer9 = static_cast<rx::Renderer9*>(mRenderer);      // D3D9_REPLACE
-    mTexStorage = new TextureStorage2D(renderer9, levels, internalformat, mUsage, false, width, height);
+    mTexStorage = new rx::TextureStorage2D(renderer9, levels, internalformat, mUsage, false, width, height);
     
     if (mTexStorage->isManaged())
     {
@@ -750,7 +750,7 @@ void Texture2D::updateTexture()
 
     for (int level = 0; level < levels; level++)
     {
-        Image *image = &mImageArray[level];
+        rx::Image *image = &mImageArray[level];
 
         if (image->isDirty())
         {
@@ -761,7 +761,7 @@ void Texture2D::updateTexture()
 
 void Texture2D::convertToRenderTarget()
 {
-    TextureStorage2D *newTexStorage = NULL;
+    rx::TextureStorage2D *newTexStorage = NULL;
 
     if (mImageArray[0].getWidth() != 0 && mImageArray[0].getHeight() != 0)
     {
@@ -772,7 +772,7 @@ void Texture2D::convertToRenderTarget()
 
         assert(dynamic_cast<rx::Renderer9*>(mRenderer) != NULL);                // D3D9_REPLACE
         rx::Renderer9 *renderer9 = static_cast<rx::Renderer9*>(mRenderer);      // D3D9_REPLACE
-        newTexStorage = new TextureStorage2D(renderer9, levels, internalformat, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true, width, height);
+        newTexStorage = new rx::TextureStorage2D(renderer9, levels, internalformat, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true, width, height);
 
         if (mTexStorage != NULL)
         {
@@ -822,7 +822,7 @@ void Texture2D::generateMipmaps()
     {
         for (unsigned int i = 1; i <= q; i++)
         {
-            Image::GenerateMipmap(&mImageArray[i], &mImageArray[i - 1]);
+            rx::Image::GenerateMipmap(&mImageArray[i], &mImageArray[i - 1]);
         }
     }
 }
@@ -891,7 +891,7 @@ int Texture2D::levelCount()
     return mTexStorage ? mTexStorage->levelCount() - getLodOffset() : 0;
 }
 
-TextureStorage *Texture2D::getStorage(bool renderTarget)
+rx::TextureStorage *Texture2D::getStorage(bool renderTarget)
 {
     if (!mTexStorage || (renderTarget && !mTexStorage->isRenderTarget()))
     {
@@ -1039,7 +1039,7 @@ void TextureCubeMap::commitRect(int face, GLint level, GLint xoffset, GLint yoff
 
     if (level < levelCount())
     {
-        Image *image = &mImageArray[face][level];
+        rx::Image *image = &mImageArray[face][level];
         if (image->updateSurface(mTexStorage, face, level, xoffset, yoffset, width, height))
             image->markClean();
     }
@@ -1180,7 +1180,7 @@ void TextureCubeMap::createTexture()
     delete mTexStorage;
     assert(dynamic_cast<rx::Renderer9*>(mRenderer) != NULL);                // D3D9_REPLACE
     rx::Renderer9 *renderer9 = static_cast<rx::Renderer9*>(mRenderer);      // D3D9_REPLACE
-    mTexStorage = new TextureStorageCubeMap(renderer9, levels, internalformat, mUsage, false, size);
+    mTexStorage = new rx::TextureStorageCubeMap(renderer9, levels, internalformat, mUsage, false, size);
 
     if (mTexStorage->isManaged())
     {
@@ -1208,7 +1208,7 @@ void TextureCubeMap::updateTexture()
 
         for (int level = 0; level < levels; level++)
         {
-            Image *image = &mImageArray[face][level];
+            rx::Image *image = &mImageArray[face][level];
 
             if (image->isDirty())
             {
@@ -1220,7 +1220,7 @@ void TextureCubeMap::updateTexture()
 
 void TextureCubeMap::convertToRenderTarget()
 {
-    TextureStorageCubeMap *newTexStorage = NULL;
+    rx::TextureStorageCubeMap *newTexStorage = NULL;
 
     if (mImageArray[0][0].getWidth() != 0)
     {
@@ -1230,7 +1230,7 @@ void TextureCubeMap::convertToRenderTarget()
 
         assert(dynamic_cast<rx::Renderer9*>(mRenderer) != NULL);                // D3D9_REPLACE
         rx::Renderer9 *renderer9 = static_cast<rx::Renderer9*>(mRenderer);      // D3D9_REPLACE
-        newTexStorage = new TextureStorageCubeMap(renderer9, levels, internalformat, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true, size);
+        newTexStorage = new rx::TextureStorageCubeMap(renderer9, levels, internalformat, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true, size);
 
         if (mTexStorage != NULL)
         {
@@ -1371,7 +1371,7 @@ void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size
     delete mTexStorage;
     assert(dynamic_cast<rx::Renderer9*>(mRenderer) != NULL);                // D3D9_REPLACE
     rx::Renderer9 *renderer9 = static_cast<rx::Renderer9*>(mRenderer);      // D3D9_REPLACE
-    mTexStorage = new TextureStorageCubeMap(renderer9, levels, internalformat, mUsage, false, size);
+    mTexStorage = new rx::TextureStorageCubeMap(renderer9, levels, internalformat, mUsage, false, size);
     mImmutable = true;
 
     for (int level = 0; level < levels; level++)
@@ -1450,7 +1450,7 @@ void TextureCubeMap::generateMipmaps()
         {
             for (unsigned int i = 1; i <= q; i++)
             {
-                Image::GenerateMipmap(&mImageArray[f][i], &mImageArray[f][i - 1]);
+                rx::Image::GenerateMipmap(&mImageArray[f][i], &mImageArray[f][i - 1]);
             }
         }
     }
@@ -1495,7 +1495,7 @@ int TextureCubeMap::levelCount()
     return mTexStorage ? mTexStorage->levelCount() - getLodOffset() : 0;
 }
 
-TextureStorage *TextureCubeMap::getStorage(bool renderTarget)
+rx::TextureStorage *TextureCubeMap::getStorage(bool renderTarget)
 {
     if (!mTexStorage || (renderTarget && !mTexStorage->isRenderTarget()))
     {

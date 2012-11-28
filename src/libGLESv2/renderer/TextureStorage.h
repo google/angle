@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-// TextureStorage.h: Defines the abstract gl::TextureStorage class and its concrete derived
+// TextureStorage.h: Defines the abstract rx::TextureStorage class and its concrete derived
 // classes TextureStorage2D and TextureStorageCubeMap, which act as the interface to the
 // D3D-side texture.
 
@@ -22,10 +22,7 @@ namespace rx
 class Renderer9;
 class SwapChain;
 class Blit;
-}
 
-namespace gl
-{
 class TextureStorage
 {
   public:

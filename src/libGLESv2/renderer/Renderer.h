@@ -37,15 +37,10 @@ namespace egl
 class Display;
 }
 
-namespace gl
+namespace rx
 {
 class TextureStorage2D;
 class TextureStorageCubeMap;
-}
-
-namespace rx
-{
-
 class Blit;
 
 struct ConfigDesc
@@ -114,11 +109,11 @@ class Renderer
 
     virtual GLsizei getMaxSupportedSamples() const = 0;
 
-    virtual bool copyToRenderTarget(gl::TextureStorage2D *dest, gl::TextureStorage2D *source) = 0;
-    virtual bool copyToRenderTarget(gl::TextureStorageCubeMap *dest, gl::TextureStorageCubeMap *source) = 0;
+    virtual bool copyToRenderTarget(TextureStorage2D *dest, TextureStorage2D *source) = 0;
+    virtual bool copyToRenderTarget(TextureStorageCubeMap *dest, TextureStorageCubeMap *source) = 0;
 
-    virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, gl::TextureStorage2D *storage, GLint level) = 0;
-    virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, gl::TextureStorageCubeMap *storage, GLenum target, GLint level) = 0;
+    virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorage2D *storage, GLint level) = 0;
+    virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorageCubeMap *storage, GLenum target, GLint level) = 0;
 
   protected:
     egl::Display *mDisplay;

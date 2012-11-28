@@ -90,7 +90,7 @@ class Texture : public RefCountObject
 
     virtual bool isSamplerComplete() const = 0;
 
-    TextureStorage *getNativeTexture();
+    rx::TextureStorage *getNativeTexture();
     virtual Renderbuffer *getRenderbuffer(GLenum target) = 0;
 
     virtual void generateMipmaps() = 0;
@@ -107,10 +107,10 @@ class Texture : public RefCountObject
     static const GLuint INCOMPLETE_TEXTURE_ID = static_cast<GLuint>(-1);   // Every texture takes an id at creation time. The value is arbitrary because it is never registered with the resource manager.
 
   protected:
-    void setImage(GLint unpackAlignment, const void *pixels, Image *image);
-    bool subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, Image *image);
-    void setCompressedImage(GLsizei imageSize, const void *pixels, Image *image);
-    bool subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels, Image *image);
+    void setImage(GLint unpackAlignment, const void *pixels, rx::Image *image);
+    bool subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, rx::Image *image);
+    void setCompressedImage(GLsizei imageSize, const void *pixels, rx::Image *image);
+    bool subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels, rx::Image *image);
 
     GLint creationLevels(GLsizei width, GLsizei height) const;
     GLint creationLevels(GLsizei size) const;
@@ -135,7 +135,7 @@ class Texture : public RefCountObject
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture);
 
-    virtual TextureStorage *getStorage(bool renderTarget) = 0;
+    virtual rx::TextureStorage *getStorage(bool renderTarget) = 0;
 };
 
 class Texture2D : public Texture
@@ -185,16 +185,16 @@ class Texture2D : public Texture
     virtual void createTexture();
     virtual void updateTexture();
     virtual void convertToRenderTarget();
-    virtual TextureStorage *getStorage(bool renderTarget);
+    virtual rx::TextureStorage *getStorage(bool renderTarget);
 
     bool isMipmapComplete() const;
 
     void redefineImage(GLint level, GLint internalformat, GLsizei width, GLsizei height);
     void commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
 
-    Image mImageArray[IMPLEMENTATION_MAX_TEXTURE_LEVELS];
+    rx::Image mImageArray[IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
-    TextureStorage2D *mTexStorage;
+    rx::TextureStorage2D *mTexStorage;
     egl::Surface *mSurface;
 
     // A specific internal reference count is kept for colorbuffer proxy references,
@@ -258,7 +258,7 @@ class TextureCubeMap : public Texture
     virtual void createTexture();
     virtual void updateTexture();
     virtual void convertToRenderTarget();
-    virtual TextureStorage *getStorage(bool renderTarget);
+    virtual rx::TextureStorage *getStorage(bool renderTarget);
 
     bool isCubeComplete() const;
     bool isMipmapCubeComplete() const;
@@ -267,9 +267,9 @@ class TextureCubeMap : public Texture
     void commitRect(int faceIndex, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
     void redefineImage(int faceIndex, GLint level, GLint internalformat, GLsizei width, GLsizei height);
 
-    Image mImageArray[6][IMPLEMENTATION_MAX_TEXTURE_LEVELS];
+    rx::Image mImageArray[6][IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
-    TextureStorageCubeMap *mTexStorage;
+    rx::TextureStorageCubeMap *mTexStorage;
 
     // A specific internal reference count is kept for colorbuffer proxy references,
     // because, as the renderbuffer acting as proxy will maintain a binding pointer

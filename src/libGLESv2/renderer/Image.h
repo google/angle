@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-// Image.h: Defines the gl::Image class, which acts as the interface to
+// Image.h: Defines the rx::Image class, which acts as the interface to
 // the actual underlying surfaces of a Texture.
 
 #ifndef LIBGLESV2_RENDERER_IMAGE_H_
@@ -16,16 +16,16 @@
 
 #include "common/debug.h"
 
+namespace gl
+{
+class Framebuffer;
+}
+
 namespace rx
 {
 class Renderer9;
-}
-
-namespace gl
-{
 class TextureStorage2D;
 class TextureStorageCubeMap;
-class Framebuffer;
 
 class Image
 {
@@ -36,7 +36,7 @@ class Image
     static void GenerateMipmap(Image *dest, Image *source);
     static void Image::CopyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface9 *source);
 
-    bool redefine(rx::Renderer9 *renderer, GLint internalformat, GLsizei width, GLsizei height, bool forceRelease);
+    bool redefine(Renderer9 *renderer, GLint internalformat, GLsizei width, GLsizei height, bool forceRelease);
     void markDirty() {mDirty = true;}
     void markClean() {mDirty = false;}
 
@@ -103,7 +103,7 @@ class Image
     void loadCompressedData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                             const void *input);
 
-    void copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
+    void copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Image);
@@ -121,7 +121,7 @@ class Image
 
     bool mDirty;
 
-    rx::Renderer9 *mRenderer;
+    Renderer9 *mRenderer;
 
     D3DPOOL mD3DPool;   // can only be D3DPOOL_SYSTEMMEM or D3DPOOL_MANAGED since it needs to be lockable.
     D3DFORMAT mD3DFormat;

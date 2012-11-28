@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-// TextureSSE2.cpp: Implements SSE2-based functions of gl::Image class. It's
+// TextureSSE2.cpp: Implements SSE2-based functions of rx::Image class. It's
 // in a separated file for GCC, which can enable SSE usage only per-file,
 // not for code blocks that use SSE2 explicitly.
 
@@ -12,7 +12,7 @@
 
 #include <intrin.h>
 
-namespace gl
+namespace rx
 {
 
 void Image::loadRGBAUByteDataSSE2(GLsizei width, GLsizei height,

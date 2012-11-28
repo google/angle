@@ -212,7 +212,7 @@ bool Blit::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
     return true;
 }
 
-bool Blit::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, gl::TextureStorage2D *storage, GLint level)
+bool Blit::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorage2D *storage, GLint level)
 {
     // D3D9_REPLACE
     IDirect3DSurface9 *source = framebuffer->getRenderTarget();
@@ -235,7 +235,7 @@ bool Blit::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum des
     return result;
 }
 
-bool Blit::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, gl::TextureStorageCubeMap *storage, GLenum target, GLint level)
+bool Blit::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorageCubeMap *storage, GLenum target, GLint level)
 {
     // D3D9_REPLACE
     IDirect3DSurface9 *source = framebuffer->getRenderTarget();

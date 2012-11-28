@@ -111,11 +111,11 @@ class Renderer9 : public Renderer
     
     D3DFORMAT ConvertTextureInternalFormat(GLint internalformat);
 
-    virtual bool copyToRenderTarget(gl::TextureStorage2D *dest, gl::TextureStorage2D *source);
-    virtual bool copyToRenderTarget(gl::TextureStorageCubeMap *dest, gl::TextureStorageCubeMap *source);
+    virtual bool copyToRenderTarget(TextureStorage2D *dest, TextureStorage2D *source);
+    virtual bool copyToRenderTarget(TextureStorageCubeMap *dest, TextureStorageCubeMap *source);
 
-    virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, gl::TextureStorage2D *storage, GLint level);
-    virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, gl::TextureStorageCubeMap *storage, GLenum target, GLint level);
+    virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorage2D *storage, GLint level);
+    virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorageCubeMap *storage, GLenum target, GLint level);
 
     bool boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest);
 

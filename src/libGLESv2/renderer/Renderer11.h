@@ -83,8 +83,8 @@ class Renderer11 : public Renderer
 
     virtual GLsizei getMaxSupportedSamples() const;
 
-    virtual bool copyToRenderTarget(gl::TextureStorage2D *dest, gl::TextureStorage2D *source);
-    virtual bool copyToRenderTarget(gl::TextureStorageCubeMap *dest, gl::TextureStorageCubeMap *source);
+    virtual bool copyToRenderTarget(TextureStorage2D *dest, TextureStorage2D *source);
+    virtual bool copyToRenderTarget(TextureStorageCubeMap *dest, TextureStorageCubeMap *source);
 
     // D3D11-renderer specific methods
     ID3D11Device *getDevice() { return mDevice; }

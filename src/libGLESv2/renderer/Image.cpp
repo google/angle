@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-// Image.cpp: Implements the gl::Image class, which acts as the interface to
+// Image.cpp: Implements the rx::Image class, which acts as the interface to
 // the actual underlying surfaces of a Texture.
 
 #include "libGLESv2/renderer/Image.h"
@@ -19,7 +19,7 @@
 
 #include "libGLESv2/renderer/renderer9_utils.h"
 
-namespace gl
+namespace rx
 {
 
 namespace
@@ -67,10 +67,10 @@ struct A16B16G16R16F
 
     static void average(A16B16G16R16F *dst, const A16B16G16R16F *src1, const A16B16G16R16F *src2)
     {
-        dst->R = float32ToFloat16((float16ToFloat32(src1->R) + float16ToFloat32(src2->R)) * 0.5f);
-        dst->G = float32ToFloat16((float16ToFloat32(src1->G) + float16ToFloat32(src2->G)) * 0.5f);
-        dst->B = float32ToFloat16((float16ToFloat32(src1->B) + float16ToFloat32(src2->B)) * 0.5f);
-        dst->A = float32ToFloat16((float16ToFloat32(src1->A) + float16ToFloat32(src2->A)) * 0.5f);
+        dst->R = gl::float32ToFloat16((gl::float16ToFloat32(src1->R) + gl::float16ToFloat32(src2->R)) * 0.5f);
+        dst->G = gl::float32ToFloat16((gl::float16ToFloat32(src1->G) + gl::float16ToFloat32(src2->G)) * 0.5f);
+        dst->B = gl::float32ToFloat16((gl::float16ToFloat32(src1->B) + gl::float16ToFloat32(src2->B)) * 0.5f);
+        dst->A = gl::float32ToFloat16((gl::float16ToFloat32(src1->A) + gl::float16ToFloat32(src2->A)) * 0.5f);
     }
 };
 
@@ -312,7 +312,7 @@ void Image::createSurface()
         int levelToFetch = 0;
         GLsizei requestWidth = mWidth;
         GLsizei requestHeight = mHeight;
-        MakeValidSize(true, IsCompressed(mInternalFormat), &requestWidth, &requestHeight, &levelToFetch);
+        gl::MakeValidSize(true, gl::IsCompressed(mInternalFormat), &requestWidth, &requestHeight, &levelToFetch);
 
         IDirect3DDevice9 *device = mRenderer->getDevice(); // D3D9_REPLACE
 
@@ -492,12 +492,12 @@ void Image::loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height
     }
 
 
-    GLsizei inputPitch = ComputePitch(width, mInternalFormat, unpackAlignment);
+    GLsizei inputPitch = gl::ComputePitch(width, mInternalFormat, unpackAlignment);
 
     switch (mInternalFormat)
     {
       case GL_ALPHA8_EXT:
-        if (supportsSSE2())
+        if (gl::supportsSSE2())
         {
             loadAlphaDataSSE2(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         }
@@ -537,7 +537,7 @@ void Image::loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height
         loadRGB565Data(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         break;
       case GL_RGBA8_OES:
-        if (supportsSSE2())
+        if (gl::supportsSSE2())
         {
             loadRGBAUByteDataSSE2(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         }
@@ -970,8 +970,8 @@ void Image::loadCompressedData(GLint xoffset, GLint yoffset, GLsizei width, GLsi
         return;
     }
 
-    GLsizei inputSize = ComputeCompressedSize(width, height, mInternalFormat);
-    GLsizei inputPitch = ComputeCompressedPitch(width, mInternalFormat);
+    GLsizei inputSize = gl::ComputeCompressedSize(width, height, mInternalFormat);
+    GLsizei inputPitch = gl::ComputeCompressedPitch(width, mInternalFormat);
     int rows = inputSize / inputPitch;
     for (int i = 0; i < rows; ++i)
     {
@@ -982,7 +982,7 @@ void Image::loadCompressedData(GLint xoffset, GLint yoffset, GLsizei width, GLsi
 }
 
 // This implements glCopyTex[Sub]Image2D for non-renderable internal texture formats and incomplete textures
-void Image::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
+void Image::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source)
 {
     IDirect3DSurface9 *renderTarget = source->getRenderTarget();
 

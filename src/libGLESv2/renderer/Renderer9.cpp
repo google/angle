@@ -576,7 +576,7 @@ void Renderer9::setTexture(gl::SamplerType type, int index, gl::Texture *texture
 
     if (texture)
     {
-        gl::TextureStorage *texStorage = texture->getNativeTexture();
+        TextureStorage *texStorage = texture->getNativeTexture();
         if (texStorage)
         {
             d3dTexture = texStorage->getBaseTexture();
@@ -1059,7 +1059,7 @@ D3DFORMAT Renderer9::ConvertTextureInternalFormat(GLint internalformat)
     return D3DFMT_A8R8G8B8;
 }
 
-bool Renderer9::copyToRenderTarget(gl::TextureStorage2D *dest, gl::TextureStorage2D *source)
+bool Renderer9::copyToRenderTarget(TextureStorage2D *dest, TextureStorage2D *source)
 {
     bool result = false;
 
@@ -1084,7 +1084,7 @@ bool Renderer9::copyToRenderTarget(gl::TextureStorage2D *dest, gl::TextureStorag
     return result;
 }
 
-bool Renderer9::copyToRenderTarget(gl::TextureStorageCubeMap *dest, gl::TextureStorageCubeMap *source)
+bool Renderer9::copyToRenderTarget(TextureStorageCubeMap *dest, TextureStorageCubeMap *source)
 {
     bool result = false;
 
@@ -1130,13 +1130,13 @@ D3DPOOL Renderer9::getBufferPool(DWORD usage) const
 }
 
 bool Renderer9::copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset,
-                          gl::TextureStorage2D *storage, GLint level)
+                          TextureStorage2D *storage, GLint level)
 {
     return mBlit->copy(framebuffer, sourceRect, destFormat, xoffset, yoffset, storage, level);
 }
 
 bool Renderer9::copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset,
-                          gl::TextureStorageCubeMap *storage, GLenum target, GLint level)
+                          TextureStorageCubeMap *storage, GLenum target, GLint level)
 {
     return mBlit->copy(framebuffer, sourceRect, destFormat, xoffset, yoffset, storage, target, level);
 }
@@ -1180,7 +1180,7 @@ bool Renderer9::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *s
 
             if (SUCCEEDED(result))
             {
-                gl::Image::CopyLockableSurfaces(surf, source);
+                Image::CopyLockableSurfaces(surf, source);
                 result = device->UpdateSurface(surf, NULL, dest, NULL);
                 surf->Release();
             }
