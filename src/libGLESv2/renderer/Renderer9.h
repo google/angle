@@ -90,8 +90,7 @@ class Renderer9 : public Renderer
                                       int stencilBackRef, bool frontFaceCCW, unsigned int stencilSize);
 
     virtual void setScissorRectangle(const gl::Rectangle &scissor);
-    virtual bool setViewport(const gl::Rectangle& viewport, float zNear, float zFar,
-                             unsigned int renderTargetWidth, unsigned int renderTargetHeight,
+    virtual bool setViewport(const gl::Rectangle &viewport, float zNear, float zFar,
                              gl::ProgramBinary *currentProgram, bool forceSetUniforms);
 
     virtual bool applyRenderTarget(gl::Framebuffer *frameBuffer);

@@ -1754,8 +1754,7 @@ bool Context::applyRenderTarget(bool ignoreViewport)
 
     ProgramBinary *programBinary = mState.currentProgram ? getCurrentProgramBinary() : NULL;
 
-    if (!mRenderer->setViewport(viewport, zNear, zFar, mRenderTargetDesc.width, mRenderTargetDesc.height,
-                                programBinary, mDxUniformsDirty))
+    if (!mRenderer->setViewport(viewport, zNear, zFar, programBinary, mDxUniformsDirty))
     {
         return false;
     }

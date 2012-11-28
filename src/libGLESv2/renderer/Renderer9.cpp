@@ -919,18 +919,17 @@ void Renderer9::setScissorRectangle(const gl::Rectangle &scissor)
     mForceSetScissor = false;
 }
 
-bool Renderer9::setViewport(const gl::Rectangle& viewport, float zNear, float zFar,
-                            unsigned int renderTargetWidth, unsigned int renderTargetHeight,
+bool Renderer9::setViewport(const gl::Rectangle &viewport, float zNear, float zFar,
                             gl::ProgramBinary *currentProgram, bool forceSetUniforms)
 {
     bool viewportChanged =  mForceSetViewport || memcmp(&viewport, &mCurViewport, sizeof(gl::Rectangle)) != 0 ||
                             zNear != mCurNear || zFar != mCurFar;
 
     D3DVIEWPORT9 dxViewport;
-    dxViewport.X = gl::clamp(viewport.x, 0, static_cast<int>(renderTargetWidth));
-    dxViewport.Y = gl::clamp(viewport.y, 0, static_cast<int>(renderTargetHeight));
-    dxViewport.Width = gl::clamp(viewport.width, 0, static_cast<int>(renderTargetWidth) - static_cast<int>(dxViewport.X));
-    dxViewport.Height = gl::clamp(viewport.height, 0, static_cast<int>(renderTargetHeight) - static_cast<int>(dxViewport.Y));
+    dxViewport.X = gl::clamp(viewport.x, 0, static_cast<int>(mRenderTargetDesc.width));
+    dxViewport.Y = gl::clamp(viewport.y, 0, static_cast<int>(mRenderTargetDesc.height));
+    dxViewport.Width = gl::clamp(viewport.width, 0, static_cast<int>(mRenderTargetDesc.width) - static_cast<int>(dxViewport.X));
+    dxViewport.Height = gl::clamp(viewport.height, 0, static_cast<int>(mRenderTargetDesc.height) - static_cast<int>(dxViewport.Y));
     dxViewport.MinZ = zNear;
     dxViewport.MaxZ = zFar;
 
