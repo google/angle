@@ -1007,7 +1007,7 @@ bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
         RenderTarget *renderTarget = renderbufferObject->getRenderTarget();
         if (renderTarget)
         {
-            renderTargetSurface = renderTarget->getSurface();
+            renderTargetSurface = RenderTarget9::makeRenderTarget9(renderTarget)->getSurface();
         }
 
         if (!renderTargetSurface)
@@ -1061,7 +1061,7 @@ bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
 
             if (depthStencilRenderTarget)
             {
-                depthStencilSurface = depthStencilRenderTarget->getSurface();
+                depthStencilSurface = RenderTarget9::makeRenderTarget9(depthStencilRenderTarget)->getSurface();
             }
 
             if (!depthStencilSurface)

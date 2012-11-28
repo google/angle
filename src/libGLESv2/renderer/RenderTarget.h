@@ -30,9 +30,7 @@ class RenderTarget
     GLenum getInternalFormat() { return mInternalFormat; }
     GLenum getActualFormat() { return mActualFormat; }
     GLsizei getSamples() { return mSamples; }
-
-    virtual IDirect3DSurface9 *getSurface() = 0;   // D3D9_REPLACE - temporary pass-through function
-
+    
     struct Desc {
         GLsizei width;
         GLsizei height;
