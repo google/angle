@@ -352,7 +352,6 @@ void Context::markAllStateDirty()
     mAppliedStencilbufferSerial = 0;
     mAppliedIBSerial = 0;
     mDepthStencilInitialized = false;
-    mViewportInitialized = false;
     mRenderTargetDescInitialized = false;
 
     mVertexDeclarationCache.markStateDirty();
@@ -1826,68 +1825,31 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         mRenderTargetDescInitialized = true;
     }
 
-    D3DVIEWPORT9 viewport;
-
+    Rectangle viewport = mState.viewport;
     float zNear = clamp01(mState.zNear);
     float zFar = clamp01(mState.zFar);
 
     if (ignoreViewport)
     {
-        viewport.X = 0;
-        viewport.Y = 0;
-        viewport.Width = mRenderTargetDesc.width;
-        viewport.Height = mRenderTargetDesc.height;
-        viewport.MinZ = 0.0f;
-        viewport.MaxZ = 1.0f;
-    }
-    else
-    {
-        viewport.X = clamp(mState.viewport.x, 0L, static_cast<LONG>(mRenderTargetDesc.width));
-        viewport.Y = clamp(mState.viewport.y, 0L, static_cast<LONG>(mRenderTargetDesc.height));
-        viewport.Width = clamp(mState.viewport.width, 0L, static_cast<LONG>(mRenderTargetDesc.width) - static_cast<LONG>(viewport.X));
-        viewport.Height = clamp(mState.viewport.height, 0L, static_cast<LONG>(mRenderTargetDesc.height) - static_cast<LONG>(viewport.Y));
+        viewport.x = 0;
+        viewport.y = 0;
+        viewport.width = mRenderTargetDesc.width;
+        viewport.height = mRenderTargetDesc.height;
+        zNear = 0.0f;
+        zFar = 1.0f;
     }
 
-    if (viewport.Width <= 0 || viewport.Height <= 0)
-    {
-        return false;   // Nothing to render
-    }
+    ProgramBinary *programBinary = mState.currentProgram ? getCurrentProgramBinary() : NULL;
 
-    if (renderTargetChanged || !mViewportInitialized || memcmp(&viewport, &mSetViewport, sizeof mSetViewport) != 0)
+    if (!mRenderer->setViewport(viewport, zNear, zFar, mRenderTargetDesc.width, mRenderTargetDesc.height,
+                                programBinary, mDxUniformsDirty))
     {
-        mDevice->SetViewport(&viewport);
-        mSetViewport = viewport;
-        mViewportInitialized = true;
-        mDxUniformsDirty = true;
+        return false;
     }
+    mDxUniformsDirty = false;
 
     mRenderer->setScissorRectangle(mState.scissor, static_cast<int>(mRenderTargetDesc.width),
                                     static_cast<int>(mRenderTargetDesc.height));
-
-    if (mState.currentProgram && mDxUniformsDirty)
-    {
-        ProgramBinary *programBinary = getCurrentProgramBinary();
-
-        GLint halfPixelSize = programBinary->getDxHalfPixelSizeLocation();
-        GLfloat xy[2] = {1.0f / viewport.Width, -1.0f / viewport.Height};
-        programBinary->setUniform2fv(halfPixelSize, 1, xy);
-
-        // These values are used for computing gl_FragCoord in Program::linkVaryings().
-        GLint coord = programBinary->getDxCoordLocation();
-        GLfloat whxy[4] = {mState.viewport.width / 2.0f, mState.viewport.height / 2.0f,
-                          (float)mState.viewport.x + mState.viewport.width / 2.0f,
-                          (float)mState.viewport.y + mState.viewport.height / 2.0f};
-        programBinary->setUniform4fv(coord, 1, whxy);
-
-        GLint depth = programBinary->getDxDepthLocation();
-        GLfloat dz[2] = {(zFar - zNear) / 2.0f, (zNear + zFar) / 2.0f};
-        programBinary->setUniform2fv(depth, 1, dz);
-
-        GLint depthRange = programBinary->getDxDepthRangeLocation();
-        GLfloat nearFarDiff[3] = {zNear, zFar, zFar - zNear};
-        programBinary->setUniform3fv(depthRange, 1, nearFarDiff);
-        mDxUniformsDirty = false;
-    }
 
     return true;
 }

@@ -550,8 +550,6 @@ class Context
     unsigned int mAppliedStencilbufferSerial;
     unsigned int mAppliedIBSerial;
     bool mDepthStencilInitialized;
-    bool mViewportInitialized;
-    D3DVIEWPORT9 mSetViewport;
     bool mRenderTargetDescInitialized;
     rx::RenderTarget::Desc mRenderTargetDesc;
     bool mDxUniformsDirty;
