@@ -270,7 +270,6 @@
             'libGLESv2/renderer/RenderTarget9.h',
             'libGLESv2/renderer/RenderTarget9.cpp',
             'libGLESv2/renderer/ShaderCache.h',
-            'libGLESv2/renderer/SwapChain.cpp',
             'libGLESv2/renderer/SwapChain.h',
             'libGLESv2/renderer/SwapChain9.cpp',
             'libGLESv2/renderer/SwapChain9.h',
