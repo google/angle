@@ -87,14 +87,12 @@ struct DepthStencilState
 
     bool stencilTest;
     GLenum stencilFunc;
-    GLint stencilRef;
     GLuint stencilMask;
     GLenum stencilFail;
     GLenum stencilPassDepthFail;
     GLenum stencilPassDepthPass;
     GLuint stencilWritemask;
     GLenum stencilBackFunc;
-    GLint stencilBackRef;
     GLuint stencilBackMask;
     GLenum stencilBackFail;
     GLenum stencilBackPassDepthFail;

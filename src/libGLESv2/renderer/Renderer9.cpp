@@ -745,11 +745,13 @@ void Renderer9::setBlendState(const gl::BlendState &blendState, const gl::Color 
     mForceSetBlendState = false;
 }
 
-void Renderer9::setDepthStencilState(const gl::DepthStencilState &depthStencilState, bool frontFaceCCW,
-                                     unsigned int stencilSize)
+void Renderer9::setDepthStencilState(const gl::DepthStencilState &depthStencilState, int stencilRef,
+                                     int stencilBackRef, bool frontFaceCCW, unsigned int stencilSize)
 {
     bool depthStencilStateChanged = mForceSetDepthStencilState ||
                                     memcmp(&depthStencilState, &mCurDepthStencilState, sizeof(gl::DepthStencilState)) != 0;
+    bool stencilRefChanged = mForceSetDepthStencilState || stencilRef != mCurStencilRef ||
+                             stencilBackRef != mCurStencilBackRef;
     bool frontFaceCCWChanged = mForceSetDepthStencilState || frontFaceCCW != mCurFrontFaceCCW;
     bool stencilSizeChanged = mForceSetDepthStencilState || stencilSize != mCurStencilSize;
 
@@ -768,7 +770,7 @@ void Renderer9::setDepthStencilState(const gl::DepthStencilState &depthStencilSt
         mCurDepthStencilState = depthStencilState;
     }
 
-    if (depthStencilStateChanged || frontFaceCCWChanged || stencilSizeChanged)
+    if (depthStencilStateChanged || stencilRefChanged || frontFaceCCWChanged || stencilSizeChanged)
     {
         if (depthStencilState.stencilTest && stencilSize > 0)
         {
@@ -780,7 +782,7 @@ void Renderer9::setDepthStencilState(const gl::DepthStencilState &depthStencilSt
             const D3DRENDERSTATETYPE D3DRS_CCW_STENCILMASK = D3DRS_STENCILMASK;
             const D3DRENDERSTATETYPE D3DRS_CCW_STENCILWRITEMASK = D3DRS_STENCILWRITEMASK;
             if (depthStencilState.stencilWritemask != depthStencilState.stencilBackWritemask ||
-                depthStencilState.stencilRef != depthStencilState.stencilBackRef ||
+                stencilRef != stencilBackRef ||
                 depthStencilState.stencilMask != depthStencilState.stencilBackMask)
             {
                 ERR("Separate front/back stencil writemasks, reference values, or stencil mask values are invalid under WebGL.");
@@ -796,7 +798,7 @@ void Renderer9::setDepthStencilState(const gl::DepthStencilState &depthStencilSt
                                     gl_d3d9::ConvertComparison(depthStencilState.stencilFunc));
 
             mDevice->SetRenderState(frontFaceCCW ? D3DRS_STENCILREF : D3DRS_CCW_STENCILREF,
-                                    (depthStencilState.stencilRef < (GLint)maxStencil) ? depthStencilState.stencilRef : maxStencil);
+                                    (stencilRef < (int)maxStencil) ? stencilRef : maxStencil);
             mDevice->SetRenderState(frontFaceCCW ? D3DRS_STENCILMASK : D3DRS_CCW_STENCILMASK,
                                     depthStencilState.stencilMask);
 
@@ -813,7 +815,7 @@ void Renderer9::setDepthStencilState(const gl::DepthStencilState &depthStencilSt
                                     gl_d3d9::ConvertComparison(depthStencilState.stencilBackFunc));
 
             mDevice->SetRenderState(!frontFaceCCW ? D3DRS_STENCILREF : D3DRS_CCW_STENCILREF,
-                                    (depthStencilState.stencilBackRef < (GLint)maxStencil) ? depthStencilState.stencilBackRef : maxStencil);
+                                    (stencilBackRef < (int)maxStencil) ? stencilBackRef : maxStencil);
             mDevice->SetRenderState(!frontFaceCCW ? D3DRS_STENCILMASK : D3DRS_CCW_STENCILMASK,
                                     depthStencilState.stencilBackMask);
 
@@ -831,6 +833,8 @@ void Renderer9::setDepthStencilState(const gl::DepthStencilState &depthStencilSt
 
         mDevice->SetRenderState(D3DRS_ZWRITEENABLE, depthStencilState.depthMask ? TRUE : FALSE);
 
+        mCurStencilRef = stencilRef;
+        mCurStencilBackRef = stencilBackRef;
         mCurFrontFaceCCW = frontFaceCCW;
         mCurStencilSize = stencilSize;
     }

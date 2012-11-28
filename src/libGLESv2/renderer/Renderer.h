@@ -76,8 +76,8 @@ class Renderer
     virtual void setRasterizerState(const gl::RasterizerState &rasterState, unsigned int depthSize) = 0;
     virtual void setBlendState(const gl::BlendState &blendState, const gl::Color &blendColor,
                                unsigned int sampleMask) = 0;
-    virtual void setDepthStencilState(const gl::DepthStencilState &depthStencilState, bool frontFaceCCW,
-                                      unsigned int stencilSize) = 0;
+    virtual void setDepthStencilState(const gl::DepthStencilState &depthStencilState, int stencilRef,
+                                      int stencilBackRef, bool frontFaceCCW, unsigned int stencilSize) = 0;
 
     virtual void setScissorRectangle(const gl::Rectangle& scissor, unsigned int renderTargetWidth,
                                      unsigned int renderTargetHeight) = 0;

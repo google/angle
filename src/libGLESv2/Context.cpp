@@ -84,11 +84,9 @@ Context::Context(const gl::Context *shareContext, rx::Renderer *renderer, bool n
     mState.depthStencil.depthMask = true;
     mState.depthStencil.stencilTest = false;
     mState.depthStencil.stencilFunc = GL_ALWAYS;
-    mState.depthStencil.stencilRef = 0;
     mState.depthStencil.stencilMask = -1;
     mState.depthStencil.stencilWritemask = -1;
     mState.depthStencil.stencilBackFunc = GL_ALWAYS;
-    mState.depthStencil.stencilBackRef = 0;
     mState.depthStencil.stencilBackMask = - 1;
     mState.depthStencil.stencilBackWritemask = -1;
     mState.depthStencil.stencilFail = GL_KEEP;
@@ -97,6 +95,9 @@ Context::Context(const gl::Context *shareContext, rx::Renderer *renderer, bool n
     mState.depthStencil.stencilBackFail = GL_KEEP;
     mState.depthStencil.stencilBackPassDepthFail = GL_KEEP;
     mState.depthStencil.stencilBackPassDepthPass = GL_KEEP;
+
+    mState.stencilRef = 0;
+    mState.stencilBackRef = 0;
 
     mState.sampleCoverage = false;
     mState.sampleCoverageValue = 1.0f;
@@ -482,14 +483,14 @@ bool Context::isStencilTestEnabled() const
 void Context::setStencilParams(GLenum stencilFunc, GLint stencilRef, GLuint stencilMask)
 {
     mState.depthStencil.stencilFunc = stencilFunc;
-    mState.depthStencil.stencilRef = (stencilRef > 0) ? stencilRef : 0;
+    mState.stencilRef = (stencilRef > 0) ? stencilRef : 0;
     mState.depthStencil.stencilMask = stencilMask;
 }
 
 void Context::setStencilBackParams(GLenum stencilBackFunc, GLint stencilBackRef, GLuint stencilBackMask)
 {
     mState.depthStencil.stencilBackFunc = stencilBackFunc;
-    mState.depthStencil.stencilBackRef = (stencilBackRef > 0) ? stencilBackRef : 0;
+    mState.stencilBackRef = (stencilBackRef > 0) ? stencilBackRef : 0;
     mState.depthStencil.stencilBackMask = stencilBackMask;
 }
 
@@ -1346,10 +1347,10 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_FRAGMENT_SHADER_DERIVATIVE_HINT_OES: *params = mState.fragmentShaderDerivativeHint; break;
       case GL_ACTIVE_TEXTURE:                   *params = (mState.activeSampler + GL_TEXTURE0); break;
       case GL_STENCIL_FUNC:                     *params = mState.depthStencil.stencilFunc;             break;
-      case GL_STENCIL_REF:                      *params = mState.depthStencil.stencilRef;              break;
+      case GL_STENCIL_REF:                      *params = mState.stencilRef;                           break;
       case GL_STENCIL_VALUE_MASK:               *params = mState.depthStencil.stencilMask;             break;
       case GL_STENCIL_BACK_FUNC:                *params = mState.depthStencil.stencilBackFunc;         break;
-      case GL_STENCIL_BACK_REF:                 *params = mState.depthStencil.stencilBackRef;          break;
+      case GL_STENCIL_BACK_REF:                 *params = mState.stencilBackRef;                       break;
       case GL_STENCIL_BACK_VALUE_MASK:          *params = mState.depthStencil.stencilBackMask;         break;
       case GL_STENCIL_FAIL:                     *params = mState.depthStencil.stencilFail;             break;
       case GL_STENCIL_PASS_DEPTH_FAIL:          *params = mState.depthStencil.stencilPassDepthFail;    break;
@@ -1960,9 +1961,8 @@ void Context::applyState(GLenum drawMode)
     mRenderer->setBlendState(mState.blend, mState.blendColor, mask);
 
     unsigned int stencilSize = framebufferObject->hasStencil() ? framebufferObject->getStencilbuffer()->getStencilSize() : 0;
-    mRenderer->setDepthStencilState(mState.depthStencil,
-                                    mState.rasterizer.frontFace == GL_CCW,
-                                    stencilSize);
+    mRenderer->setDepthStencilState(mState.depthStencil, mState.stencilRef, mState.stencilBackRef,
+                                    mState.rasterizer.frontFace == GL_CCW, stencilSize);
 }
 
 GLenum Context::applyVertexBuffer(GLint first, GLsizei count, GLsizei instances, GLsizei *repeatDraw)

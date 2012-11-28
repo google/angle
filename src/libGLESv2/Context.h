@@ -164,6 +164,8 @@ struct State
     bool sampleCoverageInvert;
 
     DepthStencilState depthStencil;
+    GLint stencilRef;
+    GLint stencilBackRef;
 
     GLfloat lineWidth;
 

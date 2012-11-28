@@ -311,8 +311,8 @@ void Renderer11::setBlendState(const gl::BlendState &blendState, const gl::Color
     mForceSetBlendState = false;
 }
 
-void Renderer11::setDepthStencilState(const gl::DepthStencilState &depthStencilState, bool frontFaceCCW,
-                                      unsigned int stencilSize)
+void Renderer11::setDepthStencilState(const gl::DepthStencilState &depthStencilState, int stencilRef,
+                                      int stencilBackRef, bool frontFaceCCW, unsigned int stencilSize)
 {
     // TODO
     UNIMPLEMENTED();
