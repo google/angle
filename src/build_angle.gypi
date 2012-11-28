@@ -268,6 +268,8 @@
             'libGLESv2/renderer/renderer9_utils.cpp',
             'libGLESv2/renderer/renderer9_utils.h',
             'libGLESv2/renderer/RenderTarget.h',
+            'libGLESv2/renderer/RenderTarget11.h',
+            'libGLESv2/renderer/RenderTarget11.cpp',
             'libGLESv2/renderer/RenderTarget9.h',
             'libGLESv2/renderer/RenderTarget9.cpp',
             'libGLESv2/renderer/ShaderCache.h',

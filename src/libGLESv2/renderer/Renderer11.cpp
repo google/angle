@@ -11,6 +11,7 @@
 #include "libGLESv2/utilities.h"
 #include "libGLESv2/mathutil.h"
 #include "libGLESv2/renderer/Renderer11.h"
+#include "libGLESv2/renderer/RenderTarget11.h"
 #include "libGLESv2/renderer/renderer11_utils.h"
 #include "libGLESv2/renderer/SwapChain11.h"
 
@@ -730,9 +731,17 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect,
 
 RenderTarget *Renderer11::createRenderTarget(SwapChain *swapChain, bool depth)
 {
-    // TODO
-    UNIMPLEMENTED();
-    return NULL;
+    SwapChain11 *swapChain11 = SwapChain11::makeSwapChain11(swapChain); 
+    RenderTarget11 *renderTarget = NULL;
+    if (depth)
+    {
+        renderTarget = new RenderTarget11(this, swapChain11->getDepthStencil(), swapChain11->getWidth(), swapChain11->getHeight());
+    }
+    else
+    {
+        renderTarget = new RenderTarget11(this, swapChain11->getRenderTarget(), swapChain11->getWidth(), swapChain11->getHeight());
+    }
+    return renderTarget;
 }
 
 RenderTarget *Renderer11::createRenderTarget(int width, int height, GLenum format, GLsizei samples, bool depth)

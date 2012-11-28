@@ -32,6 +32,9 @@ class SwapChain11 : public SwapChain
     virtual ID3D11DepthStencilView *getDepthStencil();
     virtual ID3D11Texture2D *getOffscreenTexture();
 
+    EGLint getWidth() const { return mWidth; }
+    EGLint getHeight() const { return mHeight; }
+
     static SwapChain11 *makeSwapChain11(SwapChain *swapChain);
 
   private:
