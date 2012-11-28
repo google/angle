@@ -152,6 +152,12 @@ class Renderer11 : public Renderer
 
     RenderStateCache mStateCache;
 
+    // current render target states
+    bool mDepthStencilInitialized;
+    bool mRenderTargetDescInitialized;
+    rx::RenderTarget::Desc mRenderTargetDesc;
+    unsigned int mCurDepthSize;
+
     // Currently applied blend state
     bool mForceSetBlendState;
     gl::BlendState mCurBlendState;
@@ -161,7 +167,6 @@ class Renderer11 : public Renderer
     // Currently applied rasterizer state
     bool mForceSetRasterState;
     gl::RasterizerState mCurRasterState;
-    unsigned int mCurDepthSize;
 
     // Currently applied depth stencil state
     bool mForceSetDepthStencilState;

@@ -491,6 +491,9 @@ void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *
 
 void Renderer11::markAllStateDirty()
 {
+    mDepthStencilInitialized = false;
+    mRenderTargetDescInitialized = false;
+
     mForceSetBlendState = true;
     mForceSetRasterState = true;
     mForceSetDepthStencilState = true;
