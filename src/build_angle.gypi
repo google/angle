@@ -79,6 +79,7 @@
         'compiler/glslang_lex.cpp',
         'compiler/glslang_tab.cpp',
         'compiler/glslang_tab.h',
+        'compiler/HashNames.h',
         'compiler/InfoSink.cpp',
         'compiler/InfoSink.h',
         'compiler/Initialize.cpp',

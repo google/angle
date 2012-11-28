@@ -18,6 +18,7 @@
 
 #include "compiler/BuiltInFunctionEmulator.h"
 #include "compiler/ExtensionBehavior.h"
+#include "compiler/HashNames.h"
 #include "compiler/InfoSink.h"
 #include "compiler/SymbolTable.h"
 #include "compiler/VariableInfo.h"
@@ -67,6 +68,9 @@ public:
     const TVariableInfoList& getAttribs() const { return attribs; }
     const TVariableInfoList& getUniforms() const { return uniforms; }
     int getMappedNameMaxLength() const;
+
+    ShHashFunction64 getHashFunction() const { return hashFunction; }
+    const NameMap& getNameMap() const { return nameMap; }
 
 protected:
     ShShaderType getShaderType() const { return shaderType; }
@@ -124,6 +128,10 @@ private:
 
     // Cached copy of the ref-counted singleton.
     LongNameMap* longNameMap;
+
+    // name hashing.
+    ShHashFunction64 hashFunction;
+    NameMap nameMap;
 };
 
 //
