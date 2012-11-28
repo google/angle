@@ -172,10 +172,7 @@ struct State
     GLenum generateMipmapHint;
     GLenum fragmentShaderDerivativeHint;
 
-    GLint viewportX;
-    GLint viewportY;
-    GLsizei viewportWidth;
-    GLsizei viewportHeight;
+    Rectangle viewport;
     float zNear;
     float zFar;
 

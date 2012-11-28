@@ -106,10 +106,10 @@ Context::Context(const gl::Context *shareContext, rx::Renderer *renderer, bool n
 
     mState.lineWidth = 1.0f;
 
-    mState.viewportX = 0;
-    mState.viewportY = 0;
-    mState.viewportWidth = 0;
-    mState.viewportHeight = 0;
+    mState.viewport.x = 0;
+    mState.viewport.y = 0;
+    mState.viewport.width = 0;
+    mState.viewport.height = 0;
     mState.zNear = 0.0f;
     mState.zFar = 1.0f;
 
@@ -304,10 +304,10 @@ void Context::makeCurrent(egl::Surface *surface)
         initExtensionString();
         initRendererString();
 
-        mState.viewportX = 0;
-        mState.viewportY = 0;
-        mState.viewportWidth = surface->getWidth();
-        mState.viewportHeight = surface->getHeight();
+        mState.viewport.x = 0;
+        mState.viewport.y = 0;
+        mState.viewport.width = surface->getWidth();
+        mState.viewport.height = surface->getHeight();
 
         mState.scissor.x = 0;
         mState.scissor.y = 0;
@@ -599,10 +599,10 @@ void Context::setFragmentShaderDerivativeHint(GLenum hint)
 
 void Context::setViewportParams(GLint x, GLint y, GLsizei width, GLsizei height)
 {
-    mState.viewportX = x;
-    mState.viewportY = y;
-    mState.viewportWidth = width;
-    mState.viewportHeight = height;
+    mState.viewport.x = x;
+    mState.viewport.y = y;
+    mState.viewport.width = width;
+    mState.viewport.height = height;
 }
 
 void Context::setScissorParams(GLint x, GLint y, GLsizei width, GLsizei height)
@@ -1454,10 +1454,10 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
         }
         break;
       case GL_VIEWPORT:
-        params[0] = mState.viewportX;
-        params[1] = mState.viewportY;
-        params[2] = mState.viewportWidth;
-        params[3] = mState.viewportHeight;
+        params[0] = mState.viewport.x;
+        params[1] = mState.viewport.y;
+        params[2] = mState.viewport.width;
+        params[3] = mState.viewport.height;
         break;
       case GL_SCISSOR_BOX:
         params[0] = mState.scissor.x;
@@ -1842,12 +1842,10 @@ bool Context::applyRenderTarget(bool ignoreViewport)
     }
     else
     {
-        viewport.X = clamp(mState.viewportX, 0L, static_cast<LONG>(mRenderTargetDesc.width));
-        viewport.Y = clamp(mState.viewportY, 0L, static_cast<LONG>(mRenderTargetDesc.height));
-        viewport.Width = clamp(mState.viewportWidth, 0L, static_cast<LONG>(mRenderTargetDesc.width) - static_cast<LONG>(viewport.X));
-        viewport.Height = clamp(mState.viewportHeight, 0L, static_cast<LONG>(mRenderTargetDesc.height) - static_cast<LONG>(viewport.Y));
-        viewport.MinZ = zNear;
-        viewport.MaxZ = zFar;
+        viewport.X = clamp(mState.viewport.x, 0L, static_cast<LONG>(mRenderTargetDesc.width));
+        viewport.Y = clamp(mState.viewport.y, 0L, static_cast<LONG>(mRenderTargetDesc.height));
+        viewport.Width = clamp(mState.viewport.width, 0L, static_cast<LONG>(mRenderTargetDesc.width) - static_cast<LONG>(viewport.X));
+        viewport.Height = clamp(mState.viewport.height, 0L, static_cast<LONG>(mRenderTargetDesc.height) - static_cast<LONG>(viewport.Y));
     }
 
     if (viewport.Width <= 0 || viewport.Height <= 0)
@@ -1876,9 +1874,9 @@ bool Context::applyRenderTarget(bool ignoreViewport)
 
         // These values are used for computing gl_FragCoord in Program::linkVaryings().
         GLint coord = programBinary->getDxCoordLocation();
-        GLfloat whxy[4] = {mState.viewportWidth / 2.0f, mState.viewportHeight / 2.0f, 
-                          (float)mState.viewportX + mState.viewportWidth / 2.0f, 
-                          (float)mState.viewportY + mState.viewportHeight / 2.0f};
+        GLfloat whxy[4] = {mState.viewport.width / 2.0f, mState.viewport.height / 2.0f,
+                          (float)mState.viewport.x + mState.viewport.width / 2.0f,
+                          (float)mState.viewport.y + mState.viewport.height / 2.0f};
         programBinary->setUniform4fv(coord, 1, whxy);
 
         GLint depth = programBinary->getDxDepthLocation();
