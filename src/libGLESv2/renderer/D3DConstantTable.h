@@ -17,7 +17,7 @@
 
 #include "common/angleutils.h"
 
-namespace gl
+namespace rx
 {
 
 namespace ctab

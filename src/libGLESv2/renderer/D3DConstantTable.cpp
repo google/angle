@@ -21,7 +21,7 @@
 const static int SHADER_VERSION_MASK = D3DVS_VERSION(0, 0);
 const static int FOURCC_CTAB = MAKEFOURCC('C','T','A','B');
 
-namespace gl
+namespace rx
 {
 // These structs and constants correspond to the format of the constant table in a shader binary.
 // They match the corresponding structures in d3dx9shader.h.
@@ -147,7 +147,7 @@ unsigned D3DConstant::addStructMembers(const char *base, RegisterSet registerSet
 
 D3DConstantTable::D3DConstantTable(void *blob, size_t size) : mError(false)
 {
-    BinaryInputStream stream(blob, size);
+    gl::BinaryInputStream stream(blob, size);
 
     int version;
     stream.read(&version);

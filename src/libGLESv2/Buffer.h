@@ -21,10 +21,14 @@
 #include "common/RefCountObject.h"
 #include "libGLESv2/renderer/Renderer9.h"
 
-namespace gl
+namespace rx
 {
 class StaticVertexBuffer;
 class StaticIndexBuffer;
+}
+
+namespace gl
+{
 
 class Buffer : public RefCountObject
 {
@@ -40,8 +44,8 @@ class Buffer : public RefCountObject
     size_t size() const { return mSize; }
     GLenum usage() const { return mUsage; }
 
-    StaticVertexBuffer *getStaticVertexBuffer();
-    StaticIndexBuffer *getStaticIndexBuffer();
+    rx::StaticVertexBuffer *getStaticVertexBuffer();
+    rx::StaticIndexBuffer *getStaticIndexBuffer();
     void invalidateStaticData();
     void promoteStaticUsage(int dataSize);
 
@@ -53,8 +57,8 @@ class Buffer : public RefCountObject
     GLsizeiptr mSize;
     GLenum mUsage;
 
-    StaticVertexBuffer *mStaticVertexBuffer;
-    StaticIndexBuffer *mStaticIndexBuffer;
+    rx::StaticVertexBuffer *mStaticVertexBuffer;
+    rx::StaticIndexBuffer *mStaticIndexBuffer;
     GLsizeiptr mUnmodifiedDataUse;
 };
 

@@ -23,7 +23,7 @@ namespace
     enum { INITIAL_INDEX_BUFFER_SIZE = 4096 * sizeof(GLuint) };
 }
 
-namespace gl
+namespace rx
 {
 
 struct TranslatedIndexData
@@ -125,7 +125,7 @@ class IndexDataManager
     IndexDataManager(rx::Renderer9 *renderer);
     virtual ~IndexDataManager();
 
-    GLenum prepareIndexData(GLenum type, GLsizei count, Buffer *arrayElementBuffer, const GLvoid *indices, TranslatedIndexData *translated, IDirect3DIndexBuffer9 **indexBuffer, unsigned int *serial);
+    GLenum prepareIndexData(GLenum type, GLsizei count, gl::Buffer *arrayElementBuffer, const GLvoid *indices, TranslatedIndexData *translated, IDirect3DIndexBuffer9 **indexBuffer, unsigned int *serial);
     StaticIndexBuffer *getCountingIndices(GLsizei count);
 
   private:

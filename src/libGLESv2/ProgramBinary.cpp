@@ -1817,8 +1817,8 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
     }
 
     bool success = true;
-    D3DConstantTable *constantTableVS = NULL;
-    D3DConstantTable *constantTablePS = NULL;
+    rx::D3DConstantTable *constantTableVS = NULL;
+    rx::D3DConstantTable *constantTablePS = NULL;
     mVertexExecutable = mRenderer->compileToExecutable(infoLog, vertexHLSL.c_str(), GL_VERTEX_SHADER);
     mPixelExecutable = mRenderer->compileToExecutable(infoLog, pixelHLSL.c_str(), GL_FRAGMENT_SHADER);
 
@@ -1937,11 +1937,11 @@ bool ProgramBinary::linkAttributes(InfoLog &infoLog, const AttributeBindings &at
     return true;
 }
 
-bool ProgramBinary::linkUniforms(InfoLog &infoLog, D3DConstantTable *vsConstantTable, D3DConstantTable *psConstantTable)
+bool ProgramBinary::linkUniforms(InfoLog &infoLog, rx::D3DConstantTable *vsConstantTable, rx::D3DConstantTable *psConstantTable)
 {
     for (unsigned int constantIndex = 0; constantIndex < psConstantTable->constants(); constantIndex++)
     {
-        const D3DConstant *constant = psConstantTable->getConstant(constantIndex);
+        const rx::D3DConstant *constant = psConstantTable->getConstant(constantIndex);
 
         if (!defineUniform(infoLog, GL_FRAGMENT_SHADER, constant, "", vsConstantTable, psConstantTable))
         {
@@ -1951,7 +1951,7 @@ bool ProgramBinary::linkUniforms(InfoLog &infoLog, D3DConstantTable *vsConstantT
 
     for (unsigned int constantIndex = 0; constantIndex < vsConstantTable->constants(); constantIndex++)
     {
-        const D3DConstant *constant = vsConstantTable->getConstant(constantIndex);
+        const rx::D3DConstant *constant = vsConstantTable->getConstant(constantIndex);
 
         if (!defineUniform(infoLog, GL_VERTEX_SHADER, constant, "", vsConstantTable, psConstantTable))
         {
@@ -1963,15 +1963,15 @@ bool ProgramBinary::linkUniforms(InfoLog &infoLog, D3DConstantTable *vsConstantT
 
 // Adds the description of a constant found in the binary shader to the list of uniforms
 // Returns true if succesful (uniform not already defined)
-bool ProgramBinary::defineUniform(InfoLog &infoLog, GLenum shader, const D3DConstant *constant, const std::string &name,
-                                  D3DConstantTable *vsConstantTable, D3DConstantTable *psConstantTable)
+bool ProgramBinary::defineUniform(InfoLog &infoLog, GLenum shader, const rx::D3DConstant *constant, const std::string &name,
+                                  rx::D3DConstantTable *vsConstantTable, rx::D3DConstantTable *psConstantTable)
 {
-    if (constant->registerSet == D3DConstant::RS_SAMPLER)
+    if (constant->registerSet == rx::D3DConstant::RS_SAMPLER)
     {
         for (unsigned int i = 0; i < constant->registerCount; i++)
         {
-            const D3DConstant *psConstant = psConstantTable->getConstantByName(constant->name.c_str());
-            const D3DConstant *vsConstant = vsConstantTable->getConstantByName(constant->name.c_str());
+            const rx::D3DConstant *psConstant = psConstantTable->getConstantByName(constant->name.c_str());
+            const rx::D3DConstant *vsConstant = vsConstantTable->getConstantByName(constant->name.c_str());
 
             if (psConstant)
             {
@@ -1980,7 +1980,7 @@ bool ProgramBinary::defineUniform(InfoLog &infoLog, GLenum shader, const D3DCons
                 if (samplerIndex < MAX_TEXTURE_IMAGE_UNITS)
                 {
                     mSamplersPS[samplerIndex].active = true;
-                    mSamplersPS[samplerIndex].textureType = (constant->type == D3DConstant::PT_SAMPLERCUBE) ? TEXTURE_CUBE : TEXTURE_2D;
+                    mSamplersPS[samplerIndex].textureType = (constant->type == rx::D3DConstant::PT_SAMPLERCUBE) ? TEXTURE_CUBE : TEXTURE_2D;
                     mSamplersPS[samplerIndex].logicalTextureUnit = 0;
                     mUsedPixelSamplerRange = std::max(samplerIndex + 1, mUsedPixelSamplerRange);
                 }
@@ -1998,7 +1998,7 @@ bool ProgramBinary::defineUniform(InfoLog &infoLog, GLenum shader, const D3DCons
                 if (samplerIndex < getContext()->getMaximumVertexTextureImageUnits())
                 {
                     mSamplersVS[samplerIndex].active = true;
-                    mSamplersVS[samplerIndex].textureType = (constant->type == D3DConstant::PT_SAMPLERCUBE) ? TEXTURE_CUBE : TEXTURE_2D;
+                    mSamplersVS[samplerIndex].textureType = (constant->type == rx::D3DConstant::PT_SAMPLERCUBE) ? TEXTURE_CUBE : TEXTURE_2D;
                     mSamplersVS[samplerIndex].logicalTextureUnit = 0;
                     mUsedVertexSamplerRange = std::max(samplerIndex + 1, mUsedVertexSamplerRange);
                 }
@@ -2013,13 +2013,13 @@ bool ProgramBinary::defineUniform(InfoLog &infoLog, GLenum shader, const D3DCons
 
     switch(constant->typeClass)
     {
-      case D3DConstant::CLASS_STRUCT:
+      case rx::D3DConstant::CLASS_STRUCT:
         {
             for (unsigned int arrayIndex = 0; arrayIndex < constant->elements; arrayIndex++)
             {
                 for (unsigned int field = 0; field < constant->structMembers[arrayIndex].size(); field++)
                 {
-                    const D3DConstant *fieldConstant = constant->structMembers[arrayIndex][field];
+                    const rx::D3DConstant *fieldConstant = constant->structMembers[arrayIndex][field];
 
                     std::string structIndex = (constant->elements > 1) ? ("[" + str(arrayIndex) + "]") : "";
 
@@ -2032,10 +2032,10 @@ bool ProgramBinary::defineUniform(InfoLog &infoLog, GLenum shader, const D3DCons
 
             return true;
         }
-      case D3DConstant::CLASS_SCALAR:
-      case D3DConstant::CLASS_VECTOR:
-      case D3DConstant::CLASS_MATRIX_COLUMNS:
-      case D3DConstant::CLASS_OBJECT:
+      case rx::D3DConstant::CLASS_SCALAR:
+      case rx::D3DConstant::CLASS_VECTOR:
+      case rx::D3DConstant::CLASS_MATRIX_COLUMNS:
+      case rx::D3DConstant::CLASS_OBJECT:
         return defineUniform(shader, constant, name + constant->name);
       default:
         UNREACHABLE();
@@ -2043,7 +2043,7 @@ bool ProgramBinary::defineUniform(InfoLog &infoLog, GLenum shader, const D3DCons
     }
 }
 
-bool ProgramBinary::defineUniform(GLenum shader, const D3DConstant *constant, const std::string &_name)
+bool ProgramBinary::defineUniform(GLenum shader, const rx::D3DConstant *constant, const std::string &_name)
 {
     Uniform *uniform = createUniform(constant, _name);
 
@@ -2081,27 +2081,27 @@ bool ProgramBinary::defineUniform(GLenum shader, const D3DConstant *constant, co
     return true;
 }
 
-Uniform *ProgramBinary::createUniform(const D3DConstant *constant, const std::string &_name)
+Uniform *ProgramBinary::createUniform(const rx::D3DConstant *constant, const std::string &_name)
 {
     if (constant->rows == 1)   // Vectors and scalars
     {
         switch (constant->type)
         {
-          case D3DConstant::PT_SAMPLER2D:
+          case rx::D3DConstant::PT_SAMPLER2D:
             switch (constant->columns)
             {
               case 1: return new Uniform(GL_SAMPLER_2D, _name, constant->elements);
               default: UNREACHABLE();
             }
             break;
-          case D3DConstant::PT_SAMPLERCUBE:
+          case rx::D3DConstant::PT_SAMPLERCUBE:
             switch (constant->columns)
             {
               case 1: return new Uniform(GL_SAMPLER_CUBE, _name, constant->elements);
               default: UNREACHABLE();
             }
             break;
-          case D3DConstant::PT_BOOL:
+          case rx::D3DConstant::PT_BOOL:
             switch (constant->columns)
             {
               case 1: return new Uniform(GL_BOOL, _name, constant->elements);
@@ -2111,7 +2111,7 @@ Uniform *ProgramBinary::createUniform(const D3DConstant *constant, const std::st
               default: UNREACHABLE();
             }
             break;
-          case D3DConstant::PT_INT:
+          case rx::D3DConstant::PT_INT:
             switch (constant->columns)
             {
               case 1: return new Uniform(GL_INT, _name, constant->elements);
@@ -2121,7 +2121,7 @@ Uniform *ProgramBinary::createUniform(const D3DConstant *constant, const std::st
               default: UNREACHABLE();
             }
             break;
-          case D3DConstant::PT_FLOAT:
+          case rx::D3DConstant::PT_FLOAT:
             switch (constant->columns)
             {
               case 1: return new Uniform(GL_FLOAT, _name, constant->elements);
@@ -2139,7 +2139,7 @@ Uniform *ProgramBinary::createUniform(const D3DConstant *constant, const std::st
     {
         switch (constant->type)
         {
-          case D3DConstant::PT_FLOAT:
+          case rx::D3DConstant::PT_FLOAT:
             switch (constant->rows)
             {
               case 2: return new Uniform(GL_FLOAT_MAT2, _name, constant->elements);

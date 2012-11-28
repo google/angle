@@ -664,7 +664,7 @@ GLenum Renderer11::applyVertexBuffer(gl::ProgramBinary *programBinary, gl::Verte
     return GL_NO_ERROR;
 }
 
-GLenum Renderer11::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, gl::TranslatedIndexData *indexInfo)
+GLenum Renderer11::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo)
 {
     // TODO
     UNIMPLEMENTED();
@@ -677,7 +677,7 @@ void Renderer11::drawArrays(GLenum mode, GLsizei count, GLsizei instances)
     mDeviceContext->Draw(count, 0);
 }
 
-void Renderer11::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer, const gl::TranslatedIndexData &indexInfo)
+void Renderer11::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo)
 {
     // TODO
     UNIMPLEMENTED();

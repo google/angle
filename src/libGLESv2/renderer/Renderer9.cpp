@@ -379,8 +379,8 @@ void Renderer9::initializeDevice()
 
     ASSERT(!mBlit && !mVertexDataManager && !mIndexDataManager);
     mBlit = new Blit(this);
-    mVertexDataManager = new gl::VertexDataManager(this);
-    mIndexDataManager = new gl::IndexDataManager(this);
+    mVertexDataManager = new rx::VertexDataManager(this);
+    mIndexDataManager = new rx::IndexDataManager(this);
 }
 
 D3DPRESENT_PARAMETERS Renderer9::getDefaultPresentParameters()
@@ -1124,7 +1124,7 @@ bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
 
 GLenum Renderer9::applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], GLint first, GLsizei count, GLsizei instances)
 {
-    gl::TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS];
+    TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS];
     GLenum err = mVertexDataManager->prepareVertexData(vertexAttributes, programBinary, first, count, attributes, instances);
     if (err != GL_NO_ERROR)
     {
@@ -1135,7 +1135,7 @@ GLenum Renderer9::applyVertexBuffer(gl::ProgramBinary *programBinary, gl::Vertex
 }
 
 // Applies the indices and element array bindings to the Direct3D 9 device
-GLenum Renderer9::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, gl::TranslatedIndexData *indexInfo)
+GLenum Renderer9::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo)
 {
     IDirect3DIndexBuffer9 *indexBuffer;
     unsigned int serial;
@@ -1163,7 +1163,7 @@ void Renderer9::drawArrays(GLenum mode, GLsizei count, GLsizei instances)
     }
     else if (instances > 0)
     {
-        gl::StaticIndexBuffer *countingIB = mIndexDataManager->getCountingIndices(count);
+        StaticIndexBuffer *countingIB = mIndexDataManager->getCountingIndices(count);
         if (countingIB)
         {
             if (mAppliedIBSerial != countingIB->getSerial())
@@ -1189,7 +1189,7 @@ void Renderer9::drawArrays(GLenum mode, GLsizei count, GLsizei instances)
     }
 }
 
-void Renderer9::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer, const gl::TranslatedIndexData &indexInfo)
+void Renderer9::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo)
 {
     startScene();
 
@@ -1226,7 +1226,7 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
 
         if (!mLineLoopIB)
         {
-            mLineLoopIB = new gl::StreamingIndexBuffer(this, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX32);
+            mLineLoopIB = new StreamingIndexBuffer(this, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX32);
         }
 
         if (mLineLoopIB)
@@ -1283,7 +1283,7 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
 
         if (!mLineLoopIB)
         {
-            mLineLoopIB = new gl::StreamingIndexBuffer(this, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX16);
+            mLineLoopIB = new StreamingIndexBuffer(this, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX16);
         }
 
         if (mLineLoopIB)
@@ -2618,7 +2618,7 @@ RenderTarget *Renderer9::createRenderTarget(int width, int height, GLenum format
 ShaderExecutable *Renderer9::loadExecutable(const void *function, size_t length, GLenum type, void *data)
 {
     ShaderExecutable9 *executable = NULL;
-    gl::D3DConstantTable *table = reinterpret_cast<gl::D3DConstantTable *>(data);
+    D3DConstantTable *table = reinterpret_cast<D3DConstantTable *>(data);
 
     switch (type)
     {
@@ -2669,7 +2669,7 @@ ShaderExecutable *Renderer9::compileToExecutable(gl::InfoLog &infoLog, const cha
     if (!binary)
         return NULL;
 
-    gl::D3DConstantTable *constantTable = new gl::D3DConstantTable(binary->GetBufferPointer(), binary->GetBufferSize());
+    D3DConstantTable *constantTable = new D3DConstantTable(binary->GetBufferPointer(), binary->GetBufferSize());
     if (constantTable->error())
     {
         delete constantTable;

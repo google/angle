@@ -18,7 +18,7 @@
 
 #include "libGLESv2/Context.h"
 
-namespace gl
+namespace rx
 {
 
 struct TranslatedAttribute
@@ -64,7 +64,7 @@ class ArrayVertexBuffer : public VertexBuffer
     ~ArrayVertexBuffer();
 
     std::size_t size() const { return mBufferSize; }
-    virtual void *map(const VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset) = 0;
+    virtual void *map(const gl::VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset) = 0;
     virtual void reserveRequiredSpace() = 0;
     void addRequiredSpace(UINT requiredSpace);
 
@@ -80,7 +80,7 @@ class StreamingVertexBuffer : public ArrayVertexBuffer
     StreamingVertexBuffer(rx::Renderer9 *renderer, std::size_t initialSize);
     ~StreamingVertexBuffer();
 
-    void *map(const VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset);
+    void *map(const gl::VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset);
     void reserveRequiredSpace();
 };
 
@@ -90,10 +90,10 @@ class StaticVertexBuffer : public ArrayVertexBuffer
     explicit StaticVertexBuffer(rx::Renderer9 *renderer);
     ~StaticVertexBuffer();
 
-    void *map(const VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset);
+    void *map(const gl::VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset);
     void reserveRequiredSpace();
 
-    std::size_t lookupAttribute(const VertexAttribute &attribute);   // Returns the offset into the vertex buffer, or -1 if not found
+    std::size_t lookupAttribute(const gl::VertexAttribute &attribute);   // Returns the offset into the vertex buffer, or -1 if not found
 
   private:
     struct VertexElement
@@ -116,21 +116,21 @@ class VertexDataManager
     VertexDataManager(rx::Renderer9 *renderer);
     virtual ~VertexDataManager();
 
-    GLenum prepareVertexData(const VertexAttribute attribs[], ProgramBinary *programBinary, GLint start, GLsizei count, TranslatedAttribute *outAttribs, GLsizei instances);
+    GLenum prepareVertexData(const gl::VertexAttribute attribs[], gl::ProgramBinary *programBinary, GLint start, GLsizei count, TranslatedAttribute *outAttribs, GLsizei instances);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(VertexDataManager);
 
-    std::size_t spaceRequired(const VertexAttribute &attrib, std::size_t count, GLsizei instances) const;
-    std::size_t writeAttributeData(ArrayVertexBuffer *vertexBuffer, GLint start, GLsizei count, const VertexAttribute &attribute, GLsizei instances);
+    std::size_t spaceRequired(const gl::VertexAttribute &attrib, std::size_t count, GLsizei instances) const;
+    std::size_t writeAttributeData(ArrayVertexBuffer *vertexBuffer, GLint start, GLsizei count, const gl::VertexAttribute &attribute, GLsizei instances);
 
     rx::Renderer9 *const mRenderer;   // D3D9_REPLACE
 
     StreamingVertexBuffer *mStreamingBuffer;
 
-    float mCurrentValue[MAX_VERTEX_ATTRIBS][4];
-    StreamingVertexBuffer *mCurrentValueBuffer[MAX_VERTEX_ATTRIBS];
-    std::size_t mCurrentValueOffsets[MAX_VERTEX_ATTRIBS];
+    float mCurrentValue[gl::MAX_VERTEX_ATTRIBS][4];
+    StreamingVertexBuffer *mCurrentValueBuffer[gl::MAX_VERTEX_ATTRIBS];
+    std::size_t mCurrentValueOffsets[gl::MAX_VERTEX_ATTRIBS];
 
     // Attribute format conversion
     struct FormatConverter
@@ -158,7 +158,7 @@ class VertexDataManager
     void checkVertexCaps(DWORD declTypes);
 
     unsigned int typeIndex(GLenum type) const;
-    const FormatConverter &formatConverter(const VertexAttribute &attribute) const;
+    const FormatConverter &formatConverter(const gl::VertexAttribute &attribute) const;
 };
 
 }

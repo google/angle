@@ -15,7 +15,7 @@
 #include "libGLESv2/mathutil.h"
 #include "libGLESv2/main.h"
 
-namespace gl
+namespace rx
 {
 unsigned int IndexBuffer::mCurrentSerial = 1;
 
@@ -107,7 +107,7 @@ void computeRange(GLenum type, const GLvoid *indices, GLsizei count, GLuint *min
     else UNREACHABLE();
 }
 
-GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, Buffer *buffer, const GLvoid *indices, TranslatedIndexData *translated, IDirect3DIndexBuffer9 **d3dIndexBuffer, unsigned int *serial)
+GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer *buffer, const GLvoid *indices, TranslatedIndexData *translated, IDirect3DIndexBuffer9 **d3dIndexBuffer, unsigned int *serial)
 {
     if (!mStreamingBufferShort)
     {

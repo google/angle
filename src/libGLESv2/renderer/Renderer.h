@@ -47,7 +47,6 @@ class InfoLog;
 class ProgramBinary;
 class VertexAttribute;
 class Buffer;
-struct TranslatedIndexData;
 }
 
 namespace rx
@@ -55,6 +54,7 @@ namespace rx
 class TextureStorage2D;
 class TextureStorageCubeMap;
 class Blit;
+struct TranslatedIndexData;
 
 struct ConfigDesc
 {
@@ -97,10 +97,10 @@ class Renderer
     virtual void applyShaders(gl::ProgramBinary *programBinary) = 0;
     virtual bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount) = 0;
     virtual GLenum applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], GLint first, GLsizei count, GLsizei instances) = 0;
-    virtual GLenum applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, gl::TranslatedIndexData *indexInfo) = 0;
+    virtual GLenum applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo) = 0;
 
     virtual void drawArrays(GLenum mode, GLsizei count, GLsizei instances) = 0;
-    virtual void drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer, const gl::TranslatedIndexData &indexInfo) = 0;
+    virtual void drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo) = 0;
 
     virtual void clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer) = 0;
 

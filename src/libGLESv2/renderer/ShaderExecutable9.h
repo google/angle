@@ -21,15 +21,15 @@ namespace rx
 class ShaderExecutable9 : public ShaderExecutable
 {
   public:
-    ShaderExecutable9(const void *function, size_t length, IDirect3DPixelShader9 *executable, gl::D3DConstantTable *constantTable);
-    ShaderExecutable9(const void *function, size_t length, IDirect3DVertexShader9 *executable, gl::D3DConstantTable *constantTable);
+    ShaderExecutable9(const void *function, size_t length, IDirect3DPixelShader9 *executable, D3DConstantTable *constantTable);
+    ShaderExecutable9(const void *function, size_t length, IDirect3DVertexShader9 *executable, D3DConstantTable *constantTable);
     virtual ~ShaderExecutable9();
 
     static ShaderExecutable9 *makeShaderExecutable9(ShaderExecutable *executable);
 
     IDirect3DPixelShader9 *getPixelShader();
     IDirect3DVertexShader9 *getVertexShader();
-    virtual gl::D3DConstantTable *getConstantTable();
+    virtual D3DConstantTable *getConstantTable();
 
   private:
     DISALLOW_COPY_AND_ASSIGN(ShaderExecutable9);
@@ -37,7 +37,7 @@ class ShaderExecutable9 : public ShaderExecutable
     IDirect3DPixelShader9 *mPixelExecutable;
     IDirect3DVertexShader9 *mVertexExecutable;
 
-    gl::D3DConstantTable *mConstantTable;
+    D3DConstantTable *mConstantTable;
 };
 
 }

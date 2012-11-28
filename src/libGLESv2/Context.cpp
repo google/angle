@@ -2040,7 +2040,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
 
     applyState(mode);
 
-    TranslatedIndexData indexInfo;
+    rx::TranslatedIndexData indexInfo;
     GLenum err = mRenderer->applyIndexBuffer(indices, mState.elementArrayBuffer.get(), count, mode, type, &indexInfo);
     if (err != GL_NO_ERROR)
     {

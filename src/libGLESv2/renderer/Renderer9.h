@@ -28,16 +28,12 @@
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/renderer/IndexDataManager.h"
 
-namespace gl
+namespace rx
 {
 class D3DConstantTable;
 class VertexDataManager;
 class StreamingIndexBuffer;
 struct TranslatedAttribute;
-}
-
-namespace rx
-{
 
 class Renderer9 : public Renderer
 {
@@ -96,10 +92,10 @@ class Renderer9 : public Renderer
     virtual void applyShaders(gl::ProgramBinary *programBinary);
     virtual bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount);
     virtual GLenum applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], GLint first, GLsizei count, GLsizei instances);
-    virtual GLenum applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, gl::TranslatedIndexData *indexInfo);
+    virtual GLenum applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo);
 
     virtual void drawArrays(GLenum mode, GLsizei count, GLsizei instances);
-    virtual void drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer, const gl::TranslatedIndexData &indexInfo);
+    virtual void drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo);
 
     virtual void clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer);
 
@@ -265,11 +261,11 @@ class Renderer9 : public Renderer
     VertexShaderCache mVertexShaderCache;
     PixelShaderCache mPixelShaderCache;
 
-    gl::VertexDataManager *mVertexDataManager;
+    VertexDataManager *mVertexDataManager;
     VertexDeclarationCache mVertexDeclarationCache;
 
-    gl::IndexDataManager *mIndexDataManager;
-    gl::StreamingIndexBuffer *mLineLoopIB;
+    IndexDataManager *mIndexDataManager;
+    StreamingIndexBuffer *mLineLoopIB;
 };
 
 }

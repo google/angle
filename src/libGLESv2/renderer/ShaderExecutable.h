@@ -40,7 +40,7 @@ class ShaderExecutable
         return mLength;
     }
 
-    virtual gl::D3DConstantTable *getConstantTable() = 0; // D3D9_REMOVE
+    virtual D3DConstantTable *getConstantTable() = 0; // D3D9_REMOVE
 
   private:
     DISALLOW_COPY_AND_ASSIGN(ShaderExecutable);

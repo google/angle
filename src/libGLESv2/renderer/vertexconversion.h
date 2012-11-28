@@ -15,7 +15,7 @@
 
 #include "libGLESv2/Context.h" // Defines Index
 
-namespace gl
+namespace rx
 {
 
 // Conversion types:

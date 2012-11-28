@@ -56,7 +56,7 @@ ID3D11PixelShader *ShaderExecutable11::getPixelShader()
     return mPixelExecutable;
 }
 
-gl::D3DConstantTable *ShaderExecutable11::getConstantTable()
+D3DConstantTable *ShaderExecutable11::getConstantTable()
 {
     return NULL;
 }

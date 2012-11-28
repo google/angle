@@ -28,19 +28,19 @@ namespace
     enum { CONSTANT_VERTEX_BUFFER_SIZE = 4096 };
 }
 
-namespace gl
+namespace rx
 {
 unsigned int VertexBuffer::mCurrentSerial = 1;
 
-int elementsInBuffer(const VertexAttribute &attribute, int size)
+int elementsInBuffer(const gl::VertexAttribute &attribute, int size)
 {
     int stride = attribute.stride();
     return (size - attribute.mOffset % stride + (stride - attribute.typeSize())) / stride;
 }
 
-VertexDataManager::VertexDataManager(rx::Renderer9 *renderer) : mRenderer(renderer)
+VertexDataManager::VertexDataManager(Renderer9 *renderer) : mRenderer(renderer)
 {
-    for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
+    for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
         mCurrentValue[i][0] = std::numeric_limits<float>::quiet_NaN();
         mCurrentValue[i][1] = std::numeric_limits<float>::quiet_NaN();
@@ -65,15 +65,15 @@ VertexDataManager::~VertexDataManager()
 {
     delete mStreamingBuffer;
 
-    for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
+    for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
         delete mCurrentValueBuffer[i];
     }
 }
 
-std::size_t VertexDataManager::writeAttributeData(ArrayVertexBuffer *vertexBuffer, GLint start, GLsizei count, const VertexAttribute &attribute, GLsizei instances)
+std::size_t VertexDataManager::writeAttributeData(ArrayVertexBuffer *vertexBuffer, GLint start, GLsizei count, const gl::VertexAttribute &attribute, GLsizei instances)
 {
-    Buffer *buffer = attribute.mBoundBuffer.get();
+    gl::Buffer *buffer = attribute.mBoundBuffer.get();
 
     int inputStride = attribute.stride();
     int elementSize = attribute.typeSize();
@@ -125,24 +125,24 @@ std::size_t VertexDataManager::writeAttributeData(ArrayVertexBuffer *vertexBuffe
     return streamOffset;
 }
 
-GLenum VertexDataManager::prepareVertexData(const VertexAttribute attribs[], ProgramBinary *programBinary, GLint start, GLsizei count, TranslatedAttribute *translated, GLsizei instances)
+GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[], gl::ProgramBinary *programBinary, GLint start, GLsizei count, TranslatedAttribute *translated, GLsizei instances)
 {
     if (!mStreamingBuffer)
     {
         return GL_OUT_OF_MEMORY;
     }
 
-    for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
+    for (int attributeIndex = 0; attributeIndex < gl::MAX_VERTEX_ATTRIBS; attributeIndex++)
     {
         translated[attributeIndex].active = (programBinary->getSemanticIndex(attributeIndex) != -1);
     }
 
     // Determine the required storage size per used buffer, and invalidate static buffers that don't contain matching attributes
-    for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
+    for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
         if (translated[i].active && attribs[i].mArrayEnabled)
         {
-            Buffer *buffer = attribs[i].mBoundBuffer.get();
+            gl::Buffer *buffer = attribs[i].mBoundBuffer.get();
             StaticVertexBuffer *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
 
             if (staticBuffer)
@@ -160,7 +160,7 @@ GLenum VertexDataManager::prepareVertexData(const VertexAttribute attribs[], Pro
                     {
                         if (translated[previous].active && attribs[previous].mArrayEnabled)
                         {
-                            Buffer *previousBuffer = attribs[previous].mBoundBuffer.get();
+                            gl::Buffer *previousBuffer = attribs[previous].mBoundBuffer.get();
                             StaticVertexBuffer *previousStaticBuffer = previousBuffer ? previousBuffer->getStaticVertexBuffer() : NULL;
 
                             if (staticBuffer == previousStaticBuffer)
@@ -183,11 +183,11 @@ GLenum VertexDataManager::prepareVertexData(const VertexAttribute attribs[], Pro
     }
 
     // Reserve the required space per used buffer
-    for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
+    for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
         if (translated[i].active && attribs[i].mArrayEnabled)
         {
-            Buffer *buffer = attribs[i].mBoundBuffer.get();
+            gl::Buffer *buffer = attribs[i].mBoundBuffer.get();
             ArrayVertexBuffer *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
             ArrayVertexBuffer *vertexBuffer = staticBuffer ? staticBuffer : mStreamingBuffer;
 
@@ -199,13 +199,13 @@ GLenum VertexDataManager::prepareVertexData(const VertexAttribute attribs[], Pro
     }
 
     // Perform the vertex data translations
-    for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
+    for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
         if (translated[i].active)
         {
             if (attribs[i].mArrayEnabled)
             {
-                Buffer *buffer = attribs[i].mBoundBuffer.get();
+                gl::Buffer *buffer = attribs[i].mBoundBuffer.get();
 
                 if (!buffer && attribs[i].mPointer == NULL)
                 {
@@ -279,7 +279,7 @@ GLenum VertexDataManager::prepareVertexData(const VertexAttribute attribs[], Pro
                     const int requiredSpace = 4 * sizeof(float);
                     buffer->addRequiredSpace(requiredSpace);
                     buffer->reserveRequiredSpace();
-                    float *data = static_cast<float*>(buffer->map(VertexAttribute(), requiredSpace, &mCurrentValueOffsets[i]));
+                    float *data = static_cast<float*>(buffer->map(gl::VertexAttribute(), requiredSpace, &mCurrentValueOffsets[i]));
                     if (data)
                     {
                         data[0] = attribs[i].mCurrentValue[0];
@@ -306,11 +306,11 @@ GLenum VertexDataManager::prepareVertexData(const VertexAttribute attribs[], Pro
         }
     }
 
-    for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
+    for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
         if (translated[i].active && attribs[i].mArrayEnabled)
         {
-            Buffer *buffer = attribs[i].mBoundBuffer.get();
+            gl::Buffer *buffer = attribs[i].mBoundBuffer.get();
 
             if (buffer)
             {
@@ -322,7 +322,7 @@ GLenum VertexDataManager::prepareVertexData(const VertexAttribute attribs[], Pro
     return GL_NO_ERROR;
 }
 
-std::size_t VertexDataManager::spaceRequired(const VertexAttribute &attrib, std::size_t count, GLsizei instances) const
+std::size_t VertexDataManager::spaceRequired(const gl::VertexAttribute &attrib, std::size_t count, GLsizei instances) const
 {
     size_t elementSize = formatConverter(attrib).outputElementSize;
 
@@ -386,12 +386,12 @@ struct WidenRule
 {
 };
 
-template <int size> struct WidenRule<D3DVT_FLOAT, size>          : gl::NoWiden<size> { };
-template <int size> struct WidenRule<D3DVT_SHORT, size>          : gl::WidenToEven<size> { };
-template <int size> struct WidenRule<D3DVT_SHORT_NORM, size>     : gl::WidenToEven<size> { };
-template <int size> struct WidenRule<D3DVT_UBYTE, size>          : gl::WidenToFour<size> { };
-template <int size> struct WidenRule<D3DVT_UBYTE_NORM, size>     : gl::WidenToFour<size> { };
-template <int size> struct WidenRule<D3DVT_USHORT_NORM, size>    : gl::WidenToEven<size> { };
+template <int size> struct WidenRule<D3DVT_FLOAT, size>          : NoWiden<size> { };
+template <int size> struct WidenRule<D3DVT_SHORT, size>          : WidenToEven<size> { };
+template <int size> struct WidenRule<D3DVT_SHORT_NORM, size>     : WidenToEven<size> { };
+template <int size> struct WidenRule<D3DVT_UBYTE, size>          : WidenToFour<size> { };
+template <int size> struct WidenRule<D3DVT_UBYTE_NORM, size>     : WidenToFour<size> { };
+template <int size> struct WidenRule<D3DVT_USHORT_NORM, size>    : WidenToEven<size> { };
 
 // VertexTypeFlags encodes the D3DCAPS9::DeclType flag and vertex declaration flag for each D3D vertex type & size combination.
 template <unsigned int d3dtype, int size>
@@ -450,16 +450,16 @@ template <bool normalized> struct VertexTypeMapping<GL_FLOAT, normalized>   : Ve
 
 // Almost all cases are covered by Cast (including those that are actually Identity since Cast<T,T> knows it's an identity mapping).
 template <GLenum fromType, bool normalized, unsigned int toType>
-struct ConversionRule : gl::Cast<typename GLToCType<fromType>::type, typename D3DToCType<toType>::type>
+struct ConversionRule : Cast<typename GLToCType<fromType>::type, typename D3DToCType<toType>::type>
 {
 };
 
 // All conversions from normalized types to float use the Normalize operator.
-template <GLenum fromType> struct ConversionRule<fromType, true, D3DVT_FLOAT> : gl::Normalize<typename GLToCType<fromType>::type> { };
+template <GLenum fromType> struct ConversionRule<fromType, true, D3DVT_FLOAT> : Normalize<typename GLToCType<fromType>::type> { };
 
 // Use a full specialisation for this so that it preferentially matches ahead of the generic normalize-to-float rules.
-template <> struct ConversionRule<GL_FIXED, true, D3DVT_FLOAT> : gl::FixedToFloat<GLint, 16> { };
-template <> struct ConversionRule<GL_FIXED, false, D3DVT_FLOAT> : gl::FixedToFloat<GLint, 16> { };
+template <> struct ConversionRule<GL_FIXED, true, D3DVT_FLOAT>  : FixedToFloat<GLint, 16> { };
+template <> struct ConversionRule<GL_FIXED, false, D3DVT_FLOAT> : FixedToFloat<GLint, 16> { };
 
 // A 2-stage construction is used for DefaultVertexValues because float must use SimpleDefaultValues (i.e. 0/1)
 // whether it is normalized or not.
@@ -468,8 +468,8 @@ struct DefaultVertexValuesStage2
 {
 };
 
-template <class T> struct DefaultVertexValuesStage2<T, true>  : gl::NormalizedDefaultValues<T> { };
-template <class T> struct DefaultVertexValuesStage2<T, false> : gl::SimpleDefaultValues<T> { };
+template <class T> struct DefaultVertexValuesStage2<T, true>  : NormalizedDefaultValues<T> { };
+template <class T> struct DefaultVertexValuesStage2<T, false> : SimpleDefaultValues<T> { };
 
 // Work out the default value rule for a D3D type (expressed as the C type) and
 template <class T, bool normalized>
@@ -477,7 +477,7 @@ struct DefaultVertexValues : DefaultVertexValuesStage2<T, normalized>
 {
 };
 
-template <bool normalized> struct DefaultVertexValues<float, normalized> : gl::SimpleDefaultValues<float> { };
+template <bool normalized> struct DefaultVertexValues<float, normalized> : SimpleDefaultValues<float> { };
 
 // Policy rules for use with Converter, to choose whether to use the preferred or fallback conversion.
 // The fallback conversion produces an output that all D3D9 devices must support.
@@ -489,12 +489,12 @@ template <class T> struct UseFallback { enum { type = T::fallback }; };
 // and the D3DDECLTYPE member needed for the vertex declaration in declflag.
 template <GLenum fromType, bool normalized, int size, template <class T> class PreferenceRule>
 struct Converter
-    : gl::VertexDataConverter<typename GLToCType<fromType>::type,
-                              WidenRule<PreferenceRule< VertexTypeMapping<fromType, normalized> >::type, size>,
-                              ConversionRule<fromType,
-                                             normalized,
-                                             PreferenceRule< VertexTypeMapping<fromType, normalized> >::type>,
-                              DefaultVertexValues<typename D3DToCType<PreferenceRule< VertexTypeMapping<fromType, normalized> >::type>::type, normalized > >
+    : VertexDataConverter<typename GLToCType<fromType>::type,
+                          WidenRule<PreferenceRule< VertexTypeMapping<fromType, normalized> >::type, size>,
+                          ConversionRule<fromType,
+                                         normalized,
+                                         PreferenceRule< VertexTypeMapping<fromType, normalized> >::type>,
+                          DefaultVertexValues<typename D3DToCType<PreferenceRule< VertexTypeMapping<fromType, normalized> >::type>::type, normalized > >
 {
 private:
     enum { d3dtype = PreferenceRule< VertexTypeMapping<fromType, normalized> >::type };
@@ -650,7 +650,7 @@ StreamingVertexBuffer::~StreamingVertexBuffer()
 {
 }
 
-void *StreamingVertexBuffer::map(const VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *offset)
+void *StreamingVertexBuffer::map(const gl::VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *offset)
 {
     void *mapPtr = NULL;
 
@@ -717,7 +717,7 @@ StaticVertexBuffer::~StaticVertexBuffer()
 {
 }
 
-void *StaticVertexBuffer::map(const VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset)
+void *StaticVertexBuffer::map(const gl::VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset)
 {
     void *mapPtr = NULL;
 
@@ -766,7 +766,7 @@ void StaticVertexBuffer::reserveRequiredSpace()
     mRequiredSpace = 0;
 }
 
-std::size_t StaticVertexBuffer::lookupAttribute(const VertexAttribute &attribute)
+std::size_t StaticVertexBuffer::lookupAttribute(const gl::VertexAttribute &attribute)
 {
     for (unsigned int element = 0; element < mCache.size(); element++)
     {
@@ -785,7 +785,7 @@ std::size_t StaticVertexBuffer::lookupAttribute(const VertexAttribute &attribute
     return -1;
 }
 
-const VertexDataManager::FormatConverter &VertexDataManager::formatConverter(const VertexAttribute &attribute) const
+const VertexDataManager::FormatConverter &VertexDataManager::formatConverter(const gl::VertexAttribute &attribute) const
 {
     return mAttributeTypes[typeIndex(attribute.mType)][attribute.mNormalized][attribute.mSize - 1];
 }

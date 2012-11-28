@@ -56,13 +56,13 @@ struct Uniform
             registerCount = 0;
         }
 
-        void set(const D3DConstant *constant)
+        void set(const rx::D3DConstant *constant)
         {
             switch(constant->registerSet)
             {
-              case D3DConstant::RS_BOOL:    boolIndex = constant->registerIndex;    break;
-              case D3DConstant::RS_FLOAT4:  float4Index = constant->registerIndex;  break;
-              case D3DConstant::RS_SAMPLER: samplerIndex = constant->registerIndex; break;
+              case rx::D3DConstant::RS_BOOL:    boolIndex = constant->registerIndex;    break;
+              case rx::D3DConstant::RS_FLOAT4:  float4Index = constant->registerIndex;  break;
+              case rx::D3DConstant::RS_SAMPLER: samplerIndex = constant->registerIndex; break;
               default: UNREACHABLE();
             }
             
@@ -171,11 +171,11 @@ class ProgramBinary : public RefCountObject
 
     bool linkAttributes(InfoLog &infoLog, const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader);
 
-    bool linkUniforms(InfoLog &infoLog, D3DConstantTable *vsConstantTable, D3DConstantTable *psConstantTable);
-    bool defineUniform(InfoLog &infoLog, GLenum shader, const D3DConstant *constant, const std::string &name,
-                       D3DConstantTable *vsConstantTable, D3DConstantTable *psConstantTable);
-    bool defineUniform(GLenum shader, const D3DConstant *constant, const std::string &name);
-    Uniform *createUniform( const D3DConstant *constant, const std::string &name);
+    bool linkUniforms(InfoLog &infoLog, rx::D3DConstantTable *vsConstantTable, rx::D3DConstantTable *psConstantTable);
+    bool defineUniform(InfoLog &infoLog, GLenum shader, const rx::D3DConstant *constant, const std::string &name,
+                       rx::D3DConstantTable *vsConstantTable, rx::D3DConstantTable *psConstantTable);
+    bool defineUniform(GLenum shader, const rx::D3DConstant *constant, const std::string &name);
+    Uniform *createUniform(const rx::D3DConstant *constant, const std::string &name);
     bool applyUniformnfv(IDirect3DDevice9 *device, Uniform *targetUniform, const GLfloat *v);   // D3D9_REPLACE
     bool applyUniform1iv(IDirect3DDevice9 *device, Uniform *targetUniform, GLsizei count, const GLint *v);
     bool applyUniform2iv(IDirect3DDevice9 *device, Uniform *targetUniform, GLsizei count, const GLint *v);

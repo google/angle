@@ -41,7 +41,7 @@ VertexDeclarationCache::~VertexDeclarationCache()
     }
 }
 
-GLenum VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, gl::TranslatedAttribute attributes[], gl::ProgramBinary *programBinary, GLsizei instances, GLsizei *repeatDraw)
+GLenum VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, TranslatedAttribute attributes[], gl::ProgramBinary *programBinary, GLsizei instances, GLsizei *repeatDraw)
 {
     *repeatDraw = 1;
 
