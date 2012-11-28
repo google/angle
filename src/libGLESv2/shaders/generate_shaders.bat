@@ -12,3 +12,6 @@ fxc /E flipyvs /T vs_2_0 /Fh flipyvs.h Blit.vs
 fxc /E passthroughps /T ps_2_0 /Fh passthroughps.h Blit.ps
 fxc /E luminanceps /T ps_2_0 /Fh luminanceps.h Blit.ps
 fxc /E componentmaskps /T ps_2_0 /Fh componentmaskps.h Blit.ps
+
+fxc /E VS_Passthrough /T vs_4_0 /Fh passthrough11vs.h Passthrough11.hlsl
+fxc /E PS_Passthrough /T ps_4_0 /Fh passthrough11ps.h Passthrough11.hlsl
