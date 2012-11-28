@@ -395,4 +395,10 @@ IDirect3DTexture9 *SwapChain9::getOffscreenTexture()
     return mOffscreenTexture;
 }
 
+SwapChain9 *SwapChain9::makeSwapChain9(SwapChain *swapChain)
+{
+    ASSERT(dynamic_cast<rx::SwapChain9*>(swapChain) != NULL);
+    return static_cast<rx::SwapChain9*>(swapChain);
+}
+
 }

@@ -32,6 +32,8 @@ class SwapChain9 : public SwapChain
     virtual IDirect3DSurface9 *getDepthStencil();
     virtual IDirect3DTexture9 *getOffscreenTexture();
 
+    static SwapChain9 *makeSwapChain9(SwapChain *swapChain);
+
   private:
     DISALLOW_COPY_AND_ASSIGN(SwapChain9);
 

@@ -32,6 +32,8 @@ class SwapChain11 : public SwapChain
     virtual ID3D11DepthStencilView *getDepthStencil();
     virtual ID3D11Texture2D *getOffscreenTexture();
 
+    static SwapChain11 *makeSwapChain11(SwapChain *swapChain);
+
   private:
     DISALLOW_COPY_AND_ASSIGN(SwapChain11);
 

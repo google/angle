@@ -316,4 +316,11 @@ ID3D11Texture2D *SwapChain11::getOffscreenTexture()
     return mOffscreenTexture;
 }
 
+SwapChain11 *SwapChain11::makeSwapChain11(SwapChain *swapChain)
+{
+    ASSERT(dynamic_cast<rx::SwapChain11*>(swapChain) != NULL);
+    return static_cast<rx::SwapChain11*>(swapChain);
 }
+
+}
+
