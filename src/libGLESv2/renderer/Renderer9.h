@@ -261,6 +261,8 @@ class Renderer9 : public Renderer
     bool mRenderTargetDescInitialized;
     rx::RenderTarget::Desc mRenderTargetDesc;
 
+    IDirect3DStateBlock9 *mMaskedClearSavedState;
+
     // previously set render states
     bool mForceSetDepthStencilState;
     gl::DepthStencilState mCurDepthStencilState;
