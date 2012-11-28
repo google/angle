@@ -22,7 +22,7 @@ namespace gl
 class Fence
 {
   public:
-    explicit Fence(rx::Renderer9 *renderer);
+    explicit Fence(rx::Renderer *renderer);
     virtual ~Fence();
 
     GLboolean isFence();

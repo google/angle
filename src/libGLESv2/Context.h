@@ -15,7 +15,6 @@
 #include <GLES2/gl2ext.h>
 #define EGLAPI
 #include <EGL/egl.h>
-#include <d3d9.h>
 
 #include <string>
 #include <map>
@@ -442,8 +441,7 @@ class Context
     void initExtensionString();
     void initRendererString();
 
-    IDirect3DDevice9 *mDevice;
-    rx::Renderer9 *mRenderer;  // D3D9_REPLACE
+    rx::Renderer *const mRenderer;
 
     State mState;
 
@@ -492,7 +490,7 @@ class Context
     unsigned int mAppliedTextureSerialPS[MAX_TEXTURE_IMAGE_UNITS];
     unsigned int mAppliedTextureSerialVS[MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF];
     unsigned int mAppliedProgramBinarySerial;
-    rx::RenderTarget::Desc mRenderTargetDesc; // D3D9_REPLACE
+    rx::RenderTarget::Desc mRenderTargetDesc;
     bool mDxUniformsDirty;
     BindingPointer<ProgramBinary> mCurrentProgramBinary;
     Framebuffer *mBoundDrawFramebuffer;
@@ -524,8 +522,6 @@ class Context
     bool mSupports32bitIndices;
     bool mSupportsTextureFilterAnisotropy;
     int mNumCompressedTextureFormats;
-
-    IDirect3DStateBlock9 *mMaskedClearSavedState;
 
     ResourceManager *mResourceManager;
 };

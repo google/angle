@@ -23,7 +23,7 @@ namespace gl
 class Query : public RefCountObject
 {
   public:
-    Query(rx::Renderer9 *renderer, GLuint id, GLenum type);
+    Query(rx::Renderer *renderer, GLuint id, GLenum type);
     virtual ~Query();
 
     void begin();

@@ -33,14 +33,9 @@
 
 namespace gl
 {
-Context::Context(const gl::Context *shareContext, rx::Renderer *renderer, bool notifyResets, bool robustAccess)
+Context::Context(const gl::Context *shareContext, rx::Renderer *renderer, bool notifyResets, bool robustAccess) : mRenderer(renderer)
 {
     ASSERT(robustAccess == false);   // Unimplemented
-
-    ASSERT(dynamic_cast<rx::Renderer9*>(renderer) != NULL); // D3D9_REPLACE
-    mRenderer = static_cast<rx::Renderer9*>(renderer);
-
-    mDevice = NULL;
 
     mFenceHandleAllocator.setBaseHandle(0);
 
@@ -169,7 +164,7 @@ Context::Context(const gl::Context *shareContext, rx::Renderer *renderer, bool n
     mSupportsEventQueries = false;
     mSupportsOcclusionQueries = false;
     mNumCompressedTextureFormats = 0;
-    mMaskedClearSavedState = NULL;
+
     markAllStateDirty();
 }
 
@@ -231,18 +226,11 @@ Context::~Context()
     mTexture2DZero.set(NULL);
     mTextureCubeMapZero.set(NULL);
 
-    if (mMaskedClearSavedState)
-    {
-        mMaskedClearSavedState->Release();
-    }
-
     mResourceManager->release();
 }
 
 void Context::makeCurrent(egl::Surface *surface)
 {
-    mDevice = mRenderer->getDevice(); // D3D9_REMOVE
-
     if (!mHasBeenCurrent)
     {
         mSupportsShaderModel3 = mRenderer->getShaderModel3Support();
