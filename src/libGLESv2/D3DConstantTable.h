@@ -90,8 +90,8 @@ struct D3DConstant
     std::vector<std::vector<const D3DConstant*> > structMembers;    
 
   private:
-    D3DConstant(const char *base, RegisterSet registerSet, unsigned registerIndex, const ctab::StructMemberInfo *memberInfo);
-    unsigned addStructMembers(const char *base, RegisterSet registerSet, unsigned registerIndex, const ctab::TypeInfo *typeInfo);
+    D3DConstant(const char *base, RegisterSet registerSet, unsigned registerIndex, unsigned maxRegister, const ctab::StructMemberInfo *memberInfo);
+    unsigned addStructMembers(const char *base, RegisterSet registerSet, unsigned registerIndex, unsigned maxRegister, const ctab::TypeInfo *typeInfo);
 };
 
 class D3DConstantTable
