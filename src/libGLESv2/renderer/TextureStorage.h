@@ -49,8 +49,6 @@ class TextureStorage
     int levelCount();
 
   protected:
-    static bool copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *source, bool fromManaged);
-
     int mLodOffset;
 
   private:
@@ -75,8 +73,6 @@ class TextureStorage2D : public TextureStorage
 
     virtual ~TextureStorage2D();
 
-    static bool copyToRenderTarget(TextureStorage2D *dest, TextureStorage2D *source);
-
     IDirect3DSurface9 *getSurfaceLevel(int level, bool dirty);
     virtual IDirect3DBaseTexture9 *getBaseTexture() const;
     void generateMipmap(int level);
@@ -96,8 +92,6 @@ class TextureStorageCubeMap : public TextureStorage
     TextureStorageCubeMap(rx::Renderer9 *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size);
 
     virtual ~TextureStorageCubeMap();
-
-    static bool copyToRenderTarget(TextureStorageCubeMap *dest, TextureStorageCubeMap *source);
 
     IDirect3DSurface9 *getCubeMapSurface(GLenum faceTarget, int level, bool dirty);
     virtual IDirect3DBaseTexture9 *getBaseTexture() const;

@@ -37,6 +37,12 @@ namespace egl
 class Display;
 }
 
+namespace gl
+{
+class TextureStorage2D;
+class TextureStorageCubeMap;
+}
+
 namespace rx
 {
 
@@ -105,6 +111,9 @@ class Renderer
     virtual int getMaxSwapInterval() const = 0;
 
     virtual GLsizei getMaxSupportedSamples() const = 0;
+
+    virtual bool copyToRenderTarget(gl::TextureStorage2D *dest, gl::TextureStorage2D *source) = 0;
+    virtual bool copyToRenderTarget(gl::TextureStorageCubeMap *dest, gl::TextureStorageCubeMap *source) = 0;
 
   protected:
     egl::Display *mDisplay;

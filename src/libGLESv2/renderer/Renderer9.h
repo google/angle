@@ -110,12 +110,17 @@ class Renderer9 : public Renderer
     int getNearestSupportedSamples(D3DFORMAT format, int requested) const;
     
     D3DFORMAT ConvertTextureInternalFormat(GLint internalformat);
+
+    virtual bool copyToRenderTarget(gl::TextureStorage2D *dest, gl::TextureStorage2D *source);
+    virtual bool copyToRenderTarget(gl::TextureStorageCubeMap *dest, gl::TextureStorageCubeMap *source);
+
     D3DPOOL getTexturePool(DWORD usage) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer9);
 
     void getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray);
+    bool copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *source, bool fromManaged);
 
     D3DPOOL getBufferPool(DWORD usage) const;
 

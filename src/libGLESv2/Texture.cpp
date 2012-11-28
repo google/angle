@@ -782,7 +782,7 @@ void Texture2D::convertToRenderTarget()
 
         if (mTexStorage != NULL)
         {
-            if (!TextureStorage2D::copyToRenderTarget(newTexStorage, mTexStorage))
+            if (!mRenderer->copyToRenderTarget(newTexStorage, mTexStorage))
             {   
                 delete newTexStorage;
                 return error(GL_OUT_OF_MEMORY);
@@ -1240,7 +1240,7 @@ void TextureCubeMap::convertToRenderTarget()
 
         if (mTexStorage != NULL)
         {
-            if (!TextureStorageCubeMap::copyToRenderTarget(newTexStorage, mTexStorage))
+            if (!mRenderer->copyToRenderTarget(newTexStorage, mTexStorage))
             {
                 delete newTexStorage;
                 return error(GL_OUT_OF_MEMORY);

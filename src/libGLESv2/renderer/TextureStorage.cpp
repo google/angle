@@ -121,45 +121,6 @@ int TextureStorage::levelCount()
     return getBaseTexture() ? getBaseTexture()->GetLevelCount() - getLodOffset() : 0;
 }
 
-bool TextureStorage::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *source, bool fromManaged)
-{
-    if (source && dest)
-    {
-        HRESULT result = D3DERR_OUTOFVIDEOMEMORY;
-        rx::Renderer9 *renderer = getDisplay()->getRenderer9();
-        IDirect3DDevice9 *device = renderer->getDevice(); // D3D9_REPLACE
-
-        if (fromManaged)
-        {
-            D3DSURFACE_DESC desc;
-            source->GetDesc(&desc);
-
-            IDirect3DSurface9 *surf = 0;
-            result = device->CreateOffscreenPlainSurface(desc.Width, desc.Height, desc.Format, D3DPOOL_SYSTEMMEM, &surf, NULL);
-
-            if (SUCCEEDED(result))
-            {
-                Image::CopyLockableSurfaces(surf, source);
-                result = device->UpdateSurface(surf, NULL, dest, NULL);
-                surf->Release();
-            }
-        }
-        else
-        {
-            renderer->endScene();
-            result = device->StretchRect(source, NULL, dest, NULL, D3DTEXF_NONE);
-        }
-
-        if (FAILED(result))
-        {
-            ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-            return false;
-        }
-    }
-
-    return true;
-} 
-
 TextureStorage2D::TextureStorage2D(rx::Renderer9 *renderer, rx::SwapChain *swapchain) : TextureStorage(renderer, D3DUSAGE_RENDERTARGET), mRenderTargetSerial(RenderbufferStorage::issueSerial())
 {
     IDirect3DTexture9 *surfaceTexture = swapchain->getOffscreenTexture();
@@ -194,31 +155,6 @@ TextureStorage2D::~TextureStorage2D()
     {
         mTexture->Release();
     }
-}
-
-bool TextureStorage2D::copyToRenderTarget(TextureStorage2D *dest, TextureStorage2D *source)
-{
-    bool result = false;
-
-    if (source && dest)
-    {
-        int levels = source->levelCount();
-        for (int i = 0; i < levels; ++i)
-        {
-            IDirect3DSurface9 *srcSurf = source->getSurfaceLevel(i, false);
-            IDirect3DSurface9 *dstSurf = dest->getSurfaceLevel(i, false);
-            
-            result = TextureStorage::copyToRenderTarget(dstSurf, srcSurf, source->isManaged());
-
-            if (srcSurf) srcSurf->Release();
-            if (dstSurf) dstSurf->Release();
-
-            if (!result)
-                return false;
-        }
-    }
-
-    return result;
 }
 
 // Increments refcount on surface.
@@ -295,34 +231,6 @@ TextureStorageCubeMap::~TextureStorageCubeMap()
     {
         mTexture->Release();
     }
-}
-
-bool TextureStorageCubeMap::copyToRenderTarget(TextureStorageCubeMap *dest, TextureStorageCubeMap *source)
-{
-    bool result = false;
-
-    if (source && dest)
-    {
-        int levels = source->levelCount();
-        for (int f = 0; f < 6; f++)
-        {
-            for (int i = 0; i < levels; i++)
-            {
-                IDirect3DSurface9 *srcSurf = source->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i, false);
-                IDirect3DSurface9 *dstSurf = dest->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i, true);
-
-                result = TextureStorage::copyToRenderTarget(dstSurf, srcSurf, source->isManaged());
-
-                if (srcSurf) srcSurf->Release();
-                if (dstSurf) dstSurf->Release();
-
-                if (!result)
-                    return false;
-            }
-        }
-    }
-
-    return result;
 }
 
 // Increments refcount on surface.
