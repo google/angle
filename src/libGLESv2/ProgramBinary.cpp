@@ -2066,7 +2066,7 @@ bool ProgramBinary::linkUniforms(InfoLog &infoLog, GLenum shader, D3DConstantTab
     {
         const D3DConstant *constant = constantTable->getConstant(constantIndex);
 
-        if (!defineUniform(infoLog, shader, constant, ""))
+        if (!defineUniform(infoLog, shader, constant, "", mConstantTableVS, mConstantTablePS))
         {
             return false;
         }
@@ -2077,14 +2077,15 @@ bool ProgramBinary::linkUniforms(InfoLog &infoLog, GLenum shader, D3DConstantTab
 
 // Adds the description of a constant found in the binary shader to the list of uniforms
 // Returns true if succesful (uniform not already defined)
-bool ProgramBinary::defineUniform(InfoLog &infoLog, GLenum shader, const D3DConstant *constant, const std::string &name)
+bool ProgramBinary::defineUniform(InfoLog &infoLog, GLenum shader, const D3DConstant *constant, const std::string &name,
+                                  D3DConstantTable *vsConstantTable, D3DConstantTable *psConstantTable)
 {
     if (constant->registerSet == D3DConstant::RS_SAMPLER)
     {
         for (unsigned int i = 0; i < constant->registerCount; i++)
         {
-            const D3DConstant *psConstant = mConstantTablePS->getConstantByName(constant->name.c_str());
-            const D3DConstant *vsConstant = mConstantTableVS->getConstantByName(constant->name.c_str());
+            const D3DConstant *psConstant = psConstantTable->getConstantByName(constant->name.c_str());
+            const D3DConstant *vsConstant = vsConstantTable->getConstantByName(constant->name.c_str());
 
             if (psConstant)
             {
@@ -2136,7 +2137,7 @@ bool ProgramBinary::defineUniform(InfoLog &infoLog, GLenum shader, const D3DCons
 
                     std::string structIndex = (constant->elements > 1) ? ("[" + str(arrayIndex) + "]") : "";
 
-                    if (!defineUniform(infoLog, shader, fieldConstant, name + constant->name + structIndex + "."))
+                    if (!defineUniform(infoLog, shader, fieldConstant, name + constant->name + structIndex + ".", vsConstantTable, psConstantTable))
                     {
                         return false;
                     }
