@@ -722,6 +722,20 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect,
     return false;
 }
 
+RenderTarget *Renderer11::createRenderTarget(SwapChain *swapChain, bool depth)
+{
+    // TODO
+    UNIMPLEMENTED();
+    return NULL;
+}
+
+RenderTarget *Renderer11::createRenderTarget(int width, int height, GLenum format, GLsizei samples, bool depth)
+{
+    // TODO
+    UNIMPLEMENTED();
+    return NULL;
+}
+
 bool Renderer11::blitRect(gl::Framebuffer *readTarget, gl::Rectangle *readRect, gl::Framebuffer *drawTarget, gl::Rectangle *drawRect,
                           bool blitRenderTarget, bool blitDepthStencil)
 {

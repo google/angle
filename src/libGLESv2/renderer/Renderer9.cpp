@@ -2135,6 +2135,30 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
     systemSurface->Release();
 }
 
+RenderTarget *Renderer9::createRenderTarget(SwapChain *swapChain, bool depth)
+{
+    SwapChain9 *swapChain9 = SwapChain9::makeSwapChain9(swapChain);
+    IDirect3DSurface9 *surface = NULL;
+    if (depth)
+    {
+        surface = swapChain9->getDepthStencil();
+    }
+    else
+    {
+        surface = swapChain9->getRenderTarget();
+    }
+
+    RenderTarget9 *renderTarget = new RenderTarget9(this, surface);
+
+    return renderTarget;
+}
+
+RenderTarget *Renderer9::createRenderTarget(int width, int height, GLenum format, GLsizei samples, bool depth)
+{
+    RenderTarget9 *renderTarget = new RenderTarget9(this, width, height, format, samples);
+    return renderTarget;
+}
+
 bool Renderer9::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
 {
     return mBlit->boxFilter(source, dest);

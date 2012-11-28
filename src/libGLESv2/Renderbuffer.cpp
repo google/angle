@@ -14,10 +14,6 @@
 #include "libGLESv2/Texture.h"
 #include "libGLESv2/utilities.h"
 
-#include "libGLESv2/renderer/RenderTarget9.h" // D3D9_REPLACE
-#include "libGLESv2/renderer/SwapChain9.h" // D3D9_REPLACE
-#include "libGLESv2/renderer/renderer9_utils.h" // D3D9_REPLACE
-
 namespace gl
 {
 unsigned int RenderbufferStorage::mCurrentSerial = 1;
@@ -369,8 +365,8 @@ unsigned int RenderbufferStorage::issueCubeSerials()
 
 Colorbuffer::Colorbuffer(rx::Renderer *renderer, rx::SwapChain *swapChain)
 {
-    rx::SwapChain9 *swapChain9 = static_cast<rx::SwapChain9*>(swapChain);
-    mRenderTarget = new rx::RenderTarget9(renderer, swapChain9->getRenderTarget());
+    mRenderTarget = renderer->createRenderTarget(swapChain, false); 
+
     if (mRenderTarget)
     {
         mWidth = mRenderTarget->getWidth();
@@ -383,8 +379,7 @@ Colorbuffer::Colorbuffer(rx::Renderer *renderer, rx::SwapChain *swapChain)
 
 Colorbuffer::Colorbuffer(rx::Renderer *renderer, int width, int height, GLenum format, GLsizei samples) : mRenderTarget(NULL)
 {
-
-    mRenderTarget = new rx::RenderTarget9(renderer, width, height, format, samples);
+    mRenderTarget = renderer->createRenderTarget(width, height, format, samples, false);
 
     if (mRenderTarget)
     {
@@ -416,8 +411,7 @@ rx::RenderTarget *Colorbuffer::getRenderTarget()
 
 DepthStencilbuffer::DepthStencilbuffer(rx::Renderer *renderer, rx::SwapChain *swapChain)
 {
-    rx::SwapChain9 *swapChain9 = static_cast<rx::SwapChain9*>(swapChain);
-    mDepthStencil = new rx::RenderTarget9(renderer, swapChain9->getDepthStencil());
+    mDepthStencil = renderer->createRenderTarget(swapChain, true);
     if (mDepthStencil)
     {
         mWidth = mDepthStencil->getWidth();
@@ -431,7 +425,7 @@ DepthStencilbuffer::DepthStencilbuffer(rx::Renderer *renderer, rx::SwapChain *sw
 DepthStencilbuffer::DepthStencilbuffer(rx::Renderer *renderer, int width, int height, GLsizei samples)
 {
 
-    mDepthStencil = new rx::RenderTarget9(renderer, width, height, GL_DEPTH24_STENCIL8_OES, samples);
+    mDepthStencil = renderer->createRenderTarget(width, height, GL_DEPTH24_STENCIL8_OES, samples, true);
 
     mWidth = mDepthStencil->getWidth();
     mHeight = mDepthStencil->getHeight();

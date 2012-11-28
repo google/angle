@@ -121,6 +121,9 @@ class Renderer11 : public Renderer
     virtual void readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,
                             GLsizei outputPitch, bool packReverseRowOrder, GLint packAlignment, void* pixels);
 
+    virtual RenderTarget *createRenderTarget(SwapChain *swapChain, bool depth);
+    virtual RenderTarget *createRenderTarget(int width, int height, GLenum format, GLsizei samples, bool depth);
+
     // D3D11-renderer specific methods
     ID3D11Device *getDevice() { return mDevice; }
     ID3D11DeviceContext *getDeviceContext() { return mDeviceContext; };

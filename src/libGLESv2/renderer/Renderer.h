@@ -151,6 +151,9 @@ class Renderer
     virtual void readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,
                             GLsizei outputPitch, bool packReverseRowOrder, GLint packAlignment, void* pixels) = 0;
 
+    virtual RenderTarget *createRenderTarget(SwapChain *swapChain, bool depth) = 0;
+    virtual RenderTarget *createRenderTarget(int width, int height, GLenum format, GLsizei samples, bool depth) = 0;
+
   protected:
     egl::Display *mDisplay;
 
