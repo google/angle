@@ -13,6 +13,7 @@
 #include "libGLESv2/Framebuffer.h"
 #include "libGLESv2/renderer/Renderer9.h"
 #include "libGLESv2/renderer/renderer9_utils.h"
+#include "libGLESv2/renderer/SwapChain9.h"
 #include "libGLESv2/renderer/TextureStorage.h"
 #include "libGLESv2/renderer/Image.h"
 #include "libGLESv2/renderer/Blit.h"
@@ -504,7 +505,7 @@ void Renderer9::sync(bool block)
 
 SwapChain *Renderer9::createSwapChain(HWND window, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat)
 {
-    return new rx::SwapChain(this, window, shareHandle, backBufferFormat, depthBufferFormat);
+    return new rx::SwapChain9(this, window, shareHandle, backBufferFormat, depthBufferFormat);
 }
 
 // D3D9_REPLACE

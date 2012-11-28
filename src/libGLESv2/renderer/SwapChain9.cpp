@@ -4,25 +4,24 @@
 // found in the LICENSE file.
 //
 
-// SwapChain.cpp: Implements a back-end specific class that hides the details of the
-// implementation-specific swapchain.
+// SwapChain9.cpp: Implements a back-end specific class for the D3D9 swap chain.
 
-#include "libGLESv2/renderer/SwapChain.h"
+#include "libGLESv2/renderer/SwapChain9.h"
 
 #include "common/debug.h"
 #include "libGLESv2/utilities.h"
-#include "libGLESv2/renderer/renderer9_utils.h" // D3D9_REPLACE
-#include "libGLESv2/renderer/Renderer9.h"   // D3D9_REPLACE
+#include "libGLESv2/renderer/renderer9_utils.h"
+#include "libGLESv2/renderer/Renderer9.h"
+#include "libGLESv2/renderer/RenderTarget9.h"
 #include "libGLESv2/Context.h"
 #include "libGLESv2/main.h"
 
 namespace rx
 {
 
-SwapChain::SwapChain(Renderer9 *renderer, HWND window, HANDLE shareHandle,
-                     GLenum backBufferFormat, GLenum depthBufferFormat)
-    : mRenderer(renderer), mWindow(window), mShareHandle(shareHandle),
-      mBackBufferFormat(backBufferFormat), mDepthBufferFormat(depthBufferFormat)
+SwapChain9::SwapChain9(Renderer9 *renderer, HWND window, HANDLE shareHandle,
+                       GLenum backBufferFormat, GLenum depthBufferFormat)
+    : mRenderer(renderer), SwapChain(window, shareHandle, backBufferFormat, depthBufferFormat)
 {
     mSwapChain = NULL;
     mBackBuffer = NULL;
@@ -33,12 +32,12 @@ SwapChain::SwapChain(Renderer9 *renderer, HWND window, HANDLE shareHandle,
     mHeight = -1;
 }
 
-SwapChain::~SwapChain()
+SwapChain9::~SwapChain9()
 {
     release();
 }
 
-void SwapChain::release()
+void SwapChain9::release()
 {
     if (mSwapChain)
     {
@@ -89,8 +88,7 @@ static DWORD convertInterval(EGLint interval)
     return D3DPRESENT_INTERVAL_DEFAULT;
 }
 
-// D3D9_REPLACE
-EGLint SwapChain::reset(int backbufferWidth, int backbufferHeight, EGLint swapInterval)
+EGLint SwapChain9::reset(int backbufferWidth, int backbufferHeight, EGLint swapInterval)
 {
     IDirect3DDevice9 *device = mRenderer->getDevice();
 
@@ -252,7 +250,7 @@ EGLint SwapChain::reset(int backbufferWidth, int backbufferHeight, EGLint swapIn
             ERR("Could not create depthstencil surface for new swap chain: 0x%08X", result);
             release();
 
-            if(isDeviceLostError(result))
+            if (isDeviceLostError(result))
             {
                 return EGL_CONTEXT_LOST;
             }
@@ -270,7 +268,7 @@ EGLint SwapChain::reset(int backbufferWidth, int backbufferHeight, EGLint swapIn
 }
 
 // parameters should be validated/clamped by caller
-EGLint SwapChain::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
+EGLint SwapChain9::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
 {
     if (!mSwapChain)
     {
@@ -361,7 +359,7 @@ EGLint SwapChain::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
 
 // Increments refcount on surface.
 // caller must Release() the returned surface
-IDirect3DSurface9 *SwapChain::getRenderTarget()
+IDirect3DSurface9 *SwapChain9::getRenderTarget()
 {
     if (mRenderTarget)
     {
@@ -373,7 +371,7 @@ IDirect3DSurface9 *SwapChain::getRenderTarget()
 
 // Increments refcount on surface.
 // caller must Release() the returned surface
-IDirect3DSurface9 *SwapChain::getDepthStencil()
+IDirect3DSurface9 *SwapChain9::getDepthStencil()
 {
     if (mDepthStencil)
     {
@@ -385,7 +383,7 @@ IDirect3DSurface9 *SwapChain::getDepthStencil()
 
 // Increments refcount on texture.
 // caller must Release() the returned texture
-IDirect3DTexture9 *SwapChain::getOffscreenTexture()
+IDirect3DTexture9 *SwapChain9::getOffscreenTexture()
 {
     if (mOffscreenTexture)
     {

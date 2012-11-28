@@ -15,6 +15,7 @@
 #include "libGLESv2/utilities.h"
 
 #include "libGLESv2/renderer/RenderTarget9.h" // D3D9_REPLACE
+#include "libGLESv2/renderer/SwapChain9.h" // D3D9_REPLACE
 #include "libGLESv2/renderer/renderer9_utils.h" // D3D9_REPLACE
 
 namespace gl
@@ -384,7 +385,8 @@ unsigned int RenderbufferStorage::issueCubeSerials()
 
 Colorbuffer::Colorbuffer(rx::Renderer *renderer, rx::SwapChain *swapChain)
 {
-    mRenderTarget = new rx::RenderTarget9(renderer, swapChain->getRenderTarget());
+    rx::SwapChain9 *swapChain9 = static_cast<rx::SwapChain9*>(swapChain);
+    mRenderTarget = new rx::RenderTarget9(renderer, swapChain9->getRenderTarget());
     if (mRenderTarget)
     {
         mWidth = mRenderTarget->getWidth();
@@ -432,7 +434,8 @@ IDirect3DSurface9 *Colorbuffer::getRenderTarget()
 
 DepthStencilbuffer::DepthStencilbuffer(rx::Renderer *renderer, rx::SwapChain *swapChain)
 {
-    mDepthStencil = new rx::RenderTarget9(renderer, swapChain->getDepthStencil());
+    rx::SwapChain9 *swapChain9 = static_cast<rx::SwapChain9*>(swapChain);
+    mDepthStencil = new rx::RenderTarget9(renderer, swapChain9->getDepthStencil());
     if (mDepthStencil)
     {
         mWidth = mDepthStencil->getWidth();

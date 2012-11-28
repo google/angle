@@ -20,7 +20,7 @@
 namespace rx
 {
 class Renderer9;
-class SwapChain;
+class SwapChain9;
 class Blit;
 
 class TextureStorage
@@ -62,7 +62,7 @@ class TextureStorage
 class TextureStorage2D : public TextureStorage
 {
   public:
-    explicit TextureStorage2D(rx::Renderer9 *renderer, rx::SwapChain *swapchain);
+    explicit TextureStorage2D(rx::Renderer9 *renderer, rx::SwapChain9 *swapchain);
     TextureStorage2D(rx::Renderer9 *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height);
 
     virtual ~TextureStorage2D();

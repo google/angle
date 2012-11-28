@@ -272,6 +272,8 @@
             'libGLESv2/renderer/ShaderCache.h',
             'libGLESv2/renderer/SwapChain.cpp',
             'libGLESv2/renderer/SwapChain.h',
+            'libGLESv2/renderer/SwapChain9.cpp',
+            'libGLESv2/renderer/SwapChain9.h',
             'libGLESv2/renderer/TextureStorage.cpp',
             'libGLESv2/renderer/TextureStorage.h',
             'libGLESv2/renderer/RenderStateCache.cpp',

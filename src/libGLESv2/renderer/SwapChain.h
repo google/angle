@@ -16,47 +16,30 @@
 #define EGLAPI
 #include <EGL/egl.h>
 
-#include <d3d9.h>  // D3D9_REPLACE
-
 #include "common/angleutils.h"
 
 namespace rx
 {
-class Renderer9;   // D3D9_REPLACE
 
 class SwapChain
 {
   public:
-    SwapChain(Renderer9 *renderer, HWND window, HANDLE shareHandle,
-              GLenum backBufferFormat, GLenum depthBufferFormat);
-    virtual ~SwapChain();
+    SwapChain(HWND window, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat)
+        : mWindow(window), mShareHandle(shareHandle), mBackBufferFormat(backBufferFormat), mDepthBufferFormat(depthBufferFormat)
+    {
+    }
 
-    virtual EGLint reset(EGLint backbufferWidth, EGLint backbufferHeight, EGLint swapInterval);
-    virtual EGLint swapRect(EGLint x, EGLint y, EGLint width, EGLint height);
+    virtual ~SwapChain() {};
 
-    virtual IDirect3DSurface9 *getRenderTarget();
-    virtual IDirect3DSurface9 *getDepthStencil();
-    virtual IDirect3DTexture9 *getOffscreenTexture();
+    virtual EGLint reset(EGLint backbufferWidth, EGLint backbufferHeight, EGLint swapInterval) = 0;
+    virtual EGLint swapRect(EGLint x, EGLint y, EGLint width, EGLint height) = 0;
 
-    HANDLE getShareHandle() { return mShareHandle; }
+    virtual HANDLE getShareHandle() {return mShareHandle;};
 
-  private:
-    DISALLOW_COPY_AND_ASSIGN(SwapChain);
-
-    void release();
-
-    Renderer9 *mRenderer;   // D3D9_REPLACE
-    EGLint mHeight;
-    EGLint mWidth;
-
+  protected:
     const HWND mWindow;            // Window that the surface is created for.
     const GLenum mBackBufferFormat;
     const GLenum mDepthBufferFormat;
-    IDirect3DSwapChain9 *mSwapChain;
-    IDirect3DSurface9 *mBackBuffer;
-    IDirect3DSurface9 *mDepthStencil;
-    IDirect3DSurface9* mRenderTarget;
-    IDirect3DTexture9* mOffscreenTexture;
 
     HANDLE mShareHandle;
 };

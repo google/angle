@@ -10,7 +10,7 @@
 
 #include "libGLESv2/main.h"
 #include "libGLESv2/renderer/TextureStorage.h"
-#include "libGLESv2/renderer/SwapChain.h"
+#include "libGLESv2/renderer/SwapChain9.h"
 #include "libGLESv2/renderer/Blit.h"
 
 #include "libGLESv2/renderer/renderer9_utils.h"
@@ -115,7 +115,7 @@ int TextureStorage::levelCount()
     return getBaseTexture() ? getBaseTexture()->GetLevelCount() - getLodOffset() : 0;
 }
 
-TextureStorage2D::TextureStorage2D(Renderer9 *renderer, rx::SwapChain *swapchain) : TextureStorage(renderer, D3DUSAGE_RENDERTARGET), mRenderTargetSerial(gl::RenderbufferStorage::issueSerial())
+TextureStorage2D::TextureStorage2D(Renderer9 *renderer, rx::SwapChain9 *swapchain) : TextureStorage(renderer, D3DUSAGE_RENDERTARGET), mRenderTargetSerial(gl::RenderbufferStorage::issueSerial())
 {
     IDirect3DTexture9 *surfaceTexture = swapchain->getOffscreenTexture();
     mTexture = surfaceTexture;
