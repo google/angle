@@ -1318,8 +1318,8 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
     }
 
     // Write the HLSL input/output declarations
+    const bool sm3 = mRenderer->getShaderModel3Support();
     Context *context = getContext();
-    const bool sm3 = context->supportsShaderModel3();
     const int maxVaryingVectors = context->getMaximumVaryingVectors();
 
     if (registers == maxVaryingVectors && fragmentShader->mUsesFragCoord)
@@ -1931,9 +1931,8 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
         return false;
     }
 
-    Context *context = getContext();
-    const char *vertexProfile = context->supportsShaderModel3() ? "vs_3_0" : "vs_2_0";
-    const char *pixelProfile = context->supportsShaderModel3() ? "ps_3_0" : "ps_2_0";
+    const char *vertexProfile = mRenderer->getShaderModel3Support() ? "vs_3_0" : "vs_2_0";
+    const char *pixelProfile = mRenderer->getShaderModel3Support() ? "ps_3_0" : "ps_2_0";
 
     ID3D10Blob *vertexBinary = compileToBinary(infoLog, vertexHLSL.c_str(), vertexProfile, &mConstantTableVS);
     ID3D10Blob *pixelBinary = compileToBinary(infoLog, pixelHLSL.c_str(), pixelProfile, &mConstantTablePS);
@@ -1983,6 +1982,7 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
         mDxFrontCCWLocation = getUniformLocation("dx_FrontCCW");
         mDxPointsOrLinesLocation = getUniformLocation("dx_PointsOrLines");
 
+        Context *context = getContext();
         context->markDxUniformsDirty();
 
         return true;

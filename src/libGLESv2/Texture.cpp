@@ -310,7 +310,7 @@ bool Texture::isImmutable() const
 
 GLint Texture::creationLevels(GLsizei width, GLsizei height) const
 {
-    if ((isPow2(width) && isPow2(height)) || getContext()->supportsNonPower2Texture())
+    if ((isPow2(width) && isPow2(height)) || mRenderer->getNonPower2TextureSupport())
     {
         return 0;   // Maximum number of levels
     }
@@ -627,9 +627,10 @@ bool Texture2D::isSamplerComplete() const
     }
 
     bool mipmapping = isMipmapFiltered();
+    bool filtering, renderable;
 
-    if ((IsFloat32Format(getInternalFormat(0)) && !getContext()->supportsFloat32LinearFilter()) ||
-        (IsFloat16Format(getInternalFormat(0)) && !getContext()->supportsFloat16LinearFilter()))
+    if ((IsFloat32Format(getInternalFormat(0)) && !mRenderer->getFloat32TextureSupport(&filtering, &renderable)) ||
+        (IsFloat16Format(getInternalFormat(0)) && !mRenderer->getFloat16TextureSupport(&filtering, &renderable)))
     {
         if (mSamplerState.magFilter != GL_NEAREST ||
             (mSamplerState.minFilter != GL_NEAREST && mSamplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST))
@@ -638,7 +639,7 @@ bool Texture2D::isSamplerComplete() const
         }
     }
 
-    bool npotSupport = getContext()->supportsNonPower2Texture();
+    bool npotSupport = mRenderer->getNonPower2TextureSupport();
 
     if (!npotSupport)
     {
@@ -797,7 +798,7 @@ void Texture2D::convertToRenderTarget()
 
 void Texture2D::generateMipmaps()
 {
-    if (!getContext()->supportsNonPower2Texture())
+    if (!mRenderer->getNonPower2TextureSupport())
     {
         if (!isPow2(mImageArray[0].getWidth()) || !isPow2(mImageArray[0].getHeight()))
         {
@@ -1072,9 +1073,10 @@ bool TextureCubeMap::isSamplerComplete() const
     int size = mImageArray[0][0].getWidth();
 
     bool mipmapping = isMipmapFiltered();
+    bool filtering, renderable;
 
-    if ((gl::ExtractType(getInternalFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0)) == GL_FLOAT && !getContext()->supportsFloat32LinearFilter()) ||
-        (gl::ExtractType(getInternalFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0) == GL_HALF_FLOAT_OES) && !getContext()->supportsFloat16LinearFilter()))
+    if ((gl::ExtractType(getInternalFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0)) == GL_FLOAT && !mRenderer->getFloat32TextureSupport(&filtering, &renderable)) ||
+        (gl::ExtractType(getInternalFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0) == GL_HALF_FLOAT_OES) && !mRenderer->getFloat16TextureSupport(&filtering, &renderable)))
     {
         if (mSamplerState.magFilter != GL_NEAREST ||
             (mSamplerState.minFilter != GL_NEAREST && mSamplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST))
@@ -1083,7 +1085,7 @@ bool TextureCubeMap::isSamplerComplete() const
         }
     }
 
-    if (!isPow2(size) && !getContext()->supportsNonPower2Texture())
+    if (!isPow2(size) && !mRenderer->getNonPower2TextureSupport())
     {
         if (mSamplerState.wrapS != GL_CLAMP_TO_EDGE || mSamplerState.wrapT != GL_CLAMP_TO_EDGE || mipmapping)
         {
@@ -1415,7 +1417,7 @@ void TextureCubeMap::generateMipmaps()
         return error(GL_INVALID_OPERATION);
     }
 
-    if (!getContext()->supportsNonPower2Texture())
+    if (!mRenderer->getNonPower2TextureSupport())
     {
         if (!isPow2(mImageArray[0][0].getWidth()))
         {

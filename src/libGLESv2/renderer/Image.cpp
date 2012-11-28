@@ -210,6 +210,8 @@ Image::Image()
 
     mDirty = false;
 
+    mRenderer = NULL;
+
     mD3DPool = D3DPOOL_SYSTEMMEM;
     mD3DFormat = D3DFMT_UNKNOWN;
     mActualFormat = GL_NONE;
@@ -277,6 +279,9 @@ bool Image::redefine(rx::Renderer9 *renderer, GLint internalformat, GLsizei widt
         mD3DFormat = renderer->ConvertTextureInternalFormat(internalformat);
         mActualFormat = dx2es::GetEquivalentFormat(mD3DFormat);
 
+        ASSERT(dynamic_cast<rx::Renderer9*>(renderer) != NULL); // D3D9_REPLACE
+        mRenderer = static_cast<rx::Renderer9*>(renderer); // D3D9_REPLACE
+
         if (mSurface)
         {
             mSurface->Release();
@@ -309,8 +314,8 @@ void Image::createSurface()
         GLsizei requestHeight = mHeight;
         MakeValidSize(true, IsCompressed(mInternalFormat), &requestWidth, &requestHeight, &levelToFetch);
 
-        // D3D9_REPLACE
-        IDirect3DDevice9 *device = getDisplay()->getRenderer9()->getDevice();
+        IDirect3DDevice9 *device = mRenderer->getDevice(); // D3D9_REPLACE
+
         HRESULT result = device->CreateTexture(requestWidth, requestHeight, levelToFetch + 1, NULL, d3dFormat,
                                                     poolToUse, &newTexture, NULL);
 
@@ -437,7 +442,8 @@ bool Image::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint y
         rect.bottom = yoffset + height;
 
         POINT point = {rect.left, rect.top};
-        IDirect3DDevice9 *device = getDisplay()->getRenderer9()->getDevice();  // D3D9_REPLACE
+
+        IDirect3DDevice9 *device = mRenderer->getDevice(); // D3D9_REPLACE
 
         if (mD3DPool == D3DPOOL_MANAGED)
         {
@@ -986,7 +992,8 @@ void Image::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, 
         return error(GL_OUT_OF_MEMORY);
     }
 
-    IDirect3DDevice9 *device = getDisplay()->getRenderer9()->getDevice(); // D3D9_REPLACE
+    IDirect3DDevice9 *device = mRenderer->getDevice(); // D3D9_REPLACE
+
     IDirect3DSurface9 *renderTargetData = NULL;
     D3DSURFACE_DESC description;
     renderTarget->GetDesc(&description);

@@ -121,6 +121,8 @@ class Image
 
     bool mDirty;
 
+    rx::Renderer9 *mRenderer;
+
     D3DPOOL mD3DPool;   // can only be D3DPOOL_SYSTEMMEM or D3DPOOL_MANAGED since it needs to be lockable.
     D3DFORMAT mD3DFormat;
     GLenum mActualFormat;

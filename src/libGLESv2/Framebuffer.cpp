@@ -273,7 +273,6 @@ bool Framebuffer::hasStencil()
 
 GLenum Framebuffer::completeness()
 {
-    gl::Context *context = gl::getContext();
     int width = 0;
     int height = 0;
     int samples = -1;
@@ -313,8 +312,10 @@ GLenum Framebuffer::completeness()
                 return GL_FRAMEBUFFER_UNSUPPORTED;
             }
 
-            if ((gl::IsFloat32Format(internalformat) && !context->supportsFloat32RenderableTextures()) ||
-                (gl::IsFloat16Format(internalformat) && !context->supportsFloat16RenderableTextures()))
+            bool filtering, renderable;
+
+            if ((gl::IsFloat32Format(internalformat) && !mRenderer->getFloat32TextureSupport(&filtering, &renderable)) ||
+                (gl::IsFloat16Format(internalformat) && !mRenderer->getFloat16TextureSupport(&filtering, &renderable)))
             {
                 return GL_FRAMEBUFFER_UNSUPPORTED;
             }
@@ -365,7 +366,7 @@ GLenum Framebuffer::completeness()
             GLint internalformat = depthbuffer->getInternalFormat();
 
             // depth texture attachments require OES/ANGLE_depth_texture
-            if (!context->supportsDepthTextures())
+            if (!mRenderer->getDepthTextureSupport())
             {
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
@@ -425,7 +426,7 @@ GLenum Framebuffer::completeness()
 
             // texture stencil attachments come along as part
             // of OES_packed_depth_stencil + OES/ANGLE_depth_texture
-            if (!context->supportsDepthTextures())
+            if (!mRenderer->getDepthTextureSupport())
             {
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
