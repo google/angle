@@ -257,13 +257,11 @@ void Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *textur
     UNIMPLEMENTED();
 }
 
-void Renderer11::setRasterizerState(const gl::RasterizerState &rasterState, unsigned int depthSize)
+void Renderer11::setRasterizerState(const gl::RasterizerState &rasterState)
 {
-    if (mForceSetRasterState ||
-        memcmp(&rasterState, &mCurRasterState, sizeof(gl::RasterizerState)) != 0 ||
-        depthSize != mCurDepthSize)
+    if (mForceSetRasterState || memcmp(&rasterState, &mCurRasterState, sizeof(gl::RasterizerState)) != 0)
     {
-        ID3D11RasterizerState *dxRasterState = mStateCache.getRasterizerState(rasterState, depthSize);
+        ID3D11RasterizerState *dxRasterState = mStateCache.getRasterizerState(rasterState, mCurDepthSize);
         if (!dxRasterState)
         {
             ERR("NULL blend state returned by RenderStateCache::getRasterizerState, setting the "
@@ -277,7 +275,6 @@ void Renderer11::setRasterizerState(const gl::RasterizerState &rasterState, unsi
             dxRasterState->Release();
         }
         mCurRasterState = rasterState;
-        mCurDepthSize = depthSize;
     }
 
     mForceSetRasterState = false;

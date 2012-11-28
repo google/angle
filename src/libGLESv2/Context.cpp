@@ -1780,10 +1780,7 @@ void Context::applyState(GLenum drawMode)
     GLint alwaysFront = !isTriangleMode(drawMode);
     programBinary->setUniform1iv(pointsOrLines, 1, &alwaysFront);
 
-    const gl::Renderbuffer *depthbuffer = framebufferObject->getDepthbuffer();
-    unsigned int depthSize = depthbuffer ? depthbuffer->getDepthSize() : 0;
-
-    mRenderer->setRasterizerState(mState.rasterizer, depthSize);
+    mRenderer->setRasterizerState(mState.rasterizer);
 
     unsigned int mask = 0;
     if (mState.sampleCoverage)

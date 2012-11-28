@@ -660,10 +660,9 @@ void Renderer9::setTexture(gl::SamplerType type, int index, gl::Texture *texture
     mDevice->SetTexture(d3dSampler, d3dTexture);
 }
 
-void Renderer9::setRasterizerState(const gl::RasterizerState &rasterState, unsigned int depthSize)
+void Renderer9::setRasterizerState(const gl::RasterizerState &rasterState)
 {
     bool rasterStateChanged = mForceSetRasterState || memcmp(&rasterState, &mCurRasterState, sizeof(gl::RasterizerState)) != 0;
-    bool depthSizeChanged = mForceSetRasterState || depthSize != mCurDepthSize;
 
     if (rasterStateChanged)
     {
@@ -679,18 +678,13 @@ void Renderer9::setRasterizerState(const gl::RasterizerState &rasterState, unsig
 
         mDevice->SetRenderState(D3DRS_SCISSORTESTENABLE, rasterState.scissorTest ? TRUE : FALSE);
 
-        mCurRasterState = rasterState;
-    }
-
-    if (rasterStateChanged || depthSizeChanged)
-    {
         if (rasterState.polygonOffsetFill)
         {
-            if (depthSize > 0)
+            if (mCurDepthSize > 0)
             {
                 mDevice->SetRenderState(D3DRS_SLOPESCALEDEPTHBIAS, *(DWORD*)&rasterState.polygonOffsetFactor);
 
-                float depthBias = ldexp(rasterState.polygonOffsetUnits, -static_cast<int>(depthSize));
+                float depthBias = ldexp(rasterState.polygonOffsetUnits, -static_cast<int>(mCurDepthSize));
                 mDevice->SetRenderState(D3DRS_DEPTHBIAS, *(DWORD*)&depthBias);
             }
         }
@@ -700,7 +694,7 @@ void Renderer9::setRasterizerState(const gl::RasterizerState &rasterState, unsig
             mDevice->SetRenderState(D3DRS_DEPTHBIAS, 0);
         }
 
-        mCurDepthSize = depthSize;
+        mCurRasterState = rasterState;
     }
 
     mForceSetRasterState = false;
@@ -1088,6 +1082,8 @@ bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
         stencilbufferSerial != mAppliedStencilbufferSerial ||
         !mDepthStencilInitialized)
     {
+        unsigned int depthSize = 0;
+
         // Apply the depth stencil on the device
         if (depthStencil)
         {
@@ -1107,10 +1103,18 @@ bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
 
             mDevice->SetDepthStencilSurface(depthStencilSurface);
             depthStencilSurface->Release();
+
+            depthSize = depthStencil->getDepthSize();
         }
         else
         {
             mDevice->SetDepthStencilSurface(NULL);
+        }
+
+        if (!mDepthStencilInitialized || depthSize != mCurDepthSize)
+        {
+            mCurDepthSize = depthSize;
+            mForceSetRasterState = true;
         }
 
         mAppliedDepthbufferSerial = depthbufferSerial;
