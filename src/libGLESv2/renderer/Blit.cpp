@@ -47,7 +47,7 @@ const size_t g_shaderSize[] =
 namespace rx
 {
 Blit::Blit(rx::Renderer9 *renderer)
-  : mRenderer(renderer), mQuadVertexBuffer(NULL), mQuadVertexDeclaration(NULL), mSavedRenderTarget(NULL), mSavedDepthStencil(NULL), mSavedStateBlock(NULL)
+  : mRenderer(renderer), mQuadVertexBuffer(NULL), mQuadVertexDeclaration(NULL), mSavedStateBlock(NULL), mSavedRenderTarget(NULL), mSavedDepthStencil(NULL)
 {
     initGeometry();
     memset(mCompiledShaders, 0, sizeof(mCompiledShaders));

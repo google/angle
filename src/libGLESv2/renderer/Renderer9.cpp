@@ -385,12 +385,12 @@ int Renderer9::generateConfigs(ConfigDesc **configDescList)
     D3DDISPLAYMODE currentDisplayMode;
     mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
 
-    int numRenderFormats = sizeof(RenderTargetFormats) / sizeof(RenderTargetFormats[0]);
-    int numDepthFormats = sizeof(DepthStencilFormats) / sizeof(DepthStencilFormats[0]);
+    unsigned int numRenderFormats = sizeof(RenderTargetFormats) / sizeof(RenderTargetFormats[0]);
+    unsigned int numDepthFormats = sizeof(DepthStencilFormats) / sizeof(DepthStencilFormats[0]);
     (*configDescList) = new ConfigDesc[numRenderFormats * numDepthFormats];
     int numConfigs = 0;
 
-    for (int formatIndex = 0; formatIndex < numRenderFormats; formatIndex++)
+    for (unsigned int formatIndex = 0; formatIndex < numRenderFormats; formatIndex++)
     {
         D3DFORMAT renderTargetFormat = RenderTargetFormats[formatIndex];
 
@@ -398,7 +398,7 @@ int Renderer9::generateConfigs(ConfigDesc **configDescList)
 
         if (SUCCEEDED(result))
         {
-            for (int depthStencilIndex = 0; depthStencilIndex < numDepthFormats; depthStencilIndex++)
+            for (unsigned int depthStencilIndex = 0; depthStencilIndex < numDepthFormats; depthStencilIndex++)
             {
                 D3DFORMAT depthStencilFormat = DepthStencilFormats[depthStencilIndex];
                 HRESULT result = D3D_OK;

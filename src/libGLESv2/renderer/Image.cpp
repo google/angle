@@ -317,7 +317,7 @@ void Image::createSurface()
 
         IDirect3DDevice9 *device = mRenderer->getDevice(); // D3D9_REPLACE
 
-        HRESULT result = device->CreateTexture(requestWidth, requestHeight, levelToFetch + 1, NULL, d3dFormat,
+        HRESULT result = device->CreateTexture(requestWidth, requestHeight, levelToFetch + 1, 0, d3dFormat,
                                                     poolToUse, &newTexture, NULL);
 
         if (FAILED(result))

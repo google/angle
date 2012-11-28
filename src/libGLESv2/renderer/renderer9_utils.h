@@ -75,6 +75,6 @@ inline bool isDeviceLostError(HRESULT errorCode)
       default:
         return false;
     }
-};
+}
 
 #endif // LIBGLESV2_RENDERER_RENDERER9_UTILS_H

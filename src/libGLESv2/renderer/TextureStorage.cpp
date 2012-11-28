@@ -22,11 +22,11 @@ namespace rx
 unsigned int TextureStorage::mCurrentTextureSerial = 1;
 
 TextureStorage::TextureStorage(Renderer9 *renderer, DWORD usage)
-    : mD3DUsage(usage),
-      mD3DPool(renderer->getTexturePool(usage)),
+    : mLodOffset(0),
       mRenderer(renderer),
-      mTextureSerial(issueTextureSerial()),
-      mLodOffset(0)
+      mD3DUsage(usage),
+      mD3DPool(renderer->getTexturePool(usage)),
+      mTextureSerial(issueTextureSerial())
 {
 }
 

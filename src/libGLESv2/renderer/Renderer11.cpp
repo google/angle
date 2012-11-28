@@ -178,14 +178,14 @@ void Renderer11::initializeDevice()
 
 int Renderer11::generateConfigs(ConfigDesc **configDescList)
 {
-    int numRenderFormats = sizeof(RenderTargetFormats) / sizeof(RenderTargetFormats[0]);
-    int numDepthFormats = sizeof(DepthStencilFormats) / sizeof(DepthStencilFormats[0]);
+    unsigned int numRenderFormats = sizeof(RenderTargetFormats) / sizeof(RenderTargetFormats[0]);
+    unsigned int numDepthFormats = sizeof(DepthStencilFormats) / sizeof(DepthStencilFormats[0]);
     (*configDescList) = new ConfigDesc[numRenderFormats * numDepthFormats];
     int numConfigs = 0;
     
-    for (int formatIndex = 0; formatIndex < numRenderFormats; formatIndex++)
+    for (unsigned int formatIndex = 0; formatIndex < numRenderFormats; formatIndex++)
     {
-        for (int depthStencilIndex = 0; depthStencilIndex < numDepthFormats; depthStencilIndex++)
+        for (unsigned int depthStencilIndex = 0; depthStencilIndex < numDepthFormats; depthStencilIndex++)
         {
             DXGI_FORMAT renderTargetFormat = RenderTargetFormats[formatIndex];
 

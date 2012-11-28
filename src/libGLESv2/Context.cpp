@@ -1517,7 +1517,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
         break;
       case GL_TEXTURE_BINDING_2D:
         {
-            if (mState.activeSampler < 0 || mState.activeSampler > getMaximumCombinedTextureImageUnits() - 1)
+            if (mState.activeSampler > getMaximumCombinedTextureImageUnits() - 1)
             {
                 error(GL_INVALID_OPERATION);
                 return false;
@@ -1528,7 +1528,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
         break;
       case GL_TEXTURE_BINDING_CUBE_MAP:
         {
-            if (mState.activeSampler < 0 || mState.activeSampler > getMaximumCombinedTextureImageUnits() - 1)
+            if (mState.activeSampler > getMaximumCombinedTextureImageUnits() - 1)
             {
                 error(GL_INVALID_OPERATION);
                 return false;
@@ -2366,7 +2366,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
     applyShaders();
     applyTextures();
 
-    if (!getCurrentProgramBinary()->validateSamplers(false))
+    if (!getCurrentProgramBinary()->validateSamplers(NULL))
     {
         return error(GL_INVALID_OPERATION);
     }

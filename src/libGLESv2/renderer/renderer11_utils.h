@@ -58,4 +58,4 @@ inline bool isDeviceLostError(HRESULT errorCode)
       default:
         return false;
     }
-};
+}
