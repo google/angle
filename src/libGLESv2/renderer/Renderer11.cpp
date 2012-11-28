@@ -8,6 +8,7 @@
 
 #include "common/debug.h"
 #include "libGLESv2/utilities.h"
+#include "libGLESv2/mathutil.h"
 #include "libGLESv2/renderer/Renderer11.h"
 #include "libGLESv2/renderer/renderer11_utils.h"
 
@@ -39,6 +40,8 @@ Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(
     mDxgiFactory = NULL;
 
     mForceSetBlendState = true;
+    mForceSetRasterState = true;
+    mForceSetScissor = true;
 }
 
 Renderer11::~Renderer11()
@@ -254,8 +257,28 @@ void Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *textur
 
 void Renderer11::setRasterizerState(const gl::RasterizerState &rasterState, unsigned int depthSize)
 {
-    // TODO
-    UNIMPLEMENTED();
+    if (mForceSetRasterState ||
+        memcmp(&rasterState, &mCurRasterState, sizeof(gl::RasterizerState)) != 0 ||
+        depthSize != mCurDepthSize)
+    {
+        ID3D11RasterizerState *dxRasterState = mStateCache.getRasterizerState(rasterState, depthSize);
+        if (!dxRasterState)
+        {
+            ERR("NULL blend state returned by RenderStateCache::getRasterizerState, setting the "
+                "rasterizer state.");
+        }
+
+        mDeviceContext->RSSetState(dxRasterState);
+
+        if (dxRasterState)
+        {
+            dxRasterState->Release();
+        }
+        mCurRasterState = rasterState;
+        mCurDepthSize = depthSize;
+    }
+
+    mForceSetRasterState = false;
 }
 
 void Renderer11::setBlendState(const gl::BlendState &blendState, const gl::Color &blendColor,
@@ -298,14 +321,33 @@ void Renderer11::setDepthStencilState(const gl::DepthStencilState &depthStencilS
 void Renderer11::setScissorRectangle(const gl::Rectangle& scissor, unsigned int renderTargetWidth,
                                      unsigned int renderTargetHeight)
 {
-    // TODO
-    UNIMPLEMENTED();
+    if (mForceSetScissor ||
+        renderTargetWidth != mCurRenderTargetWidth ||
+        renderTargetHeight != mCurRenderTargetHeight ||
+        memcmp(&scissor, &mCurScissor, sizeof(gl::Rectangle)) != 0)
+    {
+        D3D11_RECT rect;
+        rect.left = gl::clamp(scissor.x, 0, static_cast<int>(renderTargetWidth));
+        rect.top = gl::clamp(scissor.y, 0, static_cast<int>(renderTargetWidth));
+        rect.right = gl::clamp(scissor.x + scissor.width, 0, static_cast<int>(renderTargetWidth));
+        rect.bottom = gl::clamp(scissor.y + scissor.height, 0, static_cast<int>(renderTargetWidth));
+
+        mDeviceContext->RSSetScissorRects(1, &rect);
+
+        mCurScissor = scissor;
+        mCurRenderTargetWidth = renderTargetWidth;
+        mCurRenderTargetHeight = renderTargetHeight;
+    }
+
+    mForceSetScissor = false;
 }
 
 void Renderer11::applyRenderTarget(gl::Framebuffer *frameBuffer)
 {
     // TODO
     UNIMPLEMENTED();
+
+    mForceSetScissor = true;
 }
 
 void Renderer11::clear(GLbitfield mask, const gl::Color &colorClear, float depthClear, int stencilClear,
@@ -386,6 +428,8 @@ bool Renderer11::resetDevice()
     mDeviceLost = false;
 
     mForceSetBlendState = true;
+    mForceSetRasterState = true;
+    mForceSetScissor = true;
 
     return true;
 }

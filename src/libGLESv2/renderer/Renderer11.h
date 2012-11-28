@@ -132,6 +132,17 @@ class Renderer11 : public Renderer
     gl::Color mCurBlendColor;
     unsigned int mCurSampleMask;
 
+    // Currently applied rasterizer state
+    bool mForceSetRasterState;
+    gl::RasterizerState mCurRasterState;
+    unsigned int mCurDepthSize;
+
+    // Currently applied scissor rectangle
+    bool mForceSetScissor;
+    gl::Rectangle mCurScissor;
+    unsigned int mCurRenderTargetWidth;
+    unsigned int mCurRenderTargetHeight;
+
     ID3D11Device *mDevice;
     D3D_FEATURE_LEVEL mFeatureLevel;
     ID3D11DeviceContext *mDeviceContext;
