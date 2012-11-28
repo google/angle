@@ -588,20 +588,6 @@ class Context
     bool mSupportsTextureFilterAnisotropy;
     int mNumCompressedTextureFormats;
 
-    // state caching flags
-    bool mClearStateDirty;
-    bool mCullStateDirty;
-    bool mDepthStateDirty;
-    bool mMaskStateDirty;
-    bool mPixelPackingStateDirty;
-    bool mBlendStateDirty;
-    bool mStencilStateDirty;
-    bool mPolygonOffsetStateDirty;
-    bool mScissorStateDirty;
-    bool mSampleStateDirty;
-    bool mFrontFaceDirty;
-    bool mDitherStateDirty;
-
     IDirect3DStateBlock9 *mMaskedClearSavedState;
 
     ResourceManager *mResourceManager;

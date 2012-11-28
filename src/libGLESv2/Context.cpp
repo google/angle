@@ -357,17 +357,6 @@ void Context::markAllStateDirty()
 
     mVertexDeclarationCache.markStateDirty();
 
-    mClearStateDirty = true;
-    mCullStateDirty = true;
-    mDepthStateDirty = true;
-    mMaskStateDirty = true;
-    mBlendStateDirty = true;
-    mStencilStateDirty = true;
-    mPolygonOffsetStateDirty = true;
-    mScissorStateDirty = true;
-    mSampleStateDirty = true;
-    mDitherStateDirty = true;
-    mFrontFaceDirty = true;
     mDxUniformsDirty = true;
 }
 
@@ -409,11 +398,7 @@ void Context::setClearStencil(int stencil)
 
 void Context::setCullFace(bool enabled)
 {
-    if (mState.rasterizer.cullFace != enabled)
-    {
-        mState.rasterizer.cullFace = enabled;
-        mCullStateDirty = true;
-    }
+    mState.rasterizer.cullFace = enabled;
 }
 
 bool Context::isCullFaceEnabled() const
@@ -423,29 +408,17 @@ bool Context::isCullFaceEnabled() const
 
 void Context::setCullMode(GLenum mode)
 {
-    if (mState.rasterizer.cullMode != mode)
-    {
-        mState.rasterizer.cullMode = mode;
-        mCullStateDirty = true;
-    }
+    mState.rasterizer.cullMode = mode;
 }
 
 void Context::setFrontFace(GLenum front)
 {
-    if (mState.rasterizer.frontFace != front)
-    {
-        mState.rasterizer.frontFace = front;
-        mFrontFaceDirty = true;
-    }
+    mState.rasterizer.frontFace = front;
 }
 
 void Context::setDepthTest(bool enabled)
 {
-    if (mState.depthStencil.depthTest != enabled)
-    {
-        mState.depthStencil.depthTest = enabled;
-        mDepthStateDirty = true;
-    }
+    mState.depthStencil.depthTest = enabled;
 }
 
 bool Context::isDepthTestEnabled() const
@@ -455,11 +428,7 @@ bool Context::isDepthTestEnabled() const
 
 void Context::setDepthFunc(GLenum depthFunc)
 {
-    if (mState.depthStencil.depthFunc != depthFunc)
-    {
-        mState.depthStencil.depthFunc = depthFunc;
-        mDepthStateDirty = true;
-    }
+     mState.depthStencil.depthFunc = depthFunc;
 }
 
 void Context::setDepthRange(float zNear, float zFar)
@@ -470,11 +439,7 @@ void Context::setDepthRange(float zNear, float zFar)
 
 void Context::setBlend(bool enabled)
 {
-    if (mState.blend.blend != enabled)
-    {
-        mState.blend.blend = enabled;
-        mBlendStateDirty = true;
-    }
+    mState.blend.blend = enabled;
 }
 
 bool Context::isBlendEnabled() const
@@ -484,52 +449,29 @@ bool Context::isBlendEnabled() const
 
 void Context::setBlendFactors(GLenum sourceRGB, GLenum destRGB, GLenum sourceAlpha, GLenum destAlpha)
 {
-    if (mState.blend.sourceBlendRGB != sourceRGB ||
-        mState.blend.sourceBlendAlpha != sourceAlpha ||
-        mState.blend.destBlendRGB != destRGB ||
-        mState.blend.destBlendAlpha != destAlpha)
-    {
-        mState.blend.sourceBlendRGB = sourceRGB;
-        mState.blend.destBlendRGB = destRGB;
-        mState.blend.sourceBlendAlpha = sourceAlpha;
-        mState.blend.destBlendAlpha = destAlpha;
-        mBlendStateDirty = true;
-    }
+    mState.blend.sourceBlendRGB = sourceRGB;
+    mState.blend.destBlendRGB = destRGB;
+    mState.blend.sourceBlendAlpha = sourceAlpha;
+    mState.blend.destBlendAlpha = destAlpha;
 }
 
 void Context::setBlendColor(float red, float green, float blue, float alpha)
 {
-    if (mState.blendColor.red != red ||
-        mState.blendColor.green != green ||
-        mState.blendColor.blue != blue ||
-        mState.blendColor.alpha != alpha)
-    {
-        mState.blendColor.red = red;
-        mState.blendColor.green = green;
-        mState.blendColor.blue = blue;
-        mState.blendColor.alpha = alpha;
-        mBlendStateDirty = true;
-    }
+    mState.blendColor.red = red;
+    mState.blendColor.green = green;
+    mState.blendColor.blue = blue;
+    mState.blendColor.alpha = alpha;
 }
 
 void Context::setBlendEquation(GLenum rgbEquation, GLenum alphaEquation)
 {
-    if (mState.blend.blendEquationRGB != rgbEquation ||
-        mState.blend.blendEquationAlpha != alphaEquation)
-    {
-        mState.blend.blendEquationRGB = rgbEquation;
-        mState.blend.blendEquationAlpha = alphaEquation;
-        mBlendStateDirty = true;
-    }
+    mState.blend.blendEquationRGB = rgbEquation;
+    mState.blend.blendEquationAlpha = alphaEquation;
 }
 
 void Context::setStencilTest(bool enabled)
 {
-    if (mState.depthStencil.stencilTest != enabled)
-    {
-        mState.depthStencil.stencilTest = enabled;
-        mStencilStateDirty = true;
-    }
+    mState.depthStencil.stencilTest = enabled;
 }
 
 bool Context::isStencilTestEnabled() const
@@ -539,107 +481,61 @@ bool Context::isStencilTestEnabled() const
 
 void Context::setStencilParams(GLenum stencilFunc, GLint stencilRef, GLuint stencilMask)
 {
-    if (mState.depthStencil.stencilFunc != stencilFunc ||
-        mState.depthStencil.stencilRef != stencilRef ||
-        mState.depthStencil.stencilMask != stencilMask)
-    {
-        mState.depthStencil.stencilFunc = stencilFunc;
-        mState.depthStencil.stencilRef = (stencilRef > 0) ? stencilRef : 0;
-        mState.depthStencil.stencilMask = stencilMask;
-        mStencilStateDirty = true;
-    }
+    mState.depthStencil.stencilFunc = stencilFunc;
+    mState.depthStencil.stencilRef = (stencilRef > 0) ? stencilRef : 0;
+    mState.depthStencil.stencilMask = stencilMask;
 }
 
 void Context::setStencilBackParams(GLenum stencilBackFunc, GLint stencilBackRef, GLuint stencilBackMask)
 {
-    if (mState.depthStencil.stencilBackFunc != stencilBackFunc ||
-        mState.depthStencil.stencilBackRef != stencilBackRef ||
-        mState.depthStencil.stencilBackMask != stencilBackMask)
-    {
-        mState.depthStencil.stencilBackFunc = stencilBackFunc;
-        mState.depthStencil.stencilBackRef = (stencilBackRef > 0) ? stencilBackRef : 0;
-        mState.depthStencil.stencilBackMask = stencilBackMask;
-        mStencilStateDirty = true;
-    }
+    mState.depthStencil.stencilBackFunc = stencilBackFunc;
+    mState.depthStencil.stencilBackRef = (stencilBackRef > 0) ? stencilBackRef : 0;
+    mState.depthStencil.stencilBackMask = stencilBackMask;
 }
 
 void Context::setStencilWritemask(GLuint stencilWritemask)
 {
-    if (mState.depthStencil.stencilWritemask != stencilWritemask)
-    {
-        mState.depthStencil.stencilWritemask = stencilWritemask;
-        mStencilStateDirty = true;
-    }
+    mState.depthStencil.stencilWritemask = stencilWritemask;
 }
 
 void Context::setStencilBackWritemask(GLuint stencilBackWritemask)
 {
-    if (mState.depthStencil.stencilBackWritemask != stencilBackWritemask)
-    {
-        mState.depthStencil.stencilBackWritemask = stencilBackWritemask;
-        mStencilStateDirty = true;
-    }
+    mState.depthStencil.stencilBackWritemask = stencilBackWritemask;
 }
 
 void Context::setStencilOperations(GLenum stencilFail, GLenum stencilPassDepthFail, GLenum stencilPassDepthPass)
 {
-    if (mState.depthStencil.stencilFail != stencilFail ||
-        mState.depthStencil.stencilPassDepthFail != stencilPassDepthFail ||
-        mState.depthStencil.stencilPassDepthPass != stencilPassDepthPass)
-    {
-        mState.depthStencil.stencilFail = stencilFail;
-        mState.depthStencil.stencilPassDepthFail = stencilPassDepthFail;
-        mState.depthStencil.stencilPassDepthPass = stencilPassDepthPass;
-        mStencilStateDirty = true;
-    }
+    mState.depthStencil.stencilFail = stencilFail;
+    mState.depthStencil.stencilPassDepthFail = stencilPassDepthFail;
+    mState.depthStencil.stencilPassDepthPass = stencilPassDepthPass;
 }
 
 void Context::setStencilBackOperations(GLenum stencilBackFail, GLenum stencilBackPassDepthFail, GLenum stencilBackPassDepthPass)
 {
-    if (mState.depthStencil.stencilBackFail != stencilBackFail ||
-        mState.depthStencil.stencilBackPassDepthFail != stencilBackPassDepthFail ||
-        mState.depthStencil.stencilBackPassDepthPass != stencilBackPassDepthPass)
-    {
-        mState.depthStencil.stencilBackFail = stencilBackFail;
-        mState.depthStencil.stencilBackPassDepthFail = stencilBackPassDepthFail;
-        mState.depthStencil.stencilBackPassDepthPass = stencilBackPassDepthPass;
-        mStencilStateDirty = true;
-    }
+    mState.depthStencil.stencilBackFail = stencilBackFail;
+    mState.depthStencil.stencilBackPassDepthFail = stencilBackPassDepthFail;
+    mState.depthStencil.stencilBackPassDepthPass = stencilBackPassDepthPass;
 }
 
 void Context::setPolygonOffsetFill(bool enabled)
 {
-    if (mState.rasterizer.polygonOffsetFill != enabled)
-    {
-        mState.rasterizer.polygonOffsetFill = enabled;
-        mPolygonOffsetStateDirty = true;
-    }
+     mState.rasterizer.polygonOffsetFill = enabled;
 }
 
 bool Context::isPolygonOffsetFillEnabled() const
 {
     return mState.rasterizer.polygonOffsetFill;
-
 }
 
 void Context::setPolygonOffsetParams(GLfloat factor, GLfloat units)
 {
-    if (mState.rasterizer.polygonOffsetFactor != factor ||
-        mState.rasterizer.polygonOffsetUnits != units)
-    {
-        mState.rasterizer.polygonOffsetFactor = factor;
-        mState.rasterizer.polygonOffsetUnits = units;
-        mPolygonOffsetStateDirty = true;
-    }
+    mState.rasterizer.polygonOffsetFactor = factor;
+    mState.rasterizer.polygonOffsetUnits = units;
 }
 
 void Context::setSampleAlphaToCoverage(bool enabled)
 {
-    if (mState.blend.sampleAlphaToCoverage != enabled)
-    {
-        mState.blend.sampleAlphaToCoverage = enabled;
-        mSampleStateDirty = true;
-    }
+    mState.blend.sampleAlphaToCoverage = enabled;
 }
 
 bool Context::isSampleAlphaToCoverageEnabled() const
@@ -649,11 +545,7 @@ bool Context::isSampleAlphaToCoverageEnabled() const
 
 void Context::setSampleCoverage(bool enabled)
 {
-    if (mState.sampleCoverage != enabled)
-    {
-        mState.sampleCoverage = enabled;
-        mSampleStateDirty = true;
-    }
+    mState.sampleCoverage = enabled;
 }
 
 bool Context::isSampleCoverageEnabled() const
@@ -663,22 +555,13 @@ bool Context::isSampleCoverageEnabled() const
 
 void Context::setSampleCoverageParams(GLclampf value, bool invert)
 {
-    if (mState.sampleCoverageValue != value ||
-        mState.sampleCoverageInvert != invert)
-    {
-        mState.sampleCoverageValue = value;
-        mState.sampleCoverageInvert = invert;
-        mSampleStateDirty = true;
-    }
+    mState.sampleCoverageValue = value;
+    mState.sampleCoverageInvert = invert;
 }
 
 void Context::setScissorTest(bool enabled)
 {
-    if (mState.rasterizer.scissorTest != enabled)
-    {
-        mState.rasterizer.scissorTest = enabled;
-        mScissorStateDirty = true;
-    }
+    mState.rasterizer.scissorTest = enabled;
 }
 
 bool Context::isScissorTestEnabled() const
@@ -688,11 +571,7 @@ bool Context::isScissorTestEnabled() const
 
 void Context::setDither(bool enabled)
 {
-    if (mState.blend.dither != enabled)
-    {
-        mState.blend.dither = enabled;
-        mDitherStateDirty = true;
-    }
+    mState.blend.dither = enabled;
 }
 
 bool Context::isDitherEnabled() const
@@ -728,37 +607,23 @@ void Context::setViewportParams(GLint x, GLint y, GLsizei width, GLsizei height)
 
 void Context::setScissorParams(GLint x, GLint y, GLsizei width, GLsizei height)
 {
-    if (mState.scissor.x != x || mState.scissor.y != y ||
-        mState.scissor.width != width || mState.scissor.height != height)
-    {
-        mState.scissor.x = x;
-        mState.scissor.y = y;
-        mState.scissor.width = width;
-        mState.scissor.height = height;
-        mScissorStateDirty = true;
-    }
+    mState.scissor.x = x;
+    mState.scissor.y = y;
+    mState.scissor.width = width;
+    mState.scissor.height = height;
 }
 
 void Context::setColorMask(bool red, bool green, bool blue, bool alpha)
 {
-    if (mState.blend.colorMaskRed != red || mState.blend.colorMaskGreen != green ||
-        mState.blend.colorMaskBlue != blue || mState.blend.colorMaskAlpha != alpha)
-    {
-        mState.blend.colorMaskRed = red;
-        mState.blend.colorMaskGreen = green;
-        mState.blend.colorMaskBlue = blue;
-        mState.blend.colorMaskAlpha = alpha;
-        mMaskStateDirty = true;
-    }
+    mState.blend.colorMaskRed = red;
+    mState.blend.colorMaskGreen = green;
+    mState.blend.colorMaskBlue = blue;
+    mState.blend.colorMaskAlpha = alpha;
 }
 
 void Context::setDepthMask(bool mask)
 {
-    if (mState.depthStencil.depthMask != mask)
-    {
-        mState.depthStencil.depthMask = mask;
-        mMaskStateDirty = true;
-    }
+    mState.depthStencil.depthMask = mask;
 }
 
 void Context::setActiveSampler(unsigned int active)
@@ -1915,7 +1780,6 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         }
         mDevice->SetRenderTarget(0, renderTarget);
         mAppliedRenderTargetSerial = renderTargetSerial;
-        mScissorStateDirty = true; // Scissor area must be clamped to render target's size-- this is different for different render targets.
         renderTargetChanged = true;
         renderTarget->Release();
     }
@@ -2012,12 +1876,8 @@ bool Context::applyRenderTarget(bool ignoreViewport)
         mDxUniformsDirty = true;
     }
 
-    if (mScissorStateDirty)
-    {
-        mRenderer->setScissorRectangle(mState.scissor, static_cast<int>(mRenderTargetDesc.Width),
-                                       static_cast<int>(mRenderTargetDesc.Height));
-        mScissorStateDirty = false;
-    }
+    mRenderer->setScissorRectangle(mState.scissor, static_cast<int>(mRenderTargetDesc.Width),
+                                    static_cast<int>(mRenderTargetDesc.Height));
 
     if (mState.currentProgram && mDxUniformsDirty)
     {
@@ -2064,64 +1924,45 @@ void Context::applyState(GLenum drawMode)
     GLint alwaysFront = !isTriangleMode(drawMode);
     programBinary->setUniform1iv(pointsOrLines, 1, &alwaysFront);
 
-    if (mCullStateDirty || mFrontFaceDirty || mPolygonOffsetStateDirty)
+    const gl::Renderbuffer *depthbuffer = framebufferObject->getDepthbuffer();
+    unsigned int depthSize = depthbuffer ? depthbuffer->getDepthSize() : 0;
+
+    mRenderer->setRasterizerState(mState.rasterizer, depthSize);
+
+    unsigned int mask = 0;
+    if (mState.sampleCoverage)
     {
-        const gl::Renderbuffer *depthbuffer = framebufferObject->getDepthbuffer();
-        unsigned int depthSize = depthbuffer ? depthbuffer->getDepthSize() : 0;
-
-        mRenderer->setRasterizerState(mState.rasterizer, depthSize);
-
-        mCullStateDirty = false;
-        mPolygonOffsetStateDirty = false;
-    }
-
-    if (mBlendStateDirty || mMaskStateDirty)
-    {
-        unsigned int mask = 0;
-        if (mState.sampleCoverage)
+        if (mState.sampleCoverageValue != 0)
         {
-            if (mState.sampleCoverageValue != 0)
+            float threshold = 0.5f;
+
+            for (int i = 0; i < framebufferObject->getSamples(); ++i)
             {
-                float threshold = 0.5f;
+                mask <<= 1;
 
-                for (int i = 0; i < framebufferObject->getSamples(); ++i)
+                if ((i + 1) * mState.sampleCoverageValue >= threshold)
                 {
-                    mask <<= 1;
-
-                    if ((i + 1) * mState.sampleCoverageValue >= threshold)
-                    {
-                        threshold += 1.0f;
-                        mask |= 1;
-                    }
+                    threshold += 1.0f;
+                    mask |= 1;
                 }
             }
-            
-            if (mState.sampleCoverageInvert)
-            {
-                mask = ~mask;
-            }
         }
-        else
+
+        if (mState.sampleCoverageInvert)
         {
-            mask = 0xFFFFFFFF;
+            mask = ~mask;
         }
-
-        mRenderer->setBlendState(mState.blend, mState.blendColor, mask);
-        mBlendStateDirty = false;
     }
-
-    if (mStencilStateDirty || mFrontFaceDirty || mDepthStateDirty)
+    else
     {
-        unsigned int stencilSize = framebufferObject->hasStencil() ? framebufferObject->getStencilbuffer()->getStencilSize() : 0;
-
-        mRenderer->setDepthStencilState(mState.depthStencil,
-                                        mState.rasterizer.frontFace == GL_CCW,
-                                        stencilSize);
-
-        mDepthStateDirty = false;
-        mStencilStateDirty = false;
-        mFrontFaceDirty = false;
+        mask = 0xFFFFFFFF;
     }
+    mRenderer->setBlendState(mState.blend, mState.blendColor, mask);
+
+    unsigned int stencilSize = framebufferObject->hasStencil() ? framebufferObject->getStencilbuffer()->getStencilSize() : 0;
+    mRenderer->setDepthStencilState(mState.depthStencil,
+                                    mState.rasterizer.frontFace == GL_CCW,
+                                    stencilSize);
 }
 
 GLenum Context::applyVertexBuffer(GLint first, GLsizei count, GLsizei instances, GLsizei *repeatDraw)
@@ -2761,7 +2602,6 @@ void Context::clear(GLbitfield mask)
             mDevice->SetRenderState(D3DRS_STENCILFAIL, D3DSTENCILOP_REPLACE);
             mDevice->SetRenderState(D3DRS_STENCILZFAIL, D3DSTENCILOP_REPLACE);
             mDevice->SetRenderState(D3DRS_STENCILPASS, D3DSTENCILOP_REPLACE);
-            mStencilStateDirty = true;
         }
         else
         {
