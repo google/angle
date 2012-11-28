@@ -171,6 +171,7 @@ class Renderer9 : public Renderer
     virtual RenderTarget *createRenderTarget(int width, int height, GLenum format, GLsizei samples, bool depth);
 
     // Shader operations
+    virtual ShaderExecutable *loadExecutable(const DWORD *function, size_t length, GLenum type, void *data);
     virtual ShaderExecutable *compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, GLenum type);
 
     // D3D9-renderer specific methods

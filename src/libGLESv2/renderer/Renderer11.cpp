@@ -829,6 +829,13 @@ RenderTarget *Renderer11::createRenderTarget(int width, int height, GLenum forma
     return NULL;
 }
 
+ShaderExecutable *Renderer11::loadExecutable(const DWORD *function, size_t length, GLenum type, void *data)
+{
+    // TODO
+    UNIMPLEMENTED();
+    return NULL;
+}
+
 ShaderExecutable *Renderer11::compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, GLenum type)
 {
     // TODO

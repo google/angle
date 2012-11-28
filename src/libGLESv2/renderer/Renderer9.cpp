@@ -2632,6 +2632,39 @@ RenderTarget *Renderer9::createRenderTarget(int width, int height, GLenum format
     return renderTarget;
 }
 
+ShaderExecutable *Renderer9::loadExecutable(const DWORD *function, size_t length, GLenum type, void *data)
+{
+    ShaderExecutable9 *executable = NULL;
+    gl::D3DConstantTable *table = reinterpret_cast<gl::D3DConstantTable *>(data);
+
+    switch (type)
+    {
+      case GL_VERTEX_SHADER:
+        {
+            IDirect3DVertexShader9 *vshader = createVertexShader(function, length);
+            if (vshader)
+            {
+                executable = new ShaderExecutable9(vshader, table);
+            }
+        }
+        break;
+      case GL_FRAGMENT_SHADER:
+        {
+            IDirect3DPixelShader9 *pshader = createPixelShader(function, length);
+            if (pshader)
+            {
+                executable = new ShaderExecutable9(pshader, table);
+            }
+        }
+        break;
+      default:
+        UNREACHABLE();
+        break;
+    }
+
+    return executable;
+}
+
 ShaderExecutable *Renderer9::compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, GLenum type)
 {
     const char *profile = NULL;
@@ -2654,32 +2687,7 @@ ShaderExecutable *Renderer9::compileToExecutable(gl::InfoLog &infoLog, const cha
     if (!binary)
         return NULL;
 
-    ShaderExecutable9 *executable = NULL;
-
-    switch (type)
-    {
-      case GL_VERTEX_SHADER:
-        {
-            IDirect3DVertexShader9 *vshader = createVertexShader((DWORD *)binary->GetBufferPointer(), binary->GetBufferSize());
-            if (vshader)
-            {
-                executable = new ShaderExecutable9(vshader, constantTable);
-            }
-        }
-        break;
-      case GL_FRAGMENT_SHADER:
-        {
-            IDirect3DPixelShader9 *pshader = createPixelShader((DWORD *)binary->GetBufferPointer(), binary->GetBufferSize());
-            if (pshader)
-            {
-                executable = new ShaderExecutable9(pshader, constantTable);
-            }
-        }
-        break;
-      default:
-        UNREACHABLE();
-        break;
-    }
+    ShaderExecutable *executable = loadExecutable((DWORD *)binary->GetBufferPointer(), binary->GetBufferSize(), type, constantTable);
 
     return executable;
 }
