@@ -1608,7 +1608,14 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
                         pixelHLSL += "[" + str(j) + "]";
                     }
 
-                    pixelHLSL += " = input.v" + n + ";\n";
+                    switch (VariableColumnCount(varying->type))
+                    {
+                      case 1: pixelHLSL += " = input.v" + n + ".x;\n";   break;
+                      case 2: pixelHLSL += " = input.v" + n + ".xy;\n";  break;
+                      case 3: pixelHLSL += " = input.v" + n + ".xyz;\n"; break;
+                      case 4: pixelHLSL += " = input.v" + n + ";\n";     break;
+                      default: UNREACHABLE();
+                    }
                 }
             }
         }
