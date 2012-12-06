@@ -1685,6 +1685,7 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
 
     stream.read(&mUsedVertexSamplerRange);
     stream.read(&mUsedPixelSamplerRange);
+    stream.read(&mUsesPointSize);
 
     unsigned int size;
     stream.read(&size);
@@ -1813,6 +1814,7 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
 
     stream.write(mUsedVertexSamplerRange);
     stream.write(mUsedPixelSamplerRange);
+    stream.write(mUsesPointSize);
 
     stream.write(mUniforms.size());
     for (unsigned int i = 0; i < mUniforms.size(); ++i)
