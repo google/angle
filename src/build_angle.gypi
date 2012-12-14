@@ -9,6 +9,7 @@
   'target_defaults': {
     'defines': [
       'ANGLE_DISABLE_TRACE',
+      'ANGLE_COMPILE_OPTIMIZATION_LEVEL=D3DCOMPILE_OPTIMIZATION_LEVEL0',
       'ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES={ L"d3dcompiler_46.dll", L"d3dcompiler_43.dll" }',
     ],
   },
