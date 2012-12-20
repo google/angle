@@ -23,6 +23,7 @@ class Framebuffer;
 
 namespace rx
 {
+class Renderer;
 class Renderer9;
 class TextureStorage2D;
 class TextureStorageCubeMap;
@@ -36,7 +37,7 @@ class Image
     static void GenerateMipmap(Image *dest, Image *source);
     static void Image::CopyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface9 *source);
 
-    bool redefine(Renderer9 *renderer, GLint internalformat, GLsizei width, GLsizei height, bool forceRelease);
+    bool redefine(Renderer *renderer, GLint internalformat, GLsizei width, GLsizei height, bool forceRelease);
     void markDirty() {mDirty = true;}
     void markClean() {mDirty = false;}
 

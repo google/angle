@@ -266,21 +266,21 @@ void Image::CopyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface9 *sou
     else UNREACHABLE();
 }
 
-bool Image::redefine(rx::Renderer9 *renderer, GLint internalformat, GLsizei width, GLsizei height, bool forceRelease)
+bool Image::redefine(rx::Renderer *renderer, GLint internalformat, GLsizei width, GLsizei height, bool forceRelease)
 {
     if (mWidth != width ||
         mHeight != height ||
         mInternalFormat != internalformat ||
         forceRelease)
     {
+        mRenderer = Renderer9::makeRenderer9(renderer);
+
         mWidth = width;
         mHeight = height;
         mInternalFormat = internalformat;
         // compute the d3d format that will be used
-        mD3DFormat = renderer->ConvertTextureInternalFormat(internalformat);
+        mD3DFormat = mRenderer->ConvertTextureInternalFormat(internalformat);
         mActualFormat = d3d9_gl::GetEquivalentFormat(mD3DFormat);
-
-        mRenderer = Renderer9::makeRenderer9(renderer); // D3D9_REPLACE
 
         if (mSurface)
         {

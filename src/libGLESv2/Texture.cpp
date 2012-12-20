@@ -416,9 +416,8 @@ GLenum Texture2D::getActualFormat(GLint level) const
 void Texture2D::redefineImage(GLint level, GLint internalformat, GLsizei width, GLsizei height)
 {
     releaseTexImage();
-    assert(dynamic_cast<rx::Renderer9*>(mRenderer) != NULL);                // D3D9_REPLACE
-    rx::Renderer9 *renderer9 = static_cast<rx::Renderer9*>(mRenderer);      // D3D9_REPLACE
-    bool redefined = mImageArray[level]->redefine(renderer9, internalformat, width, height, false);
+   
+    bool redefined = mImageArray[level]->redefine(mRenderer, internalformat, width, height, false);
 
     if (mTexStorage && redefined)
     {
@@ -447,13 +446,11 @@ void Texture2D::bindTexImage(egl::Surface *surface)
 
     GLint internalformat = surface->getFormat();
 
-    assert(dynamic_cast<rx::Renderer9*>(mRenderer) != NULL);                // D3D9_REPLACE
-    rx::Renderer9 *renderer9 = static_cast<rx::Renderer9*>(mRenderer);      // D3D9_REPLACE
-    mImageArray[0]->redefine(renderer9, internalformat, surface->getWidth(), surface->getHeight(), true);
+    mImageArray[0]->redefine(mRenderer, internalformat, surface->getWidth(), surface->getHeight(), true);
 
     delete mTexStorage;
     rx::SwapChain9 *swapchain = static_cast<rx::SwapChain9*>(surface->getSwapChain());  // D3D9_REPLACE
-    mTexStorage = new rx::TextureStorage2D(renderer9, swapchain);
+    mTexStorage = new rx::TextureStorage2D(mRenderer, swapchain);
 
     mDirtyImages = true;
     mSurface = surface;
@@ -473,11 +470,9 @@ void Texture2D::releaseTexImage()
             mTexStorage = NULL;
         }
 
-        assert(dynamic_cast<rx::Renderer9*>(mRenderer) != NULL);                // D3D9_REPLACE
-        rx::Renderer9 *renderer9 = static_cast<rx::Renderer9*>(mRenderer);      // D3D9_REPLACE
         for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
         {
-            mImageArray[i]->redefine(renderer9, GL_RGBA8_OES, 0, 0, true);
+            mImageArray[i]->redefine(mRenderer, GL_RGBA8_OES, 0, 0, true);
         }
     }
 }
@@ -592,21 +587,19 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
 void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height)
 {
     delete mTexStorage;
-    assert(dynamic_cast<rx::Renderer9*>(mRenderer) != NULL);                // D3D9_REPLACE
-    rx::Renderer9 *renderer9 = static_cast<rx::Renderer9*>(mRenderer);      // D3D9_REPLACE
-    mTexStorage = new rx::TextureStorage2D(renderer9, levels, internalformat, mUsage, false, width, height);
+    mTexStorage = new rx::TextureStorage2D(mRenderer, levels, internalformat, mUsage, false, width, height);
     mImmutable = true;
 
     for (int level = 0; level < levels; level++)
     {
-        mImageArray[level]->redefine(renderer9, internalformat, width, height, true);
+        mImageArray[level]->redefine(mRenderer, internalformat, width, height, true);
         width = std::max(1, width >> 1);
         height = std::max(1, height >> 1);
     }
 
     for (int level = levels; level < IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
     {
-        mImageArray[level]->redefine(renderer9, GL_NONE, 0, 0, true);
+        mImageArray[level]->redefine(mRenderer, GL_NONE, 0, 0, true);
     }
 
     if (mTexStorage->isManaged())
@@ -736,9 +729,7 @@ void Texture2D::createTexture()
     GLenum internalformat = mImageArray[0]->getInternalFormat();
 
     delete mTexStorage;
-    assert(dynamic_cast<rx::Renderer9*>(mRenderer) != NULL);                // D3D9_REPLACE
-    rx::Renderer9 *renderer9 = static_cast<rx::Renderer9*>(mRenderer);      // D3D9_REPLACE
-    mTexStorage = new rx::TextureStorage2D(renderer9, levels, internalformat, mUsage, false, width, height);
+    mTexStorage = new rx::TextureStorage2D(mRenderer, levels, internalformat, mUsage, false, width, height);
     
     if (mTexStorage->isManaged())
     {
@@ -781,9 +772,7 @@ void Texture2D::convertToRenderTarget()
         GLint levels = creationLevels(width, height);
         GLenum internalformat = mImageArray[0]->getInternalFormat();
 
-        assert(dynamic_cast<rx::Renderer9*>(mRenderer) != NULL);                // D3D9_REPLACE
-        rx::Renderer9 *renderer9 = static_cast<rx::Renderer9*>(mRenderer);      // D3D9_REPLACE
-        newTexStorage = new rx::TextureStorage2D(renderer9, levels, internalformat, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true, width, height);
+        newTexStorage = new rx::TextureStorage2D(mRenderer, levels, internalformat, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true, width, height);
 
         if (mTexStorage != NULL)
         {
@@ -1195,9 +1184,7 @@ void TextureCubeMap::createTexture()
     GLenum internalformat = mImageArray[0][0]->getInternalFormat();
 
     delete mTexStorage;
-    assert(dynamic_cast<rx::Renderer9*>(mRenderer) != NULL);                // D3D9_REPLACE
-    rx::Renderer9 *renderer9 = static_cast<rx::Renderer9*>(mRenderer);      // D3D9_REPLACE
-    mTexStorage = new rx::TextureStorageCubeMap(renderer9, levels, internalformat, mUsage, false, size);
+    mTexStorage = new rx::TextureStorageCubeMap(mRenderer, levels, internalformat, mUsage, false, size);
 
     if (mTexStorage->isManaged())
     {
@@ -1245,9 +1232,7 @@ void TextureCubeMap::convertToRenderTarget()
         GLint levels = creationLevels(size);
         GLenum internalformat = mImageArray[0][0]->getInternalFormat();
 
-        assert(dynamic_cast<rx::Renderer9*>(mRenderer) != NULL);                // D3D9_REPLACE
-        rx::Renderer9 *renderer9 = static_cast<rx::Renderer9*>(mRenderer);      // D3D9_REPLACE
-        newTexStorage = new rx::TextureStorageCubeMap(renderer9, levels, internalformat, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true, size);
+        newTexStorage = new rx::TextureStorageCubeMap(mRenderer, levels, internalformat, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true, size);
 
         if (mTexStorage != NULL)
         {
@@ -1286,9 +1271,7 @@ unsigned int TextureCubeMap::faceIndex(GLenum face)
 
 void TextureCubeMap::redefineImage(int face, GLint level, GLint internalformat, GLsizei width, GLsizei height)
 {
-    assert(dynamic_cast<rx::Renderer9*>(mRenderer) != NULL);                // D3D9_REPLACE
-    rx::Renderer9 *renderer9 = static_cast<rx::Renderer9*>(mRenderer);      // D3D9_REPLACE
-    bool redefined = mImageArray[face][level]->redefine(renderer9, internalformat, width, height, false);
+    bool redefined = mImageArray[face][level]->redefine(mRenderer, internalformat, width, height, false);
 
     if (mTexStorage && redefined)
     {
@@ -1386,16 +1369,14 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
 void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size)
 {
     delete mTexStorage;
-    assert(dynamic_cast<rx::Renderer9*>(mRenderer) != NULL);                // D3D9_REPLACE
-    rx::Renderer9 *renderer9 = static_cast<rx::Renderer9*>(mRenderer);      // D3D9_REPLACE
-    mTexStorage = new rx::TextureStorageCubeMap(renderer9, levels, internalformat, mUsage, false, size);
+    mTexStorage = new rx::TextureStorageCubeMap(mRenderer, levels, internalformat, mUsage, false, size);
     mImmutable = true;
 
     for (int level = 0; level < levels; level++)
     {
         for (int face = 0; face < 6; face++)
         {
-            mImageArray[face][level]->redefine(renderer9, internalformat, size, size, true);
+            mImageArray[face][level]->redefine(mRenderer, internalformat, size, size, true);
             size = std::max(1, size >> 1);
         }
     }
@@ -1404,7 +1385,7 @@ void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size
     {
         for (int face = 0; face < 6; face++)
         {
-            mImageArray[face][level]->redefine(renderer9, GL_NONE, 0, 0, true);
+            mImageArray[face][level]->redefine(mRenderer, GL_NONE, 0, 0, true);
         }
     }
 

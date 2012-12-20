@@ -28,7 +28,7 @@ class Blit;
 class TextureStorage
 {
   public:
-    TextureStorage(rx::Renderer9 *renderer, DWORD usage);
+    TextureStorage(rx::Renderer *renderer, DWORD usage);
 
     virtual ~TextureStorage();
 
@@ -64,8 +64,8 @@ class TextureStorage
 class TextureStorage2D : public TextureStorage
 {
   public:
-    explicit TextureStorage2D(rx::Renderer9 *renderer, rx::SwapChain9 *swapchain);
-    TextureStorage2D(rx::Renderer9 *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height);
+    explicit TextureStorage2D(rx::Renderer *renderer, rx::SwapChain9 *swapchain);
+    TextureStorage2D(rx::Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height);
 
     virtual ~TextureStorage2D();
 
@@ -89,7 +89,7 @@ class TextureStorage2D : public TextureStorage
 class TextureStorageCubeMap : public TextureStorage
 {
   public:
-    TextureStorageCubeMap(rx::Renderer9 *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size);
+    TextureStorageCubeMap(rx::Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size);
 
     virtual ~TextureStorageCubeMap();
 
