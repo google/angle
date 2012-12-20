@@ -258,6 +258,8 @@
             'libGLESv2/renderer/Image9.cpp',
             'libGLESv2/renderer/Image9.h',
             'libGLESv2/renderer/ImageSSE2.cpp',
+            'libGLESv2/renderer/IndexBuffer.cpp',
+            'libGLESv2/renderer/IndexBuffer.h',
             'libGLESv2/renderer/IndexDataManager.cpp',
             'libGLESv2/renderer/IndexDataManager.h',
             'libGLESv2/renderer/Renderer.cpp',

@@ -152,6 +152,9 @@
     <ClCompile Include="renderer\VertexBuffer11.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\IndexBuffer.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="renderer\Image11.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
@@ -317,6 +320,9 @@
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="renderer\VertexBuffer11.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\IndexBuffer.h">
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="renderer\Image11.h">
