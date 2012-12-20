@@ -149,6 +149,9 @@
     <ClCompile Include="renderer\VertexBuffer9.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\VertexBuffer11.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="renderer\Image11.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
@@ -313,11 +316,8 @@
     <ClInclude Include="renderer\VertexBuffer9.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\Image11.h">
+    <ClInclude Include="renderer\VertexBuffer11.h">
       <Filter>Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Uniform.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

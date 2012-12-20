@@ -20,6 +20,7 @@
 #include "libGLESv2/renderer/ShaderExecutable11.h"
 #include "libGLESv2/renderer/SwapChain11.h"
 #include "libGLESv2/renderer/Image11.h"
+#include "libGLESv2/renderer/VertexBuffer11.h"
 
 #include "libEGL/Config.h"
 #include "libEGL/Display.h"
@@ -1250,9 +1251,7 @@ ShaderExecutable *Renderer11::compileToExecutable(gl::InfoLog &infoLog, const ch
 
 VertexBuffer *Renderer11::createVertexBuffer()
 {
-    // TODO
-    UNIMPLEMENTED();
-    return NULL;
+    return new VertexBuffer11(this);
 }
 
 bool Renderer11::blitRect(gl::Framebuffer *readTarget, gl::Rectangle *readRect, gl::Framebuffer *drawTarget, gl::Rectangle *drawRect,

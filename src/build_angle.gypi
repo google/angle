@@ -297,6 +297,8 @@
             'libGLESv2/renderer/VertexBuffer.h',
             'libGLESv2/renderer/VertexBuffer9.cpp',
             'libGLESv2/renderer/VertexBuffer9.h',
+            'libGLESv2/renderer/VertexBuffer11.cpp',
+            'libGLESv2/renderer/VertexBuffer11.h',
             'libGLESv2/renderer/VertexDeclarationCache.cpp',
             'libGLESv2/renderer/VertexDeclarationCache.h',
             'libGLESv2/ResourceManager.cpp',
