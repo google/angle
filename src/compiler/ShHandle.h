@@ -26,6 +26,7 @@
 class LongNameMap;
 class TCompiler;
 class TDependencyGraph;
+class TranslatorHLSL;
 
 //
 // Helper function to identify specs that are based on the WebGL spec,
@@ -41,6 +42,7 @@ public:
     TShHandleBase();
     virtual ~TShHandleBase();
     virtual TCompiler* getAsCompiler() { return 0; }
+    virtual TranslatorHLSL* getAsTranslatorHLSL() { return 0; }
 
 protected:
     // Memory allocator. Allocates and tracks memory required by the compiler.

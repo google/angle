@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -36,7 +36,7 @@ extern "C" {
 
 // Version number for shader translation API.
 // It is incremented everytime the API changes.
-#define SH_VERSION 107
+#define SH_VERSION 108
 
 //
 // The names of the following enums have been derived by replacing GL prefix
@@ -115,7 +115,8 @@ typedef enum {
   SH_MAPPED_NAME_MAX_LENGTH      =  0x6000,
   SH_NAME_MAX_LENGTH             =  0x6001,
   SH_HASHED_NAME_MAX_LENGTH      =  0x6002,
-  SH_HASHED_NAMES_COUNT          =  0x6003
+  SH_HASHED_NAMES_COUNT          =  0x6003,
+  SH_ACTIVE_UNIFORMS_ARRAY       =  0x6004
 } ShShaderInfo;
 
 // Compile options.
@@ -383,6 +384,18 @@ COMPILER_EXPORT void ShGetNameHashingEntry(const ShHandle handle,
                                            int index,
                                            char* name,
                                            char* hashedName);
+
+// Returns a parameter from a compiled shader.
+// Parameters:
+// handle: Specifies the compiler
+// pname: Specifies the parameter to query.
+// The following parameters are defined:
+// SH_ACTIVE_UNIFORMS_ARRAY: an STL vector of active uniforms. Valid only for
+//                           HLSL output.
+// params: Requested parameter
+COMPILER_EXPORT void ShGetInfoPointer(const ShHandle handle,
+                                      ShShaderInfo pname,
+                                      void** params);
 
 #ifdef __cplusplus
 }

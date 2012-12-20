@@ -115,6 +115,11 @@ TInfoSinkBase &OutputHLSL::getBodyStream()
     return mBody;
 }
 
+const ActiveUniforms &OutputHLSL::getUniforms()
+{
+    return mActiveUniforms;
+}
+
 int OutputHLSL::vectorSize(const TType &type) const
 {
     int elementSize = type.isMatrix() ? type.getNominalSize() : 1;

@@ -31,6 +31,7 @@ class OutputHLSL : public TIntermTraverser
     void output();
 
     TInfoSinkBase &getBodyStream();
+    const ActiveUniforms &getUniforms();
 
     TString typeString(const TType &type);
     static TString qualifierString(TQualifier qualifier);
