@@ -7,8 +7,8 @@
 // VertexDataManager.h: Defines the VertexDataManager, a class that
 // runs the Buffer translation process.
 
-#ifndef LIBGLESV2_VERTEXDATAMANAGER_H_
-#define LIBGLESV2_VERTEXDATAMANAGER_H_
+#ifndef LIBGLESV2_RENDERER_VERTEXDATAMANAGER_H_
+#define LIBGLESV2_RENDERER_VERTEXDATAMANAGER_H_
 
 #include <vector>
 #include <cstddef>
@@ -17,6 +17,7 @@
 #include <GLES2/gl2.h>
 
 #include "libGLESv2/Context.h"
+#include "libGLESv2/renderer/VertexBuffer.h"
 
 namespace rx
 {
@@ -32,82 +33,6 @@ struct TranslatedAttribute
     IDirect3DVertexBuffer9 *vertexBuffer;
     unsigned int serial;
     unsigned int divisor;
-};
-
-class VertexBuffer
-{
-  public:
-    VertexBuffer(rx::Renderer9 *renderer, std::size_t size, DWORD usageFlags);
-    virtual ~VertexBuffer();
-
-    void unmap();
-
-    IDirect3DVertexBuffer9 *getBuffer() const;
-    unsigned int getSerial() const;
-
-  protected:
-    rx::Renderer9 *const mRenderer;   // D3D9_REPLACE
-    IDirect3DVertexBuffer9 *mVertexBuffer;
-
-    unsigned int mSerial;
-    static unsigned int issueSerial();
-    static unsigned int mCurrentSerial;
-
-  private:
-    DISALLOW_COPY_AND_ASSIGN(VertexBuffer);
-};
-
-class ArrayVertexBuffer : public VertexBuffer
-{
-  public:
-    ArrayVertexBuffer(rx::Renderer9 *renderer, std::size_t size, DWORD usageFlags);
-    ~ArrayVertexBuffer();
-
-    std::size_t size() const { return mBufferSize; }
-    virtual void *map(const gl::VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset) = 0;
-    virtual void reserveRequiredSpace() = 0;
-    void addRequiredSpace(UINT requiredSpace);
-
-  protected:
-    std::size_t mBufferSize;
-    std::size_t mWritePosition;
-    std::size_t mRequiredSpace;
-};
-
-class StreamingVertexBuffer : public ArrayVertexBuffer
-{
-  public:
-    StreamingVertexBuffer(rx::Renderer9 *renderer, std::size_t initialSize);
-    ~StreamingVertexBuffer();
-
-    void *map(const gl::VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset);
-    void reserveRequiredSpace();
-};
-
-class StaticVertexBuffer : public ArrayVertexBuffer
-{
-  public:
-    explicit StaticVertexBuffer(rx::Renderer9 *renderer);
-    ~StaticVertexBuffer();
-
-    void *map(const gl::VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset);
-    void reserveRequiredSpace();
-
-    std::size_t lookupAttribute(const gl::VertexAttribute &attribute);   // Returns the offset into the vertex buffer, or -1 if not found
-
-  private:
-    struct VertexElement
-    {
-        GLenum type;
-        GLint size;
-        GLsizei stride;
-        bool normalized;
-        int attributeOffset;
-
-        std::size_t streamOffset;
-    };
-
-    std::vector<VertexElement> mCache;
 };
 
 class VertexDataManager
@@ -163,4 +88,4 @@ class VertexDataManager
 
 }
 
-#endif   // LIBGLESV2_VERTEXDATAMANAGER_H_
+#endif   // LIBGLESV2_RENDERER_VERTEXDATAMANAGER_H_
