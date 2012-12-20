@@ -333,6 +333,11 @@ Texture2D::Texture2D(rx::Renderer *renderer, GLuint id) : Texture(renderer, id)
     mSurface = NULL;
     mColorbufferProxy = NULL;
     mProxyRefs = 0;
+
+    for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++i)
+    {
+        mImageArray[i] = new rx::Image();
+    }
 }
 
 Texture2D::~Texture2D()
@@ -346,6 +351,11 @@ Texture2D::~Texture2D()
     {
         mSurface->setBoundTexture(NULL);
         mSurface = NULL;
+    }
+
+    for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++i)
+    {
+        delete mImageArray[i];
     }
 }
 
@@ -374,7 +384,7 @@ GLenum Texture2D::getTarget() const
 GLsizei Texture2D::getWidth(GLint level) const
 {
     if (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-        return mImageArray[level].getWidth();
+        return mImageArray[level]->getWidth();
     else
         return 0;
 }
@@ -382,7 +392,7 @@ GLsizei Texture2D::getWidth(GLint level) const
 GLsizei Texture2D::getHeight(GLint level) const
 {
     if (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-        return mImageArray[level].getHeight();
+        return mImageArray[level]->getHeight();
     else
         return 0;
 }
@@ -390,7 +400,7 @@ GLsizei Texture2D::getHeight(GLint level) const
 GLenum Texture2D::getInternalFormat(GLint level) const
 {
     if (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-        return mImageArray[level].getInternalFormat();
+        return mImageArray[level]->getInternalFormat();
     else
         return GL_NONE;
 }
@@ -398,7 +408,7 @@ GLenum Texture2D::getInternalFormat(GLint level) const
 GLenum Texture2D::getActualFormat(GLint level) const
 {
     if (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-        return mImageArray[level].getActualFormat();
+        return mImageArray[level]->getActualFormat();
     else
         return D3DFMT_UNKNOWN;
 }
@@ -408,13 +418,13 @@ void Texture2D::redefineImage(GLint level, GLint internalformat, GLsizei width, 
     releaseTexImage();
     assert(dynamic_cast<rx::Renderer9*>(mRenderer) != NULL);                // D3D9_REPLACE
     rx::Renderer9 *renderer9 = static_cast<rx::Renderer9*>(mRenderer);      // D3D9_REPLACE
-    bool redefined = mImageArray[level].redefine(renderer9, internalformat, width, height, false);
+    bool redefined = mImageArray[level]->redefine(renderer9, internalformat, width, height, false);
 
     if (mTexStorage && redefined)
     {
         for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
         {
-            mImageArray[i].markDirty();
+            mImageArray[i]->markDirty();
         }
 
         delete mTexStorage;
@@ -428,7 +438,7 @@ void Texture2D::setImage(GLint level, GLsizei width, GLsizei height, GLenum form
     GLint internalformat = ConvertSizedInternalFormat(format, type);
     redefineImage(level, internalformat, width, height);
 
-    Texture::setImage(unpackAlignment, pixels, &mImageArray[level]);
+    Texture::setImage(unpackAlignment, pixels, mImageArray[level]);
 }
 
 void Texture2D::bindTexImage(egl::Surface *surface)
@@ -439,7 +449,7 @@ void Texture2D::bindTexImage(egl::Surface *surface)
 
     assert(dynamic_cast<rx::Renderer9*>(mRenderer) != NULL);                // D3D9_REPLACE
     rx::Renderer9 *renderer9 = static_cast<rx::Renderer9*>(mRenderer);      // D3D9_REPLACE
-    mImageArray[0].redefine(renderer9, internalformat, surface->getWidth(), surface->getHeight(), true);
+    mImageArray[0]->redefine(renderer9, internalformat, surface->getWidth(), surface->getHeight(), true);
 
     delete mTexStorage;
     rx::SwapChain9 *swapchain = static_cast<rx::SwapChain9*>(surface->getSwapChain());  // D3D9_REPLACE
@@ -467,7 +477,7 @@ void Texture2D::releaseTexImage()
         rx::Renderer9 *renderer9 = static_cast<rx::Renderer9*>(mRenderer);      // D3D9_REPLACE
         for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
         {
-            mImageArray[i].redefine(renderer9, GL_RGBA8_OES, 0, 0, true);
+            mImageArray[i]->redefine(renderer9, GL_RGBA8_OES, 0, 0, true);
         }
     }
 }
@@ -477,16 +487,16 @@ void Texture2D::setCompressedImage(GLint level, GLenum format, GLsizei width, GL
     // compressed formats don't have separate sized internal formats-- we can just use the compressed format directly
     redefineImage(level, format, width, height);
 
-    Texture::setCompressedImage(imageSize, pixels, &mImageArray[level]);
+    Texture::setCompressedImage(imageSize, pixels, mImageArray[level]);
 }
 
 void Texture2D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
-    ASSERT(mImageArray[level].getSurface() != NULL);
+    ASSERT(mImageArray[level]->getSurface() != NULL);
 
     if (level < levelCount())
     {
-        rx::Image *image = &mImageArray[level];
+        rx::Image *image = mImageArray[level];
         if (image->updateSurface(mTexStorage, level, xoffset, yoffset, width, height))
         {
             image->markClean();
@@ -496,7 +506,7 @@ void Texture2D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei wi
 
 void Texture2D::subImage(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    if (Texture::subImage(xoffset, yoffset, width, height, format, type, unpackAlignment, pixels, &mImageArray[level]))
+    if (Texture::subImage(xoffset, yoffset, width, height, format, type, unpackAlignment, pixels, mImageArray[level]))
     {
         commitRect(level, xoffset, yoffset, width, height);
     }
@@ -504,7 +514,7 @@ void Texture2D::subImage(GLint level, GLint xoffset, GLint yoffset, GLsizei widt
 
 void Texture2D::subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels)
 {
-    if (Texture::subImageCompressed(xoffset, yoffset, width, height, format, imageSize, pixels, &mImageArray[level]))
+    if (Texture::subImageCompressed(xoffset, yoffset, width, height, format, imageSize, pixels, mImageArray[level]))
     {
         commitRect(level, xoffset, yoffset, width, height);
     }
@@ -515,9 +525,9 @@ void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei 
     GLint internalformat = ConvertSizedInternalFormat(format, GL_UNSIGNED_BYTE);
     redefineImage(level, internalformat, width, height);
    
-    if (!mImageArray[level].isRenderableFormat())
+    if (!mImageArray[level]->isRenderableFormat())
     {
-        mImageArray[level].copy(0, 0, x, y, width, height, source);
+        mImageArray[level]->copy(0, 0, x, y, width, height, source);
         mDirtyImages = true;
     }
     else
@@ -527,7 +537,7 @@ void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei 
             convertToRenderTarget();
         }
         
-        mImageArray[level].markClean();
+        mImageArray[level]->markClean();
 
         if (width != 0 && height != 0 && level < levelCount())
         {
@@ -545,14 +555,14 @@ void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei 
 
 void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
 {
-    if (xoffset + width > mImageArray[level].getWidth() || yoffset + height > mImageArray[level].getHeight())
+    if (xoffset + width > mImageArray[level]->getWidth() || yoffset + height > mImageArray[level]->getHeight())
     {
         return error(GL_INVALID_VALUE);
     }
 
-    if (!mImageArray[level].isRenderableFormat() || (!mTexStorage && !isSamplerComplete()))
+    if (!mImageArray[level]->isRenderableFormat() || (!mTexStorage && !isSamplerComplete()))
     {
-        mImageArray[level].copy(xoffset, yoffset, x, y, width, height, source);
+        mImageArray[level]->copy(xoffset, yoffset, x, y, width, height, source);
         mDirtyImages = true;
     }
     else
@@ -573,7 +583,7 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
             sourceRect.bottom = y + height;
 
             mRenderer->copyImage(source, sourceRect, 
-                                 gl::ExtractFormat(mImageArray[0].getInternalFormat()),
+                                 gl::ExtractFormat(mImageArray[0]->getInternalFormat()),
                                  xoffset, yoffset, mTexStorage, level);
         }
     }
@@ -589,14 +599,14 @@ void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GL
 
     for (int level = 0; level < levels; level++)
     {
-        mImageArray[level].redefine(renderer9, internalformat, width, height, true);
+        mImageArray[level]->redefine(renderer9, internalformat, width, height, true);
         width = std::max(1, width >> 1);
         height = std::max(1, height >> 1);
     }
 
     for (int level = levels; level < IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
     {
-        mImageArray[level].redefine(renderer9, GL_NONE, 0, 0, true);
+        mImageArray[level]->redefine(renderer9, GL_NONE, 0, 0, true);
     }
 
     if (mTexStorage->isManaged())
@@ -605,7 +615,7 @@ void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GL
 
         for (int level = 0; level < levels; level++)
         {
-            mImageArray[level].setManagedSurface(mTexStorage, level);
+            mImageArray[level]->setManagedSurface(mTexStorage, level);
         }
     }
 }
@@ -613,8 +623,8 @@ void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GL
 // Tests for 2D texture sampling completeness. [OpenGL ES 2.0.24] section 3.8.2 page 85.
 bool Texture2D::isSamplerComplete() const
 {
-    GLsizei width = mImageArray[0].getWidth();
-    GLsizei height = mImageArray[0].getHeight();
+    GLsizei width = mImageArray[0]->getWidth();
+    GLsizei height = mImageArray[0]->getHeight();
 
     if (width <= 0 || height <= 0)
     {
@@ -672,8 +682,8 @@ bool Texture2D::isMipmapComplete() const
         return true;
     }
 
-    GLsizei width = mImageArray[0].getWidth();
-    GLsizei height = mImageArray[0].getHeight();
+    GLsizei width = mImageArray[0]->getWidth();
+    GLsizei height = mImageArray[0]->getHeight();
 
     if (width <= 0 || height <= 0)
     {
@@ -684,17 +694,17 @@ bool Texture2D::isMipmapComplete() const
 
     for (int level = 1; level <= q; level++)
     {
-        if (mImageArray[level].getInternalFormat() != mImageArray[0].getInternalFormat())
+        if (mImageArray[level]->getInternalFormat() != mImageArray[0]->getInternalFormat())
         {
             return false;
         }
 
-        if (mImageArray[level].getWidth() != std::max(1, width >> level))
+        if (mImageArray[level]->getWidth() != std::max(1, width >> level))
         {
             return false;
         }
 
-        if (mImageArray[level].getHeight() != std::max(1, height >> level))
+        if (mImageArray[level]->getHeight() != std::max(1, height >> level))
         {
             return false;
         }
@@ -716,14 +726,14 @@ bool Texture2D::isDepth(GLint level) const
 // Constructs a native texture resource from the texture images
 void Texture2D::createTexture()
 {
-    GLsizei width = mImageArray[0].getWidth();
-    GLsizei height = mImageArray[0].getHeight();
+    GLsizei width = mImageArray[0]->getWidth();
+    GLsizei height = mImageArray[0]->getHeight();
 
     if (!(width > 0 && height > 0))
         return; // do not attempt to create native textures for nonexistant data
 
     GLint levels = creationLevels(width, height);
-    GLenum internalformat = mImageArray[0].getInternalFormat();
+    GLenum internalformat = mImageArray[0]->getInternalFormat();
 
     delete mTexStorage;
     assert(dynamic_cast<rx::Renderer9*>(mRenderer) != NULL);                // D3D9_REPLACE
@@ -736,7 +746,7 @@ void Texture2D::createTexture()
 
         for (int level = 0; level < levels; level++)
         {
-            mImageArray[level].setManagedSurface(mTexStorage, level);
+            mImageArray[level]->setManagedSurface(mTexStorage, level);
         }
     }
 
@@ -751,11 +761,11 @@ void Texture2D::updateTexture()
 
     for (int level = 0; level < levels; level++)
     {
-        rx::Image *image = &mImageArray[level];
+        rx::Image *image = mImageArray[level];
 
         if (image->isDirty())
         {
-            commitRect(level, 0, 0, mImageArray[level].getWidth(), mImageArray[level].getHeight());
+            commitRect(level, 0, 0, mImageArray[level]->getWidth(), mImageArray[level]->getHeight());
         }
     }
 }
@@ -764,12 +774,12 @@ void Texture2D::convertToRenderTarget()
 {
     rx::TextureStorage2D *newTexStorage = NULL;
 
-    if (mImageArray[0].getWidth() != 0 && mImageArray[0].getHeight() != 0)
+    if (mImageArray[0]->getWidth() != 0 && mImageArray[0]->getHeight() != 0)
     {
-        GLsizei width = mImageArray[0].getWidth();
-        GLsizei height = mImageArray[0].getHeight();
+        GLsizei width = mImageArray[0]->getWidth();
+        GLsizei height = mImageArray[0]->getHeight();
         GLint levels = creationLevels(width, height);
-        GLenum internalformat = mImageArray[0].getInternalFormat();
+        GLenum internalformat = mImageArray[0]->getInternalFormat();
 
         assert(dynamic_cast<rx::Renderer9*>(mRenderer) != NULL);                // D3D9_REPLACE
         rx::Renderer9 *renderer9 = static_cast<rx::Renderer9*>(mRenderer);      // D3D9_REPLACE
@@ -795,19 +805,19 @@ void Texture2D::generateMipmaps()
 {
     if (!mRenderer->getNonPower2TextureSupport())
     {
-        if (!isPow2(mImageArray[0].getWidth()) || !isPow2(mImageArray[0].getHeight()))
+        if (!isPow2(mImageArray[0]->getWidth()) || !isPow2(mImageArray[0]->getHeight()))
         {
             return error(GL_INVALID_OPERATION);
         }
     }
 
     // Purge array levels 1 through q and reset them to represent the generated mipmap levels.
-    unsigned int q = log2(std::max(mImageArray[0].getWidth(), mImageArray[0].getHeight()));
+    unsigned int q = log2(std::max(mImageArray[0]->getWidth(), mImageArray[0]->getHeight()));
     for (unsigned int i = 1; i <= q; i++)
     {
-        redefineImage(i, mImageArray[0].getInternalFormat(), 
-                         std::max(mImageArray[0].getWidth() >> i, 1),
-                         std::max(mImageArray[0].getHeight() >> i, 1));
+        redefineImage(i, mImageArray[0]->getInternalFormat(), 
+                         std::max(mImageArray[0]->getWidth() >> i, 1),
+                         std::max(mImageArray[0]->getHeight() >> i, 1));
     }
 
     if (mTexStorage && mTexStorage->isRenderTarget())
@@ -816,14 +826,14 @@ void Texture2D::generateMipmaps()
         {
             mTexStorage->generateMipmap(i);
 
-            mImageArray[i].markClean();
+            mImageArray[i]->markClean();
         }
     }
     else
     {
         for (unsigned int i = 1; i <= q; i++)
         {
-            rx::Image::GenerateMipmap(&mImageArray[i], &mImageArray[i - 1]);
+            rx::Image::GenerateMipmap(mImageArray[i], mImageArray[i - 1]);
         }
     }
 }
@@ -912,6 +922,11 @@ TextureCubeMap::TextureCubeMap(rx::Renderer *renderer, GLuint id) : Texture(rend
     {
         mFaceProxies[i] = NULL;
         mFaceProxyRefs[i] = 0;
+
+        for (int j = 0; j < IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++j)
+        {
+            mImageArray[i][j] = new rx::Image();
+        }
     }
 }
 
@@ -920,6 +935,11 @@ TextureCubeMap::~TextureCubeMap()
     for (int i = 0; i < 6; i++)
     {
         mFaceProxies[i] = NULL;
+
+        for (int j = 0; j < IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++j)
+        {
+            delete mImageArray[i][j];
+        }
     }
 
     delete mTexStorage;
@@ -963,7 +983,7 @@ GLenum TextureCubeMap::getTarget() const
 GLsizei TextureCubeMap::getWidth(GLenum target, GLint level) const
 {
     if (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-        return mImageArray[faceIndex(target)][level].getWidth();
+        return mImageArray[faceIndex(target)][level]->getWidth();
     else
         return 0;
 }
@@ -971,7 +991,7 @@ GLsizei TextureCubeMap::getWidth(GLenum target, GLint level) const
 GLsizei TextureCubeMap::getHeight(GLenum target, GLint level) const
 {
     if (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-        return mImageArray[faceIndex(target)][level].getHeight();
+        return mImageArray[faceIndex(target)][level]->getHeight();
     else
         return 0;
 }
@@ -979,7 +999,7 @@ GLsizei TextureCubeMap::getHeight(GLenum target, GLint level) const
 GLenum TextureCubeMap::getInternalFormat(GLenum target, GLint level) const
 {
     if (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-        return mImageArray[faceIndex(target)][level].getInternalFormat();
+        return mImageArray[faceIndex(target)][level]->getInternalFormat();
     else
         return GL_NONE;
 }
@@ -987,7 +1007,7 @@ GLenum TextureCubeMap::getInternalFormat(GLenum target, GLint level) const
 GLenum TextureCubeMap::getActualFormat(GLenum target, GLint level) const
 {
     if (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-        return mImageArray[faceIndex(target)][level].getActualFormat();
+        return mImageArray[faceIndex(target)][level]->getActualFormat();
     else
         return D3DFMT_UNKNOWN;
 }
@@ -1027,16 +1047,16 @@ void TextureCubeMap::setCompressedImage(GLenum face, GLint level, GLenum format,
     // compressed formats don't have separate sized internal formats-- we can just use the compressed format directly
     redefineImage(faceIndex(face), level, format, width, height);
 
-    Texture::setCompressedImage(imageSize, pixels, &mImageArray[faceIndex(face)][level]);
+    Texture::setCompressedImage(imageSize, pixels, mImageArray[faceIndex(face)][level]);
 }
 
 void TextureCubeMap::commitRect(int face, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
-    ASSERT(mImageArray[face][level].getSurface() != NULL);
+    ASSERT(mImageArray[face][level]->getSurface() != NULL);
 
     if (level < levelCount())
     {
-        rx::Image *image = &mImageArray[face][level];
+        rx::Image *image = mImageArray[face][level];
         if (image->updateSurface(mTexStorage, face, level, xoffset, yoffset, width, height))
             image->markClean();
     }
@@ -1044,7 +1064,7 @@ void TextureCubeMap::commitRect(int face, GLint level, GLint xoffset, GLint yoff
 
 void TextureCubeMap::subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    if (Texture::subImage(xoffset, yoffset, width, height, format, type, unpackAlignment, pixels, &mImageArray[faceIndex(target)][level]))
+    if (Texture::subImage(xoffset, yoffset, width, height, format, type, unpackAlignment, pixels, mImageArray[faceIndex(target)][level]))
     {
         commitRect(faceIndex(target), level, xoffset, yoffset, width, height);
     }
@@ -1052,7 +1072,7 @@ void TextureCubeMap::subImage(GLenum target, GLint level, GLint xoffset, GLint y
 
 void TextureCubeMap::subImageCompressed(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels)
 {
-    if (Texture::subImageCompressed(xoffset, yoffset, width, height, format, imageSize, pixels, &mImageArray[faceIndex(target)][level]))
+    if (Texture::subImageCompressed(xoffset, yoffset, width, height, format, imageSize, pixels, mImageArray[faceIndex(target)][level]))
     {
         commitRect(faceIndex(target), level, xoffset, yoffset, width, height);
     }
@@ -1061,7 +1081,7 @@ void TextureCubeMap::subImageCompressed(GLenum target, GLint level, GLint xoffse
 // Tests for cube map sampling completeness. [OpenGL ES 2.0.24] section 3.8.2 page 86.
 bool TextureCubeMap::isSamplerComplete() const
 {
-    int size = mImageArray[0][0].getWidth();
+    int size = mImageArray[0][0]->getWidth();
 
     bool mipmapping = isMipmapFiltered();
     bool filtering, renderable;
@@ -1105,16 +1125,16 @@ bool TextureCubeMap::isSamplerComplete() const
 // Tests for cube texture completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
 bool TextureCubeMap::isCubeComplete() const
 {
-    if (mImageArray[0][0].getWidth() <= 0 || mImageArray[0][0].getHeight() != mImageArray[0][0].getWidth())
+    if (mImageArray[0][0]->getWidth() <= 0 || mImageArray[0][0]->getHeight() != mImageArray[0][0]->getWidth())
     {
         return false;
     }
 
     for (unsigned int face = 1; face < 6; face++)
     {
-        if (mImageArray[face][0].getWidth() != mImageArray[0][0].getWidth() ||
-            mImageArray[face][0].getWidth() != mImageArray[0][0].getHeight() ||
-            mImageArray[face][0].getInternalFormat() != mImageArray[0][0].getInternalFormat())
+        if (mImageArray[face][0]->getWidth() != mImageArray[0][0]->getWidth() ||
+            mImageArray[face][0]->getWidth() != mImageArray[0][0]->getHeight() ||
+            mImageArray[face][0]->getInternalFormat() != mImageArray[0][0]->getInternalFormat())
         {
             return false;
         }
@@ -1135,7 +1155,7 @@ bool TextureCubeMap::isMipmapCubeComplete() const
         return false;
     }
 
-    GLsizei size = mImageArray[0][0].getWidth();
+    GLsizei size = mImageArray[0][0]->getWidth();
 
     int q = log2(size);
 
@@ -1143,12 +1163,12 @@ bool TextureCubeMap::isMipmapCubeComplete() const
     {
         for (int level = 1; level <= q; level++)
         {
-            if (mImageArray[face][level].getInternalFormat() != mImageArray[0][0].getInternalFormat())
+            if (mImageArray[face][level]->getInternalFormat() != mImageArray[0][0]->getInternalFormat())
             {
                 return false;
             }
 
-            if (mImageArray[face][level].getWidth() != std::max(1, size >> level))
+            if (mImageArray[face][level]->getWidth() != std::max(1, size >> level))
             {
                 return false;
             }
@@ -1166,13 +1186,13 @@ bool TextureCubeMap::isCompressed(GLenum target, GLint level) const
 // Constructs a native texture resource from the texture images, or returns an existing one
 void TextureCubeMap::createTexture()
 {
-    GLsizei size = mImageArray[0][0].getWidth();
+    GLsizei size = mImageArray[0][0]->getWidth();
 
     if (!(size > 0))
         return; // do not attempt to create native textures for nonexistant data
 
     GLint levels = creationLevels(size);
-    GLenum internalformat = mImageArray[0][0].getInternalFormat();
+    GLenum internalformat = mImageArray[0][0]->getInternalFormat();
 
     delete mTexStorage;
     assert(dynamic_cast<rx::Renderer9*>(mRenderer) != NULL);                // D3D9_REPLACE
@@ -1187,7 +1207,7 @@ void TextureCubeMap::createTexture()
         {
             for (int level = 0; level < levels; level++)
             {
-                mImageArray[face][level].setManagedSurface(mTexStorage, face, level);
+                mImageArray[face][level]->setManagedSurface(mTexStorage, face, level);
             }
         }
     }
@@ -1205,7 +1225,7 @@ void TextureCubeMap::updateTexture()
 
         for (int level = 0; level < levels; level++)
         {
-            rx::Image *image = &mImageArray[face][level];
+            rx::Image *image = mImageArray[face][level];
 
             if (image->isDirty())
             {
@@ -1219,11 +1239,11 @@ void TextureCubeMap::convertToRenderTarget()
 {
     rx::TextureStorageCubeMap *newTexStorage = NULL;
 
-    if (mImageArray[0][0].getWidth() != 0)
+    if (mImageArray[0][0]->getWidth() != 0)
     {
-        GLsizei size = mImageArray[0][0].getWidth();
+        GLsizei size = mImageArray[0][0]->getWidth();
         GLint levels = creationLevels(size);
-        GLenum internalformat = mImageArray[0][0].getInternalFormat();
+        GLenum internalformat = mImageArray[0][0]->getInternalFormat();
 
         assert(dynamic_cast<rx::Renderer9*>(mRenderer) != NULL);                // D3D9_REPLACE
         rx::Renderer9 *renderer9 = static_cast<rx::Renderer9*>(mRenderer);      // D3D9_REPLACE
@@ -1250,7 +1270,7 @@ void TextureCubeMap::setImage(int faceIndex, GLint level, GLsizei width, GLsizei
     GLint internalformat = ConvertSizedInternalFormat(format, type);
     redefineImage(faceIndex, level, internalformat, width, height);
 
-    Texture::setImage(unpackAlignment, pixels, &mImageArray[faceIndex][level]);
+    Texture::setImage(unpackAlignment, pixels, mImageArray[faceIndex][level]);
 }
 
 unsigned int TextureCubeMap::faceIndex(GLenum face)
@@ -1268,7 +1288,7 @@ void TextureCubeMap::redefineImage(int face, GLint level, GLint internalformat, 
 {
     assert(dynamic_cast<rx::Renderer9*>(mRenderer) != NULL);                // D3D9_REPLACE
     rx::Renderer9 *renderer9 = static_cast<rx::Renderer9*>(mRenderer);      // D3D9_REPLACE
-    bool redefined = mImageArray[face][level].redefine(renderer9, internalformat, width, height, false);
+    bool redefined = mImageArray[face][level]->redefine(renderer9, internalformat, width, height, false);
 
     if (mTexStorage && redefined)
     {
@@ -1276,7 +1296,7 @@ void TextureCubeMap::redefineImage(int face, GLint level, GLint internalformat, 
         {
             for (int f = 0; f < 6; f++)
             {
-                mImageArray[f][i].markDirty();
+                mImageArray[f][i]->markDirty();
             }
         }
 
@@ -1293,9 +1313,9 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint 
     GLint internalformat = gl::ConvertSizedInternalFormat(format, GL_UNSIGNED_BYTE);
     redefineImage(faceindex, level, internalformat, width, height);
 
-    if (!mImageArray[faceindex][level].isRenderableFormat())
+    if (!mImageArray[faceindex][level]->isRenderableFormat())
     {
-        mImageArray[faceindex][level].copy(0, 0, x, y, width, height, source);
+        mImageArray[faceindex][level]->copy(0, 0, x, y, width, height, source);
         mDirtyImages = true;
     }
     else
@@ -1305,7 +1325,7 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint 
             convertToRenderTarget();
         }
         
-        mImageArray[faceindex][level].markClean();
+        mImageArray[faceindex][level]->markClean();
 
         ASSERT(width == height);
 
@@ -1325,7 +1345,7 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint 
 
 void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
 {
-    GLsizei size = mImageArray[faceIndex(target)][level].getWidth();
+    GLsizei size = mImageArray[faceIndex(target)][level]->getWidth();
 
     if (xoffset + width > size || yoffset + height > size)
     {
@@ -1334,9 +1354,9 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
 
     unsigned int faceindex = faceIndex(target);
 
-    if (!mImageArray[faceindex][level].isRenderableFormat() || (!mTexStorage && !isSamplerComplete()))
+    if (!mImageArray[faceindex][level]->isRenderableFormat() || (!mTexStorage && !isSamplerComplete()))
     {
-        mImageArray[faceindex][level].copy(0, 0, x, y, width, height, source);
+        mImageArray[faceindex][level]->copy(0, 0, x, y, width, height, source);
         mDirtyImages = true;
     }
     else
@@ -1356,7 +1376,7 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
             sourceRect.top = y;
             sourceRect.bottom = y + height;
 
-            mRenderer->copyImage(source, sourceRect, gl::ExtractFormat(mImageArray[0][0].getInternalFormat()), 
+            mRenderer->copyImage(source, sourceRect, gl::ExtractFormat(mImageArray[0][0]->getInternalFormat()), 
                                  xoffset, yoffset, mTexStorage, target, level);
 
         }
@@ -1375,7 +1395,7 @@ void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size
     {
         for (int face = 0; face < 6; face++)
         {
-            mImageArray[face][level].redefine(renderer9, internalformat, size, size, true);
+            mImageArray[face][level]->redefine(renderer9, internalformat, size, size, true);
             size = std::max(1, size >> 1);
         }
     }
@@ -1384,7 +1404,7 @@ void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size
     {
         for (int face = 0; face < 6; face++)
         {
-            mImageArray[face][level].redefine(renderer9, GL_NONE, 0, 0, true);
+            mImageArray[face][level]->redefine(renderer9, GL_NONE, 0, 0, true);
         }
     }
 
@@ -1396,7 +1416,7 @@ void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size
         {
             for (int level = 0; level < levels; level++)
             {
-                mImageArray[face][level].setManagedSurface(mTexStorage, face, level);
+                mImageArray[face][level]->setManagedSurface(mTexStorage, face, level);
             }
         }
     }
@@ -1411,21 +1431,21 @@ void TextureCubeMap::generateMipmaps()
 
     if (!mRenderer->getNonPower2TextureSupport())
     {
-        if (!isPow2(mImageArray[0][0].getWidth()))
+        if (!isPow2(mImageArray[0][0]->getWidth()))
         {
             return error(GL_INVALID_OPERATION);
         }
     }
 
     // Purge array levels 1 through q and reset them to represent the generated mipmap levels.
-    unsigned int q = log2(mImageArray[0][0].getWidth());
+    unsigned int q = log2(mImageArray[0][0]->getWidth());
     for (unsigned int f = 0; f < 6; f++)
     {
         for (unsigned int i = 1; i <= q; i++)
         {
-            redefineImage(f, i, mImageArray[f][0].getInternalFormat(),
-                                std::max(mImageArray[f][0].getWidth() >> i, 1),
-                                std::max(mImageArray[f][0].getWidth() >> i, 1));
+            redefineImage(f, i, mImageArray[f][0]->getInternalFormat(),
+                                std::max(mImageArray[f][0]->getWidth() >> i, 1),
+                                std::max(mImageArray[f][0]->getWidth() >> i, 1));
         }
     }
 
@@ -1437,7 +1457,7 @@ void TextureCubeMap::generateMipmaps()
             {
                 mTexStorage->generateMipmap(f, i);
 
-                mImageArray[f][i].markClean();
+                mImageArray[f][i]->markClean();
             }
         }
     }
@@ -1447,7 +1467,7 @@ void TextureCubeMap::generateMipmaps()
         {
             for (unsigned int i = 1; i <= q; i++)
             {
-                rx::Image::GenerateMipmap(&mImageArray[f][i], &mImageArray[f][i - 1]);
+                rx::Image::GenerateMipmap(mImageArray[f][i], mImageArray[f][i - 1]);
             }
         }
     }

@@ -191,7 +191,7 @@ class Texture2D : public Texture
     void redefineImage(GLint level, GLint internalformat, GLsizei width, GLsizei height);
     void commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
 
-    rx::Image mImageArray[IMPLEMENTATION_MAX_TEXTURE_LEVELS];
+    rx::Image *mImageArray[IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
     rx::TextureStorage2D *mTexStorage;
     egl::Surface *mSurface;
@@ -266,7 +266,7 @@ class TextureCubeMap : public Texture
     void commitRect(int faceIndex, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
     void redefineImage(int faceIndex, GLint level, GLint internalformat, GLsizei width, GLsizei height);
 
-    rx::Image mImageArray[6][IMPLEMENTATION_MAX_TEXTURE_LEVELS];
+    rx::Image *mImageArray[6][IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
     rx::TextureStorageCubeMap *mTexStorage;
 
