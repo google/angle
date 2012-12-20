@@ -198,24 +198,32 @@ bool VertexBuffer9::setBufferSize(unsigned int size)
 
 bool VertexBuffer9::discard()
 {
-    void *dummy;
-    HRESULT result;
-
-    result = mVertexBuffer->Lock(0, 1, &dummy, D3DLOCK_DISCARD);
-    if (FAILED(result))
+    if (mVertexBuffer)
     {
-        ERR("Discard lock failed with error 0x%08x", result);
+        void *dummy;
+        HRESULT result;
+
+        result = mVertexBuffer->Lock(0, 1, &dummy, D3DLOCK_DISCARD);
+        if (FAILED(result))
+        {
+            ERR("Discard lock failed with error 0x%08x", result);
+            return false;
+        }
+
+        result = mVertexBuffer->Unlock();
+        if (FAILED(result))
+        {
+            ERR("Discard unlock failed with error 0x%08x", result);
+            return false;
+        }
+
+        return true;
+    }
+    else
+    {
+        ERR("Vertex buffer not initialized.");
         return false;
     }
-
-    result = mVertexBuffer->Unlock();
-    if (FAILED(result))
-    {
-        ERR("Discard unlock failed with error 0x%08x", result);
-        return false;
-    }
-
-    return true;
 }
 
 IDirect3DVertexBuffer9 * VertexBuffer9::getBuffer() const
