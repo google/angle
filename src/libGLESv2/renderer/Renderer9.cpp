@@ -95,6 +95,15 @@ Renderer9::Renderer9(egl::Display *display, HDC hDc, bool softwareDevice) : Rend
     mVertexDataManager = NULL;
     mIndexDataManager = NULL;
     mLineLoopIB = NULL;
+
+    mMaxNullColorbufferLRU = 0;
+    for (int i = 0; i < NUM_NULL_COLORBUFFER_CACHE_ENTRIES; i++)
+    {
+        mNullColorbufferCache[i].lruCount = 0;
+        mNullColorbufferCache[i].width = 0;
+        mNullColorbufferCache[i].height = 0;
+        mNullColorbufferCache[i].buffer = NULL;
+    }
 }
 
 Renderer9::~Renderer9()
@@ -991,6 +1000,51 @@ bool Renderer9::applyPrimitiveType(GLenum mode, GLsizei count)
     return mPrimitiveCount > 0;
 }
 
+
+gl::Renderbuffer *Renderer9::getNullColorbuffer(gl::Renderbuffer *depthbuffer)
+{
+    if (!depthbuffer)
+    {
+        ERR("Unexpected null depthbuffer for depth-only FBO.");
+        return NULL;
+    }
+
+    GLsizei width  = depthbuffer->getWidth();
+    GLsizei height = depthbuffer->getHeight();
+
+    // search cached nullcolorbuffers
+    for (int i = 0; i < NUM_NULL_COLORBUFFER_CACHE_ENTRIES; i++)
+    {
+        if (mNullColorbufferCache[i].buffer != NULL &&
+            mNullColorbufferCache[i].width == width &&
+            mNullColorbufferCache[i].height == height)
+        {
+            mNullColorbufferCache[i].lruCount = ++mMaxNullColorbufferLRU;
+            return mNullColorbufferCache[i].buffer;
+        }
+    }
+
+    gl::Renderbuffer *nullbuffer = new gl::Renderbuffer(this, 0, new gl::Colorbuffer(this, width, height, GL_NONE, 0));
+
+    // add nullbuffer to the cache
+    NullColorbufferCacheEntry *oldest = &mNullColorbufferCache[0];
+    for (int i = 1; i < NUM_NULL_COLORBUFFER_CACHE_ENTRIES; i++)
+    {
+        if (mNullColorbufferCache[i].lruCount < oldest->lruCount)
+        {
+            oldest = &mNullColorbufferCache[i];
+        }
+    }
+
+    delete oldest->buffer;
+    oldest->buffer = nullbuffer;
+    oldest->lruCount = ++mMaxNullColorbufferLRU;
+    oldest->width = width;
+    oldest->height = height;
+
+    return nullbuffer;
+}
+
 bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
 {
     // if there is no color attachment we must synthesize a NULL colorattachment
@@ -1002,7 +1056,7 @@ bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
     }
     else
     {
-        renderbufferObject = framebuffer->getNullColorbuffer();
+        renderbufferObject = getNullColorbuffer(framebuffer->getDepthbuffer());
     }
     if (!renderbufferObject)
     {
@@ -1603,6 +1657,13 @@ void Renderer9::releaseDeviceResources()
 
     delete mLineLoopIB;
     mLineLoopIB = NULL;
+
+    for (int i = 0; i < NUM_NULL_COLORBUFFER_CACHE_ENTRIES; i++)
+    {
+        delete mNullColorbufferCache[i].buffer;
+        mNullColorbufferCache[i].buffer = NULL;
+    }
+
 }
 
 

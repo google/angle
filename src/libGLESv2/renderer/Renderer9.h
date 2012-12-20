@@ -178,6 +178,7 @@ class Renderer9 : public Renderer
 
     void getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray);
     bool copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *source, bool fromManaged);
+    gl::Renderbuffer *getNullColorbuffer(gl::Renderbuffer *depthbuffer);
 
     D3DPOOL getBufferPool(DWORD usage) const;
 
@@ -267,6 +268,17 @@ class Renderer9 : public Renderer
 
     IndexDataManager *mIndexDataManager;
     StreamingIndexBuffer *mLineLoopIB;
+
+    enum { NUM_NULL_COLORBUFFER_CACHE_ENTRIES = 12 };
+    struct NullColorbufferCacheEntry
+    {
+        UINT lruCount;
+        int width;
+        int height;
+        gl::Renderbuffer *buffer;
+    } mNullColorbufferCache[NUM_NULL_COLORBUFFER_CACHE_ENTRIES];
+    UINT mMaxNullColorbufferLRU;
+
 };
 
 }

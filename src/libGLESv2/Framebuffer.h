@@ -51,7 +51,6 @@ class Framebuffer
     Renderbuffer *getDepthbuffer();
     Renderbuffer *getStencilbuffer();
     Renderbuffer *getDepthOrStencilbuffer();
-    Renderbuffer *getNullColorbuffer();
 
     GLenum getColorbufferType();
     GLenum getDepthbufferType();
@@ -75,8 +74,6 @@ class Framebuffer
 
     GLenum mStencilbufferType;
     BindingPointer<Renderbuffer> mStencilbufferPointer;
-
-    BindingPointer<Renderbuffer> mNullColorbufferPointer;
 
     rx::Renderer *mRenderer;
 

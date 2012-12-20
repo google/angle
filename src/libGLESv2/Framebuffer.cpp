@@ -30,7 +30,6 @@ Framebuffer::~Framebuffer()
     mColorbufferPointer.set(NULL);
     mDepthbufferPointer.set(NULL);
     mStencilbufferPointer.set(NULL);
-    mNullColorbufferPointer.set(NULL);
 }
 
 Renderbuffer *Framebuffer::lookupRenderbuffer(GLenum type, GLuint handle) const
@@ -179,30 +178,6 @@ Renderbuffer *Framebuffer::getDepthOrStencilbuffer()
     }
 
     return depthstencilbuffer;
-}
-
-Renderbuffer *Framebuffer::getNullColorbuffer()
-{
-    Renderbuffer *nullbuffer  = mNullColorbufferPointer.get();
-    Renderbuffer *depthbuffer = getDepthbuffer();
-
-    if (!depthbuffer)
-    {
-        ERR("Unexpected null depthbuffer for depth-only FBO.");
-        return NULL;
-    }
-
-    GLsizei width  = depthbuffer->getWidth();
-    GLsizei height = depthbuffer->getHeight();
-
-    if (!nullbuffer ||
-        width != nullbuffer->getWidth() || height != nullbuffer->getHeight())
-    {
-        nullbuffer = new Renderbuffer(mRenderer, 0, new Colorbuffer(mRenderer, width, height, GL_NONE, 0));
-        mNullColorbufferPointer.set(nullbuffer);
-    }
-
-    return nullbuffer;
 }
 
 GLenum Framebuffer::getColorbufferType()
