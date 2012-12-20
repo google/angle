@@ -53,6 +53,7 @@ namespace rx
 {
 class TextureStorage2D;
 class TextureStorageCubeMap;
+class VertexBuffer;
 class Blit;
 struct TranslatedIndexData;
 
@@ -169,6 +170,9 @@ class Renderer
     // Image operations
     virtual Image *createImage() = 0;
     virtual void generateMipmap(Image *dest, Image *source) = 0;
+
+    // Buffer creation
+    virtual VertexBuffer *createVertexBuffer() = 0;
 
   protected:
     bool initializeCompiler();

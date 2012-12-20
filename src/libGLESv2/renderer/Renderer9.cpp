@@ -24,6 +24,7 @@
 #include "libGLESv2/renderer/Image9.h"
 #include "libGLESv2/renderer/Blit.h"
 #include "libGLESv2/renderer/RenderTarget9.h"
+#include "libGLESv2/renderer/VertexBuffer9.h"
 
 #include "libEGL/Config.h"
 #include "libEGL/Display.h"
@@ -586,6 +587,11 @@ HRESULT Renderer9::createVertexBuffer(UINT Length, DWORD Usage, IDirect3DVertexB
 {
     D3DPOOL Pool = getBufferPool(Usage);
     return mDevice->CreateVertexBuffer(Length, Usage, 0, Pool, ppVertexBuffer, NULL);
+}
+
+VertexBuffer *Renderer9::createVertexBuffer()
+{
+    return new VertexBuffer9(this);
 }
 
 HRESULT Renderer9::createIndexBuffer(UINT Length, DWORD Usage, D3DFORMAT Format, IDirect3DIndexBuffer9 **ppIndexBuffer)

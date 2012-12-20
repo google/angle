@@ -136,6 +136,9 @@ class Renderer11 : public Renderer
     virtual Image *createImage();
     virtual void generateMipmap(Image *dest, Image *source);
 
+    // Buffer creation
+    virtual VertexBuffer *createVertexBuffer();
+
     // D3D11-renderer specific methods
     ID3D11Device *getDevice() { return mDevice; }
     ID3D11DeviceContext *getDeviceContext() { return mDeviceContext; };

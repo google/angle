@@ -1238,6 +1238,13 @@ ShaderExecutable *Renderer11::compileToExecutable(gl::InfoLog &infoLog, const ch
     return executable;
 }
 
+VertexBuffer *Renderer11::createVertexBuffer()
+{
+    // TODO
+    UNIMPLEMENTED();
+    return NULL;
+}
+
 bool Renderer11::blitRect(gl::Framebuffer *readTarget, gl::Rectangle *readRect, gl::Framebuffer *drawTarget, gl::Rectangle *drawRect,
                           bool blitRenderTarget, bool blitDepthStencil)
 {
