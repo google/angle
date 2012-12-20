@@ -25,8 +25,8 @@ Image::Image()
     mActualFormat = GL_NONE;
 }
 
-void Image::loadAlphaData(GLsizei width, GLsizei height,
-                          int inputPitch, const void *input, size_t outputPitch, void *output)
+void Image::loadAlphaDataToBGRA(GLsizei width, GLsizei height,
+                                int inputPitch, const void *input, size_t outputPitch, void *output)
 {
     const unsigned char *source = NULL;
     unsigned char *dest = NULL;
@@ -45,8 +45,8 @@ void Image::loadAlphaData(GLsizei width, GLsizei height,
     }
 }
 
-void Image::loadAlphaFloatData(GLsizei width, GLsizei height,
-                               int inputPitch, const void *input, size_t outputPitch, void *output)
+void Image::loadAlphaFloatDataToRGBA(GLsizei width, GLsizei height,
+                                     int inputPitch, const void *input, size_t outputPitch, void *output)
 {
     const float *source = NULL;
     float *dest = NULL;
@@ -65,8 +65,8 @@ void Image::loadAlphaFloatData(GLsizei width, GLsizei height,
     }
 }
 
-void Image::loadAlphaHalfFloatData(GLsizei width, GLsizei height,
-                                   int inputPitch, const void *input, size_t outputPitch, void *output)
+void Image::loadAlphaHalfFloatDataToRGBA(GLsizei width, GLsizei height,
+                                         int inputPitch, const void *input, size_t outputPitch, void *output)
 {
     const unsigned short *source = NULL;
     unsigned short *dest = NULL;
@@ -85,8 +85,8 @@ void Image::loadAlphaHalfFloatData(GLsizei width, GLsizei height,
     }
 }
 
-void Image::loadLuminanceData(GLsizei width, GLsizei height,
-                              int inputPitch, const void *input, size_t outputPitch, void *output, bool native)
+void Image::loadLuminanceDataToNativeOrBGRA(GLsizei width, GLsizei height,
+                                            int inputPitch, const void *input, size_t outputPitch, void *output, bool native)
 {
     const unsigned char *source = NULL;
     unsigned char *dest = NULL;
@@ -113,8 +113,8 @@ void Image::loadLuminanceData(GLsizei width, GLsizei height,
     }
 }
 
-void Image::loadLuminanceFloatData(GLsizei width, GLsizei height,
-                                   int inputPitch, const void *input, size_t outputPitch, void *output)
+void Image::loadLuminanceFloatDataToRGBA(GLsizei width, GLsizei height,
+                                         int inputPitch, const void *input, size_t outputPitch, void *output)
 {
     const float *source = NULL;
     float *dest = NULL;
@@ -133,8 +133,8 @@ void Image::loadLuminanceFloatData(GLsizei width, GLsizei height,
     }
 }
 
-void Image::loadLuminanceHalfFloatData(GLsizei width, GLsizei height,
-                                       int inputPitch, const void *input, size_t outputPitch, void *output)
+void Image::loadLuminanceHalfFloatDataToRGBA(GLsizei width, GLsizei height,
+                                             int inputPitch, const void *input, size_t outputPitch, void *output)
 {
     const unsigned short *source = NULL;
     unsigned short *dest = NULL;
@@ -153,8 +153,8 @@ void Image::loadLuminanceHalfFloatData(GLsizei width, GLsizei height,
     }
 }
 
-void Image::loadLuminanceAlphaData(GLsizei width, GLsizei height,
-                                   int inputPitch, const void *input, size_t outputPitch, void *output, bool native)
+void Image::loadLuminanceAlphaDataToNativeOrBGRA(GLsizei width, GLsizei height,
+                                                 int inputPitch, const void *input, size_t outputPitch, void *output, bool native)
 {
     const unsigned char *source = NULL;
     unsigned char *dest = NULL;
@@ -181,8 +181,8 @@ void Image::loadLuminanceAlphaData(GLsizei width, GLsizei height,
     }
 }
 
-void Image::loadLuminanceAlphaFloatData(GLsizei width, GLsizei height,
-                                        int inputPitch, const void *input, size_t outputPitch, void *output)
+void Image::loadLuminanceAlphaFloatDataToRGBA(GLsizei width, GLsizei height,
+                                              int inputPitch, const void *input, size_t outputPitch, void *output)
 {
     const float *source = NULL;
     float *dest = NULL;
@@ -201,8 +201,8 @@ void Image::loadLuminanceAlphaFloatData(GLsizei width, GLsizei height,
     }
 }
 
-void Image::loadLuminanceAlphaHalfFloatData(GLsizei width, GLsizei height,
-                                            int inputPitch, const void *input, size_t outputPitch, void *output)
+void Image::loadLuminanceAlphaHalfFloatDataToRGBA(GLsizei width, GLsizei height,
+                                                  int inputPitch, const void *input, size_t outputPitch, void *output)
 {
     const unsigned short *source = NULL;
     unsigned short *dest = NULL;
@@ -221,8 +221,8 @@ void Image::loadLuminanceAlphaHalfFloatData(GLsizei width, GLsizei height,
     }
 }
 
-void Image::loadRGBUByteData(GLsizei width, GLsizei height,
-                             int inputPitch, const void *input, size_t outputPitch, void *output)
+void Image::loadRGBUByteDataToBGRX(GLsizei width, GLsizei height,
+                                   int inputPitch, const void *input, size_t outputPitch, void *output)
 {
     const unsigned char *source = NULL;
     unsigned char *dest = NULL;
@@ -241,8 +241,8 @@ void Image::loadRGBUByteData(GLsizei width, GLsizei height,
     }
 }
 
-void Image::loadRGB565Data(GLsizei width, GLsizei height,
-                           int inputPitch, const void *input, size_t outputPitch, void *output)
+void Image::loadRGB565DataToBGRA(GLsizei width, GLsizei height,
+                                 int inputPitch, const void *input, size_t outputPitch, void *output)
 {
     const unsigned short *source = NULL;
     unsigned char *dest = NULL;
@@ -262,8 +262,8 @@ void Image::loadRGB565Data(GLsizei width, GLsizei height,
     }
 }
 
-void Image::loadRGBFloatData(GLsizei width, GLsizei height,
-                             int inputPitch, const void *input, size_t outputPitch, void *output)
+void Image::loadRGBFloatDataToRGBA(GLsizei width, GLsizei height,
+                                   int inputPitch, const void *input, size_t outputPitch, void *output)
 {
     const float *source = NULL;
     float *dest = NULL;
@@ -282,8 +282,8 @@ void Image::loadRGBFloatData(GLsizei width, GLsizei height,
     }
 }
 
-void Image::loadRGBHalfFloatData(GLsizei width, GLsizei height,
-                                 int inputPitch, const void *input, size_t outputPitch, void *output)
+void Image::loadRGBHalfFloatDataToRGBA(GLsizei width, GLsizei height,
+                                       int inputPitch, const void *input, size_t outputPitch, void *output)
 {
     const unsigned short *source = NULL;
     unsigned short *dest = NULL;
@@ -302,8 +302,8 @@ void Image::loadRGBHalfFloatData(GLsizei width, GLsizei height,
     }
 }
 
-void Image::loadRGBAUByteData(GLsizei width, GLsizei height,
-                              int inputPitch, const void *input, size_t outputPitch, void *output)
+void Image::loadRGBAUByteDataToBGRA(GLsizei width, GLsizei height,
+                                    int inputPitch, const void *input, size_t outputPitch, void *output)
 {
     const unsigned int *source = NULL;
     unsigned int *dest = NULL;
@@ -320,8 +320,8 @@ void Image::loadRGBAUByteData(GLsizei width, GLsizei height,
     }
 }
 
-void Image::loadRGBA4444Data(GLsizei width, GLsizei height,
-                             int inputPitch, const void *input, size_t outputPitch, void *output)
+void Image::loadRGBA4444DataToBGRA(GLsizei width, GLsizei height,
+                                   int inputPitch, const void *input, size_t outputPitch, void *output)
 {
     const unsigned short *source = NULL;
     unsigned char *dest = NULL;
@@ -341,8 +341,8 @@ void Image::loadRGBA4444Data(GLsizei width, GLsizei height,
     }
 }
 
-void Image::loadRGBA5551Data(GLsizei width, GLsizei height,
-                             int inputPitch, const void *input, size_t outputPitch, void *output)
+void Image::loadRGBA5551DataToBGRA(GLsizei width, GLsizei height,
+                                   int inputPitch, const void *input, size_t outputPitch, void *output)
 {
     const unsigned short *source = NULL;
     unsigned char *dest = NULL;
@@ -362,8 +362,8 @@ void Image::loadRGBA5551Data(GLsizei width, GLsizei height,
     }
 }
 
-void Image::loadRGBAFloatData(GLsizei width, GLsizei height,
-                              int inputPitch, const void *input, size_t outputPitch, void *output)
+void Image::loadRGBAFloatDataToRGBA(GLsizei width, GLsizei height,
+                                    int inputPitch, const void *input, size_t outputPitch, void *output)
 {
     const float *source = NULL;
     float *dest = NULL;
@@ -376,8 +376,8 @@ void Image::loadRGBAFloatData(GLsizei width, GLsizei height,
     }
 }
 
-void Image::loadRGBAHalfFloatData(GLsizei width, GLsizei height,
-                                  int inputPitch, const void *input, size_t outputPitch, void *output)
+void Image::loadRGBAHalfFloatDataToRGBA(GLsizei width, GLsizei height,
+                                        int inputPitch, const void *input, size_t outputPitch, void *output)
 {
     const unsigned char *source = NULL;
     unsigned char *dest = NULL;
@@ -390,8 +390,8 @@ void Image::loadRGBAHalfFloatData(GLsizei width, GLsizei height,
     }
 }
 
-void Image::loadBGRAData(GLsizei width, GLsizei height,
-                         int inputPitch, const void *input, size_t outputPitch, void *output)
+void Image::loadBGRADataToBGRA(GLsizei width, GLsizei height,
+                               int inputPitch, const void *input, size_t outputPitch, void *output)
 {
     const unsigned char *source = NULL;
     unsigned char *dest = NULL;

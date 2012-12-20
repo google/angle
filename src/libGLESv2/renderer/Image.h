@@ -55,48 +55,48 @@ class Image
 
     virtual void copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source) = 0;
 
-    static void loadAlphaData(GLsizei width, GLsizei height,
-                              int inputPitch, const void *input, size_t outputPitch, void *output);
-    static void loadAlphaDataSSE2(GLsizei width, GLsizei height,
-                                  int inputPitch, const void *input, size_t outputPitch, void *output);
-    static void loadAlphaFloatData(GLsizei width, GLsizei height,
-                                   int inputPitch, const void *input, size_t outputPitch, void *output);
-    static void loadAlphaHalfFloatData(GLsizei width, GLsizei height,
+    static void loadAlphaDataToBGRA(GLsizei width, GLsizei height,
+                                    int inputPitch, const void *input, size_t outputPitch, void *output);
+    static void loadAlphaDataToBGRASSE2(GLsizei width, GLsizei height,
+                                        int inputPitch, const void *input, size_t outputPitch, void *output);
+    static void loadAlphaFloatDataToRGBA(GLsizei width, GLsizei height,
+                                         int inputPitch, const void *input, size_t outputPitch, void *output);
+    static void loadAlphaHalfFloatDataToRGBA(GLsizei width, GLsizei height,
+                                             int inputPitch, const void *input, size_t outputPitch, void *output);
+    static void loadLuminanceDataToNativeOrBGRA(GLsizei width, GLsizei height,
+                                        int inputPitch, const void *input, size_t outputPitch, void *output, bool native);
+    static void loadLuminanceFloatDataToRGBA(GLsizei width, GLsizei height,
+                                             int inputPitch, const void *input, size_t outputPitch, void *output);
+    static void loadLuminanceHalfFloatDataToRGBA(GLsizei width, GLsizei height,
+                                                 int inputPitch, const void *input, size_t outputPitch, void *output);
+    static void loadLuminanceAlphaDataToNativeOrBGRA(GLsizei width, GLsizei height,
+                                             int inputPitch, const void *input, size_t outputPitch, void *output, bool native);
+    static void loadLuminanceAlphaFloatDataToRGBA(GLsizei width, GLsizei height,
+                                                  int inputPitch, const void *input, size_t outputPitch, void *output);
+    static void loadLuminanceAlphaHalfFloatDataToRGBA(GLsizei width, GLsizei height,
+                                                      int inputPitch, const void *input, size_t outputPitch, void *output);
+    static void loadRGBUByteDataToBGRX(GLsizei width, GLsizei height,
                                        int inputPitch, const void *input, size_t outputPitch, void *output);
-    static void loadLuminanceData(GLsizei width, GLsizei height,
-                                  int inputPitch, const void *input, size_t outputPitch, void *output, bool native);
-    static void loadLuminanceFloatData(GLsizei width, GLsizei height,
-                                       int inputPitch, const void *input, size_t outputPitch, void *output);
-    static void loadLuminanceHalfFloatData(GLsizei width, GLsizei height,
-                                           int inputPitch, const void *input, size_t outputPitch, void *output);
-    static void loadLuminanceAlphaData(GLsizei width, GLsizei height,
-                                       int inputPitch, const void *input, size_t outputPitch, void *output, bool native);
-    static void loadLuminanceAlphaFloatData(GLsizei width, GLsizei height,
-                                            int inputPitch, const void *input, size_t outputPitch, void *output);
-    static void loadLuminanceAlphaHalfFloatData(GLsizei width, GLsizei height,
-                                                int inputPitch, const void *input, size_t outputPitch, void *output);
-    static void loadRGBUByteData(GLsizei width, GLsizei height,
-                                 int inputPitch, const void *input, size_t outputPitch, void *output);
-    static void loadRGB565Data(GLsizei width, GLsizei height,
-                               int inputPitch, const void *input, size_t outputPitch, void *output);
-    static void loadRGBFloatData(GLsizei width, GLsizei height,
-                                 int inputPitch, const void *input, size_t outputPitch, void *output);
-    static void loadRGBHalfFloatData(GLsizei width, GLsizei height,
+    static void loadRGB565DataToBGRA(GLsizei width, GLsizei height,
                                      int inputPitch, const void *input, size_t outputPitch, void *output);
-    static void loadRGBAUByteDataSSE2(GLsizei width, GLsizei height,
-                                      int inputPitch, const void *input, size_t outputPitch, void *output);
-    static void loadRGBAUByteData(GLsizei width, GLsizei height,
-                                  int inputPitch, const void *input, size_t outputPitch, void *output);
-    static void loadRGBA4444Data(GLsizei width, GLsizei height,
-                                 int inputPitch, const void *input, size_t outputPitch, void *output);
-    static void loadRGBA5551Data(GLsizei width, GLsizei height,
-                                 int inputPitch, const void *input, size_t outputPitch, void *output);
-    static void loadRGBAFloatData(GLsizei width, GLsizei height,
-                                  int inputPitch, const void *input, size_t outputPitch, void *output);
-    static void loadRGBAHalfFloatData(GLsizei width, GLsizei height,
-                                      int inputPitch, const void *input, size_t outputPitch, void *output);
-    static void loadBGRAData(GLsizei width, GLsizei height,
-                             int inputPitch, const void *input, size_t outputPitch, void *output);
+    static void loadRGBFloatDataToRGBA(GLsizei width, GLsizei height,
+                                       int inputPitch, const void *input, size_t outputPitch, void *output);
+    static void loadRGBHalfFloatDataToRGBA(GLsizei width, GLsizei height,
+                                           int inputPitch, const void *input, size_t outputPitch, void *output);
+    static void loadRGBAUByteDataToBGRASSE2(GLsizei width, GLsizei height,
+                                            int inputPitch, const void *input, size_t outputPitch, void *output);
+    static void loadRGBAUByteDataToBGRA(GLsizei width, GLsizei height,
+                                        int inputPitch, const void *input, size_t outputPitch, void *output);
+    static void loadRGBA4444DataToBGRA(GLsizei width, GLsizei height,
+                                       int inputPitch, const void *input, size_t outputPitch, void *output);
+    static void loadRGBA5551DataToBGRA(GLsizei width, GLsizei height,
+                                       int inputPitch, const void *input, size_t outputPitch, void *output);
+    static void loadRGBAFloatDataToRGBA(GLsizei width, GLsizei height,
+                                        int inputPitch, const void *input, size_t outputPitch, void *output);
+    static void loadRGBAHalfFloatDataToRGBA(GLsizei width, GLsizei height,
+                                            int inputPitch, const void *input, size_t outputPitch, void *output);
+    static void loadBGRADataToBGRA(GLsizei width, GLsizei height,
+                                   int inputPitch, const void *input, size_t outputPitch, void *output);
 
   protected:
     GLsizei mWidth;

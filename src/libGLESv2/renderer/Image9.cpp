@@ -377,74 +377,74 @@ void Image9::loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heigh
       case GL_ALPHA8_EXT:
         if (gl::supportsSSE2())
         {
-            loadAlphaDataSSE2(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+            loadAlphaDataToBGRASSE2(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         }
         else
         {
-            loadAlphaData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+            loadAlphaDataToBGRA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         }
         break;
       case GL_LUMINANCE8_EXT:
-        loadLuminanceData(width, height, inputPitch, input, locked.Pitch, locked.pBits, getD3DFormat() == D3DFMT_L8);
+        loadLuminanceDataToNativeOrBGRA(width, height, inputPitch, input, locked.Pitch, locked.pBits, getD3DFormat() == D3DFMT_L8);
         break;
       case GL_ALPHA32F_EXT:
-        loadAlphaFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadAlphaFloatDataToRGBA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         break;
       case GL_LUMINANCE32F_EXT:
-        loadLuminanceFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadLuminanceFloatDataToRGBA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         break;
       case GL_ALPHA16F_EXT:
-        loadAlphaHalfFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadAlphaHalfFloatDataToRGBA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         break;
       case GL_LUMINANCE16F_EXT:
-        loadLuminanceHalfFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadLuminanceHalfFloatDataToRGBA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         break;
       case GL_LUMINANCE8_ALPHA8_EXT:
-        loadLuminanceAlphaData(width, height, inputPitch, input, locked.Pitch, locked.pBits, getD3DFormat() == D3DFMT_A8L8);
+        loadLuminanceAlphaDataToNativeOrBGRA(width, height, inputPitch, input, locked.Pitch, locked.pBits, getD3DFormat() == D3DFMT_A8L8);
         break;
       case GL_LUMINANCE_ALPHA32F_EXT:
-        loadLuminanceAlphaFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadLuminanceAlphaFloatDataToRGBA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         break;
       case GL_LUMINANCE_ALPHA16F_EXT:
-        loadLuminanceAlphaHalfFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadLuminanceAlphaHalfFloatDataToRGBA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         break;
       case GL_RGB8_OES:
-        loadRGBUByteData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadRGBUByteDataToBGRX(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         break;
       case GL_RGB565:
-        loadRGB565Data(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadRGB565DataToBGRA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         break;
       case GL_RGBA8_OES:
         if (gl::supportsSSE2())
         {
-            loadRGBAUByteDataSSE2(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+            loadRGBAUByteDataToBGRASSE2(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         }
         else
         {
-            loadRGBAUByteData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+            loadRGBAUByteDataToBGRA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         }
         break;
       case GL_RGBA4:
-        loadRGBA4444Data(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadRGBA4444DataToBGRA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         break;
       case GL_RGB5_A1:
-        loadRGBA5551Data(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadRGBA5551DataToBGRA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         break;
       case GL_BGRA8_EXT:
-        loadBGRAData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadBGRADataToBGRA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         break;
       // float textures are converted to RGBA, not BGRA, as they're stored that way in D3D
       case GL_RGB32F_EXT:
-        loadRGBFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadRGBFloatDataToRGBA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         break;
       case GL_RGB16F_EXT:
-        loadRGBHalfFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadRGBHalfFloatDataToRGBA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         break;
       case GL_RGBA32F_EXT:
-        loadRGBAFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadRGBAFloatDataToRGBA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         break;
       case GL_RGBA16F_EXT:
-        loadRGBAHalfFloatData(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadRGBAHalfFloatDataToRGBA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
         break;
       default: UNREACHABLE(); 
     }

@@ -16,8 +16,8 @@
 namespace rx
 {
 
-void Image::loadRGBAUByteDataSSE2(GLsizei width, GLsizei height,
-                                  int inputPitch, const void *input, size_t outputPitch, void *output)
+void Image::loadRGBAUByteDataToBGRASSE2(GLsizei width, GLsizei height,
+                                        int inputPitch, const void *input, size_t outputPitch, void *output)
 {
     const unsigned int *source = NULL;
     unsigned int *dest = NULL;
@@ -58,8 +58,8 @@ void Image::loadRGBAUByteDataSSE2(GLsizei width, GLsizei height,
     }
 }
 
-void Image::loadAlphaDataSSE2(GLsizei width, GLsizei height,
-                              int inputPitch, const void *input, size_t outputPitch, void *output)
+void Image::loadAlphaDataToBGRASSE2(GLsizei width, GLsizei height,
+                                    int inputPitch, const void *input, size_t outputPitch, void *output)
 {
     const unsigned char *source = NULL;
     unsigned int *dest = NULL;

@@ -124,28 +124,28 @@ void Image11::loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
         UNIMPLEMENTED(); // TODO - new function for D3D11-supported formats
         break;
       case GL_LUMINANCE8_EXT:
-        loadLuminanceData(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData, false);
+        loadLuminanceDataToNativeOrBGRA(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData, false);
         break;
       case GL_ALPHA32F_EXT:
-        loadAlphaFloatData(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
+        loadAlphaFloatDataToRGBA(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
         break;
       case GL_LUMINANCE32F_EXT:
         UNIMPLEMENTED(); // TODO - new function for D3D11-supported formats
         break;
       case GL_ALPHA16F_EXT:
-        loadAlphaHalfFloatData(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
+        loadAlphaHalfFloatDataToRGBA(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
         break;
       case GL_LUMINANCE16F_EXT:
-        loadLuminanceHalfFloatData(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
+        loadLuminanceHalfFloatDataToRGBA(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
         break;
       case GL_LUMINANCE8_ALPHA8_EXT:
-        loadLuminanceAlphaData(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData, false);
+        loadLuminanceAlphaDataToNativeOrBGRA(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData, false);
         break;
       case GL_LUMINANCE_ALPHA32F_EXT:
-        loadLuminanceAlphaFloatData(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
+        loadLuminanceAlphaFloatDataToRGBA(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
         break;
       case GL_LUMINANCE_ALPHA16F_EXT:
-        loadLuminanceAlphaHalfFloatData(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
+        loadLuminanceAlphaHalfFloatDataToRGBA(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
         break;
       case GL_RGB8_OES:
         UNIMPLEMENTED(); // TODO - new function for D3D11-supported formats
@@ -163,19 +163,19 @@ void Image11::loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
         UNIMPLEMENTED(); // TODO - new function for D3D11-supported formats
         break;
       case GL_BGRA8_EXT:
-        loadBGRAData(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
+        loadBGRADataToBGRA(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
         break;
       case GL_RGB32F_EXT:
         UNIMPLEMENTED(); // TODO - new function for D3D11-supported formats
         break;
       case GL_RGB16F_EXT:
-        loadRGBHalfFloatData(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
+        loadRGBHalfFloatDataToRGBA(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
         break;
       case GL_RGBA32F_EXT:
-        loadRGBAFloatData(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
+        loadRGBAFloatDataToRGBA(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
         break;
       case GL_RGBA16F_EXT:
-        loadRGBAHalfFloatData(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
+        loadRGBAHalfFloatDataToRGBA(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
         break;
       default: UNREACHABLE(); 
     }
