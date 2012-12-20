@@ -259,6 +259,10 @@ public:
     const char* getQualifierString() const { return type.getQualifierString(); }
     TString getCompleteString() const { return type.getCompleteString(); }
 
+    int totalRegisterCount() const { return type.totalRegisterCount(); }
+    int elementRegisterCount() const { return type.elementRegisterCount(); }
+    int getArraySize() const { return type.getArraySize(); }
+
 protected:
     TType type;
 };

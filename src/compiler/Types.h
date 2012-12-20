@@ -136,6 +136,43 @@ public:
         return totalSize;
     }
 
+    int elementRegisterCount() const
+    {
+        TTypeList *structure = getStruct();
+
+        if (structure)
+        {
+            int registerCount = 0;
+
+            for (size_t i = 0; i < structure->size(); i++)
+            {
+                registerCount += (*structure)[i].type->totalRegisterCount();
+            }
+
+            return registerCount;
+        }
+        else if (isMatrix())
+        {
+            return getNominalSize();
+        }
+        else
+        {
+            return 1;
+        }
+    }
+
+    int totalRegisterCount() const
+    {
+        if (array)
+        {
+            return arraySize * elementRegisterCount();
+        }
+        else
+        {
+            return elementRegisterCount();
+        }
+    }
+
     bool isMatrix() const { return matrix ? true : false; }
     void setMatrix(bool m) { matrix = m; }
 
