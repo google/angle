@@ -1648,7 +1648,7 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
 
     int version = 0;
     stream.read(&version);
-    if (version != BUILD_REVISION)
+    if (version != VERSION_DWORD)
     {
         infoLog.append("Invalid program binary version.");
         return false;
@@ -1789,7 +1789,7 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
     BinaryOutputStream stream;
 
     stream.write(GL_PROGRAM_BINARY_ANGLE);
-    stream.write(BUILD_REVISION);
+    stream.write(VERSION_DWORD);
 
     for (unsigned int i = 0; i < MAX_VERTEX_ATTRIBS; ++i)
     {
