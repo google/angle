@@ -13,7 +13,6 @@
 #include <d3d9.h>
 
 #include "libGLESv2/renderer/ShaderExecutable.h"
-#include "libGLESv2/renderer/D3DConstantTable.h"
 
 namespace rx
 {
@@ -21,23 +20,20 @@ namespace rx
 class ShaderExecutable9 : public ShaderExecutable
 {
   public:
-    ShaderExecutable9(const void *function, size_t length, IDirect3DPixelShader9 *executable, D3DConstantTable *constantTable);
-    ShaderExecutable9(const void *function, size_t length, IDirect3DVertexShader9 *executable, D3DConstantTable *constantTable);
+    ShaderExecutable9(const void *function, size_t length, IDirect3DPixelShader9 *executable);
+    ShaderExecutable9(const void *function, size_t length, IDirect3DVertexShader9 *executable);
     virtual ~ShaderExecutable9();
 
     static ShaderExecutable9 *makeShaderExecutable9(ShaderExecutable *executable);
 
     IDirect3DPixelShader9 *getPixelShader();
     IDirect3DVertexShader9 *getVertexShader();
-    virtual D3DConstantTable *getConstantTable();
 
   private:
     DISALLOW_COPY_AND_ASSIGN(ShaderExecutable9);
 
     IDirect3DPixelShader9 *mPixelExecutable;
     IDirect3DVertexShader9 *mVertexExecutable;
-
-    D3DConstantTable *mConstantTable;
 };
 
 }

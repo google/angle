@@ -14,20 +14,18 @@
 namespace rx
 {
 
-ShaderExecutable9::ShaderExecutable9(const void *function, size_t length, IDirect3DPixelShader9 *executable, D3DConstantTable *constantTable)
+ShaderExecutable9::ShaderExecutable9(const void *function, size_t length, IDirect3DPixelShader9 *executable)
     : ShaderExecutable(function, length)
 {
     mPixelExecutable = executable;
     mVertexExecutable = NULL;
-    mConstantTable = constantTable;
 }
 
-ShaderExecutable9::ShaderExecutable9(const void *function, size_t length, IDirect3DVertexShader9 *executable, D3DConstantTable *constantTable)
+ShaderExecutable9::ShaderExecutable9(const void *function, size_t length, IDirect3DVertexShader9 *executable)
     : ShaderExecutable(function, length)
 {
     mVertexExecutable = executable;
     mPixelExecutable = NULL;
-    mConstantTable = constantTable;
 }
 
 ShaderExecutable9::~ShaderExecutable9()
@@ -40,8 +38,6 @@ ShaderExecutable9::~ShaderExecutable9()
     {
         mPixelExecutable->Release();
     }
-
-    delete mConstantTable;
 }
 
 ShaderExecutable9 *ShaderExecutable9::makeShaderExecutable9(ShaderExecutable *executable)
@@ -58,11 +54,6 @@ IDirect3DVertexShader9 *ShaderExecutable9::getVertexShader()
 IDirect3DPixelShader9 *ShaderExecutable9::getPixelShader()
 {
     return mPixelExecutable;
-}
-
-D3DConstantTable *ShaderExecutable9::getConstantTable()
-{
-    return mConstantTable;
 }
 
 }

@@ -119,9 +119,6 @@
     <ClCompile Include="renderer\VertexDeclarationCache.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\D3DConstantTable.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\IndexDataManager.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
@@ -299,9 +296,6 @@
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="renderer\VertexDataManager.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\D3DConstantTable.h">
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="renderer\IndexDataManager.h">

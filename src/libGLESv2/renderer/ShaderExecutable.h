@@ -11,7 +11,6 @@
 #define LIBGLESV2_RENDERER_SHADEREXECUTABLE_H_
 
 #include "common/angleutils.h"
-#include "libGLESv2/renderer/D3DConstantTable.h"
 
 namespace rx
 {
@@ -39,8 +38,6 @@ class ShaderExecutable
     {
         return mLength;
     }
-
-    virtual D3DConstantTable *getConstantTable() = 0; // D3D9_REMOVE
 
   private:
     DISALLOW_COPY_AND_ASSIGN(ShaderExecutable);

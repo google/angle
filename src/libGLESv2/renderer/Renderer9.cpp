@@ -2866,10 +2866,9 @@ RenderTarget *Renderer9::createRenderTarget(int width, int height, GLenum format
     return renderTarget;
 }
 
-ShaderExecutable *Renderer9::loadExecutable(const void *function, size_t length, GLenum type, void *data)
+ShaderExecutable *Renderer9::loadExecutable(const void *function, size_t length, GLenum type)
 {
     ShaderExecutable9 *executable = NULL;
-    D3DConstantTable *table = reinterpret_cast<D3DConstantTable *>(data);
 
     switch (type)
     {
@@ -2878,7 +2877,7 @@ ShaderExecutable *Renderer9::loadExecutable(const void *function, size_t length,
             IDirect3DVertexShader9 *vshader = createVertexShader((DWORD*)function, length);
             if (vshader)
             {
-                executable = new ShaderExecutable9(function, length, vshader, table);
+                executable = new ShaderExecutable9(function, length, vshader);
             }
         }
         break;
@@ -2887,7 +2886,7 @@ ShaderExecutable *Renderer9::loadExecutable(const void *function, size_t length,
             IDirect3DPixelShader9 *pshader = createPixelShader((DWORD*)function, length);
             if (pshader)
             {
-                executable = new ShaderExecutable9(function, length, pshader, table);
+                executable = new ShaderExecutable9(function, length, pshader);
             }
         }
         break;
@@ -2920,15 +2919,7 @@ ShaderExecutable *Renderer9::compileToExecutable(gl::InfoLog &infoLog, const cha
     if (!binary)
         return NULL;
 
-    D3DConstantTable *constantTable = new D3DConstantTable(binary->GetBufferPointer(), binary->GetBufferSize());
-    if (constantTable->error())
-    {
-        delete constantTable;
-        binary->Release();
-        return NULL;
-    }
-
-    ShaderExecutable *executable = loadExecutable(binary->GetBufferPointer(), binary->GetBufferSize(), type, constantTable);
+    ShaderExecutable *executable = loadExecutable(binary->GetBufferPointer(), binary->GetBufferSize(), type);
     binary->Release();
 
     return executable;

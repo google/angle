@@ -31,7 +31,6 @@
 
 namespace rx
 {
-class D3DConstantTable;
 class VertexDataManager;
 class StreamingIndexBufferInterface;
 struct TranslatedAttribute;
@@ -165,7 +164,7 @@ class Renderer9 : public Renderer
     virtual RenderTarget *createRenderTarget(int width, int height, GLenum format, GLsizei samples, bool depth);
 
     // Shader operations
-    virtual ShaderExecutable *loadExecutable(const void *function, size_t length, GLenum type, void *data);
+    virtual ShaderExecutable *loadExecutable(const void *function, size_t length, GLenum type);
     virtual ShaderExecutable *compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, GLenum type);
 
     // Image operations

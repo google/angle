@@ -244,7 +244,6 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClCompile Include="..\common\RefCountObject.cpp" />
     <ClCompile Include="Renderbuffer.cpp" />
     <ClCompile Include="renderer\Blit.cpp" />
-    <ClCompile Include="renderer\D3DConstantTable.cpp" />
     <ClCompile Include="renderer\Image.cpp" />
     <ClCompile Include="renderer\Image9.cpp" />
     <ClCompile Include="renderer\IndexBuffer.cpp" />
@@ -299,7 +298,6 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="..\common\RefCountObject.h" />
     <ClInclude Include="Renderbuffer.h" />
     <ClInclude Include="renderer\Blit.h" />
-    <ClInclude Include="renderer\D3DConstantTable.h" />
     <ClInclude Include="renderer\generatemip.h" />
     <ClInclude Include="renderer\Image.h" />
     <ClInclude Include="renderer\Image11.h" />

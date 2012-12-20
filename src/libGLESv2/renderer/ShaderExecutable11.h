@@ -29,7 +29,6 @@ class ShaderExecutable11 : public ShaderExecutable
 
     ID3D11PixelShader *getPixelShader();
     ID3D11VertexShader *getVertexShader();
-    virtual D3DConstantTable *getConstantTable();
 
   private:
     DISALLOW_COPY_AND_ASSIGN(ShaderExecutable11);

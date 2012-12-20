@@ -1347,7 +1347,7 @@ RenderTarget *Renderer11::createRenderTarget(int width, int height, GLenum forma
     return NULL;
 }
 
-ShaderExecutable *Renderer11::loadExecutable(const void *function, size_t length, GLenum type, void *data)
+ShaderExecutable *Renderer11::loadExecutable(const void *function, size_t length, GLenum type)
 {
     ShaderExecutable11 *executable = NULL;
 
@@ -1406,7 +1406,7 @@ ShaderExecutable *Renderer11::compileToExecutable(gl::InfoLog &infoLog, const ch
     if (!binary)
         return NULL;
 
-    ShaderExecutable *executable = loadExecutable((DWORD *)binary->GetBufferPointer(), binary->GetBufferSize(), type, NULL);
+    ShaderExecutable *executable = loadExecutable((DWORD *)binary->GetBufferPointer(), binary->GetBufferSize(), type);
     binary->Release();
 
     return executable;

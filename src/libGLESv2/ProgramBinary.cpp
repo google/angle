@@ -1639,7 +1639,7 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
     ptr += vertexShaderSize;
 
     mPixelExecutable = mRenderer->loadExecutable(reinterpret_cast<const DWORD*>(pixelShaderFunction),
-                                                 pixelShaderSize, GL_FRAGMENT_SHADER, NULL);
+                                                 pixelShaderSize, GL_FRAGMENT_SHADER);
     if (!mPixelExecutable)
     {
         infoLog.append("Could not create pixel shader.");
@@ -1647,7 +1647,7 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
     }
 
     mVertexExecutable = mRenderer->loadExecutable(reinterpret_cast<const DWORD*>(vertexShaderFunction),
-                                                  vertexShaderSize, GL_VERTEX_SHADER, NULL);
+                                                  vertexShaderSize, GL_VERTEX_SHADER);
     if (!mVertexExecutable)
     {
         infoLog.append("Could not create vertex shader.");
@@ -1922,160 +1922,6 @@ bool ProgramBinary::linkUniforms(InfoLog &infoLog, const sh::ActiveUniforms &ver
     return true;
 }
 
-// Adds the description of a constant found in the binary shader to the list of uniforms
-// Returns true if succesful (uniform not already defined)
-bool ProgramBinary::defineUniform(InfoLog &infoLog, GLenum shader, const rx::D3DConstant *constant, const std::string &name,
-                                  rx::D3DConstantTable *vsConstantTable, rx::D3DConstantTable *psConstantTable)
-{
-    if (constant->registerSet == rx::D3DConstant::RS_SAMPLER)
-    {
-        for (unsigned int i = 0; i < constant->registerCount; i++)
-        {
-            const rx::D3DConstant *psConstant = psConstantTable->getConstantByName(constant->name.c_str());
-            const rx::D3DConstant *vsConstant = vsConstantTable->getConstantByName(constant->name.c_str());
-
-            if (psConstant)
-            {
-                unsigned int samplerIndex = psConstant->registerIndex + i;
-
-                if (samplerIndex < MAX_TEXTURE_IMAGE_UNITS)
-                {
-                    mSamplersPS[samplerIndex].active = true;
-                    mSamplersPS[samplerIndex].textureType = (constant->type == rx::D3DConstant::PT_SAMPLERCUBE) ? TEXTURE_CUBE : TEXTURE_2D;
-                    mSamplersPS[samplerIndex].logicalTextureUnit = 0;
-                    mUsedPixelSamplerRange = std::max(samplerIndex + 1, mUsedPixelSamplerRange);
-                }
-                else
-                {
-                    infoLog.append("Pixel shader sampler count exceeds MAX_TEXTURE_IMAGE_UNITS (%d).", MAX_TEXTURE_IMAGE_UNITS);
-                    return false;
-                }
-            }
-            
-            if (vsConstant)
-            {
-                unsigned int samplerIndex = vsConstant->registerIndex + i;
-
-                if (samplerIndex < getContext()->getMaximumVertexTextureImageUnits())
-                {
-                    mSamplersVS[samplerIndex].active = true;
-                    mSamplersVS[samplerIndex].textureType = (constant->type == rx::D3DConstant::PT_SAMPLERCUBE) ? TEXTURE_CUBE : TEXTURE_2D;
-                    mSamplersVS[samplerIndex].logicalTextureUnit = 0;
-                    mUsedVertexSamplerRange = std::max(samplerIndex + 1, mUsedVertexSamplerRange);
-                }
-                else
-                {
-                    infoLog.append("Vertex shader sampler count exceeds MAX_VERTEX_TEXTURE_IMAGE_UNITS (%d).", getContext()->getMaximumVertexTextureImageUnits());
-                    return false;
-                }
-            }
-        }
-    }
-
-    switch(constant->typeClass)
-    {
-      case rx::D3DConstant::CLASS_STRUCT:
-        {
-            for (unsigned int arrayIndex = 0; arrayIndex < constant->elements; arrayIndex++)
-            {
-                for (unsigned int field = 0; field < constant->structMembers[arrayIndex].size(); field++)
-                {
-                    const rx::D3DConstant *fieldConstant = constant->structMembers[arrayIndex][field];
-
-                    std::string structIndex = (constant->elements > 1) ? ("[" + str(arrayIndex) + "]") : "";
-
-                    if (!defineUniform(infoLog, shader, fieldConstant, name + constant->name + structIndex + ".", vsConstantTable, psConstantTable))
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        }
-      case rx::D3DConstant::CLASS_SCALAR:
-      case rx::D3DConstant::CLASS_VECTOR:
-      case rx::D3DConstant::CLASS_MATRIX_COLUMNS:
-      case rx::D3DConstant::CLASS_OBJECT:
-        return defineUniform(shader, constant, name + constant->name);
-      default:
-        UNREACHABLE();
-        return false;
-    }
-}
-
-bool ProgramBinary::defineUniform(GLenum shader, const rx::D3DConstant *constant, const std::string &_name)
-{
-    if (_name == "dx_DepthRange")
-    {
-        if (shader == GL_VERTEX_SHADER)   mDxDepthRangeRegisterVS = constant->registerIndex;
-        if (shader == GL_FRAGMENT_SHADER) mDxDepthRangeRegisterPS = constant->registerIndex;
-        return true;
-    }
-
-    if (_name == "dx_DepthFront")
-    {
-        mDxDepthFrontRegister = constant->registerIndex;
-        return true;
-    }
-
-    if (_name == "dx_Coord")
-    {
-        mDxCoordRegister = constant->registerIndex;
-        return true;
-    }
-
-    if (_name == "dx_HalfPixelSize")
-    {
-        mDxHalfPixelSizeRegister = constant->registerIndex;
-        return true;
-    }
-
-    Uniform *uniform = createUniform(constant, _name);
-
-    if (!uniform)
-    {
-        return false;
-    }
-
-    // Check if already defined
-    GLint location = getUniformLocation(uniform->name);
-    GLenum type = uniform->type;
-
-    if (location >= 0)
-    {
-        delete uniform;
-        uniform = mUniforms[mUniformIndex[location].index];
-    }
-
-    if (shader == GL_FRAGMENT_SHADER)
-    {
-        uniform->ps.registerIndex = constant->registerIndex;
-        uniform->ps.registerCount = constant->registerCount;
-    }
-    else if (shader == GL_VERTEX_SHADER)
-    {
-        uniform->vs.registerIndex = constant->registerIndex;
-        uniform->vs.registerCount = constant->registerCount;
-    }
-    else UNREACHABLE();
-
-    if (location >= 0)
-    {
-        return uniform->type == type;
-    }
-
-    mUniforms.push_back(uniform);
-    unsigned int uniformIndex = mUniforms.size() - 1;
-
-    for (unsigned int i = 0; i < uniform->arraySize; ++i)
-    {
-        mUniformIndex.push_back(UniformLocation(_name, i, uniformIndex));
-    }
-
-    return true;
-}
-
 bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, InfoLog &infoLog)
 {
     if (constant.name == "dx_DepthRange")
@@ -2195,81 +2041,6 @@ bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, In
     }
 
     return true;
-}
-
-Uniform *ProgramBinary::createUniform(const rx::D3DConstant *constant, const std::string &_name)
-{
-    if (constant->rows == 1)   // Vectors and scalars
-    {
-        switch (constant->type)
-        {
-          case rx::D3DConstant::PT_SAMPLER2D:
-            switch (constant->columns)
-            {
-              case 1: return new Uniform(GL_SAMPLER_2D, _name, constant->elements);
-              default: UNREACHABLE();
-            }
-            break;
-          case rx::D3DConstant::PT_SAMPLERCUBE:
-            switch (constant->columns)
-            {
-              case 1: return new Uniform(GL_SAMPLER_CUBE, _name, constant->elements);
-              default: UNREACHABLE();
-            }
-            break;
-          case rx::D3DConstant::PT_BOOL:
-            switch (constant->columns)
-            {
-              case 1: return new Uniform(GL_BOOL, _name, constant->elements);
-              case 2: return new Uniform(GL_BOOL_VEC2, _name, constant->elements);
-              case 3: return new Uniform(GL_BOOL_VEC3, _name, constant->elements);
-              case 4: return new Uniform(GL_BOOL_VEC4, _name, constant->elements);
-              default: UNREACHABLE();
-            }
-            break;
-          case rx::D3DConstant::PT_INT:
-            switch (constant->columns)
-            {
-              case 1: return new Uniform(GL_INT, _name, constant->elements);
-              case 2: return new Uniform(GL_INT_VEC2, _name, constant->elements);
-              case 3: return new Uniform(GL_INT_VEC3, _name, constant->elements);
-              case 4: return new Uniform(GL_INT_VEC4, _name, constant->elements);
-              default: UNREACHABLE();
-            }
-            break;
-          case rx::D3DConstant::PT_FLOAT:
-            switch (constant->columns)
-            {
-              case 1: return new Uniform(GL_FLOAT, _name, constant->elements);
-              case 2: return new Uniform(GL_FLOAT_VEC2, _name, constant->elements);
-              case 3: return new Uniform(GL_FLOAT_VEC3, _name, constant->elements);
-              case 4: return new Uniform(GL_FLOAT_VEC4, _name, constant->elements);
-              default: UNREACHABLE();
-            }
-            break;
-          default:
-            UNREACHABLE();
-        }
-    }
-    else if (constant->rows == constant->columns)  // Square matrices
-    {
-        switch (constant->type)
-        {
-          case rx::D3DConstant::PT_FLOAT:
-            switch (constant->rows)
-            {
-              case 2: return new Uniform(GL_FLOAT_MAT2, _name, constant->elements);
-              case 3: return new Uniform(GL_FLOAT_MAT3, _name, constant->elements);
-              case 4: return new Uniform(GL_FLOAT_MAT4, _name, constant->elements);
-              default: UNREACHABLE();
-            }
-            break;
-          default: UNREACHABLE();
-        }
-    }
-    else UNREACHABLE();
-
-    return 0;
 }
 
 // This method needs to match OutputHLSL::decorate
