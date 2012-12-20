@@ -857,7 +857,7 @@ void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *
         gl::Renderbuffer *renderbufferObject = frameBuffer->getDepthOrStencilbuffer();
         if (renderbufferObject)
         {
-            RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(renderbufferObject->getRenderTarget());
+            RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(renderbufferObject->getDepthStencil());
             if (!renderTarget)
             {
                 ERR("render target pointer unexpectedly null.");
