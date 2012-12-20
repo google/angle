@@ -319,6 +319,12 @@
     <ClInclude Include="renderer\VertexBuffer11.h">
       <Filter>Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\Image11.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Uniform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="libGLESv2.def">
