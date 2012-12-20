@@ -1801,18 +1801,10 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
     }
 
     bool success = true;
-    rx::D3DConstantTable *constantTableVS = NULL;
-    rx::D3DConstantTable *constantTablePS = NULL;
     mVertexExecutable = mRenderer->compileToExecutable(infoLog, vertexHLSL.c_str(), GL_VERTEX_SHADER);
     mPixelExecutable = mRenderer->compileToExecutable(infoLog, pixelHLSL.c_str(), GL_FRAGMENT_SHADER);
 
-    if (mVertexExecutable && mPixelExecutable)
-    {
-        // D3D9_REPLACE
-        constantTableVS = mVertexExecutable->getConstantTable();
-        constantTablePS = mPixelExecutable->getConstantTable();
-    }
-    else
+    if (!mVertexExecutable || !mPixelExecutable)
     {
         infoLog.append("Failed to create D3D shaders.");
         success = false;
@@ -1828,32 +1820,9 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
         success = false;
     }
 
-    if (constantTableVS && constantTablePS)   // D3D9_REPLACE
+    if (!linkUniforms(infoLog, vertexShader->getUniforms(), fragmentShader->getUniforms()))
     {
-        if (!linkUniforms(infoLog, constantTableVS, constantTablePS))
-        {
-            success = false;
-        }
-    }
-    else
-    {
-        for (sh::ActiveUniforms::const_iterator uniform = vertexShader->getUniforms().begin(); uniform != vertexShader->getUniforms().end(); uniform++)
-        {
-            if (!defineUniform(GL_VERTEX_SHADER, *uniform, infoLog))
-            {
-                success = false;
-                break;
-            }
-        }
-
-        for (sh::ActiveUniforms::const_iterator uniform = fragmentShader->getUniforms().begin(); uniform != fragmentShader->getUniforms().end(); uniform++)
-        {
-            if (!defineUniform(GL_FRAGMENT_SHADER, *uniform, infoLog))
-            {
-                success = false;
-                break;
-            }
-        }
+        success = false;
     }
 
     Context *context = getContext();
@@ -1932,27 +1901,24 @@ bool ProgramBinary::linkAttributes(InfoLog &infoLog, const AttributeBindings &at
     return true;
 }
 
-bool ProgramBinary::linkUniforms(InfoLog &infoLog, rx::D3DConstantTable *vsConstantTable, rx::D3DConstantTable *psConstantTable)
+bool ProgramBinary::linkUniforms(InfoLog &infoLog, const sh::ActiveUniforms &vertexUniforms, const sh::ActiveUniforms &fragmentUniforms)
 {
-    for (unsigned int constantIndex = 0; constantIndex < psConstantTable->constants(); constantIndex++)
+    for (sh::ActiveUniforms::const_iterator uniform = vertexUniforms.begin(); uniform != vertexUniforms.end(); uniform++)
     {
-        const rx::D3DConstant *constant = psConstantTable->getConstant(constantIndex);
-
-        if (!defineUniform(infoLog, GL_FRAGMENT_SHADER, constant, "", vsConstantTable, psConstantTable))
+        if (!defineUniform(GL_VERTEX_SHADER, *uniform, infoLog))
         {
             return false;
         }
     }
 
-    for (unsigned int constantIndex = 0; constantIndex < vsConstantTable->constants(); constantIndex++)
+    for (sh::ActiveUniforms::const_iterator uniform = fragmentUniforms.begin(); uniform != fragmentUniforms.end(); uniform++)
     {
-        const rx::D3DConstant *constant = vsConstantTable->getConstant(constantIndex);
-
-        if (!defineUniform(infoLog, GL_VERTEX_SHADER, constant, "", vsConstantTable, psConstantTable))
+        if (!defineUniform(GL_FRAGMENT_SHADER, *uniform, infoLog))
         {
             return false;
         }
     }
+
     return true;
 }
 
