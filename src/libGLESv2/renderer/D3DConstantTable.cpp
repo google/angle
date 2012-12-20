@@ -83,17 +83,17 @@ D3DConstant::D3DConstant(const char *base, const ctab::ConstantInfo *constantInf
 
     if (typeClass == CLASS_STRUCT)
     {
-        addStructMembers(base, registerSet, registerIndex, typeInfo);
+        addStructMembers(base, registerSet, registerIndex, registerIndex + registerCount, typeInfo);
     }
 }
 
-D3DConstant::D3DConstant(const char *base, RegisterSet registerSet, unsigned registerIndex, const ctab::StructMemberInfo *memberInfo)
+D3DConstant::D3DConstant(const char *base, RegisterSet registerSet, unsigned registerIndex, unsigned maxRegister, const ctab::StructMemberInfo *memberInfo)
     : registerSet(registerSet), registerIndex(registerIndex)
 {
     const ctab::TypeInfo *typeInfo = reinterpret_cast<const ctab::TypeInfo*>(base + memberInfo->typeInfo);
 
     name = base + memberInfo->name;
-    registerCount = typeInfo->rows * typeInfo->elements;
+    registerCount = std::min(static_cast<int>(maxRegister - registerIndex), typeInfo->rows * typeInfo->elements);
     typeClass = static_cast<Class>(typeInfo->typeClass);
     type = static_cast<Type>(typeInfo->type);
     rows = typeInfo->rows;
@@ -102,7 +102,7 @@ D3DConstant::D3DConstant(const char *base, RegisterSet registerSet, unsigned reg
 
     if (typeClass == CLASS_STRUCT)
     {
-        registerCount = addStructMembers(base, registerSet, registerIndex, typeInfo);
+        registerCount = addStructMembers(base, registerSet, registerIndex, maxRegister, typeInfo);
     }
 }
 
@@ -117,7 +117,7 @@ D3DConstant::~D3DConstant()
     }
 }
 
-unsigned D3DConstant::addStructMembers(const char *base, RegisterSet registerSet, unsigned registerIndex, const ctab::TypeInfo *typeInfo)
+unsigned D3DConstant::addStructMembers(const char *base, RegisterSet registerSet, unsigned registerIndex, unsigned maxRegister, const ctab::TypeInfo *typeInfo)
 {
     const ctab::StructMemberInfo *memberInfos = reinterpret_cast<const ctab::StructMemberInfo*>(
         base + typeInfo->structMemberInfos);
@@ -135,7 +135,7 @@ unsigned D3DConstant::addStructMembers(const char *base, RegisterSet registerSet
             const ctab::TypeInfo *memberTypeInfo = reinterpret_cast<const ctab::TypeInfo*>(
                 base + memberInfos[i].typeInfo);
 
-            D3DConstant *member = new D3DConstant(base, registerSet, memberIndex, memberInfos + i);
+            D3DConstant *member = new D3DConstant(base, registerSet, memberIndex, maxRegister, memberInfos + i);
             memberIndex += member->registerCount;
 
             structMembers[j][i] = member;
