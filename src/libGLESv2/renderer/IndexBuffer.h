@@ -10,9 +10,6 @@
 #ifndef LIBGLESV2_RENDERER_INDEXBUFFER_H_
 #define LIBGLESV2_RENDERER_INDEXBUFFER_H_
 
-#include <vector>
-#include <cstddef>
-
 #define GL_APICALL
 #include <GLES2/gl2.h>
 
@@ -21,8 +18,6 @@
 
 namespace rx
 {
-
-class Renderer9;
 
 class IndexBuffer
 {
@@ -56,60 +51,61 @@ class IndexBuffer
 class IndexBufferInterface
 {
   public:
-    IndexBufferInterface(rx::Renderer9 *renderer, UINT size, D3DFORMAT format);
+    IndexBufferInterface(Renderer *renderer, bool dynamic);
     virtual ~IndexBufferInterface();
 
-    UINT size() const { return mBufferSize; }
-    virtual void *map(UINT requiredSpace, UINT *offset) = 0;
-    void unmap();
-    virtual void reserveSpace(UINT requiredSpace, GLenum type) = 0;
+    virtual bool reserveBufferSpace(unsigned int size, GLenum indexType) = 0;
 
-    IDirect3DIndexBuffer9 *getBuffer() const;
+    GLenum getIndexType() const;
+    unsigned int getBufferSize() const;
+
     unsigned int getSerial() const;
 
+    int mapBuffer(unsigned int size, void** outMappedMemory);
+    bool unmapBuffer();
+
+    IndexBuffer *getIndexBuffer() const;
+
   protected:
-    rx::Renderer9 *const mRenderer;   // D3D9_REPLACE
+    unsigned int getWritePosition() const;
+    void setWritePosition(unsigned int writePosition);
 
-    IDirect3DIndexBuffer9 *mIndexBuffer;
-    UINT mBufferSize;
+    bool discard();
 
-    unsigned int mSerial;
-    static unsigned int issueSerial();
-    static unsigned int mCurrentSerial;
+    bool setBufferSize(unsigned int bufferSize, GLenum indexType);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(IndexBufferInterface);
+
+    rx::Renderer *const mRenderer;
+
+    IndexBuffer* mIndexBuffer;
+
+    unsigned int mWritePosition;
+    bool mDynamic;
 };
 
 class StreamingIndexBufferInterface : public IndexBufferInterface
 {
   public:
-    StreamingIndexBufferInterface(rx::Renderer9 *renderer, UINT initialSize, D3DFORMAT format);
+    StreamingIndexBufferInterface(Renderer *renderer);
     ~StreamingIndexBufferInterface();
 
-    virtual void *map(UINT requiredSpace, UINT *offset);
-    virtual void reserveSpace(UINT requiredSpace, GLenum type);
-
-  private:
-    UINT mWritePosition;
+    virtual bool reserveBufferSpace(unsigned int size, GLenum indexType);
 };
 
 class StaticIndexBufferInterface : public IndexBufferInterface
 {
   public:
-    explicit StaticIndexBufferInterface(rx::Renderer9 *renderer);
+    explicit StaticIndexBufferInterface(Renderer *renderer);
     ~StaticIndexBufferInterface();
 
-    virtual void *map(UINT requiredSpace, UINT *offset);
-    virtual void reserveSpace(UINT requiredSpace, GLenum type);
+    virtual bool reserveBufferSpace(unsigned int size, GLenum indexType);
 
-    bool lookupType(GLenum type);
     UINT lookupRange(intptr_t offset, GLsizei count, UINT *minIndex, UINT *maxIndex);   // Returns the offset into the index buffer, or -1 if not found
     void addRange(intptr_t offset, GLsizei count, UINT minIndex, UINT maxIndex, UINT streamOffset);
 
   private:
-    GLenum mCacheType;
-
     struct IndexRange
     {
         intptr_t offset;

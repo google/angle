@@ -9,8 +9,6 @@
 
 #include "libGLESv2/renderer/IndexBuffer.h"
 
-#include "libGLESv2/renderer/Renderer9.h"
-
 namespace rx
 {
 
@@ -36,172 +34,143 @@ void IndexBuffer::updateSerial()
 }
 
 
-unsigned int IndexBufferInterface::mCurrentSerial = 1;
-
-IndexBufferInterface::IndexBufferInterface(rx::Renderer9 *renderer, UINT size, D3DFORMAT format) : mRenderer(renderer), mBufferSize(size), mIndexBuffer(NULL)
+IndexBufferInterface::IndexBufferInterface(Renderer *renderer, bool dynamic) : mRenderer(renderer)
 {
-    if (size > 0)
-    {
-        // D3D9_REPLACE
-        HRESULT result = mRenderer->createIndexBuffer(size, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, format, &mIndexBuffer);
-        mSerial = issueSerial();
+    mIndexBuffer = renderer->createIndexBuffer();
 
-        if (FAILED(result))
-        {
-            ERR("Out of memory allocating an index buffer of size %lu.", size);
-        }
-    }
+    mDynamic = dynamic;
+    mWritePosition = 0;
 }
 
 IndexBufferInterface::~IndexBufferInterface()
 {
     if (mIndexBuffer)
     {
-        mIndexBuffer->Release();
+        delete mIndexBuffer;
     }
 }
 
-IDirect3DIndexBuffer9 *IndexBufferInterface::getBuffer() const
+GLenum IndexBufferInterface::getIndexType() const
 {
-    return mIndexBuffer;
+    return mIndexBuffer->getIndexType();
+}
+
+unsigned int IndexBufferInterface::getBufferSize() const
+{
+    return mIndexBuffer->getBufferSize();
 }
 
 unsigned int IndexBufferInterface::getSerial() const
 {
-    return mSerial;
+    return mIndexBuffer->getSerial();
 }
 
-unsigned int IndexBufferInterface::issueSerial()
+int IndexBufferInterface::mapBuffer(unsigned int size, void** outMappedMemory)
 {
-    return mCurrentSerial++;
-}
-
-void IndexBufferInterface::unmap()
-{
-    if (mIndexBuffer)
+    if (!mIndexBuffer->mapBuffer(mWritePosition, size, outMappedMemory))
     {
-        mIndexBuffer->Unlock();
+        *outMappedMemory = NULL;
+        return -1;
+    }
+
+    int oldWritePos = static_cast<int>(mWritePosition);
+    mWritePosition += size;
+
+    return oldWritePos;
+}
+
+bool IndexBufferInterface::unmapBuffer()
+{
+    return mIndexBuffer->unmapBuffer();
+}
+
+IndexBuffer * IndexBufferInterface::getIndexBuffer() const
+{
+    return mIndexBuffer;
+}
+
+unsigned int IndexBufferInterface::getWritePosition() const
+{
+    return mWritePosition;
+}
+
+void IndexBufferInterface::setWritePosition(unsigned int writePosition)
+{
+    mWritePosition = writePosition;
+}
+
+bool IndexBufferInterface::discard()
+{
+    return mIndexBuffer->discard();
+}
+
+bool IndexBufferInterface::setBufferSize(unsigned int bufferSize, GLenum indexType)
+{
+    if (mIndexBuffer->getBufferSize() == 0)
+    {
+        return mIndexBuffer->initialize(bufferSize, indexType, mDynamic);
+    }
+    else
+    {
+        return mIndexBuffer->setSize(bufferSize, indexType);
     }
 }
 
-StreamingIndexBufferInterface::StreamingIndexBufferInterface(rx::Renderer9 *renderer, UINT initialSize, D3DFORMAT format) : IndexBufferInterface(renderer, initialSize, format)
+StreamingIndexBufferInterface::StreamingIndexBufferInterface(Renderer *renderer) : IndexBufferInterface(renderer, true)
 {
-    mWritePosition = 0;
 }
 
 StreamingIndexBufferInterface::~StreamingIndexBufferInterface()
 {
 }
 
-void *StreamingIndexBufferInterface::map(UINT requiredSpace, UINT *offset)
+bool StreamingIndexBufferInterface::reserveBufferSpace(unsigned int size, GLenum indexType)
 {
-    void *mapPtr = NULL;
-
-    if (mIndexBuffer)
+    bool result = true;
+    unsigned int curBufferSize = getBufferSize();
+    if (size > curBufferSize)
     {
-        HRESULT result = mIndexBuffer->Lock(mWritePosition, requiredSpace, &mapPtr, D3DLOCK_NOOVERWRITE);
-
-        if (FAILED(result))
+        result = setBufferSize(std::max(size, 2 * curBufferSize), indexType);
+        setWritePosition(0);
+    }
+    else if (getWritePosition() + size > curBufferSize)
+    {
+        if (!discard())
         {
-            ERR(" Lock failed with error 0x%08x", result);
-            return NULL;
+            return false;
         }
-
-        *offset = mWritePosition;
-        mWritePosition += requiredSpace;
+        setWritePosition(0);
     }
 
-    return mapPtr;
+    return result;
 }
 
-void StreamingIndexBufferInterface::reserveSpace(UINT requiredSpace, GLenum type)
+
+StaticIndexBufferInterface::StaticIndexBufferInterface(Renderer *renderer) : IndexBufferInterface(renderer, false)
 {
-    if (requiredSpace > mBufferSize)
-    {
-        if (mIndexBuffer)
-        {
-            mIndexBuffer->Release();
-            mIndexBuffer = NULL;
-        }
-
-        mBufferSize = std::max(requiredSpace, 2 * mBufferSize);
-
-        // D3D9_REPLACE
-        HRESULT result = mRenderer->createIndexBuffer(mBufferSize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY, type == GL_UNSIGNED_INT ? D3DFMT_INDEX32 : D3DFMT_INDEX16, &mIndexBuffer);
-        mSerial = issueSerial();
-
-        if (FAILED(result))
-        {
-            ERR("Out of memory allocating a vertex buffer of size %lu.", mBufferSize);
-        }
-
-        mWritePosition = 0;
-    }
-    else if (mWritePosition + requiredSpace > mBufferSize)   // Recycle
-    {
-        void *dummy;
-        mIndexBuffer->Lock(0, 1, &dummy, D3DLOCK_DISCARD);
-        mIndexBuffer->Unlock();
-
-        mWritePosition = 0;
-    }
-}
-
-StaticIndexBufferInterface::StaticIndexBufferInterface(rx::Renderer9 *renderer) : IndexBufferInterface(renderer, 0, D3DFMT_UNKNOWN)
-{
-    mCacheType = GL_NONE;
 }
 
 StaticIndexBufferInterface::~StaticIndexBufferInterface()
 {
 }
 
-void *StaticIndexBufferInterface::map(UINT requiredSpace, UINT *offset)
+bool StaticIndexBufferInterface::reserveBufferSpace(unsigned int size, GLenum indexType)
 {
-    void *mapPtr = NULL;
-
-    if (mIndexBuffer)
+    unsigned int curSize = getBufferSize();
+    if (curSize == 0)
     {
-        HRESULT result = mIndexBuffer->Lock(0, requiredSpace, &mapPtr, 0);
-
-        if (FAILED(result))
-        {
-            ERR(" Lock failed with error 0x%08x", result);
-            return NULL;
-        }
-
-        *offset = 0;
+        return setBufferSize(size, indexType);
     }
-
-    return mapPtr;
-}
-
-void StaticIndexBufferInterface::reserveSpace(UINT requiredSpace, GLenum type)
-{
-    if (!mIndexBuffer && mBufferSize == 0)
+    else if (curSize >= size && indexType == getIndexType())
     {
-        // D3D9_REPLACE
-        HRESULT result = mRenderer->createIndexBuffer(requiredSpace, D3DUSAGE_WRITEONLY, type == GL_UNSIGNED_INT ? D3DFMT_INDEX32 : D3DFMT_INDEX16, &mIndexBuffer);
-        mSerial = issueSerial();
-
-        if (FAILED(result))
-        {
-            ERR("Out of memory allocating a vertex buffer of size %lu.", mBufferSize);
-        }
-
-        mBufferSize = requiredSpace;
-        mCacheType = type;
+        return true;
     }
-    else if (mIndexBuffer && mBufferSize >= requiredSpace && mCacheType == type)
+    else
     {
-        // Already allocated
+        ERR("Static index buffers can't be resized");
+        UNREACHABLE();
+        return false;
     }
-    else UNREACHABLE();   // Static index buffers can't be resized
-}
-
-bool StaticIndexBufferInterface::lookupType(GLenum type)
-{
-    return mCacheType == type;
 }
 
 UINT StaticIndexBufferInterface::lookupRange(intptr_t offset, GLsizei count, UINT *minIndex, UINT *maxIndex)

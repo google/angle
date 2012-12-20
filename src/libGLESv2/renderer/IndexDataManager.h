@@ -32,24 +32,24 @@ struct TranslatedIndexData
     UINT minIndex;
     UINT maxIndex;
     UINT startIndex;
+
+    IndexBuffer *indexBuffer;
+    unsigned int serial;
 };
 
 class IndexDataManager
 {
   public:
-    IndexDataManager(rx::Renderer9 *renderer);
+    explicit IndexDataManager(Renderer *renderer);
     virtual ~IndexDataManager();
 
-    GLenum prepareIndexData(GLenum type, GLsizei count, gl::Buffer *arrayElementBuffer, const GLvoid *indices, TranslatedIndexData *translated, IDirect3DIndexBuffer9 **indexBuffer, unsigned int *serial);
+    GLenum prepareIndexData(GLenum type, GLsizei count, gl::Buffer *arrayElementBuffer, const GLvoid *indices, TranslatedIndexData *translated);
     StaticIndexBufferInterface *getCountingIndices(GLsizei count);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(IndexDataManager);
 
-    std::size_t typeSize(GLenum type) const;
-    std::size_t indexSize(D3DFORMAT format) const;
-
-    rx::Renderer9 *const mRenderer;   // D3D9_REPLACE
+    Renderer *const mRenderer;
 
     StreamingIndexBufferInterface *mStreamingBufferShort;
     StreamingIndexBufferInterface *mStreamingBufferInt;

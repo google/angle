@@ -1200,16 +1200,16 @@ GLenum Renderer9::applyVertexBuffer(gl::ProgramBinary *programBinary, gl::Vertex
 // Applies the indices and element array bindings to the Direct3D 9 device
 GLenum Renderer9::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo)
 {
-    IDirect3DIndexBuffer9 *indexBuffer;
-    unsigned int serial;
-    GLenum err = mIndexDataManager->prepareIndexData(type, count, elementArrayBuffer, indices, indexInfo, &indexBuffer, &serial);
+    GLenum err = mIndexDataManager->prepareIndexData(type, count, elementArrayBuffer, indices, indexInfo);
 
     if (err == GL_NO_ERROR)
     {
-        if (serial != mAppliedIBSerial)
+        if (indexInfo->serial != mAppliedIBSerial)
         {
-            mDevice->SetIndices(indexBuffer);
-            mAppliedIBSerial = serial;
+            IndexBuffer9* indexBuffer = IndexBuffer9::makeIndexBuffer9(indexInfo->indexBuffer);
+
+            mDevice->SetIndices(indexBuffer->getBuffer());
+            mAppliedIBSerial = indexInfo->serial;
         }
     }
 
@@ -1231,7 +1231,9 @@ void Renderer9::drawArrays(GLenum mode, GLsizei count, GLsizei instances)
         {
             if (mAppliedIBSerial != countingIB->getSerial())
             {
-                mDevice->SetIndices(countingIB->getBuffer());
+                IndexBuffer9 *indexBuffer = IndexBuffer9::makeIndexBuffer9(countingIB->getIndexBuffer());
+
+                mDevice->SetIndices(indexBuffer->getBuffer());
                 mAppliedIBSerial = countingIB->getSerial();
             }
 
@@ -1281,138 +1283,161 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
     }
 
     UINT startIndex = 0;
-    bool succeeded = false;
 
     if (get32BitIndexSupport())
     {
+        if (!mLineLoopIB)
+        {
+            mLineLoopIB = new StreamingIndexBufferInterface(this);
+            if (!mLineLoopIB->reserveBufferSpace(INITIAL_INDEX_BUFFER_SIZE, GL_UNSIGNED_INT))
+            {
+                delete mLineLoopIB;
+                mLineLoopIB = NULL;
+
+                ERR("Could not create a 32-bit looping index buffer for GL_LINE_LOOP.");
+                return error(GL_OUT_OF_MEMORY);
+            }
+        }
+
         const int spaceNeeded = (count + 1) * sizeof(unsigned int);
-
-        if (!mLineLoopIB)
+        if (!mLineLoopIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT))
         {
-            mLineLoopIB = new StreamingIndexBufferInterface(this, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX32);
+            ERR("Could not reserve enough space in looping index buffer for GL_LINE_LOOP.");
+            return error(GL_OUT_OF_MEMORY);
         }
 
-        if (mLineLoopIB)
+        void* mappedMemory = NULL;
+        int offset = mLineLoopIB->mapBuffer(spaceNeeded, &mappedMemory);
+        if (offset == -1 || mappedMemory == NULL)
         {
-            mLineLoopIB->reserveSpace(spaceNeeded, GL_UNSIGNED_INT);
+            ERR("Could not map index buffer for GL_LINE_LOOP.");
+            return error(GL_OUT_OF_MEMORY);
+        }
 
-            UINT offset = 0;
-            unsigned int *data = static_cast<unsigned int*>(mLineLoopIB->map(spaceNeeded, &offset));
-            startIndex = offset / 4;
-            
-            if (data)
+        startIndex = static_cast<UINT>(offset) / 4;
+        unsigned int *data = reinterpret_cast<unsigned int*>(mappedMemory);
+
+        switch (type)
+        {
+          case GL_NONE:   // Non-indexed draw
+            for (int i = 0; i < count; i++)
             {
-                switch (type)
-                {
-                  case GL_NONE:   // Non-indexed draw
-                    for (int i = 0; i < count; i++)
-                    {
-                        data[i] = i;
-                    }
-                    data[count] = 0;
-                    break;
-                  case GL_UNSIGNED_BYTE:
-                    for (int i = 0; i < count; i++)
-                    {
-                        data[i] = static_cast<const GLubyte*>(indices)[i];
-                    }
-                    data[count] = static_cast<const GLubyte*>(indices)[0];
-                    break;
-                  case GL_UNSIGNED_SHORT:
-                    for (int i = 0; i < count; i++)
-                    {
-                        data[i] = static_cast<const GLushort*>(indices)[i];
-                    }
-                    data[count] = static_cast<const GLushort*>(indices)[0];
-                    break;
-                  case GL_UNSIGNED_INT:
-                    for (int i = 0; i < count; i++)
-                    {
-                        data[i] = static_cast<const GLuint*>(indices)[i];
-                    }
-                    data[count] = static_cast<const GLuint*>(indices)[0];
-                    break;
-                  default: UNREACHABLE();
-                }
-
-                mLineLoopIB->unmap();
-                succeeded = true;
+                data[i] = i;
             }
+            data[count] = 0;
+            break;
+          case GL_UNSIGNED_BYTE:
+            for (int i = 0; i < count; i++)
+            {
+                data[i] = static_cast<const GLubyte*>(indices)[i];
+            }
+            data[count] = static_cast<const GLubyte*>(indices)[0];
+            break;
+          case GL_UNSIGNED_SHORT:
+            for (int i = 0; i < count; i++)
+            {
+                data[i] = static_cast<const GLushort*>(indices)[i];
+            }
+            data[count] = static_cast<const GLushort*>(indices)[0];
+            break;
+          case GL_UNSIGNED_INT:
+            for (int i = 0; i < count; i++)
+            {
+                data[i] = static_cast<const GLuint*>(indices)[i];
+            }
+            data[count] = static_cast<const GLuint*>(indices)[0];
+            break;
+          default: UNREACHABLE();
+        }
+
+        if (!mLineLoopIB->unmapBuffer())
+        {
+            ERR("Could not unmap index buffer for GL_LINE_LOOP.");
+            return error(GL_OUT_OF_MEMORY);
         }
     }
     else
     {
+        if (!mLineLoopIB)
+        {
+            mLineLoopIB = new StreamingIndexBufferInterface(this);
+            if (!mLineLoopIB->reserveBufferSpace(INITIAL_INDEX_BUFFER_SIZE, GL_UNSIGNED_SHORT))
+            {
+                delete mLineLoopIB;
+                mLineLoopIB = NULL;
+
+                ERR("Could not create a 16-bit looping index buffer for GL_LINE_LOOP.");
+                return error(GL_OUT_OF_MEMORY);
+            }
+        }
+
         const int spaceNeeded = (count + 1) * sizeof(unsigned short);
-
-        if (!mLineLoopIB)
+        if (!mLineLoopIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_SHORT))
         {
-            mLineLoopIB = new StreamingIndexBufferInterface(this, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX16);
+            ERR("Could not reserve enough space in looping index buffer for GL_LINE_LOOP.");
+            return error(GL_OUT_OF_MEMORY);
         }
 
-        if (mLineLoopIB)
+        void* mappedMemory = NULL;
+        int offset = mLineLoopIB->mapBuffer(spaceNeeded, &mappedMemory);
+        if (offset == -1 || mappedMemory == NULL)
         {
-            mLineLoopIB->reserveSpace(spaceNeeded, GL_UNSIGNED_SHORT);
+            ERR("Could not map index buffer for GL_LINE_LOOP.");
+            return error(GL_OUT_OF_MEMORY);
+        }
 
-            UINT offset = 0;
-            unsigned short *data = static_cast<unsigned short*>(mLineLoopIB->map(spaceNeeded, &offset));
-            startIndex = offset / 2;
-            
-            if (data)
+        startIndex = static_cast<UINT>(offset) / 2;
+        unsigned short *data = reinterpret_cast<unsigned short*>(mappedMemory);
+
+        switch (type)
+        {
+          case GL_NONE:   // Non-indexed draw
+            for (int i = 0; i < count; i++)
             {
-                switch (type)
-                {
-                  case GL_NONE:   // Non-indexed draw
-                    for (int i = 0; i < count; i++)
-                    {
-                        data[i] = i;
-                    }
-                    data[count] = 0;
-                    break;
-                  case GL_UNSIGNED_BYTE:
-                    for (int i = 0; i < count; i++)
-                    {
-                        data[i] = static_cast<const GLubyte*>(indices)[i];
-                    }
-                    data[count] = static_cast<const GLubyte*>(indices)[0];
-                    break;
-                  case GL_UNSIGNED_SHORT:
-                    for (int i = 0; i < count; i++)
-                    {
-                        data[i] = static_cast<const GLushort*>(indices)[i];
-                    }
-                    data[count] = static_cast<const GLushort*>(indices)[0];
-                    break;
-                  case GL_UNSIGNED_INT:
-                    for (int i = 0; i < count; i++)
-                    {
-                        data[i] = static_cast<const GLuint*>(indices)[i];
-                    }
-                    data[count] = static_cast<const GLuint*>(indices)[0];
-                    break;
-                  default: UNREACHABLE();
-                }
-
-                mLineLoopIB->unmap();
-                succeeded = true;
+                data[i] = i;
             }
-        }
-    }
-    
-    if (succeeded)
-    {
-        if (mAppliedIBSerial != mLineLoopIB->getSerial())
-        {
-            mDevice->SetIndices(mLineLoopIB->getBuffer());
-            mAppliedIBSerial = mLineLoopIB->getSerial();
+            data[count] = 0;
+            break;
+          case GL_UNSIGNED_BYTE:
+            for (int i = 0; i < count; i++)
+            {
+                data[i] = static_cast<const GLubyte*>(indices)[i];
+            }
+            data[count] = static_cast<const GLubyte*>(indices)[0];
+            break;
+          case GL_UNSIGNED_SHORT:
+            for (int i = 0; i < count; i++)
+            {
+                data[i] = static_cast<const GLushort*>(indices)[i];
+            }
+            data[count] = static_cast<const GLushort*>(indices)[0];
+            break;
+          case GL_UNSIGNED_INT:
+            for (int i = 0; i < count; i++)
+            {
+                data[i] = static_cast<const GLuint*>(indices)[i];
+            }
+            data[count] = static_cast<const GLuint*>(indices)[0];
+            break;
+          default: UNREACHABLE();
         }
 
-        mDevice->DrawIndexedPrimitive(D3DPT_LINESTRIP, -minIndex, minIndex, count, startIndex, count);
+        if (!mLineLoopIB->unmapBuffer())
+        {
+            ERR("Could not unmap index buffer for GL_LINE_LOOP.");
+            return error(GL_OUT_OF_MEMORY);
+        }
     }
-    else
+
+    if (mAppliedIBSerial != mLineLoopIB->getSerial())
     {
-        ERR("Could not create a looping index buffer for GL_LINE_LOOP.");
-        return error(GL_OUT_OF_MEMORY);
+        IndexBuffer9 *indexBuffer = IndexBuffer9::makeIndexBuffer9(mLineLoopIB->getIndexBuffer());
+
+        mDevice->SetIndices(indexBuffer->getBuffer());
+        mAppliedIBSerial = mLineLoopIB->getSerial();
     }
+
+    mDevice->DrawIndexedPrimitive(D3DPT_LINESTRIP, -minIndex, minIndex, count, startIndex, count);
 }
 
 void Renderer9::applyShaders(gl::ProgramBinary *programBinary)
