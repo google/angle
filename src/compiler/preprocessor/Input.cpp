@@ -26,7 +26,7 @@ Input::Input(int count, const char* const string[], const int length[]) :
     for (int i = 0; i < mCount; ++i)
     {
         int len = length ? length[i] : -1;
-        mLength.push_back(len < 0 ? strlen(mString[i]) : len);
+        mLength.push_back(len < 0 ? std::strlen(mString[i]) : len);
     }
 }
 
@@ -37,7 +37,7 @@ int Input::read(char* buf, int maxSize)
     {
         int size = mLength[mReadLoc.sIndex] - mReadLoc.cIndex;
         size = std::min(size, maxSize);
-        memcpy(buf + nRead, mString[mReadLoc.sIndex] + mReadLoc.cIndex, size);
+        std::memcpy(buf + nRead, mString[mReadLoc.sIndex] + mReadLoc.cIndex, size);
         nRead += size;
         mReadLoc.cIndex += size;
 

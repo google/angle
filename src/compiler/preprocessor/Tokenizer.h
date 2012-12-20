@@ -32,7 +32,7 @@ class Tokenizer : public Lexer
         bool leadingSpace;
         bool lineStart;
     };
-    static const size_t kMaxTokenLength;
+    static const std::size_t kMaxTokenLength;
 
     Tokenizer(Diagnostics* diagnostics);
     ~Tokenizer();

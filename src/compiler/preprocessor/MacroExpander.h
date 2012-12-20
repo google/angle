@@ -53,7 +53,7 @@ class MacroExpander : public Lexer
     struct MacroContext
     {
         const Macro* macro;
-        size_t index;
+        std::size_t index;
         std::vector<Token> replacements;
 
         MacroContext() : macro(0), index(0) { }
