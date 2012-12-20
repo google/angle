@@ -2490,31 +2490,13 @@ GLint ProgramBinary::getActiveAttributeMaxLength()
 
 void ProgramBinary::getActiveUniform(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name)
 {
-    // Skip over internal uniforms
-    unsigned int activeUniform = 0;
-    unsigned int uniform;
-    for (uniform = 0; uniform < mUniforms.size(); uniform++)
-    {
-        if (mUniforms[uniform]->name.compare(0, 3, "dx_") == 0)
-        {
-            continue;
-        }
-
-        if (activeUniform == index)
-        {
-            break;
-        }
-
-        activeUniform++;
-    }
-
-    ASSERT(uniform < mUniforms.size());   // index must be smaller than getActiveUniformCount()
+    ASSERT(index < mUniforms.size());   // index must be smaller than getActiveUniformCount()
 
     if (bufsize > 0)
     {
-        std::string string = mUniforms[uniform]->name;
+        std::string string = mUniforms[index]->name;
 
-        if (mUniforms[uniform]->isArray())
+        if (mUniforms[index]->isArray())
         {
             string += "[0]";
         }
@@ -2528,25 +2510,14 @@ void ProgramBinary::getActiveUniform(GLuint index, GLsizei bufsize, GLsizei *len
         }
     }
 
-    *size = mUniforms[uniform]->arraySize;
+    *size = mUniforms[index]->arraySize;
 
-    *type = mUniforms[uniform]->type;
+    *type = mUniforms[index]->type;
 }
 
 GLint ProgramBinary::getActiveUniformCount()
 {
-    int count = 0;
-
-    unsigned int numUniforms = mUniforms.size();
-    for (unsigned int uniformIndex = 0; uniformIndex < numUniforms; uniformIndex++)
-    {
-        if (mUniforms[uniformIndex]->name.compare(0, 3, "dx_") != 0)
-        {
-            count++;
-        }
-    }
-
-    return count;
+    return mUniforms.size();
 }
 
 GLint ProgramBinary::getActiveUniformMaxLength()
@@ -2556,7 +2527,7 @@ GLint ProgramBinary::getActiveUniformMaxLength()
     unsigned int numUniforms = mUniforms.size();
     for (unsigned int uniformIndex = 0; uniformIndex < numUniforms; uniformIndex++)
     {
-        if (!mUniforms[uniformIndex]->name.empty() && mUniforms[uniformIndex]->name.compare(0, 3, "dx_") != 0)
+        if (!mUniforms[uniformIndex]->name.empty())
         {
             int length = (int)(mUniforms[uniformIndex]->name.length() + 1);
             if (mUniforms[uniformIndex]->isArray())
