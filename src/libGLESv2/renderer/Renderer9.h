@@ -22,7 +22,9 @@
 #include <d3d9.h>
 
 #include "common/angleutils.h"
+#include "libGLESv2/mathutil.h"
 #include "libGLESv2/Context.h"
+#include "libGLESv2/ProgramBinary.h"
 #include "libGLESv2/renderer/ShaderCache.h"
 #include "libGLESv2/renderer/VertexDeclarationCache.h"
 #include "libGLESv2/renderer/Renderer.h"
@@ -90,6 +92,7 @@ class Renderer9 : public Renderer
 
     virtual bool applyRenderTarget(gl::Framebuffer *frameBuffer);
     virtual void applyShaders(gl::ProgramBinary *programBinary);
+    virtual void applyUniforms(const gl::UniformArray *uniformArray);
     virtual bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount);
     virtual GLenum applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], GLint first, GLsizei count, GLsizei instances);
     virtual GLenum applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo);
@@ -180,6 +183,14 @@ class Renderer9 : public Renderer
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer9);
+
+    bool applyUniformnfv(gl::Uniform *targetUniform, const GLfloat *v);
+    bool applyUniform1iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v);
+    bool applyUniform2iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v);
+    bool applyUniform3iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v);
+    bool applyUniform4iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v);
+    void applyUniformniv(gl::Uniform *targetUniform, GLsizei count, const gl::Vector4 *vector);
+    void applyUniformnbv(gl::Uniform *targetUniform, GLsizei count, int width, const GLboolean *v);
 
     void drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
 

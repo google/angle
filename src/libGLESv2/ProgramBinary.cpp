@@ -978,52 +978,74 @@ void ProgramBinary::dirtyAllUniforms()
     }
 }
 
-// Applies all the uniforms set for this program object to the Direct3D 9 device
+// Applies all the uniforms set for this program object to the renderer
 void ProgramBinary::applyUniforms()
 {
+    // Retrieve sampler uniform values
+    for (std::vector<Uniform*>::iterator ub = mUniforms.begin(), ue = mUniforms.end(); ub != ue; ++ub)
+    {
+        Uniform *targetUniform = *ub;
+
+        if (targetUniform->dirty)
+        {
+            int count = targetUniform->arraySize;
+            GLint *v = (GLint*)targetUniform->data;
+
+            switch (targetUniform->type)
+            {
+              case GL_SAMPLER_2D:
+              case GL_SAMPLER_CUBE:
+                {
+                    if (targetUniform->ps.registerCount)
+                    {
+                        if (targetUniform->ps.samplerIndex >= 0)
+                        {
+                            unsigned int firstIndex = targetUniform->ps.samplerIndex;
+
+                            for (int i = 0; i < count; i++)
+                            {
+                                unsigned int samplerIndex = firstIndex + i;
+
+                                if (samplerIndex < MAX_TEXTURE_IMAGE_UNITS)
+                                {
+                                    ASSERT(mSamplersPS[samplerIndex].active);
+                                    mSamplersPS[samplerIndex].logicalTextureUnit = v[i];
+                                }
+                            }
+                        }
+                    }
+
+                    if (targetUniform->vs.registerCount)
+                    {
+                        if (targetUniform->vs.samplerIndex >= 0)
+                        {
+                            unsigned int firstIndex = targetUniform->vs.samplerIndex;
+
+                            for (int i = 0; i < count; i++)
+                            {
+                                unsigned int samplerIndex = firstIndex + i;
+
+                                if (samplerIndex < MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF)
+                                {
+                                    ASSERT(mSamplersVS[samplerIndex].active);
+                                    mSamplersVS[samplerIndex].logicalTextureUnit = v[i];
+                                }
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+        }
+    }
+
     if (dynamic_cast<rx::Renderer9*>(mRenderer) == NULL)  // D3D9_REPLACE
     {
         return;   // UNIMPLEMENTED
     }
 
-    IDirect3DDevice9 *device = rx::Renderer9::makeRenderer9(mRenderer)->getDevice(); // D3D9_REPLACE
-
-    for (std::vector<Uniform*>::iterator ub = mUniforms.begin(), ue = mUniforms.end(); ub != ue; ++ub) {
-        Uniform *targetUniform = *ub;
-
-        if (targetUniform->dirty)
-        {
-            int arraySize = targetUniform->arraySize;
-            GLfloat *f = (GLfloat*)targetUniform->data;
-            GLint *i = (GLint*)targetUniform->data;
-            GLboolean *b = (GLboolean*)targetUniform->data;
-
-            switch (targetUniform->type)
-            {
-              case GL_BOOL:       applyUniformnbv(device, targetUniform, arraySize, 1, b);    break;
-              case GL_BOOL_VEC2:  applyUniformnbv(device, targetUniform, arraySize, 2, b);    break;
-              case GL_BOOL_VEC3:  applyUniformnbv(device, targetUniform, arraySize, 3, b);    break;
-              case GL_BOOL_VEC4:  applyUniformnbv(device, targetUniform, arraySize, 4, b);    break;
-              case GL_FLOAT:
-              case GL_FLOAT_VEC2:
-              case GL_FLOAT_VEC3:
-              case GL_FLOAT_VEC4:
-              case GL_FLOAT_MAT2:
-              case GL_FLOAT_MAT3:
-              case GL_FLOAT_MAT4: applyUniformnfv(device, targetUniform, f);                  break;
-              case GL_SAMPLER_2D:
-              case GL_SAMPLER_CUBE:
-              case GL_INT:        applyUniform1iv(device, targetUniform, arraySize, i);       break;
-              case GL_INT_VEC2:   applyUniform2iv(device, targetUniform, arraySize, i);       break;
-              case GL_INT_VEC3:   applyUniform3iv(device, targetUniform, arraySize, i);       break;
-              case GL_INT_VEC4:   applyUniform4iv(device, targetUniform, arraySize, i);       break;
-              default:
-                UNREACHABLE();
-            }
-
-            targetUniform->dirty = false;
-        }
-    }
+    // Set all other uniforms
+    rx::Renderer9::makeRenderer9(mRenderer)->applyUniforms(&mUniforms);
 }
 
 // Packs varyings into generic varying registers, using the algorithm from [OpenGL ES Shading Language 1.00 rev. 17] appendix A section 7 page 111
@@ -2213,207 +2235,6 @@ std::string ProgramBinary::undecorateUniform(const std::string &_name)
     
     return name;
 }
-
-// D3D9_REPLACE begin
-void ProgramBinary::applyUniformnbv(IDirect3DDevice9 *device, Uniform *targetUniform, GLsizei count, int width, const GLboolean *v)
-{
-    float vector[D3D9_MAX_FLOAT_CONSTANTS * 4];
-    BOOL boolVector[D3D9_MAX_BOOL_CONSTANTS];
-
-    if (targetUniform->ps.float4Index >= 0 || targetUniform->vs.float4Index >= 0)
-    {
-        ASSERT(count <= D3D9_MAX_FLOAT_CONSTANTS);
-        for (int i = 0; i < count; i++)
-        {
-            for (int j = 0; j < 4; j++)
-            {
-                if (j < width)
-                {
-                    vector[i * 4 + j] = (v[i * width + j] == GL_FALSE) ? 0.0f : 1.0f;
-                }
-                else
-                {
-                    vector[i * 4 + j] = 0.0f;
-                }
-            }
-        }
-    }
-
-    if (targetUniform->ps.boolIndex >= 0 || targetUniform->vs.boolIndex >= 0)
-    {
-        int psCount = targetUniform->ps.boolIndex >= 0 ? targetUniform->ps.registerCount : 0;
-        int vsCount = targetUniform->vs.boolIndex >= 0 ? targetUniform->vs.registerCount : 0;
-        int copyCount = std::min(count * width, std::max(psCount, vsCount));
-        ASSERT(copyCount <= D3D9_MAX_BOOL_CONSTANTS);
-        for (int i = 0; i < copyCount; i++)
-        {
-            boolVector[i] = v[i] != GL_FALSE;
-        }
-    }
-
-    if (targetUniform->ps.float4Index >= 0)
-    {
-        device->SetPixelShaderConstantF(targetUniform->ps.float4Index, vector, targetUniform->ps.registerCount);
-    }
-        
-    if (targetUniform->ps.boolIndex >= 0)
-    {
-        device->SetPixelShaderConstantB(targetUniform->ps.boolIndex, boolVector, targetUniform->ps.registerCount);
-    }
-    
-    if (targetUniform->vs.float4Index >= 0)
-    {
-        device->SetVertexShaderConstantF(targetUniform->vs.float4Index, vector, targetUniform->vs.registerCount);
-    }
-        
-    if (targetUniform->vs.boolIndex >= 0)
-    {
-        device->SetVertexShaderConstantB(targetUniform->vs.boolIndex, boolVector, targetUniform->vs.registerCount);
-    }
-}
-
-bool ProgramBinary::applyUniformnfv(IDirect3DDevice9 *device, Uniform *targetUniform, const GLfloat *v)
-{
-    if (targetUniform->ps.registerCount)
-    {
-        device->SetPixelShaderConstantF(targetUniform->ps.float4Index, v, targetUniform->ps.registerCount);
-    }
-
-    if (targetUniform->vs.registerCount)
-    {
-        device->SetVertexShaderConstantF(targetUniform->vs.float4Index, v, targetUniform->vs.registerCount);
-    }
-
-    return true;
-}
-
-bool ProgramBinary::applyUniform1iv(IDirect3DDevice9 *device, Uniform *targetUniform, GLsizei count, const GLint *v)
-{
-    ASSERT(count <= D3D9_MAX_FLOAT_CONSTANTS);
-    Vector4 vector[D3D9_MAX_FLOAT_CONSTANTS];
-
-    for (int i = 0; i < count; i++)
-    {
-        vector[i] = Vector4((float)v[i], 0, 0, 0);
-    }
-
-    if (targetUniform->ps.registerCount)
-    {
-        if (targetUniform->ps.samplerIndex >= 0)
-        {
-            unsigned int firstIndex = targetUniform->ps.samplerIndex;
-
-            for (int i = 0; i < count; i++)
-            {
-                unsigned int samplerIndex = firstIndex + i;
-
-                if (samplerIndex < MAX_TEXTURE_IMAGE_UNITS)
-                {
-                    ASSERT(mSamplersPS[samplerIndex].active);
-                    mSamplersPS[samplerIndex].logicalTextureUnit = v[i];
-                }
-            }
-        }
-        else
-        {
-            ASSERT(targetUniform->ps.float4Index >= 0);
-            device->SetPixelShaderConstantF(targetUniform->ps.float4Index, (const float*)vector, targetUniform->ps.registerCount);
-        }
-    }
-
-    if (targetUniform->vs.registerCount)
-    {
-        if (targetUniform->vs.samplerIndex >= 0)
-        {
-            unsigned int firstIndex = targetUniform->vs.samplerIndex;
-
-            for (int i = 0; i < count; i++)
-            {
-                unsigned int samplerIndex = firstIndex + i;
-
-                if (samplerIndex < MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF)
-                {
-                    ASSERT(mSamplersVS[samplerIndex].active);
-                    mSamplersVS[samplerIndex].logicalTextureUnit = v[i];
-                }
-            }
-        }
-        else
-        {
-            ASSERT(targetUniform->vs.float4Index >= 0);
-            device->SetVertexShaderConstantF(targetUniform->vs.float4Index, (const float *)vector, targetUniform->vs.registerCount);
-        }
-    }
-
-    return true;
-}
-
-bool ProgramBinary::applyUniform2iv(IDirect3DDevice9 *device, Uniform *targetUniform, GLsizei count, const GLint *v)
-{
-    ASSERT(count <= D3D9_MAX_FLOAT_CONSTANTS);
-    Vector4 vector[D3D9_MAX_FLOAT_CONSTANTS];
-
-    for (int i = 0; i < count; i++)
-    {
-        vector[i] = Vector4((float)v[0], (float)v[1], 0, 0);
-
-        v += 2;
-    }
-
-    applyUniformniv(device, targetUniform, count, vector);
-
-    return true;
-}
-
-bool ProgramBinary::applyUniform3iv(IDirect3DDevice9 *device, Uniform *targetUniform, GLsizei count, const GLint *v)
-{
-    ASSERT(count <= D3D9_MAX_FLOAT_CONSTANTS);
-    Vector4 vector[D3D9_MAX_FLOAT_CONSTANTS];
-
-    for (int i = 0; i < count; i++)
-    {
-        vector[i] = Vector4((float)v[0], (float)v[1], (float)v[2], 0);
-
-        v += 3;
-    }
-
-    applyUniformniv(device, targetUniform, count, vector);
-
-    return true;
-}
-
-bool ProgramBinary::applyUniform4iv(IDirect3DDevice9 *device, Uniform *targetUniform, GLsizei count, const GLint *v)
-{
-    ASSERT(count <= D3D9_MAX_FLOAT_CONSTANTS);
-    Vector4 vector[D3D9_MAX_FLOAT_CONSTANTS];
-
-    for (int i = 0; i < count; i++)
-    {
-        vector[i] = Vector4((float)v[0], (float)v[1], (float)v[2], (float)v[3]);
-
-        v += 4;
-    }
-
-    applyUniformniv(device, targetUniform, count, vector);
-
-    return true;
-}
-
-void ProgramBinary::applyUniformniv(IDirect3DDevice9 *device, Uniform *targetUniform, GLsizei count, const Vector4 *vector)
-{
-    if (targetUniform->ps.registerCount)
-    {
-        ASSERT(targetUniform->ps.float4Index >= 0);
-        device->SetPixelShaderConstantF(targetUniform->ps.float4Index, (const float *)vector, targetUniform->ps.registerCount);
-    }
-
-    if (targetUniform->vs.registerCount)
-    {
-        ASSERT(targetUniform->vs.float4Index >= 0);
-        device->SetVertexShaderConstantF(targetUniform->vs.float4Index, (const float *)vector, targetUniform->vs.registerCount);
-    }
-}
-// D3D9_REPLACE end
 
 bool ProgramBinary::isValidated() const 
 {

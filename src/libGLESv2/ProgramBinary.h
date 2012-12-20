@@ -81,6 +81,8 @@ struct Uniform
     RegisterInfo vs;
 };
 
+typedef std::vector<Uniform*> UniformArray;
+
 // Struct used for correlating uniforms/elements of uniform arrays to handles
 struct UniformLocation
 {
@@ -174,14 +176,7 @@ class ProgramBinary : public RefCountObject
                        rx::D3DConstantTable *vsConstantTable, rx::D3DConstantTable *psConstantTable);
     bool defineUniform(GLenum shader, const rx::D3DConstant *constant, const std::string &name);
     Uniform *createUniform(const rx::D3DConstant *constant, const std::string &name);
-    bool applyUniformnfv(IDirect3DDevice9 *device, Uniform *targetUniform, const GLfloat *v);   // D3D9_REPLACE
-    bool applyUniform1iv(IDirect3DDevice9 *device, Uniform *targetUniform, GLsizei count, const GLint *v);
-    bool applyUniform2iv(IDirect3DDevice9 *device, Uniform *targetUniform, GLsizei count, const GLint *v);
-    bool applyUniform3iv(IDirect3DDevice9 *device, Uniform *targetUniform, GLsizei count, const GLint *v);
-    bool applyUniform4iv(IDirect3DDevice9 *device, Uniform *targetUniform, GLsizei count, const GLint *v);
-    void applyUniformniv(IDirect3DDevice9 *device, Uniform *targetUniform, GLsizei count, const Vector4 *vector);
-    void applyUniformnbv(IDirect3DDevice9 *device, Uniform *targetUniform, GLsizei count, int width, const GLboolean *v);
-
+    
     rx::Renderer *const mRenderer;
 
     rx::ShaderExecutable *mPixelExecutable;
@@ -205,7 +200,6 @@ class ProgramBinary : public RefCountObject
     GLuint mUsedPixelSamplerRange;
     bool mUsesPointSize;
 
-    typedef std::vector<Uniform*> UniformArray;
     UniformArray mUniforms;
     typedef std::vector<UniformLocation> UniformIndex;
     UniformIndex mUniformIndex;
