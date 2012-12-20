@@ -90,8 +90,8 @@ class Renderer
                                       int stencilBackRef, bool frontFaceCCW) = 0;
 
     virtual void setScissorRectangle(const gl::Rectangle &scissor, bool enabled) = 0;
-    virtual bool setViewport(const gl::Rectangle &viewport, float zNear, float zFar, bool ignoreViewport,
-                             gl::ProgramBinary *currentProgram, bool forceSetUniforms) = 0;
+    virtual bool setViewport(const gl::Rectangle &viewport, float zNear, float zFar, GLenum drawMode, GLenum frontFace,
+                             bool ignoreViewport, gl::ProgramBinary *currentProgram, bool forceSetUniforms) = 0;
 
     virtual bool applyRenderTarget(gl::Framebuffer *frameBuffer) = 0;
     virtual void applyShaders(gl::ProgramBinary *programBinary) = 0;

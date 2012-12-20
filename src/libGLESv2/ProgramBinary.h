@@ -130,10 +130,9 @@ class ProgramBinary : public RefCountObject
     bool getUniformiv(GLint location, GLsizei *bufSize, GLint *params);
 
     GLint getDxDepthRangeLocation() const;
-    GLint getDxDepthLocation() const;
+    GLint getDxDepthFrontLocation() const;
     GLint getDxCoordLocation() const;
     GLint getDxHalfPixelSizeLocation() const;
-    GLint getDxFrontCCWLocation() const;
 
     void dirtyAllUniforms();
     void applyUniforms();
@@ -212,10 +211,9 @@ class ProgramBinary : public RefCountObject
     UniformIndex mUniformIndex;
 
     GLint mDxDepthRangeLocation;
-    GLint mDxDepthLocation;
+    GLint mDxDepthFrontLocation;
     GLint mDxCoordLocation;
     GLint mDxHalfPixelSizeLocation;
-    GLint mDxFrontCCWLocation;
 
     bool mValidated;
 

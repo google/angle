@@ -207,13 +207,12 @@ void OutputHLSL::header()
 
         if (mUsesFragCoord)
         {
-            out << "uniform float4 dx_Coord;\n"
-                   "uniform float2 dx_Depth;\n";
+            out << "uniform float4 dx_Coord;\n";
         }
 
-        if (mUsesFrontFacing)
+        if (mUsesFragCoord || mUsesFrontFacing)
         {
-            out << "uniform float dx_FrontCCW;\n";
+            out << "uniform float3 dx_DepthFront;\n";
         }
         
         out << "\n";

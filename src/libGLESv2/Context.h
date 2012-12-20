@@ -69,8 +69,8 @@ enum
     MAX_TEXTURE_IMAGE_UNITS = 16,
     MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF = 4,   // For devices supporting vertex texture fetch
     MAX_COMBINED_TEXTURE_IMAGE_UNITS_VTF = MAX_TEXTURE_IMAGE_UNITS + MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF,    
-    MAX_FRAGMENT_UNIFORM_VECTORS_SM2 = 32 - 4,    // Reserve space for dx_Coord, dx_Depth, dx_DepthRange and dx_FrontCCW.
-    MAX_FRAGMENT_UNIFORM_VECTORS_SM3 = 224 - 4,
+    MAX_FRAGMENT_UNIFORM_VECTORS_SM2 = 32 - 3,    // Reserve space for dx_Coord, dx_DepthFront and dx_DepthRange.
+    MAX_FRAGMENT_UNIFORM_VECTORS_SM3 = 224 - 3,
     MAX_DRAW_BUFFERS = 1
 };
 
@@ -423,7 +423,7 @@ class Context
   private:
     DISALLOW_COPY_AND_ASSIGN(Context);
 
-    bool applyRenderTarget(bool ignoreViewport);
+    bool applyRenderTarget(GLenum drawMode, bool ignoreViewport);
     void applyState(GLenum drawMode);
     void applyShaders();
     void applyTextures();

@@ -892,8 +892,8 @@ void Renderer9::setScissorRectangle(const gl::Rectangle &scissor, bool enabled)
     mForceSetScissor = false;
 }
 
-bool Renderer9::setViewport(const gl::Rectangle &viewport, float zNear, float zFar, bool ignoreViewport,
-                            gl::ProgramBinary *currentProgram, bool forceSetUniforms)
+bool Renderer9::setViewport(const gl::Rectangle &viewport, float zNear, float zFar, GLenum drawMode, GLenum frontFace,
+                            bool ignoreViewport, gl::ProgramBinary *currentProgram, bool forceSetUniforms)
 {
     gl::Rectangle actualViewport = viewport;
     float actualZNear = gl::clamp01(zNear);
@@ -946,9 +946,10 @@ bool Renderer9::setViewport(const gl::Rectangle &viewport, float zNear, float zF
                             actualViewport.y + (actualViewport.height * 0.5f) };
         currentProgram->setUniform4fv(coord, 1, whxy);
 
-        GLint depth = currentProgram->getDxDepthLocation();
-        GLfloat dz[2] = { (actualZFar - actualZNear) * 0.5f, (actualZNear + actualZFar) * 0.5f };
-        currentProgram->setUniform2fv(depth, 1, dz);
+        GLint depthFront = currentProgram->getDxDepthFrontLocation();
+        GLfloat ccw = !gl::IsTriangleMode(drawMode) ? 0.0f : (frontFace == GL_CCW ? 1.0f : -1.0f);
+        GLfloat dz[3] = { (actualZFar - actualZNear) * 0.5f, (actualZNear + actualZFar) * 0.5f, ccw };
+        currentProgram->setUniform3fv(depthFront, 1, dz);
 
         GLint depthRange = currentProgram->getDxDepthRangeLocation();
         GLfloat nearFarDiff[3] = { actualZNear, actualZFar, actualZFar - actualZNear };

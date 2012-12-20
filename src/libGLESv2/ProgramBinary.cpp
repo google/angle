@@ -83,10 +83,9 @@ ProgramBinary::ProgramBinary(rx::Renderer *renderer) : mRenderer(renderer), RefC
     mUsedPixelSamplerRange = 0;
 
     mDxDepthRangeLocation = -1;
-    mDxDepthLocation = -1;
+    mDxDepthFrontLocation = -1;
     mDxCoordLocation = -1;
     mDxHalfPixelSizeLocation = -1;
-    mDxFrontCCWLocation = -1;
 }
 
 ProgramBinary::~ProgramBinary()
@@ -1462,7 +1461,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
                           "    gl_FragCoord.y = (input.gl_FragCoord.y * rhw) * dx_Coord.y + dx_Coord.w;\n";
         }
         
-        pixelHLSL += "    gl_FragCoord.z = (input.gl_FragCoord.z * rhw) * dx_Depth.x + dx_Depth.y;\n"
+        pixelHLSL += "    gl_FragCoord.z = (input.gl_FragCoord.z * rhw) * dx_DepthFront.x + dx_DepthFront.y;\n"
                       "    gl_FragCoord.w = rhw;\n";
     }
 
@@ -1474,7 +1473,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
 
     if (fragmentShader->mUsesFrontFacing)
     {
-        pixelHLSL += "    gl_FrontFacing = (input.vFace * dx_FrontCCW >= 0.0);\n";
+        pixelHLSL += "    gl_FrontFacing = (input.vFace * dx_DepthFront.z >= 0.0);\n";
     }
 
     for (VaryingList::iterator varying = fragmentShader->mVaryings.begin(); varying != fragmentShader->mVaryings.end(); varying++)
@@ -1625,10 +1624,9 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
     }
 
     stream.read(&mDxDepthRangeLocation);
-    stream.read(&mDxDepthLocation);
+    stream.read(&mDxDepthFrontLocation);
     stream.read(&mDxCoordLocation);
     stream.read(&mDxHalfPixelSizeLocation);
-    stream.read(&mDxFrontCCWLocation);
 
     unsigned int pixelShaderSize;
     stream.read(&pixelShaderSize);
@@ -1733,10 +1731,9 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
     }
 
     stream.write(mDxDepthRangeLocation);
-    stream.write(mDxDepthLocation);
+    stream.write(mDxDepthFrontLocation);
     stream.write(mDxCoordLocation);
     stream.write(mDxHalfPixelSizeLocation);
-    stream.write(mDxFrontCCWLocation);
 
     UINT pixelShaderSize = mPixelExecutable->getLength();
     stream.write(pixelShaderSize);
@@ -1859,10 +1856,9 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
     // these uniforms are searched as already-decorated because gl_ and dx_
     // are reserved prefixes, and do not receive additional decoration
     mDxDepthRangeLocation = getUniformLocation("dx_DepthRange");
-    mDxDepthLocation = getUniformLocation("dx_Depth");
+    mDxDepthFrontLocation = getUniformLocation("dx_DepthFront");
     mDxCoordLocation = getUniformLocation("dx_Coord");
     mDxHalfPixelSizeLocation = getUniformLocation("dx_HalfPixelSize");
-    mDxFrontCCWLocation = getUniformLocation("dx_FrontCCW");
 
     Context *context = getContext();
     context->markDxUniformsDirty();
@@ -2655,9 +2651,9 @@ GLint ProgramBinary::getDxDepthRangeLocation() const
     return mDxDepthRangeLocation;
 }
 
-GLint ProgramBinary::getDxDepthLocation() const
+GLint ProgramBinary::getDxDepthFrontLocation() const
 {
-    return mDxDepthLocation;
+    return mDxDepthFrontLocation;
 }
 
 GLint ProgramBinary::getDxCoordLocation() const
@@ -2668,11 +2664,6 @@ GLint ProgramBinary::getDxCoordLocation() const
 GLint ProgramBinary::getDxHalfPixelSizeLocation() const
 {
     return mDxHalfPixelSizeLocation;
-}
-
-GLint ProgramBinary::getDxFrontCCWLocation() const
-{
-    return mDxFrontCCWLocation;
 }
 
 ProgramBinary::Sampler::Sampler() : active(false), logicalTextureUnit(0), textureType(TEXTURE_2D)

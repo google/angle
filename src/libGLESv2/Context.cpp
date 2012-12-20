@@ -1701,8 +1701,8 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
 }
 
 // Applies the render target surface, depth stencil surface, viewport rectangle and
-// scissor rectangle to the Direct3D 9 device
-bool Context::applyRenderTarget(bool ignoreViewport)
+// scissor rectangle to the renderer
+bool Context::applyRenderTarget(GLenum drawMode, bool ignoreViewport)
 {
     Framebuffer *framebufferObject = getDrawFramebuffer();
 
@@ -1714,8 +1714,8 @@ bool Context::applyRenderTarget(bool ignoreViewport)
     mRenderer->applyRenderTarget(framebufferObject);
 
     ProgramBinary *programBinary = mState.currentProgram ? getCurrentProgramBinary() : NULL;
-    if (!mRenderer->setViewport(mState.viewport, mState.zNear, mState.zFar, ignoreViewport,
-                                programBinary, mDxUniformsDirty))
+    if (!mRenderer->setViewport(mState.viewport, mState.zNear, mState.zFar, drawMode, mState.rasterizer.frontFace,
+                                ignoreViewport, programBinary, mDxUniformsDirty))
     {
         return false;
     }
@@ -1729,14 +1729,6 @@ bool Context::applyRenderTarget(bool ignoreViewport)
 // Applies the fixed-function state (culling, depth test, alpha blending, stenciling, etc) to the Direct3D 9 device
 void Context::applyState(GLenum drawMode)
 {
-    ProgramBinary *programBinary = getCurrentProgramBinary();
-
-    Framebuffer *framebufferObject = getDrawFramebuffer();
-
-    GLint frontCCW = programBinary->getDxFrontCCWLocation();
-    GLfloat ccw = !IsTriangleMode(drawMode) ? 0.0f : (mState.rasterizer.frontFace == GL_CCW ? 1.0f : -1.0f);
-    programBinary->setUniform1fv(frontCCW, 1, &ccw);
-
     mRenderer->setRasterizerState(mState.rasterizer);
 
     unsigned int mask = 0;
@@ -1744,6 +1736,7 @@ void Context::applyState(GLenum drawMode)
     {
         if (mState.sampleCoverageValue != 0)
         {
+            Framebuffer *framebufferObject = getDrawFramebuffer();
             float threshold = 0.5f;
 
             for (int i = 0; i < framebufferObject->getSamples(); ++i)
@@ -1946,7 +1939,7 @@ void Context::clear(GLbitfield mask)
         return error(GL_INVALID_VALUE);
     }
 
-    if (!applyRenderTarget(true))   // Clips the clear to the scissor rectangle but not the viewport
+    if (!applyRenderTarget(GL_TRIANGLES, true))   // Clips the clear to the scissor rectangle but not the viewport
     {
         return;
     }
@@ -1977,7 +1970,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
         return;
     }
 
-    if (!applyRenderTarget(false))
+    if (!applyRenderTarget(mode, false))
     {
         return;
     }
@@ -2023,7 +2016,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
         return;
     }
 
-    if (!applyRenderTarget(false))
+    if (!applyRenderTarget(mode, false))
     {
         return;
     }
