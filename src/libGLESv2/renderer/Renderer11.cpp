@@ -837,7 +837,7 @@ void Renderer11::applyUniforms(const gl::UniformArray *uniformArray)
           case GL_FLOAT_MAT4:
             if (uniform->vs.registerCount)
             {
-                for (int i = 0; i < uniform->vs.registerCount; i++)
+                for (unsigned int i = 0; i < uniform->vs.registerCount; i++)
                 {
                     cVS[uniform->vs.registerIndex + i][0] = f[i][0];
                     cVS[uniform->vs.registerIndex + i][1] = f[i][1];
@@ -847,7 +847,7 @@ void Renderer11::applyUniforms(const gl::UniformArray *uniformArray)
             }
             if (uniform->ps.registerCount)
             {
-                for (int i = 0; i < uniform->ps.registerCount; i++)
+                for (unsigned int i = 0; i < uniform->ps.registerCount; i++)
                 {
                     cPS[uniform->ps.registerIndex + i][0] = f[i][0];
                     cPS[uniform->ps.registerIndex + i][1] = f[i][1];

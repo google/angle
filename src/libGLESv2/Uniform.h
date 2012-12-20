@@ -25,7 +25,9 @@ struct Uniform
 
     ~Uniform();
 
-    bool isArray();
+    bool isArray() const;
+    unsigned int elementCount() const;
+    unsigned int registerCount() const;
     static std::string Uniform::undecorate(const std::string &_name);
 
     const GLenum type;
@@ -45,7 +47,7 @@ struct Uniform
         }
 
         int registerIndex;
-        int registerCount;
+        unsigned int registerCount;
     };
 
     RegisterInfo ps;

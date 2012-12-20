@@ -1471,7 +1471,7 @@ void Renderer9::applyUniforms(const gl::UniformArray *uniformArray)
 
         if (targetUniform->dirty)
         {
-            int arraySize = targetUniform->arraySize;
+            int count = targetUniform->elementCount();
             GLfloat *f = (GLfloat*)targetUniform->data;
             GLint *i = (GLint*)targetUniform->data;
             GLboolean *b = (GLboolean*)targetUniform->data;
@@ -1481,21 +1481,21 @@ void Renderer9::applyUniforms(const gl::UniformArray *uniformArray)
               case GL_SAMPLER_2D:
               case GL_SAMPLER_CUBE:
                   break;
-              case GL_BOOL:       applyUniformnbv(targetUniform, arraySize, 1, b);    break;
-              case GL_BOOL_VEC2:  applyUniformnbv(targetUniform, arraySize, 2, b);    break;
-              case GL_BOOL_VEC3:  applyUniformnbv(targetUniform, arraySize, 3, b);    break;
-              case GL_BOOL_VEC4:  applyUniformnbv(targetUniform, arraySize, 4, b);    break;
+              case GL_BOOL:       applyUniformnbv(targetUniform, count, 1, b);    break;
+              case GL_BOOL_VEC2:  applyUniformnbv(targetUniform, count, 2, b);    break;
+              case GL_BOOL_VEC3:  applyUniformnbv(targetUniform, count, 3, b);    break;
+              case GL_BOOL_VEC4:  applyUniformnbv(targetUniform, count, 4, b);    break;
               case GL_FLOAT:
               case GL_FLOAT_VEC2:
               case GL_FLOAT_VEC3:
               case GL_FLOAT_VEC4:
               case GL_FLOAT_MAT2:
               case GL_FLOAT_MAT3:
-              case GL_FLOAT_MAT4: applyUniformnfv(targetUniform, f);                  break;
-              case GL_INT:        applyUniform1iv(targetUniform, arraySize, i);       break;
-              case GL_INT_VEC2:   applyUniform2iv(targetUniform, arraySize, i);       break;
-              case GL_INT_VEC3:   applyUniform3iv(targetUniform, arraySize, i);       break;
-              case GL_INT_VEC4:   applyUniform4iv(targetUniform, arraySize, i);       break;
+              case GL_FLOAT_MAT4: applyUniformnfv(targetUniform, f);              break;
+              case GL_INT:        applyUniform1iv(targetUniform, count, i);       break;
+              case GL_INT_VEC2:   applyUniform2iv(targetUniform, count, i);       break;
+              case GL_INT_VEC3:   applyUniform3iv(targetUniform, count, i);       break;
+              case GL_INT_VEC4:   applyUniform4iv(targetUniform, count, i);       break;
               default:
                 UNREACHABLE();
             }

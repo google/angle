@@ -14,7 +14,7 @@ namespace gl
 Uniform::Uniform(GLenum type, const std::string &_name, unsigned int arraySize)
     : type(type), _name(_name), name(undecorate(_name)), arraySize(arraySize)
 {
-    int bytes = gl::UniformInternalSize(type) * arraySize;
+    int bytes = gl::UniformInternalSize(type) * elementCount();
     data = new unsigned char[bytes];
     memset(data, 0, bytes);
     dirty = true;
@@ -25,12 +25,29 @@ Uniform::~Uniform()
     delete[] data;
 }
 
-bool Uniform::isArray()
+bool Uniform::isArray() const
 {
-    size_t dot = _name.find_last_of('.');
-    if (dot == std::string::npos) dot = -1;
+    if (name != _name)   // D3D9_REPLACE
+    {
+        size_t dot = _name.find_last_of('.');
+        if (dot == std::string::npos) dot = -1;
 
-    return _name.compare(dot + 1, dot + 4, "ar_") == 0;
+        return _name.compare(dot + 1, dot + 4, "ar_") == 0;
+    }
+    else
+    {
+        return arraySize > 0;
+    }
+}
+
+unsigned int Uniform::elementCount() const
+{
+    return arraySize > 0 ? arraySize : 1;
+}
+
+unsigned int Uniform::registerCount() const
+{
+    return VariableRowCount(type) * elementCount();
 }
 
 std::string Uniform::undecorate(const std::string &_name)
