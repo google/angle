@@ -113,6 +113,8 @@
         'compiler/SymbolTable.cpp',
         'compiler/SymbolTable.h',
         'compiler/Types.h',
+        'compiler/Uniform.cpp',
+        'compiler/Uniform.h',
         'compiler/util.cpp',
         'compiler/util.h',
         'compiler/ValidateLimitations.cpp',

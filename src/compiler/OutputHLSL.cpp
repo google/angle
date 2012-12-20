@@ -2616,6 +2616,8 @@ int OutputHLSL::samplerRegister(TIntermSymbol *sampler)
     int index = mSamplerRegister;
     mSamplerRegister += sampler->totalRegisterCount();
 
+    declareUniform(type, sampler->getSymbol(), index);
+
     return index;
 }
 
@@ -2627,7 +2629,132 @@ int OutputHLSL::uniformRegister(TIntermSymbol *uniform)
     int index = mUniformRegister;
     mUniformRegister += uniform->totalRegisterCount();
 
+    declareUniform(type, uniform->getSymbol(), index);
+
     return index;
+}
+
+void OutputHLSL::declareUniform(const TType &type, const TString &name, int index)
+{
+    const TTypeList *structure = type.getStruct();
+
+    if (!structure)
+    {
+        mActiveUniforms.push_back(Uniform(glVariableType(type), name.c_str(), type.getArraySize(), index));
+    }
+    else
+    {
+        if (type.isArray())
+        {
+            int elementIndex = index;
+
+            for (int i = 0; i < type.getArraySize(); i++)
+            {
+                for (size_t j = 0; j < structure->size(); j++)
+                {
+                    const TType &fieldType = *(*structure)[j].type;
+                    const TString &fieldName = fieldType.getFieldName();
+
+                    const TString uniformName = name + "[" + str(i) + "]." + fieldName;
+                    declareUniform(fieldType, uniformName, elementIndex);
+                    elementIndex += fieldType.elementRegisterCount();
+                }
+            }
+        }
+        else
+        {
+            int fieldIndex = index;
+
+            for (size_t i = 0; i < structure->size(); i++)
+            {
+                const TType &fieldType = *(*structure)[i].type;
+                const TString &fieldName = fieldType.getFieldName();
+
+                const TString uniformName = name + "." + fieldName;
+                declareUniform(fieldType, uniformName, fieldIndex);
+                fieldIndex += fieldType.totalRegisterCount();
+            }
+        }
+    }
+}
+
+GLenum OutputHLSL::glVariableType(const TType &type)
+{
+    if (type.getBasicType() == EbtFloat)
+    {
+        if (type.isScalar())
+        {
+            return GL_FLOAT;
+        }
+        else if (type.isVector())
+        {
+            switch(type.getNominalSize())
+            {
+              case 2: return GL_FLOAT_VEC2;
+              case 3: return GL_FLOAT_VEC3;
+              case 4: return GL_FLOAT_VEC4;
+              default: UNREACHABLE();
+            }
+        }
+        else if (type.isMatrix())
+        {
+            switch(type.getNominalSize())
+            {
+              case 2: return GL_FLOAT_MAT2;
+              case 3: return GL_FLOAT_MAT3;
+              case 4: return GL_FLOAT_MAT4;
+              default: UNREACHABLE();
+            }
+        }
+        else UNREACHABLE();
+    }
+    else if (type.getBasicType() == EbtInt)
+    {
+        if (type.isScalar())
+        {
+            return GL_INT;
+        }
+        else if (type.isVector())
+        {
+            switch(type.getNominalSize())
+            {
+              case 2: return GL_INT_VEC2;
+              case 3: return GL_INT_VEC3;
+              case 4: return GL_INT_VEC4;
+              default: UNREACHABLE();
+            }
+        }
+        else UNREACHABLE();
+    }
+    else if (type.getBasicType() == EbtBool)
+    {
+        if (type.isScalar())
+        {
+            return GL_BOOL;
+        }
+        else if (type.isVector())
+        {
+            switch(type.getNominalSize())
+            {
+              case 2: return GL_BOOL_VEC2;
+              case 3: return GL_BOOL_VEC3;
+              case 4: return GL_BOOL_VEC4;
+              default: UNREACHABLE();
+            }
+        }
+        else UNREACHABLE();
+    }
+    else if (type.getBasicType() == EbtSampler2D)
+    {
+        return GL_SAMPLER_2D;
+    }
+    else if (type.getBasicType() == EbtSamplerCube)
+    {
+        return GL_SAMPLER_CUBE;
+    }
+    else UNREACHABLE();
+
+    return GL_NONE;
 }
 
 }

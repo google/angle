@@ -148,6 +148,7 @@
     <ClCompile Include="SearchSymbol.cpp" />
     <ClCompile Include="TranslatorHLSL.cpp" />
     <ClCompile Include="UnfoldShortCircuit.cpp" />
+    <ClCompile Include="Uniform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DetectDiscontinuity.h" />
@@ -155,6 +156,7 @@
     <ClInclude Include="SearchSymbol.h" />
     <ClInclude Include="TranslatorHLSL.h" />
     <ClInclude Include="UnfoldShortCircuit.h" />
+    <ClInclude Include="Uniform.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="translator_common.vcxproj">

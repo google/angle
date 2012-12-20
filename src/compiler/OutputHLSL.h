@@ -16,6 +16,7 @@
 
 #include "compiler/intermediate.h"
 #include "compiler/ParseHelper.h"
+#include "compiler/Uniform.h"
 
 namespace sh
 {
@@ -158,6 +159,10 @@ class OutputHLSL : public TIntermTraverser
     TString registerString(TIntermSymbol *operand);
     int samplerRegister(TIntermSymbol *sampler);
     int uniformRegister(TIntermSymbol *uniform);
+    void declareUniform(const TType &type, const TString &name, int index);
+    static GLenum glVariableType(const TType &type);
+
+    ActiveUniforms mActiveUniforms;
 };
 }
 
