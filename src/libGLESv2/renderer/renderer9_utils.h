@@ -56,7 +56,7 @@ GLenum GetEquivalentFormat(D3DFORMAT format);
 
 }
 
-namespace dx
+namespace d3d9
 {
 bool IsCompressedFormat(D3DFORMAT format);
 size_t ComputeRowSize(D3DFORMAT format, unsigned int width);

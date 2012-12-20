@@ -127,8 +127,8 @@ void Image9::copyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface9 *so
         D3DSURFACE_DESC desc;
         source->GetDesc(&desc);
 
-        int rows = dx::IsCompressedFormat(desc.Format) ? desc.Height / 4 : desc.Height;
-        int bytes = dx::ComputeRowSize(desc.Format, desc.Width);
+        int rows = d3d9::IsCompressedFormat(desc.Format) ? desc.Height / 4 : desc.Height;
+        int bytes = d3d9::ComputeRowSize(desc.Format, desc.Width);
         ASSERT(bytes <= sourceLock.Pitch && bytes <= destLock.Pitch);
 
         for(int i = 0; i < rows; i++)
