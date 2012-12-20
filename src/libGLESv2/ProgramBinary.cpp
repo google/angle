@@ -30,8 +30,8 @@ std::string str(int i)
     return buffer;
 }
 
-UniformLocation::UniformLocation(const std::string &_name, unsigned int element, unsigned int index) 
-    : name(Uniform::undecorate(_name)), element(element), index(index)
+UniformLocation::UniformLocation(const std::string &name, unsigned int element, unsigned int index) 
+    : name(name), element(element), index(index)
 {
 }
 
@@ -1577,14 +1577,14 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
     for (unsigned int i = 0; i < size; ++i)
     {
         GLenum type;
-        std::string _name;
+        std::string name;
         unsigned int arraySize;
 
         stream.read(&type);
-        stream.read(&_name);
+        stream.read(&name);
         stream.read(&arraySize);
 
-        mUniforms[i] = new Uniform(type, _name, arraySize);
+        mUniforms[i] = new Uniform(type, name, arraySize);
         
         stream.read(&mUniforms[i]->ps.registerIndex);
         stream.read(&mUniforms[i]->ps.registerCount);
@@ -1694,7 +1694,7 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
     for (unsigned int i = 0; i < mUniforms.size(); ++i)
     {
         stream.write(mUniforms[i]->type);
-        stream.write(mUniforms[i]->_name);
+        stream.write(mUniforms[i]->name);
         stream.write(mUniforms[i]->arraySize);
 
         stream.write(mUniforms[i]->ps.registerIndex);

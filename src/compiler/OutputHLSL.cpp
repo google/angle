@@ -2579,11 +2579,7 @@ TString OutputHLSL::decorate(const TString &string)
 
 TString OutputHLSL::decorateUniform(const TString &string, const TType &type)
 {
-    if (type.isArray())
-    {
-        return "ar_" + string;   // Allows identifying arrays of size 1
-    }
-    else if (type.getBasicType() == EbtSamplerExternalOES)
+    if (type.getBasicType() == EbtSamplerExternalOES)
     {
         return "ex_" + string;
     }

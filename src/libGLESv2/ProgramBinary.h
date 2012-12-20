@@ -37,7 +37,7 @@ struct UniformLocation
     {
     }
 
-    UniformLocation(const std::string &_name, unsigned int element, unsigned int index);
+    UniformLocation(const std::string &name, unsigned int element, unsigned int index);
 
     std::string name;
     unsigned int element;
