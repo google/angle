@@ -121,6 +121,7 @@ class ProgramBinary : public RefCountObject
     bool defineUniform(InfoLog &infoLog, GLenum shader, const rx::D3DConstant *constant, const std::string &name,
                        rx::D3DConstantTable *vsConstantTable, rx::D3DConstantTable *psConstantTable);
     bool defineUniform(GLenum shader, const rx::D3DConstant *constant, const std::string &name);
+    bool defineUniform(GLenum shader, const sh::Uniform &constant);
     Uniform *createUniform(const rx::D3DConstant *constant, const std::string &name);
     
     rx::Renderer *const mRenderer;

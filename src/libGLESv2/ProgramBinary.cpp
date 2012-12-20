@@ -1828,11 +1828,31 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
         success = false;
     }
 
-    if (constantTableVS && constantTablePS)
+    if (constantTableVS && constantTablePS)   // D3D9_REPLACE
     {
         if (!linkUniforms(infoLog, constantTableVS, constantTablePS))
         {
             success = false;
+        }
+    }
+    else
+    {
+        for (sh::ActiveUniforms::const_iterator uniform = vertexShader->getUniforms().begin(); uniform != vertexShader->getUniforms().end(); uniform++)
+        {
+            if (!defineUniform(GL_VERTEX_SHADER, *uniform))
+            {
+                success = false;
+                break;
+            }
+        }
+
+        for (sh::ActiveUniforms::const_iterator uniform = fragmentShader->getUniforms().begin(); uniform != fragmentShader->getUniforms().end(); uniform++)
+        {
+            if (!defineUniform(GL_FRAGMENT_SHADER, *uniform))
+            {
+                success = false;
+                break;
+            }
         }
     }
 
@@ -2085,6 +2105,54 @@ bool ProgramBinary::defineUniform(GLenum shader, const rx::D3DConstant *constant
     for (unsigned int i = 0; i < uniform->arraySize; ++i)
     {
         mUniformIndex.push_back(UniformLocation(_name, i, uniformIndex));
+    }
+
+    return true;
+}
+
+bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant)
+{
+    ASSERT(constant.arraySize <= 1);   // FIXME: UNIMPLEMENTED
+    Uniform *uniform = new Uniform(constant.type, constant.name, 1 /*constant.arraySize*/);
+
+    if (!uniform)
+    {
+        return false;
+    }
+
+    // Check if already defined
+    GLint location = getUniformLocation(uniform->name);
+    GLenum type = uniform->type;
+
+    if (location >= 0)
+    {
+        delete uniform;
+        uniform = mUniforms[mUniformIndex[location].index];
+    }
+
+    if (shader == GL_FRAGMENT_SHADER)
+    {
+        uniform->ps.registerIndex = constant.registerIndex;
+        uniform->ps.registerCount = 1 /*constant.arraySize*/;
+    }
+    else if (shader == GL_VERTEX_SHADER)
+    {
+        uniform->vs.registerIndex = constant.registerIndex;
+        uniform->vs.registerCount = 1 /*constant.arraySize*/;
+    }
+    else UNREACHABLE();
+
+    if (location >= 0)
+    {
+        return uniform->type == type;
+    }
+
+    mUniforms.push_back(uniform);
+    unsigned int uniformIndex = mUniforms.size() - 1;
+
+    for (unsigned int i = 0; i < uniform->arraySize; i++)
+    {
+        mUniformIndex.push_back(UniformLocation(constant.name, i, uniformIndex));
     }
 
     return true;
