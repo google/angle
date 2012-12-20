@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-// VertexBuffer.h: Defines the VertexBuffer and derivations, classes that
-// perform graphics API agnostic vertex buffer operations.
+// VertexBuffer.h: Defines the abstract VertexBuffer class and VertexBufferInterface
+// class with derivations, classes that perform graphics API agnostic vertex buffer operations.
 
 #ifndef LIBGLESV2_RENDERER_VERTEXBUFFER_H_
 #define LIBGLESV2_RENDERER_VERTEXBUFFER_H_
@@ -20,6 +20,37 @@
 
 namespace rx
 {
+
+class VertexBuffer
+{
+  public:
+    VertexBuffer();
+    virtual ~VertexBuffer();
+
+    virtual bool initialize(unsigned int size, bool dynamicUsage) = 0;
+
+    virtual bool storeVertexAttributes(const gl::VertexAttribute &attrib, GLint start, GLsizei count,
+                                       GLsizei instances, unsigned int offset) = 0;
+    virtual bool storeRawData(const void* data, unsigned int size, unsigned int offset) = 0;
+
+    virtual unsigned int getSpaceRequired(const gl::VertexAttribute &attrib, GLsizei count,
+                                          GLsizei instances) const = 0;
+
+    virtual unsigned int getBufferSize() const = 0;
+    virtual bool setBufferSize(unsigned int size) = 0;
+    virtual bool discard() = 0;
+
+    unsigned int getSerial() const;
+
+  protected:
+    void updateSerial();
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(VertexBuffer);
+
+    unsigned int mSerial;
+    static unsigned int mNextSerial;
+};
 
 class VertexBufferInterface
 {

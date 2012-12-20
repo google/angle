@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-// VertexBuffer.cpp: Defines the VertexBuffer and derivations, classes that
-// perform graphics API agnostic vertex buffer operations.
+// VertexBuffer.cpp: Defines the abstract VertexBuffer class and VertexBufferInterface
+// class with derivations, classes that perform graphics API agnostic vertex buffer operations.
 
 #include "libGLESv2/renderer/VertexBuffer.h"
 
@@ -13,6 +13,28 @@
 
 namespace rx
 {
+
+unsigned int VertexBuffer::mNextSerial = 1;
+
+VertexBuffer::VertexBuffer()
+{
+    updateSerial();
+}
+
+VertexBuffer::~VertexBuffer()
+{
+}
+
+void VertexBuffer::updateSerial()
+{
+    mSerial = mNextSerial++;
+}
+
+unsigned int VertexBuffer::getSerial() const
+{
+    return mSerial;
+}
+
 
 unsigned int VertexBufferInterface::mCurrentSerial = 1;
 
