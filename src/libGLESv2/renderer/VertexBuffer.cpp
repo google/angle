@@ -29,6 +29,10 @@ VertexBuffer::VertexBuffer(rx::Renderer9 *renderer, std::size_t size, DWORD usag
             ERR("Out of memory allocating a vertex buffer of size %lu.", size);
         }
     }
+
+    mBufferSize = size;
+    mWritePosition = 0;
+    mRequiredSpace = 0;
 }
 
 VertexBuffer::~VertexBuffer()
@@ -62,23 +66,12 @@ unsigned int VertexBuffer::issueSerial()
     return mCurrentSerial++;
 }
 
-ArrayVertexBuffer::ArrayVertexBuffer(rx::Renderer9 *renderer, std::size_t size, DWORD usageFlags) : VertexBuffer(renderer, size, usageFlags)
-{
-    mBufferSize = size;
-    mWritePosition = 0;
-    mRequiredSpace = 0;
-}
-
-ArrayVertexBuffer::~ArrayVertexBuffer()
-{
-}
-
-void ArrayVertexBuffer::addRequiredSpace(UINT requiredSpace)
+void VertexBuffer::addRequiredSpace(UINT requiredSpace)
 {
     mRequiredSpace += requiredSpace;
 }
 
-StreamingVertexBuffer::StreamingVertexBuffer(rx::Renderer9 *renderer, std::size_t initialSize) : ArrayVertexBuffer(renderer, initialSize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY)
+StreamingVertexBuffer::StreamingVertexBuffer(rx::Renderer9 *renderer, std::size_t initialSize) : VertexBuffer(renderer, initialSize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY)
 {
 }
 
@@ -145,7 +138,7 @@ void StreamingVertexBuffer::reserveRequiredSpace()
     mRequiredSpace = 0;
 }
 
-StaticVertexBuffer::StaticVertexBuffer(rx::Renderer9 *renderer) : ArrayVertexBuffer(renderer, 0, D3DUSAGE_WRITEONLY)
+StaticVertexBuffer::StaticVertexBuffer(rx::Renderer9 *renderer) : VertexBuffer(renderer, 0, D3DUSAGE_WRITEONLY)
 {
 }
 

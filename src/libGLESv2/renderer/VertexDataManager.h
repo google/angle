@@ -47,7 +47,7 @@ class VertexDataManager
     DISALLOW_COPY_AND_ASSIGN(VertexDataManager);
 
     std::size_t spaceRequired(const gl::VertexAttribute &attrib, std::size_t count, GLsizei instances) const;
-    std::size_t writeAttributeData(ArrayVertexBuffer *vertexBuffer, GLint start, GLsizei count, const gl::VertexAttribute &attribute, GLsizei instances);
+    std::size_t writeAttributeData(VertexBuffer *vertexBuffer, GLint start, GLsizei count, const gl::VertexAttribute &attribute, GLsizei instances);
 
     rx::Renderer9 *const mRenderer;   // D3D9_REPLACE
 

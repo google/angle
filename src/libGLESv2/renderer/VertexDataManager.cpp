@@ -70,7 +70,7 @@ VertexDataManager::~VertexDataManager()
     }
 }
 
-std::size_t VertexDataManager::writeAttributeData(ArrayVertexBuffer *vertexBuffer, GLint start, GLsizei count, const gl::VertexAttribute &attribute, GLsizei instances)
+std::size_t VertexDataManager::writeAttributeData(VertexBuffer *vertexBuffer, GLint start, GLsizei count, const gl::VertexAttribute &attribute, GLsizei instances)
 {
     gl::Buffer *buffer = attribute.mBoundBuffer.get();
 
@@ -187,8 +187,8 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
         if (translated[i].active && attribs[i].mArrayEnabled)
         {
             gl::Buffer *buffer = attribs[i].mBoundBuffer.get();
-            ArrayVertexBuffer *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
-            ArrayVertexBuffer *vertexBuffer = staticBuffer ? staticBuffer : mStreamingBuffer;
+            VertexBuffer *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
+            VertexBuffer *vertexBuffer = staticBuffer ? staticBuffer : mStreamingBuffer;
 
             if (vertexBuffer)
             {
@@ -216,7 +216,7 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
                 const FormatConverter &converter = formatConverter(attribs[i]);
 
                 StaticVertexBuffer *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
-                ArrayVertexBuffer *vertexBuffer = staticBuffer ? staticBuffer : static_cast<ArrayVertexBuffer*>(mStreamingBuffer);
+                VertexBuffer *vertexBuffer = staticBuffer ? staticBuffer : static_cast<VertexBuffer*>(mStreamingBuffer);
 
                 std::size_t streamOffset = -1;
 

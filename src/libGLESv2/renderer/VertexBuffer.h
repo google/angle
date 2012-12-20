@@ -28,6 +28,11 @@ class VertexBuffer
     virtual ~VertexBuffer();
 
     void unmap();
+    virtual void *map(const gl::VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset) = 0;
+
+    std::size_t size() const { return mBufferSize; }
+    virtual void reserveRequiredSpace() = 0;
+    void addRequiredSpace(UINT requiredSpace);
 
     IDirect3DVertexBuffer9 *getBuffer() const;
     unsigned int getSerial() const;
@@ -40,28 +45,15 @@ class VertexBuffer
     static unsigned int issueSerial();
     static unsigned int mCurrentSerial;
 
-private:
-    DISALLOW_COPY_AND_ASSIGN(VertexBuffer);
-};
-
-class ArrayVertexBuffer : public VertexBuffer
-{
-  public:
-    ArrayVertexBuffer(rx::Renderer9 *renderer, std::size_t size, DWORD usageFlags);
-    ~ArrayVertexBuffer();
-
-    std::size_t size() const { return mBufferSize; }
-    virtual void *map(const gl::VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset) = 0;
-    virtual void reserveRequiredSpace() = 0;
-    void addRequiredSpace(UINT requiredSpace);
-
-  protected:
     std::size_t mBufferSize;
     std::size_t mWritePosition;
     std::size_t mRequiredSpace;
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(VertexBuffer);
 };
 
-class StreamingVertexBuffer : public ArrayVertexBuffer
+class StreamingVertexBuffer : public VertexBuffer
 {
   public:
     StreamingVertexBuffer(rx::Renderer9 *renderer, std::size_t initialSize);
@@ -71,7 +63,7 @@ class StreamingVertexBuffer : public ArrayVertexBuffer
     void reserveRequiredSpace();
 };
 
-class StaticVertexBuffer : public ArrayVertexBuffer
+class StaticVertexBuffer : public VertexBuffer
 {
   public:
     explicit StaticVertexBuffer(rx::Renderer9 *renderer);
