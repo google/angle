@@ -794,11 +794,81 @@ void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
 
 void Renderer11::applyUniforms(const gl::UniformArray *uniformArray)
 {
-    // TODO
-    if (uniformArray->size() != 0)
+    D3D11_BUFFER_DESC constantBufferDescription = {0};
+    constantBufferDescription.ByteWidth = D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT * sizeof(float[4]);
+    constantBufferDescription.Usage = D3D11_USAGE_DYNAMIC;
+    constantBufferDescription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    constantBufferDescription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    constantBufferDescription.MiscFlags = 0;
+    constantBufferDescription.StructureByteStride = 0;
+
+    ID3D11Buffer *constantBufferVS = NULL;
+    HRESULT result = mDevice->CreateBuffer(&constantBufferDescription, NULL, &constantBufferVS);
+    ASSERT(SUCCEEDED(result));
+
+    ID3D11Buffer *constantBufferPS = NULL;
+    result = mDevice->CreateBuffer(&constantBufferDescription, NULL, &constantBufferPS);
+    ASSERT(SUCCEEDED(result));
+
+    D3D11_MAPPED_SUBRESOURCE mapVS = {0};
+    result = mDeviceContext->Map(constantBufferVS, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapVS);
+    ASSERT(SUCCEEDED(result));
+
+    D3D11_MAPPED_SUBRESOURCE mapPS = {0};
+    result = mDeviceContext->Map(constantBufferPS, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapPS);
+    ASSERT(SUCCEEDED(result));
+
+    float (*cVS)[4] = (float(*)[4])mapVS.pData;
+    float (*cPS)[4] = (float(*)[4])mapPS.pData;
+
+    for (gl::UniformArray::const_iterator uniform_iterator = uniformArray->begin(); uniform_iterator != uniformArray->end(); uniform_iterator++)
     {
-        UNIMPLEMENTED();
+        const gl::Uniform *uniform = *uniform_iterator;
+        GLfloat (*f)[4] = (GLfloat(*)[4])uniform->data;
+
+        switch (uniform->type)
+        {
+          case GL_FLOAT:
+          case GL_FLOAT_VEC2:
+          case GL_FLOAT_VEC3:
+          case GL_FLOAT_VEC4:
+          case GL_FLOAT_MAT2:
+          case GL_FLOAT_MAT3:
+          case GL_FLOAT_MAT4:
+            if (uniform->vs.registerCount)
+            {
+                for (int i = 0; i < uniform->vs.registerCount; i++)
+                {
+                    cVS[uniform->vs.registerIndex + i][0] = f[i][0];
+                    cVS[uniform->vs.registerIndex + i][1] = f[i][1];
+                    cVS[uniform->vs.registerIndex + i][2] = f[i][2];
+                    cVS[uniform->vs.registerIndex + i][3] = f[i][3];
+                }
+            }
+            if (uniform->ps.registerCount)
+            {
+                for (int i = 0; i < uniform->ps.registerCount; i++)
+                {
+                    cPS[uniform->ps.registerIndex + i][0] = f[i][0];
+                    cPS[uniform->ps.registerIndex + i][1] = f[i][1];
+                    cPS[uniform->ps.registerIndex + i][2] = f[i][2];
+                    cPS[uniform->ps.registerIndex + i][3] = f[i][3];
+                }
+            }
+            break;
+          default:
+            UNIMPLEMENTED();   // FIXME
+            UNREACHABLE();
+        }
     }
+
+    mDeviceContext->Unmap(constantBufferVS, 0);
+    mDeviceContext->VSSetConstantBuffers(0, 1, &constantBufferVS);
+    constantBufferVS->Release();
+
+    mDeviceContext->Unmap(constantBufferPS, 0);
+    mDeviceContext->PSSetConstantBuffers(0, 1, &constantBufferPS);
+    constantBufferPS->Release();
 }
 
 void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer)
