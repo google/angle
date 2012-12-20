@@ -19,6 +19,9 @@
 
 #include <string>
 
+#undef near
+#undef far
+
 namespace gl
 {
 std::string str(int i)
@@ -2646,24 +2649,28 @@ bool ProgramBinary::validateSamplers(InfoLog *infoLog)
     return true;
 }
 
-GLint ProgramBinary::getDxDepthRangeLocation() const
+void ProgramBinary::applyDxDepthRange(float near, float far, float diff)
 {
-    return mDxDepthRangeLocation;
+   GLfloat nearFarDiff[3] = {near, far, diff};
+   setUniform3fv(mDxDepthRangeLocation, 1, nearFarDiff);
 }
 
-GLint ProgramBinary::getDxDepthFrontLocation() const
+void ProgramBinary::applyDxDepthFront(float range, float start, float frontCCW)
 {
-    return mDxDepthFrontLocation;
+    GLfloat dz[3] = {range, start, frontCCW};
+    setUniform3fv(mDxDepthFrontLocation, 1, dz);
 }
 
-GLint ProgramBinary::getDxCoordLocation() const
+void ProgramBinary::applyDxCoord(float halfWidth, float halfHeight, float x0, float y0)
 {
-    return mDxCoordLocation;
+    GLfloat whxy[4] = {halfWidth,halfHeight, x0, y0};
+    setUniform4fv(mDxCoordLocation, 1, whxy);
 }
 
-GLint ProgramBinary::getDxHalfPixelSizeLocation() const
+void ProgramBinary::applyDxHalfPixelSize(float width, float height)
 {
-    return mDxHalfPixelSizeLocation;
+    GLfloat xy[2] = {width, height};
+    setUniform2fv(mDxHalfPixelSizeLocation, 1, xy);
 }
 
 ProgramBinary::Sampler::Sampler() : active(false), logicalTextureUnit(0), textureType(TEXTURE_2D)

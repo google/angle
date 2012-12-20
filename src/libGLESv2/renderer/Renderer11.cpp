@@ -427,26 +427,18 @@ bool Renderer11::setViewport(const gl::Rectangle &viewport, float zNear, float z
 
     if (currentProgram && (viewportChanged || forceSetUniforms))
     {
-        GLint halfPixelSize = currentProgram->getDxHalfPixelSizeLocation();
-        GLfloat xy[2] = { 0.0f, 0.0f };
-        currentProgram->setUniform2fv(halfPixelSize, 1, xy);
+        currentProgram->applyDxHalfPixelSize(0.0f, 0.0f);
 
         // These values are used for computing gl_FragCoord in Program::linkVaryings().
-        GLint coord = currentProgram->getDxCoordLocation();
-        GLfloat whxy[4] = { actualViewport.width  * 0.5f,
-                            actualViewport.height * 0.5f,
-                            actualViewport.x + (actualViewport.width  * 0.5f),
-                            actualViewport.y + (actualViewport.height * 0.5f) };
-        currentProgram->setUniform4fv(coord, 1, whxy);
+        currentProgram->applyDxCoord(actualViewport.width  * 0.5f,
+                                     actualViewport.height * 0.5f,
+                                     actualViewport.x + (actualViewport.width  * 0.5f),
+                                     actualViewport.y + (actualViewport.height * 0.5f));
 
-        GLint depthFront = currentProgram->getDxDepthFrontLocation();
         GLfloat ccw = !gl::IsTriangleMode(drawMode) ? 0.0f : (frontFace == GL_CCW ? 1.0f : -1.0f);
-        GLfloat dz[3] = { (actualZFar - actualZNear) * 0.5f, (actualZNear + actualZFar) * 0.5f, ccw };
-        currentProgram->setUniform3fv(depthFront, 1, dz);
+        currentProgram->applyDxDepthFront((actualZFar - actualZNear) * 0.5f, (actualZNear + actualZFar) * 0.5f, ccw);
 
-        GLint depthRange = currentProgram->getDxDepthRangeLocation();
-        GLfloat nearFarDiff[3] = { actualZNear, actualZFar, actualZFar - actualZNear };
-        currentProgram->setUniform3fv(depthRange, 1, nearFarDiff);
+        currentProgram->applyDxDepthRange(actualZNear, actualZFar, actualZFar - actualZNear);
     }
 
     mForceSetViewport = false;
