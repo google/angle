@@ -148,25 +148,25 @@ void Image11::loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
         loadLuminanceAlphaHalfFloatDataToRGBA(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
         break;
       case GL_RGB8_OES:
-        UNIMPLEMENTED(); // TODO - new function for D3D11-supported formats
+        loadRGBUByteDataToRGBA(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
         break;
       case GL_RGB565:
-        UNIMPLEMENTED(); // TODO - new function for D3D11-supported formats
+        loadRGB565DataToRGBA(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
         break;
       case GL_RGBA8_OES:
-        UNIMPLEMENTED(); // TODO - new function for D3D11-supported formats
+        loadRGBAUByteDataToNative(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
         break;
       case GL_RGBA4:
-        UNIMPLEMENTED(); // TODO - new function for D3D11-supported formats
+        loadRGBA4444DataToRGBA(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
         break;
       case GL_RGB5_A1:
-        UNIMPLEMENTED(); // TODO - new function for D3D11-supported formats
+        loadRGBA5551DataToRGBA(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
         break;
       case GL_BGRA8_EXT:
         loadBGRADataToBGRA(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
         break;
       case GL_RGB32F_EXT:
-        UNIMPLEMENTED(); // TODO - new function for D3D11-supported formats
+        loadRGBFloatDataToNative(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
         break;
       case GL_RGB16F_EXT:
         loadRGBHalfFloatDataToRGBA(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);

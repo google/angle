@@ -241,6 +241,26 @@ void Image::loadRGBUByteDataToBGRX(GLsizei width, GLsizei height,
     }
 }
 
+void Image::loadRGBUByteDataToRGBA(GLsizei width, GLsizei height,
+                                   int inputPitch, const void *input, size_t outputPitch, void *output)
+{
+    const unsigned char *source = NULL;
+    unsigned char *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = static_cast<const unsigned char*>(input) + y * inputPitch;
+        dest = static_cast<unsigned char*>(output) + y * outputPitch;
+        for (int x = 0; x < width; x++)
+        {
+            dest[4 * x + 0] = source[x * 3 + 0];
+            dest[4 * x + 1] = source[x * 3 + 1];
+            dest[4 * x + 2] = source[x * 3 + 2];
+            dest[4 * x + 3] = 0xFF;
+        }
+    }
+}
+
 void Image::loadRGB565DataToBGRA(GLsizei width, GLsizei height,
                                  int inputPitch, const void *input, size_t outputPitch, void *output)
 {
@@ -257,6 +277,27 @@ void Image::loadRGB565DataToBGRA(GLsizei width, GLsizei height,
             dest[4 * x + 0] = ((rgba & 0x001F) << 3) | ((rgba & 0x001F) >> 2);
             dest[4 * x + 1] = ((rgba & 0x07E0) >> 3) | ((rgba & 0x07E0) >> 9);
             dest[4 * x + 2] = ((rgba & 0xF800) >> 8) | ((rgba & 0xF800) >> 13);
+            dest[4 * x + 3] = 0xFF;
+        }
+    }
+}
+
+void Image::loadRGB565DataToRGBA(GLsizei width, GLsizei height,
+                                 int inputPitch, const void *input, size_t outputPitch, void *output)
+{
+    const unsigned short *source = NULL;
+    unsigned char *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = static_cast<unsigned char*>(output) + y * outputPitch;
+        for (int x = 0; x < width; x++)
+        {
+            unsigned short rgba = source[x];
+            dest[4 * x + 0] = ((rgba & 0xF800) >> 8) | ((rgba & 0xF800) >> 13);
+            dest[4 * x + 1] = ((rgba & 0x07E0) >> 3) | ((rgba & 0x07E0) >> 9);
+            dest[4 * x + 2] = ((rgba & 0x001F) << 3) | ((rgba & 0x001F) >> 2);
             dest[4 * x + 3] = 0xFF;
         }
     }
@@ -279,6 +320,20 @@ void Image::loadRGBFloatDataToRGBA(GLsizei width, GLsizei height,
             dest[4 * x + 2] = source[x * 3 + 2];
             dest[4 * x + 3] = 1.0f;
         }
+    }
+}
+
+void Image::loadRGBFloatDataToNative(GLsizei width, GLsizei height,
+                                     int inputPitch, const void *input, size_t outputPitch, void *output)
+{
+    const float *source = NULL;
+    float *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const float*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = reinterpret_cast<float*>(static_cast<unsigned char*>(output) + y * outputPitch);
+        memcpy(dest, source, width * 12);
     }
 }
 
@@ -320,6 +375,20 @@ void Image::loadRGBAUByteDataToBGRA(GLsizei width, GLsizei height,
     }
 }
 
+void Image::loadRGBAUByteDataToNative(GLsizei width, GLsizei height,
+                                      int inputPitch, const void *input, size_t outputPitch, void *output)
+{
+    const unsigned int *source = NULL;
+    unsigned int *dest = NULL;
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const unsigned int*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = reinterpret_cast<unsigned int*>(static_cast<unsigned char*>(output) + y * outputPitch);
+
+        memcpy(dest, source, width * 4);
+    }
+}
+
 void Image::loadRGBA4444DataToBGRA(GLsizei width, GLsizei height,
                                    int inputPitch, const void *input, size_t outputPitch, void *output)
 {
@@ -341,6 +410,27 @@ void Image::loadRGBA4444DataToBGRA(GLsizei width, GLsizei height,
     }
 }
 
+void Image::loadRGBA4444DataToRGBA(GLsizei width, GLsizei height,
+                                   int inputPitch, const void *input, size_t outputPitch, void *output)
+{
+    const unsigned short *source = NULL;
+    unsigned char *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = static_cast<unsigned char*>(output) + y * outputPitch;
+        for (int x = 0; x < width; x++)
+        {
+            unsigned short rgba = source[x];
+            dest[4 * x + 0] = ((rgba & 0xF000) >> 8) | ((rgba & 0xF000) >> 12);
+            dest[4 * x + 1] = ((rgba & 0x0F00) >> 4) | ((rgba & 0x0F00) >> 8);
+            dest[4 * x + 2] = ((rgba & 0x00F0) << 0) | ((rgba & 0x00F0) >> 4);
+            dest[4 * x + 3] = ((rgba & 0x000F) << 4) | ((rgba & 0x000F) >> 0);
+        }
+    }
+}
+
 void Image::loadRGBA5551DataToBGRA(GLsizei width, GLsizei height,
                                    int inputPitch, const void *input, size_t outputPitch, void *output)
 {
@@ -357,6 +447,27 @@ void Image::loadRGBA5551DataToBGRA(GLsizei width, GLsizei height,
             dest[4 * x + 0] = ((rgba & 0x003E) << 2) | ((rgba & 0x003E) >> 3);
             dest[4 * x + 1] = ((rgba & 0x07C0) >> 3) | ((rgba & 0x07C0) >> 8);
             dest[4 * x + 2] = ((rgba & 0xF800) >> 8) | ((rgba & 0xF800) >> 13);
+            dest[4 * x + 3] = (rgba & 0x0001) ? 0xFF : 0;
+        }
+    }
+}
+
+void Image::loadRGBA5551DataToRGBA(GLsizei width, GLsizei height,
+                                   int inputPitch, const void *input, size_t outputPitch, void *output)
+{
+    const unsigned short *source = NULL;
+    unsigned char *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = static_cast<unsigned char*>(output) + y * outputPitch;
+        for (int x = 0; x < width; x++)
+        {
+            unsigned short rgba = source[x];
+            dest[4 * x + 0] = ((rgba & 0xF800) >> 8) | ((rgba & 0xF800) >> 13);
+            dest[4 * x + 1] = ((rgba & 0x07C0) >> 3) | ((rgba & 0x07C0) >> 8);
+            dest[4 * x + 2] = ((rgba & 0x003E) << 2) | ((rgba & 0x003E) >> 3);
             dest[4 * x + 3] = (rgba & 0x0001) ? 0xFF : 0;
         }
     }
