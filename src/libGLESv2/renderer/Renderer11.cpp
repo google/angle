@@ -1257,4 +1257,11 @@ Image *Renderer11::createImage()
     return NULL;
 }
 
+void Renderer11::generateMipmap(Image *dest, Image *src)
+{
+    // TODO
+    UNIMPLEMENTED();
+    return;
+}
+
 }

@@ -226,7 +226,7 @@ Image::~Image()
     }
 }
 
-void Image::GenerateMipmap(Image *dest, Image *source)
+void Image::generateMipmap(Image *dest, Image *source)
 {
     IDirect3DSurface9 *sourceSurface = source->getSurface();
     if (sourceSurface == NULL)
@@ -238,7 +238,7 @@ void Image::GenerateMipmap(Image *dest, Image *source)
     source->markDirty();
 }
 
-void Image::CopyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface9 *source)
+void Image::copyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface9 *source)
 {
     D3DLOCKED_RECT sourceLock = {0};
     D3DLOCKED_RECT destLock = {0};
@@ -407,7 +407,7 @@ void Image::setManagedSurface(IDirect3DSurface9 *surface)
     {
         if (mSurface)
         {
-            CopyLockableSurfaces(surface, mSurface);
+            copyLockableSurfaces(surface, mSurface);
             mSurface->Release();
         }
 
@@ -455,7 +455,7 @@ bool Image::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint y
 
             if (SUCCEEDED(result))
             {
-                CopyLockableSurfaces(surf, sourceSurface);
+                copyLockableSurfaces(surf, sourceSurface);
                 result = device->UpdateSurface(surf, &rect, destSurface, &point);
                 ASSERT(SUCCEEDED(result));
                 surf->Release();

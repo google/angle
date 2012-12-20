@@ -2789,7 +2789,7 @@ bool Renderer9::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *s
 
             if (SUCCEEDED(result))
             {
-                Image::CopyLockableSurfaces(surf, source);
+                Image::copyLockableSurfaces(surf, source);
                 result = device->UpdateSurface(surf, NULL, dest, NULL);
                 surf->Release();
             }
@@ -2813,6 +2813,11 @@ bool Renderer9::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *s
 Image *Renderer9::createImage()
 {
     return new Image();
+}
+
+void Renderer9::generateMipmap(Image *dest, Image *src)
+{
+    Image::generateMipmap(dest, src);
 }
 
 }

@@ -34,8 +34,8 @@ class Image
     Image();
     ~Image();
 
-    static void GenerateMipmap(Image *dest, Image *source);
-    static void Image::CopyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface9 *source);
+    static void generateMipmap(Image *dest, Image *source);
+    static void copyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface9 *source);
 
     bool redefine(Renderer *renderer, GLint internalformat, GLsizei width, GLsizei height, bool forceRelease);
     void markDirty() {mDirty = true;}

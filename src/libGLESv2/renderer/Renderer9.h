@@ -168,6 +168,7 @@ class Renderer9 : public Renderer
 
     // Image operations
     virtual Image *createImage();
+    virtual void generateMipmap(Image *dest, Image *source);
 
     // D3D9-renderer specific methods
     bool boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest);

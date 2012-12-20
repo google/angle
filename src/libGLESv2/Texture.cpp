@@ -822,7 +822,7 @@ void Texture2D::generateMipmaps()
     {
         for (unsigned int i = 1; i <= q; i++)
         {
-            rx::Image::GenerateMipmap(mImageArray[i], mImageArray[i - 1]);
+            rx::Image::generateMipmap(mImageArray[i], mImageArray[i - 1]);
         }
     }
 }
@@ -1448,7 +1448,7 @@ void TextureCubeMap::generateMipmaps()
         {
             for (unsigned int i = 1; i <= q; i++)
             {
-                rx::Image::GenerateMipmap(mImageArray[f][i], mImageArray[f][i - 1]);
+                rx::Image::generateMipmap(mImageArray[f][i], mImageArray[f][i - 1]);
             }
         }
     }

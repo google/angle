@@ -134,6 +134,7 @@ class Renderer11 : public Renderer
 
     // Image operations
     virtual Image *createImage();
+    virtual void generateMipmap(Image *dest, Image *source);
 
     // D3D11-renderer specific methods
     ID3D11Device *getDevice() { return mDevice; }

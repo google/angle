@@ -166,8 +166,9 @@ class Renderer
     virtual ShaderExecutable *loadExecutable(const void *function, size_t length, GLenum type, void *data) = 0;
     virtual ShaderExecutable *compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, GLenum type) = 0;
 
-    // Image creation
+    // Image operations
     virtual Image *createImage() = 0;
+    virtual void generateMipmap(Image *dest, Image *source) = 0;
 
   protected:
     bool initializeCompiler();
