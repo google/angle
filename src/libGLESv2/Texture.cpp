@@ -857,6 +857,7 @@ rx::RenderTarget *Texture2D::getRenderTarget(GLenum target)
     {
         return NULL;
     }
+
     return mTexStorage->getRenderTarget();
 }
 

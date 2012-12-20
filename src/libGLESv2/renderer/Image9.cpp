@@ -17,6 +17,7 @@
 #include "libGLESv2/Texture.h"
 #include "libGLESv2/Framebuffer.h"
 #include "libGLESv2/renderer/RenderTarget9.h"
+#include "libGLESv2/renderer/TextureStorage9.h"
 
 #include "libGLESv2/renderer/renderer9_utils.h"
 #include "libGLESv2/renderer/generatemip.h"
@@ -239,7 +240,7 @@ void Image9::unlock()
 
 bool Image9::isRenderableFormat() const
 {    
-    return TextureStorage::IsTextureFormatRenderable(getD3DFormat());
+    return TextureStorage9::IsTextureFormatRenderable(getD3DFormat());
 }
 
 D3DFORMAT Image9::getD3DFormat() const
@@ -260,12 +261,14 @@ IDirect3DSurface9 *Image9::getSurface()
 
 void Image9::setManagedSurface(TextureStorage2D *storage, int level)
 {
-    setManagedSurface(storage->getSurfaceLevel(level, false));
+    TextureStorage2D9 *storage9 = TextureStorage2D9::makeTextureStorage2D9(storage->getStorageInterface());
+    setManagedSurface(storage9->getSurfaceLevel(level, false));
 }
 
 void Image9::setManagedSurface(TextureStorageCubeMap *storage, int face, int level)
 {
-    setManagedSurface(storage->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level, false));
+    TextureStorageCubeMap9 *storage9 = TextureStorageCubeMap9::makeTextureStorageCubeMap9(storage->getStorageInterface());
+    setManagedSurface(storage9->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level, false));
 }
 
 void Image9::setManagedSurface(IDirect3DSurface9 *surface)
@@ -290,13 +293,15 @@ void Image9::setManagedSurface(IDirect3DSurface9 *surface)
 bool Image9::updateSurface(TextureStorage2D *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
     ASSERT(getSurface() != NULL);
-    return updateSurface(storage->getSurfaceLevel(level, true), xoffset, yoffset, width, height);
+    TextureStorage2D9 *storage9 = TextureStorage2D9::makeTextureStorage2D9(storage->getStorageInterface());
+    return updateSurface(storage9->getSurfaceLevel(level, true), xoffset, yoffset, width, height);
 }
 
 bool Image9::updateSurface(TextureStorageCubeMap *storage, int face, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
     ASSERT(getSurface() != NULL);
-    return updateSurface(storage->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level, true), xoffset, yoffset, width, height);
+    TextureStorageCubeMap9 *storage9 = TextureStorageCubeMap9::makeTextureStorageCubeMap9(storage->getStorageInterface());
+    return updateSurface(storage9->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level, true), xoffset, yoffset, width, height);
 }
 
 bool Image9::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)

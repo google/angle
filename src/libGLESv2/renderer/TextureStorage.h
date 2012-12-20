@@ -6,10 +6,10 @@
 
 // TextureStorage.h: Defines the abstract rx::TextureStorage class and its concrete derived
 // classes TextureStorage2D and TextureStorageCubeMap, which act as the interface to the
-// D3D-side texture.
+// GPU-side texture.
 
-#ifndef LIBGLESV2_TEXTURESTORAGE_H_
-#define LIBGLESV2_TEXTURESTORAGE_H_
+#ifndef LIBGLESV2_RENDERER_TEXTURESTORAGE_H_
+#define LIBGLESV2_RENDERER_TEXTURESTORAGE_H_
 
 #define GL_APICALL
 #include <GLES2/gl2.h>
@@ -28,8 +28,18 @@ class Blit;
 class TextureStorageInterface
 {
   public:
-    TextureStorageInterface();
-    virtual ~TextureStorageInterface();
+    TextureStorageInterface() {};
+    virtual ~TextureStorageInterface() {};
+
+    virtual int getLodOffset() const = 0;
+    virtual bool isRenderTarget() const = 0;
+    virtual bool isManaged() const = 0;
+    virtual int levelCount() = 0;
+
+    virtual RenderTarget *getRenderTarget() const = 0;
+    virtual RenderTarget *getRenderTarget(GLenum faceTarget) const = 0;
+    virtual void generateMipmap(int level) = 0;
+    virtual void generateMipmap(int face, int level) = 0;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorageInterface);
@@ -39,35 +49,24 @@ class TextureStorageInterface
 class TextureStorage
 {
   public:
-    TextureStorage(rx::Renderer *renderer, DWORD usage);
-
+    TextureStorage();
     virtual ~TextureStorage();
-
-    static DWORD GetTextureUsage(D3DFORMAT d3dfmt, GLenum glusage, bool forceRenderable);
-    static bool IsTextureFormatRenderable(D3DFORMAT format);
 
     TextureStorageInterface *getStorageInterface() { return mInterface; }
 
-    bool isRenderTarget() const;
-    bool isManaged() const;
-    D3DPOOL getPool() const;
-    DWORD getUsage() const;
     unsigned int getTextureSerial() const;
-    virtual IDirect3DBaseTexture9 *getBaseTexture() const = 0;
     virtual unsigned int getRenderTargetSerial(GLenum target) const = 0;
-    int getLodOffset() const;
-    int levelCount();
+
+    virtual int getLodOffset() const;
+    virtual bool isRenderTarget() const;
+    virtual bool isManaged() const;
+    virtual int levelCount();
 
   protected:
-    int mLodOffset;
-    rx::Renderer9 *mRenderer;
     TextureStorageInterface *mInterface;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage);
-
-    const DWORD mD3DUsage;
-    const D3DPOOL mD3DPool;
 
     const unsigned int mTextureSerial;
     static unsigned int issueTextureSerial();
@@ -78,53 +77,39 @@ class TextureStorage
 class TextureStorage2D : public TextureStorage
 {
   public:
-    explicit TextureStorage2D(rx::Renderer *renderer, rx::SwapChain9 *swapchain);
-    TextureStorage2D(rx::Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height);
-
+    TextureStorage2D(Renderer *renderer, SwapChain9 *swapchain);
+    TextureStorage2D(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height);
     virtual ~TextureStorage2D();
 
-    IDirect3DSurface9 *getSurfaceLevel(int level, bool dirty);
-    RenderTarget *getRenderTarget() const;
-    virtual IDirect3DBaseTexture9 *getBaseTexture() const;
     void generateMipmap(int level);
+    RenderTarget *getRenderTarget() const;
 
     virtual unsigned int getRenderTargetSerial(GLenum target) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage2D);
 
-    void initializeRenderTarget();
-
-    IDirect3DTexture9 *mTexture;
-    RenderTarget9 *mRenderTarget;
     const unsigned int mRenderTargetSerial;
 };
 
 class TextureStorageCubeMap : public TextureStorage
 {
   public:
-    TextureStorageCubeMap(rx::Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size);
-
+    TextureStorageCubeMap(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size);
     virtual ~TextureStorageCubeMap();
 
-    IDirect3DSurface9 *getCubeMapSurface(GLenum faceTarget, int level, bool dirty);
-    RenderTarget *getRenderTarget(GLenum faceTarget) const;
-    virtual IDirect3DBaseTexture9 *getBaseTexture() const;
     void generateMipmap(int face, int level);
+    RenderTarget *getRenderTarget(GLenum faceTarget) const;
 
     virtual unsigned int getRenderTargetSerial(GLenum target) const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorageCubeMap);
 
-    void initializeRenderTarget();
-
-    IDirect3DCubeTexture9 *mTexture;
-    RenderTarget9 *mRenderTarget[6];
     const unsigned int mFirstRenderTargetSerial;
 };
 
 }
 
-#endif // LIBGLESV2_TEXTURESTORAGE_H_
+#endif // LIBGLESV2_RENDERER_TEXTURESTORAGE_H_
 

@@ -298,6 +298,8 @@
             'libGLESv2/renderer/SwapChain11.h',
             'libGLESv2/renderer/TextureStorage.cpp',
             'libGLESv2/renderer/TextureStorage.h',
+            'libGLESv2/renderer/TextureStorage9.cpp',
+            'libGLESv2/renderer/TextureStorage9.h',
             'libGLESv2/renderer/VertexBuffer.cpp',
             'libGLESv2/renderer/VertexBuffer.h',
             'libGLESv2/renderer/VertexBuffer9.cpp',

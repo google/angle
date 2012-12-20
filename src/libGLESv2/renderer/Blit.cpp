@@ -13,8 +13,8 @@
 #include "libGLESv2/main.h"
 #include "libGLESv2/utilities.h"
 #include "libGLESv2/renderer/renderer9_utils.h" // D3D9_REPLACE
-#include "libGLESv2/renderer/TextureStorage.h"
-#include "libGLESv2/renderer/RenderTarget9.h"
+#include "libGLESv2/renderer/TextureStorage9.h" // D3D9_REPLACE
+#include "libGLESv2/renderer/RenderTarget9.h"   // D3D9_REPLACE
 #include "libGLESv2/Framebuffer.h"
 
 namespace
@@ -236,7 +236,8 @@ bool Blit::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum des
         return error(GL_OUT_OF_MEMORY, false);
     }
 
-    IDirect3DSurface9 *destSurface = storage->getSurfaceLevel(level, true);
+    TextureStorage2D9 *storage9 = TextureStorage2D9::makeTextureStorage2D9(storage->getStorageInterface());
+    IDirect3DSurface9 *destSurface = storage9->getSurfaceLevel(level, true);
     bool result = false;
         
     if (destSurface)
@@ -272,7 +273,8 @@ bool Blit::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum des
         return error(GL_OUT_OF_MEMORY, false);
     }
 
-    IDirect3DSurface9 *destSurface = storage->getCubeMapSurface(target, level, true);
+    TextureStorageCubeMap9 *storage9 = TextureStorageCubeMap9::makeTextureStorageCubeMap9(storage->getStorageInterface());
+    IDirect3DSurface9 *destSurface = storage9->getCubeMapSurface(target, level, true);
     bool result = false;
 
     if (destSurface)

@@ -170,6 +170,9 @@
     <ClCompile Include="Uniform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\TextureStorage9.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinaryStream.h">
@@ -348,6 +351,9 @@
     </ClInclude>
     <ClInclude Include="Uniform.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\TextureStorage9.h">
+      <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

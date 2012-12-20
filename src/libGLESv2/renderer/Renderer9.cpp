@@ -20,7 +20,7 @@
 #include "libGLESv2/renderer/renderer9_utils.h"
 #include "libGLESv2/renderer/ShaderExecutable9.h"
 #include "libGLESv2/renderer/SwapChain9.h"
-#include "libGLESv2/renderer/TextureStorage.h"
+#include "libGLESv2/renderer/TextureStorage9.h"
 #include "libGLESv2/renderer/Image9.h"
 #include "libGLESv2/renderer/Blit.h"
 #include "libGLESv2/renderer/RenderTarget9.h"
@@ -637,7 +637,8 @@ void Renderer9::setTexture(gl::SamplerType type, int index, gl::Texture *texture
         TextureStorage *texStorage = texture->getNativeTexture();
         if (texStorage)
         {
-            d3dTexture = texStorage->getBaseTexture();
+            TextureStorage9 *storage9 = TextureStorage9::makeTextureStorage9(texStorage->getStorageInterface());
+            d3dTexture = storage9->getBaseTexture();
         }
         // If we get NULL back from getBaseTexture here, something went wrong
         // in the texture class and we're unexpectedly missing the d3d texture
@@ -2375,13 +2376,16 @@ bool Renderer9::copyToRenderTarget(TextureStorage2D *dest, TextureStorage2D *sou
 
     if (source && dest)
     {
-        int levels = source->levelCount();
+        TextureStorage2D9 *source9 = TextureStorage2D9::makeTextureStorage2D9(source->getStorageInterface());
+        TextureStorage2D9 *dest9 = TextureStorage2D9::makeTextureStorage2D9(dest->getStorageInterface());
+
+        int levels = source9->levelCount();
         for (int i = 0; i < levels; ++i)
         {
-            IDirect3DSurface9 *srcSurf = source->getSurfaceLevel(i, false);
-            IDirect3DSurface9 *dstSurf = dest->getSurfaceLevel(i, false);
+            IDirect3DSurface9 *srcSurf = source9->getSurfaceLevel(i, false);
+            IDirect3DSurface9 *dstSurf = dest9->getSurfaceLevel(i, false);
             
-            result = copyToRenderTarget(dstSurf, srcSurf, source->isManaged());
+            result = copyToRenderTarget(dstSurf, srcSurf, source9->isManaged());
 
             if (srcSurf) srcSurf->Release();
             if (dstSurf) dstSurf->Release();
@@ -2400,15 +2404,17 @@ bool Renderer9::copyToRenderTarget(TextureStorageCubeMap *dest, TextureStorageCu
 
     if (source && dest)
     {
-        int levels = source->levelCount();
+        TextureStorageCubeMap9 *source9 = TextureStorageCubeMap9::makeTextureStorageCubeMap9(source->getStorageInterface());
+        TextureStorageCubeMap9 *dest9 = TextureStorageCubeMap9::makeTextureStorageCubeMap9(dest->getStorageInterface());
+        int levels = source9->levelCount();
         for (int f = 0; f < 6; f++)
         {
             for (int i = 0; i < levels; i++)
             {
-                IDirect3DSurface9 *srcSurf = source->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i, false);
-                IDirect3DSurface9 *dstSurf = dest->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i, true);
+                IDirect3DSurface9 *srcSurf = source9->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i, false);
+                IDirect3DSurface9 *dstSurf = dest9->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + f, i, true);
 
-                result = copyToRenderTarget(dstSurf, srcSurf, source->isManaged());
+                result = copyToRenderTarget(dstSurf, srcSurf, source9->isManaged());
 
                 if (srcSurf) srcSurf->Release();
                 if (dstSurf) dstSurf->Release();
