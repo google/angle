@@ -262,6 +262,8 @@
             'libGLESv2/renderer/IndexBuffer.h',
             'libGLESv2/renderer/IndexBuffer9.cpp',
             'libGLESv2/renderer/IndexBuffer9.h',
+            'libGLESv2/renderer/IndexBuffer11.cpp',
+            'libGLESv2/renderer/IndexBuffer11.h',
             'libGLESv2/renderer/IndexDataManager.cpp',
             'libGLESv2/renderer/IndexDataManager.h',
             'libGLESv2/renderer/Renderer.cpp',

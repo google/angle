@@ -158,6 +158,9 @@
     <ClCompile Include="renderer\IndexBuffer9.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\IndexBuffer11.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="renderer\Image11.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
@@ -329,6 +332,9 @@
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="renderer\IndexBuffer9.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\IndexBuffer11.h">
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="renderer\Image11.h">

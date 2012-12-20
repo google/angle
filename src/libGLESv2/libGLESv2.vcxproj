@@ -248,6 +248,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClCompile Include="renderer\Image.cpp" />
     <ClCompile Include="renderer\Image9.cpp" />
     <ClCompile Include="renderer\IndexBuffer.cpp" />
+    <ClCompile Include="renderer\IndexBuffer11.cpp" />
     <ClCompile Include="renderer\IndexBuffer9.cpp" />
     <ClCompile Include="renderer\IndexDataManager.cpp" />
     <ClCompile Include="renderer\ImageSSE2.cpp" />
@@ -302,6 +303,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="renderer\Image11.h" />
     <ClInclude Include="renderer\Image9.h" />
     <ClInclude Include="renderer\IndexBuffer.h" />
+    <ClInclude Include="renderer\IndexBuffer11.h" />
     <ClInclude Include="renderer\IndexBuffer9.h" />
     <ClInclude Include="renderer\IndexDataManager.h" />
     <ClInclude Include="renderer\Renderer.h" />

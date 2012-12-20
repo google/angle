@@ -21,6 +21,7 @@
 #include "libGLESv2/renderer/SwapChain11.h"
 #include "libGLESv2/renderer/Image11.h"
 #include "libGLESv2/renderer/VertexBuffer11.h"
+#include "libGLESv2/renderer/IndexBuffer11.h"
 
 #include "libEGL/Config.h"
 #include "libEGL/Display.h"
@@ -1256,9 +1257,7 @@ VertexBuffer *Renderer11::createVertexBuffer()
 
 IndexBuffer *Renderer11::createIndexBuffer()
 {
-    // TODO
-    UNIMPLEMENTED();
-    return NULL;
+    return new IndexBuffer11(this);
 }
 
 bool Renderer11::blitRect(gl::Framebuffer *readTarget, gl::Rectangle *readRect, gl::Framebuffer *drawTarget, gl::Rectangle *drawRect,
