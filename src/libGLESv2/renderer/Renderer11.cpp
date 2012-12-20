@@ -696,18 +696,24 @@ void Renderer11::drawElements(GLenum mode, GLsizei count, GLenum type, const GLv
 
 void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
 {
-    ShaderExecutable *vertexExe = programBinary->getVertexExecutable();
-    ShaderExecutable *pixelExe = programBinary->getPixelExecutable();
+    unsigned int programBinarySerial = programBinary->getSerial();
+    if (programBinarySerial != mAppliedProgramBinarySerial)
+    {
+        ShaderExecutable *vertexExe = programBinary->getVertexExecutable();
+        ShaderExecutable *pixelExe = programBinary->getPixelExecutable();
 
-    ID3D11VertexShader *vertexShader = NULL;
-    if (vertexExe) vertexShader = ShaderExecutable11::makeShaderExecutable11(vertexExe)->getVertexShader();
+        ID3D11VertexShader *vertexShader = NULL;
+        if (vertexExe) vertexShader = ShaderExecutable11::makeShaderExecutable11(vertexExe)->getVertexShader();
 
-    ID3D11PixelShader *pixelShader = NULL;
-    if (pixelExe) pixelShader = ShaderExecutable11::makeShaderExecutable11(pixelExe)->getPixelShader();
+        ID3D11PixelShader *pixelShader = NULL;
+        if (pixelExe) pixelShader = ShaderExecutable11::makeShaderExecutable11(pixelExe)->getPixelShader();
 
-    mDeviceContext->PSSetShader(pixelShader, NULL, 0);
-    mDeviceContext->VSSetShader(vertexShader, NULL, 0);
-    programBinary->dirtyAllUniforms();
+        mDeviceContext->PSSetShader(pixelShader, NULL, 0);
+        mDeviceContext->VSSetShader(vertexShader, NULL, 0);
+        programBinary->dirtyAllUniforms();
+
+        mAppliedProgramBinarySerial = programBinarySerial;
+    }
 }
 
 void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer)
@@ -839,6 +845,8 @@ void Renderer11::markAllStateDirty()
     mForceSetDepthStencilState = true;
     mForceSetScissor = true;
     mForceSetViewport = true;
+
+    mAppliedProgramBinarySerial = 0;
 }
 
 void Renderer11::releaseDeviceResources()

@@ -259,6 +259,7 @@ class Renderer9 : public Renderer
     GLuint mCurSampleMask;
 
     unsigned int mAppliedIBSerial;
+    unsigned int mAppliedProgramBinarySerial;
 
     // A pool of event queries that are currently unused.
     std::vector<IDirect3DQuery9*> mEventQueryPool;

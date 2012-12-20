@@ -317,8 +317,6 @@ void Context::markAllStateDirty()
         mAppliedTextureSerialVS[t] = 0;
     }
 
-    mAppliedProgramBinarySerial = 0;
-
     mDxUniformsDirty = true;
 }
 
@@ -1784,11 +1782,7 @@ void Context::applyShaders()
 {
     ProgramBinary *programBinary = getCurrentProgramBinary();
 
-    if (programBinary->getSerial() != mAppliedProgramBinarySerial)
-    {
-        mRenderer->applyShaders(programBinary);
-        mAppliedProgramBinarySerial = programBinary->getSerial();
-    }
+    mRenderer->applyShaders(programBinary);
     
     programBinary->applyUniforms();
 }

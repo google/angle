@@ -1412,18 +1412,24 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
 
 void Renderer9::applyShaders(gl::ProgramBinary *programBinary)
 {
-    ShaderExecutable *vertexExe = programBinary->getVertexExecutable();
-    ShaderExecutable *pixelExe = programBinary->getPixelExecutable();
+    unsigned int programBinarySerial = programBinary->getSerial();
+    if (programBinarySerial != mAppliedProgramBinarySerial)
+    {
+        ShaderExecutable *vertexExe = programBinary->getVertexExecutable();
+        ShaderExecutable *pixelExe = programBinary->getPixelExecutable();
 
-    IDirect3DVertexShader9 *vertexShader = NULL;
-    if (vertexExe) vertexShader = ShaderExecutable9::makeShaderExecutable9(vertexExe)->getVertexShader();
+        IDirect3DVertexShader9 *vertexShader = NULL;
+        if (vertexExe) vertexShader = ShaderExecutable9::makeShaderExecutable9(vertexExe)->getVertexShader();
 
-    IDirect3DPixelShader9 *pixelShader = NULL;
-    if (pixelExe) pixelShader = ShaderExecutable9::makeShaderExecutable9(pixelExe)->getPixelShader();
+        IDirect3DPixelShader9 *pixelShader = NULL;
+        if (pixelExe) pixelShader = ShaderExecutable9::makeShaderExecutable9(pixelExe)->getPixelShader();
 
-    mDevice->SetPixelShader(pixelShader);
-    mDevice->SetVertexShader(vertexShader);
-    programBinary->dirtyAllUniforms();
+        mDevice->SetPixelShader(pixelShader);
+        mDevice->SetVertexShader(vertexShader);
+        programBinary->dirtyAllUniforms();
+
+        mAppliedProgramBinarySerial = programBinarySerial;
+    }
 }
 
 void Renderer9::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer)
@@ -1625,6 +1631,7 @@ void Renderer9::markAllStateDirty()
     mForceSetBlendState = true;
 
     mAppliedIBSerial = 0;
+    mAppliedProgramBinarySerial = 0;
 
     mVertexDeclarationCache.markStateDirty();
 }
