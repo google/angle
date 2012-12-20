@@ -28,6 +28,9 @@ D3D11_DEPTH_WRITE_MASK ConvertDepthMask(bool depthWriteEnabled);
 UINT8 ConvertStencilMask(GLuint stencilmask);
 D3D11_STENCIL_OP ConvertStencilOp(GLenum stencilOp);
 
+DXGI_FORMAT ConvertRenderbufferFormat(GLenum format);
+DXGI_FORMAT ConvertTextureInternalFormat(GLenum internalformat);
+
 }
 
 namespace d3d11_gl
@@ -37,12 +40,13 @@ GLenum ConvertBackBufferFormat(DXGI_FORMAT format);
 GLenum ConvertDepthStencilFormat(DXGI_FORMAT format);
 GLenum ConvertRenderbufferFormat(DXGI_FORMAT format);
 GLenum ConvertTextureInternalFormat(DXGI_FORMAT format);
+
 }
 
-namespace gl_d3d11
+namespace d3d11
 {
-DXGI_FORMAT ConvertRenderbufferFormat(GLenum format);
-DXGI_FORMAT ConvertTextureInternalFormat(GLenum internalformat);
+size_t ComputePixelSizeBits(DXGI_FORMAT format);
+size_t ComputeBlockSizeBits(DXGI_FORMAT format);
 }
 
 inline bool isDeviceLostError(HRESULT errorCode)
