@@ -19,133 +19,29 @@
 #include "libGLESv2/renderer/RenderTarget9.h"
 
 #include "libGLESv2/renderer/renderer9_utils.h"
+#include "libGLESv2/renderer/generatemip.h"
 
 namespace rx
 {
 
-namespace
+Image9::Image9()
 {
-struct L8
+    mSurface = NULL;
+    mRenderer = NULL;
+
+    mD3DPool = D3DPOOL_SYSTEMMEM;
+    mD3DFormat = D3DFMT_UNKNOWN;
+}
+
+Image9::~Image9()
 {
-    unsigned char L;
-
-    static void average(L8 *dst, const L8 *src1, const L8 *src2)
+    if (mSurface)
     {
-        dst->L = ((src1->L ^ src2->L) >> 1) + (src1->L & src2->L);
-    }
-};
-
-struct A8L8
-{
-    unsigned char L;
-    unsigned char A;
-
-    static void average(A8L8 *dst, const A8L8 *src1, const A8L8 *src2)
-    {
-        *(unsigned short*)dst = (((*(unsigned short*)src1 ^ *(unsigned short*)src2) & 0xFEFE) >> 1) + (*(unsigned short*)src1 & *(unsigned short*)src2);
-    }
-};
-
-struct A8R8G8B8
-{
-    unsigned char B;
-    unsigned char G;
-    unsigned char R;
-    unsigned char A;
-
-    static void average(A8R8G8B8 *dst, const A8R8G8B8 *src1, const A8R8G8B8 *src2)
-    {
-        *(unsigned int*)dst = (((*(unsigned int*)src1 ^ *(unsigned int*)src2) & 0xFEFEFEFE) >> 1) + (*(unsigned int*)src1 & *(unsigned int*)src2);
-    }
-};
-
-struct A16B16G16R16F
-{
-    unsigned short R;
-    unsigned short G;
-    unsigned short B;
-    unsigned short A;
-
-    static void average(A16B16G16R16F *dst, const A16B16G16R16F *src1, const A16B16G16R16F *src2)
-    {
-        dst->R = gl::float32ToFloat16((gl::float16ToFloat32(src1->R) + gl::float16ToFloat32(src2->R)) * 0.5f);
-        dst->G = gl::float32ToFloat16((gl::float16ToFloat32(src1->G) + gl::float16ToFloat32(src2->G)) * 0.5f);
-        dst->B = gl::float32ToFloat16((gl::float16ToFloat32(src1->B) + gl::float16ToFloat32(src2->B)) * 0.5f);
-        dst->A = gl::float32ToFloat16((gl::float16ToFloat32(src1->A) + gl::float16ToFloat32(src2->A)) * 0.5f);
-    }
-};
-
-struct A32B32G32R32F
-{
-    float R;
-    float G;
-    float B;
-    float A;
-
-    static void average(A32B32G32R32F *dst, const A32B32G32R32F *src1, const A32B32G32R32F *src2)
-    {
-        dst->R = (src1->R + src2->R) * 0.5f;
-        dst->G = (src1->G + src2->G) * 0.5f;
-        dst->B = (src1->B + src2->B) * 0.5f;
-        dst->A = (src1->A + src2->A) * 0.5f;
-    }
-};
-
-template <typename T>
-void GenerateMip(unsigned int sourceWidth, unsigned int sourceHeight,
-                 const unsigned char *sourceData, int sourcePitch,
-                 unsigned char *destData, int destPitch)
-{
-    unsigned int mipWidth = std::max(1U, sourceWidth >> 1);
-    unsigned int mipHeight = std::max(1U, sourceHeight >> 1);
-
-    if (sourceHeight == 1)
-    {
-        ASSERT(sourceWidth != 1);
-
-        const T *src = (const T*)sourceData;
-        T *dst = (T*)destData;
-
-        for (unsigned int x = 0; x < mipWidth; x++)
-        {
-            T::average(&dst[x], &src[x * 2], &src[x * 2 + 1]);
-        }
-    }
-    else if (sourceWidth == 1)
-    {
-        ASSERT(sourceHeight != 1);
-
-        for (unsigned int y = 0; y < mipHeight; y++)
-        {
-            const T *src0 = (const T*)(sourceData + y * 2 * sourcePitch);
-            const T *src1 = (const T*)(sourceData + y * 2 * sourcePitch + sourcePitch);
-            T *dst = (T*)(destData + y * destPitch);
-
-            T::average(dst, src0, src1);
-        }
-    }
-    else
-    {
-        for (unsigned int y = 0; y < mipHeight; y++)
-        {
-            const T *src0 = (const T*)(sourceData + y * 2 * sourcePitch);
-            const T *src1 = (const T*)(sourceData + y * 2 * sourcePitch + sourcePitch);
-            T *dst = (T*)(destData + y * destPitch);
-
-            for (unsigned int x = 0; x < mipWidth; x++)
-            {
-                T tmp0;
-                T tmp1;
-
-                T::average(&tmp0, &src0[x * 2], &src0[x * 2 + 1]);
-                T::average(&tmp1, &src1[x * 2], &src1[x * 2 + 1]);
-                T::average(&dst[x], &tmp0, &tmp1);
-            }
-        }
+        mSurface->Release();
     }
 }
 
-void GenerateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 *sourceSurface)
+void Image9::generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 *sourceSurface)
 {
     D3DSURFACE_DESC destDesc;
     HRESULT result = destSurface->GetDesc(&destDesc);
@@ -199,24 +95,6 @@ void GenerateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 *sourceSurfac
         sourceSurface->UnlockRect();
     }
 }
-}
-
-Image9::Image9()
-{
-    mSurface = NULL;
-    mRenderer = NULL;
-
-    mD3DPool = D3DPOOL_SYSTEMMEM;
-    mD3DFormat = D3DFMT_UNKNOWN;
-}
-
-Image9::~Image9()
-{
-    if (mSurface)
-    {
-        mSurface->Release();
-    }
-}
 
 Image9 *Image9::makeImage9(Image *img)
 {
@@ -231,7 +109,7 @@ void Image9::generateMipmap(Image9 *dest, Image9 *source)
         return error(GL_OUT_OF_MEMORY);
 
     IDirect3DSurface9 *destSurface = dest->getSurface();
-    GenerateMip(destSurface, sourceSurface);
+    generateMip(destSurface, sourceSurface);
 
     source->markDirty();
 }

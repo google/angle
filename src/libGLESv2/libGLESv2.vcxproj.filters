@@ -292,6 +292,9 @@
     <ClInclude Include="renderer\Image.h">
       <Filter>Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\generatemip.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="libGLESv2.def">

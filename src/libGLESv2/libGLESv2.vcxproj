@@ -290,6 +290,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="Renderbuffer.h" />
     <ClInclude Include="renderer\Blit.h" />
     <ClInclude Include="renderer\D3DConstantTable.h" />
+    <ClInclude Include="renderer\generatemip.h" />
     <ClInclude Include="renderer\Image.h" />
     <ClInclude Include="renderer\Image9.h" />
     <ClInclude Include="renderer\IndexDataManager.h" />

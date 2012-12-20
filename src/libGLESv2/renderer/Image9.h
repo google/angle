@@ -38,6 +38,7 @@ class Image9 : public Image
     static Image9 *makeImage9(Image *img);
 
     static void generateMipmap(Image9 *dest, Image9 *source);
+    static void generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 *sourceSurface);
     static void copyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface9 *source);
 
     virtual bool redefine(Renderer *renderer, GLint internalformat, GLsizei width, GLsizei height, bool forceRelease);
