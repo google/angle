@@ -24,7 +24,6 @@
 #include "common/angleutils.h"
 #include "libGLESv2/mathutil.h"
 #include "libGLESv2/Context.h"
-#include "libGLESv2/ProgramBinary.h"
 #include "libGLESv2/renderer/ShaderCache.h"
 #include "libGLESv2/renderer/VertexDeclarationCache.h"
 #include "libGLESv2/renderer/Renderer.h"

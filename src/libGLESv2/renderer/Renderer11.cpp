@@ -710,6 +710,15 @@ void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
     }
 }
 
+void Renderer11::applyUniforms(const gl::UniformArray *uniformArray)
+{
+    // TODO
+    if (uniformArray->size() != 0)
+    {
+        UNIMPLEMENTED();
+    }
+}
+
 void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer)
 {
     if (clearParams.mask & GL_COLOR_BUFFER_BIT)

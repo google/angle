@@ -15,7 +15,6 @@
 
 #include "libGLESv2/main.h"
 #include "libGLESv2/Shader.h"
-#include "libGLESv2/utilities.h"
 
 #include <string>
 
@@ -31,30 +30,8 @@ std::string str(int i)
     return buffer;
 }
 
-Uniform::Uniform(GLenum type, const std::string &_name, unsigned int arraySize)
-    : type(type), _name(_name), name(ProgramBinary::undecorateUniform(_name)), arraySize(arraySize)
-{
-    int bytes = UniformInternalSize(type) * arraySize;
-    data = new unsigned char[bytes];
-    memset(data, 0, bytes);
-    dirty = true;
-}
-
-Uniform::~Uniform()
-{
-    delete[] data;
-}
-
-bool Uniform::isArray()
-{
-    size_t dot = _name.find_last_of('.');
-    if (dot == std::string::npos) dot = -1;
-
-    return _name.compare(dot + 1, dot + 4, "ar_") == 0;
-}
-
 UniformLocation::UniformLocation(const std::string &_name, unsigned int element, unsigned int index) 
-    : name(ProgramBinary::undecorateUniform(_name)), element(element), index(index)
+    : name(Uniform::undecorate(_name)), element(element), index(index)
 {
 }
 
@@ -1039,13 +1016,7 @@ void ProgramBinary::applyUniforms()
         }
     }
 
-    if (dynamic_cast<rx::Renderer9*>(mRenderer) == NULL)  // D3D9_REPLACE
-    {
-        return;   // UNIMPLEMENTED
-    }
-
-    // Set all other uniforms
-    rx::Renderer9::makeRenderer9(mRenderer)->applyUniforms(&mUniforms);
+    mRenderer->applyUniforms(&mUniforms);
 }
 
 // Packs varyings into generic varying registers, using the algorithm from [OpenGL ES Shading Language 1.00 rev. 17] appendix A section 7 page 111
@@ -2207,30 +2178,6 @@ std::string ProgramBinary::decorateAttribute(const std::string &name)
     if (name.compare(0, 3, "gl_") != 0 && name.compare(0, 3, "dx_") != 0)
     {
         return "_" + name;
-    }
-    
-    return name;
-}
-
-std::string ProgramBinary::undecorateUniform(const std::string &_name)
-{
-    std::string name = _name;
-    
-    // Remove any structure field decoration
-    size_t pos = 0;
-    while ((pos = name.find("._", pos)) != std::string::npos)
-    {
-        name.replace(pos, 2, ".");
-    }
-
-    // Remove the leading decoration
-    if (name[0] == '_')
-    {
-        return name.substr(1);
-    }
-    else if (name.compare(0, 3, "ar_") == 0)
-    {
-        return name.substr(3);
     }
     
     return name;
