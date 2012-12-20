@@ -152,6 +152,9 @@
     <ClCompile Include="renderer\Image11.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Uniform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinaryStream.h">
@@ -312,6 +315,9 @@
     </ClInclude>
     <ClInclude Include="renderer\Image11.h">
       <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Uniform.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -21,6 +21,7 @@
 #include "libGLESv2/Context.h"
 #include "libGLESv2/mathutil.h"
 #include "libGLESv2/Shader.h"
+#include "libGLESv2/Uniform.h"
 
 #include "libGLESv2/renderer/ShaderExecutable.h"
 
@@ -28,60 +29,6 @@ namespace gl
 {
 class FragmentShader;
 class VertexShader;
-
-// Helper struct representing a single shader uniform
-struct Uniform
-{
-    Uniform(GLenum type, const std::string &_name, unsigned int arraySize);
-
-    ~Uniform();
-
-    bool isArray();
-
-    const GLenum type;
-    const std::string _name;   // Decorated name
-    const std::string name;    // Undecorated name
-    const unsigned int arraySize;
-
-    unsigned char *data;
-    bool dirty;
-
-    struct RegisterInfo
-    {
-        RegisterInfo()
-        {
-            float4Index = -1;
-            samplerIndex = -1;
-            boolIndex = -1;
-            registerCount = 0;
-        }
-
-        void set(const rx::D3DConstant *constant)
-        {
-            switch(constant->registerSet)
-            {
-              case rx::D3DConstant::RS_BOOL:    boolIndex = constant->registerIndex;    break;
-              case rx::D3DConstant::RS_FLOAT4:  float4Index = constant->registerIndex;  break;
-              case rx::D3DConstant::RS_SAMPLER: samplerIndex = constant->registerIndex; break;
-              default: UNREACHABLE();
-            }
-            
-            ASSERT(registerCount == 0 || registerCount == (int)constant->registerCount);
-            registerCount = constant->registerCount;
-        }
-
-        int float4Index;
-        int samplerIndex;
-        int boolIndex;
-
-        int registerCount;
-    };
-
-    RegisterInfo ps;
-    RegisterInfo vs;
-};
-
-typedef std::vector<Uniform*> UniformArray;
 
 // Struct used for correlating uniforms/elements of uniform arrays to handles
 struct UniformLocation
@@ -161,7 +108,6 @@ class ProgramBinary : public RefCountObject
     unsigned int getSerial() const;
 
     static std::string decorateAttribute(const std::string &name);    // Prepend an underscore
-    static std::string undecorateUniform(const std::string &_name);   // Remove leading underscore
 
   private:
     DISALLOW_COPY_AND_ASSIGN(ProgramBinary);

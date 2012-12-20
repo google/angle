@@ -305,6 +305,8 @@
             'libGLESv2/Shader.h',
             'libGLESv2/Texture.cpp',
             'libGLESv2/Texture.h',
+            'libGLESv2/Uniform.cpp',
+            'libGLESv2/Uniform.h',
             'libGLESv2/utilities.cpp',
             'libGLESv2/utilities.h',
           ],
