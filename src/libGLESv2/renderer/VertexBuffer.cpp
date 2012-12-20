@@ -14,9 +14,9 @@
 namespace rx
 {
 
-unsigned int VertexBuffer::mCurrentSerial = 1;
+unsigned int VertexBufferInterface::mCurrentSerial = 1;
 
-VertexBuffer::VertexBuffer(rx::Renderer9 *renderer, std::size_t size, DWORD usageFlags) : mRenderer(renderer), mVertexBuffer(NULL)
+VertexBufferInterface::VertexBufferInterface(rx::Renderer9 *renderer, std::size_t size, DWORD usageFlags) : mRenderer(renderer), mVertexBuffer(NULL)
 {
     if (size > 0)
     {
@@ -35,7 +35,7 @@ VertexBuffer::VertexBuffer(rx::Renderer9 *renderer, std::size_t size, DWORD usag
     mRequiredSpace = 0;
 }
 
-VertexBuffer::~VertexBuffer()
+VertexBufferInterface::~VertexBufferInterface()
 {
     if (mVertexBuffer)
     {
@@ -43,7 +43,7 @@ VertexBuffer::~VertexBuffer()
     }
 }
 
-void VertexBuffer::unmap()
+void VertexBufferInterface::unmap()
 {
     if (mVertexBuffer)
     {
@@ -51,35 +51,35 @@ void VertexBuffer::unmap()
     }
 }
 
-IDirect3DVertexBuffer9 *VertexBuffer::getBuffer() const
+IDirect3DVertexBuffer9 *VertexBufferInterface::getBuffer() const
 {
     return mVertexBuffer;
 }
 
-unsigned int VertexBuffer::getSerial() const
+unsigned int VertexBufferInterface::getSerial() const
 {
     return mSerial;
 }
 
-unsigned int VertexBuffer::issueSerial()
+unsigned int VertexBufferInterface::issueSerial()
 {
     return mCurrentSerial++;
 }
 
-void VertexBuffer::addRequiredSpace(UINT requiredSpace)
+void VertexBufferInterface::addRequiredSpace(UINT requiredSpace)
 {
     mRequiredSpace += requiredSpace;
 }
 
-StreamingVertexBuffer::StreamingVertexBuffer(rx::Renderer9 *renderer, std::size_t initialSize) : VertexBuffer(renderer, initialSize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY)
+StreamingVertexBufferInterface::StreamingVertexBufferInterface(rx::Renderer9 *renderer, std::size_t initialSize) : VertexBufferInterface(renderer, initialSize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY)
 {
 }
 
-StreamingVertexBuffer::~StreamingVertexBuffer()
+StreamingVertexBufferInterface::~StreamingVertexBufferInterface()
 {
 }
 
-void *StreamingVertexBuffer::map(const gl::VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *offset)
+void *StreamingVertexBufferInterface::map(const gl::VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *offset)
 {
     void *mapPtr = NULL;
 
@@ -100,7 +100,7 @@ void *StreamingVertexBuffer::map(const gl::VertexAttribute &attribute, std::size
     return mapPtr;
 }
 
-void StreamingVertexBuffer::reserveRequiredSpace()
+void StreamingVertexBufferInterface::reserveRequiredSpace()
 {
     if (mRequiredSpace > mBufferSize)
     {
@@ -138,15 +138,15 @@ void StreamingVertexBuffer::reserveRequiredSpace()
     mRequiredSpace = 0;
 }
 
-StaticVertexBuffer::StaticVertexBuffer(rx::Renderer9 *renderer) : VertexBuffer(renderer, 0, D3DUSAGE_WRITEONLY)
+StaticVertexBufferInterface::StaticVertexBufferInterface(rx::Renderer9 *renderer) : VertexBufferInterface(renderer, 0, D3DUSAGE_WRITEONLY)
 {
 }
 
-StaticVertexBuffer::~StaticVertexBuffer()
+StaticVertexBufferInterface::~StaticVertexBufferInterface()
 {
 }
 
-void *StaticVertexBuffer::map(const gl::VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset)
+void *StaticVertexBufferInterface::map(const gl::VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset)
 {
     void *mapPtr = NULL;
 
@@ -171,7 +171,7 @@ void *StaticVertexBuffer::map(const gl::VertexAttribute &attribute, std::size_t 
     return mapPtr;
 }
 
-void StaticVertexBuffer::reserveRequiredSpace()
+void StaticVertexBufferInterface::reserveRequiredSpace()
 {
     if (!mVertexBuffer && mBufferSize == 0)
     {
@@ -195,7 +195,7 @@ void StaticVertexBuffer::reserveRequiredSpace()
     mRequiredSpace = 0;
 }
 
-std::size_t StaticVertexBuffer::lookupAttribute(const gl::VertexAttribute &attribute)
+std::size_t StaticVertexBufferInterface::lookupAttribute(const gl::VertexAttribute &attribute)
 {
     for (unsigned int element = 0; element < mCache.size(); element++)
     {

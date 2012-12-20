@@ -52,7 +52,7 @@ VertexDataManager::VertexDataManager(Renderer9 *renderer) : mRenderer(renderer)
     // D3D9_REPLACE
     checkVertexCaps(renderer->getCapsDeclTypes());
 
-    mStreamingBuffer = new StreamingVertexBuffer(renderer, INITIAL_STREAM_BUFFER_SIZE);
+    mStreamingBuffer = new StreamingVertexBufferInterface(renderer, INITIAL_STREAM_BUFFER_SIZE);
 
     if (!mStreamingBuffer)
     {
@@ -70,7 +70,7 @@ VertexDataManager::~VertexDataManager()
     }
 }
 
-std::size_t VertexDataManager::writeAttributeData(VertexBuffer *vertexBuffer, GLint start, GLsizei count, const gl::VertexAttribute &attribute, GLsizei instances)
+std::size_t VertexDataManager::writeAttributeData(VertexBufferInterface *vertexBuffer, GLint start, GLsizei count, const gl::VertexAttribute &attribute, GLsizei instances)
 {
     gl::Buffer *buffer = attribute.mBoundBuffer.get();
 
@@ -142,7 +142,7 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
         if (translated[i].active && attribs[i].mArrayEnabled)
         {
             gl::Buffer *buffer = attribs[i].mBoundBuffer.get();
-            StaticVertexBuffer *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
+            StaticVertexBufferInterface *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
 
             if (staticBuffer)
             {
@@ -160,7 +160,7 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
                         if (translated[previous].active && attribs[previous].mArrayEnabled)
                         {
                             gl::Buffer *previousBuffer = attribs[previous].mBoundBuffer.get();
-                            StaticVertexBuffer *previousStaticBuffer = previousBuffer ? previousBuffer->getStaticVertexBuffer() : NULL;
+                            StaticVertexBufferInterface *previousStaticBuffer = previousBuffer ? previousBuffer->getStaticVertexBuffer() : NULL;
 
                             if (staticBuffer == previousStaticBuffer)
                             {
@@ -187,8 +187,8 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
         if (translated[i].active && attribs[i].mArrayEnabled)
         {
             gl::Buffer *buffer = attribs[i].mBoundBuffer.get();
-            VertexBuffer *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
-            VertexBuffer *vertexBuffer = staticBuffer ? staticBuffer : mStreamingBuffer;
+            VertexBufferInterface *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
+            VertexBufferInterface *vertexBuffer = staticBuffer ? staticBuffer : mStreamingBuffer;
 
             if (vertexBuffer)
             {
@@ -215,8 +215,8 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
 
                 const FormatConverter &converter = formatConverter(attribs[i]);
 
-                StaticVertexBuffer *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
-                VertexBuffer *vertexBuffer = staticBuffer ? staticBuffer : static_cast<VertexBuffer*>(mStreamingBuffer);
+                StaticVertexBufferInterface *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
+                VertexBufferInterface *vertexBuffer = staticBuffer ? staticBuffer : static_cast<VertexBufferInterface*>(mStreamingBuffer);
 
                 std::size_t streamOffset = -1;
 
@@ -265,10 +265,10 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
             {
                 if (!mCurrentValueBuffer[i])
                 {
-                    mCurrentValueBuffer[i] = new StreamingVertexBuffer(mRenderer, CONSTANT_VERTEX_BUFFER_SIZE);
+                    mCurrentValueBuffer[i] = new StreamingVertexBufferInterface(mRenderer, CONSTANT_VERTEX_BUFFER_SIZE);
                 }
 
-                StreamingVertexBuffer *buffer = mCurrentValueBuffer[i];
+                StreamingVertexBufferInterface *buffer = mCurrentValueBuffer[i];
 
                 if (mCurrentValue[i][0] != attribs[i].mCurrentValue[0] ||
                     mCurrentValue[i][1] != attribs[i].mCurrentValue[1] ||

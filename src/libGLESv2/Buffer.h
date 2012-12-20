@@ -23,7 +23,7 @@
 
 namespace rx
 {
-class StaticVertexBuffer;
+class StaticVertexBufferInterface;
 class StaticIndexBuffer;
 }
 
@@ -44,7 +44,7 @@ class Buffer : public RefCountObject
     size_t size() const { return mSize; }
     GLenum usage() const { return mUsage; }
 
-    rx::StaticVertexBuffer *getStaticVertexBuffer();
+    rx::StaticVertexBufferInterface *getStaticVertexBuffer();
     rx::StaticIndexBuffer *getStaticIndexBuffer();
     void invalidateStaticData();
     void promoteStaticUsage(int dataSize);
@@ -57,7 +57,7 @@ class Buffer : public RefCountObject
     GLsizeiptr mSize;
     GLenum mUsage;
 
-    rx::StaticVertexBuffer *mStaticVertexBuffer;
+    rx::StaticVertexBufferInterface *mStaticVertexBuffer;
     rx::StaticIndexBuffer *mStaticIndexBuffer;
     GLsizeiptr mUnmodifiedDataUse;
 };

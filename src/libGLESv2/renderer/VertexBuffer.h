@@ -21,11 +21,11 @@
 namespace rx
 {
 
-class VertexBuffer
+class VertexBufferInterface
 {
   public:
-    VertexBuffer(rx::Renderer9 *renderer, std::size_t size, DWORD usageFlags);
-    virtual ~VertexBuffer();
+    VertexBufferInterface(rx::Renderer9 *renderer, std::size_t size, DWORD usageFlags);
+    virtual ~VertexBufferInterface();
 
     void unmap();
     virtual void *map(const gl::VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset) = 0;
@@ -50,24 +50,24 @@ class VertexBuffer
     std::size_t mRequiredSpace;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(VertexBuffer);
+    DISALLOW_COPY_AND_ASSIGN(VertexBufferInterface);
 };
 
-class StreamingVertexBuffer : public VertexBuffer
+class StreamingVertexBufferInterface : public VertexBufferInterface
 {
   public:
-    StreamingVertexBuffer(rx::Renderer9 *renderer, std::size_t initialSize);
-    ~StreamingVertexBuffer();
+    StreamingVertexBufferInterface(rx::Renderer9 *renderer, std::size_t initialSize);
+    ~StreamingVertexBufferInterface();
 
     void *map(const gl::VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset);
     void reserveRequiredSpace();
 };
 
-class StaticVertexBuffer : public VertexBuffer
+class StaticVertexBufferInterface : public VertexBufferInterface
 {
   public:
-    explicit StaticVertexBuffer(rx::Renderer9 *renderer);
-    ~StaticVertexBuffer();
+    explicit StaticVertexBufferInterface(rx::Renderer9 *renderer);
+    ~StaticVertexBufferInterface();
 
     void *map(const gl::VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset);
     void reserveRequiredSpace();

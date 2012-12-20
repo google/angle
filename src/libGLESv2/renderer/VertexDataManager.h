@@ -47,14 +47,14 @@ class VertexDataManager
     DISALLOW_COPY_AND_ASSIGN(VertexDataManager);
 
     std::size_t spaceRequired(const gl::VertexAttribute &attrib, std::size_t count, GLsizei instances) const;
-    std::size_t writeAttributeData(VertexBuffer *vertexBuffer, GLint start, GLsizei count, const gl::VertexAttribute &attribute, GLsizei instances);
+    std::size_t writeAttributeData(VertexBufferInterface *vertexBuffer, GLint start, GLsizei count, const gl::VertexAttribute &attribute, GLsizei instances);
 
     rx::Renderer9 *const mRenderer;   // D3D9_REPLACE
 
-    StreamingVertexBuffer *mStreamingBuffer;
+    StreamingVertexBufferInterface *mStreamingBuffer;
 
     float mCurrentValue[gl::MAX_VERTEX_ATTRIBS][4];
-    StreamingVertexBuffer *mCurrentValueBuffer[gl::MAX_VERTEX_ATTRIBS];
+    StreamingVertexBufferInterface *mCurrentValueBuffer[gl::MAX_VERTEX_ATTRIBS];
     std::size_t mCurrentValueOffsets[gl::MAX_VERTEX_ATTRIBS];
 
     // Attribute format conversion

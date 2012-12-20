@@ -61,7 +61,7 @@ void Buffer::bufferData(const void *data, GLsizeiptr size, GLenum usage)
 
     if (usage == GL_STATIC_DRAW)
     {
-        mStaticVertexBuffer = new rx::StaticVertexBuffer(mRenderer);
+        mStaticVertexBuffer = new rx::StaticVertexBufferInterface(mRenderer);
         mStaticIndexBuffer = new rx::StaticIndexBuffer(mRenderer);
     }
 }
@@ -78,7 +78,7 @@ void Buffer::bufferSubData(const void *data, GLsizeiptr size, GLintptr offset)
     mUnmodifiedDataUse = 0;
 }
 
-rx::StaticVertexBuffer *Buffer::getStaticVertexBuffer()
+rx::StaticVertexBufferInterface *Buffer::getStaticVertexBuffer()
 {
     return mStaticVertexBuffer;
 }
@@ -108,7 +108,7 @@ void Buffer::promoteStaticUsage(int dataSize)
 
         if (mUnmodifiedDataUse > 3 * mSize)
         {
-            mStaticVertexBuffer = new rx::StaticVertexBuffer(mRenderer);
+            mStaticVertexBuffer = new rx::StaticVertexBufferInterface(mRenderer);
             mStaticIndexBuffer = new rx::StaticIndexBuffer(mRenderer);
         }
     }
