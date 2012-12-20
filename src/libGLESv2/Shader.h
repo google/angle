@@ -19,6 +19,7 @@
 #include <vector>
 
 #include "libGLESv2/ResourceManager.h"
+#include "compiler/Uniform.h"
 
 namespace gl
 {
@@ -60,6 +61,7 @@ class Shader
     void getSource(GLsizei bufSize, GLsizei *length, char *buffer);
     int getTranslatedSourceLength() const;
     void getTranslatedSource(GLsizei bufSize, GLsizei *length, char *buffer);
+    const sh::ActiveUniforms &getUniforms();
 
     virtual void compile() = 0;
     virtual void uncompile();
@@ -106,6 +108,7 @@ class Shader
     char *mSource;
     char *mHlsl;
     char *mInfoLog;
+    sh::ActiveUniforms mActiveUniforms;
 
     ResourceManager *mResourceManager;
 };

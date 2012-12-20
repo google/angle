@@ -174,6 +174,11 @@ void Shader::getTranslatedSource(GLsizei bufSize, GLsizei *length, char *buffer)
     getSourceImpl(mHlsl, bufSize, length, buffer);
 }
 
+const sh::ActiveUniforms &Shader::getUniforms()
+{
+    return mActiveUniforms;
+}
+
 bool Shader::isCompiled()
 {
     return mHlsl != NULL;
@@ -310,6 +315,8 @@ void Shader::uncompile()
     mUsesFrontFacing = false;
     mUsesPointSize = false;
     mUsesPointCoord = false;
+
+    mActiveUniforms.clear();
 }
 
 void Shader::compileToHLSL(void *compiler)
@@ -355,6 +362,10 @@ void Shader::compileToHLSL(void *compiler)
         ShGetInfo(compiler, SH_OBJECT_CODE_LENGTH, &objCodeLen);
         mHlsl = new char[objCodeLen];
         ShGetObjectCode(compiler, mHlsl);
+
+        void *activeUniforms;
+        ShGetInfoPointer(compiler, SH_ACTIVE_UNIFORMS_ARRAY, &activeUniforms);
+        mActiveUniforms = *(sh::ActiveUniforms*)activeUniforms;
     }
     else
     {
