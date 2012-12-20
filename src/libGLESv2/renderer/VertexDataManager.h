@@ -26,11 +26,11 @@ struct TranslatedAttribute
 {
     bool active;
 
-    D3DDECLTYPE type;
+    const gl::VertexAttribute *attribute;
     UINT offset;
     UINT stride;   // 0 means not to advance the read pointer at all
 
-    IDirect3DVertexBuffer9 *vertexBuffer;
+    VertexBuffer *vertexBuffer;
     unsigned int serial;
     unsigned int divisor;
 };
@@ -38,7 +38,7 @@ struct TranslatedAttribute
 class VertexDataManager
 {
   public:
-    VertexDataManager(rx::Renderer9 *renderer);
+    VertexDataManager(rx::Renderer *renderer);
     virtual ~VertexDataManager();
 
     GLenum prepareVertexData(const gl::VertexAttribute attribs[], gl::ProgramBinary *programBinary, GLint start, GLsizei count, TranslatedAttribute *outAttribs, GLsizei instances);
@@ -46,44 +46,13 @@ class VertexDataManager
   private:
     DISALLOW_COPY_AND_ASSIGN(VertexDataManager);
 
-    std::size_t spaceRequired(const gl::VertexAttribute &attrib, std::size_t count, GLsizei instances) const;
-    std::size_t writeAttributeData(VertexBufferInterface *vertexBuffer, GLint start, GLsizei count, const gl::VertexAttribute &attribute, GLsizei instances);
-
-    rx::Renderer9 *const mRenderer;   // D3D9_REPLACE
+    rx::Renderer *const mRenderer;
 
     StreamingVertexBufferInterface *mStreamingBuffer;
 
     float mCurrentValue[gl::MAX_VERTEX_ATTRIBS][4];
     StreamingVertexBufferInterface *mCurrentValueBuffer[gl::MAX_VERTEX_ATTRIBS];
     std::size_t mCurrentValueOffsets[gl::MAX_VERTEX_ATTRIBS];
-
-    // Attribute format conversion
-    struct FormatConverter
-    {
-        bool identity;
-        std::size_t outputElementSize;
-        void (*convertArray)(const void *in, std::size_t stride, std::size_t n, void *out);
-        D3DDECLTYPE d3dDeclType;
-    };
-
-    enum { NUM_GL_VERTEX_ATTRIB_TYPES = 6 };
-
-    FormatConverter mAttributeTypes[NUM_GL_VERTEX_ATTRIB_TYPES][2][4];   // [GL types as enumerated by typeIndex()][normalized][size - 1]
-
-    struct TranslationDescription
-    {
-        DWORD capsFlag;
-        FormatConverter preferredConversion;
-        FormatConverter fallbackConversion;
-    };
-
-    // This table is used to generate mAttributeTypes.
-    static const TranslationDescription mPossibleTranslations[NUM_GL_VERTEX_ATTRIB_TYPES][2][4]; // [GL types as enumerated by typeIndex()][normalized][size - 1]
-
-    void checkVertexCaps(DWORD declTypes);
-
-    unsigned int typeIndex(GLenum type) const;
-    const FormatConverter &formatConverter(const gl::VertexAttribute &attribute) const;
 };
 
 }

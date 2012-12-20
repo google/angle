@@ -17,6 +17,7 @@
 #include <GLES2/gl2.h>
 
 #include "libGLESv2/Context.h"
+#include "libGLESv2/renderer/Renderer.h"
 
 namespace rx
 {
@@ -55,55 +56,66 @@ class VertexBuffer
 class VertexBufferInterface
 {
   public:
-    VertexBufferInterface(rx::Renderer9 *renderer, std::size_t size, DWORD usageFlags);
+    VertexBufferInterface(rx::Renderer *renderer, bool dynamic);
     virtual ~VertexBufferInterface();
 
-    void unmap();
-    virtual void *map(const gl::VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset) = 0;
+    void reserveVertexSpace(const gl::VertexAttribute &attribute, GLsizei count, GLsizei instances);
+    void reserveRawDataSpace(unsigned int size);
 
-    std::size_t size() const { return mBufferSize; }
-    virtual void reserveRequiredSpace() = 0;
-    void addRequiredSpace(UINT requiredSpace);
+    unsigned int getBufferSize() const;
 
-    IDirect3DVertexBuffer9 *getBuffer() const;
     unsigned int getSerial() const;
 
+    virtual int storeVertexAttributes(const gl::VertexAttribute &attrib, GLint start, GLsizei count, GLsizei instances);
+    virtual int storeRawData(const void* data, unsigned int size);
+
+    VertexBuffer* getVertexBuffer() const;
+
   protected:
-    rx::Renderer9 *const mRenderer;   // D3D9_REPLACE
-    IDirect3DVertexBuffer9 *mVertexBuffer;
+    virtual bool reserveSpace(unsigned int size) = 0;
 
-    unsigned int mSerial;
-    static unsigned int issueSerial();
-    static unsigned int mCurrentSerial;
+    unsigned int getWritePosition() const;
+    void setWritePosition(unsigned int writePosition);
 
-    std::size_t mBufferSize;
-    std::size_t mWritePosition;
-    std::size_t mRequiredSpace;
+    bool discard();
+
+    bool setBufferSize(unsigned int size);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(VertexBufferInterface);
+
+    rx::Renderer *const mRenderer;
+
+    VertexBuffer* mVertexBuffer;
+
+    unsigned int mWritePosition;
+    unsigned int mReservedSpace;
+    bool mDynamic;
 };
 
 class StreamingVertexBufferInterface : public VertexBufferInterface
 {
   public:
-    StreamingVertexBufferInterface(rx::Renderer9 *renderer, std::size_t initialSize);
+    StreamingVertexBufferInterface(rx::Renderer *renderer, std::size_t initialSize);
     ~StreamingVertexBufferInterface();
 
-    void *map(const gl::VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset);
-    void reserveRequiredSpace();
+  protected:
+    bool reserveSpace(unsigned int size);
 };
 
 class StaticVertexBufferInterface : public VertexBufferInterface
 {
   public:
-    explicit StaticVertexBufferInterface(rx::Renderer9 *renderer);
+    explicit StaticVertexBufferInterface(rx::Renderer *renderer);
     ~StaticVertexBufferInterface();
 
-    void *map(const gl::VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset);
-    void reserveRequiredSpace();
+    int storeVertexAttributes(const gl::VertexAttribute &attrib, GLint start, GLsizei count, GLsizei instances);
 
-    std::size_t lookupAttribute(const gl::VertexAttribute &attribute);   // Returns the offset into the vertex buffer, or -1 if not found
+    // Returns the offset into the vertex buffer, or -1 if not found
+    int lookupAttribute(const gl::VertexAttribute &attribute);
+
+  protected:
+    bool reserveSpace(unsigned int size);
 
   private:
     struct VertexElement
@@ -114,7 +126,7 @@ class StaticVertexBufferInterface : public VertexBufferInterface
         bool normalized;
         int attributeOffset;
 
-        std::size_t streamOffset;
+        unsigned int streamOffset;
     };
 
     std::vector<VertexElement> mCache;

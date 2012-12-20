@@ -7,6 +7,7 @@
 // VertexDeclarationCache.cpp: Implements a helper class to construct and cache vertex declarations.
 
 #include "libGLESv2/ProgramBinary.h"
+#include "libGLESv2/renderer/VertexBuffer9.h"
 #include "libGLESv2/renderer/VertexDataManager.h"
 #include "libGLESv2/renderer/VertexDeclarationCache.h"
 
@@ -122,11 +123,13 @@ GLenum VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, Transl
                 }
             }
 
+            VertexBuffer9 *vertexBuffer = VertexBuffer9::makeVertexBuffer9(attributes[i].vertexBuffer);
+
             if (mAppliedVBs[stream].serial != attributes[i].serial ||
                 mAppliedVBs[stream].stride != attributes[i].stride ||
                 mAppliedVBs[stream].offset != attributes[i].offset)
             {
-                device->SetStreamSource(stream, attributes[i].vertexBuffer, attributes[i].offset, attributes[i].stride);
+                device->SetStreamSource(stream, vertexBuffer->getBuffer(), attributes[i].offset, attributes[i].stride);
                 mAppliedVBs[stream].serial = attributes[i].serial;
                 mAppliedVBs[stream].stride = attributes[i].stride;
                 mAppliedVBs[stream].offset = attributes[i].offset;
@@ -134,7 +137,7 @@ GLenum VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, Transl
 
             element->Stream = stream;
             element->Offset = 0;
-            element->Type = attributes[i].type;
+            element->Type = attributes[i].attribute->mArrayEnabled ? vertexBuffer->getDeclType(*attributes[i].attribute) : D3DDECLTYPE_FLOAT4;
             element->Method = D3DDECLMETHOD_DEFAULT;
             element->Usage = D3DDECLUSAGE_TEXCOORD;
             element->UsageIndex = programBinary->getSemanticIndex(i);

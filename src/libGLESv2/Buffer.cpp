@@ -70,7 +70,7 @@ void Buffer::bufferSubData(const void *data, GLsizeiptr size, GLintptr offset)
 {
     memcpy(mContents + offset, data, size);
     
-    if ((mStaticVertexBuffer && mStaticVertexBuffer->size() != 0) || (mStaticIndexBuffer && mStaticIndexBuffer->size() != 0))
+    if ((mStaticVertexBuffer && mStaticVertexBuffer->getBufferSize() != 0) || (mStaticIndexBuffer && mStaticIndexBuffer->size() != 0))
     {
         invalidateStaticData();
     }
