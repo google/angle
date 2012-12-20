@@ -24,6 +24,35 @@ namespace rx
 
 class Renderer9;
 
+class IndexBuffer
+{
+  public:
+    IndexBuffer();
+    virtual ~IndexBuffer();
+
+    virtual bool initialize(unsigned int bufferSize, GLenum indexType, bool dynamic) = 0;
+
+    virtual bool mapBuffer(unsigned int offset, unsigned int size, void** outMappedMemory) = 0;
+    virtual bool unmapBuffer() = 0;
+
+    virtual bool discard() = 0;
+
+    virtual GLenum getIndexType() const = 0;
+    virtual unsigned int getBufferSize() const = 0;
+    virtual bool setSize(unsigned int bufferSize, GLenum indexType) = 0;
+
+    unsigned int getSerial() const;
+
+  protected:
+    void updateSerial();
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(IndexBuffer);
+
+    unsigned int mSerial;
+    static unsigned int mNextSerial;
+};
+
 class IndexBufferInterface
 {
   public:

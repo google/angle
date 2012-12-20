@@ -14,6 +14,28 @@
 namespace rx
 {
 
+unsigned int IndexBuffer::mNextSerial = 1;
+
+IndexBuffer::IndexBuffer()
+{
+    updateSerial();
+}
+
+IndexBuffer::~IndexBuffer()
+{
+}
+
+unsigned int IndexBuffer::getSerial() const
+{
+    return mSerial;
+}
+
+void IndexBuffer::updateSerial()
+{
+    mSerial = mNextSerial++;
+}
+
+
 unsigned int IndexBufferInterface::mCurrentSerial = 1;
 
 IndexBufferInterface::IndexBufferInterface(rx::Renderer9 *renderer, UINT size, D3DFORMAT format) : mRenderer(renderer), mBufferSize(size), mIndexBuffer(NULL)
