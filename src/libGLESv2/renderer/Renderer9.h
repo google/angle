@@ -247,8 +247,6 @@ class Renderer9 : public Renderer
     bool mForceSetScissor;
     gl::Rectangle mCurScissor;
     bool mScissorEnabled;
-    unsigned int mCurRenderTargetWidth;
-    unsigned int mCurRenderTargetHeight;
 
     bool mForceSetViewport;
     gl::Rectangle mCurViewport;

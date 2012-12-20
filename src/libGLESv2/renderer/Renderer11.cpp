@@ -828,6 +828,9 @@ void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *
 
 void Renderer11::markAllStateDirty()
 {
+    mAppliedRenderTargetSerial = 0;
+    mAppliedDepthbufferSerial = 0;
+    mAppliedStencilbufferSerial = 0;
     mDepthStencilInitialized = false;
     mRenderTargetDescInitialized = false;
 

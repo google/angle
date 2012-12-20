@@ -88,8 +88,6 @@ Renderer9::Renderer9(egl::Display *display, HDC hDc, bool softwareDevice) : Rend
 
     mMaxSupportedSamples = 0;
 
-    mAppliedIBSerial = 0;
-
     mMaskedClearSavedState = NULL;
 
     mVertexDataManager = NULL;
@@ -1622,9 +1620,11 @@ void Renderer9::markAllStateDirty()
 
     mForceSetDepthStencilState = true;
     mForceSetRasterState = true;
-    mForceSetBlendState = true;
     mForceSetScissor = true;
     mForceSetViewport = true;
+    mForceSetBlendState = true;
+
+    mAppliedIBSerial = 0;
 
     mVertexDeclarationCache.markStateDirty();
 }
