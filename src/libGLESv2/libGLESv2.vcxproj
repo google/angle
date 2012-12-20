@@ -248,6 +248,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClCompile Include="renderer\Image.cpp" />
     <ClCompile Include="renderer\Image9.cpp" />
     <ClCompile Include="renderer\IndexDataManager.cpp" />
+    <ClCompile Include="renderer\ImageSSE2.cpp" />
     <ClCompile Include="renderer\Renderer.cpp" />
     <ClCompile Include="renderer\Renderer11.cpp" />
     <ClCompile Include="renderer\renderer11_utils.cpp" />
@@ -266,7 +267,6 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="TextureSSE2.cpp" />
     <ClCompile Include="utilities.cpp" />
   </ItemGroup>
   <ItemGroup>

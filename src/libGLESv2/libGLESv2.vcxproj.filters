@@ -71,9 +71,6 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TextureSSE2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="utilities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -141,6 +138,9 @@
       <Filter>Renderer</Filter>
     </ClCompile>
     <ClCompile Include="renderer\Image.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\ImageSSE2.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
   </ItemGroup>
