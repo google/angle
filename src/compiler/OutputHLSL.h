@@ -9,6 +9,10 @@
 
 #include <list>
 #include <set>
+#include <map>
+
+#define GL_APICALL
+#include <GLES2/gl2.h>
 
 #include "compiler/intermediate.h"
 #include "compiler/ParseHelper.h"
@@ -147,6 +151,13 @@ class OutputHLSL : public TIntermTraverser
     bool mInsideDiscontinuousLoop;
 
     TIntermSymbol *mExcessiveLoopIndex;
+
+    int mUniformRegister;
+    int mSamplerRegister;
+
+    TString registerString(TIntermSymbol *operand);
+    int samplerRegister(TIntermSymbol *sampler);
+    int uniformRegister(TIntermSymbol *uniform);
 };
 }
 

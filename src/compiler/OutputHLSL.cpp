@@ -89,6 +89,9 @@ OutputHLSL::OutputHLSL(TParseContext &context) : TIntermTraverser(true, true, tr
     mInsideDiscontinuousLoop = false;
 
     mExcessiveLoopIndex = NULL;
+
+    mUniformRegister = 0;
+    mSamplerRegister = 0;
 }
 
 OutputHLSL::~OutputHLSL()
@@ -144,7 +147,8 @@ void OutputHLSL::header()
         const TType &type = uniform->second->getType();
         const TString &name = uniform->second->getSymbol();
 
-        uniforms += "uniform " + typeString(type) + " " + decorateUniform(name, type) + arrayString(type) + ";\n";
+        uniforms += "uniform " + typeString(type) + " " + decorateUniform(name, type) + arrayString(type) + 
+                    " : register(" + registerString(mReferencedUniforms[name]) + ");\n";
     }
 
     for (ReferencedSymbols::const_iterator varying = mReferencedVaryings.begin(); varying != mReferencedVaryings.end(); varying++)
@@ -2591,4 +2595,39 @@ TString OutputHLSL::decorateField(const TString &string, const TType &structure)
 
     return string;
 }
+
+TString OutputHLSL::registerString(TIntermSymbol *operand)
+{
+    ASSERT(operand->getQualifier() == EvqUniform);
+
+    if (IsSampler(operand->getBasicType()))
+    {
+        return "s" + str(samplerRegister(operand));
+    }
+
+    return "c" + str(uniformRegister(operand));
+}
+
+int OutputHLSL::samplerRegister(TIntermSymbol *sampler)
+{
+    const TType &type = sampler->getType();
+    ASSERT(IsSampler(type.getBasicType()));
+
+    int index = mSamplerRegister;
+    mSamplerRegister += sampler->totalRegisterCount();
+
+    return index;
+}
+
+int OutputHLSL::uniformRegister(TIntermSymbol *uniform)
+{
+    const TType &type = uniform->getType();
+    ASSERT(!IsSampler(type.getBasicType()));
+
+    int index = mUniformRegister;
+    mUniformRegister += uniform->totalRegisterCount();
+
+    return index;
+}
+
 }
