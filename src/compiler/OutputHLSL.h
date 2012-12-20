@@ -158,6 +158,7 @@ class OutputHLSL : public TIntermTraverser
     int mSamplerRegister;
 
     TString registerString(TIntermSymbol *operand);
+    TString dx_RegisterString(GLenum type, const char *name);
     int samplerRegister(TIntermSymbol *sampler);
     int uniformRegister(TIntermSymbol *uniform);
     void declareUniform(const TType &type, const TString &name, int index);

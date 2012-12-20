@@ -2112,6 +2112,31 @@ bool ProgramBinary::defineUniform(GLenum shader, const rx::D3DConstant *constant
 
 bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, InfoLog &infoLog)
 {
+    if (constant.name == "dx_DepthRange")
+    {
+        if (shader == GL_VERTEX_SHADER)   mDxDepthRangeRegisterVS = constant.registerIndex;
+        if (shader == GL_FRAGMENT_SHADER) mDxDepthRangeRegisterPS = constant.registerIndex;
+        return true;
+    }
+
+    if (constant.name == "dx_DepthFront")
+    {
+        mDxDepthFrontRegister = constant.registerIndex;
+        return true;
+    }
+
+    if (constant.name == "dx_Coord")
+    {
+        mDxCoordRegister = constant.registerIndex;
+        return true;
+    }
+
+    if (constant.name == "dx_HalfPixelSize")
+    {
+        mDxHalfPixelSizeRegister = constant.registerIndex;
+        return true;
+    }
+
     if (constant.type == GL_SAMPLER_2D ||
         constant.type == GL_SAMPLER_CUBE)
     {
