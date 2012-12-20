@@ -336,7 +336,7 @@ Texture2D::Texture2D(rx::Renderer *renderer, GLuint id) : Texture(renderer, id)
 
     for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++i)
     {
-        mImageArray[i] = new rx::Image();
+        mImageArray[i] = renderer->createImage();
     }
 }
 
@@ -925,7 +925,7 @@ TextureCubeMap::TextureCubeMap(rx::Renderer *renderer, GLuint id) : Texture(rend
 
         for (int j = 0; j < IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++j)
         {
-            mImageArray[i][j] = new rx::Image();
+            mImageArray[i][j] = renderer->createImage();
         }
     }
 }

@@ -166,6 +166,9 @@ class Renderer9 : public Renderer
     virtual ShaderExecutable *loadExecutable(const void *function, size_t length, GLenum type, void *data);
     virtual ShaderExecutable *compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, GLenum type);
 
+    // Image operations
+    virtual Image *createImage();
+
     // D3D9-renderer specific methods
     bool boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest);
 

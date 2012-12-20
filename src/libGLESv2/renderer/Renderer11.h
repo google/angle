@@ -132,6 +132,9 @@ class Renderer11 : public Renderer
     virtual ShaderExecutable *loadExecutable(const void *function, size_t length, GLenum type, void *data);
     virtual ShaderExecutable *compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, GLenum type);
 
+    // Image operations
+    virtual Image *createImage();
+
     // D3D11-renderer specific methods
     ID3D11Device *getDevice() { return mDevice; }
     ID3D11DeviceContext *getDeviceContext() { return mDeviceContext; };

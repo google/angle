@@ -1250,4 +1250,11 @@ void Renderer11::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsi
     return;
 }
 
+Image *Renderer11::createImage()
+{
+    // TODO
+    UNIMPLEMENTED();
+    return NULL;
+}
+
 }

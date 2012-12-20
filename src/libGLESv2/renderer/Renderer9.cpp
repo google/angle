@@ -2810,4 +2810,9 @@ bool Renderer9::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *s
     return true;
 }
 
+Image *Renderer9::createImage()
+{
+    return new Image();
+}
+
 }
