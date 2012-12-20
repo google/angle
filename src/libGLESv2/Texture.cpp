@@ -20,7 +20,7 @@
 #include "libGLESv2/mathutil.h"
 #include "libGLESv2/utilities.h"
 #include "libGLESv2/renderer/Blit.h"
-#include "libGLESv2/renderer/SwapChain9.h"
+#include "libGLESv2/renderer/SwapChain.h"
 #include "libGLESv2/Framebuffer.h"
 
 namespace gl
@@ -449,8 +449,7 @@ void Texture2D::bindTexImage(egl::Surface *surface)
     mImageArray[0]->redefine(mRenderer, internalformat, surface->getWidth(), surface->getHeight(), true);
 
     delete mTexStorage;
-    rx::SwapChain9 *swapchain = static_cast<rx::SwapChain9*>(surface->getSwapChain());  // D3D9_REPLACE
-    mTexStorage = new rx::TextureStorageInterface2D(mRenderer, swapchain);
+    mTexStorage = new rx::TextureStorageInterface2D(mRenderer, surface->getSwapChain());
 
     mDirtyImages = true;
     mSurface = surface;

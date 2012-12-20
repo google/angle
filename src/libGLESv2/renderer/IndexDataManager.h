@@ -26,6 +26,7 @@ namespace
 
 namespace rx
 {
+class Renderer9;
 
 struct TranslatedIndexData
 {

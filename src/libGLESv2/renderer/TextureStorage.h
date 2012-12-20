@@ -19,10 +19,8 @@
 
 namespace rx
 {
-class Renderer9;
-class SwapChain9;
+class SwapChain;
 class RenderTarget;
-class RenderTarget9;
 class Blit;
 
 class TextureStorage
@@ -77,7 +75,7 @@ class TextureStorageInterface
 class TextureStorageInterface2D : public TextureStorageInterface
 {
   public:
-    TextureStorageInterface2D(Renderer *renderer, SwapChain9 *swapchain);
+    TextureStorageInterface2D(Renderer *renderer, SwapChain *swapchain);
     TextureStorageInterface2D(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height);
     virtual ~TextureStorageInterface2D();
 

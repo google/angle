@@ -10,11 +10,9 @@
 
 #include "libGLESv2/main.h"
 #include "libGLESv2/renderer/TextureStorage.h"
-#include "libGLESv2/renderer/TextureStorage9.h"
-#include "libGLESv2/renderer/SwapChain9.h"
+#include "libGLESv2/renderer/SwapChain.h"
 #include "libGLESv2/renderer/Blit.h"
-#include "libGLESv2/renderer/RenderTarget9.h"
-#include "libGLESv2/renderer/renderer9_utils.h"
+#include "libGLESv2/renderer/RenderTarget.h"
 
 #include "common/debug.h"
 
@@ -65,7 +63,7 @@ int TextureStorageInterface::levelCount()
     return mInstance->levelCount();
 }
 
-TextureStorageInterface2D::TextureStorageInterface2D(Renderer *renderer, SwapChain9 *swapchain) 
+TextureStorageInterface2D::TextureStorageInterface2D(Renderer *renderer, SwapChain *swapchain) 
     : mRenderTargetSerial(gl::RenderbufferStorage::issueSerial())
 {
     mInstance = renderer->createTextureStorage2D(swapchain);
