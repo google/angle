@@ -25,6 +25,17 @@ class RenderTarget;
 class RenderTarget9;
 class Blit;
 
+class TextureStorageInterface
+{
+  public:
+    TextureStorageInterface();
+    virtual ~TextureStorageInterface();
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(TextureStorageInterface);
+
+};
+
 class TextureStorage
 {
   public:
@@ -34,6 +45,8 @@ class TextureStorage
 
     static DWORD GetTextureUsage(D3DFORMAT d3dfmt, GLenum glusage, bool forceRenderable);
     static bool IsTextureFormatRenderable(D3DFORMAT format);
+
+    TextureStorageInterface *getStorageInterface() { return mInterface; }
 
     bool isRenderTarget() const;
     bool isManaged() const;
@@ -48,6 +61,7 @@ class TextureStorage
   protected:
     int mLodOffset;
     rx::Renderer9 *mRenderer;
+    TextureStorageInterface *mInterface;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage);

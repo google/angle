@@ -26,12 +26,14 @@ TextureStorage::TextureStorage(Renderer *renderer, DWORD usage)
       mRenderer(Renderer9::makeRenderer9(renderer)),
       mD3DUsage(usage),
       mD3DPool(mRenderer->getTexturePool(usage)),
-      mTextureSerial(issueTextureSerial())
+      mTextureSerial(issueTextureSerial()),
+      mInterface(NULL)
 {
 }
 
 TextureStorage::~TextureStorage()
 {
+    delete mInterface;
 }
 
 DWORD TextureStorage::GetTextureUsage(D3DFORMAT d3dfmt, GLenum glusage, bool forceRenderable)
