@@ -174,6 +174,7 @@ class Renderer9 : public Renderer
 
     // Buffer creation
     virtual VertexBuffer *createVertexBuffer();
+    virtual IndexBuffer *createIndexBuffer();
 
     // D3D9-renderer specific methods
     bool boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest);

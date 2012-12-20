@@ -55,6 +55,7 @@ namespace rx
 class TextureStorage2D;
 class TextureStorageCubeMap;
 class VertexBuffer;
+class IndexBuffer;
 class Blit;
 struct TranslatedIndexData;
 
@@ -175,6 +176,7 @@ class Renderer
 
     // Buffer creation
     virtual VertexBuffer *createVertexBuffer() = 0;
+    virtual IndexBuffer *createIndexBuffer() = 0;
 
   protected:
     bool initializeCompiler();

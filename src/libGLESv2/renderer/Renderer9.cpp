@@ -25,6 +25,7 @@
 #include "libGLESv2/renderer/Blit.h"
 #include "libGLESv2/renderer/RenderTarget9.h"
 #include "libGLESv2/renderer/VertexBuffer9.h"
+#include "libGLESv2/renderer/IndexBuffer9.h"
 
 #include "libEGL/Config.h"
 #include "libEGL/Display.h"
@@ -598,6 +599,11 @@ HRESULT Renderer9::createIndexBuffer(UINT Length, DWORD Usage, D3DFORMAT Format,
 {
     D3DPOOL Pool = getBufferPool(Usage);
     return mDevice->CreateIndexBuffer(Length, Usage, Format, Pool, ppIndexBuffer, NULL);
+}
+
+IndexBuffer *Renderer9::createIndexBuffer()
+{
+    return new IndexBuffer9(this);
 }
 
 void Renderer9::setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &samplerState)

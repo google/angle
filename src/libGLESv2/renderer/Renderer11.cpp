@@ -1254,6 +1254,13 @@ VertexBuffer *Renderer11::createVertexBuffer()
     return new VertexBuffer11(this);
 }
 
+IndexBuffer *Renderer11::createIndexBuffer()
+{
+    // TODO
+    UNIMPLEMENTED();
+    return NULL;
+}
+
 bool Renderer11::blitRect(gl::Framebuffer *readTarget, gl::Rectangle *readRect, gl::Framebuffer *drawTarget, gl::Rectangle *drawRect,
                           bool blitRenderTarget, bool blitDepthStencil)
 {

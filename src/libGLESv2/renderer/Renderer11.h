@@ -139,6 +139,7 @@ class Renderer11 : public Renderer
 
     // Buffer creation
     virtual VertexBuffer *createVertexBuffer();
+    virtual IndexBuffer *createIndexBuffer();
 
     // D3D11-renderer specific methods
     ID3D11Device *getDevice() { return mDevice; }
