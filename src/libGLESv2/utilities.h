@@ -57,6 +57,8 @@ GLuint GetGreenSize(GLenum colorFormat);
 GLuint GetBlueSize(GLenum colorFormat);
 GLuint GetDepthSize(GLenum depthFormat);
 GLuint GetStencilSize(GLenum stencilFormat);
+bool IsTriangleMode(GLenum drawMode);
+
 }
 
 std::string getTempPath();

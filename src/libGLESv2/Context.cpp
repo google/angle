@@ -1734,7 +1734,7 @@ void Context::applyState(GLenum drawMode)
     Framebuffer *framebufferObject = getDrawFramebuffer();
 
     GLint frontCCW = programBinary->getDxFrontCCWLocation();
-    GLfloat ccw = !isTriangleMode(drawMode) ? 0.0f : (mState.rasterizer.frontFace == GL_CCW ? 1.0f : -1.0f);
+    GLfloat ccw = !IsTriangleMode(drawMode) ? 0.0f : (mState.rasterizer.frontFace == GL_CCW ? 1.0f : -1.0f);
     programBinary->setUniform1fv(frontCCW, 1, &ccw);
 
     mRenderer->setRasterizerState(mState.rasterizer);
@@ -2498,31 +2498,12 @@ bool Context::skipDraw(GLenum drawMode)
             return true;
         }
     }
-    else if (isTriangleMode(drawMode))
+    else if (IsTriangleMode(drawMode))
     {
         if (mState.rasterizer.cullFace && mState.rasterizer.cullMode == GL_FRONT_AND_BACK)
         {
             return true;
         }
-    }
-
-    return false;
-}
-
-bool Context::isTriangleMode(GLenum drawMode)
-{
-    switch (drawMode)
-    {
-      case GL_TRIANGLES:
-      case GL_TRIANGLE_FAN:
-      case GL_TRIANGLE_STRIP:
-        return true;
-      case GL_POINTS:
-      case GL_LINES:
-      case GL_LINE_LOOP:
-      case GL_LINE_STRIP:
-        return false;
-      default: UNREACHABLE();
     }
 
     return false;

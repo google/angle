@@ -437,7 +437,6 @@ class Context
     Texture *getIncompleteTexture(TextureType type);
 
     bool skipDraw(GLenum drawMode);
-    bool isTriangleMode(GLenum drawMode);
 
     void initExtensionString();
     void initRendererString();

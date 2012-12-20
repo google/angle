@@ -728,6 +728,25 @@ unsigned int GetStencilSize(GLenum stencilFormat)
     }
 }
 
+bool IsTriangleMode(GLenum drawMode)
+{
+    switch (drawMode)
+    {
+      case GL_TRIANGLES:
+      case GL_TRIANGLE_FAN:
+      case GL_TRIANGLE_STRIP:
+        return true;
+      case GL_POINTS:
+      case GL_LINES:
+      case GL_LINE_LOOP:
+      case GL_LINE_STRIP:
+        return false;
+      default: UNREACHABLE();
+    }
+
+    return false;
+}
+
 }
 
 std::string getTempPath()
