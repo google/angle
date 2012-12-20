@@ -149,6 +149,9 @@
     <ClCompile Include="renderer\VertexBuffer9.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\Image11.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinaryStream.h">
@@ -305,6 +308,9 @@
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="renderer\VertexBuffer9.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\Image11.h">
       <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>

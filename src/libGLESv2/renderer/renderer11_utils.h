@@ -29,8 +29,7 @@ UINT8 ConvertStencilMask(GLuint stencilmask);
 D3D11_STENCIL_OP ConvertStencilOp(GLenum stencilOp);
 
 DXGI_FORMAT ConvertRenderbufferFormat(GLenum format);
-DXGI_FORMAT ConvertTextureInternalFormat(GLenum internalformat);
-
+DXGI_FORMAT ConvertTextureFormat(GLenum format);
 }
 
 namespace d3d11_gl

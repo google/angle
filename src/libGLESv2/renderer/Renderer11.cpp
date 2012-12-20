@@ -19,6 +19,7 @@
 #include "libGLESv2/renderer/renderer11_utils.h"
 #include "libGLESv2/renderer/ShaderExecutable11.h"
 #include "libGLESv2/renderer/SwapChain11.h"
+#include "libGLESv2/renderer/Image11.h"
 
 #include "libEGL/Config.h"
 #include "libEGL/Display.h"
@@ -1263,9 +1264,7 @@ void Renderer11::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsi
 
 Image *Renderer11::createImage()
 {
-    // TODO
-    UNIMPLEMENTED();
-    return NULL;
+    return new Image11();
 }
 
 void Renderer11::generateMipmap(Image *dest, Image *src)
