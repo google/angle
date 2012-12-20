@@ -22,6 +22,8 @@
 #include "libGLESv2/renderer/Image11.h"
 #include "libGLESv2/renderer/VertexBuffer11.h"
 #include "libGLESv2/renderer/IndexBuffer11.h"
+#include "libGLESv2/renderer/VertexDataManager.h"
+#include "libGLESv2/renderer/IndexDataManager.h"
 
 #include "libEGL/Config.h"
 #include "libEGL/Display.h"
@@ -40,6 +42,9 @@ static const DXGI_FORMAT DepthStencilFormats[] =
 
 Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(hDc)
 {
+    mVertexDataManager = NULL;
+    mIndexDataManager = NULL;
+
     mD3d11Module = NULL;
     mDxgiModule = NULL;
 
@@ -192,12 +197,13 @@ EGLint Renderer11::initialize()
 void Renderer11::initializeDevice()
 {
     mStateCache.initialize(mDevice);
+    mInputLayoutCache.initialize(mDevice, mDeviceContext);
+
+    ASSERT(!mVertexDataManager && !mIndexDataManager);
+    mVertexDataManager = new VertexDataManager(this);
+    mIndexDataManager = new IndexDataManager(this);
 
     markAllStateDirty();
-
-    // Permanent non-default states
-    // TODO
-    // UNIMPLEMENTED();
 }
 
 int Renderer11::generateConfigs(ConfigDesc **configDescList)
@@ -625,58 +631,32 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
 
 GLenum Renderer11::applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], GLint first, GLsizei count, GLsizei instances)
 {
-    // TODO: Create/update vertex buffers for arbitrary GL attributes
-    ASSERT(vertexAttributes[0].mBoundBuffer.get() == 0);   // UNIMPLEMENTED();
-
-    UINT stride = vertexAttributes[0].mStride != 0 ? vertexAttributes[0].mStride : vertexAttributes[0].typeSize();
-    UINT size = stride * count;
-
-    D3D11_BUFFER_DESC vertexBufferDescription = {0};
-    vertexBufferDescription.ByteWidth = size;
-    vertexBufferDescription.Usage = D3D11_USAGE_DYNAMIC;
-    vertexBufferDescription.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    vertexBufferDescription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    vertexBufferDescription.MiscFlags = 0;
-    vertexBufferDescription.StructureByteStride = 0;
-
-    ID3D11Buffer *vertexBuffer = NULL;
-    HRESULT result = mDevice->CreateBuffer(&vertexBufferDescription, NULL, &vertexBuffer);
-    ASSERT(SUCCEEDED(result));
-
-    D3D11_MAPPED_SUBRESOURCE map;
-    result = mDeviceContext->Map(vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-    ASSERT(SUCCEEDED(result));
-    memcpy(map.pData, vertexAttributes[0].mPointer, size);
-    mDeviceContext->Unmap(vertexBuffer, 0);
-
-    UINT offset = 0;
-    mDeviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
-    vertexBuffer->Release();
-
-    // TODO: Build the input layout from the (translated) attribute information
-    D3D11_INPUT_ELEMENT_DESC inputElementDescriptions[1] =
+    TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS];
+    GLenum err = mVertexDataManager->prepareVertexData(vertexAttributes, programBinary, first, count, attributes, instances);
+    if (err != GL_NO_ERROR)
     {
-        {"TEXCOORD", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}
-    };
+        return err;
+    }
 
-    ShaderExecutable *vertexExecutable = programBinary->getVertexExecutable();
-
-    ID3D11InputLayout *inputLayout = NULL;
-    result = mDevice->CreateInputLayout(inputElementDescriptions, 1, vertexExecutable->getFunction(), vertexExecutable->getLength(), &inputLayout);
-    ASSERT(SUCCEEDED(result));
-    
-    mDeviceContext->IASetInputLayout(inputLayout);
-    inputLayout->Release();   // TODO: Build a cache of input layouts
-
-    return GL_NO_ERROR;
+    return mInputLayoutCache.applyVertexBuffers(attributes, programBinary);
 }
 
 GLenum Renderer11::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo)
 {
-    // TODO
-    UNIMPLEMENTED();
+    GLenum err = mIndexDataManager->prepareIndexData(type, count, elementArrayBuffer, indices, indexInfo);
 
-    return GL_OUT_OF_MEMORY;
+    if (err == GL_NO_ERROR)
+    {
+        if (indexInfo->serial != mAppliedIBSerial)
+        {
+            IndexBuffer11* indexBuffer = IndexBuffer11::makeIndexBuffer11(indexInfo->indexBuffer);
+
+            mDeviceContext->IASetIndexBuffer(indexBuffer->getBuffer(), indexBuffer->getIndexFormat(), indexInfo->startIndex);
+            mAppliedIBSerial = indexInfo->serial;
+        }
+    }
+
+    return err;
 }
 
 void Renderer11::drawArrays(GLenum mode, GLsizei count, GLsizei instances)
@@ -851,14 +831,20 @@ void Renderer11::markAllStateDirty()
     mForceSetScissor = true;
     mForceSetViewport = true;
 
+    mAppliedIBSerial = 0;
     mAppliedProgramBinarySerial = 0;
 }
 
 void Renderer11::releaseDeviceResources()
 {
-    // TODO
-    // UNIMPLEMENTED();
     mStateCache.clear();
+    mInputLayoutCache.clear();
+
+    delete mVertexDataManager;
+    mVertexDataManager = NULL;
+
+    delete mIndexDataManager;
+    mIndexDataManager = NULL;
 }
 
 void Renderer11::markDeviceLost()

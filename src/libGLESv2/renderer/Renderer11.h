@@ -24,9 +24,13 @@
 
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/renderer/RenderStateCache.h"
+#include "libGLESv2/renderer/InputLayoutCache.h"
 
 namespace rx
 {
+
+class VertexDataManager;
+class IndexDataManager;
 
 class Renderer11 : public Renderer
 {
@@ -197,7 +201,13 @@ class Renderer11 : public Renderer
     float mCurNear;
     float mCurFar;
 
+    unsigned int mAppliedIBSerial;
     unsigned int mAppliedProgramBinarySerial;
+
+    // Vertex, index and input layouts
+    VertexDataManager *mVertexDataManager;
+    IndexDataManager *mIndexDataManager;
+    InputLayoutCache mInputLayoutCache;
 
     ID3D11Device *mDevice;
     D3D_FEATURE_LEVEL mFeatureLevel;
