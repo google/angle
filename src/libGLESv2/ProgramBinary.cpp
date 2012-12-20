@@ -1839,7 +1839,7 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
     {
         for (sh::ActiveUniforms::const_iterator uniform = vertexShader->getUniforms().begin(); uniform != vertexShader->getUniforms().end(); uniform++)
         {
-            if (!defineUniform(GL_VERTEX_SHADER, *uniform))
+            if (!defineUniform(GL_VERTEX_SHADER, *uniform, infoLog))
             {
                 success = false;
                 break;
@@ -1848,7 +1848,7 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
 
         for (sh::ActiveUniforms::const_iterator uniform = fragmentShader->getUniforms().begin(); uniform != fragmentShader->getUniforms().end(); uniform++)
         {
-            if (!defineUniform(GL_FRAGMENT_SHADER, *uniform))
+            if (!defineUniform(GL_FRAGMENT_SHADER, *uniform, infoLog))
             {
                 success = false;
                 break;
@@ -2110,8 +2110,52 @@ bool ProgramBinary::defineUniform(GLenum shader, const rx::D3DConstant *constant
     return true;
 }
 
-bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant)
+bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, InfoLog &infoLog)
 {
+    if (constant.type == GL_SAMPLER_2D ||
+        constant.type == GL_SAMPLER_CUBE)
+    {
+        unsigned int samplerIndex = constant.registerIndex;
+            
+        do
+        {
+            if (shader == GL_VERTEX_SHADER)
+            {
+                if (samplerIndex < getContext()->getMaximumVertexTextureImageUnits())
+                {
+                    mSamplersVS[samplerIndex].active = true;
+                    mSamplersVS[samplerIndex].textureType = (constant.type == GL_SAMPLER_CUBE) ? TEXTURE_CUBE : TEXTURE_2D;
+                    mSamplersVS[samplerIndex].logicalTextureUnit = 0;
+                    mUsedVertexSamplerRange = std::max(samplerIndex + 1, mUsedVertexSamplerRange);
+                }
+                else
+                {
+                    infoLog.append("Vertex shader sampler count exceeds MAX_VERTEX_TEXTURE_IMAGE_UNITS (%d).", getContext()->getMaximumVertexTextureImageUnits());
+                    return false;
+                }
+            }
+            else if (shader == GL_FRAGMENT_SHADER)
+            {
+                if (samplerIndex < MAX_TEXTURE_IMAGE_UNITS)
+                {
+                    mSamplersPS[samplerIndex].active = true;
+                    mSamplersPS[samplerIndex].textureType = (constant.type == GL_SAMPLER_CUBE) ? TEXTURE_CUBE : TEXTURE_2D;
+                    mSamplersPS[samplerIndex].logicalTextureUnit = 0;
+                    mUsedPixelSamplerRange = std::max(samplerIndex + 1, mUsedPixelSamplerRange);
+                }
+                else
+                {
+                    infoLog.append("Pixel shader sampler count exceeds MAX_TEXTURE_IMAGE_UNITS (%d).", MAX_TEXTURE_IMAGE_UNITS);
+                    return false;
+                }
+            }
+            else UNREACHABLE();
+
+            samplerIndex++;
+        }
+        while (samplerIndex < constant.registerIndex + constant.arraySize);
+    }
+
     Uniform *uniform = NULL;
     GLint location = getUniformLocation(constant.name);
 

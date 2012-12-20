@@ -78,7 +78,7 @@ ID3DBlob *Renderer::compileToBinary(gl::InfoLog &infoLog, const char *hlsl, cons
     }
 
     HRESULT result = S_OK;
-    UINT flags = 0;
+    UINT flags = D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY;   // Enables using legacy sampler syntax for Shader Model 4+
     std::string sourceText;
     if (gl::perfActive())
     {

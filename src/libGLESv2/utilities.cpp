@@ -163,6 +163,8 @@ int VariableRowCount(GLenum type)
       case GL_BOOL_VEC4:
       case GL_FLOAT_VEC4:
       case GL_INT_VEC4:
+      case GL_SAMPLER_2D:
+      case GL_SAMPLER_CUBE:
         return 1;
       case GL_FLOAT_MAT2:
         return 2;

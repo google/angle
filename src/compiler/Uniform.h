@@ -22,7 +22,7 @@ struct Uniform
 
     GLenum type;
     std::string name;
-    int arraySize;
+    unsigned int arraySize;
     
     int registerIndex;
 };

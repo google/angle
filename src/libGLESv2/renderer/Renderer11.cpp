@@ -828,6 +828,9 @@ void Renderer11::applyUniforms(const gl::UniformArray *uniformArray)
 
         switch (uniform->type)
         {
+          case GL_SAMPLER_2D:
+          case GL_SAMPLER_CUBE:
+            break;
           case GL_FLOAT:
           case GL_FLOAT_VEC2:
           case GL_FLOAT_VEC3:
