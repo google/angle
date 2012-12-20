@@ -59,8 +59,6 @@ class Query;
 enum
 {
     D3D9_MAX_FLOAT_CONSTANTS = 256,
-    D3D9_MAX_BOOL_CONSTANTS = 16,
-    D3D9_MAX_INT_CONSTANTS = 16,
 
     MAX_VERTEX_ATTRIBS = 16,
     MAX_VERTEX_UNIFORM_VECTORS = D3D9_MAX_FLOAT_CONSTANTS - 2,   // Reserve space for dx_HalfPixelSize and dx_DepthRange.

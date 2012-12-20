@@ -965,53 +965,45 @@ void ProgramBinary::applyUniforms()
 
         if (targetUniform->dirty)
         {
-            int count = targetUniform->arraySize;
-            GLint *v = (GLint*)targetUniform->data;
-
-            switch (targetUniform->type)
+            if (targetUniform->type == GL_SAMPLER_2D || 
+                targetUniform->type == GL_SAMPLER_CUBE)
             {
-              case GL_SAMPLER_2D:
-              case GL_SAMPLER_CUBE:
+                int count = targetUniform->arraySize;
+                GLint *v = (GLint*)targetUniform->data;
+
+                if (targetUniform->ps.registerCount)
                 {
-                    if (targetUniform->ps.registerCount)
+                    ASSERT(targetUniform->ps.registerIndex >= 0);
+                    unsigned int firstIndex = targetUniform->ps.registerIndex;
+
+                    for (int i = 0; i < count; i++)
                     {
-                        if (targetUniform->ps.samplerIndex >= 0)
+                        unsigned int samplerIndex = firstIndex + i;
+
+                        if (samplerIndex < MAX_TEXTURE_IMAGE_UNITS)
                         {
-                            unsigned int firstIndex = targetUniform->ps.samplerIndex;
-
-                            for (int i = 0; i < count; i++)
-                            {
-                                unsigned int samplerIndex = firstIndex + i;
-
-                                if (samplerIndex < MAX_TEXTURE_IMAGE_UNITS)
-                                {
-                                    ASSERT(mSamplersPS[samplerIndex].active);
-                                    mSamplersPS[samplerIndex].logicalTextureUnit = v[i];
-                                }
-                            }
-                        }
-                    }
-
-                    if (targetUniform->vs.registerCount)
-                    {
-                        if (targetUniform->vs.samplerIndex >= 0)
-                        {
-                            unsigned int firstIndex = targetUniform->vs.samplerIndex;
-
-                            for (int i = 0; i < count; i++)
-                            {
-                                unsigned int samplerIndex = firstIndex + i;
-
-                                if (samplerIndex < MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF)
-                                {
-                                    ASSERT(mSamplersVS[samplerIndex].active);
-                                    mSamplersVS[samplerIndex].logicalTextureUnit = v[i];
-                                }
-                            }
+                            ASSERT(mSamplersPS[samplerIndex].active);
+                            mSamplersPS[samplerIndex].logicalTextureUnit = v[i];
                         }
                     }
                 }
-                break;
+
+                if (targetUniform->vs.registerCount)
+                {
+                    ASSERT(targetUniform->vs.registerIndex >= 0);
+                    unsigned int firstIndex = targetUniform->vs.registerIndex;
+
+                    for (int i = 0; i < count; i++)
+                    {
+                        unsigned int samplerIndex = firstIndex + i;
+
+                        if (samplerIndex < MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF)
+                        {
+                            ASSERT(mSamplersVS[samplerIndex].active);
+                            mSamplersVS[samplerIndex].logicalTextureUnit = v[i];
+                        }
+                    }
+                }
             }
         }
     }
@@ -1594,14 +1586,10 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
 
         mUniforms[i] = new Uniform(type, _name, arraySize);
         
-        stream.read(&mUniforms[i]->ps.float4Index);
-        stream.read(&mUniforms[i]->ps.samplerIndex);
-        stream.read(&mUniforms[i]->ps.boolIndex);
+        stream.read(&mUniforms[i]->ps.registerIndex);
         stream.read(&mUniforms[i]->ps.registerCount);
 
-        stream.read(&mUniforms[i]->vs.float4Index);
-        stream.read(&mUniforms[i]->vs.samplerIndex);
-        stream.read(&mUniforms[i]->vs.boolIndex);
+        stream.read(&mUniforms[i]->vs.registerIndex);
         stream.read(&mUniforms[i]->vs.registerCount);
     }
 
@@ -1709,14 +1697,10 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
         stream.write(mUniforms[i]->_name);
         stream.write(mUniforms[i]->arraySize);
 
-        stream.write(mUniforms[i]->ps.float4Index);
-        stream.write(mUniforms[i]->ps.samplerIndex);
-        stream.write(mUniforms[i]->ps.boolIndex);
+        stream.write(mUniforms[i]->ps.registerIndex);
         stream.write(mUniforms[i]->ps.registerCount);
 
-        stream.write(mUniforms[i]->vs.float4Index);
-        stream.write(mUniforms[i]->vs.samplerIndex);
-        stream.write(mUniforms[i]->vs.boolIndex);
+        stream.write(mUniforms[i]->vs.registerIndex);
         stream.write(mUniforms[i]->vs.registerCount);
     }
 
@@ -2078,8 +2062,17 @@ bool ProgramBinary::defineUniform(GLenum shader, const rx::D3DConstant *constant
         uniform = mUniforms[mUniformIndex[location].index];
     }
 
-    if (shader == GL_FRAGMENT_SHADER) uniform->ps.set(constant);
-    if (shader == GL_VERTEX_SHADER)   uniform->vs.set(constant);
+    if (shader == GL_FRAGMENT_SHADER)
+    {
+        uniform->ps.registerIndex = constant->registerIndex;
+        uniform->ps.registerCount = constant->registerCount;
+    }
+    else if (shader == GL_VERTEX_SHADER)
+    {
+        uniform->vs.registerIndex = constant->registerIndex;
+        uniform->vs.registerCount = constant->registerCount;
+    }
+    else UNREACHABLE();
 
     if (location >= 0)
     {

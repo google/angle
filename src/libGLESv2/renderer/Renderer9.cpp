@@ -1508,9 +1508,8 @@ void Renderer9::applyUniforms(const gl::UniformArray *uniformArray)
 void Renderer9::applyUniformnbv(gl::Uniform *targetUniform, GLsizei count, int width, const GLboolean *v)
 {
     float vector[gl::D3D9_MAX_FLOAT_CONSTANTS * 4];
-    BOOL boolVector[gl::D3D9_MAX_BOOL_CONSTANTS];
 
-    if (targetUniform->ps.float4Index >= 0 || targetUniform->vs.float4Index >= 0)
+    if (targetUniform->ps.registerIndex >= 0 || targetUniform->vs.registerIndex >= 0)
     {
         ASSERT(count <= gl::D3D9_MAX_FLOAT_CONSTANTS);
         for (int i = 0; i < count; i++)
@@ -1529,55 +1528,25 @@ void Renderer9::applyUniformnbv(gl::Uniform *targetUniform, GLsizei count, int w
         }
     }
 
-    if (targetUniform->ps.boolIndex >= 0 || targetUniform->vs.boolIndex >= 0)
-    {
-        int psCount = targetUniform->ps.boolIndex >= 0 ? targetUniform->ps.registerCount : 0;
-        int vsCount = targetUniform->vs.boolIndex >= 0 ? targetUniform->vs.registerCount : 0;
-        int copyCount = std::min(count * width, std::max(psCount, vsCount));
-        ASSERT(copyCount <= gl::D3D9_MAX_BOOL_CONSTANTS);
-        for (int i = 0; i < copyCount; i++)
-        {
-            boolVector[i] = v[i] != GL_FALSE;
-        }
-    }
-
-    if (targetUniform->ps.float4Index >= 0)
-    {
-        mDevice->SetPixelShaderConstantF(targetUniform->ps.float4Index, vector, targetUniform->ps.registerCount);
-    }
-        
-    if (targetUniform->ps.boolIndex >= 0)
-    {
-        mDevice->SetPixelShaderConstantB(targetUniform->ps.boolIndex, boolVector, targetUniform->ps.registerCount);
-    }
-    
-    if (targetUniform->vs.float4Index >= 0)
-    {
-        mDevice->SetVertexShaderConstantF(targetUniform->vs.float4Index, vector, targetUniform->vs.registerCount);
-    }
-        
-    if (targetUniform->vs.boolIndex >= 0)
-    {
-        mDevice->SetVertexShaderConstantB(targetUniform->vs.boolIndex, boolVector, targetUniform->vs.registerCount);
-    }
+    applyUniformnfv(targetUniform, vector);
 }
 
-bool Renderer9::applyUniformnfv(gl::Uniform *targetUniform, const GLfloat *v)
+void Renderer9::applyUniformnfv(gl::Uniform *targetUniform, const GLfloat *v)
 {
     if (targetUniform->ps.registerCount)
     {
-        mDevice->SetPixelShaderConstantF(targetUniform->ps.float4Index, v, targetUniform->ps.registerCount);
+        ASSERT(targetUniform->ps.registerIndex >= 0);
+        mDevice->SetPixelShaderConstantF(targetUniform->ps.registerIndex, v, targetUniform->ps.registerCount);
     }
 
     if (targetUniform->vs.registerCount)
     {
-        mDevice->SetVertexShaderConstantF(targetUniform->vs.float4Index, v, targetUniform->vs.registerCount);
+        ASSERT(targetUniform->vs.registerIndex >= 0);
+        mDevice->SetVertexShaderConstantF(targetUniform->vs.registerIndex, v, targetUniform->vs.registerCount);
     }
-
-    return true;
 }
 
-bool Renderer9::applyUniform1iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v)
+void Renderer9::applyUniform1iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v)
 {
     ASSERT(count <= gl::D3D9_MAX_FLOAT_CONSTANTS);
     gl::Vector4 vector[gl::D3D9_MAX_FLOAT_CONSTANTS];
@@ -1587,26 +1556,10 @@ bool Renderer9::applyUniform1iv(gl::Uniform *targetUniform, GLsizei count, const
         vector[i] = gl::Vector4((float)v[i], 0, 0, 0);
     }
 
-    if (targetUniform->ps.registerCount)
-    {
-        if (targetUniform->ps.float4Index >= 0)
-        {
-            mDevice->SetPixelShaderConstantF(targetUniform->ps.float4Index, (const float*)vector, targetUniform->ps.registerCount);
-        }
-    }
-
-    if (targetUniform->vs.registerCount)
-    {
-        if (targetUniform->vs.float4Index >= 0)
-        {
-            mDevice->SetVertexShaderConstantF(targetUniform->vs.float4Index, (const float *)vector, targetUniform->vs.registerCount);
-        }
-    }
-
-    return true;
+    applyUniformnfv(targetUniform, (const GLfloat*)vector);
 }
 
-bool Renderer9::applyUniform2iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v)
+void Renderer9::applyUniform2iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v)
 {
     ASSERT(count <= gl::D3D9_MAX_FLOAT_CONSTANTS);
     gl::Vector4 vector[gl::D3D9_MAX_FLOAT_CONSTANTS];
@@ -1618,12 +1571,10 @@ bool Renderer9::applyUniform2iv(gl::Uniform *targetUniform, GLsizei count, const
         v += 2;
     }
 
-    applyUniformniv(targetUniform, count, vector);
-
-    return true;
+    applyUniformnfv(targetUniform, (const GLfloat*)vector);
 }
 
-bool Renderer9::applyUniform3iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v)
+void Renderer9::applyUniform3iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v)
 {
     ASSERT(count <= gl::D3D9_MAX_FLOAT_CONSTANTS);
     gl::Vector4 vector[gl::D3D9_MAX_FLOAT_CONSTANTS];
@@ -1635,12 +1586,10 @@ bool Renderer9::applyUniform3iv(gl::Uniform *targetUniform, GLsizei count, const
         v += 3;
     }
 
-    applyUniformniv(targetUniform, count, vector);
-
-    return true;
+    applyUniformnfv(targetUniform, (const GLfloat*)vector);
 }
 
-bool Renderer9::applyUniform4iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v)
+void Renderer9::applyUniform4iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v)
 {
     ASSERT(count <= gl::D3D9_MAX_FLOAT_CONSTANTS);
     gl::Vector4 vector[gl::D3D9_MAX_FLOAT_CONSTANTS];
@@ -1652,24 +1601,7 @@ bool Renderer9::applyUniform4iv(gl::Uniform *targetUniform, GLsizei count, const
         v += 4;
     }
 
-    applyUniformniv(targetUniform, count, vector);
-
-    return true;
-}
-
-void Renderer9::applyUniformniv(gl::Uniform *targetUniform, GLsizei count, const gl::Vector4 *vector)
-{
-    if (targetUniform->ps.registerCount)
-    {
-        ASSERT(targetUniform->ps.float4Index >= 0);
-        mDevice->SetPixelShaderConstantF(targetUniform->ps.float4Index, (const float *)vector, targetUniform->ps.registerCount);
-    }
-
-    if (targetUniform->vs.registerCount)
-    {
-        ASSERT(targetUniform->vs.float4Index >= 0);
-        mDevice->SetVertexShaderConstantF(targetUniform->vs.float4Index, (const float *)vector, targetUniform->vs.registerCount);
-    }
+    applyUniformnfv(targetUniform, (const GLfloat*)vector);
 }
 
 void Renderer9::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer)

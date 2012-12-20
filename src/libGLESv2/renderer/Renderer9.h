@@ -187,12 +187,11 @@ class Renderer9 : public Renderer
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer9);
 
-    bool applyUniformnfv(gl::Uniform *targetUniform, const GLfloat *v);
-    bool applyUniform1iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v);
-    bool applyUniform2iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v);
-    bool applyUniform3iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v);
-    bool applyUniform4iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v);
-    void applyUniformniv(gl::Uniform *targetUniform, GLsizei count, const gl::Vector4 *vector);
+    void applyUniformnfv(gl::Uniform *targetUniform, const GLfloat *v);
+    void applyUniform1iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v);
+    void applyUniform2iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v);
+    void applyUniform3iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v);
+    void applyUniform4iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v);
     void applyUniformnbv(gl::Uniform *targetUniform, GLsizei count, int width, const GLboolean *v);
 
     void drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
