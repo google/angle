@@ -1734,12 +1734,8 @@ void Context::applyState(GLenum drawMode)
     Framebuffer *framebufferObject = getDrawFramebuffer();
 
     GLint frontCCW = programBinary->getDxFrontCCWLocation();
-    GLint ccw = (mState.rasterizer.frontFace == GL_CCW);
-    programBinary->setUniform1iv(frontCCW, 1, &ccw);
-
-    GLint pointsOrLines = programBinary->getDxPointsOrLinesLocation();
-    GLint alwaysFront = !isTriangleMode(drawMode);
-    programBinary->setUniform1iv(pointsOrLines, 1, &alwaysFront);
+    GLfloat ccw = !isTriangleMode(drawMode) ? 0.0f : (mState.rasterizer.frontFace == GL_CCW ? 1.0f : -1.0f);
+    programBinary->setUniform1fv(frontCCW, 1, &ccw);
 
     mRenderer->setRasterizerState(mState.rasterizer);
 

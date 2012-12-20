@@ -134,7 +134,6 @@ class ProgramBinary : public RefCountObject
     GLint getDxCoordLocation() const;
     GLint getDxHalfPixelSizeLocation() const;
     GLint getDxFrontCCWLocation() const;
-    GLint getDxPointsOrLinesLocation() const;
 
     void dirtyAllUniforms();
     void applyUniforms();
@@ -217,7 +216,6 @@ class ProgramBinary : public RefCountObject
     GLint mDxCoordLocation;
     GLint mDxHalfPixelSizeLocation;
     GLint mDxFrontCCWLocation;
-    GLint mDxPointsOrLinesLocation;
 
     bool mValidated;
 

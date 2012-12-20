@@ -87,7 +87,6 @@ ProgramBinary::ProgramBinary(rx::Renderer *renderer) : mRenderer(renderer), RefC
     mDxCoordLocation = -1;
     mDxHalfPixelSizeLocation = -1;
     mDxFrontCCWLocation = -1;
-    mDxPointsOrLinesLocation = -1;
 }
 
 ProgramBinary::~ProgramBinary()
@@ -1475,7 +1474,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
 
     if (fragmentShader->mUsesFrontFacing)
     {
-        pixelHLSL += "    gl_FrontFacing = dx_PointsOrLines || (dx_FrontCCW ? (input.vFace >= 0.0) : (input.vFace <= 0.0));\n";
+        pixelHLSL += "    gl_FrontFacing = (input.vFace * dx_FrontCCW >= 0.0);\n";
     }
 
     for (VaryingList::iterator varying = fragmentShader->mVaryings.begin(); varying != fragmentShader->mVaryings.end(); varying++)
@@ -1630,7 +1629,6 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
     stream.read(&mDxCoordLocation);
     stream.read(&mDxHalfPixelSizeLocation);
     stream.read(&mDxFrontCCWLocation);
-    stream.read(&mDxPointsOrLinesLocation);
 
     unsigned int pixelShaderSize;
     stream.read(&pixelShaderSize);
@@ -1739,7 +1737,6 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
     stream.write(mDxCoordLocation);
     stream.write(mDxHalfPixelSizeLocation);
     stream.write(mDxFrontCCWLocation);
-    stream.write(mDxPointsOrLinesLocation);
 
     UINT pixelShaderSize = mPixelExecutable->getLength();
     stream.write(pixelShaderSize);
@@ -1866,7 +1863,6 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
     mDxCoordLocation = getUniformLocation("dx_Coord");
     mDxHalfPixelSizeLocation = getUniformLocation("dx_HalfPixelSize");
     mDxFrontCCWLocation = getUniformLocation("dx_FrontCCW");
-    mDxPointsOrLinesLocation = getUniformLocation("dx_PointsOrLines");
 
     Context *context = getContext();
     context->markDxUniformsDirty();
@@ -2677,11 +2673,6 @@ GLint ProgramBinary::getDxHalfPixelSizeLocation() const
 GLint ProgramBinary::getDxFrontCCWLocation() const
 {
     return mDxFrontCCWLocation;
-}
-
-GLint ProgramBinary::getDxPointsOrLinesLocation() const
-{
-    return mDxPointsOrLinesLocation;
 }
 
 ProgramBinary::Sampler::Sampler() : active(false), logicalTextureUnit(0), textureType(TEXTURE_2D)

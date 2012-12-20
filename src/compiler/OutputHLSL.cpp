@@ -213,8 +213,7 @@ void OutputHLSL::header()
 
         if (mUsesFrontFacing)
         {
-            out << "uniform bool dx_PointsOrLines;\n"
-                   "uniform bool dx_FrontCCW;\n";
+            out << "uniform float dx_FrontCCW;\n";
         }
         
         out << "\n";
