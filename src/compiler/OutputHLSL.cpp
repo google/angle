@@ -135,54 +135,37 @@ void OutputHLSL::header()
         out << *constructor;
     }
 
+    TString uniforms;
+    TString varyings;
+    TString attributes;
+
+    for (ReferencedSymbols::const_iterator uniform = mReferencedUniforms.begin(); uniform != mReferencedUniforms.end(); uniform++)
+    {
+        const TType &type = uniform->second->getType();
+        const TString &name = uniform->second->getSymbol();
+
+        uniforms += "uniform " + typeString(type) + " " + decorateUniform(name, type) + arrayString(type) + ";\n";
+    }
+
+    for (ReferencedSymbols::const_iterator varying = mReferencedVaryings.begin(); varying != mReferencedVaryings.end(); varying++)
+    {
+        const TType &type = varying->second->getType();
+        const TString &name = varying->second->getSymbol();
+
+        // Program linking depends on this exact format
+        varyings += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
+    }
+
+    for (ReferencedSymbols::const_iterator attribute = mReferencedAttributes.begin(); attribute != mReferencedAttributes.end(); attribute++)
+    {
+        const TType &type = attribute->second->getType();
+        const TString &name = attribute->second->getSymbol();
+
+        attributes += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
+    }
+
     if (shaderType == SH_FRAGMENT_SHADER)
     {
-        TString uniforms;
-        TString varyings;
-
-        TSymbolTableLevel *symbols = mContext.symbolTable.getGlobalLevel();
-        int semanticIndex = 0;
-
-        for (TSymbolTableLevel::const_iterator namedSymbol = symbols->begin(); namedSymbol != symbols->end(); namedSymbol++)
-        {
-            const TSymbol *symbol = (*namedSymbol).second;
-            const TString &name = symbol->getName();
-
-            if (symbol->isVariable())
-            {
-                const TVariable *variable = static_cast<const TVariable*>(symbol);
-                const TType &type = variable->getType();
-                TQualifier qualifier = type.getQualifier();
-
-                if (qualifier == EvqUniform)
-                {
-                    if (mReferencedUniforms.find(name.c_str()) != mReferencedUniforms.end())
-                    {
-                        uniforms += "uniform " + typeString(type) + " " + decorateUniform(name, type) + arrayString(type) + ";\n";
-                    }
-                }
-                else if (qualifier == EvqVaryingIn || qualifier == EvqInvariantVaryingIn)
-                {
-                    if (mReferencedVaryings.find(name.c_str()) != mReferencedVaryings.end())
-                    {
-                        // Program linking depends on this exact format
-                        varyings += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
-
-                        semanticIndex += type.isArray() ? type.getArraySize() : 1;
-                    }
-                }
-                else if (qualifier == EvqGlobal || qualifier == EvqTemporary)
-                {
-                    // Globals are declared and intialized as an aggregate node
-                }
-                else if (qualifier == EvqConst)
-                {
-                    // Constants are repeated as literals where used
-                }
-                else UNREACHABLE();
-            }
-        }
-
         out << "// Varyings\n";
         out <<  varyings;
         out << "\n"
@@ -351,57 +334,6 @@ void OutputHLSL::header()
     }
     else   // Vertex shader
     {
-        TString uniforms;
-        TString attributes;
-        TString varyings;
-
-        TSymbolTableLevel *symbols = mContext.symbolTable.getGlobalLevel();
-
-        for (TSymbolTableLevel::const_iterator namedSymbol = symbols->begin(); namedSymbol != symbols->end(); namedSymbol++)
-        {
-            const TSymbol *symbol = (*namedSymbol).second;
-            const TString &name = symbol->getName();
-
-            if (symbol->isVariable())
-            {
-                const TVariable *variable = static_cast<const TVariable*>(symbol);
-                const TType &type = variable->getType();
-                TQualifier qualifier = type.getQualifier();
-
-                if (qualifier == EvqUniform)
-                {
-                    if (mReferencedUniforms.find(name.c_str()) != mReferencedUniforms.end())
-                    {
-                        uniforms += "uniform " + typeString(type) + " " + decorateUniform(name, type) + arrayString(type) + ";\n";
-                    }
-                }
-                else if (qualifier == EvqAttribute)
-                {
-                    if (mReferencedAttributes.find(name.c_str()) != mReferencedAttributes.end())
-                    {
-                        attributes += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
-                    }
-                }
-                else if (qualifier == EvqVaryingOut || qualifier == EvqInvariantVaryingOut)
-                {
-                    if (mReferencedVaryings.find(name.c_str()) != mReferencedVaryings.end())
-                    {
-                        // Program linking depends on this exact format
-                        varyings += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
-                    }
-                }
-                else if (qualifier == EvqGlobal || qualifier == EvqTemporary)
-                {
-                    // Globals are declared and intialized as an aggregate node
-                }
-                else if (qualifier == EvqConst)
-                {
-                    // Constants are repeated as literals where used
-                }
-                else UNREACHABLE();
-            }
-        }
-
         out << "// Attributes\n";
         out <<  attributes;
         out << "\n"
@@ -846,17 +778,17 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
 
         if (qualifier == EvqUniform)
         {
-            mReferencedUniforms.insert(name.c_str());
+            mReferencedUniforms[name] = node;
             out << decorateUniform(name, node->getType());
         }
         else if (qualifier == EvqAttribute)
         {
-            mReferencedAttributes.insert(name.c_str());
+            mReferencedAttributes[name] = node;
             out << decorate(name);
         }
         else if (qualifier == EvqVaryingOut || qualifier == EvqInvariantVaryingOut || qualifier == EvqVaryingIn || qualifier == EvqInvariantVaryingIn)
         {
-            mReferencedVaryings.insert(name.c_str());
+            mReferencedVaryings[name] = node;
             out << decorate(name);
         }
         else
