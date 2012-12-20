@@ -41,7 +41,7 @@ class IndexDataManager
     virtual ~IndexDataManager();
 
     GLenum prepareIndexData(GLenum type, GLsizei count, gl::Buffer *arrayElementBuffer, const GLvoid *indices, TranslatedIndexData *translated, IDirect3DIndexBuffer9 **indexBuffer, unsigned int *serial);
-    StaticIndexBuffer *getCountingIndices(GLsizei count);
+    StaticIndexBufferInterface *getCountingIndices(GLsizei count);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(IndexDataManager);
@@ -51,9 +51,9 @@ class IndexDataManager
 
     rx::Renderer9 *const mRenderer;   // D3D9_REPLACE
 
-    StreamingIndexBuffer *mStreamingBufferShort;
-    StreamingIndexBuffer *mStreamingBufferInt;
-    StaticIndexBuffer *mCountingBuffer;
+    StreamingIndexBufferInterface *mStreamingBufferShort;
+    StreamingIndexBufferInterface *mStreamingBufferInt;
+    StaticIndexBufferInterface *mCountingBuffer;
 };
 
 }

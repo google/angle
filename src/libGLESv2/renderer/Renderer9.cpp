@@ -1220,7 +1220,7 @@ void Renderer9::drawArrays(GLenum mode, GLsizei count, GLsizei instances)
     }
     else if (instances > 0)
     {
-        StaticIndexBuffer *countingIB = mIndexDataManager->getCountingIndices(count);
+        StaticIndexBufferInterface *countingIB = mIndexDataManager->getCountingIndices(count);
         if (countingIB)
         {
             if (mAppliedIBSerial != countingIB->getSerial())
@@ -1283,7 +1283,7 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
 
         if (!mLineLoopIB)
         {
-            mLineLoopIB = new StreamingIndexBuffer(this, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX32);
+            mLineLoopIB = new StreamingIndexBufferInterface(this, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX32);
         }
 
         if (mLineLoopIB)
@@ -1340,7 +1340,7 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
 
         if (!mLineLoopIB)
         {
-            mLineLoopIB = new StreamingIndexBuffer(this, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX16);
+            mLineLoopIB = new StreamingIndexBufferInterface(this, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX16);
         }
 
         if (mLineLoopIB)

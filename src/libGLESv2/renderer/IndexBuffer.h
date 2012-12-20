@@ -24,11 +24,11 @@ namespace rx
 
 class Renderer9;
 
-class IndexBuffer
+class IndexBufferInterface
 {
   public:
-    IndexBuffer(rx::Renderer9 *renderer, UINT size, D3DFORMAT format);
-    virtual ~IndexBuffer();
+    IndexBufferInterface(rx::Renderer9 *renderer, UINT size, D3DFORMAT format);
+    virtual ~IndexBufferInterface();
 
     UINT size() const { return mBufferSize; }
     virtual void *map(UINT requiredSpace, UINT *offset) = 0;
@@ -49,14 +49,14 @@ class IndexBuffer
     static unsigned int mCurrentSerial;
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(IndexBuffer);
+    DISALLOW_COPY_AND_ASSIGN(IndexBufferInterface);
 };
 
-class StreamingIndexBuffer : public IndexBuffer
+class StreamingIndexBufferInterface : public IndexBufferInterface
 {
   public:
-    StreamingIndexBuffer(rx::Renderer9 *renderer, UINT initialSize, D3DFORMAT format);
-    ~StreamingIndexBuffer();
+    StreamingIndexBufferInterface(rx::Renderer9 *renderer, UINT initialSize, D3DFORMAT format);
+    ~StreamingIndexBufferInterface();
 
     virtual void *map(UINT requiredSpace, UINT *offset);
     virtual void reserveSpace(UINT requiredSpace, GLenum type);
@@ -65,11 +65,11 @@ class StreamingIndexBuffer : public IndexBuffer
     UINT mWritePosition;
 };
 
-class StaticIndexBuffer : public IndexBuffer
+class StaticIndexBufferInterface : public IndexBufferInterface
 {
   public:
-    explicit StaticIndexBuffer(rx::Renderer9 *renderer);
-    ~StaticIndexBuffer();
+    explicit StaticIndexBufferInterface(rx::Renderer9 *renderer);
+    ~StaticIndexBufferInterface();
 
     virtual void *map(UINT requiredSpace, UINT *offset);
     virtual void reserveSpace(UINT requiredSpace, GLenum type);

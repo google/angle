@@ -20,11 +20,11 @@ namespace rx
 
 IndexDataManager::IndexDataManager(rx::Renderer9 *renderer) : mRenderer(renderer)
 {
-    mStreamingBufferShort = new StreamingIndexBuffer(mRenderer, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX16);
+    mStreamingBufferShort = new StreamingIndexBufferInterface(mRenderer, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX16);
 
     if (renderer->get32BitIndexSupport())
     {
-        mStreamingBufferInt = new StreamingIndexBuffer(mRenderer, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX32);
+        mStreamingBufferInt = new StreamingIndexBufferInterface(mRenderer, INITIAL_INDEX_BUFFER_SIZE, D3DFMT_INDEX32);
 
         if (!mStreamingBufferInt)
         {
@@ -135,10 +135,10 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
         indices = static_cast<const GLubyte*>(buffer->data()) + offset;
     }
 
-    StreamingIndexBuffer *streamingBuffer = (type == GL_UNSIGNED_INT) ? mStreamingBufferInt : mStreamingBufferShort;
+    StreamingIndexBufferInterface *streamingBuffer = (type == GL_UNSIGNED_INT) ? mStreamingBufferInt : mStreamingBufferShort;
 
-    StaticIndexBuffer *staticBuffer = buffer ? buffer->getStaticIndexBuffer() : NULL;
-    IndexBuffer *indexBuffer = streamingBuffer;
+    StaticIndexBufferInterface *staticBuffer = buffer ? buffer->getStaticIndexBuffer() : NULL;
+    IndexBufferInterface *indexBuffer = streamingBuffer;
     UINT streamOffset = 0;
 
     if (staticBuffer && staticBuffer->lookupType(type) && alignedOffset)
@@ -225,7 +225,7 @@ std::size_t IndexDataManager::typeSize(GLenum type) const
     }
 }
 
-StaticIndexBuffer *IndexDataManager::getCountingIndices(GLsizei count)
+StaticIndexBufferInterface *IndexDataManager::getCountingIndices(GLsizei count)
 {
     if (count <= 65536)   // 16-bit indices
     {
@@ -234,7 +234,7 @@ StaticIndexBuffer *IndexDataManager::getCountingIndices(GLsizei count)
         if (!mCountingBuffer || mCountingBuffer->size() < spaceNeeded)
         {
             delete mCountingBuffer;
-            mCountingBuffer = new StaticIndexBuffer(mRenderer);
+            mCountingBuffer = new StaticIndexBufferInterface(mRenderer);
             mCountingBuffer->reserveSpace(spaceNeeded, GL_UNSIGNED_SHORT);
 
             UINT offset;
@@ -258,7 +258,7 @@ StaticIndexBuffer *IndexDataManager::getCountingIndices(GLsizei count)
         if (!mCountingBuffer || mCountingBuffer->size() < spaceNeeded)
         {
             delete mCountingBuffer;
-            mCountingBuffer = new StaticIndexBuffer(mRenderer);
+            mCountingBuffer = new StaticIndexBufferInterface(mRenderer);
             mCountingBuffer->reserveSpace(spaceNeeded, GL_UNSIGNED_INT);
 
             UINT offset;

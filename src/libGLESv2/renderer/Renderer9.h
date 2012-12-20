@@ -33,7 +33,7 @@ namespace rx
 {
 class D3DConstantTable;
 class VertexDataManager;
-class StreamingIndexBuffer;
+class StreamingIndexBufferInterface;
 struct TranslatedAttribute;
 
 class Renderer9 : public Renderer
@@ -283,7 +283,7 @@ class Renderer9 : public Renderer
     VertexDeclarationCache mVertexDeclarationCache;
 
     IndexDataManager *mIndexDataManager;
-    StreamingIndexBuffer *mLineLoopIB;
+    StreamingIndexBufferInterface *mLineLoopIB;
 
     enum { NUM_NULL_COLORBUFFER_CACHE_ENTRIES = 12 };
     struct NullColorbufferCacheEntry

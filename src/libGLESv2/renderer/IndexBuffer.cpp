@@ -14,9 +14,9 @@
 namespace rx
 {
 
-unsigned int IndexBuffer::mCurrentSerial = 1;
+unsigned int IndexBufferInterface::mCurrentSerial = 1;
 
-IndexBuffer::IndexBuffer(rx::Renderer9 *renderer, UINT size, D3DFORMAT format) : mRenderer(renderer), mBufferSize(size), mIndexBuffer(NULL)
+IndexBufferInterface::IndexBufferInterface(rx::Renderer9 *renderer, UINT size, D3DFORMAT format) : mRenderer(renderer), mBufferSize(size), mIndexBuffer(NULL)
 {
     if (size > 0)
     {
@@ -31,7 +31,7 @@ IndexBuffer::IndexBuffer(rx::Renderer9 *renderer, UINT size, D3DFORMAT format) :
     }
 }
 
-IndexBuffer::~IndexBuffer()
+IndexBufferInterface::~IndexBufferInterface()
 {
     if (mIndexBuffer)
     {
@@ -39,22 +39,22 @@ IndexBuffer::~IndexBuffer()
     }
 }
 
-IDirect3DIndexBuffer9 *IndexBuffer::getBuffer() const
+IDirect3DIndexBuffer9 *IndexBufferInterface::getBuffer() const
 {
     return mIndexBuffer;
 }
 
-unsigned int IndexBuffer::getSerial() const
+unsigned int IndexBufferInterface::getSerial() const
 {
     return mSerial;
 }
 
-unsigned int IndexBuffer::issueSerial()
+unsigned int IndexBufferInterface::issueSerial()
 {
     return mCurrentSerial++;
 }
 
-void IndexBuffer::unmap()
+void IndexBufferInterface::unmap()
 {
     if (mIndexBuffer)
     {
@@ -62,16 +62,16 @@ void IndexBuffer::unmap()
     }
 }
 
-StreamingIndexBuffer::StreamingIndexBuffer(rx::Renderer9 *renderer, UINT initialSize, D3DFORMAT format) : IndexBuffer(renderer, initialSize, format)
+StreamingIndexBufferInterface::StreamingIndexBufferInterface(rx::Renderer9 *renderer, UINT initialSize, D3DFORMAT format) : IndexBufferInterface(renderer, initialSize, format)
 {
     mWritePosition = 0;
 }
 
-StreamingIndexBuffer::~StreamingIndexBuffer()
+StreamingIndexBufferInterface::~StreamingIndexBufferInterface()
 {
 }
 
-void *StreamingIndexBuffer::map(UINT requiredSpace, UINT *offset)
+void *StreamingIndexBufferInterface::map(UINT requiredSpace, UINT *offset)
 {
     void *mapPtr = NULL;
 
@@ -92,7 +92,7 @@ void *StreamingIndexBuffer::map(UINT requiredSpace, UINT *offset)
     return mapPtr;
 }
 
-void StreamingIndexBuffer::reserveSpace(UINT requiredSpace, GLenum type)
+void StreamingIndexBufferInterface::reserveSpace(UINT requiredSpace, GLenum type)
 {
     if (requiredSpace > mBufferSize)
     {
@@ -125,16 +125,16 @@ void StreamingIndexBuffer::reserveSpace(UINT requiredSpace, GLenum type)
     }
 }
 
-StaticIndexBuffer::StaticIndexBuffer(rx::Renderer9 *renderer) : IndexBuffer(renderer, 0, D3DFMT_UNKNOWN)
+StaticIndexBufferInterface::StaticIndexBufferInterface(rx::Renderer9 *renderer) : IndexBufferInterface(renderer, 0, D3DFMT_UNKNOWN)
 {
     mCacheType = GL_NONE;
 }
 
-StaticIndexBuffer::~StaticIndexBuffer()
+StaticIndexBufferInterface::~StaticIndexBufferInterface()
 {
 }
 
-void *StaticIndexBuffer::map(UINT requiredSpace, UINT *offset)
+void *StaticIndexBufferInterface::map(UINT requiredSpace, UINT *offset)
 {
     void *mapPtr = NULL;
 
@@ -154,7 +154,7 @@ void *StaticIndexBuffer::map(UINT requiredSpace, UINT *offset)
     return mapPtr;
 }
 
-void StaticIndexBuffer::reserveSpace(UINT requiredSpace, GLenum type)
+void StaticIndexBufferInterface::reserveSpace(UINT requiredSpace, GLenum type)
 {
     if (!mIndexBuffer && mBufferSize == 0)
     {
@@ -177,12 +177,12 @@ void StaticIndexBuffer::reserveSpace(UINT requiredSpace, GLenum type)
     else UNREACHABLE();   // Static index buffers can't be resized
 }
 
-bool StaticIndexBuffer::lookupType(GLenum type)
+bool StaticIndexBufferInterface::lookupType(GLenum type)
 {
     return mCacheType == type;
 }
 
-UINT StaticIndexBuffer::lookupRange(intptr_t offset, GLsizei count, UINT *minIndex, UINT *maxIndex)
+UINT StaticIndexBufferInterface::lookupRange(intptr_t offset, GLsizei count, UINT *minIndex, UINT *maxIndex)
 {
     IndexRange range = {offset, count};
 
@@ -198,7 +198,7 @@ UINT StaticIndexBuffer::lookupRange(intptr_t offset, GLsizei count, UINT *minInd
     return res->second.streamOffset;
 }
 
-void StaticIndexBuffer::addRange(intptr_t offset, GLsizei count, UINT minIndex, UINT maxIndex, UINT streamOffset)
+void StaticIndexBufferInterface::addRange(intptr_t offset, GLsizei count, UINT minIndex, UINT maxIndex, UINT streamOffset)
 {
     IndexRange indexRange = {offset, count};
     IndexResult indexResult = {minIndex, maxIndex, streamOffset};
