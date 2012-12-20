@@ -3074,4 +3074,20 @@ void Renderer9::generateMipmap(Image *dest, Image *src)
     Image9::generateMipmap(dst9, src9);
 }
 
+TextureStorage *Renderer9::createTextureStorage2D(SwapChain *swapChain)
+{
+    SwapChain9 *swapChain9 = SwapChain9::makeSwapChain9(swapChain);
+    return new TextureStorage9_2D(this, swapChain9);
+}
+
+TextureStorage *Renderer9::createTextureStorage2D(int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height)
+{
+    return new TextureStorage9_2D(this, levels, internalformat, usage, forceRenderable, width, height);
+}
+
+TextureStorage *Renderer9::createTextureStorageCube(int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
+{
+    return new TextureStorage9_Cube(this, levels, internalformat, usage, forceRenderable, size);
+}
+
 }

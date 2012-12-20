@@ -140,6 +140,9 @@ class Renderer11 : public Renderer
     // Image operations
     virtual Image *createImage();
     virtual void generateMipmap(Image *dest, Image *source);
+    virtual TextureStorage *createTextureStorage2D(SwapChain *swapChain);
+    virtual TextureStorage *createTextureStorage2D(int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height);
+    virtual TextureStorage *createTextureStorageCube(int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size);
 
     // Buffer creation
     virtual VertexBuffer *createVertexBuffer();

@@ -68,15 +68,13 @@ int TextureStorageInterface::levelCount()
 TextureStorageInterface2D::TextureStorageInterface2D(Renderer *renderer, SwapChain9 *swapchain) 
     : mRenderTargetSerial(gl::RenderbufferStorage::issueSerial())
 {
-    TextureStorage9_2D *newInterface = new TextureStorage9_2D(renderer, swapchain);
-    mInstance = newInterface;
+    mInstance = renderer->createTextureStorage2D(swapchain);
 }
 
 TextureStorageInterface2D::TextureStorageInterface2D(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height)
     : mRenderTargetSerial(gl::RenderbufferStorage::issueSerial())
 {
-    TextureStorage9_2D *newInterface = new TextureStorage9_2D(renderer, levels, internalformat, usage, forceRenderable, width, height); // D3D9_REPLACE
-    mInstance = newInterface;
+    mInstance = renderer->createTextureStorage2D(levels, internalformat, usage, forceRenderable, width, height);
 }
 
 TextureStorageInterface2D::~TextureStorageInterface2D()
@@ -101,8 +99,7 @@ unsigned int TextureStorageInterface2D::getRenderTargetSerial(GLenum target) con
 TextureStorageInterfaceCube::TextureStorageInterfaceCube(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
     : mFirstRenderTargetSerial(gl::RenderbufferStorage::issueCubeSerials())
 {
-    TextureStorage9_Cube *newInterface = new TextureStorage9_Cube(renderer, levels, internalformat, usage, forceRenderable, size); // D3D9_REPLACE
-    mInstance = newInterface;
+    mInstance = renderer->createTextureStorageCube(levels, internalformat, usage, forceRenderable, size);
 }
 
 TextureStorageInterfaceCube::~TextureStorageInterfaceCube()

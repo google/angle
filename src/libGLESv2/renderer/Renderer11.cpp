@@ -1274,4 +1274,25 @@ void Renderer11::generateMipmap(Image *dest, Image *src)
     return;
 }
 
+TextureStorage *Renderer11::createTextureStorage2D(SwapChain *swapChain)
+{
+    // TODO 
+    UNIMPLEMENTED();
+    return NULL;
+}
+
+TextureStorage *Renderer11::createTextureStorage2D(int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height)
+{
+    // TODO
+    UNIMPLEMENTED();
+    return NULL;
+}
+
+TextureStorage *Renderer11::createTextureStorageCube(int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
+{
+    // TODO
+    UNIMPLEMENTED();
+    return NULL;
+}
+
 }
