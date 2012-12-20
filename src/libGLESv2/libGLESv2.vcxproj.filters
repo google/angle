@@ -122,9 +122,6 @@
     <ClCompile Include="renderer\VertexDeclarationCache.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\ShaderExecutable9.cpp">
-      <Filter>Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\D3DConstantTable.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
@@ -132,6 +129,18 @@
       <Filter>Renderer</Filter>
     </ClCompile>
     <ClCompile Include="renderer\VertexDataManager.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\ShaderExecutable9.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\ShaderExecutable11.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\Image9.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\Image.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
   </ItemGroup>
@@ -214,9 +223,6 @@
     <ClInclude Include="renderer\Renderer9.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\Image.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="renderer\TextureStorage.h">
       <Filter>Renderer</Filter>
     </ClInclude>
@@ -262,9 +268,6 @@
     <ClInclude Include="renderer\ShaderExecutable.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\ShaderExecutable9.h">
-      <Filter>Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="renderer\VertexDataManager.h">
       <Filter>Renderer</Filter>
     </ClInclude>
@@ -275,6 +278,18 @@
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="renderer\vertexconversion.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\ShaderExecutable9.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\ShaderExecutable11.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\Image9.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\Image.h">
       <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>

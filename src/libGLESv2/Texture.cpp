@@ -487,8 +487,6 @@ void Texture2D::setCompressedImage(GLint level, GLenum format, GLsizei width, GL
 
 void Texture2D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
-    ASSERT(mImageArray[level]->getSurface() != NULL);
-
     if (level < levelCount())
     {
         rx::Image *image = mImageArray[level];
@@ -822,7 +820,7 @@ void Texture2D::generateMipmaps()
     {
         for (unsigned int i = 1; i <= q; i++)
         {
-            rx::Image::generateMipmap(mImageArray[i], mImageArray[i - 1]);
+            mRenderer->generateMipmap(mImageArray[i], mImageArray[i - 1]);
         }
     }
 }
@@ -1041,8 +1039,6 @@ void TextureCubeMap::setCompressedImage(GLenum face, GLint level, GLenum format,
 
 void TextureCubeMap::commitRect(int face, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
-    ASSERT(mImageArray[face][level]->getSurface() != NULL);
-
     if (level < levelCount())
     {
         rx::Image *image = mImageArray[face][level];
@@ -1448,7 +1444,7 @@ void TextureCubeMap::generateMipmaps()
         {
             for (unsigned int i = 1; i <= q; i++)
             {
-                rx::Image::generateMipmap(mImageArray[f][i], mImageArray[f][i - 1]);
+                mRenderer->generateMipmap(mImageArray[f][i], mImageArray[f][i - 1]);
             }
         }
     }

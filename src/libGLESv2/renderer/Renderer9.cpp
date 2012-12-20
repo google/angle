@@ -21,7 +21,7 @@
 #include "libGLESv2/renderer/ShaderExecutable9.h"
 #include "libGLESv2/renderer/SwapChain9.h"
 #include "libGLESv2/renderer/TextureStorage.h"
-#include "libGLESv2/renderer/Image.h"
+#include "libGLESv2/renderer/Image9.h"
 #include "libGLESv2/renderer/Blit.h"
 #include "libGLESv2/renderer/RenderTarget9.h"
 
@@ -2789,7 +2789,7 @@ bool Renderer9::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *s
 
             if (SUCCEEDED(result))
             {
-                Image::copyLockableSurfaces(surf, source);
+                Image9::copyLockableSurfaces(surf, source);
                 result = device->UpdateSurface(surf, NULL, dest, NULL);
                 surf->Release();
             }
@@ -2812,12 +2812,14 @@ bool Renderer9::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *s
 
 Image *Renderer9::createImage()
 {
-    return new Image();
+    return new Image9();
 }
 
 void Renderer9::generateMipmap(Image *dest, Image *src)
 {
-    Image::generateMipmap(dest, src);
+    Image9 *src9 = Image9::makeImage9(src);
+    Image9 *dst9 = Image9::makeImage9(dest);
+    Image9::generateMipmap(dst9, src9);
 }
 
 }

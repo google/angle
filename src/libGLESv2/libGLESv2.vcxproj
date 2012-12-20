@@ -245,12 +245,13 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClCompile Include="Renderbuffer.cpp" />
     <ClCompile Include="renderer\Blit.cpp" />
     <ClCompile Include="renderer\D3DConstantTable.cpp" />
+    <ClCompile Include="renderer\Image.cpp" />
+    <ClCompile Include="renderer\Image9.cpp" />
     <ClCompile Include="renderer\IndexDataManager.cpp" />
     <ClCompile Include="renderer\Renderer.cpp" />
     <ClCompile Include="renderer\Renderer11.cpp" />
     <ClCompile Include="renderer\renderer11_utils.cpp" />
     <ClCompile Include="renderer\Renderer9.cpp" />
-    <ClCompile Include="renderer\Image.cpp" />
     <ClCompile Include="renderer\renderer9_utils.cpp" />
     <ClCompile Include="renderer\RenderTarget11.cpp" />
     <ClCompile Include="renderer\RenderTarget9.cpp" />
@@ -290,6 +291,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="renderer\Blit.h" />
     <ClInclude Include="renderer\D3DConstantTable.h" />
     <ClInclude Include="renderer\Image.h" />
+    <ClInclude Include="renderer\Image9.h" />
     <ClInclude Include="renderer\IndexDataManager.h" />
     <ClInclude Include="renderer\Renderer.h" />
     <ClInclude Include="renderer\Renderer11.h" />

@@ -9,6 +9,7 @@
 // not for code blocks that use SSE2 explicitly.
 
 #include "libGLESv2/Texture.h"
+#include "libGLESv2/renderer/Image.h"
 
 #include <intrin.h>
 
@@ -16,7 +17,7 @@ namespace rx
 {
 
 void Image::loadRGBAUByteDataSSE2(GLsizei width, GLsizei height,
-                                  int inputPitch, const void *input, size_t outputPitch, void *output) const
+                                  int inputPitch, const void *input, size_t outputPitch, void *output)
 {
     const unsigned int *source = NULL;
     unsigned int *dest = NULL;
@@ -58,7 +59,7 @@ void Image::loadRGBAUByteDataSSE2(GLsizei width, GLsizei height,
 }
 
 void Image::loadAlphaDataSSE2(GLsizei width, GLsizei height,
-                              int inputPitch, const void *input, size_t outputPitch, void *output) const
+                              int inputPitch, const void *input, size_t outputPitch, void *output)
 {
     const unsigned char *source = NULL;
     unsigned int *dest = NULL;

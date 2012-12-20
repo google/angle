@@ -257,6 +257,8 @@
             'libGLESv2/renderer/Blit.h',
             'libGLESv2/renderer/Image.cpp',
             'libGLESv2/renderer/Image.h',
+            'libGLESv2/renderer/Image9.cpp',
+            'libGLESv2/renderer/Image9.h',
             'libGLESv2/renderer/Renderer.cpp',
             'libGLESv2/renderer/Renderer.h',
             'libGLESv2/renderer/Renderer11.cpp',
