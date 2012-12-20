@@ -2673,7 +2673,7 @@ void OutputHLSL::declareUniform(const TType &type, const TString &name, int inde
 
                     const TString uniformName = name + "[" + str(i) + "]." + fieldName;
                     declareUniform(fieldType, uniformName, elementIndex);
-                    elementIndex += fieldType.elementRegisterCount();
+                    elementIndex += fieldType.totalRegisterCount();
                 }
             }
         }
