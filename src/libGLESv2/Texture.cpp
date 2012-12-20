@@ -191,7 +191,7 @@ float Texture::getMaxAnisotropy() const
 
 int Texture::getLodOffset()
 {
-    rx::TextureStorage *texture = getStorage(false);
+    rx::TextureStorageInterface *texture = getStorage(false);
     return texture ? texture->getLodOffset() : 0;
 }
 
@@ -263,11 +263,11 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GL
     return true;
 }
 
-rx::TextureStorage *Texture::getNativeTexture()
+rx::TextureStorageInterface *Texture::getNativeTexture()
 {
     // ensure the underlying texture is created
 
-    rx::TextureStorage *storage = getStorage(false);
+    rx::TextureStorageInterface *storage = getStorage(false);
     if (storage)
     {
         updateTexture();
@@ -294,13 +294,13 @@ void Texture::resetDirty()
 
 unsigned int Texture::getTextureSerial()
 {
-    rx::TextureStorage *texture = getStorage(false);
+    rx::TextureStorageInterface *texture = getStorage(false);
     return texture ? texture->getTextureSerial() : 0;
 }
 
 unsigned int Texture::getRenderTargetSerial(GLenum target)
 {
-    rx::TextureStorage *texture = getStorage(true);
+    rx::TextureStorageInterface *texture = getStorage(true);
     return texture ? texture->getRenderTargetSerial(target) : 0;
 }
 
@@ -450,7 +450,7 @@ void Texture2D::bindTexImage(egl::Surface *surface)
 
     delete mTexStorage;
     rx::SwapChain9 *swapchain = static_cast<rx::SwapChain9*>(surface->getSwapChain());  // D3D9_REPLACE
-    mTexStorage = new rx::TextureStorage2D(mRenderer, swapchain);
+    mTexStorage = new rx::TextureStorageInterface2D(mRenderer, swapchain);
 
     mDirtyImages = true;
     mSurface = surface;
@@ -585,7 +585,7 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
 void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height)
 {
     delete mTexStorage;
-    mTexStorage = new rx::TextureStorage2D(mRenderer, levels, internalformat, mUsage, false, width, height);
+    mTexStorage = new rx::TextureStorageInterface2D(mRenderer, levels, internalformat, mUsage, false, width, height);
     mImmutable = true;
 
     for (int level = 0; level < levels; level++)
@@ -727,7 +727,7 @@ void Texture2D::createTexture()
     GLenum internalformat = mImageArray[0]->getInternalFormat();
 
     delete mTexStorage;
-    mTexStorage = new rx::TextureStorage2D(mRenderer, levels, internalformat, mUsage, false, width, height);
+    mTexStorage = new rx::TextureStorageInterface2D(mRenderer, levels, internalformat, mUsage, false, width, height);
     
     if (mTexStorage->isManaged())
     {
@@ -761,7 +761,7 @@ void Texture2D::updateTexture()
 
 void Texture2D::convertToRenderTarget()
 {
-    rx::TextureStorage2D *newTexStorage = NULL;
+    rx::TextureStorageInterface2D *newTexStorage = NULL;
 
     if (mImageArray[0]->getWidth() != 0 && mImageArray[0]->getHeight() != 0)
     {
@@ -770,7 +770,7 @@ void Texture2D::convertToRenderTarget()
         GLint levels = creationLevels(width, height);
         GLenum internalformat = mImageArray[0]->getInternalFormat();
 
-        newTexStorage = new rx::TextureStorage2D(mRenderer, levels, internalformat, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true, width, height);
+        newTexStorage = new rx::TextureStorageInterface2D(mRenderer, levels, internalformat, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true, width, height);
 
         if (mTexStorage != NULL)
         {
@@ -886,7 +886,7 @@ int Texture2D::levelCount()
     return mTexStorage ? mTexStorage->levelCount() - getLodOffset() : 0;
 }
 
-rx::TextureStorage *Texture2D::getStorage(bool renderTarget)
+rx::TextureStorageInterface *Texture2D::getStorage(bool renderTarget)
 {
     if (!mTexStorage || (renderTarget && !mTexStorage->isRenderTarget()))
     {
@@ -1181,7 +1181,7 @@ void TextureCubeMap::createTexture()
     GLenum internalformat = mImageArray[0][0]->getInternalFormat();
 
     delete mTexStorage;
-    mTexStorage = new rx::TextureStorageCubeMap(mRenderer, levels, internalformat, mUsage, false, size);
+    mTexStorage = new rx::TextureStorageInterfaceCube(mRenderer, levels, internalformat, mUsage, false, size);
 
     if (mTexStorage->isManaged())
     {
@@ -1221,7 +1221,7 @@ void TextureCubeMap::updateTexture()
 
 void TextureCubeMap::convertToRenderTarget()
 {
-    rx::TextureStorageCubeMap *newTexStorage = NULL;
+    rx::TextureStorageInterfaceCube *newTexStorage = NULL;
 
     if (mImageArray[0][0]->getWidth() != 0)
     {
@@ -1229,7 +1229,7 @@ void TextureCubeMap::convertToRenderTarget()
         GLint levels = creationLevels(size);
         GLenum internalformat = mImageArray[0][0]->getInternalFormat();
 
-        newTexStorage = new rx::TextureStorageCubeMap(mRenderer, levels, internalformat, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true, size);
+        newTexStorage = new rx::TextureStorageInterfaceCube(mRenderer, levels, internalformat, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true, size);
 
         if (mTexStorage != NULL)
         {
@@ -1366,7 +1366,7 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
 void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size)
 {
     delete mTexStorage;
-    mTexStorage = new rx::TextureStorageCubeMap(mRenderer, levels, internalformat, mUsage, false, size);
+    mTexStorage = new rx::TextureStorageInterfaceCube(mRenderer, levels, internalformat, mUsage, false, size);
     mImmutable = true;
 
     for (int level = 0; level < levels; level++)
@@ -1488,7 +1488,7 @@ int TextureCubeMap::levelCount()
     return mTexStorage ? mTexStorage->levelCount() - getLodOffset() : 0;
 }
 
-rx::TextureStorage *TextureCubeMap::getStorage(bool renderTarget)
+rx::TextureStorageInterface *TextureCubeMap::getStorage(bool renderTarget)
 {
     if (!mTexStorage || (renderTarget && !mTexStorage->isRenderTarget()))
     {

@@ -26,8 +26,8 @@ namespace rx
 {
 class Renderer;
 class Renderer9;
-class TextureStorage2D;
-class TextureStorageCubeMap;
+class TextureStorageInterface2D;
+class TextureStorageInterfaceCube;
 
 class Image9 : public Image
 {
@@ -49,10 +49,10 @@ class Image9 : public Image
     virtual bool isDirty() const {return mSurface && mDirty;}
     IDirect3DSurface9 *getSurface();
 
-    virtual void setManagedSurface(TextureStorage2D *storage, int level);
-    virtual void setManagedSurface(TextureStorageCubeMap *storage, int face, int level);
-    virtual bool updateSurface(TextureStorage2D *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
-    virtual bool updateSurface(TextureStorageCubeMap *storage, int face, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
+    virtual void setManagedSurface(TextureStorageInterface2D *storage, int level);
+    virtual void setManagedSurface(TextureStorageInterfaceCube *storage, int face, int level);
+    virtual bool updateSurface(TextureStorageInterface2D *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
+    virtual bool updateSurface(TextureStorageInterfaceCube *storage, int face, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
 
     virtual void loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                   GLint unpackAlignment, const void *input);

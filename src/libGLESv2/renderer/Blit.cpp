@@ -213,7 +213,7 @@ bool Blit::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
     return true;
 }
 
-bool Blit::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorage2D *storage, GLint level)
+bool Blit::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorageInterface2D *storage, GLint level)
 {
     // D3D9_REPLACE
     RenderTarget9 *renderTarget = NULL;
@@ -236,7 +236,7 @@ bool Blit::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum des
         return error(GL_OUT_OF_MEMORY, false);
     }
 
-    TextureStorage2D9 *storage9 = TextureStorage2D9::makeTextureStorage2D9(storage->getStorageInterface());
+    TextureStorage9_2D *storage9 = TextureStorage9_2D::makeTextureStorage9_2D(storage->getStorageInstance());
     IDirect3DSurface9 *destSurface = storage9->getSurfaceLevel(level, true);
     bool result = false;
         
@@ -250,7 +250,7 @@ bool Blit::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum des
     return result;
 }
 
-bool Blit::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorageCubeMap *storage, GLenum target, GLint level)
+bool Blit::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorageInterfaceCube *storage, GLenum target, GLint level)
 {
     // D3D9_REPLACE
     RenderTarget9 *renderTarget = NULL;
@@ -273,7 +273,7 @@ bool Blit::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum des
         return error(GL_OUT_OF_MEMORY, false);
     }
 
-    TextureStorageCubeMap9 *storage9 = TextureStorageCubeMap9::makeTextureStorageCubeMap9(storage->getStorageInterface());
+    TextureStorage9_Cube *storage9 = TextureStorage9_Cube::makeTextureStorage9_Cube(storage->getStorageInstance());
     IDirect3DSurface9 *destSurface = storage9->getCubeMapSurface(target, level, true);
     bool result = false;
 

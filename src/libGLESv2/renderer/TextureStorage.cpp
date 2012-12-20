@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-// TextureStorage.cpp: Implements the abstract rx::TextureStorage class and its concrete derived
-// classes TextureStorage2D and TextureStorageCubeMap, which act as the interface to the
+// TextureStorage.cpp: Implements the abstract rx::TextureStorageInterface class and its concrete derived
+// classes TextureStorageInterface2D and TextureStorageInterfaceCube, which act as the interface to the
 // GPU-side texture.
 
 #include "libGLESv2/main.h"
@@ -20,106 +20,106 @@
 
 namespace rx
 {
-unsigned int TextureStorage::mCurrentTextureSerial = 1;
+unsigned int TextureStorageInterface::mCurrentTextureSerial = 1;
 
-TextureStorage::TextureStorage()
+TextureStorageInterface::TextureStorageInterface()
     : mTextureSerial(issueTextureSerial()),
-      mInterface(NULL)
+      mInstance(NULL)
 {
 }
 
-TextureStorage::~TextureStorage()
+TextureStorageInterface::~TextureStorageInterface()
 {
-    delete mInterface;
+    delete mInstance;
 }
 
-bool TextureStorage::isRenderTarget() const
+bool TextureStorageInterface::isRenderTarget() const
 {
-    return mInterface->isRenderTarget();
+    return mInstance->isRenderTarget();
 }
 
 
-bool TextureStorage::isManaged() const
+bool TextureStorageInterface::isManaged() const
 {
-    return mInterface->isManaged();
+    return mInstance->isManaged();
 }
 
-unsigned int TextureStorage::getTextureSerial() const
+unsigned int TextureStorageInterface::getTextureSerial() const
 {
     return mTextureSerial;
 }
 
-unsigned int TextureStorage::issueTextureSerial()
+unsigned int TextureStorageInterface::issueTextureSerial()
 {
     return mCurrentTextureSerial++;
 }
 
-int TextureStorage::getLodOffset() const
+int TextureStorageInterface::getLodOffset() const
 {
-    return mInterface->getLodOffset();
+    return mInstance->getLodOffset();
 }
 
 
-int TextureStorage::levelCount()
+int TextureStorageInterface::levelCount()
 {
-    return mInterface->levelCount();
+    return mInstance->levelCount();
 }
 
-TextureStorage2D::TextureStorage2D(Renderer *renderer, SwapChain9 *swapchain) 
+TextureStorageInterface2D::TextureStorageInterface2D(Renderer *renderer, SwapChain9 *swapchain) 
     : mRenderTargetSerial(gl::RenderbufferStorage::issueSerial())
 {
-    TextureStorage2D9 *newInterface = new TextureStorage2D9(renderer, swapchain);
-    mInterface = newInterface;
+    TextureStorage9_2D *newInterface = new TextureStorage9_2D(renderer, swapchain);
+    mInstance = newInterface;
 }
 
-TextureStorage2D::TextureStorage2D(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height)
+TextureStorageInterface2D::TextureStorageInterface2D(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height)
     : mRenderTargetSerial(gl::RenderbufferStorage::issueSerial())
 {
-    TextureStorage2D9 *newInterface = new TextureStorage2D9(renderer, levels, internalformat, usage, forceRenderable, width, height); // D3D9_REPLACE
-    mInterface = newInterface;
+    TextureStorage9_2D *newInterface = new TextureStorage9_2D(renderer, levels, internalformat, usage, forceRenderable, width, height); // D3D9_REPLACE
+    mInstance = newInterface;
 }
 
-TextureStorage2D::~TextureStorage2D()
+TextureStorageInterface2D::~TextureStorageInterface2D()
 {
 }
 
-RenderTarget *TextureStorage2D::getRenderTarget() const
+RenderTarget *TextureStorageInterface2D::getRenderTarget() const
 {
-    return mInterface->getRenderTarget();
+    return mInstance->getRenderTarget();
 }
 
-void TextureStorage2D::generateMipmap(int level)
+void TextureStorageInterface2D::generateMipmap(int level)
 {
-    mInterface->generateMipmap(level);
+    mInstance->generateMipmap(level);
 }
 
-unsigned int TextureStorage2D::getRenderTargetSerial(GLenum target) const
+unsigned int TextureStorageInterface2D::getRenderTargetSerial(GLenum target) const
 {
     return mRenderTargetSerial;
 }
 
-TextureStorageCubeMap::TextureStorageCubeMap(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
+TextureStorageInterfaceCube::TextureStorageInterfaceCube(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
     : mFirstRenderTargetSerial(gl::RenderbufferStorage::issueCubeSerials())
 {
-    TextureStorageCubeMap9 *newInterface = new TextureStorageCubeMap9(renderer, levels, internalformat, usage, forceRenderable, size); // D3D9_REPLACE
-    mInterface = newInterface;
+    TextureStorage9_Cube *newInterface = new TextureStorage9_Cube(renderer, levels, internalformat, usage, forceRenderable, size); // D3D9_REPLACE
+    mInstance = newInterface;
 }
 
-TextureStorageCubeMap::~TextureStorageCubeMap()
+TextureStorageInterfaceCube::~TextureStorageInterfaceCube()
 {
 }
 
-RenderTarget *TextureStorageCubeMap::getRenderTarget(GLenum faceTarget) const
+RenderTarget *TextureStorageInterfaceCube::getRenderTarget(GLenum faceTarget) const
 {
-    return mInterface->getRenderTarget(faceTarget);
+    return mInstance->getRenderTarget(faceTarget);
 }
 
-void TextureStorageCubeMap::generateMipmap(int face, int level)
+void TextureStorageInterfaceCube::generateMipmap(int face, int level)
 {
-    mInterface->generateMipmap(face, level);
+    mInstance->generateMipmap(face, level);
 }
 
-unsigned int TextureStorageCubeMap::getRenderTargetSerial(GLenum target) const
+unsigned int TextureStorageInterfaceCube::getRenderTargetSerial(GLenum target) const
 {
     return mFirstRenderTargetSerial + gl::TextureCubeMap::faceIndex(target);
 }

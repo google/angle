@@ -21,8 +21,8 @@ class Framebuffer;
 namespace rx
 {
 class Renderer;
-class TextureStorage2D;
-class TextureStorageCubeMap;
+class TextureStorageInterface2D;
+class TextureStorageInterfaceCube;
 
 class Image
 {
@@ -39,10 +39,10 @@ class Image
     void markClean() {mDirty = false;}
     virtual bool isDirty() const = 0;
 
-    virtual void setManagedSurface(TextureStorage2D *storage, int level) {};
-    virtual void setManagedSurface(TextureStorageCubeMap *storage, int face, int level) {};
-    virtual bool updateSurface(TextureStorage2D *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height) = 0;
-    virtual bool updateSurface(TextureStorageCubeMap *storage, int face, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height) = 0;
+    virtual void setManagedSurface(TextureStorageInterface2D *storage, int level) {};
+    virtual void setManagedSurface(TextureStorageInterfaceCube *storage, int face, int level) {};
+    virtual bool updateSurface(TextureStorageInterface2D *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height) = 0;
+    virtual bool updateSurface(TextureStorageInterfaceCube *storage, int face, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height) = 0;
 
     virtual bool redefine(Renderer *renderer, GLint internalformat, GLsizei width, GLsizei height, bool forceRelease) = 0;
 

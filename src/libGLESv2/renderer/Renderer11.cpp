@@ -1119,22 +1119,14 @@ int Renderer11::getMaxSupportedSamples() const
     return 1;
 }
 
-bool Renderer11::copyToRenderTarget(TextureStorage2D *dest, TextureStorage2D *source)
+bool Renderer11::copyToRenderTarget(TextureStorageInterface2D *dest, TextureStorageInterface2D *source)
 {
     // TODO
     UNIMPLEMENTED();
     return false;
 }
 
-bool Renderer11::copyToRenderTarget(TextureStorageCubeMap *dest, TextureStorageCubeMap *source)
-{
-    // TODO
-    UNIMPLEMENTED();
-    return false;
-}
-
-bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat,
-                           GLint xoffset, GLint yoffset, TextureStorage2D *storage, GLint level)
+bool Renderer11::copyToRenderTarget(TextureStorageInterfaceCube *dest, TextureStorageInterfaceCube *source)
 {
     // TODO
     UNIMPLEMENTED();
@@ -1142,7 +1134,15 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect,
 }
 
 bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat,
-                           GLint xoffset, GLint yoffset, TextureStorageCubeMap *storage, GLenum target, GLint level)
+                           GLint xoffset, GLint yoffset, TextureStorageInterface2D *storage, GLint level)
+{
+    // TODO
+    UNIMPLEMENTED();
+    return false;
+}
+
+bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat,
+                           GLint xoffset, GLint yoffset, TextureStorageInterfaceCube *storage, GLenum target, GLint level)
 {
     // TODO
     UNIMPLEMENTED();

@@ -43,14 +43,14 @@ bool Image11::isDirty() const
     return (mStagingTexture && mDirty);
 }
 
-bool Image11::updateSurface(TextureStorage2D *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
+bool Image11::updateSurface(TextureStorageInterface2D *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
     // TODO - relies on TextureStorage11 implementation
     UNIMPLEMENTED();
     return false;
 }
 
-bool Image11::updateSurface(TextureStorageCubeMap *storage, int face, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
+bool Image11::updateSurface(TextureStorageInterfaceCube *storage, int face, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
     // TODO - relies on TextureStorage11 implementation
     UNIMPLEMENTED();

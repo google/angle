@@ -89,7 +89,7 @@ class Texture : public RefCountObject
 
     virtual bool isSamplerComplete() const = 0;
 
-    rx::TextureStorage *getNativeTexture();
+    rx::TextureStorageInterface *getNativeTexture();
     virtual Renderbuffer *getRenderbuffer(GLenum target) = 0;
 
     virtual void generateMipmaps() = 0;
@@ -134,7 +134,7 @@ class Texture : public RefCountObject
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture);
 
-    virtual rx::TextureStorage *getStorage(bool renderTarget) = 0;
+    virtual rx::TextureStorageInterface *getStorage(bool renderTarget) = 0;
 };
 
 class Texture2D : public Texture
@@ -184,7 +184,7 @@ class Texture2D : public Texture
     virtual void createTexture();
     virtual void updateTexture();
     virtual void convertToRenderTarget();
-    virtual rx::TextureStorage *getStorage(bool renderTarget);
+    virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
 
     bool isMipmapComplete() const;
 
@@ -193,7 +193,7 @@ class Texture2D : public Texture
 
     rx::Image *mImageArray[IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
-    rx::TextureStorage2D *mTexStorage;
+    rx::TextureStorageInterface2D *mTexStorage;
     egl::Surface *mSurface;
 
     // A specific internal reference count is kept for colorbuffer proxy references,
@@ -257,7 +257,7 @@ class TextureCubeMap : public Texture
     virtual void createTexture();
     virtual void updateTexture();
     virtual void convertToRenderTarget();
-    virtual rx::TextureStorage *getStorage(bool renderTarget);
+    virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
 
     bool isCubeComplete() const;
     bool isMipmapCubeComplete() const;
@@ -268,7 +268,7 @@ class TextureCubeMap : public Texture
 
     rx::Image *mImageArray[6][IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
-    rx::TextureStorageCubeMap *mTexStorage;
+    rx::TextureStorageInterfaceCube *mTexStorage;
 
     // A specific internal reference count is kept for colorbuffer proxy references,
     // because, as the renderbuffer acting as proxy will maintain a binding pointer

@@ -116,13 +116,13 @@ class Renderer11 : public Renderer
     virtual GLsizei getMaxSupportedSamples() const;
 
     // Pixel operations
-    virtual bool copyToRenderTarget(TextureStorage2D *dest, TextureStorage2D *source);
-    virtual bool copyToRenderTarget(TextureStorageCubeMap *dest, TextureStorageCubeMap *source);
+    virtual bool copyToRenderTarget(TextureStorageInterface2D *dest, TextureStorageInterface2D *source);
+    virtual bool copyToRenderTarget(TextureStorageInterfaceCube *dest, TextureStorageInterfaceCube *source);
 
     virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat,
-                           GLint xoffset, GLint yoffset, TextureStorage2D *storage, GLint level);
+                           GLint xoffset, GLint yoffset, TextureStorageInterface2D *storage, GLint level);
     virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat,
-                           GLint xoffset, GLint yoffset, TextureStorageCubeMap *storage, GLenum target, GLint level);
+                           GLint xoffset, GLint yoffset, TextureStorageInterfaceCube *storage, GLenum target, GLint level);
 
     virtual bool blitRect(gl::Framebuffer *readTarget, gl::Rectangle *readRect, gl::Framebuffer *drawTarget, gl::Rectangle *drawRect,
                           bool blitRenderTarget, bool blitDepthStencil);

@@ -5,7 +5,7 @@
 //
 
 // TextureStorage9.cpp: Implements the abstract rx::TextureStorage9 class and its concrete derived
-// classes TextureStorage2D9 and TextureStorageCubeMap9, which act as the interface to the
+// classes TextureStorage9_2D and TextureStorage9_Cube, which act as the interface to the
 // D3D9 texture.
 
 #include "libGLESv2/main.h"
@@ -31,7 +31,7 @@ TextureStorage9::~TextureStorage9()
 {
 }
 
-TextureStorage9 *TextureStorage9::makeTextureStorage9(TextureStorageInterface *storage)
+TextureStorage9 *TextureStorage9::makeTextureStorage9(TextureStorage *storage)
 {
     ASSERT(dynamic_cast<TextureStorage9*>(storage) != NULL);
     return static_cast<TextureStorage9*>(storage);
@@ -108,7 +108,7 @@ int TextureStorage9::levelCount()
     return getBaseTexture() ? getBaseTexture()->GetLevelCount() - getLodOffset() : 0;
 }
 
-TextureStorage2D9::TextureStorage2D9(Renderer *renderer, SwapChain9 *swapchain) : TextureStorage9(renderer, D3DUSAGE_RENDERTARGET)
+TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, SwapChain9 *swapchain) : TextureStorage9(renderer, D3DUSAGE_RENDERTARGET)
 {
     IDirect3DTexture9 *surfaceTexture = swapchain->getOffscreenTexture();
     mTexture = surfaceTexture;
@@ -116,7 +116,7 @@ TextureStorage2D9::TextureStorage2D9(Renderer *renderer, SwapChain9 *swapchain) 
     initializeRenderTarget();
 }
 
-TextureStorage2D9::TextureStorage2D9(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height)
+TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height)
     : TextureStorage9(renderer, GetTextureUsage(Renderer9::makeRenderer9(renderer)->ConvertTextureInternalFormat(internalformat), usage, forceRenderable))
 {
     mTexture = NULL;
@@ -139,7 +139,7 @@ TextureStorage2D9::TextureStorage2D9(Renderer *renderer, int levels, GLenum inte
     initializeRenderTarget();
 }
 
-TextureStorage2D9::~TextureStorage2D9()
+TextureStorage9_2D::~TextureStorage9_2D()
 {
     if (mTexture)
     {
@@ -149,15 +149,15 @@ TextureStorage2D9::~TextureStorage2D9()
     delete mRenderTarget;
 }
 
-TextureStorage2D9 *TextureStorage2D9::makeTextureStorage2D9(TextureStorageInterface *storage)
+TextureStorage9_2D *TextureStorage9_2D::makeTextureStorage9_2D(TextureStorage *storage)
 {
-    ASSERT(dynamic_cast<TextureStorage2D9*>(storage) != NULL);
-    return static_cast<TextureStorage2D9*>(storage);
+    ASSERT(dynamic_cast<TextureStorage9_2D*>(storage) != NULL);
+    return static_cast<TextureStorage9_2D*>(storage);
 }
 
 // Increments refcount on surface.
 // caller must Release() the returned surface
-IDirect3DSurface9 *TextureStorage2D9::getSurfaceLevel(int level, bool dirty)
+IDirect3DSurface9 *TextureStorage9_2D::getSurfaceLevel(int level, bool dirty)
 {
     IDirect3DSurface9 *surface = NULL;
 
@@ -176,12 +176,12 @@ IDirect3DSurface9 *TextureStorage2D9::getSurfaceLevel(int level, bool dirty)
     return surface;
 }
 
-RenderTarget *TextureStorage2D9::getRenderTarget() const
+RenderTarget *TextureStorage9_2D::getRenderTarget() const
 {
     return mRenderTarget;
 }
 
-void TextureStorage2D9::generateMipmap(int level)
+void TextureStorage9_2D::generateMipmap(int level)
 {
     IDirect3DSurface9 *upper = getSurfaceLevel(level - 1, false);
     IDirect3DSurface9 *lower = getSurfaceLevel(level, true);
@@ -195,12 +195,12 @@ void TextureStorage2D9::generateMipmap(int level)
     if (lower != NULL) lower->Release();
 }
 
-IDirect3DBaseTexture9 *TextureStorage2D9::getBaseTexture() const
+IDirect3DBaseTexture9 *TextureStorage9_2D::getBaseTexture() const
 {
     return mTexture;
 }
 
-void TextureStorage2D9::initializeRenderTarget()
+void TextureStorage9_2D::initializeRenderTarget()
 {
     if (mTexture != NULL && isRenderTarget())
     {
@@ -214,7 +214,7 @@ void TextureStorage2D9::initializeRenderTarget()
     }
 }
 
-TextureStorageCubeMap9::TextureStorageCubeMap9(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
+TextureStorage9_Cube::TextureStorage9_Cube(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
     : TextureStorage9(renderer, GetTextureUsage(Renderer9::makeRenderer9(renderer)->ConvertTextureInternalFormat(internalformat), usage, forceRenderable))
 {
     mTexture = NULL;
@@ -238,7 +238,7 @@ TextureStorageCubeMap9::TextureStorageCubeMap9(Renderer *renderer, int levels, G
     initializeRenderTarget();
 }
 
-TextureStorageCubeMap9::~TextureStorageCubeMap9()
+TextureStorage9_Cube::~TextureStorage9_Cube()
 {
     if (mTexture)
     {
@@ -251,15 +251,15 @@ TextureStorageCubeMap9::~TextureStorageCubeMap9()
     }
 }
 
-TextureStorageCubeMap9 *TextureStorageCubeMap9::makeTextureStorageCubeMap9(TextureStorageInterface *storage)
+TextureStorage9_Cube *TextureStorage9_Cube::makeTextureStorage9_Cube(TextureStorage *storage)
 {
-    ASSERT(dynamic_cast<TextureStorageCubeMap9*>(storage) != NULL);
-    return static_cast<TextureStorageCubeMap9*>(storage);
+    ASSERT(dynamic_cast<TextureStorage9_Cube*>(storage) != NULL);
+    return static_cast<TextureStorage9_Cube*>(storage);
 }
 
 // Increments refcount on surface.
 // caller must Release() the returned surface
-IDirect3DSurface9 *TextureStorageCubeMap9::getCubeMapSurface(GLenum faceTarget, int level, bool dirty)
+IDirect3DSurface9 *TextureStorage9_Cube::getCubeMapSurface(GLenum faceTarget, int level, bool dirty)
 {
     IDirect3DSurface9 *surface = NULL;
 
@@ -279,12 +279,12 @@ IDirect3DSurface9 *TextureStorageCubeMap9::getCubeMapSurface(GLenum faceTarget, 
     return surface;
 }
 
-RenderTarget *TextureStorageCubeMap9::getRenderTarget(GLenum faceTarget) const
+RenderTarget *TextureStorage9_Cube::getRenderTarget(GLenum faceTarget) const
 {
     return mRenderTarget[gl::TextureCubeMap::faceIndex(faceTarget)];
 }
 
-void TextureStorageCubeMap9::generateMipmap(int face, int level)
+void TextureStorage9_Cube::generateMipmap(int face, int level)
 {
     IDirect3DSurface9 *upper = getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level - 1, false);
     IDirect3DSurface9 *lower = getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level, true);
@@ -298,12 +298,12 @@ void TextureStorageCubeMap9::generateMipmap(int face, int level)
     if (lower != NULL) lower->Release();
 }
 
-IDirect3DBaseTexture9 *TextureStorageCubeMap9::getBaseTexture() const
+IDirect3DBaseTexture9 *TextureStorage9_Cube::getBaseTexture() const
 {
     return mTexture;
 }
 
-void TextureStorageCubeMap9::initializeRenderTarget()
+void TextureStorage9_Cube::initializeRenderTarget()
 {
     if (mTexture != NULL && isRenderTarget())
     {

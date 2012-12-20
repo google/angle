@@ -52,8 +52,8 @@ class Buffer;
 
 namespace rx
 {
-class TextureStorage2D;
-class TextureStorageCubeMap;
+class TextureStorageInterface2D;
+class TextureStorageInterfaceCube;
 class VertexBuffer;
 class IndexBuffer;
 class Blit;
@@ -149,13 +149,13 @@ class Renderer
     virtual GLsizei getMaxSupportedSamples() const = 0;
 
     // Pixel operations
-    virtual bool copyToRenderTarget(TextureStorage2D *dest, TextureStorage2D *source) = 0;
-    virtual bool copyToRenderTarget(TextureStorageCubeMap *dest, TextureStorageCubeMap *source) = 0;
+    virtual bool copyToRenderTarget(TextureStorageInterface2D *dest, TextureStorageInterface2D *source) = 0;
+    virtual bool copyToRenderTarget(TextureStorageInterfaceCube *dest, TextureStorageInterfaceCube *source) = 0;
 
     virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat,
-                           GLint xoffset, GLint yoffset, TextureStorage2D *storage, GLint level) = 0;
+                           GLint xoffset, GLint yoffset, TextureStorageInterface2D *storage, GLint level) = 0;
     virtual bool copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat,
-                           GLint xoffset, GLint yoffset, TextureStorageCubeMap *storage, GLenum target, GLint level) = 0;
+                           GLint xoffset, GLint yoffset, TextureStorageInterfaceCube *storage, GLenum target, GLint level) = 0;
 
     virtual bool blitRect(gl::Framebuffer *readTarget, gl::Rectangle *readRect, gl::Framebuffer *drawTarget, gl::Rectangle *drawRect,
                           bool blitRenderTarget, bool blitDepthStencil) = 0;

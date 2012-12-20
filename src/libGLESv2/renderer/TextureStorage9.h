@@ -5,7 +5,7 @@
 //
 
 // TextureStorage9.h: Defines the abstract rx::TextureStorage9 class and its concrete derived
-// classes TextureStorage2D9 and TextureStorageCubeMap9, which act as the interface to the
+// classes TextureStorage9_2D and TextureStorage9_Cube, which act as the interface to the
 // D3D9 texture.
 
 #ifndef LIBGLESV2_RENDERER_TEXTURESTORAGE9_H_
@@ -26,13 +26,13 @@ class RenderTarget;
 class RenderTarget9;
 class Blit;
 
-class TextureStorage9 : public TextureStorageInterface
+class TextureStorage9 : public TextureStorage
 {
   public:
     TextureStorage9(Renderer *renderer, DWORD usage);
     virtual ~TextureStorage9();
 
-    static TextureStorage9 *makeTextureStorage9(TextureStorageInterface *storage);
+    static TextureStorage9 *makeTextureStorage9(TextureStorage *storage);
 
     static DWORD GetTextureUsage(D3DFORMAT d3dfmt, GLenum glusage, bool forceRenderable);
     static bool IsTextureFormatRenderable(D3DFORMAT format);
@@ -62,14 +62,14 @@ class TextureStorage9 : public TextureStorageInterface
     const D3DPOOL mD3DPool;
 };
 
-class TextureStorage2D9 : public TextureStorage9
+class TextureStorage9_2D : public TextureStorage9
 {
   public:
-    TextureStorage2D9(Renderer *renderer, SwapChain9 *swapchain);
-    TextureStorage2D9(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height);
-    virtual ~TextureStorage2D9();
+    TextureStorage9_2D(Renderer *renderer, SwapChain9 *swapchain);
+    TextureStorage9_2D(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height);
+    virtual ~TextureStorage9_2D();
 
-    static TextureStorage2D9 *makeTextureStorage2D9(TextureStorageInterface *storage);
+    static TextureStorage9_2D *makeTextureStorage9_2D(TextureStorage *storage);
 
     IDirect3DSurface9 *getSurfaceLevel(int level, bool dirty);
     virtual RenderTarget *getRenderTarget() const;
@@ -77,7 +77,7 @@ class TextureStorage2D9 : public TextureStorage9
     virtual void generateMipmap(int level);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(TextureStorage2D9);
+    DISALLOW_COPY_AND_ASSIGN(TextureStorage9_2D);
 
     void initializeRenderTarget();
 
@@ -85,13 +85,13 @@ class TextureStorage2D9 : public TextureStorage9
     RenderTarget9 *mRenderTarget;
 };
 
-class TextureStorageCubeMap9 : public TextureStorage9
+class TextureStorage9_Cube : public TextureStorage9
 {
   public:
-    TextureStorageCubeMap9(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size);
-    virtual ~TextureStorageCubeMap9();
+    TextureStorage9_Cube(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size);
+    virtual ~TextureStorage9_Cube();
 
-    static TextureStorageCubeMap9 *makeTextureStorageCubeMap9(TextureStorageInterface *storage);
+    static TextureStorage9_Cube *makeTextureStorage9_Cube(TextureStorage *storage);
 
     IDirect3DSurface9 *getCubeMapSurface(GLenum faceTarget, int level, bool dirty);
     virtual RenderTarget *getRenderTarget(GLenum faceTarget) const;
@@ -99,7 +99,7 @@ class TextureStorageCubeMap9 : public TextureStorage9
     virtual void generateMipmap(int face, int level);
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(TextureStorageCubeMap9);
+    DISALLOW_COPY_AND_ASSIGN(TextureStorage9_Cube);
 
     void initializeRenderTarget();
 

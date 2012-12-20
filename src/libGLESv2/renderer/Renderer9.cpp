@@ -634,10 +634,10 @@ void Renderer9::setTexture(gl::SamplerType type, int index, gl::Texture *texture
 
     if (texture)
     {
-        TextureStorage *texStorage = texture->getNativeTexture();
+        TextureStorageInterface *texStorage = texture->getNativeTexture();
         if (texStorage)
         {
-            TextureStorage9 *storage9 = TextureStorage9::makeTextureStorage9(texStorage->getStorageInterface());
+            TextureStorage9 *storage9 = TextureStorage9::makeTextureStorage9(texStorage->getStorageInstance());
             d3dTexture = storage9->getBaseTexture();
         }
         // If we get NULL back from getBaseTexture here, something went wrong
@@ -2370,14 +2370,14 @@ D3DFORMAT Renderer9::ConvertTextureInternalFormat(GLint internalformat)
     return D3DFMT_A8R8G8B8;
 }
 
-bool Renderer9::copyToRenderTarget(TextureStorage2D *dest, TextureStorage2D *source)
+bool Renderer9::copyToRenderTarget(TextureStorageInterface2D *dest, TextureStorageInterface2D *source)
 {
     bool result = false;
 
     if (source && dest)
     {
-        TextureStorage2D9 *source9 = TextureStorage2D9::makeTextureStorage2D9(source->getStorageInterface());
-        TextureStorage2D9 *dest9 = TextureStorage2D9::makeTextureStorage2D9(dest->getStorageInterface());
+        TextureStorage9_2D *source9 = TextureStorage9_2D::makeTextureStorage9_2D(source->getStorageInstance());
+        TextureStorage9_2D *dest9 = TextureStorage9_2D::makeTextureStorage9_2D(dest->getStorageInstance());
 
         int levels = source9->levelCount();
         for (int i = 0; i < levels; ++i)
@@ -2398,14 +2398,14 @@ bool Renderer9::copyToRenderTarget(TextureStorage2D *dest, TextureStorage2D *sou
     return result;
 }
 
-bool Renderer9::copyToRenderTarget(TextureStorageCubeMap *dest, TextureStorageCubeMap *source)
+bool Renderer9::copyToRenderTarget(TextureStorageInterfaceCube *dest, TextureStorageInterfaceCube *source)
 {
     bool result = false;
 
     if (source && dest)
     {
-        TextureStorageCubeMap9 *source9 = TextureStorageCubeMap9::makeTextureStorageCubeMap9(source->getStorageInterface());
-        TextureStorageCubeMap9 *dest9 = TextureStorageCubeMap9::makeTextureStorageCubeMap9(dest->getStorageInterface());
+        TextureStorage9_Cube *source9 = TextureStorage9_Cube::makeTextureStorage9_Cube(source->getStorageInstance());
+        TextureStorage9_Cube *dest9 = TextureStorage9_Cube::makeTextureStorage9_Cube(dest->getStorageInstance());
         int levels = source9->levelCount();
         for (int f = 0; f < 6; f++)
         {
@@ -2446,13 +2446,13 @@ D3DPOOL Renderer9::getBufferPool(DWORD usage) const
 }
 
 bool Renderer9::copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat,
-                          GLint xoffset, GLint yoffset, TextureStorage2D *storage, GLint level)
+                          GLint xoffset, GLint yoffset, TextureStorageInterface2D *storage, GLint level)
 {
     return mBlit->copy(framebuffer, sourceRect, destFormat, xoffset, yoffset, storage, level);
 }
 
 bool Renderer9::copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat,
-                          GLint xoffset, GLint yoffset, TextureStorageCubeMap *storage, GLenum target, GLint level)
+                          GLint xoffset, GLint yoffset, TextureStorageInterfaceCube *storage, GLenum target, GLint level)
 {
     return mBlit->copy(framebuffer, sourceRect, destFormat, xoffset, yoffset, storage, target, level);
 }
