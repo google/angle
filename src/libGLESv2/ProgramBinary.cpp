@@ -85,10 +85,11 @@ ProgramBinary::ProgramBinary(rx::Renderer *renderer) : mRenderer(renderer), RefC
     mUsedVertexSamplerRange = 0;
     mUsedPixelSamplerRange = 0;
 
-    mDxDepthRangeLocation = -1;
-    mDxDepthFrontLocation = -1;
-    mDxCoordLocation = -1;
-    mDxHalfPixelSizeLocation = -1;
+    mDxDepthRangeRegisterVS = -1;
+    mDxDepthRangeRegisterPS = -1;
+    mDxDepthFrontRegister = -1;
+    mDxCoordRegister = -1;
+    mDxHalfPixelSizeRegister = -1;
 }
 
 ProgramBinary::~ProgramBinary()
@@ -1626,10 +1627,11 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
         stream.read(&mUniformIndex[i].index);
     }
 
-    stream.read(&mDxDepthRangeLocation);
-    stream.read(&mDxDepthFrontLocation);
-    stream.read(&mDxCoordLocation);
-    stream.read(&mDxHalfPixelSizeLocation);
+    stream.read(&mDxDepthRangeRegisterVS);
+    stream.read(&mDxDepthRangeRegisterPS);
+    stream.read(&mDxDepthFrontRegister);
+    stream.read(&mDxCoordRegister);
+    stream.read(&mDxHalfPixelSizeRegister);
 
     unsigned int pixelShaderSize;
     stream.read(&pixelShaderSize);
@@ -1733,10 +1735,11 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
         stream.write(mUniformIndex[i].index);
     }
 
-    stream.write(mDxDepthRangeLocation);
-    stream.write(mDxDepthFrontLocation);
-    stream.write(mDxCoordLocation);
-    stream.write(mDxHalfPixelSizeLocation);
+    stream.write(mDxDepthRangeRegisterVS);
+    stream.write(mDxDepthRangeRegisterPS);
+    stream.write(mDxDepthFrontRegister);
+    stream.write(mDxCoordRegister);
+    stream.write(mDxHalfPixelSizeRegister);
 
     UINT pixelShaderSize = mPixelExecutable->getLength();
     stream.write(pixelShaderSize);
@@ -1855,13 +1858,6 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
             success = false;
         }
     }
-
-    // these uniforms are searched as already-decorated because gl_ and dx_
-    // are reserved prefixes, and do not receive additional decoration
-    mDxDepthRangeLocation = getUniformLocation("dx_DepthRange");
-    mDxDepthFrontLocation = getUniformLocation("dx_DepthFront");
-    mDxCoordLocation = getUniformLocation("dx_Coord");
-    mDxHalfPixelSizeLocation = getUniformLocation("dx_HalfPixelSize");
 
     Context *context = getContext();
     context->markDxUniformsDirty();
@@ -2047,9 +2043,34 @@ bool ProgramBinary::defineUniform(InfoLog &infoLog, GLenum shader, const rx::D3D
 
 bool ProgramBinary::defineUniform(GLenum shader, const rx::D3DConstant *constant, const std::string &_name)
 {
+    if (_name == "dx_DepthRange")
+    {
+        if (shader == GL_VERTEX_SHADER)   mDxDepthRangeRegisterVS = constant->registerIndex;
+        if (shader == GL_FRAGMENT_SHADER) mDxDepthRangeRegisterPS = constant->registerIndex;
+        return true;
+    }
+
+    if (_name == "dx_DepthFront")
+    {
+        mDxDepthFrontRegister = constant->registerIndex;
+        return true;
+    }
+
+    if (_name == "dx_Coord")
+    {
+        mDxCoordRegister = constant->registerIndex;
+        return true;
+    }
+
+    if (_name == "dx_HalfPixelSize")
+    {
+        mDxHalfPixelSizeRegister = constant->registerIndex;
+        return true;
+    }
+
     Uniform *uniform = createUniform(constant, _name);
 
-    if(!uniform)
+    if (!uniform)
     {
         return false;
     }
@@ -2651,26 +2672,56 @@ bool ProgramBinary::validateSamplers(InfoLog *infoLog)
 
 void ProgramBinary::applyDxDepthRange(float near, float far, float diff)
 {
-   GLfloat nearFarDiff[3] = {near, far, diff};
-   setUniform3fv(mDxDepthRangeLocation, 1, nearFarDiff);
+    if (dynamic_cast<rx::Renderer9*>(mRenderer) == NULL) return;   // UNIMPLEMENTED
+    IDirect3DDevice9 *device = rx::Renderer9::makeRenderer9(mRenderer)->getDevice();   // D3D9_REPLACE
+
+    if (mDxDepthRangeRegisterVS >= 0)
+    {
+        float nearFarDiff[4] = {near, far, diff};
+        device->SetVertexShaderConstantF(mDxDepthRangeRegisterVS, nearFarDiff, 1);
+    }
+
+    if (mDxDepthRangeRegisterPS >= 0)
+    {
+        float nearFarDiff[4] = {near, far, diff};
+        device->SetPixelShaderConstantF(mDxDepthRangeRegisterPS, nearFarDiff, 1);
+    }
 }
 
 void ProgramBinary::applyDxDepthFront(float range, float start, float frontCCW)
 {
-    GLfloat dz[3] = {range, start, frontCCW};
-    setUniform3fv(mDxDepthFrontLocation, 1, dz);
+    if (mDxDepthFrontRegister >= 0)
+    {
+        if (dynamic_cast<rx::Renderer9*>(mRenderer) == NULL) return;   // UNIMPLEMENTED
+        IDirect3DDevice9 *device = rx::Renderer9::makeRenderer9(mRenderer)->getDevice();   // D3D9_REPLACE
+    
+        GLfloat dz[4] = {range, start, frontCCW};
+        device->SetPixelShaderConstantF(mDxDepthFrontRegister, dz, 1);
+    }
 }
 
 void ProgramBinary::applyDxCoord(float halfWidth, float halfHeight, float x0, float y0)
 {
-    GLfloat whxy[4] = {halfWidth,halfHeight, x0, y0};
-    setUniform4fv(mDxCoordLocation, 1, whxy);
+    if (mDxCoordRegister >= 0)
+    {
+        if (dynamic_cast<rx::Renderer9*>(mRenderer) == NULL) return;   // UNIMPLEMENTED
+        IDirect3DDevice9 *device = rx::Renderer9::makeRenderer9(mRenderer)->getDevice();   // D3D9_REPLACE
+    
+        GLfloat whxy[4] = {halfWidth,halfHeight, x0, y0};
+        device->SetPixelShaderConstantF(mDxCoordRegister, whxy, 1);
+    }
 }
 
 void ProgramBinary::applyDxHalfPixelSize(float width, float height)
 {
-    GLfloat xy[2] = {width, height};
-    setUniform2fv(mDxHalfPixelSizeLocation, 1, xy);
+    if (mDxHalfPixelSizeRegister >= 0)
+    {
+        if (dynamic_cast<rx::Renderer9*>(mRenderer) == NULL) return;   // UNIMPLEMENTED
+        IDirect3DDevice9 *device = rx::Renderer9::makeRenderer9(mRenderer)->getDevice();   // D3D9_REPLACE
+    
+        GLfloat xy[4] = {width, height};
+        device->SetVertexShaderConstantF(mDxHalfPixelSizeRegister, xy, 1);
+    }
 }
 
 ProgramBinary::Sampler::Sampler() : active(false), logicalTextureUnit(0), textureType(TEXTURE_2D)

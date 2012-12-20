@@ -210,10 +210,11 @@ class ProgramBinary : public RefCountObject
     typedef std::vector<UniformLocation> UniformIndex;
     UniformIndex mUniformIndex;
 
-    GLint mDxDepthRangeLocation;
-    GLint mDxDepthFrontLocation;
-    GLint mDxCoordLocation;
-    GLint mDxHalfPixelSizeLocation;
+    int mDxDepthRangeRegisterVS;
+    int mDxDepthRangeRegisterPS;
+    int mDxDepthFrontRegister;
+    int mDxCoordRegister;
+    int mDxHalfPixelSizeRegister;
 
     bool mValidated;
 
