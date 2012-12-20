@@ -31,6 +31,7 @@ namespace rx
 
 class VertexDataManager;
 class IndexDataManager;
+class StreamingIndexBufferInterface;
 
 class Renderer11 : public Renderer
 {
@@ -156,6 +157,8 @@ class Renderer11 : public Renderer
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer11);
 
+    void drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
+
     HMODULE mD3d11Module;
     HMODULE mDxgiModule;
     HDC mDc;
@@ -211,6 +214,8 @@ class Renderer11 : public Renderer
     VertexDataManager *mVertexDataManager;
     IndexDataManager *mIndexDataManager;
     InputLayoutCache mInputLayoutCache;
+
+    StreamingIndexBufferInterface *mLineLoopIB;
 
     ID3D11Device *mDevice;
     D3D_FEATURE_LEVEL mFeatureLevel;

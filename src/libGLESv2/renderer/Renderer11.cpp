@@ -45,6 +45,8 @@ Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(
     mVertexDataManager = NULL;
     mIndexDataManager = NULL;
 
+    mLineLoopIB = NULL;
+
     mD3d11Module = NULL;
     mDxgiModule = NULL;
 
@@ -666,8 +668,106 @@ void Renderer11::drawArrays(GLenum mode, GLsizei count, GLsizei instances)
 
 void Renderer11::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo)
 {
-    // TODO
-    UNIMPLEMENTED();
+    if (mode == GL_LINE_LOOP)
+    {
+        drawLineLoop(count, type, indices, indexInfo.minIndex, elementArrayBuffer);
+    }
+    else
+    {
+        mDeviceContext->DrawIndexed(indexInfo.maxIndex - indexInfo.minIndex + 1, 0, -static_cast<int>(indexInfo.minIndex));
+    }
+}
+
+void Renderer11::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer)
+{
+    // Get the raw indices for an indexed draw
+    if (type != GL_NONE && elementArrayBuffer)
+    {
+        gl::Buffer *indexBuffer = elementArrayBuffer;
+        intptr_t offset = reinterpret_cast<intptr_t>(indices);
+        indices = static_cast<const GLubyte*>(indexBuffer->data()) + offset;
+    }
+
+    if (!mLineLoopIB)
+    {
+        mLineLoopIB = new StreamingIndexBufferInterface(this);
+        if (!mLineLoopIB->reserveBufferSpace(INITIAL_INDEX_BUFFER_SIZE, GL_UNSIGNED_INT))
+        {
+            delete mLineLoopIB;
+            mLineLoopIB = NULL;
+
+            ERR("Could not create a 32-bit looping index buffer for GL_LINE_LOOP.");
+            return error(GL_OUT_OF_MEMORY);
+        }
+    }
+
+    const int spaceNeeded = (count + 1) * sizeof(unsigned int);
+    if (!mLineLoopIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT))
+    {
+        ERR("Could not reserve enough space in looping index buffer for GL_LINE_LOOP.");
+        return error(GL_OUT_OF_MEMORY);
+    }
+
+    void* mappedMemory = NULL;
+    int offset = mLineLoopIB->mapBuffer(spaceNeeded, &mappedMemory);
+    if (offset == -1 || mappedMemory == NULL)
+    {
+        ERR("Could not map index buffer for GL_LINE_LOOP.");
+        return error(GL_OUT_OF_MEMORY);
+    }
+
+    UINT startIndex = static_cast<UINT>(offset) / 4;
+    unsigned int *data = reinterpret_cast<unsigned int*>(mappedMemory);
+
+    switch (type)
+    {
+      case GL_NONE:   // Non-indexed draw
+        for (int i = 0; i < count; i++)
+        {
+            data[i] = i;
+        }
+        data[count] = 0;
+        break;
+      case GL_UNSIGNED_BYTE:
+        for (int i = 0; i < count; i++)
+        {
+            data[i] = static_cast<const GLubyte*>(indices)[i];
+        }
+        data[count] = static_cast<const GLubyte*>(indices)[0];
+        break;
+      case GL_UNSIGNED_SHORT:
+        for (int i = 0; i < count; i++)
+        {
+            data[i] = static_cast<const GLushort*>(indices)[i];
+        }
+        data[count] = static_cast<const GLushort*>(indices)[0];
+        break;
+      case GL_UNSIGNED_INT:
+        for (int i = 0; i < count; i++)
+        {
+            data[i] = static_cast<const GLuint*>(indices)[i];
+        }
+        data[count] = static_cast<const GLuint*>(indices)[0];
+        break;
+      default: UNREACHABLE();
+    }
+
+    if (!mLineLoopIB->unmapBuffer())
+    {
+        ERR("Could not unmap index buffer for GL_LINE_LOOP.");
+        return error(GL_OUT_OF_MEMORY);
+    }
+
+    if (mAppliedIBSerial != mLineLoopIB->getSerial())
+    {
+        IndexBuffer11 *indexBuffer = IndexBuffer11::makeIndexBuffer11(mLineLoopIB->getIndexBuffer());
+
+        mDeviceContext->IASetIndexBuffer(indexBuffer->getBuffer(), indexBuffer->getIndexFormat(), startIndex);
+        mAppliedIBSerial = mLineLoopIB->getSerial();
+    }
+
+    mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+    mDeviceContext->DrawIndexed(count, 0, -minIndex);
 }
 
 void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
@@ -845,6 +945,9 @@ void Renderer11::releaseDeviceResources()
 
     delete mIndexDataManager;
     mIndexDataManager = NULL;
+
+    delete mLineLoopIB;
+    mLineLoopIB = NULL;
 }
 
 void Renderer11::markDeviceLost()
