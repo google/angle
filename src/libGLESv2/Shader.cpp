@@ -235,7 +235,7 @@ void Shader::initializeCompiler()
             resources.MaxTextureImageUnits = MAX_TEXTURE_IMAGE_UNITS;
             resources.MaxFragmentUniformVectors = context->getMaximumFragmentUniformVectors();
             resources.MaxDrawBuffers = MAX_DRAW_BUFFERS;
-            resources.OES_standard_derivatives = 1;
+            resources.OES_standard_derivatives = context->supportsDerivativeInstructions() ? 1 : 0;
             // resources.OES_EGL_image_external = getDisplay()->isD3d9ExDevice() ? 1 : 0; // TODO: commented out until the extension is actually supported.
 
             mFragmentCompiler = ShConstructCompiler(SH_FRAGMENT_SHADER, SH_GLES2_SPEC, SH_HLSL_OUTPUT, &resources);

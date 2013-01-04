@@ -317,7 +317,7 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
         mSupportsLuminanceAlphaTextures = mDisplay->getLuminanceAlphaTextureSupport();
         mSupportsDepthTextures = mDisplay->getDepthTextureSupport();
         mSupportsTextureFilterAnisotropy = mMaxTextureAnisotropy >= 2.0f;
-
+        mSupportsDerivativeInstructions = (mDeviceCaps.PS20Caps.Caps & D3DPS20CAPS_GRADIENTINSTRUCTIONS) != 0;
         mSupports32bitIndices = mDeviceCaps.MaxVertexIndex >= (1 << 16);
 
         mNumCompressedTextureFormats = 0;
@@ -3621,6 +3621,11 @@ bool Context::supportsTextureFilterAnisotropy() const
     return mSupportsTextureFilterAnisotropy;
 }
 
+bool Context::supportsDerivativeInstructions() const
+{
+    return mSupportsDerivativeInstructions;
+}
+
 float Context::getTextureMaxAnisotropy() const
 {
     return mMaxTextureAnisotropy;
@@ -3883,7 +3888,10 @@ void Context::initExtensionString()
     mExtensionString += "GL_OES_packed_depth_stencil ";
     mExtensionString += "GL_OES_get_program_binary ";
     mExtensionString += "GL_OES_rgb8_rgba8 ";
-    mExtensionString += "GL_OES_standard_derivatives ";
+    if (supportsDerivativeInstructions())
+    {
+        mExtensionString += "GL_OES_standard_derivatives ";
+    }
 
     if (supportsFloat16Textures())
     {
