@@ -183,7 +183,7 @@ enum TOperator {
     EOpVectorTimesScalarAssign,
     EOpMatrixTimesScalarAssign,
     EOpMatrixTimesMatrixAssign,
-    EOpDivAssign,
+    EOpDivAssign
 };
 
 extern const char* getOperatorString(TOperator op);
@@ -269,7 +269,7 @@ protected:
 enum TLoopType {
     ELoopFor,
     ELoopWhile,
-    ELoopDoWhile,
+    ELoopDoWhile
 };
 
 class TIntermLoop : public TIntermNode {

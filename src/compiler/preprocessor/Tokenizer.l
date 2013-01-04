@@ -25,7 +25,7 @@ IF YOU MODIFY THIS FILE YOU ALSO NEED TO RUN generate_parser.sh.
 %{
 #include "Tokenizer.h"
 
-#include "Diagnostics.h"
+#include "DiagnosticsBase.h"
 #include "Token.h"
 
 #if defined(__GNUC__)
