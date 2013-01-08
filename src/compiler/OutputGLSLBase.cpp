@@ -7,6 +7,8 @@
 #include "compiler/OutputGLSLBase.h"
 #include "compiler/debug.h"
 
+#include <limits.h>
+
 namespace
 {
 TString arrayBrackets(const TType& type)
@@ -155,7 +157,7 @@ const ConstantUnion* TOutputGLSLBase::writeConstantUnion(const TType& type,
         {
             switch (pConstUnion->getType())
             {
-                case EbtFloat: out << pConstUnion->getFConst(); break;
+                case EbtFloat: out << std::min(FLT_MAX, std::max(-FLT_MAX, pConstUnion->getFConst())); break;
                 case EbtInt: out << pConstUnion->getIConst(); break;
                 case EbtBool: out << pConstUnion->getBConst(); break;
                 default: UNREACHABLE();

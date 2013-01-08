@@ -1162,7 +1162,7 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, TIntermTyped* constantNod
             case EbtFloat:
                 if (rightUnionArray[i] == 0.0f) {
                     infoSink.info.message(EPrefixWarning, "Divide by zero error during constant folding", getLine());
-                    tempConstArray[i].setFConst(FLT_MAX);
+                    tempConstArray[i].setFConst(unionArray[i].getFConst() < 0 ? -FLT_MAX : FLT_MAX);
                 } else
                     tempConstArray[i].setFConst(unionArray[i].getFConst() / rightUnionArray[i].getFConst());
                 break;

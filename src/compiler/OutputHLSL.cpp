@@ -13,6 +13,7 @@
 #include "compiler/SearchSymbol.h"
 #include "compiler/DetectDiscontinuity.h"
 
+#include <limits.h>
 #include <stdio.h>
 #include <algorithm>
 
@@ -2565,7 +2566,7 @@ const ConstantUnion *OutputHLSL::writeConstantUnion(const TType &type, const Con
         {
             switch (constUnion->getType())
             {
-              case EbtFloat: out << constUnion->getFConst(); break;
+              case EbtFloat: out << std::min(FLT_MAX, std::max(-FLT_MAX, constUnion->getFConst())); break;
               case EbtInt:   out << constUnion->getIConst(); break;
               case EbtBool:  out << constUnion->getBConst(); break;
               default: UNREACHABLE();
