@@ -330,8 +330,43 @@ void Renderer11::setSamplerState(gl::SamplerType type, int index, const gl::Samp
 
 void Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *texture)
 {
-    // TODO
-    UNIMPLEMENTED();
+    ID3D11ShaderResourceView *textureSRV = NULL;
+
+    if (texture)
+    {
+        TextureStorageInterface *texStorage = texture->getNativeTexture();
+        if (texStorage)
+        {
+            TextureStorage11 *storage11 = TextureStorage11::makeTextureStorage11(texStorage->getStorageInstance());
+            textureSRV = storage11->getSRV();
+        }
+
+        // If we get NULL back from getSRV here, something went wrong in the texture class and we're unexpectedly
+        // missing the shader resource view
+        ASSERT(textureSRV != NULL);
+    }
+
+    if (type == gl::SAMPLER_PIXEL)
+    {
+        if (index < 0 || index >= gl::MAX_TEXTURE_IMAGE_UNITS)
+        {
+            ERR("Pixel shader sampler index %i is not valid.", index);
+            return;
+        }
+
+        mDeviceContext->PSSetShaderResources(index, 1, &textureSRV);
+    }
+    else if (type == gl::SAMPLER_VERTEX)
+    {
+        if (index < 0 || index >= gl::MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF)
+        {
+            ERR("Vertex shader sampler index %i is not valid.", index);
+            return;
+        }
+
+        mDeviceContext->VSSetShaderResources(index, 1, &textureSRV);
+    }
+    else UNREACHABLE();
 }
 
 void Renderer11::setRasterizerState(const gl::RasterizerState &rasterState)
