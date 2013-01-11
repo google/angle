@@ -28,6 +28,11 @@ D3D11_DEPTH_WRITE_MASK ConvertDepthMask(bool depthWriteEnabled);
 UINT8 ConvertStencilMask(GLuint stencilmask);
 D3D11_STENCIL_OP ConvertStencilOp(GLenum stencilOp);
 
+D3D11_FILTER ConvertFilter(GLenum minFilter, GLenum magFilter, float maxAnisotropy);
+D3D11_TEXTURE_ADDRESS_MODE ConvertTextureWrap(GLenum wrap);
+FLOAT ConvertMinLOD(GLenum minFilter);
+FLOAT ConvertMaxLOD(GLenum minFilter);
+
 DXGI_FORMAT ConvertRenderbufferFormat(GLenum format);
 DXGI_FORMAT ConvertTextureFormat(GLenum format);
 }

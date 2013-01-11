@@ -11,6 +11,8 @@
 
 #include "common/debug.h"
 
+#include <float.h>
+
 namespace gl_d3d11
 {
 
@@ -147,6 +149,62 @@ D3D11_STENCIL_OP ConvertStencilOp(GLenum stencilOp)
     }
 
     return d3dStencilOp;
+}
+
+D3D11_FILTER ConvertFilter(GLenum minFilter, GLenum magFilter, float maxAnisotropy)
+{
+    if (maxAnisotropy > 1.0f)
+    {
+        return D3D11_ENCODE_ANISOTROPIC_FILTER(false);
+    }
+    else
+    {
+        D3D11_FILTER_TYPE dxMin = D3D11_FILTER_TYPE_POINT;
+        D3D11_FILTER_TYPE dxMip = D3D11_FILTER_TYPE_POINT;
+        switch (minFilter)
+        {
+          case GL_NEAREST:                dxMin = D3D11_FILTER_TYPE_POINT;  dxMip = D3D11_FILTER_TYPE_POINT;  break;
+          case GL_LINEAR:                 dxMin = D3D11_FILTER_TYPE_LINEAR; dxMip = D3D11_FILTER_TYPE_POINT;  break;
+          case GL_NEAREST_MIPMAP_NEAREST: dxMin = D3D11_FILTER_TYPE_POINT;  dxMip = D3D11_FILTER_TYPE_POINT;  break;
+          case GL_LINEAR_MIPMAP_NEAREST:  dxMin = D3D11_FILTER_TYPE_LINEAR; dxMip = D3D11_FILTER_TYPE_POINT;  break;
+          case GL_NEAREST_MIPMAP_LINEAR:  dxMin = D3D11_FILTER_TYPE_POINT;  dxMip = D3D11_FILTER_TYPE_LINEAR; break;
+          case GL_LINEAR_MIPMAP_LINEAR:   dxMin = D3D11_FILTER_TYPE_LINEAR; dxMip = D3D11_FILTER_TYPE_LINEAR; break;
+          default:                        UNREACHABLE();
+        }
+
+        D3D11_FILTER_TYPE dxMag = D3D11_FILTER_TYPE_POINT;
+        switch (magFilter)
+        {
+          case GL_NEAREST: dxMag = D3D11_FILTER_TYPE_POINT;  break;
+          case GL_LINEAR:  dxMag = D3D11_FILTER_TYPE_LINEAR; break;
+          default:         UNREACHABLE();
+        }
+
+        return D3D11_ENCODE_BASIC_FILTER(dxMin, dxMag, dxMip, false);
+    }
+}
+
+D3D11_TEXTURE_ADDRESS_MODE ConvertTextureWrap(GLenum wrap)
+{
+    switch (wrap)
+    {
+      case GL_REPEAT:          return D3D11_TEXTURE_ADDRESS_WRAP;
+      case GL_CLAMP_TO_EDGE:   return D3D11_TEXTURE_ADDRESS_CLAMP;
+      case GL_MIRRORED_REPEAT: return D3D11_TEXTURE_ADDRESS_MIRROR;
+      default:                 UNREACHABLE();
+    }
+
+    return D3D11_TEXTURE_ADDRESS_WRAP;
+}
+
+FLOAT ConvertMinLOD(GLenum minFilter)
+{
+    return (minFilter == GL_NEAREST || minFilter == GL_LINEAR) ? 0.0f : -FLT_MAX;
+}
+
+FLOAT ConvertMaxLOD(GLenum minFilter)
+{
+    return (minFilter == GL_NEAREST || minFilter == GL_LINEAR) ? 0.0f : FLT_MAX;
 }
 
 }
@@ -312,10 +370,12 @@ DXGI_FORMAT ConvertTextureFormat(GLenum internalformat)
 
     return DXGI_FORMAT_R8G8B8A8_UNORM;
 }
+
 }
 
 namespace d3d11
 {
+
 size_t ComputePixelSizeBits(DXGI_FORMAT format)
 {
     switch (format)
@@ -473,4 +533,5 @@ size_t ComputeBlockSizeBits(DXGI_FORMAT format)
         return 0;
     }
 }
+
 }
