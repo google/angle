@@ -328,7 +328,7 @@ std::size_t RenderStateCache::hashSamplerState(const gl::SamplerState &samplerSt
 
 bool RenderStateCache::compareSamplerStates(const gl::SamplerState &a, const gl::SamplerState &b)
 {
-    return memcmp(&a, &b, sizeof(gl::DepthStencilState)) == 0;
+    return memcmp(&a, &b, sizeof(gl::SamplerState)) == 0;
 }
 
 ID3D11SamplerState *RenderStateCache::getSamplerState(const gl::SamplerState &samplerState)
