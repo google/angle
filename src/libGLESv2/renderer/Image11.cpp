@@ -43,6 +43,13 @@ bool Image11::isDirty() const
     return (mStagingTexture && mDirty);
 }
 
+ID3D11Texture2D *Image11::getStagingTexture()
+{
+    createStagingTexture();
+
+    return mStagingTexture;
+}
+
 bool Image11::updateSurface(TextureStorageInterface2D *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
     // TODO - relies on TextureStorage11 implementation
