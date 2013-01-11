@@ -63,7 +63,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
     mDepthStencil = NULL;
 
     DXGI_FORMAT requestedFormat = gl_d3d11::ConvertRenderbufferFormat(format);
-    int supportedSamples = 1; // TODO - Multisample support query
+    int supportedSamples = 0; // TODO - Multisample support query
 
     if (supportedSamples == -1)
     {
@@ -83,7 +83,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
         desc.MipLevels = 1;
         desc.ArraySize = 1;
         desc.Format = requestedFormat;
-        desc.SampleDesc.Count = supportedSamples;
+        desc.SampleDesc.Count = (supportedSamples == 0 ? 1 : supportedSamples);
         desc.SampleDesc.Quality = 0;
         desc.Usage = D3D11_USAGE_DEFAULT;
         desc.CPUAccessFlags = 0;
