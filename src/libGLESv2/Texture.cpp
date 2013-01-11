@@ -36,7 +36,6 @@ Texture::Texture(rx::Renderer *renderer, GLuint id) : RefCountObject(id)
     mSamplerState.wrapT = GL_REPEAT;
     mSamplerState.maxAnisotropy = 1.0f;
     mSamplerState.lodOffset = 0;
-    mDirtyParameters = true;
     mUsage = GL_NONE;
     
     mDirtyImages = true;
@@ -59,14 +58,8 @@ bool Texture::setMinFilter(GLenum filter)
       case GL_LINEAR_MIPMAP_NEAREST:
       case GL_NEAREST_MIPMAP_LINEAR:
       case GL_LINEAR_MIPMAP_LINEAR:
-        {
-            if (mSamplerState.minFilter != filter)
-            {
-                mSamplerState.minFilter = filter;
-                mDirtyParameters = true;
-            }
-            return true;
-        }
+        mSamplerState.minFilter = filter;
+        return true;
       default:
         return false;
     }
@@ -79,14 +72,8 @@ bool Texture::setMagFilter(GLenum filter)
     {
       case GL_NEAREST:
       case GL_LINEAR:
-        {
-            if (mSamplerState.magFilter != filter)
-            {
-                mSamplerState.magFilter = filter;
-                mDirtyParameters = true;
-            }
-            return true;
-        }
+        mSamplerState.magFilter = filter;
+        return true;
       default:
         return false;
     }
@@ -100,14 +87,8 @@ bool Texture::setWrapS(GLenum wrap)
       case GL_REPEAT:
       case GL_CLAMP_TO_EDGE:
       case GL_MIRRORED_REPEAT:
-        {
-            if (mSamplerState.wrapS != wrap)
-            {
-                mSamplerState.wrapS = wrap;
-                mDirtyParameters = true;
-            }
-            return true;
-        }
+        mSamplerState.wrapS = wrap;
+        return true;
       default:
         return false;
     }
@@ -121,14 +102,8 @@ bool Texture::setWrapT(GLenum wrap)
       case GL_REPEAT:
       case GL_CLAMP_TO_EDGE:
       case GL_MIRRORED_REPEAT:
-        {
-            if (mSamplerState.wrapT != wrap)
-            {
-                mSamplerState.wrapT = wrap;
-                mDirtyParameters = true;
-            }
-            return true;
-        }
+        mSamplerState.wrapT = wrap;
+        return true;
       default:
         return false;
     }
@@ -142,11 +117,9 @@ bool Texture::setMaxAnisotropy(float textureMaxAnisotropy, float contextMaxAniso
     {
         return false;
     }
-    if (mSamplerState.maxAnisotropy != textureMaxAnisotropy)
-    {
-        mSamplerState.maxAnisotropy = textureMaxAnisotropy;
-        mDirtyParameters = true;
-    }
+
+    mSamplerState.maxAnisotropy = textureMaxAnisotropy;
+
     return true;
 }
 
@@ -276,11 +249,6 @@ rx::TextureStorageInterface *Texture::getNativeTexture()
     return storage;
 }
 
-bool Texture::hasDirtyParameters() const
-{
-    return mDirtyParameters;
-}
-
 bool Texture::hasDirtyImages() const
 {
     return mDirtyImages;
@@ -288,7 +256,6 @@ bool Texture::hasDirtyImages() const
 
 void Texture::resetDirty()
 {
-    mDirtyParameters = false;
     mDirtyImages = false;
 }
 

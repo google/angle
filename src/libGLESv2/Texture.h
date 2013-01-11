@@ -115,7 +115,6 @@ class Texture : public RefCountObject
     rx::Renderer *mRenderer;
 
     SamplerState mSamplerState;
-    bool mDirtyParameters;
     GLenum mUsage;
 
     bool mDirtyImages;
