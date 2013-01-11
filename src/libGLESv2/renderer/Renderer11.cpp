@@ -654,7 +654,7 @@ GLenum Renderer11::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementAr
         {
             IndexBuffer11* indexBuffer = IndexBuffer11::makeIndexBuffer11(indexInfo->indexBuffer);
 
-            mDeviceContext->IASetIndexBuffer(indexBuffer->getBuffer(), indexBuffer->getIndexFormat(), indexInfo->startIndex);
+            mDeviceContext->IASetIndexBuffer(indexBuffer->getBuffer(), indexBuffer->getIndexFormat(), indexInfo->startOffset);
             mAppliedIBSerial = indexInfo->serial;
         }
     }
@@ -717,7 +717,6 @@ void Renderer11::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices,
         return error(GL_OUT_OF_MEMORY);
     }
 
-    UINT startIndex = static_cast<UINT>(offset) / 4;
     unsigned int *data = reinterpret_cast<unsigned int*>(mappedMemory);
 
     switch (type)
@@ -763,7 +762,7 @@ void Renderer11::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices,
     {
         IndexBuffer11 *indexBuffer = IndexBuffer11::makeIndexBuffer11(mLineLoopIB->getIndexBuffer());
 
-        mDeviceContext->IASetIndexBuffer(indexBuffer->getBuffer(), indexBuffer->getIndexFormat(), startIndex);
+        mDeviceContext->IASetIndexBuffer(indexBuffer->getBuffer(), indexBuffer->getIndexFormat(), offset);
         mAppliedIBSerial = mLineLoopIB->getSerial();
     }
 

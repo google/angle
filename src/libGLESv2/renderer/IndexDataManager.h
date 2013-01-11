@@ -33,6 +33,7 @@ struct TranslatedIndexData
     UINT minIndex;
     UINT maxIndex;
     UINT startIndex;
+    UINT startOffset;   // In bytes
 
     IndexBuffer *indexBuffer;
     unsigned int serial;

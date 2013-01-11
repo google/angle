@@ -219,6 +219,7 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
     translated->indexBuffer = indexBuffer->getIndexBuffer();
     translated->serial = indexBuffer->getSerial();
     translated->startIndex = streamOffset / indexTypeSize(destinationIndexType);
+    translated->startOffset = streamOffset;
 
     if (buffer)
     {
