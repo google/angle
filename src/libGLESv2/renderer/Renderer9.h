@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -233,6 +233,27 @@ class Renderer9 : public Renderer
     bool mSupportsTextureFilterAnisotropy;
     int mMinSwapInterval;
     int mMaxSwapInterval;
+
+    bool mOcclusionQuerySupport;
+    bool mEventQuerySupport;
+    bool mVertexTextureSupport;
+
+    bool mDepthTextureSupport;
+
+    bool mFloat32TextureSupport;
+    bool mFloat32FilterSupport;
+    bool mFloat32RenderSupport;
+
+    bool mFloat16TextureSupport;
+    bool mFloat16FilterSupport;
+    bool mFloat16RenderSupport;
+
+    bool mDXT1TextureSupport;
+    bool mDXT3TextureSupport;
+    bool mDXT5TextureSupport;
+
+    bool mLuminanceTextureSupport;
+    bool mLuminanceAlphaTextureSupport;
 
     std::map<D3DFORMAT, bool *> mMultiSampleSupport;
     GLsizei mMaxSupportedSamples;

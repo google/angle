@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -358,6 +358,104 @@ EGLint Renderer9::initialize()
 
     mVertexShaderCache.initialize(mDevice);
     mPixelShaderCache.initialize(mDevice);
+
+    // Check occlusion query support
+    IDirect3DQuery9 *occlusionQuery = NULL;
+    if (SUCCEEDED(mDevice->CreateQuery(D3DQUERYTYPE_OCCLUSION, &occlusionQuery)) && occlusionQuery)
+    {
+        occlusionQuery->Release();
+        mOcclusionQuerySupport = true;
+    }
+    else
+    {
+        mOcclusionQuerySupport = false;
+    }
+
+    // Check event query support
+    IDirect3DQuery9 *eventQuery = NULL;
+    if (SUCCEEDED(mDevice->CreateQuery(D3DQUERYTYPE_EVENT, &eventQuery)) && eventQuery)
+    {
+        eventQuery->Release();
+        mEventQuerySupport = true;
+    }
+    else
+    {
+        mEventQuerySupport = false;
+    }
+
+    D3DDISPLAYMODE currentDisplayMode;
+    mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
+
+    // Check vertex texture support
+    // Only Direct3D 10 ready devices support all the necessary vertex texture formats.
+    // We test this using D3D9 by checking support for the R16F format.
+    mVertexTextureSupport = mDeviceCaps.PixelShaderVersion >= D3DPS_VERSION(3, 0) &&
+                            SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format,
+                                                               D3DUSAGE_QUERY_VERTEXTEXTURE, D3DRTYPE_TEXTURE, D3DFMT_R16F));
+
+    // Check depth texture support
+    // we use INTZ for depth textures in Direct3D9
+    // we also want NULL texture support to ensure the we can make depth-only FBOs
+    // see http://aras-p.info/texts/D3D9GPUHacks.html
+    mDepthTextureSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format,
+                                                              D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_TEXTURE, D3DFMT_INTZ)) &&
+                           SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format,
+                                                              D3DUSAGE_RENDERTARGET, D3DRTYPE_SURFACE, D3DFMT_NULL));
+
+    // Check 32 bit floating point texture support
+    mFloat32FilterSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_QUERY_FILTER,
+                                                               D3DRTYPE_TEXTURE, D3DFMT_A32B32G32R32F)) &&
+                            SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_QUERY_FILTER,
+                                                               D3DRTYPE_CUBETEXTURE, D3DFMT_A32B32G32R32F));
+
+    mFloat32RenderSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET,
+                                                               D3DRTYPE_TEXTURE, D3DFMT_A32B32G32R32F)) &&
+                            SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET,
+                                                               D3DRTYPE_CUBETEXTURE, D3DFMT_A32B32G32R32F));
+
+    if (!mFloat32FilterSupport && !mFloat32RenderSupport)
+    {
+        mFloat32TextureSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0,
+                                                                    D3DRTYPE_TEXTURE, D3DFMT_A32B32G32R32F)) &&
+                                 SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0,
+                                                                    D3DRTYPE_CUBETEXTURE, D3DFMT_A32B32G32R32F));
+    }
+    else
+    {
+        mFloat32TextureSupport = true;
+    }
+
+    // Check 16 bit floating point texture support
+    mFloat16FilterSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_QUERY_FILTER,
+                                                               D3DRTYPE_TEXTURE, D3DFMT_A16B16G16R16F)) &&
+                            SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_QUERY_FILTER,
+                                                               D3DRTYPE_CUBETEXTURE, D3DFMT_A16B16G16R16F));
+
+    mFloat16RenderSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET,
+                                                               D3DRTYPE_TEXTURE, D3DFMT_A16B16G16R16F)) &&
+                            SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET,
+                                                               D3DRTYPE_CUBETEXTURE, D3DFMT_A16B16G16R16F));
+
+    if (!mFloat16FilterSupport && !mFloat16RenderSupport)
+    {
+        mFloat16TextureSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0,
+                                                                    D3DRTYPE_TEXTURE, D3DFMT_A16B16G16R16F)) &&
+                                 SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0,
+                                                                    D3DRTYPE_CUBETEXTURE, D3DFMT_A16B16G16R16F));
+    }
+    else
+    {
+        mFloat16TextureSupport = true;
+    }
+
+    // Check DXT texture support
+    mDXT1TextureSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT1));
+    mDXT3TextureSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT3));
+    mDXT5TextureSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT5));
+
+    // Check luminance[alpha] texture support
+    mLuminanceTextureSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_L8));
+    mLuminanceAlphaTextureSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_A8L8));
 
     initializeDevice();
 
@@ -1991,114 +2089,46 @@ void Renderer9::getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray)
 
 bool Renderer9::getDXT1TextureSupport()
 {
-    D3DDISPLAYMODE currentDisplayMode;
-    mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
-
-    return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT1));
+    return mDXT1TextureSupport;
 }
 
 bool Renderer9::getDXT3TextureSupport()
 {
-    D3DDISPLAYMODE currentDisplayMode;
-    mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
-
-    return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT3));
+    return mDXT3TextureSupport;
 }
 
 bool Renderer9::getDXT5TextureSupport()
 {
-    D3DDISPLAYMODE currentDisplayMode;
-    mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
-
-    return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_DXT5));
+    return mDXT5TextureSupport;
 }
 
-// we use INTZ for depth textures in Direct3D9
-// we also want NULL texture support to ensure the we can make depth-only FBOs
-// see http://aras-p.info/texts/D3D9GPUHacks.html
 bool Renderer9::getDepthTextureSupport() const
 {
-    D3DDISPLAYMODE currentDisplayMode;
-    mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
-
-    bool intz = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format,
-                                                   D3DUSAGE_DEPTHSTENCIL, D3DRTYPE_TEXTURE, D3DFMT_INTZ));
-    bool null = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format,
-                                                   D3DUSAGE_RENDERTARGET, D3DRTYPE_SURFACE, D3DFMT_NULL));
-
-    return intz && null;
+    return mDepthTextureSupport;
 }
 
 bool Renderer9::getFloat32TextureSupport(bool *filtering, bool *renderable)
 {
-    D3DDISPLAYMODE currentDisplayMode;
-    mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
-
-    *filtering = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_QUERY_FILTER, 
-                                                    D3DRTYPE_TEXTURE, D3DFMT_A32B32G32R32F)) &&
-                 SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_QUERY_FILTER,
-                                                    D3DRTYPE_CUBETEXTURE, D3DFMT_A32B32G32R32F));
-
-    *renderable = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET,
-                                                     D3DRTYPE_TEXTURE, D3DFMT_A32B32G32R32F))&&
-                  SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET,
-                                                     D3DRTYPE_CUBETEXTURE, D3DFMT_A32B32G32R32F));
-
-    if (!*filtering && !*renderable)
-    {
-        return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0,
-                                                  D3DRTYPE_TEXTURE, D3DFMT_A32B32G32R32F)) &&
-               SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0,
-                                                  D3DRTYPE_CUBETEXTURE, D3DFMT_A32B32G32R32F));
-    }
-    else
-    {
-        return true;
-    }
+    *filtering = mFloat32FilterSupport;
+    *renderable = mFloat32RenderSupport;
+    return mFloat32TextureSupport;
 }
 
 bool Renderer9::getFloat16TextureSupport(bool *filtering, bool *renderable)
 {
-    D3DDISPLAYMODE currentDisplayMode;
-    mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
-
-    *filtering = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_QUERY_FILTER, 
-                                                    D3DRTYPE_TEXTURE, D3DFMT_A16B16G16R16F)) &&
-                 SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_QUERY_FILTER,
-                                                    D3DRTYPE_CUBETEXTURE, D3DFMT_A16B16G16R16F));
-
-    *renderable = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET, 
-                                                    D3DRTYPE_TEXTURE, D3DFMT_A16B16G16R16F)) &&
-                 SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_RENDERTARGET,
-                                                    D3DRTYPE_CUBETEXTURE, D3DFMT_A16B16G16R16F));
-
-    if (!*filtering && !*renderable)
-    {
-        return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0,
-                                                  D3DRTYPE_TEXTURE, D3DFMT_A16B16G16R16F)) &&
-               SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0,
-                                                  D3DRTYPE_CUBETEXTURE, D3DFMT_A16B16G16R16F));
-    }
-    else
-    {
-        return true;
-    }
+    *filtering = mFloat16FilterSupport;
+    *renderable = mFloat16RenderSupport;
+    return mFloat16TextureSupport;
 }
 
 bool Renderer9::getLuminanceTextureSupport()
 {
-    D3DDISPLAYMODE currentDisplayMode;
-    mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
-
-    return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_L8));
+    return mLuminanceTextureSupport;
 }
 
 bool Renderer9::getLuminanceAlphaTextureSupport()
 {
-    D3DDISPLAYMODE currentDisplayMode;
-    mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
-
-    return SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, 0, D3DRTYPE_TEXTURE, D3DFMT_A8L8));
+    return mLuminanceAlphaTextureSupport;
 }
 
 bool Renderer9::getTextureFilterAnisotropySupport() const
@@ -2117,34 +2147,12 @@ float Renderer9::getTextureMaxAnisotropy() const
 
 bool Renderer9::getEventQuerySupport()
 {
-    IDirect3DQuery9 *query = allocateEventQuery();
-    if (query)
-    {
-        freeEventQuery(query);
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-    return true;
+    return mEventQuerySupport;
 }
 
-// Only Direct3D 10 ready devices support all the necessary vertex texture formats.
-// We test this using D3D9 by checking support for the R16F format.
 bool Renderer9::getVertexTextureSupport() const
 {
-    if (!mDevice || mDeviceCaps.PixelShaderVersion < D3DPS_VERSION(3, 0))
-    {
-        return false;
-    }
-
-    D3DDISPLAYMODE currentDisplayMode;
-    mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
-
-    HRESULT result = mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format, D3DUSAGE_QUERY_VERTEXTEXTURE, D3DRTYPE_TEXTURE, D3DFMT_R16F);
-
-    return SUCCEEDED(result);
+    return mVertexTextureSupport;
 }
 
 bool Renderer9::getNonPower2TextureSupport() const
@@ -2154,22 +2162,7 @@ bool Renderer9::getNonPower2TextureSupport() const
 
 bool Renderer9::getOcclusionQuerySupport() const
 {
-    if (!mDevice)
-    {
-        return false;
-    }
-
-    IDirect3DQuery9 *query = NULL;
-    HRESULT result = mDevice->CreateQuery(D3DQUERYTYPE_OCCLUSION, &query);
-    if (SUCCEEDED(result) && query)
-    {
-        query->Release();
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return mOcclusionQuerySupport;
 }
 
 bool Renderer9::getInstancingSupport() const
