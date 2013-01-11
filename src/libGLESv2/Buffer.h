@@ -52,7 +52,7 @@ class Buffer : public RefCountObject
   private:
     DISALLOW_COPY_AND_ASSIGN(Buffer);
 
-    rx::Renderer9 *mRenderer;  // D3D9_REPLACE
+    rx::Renderer *mRenderer;
     GLubyte *mContents;
     GLsizeiptr mSize;
     GLenum mUsage;
