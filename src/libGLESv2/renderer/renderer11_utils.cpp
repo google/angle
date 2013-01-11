@@ -16,7 +16,7 @@
 namespace gl_d3d11
 {
 
-D3D11_BLEND ConvertBlendFunc(GLenum glBlend)
+D3D11_BLEND ConvertBlendFunc(GLenum glBlend, bool isAlpha)
 {
     D3D11_BLEND d3dBlend = D3D11_BLEND_ZERO;
 
@@ -24,10 +24,10 @@ D3D11_BLEND ConvertBlendFunc(GLenum glBlend)
     {
       case GL_ZERO:                     d3dBlend = D3D11_BLEND_ZERO;                break;
       case GL_ONE:                      d3dBlend = D3D11_BLEND_ONE;                 break;
-      case GL_SRC_COLOR:                d3dBlend = D3D11_BLEND_SRC_COLOR;           break;
-      case GL_ONE_MINUS_SRC_COLOR:      d3dBlend = D3D11_BLEND_INV_SRC_COLOR;       break;
-      case GL_DST_COLOR:                d3dBlend = D3D11_BLEND_DEST_COLOR;          break;
-      case GL_ONE_MINUS_DST_COLOR:      d3dBlend = D3D11_BLEND_INV_DEST_COLOR;      break;
+      case GL_SRC_COLOR:                d3dBlend = (isAlpha ? D3D11_BLEND_SRC_ALPHA : D3D11_BLEND_SRC_COLOR);           break;
+      case GL_ONE_MINUS_SRC_COLOR:      d3dBlend = (isAlpha ? D3D11_BLEND_INV_SRC_ALPHA : D3D11_BLEND_INV_SRC_COLOR);   break;
+      case GL_DST_COLOR:                d3dBlend = (isAlpha ? D3D11_BLEND_DEST_ALPHA : D3D11_BLEND_DEST_COLOR);         break;
+      case GL_ONE_MINUS_DST_COLOR:      d3dBlend = (isAlpha ? D3D11_BLEND_INV_DEST_ALPHA : D3D11_BLEND_INV_DEST_COLOR); break;
       case GL_SRC_ALPHA:                d3dBlend = D3D11_BLEND_SRC_ALPHA;           break;
       case GL_ONE_MINUS_SRC_ALPHA:      d3dBlend = D3D11_BLEND_INV_SRC_ALPHA;       break;
       case GL_DST_ALPHA:                d3dBlend = D3D11_BLEND_DEST_ALPHA;          break;

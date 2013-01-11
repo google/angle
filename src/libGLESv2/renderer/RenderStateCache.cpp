@@ -130,12 +130,12 @@ ID3D11BlendState *RenderStateCache::getBlendState(const gl::BlendState &blendSta
             rtBlend.BlendEnable = blendState.blend;
             if (blendState.blend)
             {
-                rtBlend.SrcBlend = gl_d3d11::ConvertBlendFunc(blendState.sourceBlendRGB);
-                rtBlend.DestBlend = gl_d3d11::ConvertBlendFunc(blendState.destBlendRGB);
+                rtBlend.SrcBlend = gl_d3d11::ConvertBlendFunc(blendState.sourceBlendRGB, false);
+                rtBlend.DestBlend = gl_d3d11::ConvertBlendFunc(blendState.destBlendRGB, false);
                 rtBlend.BlendOp = gl_d3d11::ConvertBlendOp(blendState.blendEquationRGB);
 
-                rtBlend.SrcBlendAlpha = gl_d3d11::ConvertBlendFunc(blendState.sourceBlendAlpha);
-                rtBlend.DestBlendAlpha = gl_d3d11::ConvertBlendFunc(blendState.destBlendAlpha);
+                rtBlend.SrcBlendAlpha = gl_d3d11::ConvertBlendFunc(blendState.sourceBlendAlpha, true);
+                rtBlend.DestBlendAlpha = gl_d3d11::ConvertBlendFunc(blendState.destBlendAlpha, true);
                 rtBlend.BlendOpAlpha = gl_d3d11::ConvertBlendOp(blendState.blendEquationAlpha);
             }
 
