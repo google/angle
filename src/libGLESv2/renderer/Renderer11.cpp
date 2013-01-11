@@ -342,7 +342,7 @@ void Renderer11::setRasterizerState(const gl::RasterizerState &rasterState)
                                                                               mCurDepthSize);
         if (!dxRasterState)
         {
-            ERR("NULL blend state returned by RenderStateCache::getRasterizerState, setting the default"
+            ERR("NULL rasterizer state returned by RenderStateCache::getRasterizerState, setting the default"
                 "rasterizer state.");
         }
 
