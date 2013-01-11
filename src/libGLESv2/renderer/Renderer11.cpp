@@ -675,7 +675,7 @@ void Renderer11::drawElements(GLenum mode, GLsizei count, GLenum type, const GLv
     }
     else
     {
-        mDeviceContext->DrawIndexed(indexInfo.maxIndex - indexInfo.minIndex + 1, 0, -static_cast<int>(indexInfo.minIndex));
+        mDeviceContext->DrawIndexed(count, 0, -static_cast<int>(indexInfo.minIndex));
     }
 }
 
