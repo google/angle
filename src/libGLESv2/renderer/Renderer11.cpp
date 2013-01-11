@@ -1437,9 +1437,8 @@ RenderTarget *Renderer11::createRenderTarget(SwapChain *swapChain, bool depth)
 
 RenderTarget *Renderer11::createRenderTarget(int width, int height, GLenum format, GLsizei samples, bool depth)
 {
-    // TODO
-    UNIMPLEMENTED();
-    return NULL;
+    RenderTarget11 *renderTarget = new RenderTarget11(this, width, height, format, samples, depth);
+    return renderTarget;
 }
 
 ShaderExecutable *Renderer11::loadExecutable(const void *function, size_t length, GLenum type)

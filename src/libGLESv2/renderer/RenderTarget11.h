@@ -24,6 +24,7 @@ class RenderTarget11 : public RenderTarget
   public:
     RenderTarget11(Renderer *renderer, ID3D11RenderTargetView *view, GLsizei width, GLsizei height);
     RenderTarget11(Renderer *renderer, ID3D11DepthStencilView *view, GLsizei width, GLsizei height);
+    RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height, GLenum format, GLsizei samples, bool depth);
     virtual ~RenderTarget11();
 
     static RenderTarget11 *makeRenderTarget11(RenderTarget *renderTarget);
