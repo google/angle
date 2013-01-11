@@ -180,6 +180,13 @@ class Renderer11 : public Renderer
     unsigned int mCurDepthSize;
     unsigned int mCurStencilSize;
 
+    // Currently applied sampler states
+    bool mForceSetVertexSamplerStates[gl::MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF];
+    gl::SamplerState mCurVertexSamplerStates[gl::MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF];
+
+    bool mForceSetPixelSamplerStates[gl::MAX_TEXTURE_IMAGE_UNITS];
+    gl::SamplerState mCurPixelSamplerStates[gl::MAX_TEXTURE_IMAGE_UNITS];
+
     // Currently applied blend state
     bool mForceSetBlendState;
     gl::BlendState mCurBlendState;

@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -267,8 +267,65 @@ SwapChain *Renderer11::createSwapChain(HWND window, HANDLE shareHandle, GLenum b
 
 void Renderer11::setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &samplerState)
 {
-    // TODO
-    UNIMPLEMENTED();
+    if (type == gl::SAMPLER_PIXEL)
+    {
+        if (index < 0 || index >= gl::MAX_TEXTURE_IMAGE_UNITS)
+        {
+            ERR("Pixel shader sampler index %i is not valid.", index);
+            return;
+        }
+
+        if (mForceSetPixelSamplerStates[index] || memcmp(&samplerState, &mCurPixelSamplerStates[index], sizeof(gl::SamplerState)) != 0)
+        {
+            ID3D11SamplerState *dxSamplerState = mStateCache.getSamplerState(samplerState);
+
+            if (!dxSamplerState)
+            {
+                ERR("NULL sampler state returned by RenderStateCache::getSamplerState, setting the default"
+                    "sampler state for pixel shaders at slot %i.", index);
+            }
+
+            mDeviceContext->PSSetSamplers(index, 1, &dxSamplerState);
+
+            if (dxSamplerState)
+            {
+                dxSamplerState->Release();
+            }
+            mCurPixelSamplerStates[index] = samplerState;
+        }
+
+        mForceSetPixelSamplerStates[index] = false;
+    }
+    else if (type == gl::SAMPLER_VERTEX)
+    {
+        if (index < 0 || index >= gl::MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF)
+        {
+            ERR("Vertex shader sampler index %i is not valid.", index);
+            return;
+        }
+
+        if (mForceSetVertexSamplerStates[index] || memcmp(&samplerState, &mCurVertexSamplerStates[index], sizeof(gl::SamplerState)) != 0)
+        {
+            ID3D11SamplerState *dxSamplerState = mStateCache.getSamplerState(samplerState);
+
+            if (!dxSamplerState)
+            {
+                ERR("NULL sampler state returned by RenderStateCache::getSamplerState, setting the default"
+                    "sampler state for vertex shaders at slot %i.", index);
+            }
+
+            mDeviceContext->VSSetSamplers(index, 1, &dxSamplerState);
+
+            if (dxSamplerState)
+            {
+                dxSamplerState->Release();
+            }
+            mCurVertexSamplerStates[index] = samplerState;
+        }
+
+        mForceSetVertexSamplerStates[index] = false;
+    }
+    else UNREACHABLE();
 }
 
 void Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *texture)
@@ -997,6 +1054,15 @@ void Renderer11::markAllStateDirty()
     mAppliedStencilbufferSerial = 0;
     mDepthStencilInitialized = false;
     mRenderTargetDescInitialized = false;
+
+    for (int i = 0; i < gl::MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF; i++)
+    {
+        mForceSetVertexSamplerStates[i] = true;
+    }
+    for (int i = 0; i < gl::MAX_TEXTURE_IMAGE_UNITS; i++)
+    {
+        mForceSetPixelSamplerStates[i] = true;
+    }
 
     mForceSetBlendState = true;
     mForceSetRasterState = true;
