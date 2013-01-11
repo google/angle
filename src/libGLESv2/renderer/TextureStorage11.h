@@ -53,6 +53,7 @@ class TextureStorage11 : public TextureStorage
   protected:
     Renderer11 *mRenderer;
     int mLodOffset;
+    unsigned int mMipLevels;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage11);

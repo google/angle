@@ -21,7 +21,8 @@ namespace rx
 
 TextureStorage11::TextureStorage11(Renderer *renderer, UINT bindFlags)
     : mBindFlags(bindFlags),
-      mLodOffset(0)
+      mLodOffset(0),
+      mMipLevels(0)
 {
     mRenderer = Renderer11::makeRenderer11(renderer);
 }
@@ -96,30 +97,22 @@ bool TextureStorage11::isManaged() const
     return false;
 }
 
-// TODO - We should store level count internally at creation time instead
-// of making driver calls to determine it each time levelCount() is called.
 int TextureStorage11::levelCount()
 {
     int levels = 0;
     if (getBaseTexture())
     {
-        D3D11_TEXTURE2D_DESC desc;
-        getBaseTexture()->GetDesc(&desc);
-        levels = desc.MipLevels - getLodOffset();
+        levels = mMipLevels - getLodOffset();
     }
     return levels;
 }
 
-// TODO - Once we're storing level count internally, we should no longer
-// need to look up the texture description to determine the number of mip levels.
 UINT TextureStorage11::getSubresourceIndex(int level, int faceIndex)
 {
     UINT index = 0;
     if (getBaseTexture())
     {
-        D3D11_TEXTURE2D_DESC desc;
-        getBaseTexture()->GetDesc(&desc);
-        index = D3D11CalcSubresource(level, faceIndex, desc.MipLevels);
+        index = D3D11CalcSubresource(level, faceIndex, mMipLevels);
     }
     return index;
 }
@@ -157,6 +150,8 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, SwapChain11 *swapch
     D3D11_TEXTURE2D_DESC desc;
     surfaceTexture->GetDesc(&desc);
 
+    mMipLevels = desc.MipLevels;
+
     initializeSRV(desc.Format, desc.MipLevels);
     initializeRenderTarget(desc.Format, desc.Width, desc.Height);
 }
@@ -168,6 +163,7 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int levels, GLenum 
     mSRV = NULL;
     mRenderTarget = NULL;
     DXGI_FORMAT format = gl_d3d11::ConvertTextureFormat(internalformat);
+
     // if the width or height is not positive this should be treated as an incomplete texture
     // we handle that here by skipping the d3d texture creation
     if (width > 0 && height > 0)
@@ -197,6 +193,11 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int levels, GLenum 
             ASSERT(result == E_OUTOFMEMORY);
             ERR("Creating image failed.");
             error(GL_OUT_OF_MEMORY);
+        }
+        else
+        {
+            mTexture->GetDesc(&desc);
+            mMipLevels = desc.MipLevels;
         }
     }
 
@@ -339,6 +340,11 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int levels, GLe
             ASSERT(result == E_OUTOFMEMORY);
             ERR("Creating image failed.");
             error(GL_OUT_OF_MEMORY);
+        }
+        else
+        {
+            mTexture->GetDesc(&desc);
+            mMipLevels = desc.MipLevels;
         }
     }
 
