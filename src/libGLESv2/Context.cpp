@@ -307,16 +307,6 @@ void Context::makeCurrent(egl::Surface *surface)
 // This function will set all of the state-related dirty flags, so that all state is set during next pre-draw.
 void Context::markAllStateDirty()
 {
-    for (int t = 0; t < MAX_TEXTURE_IMAGE_UNITS; t++)
-    {
-        mAppliedTextureSerialPS[t] = 0;
-    }
-
-    for (int t = 0; t < MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF; t++)
-    {
-        mAppliedTextureSerialVS[t] = 0;
-    }
-
     mDxUniformsDirty = true;
 }
 
@@ -1795,7 +1785,6 @@ void Context::applyTextures(SamplerType type)
     ProgramBinary *programBinary = getCurrentProgramBinary();
 
     int samplerCount = (type == SAMPLER_PIXEL) ? MAX_TEXTURE_IMAGE_UNITS : MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF;   // Range of Direct3D 9 samplers of given sampler type
-    unsigned int *appliedTextureSerial = (type == SAMPLER_PIXEL) ? mAppliedTextureSerialPS : mAppliedTextureSerialVS;
     int samplerRange = programBinary->getUsedSamplerRange(type);
 
     for (int samplerIndex = 0; samplerIndex < samplerRange; samplerIndex++)
@@ -1805,53 +1794,32 @@ void Context::applyTextures(SamplerType type)
         if (textureUnit != -1)
         {
             TextureType textureType = programBinary->getSamplerTextureType(type, samplerIndex);
-
             Texture *texture = getSamplerTexture(textureUnit, textureType);
-            unsigned int texSerial = texture->getTextureSerial();
 
-            if (appliedTextureSerial[samplerIndex] != texSerial || texture->hasDirtyParameters() || texture->hasDirtyImages())
+            if (texture->isSamplerComplete())
             {
-                if (texture->isSamplerComplete())
-                {
-                    if (appliedTextureSerial[samplerIndex] != texSerial || texture->hasDirtyParameters())
-                    {
-                        SamplerState samplerState;
-                        texture->getSamplerState(&samplerState);
+                SamplerState samplerState;
+                texture->getSamplerState(&samplerState);
+                mRenderer->setSamplerState(type, samplerIndex, samplerState);
 
-                        mRenderer->setSamplerState(type, samplerIndex, samplerState);
-                    }
+                mRenderer->setTexture(type, samplerIndex, texture);
 
-                    if (appliedTextureSerial[samplerIndex] != texSerial || texture->hasDirtyImages())
-                    {
-                        mRenderer->setTexture(type, samplerIndex, texture);
-                    }
-                }
-                else
-                {
-                    mRenderer->setTexture(type, samplerIndex, getIncompleteTexture(textureType));
-                }
-
-                appliedTextureSerial[samplerIndex] = texSerial;
                 texture->resetDirty();
+            }
+            else
+            {
+                mRenderer->setTexture(type, samplerIndex, getIncompleteTexture(textureType));
             }
         }
         else
         {
-            if (appliedTextureSerial[samplerIndex] != 0)
-            {
-                mRenderer->setTexture(type, samplerIndex, NULL);
-                appliedTextureSerial[samplerIndex] = 0;
-            }
+            mRenderer->setTexture(type, samplerIndex, NULL);
         }
     }
 
     for (int samplerIndex = samplerRange; samplerIndex < samplerCount; samplerIndex++)
     {
-        if (appliedTextureSerial[samplerIndex] != 0)
-        {
-            mRenderer->setTexture(type, samplerIndex, NULL);
-            appliedTextureSerial[samplerIndex] = 0;
-        }
+        mRenderer->setTexture(type, samplerIndex, NULL);
     }
 }
 

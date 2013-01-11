@@ -706,22 +706,31 @@ IndexBuffer *Renderer9::createIndexBuffer()
 
 void Renderer9::setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &samplerState)
 {
-    int d3dSamplerOffset = (type == gl::SAMPLER_PIXEL) ? 0 : D3DVERTEXTEXTURESAMPLER0;
-    int d3dSampler = index + d3dSamplerOffset;
+    bool *forceSetSamplers = (type == gl::SAMPLER_PIXEL) ? mForceSetPixelSamplerStates : mForceSetVertexSamplerStates;
+    gl::SamplerState *appliedSamplers = (type == gl::SAMPLER_PIXEL) ? mCurPixelSamplerStates: mCurVertexSamplerStates;
 
-    mDevice->SetSamplerState(d3dSampler, D3DSAMP_ADDRESSU, gl_d3d9::ConvertTextureWrap(samplerState.wrapS));
-    mDevice->SetSamplerState(d3dSampler, D3DSAMP_ADDRESSV, gl_d3d9::ConvertTextureWrap(samplerState.wrapT));
-
-    mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAGFILTER, gl_d3d9::ConvertMagFilter(samplerState.magFilter, samplerState.maxAnisotropy));
-    D3DTEXTUREFILTERTYPE d3dMinFilter, d3dMipFilter;
-    gl_d3d9::ConvertMinFilter(samplerState.minFilter, &d3dMinFilter, &d3dMipFilter, samplerState.maxAnisotropy);
-    mDevice->SetSamplerState(d3dSampler, D3DSAMP_MINFILTER, d3dMinFilter);
-    mDevice->SetSamplerState(d3dSampler, D3DSAMP_MIPFILTER, d3dMipFilter);
-    mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAXMIPLEVEL, samplerState.lodOffset);
-    if (mSupportsTextureFilterAnisotropy)
+    if (forceSetSamplers[index] || memcmp(&samplerState, &appliedSamplers[index], sizeof(gl::SamplerState)) != 0)
     {
-        mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAXANISOTROPY, (DWORD)samplerState.maxAnisotropy);
+        int d3dSamplerOffset = (type == gl::SAMPLER_PIXEL) ? 0 : D3DVERTEXTEXTURESAMPLER0;
+        int d3dSampler = index + d3dSamplerOffset;
+
+        mDevice->SetSamplerState(d3dSampler, D3DSAMP_ADDRESSU, gl_d3d9::ConvertTextureWrap(samplerState.wrapS));
+        mDevice->SetSamplerState(d3dSampler, D3DSAMP_ADDRESSV, gl_d3d9::ConvertTextureWrap(samplerState.wrapT));
+
+        mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAGFILTER, gl_d3d9::ConvertMagFilter(samplerState.magFilter, samplerState.maxAnisotropy));
+        D3DTEXTUREFILTERTYPE d3dMinFilter, d3dMipFilter;
+        gl_d3d9::ConvertMinFilter(samplerState.minFilter, &d3dMinFilter, &d3dMipFilter, samplerState.maxAnisotropy);
+        mDevice->SetSamplerState(d3dSampler, D3DSAMP_MINFILTER, d3dMinFilter);
+        mDevice->SetSamplerState(d3dSampler, D3DSAMP_MIPFILTER, d3dMipFilter);
+        mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAXMIPLEVEL, samplerState.lodOffset);
+        if (mSupportsTextureFilterAnisotropy)
+        {
+            mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAXANISOTROPY, (DWORD)samplerState.maxAnisotropy);
+        }
     }
+
+    forceSetSamplers[index] = false;
+    appliedSamplers[index] = samplerState;
 }
 
 void Renderer9::setTexture(gl::SamplerType type, int index, gl::Texture *texture)
@@ -729,6 +738,10 @@ void Renderer9::setTexture(gl::SamplerType type, int index, gl::Texture *texture
     int d3dSamplerOffset = (type == gl::SAMPLER_PIXEL) ? 0 : D3DVERTEXTEXTURESAMPLER0;
     int d3dSampler = index + d3dSamplerOffset;
     IDirect3DBaseTexture9 *d3dTexture = NULL;
+    unsigned int serial = 0;
+    bool forceSetTexture = false;
+
+    unsigned int *appliedSerials = (type == gl::SAMPLER_PIXEL) ? mCurPixelTextureSerials : mCurVertexTextureSerials;
 
     if (texture)
     {
@@ -741,9 +754,17 @@ void Renderer9::setTexture(gl::SamplerType type, int index, gl::Texture *texture
         // If we get NULL back from getBaseTexture here, something went wrong
         // in the texture class and we're unexpectedly missing the d3d texture
         ASSERT(d3dTexture != NULL);
+
+        serial = texture->getTextureSerial();
+        forceSetTexture = texture->hasDirtyImages();
     }
 
-    mDevice->SetTexture(d3dSampler, d3dTexture);
+    if (forceSetTexture || appliedSerials[index] != serial)
+    {
+        mDevice->SetTexture(d3dSampler, d3dTexture);
+    }
+
+    appliedSerials[index] = serial;
 }
 
 void Renderer9::setRasterizerState(const gl::RasterizerState &rasterState)
@@ -1901,6 +1922,17 @@ void Renderer9::markAllStateDirty()
     mForceSetScissor = true;
     mForceSetViewport = true;
     mForceSetBlendState = true;
+
+    for (unsigned int i = 0; i < gl::MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF; i++)
+    {
+        mForceSetVertexSamplerStates[i] = true;
+        mCurVertexTextureSerials[i] = 0;
+    }
+    for (unsigned int i = 0; i < gl::MAX_TEXTURE_IMAGE_UNITS; i++)
+    {
+        mForceSetPixelSamplerStates[i] = true;
+        mCurPixelTextureSerials[i] = 0;
+    }
 
     mAppliedIBSerial = 0;
     mAppliedProgramBinarySerial = 0;

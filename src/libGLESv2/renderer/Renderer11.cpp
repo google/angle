@@ -325,6 +325,8 @@ void Renderer11::setSamplerState(gl::SamplerType type, int index, const gl::Samp
 void Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *texture)
 {
     ID3D11ShaderResourceView *textureSRV = NULL;
+    unsigned int serial = 0;
+    bool forceSetTexture = false;
 
     if (texture)
     {
@@ -338,6 +340,9 @@ void Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *textur
         // If we get NULL back from getSRV here, something went wrong in the texture class and we're unexpectedly
         // missing the shader resource view
         ASSERT(textureSRV != NULL);
+
+        serial = texture->getTextureSerial();
+        forceSetTexture = texture->hasDirtyImages();
     }
 
     if (type == gl::SAMPLER_PIXEL)
@@ -348,7 +353,12 @@ void Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *textur
             return;
         }
 
-        mDeviceContext->PSSetShaderResources(index, 1, &textureSRV);
+        if (forceSetTexture || mCurPixelTextureSerials[index] != serial)
+        {
+            mDeviceContext->PSSetShaderResources(index, 1, &textureSRV);
+        }
+
+        mCurPixelTextureSerials[index] = serial;
     }
     else if (type == gl::SAMPLER_VERTEX)
     {
@@ -358,7 +368,12 @@ void Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *textur
             return;
         }
 
-        mDeviceContext->VSSetShaderResources(index, 1, &textureSRV);
+        if (forceSetTexture || mCurVertexTextureSerials[index] != serial)
+        {
+            mDeviceContext->VSSetShaderResources(index, 1, &textureSRV);
+        }
+
+        mCurVertexTextureSerials[index] = serial;
     }
     else UNREACHABLE();
 }
@@ -1160,10 +1175,12 @@ void Renderer11::markAllStateDirty()
     for (int i = 0; i < gl::MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF; i++)
     {
         mForceSetVertexSamplerStates[i] = true;
+        mCurVertexTextureSerials[i] = 0;
     }
     for (int i = 0; i < gl::MAX_TEXTURE_IMAGE_UNITS; i++)
     {
         mForceSetPixelSamplerStates[i] = true;
+        mCurPixelTextureSerials[i] = 0;
     }
 
     mForceSetBlendState = true;
