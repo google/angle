@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -90,7 +90,15 @@ OutputHLSL::OutputHLSL(TParseContext &context) : TIntermTraverser(true, true, tr
 
     mExcessiveLoopIndex = NULL;
 
-    mUniformRegister = 0;
+    if (mContext.shaderType == SH_FRAGMENT_SHADER)
+    {
+        mUniformRegister = 3;   // Reserve registers for dx_DepthRange, dx_Coord and dx_DepthFront
+    }
+    else
+    {
+        mUniformRegister = 2;   // Reserve registers for dx_DepthRange and dx_HalfPixelSize
+    }
+
     mSamplerRegister = 0;
 }
 
@@ -199,12 +207,12 @@ void OutputHLSL::header()
 
         if (mUsesFragCoord)
         {
-            out << "uniform float4 dx_Coord : register(" + dx_RegisterString(GL_FLOAT_VEC4, "dx_Coord") + ");\n";
+            out << "uniform float4 dx_Coord : register(c1);\n";
         }
 
         if (mUsesFragCoord || mUsesFrontFacing)
         {
-            out << "uniform float3 dx_DepthFront : register(" + dx_RegisterString(GL_FLOAT_VEC3, "dx_DepthFront") + ");\n";
+            out << "uniform float3 dx_DepthFront : register(c2);\n";
         }
         
         out << "\n";
@@ -357,7 +365,7 @@ void OutputHLSL::header()
                "// Varyings\n";
         out <<  varyings;
         out << "\n"
-               "uniform float2 dx_HalfPixelSize : register(" + dx_RegisterString(GL_FLOAT_VEC2, "dx_HalfPixelSize") + ");\n"
+               "uniform float2 dx_HalfPixelSize : register(c1);\n"
                "\n";
         out <<  uniforms;
         out << "\n";
@@ -456,7 +464,7 @@ void OutputHLSL::header()
                "    float diff;\n"
                "};\n"
                "\n"
-               "uniform float3 dx_DepthRange : register(" + dx_RegisterString(GL_FLOAT_VEC3, "dx_DepthRange") + ");"
+               "uniform float3 dx_DepthRange : register(c0);"
                "static gl_DepthRangeParameters gl_DepthRange = {dx_DepthRange.x, dx_DepthRange.y, dx_DepthRange.z};\n"
                "\n";
     }
@@ -2607,17 +2615,6 @@ TString OutputHLSL::registerString(TIntermSymbol *operand)
     }
 
     return "c" + str(uniformRegister(operand));
-}
-
-TString OutputHLSL::dx_RegisterString(GLenum type, const char *name)
-{
-    ASSERT(type >= GL_FLOAT_VEC2 && type <= GL_FLOAT_VEC4);   // Only single (uniform) registers handled
-    int index = mUniformRegister;
-    mUniformRegister += 1;
-
-    mActiveUniforms.push_back(Uniform(type, name, 0, index));
-
-    return "c" + str(index);
 }
 
 int OutputHLSL::samplerRegister(TIntermSymbol *sampler)

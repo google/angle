@@ -1561,7 +1561,7 @@ void Renderer9::applyShaders(gl::ProgramBinary *programBinary)
     }
 }
 
-void Renderer9::applyUniforms(const gl::UniformArray *uniformArray)
+void Renderer9::applyUniforms(const gl::UniformArray *uniformArray, const dx_VertexConstants &vertexConstants, const dx_PixelConstants &pixelConstants)
 {
     for (std::vector<gl::Uniform*>::const_iterator ub = uniformArray->begin(), ue = uniformArray->end(); ub != ue; ++ub)
     {
@@ -1601,6 +1601,10 @@ void Renderer9::applyUniforms(const gl::UniformArray *uniformArray)
             targetUniform->dirty = false;
         }
     }
+
+    // Driver uniforms
+    mDevice->SetVertexShaderConstantF(0, (float*)&vertexConstants, sizeof(dx_VertexConstants) / sizeof(float[4]));
+    mDevice->SetPixelShaderConstantF(0, (float*)&pixelConstants, sizeof(dx_PixelConstants) / sizeof(float[4]));
 }
 
 void Renderer9::applyUniformnbv(gl::Uniform *targetUniform, GLsizei count, int width, const GLboolean *v)

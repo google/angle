@@ -147,11 +147,8 @@ class ProgramBinary : public RefCountObject
     typedef std::vector<UniformLocation> UniformIndex;
     UniformIndex mUniformIndex;
 
-    int mDxDepthRangeRegisterVS;
-    int mDxDepthRangeRegisterPS;
-    int mDxDepthFrontRegister;
-    int mDxCoordRegister;
-    int mDxHalfPixelSizeRegister;
+    rx::dx_VertexConstants mVertexConstants;
+    rx::dx_PixelConstants mPixelConstants;
 
     bool mValidated;
 

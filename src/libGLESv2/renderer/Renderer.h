@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -67,6 +67,19 @@ struct ConfigDesc
     bool    fastConfig;
 };
 
+struct dx_VertexConstants
+{
+    float depthRange[4];
+    float halfPixelSize[4];
+};
+
+struct dx_PixelConstants
+{
+    float depthRange[4];
+    float coord[4];
+    float depthFront[4];
+};
+
 class Renderer
 {
   public:
@@ -98,7 +111,7 @@ class Renderer
 
     virtual bool applyRenderTarget(gl::Framebuffer *frameBuffer) = 0;
     virtual void applyShaders(gl::ProgramBinary *programBinary) = 0;
-    virtual void applyUniforms(const gl::UniformArray *uniformArray) = 0;
+    virtual void applyUniforms(const gl::UniformArray *uniformArray, const dx_VertexConstants &vertexConstants, const dx_PixelConstants &pixelConstants) = 0;
     virtual bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount) = 0;
     virtual GLenum applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], GLint first, GLsizei count, GLsizei instances) = 0;
     virtual GLenum applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo) = 0;

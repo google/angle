@@ -867,7 +867,7 @@ void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
     }
 }
 
-void Renderer11::applyUniforms(const gl::UniformArray *uniformArray)
+void Renderer11::applyUniforms(const gl::UniformArray *uniformArray, const dx_VertexConstants &vertexConstants, const dx_PixelConstants &pixelConstants)
 {
     D3D11_BUFFER_DESC constantBufferDescription = {0};
     constantBufferDescription.ByteWidth = D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT * sizeof(float[4]);
@@ -939,6 +939,10 @@ void Renderer11::applyUniforms(const gl::UniformArray *uniformArray)
             UNREACHABLE();
         }
     }
+
+    // Driver uniforms
+    memcpy(cVS, &vertexConstants, sizeof(dx_VertexConstants));
+    memcpy(cPS, &pixelConstants, sizeof(dx_PixelConstants));
 
     mDeviceContext->Unmap(constantBufferVS, 0);
     mDeviceContext->VSSetConstantBuffers(0, 1, &constantBufferVS);
