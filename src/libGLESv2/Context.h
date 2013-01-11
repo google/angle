@@ -467,8 +467,8 @@ class Context
     QueryMap mQueryMap;
     HandleAllocator mQueryHandleAllocator;
 
-    std::string mExtensionString;
-    std::string mRendererString;
+    const char *mExtensionString;
+    const char *mRendererString;
     
     BindingPointer<Texture> mIncompleteTextures[TEXTURE_TYPE_COUNT];
 

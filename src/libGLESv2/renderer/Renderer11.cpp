@@ -29,6 +29,8 @@
 #include "libEGL/Config.h"
 #include "libEGL/Display.h"
 
+#include <sstream>
+
 namespace rx
 {
 static const DXGI_FORMAT RenderTargetFormats[] =
@@ -1391,9 +1393,17 @@ DWORD Renderer11::getAdapterVendor() const
     return mAdapterDescription.VendorId;
 }
 
-const char *Renderer11::getAdapterDescription() const
+std::string Renderer11::getRendererDescription() const
 {
-    return mDescription;
+    std::ostringstream rendererString;
+
+    rendererString << mDescription;
+    rendererString << " Direct3D11";
+
+    rendererString << " vs_" << getMajorShaderModel() << "_" << getMinorShaderModel();
+    rendererString << " ps_" << getMajorShaderModel() << "_" << getMinorShaderModel();
+
+    return rendererString.str();
 }
 
 GUID Renderer11::getAdapterIdentifier() const
@@ -1536,8 +1546,19 @@ int Renderer11::getMajorShaderModel() const
     switch (mFeatureLevel)
     {
       case D3D_FEATURE_LEVEL_11_0: return D3D11_SHADER_MAJOR_VERSION;   // 5
-      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_1: return D3D10_1_SHADER_MAJOR_VERSION; // 4
       case D3D_FEATURE_LEVEL_10_0: return D3D10_SHADER_MAJOR_VERSION;   // 4
+      default: UNREACHABLE();      return 0;
+    }
+}
+
+int Renderer11::getMinorShaderModel() const
+{
+    switch (mFeatureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_0: return D3D11_SHADER_MINOR_VERSION;   // 0
+      case D3D_FEATURE_LEVEL_10_1: return D3D10_1_SHADER_MINOR_VERSION; // 1
+      case D3D_FEATURE_LEVEL_10_0: return D3D10_SHADER_MINOR_VERSION;   // 0
       default: UNREACHABLE();      return 0;
     }
 }

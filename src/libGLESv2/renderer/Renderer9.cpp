@@ -30,6 +30,8 @@
 #include "libEGL/Config.h"
 #include "libEGL/Display.h"
 
+#include <sstream>
+
 // Can also be enabled by defining FORCE_REF_RAST in the project's predefined macros
 #define REF_RAST 0
 
@@ -2100,9 +2102,24 @@ DWORD Renderer9::getAdapterVendor() const
     return mAdapterIdentifier.VendorId;
 }
 
-const char *Renderer9::getAdapterDescription() const
+std::string Renderer9::getRendererDescription() const
 {
-    return mAdapterIdentifier.Description;
+    std::ostringstream rendererString;
+
+    rendererString << mAdapterIdentifier.Description;
+    if (getShareHandleSupport())
+    {
+        rendererString << " Direct3D9Ex";
+    }
+    else
+    {
+        rendererString << " Direct3D9";
+    }
+
+    rendererString << " vs_" << D3DSHADER_VERSION_MAJOR(mDeviceCaps.VertexShaderVersion) << "_" << D3DSHADER_VERSION_MINOR(mDeviceCaps.VertexShaderVersion);
+    rendererString << " ps_" << D3DSHADER_VERSION_MAJOR(mDeviceCaps.PixelShaderVersion) << "_" << D3DSHADER_VERSION_MINOR(mDeviceCaps.PixelShaderVersion);
+
+    return rendererString.str();
 }
 
 GUID Renderer9::getAdapterIdentifier() const

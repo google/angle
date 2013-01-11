@@ -131,7 +131,7 @@ class Renderer
 
     // Renderer capabilities
     virtual DWORD getAdapterVendor() const = 0;
-    virtual const char *getAdapterDescription() const = 0;
+    virtual std::string getRendererDescription() const = 0;
     virtual GUID getAdapterIdentifier() const = 0;
 
     virtual bool getDXT1TextureSupport() = 0;

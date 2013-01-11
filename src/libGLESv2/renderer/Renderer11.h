@@ -86,7 +86,7 @@ class Renderer11 : public Renderer
 
     // Renderer capabilities
     virtual DWORD getAdapterVendor() const;
-    virtual const char *getAdapterDescription() const;
+    virtual std::string getRendererDescription() const;
     virtual GUID getAdapterIdentifier() const;
 
     virtual bool getDXT1TextureSupport();
@@ -173,6 +173,7 @@ class Renderer11 : public Renderer
 
     void initializeDevice();
     void releaseDeviceResources();
+    int getMinorShaderModel() const;
 
     RenderStateCache mStateCache;
 

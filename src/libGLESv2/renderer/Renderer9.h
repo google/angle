@@ -111,7 +111,7 @@ class Renderer9 : public Renderer
     // Renderer capabilities
     IDirect3DDevice9 *getDevice() { return mDevice; }
     virtual DWORD getAdapterVendor() const;
-    virtual const char *getAdapterDescription() const;
+    virtual std::string getRendererDescription() const;
     virtual GUID getAdapterIdentifier() const;
 
     virtual bool getDXT1TextureSupport();
