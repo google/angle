@@ -1604,6 +1604,7 @@ void Renderer11::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsi
                             GLsizei outputPitch, bool packReverseRowOrder, GLint packAlignment, void* pixels)
 {
     ID3D11Texture2D *colorBufferTexture = NULL;
+    unsigned int subresourceIndex = 0;
 
     gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer();
     if (colorbuffer)
@@ -1611,6 +1612,8 @@ void Renderer11::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsi
         RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(colorbuffer->getRenderTarget());
         if (renderTarget)
         {
+            subresourceIndex = renderTarget->getSubresourceIndex();
+
             ID3D11RenderTargetView *colorBufferRTV = renderTarget->getRenderTargetView();
             if (colorBufferRTV)
             {
@@ -1641,8 +1644,8 @@ void Renderer11::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsi
         area.width = width;
         area.height = height;
 
-        readTextureData(colorBufferTexture, 0, area, format, type, outputPitch, packReverseRowOrder,
-                        packAlignment, pixels);
+        readTextureData(colorBufferTexture, subresourceIndex, area, format, type, outputPitch,
+                        packReverseRowOrder, packAlignment, pixels);
 
         colorBufferTexture->Release();
         colorBufferTexture = NULL;
