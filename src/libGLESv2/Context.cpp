@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -2160,7 +2160,7 @@ int Context::getMajorShaderModel() const
 
 float Context::getMaximumPointSize() const
 {
-    return mMajorShaderModel >= 3 ? mMaximumPointSize : ALIASED_POINT_SIZE_RANGE_MAX_SM2;
+    return mMajorShaderModel == 3 ? mMaximumPointSize : ALIASED_POINT_SIZE_RANGE_MAX_SM2;
 }
 
 int Context::getMaximumVaryingVectors() const

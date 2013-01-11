@@ -1183,8 +1183,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
     }
 
     // Write the HLSL input/output declarations
-    const bool sm3 = (mRenderer->getMajorShaderModel() >= 3);
-    const bool sm4 = (mRenderer->getMajorShaderModel() >= 4);
+    const int shaderModel = mRenderer->getMajorShaderModel();
     Context *context = getContext();
     const int maxVaryingVectors = context->getMaximumVaryingVectors();
 
@@ -1227,9 +1226,9 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
     }
 
     mUsesPointSize = vertexShader->mUsesPointSize;
-    std::string varyingSemantic = (mUsesPointSize && sm3) ? "COLOR" : "TEXCOORD";
-    std::string targetSemantic = sm4 ? "SV_Target" : "COLOR";
-    std::string positionSemantic = sm4 ? "SV_POSITION" : "POSITION";
+    std::string varyingSemantic = (mUsesPointSize && shaderModel >= 3) ? "COLOR" : "TEXCOORD";
+    std::string targetSemantic = (shaderModel >= 4) ? "SV_Target" : "COLOR";
+    std::string positionSemantic = (shaderModel >= 4) ? "SV_POSITION" : "POSITION";
 
     vertexHLSL += "struct VS_INPUT\n"
                    "{\n";
@@ -1271,7 +1270,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
         vertexHLSL += "    float4 gl_FragCoord : " + varyingSemantic + str(registers) + ";\n";
     }
 
-    if (vertexShader->mUsesPointSize && sm3)
+    if (vertexShader->mUsesPointSize && shaderModel >= 3)
     {
         vertexHLSL += "    float gl_PointSize : PSIZE;\n";
     }
@@ -1303,7 +1302,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
                    "    output.gl_Position.z = (gl_Position.z + gl_Position.w) * 0.5;\n"
                    "    output.gl_Position.w = gl_Position.w;\n";
 
-    if (vertexShader->mUsesPointSize && sm3)
+    if (vertexShader->mUsesPointSize && shaderModel >= 3)
     {
         vertexHLSL += "    output.gl_PointSize = gl_PointSize;\n";
     }
@@ -1402,17 +1401,17 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
     {
         pixelHLSL += "    float4 gl_FragCoord : " + varyingSemantic + str(registers) + ";\n";
         
-        if (sm4)
+        if (shaderModel >= 4)
         {
             pixelHLSL += "    float4 dx_VPos : SV_Position;\n";
         }
-        else if (sm3)
+        else if (shaderModel >= 3)
         {
             pixelHLSL += "    float2 dx_VPos : VPOS;\n";
         }
     }
 
-    if (fragmentShader->mUsesPointCoord && sm3)
+    if (fragmentShader->mUsesPointCoord && shaderModel == 3)
     {
         pixelHLSL += "    float2 gl_PointCoord : TEXCOORD0;\n";
     }
@@ -1436,12 +1435,12 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
     {
         pixelHLSL += "    float rhw = 1.0 / input.gl_FragCoord.w;\n";
         
-        if (sm4)
+        if (shaderModel >= 4)
         {
             pixelHLSL += "    gl_FragCoord.x = input.dx_VPos.x;\n"
                          "    gl_FragCoord.y = input.dx_VPos.y;\n";
         }
-        else if (sm3)
+        else if (shaderModel >= 3)
         {
             pixelHLSL += "    gl_FragCoord.x = input.dx_VPos.x + 0.5;\n"
                          "    gl_FragCoord.y = input.dx_VPos.y + 0.5;\n";
@@ -1457,7 +1456,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
                      "    gl_FragCoord.w = rhw;\n";
     }
 
-    if (fragmentShader->mUsesPointCoord && sm3)
+    if (fragmentShader->mUsesPointCoord && shaderModel == 3)
     {
         pixelHLSL += "    gl_PointCoord.x = input.gl_PointCoord.x;\n";
         pixelHLSL += "    gl_PointCoord.y = 1.0 - input.gl_PointCoord.y;\n";
