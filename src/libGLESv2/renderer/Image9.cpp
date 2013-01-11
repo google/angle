@@ -112,7 +112,7 @@ void Image9::generateMipmap(Image9 *dest, Image9 *source)
     IDirect3DSurface9 *destSurface = dest->getSurface();
     generateMip(destSurface, sourceSurface);
 
-    source->markDirty();
+    dest->markDirty();
 }
 
 void Image9::copyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface9 *source)
