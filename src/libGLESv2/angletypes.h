@@ -98,6 +98,16 @@ struct DepthStencilState
     GLuint stencilBackWritemask;
 };
 
+struct SamplerState
+{
+    GLenum minFilter;
+    GLenum magFilter;
+    GLenum wrapS;
+    GLenum wrapT;
+    float maxAnisotropy;
+    int lodOffset;
+};
+
 struct ClearParameters
 {
     GLbitfield mask;

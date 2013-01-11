@@ -22,6 +22,7 @@
 #include "libGLESv2/renderer/TextureStorage.h"
 #include "libGLESv2/Renderbuffer.h"
 #include "libGLESv2/utilities.h"
+#include "libGLESv2/angletypes.h"
 
 namespace egl
 {
@@ -46,16 +47,6 @@ enum
     IMPLEMENTATION_MAX_CUBE_MAP_TEXTURE_SIZE = 16384,
 
     IMPLEMENTATION_MAX_TEXTURE_LEVELS = 15   // 1+log2 of MAX_TEXTURE_SIZE
-};
-
-struct SamplerState
-{
-    GLenum minFilter;
-    GLenum magFilter;
-    GLenum wrapS;
-    GLenum wrapT;
-    float maxAnisotropy;
-    int lodOffset;
 };
 
 class Texture : public RefCountObject
