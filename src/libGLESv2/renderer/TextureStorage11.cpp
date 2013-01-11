@@ -29,7 +29,7 @@ TextureStorage11::TextureStorage11(Renderer *renderer, UINT bindFlags)
 
 TextureStorage11::~TextureStorage11()
 {
-}    
+}
 
 TextureStorage11 *TextureStorage11::makeTextureStorage11(TextureStorage *storage)
 {
@@ -209,6 +209,9 @@ TextureStorage11_2D::~TextureStorage11_2D()
 {
     if (mTexture)
         mTexture->Release();
+
+    if (mSRV)
+        mSRV->Release();
 }
 
 TextureStorage11_2D *TextureStorage11_2D::makeTextureStorage11_2D(TextureStorage *storage)
@@ -356,6 +359,9 @@ TextureStorage11_Cube::~TextureStorage11_Cube()
 {
     if (mTexture)
         mTexture->Release();
+
+    if (mSRV)
+        mSRV->Release();
 }
 
 TextureStorage11_Cube *TextureStorage11_Cube::makeTextureStorage11_Cube(TextureStorage *storage)
