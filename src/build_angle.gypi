@@ -47,6 +47,10 @@
         'compiler/preprocessor/Tokenizer.cpp',
         'compiler/preprocessor/Tokenizer.h',
       ],
+      # TODO(jschuh): http://crbug.com/167187
+      'msvs_disabled_warnings': [
+        4267,
+      ],      
     },
     {
       'target_name': 'translator_common',
