@@ -537,7 +537,7 @@ bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count)
     {
       case GL_POINTS:         primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_POINTLIST;   break;
       case GL_LINES:          primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_LINELIST;      break;
-      case GL_LINE_LOOP:      UNIMPLEMENTED();   /* TODO */                              break;
+      case GL_LINE_LOOP:      primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;     break;
       case GL_LINE_STRIP:     primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;     break;
       case GL_TRIANGLES:      primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;  break;
       case GL_TRIANGLE_STRIP: primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP; break;
@@ -737,7 +737,19 @@ GLenum Renderer11::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementAr
 
 void Renderer11::drawArrays(GLenum mode, GLsizei count, GLsizei instances)
 {
-    mDeviceContext->Draw(count, 0);
+    if (mode == GL_LINE_LOOP)
+    {
+        drawLineLoop(count, GL_NONE, NULL, 0, NULL);
+    }
+    else if (instances > 0)
+    {
+        // TODO
+        UNIMPLEMENTED();
+    }
+    else
+    {
+        mDeviceContext->Draw(count, 0);
+    }
 }
 
 void Renderer11::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo)
@@ -841,8 +853,7 @@ void Renderer11::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices,
         mAppliedIBOffset = indexBufferOffset;
     }
 
-    mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-    mDeviceContext->DrawIndexed(count, 0, -minIndex);
+    mDeviceContext->DrawIndexed(count + 1, 0, -minIndex);
 }
 
 void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
