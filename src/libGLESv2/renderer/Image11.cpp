@@ -127,7 +127,7 @@ void Image11::loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
     switch (mInternalFormat)
     {
       case GL_ALPHA8_EXT:
-        UNIMPLEMENTED(); // TODO - new function for D3D11-supported formats
+        loadAlphaDataToNative(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
         break;
       case GL_LUMINANCE8_EXT:
         loadLuminanceDataToNativeOrBGRA(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData, false);
@@ -136,7 +136,7 @@ void Image11::loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
         loadAlphaFloatDataToRGBA(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
         break;
       case GL_LUMINANCE32F_EXT:
-        UNIMPLEMENTED(); // TODO - new function for D3D11-supported formats
+        loadLuminanceFloatDataToRGB(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
         break;
       case GL_ALPHA16F_EXT:
         loadAlphaHalfFloatDataToRGBA(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);

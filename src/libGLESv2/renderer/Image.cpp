@@ -45,6 +45,20 @@ void Image::loadAlphaDataToBGRA(GLsizei width, GLsizei height,
     }
 }
 
+void Image::loadAlphaDataToNative(GLsizei width, GLsizei height,
+                                  int inputPitch, const void *input, size_t outputPitch, void *output)
+{
+    const unsigned char *source = NULL;
+    unsigned char *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = static_cast<const unsigned char*>(input) + y * inputPitch;
+        dest = static_cast<unsigned char*>(output) + y * outputPitch;
+        memcpy(dest, source, width);
+    }
+}
+
 void Image::loadAlphaFloatDataToRGBA(GLsizei width, GLsizei height,
                                      int inputPitch, const void *input, size_t outputPitch, void *output)
 {
@@ -129,6 +143,25 @@ void Image::loadLuminanceFloatDataToRGBA(GLsizei width, GLsizei height,
             dest[4 * x + 1] = source[x];
             dest[4 * x + 2] = source[x];
             dest[4 * x + 3] = 1.0f;
+        }
+    }
+}
+
+void Image::loadLuminanceFloatDataToRGB(GLsizei width, GLsizei height,
+                                        int inputPitch, const void *input, size_t outputPitch, void *output)
+{
+    const float *source = NULL;
+    float *dest = NULL;
+
+    for (int y = 0; y < height; y++)
+    {
+        source = reinterpret_cast<const float*>(static_cast<const unsigned char*>(input) + y * inputPitch);
+        dest = reinterpret_cast<float*>(static_cast<unsigned char*>(output) + y * outputPitch);
+        for (int x = 0; x < width; x++)
+        {
+            dest[3 * x + 0] = source[x];
+            dest[3 * x + 1] = source[x];
+            dest[3 * x + 2] = source[x];
         }
     }
 }
