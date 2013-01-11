@@ -219,6 +219,7 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
     offscreenTextureDesc.MiscFlags = 0;   // D3D11_RESOURCE_MISC_SHARED
 
     HRESULT result = device->CreateTexture2D(&offscreenTextureDesc, NULL, &mOffscreenTexture);
+    d3d11::SetDebugName(mOffscreenTexture, "Offscreen texture");
 
     if (FAILED(result))
     {
@@ -237,9 +238,11 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
         
     result = device->CreateRenderTargetView(mOffscreenTexture, NULL, &mOffscreenRTView);
     ASSERT(SUCCEEDED(result));
+    d3d11::SetDebugName(mOffscreenRTView, "Offscreen render target");
 
     result = device->CreateShaderResourceView(mOffscreenTexture, NULL, &mOffscreenSRView);
     ASSERT(SUCCEEDED(result));
+    d3d11::SetDebugName(mOffscreenSRView, "Offscreen shader resource");
 
     if (mWindow)
     {
@@ -280,9 +283,11 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
 
         result = mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&mBackBufferTexture);
         ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mBackBufferTexture, "Back buffer texture");
 
         result = device->CreateRenderTargetView(mBackBufferTexture, NULL, &mBackBufferRTView);
         ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mBackBufferRTView, "Back buffer render target");
     }
 
     if (mDepthBufferFormat != GL_NONE)
@@ -301,7 +306,6 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
         depthStencilDesc.MiscFlags = 0;
 
         result = device->CreateTexture2D(&depthStencilDesc, NULL, &mDepthStencilTexture);
-
         if (FAILED(result))
         {
             ERR("Could not create depthstencil surface for new swap chain: 0x%08X", result);
@@ -316,9 +320,11 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
                 return EGL_BAD_ALLOC;
             }
         }
+        d3d11::SetDebugName(mDepthStencilTexture, "Depth stencil texture");
 
         result = device->CreateDepthStencilView(mDepthStencilTexture, NULL, &mDepthStencilDSView);
         ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mDepthStencilDSView, "Depth stencil view");
     }
 
     D3D11_BUFFER_DESC vbDesc;
@@ -331,6 +337,7 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
 
     result = device->CreateBuffer(&vbDesc, NULL, &mQuadVB);
     ASSERT(SUCCEEDED(result));
+    d3d11::SetDebugName(mQuadVB, "Swap chain quad vertex buffer");
 
     D3D11_SAMPLER_DESC samplerDesc;
     samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
@@ -349,6 +356,7 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
 
     result = device->CreateSamplerState(&samplerDesc, &mPassThroughSampler);
     ASSERT(SUCCEEDED(result));
+    d3d11::SetDebugName(mPassThroughSampler, "Swap chain pass through sampler");
 
     D3D11_INPUT_ELEMENT_DESC quadLayout[] =
     {
@@ -358,12 +366,15 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
 
     result = device->CreateInputLayout(quadLayout, 2, g_VS_Passthrough, sizeof(g_VS_Passthrough), &mPassThroughIL);
     ASSERT(SUCCEEDED(result));
+    d3d11::SetDebugName(mPassThroughIL, "Swap chain pass through layout");
 
     result = device->CreateVertexShader(g_VS_Passthrough, sizeof(g_VS_Passthrough), NULL, &mPassThroughVS);
     ASSERT(SUCCEEDED(result));
+    d3d11::SetDebugName(mPassThroughVS, "Swap chain pass through vertex shader");
 
     result = device->CreatePixelShader(g_PS_Passthrough, sizeof(g_PS_Passthrough), NULL, &mPassThroughPS);
     ASSERT(SUCCEEDED(result));
+    d3d11::SetDebugName(mPassThroughPS, "Swap chain pass through pixel shader");
 
     mWidth = backbufferWidth;
     mHeight = backbufferHeight;
