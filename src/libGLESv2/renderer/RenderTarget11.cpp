@@ -16,6 +16,167 @@
 namespace rx
 {
 
+static ID3D11Texture2D *getTextureResource(ID3D11View *view)
+{
+    ID3D11Resource *textureResource = NULL;
+    view->GetResource(&textureResource);
+    if (!textureResource)
+    {
+        return NULL;
+    }
+
+    ID3D11Texture2D *texture = NULL;
+    HRESULT result = textureResource->QueryInterface(IID_ID3D11Texture2D, (void**)&texture);
+
+    textureResource->Release();
+    textureResource = NULL;
+
+    if (FAILED(result))
+    {
+        return NULL;
+    }
+
+    return texture;
+}
+
+static unsigned int getRTVSubresourceIndex(ID3D11RenderTargetView *view)
+{
+    D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
+    view->GetDesc(&rtvDesc);
+
+    ID3D11Texture2D *texture = getTextureResource(view);
+    if (!texture)
+    {
+        ERR("Failed to extract the ID3D11Texture2D from the render target view.");
+        return 0;
+    }
+
+    D3D11_TEXTURE2D_DESC texDesc;
+    texture->GetDesc(&texDesc);
+
+    texture->Release();
+    texture = NULL;
+
+    unsigned int mipSlice = 0;
+    unsigned int arraySlice = 0;
+    unsigned int mipLevels = texDesc.MipLevels;
+
+    switch (rtvDesc.ViewDimension)
+    {
+      case D3D11_RTV_DIMENSION_TEXTURE1D:
+        mipSlice = rtvDesc.Texture1D.MipSlice;
+        arraySlice = 0;
+        break;
+
+      case D3D11_RTV_DIMENSION_TEXTURE1DARRAY:
+        mipSlice = rtvDesc.Texture1DArray.MipSlice;
+        arraySlice = rtvDesc.Texture1DArray.FirstArraySlice;
+        break;
+
+      case D3D11_RTV_DIMENSION_TEXTURE2D:
+        mipSlice = rtvDesc.Texture2D.MipSlice;
+        arraySlice = 0;
+        break;
+
+      case D3D11_RTV_DIMENSION_TEXTURE2DARRAY:
+        mipSlice = rtvDesc.Texture2DArray.MipSlice;
+        arraySlice = rtvDesc.Texture2DArray.FirstArraySlice;
+        break;
+
+      case D3D11_RTV_DIMENSION_TEXTURE2DMS:
+        mipSlice = 0;
+        arraySlice = 0;
+        break;
+
+      case D3D11_RTV_DIMENSION_TEXTURE2DMSARRAY:
+        mipSlice = 0;
+        arraySlice = rtvDesc.Texture2DMSArray.FirstArraySlice;
+        break;
+
+      case D3D11_RTV_DIMENSION_TEXTURE3D:
+        mipSlice = rtvDesc.Texture3D.MipSlice;
+        arraySlice = 0;
+        break;
+
+      case D3D11_RTV_DIMENSION_UNKNOWN:
+      case D3D11_RTV_DIMENSION_BUFFER:
+        UNIMPLEMENTED();
+        break;
+
+      default:
+        UNREACHABLE();
+        break;
+    }
+
+    return D3D11CalcSubresource(mipSlice, arraySlice, mipLevels);
+}
+
+static unsigned int getDSVSubresourceIndex(ID3D11DepthStencilView *view)
+{
+    D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+    view->GetDesc(&dsvDesc);
+
+    ID3D11Texture2D *texture = getTextureResource(view);
+    if (!texture)
+    {
+        ERR("Failed to extract the ID3D11Texture2D from the depth stencil view.");
+        return 0;
+    }
+
+    D3D11_TEXTURE2D_DESC texDesc;
+    texture->GetDesc(&texDesc);
+
+    texture->Release();
+    texture = NULL;
+
+    unsigned int mipSlice = 0;
+    unsigned int arraySlice = 0;
+    unsigned int mipLevels = texDesc.MipLevels;
+
+    switch (dsvDesc.ViewDimension)
+    {
+      case D3D11_DSV_DIMENSION_TEXTURE1D:
+        mipSlice = dsvDesc.Texture1D.MipSlice;
+        arraySlice = 0;
+        break;
+
+      case D3D11_DSV_DIMENSION_TEXTURE1DARRAY:
+        mipSlice = dsvDesc.Texture1DArray.MipSlice;
+        arraySlice = dsvDesc.Texture1DArray.FirstArraySlice;
+        break;
+
+      case D3D11_DSV_DIMENSION_TEXTURE2D:
+        mipSlice = dsvDesc.Texture2D.MipSlice;
+        arraySlice = 0;
+        break;
+
+      case D3D11_DSV_DIMENSION_TEXTURE2DARRAY:
+        mipSlice = dsvDesc.Texture2DArray.MipSlice;
+        arraySlice = dsvDesc.Texture2DArray.FirstArraySlice;
+        break;
+
+      case D3D11_DSV_DIMENSION_TEXTURE2DMS:
+        mipSlice = 0;
+        arraySlice = 0;
+        break;
+
+      case D3D11_DSV_DIMENSION_TEXTURE2DMSARRAY:
+        mipSlice = 0;
+        arraySlice = dsvDesc.Texture2DMSArray.FirstArraySlice;
+        break;
+
+      case D3D11_RTV_DIMENSION_UNKNOWN:
+        UNIMPLEMENTED();
+        break;
+
+      default:
+        UNREACHABLE();
+        break;
+    }
+
+    return D3D11CalcSubresource(mipSlice, arraySlice, mipLevels);
+}
+
 RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11RenderTargetView *view, GLsizei width, GLsizei height)
 {
     mRenderer = Renderer11::makeRenderer11(renderer);
@@ -27,9 +188,10 @@ RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11RenderTargetView *view,
         D3D11_RENDER_TARGET_VIEW_DESC desc;
         view->GetDesc(&desc);
 
+        mSubresourceIndex = getRTVSubresourceIndex(mRenderTarget);
         mWidth = width;
         mHeight = height;
-        
+
         mInternalFormat = d3d11_gl::ConvertRenderbufferFormat(desc.Format);
         mActualFormat = d3d11_gl::ConvertRenderbufferFormat(desc.Format);
         mSamples = 1; // TEMP?
@@ -47,9 +209,10 @@ RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11DepthStencilView *view,
         D3D11_DEPTH_STENCIL_VIEW_DESC desc;
         view->GetDesc(&desc);
 
+        mSubresourceIndex = getDSVSubresourceIndex(mDepthStencil);
         mWidth = width;
         mHeight = height;
-        
+
         mInternalFormat = d3d11_gl::ConvertRenderbufferFormat(desc.Format);
         mActualFormat = d3d11_gl::ConvertRenderbufferFormat(desc.Format);
         mSamples = 1; // TEMP?
@@ -132,6 +295,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
     mInternalFormat = format;
     mSamples = supportedSamples;
     mActualFormat = format;
+    mSubresourceIndex = D3D11CalcSubresource(0, 0, 1);
 }
 
 RenderTarget11::~RenderTarget11()
@@ -173,6 +337,11 @@ ID3D11DepthStencilView *RenderTarget11::getDepthStencilView() const
     }
 
     return mDepthStencil;
+}
+
+unsigned int RenderTarget11::getSubresourceIndex() const
+{
+    return mSubresourceIndex;
 }
 
 }

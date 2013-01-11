@@ -35,9 +35,12 @@ class RenderTarget11 : public RenderTarget
     // Adds reference, caller must call Release
     ID3D11DepthStencilView *getDepthStencilView() const;
 
+    unsigned int getSubresourceIndex() const;
+
   private:
     DISALLOW_COPY_AND_ASSIGN(RenderTarget11);
 
+    unsigned int mSubresourceIndex;
     ID3D11RenderTargetView *mRenderTarget;
     ID3D11DepthStencilView *mDepthStencil;
 
