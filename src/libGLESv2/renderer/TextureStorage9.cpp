@@ -112,6 +112,7 @@ TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, SwapChain9 *swapchain
 {
     IDirect3DTexture9 *surfaceTexture = swapchain->getOffscreenTexture();
     mTexture = surfaceTexture;
+    mRenderTarget = NULL;
 
     initializeRenderTarget();
 }
@@ -120,6 +121,7 @@ TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, int levels, GLenum in
     : TextureStorage9(renderer, GetTextureUsage(Renderer9::makeRenderer9(renderer)->ConvertTextureInternalFormat(internalformat), usage, forceRenderable))
 {
     mTexture = NULL;
+    mRenderTarget = NULL;
     // if the width or height is not positive this should be treated as an incomplete texture
     // we handle that here by skipping the d3d texture creation
     if (width > 0 && height > 0)
@@ -202,15 +204,13 @@ IDirect3DBaseTexture9 *TextureStorage9_2D::getBaseTexture() const
 
 void TextureStorage9_2D::initializeRenderTarget()
 {
+    ASSERT(mRenderTarget == NULL);
+
     if (mTexture != NULL && isRenderTarget())
     {
         IDirect3DSurface9 *surface = getSurfaceLevel(0, false);
 
         mRenderTarget = new RenderTarget9(mRenderer, surface);
-    }
-    else
-    {
-        mRenderTarget = NULL;
     }
 }
 
@@ -218,6 +218,11 @@ TextureStorage9_Cube::TextureStorage9_Cube(Renderer *renderer, int levels, GLenu
     : TextureStorage9(renderer, GetTextureUsage(Renderer9::makeRenderer9(renderer)->ConvertTextureInternalFormat(internalformat), usage, forceRenderable))
 {
     mTexture = NULL;
+    for (int i = 0; i < 6; ++i)
+    {
+        mRenderTarget[i] = NULL;
+    }
+
     // if the size is not positive this should be treated as an incomplete texture
     // we handle that here by skipping the d3d texture creation
     if (size > 0)
@@ -311,16 +316,11 @@ void TextureStorage9_Cube::initializeRenderTarget()
 
         for (int i = 0; i < 6; ++i)
         {
+            ASSERT(mRenderTarget[i] == NULL);
+
             surface = getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, false);
 
             mRenderTarget[i] = new RenderTarget9(mRenderer, surface);
-        }
-    }
-    else
-    {
-        for (int i = 0; i < 6; ++i)
-        {
-            mRenderTarget[i] = NULL;
         }
     }
 }

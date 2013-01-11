@@ -152,6 +152,7 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, SwapChain11 *swapch
     ID3D11Texture2D *surfaceTexture = swapchain->getOffscreenTexture();
     mTexture = surfaceTexture;
     mSRV = NULL;
+    mRenderTarget = NULL;
 
     D3D11_TEXTURE2D_DESC desc;
     surfaceTexture->GetDesc(&desc);
@@ -165,6 +166,7 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int levels, GLenum 
 {
     mTexture = NULL;
     mSRV = NULL;
+    mRenderTarget = NULL;
     DXGI_FORMAT format = gl_d3d11::ConvertTextureFormat(internalformat);
     // if the width or height is not positive this should be treated as an incomplete texture
     // we handle that here by skipping the d3d texture creation
@@ -237,7 +239,7 @@ void TextureStorage11_2D::generateMipmap(int level)
 
 void TextureStorage11_2D::initializeRenderTarget(DXGI_FORMAT format, int width, int height)
 {
-    mRenderTarget = NULL;
+    ASSERT(mRenderTarget == NULL);
 
     if (mTexture != NULL && isRenderTarget())
     {
@@ -299,6 +301,12 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int levels, GLe
 {
     mTexture = NULL;
     mSRV = NULL;
+    
+    for (int i = 0; i < 6; ++i)
+    {
+        mRenderTarget[i] = NULL;
+    }
+
     DXGI_FORMAT format = gl_d3d11::ConvertTextureFormat(internalformat);
     // if the size is not positive this should be treated as an incomplete texture
     // we handle that here by skipping the d3d texture creation
@@ -372,11 +380,6 @@ void TextureStorage11_Cube::generateMipmap(int face, int level)
 
 void TextureStorage11_Cube::initializeRenderTarget(DXGI_FORMAT format, int size)
 {
-    for (int i = 0; i < 6; ++i)
-    {
-        mRenderTarget[i] = NULL;
-    }
-
     if (mTexture != NULL && isRenderTarget())
     {
         if (getBindFlags() & D3D11_BIND_RENDER_TARGET)
@@ -386,6 +389,7 @@ void TextureStorage11_Cube::initializeRenderTarget(DXGI_FORMAT format, int size)
 
             for (int i = 0; i < 6; ++i)
             {
+                ASSERT(mRenderTarget[i] == NULL);
                 D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
                 rtvDesc.Format = format;
                 rtvDesc.Texture2DArray.MipSlice = 0;
