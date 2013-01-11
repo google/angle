@@ -110,6 +110,42 @@ int TextureStorage11::levelCount()
     return levels;
 }
 
+// TODO - Once we're storing level count internally, we should no longer
+// need to look up the texture description to determine the number of mip levels.
+UINT TextureStorage11::getSubresourceIndex(int level, int faceIndex)
+{
+    UINT index = 0;
+    if (getBaseTexture())
+    {
+        D3D11_TEXTURE2D_DESC desc;
+        getBaseTexture()->GetDesc(&desc);
+        index = D3D11CalcSubresource(level, faceIndex, desc.MipLevels);
+    }
+    return index;
+}
+
+bool TextureStorage11::updateSubresourceLevel(ID3D11Texture2D *srcTexture, int level, int face, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
+{
+    if (srcTexture)
+    {
+        D3D11_BOX srcBox;
+        srcBox.left = xoffset;
+        srcBox.top = yoffset;
+        srcBox.right = xoffset + width;
+        srcBox.bottom = yoffset + height;
+        srcBox.front = 0;
+        srcBox.back = 1;
+
+        ID3D11DeviceContext *context = mRenderer->getDeviceContext();
+        
+        ASSERT(getBaseTexture());        
+        context->CopySubresourceRegion(getBaseTexture(), getSubresourceIndex(level, face), xoffset, yoffset, 0, srcTexture, 0, &srcBox);
+        return true;
+    }
+
+    return false;
+}
+
 TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, SwapChain11 *swapchain)
     : TextureStorage11(renderer, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE)
 {
