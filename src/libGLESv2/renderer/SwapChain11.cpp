@@ -47,6 +47,11 @@ SwapChain11::SwapChain11(Renderer11 *renderer, HWND window, HANDLE shareHandle,
     mOffscreenSRView = NULL;
     mDepthStencilTexture = NULL;
     mDepthStencilDSView = NULL;
+    mQuadVB = NULL;
+    mPassThroughSampler = NULL;
+    mPassThroughIL = NULL;
+    mPassThroughVS = NULL;
+    mPassThroughPS = NULL;
     mWidth = -1;
     mHeight = -1;
 }
