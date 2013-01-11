@@ -287,10 +287,6 @@ void Renderer11::setSamplerState(gl::SamplerType type, int index, const gl::Samp
 
             mDeviceContext->PSSetSamplers(index, 1, &dxSamplerState);
 
-            if (dxSamplerState)
-            {
-                dxSamplerState->Release();
-            }
             mCurPixelSamplerStates[index] = samplerState;
         }
 
@@ -316,10 +312,6 @@ void Renderer11::setSamplerState(gl::SamplerType type, int index, const gl::Samp
 
             mDeviceContext->VSSetSamplers(index, 1, &dxSamplerState);
 
-            if (dxSamplerState)
-            {
-                dxSamplerState->Release();
-            }
             mCurVertexSamplerStates[index] = samplerState;
         }
 
@@ -383,10 +375,6 @@ void Renderer11::setRasterizerState(const gl::RasterizerState &rasterState)
 
         mDeviceContext->RSSetState(dxRasterState);
 
-        if (dxRasterState)
-        {
-            dxRasterState->Release();
-        }
         mCurRasterState = rasterState;
     }
 
@@ -411,10 +399,6 @@ void Renderer11::setBlendState(const gl::BlendState &blendState, const gl::Color
         const float blendColors[] = { blendColor.red, blendColor.green, blendColor.blue, blendColor.alpha };
         mDeviceContext->OMSetBlendState(dxBlendState, blendColors, sampleMask);
 
-        if (dxBlendState)
-        {
-            dxBlendState->Release();
-        }
         mCurBlendState = blendState;
         mCurBlendColor = blendColor;
         mCurSampleMask = sampleMask;
@@ -448,10 +432,6 @@ void Renderer11::setDepthStencilState(const gl::DepthStencilState &depthStencilS
 
         mDeviceContext->OMSetDepthStencilState(dxDepthStencilState, static_cast<UINT>(stencilRef));
 
-        if (dxDepthStencilState)
-        {
-            dxDepthStencilState->Release();
-        }
         mCurDepthStencilState = depthStencilState;
         mCurStencilRef = stencilRef;
         mCurStencilBackRef = stencilBackRef;

@@ -96,7 +96,6 @@ ID3D11BlendState *RenderStateCache::getBlendState(const gl::BlendState &blendSta
     if (i != mBlendStateCache.end())
     {
         BlendStateCounterPair &state = i->second;
-        state.first->AddRef();
         state.second = mCounter++;
         return state.first;
     }
@@ -156,7 +155,6 @@ ID3D11BlendState *RenderStateCache::getBlendState(const gl::BlendState &blendSta
 
         mBlendStateCache.insert(std::make_pair(blendState, std::make_pair(dx11BlendState, mCounter++)));
 
-        dx11BlendState->AddRef();
         return dx11BlendState;
     }
 }
@@ -193,7 +191,6 @@ ID3D11RasterizerState *RenderStateCache::getRasterizerState(const gl::Rasterizer
     if (i != mRasterizerStateCache.end())
     {
         RasterizerStateCounterPair &state = i->second;
-        state.first->AddRef();
         state.second = mCounter++;
         return state.first;
     }
@@ -238,7 +235,6 @@ ID3D11RasterizerState *RenderStateCache::getRasterizerState(const gl::Rasterizer
 
         mRasterizerStateCache.insert(std::make_pair(key, std::make_pair(dx11RasterizerState, mCounter++)));
 
-        dx11RasterizerState->AddRef();
         return dx11RasterizerState;
     }
 }
@@ -269,7 +265,6 @@ ID3D11DepthStencilState* RenderStateCache::getDepthStencilState(const gl::DepthS
     if (i != mDepthStencilStateCache.end())
     {
         DepthStencilStateCounterPair &state = i->second;
-        state.first->AddRef();
         state.second = mCounter++;
         return state.first;
     }
@@ -318,7 +313,6 @@ ID3D11DepthStencilState* RenderStateCache::getDepthStencilState(const gl::DepthS
 
         mDepthStencilStateCache.insert(std::make_pair(dsState, std::make_pair(dx11DepthStencilState, mCounter++)));
 
-        dx11DepthStencilState->AddRef();
         return dx11DepthStencilState;
     }
 }
@@ -349,7 +343,6 @@ ID3D11SamplerState* RenderStateCache::getSamplerState(const gl::SamplerState &sa
     if (i != mSamplerStateCache.end())
     {
         SamplerStateCounterPair &state = i->second;
-        state.first->AddRef();
         state.second = mCounter++;
         return state.first;
     }
@@ -397,7 +390,6 @@ ID3D11SamplerState* RenderStateCache::getSamplerState(const gl::SamplerState &sa
 
         mSamplerStateCache.insert(std::make_pair(samplerState, std::make_pair(dx11SamplerState, mCounter++)));
 
-        dx11SamplerState->AddRef();
         return dx11SamplerState;
     }
 }
