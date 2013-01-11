@@ -33,6 +33,7 @@ class RenderStateCache
     ID3D11RasterizerState *getRasterizerState(const gl::RasterizerState &rasterState,
                                               bool scissorEnabled, unsigned int depthSize);
     ID3D11DepthStencilState* getDepthStencilState(const gl::DepthStencilState &dsState);
+    ID3D11SamplerState* getSamplerState(const gl::SamplerState &samplerState);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(RenderStateCache);
@@ -80,6 +81,20 @@ class RenderStateCache
                                DepthStencilStateHashFunction,
                                DepthStencilStateEqualityFunction> DepthStencilStateMap;
     DepthStencilStateMap mDepthStencilStateCache;
+
+    // Sample state cache
+    static std::size_t hashSamplerState(const gl::SamplerState &samplerState);
+    static bool compareSamplerStates(const gl::SamplerState &a, const gl::SamplerState &b);
+    static const unsigned int kMaxSamplerStates;
+
+    typedef std::size_t (*SamplerStateHashFunction)(const gl::SamplerState &);
+    typedef bool (*SamplerStateEqualityFunction)(const gl::SamplerState &, const gl::SamplerState &);
+    typedef std::pair<ID3D11SamplerState*, unsigned long long> SamplerStateCounterPair;
+    typedef std::unordered_map<gl::SamplerState,
+                               SamplerStateCounterPair,
+                               SamplerStateHashFunction,
+                               SamplerStateEqualityFunction> SamplerStateMap;
+    SamplerStateMap mSamplerStateCache;
 
     ID3D11Device* mDevice;
 };

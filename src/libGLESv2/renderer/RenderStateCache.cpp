@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -16,17 +16,19 @@
 namespace rx
 {
 
-// MSDN's documentation of ID3D11Device::CreateBlendState, ID3D11Device::CreateRasterizerState
-// and ID3D11Device::CreateDepthStencilState claims the maximum number of unique states of each
-// type an application can create is 4096
+// MSDN's documentation of ID3D11Device::CreateBlendState, ID3D11Device::CreateRasterizerState,
+// ID3D11Device::CreateDepthStencilState and ID3D11Device::CreateSamplerState claims the maximum
+// number of unique states of each type an application can create is 4096
 const unsigned int RenderStateCache::kMaxBlendStates = 4096;
 const unsigned int RenderStateCache::kMaxRasterizerStates = 4096;
 const unsigned int RenderStateCache::kMaxDepthStencilStates = 4096;
+const unsigned int RenderStateCache::kMaxSamplerStates = 4096;
 
 RenderStateCache::RenderStateCache() : mDevice(NULL), mCounter(0),
                                        mBlendStateCache(kMaxBlendStates, hashBlendState, compareBlendStates),
                                        mRasterizerStateCache(kMaxRasterizerStates, hashRasterizerState, compareRasterizerStates),
-                                       mDepthStencilStateCache(kMaxDepthStencilStates, hashDepthStencilState, compareDepthStencilStates)
+                                       mDepthStencilStateCache(kMaxDepthStencilStates, hashDepthStencilState, compareDepthStencilStates),
+                                       mSamplerStateCache(kMaxSamplerStates, hashSamplerState, compareSamplerStates)
 {
 }
 
@@ -60,6 +62,12 @@ void RenderStateCache::clear()
         i->second.first->Release();
     }
     mDepthStencilStateCache.clear();
+
+    for (SamplerStateMap::iterator i = mSamplerStateCache.begin(); i != mSamplerStateCache.end(); i++)
+    {
+        i->second.first->Release();
+    }
+    mSamplerStateCache.clear();
 }
 
 std::size_t RenderStateCache::hashBlendState(const gl::BlendState &blendState)
@@ -312,6 +320,85 @@ ID3D11DepthStencilState* RenderStateCache::getDepthStencilState(const gl::DepthS
 
         dx11DepthStencilState->AddRef();
         return dx11DepthStencilState;
+    }
+}
+
+std::size_t RenderStateCache::hashSamplerState(const gl::SamplerState &samplerState)
+{
+    static const unsigned int seed = 0xABCDEF98;
+
+    std::size_t hash = 0;
+    MurmurHash3_x86_32(&samplerState, sizeof(gl::SamplerState), seed, &hash);
+    return hash;
+}
+
+bool RenderStateCache::compareSamplerStates(const gl::SamplerState &a, const gl::SamplerState &b)
+{
+    return memcmp(&a, &b, sizeof(gl::DepthStencilState)) == 0;
+}
+
+ID3D11SamplerState* RenderStateCache::getSamplerState(const gl::SamplerState &samplerState)
+{
+    if (!mDevice)
+    {
+        ERR("RenderStateCache is not initialized.");
+        return NULL;
+    }
+
+    SamplerStateMap::iterator i = mSamplerStateCache.find(samplerState);
+    if (i != mSamplerStateCache.end())
+    {
+        SamplerStateCounterPair &state = i->second;
+        state.first->AddRef();
+        state.second = mCounter++;
+        return state.first;
+    }
+    else
+    {
+        if (mSamplerStateCache.size() >= kMaxSamplerStates)
+        {
+            TRACE("Overflowed the limit of %u sampler states, removing the least recently used "
+                  "to make room.", kMaxSamplerStates);
+
+            SamplerStateMap::iterator leastRecentlyUsed = mSamplerStateCache.begin();
+            for (SamplerStateMap::iterator i = mSamplerStateCache.begin(); i != mSamplerStateCache.end(); i++)
+            {
+                if (i->second.second < leastRecentlyUsed->second.second)
+                {
+                    leastRecentlyUsed = i;
+                }
+            }
+            leastRecentlyUsed->second.first->Release();
+            mSamplerStateCache.erase(leastRecentlyUsed);
+        }
+
+        D3D11_SAMPLER_DESC samplerDesc;
+        samplerDesc.Filter = gl_d3d11::ConvertFilter(samplerState.minFilter, samplerState.magFilter, samplerState.maxAnisotropy);
+        samplerDesc.AddressU = gl_d3d11::ConvertTextureWrap(samplerState.wrapS);
+        samplerDesc.AddressV = gl_d3d11::ConvertTextureWrap(samplerState.wrapT);
+        samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+        samplerDesc.MipLODBias = static_cast<float>(samplerState.lodOffset);
+        samplerDesc.MaxAnisotropy = samplerState.maxAnisotropy;
+        samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+        samplerDesc.BorderColor[0] = 0.0f;
+        samplerDesc.BorderColor[1] = 0.0f;
+        samplerDesc.BorderColor[2] = 0.0f;
+        samplerDesc.BorderColor[3] = 0.0f;
+        samplerDesc.MinLOD = gl_d3d11::ConvertMinLOD(samplerState.minFilter);
+        samplerDesc.MaxLOD = gl_d3d11::ConvertMaxLOD(samplerState.minFilter);
+
+        ID3D11SamplerState *dx11SamplerState = NULL;
+        HRESULT result = mDevice->CreateSamplerState(&samplerDesc, &dx11SamplerState);
+        if (FAILED(result) || !dx11SamplerState)
+        {
+            ERR("Unable to create a ID3D11DepthStencilState, HRESULT: 0x%X.", result);
+            return NULL;
+        }
+
+        mSamplerStateCache.insert(std::make_pair(samplerState, std::make_pair(dx11SamplerState, mCounter++)));
+
+        dx11SamplerState->AddRef();
+        return dx11SamplerState;
     }
 }
 
