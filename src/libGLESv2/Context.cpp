@@ -17,7 +17,6 @@
 #include "libGLESv2/main.h"
 #include "libGLESv2/mathutil.h"
 #include "libGLESv2/utilities.h"
-#include "libGLESv2/renderer/renderer9_utils.h" // D3D9_REPLACE
 #include "libGLESv2/ResourceManager.h"
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/Fence.h"

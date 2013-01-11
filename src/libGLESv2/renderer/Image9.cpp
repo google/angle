@@ -191,7 +191,7 @@ void Image9::createSurface()
         GLsizei requestHeight = mHeight;
         gl::MakeValidSize(true, gl::IsCompressed(mInternalFormat), &requestWidth, &requestHeight, &levelToFetch);
 
-        IDirect3DDevice9 *device = mRenderer->getDevice(); // D3D9_REPLACE
+        IDirect3DDevice9 *device = mRenderer->getDevice();
 
         HRESULT result = device->CreateTexture(requestWidth, requestHeight, levelToFetch + 1, 0, d3dFormat,
                                                     poolToUse, &newTexture, NULL);
@@ -321,7 +321,7 @@ bool Image9::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint 
 
         POINT point = {rect.left, rect.top};
 
-        IDirect3DDevice9 *device = mRenderer->getDevice(); // D3D9_REPLACE
+        IDirect3DDevice9 *device = mRenderer->getDevice();
 
         if (mD3DPool == D3DPOOL_MANAGED)
         {
@@ -504,7 +504,7 @@ void Image9::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width,
         return error(GL_OUT_OF_MEMORY);
     }
 
-    IDirect3DDevice9 *device = mRenderer->getDevice(); // D3D9_REPLACE
+    IDirect3DDevice9 *device = mRenderer->getDevice();
 
     IDirect3DSurface9 *renderTargetData = NULL;
     D3DSURFACE_DESC description;

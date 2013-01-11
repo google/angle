@@ -137,7 +137,7 @@ class Renderer9 : public Renderer
     virtual int getMaxTextureWidth() const;
     virtual int getMaxTextureHeight() const;
     virtual bool get32BitIndexSupport() const;
-    DWORD getCapsDeclTypes() const; // D3D9_REPLACE
+    DWORD getCapsDeclTypes() const;
     virtual int getMinSwapInterval() const;
     virtual int getMaxSwapInterval() const;
 

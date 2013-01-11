@@ -15,8 +15,6 @@
 
 #include "common/angleutils.h"
 
-struct IDirect3DSurface9;   // D3D9_REPLACE
-
 namespace rx
 {
 class RenderTarget

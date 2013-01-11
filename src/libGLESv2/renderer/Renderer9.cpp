@@ -596,7 +596,6 @@ void Renderer9::endScene()
     }
 }
 
-// D3D9_REPLACE
 void Renderer9::sync(bool block)
 {
     HRESULT result;
@@ -642,7 +641,6 @@ SwapChain *Renderer9::createSwapChain(HWND window, HANDLE shareHandle, GLenum ba
     return new rx::SwapChain9(this, window, shareHandle, backBufferFormat, depthBufferFormat);
 }
 
-// D3D9_REPLACE
 IDirect3DQuery9* Renderer9::allocateEventQuery()
 {
     IDirect3DQuery9 *query = NULL;
@@ -661,7 +659,6 @@ IDirect3DQuery9* Renderer9::allocateEventQuery()
     return query;
 }
 
-// D3D9_REPLACE
 void Renderer9::freeEventQuery(IDirect3DQuery9* query)
 {
     if (mEventQueryPool.size() > 1000)
@@ -2252,7 +2249,6 @@ bool Renderer9::getInstancingSupport() const
 bool Renderer9::getShareHandleSupport() const
 {
     // PIX doesn't seem to support using share handles, so disable them.
-    // D3D9_REPLACE
     return (mD3d9Ex != NULL) && !gl::perfActive();
 }
 
@@ -3029,7 +3025,6 @@ bool Renderer9::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *s
     if (source && dest)
     {
         HRESULT result = D3DERR_OUTOFVIDEOMEMORY;
-        IDirect3DDevice9 *device = getDevice(); // D3D9_REPLACE
 
         if (fromManaged)
         {
@@ -3037,19 +3032,19 @@ bool Renderer9::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *s
             source->GetDesc(&desc);
 
             IDirect3DSurface9 *surf = 0;
-            result = device->CreateOffscreenPlainSurface(desc.Width, desc.Height, desc.Format, D3DPOOL_SYSTEMMEM, &surf, NULL);
+            result = mDevice->CreateOffscreenPlainSurface(desc.Width, desc.Height, desc.Format, D3DPOOL_SYSTEMMEM, &surf, NULL);
 
             if (SUCCEEDED(result))
             {
                 Image9::copyLockableSurfaces(surf, source);
-                result = device->UpdateSurface(surf, NULL, dest, NULL);
+                result = mDevice->UpdateSurface(surf, NULL, dest, NULL);
                 surf->Release();
             }
         }
         else
         {
             endScene();
-            result = device->StretchRect(source, NULL, dest, NULL, D3DTEXF_NONE);
+            result = mDevice->StretchRect(source, NULL, dest, NULL, D3DTEXF_NONE);
         }
 
         if (FAILED(result))
