@@ -24,6 +24,7 @@
 #include "libGLESv2/renderer/IndexBuffer11.h"
 #include "libGLESv2/renderer/VertexDataManager.h"
 #include "libGLESv2/renderer/IndexDataManager.h"
+#include "libGLESv2/renderer/TextureStorage11.h"
 
 #include "libEGL/Config.h"
 #include "libEGL/Display.h"
@@ -1297,15 +1298,29 @@ int Renderer11::getMaxSupportedSamples() const
 
 bool Renderer11::copyToRenderTarget(TextureStorageInterface2D *dest, TextureStorageInterface2D *source)
 {
-    // TODO
-    UNIMPLEMENTED();
+    if (source && dest)
+    {
+        TextureStorage11_2D *source11 = TextureStorage11_2D::makeTextureStorage11_2D(source->getStorageInstance());
+        TextureStorage11_2D *dest11 = TextureStorage11_2D::makeTextureStorage11_2D(dest->getStorageInstance());
+
+        getDeviceContext()->CopyResource(dest11->getBaseTexture(), source11->getBaseTexture());
+        return true;
+    }
+
     return false;
 }
 
 bool Renderer11::copyToRenderTarget(TextureStorageInterfaceCube *dest, TextureStorageInterfaceCube *source)
 {
-    // TODO
-    UNIMPLEMENTED();
+    if (source && dest)
+    {
+        TextureStorage11_2D *source11 = TextureStorage11_2D::makeTextureStorage11_2D(source->getStorageInstance());
+        TextureStorage11_2D *dest11 = TextureStorage11_2D::makeTextureStorage11_2D(dest->getStorageInstance());
+
+        getDeviceContext()->CopyResource(dest11->getBaseTexture(), source11->getBaseTexture());
+        return true;
+    }
+
     return false;
 }
 
