@@ -221,26 +221,28 @@ ID3D11Buffer *VertexBuffer11::getBuffer() const
 }
 
 template <typename T, unsigned int componentCount, bool widen, bool normalized>
-static void copyVertexData(const void* input, unsigned int stride, unsigned int count, void* output)
+static void copyVertexData(const void *input, unsigned int stride, unsigned int count, void *output)
 {
-    unsigned int typeSize = sizeof(T);
-    unsigned int vertexSize = typeSize * componentCount;
+    unsigned int attribSize = sizeof(T) * componentCount;
 
-    unsigned int outputStride = widen ? 4 : componentCount;
-    T defaultVal = normalized ? std::numeric_limits<T>::max() : T(1);
-
-    if (vertexSize == stride && !widen)
+    if (attribSize == stride && !widen)
     {
-        memcpy(output, input, count * vertexSize);
+        memcpy(output, input, count * attribSize);
     }
     else
     {
+        unsigned int outputStride = widen ? 4 : componentCount;
+        T defaultVal = normalized ? std::numeric_limits<T>::max() : T(1);
+
         for (unsigned int i = 0; i < count; i++)
         {
-            const T* offsetInput = reinterpret_cast<const T*>(reinterpret_cast<const char*>(input) + stride * i);
-            T* offsetOutput = reinterpret_cast<T*>(output) + i * outputStride;
+            const T *offsetInput = reinterpret_cast<const T*>(reinterpret_cast<const char*>(input) + i * stride);
+            T *offsetOutput = reinterpret_cast<T*>(output) + i * outputStride;
 
-            memcpy(offsetOutput, offsetInput, vertexSize);
+            for (unsigned int j = 0; j < componentCount; j++)
+            {
+                offsetOutput[j] = offsetInput[j];
+            }
 
             if (widen)
             {
