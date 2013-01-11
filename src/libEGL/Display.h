@@ -20,7 +20,7 @@
 #include <vector>
 
 #include "libGLESv2/Context.h"
-#include "libGLESv2/renderer/Renderer9.h"
+#include "libGLESv2/renderer/Renderer.h"
 
 #include "libEGL/Config.h"
 #include "libEGL/Surface.h"
