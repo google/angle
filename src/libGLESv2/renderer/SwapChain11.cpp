@@ -431,6 +431,16 @@ EGLint SwapChain11::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
     // Apply render targets
     deviceContext->OMSetRenderTargets(1, &mBackBufferRTView, NULL);
 
+    // Set the viewport
+    D3D11_VIEWPORT viewport;
+    viewport.TopLeftX = 0;
+    viewport.TopLeftY = 0;
+    viewport.Width = mWidth;
+    viewport.Height = mHeight;
+    viewport.MinDepth = 0.0f;
+    viewport.MaxDepth = 1.0f;
+    deviceContext->RSSetViewports(1, &viewport);
+
     // Apply textures
     deviceContext->PSSetShaderResources(0, 1, &mOffscreenSRView);
     deviceContext->PSSetSamplers(0, 1, &mPassThroughSampler);
