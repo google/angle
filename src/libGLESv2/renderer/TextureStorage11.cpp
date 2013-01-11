@@ -282,7 +282,7 @@ void TextureStorage11_2D::initializeSRV(DXGI_FORMAT format, int levels)
         srvDesc.Format = format;
         srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
         srvDesc.Texture2D.MostDetailedMip = 0;
-        srvDesc.Texture2D.MipLevels = levels;
+        srvDesc.Texture2D.MipLevels = (levels == 0 ? -1 : levels);
 
         ID3D11Device *device = mRenderer->getDevice();
         HRESULT result = device->CreateShaderResourceView(mTexture, &srvDesc, &mSRV);
@@ -427,7 +427,7 @@ void TextureStorage11_Cube::initializeSRV(DXGI_FORMAT format, int levels)
         D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
         srvDesc.Format = format;
         srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
-        srvDesc.TextureCube.MipLevels = levels;
+        srvDesc.TextureCube.MipLevels = (levels == 0 ? -1 : levels);
         srvDesc.TextureCube.MostDetailedMip = 0;
 
         ID3D11Device *device = mRenderer->getDevice();
