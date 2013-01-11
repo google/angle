@@ -1303,7 +1303,7 @@ bool Renderer11::copyToRenderTarget(TextureStorageInterface2D *dest, TextureStor
         TextureStorage11_2D *source11 = TextureStorage11_2D::makeTextureStorage11_2D(source->getStorageInstance());
         TextureStorage11_2D *dest11 = TextureStorage11_2D::makeTextureStorage11_2D(dest->getStorageInstance());
 
-        getDeviceContext()->CopyResource(dest11->getBaseTexture(), source11->getBaseTexture());
+        mDeviceContext->CopyResource(dest11->getBaseTexture(), source11->getBaseTexture());
         return true;
     }
 
@@ -1314,10 +1314,10 @@ bool Renderer11::copyToRenderTarget(TextureStorageInterfaceCube *dest, TextureSt
 {
     if (source && dest)
     {
-        TextureStorage11_2D *source11 = TextureStorage11_2D::makeTextureStorage11_2D(source->getStorageInstance());
-        TextureStorage11_2D *dest11 = TextureStorage11_2D::makeTextureStorage11_2D(dest->getStorageInstance());
+        TextureStorage11_Cube *source11 = TextureStorage11_Cube::makeTextureStorage11_Cube(source->getStorageInstance());
+        TextureStorage11_Cube *dest11 = TextureStorage11_Cube::makeTextureStorage11_Cube(dest->getStorageInstance());
 
-        getDeviceContext()->CopyResource(dest11->getBaseTexture(), source11->getBaseTexture());
+        mDeviceContext->CopyResource(dest11->getBaseTexture(), source11->getBaseTexture());
         return true;
     }
 
