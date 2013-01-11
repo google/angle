@@ -78,6 +78,27 @@ class TextureStorage11_2D : public TextureStorage11
     RenderTarget11 *mRenderTarget;
 };
 
+class TextureStorage11_Cube : public TextureStorage11
+{
+  public:
+    TextureStorage11_Cube(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size);
+    virtual ~TextureStorage11_Cube();
+
+    static TextureStorage11_Cube *makeTextureStorage11_Cube(TextureStorage *storage);
+
+    virtual RenderTarget *getRenderTarget(GLenum faceTarget) const;
+    virtual ID3D11Texture2D *getBaseTexture() const;
+    virtual void generateMipmap(int face, int level);
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(TextureStorage11_Cube);
+
+    void initializeRenderTarget(DXGI_FORMAT format, int size);
+
+    ID3D11Texture2D *mTexture;
+    RenderTarget11 *mRenderTarget[6];
+};
+
 }
 
 #endif // LIBGLESV2_RENDERER_TEXTURESTORAGE11_H_

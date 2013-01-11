@@ -225,4 +225,117 @@ void TextureStorage11_2D::initializeRenderTarget(DXGI_FORMAT format, int width, 
     }
 }
 
+TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
+    : TextureStorage11(renderer, GetTextureBindFlags(gl_d3d11::ConvertTextureFormat(internalformat), usage, forceRenderable))
+{
+    mTexture = NULL;
+    DXGI_FORMAT format = gl_d3d11::ConvertTextureFormat(internalformat);
+    // if the size is not positive this should be treated as an incomplete texture
+    // we handle that here by skipping the d3d texture creation
+    if (size > 0)
+    {
+        // adjust size if needed for compressed textures
+        int height = size;
+        gl::MakeValidSize(false, gl::IsCompressed(internalformat), &size, &height, &mLodOffset);
+
+        ID3D11Device *device = mRenderer->getDevice();
+
+        D3D11_TEXTURE2D_DESC desc;
+        desc.Width = size;
+        desc.Height = size;
+        desc.MipLevels = levels + mLodOffset;
+        desc.ArraySize = 6;
+        desc.Format = format;
+        desc.SampleDesc.Count = 1;
+        desc.SampleDesc.Quality = 0;
+        desc.Usage = D3D11_USAGE_DEFAULT;
+        desc.BindFlags = getBindFlags();
+        desc.CPUAccessFlags = 0;
+        desc.MiscFlags = D3D11_RESOURCE_MISC_TEXTURECUBE;
+
+        HRESULT result = device->CreateTexture2D(&desc, NULL, &mTexture);
+
+        if (FAILED(result))
+        {
+            ASSERT(result == E_OUTOFMEMORY);
+            ERR("Creating image failed.");
+            error(GL_OUT_OF_MEMORY);
+        }
+    }
+
+    initializeRenderTarget(format, size);
+}
+
+TextureStorage11_Cube::~TextureStorage11_Cube()
+{
+    if (mTexture)
+        mTexture->Release();
+}
+
+TextureStorage11_Cube *TextureStorage11_Cube::makeTextureStorage11_Cube(TextureStorage *storage)
+{
+    ASSERT(dynamic_cast<TextureStorage11_Cube*>(storage) != NULL);
+    return static_cast<TextureStorage11_Cube*>(storage);
+}
+
+RenderTarget *TextureStorage11_Cube::getRenderTarget(GLenum faceTarget) const
+{
+    return mRenderTarget[gl::TextureCubeMap::faceIndex(faceTarget)];
+}
+
+ID3D11Texture2D *TextureStorage11_Cube::getBaseTexture() const
+{
+    return mTexture;
+}
+
+void TextureStorage11_Cube::generateMipmap(int face, int level)
+{
+    // TODO
+    UNIMPLEMENTED();
+}
+
+void TextureStorage11_Cube::initializeRenderTarget(DXGI_FORMAT format, int size)
+{
+    for (int i = 0; i < 6; ++i)
+    {
+        mRenderTarget[i] = NULL;
+    }
+
+    if (mTexture != NULL && isRenderTarget())
+    {
+        if (getBindFlags() & D3D11_BIND_RENDER_TARGET)
+        {
+            // Create render target view -- texture should already be created with 
+            // BIND_RENDER_TARGET flag.
+
+            for (int i = 0; i < 6; ++i)
+            {
+                D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
+                rtvDesc.Format = format;
+                rtvDesc.Texture2DArray.MipSlice = 0;
+                rtvDesc.Texture2DArray.FirstArraySlice = i;
+                rtvDesc.Texture2DArray.ArraySize = 1;
+
+                ID3D11RenderTargetView *renderTargetView;
+                ID3D11Device *device = mRenderer->getDevice();
+                HRESULT result = device->CreateRenderTargetView(mTexture, &rtvDesc, &renderTargetView);
+
+                if (result == E_OUTOFMEMORY)
+                    return;
+
+                ASSERT(SUCCESS(result));
+
+                mRenderTarget[i] = new RenderTarget11(mRenderer, renderTargetView, size, size);
+            }
+        }
+        else if (getBindFlags() & D3D11_BIND_DEPTH_STENCIL)
+        {
+            // TODO
+            UNIMPLEMENTED();
+        }
+        else
+            UNREACHABLE();
+    }
+}
+
 }
