@@ -18,12 +18,8 @@
 
 #include "common/angleutils.h"
 
-#include "libEGL/Display.h"
-
-namespace gl
-{
-class Context;
-}
+#include "libGLESv2/Context.h"
+#include "libGLESv2/renderer/Renderer9.h"
 
 namespace rx
 {

@@ -27,9 +27,6 @@
 #include "libGLESv2/renderer/VertexBuffer9.h"
 #include "libGLESv2/renderer/IndexBuffer9.h"
 
-#include "libEGL/Config.h"
-#include "libEGL/Display.h"
-
 #include <sstream>
 
 // Can also be enabled by defining FORCE_REF_RAST in the project's predefined macros

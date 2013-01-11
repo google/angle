@@ -14,8 +14,6 @@
 
 #include "common/debug.h"
 
-#include "libEGL/Display.h"
-
 #include "libGLESv2/main.h"
 #include "libGLESv2/mathutil.h"
 #include "libGLESv2/utilities.h"

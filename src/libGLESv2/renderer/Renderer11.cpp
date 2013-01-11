@@ -26,9 +26,6 @@
 #include "libGLESv2/renderer/IndexDataManager.h"
 #include "libGLESv2/renderer/TextureStorage11.h"
 
-#include "libEGL/Config.h"
-#include "libEGL/Display.h"
-
 #include <sstream>
 
 namespace rx

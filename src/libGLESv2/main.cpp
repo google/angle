@@ -10,7 +10,6 @@
 #include "libGLESv2/utilities.h"
 
 #include "common/debug.h"
-#include "libEGL/Surface.h"
 
 #include "libGLESv2/Framebuffer.h"
 
