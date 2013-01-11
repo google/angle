@@ -7,7 +7,7 @@
 #include "compiler/OutputGLSLBase.h"
 #include "compiler/debug.h"
 
-#include <limits.h>
+#include <cfloat>
 
 namespace
 {
