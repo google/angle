@@ -216,7 +216,7 @@ ID3D11RasterizerState *RenderStateCache::getRasterizerState(const gl::Rasterizer
         D3D11_RASTERIZER_DESC rasterDesc;
         rasterDesc.FillMode = D3D11_FILL_SOLID;
         rasterDesc.CullMode = gl_d3d11::ConvertCullMode(rasterState.cullFace, rasterState.cullMode);
-        rasterDesc.FrontCounterClockwise = (rasterState.frontFace == GL_CCW) ? TRUE : FALSE;
+        rasterDesc.FrontCounterClockwise = (rasterState.frontFace == GL_CCW) ? FALSE: TRUE;
         rasterDesc.DepthBias = ldexp(rasterState.polygonOffsetUnits, -static_cast<int>(depthSize));
         rasterDesc.DepthBiasClamp = 0.0f; // MSDN documentation of DepthBiasClamp implies a value of zero will preform no clamping, must be tested though.
         rasterDesc.SlopeScaledDepthBias = rasterState.polygonOffsetUnits;
