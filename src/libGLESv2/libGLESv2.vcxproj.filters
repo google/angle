@@ -18,6 +18,12 @@
     <Filter Include="Third Party\MurmurHash">
       <UniqueIdentifier>{b0005d2f-9b4a-4659-a270-138811174f73}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Renderer\Shaders">
+      <UniqueIdentifier>{6dc0306f-6396-4e80-9ef9-09b58aa53c4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\Shaders\Compiled">
+      <UniqueIdentifier>{6332705b-1999-4292-a38b-dd47329734aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Buffer.cpp">
@@ -355,10 +361,43 @@
     <ClInclude Include="renderer\TextureStorage11.h">
       <Filter>Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\passthrough11ps.h">
+      <Filter>Renderer\Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\passthrough11vs.h">
+      <Filter>Renderer\Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\passthroughps.h">
+      <Filter>Renderer\Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\standardvs.h">
+      <Filter>Renderer\Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\componentmaskps.h">
+      <Filter>Renderer\Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\flipyvs.h">
+      <Filter>Renderer\Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\luminanceps.h">
+      <Filter>Renderer\Shaders\Compiled</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="libGLESv2.def">
       <Filter>Source Files</Filter>
+    </None>
+    <None Include="renderer\shaders\Blit.ps">
+      <Filter>Renderer\Shaders</Filter>
+    </None>
+    <None Include="renderer\shaders\Blit.vs">
+      <Filter>Renderer\Shaders</Filter>
+    </None>
+    <None Include="renderer\shaders\generate_shaders.bat">
+      <Filter>Renderer\Shaders</Filter>
+    </None>
+    <None Include="renderer\shaders\Passthrough11.hlsl">
+      <Filter>Renderer\Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

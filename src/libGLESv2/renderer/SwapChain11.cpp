@@ -15,8 +15,8 @@
 #include "libGLESv2/Context.h"
 #include "libGLESv2/main.h"
 
-#include "libGLESv2/shaders/passthrough11vs.h"
-#include "libGLESv2/shaders/passthrough11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthrough11vs.h"
+#include "libGLESv2/renderer/shaders/compiled/passthrough11ps.h"
 
 namespace rx
 {

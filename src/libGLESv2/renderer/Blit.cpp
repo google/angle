@@ -19,11 +19,11 @@
 
 namespace
 {
-#include "libGLESv2/shaders/standardvs.h"
-#include "libGLESv2/shaders/flipyvs.h"
-#include "libGLESv2/shaders/passthroughps.h"
-#include "libGLESv2/shaders/luminanceps.h"
-#include "libGLESv2/shaders/componentmaskps.h"
+#include "libGLESv2/renderer/shaders/compiled/standardvs.h"
+#include "libGLESv2/renderer/shaders/compiled/flipyvs.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughps.h"
+#include "libGLESv2/renderer/shaders/compiled/luminanceps.h"
+#include "libGLESv2/renderer/shaders/compiled/componentmaskps.h"
 
 const BYTE* const g_shaderCode[] =
 {
