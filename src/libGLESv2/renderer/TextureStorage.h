@@ -19,6 +19,7 @@
 
 namespace rx
 {
+class Renderer;
 class SwapChain;
 class RenderTarget;
 class Blit;
