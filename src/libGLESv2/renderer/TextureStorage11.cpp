@@ -151,10 +151,12 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, SwapChain11 *swapch
 {
     ID3D11Texture2D *surfaceTexture = swapchain->getOffscreenTexture();
     mTexture = surfaceTexture;
+    mSRV = NULL;
 
     D3D11_TEXTURE2D_DESC desc;
     surfaceTexture->GetDesc(&desc);
 
+    initializeSRV(desc.Format, desc.MipLevels);
     initializeRenderTarget(desc.Format, desc.Width, desc.Height);
 }
 
@@ -162,6 +164,7 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int levels, GLenum 
     : TextureStorage11(renderer, GetTextureBindFlags(gl_d3d11::ConvertTextureFormat(internalformat), usage, forceRenderable))
 {
     mTexture = NULL;
+    mSRV = NULL;
     DXGI_FORMAT format = gl_d3d11::ConvertTextureFormat(internalformat);
     // if the width or height is not positive this should be treated as an incomplete texture
     // we handle that here by skipping the d3d texture creation
@@ -195,6 +198,7 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int levels, GLenum 
         }
     }
 
+    initializeSRV(format, levels + mLodOffset);
     initializeRenderTarget(format, width, height);
 }
 
@@ -218,6 +222,11 @@ RenderTarget *TextureStorage11_2D::getRenderTarget() const
 ID3D11Texture2D *TextureStorage11_2D::getBaseTexture() const
 {
     return mTexture;
+}
+
+ID3D11ShaderResourceView *TextureStorage11_2D::getSRV() const
+{
+    return mSRV;
 }
 
 void TextureStorage11_2D::generateMipmap(int level)
@@ -261,10 +270,35 @@ void TextureStorage11_2D::initializeRenderTarget(DXGI_FORMAT format, int width, 
     }
 }
 
+void TextureStorage11_2D::initializeSRV(DXGI_FORMAT format, int levels)
+{
+    ASSERT(mSRV == NULL);
+
+    if (mTexture)
+    {
+        D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+        srvDesc.Format = format;
+        srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+        srvDesc.Texture2D.MostDetailedMip = 0;
+        srvDesc.Texture2D.MipLevels = levels;
+
+        ID3D11Device *device = mRenderer->getDevice();
+        HRESULT result = device->CreateShaderResourceView(mTexture, &srvDesc, &mSRV);
+
+        if (result == E_OUTOFMEMORY)
+        {
+            return error(GL_OUT_OF_MEMORY);
+        }
+
+        ASSERT(SUCCEEDED(result));
+    }
+}
+
 TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
     : TextureStorage11(renderer, GetTextureBindFlags(gl_d3d11::ConvertTextureFormat(internalformat), usage, forceRenderable))
 {
     mTexture = NULL;
+    mSRV = NULL;
     DXGI_FORMAT format = gl_d3d11::ConvertTextureFormat(internalformat);
     // if the size is not positive this should be treated as an incomplete texture
     // we handle that here by skipping the d3d texture creation
@@ -299,6 +333,7 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int levels, GLe
         }
     }
 
+    initializeSRV(format, levels + mLodOffset);
     initializeRenderTarget(format, size);
 }
 
@@ -322,6 +357,11 @@ RenderTarget *TextureStorage11_Cube::getRenderTarget(GLenum faceTarget) const
 ID3D11Texture2D *TextureStorage11_Cube::getBaseTexture() const
 {
     return mTexture;
+}
+
+ID3D11ShaderResourceView *TextureStorage11_Cube::getSRV() const
+{
+    return mSRV;
 }
 
 void TextureStorage11_Cube::generateMipmap(int face, int level)
@@ -371,6 +411,30 @@ void TextureStorage11_Cube::initializeRenderTarget(DXGI_FORMAT format, int size)
         }
         else
             UNREACHABLE();
+    }
+}
+
+void TextureStorage11_Cube::initializeSRV(DXGI_FORMAT format, int levels)
+{
+    ASSERT(mSRV == NULL);
+
+    if (mTexture)
+    {
+        D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+        srvDesc.Format = format;
+        srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
+        srvDesc.TextureCube.MipLevels = levels;
+        srvDesc.TextureCube.MostDetailedMip = 0;
+
+        ID3D11Device *device = mRenderer->getDevice();
+        HRESULT result = device->CreateShaderResourceView(mTexture, &srvDesc, &mSRV);
+
+        if (result == E_OUTOFMEMORY)
+        {
+            return error(GL_OUT_OF_MEMORY);
+        }
+
+        ASSERT(SUCCEEDED(result));
     }
 }
 
