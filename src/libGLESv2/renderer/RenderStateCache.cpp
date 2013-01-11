@@ -37,7 +37,7 @@ RenderStateCache::~RenderStateCache()
     clear();
 }
 
-void RenderStateCache::initialize(ID3D11Device* device)
+void RenderStateCache::initialize(ID3D11Device *device)
 {
     clear();
     mDevice = device;
@@ -145,7 +145,7 @@ ID3D11BlendState *RenderStateCache::getBlendState(const gl::BlendState &blendSta
                                                                        blendState.colorMaskAlpha);
         }
 
-        ID3D11BlendState* dx11BlendState = NULL;
+        ID3D11BlendState *dx11BlendState = NULL;
         HRESULT result = mDevice->CreateBlendState(&blendDesc, &dx11BlendState);
         if (FAILED(result) || !dx11BlendState)
         {
@@ -225,7 +225,7 @@ ID3D11RasterizerState *RenderStateCache::getRasterizerState(const gl::Rasterizer
         rasterDesc.MultisampleEnable = TRUE;
         rasterDesc.AntialiasedLineEnable = FALSE;
 
-        ID3D11RasterizerState* dx11RasterizerState = NULL;
+        ID3D11RasterizerState *dx11RasterizerState = NULL;
         HRESULT result = mDevice->CreateRasterizerState(&rasterDesc, &dx11RasterizerState);
         if (FAILED(result) || !dx11RasterizerState)
         {
@@ -253,7 +253,7 @@ bool RenderStateCache::compareDepthStencilStates(const gl::DepthStencilState &a,
     return memcmp(&a, &b, sizeof(gl::DepthStencilState)) == 0;
 }
 
-ID3D11DepthStencilState* RenderStateCache::getDepthStencilState(const gl::DepthStencilState &dsState)
+ID3D11DepthStencilState *RenderStateCache::getDepthStencilState(const gl::DepthStencilState &dsState)
 {
     if (!mDevice)
     {
@@ -303,7 +303,7 @@ ID3D11DepthStencilState* RenderStateCache::getDepthStencilState(const gl::DepthS
         dsDesc.BackFace.StencilPassOp = gl_d3d11::ConvertStencilOp(dsState.stencilBackPassDepthPass);
         dsDesc.BackFace.StencilFunc = gl_d3d11::ConvertComparison(dsState.stencilBackFunc);
 
-        ID3D11DepthStencilState* dx11DepthStencilState = NULL;
+        ID3D11DepthStencilState *dx11DepthStencilState = NULL;
         HRESULT result = mDevice->CreateDepthStencilState(&dsDesc, &dx11DepthStencilState);
         if (FAILED(result) || !dx11DepthStencilState)
         {
@@ -331,7 +331,7 @@ bool RenderStateCache::compareSamplerStates(const gl::SamplerState &a, const gl:
     return memcmp(&a, &b, sizeof(gl::DepthStencilState)) == 0;
 }
 
-ID3D11SamplerState* RenderStateCache::getSamplerState(const gl::SamplerState &samplerState)
+ID3D11SamplerState *RenderStateCache::getSamplerState(const gl::SamplerState &samplerState)
 {
     if (!mDevice)
     {
