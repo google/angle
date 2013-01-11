@@ -77,6 +77,8 @@ Renderer11::~Renderer11()
 
     if (mDeviceContext)
     {
+        mDeviceContext->ClearState();
+        mDeviceContext->Flush();
         mDeviceContext->Release();
         mDeviceContext = NULL;
     }
