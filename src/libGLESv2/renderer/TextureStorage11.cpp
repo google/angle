@@ -248,6 +248,7 @@ void TextureStorage11_2D::initializeRenderTarget(DXGI_FORMAT format, int width, 
             // Create render target view -- texture should already be created with 
             // BIND_RENDER_TARGET flag.
             D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
+            rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
             rtvDesc.Format = format;
             rtvDesc.Texture2D.MipSlice = 0;
 

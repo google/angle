@@ -102,6 +102,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
                 dsvDesc.Format = requestedFormat;
                 dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
                 dsvDesc.Texture2D.MipSlice = 0;
+                dsvDesc.Flags = 0;
                 result = device->CreateDepthStencilView(rtTexture, &dsvDesc, &mDepthStencil);
             }
             else
