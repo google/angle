@@ -534,4 +534,13 @@ size_t ComputeBlockSizeBits(DXGI_FORMAT format)
     }
 }
 
+HRESULT SetDebugName(ID3D11DeviceChild *resource, const char *name)
+{
+#if defined(_DEBUG)
+    return resource->SetPrivateData(WKPDID_D3DDebugObjectName, strlen(name), name);
+#else
+    return S_OK;
+#endif
+}
+
 }
