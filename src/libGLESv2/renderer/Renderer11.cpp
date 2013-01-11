@@ -47,6 +47,7 @@ Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(
     mIndexDataManager = NULL;
 
     mLineLoopIB = NULL;
+    mTriangleFanIB = NULL;
 
     mD3d11Module = NULL;
     mDxgiModule = NULL;
@@ -558,7 +559,8 @@ bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count)
       case GL_LINE_STRIP:     primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;     break;
       case GL_TRIANGLES:      primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;  break;
       case GL_TRIANGLE_STRIP: primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP; break;
-      case GL_TRIANGLE_FAN:   UNIMPLEMENTED();   /* TODO */                              break;
+          // emulate fans via rewriting index buffer
+      case GL_TRIANGLE_FAN:   primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;	break;
       default:
         return error(GL_INVALID_ENUM, false);
     }
@@ -758,6 +760,10 @@ void Renderer11::drawArrays(GLenum mode, GLsizei count, GLsizei instances)
     {
         drawLineLoop(count, GL_NONE, NULL, 0, NULL);
     }
+    else if (mode == GL_TRIANGLE_FAN)
+    {
+        drawTriangleFan(count, GL_NONE, NULL, 0, NULL);
+    }
     else if (instances > 0)
     {
         // TODO
@@ -774,6 +780,10 @@ void Renderer11::drawElements(GLenum mode, GLsizei count, GLenum type, const GLv
     if (mode == GL_LINE_LOOP)
     {
         drawLineLoop(count, type, indices, indexInfo.minIndex, elementArrayBuffer);
+    }
+    else if (mode == GL_TRIANGLE_FAN)
+    {
+        drawTriangleFan(count, type, indices, indexInfo.minIndex, elementArrayBuffer);
     }
     else
     {
@@ -871,6 +881,103 @@ void Renderer11::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices,
     }
 
     mDeviceContext->DrawIndexed(count + 1, 0, -minIndex);
+}
+
+void Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer)
+{
+    // Get the raw indices for an indexed draw
+    if (type != GL_NONE && elementArrayBuffer)
+    {
+        gl::Buffer *indexBuffer = elementArrayBuffer;
+        intptr_t offset = reinterpret_cast<intptr_t>(indices);
+        indices = static_cast<const GLubyte*>(indexBuffer->data()) + offset;
+    }
+
+    if (!mTriangleFanIB)
+    {
+        mTriangleFanIB = new StreamingIndexBufferInterface(this);
+        if (!mTriangleFanIB->reserveBufferSpace(INITIAL_INDEX_BUFFER_SIZE, GL_UNSIGNED_INT))
+        {
+            delete mTriangleFanIB;
+            mTriangleFanIB = NULL;
+
+            ERR("Could not create a scratch index buffer for GL_TRIANGLE_FAN.");
+            return error(GL_OUT_OF_MEMORY);
+        }
+    }
+
+    const int numTris = count - 2;
+    const int spaceNeeded = (numTris * 3) * sizeof(unsigned int);
+    if (!mTriangleFanIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT))
+    {
+        ERR("Could not reserve enough space in scratch index buffer for GL_TRIANGLE_FAN.");
+        return error(GL_OUT_OF_MEMORY);
+    }
+
+    void* mappedMemory = NULL;
+    int offset = mTriangleFanIB->mapBuffer(spaceNeeded, &mappedMemory);
+    if (offset == -1 || mappedMemory == NULL)
+    {
+        ERR("Could not map scratch index buffer for GL_TRIANGLE_FAN.");
+        return error(GL_OUT_OF_MEMORY);
+    }
+
+    unsigned int *data = reinterpret_cast<unsigned int*>(mappedMemory);
+    unsigned int indexBufferOffset = static_cast<unsigned int>(offset);
+
+    switch (type)
+    {
+      case GL_NONE:   // Non-indexed draw
+        for (int i = 0; i < numTris; i++)
+        {
+            data[i*3 + 0] = 0;
+            data[i*3 + 1] = i + 1;
+            data[i*3 + 2] = i + 2;
+        }
+        break;
+      case GL_UNSIGNED_BYTE:
+        for (int i = 0; i < numTris; i++)
+        {
+            data[i*3 + 0] = static_cast<const GLubyte*>(indices)[0];
+            data[i*3 + 1] = static_cast<const GLubyte*>(indices)[i + 1];
+            data[i*3 + 2] = static_cast<const GLubyte*>(indices)[i + 2];
+        }
+        break;
+      case GL_UNSIGNED_SHORT:
+        for (int i = 0; i < numTris; i++)
+        {
+            data[i*3 + 0] = static_cast<const GLushort*>(indices)[0];
+            data[i*3 + 1] = static_cast<const GLushort*>(indices)[i + 1];
+            data[i*3 + 2] = static_cast<const GLushort*>(indices)[i + 2];
+        }
+        break;
+      case GL_UNSIGNED_INT:
+        for (int i = 0; i < numTris; i++)
+        {
+            data[i*3 + 0] = static_cast<const GLuint*>(indices)[0];
+            data[i*3 + 1] = static_cast<const GLuint*>(indices)[i + 1];
+            data[i*3 + 2] = static_cast<const GLuint*>(indices)[i + 2];
+        }
+        break;
+      default: UNREACHABLE();
+    }
+
+    if (!mTriangleFanIB->unmapBuffer())
+    {
+        ERR("Could not unmap scratch index buffer for GL_TRIANGLE_FAN.");
+        return error(GL_OUT_OF_MEMORY);
+    }
+
+    if (mAppliedIBSerial != mTriangleFanIB->getSerial() || mAppliedIBOffset != indexBufferOffset)
+    {
+        IndexBuffer11 *indexBuffer = IndexBuffer11::makeIndexBuffer11(mTriangleFanIB->getIndexBuffer());
+
+        mDeviceContext->IASetIndexBuffer(indexBuffer->getBuffer(), indexBuffer->getIndexFormat(), indexBufferOffset);
+        mAppliedIBSerial = mTriangleFanIB->getSerial();
+        mAppliedIBOffset = indexBufferOffset;
+    }
+
+    mDeviceContext->DrawIndexed(numTris * 3, 0, -minIndex);
 }
 
 void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
@@ -1208,6 +1315,9 @@ void Renderer11::releaseDeviceResources()
 
     delete mLineLoopIB;
     mLineLoopIB = NULL;
+
+    delete mTriangleFanIB;
+    mTriangleFanIB = NULL;
 }
 
 void Renderer11::markDeviceLost()

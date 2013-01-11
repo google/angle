@@ -159,6 +159,7 @@ class Renderer11 : public Renderer
     DISALLOW_COPY_AND_ASSIGN(Renderer11);
 
     void drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
+    void drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
 
     void readTextureData(ID3D11Texture2D *texture, unsigned int subResource, const gl::Rectangle &area,
                          GLenum format, GLenum type, GLsizei outputPitch, bool packReverseRowOrder,
@@ -234,6 +235,7 @@ class Renderer11 : public Renderer
     InputLayoutCache mInputLayoutCache;
 
     StreamingIndexBufferInterface *mLineLoopIB;
+    StreamingIndexBufferInterface *mTriangleFanIB;
 
     ID3D11Device *mDevice;
     D3D_FEATURE_LEVEL mFeatureLevel;
