@@ -1401,7 +1401,13 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
     if (fragmentShader->mUsesFragCoord)
     {
         pixelHLSL += "    float4 gl_FragCoord : " + varyingSemantic + str(registers) + ";\n";
-        if (sm3) {
+        
+        if (sm4)
+        {
+            pixelHLSL += "    float4 dx_VPos : SV_Position;\n";
+        }
+        else if (sm3)
+        {
             pixelHLSL += "    float2 dx_VPos : VPOS;\n";
         }
     }
@@ -1430,20 +1436,25 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
     {
         pixelHLSL += "    float rhw = 1.0 / input.gl_FragCoord.w;\n";
         
-        if (sm3)
+        if (sm4)
+        {
+            pixelHLSL += "    gl_FragCoord.x = input.dx_VPos.x;\n"
+                         "    gl_FragCoord.y = input.dx_VPos.y;\n";
+        }
+        else if (sm3)
         {
             pixelHLSL += "    gl_FragCoord.x = input.dx_VPos.x + 0.5;\n"
-                          "    gl_FragCoord.y = input.dx_VPos.y + 0.5;\n";
+                         "    gl_FragCoord.y = input.dx_VPos.y + 0.5;\n";
         }
         else
         {
             // dx_Coord contains the viewport width/2, height/2, center.x and center.y. See Context::applyRenderTarget()
             pixelHLSL += "    gl_FragCoord.x = (input.gl_FragCoord.x * rhw) * dx_Coord.x + dx_Coord.z;\n"
-                          "    gl_FragCoord.y = (input.gl_FragCoord.y * rhw) * dx_Coord.y + dx_Coord.w;\n";
+                         "    gl_FragCoord.y = (input.gl_FragCoord.y * rhw) * dx_Coord.y + dx_Coord.w;\n";
         }
         
         pixelHLSL += "    gl_FragCoord.z = (input.gl_FragCoord.z * rhw) * dx_DepthFront.x + dx_DepthFront.y;\n"
-                      "    gl_FragCoord.w = rhw;\n";
+                     "    gl_FragCoord.w = rhw;\n";
     }
 
     if (fragmentShader->mUsesPointCoord && sm3)
