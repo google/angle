@@ -2211,6 +2211,11 @@ bool Renderer9::getShareHandleSupport() const
     return (mD3d9Ex != NULL) && !gl::perfActive();
 }
 
+bool Renderer9::getDerivativeInstructionSupport() const
+{
+    return (mDeviceCaps.PS20Caps.Caps & D3DPS20CAPS_GRADIENTINSTRUCTIONS) != 0;
+}
+
 int Renderer9::getMajorShaderModel() const
 {
     return D3DSHADER_VERSION_MAJOR(mDeviceCaps.PixelShaderVersion);

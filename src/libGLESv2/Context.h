@@ -409,6 +409,7 @@ class Context
     bool supportsNonPower2Texture() const;
     bool supportsInstancing() const;
     bool supportsTextureFilterAnisotropy() const;
+    bool supportsDerivativeInstructions() const;
 
     bool getCurrentReadFormatType(GLenum *format, GLenum *type);
 
@@ -515,6 +516,7 @@ class Context
     bool mSupportsDepthTextures;
     bool mSupports32bitIndices;
     bool mSupportsTextureFilterAnisotropy;
+    bool mSupportsDerivativeInstructions;
     int mNumCompressedTextureFormats;
 
     ResourceManager *mResourceManager;

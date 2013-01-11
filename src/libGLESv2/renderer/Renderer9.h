@@ -130,6 +130,7 @@ class Renderer9 : public Renderer
     virtual bool getTextureFilterAnisotropySupport() const;
     virtual float getTextureMaxAnisotropy() const;
     virtual bool getShareHandleSupport() const;
+    virtual bool getDerivativeInstructionSupport() const;
 
     virtual int getMajorShaderModel() const;
     virtual float getMaxPointSize() const;

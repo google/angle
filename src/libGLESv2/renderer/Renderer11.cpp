@@ -1414,6 +1414,13 @@ bool Renderer11::getShareHandleSupport() const
     return false && !gl::perfActive();
 }
 
+bool Renderer11::getDerivativeInstructionSupport() const
+{
+    // TODO
+    // UNIMPLEMENTED();
+    return false;
+}
+
 int Renderer11::getMajorShaderModel() const
 {
     switch (mFeatureLevel)
