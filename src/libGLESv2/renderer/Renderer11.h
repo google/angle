@@ -159,6 +159,10 @@ class Renderer11 : public Renderer
 
     void drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
 
+    void readTextureData(ID3D11Texture2D *texture, unsigned int subResource, const gl::Rectangle &area,
+                         GLenum format, GLenum type, GLsizei outputPitch, bool packReverseRowOrder,
+                         GLint packAlignment, void *pixels);
+
     HMODULE mD3d11Module;
     HMODULE mDxgiModule;
     HDC mDc;

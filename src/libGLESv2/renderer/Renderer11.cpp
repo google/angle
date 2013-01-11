@@ -1527,9 +1527,50 @@ bool Renderer11::blitRect(gl::Framebuffer *readTarget, gl::Rectangle *readRect, 
 void Renderer11::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,
                             GLsizei outputPitch, bool packReverseRowOrder, GLint packAlignment, void* pixels)
 {
-    // TODO
-    UNIMPLEMENTED();
-    return;
+    ID3D11Texture2D *colorBufferTexture = NULL;
+
+    gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer();
+    if (colorbuffer)
+    {
+        RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(colorbuffer->getRenderTarget());
+        if (renderTarget)
+        {
+            ID3D11RenderTargetView *colorBufferRTV = renderTarget->getRenderTargetView();
+            if (colorBufferRTV)
+            {
+                ID3D11Resource *textureResource = NULL;
+                colorBufferRTV->GetResource(&textureResource);
+
+                if (textureResource)
+                {
+                    HRESULT result = textureResource->QueryInterface(IID_ID3D11Texture2D, (void**)&colorBufferTexture);
+                    textureResource->Release();
+
+                    if (FAILED(result))
+                    {
+                        ERR("Failed to extract the ID3D11Texture2D from the render target resource, "
+                            "HRESULT: 0x%X.", result);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    if (colorBufferTexture)
+    {
+        gl::Rectangle area;
+        area.x = x;
+        area.y = y;
+        area.width = width;
+        area.height = height;
+
+        readTextureData(colorBufferTexture, 0, area, format, type, outputPitch, packReverseRowOrder,
+                        packAlignment, pixels);
+
+        colorBufferTexture->Release();
+        colorBufferTexture = NULL;
+    }
 }
 
 Image *Renderer11::createImage()
@@ -1558,6 +1599,376 @@ TextureStorage *Renderer11::createTextureStorage2D(int levels, GLenum internalfo
 TextureStorage *Renderer11::createTextureStorageCube(int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
 {
     return new TextureStorage11_Cube(this, levels, internalformat, usage, forceRenderable, size);
+}
+
+static inline unsigned int getFastPixelCopySize(DXGI_FORMAT sourceFormat, GLenum destFormat, GLenum destType)
+{
+    if (sourceFormat == DXGI_FORMAT_A8_UNORM &&
+        destFormat   == GL_ALPHA &&
+        destType     == GL_UNSIGNED_BYTE)
+    {
+        return 1;
+    }
+    else if (sourceFormat == DXGI_FORMAT_R8G8B8A8_UNORM &&
+             destFormat   == GL_RGBA &&
+             destType     == GL_UNSIGNED_BYTE)
+    {
+        return 4;
+    }
+    else if (sourceFormat == DXGI_FORMAT_B8G8R8A8_UNORM &&
+             destFormat   == GL_BGRA_EXT &&
+             destType     == GL_UNSIGNED_BYTE)
+    {
+        return 4;
+    }
+    else if (sourceFormat == DXGI_FORMAT_R16G16B16A16_FLOAT &&
+             destFormat   == GL_RGBA &&
+             destType     == GL_HALF_FLOAT_OES)
+    {
+        return 8;
+    }
+    else if (sourceFormat == DXGI_FORMAT_R32G32B32_FLOAT &&
+             destFormat   == GL_RGB &&
+             destType     == GL_FLOAT)
+    {
+        return 12;
+    }
+    else if (sourceFormat == DXGI_FORMAT_R32G32B32A32_FLOAT &&
+             destFormat   == GL_RGBA &&
+             destType     == GL_FLOAT)
+    {
+        return 16;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+static inline void readPixelColor(const unsigned char *data, DXGI_FORMAT format, unsigned int x,
+                                  unsigned int y, int inputPitch, gl::Color *outColor)
+{
+    switch (format)
+    {
+      case DXGI_FORMAT_R8G8B8A8_UNORM:
+        {
+            unsigned int rgba = *reinterpret_cast<const unsigned int*>(data + 4 * x + y * inputPitch);
+            outColor->red =   (rgba & 0xFF000000) * (1.0f / 0xFF000000);
+            outColor->green = (rgba & 0x00FF0000) * (1.0f / 0x00FF0000);
+            outColor->blue =  (rgba & 0x0000FF00) * (1.0f / 0x0000FF00);
+            outColor->alpha = (rgba & 0x000000FF) * (1.0f / 0x000000FF);
+        }
+        break;
+
+      case DXGI_FORMAT_A8_UNORM:
+        {
+            outColor->red =   0.0f;
+            outColor->green = 0.0f;
+            outColor->blue =  0.0f;
+            outColor->alpha = *(data + x + y * inputPitch) / 255.0f;
+        }
+        break;
+
+      case DXGI_FORMAT_R32G32B32A32_FLOAT:
+        {
+            outColor->red =   *(reinterpret_cast<const float*>(data + 16 * x + y * inputPitch) + 0);
+            outColor->green = *(reinterpret_cast<const float*>(data + 16 * x + y * inputPitch) + 1);
+            outColor->blue =  *(reinterpret_cast<const float*>(data + 16 * x + y * inputPitch) + 2);
+            outColor->alpha = *(reinterpret_cast<const float*>(data + 16 * x + y * inputPitch) + 3);
+        }
+        break;
+
+      case DXGI_FORMAT_R32G32B32_FLOAT:
+        {
+            outColor->red =   *(reinterpret_cast<const float*>(data + 12 * x + y * inputPitch) + 0);
+            outColor->green = *(reinterpret_cast<const float*>(data + 12 * x + y * inputPitch) + 1);
+            outColor->blue =  *(reinterpret_cast<const float*>(data + 12 * x + y * inputPitch) + 2);
+            outColor->alpha = 1.0f;
+        }
+        break;
+
+      case DXGI_FORMAT_R16G16B16A16_FLOAT:
+        {
+            outColor->red =   gl::float16ToFloat32(*(reinterpret_cast<const unsigned short*>(data + 8 * x + y * inputPitch) + 0));
+            outColor->green = gl::float16ToFloat32(*(reinterpret_cast<const unsigned short*>(data + 8 * x + y * inputPitch) + 1));
+            outColor->blue =  gl::float16ToFloat32(*(reinterpret_cast<const unsigned short*>(data + 8 * x + y * inputPitch) + 2));
+            outColor->alpha = gl::float16ToFloat32(*(reinterpret_cast<const unsigned short*>(data + 8 * x + y * inputPitch) + 3));
+        }
+        break;
+
+      case DXGI_FORMAT_B8G8R8A8_UNORM:
+        {
+            unsigned int bgra = *reinterpret_cast<const unsigned int*>(data + 4 * x + y * inputPitch);
+            outColor->red =   (bgra & 0x0000FF00) * (1.0f / 0x0000FF00);
+            outColor->blue =  (bgra & 0xFF000000) * (1.0f / 0xFF000000);
+            outColor->green = (bgra & 0x00FF0000) * (1.0f / 0x00FF0000);
+            outColor->alpha = (bgra & 0x000000FF) * (1.0f / 0x000000FF);
+        }
+        break;
+
+      case DXGI_FORMAT_R8_UNORM:
+        {
+            outColor->red =   *(data + x + y * inputPitch) / 255.0f;
+            outColor->green = 0.0f;
+            outColor->blue =  0.0f;
+            outColor->alpha = 1.0f;
+        }
+        break;
+
+      case DXGI_FORMAT_R8G8_UNORM:
+        {
+            unsigned short rg = *reinterpret_cast<const unsigned short*>(data + 2 * x + y * inputPitch);
+
+            outColor->red =   (rg & 0xFF00) * (1.0f / 0xFF00);
+            outColor->green = (rg & 0x00FF) * (1.0f / 0x00FF);
+            outColor->blue =  0.0f;
+            outColor->alpha = 1.0f;
+        }
+        break;
+
+      case DXGI_FORMAT_R16_FLOAT:
+        {
+            outColor->red =   gl::float16ToFloat32(*reinterpret_cast<const unsigned short*>(data + 2 * x + y * inputPitch));
+            outColor->green = 0.0f;
+            outColor->blue =  0.0f;
+            outColor->alpha = 1.0f;
+        }
+        break;
+
+      case DXGI_FORMAT_R16G16_FLOAT:
+        {
+            outColor->red =   gl::float16ToFloat32(*(reinterpret_cast<const unsigned short*>(data + 4 * x + y * inputPitch) + 0));
+            outColor->green = gl::float16ToFloat32(*(reinterpret_cast<const unsigned short*>(data + 4 * x + y * inputPitch) + 1));
+            outColor->blue =  0.0f;
+            outColor->alpha = 1.0f;
+        }
+        break;
+
+      default:
+        ERR("ReadPixelColor not implemented for DXGI format %u.", format);
+        UNIMPLEMENTED();
+        break;
+    }
+}
+
+static inline void writePixelColor(const gl::Color &color, GLenum format, GLenum type, unsigned int x,
+                                   unsigned int y, int outputPitch, void *outData)
+{
+    unsigned char* byteData = reinterpret_cast<unsigned char*>(outData);
+    unsigned short* shortData = reinterpret_cast<unsigned short*>(outData);
+
+    switch (format)
+    {
+      case GL_RGBA:
+        switch (type)
+        {
+          case GL_UNSIGNED_BYTE:
+            byteData[4 * x + y * outputPitch + 0] = static_cast<unsigned char>(255 * color.red   + 0.5f);
+            byteData[4 * x + y * outputPitch + 1] = static_cast<unsigned char>(255 * color.green + 0.5f);
+            byteData[4 * x + y * outputPitch + 2] = static_cast<unsigned char>(255 * color.blue  + 0.5f);
+            byteData[4 * x + y * outputPitch + 3] = static_cast<unsigned char>(255 * color.alpha + 0.5f);
+            break;
+
+          default:
+            ERR("WritePixelColor not implemented for format GL_RGBA and type 0x%X.", type);
+            UNIMPLEMENTED();
+            break;
+        }
+        break;
+
+      case GL_BGRA_EXT:
+        switch (type)
+        {
+          case GL_UNSIGNED_BYTE:
+            byteData[4 * x + y * outputPitch + 0] = static_cast<unsigned char>(255 * color.blue  + 0.5f);
+            byteData[4 * x + y * outputPitch + 1] = static_cast<unsigned char>(255 * color.green + 0.5f);
+            byteData[4 * x + y * outputPitch + 2] = static_cast<unsigned char>(255 * color.red   + 0.5f);
+            byteData[4 * x + y * outputPitch + 3] = static_cast<unsigned char>(255 * color.alpha + 0.5f);
+            break;
+
+          case GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT:
+            // According to the desktop GL spec in the "Transfer of Pixel Rectangles" section
+            // this type is packed as follows:
+            //   15   14   13   12   11   10    9    8    7    6    5    4    3    2    1    0
+            //  --------------------------------------------------------------------------------
+            // |       4th         |        3rd         |        2nd        |   1st component   |
+            //  --------------------------------------------------------------------------------
+            // in the case of BGRA_EXT, B is the first component, G the second, and so forth.
+            shortData[x + y * outputPitch / sizeof(unsigned short)] =
+                (static_cast<unsigned short>(15 * color.alpha + 0.5f) << 12) |
+                (static_cast<unsigned short>(15 * color.red   + 0.5f) <<  8) |
+                (static_cast<unsigned short>(15 * color.green + 0.5f) <<  4) |
+                (static_cast<unsigned short>(15 * color.blue  + 0.5f) <<  0);
+            break;
+
+          case GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT:
+            // According to the desktop GL spec in the "Transfer of Pixel Rectangles" section
+            // this type is packed as follows:
+            //   15   14   13   12   11   10    9    8    7    6    5    4    3    2    1    0
+            //  --------------------------------------------------------------------------------
+            // | 4th |          3rd           |           2nd          |      1st component     |
+            //  --------------------------------------------------------------------------------
+            // in the case of BGRA_EXT, B is the first component, G the second, and so forth.
+            shortData[x + y * outputPitch / sizeof(unsigned short)] =
+                (static_cast<unsigned short>(     color.alpha + 0.5f) << 15) |
+                (static_cast<unsigned short>(31 * color.red   + 0.5f) << 10) |
+                (static_cast<unsigned short>(31 * color.green + 0.5f) <<  5) |
+                (static_cast<unsigned short>(31 * color.blue  + 0.5f) <<  0);
+            break;
+
+          default:
+            ERR("WritePixelColor not implemented for format GL_BGRA_EXT and type 0x%X.", type);
+            UNIMPLEMENTED();
+            break;
+        }
+        break;
+
+      case GL_RGB:
+        switch (type)
+        {
+          case GL_UNSIGNED_SHORT_5_6_5:
+            shortData[x + y * outputPitch / sizeof(unsigned short)] =
+                (static_cast<unsigned short>(31 * color.blue  + 0.5f) <<  0) |
+                (static_cast<unsigned short>(63 * color.green + 0.5f) <<  5) |
+                (static_cast<unsigned short>(31 * color.red   + 0.5f) << 11);
+            break;
+
+          case GL_UNSIGNED_BYTE:
+            byteData[3 * x + y * outputPitch + 0] = static_cast<unsigned char>(255 * color.red +   0.5f);
+            byteData[3 * x + y * outputPitch + 1] = static_cast<unsigned char>(255 * color.green + 0.5f);
+            byteData[3 * x + y * outputPitch + 2] = static_cast<unsigned char>(255 * color.blue +  0.5f);
+            break;
+
+          default:
+            ERR("WritePixelColor not implemented for format GL_RGB and type 0x%X.", type);
+            UNIMPLEMENTED();
+            break;
+        }
+        break;
+
+      default:
+        ERR("WritePixelColor not implemented for format 0x%X.", format);
+        UNIMPLEMENTED();
+        break;
+    }
+}
+
+void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResource, const gl::Rectangle &area,
+                                 GLenum format, GLenum type, GLsizei outputPitch, bool packReverseRowOrder,
+                                 GLint packAlignment, void *pixels)
+{
+    D3D11_TEXTURE2D_DESC textureDesc;
+    texture->GetDesc(&textureDesc);
+
+    D3D11_TEXTURE2D_DESC stagingDesc;
+    stagingDesc.Width = area.width;
+    stagingDesc.Height = area.height;
+    stagingDesc.MipLevels = 1;
+    stagingDesc.ArraySize = 1;
+    stagingDesc.Format = textureDesc.Format;
+    stagingDesc.SampleDesc.Count = 1;
+    stagingDesc.SampleDesc.Quality = 0;
+    stagingDesc.Usage = D3D11_USAGE_STAGING;
+    stagingDesc.BindFlags = 0;
+    stagingDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+    stagingDesc.MiscFlags = 0;
+
+    ID3D11Texture2D* stagingTex = NULL;
+    HRESULT result = mDevice->CreateTexture2D(&stagingDesc, NULL, &stagingTex);
+    if (FAILED(result))
+    {
+        ERR("Failed to create staging texture for readPixels, HRESULT: 0x%X.", result);
+        return;
+    }
+
+    ID3D11Texture2D* srcTex = NULL;
+    if (textureDesc.SampleDesc.Count > 1)
+    {
+        D3D11_TEXTURE2D_DESC resolveDesc;
+        resolveDesc.Width = textureDesc.Width;
+        resolveDesc.Height = textureDesc.Height;
+        resolveDesc.MipLevels = 1;
+        resolveDesc.ArraySize = 1;
+        resolveDesc.Format = textureDesc.Format;
+        resolveDesc.SampleDesc.Count = 1;
+        resolveDesc.SampleDesc.Quality = 0;
+        resolveDesc.Usage = D3D11_USAGE_DEFAULT;
+        resolveDesc.BindFlags = 0;
+        resolveDesc.CPUAccessFlags = 0;
+        resolveDesc.MiscFlags = 0;
+
+        result = mDevice->CreateTexture2D(&resolveDesc, NULL, &srcTex);
+        if (FAILED(result))
+        {
+            ERR("Failed to create resolve texture for readPixels, HRESULT: 0x%X.", result);
+            stagingTex->Release();
+            return;
+        }
+
+        mDeviceContext->ResolveSubresource(srcTex, 0, texture, subResource, textureDesc.Format);
+        subResource = 0;
+    }
+    else
+    {
+        srcTex = texture;
+        srcTex->AddRef();
+    }
+
+    D3D11_BOX srcBox;
+    srcBox.left = area.x;
+    srcBox.right = area.x + area.width;
+    srcBox.top = area.y;
+    srcBox.bottom = area.y + area.height;
+    srcBox.front = 0;
+    srcBox.back = 1;
+
+    mDeviceContext->CopySubresourceRegion(stagingTex, 0, 0, 0, 0, srcTex, subResource, &srcBox);
+
+    srcTex->Release();
+    srcTex = NULL;
+
+    D3D11_MAPPED_SUBRESOURCE mapping;
+    mDeviceContext->Map(stagingTex, 0, D3D11_MAP_READ, 0, &mapping);
+
+    unsigned char *source;
+    int inputPitch;
+    if (packReverseRowOrder)
+    {
+        source = static_cast<unsigned char*>(mapping.pData) + mapping.RowPitch * (area.height - 1);
+        inputPitch = -static_cast<int>(mapping.RowPitch);
+    }
+    else
+    {
+        source = static_cast<unsigned char*>(mapping.pData);
+        inputPitch = static_cast<int>(mapping.RowPitch);
+    }
+
+    unsigned int fastPixelSize = getFastPixelCopySize(textureDesc.Format, format, type);
+    if (fastPixelSize != 0)
+    {
+        unsigned char *dest = static_cast<unsigned char*>(pixels);
+        for (int j = 0; j < area.height; j++)
+        {
+            memcpy(dest + j * outputPitch, source + j * inputPitch, area.width * fastPixelSize);
+        }
+    }
+    else
+    {
+        gl::Color pixelColor;
+        for (int j = 0; j < area.height; j++)
+        {
+            for (int i = 0; i < area.width; i++)
+            {
+                readPixelColor(source, textureDesc.Format, i, j, inputPitch, &pixelColor);
+                writePixelColor(pixelColor, format, type, i, j, outputPitch, pixels);
+            }
+        }
+    }
+
+    mDeviceContext->Unmap(stagingTex, 0);
+
+    stagingTex->Release();
+    stagingTex = NULL;
 }
 
 }
