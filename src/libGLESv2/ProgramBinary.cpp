@@ -1000,7 +1000,7 @@ void ProgramBinary::applyUniforms()
         }
     }
 
-    mRenderer->applyUniforms(&mUniforms, mVertexConstants, mPixelConstants);
+    mRenderer->applyUniforms(&mUniforms);
 }
 
 // Packs varyings into generic varying registers, using the algorithm from [OpenGL ES Shading Language 1.00 rev. 17] appendix A section 7 page 111
@@ -1813,9 +1813,6 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
         success = false;
     }
 
-    Context *context = getContext();
-    context->markDxUniformsDirty();
-
     return success;
 }
 
@@ -2239,38 +2236,6 @@ bool ProgramBinary::validateSamplers(InfoLog *infoLog)
     }
 
     return true;
-}
-
-void ProgramBinary::applyDxDepthRange(float near, float far, float diff)
-{
-    mVertexConstants.depthRange[0] = near;
-    mVertexConstants.depthRange[1] = far;
-    mVertexConstants.depthRange[2] = diff;
-
-    mPixelConstants.depthRange[0] = near;
-    mPixelConstants.depthRange[1] = far;
-    mPixelConstants.depthRange[2] = diff;
-}
-
-void ProgramBinary::applyDxDepthFront(float range, float start, float frontCCW)
-{
-    mPixelConstants.depthFront[0] = range;
-    mPixelConstants.depthFront[1] = start;
-    mPixelConstants.depthFront[2] = frontCCW;
-}
-
-void ProgramBinary::applyDxCoord(float halfWidth, float halfHeight, float x0, float y0)
-{
-    mPixelConstants.coord[0] = halfWidth;
-    mPixelConstants.coord[1] = halfHeight;
-    mPixelConstants.coord[2] = x0;
-    mPixelConstants.coord[3] = y0;
-}
-
-void ProgramBinary::applyDxHalfPixelSize(float width, float height)
-{
-    mVertexConstants.halfPixelSize[0] = width;
-    mVertexConstants.halfPixelSize[1] = height;
 }
 
 ProgramBinary::Sampler::Sampler() : active(false), logicalTextureUnit(0), textureType(TEXTURE_2D)

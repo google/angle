@@ -489,7 +489,7 @@ void Renderer11::setScissorRectangle(const gl::Rectangle &scissor, bool enabled)
 }
 
 bool Renderer11::setViewport(const gl::Rectangle &viewport, float zNear, float zFar, GLenum drawMode, GLenum frontFace, 
-                             bool ignoreViewport, gl::ProgramBinary *currentProgram, bool forceSetUniforms)
+                             bool ignoreViewport, gl::ProgramBinary *currentProgram)
 {
     gl::Rectangle actualViewport = viewport;
     float actualZNear = gl::clamp01(zNear);
@@ -517,8 +517,8 @@ bool Renderer11::setViewport(const gl::Rectangle &viewport, float zNear, float z
         return false;   // Nothing to render
     }
 
-    bool viewportChanged =  mForceSetViewport || memcmp(&actualViewport, &mCurViewport, sizeof(gl::Rectangle)) != 0 ||
-                            actualZNear != mCurNear || actualZFar != mCurFar;
+    bool viewportChanged = mForceSetViewport || memcmp(&actualViewport, &mCurViewport, sizeof(gl::Rectangle)) != 0 ||
+                           actualZNear != mCurNear || actualZFar != mCurFar;
 
     if (viewportChanged)
     {
@@ -529,20 +529,42 @@ bool Renderer11::setViewport(const gl::Rectangle &viewport, float zNear, float z
         mCurFar = actualZFar;
     }
 
-    if (currentProgram && (viewportChanged || forceSetUniforms))
+    if (currentProgram)
     {
-        currentProgram->applyDxHalfPixelSize(0.0f, 0.0f);
+        dx_VertexConstants vc = {0};
+        dx_PixelConstants pc = {0};
 
-        // These values are used for computing gl_FragCoord in Program::linkVaryings().
-        currentProgram->applyDxCoord(actualViewport.width  * 0.5f,
-                                     actualViewport.height * 0.5f,
-                                     actualViewport.x + (actualViewport.width  * 0.5f),
-                                     actualViewport.y + (actualViewport.height * 0.5f));
+        vc.halfPixelSize[0] = 0.0f;
+        vc.halfPixelSize[1] = 0.0f;
 
-        GLfloat ccw = !gl::IsTriangleMode(drawMode) ? 0.0f : (frontFace == GL_CCW ? 1.0f : -1.0f);
-        currentProgram->applyDxDepthFront((actualZFar - actualZNear) * 0.5f, (actualZNear + actualZFar) * 0.5f, ccw);
+        pc.coord[0] = actualViewport.width  * 0.5f;
+        pc.coord[1] = actualViewport.height * 0.5f;
+        pc.coord[2] = actualViewport.x + (actualViewport.width  * 0.5f);
+        pc.coord[3] = actualViewport.y + (actualViewport.height * 0.5f);
 
-        currentProgram->applyDxDepthRange(actualZNear, actualZFar, actualZFar - actualZNear);
+        pc.depthFront[0] = (actualZFar - actualZNear) * 0.5f;
+        pc.depthFront[1] = (actualZNear + actualZFar) * 0.5f;
+        pc.depthFront[2] = !gl::IsTriangleMode(drawMode) ? 0.0f : (frontFace == GL_CCW ? 1.0f : -1.0f);;
+
+        vc.depthRange[0] = actualZNear;
+        vc.depthRange[1] = actualZFar;
+        vc.depthRange[2] = actualZFar - actualZNear;
+
+        pc.depthRange[0] = actualZNear;
+        pc.depthRange[1] = actualZFar;
+        pc.depthRange[2] = actualZFar - actualZNear;
+
+        if (memcmp(&vc, &mVertexConstants, sizeof(dx_VertexConstants)) != 0)
+        {
+            mVertexConstants = vc;
+            mDxUniformsDirty = true;
+        }
+
+        if (memcmp(&pc, &mPixelConstants, sizeof(dx_PixelConstants)) != 0)
+        {
+            mPixelConstants = pc;
+            mDxUniformsDirty = true;
+        }
     }
 
     mForceSetViewport = false;
@@ -999,12 +1021,13 @@ void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
         mDeviceContext->PSSetShader(pixelShader, NULL, 0);
         mDeviceContext->VSSetShader(vertexShader, NULL, 0);
         programBinary->dirtyAllUniforms();
+        mDxUniformsDirty = true;
 
         mAppliedProgramBinarySerial = programBinarySerial;
     }
 }
 
-void Renderer11::applyUniforms(const gl::UniformArray *uniformArray, const dx_VertexConstants &vertexConstants, const dx_PixelConstants &pixelConstants)
+void Renderer11::applyUniforms(const gl::UniformArray *uniformArray)
 {
     D3D11_BUFFER_DESC constantBufferDescription = {0};
     constantBufferDescription.ByteWidth = D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT * sizeof(float[4]);
@@ -1145,8 +1168,8 @@ void Renderer11::applyUniforms(const gl::UniformArray *uniformArray, const dx_Ve
     }
 
     // Driver uniforms
-    memcpy(mapVS.pData, &vertexConstants, sizeof(dx_VertexConstants));
-    memcpy(mapPS.pData, &pixelConstants, sizeof(dx_PixelConstants));
+    memcpy(mapVS.pData, &mVertexConstants, sizeof(dx_VertexConstants));
+    memcpy(mapPS.pData, &mPixelConstants, sizeof(dx_PixelConstants));
 
     mDeviceContext->Unmap(constantBufferVS, 0);
     mDeviceContext->VSSetConstantBuffers(0, 1, &constantBufferVS);
@@ -1302,6 +1325,7 @@ void Renderer11::markAllStateDirty()
     mAppliedIBOffset = 0;
 
     mAppliedProgramBinarySerial = 0;
+    mDxUniformsDirty = true;
 }
 
 void Renderer11::releaseDeviceResources()

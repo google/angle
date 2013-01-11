@@ -62,12 +62,12 @@ class Renderer11 : public Renderer
 
     virtual void setScissorRectangle(const gl::Rectangle &scissor, bool enabled);
     virtual bool setViewport(const gl::Rectangle &viewport, float zNear, float zFar, GLenum drawMode, GLenum frontFace,
-                             bool ignoreViewport, gl::ProgramBinary *currentProgram, bool forceSetUniforms);
+                             bool ignoreViewport, gl::ProgramBinary *currentProgram);
 
     virtual bool applyPrimitiveType(GLenum mode, GLsizei count);
     virtual bool applyRenderTarget(gl::Framebuffer *frameBuffer);
     virtual void applyShaders(gl::ProgramBinary *programBinary);
-    virtual void applyUniforms(const gl::UniformArray *uniformArray, const dx_VertexConstants &vertexConstants, const dx_PixelConstants &pixelConstants);
+    virtual void applyUniforms(const gl::UniformArray *uniformArray);
     virtual GLenum applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], GLint first, GLsizei count, GLsizei instances);
     virtual GLenum applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo);
 
@@ -229,6 +229,10 @@ class Renderer11 : public Renderer
     unsigned int mAppliedIBOffset;
 
     unsigned int mAppliedProgramBinarySerial;
+
+    rx::dx_VertexConstants mVertexConstants;
+    rx::dx_PixelConstants mPixelConstants;
+    bool mDxUniformsDirty;
 
     // Vertex, index and input layouts
     VertexDataManager *mVertexDataManager;

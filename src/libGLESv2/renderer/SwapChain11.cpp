@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -472,12 +472,6 @@ EGLint SwapChain11::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
     static ID3D11RenderTargetView *const nullRTV = NULL;
     deviceContext->OMSetRenderTargets(1, &nullRTV, NULL);
 
-    // Mark context and renderer dirty flags
-    gl::Context *glContext = static_cast<gl::Context*>(glGetCurrentContext());
-    if (glContext)
-    {
-        glContext->markAllStateDirty();
-    }
     mRenderer->markAllStateDirty();
 
     return EGL_SUCCESS;

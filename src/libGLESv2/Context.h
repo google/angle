@@ -191,9 +191,6 @@ class Context
 
     void makeCurrent(egl::Surface *surface);
 
-    virtual void markAllStateDirty();
-    void markDxUniformsDirty();
-
     virtual void markContextLost();
     bool isContextLost();
 
@@ -486,7 +483,6 @@ class Context
     GLenum mResetStrategy;
     bool mRobustAccess;
 
-    bool mDxUniformsDirty;
     BindingPointer<ProgramBinary> mCurrentProgramBinary;
     Framebuffer *mBoundDrawFramebuffer;
 

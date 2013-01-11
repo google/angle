@@ -178,8 +178,6 @@ Context::Context(const gl::Context *shareContext, rx::Renderer *renderer, bool n
     mSupportsEventQueries = false;
     mSupportsOcclusionQueries = false;
     mNumCompressedTextureFormats = 0;
-
-    markAllStateDirty();
 }
 
 Context::~Context()
@@ -314,19 +312,6 @@ void Context::makeCurrent(egl::Surface *surface)
     Framebuffer *framebufferZero = new DefaultFramebuffer(mRenderer, colorbufferZero, depthStencilbufferZero);
 
     setFramebufferZero(framebufferZero);
-    
-    markAllStateDirty();
-}
-
-// This function will set all of the state-related dirty flags, so that all state is set during next pre-draw.
-void Context::markAllStateDirty()
-{
-    mDxUniformsDirty = true;
-}
-
-void Context::markDxUniformsDirty()
-{
-    mDxUniformsDirty = true;
 }
 
 // NOTE: this function should not assume that this context is current!
@@ -933,7 +918,6 @@ void Context::useProgram(GLuint program)
         Program *newProgram = mResourceManager->getProgram(program);
         Program *oldProgram = mResourceManager->getProgram(priorProgram);
         mCurrentProgramBinary.set(NULL);
-        mDxUniformsDirty = true;
 
         if (newProgram)
         {
@@ -959,7 +943,6 @@ void Context::linkProgram(GLuint program)
     if (linked && program == mState.currentProgram)
     {
         mCurrentProgramBinary.set(programObject->getProgramBinary());
-        mDxUniformsDirty = true;
     }
 }
 
@@ -974,7 +957,6 @@ void Context::setProgramBinary(GLuint program, const void *binary, GLint length)
     if (loaded && program == mState.currentProgram)
     {
         mCurrentProgramBinary.set(programObject->getProgramBinary());
-        mDxUniformsDirty = true;
     }
 
 }
@@ -1719,11 +1701,10 @@ bool Context::applyRenderTarget(GLenum drawMode, bool ignoreViewport)
 
     ProgramBinary *programBinary = mState.currentProgram ? getCurrentProgramBinary() : NULL;
     if (!mRenderer->setViewport(mState.viewport, mState.zNear, mState.zFar, drawMode, mState.rasterizer.frontFace,
-                                ignoreViewport, programBinary, mDxUniformsDirty))
+                                ignoreViewport, programBinary))
     {
         return false;
     }
-    mDxUniformsDirty = false;
 
     mRenderer->setScissorRectangle(mState.scissor, mState.scissorTest);
 

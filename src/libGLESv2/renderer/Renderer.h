@@ -107,11 +107,11 @@ class Renderer
 
     virtual void setScissorRectangle(const gl::Rectangle &scissor, bool enabled) = 0;
     virtual bool setViewport(const gl::Rectangle &viewport, float zNear, float zFar, GLenum drawMode, GLenum frontFace,
-                             bool ignoreViewport, gl::ProgramBinary *currentProgram, bool forceSetUniforms) = 0;
+                             bool ignoreViewport, gl::ProgramBinary *currentProgram) = 0;
 
     virtual bool applyRenderTarget(gl::Framebuffer *frameBuffer) = 0;
     virtual void applyShaders(gl::ProgramBinary *programBinary) = 0;
-    virtual void applyUniforms(const gl::UniformArray *uniformArray, const dx_VertexConstants &vertexConstants, const dx_PixelConstants &pixelConstants) = 0;
+    virtual void applyUniforms(const gl::UniformArray *uniformArray) = 0;
     virtual bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount) = 0;
     virtual GLenum applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], GLint first, GLsizei count, GLsizei instances) = 0;
     virtual GLenum applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo) = 0;

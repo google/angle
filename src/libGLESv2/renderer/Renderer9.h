@@ -86,11 +86,11 @@ class Renderer9 : public Renderer
 
     virtual void setScissorRectangle(const gl::Rectangle &scissor, bool enabled);
     virtual bool setViewport(const gl::Rectangle &viewport, float zNear, float zFar, GLenum drawMode, GLenum frontFace,
-                             bool ignoreViewport, gl::ProgramBinary *currentProgram, bool forceSetUniforms);
+                             bool ignoreViewport, gl::ProgramBinary *currentProgram);
 
     virtual bool applyRenderTarget(gl::Framebuffer *frameBuffer);
     virtual void applyShaders(gl::ProgramBinary *programBinary);
-    virtual void applyUniforms(const gl::UniformArray *uniformArray, const dx_VertexConstants &vertexConstants, const dx_PixelConstants &pixelConstants);
+    virtual void applyUniforms(const gl::UniformArray *uniformArray);
     virtual bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount);
     virtual GLenum applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], GLint first, GLsizei count, GLsizei instances);
     virtual GLenum applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo);
@@ -308,6 +308,10 @@ class Renderer9 : public Renderer
 
     unsigned int mAppliedIBSerial;
     unsigned int mAppliedProgramBinarySerial;
+    
+    rx::dx_VertexConstants mVertexConstants;
+    rx::dx_PixelConstants mPixelConstants;
+    bool mDxUniformsDirty;
 
     // A pool of event queries that are currently unused.
     std::vector<IDirect3DQuery9*> mEventQueryPool;

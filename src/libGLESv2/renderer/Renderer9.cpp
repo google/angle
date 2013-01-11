@@ -1027,7 +1027,7 @@ void Renderer9::setScissorRectangle(const gl::Rectangle &scissor, bool enabled)
 }
 
 bool Renderer9::setViewport(const gl::Rectangle &viewport, float zNear, float zFar, GLenum drawMode, GLenum frontFace,
-                            bool ignoreViewport, gl::ProgramBinary *currentProgram, bool forceSetUniforms)
+                            bool ignoreViewport, gl::ProgramBinary *currentProgram)
 {
     gl::Rectangle actualViewport = viewport;
     float actualZNear = gl::clamp01(zNear);
@@ -1055,8 +1055,8 @@ bool Renderer9::setViewport(const gl::Rectangle &viewport, float zNear, float zF
         return false;   // Nothing to render
     }
 
-    bool viewportChanged =  mForceSetViewport || memcmp(&actualViewport, &mCurViewport, sizeof(gl::Rectangle)) != 0 ||
-                            actualZNear != mCurNear || actualZFar != mCurFar;
+    bool viewportChanged = mForceSetViewport || memcmp(&actualViewport, &mCurViewport, sizeof(gl::Rectangle)) != 0 ||
+                           actualZNear != mCurNear || actualZFar != mCurFar;
     if (viewportChanged)
     {
         mDevice->SetViewport(&dxViewport);
@@ -1066,20 +1066,42 @@ bool Renderer9::setViewport(const gl::Rectangle &viewport, float zNear, float zF
         mCurFar = actualZFar;
     }
 
-    if (currentProgram && (viewportChanged || forceSetUniforms))
+    if (currentProgram)
     {
-        currentProgram->applyDxHalfPixelSize(1.0f / dxViewport.Width, -1.0f / dxViewport.Height);
+        dx_VertexConstants vc = {0};
+        dx_PixelConstants pc = {0};
 
-        // These values are used for computing gl_FragCoord in Program::linkVaryings().
-        currentProgram->applyDxCoord(actualViewport.width  * 0.5f,
-                                     actualViewport.height * 0.5f,
-                                     actualViewport.x + (actualViewport.width  * 0.5f),
-                                     actualViewport.y + (actualViewport.height * 0.5f));
+        vc.halfPixelSize[0] = 1.0f / dxViewport.Width;
+        vc.halfPixelSize[1] = -1.0f / dxViewport.Height;
 
-        GLfloat ccw = !gl::IsTriangleMode(drawMode) ? 0.0f : (frontFace == GL_CCW ? 1.0f : -1.0f);
-        currentProgram->applyDxDepthFront((actualZFar - actualZNear) * 0.5f, (actualZNear + actualZFar) * 0.5f, ccw);
+        pc.coord[0] = actualViewport.width  * 0.5f;
+        pc.coord[1] = actualViewport.height * 0.5f;
+        pc.coord[2] = actualViewport.x + (actualViewport.width  * 0.5f);
+        pc.coord[3] = actualViewport.y + (actualViewport.height * 0.5f);
 
-        currentProgram->applyDxDepthRange(actualZNear, actualZFar, actualZFar - actualZNear);
+        pc.depthFront[0] = (actualZFar - actualZNear) * 0.5f;
+        pc.depthFront[1] = (actualZNear + actualZFar) * 0.5f;
+        pc.depthFront[2] = !gl::IsTriangleMode(drawMode) ? 0.0f : (frontFace == GL_CCW ? 1.0f : -1.0f);;
+
+        vc.depthRange[0] = actualZNear;
+        vc.depthRange[1] = actualZFar;
+        vc.depthRange[2] = actualZFar - actualZNear;
+
+        pc.depthRange[0] = actualZNear;
+        pc.depthRange[1] = actualZFar;
+        pc.depthRange[2] = actualZFar - actualZNear;
+
+        if (memcmp(&vc, &mVertexConstants, sizeof(dx_VertexConstants)) != 0)
+        {
+            mVertexConstants = vc;
+            mDxUniformsDirty = true;
+        }
+
+        if (memcmp(&pc, &mPixelConstants, sizeof(dx_PixelConstants)) != 0)
+        {
+            mPixelConstants = pc;
+            mDxUniformsDirty = true;
+        }
     }
 
     mForceSetViewport = false;
@@ -1579,12 +1601,13 @@ void Renderer9::applyShaders(gl::ProgramBinary *programBinary)
         mDevice->SetPixelShader(pixelShader);
         mDevice->SetVertexShader(vertexShader);
         programBinary->dirtyAllUniforms();
+        mDxUniformsDirty = true;
 
         mAppliedProgramBinarySerial = programBinarySerial;
     }
 }
 
-void Renderer9::applyUniforms(const gl::UniformArray *uniformArray, const dx_VertexConstants &vertexConstants, const dx_PixelConstants &pixelConstants)
+void Renderer9::applyUniforms(const gl::UniformArray *uniformArray)
 {
     for (std::vector<gl::Uniform*>::const_iterator ub = uniformArray->begin(), ue = uniformArray->end(); ub != ue; ++ub)
     {
@@ -1626,8 +1649,12 @@ void Renderer9::applyUniforms(const gl::UniformArray *uniformArray, const dx_Ver
     }
 
     // Driver uniforms
-    mDevice->SetVertexShaderConstantF(0, (float*)&vertexConstants, sizeof(dx_VertexConstants) / sizeof(float[4]));
-    mDevice->SetPixelShaderConstantF(0, (float*)&pixelConstants, sizeof(dx_PixelConstants) / sizeof(float[4]));
+    if (mDxUniformsDirty)
+    {
+        mDevice->SetVertexShaderConstantF(0, (float*)&mVertexConstants, sizeof(dx_VertexConstants) / sizeof(float[4]));
+        mDevice->SetPixelShaderConstantF(0, (float*)&mPixelConstants, sizeof(dx_PixelConstants) / sizeof(float[4]));
+        mDxUniformsDirty = false;
+    }
 }
 
 void Renderer9::applyUniformnbv(gl::Uniform *targetUniform, GLsizei count, int width, const GLboolean *v)
@@ -1938,6 +1965,7 @@ void Renderer9::markAllStateDirty()
 
     mAppliedIBSerial = 0;
     mAppliedProgramBinarySerial = 0;
+    mDxUniformsDirty = true;
 
     mVertexDeclarationCache.markStateDirty();
 }
