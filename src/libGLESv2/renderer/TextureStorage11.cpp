@@ -247,7 +247,7 @@ void TextureStorage11_2D::initializeRenderTarget(DXGI_FORMAT format, int width, 
             if (result == E_OUTOFMEMORY)
                 return;
 
-            ASSERT(SUCCESS(result));
+            ASSERT(SUCCEEDED(result));
 
             mRenderTarget = new RenderTarget11(mRenderer, renderTargetView, width, height);
         }
@@ -359,7 +359,7 @@ void TextureStorage11_Cube::initializeRenderTarget(DXGI_FORMAT format, int size)
                 if (result == E_OUTOFMEMORY)
                     return;
 
-                ASSERT(SUCCESS(result));
+                ASSERT(SUCCEEDED(result));
 
                 mRenderTarget[i] = new RenderTarget11(mRenderer, renderTargetView, size, size);
             }
