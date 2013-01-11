@@ -219,6 +219,8 @@ class Renderer11 : public Renderer
     float mCurFar;
 
     unsigned int mAppliedIBSerial;
+    unsigned int mAppliedIBOffset;
+
     unsigned int mAppliedProgramBinarySerial;
 
     // Vertex, index and input layouts

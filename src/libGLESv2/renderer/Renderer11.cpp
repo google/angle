@@ -722,12 +722,13 @@ GLenum Renderer11::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementAr
 
     if (err == GL_NO_ERROR)
     {
-        if (indexInfo->serial != mAppliedIBSerial)
+        if (indexInfo->serial != mAppliedIBSerial || indexInfo->startOffset != mAppliedIBOffset)
         {
             IndexBuffer11* indexBuffer = IndexBuffer11::makeIndexBuffer11(indexInfo->indexBuffer);
 
             mDeviceContext->IASetIndexBuffer(indexBuffer->getBuffer(), indexBuffer->getIndexFormat(), indexInfo->startOffset);
             mAppliedIBSerial = indexInfo->serial;
+            mAppliedIBOffset = indexInfo->startOffset;
         }
     }
 
@@ -790,6 +791,7 @@ void Renderer11::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices,
     }
 
     unsigned int *data = reinterpret_cast<unsigned int*>(mappedMemory);
+    unsigned int indexBufferOffset = static_cast<unsigned int>(offset);
 
     switch (type)
     {
@@ -830,12 +832,13 @@ void Renderer11::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices,
         return error(GL_OUT_OF_MEMORY);
     }
 
-    if (mAppliedIBSerial != mLineLoopIB->getSerial())
+    if (mAppliedIBSerial != mLineLoopIB->getSerial() || mAppliedIBOffset != indexBufferOffset)
     {
         IndexBuffer11 *indexBuffer = IndexBuffer11::makeIndexBuffer11(mLineLoopIB->getIndexBuffer());
 
-        mDeviceContext->IASetIndexBuffer(indexBuffer->getBuffer(), indexBuffer->getIndexFormat(), offset);
+        mDeviceContext->IASetIndexBuffer(indexBuffer->getBuffer(), indexBuffer->getIndexFormat(), indexBufferOffset);
         mAppliedIBSerial = mLineLoopIB->getSerial();
+        mAppliedIBOffset = indexBufferOffset;
     }
 
     mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
@@ -1086,6 +1089,8 @@ void Renderer11::markAllStateDirty()
     mForceSetViewport = true;
 
     mAppliedIBSerial = 0;
+    mAppliedIBOffset = 0;
+
     mAppliedProgramBinarySerial = 0;
 }
 
