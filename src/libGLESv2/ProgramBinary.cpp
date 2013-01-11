@@ -1399,7 +1399,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
                 for (int j = 0; j < rows; j++)
                 {
                     std::string n = str(varying->reg + i * rows + j);
-                    pixelHLSL += "    float4 v" + n + " : " + varyingSemantic + n + ";\n";
+                    pixelHLSL += "    float" + str(VariableColumnCount(varying->type)) + " v" + n + " : " + varyingSemantic + n + ";\n";
                 }
             }
         }
