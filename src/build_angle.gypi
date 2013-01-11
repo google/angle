@@ -20,10 +20,10 @@
       'include_dirs': [
       ],
       'sources': [
-        'compiler/preprocessor/Diagnostics.cpp',
-        'compiler/preprocessor/Diagnostics.h',
-        'compiler/preprocessor/DirectiveHandler.cpp',
-        'compiler/preprocessor/DirectiveHandler.h',
+        'compiler/preprocessor/DiagnosticsBase.cpp',
+        'compiler/preprocessor/DiagnosticsBase.h',
+        'compiler/preprocessor/DirectiveHandlerBase.cpp',
+        'compiler/preprocessor/DirectiveHandlerBase.h',
         'compiler/preprocessor/DirectiveParser.cpp',
         'compiler/preprocessor/DirectiveParser.h',
         'compiler/preprocessor/ExpressionParser.cpp',

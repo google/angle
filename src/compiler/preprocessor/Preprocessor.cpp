@@ -9,7 +9,7 @@
 #include <cassert>
 #include <sstream>
 
-#include "Diagnostics.h"
+#include "DiagnosticsBase.h"
 #include "DirectiveParser.h"
 #include "Macro.h"
 #include "MacroExpander.h"
