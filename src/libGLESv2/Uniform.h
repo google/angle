@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2010-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2010-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -27,7 +27,6 @@ struct Uniform
 
     bool isArray() const;
     unsigned int elementCount() const;
-    unsigned int registerCount() const;
 
     const GLenum type;
     const std::string name;
@@ -36,20 +35,9 @@ struct Uniform
     unsigned char *data;
     bool dirty;
 
-    struct RegisterInfo
-    {
-        RegisterInfo()
-        {
-            registerIndex = -1;
-            registerCount = 0;
-        }
-
-        int registerIndex;
-        unsigned int registerCount;
-    };
-
-    RegisterInfo ps;
-    RegisterInfo vs;
+    int psRegisterIndex;
+    int vsRegisterIndex;
+    unsigned int registerCount;
 };
 
 typedef std::vector<Uniform*> UniformArray;

@@ -965,10 +965,9 @@ void ProgramBinary::applyUniforms()
                 int count = targetUniform->elementCount();
                 GLint *v = (GLint*)targetUniform->data;
 
-                if (targetUniform->ps.registerCount)
+                if (targetUniform->psRegisterIndex >= 0)
                 {
-                    ASSERT(targetUniform->ps.registerIndex >= 0);
-                    unsigned int firstIndex = targetUniform->ps.registerIndex;
+                    unsigned int firstIndex = targetUniform->psRegisterIndex;
 
                     for (int i = 0; i < count; i++)
                     {
@@ -982,10 +981,9 @@ void ProgramBinary::applyUniforms()
                     }
                 }
 
-                if (targetUniform->vs.registerCount)
+                if (targetUniform->vsRegisterIndex >= 0)
                 {
-                    ASSERT(targetUniform->vs.registerIndex >= 0);
-                    unsigned int firstIndex = targetUniform->vs.registerIndex;
+                    unsigned int firstIndex = targetUniform->vsRegisterIndex;
 
                     for (int i = 0; i < count; i++)
                     {
@@ -1581,11 +1579,9 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
 
         mUniforms[i] = new Uniform(type, name, arraySize);
         
-        stream.read(&mUniforms[i]->ps.registerIndex);
-        stream.read(&mUniforms[i]->ps.registerCount);
-
-        stream.read(&mUniforms[i]->vs.registerIndex);
-        stream.read(&mUniforms[i]->vs.registerCount);
+        stream.read(&mUniforms[i]->psRegisterIndex);
+        stream.read(&mUniforms[i]->vsRegisterIndex);
+        stream.read(&mUniforms[i]->registerCount);
     }
 
     stream.read(&size);
@@ -1687,11 +1683,9 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
         stream.write(mUniforms[i]->name);
         stream.write(mUniforms[i]->arraySize);
 
-        stream.write(mUniforms[i]->ps.registerIndex);
-        stream.write(mUniforms[i]->ps.registerCount);
-
-        stream.write(mUniforms[i]->vs.registerIndex);
-        stream.write(mUniforms[i]->vs.registerCount);
+        stream.write(mUniforms[i]->psRegisterIndex);
+        stream.write(mUniforms[i]->vsRegisterIndex);
+        stream.write(mUniforms[i]->registerCount);
     }
 
     stream.write(mUniformIndex.size());
@@ -1976,13 +1970,11 @@ bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, In
 
     if (shader == GL_FRAGMENT_SHADER)
     {
-        uniform->ps.registerIndex = constant.registerIndex;
-        uniform->ps.registerCount = uniform->registerCount();
+        uniform->psRegisterIndex = constant.registerIndex;
     }
     else if (shader == GL_VERTEX_SHADER)
     {
-        uniform->vs.registerIndex = constant.registerIndex;
-        uniform->vs.registerCount = uniform->registerCount();
+        uniform->vsRegisterIndex = constant.registerIndex;
     }
     else UNREACHABLE();
 

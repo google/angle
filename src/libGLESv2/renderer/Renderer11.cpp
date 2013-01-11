@@ -257,7 +257,7 @@ void Renderer11::deleteConfigs(ConfigDesc *configDescList)
 void Renderer11::sync(bool block)
 {
     // TODO
-    UNIMPLEMENTED();
+    // UNIMPLEMENTED();
 }
 
 SwapChain *Renderer11::createSwapChain(HWND window, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat)
@@ -893,13 +893,9 @@ void Renderer11::applyUniforms(const gl::UniformArray *uniformArray, const dx_Ve
     result = mDeviceContext->Map(constantBufferPS, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapPS);
     ASSERT(SUCCEEDED(result));
 
-    float (*cVS)[4] = (float(*)[4])mapVS.pData;
-    float (*cPS)[4] = (float(*)[4])mapPS.pData;
-
     for (gl::UniformArray::const_iterator uniform_iterator = uniformArray->begin(); uniform_iterator != uniformArray->end(); uniform_iterator++)
     {
         const gl::Uniform *uniform = *uniform_iterator;
-        GLfloat (*f)[4] = (GLfloat(*)[4])uniform->data;
 
         switch (uniform->type)
         {
@@ -913,36 +909,107 @@ void Renderer11::applyUniforms(const gl::UniformArray *uniformArray, const dx_Ve
           case GL_FLOAT_MAT2:
           case GL_FLOAT_MAT3:
           case GL_FLOAT_MAT4:
-            if (uniform->vs.registerCount)
+            if (uniform->vsRegisterIndex >= 0)
             {
-                for (unsigned int i = 0; i < uniform->vs.registerCount; i++)
+                GLfloat (*c)[4] = (GLfloat(*)[4])mapVS.pData;
+                float (*f)[4] = (float(*)[4])uniform->data;
+
+                for (unsigned int i = 0; i < uniform->registerCount; i++)
                 {
-                    cVS[uniform->vs.registerIndex + i][0] = f[i][0];
-                    cVS[uniform->vs.registerIndex + i][1] = f[i][1];
-                    cVS[uniform->vs.registerIndex + i][2] = f[i][2];
-                    cVS[uniform->vs.registerIndex + i][3] = f[i][3];
+                    c[uniform->vsRegisterIndex + i][0] = f[i][0];
+                    c[uniform->vsRegisterIndex + i][1] = f[i][1];
+                    c[uniform->vsRegisterIndex + i][2] = f[i][2];
+                    c[uniform->vsRegisterIndex + i][3] = f[i][3];
                 }
             }
-            if (uniform->ps.registerCount)
+            if (uniform->psRegisterIndex >= 0)
             {
-                for (unsigned int i = 0; i < uniform->ps.registerCount; i++)
+                GLfloat (*c)[4] = (GLfloat(*)[4])mapPS.pData;
+                float (*f)[4] = (float(*)[4])uniform->data;
+
+                for (unsigned int i = 0; i < uniform->registerCount; i++)
                 {
-                    cPS[uniform->ps.registerIndex + i][0] = f[i][0];
-                    cPS[uniform->ps.registerIndex + i][1] = f[i][1];
-                    cPS[uniform->ps.registerIndex + i][2] = f[i][2];
-                    cPS[uniform->ps.registerIndex + i][3] = f[i][3];
+                    c[uniform->psRegisterIndex + i][0] = f[i][0];
+                    c[uniform->psRegisterIndex + i][1] = f[i][1];
+                    c[uniform->psRegisterIndex + i][2] = f[i][2];
+                    c[uniform->psRegisterIndex + i][3] = f[i][3];
+                }
+            }
+            break;
+          case GL_INT:
+          case GL_INT_VEC2:
+          case GL_INT_VEC3:
+          case GL_INT_VEC4:
+            if (uniform->vsRegisterIndex >= 0)
+            {
+                int (*c)[4] = (int(*)[4])mapVS.pData;
+                GLint *x = (GLint*)uniform->data;
+                int count = gl::VariableColumnCount(uniform->type);
+
+                for (unsigned int i = 0; i < uniform->registerCount; i++)
+                {
+                    if (count >= 1) c[uniform->vsRegisterIndex + i][0] = x[i * count + 0];
+                    if (count >= 2) c[uniform->vsRegisterIndex + i][1] = x[i * count + 1];
+                    if (count >= 3) c[uniform->vsRegisterIndex + i][2] = x[i * count + 2];
+                    if (count >= 4) c[uniform->vsRegisterIndex + i][3] = x[i * count + 3];
+                }
+            }
+            if (uniform->psRegisterIndex >= 0)
+            {
+                int (*c)[4] = (int(*)[4])mapPS.pData;
+                GLint *x = (GLint*)uniform->data;
+                int count = gl::VariableColumnCount(uniform->type);
+
+                for (unsigned int i = 0; i < uniform->registerCount; i++)
+                {
+                    if (count >= 1) c[uniform->psRegisterIndex + i][0] = x[i * count + 0];
+                    if (count >= 2) c[uniform->psRegisterIndex + i][1] = x[i * count + 1];
+                    if (count >= 3) c[uniform->psRegisterIndex + i][2] = x[i * count + 2];
+                    if (count >= 4) c[uniform->psRegisterIndex + i][3] = x[i * count + 3];
+                }
+            }
+            break;
+          case GL_BOOL:
+          case GL_BOOL_VEC2:
+          case GL_BOOL_VEC3:
+          case GL_BOOL_VEC4:
+            if (uniform->vsRegisterIndex >= 0)
+            {
+                int (*c)[4] = (int(*)[4])mapVS.pData;
+                GLboolean *b = (GLboolean*)uniform->data;
+                int count = gl::VariableColumnCount(uniform->type);
+
+                for (unsigned int i = 0; i < uniform->registerCount; i++)
+                {
+                    if (count >= 1) c[uniform->vsRegisterIndex + i][0] = b[i * count + 0];
+                    if (count >= 2) c[uniform->vsRegisterIndex + i][1] = b[i * count + 1];
+                    if (count >= 3) c[uniform->vsRegisterIndex + i][2] = b[i * count + 2];
+                    if (count >= 4) c[uniform->vsRegisterIndex + i][3] = b[i * count + 3];
+                }
+            }
+            if (uniform->psRegisterIndex >= 0)
+            {
+                int (*c)[4] = (int(*)[4])mapPS.pData;
+                GLboolean *b = (GLboolean*)uniform->data;
+                int count = gl::VariableColumnCount(uniform->type);
+
+                for (unsigned int i = 0; i < uniform->registerCount; i++)
+                {
+                    if (count >= 1) c[uniform->psRegisterIndex + i][0] = b[i * count + 0];
+                    if (count >= 2) c[uniform->psRegisterIndex + i][1] = b[i * count + 1];
+                    if (count >= 3) c[uniform->psRegisterIndex + i][2] = b[i * count + 2];
+                    if (count >= 4) c[uniform->psRegisterIndex + i][3] = b[i * count + 3];
                 }
             }
             break;
           default:
-            UNIMPLEMENTED();   // FIXME
             UNREACHABLE();
         }
     }
 
     // Driver uniforms
-    memcpy(cVS, &vertexConstants, sizeof(dx_VertexConstants));
-    memcpy(cPS, &pixelConstants, sizeof(dx_PixelConstants));
+    memcpy(mapVS.pData, &vertexConstants, sizeof(dx_VertexConstants));
+    memcpy(mapPS.pData, &pixelConstants, sizeof(dx_PixelConstants));
 
     mDeviceContext->Unmap(constantBufferVS, 0);
     mDeviceContext->VSSetConstantBuffers(0, 1, &constantBufferVS);

@@ -1611,7 +1611,7 @@ void Renderer9::applyUniformnbv(gl::Uniform *targetUniform, GLsizei count, int w
 {
     float vector[gl::D3D9_MAX_FLOAT_CONSTANTS * 4];
 
-    if (targetUniform->ps.registerIndex >= 0 || targetUniform->vs.registerIndex >= 0)
+    if (targetUniform->psRegisterIndex >= 0 || targetUniform->vsRegisterIndex >= 0)
     {
         ASSERT(count <= gl::D3D9_MAX_FLOAT_CONSTANTS);
         for (int i = 0; i < count; i++)
@@ -1635,16 +1635,14 @@ void Renderer9::applyUniformnbv(gl::Uniform *targetUniform, GLsizei count, int w
 
 void Renderer9::applyUniformnfv(gl::Uniform *targetUniform, const GLfloat *v)
 {
-    if (targetUniform->ps.registerCount)
+    if (targetUniform->psRegisterIndex >= 0)
     {
-        ASSERT(targetUniform->ps.registerIndex >= 0);
-        mDevice->SetPixelShaderConstantF(targetUniform->ps.registerIndex, v, targetUniform->ps.registerCount);
+        mDevice->SetPixelShaderConstantF(targetUniform->psRegisterIndex, v, targetUniform->registerCount);
     }
 
-    if (targetUniform->vs.registerCount)
+    if (targetUniform->vsRegisterIndex >= 0)
     {
-        ASSERT(targetUniform->vs.registerIndex >= 0);
-        mDevice->SetVertexShaderConstantF(targetUniform->vs.registerIndex, v, targetUniform->vs.registerCount);
+        mDevice->SetVertexShaderConstantF(targetUniform->vsRegisterIndex, v, targetUniform->registerCount);
     }
 }
 

@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2010-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2010-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -18,6 +18,10 @@ Uniform::Uniform(GLenum type, const std::string &name, unsigned int arraySize)
     data = new unsigned char[bytes];
     memset(data, 0, bytes);
     dirty = true;
+
+    psRegisterIndex = -1;
+    vsRegisterIndex = -1;
+    registerCount = VariableRowCount(type) * elementCount();
 }
 
 Uniform::~Uniform()
@@ -33,11 +37,6 @@ bool Uniform::isArray() const
 unsigned int Uniform::elementCount() const
 {
     return arraySize > 0 ? arraySize : 1;
-}
-
-unsigned int Uniform::registerCount() const
-{
-    return VariableRowCount(type) * elementCount();
 }
 
 }
