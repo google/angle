@@ -1265,8 +1265,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
     vertexHLSL += "};\n"
                    "\n"
                    "struct VS_OUTPUT\n"
-                   "{\n"
-                   "    float4 gl_Position : " + positionSemantic + ";\n";
+                   "{\n";
 
     for (int r = 0; r < registers; r++)
     {
@@ -1285,10 +1284,11 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
         vertexHLSL += "    float gl_PointSize : PSIZE;\n";
     }
 
-    vertexHLSL += "};\n"
-                   "\n"
-                   "VS_OUTPUT main(VS_INPUT input)\n"
-                   "{\n";
+    vertexHLSL += "    float4 gl_Position : " + positionSemantic + ";\n"
+                  "};\n"
+                  "\n"
+                  "VS_OUTPUT main(VS_INPUT input)\n"
+                  "{\n";
 
     for (AttributeArray::iterator attribute = vertexShader->mAttributes.begin(); attribute != vertexShader->mAttributes.end(); attribute++)
     {
