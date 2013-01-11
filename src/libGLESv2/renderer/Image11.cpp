@@ -9,6 +9,7 @@
 
 #include "libGLESv2/renderer/Renderer11.h"
 #include "libGLESv2/renderer/Image11.h"
+#include "libGLESv2/renderer/TextureStorage11.h"
 
 #include "libGLESv2/main.h"
 #include "libGLESv2/mathutil.h"
@@ -52,16 +53,14 @@ ID3D11Texture2D *Image11::getStagingTexture()
 
 bool Image11::updateSurface(TextureStorageInterface2D *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
-    // TODO - relies on TextureStorage11 implementation
-    UNIMPLEMENTED();
-    return false;
+    TextureStorage11_2D *storage11 = TextureStorage11_2D::makeTextureStorage11_2D(storage->getStorageInstance());
+    return storage11->updateSubresourceLevel(getStagingTexture(), level, 0, xoffset, yoffset, width, height);
 }
 
 bool Image11::updateSurface(TextureStorageInterfaceCube *storage, int face, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
-    // TODO - relies on TextureStorage11 implementation
-    UNIMPLEMENTED();
-    return false;
+    TextureStorage11_Cube *storage11 = TextureStorage11_Cube::makeTextureStorage11_Cube(storage->getStorageInstance());
+    return storage11->updateSubresourceLevel(getStagingTexture(), level, face, xoffset, yoffset, width, height);
 }
 
 bool Image11::redefine(Renderer *renderer, GLint internalformat, GLsizei width, GLsizei height, bool forceRelease)
