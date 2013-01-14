@@ -16,13 +16,13 @@
 
 #include "GLSLANG/ShaderLang.h"
 
-#include "compiler/ArrayBoundsClamper.h"
 #include "compiler/BuiltInFunctionEmulator.h"
 #include "compiler/ExtensionBehavior.h"
 #include "compiler/HashNames.h"
 #include "compiler/InfoSink.h"
 #include "compiler/SymbolTable.h"
 #include "compiler/VariableInfo.h"
+#include "third_party/compiler/ArrayBoundsClamper.h"
 
 class LongNameMap;
 class TCompiler;

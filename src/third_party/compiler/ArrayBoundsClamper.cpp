@@ -23,7 +23,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "compiler/ArrayBoundsClamper.h"
+#include "third_party/compiler/ArrayBoundsClamper.h"
 
 const char* kIntClampBegin = "// BEGIN: Generated code for array bounds clamping\n\n";
 const char* kIntClampEnd = "// END: Generated code for array bounds clamping\n\n";

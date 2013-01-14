@@ -64,8 +64,6 @@
         'COMPILER_IMPLEMENTATION',
       ],
       'sources': [
-        'compiler/ArrayBoundsClamper.cpp',
-        'compiler/ArrayBoundsClamper.h',
         'compiler/BaseTypes.h',
         'compiler/BuiltInFunctionEmulator.cpp',
         'compiler/BuiltInFunctionEmulator.h',
@@ -141,6 +139,8 @@
         'compiler/timing/RestrictFragmentShaderTiming.h',
         'compiler/timing/RestrictVertexShaderTiming.cpp',
         'compiler/timing/RestrictVertexShaderTiming.h',
+        'third_party/compiler/ArrayBoundsClamper.cpp',
+        'third_party/compiler/ArrayBoundsClamper.h',
       ],
       'conditions': [
         ['OS=="win"', {

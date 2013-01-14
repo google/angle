@@ -4,7 +4,6 @@
 // found in the LICENSE file.
 //
 
-#include "compiler/ArrayBoundsClamper.h"
 #include "compiler/BuiltInFunctionEmulator.h"
 #include "compiler/DetectRecursion.h"
 #include "compiler/ForLoopUnroll.h"
@@ -20,6 +19,7 @@
 #include "compiler/depgraph/DependencyGraphOutput.h"
 #include "compiler/timing/RestrictFragmentShaderTiming.h"
 #include "compiler/timing/RestrictVertexShaderTiming.h"
+#include "third_party/compiler/ArrayBoundsClamper.h"
 
 bool isWebGLBasedSpec(ShShaderSpec spec)
 {
