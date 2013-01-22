@@ -99,7 +99,7 @@ OutputHLSL::~OutputHLSL()
 
 void OutputHLSL::output()
 {
-    mContainsLoopDiscontinuity = containsLoopDiscontinuity(mContext.treeRoot);
+    mContainsLoopDiscontinuity = mContext.shaderType == SH_FRAGMENT_SHADER && containsLoopDiscontinuity(mContext.treeRoot);
 
     mContext.treeRoot->traverse(this);   // Output the body first to determine what has to go in the header
     header();
@@ -1779,7 +1779,7 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
 {
     bool wasDiscontinuous = mInsideDiscontinuousLoop;
 
-    if (!mInsideDiscontinuousLoop)
+    if (mContainsLoopDiscontinuity && !mInsideDiscontinuousLoop)
     {
         mInsideDiscontinuousLoop = containsLoopDiscontinuity(node);
     }
