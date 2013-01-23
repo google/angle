@@ -69,7 +69,7 @@
             ],
             'RuntimeTypeInfo': 'false',
             'WarningLevel': '4',
-            'DisableSpecificWarnings': '4100;4127;4189;4239;4244;4245;4512;4702',
+            'DisableSpecificWarnings': [4100, 4127, 4189, 4239, 4244, 4245, 4512, 4702],
           },
           'VCLinkerTool': {
             'FixedBaseAddress': '1',
