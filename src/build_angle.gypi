@@ -221,7 +221,6 @@
           'include_dirs': [
             '.',
             '../include',
-            '$(DXSDK_DIR)/include',
           ],
           'sources': [
             'common/angleutils.h',
@@ -279,7 +278,6 @@
           'msvs_disabled_warnings': [ 4267 ],
           'msvs_settings': {
             'VCLinkerTool': {
-              'AdditionalLibraryDirectories': ['$(DXSDK_DIR)/lib/x86'],
               'AdditionalDependencies': [
                 'd3d9.lib',
               ],
@@ -293,7 +291,6 @@
           'include_dirs': [
             '.',
             '../include',
-            '$(DXSDK_DIR)/include',
           ],
           'sources': [
             'common/angleutils.h',
@@ -318,7 +315,6 @@
           'msvs_disabled_warnings': [ 4267 ],
           'msvs_settings': {
             'VCLinkerTool': {
-              'AdditionalLibraryDirectories': ['$(DXSDK_DIR)/lib/x86'],
               'AdditionalDependencies': [
                 'd3d9.lib',
                 'dxguid.lib',
