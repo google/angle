@@ -533,6 +533,8 @@ bool IsColorRenderable(GLenum internalformat)
       case GL_STENCIL_INDEX8:
       case GL_DEPTH24_STENCIL8_OES:
         return false;
+      case GL_BGRA8_EXT:
+          return true;
       default:
         UNIMPLEMENTED();
     }

@@ -59,6 +59,14 @@ Config::Config(rx::ConfigDesc desc, EGLint minInterval, EGLint maxInterval, EGLi
         mAlphaSize = 0;
         mBindToTextureRGB = true;
         break;
+      case GL_BGRA8_EXT:
+        mBufferSize = 32;
+        mRedSize = 8;
+        mGreenSize = 8;
+        mBlueSize = 8;
+        mAlphaSize = 8;
+        mBindToTextureRGBA = true;
+        break;
       default:
         UNREACHABLE();   // Other formats should not be valid
     }

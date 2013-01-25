@@ -47,6 +47,7 @@ class SwapChain11 : public SwapChain
     Renderer11 *mRenderer;
     EGLint mHeight;
     EGLint mWidth;
+    bool mAppCreatedShareHandle;
 
     IDXGISwapChain *mSwapChain;
 

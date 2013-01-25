@@ -40,6 +40,7 @@ SwapChain11::SwapChain11(Renderer11 *renderer, HWND window, HANDLE shareHandle,
     mPassThroughPS = NULL;
     mWidth = -1;
     mHeight = -1;
+    mAppCreatedShareHandle = mShareHandle != NULL;
 }
 
 SwapChain11::~SwapChain11()
@@ -127,8 +128,10 @@ void SwapChain11::release()
         mPassThroughPS = NULL;
     }
 
-    if (mWindow)
+    if (!mAppCreatedShareHandle)
+    {
         mShareHandle = NULL;
+    }
 }
 
 EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swapInterval)
@@ -190,44 +193,107 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
         mDepthStencilDSView = NULL;
     }
 
-    HANDLE *pShareHandle = NULL;
-    if (!mWindow && mRenderer->getShareHandleSupport())
+    // If the app passed in a share handle, open the resource
+    // See EGL_ANGLE_d3d_share_handle_client_buffer
+    if (mAppCreatedShareHandle)
     {
-        pShareHandle = &mShareHandle;
-    }
+        ID3D11Resource *tempResource11;
+        HRESULT result = device->OpenSharedResource(mShareHandle, __uuidof(ID3D11Resource), (void**)&tempResource11);
 
-    D3D11_TEXTURE2D_DESC offscreenTextureDesc = {0};
-    offscreenTextureDesc.Width = backbufferWidth;
-    offscreenTextureDesc.Height = backbufferHeight;
-    offscreenTextureDesc.Format = gl_d3d11::ConvertRenderbufferFormat(mBackBufferFormat);
-    offscreenTextureDesc.MipLevels = 1;
-    offscreenTextureDesc.ArraySize = 1;
-    offscreenTextureDesc.SampleDesc.Count = 1;
-    offscreenTextureDesc.SampleDesc.Quality = 0;
-    offscreenTextureDesc.Usage = D3D11_USAGE_DEFAULT;
-    offscreenTextureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-    offscreenTextureDesc.CPUAccessFlags = 0;
-    offscreenTextureDesc.MiscFlags = 0;   // D3D11_RESOURCE_MISC_SHARED
-
-    HRESULT result = device->CreateTexture2D(&offscreenTextureDesc, NULL, &mOffscreenTexture);
-    d3d11::SetDebugName(mOffscreenTexture, "Offscreen texture");
-
-    if (FAILED(result))
-    {
-        ERR("Could not create offscreen texture: %08lX", result);
-        release();
-
-        if (isDeviceLostError(result))
+        if (FAILED(result))
         {
-            return EGL_CONTEXT_LOST;
+            ERR("Failed to open the swap chain pbuffer share handle: %08lX", result);
+            release();
+            return EGL_BAD_PARAMETER;
         }
-        else
+
+        result = tempResource11->QueryInterface(__uuidof(ID3D11Texture2D), (void**)&mOffscreenTexture);
+        tempResource11->Release();
+
+        if (FAILED(result))
         {
-            return EGL_BAD_ALLOC;
+            ERR("Failed to query texture2d interface in pbuffer share handle: %08lX", result);
+            release();
+            return EGL_BAD_PARAMETER;
+        }
+
+        // Validate offscreen texture parameters
+        D3D11_TEXTURE2D_DESC offscreenTextureDesc = {0};
+        mOffscreenTexture->GetDesc(&offscreenTextureDesc);
+
+        if (offscreenTextureDesc.Width != (UINT)backbufferWidth
+            || offscreenTextureDesc.Height != (UINT)backbufferHeight
+            || offscreenTextureDesc.Format != gl_d3d11::ConvertRenderbufferFormat(mBackBufferFormat)
+            || offscreenTextureDesc.MipLevels != 1
+            || offscreenTextureDesc.ArraySize != 1)
+        {
+            ERR("Invalid texture parameters in the shared offscreen texture pbuffer");
+            release();
+            return EGL_BAD_PARAMETER;
+        }
+    }
+    else
+    {
+        const bool useSharedResource = !mWindow && mRenderer->getShareHandleSupport();
+
+        D3D11_TEXTURE2D_DESC offscreenTextureDesc = {0};
+        offscreenTextureDesc.Width = backbufferWidth;
+        offscreenTextureDesc.Height = backbufferHeight;
+        offscreenTextureDesc.Format = gl_d3d11::ConvertRenderbufferFormat(mBackBufferFormat);
+        offscreenTextureDesc.MipLevels = 1;
+        offscreenTextureDesc.ArraySize = 1;
+        offscreenTextureDesc.SampleDesc.Count = 1;
+        offscreenTextureDesc.SampleDesc.Quality = 0;
+        offscreenTextureDesc.Usage = D3D11_USAGE_DEFAULT;
+        offscreenTextureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+        offscreenTextureDesc.CPUAccessFlags = 0;
+        offscreenTextureDesc.MiscFlags = useSharedResource ? D3D11_RESOURCE_MISC_SHARED : 0;
+
+        HRESULT result = device->CreateTexture2D(&offscreenTextureDesc, NULL, &mOffscreenTexture);
+
+        if (FAILED(result))
+        {
+            ERR("Could not create offscreen texture: %08lX", result);
+            release();
+
+            if (isDeviceLostError(result))
+            {
+                return EGL_CONTEXT_LOST;
+            }
+            else
+            {
+                return EGL_BAD_ALLOC;
+            }
+        }
+
+        d3d11::SetDebugName(mOffscreenTexture, "Offscreen texture");
+
+        // EGL_ANGLE_surface_d3d_texture_2d_share_handle requires that we store a share handle for the client
+        if (useSharedResource)
+        {
+            IDXGIResource *offscreenTextureResource = NULL;
+            result = mOffscreenTexture->QueryInterface(__uuidof(IDXGIResource), (void**)&offscreenTextureResource);
+
+            // Fall back to no share handle on failure
+            if (FAILED(result))
+            {
+                ERR("Could not query offscreen texture resource: %08lX", result);
+            }
+            else
+            {
+                result = offscreenTextureResource->GetSharedHandle(&mShareHandle);
+
+                if (FAILED(result))
+                {
+                    mShareHandle = NULL;
+                    ERR("Could not get offscreen texture shared handle: %08lX", result);
+                }
+            }
         }
     }
         
-    result = device->CreateRenderTargetView(mOffscreenTexture, NULL, &mOffscreenRTView);
+    HRESULT result = device->CreateRenderTargetView(mOffscreenTexture, NULL, &mOffscreenRTView);
+
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mOffscreenRTView, "Offscreen render target");
 

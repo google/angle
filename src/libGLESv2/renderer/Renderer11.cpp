@@ -41,6 +41,7 @@ namespace rx
 {
 static const DXGI_FORMAT RenderTargetFormats[] =
     {
+        DXGI_FORMAT_B8G8R8A8_UNORM,
         DXGI_FORMAT_R8G8B8A8_UNORM
     };
 
@@ -1892,11 +1893,10 @@ bool Renderer11::getInstancingSupport() const
 
 bool Renderer11::getShareHandleSupport() const
 {
-    // TODO
-    // UNIMPLEMENTED();
-
+    // We only currently support share handles with BGRA surfaces, because
+    // chrome needs BGRA. Once chrome fixes this, we should always support them.
     // PIX doesn't seem to support using share handles, so disable them.
-    return false && !gl::perfActive();
+    return getBGRATextureSupport() && !gl::perfActive();
 }
 
 bool Renderer11::getDerivativeInstructionSupport() const

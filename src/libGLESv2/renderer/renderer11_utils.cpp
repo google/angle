@@ -217,6 +217,7 @@ GLenum ConvertBackBufferFormat(DXGI_FORMAT format)
     switch (format)
     {
       case DXGI_FORMAT_R8G8B8A8_UNORM: return GL_RGBA8_OES;
+      case DXGI_FORMAT_B8G8R8A8_UNORM: return GL_BGRA8_EXT;
       default:
         UNREACHABLE();
     }
@@ -240,6 +241,8 @@ GLenum ConvertRenderbufferFormat(DXGI_FORMAT format)
 {
     switch (format)
     {
+      case DXGI_FORMAT_B8G8R8A8_UNORM:
+        return GL_BGRA8_EXT;
       case DXGI_FORMAT_R8G8B8A8_UNORM:
         return GL_RGBA8_OES;
       case DXGI_FORMAT_D24_UNORM_S8_UINT:
@@ -307,6 +310,8 @@ DXGI_FORMAT ConvertRenderbufferFormat(GLenum format)
       case GL_RGB565:
       case GL_RGB8_OES:
         return DXGI_FORMAT_R8G8B8A8_UNORM;
+      case GL_BGRA8_EXT:
+        return DXGI_FORMAT_B8G8R8A8_UNORM;
       case GL_DEPTH_COMPONENT16:
       case GL_STENCIL_INDEX8:
       case GL_DEPTH24_STENCIL8_OES:
