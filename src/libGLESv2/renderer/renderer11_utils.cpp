@@ -376,6 +376,14 @@ DXGI_FORMAT ConvertTextureFormat(GLenum internalformat)
 namespace d3d11
 {
 
+void SetPositionTexCoordVertex(PositionTexCoordVertex* vertex, float x, float y, float u, float v)
+{
+    vertex->x = x;
+    vertex->y = y;
+    vertex->u = u;
+    vertex->v = v;
+}
+
 size_t ComputePixelSizeBits(DXGI_FORMAT format)
 {
     switch (format)

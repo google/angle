@@ -21,20 +21,6 @@
 namespace rx
 {
 
-struct QuadVertex
-{
-    float x, y;
-    float u, v;
-};
-
-static void setVertex(QuadVertex* vertex, float x, float y, float u, float v)
-{
-    vertex->x = x;
-    vertex->y = y;
-    vertex->u = u;
-    vertex->v = v;
-}
-
 SwapChain11::SwapChain11(Renderer11 *renderer, HWND window, HANDLE shareHandle,
                          GLenum backBufferFormat, GLenum depthBufferFormat)
     : mRenderer(renderer), SwapChain(window, shareHandle, backBufferFormat, depthBufferFormat)
@@ -333,7 +319,7 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
     }
 
     D3D11_BUFFER_DESC vbDesc;
-    vbDesc.ByteWidth = sizeof(QuadVertex) * 4;
+    vbDesc.ByteWidth = sizeof(d3d11::PositionTexCoordVertex) * 4;
     vbDesc.Usage = D3D11_USAGE_DYNAMIC;
     vbDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     vbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
@@ -406,7 +392,7 @@ EGLint SwapChain11::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
         return EGL_BAD_ACCESS;
     }
 
-    QuadVertex *vertices = static_cast<QuadVertex*>(mappedResource.pData);
+    d3d11::PositionTexCoordVertex *vertices = static_cast<d3d11::PositionTexCoordVertex*>(mappedResource.pData);
 
     // Create a quad in homogeneous coordinates
     float x1 = (x / mWidth) * 2.0f - 1.0f;
@@ -419,14 +405,14 @@ EGLint SwapChain11::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
     float u2 = (x + width) / float(mWidth);
     float v2 = (y + height) / float(mHeight);
 
-    setVertex(&vertices[0], x1, y1, u1, v1);
-    setVertex(&vertices[1], x1, y2, u1, v2);
-    setVertex(&vertices[2], x2, y1, u2, v1);
-    setVertex(&vertices[3], x2, y2, u2, v2);
+    d3d11::SetPositionTexCoordVertex(&vertices[0], x1, y1, u1, v1);
+    d3d11::SetPositionTexCoordVertex(&vertices[1], x1, y2, u1, v2);
+    d3d11::SetPositionTexCoordVertex(&vertices[2], x2, y1, u2, v1);
+    d3d11::SetPositionTexCoordVertex(&vertices[3], x2, y2, u2, v2);
 
     deviceContext->Unmap(mQuadVB, 0);
 
-    static UINT stride = sizeof(QuadVertex);
+    static UINT stride = sizeof(d3d11::PositionTexCoordVertex);
     static UINT startIdx = 0;
     deviceContext->IASetVertexBuffers(0, 1, &mQuadVB, &stride, &startIdx);
 

@@ -49,6 +49,14 @@ GLenum ConvertTextureInternalFormat(DXGI_FORMAT format);
 
 namespace d3d11
 {
+
+struct PositionTexCoordVertex
+{
+    float x, y;
+    float u, v;
+};
+void SetPositionTexCoordVertex(PositionTexCoordVertex* vertex, float x, float y, float u, float v);
+
 size_t ComputePixelSizeBits(DXGI_FORMAT format);
 size_t ComputeBlockSizeBits(DXGI_FORMAT format);
 
