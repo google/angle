@@ -280,6 +280,8 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClCompile Include="utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\common\debug.h" />
+    <ClInclude Include="..\common\system.h" />
     <ClInclude Include="..\third_party\murmurhash\MurmurHash3.h" />
     <ClInclude Include="angletypes.h" />
     <ClInclude Include="BinaryStream.h" />

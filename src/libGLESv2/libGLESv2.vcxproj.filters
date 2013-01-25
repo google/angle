@@ -397,6 +397,12 @@
     <ClInclude Include="renderer\shaders\compiled\clear11vs.h">
       <Filter>Renderer\Shaders\Compiled</Filter>
     </ClInclude>
+    <ClInclude Include="..\common\system.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\debug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="libGLESv2.def">
