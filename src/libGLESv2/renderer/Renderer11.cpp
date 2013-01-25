@@ -819,12 +819,11 @@ void Renderer11::drawArrays(GLenum mode, GLsizei count, GLsizei instances)
     }
     else if (mode == GL_TRIANGLE_FAN)
     {
-        drawTriangleFan(count, GL_NONE, NULL, 0, NULL);
+        drawTriangleFan(count, GL_NONE, NULL, 0, NULL, instances);
     }
     else if (instances > 0)
     {
-        // TODO
-        UNIMPLEMENTED();
+        mDeviceContext->DrawInstanced(count, instances, 0, 0);
     }
     else
     {
@@ -832,7 +831,7 @@ void Renderer11::drawArrays(GLenum mode, GLsizei count, GLsizei instances)
     }
 }
 
-void Renderer11::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo)
+void Renderer11::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo, GLsizei instances)
 {
     if (mode == GL_LINE_LOOP)
     {
@@ -840,7 +839,11 @@ void Renderer11::drawElements(GLenum mode, GLsizei count, GLenum type, const GLv
     }
     else if (mode == GL_TRIANGLE_FAN)
     {
-        drawTriangleFan(count, type, indices, indexInfo.minIndex, elementArrayBuffer);
+        drawTriangleFan(count, type, indices, indexInfo.minIndex, elementArrayBuffer, instances);
+    }
+    else if (instances > 0)
+    {
+        mDeviceContext->DrawIndexedInstanced(count, instances, 0, -static_cast<int>(indexInfo.minIndex), 0);
     }
     else
     {
@@ -940,7 +943,7 @@ void Renderer11::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices,
     mDeviceContext->DrawIndexed(count + 1, 0, -minIndex);
 }
 
-void Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer)
+void Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer, int instances)
 {
     // Get the raw indices for an indexed draw
     if (type != GL_NONE && elementArrayBuffer)
@@ -1034,7 +1037,14 @@ void Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indic
         mAppliedIBOffset = indexBufferOffset;
     }
 
-    mDeviceContext->DrawIndexed(numTris * 3, 0, -minIndex);
+    if (instances > 0)
+    {
+        mDeviceContext->DrawIndexedInstanced(numTris * 3, instances, 0, -minIndex, 0);
+    }
+    else
+    {
+        mDeviceContext->DrawIndexed(numTris * 3, 0, -minIndex);
+    }
 }
 
 void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
@@ -1937,9 +1947,7 @@ bool Renderer11::getOcclusionQuerySupport() const
 
 bool Renderer11::getInstancingSupport() const
 {
-    // TODO
-    // UNIMPLEMENTED();
-    return false;
+    return true;
 }
 
 bool Renderer11::getShareHandleSupport() const

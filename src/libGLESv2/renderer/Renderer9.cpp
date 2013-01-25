@@ -1397,7 +1397,7 @@ void Renderer9::drawArrays(GLenum mode, GLsizei count, GLsizei instances)
     }
 }
 
-void Renderer9::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo)
+void Renderer9::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo, GLsizei /*instances*/)
 {
     startScene();
 

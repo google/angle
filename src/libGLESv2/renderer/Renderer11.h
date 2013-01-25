@@ -78,7 +78,7 @@ class Renderer11 : public Renderer
     virtual GLenum applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo);
 
     virtual void drawArrays(GLenum mode, GLsizei count, GLsizei instances);
-    virtual void drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo);
+    virtual void drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer, const TranslatedIndexData &indexInfo, GLsizei instances);
 
     virtual void clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer);
 
@@ -175,7 +175,7 @@ class Renderer11 : public Renderer
     DISALLOW_COPY_AND_ASSIGN(Renderer11);
 
     void drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
-    void drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
+    void drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer, int instances);
 
     void readTextureData(ID3D11Texture2D *texture, unsigned int subResource, const gl::Rectangle &area,
                          GLenum format, GLenum type, GLsizei outputPitch, bool packReverseRowOrder,

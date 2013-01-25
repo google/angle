@@ -70,13 +70,15 @@ GLenum InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::M
         {
             VertexBuffer11 *vertexBuffer = VertexBuffer11::makeVertexBuffer11(attributes[i].vertexBuffer);
 
+            D3D11_INPUT_CLASSIFICATION inputClass = attributes[i].divisor > 0 ? D3D11_INPUT_PER_INSTANCE_DATA : D3D11_INPUT_PER_VERTEX_DATA;
+
             ilKey.elements[ilKey.elementCount].SemanticName = semanticName;
             ilKey.elements[ilKey.elementCount].SemanticIndex = programBinary->getSemanticIndex(i);
             ilKey.elements[ilKey.elementCount].Format = attributes[i].attribute->mArrayEnabled ? vertexBuffer->getDXGIFormat(*attributes[i].attribute) : DXGI_FORMAT_R32G32B32A32_FLOAT;
             ilKey.elements[ilKey.elementCount].InputSlot = i;
             ilKey.elements[ilKey.elementCount].AlignedByteOffset = 0;
-            ilKey.elements[ilKey.elementCount].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-            ilKey.elements[ilKey.elementCount].InstanceDataStepRate = 0;
+            ilKey.elements[ilKey.elementCount].InputSlotClass = inputClass;
+            ilKey.elements[ilKey.elementCount].InstanceDataStepRate = attributes[i].divisor;
             ilKey.elementCount++;
 
             vertexBuffers[i] = vertexBuffer->getBuffer();
