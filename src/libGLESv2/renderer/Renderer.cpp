@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -78,7 +78,7 @@ ID3DBlob *Renderer::compileToBinary(gl::InfoLog &infoLog, const char *hlsl, cons
     }
 
     HRESULT result = S_OK;
-    UINT flags = D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY;   // Enables using legacy sampler syntax for Shader Model 4+
+    UINT flags = 0;
     std::string sourceText;
     if (gl::perfActive())
     {
