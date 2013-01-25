@@ -2338,6 +2338,45 @@ IndexBuffer *Renderer11::createIndexBuffer()
     return new IndexBuffer11(this);
 }
 
+bool Renderer11::getRenderTargetResource(gl::Framebuffer *framebuffer, unsigned int *subresourceIndex, ID3D11Texture2D **resource)
+{
+    gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer();
+    if (colorbuffer)
+    {
+        RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(colorbuffer->getRenderTarget());
+        if (renderTarget)
+        {
+            *subresourceIndex = renderTarget->getSubresourceIndex();
+
+            ID3D11RenderTargetView *colorBufferRTV = renderTarget->getRenderTargetView();
+            if (colorBufferRTV)
+            {
+                ID3D11Resource *textureResource = NULL;
+                colorBufferRTV->GetResource(&textureResource);
+                colorBufferRTV->Release();
+
+                if (textureResource)
+                {
+                    HRESULT result = textureResource->QueryInterface(IID_ID3D11Texture2D, (void**)resource);
+                    textureResource->Release();
+
+                    if (SUCCEEDED(result))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        ERR("Failed to extract the ID3D11Texture2D from the render target resource, "
+                            "HRESULT: 0x%X.", result);
+                    }
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
 bool Renderer11::blitRect(gl::Framebuffer *readTarget, gl::Rectangle *readRect, gl::Framebuffer *drawTarget, gl::Rectangle *drawRect,
                           bool blitRenderTarget, bool blitDepthStencil)
 {
@@ -2352,37 +2391,7 @@ void Renderer11::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsi
     ID3D11Texture2D *colorBufferTexture = NULL;
     unsigned int subresourceIndex = 0;
 
-    gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer();
-    if (colorbuffer)
-    {
-        RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(colorbuffer->getRenderTarget());
-        if (renderTarget)
-        {
-            subresourceIndex = renderTarget->getSubresourceIndex();
-
-            ID3D11RenderTargetView *colorBufferRTV = renderTarget->getRenderTargetView();
-            if (colorBufferRTV)
-            {
-                ID3D11Resource *textureResource = NULL;
-                colorBufferRTV->GetResource(&textureResource);
-
-                if (textureResource)
-                {
-                    HRESULT result = textureResource->QueryInterface(IID_ID3D11Texture2D, (void**)&colorBufferTexture);
-                    textureResource->Release();
-
-                    if (FAILED(result))
-                    {
-                        ERR("Failed to extract the ID3D11Texture2D from the render target resource, "
-                            "HRESULT: 0x%X.", result);
-                        return;
-                    }
-                }
-            }
-        }
-    }
-
-    if (colorBufferTexture)
+    if (getRenderTargetResource(framebuffer, &subresourceIndex, &colorBufferTexture))
     {
         gl::Rectangle area;
         area.x = x;
