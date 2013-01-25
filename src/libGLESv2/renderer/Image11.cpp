@@ -10,6 +10,7 @@
 #include "libGLESv2/renderer/Renderer11.h"
 #include "libGLESv2/renderer/Image11.h"
 #include "libGLESv2/renderer/TextureStorage11.h"
+#include "libGLESv2/Framebuffer.h"
 
 #include "libGLESv2/main.h"
 #include "libGLESv2/mathutil.h"
@@ -218,8 +219,77 @@ void Image11::loadCompressedData(GLint xoffset, GLint yoffset, GLsizei width, GL
 
 void Image11::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source)
 {
-    // TODO
-    UNIMPLEMENTED();
+    if (source->getColorbuffer() && source->getColorbuffer()->getInternalFormat() == (GLuint)mInternalFormat)
+    {
+        // No conversion needed-- use copyback fastpath
+        ID3D11Texture2D *colorBufferTexture = NULL;
+        unsigned int subresourceIndex = 0;
+
+        if (mRenderer->getRenderTargetResource(source, &subresourceIndex, &colorBufferTexture))
+        {
+            D3D11_TEXTURE2D_DESC textureDesc;
+            colorBufferTexture->GetDesc(&textureDesc);
+
+            ID3D11Device *device = mRenderer->getDevice();
+            ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
+
+            ID3D11Texture2D* srcTex = NULL;
+            if (textureDesc.SampleDesc.Count > 1)
+            {
+                D3D11_TEXTURE2D_DESC resolveDesc;
+                resolveDesc.Width = textureDesc.Width;
+                resolveDesc.Height = textureDesc.Height;
+                resolveDesc.MipLevels = 1;
+                resolveDesc.ArraySize = 1;
+                resolveDesc.Format = textureDesc.Format;
+                resolveDesc.SampleDesc.Count = 1;
+                resolveDesc.SampleDesc.Quality = 0;
+                resolveDesc.Usage = D3D11_USAGE_DEFAULT;
+                resolveDesc.BindFlags = 0;
+                resolveDesc.CPUAccessFlags = 0;
+                resolveDesc.MiscFlags = 0;
+
+                HRESULT result = device->CreateTexture2D(&resolveDesc, NULL, &srcTex);
+                if (FAILED(result))
+                {
+                    ERR("Failed to create resolve texture for Image11::copy, HRESULT: 0x%X.", result);
+                    return;
+                }
+
+                deviceContext->ResolveSubresource(srcTex, 0, colorBufferTexture, subresourceIndex, textureDesc.Format);
+                subresourceIndex = 0;
+            }
+            else
+            {
+                srcTex = colorBufferTexture;
+                srcTex->AddRef();
+            }
+
+            D3D11_BOX srcBox;
+            srcBox.left = x;
+            srcBox.right = x + width;
+            srcBox.top = y;
+            srcBox.bottom = y + height;
+            srcBox.front = 0;
+            srcBox.back = 1;
+
+            deviceContext->CopySubresourceRegion(mStagingTexture, 0, xoffset, yoffset, 0, srcTex, subresourceIndex, &srcBox);
+
+            srcTex->Release();
+            colorBufferTexture->Release();
+        }
+    }
+    else
+    {
+        // This format requires conversion, so we must copy the texture to staging and manually convert via readPixels
+        D3D11_MAPPED_SUBRESOURCE mappedImage;
+        HRESULT result = map(&mappedImage);
+            
+        mRenderer->readPixels(source, x, y, width, height, gl::ExtractFormat(mInternalFormat), 
+                              gl::ExtractType(mInternalFormat), mappedImage.RowPitch, false, 4, mappedImage.pData);
+
+        unmap();
+    }
 }
 
 void Image11::createStagingTexture()
