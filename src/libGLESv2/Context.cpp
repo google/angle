@@ -2128,7 +2128,7 @@ float Context::getMaximumPointSize() const
 
 int Context::getMaximumVaryingVectors() const
 {
-    return mMajorShaderModel >= 3 ? MAX_VARYING_VECTORS_SM3 : MAX_VARYING_VECTORS_SM2;
+    return mRenderer->getMaxVaryingVectors();
 }
 
 unsigned int Context::getMaximumCombinedTextureImageUnits() const

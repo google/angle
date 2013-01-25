@@ -2250,6 +2250,11 @@ int Renderer9::getMaxFragmentUniformVectors() const
     return getMajorShaderModel() >= 3 ? MAX_FRAGMENT_UNIFORM_VECTORS_SM3 : MAX_FRAGMENT_UNIFORM_VECTORS_SM2;
 }
 
+int Renderer9::getMaxVaryingVectors() const
+{
+    return getMajorShaderModel() >= 3 ? MAX_VARYING_VECTORS_SM3 : MAX_VARYING_VECTORS_SM2;
+}
+
 bool Renderer9::getNonPower2TextureSupport() const
 {
     return mSupportsNonPower2Textures;

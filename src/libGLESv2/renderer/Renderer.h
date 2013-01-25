@@ -147,6 +147,7 @@ class Renderer
     virtual unsigned int getMaxVertexTextureImageUnits() const = 0;
     virtual int getMaxVertexUniformVectors() const = 0;
     virtual int getMaxFragmentUniformVectors() const = 0;
+    virtual int getMaxVaryingVectors() const = 0;
     virtual bool getNonPower2TextureSupport() const = 0;
     virtual bool getDepthTextureSupport() const = 0;
     virtual bool getOcclusionQuerySupport() const = 0;

@@ -58,17 +58,16 @@ class Query;
 
 enum
 {
+    MAX_DRAW_BUFFERS = 1,
+
     MAX_VERTEX_ATTRIBS = 16,
-    MAX_VARYING_VECTORS_SM2 = 8,
-    MAX_VARYING_VECTORS_SM3 = 10,
     MAX_TEXTURE_IMAGE_UNITS = 16,
 
-    // Implementation upper limit, for devices supporting vertex texture fetch. 
-    // Real limit depends on the shader model
+    // Implementation upper limits, real maximums depend on the hardware
     IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS = 16,
     IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS = MAX_TEXTURE_IMAGE_UNITS + IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS,    
 
-    MAX_DRAW_BUFFERS = 1
+    IMPLEMENTATION_MAX_VARYING_VECTORS = 32
 };
 
 enum QueryType

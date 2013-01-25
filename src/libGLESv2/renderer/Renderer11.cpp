@@ -1884,6 +1884,21 @@ int Renderer11::getMaxFragmentUniformVectors() const
     return MAX_FRAGMENT_UNIFORM_VECTORS_D3D11;
 }
 
+int Renderer11::getMaxVaryingVectors() const
+{
+    META_ASSERT(gl::IMPLEMENTATION_MAX_VARYING_VECTORS == D3D11_VS_OUTPUT_REGISTER_COUNT);
+    switch (mFeatureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_0:
+        return D3D11_VS_OUTPUT_REGISTER_COUNT;
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0:
+        return D3D10_VS_OUTPUT_REGISTER_COUNT;
+      default: UNREACHABLE();
+        return 0;
+    }
+}
+
 bool Renderer11::getNonPower2TextureSupport() const
 {
     // TODO

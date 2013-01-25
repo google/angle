@@ -1174,7 +1174,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
     }
 
     // Map the varyings to the register file
-    const Varying *packing[MAX_VARYING_VECTORS_SM3][4] = {NULL};
+    const Varying *packing[IMPLEMENTATION_MAX_VARYING_VECTORS][4] = {NULL};
     int registers = packVaryings(infoLog, packing, fragmentShader);
 
     if (registers < 0)
