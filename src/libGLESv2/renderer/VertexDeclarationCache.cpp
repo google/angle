@@ -56,21 +56,16 @@ GLenum VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, Transl
         {
             if (attributes[i].active)
             {
-                if (indexedAttribute == gl::MAX_VERTEX_ATTRIBS)
+                if (indexedAttribute == gl::MAX_VERTEX_ATTRIBS && attributes[i].divisor == 0)
                 {
-                    if (attributes[i].divisor == 0)
-                    {
-                        indexedAttribute = i;
-                    }
+                    indexedAttribute = i;
                 }
-                else if (instancedAttribute == gl::MAX_VERTEX_ATTRIBS)
+                else if (instancedAttribute == gl::MAX_VERTEX_ATTRIBS && attributes[i].divisor != 0)
                 {
-                    if (attributes[i].divisor != 0)
-                    {
-                        instancedAttribute = i;
-                    }
+                    instancedAttribute = i;
                 }
-                else break;   // Found both an indexed and instanced attribute
+                if (indexedAttribute != gl::MAX_VERTEX_ATTRIBS && instancedAttribute != gl::MAX_VERTEX_ATTRIBS)
+                    break;   // Found both an indexed and instanced attribute
             }
         }
 
