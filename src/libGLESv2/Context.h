@@ -83,7 +83,6 @@ enum QueryType
 const float ALIASED_LINE_WIDTH_RANGE_MIN = 1.0f;
 const float ALIASED_LINE_WIDTH_RANGE_MAX = 1.0f;
 const float ALIASED_POINT_SIZE_RANGE_MIN = 1.0f;
-const float ALIASED_POINT_SIZE_RANGE_MAX_SM2 = 1.0f;
 
 // Helper structure describing a single vertex attribute
 class VertexAttribute

@@ -2120,7 +2120,7 @@ int Context::getMajorShaderModel() const
 
 float Context::getMaximumPointSize() const
 {
-    return mMajorShaderModel == 3 ? mMaximumPointSize : ALIASED_POINT_SIZE_RANGE_MAX_SM2;
+    return mMaximumPointSize;
 }
 
 int Context::getMaximumVaryingVectors() const

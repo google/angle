@@ -2261,7 +2261,8 @@ int Renderer9::getMajorShaderModel() const
 
 float Renderer9::getMaxPointSize() const
 {
-    return mDeviceCaps.MaxPointSize;
+    // Point size clamped at 1.0f for SM2
+    return getMajorShaderModel() == 3 ? mDeviceCaps.MaxPointSize : 1.0f;
 }
 
 int Renderer9::getMaxTextureWidth() const
