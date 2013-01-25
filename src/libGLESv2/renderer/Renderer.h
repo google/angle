@@ -145,6 +145,7 @@ class Renderer
     virtual bool getLuminanceAlphaTextureSupport() = 0;
     bool getVertexTextureSupport() const { return getMaxVertexTextureImageUnits() > 0; }
     virtual unsigned int getMaxVertexTextureImageUnits() const = 0;
+    virtual unsigned int getMaxCombinedTextureImageUnits() const = 0;
     virtual int getMaxVertexUniformVectors() const = 0;
     virtual int getMaxFragmentUniformVectors() const = 0;
     virtual int getMaxVaryingVectors() const = 0;

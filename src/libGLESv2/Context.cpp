@@ -270,7 +270,6 @@ void Context::makeCurrent(egl::Surface *surface)
         mSupportsLuminanceAlphaTextures = mRenderer->getLuminanceAlphaTextureSupport();
         mSupportsDepthTextures = mRenderer->getDepthTextureSupport();
         mSupportsTextureFilterAnisotropy = mRenderer->getTextureFilterAnisotropySupport();
-        mSupportsDerivativeInstructions = mRenderer->getDerivativeInstructionSupport();
         mSupports32bitIndices = mRenderer->get32BitIndexSupport();
 
         mNumCompressedTextureFormats = 0;
@@ -1269,8 +1268,8 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
     {
       case GL_MAX_VERTEX_ATTRIBS:               *params = gl::MAX_VERTEX_ATTRIBS;               break;
       case GL_MAX_VERTEX_UNIFORM_VECTORS:       *params = mRenderer->getMaxVertexUniformVectors(); break;
-      case GL_MAX_VARYING_VECTORS:              *params = getMaximumVaryingVectors();           break;
-      case GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS: *params = getMaximumCombinedTextureImageUnits(); break;
+      case GL_MAX_VARYING_VECTORS:              *params = mRenderer->getMaxVaryingVectors();    break;
+      case GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS: *params = mRenderer->getMaxCombinedTextureImageUnits(); break;
       case GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS:   *params = mRenderer->getMaxVertexTextureImageUnits(); break;
       case GL_MAX_TEXTURE_IMAGE_UNITS:          *params = gl::MAX_TEXTURE_IMAGE_UNITS;          break;
       case GL_MAX_FRAGMENT_UNIFORM_VECTORS:     *params = mRenderer->getMaxFragmentUniformVectors(); break;
@@ -1468,7 +1467,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
         break;
       case GL_TEXTURE_BINDING_2D:
         {
-            if (mState.activeSampler > getMaximumCombinedTextureImageUnits() - 1)
+            if (mState.activeSampler > mRenderer->getMaxCombinedTextureImageUnits() - 1)
             {
                 error(GL_INVALID_OPERATION);
                 return false;
@@ -1479,7 +1478,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
         break;
       case GL_TEXTURE_BINDING_CUBE_MAP:
         {
-            if (mState.activeSampler > getMaximumCombinedTextureImageUnits() - 1)
+            if (mState.activeSampler > mRenderer->getMaxCombinedTextureImageUnits() - 1)
             {
                 error(GL_INVALID_OPERATION);
                 return false;
@@ -2126,14 +2125,9 @@ float Context::getMaximumPointSize() const
     return mMaximumPointSize;
 }
 
-int Context::getMaximumVaryingVectors() const
-{
-    return mRenderer->getMaxVaryingVectors();
-}
-
 unsigned int Context::getMaximumCombinedTextureImageUnits() const
 {
-    return MAX_TEXTURE_IMAGE_UNITS + mRenderer->getMaxVertexTextureImageUnits();
+    return mRenderer->getMaxCombinedTextureImageUnits();
 }
 
 int Context::getMaxSupportedSamples() const
@@ -2254,11 +2248,6 @@ bool Context::supportsInstancing() const
 bool Context::supportsTextureFilterAnisotropy() const
 {
     return mSupportsTextureFilterAnisotropy;
-}
-
-bool Context::supportsDerivativeInstructions() const
-{
-    return mSupportsDerivativeInstructions;
 }
 
 float Context::getTextureMaxAnisotropy() const
@@ -2499,7 +2488,7 @@ void Context::initExtensionString()
     extensionString += "GL_OES_packed_depth_stencil ";
     extensionString += "GL_OES_get_program_binary ";
     extensionString += "GL_OES_rgb8_rgba8 ";
-    if (supportsDerivativeInstructions())
+    if (mRenderer->getDerivativeInstructionSupport())
     {
         extensionString += "GL_OES_standard_derivatives ";
     }

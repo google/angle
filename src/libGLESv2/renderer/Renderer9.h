@@ -134,6 +134,7 @@ class Renderer9 : public Renderer
     virtual bool getLuminanceTextureSupport();
     virtual bool getLuminanceAlphaTextureSupport();
     virtual unsigned int getMaxVertexTextureImageUnits() const;
+    virtual unsigned int getMaxCombinedTextureImageUnits() const;
     virtual int getMaxVertexUniformVectors() const;
     virtual int getMaxFragmentUniformVectors() const;
     virtual int getMaxVaryingVectors() const;

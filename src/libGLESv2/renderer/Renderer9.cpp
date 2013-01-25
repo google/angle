@@ -2240,6 +2240,11 @@ unsigned int Renderer9::getMaxVertexTextureImageUnits() const
     return mVertexTextureSupport ? MAX_TEXTURE_IMAGE_UNITS_VTF_SM3 : 0;
 }
 
+unsigned int Renderer9::getMaxCombinedTextureImageUnits() const
+{
+    return gl::MAX_TEXTURE_IMAGE_UNITS + getMaxVertexTextureImageUnits();
+}
+
 int Renderer9::getMaxVertexUniformVectors() const
 {
     return MAX_VERTEX_UNIFORM_VECTORS;

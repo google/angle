@@ -165,7 +165,7 @@ GLint ProgramBinary::getSamplerMapping(SamplerType type, unsigned int samplerInd
       default: UNREACHABLE();
     }
 
-    if (logicalTextureUnit >= 0 && logicalTextureUnit < (GLint)getContext()->getMaximumCombinedTextureImageUnits())
+    if (logicalTextureUnit >= 0 && logicalTextureUnit < (GLint)mRenderer->getMaxCombinedTextureImageUnits())
     {
         return logicalTextureUnit;
     }
@@ -1007,8 +1007,7 @@ void ProgramBinary::applyUniforms()
 // Returns the number of used varying registers, or -1 if unsuccesful
 int ProgramBinary::packVaryings(InfoLog &infoLog, const Varying *packing[][4], FragmentShader *fragmentShader)
 {
-    Context *context = getContext();
-    const int maxVaryingVectors = context->getMaximumVaryingVectors();
+    const int maxVaryingVectors = mRenderer->getMaxVaryingVectors();
 
     for (VaryingList::iterator varying = fragmentShader->mVaryings.begin(); varying != fragmentShader->mVaryings.end(); varying++)
     {
@@ -1184,8 +1183,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
 
     // Write the HLSL input/output declarations
     const int shaderModel = mRenderer->getMajorShaderModel();
-    Context *context = getContext();
-    const int maxVaryingVectors = context->getMaximumVaryingVectors();
+    const int maxVaryingVectors = mRenderer->getMaxVaryingVectors();
 
     if (registers == maxVaryingVectors && fragmentShader->mUsesFragCoord)
     {
@@ -2176,7 +2174,7 @@ bool ProgramBinary::validateSamplers(InfoLog *infoLog)
     // texture image unit, and this is the current program, then ValidateProgram will fail, and
     // DrawArrays and DrawElements will issue the INVALID_OPERATION error.
 
-    const unsigned int maxCombinedTextureImageUnits = getContext()->getMaximumCombinedTextureImageUnits();
+    const unsigned int maxCombinedTextureImageUnits = mRenderer->getMaxCombinedTextureImageUnits();
     TextureType textureUnitType[IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS];
 
     for (unsigned int i = 0; i < IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS; ++i)

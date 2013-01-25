@@ -1870,6 +1870,11 @@ unsigned int Renderer11::getMaxVertexTextureImageUnits() const
     }
 }
 
+unsigned int Renderer11::getMaxCombinedTextureImageUnits() const
+{
+    return gl::MAX_TEXTURE_IMAGE_UNITS + getMaxVertexTextureImageUnits();
+}
+
 int Renderer11::getMaxVertexUniformVectors() const
 {
     META_ASSERT(MAX_VERTEX_UNIFORM_VECTORS_D3D11 <= D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT);

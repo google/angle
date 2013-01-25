@@ -229,7 +229,6 @@ void Shader::initializeCompiler()
 
         if (result)
         {
-            Context *context = getContext();
             ShShaderOutput hlslVersion = (mRenderer->getMajorShaderModel() >= 4) ? SH_HLSL11_OUTPUT : SH_HLSL9_OUTPUT;
 
             ShBuiltInResources resources;
@@ -237,14 +236,14 @@ void Shader::initializeCompiler()
 
             resources.MaxVertexAttribs = MAX_VERTEX_ATTRIBS;
             resources.MaxVertexUniformVectors = mRenderer->getMaxVertexUniformVectors();
-            resources.MaxVaryingVectors = context->getMaximumVaryingVectors();
+            resources.MaxVaryingVectors = mRenderer->getMaxVaryingVectors();
             resources.MaxVertexTextureImageUnits = mRenderer->getMaxVertexTextureImageUnits();
-            resources.MaxCombinedTextureImageUnits = context->getMaximumCombinedTextureImageUnits();
+            resources.MaxCombinedTextureImageUnits = mRenderer->getMaxCombinedTextureImageUnits();
             resources.MaxTextureImageUnits = MAX_TEXTURE_IMAGE_UNITS;
             resources.MaxFragmentUniformVectors = mRenderer->getMaxFragmentUniformVectors();
             resources.MaxDrawBuffers = MAX_DRAW_BUFFERS;
-            resources.OES_standard_derivatives = context->supportsDerivativeInstructions() ? 1 : 0;
-            // resources.OES_EGL_image_external = getDisplay()->getRenderer()->getShareHandleSupport() ? 1 : 0; // TODO: commented out until the extension is actually supported.
+            resources.OES_standard_derivatives = mRenderer->getDerivativeInstructionSupport();
+            // resources.OES_EGL_image_external = mRenderer->getShareHandleSupport() ? 1 : 0; // TODO: commented out until the extension is actually supported.
 
             mFragmentCompiler = ShConstructCompiler(SH_FRAGMENT_SHADER, SH_GLES2_SPEC, hlslVersion, &resources);
             mVertexCompiler = ShConstructCompiler(SH_VERTEX_SHADER, SH_GLES2_SPEC, hlslVersion, &resources);
