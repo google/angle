@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -19,6 +19,8 @@ ShaderExecutable11::ShaderExecutable11(const void *function, size_t length, ID3D
 {
     mPixelExecutable = executable;
     mVertexExecutable = NULL;
+
+    mConstantBuffer = NULL;
 }
 
 ShaderExecutable11::ShaderExecutable11(const void *function, size_t length, ID3D11VertexShader *executable)
@@ -26,6 +28,8 @@ ShaderExecutable11::ShaderExecutable11(const void *function, size_t length, ID3D
 {
     mVertexExecutable = executable;
     mPixelExecutable = NULL;
+
+    mConstantBuffer = NULL;
 }
 
 ShaderExecutable11::~ShaderExecutable11()
@@ -38,6 +42,11 @@ ShaderExecutable11::~ShaderExecutable11()
     {
         mPixelExecutable->Release();
     }
+    
+    if (mConstantBuffer)
+    {
+        mConstantBuffer->Release();
+    }
 }
 
 ShaderExecutable11 *ShaderExecutable11::makeShaderExecutable11(ShaderExecutable *executable)
@@ -46,14 +55,19 @@ ShaderExecutable11 *ShaderExecutable11::makeShaderExecutable11(ShaderExecutable 
     return static_cast<ShaderExecutable11*>(executable);
 }
 
-ID3D11VertexShader *ShaderExecutable11::getVertexShader()
+ID3D11VertexShader *ShaderExecutable11::getVertexShader() const
 {
     return mVertexExecutable;
 }
 
-ID3D11PixelShader *ShaderExecutable11::getPixelShader()
+ID3D11PixelShader *ShaderExecutable11::getPixelShader() const
 {
     return mPixelExecutable;
+}
+
+ID3D11Buffer *ShaderExecutable11::getConstantBuffer()
+{
+    return mConstantBuffer;
 }
 
 }

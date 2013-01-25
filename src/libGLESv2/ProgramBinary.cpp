@@ -1000,7 +1000,7 @@ void ProgramBinary::applyUniforms()
         }
     }
 
-    mRenderer->applyUniforms(&mUniforms);
+    mRenderer->applyUniforms(this, &mUniforms);
 }
 
 // Packs varyings into generic varying registers, using the algorithm from [OpenGL ES Shading Language 1.00 rev. 17] appendix A section 7 page 111

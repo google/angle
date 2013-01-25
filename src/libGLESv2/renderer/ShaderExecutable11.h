@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -27,14 +27,18 @@ class ShaderExecutable11 : public ShaderExecutable
 
     static ShaderExecutable11 *makeShaderExecutable11(ShaderExecutable *executable);
 
-    ID3D11PixelShader *getPixelShader();
-    ID3D11VertexShader *getVertexShader();
+    ID3D11PixelShader *getPixelShader() const;
+    ID3D11VertexShader *getVertexShader() const;
+
+    ID3D11Buffer *getConstantBuffer();
 
   private:
     DISALLOW_COPY_AND_ASSIGN(ShaderExecutable11);
 
     ID3D11PixelShader *mPixelExecutable;
     ID3D11VertexShader *mVertexExecutable;
+
+    ID3D11Buffer *mConstantBuffer;
 };
 
 }

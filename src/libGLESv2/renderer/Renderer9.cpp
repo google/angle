@@ -1606,7 +1606,7 @@ void Renderer9::applyShaders(gl::ProgramBinary *programBinary)
     }
 }
 
-void Renderer9::applyUniforms(const gl::UniformArray *uniformArray)
+void Renderer9::applyUniforms(gl::ProgramBinary *programBinary, const gl::UniformArray *uniformArray)
 {
     for (std::vector<gl::Uniform*>::const_iterator ub = uniformArray->begin(), ue = uniformArray->end(); ub != ue; ++ub)
     {

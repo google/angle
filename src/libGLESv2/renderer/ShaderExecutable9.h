@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -26,8 +26,8 @@ class ShaderExecutable9 : public ShaderExecutable
 
     static ShaderExecutable9 *makeShaderExecutable9(ShaderExecutable *executable);
 
-    IDirect3DPixelShader9 *getPixelShader();
-    IDirect3DVertexShader9 *getVertexShader();
+    IDirect3DPixelShader9 *getPixelShader() const;
+    IDirect3DVertexShader9 *getVertexShader() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(ShaderExecutable9);

@@ -1043,7 +1043,7 @@ void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
     }
 }
 
-void Renderer11::applyUniforms(const gl::UniformArray *uniformArray)
+void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, const gl::UniformArray *uniformArray)
 {
     D3D11_BUFFER_DESC constantBufferDescriptionVS = {0};
     constantBufferDescriptionVS.ByteWidth = D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT * sizeof(float[4]);
