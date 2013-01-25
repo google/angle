@@ -236,7 +236,7 @@ void Shader::initializeCompiler()
             ShInitBuiltInResources(&resources);
 
             resources.MaxVertexAttribs = MAX_VERTEX_ATTRIBS;
-            resources.MaxVertexUniformVectors = MAX_VERTEX_UNIFORM_VECTORS;
+            resources.MaxVertexUniformVectors = mRenderer->getMaxVertexUniformVectors();
             resources.MaxVaryingVectors = context->getMaximumVaryingVectors();
             resources.MaxVertexTextureImageUnits = mRenderer->getMaxVertexTextureImageUnits();
             resources.MaxCombinedTextureImageUnits = context->getMaximumCombinedTextureImageUnits();

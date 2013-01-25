@@ -1658,11 +1658,11 @@ void Renderer9::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArray
 
 void Renderer9::applyUniformnbv(gl::Uniform *targetUniform, GLsizei count, int width, const GLboolean *v)
 {
-    float vector[gl::D3D9_MAX_FLOAT_CONSTANTS * 4];
+    float vector[D3D9_MAX_FLOAT_CONSTANTS * 4];
 
     if (targetUniform->psRegisterIndex >= 0 || targetUniform->vsRegisterIndex >= 0)
     {
-        ASSERT(count <= gl::D3D9_MAX_FLOAT_CONSTANTS);
+        ASSERT(count <= D3D9_MAX_FLOAT_CONSTANTS);
         for (int i = 0; i < count; i++)
         {
             for (int j = 0; j < 4; j++)
@@ -1697,8 +1697,8 @@ void Renderer9::applyUniformnfv(gl::Uniform *targetUniform, const GLfloat *v)
 
 void Renderer9::applyUniform1iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v)
 {
-    ASSERT(count <= gl::D3D9_MAX_FLOAT_CONSTANTS);
-    gl::Vector4 vector[gl::D3D9_MAX_FLOAT_CONSTANTS];
+    ASSERT(count <= D3D9_MAX_FLOAT_CONSTANTS);
+    gl::Vector4 vector[D3D9_MAX_FLOAT_CONSTANTS];
 
     for (int i = 0; i < count; i++)
     {
@@ -1710,8 +1710,8 @@ void Renderer9::applyUniform1iv(gl::Uniform *targetUniform, GLsizei count, const
 
 void Renderer9::applyUniform2iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v)
 {
-    ASSERT(count <= gl::D3D9_MAX_FLOAT_CONSTANTS);
-    gl::Vector4 vector[gl::D3D9_MAX_FLOAT_CONSTANTS];
+    ASSERT(count <= D3D9_MAX_FLOAT_CONSTANTS);
+    gl::Vector4 vector[D3D9_MAX_FLOAT_CONSTANTS];
 
     for (int i = 0; i < count; i++)
     {
@@ -1725,8 +1725,8 @@ void Renderer9::applyUniform2iv(gl::Uniform *targetUniform, GLsizei count, const
 
 void Renderer9::applyUniform3iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v)
 {
-    ASSERT(count <= gl::D3D9_MAX_FLOAT_CONSTANTS);
-    gl::Vector4 vector[gl::D3D9_MAX_FLOAT_CONSTANTS];
+    ASSERT(count <= D3D9_MAX_FLOAT_CONSTANTS);
+    gl::Vector4 vector[D3D9_MAX_FLOAT_CONSTANTS];
 
     for (int i = 0; i < count; i++)
     {
@@ -1740,8 +1740,8 @@ void Renderer9::applyUniform3iv(gl::Uniform *targetUniform, GLsizei count, const
 
 void Renderer9::applyUniform4iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v)
 {
-    ASSERT(count <= gl::D3D9_MAX_FLOAT_CONSTANTS);
-    gl::Vector4 vector[gl::D3D9_MAX_FLOAT_CONSTANTS];
+    ASSERT(count <= D3D9_MAX_FLOAT_CONSTANTS);
+    gl::Vector4 vector[D3D9_MAX_FLOAT_CONSTANTS];
 
     for (int i = 0; i < count; i++)
     {
@@ -2242,12 +2242,12 @@ unsigned int Renderer9::getMaxVertexTextureImageUnits() const
 
 int Renderer9::getMaxVertexUniformVectors() const
 {
-    return gl::MAX_VERTEX_UNIFORM_VECTORS;
+    return MAX_VERTEX_UNIFORM_VECTORS;
 }
 
 int Renderer9::getMaxFragmentUniformVectors() const
 {
-    return getMajorShaderModel() >= 3 ? gl::MAX_FRAGMENT_UNIFORM_VECTORS_SM3 : gl::MAX_FRAGMENT_UNIFORM_VECTORS_SM2;
+    return getMajorShaderModel() >= 3 ? MAX_FRAGMENT_UNIFORM_VECTORS_SM3 : MAX_FRAGMENT_UNIFORM_VECTORS_SM2;
 }
 
 bool Renderer9::getNonPower2TextureSupport() const

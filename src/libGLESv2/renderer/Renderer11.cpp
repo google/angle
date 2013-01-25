@@ -1872,12 +1872,16 @@ unsigned int Renderer11::getMaxVertexTextureImageUnits() const
 
 int Renderer11::getMaxVertexUniformVectors() const
 {
-    return gl::MAX_VERTEX_UNIFORM_VECTORS;
+    META_ASSERT(MAX_VERTEX_UNIFORM_VECTORS_D3D11 <= D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT);
+    ASSERT(mFeatureLevel >= D3D_FEATURE_LEVEL_10_0);
+    return MAX_VERTEX_UNIFORM_VECTORS_D3D11;
 }
 
 int Renderer11::getMaxFragmentUniformVectors() const
 {
-    return getMajorShaderModel() >= 3 ? gl::MAX_FRAGMENT_UNIFORM_VECTORS_SM3 : gl::MAX_FRAGMENT_UNIFORM_VECTORS_SM2;
+    META_ASSERT(MAX_FRAGMENT_UNIFORM_VECTORS_D3D11 <= D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT);
+    ASSERT(mFeatureLevel >= D3D_FEATURE_LEVEL_10_0);
+    return MAX_FRAGMENT_UNIFORM_VECTORS_D3D11;
 }
 
 bool Renderer11::getNonPower2TextureSupport() const

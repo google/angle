@@ -33,6 +33,12 @@ class VertexDataManager;
 class IndexDataManager;
 class StreamingIndexBufferInterface;
 
+enum
+{
+    MAX_VERTEX_UNIFORM_VECTORS_D3D11 = 1024,
+    MAX_FRAGMENT_UNIFORM_VECTORS_D3D11 = 1024
+};
+
 class Renderer11 : public Renderer
 {
   public:
