@@ -2414,9 +2414,9 @@ Image *Renderer11::createImage()
 
 void Renderer11::generateMipmap(Image *dest, Image *src)
 {
-    // TODO
-    UNIMPLEMENTED();
-    return;
+    Image11 *dest11 = Image11::makeImage11(dest);
+    Image11 *src11 = Image11::makeImage11(src);
+    Image11::generateMipmap(dest11, src11);
 }
 
 TextureStorage *Renderer11::createTextureStorage2D(SwapChain *swapChain)

@@ -36,6 +36,8 @@ class Image11 : public Image
 
     static Image11 *makeImage11(Image *img);
 
+    static void generateMipmap(Image11 *dest, Image11 *src);
+
     virtual bool isDirty() const;
     ID3D11Texture2D *getStagingTexture();
 
@@ -54,14 +56,15 @@ class Image11 : public Image
 
     virtual void copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
 
+  protected:
+    HRESULT map(D3D11_MAPPED_SUBRESOURCE *map);
+    void unmap();
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Image11);
 
     void createStagingTexture();
     bool updateStagingTexture(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
-
-    HRESULT map(D3D11_MAPPED_SUBRESOURCE *map);
-    void unmap();
 
     Renderer11 *mRenderer;
 

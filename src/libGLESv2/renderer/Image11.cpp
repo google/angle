@@ -15,6 +15,7 @@
 #include "libGLESv2/main.h"
 #include "libGLESv2/mathutil.h"
 #include "libGLESv2/renderer/renderer11_utils.h"
+#include "libGLESv2/renderer/generatemip.h"
 
 namespace rx
 {
@@ -38,6 +39,69 @@ Image11 *Image11::makeImage11(Image *img)
 {
     ASSERT(dynamic_cast<rx::Image11*>(img) != NULL);
     return static_cast<rx::Image11*>(img);
+}
+
+void Image11::generateMipmap(Image11 *dest, Image11 *src)
+{
+    ASSERT(src->getDXGIFormat() == dest->getDXGIFormat());
+    ASSERT(src->getWidth() == 1 || src->getWidth() / 2 == dest->getWidth());
+    ASSERT(src->getHeight() == 1 || src->getHeight() / 2 == dest->getHeight());
+
+    D3D11_MAPPED_SUBRESOURCE destMapped, srcMapped;
+    dest->map(&destMapped);
+    src->map(&srcMapped);
+
+    const unsigned char *sourceData = reinterpret_cast<const unsigned char*>(srcMapped.pData);
+    unsigned char *destData = reinterpret_cast<unsigned char*>(destMapped.pData);
+
+    if (sourceData && destData)
+    {
+        switch (src->getDXGIFormat())
+        {
+          case DXGI_FORMAT_R8G8B8A8_UNORM:
+          case DXGI_FORMAT_B8G8R8A8_UNORM:
+            GenerateMip<R8G8B8A8>(src->getWidth(), src->getHeight(), sourceData, srcMapped.RowPitch, destData, destMapped.RowPitch);
+            break;
+          case DXGI_FORMAT_A8_UNORM:
+            GenerateMip<A8>(src->getWidth(), src->getHeight(), sourceData, srcMapped.RowPitch, destData, destMapped.RowPitch);
+            break;
+          case DXGI_FORMAT_R8_UNORM:
+            GenerateMip<R8>(src->getWidth(), src->getHeight(), sourceData, srcMapped.RowPitch, destData, destMapped.RowPitch);
+            break;
+          case DXGI_FORMAT_R32G32B32A32_FLOAT:
+            GenerateMip<A32B32G32R32F>(src->getWidth(), src->getHeight(), sourceData, srcMapped.RowPitch, destData, destMapped.RowPitch);
+            break;
+          case DXGI_FORMAT_R32G32B32_FLOAT:
+            GenerateMip<R32G32B32F>(src->getWidth(), src->getHeight(), sourceData, srcMapped.RowPitch, destData, destMapped.RowPitch);
+            break;
+          case DXGI_FORMAT_R16G16B16A16_FLOAT:
+            GenerateMip<A16B16G16R16F>(src->getWidth(), src->getHeight(), sourceData, srcMapped.RowPitch, destData, destMapped.RowPitch);
+            break;
+          case DXGI_FORMAT_R8G8_UNORM:
+            GenerateMip<R8G8>(src->getWidth(), src->getHeight(), sourceData, srcMapped.RowPitch, destData, destMapped.RowPitch);
+            break;
+          case DXGI_FORMAT_R16_FLOAT:
+            GenerateMip<R16F>(src->getWidth(), src->getHeight(), sourceData, srcMapped.RowPitch, destData, destMapped.RowPitch);
+            break;
+          case DXGI_FORMAT_R16G16_FLOAT:
+            GenerateMip<R16G16F>(src->getWidth(), src->getHeight(), sourceData, srcMapped.RowPitch, destData, destMapped.RowPitch);
+            break;
+          case DXGI_FORMAT_R32_FLOAT:
+            GenerateMip<R32F>(src->getWidth(), src->getHeight(), sourceData, srcMapped.RowPitch, destData, destMapped.RowPitch);
+            break;
+          case DXGI_FORMAT_R32G32_FLOAT:
+            GenerateMip<R32G32F>(src->getWidth(), src->getHeight(), sourceData, srcMapped.RowPitch, destData, destMapped.RowPitch);
+            break;
+          default:
+            UNREACHABLE();
+            break;
+        }
+
+        dest->unmap();
+        src->unmap();
+    }
+
+    dest->markDirty();
 }
 
 bool Image11::isDirty() const

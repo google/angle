@@ -24,6 +24,9 @@ struct L8
     }
 };
 
+typedef L8 R8; // R8 type is functionally equivalent for mip purposes
+typedef L8 A8; // A8 type is functionally equivalent for mip purposes
+
 struct A8L8
 {
     unsigned char L;
@@ -34,6 +37,8 @@ struct A8L8
         *(unsigned short*)dst = (((*(unsigned short*)src1 ^ *(unsigned short*)src2) & 0xFEFE) >> 1) + (*(unsigned short*)src1 & *(unsigned short*)src2);
     }
 };
+
+typedef A8L8 R8G8; // R8G8 type is functionally equivalent for mip purposes
 
 struct A8R8G8B8
 {
@@ -47,6 +52,8 @@ struct A8R8G8B8
         *(unsigned int*)dst = (((*(unsigned int*)src1 ^ *(unsigned int*)src2) & 0xFEFEFEFE) >> 1) + (*(unsigned int*)src1 & *(unsigned int*)src2);
     }
 };
+
+typedef A8R8G8B8 R8G8B8A8; // R8G8B8A8 type is functionally equivalent for mip purposes
 
 struct A16B16G16R16F
 {
@@ -64,6 +71,28 @@ struct A16B16G16R16F
     }
 };
 
+struct R16F
+{
+    unsigned short R;
+
+    static void average(R16F *dst, const R16F *src1, const R16F *src2)
+    {
+        dst->R = gl::float32ToFloat16((gl::float16ToFloat32(src1->R) + gl::float16ToFloat32(src2->R)) * 0.5f);
+    }
+};
+
+struct R16G16F
+{
+    unsigned short R;
+    unsigned short G;
+
+    static void average(R16G16F *dst, const R16G16F *src1, const R16G16F *src2)
+    {
+        dst->R = gl::float32ToFloat16((gl::float16ToFloat32(src1->R) + gl::float16ToFloat32(src2->R)) * 0.5f);
+        dst->G = gl::float32ToFloat16((gl::float16ToFloat32(src1->G) + gl::float16ToFloat32(src2->G)) * 0.5f);
+    }
+};
+
 struct A32B32G32R32F
 {
     float R;
@@ -77,6 +106,42 @@ struct A32B32G32R32F
         dst->G = (src1->G + src2->G) * 0.5f;
         dst->B = (src1->B + src2->B) * 0.5f;
         dst->A = (src1->A + src2->A) * 0.5f;
+    }
+};
+
+struct R32F
+{
+    float R;
+
+    static void average(R32F *dst, const R32F *src1, const R32F *src2)
+    {
+        dst->R = (src1->R + src2->R) * 0.5f;
+    }
+};
+
+struct R32G32F
+{
+    float R;
+    float G;
+
+    static void average(R32G32F *dst, const R32G32F *src1, const R32G32F *src2)
+    {
+        dst->R = (src1->R + src2->R) * 0.5f;
+        dst->G = (src1->G + src2->G) * 0.5f;
+    }
+};
+
+struct R32G32B32F
+{
+    float R;
+    float G;
+    float B;
+
+    static void average(R32G32B32F *dst, const R32G32B32F *src1, const R32G32B32F *src2)
+    {
+        dst->R = (src1->R + src2->R) * 0.5f;
+        dst->G = (src1->G + src2->G) * 0.5f;
+        dst->B = (src1->B + src2->B) * 0.5f;
     }
 };
 
