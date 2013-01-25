@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -105,7 +105,16 @@ int main(int argc, char* argv[])
                     switch (argv[0][3]) {
                     case 'e': output = SH_ESSL_OUTPUT; break;
                     case 'g': output = SH_GLSL_OUTPUT; break;
-                    case 'h': output = SH_HLSL_OUTPUT; break;
+                    case 'h':
+                        if (argv[0][4] == '1' && argv[0][5] == '1')
+                        {
+                            output = SH_HLSL11_OUTPUT;
+                        }
+                        else
+                        {
+                            output = SH_HLSL9_OUTPUT;
+                        }
+                        break;
                     default: failCode = EFailUsage;
                     }
                 } else {
@@ -219,7 +228,8 @@ void usage()
         "       -s=c     : use CSS Shaders spec\n"
         "       -b=e     : output GLSL ES code (this is by default)\n"
         "       -b=g     : output GLSL code\n"
-        "       -b=h     : output HLSL code\n"
+        "       -b=h9    : output HLSL9 code\n"
+        "       -b=h11   : output HLSL11 code\n"
         "       -x=i     : enable GL_OES_EGL_image_external\n"
         "       -x=d     : enable GL_OES_EGL_standard_derivatives\n"
         "       -x=r     : enable ARB_texture_rectangle\n");

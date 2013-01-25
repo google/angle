@@ -79,6 +79,7 @@ typedef enum {
 typedef enum {
   SH_ESSL_OUTPUT   = 0x8B45,
   SH_GLSL_OUTPUT   = 0x8B46,
+  SH_HLSL_OUTPUT   = 0x8B47,
   SH_HLSL9_OUTPUT  = 0x8B47,
   SH_HLSL11_OUTPUT = 0x8B48
 } ShShaderOutput;
@@ -229,7 +230,7 @@ typedef void* ShHandle;
 // spec: Specifies the language spec the compiler must conform to -
 //       SH_GLES2_SPEC or SH_WEBGL_SPEC.
 // output: Specifies the output code type - SH_ESSL_OUTPUT, SH_GLSL_OUTPUT,
-//         or SH_HLSL_OUTPUT.
+//         SH_HLSL9_OUTPUT or SH_HLSL11_OUTPUT.
 // resources: Specifies the built-in resources.
 COMPILER_EXPORT ShHandle ShConstructCompiler(
     ShShaderType type,
