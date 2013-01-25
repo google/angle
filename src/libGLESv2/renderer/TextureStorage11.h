@@ -12,6 +12,7 @@
 
 #include <d3d11.h>
 
+#include "libGLESv2/Texture.h"
 #include "libGLESv2/renderer/TextureStorage.h"
 
 namespace rx
@@ -36,11 +37,12 @@ class TextureStorage11 : public TextureStorage
     UINT getBindFlags() const;
 
     virtual ID3D11Texture2D *getBaseTexture() const = 0;
-    virtual ID3D11ShaderResourceView *getSRV() const = 0;
-    virtual RenderTarget *getRenderTarget() const { return getRenderTarget(0); }
-    virtual RenderTarget *getRenderTarget(int level) const { return NULL; }
-    virtual RenderTarget *getRenderTarget(GLenum faceTarget) const { return getRenderTarget(faceTarget, 0); }
-    virtual RenderTarget *getRenderTarget(GLenum faceTarget, int level) const { return NULL; }
+    virtual ID3D11ShaderResourceView *getSRV() = 0;
+    virtual RenderTarget *getRenderTarget() { return getRenderTarget(0); }
+    virtual RenderTarget *getRenderTarget(int level) { return NULL; }
+    virtual RenderTarget *getRenderTarget(GLenum faceTarget) { return getRenderTarget(faceTarget, 0); }
+    virtual RenderTarget *getRenderTarget(GLenum faceTarget, int level) { return NULL; }
+
     virtual void generateMipmap(int level) {};
     virtual void generateMipmap(int face, int level) {};
 
@@ -49,7 +51,7 @@ class TextureStorage11 : public TextureStorage
     virtual bool isManaged() const;
     virtual int levelCount();
     UINT getSubresourceIndex(int level, int faceTarget);
-    
+
     bool updateSubresourceLevel(ID3D11Texture2D *texture, int level, int faceTarget, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
 
   protected:
@@ -72,20 +74,22 @@ class TextureStorage11_2D : public TextureStorage11
 
     static TextureStorage11_2D *makeTextureStorage11_2D(TextureStorage *storage);
 
-    virtual RenderTarget *getRenderTarget(int level) const;
     virtual ID3D11Texture2D *getBaseTexture() const;
-    virtual ID3D11ShaderResourceView *getSRV() const;
+    virtual ID3D11ShaderResourceView *getSRV();
+    virtual RenderTarget *getRenderTarget(int level);
+
     virtual void generateMipmap(int level);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage11_2D);
 
-    void initializeRenderTarget(DXGI_FORMAT format, int width, int height);
-    void initializeSRV(DXGI_FORMAT format);
-
     ID3D11Texture2D *mTexture;
+    DXGI_FORMAT mTextureFormat;
+    unsigned int mTextureWidth;
+    unsigned int mTextureHeight;
+
     ID3D11ShaderResourceView *mSRV;
-    RenderTarget11 **mRenderTarget;
+    RenderTarget11 *mRenderTarget[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
 
 class TextureStorage11_Cube : public TextureStorage11
@@ -96,20 +100,22 @@ class TextureStorage11_Cube : public TextureStorage11
 
     static TextureStorage11_Cube *makeTextureStorage11_Cube(TextureStorage *storage);
 
-    virtual RenderTarget *getRenderTarget(GLenum faceTarget, int level) const;
     virtual ID3D11Texture2D *getBaseTexture() const;
-    virtual ID3D11ShaderResourceView *getSRV() const;
+    virtual ID3D11ShaderResourceView *getSRV();
+    virtual RenderTarget *getRenderTarget(GLenum faceTarget, int level);
+
     virtual void generateMipmap(int face, int level);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage11_Cube);
 
-    void initializeRenderTarget(DXGI_FORMAT format, int size);
-    void initializeSRV(DXGI_FORMAT format);
-
     ID3D11Texture2D *mTexture;
+    DXGI_FORMAT mTextureFormat;
+    unsigned int mTextureWidth;
+    unsigned int mTextureHeight;
+
     ID3D11ShaderResourceView *mSRV;
-    RenderTarget11 **mRenderTarget[6];
+    RenderTarget11 *mRenderTarget[6][gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
 
 }

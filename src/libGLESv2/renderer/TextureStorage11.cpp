@@ -131,7 +131,7 @@ bool TextureStorage11::updateSubresourceLevel(ID3D11Texture2D *srcTexture, int l
 
         ID3D11DeviceContext *context = mRenderer->getDeviceContext();
         
-        ASSERT(getBaseTexture());        
+        ASSERT(getBaseTexture());
         context->CopySubresourceRegion(getBaseTexture(), getSubresourceIndex(level, face), xoffset, yoffset, 0, srcTexture, 0, &srcBox);
         return true;
     }
@@ -145,15 +145,19 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, SwapChain11 *swapch
     ID3D11Texture2D *surfaceTexture = swapchain->getOffscreenTexture();
     mTexture = surfaceTexture;
     mSRV = NULL;
-    mRenderTarget = NULL;
+
+    for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
+    {
+        mRenderTarget[i] = NULL;
+    }
 
     D3D11_TEXTURE2D_DESC desc;
     surfaceTexture->GetDesc(&desc);
 
     mMipLevels = desc.MipLevels;
-
-    initializeSRV(desc.Format);
-    initializeRenderTarget(desc.Format, desc.Width, desc.Height);
+    mTextureFormat = desc.Format;
+    mTextureWidth = desc.Width;
+    mTextureHeight = desc.Height;
 }
 
 TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height)
@@ -161,8 +165,14 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int levels, GLenum 
 {
     mTexture = NULL;
     mSRV = NULL;
-    mRenderTarget = NULL;
+    mTextureWidth = 0;
+    mTextureHeight = 0;
     DXGI_FORMAT format = gl_d3d11::ConvertTextureFormat(internalformat);
+
+    for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
+    {
+        mRenderTarget[i] = NULL;
+    }
 
     // if the width or height is not positive this should be treated as an incomplete texture
     // we handle that here by skipping the d3d texture creation
@@ -198,11 +208,11 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int levels, GLenum 
         {
             mTexture->GetDesc(&desc);
             mMipLevels = desc.MipLevels;
+            mTextureFormat = desc.Format;
+            mTextureWidth = desc.Width;
+            mTextureHeight = desc.Height;
         }
     }
-
-    initializeSRV(format);
-    initializeRenderTarget(format, width, height);
 }
 
 TextureStorage11_2D::~TextureStorage11_2D()
@@ -219,16 +229,10 @@ TextureStorage11_2D::~TextureStorage11_2D()
         mSRV = NULL;
     }
 
-    if (mRenderTarget)
+    for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
     {
-        for (unsigned int i = 0; i < mMipLevels; i++)
-        {
-            delete mRenderTarget[i];
-            mRenderTarget[i] = NULL;
-        }
-
-        delete[] mRenderTarget;
-        mRenderTarget = NULL;
+        delete mRenderTarget[i];
+        mRenderTarget[i] = NULL;
     }
 }
 
@@ -238,15 +242,39 @@ TextureStorage11_2D *TextureStorage11_2D::makeTextureStorage11_2D(TextureStorage
     return static_cast<TextureStorage11_2D*>(storage);
 }
 
-RenderTarget *TextureStorage11_2D::getRenderTarget(int level) const
+RenderTarget *TextureStorage11_2D::getRenderTarget(int level)
 {
-    if (level < 0 || level >= static_cast<int>(mMipLevels))
+    if (level >= 0 && level < static_cast<int>(mMipLevels))
     {
-        return NULL;
+        if (!mRenderTarget[level])
+        {
+            ID3D11Device *device = mRenderer->getDevice();
+            HRESULT result;
+
+            D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
+            rtvDesc.Format = mTextureFormat;
+            rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+            rtvDesc.Texture2D.MipSlice = level;
+
+            ID3D11RenderTargetView *rtv;
+            result = device->CreateRenderTargetView(mTexture, &rtvDesc, &rtv);
+
+            if (result == E_OUTOFMEMORY)
+            {
+                return error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
+            }
+            ASSERT(SUCCEEDED(result));
+
+            mRenderTarget[level] = new RenderTarget11(mRenderer, rtv,
+                                                      std::max(mTextureWidth >> level, 1U),
+                                                      std::max(mTextureHeight >> level, 1U));
+        }
+
+        return mRenderTarget[level];
     }
     else
     {
-        return mRenderTarget[level];
+        return NULL;
     }
 }
 
@@ -255,8 +283,27 @@ ID3D11Texture2D *TextureStorage11_2D::getBaseTexture() const
     return mTexture;
 }
 
-ID3D11ShaderResourceView *TextureStorage11_2D::getSRV() const
+ID3D11ShaderResourceView *TextureStorage11_2D::getSRV()
 {
+    if (!mSRV)
+    {
+        ID3D11Device *device = mRenderer->getDevice();
+
+        D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+        srvDesc.Format = mTextureFormat;
+        srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+        srvDesc.Texture2D.MipLevels = (mMipLevels == 0 ? -1 : mMipLevels);
+        srvDesc.Texture2D.MostDetailedMip = 0;
+
+        HRESULT result = device->CreateShaderResourceView(mTexture, &srvDesc, &mSRV);
+
+        if (result == E_OUTOFMEMORY)
+        {
+            return error(GL_OUT_OF_MEMORY, static_cast<ID3D11ShaderResourceView*>(NULL));
+        }
+        ASSERT(SUCCEEDED(result));
+    }
+
     return mSRV;
 }
 
@@ -266,79 +313,20 @@ void TextureStorage11_2D::generateMipmap(int level)
     UNIMPLEMENTED();
 }
 
-void TextureStorage11_2D::initializeRenderTarget(DXGI_FORMAT format, int width, int height)
-{
-    ASSERT(mRenderTarget == NULL);
-
-    if (mTexture != NULL && isRenderTarget())
-    {
-        if (getBindFlags() & D3D11_BIND_RENDER_TARGET)
-        {
-            mRenderTarget = new RenderTarget11*[mMipLevels];
-            for (unsigned i = 0; i < mMipLevels; i++)
-            {
-                // Create render target view -- texture should already be created with
-                // BIND_RENDER_TARGET flag.
-                D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
-                rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-                rtvDesc.Format = format;
-                rtvDesc.Texture2D.MipSlice = i;
-
-                ID3D11RenderTargetView *renderTargetView;
-                ID3D11Device *device = mRenderer->getDevice();
-                HRESULT result = device->CreateRenderTargetView(mTexture, &rtvDesc, &renderTargetView);
-
-                if (result == E_OUTOFMEMORY)
-                    return;
-
-                ASSERT(SUCCEEDED(result));
-
-                mRenderTarget[i] = new RenderTarget11(mRenderer, renderTargetView, std::max(width >> i, 1), std::max(height >> i, 1));
-            }
-        }
-        else if (getBindFlags() & D3D11_BIND_DEPTH_STENCIL)
-        {
-            // TODO
-            UNIMPLEMENTED();
-        }
-        else
-            UNREACHABLE();
-    }
-}
-
-void TextureStorage11_2D::initializeSRV(DXGI_FORMAT format)
-{
-    ASSERT(mSRV == NULL);
-
-    if (mTexture)
-    {
-        D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-        srvDesc.Format = format;
-        srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-        srvDesc.Texture2D.MostDetailedMip = 0;
-        srvDesc.Texture2D.MipLevels = (mMipLevels == 0 ? -1 : mMipLevels);
-
-        ID3D11Device *device = mRenderer->getDevice();
-        HRESULT result = device->CreateShaderResourceView(mTexture, &srvDesc, &mSRV);
-
-        if (result == E_OUTOFMEMORY)
-        {
-            return error(GL_OUT_OF_MEMORY);
-        }
-
-        ASSERT(SUCCEEDED(result));
-    }
-}
-
 TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
     : TextureStorage11(renderer, GetTextureBindFlags(gl_d3d11::ConvertTextureFormat(internalformat), usage, forceRenderable))
 {
     mTexture = NULL;
     mSRV = NULL;
+    mTextureWidth = 0;
+    mTextureHeight = 0;
 
-    for (unsigned int i = 0; i < 6; ++i)
+    for (unsigned int i = 0; i < 6; i++)
     {
-        mRenderTarget[i] = NULL;
+        for (unsigned int j = 0; j < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; j++)
+        {
+            mRenderTarget[i][j] = NULL;
+        }
     }
 
     DXGI_FORMAT format = gl_d3d11::ConvertTextureFormat(internalformat);
@@ -377,11 +365,11 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int levels, GLe
         {
             mTexture->GetDesc(&desc);
             mMipLevels = desc.MipLevels;
+            mTextureFormat = desc.Format;
+            mTextureWidth = desc.Width;
+            mTextureHeight = desc.Height;
         }
     }
-
-    initializeSRV(format);
-    initializeRenderTarget(format, size);
 }
 
 TextureStorage11_Cube::~TextureStorage11_Cube()
@@ -400,16 +388,10 @@ TextureStorage11_Cube::~TextureStorage11_Cube()
 
     for (unsigned int i = 0; i < 6; i++)
     {
-        if (mRenderTarget[i])
+        for (unsigned int j = 0; j < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; j++)
         {
-            for (unsigned int j = 0; j < mMipLevels; j++)
-            {
-                delete mRenderTarget[i][j];
-                mRenderTarget[i][j] = NULL;
-            }
-
-            delete[] mRenderTarget[i];
-            mRenderTarget[i] = NULL;
+            delete mRenderTarget[i][j];
+            mRenderTarget[i][j] = NULL;
         }
     }
 }
@@ -420,15 +402,51 @@ TextureStorage11_Cube *TextureStorage11_Cube::makeTextureStorage11_Cube(TextureS
     return static_cast<TextureStorage11_Cube*>(storage);
 }
 
-RenderTarget *TextureStorage11_Cube::getRenderTarget(GLenum faceTarget, int level) const
+RenderTarget *TextureStorage11_Cube::getRenderTarget(GLenum faceTarget, int level)
 {
-    if (level < 0 || level >= static_cast<int>(mMipLevels))
+    unsigned int faceIdx = gl::TextureCubeMap::faceIndex(faceTarget);
+    if (level >= 0 && level < static_cast<int>(mMipLevels))
     {
-        return NULL;
+        if (!mRenderTarget[faceIdx][level])
+        {
+            ID3D11Device *device = mRenderer->getDevice();
+            HRESULT result;
+
+            if (getBindFlags() & D3D11_BIND_RENDER_TARGET)
+            {
+                D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
+                rtvDesc.Format = mTextureFormat;
+                rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
+                rtvDesc.Texture2DArray.MipSlice = level;
+                rtvDesc.Texture2DArray.FirstArraySlice = faceIdx;
+                rtvDesc.Texture2DArray.ArraySize = 1;
+
+                ID3D11RenderTargetView *rtv;
+                result = device->CreateRenderTargetView(mTexture, &rtvDesc, &rtv);
+
+                if (result == E_OUTOFMEMORY)
+                {
+                    return error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
+                }
+                ASSERT(SUCCEEDED(result));
+
+                mRenderTarget[faceIdx][level] = new RenderTarget11(mRenderer, rtv,
+                                                                   std::max(mTextureWidth >> level, 1U),
+                                                                   std::max(mTextureHeight >> level, 1U));
+            }
+            else if (getBindFlags() & D3D11_BIND_DEPTH_STENCIL)
+            {
+                // TODO
+                UNIMPLEMENTED();
+            }
+            else UNREACHABLE();
+        }
+
+        return mRenderTarget[faceIdx][level];
     }
     else
     {
-        return mRenderTarget[gl::TextureCubeMap::faceIndex(faceTarget)][level];
+        return NULL;
     }
 }
 
@@ -437,8 +455,27 @@ ID3D11Texture2D *TextureStorage11_Cube::getBaseTexture() const
     return mTexture;
 }
 
-ID3D11ShaderResourceView *TextureStorage11_Cube::getSRV() const
+ID3D11ShaderResourceView *TextureStorage11_Cube::getSRV()
 {
+    if (!mSRV)
+    {
+        ID3D11Device *device = mRenderer->getDevice();
+
+        D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+        srvDesc.Format = mTextureFormat;
+        srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
+        srvDesc.TextureCube.MipLevels = (mMipLevels == 0 ? -1 : mMipLevels);
+        srvDesc.TextureCube.MostDetailedMip = 0;
+
+        HRESULT result = device->CreateShaderResourceView(mTexture, &srvDesc, &mSRV);
+
+        if (result == E_OUTOFMEMORY)
+        {
+            return error(GL_OUT_OF_MEMORY, static_cast<ID3D11ShaderResourceView*>(NULL));
+        }
+        ASSERT(SUCCEEDED(result));
+    }
+
     return mSRV;
 }
 
@@ -446,77 +483,6 @@ void TextureStorage11_Cube::generateMipmap(int face, int level)
 {
     // TODO
     UNIMPLEMENTED();
-}
-
-void TextureStorage11_Cube::initializeRenderTarget(DXGI_FORMAT format, int size)
-{
-    if (mTexture != NULL && isRenderTarget())
-    {
-        if (getBindFlags() & D3D11_BIND_RENDER_TARGET)
-        {
-            // Create render target view -- texture should already be created with 
-            // BIND_RENDER_TARGET flag.
-
-            for (unsigned int i = 0; i < 6; ++i)
-            {
-                ASSERT(mRenderTarget[i] == NULL);
-                mRenderTarget[i] = new RenderTarget11*[mMipLevels];
-
-                for (unsigned int j = 0; j < mMipLevels; j++)
-                {
-                    D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
-                    rtvDesc.Format = format;
-                    rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
-                    rtvDesc.Texture2DArray.MipSlice = j;
-                    rtvDesc.Texture2DArray.FirstArraySlice = i;
-                    rtvDesc.Texture2DArray.ArraySize = 1;
-
-                    ID3D11RenderTargetView *renderTargetView;
-                    ID3D11Device *device = mRenderer->getDevice();
-                    HRESULT result = device->CreateRenderTargetView(mTexture, &rtvDesc, &renderTargetView);
-
-                    if (result == E_OUTOFMEMORY)
-                        return;
-
-                    ASSERT(SUCCEEDED(result));
-
-                    int mipSize = size >> j;
-                    mRenderTarget[i][j] = new RenderTarget11(mRenderer, renderTargetView, mipSize, mipSize);
-                }
-            }
-        }
-        else if (getBindFlags() & D3D11_BIND_DEPTH_STENCIL)
-        {
-            // TODO
-            UNIMPLEMENTED();
-        }
-        else
-            UNREACHABLE();
-    }
-}
-
-void TextureStorage11_Cube::initializeSRV(DXGI_FORMAT format)
-{
-    ASSERT(mSRV == NULL);
-
-    if (mTexture)
-    {
-        D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-        srvDesc.Format = format;
-        srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
-        srvDesc.TextureCube.MipLevels = (mMipLevels == 0 ? -1 : mMipLevels);
-        srvDesc.TextureCube.MostDetailedMip = 0;
-
-        ID3D11Device *device = mRenderer->getDevice();
-        HRESULT result = device->CreateShaderResourceView(mTexture, &srvDesc, &mSRV);
-
-        if (result == E_OUTOFMEMORY)
-        {
-            return error(GL_OUT_OF_MEMORY);
-        }
-
-        ASSERT(SUCCEEDED(result));
-    }
 }
 
 }

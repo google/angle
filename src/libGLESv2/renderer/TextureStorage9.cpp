@@ -178,7 +178,7 @@ IDirect3DSurface9 *TextureStorage9_2D::getSurfaceLevel(int level, bool dirty)
     return surface;
 }
 
-RenderTarget *TextureStorage9_2D::getRenderTarget() const
+RenderTarget *TextureStorage9_2D::getRenderTarget()
 {
     return mRenderTarget;
 }
@@ -284,7 +284,7 @@ IDirect3DSurface9 *TextureStorage9_Cube::getCubeMapSurface(GLenum faceTarget, in
     return surface;
 }
 
-RenderTarget *TextureStorage9_Cube::getRenderTarget(GLenum faceTarget) const
+RenderTarget *TextureStorage9_Cube::getRenderTarget(GLenum faceTarget)
 {
     return mRenderTarget[gl::TextureCubeMap::faceIndex(faceTarget)];
 }

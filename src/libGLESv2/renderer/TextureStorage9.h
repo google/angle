@@ -41,8 +41,8 @@ class TextureStorage9 : public TextureStorage
     DWORD getUsage() const;
 
     virtual IDirect3DBaseTexture9 *getBaseTexture() const = 0;
-    virtual RenderTarget *getRenderTarget() const { return NULL; }
-    virtual RenderTarget *getRenderTarget(GLenum faceTarget) const { return NULL; }
+    virtual RenderTarget *getRenderTarget() { return NULL; }
+    virtual RenderTarget *getRenderTarget(GLenum faceTarget) { return NULL; }
     virtual void generateMipmap(int level) {};
     virtual void generateMipmap(int face, int level) {};
 
@@ -72,7 +72,7 @@ class TextureStorage9_2D : public TextureStorage9
     static TextureStorage9_2D *makeTextureStorage9_2D(TextureStorage *storage);
 
     IDirect3DSurface9 *getSurfaceLevel(int level, bool dirty);
-    virtual RenderTarget *getRenderTarget() const;
+    virtual RenderTarget *getRenderTarget();
     virtual IDirect3DBaseTexture9 *getBaseTexture() const;
     virtual void generateMipmap(int level);
 
@@ -94,7 +94,7 @@ class TextureStorage9_Cube : public TextureStorage9
     static TextureStorage9_Cube *makeTextureStorage9_Cube(TextureStorage *storage);
 
     IDirect3DSurface9 *getCubeMapSurface(GLenum faceTarget, int level, bool dirty);
-    virtual RenderTarget *getRenderTarget(GLenum faceTarget) const;
+    virtual RenderTarget *getRenderTarget(GLenum faceTarget);
     virtual IDirect3DBaseTexture9 *getBaseTexture() const;
     virtual void generateMipmap(int face, int level);
 
