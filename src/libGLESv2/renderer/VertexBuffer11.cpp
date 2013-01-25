@@ -77,7 +77,6 @@ bool VertexBuffer11::storeVertexAttributes(const gl::VertexAttribute &attrib, GL
         gl::Buffer *buffer = attrib.mBoundBuffer.get();
 
         int inputStride = attrib.stride();
-        int elementSize = attrib.typeSize();
         const VertexConverter &converter = getVertexConversion(attrib);
 
         ID3D11DeviceContext *dxContext = mRenderer->getDeviceContext();
@@ -269,62 +268,94 @@ static void copyFixedVertexData(const void* input, unsigned int stride, unsigned
     }
 }
 
+template <typename T, unsigned int componentCount, bool normalized>
+static void copyToFloatVertexData(const void* input, unsigned int stride, unsigned int count, void* output)
+{
+    typedef std::numeric_limits<T> NL;
+
+    for (unsigned int i = 0; i < count; i++)
+    {
+        const T *offsetInput = reinterpret_cast<const T*>(reinterpret_cast<const char*>(input) + stride * i);
+        float *offsetOutput = reinterpret_cast<float*>(output) + i * componentCount;
+
+        for (unsigned int j = 0; j < componentCount; j++)
+        {
+            if (normalized)
+            {
+                if (NL::is_signed)
+                {
+                    const float divisor = 1.0f / (2 * static_cast<float>(NL::max()) + 1);
+                    offsetOutput[j] = (2 * static_cast<float>(offsetInput[j]) + 1) * divisor;
+                }
+                else
+                {
+                    offsetOutput[j] =  static_cast<float>(offsetInput[j]) / NL::max();
+                }
+            }
+            else
+            {
+                offsetOutput[j] =  static_cast<float>(offsetInput[j]);
+            }
+        }
+    }
+}
+
 const VertexBuffer11::VertexConverter VertexBuffer11::mPossibleTranslations[NUM_GL_VERTEX_ATTRIB_TYPES][2][4] =
 {
     { // GL_BYTE
         { // unnormalized
-            { &copyVertexData<GLbyte, 1, false, false>, DXGI_FORMAT_R8_SINT, 1 },
-            { &copyVertexData<GLbyte, 2, false, false>, DXGI_FORMAT_R8G8_SINT, 2 },
-            { &copyVertexData<GLbyte, 3, true, false>, DXGI_FORMAT_R8G8B8A8_SINT, 4 },
-            { &copyVertexData<GLbyte, 4, false, false>, DXGI_FORMAT_R8G8B8A8_SINT, 4 },
+            { &copyToFloatVertexData<GLbyte, 1, false>, DXGI_FORMAT_R32_FLOAT, 4 },
+            { &copyToFloatVertexData<GLbyte, 2, false>, DXGI_FORMAT_R32G32_FLOAT, 8 },
+            { &copyToFloatVertexData<GLbyte, 3, false>, DXGI_FORMAT_R32G32B32_FLOAT, 12 },
+            { &copyToFloatVertexData<GLbyte, 4, false>, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
         },
         { // normalized
-            { &copyVertexData<GLbyte, 1, false, true>, DXGI_FORMAT_R8_SNORM, 1 },
-            { &copyVertexData<GLbyte, 2, false, true>, DXGI_FORMAT_R8G8_SNORM, 2 },
-            { &copyVertexData<GLbyte, 3, true, true>, DXGI_FORMAT_R8G8B8A8_SNORM, 4 },
-            { &copyVertexData<GLbyte, 4, false, true>, DXGI_FORMAT_R8G8B8A8_SNORM, 4 },
+            { &copyToFloatVertexData<GLbyte, 1, true>, DXGI_FORMAT_R32_FLOAT, 4 },
+            { &copyToFloatVertexData<GLbyte, 2, true>, DXGI_FORMAT_R32G32_FLOAT, 8 },
+            { &copyToFloatVertexData<GLbyte, 3, true>, DXGI_FORMAT_R32G32B32_FLOAT, 12 },
+            { &copyToFloatVertexData<GLbyte, 4, true>, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
         },
     },
     { // GL_UNSIGNED_BYTE
         { // unnormalized
-            { &copyVertexData<GLubyte, 1, false, false>, DXGI_FORMAT_R8_UINT, 1 },
-            { &copyVertexData<GLubyte, 2, false, false>, DXGI_FORMAT_R8G8_UINT, 2 },
-            { &copyVertexData<GLubyte, 3, true, false>, DXGI_FORMAT_R8G8B8A8_UINT, 4 },
-            { &copyVertexData<GLubyte, 4, false, false>, DXGI_FORMAT_R8G8B8A8_UINT, 4 },
+            { &copyToFloatVertexData<GLubyte, 1, false>, DXGI_FORMAT_R32_FLOAT, 4 },
+            { &copyToFloatVertexData<GLubyte, 2, false>, DXGI_FORMAT_R32G32_FLOAT, 8 },
+            { &copyToFloatVertexData<GLubyte, 3, false>, DXGI_FORMAT_R32G32B32_FLOAT, 12 },
+            { &copyToFloatVertexData<GLubyte, 4, false>, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
         },
         { // normalized
-            { &copyVertexData<GLubyte, 1, false, true>, DXGI_FORMAT_R8_UNORM, 1 },
-            { &copyVertexData<GLubyte, 2, false, true>, DXGI_FORMAT_R8G8_UNORM, 2 },
-            { &copyVertexData<GLubyte, 3, true, true>, DXGI_FORMAT_R8G8B8A8_UNORM, 4 },
-            { &copyVertexData<GLubyte, 4, false, true>, DXGI_FORMAT_R8G8B8A8_UNORM, 4 },
+            { &copyToFloatVertexData<GLubyte, 1, true>, DXGI_FORMAT_R32_FLOAT, 4 },
+            { &copyToFloatVertexData<GLubyte, 2, true>, DXGI_FORMAT_R32G32_FLOAT, 8 },
+            { &copyToFloatVertexData<GLubyte, 3, true>, DXGI_FORMAT_R32G32B32_FLOAT, 12 },
+            { &copyToFloatVertexData<GLubyte, 4, true>, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
         },
     },
     { // GL_SHORT
         { // unnormalized
-            { &copyVertexData<GLshort, 1, false, false>, DXGI_FORMAT_R16_SINT, 2 },
-            { &copyVertexData<GLshort, 2, false, false>, DXGI_FORMAT_R16G16_SINT, 4 },
-            { &copyVertexData<GLshort, 3, true, false>, DXGI_FORMAT_R16G16B16A16_SINT, 8 },
-            { &copyVertexData<GLshort, 4, false, false>, DXGI_FORMAT_R16G16B16A16_SINT, 8 },
+            { &copyToFloatVertexData<GLshort, 1, false>, DXGI_FORMAT_R32_FLOAT, 4 },
+            { &copyToFloatVertexData<GLshort, 2, false>, DXGI_FORMAT_R32G32_FLOAT, 8 },
+            { &copyToFloatVertexData<GLshort, 3, false>, DXGI_FORMAT_R32G32B32_FLOAT, 12 },
+            { &copyToFloatVertexData<GLshort, 4, false>, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
         },
         { // normalized
-            { &copyVertexData<GLshort, 1, false, true>, DXGI_FORMAT_R16_SNORM, 2 },
-            { &copyVertexData<GLshort, 2, false, true>, DXGI_FORMAT_R16G16_SNORM, 4 },
-            { &copyVertexData<GLshort, 3, true, true>, DXGI_FORMAT_R16G16B16A16_SNORM, 8 },
-            { &copyVertexData<GLshort, 4, false, true>, DXGI_FORMAT_R16G16B16A16_SNORM, 8 },
+            { &copyToFloatVertexData<GLshort, 1, true>, DXGI_FORMAT_R32_FLOAT, 4 },
+            { &copyToFloatVertexData<GLshort, 2, true>, DXGI_FORMAT_R32G32_FLOAT, 8 },
+            { &copyToFloatVertexData<GLshort, 3, true>, DXGI_FORMAT_R32G32B32_FLOAT, 12 },
+            { &copyToFloatVertexData<GLshort, 4, true>, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
         },
     },
     { // GL_UNSIGNED_SHORT
         { // unnormalized
-            { &copyVertexData<GLushort, 1, false, false>, DXGI_FORMAT_R16_UINT, 2 },
-            { &copyVertexData<GLushort, 2, false, false>, DXGI_FORMAT_R16G16_UINT, 4 },
-            { &copyVertexData<GLushort, 3, true, false>, DXGI_FORMAT_R16G16B16A16_UINT, 8 },
-            { &copyVertexData<GLushort, 4, false, false>, DXGI_FORMAT_R16G16B16A16_UINT, 8 },
+            { &copyToFloatVertexData<GLushort, 1, false>, DXGI_FORMAT_R32_FLOAT, 4 },
+            { &copyToFloatVertexData<GLushort, 2, false>, DXGI_FORMAT_R32G32_FLOAT, 8 },
+            { &copyToFloatVertexData<GLushort, 3, false>, DXGI_FORMAT_R32G32B32_FLOAT, 12 },
+            { &copyToFloatVertexData<GLushort, 4, false>, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
         },
         { // normalized
-            { &copyVertexData<GLushort, 1, false, true>, DXGI_FORMAT_R16_UNORM, 2 },
-            { &copyVertexData<GLushort, 2, false, true>, DXGI_FORMAT_R16G16_UNORM, 4 },
-            { &copyVertexData<GLushort, 3, true, true>, DXGI_FORMAT_R16G16B16A16_UNORM, 8 },
-            { &copyVertexData<GLushort, 4, false, true>, DXGI_FORMAT_R16G16B16A16_UNORM, 8 },
+            { &copyToFloatVertexData<GLushort, 1, true>, DXGI_FORMAT_R32_FLOAT, 4 },
+            { &copyToFloatVertexData<GLushort, 2, true>, DXGI_FORMAT_R32G32_FLOAT, 8 },
+            { &copyToFloatVertexData<GLushort, 3, true>, DXGI_FORMAT_R32G32B32_FLOAT, 12 },
+            { &copyToFloatVertexData<GLushort, 4, true>, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
         },
     },
     { // GL_FIXED
@@ -371,7 +402,7 @@ const VertexBuffer11::VertexConverter &VertexBuffer11::getVertexConversion(const
       default:                  UNREACHABLE(); break;
     }
 
-    return mPossibleTranslations[typeIndex][attribute.mNormalized][attribute.mSize - 1];
+    return mPossibleTranslations[typeIndex][attribute.mNormalized ? 1 : 0][attribute.mSize - 1];
 }
 
 }
