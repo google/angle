@@ -507,6 +507,7 @@ EGLint SwapChain11::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
     deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
     deviceContext->VSSetShader(mPassThroughVS, NULL, 0);
     deviceContext->PSSetShader(mPassThroughPS, NULL, 0);
+    deviceContext->GSSetShader(NULL, NULL, 0);
 
     // Apply render targets
     deviceContext->OMSetRenderTargets(1, &mBackBufferRTView, NULL);

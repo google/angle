@@ -41,6 +41,7 @@ ProgramBinary::ProgramBinary(rx::Renderer *renderer) : mRenderer(renderer), RefC
 {
     mPixelExecutable = NULL;
     mVertexExecutable = NULL;
+    mGeometryExecutable = NULL;
 
     mValidated = false;
 
@@ -67,7 +68,13 @@ ProgramBinary::ProgramBinary(rx::Renderer *renderer) : mRenderer(renderer), RefC
 ProgramBinary::~ProgramBinary()
 {
     delete mPixelExecutable;
+    mPixelExecutable = NULL;
+
     delete mVertexExecutable;
+    mVertexExecutable = NULL;
+
+    delete mGeometryExecutable;
+    mGeometryExecutable = NULL;
 
     while (!mUniforms.empty())
     {
@@ -94,6 +101,11 @@ rx::ShaderExecutable *ProgramBinary::getPixelExecutable()
 rx::ShaderExecutable *ProgramBinary::getVertexExecutable()
 {
     return mVertexExecutable;
+}
+
+rx::ShaderExecutable *ProgramBinary::getGeometryExecutable()
+{
+    return mGeometryExecutable;
 }
 
 GLuint ProgramBinary::getAttributeLocation(const char *name)
@@ -137,6 +149,16 @@ GLint ProgramBinary::getUsedSamplerRange(SamplerType type)
 bool ProgramBinary::usesPointSize() const
 {
     return mUsesPointSize;
+}
+
+bool ProgramBinary::usesPointSpriteEmulation() const
+{
+    return mUsesPointSize && mRenderer->getMajorShaderModel() >= 4;
+}
+
+bool ProgramBinary::usesGeometryShader() const
+{
+    return usesPointSpriteEmulation();
 }
 
 // Returns the index of the texture image unit (0-19) corresponding to a Direct3D 9 sampler
@@ -1420,7 +1442,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
         }
     }
 
-    if (fragmentShader->mUsesPointCoord && shaderModel == 3)
+    if (fragmentShader->mUsesPointCoord && shaderModel >= 3)
     {
         pixelHLSL += "    float2 gl_PointCoord : " + pointCoordSemantic + ";\n";
     }
@@ -1477,7 +1499,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
                      "    gl_FragCoord.w = rhw;\n";
     }
 
-    if (fragmentShader->mUsesPointCoord && shaderModel == 3)
+    if (fragmentShader->mUsesPointCoord && shaderModel >= 3)
     {
         pixelHLSL += "    gl_PointCoord.x = input.gl_PointCoord.x;\n";
         pixelHLSL += "    gl_PointCoord.y = 1.0 - input.gl_PointCoord.y;\n";
@@ -1643,6 +1665,9 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
     unsigned int vertexShaderSize;
     stream.read(&vertexShaderSize);
 
+    unsigned int geometryShaderSize;
+    stream.read(&geometryShaderSize);
+
     const char *ptr = (const char*) binary + stream.offset();
 
     const GUID *binaryIdentifier = (const GUID *) ptr;
@@ -1661,6 +1686,9 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
     const char *vertexShaderFunction = ptr;
     ptr += vertexShaderSize;
 
+    const char *geometryShaderFunction = geometryShaderSize > 0 ? ptr : NULL;
+    ptr += geometryShaderSize;
+
     mPixelExecutable = mRenderer->loadExecutable(reinterpret_cast<const DWORD*>(pixelShaderFunction),
                                                  pixelShaderSize, rx::SHADER_PIXEL);
     if (!mPixelExecutable)
@@ -1677,6 +1705,25 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
         delete mPixelExecutable;
         mPixelExecutable = NULL;
         return false;
+    }
+
+    if (geometryShaderFunction != NULL && geometryShaderSize > 0)
+    {
+        mGeometryExecutable = mRenderer->loadExecutable(reinterpret_cast<const DWORD*>(geometryShaderFunction),
+                                                        geometryShaderSize, rx::SHADER_GEOMETRY);
+        if (!mGeometryExecutable)
+        {
+            infoLog.append("Could not create geometry shader.");
+            delete mPixelExecutable;
+            mPixelExecutable = NULL;
+            delete mVertexExecutable;
+            mVertexExecutable = NULL;
+            return false;
+        }
+    }
+    else
+    {
+        mGeometryExecutable = NULL;
     }
 
     return true;
@@ -1740,12 +1787,15 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
     UINT vertexShaderSize = mVertexExecutable->getLength();
     stream.write(vertexShaderSize);
 
+    UINT geometryShaderSize = (mGeometryExecutable != NULL) ? mGeometryExecutable->getLength() : 0;
+    stream.write(geometryShaderSize);
+
     GUID identifier = mRenderer->getAdapterIdentifier();
 
     GLsizei streamLength = stream.length();
     const void *streamData = stream.data();
 
-    GLsizei totalLength = streamLength + sizeof(GUID) + pixelShaderSize + vertexShaderSize;
+    GLsizei totalLength = streamLength + sizeof(GUID) + pixelShaderSize + vertexShaderSize + geometryShaderSize;
     if (totalLength > bufSize)
     {
         if (length)
@@ -1771,6 +1821,12 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
 
         memcpy(ptr, mVertexExecutable->getFunction(), vertexShaderSize);
         ptr += vertexShaderSize;
+
+        if (mGeometryExecutable != NULL && geometryShaderSize > 0)
+        {
+            memcpy(ptr, mGeometryExecutable->getFunction(), geometryShaderSize);
+            ptr += geometryShaderSize;
+        }
 
         ASSERT(ptr - totalLength == binary);
     }
@@ -1829,7 +1885,13 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
     mVertexExecutable = mRenderer->compileToExecutable(infoLog, vertexHLSL.c_str(), rx::SHADER_VERTEX);
     mPixelExecutable = mRenderer->compileToExecutable(infoLog, pixelHLSL.c_str(), rx::SHADER_PIXEL);
 
-    if (!mVertexExecutable || !mPixelExecutable)
+    if (usesGeometryShader())
+    {
+        std::string geometryHLSL = generateGeometryShaderHLSL(registers, packing, fragmentShader, vertexShader);
+        mGeometryExecutable = mRenderer->compileToExecutable(infoLog, geometryHLSL.c_str(), rx::SHADER_GEOMETRY);
+    }
+
+    if (!mVertexExecutable || !mPixelExecutable || (usesGeometryShader() && !mGeometryExecutable))
     {
         infoLog.append("Failed to create D3D shaders.");
         success = false;
@@ -1838,6 +1900,8 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
         mVertexExecutable = NULL;
         delete mPixelExecutable;
         mPixelExecutable = NULL;
+        delete mGeometryExecutable;
+        mGeometryExecutable = NULL;
     }
 
     if (!linkAttributes(infoLog, attributeBindings, fragmentShader, vertexShader))
@@ -2036,6 +2100,142 @@ bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, In
     }
 
     return true;
+}
+
+std::string ProgramBinary::generateGeometryShaderHLSL(int registers, const Varying *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const
+{
+    // for now we only handle point sprite emulation
+    ASSERT(usesPointSpriteEmulation());
+    return generatePointSpriteHLSL(registers, packing, fragmentShader, vertexShader);
+}
+
+std::string ProgramBinary::generatePointSpriteHLSL(int registers, const Varying *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const
+{
+    ASSERT(registers >= 0);
+    ASSERT(vertexShader->mUsesPointSize);
+    ASSERT(mRenderer->getMajorShaderModel() >= 4);
+
+    std::string geomHLSL;
+
+    std::string varyingSemantic = "TEXCOORD";
+
+    std::string fragCoordSemantic;
+    std::string pointCoordSemantic;
+
+    int reservedRegisterIndex = registers;
+
+    if (fragmentShader->mUsesFragCoord)
+    {
+        fragCoordSemantic = varyingSemantic + str(reservedRegisterIndex++);
+    }
+
+    if (fragmentShader->mUsesPointCoord)
+    {
+        pointCoordSemantic = varyingSemantic + str(reservedRegisterIndex++);
+    }
+
+    geomHLSL += "uniform float4 dx_viewportCoords : register(c1);\n"
+                "\n";
+
+    geomHLSL += "struct GS_INPUT\n"
+                "{\n";
+
+    for (int r = 0; r < registers; r++)
+    {
+        int registerSize = packing[r][3] ? 4 : (packing[r][2] ? 3 : (packing[r][1] ? 2 : 1));
+
+        geomHLSL += "    float" + str(registerSize) + " v" + str(r) + " : " + varyingSemantic + str(r) + ";\n";
+    }
+
+    if (fragmentShader->mUsesFragCoord)
+    {
+        geomHLSL += "    float4 gl_FragCoord : " + fragCoordSemantic + ";\n";
+    }
+
+    geomHLSL += "    float gl_PointSize : PSIZE;\n"
+                "    float4 gl_Position : SV_Position;\n"
+                  "};\n"
+                  "\n"
+                  "struct GS_OUTPUT\n"
+                  "{\n";
+
+    for (int r = 0; r < registers; r++)
+    {
+        int registerSize = packing[r][3] ? 4 : (packing[r][2] ? 3 : (packing[r][1] ? 2 : 1));
+
+        geomHLSL += "    float" + str(registerSize) + " v" + str(r) + " : " + varyingSemantic + str(r) + ";\n";
+    }
+
+    if (fragmentShader->mUsesFragCoord)
+    {
+        geomHLSL += "    float4 gl_FragCoord : " + fragCoordSemantic + ";\n";
+    }
+
+    if (fragmentShader->mUsesPointCoord)
+    {
+        geomHLSL += "    float2 gl_PointCoord : " + pointCoordSemantic + ";\n";
+    }
+
+    geomHLSL +=   "    float4 gl_Position : SV_Position;\n"
+                  "};\n"
+                  "\n"
+                  "static float2 pointSpriteCorners[] = \n"
+                  "{\n"
+                  "    float2( 0.5f, -0.5f),\n"
+                  "    float2( 0.5f,  0.5f),\n"
+                  "    float2(-0.5f, -0.5f),\n"
+                  "    float2(-0.5f,  0.5f)\n"
+                  "};\n"
+                  "\n"
+                  "static float2 pointSpriteTexcoords[] = \n"
+                  "{\n"
+                  "    float2(1.0f, 1.0f),\n"
+                  "    float2(1.0f, 0.0f),\n"
+                  "    float2(0.0f, 1.0f),\n"
+                  "    float2(0.0f, 0.0f)\n"
+                  "};\n"
+                  "\n"
+                  "static float minPointSize = " + str(ALIASED_POINT_SIZE_RANGE_MIN) + ".0f;\n"
+                  "static float maxPointSize = " + str(mRenderer->getMaxPointSize()) + ".0f;\n"
+                  "\n"
+                  "[maxvertexcount(4)]\n"
+                  "void main(point GS_INPUT input[1], inout TriangleStream<GS_OUTPUT> outStream)\n"
+                  "{\n"
+                  "    GS_OUTPUT output = (GS_OUTPUT)0;\n";
+
+    for (int r = 0; r < registers; r++)
+    {
+        geomHLSL += "    output.v" + str(r) + " = input[0].v" + str(r) + ";\n";
+    }
+
+    if (fragmentShader->mUsesFragCoord)
+    {
+        geomHLSL += "    output.gl_FragCoord = input[0].gl_FragCoord;\n";
+    }
+
+    geomHLSL += "    \n"
+                "    float gl_PointSize = clamp(input[0].gl_PointSize, minPointSize, maxPointSize);\n"
+                "    float4 gl_Position = input[0].gl_Position;\n"
+                "    float2 viewportScale = float2(1.0f / dx_viewportCoords.x, 1.0f / dx_viewportCoords.y);\n";
+
+    for (int corner = 0; corner < 4; corner++)
+    {
+        geomHLSL += "    \n"
+                    "    output.gl_Position = gl_Position + float4(pointSpriteCorners[" + str(corner) + "] * viewportScale * gl_PointSize, 0.0f, 0.0f);\n";
+
+        if (fragmentShader->mUsesPointCoord)
+        {
+            geomHLSL += "    output.gl_PointCoord = pointSpriteTexcoords[" + str(corner) + "];\n";
+        }
+
+        geomHLSL += "    outStream.Append(output);\n";
+    }
+
+    geomHLSL += "    \n"
+                "    outStream.RestartStrip();\n"
+                "}\n";
+
+    return geomHLSL;
 }
 
 // This method needs to match OutputHLSL::decorate

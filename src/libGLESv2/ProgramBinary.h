@@ -53,6 +53,7 @@ class ProgramBinary : public RefCountObject
 
     rx::ShaderExecutable *getPixelExecutable();
     rx::ShaderExecutable *getVertexExecutable();
+    rx::ShaderExecutable *getGeometryExecutable();
 
     GLuint getAttributeLocation(const char *name);
     int getSemanticIndex(int attributeIndex);
@@ -61,6 +62,8 @@ class ProgramBinary : public RefCountObject
     TextureType getSamplerTextureType(SamplerType type, unsigned int samplerIndex);
     GLint getUsedSamplerRange(SamplerType type);
     bool usesPointSize() const;
+    bool usesPointSpriteEmulation() const;
+    bool usesGeometryShader() const;
 
     GLint getUniformLocation(std::string name);
     bool setUniform1fv(GLint location, GLsizei count, const GLfloat *v);
@@ -117,10 +120,14 @@ class ProgramBinary : public RefCountObject
     bool linkUniforms(InfoLog &infoLog, const sh::ActiveUniforms &vertexUniforms, const sh::ActiveUniforms &fragmentUniforms);
     bool defineUniform(GLenum shader, const sh::Uniform &constant, InfoLog &infoLog);
     
+    std::string generateGeometryShaderHLSL(int registers, const Varying *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const;
+    std::string generatePointSpriteHLSL(int registers, const Varying *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const;
+
     rx::Renderer *const mRenderer;
 
     rx::ShaderExecutable *mPixelExecutable;
     rx::ShaderExecutable *mVertexExecutable;
+    rx::ShaderExecutable *mGeometryExecutable;
 
     Attribute mLinkedAttribute[MAX_VERTEX_ATTRIBS];
     int mSemanticIndex[MAX_VERTEX_ATTRIBS];

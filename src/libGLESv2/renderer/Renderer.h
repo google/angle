@@ -83,7 +83,8 @@ struct dx_PixelConstants
 enum ShaderType
 {
     SHADER_VERTEX,
-    SHADER_PIXEL
+    SHADER_PIXEL,
+    SHADER_GEOMETRY
 };
 
 class Renderer

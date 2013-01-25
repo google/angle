@@ -1712,7 +1712,17 @@ bool Context::applyRenderTarget(GLenum drawMode, bool ignoreViewport)
 // Applies the fixed-function state (culling, depth test, alpha blending, stenciling, etc) to the Direct3D 9 device
 void Context::applyState(GLenum drawMode)
 {
-    mRenderer->setRasterizerState(mState.rasterizer);
+    // disable face culling for point sprite emulation (done as geometry shader quads)
+    if (getCurrentProgramBinary()->usesPointSpriteEmulation())
+    {
+        RasterizerState rasterizerStateCopy = mState.rasterizer;
+        rasterizerStateCopy.cullFace = false;
+        mRenderer->setRasterizerState(rasterizerStateCopy);
+    }
+    else
+    {
+        mRenderer->setRasterizerState(mState.rasterizer);
+    }
 
     unsigned int mask = 0;
     if (mState.sampleCoverage)

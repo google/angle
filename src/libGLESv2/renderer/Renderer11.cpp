@@ -1044,6 +1044,7 @@ void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
     {
         ShaderExecutable *vertexExe = programBinary->getVertexExecutable();
         ShaderExecutable *pixelExe = programBinary->getPixelExecutable();
+        ShaderExecutable *geometryExe = programBinary->getGeometryExecutable();
 
         ID3D11VertexShader *vertexShader = NULL;
         if (vertexExe) vertexShader = ShaderExecutable11::makeShaderExecutable11(vertexExe)->getVertexShader();
@@ -1051,8 +1052,21 @@ void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
         ID3D11PixelShader *pixelShader = NULL;
         if (pixelExe) pixelShader = ShaderExecutable11::makeShaderExecutable11(pixelExe)->getPixelShader();
 
+        ID3D11GeometryShader *geometryShader = NULL;
+        if (geometryExe) geometryShader = ShaderExecutable11::makeShaderExecutable11(geometryExe)->getGeometryShader();
+
         mDeviceContext->PSSetShader(pixelShader, NULL, 0);
         mDeviceContext->VSSetShader(vertexShader, NULL, 0);
+
+        if (geometryShader)
+        {
+            mDeviceContext->GSSetShader(geometryShader, NULL, 0);
+        }
+        else
+        {
+            mDeviceContext->GSSetShader(NULL, NULL, 0);
+        }
+
         programBinary->dirtyAllUniforms();
 
         mAppliedProgramBinarySerial = programBinarySerial;
@@ -1221,7 +1235,7 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArra
     
     mDeviceContext->VSSetConstantBuffers(0, 1, &vertexConstantBuffer);
     mDeviceContext->PSSetConstantBuffers(0, 1, &pixelConstantBuffer);
-    
+
     delete[] mapVS;
     delete[] mapPS;
 
@@ -1269,6 +1283,9 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArra
         mDeviceContext->UpdateSubresource(mDriverConstantBufferPS, 0, NULL, &mPixelConstants, 16, 0);
         memcpy(&mAppliedPixelConstants, &mPixelConstants, sizeof(dx_PixelConstants));
     }
+
+    // needed for the point sprite geometry shader
+    mDeviceContext->GSSetConstantBuffers(0, 1, &mDriverConstantBufferPS);
 }
 
 void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer)
@@ -1964,9 +1981,9 @@ int Renderer11::getMinorShaderModel() const
 
 float Renderer11::getMaxPointSize() const
 {
-    // TODO
-    // UNIMPLEMENTED();
-    return 1.0f;
+    // choose a reasonable maximum. we enforce this in the shader.
+    // (nb: on a Radeon 2600xt, DX9 reports a 256 max point size)
+    return 1024.0f;
 }
 
 int Renderer11::getMaxTextureWidth() const
@@ -2406,6 +2423,18 @@ ShaderExecutable *Renderer11::loadExecutable(const void *function, size_t length
             }
         }
         break;
+      case rx::SHADER_GEOMETRY:
+        {
+            ID3D11GeometryShader *gshader = NULL;
+            HRESULT result = mDevice->CreateGeometryShader(function, length, NULL, &gshader);
+            ASSERT(SUCCEEDED(result));
+
+            if (gshader)
+            {
+                executable = new ShaderExecutable11(function, length, gshader);
+            }
+        }
+        break;
       default:
         UNREACHABLE();
         break;
@@ -2425,6 +2454,9 @@ ShaderExecutable *Renderer11::compileToExecutable(gl::InfoLog &infoLog, const ch
         break;
       case rx::SHADER_PIXEL:
         profile = "ps_4_0";
+        break;
+      case rx::SHADER_GEOMETRY:
+        profile = "gs_4_0";
         break;
       default:
         UNREACHABLE();

@@ -19,6 +19,7 @@ ShaderExecutable11::ShaderExecutable11(const void *function, size_t length, ID3D
 {
     mPixelExecutable = executable;
     mVertexExecutable = NULL;
+    mGeometryExecutable = NULL;
 
     mConstantBuffer = NULL;
 }
@@ -27,6 +28,17 @@ ShaderExecutable11::ShaderExecutable11(const void *function, size_t length, ID3D
     : ShaderExecutable(function, length)
 {
     mVertexExecutable = executable;
+    mPixelExecutable = NULL;
+    mGeometryExecutable = NULL;
+
+    mConstantBuffer = NULL;
+}
+
+ShaderExecutable11::ShaderExecutable11(const void *function, size_t length, ID3D11GeometryShader *executable)
+    : ShaderExecutable(function, length)
+{
+    mGeometryExecutable = executable;
+    mVertexExecutable = NULL;
     mPixelExecutable = NULL;
 
     mConstantBuffer = NULL;
@@ -41,6 +53,10 @@ ShaderExecutable11::~ShaderExecutable11()
     if (mPixelExecutable)
     {
         mPixelExecutable->Release();
+    }
+    if (mGeometryExecutable)
+    {
+        mGeometryExecutable->Release();
     }
     
     if (mConstantBuffer)
@@ -63,6 +79,11 @@ ID3D11VertexShader *ShaderExecutable11::getVertexShader() const
 ID3D11PixelShader *ShaderExecutable11::getPixelShader() const
 {
     return mPixelExecutable;
+}
+
+ID3D11GeometryShader *ShaderExecutable11::getGeometryShader() const
+{
+    return mGeometryExecutable;
 }
 
 ID3D11Buffer *ShaderExecutable11::getConstantBuffer(ID3D11Device *device, unsigned int registerCount)

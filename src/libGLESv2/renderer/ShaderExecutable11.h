@@ -22,6 +22,7 @@ class ShaderExecutable11 : public ShaderExecutable
   public:
     ShaderExecutable11(const void *function, size_t length, ID3D11PixelShader *executable);
     ShaderExecutable11(const void *function, size_t length, ID3D11VertexShader *executable);
+    ShaderExecutable11(const void *function, size_t length, ID3D11GeometryShader *executable);
 
     virtual ~ShaderExecutable11();
 
@@ -29,6 +30,7 @@ class ShaderExecutable11 : public ShaderExecutable
 
     ID3D11PixelShader *getPixelShader() const;
     ID3D11VertexShader *getVertexShader() const;
+    ID3D11GeometryShader *getGeometryShader() const;
 
     ID3D11Buffer *getConstantBuffer(ID3D11Device *device, unsigned int registerCount);
 
@@ -37,6 +39,7 @@ class ShaderExecutable11 : public ShaderExecutable
 
     ID3D11PixelShader *mPixelExecutable;
     ID3D11VertexShader *mVertexExecutable;
+    ID3D11GeometryShader *mGeometryExecutable;
 
     ID3D11Buffer *mConstantBuffer;
 };
