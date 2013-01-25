@@ -477,6 +477,18 @@ EGLint SwapChain11::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
     return EGL_SUCCESS;
 }
 
+// Increments refcount on texture.
+// caller must Release() the returned texture
+ID3D11Texture2D *SwapChain11::getOffscreenTexture()
+{
+    if (mOffscreenTexture)
+    {
+        mOffscreenTexture->AddRef();
+    }
+
+    return mOffscreenTexture;
+}
+
 // Increments refcount on view.
 // caller must Release() the returned view
 ID3D11RenderTargetView *SwapChain11::getRenderTarget()
@@ -491,6 +503,18 @@ ID3D11RenderTargetView *SwapChain11::getRenderTarget()
 
 // Increments refcount on view.
 // caller must Release() the returned view
+ID3D11ShaderResourceView *SwapChain11::getRenderTargetShaderResource()
+{
+    if (mOffscreenSRView)
+    {
+        mOffscreenSRView->AddRef();
+    }
+
+    return mOffscreenSRView;
+}
+
+// Increments refcount on view.
+// caller must Release() the returned view
 ID3D11DepthStencilView *SwapChain11::getDepthStencil()
 {
     if (mDepthStencilDSView)
@@ -501,18 +525,6 @@ ID3D11DepthStencilView *SwapChain11::getDepthStencil()
     return mDepthStencilDSView;
 }
 
-// Increments refcount on texture.
-// caller must Release() the returned texture
-ID3D11Texture2D *SwapChain11::getOffscreenTexture()
-{
-    if (mOffscreenTexture)
-    {
-        mOffscreenTexture->AddRef();
-    }
-
-    return mOffscreenTexture;
-}
-
 SwapChain11 *SwapChain11::makeSwapChain11(SwapChain *swapChain)
 {
     ASSERT(dynamic_cast<rx::SwapChain11*>(swapChain) != NULL);
@@ -520,4 +532,3 @@ SwapChain11 *SwapChain11::makeSwapChain11(SwapChain *swapChain)
 }
 
 }
-

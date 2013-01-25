@@ -28,9 +28,11 @@ class SwapChain11 : public SwapChain
     virtual EGLint reset(EGLint backbufferWidth, EGLint backbufferHeight, EGLint swapInterval);
     virtual EGLint swapRect(EGLint x, EGLint y, EGLint width, EGLint height);
 
-    virtual ID3D11RenderTargetView *getRenderTarget();
-    virtual ID3D11DepthStencilView *getDepthStencil();
     virtual ID3D11Texture2D *getOffscreenTexture();
+    virtual ID3D11RenderTargetView *getRenderTarget();
+    virtual ID3D11ShaderResourceView *getRenderTargetShaderResource();
+
+    virtual ID3D11DepthStencilView *getDepthStencil();
 
     EGLint getWidth() const { return mWidth; }
     EGLint getHeight() const { return mHeight; }
@@ -53,10 +55,10 @@ class SwapChain11 : public SwapChain
 
     ID3D11Texture2D *mOffscreenTexture;
     ID3D11RenderTargetView *mOffscreenRTView;
+    ID3D11ShaderResourceView *mOffscreenSRView;
 
     ID3D11Texture2D *mDepthStencilTexture;
     ID3D11DepthStencilView *mDepthStencilDSView;
-    ID3D11ShaderResourceView *mOffscreenSRView;
 
     ID3D11Buffer *mQuadVB;
     ID3D11SamplerState *mPassThroughSampler;
