@@ -81,7 +81,7 @@ class TextureStorage11_2D : public TextureStorage11
     DISALLOW_COPY_AND_ASSIGN(TextureStorage11_2D);
 
     void initializeRenderTarget(DXGI_FORMAT format, int width, int height);
-    void initializeSRV(DXGI_FORMAT format, int levels);
+    void initializeSRV(DXGI_FORMAT format);
 
     ID3D11Texture2D *mTexture;
     ID3D11ShaderResourceView *mSRV;
@@ -105,7 +105,7 @@ class TextureStorage11_Cube : public TextureStorage11
     DISALLOW_COPY_AND_ASSIGN(TextureStorage11_Cube);
 
     void initializeRenderTarget(DXGI_FORMAT format, int size);
-    void initializeSRV(DXGI_FORMAT format, int levels);
+    void initializeSRV(DXGI_FORMAT format);
 
     ID3D11Texture2D *mTexture;
     ID3D11ShaderResourceView *mSRV;

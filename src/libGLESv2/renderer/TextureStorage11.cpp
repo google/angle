@@ -152,7 +152,7 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, SwapChain11 *swapch
 
     mMipLevels = desc.MipLevels;
 
-    initializeSRV(desc.Format, desc.MipLevels);
+    initializeSRV(desc.Format);
     initializeRenderTarget(desc.Format, desc.Width, desc.Height);
 }
 
@@ -201,7 +201,7 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int levels, GLenum 
         }
     }
 
-    initializeSRV(format, levels + mLodOffset);
+    initializeSRV(format);
     initializeRenderTarget(format, width, height);
 }
 
@@ -306,7 +306,7 @@ void TextureStorage11_2D::initializeRenderTarget(DXGI_FORMAT format, int width, 
     }
 }
 
-void TextureStorage11_2D::initializeSRV(DXGI_FORMAT format, int levels)
+void TextureStorage11_2D::initializeSRV(DXGI_FORMAT format)
 {
     ASSERT(mSRV == NULL);
 
@@ -316,7 +316,7 @@ void TextureStorage11_2D::initializeSRV(DXGI_FORMAT format, int levels)
         srvDesc.Format = format;
         srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
         srvDesc.Texture2D.MostDetailedMip = 0;
-        srvDesc.Texture2D.MipLevels = (levels == 0 ? -1 : levels);
+        srvDesc.Texture2D.MipLevels = (mMipLevels == 0 ? -1 : mMipLevels);
 
         ID3D11Device *device = mRenderer->getDevice();
         HRESULT result = device->CreateShaderResourceView(mTexture, &srvDesc, &mSRV);
@@ -380,7 +380,7 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int levels, GLe
         }
     }
 
-    initializeSRV(format, levels + mLodOffset);
+    initializeSRV(format);
     initializeRenderTarget(format, size);
 }
 
@@ -495,7 +495,7 @@ void TextureStorage11_Cube::initializeRenderTarget(DXGI_FORMAT format, int size)
     }
 }
 
-void TextureStorage11_Cube::initializeSRV(DXGI_FORMAT format, int levels)
+void TextureStorage11_Cube::initializeSRV(DXGI_FORMAT format)
 {
     ASSERT(mSRV == NULL);
 
@@ -504,7 +504,7 @@ void TextureStorage11_Cube::initializeSRV(DXGI_FORMAT format, int levels)
         D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
         srvDesc.Format = format;
         srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
-        srvDesc.TextureCube.MipLevels = (levels == 0 ? -1 : levels);
+        srvDesc.TextureCube.MipLevels = (mMipLevels == 0 ? -1 : mMipLevels);
         srvDesc.TextureCube.MostDetailedMip = 0;
 
         ID3D11Device *device = mRenderer->getDevice();
