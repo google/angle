@@ -37,8 +37,10 @@ class TextureStorage11 : public TextureStorage
 
     virtual ID3D11Texture2D *getBaseTexture() const = 0;
     virtual ID3D11ShaderResourceView *getSRV() const = 0;
-    virtual RenderTarget *getRenderTarget() const { return NULL; }
-    virtual RenderTarget *getRenderTarget(GLenum faceTarget) const { return NULL; }
+    virtual RenderTarget *getRenderTarget() const { return getRenderTarget(0); }
+    virtual RenderTarget *getRenderTarget(int level) const { return NULL; }
+    virtual RenderTarget *getRenderTarget(GLenum faceTarget) const { return getRenderTarget(faceTarget, 0); }
+    virtual RenderTarget *getRenderTarget(GLenum faceTarget, int level) const { return NULL; }
     virtual void generateMipmap(int level) {};
     virtual void generateMipmap(int face, int level) {};
 
@@ -70,7 +72,7 @@ class TextureStorage11_2D : public TextureStorage11
 
     static TextureStorage11_2D *makeTextureStorage11_2D(TextureStorage *storage);
 
-    virtual RenderTarget *getRenderTarget() const;
+    virtual RenderTarget *getRenderTarget(int level) const;
     virtual ID3D11Texture2D *getBaseTexture() const;
     virtual ID3D11ShaderResourceView *getSRV() const;
     virtual void generateMipmap(int level);
@@ -83,7 +85,7 @@ class TextureStorage11_2D : public TextureStorage11
 
     ID3D11Texture2D *mTexture;
     ID3D11ShaderResourceView *mSRV;
-    RenderTarget11 *mRenderTarget;
+    RenderTarget11 **mRenderTarget;
 };
 
 class TextureStorage11_Cube : public TextureStorage11
@@ -94,7 +96,7 @@ class TextureStorage11_Cube : public TextureStorage11
 
     static TextureStorage11_Cube *makeTextureStorage11_Cube(TextureStorage *storage);
 
-    virtual RenderTarget *getRenderTarget(GLenum faceTarget) const;
+    virtual RenderTarget *getRenderTarget(GLenum faceTarget, int level) const;
     virtual ID3D11Texture2D *getBaseTexture() const;
     virtual ID3D11ShaderResourceView *getSRV() const;
     virtual void generateMipmap(int face, int level);
@@ -107,7 +109,7 @@ class TextureStorage11_Cube : public TextureStorage11
 
     ID3D11Texture2D *mTexture;
     ID3D11ShaderResourceView *mSRV;
-    RenderTarget11 *mRenderTarget[6];
+    RenderTarget11 **mRenderTarget[6];
 };
 
 }
