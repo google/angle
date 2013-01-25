@@ -1268,12 +1268,12 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
     switch (pname)
     {
       case GL_MAX_VERTEX_ATTRIBS:               *params = gl::MAX_VERTEX_ATTRIBS;               break;
-      case GL_MAX_VERTEX_UNIFORM_VECTORS:       *params = gl::MAX_VERTEX_UNIFORM_VECTORS;       break;
+      case GL_MAX_VERTEX_UNIFORM_VECTORS:       *params = mRenderer->getMaxVertexUniformVectors(); break;
       case GL_MAX_VARYING_VECTORS:              *params = getMaximumVaryingVectors();           break;
       case GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS: *params = getMaximumCombinedTextureImageUnits(); break;
       case GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS:   *params = mRenderer->getMaxVertexTextureImageUnits(); break;
       case GL_MAX_TEXTURE_IMAGE_UNITS:          *params = gl::MAX_TEXTURE_IMAGE_UNITS;          break;
-      case GL_MAX_FRAGMENT_UNIFORM_VECTORS:     *params = getMaximumFragmentUniformVectors();   break;
+      case GL_MAX_FRAGMENT_UNIFORM_VECTORS:     *params = mRenderer->getMaxFragmentUniformVectors(); break;
       case GL_MAX_RENDERBUFFER_SIZE:            *params = getMaximumRenderbufferDimension();    break;
       case GL_NUM_SHADER_BINARY_FORMATS:        *params = 0;                                    break;
       case GL_SHADER_BINARY_FORMATS:      /* no shader binary formats are supported */          break;
@@ -2134,11 +2134,6 @@ int Context::getMaximumVaryingVectors() const
 unsigned int Context::getMaximumCombinedTextureImageUnits() const
 {
     return MAX_TEXTURE_IMAGE_UNITS + mRenderer->getMaxVertexTextureImageUnits();
-}
-
-int Context::getMaximumFragmentUniformVectors() const
-{
-    return mMajorShaderModel >= 3 ? MAX_FRAGMENT_UNIFORM_VECTORS_SM3 : MAX_FRAGMENT_UNIFORM_VECTORS_SM2;
 }
 
 int Context::getMaxSupportedSamples() const

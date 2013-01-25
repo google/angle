@@ -2240,6 +2240,16 @@ unsigned int Renderer9::getMaxVertexTextureImageUnits() const
     return mVertexTextureSupport ? MAX_TEXTURE_IMAGE_UNITS_VTF_SM3 : 0;
 }
 
+int Renderer9::getMaxVertexUniformVectors() const
+{
+    return gl::MAX_VERTEX_UNIFORM_VECTORS;
+}
+
+int Renderer9::getMaxFragmentUniformVectors() const
+{
+    return getMajorShaderModel() >= 3 ? gl::MAX_FRAGMENT_UNIFORM_VECTORS_SM3 : gl::MAX_FRAGMENT_UNIFORM_VECTORS_SM2;
+}
+
 bool Renderer9::getNonPower2TextureSupport() const
 {
     return mSupportsNonPower2Textures;

@@ -241,7 +241,7 @@ void Shader::initializeCompiler()
             resources.MaxVertexTextureImageUnits = mRenderer->getMaxVertexTextureImageUnits();
             resources.MaxCombinedTextureImageUnits = context->getMaximumCombinedTextureImageUnits();
             resources.MaxTextureImageUnits = MAX_TEXTURE_IMAGE_UNITS;
-            resources.MaxFragmentUniformVectors = context->getMaximumFragmentUniformVectors();
+            resources.MaxFragmentUniformVectors = mRenderer->getMaxFragmentUniformVectors();
             resources.MaxDrawBuffers = MAX_DRAW_BUFFERS;
             resources.OES_standard_derivatives = context->supportsDerivativeInstructions() ? 1 : 0;
             // resources.OES_EGL_image_external = getDisplay()->getRenderer()->getShareHandleSupport() ? 1 : 0; // TODO: commented out until the extension is actually supported.

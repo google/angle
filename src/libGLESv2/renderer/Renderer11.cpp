@@ -1870,6 +1870,16 @@ unsigned int Renderer11::getMaxVertexTextureImageUnits() const
     }
 }
 
+int Renderer11::getMaxVertexUniformVectors() const
+{
+    return gl::MAX_VERTEX_UNIFORM_VECTORS;
+}
+
+int Renderer11::getMaxFragmentUniformVectors() const
+{
+    return getMajorShaderModel() >= 3 ? gl::MAX_FRAGMENT_UNIFORM_VECTORS_SM3 : gl::MAX_FRAGMENT_UNIFORM_VECTORS_SM2;
+}
+
 bool Renderer11::getNonPower2TextureSupport() const
 {
     // TODO

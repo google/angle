@@ -99,6 +99,8 @@ class Renderer11 : public Renderer
     virtual bool getLuminanceTextureSupport();
     virtual bool getLuminanceAlphaTextureSupport();
     virtual unsigned int getMaxVertexTextureImageUnits() const;
+    virtual int getMaxVertexUniformVectors() const;
+    virtual int getMaxFragmentUniformVectors() const;
     virtual bool getNonPower2TextureSupport() const;
     virtual bool getDepthTextureSupport() const;
     virtual bool getOcclusionQuerySupport() const;
