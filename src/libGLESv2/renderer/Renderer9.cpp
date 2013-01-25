@@ -2448,16 +2448,28 @@ D3DPOOL Renderer9::getBufferPool(DWORD usage) const
     return D3DPOOL_DEFAULT;
 }
 
-bool Renderer9::copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat,
+bool Renderer9::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                           GLint xoffset, GLint yoffset, TextureStorageInterface2D *storage, GLint level)
 {
-    return mBlit->copy(framebuffer, sourceRect, destFormat, xoffset, yoffset, storage, level);
+    RECT rect;
+    rect.left = sourceRect.x;
+    rect.top = sourceRect.y;
+    rect.right = sourceRect.x + sourceRect.width;
+    rect.bottom = sourceRect.y + sourceRect.height;
+
+    return mBlit->copy(framebuffer, rect, destFormat, xoffset, yoffset, storage, level);
 }
 
-bool Renderer9::copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat,
+bool Renderer9::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                           GLint xoffset, GLint yoffset, TextureStorageInterfaceCube *storage, GLenum target, GLint level)
 {
-    return mBlit->copy(framebuffer, sourceRect, destFormat, xoffset, yoffset, storage, target, level);
+    RECT rect;
+    rect.left = sourceRect.x;
+    rect.top = sourceRect.y;
+    rect.right = sourceRect.x + sourceRect.width;
+    rect.bottom = sourceRect.y + sourceRect.height;
+
+    return mBlit->copy(framebuffer, rect, destFormat, xoffset, yoffset, storage, target, level);
 }
 
 bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, gl::Rectangle *readRect, gl::Framebuffer *drawFramebuffer, gl::Rectangle *drawRect,

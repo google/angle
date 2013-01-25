@@ -498,14 +498,13 @@ void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei 
 
         if (width != 0 && height != 0 && level < levelCount())
         {
-            RECT sourceRect;
-            sourceRect.left = x;
-            sourceRect.right = x + width;
-            sourceRect.top = y;
-            sourceRect.bottom = y + height;
+            gl::Rectangle sourceRect;
+            sourceRect.x = x;
+            sourceRect.width = width;
+            sourceRect.y = y;
+            sourceRect.height = height;
 
             mRenderer->copyImage(source, sourceRect, format, 0, 0, mTexStorage, level);
-
         }
     }
 }
@@ -533,11 +532,11 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
 
         if (level < levelCount())
         {
-            RECT sourceRect;
-            sourceRect.left = x;
-            sourceRect.right = x + width;
-            sourceRect.top = y;
-            sourceRect.bottom = y + height;
+            gl::Rectangle sourceRect;
+            sourceRect.x = x;
+            sourceRect.width = width;
+            sourceRect.y = y;
+            sourceRect.height = height;
 
             mRenderer->copyImage(source, sourceRect, 
                                  gl::ExtractFormat(mImageArray[0]->getInternalFormat()),
@@ -1275,14 +1274,13 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint 
 
         if (width > 0 && level < levelCount())
         {
-            RECT sourceRect;
-            sourceRect.left = x;
-            sourceRect.right = x + width;
-            sourceRect.top = y;
-            sourceRect.bottom = y + height;
+            gl::Rectangle sourceRect;
+            sourceRect.x = x;
+            sourceRect.width = width;
+            sourceRect.y = y;
+            sourceRect.height = height;
 
             mRenderer->copyImage(source, sourceRect, format, 0, 0, mTexStorage, target, level);
-
         }
     }
 }
@@ -1314,15 +1312,14 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
 
         if (level < levelCount())
         {
-            RECT sourceRect;
-            sourceRect.left = x;
-            sourceRect.right = x + width;
-            sourceRect.top = y;
-            sourceRect.bottom = y + height;
+            gl::Rectangle sourceRect;
+            sourceRect.x = x;
+            sourceRect.width = width;
+            sourceRect.y = y;
+            sourceRect.height = height;
 
             mRenderer->copyImage(source, sourceRect, gl::ExtractFormat(mImageArray[0][0]->getInternalFormat()), 
                                  xoffset, yoffset, mTexStorage, target, level);
-
         }
     }
 }
