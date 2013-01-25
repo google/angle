@@ -1652,7 +1652,7 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
     ptr += vertexShaderSize;
 
     mPixelExecutable = mRenderer->loadExecutable(reinterpret_cast<const DWORD*>(pixelShaderFunction),
-                                                 pixelShaderSize, GL_FRAGMENT_SHADER);
+                                                 pixelShaderSize, rx::SHADER_PIXEL);
     if (!mPixelExecutable)
     {
         infoLog.append("Could not create pixel shader.");
@@ -1660,7 +1660,7 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
     }
 
     mVertexExecutable = mRenderer->loadExecutable(reinterpret_cast<const DWORD*>(vertexShaderFunction),
-                                                  vertexShaderSize, GL_VERTEX_SHADER);
+                                                  vertexShaderSize, rx::SHADER_VERTEX);
     if (!mVertexExecutable)
     {
         infoLog.append("Could not create vertex shader.");
@@ -1807,8 +1807,8 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
     }
 
     bool success = true;
-    mVertexExecutable = mRenderer->compileToExecutable(infoLog, vertexHLSL.c_str(), GL_VERTEX_SHADER);
-    mPixelExecutable = mRenderer->compileToExecutable(infoLog, pixelHLSL.c_str(), GL_FRAGMENT_SHADER);
+    mVertexExecutable = mRenderer->compileToExecutable(infoLog, vertexHLSL.c_str(), rx::SHADER_VERTEX);
+    mPixelExecutable = mRenderer->compileToExecutable(infoLog, pixelHLSL.c_str(), rx::SHADER_PIXEL);
 
     if (!mVertexExecutable || !mPixelExecutable)
     {

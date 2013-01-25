@@ -2376,13 +2376,13 @@ RenderTarget *Renderer11::createRenderTarget(int width, int height, GLenum forma
     return renderTarget;
 }
 
-ShaderExecutable *Renderer11::loadExecutable(const void *function, size_t length, GLenum type)
+ShaderExecutable *Renderer11::loadExecutable(const void *function, size_t length, rx::ShaderType type)
 {
     ShaderExecutable11 *executable = NULL;
 
     switch (type)
     {
-      case GL_VERTEX_SHADER:
+      case rx::SHADER_VERTEX:
         {
             ID3D11VertexShader *vshader = NULL;
             HRESULT result = mDevice->CreateVertexShader(function, length, NULL, &vshader);
@@ -2394,7 +2394,7 @@ ShaderExecutable *Renderer11::loadExecutable(const void *function, size_t length
             }
         }
         break;
-      case GL_FRAGMENT_SHADER:
+      case rx::SHADER_PIXEL:
         {
             ID3D11PixelShader *pshader = NULL;
             HRESULT result = mDevice->CreatePixelShader(function, length, NULL, &pshader);
@@ -2414,16 +2414,16 @@ ShaderExecutable *Renderer11::loadExecutable(const void *function, size_t length
     return executable;
 }
 
-ShaderExecutable *Renderer11::compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, GLenum type)
+ShaderExecutable *Renderer11::compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, rx::ShaderType type)
 {
     const char *profile = NULL;
 
     switch (type)
     {
-      case GL_VERTEX_SHADER:
+      case rx::SHADER_VERTEX:
         profile = "vs_4_0";
         break;
-      case GL_FRAGMENT_SHADER:
+      case rx::SHADER_PIXEL:
         profile = "ps_4_0";
         break;
       default:

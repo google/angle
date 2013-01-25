@@ -2981,13 +2981,13 @@ RenderTarget *Renderer9::createRenderTarget(int width, int height, GLenum format
     return renderTarget;
 }
 
-ShaderExecutable *Renderer9::loadExecutable(const void *function, size_t length, GLenum type)
+ShaderExecutable *Renderer9::loadExecutable(const void *function, size_t length, rx::ShaderType type)
 {
     ShaderExecutable9 *executable = NULL;
 
     switch (type)
     {
-      case GL_VERTEX_SHADER:
+      case rx::SHADER_VERTEX:
         {
             IDirect3DVertexShader9 *vshader = createVertexShader((DWORD*)function, length);
             if (vshader)
@@ -2996,7 +2996,7 @@ ShaderExecutable *Renderer9::loadExecutable(const void *function, size_t length,
             }
         }
         break;
-      case GL_FRAGMENT_SHADER:
+      case rx::SHADER_PIXEL:
         {
             IDirect3DPixelShader9 *pshader = createPixelShader((DWORD*)function, length);
             if (pshader)
@@ -3013,16 +3013,16 @@ ShaderExecutable *Renderer9::loadExecutable(const void *function, size_t length,
     return executable;
 }
 
-ShaderExecutable *Renderer9::compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, GLenum type)
+ShaderExecutable *Renderer9::compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, rx::ShaderType type)
 {
     const char *profile = NULL;
 
     switch (type)
     {
-      case GL_VERTEX_SHADER:
+      case rx::SHADER_VERTEX:
         profile = getMajorShaderModel() >= 3 ? "vs_3_0" : "vs_2_0";
         break;
-      case GL_FRAGMENT_SHADER:
+      case rx::SHADER_PIXEL:
         profile = getMajorShaderModel() >= 3 ? "ps_3_0" : "ps_2_0";
         break;
       default:

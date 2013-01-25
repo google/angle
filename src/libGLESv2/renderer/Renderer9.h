@@ -180,8 +180,8 @@ class Renderer9 : public Renderer
     virtual RenderTarget *createRenderTarget(int width, int height, GLenum format, GLsizei samples, bool depth);
 
     // Shader operations
-    virtual ShaderExecutable *loadExecutable(const void *function, size_t length, GLenum type);
-    virtual ShaderExecutable *compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, GLenum type);
+    virtual ShaderExecutable *loadExecutable(const void *function, size_t length, rx::ShaderType type);
+    virtual ShaderExecutable *compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, rx::ShaderType type);
 
     // Image operations
     virtual Image *createImage();

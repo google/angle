@@ -80,6 +80,12 @@ struct dx_PixelConstants
     float depthFront[4];
 };
 
+enum ShaderType
+{
+    SHADER_VERTEX,
+    SHADER_PIXEL
+};
+
 class Renderer
 {
   public:
@@ -187,8 +193,8 @@ class Renderer
     virtual RenderTarget *createRenderTarget(int width, int height, GLenum format, GLsizei samples, bool depth) = 0;
 
     // Shader operations
-    virtual ShaderExecutable *loadExecutable(const void *function, size_t length, GLenum type) = 0;
-    virtual ShaderExecutable *compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, GLenum type) = 0;
+    virtual ShaderExecutable *loadExecutable(const void *function, size_t length, rx::ShaderType type) = 0;
+    virtual ShaderExecutable *compileToExecutable(gl::InfoLog &infoLog, const char *shaderHLSL, rx::ShaderType type) = 0;
 
     // Image operations
     virtual Image *createImage() = 0;
