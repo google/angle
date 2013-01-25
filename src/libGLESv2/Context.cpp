@@ -1697,9 +1697,8 @@ bool Context::applyRenderTarget(GLenum drawMode, bool ignoreViewport)
 
     mRenderer->applyRenderTarget(framebufferObject);
 
-    ProgramBinary *programBinary = mState.currentProgram ? getCurrentProgramBinary() : NULL;
     if (!mRenderer->setViewport(mState.viewport, mState.zNear, mState.zFar, drawMode, mState.rasterizer.frontFace,
-                                ignoreViewport, programBinary))
+                                ignoreViewport))
     {
         return false;
     }

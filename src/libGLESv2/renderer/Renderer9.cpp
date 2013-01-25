@@ -1026,7 +1026,7 @@ void Renderer9::setScissorRectangle(const gl::Rectangle &scissor, bool enabled)
 }
 
 bool Renderer9::setViewport(const gl::Rectangle &viewport, float zNear, float zFar, GLenum drawMode, GLenum frontFace,
-                            bool ignoreViewport, gl::ProgramBinary *currentProgram)
+                            bool ignoreViewport)
 {
     gl::Rectangle actualViewport = viewport;
     float actualZNear = gl::clamp01(zNear);
@@ -1063,10 +1063,7 @@ bool Renderer9::setViewport(const gl::Rectangle &viewport, float zNear, float zF
         mCurViewport = actualViewport;
         mCurNear = actualZNear;
         mCurFar = actualZFar;
-    }
 
-    if (currentProgram)
-    {
         dx_VertexConstants vc = {0};
         dx_PixelConstants pc = {0};
 

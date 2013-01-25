@@ -68,7 +68,7 @@ class Renderer11 : public Renderer
 
     virtual void setScissorRectangle(const gl::Rectangle &scissor, bool enabled);
     virtual bool setViewport(const gl::Rectangle &viewport, float zNear, float zFar, GLenum drawMode, GLenum frontFace,
-                             bool ignoreViewport, gl::ProgramBinary *currentProgram);
+                             bool ignoreViewport);
 
     virtual bool applyPrimitiveType(GLenum mode, GLsizei count);
     virtual bool applyRenderTarget(gl::Framebuffer *frameBuffer);
