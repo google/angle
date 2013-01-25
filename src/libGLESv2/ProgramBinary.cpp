@@ -61,6 +61,7 @@ ProgramBinary::ProgramBinary(rx::Renderer *renderer) : mRenderer(renderer), RefC
 
     mUsedVertexSamplerRange = 0;
     mUsedPixelSamplerRange = 0;
+    mUsesPointSize = false;
 }
 
 ProgramBinary::~ProgramBinary()
