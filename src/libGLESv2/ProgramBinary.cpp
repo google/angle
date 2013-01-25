@@ -1231,7 +1231,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
     std::string positionSemantic = (shaderModel >= 4) ? "SV_POSITION" : "POSITION";
 
     vertexHLSL += "struct VS_INPUT\n"
-                   "{\n";
+                  "{\n";
 
     int semanticIndex = 0;
     for (AttributeArray::iterator attribute = vertexShader->mAttributes.begin(); attribute != vertexShader->mAttributes.end(); attribute++)
@@ -1254,9 +1254,9 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
     }
 
     vertexHLSL += "};\n"
-                   "\n"
-                   "struct VS_OUTPUT\n"
-                   "{\n";
+                  "\n"
+                  "struct VS_OUTPUT\n"
+                  "{\n";
 
     for (int r = 0; r < registers; r++)
     {
@@ -1294,13 +1294,13 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
     }
 
     vertexHLSL += "\n"
-                   "    gl_main();\n"
-                   "\n"
-                   "    VS_OUTPUT output;\n"
-                   "    output.gl_Position.x = gl_Position.x - dx_HalfPixelSize.x * gl_Position.w;\n"
-                   "    output.gl_Position.y = -(gl_Position.y + dx_HalfPixelSize.y * gl_Position.w);\n"
-                   "    output.gl_Position.z = (gl_Position.z + gl_Position.w) * 0.5;\n"
-                   "    output.gl_Position.w = gl_Position.w;\n";
+                  "    gl_main();\n"
+                  "\n"
+                  "    VS_OUTPUT output;\n"
+                  "    output.gl_Position.x = gl_Position.x - dx_HalfPixelSize.x * gl_Position.w;\n"
+                  "    output.gl_Position.y = -(gl_Position.y + dx_HalfPixelSize.y * gl_Position.w);\n"
+                  "    output.gl_Position.z = (gl_Position.z + gl_Position.w) * 0.5;\n"
+                  "    output.gl_Position.w = gl_Position.w;\n";
 
     if (vertexShader->mUsesPointSize && shaderModel >= 3)
     {
@@ -1374,11 +1374,11 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
     }
 
     vertexHLSL += "\n"
-                   "    return output;\n"
-                   "}\n";
+                  "    return output;\n"
+                  "}\n";
 
     pixelHLSL += "struct PS_INPUT\n"
-                  "{\n";
+                 "{\n";
     
     for (VaryingList::iterator varying = fragmentShader->mVaryings.begin(); varying != fragmentShader->mVaryings.end(); varying++)
     {
@@ -1426,8 +1426,16 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
     
     if (fragmentShader->mUsesFrontFacing)
     {
-        pixelHLSL += "PS_OUTPUT main(PS_INPUT input, bool isFrontFace : SV_IsFrontFace)\n"
-                     "{\n";
+        if (shaderModel >= 4)
+        {
+            pixelHLSL += "PS_OUTPUT main(PS_INPUT input, bool isFrontFace : SV_IsFrontFace)\n"
+                         "{\n";
+        }
+        else
+        {
+            pixelHLSL += "PS_OUTPUT main(PS_INPUT input, float vFace : VFACE)\n"
+                         "{\n";
+        }
     }
     else
     {
@@ -1515,13 +1523,13 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
     }
 
     pixelHLSL += "\n"
-                  "    gl_main();\n"
-                  "\n"
-                  "    PS_OUTPUT output;\n"                 
-                  "    output.gl_Color[0] = gl_Color[0];\n"
-                  "\n"
-                  "    return output;\n"
-                  "}\n";
+                 "    gl_main();\n"
+                 "\n"
+                 "    PS_OUTPUT output;\n"                 
+                 "    output.gl_Color[0] = gl_Color[0];\n"
+                 "\n"
+                 "    return output;\n"
+                 "}\n";
 
     return true;
 }
