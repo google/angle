@@ -473,10 +473,10 @@ EGLint SwapChain11::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
     d3d11::PositionTexCoordVertex *vertices = static_cast<d3d11::PositionTexCoordVertex*>(mappedResource.pData);
 
     // Create a quad in homogeneous coordinates
-    float x1 = (x / mWidth) * 2.0f - 1.0f;
-    float y1 = ((mHeight - y - height) / mHeight) * 2.0f - 1.0f;
-    float x2 = ((x + width) / mWidth) * 2.0f - 1.0f;
-    float y2 = ((mHeight - y) / mHeight) * 2.0f - 1.0f;
+    float x1 = (x / float(mWidth)) * 2.0f - 1.0f;
+    float y1 = ((mHeight - y - height) / float(mHeight)) * 2.0f - 1.0f;
+    float x2 = ((x + width) / float(mWidth)) * 2.0f - 1.0f;
+    float y2 = ((mHeight - y) / float(mHeight)) * 2.0f - 1.0f;
 
     float u1 = x / float(mWidth);
     float v1 = y / float(mHeight);
