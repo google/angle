@@ -65,8 +65,22 @@ ID3D11PixelShader *ShaderExecutable11::getPixelShader() const
     return mPixelExecutable;
 }
 
-ID3D11Buffer *ShaderExecutable11::getConstantBuffer()
+ID3D11Buffer *ShaderExecutable11::getConstantBuffer(ID3D11Device *device, unsigned int registerCount)
 {
+    if (!mConstantBuffer && registerCount > 0)
+    {
+        D3D11_BUFFER_DESC constantBufferDescription = {0};
+        constantBufferDescription.ByteWidth = registerCount * sizeof(float[4]);
+        constantBufferDescription.Usage = D3D11_USAGE_DEFAULT;
+        constantBufferDescription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+        constantBufferDescription.CPUAccessFlags = 0;
+        constantBufferDescription.MiscFlags = 0;
+        constantBufferDescription.StructureByteStride = 0;
+
+        HRESULT result = device->CreateBuffer(&constantBufferDescription, NULL, &mConstantBuffer);
+        ASSERT(SUCCEEDED(result));
+    }
+
     return mConstantBuffer;
 }
 

@@ -30,7 +30,7 @@ class ShaderExecutable11 : public ShaderExecutable
     ID3D11PixelShader *getPixelShader() const;
     ID3D11VertexShader *getVertexShader() const;
 
-    ID3D11Buffer *getConstantBuffer();
+    ID3D11Buffer *getConstantBuffer(ID3D11Device *device, unsigned int registerCount);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(ShaderExecutable11);

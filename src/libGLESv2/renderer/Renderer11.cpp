@@ -1045,37 +1045,32 @@ void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
 
 void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, const gl::UniformArray *uniformArray)
 {
-    D3D11_BUFFER_DESC constantBufferDescriptionVS = {0};
-    constantBufferDescriptionVS.ByteWidth = D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT * sizeof(float[4]);
-    constantBufferDescriptionVS.Usage = D3D11_USAGE_DYNAMIC;
-    constantBufferDescriptionVS.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    constantBufferDescriptionVS.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    constantBufferDescriptionVS.MiscFlags = 0;
-    constantBufferDescriptionVS.StructureByteStride = 0;
+    ShaderExecutable11 *vertexExecutable = ShaderExecutable11::makeShaderExecutable11(programBinary->getVertexExecutable());
+    ShaderExecutable11 *pixelExecutable = ShaderExecutable11::makeShaderExecutable11(programBinary->getPixelExecutable());
 
-    ID3D11Buffer *constantBufferVS = NULL;
-    HRESULT result = mDevice->CreateBuffer(&constantBufferDescriptionVS, NULL, &constantBufferVS);
-    ASSERT(SUCCEEDED(result));
+    unsigned int totalRegisterCountVS = 0;
+    unsigned int totalRegisterCountPS = 0;
 
-    D3D11_BUFFER_DESC constantBufferDescriptionPS = {0};
-    constantBufferDescriptionPS.ByteWidth = D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT * sizeof(float[4]);
-    constantBufferDescriptionPS.Usage = D3D11_USAGE_DYNAMIC;
-    constantBufferDescriptionPS.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    constantBufferDescriptionPS.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    constantBufferDescriptionPS.MiscFlags = 0;
-    constantBufferDescriptionPS.StructureByteStride = 0;
+    for (gl::UniformArray::const_iterator uniform_iterator = uniformArray->begin(); uniform_iterator != uniformArray->end(); uniform_iterator++)
+    {
+        const gl::Uniform *uniform = *uniform_iterator;
 
-    ID3D11Buffer *constantBufferPS = NULL;
-    result = mDevice->CreateBuffer(&constantBufferDescriptionPS, NULL, &constantBufferPS);
-    ASSERT(SUCCEEDED(result));
+        if (uniform->vsRegisterIndex >= 0)
+        {
+            totalRegisterCountVS += uniform->registerCount;
+        }
 
-    D3D11_MAPPED_SUBRESOURCE mapVS = {0};
-    result = mDeviceContext->Map(constantBufferVS, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapVS);
-    ASSERT(SUCCEEDED(result));
+        if (uniform->psRegisterIndex >= 0)
+        {
+            totalRegisterCountPS += uniform->registerCount;
+        }
+    }
 
-    D3D11_MAPPED_SUBRESOURCE mapPS = {0};
-    result = mDeviceContext->Map(constantBufferPS, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapPS);
-    ASSERT(SUCCEEDED(result));
+    ID3D11Buffer *vertexConstantBuffer = vertexExecutable->getConstantBuffer(mDevice, totalRegisterCountVS);
+    ID3D11Buffer *pixelConstantBuffer = pixelExecutable->getConstantBuffer(mDevice, totalRegisterCountPS);
+
+    void *mapVS = new float[4 * totalRegisterCountVS];
+    void *mapPS = new float[4 * totalRegisterCountPS];
 
     for (gl::UniformArray::const_iterator uniform_iterator = uniformArray->begin(); uniform_iterator != uniformArray->end(); uniform_iterator++)
     {
@@ -1095,7 +1090,7 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, const gl::Unifo
           case GL_FLOAT_MAT4:
             if (uniform->vsRegisterIndex >= 0)
             {
-                GLfloat (*c)[4] = (GLfloat(*)[4])mapVS.pData;
+                GLfloat (*c)[4] = (GLfloat(*)[4])mapVS;
                 float (*f)[4] = (float(*)[4])uniform->data;
 
                 for (unsigned int i = 0; i < uniform->registerCount; i++)
@@ -1108,7 +1103,7 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, const gl::Unifo
             }
             if (uniform->psRegisterIndex >= 0)
             {
-                GLfloat (*c)[4] = (GLfloat(*)[4])mapPS.pData;
+                GLfloat (*c)[4] = (GLfloat(*)[4])mapPS;
                 float (*f)[4] = (float(*)[4])uniform->data;
 
                 for (unsigned int i = 0; i < uniform->registerCount; i++)
@@ -1126,7 +1121,7 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, const gl::Unifo
           case GL_INT_VEC4:
             if (uniform->vsRegisterIndex >= 0)
             {
-                int (*c)[4] = (int(*)[4])mapVS.pData;
+                int (*c)[4] = (int(*)[4])mapVS;
                 GLint *x = (GLint*)uniform->data;
                 int count = gl::VariableColumnCount(uniform->type);
 
@@ -1140,7 +1135,7 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, const gl::Unifo
             }
             if (uniform->psRegisterIndex >= 0)
             {
-                int (*c)[4] = (int(*)[4])mapPS.pData;
+                int (*c)[4] = (int(*)[4])mapPS;
                 GLint *x = (GLint*)uniform->data;
                 int count = gl::VariableColumnCount(uniform->type);
 
@@ -1159,7 +1154,7 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, const gl::Unifo
           case GL_BOOL_VEC4:
             if (uniform->vsRegisterIndex >= 0)
             {
-                int (*c)[4] = (int(*)[4])mapVS.pData;
+                int (*c)[4] = (int(*)[4])mapVS;
                 GLboolean *b = (GLboolean*)uniform->data;
                 int count = gl::VariableColumnCount(uniform->type);
 
@@ -1173,7 +1168,7 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, const gl::Unifo
             }
             if (uniform->psRegisterIndex >= 0)
             {
-                int (*c)[4] = (int(*)[4])mapPS.pData;
+                int (*c)[4] = (int(*)[4])mapPS;
                 GLboolean *b = (GLboolean*)uniform->data;
                 int count = gl::VariableColumnCount(uniform->type);
 
@@ -1191,13 +1186,21 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, const gl::Unifo
         }
     }
 
-    mDeviceContext->Unmap(constantBufferVS, 0);
-    mDeviceContext->VSSetConstantBuffers(0, 1, &constantBufferVS);
-    constantBufferVS->Release();
+    if (vertexConstantBuffer)
+    {
+        mDeviceContext->UpdateSubresource(vertexConstantBuffer, 0, NULL, mapVS, 0, 0);
+    }
+
+    if (pixelConstantBuffer)
+    {
+        mDeviceContext->UpdateSubresource(pixelConstantBuffer, 0, NULL, mapPS, 0, 0);
+    }
     
-    mDeviceContext->Unmap(constantBufferPS, 0);
-    mDeviceContext->PSSetConstantBuffers(0, 1, &constantBufferPS);
-    constantBufferPS->Release();
+    mDeviceContext->VSSetConstantBuffers(0, 1, &vertexConstantBuffer);
+    mDeviceContext->PSSetConstantBuffers(0, 1, &pixelConstantBuffer);
+    
+    delete[] mapVS;
+    delete[] mapPS;
 
     // Driver uniforms
     if (!mDriverConstantBufferVS)
@@ -1210,7 +1213,7 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, const gl::Unifo
         constantBufferDescription.MiscFlags = 0;
         constantBufferDescription.StructureByteStride = 0;
 
-        result = mDevice->CreateBuffer(&constantBufferDescription, NULL, &mDriverConstantBufferVS);
+        HRESULT result = mDevice->CreateBuffer(&constantBufferDescription, NULL, &mDriverConstantBufferVS);
         ASSERT(SUCCEEDED(result));
 
         mDeviceContext->VSSetConstantBuffers(1, 1, &mDriverConstantBufferVS);
@@ -1226,7 +1229,7 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, const gl::Unifo
         constantBufferDescription.MiscFlags = 0;
         constantBufferDescription.StructureByteStride = 0;
 
-        result = mDevice->CreateBuffer(&constantBufferDescription, NULL, &mDriverConstantBufferPS);
+        HRESULT result = mDevice->CreateBuffer(&constantBufferDescription, NULL, &mDriverConstantBufferPS);
         ASSERT(SUCCEEDED(result));
 
         mDeviceContext->PSSetConstantBuffers(1, 1, &mDriverConstantBufferPS);
