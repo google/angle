@@ -436,7 +436,7 @@ void Texture2D::releaseTexImage()
 
         for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
         {
-            mImageArray[i]->redefine(mRenderer, GL_RGBA8_OES, 0, 0, true);
+            mImageArray[i]->redefine(mRenderer, GL_NONE, 0, 0, true);
         }
     }
 }

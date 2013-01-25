@@ -283,6 +283,8 @@ GLenum ConvertTextureInternalFormat(DXGI_FORMAT format)
         return GL_RG16F_EXT;
       case DXGI_FORMAT_D24_UNORM_S8_UINT:
         return GL_DEPTH24_STENCIL8_OES;
+      case DXGI_FORMAT_UNKNOWN:
+        return GL_NONE;
       default:
         UNREACHABLE();
     }
@@ -364,6 +366,8 @@ DXGI_FORMAT ConvertTextureFormat(GLenum internalformat)
       case GL_DEPTH_COMPONENT32_OES:
       case GL_DEPTH24_STENCIL8_OES:
         return DXGI_FORMAT_D24_UNORM_S8_UINT;
+      case GL_NONE:
+        return DXGI_FORMAT_UNKNOWN;
       default:
         UNREACHABLE();
     }
