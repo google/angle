@@ -265,7 +265,23 @@ RenderTarget *TextureStorage11_2D::getRenderTarget(int level)
             }
             ASSERT(SUCCEEDED(result));
 
-            mRenderTarget[level] = new RenderTarget11(mRenderer, rtv,
+            D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+            srvDesc.Format = mTextureFormat;
+            srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+            srvDesc.Texture2D.MostDetailedMip = level;
+            srvDesc.Texture2D.MipLevels = 1;
+
+            ID3D11ShaderResourceView *srv;
+            result = device->CreateShaderResourceView(mTexture, &srvDesc, &srv);
+
+            if (result == E_OUTOFMEMORY)
+            {
+                rtv->Release();
+                return error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
+            }
+            ASSERT(SUCCEEDED(result));
+
+            mRenderTarget[level] = new RenderTarget11(mRenderer, rtv, srv,
                                                       std::max(mTextureWidth >> level, 1U),
                                                       std::max(mTextureHeight >> level, 1U));
         }
@@ -430,7 +446,25 @@ RenderTarget *TextureStorage11_Cube::getRenderTarget(GLenum faceTarget, int leve
                 }
                 ASSERT(SUCCEEDED(result));
 
-                mRenderTarget[faceIdx][level] = new RenderTarget11(mRenderer, rtv,
+                D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+                srvDesc.Format = mTextureFormat;
+                srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+                srvDesc.Texture2DArray.MostDetailedMip = level;
+                srvDesc.Texture2DArray.MipLevels = 1;
+                srvDesc.Texture2DArray.FirstArraySlice = faceIdx;
+                srvDesc.Texture2DArray.ArraySize = 1;
+
+                ID3D11ShaderResourceView *srv;
+                result = device->CreateShaderResourceView(mTexture, &srvDesc, &srv);
+
+                if (result == E_OUTOFMEMORY)
+                {
+                    rtv->Release();
+                    return error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
+                }
+                ASSERT(SUCCEEDED(result));
+
+                mRenderTarget[faceIdx][level] = new RenderTarget11(mRenderer, rtv, srv,
                                                                    std::max(mTextureWidth >> level, 1U),
                                                                    std::max(mTextureHeight >> level, 1U));
             }

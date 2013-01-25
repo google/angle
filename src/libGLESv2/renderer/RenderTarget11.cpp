@@ -177,44 +177,46 @@ static unsigned int getDSVSubresourceIndex(ID3D11DepthStencilView *view)
     return D3D11CalcSubresource(mipSlice, arraySlice, mipLevels);
 }
 
-RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11RenderTargetView *view, GLsizei width, GLsizei height)
+RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11RenderTargetView *rtv, ID3D11ShaderResourceView *srv, GLsizei width, GLsizei height)
 {
     mRenderer = Renderer11::makeRenderer11(renderer);
-    mRenderTarget = view;
+    mRenderTarget = rtv;
     mDepthStencil = NULL;
+    mShaderResource = srv;
 
     if (mRenderTarget)
     {
         D3D11_RENDER_TARGET_VIEW_DESC desc;
-        view->GetDesc(&desc);
+        mRenderTarget->GetDesc(&desc);
 
         mSubresourceIndex = getRTVSubresourceIndex(mRenderTarget);
         mWidth = width;
         mHeight = height;
 
-        mInternalFormat = d3d11_gl::ConvertRenderbufferFormat(desc.Format);
-        mActualFormat = d3d11_gl::ConvertRenderbufferFormat(desc.Format);
+        mInternalFormat = d3d11_gl::ConvertTextureInternalFormat(desc.Format);
+        mActualFormat = d3d11_gl::ConvertTextureInternalFormat(desc.Format);
         mSamples = 1; // TEMP?
     }
 }
 
-RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11DepthStencilView *view, GLsizei width, GLsizei height)
+RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11DepthStencilView *dsv, ID3D11ShaderResourceView *srv, GLsizei width, GLsizei height)
 {
     mRenderer = Renderer11::makeRenderer11(renderer);
     mRenderTarget = NULL;
-    mDepthStencil = view;
+    mDepthStencil = dsv;
+    mShaderResource = srv;
 
     if (mDepthStencil)
     {
         D3D11_DEPTH_STENCIL_VIEW_DESC desc;
-        view->GetDesc(&desc);
+        mDepthStencil->GetDesc(&desc);
 
         mSubresourceIndex = getDSVSubresourceIndex(mDepthStencil);
         mWidth = width;
         mHeight = height;
 
-        mInternalFormat = d3d11_gl::ConvertRenderbufferFormat(desc.Format);
-        mActualFormat = d3d11_gl::ConvertRenderbufferFormat(desc.Format);
+        mInternalFormat = d3d11_gl::ConvertTextureInternalFormat(desc.Format);
+        mActualFormat = d3d11_gl::ConvertTextureInternalFormat(desc.Format);
         mSamples = 1; // TEMP?
     }
 }
@@ -224,6 +226,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
     mRenderer = Renderer11::makeRenderer11(renderer);
     mRenderTarget = NULL;
     mDepthStencil = NULL;
+    mShaderResource = NULL;
 
     DXGI_FORMAT requestedFormat = gl_d3d11::ConvertRenderbufferFormat(format);
     int supportedSamples = 0; // TODO - Multisample support query
@@ -251,43 +254,68 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
         desc.Usage = D3D11_USAGE_DEFAULT;
         desc.CPUAccessFlags = 0;
         desc.MiscFlags = 0;
-        desc.BindFlags = (depth ? D3D11_BIND_DEPTH_STENCIL : D3D11_BIND_RENDER_TARGET);
+        desc.BindFlags = (depth ? D3D11_BIND_DEPTH_STENCIL : (D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE));
         ID3D11Texture2D *rtTexture = NULL;
 
         ID3D11Device *device = mRenderer->getDevice();
         HRESULT result = device->CreateTexture2D(&desc, NULL, &rtTexture);
 
-        if (SUCCEEDED(result))
-        {
-            if (depth)
-            {
-                D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
-                dsvDesc.Format = requestedFormat;
-                dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-                dsvDesc.Texture2D.MipSlice = 0;
-                dsvDesc.Flags = 0;
-                result = device->CreateDepthStencilView(rtTexture, &dsvDesc, &mDepthStencil);
-            }
-            else
-            {   
-                D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
-                rtvDesc.Format = requestedFormat;
-                rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-                rtvDesc.Texture2D.MipSlice = 0;
-                result = device->CreateRenderTargetView(rtTexture, &rtvDesc, &mRenderTarget);
-            }
-
-            rtTexture->Release();
-        }
-
         if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
         {
             error(GL_OUT_OF_MEMORY);
-
             return;
         }
-
         ASSERT(SUCCEEDED(result));
+
+        if (depth)
+        {
+            D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+            dsvDesc.Format = requestedFormat;
+            dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+            dsvDesc.Texture2D.MipSlice = 0;
+            dsvDesc.Flags = 0;
+            result = device->CreateDepthStencilView(rtTexture, &dsvDesc, &mDepthStencil);
+
+            if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+            {
+                rtTexture->Release();
+                error(GL_OUT_OF_MEMORY);
+                return;
+            }
+            ASSERT(SUCCEEDED(result));
+        }
+        else
+        {
+            D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
+            rtvDesc.Format = requestedFormat;
+            rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+            rtvDesc.Texture2D.MipSlice = 0;
+            result = device->CreateRenderTargetView(rtTexture, &rtvDesc, &mRenderTarget);
+
+            if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+            {
+                rtTexture->Release();
+                error(GL_OUT_OF_MEMORY);
+                return;
+            }
+            ASSERT(SUCCEEDED(result));
+
+            D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+            srvDesc.Format = requestedFormat;
+            srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+            srvDesc.Texture2D.MostDetailedMip = 0;
+            srvDesc.Texture2D.MipLevels = 1;
+            result = device->CreateShaderResourceView(rtTexture, &srvDesc, &mShaderResource);
+
+            if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+            {
+                rtTexture->Release();
+                mRenderTarget->Release();
+                error(GL_OUT_OF_MEMORY);
+                return;
+            }
+            ASSERT(SUCCEEDED(result));
+        }
     }
 
     mWidth = width;
@@ -303,11 +331,19 @@ RenderTarget11::~RenderTarget11()
     if (mRenderTarget)
     {
         mRenderTarget->Release();
+        mRenderTarget = NULL;
     }
 
     if (mDepthStencil)
     {
         mDepthStencil->Release();
+        mDepthStencil = NULL;
+    }
+
+    if (mShaderResource)
+    {
+        mShaderResource->Release();
+        mShaderResource = NULL;
     }
 }
 
@@ -337,6 +373,17 @@ ID3D11DepthStencilView *RenderTarget11::getDepthStencilView() const
     }
 
     return mDepthStencil;
+}
+
+// Adds reference, caller must call Release
+ID3D11ShaderResourceView *RenderTarget11::getShaderResourceView() const
+{
+    if (mShaderResource)
+    {
+        mShaderResource->AddRef();
+    }
+
+    return mShaderResource;
 }
 
 unsigned int RenderTarget11::getSubresourceIndex() const

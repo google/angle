@@ -22,8 +22,8 @@ class Renderer11;
 class RenderTarget11 : public RenderTarget
 {
   public:
-    RenderTarget11(Renderer *renderer, ID3D11RenderTargetView *view, GLsizei width, GLsizei height);
-    RenderTarget11(Renderer *renderer, ID3D11DepthStencilView *view, GLsizei width, GLsizei height);
+    RenderTarget11(Renderer *renderer, ID3D11RenderTargetView *rtv, ID3D11ShaderResourceView *srv, GLsizei width, GLsizei height);
+    RenderTarget11(Renderer *renderer, ID3D11DepthStencilView *dsv, ID3D11ShaderResourceView *srv, GLsizei width, GLsizei height);
     RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height, GLenum format, GLsizei samples, bool depth);
     virtual ~RenderTarget11();
 
@@ -35,6 +35,9 @@ class RenderTarget11 : public RenderTarget
     // Adds reference, caller must call Release
     ID3D11DepthStencilView *getDepthStencilView() const;
 
+    // Adds reference, caller must call Release
+    ID3D11ShaderResourceView *getShaderResourceView() const;
+
     unsigned int getSubresourceIndex() const;
 
   private:
@@ -43,6 +46,7 @@ class RenderTarget11 : public RenderTarget
     unsigned int mSubresourceIndex;
     ID3D11RenderTargetView *mRenderTarget;
     ID3D11DepthStencilView *mDepthStencil;
+    ID3D11ShaderResourceView *mShaderResource;
 
     Renderer11 *mRenderer;
 };

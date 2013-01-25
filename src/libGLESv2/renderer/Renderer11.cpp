@@ -1687,15 +1687,18 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const RECT &sourceRect,
 
 RenderTarget *Renderer11::createRenderTarget(SwapChain *swapChain, bool depth)
 {
-    SwapChain11 *swapChain11 = SwapChain11::makeSwapChain11(swapChain); 
+    SwapChain11 *swapChain11 = SwapChain11::makeSwapChain11(swapChain);
     RenderTarget11 *renderTarget = NULL;
     if (depth)
     {
-        renderTarget = new RenderTarget11(this, swapChain11->getDepthStencil(), swapChain11->getWidth(), swapChain11->getHeight());
+        renderTarget = new RenderTarget11(this, swapChain11->getDepthStencil(), NULL,
+                                          swapChain11->getWidth(), swapChain11->getHeight());
     }
     else
     {
-        renderTarget = new RenderTarget11(this, swapChain11->getRenderTarget(), swapChain11->getWidth(), swapChain11->getHeight());
+        renderTarget = new RenderTarget11(this, swapChain11->getRenderTarget(),
+                                          swapChain11->getRenderTargetShaderResource(),
+                                          swapChain11->getWidth(), swapChain11->getHeight());
     }
     return renderTarget;
 }
