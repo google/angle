@@ -1168,9 +1168,11 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
     const int shaderModel = mRenderer->getMajorShaderModel();
     const int maxVaryingVectors = mRenderer->getMaxVaryingVectors();
 
-    if (registers == maxVaryingVectors && fragmentShader->mUsesFragCoord)
+    const int registersNeeded = registers + (fragmentShader->mUsesFragCoord ? 1 : 0) + (fragmentShader->mUsesPointCoord ? 1 : 0);
+
+    if (registersNeeded > maxVaryingVectors)
     {
-        infoLog.append("No varying registers left to support gl_FragCoord");
+        infoLog.append("No varying registers left to support gl_FragCoord/gl_PointCoord");
 
         return false;
     }
@@ -1209,9 +1211,33 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
     }
 
     mUsesPointSize = vertexShader->mUsesPointSize;
-    std::string varyingSemantic = (mUsesPointSize && shaderModel >= 3) ? "COLOR" : "TEXCOORD";
+    std::string varyingSemantic = (mUsesPointSize && shaderModel == 3) ? "COLOR" : "TEXCOORD";
     std::string targetSemantic = (shaderModel >= 4) ? "SV_Target" : "COLOR";
-    std::string positionSemantic = (shaderModel >= 4) ? "SV_POSITION" : "POSITION";
+    std::string positionSemantic = (shaderModel >= 4) ? "SV_Position" : "POSITION";
+
+    // special varyings that use reserved registers
+    int reservedRegisterIndex = registers;
+    std::string fragCoordSemantic;
+    std::string pointCoordSemantic;
+
+    if (fragmentShader->mUsesFragCoord)
+    {
+        fragCoordSemantic = varyingSemantic + str(reservedRegisterIndex++);
+    }
+
+    if (fragmentShader->mUsesPointCoord)
+    {
+        // Shader model 3 uses a special TEXCOORD semantic for point sprite texcoords.
+        // In DX11 we compute this in the GS.
+        if (shaderModel == 3)
+        {
+            pointCoordSemantic = "TEXCOORD0";
+        }
+        else if (shaderModel >= 4)
+        {
+            pointCoordSemantic = varyingSemantic + str(reservedRegisterIndex++); 
+        }
+    }
 
     vertexHLSL += "struct VS_INPUT\n"
                   "{\n";
@@ -1250,7 +1276,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
 
     if (fragmentShader->mUsesFragCoord)
     {
-        vertexHLSL += "    float4 gl_FragCoord : " + varyingSemantic + str(registers) + ";\n";
+        vertexHLSL += "    float4 gl_FragCoord : " + fragCoordSemantic + ";\n";
     }
 
     if (vertexShader->mUsesPointSize && shaderModel >= 3)
@@ -1382,7 +1408,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
 
     if (fragmentShader->mUsesFragCoord)
     {
-        pixelHLSL += "    float4 gl_FragCoord : " + varyingSemantic + str(registers) + ";\n";
+        pixelHLSL += "    float4 gl_FragCoord : " + fragCoordSemantic + ";\n";
         
         if (shaderModel >= 4)
         {
@@ -1396,7 +1422,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
 
     if (fragmentShader->mUsesPointCoord && shaderModel == 3)
     {
-        pixelHLSL += "    float2 gl_PointCoord : TEXCOORD0;\n";
+        pixelHLSL += "    float2 gl_PointCoord : " + pointCoordSemantic + ";\n";
     }
 
     pixelHLSL += "};\n"
