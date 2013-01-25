@@ -162,8 +162,21 @@ void OutputHLSL::header()
         const TType &type = uniform->second->getType();
         const TString &name = uniform->second->getSymbol();
 
-        uniforms += "uniform " + typeString(type) + " " + decorateUniform(name, type) + arrayString(type) + 
-                    " : register(" + registerString(mReferencedUniforms[name]) + ");\n";
+        if (mOutputType == SH_HLSL11_OUTPUT && IsSampler(type.getBasicType()))   // Also declare the texture
+        {
+            int index = samplerRegister(mReferencedUniforms[name]);
+
+            uniforms += "uniform SamplerState sampler_" + decorateUniform(name, type) + arrayString(type) + 
+                        " : register(s" + str(index) + ");\n";
+
+            uniforms += "uniform " + textureString(type) + " texture_" + decorateUniform(name, type) + arrayString(type) + 
+                        " : register(t" + str(index) + ");\n";
+        }
+        else
+        {
+            uniforms += "uniform " + typeString(type) + " " + decorateUniform(name, type) + arrayString(type) + 
+                        " : register(" + registerString(mReferencedUniforms[name]) + ");\n";
+        }
     }
 
     for (ReferencedSymbols::const_iterator varying = mReferencedVaryings.begin(); varying != mReferencedVaryings.end(); varying++)
@@ -223,132 +236,296 @@ void OutputHLSL::header()
 
         if (mUsesTexture2D)
         {
-            out << "float4 gl_texture2D(sampler2D s, float2 t)\n"
-                   "{\n"
-                   "    return tex2D(s, t);\n"
-                   "}\n"
-                   "\n";
+            if (mOutputType == SH_HLSL9_OUTPUT)
+            {
+                out << "float4 gl_texture2D(sampler2D s, float2 t)\n"
+                       "{\n"
+                       "    return tex2D(s, t);\n"
+                       "}\n"
+                       "\n";
+            }
+            else if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_texture2D(Texture2D t, SamplerState s, float2 uv)\n"
+                       "{\n"
+                       "    return t.Sample(s, uv);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
         }
 
         if (mUsesTexture2D_bias)
         {
-            out << "float4 gl_texture2D(sampler2D s, float2 t, float bias)\n"
-                   "{\n"
-                   "    return tex2Dbias(s, float4(t.x, t.y, 0, bias));\n"
-                   "}\n"
-                   "\n";
+            if (mOutputType == SH_HLSL9_OUTPUT)
+            {
+                out << "float4 gl_texture2D(sampler2D s, float2 t, float bias)\n"
+                       "{\n"
+                       "    return tex2Dbias(s, float4(t.x, t.y, 0, bias));\n"
+                       "}\n"
+                       "\n";
+            }
+            else if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_texture2D(Texture2D t, SamplerState s, float2 uv, float bias)\n"
+                       "{\n"
+                       "    return t.SampleBias(s, uv, bias);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
         }
 
         if (mUsesTexture2DProj)
         {
-            out << "float4 gl_texture2DProj(sampler2D s, float3 t)\n"
-                   "{\n"
-                   "    return tex2Dproj(s, float4(t.x, t.y, 0, t.z));\n"
-                   "}\n"
-                   "\n"
-                   "float4 gl_texture2DProj(sampler2D s, float4 t)\n"
-                   "{\n"
-                   "    return tex2Dproj(s, t);\n"
-                   "}\n"
-                   "\n";
+            if (mOutputType == SH_HLSL9_OUTPUT)
+            {
+                out << "float4 gl_texture2DProj(sampler2D s, float3 t)\n"
+                       "{\n"
+                       "    return tex2Dproj(s, float4(t.x, t.y, 0, t.z));\n"
+                       "}\n"
+                       "\n"
+                       "float4 gl_texture2DProj(sampler2D s, float4 t)\n"
+                       "{\n"
+                       "    return tex2Dproj(s, t);\n"
+                       "}\n"
+                       "\n";
+            }
+            else if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_texture2DProj(Texture2D t, SamplerState s, float3 uvw)\n"
+                       "{\n"
+                       "    return t.Sample(s, float2(uvw.x / uvw.z, uvw.y / uvw.z));\n"
+                       "}\n"
+                       "\n"
+                       "float4 gl_texture2DProj(Texture2D t, SamplerState s, float4 uvw)\n"
+                       "{\n"
+                       "    return t.Sample(s, float2(uvw.x / uvw.w, uvw.y / uvw.w));\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
         }
 
         if (mUsesTexture2DProj_bias)
         {
-            out << "float4 gl_texture2DProj(sampler2D s, float3 t, float bias)\n"
-                   "{\n"
-                   "    return tex2Dbias(s, float4(t.x / t.z, t.y / t.z, 0, bias));\n"
-                   "}\n"
-                   "\n"
-                   "float4 gl_texture2DProj(sampler2D s, float4 t, float bias)\n"
-                   "{\n"
-                   "    return tex2Dbias(s, float4(t.x / t.w, t.y / t.w, 0, bias));\n"
-                   "}\n"
-                   "\n";
+            if (mOutputType == SH_HLSL9_OUTPUT)
+            {
+                out << "float4 gl_texture2DProj(sampler2D s, float3 t, float bias)\n"
+                       "{\n"
+                       "    return tex2Dbias(s, float4(t.x / t.z, t.y / t.z, 0, bias));\n"
+                       "}\n"
+                       "\n"
+                       "float4 gl_texture2DProj(sampler2D s, float4 t, float bias)\n"
+                       "{\n"
+                       "    return tex2Dbias(s, float4(t.x / t.w, t.y / t.w, 0, bias));\n"
+                       "}\n"
+                       "\n";
+            }
+            else if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_texture2DProj(Texture2D t, SamplerState s, float3 uvw, float bias)\n"
+                       "{\n"
+                       "    return t.SampleBias(s, float2(uvw.x / uvw.z, uvw.y / uvw.z), bias);\n"
+                       "}\n"
+                       "\n"
+                       "float4 gl_texture2DProj(Texture2D t, SamplerState s, float4 uvw, float bias)\n"
+                       "{\n"
+                       "    return t.SampleBias(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), bias);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
         }
 
         if (mUsesTextureCube)
         {
-            out << "float4 gl_textureCube(samplerCUBE s, float3 t)\n"
-                   "{\n"
-                   "    return texCUBE(s, t);\n"
-                   "}\n"
-                   "\n";
+            if (mOutputType == SH_HLSL9_OUTPUT)
+            {
+                out << "float4 gl_textureCube(samplerCUBE s, float3 t)\n"
+                       "{\n"
+                       "    return texCUBE(s, t);\n"
+                       "}\n"
+                       "\n";
+            }
+            else if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_textureCube(TextureCube t, SamplerState s, float3 uvw)\n"
+                       "{\n"
+                       "    return t.Sample(s, uvw);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
         }
 
         if (mUsesTextureCube_bias)
         {
-            out << "float4 gl_textureCube(samplerCUBE s, float3 t, float bias)\n"
-                   "{\n"
-                   "    return texCUBEbias(s, float4(t.x, t.y, t.z, bias));\n"
-                   "}\n"
-                   "\n";
+            if (mOutputType == SH_HLSL9_OUTPUT)
+            {
+                out << "float4 gl_textureCube(samplerCUBE s, float3 t, float bias)\n"
+                       "{\n"
+                       "    return texCUBEbias(s, float4(t.x, t.y, t.z, bias));\n"
+                       "}\n"
+                       "\n";
+            }
+            else if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_textureCube(TextureCube t, SamplerState s, float3 uvw, float bias)\n"
+                       "{\n"
+                       "    return t.SampleBias(s, uvw, bias);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
         }
 
         // These *Lod0 intrinsics are not available in GL fragment shaders.
         // They are used to sample using discontinuous texture coordinates.
         if (mUsesTexture2DLod0)
         {
-            out << "float4 gl_texture2DLod0(sampler2D s, float2 t)\n"
-                   "{\n"
-                   "    return tex2Dlod(s, float4(t.x, t.y, 0, 0));\n"
-                   "}\n"
-                   "\n";
+            if (mOutputType == SH_HLSL9_OUTPUT)
+            {
+                out << "float4 gl_texture2DLod0(sampler2D s, float2 t)\n"
+                       "{\n"
+                       "    return tex2Dlod(s, float4(t.x, t.y, 0, 0));\n"
+                       "}\n"
+                       "\n";
+            }
+            else if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_texture2DLod0(Texture2D t, SamplerState s, float2 uv)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, uv, 0);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
         }
 
         if (mUsesTexture2DLod0_bias)
         {
-            out << "float4 gl_texture2DLod0(sampler2D s, float2 t, float bias)\n"
-                   "{\n"
-                   "    return tex2Dlod(s, float4(t.x, t.y, 0, 0));\n"
-                   "}\n"
-                   "\n";
+            if (mOutputType == SH_HLSL9_OUTPUT)
+            {
+                out << "float4 gl_texture2DLod0(sampler2D s, float2 t, float bias)\n"
+                       "{\n"
+                       "    return tex2Dlod(s, float4(t.x, t.y, 0, 0));\n"
+                       "}\n"
+                       "\n";
+            }
+            else if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_texture2DLod0(Texture2D t, SamplerState s, float2 uv, float bias)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, uv, 0);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
         }
 
         if (mUsesTexture2DProjLod0)
         {
-            out << "float4 gl_texture2DProjLod0(sampler2D s, float3 t)\n"
-                   "{\n"
-                   "    return tex2Dlod(s, float4(t.x / t.z, t.y / t.z, 0, 0));\n"
-                   "}\n"
-                   "\n"
-                   "float4 gl_texture2DProjLod(sampler2D s, float4 t)\n"
-                   "{\n"
-                   "    return tex2Dlod(s, float4(t.x / t.w, t.y / t.w, 0, 0));\n"
-                   "}\n"
-                   "\n";
+            if (mOutputType == SH_HLSL9_OUTPUT)
+            {
+                out << "float4 gl_texture2DProjLod0(sampler2D s, float3 t)\n"
+                       "{\n"
+                       "    return tex2Dlod(s, float4(t.x / t.z, t.y / t.z, 0, 0));\n"
+                       "}\n"
+                       "\n"
+                       "float4 gl_texture2DProjLod(sampler2D s, float4 t)\n"
+                       "{\n"
+                       "    return tex2Dlod(s, float4(t.x / t.w, t.y / t.w, 0, 0));\n"
+                       "}\n"
+                       "\n";
+            }
+            else if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_texture2DProjLod0(Texture2D t, SamplerState s, float3 uvw)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float2(uvw.x / uvw.z, uvw.y / uvw.z), 0);\n"
+                       "}\n"
+                       "\n"
+                       "float4 gl_texture2DProjLod0(Texture2D t, SamplerState s, float4 uvw)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), 0);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
         }
 
         if (mUsesTexture2DProjLod0_bias)
         {
-            out << "float4 gl_texture2DProjLod0_bias(sampler2D s, float3 t, float bias)\n"
-                   "{\n"
-                   "    return tex2Dlod(s, float4(t.x / t.z, t.y / t.z, 0, 0));\n"
-                   "}\n"
-                   "\n"
-                   "float4 gl_texture2DProjLod_bias(sampler2D s, float4 t, float bias)\n"
-                   "{\n"
-                   "    return tex2Dlod(s, float4(t.x / t.w, t.y / t.w, 0, 0));\n"
-                   "}\n"
-                   "\n";
+            if (mOutputType == SH_HLSL9_OUTPUT)
+            {
+                out << "float4 gl_texture2DProjLod0_bias(sampler2D s, float3 t, float bias)\n"
+                       "{\n"
+                       "    return tex2Dlod(s, float4(t.x / t.z, t.y / t.z, 0, 0));\n"
+                       "}\n"
+                       "\n"
+                       "float4 gl_texture2DProjLod_bias(sampler2D s, float4 t, float bias)\n"
+                       "{\n"
+                       "    return tex2Dlod(s, float4(t.x / t.w, t.y / t.w, 0, 0));\n"
+                       "}\n"
+                       "\n";
+            }
+            else if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_texture2DProjLod_bias(Texture2D t, SamplerState s, float3 uvw, float bias)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float2(uvw.x / uvw.z, uvw.y / uvw.z), 0);\n"
+                       "}\n"
+                       "\n"
+                       "float4 gl_texture2DProjLod_bias(Texture2D t, SamplerState s, float4 uvw, float bias)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), 0);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
         }
 
         if (mUsesTextureCubeLod0)
         {
-            out << "float4 gl_textureCubeLod0(samplerCUBE s, float3 t)\n"
-                   "{\n"
-                   "    return texCUBElod(s, float4(t.x, t.y, t.z, 0));\n"
-                   "}\n"
-                   "\n";
+            if (mOutputType == SH_HLSL9_OUTPUT)
+            {
+                out << "float4 gl_textureCubeLod0(samplerCUBE s, float3 t)\n"
+                       "{\n"
+                       "    return texCUBElod(s, float4(t.x, t.y, t.z, 0));\n"
+                       "}\n"
+                       "\n";
+            }
+            else if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_textureCubeLod0(TextureCube t, SamplerState s, float3 uvw)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, uvw, 0);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
         }
 
         if (mUsesTextureCubeLod0_bias)
         {
-            out << "float4 gl_textureCubeLod0(samplerCUBE s, float3 t, float bias)\n"
-                   "{\n"
-                   "    return texCUBElod(s, float4(t.x, t.y, t.z, 0));\n"
-                   "}\n"
-                   "\n";
+            if (mOutputType == SH_HLSL9_OUTPUT)
+            {
+                out << "float4 gl_textureCubeLod0(samplerCUBE s, float3 t, float bias)\n"
+                       "{\n"
+                       "    return texCUBElod(s, float4(t.x, t.y, t.z, 0));\n"
+                       "}\n"
+                       "\n";
+            }
+            else if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_textureCubeLod0(TextureCube t, SamplerState s, float3 uvw, float bias)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, uvw, 0);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
         }
     }
     else   // Vertex shader
@@ -374,66 +551,148 @@ void OutputHLSL::header()
         
         if (mUsesTexture2D)
         {
-            out << "float4 gl_texture2D(sampler2D s, float2 t)\n"
-                   "{\n"
-                   "    return tex2Dlod(s, float4(t.x, t.y, 0, 0));\n"
-                   "}\n"
-                   "\n";
+            if (mOutputType == SH_HLSL9_OUTPUT)
+            {
+                out << "float4 gl_texture2D(sampler2D s, float2 t)\n"
+                       "{\n"
+                       "    return tex2Dlod(s, float4(t.x, t.y, 0, 0));\n"
+                       "}\n"
+                       "\n";
+            }
+            else if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_texture2D(Texture2D t, SamplerState s, float2 uv)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, uv, 0);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
         }
 
         if (mUsesTexture2DLod)
         {
-            out << "float4 gl_texture2DLod(sampler2D s, float2 t, float lod)\n"
-                   "{\n"
-                   "    return tex2Dlod(s, float4(t.x, t.y, 0, lod));\n"
-                   "}\n"
-                   "\n";
+            if (mOutputType == SH_HLSL9_OUTPUT)
+            {
+                out << "float4 gl_texture2DLod(sampler2D s, float2 t, float lod)\n"
+                       "{\n"
+                       "    return tex2Dlod(s, float4(t.x, t.y, 0, lod));\n"
+                       "}\n"
+                       "\n";
+            }
+            else if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_texture2DLod(Texture2D t, SamplerState s, float2 uv, float lod)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, uv, lod);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
         }
 
         if (mUsesTexture2DProj)
         {
-            out << "float4 gl_texture2DProj(sampler2D s, float3 t)\n"
-                   "{\n"
-                   "    return tex2Dlod(s, float4(t.x / t.z, t.y / t.z, 0, 0));\n"
-                   "}\n"
-                   "\n"
-                   "float4 gl_texture2DProj(sampler2D s, float4 t)\n"
-                   "{\n"
-                   "    return tex2Dlod(s, float4(t.x / t.w, t.y / t.w, 0, 0));\n"
-                   "}\n"
-                   "\n";
+            if (mOutputType == SH_HLSL9_OUTPUT)
+            {
+                out << "float4 gl_texture2DProj(sampler2D s, float3 t)\n"
+                       "{\n"
+                       "    return tex2Dlod(s, float4(t.x / t.z, t.y / t.z, 0, 0));\n"
+                       "}\n"
+                       "\n"
+                       "float4 gl_texture2DProj(sampler2D s, float4 t)\n"
+                       "{\n"
+                       "    return tex2Dlod(s, float4(t.x / t.w, t.y / t.w, 0, 0));\n"
+                       "}\n"
+                       "\n";
+            }
+            else if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_texture2DProj(Texture2D t, SamplerState s, float3 uvw)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float2(uvw.x / uvw.z, uvw.y / uvw.z), 0);\n"
+                       "}\n"
+                       "\n"
+                       "float4 gl_texture2DProj(Texture2D t, SamplerState s, float4 uvw)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), 0);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
         }
 
         if (mUsesTexture2DProjLod)
         {
-            out << "float4 gl_texture2DProjLod(sampler2D s, float3 t, float lod)\n"
-                   "{\n"
-                   "    return tex2Dlod(s, float4(t.x / t.z, t.y / t.z, 0, lod));\n"
-                   "}\n"
-                   "\n"
-                   "float4 gl_texture2DProjLod(sampler2D s, float4 t, float lod)\n"
-                   "{\n"
-                   "    return tex2Dlod(s, float4(t.x / t.w, t.y / t.w, 0, lod));\n"
-                   "}\n"
-                   "\n";
+            if (mOutputType == SH_HLSL9_OUTPUT)
+            {
+                out << "float4 gl_texture2DProjLod(sampler2D s, float3 t, float lod)\n"
+                       "{\n"
+                       "    return tex2Dlod(s, float4(t.x / t.z, t.y / t.z, 0, lod));\n"
+                       "}\n"
+                       "\n"
+                       "float4 gl_texture2DProjLod(sampler2D s, float4 t, float lod)\n"
+                       "{\n"
+                       "    return tex2Dlod(s, float4(t.x / t.w, t.y / t.w, 0, lod));\n"
+                       "}\n"
+                       "\n";
+            }
+            else if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_texture2DProj(Texture2D t, SamplerState s, float3 uvw, float lod)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float2(uvw.x / uvw.z, uvw.y / uvw.z), lod);\n"
+                       "}\n"
+                       "\n"
+                       "float4 gl_texture2DProj(Texture2D t, SamplerState s, float4 uvw)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), lod);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
         }
 
         if (mUsesTextureCube)
         {
-            out << "float4 gl_textureCube(samplerCUBE s, float3 t)\n"
-                   "{\n"
-                   "    return texCUBElod(s, float4(t.x, t.y, t.z, 0));\n"
-                   "}\n"
-                   "\n";
+            if (mOutputType == SH_HLSL9_OUTPUT)
+            {
+                out << "float4 gl_textureCube(samplerCUBE s, float3 t)\n"
+                       "{\n"
+                       "    return texCUBElod(s, float4(t.x, t.y, t.z, 0));\n"
+                       "}\n"
+                       "\n";
+            }
+            else if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_textureCube(TextureCube t, SamplerState s, float3 uvw)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, uvw, 0);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
         }
 
         if (mUsesTextureCubeLod)
         {
-            out << "float4 gl_textureCubeLod(samplerCUBE s, float3 t, float lod)\n"
-                   "{\n"
-                   "    return texCUBElod(s, float4(t.x, t.y, t.z, lod));\n"
-                   "}\n"
-                   "\n";
+            if (mOutputType == SH_HLSL9_OUTPUT)
+            {
+                out << "float4 gl_textureCubeLod(samplerCUBE s, float3 t, float lod)\n"
+                       "{\n"
+                       "    return texCUBElod(s, float4(t.x, t.y, t.z, lod));\n"
+                       "}\n"
+                       "\n";
+            }
+            else if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_textureCubeLod(TextureCube t, SamplerState s, float3 uvw, float lod)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, uvw, lod);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
         }
     }
 
@@ -1524,6 +1783,13 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                         out << "gl_textureCubeLod(";
                     }
                     else UNREACHABLE();
+
+                    if (mOutputType == SH_HLSL11_OUTPUT)
+                    {
+                        out << "texture_";
+                        node->getSequence()[0]->traverse(this);
+                        out << ", sampler_";
+                    }
                 }
             }
             else if (visit == InVisit)
@@ -2234,8 +2500,26 @@ TString OutputHLSL::typeString(const TType &type)
         }
     }
 
-    UNIMPLEMENTED();   // FIXME
+    UNREACHABLE();
     return "<unknown type>";
+}
+
+TString OutputHLSL::textureString(const TType &type)
+{
+    switch (type.getBasicType())
+    {
+      case EbtSampler2D:
+        return "Texture2D";
+      case EbtSamplerCube:
+        return "TextureCube";
+      case EbtSamplerExternalOES:
+        return "Texture2D";
+      default:
+        break;
+    }
+
+    UNREACHABLE();
+    return "<unknown texture type>";
 }
 
 TString OutputHLSL::arrayString(const TType &type)

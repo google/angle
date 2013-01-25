@@ -34,6 +34,7 @@ class OutputHLSL : public TIntermTraverser
     const ActiveUniforms &getUniforms();
 
     TString typeString(const TType &type);
+    TString textureString(const TType &type);
     static TString qualifierString(TQualifier qualifier);
     static TString arrayString(const TType &type);
     static TString initializer(const TType &type);
