@@ -91,6 +91,12 @@
     <ClCompile Include="translator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\compiler\preprocessor\preprocessor.vcxproj">
+      <Project>{fbe32df3-0fb0-4f2f-a424-2c21bd7bc325}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\compiler\translator_common.vcxproj">
+      <Project>{5b3a6db8-1e7e-40d7-92b9-da8aae619fad}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\src\compiler\translator_hlsl.vcxproj">
       <Project>{5620f0e4-6c43-49bc-a178-b804e1a0c3a7}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
