@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -20,6 +20,11 @@
 
 #include "libGLESv2/ResourceManager.h"
 #include "compiler/Uniform.h"
+
+namespace rx
+{
+class Renderer;
+}
 
 namespace gl
 {
@@ -46,7 +51,7 @@ class Shader
     friend class ProgramBinary;
 
   public:
-    Shader(ResourceManager *manager, GLuint handle);
+    Shader(ResourceManager *manager, const rx::Renderer *renderer, GLuint handle);
 
     virtual ~Shader();
 
@@ -85,6 +90,8 @@ class Shader
 
     static GLenum parseType(const std::string &type);
     static bool compareVarying(const Varying &x, const Varying &y);
+
+    const rx::Renderer *const mRenderer;
 
     VaryingList mVaryings;
 
@@ -134,7 +141,7 @@ class VertexShader : public Shader
     friend class ProgramBinary;
 
   public:
-    VertexShader(ResourceManager *manager, GLuint handle);
+    VertexShader(ResourceManager *manager, const rx::Renderer *renderer, GLuint handle);
 
     ~VertexShader();
 
@@ -154,7 +161,7 @@ class VertexShader : public Shader
 class FragmentShader : public Shader
 {
   public:
-    FragmentShader(ResourceManager *manager, GLuint handle);
+    FragmentShader(ResourceManager *manager,const rx::Renderer *renderer, GLuint handle);
 
     ~FragmentShader();
 

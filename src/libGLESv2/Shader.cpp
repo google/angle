@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -21,7 +21,8 @@ namespace gl
 void *Shader::mFragmentCompiler = NULL;
 void *Shader::mVertexCompiler = NULL;
 
-Shader::Shader(ResourceManager *manager, GLuint handle) : mHandle(handle), mResourceManager(manager)
+Shader::Shader(ResourceManager *manager, const rx::Renderer *renderer, GLuint handle)
+    : mHandle(handle), mRenderer(renderer), mResourceManager(manager)
 {
     mSource = NULL;
     mHlsl = NULL;
@@ -228,9 +229,11 @@ void Shader::initializeCompiler()
 
         if (result)
         {
+            Context *context = getContext();
+            ShShaderOutput hlslVersion = (mRenderer->getMajorShaderModel() >= 4) ? SH_HLSL11_OUTPUT : SH_HLSL9_OUTPUT;
+
             ShBuiltInResources resources;
             ShInitBuiltInResources(&resources);
-            Context *context = getContext();
 
             resources.MaxVertexAttribs = MAX_VERTEX_ATTRIBS;
             resources.MaxVertexUniformVectors = MAX_VERTEX_UNIFORM_VECTORS;
@@ -243,8 +246,8 @@ void Shader::initializeCompiler()
             resources.OES_standard_derivatives = context->supportsDerivativeInstructions() ? 1 : 0;
             // resources.OES_EGL_image_external = getDisplay()->getRenderer()->getShareHandleSupport() ? 1 : 0; // TODO: commented out until the extension is actually supported.
 
-            mFragmentCompiler = ShConstructCompiler(SH_FRAGMENT_SHADER, SH_GLES2_SPEC, SH_HLSL_OUTPUT, &resources);
-            mVertexCompiler = ShConstructCompiler(SH_VERTEX_SHADER, SH_GLES2_SPEC, SH_HLSL_OUTPUT, &resources);
+            mFragmentCompiler = ShConstructCompiler(SH_FRAGMENT_SHADER, SH_GLES2_SPEC, hlslVersion, &resources);
+            mVertexCompiler = ShConstructCompiler(SH_VERTEX_SHADER, SH_GLES2_SPEC, hlslVersion, &resources);
         }
     }
 }
@@ -496,7 +499,8 @@ bool Shader::compareVarying(const Varying &x, const Varying &y)
     return false;
 }
 
-VertexShader::VertexShader(ResourceManager *manager, GLuint handle) : Shader(manager, handle)
+VertexShader::VertexShader(ResourceManager *manager, const rx::Renderer *renderer, GLuint handle)
+    : Shader(manager, renderer, handle)
 {
 }
 
@@ -571,7 +575,8 @@ void VertexShader::parseAttributes()
     }
 }
 
-FragmentShader::FragmentShader(ResourceManager *manager, GLuint handle) : Shader(manager, handle)
+FragmentShader::FragmentShader(ResourceManager *manager, const rx::Renderer *renderer, GLuint handle)
+    : Shader(manager, renderer, handle)
 {
 }
 

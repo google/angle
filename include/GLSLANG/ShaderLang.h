@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -36,7 +36,7 @@ extern "C" {
 
 // Version number for shader translation API.
 // It is incremented everytime the API changes.
-#define SH_VERSION 108
+#define SH_VERSION 109
 
 //
 // The names of the following enums have been derived by replacing GL prefix
@@ -77,9 +77,10 @@ typedef enum {
 } ShShaderSpec;
 
 typedef enum {
-  SH_ESSL_OUTPUT = 0x8B45,
-  SH_GLSL_OUTPUT = 0x8B46,
-  SH_HLSL_OUTPUT = 0x8B47
+  SH_ESSL_OUTPUT   = 0x8B45,
+  SH_GLSL_OUTPUT   = 0x8B46,
+  SH_HLSL9_OUTPUT  = 0x8B47,
+  SH_HLSL11_OUTPUT = 0x8B48
 } ShShaderOutput;
 
 typedef enum {

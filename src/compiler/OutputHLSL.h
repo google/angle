@@ -25,7 +25,7 @@ class UnfoldShortCircuit;
 class OutputHLSL : public TIntermTraverser
 {
   public:
-    explicit OutputHLSL(TParseContext &context);
+    OutputHLSL(TParseContext &context, ShShaderOutput outputType);
     ~OutputHLSL();
 
     void output();
@@ -70,6 +70,7 @@ class OutputHLSL : public TIntermTraverser
     TString structLookup(const TString &typeName);
 
     TParseContext &mContext;
+    const ShShaderOutput mOutputType;
     UnfoldShortCircuit *mUnfoldShortCircuit;
     bool mInsideFunction;
 
