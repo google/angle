@@ -1933,9 +1933,15 @@ int Renderer11::getMaxVaryingVectors() const
 
 bool Renderer11::getNonPower2TextureSupport() const
 {
-    // TODO
-    // UNIMPLEMENTED();
-    return false;
+    switch (mFeatureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_0:
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0:
+        return true;
+      default: UNREACHABLE();
+        return false;
+    }
 }
 
 bool Renderer11::getOcclusionQuerySupport() const
