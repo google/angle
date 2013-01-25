@@ -139,6 +139,43 @@ bool TextureStorage11::updateSubresourceLevel(ID3D11Texture2D *srcTexture, int l
     return false;
 }
 
+void TextureStorage11::generateMipmapLayer(RenderTarget11 *source, RenderTarget11 *dest)
+{
+    if (source && dest)
+    {
+        ID3D11ShaderResourceView *sourceSRV = source->getShaderResourceView();
+        ID3D11RenderTargetView *destRTV = dest->getRenderTargetView();
+
+        if (sourceSRV && destRTV)
+        {
+            gl::Rectangle sourceArea;
+            sourceArea.x = 0;
+            sourceArea.y = 0;
+            sourceArea.width = source->getWidth();
+            sourceArea.height = source->getHeight();
+
+            gl::Rectangle destArea;
+            destArea.x = 0;
+            destArea.y = 0;
+            destArea.width = dest->getWidth();
+            destArea.height = dest->getHeight();
+
+            mRenderer->copyTexture(sourceSRV, sourceArea, source->getWidth(), source->getHeight(),
+                                   destRTV, destArea, dest->getWidth(), dest->getHeight(),
+                                   GL_RGBA);
+        }
+
+        if (sourceSRV)
+        {
+            sourceSRV->Release();
+        }
+        if (destRTV)
+        {
+            destRTV->Release();
+        }
+    }
+}
+
 TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, SwapChain11 *swapchain)
     : TextureStorage11(renderer, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE)
 {
@@ -325,8 +362,10 @@ ID3D11ShaderResourceView *TextureStorage11_2D::getSRV()
 
 void TextureStorage11_2D::generateMipmap(int level)
 {
-    // TODO
-    UNIMPLEMENTED();
+    RenderTarget11 *source = RenderTarget11::makeRenderTarget11(getRenderTarget(level - 1));
+    RenderTarget11 *dest = RenderTarget11::makeRenderTarget11(getRenderTarget(level));
+
+    generateMipmapLayer(source, dest);
 }
 
 TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
@@ -515,8 +554,10 @@ ID3D11ShaderResourceView *TextureStorage11_Cube::getSRV()
 
 void TextureStorage11_Cube::generateMipmap(int face, int level)
 {
-    // TODO
-    UNIMPLEMENTED();
+    RenderTarget11 *source = RenderTarget11::makeRenderTarget11(getRenderTarget(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level - 1));
+    RenderTarget11 *dest = RenderTarget11::makeRenderTarget11(getRenderTarget(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level));
+
+    generateMipmapLayer(source, dest);
 }
 
 }
