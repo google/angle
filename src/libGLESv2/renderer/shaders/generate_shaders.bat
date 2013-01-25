@@ -15,3 +15,6 @@ fxc /E componentmaskps /T ps_2_0 /Fh compiled/componentmaskps.h Blit.ps
 
 fxc /E VS_Passthrough /T vs_4_0 /Fh compiled/passthrough11vs.h Passthrough11.hlsl
 fxc /E PS_PassthroughRGBA /T ps_4_0 /Fh compiled/passthroughrgba11ps.h Passthrough11.hlsl
+fxc /E PS_PassthroughRGB /T ps_4_0 /Fh compiled/passthroughrgb11ps.h Passthrough11.hlsl
+fxc /E PS_PassthroughLum /T ps_4_0 /Fh compiled/passthroughlum11ps.h Passthrough11.hlsl
+fxc /E PS_PassthroughLumAlpha /T ps_4_0 /Fh compiled/passthroughlumalpha11ps.h Passthrough11.hlsl

@@ -325,7 +325,10 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="renderer\shaders\compiled\flipyvs.h" />
     <ClInclude Include="renderer\shaders\compiled\luminanceps.h" />
     <ClInclude Include="renderer\shaders\compiled\passthrough11vs.h" />
+    <ClInclude Include="renderer\shaders\compiled\passthroughlum11ps.h" />
+    <ClInclude Include="renderer\shaders\compiled\passthroughlumalpha11ps.h" />
     <ClInclude Include="renderer\shaders\compiled\passthroughps.h" />
+    <ClInclude Include="renderer\shaders\compiled\passthroughrgb11ps.h" />
     <ClInclude Include="renderer\shaders\compiled\passthroughrgba11ps.h" />
     <ClInclude Include="renderer\shaders\compiled\standardvs.h" />
     <ClInclude Include="renderer\SwapChain.h" />

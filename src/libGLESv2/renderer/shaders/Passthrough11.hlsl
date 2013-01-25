@@ -12,3 +12,18 @@ float4 PS_PassthroughRGBA(in float4 inPosition : SV_POSITION, in float2 inTexCoo
 {
     return Texture.Sample(Sampler, inTexCoord).rgba;
 }
+
+float4 PS_PassthroughRGB(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
+{
+    return float4(Texture.Sample(Sampler, inTexCoord).rgb, 1.0f);
+}
+
+float4 PS_PassthroughLum(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
+{
+    return float4(Texture.Sample(Sampler, inTexCoord).rrr, 1.0f);
+}
+
+float4 PS_PassthroughLumAlpha(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
+{
+    return Texture.Sample(Sampler, inTexCoord).rrra;
+}

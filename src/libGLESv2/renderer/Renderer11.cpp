@@ -26,6 +26,12 @@
 #include "libGLESv2/renderer/IndexDataManager.h"
 #include "libGLESv2/renderer/TextureStorage11.h"
 
+#include "libGLESv2/renderer/shaders/compiled/passthrough11vs.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughrgba11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughrgb11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughlum11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughlumalpha11ps.h"
+
 #include <sstream>
 
 namespace rx
@@ -47,6 +53,16 @@ Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(
 
     mLineLoopIB = NULL;
     mTriangleFanIB = NULL;
+
+    mCopyResourcesInitialized = false;
+    mCopyVB = NULL;
+    mCopySampler = NULL;
+    mCopyIL = NULL;
+    mCopyVS = NULL;
+    mCopyRGBAPS = NULL;
+    mCopyRGBPS = NULL;
+    mCopyLumPS = NULL;
+    mCopyLumAlphaPS = NULL;
 
     mD3d11Module = NULL;
     mDxgiModule = NULL;
@@ -1341,6 +1357,56 @@ void Renderer11::releaseDeviceResources()
 
     delete mTriangleFanIB;
     mTriangleFanIB = NULL;
+
+    if (mCopyVB)
+    {
+        mCopyVB->Release();
+        mCopyVB = NULL;
+    }
+
+    if (mCopySampler)
+    {
+        mCopySampler->Release();
+        mCopySampler = NULL;
+    }
+
+    if (mCopyIL)
+    {
+        mCopyIL->Release();
+        mCopyIL = NULL;
+    }
+
+    if (mCopyVS)
+    {
+        mCopyVS->Release();
+        mCopyVS = NULL;
+    }
+
+    if (mCopyRGBAPS)
+    {
+        mCopyRGBAPS->Release();
+        mCopyRGBAPS = NULL;
+    }
+
+    if (mCopyRGBPS)
+    {
+        mCopyRGBPS->Release();
+        mCopyRGBPS = NULL;
+    }
+
+    if (mCopyLumPS)
+    {
+        mCopyLumPS->Release();
+        mCopyLumPS = NULL;
+    }
+
+    if (mCopyLumAlphaPS)
+    {
+        mCopyLumAlphaPS->Release();
+        mCopyLumAlphaPS = NULL;
+    }
+
+    mCopyResourcesInitialized = false;
 }
 
 void Renderer11::markDeviceLost()
@@ -1672,17 +1738,306 @@ bool Renderer11::copyToRenderTarget(TextureStorageInterfaceCube *dest, TextureSt
 bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                            GLint xoffset, GLint yoffset, TextureStorageInterface2D *storage, GLint level)
 {
-    // TODO
-    UNIMPLEMENTED();
-    return false;
+    gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer();
+    if (!colorbuffer)
+    {
+        ERR("Failed to retrieve the color buffer from the frame buffer.");
+        return error(GL_OUT_OF_MEMORY, false);
+    }
+
+    RenderTarget11 *sourceRenderTarget = RenderTarget11::makeRenderTarget11(colorbuffer->getRenderTarget());
+    if (!sourceRenderTarget)
+    {
+        ERR("Failed to retrieve the render target from the frame buffer.");
+        return error(GL_OUT_OF_MEMORY, false);
+    }
+
+    ID3D11ShaderResourceView *source = sourceRenderTarget->getShaderResourceView();
+    if (!source)
+    {
+        ERR("Failed to retrieve the render target view from the render target.");
+        return error(GL_OUT_OF_MEMORY, false);
+    }
+
+    TextureStorage11_2D *storage11 = TextureStorage11_2D::makeTextureStorage11_2D(storage->getStorageInstance());
+    if (!storage11)
+    {
+        source->Release();
+        ERR("Failed to retrieve the texture storage from the destination.");
+        return error(GL_OUT_OF_MEMORY, false);
+    }
+
+    RenderTarget11 *destRenderTarget = RenderTarget11::makeRenderTarget11(storage11->getRenderTarget(level));
+    if (!destRenderTarget)
+    {
+        source->Release();
+        ERR("Failed to retrieve the render target from the destination storage.");
+        return error(GL_OUT_OF_MEMORY, false);
+    }
+
+    ID3D11RenderTargetView *dest = destRenderTarget->getRenderTargetView();
+    if (!dest)
+    {
+        source->Release();
+        ERR("Failed to retrieve the render target view from the destination render target.");
+        return error(GL_OUT_OF_MEMORY, false);
+    }
+
+    gl::Rectangle destRect;
+    destRect.x = xoffset;
+    destRect.y = yoffset;
+    destRect.width = sourceRect.width;
+    destRect.height = sourceRect.height;
+
+    bool ret = copyTexture(source, sourceRect, sourceRenderTarget->getWidth(), sourceRenderTarget->getHeight(),
+                           dest, destRect, destRenderTarget->getWidth(), destRenderTarget->getHeight(), destFormat);
+
+    source->Release();
+    dest->Release();
+
+    return ret;
 }
 
 bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                            GLint xoffset, GLint yoffset, TextureStorageInterfaceCube *storage, GLenum target, GLint level)
 {
-    // TODO
-    UNIMPLEMENTED();
-    return false;
+    gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer();
+    if (!colorbuffer)
+    {
+        ERR("Failed to retrieve the color buffer from the frame buffer.");
+        return error(GL_OUT_OF_MEMORY, false);
+    }
+
+    RenderTarget11 *sourceRenderTarget = RenderTarget11::makeRenderTarget11(colorbuffer->getRenderTarget());
+    if (!sourceRenderTarget)
+    {
+        ERR("Failed to retrieve the render target from the frame buffer.");
+        return error(GL_OUT_OF_MEMORY, false);
+    }
+
+    ID3D11ShaderResourceView *source = sourceRenderTarget->getShaderResourceView();
+    if (!source)
+    {
+        ERR("Failed to retrieve the render target view from the render target.");
+        return error(GL_OUT_OF_MEMORY, false);
+    }
+
+    TextureStorage11_Cube *storage11 = TextureStorage11_Cube::makeTextureStorage11_Cube(storage->getStorageInstance());
+    if (!storage11)
+    {
+        source->Release();
+        ERR("Failed to retrieve the texture storage from the destination.");
+        return error(GL_OUT_OF_MEMORY, false);
+    }
+
+    RenderTarget11 *destRenderTarget = RenderTarget11::makeRenderTarget11(storage11->getRenderTarget(target, level));
+    if (!destRenderTarget)
+    {
+        source->Release();
+        ERR("Failed to retrieve the render target from the destination storage.");
+        return error(GL_OUT_OF_MEMORY, false);
+    }
+
+    ID3D11RenderTargetView *dest = destRenderTarget->getRenderTargetView();
+    if (!dest)
+    {
+        source->Release();
+        ERR("Failed to retrieve the render target view from the destination render target.");
+        return error(GL_OUT_OF_MEMORY, false);
+    }
+
+    gl::Rectangle destRect;
+    destRect.x = xoffset;
+    destRect.y = yoffset;
+    destRect.width = sourceRect.width;
+    destRect.height = sourceRect.height;
+
+    bool ret = copyTexture(source, sourceRect, sourceRenderTarget->getWidth(), sourceRenderTarget->getHeight(),
+                           dest, destRect, destRenderTarget->getWidth(), destRenderTarget->getHeight(), destFormat);
+
+    source->Release();
+    dest->Release();
+
+    return ret;
+}
+
+bool Renderer11::copyTexture(ID3D11ShaderResourceView *source, const gl::Rectangle &sourceArea, unsigned int sourceWidth, unsigned int sourceHeight,
+                             ID3D11RenderTargetView *dest, const gl::Rectangle &destArea, unsigned int destWidth, unsigned int destHeight, GLenum destFormat)
+{
+    HRESULT result;
+
+    if (!mCopyResourcesInitialized)
+    {
+        ASSERT(!mCopyVB && !mCopySampler && !mCopyIL && !mCopyVS && !mCopyRGBAPS && !mCopyRGBPS && !mCopyLumPS && !mCopyLumAlphaPS);
+
+        D3D11_BUFFER_DESC vbDesc;
+        vbDesc.ByteWidth = sizeof(d3d11::PositionTexCoordVertex) * 4;
+        vbDesc.Usage = D3D11_USAGE_DYNAMIC;
+        vbDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+        vbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+        vbDesc.MiscFlags = 0;
+        vbDesc.StructureByteStride = 0;
+
+        result = mDevice->CreateBuffer(&vbDesc, NULL, &mCopyVB);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mCopyVB, "Renderer11 copy texture vertex buffer");
+
+        D3D11_SAMPLER_DESC samplerDesc;
+        samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+        samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+        samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+        samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+        samplerDesc.MipLODBias = 0.0f;
+        samplerDesc.MaxAnisotropy = 0;
+        samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+        samplerDesc.BorderColor[0] = 0.0f;
+        samplerDesc.BorderColor[1] = 0.0f;
+        samplerDesc.BorderColor[2] = 0.0f;
+        samplerDesc.BorderColor[3] = 0.0f;
+        samplerDesc.MinLOD = 0.0f;
+        samplerDesc.MaxLOD = 0.0f;
+
+        result = mDevice->CreateSamplerState(&samplerDesc, &mCopySampler);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mCopySampler, "Renderer11 copy sampler");
+
+        D3D11_INPUT_ELEMENT_DESC quadLayout[] =
+        {
+            { "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 8, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        };
+
+        result = mDevice->CreateInputLayout(quadLayout, 2, g_VS_Passthrough, sizeof(g_VS_Passthrough), &mCopyIL);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mCopyIL, "Renderer11 copy texture input layout");
+
+        result = mDevice->CreateVertexShader(g_VS_Passthrough, sizeof(g_VS_Passthrough), NULL, &mCopyVS);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mCopyVS, "Renderer11 copy texture vertex shader");
+
+        result = mDevice->CreatePixelShader(g_PS_PassthroughRGBA, sizeof(g_PS_PassthroughRGBA), NULL, &mCopyRGBAPS);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mCopyRGBAPS, "Renderer11 copy texture RGBA pixel shader");
+
+        result = mDevice->CreatePixelShader(g_PS_PassthroughRGB, sizeof(g_PS_PassthroughRGB), NULL, &mCopyRGBPS);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mCopyRGBPS, "Renderer11 copy texture RGB pixel shader");
+
+        result = mDevice->CreatePixelShader(g_PS_PassthroughLum, sizeof(g_PS_PassthroughLum), NULL, &mCopyLumPS);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mCopyLumPS, "Renderer11 copy texture luminance pixel shader");
+
+        result = mDevice->CreatePixelShader(g_PS_PassthroughLumAlpha, sizeof(g_PS_PassthroughLumAlpha), NULL, &mCopyLumAlphaPS);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mCopyLumAlphaPS, "Renderer11 copy texture luminance alpha pixel shader");
+
+        mCopyResourcesInitialized = true;
+    }
+
+    // Verify the source and destination area sizes
+    if (sourceArea.x < 0 || sourceArea.x + sourceArea.width > static_cast<int>(sourceWidth) ||
+        sourceArea.y < 0 || sourceArea.y + sourceArea.height > static_cast<int>(sourceHeight) ||
+        destArea.x < 0 || destArea.x + destArea.width > static_cast<int>(destWidth) ||
+        destArea.y < 0 || destArea.y + destArea.height > static_cast<int>(destHeight))
+    {
+        return error(GL_INVALID_VALUE, false);
+    }
+
+    // Set vertices
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    result = mDeviceContext->Map(mCopyVB, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    if (FAILED(result))
+    {
+        ERR("Failed to map vertex buffer for texture copy, HRESULT: 0x%X.", result);
+        return error(GL_OUT_OF_MEMORY, false);
+    }
+
+    d3d11::PositionTexCoordVertex *vertices = static_cast<d3d11::PositionTexCoordVertex*>(mappedResource.pData);
+
+    // Create a quad in homogeneous coordinates
+    float x1 = (destArea.x / destWidth) * 2.0f - 1.0f;
+    float y1 = (destArea.y / destHeight) * 2.0f - 1.0f;
+    float x2 = ((destArea.x + destArea.width) / destWidth) * 2.0f - 1.0f;
+    float y2 = ((destArea.y + destArea.height) / destHeight) * 2.0f - 1.0f;
+
+    float u1 = sourceArea.x / float(sourceWidth);
+    float v1 = sourceArea.y / float(sourceHeight);
+    float u2 = (sourceArea.x + sourceArea.width) / float(sourceWidth);
+    float v2 = (sourceArea.y + sourceArea.height) / float(sourceHeight);
+
+    d3d11::SetPositionTexCoordVertex(&vertices[0], x1, y1, u1, v2);
+    d3d11::SetPositionTexCoordVertex(&vertices[1], x1, y2, u1, v1);
+    d3d11::SetPositionTexCoordVertex(&vertices[2], x2, y1, u2, v2);
+    d3d11::SetPositionTexCoordVertex(&vertices[3], x2, y2, u2, v1);
+
+    mDeviceContext->Unmap(mCopyVB, 0);
+
+    static UINT stride = sizeof(d3d11::PositionTexCoordVertex);
+    static UINT startIdx = 0;
+    mDeviceContext->IASetVertexBuffers(0, 1, &mCopyVB, &stride, &startIdx);
+
+    // Apply state
+    static const float blendFactor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    mDeviceContext->OMSetBlendState(NULL, blendFactor, 0xFFFFFFF);
+    mDeviceContext->OMSetDepthStencilState(NULL, 0xFFFFFFFF);
+    mDeviceContext->RSSetState(NULL);
+
+    // Apply shaders
+    mDeviceContext->IASetInputLayout(mCopyIL);
+    mDeviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    mDeviceContext->VSSetShader(mCopyVS, NULL, 0);
+
+    ID3D11PixelShader *ps = NULL;
+    switch(destFormat)
+    {
+      case GL_RGBA:            ps = mCopyRGBAPS;     break;
+      case GL_RGB:             ps = mCopyRGBPS;      break;
+      case GL_ALPHA:           ps = mCopyRGBAPS;     break;
+      case GL_BGRA_EXT:        ps = mCopyRGBAPS;     break;
+      case GL_LUMINANCE:       ps = mCopyLumPS;      break;
+      case GL_LUMINANCE_ALPHA: ps = mCopyLumAlphaPS; break;
+      default: UNREACHABLE();  ps = NULL;            break;
+    }
+
+    mDeviceContext->PSSetShader(ps, NULL, 0);
+
+    // Unset the currently bound shader resource to avoid conflicts
+    static ID3D11ShaderResourceView *const nullSRV = NULL;
+    mDeviceContext->PSSetShaderResources(0, 1, &nullSRV);
+
+    // Apply render targets
+    mDeviceContext->OMSetRenderTargets(1, &dest, NULL);
+
+    // Set the viewport
+    D3D11_VIEWPORT viewport;
+    viewport.TopLeftX = 0;
+    viewport.TopLeftY = 0;
+    viewport.Width = destWidth;
+    viewport.Height = destHeight;
+    viewport.MinDepth = 0.0f;
+    viewport.MaxDepth = 1.0f;
+    mDeviceContext->RSSetViewports(1, &viewport);
+
+    // Apply textures
+    mDeviceContext->PSSetShaderResources(0, 1, &source);
+    mDeviceContext->PSSetSamplers(0, 1, &mCopySampler);
+
+    // Draw the quad
+    mDeviceContext->Draw(4, 0);
+
+    // Unbind textures and render targets and vertex buffer
+    mDeviceContext->PSSetShaderResources(0, 1, &nullSRV);
+
+    static ID3D11RenderTargetView *const nullRTV = NULL;
+    mDeviceContext->OMSetRenderTargets(1, &nullRTV, NULL);
+
+    static UINT zero = 0;
+    static ID3D11Buffer *const nullBuffer = NULL;
+    mDeviceContext->IASetVertexBuffers(0, 1, &nullBuffer, &zero, &zero);
+
+    markAllStateDirty();
+
+    return true;
 }
 
 RenderTarget *Renderer11::createRenderTarget(SwapChain *swapChain, bool depth)

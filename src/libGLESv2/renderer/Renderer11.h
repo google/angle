@@ -126,6 +126,9 @@ class Renderer11 : public Renderer
     virtual bool copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                            GLint xoffset, GLint yoffset, TextureStorageInterfaceCube *storage, GLenum target, GLint level);
 
+    bool copyTexture(ID3D11ShaderResourceView *source, const gl::Rectangle &sourceArea, unsigned int sourceWidth, unsigned int sourceHeight,
+                     ID3D11RenderTargetView *dest, const gl::Rectangle &destArea, unsigned int destWidth, unsigned int destHeight, GLenum destFormat);
+
     virtual bool blitRect(gl::Framebuffer *readTarget, gl::Rectangle *readRect, gl::Framebuffer *drawTarget, gl::Rectangle *drawRect,
                           bool blitRenderTarget, bool blitDepthStencil);
     virtual void readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,
@@ -241,6 +244,17 @@ class Renderer11 : public Renderer
 
     StreamingIndexBufferInterface *mLineLoopIB;
     StreamingIndexBufferInterface *mTriangleFanIB;
+
+    // Texture copy resources
+    bool mCopyResourcesInitialized;
+    ID3D11Buffer *mCopyVB;
+    ID3D11SamplerState *mCopySampler;
+    ID3D11InputLayout *mCopyIL;
+    ID3D11VertexShader *mCopyVS;
+    ID3D11PixelShader *mCopyRGBAPS;
+    ID3D11PixelShader *mCopyRGBPS;
+    ID3D11PixelShader *mCopyLumPS;
+    ID3D11PixelShader *mCopyLumAlphaPS;
 
     ID3D11Device *mDevice;
     D3D_FEATURE_LEVEL mFeatureLevel;

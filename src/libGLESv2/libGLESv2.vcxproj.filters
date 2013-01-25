@@ -382,6 +382,15 @@
     <ClInclude Include="renderer\shaders\compiled\passthroughrgba11ps.h">
       <Filter>Renderer\Shaders\Compiled</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\passthroughrgb11ps.h">
+      <Filter>Renderer\Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\passthroughlum11ps.h">
+      <Filter>Renderer\Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\passthroughlumalpha11ps.h">
+      <Filter>Renderer\Shaders\Compiled</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="libGLESv2.def">
