@@ -16,6 +16,7 @@ Contributors
     Nicolas Capens, TransGaming Inc.
     Daniel Koch, TransGaming Inc.
     Alastair Patrick, Google Inc.
+    Kenneth Russell, Google Inc.
     Members of the WebGL working group
 
 Contact
@@ -28,8 +29,8 @@ Status
 
 Version
 
-    Last Modified Data: November 13, 2012
-    Revision: #5
+    Last Modified Date: January 23, 2013
+    Revision: #6
 
 Number
 
@@ -63,7 +64,7 @@ New Tokens
 
     Accepted by the <pname> parameter of GetIntegerv:
 
-        MAX_COLOR_ATTACHMENTS_ANGLE                  0x8CDF
+        MAX_COLOR_ATTACHMENTS_ANGLE             0x8CDF
 
     Accepted by the <pname> parameters of GetIntegerv and GetFloatv:
 
@@ -150,11 +151,20 @@ Changes to Chapter 3 of the OpenGL ES 2.0 Specification (Rasterization)
 Changes to Chapter 4 of the OpenGL ES 2.0 Specification (Per-Fragment
 Operations and the Frame Buffer)
 
-    Insert Table 4.3 (and renumber subsequent tables): Arguments to
-    DrawBuffersANGLE when the context is bound to a framebuffer
-    object, and the buffers they indicate. <i> in
-    COLOR_ATTACHMENT<i>_ANGLE may range from zero to the value of
-    MAX_COLOR_ATTACHMENTS_ANGLE minus one.
+    Modify the overview of Chapter 4 and replace the sentences
+    of the fifth paragraph which read: 
+
+    "The name of the color buffer of an application-created framebuffer
+    object is COLOR_ATTACHMENT0. The names of the depth and stencil buffers
+    are DEPTH_ATTACHMENT and STENCIL_ATTACHMENT." 
+
+    With the following:
+
+    "A framebuffer object has an array of color buffer attachment points,
+    numbered zero through <n>, a depth buffer attachment point, and a
+    stencil buffer attachment point." 
+
+    Insert Table 4.3 to Section 4.2.1 (and renumber subsequent tables):
 
     Symbolic Constant                         Meaning
     -----------------                         ---------------------
@@ -164,6 +174,10 @@ Operations and the Frame Buffer)
                                               attached at color attachment
                                               point i
 
+    Table 4.3: Arguments to DrawBuffersANGLE when the context is bound to a
+    framebuffer object, and the buffers they indicate. <i> in
+    COLOR_ATTACHMENT<i>_ANGLE may range from zero to the value of
+    MAX_COLOR_ATTACHMENTS_ANGLE minus one.
 
     Replace Section 4.2.1, "Selecting a Buffer for Writing" with the following:
 
@@ -216,7 +230,7 @@ Operations and the Frame Buffer)
     will generate the error INVALID_OPERATION.
 
     If a fragment shader writes to "gl_FragColor", DrawBuffersANGLE 
-    specifies a set of draw buffers into which the color written to
+    specifies the draw buffer, if any, into which the color written to
     "gl_FragColor" is written. If a fragment shader writes to
     "gl_FragData", DrawBuffersANGLE specifies a set of draw buffers
     into which each of the multiple output colors defined by these
@@ -267,6 +281,58 @@ Operations and the Frame Buffer)
     for the depth and stencil attachment points. The number of color attachment
     points is equal to the value of MAX_COLOR_ATTACHMENTS_ANGLE."
 
+    Replace the third item in the bulleted list in Section 4.4.1 (Binding
+    and Managing Framebuffer Objects) with the following:
+
+    " * The only color buffer bitplanes are the ones defined by the
+    framebuffer attachments points named COLOR_ATTACHMENT0_ANGLE through
+    COLOR_ATTACHMENT<n>_ANGLE."
+
+    Modify Section 4.4.3 (Renderbuffer Objects) in the 
+    "Attaching Renderbuffer Images to a Framebuffer" subsection as follows:
+
+    Insert the following table:
+
+    Name of attachment
+    ---------------------------------------
+    COLOR_ATTACHMENT<i>_ANGLE (see caption)
+    DEPTH_ATTACHMENT
+    STENCIL_ATTACHMENT
+
+    Table 4.x: Framebuffer attachment points. <i> in COLOR_ATTACHMENT<i>_ANGLE
+    may range from zero to the value of MAX_COLOR_ATTACHMENTS_ANGLE minus 1.
+
+    Modify the third sentence of the paragraph following the definition of
+    FramebufferRenderbuffer to be as follows:
+
+    "<attachment> should be set to one of the attachment points of the 
+    framebuffer listed in Table 4.x." 
+
+    Modify Section 4.4.3 (Renderbuffer Objects) in the "Attaching Texture
+    Images to a Framebuffer" subsection as follows:
+
+    Modify the last sentence of the paragraph following the definition of
+    FramebufferTexture2D to be as follows:
+
+    "<attachment> must be one of the attachment points of the framebuffer
+    listed in Table 4.x."
+
+    Modify Section 4.4.5 (Framebuffer Completeness) and replace the 3rd
+    item in the bulleted list in the "Framebuffer Attachment Completeness"
+    subsection with the following:
+
+    " * If <attachment> is COLOR_ATTACHMENT<i>_ANGLE, then <image> must
+    have a color-renderable internal format."
+
+Changes to Chapter 6 of the OpenGL ES 2.0 Specification (State and
+State Requests)
+
+    In section 6.1.3 (Enumerated Queries) modify the third sentence in
+    the definition of GetFramebufferAttachmentParameteriv to be as follows:
+
+    "<attachment> must be one of the attachment points of the framebuffer
+    listed in Table 4.x."
+
 Changes to Chapter 3 of the OpenGL ES Shading Language 1.0.17 Specification (Basics)
 
     Add a new section:
@@ -298,7 +364,28 @@ Dependencies on ANGLE_framebuffer_blit and APPLE_framebuffer_multisample:
 
 Errors
 
-    <TBD>
+    The INVALID_OPERATION error is generated if DrawBuffersANGLE is called
+    when the default framebuffer is bound and any of the following conditions
+    hold: 
+     - <n> is greater than 1 and less than MAX_DRAW_BUFFERS_ANGLE,
+     - <bufs> contains a value other than BACK or NONE.
+
+    The INVALID_OPERATION error is generated if DrawBuffersANGLE is called
+    when bound to a draw framebuffer object and any of the following
+    conditions hold:
+     - the <i>th value in <bufs> is not COLOR_ATTACHMENT<i>_ANGLE or NONE.
+
+    The INVALID_VALUE error is generated if DrawBuffersANGLE is called
+    with a value of <n> which is greater than MAX_DRAW_BUFFERS_ANGLE.
+
+    The INVALID_ENUM error is generated by FramebufferRenderbuffer if
+    the <attachment> parameter is not one of the values listed in Table 4.x.
+
+    The INVALID_ENUM error is generated by FramebufferTexture2D if
+    the <attachment> parameter is not one of the values listed in Table 4.x.
+
+    The INVALID_ENUM error is generated by GetFramebufferAttachmentParameteriv
+    if the <attachment> parameter is not one of the values listed in Table 4.x.
 
 New State
 
@@ -323,10 +410,10 @@ Issues
 
   1) Differences from NV_draw_buffers + NV_fbo_color_attachments?
 
-   - interactions with blit_framebuffer
-   - MAX limits are global instead of per-fbo (TBD - Issue 2)
-   - no broadcast from gl_FragColor (TBD - Issue 3)
-   - can be used to with default framebuffer to set NONE/BACK (TBD - Issue 4)
+   - adds interactions with blit_framebuffer and separate draw/read binding points
+   - MAX limits are global instead of per-fbo (see Issue 2)
+   - no broadcast from gl_FragColor (see Issue 3)
+   - can be used to with default framebuffer to set NONE/BACK (see Issue 4)
 
    2) Should the MAX_DRAW_BUFFERS_ANGLE and MAX_COLOR_ATTACHMENTS_ANGLE limits
     be per-framebuffer values or implementation dependent constants?
@@ -334,7 +421,7 @@ Issues
     DISCUSSION: In ARB_draw_buffers this was per-context (see Issue 2).
     EXT_framebuffer_object (and subsequently ARB_framebuffer_object, and GL 3.0
     through GL 4.2) made these queries framebuffer-dependent. 
-    However GL in 4.3 and GLES 3.0, these limits were moved from 
+    However in GL 4.3 and GLES 3.0, these limits were changed from 
     framebuffer-dependent state to implementation-dependent state after
     much discussion (Bug 7990).
 
@@ -347,6 +434,12 @@ Issues
     query is per-framebuffer, they can report a maximum of one attachment
     when there are multisampled attachments, but a higher limit when only
     single-sampled attachments are present.
+
+    RESOLVED. Make this global context state as this is most consistent 
+    with GLES 3.0 and updated GL drivers. Unfortunately this means that a
+    D3D9-based implementation of this extension is not possible since D3D9
+    does not support multisampled MRTs. Perhaps such an implementation could
+    report FBO incomplete in this situation, but that seems less than desirable.
 
    3) Should we support broadcast from gl_FragColor to all gl_FragData[x]
     or should it be synonymous with gl_FragData[0]?
@@ -361,6 +454,9 @@ Issues
     writes to gl_FragColor with replicated writes to all possible gl_FragData
     locations when this extension is enabled.
 
+    RESOLVED: Broadcast from gl_FragColor to all enabledMRT buffers is not
+    supported. A shader author must write gl_FragData[x] if they want to use MRT
+
    4) Should we allow DrawBuffersANGLE to be called when the default FBO is bound?
 
     DISCUSSION: NV_draw_buffers specifies that DrawBuffersNV errors with 
@@ -370,9 +466,25 @@ Issues
     An implementation that does not natively support disabling the drawbuffer
     on the default FBO could emulate this by disabling color writes.
 
+    RESOLVED: Allow DrawBuffersANGLE to be called for the default FBO. This
+    is more forward looking and is compatible with ES 3.0.
+
+   5) What are the requirements on the color attachment sizes and formats?
+    
+    RESOLVED: ES 2.0 requires that all color buffers attached to application-
+    created framebuffer objects must have the same number of bitplanes
+    (Chapter 4 overview p91). ES 2.0 also requires that all attached images
+    have the same width and height (Section 4.4.5 Framebuffer Completeness).
+    This extension does not lift those requirements, and failing to meet
+    them will result in an incomplete FBO.
 
 Revision History
 
+    01/23/2013  dgkoch  add resolutions to issues 2-4.
+                        add issue 5.
+                        Add Table 4.x and update various explicit
+                        references to COLOR_ATTACHMENT0.
+                        Add errors.
     11/13/2012  dgkoch  add revision history
                         add text from updated ES 3.0 spec
                         add issues for discussion
