@@ -9,4 +9,5 @@ patches-*
 *.target.mk
 ipch
 debug.txt
+*.opensdf
 
