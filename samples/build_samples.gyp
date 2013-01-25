@@ -37,7 +37,6 @@
           ],
           'msvs_settings': {
             'VCLinkerTool': {
-              'AdditionalLibraryDirectories': ['$(DXSDK_DIR)/lib/x86'],
               'AdditionalDependencies': ['d3d9.lib'],
             }
           }
