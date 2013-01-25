@@ -237,9 +237,13 @@ class Renderer11 : public Renderer
 
     unsigned int mAppliedProgramBinarySerial;
 
-    rx::dx_VertexConstants mVertexConstants;
-    rx::dx_PixelConstants mPixelConstants;
-    bool mDxUniformsDirty;
+    dx_VertexConstants mVertexConstants;
+    dx_VertexConstants mAppliedVertexConstants;
+    ID3D11Buffer *mDriverConstantBufferVS;
+
+    dx_PixelConstants mPixelConstants;
+    dx_PixelConstants mAppliedPixelConstants;
+    ID3D11Buffer *mDriverConstantBufferPS;
 
     // Vertex, index and input layouts
     VertexDataManager *mVertexDataManager;

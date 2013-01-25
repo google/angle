@@ -89,6 +89,9 @@ Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(
     mDeviceContext = NULL;
     mDxgiAdapter = NULL;
     mDxgiFactory = NULL;
+
+    mDriverConstantBufferVS = NULL;
+    mDriverConstantBufferPS = NULL;
 }
 
 Renderer11::~Renderer11()
@@ -558,42 +561,27 @@ bool Renderer11::setViewport(const gl::Rectangle &viewport, float zNear, float z
         mCurFar = actualZFar;
     }
 
-    if (currentProgram)
+    if (currentProgram && viewportChanged)
     {
-        dx_VertexConstants vc = {0};
-        dx_PixelConstants pc = {0};
+        mVertexConstants.halfPixelSize[0] = 0.0f;
+        mVertexConstants.halfPixelSize[1] = 0.0f;
 
-        vc.halfPixelSize[0] = 0.0f;
-        vc.halfPixelSize[1] = 0.0f;
+        mPixelConstants.coord[0] = actualViewport.width  * 0.5f;
+        mPixelConstants.coord[1] = actualViewport.height * 0.5f;
+        mPixelConstants.coord[2] = actualViewport.x + (actualViewport.width  * 0.5f);
+        mPixelConstants.coord[3] = actualViewport.y + (actualViewport.height * 0.5f);
 
-        pc.coord[0] = actualViewport.width  * 0.5f;
-        pc.coord[1] = actualViewport.height * 0.5f;
-        pc.coord[2] = actualViewport.x + (actualViewport.width  * 0.5f);
-        pc.coord[3] = actualViewport.y + (actualViewport.height * 0.5f);
+        mPixelConstants.depthFront[0] = (actualZFar - actualZNear) * 0.5f;
+        mPixelConstants.depthFront[1] = (actualZNear + actualZFar) * 0.5f;
+        mPixelConstants.depthFront[2] = !gl::IsTriangleMode(drawMode) ? 0.0f : (frontFace == GL_CCW ? 1.0f : -1.0f);;
 
-        pc.depthFront[0] = (actualZFar - actualZNear) * 0.5f;
-        pc.depthFront[1] = (actualZNear + actualZFar) * 0.5f;
-        pc.depthFront[2] = !gl::IsTriangleMode(drawMode) ? 0.0f : (frontFace == GL_CCW ? 1.0f : -1.0f);;
+        mVertexConstants.depthRange[0] = actualZNear;
+        mVertexConstants.depthRange[1] = actualZFar;
+        mVertexConstants.depthRange[2] = actualZFar - actualZNear;
 
-        vc.depthRange[0] = actualZNear;
-        vc.depthRange[1] = actualZFar;
-        vc.depthRange[2] = actualZFar - actualZNear;
-
-        pc.depthRange[0] = actualZNear;
-        pc.depthRange[1] = actualZFar;
-        pc.depthRange[2] = actualZFar - actualZNear;
-
-        if (memcmp(&vc, &mVertexConstants, sizeof(dx_VertexConstants)) != 0)
-        {
-            mVertexConstants = vc;
-            mDxUniformsDirty = true;
-        }
-
-        if (memcmp(&pc, &mPixelConstants, sizeof(dx_PixelConstants)) != 0)
-        {
-            mPixelConstants = pc;
-            mDxUniformsDirty = true;
-        }
+        mPixelConstants.depthRange[0] = actualZNear;
+        mPixelConstants.depthRange[1] = actualZFar;
+        mPixelConstants.depthRange[2] = actualZFar - actualZNear;
     }
 
     mForceSetViewport = false;
@@ -1050,7 +1038,6 @@ void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
         mDeviceContext->PSSetShader(pixelShader, NULL, 0);
         mDeviceContext->VSSetShader(vertexShader, NULL, 0);
         programBinary->dirtyAllUniforms();
-        mDxUniformsDirty = true;
 
         mAppliedProgramBinarySerial = programBinarySerial;
     }
@@ -1058,36 +1045,36 @@ void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
 
 void Renderer11::applyUniforms(const gl::UniformArray *uniformArray)
 {
-    D3D11_BUFFER_DESC constantBufferDescriptionVS0 = {0};
-    constantBufferDescriptionVS0.ByteWidth = D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT * sizeof(float[4]);
-    constantBufferDescriptionVS0.Usage = D3D11_USAGE_DYNAMIC;
-    constantBufferDescriptionVS0.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    constantBufferDescriptionVS0.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    constantBufferDescriptionVS0.MiscFlags = 0;
-    constantBufferDescriptionVS0.StructureByteStride = 0;
+    D3D11_BUFFER_DESC constantBufferDescriptionVS = {0};
+    constantBufferDescriptionVS.ByteWidth = D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT * sizeof(float[4]);
+    constantBufferDescriptionVS.Usage = D3D11_USAGE_DYNAMIC;
+    constantBufferDescriptionVS.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    constantBufferDescriptionVS.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    constantBufferDescriptionVS.MiscFlags = 0;
+    constantBufferDescriptionVS.StructureByteStride = 0;
 
-    ID3D11Buffer *constantBufferVS0 = NULL;
-    HRESULT result = mDevice->CreateBuffer(&constantBufferDescriptionVS0, NULL, &constantBufferVS0);
+    ID3D11Buffer *constantBufferVS = NULL;
+    HRESULT result = mDevice->CreateBuffer(&constantBufferDescriptionVS, NULL, &constantBufferVS);
     ASSERT(SUCCEEDED(result));
 
-    D3D11_BUFFER_DESC constantBufferDescriptionPS0 = {0};
-    constantBufferDescriptionPS0.ByteWidth = D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT * sizeof(float[4]);
-    constantBufferDescriptionPS0.Usage = D3D11_USAGE_DYNAMIC;
-    constantBufferDescriptionPS0.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    constantBufferDescriptionPS0.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    constantBufferDescriptionPS0.MiscFlags = 0;
-    constantBufferDescriptionPS0.StructureByteStride = 0;
+    D3D11_BUFFER_DESC constantBufferDescriptionPS = {0};
+    constantBufferDescriptionPS.ByteWidth = D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT * sizeof(float[4]);
+    constantBufferDescriptionPS.Usage = D3D11_USAGE_DYNAMIC;
+    constantBufferDescriptionPS.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    constantBufferDescriptionPS.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    constantBufferDescriptionPS.MiscFlags = 0;
+    constantBufferDescriptionPS.StructureByteStride = 0;
 
-    ID3D11Buffer *constantBufferPS0 = NULL;
-    result = mDevice->CreateBuffer(&constantBufferDescriptionPS0, NULL, &constantBufferPS0);
+    ID3D11Buffer *constantBufferPS = NULL;
+    result = mDevice->CreateBuffer(&constantBufferDescriptionPS, NULL, &constantBufferPS);
     ASSERT(SUCCEEDED(result));
 
-    D3D11_MAPPED_SUBRESOURCE mapVS0 = {0};
-    result = mDeviceContext->Map(constantBufferVS0, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapVS0);
+    D3D11_MAPPED_SUBRESOURCE mapVS = {0};
+    result = mDeviceContext->Map(constantBufferVS, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapVS);
     ASSERT(SUCCEEDED(result));
 
-    D3D11_MAPPED_SUBRESOURCE mapPS0 = {0};
-    result = mDeviceContext->Map(constantBufferPS0, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapPS0);
+    D3D11_MAPPED_SUBRESOURCE mapPS = {0};
+    result = mDeviceContext->Map(constantBufferPS, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapPS);
     ASSERT(SUCCEEDED(result));
 
     for (gl::UniformArray::const_iterator uniform_iterator = uniformArray->begin(); uniform_iterator != uniformArray->end(); uniform_iterator++)
@@ -1108,7 +1095,7 @@ void Renderer11::applyUniforms(const gl::UniformArray *uniformArray)
           case GL_FLOAT_MAT4:
             if (uniform->vsRegisterIndex >= 0)
             {
-                GLfloat (*c)[4] = (GLfloat(*)[4])mapVS0.pData;
+                GLfloat (*c)[4] = (GLfloat(*)[4])mapVS.pData;
                 float (*f)[4] = (float(*)[4])uniform->data;
 
                 for (unsigned int i = 0; i < uniform->registerCount; i++)
@@ -1121,7 +1108,7 @@ void Renderer11::applyUniforms(const gl::UniformArray *uniformArray)
             }
             if (uniform->psRegisterIndex >= 0)
             {
-                GLfloat (*c)[4] = (GLfloat(*)[4])mapPS0.pData;
+                GLfloat (*c)[4] = (GLfloat(*)[4])mapPS.pData;
                 float (*f)[4] = (float(*)[4])uniform->data;
 
                 for (unsigned int i = 0; i < uniform->registerCount; i++)
@@ -1139,7 +1126,7 @@ void Renderer11::applyUniforms(const gl::UniformArray *uniformArray)
           case GL_INT_VEC4:
             if (uniform->vsRegisterIndex >= 0)
             {
-                int (*c)[4] = (int(*)[4])mapVS0.pData;
+                int (*c)[4] = (int(*)[4])mapVS.pData;
                 GLint *x = (GLint*)uniform->data;
                 int count = gl::VariableColumnCount(uniform->type);
 
@@ -1153,7 +1140,7 @@ void Renderer11::applyUniforms(const gl::UniformArray *uniformArray)
             }
             if (uniform->psRegisterIndex >= 0)
             {
-                int (*c)[4] = (int(*)[4])mapPS0.pData;
+                int (*c)[4] = (int(*)[4])mapPS.pData;
                 GLint *x = (GLint*)uniform->data;
                 int count = gl::VariableColumnCount(uniform->type);
 
@@ -1172,7 +1159,7 @@ void Renderer11::applyUniforms(const gl::UniformArray *uniformArray)
           case GL_BOOL_VEC4:
             if (uniform->vsRegisterIndex >= 0)
             {
-                int (*c)[4] = (int(*)[4])mapVS0.pData;
+                int (*c)[4] = (int(*)[4])mapVS.pData;
                 GLboolean *b = (GLboolean*)uniform->data;
                 int count = gl::VariableColumnCount(uniform->type);
 
@@ -1186,7 +1173,7 @@ void Renderer11::applyUniforms(const gl::UniformArray *uniformArray)
             }
             if (uniform->psRegisterIndex >= 0)
             {
-                int (*c)[4] = (int(*)[4])mapPS0.pData;
+                int (*c)[4] = (int(*)[4])mapPS.pData;
                 GLboolean *b = (GLboolean*)uniform->data;
                 int count = gl::VariableColumnCount(uniform->type);
 
@@ -1204,57 +1191,58 @@ void Renderer11::applyUniforms(const gl::UniformArray *uniformArray)
         }
     }
 
-    mDeviceContext->Unmap(constantBufferVS0, 0);
-    mDeviceContext->Unmap(constantBufferPS0, 0);
+    mDeviceContext->Unmap(constantBufferVS, 0);
+    mDeviceContext->VSSetConstantBuffers(0, 1, &constantBufferVS);
+    constantBufferVS->Release();
+    
+    mDeviceContext->Unmap(constantBufferPS, 0);
+    mDeviceContext->PSSetConstantBuffers(0, 1, &constantBufferPS);
+    constantBufferPS->Release();
 
     // Driver uniforms
-    D3D11_BUFFER_DESC constantBufferDescriptionVS1 = {0};
-    constantBufferDescriptionVS1.ByteWidth = sizeof(dx_VertexConstants);
-    constantBufferDescriptionVS1.Usage = D3D11_USAGE_DYNAMIC;
-    constantBufferDescriptionVS1.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    constantBufferDescriptionVS1.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    constantBufferDescriptionVS1.MiscFlags = 0;
-    constantBufferDescriptionVS1.StructureByteStride = 0;
+    if (!mDriverConstantBufferVS)
+    {
+        D3D11_BUFFER_DESC constantBufferDescription = {0};
+        constantBufferDescription.ByteWidth = sizeof(dx_VertexConstants);
+        constantBufferDescription.Usage = D3D11_USAGE_DEFAULT;
+        constantBufferDescription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+        constantBufferDescription.CPUAccessFlags = 0;
+        constantBufferDescription.MiscFlags = 0;
+        constantBufferDescription.StructureByteStride = 0;
 
-    ID3D11Buffer *constantBufferVS1 = NULL;
-    result = mDevice->CreateBuffer(&constantBufferDescriptionVS1, NULL, &constantBufferVS1);
-    ASSERT(SUCCEEDED(result));
+        result = mDevice->CreateBuffer(&constantBufferDescription, NULL, &mDriverConstantBufferVS);
+        ASSERT(SUCCEEDED(result));
 
-    D3D11_BUFFER_DESC constantBufferDescriptionPS1 = {0};
-    constantBufferDescriptionPS1.ByteWidth = sizeof(dx_PixelConstants);
-    constantBufferDescriptionPS1.Usage = D3D11_USAGE_DYNAMIC;
-    constantBufferDescriptionPS1.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    constantBufferDescriptionPS1.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    constantBufferDescriptionPS1.MiscFlags = 0;
-    constantBufferDescriptionPS1.StructureByteStride = 0;
+        mDeviceContext->VSSetConstantBuffers(1, 1, &mDriverConstantBufferVS);
+    }
 
-    ID3D11Buffer *constantBufferPS1 = NULL;
-    result = mDevice->CreateBuffer(&constantBufferDescriptionPS1, NULL, &constantBufferPS1);
-    ASSERT(SUCCEEDED(result));
+    if (!mDriverConstantBufferPS)
+    {
+        D3D11_BUFFER_DESC constantBufferDescription = {0};
+        constantBufferDescription.ByteWidth = sizeof(dx_PixelConstants);
+        constantBufferDescription.Usage = D3D11_USAGE_DEFAULT;
+        constantBufferDescription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+        constantBufferDescription.CPUAccessFlags = 0;
+        constantBufferDescription.MiscFlags = 0;
+        constantBufferDescription.StructureByteStride = 0;
 
-    D3D11_MAPPED_SUBRESOURCE mapVS1 = {0};
-    result = mDeviceContext->Map(constantBufferVS1, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapVS1);
-    ASSERT(SUCCEEDED(result));
+        result = mDevice->CreateBuffer(&constantBufferDescription, NULL, &mDriverConstantBufferPS);
+        ASSERT(SUCCEEDED(result));
 
-    D3D11_MAPPED_SUBRESOURCE mapPS1 = {0};
-    result = mDeviceContext->Map(constantBufferPS1, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapPS1);
-    ASSERT(SUCCEEDED(result));
+        mDeviceContext->PSSetConstantBuffers(1, 1, &mDriverConstantBufferPS);
+    }
 
-    memcpy(mapVS1.pData, &mVertexConstants, sizeof(dx_VertexConstants));
-    memcpy(mapPS1.pData, &mPixelConstants, sizeof(dx_PixelConstants));
+    if (memcmp(&mVertexConstants, &mAppliedVertexConstants, sizeof(dx_VertexConstants)) != 0)
+    {
+        mDeviceContext->UpdateSubresource(mDriverConstantBufferVS, 0, NULL, &mVertexConstants, 16, 0);
+        memcpy(&mAppliedVertexConstants, &mVertexConstants, sizeof(dx_VertexConstants));
+    }
 
-    mDeviceContext->Unmap(constantBufferVS1, 0);
-    mDeviceContext->Unmap(constantBufferPS1, 0);
-
-    ID3D11Buffer *buffersVS[2] = {constantBufferVS0, constantBufferVS1};
-    mDeviceContext->VSSetConstantBuffers(0, 2, buffersVS);
-    constantBufferVS0->Release();
-    constantBufferVS1->Release();
-    
-    ID3D11Buffer *buffersPS[2] = {constantBufferPS0, constantBufferPS1};
-    mDeviceContext->PSSetConstantBuffers(0, 2, buffersPS);
-    constantBufferPS0->Release();
-    constantBufferPS1->Release();
+    if (memcmp(&mPixelConstants, &mAppliedPixelConstants, sizeof(dx_PixelConstants)) != 0)
+    {
+        mDeviceContext->UpdateSubresource(mDriverConstantBufferPS, 0, NULL, &mPixelConstants, 16, 0);
+        memcpy(&mAppliedPixelConstants, &mPixelConstants, sizeof(dx_PixelConstants));
+    }
 }
 
 void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer)
@@ -1540,7 +1528,8 @@ void Renderer11::markAllStateDirty()
     mAppliedIBOffset = 0;
 
     mAppliedProgramBinarySerial = 0;
-    mDxUniformsDirty = true;
+    memset(&mAppliedVertexConstants, 0, sizeof(dx_VertexConstants));
+    memset(&mAppliedPixelConstants, 0, sizeof(dx_PixelConstants));
 }
 
 void Renderer11::releaseDeviceResources()
@@ -1647,6 +1636,18 @@ void Renderer11::releaseDeviceResources()
     }
 
     mClearResourcesInitialized = false;
+
+    if (mDriverConstantBufferVS)
+    {
+        mDriverConstantBufferVS->Release();
+        mDriverConstantBufferVS = NULL;
+    }
+
+    if (mDriverConstantBufferPS)
+    {
+        mDriverConstantBufferPS->Release();
+        mDriverConstantBufferPS = NULL;
+    }
 }
 
 void Renderer11::markDeviceLost()
