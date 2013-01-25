@@ -122,7 +122,7 @@ class Renderer9 : public Renderer
     virtual bool getFloat16TextureSupport(bool *filtering, bool *renderable);
     virtual bool getLuminanceTextureSupport();
     virtual bool getLuminanceAlphaTextureSupport();
-    virtual bool getVertexTextureSupport() const;
+    virtual unsigned int getMaxVertexTextureImageUnits() const;
     virtual bool getNonPower2TextureSupport() const;
     virtual bool getDepthTextureSupport() const;
     virtual bool getOcclusionQuerySupport() const;
@@ -296,14 +296,14 @@ class Renderer9 : public Renderer
     GLuint mCurSampleMask;
 
     // Currently applied sampler states
-    bool mForceSetVertexSamplerStates[gl::MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF];
-    gl::SamplerState mCurVertexSamplerStates[gl::MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF];
+    bool mForceSetVertexSamplerStates[gl::IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS];
+    gl::SamplerState mCurVertexSamplerStates[gl::IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS];
 
     bool mForceSetPixelSamplerStates[gl::MAX_TEXTURE_IMAGE_UNITS];
     gl::SamplerState mCurPixelSamplerStates[gl::MAX_TEXTURE_IMAGE_UNITS];
 
     // Currently applied textures
-    unsigned int mCurVertexTextureSerials[gl::MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF];
+    unsigned int mCurVertexTextureSerials[gl::IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS];
     unsigned int mCurPixelTextureSerials[gl::MAX_TEXTURE_IMAGE_UNITS];
 
     unsigned int mAppliedIBSerial;

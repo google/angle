@@ -142,7 +142,8 @@ class Renderer
     virtual bool getFloat16TextureSupport(bool *filtering, bool *renderable) = 0;
     virtual bool getLuminanceTextureSupport() = 0;
     virtual bool getLuminanceAlphaTextureSupport() = 0;
-    virtual bool getVertexTextureSupport() const = 0;
+    bool getVertexTextureSupport() const { return getMaxVertexTextureImageUnits() > 0; }
+    virtual unsigned int getMaxVertexTextureImageUnits() const = 0;
     virtual bool getNonPower2TextureSupport() const = 0;
     virtual bool getDepthTextureSupport() const = 0;
     virtual bool getOcclusionQuerySupport() const = 0;

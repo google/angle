@@ -133,7 +133,7 @@ class ProgramBinary : public RefCountObject
     };
 
     Sampler mSamplersPS[MAX_TEXTURE_IMAGE_UNITS];
-    Sampler mSamplersVS[MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF];
+    Sampler mSamplersVS[IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS];
     GLuint mUsedVertexSamplerRange;
     GLuint mUsedPixelSamplerRange;
     bool mUsesPointSize;

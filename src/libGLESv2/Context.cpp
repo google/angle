@@ -207,7 +207,7 @@ Context::~Context()
 
     for (int type = 0; type < TEXTURE_TYPE_COUNT; type++)
     {
-        for (int sampler = 0; sampler < MAX_COMBINED_TEXTURE_IMAGE_UNITS_VTF; sampler++)
+        for (int sampler = 0; sampler < IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS; sampler++)
         {
             mState.samplerTexture[type][sampler].set(NULL);
         }
@@ -1269,7 +1269,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_MAX_VERTEX_UNIFORM_VECTORS:       *params = gl::MAX_VERTEX_UNIFORM_VECTORS;       break;
       case GL_MAX_VARYING_VECTORS:              *params = getMaximumVaryingVectors();           break;
       case GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS: *params = getMaximumCombinedTextureImageUnits(); break;
-      case GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS:   *params = getMaximumVertexTextureImageUnits();  break;
+      case GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS:   *params = mRenderer->getMaxVertexTextureImageUnits(); break;
       case GL_MAX_TEXTURE_IMAGE_UNITS:          *params = gl::MAX_TEXTURE_IMAGE_UNITS;          break;
       case GL_MAX_FRAGMENT_UNIFORM_VECTORS:     *params = getMaximumFragmentUniformVectors();   break;
       case GL_MAX_RENDERBUFFER_SIZE:            *params = getMaximumRenderbufferDimension();    break;
@@ -1776,7 +1776,8 @@ void Context::applyTextures(SamplerType type)
 {
     ProgramBinary *programBinary = getCurrentProgramBinary();
 
-    int samplerCount = (type == SAMPLER_PIXEL) ? MAX_TEXTURE_IMAGE_UNITS : MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF;   // Range of Direct3D 9 samplers of given sampler type
+    // Range of Direct3D samplers of given sampler type
+    int samplerCount = (type == SAMPLER_PIXEL) ? MAX_TEXTURE_IMAGE_UNITS : mRenderer->getMaxVertexTextureImageUnits();
     int samplerRange = programBinary->getUsedSamplerRange(type);
 
     for (int samplerIndex = 0; samplerIndex < samplerRange; samplerIndex++)
@@ -2128,14 +2129,9 @@ int Context::getMaximumVaryingVectors() const
     return mMajorShaderModel >= 3 ? MAX_VARYING_VECTORS_SM3 : MAX_VARYING_VECTORS_SM2;
 }
 
-unsigned int Context::getMaximumVertexTextureImageUnits() const
-{
-    return mSupportsVertexTexture ? MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF : 0;
-}
-
 unsigned int Context::getMaximumCombinedTextureImageUnits() const
 {
-    return MAX_TEXTURE_IMAGE_UNITS + getMaximumVertexTextureImageUnits();
+    return MAX_TEXTURE_IMAGE_UNITS + mRenderer->getMaxVertexTextureImageUnits();
 }
 
 int Context::getMaximumFragmentUniformVectors() const
@@ -2321,7 +2317,7 @@ void Context::detachTexture(GLuint texture)
 
     for (int type = 0; type < TEXTURE_TYPE_COUNT; type++)
     {
-        for (int sampler = 0; sampler < MAX_COMBINED_TEXTURE_IMAGE_UNITS_VTF; sampler++)
+        for (int sampler = 0; sampler < IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS; sampler++)
         {
             if (mState.samplerTexture[type][sampler].id() == texture)
             {

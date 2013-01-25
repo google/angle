@@ -66,6 +66,11 @@ static const D3DFORMAT DepthStencilFormats[] =
     //  D3DFMT_D24FS8
     };
 
+enum
+{
+    MAX_TEXTURE_IMAGE_UNITS_VTF_SM3 = 4
+};
+
 Renderer9::Renderer9(egl::Display *display, HDC hDc, bool softwareDevice) : Renderer(display), mDc(hDc), mSoftwareDevice(softwareDevice)
 {
     mD3d9Module = NULL;
@@ -1946,7 +1951,7 @@ void Renderer9::markAllStateDirty()
     mForceSetViewport = true;
     mForceSetBlendState = true;
 
-    for (unsigned int i = 0; i < gl::MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF; i++)
+    for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS; i++)
     {
         mForceSetVertexSamplerStates[i] = true;
         mCurVertexTextureSerials[i] = 0;
@@ -2223,9 +2228,10 @@ bool Renderer9::getEventQuerySupport()
     return mEventQuerySupport;
 }
 
-bool Renderer9::getVertexTextureSupport() const
+unsigned int Renderer9::getMaxVertexTextureImageUnits() const
 {
-    return mVertexTextureSupport;
+    META_ASSERT(MAX_TEXTURE_IMAGE_UNITS_VTF_SM3 <= gl::IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS);
+    return mVertexTextureSupport ? MAX_TEXTURE_IMAGE_UNITS_VTF_SM3 : 0;
 }
 
 bool Renderer9::getNonPower2TextureSupport() const

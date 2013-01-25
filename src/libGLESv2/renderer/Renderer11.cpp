@@ -46,6 +46,11 @@ static const DXGI_FORMAT DepthStencilFormats[] =
         DXGI_FORMAT_D24_UNORM_S8_UINT
     };
 
+enum
+{
+    MAX_TEXTURE_IMAGE_UNITS_VTF_SM4 = 16
+};
+
 Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(hDc)
 {
     mVertexDataManager = NULL;
@@ -312,7 +317,7 @@ void Renderer11::setSamplerState(gl::SamplerType type, int index, const gl::Samp
     }
     else if (type == gl::SAMPLER_VERTEX)
     {
-        if (index < 0 || index >= gl::MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF)
+        if (index < 0 || index >= (int)getMaxVertexTextureImageUnits())
         {
             ERR("Vertex shader sampler index %i is not valid.", index);
             return;
@@ -378,7 +383,7 @@ void Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *textur
     }
     else if (type == gl::SAMPLER_VERTEX)
     {
-        if (index < 0 || index >= gl::MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF)
+        if (index < 0 || index >= (int)getMaxVertexTextureImageUnits())
         {
             ERR("Vertex shader sampler index %i is not valid.", index);
             return;
@@ -1317,7 +1322,7 @@ void Renderer11::markAllStateDirty()
     mDepthStencilInitialized = false;
     mRenderTargetDescInitialized = false;
 
-    for (int i = 0; i < gl::MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF; i++)
+    for (int i = 0; i < gl::IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS; i++)
     {
         mForceSetVertexSamplerStates[i] = true;
         mCurVertexTextureSerials[i] = 0;
@@ -1584,11 +1589,18 @@ bool Renderer11::getEventQuerySupport()
     return false;
 }
 
-bool Renderer11::getVertexTextureSupport() const
+unsigned int Renderer11::getMaxVertexTextureImageUnits() const
 {
-    // TODO
-    // UNIMPLEMENTED();
-    return false;
+    META_ASSERT(MAX_TEXTURE_IMAGE_UNITS_VTF_SM4 <= gl::IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS);
+    switch (mFeatureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_0:
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0:
+        return MAX_TEXTURE_IMAGE_UNITS_VTF_SM4;
+      default: UNREACHABLE();
+        return 0;
+    }
 }
 
 bool Renderer11::getNonPower2TextureSupport() const

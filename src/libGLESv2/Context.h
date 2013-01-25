@@ -65,8 +65,12 @@ enum
     MAX_VARYING_VECTORS_SM2 = 8,
     MAX_VARYING_VECTORS_SM3 = 10,
     MAX_TEXTURE_IMAGE_UNITS = 16,
-    MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF = 4,   // For devices supporting vertex texture fetch
-    MAX_COMBINED_TEXTURE_IMAGE_UNITS_VTF = MAX_TEXTURE_IMAGE_UNITS + MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF,    
+
+    // Implementation upper limit, for devices supporting vertex texture fetch. 
+    // Real limit depends on the shader model
+    IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS = 16,
+    IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS = MAX_TEXTURE_IMAGE_UNITS + IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS,    
+
     MAX_FRAGMENT_UNIFORM_VECTORS_SM2 = 32 - 3,    // Reserve space for dx_Coord, dx_DepthFront and dx_DepthRange.
     MAX_FRAGMENT_UNIFORM_VECTORS_SM3 = 224 - 3,
     MAX_DRAW_BUFFERS = 1
@@ -173,7 +177,7 @@ struct State
     GLuint currentProgram;
 
     VertexAttribute vertexAttribute[MAX_VERTEX_ATTRIBS];
-    BindingPointer<Texture> samplerTexture[TEXTURE_TYPE_COUNT][MAX_COMBINED_TEXTURE_IMAGE_UNITS_VTF];
+    BindingPointer<Texture> samplerTexture[TEXTURE_TYPE_COUNT][IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS];
     BindingPointer<Query> activeQuery[QUERY_TYPE_COUNT];
 
     GLint unpackAlignment;
@@ -377,7 +381,6 @@ class Context
     int getMajorShaderModel() const;
     float getMaximumPointSize() const;
     int getMaximumVaryingVectors() const;
-    unsigned int getMaximumVertexTextureImageUnits() const;
     unsigned int getMaximumCombinedTextureImageUnits() const;
     int getMaximumFragmentUniformVectors() const;
     int getMaximumRenderbufferDimension() const;

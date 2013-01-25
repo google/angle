@@ -54,7 +54,7 @@ ProgramBinary::ProgramBinary(rx::Renderer *renderer) : mRenderer(renderer), RefC
         mSamplersPS[index].active = false;
     }
 
-    for (int index = 0; index < MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF; index++)
+    for (int index = 0; index < IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS; index++)
     {
         mSamplersVS[index].active = false;
     }
@@ -989,7 +989,7 @@ void ProgramBinary::applyUniforms()
                     {
                         unsigned int samplerIndex = firstIndex + i;
 
-                        if (samplerIndex < MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF)
+                        if (samplerIndex < IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS)
                         {
                             ASSERT(mSamplersVS[samplerIndex].active);
                             mSamplersVS[samplerIndex].logicalTextureUnit = v[i];
@@ -1573,7 +1573,7 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
         mSamplersPS[i].textureType = (TextureType) textureType;
     }
 
-    for (unsigned int i = 0; i < MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF; ++i)
+    for (unsigned int i = 0; i < IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS; ++i)
     {
         stream.read(&mSamplersVS[i].active);
         stream.read(&mSamplersVS[i].logicalTextureUnit);
@@ -1694,7 +1694,7 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
         stream.write((int) mSamplersPS[i].textureType);
     }
 
-    for (unsigned int i = 0; i < MAX_VERTEX_TEXTURE_IMAGE_UNITS_VTF; ++i)
+    for (unsigned int i = 0; i < IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS; ++i)
     {
         stream.write(mSamplersVS[i].active);
         stream.write(mSamplersVS[i].logicalTextureUnit);
@@ -1937,7 +1937,7 @@ bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, In
         {
             if (shader == GL_VERTEX_SHADER)
             {
-                if (samplerIndex < getContext()->getMaximumVertexTextureImageUnits())
+                if (samplerIndex < mRenderer->getMaxVertexTextureImageUnits())
                 {
                     mSamplersVS[samplerIndex].active = true;
                     mSamplersVS[samplerIndex].textureType = (constant.type == GL_SAMPLER_CUBE) ? TEXTURE_CUBE : TEXTURE_2D;
@@ -1946,7 +1946,7 @@ bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, In
                 }
                 else
                 {
-                    infoLog.append("Vertex shader sampler count exceeds MAX_VERTEX_TEXTURE_IMAGE_UNITS (%d).", getContext()->getMaximumVertexTextureImageUnits());
+                    infoLog.append("Vertex shader sampler count exceeds the maximum vertex texture units (%d).", mRenderer->getMaxVertexTextureImageUnits());
                     return false;
                 }
             }
@@ -2177,9 +2177,9 @@ bool ProgramBinary::validateSamplers(InfoLog *infoLog)
     // DrawArrays and DrawElements will issue the INVALID_OPERATION error.
 
     const unsigned int maxCombinedTextureImageUnits = getContext()->getMaximumCombinedTextureImageUnits();
-    TextureType textureUnitType[MAX_COMBINED_TEXTURE_IMAGE_UNITS_VTF];
+    TextureType textureUnitType[IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS];
 
-    for (unsigned int i = 0; i < MAX_COMBINED_TEXTURE_IMAGE_UNITS_VTF; ++i)
+    for (unsigned int i = 0; i < IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS; ++i)
     {
         textureUnitType[i] = TEXTURE_UNKNOWN;
     }
@@ -2194,7 +2194,7 @@ bool ProgramBinary::validateSamplers(InfoLog *infoLog)
             {
                 if (infoLog)
                 {
-                    infoLog->append("Sampler uniform (%d) exceeds MAX_COMBINED_TEXTURE_IMAGE_UNITS (%d)", unit, maxCombinedTextureImageUnits);
+                    infoLog->append("Sampler uniform (%d) exceeds IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS (%d)", unit, maxCombinedTextureImageUnits);
                 }
 
                 return false;
@@ -2229,7 +2229,7 @@ bool ProgramBinary::validateSamplers(InfoLog *infoLog)
             {
                 if (infoLog)
                 {
-                    infoLog->append("Sampler uniform (%d) exceeds MAX_COMBINED_TEXTURE_IMAGE_UNITS (%d)", unit, maxCombinedTextureImageUnits);
+                    infoLog->append("Sampler uniform (%d) exceeds IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS (%d)", unit, maxCombinedTextureImageUnits);
                 }
 
                 return false;
