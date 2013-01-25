@@ -114,6 +114,7 @@ class Renderer9 : public Renderer
     virtual std::string getRendererDescription() const;
     virtual GUID getAdapterIdentifier() const;
 
+    virtual bool getBGRATextureSupport() const;
     virtual bool getDXT1TextureSupport();
     virtual bool getDXT3TextureSupport();
     virtual bool getDXT5TextureSupport();

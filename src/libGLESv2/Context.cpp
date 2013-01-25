@@ -169,6 +169,7 @@ Context::Context(const gl::Context *shareContext, rx::Renderer *renderer, bool n
     mResetStrategy = (notifyResets ? GL_LOSE_CONTEXT_ON_RESET_EXT : GL_NO_RESET_NOTIFICATION_EXT);
     mRobustAccess = robustAccess;
 
+    mSupportsBGRATextures = false;
     mSupportsDXT1Textures = false;
     mSupportsDXT3Textures = false;
     mSupportsDXT5Textures = false;
@@ -259,6 +260,7 @@ void Context::makeCurrent(egl::Surface *surface)
 
         mSupportsEventQueries = mRenderer->getEventQuerySupport();
         mSupportsOcclusionQueries = mRenderer->getOcclusionQuerySupport();
+        mSupportsBGRATextures = mRenderer->getBGRATextureSupport();
         mSupportsDXT1Textures = mRenderer->getDXT1TextureSupport();
         mSupportsDXT3Textures = mRenderer->getDXT3TextureSupport();
         mSupportsDXT5Textures = mRenderer->getDXT5TextureSupport();
@@ -2154,6 +2156,11 @@ bool Context::supportsOcclusionQueries() const
     return mSupportsOcclusionQueries;
 }
 
+bool Context::supportsBGRATextures() const
+{
+    return mSupportsBGRATextures;
+}
+
 bool Context::supportsDXT1Textures() const
 {
     return mSupportsDXT1Textures;
@@ -2543,7 +2550,11 @@ void Context::initExtensionString()
         extensionString += "GL_EXT_texture_filter_anisotropic ";
     }
 
-    extensionString += "GL_EXT_texture_format_BGRA8888 ";
+    if (supportsBGRATextures())
+    {
+        extensionString += "GL_EXT_texture_format_BGRA8888 ";
+    }
+
     extensionString += "GL_EXT_texture_storage ";
 
     // ANGLE-specific extensions

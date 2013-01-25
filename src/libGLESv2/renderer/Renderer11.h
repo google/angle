@@ -89,6 +89,7 @@ class Renderer11 : public Renderer
     virtual std::string getRendererDescription() const;
     virtual GUID getAdapterIdentifier() const;
 
+    virtual bool getBGRATextureSupport() const;
     virtual bool getDXT1TextureSupport();
     virtual bool getDXT3TextureSupport();
     virtual bool getDXT5TextureSupport();
@@ -280,6 +281,9 @@ class Renderer11 : public Renderer
     DXGI_ADAPTER_DESC mAdapterDescription;
     char mDescription[128];
     IDXGIFactory *mDxgiFactory;
+
+    // Cached device caps
+    bool mBGRATextureSupport;
 };
 
 }

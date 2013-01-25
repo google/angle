@@ -2165,6 +2165,12 @@ void Renderer9::getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray)
     }
 }
 
+bool Renderer9::getBGRATextureSupport() const
+{
+    // DirectX 9 always supports BGRA
+    return true;
+}
+
 bool Renderer9::getDXT1TextureSupport()
 {
     return mDXT1TextureSupport;

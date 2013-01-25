@@ -134,6 +134,7 @@ class Renderer
     virtual std::string getRendererDescription() const = 0;
     virtual GUID getAdapterIdentifier() const = 0;
 
+    virtual bool getBGRATextureSupport() const = 0;
     virtual bool getDXT1TextureSupport() = 0;
     virtual bool getDXT3TextureSupport() = 0;
     virtual bool getDXT5TextureSupport() = 0;

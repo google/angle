@@ -92,6 +92,8 @@ Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(
 
     mDriverConstantBufferVS = NULL;
     mDriverConstantBufferPS = NULL;
+
+    mBGRATextureSupport = false;
 }
 
 Renderer11::~Renderer11()
@@ -227,6 +229,19 @@ EGLint Renderer11::initialize()
     }
 
     initializeDevice();
+
+    // BGRA texture support is optional in feature levels 10 and 10_1
+    UINT formatSupport;
+    result = mDevice->CheckFormatSupport(DXGI_FORMAT_B8G8R8A8_UNORM, &formatSupport);
+    if (FAILED(result))
+    {
+        ERR("Error checking BGRA format support: 0x%08X", result);
+    }
+    else
+    {
+        const int flags = (D3D11_FORMAT_SUPPORT_TEXTURE2D | D3D11_FORMAT_SUPPORT_RENDER_TARGET);
+        mBGRATextureSupport = (formatSupport & flags) == flags;
+    }
 
     return EGL_SUCCESS;
 }
@@ -1750,6 +1765,11 @@ GUID Renderer11::getAdapterIdentifier() const
     // UNIMPLEMENTED();
     GUID foo = {0};
     return foo;
+}
+
+bool Renderer11::getBGRATextureSupport() const
+{
+    return mBGRATextureSupport;
 }
 
 bool Renderer11::getDXT1TextureSupport()

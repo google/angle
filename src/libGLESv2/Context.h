@@ -392,6 +392,7 @@ class Context
     const char *getRendererString() const;
     bool supportsEventQueries() const;
     bool supportsOcclusionQueries() const;
+    bool supportsBGRATextures() const;
     bool supportsDXT1Textures() const;
     bool supportsDXT3Textures() const;
     bool supportsDXT5Textures() const;
@@ -500,6 +501,7 @@ class Context
     float mMaxTextureAnisotropy;
     bool mSupportsEventQueries;
     bool mSupportsOcclusionQueries;
+    bool mSupportsBGRATextures;
     bool mSupportsDXT1Textures;
     bool mSupportsDXT3Textures;
     bool mSupportsDXT5Textures;
