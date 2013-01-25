@@ -321,6 +321,8 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="renderer\ShaderExecutable.h" />
     <ClInclude Include="renderer\ShaderExecutable11.h" />
     <ClInclude Include="renderer\ShaderExecutable9.h" />
+    <ClInclude Include="renderer\shaders\compiled\clear11ps.h" />
+    <ClInclude Include="renderer\shaders\compiled\clear11vs.h" />
     <ClInclude Include="renderer\shaders\compiled\componentmaskps.h" />
     <ClInclude Include="renderer\shaders\compiled\flipyvs.h" />
     <ClInclude Include="renderer\shaders\compiled\luminanceps.h" />
@@ -355,6 +357,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <None Include="libGLESv2.def" />
     <None Include="renderer\shaders\Blit.ps" />
     <None Include="renderer\shaders\Blit.vs" />
+    <None Include="renderer\shaders\Clear11.hlsl" />
     <None Include="renderer\shaders\generate_shaders.bat" />
     <None Include="renderer\shaders\Passthrough11.hlsl" />
   </ItemGroup>

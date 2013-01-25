@@ -391,6 +391,12 @@
     <ClInclude Include="renderer\shaders\compiled\passthroughlumalpha11ps.h">
       <Filter>Renderer\Shaders\Compiled</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\clear11ps.h">
+      <Filter>Renderer\Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\clear11vs.h">
+      <Filter>Renderer\Shaders\Compiled</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="libGLESv2.def">
@@ -406,6 +412,9 @@
       <Filter>Renderer\Shaders</Filter>
     </None>
     <None Include="renderer\shaders\Passthrough11.hlsl">
+      <Filter>Renderer\Shaders</Filter>
+    </None>
+    <None Include="renderer\shaders\Clear11.hlsl">
       <Filter>Renderer\Shaders</Filter>
     </None>
   </ItemGroup>

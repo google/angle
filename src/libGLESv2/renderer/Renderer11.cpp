@@ -32,6 +32,9 @@
 #include "libGLESv2/renderer/shaders/compiled/passthroughlum11ps.h"
 #include "libGLESv2/renderer/shaders/compiled/passthroughlumalpha11ps.h"
 
+#include "libGLESv2/renderer/shaders/compiled/clear11vs.h"
+#include "libGLESv2/renderer/shaders/compiled/clear11ps.h"
+
 #include <sstream>
 
 namespace rx
@@ -68,6 +71,14 @@ Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(
     mCopyRGBPS = NULL;
     mCopyLumPS = NULL;
     mCopyLumAlphaPS = NULL;
+
+    mClearResourcesInitialized = false;
+    mClearVB = NULL;
+    mClearIL = NULL;
+    mClearVS = NULL;
+    mClearPS = NULL;
+    mClearScissorRS = NULL;
+    mClearNoScissorRS = NULL;
 
     mD3d11Module = NULL;
     mDxgiModule = NULL;
@@ -1220,8 +1231,7 @@ void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *
 
      if (needMaskedColorClear || needMaskedStencilClear || needScissoredClear)
      {
-         // TODO
-         UNIMPLEMENTED();
+         maskedClear(clearParams);
      }
      else
      {
@@ -1291,6 +1301,166 @@ void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *
             }
         }
     }
+}
+
+void Renderer11::maskedClear(const gl::ClearParameters &clearParams)
+{
+    HRESULT result;
+
+    if (!mClearResourcesInitialized)
+    {
+        ASSERT(!mClearVB && !mClearVS && !mClearPS && !mClearScissorRS && !mClearNoScissorRS);
+
+        D3D11_BUFFER_DESC vbDesc;
+        vbDesc.ByteWidth = sizeof(d3d11::PositionDepthColorVertex) * 4;
+        vbDesc.Usage = D3D11_USAGE_DYNAMIC;
+        vbDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+        vbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+        vbDesc.MiscFlags = 0;
+        vbDesc.StructureByteStride = 0;
+
+        result = mDevice->CreateBuffer(&vbDesc, NULL, &mClearVB);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mClearVB, "Renderer11 masked clear vertex buffer");
+
+        D3D11_INPUT_ELEMENT_DESC quadLayout[] =
+        {
+            { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        };
+
+        result = mDevice->CreateInputLayout(quadLayout, 2, g_VS_Clear, sizeof(g_VS_Clear), &mClearIL);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mClearIL, "Renderer11 masked clear input layout");
+
+        result = mDevice->CreateVertexShader(g_VS_Clear, sizeof(g_VS_Clear), NULL, &mClearVS);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mClearVS, "Renderer11 masked clear vertex shader");
+
+        result = mDevice->CreatePixelShader(g_PS_Clear, sizeof(g_PS_Clear), NULL, &mClearPS);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mClearPS, "Renderer11 masked clear pixel shader");
+
+        D3D11_RASTERIZER_DESC rsScissorDesc;
+        rsScissorDesc.FillMode = D3D11_FILL_SOLID;
+        rsScissorDesc.CullMode = D3D11_CULL_NONE;
+        rsScissorDesc.FrontCounterClockwise = FALSE;
+        rsScissorDesc.DepthBias = 0;
+        rsScissorDesc.DepthBiasClamp = 0.0f;
+        rsScissorDesc.SlopeScaledDepthBias = 0.0f;
+        rsScissorDesc.DepthClipEnable = FALSE;
+        rsScissorDesc.ScissorEnable = TRUE;
+        rsScissorDesc.MultisampleEnable = FALSE;
+        rsScissorDesc.AntialiasedLineEnable = FALSE;
+
+        result = mDevice->CreateRasterizerState(&rsScissorDesc, &mClearScissorRS);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mClearScissorRS, "Renderer11 masked clear scissor rasterizer state");
+
+        D3D11_RASTERIZER_DESC rsNoScissorDesc;
+        rsNoScissorDesc.FillMode = D3D11_FILL_SOLID;
+        rsNoScissorDesc.CullMode = D3D11_CULL_NONE;
+        rsNoScissorDesc.FrontCounterClockwise = FALSE;
+        rsNoScissorDesc.DepthBias = 0;
+        rsNoScissorDesc.DepthBiasClamp = 0.0f;
+        rsNoScissorDesc.SlopeScaledDepthBias = 0.0f;
+        rsNoScissorDesc.DepthClipEnable = FALSE;
+        rsNoScissorDesc.ScissorEnable = FALSE;
+        rsNoScissorDesc.MultisampleEnable = FALSE;
+        rsNoScissorDesc.AntialiasedLineEnable = FALSE;
+
+        result = mDevice->CreateRasterizerState(&rsNoScissorDesc, &mClearNoScissorRS);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mClearNoScissorRS, "Renderer11 masked clear no scissor rasterizer state");
+
+        mClearResourcesInitialized = true;
+    }
+
+    // Prepare the depth stencil state to write depth values if the depth should be cleared
+    // and stencil values if the stencil should be cleared
+    gl::DepthStencilState glDSState;
+    glDSState.depthTest = (clearParams.mask & GL_DEPTH_BUFFER_BIT) != 0;
+    glDSState.depthFunc = GL_ALWAYS;
+    glDSState.depthMask = (clearParams.mask & GL_DEPTH_BUFFER_BIT) != 0;
+    glDSState.stencilTest = (clearParams.mask & GL_STENCIL_BUFFER_BIT) != 0;
+    glDSState.stencilFunc = GL_ALWAYS;
+    glDSState.stencilMask = 0;
+    glDSState.stencilFail = GL_REPLACE;
+    glDSState.stencilPassDepthFail = GL_REPLACE;
+    glDSState.stencilPassDepthPass = GL_REPLACE;
+    glDSState.stencilWritemask = clearParams.stencilWriteMask;
+    glDSState.stencilBackFunc = GL_ALWAYS;
+    glDSState.stencilBackMask = 0;
+    glDSState.stencilBackFail = GL_REPLACE;
+    glDSState.stencilBackPassDepthFail = GL_REPLACE;
+    glDSState.stencilBackPassDepthPass = GL_REPLACE;
+    glDSState.stencilBackWritemask = clearParams.stencilWriteMask;
+
+    int stencilClear = clearParams.stencilClearValue & 0x000000FF;
+
+    ID3D11DepthStencilState *dsState = mStateCache.getDepthStencilState(glDSState);
+
+    // Prepare the blend state to use a write mask if the color buffer should be cleared
+    gl::BlendState glBlendState;
+    glBlendState.blend = false;
+    glBlendState.sourceBlendRGB = GL_ONE;
+    glBlendState.destBlendRGB = GL_ZERO;
+    glBlendState.sourceBlendAlpha = GL_ONE;
+    glBlendState.destBlendAlpha = GL_ZERO;
+    glBlendState.blendEquationRGB = GL_FUNC_ADD;
+    glBlendState.blendEquationAlpha = GL_FUNC_ADD;
+    glBlendState.colorMaskRed = (clearParams.mask & GL_COLOR_BUFFER_BIT) ? clearParams.colorMaskRed : false;
+    glBlendState.colorMaskGreen = (clearParams.mask & GL_COLOR_BUFFER_BIT) ? clearParams.colorMaskGreen : false;
+    glBlendState.colorMaskBlue = (clearParams.mask & GL_COLOR_BUFFER_BIT) ? clearParams.colorMaskBlue : false;
+    glBlendState.colorMaskBlue = (clearParams.mask & GL_COLOR_BUFFER_BIT) ? clearParams.colorMaskBlue : false;
+    glBlendState.sampleAlphaToCoverage = false;
+    glBlendState.dither = false;
+
+    static const float blendFactors[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    static const UINT sampleMask = 0xFFFFFFFF;
+
+    ID3D11BlendState *blendState = mStateCache.getBlendState(glBlendState);
+
+    // Set the vertices
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    result = mDeviceContext->Map(mClearVB, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    if (FAILED(result))
+    {
+        ERR("Failed to map masked clear vertex buffer, HRESULT: 0x%X.", result);
+        return;
+    }
+
+    d3d11::PositionDepthColorVertex *vertices = reinterpret_cast<d3d11::PositionDepthColorVertex*>(mappedResource.pData);
+
+    float depthClear = gl::clamp01(clearParams.depthClearValue);
+    d3d11::SetPositionDepthColorVertex(&vertices[0], -1.0f,  1.0f, depthClear, clearParams.colorClearValue);
+    d3d11::SetPositionDepthColorVertex(&vertices[1], -1.0f, -1.0f, depthClear, clearParams.colorClearValue);
+    d3d11::SetPositionDepthColorVertex(&vertices[2],  1.0f,  1.0f, depthClear, clearParams.colorClearValue);
+    d3d11::SetPositionDepthColorVertex(&vertices[3],  1.0f, -1.0f, depthClear, clearParams.colorClearValue);
+
+    mDeviceContext->Unmap(mClearVB, 0);
+
+    // Apply state
+    mDeviceContext->OMSetBlendState(blendState, blendFactors, sampleMask);
+    mDeviceContext->OMSetDepthStencilState(dsState, stencilClear);
+    mDeviceContext->RSSetState(mScissorEnabled ? mClearScissorRS : mClearNoScissorRS);
+
+    // Apply shaders
+    mDeviceContext->IASetInputLayout(mClearIL);
+    mDeviceContext->VSSetShader(mClearVS, NULL, 0);
+    mDeviceContext->PSSetShader(mClearPS, NULL, 0);
+
+    // Apply vertex buffer
+    static UINT stride = sizeof(d3d11::PositionDepthColorVertex);
+    static UINT startIdx = 0;
+    mDeviceContext->IASetVertexBuffers(0, 1, &mClearVB, &stride, &startIdx);
+    mDeviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+    // Draw the clear quad
+    mDeviceContext->Draw(4, 0);
+
+    // Clean up
+    markAllStateDirty();
 }
 
 void Renderer11::markAllStateDirty()
@@ -1391,6 +1561,44 @@ void Renderer11::releaseDeviceResources()
     }
 
     mCopyResourcesInitialized = false;
+
+    if (mClearVB)
+    {
+        mClearVB->Release();
+        mClearVB = NULL;
+    }
+
+    if (mClearIL)
+    {
+        mClearIL->Release();
+        mClearIL = NULL;
+    }
+
+    if (mClearVS)
+    {
+        mClearVS->Release();
+        mClearVS = NULL;
+    }
+
+    if (mClearPS)
+    {
+        mClearPS->Release();
+        mClearPS = NULL;
+    }
+
+    if (mClearScissorRS)
+    {
+        mClearScissorRS->Release();
+        mClearScissorRS = NULL;
+    }
+
+    if (mClearNoScissorRS)
+    {
+        mClearNoScissorRS->Release();
+        mClearNoScissorRS = NULL;
+    }
+
+    mClearResourcesInitialized = false;
 }
 
 void Renderer11::markDeviceLost()

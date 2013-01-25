@@ -57,6 +57,14 @@ struct PositionTexCoordVertex
 };
 void SetPositionTexCoordVertex(PositionTexCoordVertex* vertex, float x, float y, float u, float v);
 
+struct PositionDepthColorVertex
+{
+    float x, y, z;
+    float r, g, b, a;
+};
+void SetPositionDepthColorVertex(PositionDepthColorVertex* vertex, float x, float y, float z,
+                                 const gl::Color &color);
+
 size_t ComputePixelSizeBits(DXGI_FORMAT format);
 size_t ComputeBlockSizeBits(DXGI_FORMAT format);
 

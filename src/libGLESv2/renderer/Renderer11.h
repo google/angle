@@ -168,6 +168,8 @@ class Renderer11 : public Renderer
                          GLenum format, GLenum type, GLsizei outputPitch, bool packReverseRowOrder,
                          GLint packAlignment, void *pixels);
 
+    void maskedClear(const gl::ClearParameters &clearParams);
+
     HMODULE mD3d11Module;
     HMODULE mDxgiModule;
     HDC mDc;
@@ -255,6 +257,15 @@ class Renderer11 : public Renderer
     ID3D11PixelShader *mCopyRGBPS;
     ID3D11PixelShader *mCopyLumPS;
     ID3D11PixelShader *mCopyLumAlphaPS;
+
+    // Masked clear resources
+    bool mClearResourcesInitialized;
+    ID3D11Buffer *mClearVB;
+    ID3D11InputLayout *mClearIL;
+    ID3D11VertexShader *mClearVS;
+    ID3D11PixelShader *mClearPS;
+    ID3D11RasterizerState *mClearScissorRS;
+    ID3D11RasterizerState *mClearNoScissorRS;
 
     ID3D11Device *mDevice;
     D3D_FEATURE_LEVEL mFeatureLevel;

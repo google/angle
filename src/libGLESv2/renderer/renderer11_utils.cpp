@@ -384,6 +384,18 @@ void SetPositionTexCoordVertex(PositionTexCoordVertex* vertex, float x, float y,
     vertex->v = v;
 }
 
+void SetPositionDepthColorVertex(PositionDepthColorVertex* vertex, float x, float y, float z,
+                                 const gl::Color &color)
+{
+    vertex->x = x;
+    vertex->y = y;
+    vertex->z = z;
+    vertex->r = color.red;
+    vertex->g = color.green;
+    vertex->b = color.blue;
+    vertex->a = color.alpha;
+}
+
 size_t ComputePixelSizeBits(DXGI_FORMAT format)
 {
     switch (format)
