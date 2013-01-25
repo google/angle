@@ -146,6 +146,8 @@
       ],
       'conditions': [
         ['OS=="win"', {
+          # TODO(jschuh): http://crbug.com/167187 size_t -> int
+          'msvs_disabled_warnings': [ 4267 ],
           'sources': ['compiler/ossource_win.cpp'],
         }, { # else: posix
           'sources': ['compiler/ossource_posix.cpp'],
@@ -179,6 +181,8 @@
         'compiler/VersionGLSL.cpp',
         'compiler/VersionGLSL.h',
       ],
+      # TODO(jschuh): http://crbug.com/167187 size_t -> int
+      'msvs_disabled_warnings': [ 4267 ],
     },
   ],
   'conditions': [
@@ -209,6 +213,8 @@
             'compiler/SearchSymbol.cpp',
             'compiler/SearchSymbol.h',
           ],
+          # TODO(jschuh): http://crbug.com/167187 size_t -> int
+          'msvs_disabled_warnings': [ 4267 ],
         },
         {
           'target_name': 'libGLESv2',
@@ -330,6 +336,8 @@
             'libGLESv2/utilities.cpp',
             'libGLESv2/utilities.h',
           ],
+          # TODO(jschuh): http://crbug.com/167187 size_t -> int
+          'msvs_disabled_warnings': [ 4267 ],
           'msvs_settings': {
             'VCLinkerTool': {
               'AdditionalLibraryDirectories': ['$(DXSDK_DIR)/lib/x86'],
@@ -368,6 +376,8 @@
             'libEGL/Surface.cpp',
             'libEGL/Surface.h',
           ],
+          # TODO(jschuh): http://crbug.com/167187 size_t -> int
+          'msvs_disabled_warnings': [ 4267 ],
           'msvs_settings': {
             'VCLinkerTool': {
               'AdditionalLibraryDirectories': ['$(DXSDK_DIR)/lib/x86'],
