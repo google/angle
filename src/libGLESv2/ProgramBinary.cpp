@@ -1010,6 +1010,8 @@ int ProgramBinary::packVaryings(InfoLog &infoLog, const Varying *packing[][4], F
 {
     const int maxVaryingVectors = mRenderer->getMaxVaryingVectors();
 
+    fragmentShader->resetVaryingsRegisterAssignment();
+
     for (VaryingList::iterator varying = fragmentShader->mVaryings.begin(); varying != fragmentShader->mVaryings.end(); varying++)
     {
         int n = VariableRowCount(varying->type) * varying->size;
@@ -1153,31 +1155,11 @@ int ProgramBinary::packVaryings(InfoLog &infoLog, const Varying *packing[][4], F
     return registers;
 }
 
-bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::string& vertexHLSL, FragmentShader *fragmentShader, VertexShader *vertexShader)
+bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying *packing[][4],
+                                 std::string& pixelHLSL, std::string& vertexHLSL,
+                                 FragmentShader *fragmentShader, VertexShader *vertexShader)
 {
     if (pixelHLSL.empty() || vertexHLSL.empty())
-    {
-        return false;
-    }
-
-    // Reset the varying register assignments
-    for (VaryingList::iterator fragVar = fragmentShader->mVaryings.begin(); fragVar != fragmentShader->mVaryings.end(); fragVar++)
-    {
-        fragVar->reg = -1;
-        fragVar->col = -1;
-    }
-
-    for (VaryingList::iterator vtxVar = vertexShader->mVaryings.begin(); vtxVar != vertexShader->mVaryings.end(); vtxVar++)
-    {
-        vtxVar->reg = -1;
-        vtxVar->col = -1;
-    }
-
-    // Map the varyings to the register file
-    const Varying *packing[IMPLEMENTATION_MAX_VARYING_VECTORS][4] = {NULL};
-    int registers = packVaryings(infoLog, packing, fragmentShader);
-
-    if (registers < 0)
     {
         return false;
     }
@@ -1192,6 +1174,8 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
 
         return false;
     }
+
+    vertexShader->resetVaryingsRegisterAssignment();
 
     for (VaryingList::iterator input = fragmentShader->mVaryings.begin(); input != fragmentShader->mVaryings.end(); input++)
     {
@@ -1801,7 +1785,16 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
     std::string pixelHLSL = fragmentShader->getHLSL();
     std::string vertexHLSL = vertexShader->getHLSL();
 
-    if (!linkVaryings(infoLog, pixelHLSL, vertexHLSL, fragmentShader, vertexShader))
+    // Map the varyings to the register file
+    const Varying *packing[IMPLEMENTATION_MAX_VARYING_VECTORS][4] = {NULL};
+    int registers = packVaryings(infoLog, packing, fragmentShader);
+
+    if (registers < 0)
+    {
+        return false;
+    }
+
+    if (!linkVaryings(infoLog, registers, packing, pixelHLSL, vertexHLSL, fragmentShader, vertexShader))
     {
         return false;
     }

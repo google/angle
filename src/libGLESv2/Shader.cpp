@@ -301,6 +301,15 @@ void Shader::parseVaryings()
     }
 }
 
+void Shader::resetVaryingsRegisterAssignment()
+{
+    for (VaryingList::iterator var = mVaryings.begin(); var != mVaryings.end(); var++)
+    {
+        var->reg = -1;
+        var->col = -1;
+    }
+}
+
 // initialize/clean up previous state
 void Shader::uncompile()
 {

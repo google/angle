@@ -108,7 +108,9 @@ class ProgramBinary : public RefCountObject
     DISALLOW_COPY_AND_ASSIGN(ProgramBinary);
 
     int packVaryings(InfoLog &infoLog, const Varying *packing[][4], FragmentShader *fragmentShader);
-    bool linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::string& vertexHLSL, FragmentShader *fragmentShader, VertexShader *vertexShader);
+    bool linkVaryings(InfoLog &infoLog, int registers, const Varying *packing[][4],
+                      std::string& pixelHLSL, std::string& vertexHLSL,
+                      FragmentShader *fragmentShader, VertexShader *vertexShader);
 
     bool linkAttributes(InfoLog &infoLog, const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader);
 

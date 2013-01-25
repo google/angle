@@ -83,6 +83,7 @@ class Shader
 
   protected:
     void parseVaryings();
+    void resetVaryingsRegisterAssignment();
 
     void compileToHLSL(void *compiler);
 
