@@ -1043,13 +1043,16 @@ void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
     }
 }
 
-void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, const gl::UniformArray *uniformArray)
+void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArray *uniformArray)
 {
     ShaderExecutable11 *vertexExecutable = ShaderExecutable11::makeShaderExecutable11(programBinary->getVertexExecutable());
     ShaderExecutable11 *pixelExecutable = ShaderExecutable11::makeShaderExecutable11(programBinary->getPixelExecutable());
 
     unsigned int totalRegisterCountVS = 0;
     unsigned int totalRegisterCountPS = 0;
+
+    bool vertexUniformsDirty = false;
+    bool pixelUniformsDirty = false;
 
     for (gl::UniformArray::const_iterator uniform_iterator = uniformArray->begin(); uniform_iterator != uniformArray->end(); uniform_iterator++)
     {
@@ -1058,23 +1061,25 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, const gl::Unifo
         if (uniform->vsRegisterIndex >= 0)
         {
             totalRegisterCountVS += uniform->registerCount;
+            vertexUniformsDirty = vertexUniformsDirty || uniform->dirty;
         }
 
         if (uniform->psRegisterIndex >= 0)
         {
             totalRegisterCountPS += uniform->registerCount;
+            pixelUniformsDirty = pixelUniformsDirty || uniform->dirty;
         }
     }
 
     ID3D11Buffer *vertexConstantBuffer = vertexExecutable->getConstantBuffer(mDevice, totalRegisterCountVS);
     ID3D11Buffer *pixelConstantBuffer = pixelExecutable->getConstantBuffer(mDevice, totalRegisterCountPS);
 
-    void *mapVS = new float[4 * totalRegisterCountVS];
-    void *mapPS = new float[4 * totalRegisterCountPS];
+    void *mapVS = (totalRegisterCountVS > 0 && vertexUniformsDirty) ? new float[4 * totalRegisterCountVS] : NULL;
+    void *mapPS = (totalRegisterCountPS > 0 && pixelUniformsDirty) ? new float[4 * totalRegisterCountPS] : NULL;
 
-    for (gl::UniformArray::const_iterator uniform_iterator = uniformArray->begin(); uniform_iterator != uniformArray->end(); uniform_iterator++)
+    for (gl::UniformArray::iterator uniform_iterator = uniformArray->begin(); uniform_iterator != uniformArray->end(); uniform_iterator++)
     {
-        const gl::Uniform *uniform = *uniform_iterator;
+        gl::Uniform *uniform = *uniform_iterator;
 
         switch (uniform->type)
         {
@@ -1088,7 +1093,7 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, const gl::Unifo
           case GL_FLOAT_MAT2:
           case GL_FLOAT_MAT3:
           case GL_FLOAT_MAT4:
-            if (uniform->vsRegisterIndex >= 0)
+            if (uniform->vsRegisterIndex >= 0 && mapVS)
             {
                 GLfloat (*c)[4] = (GLfloat(*)[4])mapVS;
                 float (*f)[4] = (float(*)[4])uniform->data;
@@ -1101,7 +1106,7 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, const gl::Unifo
                     c[uniform->vsRegisterIndex + i][3] = f[i][3];
                 }
             }
-            if (uniform->psRegisterIndex >= 0)
+            if (uniform->psRegisterIndex >= 0 && mapPS)
             {
                 GLfloat (*c)[4] = (GLfloat(*)[4])mapPS;
                 float (*f)[4] = (float(*)[4])uniform->data;
@@ -1119,7 +1124,7 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, const gl::Unifo
           case GL_INT_VEC2:
           case GL_INT_VEC3:
           case GL_INT_VEC4:
-            if (uniform->vsRegisterIndex >= 0)
+            if (uniform->vsRegisterIndex >= 0 && mapVS)
             {
                 int (*c)[4] = (int(*)[4])mapVS;
                 GLint *x = (GLint*)uniform->data;
@@ -1133,7 +1138,7 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, const gl::Unifo
                     if (count >= 4) c[uniform->vsRegisterIndex + i][3] = x[i * count + 3];
                 }
             }
-            if (uniform->psRegisterIndex >= 0)
+            if (uniform->psRegisterIndex >= 0 && mapPS)
             {
                 int (*c)[4] = (int(*)[4])mapPS;
                 GLint *x = (GLint*)uniform->data;
@@ -1152,7 +1157,7 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, const gl::Unifo
           case GL_BOOL_VEC2:
           case GL_BOOL_VEC3:
           case GL_BOOL_VEC4:
-            if (uniform->vsRegisterIndex >= 0)
+            if (uniform->vsRegisterIndex >= 0 && mapVS)
             {
                 int (*c)[4] = (int(*)[4])mapVS;
                 GLboolean *b = (GLboolean*)uniform->data;
@@ -1166,7 +1171,7 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, const gl::Unifo
                     if (count >= 4) c[uniform->vsRegisterIndex + i][3] = b[i * count + 3];
                 }
             }
-            if (uniform->psRegisterIndex >= 0)
+            if (uniform->psRegisterIndex >= 0 && mapPS)
             {
                 int (*c)[4] = (int(*)[4])mapPS;
                 GLboolean *b = (GLboolean*)uniform->data;
@@ -1184,14 +1189,16 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, const gl::Unifo
           default:
             UNREACHABLE();
         }
+
+        uniform->dirty = false;
     }
 
-    if (vertexConstantBuffer)
+    if (vertexConstantBuffer && mapVS)
     {
         mDeviceContext->UpdateSubresource(vertexConstantBuffer, 0, NULL, mapVS, 0, 0);
     }
 
-    if (pixelConstantBuffer)
+    if (pixelConstantBuffer && mapPS)
     {
         mDeviceContext->UpdateSubresource(pixelConstantBuffer, 0, NULL, mapPS, 0, 0);
     }
