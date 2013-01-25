@@ -93,9 +93,7 @@ bool Image11::redefine(Renderer *renderer, GLint internalformat, GLsizei width, 
 
 bool Image11::isRenderableFormat() const
 {
-    // TODO - relies on TextureStorage11 implementation
-    UNIMPLEMENTED();
-    return false;
+    return TextureStorage11::IsTextureFormatRenderable(mDXGIFormat);
 }
 
 DXGI_FORMAT Image11::getDXGIFormat() const
