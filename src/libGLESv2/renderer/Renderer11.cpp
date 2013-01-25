@@ -1058,28 +1058,36 @@ void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
 
 void Renderer11::applyUniforms(const gl::UniformArray *uniformArray)
 {
-    D3D11_BUFFER_DESC constantBufferDescription = {0};
-    constantBufferDescription.ByteWidth = D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT * sizeof(float[4]);
-    constantBufferDescription.Usage = D3D11_USAGE_DYNAMIC;
-    constantBufferDescription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-    constantBufferDescription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    constantBufferDescription.MiscFlags = 0;
-    constantBufferDescription.StructureByteStride = 0;
+    D3D11_BUFFER_DESC constantBufferDescriptionVS0 = {0};
+    constantBufferDescriptionVS0.ByteWidth = D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT * sizeof(float[4]);
+    constantBufferDescriptionVS0.Usage = D3D11_USAGE_DYNAMIC;
+    constantBufferDescriptionVS0.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    constantBufferDescriptionVS0.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    constantBufferDescriptionVS0.MiscFlags = 0;
+    constantBufferDescriptionVS0.StructureByteStride = 0;
 
-    ID3D11Buffer *constantBufferVS = NULL;
-    HRESULT result = mDevice->CreateBuffer(&constantBufferDescription, NULL, &constantBufferVS);
+    ID3D11Buffer *constantBufferVS0 = NULL;
+    HRESULT result = mDevice->CreateBuffer(&constantBufferDescriptionVS0, NULL, &constantBufferVS0);
     ASSERT(SUCCEEDED(result));
 
-    ID3D11Buffer *constantBufferPS = NULL;
-    result = mDevice->CreateBuffer(&constantBufferDescription, NULL, &constantBufferPS);
+    D3D11_BUFFER_DESC constantBufferDescriptionPS0 = {0};
+    constantBufferDescriptionPS0.ByteWidth = D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT * sizeof(float[4]);
+    constantBufferDescriptionPS0.Usage = D3D11_USAGE_DYNAMIC;
+    constantBufferDescriptionPS0.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    constantBufferDescriptionPS0.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    constantBufferDescriptionPS0.MiscFlags = 0;
+    constantBufferDescriptionPS0.StructureByteStride = 0;
+
+    ID3D11Buffer *constantBufferPS0 = NULL;
+    result = mDevice->CreateBuffer(&constantBufferDescriptionPS0, NULL, &constantBufferPS0);
     ASSERT(SUCCEEDED(result));
 
-    D3D11_MAPPED_SUBRESOURCE mapVS = {0};
-    result = mDeviceContext->Map(constantBufferVS, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapVS);
+    D3D11_MAPPED_SUBRESOURCE mapVS0 = {0};
+    result = mDeviceContext->Map(constantBufferVS0, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapVS0);
     ASSERT(SUCCEEDED(result));
 
-    D3D11_MAPPED_SUBRESOURCE mapPS = {0};
-    result = mDeviceContext->Map(constantBufferPS, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapPS);
+    D3D11_MAPPED_SUBRESOURCE mapPS0 = {0};
+    result = mDeviceContext->Map(constantBufferPS0, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapPS0);
     ASSERT(SUCCEEDED(result));
 
     for (gl::UniformArray::const_iterator uniform_iterator = uniformArray->begin(); uniform_iterator != uniformArray->end(); uniform_iterator++)
@@ -1100,7 +1108,7 @@ void Renderer11::applyUniforms(const gl::UniformArray *uniformArray)
           case GL_FLOAT_MAT4:
             if (uniform->vsRegisterIndex >= 0)
             {
-                GLfloat (*c)[4] = (GLfloat(*)[4])mapVS.pData;
+                GLfloat (*c)[4] = (GLfloat(*)[4])mapVS0.pData;
                 float (*f)[4] = (float(*)[4])uniform->data;
 
                 for (unsigned int i = 0; i < uniform->registerCount; i++)
@@ -1113,7 +1121,7 @@ void Renderer11::applyUniforms(const gl::UniformArray *uniformArray)
             }
             if (uniform->psRegisterIndex >= 0)
             {
-                GLfloat (*c)[4] = (GLfloat(*)[4])mapPS.pData;
+                GLfloat (*c)[4] = (GLfloat(*)[4])mapPS0.pData;
                 float (*f)[4] = (float(*)[4])uniform->data;
 
                 for (unsigned int i = 0; i < uniform->registerCount; i++)
@@ -1131,7 +1139,7 @@ void Renderer11::applyUniforms(const gl::UniformArray *uniformArray)
           case GL_INT_VEC4:
             if (uniform->vsRegisterIndex >= 0)
             {
-                int (*c)[4] = (int(*)[4])mapVS.pData;
+                int (*c)[4] = (int(*)[4])mapVS0.pData;
                 GLint *x = (GLint*)uniform->data;
                 int count = gl::VariableColumnCount(uniform->type);
 
@@ -1145,7 +1153,7 @@ void Renderer11::applyUniforms(const gl::UniformArray *uniformArray)
             }
             if (uniform->psRegisterIndex >= 0)
             {
-                int (*c)[4] = (int(*)[4])mapPS.pData;
+                int (*c)[4] = (int(*)[4])mapPS0.pData;
                 GLint *x = (GLint*)uniform->data;
                 int count = gl::VariableColumnCount(uniform->type);
 
@@ -1164,7 +1172,7 @@ void Renderer11::applyUniforms(const gl::UniformArray *uniformArray)
           case GL_BOOL_VEC4:
             if (uniform->vsRegisterIndex >= 0)
             {
-                int (*c)[4] = (int(*)[4])mapVS.pData;
+                int (*c)[4] = (int(*)[4])mapVS0.pData;
                 GLboolean *b = (GLboolean*)uniform->data;
                 int count = gl::VariableColumnCount(uniform->type);
 
@@ -1178,7 +1186,7 @@ void Renderer11::applyUniforms(const gl::UniformArray *uniformArray)
             }
             if (uniform->psRegisterIndex >= 0)
             {
-                int (*c)[4] = (int(*)[4])mapPS.pData;
+                int (*c)[4] = (int(*)[4])mapPS0.pData;
                 GLboolean *b = (GLboolean*)uniform->data;
                 int count = gl::VariableColumnCount(uniform->type);
 
@@ -1196,17 +1204,57 @@ void Renderer11::applyUniforms(const gl::UniformArray *uniformArray)
         }
     }
 
+    mDeviceContext->Unmap(constantBufferVS0, 0);
+    mDeviceContext->Unmap(constantBufferPS0, 0);
+
     // Driver uniforms
-    memcpy(mapVS.pData, &mVertexConstants, sizeof(dx_VertexConstants));
-    memcpy(mapPS.pData, &mPixelConstants, sizeof(dx_PixelConstants));
+    D3D11_BUFFER_DESC constantBufferDescriptionVS1 = {0};
+    constantBufferDescriptionVS1.ByteWidth = sizeof(dx_VertexConstants);
+    constantBufferDescriptionVS1.Usage = D3D11_USAGE_DYNAMIC;
+    constantBufferDescriptionVS1.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    constantBufferDescriptionVS1.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    constantBufferDescriptionVS1.MiscFlags = 0;
+    constantBufferDescriptionVS1.StructureByteStride = 0;
 
-    mDeviceContext->Unmap(constantBufferVS, 0);
-    mDeviceContext->VSSetConstantBuffers(0, 1, &constantBufferVS);
-    constantBufferVS->Release();
+    ID3D11Buffer *constantBufferVS1 = NULL;
+    result = mDevice->CreateBuffer(&constantBufferDescriptionVS1, NULL, &constantBufferVS1);
+    ASSERT(SUCCEEDED(result));
 
-    mDeviceContext->Unmap(constantBufferPS, 0);
-    mDeviceContext->PSSetConstantBuffers(0, 1, &constantBufferPS);
-    constantBufferPS->Release();
+    D3D11_BUFFER_DESC constantBufferDescriptionPS1 = {0};
+    constantBufferDescriptionPS1.ByteWidth = sizeof(dx_PixelConstants);
+    constantBufferDescriptionPS1.Usage = D3D11_USAGE_DYNAMIC;
+    constantBufferDescriptionPS1.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    constantBufferDescriptionPS1.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    constantBufferDescriptionPS1.MiscFlags = 0;
+    constantBufferDescriptionPS1.StructureByteStride = 0;
+
+    ID3D11Buffer *constantBufferPS1 = NULL;
+    result = mDevice->CreateBuffer(&constantBufferDescriptionPS1, NULL, &constantBufferPS1);
+    ASSERT(SUCCEEDED(result));
+
+    D3D11_MAPPED_SUBRESOURCE mapVS1 = {0};
+    result = mDeviceContext->Map(constantBufferVS1, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapVS1);
+    ASSERT(SUCCEEDED(result));
+
+    D3D11_MAPPED_SUBRESOURCE mapPS1 = {0};
+    result = mDeviceContext->Map(constantBufferPS1, 0, D3D11_MAP_WRITE_DISCARD, 0, &mapPS1);
+    ASSERT(SUCCEEDED(result));
+
+    memcpy(mapVS1.pData, &mVertexConstants, sizeof(dx_VertexConstants));
+    memcpy(mapPS1.pData, &mPixelConstants, sizeof(dx_PixelConstants));
+
+    mDeviceContext->Unmap(constantBufferVS1, 0);
+    mDeviceContext->Unmap(constantBufferPS1, 0);
+
+    ID3D11Buffer *buffersVS[2] = {constantBufferVS0, constantBufferVS1};
+    mDeviceContext->VSSetConstantBuffers(0, 2, buffersVS);
+    constantBufferVS0->Release();
+    constantBufferVS1->Release();
+    
+    ID3D11Buffer *buffersPS[2] = {constantBufferPS0, constantBufferPS1};
+    mDeviceContext->PSSetConstantBuffers(0, 2, buffersPS);
+    constantBufferPS0->Release();
+    constantBufferPS1->Release();
 }
 
 void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer)

@@ -92,13 +92,20 @@ OutputHLSL::OutputHLSL(TParseContext &context, ShShaderOutput outputType)
 
     mExcessiveLoopIndex = NULL;
 
-    if (mContext.shaderType == SH_FRAGMENT_SHADER)
+    if (mOutputType == SH_HLSL9_OUTPUT)
     {
-        mUniformRegister = 3;   // Reserve registers for dx_DepthRange, dx_Coord and dx_DepthFront
+        if (mContext.shaderType == SH_FRAGMENT_SHADER)
+        {
+            mUniformRegister = 3;   // Reserve registers for dx_DepthRange, dx_Coord and dx_DepthFront
+        }
+        else
+        {
+            mUniformRegister = 2;   // Reserve registers for dx_DepthRange and dx_HalfPixelSize
+        }
     }
     else
     {
-        mUniformRegister = 2;   // Reserve registers for dx_DepthRange and dx_HalfPixelSize
+        mUniformRegister = 0;
     }
 
     mSamplerRegister = 0;
@@ -220,17 +227,65 @@ void OutputHLSL::header()
 
         out << "\n";
 
-        if (mUsesFragCoord)
+        if (mUsesDepthRange)
         {
-            out << "uniform float4 dx_Coord : register(c1);\n";
+            out << "struct gl_DepthRangeParameters\n"
+                   "{\n"
+                   "    float near;\n"
+                   "    float far;\n"
+                   "    float diff;\n"
+                   "};\n"
+                   "\n";
         }
 
-        if (mUsesFragCoord || mUsesFrontFacing)
+        if (mOutputType == SH_HLSL11_OUTPUT)
         {
-            out << "uniform float3 dx_DepthFront : register(c2);\n";
+            out << "cbuffer DriverConstants : register(b1)\n"
+                   "{\n";
+
+            if (mUsesDepthRange)
+            {
+                out << "    float3 dx_DepthRange : packoffset(c0);\n";
+            }
+
+            if (mUsesFragCoord)
+            {
+                out << "    float4 dx_Coord : packoffset(c1);\n";
+            }
+
+            if (mUsesFragCoord || mUsesFrontFacing)
+            {
+                out << "    float3 dx_DepthFront : packoffset(c2);\n";
+            }
+
+            out << "};\n";
+        }
+        else
+        {
+            if (mUsesDepthRange)
+            {
+                out << "uniform float3 dx_DepthRange : register(c0);";
+            }
+
+            if (mUsesFragCoord)
+            {
+                out << "uniform float4 dx_Coord : register(c1);\n";
+            }
+
+            if (mUsesFragCoord || mUsesFrontFacing)
+            {
+                out << "uniform float3 dx_DepthFront : register(c2);\n";
+            }
+        }
+
+        out << "\n";
+
+        if (mUsesDepthRange)
+        {
+            out << "static gl_DepthRangeParameters gl_DepthRange = {dx_DepthRange.x, dx_DepthRange.y, dx_DepthRange.z};\n"
+                   "\n";
         }
         
-        out << "\n";
         out <<  uniforms;
         out << "\n";
 
@@ -543,10 +598,51 @@ void OutputHLSL::header()
         out << "\n"
                "// Varyings\n";
         out <<  varyings;
-        out << "\n"
-               "uniform float2 dx_HalfPixelSize : register(c1);\n"
-               "\n";
-        out <<  uniforms;
+        out << "\n";
+
+        if (mUsesDepthRange)
+        {
+            out << "struct gl_DepthRangeParameters\n"
+                   "{\n"
+                   "    float near;\n"
+                   "    float far;\n"
+                   "    float diff;\n"
+                   "};\n"
+                   "\n";
+        }
+
+        if (mOutputType == SH_HLSL11_OUTPUT)
+        {
+            out << "cbuffer DriverConstants : register(b1)\n"
+                   "{\n";
+
+            if (mUsesDepthRange)
+            {
+                out << "    float3 dx_DepthRange : packoffset(c0);\n";
+            }
+
+            out << "    float2 dx_HalfPixelSize : packoffset(c1);\n";
+            out << "};\n";
+        }
+        else
+        {
+            if (mUsesDepthRange)
+            {
+                out << "uniform float3 dx_DepthRange : register(c0);\n";
+            }
+
+            out << "uniform float2 dx_HalfPixelSize : register(c1);\n";
+        }
+
+        out << "\n";
+
+        if (mUsesDepthRange)
+        {
+            out << "static gl_DepthRangeParameters gl_DepthRange = {dx_DepthRange.x, dx_DepthRange.y, dx_DepthRange.z};\n"
+                   "\n";
+        }
+
+        out << uniforms;
         out << "\n";
         
         if (mUsesTexture2D)
@@ -714,20 +810,6 @@ void OutputHLSL::header()
     if (mUsesPointSize)
     {
         out << "#define GL_USES_POINT_SIZE\n";
-    }
-
-    if (mUsesDepthRange)
-    {
-        out << "struct gl_DepthRangeParameters\n"
-               "{\n"
-               "    float near;\n"
-               "    float far;\n"
-               "    float diff;\n"
-               "};\n"
-               "\n"
-               "uniform float3 dx_DepthRange : register(c0);"
-               "static gl_DepthRangeParameters gl_DepthRange = {dx_DepthRange.x, dx_DepthRange.y, dx_DepthRange.z};\n"
-               "\n";
     }
 
     if (mUsesXor)
