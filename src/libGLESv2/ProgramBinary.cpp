@@ -1416,20 +1416,24 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
         pixelHLSL += "    float2 gl_PointCoord : TEXCOORD0;\n";
     }
 
+    pixelHLSL += "};\n"
+                 "\n"
+                 "struct PS_OUTPUT\n"
+                 "{\n"
+                 "    float4 gl_Color[1] : " + targetSemantic + ";\n"
+                 "};\n"
+                 "\n";
+    
     if (fragmentShader->mUsesFrontFacing)
     {
-        pixelHLSL += "    float vFace : VFACE;\n";
+        pixelHLSL += "PS_OUTPUT main(PS_INPUT input, bool isFrontFace : SV_IsFrontFace)\n"
+                     "{\n";
     }
-
-    pixelHLSL += "};\n"
-                  "\n"
-                  "struct PS_OUTPUT\n"
-                  "{\n"
-                  "    float4 gl_Color[1] : " + targetSemantic + ";\n"
-                  "};\n"
-                  "\n"
-                  "PS_OUTPUT main(PS_INPUT input)\n"
-                  "{\n";
+    else
+    {
+        pixelHLSL += "PS_OUTPUT main(PS_INPUT input)\n"
+                     "{\n";
+    }
 
     if (fragmentShader->mUsesFragCoord)
     {
@@ -1464,7 +1468,14 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
 
     if (fragmentShader->mUsesFrontFacing)
     {
-        pixelHLSL += "    gl_FrontFacing = (input.vFace * dx_DepthFront.z >= 0.0);\n";
+        if (shaderModel <= 3)
+        {
+            pixelHLSL += "    gl_FrontFacing = (vFace * dx_DepthFront.z >= 0.0);\n";
+        }
+        else
+        {
+            pixelHLSL += "    gl_FrontFacing = isFrontFace;\n";
+        }
     }
 
     for (VaryingList::iterator varying = fragmentShader->mVaryings.begin(); varying != fragmentShader->mVaryings.end(); varying++)
