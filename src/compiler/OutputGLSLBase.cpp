@@ -40,12 +40,14 @@ bool isSingleStatement(TIntermNode* node) {
 }  // namespace
 
 TOutputGLSLBase::TOutputGLSLBase(TInfoSinkBase& objSink,
+                                 ShArrayIndexClampingStrategy clampingStrategy,
                                  ShHashFunction64 hashFunction,
                                  NameMap& nameMap,
                                  TSymbolTable& symbolTable)
     : TIntermTraverser(true, true, true),
       mObjSink(objSink),
       mDeclaringVariables(false),
+      mClampingStrategy(clampingStrategy),
       mHashFunction(hashFunction),
       mNameMap(nameMap),
       mSymbolTable(symbolTable)
@@ -221,7 +223,11 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary* node)
             {
                 if (visit == InVisit)
                 {
-                    out << "[webgl_int_clamp(";
+                    if (mClampingStrategy == SH_CLAMP_WITH_CLAMP_INTRINSIC) {
+                        out << "[int(clamp(float(";
+                    } else {
+                        out << "[webgl_int_clamp(";
+                    }
                 }
                 else if (visit == PostVisit)
                 {
@@ -238,7 +244,12 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary* node)
                     {
                         maxSize = leftType.getNominalSize() - 1;
                     }
-                    out << ", 0, " << maxSize << ")]";
+
+                    if (mClampingStrategy == SH_CLAMP_WITH_CLAMP_INTRINSIC) {
+                        out << "), 0.0, float(" << maxSize << ")))]";
+                    } else {
+                        out << ", 0, " << maxSize << ")]";
+                    }
                 }
             }
             else

@@ -155,9 +155,20 @@ typedef enum {
   // This flag ensures all indirect (expression-based) array indexing
   // is clamped to the bounds of the array. This ensures, for example,
   // that you cannot read off the end of a uniform, whether an array
-  // vec234, or mat234 type.
+  // vec234, or mat234 type. The ShArrayIndexClampingStrategy enum,
+  // specified in the ShBuiltInResources when constructing the
+  // compiler, selects the strategy for the clamping implementation.
   SH_CLAMP_INDIRECT_ARRAY_BOUNDS = 0x1000
 } ShCompileOptions;
+
+// Defines alternate strategies for implementing array index clamping.
+typedef enum {
+  // Use the clamp intrinsic for array index clamping.
+  SH_CLAMP_WITH_CLAMP_INTRINSIC = 1,
+
+  // Use a user-defined function for array index clamping.
+  SH_CLAMP_WITH_USER_DEFINED_INT_CLAMP_FUNCTION
+} ShArrayIndexClampingStrategy;
 
 //
 // Driver must call this first, once, before doing any other
@@ -201,6 +212,10 @@ typedef struct
     // Set a 64 bit hash function to enable user-defined name hashing.
     // Default is NULL.
     ShHashFunction64 HashFunction;
+
+    // Selects a strategy to use when implementing array index clamping.
+    // Default is SH_CLAMP_WITH_CLAMP_INTRINSIC.
+    ShArrayIndexClampingStrategy ArrayIndexClampingStrategy;
 } ShBuiltInResources;
 
 //

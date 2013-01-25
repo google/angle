@@ -108,6 +108,7 @@ protected:
     const TExtensionBehavior& getExtensionBehavior() const;
 
     const ArrayBoundsClamper& getArrayBoundsClamper() const;
+    ShArrayIndexClampingStrategy getArrayIndexClampingStrategy() const;
     const BuiltInFunctionEmulator& getBuiltInFunctionEmulator() const;
 
 private:
@@ -123,6 +124,7 @@ private:
     TExtensionBehavior extensionBehavior;
 
     ArrayBoundsClamper arrayBoundsClamper;
+    ShArrayIndexClampingStrategy clampingStrategy;
     BuiltInFunctionEmulator builtInFunctionEmulator;
 
     // Results of compilation.

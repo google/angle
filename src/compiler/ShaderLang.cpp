@@ -128,6 +128,8 @@ void ShInitBuiltInResources(ShBuiltInResources* resources)
 
     // Disable name hashing by default.
     resources->HashFunction = NULL;
+
+    resources->ArrayIndexClampingStrategy = SH_CLAMP_WITH_CLAMP_INTRINSIC;
 }
 
 //

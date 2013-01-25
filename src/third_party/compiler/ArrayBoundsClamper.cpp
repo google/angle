@@ -70,17 +70,14 @@ private:
 }  // anonymous namespace
 
 ArrayBoundsClamper::ArrayBoundsClamper()
-    : mArrayBoundsClampDefinitionNeeded(false)
+    : mClampingStrategy(SH_CLAMP_WITH_CLAMP_INTRINSIC)
+    , mArrayBoundsClampDefinitionNeeded(false)
 {
 }
 
-void ArrayBoundsClamper::OutputClampingFunctionDefinition(TInfoSinkBase& out) const
+void ArrayBoundsClamper::SetClampingStrategy(ShArrayIndexClampingStrategy clampingStrategy)
 {
-    if (!mArrayBoundsClampDefinitionNeeded)
-    {
-        return;
-    }
-    out << kIntClampBegin << kIntClampDefinition << kIntClampEnd;
+    mClampingStrategy = clampingStrategy;
 }
 
 void ArrayBoundsClamper::MarkIndirectArrayBoundsForClamping(TIntermNode* root)
@@ -95,3 +92,15 @@ void ArrayBoundsClamper::MarkIndirectArrayBoundsForClamping(TIntermNode* root)
     }
 }
 
+void ArrayBoundsClamper::OutputClampingFunctionDefinition(TInfoSinkBase& out) const
+{
+    if (!mArrayBoundsClampDefinitionNeeded)
+    {
+        return;
+    }
+    if (mClampingStrategy != SH_CLAMP_WITH_USER_DEFINED_INT_CLAMP_FUNCTION)
+    {
+        return;
+    }
+    out << kIntClampBegin << kIntClampDefinition << kIntClampEnd;
+}

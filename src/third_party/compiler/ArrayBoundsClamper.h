@@ -35,12 +35,16 @@ class ArrayBoundsClamper {
 public:
     ArrayBoundsClamper();
 
-    // Output array clamp function source into the shader source.
-    void OutputClampingFunctionDefinition(TInfoSinkBase& out) const;
+    // Must be set before compiling any shaders to ensure consistency
+    // between the translated shaders and any necessary prequel.
+    void SetClampingStrategy(ShArrayIndexClampingStrategy clampingStrategy);
 
     // Marks nodes in the tree that index arrays indirectly as
     // requiring clamping.
     void MarkIndirectArrayBoundsForClamping(TIntermNode* root);
+
+    // If necessary, output array clamp function source into the shader source.
+    void OutputClampingFunctionDefinition(TInfoSinkBase& out) const;
 
     void Cleanup()
     {
@@ -50,7 +54,8 @@ public:
 private:
     bool GetArrayBoundsClampDefinitionNeeded() const { return mArrayBoundsClampDefinitionNeeded; }
     void SetArrayBoundsClampDefinitionNeeded() { mArrayBoundsClampDefinitionNeeded = true; }
-    
+
+    ShArrayIndexClampingStrategy mClampingStrategy;
     bool mArrayBoundsClampDefinitionNeeded;
 };
 

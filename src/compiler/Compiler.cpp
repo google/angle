@@ -102,6 +102,7 @@ TShHandleBase::~TShHandleBase() {
 TCompiler::TCompiler(ShShaderType type, ShShaderSpec spec)
     : shaderType(type),
       shaderSpec(spec),
+      clampingStrategy(SH_CLAMP_WITH_CLAMP_INTRINSIC),
       builtInFunctionEmulator(type)
 {
     longNameMap = LongNameMap::GetInstance();
@@ -124,6 +125,9 @@ bool TCompiler::Init(const ShBuiltInResources& resources)
     if (!InitBuiltInSymbolTable(resources))
         return false;
     InitExtensionBehavior(resources, extensionBehavior);
+
+    arrayBoundsClamper.SetClampingStrategy(resources.ArrayIndexClampingStrategy);
+    clampingStrategy = resources.ArrayIndexClampingStrategy;
 
     hashFunction = resources.HashFunction;
 
@@ -355,13 +359,17 @@ const TExtensionBehavior& TCompiler::getExtensionBehavior() const
     return extensionBehavior;
 }
 
-const BuiltInFunctionEmulator& TCompiler::getBuiltInFunctionEmulator() const
-{
-    return builtInFunctionEmulator;
-}
-
 const ArrayBoundsClamper& TCompiler::getArrayBoundsClamper() const
 {
     return arrayBoundsClamper;
 }
 
+ShArrayIndexClampingStrategy TCompiler::getArrayIndexClampingStrategy() const
+{
+    return clampingStrategy;
+}
+
+const BuiltInFunctionEmulator& TCompiler::getBuiltInFunctionEmulator() const
+{
+    return builtInFunctionEmulator;
+}
