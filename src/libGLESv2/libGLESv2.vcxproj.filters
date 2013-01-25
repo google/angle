@@ -361,9 +361,6 @@
     <ClInclude Include="renderer\TextureStorage11.h">
       <Filter>Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\shaders\compiled\passthrough11ps.h">
-      <Filter>Renderer\Shaders\Compiled</Filter>
-    </ClInclude>
     <ClInclude Include="renderer\shaders\compiled\passthrough11vs.h">
       <Filter>Renderer\Shaders\Compiled</Filter>
     </ClInclude>
@@ -380,6 +377,9 @@
       <Filter>Renderer\Shaders\Compiled</Filter>
     </ClInclude>
     <ClInclude Include="renderer\shaders\compiled\luminanceps.h">
+      <Filter>Renderer\Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\passthroughrgba11ps.h">
       <Filter>Renderer\Shaders\Compiled</Filter>
     </ClInclude>
   </ItemGroup>

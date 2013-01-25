@@ -16,7 +16,7 @@
 #include "libGLESv2/main.h"
 
 #include "libGLESv2/renderer/shaders/compiled/passthrough11vs.h"
-#include "libGLESv2/renderer/shaders/compiled/passthrough11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughrgba11ps.h"
 
 namespace rx
 {
@@ -377,7 +377,7 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mPassThroughVS, "Swap chain pass through vertex shader");
 
-    result = device->CreatePixelShader(g_PS_Passthrough, sizeof(g_PS_Passthrough), NULL, &mPassThroughPS);
+    result = device->CreatePixelShader(g_PS_PassthroughRGBA, sizeof(g_PS_PassthroughRGBA), NULL, &mPassThroughPS);
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mPassThroughPS, "Swap chain pass through pixel shader");
 
