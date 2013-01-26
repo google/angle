@@ -334,7 +334,7 @@ void ShGetNameHashingEntry(const ShHandle handle,
     }
     strncpy(name, it->first.c_str(), len);
     // To be on the safe side in case the source is longer than expected.
-    name[len] = '\0';
+    name[len - 1] = '\0';
 
     len = it->second.length() + 1;
     max_len = 0;
@@ -345,5 +345,5 @@ void ShGetNameHashingEntry(const ShHandle handle,
     }
     strncpy(hashedName, it->second.c_str(), len);
     // To be on the safe side in case the source is longer than expected.
-    hashedName[len] = '\0';
+    hashedName[len - 1] = '\0';
 }
