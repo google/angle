@@ -65,7 +65,7 @@ bool VertexBuffer11::initialize(unsigned int size, bool dynamicUsage)
 
 VertexBuffer11 *VertexBuffer11::makeVertexBuffer11(VertexBuffer *vetexBuffer)
 {
-    ASSERT(dynamic_cast<VertexBuffer11*>(vetexBuffer) != NULL);
+    ASSERT(HAS_DYNAMIC_TYPE(VertexBuffer11*, vetexBuffer));
     return static_cast<VertexBuffer11*>(vetexBuffer);
 }
 

@@ -164,7 +164,7 @@ Renderer9::~Renderer9()
 
 Renderer9 *Renderer9::makeRenderer9(Renderer *renderer)
 {
-    ASSERT(dynamic_cast<rx::Renderer9*>(renderer) != NULL);
+    ASSERT(HAS_DYNAMIC_TYPE(rx::Renderer9*, renderer));
     return static_cast<rx::Renderer9*>(renderer);
 }
 

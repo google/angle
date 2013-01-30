@@ -67,7 +67,7 @@ ShaderExecutable11::~ShaderExecutable11()
 
 ShaderExecutable11 *ShaderExecutable11::makeShaderExecutable11(ShaderExecutable *executable)
 {
-    ASSERT(dynamic_cast<ShaderExecutable11*>(executable) != NULL);
+    ASSERT(HAS_DYNAMIC_TYPE(ShaderExecutable11*, executable));
     return static_cast<ShaderExecutable11*>(executable);
 }
 

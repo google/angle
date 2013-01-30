@@ -86,7 +86,7 @@ bool IndexBuffer9::initialize(unsigned int bufferSize, GLenum indexType, bool dy
 
 IndexBuffer9 *IndexBuffer9::makeIndexBuffer9(IndexBuffer *indexBuffer)
 {
-    ASSERT(dynamic_cast<IndexBuffer9*>(indexBuffer) != NULL);
+    ASSERT(HAS_DYNAMIC_TYPE(IndexBuffer9*, indexBuffer));
     return static_cast<IndexBuffer9*>(indexBuffer);
 }
 

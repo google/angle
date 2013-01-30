@@ -33,7 +33,7 @@ TextureStorage9::~TextureStorage9()
 
 TextureStorage9 *TextureStorage9::makeTextureStorage9(TextureStorage *storage)
 {
-    ASSERT(dynamic_cast<TextureStorage9*>(storage) != NULL);
+    ASSERT(HAS_DYNAMIC_TYPE(TextureStorage9*, storage));
     return static_cast<TextureStorage9*>(storage);
 }
 
@@ -153,7 +153,7 @@ TextureStorage9_2D::~TextureStorage9_2D()
 
 TextureStorage9_2D *TextureStorage9_2D::makeTextureStorage9_2D(TextureStorage *storage)
 {
-    ASSERT(dynamic_cast<TextureStorage9_2D*>(storage) != NULL);
+    ASSERT(HAS_DYNAMIC_TYPE(TextureStorage9_2D*, storage));
     return static_cast<TextureStorage9_2D*>(storage);
 }
 
@@ -258,7 +258,7 @@ TextureStorage9_Cube::~TextureStorage9_Cube()
 
 TextureStorage9_Cube *TextureStorage9_Cube::makeTextureStorage9_Cube(TextureStorage *storage)
 {
-    ASSERT(dynamic_cast<TextureStorage9_Cube*>(storage) != NULL);
+    ASSERT(HAS_DYNAMIC_TYPE(TextureStorage9_Cube*, storage));
     return static_cast<TextureStorage9_Cube*>(storage);
 }
 

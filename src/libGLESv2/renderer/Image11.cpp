@@ -37,7 +37,7 @@ Image11::~Image11()
 
 Image11 *Image11::makeImage11(Image *img)
 {
-    ASSERT(dynamic_cast<rx::Image11*>(img) != NULL);
+    ASSERT(HAS_DYNAMIC_TYPE(rx::Image11*, img));
     return static_cast<rx::Image11*>(img);
 }
 

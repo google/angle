@@ -392,7 +392,7 @@ IDirect3DTexture9 *SwapChain9::getOffscreenTexture()
 
 SwapChain9 *SwapChain9::makeSwapChain9(SwapChain *swapChain)
 {
-    ASSERT(dynamic_cast<rx::SwapChain9*>(swapChain) != NULL);
+    ASSERT(HAS_DYNAMIC_TYPE(rx::SwapChain9*, swapChain));
     return static_cast<rx::SwapChain9*>(swapChain);
 }
 

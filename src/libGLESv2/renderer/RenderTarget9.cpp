@@ -94,7 +94,7 @@ RenderTarget9::~RenderTarget9()
 
 RenderTarget9 *RenderTarget9::makeRenderTarget9(RenderTarget *target)
 {
-    ASSERT(dynamic_cast<rx::RenderTarget9*>(target) != NULL);
+    ASSERT(HAS_DYNAMIC_TYPE(rx::RenderTarget9*, target));
     return static_cast<rx::RenderTarget9*>(target);
 }
 

@@ -42,7 +42,7 @@ ShaderExecutable9::~ShaderExecutable9()
 
 ShaderExecutable9 *ShaderExecutable9::makeShaderExecutable9(ShaderExecutable *executable)
 {
-    ASSERT(dynamic_cast<ShaderExecutable9*>(executable) != NULL);
+    ASSERT(HAS_DYNAMIC_TYPE(ShaderExecutable9*, executable));
     return static_cast<ShaderExecutable9*>(executable);
 }
 

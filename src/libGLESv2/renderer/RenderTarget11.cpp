@@ -349,7 +349,7 @@ RenderTarget11::~RenderTarget11()
 
 RenderTarget11 *RenderTarget11::makeRenderTarget11(RenderTarget *target)
 {
-    ASSERT(dynamic_cast<rx::RenderTarget11*>(target) != NULL);
+    ASSERT(HAS_DYNAMIC_TYPE(rx::RenderTarget11*, target));
     return static_cast<rx::RenderTarget11*>(target);
 }
 

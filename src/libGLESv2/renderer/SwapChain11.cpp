@@ -592,7 +592,7 @@ ID3D11DepthStencilView *SwapChain11::getDepthStencil()
 
 SwapChain11 *SwapChain11::makeSwapChain11(SwapChain *swapChain)
 {
-    ASSERT(dynamic_cast<rx::SwapChain11*>(swapChain) != NULL);
+    ASSERT(HAS_DYNAMIC_TYPE(rx::SwapChain11*, swapChain));
     return static_cast<rx::SwapChain11*>(swapChain);
 }
 

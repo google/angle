@@ -75,7 +75,7 @@ bool VertexBuffer9::initialize(unsigned int size, bool dynamicUsage)
 
 VertexBuffer9 *VertexBuffer9::makeVertexBuffer9(VertexBuffer *vertexBuffer)
 {
-    ASSERT(dynamic_cast<VertexBuffer9*>(vertexBuffer) != NULL);
+    ASSERT(HAS_DYNAMIC_TYPE(VertexBuffer9*, vertexBuffer));
     return static_cast<VertexBuffer9*>(vertexBuffer);
 }
 

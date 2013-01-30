@@ -65,7 +65,7 @@ bool IndexBuffer11::initialize(unsigned int bufferSize, GLenum indexType, bool d
 
 IndexBuffer11 *IndexBuffer11::makeIndexBuffer11(IndexBuffer *indexBuffer)
 {
-    ASSERT(dynamic_cast<IndexBuffer11*>(indexBuffer) != NULL);
+    ASSERT(HAS_DYNAMIC_TYPE(IndexBuffer11*, indexBuffer));
     return static_cast<IndexBuffer11*>(indexBuffer);
 }
 
