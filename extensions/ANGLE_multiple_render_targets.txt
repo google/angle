@@ -1,10 +1,10 @@
 Name
 
-    ANGLE_multiple_render_targets
+    EXT_draw_buffers
 
 Name Strings
 
-    GL_ANGLE_multiple_render_targets
+    GL_EXT_draw_buffers
 
 Contributors
 
@@ -17,20 +17,22 @@ Contributors
     Daniel Koch, TransGaming Inc.
     Alastair Patrick, Google Inc.
     Kenneth Russell, Google Inc.
-    Members of the WebGL working group
+    Greg Roth, NVIDIA Corporation
+    Ben Bowman, Imagination Technologies
+    Members of the WebGL and OpenGL ES working groups
 
 Contact
 
-    Daniel Koch <daniel> <at> <transgaming> <dot> <com>
+    Daniel Koch (daniel 'at' transgaming.com)
 
 Status
 
-    Incomplete -- do not implement!
+    Draft Complete 
 
 Version
 
-    Last Modified Date: January 23, 2013
-    Revision: #6
+    Last Modified Date: January 30, 2013
+    Revision: #7
 
 Number
 
@@ -58,60 +60,60 @@ Overview
 
 New Procedures and Functions
 
-      void DrawBuffersANGLE(sizei n, const enum *bufs);
+      void DrawBuffersEXT(sizei n, const enum *bufs);
 
 New Tokens
 
     Accepted by the <pname> parameter of GetIntegerv:
 
-        MAX_COLOR_ATTACHMENTS_ANGLE             0x8CDF
+        MAX_COLOR_ATTACHMENTS_EXT             0x8CDF
 
     Accepted by the <pname> parameters of GetIntegerv and GetFloatv:
 
-        MAX_DRAW_BUFFERS_ANGLE                  0x8824
-        DRAW_BUFFER0_ANGLE                      0x8825
-        DRAW_BUFFER1_ANGLE                      0x8826
-        DRAW_BUFFER2_ANGLE                      0x8827
-        DRAW_BUFFER3_ANGLE                      0x8828
-        DRAW_BUFFER4_ANGLE                      0x8829
-        DRAW_BUFFER5_ANGLE                      0x882A
-        DRAW_BUFFER6_ANGLE                      0x882B
-        DRAW_BUFFER7_ANGLE                      0x882C
-        DRAW_BUFFER8_ANGLE                      0x882D
-        DRAW_BUFFER9_ANGLE                      0x882E
-        DRAW_BUFFER10_ANGLE                     0x882F
-        DRAW_BUFFER11_ANGLE                     0x8830
-        DRAW_BUFFER12_ANGLE                     0x8831
-        DRAW_BUFFER13_ANGLE                     0x8832
-        DRAW_BUFFER14_ANGLE                     0x8833
-        DRAW_BUFFER15_ANGLE                     0x8834
+        MAX_DRAW_BUFFERS_EXT                  0x8824
+        DRAW_BUFFER0_EXT                      0x8825
+        DRAW_BUFFER1_EXT                      0x8826
+        DRAW_BUFFER2_EXT                      0x8827
+        DRAW_BUFFER3_EXT                      0x8828
+        DRAW_BUFFER4_EXT                      0x8829
+        DRAW_BUFFER5_EXT                      0x882A
+        DRAW_BUFFER6_EXT                      0x882B
+        DRAW_BUFFER7_EXT                      0x882C
+        DRAW_BUFFER8_EXT                      0x882D
+        DRAW_BUFFER9_EXT                      0x882E
+        DRAW_BUFFER10_EXT                     0x882F
+        DRAW_BUFFER11_EXT                     0x8830
+        DRAW_BUFFER12_EXT                     0x8831
+        DRAW_BUFFER13_EXT                     0x8832
+        DRAW_BUFFER14_EXT                     0x8833
+        DRAW_BUFFER15_EXT                     0x8834
 
     Accepted by the <attachment> parameter of FramebufferRenderbuffer,
     FramebufferTexture2D and GetFramebufferAttachmentParameteriv, and by
-    the <bufs> parameter of DrawBuffersANGLE:
+    the <bufs> parameter of DrawBuffersEXT:
 
-        COLOR_ATTACHMENT0_ANGLE                      0x8CE0
-        COLOR_ATTACHMENT1_ANGLE                      0x8CE1
-        COLOR_ATTACHMENT2_ANGLE                      0x8CE2
-        COLOR_ATTACHMENT3_ANGLE                      0x8CE3
-        COLOR_ATTACHMENT4_ANGLE                      0x8CE4
-        COLOR_ATTACHMENT5_ANGLE                      0x8CE5
-        COLOR_ATTACHMENT6_ANGLE                      0x8CE6
-        COLOR_ATTACHMENT7_ANGLE                      0x8CE7
-        COLOR_ATTACHMENT8_ANGLE                      0x8CE8
-        COLOR_ATTACHMENT9_ANGLE                      0x8CE9
-        COLOR_ATTACHMENT10_ANGLE                     0x8CEA
-        COLOR_ATTACHMENT11_ANGLE                     0x8CEB
-        COLOR_ATTACHMENT12_ANGLE                     0x8CEC
-        COLOR_ATTACHMENT13_ANGLE                     0x8CED
-        COLOR_ATTACHMENT14_ANGLE                     0x8CEE
-        COLOR_ATTACHMENT15_ANGLE                     0x8CEF
+        COLOR_ATTACHMENT0_EXT                      0x8CE0
+        COLOR_ATTACHMENT1_EXT                      0x8CE1
+        COLOR_ATTACHMENT2_EXT                      0x8CE2
+        COLOR_ATTACHMENT3_EXT                      0x8CE3
+        COLOR_ATTACHMENT4_EXT                      0x8CE4
+        COLOR_ATTACHMENT5_EXT                      0x8CE5
+        COLOR_ATTACHMENT6_EXT                      0x8CE6
+        COLOR_ATTACHMENT7_EXT                      0x8CE7
+        COLOR_ATTACHMENT8_EXT                      0x8CE8
+        COLOR_ATTACHMENT9_EXT                      0x8CE9
+        COLOR_ATTACHMENT10_EXT                     0x8CEA
+        COLOR_ATTACHMENT11_EXT                     0x8CEB
+        COLOR_ATTACHMENT12_EXT                     0x8CEC
+        COLOR_ATTACHMENT13_EXT                     0x8CED
+        COLOR_ATTACHMENT14_EXT                     0x8CEE
+        COLOR_ATTACHMENT15_EXT                     0x8CEF
 
-    The COLOR_ATTACHMENT0_ANGLE constant is equal to the
+    The COLOR_ATTACHMENT0_EXT constant is equal to the
     COLOR_ATTACHMENT0 constant.
 
-    Each COLOR_ATTACHMENT<i>_ANGLE adheres to COLOR_ATTACHMENT<i>_ANGLE
-    = COLOR_ATTACHMENT0_ANGLE + <i>.
+    Each COLOR_ATTACHMENT<i>_EXT adheres to COLOR_ATTACHMENT<i>_EXT
+    = COLOR_ATTACHMENT0_EXT + <i>.
 
 Changes to Chapter 3 of the OpenGL ES 2.0 Specification (Rasterization)
 
@@ -166,18 +168,18 @@ Operations and the Frame Buffer)
 
     Insert Table 4.3 to Section 4.2.1 (and renumber subsequent tables):
 
-    Symbolic Constant                         Meaning
-    -----------------                         ---------------------
-    NONE                                      No buffer
+    Symbolic Constant                       Meaning
+    -----------------                       ---------------------
+    NONE                                    No buffer
 
-    COLOR_ATTACHMENT<i>_ANGLE (see caption)   Output fragment color to image 
-                                              attached at color attachment
-                                              point i
+    COLOR_ATTACHMENT<i>_EXT (see caption)   Output fragment color to image 
+                                            attached at color attachment
+                                            point i
 
-    Table 4.3: Arguments to DrawBuffersANGLE when the context is bound to a
+    Table 4.3: Arguments to DrawBuffersEXT when the context is bound to a
     framebuffer object, and the buffers they indicate. <i> in
-    COLOR_ATTACHMENT<i>_ANGLE may range from zero to the value of
-    MAX_COLOR_ATTACHMENTS_ANGLE minus one.
+    COLOR_ATTACHMENT<i>_EXT may range from zero to the value of
+    MAX_COLOR_ATTACHMENTS_EXT minus one.
 
     Replace Section 4.2.1, "Selecting a Buffer for Writing" with the following:
 
@@ -185,11 +187,11 @@ Operations and the Frame Buffer)
     single buffered surfaces or into the back buffer for back buffered
     surfaces as determined when making the context current. To control
     the color buffer into which each of the fragment color values is
-    written, DrawBuffersANGLE is used.
+    written, DrawBuffersEXT is used.
 
     The command
 
-      void DrawBuffersANGLE(sizei n, const enum *bufs);
+      void DrawBuffersEXT(sizei n, const enum *bufs);
 
     defines the draw buffers to which all fragment colors are written.
     <n> specifies the number of buffers in <bufs>. <bufs> is a pointer
@@ -207,7 +209,7 @@ Operations and the Frame Buffer)
     and the constant must be BACK or NONE. When draw buffer zero is
     BACK, color values are written into the sole buffer for single-
     buffered contexts, or into the back buffer for double-buffered
-    contexts. If DrawBuffersANGLE is supplied with a constant other than
+    contexts. If DrawBuffersEXT is supplied with a constant other than
     BACK and NONE, the error INVALID_OPERATION is generated.
 
     If the GL is bound to a draw framebuffer object, then each of the
@@ -219,27 +221,27 @@ Operations and the Frame Buffer)
 
     The maximum number of draw buffers is implementation-dependent. The
     number of draw buffers supported can be queried by calling
-    GetIntegerv with the symbolic constant MAX_DRAW_BUFFERS_ANGLE. An
+    GetIntegerv with the symbolic constant MAX_DRAW_BUFFERS_EXT. An
     INVALID_VALUE error is generated if <n> is greater than
-    MAX_DRAW_BUFFERS_ANGLE.
+    MAX_DRAW_BUFFERS_EXT.
 
     If the GL is bound to a draw framebuffer object, the <i>th buffer listed
-    in <bufs> must be COLOR_ATTACHMENT<i>_ANGLE or NONE. Specifying a
-    buffer out of order, BACK, or COLOR_ATTACHMENT<m>_ANGLE where <m> is
-    greater than or equal to the value of MAX_COLOR_ATTACHMENTS_ANGLE,
+    in <bufs> must be COLOR_ATTACHMENT<i>_EXT or NONE. Specifying a
+    buffer out of order, BACK, or COLOR_ATTACHMENT<m>_EXT where <m> is
+    greater than or equal to the value of MAX_COLOR_ATTACHMENTS_EXT,
     will generate the error INVALID_OPERATION.
 
-    If a fragment shader writes to "gl_FragColor", DrawBuffersANGLE 
-    specifies the draw buffer, if any, into which the color written to
-    "gl_FragColor" is written. If a fragment shader writes to
-    "gl_FragData", DrawBuffersANGLE specifies a set of draw buffers
+    If a fragment shader writes to "gl_FragColor", DrawBuffersEXT 
+    specifies the set of draw buffers into which the color 
+    written to "gl_FragColor" is written. If a fragment shader writes to
+    "gl_FragData", DrawBuffersEXT specifies a set of draw buffers
     into which each of the multiple output colors defined by these
     variables are separately written. If a fragment shader writes to
     neither "gl_FragColor" nor "gl_FragData" the values of the
     fragment colors following shader execution are undefined, and may
     differ for each fragment color.
 
-    Indicating a buffer or buffers using DrawBuffersANGLE causes
+    Indicating a buffer or buffers using DrawBuffersEXT causes
     subsequent pixel color value writes to affect the indicated
     buffers. If the GL is bound to a draw framebuffer object and a draw
     buffer selects an attachment that has no image attached, then that
@@ -254,7 +256,7 @@ Operations and the Frame Buffer)
     fragment color zero is BACK if there is a default framebuffer
     associated with the context, otherwise NONE. For framebuffer
     objects, in the initial state the draw buffer for fragment color
-    zero is COLOR_ATTACHMENT0_ANGLE.
+    zero is COLOR_ATTACHMENT0_EXT.
 
     For both the default framebuffer and framebuffer objects, the
     initial state of draw buffers for fragment colors other than zero is
@@ -262,7 +264,30 @@ Operations and the Frame Buffer)
 
     The value of the draw buffer selected for fragment color <i> can be
     queried by calling GetIntegerv with the symbolic constant
-    DRAW_BUFFER<i>_ANGLE."
+    DRAW_BUFFER<i>_EXT."
+
+    Modify Section 4.2.3 (Clearing the Buffers) and replace the first
+    two paragraphs with the following:
+
+    "The GL provides a means for setting portions of every pixel in a
+    particular buffer to the same value.  The argument to
+    
+        void Clear(bitfield buf);
+
+    is the bitwise OR of a number of values indicating which buffers are
+    to be cleared. The values are COLOR_BUFFER_BIT, DEPTH_BUFFER_BIT, and
+    STENCIL_BUFFER_BIT, indicating the buffers currently enabled for color
+    writing, the depth buffer, and the stencil buffer (see below), 
+    respectively. The value to which each buffer is cleared depends on
+    the setting of the clear value for that buffer.  If the mask is not a
+    bitwise OR of the specified values, then the error INVALID_VALUE is
+    generated.
+
+        void ClearColor(clampf r, clampf, g, clampf b, clampf a);
+   
+    sets the clear value for fixed-point color buffers.  Each of the
+    specified components is clamped to [0, 1] and converted to fixed-point
+    as described in section 2.1.2 for framebuffer color components."
 
     Replace the second paragraph of Section 4.4.1 (Binding and Managing
     Framebuffer Objects) with the following:
@@ -279,14 +304,14 @@ Operations and the Frame Buffer)
     to the unused name. The resulting framebuffer object is a new state 
     vector. There is a number of color attachment points, plus one each
     for the depth and stencil attachment points. The number of color attachment
-    points is equal to the value of MAX_COLOR_ATTACHMENTS_ANGLE."
+    points is equal to the value of MAX_COLOR_ATTACHMENTS_EXT."
 
     Replace the third item in the bulleted list in Section 4.4.1 (Binding
     and Managing Framebuffer Objects) with the following:
 
     " * The only color buffer bitplanes are the ones defined by the
-    framebuffer attachments points named COLOR_ATTACHMENT0_ANGLE through
-    COLOR_ATTACHMENT<n>_ANGLE."
+    framebuffer attachments points named COLOR_ATTACHMENT0_EXT through
+    COLOR_ATTACHMENT<n>_EXT."
 
     Modify Section 4.4.3 (Renderbuffer Objects) in the 
     "Attaching Renderbuffer Images to a Framebuffer" subsection as follows:
@@ -295,12 +320,12 @@ Operations and the Frame Buffer)
 
     Name of attachment
     ---------------------------------------
-    COLOR_ATTACHMENT<i>_ANGLE (see caption)
+    COLOR_ATTACHMENT<i>_EXT (see caption)
     DEPTH_ATTACHMENT
     STENCIL_ATTACHMENT
 
-    Table 4.x: Framebuffer attachment points. <i> in COLOR_ATTACHMENT<i>_ANGLE
-    may range from zero to the value of MAX_COLOR_ATTACHMENTS_ANGLE minus 1.
+    Table 4.x: Framebuffer attachment points. <i> in COLOR_ATTACHMENT<i>_EXT
+    may range from zero to the value of MAX_COLOR_ATTACHMENTS_EXT minus 1.
 
     Modify the third sentence of the paragraph following the definition of
     FramebufferRenderbuffer to be as follows:
@@ -321,7 +346,7 @@ Operations and the Frame Buffer)
     item in the bulleted list in the "Framebuffer Attachment Completeness"
     subsection with the following:
 
-    " * If <attachment> is COLOR_ATTACHMENT<i>_ANGLE, then <image> must
+    " * If <attachment> is COLOR_ATTACHMENT<i>_EXT, then <image> must
     have a color-renderable internal format."
 
 Changes to Chapter 6 of the OpenGL ES 2.0 Specification (State and
@@ -337,14 +362,14 @@ Changes to Chapter 3 of the OpenGL ES Shading Language 1.0.17 Specification (Bas
 
     Add a new section:
 
-    3.4.1 GL_ANGLE_multiple_render_targets Extension
+    3.4.1 GL_EXT_draw_buffers Extension
 
-    To use the GL_ANGLE_multiple_render_targets extension in a shader it
+    To use the GL_EXT_draw_buffers extension in a shader it
     must be enabled using the #extension directive.
 
     The shading language preprocessor #define
-    GL_ANGLE_multiple_render_targets will be defined to 1, if the
-    GL_ANGLE_multiple_render_targets extension is supported.
+    GL_EXT_draw_buffers will be defined to 1, if the
+    GL_EXT_draw_buffers extension is supported.
 
 Dependencies on ANGLE_framebuffer_blit and APPLE_framebuffer_multisample:
 
@@ -364,19 +389,19 @@ Dependencies on ANGLE_framebuffer_blit and APPLE_framebuffer_multisample:
 
 Errors
 
-    The INVALID_OPERATION error is generated if DrawBuffersANGLE is called
+    The INVALID_OPERATION error is generated if DrawBuffersEXT is called
     when the default framebuffer is bound and any of the following conditions
     hold: 
-     - <n> is greater than 1 and less than MAX_DRAW_BUFFERS_ANGLE,
+     - <n> is greater than 1 and less than MAX_DRAW_BUFFERS_EXT,
      - <bufs> contains a value other than BACK or NONE.
 
-    The INVALID_OPERATION error is generated if DrawBuffersANGLE is called
+    The INVALID_OPERATION error is generated if DrawBuffersEXT is called
     when bound to a draw framebuffer object and any of the following
     conditions hold:
-     - the <i>th value in <bufs> is not COLOR_ATTACHMENT<i>_ANGLE or NONE.
+     - the <i>th value in <bufs> is not COLOR_ATTACHMENT<i>_EXT or NONE.
 
-    The INVALID_VALUE error is generated if DrawBuffersANGLE is called
-    with a value of <n> which is greater than MAX_DRAW_BUFFERS_ANGLE.
+    The INVALID_VALUE error is generated if DrawBuffersEXT is called
+    with a value of <n> which is greater than MAX_DRAW_BUFFERS_EXT.
 
     The INVALID_ENUM error is generated by FramebufferRenderbuffer if
     the <attachment> parameter is not one of the values listed in Table 4.x.
@@ -391,31 +416,36 @@ New State
 
     Add Table 6.X Framebuffer (State per framebuffer object):
 
-    State                 Type Get Command  Initial Value Description 
-    ---------------       ---- ------------ ------------- -----------
-    DRAW_BUFFER<i>_ANGLE  Z10* GetIntegerv  see 4.2.1     Draw buffer selected 
+    State               Type Get Command  Initial Value Description 
+    ------------------  ---- ------------ ------------- -----------
+    DRAW_BUFFER<i>_EXT  Z10* GetIntegerv  see 4.2.1     Draw buffer selected 
 							  for fragment color i
 
     Add to Table 6.18 (Implementation Dependent Values)
 
-    Get value                    Type Get Cmnd    Minimum Value Description             Sec.
-    ------------------------     ---- ----------- ------------- -----------             -----
-    MAX_DRAW_BUFFERS_ANGLE       Z+   GetIntegerv 1             Maximum number of       4.2.1
-                                                                active draw buffers
-    MAX_COLOR_ATTACHMENTS_ANGLE  Z+   GetIntegerv 1             Number of framebuffer   4.4.1
-                                                                color attachment points
+    Get value                 Type Get Cmnd    Minimum Value Description             Sec.
+    --------------------      ---- ----------- ------------- -----------             -----
+    MAX_DRAW_BUFFERS_EXT      Z+   GetIntegerv 1             Maximum number of       4.2.1
+                                                             active draw buffers
+    MAX_COLOR_ATTACHMENTS_EXT Z+   GetIntegerv 1             Number of framebuffer   4.4.1
+                                                             color attachment points
 Issues
 
     See ARB_draw_buffers for relevant issues.
 
-  1) Differences from NV_draw_buffers + NV_fbo_color_attachments?
+  1) What are the differences between this extension and NV_draw_buffers
+    + NV_fbo_color_attachments?
 
-   - adds interactions with blit_framebuffer and separate draw/read binding points
-   - MAX limits are global instead of per-fbo (see Issue 2)
-   - no broadcast from gl_FragColor (see Issue 3)
-   - can be used to with default framebuffer to set NONE/BACK (see Issue 4)
+    RESOLVED. This extension:
+     - adds interactions with blit_framebuffer and the separate 
+       draw/read binding points
+     - The draw buffer and color attachment limits are global instead
+       of per-fbo (see Issue 2)
+     - can be used to with default framebuffer to set NONE/BACK (see Issue 4)
+     - retains the ordering restrictions on color attachments that are 
+       imposed by ES 3.0.
 
-   2) Should the MAX_DRAW_BUFFERS_ANGLE and MAX_COLOR_ATTACHMENTS_ANGLE limits
+   2) Should the MAX_DRAW_BUFFERS_EXT and MAX_COLOR_ATTACHMENTS_EXT limits
     be per-framebuffer values or implementation dependent constants?
 
     DISCUSSION: In ARB_draw_buffers this was per-context (see Issue 2).
@@ -436,10 +466,10 @@ Issues
     single-sampled attachments are present.
 
     RESOLVED. Make this global context state as this is most consistent 
-    with GLES 3.0 and updated GL drivers. Unfortunately this means that a
-    D3D9-based implementation of this extension is not possible since D3D9
-    does not support multisampled MRTs. Perhaps such an implementation could
-    report FBO incomplete in this situation, but that seems less than desirable.
+    with GLES 3.0 and updated GL drivers. In an implementation cannot
+    support multisampling in conjunction with multiple color attachments,
+    perhaps such an implementation could report FBO incomplete in this 
+    situation, but this is less than desirable.
 
    3) Should we support broadcast from gl_FragColor to all gl_FragData[x]
     or should it be synonymous with gl_FragData[0]?
@@ -454,10 +484,18 @@ Issues
     writes to gl_FragColor with replicated writes to all possible gl_FragData
     locations when this extension is enabled.
 
-    RESOLVED: Broadcast from gl_FragColor to all enabledMRT buffers is not
-    supported. A shader author must write gl_FragData[x] if they want to use MRT
-
-   4) Should we allow DrawBuffersANGLE to be called when the default FBO is bound?
+    RESOLVED: Writes to gl_FragColor are broadcast to all enabled color
+    buffers. ES 3.0 using ESSL 1.0 doesn't support broadcast because
+    ESSL 1.0 was not extended to have multiple color outputs (but that is
+    what this extension adds). ESSL 3.0 doesn't support the broadcast because
+    it doesn't have the gl_FragColor variable at all, and only has user-
+    defined out variables. This extension extends ESSL 1.0 to have multiple
+    color outputs. Broadcasting from gl_FragColor to all enabled color 
+    buffers is the most consistent with existing draw buffer extensions to
+    date (both NV_draw_buffers and desktop GL).
+    
+   4) Should we allow DrawBuffersEXT to be called when the default FBO is
+    bound?
 
     DISCUSSION: NV_draw_buffers specifies that DrawBuffersNV errors with 
     INVALID_OPERATION when the default FBO is bound. OpenGL ES 3.0 allows
@@ -466,7 +504,7 @@ Issues
     An implementation that does not natively support disabling the drawbuffer
     on the default FBO could emulate this by disabling color writes.
 
-    RESOLVED: Allow DrawBuffersANGLE to be called for the default FBO. This
+    RESOLVED: Allow DrawBuffersEXT to be called for the default FBO. This
     is more forward looking and is compatible with ES 3.0.
 
    5) What are the requirements on the color attachment sizes and formats?
@@ -478,8 +516,17 @@ Issues
     This extension does not lift those requirements, and failing to meet
     them will result in an incomplete FBO.
 
+   6) Does this have any interactions with glClear?
+
+    RESOLVED: Yes. When multiple color buffers are enabled for writing,
+    glClear clears all of the color buffers.  Added language clarifying
+    that glClear and glClearColor may affect multiple color buffers.
+
 Revision History
 
+    01/30/2013  dgkoch  add issue 6 and clear interactions
+                        renamed to EXT_draw_buffers based on feedback
+                        changed resolution of issue 3.
     01/23/2013  dgkoch  add resolutions to issues 2-4.
                         add issue 5.
                         Add Table 4.x and update various explicit
