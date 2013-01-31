@@ -262,7 +262,13 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary* node)
             {
                 out << ".";
                 // TODO(alokp): ASSERT
-                out << hashName(node->getType().getFieldName());
+                TString fieldName = node->getType().getFieldName();
+
+                const TType& structType = node->getLeft()->getType();
+                if (!mSymbolTable.findBuiltIn(structType.getTypeName()))
+                    fieldName = hashName(fieldName);
+
+                out << fieldName;
                 visitChildren = false;
             }
             break;
