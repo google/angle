@@ -34,6 +34,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PostSubBuffer", "gles2_book
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "preprocessor", "..\src\compiler\preprocessor\preprocessor.vcxproj", "{FBE32DF3-0FB0-4F2F-A424-2C21BD7BC325}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Simple_Instancing", "angle\Simple_Instancing\Simple_Instancing.vcxproj", "{EB6E138B-9DE5-41E8-A127-3675AA2BA607}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -154,6 +156,12 @@ Global
 		{FBE32DF3-0FB0-4F2F-A424-2C21BD7BC325}.Release|Win32.Build.0 = Release|Win32
 		{FBE32DF3-0FB0-4F2F-A424-2C21BD7BC325}.Release|x64.ActiveCfg = Release|x64
 		{FBE32DF3-0FB0-4F2F-A424-2C21BD7BC325}.Release|x64.Build.0 = Release|x64
+		{EB6E138B-9DE5-41E8-A127-3675AA2BA607}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EB6E138B-9DE5-41E8-A127-3675AA2BA607}.Debug|Win32.Build.0 = Debug|Win32
+		{EB6E138B-9DE5-41E8-A127-3675AA2BA607}.Debug|x64.ActiveCfg = Debug|Win32
+		{EB6E138B-9DE5-41E8-A127-3675AA2BA607}.Release|Win32.ActiveCfg = Release|Win32
+		{EB6E138B-9DE5-41E8-A127-3675AA2BA607}.Release|Win32.Build.0 = Release|Win32
+		{EB6E138B-9DE5-41E8-A127-3675AA2BA607}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
