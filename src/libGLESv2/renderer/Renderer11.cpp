@@ -81,6 +81,8 @@ Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(
     mClearScissorRS = NULL;
     mClearNoScissorRS = NULL;
 
+    mSyncQuery = NULL;
+
     mD3d11Module = NULL;
     mDxgiModule = NULL;
 
@@ -309,8 +311,41 @@ void Renderer11::deleteConfigs(ConfigDesc *configDescList)
 
 void Renderer11::sync(bool block)
 {
-    // TODO
-    // UNIMPLEMENTED();
+    if (block)
+    {
+        HRESULT result;
+
+        if (!mSyncQuery)
+        {
+            D3D11_QUERY_DESC queryDesc;
+            queryDesc.Query = D3D11_QUERY_EVENT;
+            queryDesc.MiscFlags = 0;
+
+            result = mDevice->CreateQuery(&queryDesc, &mSyncQuery);
+            ASSERT(SUCCEEDED(result));
+        }
+
+        mDeviceContext->End(mSyncQuery);
+        mDeviceContext->Flush();
+
+        do
+        {
+            result = mDeviceContext->GetData(mSyncQuery, NULL, 0, D3D11_ASYNC_GETDATA_DONOTFLUSH);
+
+            // Keep polling, but allow other threads to do something useful first
+            Sleep(0);
+
+            if (testDeviceLost(true))
+            {
+                return;
+            }
+        }
+        while (result == S_FALSE);
+    }
+    else
+    {
+        mDeviceContext->Flush();
+    }
 }
 
 SwapChain *Renderer11::createSwapChain(HWND window, HANDLE shareHandle, GLenum backBufferFormat, GLenum depthBufferFormat)
@@ -1697,6 +1732,12 @@ void Renderer11::releaseDeviceResources()
     {
         mDriverConstantBufferPS->Release();
         mDriverConstantBufferPS = NULL;
+    }
+
+    if (mSyncQuery)
+    {
+        mSyncQuery->Release();
+        mSyncQuery = NULL;
     }
 }
 

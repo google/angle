@@ -284,6 +284,9 @@ class Renderer11 : public Renderer
     ID3D11RasterizerState *mClearScissorRS;
     ID3D11RasterizerState *mClearNoScissorRS;
 
+    // Sync query
+    ID3D11Query *mSyncQuery;
+
     ID3D11Device *mDevice;
     D3D_FEATURE_LEVEL mFeatureLevel;
     ID3D11DeviceContext *mDeviceContext;
