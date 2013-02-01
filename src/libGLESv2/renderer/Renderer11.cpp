@@ -1950,7 +1950,15 @@ bool Renderer11::getOcclusionQuerySupport() const
 
 bool Renderer11::getInstancingSupport() const
 {
-    return true;
+    switch (mFeatureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_0:
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0:
+        return true;
+      default: UNREACHABLE();
+        return false;
+    }
 }
 
 bool Renderer11::getShareHandleSupport() const
