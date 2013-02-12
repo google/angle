@@ -239,13 +239,14 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
     // Set the location for EOF token manually.
     pp::Input* input = &yyextra->input;
     pp::Input::Location* scanLoc = &yyextra->scanLoc;
-    int sIndexMax = std::max(0, input->count() - 1);
+    yy_size_t sIndexMax = input->count() ? input->count() - 1 : 0;
     if (scanLoc->sIndex != sIndexMax)
     {
         // We can only reach here if there are empty strings at the
         // end of the input.
         scanLoc->sIndex = sIndexMax; scanLoc->cIndex = 0;
-        yyfileno = sIndexMax; yylineno = 1;
+        // FIXME: this is not 64-bit clean.
+        yyfileno = static_cast<int>(sIndexMax); yylineno = 1;
     }
     yylloc->file = yyfileno;
     yylloc->line = yylineno;

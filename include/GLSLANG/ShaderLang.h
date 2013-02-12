@@ -24,6 +24,7 @@
 #endif
 
 #include "KHR/khrplatform.h"
+#include <stddef.h>
 
 //
 // This is the platform independent interface between an OGL driver
@@ -36,7 +37,7 @@ extern "C" {
 
 // Version number for shader translation API.
 // It is incremented everytime the API changes.
-#define SH_VERSION 107
+#define ANGLE_SH_VERSION 108
 
 //
 // The names of the following enums have been derived by replacing GL prefix
@@ -184,7 +185,7 @@ COMPILER_EXPORT int ShFinalize();
 
 // The 64 bits hash function. The first parameter is the input string; the
 // second parameter is the string length.
-typedef khronos_uint64_t (*ShHashFunction64)(const char*, unsigned int);
+typedef khronos_uint64_t (*ShHashFunction64)(const char*, size_t);
 
 //
 // Implementation dependent built-in resources (constants and extensions).
@@ -279,7 +280,7 @@ COMPILER_EXPORT void ShDestruct(ShHandle handle);
 COMPILER_EXPORT int ShCompile(
     const ShHandle handle,
     const char* const shaderStrings[],
-    const int numStrings,
+    size_t numStrings,
     int compileOptions
     );
 
@@ -307,11 +308,11 @@ COMPILER_EXPORT int ShCompile(
 // SH_HASHED_NAME_MAX_LENGTH: the max length of a hashed name including the
 //                            null termination character.
 // SH_HASHED_NAMES_COUNT: the number of hashed names from the latest compile.
-// 
+//
 // params: Requested parameter
 COMPILER_EXPORT void ShGetInfo(const ShHandle handle,
                                ShShaderInfo pname,
-                               int* params);
+                               size_t* params);
 
 // Returns nul-terminated information log for a compiled shader.
 // Parameters:
@@ -354,7 +355,7 @@ COMPILER_EXPORT void ShGetObjectCode(const ShHandle handle, char* objCode);
 //             mappedName are the same.
 COMPILER_EXPORT void ShGetActiveAttrib(const ShHandle handle,
                                        int index,
-                                       int* length,
+                                       size_t* length,
                                        int* size,
                                        ShDataType* type,
                                        char* name,
@@ -381,7 +382,7 @@ COMPILER_EXPORT void ShGetActiveAttrib(const ShHandle handle,
 //             mappedName are the same.
 COMPILER_EXPORT void ShGetActiveUniform(const ShHandle handle,
                                         int index,
-                                        int* length,
+                                        size_t* length,
                                         int* size,
                                         ShDataType* type,
                                         char* name,

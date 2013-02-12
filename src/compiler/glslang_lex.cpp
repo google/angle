@@ -821,7 +821,7 @@ WHICH GENERATES THE GLSL ES LEXER (glslang_lex.cpp).
 #define YY_INPUT(buf, result, max_size) \
     result = string_input(buf, max_size, yyscanner);
 
-static int string_input(char* buf, int max_size, yyscan_t yyscanner);
+static yy_size_t string_input(char* buf, yy_size_t max_size, yyscan_t yyscanner);
 static int check_type(yyscan_t yyscanner);
 static int reserved_word(yyscan_t yyscanner);
 
@@ -1543,11 +1543,11 @@ YY_RULE_SETUP
 	YY_BREAK
 case 99:
 YY_RULE_SETUP
-{ yylval->lex.i = strtol(yytext, 0, 0); return(INTCONSTANT); }
+{ yylval->lex.i = static_cast<int>(strtol(yytext, 0, 0)); return(INTCONSTANT); }
 	YY_BREAK
 case 100:
 YY_RULE_SETUP
-{ yylval->lex.i = strtol(yytext, 0, 0); return(INTCONSTANT); }
+{ yylval->lex.i = static_cast<int>(strtol(yytext, 0, 0)); return(INTCONSTANT); }
 	YY_BREAK
 case 101:
 YY_RULE_SETUP
@@ -1555,7 +1555,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 102:
 YY_RULE_SETUP
-{ yylval->lex.i = strtol(yytext, 0, 0); return(INTCONSTANT); }
+{ yylval->lex.i = static_cast<int>(strtol(yytext, 0, 0)); return(INTCONSTANT); }
 	YY_BREAK
 case 103:
 YY_RULE_SETUP
@@ -2948,13 +2948,13 @@ void yyfree (void * ptr , yyscan_t yyscanner)
 
 #define YYTABLES_NAME "yytables"
 
-int string_input(char* buf, int max_size, yyscan_t yyscanner) {
+yy_size_t string_input(char* buf, yy_size_t max_size, yyscan_t yyscanner) {
     pp::Token token;
     yyget_extra(yyscanner)->preprocessor.lex(&token);
-    int len = token.type == pp::Token::LAST ? 0 : token.text.size();
-    if ((len > 0) && (len < max_size))
+    yy_size_t len = token.type == pp::Token::LAST ? 0 : token.text.size();
+    if (len < max_size)
         memcpy(buf, token.text.c_str(), len);
-    yyset_lineno(EncodeSourceLoc(token.location.file, token.location.line),yyscanner);
+    yyset_lineno(EncodeSourceLoc(token.location.file, token.location.line), yyscanner);
 
     if (len >= max_size)
         YY_FATAL_ERROR("Input buffer overflow");
@@ -3017,7 +3017,7 @@ int glslang_finalize(TParseContext* context) {
     return 0;
 }
 
-int glslang_scan(int count, const char* const string[], const int length[],
+int glslang_scan(size_t count, const char* const string[], const int length[],
                  TParseContext* context) {
     yyrestart(NULL,context->scanner);
     yyset_lineno(EncodeSourceLoc(0, 1),context->scanner);

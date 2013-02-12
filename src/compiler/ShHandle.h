@@ -61,7 +61,7 @@ public:
 
     bool Init(const ShBuiltInResources& resources);
     bool compile(const char* const shaderStrings[],
-                 const int numStrings,
+                 size_t numStrings,
                  int compileOptions);
 
     // Get results of the last compilation.
