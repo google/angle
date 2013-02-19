@@ -910,7 +910,9 @@ bool Display::testDeviceLost()
 {
     if (mDeviceEx)
     {
-        return FAILED(mDeviceEx->CheckDeviceState(NULL));
+        // Sometimes CheckDeviceState returns S_PRESENT_MODE_CHANGED when the GPU has hung.
+        HRESULT result = mDeviceEx->CheckDeviceState(NULL);
+        return FAILED(result) || result == S_PRESENT_MODE_CHANGED;
     }
     else if (mDevice)
     {
