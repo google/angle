@@ -125,6 +125,7 @@ void ShInitBuiltInResources(ShBuiltInResources* resources)
     resources->OES_standard_derivatives = 0;
     resources->OES_EGL_image_external = 0;
     resources->ARB_texture_rectangle = 0;
+    resources->EXT_draw_buffers = 0;
 
     // Disable name hashing by default.
     resources->HashFunction = NULL;

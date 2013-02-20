@@ -208,6 +208,7 @@ typedef struct
     int OES_standard_derivatives;
     int OES_EGL_image_external;
     int ARB_texture_rectangle;
+    int EXT_draw_buffers;
 
     // Name Hashing.
     // Set a 64 bit hash function to enable user-defined name hashing.
