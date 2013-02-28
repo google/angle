@@ -4479,7 +4479,7 @@ yyreduce:
         // knows where to find parameters.
         //
         TIntermAggregate* paramNodes = new TIntermAggregate;
-        for (int i = 0; i < function->getParamCount(); i++) {
+        for (size_t i = 0; i < function->getParamCount(); i++) {
             const TParameter& param = function->getParam(i);
             if (param.name != 0) {
                 TVariable *variable = new TVariable(param.name, *param.type);
@@ -4755,5 +4755,3 @@ yyreturn:
 int glslang_parse(TParseContext* context) {
     return yyparse(context);
 }
-
-
