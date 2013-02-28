@@ -322,7 +322,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
     mHeight = height;
     mInternalFormat = format;
     mSamples = supportedSamples;
-    mActualFormat = format;
+    mActualFormat = d3d11_gl::ConvertTextureInternalFormat(requestedFormat);
     mSubresourceIndex = D3D11CalcSubresource(0, 0, 1);
 }
 
