@@ -39,6 +39,12 @@
 
 #include "libEGL/Display.h"
 
+#ifdef _DEBUG
+// this flag enables suppressing some spurious warnings that pop up in certain WebGL samples
+// and conformance tests. to enable all warnings, remove this define.
+#define ANGLE_SUPPRESS_D3D11_HAZARD_WARNINGS 1
+#endif
+
 namespace rx
 {
 static const DXGI_FORMAT RenderTargetFormats[] =
@@ -202,6 +208,29 @@ EGLint Renderer11::initialize()
         ERR("Could not create DXGI factory - aborting!\n");
         return EGL_NOT_INITIALIZED;
     }
+
+    // Disable some spurious D3D11 debug warnings to prevent them from flooding the output log
+#if defined(ANGLE_SUPPRESS_D3D11_HAZARD_WARNINGS) && defined(_DEBUG)
+    ID3D11InfoQueue *infoQueue;
+    result = mDevice->QueryInterface(__uuidof(ID3D11InfoQueue),  (void **)&infoQueue);
+
+    if (SUCCEEDED(result))
+    {
+        D3D11_MESSAGE_ID hideMessages[] =
+        {
+            D3D11_MESSAGE_ID_DEVICE_OMSETRENDERTARGETS_HAZARD,
+            D3D11_MESSAGE_ID_DEVICE_PSSETSHADERRESOURCES_HAZARD
+        };
+
+        D3D11_INFO_QUEUE_FILTER filter = {0};
+        filter.DenyList.NumIDs = ArraySize(hideMessages);
+        filter.DenyList.pIDList = hideMessages;
+
+        infoQueue->AddStorageFilterEntries(&filter);
+
+        infoQueue->Release();
+    }
+#endif
 
     unsigned int maxSupportedSamples = 0;
     unsigned int rtFormatCount = ArraySize(RenderTargetFormats);
