@@ -1421,14 +1421,22 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
     if (fragmentShader->mUsesFragCoord)
     {
         pixelHLSL += "    float4 gl_FragCoord : " + fragCoordSemantic + ";\n";
+    }
         
-        // Must consume the PSIZE element if the geometry shader is not active
-        // We won't know if we use a GS until we draw
-        if (vertexShader->mUsesPointSize && shaderModel >= 4)
-        {
-            pixelHLSL += "    float gl_PointSize : PSIZE;\n";
-        }
+    if (fragmentShader->mUsesPointCoord && shaderModel >= 3)
+    {
+        pixelHLSL += "    float2 gl_PointCoord : " + pointCoordSemantic + ";\n";
+    }
 
+    // Must consume the PSIZE element if the geometry shader is not active
+    // We won't know if we use a GS until we draw
+    if (vertexShader->mUsesPointSize && shaderModel >= 4)
+    {
+        pixelHLSL += "    float gl_PointSize : PSIZE;\n";
+    }
+
+    if (fragmentShader->mUsesFragCoord)
+    {
         if (shaderModel >= 4)
         {
             pixelHLSL += "    float4 dx_VPos : SV_Position;\n";
@@ -1437,11 +1445,6 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
         {
             pixelHLSL += "    float2 dx_VPos : VPOS;\n";
         }
-    }
-
-    if (fragmentShader->mUsesPointCoord && shaderModel >= 3)
-    {
-        pixelHLSL += "    float2 gl_PointCoord : " + pointCoordSemantic + ";\n";
     }
 
     pixelHLSL += "};\n"
