@@ -750,6 +750,14 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
             return false;
         }
 
+        // check for zero-sized default framebuffer, which is a special case.
+        // in this case we do not wish to modify any state and just silently return false.
+        // this will not report any gl error but will cause the calling method to return.
+        if (renderbufferObject->getWidth() == 0 || renderbufferObject->getHeight() == 0)
+        {
+            return false;
+        }
+
         renderTargetSerial = renderbufferObject->getSerial();
     }
 

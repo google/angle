@@ -141,6 +141,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11RenderTargetView *rtv, 
     mRenderTarget = rtv;
     mDepthStencil = NULL;
     mShaderResource = srv;
+    mSubresourceIndex = 0;
 
     if (mRenderTarget && mTexture)
     {
@@ -167,7 +168,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11DepthStencilView *dsv, 
     mRenderTarget = NULL;
     mDepthStencil = dsv;
     mShaderResource = srv;
-    mTexture = tex;
+    mSubresourceIndex = 0;
 
     if (mDepthStencil && mTexture)
     {

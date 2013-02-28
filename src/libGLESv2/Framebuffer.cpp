@@ -457,9 +457,8 @@ int Framebuffer::getSamples()
 
 GLenum DefaultFramebuffer::completeness()
 {
-    // The default framebuffer should always be complete
-    ASSERT(Framebuffer::completeness() == GL_FRAMEBUFFER_COMPLETE);
-
+    // The default framebuffer *must* always be complete, though it may not be
+    // subject to the same rules as application FBOs. ie, it could have 0x0 size.
     return GL_FRAMEBUFFER_COMPLETE;
 }
 

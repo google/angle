@@ -20,7 +20,15 @@ namespace rx
 class RenderTarget
 {
   public:
-    RenderTarget() {};
+    RenderTarget()
+    {
+        mWidth = 0;
+        mHeight = 0;
+        mInternalFormat = GL_NONE;
+        mActualFormat = GL_NONE;
+        mSamples = 0;
+    }
+
     virtual ~RenderTarget() {};
 
     GLsizei getWidth() { return mWidth; }
