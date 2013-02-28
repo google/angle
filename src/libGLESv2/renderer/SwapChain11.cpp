@@ -459,6 +459,13 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
         return EGL_BAD_PARAMETER;
     }
 
+    // EGL allows creating a surface with 0x0 dimension, however, DXGI does not like 0x0 swapchains
+    if (backbufferWidth < 1 || backbufferHeight < 1)
+    {
+        releaseOffscreenTexture();
+        return EGL_SUCCESS;
+    }
+
     if (mWindow)
     {
         // We cannot create a swap chain for an HWND that is owned by a different process
