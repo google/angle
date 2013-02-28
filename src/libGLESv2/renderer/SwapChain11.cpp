@@ -136,33 +136,13 @@ void SwapChain11::release()
     }
 }
 
-EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swapInterval)
+EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHeight)
 {
     ID3D11Device *device = mRenderer->getDevice();
 
     if (device == NULL)
     {
         return EGL_BAD_ACCESS;
-    }
-
-    // Release specific resources to free up memory for the new render target, while the
-    // old render target still exists for the purpose of preserving its contents.
-    if (mSwapChain)
-    {
-        mSwapChain->Release();
-        mSwapChain = NULL;
-    }
-
-    if (mBackBufferTexture)
-    {
-        mBackBufferTexture->Release();
-        mBackBufferTexture = NULL;
-    }
-
-    if (mBackBufferRTView)
-    {
-        mBackBufferRTView->Release();
-        mBackBufferRTView = NULL;
     }
 
     if (mOffscreenTexture)
@@ -193,13 +173,6 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
     {
         mDepthStencilDSView->Release();
         mDepthStencilDSView = NULL;
-    }
-
-    mSwapInterval = static_cast<unsigned int>(swapInterval);
-    if (mSwapInterval > 4)
-    {
-        // IDXGISwapChain::Present documentation states that valid sync intervals are in the [0,4] range
-        return EGL_BAD_PARAMETER;
     }
 
     // If the app passed in a share handle, open the resource
@@ -310,64 +283,6 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mOffscreenSRView, "Offscreen shader resource");
 
-    if (mWindow)
-    {
-        // We cannot create a swap chain for an HWND that is owned by a different process
-        DWORD currentProcessId = GetCurrentProcessId();
-        DWORD wndProcessId;
-        GetWindowThreadProcessId(mWindow, &wndProcessId);
-
-        if (currentProcessId != wndProcessId)
-        {
-            ERR("Could not create swap chain, window owned by different process");
-            release();
-            return EGL_BAD_NATIVE_WINDOW;
-        }
-
-        IDXGIFactory *factory = mRenderer->getDxgiFactory();
-
-        DXGI_SWAP_CHAIN_DESC swapChainDesc = {0};
-        swapChainDesc.BufferCount = 2;
-        swapChainDesc.BufferDesc.Format = gl_d3d11::ConvertRenderbufferFormat(mBackBufferFormat);
-        swapChainDesc.BufferDesc.Width = backbufferWidth;
-        swapChainDesc.BufferDesc.Height = backbufferHeight;
-        swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-        swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-        swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
-        swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
-        swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-        swapChainDesc.Flags = 0;
-        swapChainDesc.OutputWindow = mWindow;
-        swapChainDesc.SampleDesc.Count = 1;
-        swapChainDesc.SampleDesc.Quality = 0;
-        swapChainDesc.Windowed = TRUE;
-
-        result = factory->CreateSwapChain(device, &swapChainDesc, &mSwapChain);
-
-        if (FAILED(result))
-        {
-            ERR("Could not create additional swap chains or offscreen surfaces: %08lX", result);
-            release();
-
-            if (d3d11::isDeviceLostError(result))
-            {
-                return EGL_CONTEXT_LOST;
-            }
-            else
-            {
-                return EGL_BAD_ALLOC;
-            }
-        }
-
-        result = mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&mBackBufferTexture);
-        ASSERT(SUCCEEDED(result));
-        d3d11::SetDebugName(mBackBufferTexture, "Back buffer texture");
-
-        result = device->CreateRenderTargetView(mBackBufferTexture, NULL, &mBackBufferRTView);
-        ASSERT(SUCCEEDED(result));
-        d3d11::SetDebugName(mBackBufferRTView, "Back buffer render target");
-    }
-
     if (mDepthBufferFormat != GL_NONE)
     {
         D3D11_TEXTURE2D_DESC depthStencilDesc = {0};
@@ -405,6 +320,106 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
         d3d11::SetDebugName(mDepthStencilDSView, "Depth stencil view");
     }
 
+    mWidth = backbufferWidth;
+    mHeight = backbufferHeight;
+
+    return EGL_SUCCESS;
+}
+
+EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swapInterval)
+{
+    ID3D11Device *device = mRenderer->getDevice();
+
+    if (device == NULL)
+    {
+        return EGL_BAD_ACCESS;
+    }
+
+    // Release specific resources to free up memory for the new render target, while the
+    // old render target still exists for the purpose of preserving its contents.
+    if (mSwapChain)
+    {
+        mSwapChain->Release();
+        mSwapChain = NULL;
+    }
+
+    if (mBackBufferTexture)
+    {
+        mBackBufferTexture->Release();
+        mBackBufferTexture = NULL;
+    }
+
+    if (mBackBufferRTView)
+    {
+        mBackBufferRTView->Release();
+        mBackBufferRTView = NULL;
+    }
+
+    mSwapInterval = static_cast<unsigned int>(swapInterval);
+    if (mSwapInterval > 4)
+    {
+        // IDXGISwapChain::Present documentation states that valid sync intervals are in the [0,4] range
+        return EGL_BAD_PARAMETER;
+    }
+
+    if (mWindow)
+    {
+        // We cannot create a swap chain for an HWND that is owned by a different process
+        DWORD currentProcessId = GetCurrentProcessId();
+        DWORD wndProcessId;
+        GetWindowThreadProcessId(mWindow, &wndProcessId);
+
+        if (currentProcessId != wndProcessId)
+        {
+            ERR("Could not create swap chain, window owned by different process");
+            release();
+            return EGL_BAD_NATIVE_WINDOW;
+        }
+
+        IDXGIFactory *factory = mRenderer->getDxgiFactory();
+
+        DXGI_SWAP_CHAIN_DESC swapChainDesc = {0};
+        swapChainDesc.BufferCount = 2;
+        swapChainDesc.BufferDesc.Format = gl_d3d11::ConvertRenderbufferFormat(mBackBufferFormat);
+        swapChainDesc.BufferDesc.Width = backbufferWidth;
+        swapChainDesc.BufferDesc.Height = backbufferHeight;
+        swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+        swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+        swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
+        swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
+        swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+        swapChainDesc.Flags = 0;
+        swapChainDesc.OutputWindow = mWindow;
+        swapChainDesc.SampleDesc.Count = 1;
+        swapChainDesc.SampleDesc.Quality = 0;
+        swapChainDesc.Windowed = TRUE;
+
+        HRESULT result = factory->CreateSwapChain(device, &swapChainDesc, &mSwapChain);
+
+        if (FAILED(result))
+        {
+            ERR("Could not create additional swap chains or offscreen surfaces: %08lX", result);
+            release();
+
+            if (d3d11::isDeviceLostError(result))
+            {
+                return EGL_CONTEXT_LOST;
+            }
+            else
+            {
+                return EGL_BAD_ALLOC;
+            }
+        }
+
+        result = mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&mBackBufferTexture);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mBackBufferTexture, "Back buffer texture");
+
+        result = device->CreateRenderTargetView(mBackBufferTexture, NULL, &mBackBufferRTView);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mBackBufferRTView, "Back buffer render target");
+    }
+
     // If we are resizing the swap chain, we don't wish to recreate all the static resources
     if (!mPassThroughResourcesInit)
     {
@@ -412,10 +427,7 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
         initPassThroughResources();
     }
 
-    mWidth = backbufferWidth;
-    mHeight = backbufferHeight;
-
-    return EGL_SUCCESS;
+    return resetOffscreenTexture(backbufferWidth, backbufferHeight);
 }
 
 void SwapChain11::initPassThroughResources()

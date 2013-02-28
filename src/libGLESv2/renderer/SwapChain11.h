@@ -44,6 +44,7 @@ class SwapChain11 : public SwapChain
 
     void release();
     void initPassThroughResources();
+    EGLint resetOffscreenTexture(int backbufferWidth, int backbufferHeight);
 
     Renderer11 *mRenderer;
     EGLint mHeight;
