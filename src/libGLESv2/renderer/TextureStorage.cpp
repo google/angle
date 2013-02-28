@@ -8,11 +8,8 @@
 // classes TextureStorageInterface2D and TextureStorageInterfaceCube, which act as the interface to the
 // GPU-side texture.
 
-#include "libGLESv2/main.h"
 #include "libGLESv2/renderer/TextureStorage.h"
-#include "libGLESv2/renderer/SwapChain.h"
-#include "libGLESv2/renderer/Blit.h"
-#include "libGLESv2/renderer/RenderTarget.h"
+#include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/Renderbuffer.h"
 #include "libGLESv2/Texture.h"
 

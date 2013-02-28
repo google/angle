@@ -13,13 +13,22 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 
-#include "common/debug.h"
-#include "libEGL/Display.h"
+#define EGLAPI
+#include <EGL/egl.h>
 
-#include "libGLESv2/Context.h"
+#include "common/debug.h"
+#include "common/system.h"
+
+namespace egl
+{
+class Display;
+class Surface;
+}
 
 namespace gl
 {
+class Context;
+    
 struct Current
 {
     Context *context;
@@ -42,6 +51,11 @@ const T &error(GLenum errorCode, const T &returnValue)
     return returnValue;
 }
 
+}
+
+namespace rx
+{
+class Renderer;
 }
 
 extern "C"

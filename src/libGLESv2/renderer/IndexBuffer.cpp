@@ -8,6 +8,7 @@
 // class with derivations, classes that perform graphics API agnostic index buffer operations.
 
 #include "libGLESv2/renderer/IndexBuffer.h"
+#include "libGLESv2/renderer/Renderer.h"
 
 namespace rx
 {
@@ -173,7 +174,7 @@ bool StaticIndexBufferInterface::reserveBufferSpace(unsigned int size, GLenum in
     }
 }
 
-UINT StaticIndexBufferInterface::lookupRange(intptr_t offset, GLsizei count, UINT *minIndex, UINT *maxIndex)
+unsigned int StaticIndexBufferInterface::lookupRange(intptr_t offset, GLsizei count, unsigned int *minIndex, unsigned int *maxIndex)
 {
     IndexRange range = {offset, count};
 
@@ -189,7 +190,7 @@ UINT StaticIndexBufferInterface::lookupRange(intptr_t offset, GLsizei count, UIN
     return res->second.streamOffset;
 }
 
-void StaticIndexBufferInterface::addRange(intptr_t offset, GLsizei count, UINT minIndex, UINT maxIndex, UINT streamOffset)
+void StaticIndexBufferInterface::addRange(intptr_t offset, GLsizei count, unsigned int minIndex, unsigned int maxIndex, unsigned int streamOffset)
 {
     IndexRange indexRange = {offset, count};
     IndexResult indexResult = {minIndex, maxIndex, streamOffset};

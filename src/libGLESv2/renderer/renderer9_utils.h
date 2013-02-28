@@ -16,7 +16,6 @@
 #include <d3d9.h>
 
 #include "libGLESv2/utilities.h"
-#include "libGLESv2/main.h"
 
 const D3DFORMAT D3DFMT_INTZ = ((D3DFORMAT)(MAKEFOURCC('I','N','T','Z')));
 const D3DFORMAT D3DFMT_NULL = ((D3DFORMAT)(MAKEFOURCC('N','U','L','L')));

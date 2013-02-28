@@ -22,7 +22,7 @@
 #include "libGLESv2/mathutil.h"
 #include "libGLESv2/Uniform.h"
 #include "libGLESv2/Shader.h"
-#include "Context.h"
+#include "libGLESv2/Constants.h"
 
 namespace rx
 {

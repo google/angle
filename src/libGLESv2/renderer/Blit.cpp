@@ -8,13 +8,11 @@
 
 #include "libGLESv2/renderer/Blit.h"
 
-#include "common/debug.h"
-
 #include "libGLESv2/main.h"
-#include "libGLESv2/utilities.h"
 #include "libGLESv2/renderer/renderer9_utils.h"
 #include "libGLESv2/renderer/TextureStorage9.h"
 #include "libGLESv2/renderer/RenderTarget9.h"
+#include "libGLESv2/renderer/Renderer9.h"
 #include "libGLESv2/Framebuffer.h"
 #include "libGLESv2/Renderbuffer.h"
 

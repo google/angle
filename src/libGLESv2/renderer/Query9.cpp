@@ -10,6 +10,7 @@
 #include "libGLESv2/renderer/Query9.h"
 #include "libGLESv2/main.h"
 #include "libGLESv2/renderer/renderer9_utils.h"
+#include "libGLESv2/renderer/Renderer9.h"
 
 namespace rx
 {

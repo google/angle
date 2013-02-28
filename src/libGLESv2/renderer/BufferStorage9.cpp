@@ -7,10 +7,8 @@
 // BufferStorage9.cpp Defines the BufferStorage9 class.
 
 #include "libGLESv2/renderer/BufferStorage9.h"
-#include "libGLESv2/main.h"
 #include "common/debug.h"
-#include <stdlib.h>
-#include <string.h>
+#include <algorithm> // for std::min and std::max
 
 namespace rx
 {

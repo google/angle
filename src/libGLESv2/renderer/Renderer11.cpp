@@ -8,14 +8,12 @@
 
 #include <D3Dcompiler.h>
 
-#include "common/debug.h"
 #include "libGLESv2/main.h"
 #include "libGLESv2/utilities.h"
-#include "libGLESv2/mathutil.h"
 #include "libGLESv2/Buffer.h"
-#include "libGLESv2/Program.h"
 #include "libGLESv2/ProgramBinary.h"
 #include "libGLESv2/Framebuffer.h"
+#include "libGLESv2/RenderBuffer.h"
 #include "libGLESv2/renderer/Renderer11.h"
 #include "libGLESv2/renderer/RenderTarget11.h"
 #include "libGLESv2/renderer/renderer11_utils.h"
@@ -39,6 +37,8 @@
 
 #include "libGLESv2/renderer/shaders/compiled/clear11vs.h"
 #include "libGLESv2/renderer/shaders/compiled/clear11ps.h"
+
+#include "libEGL/Display.h"
 
 #include <sstream>
 

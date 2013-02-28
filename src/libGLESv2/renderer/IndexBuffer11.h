@@ -10,12 +10,12 @@
 #define LIBGLESV2_RENDERER_INDEXBUFFER11_H_
 
 #include "libGLESv2/renderer/IndexBuffer.h"
-#include "libGLESv2/renderer/Renderer11.h"
 
 #include <d3d11.h>
 
 namespace rx
 {
+class Renderer11;
 
 class IndexBuffer11 : public IndexBuffer
 {

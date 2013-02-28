@@ -18,8 +18,8 @@
 #include <list>
 #include <vector>
 
-#include "libGLESv2/ResourceManager.h"
 #include "compiler/Uniform.h"
+#include "common/angleutils.h"
 
 namespace rx
 {
@@ -28,6 +28,8 @@ class Renderer;
 
 namespace gl
 {
+class ResourceManager;
+
 struct Varying
 {
     Varying(GLenum type, const std::string &name, int size, bool array)

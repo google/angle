@@ -18,10 +18,6 @@
 
 #include "common/debug.h"
 #include "common/RefCountObject.h"
-#include "libGLESv2/renderer/Image.h"
-#include "libGLESv2/renderer/TextureStorage.h"
-#include "libGLESv2/Renderbuffer.h"
-#include "libGLESv2/utilities.h"
 #include "libGLESv2/angletypes.h"
 
 namespace egl
@@ -32,11 +28,17 @@ class Surface;
 namespace rx
 {
 class Renderer;
+class TextureStorageInterface;
+class TextureStorageInterface2D;
+class TextureStorageInterfaceCube;
+class RenderTarget;
+class Image;
 }
 
 namespace gl
 {
 class Framebuffer;
+class Renderbuffer;
 
 enum
 {

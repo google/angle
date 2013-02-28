@@ -10,12 +10,12 @@
 #define LIBGLESV2_RENDERER_BUFFERSTORAGE11_H_
 
 #include "libGLESv2/renderer/BufferStorage.h"
-#include "libGLESv2/renderer/Renderer11.h"
 
 #include <D3D11.h>
 
 namespace rx
 {
+class Renderer11;
 
 class BufferStorage11 : public BufferStorage
 {

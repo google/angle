@@ -9,14 +9,12 @@
 // D3D9 texture.
 
 #include "libGLESv2/main.h"
+#include "libGLESv2/renderer/Renderer9.h"
 #include "libGLESv2/renderer/TextureStorage9.h"
 #include "libGLESv2/renderer/SwapChain9.h"
-#include "libGLESv2/renderer/Blit.h"
 #include "libGLESv2/renderer/RenderTarget9.h"
 #include "libGLESv2/renderer/renderer9_utils.h"
 #include "libGLESv2/Texture.h"
-
-#include "common/debug.h"
 
 namespace rx
 {

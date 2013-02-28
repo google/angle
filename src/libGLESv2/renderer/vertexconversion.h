@@ -13,8 +13,6 @@
 #include <cstddef>
 #include <limits>
 
-#include "libGLESv2/Context.h" // Defines Index
-
 namespace rx
 {
 

@@ -10,12 +10,12 @@
 #define LIBGLESV2_RENDERER_VERTEXBUFFER11_H_
 
 #include "libGLESv2/renderer/VertexBuffer.h"
-#include "libGLESv2/renderer/Renderer11.h"
 
 #include <d3d11.h>
 
 namespace rx
 {
+class Renderer11;
 
 class VertexBuffer11 : public VertexBuffer
 {

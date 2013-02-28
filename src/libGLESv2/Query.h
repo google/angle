@@ -14,7 +14,12 @@
 
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
-#include "libGLESv2/renderer/Renderer.h"
+
+namespace rx
+{
+class Renderer;
+class QueryImpl;
+}
 
 namespace gl
 {

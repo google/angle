@@ -12,6 +12,8 @@
 #include "libGLESv2/renderer/BufferStorage11.h"
 #include "libGLESv2/renderer/ShaderExecutable11.h"
 #include "libGLESv2/ProgramBinary.h"
+#include "libGLESv2/Context.h"
+#include "libGLESv2/renderer/VertexDataManager.h"
 
 #include "third_party/murmurhash/MurmurHash3.h"
 

@@ -8,13 +8,8 @@
 
 #include "libGLESv2/renderer/SwapChain11.h"
 
-#include "common/debug.h"
-#include "libGLESv2/utilities.h"
 #include "libGLESv2/renderer/renderer11_utils.h"
 #include "libGLESv2/renderer/Renderer11.h"
-#include "libGLESv2/Context.h"
-#include "libGLESv2/main.h"
-
 #include "libGLESv2/renderer/shaders/compiled/passthrough11vs.h"
 #include "libGLESv2/renderer/shaders/compiled/passthroughrgba11ps.h"
 

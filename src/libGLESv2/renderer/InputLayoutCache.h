@@ -10,15 +10,23 @@
 #ifndef LIBGLESV2_RENDERER_INPUTLAYOUTCACHE_H_
 #define LIBGLESV2_RENDERER_INPUTLAYOUTCACHE_H_
 
-#include "libGLESv2/Context.h"
+#include "libGLESv2/Constants.h"
+#include "common/angleutils.h"
 
-#include "libGLESv2/renderer/VertexDataManager.h"
+#define GL_APICALL
+#include <GLES2/gl2.h>
 
 #include <D3D11.h>
 #include <unordered_map>
 
+namespace gl
+{
+class ProgramBinary;
+}
+
 namespace rx
 {
+struct TranslatedAttribute;
 
 class InputLayoutCache
 {

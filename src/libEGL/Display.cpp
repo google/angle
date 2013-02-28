@@ -17,8 +17,10 @@
 #include "common/debug.h"
 #include "libGLESv2/mathutil.h"
 #include "libGLESv2/main.h"
+#include "libGLESv2/Context.h"
 
 #include "libEGL/main.h"
+#include "libEGL/Surface.h"
 
 namespace egl
 {

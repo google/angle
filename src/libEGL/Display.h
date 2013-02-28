@@ -16,14 +16,17 @@
 #include <set>
 #include <vector>
 
-#include "libGLESv2/Context.h"
-#include "libGLESv2/renderer/Renderer.h"
-
 #include "libEGL/Config.h"
-#include "libEGL/Surface.h"
+
+namespace gl
+{
+class Context;
+}
 
 namespace egl
 {
+class Surface;
+
 class Display
 {
   public:

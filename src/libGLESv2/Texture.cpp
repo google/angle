@@ -10,16 +10,15 @@
 
 #include "libGLESv2/Texture.h"
 
-#include <algorithm>
-
-#include "common/debug.h"
-
 #include "libGLESv2/main.h"
 #include "libGLESv2/mathutil.h"
 #include "libGLESv2/utilities.h"
 #include "libGLESv2/renderer/Blit.h"
-#include "libGLESv2/renderer/SwapChain.h"
-#include "libGLESv2/Framebuffer.h"
+#include "libGLESv2/Renderbuffer.h"
+#include "libGLESv2/renderer/Image.h"
+#include "libGLESv2/renderer/Renderer.h"
+#include "libGLESv2/renderer/TextureStorage.h"
+#include "libEGL/Surface.h"
 
 namespace gl
 {

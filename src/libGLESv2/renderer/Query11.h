@@ -10,10 +10,11 @@
 #define LIBGLESV2_RENDERER_QUERY11_H_
 
 #include "libGLESv2/renderer/QueryImpl.h"
-#include "libGLESv2/renderer/Renderer11.h"
+#include <D3D11.h>
 
 namespace rx
 {
+class Renderer11;
 
 class Query11 : public QueryImpl
 {

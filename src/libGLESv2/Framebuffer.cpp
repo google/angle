@@ -10,9 +10,11 @@
 #include "libGLESv2/Framebuffer.h"
 
 #include "libGLESv2/main.h"
-#include "libGLESv2/Renderbuffer.h"
-#include "libGLESv2/Texture.h"
 #include "libGLESv2/utilities.h"
+#include "libGLESv2/Texture.h"
+#include "libGLESv2/Context.h"
+#include "libGLESv2/renderer/Renderer.h"
+#include "libGLESv2/Renderbuffer.h"
 
 namespace gl
 {

@@ -15,10 +15,11 @@
 
 #include <map>
 
-#include "libGLESv2/renderer/Renderer.h"
+#include "common/angleutils.h"
 
 namespace rx
 {
+class Renderer;
 
 class IndexBuffer
 {
@@ -103,8 +104,8 @@ class StaticIndexBufferInterface : public IndexBufferInterface
 
     virtual bool reserveBufferSpace(unsigned int size, GLenum indexType);
 
-    UINT lookupRange(intptr_t offset, GLsizei count, UINT *minIndex, UINT *maxIndex);   // Returns the offset into the index buffer, or -1 if not found
-    void addRange(intptr_t offset, GLsizei count, UINT minIndex, UINT maxIndex, UINT streamOffset);
+    unsigned int lookupRange(intptr_t offset, GLsizei count, unsigned int *minIndex, unsigned int *maxIndex);   // Returns the offset into the index buffer, or -1 if not found
+    void addRange(intptr_t offset, GLsizei count, unsigned int minIndex, unsigned int maxIndex, unsigned int streamOffset);
 
   private:
     struct IndexRange
@@ -128,9 +129,9 @@ class StaticIndexBufferInterface : public IndexBufferInterface
 
     struct IndexResult
     {
-        UINT minIndex;
-        UINT maxIndex;
-        UINT streamOffset;
+        unsigned int minIndex;
+        unsigned int maxIndex;
+        unsigned int streamOffset;
     };
 
     std::map<IndexRange, IndexResult> mCache;

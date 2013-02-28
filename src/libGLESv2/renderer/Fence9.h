@@ -10,10 +10,12 @@
 #define LIBGLESV2_RENDERER_FENCE9_H_
 
 #include "libGLESv2/renderer/FenceImpl.h"
-#include "libGLESv2/renderer/Renderer9.h"
+
+#include <d3d9.h>
 
 namespace rx
 {
+class Renderer9;
 
 class Fence9 : public FenceImpl
 {

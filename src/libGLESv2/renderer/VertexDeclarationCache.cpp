@@ -7,8 +7,8 @@
 // VertexDeclarationCache.cpp: Implements a helper class to construct and cache vertex declarations.
 
 #include "libGLESv2/ProgramBinary.h"
+#include "libGLESv2/Context.h"
 #include "libGLESv2/renderer/VertexBuffer9.h"
-#include "libGLESv2/renderer/VertexDataManager.h"
 #include "libGLESv2/renderer/VertexDeclarationCache.h"
 
 namespace rx

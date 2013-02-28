@@ -14,7 +14,6 @@
 #include "libGLESv2/Renderbuffer.h"
 #include "libGLESv2/Shader.h"
 #include "libGLESv2/Texture.h"
-#include "libGLESv2/renderer/Renderer.h"
 
 namespace gl
 {

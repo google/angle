@@ -10,11 +10,11 @@
 
 #include "libGLESv2/Shader.h"
 
-#include <string>
-
 #include "GLSLANG/ShaderLang.h"
-#include "libGLESv2/main.h"
 #include "libGLESv2/utilities.h"
+#include "libGLESv2/renderer/Renderer.h"
+#include "libGLESv2/Constants.h"
+#include "libGLESv2/ResourceManager.h"
 
 namespace gl
 {

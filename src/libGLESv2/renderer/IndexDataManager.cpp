@@ -10,11 +10,9 @@
 #include "libGLESv2/renderer/IndexDataManager.h"
 #include "libGLESv2/renderer/BufferStorage.h"
 
-#include "common/debug.h"
-
 #include "libGLESv2/Buffer.h"
-#include "libGLESv2/mathutil.h"
 #include "libGLESv2/main.h"
+#include "libGLESv2/renderer/IndexBuffer.h"
 
 namespace rx
 {

@@ -18,11 +18,17 @@
 
 #include "common/angleutils.h"
 
-#include "libGLESv2/Context.h"
-#include "libGLESv2/renderer/Renderer9.h"
+namespace gl
+{
+class Framebuffer;
+}
 
 namespace rx
 {
+class Renderer9;
+class TextureStorageInterface2D;
+class TextureStorageInterfaceCube;
+
 class Blit
 {
   public:

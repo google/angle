@@ -10,25 +10,19 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 
-#include <exception>
-#include <limits>
-
-#include "common/debug.h"
 #include "common/version.h"
 
 #include "libGLESv2/main.h"
-#include "libGLESv2/mathutil.h"
 #include "libGLESv2/utilities.h"
 #include "libGLESv2/Buffer.h"
-#include "libGLESv2/Context.h"
 #include "libGLESv2/Fence.h"
 #include "libGLESv2/Framebuffer.h"
+#include "libGLESv2/Renderbuffer.h"
 #include "libGLESv2/Program.h"
 #include "libGLESv2/ProgramBinary.h"
-#include "libGLESv2/Renderbuffer.h"
-#include "libGLESv2/Shader.h"
 #include "libGLESv2/Texture.h"
 #include "libGLESv2/Query.h"
+#include "libGLESv2/Context.h"
 
 bool validImageSize(GLint level, GLsizei width, GLsizei height)
 {

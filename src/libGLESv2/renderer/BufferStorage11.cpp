@@ -8,6 +8,7 @@
 
 #include "libGLESv2/renderer/BufferStorage11.h"
 #include "libGLESv2/main.h"
+#include "libGLESv2/renderer/Renderer11.h"
 
 namespace rx
 {

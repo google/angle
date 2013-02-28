@@ -7,14 +7,7 @@
 // utilities.cpp: Conversion functions and other utility routines.
 
 #include "libGLESv2/utilities.h"
-
-#include <limits>
-#include <stdio.h>
-
-#include "common/debug.h"
-#include "common/system.h"
 #include "libGLESv2/mathutil.h"
-#include "libGLESv2/Context.h"
 
 namespace gl
 {

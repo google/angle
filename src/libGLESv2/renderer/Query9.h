@@ -10,10 +10,12 @@
 #define LIBGLESV2_RENDERER_QUERY9_H_
 
 #include "libGLESv2/renderer/QueryImpl.h"
-#include "libGLESv2/renderer/Renderer9.h"
+
+#include <d3d9.h>
 
 namespace rx
 {
+class Renderer9;
 
 class Query9 : public QueryImpl
 {

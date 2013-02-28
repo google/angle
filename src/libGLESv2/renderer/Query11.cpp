@@ -7,6 +7,7 @@
 // Query11.cpp: Defines the rx::Query11 class which implements rx::QueryImpl.
 
 #include "libGLESv2/renderer/Query11.h"
+#include "libGLESv2/renderer/Renderer11.h"
 #include "libGLESv2/main.h"
 
 namespace rx

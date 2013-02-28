@@ -7,11 +7,8 @@
 // main.cpp: DLL entry point and management of thread-local data.
 
 #include "libGLESv2/main.h"
-#include "libGLESv2/utilities.h"
 
-#include "common/debug.h"
-
-#include "libGLESv2/Framebuffer.h"
+#include "libGLESv2/Context.h"
 
 static DWORD currentTLS = TLS_OUT_OF_INDEXES;
 

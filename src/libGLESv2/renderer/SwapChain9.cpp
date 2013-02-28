@@ -7,14 +7,8 @@
 // SwapChain9.cpp: Implements a back-end specific class for the D3D9 swap chain.
 
 #include "libGLESv2/renderer/SwapChain9.h"
-
-#include "common/debug.h"
-#include "libGLESv2/utilities.h"
 #include "libGLESv2/renderer/renderer9_utils.h"
 #include "libGLESv2/renderer/Renderer9.h"
-#include "libGLESv2/renderer/RenderTarget9.h"
-#include "libGLESv2/Context.h"
-#include "libGLESv2/main.h"
 
 namespace rx
 {

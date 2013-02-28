@@ -8,17 +8,13 @@
 
 #include <D3Dcompiler.h>
 
-#include "common/debug.h"
 #include "libGLESv2/main.h"
-#include "libGLESv2/utilities.h"
-#include "libGLESv2/mathutil.h"
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/Texture.h"
 #include "libGLESv2/Framebuffer.h"
-#include "libGLESv2/Program.h"
+#include "libGLESv2/Renderbuffer.h"
 #include "libGLESv2/ProgramBinary.h"
 #include "libGLESv2/renderer/IndexDataManager.h"
-#include "libGLESv2/renderer/VertexDataManager.h"
 #include "libGLESv2/renderer/Renderer9.h"
 #include "libGLESv2/renderer/renderer9_utils.h"
 #include "libGLESv2/renderer/ShaderExecutable9.h"
@@ -32,6 +28,8 @@
 #include "libGLESv2/renderer/BufferStorage9.h"
 #include "libGLESv2/renderer/Query9.h"
 #include "libGLESv2/renderer/Fence9.h"
+
+#include "libEGL/Display.h"
 
 #include <sstream>
 

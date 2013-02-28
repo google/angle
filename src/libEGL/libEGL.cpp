@@ -17,7 +17,7 @@
 
 #include "libEGL/main.h"
 #include "libEGL/Display.h"
-
+#include "libEGL/Surface.h"
 
 bool validateDisplay(egl::Display *display)
 {

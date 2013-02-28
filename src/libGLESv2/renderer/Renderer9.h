@@ -23,16 +23,20 @@
 
 #include "common/angleutils.h"
 #include "libGLESv2/mathutil.h"
-#include "libGLESv2/Context.h"
 #include "libGLESv2/renderer/ShaderCache.h"
 #include "libGLESv2/renderer/VertexDeclarationCache.h"
 #include "libGLESv2/renderer/Renderer.h"
-#include "libGLESv2/renderer/IndexDataManager.h"
 #include "libGLESv2/renderer/RenderTarget.h"
+
+namespace gl
+{
+class Renderbuffer;
+}
 
 namespace rx
 {
 class VertexDataManager;
+class IndexDataManager;
 class StreamingIndexBufferInterface;
 struct TranslatedAttribute;
 

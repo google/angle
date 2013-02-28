@@ -7,6 +7,7 @@
 // IndexBuffer11.cpp: Defines the D3D11 IndexBuffer implementation.
 
 #include "libGLESv2/renderer/IndexBuffer11.h"
+#include "libGLESv2/renderer/Renderer11.h"
 
 namespace rx
 {

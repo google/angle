@@ -9,14 +9,7 @@
 
 #include "libGLESv2/Program.h"
 #include "libGLESv2/ProgramBinary.h"
-
-#include "common/debug.h"
-
-#include "libGLESv2/main.h"
-#include "libGLESv2/Shader.h"
-#include "libGLESv2/utilities.h"
-
-#include <string>
+#include "libGLESv2/ResourceManager.h"
 
 namespace gl
 {

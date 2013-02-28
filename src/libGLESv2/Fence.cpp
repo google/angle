@@ -8,6 +8,7 @@
 
 #include "libGLESv2/Fence.h"
 #include "libGLESv2/renderer/FenceImpl.h"
+#include "libGLESv2/renderer/Renderer.h"
 
 namespace gl
 {

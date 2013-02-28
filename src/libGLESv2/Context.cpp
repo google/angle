@@ -9,24 +9,24 @@
 
 #include "libGLESv2/Context.h"
 
-#include <algorithm>
 #include <sstream>
 
 #include "libGLESv2/main.h"
-#include "libGLESv2/mathutil.h"
 #include "libGLESv2/utilities.h"
-#include "libGLESv2/ResourceManager.h"
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/Fence.h"
 #include "libGLESv2/Framebuffer.h"
+#include "libGLESv2/Renderbuffer.h"
 #include "libGLESv2/Program.h"
 #include "libGLESv2/ProgramBinary.h"
 #include "libGLESv2/Query.h"
-#include "libGLESv2/Renderbuffer.h"
-#include "libGLESv2/Shader.h"
 #include "libGLESv2/Texture.h"
+#include "libGLESv2/ResourceManager.h"
 #include "libGLESv2/renderer/IndexDataManager.h"
 #include "libGLESv2/renderer/RenderTarget.h"
+#include "libGLESv2/renderer/Renderer.h"
+
+#include "libEGL/Surface.h"
 
 #undef near
 #undef far

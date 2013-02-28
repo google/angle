@@ -16,13 +16,23 @@
 #define GL_APICALL
 #include <GLES2/gl2.h>
 
-#include "libGLESv2/Context.h"
+#include "libGLESv2/Constants.h"
+#include "common/angleutils.h"
+
+#include <D3D11.h>
+
+namespace gl
+{
+class VertexAttribute;
+class ProgramBinary;
+}
 
 namespace rx
 {
 class BufferStorage;
 class StreamingVertexBufferInterface;
 class VertexBuffer;
+class Renderer;
 
 struct TranslatedAttribute
 {

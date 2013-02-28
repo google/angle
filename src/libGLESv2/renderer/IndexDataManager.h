@@ -16,23 +16,32 @@
 #define GL_APICALL
 #include <GLES2/gl2.h>
 
-#include "libGLESv2/renderer/Renderer.h"
-#include "libGLESv2/renderer/IndexBuffer.h"
+#include "common/angleutils.h"
 
 namespace
 {
     enum { INITIAL_INDEX_BUFFER_SIZE = 4096 * sizeof(GLuint) };
 }
 
+namespace gl
+{
+class Buffer;
+}
+
 namespace rx
 {
+class StaticIndexBufferInterface;
+class StreamingIndexBufferInterface;
+class IndexBuffer;
+class BufferStorage;
+class Renderer;
 
 struct TranslatedIndexData
 {
-    UINT minIndex;
-    UINT maxIndex;
-    UINT startIndex;
-    UINT startOffset;   // In bytes
+    unsigned int minIndex;
+    unsigned int maxIndex;
+    unsigned int startIndex;
+    unsigned int startOffset;   // In bytes
 
     IndexBuffer *indexBuffer;
     BufferStorage *storage;

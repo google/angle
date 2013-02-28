@@ -13,7 +13,12 @@
 #include <GLES2/gl2.h>
 
 #include "common/angleutils.h"
-#include "libGLESv2/renderer/Renderer.h"
+
+namespace rx
+{
+class Renderer;
+class FenceImpl;
+}
 
 namespace gl
 {

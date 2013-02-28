@@ -10,10 +10,8 @@
 #include "libGLESv2/renderer/Image9.h"
 
 #include "libGLESv2/main.h"
-#include "libGLESv2/mathutil.h"
-#include "libGLESv2/utilities.h"
-#include "libGLESv2/Texture.h"
 #include "libGLESv2/Framebuffer.h"
+#include "libGLESv2/Renderbuffer.h"
 #include "libGLESv2/renderer/Renderer9.h"
 #include "libGLESv2/renderer/RenderTarget9.h"
 #include "libGLESv2/renderer/TextureStorage9.h"

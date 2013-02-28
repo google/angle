@@ -10,12 +10,12 @@
 #define LIBGLESV2_RENDERER_VERTEXBUFFER9_H_
 
 #include "libGLESv2/renderer/VertexBuffer.h"
-#include "libGLESv2/renderer/Renderer9.h"
 
 #include <d3d9.h>
 
 namespace rx
 {
+class Renderer9;
 
 class VertexBuffer9 : public VertexBuffer
 {
