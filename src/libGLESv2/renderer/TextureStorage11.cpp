@@ -179,22 +179,32 @@ void TextureStorage11::generateMipmapLayer(RenderTarget11 *source, RenderTarget1
 TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, SwapChain11 *swapchain)
     : TextureStorage11(renderer, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE)
 {
-    ID3D11Texture2D *surfaceTexture = swapchain->getOffscreenTexture();
-    mTexture = surfaceTexture;
-    mSRV = NULL;
+    mTexture = swapchain->getOffscreenTexture();
+    mSRV = swapchain->getRenderTargetShaderResource();
 
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
     {
         mRenderTarget[i] = NULL;
     }
 
-    D3D11_TEXTURE2D_DESC desc;
-    surfaceTexture->GetDesc(&desc);
+    D3D11_TEXTURE2D_DESC texDesc;
+    mTexture->GetDesc(&texDesc);
+    mMipLevels = texDesc.MipLevels;
+    mTextureFormat = texDesc.Format;
+    mTextureWidth = texDesc.Width;
+    mTextureHeight = texDesc.Height;
 
-    mMipLevels = desc.MipLevels;
-    mTextureFormat = desc.Format;
-    mTextureWidth = desc.Width;
-    mTextureHeight = desc.Height;
+    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+    mSRV->GetDesc(&srvDesc);
+    mShaderResourceFormat = srvDesc.Format;
+
+    ID3D11RenderTargetView* offscreenRTV = swapchain->getRenderTarget();
+    D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
+    offscreenRTV->GetDesc(&rtvDesc);
+    mRenderTargetFormat = rtvDesc.Format;
+    offscreenRTV->Release();
+
+    mDepthStencilFormat = DXGI_FORMAT_UNKNOWN;
 }
 
 TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height)
@@ -204,11 +214,26 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int levels, GLenum 
     mSRV = NULL;
     mTextureWidth = 0;
     mTextureHeight = 0;
-    DXGI_FORMAT format = gl_d3d11::ConvertTextureFormat(internalformat);
 
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
     {
         mRenderTarget[i] = NULL;
+    }
+
+    DXGI_FORMAT convertedFormat = gl_d3d11::ConvertTextureFormat(internalformat);
+    if (d3d11::IsDepthStencilFormat(convertedFormat))
+    {
+        mTextureFormat = d3d11::GetDepthTextureFormat(convertedFormat);
+        mShaderResourceFormat = d3d11::GetDepthShaderResourceFormat(convertedFormat);
+        mDepthStencilFormat = convertedFormat;
+        mRenderTargetFormat = DXGI_FORMAT_UNKNOWN;
+    }
+    else
+    {
+        mTextureFormat = convertedFormat;
+        mShaderResourceFormat = convertedFormat;
+        mDepthStencilFormat = DXGI_FORMAT_UNKNOWN;
+        mRenderTargetFormat = convertedFormat;
     }
 
     // if the width or height is not positive this should be treated as an incomplete texture
@@ -225,7 +250,7 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int levels, GLenum 
         desc.Height = height;
         desc.MipLevels = levels + mLodOffset;
         desc.ArraySize = 1;
-        desc.Format = format;
+        desc.Format = mTextureFormat;
         desc.SampleDesc.Count = 1;
         desc.SampleDesc.Quality = 0;
         desc.Usage = D3D11_USAGE_DEFAULT;
@@ -251,7 +276,6 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int levels, GLenum 
         {
             mTexture->GetDesc(&desc);
             mMipLevels = desc.MipLevels;
-            mTextureFormat = desc.Format;
             mTextureWidth = desc.Width;
             mTextureHeight = desc.Height;
         }
@@ -294,22 +318,8 @@ RenderTarget *TextureStorage11_2D::getRenderTarget(int level)
             ID3D11Device *device = mRenderer->getDevice();
             HRESULT result;
 
-            D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
-            rtvDesc.Format = mTextureFormat;
-            rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
-            rtvDesc.Texture2D.MipSlice = level;
-
-            ID3D11RenderTargetView *rtv;
-            result = device->CreateRenderTargetView(mTexture, &rtvDesc, &rtv);
-
-            if (result == E_OUTOFMEMORY)
-            {
-                return gl::error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
-            }
-            ASSERT(SUCCEEDED(result));
-
             D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-            srvDesc.Format = mTextureFormat;
+            srvDesc.Format = mShaderResourceFormat;
             srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
             srvDesc.Texture2D.MostDetailedMip = level;
             srvDesc.Texture2D.MipLevels = 1;
@@ -319,18 +329,65 @@ RenderTarget *TextureStorage11_2D::getRenderTarget(int level)
 
             if (result == E_OUTOFMEMORY)
             {
-                rtv->Release();
                 return gl::error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
             }
             ASSERT(SUCCEEDED(result));
 
-            // RenderTarget11 expects to be the owner of the resources it is given but TextureStorage11
-            // also needs to keep a reference to the texture.
-            mTexture->AddRef();
+            if (mRenderTargetFormat != DXGI_FORMAT_UNKNOWN)
+            {
+                D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
+                rtvDesc.Format = mRenderTargetFormat;
+                rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+                rtvDesc.Texture2D.MipSlice = level;
 
-            mRenderTarget[level] = new RenderTarget11(mRenderer, rtv, mTexture, srv,
-                                                      std::max(mTextureWidth >> level, 1U),
-                                                      std::max(mTextureHeight >> level, 1U));
+                ID3D11RenderTargetView *rtv;
+                result = device->CreateRenderTargetView(mTexture, &rtvDesc, &rtv);
+
+                if (result == E_OUTOFMEMORY)
+                {
+                    srv->Release();
+                    return gl::error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
+                }
+                ASSERT(SUCCEEDED(result));
+
+                // RenderTarget11 expects to be the owner of the resources it is given but TextureStorage11
+                // also needs to keep a reference to the texture.
+                mTexture->AddRef();
+
+                mRenderTarget[level] = new RenderTarget11(mRenderer, rtv, mTexture, srv,
+                                                          std::max(mTextureWidth >> level, 1U),
+                                                          std::max(mTextureHeight >> level, 1U));
+            }
+            else if (mDepthStencilFormat != DXGI_FORMAT_UNKNOWN)
+            {
+                D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+                dsvDesc.Format = mDepthStencilFormat;
+                dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+                dsvDesc.Texture2D.MipSlice = level;
+                dsvDesc.Flags = 0;
+
+                ID3D11DepthStencilView *dsv;
+                result = device->CreateDepthStencilView(mTexture, &dsvDesc, &dsv);
+
+                if (result == E_OUTOFMEMORY)
+                {
+                    srv->Release();
+                    return gl::error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
+                }
+                ASSERT(SUCCEEDED(result));
+
+                // RenderTarget11 expects to be the owner of the resources it is given but TextureStorage11
+                // also needs to keep a reference to the texture.
+                mTexture->AddRef();
+
+                mRenderTarget[level] = new RenderTarget11(mRenderer, dsv, mTexture, srv,
+                                                          std::max(mTextureWidth >> level, 1U),
+                                                          std::max(mTextureHeight >> level, 1U));
+            }
+            else
+            {
+                UNREACHABLE();
+            }
         }
 
         return mRenderTarget[level];
@@ -353,7 +410,7 @@ ID3D11ShaderResourceView *TextureStorage11_2D::getSRV()
         ID3D11Device *device = mRenderer->getDevice();
 
         D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-        srvDesc.Format = mTextureFormat;
+        srvDesc.Format = mShaderResourceFormat;
         srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
         srvDesc.Texture2D.MipLevels = (mMipLevels == 0 ? -1 : mMipLevels);
         srvDesc.Texture2D.MostDetailedMip = 0;
@@ -394,7 +451,22 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int levels, GLe
         }
     }
 
-    DXGI_FORMAT format = gl_d3d11::ConvertTextureFormat(internalformat);
+    DXGI_FORMAT convertedFormat = gl_d3d11::ConvertTextureFormat(internalformat);
+    if (d3d11::IsDepthStencilFormat(convertedFormat))
+    {
+        mTextureFormat = d3d11::GetDepthTextureFormat(convertedFormat);
+        mShaderResourceFormat = d3d11::GetDepthShaderResourceFormat(convertedFormat);
+        mDepthStencilFormat = convertedFormat;
+        mRenderTargetFormat = DXGI_FORMAT_UNKNOWN;
+    }
+    else
+    {
+        mTextureFormat = convertedFormat;
+        mShaderResourceFormat = convertedFormat;
+        mDepthStencilFormat = DXGI_FORMAT_UNKNOWN;
+        mRenderTargetFormat = convertedFormat;
+    }
+
     // if the size is not positive this should be treated as an incomplete texture
     // we handle that here by skipping the d3d texture creation
     if (size > 0)
@@ -410,7 +482,7 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int levels, GLe
         desc.Height = size;
         desc.MipLevels = levels + mLodOffset;
         desc.ArraySize = 6;
-        desc.Format = format;
+        desc.Format = mTextureFormat;
         desc.SampleDesc.Count = 1;
         desc.SampleDesc.Quality = 0;
         desc.Usage = D3D11_USAGE_DEFAULT;
@@ -430,7 +502,6 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int levels, GLe
         {
             mTexture->GetDesc(&desc);
             mMipLevels = desc.MipLevels;
-            mTextureFormat = desc.Format;
             mTextureWidth = desc.Width;
             mTextureHeight = desc.Height;
         }
@@ -477,10 +548,27 @@ RenderTarget *TextureStorage11_Cube::getRenderTarget(GLenum faceTarget, int leve
             ID3D11Device *device = mRenderer->getDevice();
             HRESULT result;
 
-            if (getBindFlags() & D3D11_BIND_RENDER_TARGET)
+            D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+            srvDesc.Format = mShaderResourceFormat;
+            srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+            srvDesc.Texture2DArray.MostDetailedMip = level;
+            srvDesc.Texture2DArray.MipLevels = 1;
+            srvDesc.Texture2DArray.FirstArraySlice = faceIdx;
+            srvDesc.Texture2DArray.ArraySize = 1;
+
+            ID3D11ShaderResourceView *srv;
+            result = device->CreateShaderResourceView(mTexture, &srvDesc, &srv);
+
+            if (result == E_OUTOFMEMORY)
+            {
+                return gl::error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
+            }
+            ASSERT(SUCCEEDED(result));
+
+            if (mRenderTargetFormat != DXGI_FORMAT_UNKNOWN)
             {
                 D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
-                rtvDesc.Format = mTextureFormat;
+                rtvDesc.Format = mRenderTargetFormat;
                 rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
                 rtvDesc.Texture2DArray.MipSlice = level;
                 rtvDesc.Texture2DArray.FirstArraySlice = faceIdx;
@@ -491,24 +579,7 @@ RenderTarget *TextureStorage11_Cube::getRenderTarget(GLenum faceTarget, int leve
 
                 if (result == E_OUTOFMEMORY)
                 {
-                    return gl::error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
-                }
-                ASSERT(SUCCEEDED(result));
-
-                D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-                srvDesc.Format = mTextureFormat;
-                srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
-                srvDesc.Texture2DArray.MostDetailedMip = level;
-                srvDesc.Texture2DArray.MipLevels = 1;
-                srvDesc.Texture2DArray.FirstArraySlice = faceIdx;
-                srvDesc.Texture2DArray.ArraySize = 1;
-
-                ID3D11ShaderResourceView *srv;
-                result = device->CreateShaderResourceView(mTexture, &srvDesc, &srv);
-
-                if (result == E_OUTOFMEMORY)
-                {
-                    rtv->Release();
+                    srv->Release();
                     return gl::error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
                 }
                 ASSERT(SUCCEEDED(result));
@@ -521,12 +592,37 @@ RenderTarget *TextureStorage11_Cube::getRenderTarget(GLenum faceTarget, int leve
                                                                    std::max(mTextureWidth >> level, 1U),
                                                                    std::max(mTextureHeight >> level, 1U));
             }
-            else if (getBindFlags() & D3D11_BIND_DEPTH_STENCIL)
+            else if (mDepthStencilFormat != DXGI_FORMAT_UNKNOWN)
             {
-                // TODO
-                UNIMPLEMENTED();
+                D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+                dsvDesc.Format = mRenderTargetFormat;
+                dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
+                dsvDesc.Texture2DArray.MipSlice = level;
+                dsvDesc.Texture2DArray.FirstArraySlice = faceIdx;
+                dsvDesc.Texture2DArray.ArraySize = 1;
+
+                ID3D11DepthStencilView *dsv;
+                result = device->CreateDepthStencilView(mTexture, &dsvDesc, &dsv);
+
+                if (result == E_OUTOFMEMORY)
+                {
+                    srv->Release();
+                    return gl::error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
+                }
+                ASSERT(SUCCEEDED(result));
+
+                // RenderTarget11 expects to be the owner of the resources it is given but TextureStorage11
+                // also needs to keep a reference to the texture.
+                mTexture->AddRef();
+
+                mRenderTarget[faceIdx][level] = new RenderTarget11(mRenderer, dsv, mTexture, srv,
+                                                                   std::max(mTextureWidth >> level, 1U),
+                                                                   std::max(mTextureHeight >> level, 1U));
             }
-            else UNREACHABLE();
+            else
+            {
+                UNREACHABLE();
+            }
         }
 
         return mRenderTarget[faceIdx][level];
@@ -549,7 +645,7 @@ ID3D11ShaderResourceView *TextureStorage11_Cube::getSRV()
         ID3D11Device *device = mRenderer->getDevice();
 
         D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-        srvDesc.Format = mTextureFormat;
+        srvDesc.Format = mShaderResourceFormat;
         srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
         srvDesc.TextureCube.MipLevels = (mMipLevels == 0 ? -1 : mMipLevels);
         srvDesc.TextureCube.MostDetailedMip = 0;

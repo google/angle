@@ -87,6 +87,9 @@ class TextureStorage11_2D : public TextureStorage11
 
     ID3D11Texture2D *mTexture;
     DXGI_FORMAT mTextureFormat;
+    DXGI_FORMAT mShaderResourceFormat;
+    DXGI_FORMAT mRenderTargetFormat;
+    DXGI_FORMAT mDepthStencilFormat;
     unsigned int mTextureWidth;
     unsigned int mTextureHeight;
 
@@ -113,6 +116,9 @@ class TextureStorage11_Cube : public TextureStorage11
 
     ID3D11Texture2D *mTexture;
     DXGI_FORMAT mTextureFormat;
+    DXGI_FORMAT mShaderResourceFormat;
+    DXGI_FORMAT mRenderTargetFormat;
+    DXGI_FORMAT mDepthStencilFormat;
     unsigned int mTextureWidth;
     unsigned int mTextureHeight;
 
