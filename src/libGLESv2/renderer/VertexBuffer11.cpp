@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -310,10 +310,10 @@ const VertexBuffer11::VertexConverter VertexBuffer11::mPossibleTranslations[NUM_
             { &copyToFloatVertexData<GLbyte, 4, false>, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
         },
         { // normalized
-            { &copyToFloatVertexData<GLbyte, 1, true>, DXGI_FORMAT_R32_FLOAT, 4 },
-            { &copyToFloatVertexData<GLbyte, 2, true>, DXGI_FORMAT_R32G32_FLOAT, 8 },
-            { &copyToFloatVertexData<GLbyte, 3, true>, DXGI_FORMAT_R32G32B32_FLOAT, 12 },
-            { &copyToFloatVertexData<GLbyte, 4, true>, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
+            { &copyVertexData<GLbyte, 1, false, true>, DXGI_FORMAT_R8_SNORM, 1 },
+            { &copyVertexData<GLbyte, 2, false, true>, DXGI_FORMAT_R8G8_SNORM, 2 },
+            { &copyVertexData<GLbyte, 3, true, true>, DXGI_FORMAT_R8G8B8A8_SNORM, 4 },
+            { &copyVertexData<GLbyte, 4, false, true>, DXGI_FORMAT_R8G8B8A8_SNORM, 4 },
         },
     },
     { // GL_UNSIGNED_BYTE
@@ -324,10 +324,10 @@ const VertexBuffer11::VertexConverter VertexBuffer11::mPossibleTranslations[NUM_
             { &copyToFloatVertexData<GLubyte, 4, false>, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
         },
         { // normalized
-            { &copyToFloatVertexData<GLubyte, 1, true>, DXGI_FORMAT_R32_FLOAT, 4 },
-            { &copyToFloatVertexData<GLubyte, 2, true>, DXGI_FORMAT_R32G32_FLOAT, 8 },
-            { &copyToFloatVertexData<GLubyte, 3, true>, DXGI_FORMAT_R32G32B32_FLOAT, 12 },
-            { &copyToFloatVertexData<GLubyte, 4, true>, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
+            { &copyVertexData<GLubyte, 1, false, true>, DXGI_FORMAT_R8_UNORM, 1 },
+            { &copyVertexData<GLubyte, 2, false, true>, DXGI_FORMAT_R8G8_UNORM, 2 },
+            { &copyVertexData<GLubyte, 3, true, true>, DXGI_FORMAT_R8G8B8A8_UNORM, 4 },
+            { &copyVertexData<GLubyte, 4, false, true>, DXGI_FORMAT_R8G8B8A8_UNORM, 4 },
         },
     },
     { // GL_SHORT
@@ -338,10 +338,10 @@ const VertexBuffer11::VertexConverter VertexBuffer11::mPossibleTranslations[NUM_
             { &copyToFloatVertexData<GLshort, 4, false>, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
         },
         { // normalized
-            { &copyToFloatVertexData<GLshort, 1, true>, DXGI_FORMAT_R32_FLOAT, 4 },
-            { &copyToFloatVertexData<GLshort, 2, true>, DXGI_FORMAT_R32G32_FLOAT, 8 },
-            { &copyToFloatVertexData<GLshort, 3, true>, DXGI_FORMAT_R32G32B32_FLOAT, 12 },
-            { &copyToFloatVertexData<GLshort, 4, true>, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
+            { &copyVertexData<GLshort, 1, false, true>, DXGI_FORMAT_R16_SNORM, 2 },
+            { &copyVertexData<GLshort, 2, false, true>, DXGI_FORMAT_R16G16_SNORM, 4 },
+            { &copyVertexData<GLshort, 3, true, true>, DXGI_FORMAT_R16G16B16A16_SNORM, 8 },
+            { &copyVertexData<GLshort, 4, false, true>, DXGI_FORMAT_R16G16B16A16_SNORM, 8 },
         },
     },
     { // GL_UNSIGNED_SHORT
@@ -352,10 +352,10 @@ const VertexBuffer11::VertexConverter VertexBuffer11::mPossibleTranslations[NUM_
             { &copyToFloatVertexData<GLushort, 4, false>, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
         },
         { // normalized
-            { &copyToFloatVertexData<GLushort, 1, true>, DXGI_FORMAT_R32_FLOAT, 4 },
-            { &copyToFloatVertexData<GLushort, 2, true>, DXGI_FORMAT_R32G32_FLOAT, 8 },
-            { &copyToFloatVertexData<GLushort, 3, true>, DXGI_FORMAT_R32G32B32_FLOAT, 12 },
-            { &copyToFloatVertexData<GLushort, 4, true>, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
+            { &copyVertexData<GLushort, 1, false, true>, DXGI_FORMAT_R16_UNORM, 2 },
+            { &copyVertexData<GLushort, 2, false, true>, DXGI_FORMAT_R16G16_UNORM, 4 },
+            { &copyVertexData<GLushort, 3, true, true>, DXGI_FORMAT_R16G16B16A16_UNORM, 8 },
+            { &copyVertexData<GLushort, 4, false, true>, DXGI_FORMAT_R16G16B16A16_UNORM, 8 },
         },
     },
     { // GL_FIXED
