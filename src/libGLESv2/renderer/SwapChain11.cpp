@@ -42,6 +42,7 @@ SwapChain11::SwapChain11(Renderer11 *renderer, HWND window, HANDLE shareHandle,
     mHeight = -1;
     mSwapInterval = 0;
     mAppCreatedShareHandle = mShareHandle != NULL;
+    mPassThroughResourcesInit = false;
 }
 
 SwapChain11::~SwapChain11()
@@ -404,6 +405,29 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
         d3d11::SetDebugName(mDepthStencilDSView, "Depth stencil view");
     }
 
+    // If we are resizing the swap chain, we don't wish to recreate all the static resources
+    if (!mPassThroughResourcesInit)
+    {
+        mPassThroughResourcesInit = true;
+        initPassThroughResources();
+    }
+
+    mWidth = backbufferWidth;
+    mHeight = backbufferHeight;
+
+    return EGL_SUCCESS;
+}
+
+void SwapChain11::initPassThroughResources()
+{
+    ID3D11Device *device = mRenderer->getDevice();
+
+    ASSERT(device != NULL);
+
+    // Make sure our resources are all not allocated, when we create
+    ASSERT(mQuadVB == NULL && mPassThroughSampler == NULL);
+    ASSERT(mPassThroughIL == NULL && mPassThroughVS == NULL && mPassThroughPS == NULL);
+
     D3D11_BUFFER_DESC vbDesc;
     vbDesc.ByteWidth = sizeof(d3d11::PositionTexCoordVertex) * 4;
     vbDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -412,7 +436,7 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
     vbDesc.MiscFlags = 0;
     vbDesc.StructureByteStride = 0;
 
-    result = device->CreateBuffer(&vbDesc, NULL, &mQuadVB);
+    HRESULT result = device->CreateBuffer(&vbDesc, NULL, &mQuadVB);
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mQuadVB, "Swap chain quad vertex buffer");
 
@@ -452,11 +476,6 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
     result = device->CreatePixelShader(g_PS_PassthroughRGBA, sizeof(g_PS_PassthroughRGBA), NULL, &mPassThroughPS);
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mPassThroughPS, "Swap chain pass through pixel shader");
-
-    mWidth = backbufferWidth;
-    mHeight = backbufferHeight;
-
-    return EGL_SUCCESS;
 }
 
 // parameters should be validated/clamped by caller

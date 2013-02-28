@@ -43,12 +43,14 @@ class SwapChain11 : public SwapChain
     DISALLOW_COPY_AND_ASSIGN(SwapChain11);
 
     void release();
+    void initPassThroughResources();
 
     Renderer11 *mRenderer;
     EGLint mHeight;
     EGLint mWidth;
     bool mAppCreatedShareHandle;
     unsigned int mSwapInterval;
+    bool mPassThroughResourcesInit;
 
     IDXGISwapChain *mSwapChain;
 
