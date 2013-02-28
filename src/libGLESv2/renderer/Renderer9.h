@@ -149,6 +149,7 @@ class Renderer9 : public Renderer
 
     virtual int getMajorShaderModel() const;
     virtual float getMaxPointSize() const;
+    virtual int getMaxViewportDimension() const;
     virtual int getMaxTextureWidth() const;
     virtual int getMaxTextureHeight() const;
     virtual bool get32BitIndexSupport() const;

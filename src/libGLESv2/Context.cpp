@@ -251,6 +251,7 @@ void Context::makeCurrent(egl::Surface *surface)
         mSupportsNonPower2Texture = mRenderer->getNonPower2TextureSupport();
         mSupportsInstancing = mRenderer->getInstancingSupport();
 
+        mMaxViewportDimension = mRenderer->getMaxViewportDimension();
         mMaxTextureDimension = std::min(std::min(mRenderer->getMaxTextureWidth(), mRenderer->getMaxTextureHeight()),
                                         (int)gl::IMPLEMENTATION_MAX_TEXTURE_SIZE);
         mMaxCubeTextureDimension = std::min(mMaxTextureDimension, (int)gl::IMPLEMENTATION_MAX_CUBE_MAP_TEXTURE_SIZE);
@@ -1377,9 +1378,8 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
         break;
       case GL_MAX_VIEWPORT_DIMS:
         {
-            int maxDimension = std::max(getMaximumRenderbufferDimension(), getMaximumTextureDimension());
-            params[0] = maxDimension;
-            params[1] = maxDimension;
+            params[0] = mMaxViewportDimension;
+            params[1] = mMaxViewportDimension;
         }
         break;
       case GL_COMPRESSED_TEXTURE_FORMATS:

@@ -2307,6 +2307,13 @@ float Renderer9::getMaxPointSize() const
     return getMajorShaderModel() == 3 ? mDeviceCaps.MaxPointSize : 1.0f;
 }
 
+int Renderer9::getMaxViewportDimension() const
+{
+    int maxTextureDimension = std::min(std::min(getMaxTextureWidth(), getMaxTextureHeight()),
+                                       (int)gl::IMPLEMENTATION_MAX_TEXTURE_SIZE);
+    return maxTextureDimension;
+}
+
 int Renderer9::getMaxTextureWidth() const
 {
     return (int)mDeviceCaps.MaxTextureWidth;

@@ -169,6 +169,7 @@ class Renderer
 
     virtual int getMajorShaderModel() const = 0;
     virtual float getMaxPointSize() const = 0;
+    virtual int getMaxViewportDimension() const = 0;
     virtual int getMaxTextureWidth() const = 0;
     virtual int getMaxTextureHeight() const = 0;
     virtual bool get32BitIndexSupport() const = 0;

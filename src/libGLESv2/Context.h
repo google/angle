@@ -485,6 +485,7 @@ class Context
     bool mSupportsVertexTexture;
     bool mSupportsNonPower2Texture;
     bool mSupportsInstancing;
+    int  mMaxViewportDimension;
     int  mMaxRenderbufferDimension;
     int  mMaxTextureDimension;
     int  mMaxCubeTextureDimension;

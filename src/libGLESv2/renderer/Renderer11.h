@@ -21,6 +21,7 @@
 
 #include "common/angleutils.h"
 #include "libGLESv2/angletypes.h"
+#include "libGLESv2/mathutil.h"
 
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/renderer/RenderStateCache.h"
@@ -120,6 +121,7 @@ class Renderer11 : public Renderer
 
     virtual int getMajorShaderModel() const;
     virtual float getMaxPointSize() const;
+    virtual int getMaxViewportDimension() const;
     virtual int getMaxTextureWidth() const;
     virtual int getMaxTextureHeight() const;
     virtual bool get32BitIndexSupport() const;
@@ -193,6 +195,7 @@ class Renderer11 : public Renderer
                          GLint packAlignment, void *pixels);
 
     void maskedClear(const gl::ClearParameters &clearParams);
+    rx::Range getViewportBounds() const;
 
     bool blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &readRect, gl::Framebuffer *drawTarget,
                   const gl::Rectangle &drawRect, BlitTarget target);

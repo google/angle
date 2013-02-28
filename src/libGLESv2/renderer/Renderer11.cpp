@@ -562,10 +562,10 @@ void Renderer11::setScissorRectangle(const gl::Rectangle &scissor, bool enabled)
         if (enabled)
         {
             D3D11_RECT rect;
-            rect.left = gl::clamp(scissor.x, 0, static_cast<int>(mRenderTargetDesc.width));
-            rect.top = gl::clamp(scissor.y, 0, static_cast<int>(mRenderTargetDesc.height));
-            rect.right = gl::clamp(scissor.x + scissor.width, 0, static_cast<int>(mRenderTargetDesc.width));
-            rect.bottom = gl::clamp(scissor.y + scissor.height, 0, static_cast<int>(mRenderTargetDesc.height));
+            rect.left = std::max(0, scissor.x);
+            rect.top = std::max(0, scissor.y);
+            rect.right = scissor.x + std::max(0, scissor.width);
+            rect.bottom = scissor.y + std::max(0, scissor.height);
 
             mDeviceContext->RSSetScissorRects(1, &rect);
         }
@@ -598,11 +598,17 @@ bool Renderer11::setViewport(const gl::Rectangle &viewport, float zNear, float z
         actualZFar = 1.0f;
     }
 
+    // Get D3D viewport bounds, which depends on the feature level
+    const Range& viewportBounds = getViewportBounds();
+
+    // Clamp width and height first to the gl maximum, then clamp further if we extend past the D3D maximum bounds
     D3D11_VIEWPORT dxViewport;
-    dxViewport.TopLeftX = gl::clamp(actualViewport.x, 0, static_cast<int>(mRenderTargetDesc.width));
-    dxViewport.TopLeftY = gl::clamp(actualViewport.y, 0, static_cast<int>(mRenderTargetDesc.height));
-    dxViewport.Width = gl::clamp(actualViewport.width, 0, static_cast<int>(mRenderTargetDesc.width) - static_cast<int>(dxViewport.TopLeftX));
-    dxViewport.Height = gl::clamp(actualViewport.height, 0, static_cast<int>(mRenderTargetDesc.height) - static_cast<int>(dxViewport.TopLeftY));
+    dxViewport.TopLeftX = gl::clamp(actualViewport.x, viewportBounds.start, viewportBounds.end);
+    dxViewport.TopLeftY = gl::clamp(actualViewport.y, viewportBounds.start, viewportBounds.end);
+    dxViewport.Width = gl::clamp(actualViewport.width, 0, getMaxViewportDimension());
+    dxViewport.Height = gl::clamp(actualViewport.height, 0, getMaxViewportDimension());
+    dxViewport.Width = std::min((int)dxViewport.Width, viewportBounds.end - static_cast<int>(dxViewport.TopLeftX));
+    dxViewport.Height = std::min((int)dxViewport.Height, viewportBounds.end - static_cast<int>(dxViewport.TopLeftY));
     dxViewport.MinDepth = actualZNear;
     dxViewport.MaxDepth = actualZFar;
 
@@ -793,8 +799,8 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
         mRenderTargetDesc.width = renderTargetWidth;
         mRenderTargetDesc.height = renderTargetHeight;
         mRenderTargetDesc.format = renderTargetFormat;
-        mForceSetViewport = true; // TODO: It may not be required to clamp the viewport in D3D11
-        mForceSetScissor = true; // TODO: It may not be required to clamp the scissor in D3D11
+        mForceSetViewport = true;
+        mForceSetScissor = true;
 
         if (!mDepthStencilInitialized || depthSize != mCurDepthSize)
         {
@@ -2023,6 +2029,20 @@ bool Renderer11::getEventQuerySupport()
     return true;
 }
 
+Range Renderer11::getViewportBounds() const
+{
+    switch (mFeatureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_0:
+        return Range(D3D11_VIEWPORT_BOUNDS_MIN, D3D11_VIEWPORT_BOUNDS_MAX);
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0:
+        return Range(D3D10_VIEWPORT_BOUNDS_MIN, D3D10_VIEWPORT_BOUNDS_MAX);
+      default: UNREACHABLE();
+        return Range(0, 0);
+    }
+}
+
 unsigned int Renderer11::getMaxVertexTextureImageUnits() const
 {
     META_ASSERT(MAX_TEXTURE_IMAGE_UNITS_VTF_SM4 <= gl::IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS);
@@ -2158,6 +2178,21 @@ float Renderer11::getMaxPointSize() const
     // choose a reasonable maximum. we enforce this in the shader.
     // (nb: on a Radeon 2600xt, DX9 reports a 256 max point size)
     return 1024.0f;
+}
+
+int Renderer11::getMaxViewportDimension() const
+{
+    // Clamp viewport width/height to half of the maximum right/bottom edge
+    switch (mFeatureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_0: 
+        return D3D11_VIEWPORT_BOUNDS_MAX - D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION;   // 16384
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0: 
+        return D3D10_VIEWPORT_BOUNDS_MAX - D3D10_REQ_TEXTURE2D_U_OR_V_DIMENSION;   // 8192
+      default: UNREACHABLE();      
+        return 0;
+    }
 }
 
 int Renderer11::getMaxTextureWidth() const
