@@ -730,7 +730,7 @@ void Texture2D::convertToRenderTarget()
     {
         GLsizei width = mImageArray[0]->getWidth();
         GLsizei height = mImageArray[0]->getHeight();
-        GLint levels = creationLevels(width, height);
+        GLint levels = mTexStorage != NULL ? mTexStorage->levelCount() : creationLevels(width, height);
         GLenum internalformat = mImageArray[0]->getInternalFormat();
 
         newTexStorage = new rx::TextureStorageInterface2D(mRenderer, levels, internalformat, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true, width, height);
@@ -1189,7 +1189,7 @@ void TextureCubeMap::convertToRenderTarget()
     if (mImageArray[0][0]->getWidth() != 0)
     {
         GLsizei size = mImageArray[0][0]->getWidth();
-        GLint levels = creationLevels(size);
+        GLint levels = mTexStorage != NULL ? mTexStorage->levelCount() : creationLevels(size);
         GLenum internalformat = mImageArray[0][0]->getInternalFormat();
 
         newTexStorage = new rx::TextureStorageInterfaceCube(mRenderer, levels, internalformat, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, true, size);
