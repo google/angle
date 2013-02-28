@@ -37,7 +37,6 @@ class Image11 : public Image
     static void generateMipmap(Image11 *dest, Image11 *src);
 
     virtual bool isDirty() const;
-    ID3D11Texture2D *getStagingTexture();
 
     virtual bool updateSurface(TextureStorageInterface2D *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
     virtual bool updateSurface(TextureStorageInterfaceCube *storage, int face, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
@@ -61,8 +60,8 @@ class Image11 : public Image
   private:
     DISALLOW_COPY_AND_ASSIGN(Image11);
 
+    ID3D11Texture2D *getStagingTexture();
     void createStagingTexture();
-    bool updateStagingTexture(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
 
     Renderer11 *mRenderer;
 

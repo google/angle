@@ -111,13 +111,6 @@ bool Image11::isDirty() const
     return (mStagingTexture && mDirty);
 }
 
-ID3D11Texture2D *Image11::getStagingTexture()
-{
-    createStagingTexture();
-
-    return mStagingTexture;
-}
-
 bool Image11::updateSurface(TextureStorageInterface2D *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
     TextureStorage11_2D *storage11 = TextureStorage11_2D::makeTextureStorage11_2D(storage->getStorageInstance());
@@ -360,6 +353,13 @@ void Image11::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width
 
         unmap();
     }
+}
+
+ID3D11Texture2D *Image11::getStagingTexture()
+{
+    createStagingTexture();
+
+    return mStagingTexture;
 }
 
 void Image11::createStagingTexture()
