@@ -199,6 +199,7 @@ class Renderer9 : public Renderer
     void applyUniformnbv(gl::Uniform *targetUniform, const GLint *v);
 
     void drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
+    void drawIndexedPoints(GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer);
 
     void getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray);
     bool copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *source, bool fromManaged);

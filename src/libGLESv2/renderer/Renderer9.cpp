@@ -1427,7 +1427,11 @@ void Renderer9::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvo
 {
     startScene();
 
-    if (mode == GL_LINE_LOOP)
+    if (mode == GL_POINTS)
+    {
+        drawIndexedPoints(count, type, indices, elementArrayBuffer);
+    }
+    else if (mode == GL_LINE_LOOP)
     {
         drawLineLoop(count, type, indices, indexInfo.minIndex, elementArrayBuffer);
     }
@@ -1608,6 +1612,37 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
     }
 
     mDevice->DrawIndexedPrimitive(D3DPT_LINESTRIP, -minIndex, minIndex, count, startIndex, count);
+}
+
+template <typename T>
+static void drawPoints(IDirect3DDevice9* device, GLsizei count, const GLvoid *indices)
+{
+    for (int i = 0; i < count; i++)
+    {
+        unsigned int indexValue = static_cast<unsigned int>(static_cast<const T*>(indices)[i]);
+        device->DrawPrimitive(D3DPT_POINTLIST, indexValue, 1);
+    }
+}
+
+void Renderer9::drawIndexedPoints(GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer)
+{
+    // Drawing index point lists is unsupported in d3d9, fall back to a regular DrawPrimitive call
+    // for each individual point. This call is not expected to happen often.
+
+    if (elementArrayBuffer)
+    {
+        BufferStorage *storage = elementArrayBuffer->getStorage();
+        intptr_t offset = reinterpret_cast<intptr_t>(indices);
+        indices = static_cast<const GLubyte*>(storage->getData()) + offset;
+    }
+
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:  drawPoints<GLubyte>(mDevice, count, indices);  break;
+        case GL_UNSIGNED_SHORT: drawPoints<GLushort>(mDevice, count, indices); break;
+        case GL_UNSIGNED_INT:   drawPoints<GLuint>(mDevice, count, indices);   break;
+        default: UNREACHABLE();
+    }
 }
 
 void Renderer9::applyShaders(gl::ProgramBinary *programBinary)
