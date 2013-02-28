@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -22,6 +22,7 @@
 #include "libGLESv2/renderer/IndexBuffer.h"
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/renderer/VertexBuffer.h"
+#include "libGLESv2/renderer/BufferStorage.h"
 
 namespace gl
 {
@@ -36,9 +37,10 @@ class Buffer : public RefCountObject
     void bufferData(const void *data, GLsizeiptr size, GLenum usage);
     void bufferSubData(const void *data, GLsizeiptr size, GLintptr offset);
 
-    void *data() { return mContents; }
-    size_t size() const { return mSize; }
-    GLenum usage() const { return mUsage; }
+    GLenum usage() const;
+
+    rx::BufferStorage *getStorage() const;
+    unsigned int size();
 
     rx::StaticVertexBufferInterface *getStaticVertexBuffer();
     rx::StaticIndexBufferInterface *getStaticIndexBuffer();
@@ -49,13 +51,13 @@ class Buffer : public RefCountObject
     DISALLOW_COPY_AND_ASSIGN(Buffer);
 
     rx::Renderer *mRenderer;
-    GLubyte *mContents;
-    GLsizeiptr mSize;
     GLenum mUsage;
+
+    rx::BufferStorage *mBufferStorage;
 
     rx::StaticVertexBufferInterface *mStaticVertexBuffer;
     rx::StaticIndexBufferInterface *mStaticIndexBuffer;
-    GLsizeiptr mUnmodifiedDataUse;
+    unsigned int mUnmodifiedDataUse;
 };
 
 }

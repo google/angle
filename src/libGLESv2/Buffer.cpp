@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -18,10 +18,9 @@ namespace gl
 Buffer::Buffer(rx::Renderer *renderer, GLuint id) : RefCountObject(id)
 {
     mRenderer = renderer;
-    mContents = NULL;
-    mSize = 0;
     mUsage = GL_DYNAMIC_DRAW;
 
+    mBufferStorage = renderer->createBufferStorage();
     mStaticVertexBuffer = NULL;
     mStaticIndexBuffer = NULL;
     mUnmodifiedDataUse = 0;
@@ -29,31 +28,16 @@ Buffer::Buffer(rx::Renderer *renderer, GLuint id) : RefCountObject(id)
 
 Buffer::~Buffer()
 {
-    delete[] mContents;
+    delete mBufferStorage;
     delete mStaticVertexBuffer;
     delete mStaticIndexBuffer;
 }
 
 void Buffer::bufferData(const void *data, GLsizeiptr size, GLenum usage)
 {
-    if (size == 0)
-    {
-        delete[] mContents;
-        mContents = NULL;
-    }
-    else if (size != mSize)
-    {
-        delete[] mContents;
-        mContents = new GLubyte[size];
-        memset(mContents, 0, size);
-    }
+    mBufferStorage->clear();
+    mBufferStorage->setData(data, size, 0);
 
-    if (data != NULL && size > 0)
-    {
-        memcpy(mContents, data, size);
-    }
-
-    mSize = size;
     mUsage = usage;
 
     invalidateStaticData();
@@ -67,14 +51,29 @@ void Buffer::bufferData(const void *data, GLsizeiptr size, GLenum usage)
 
 void Buffer::bufferSubData(const void *data, GLsizeiptr size, GLintptr offset)
 {
-    memcpy(mContents + offset, data, size);
-    
+    mBufferStorage->setData(data, size, offset);
+
     if ((mStaticVertexBuffer && mStaticVertexBuffer->getBufferSize() != 0) || (mStaticIndexBuffer && mStaticIndexBuffer->getBufferSize() != 0))
     {
         invalidateStaticData();
     }
 
     mUnmodifiedDataUse = 0;
+}
+
+rx::BufferStorage *Buffer::getStorage() const
+{
+    return mBufferStorage;
+}
+
+unsigned int Buffer::size()
+{
+    return mBufferStorage->getSize();
+}
+
+GLenum Buffer::usage() const
+{
+    return mUsage;
 }
 
 rx::StaticVertexBufferInterface *Buffer::getStaticVertexBuffer()
@@ -105,7 +104,7 @@ void Buffer::promoteStaticUsage(int dataSize)
     {
         mUnmodifiedDataUse += dataSize;
 
-        if (mUnmodifiedDataUse > 3 * mSize)
+        if (mUnmodifiedDataUse > 3 * mBufferStorage->getSize())
         {
             mStaticVertexBuffer = new rx::StaticVertexBufferInterface(mRenderer);
             mStaticIndexBuffer = new rx::StaticIndexBufferInterface(mRenderer);

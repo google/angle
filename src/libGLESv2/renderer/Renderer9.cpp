@@ -1436,8 +1436,9 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
     if (type != GL_NONE && elementArrayBuffer)
     {
         gl::Buffer *indexBuffer = elementArrayBuffer;
+        BufferStorage *storage = indexBuffer->getStorage();
         intptr_t offset = reinterpret_cast<intptr_t>(indices);
-        indices = static_cast<const GLubyte*>(indexBuffer->data()) + offset;
+        indices = static_cast<const GLubyte*>(storage->getData()) + offset;
     }
 
     UINT startIndex = 0;

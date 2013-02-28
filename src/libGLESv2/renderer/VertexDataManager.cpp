@@ -87,11 +87,12 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
             gl::Buffer *buffer = attribs[i].mBoundBuffer.get();
             StaticVertexBufferInterface *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
 
+            BufferStorage *storage = buffer ? buffer->getStorage() : NULL;
             if (staticBuffer)
             {
                 if (staticBuffer->getBufferSize() == 0)
                 {
-                    int totalCount = elementsInBuffer(attribs[i], buffer->size());
+                    int totalCount = elementsInBuffer(attribs[i], storage->getSize());
                     staticBuffer->reserveVertexSpace(attribs[i], totalCount, 0);
                 }
                 else if (staticBuffer->lookupAttribute(attribs[i]) == -1)
@@ -126,6 +127,8 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
                 StaticVertexBufferInterface *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
                 VertexBufferInterface *vertexBuffer = staticBuffer ? staticBuffer : static_cast<VertexBufferInterface*>(mStreamingBuffer);
 
+                BufferStorage *storage = buffer ? buffer->getStorage() : NULL;
+
                 std::size_t streamOffset = -1;
                 unsigned int outputElementSize = 0;
 
@@ -137,7 +140,7 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
                     if (streamOffset == -1)
                     {
                         // Convert the entire buffer
-                        int totalCount = elementsInBuffer(attribs[i], buffer->size());
+                        int totalCount = elementsInBuffer(attribs[i], storage->getSize());
                         int startIndex = attribs[i].mOffset / attribs[i].stride();
 
                         streamOffset = staticBuffer->storeVertexAttributes(attribs[i], -startIndex, totalCount, 0);

@@ -104,7 +104,8 @@ bool VertexBuffer9::storeVertexAttributes(const gl::VertexAttribute &attrib, GLi
         const char *input = NULL;
         if (buffer)
         {
-            input = static_cast<const char*>(buffer->data()) + static_cast<int>(attrib.mOffset);
+            BufferStorage *storage = buffer->getStorage();
+            input = static_cast<const char*>(storage->getData()) + static_cast<int>(attrib.mOffset);
         }
         else
         {

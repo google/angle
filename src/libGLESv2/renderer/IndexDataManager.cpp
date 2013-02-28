@@ -130,6 +130,8 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
 
     if (buffer != NULL)
     {
+        BufferStorage *storage = buffer->getStorage();
+
         switch (type)
         {
           case GL_UNSIGNED_BYTE:  alignedOffset = (offset % sizeof(GLubyte) == 0);  break;
@@ -138,18 +140,19 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
           default: UNREACHABLE(); alignedOffset = false;
         }
 
-        if (indexTypeSize(type) * count + offset > static_cast<std::size_t>(buffer->size()))
+        if (indexTypeSize(type) * count + offset > storage->getSize())
         {
             return GL_INVALID_OPERATION;
         }
 
-        indices = static_cast<const GLubyte*>(buffer->data()) + offset;
+        indices = static_cast<const GLubyte*>(storage->getData()) + offset;
     }
 
     StreamingIndexBufferInterface *streamingBuffer = (type == GL_UNSIGNED_INT) ? mStreamingBufferInt : mStreamingBufferShort;
 
     StaticIndexBufferInterface *staticBuffer = buffer ? buffer->getStaticIndexBuffer() : NULL;
     IndexBufferInterface *indexBuffer = streamingBuffer;
+    BufferStorage *storage = buffer ? buffer->getStorage() : NULL;
     UINT streamOffset = 0;
 
     if (staticBuffer && staticBuffer->getIndexType() == type && alignedOffset)
@@ -173,7 +176,7 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
             if (staticBuffer->getBufferSize() == 0 && alignedOffset)
             {
                 indexBuffer = staticBuffer;
-                convertCount = buffer->size() / indexTypeSize(type);
+                convertCount = storage->getSize() / indexTypeSize(type);
             }
             else
             {
@@ -199,7 +202,7 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
             return GL_OUT_OF_MEMORY;
         }
 
-        convertIndices(type, staticBuffer ? buffer->data() : indices, convertCount, output);
+        convertIndices(type, staticBuffer ? storage->getData() : indices, convertCount, output);
 
         if (!indexBuffer->unmapBuffer())
         {
