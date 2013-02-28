@@ -1991,15 +1991,11 @@ bool Renderer11::getFloat16TextureSupport(bool *filtering, bool *renderable)
 
 bool Renderer11::getLuminanceTextureSupport()
 {
-    // TODO
-    // UNIMPLEMENTED();
     return false;
 }
 
 bool Renderer11::getLuminanceAlphaTextureSupport()
 {
-    // TODO
-    // UNIMPLEMENTED();
     return false;
 }
 
