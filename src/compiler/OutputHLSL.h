@@ -164,6 +164,7 @@ class OutputHLSL : public TIntermTraverser
     int uniformRegister(TIntermSymbol *uniform);
     void declareUniform(const TType &type, const TString &name, int index);
     static GLenum glVariableType(const TType &type);
+    static GLenum glVariablePrecision(const TType &type);
 
     ActiveUniforms mActiveUniforms;
 };

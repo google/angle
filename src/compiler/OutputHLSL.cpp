@@ -3036,7 +3036,7 @@ void OutputHLSL::declareUniform(const TType &type, const TString &name, int inde
 
     if (!structure)
     {
-        mActiveUniforms.push_back(Uniform(glVariableType(type), name.c_str(), type.getArraySize(), index));
+        mActiveUniforms.push_back(Uniform(glVariableType(type), glVariablePrecision(type), name.c_str(), type.getArraySize(), index));
     }
     else
     {
@@ -3147,6 +3147,41 @@ GLenum OutputHLSL::glVariableType(const TType &type)
     else if (type.getBasicType() == EbtSamplerCube)
     {
         return GL_SAMPLER_CUBE;
+    }
+    else UNREACHABLE();
+
+    return GL_NONE;
+}
+
+GLenum OutputHLSL::glVariablePrecision(const TType &type)
+{
+    if (type.getBasicType() == EbtFloat)
+    {
+        switch (type.getPrecision())
+        {
+          case EbpHigh:   return GL_HIGH_FLOAT;
+          case EbpMedium: return GL_MEDIUM_FLOAT;
+          case EbpLow:    return GL_LOW_FLOAT;
+          case EbpUndefined:
+            // Should be defined as the default precision by the parser
+          default: UNREACHABLE();
+        }
+    }
+    else if (type.getBasicType() == EbtInt)
+    {
+        switch (type.getPrecision())
+        {
+          case EbpHigh:   return GL_HIGH_INT;
+          case EbpMedium: return GL_MEDIUM_INT;
+          case EbpLow:    return GL_LOW_INT;
+          case EbpUndefined:
+            // Should be defined as the default precision by the parser
+          default: UNREACHABLE();
+        }
+    }
+    else if (type.getBasicType() == EbtBool)
+    {
+        return GL_BOOL;   // Booleans don't have a precision
     }
     else UNREACHABLE();
 

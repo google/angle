@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -18,9 +18,10 @@ namespace sh
 
 struct Uniform
 {
-    Uniform(GLenum type, const char *name, int arraySize, int registerIndex);
+    Uniform(GLenum type, GLenum precision, const char *name, int arraySize, int registerIndex);
 
     GLenum type;
+    GLenum precision;
     std::string name;
     unsigned int arraySize;
     
