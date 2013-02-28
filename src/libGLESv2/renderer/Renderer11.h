@@ -179,6 +179,12 @@ class Renderer11 : public Renderer
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer11);
 
+    enum BlitTarget
+    {
+        BLIT_RENDERTARGET,
+        BLIT_DEPTHSTENCIL,
+    };
+
     void drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
     void drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer, int instances);
 
@@ -188,6 +194,8 @@ class Renderer11 : public Renderer
 
     void maskedClear(const gl::ClearParameters &clearParams);
 
+    bool blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &readRect, gl::Framebuffer *drawTarget,
+                  const gl::Rectangle &drawRect, BlitTarget target);
     ID3D11Texture2D *resolveMultisampledTexture(ID3D11Texture2D *source, unsigned int subresource);
 
     HMODULE mD3d11Module;

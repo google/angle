@@ -2730,9 +2730,17 @@ bool Renderer11::getRenderTargetResource(gl::Framebuffer *framebuffer, unsigned 
 bool Renderer11::blitRect(gl::Framebuffer *readTarget, gl::Rectangle *readRect, gl::Framebuffer *drawTarget, gl::Rectangle *drawRect,
                           bool blitRenderTarget, bool blitDepthStencil)
 {
-    // TODO
-    UNIMPLEMENTED();
-    return false;
+    if (blitRenderTarget && !blitRect(readTarget, *readRect, drawTarget, *drawRect, BLIT_RENDERTARGET))
+    {
+        return false;
+    }
+
+    if (blitDepthStencil && !blitRect(readTarget, *readRect, drawTarget, *drawRect, BLIT_DEPTHSTENCIL))
+    {
+        return false;
+    }
+
+    return true;
 }
 
 void Renderer11::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,
@@ -3153,6 +3161,125 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
 
     stagingTex->Release();
     stagingTex = NULL;
+}
+
+bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &readRect, gl::Framebuffer *drawTarget,
+                          const gl::Rectangle &drawRect, BlitTarget target)
+{
+    ASSERT(readRect.width == drawRect.width && readRect.height == drawRect.height);
+
+    gl::Renderbuffer *readBuffer = NULL;
+    switch (target)
+    {
+      case BLIT_RENDERTARGET:
+        readBuffer = readTarget->getColorbuffer();
+        break;
+      case BLIT_DEPTHSTENCIL:
+        readBuffer = readTarget->getDepthOrStencilbuffer();
+        break;
+      default: UNREACHABLE();
+    }
+    if (!readBuffer)
+    {
+        ERR("Failed to retrieve the color buffer from the read target.");
+        return error(GL_OUT_OF_MEMORY, false);
+    }
+
+    RenderTarget11 *sourceRenderTarget = NULL;
+    switch (target)
+    {
+      case BLIT_RENDERTARGET:
+        sourceRenderTarget = RenderTarget11::makeRenderTarget11(readBuffer->getRenderTarget());
+        break;
+      case BLIT_DEPTHSTENCIL:
+        sourceRenderTarget = RenderTarget11::makeRenderTarget11(readBuffer->getDepthStencil());
+        break;
+      default: UNREACHABLE();
+    }
+    if (!sourceRenderTarget)
+    {
+        ERR("Failed to retrieve the render target from the frame buffer.");
+        return error(GL_OUT_OF_MEMORY, false);
+    }
+
+    ID3D11Texture2D *source = NULL;
+    unsigned int sourceSubresource = 0;
+    if (sourceRenderTarget->getSamples() > 0)
+    {
+        ID3D11Texture2D *unresolvedTexture = sourceRenderTarget->getTexture();
+
+        source = resolveMultisampledTexture(unresolvedTexture, sourceRenderTarget->getSubresourceIndex());
+        sourceSubresource = 0;
+
+        unresolvedTexture->Release();
+    }
+    else
+    {
+        source = sourceRenderTarget->getTexture();
+        sourceSubresource = sourceRenderTarget->getSubresourceIndex();
+    }
+
+    if (!source)
+    {
+        ERR("Failed to retrieve the render target view from the render target.");
+        return error(GL_OUT_OF_MEMORY, false);
+    }
+
+
+    gl::Renderbuffer *drawBuffer = NULL;
+    switch (target)
+    {
+      case BLIT_RENDERTARGET:
+        drawBuffer = drawTarget->getColorbuffer();
+        break;
+      case BLIT_DEPTHSTENCIL:
+        drawBuffer = drawTarget->getDepthOrStencilbuffer();
+        break;
+      default: UNREACHABLE();
+    }
+    if (!drawBuffer)
+    {
+        source->Release();
+        ERR("Failed to retrieve the color buffer from the draw buffer.");
+        return error(GL_OUT_OF_MEMORY, false);
+    }
+
+    RenderTarget11 *drawRenderTarget = NULL;
+    switch (target)
+    {
+      case BLIT_RENDERTARGET:
+        drawRenderTarget = RenderTarget11::makeRenderTarget11(drawBuffer->getRenderTarget());
+        break;
+      case BLIT_DEPTHSTENCIL:
+        drawRenderTarget = RenderTarget11::makeRenderTarget11(drawBuffer->getDepthStencil());
+        break;
+      default: UNREACHABLE();
+    }
+    if (!drawRenderTarget)
+    {
+        source->Release();
+        ERR("Failed to retrieve the render target from the render buffer.");
+        return error(GL_OUT_OF_MEMORY, false);
+    }
+
+    ID3D11Texture2D *dest = drawRenderTarget->getTexture();
+    unsigned int destSubresource = drawRenderTarget->getSubresourceIndex();
+
+    D3D11_BOX srcBox;
+    srcBox.left = readRect.x;
+    srcBox.right = readRect.x + readRect.width;
+    srcBox.top = readRect.y;
+    srcBox.bottom = readRect.y + readRect.height;
+    srcBox.front = 0;
+    srcBox.back = 1;
+
+    mDeviceContext->CopySubresourceRegion(dest, destSubresource, drawRect.x, drawRect.y, 0,
+                                          source, sourceSubresource, &srcBox);
+
+    source->Release();
+    dest->Release();
+
+    return true;
 }
 
 ID3D11Texture2D *Renderer11::resolveMultisampledTexture(ID3D11Texture2D *source, unsigned int subresource)
