@@ -67,7 +67,9 @@ static bool directStoragePossible(VertexBufferInterface* vb, const gl::VertexAtt
     gl::Buffer *buffer = attrib.mBoundBuffer.get();
     BufferStorage *storage = buffer ? buffer->getStorage() : NULL;
 
-    return storage && storage->supportsDirectBinding() && !vb->getVertexBuffer()->requiresConversion(attrib) && attrib.stride() % 4 == 0;
+    const bool isAligned = (attrib.stride() % 4 == 0) && (attrib.mOffset % 4 == 0);
+
+    return storage && storage->supportsDirectBinding() && !vb->getVertexBuffer()->requiresConversion(attrib) && isAligned;
 }
 
 GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[], gl::ProgramBinary *programBinary, GLint start, GLsizei count, TranslatedAttribute *translated, GLsizei instances)
