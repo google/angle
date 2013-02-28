@@ -3179,12 +3179,8 @@ GLenum OutputHLSL::glVariablePrecision(const TType &type)
           default: UNREACHABLE();
         }
     }
-    else if (type.getBasicType() == EbtBool)
-    {
-        return GL_BOOL;   // Booleans don't have a precision
-    }
-    else UNREACHABLE();
 
+    // Other types (boolean, sampler) don't have a precision
     return GL_NONE;
 }
 
