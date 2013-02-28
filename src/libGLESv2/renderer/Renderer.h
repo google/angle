@@ -16,8 +16,6 @@
 #define EGLAPI
 #include <EGL/egl.h>
 
-#include <D3Dcompiler.h>
-
 #include "libGLESv2/Uniform.h"
 #include "libGLESv2/angletypes.h"
 
@@ -65,6 +63,9 @@ class SwapChain;
 class RenderTarget;
 class Image;
 class TextureStorage;
+
+typedef void * ShaderBlob;
+typedef void (*pCompileFunc)();
 
 struct ConfigDesc
 {
@@ -224,7 +225,7 @@ class Renderer
 
   protected:
     bool initializeCompiler();
-    ID3DBlob *compileToBinary(gl::InfoLog &infoLog, const char *hlsl, const char *profile, bool alternateFlags);
+    ShaderBlob *compileToBinary(gl::InfoLog &infoLog, const char *hlsl, const char *profile, bool alternateFlags);
 
     egl::Display *mDisplay;
 
@@ -232,7 +233,7 @@ class Renderer
     DISALLOW_COPY_AND_ASSIGN(Renderer);
 
     HMODULE mD3dCompilerModule;
-    pD3DCompile mD3DCompileFunc;
+    pCompileFunc mD3DCompileFunc;
 };
 
 }

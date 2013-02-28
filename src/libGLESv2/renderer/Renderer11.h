@@ -17,7 +17,6 @@
 
 #include <dxgi.h>
 #include <d3d11.h>
-#include <D3Dcompiler.h>
 
 #include "common/angleutils.h"
 #include "libGLESv2/angletypes.h"

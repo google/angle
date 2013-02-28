@@ -6,6 +6,8 @@
 
 // Renderer.cpp: Implements EGL dependencies for creating and destroying Renderer instances.
 
+#include <D3Dcompiler.h>
+
 #include "libGLESv2/main.h"
 #include "libGLESv2/Program.h"
 #include "libGLESv2/renderer/Renderer.h"
@@ -64,14 +66,14 @@ bool Renderer::initializeCompiler()
         return false;
     }
 
-    mD3DCompileFunc = reinterpret_cast<pD3DCompile>(GetProcAddress(mD3dCompilerModule, "D3DCompile"));
+    mD3DCompileFunc = reinterpret_cast<pCompileFunc>(GetProcAddress(mD3dCompilerModule, "D3DCompile"));
     ASSERT(mD3DCompileFunc);
 
     return mD3DCompileFunc != NULL;
 }
 
 // Compiles HLSL code into executable binaries
-ID3DBlob *Renderer::compileToBinary(gl::InfoLog &infoLog, const char *hlsl, const char *profile, bool alternateFlags)
+ShaderBlob *Renderer::compileToBinary(gl::InfoLog &infoLog, const char *hlsl, const char *profile, bool alternateFlags)
 {
     if (!hlsl)
     {
@@ -117,13 +119,15 @@ ID3DBlob *Renderer::compileToBinary(gl::InfoLog &infoLog, const char *hlsl, cons
     };
 
     int attempts = (alternateFlags ? sizeof(extraFlags) / sizeof(UINT) : 1);
+    pD3DCompile compileFunc = reinterpret_cast<pD3DCompile>(mD3DCompileFunc);
 
     for (int i = 0; i < attempts; ++i)
     {
         ID3DBlob *errorMessage = NULL;
         ID3DBlob *binary = NULL;
-        result = mD3DCompileFunc(hlsl, strlen(hlsl), gl::g_fakepath, NULL, NULL,
-                                 "main", profile, flags | extraFlags[i], 0, &binary, &errorMessage);
+
+        result = compileFunc(hlsl, strlen(hlsl), gl::g_fakepath, NULL, NULL,
+                             "main", profile, flags | extraFlags[i], 0, &binary, &errorMessage);
         if (errorMessage)
         {
             const char *message = (const char*)errorMessage->GetBufferPointer();
@@ -138,13 +142,13 @@ ID3DBlob *Renderer::compileToBinary(gl::InfoLog &infoLog, const char *hlsl, cons
 
         if (SUCCEEDED(result))
         {
-            return binary;
+            return (ShaderBlob*)binary;
         }
         else
         {
             if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
             {
-                return gl::error(GL_OUT_OF_MEMORY, (ID3DBlob*) NULL);
+                return gl::error(GL_OUT_OF_MEMORY, (ShaderBlob*) NULL);
             }
 
             infoLog.append("Warning: D3D shader compilation failed with ");

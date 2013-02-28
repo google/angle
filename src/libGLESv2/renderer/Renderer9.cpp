@@ -6,6 +6,8 @@
 
 // Renderer9.cpp: Implements a back-end specific class for the D3D9 renderer.
 
+#include <D3Dcompiler.h>
+
 #include "common/debug.h"
 #include "libGLESv2/main.h"
 #include "libGLESv2/utilities.h"
@@ -3008,7 +3010,7 @@ ShaderExecutable *Renderer9::compileToExecutable(gl::InfoLog &infoLog, const cha
         return NULL;
     }
 
-    ID3DBlob *binary = compileToBinary(infoLog, shaderHLSL, profile, true);
+    ID3DBlob *binary = (ID3DBlob*) compileToBinary(infoLog, shaderHLSL, profile, true);
     if (!binary)
         return NULL;
 

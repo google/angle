@@ -2688,7 +2688,7 @@ ShaderExecutable *Renderer11::compileToExecutable(gl::InfoLog &infoLog, const ch
         return NULL;
     }
 
-    ID3DBlob *binary = compileToBinary(infoLog, shaderHLSL, profile, false);
+    ID3DBlob *binary = (ID3DBlob*) compileToBinary(infoLog, shaderHLSL, profile, false);
     if (!binary)
         return NULL;
 
