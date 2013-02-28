@@ -264,7 +264,7 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
             ERR("Could not create offscreen texture: %08lX", result);
             release();
 
-            if (isDeviceLostError(result))
+            if (d3d11::isDeviceLostError(result))
             {
                 return EGL_CONTEXT_LOST;
             }
@@ -348,7 +348,7 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
             ERR("Could not create additional swap chains or offscreen surfaces: %08lX", result);
             release();
 
-            if (isDeviceLostError(result))
+            if (d3d11::isDeviceLostError(result))
             {
                 return EGL_CONTEXT_LOST;
             }
@@ -388,7 +388,7 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
             ERR("Could not create depthstencil surface for new swap chain: 0x%08X", result);
             release();
 
-            if (isDeviceLostError(result))
+            if (d3d11::isDeviceLostError(result))
             {
                 return EGL_CONTEXT_LOST;
             }

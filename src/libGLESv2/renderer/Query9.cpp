@@ -108,7 +108,7 @@ GLboolean Query9::testQuery()
                 ASSERT(false);
             }
         }
-        else if (checkDeviceLost(hres))
+        else if (d3d9::checkDeviceLost(hres))
         {
             return error(GL_OUT_OF_MEMORY, GL_TRUE);
         }

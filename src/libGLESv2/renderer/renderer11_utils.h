@@ -7,6 +7,9 @@
 // renderer11_utils.h: Conversion functions and other utility routines
 // specific to the D3D11 renderer.
 
+#ifndef LIBGLESV2_RENDERER_RENDERER11_UTILS_H
+#define LIBGLESV2_RENDERER_RENDERER11_UTILS_H
+
 #define GL_APICALL
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
@@ -70,7 +73,6 @@ size_t ComputeBlockSizeBits(DXGI_FORMAT format);
 
 bool IsDepthStencilFormat(DXGI_FORMAT format);
 HRESULT SetDebugName(ID3D11DeviceChild *resource, const char *name);
-}
 
 inline bool isDeviceLostError(HRESULT errorCode)
 {
@@ -86,3 +88,7 @@ inline bool isDeviceLostError(HRESULT errorCode)
         return false;
     }
 }
+
+}
+
+#endif // LIBGLESV2_RENDERER_RENDERER11_UTILS_H

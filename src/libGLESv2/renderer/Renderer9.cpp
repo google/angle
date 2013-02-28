@@ -634,7 +634,7 @@ void Renderer9::sync(bool block)
 
     freeEventQuery(query);
 
-    if (isDeviceLostError(result))
+    if (d3d9::isDeviceLostError(result))
     {
         mDisplay->notifyDeviceLost();
     }
@@ -2705,7 +2705,7 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
 
         // It turns out that D3D will sometimes produce more error
         // codes than those documented.
-        if (checkDeviceLost(result))
+        if (d3d9::checkDeviceLost(result))
             return error(GL_OUT_OF_MEMORY);
         else
         {

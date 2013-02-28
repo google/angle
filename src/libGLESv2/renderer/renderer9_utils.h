@@ -60,7 +60,6 @@ namespace d3d9
 {
 bool IsCompressedFormat(D3DFORMAT format);
 size_t ComputeRowSize(D3DFORMAT format, unsigned int width);
-}
 
 inline bool isDeviceLostError(HRESULT errorCode)
 {
@@ -88,5 +87,7 @@ inline bool checkDeviceLost(HRESULT errorCode)
     }
     return false;
 };
+
+}
 
 #endif // LIBGLESV2_RENDERER_RENDERER9_UTILS_H
