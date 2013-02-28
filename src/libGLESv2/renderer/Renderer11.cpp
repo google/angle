@@ -1254,91 +1254,24 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArra
     ID3D11Buffer *vertexConstantBuffer = vertexExecutable->getConstantBuffer(mDevice, totalRegisterCountVS);
     ID3D11Buffer *pixelConstantBuffer = pixelExecutable->getConstantBuffer(mDevice, totalRegisterCountPS);
 
-    void *mapVS = (totalRegisterCountVS > 0 && vertexUniformsDirty) ? new float[4 * totalRegisterCountVS] : NULL;
-    void *mapPS = (totalRegisterCountPS > 0 && pixelUniformsDirty) ? new float[4 * totalRegisterCountPS] : NULL;
+    float (*mapVS)[4] = (totalRegisterCountVS > 0 && vertexUniformsDirty) ? new float[totalRegisterCountVS][4] : NULL;
+    float (*mapPS)[4] = (totalRegisterCountPS > 0 && pixelUniformsDirty) ? new float[totalRegisterCountPS][4] : NULL;
 
     for (gl::UniformArray::iterator uniform_iterator = uniformArray->begin(); uniform_iterator != uniformArray->end(); uniform_iterator++)
     {
         gl::Uniform *uniform = *uniform_iterator;
 
-        switch (uniform->type)
+        if (uniform->type !=  GL_SAMPLER_2D && uniform->type != GL_SAMPLER_CUBE)
         {
-          case GL_SAMPLER_2D:
-          case GL_SAMPLER_CUBE:
-            break;
-          case GL_FLOAT:
-          case GL_FLOAT_VEC2:
-          case GL_FLOAT_VEC3:
-          case GL_FLOAT_VEC4:
-          case GL_FLOAT_MAT2:
-          case GL_FLOAT_MAT3:
-          case GL_FLOAT_MAT4:
             if (uniform->vsRegisterIndex >= 0 && mapVS)
             {
-                GLfloat (*c)[4] = (GLfloat(*)[4])mapVS;
-                float (*f)[4] = (float(*)[4])uniform->data;
-
-                for (unsigned int i = 0; i < uniform->registerCount; i++)
-                {
-                    c[uniform->vsRegisterIndex + i][0] = f[i][0];
-                    c[uniform->vsRegisterIndex + i][1] = f[i][1];
-                    c[uniform->vsRegisterIndex + i][2] = f[i][2];
-                    c[uniform->vsRegisterIndex + i][3] = f[i][3];
-                }
+                memcpy(mapVS + uniform->vsRegisterIndex, uniform->data, uniform->registerCount * sizeof(float[4]));
             }
+
             if (uniform->psRegisterIndex >= 0 && mapPS)
             {
-                GLfloat (*c)[4] = (GLfloat(*)[4])mapPS;
-                float (*f)[4] = (float(*)[4])uniform->data;
-
-                for (unsigned int i = 0; i < uniform->registerCount; i++)
-                {
-                    c[uniform->psRegisterIndex + i][0] = f[i][0];
-                    c[uniform->psRegisterIndex + i][1] = f[i][1];
-                    c[uniform->psRegisterIndex + i][2] = f[i][2];
-                    c[uniform->psRegisterIndex + i][3] = f[i][3];
-                }
+                memcpy(mapPS + uniform->psRegisterIndex, uniform->data, uniform->registerCount * sizeof(float[4]));
             }
-            break;
-          case GL_INT:
-          case GL_INT_VEC2:
-          case GL_INT_VEC3:
-          case GL_INT_VEC4:
-          case GL_BOOL:
-          case GL_BOOL_VEC2:
-          case GL_BOOL_VEC3:
-          case GL_BOOL_VEC4:
-            if (uniform->vsRegisterIndex >= 0 && mapVS)
-            {
-                int (*c)[4] = (int(*)[4])mapVS;
-                GLint *x = (GLint*)uniform->data;
-                int count = gl::VariableColumnCount(uniform->type);
-
-                for (unsigned int i = 0; i < uniform->registerCount; i++)
-                {
-                    if (count >= 1) c[uniform->vsRegisterIndex + i][0] = x[i * count + 0];
-                    if (count >= 2) c[uniform->vsRegisterIndex + i][1] = x[i * count + 1];
-                    if (count >= 3) c[uniform->vsRegisterIndex + i][2] = x[i * count + 2];
-                    if (count >= 4) c[uniform->vsRegisterIndex + i][3] = x[i * count + 3];
-                }
-            }
-            if (uniform->psRegisterIndex >= 0 && mapPS)
-            {
-                int (*c)[4] = (int(*)[4])mapPS;
-                GLint *x = (GLint*)uniform->data;
-                int count = gl::VariableColumnCount(uniform->type);
-
-                for (unsigned int i = 0; i < uniform->registerCount; i++)
-                {
-                    if (count >= 1) c[uniform->psRegisterIndex + i][0] = x[i * count + 0];
-                    if (count >= 2) c[uniform->psRegisterIndex + i][1] = x[i * count + 1];
-                    if (count >= 3) c[uniform->psRegisterIndex + i][2] = x[i * count + 2];
-                    if (count >= 4) c[uniform->psRegisterIndex + i][3] = x[i * count + 3];
-                }
-            }
-            break;
-          default:
-            UNREACHABLE();
         }
 
         uniform->dirty = false;
