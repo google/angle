@@ -371,9 +371,14 @@ void Image11::createStagingTexture()
     {
         ID3D11Device *device = mRenderer->getDevice();
 
+        // Round up the width and height to the nearest multiple of dimension alignment
+        unsigned int dimensionAlignment = d3d11::GetTextureFormatDimensionAlignment(dxgiFormat);
+        unsigned int width = mWidth + dimensionAlignment - 1 - (mWidth - 1) % dimensionAlignment;
+        unsigned int height = mHeight + dimensionAlignment - 1 - (mHeight - 1) % dimensionAlignment;
+
         D3D11_TEXTURE2D_DESC desc;
-        desc.Width = mWidth;
-        desc.Height = mHeight;
+        desc.Width = width;
+        desc.Height = height;
         desc.MipLevels = desc.ArraySize = 1;
         desc.Format = dxgiFormat;
         desc.SampleDesc.Count = 1;

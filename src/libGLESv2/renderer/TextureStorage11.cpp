@@ -133,6 +133,11 @@ bool TextureStorage11::updateSubresourceLevel(ID3D11Texture2D *srcTexture, int l
 {
     if (srcTexture)
     {
+        // Round up the width and height to the nearest multiple of dimension alignment
+        unsigned int dimensionAlignment = d3d11::GetTextureFormatDimensionAlignment(mTextureFormat);
+        width = width + dimensionAlignment - 1 - (width - 1) % dimensionAlignment;
+        height = height + dimensionAlignment - 1 - (height - 1) % dimensionAlignment;
+
         D3D11_BOX srcBox;
         srcBox.left = xoffset;
         srcBox.top = yoffset;
