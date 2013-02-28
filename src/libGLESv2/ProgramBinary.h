@@ -28,6 +28,7 @@ namespace rx
 {
 class ShaderExecutable;
 class Renderer;
+struct TranslatedAttribute;
 }
 
 namespace gl
@@ -112,6 +113,8 @@ class ProgramBinary : public RefCountObject
     bool isValidated() const;
 
     unsigned int getSerial() const;
+
+    void sortAttributesByLayout(rx::TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS], int sortedSemanticIndices[MAX_VERTEX_ATTRIBS]) const;
 
     static std::string decorateAttribute(const std::string &name);    // Prepend an underscore
 

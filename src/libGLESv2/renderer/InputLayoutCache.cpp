@@ -51,6 +51,9 @@ void InputLayoutCache::clear()
 GLenum InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS],
                                             gl::ProgramBinary *programBinary)
 {
+    int sortedSemanticIndices[gl::MAX_VERTEX_ATTRIBS];
+    programBinary->sortAttributesByLayout(attributes, sortedSemanticIndices);
+
     if (!mDevice || !mDeviceContext)
     {
         ERR("InputLayoutCache is not initialized.");
@@ -75,7 +78,7 @@ GLenum InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::M
             D3D11_INPUT_CLASSIFICATION inputClass = attributes[i].divisor > 0 ? D3D11_INPUT_PER_INSTANCE_DATA : D3D11_INPUT_PER_VERTEX_DATA;
 
             ilKey.elements[ilKey.elementCount].SemanticName = semanticName;
-            ilKey.elements[ilKey.elementCount].SemanticIndex = programBinary->getSemanticIndex(i);
+            ilKey.elements[ilKey.elementCount].SemanticIndex = sortedSemanticIndices[i];
             ilKey.elements[ilKey.elementCount].Format = attributes[i].attribute->mArrayEnabled ? vertexBuffer->getDXGIFormat(*attributes[i].attribute) : DXGI_FORMAT_R32G32B32A32_FLOAT;
             ilKey.elements[ilKey.elementCount].InputSlot = i;
             ilKey.elements[ilKey.elementCount].AlignedByteOffset = 0;
