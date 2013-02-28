@@ -955,7 +955,7 @@ void Renderer9::setDepthStencilState(const gl::DepthStencilState &depthStencilSt
                 depthStencilState.stencilMask != depthStencilState.stencilBackMask)
             {
                 ERR("Separate front/back stencil writemasks, reference values, or stencil mask values are invalid under WebGL.");
-                return error(GL_INVALID_OPERATION);
+                return gl::error(GL_INVALID_OPERATION);
             }
 
             // get the maximum size of the stencil ref
@@ -1149,7 +1149,7 @@ bool Renderer9::applyPrimitiveType(GLenum mode, GLsizei count)
         mPrimitiveCount = count - 2;
         break;
       default:
-        return error(GL_INVALID_ENUM, false);
+        return gl::error(GL_INVALID_ENUM, false);
     }
 
     return mPrimitiveCount > 0;
@@ -1397,7 +1397,7 @@ void Renderer9::drawArrays(GLenum mode, GLsizei count, GLsizei instances)
         else
         {
             ERR("Could not create a counting index buffer for glDrawArraysInstanced.");
-            return error(GL_OUT_OF_MEMORY);
+            return gl::error(GL_OUT_OF_MEMORY);
         }
     }
     else   // Regular case
@@ -1447,7 +1447,7 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
                 mLineLoopIB = NULL;
 
                 ERR("Could not create a 32-bit looping index buffer for GL_LINE_LOOP.");
-                return error(GL_OUT_OF_MEMORY);
+                return gl::error(GL_OUT_OF_MEMORY);
             }
         }
 
@@ -1455,7 +1455,7 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
         if (!mLineLoopIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT))
         {
             ERR("Could not reserve enough space in looping index buffer for GL_LINE_LOOP.");
-            return error(GL_OUT_OF_MEMORY);
+            return gl::error(GL_OUT_OF_MEMORY);
         }
 
         void* mappedMemory = NULL;
@@ -1463,7 +1463,7 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
         if (offset == -1 || mappedMemory == NULL)
         {
             ERR("Could not map index buffer for GL_LINE_LOOP.");
-            return error(GL_OUT_OF_MEMORY);
+            return gl::error(GL_OUT_OF_MEMORY);
         }
 
         startIndex = static_cast<UINT>(offset) / 4;
@@ -1505,7 +1505,7 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
         if (!mLineLoopIB->unmapBuffer())
         {
             ERR("Could not unmap index buffer for GL_LINE_LOOP.");
-            return error(GL_OUT_OF_MEMORY);
+            return gl::error(GL_OUT_OF_MEMORY);
         }
     }
     else
@@ -1519,7 +1519,7 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
                 mLineLoopIB = NULL;
 
                 ERR("Could not create a 16-bit looping index buffer for GL_LINE_LOOP.");
-                return error(GL_OUT_OF_MEMORY);
+                return gl::error(GL_OUT_OF_MEMORY);
             }
         }
 
@@ -1527,7 +1527,7 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
         if (!mLineLoopIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_SHORT))
         {
             ERR("Could not reserve enough space in looping index buffer for GL_LINE_LOOP.");
-            return error(GL_OUT_OF_MEMORY);
+            return gl::error(GL_OUT_OF_MEMORY);
         }
 
         void* mappedMemory = NULL;
@@ -1535,7 +1535,7 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
         if (offset == -1 || mappedMemory == NULL)
         {
             ERR("Could not map index buffer for GL_LINE_LOOP.");
-            return error(GL_OUT_OF_MEMORY);
+            return gl::error(GL_OUT_OF_MEMORY);
         }
 
         startIndex = static_cast<UINT>(offset) / 2;
@@ -1577,7 +1577,7 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
         if (!mLineLoopIB->unmapBuffer())
         {
             ERR("Could not unmap index buffer for GL_LINE_LOOP.");
-            return error(GL_OUT_OF_MEMORY);
+            return gl::error(GL_OUT_OF_MEMORY);
         }
     }
 
@@ -2048,6 +2048,8 @@ bool Renderer9::testDeviceLost(bool notify)
     if (isLost)
     {
         // ensure we note the device loss --
+        // we'll probably get this done again by notifyDeviceLost
+        // but best to remember it!
         // Note that we don't want to clear the device loss status here
         // -- this needs to be done by resetDevice
         mDeviceLost = true;
@@ -2547,7 +2549,7 @@ bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, gl::Rectangle *readRe
         if (!readSurface || !drawSurface)
         {
             ERR("Failed to retrieve the render target.");
-            return error(GL_OUT_OF_MEMORY, false);
+            return gl::error(GL_OUT_OF_MEMORY, false);
         }
 
         RECT srcRect, dstRect;
@@ -2614,7 +2616,7 @@ bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, gl::Rectangle *readRe
         if (!readSurface || !drawSurface)
         {
             ERR("Failed to retrieve the render target.");
-            return error(GL_OUT_OF_MEMORY, false);
+            return gl::error(GL_OUT_OF_MEMORY, false);
         }
 
         HRESULT result = mDevice->StretchRect(readSurface, NULL, drawSurface, NULL, D3DTEXF_NONE);
@@ -2662,7 +2664,7 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
     {
         UNIMPLEMENTED();   // FIXME: Requires resolve using StretchRect into non-multisampled render target
         surface->Release();
-        return error(GL_OUT_OF_MEMORY);
+        return gl::error(GL_OUT_OF_MEMORY);
     }
 
     HRESULT result;
@@ -2690,7 +2692,7 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
         {
             ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
             surface->Release();
-            return error(GL_OUT_OF_MEMORY);
+            return gl::error(GL_OUT_OF_MEMORY);
         }
     }
 
@@ -2707,7 +2709,7 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
         if (d3d9::isDeviceLostError(result))
         {
             notifyDeviceLost();
-            return error(GL_OUT_OF_MEMORY);
+            return gl::error(GL_OUT_OF_MEMORY);
         }
         else
         {

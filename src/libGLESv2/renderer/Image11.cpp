@@ -389,7 +389,7 @@ void Image11::createStagingTexture()
         {
             ASSERT(result == E_OUTOFMEMORY);
             ERR("Creating image failed.");
-            return error(GL_OUT_OF_MEMORY);
+            return gl::error(GL_OUT_OF_MEMORY);
         }
     }
 

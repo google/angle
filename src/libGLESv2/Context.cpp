@@ -982,7 +982,7 @@ void Context::beginQuery(GLenum target, GLuint query)
     {
         if (mState.activeQuery[i].get() != NULL)
         {
-            return error(GL_INVALID_OPERATION);
+            return gl::error(GL_INVALID_OPERATION);
         }
     }
 
@@ -1005,13 +1005,13 @@ void Context::beginQuery(GLenum target, GLuint query)
     // check that name was obtained with glGenQueries
     if (!queryObject)
     {
-        return error(GL_INVALID_OPERATION);
+        return gl::error(GL_INVALID_OPERATION);
     }
 
     // check for type mismatch
     if (queryObject->getType() != target)
     {
-        return error(GL_INVALID_OPERATION);
+        return gl::error(GL_INVALID_OPERATION);
     }
 
     // set query as active for specified target
@@ -1042,7 +1042,7 @@ void Context::endQuery(GLenum target)
 
     if (queryObject == NULL)
     {
-        return error(GL_INVALID_OPERATION);
+        return gl::error(GL_INVALID_OPERATION);
     }
 
     queryObject->end();
@@ -1471,7 +1471,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
         {
             if (mState.activeSampler > mRenderer->getMaxCombinedTextureImageUnits() - 1)
             {
-                error(GL_INVALID_OPERATION);
+                gl::error(GL_INVALID_OPERATION);
                 return false;
             }
 
@@ -1482,7 +1482,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
         {
             if (mState.activeSampler > mRenderer->getMaxCombinedTextureImageUnits() - 1)
             {
-                error(GL_INVALID_OPERATION);
+                gl::error(GL_INVALID_OPERATION);
                 return false;
             }
 
@@ -1694,7 +1694,7 @@ bool Context::applyRenderTarget(GLenum drawMode, bool ignoreViewport)
 
     if (!framebufferObject || framebufferObject->completeness() != GL_FRAMEBUFFER_COMPLETE)
     {
-        return error(GL_INVALID_FRAMEBUFFER_OPERATION, false);
+        return gl::error(GL_INVALID_FRAMEBUFFER_OPERATION, false);
     }
 
     mRenderer->applyRenderTarget(framebufferObject);
@@ -1826,12 +1826,12 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
 
     if (framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
     {
-        return error(GL_INVALID_FRAMEBUFFER_OPERATION);
+        return gl::error(GL_INVALID_FRAMEBUFFER_OPERATION);
     }
 
     if (getReadFramebufferHandle() != 0 && framebuffer->getSamples() != 0)
     {
-        return error(GL_INVALID_OPERATION);
+        return gl::error(GL_INVALID_OPERATION);
     }
 
     GLsizei outputPitch = ComputePitch(width, ConvertSizedInternalFormat(format, type), getPackAlignment());
@@ -1841,7 +1841,7 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
         int requiredSize = outputPitch * height;
         if (requiredSize > *bufSize)
         {
-            return error(GL_INVALID_OPERATION);
+            return gl::error(GL_INVALID_OPERATION);
         }
     }
 
@@ -1854,7 +1854,7 @@ void Context::clear(GLbitfield mask)
 
     if (!framebufferObject || framebufferObject->completeness() != GL_FRAMEBUFFER_COMPLETE)
     {
-        return error(GL_INVALID_FRAMEBUFFER_OPERATION);
+        return gl::error(GL_INVALID_FRAMEBUFFER_OPERATION);
     }
 
     DWORD flags = 0;
@@ -1900,7 +1900,7 @@ void Context::clear(GLbitfield mask)
 
     if (mask != 0)
     {
-        return error(GL_INVALID_VALUE);
+        return gl::error(GL_INVALID_VALUE);
     }
 
     if (!applyRenderTarget(GL_TRIANGLES, true))   // Clips the clear to the scissor rectangle but not the viewport
@@ -1926,7 +1926,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
 {
     if (!mState.currentProgram)
     {
-        return error(GL_INVALID_OPERATION);
+        return gl::error(GL_INVALID_OPERATION);
     }
 
     if (!mRenderer->applyPrimitiveType(mode, count))
@@ -1946,7 +1946,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
     GLenum err = mRenderer->applyVertexBuffer(programBinary, mState.vertexAttribute, first, count, instances);
     if (err != GL_NO_ERROR)
     {
-        return error(err);
+        return gl::error(err);
     }
 
     applyShaders();
@@ -1954,7 +1954,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
 
     if (!programBinary->validateSamplers(NULL))
     {
-        return error(GL_INVALID_OPERATION);
+        return gl::error(GL_INVALID_OPERATION);
     }
 
     if (!skipDraw(mode))
@@ -1967,12 +1967,12 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
 {
     if (!mState.currentProgram)
     {
-        return error(GL_INVALID_OPERATION);
+        return gl::error(GL_INVALID_OPERATION);
     }
 
     if (!indices && !mState.elementArrayBuffer)
     {
-        return error(GL_INVALID_OPERATION);
+        return gl::error(GL_INVALID_OPERATION);
     }
     
     if (!mRenderer->applyPrimitiveType(mode, count))
@@ -1991,7 +1991,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
     GLenum err = mRenderer->applyIndexBuffer(indices, mState.elementArrayBuffer.get(), count, mode, type, &indexInfo);
     if (err != GL_NO_ERROR)
     {
-        return error(err);
+        return gl::error(err);
     }
 
     ProgramBinary *programBinary = getCurrentProgramBinary();
@@ -2000,7 +2000,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
     err = mRenderer->applyVertexBuffer(programBinary, mState.vertexAttribute, indexInfo.minIndex, vertexCount, instances);
     if (err != GL_NO_ERROR)
     {
-        return error(err);
+        return gl::error(err);
     }
 
     applyShaders();
@@ -2008,7 +2008,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
 
     if (!programBinary->validateSamplers(NULL))
     {
-        return error(GL_INVALID_OPERATION);
+        return gl::error(GL_INVALID_OPERATION);
     }
 
     if (!skipDraw(mode))
@@ -2262,13 +2262,13 @@ bool Context::getCurrentReadFormatType(GLenum *format, GLenum *type)
     Framebuffer *framebuffer = getReadFramebuffer();
     if (!framebuffer || framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
     {
-        return error(GL_INVALID_OPERATION, false);
+        return gl::error(GL_INVALID_OPERATION, false);
     }
 
     Renderbuffer *renderbuffer = framebuffer->getColorbuffer();
     if (!renderbuffer)
     {
-        return error(GL_INVALID_OPERATION, false);
+        return gl::error(GL_INVALID_OPERATION, false);
     }
 
     *format = gl::ExtractFormat(renderbuffer->getActualFormat()); 
@@ -2619,12 +2619,12 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
     if (!readFramebuffer || readFramebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE ||
         !drawFramebuffer || drawFramebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
     {
-        return error(GL_INVALID_FRAMEBUFFER_OPERATION);
+        return gl::error(GL_INVALID_FRAMEBUFFER_OPERATION);
     }
 
     if (drawFramebuffer->getSamples() != 0)
     {
-        return error(GL_INVALID_OPERATION);
+        return gl::error(GL_INVALID_OPERATION);
     }
 
     int readBufferWidth = readFramebuffer->getColorbuffer()->getWidth();
@@ -2797,12 +2797,12 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
             readFramebuffer->getColorbuffer()->getActualFormat() != drawFramebuffer->getColorbuffer()->getActualFormat())
         {
             ERR("Color buffer format conversion in BlitFramebufferANGLE not supported by this implementation");
-            return error(GL_INVALID_OPERATION);
+            return gl::error(GL_INVALID_OPERATION);
         }
         
         if (partialBufferCopy && readFramebuffer->getSamples() != 0)
         {
-            return error(GL_INVALID_OPERATION);
+            return gl::error(GL_INVALID_OPERATION);
         }
 
         blitRenderTarget = true;
@@ -2824,7 +2824,7 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
                 if (readFramebuffer->getDepthbufferType() != drawFramebuffer->getDepthbufferType() ||
                     readFramebuffer->getDepthbuffer()->getActualFormat() != drawFramebuffer->getDepthbuffer()->getActualFormat())
                 {
-                    return error(GL_INVALID_OPERATION);
+                    return gl::error(GL_INVALID_OPERATION);
                 }
 
                 blitDepthStencil = true;
@@ -2840,7 +2840,7 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
                 if (readFramebuffer->getStencilbufferType() != drawFramebuffer->getStencilbufferType() ||
                     readFramebuffer->getStencilbuffer()->getActualFormat() != drawFramebuffer->getStencilbuffer()->getActualFormat())
                 {
-                    return error(GL_INVALID_OPERATION);
+                    return gl::error(GL_INVALID_OPERATION);
                 }
 
                 blitDepthStencil = true;
@@ -2852,13 +2852,13 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
         if (partialBufferCopy)
         {
             ERR("Only whole-buffer depth and stencil blits are supported by this implementation.");
-            return error(GL_INVALID_OPERATION); // only whole-buffer copies are permitted
+            return gl::error(GL_INVALID_OPERATION); // only whole-buffer copies are permitted
         }
 
         if ((drawDSBuffer && drawDSBuffer->getSamples() != 0) || 
             (readDSBuffer && readDSBuffer->getSamples() != 0))
         {
-            return error(GL_INVALID_OPERATION);
+            return gl::error(GL_INVALID_OPERATION);
         }
     }
 

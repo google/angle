@@ -535,7 +535,7 @@ void Renderer11::setDepthStencilState(const gl::DepthStencilState &depthStencilS
         {
             ERR("Separate front/back stencil writemasks, reference values, or stencil mask values are "
                 "invalid under WebGL.");
-            return error(GL_INVALID_OPERATION);
+            return gl::error(GL_INVALID_OPERATION);
         }
 
         ID3D11DepthStencilState *dxDepthStencilState = mStateCache.getDepthStencilState(depthStencilState);
@@ -663,7 +663,7 @@ bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count)
           // emulate fans via rewriting index buffer
       case GL_TRIANGLE_FAN:   primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;	break;
       default:
-        return error(GL_INVALID_ENUM, false);
+        return gl::error(GL_INVALID_ENUM, false);
     }
 
     mDeviceContext->IASetPrimitiveTopology(primitiveTopology);
@@ -914,7 +914,7 @@ void Renderer11::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices,
             mLineLoopIB = NULL;
 
             ERR("Could not create a 32-bit looping index buffer for GL_LINE_LOOP.");
-            return error(GL_OUT_OF_MEMORY);
+            return gl::error(GL_OUT_OF_MEMORY);
         }
     }
 
@@ -922,7 +922,7 @@ void Renderer11::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices,
     if (!mLineLoopIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT))
     {
         ERR("Could not reserve enough space in looping index buffer for GL_LINE_LOOP.");
-        return error(GL_OUT_OF_MEMORY);
+        return gl::error(GL_OUT_OF_MEMORY);
     }
 
     void* mappedMemory = NULL;
@@ -930,7 +930,7 @@ void Renderer11::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices,
     if (offset == -1 || mappedMemory == NULL)
     {
         ERR("Could not map index buffer for GL_LINE_LOOP.");
-        return error(GL_OUT_OF_MEMORY);
+        return gl::error(GL_OUT_OF_MEMORY);
     }
 
     unsigned int *data = reinterpret_cast<unsigned int*>(mappedMemory);
@@ -972,7 +972,7 @@ void Renderer11::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices,
     if (!mLineLoopIB->unmapBuffer())
     {
         ERR("Could not unmap index buffer for GL_LINE_LOOP.");
-        return error(GL_OUT_OF_MEMORY);
+        return gl::error(GL_OUT_OF_MEMORY);
     }
 
     if (mAppliedIBSerial != mLineLoopIB->getSerial() || mAppliedIBOffset != indexBufferOffset)
@@ -1006,7 +1006,7 @@ void Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indic
             mTriangleFanIB = NULL;
 
             ERR("Could not create a scratch index buffer for GL_TRIANGLE_FAN.");
-            return error(GL_OUT_OF_MEMORY);
+            return gl::error(GL_OUT_OF_MEMORY);
         }
     }
 
@@ -1015,7 +1015,7 @@ void Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indic
     if (!mTriangleFanIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT))
     {
         ERR("Could not reserve enough space in scratch index buffer for GL_TRIANGLE_FAN.");
-        return error(GL_OUT_OF_MEMORY);
+        return gl::error(GL_OUT_OF_MEMORY);
     }
 
     void* mappedMemory = NULL;
@@ -1023,7 +1023,7 @@ void Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indic
     if (offset == -1 || mappedMemory == NULL)
     {
         ERR("Could not map scratch index buffer for GL_TRIANGLE_FAN.");
-        return error(GL_OUT_OF_MEMORY);
+        return gl::error(GL_OUT_OF_MEMORY);
     }
 
     unsigned int *data = reinterpret_cast<unsigned int*>(mappedMemory);
@@ -1069,7 +1069,7 @@ void Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indic
     if (!mTriangleFanIB->unmapBuffer())
     {
         ERR("Could not unmap scratch index buffer for GL_TRIANGLE_FAN.");
-        return error(GL_OUT_OF_MEMORY);
+        return gl::error(GL_OUT_OF_MEMORY);
     }
 
     if (mAppliedIBSerial != mTriangleFanIB->getSerial() || mAppliedIBOffset != indexBufferOffset)
@@ -1781,6 +1781,8 @@ bool Renderer11::testDeviceLost(bool notify)
     if (isLost)
     {
         // ensure we note the device loss --
+        // we'll probably get this done again by notifyDeviceLost
+        // but best to remember it!
         // Note that we don't want to clear the device loss status here
         // -- this needs to be done by resetDevice
         mDeviceLost = true;
@@ -2160,21 +2162,21 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     if (!colorbuffer)
     {
         ERR("Failed to retrieve the color buffer from the frame buffer.");
-        return error(GL_OUT_OF_MEMORY, false);
+        return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
     RenderTarget11 *sourceRenderTarget = RenderTarget11::makeRenderTarget11(colorbuffer->getRenderTarget());
     if (!sourceRenderTarget)
     {
         ERR("Failed to retrieve the render target from the frame buffer.");
-        return error(GL_OUT_OF_MEMORY, false);
+        return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
     ID3D11ShaderResourceView *source = sourceRenderTarget->getShaderResourceView();
     if (!source)
     {
         ERR("Failed to retrieve the render target view from the render target.");
-        return error(GL_OUT_OF_MEMORY, false);
+        return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
     TextureStorage11_2D *storage11 = TextureStorage11_2D::makeTextureStorage11_2D(storage->getStorageInstance());
@@ -2182,7 +2184,7 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     {
         source->Release();
         ERR("Failed to retrieve the texture storage from the destination.");
-        return error(GL_OUT_OF_MEMORY, false);
+        return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
     RenderTarget11 *destRenderTarget = RenderTarget11::makeRenderTarget11(storage11->getRenderTarget(level));
@@ -2190,7 +2192,7 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     {
         source->Release();
         ERR("Failed to retrieve the render target from the destination storage.");
-        return error(GL_OUT_OF_MEMORY, false);
+        return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
     ID3D11RenderTargetView *dest = destRenderTarget->getRenderTargetView();
@@ -2198,7 +2200,7 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     {
         source->Release();
         ERR("Failed to retrieve the render target view from the destination render target.");
-        return error(GL_OUT_OF_MEMORY, false);
+        return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
     gl::Rectangle destRect;
@@ -2223,21 +2225,21 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     if (!colorbuffer)
     {
         ERR("Failed to retrieve the color buffer from the frame buffer.");
-        return error(GL_OUT_OF_MEMORY, false);
+        return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
     RenderTarget11 *sourceRenderTarget = RenderTarget11::makeRenderTarget11(colorbuffer->getRenderTarget());
     if (!sourceRenderTarget)
     {
         ERR("Failed to retrieve the render target from the frame buffer.");
-        return error(GL_OUT_OF_MEMORY, false);
+        return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
     ID3D11ShaderResourceView *source = sourceRenderTarget->getShaderResourceView();
     if (!source)
     {
         ERR("Failed to retrieve the render target view from the render target.");
-        return error(GL_OUT_OF_MEMORY, false);
+        return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
     TextureStorage11_Cube *storage11 = TextureStorage11_Cube::makeTextureStorage11_Cube(storage->getStorageInstance());
@@ -2245,7 +2247,7 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     {
         source->Release();
         ERR("Failed to retrieve the texture storage from the destination.");
-        return error(GL_OUT_OF_MEMORY, false);
+        return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
     RenderTarget11 *destRenderTarget = RenderTarget11::makeRenderTarget11(storage11->getRenderTarget(target, level));
@@ -2253,7 +2255,7 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     {
         source->Release();
         ERR("Failed to retrieve the render target from the destination storage.");
-        return error(GL_OUT_OF_MEMORY, false);
+        return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
     ID3D11RenderTargetView *dest = destRenderTarget->getRenderTargetView();
@@ -2261,7 +2263,7 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     {
         source->Release();
         ERR("Failed to retrieve the render target view from the destination render target.");
-        return error(GL_OUT_OF_MEMORY, false);
+        return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
     gl::Rectangle destRect;
@@ -2358,7 +2360,7 @@ bool Renderer11::copyTexture(ID3D11ShaderResourceView *source, const gl::Rectang
         destArea.x < 0 || destArea.x + destArea.width > static_cast<int>(destWidth) ||
         destArea.y < 0 || destArea.y + destArea.height > static_cast<int>(destHeight))
     {
-        return error(GL_INVALID_VALUE, false);
+        return gl::error(GL_INVALID_VALUE, false);
     }
 
     // Set vertices
@@ -2367,7 +2369,7 @@ bool Renderer11::copyTexture(ID3D11ShaderResourceView *source, const gl::Rectang
     if (FAILED(result))
     {
         ERR("Failed to map vertex buffer for texture copy, HRESULT: 0x%X.", result);
-        return error(GL_OUT_OF_MEMORY, false);
+        return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
     d3d11::PositionTexCoordVertex *vertices = static_cast<d3d11::PositionTexCoordVertex*>(mappedResource.pData);

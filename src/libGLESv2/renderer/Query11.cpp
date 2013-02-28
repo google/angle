@@ -37,7 +37,7 @@ void Query11::begin()
 
         if (FAILED(mRenderer->getDevice()->CreateQuery(&queryDesc, &mQuery)))
         {
-            return error(GL_OUT_OF_MEMORY);
+            return gl::error(GL_OUT_OF_MEMORY);
         }
     }
 
@@ -48,7 +48,7 @@ void Query11::end()
 {
     if (mQuery == NULL)
     {
-        return error(GL_INVALID_OPERATION);
+        return gl::error(GL_INVALID_OPERATION);
     }
 
     mRenderer->getDeviceContext()->End(mQuery);
@@ -68,7 +68,7 @@ GLuint Query11::getResult()
             // if the device is lost
             if (mRenderer->testDeviceLost(true))
             {
-                return error(GL_OUT_OF_MEMORY, 0);
+                return gl::error(GL_OUT_OF_MEMORY, 0);
             }
         }
     }
@@ -108,7 +108,7 @@ GLboolean Query11::testQuery()
         }
         else if (mRenderer->testDeviceLost(true))
         {
-            return error(GL_OUT_OF_MEMORY, GL_TRUE);
+            return gl::error(GL_OUT_OF_MEMORY, GL_TRUE);
         }
 
         return getStatus();

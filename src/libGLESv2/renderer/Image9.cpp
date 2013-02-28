@@ -106,7 +106,7 @@ void Image9::generateMipmap(Image9 *dest, Image9 *source)
 {
     IDirect3DSurface9 *sourceSurface = source->getSurface();
     if (sourceSurface == NULL)
-        return error(GL_OUT_OF_MEMORY);
+        return gl::error(GL_OUT_OF_MEMORY);
 
     IDirect3DSurface9 *destSurface = dest->getSurface();
     generateMip(destSurface, sourceSurface);
@@ -199,7 +199,7 @@ void Image9::createSurface()
         {
             ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
             ERR("Creating image surface failed.");
-            return error(GL_OUT_OF_MEMORY);
+            return gl::error(GL_OUT_OF_MEMORY);
         }
 
         newTexture->GetSurfaceLevel(levelToFetch, &newSurface);
@@ -500,7 +500,7 @@ void Image9::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width,
     if (!surface)
     {
         ERR("Failed to retrieve the render target.");
-        return error(GL_OUT_OF_MEMORY);
+        return gl::error(GL_OUT_OF_MEMORY);
     }
 
     IDirect3DDevice9 *device = mRenderer->getDevice();
@@ -515,7 +515,7 @@ void Image9::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width,
     {
         ERR("Could not create matching destination surface.");
         surface->Release();
-        return error(GL_OUT_OF_MEMORY);
+        return gl::error(GL_OUT_OF_MEMORY);
     }
 
     result = device->GetRenderTargetData(surface, renderTargetData);
@@ -525,7 +525,7 @@ void Image9::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width,
         ERR("GetRenderTargetData unexpectedly failed.");
         renderTargetData->Release();
         surface->Release();
-        return error(GL_OUT_OF_MEMORY);
+        return gl::error(GL_OUT_OF_MEMORY);
     }
 
     RECT sourceRect = {x, y, x + width, y + height};
@@ -539,7 +539,7 @@ void Image9::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width,
         ERR("Failed to lock the source surface (rectangle might be invalid).");
         renderTargetData->Release();
         surface->Release();
-        return error(GL_OUT_OF_MEMORY);
+        return gl::error(GL_OUT_OF_MEMORY);
     }
 
     D3DLOCKED_RECT destLock = {0};
@@ -551,7 +551,7 @@ void Image9::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width,
         renderTargetData->UnlockRect();
         renderTargetData->Release();
         surface->Release();
-        return error(GL_OUT_OF_MEMORY);
+        return gl::error(GL_OUT_OF_MEMORY);
     }
 
     if (destLock.pBits && sourceLock.pBits)

@@ -134,7 +134,7 @@ TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, int levels, GLenum in
         if (FAILED(result))
         {
             ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-            error(GL_OUT_OF_MEMORY);
+            gl::error(GL_OUT_OF_MEMORY);
         }
     }
 
@@ -236,7 +236,7 @@ TextureStorage9_Cube::TextureStorage9_Cube(Renderer *renderer, int levels, GLenu
         if (FAILED(result))
         {
             ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-            error(GL_OUT_OF_MEMORY);
+            gl::error(GL_OUT_OF_MEMORY);
         }
     }
 

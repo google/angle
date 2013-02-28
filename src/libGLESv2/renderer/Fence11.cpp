@@ -44,7 +44,7 @@ void Fence11::setFence(GLenum condition)
 
         if (FAILED(mRenderer->getDevice()->CreateQuery(&queryDesc, &mQuery)))
         {
-            return error(GL_OUT_OF_MEMORY);
+            return gl::error(GL_OUT_OF_MEMORY);
         }
     }
 
@@ -58,14 +58,14 @@ GLboolean Fence11::testFence()
 {
     if (mQuery == NULL)
     {
-        return error(GL_INVALID_OPERATION, GL_TRUE);
+        return gl::error(GL_INVALID_OPERATION, GL_TRUE);
     }
 
     HRESULT result = mRenderer->getDeviceContext()->GetData(mQuery, NULL, 0, 0);
 
     if (mRenderer->isDeviceLost())
     {
-       return error(GL_OUT_OF_MEMORY, GL_TRUE);
+       return gl::error(GL_OUT_OF_MEMORY, GL_TRUE);
     }
 
     ASSERT(result == S_OK || result == S_FALSE);
@@ -77,7 +77,7 @@ void Fence11::finishFence()
 {
     if (mQuery == NULL)
     {
-        return error(GL_INVALID_OPERATION);
+        return gl::error(GL_INVALID_OPERATION);
     }
 
     while (!testFence())
@@ -90,7 +90,7 @@ void Fence11::getFenceiv(GLenum pname, GLint *params)
 {
     if (mQuery == NULL)
     {
-        return error(GL_INVALID_OPERATION);
+        return gl::error(GL_INVALID_OPERATION);
     }
 
     switch (pname)
@@ -111,7 +111,7 @@ void Fence11::getFenceiv(GLenum pname, GLint *params)
             if (mRenderer->isDeviceLost())
             {
                 params[0] = GL_TRUE;
-                return error(GL_OUT_OF_MEMORY);
+                return gl::error(GL_OUT_OF_MEMORY);
             }
 
             ASSERT(result == S_OK || result == S_FALSE);
@@ -124,7 +124,7 @@ void Fence11::getFenceiv(GLenum pname, GLint *params)
         params[0] = getCondition();
         break;
       default:
-        return error(GL_INVALID_ENUM);
+        return gl::error(GL_INVALID_ENUM);
         break;
     }
 }

@@ -143,7 +143,7 @@ ID3DBlob *Renderer::compileToBinary(gl::InfoLog &infoLog, const char *hlsl, cons
         {
             if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
             {
-                return error(GL_OUT_OF_MEMORY, (ID3DBlob*) NULL);
+                return gl::error(GL_OUT_OF_MEMORY, (ID3DBlob*) NULL);
             }
 
             infoLog.append("Warning: D3D shader compilation failed with ");

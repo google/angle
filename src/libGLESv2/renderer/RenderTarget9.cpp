@@ -45,7 +45,7 @@ RenderTarget9::RenderTarget9(Renderer *renderer, GLsizei width, GLsizei height, 
 
     if (supportedSamples == -1)
     {
-        error(GL_OUT_OF_MEMORY);
+        gl::error(GL_OUT_OF_MEMORY);
 
         return;
     }
@@ -69,7 +69,7 @@ RenderTarget9::RenderTarget9(Renderer *renderer, GLsizei width, GLsizei height, 
 
         if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
         {
-            error(GL_OUT_OF_MEMORY);
+            gl::error(GL_OUT_OF_MEMORY);
 
             return;
         }

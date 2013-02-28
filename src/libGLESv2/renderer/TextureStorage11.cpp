@@ -239,7 +239,7 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int levels, GLenum 
         {
             ASSERT(result == E_OUTOFMEMORY);
             ERR("Creating image failed.");
-            error(GL_OUT_OF_MEMORY);
+            gl::error(GL_OUT_OF_MEMORY);
         }
         else
         {
@@ -298,7 +298,7 @@ RenderTarget *TextureStorage11_2D::getRenderTarget(int level)
 
             if (result == E_OUTOFMEMORY)
             {
-                return error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
+                return gl::error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
             }
             ASSERT(SUCCEEDED(result));
 
@@ -314,7 +314,7 @@ RenderTarget *TextureStorage11_2D::getRenderTarget(int level)
             if (result == E_OUTOFMEMORY)
             {
                 rtv->Release();
-                return error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
+                return gl::error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
             }
             ASSERT(SUCCEEDED(result));
 
@@ -352,7 +352,7 @@ ID3D11ShaderResourceView *TextureStorage11_2D::getSRV()
 
         if (result == E_OUTOFMEMORY)
         {
-            return error(GL_OUT_OF_MEMORY, static_cast<ID3D11ShaderResourceView*>(NULL));
+            return gl::error(GL_OUT_OF_MEMORY, static_cast<ID3D11ShaderResourceView*>(NULL));
         }
         ASSERT(SUCCEEDED(result));
     }
@@ -414,7 +414,7 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int levels, GLe
         {
             ASSERT(result == E_OUTOFMEMORY);
             ERR("Creating image failed.");
-            error(GL_OUT_OF_MEMORY);
+            gl::error(GL_OUT_OF_MEMORY);
         }
         else
         {
@@ -481,7 +481,7 @@ RenderTarget *TextureStorage11_Cube::getRenderTarget(GLenum faceTarget, int leve
 
                 if (result == E_OUTOFMEMORY)
                 {
-                    return error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
+                    return gl::error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
                 }
                 ASSERT(SUCCEEDED(result));
 
@@ -499,7 +499,7 @@ RenderTarget *TextureStorage11_Cube::getRenderTarget(GLenum faceTarget, int leve
                 if (result == E_OUTOFMEMORY)
                 {
                     rtv->Release();
-                    return error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
+                    return gl::error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
                 }
                 ASSERT(SUCCEEDED(result));
 
@@ -544,7 +544,7 @@ ID3D11ShaderResourceView *TextureStorage11_Cube::getSRV()
 
         if (result == E_OUTOFMEMORY)
         {
-            return error(GL_OUT_OF_MEMORY, static_cast<ID3D11ShaderResourceView*>(NULL));
+            return gl::error(GL_OUT_OF_MEMORY, static_cast<ID3D11ShaderResourceView*>(NULL));
         }
         ASSERT(SUCCEEDED(result));
     }

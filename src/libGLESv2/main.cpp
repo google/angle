@@ -101,7 +101,7 @@ Context *getNonLostContext()
     {
         if (context->isContextLost())
         {
-            error(GL_OUT_OF_MEMORY);
+            gl::error(GL_OUT_OF_MEMORY);
             return NULL;
         }
         else
@@ -117,8 +117,6 @@ egl::Display *getDisplay()
     Current *current = (Current*)TlsGetValue(currentTLS);
 
     return current->display;
-}
-
 }
 
 // Records an error code
@@ -154,3 +152,6 @@ void error(GLenum errorCode)
         }
     }
 }
+
+}
+

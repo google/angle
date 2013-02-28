@@ -85,7 +85,7 @@ void Blit::initGeometry()
     if (FAILED(result))
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-        return error(GL_OUT_OF_MEMORY);
+        return gl::error(GL_OUT_OF_MEMORY);
     }
 
     void *lockPtr = NULL;
@@ -94,7 +94,7 @@ void Blit::initGeometry()
     if (FAILED(result) || lockPtr == NULL)
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-        return error(GL_OUT_OF_MEMORY);
+        return gl::error(GL_OUT_OF_MEMORY);
     }
 
     memcpy(lockPtr, quad, sizeof(quad));
@@ -111,7 +111,7 @@ void Blit::initGeometry()
     if (FAILED(result))
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-        return error(GL_OUT_OF_MEMORY);
+        return gl::error(GL_OUT_OF_MEMORY);
     }
 }
 
@@ -230,7 +230,7 @@ bool Blit::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum des
     if (!source)
     {
         ERR("Failed to retrieve the render target.");
-        return error(GL_OUT_OF_MEMORY, false);
+        return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
     TextureStorage9_2D *storage9 = TextureStorage9_2D::makeTextureStorage9_2D(storage->getStorageInstance());
@@ -266,7 +266,7 @@ bool Blit::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum des
     if (!source)
     {
         ERR("Failed to retrieve the render target.");
-        return error(GL_OUT_OF_MEMORY, false);
+        return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
     TextureStorage9_Cube *storage9 = TextureStorage9_Cube::makeTextureStorage9_Cube(storage->getStorageInstance());
@@ -306,7 +306,7 @@ bool Blit::copy(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum destFo
         if (FAILED(result))
         {
             ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-            return error(GL_OUT_OF_MEMORY, false);
+            return gl::error(GL_OUT_OF_MEMORY, false);
         }
     }
     else
@@ -428,7 +428,7 @@ IDirect3DTexture9 *Blit::copySurfaceToTexture(IDirect3DSurface9 *surface, const 
     if (FAILED(result))
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-        return error(GL_OUT_OF_MEMORY, (IDirect3DTexture9*)NULL);
+        return gl::error(GL_OUT_OF_MEMORY, (IDirect3DTexture9*)NULL);
     }
 
     IDirect3DSurface9 *textureSurface;
@@ -438,7 +438,7 @@ IDirect3DTexture9 *Blit::copySurfaceToTexture(IDirect3DSurface9 *surface, const 
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
         texture->Release();
-        return error(GL_OUT_OF_MEMORY, (IDirect3DTexture9*)NULL);
+        return gl::error(GL_OUT_OF_MEMORY, (IDirect3DTexture9*)NULL);
     }
 
     mRenderer->endScene();
@@ -450,7 +450,7 @@ IDirect3DTexture9 *Blit::copySurfaceToTexture(IDirect3DSurface9 *surface, const 
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
         texture->Release();
-        return error(GL_OUT_OF_MEMORY, (IDirect3DTexture9*)NULL);
+        return gl::error(GL_OUT_OF_MEMORY, (IDirect3DTexture9*)NULL);
     }
 
     return texture;

@@ -513,7 +513,7 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
 {
     if (xoffset + width > mImageArray[level]->getWidth() || yoffset + height > mImageArray[level]->getHeight())
     {
-        return error(GL_INVALID_VALUE);
+        return gl::error(GL_INVALID_VALUE);
     }
 
     if (!mImageArray[level]->isRenderableFormat() || (!mTexStorage && !isSamplerComplete()))
@@ -740,7 +740,7 @@ void Texture2D::convertToRenderTarget()
             if (!mRenderer->copyToRenderTarget(newTexStorage, mTexStorage))
             {   
                 delete newTexStorage;
-                return error(GL_OUT_OF_MEMORY);
+                return gl::error(GL_OUT_OF_MEMORY);
             }
         }
     }
@@ -757,7 +757,7 @@ void Texture2D::generateMipmaps()
     {
         if (!isPow2(mImageArray[0]->getWidth()) || !isPow2(mImageArray[0]->getHeight()))
         {
-            return error(GL_INVALID_OPERATION);
+            return gl::error(GL_INVALID_OPERATION);
         }
     }
 
@@ -792,7 +792,7 @@ Renderbuffer *Texture2D::getRenderbuffer(GLenum target)
 {
     if (target != GL_TEXTURE_2D)
     {
-        return error(GL_INVALID_OPERATION, (Renderbuffer *)NULL);
+        return gl::error(GL_INVALID_OPERATION, (Renderbuffer *)NULL);
     }
 
     if (mColorbufferProxy == NULL)
@@ -1199,7 +1199,7 @@ void TextureCubeMap::convertToRenderTarget()
             if (!mRenderer->copyToRenderTarget(newTexStorage, mTexStorage))
             {
                 delete newTexStorage;
-                return error(GL_OUT_OF_MEMORY);
+                return gl::error(GL_OUT_OF_MEMORY);
             }
         }
     }
@@ -1291,7 +1291,7 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
 
     if (xoffset + width > size || yoffset + height > size)
     {
-        return error(GL_INVALID_VALUE);
+        return gl::error(GL_INVALID_VALUE);
     }
 
     unsigned int faceindex = faceIndex(target);
@@ -1365,14 +1365,14 @@ void TextureCubeMap::generateMipmaps()
 {
     if (!isCubeComplete())
     {
-        return error(GL_INVALID_OPERATION);
+        return gl::error(GL_INVALID_OPERATION);
     }
 
     if (!mRenderer->getNonPower2TextureSupport())
     {
         if (!isPow2(mImageArray[0][0]->getWidth()))
         {
-            return error(GL_INVALID_OPERATION);
+            return gl::error(GL_INVALID_OPERATION);
         }
     }
 
@@ -1416,7 +1416,7 @@ Renderbuffer *TextureCubeMap::getRenderbuffer(GLenum target)
 {
     if (!IsCubemapTextureTarget(target))
     {
-        return error(GL_INVALID_OPERATION, (Renderbuffer *)NULL);
+        return gl::error(GL_INVALID_OPERATION, (Renderbuffer *)NULL);
     }
 
     unsigned int face = faceIndex(target);

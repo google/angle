@@ -436,7 +436,7 @@ void Display::notifyDeviceLost()
     {
         (*context)->markContextLost();
     }
-    error(EGL_CONTEXT_LOST);
+    egl::error(EGL_CONTEXT_LOST);
 }
 
 bool Display::isInitialized() const

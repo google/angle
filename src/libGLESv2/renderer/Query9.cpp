@@ -35,7 +35,7 @@ void Query9::begin()
     {
         if (FAILED(mRenderer->getDevice()->CreateQuery(D3DQUERYTYPE_OCCLUSION, &mQuery)))
         {
-            return error(GL_OUT_OF_MEMORY);
+            return gl::error(GL_OUT_OF_MEMORY);
         }
     }
 
@@ -47,7 +47,7 @@ void Query9::end()
 {
     if (mQuery == NULL)
     {
-        return error(GL_INVALID_OPERATION);
+        return gl::error(GL_INVALID_OPERATION);
     }
 
     HRESULT result = mQuery->Issue(D3DISSUE_END);
@@ -69,7 +69,7 @@ GLuint Query9::getResult()
             // instead of D3DERR_DEVICELOST like they should
             if (mRenderer->testDeviceLost(true))
             {
-                return error(GL_OUT_OF_MEMORY, 0);
+                return gl::error(GL_OUT_OF_MEMORY, 0);
             }
         }
     }
@@ -111,7 +111,7 @@ GLboolean Query9::testQuery()
         else if (d3d9::isDeviceLostError(hres))
         {
             mRenderer->notifyDeviceLost();
-            return error(GL_OUT_OF_MEMORY, GL_TRUE);
+            return gl::error(GL_OUT_OF_MEMORY, GL_TRUE);
         }
 
         return getStatus();

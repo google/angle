@@ -233,7 +233,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
 
     if (supportedSamples == -1)
     {
-        error(GL_OUT_OF_MEMORY);
+        gl::error(GL_OUT_OF_MEMORY);
 
         return;
     }
@@ -262,7 +262,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
 
         if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
         {
-            error(GL_OUT_OF_MEMORY);
+            gl::error(GL_OUT_OF_MEMORY);
             return;
         }
         ASSERT(SUCCEEDED(result));
@@ -279,7 +279,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
             if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
             {
                 rtTexture->Release();
-                error(GL_OUT_OF_MEMORY);
+                gl::error(GL_OUT_OF_MEMORY);
                 return;
             }
             ASSERT(SUCCEEDED(result));
@@ -295,7 +295,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
             if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
             {
                 rtTexture->Release();
-                error(GL_OUT_OF_MEMORY);
+                gl::error(GL_OUT_OF_MEMORY);
                 return;
             }
             ASSERT(SUCCEEDED(result));
@@ -311,7 +311,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
             {
                 rtTexture->Release();
                 mRenderTarget->Release();
-                error(GL_OUT_OF_MEMORY);
+                gl::error(GL_OUT_OF_MEMORY);
                 return;
             }
             ASSERT(SUCCEEDED(result));
