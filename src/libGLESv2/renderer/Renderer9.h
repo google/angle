@@ -36,16 +36,6 @@ class VertexDataManager;
 class StreamingIndexBufferInterface;
 struct TranslatedAttribute;
 
-enum
-{
-    D3D9_MAX_FLOAT_CONSTANTS = 256,
-    MAX_VERTEX_UNIFORM_VECTORS = D3D9_MAX_FLOAT_CONSTANTS - 2,   // Reserve space for dx_HalfPixelSize and dx_DepthRange.
-    MAX_FRAGMENT_UNIFORM_VECTORS_SM2 = 32 - 3,    // Reserve space for dx_ViewCoords, dx_DepthFront and dx_DepthRange.
-    MAX_FRAGMENT_UNIFORM_VECTORS_SM3 = 224 - 3,
-    MAX_VARYING_VECTORS_SM2 = 8,
-    MAX_VARYING_VECTORS_SM3 = 10
-};
-
 class Renderer9 : public Renderer
 {
   public:
@@ -136,9 +126,11 @@ class Renderer9 : public Renderer
     virtual bool getLuminanceAlphaTextureSupport();
     virtual unsigned int getMaxVertexTextureImageUnits() const;
     virtual unsigned int getMaxCombinedTextureImageUnits() const;
-    virtual int getMaxVertexUniformVectors() const;
-    virtual int getMaxFragmentUniformVectors() const;
-    virtual int getMaxVaryingVectors() const;
+    virtual unsigned int getReservedVertexUniformVectors() const;
+    virtual unsigned int getReservedFragmentUniformVectors() const;
+    virtual unsigned int getMaxVertexUniformVectors() const;
+    virtual unsigned int getMaxFragmentUniformVectors() const;
+    virtual unsigned int getMaxVaryingVectors() const;
     virtual bool getNonPower2TextureSupport() const;
     virtual bool getDepthTextureSupport() const;
     virtual bool getOcclusionQuerySupport() const;

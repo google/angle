@@ -2086,21 +2086,31 @@ unsigned int Renderer11::getMaxCombinedTextureImageUnits() const
     return gl::MAX_TEXTURE_IMAGE_UNITS + getMaxVertexTextureImageUnits();
 }
 
-int Renderer11::getMaxVertexUniformVectors() const
+unsigned int Renderer11::getReservedVertexUniformVectors() const
+{
+	return 0;   // Driver uniforms are stored in a separate constant buffer
+}
+
+unsigned int Renderer11::getReservedFragmentUniformVectors() const
+{
+	return 0;   // Driver uniforms are stored in a separate constant buffer
+}
+
+unsigned int Renderer11::getMaxVertexUniformVectors() const
 {
     META_ASSERT(MAX_VERTEX_UNIFORM_VECTORS_D3D11 <= D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT);
     ASSERT(mFeatureLevel >= D3D_FEATURE_LEVEL_10_0);
     return MAX_VERTEX_UNIFORM_VECTORS_D3D11;
 }
 
-int Renderer11::getMaxFragmentUniformVectors() const
+unsigned int Renderer11::getMaxFragmentUniformVectors() const
 {
     META_ASSERT(MAX_FRAGMENT_UNIFORM_VECTORS_D3D11 <= D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT);
     ASSERT(mFeatureLevel >= D3D_FEATURE_LEVEL_10_0);
     return MAX_FRAGMENT_UNIFORM_VECTORS_D3D11;
 }
 
-int Renderer11::getMaxVaryingVectors() const
+unsigned int Renderer11::getMaxVaryingVectors() const
 {
     META_ASSERT(gl::IMPLEMENTATION_MAX_VARYING_VECTORS == D3D11_VS_OUTPUT_REGISTER_COUNT);
     switch (mFeatureLevel)

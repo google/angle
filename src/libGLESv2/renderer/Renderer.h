@@ -161,9 +161,11 @@ class Renderer
     bool getVertexTextureSupport() const { return getMaxVertexTextureImageUnits() > 0; }
     virtual unsigned int getMaxVertexTextureImageUnits() const = 0;
     virtual unsigned int getMaxCombinedTextureImageUnits() const = 0;
-    virtual int getMaxVertexUniformVectors() const = 0;
-    virtual int getMaxFragmentUniformVectors() const = 0;
-    virtual int getMaxVaryingVectors() const = 0;
+    virtual unsigned int getReservedVertexUniformVectors() const = 0;
+    virtual unsigned int getReservedFragmentUniformVectors() const = 0;
+    virtual unsigned int getMaxVertexUniformVectors() const = 0;
+    virtual unsigned int getMaxFragmentUniformVectors() const = 0;
+    virtual unsigned int getMaxVaryingVectors() const = 0;
     virtual bool getNonPower2TextureSupport() const = 0;
     virtual bool getDepthTextureSupport() const = 0;
     virtual bool getOcclusionQuerySupport() const = 0;

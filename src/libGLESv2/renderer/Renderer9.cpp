@@ -78,6 +78,12 @@ static const D3DFORMAT DepthStencilFormats[] =
 
 enum
 {
+    MAX_VERTEX_CONSTANT_VECTORS_D3D9 = 256,
+    MAX_PIXEL_CONSTANT_VECTORS_SM2 = 32,
+    MAX_PIXEL_CONSTANT_VECTORS_SM3 = 224,
+    MAX_VARYING_VECTORS_SM2 = 8,
+    MAX_VARYING_VECTORS_SM3 = 10,
+
     MAX_TEXTURE_IMAGE_UNITS_VTF_SM3 = 4
 };
 
@@ -1701,8 +1707,8 @@ void Renderer9::applyUniformnfv(gl::Uniform *targetUniform, const GLfloat *v)
 
 void Renderer9::applyUniformniv(gl::Uniform *targetUniform, const GLint *v)
 {
-    ASSERT(targetUniform->registerCount <= D3D9_MAX_FLOAT_CONSTANTS);
-    GLfloat vector[D3D9_MAX_FLOAT_CONSTANTS][4];
+    ASSERT(targetUniform->registerCount <= MAX_VERTEX_CONSTANT_VECTORS_D3D9);
+    GLfloat vector[MAX_VERTEX_CONSTANT_VECTORS_D3D9][4];
 
     for (unsigned int i = 0; i < targetUniform->registerCount; i++)
     {
@@ -1717,8 +1723,8 @@ void Renderer9::applyUniformniv(gl::Uniform *targetUniform, const GLint *v)
 
 void Renderer9::applyUniformnbv(gl::Uniform *targetUniform, const GLint *v)
 {
-    ASSERT(targetUniform->registerCount <= D3D9_MAX_FLOAT_CONSTANTS);
-    GLfloat vector[D3D9_MAX_FLOAT_CONSTANTS][4];
+    ASSERT(targetUniform->registerCount <= MAX_VERTEX_CONSTANT_VECTORS_D3D9);
+    GLfloat vector[MAX_VERTEX_CONSTANT_VECTORS_D3D9][4];
 
     for (unsigned int i = 0; i < targetUniform->registerCount; i++)
     {
@@ -2235,19 +2241,31 @@ unsigned int Renderer9::getMaxCombinedTextureImageUnits() const
     return gl::MAX_TEXTURE_IMAGE_UNITS + getMaxVertexTextureImageUnits();
 }
 
-int Renderer9::getMaxVertexUniformVectors() const
+unsigned int Renderer9::getReservedVertexUniformVectors() const
 {
-    return MAX_VERTEX_UNIFORM_VECTORS;
+	return 2;   // dx_HalfPixelSize and dx_DepthRange.
 }
 
-int Renderer9::getMaxFragmentUniformVectors() const
+unsigned int Renderer9::getReservedFragmentUniformVectors() const
 {
-    return getMajorShaderModel() >= 3 ? MAX_FRAGMENT_UNIFORM_VECTORS_SM3 : MAX_FRAGMENT_UNIFORM_VECTORS_SM2;
+	return 3;   // dx_ViewCoords, dx_DepthFront and dx_DepthRange.
 }
 
-int Renderer9::getMaxVaryingVectors() const
+unsigned int Renderer9::getMaxVertexUniformVectors() const
 {
-    return getMajorShaderModel() >= 3 ? MAX_VARYING_VECTORS_SM3 : MAX_VARYING_VECTORS_SM2;
+    return MAX_VERTEX_CONSTANT_VECTORS_D3D9 - getReservedVertexUniformVectors();
+}
+
+unsigned int Renderer9::getMaxFragmentUniformVectors() const
+{
+    const int maxPixelConstantVectors = (getMajorShaderModel() >= 3) ? MAX_PIXEL_CONSTANT_VECTORS_SM3 : MAX_PIXEL_CONSTANT_VECTORS_SM2;
+
+    return maxPixelConstantVectors - getReservedFragmentUniformVectors();
+}
+
+unsigned int Renderer9::getMaxVaryingVectors() const
+{
+    return (getMajorShaderModel() >= 3) ? MAX_VARYING_VECTORS_SM3 : MAX_VARYING_VECTORS_SM2;
 }
 
 bool Renderer9::getNonPower2TextureSupport() const

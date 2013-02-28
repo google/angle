@@ -2088,6 +2088,24 @@ bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, In
         mUniformIndex.push_back(UniformLocation(constant.name, i, uniformIndex));
     }
 
+    if (shader == GL_VERTEX_SHADER)
+    {
+        if (constant.registerIndex + uniform->registerCount > mRenderer->getReservedVertexUniformVectors() + mRenderer->getMaxVertexUniformVectors())
+        {
+            infoLog.append("Vertex shader active uniforms exceed GL_MAX_VERTEX_UNIFORM_VECTORS (%u)", mRenderer->getMaxVertexUniformVectors());
+            return false;
+        }
+    }
+    else if (shader == GL_FRAGMENT_SHADER)
+    {
+        if (constant.registerIndex + uniform->registerCount > mRenderer->getReservedFragmentUniformVectors() + mRenderer->getMaxFragmentUniformVectors())
+        {
+            infoLog.append("Fragment shader active uniforms exceed GL_MAX_FRAGMENT_UNIFORM_VECTORS (%u)", mRenderer->getMaxFragmentUniformVectors());
+            return false;
+        }
+    }
+    else UNREACHABLE();
+
     return true;
 }
 
