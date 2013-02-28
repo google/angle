@@ -82,6 +82,9 @@ GLenum VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, Transl
     {
         if (attributes[i].active)
         {
+            // Directly binding the storage buffer is not supported for d3d9
+            ASSERT(attributes[i].storage == NULL);
+
             int stream = i;
 
             if (instances > 0)

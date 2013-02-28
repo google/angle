@@ -86,24 +86,32 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
         {
             gl::Buffer *buffer = attribs[i].mBoundBuffer.get();
             StaticVertexBufferInterface *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
+            VertexBufferInterface *vertexBuffer = staticBuffer ? staticBuffer : static_cast<VertexBufferInterface*>(mStreamingBuffer);
 
             BufferStorage *storage = buffer ? buffer->getStorage() : NULL;
-            if (staticBuffer)
+            bool alignedStride = attribs[i].stride() % 4 == 0;
+            bool directStorage = alignedStride && storage && storage->supportsDirectBinding() &&
+                                 !vertexBuffer->getVertexBuffer()->requiresConversion(attribs[i]);
+
+            if (!directStorage)
             {
-                if (staticBuffer->getBufferSize() == 0)
+                if (staticBuffer)
                 {
-                    int totalCount = elementsInBuffer(attribs[i], storage->getSize());
-                    staticBuffer->reserveVertexSpace(attribs[i], totalCount, 0);
+                    if (staticBuffer->getBufferSize() == 0)
+                    {
+                        int totalCount = elementsInBuffer(attribs[i], storage->getSize());
+                        staticBuffer->reserveVertexSpace(attribs[i], totalCount, 0);
+                    }
+                    else if (staticBuffer->lookupAttribute(attribs[i]) == -1)
+                    {
+                        mStreamingBuffer->reserveVertexSpace(attribs[i], count, instances);
+                        buffer->invalidateStaticData();
+                    }
                 }
-                else if (staticBuffer->lookupAttribute(attribs[i]) == -1)
+                else
                 {
                     mStreamingBuffer->reserveVertexSpace(attribs[i], count, instances);
-                    buffer->invalidateStaticData();
                 }
-            }
-            else
-            {
-                mStreamingBuffer->reserveVertexSpace(attribs[i], count, instances);
             }
         }
     }
@@ -128,11 +136,20 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
                 VertexBufferInterface *vertexBuffer = staticBuffer ? staticBuffer : static_cast<VertexBufferInterface*>(mStreamingBuffer);
 
                 BufferStorage *storage = buffer ? buffer->getStorage() : NULL;
+                bool alignedStride = attribs[i].stride() % 4 == 0;
+                bool directStorage = alignedStride && storage && storage->supportsDirectBinding() &&
+                                     !vertexBuffer->getVertexBuffer()->requiresConversion(attribs[i]);
 
                 std::size_t streamOffset = -1;
                 unsigned int outputElementSize = 0;
 
-                if (staticBuffer)
+                if (directStorage)
+                {
+                    outputElementSize = attribs[i].stride();
+                    streamOffset = attribs[i].mOffset + outputElementSize * start;
+                    storage->markBufferUsage();
+                }
+                else if (staticBuffer)
                 {
                     streamOffset = staticBuffer->lookupAttribute(attribs[i]);
                     outputElementSize = staticBuffer->getVertexBuffer()->getSpaceRequired(attribs[i], 1, 0);
@@ -167,8 +184,9 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
                     return GL_OUT_OF_MEMORY;
                 }
 
+                translated[i].storage = directStorage ? storage : NULL;
                 translated[i].vertexBuffer = vertexBuffer->getVertexBuffer();
-                translated[i].serial = vertexBuffer->getSerial();
+                translated[i].serial = directStorage ? storage->getSerial() : vertexBuffer->getSerial();
                 translated[i].divisor = attribs[i].mDivisor;
 
                 translated[i].attribute = &attribs[i];
@@ -200,6 +218,7 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
                     mCurrentValueOffsets[i] = streamOffset;
                 }
 
+                translated[i].storage = NULL;
                 translated[i].vertexBuffer = mCurrentValueBuffer[i]->getVertexBuffer();
                 translated[i].serial = mCurrentValueBuffer[i]->getSerial();
                 translated[i].divisor = 0;

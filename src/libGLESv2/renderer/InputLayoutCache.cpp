@@ -9,6 +9,7 @@
 
 #include "libGLESv2/renderer/InputLayoutCache.h"
 #include "libGLESv2/renderer/VertexBuffer11.h"
+#include "libGLESv2/renderer/BufferStorage11.h"
 #include "libGLESv2/renderer/ShaderExecutable11.h"
 #include "libGLESv2/ProgramBinary.h"
 
@@ -69,6 +70,7 @@ GLenum InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::M
         if (attributes[i].active)
         {
             VertexBuffer11 *vertexBuffer = VertexBuffer11::makeVertexBuffer11(attributes[i].vertexBuffer);
+            BufferStorage11 *bufferStorage = attributes[i].storage ? BufferStorage11::makeBufferStorage11(attributes[i].storage) : NULL;
 
             D3D11_INPUT_CLASSIFICATION inputClass = attributes[i].divisor > 0 ? D3D11_INPUT_PER_INSTANCE_DATA : D3D11_INPUT_PER_VERTEX_DATA;
 
@@ -81,7 +83,7 @@ GLenum InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::M
             ilKey.elements[ilKey.elementCount].InstanceDataStepRate = attributes[i].divisor;
             ilKey.elementCount++;
 
-            vertexBuffers[i] = vertexBuffer->getBuffer();
+            vertexBuffers[i] = bufferStorage ? bufferStorage->getBuffer() : vertexBuffer->getBuffer();
             vertexStrides[i] = attributes[i].stride;
             vertexOffsets[i] = attributes[i].offset;
         }

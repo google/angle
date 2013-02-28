@@ -31,6 +31,7 @@ struct TranslatedAttribute
     UINT stride;   // 0 means not to advance the read pointer at all
 
     VertexBuffer *vertexBuffer;
+    BufferStorage *storage;
     unsigned int serial;
     unsigned int divisor;
 };
