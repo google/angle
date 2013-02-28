@@ -39,6 +39,7 @@ class InputLayoutCache
     {
         unsigned int elementCount;
         D3D11_INPUT_ELEMENT_DESC elements[gl::MAX_VERTEX_ATTRIBS];
+        GLenum glslElementType[gl::MAX_VERTEX_ATTRIBS];
     };
 
     struct InputLayoutCounterPair

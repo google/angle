@@ -77,6 +77,11 @@ GLenum InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::M
 
             D3D11_INPUT_CLASSIFICATION inputClass = attributes[i].divisor > 0 ? D3D11_INPUT_PER_INSTANCE_DATA : D3D11_INPUT_PER_VERTEX_DATA;
 
+            // Record the type of the associated vertex shader vector in our key
+            // This will prevent mismatched vertex shaders from using the same input layout
+            GLint attributeSize;
+            programBinary->getActiveAttribute(ilKey.elementCount, 0, NULL, &attributeSize, &ilKey.glslElementType[ilKey.elementCount], NULL);
+
             ilKey.elements[ilKey.elementCount].SemanticName = semanticName;
             ilKey.elements[ilKey.elementCount].SemanticIndex = sortedSemanticIndices[i];
             ilKey.elements[ilKey.elementCount].Format = attributes[i].attribute->mArrayEnabled ? vertexBuffer->getDXGIFormat(*attributes[i].attribute) : DXGI_FORMAT_R32G32B32A32_FLOAT;
