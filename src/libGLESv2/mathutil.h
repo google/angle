@@ -56,7 +56,8 @@ inline unsigned int ceilPow2(unsigned int x)
 template<typename T, typename MIN, typename MAX>
 inline T clamp(T x, MIN min, MAX max)
 {
-    return x < min ? min : (x > max ? max : x);
+    // Since NaNs fail all comparison tests, a NaN value will default to min
+    return x > min ? (x > max ? max : x) : min;
 }
 
 inline float clamp01(float x)

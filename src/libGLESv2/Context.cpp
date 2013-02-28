@@ -480,8 +480,9 @@ bool Context::isPolygonOffsetFillEnabled() const
 
 void Context::setPolygonOffsetParams(GLfloat factor, GLfloat units)
 {
-    mState.rasterizer.polygonOffsetFactor = factor;
-    mState.rasterizer.polygonOffsetUnits = units;
+    // An application can pass NaN values here, so handle this gracefully
+    mState.rasterizer.polygonOffsetFactor = factor != factor ? 0.0f : factor;
+    mState.rasterizer.polygonOffsetUnits = units != units ? 0.0f : units;
 }
 
 void Context::setSampleAlphaToCoverage(bool enabled)
