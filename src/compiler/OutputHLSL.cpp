@@ -1563,7 +1563,6 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         {
             TIntermSequence &sequence = node->getSequence();
             TIntermTyped *variable = sequence[0]->getAsTyped();
-            bool visit = true;
 
             if (variable && (variable->getQualifier() == EvqTemporary || variable->getQualifier() == EvqGlobal))
             {
@@ -1596,18 +1595,10 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                             (*sit)->traverse(this);
                         }
 
-                        if (visit && this->inVisit)
+                        if (*sit != sequence.back())
                         {
-                            if (*sit != sequence.back())
-                            {
-                                visit = this->visitAggregate(InVisit, node);
-                            }
+                            out << ", ";
                         }
-                    }
-
-                    if (visit && this->postVisit)
-                    {
-                        this->visitAggregate(PostVisit, node);
                     }
                 }
                 else if (variable->getAsSymbolNode() && variable->getAsSymbolNode()->getSymbol() == "")   // Type (struct) declaration
@@ -1616,7 +1607,24 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 }
                 else UNREACHABLE();
             }
-            
+            else if (variable && (variable->getQualifier() == EvqVaryingOut || variable->getQualifier() == EvqInvariantVaryingOut))
+            {
+                for (TIntermSequence::iterator sit = sequence.begin(); sit != sequence.end(); sit++)
+                {
+                    TIntermSymbol *symbol = (*sit)->getAsSymbolNode();
+
+                    if (symbol)
+                    {
+                        // Vertex (output) varyings which are declared but not written to should still be declared to allow successful linking
+                        mReferencedVaryings[symbol->getSymbol()] = symbol;
+                    }
+                    else
+                    {
+                        (*sit)->traverse(this);
+                    }
+                }
+            }
+
             return false;
         }
         else if (visit == InVisit)
