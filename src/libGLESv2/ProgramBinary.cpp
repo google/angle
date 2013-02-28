@@ -1424,6 +1424,13 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
     {
         pixelHLSL += "    float4 gl_FragCoord : " + fragCoordSemantic + ";\n";
         
+        // Must consume the PSIZE element if the geometry shader is not active
+        // We won't know if we use a GS until we draw
+        if (vertexShader->mUsesPointSize && shaderModel >= 4)
+        {
+            pixelHLSL += "    float gl_PointSize : PSIZE;\n";
+        }
+
         if (shaderModel >= 4)
         {
             pixelHLSL += "    float4 dx_VPos : SV_Position;\n";
@@ -2163,10 +2170,10 @@ std::string ProgramBinary::generatePointSpriteHLSL(int registers, const Varying 
 
     geomHLSL += "    float gl_PointSize : PSIZE;\n"
                 "    float4 gl_Position : SV_Position;\n"
-                  "};\n"
-                  "\n"
-                  "struct GS_OUTPUT\n"
-                  "{\n";
+                "};\n"
+                "\n"
+                "struct GS_OUTPUT\n"
+                "{\n";
 
     for (int r = 0; r < registers; r++)
     {
@@ -2185,7 +2192,8 @@ std::string ProgramBinary::generatePointSpriteHLSL(int registers, const Varying 
         geomHLSL += "    float2 gl_PointCoord : " + pointCoordSemantic + ";\n";
     }
 
-    geomHLSL +=   "    float4 gl_Position : SV_Position;\n"
+    geomHLSL +=   "    float gl_PointSize : PSIZE;\n"
+                  "    float4 gl_Position : SV_Position;\n"
                   "};\n"
                   "\n"
                   "static float2 pointSpriteCorners[] = \n"
@@ -2210,7 +2218,8 @@ std::string ProgramBinary::generatePointSpriteHLSL(int registers, const Varying 
                   "[maxvertexcount(4)]\n"
                   "void main(point GS_INPUT input[1], inout TriangleStream<GS_OUTPUT> outStream)\n"
                   "{\n"
-                  "    GS_OUTPUT output = (GS_OUTPUT)0;\n";
+                  "    GS_OUTPUT output = (GS_OUTPUT)0;\n"
+                  "    output.gl_PointSize = input[0].gl_PointSize;\n";
 
     for (int r = 0; r < registers; r++)
     {
