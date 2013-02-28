@@ -305,7 +305,7 @@ EGLint Renderer9::initialize()
     }
 
     int max = 0;
-    for (int i = 0; i < sizeof(RenderTargetFormats) / sizeof(D3DFORMAT); ++i)
+    for (unsigned int i = 0; i < ArraySize(RenderTargetFormats); ++i)
     {
         bool *multisampleArray = new bool[D3DMULTISAMPLE_16_SAMPLES + 1];
         getMultiSampleSupport(RenderTargetFormats[i], multisampleArray);
@@ -320,7 +320,7 @@ EGLint Renderer9::initialize()
         }
     }
 
-    for (int i = 0; i < sizeof(DepthStencilFormats) / sizeof(D3DFORMAT); ++i)
+    for (unsigned int i = 0; i < ArraySize(DepthStencilFormats); ++i)
     {
         if (DepthStencilFormats[i] == D3DFMT_UNKNOWN)
             continue;
@@ -532,8 +532,8 @@ int Renderer9::generateConfigs(ConfigDesc **configDescList)
     D3DDISPLAYMODE currentDisplayMode;
     mD3d9->GetAdapterDisplayMode(mAdapter, &currentDisplayMode);
 
-    unsigned int numRenderFormats = sizeof(RenderTargetFormats) / sizeof(RenderTargetFormats[0]);
-    unsigned int numDepthFormats = sizeof(DepthStencilFormats) / sizeof(DepthStencilFormats[0]);
+    unsigned int numRenderFormats = ArraySize(RenderTargetFormats);
+    unsigned int numDepthFormats = ArraySize(DepthStencilFormats);
     (*configDescList) = new ConfigDesc[numRenderFormats * numDepthFormats];
     int numConfigs = 0;
 

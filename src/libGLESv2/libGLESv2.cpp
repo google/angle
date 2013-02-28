@@ -6942,7 +6942,7 @@ __eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *
         {"glGetProgramBinaryOES", (__eglMustCastToProperFunctionPointerType)glGetProgramBinaryOES},
         {"glProgramBinaryOES", (__eglMustCastToProperFunctionPointerType)glProgramBinaryOES},    };
 
-    for (int ext = 0; ext < sizeof(glExtensions) / sizeof(Extension); ext++)
+    for (unsigned int ext = 0; ext < ArraySize(glExtensions); ext++)
     {
         if (strcmp(procname, glExtensions[ext].name) == 0)
         {

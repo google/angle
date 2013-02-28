@@ -1167,7 +1167,7 @@ __eglMustCastToProperFunctionPointerType __stdcall eglGetProcAddress(const char 
             {"", NULL},
         };
 
-        for (int ext = 0; ext < sizeof(eglExtensions) / sizeof(Extension); ext++)
+        for (unsigned int ext = 0; ext < ArraySize(eglExtensions); ext++)
         {
             if (strcmp(procname, eglExtensions[ext].name) == 0)
             {

@@ -144,7 +144,7 @@ EGLint Renderer11::initialize()
         return EGL_NOT_INITIALIZED;
     }
 
-    D3D_FEATURE_LEVEL featureLevel[] = 
+    D3D_FEATURE_LEVEL featureLevels[] =
     {
         D3D_FEATURE_LEVEL_11_0,
         D3D_FEATURE_LEVEL_10_1,
@@ -159,8 +159,8 @@ EGLint Renderer11::initialize()
                                        #else
                                        0,
                                        #endif
-                                       featureLevel,
-                                       sizeof(featureLevel)/sizeof(featureLevel[0]),
+                                       featureLevels,
+                                       ArraySize(featureLevels),
                                        D3D11_SDK_VERSION,
                                        &mDevice,
                                        &mFeatureLevel,
@@ -204,8 +204,8 @@ EGLint Renderer11::initialize()
     }
 
     unsigned int maxSupportedSamples = 0;
-    unsigned int rtFormatCount = sizeof(RenderTargetFormats) / sizeof(DXGI_FORMAT);
-    unsigned int dsFormatCount = sizeof(DepthStencilFormats) / sizeof(DXGI_FORMAT);
+    unsigned int rtFormatCount = ArraySize(RenderTargetFormats);
+    unsigned int dsFormatCount = ArraySize(DepthStencilFormats);
     for (unsigned int i = 0; i < rtFormatCount + dsFormatCount; ++i)
     {
         DXGI_FORMAT format = (i < rtFormatCount) ? RenderTargetFormats[i] : DepthStencilFormats[i - rtFormatCount];
@@ -359,8 +359,8 @@ void Renderer11::initializeDevice()
 
 int Renderer11::generateConfigs(ConfigDesc **configDescList)
 {
-    unsigned int numRenderFormats = sizeof(RenderTargetFormats) / sizeof(RenderTargetFormats[0]);
-    unsigned int numDepthFormats = sizeof(DepthStencilFormats) / sizeof(DepthStencilFormats[0]);
+    unsigned int numRenderFormats = ArraySize(RenderTargetFormats);
+    unsigned int numDepthFormats = ArraySize(DepthStencilFormats);
     (*configDescList) = new ConfigDesc[numRenderFormats * numDepthFormats];
     int numConfigs = 0;
     
@@ -1877,7 +1877,7 @@ bool Renderer11::testDeviceResettable()
         return false;
     }
 
-    D3D_FEATURE_LEVEL featureLevel[] =
+    D3D_FEATURE_LEVEL featureLevels[] =
     {
         D3D_FEATURE_LEVEL_11_0,
         D3D_FEATURE_LEVEL_10_1,
@@ -1896,8 +1896,8 @@ bool Renderer11::testDeviceResettable()
                                        #else
                                        0,
                                        #endif
-                                       featureLevel,
-                                       sizeof(featureLevel)/sizeof(featureLevel[0]),
+                                       featureLevels,
+                                       ArraySize(featureLevels),
                                        D3D11_SDK_VERSION,
                                        &dummyDevice,
                                        &dummyFeatureLevel,

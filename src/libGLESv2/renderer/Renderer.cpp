@@ -47,7 +47,7 @@ bool Renderer::initializeCompiler()
     // Find a D3DCompiler module that had already been loaded based on a predefined list of versions.
     static TCHAR* d3dCompilerNames[] = ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES;
 
-    for (int i = 0; i < sizeof(d3dCompilerNames) / sizeof(*d3dCompilerNames); ++i)
+    for (int i = 0; i < ArraySize(d3dCompilerNames); ++i)
     {
         if (GetModuleHandleEx(0, d3dCompilerNames[i], &mD3dCompilerModule))
         {
@@ -118,9 +118,8 @@ ShaderBlob *Renderer::compileToBinary(gl::InfoLog &infoLog, const char *hlsl, co
         "prefer flow control"
     };
 
-    int attempts = (alternateFlags ? sizeof(extraFlags) / sizeof(UINT) : 1);
+    int attempts = alternateFlags ? ArraySize(extraFlags) : 1;
     pD3DCompile compileFunc = reinterpret_cast<pD3DCompile>(mD3DCompileFunc);
-
     for (int i = 0; i < attempts; ++i)
     {
         ID3DBlob *errorMessage = NULL;
