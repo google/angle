@@ -69,6 +69,7 @@ inline bool isDeviceLostError(HRESULT errorCode)
       case D3DERR_DEVICELOST:
       case D3DERR_DEVICEHUNG:
       case D3DERR_DEVICEREMOVED:
+      case S_PRESENT_MODE_CHANGED:
         return true;
       default:
         return false;

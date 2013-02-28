@@ -1999,20 +1999,22 @@ bool Renderer9::isDeviceLost()
 // set notify to true to broadcast a message to all contexts of the device loss
 bool Renderer9::testDeviceLost(bool notify)
 {
-    bool isLost = false;
+    HRESULT status = S_OK;
 
     if (mDeviceEx)
     {
-        isLost = FAILED(mDeviceEx->CheckDeviceState(NULL));
+        status = mDeviceEx->CheckDeviceState(NULL);
     }
     else if (mDevice)
     {
-        isLost = FAILED(mDevice->TestCooperativeLevel());
+        status = mDevice->TestCooperativeLevel();
     }
     else
     {
         // No device yet, so no reset required
     }
+
+    bool isLost = FAILED(status) || d3d9::isDeviceLostError(status);
 
     if (isLost)
     {
@@ -2044,11 +2046,20 @@ bool Renderer9::testDeviceResettable()
         status = mDevice->TestCooperativeLevel();
     }
 
+    // On D3D9Ex, DEVICELOST represents a hung device that needs to be restarted
+    // On some systems, they return S_PRESENT_MODE_CHANGED
+    // DEVICEREMOVED indicates the device has been stopped and must be recreated
     switch (status)
     {
       case D3DERR_DEVICENOTRESET:
       case D3DERR_DEVICEHUNG:
         return true;
+      case S_PRESENT_MODE_CHANGED:
+      case D3DERR_DEVICELOST:
+        return (mDeviceEx != NULL);
+      case D3DERR_DEVICEREMOVED:
+        UNIMPLEMENTED();
+        return false;
       default:
         return false;
     }
