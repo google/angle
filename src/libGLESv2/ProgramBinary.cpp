@@ -2064,8 +2064,15 @@ bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, In
     {
         uniform = mUniforms[mUniformIndex[location].index];
 
-        if (uniform->type != constant.type || uniform->precision != constant.precision)
+        if (uniform->type != constant.type)
         {
+            infoLog.append("Types for uniform %s do not match between the vertex and fragment shader", uniform->name.c_str());
+            return false;
+        }
+
+        if (uniform->precision != constant.precision)
+        {
+            infoLog.append("Precisions for uniform %s do not match between the vertex and fragment shader", uniform->name.c_str());
             return false;
         }
     }
