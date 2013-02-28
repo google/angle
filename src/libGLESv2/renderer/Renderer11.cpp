@@ -2518,9 +2518,9 @@ bool Renderer11::copyTexture(ID3D11ShaderResourceView *source, const gl::Rectang
 
     // Create a quad in homogeneous coordinates
     float x1 = (destArea.x / float(destWidth)) * 2.0f - 1.0f;
-    float y1 = (destArea.y / float(destHeight)) * 2.0f - 1.0f;
+    float y1 = ((destHeight - destArea.y - destArea.height) / float(destHeight)) * 2.0f - 1.0f;
     float x2 = ((destArea.x + destArea.width) / float(destWidth)) * 2.0f - 1.0f;
-    float y2 = ((destArea.y + destArea.height) / float(destHeight)) * 2.0f - 1.0f;
+    float y2 = ((destHeight - destArea.y) / float(destHeight)) * 2.0f - 1.0f;
 
     float u1 = sourceArea.x / float(sourceWidth);
     float v1 = sourceArea.y / float(sourceHeight);
