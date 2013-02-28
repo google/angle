@@ -225,6 +225,10 @@ class Renderer11 : public Renderer
     bool mFloat32FilterSupport;
     bool mFloat32RenderSupport;
 
+    bool mDXT1TextureSupport;
+    bool mDXT3TextureSupport;
+    bool mDXT5TextureSupport;
+
     // Multisample format support
     struct MultisampleSupportInfo
     {

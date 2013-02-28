@@ -310,6 +310,36 @@ EGLint Renderer11::initialize()
         }
     }
 
+    // Check compressed texture support
+    const unsigned int requiredCompressedTextureFlags = D3D11_FORMAT_SUPPORT_TEXTURE2D;
+
+    if (SUCCEEDED(mDevice->CheckFormatSupport(DXGI_FORMAT_BC1_UNORM, &formatSupport)))
+    {
+        mDXT1TextureSupport = (formatSupport & requiredCompressedTextureFlags) == requiredCompressedTextureFlags;
+    }
+    else
+    {
+        mDXT1TextureSupport = false;
+    }
+
+    if (SUCCEEDED(mDevice->CheckFormatSupport(DXGI_FORMAT_BC3_UNORM, &formatSupport)))
+    {
+        mDXT3TextureSupport = (formatSupport & requiredCompressedTextureFlags) == requiredCompressedTextureFlags;
+    }
+    else
+    {
+        mDXT3TextureSupport = false;
+    }
+
+    if (SUCCEEDED(mDevice->CheckFormatSupport(DXGI_FORMAT_BC5_UNORM, &formatSupport)))
+    {
+        mDXT5TextureSupport = (formatSupport & requiredCompressedTextureFlags) == requiredCompressedTextureFlags;
+    }
+    else
+    {
+        mDXT5TextureSupport = false;
+    }
+
     return EGL_SUCCESS;
 }
 
@@ -1952,23 +1982,17 @@ bool Renderer11::getBGRATextureSupport() const
 
 bool Renderer11::getDXT1TextureSupport()
 {
-    // TODO
-    // UNIMPLEMENTED();
-    return false;
+    return mDXT1TextureSupport;
 }
 
 bool Renderer11::getDXT3TextureSupport()
 {
-    // TODO
-    // UNIMPLEMENTED();
-    return false;
+    return mDXT3TextureSupport;
 }
 
 bool Renderer11::getDXT5TextureSupport()
 {
-    // TODO
-    // UNIMPLEMENTED();
-    return false;
+    return mDXT5TextureSupport;
 }
 
 bool Renderer11::getDepthTextureSupport() const
