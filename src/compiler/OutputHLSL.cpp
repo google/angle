@@ -96,7 +96,7 @@ OutputHLSL::OutputHLSL(TParseContext &context, ShShaderOutput outputType)
     {
         if (mContext.shaderType == SH_FRAGMENT_SHADER)
         {
-            mUniformRegister = 3;   // Reserve registers for dx_DepthRange, dx_Coord and dx_DepthFront
+            mUniformRegister = 3;   // Reserve registers for dx_DepthRange, dx_ViewCoords and dx_DepthFront
         }
         else
         {
@@ -250,7 +250,7 @@ void OutputHLSL::header()
 
             if (mUsesFragCoord)
             {
-                out << "    float4 dx_Coord : packoffset(c1);\n";
+                out << "    float4 dx_ViewCoords : packoffset(c1);\n";
             }
 
             if (mUsesFragCoord || mUsesFrontFacing)
@@ -269,7 +269,7 @@ void OutputHLSL::header()
 
             if (mUsesFragCoord)
             {
-                out << "uniform float4 dx_Coord : register(c1);\n";
+                out << "uniform float4 dx_ViewCoords : register(c1);\n";
             }
 
             if (mUsesFragCoord || mUsesFrontFacing)
@@ -613,16 +613,14 @@ void OutputHLSL::header()
 
         if (mOutputType == SH_HLSL11_OUTPUT)
         {
-            out << "cbuffer DriverConstants : register(b1)\n"
-                   "{\n";
-
             if (mUsesDepthRange)
             {
-                out << "    float3 dx_DepthRange : packoffset(c0);\n";
+                out << "cbuffer DriverConstants : register(b1)\n"
+                       "{\n"
+                       "    float3 dx_DepthRange : packoffset(c0);\n"
+                       "};\n"
+                       "\n";
             }
-
-            out << "    float2 dx_HalfPixelSize : packoffset(c1);\n";
-            out << "};\n";
         }
         else
         {
@@ -631,10 +629,9 @@ void OutputHLSL::header()
                 out << "uniform float3 dx_DepthRange : register(c0);\n";
             }
 
-            out << "uniform float2 dx_HalfPixelSize : register(c1);\n";
+            out << "uniform float2 dx_HalfPixelSize : register(c1);\n"
+                   "\n";
         }
-
-        out << "\n";
 
         if (mUsesDepthRange)
         {

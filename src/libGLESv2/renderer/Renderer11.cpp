@@ -687,17 +687,13 @@ bool Renderer11::setViewport(const gl::Rectangle &viewport, float zNear, float z
         mCurNear = actualZNear;
         mCurFar = actualZFar;
 
-        mVertexConstants.halfPixelSize[0] = 0.0f;
-        mVertexConstants.halfPixelSize[1] = 0.0f;
-
-        mPixelConstants.coord[0] = actualViewport.width  * 0.5f;
-        mPixelConstants.coord[1] = actualViewport.height * 0.5f;
-        mPixelConstants.coord[2] = actualViewport.x + (actualViewport.width  * 0.5f);
-        mPixelConstants.coord[3] = actualViewport.y + (actualViewport.height * 0.5f);
+        mPixelConstants.viewCoords[0] = actualViewport.width  * 0.5f;
+        mPixelConstants.viewCoords[1] = actualViewport.height * 0.5f;
+        mPixelConstants.viewCoords[2] = actualViewport.x + (actualViewport.width  * 0.5f);
+        mPixelConstants.viewCoords[3] = actualViewport.y + (actualViewport.height * 0.5f);
 
         mPixelConstants.depthFront[0] = (actualZFar - actualZNear) * 0.5f;
         mPixelConstants.depthFront[1] = (actualZNear + actualZFar) * 0.5f;
-        mPixelConstants.depthFront[2] = !gl::IsTriangleMode(drawMode) ? 0.0f : (frontFace == GL_CCW ? 1.0f : -1.0f);;
 
         mVertexConstants.depthRange[0] = actualZNear;
         mVertexConstants.depthRange[1] = actualZFar;

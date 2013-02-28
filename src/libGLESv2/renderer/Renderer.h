@@ -79,7 +79,7 @@ struct dx_VertexConstants
 struct dx_PixelConstants
 {
     float depthRange[4];
-    float coord[4];
+    float viewCoords[4];
     float depthFront[4];
 };
 

@@ -1088,10 +1088,10 @@ bool Renderer9::setViewport(const gl::Rectangle &viewport, float zNear, float zF
         vc.halfPixelSize[0] = 1.0f / dxViewport.Width;
         vc.halfPixelSize[1] = -1.0f / dxViewport.Height;
 
-        pc.coord[0] = actualViewport.width  * 0.5f;
-        pc.coord[1] = actualViewport.height * 0.5f;
-        pc.coord[2] = actualViewport.x + (actualViewport.width  * 0.5f);
-        pc.coord[3] = actualViewport.y + (actualViewport.height * 0.5f);
+        pc.viewCoords[0] = actualViewport.width  * 0.5f;
+        pc.viewCoords[1] = actualViewport.height * 0.5f;
+        pc.viewCoords[2] = actualViewport.x + (actualViewport.width  * 0.5f);
+        pc.viewCoords[3] = actualViewport.y + (actualViewport.height * 0.5f);
 
         pc.depthFront[0] = (actualZFar - actualZNear) * 0.5f;
         pc.depthFront[1] = (actualZNear + actualZFar) * 0.5f;

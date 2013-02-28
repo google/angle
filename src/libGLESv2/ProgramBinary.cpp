@@ -1324,14 +1324,28 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
         vertexHLSL += "(input." + decorateAttribute(attribute->name) + ");\n";
     }
 
-    vertexHLSL += "\n"
-                  "    gl_main();\n"
-                  "\n"
-                  "    VS_OUTPUT output;\n"
-                  "    output.gl_Position.x = gl_Position.x - dx_HalfPixelSize.x * gl_Position.w;\n"
-                  "    output.gl_Position.y = -(gl_Position.y + dx_HalfPixelSize.y * gl_Position.w);\n"
-                  "    output.gl_Position.z = (gl_Position.z + gl_Position.w) * 0.5;\n"
-                  "    output.gl_Position.w = gl_Position.w;\n";
+    if (shaderModel >= 4)
+    {
+        vertexHLSL += "\n"
+                      "    gl_main();\n"
+                      "\n"
+                      "    VS_OUTPUT output;\n"
+                      "    output.gl_Position.x = gl_Position.x;\n"
+                      "    output.gl_Position.y = -gl_Position.y;\n"
+                      "    output.gl_Position.z = (gl_Position.z + gl_Position.w) * 0.5;\n"
+                      "    output.gl_Position.w = gl_Position.w;\n";
+    }
+    else
+    {
+        vertexHLSL += "\n"
+                      "    gl_main();\n"
+                      "\n"
+                      "    VS_OUTPUT output;\n"
+                      "    output.gl_Position.x = gl_Position.x - dx_HalfPixelSize.x * gl_Position.w;\n"
+                      "    output.gl_Position.y = -(gl_Position.y + dx_HalfPixelSize.y * gl_Position.w);\n"
+                      "    output.gl_Position.z = (gl_Position.z + gl_Position.w) * 0.5;\n"
+                      "    output.gl_Position.w = gl_Position.w;\n";
+    }
 
     if (vertexShader->mUsesPointSize && shaderModel >= 3)
     {
@@ -1490,9 +1504,9 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
         }
         else
         {
-            // dx_Coord contains the viewport width/2, height/2, center.x and center.y. See Context::applyRenderTarget()
-            pixelHLSL += "    gl_FragCoord.x = (input.gl_FragCoord.x * rhw) * dx_Coord.x + dx_Coord.z;\n"
-                         "    gl_FragCoord.y = (input.gl_FragCoord.y * rhw) * dx_Coord.y + dx_Coord.w;\n";
+            // dx_ViewCoords contains the viewport width/2, height/2, center.x and center.y. See Renderer::setViewport()
+            pixelHLSL += "    gl_FragCoord.x = (input.gl_FragCoord.x * rhw) * dx_ViewCoords.x + dx_ViewCoords.z;\n"
+                         "    gl_FragCoord.y = (input.gl_FragCoord.y * rhw) * dx_ViewCoords.y + dx_ViewCoords.w;\n";
         }
         
         pixelHLSL += "    gl_FragCoord.z = (input.gl_FragCoord.z * rhw) * dx_DepthFront.x + dx_DepthFront.y;\n"
@@ -2134,10 +2148,9 @@ std::string ProgramBinary::generatePointSpriteHLSL(int registers, const Varying 
         pointCoordSemantic = varyingSemantic + str(reservedRegisterIndex++);
     }
 
-    geomHLSL += "uniform float4 dx_viewportCoords : register(c1);\n"
-                "\n";
-
-    geomHLSL += "struct GS_INPUT\n"
+    geomHLSL += "uniform float4 dx_ViewCoords : register(c1);\n"
+                "\n"
+                "struct GS_INPUT\n"
                 "{\n";
 
     for (int r = 0; r < registers; r++)
@@ -2216,7 +2229,7 @@ std::string ProgramBinary::generatePointSpriteHLSL(int registers, const Varying 
     geomHLSL += "    \n"
                 "    float gl_PointSize = clamp(input[0].gl_PointSize, minPointSize, maxPointSize);\n"
                 "    float4 gl_Position = input[0].gl_Position;\n"
-                "    float2 viewportScale = float2(1.0f / dx_viewportCoords.x, 1.0f / dx_viewportCoords.y) * gl_Position.w;\n";
+                "    float2 viewportScale = float2(1.0f / dx_ViewCoords.x, 1.0f / dx_ViewCoords.y);\n";
 
     for (int corner = 0; corner < 4; corner++)
     {
