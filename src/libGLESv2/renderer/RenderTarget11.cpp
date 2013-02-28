@@ -229,9 +229,9 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
     mShaderResource = NULL;
 
     DXGI_FORMAT requestedFormat = gl_d3d11::ConvertRenderbufferFormat(format);
-    int supportedSamples = 0; // TODO - Multisample support query
 
-    if (supportedSamples == -1)
+    int supportedSamples = mRenderer->getNearestSupportedSamples(requestedFormat, samples);
+    if (supportedSamples < 0)
     {
         gl::error(GL_OUT_OF_MEMORY);
 
@@ -249,7 +249,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
         desc.MipLevels = 1;
         desc.ArraySize = 1;
         desc.Format = requestedFormat;
-        desc.SampleDesc.Count = (supportedSamples == 0 ? 1 : supportedSamples);
+        desc.SampleDesc.Count = (supportedSamples == 0) ? 1 : supportedSamples;
         desc.SampleDesc.Quality = 0;
         desc.Usage = D3D11_USAGE_DEFAULT;
         desc.CPUAccessFlags = 0;
@@ -271,7 +271,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
         {
             D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
             dsvDesc.Format = requestedFormat;
-            dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+            dsvDesc.ViewDimension = (supportedSamples == 0) ? D3D11_DSV_DIMENSION_TEXTURE2D : D3D11_DSV_DIMENSION_TEXTURE2DMS;
             dsvDesc.Texture2D.MipSlice = 0;
             dsvDesc.Flags = 0;
             result = device->CreateDepthStencilView(rtTexture, &dsvDesc, &mDepthStencil);
@@ -288,7 +288,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
         {
             D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
             rtvDesc.Format = requestedFormat;
-            rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+            rtvDesc.ViewDimension = (supportedSamples == 0) ? D3D11_RTV_DIMENSION_TEXTURE2D : D3D11_RTV_DIMENSION_TEXTURE2DMS;
             rtvDesc.Texture2D.MipSlice = 0;
             result = device->CreateRenderTargetView(rtTexture, &rtvDesc, &mRenderTarget);
 
@@ -302,7 +302,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
 
             D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
             srvDesc.Format = requestedFormat;
-            srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+            srvDesc.ViewDimension = (supportedSamples == 0) ? D3D11_SRV_DIMENSION_TEXTURE2D : D3D11_SRV_DIMENSION_TEXTURE2DMS;
             srvDesc.Texture2D.MostDetailedMip = 0;
             srvDesc.Texture2D.MipLevels = 1;
             result = device->CreateShaderResourceView(rtTexture, &srvDesc, &mShaderResource);
