@@ -17,8 +17,8 @@
 namespace rx
 {
 
-bool VertexBuffer9::mAttributeTypesInitialized = false;
-VertexBuffer9::FormatConverter VertexBuffer9::mAttributeTypes[NUM_GL_VERTEX_ATTRIB_TYPES][2][4];
+bool VertexBuffer9::mTranslationsInitialized = false;
+VertexBuffer9::FormatConverter VertexBuffer9::mFormatConverters[NUM_GL_VERTEX_ATTRIB_TYPES][2][4];
 
 VertexBuffer9::VertexBuffer9(rx::Renderer9 *const renderer) : mRenderer(renderer)
 {
@@ -26,10 +26,10 @@ VertexBuffer9::VertexBuffer9(rx::Renderer9 *const renderer) : mRenderer(renderer
     mBufferSize = 0;
     mDynamicUsage = false;
 
-    if (!mAttributeTypesInitialized)
+    if (!mTranslationsInitialized)
     {
         initializeTranslations(renderer->getCapsDeclTypes());
-        mAttributeTypesInitialized = true;
+        mTranslationsInitialized = true;
     }
 }
 
@@ -437,11 +437,11 @@ void VertexBuffer9::initializeTranslations(DWORD declTypes)
             {
                 if (mPossibleTranslations[i][j][k].capsFlag == 0 || (declTypes & mPossibleTranslations[i][j][k].capsFlag) != 0)
                 {
-                    mAttributeTypes[i][j][k] = mPossibleTranslations[i][j][k].preferredConversion;
+                    mFormatConverters[i][j][k] = mPossibleTranslations[i][j][k].preferredConversion;
                 }
                 else
                 {
-                    mAttributeTypes[i][j][k] = mPossibleTranslations[i][j][k].fallbackConversion;
+                    mFormatConverters[i][j][k] = mPossibleTranslations[i][j][k].fallbackConversion;
                 }
             }
         }
@@ -465,7 +465,7 @@ unsigned int VertexBuffer9::typeIndex(GLenum type)
 
 const VertexBuffer9::FormatConverter &VertexBuffer9::formatConverter(const gl::VertexAttribute &attribute)
 {
-    return mAttributeTypes[typeIndex(attribute.mType)][attribute.mNormalized][attribute.mSize - 1];
+    return mFormatConverters[typeIndex(attribute.mType)][attribute.mNormalized][attribute.mSize - 1];
 }
 
 unsigned int VertexBuffer9::spaceRequired(const gl::VertexAttribute &attrib, std::size_t count, GLsizei instances)

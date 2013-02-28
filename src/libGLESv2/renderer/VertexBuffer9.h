@@ -54,6 +54,8 @@ class VertexBuffer9 : public VertexBuffer
     bool mDynamicUsage;
 
     // Attribute format conversion
+    enum { NUM_GL_VERTEX_ATTRIB_TYPES = 6 };
+
     struct FormatConverter
     {
         bool identity;
@@ -62,10 +64,11 @@ class VertexBuffer9 : public VertexBuffer
         D3DDECLTYPE d3dDeclType;
     };
 
-    enum { NUM_GL_VERTEX_ATTRIB_TYPES = 6 };
+    static bool mTranslationsInitialized;
+    static void initializeTranslations(DWORD declTypes);
 
-    static bool mAttributeTypesInitialized;
-    static FormatConverter mAttributeTypes[NUM_GL_VERTEX_ATTRIB_TYPES][2][4];   // [GL types as enumerated by typeIndex()][normalized][size - 1]
+    // [GL types as enumerated by typeIndex()][normalized][size - 1]
+    static FormatConverter mFormatConverters[NUM_GL_VERTEX_ATTRIB_TYPES][2][4];
 
     struct TranslationDescription
     {
@@ -74,10 +77,9 @@ class VertexBuffer9 : public VertexBuffer
         FormatConverter fallbackConversion;
     };
 
-    // This table is used to generate mAttributeTypes.
-    static const TranslationDescription mPossibleTranslations[NUM_GL_VERTEX_ATTRIB_TYPES][2][4]; // [GL types as enumerated by typeIndex()][normalized][size - 1]
-
-    static void initializeTranslations(DWORD declTypes);
+    // This table is used to generate mFormatConverters.
+    // [GL types as enumerated by typeIndex()][normalized][size - 1]
+    static const TranslationDescription mPossibleTranslations[NUM_GL_VERTEX_ATTRIB_TYPES][2][4];
 
     static unsigned int typeIndex(GLenum type);
     static const FormatConverter &formatConverter(const gl::VertexAttribute &attribute);
