@@ -205,8 +205,6 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
         return;
     }
 
-    HRESULT result = D3DERR_INVALIDCALL;
-
     if (width > 0 && height > 0)
     {
         // Create texture resource
@@ -226,7 +224,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
         ID3D11Device *device = mRenderer->getDevice();
         HRESULT result = device->CreateTexture2D(&desc, NULL, &mTexture);
 
-        if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+        if (result == E_OUTOFMEMORY)
         {
             gl::error(GL_OUT_OF_MEMORY);
             return;
@@ -242,7 +240,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
             dsvDesc.Flags = 0;
             result = device->CreateDepthStencilView(mTexture, &dsvDesc, &mDepthStencil);
 
-            if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+            if (result == E_OUTOFMEMORY)
             {
                 mTexture->Release();
                 mTexture = NULL;
@@ -258,7 +256,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
             rtvDesc.Texture2D.MipSlice = 0;
             result = device->CreateRenderTargetView(mTexture, &rtvDesc, &mRenderTarget);
 
-            if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+            if (result == E_OUTOFMEMORY)
             {
                 mTexture->Release();
                 mTexture = NULL;
@@ -274,7 +272,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
             srvDesc.Texture2D.MipLevels = 1;
             result = device->CreateShaderResourceView(mTexture, &srvDesc, &mShaderResource);
 
-            if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
+            if (result == E_OUTOFMEMORY)
             {
                 mTexture->Release();
                 mTexture = NULL;
