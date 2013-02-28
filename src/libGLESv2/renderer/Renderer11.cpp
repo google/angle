@@ -2714,10 +2714,10 @@ static inline void readPixelColor(const unsigned char *data, DXGI_FORMAT format,
       case DXGI_FORMAT_R8G8B8A8_UNORM:
         {
             unsigned int rgba = *reinterpret_cast<const unsigned int*>(data + 4 * x + y * inputPitch);
-            outColor->red =   (rgba & 0xFF000000) * (1.0f / 0xFF000000);
-            outColor->green = (rgba & 0x00FF0000) * (1.0f / 0x00FF0000);
-            outColor->blue =  (rgba & 0x0000FF00) * (1.0f / 0x0000FF00);
-            outColor->alpha = (rgba & 0x000000FF) * (1.0f / 0x000000FF);
+            outColor->red =   (rgba & 0x000000FF) * (1.0f / 0x000000FF);
+            outColor->green = (rgba & 0x0000FF00) * (1.0f / 0x0000FF00);
+            outColor->blue =  (rgba & 0x00FF0000) * (1.0f / 0x00FF0000);
+            outColor->alpha = (rgba & 0xFF000000) * (1.0f / 0xFF000000);
         }
         break;
 
@@ -2760,10 +2760,10 @@ static inline void readPixelColor(const unsigned char *data, DXGI_FORMAT format,
       case DXGI_FORMAT_B8G8R8A8_UNORM:
         {
             unsigned int bgra = *reinterpret_cast<const unsigned int*>(data + 4 * x + y * inputPitch);
-            outColor->red =   (bgra & 0x0000FF00) * (1.0f / 0x0000FF00);
-            outColor->blue =  (bgra & 0xFF000000) * (1.0f / 0xFF000000);
-            outColor->green = (bgra & 0x00FF0000) * (1.0f / 0x00FF0000);
-            outColor->alpha = (bgra & 0x000000FF) * (1.0f / 0x000000FF);
+            outColor->red =   (bgra & 0x00FF0000) * (1.0f / 0x00FF0000);
+            outColor->blue =  (bgra & 0x000000FF) * (1.0f / 0x000000FF);
+            outColor->green = (bgra & 0x0000FF00) * (1.0f / 0x0000FF00);
+            outColor->alpha = (bgra & 0xFF000000) * (1.0f / 0xFF000000);
         }
         break;
 
