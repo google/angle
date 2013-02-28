@@ -1014,7 +1014,17 @@ void __stdcall glCompressedTexImage2D(GLenum target, GLint level, GLenum interna
 
         if (border != 0)
         {
-            return gl::error(GL_INVALID_VALUE);
+            return gl::error(GL_INVALID_OPERATION);
+        }
+
+        if (width != 1 && width != 2 && width % 4 != 0)
+        {
+            return gl::error(GL_INVALID_OPERATION);
+        }
+
+        if (height != 1 && height != 2 && height % 4 != 0)
+        {
+            return gl::error(GL_INVALID_OPERATION);
         }
 
         gl::Context *context = gl::getNonLostContext();
