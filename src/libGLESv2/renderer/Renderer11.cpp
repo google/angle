@@ -6,6 +6,8 @@
 
 // Renderer11.cpp: Implements a back-end specific class for the D3D11 renderer.
 
+#include <D3Dcompiler.h>
+
 #include "common/debug.h"
 #include "libGLESv2/main.h"
 #include "libGLESv2/utilities.h"
@@ -2730,7 +2732,7 @@ ShaderExecutable *Renderer11::compileToExecutable(gl::InfoLog &infoLog, const ch
         return NULL;
     }
 
-    ID3DBlob *binary = (ID3DBlob*)compileToBinary(infoLog, shaderHLSL, profile, false);
+    ID3DBlob *binary = (ID3DBlob*)compileToBinary(infoLog, shaderHLSL, profile, D3DCOMPILE_OPTIMIZATION_LEVEL0, false);
     if (!binary)
         return NULL;
 

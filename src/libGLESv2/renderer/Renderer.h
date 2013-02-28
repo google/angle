@@ -225,7 +225,7 @@ class Renderer
 
   protected:
     bool initializeCompiler();
-    ShaderBlob *compileToBinary(gl::InfoLog &infoLog, const char *hlsl, const char *profile, bool alternateFlags);
+    ShaderBlob *compileToBinary(gl::InfoLog &infoLog, const char *hlsl, const char *profile, UINT optimizationFlags, bool alternateFlags);
 
     egl::Display *mDisplay;
 

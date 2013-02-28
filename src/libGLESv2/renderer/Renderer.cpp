@@ -73,7 +73,7 @@ bool Renderer::initializeCompiler()
 }
 
 // Compiles HLSL code into executable binaries
-ShaderBlob *Renderer::compileToBinary(gl::InfoLog &infoLog, const char *hlsl, const char *profile, bool alternateFlags)
+ShaderBlob *Renderer::compileToBinary(gl::InfoLog &infoLog, const char *hlsl, const char *profile, UINT optimizationFlags, bool alternateFlags)
 {
     if (!hlsl)
     {
@@ -86,8 +86,9 @@ ShaderBlob *Renderer::compileToBinary(gl::InfoLog &infoLog, const char *hlsl, co
     if (gl::perfActive())
     {
         flags |= D3DCOMPILE_DEBUG;
+
 #ifdef NDEBUG
-        flags |= ANGLE_COMPILE_OPTIMIZATION_LEVEL;
+        flags |= optimizationFlags;
 #else
         flags |= D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
@@ -98,7 +99,7 @@ ShaderBlob *Renderer::compileToBinary(gl::InfoLog &infoLog, const char *hlsl, co
     }
     else
     {
-        flags |= ANGLE_COMPILE_OPTIMIZATION_LEVEL;
+        flags |= optimizationFlags;
         sourceText = hlsl;
     }
 

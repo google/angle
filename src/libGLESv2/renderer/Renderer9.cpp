@@ -46,6 +46,10 @@
 #define ANGLE_ENABLE_D3D9EX 1
 #endif // !defined(ANGLE_ENABLE_D3D9EX)
 
+#if !defined(ANGLE_COMPILE_OPTIMIZATION_LEVEL)
+#define ANGLE_COMPILE_OPTIMIZATION_LEVEL D3DCOMPILE_OPTIMIZATION_LEVEL3
+#endif
+
 namespace rx
 {
 static const D3DFORMAT RenderTargetFormats[] =
@@ -3010,7 +3014,7 @@ ShaderExecutable *Renderer9::compileToExecutable(gl::InfoLog &infoLog, const cha
         return NULL;
     }
 
-    ID3DBlob *binary = (ID3DBlob*) compileToBinary(infoLog, shaderHLSL, profile, true);
+    ID3DBlob *binary = (ID3DBlob*)compileToBinary(infoLog, shaderHLSL, profile, ANGLE_COMPILE_OPTIMIZATION_LEVEL, true);
     if (!binary)
         return NULL;
 
