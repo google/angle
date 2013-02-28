@@ -859,7 +859,7 @@ rx::RenderTarget *Texture2D::getDepthStencil(GLenum target)
 
 int Texture2D::levelCount()
 {
-    return mTexStorage ? mTexStorage->levelCount() - getLodOffset() : 0;
+    return mTexStorage ? mTexStorage->levelCount() : 0;
 }
 
 rx::TextureStorageInterface *Texture2D::getStorage(bool renderTarget)
