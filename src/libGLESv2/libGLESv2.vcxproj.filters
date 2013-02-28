@@ -182,6 +182,9 @@
     <ClCompile Include="renderer\Query9.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\Fence9.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinaryStream.h">
@@ -413,6 +416,9 @@
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="renderer\FenceImpl.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\Fence9.h">
       <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
