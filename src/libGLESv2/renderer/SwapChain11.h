@@ -48,6 +48,7 @@ class SwapChain11 : public SwapChain
     EGLint mHeight;
     EGLint mWidth;
     bool mAppCreatedShareHandle;
+    unsigned int mSwapInterval;
 
     IDXGISwapChain *mSwapChain;
 

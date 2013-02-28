@@ -40,6 +40,7 @@ SwapChain11::SwapChain11(Renderer11 *renderer, HWND window, HANDLE shareHandle,
     mPassThroughPS = NULL;
     mWidth = -1;
     mHeight = -1;
+    mSwapInterval = 0;
     mAppCreatedShareHandle = mShareHandle != NULL;
 }
 
@@ -191,6 +192,13 @@ EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swap
     {
         mDepthStencilDSView->Release();
         mDepthStencilDSView = NULL;
+    }
+
+    mSwapInterval = static_cast<unsigned int>(swapInterval);
+    if (mSwapInterval > 4)
+    {
+        // IDXGISwapChain::Present documentation states that valid sync intervals are in the [0,4] range
+        return EGL_BAD_PARAMETER;
     }
 
     // If the app passed in a share handle, open the resource
@@ -528,7 +536,7 @@ EGLint SwapChain11::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
 
     // Draw
     deviceContext->Draw(4, 0);
-    mSwapChain->Present(0, 0);
+    mSwapChain->Present(mSwapInterval, 0);
 
     // Unbind
     static ID3D11ShaderResourceView *const nullSRV = NULL;
