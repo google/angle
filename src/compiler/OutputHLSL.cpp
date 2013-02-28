@@ -2090,9 +2090,12 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
         mInsideDiscontinuousLoop = containsLoopDiscontinuity(node);
     }
 
-    if (handleExcessiveLoop(node))
+    if (mOutputType == SH_HLSL9_OUTPUT)
     {
-        return false;
+        if (handleExcessiveLoop(node))
+        {
+            return false;
+        }
     }
 
     TInfoSinkBase &out = mBody;
