@@ -30,6 +30,7 @@ SwapChain9::SwapChain9(Renderer9 *renderer, HWND window, HANDLE shareHandle,
     mOffscreenTexture = NULL;
     mWidth = -1;
     mHeight = -1;
+    mSwapInterval = -1;
 }
 
 SwapChain9::~SwapChain9()
@@ -86,6 +87,12 @@ static DWORD convertInterval(EGLint interval)
     }
 
     return D3DPRESENT_INTERVAL_DEFAULT;
+}
+
+EGLint SwapChain9::resize(int backbufferWidth, int backbufferHeight)
+{
+    // D3D9 does not support resizing swap chains without recreating them
+    return reset(backbufferWidth, backbufferHeight, mSwapInterval);
 }
 
 EGLint SwapChain9::reset(int backbufferWidth, int backbufferHeight, EGLint swapInterval)
@@ -264,6 +271,7 @@ EGLint SwapChain9::reset(int backbufferWidth, int backbufferHeight, EGLint swapI
 
     mWidth = backbufferWidth;
     mHeight = backbufferHeight;
+    mSwapInterval = swapInterval;
 
     return EGL_SUCCESS;
 }

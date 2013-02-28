@@ -25,6 +25,7 @@ class SwapChain9 : public SwapChain
                GLenum backBufferFormat, GLenum depthBufferFormat);
     virtual ~SwapChain9();
 
+    EGLint resize(EGLint backbufferWidth, EGLint backbufferHeight);
     virtual EGLint reset(EGLint backbufferWidth, EGLint backbufferHeight, EGLint swapInterval);
     virtual EGLint swapRect(EGLint x, EGLint y, EGLint width, EGLint height);
 
@@ -42,6 +43,7 @@ class SwapChain9 : public SwapChain
     Renderer9 *mRenderer;
     EGLint mHeight;
     EGLint mWidth;
+    EGLint mSwapInterval;
 
     IDirect3DSwapChain9 *mSwapChain;
     IDirect3DSurface9 *mBackBuffer;

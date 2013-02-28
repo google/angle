@@ -363,6 +363,66 @@ EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHei
     return EGL_SUCCESS;
 }
 
+EGLint SwapChain11::resize(EGLint backbufferWidth, EGLint backbufferHeight)
+{
+    ID3D11Device *device = mRenderer->getDevice();
+
+    if (device == NULL)
+    {
+        return EGL_BAD_ACCESS;
+    }
+
+    // Can only call resize if we have already created our swap buffer and resources
+    ASSERT(mSwapChain && mBackBufferTexture && mBackBufferRTView);
+
+    if (mBackBufferTexture)
+    {
+        mBackBufferTexture->Release();
+        mBackBufferTexture = NULL;
+    }
+
+    if (mBackBufferRTView)
+    {
+        mBackBufferRTView->Release();
+        mBackBufferRTView = NULL;
+    }
+
+    // Resize swap chain
+    DXGI_FORMAT backbufferDXGIFormat = gl_d3d11::ConvertRenderbufferFormat(mBackBufferFormat);
+    HRESULT result = mSwapChain->ResizeBuffers(2, backbufferWidth, backbufferHeight, backbufferDXGIFormat, 0);
+
+    if (FAILED(result))
+    {
+        ERR("Error resizing swap chain buffers: 0x%08X", result);
+        release();
+
+        if (d3d11::isDeviceLostError(result))
+        {
+            return EGL_CONTEXT_LOST;
+        }
+        else
+        {
+            return EGL_BAD_ALLOC;
+        }
+    }
+
+    result = mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&mBackBufferTexture);
+    ASSERT(SUCCEEDED(result));
+    if (SUCCEEDED(result))
+    {
+        d3d11::SetDebugName(mBackBufferTexture, "Back buffer texture");
+    }
+
+    result = device->CreateRenderTargetView(mBackBufferTexture, NULL, &mBackBufferRTView);
+    ASSERT(SUCCEEDED(result));
+    if (SUCCEEDED(result))
+    {
+        d3d11::SetDebugName(mBackBufferRTView, "Back buffer render target");
+    }
+
+    return resetOffscreenTexture(backbufferWidth, backbufferHeight);
+}
+
 EGLint SwapChain11::reset(int backbufferWidth, int backbufferHeight, EGLint swapInterval)
 {
     ID3D11Device *device = mRenderer->getDevice();

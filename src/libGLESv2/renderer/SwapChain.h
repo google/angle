@@ -31,6 +31,7 @@ class SwapChain
 
     virtual ~SwapChain() {};
 
+    virtual EGLint resize(EGLint backbufferWidth, EGLint backbufferSize) = 0;
     virtual EGLint reset(EGLint backbufferWidth, EGLint backbufferHeight, EGLint swapInterval) = 0;
     virtual EGLint swapRect(EGLint x, EGLint y, EGLint width, EGLint height) = 0;
 

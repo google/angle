@@ -153,6 +153,29 @@ bool Surface::resetSwapChain()
     return true;
 }
 
+bool Surface::resizeSwapChain(int backbufferWidth, int backbufferHeight)
+{
+    ASSERT(backbufferWidth >= 0 && backbufferHeight >= 0);
+    ASSERT(mSwapChain);
+
+    EGLint status = mSwapChain->resize(backbufferWidth, backbufferHeight);
+
+    if (status == EGL_CONTEXT_LOST)
+    {
+        mDisplay->notifyDeviceLost();
+        return false;
+    }
+    else if (status != EGL_SUCCESS)
+    {
+        return error(status, false);
+    }
+
+    mWidth = backbufferWidth;
+    mHeight = backbufferHeight;
+
+    return true;
+}
+
 bool Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
 {
     ASSERT(backbufferWidth >= 0 && backbufferHeight >= 0);
@@ -306,9 +329,17 @@ bool Surface::checkForOutOfDateSwapChain()
     int clientHeight = client.bottom - client.top;
     bool sizeDirty = clientWidth != getWidth() || clientHeight != getHeight();
 
-    if (sizeDirty || mSwapIntervalDirty)
+    if (mSwapIntervalDirty)
     {
         resetSwapChain(clientWidth, clientHeight);
+    }
+    else if (sizeDirty)
+    {
+        resizeSwapChain(clientWidth, clientHeight);
+    }
+
+    if (mSwapIntervalDirty || sizeDirty)
+    {
         if (static_cast<egl::Surface*>(getCurrentDrawSurface()) == this)
         {
             glMakeCurrent(glGetCurrentContext(), static_cast<egl::Display*>(getCurrentDisplay()), this);
@@ -316,6 +347,7 @@ bool Surface::checkForOutOfDateSwapChain()
 
         return true;
     }
+
     return false;
 }
 

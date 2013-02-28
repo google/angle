@@ -25,6 +25,7 @@ class SwapChain11 : public SwapChain
                 GLenum backBufferFormat, GLenum depthBufferFormat);
     virtual ~SwapChain11();
 
+    EGLint resize(EGLint backbufferWidth, EGLint backbufferHeight);
     virtual EGLint reset(EGLint backbufferWidth, EGLint backbufferHeight, EGLint swapInterval);
     virtual EGLint swapRect(EGLint x, EGLint y, EGLint width, EGLint height);
 
