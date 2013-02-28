@@ -13,6 +13,7 @@
 #include <math.h>
 
 #include "common/system.h"
+#include "common/debug.h"
 
 namespace gl
 {
@@ -140,6 +141,20 @@ inline unsigned short float32ToFloat16(float fp32)
 }
 
 float float16ToFloat32(unsigned short h);
+
+}
+
+namespace rx
+{
+
+struct Range
+{
+    Range() {}
+    Range(int lo, int hi) : start(lo), end(hi) { ASSERT(lo <= hi); }
+
+    int start;
+    int end;
+};
 
 }
 
