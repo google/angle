@@ -214,6 +214,15 @@ class Renderer11 : public Renderer
 
     RenderStateCache mStateCache;
 
+    // Support flags
+    bool mFloat16TextureSupport;
+    bool mFloat16FilterSupport;
+    bool mFloat16RenderSupport;
+
+    bool mFloat32TextureSupport;
+    bool mFloat32FilterSupport;
+    bool mFloat32RenderSupport;
+
     // Multisample format support
     struct MultisampleSupportInfo
     {

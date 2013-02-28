@@ -251,6 +251,64 @@ EGLint Renderer11::initialize()
         mBGRATextureSupport = (formatSupport & flags) == flags;
     }
 
+    // Check floating point texture support
+    static const unsigned int requiredTextureFlags = D3D11_FORMAT_SUPPORT_TEXTURE2D | D3D11_FORMAT_SUPPORT_TEXTURECUBE;
+    static const unsigned int requiredRenderableFlags = D3D11_FORMAT_SUPPORT_RENDER_TARGET;
+    static const unsigned int requiredFilterFlags = D3D11_FORMAT_SUPPORT_SHADER_SAMPLE;
+
+    DXGI_FORMAT float16Formats[] =
+    {
+        DXGI_FORMAT_R16_FLOAT,
+        DXGI_FORMAT_R16G16_FLOAT,
+        DXGI_FORMAT_R16G16B16A16_FLOAT,
+    };
+
+    DXGI_FORMAT float32Formats[] =
+    {
+        DXGI_FORMAT_R32_FLOAT,
+        DXGI_FORMAT_R32G32_FLOAT,
+        DXGI_FORMAT_R32G32B32_FLOAT,
+        DXGI_FORMAT_R32G32B32A32_FLOAT,
+    };
+
+    mFloat16TextureSupport = true;
+    mFloat16FilterSupport = true;
+    mFloat16RenderSupport = true;
+    for (unsigned int i = 0; i < ArraySize(float16Formats); i++)
+    {
+        if (SUCCEEDED(mDevice->CheckFormatSupport(float16Formats[i], &formatSupport)))
+        {
+            mFloat16TextureSupport = mFloat16TextureSupport && (formatSupport & requiredTextureFlags) == requiredTextureFlags;
+            mFloat16FilterSupport = mFloat16FilterSupport && (formatSupport & requiredFilterFlags) == requiredFilterFlags;
+            mFloat16RenderSupport = mFloat16RenderSupport && (formatSupport & requiredRenderableFlags) == requiredRenderableFlags;
+        }
+        else
+        {
+            mFloat16TextureSupport = false;
+            mFloat16RenderSupport = false;
+            mFloat16FilterSupport = false;
+        }
+    }
+
+    mFloat32TextureSupport = true;
+    mFloat32FilterSupport = true;
+    mFloat32RenderSupport = true;
+    for (unsigned int i = 0; i < ArraySize(float32Formats); i++)
+    {
+        if (SUCCEEDED(mDevice->CheckFormatSupport(float32Formats[i], &formatSupport)))
+        {
+            mFloat32TextureSupport = mFloat32TextureSupport && (formatSupport & requiredTextureFlags) == requiredTextureFlags;
+            mFloat32FilterSupport = mFloat32FilterSupport && (formatSupport & requiredFilterFlags) == requiredFilterFlags;
+            mFloat32RenderSupport = mFloat32RenderSupport && (formatSupport & requiredRenderableFlags) == requiredRenderableFlags;
+        }
+        else
+        {
+            mFloat32TextureSupport = false;
+            mFloat32FilterSupport = false;
+            mFloat32RenderSupport = false;
+        }
+    }
+
     return EGL_SUCCESS;
 }
 
@@ -1979,22 +2037,16 @@ bool Renderer11::getDepthTextureSupport() const
 
 bool Renderer11::getFloat32TextureSupport(bool *filtering, bool *renderable)
 {
-    // TODO
-    // UNIMPLEMENTED();
-
-    *filtering = false;
-    *renderable = false;
-    return false;
+    *renderable = mFloat32RenderSupport;
+    *filtering = mFloat32FilterSupport;
+    return mFloat32TextureSupport;
 }
 
 bool Renderer11::getFloat16TextureSupport(bool *filtering, bool *renderable)
 {
-    // TODO
-    // UNIMPLEMENTED();
-
-    *filtering = false;
-    *renderable = false;
-    return false;
+    *renderable = mFloat16RenderSupport;
+    *filtering = mFloat16FilterSupport;
+    return mFloat16TextureSupport;
 }
 
 bool Renderer11::getLuminanceTextureSupport()
