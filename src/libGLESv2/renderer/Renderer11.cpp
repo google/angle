@@ -1837,10 +1837,12 @@ std::string Renderer11::getRendererDescription() const
 
 GUID Renderer11::getAdapterIdentifier() const
 {
-    // TODO
-    // UNIMPLEMENTED();
-    GUID foo = {0};
-    return foo;
+    // Use the adapter LUID as our adapter ID
+    // This number is local to a machine is only guaranteed to be unique between restarts
+    META_ASSERT(sizeof(LUID) <= sizeof(GUID));
+    GUID adapterId = {0};
+    memcpy(&adapterId, &mAdapterDescription.AdapterLuid, sizeof(LUID));
+    return adapterId;
 }
 
 bool Renderer11::getBGRATextureSupport() const
