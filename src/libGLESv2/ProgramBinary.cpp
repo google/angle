@@ -2260,7 +2260,7 @@ bool ProgramBinary::isValidated() const
     return mValidated;
 }
 
-void ProgramBinary::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name)
+void ProgramBinary::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name) const
 {
     // Skip over inactive attributes
     unsigned int activeAttribute = 0;
@@ -2298,7 +2298,7 @@ void ProgramBinary::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *l
     *type = mLinkedAttribute[attribute].type;
 }
 
-GLint ProgramBinary::getActiveAttributeCount()
+GLint ProgramBinary::getActiveAttributeCount() const
 {
     int count = 0;
 
@@ -2313,7 +2313,7 @@ GLint ProgramBinary::getActiveAttributeCount()
     return count;
 }
 
-GLint ProgramBinary::getActiveAttributeMaxLength()
+GLint ProgramBinary::getActiveAttributeMaxLength() const
 {
     int maxLength = 0;
 
@@ -2328,7 +2328,7 @@ GLint ProgramBinary::getActiveAttributeMaxLength()
     return maxLength;
 }
 
-void ProgramBinary::getActiveUniform(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name)
+void ProgramBinary::getActiveUniform(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name) const
 {
     ASSERT(index < mUniforms.size());   // index must be smaller than getActiveUniformCount()
 
@@ -2355,12 +2355,12 @@ void ProgramBinary::getActiveUniform(GLuint index, GLsizei bufsize, GLsizei *len
     *type = mUniforms[index]->type;
 }
 
-GLint ProgramBinary::getActiveUniformCount()
+GLint ProgramBinary::getActiveUniformCount() const
 {
     return mUniforms.size();
 }
 
-GLint ProgramBinary::getActiveUniformMaxLength()
+GLint ProgramBinary::getActiveUniformMaxLength() const
 {
     int maxLength = 0;
 

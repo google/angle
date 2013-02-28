@@ -99,13 +99,13 @@ class ProgramBinary : public RefCountObject
     bool link(InfoLog &infoLog, const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader);
     void getAttachedShaders(GLsizei maxCount, GLsizei *count, GLuint *shaders);
 
-    void getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name);
-    GLint getActiveAttributeCount();
-    GLint getActiveAttributeMaxLength();
+    void getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name) const;
+    GLint getActiveAttributeCount() const;
+    GLint getActiveAttributeMaxLength() const;
 
-    void getActiveUniform(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name);
-    GLint getActiveUniformCount();
-    GLint getActiveUniformMaxLength();
+    void getActiveUniform(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name) const;
+    GLint getActiveUniformCount() const;
+    GLint getActiveUniformMaxLength() const;
 
     void validate(InfoLog &infoLog);
     bool validateSamplers(InfoLog *infoLog);
