@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -19,8 +19,7 @@
 namespace gl
 {
 
-// This is how much data the application expects for a uniform
-int UniformExternalComponentCount(GLenum type)
+int UniformComponentCount(GLenum type)
 {
     switch (type)
     {
@@ -45,42 +44,6 @@ int UniformExternalComponentCount(GLenum type)
           return 4;
       case GL_FLOAT_MAT3:
           return 9;
-      case GL_FLOAT_MAT4:
-          return 16;
-      default:
-          UNREACHABLE();
-    }
-
-    return 0;
-}
-
-// This is how much data we actually store for a uniform
-int UniformInternalComponentCount(GLenum type)
-{
-    switch (type)
-    {
-      case GL_BOOL:
-      case GL_INT:
-      case GL_SAMPLER_2D:
-      case GL_SAMPLER_CUBE:
-          return 1;
-      case GL_BOOL_VEC2:
-      case GL_INT_VEC2:
-          return 2;
-      case GL_INT_VEC3:
-      case GL_BOOL_VEC3:
-          return 3;
-      case GL_FLOAT:
-      case GL_FLOAT_VEC2:
-      case GL_FLOAT_VEC3:
-      case GL_BOOL_VEC4:
-      case GL_FLOAT_VEC4:
-      case GL_INT_VEC4:
-          return 4;
-      case GL_FLOAT_MAT2:
-          return 8;
-      case GL_FLOAT_MAT3:
-          return 12;
       case GL_FLOAT_MAT4:
           return 16;
       default:
@@ -136,12 +99,13 @@ size_t UniformComponentSize(GLenum type)
 
 size_t UniformInternalSize(GLenum type)
 {
-    return UniformComponentSize(UniformComponentType(type)) * UniformInternalComponentCount(type);
+    // Expanded to 4-element vectors
+    return UniformComponentSize(UniformComponentType(type)) * VariableRowCount(type) * 4;
 }
 
 size_t UniformExternalSize(GLenum type)
 {
-    return UniformComponentSize(UniformComponentType(type)) * UniformExternalComponentCount(type);
+    return UniformComponentSize(UniformComponentType(type)) * UniformComponentCount(type);
 }
 
 int VariableRowCount(GLenum type)
@@ -187,6 +151,8 @@ int VariableColumnCount(GLenum type)
       case GL_BOOL:
       case GL_FLOAT:
       case GL_INT:
+      case GL_SAMPLER_2D:
+      case GL_SAMPLER_CUBE:
         return 1;
       case GL_BOOL_VEC2:
       case GL_FLOAT_VEC2:

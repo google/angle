@@ -260,7 +260,6 @@ bool ProgramBinary::setUniform1fv(GLint location, GLsizei count, const GLfloat* 
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
 
         count = std::min(elementCount - (int)mUniformIndex[location].element, count);
-
         GLfloat *target = (GLfloat*)targetUniform->data + mUniformIndex[location].element * 4;
 
         for (int i = 0; i < count; i++)
@@ -281,18 +280,16 @@ bool ProgramBinary::setUniform1fv(GLint location, GLsizei count, const GLfloat* 
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
 
         count = std::min(elementCount - (int)mUniformIndex[location].element, count);
-        GLint *boolParams = (GLint*)targetUniform->data + mUniformIndex[location].element;
+        GLint *boolParams = (GLint*)targetUniform->data + mUniformIndex[location].element * 4;
 
-        for (int i = 0; i < count; ++i)
+        for (int i = 0; i < count; i++)
         {
-            if (v[i] == 0.0f)
-            {
-                boolParams[i] = GL_FALSE;
-            }
-            else
-            {
-                boolParams[i] = GL_TRUE;
-            }
+            boolParams[0] = (v[0] == 0.0f) ? GL_FALSE : GL_TRUE;
+            boolParams[1] = GL_FALSE;
+            boolParams[2] = GL_FALSE;
+            boolParams[3] = GL_FALSE;
+            boolParams += 4;
+            v += 1;
         }
     }
     else
@@ -321,7 +318,6 @@ bool ProgramBinary::setUniform2fv(GLint location, GLsizei count, const GLfloat *
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
 
         count = std::min(elementCount - (int)mUniformIndex[location].element, count);
-
         GLfloat *target = (GLfloat*)targetUniform->data + mUniformIndex[location].element * 4;
 
         for (int i = 0; i < count; i++)
@@ -342,19 +338,16 @@ bool ProgramBinary::setUniform2fv(GLint location, GLsizei count, const GLfloat *
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
 
         count = std::min(elementCount - (int)mUniformIndex[location].element, count);
+        GLint *boolParams = (GLint*)targetUniform->data + mUniformIndex[location].element * 4;
 
-        GLint *boolParams = (GLint*)targetUniform->data + mUniformIndex[location].element * 2;
-
-        for (int i = 0; i < count * 2; ++i)
+        for (int i = 0; i < count; i++)
         {
-            if (v[i] == 0.0f)
-            {
-                boolParams[i] = GL_FALSE;
-            }
-            else
-            {
-                boolParams[i] = GL_TRUE;
-            }
+            boolParams[0] = (v[0] == 0.0f) ? GL_FALSE : GL_TRUE;
+            boolParams[1] = (v[1] == 0.0f) ? GL_FALSE : GL_TRUE;
+            boolParams[2] = GL_FALSE;
+            boolParams[3] = GL_FALSE;
+            boolParams += 4;
+            v += 2;
         }
     }
     else 
@@ -383,7 +376,6 @@ bool ProgramBinary::setUniform3fv(GLint location, GLsizei count, const GLfloat *
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
 
         count = std::min(elementCount - (int)mUniformIndex[location].element, count);
-
         GLfloat *target = (GLfloat*)targetUniform->data + mUniformIndex[location].element * 4;
 
         for (int i = 0; i < count; i++)
@@ -404,18 +396,16 @@ bool ProgramBinary::setUniform3fv(GLint location, GLsizei count, const GLfloat *
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
 
         count = std::min(elementCount - (int)mUniformIndex[location].element, count);
-        GLint *boolParams = (GLint*)targetUniform->data + mUniformIndex[location].element * 3;
+        GLint *boolParams = (GLint*)targetUniform->data + mUniformIndex[location].element * 4;
 
-        for (int i = 0; i < count * 3; ++i)
+        for (int i = 0; i < count; i++)
         {
-            if (v[i] == 0.0f)
-            {
-                boolParams[i] = GL_FALSE;
-            }
-            else
-            {
-                boolParams[i] = GL_TRUE;
-            }
+            boolParams[0] = (v[0] == 0.0f) ? GL_FALSE : GL_TRUE;
+            boolParams[1] = (v[1] == 0.0f) ? GL_FALSE : GL_TRUE;
+            boolParams[2] = (v[2] == 0.0f) ? GL_FALSE : GL_TRUE;
+            boolParams[3] = GL_FALSE;
+            boolParams += 4;
+            v += 3;
         }
     }
     else 
@@ -444,9 +434,17 @@ bool ProgramBinary::setUniform4fv(GLint location, GLsizei count, const GLfloat *
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
 
         count = std::min(elementCount - (int)mUniformIndex[location].element, count);
+        GLfloat *target = (GLfloat*)targetUniform->data + mUniformIndex[location].element * 4;
 
-        memcpy(targetUniform->data + mUniformIndex[location].element * sizeof(GLfloat) * 4,
-               v, 4 * sizeof(GLfloat) * count);
+        for (int i = 0; i < count; i++)
+        {
+            target[0] = v[0];
+            target[1] = v[1];
+            target[2] = v[2];
+            target[3] = v[3];
+            target += 4;
+            v += 4;
+        }
     }
     else if (targetUniform->type == GL_BOOL_VEC4)
     {
@@ -458,16 +456,14 @@ bool ProgramBinary::setUniform4fv(GLint location, GLsizei count, const GLfloat *
         count = std::min(elementCount - (int)mUniformIndex[location].element, count);
         GLint *boolParams = (GLint*)targetUniform->data + mUniformIndex[location].element * 4;
 
-        for (int i = 0; i < count * 4; ++i)
+        for (int i = 0; i < count; i++)
         {
-            if (v[i] == 0.0f)
-            {
-                boolParams[i] = GL_FALSE;
-            }
-            else
-            {
-                boolParams[i] = GL_TRUE;
-            }
+            boolParams[0] = (v[0] == 0.0f) ? GL_FALSE : GL_TRUE;
+            boolParams[1] = (v[1] == 0.0f) ? GL_FALSE : GL_TRUE;
+            boolParams[2] = (v[2] == 0.0f) ? GL_FALSE : GL_TRUE;
+            boolParams[3] = (v[3] == 0.0f) ? GL_FALSE : GL_TRUE;
+            boolParams += 4;
+            v += 4;
         }
     }
     else 
@@ -530,8 +526,8 @@ bool ProgramBinary::setUniformMatrix2fv(GLint location, GLsizei count, const GLf
         return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
 
     count = std::min(elementCount - (int)mUniformIndex[location].element, count);
-
     GLfloat *target = (GLfloat*)targetUniform->data + mUniformIndex[location].element * 8;
+
     for (int i = 0; i < count; i++)
     {
         transposeMatrix<GLfloat,4,2,2,2>(target, value);
@@ -563,8 +559,8 @@ bool ProgramBinary::setUniformMatrix3fv(GLint location, GLsizei count, const GLf
         return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
 
     count = std::min(elementCount - (int)mUniformIndex[location].element, count);
-
     GLfloat *target = (GLfloat*)targetUniform->data + mUniformIndex[location].element * 12;
+
     for (int i = 0; i < count; i++)
     {
         transposeMatrix<GLfloat,4,3,3,3>(target, value);
@@ -597,8 +593,8 @@ bool ProgramBinary::setUniformMatrix4fv(GLint location, GLsizei count, const GLf
         return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
 
     count = std::min(elementCount - (int)mUniformIndex[location].element, count);
-
     GLfloat *target = (GLfloat*)(targetUniform->data + mUniformIndex[location].element * sizeof(GLfloat) * 16);
+
     for (int i = 0; i < count; i++)
     {
         transposeMatrix<GLfloat,4,4,4,4>(target, value);
@@ -629,9 +625,17 @@ bool ProgramBinary::setUniform1iv(GLint location, GLsizei count, const GLint *v)
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
 
         count = std::min(elementCount - (int)mUniformIndex[location].element, count);
+        GLint *target = (GLint*)targetUniform->data + mUniformIndex[location].element * 4;
 
-        memcpy(targetUniform->data + mUniformIndex[location].element * sizeof(GLint),
-               v, sizeof(GLint) * count);
+        for (int i = 0; i < count; i++)
+        {
+            target[0] = v[0];
+            target[1] = 0;
+            target[2] = 0;
+            target[3] = 0;
+            target += 4;
+            v += 1;
+        }
     }
     else if (targetUniform->type == GL_BOOL)
     {
@@ -641,18 +645,16 @@ bool ProgramBinary::setUniform1iv(GLint location, GLsizei count, const GLint *v)
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
 
         count = std::min(elementCount - (int)mUniformIndex[location].element, count);
-        GLint *boolParams = (GLint*)targetUniform->data + mUniformIndex[location].element;
+        GLint *boolParams = (GLint*)targetUniform->data + mUniformIndex[location].element * 4;
 
-        for (int i = 0; i < count; ++i)
+        for (int i = 0; i < count; i++)
         {
-            if (v[i] == 0)
-            {
-                boolParams[i] = GL_FALSE;
-            }
-            else
-            {
-                boolParams[i] = GL_TRUE;
-            }
+            boolParams[0] = (v[0] == 0) ? GL_FALSE : GL_TRUE;
+            boolParams[1] = GL_FALSE;
+            boolParams[2] = GL_FALSE;
+            boolParams[3] = GL_FALSE;
+            boolParams += 4;
+            v += 1;
         }
     }
     else
@@ -681,9 +683,17 @@ bool ProgramBinary::setUniform2iv(GLint location, GLsizei count, const GLint *v)
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
 
         count = std::min(elementCount - (int)mUniformIndex[location].element, count);
+        GLint *target = (GLint*)targetUniform->data + mUniformIndex[location].element * 4;
 
-        memcpy(targetUniform->data + mUniformIndex[location].element * sizeof(GLint) * 2,
-               v, 2 * sizeof(GLint) * count);
+        for (int i = 0; i < count; i++)
+        {
+            target[0] = v[0];
+            target[1] = v[1];
+            target[2] = 0;
+            target[3] = 0;
+            target += 4;
+            v += 2;
+        }
     }
     else if (targetUniform->type == GL_BOOL_VEC2)
     {
@@ -693,18 +703,16 @@ bool ProgramBinary::setUniform2iv(GLint location, GLsizei count, const GLint *v)
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
 
         count = std::min(elementCount - (int)mUniformIndex[location].element, count);
-        GLint *boolParams = (GLint*)targetUniform->data + mUniformIndex[location].element * 2;
+        GLint *boolParams = (GLint*)targetUniform->data + mUniformIndex[location].element * 4;
 
-        for (int i = 0; i < count * 2; ++i)
+        for (int i = 0; i < count; i++)
         {
-            if (v[i] == 0)
-            {
-                boolParams[i] = GL_FALSE;
-            }
-            else
-            {
-                boolParams[i] = GL_TRUE;
-            }
+            boolParams[0] = (v[0] == 0) ? GL_FALSE : GL_TRUE;
+            boolParams[1] = (v[1] == 0) ? GL_FALSE : GL_TRUE;
+            boolParams[2] = GL_FALSE;
+            boolParams[3] = GL_FALSE;
+            boolParams += 4;
+            v += 2;
         }
     }
     else
@@ -733,9 +741,17 @@ bool ProgramBinary::setUniform3iv(GLint location, GLsizei count, const GLint *v)
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
 
         count = std::min(elementCount - (int)mUniformIndex[location].element, count);
+        GLint *target = (GLint*)targetUniform->data + mUniformIndex[location].element * 4;
 
-        memcpy(targetUniform->data + mUniformIndex[location].element * sizeof(GLint) * 3,
-               v, 3 * sizeof(GLint) * count);
+        for (int i = 0; i < count; i++)
+        {
+            target[0] = v[0];
+            target[1] = v[1];
+            target[2] = v[2];
+            target[3] = 0;
+            target += 4;
+            v += 3;
+        }
     }
     else if (targetUniform->type == GL_BOOL_VEC3)
     {
@@ -745,18 +761,16 @@ bool ProgramBinary::setUniform3iv(GLint location, GLsizei count, const GLint *v)
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
 
         count = std::min(elementCount - (int)mUniformIndex[location].element, count);
-        GLint *boolParams = (GLint*)targetUniform->data + mUniformIndex[location].element * 3;
+        GLint *boolParams = (GLint*)targetUniform->data + mUniformIndex[location].element * 4;
 
-        for (int i = 0; i < count * 3; ++i)
+        for (int i = 0; i < count; i++)
         {
-            if (v[i] == 0)
-            {
-                boolParams[i] = GL_FALSE;
-            }
-            else
-            {
-                boolParams[i] = GL_TRUE;
-            }
+            boolParams[0] = (v[0] == 0) ? GL_FALSE : GL_TRUE;
+            boolParams[1] = (v[1] == 0) ? GL_FALSE : GL_TRUE;
+            boolParams[2] = (v[2] == 0) ? GL_FALSE : GL_TRUE;
+            boolParams[3] = GL_FALSE;
+            boolParams += 4;
+            v += 3;
         }
     }
     else
@@ -785,9 +799,17 @@ bool ProgramBinary::setUniform4iv(GLint location, GLsizei count, const GLint *v)
             return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
 
         count = std::min(elementCount - (int)mUniformIndex[location].element, count);
+        GLint *target = (GLint*)targetUniform->data + mUniformIndex[location].element * 4;
 
-        memcpy(targetUniform->data + mUniformIndex[location].element * sizeof(GLint) * 4,
-               v, 4 * sizeof(GLint) * count);
+        for (int i = 0; i < count; i++)
+        {
+            target[0] = v[0];
+            target[1] = v[1];
+            target[2] = v[2];
+            target[3] = v[3];
+            target += 4;
+            v += 4;
+        }
     }
     else if (targetUniform->type == GL_BOOL_VEC4)
     {
@@ -799,16 +821,14 @@ bool ProgramBinary::setUniform4iv(GLint location, GLsizei count, const GLint *v)
         count = std::min(elementCount - (int)mUniformIndex[location].element, count);
         GLint *boolParams = (GLint*)targetUniform->data + mUniformIndex[location].element * 4;
 
-        for (int i = 0; i < count * 4; ++i)
+        for (int i = 0; i < count; i++)
         {
-            if (v[i] == 0)
-            {
-                boolParams[i] = GL_FALSE;
-            }
-            else
-            {
-                boolParams[i] = GL_TRUE;
-            }
+            boolParams[0] = (v[0] == 0) ? GL_FALSE : GL_TRUE;
+            boolParams[1] = (v[1] == 0) ? GL_FALSE : GL_TRUE;
+            boolParams[2] = (v[2] == 0) ? GL_FALSE : GL_TRUE;
+            boolParams[3] = (v[3] == 0) ? GL_FALSE : GL_TRUE;
+            boolParams += 4;
+            v += 4;
         }
     }
     else
@@ -851,30 +871,29 @@ bool ProgramBinary::getUniformfv(GLint location, GLsizei *bufSize, GLfloat *para
         break;
       default:
         {
-            unsigned int count = UniformExternalComponentCount(targetUniform->type);
-            unsigned int internalCount = UniformInternalComponentCount(targetUniform->type);
+            unsigned int size = UniformComponentCount(targetUniform->type);
 
             switch (UniformComponentType(targetUniform->type))
             {
               case GL_BOOL:
                 {
-                    GLint *boolParams = (GLint*)targetUniform->data + mUniformIndex[location].element * internalCount;
+                    GLint *boolParams = (GLint*)targetUniform->data + mUniformIndex[location].element * 4;
 
-                    for (unsigned int i = 0; i < count; ++i)
+                    for (unsigned int i = 0; i < size; i++)
                     {
                         params[i] = (boolParams[i] == GL_FALSE) ? 0.0f : 1.0f;
                     }
                 }
                 break;
               case GL_FLOAT:
-                memcpy(params, targetUniform->data + mUniformIndex[location].element * internalCount * sizeof(GLfloat),
-                       count * sizeof(GLfloat));
+                memcpy(params, targetUniform->data + mUniformIndex[location].element * 4 * sizeof(GLfloat),
+                       size * sizeof(GLfloat));
                 break;
               case GL_INT:
                 {
-                    GLint *intParams = (GLint*)targetUniform->data + mUniformIndex[location].element * internalCount;
+                    GLint *intParams = (GLint*)targetUniform->data + mUniformIndex[location].element * 4;
 
-                    for (unsigned int i = 0; i < count; ++i)
+                    for (unsigned int i = 0; i < size; i++)
                     {
                         params[i] = (float)intParams[i];
                     }
@@ -910,32 +929,25 @@ bool ProgramBinary::getUniformiv(GLint location, GLsizei *bufSize, GLint *params
     switch (targetUniform->type)
     {
       case GL_FLOAT_MAT2:
-        {
-            transposeMatrix<GLint,2,2,4,2>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 8);
-        }
+        transposeMatrix<GLint,2,2,4,2>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 8);
         break;
       case GL_FLOAT_MAT3:
-        {
-            transposeMatrix<GLint,3,3,4,3>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 12);
-        }
+        transposeMatrix<GLint,3,3,4,3>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 12);
         break;
       case GL_FLOAT_MAT4:
-        {
-            transposeMatrix<GLint,4,4,4,4>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 16);
-        }
+        transposeMatrix<GLint,4,4,4,4>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 16);
         break;
       default:
         {
-            unsigned int count = UniformExternalComponentCount(targetUniform->type);
-            unsigned int internalCount = UniformInternalComponentCount(targetUniform->type);
+            unsigned int size = VariableColumnCount(targetUniform->type);
 
             switch (UniformComponentType(targetUniform->type))
             {
               case GL_BOOL:
                 {
-                    GLint *boolParams = (GLint*)targetUniform->data + mUniformIndex[location].element * internalCount;
+                    GLint *boolParams = (GLint*)targetUniform->data + mUniformIndex[location].element * 4;
 
-                    for (unsigned int i = 0; i < count; ++i)
+                    for (unsigned int i = 0; i < size; i++)
                     {
                         params[i] = boolParams[i];
                     }
@@ -943,17 +955,17 @@ bool ProgramBinary::getUniformiv(GLint location, GLsizei *bufSize, GLint *params
                 break;
               case GL_FLOAT:
                 {
-                    GLfloat *floatParams = (GLfloat*)targetUniform->data + mUniformIndex[location].element * internalCount;
+                    GLfloat *floatParams = (GLfloat*)targetUniform->data + mUniformIndex[location].element * 4;
 
-                    for (unsigned int i = 0; i < count; ++i)
+                    for (unsigned int i = 0; i < size; i++)
                     {
                         params[i] = (GLint)floatParams[i];
                     }
                 }
                 break;
               case GL_INT:
-                memcpy(params, targetUniform->data + mUniformIndex[location].element * internalCount * sizeof(GLint),
-                       count * sizeof(GLint));
+                memcpy(params, targetUniform->data + mUniformIndex[location].element * 4 * sizeof(GLint),
+                    size * sizeof(GLint));
                 break;
               default: UNREACHABLE();
             }
@@ -986,7 +998,7 @@ void ProgramBinary::applyUniforms()
                 targetUniform->type == GL_SAMPLER_CUBE)
             {
                 int count = targetUniform->elementCount();
-                GLint *v = (GLint*)targetUniform->data;
+                GLint (*v)[4] = (GLint(*)[4])targetUniform->data;
 
                 if (targetUniform->psRegisterIndex >= 0)
                 {
@@ -999,7 +1011,7 @@ void ProgramBinary::applyUniforms()
                         if (samplerIndex < MAX_TEXTURE_IMAGE_UNITS)
                         {
                             ASSERT(mSamplersPS[samplerIndex].active);
-                            mSamplersPS[samplerIndex].logicalTextureUnit = v[i];
+                            mSamplersPS[samplerIndex].logicalTextureUnit = v[i][0];
                         }
                     }
                 }
@@ -1015,7 +1027,7 @@ void ProgramBinary::applyUniforms()
                         if (samplerIndex < IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS)
                         {
                             ASSERT(mSamplersVS[samplerIndex].active);
-                            mSamplersVS[samplerIndex].logicalTextureUnit = v[i];
+                            mSamplersVS[samplerIndex].logicalTextureUnit = v[i][0];
                         }
                     }
                 }

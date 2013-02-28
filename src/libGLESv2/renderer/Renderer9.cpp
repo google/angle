@@ -1633,7 +1633,6 @@ void Renderer9::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArray
 
         if (targetUniform->dirty)
         {
-            int count = targetUniform->elementCount();
             GLfloat *f = (GLfloat*)targetUniform->data;
             GLint *i = (GLint*)targetUniform->data;
 
@@ -1641,22 +1640,28 @@ void Renderer9::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArray
             {
               case GL_SAMPLER_2D:
               case GL_SAMPLER_CUBE:
-                  break;
-              case GL_BOOL:       applyUniformnbv(targetUniform, count, 1, i);    break;
-              case GL_BOOL_VEC2:  applyUniformnbv(targetUniform, count, 2, i);    break;
-              case GL_BOOL_VEC3:  applyUniformnbv(targetUniform, count, 3, i);    break;
-              case GL_BOOL_VEC4:  applyUniformnbv(targetUniform, count, 4, i);    break;
+                break;
+              case GL_BOOL:
+              case GL_BOOL_VEC2:
+              case GL_BOOL_VEC3:
+              case GL_BOOL_VEC4:
+                applyUniformnbv(targetUniform, i);
+                break;
               case GL_FLOAT:
               case GL_FLOAT_VEC2:
               case GL_FLOAT_VEC3:
               case GL_FLOAT_VEC4:
               case GL_FLOAT_MAT2:
               case GL_FLOAT_MAT3:
-              case GL_FLOAT_MAT4: applyUniformnfv(targetUniform, f);              break;
-              case GL_INT:        applyUniform1iv(targetUniform, count, i);       break;
-              case GL_INT_VEC2:   applyUniform2iv(targetUniform, count, i);       break;
-              case GL_INT_VEC3:   applyUniform3iv(targetUniform, count, i);       break;
-              case GL_INT_VEC4:   applyUniform4iv(targetUniform, count, i);       break;
+              case GL_FLOAT_MAT4:
+                applyUniformnfv(targetUniform, f);
+                break;
+              case GL_INT:
+              case GL_INT_VEC2:
+              case GL_INT_VEC3:
+              case GL_INT_VEC4:
+                applyUniformniv(targetUniform, i);
+                break;
               default:
                 UNREACHABLE();
             }
@@ -1674,32 +1679,6 @@ void Renderer9::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArray
     }
 }
 
-void Renderer9::applyUniformnbv(gl::Uniform *targetUniform, GLsizei count, int width, const GLint *v)
-{
-    float vector[D3D9_MAX_FLOAT_CONSTANTS * 4];
-
-    if (targetUniform->psRegisterIndex >= 0 || targetUniform->vsRegisterIndex >= 0)
-    {
-        ASSERT(count <= D3D9_MAX_FLOAT_CONSTANTS);
-        for (int i = 0; i < count; i++)
-        {
-            for (int j = 0; j < 4; j++)
-            {
-                if (j < width)
-                {
-                    vector[i * 4 + j] = (v[i * width + j] == GL_FALSE) ? 0.0f : 1.0f;
-                }
-                else
-                {
-                    vector[i * 4 + j] = 0.0f;
-                }
-            }
-        }
-    }
-
-    applyUniformnfv(targetUniform, vector);
-}
-
 void Renderer9::applyUniformnfv(gl::Uniform *targetUniform, const GLfloat *v)
 {
     if (targetUniform->psRegisterIndex >= 0)
@@ -1713,62 +1692,36 @@ void Renderer9::applyUniformnfv(gl::Uniform *targetUniform, const GLfloat *v)
     }
 }
 
-void Renderer9::applyUniform1iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v)
+void Renderer9::applyUniformniv(gl::Uniform *targetUniform, const GLint *v)
 {
-    ASSERT(count <= D3D9_MAX_FLOAT_CONSTANTS);
-    gl::Vector4 vector[D3D9_MAX_FLOAT_CONSTANTS];
+    ASSERT(targetUniform->registerCount <= D3D9_MAX_FLOAT_CONSTANTS);
+    GLfloat vector[D3D9_MAX_FLOAT_CONSTANTS][4];
 
-    for (int i = 0; i < count; i++)
+    for (unsigned int i = 0; i < targetUniform->registerCount; i++)
     {
-        vector[i] = gl::Vector4((float)v[i], 0, 0, 0);
+        vector[i][0] = (GLfloat)v[4 * i + 0];
+        vector[i][1] = (GLfloat)v[4 * i + 1];
+        vector[i][2] = (GLfloat)v[4 * i + 2];
+        vector[i][3] = (GLfloat)v[4 * i + 3];
     }
 
-    applyUniformnfv(targetUniform, (const GLfloat*)vector);
+    applyUniformnfv(targetUniform, (GLfloat*)vector);
 }
 
-void Renderer9::applyUniform2iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v)
+void Renderer9::applyUniformnbv(gl::Uniform *targetUniform, const GLint *v)
 {
-    ASSERT(count <= D3D9_MAX_FLOAT_CONSTANTS);
-    gl::Vector4 vector[D3D9_MAX_FLOAT_CONSTANTS];
+    ASSERT(targetUniform->registerCount <= D3D9_MAX_FLOAT_CONSTANTS);
+    GLfloat vector[D3D9_MAX_FLOAT_CONSTANTS][4];
 
-    for (int i = 0; i < count; i++)
+    for (unsigned int i = 0; i < targetUniform->registerCount; i++)
     {
-        vector[i] = gl::Vector4((float)v[0], (float)v[1], 0, 0);
-
-        v += 2;
+        vector[i][0] = (v[4 * i + 0] == GL_FALSE) ? 0.0f : 1.0f;
+        vector[i][1] = (v[4 * i + 1] == GL_FALSE) ? 0.0f : 1.0f;
+        vector[i][2] = (v[4 * i + 2] == GL_FALSE) ? 0.0f : 1.0f;
+        vector[i][3] = (v[4 * i + 3] == GL_FALSE) ? 0.0f : 1.0f;
     }
 
-    applyUniformnfv(targetUniform, (const GLfloat*)vector);
-}
-
-void Renderer9::applyUniform3iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v)
-{
-    ASSERT(count <= D3D9_MAX_FLOAT_CONSTANTS);
-    gl::Vector4 vector[D3D9_MAX_FLOAT_CONSTANTS];
-
-    for (int i = 0; i < count; i++)
-    {
-        vector[i] = gl::Vector4((float)v[0], (float)v[1], (float)v[2], 0);
-
-        v += 3;
-    }
-
-    applyUniformnfv(targetUniform, (const GLfloat*)vector);
-}
-
-void Renderer9::applyUniform4iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v)
-{
-    ASSERT(count <= D3D9_MAX_FLOAT_CONSTANTS);
-    gl::Vector4 vector[D3D9_MAX_FLOAT_CONSTANTS];
-
-    for (int i = 0; i < count; i++)
-    {
-        vector[i] = gl::Vector4((float)v[0], (float)v[1], (float)v[2], (float)v[3]);
-
-        v += 4;
-    }
-
-    applyUniformnfv(targetUniform, (const GLfloat*)vector);
+    applyUniformnfv(targetUniform, (GLfloat*)vector);
 }
 
 void Renderer9::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer)

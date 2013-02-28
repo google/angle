@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -20,8 +20,7 @@ namespace gl
 
 struct Color;
 
-int UniformExternalComponentCount(GLenum type);
-int UniformInternalComponentCount(GLenum type);
+int UniformComponentCount(GLenum type);
 GLenum UniformComponentType(GLenum type);
 size_t UniformInternalSize(GLenum type);
 size_t UniformExternalSize(GLenum type);
