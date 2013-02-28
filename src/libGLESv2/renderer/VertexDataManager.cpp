@@ -67,6 +67,14 @@ VertexDataManager::~VertexDataManager()
     }
 }
 
+static bool directStoragePossible(VertexBufferInterface* vb, const gl::VertexAttribute& attrib)
+{
+    gl::Buffer *buffer = attrib.mBoundBuffer.get();
+    BufferStorage *storage = buffer ? buffer->getStorage() : NULL;
+
+    return storage && storage->supportsDirectBinding() && !vb->getVertexBuffer()->requiresConversion(attrib) && attrib.stride() % 4 == 0;
+}
+
 GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[], gl::ProgramBinary *programBinary, GLint start, GLsizei count, TranslatedAttribute *translated, GLsizei instances)
 {
     if (!mStreamingBuffer)
@@ -88,18 +96,14 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
             StaticVertexBufferInterface *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
             VertexBufferInterface *vertexBuffer = staticBuffer ? staticBuffer : static_cast<VertexBufferInterface*>(mStreamingBuffer);
 
-            BufferStorage *storage = buffer ? buffer->getStorage() : NULL;
-            bool alignedStride = attribs[i].stride() % 4 == 0;
-            bool directStorage = alignedStride && storage && storage->supportsDirectBinding() &&
-                                 !vertexBuffer->getVertexBuffer()->requiresConversion(attribs[i]);
 
-            if (!directStorage)
+            if (!directStoragePossible(vertexBuffer, attribs[i]))
             {
                 if (staticBuffer)
                 {
                     if (staticBuffer->getBufferSize() == 0)
                     {
-                        int totalCount = elementsInBuffer(attribs[i], storage->getSize());
+                        int totalCount = elementsInBuffer(attribs[i], buffer->size());
                         staticBuffer->reserveVertexSpace(attribs[i], totalCount, 0);
                     }
                     else if (staticBuffer->lookupAttribute(attribs[i]) == -1)
@@ -136,9 +140,7 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
                 VertexBufferInterface *vertexBuffer = staticBuffer ? staticBuffer : static_cast<VertexBufferInterface*>(mStreamingBuffer);
 
                 BufferStorage *storage = buffer ? buffer->getStorage() : NULL;
-                bool alignedStride = attribs[i].stride() % 4 == 0;
-                bool directStorage = alignedStride && storage && storage->supportsDirectBinding() &&
-                                     !vertexBuffer->getVertexBuffer()->requiresConversion(attribs[i]);
+                bool directStorage = directStoragePossible(vertexBuffer, attribs[i]);
 
                 std::size_t streamOffset = -1;
                 unsigned int outputElementSize = 0;
