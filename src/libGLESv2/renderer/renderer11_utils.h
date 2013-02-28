@@ -28,8 +28,8 @@ D3D11_STENCIL_OP ConvertStencilOp(GLenum stencilOp);
 
 D3D11_FILTER ConvertFilter(GLenum minFilter, GLenum magFilter, float maxAnisotropy);
 D3D11_TEXTURE_ADDRESS_MODE ConvertTextureWrap(GLenum wrap);
-FLOAT ConvertMinLOD(GLenum minFilter);
-FLOAT ConvertMaxLOD(GLenum minFilter);
+FLOAT ConvertMinLOD(GLenum minFilter, unsigned int lodOffset);
+FLOAT ConvertMaxLOD(GLenum minFilter, unsigned int lodOffset);
 
 DXGI_FORMAT ConvertRenderbufferFormat(GLenum format);
 DXGI_FORMAT ConvertTextureFormat(GLenum format);
