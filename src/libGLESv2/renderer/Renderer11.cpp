@@ -2478,10 +2478,10 @@ bool Renderer11::copyTexture(ID3D11ShaderResourceView *source, const gl::Rectang
     d3d11::PositionTexCoordVertex *vertices = static_cast<d3d11::PositionTexCoordVertex*>(mappedResource.pData);
 
     // Create a quad in homogeneous coordinates
-    float x1 = (destArea.x / destWidth) * 2.0f - 1.0f;
-    float y1 = (destArea.y / destHeight) * 2.0f - 1.0f;
-    float x2 = ((destArea.x + destArea.width) / destWidth) * 2.0f - 1.0f;
-    float y2 = ((destArea.y + destArea.height) / destHeight) * 2.0f - 1.0f;
+    float x1 = (destArea.x / float(destWidth)) * 2.0f - 1.0f;
+    float y1 = (destArea.y / float(destHeight)) * 2.0f - 1.0f;
+    float x2 = ((destArea.x + destArea.width) / float(destWidth)) * 2.0f - 1.0f;
+    float y2 = ((destArea.y + destArea.height) / float(destHeight)) * 2.0f - 1.0f;
 
     float u1 = sourceArea.x / float(sourceWidth);
     float v1 = sourceArea.y / float(sourceHeight);
@@ -2500,8 +2500,7 @@ bool Renderer11::copyTexture(ID3D11ShaderResourceView *source, const gl::Rectang
     mDeviceContext->IASetVertexBuffers(0, 1, &mCopyVB, &stride, &startIdx);
 
     // Apply state
-    static const float blendFactor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-    mDeviceContext->OMSetBlendState(NULL, blendFactor, 0xFFFFFFF);
+    mDeviceContext->OMSetBlendState(NULL, NULL, 0xFFFFFFF);
     mDeviceContext->OMSetDepthStencilState(NULL, 0xFFFFFFFF);
     mDeviceContext->RSSetState(NULL);
 
