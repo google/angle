@@ -33,6 +33,8 @@ class VertexBuffer11 : public VertexBuffer
 
     virtual unsigned int getSpaceRequired(const gl::VertexAttribute &attrib, GLsizei count, GLsizei instances) const;
 
+    virtual bool requiresConversion(const gl::VertexAttribute &attrib) const;
+
     virtual unsigned int getBufferSize() const;
     virtual bool setBufferSize(unsigned int size);
     virtual bool discard();

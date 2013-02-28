@@ -163,6 +163,11 @@ unsigned int VertexBuffer11::getSpaceRequired(const gl::VertexAttribute &attrib,
     }
 }
 
+bool VertexBuffer11::requiresConversion(const gl::VertexAttribute &attrib) const
+{
+    return !getVertexConversion(attrib).identity;
+}
+
 unsigned int VertexBuffer11::getBufferSize() const
 {
     return mBufferSize;

@@ -170,6 +170,11 @@ unsigned int VertexBuffer9::getSpaceRequired(const gl::VertexAttribute &attrib, 
     return spaceRequired(attrib, count, instances);
 }
 
+bool VertexBuffer9::requiresConversion(const gl::VertexAttribute &attrib) const
+{
+    return formatConverter(attrib).identity;
+}
+
 unsigned int VertexBuffer9::getVertexSize(const gl::VertexAttribute &attrib) const
 {
     return spaceRequired(attrib, 1, 0);

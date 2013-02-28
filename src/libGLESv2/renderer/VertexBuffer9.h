@@ -33,6 +33,8 @@ class VertexBuffer9 : public VertexBuffer
 
     virtual unsigned int getSpaceRequired(const gl::VertexAttribute &attrib, GLsizei count, GLsizei instances) const;
 
+    virtual bool requiresConversion(const gl::VertexAttribute &attrib) const;
+
     unsigned int getVertexSize(const gl::VertexAttribute &attrib) const;
     D3DDECLTYPE getDeclType(const gl::VertexAttribute &attrib) const;
 
