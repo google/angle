@@ -2012,9 +2012,15 @@ bool Renderer11::getShareHandleSupport() const
 
 bool Renderer11::getDerivativeInstructionSupport() const
 {
-    // TODO
-    // UNIMPLEMENTED();
-    return false;
+    switch (mFeatureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_0:
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0:
+        return true;
+      default: UNREACHABLE();
+        return false;
+    }
 }
 
 int Renderer11::getMajorShaderModel() const
