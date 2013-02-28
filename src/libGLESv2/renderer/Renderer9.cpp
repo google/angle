@@ -2514,7 +2514,7 @@ bool Renderer9::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sou
     return mBlit->copy(framebuffer, rect, destFormat, xoffset, yoffset, storage, target, level);
 }
 
-bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, gl::Rectangle *readRect, gl::Framebuffer *drawFramebuffer, gl::Rectangle *drawRect,
+bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, const gl::Rectangle &readRect, gl::Framebuffer *drawFramebuffer, const gl::Rectangle &drawRect,
                          bool blitRenderTarget, bool blitDepthStencil)
 {
     endScene();
@@ -2552,29 +2552,19 @@ bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, gl::Rectangle *readRe
             return gl::error(GL_OUT_OF_MEMORY, false);
         }
 
-        RECT srcRect, dstRect;
-        RECT *srcRectPtr = NULL;
-        RECT *dstRectPtr = NULL;
+        RECT srcRect;
+        srcRect.left = readRect.x;
+        srcRect.right = readRect.x + readRect.width;
+        srcRect.top = readRect.y;
+        srcRect.bottom = readRect.y + readRect.height;
 
-        if (readRect)
-        {
-            srcRect.left = readRect->x;
-            srcRect.right = readRect->x + readRect->width;
-            srcRect.top = readRect->y;
-            srcRect.bottom = readRect->y + readRect->height;
-            srcRectPtr = &srcRect;
-        }
+        RECT dstRect;
+        dstRect.left = drawRect.x;
+        dstRect.right = drawRect.x + drawRect.width;
+        dstRect.top = drawRect.y;
+        dstRect.bottom = drawRect.y + drawRect.height;
 
-        if (drawRect)
-        {
-            dstRect.left = drawRect->x;
-            dstRect.right = drawRect->x + drawRect->width;
-            dstRect.top = drawRect->y;
-            dstRect.bottom = drawRect->y + drawRect->height;
-            dstRectPtr = &dstRect;
-        }
-
-        HRESULT result = mDevice->StretchRect(readSurface, srcRectPtr, drawSurface, dstRectPtr, D3DTEXF_NONE);
+        HRESULT result = mDevice->StretchRect(readSurface, &srcRect, drawSurface, &dstRect, D3DTEXF_NONE);
 
         readSurface->Release();
         drawSurface->Release();

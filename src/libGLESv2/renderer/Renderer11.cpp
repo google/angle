@@ -2727,15 +2727,15 @@ bool Renderer11::getRenderTargetResource(gl::Framebuffer *framebuffer, unsigned 
     return false;
 }
 
-bool Renderer11::blitRect(gl::Framebuffer *readTarget, gl::Rectangle *readRect, gl::Framebuffer *drawTarget, gl::Rectangle *drawRect,
+bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &readRect, gl::Framebuffer *drawTarget, const gl::Rectangle &drawRect,
                           bool blitRenderTarget, bool blitDepthStencil)
 {
-    if (blitRenderTarget && !blitRect(readTarget, *readRect, drawTarget, *drawRect, BLIT_RENDERTARGET))
+    if (blitRenderTarget && !blitRect(readTarget, readRect, drawTarget, drawRect, BLIT_RENDERTARGET))
     {
         return false;
     }
 
-    if (blitDepthStencil && !blitRect(readTarget, *readRect, drawTarget, *drawRect, BLIT_DEPTHSTENCIL))
+    if (blitDepthStencil && !blitRect(readTarget, readRect, drawTarget, drawRect, BLIT_DEPTHSTENCIL))
     {
         return false;
     }
@@ -3182,7 +3182,7 @@ bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &read
     if (!readBuffer)
     {
         ERR("Failed to retrieve the color buffer from the read target.");
-        return error(GL_OUT_OF_MEMORY, false);
+        return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
     RenderTarget11 *sourceRenderTarget = NULL;
@@ -3199,7 +3199,7 @@ bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &read
     if (!sourceRenderTarget)
     {
         ERR("Failed to retrieve the render target from the frame buffer.");
-        return error(GL_OUT_OF_MEMORY, false);
+        return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
     ID3D11Texture2D *source = NULL;
@@ -3222,7 +3222,7 @@ bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &read
     if (!source)
     {
         ERR("Failed to retrieve the render target view from the render target.");
-        return error(GL_OUT_OF_MEMORY, false);
+        return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
 
@@ -3241,7 +3241,7 @@ bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &read
     {
         source->Release();
         ERR("Failed to retrieve the color buffer from the draw buffer.");
-        return error(GL_OUT_OF_MEMORY, false);
+        return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
     RenderTarget11 *drawRenderTarget = NULL;
@@ -3259,7 +3259,7 @@ bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &read
     {
         source->Release();
         ERR("Failed to retrieve the render target from the render buffer.");
-        return error(GL_OUT_OF_MEMORY, false);
+        return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
     ID3D11Texture2D *dest = drawRenderTarget->getTexture();

@@ -2866,7 +2866,7 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
 
     if (blitRenderTarget || blitDepthStencil)
     {
-        mRenderer->blitRect(readFramebuffer, &sourceTrimmedRect, drawFramebuffer, &destTrimmedRect, blitRenderTarget, blitDepthStencil);
+        mRenderer->blitRect(readFramebuffer, sourceTrimmedRect, drawFramebuffer, destTrimmedRect, blitRenderTarget, blitDepthStencil);
     }
 }
 
