@@ -283,7 +283,7 @@ void Image11::loadCompressedData(GLint xoffset, GLint yoffset, GLsizei width, GL
 
 void Image11::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source)
 {
-    if (source->getColorbuffer() && source->getColorbuffer()->getInternalFormat() == (GLuint)mInternalFormat)
+    if (source->getColorbuffer() && source->getColorbuffer()->getActualFormat() == (GLuint)mActualFormat)
     {
         // No conversion needed-- use copyback fastpath
         ID3D11Texture2D *colorBufferTexture = NULL;
