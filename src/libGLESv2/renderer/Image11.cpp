@@ -349,8 +349,12 @@ void Image11::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width
         D3D11_MAPPED_SUBRESOURCE mappedImage;
         HRESULT result = map(&mappedImage);
             
+        // determine the offset coordinate into the destination buffer
+        GLsizei rowOffset = gl::ComputePixelSize(mActualFormat) * xoffset;
+        void *dataOffset = static_cast<unsigned char*>(mappedImage.pData) + mappedImage.RowPitch * yoffset + rowOffset;
+
         mRenderer->readPixels(source, x, y, width, height, gl::ExtractFormat(mInternalFormat), 
-                              gl::ExtractType(mInternalFormat), mappedImage.RowPitch, false, 4, mappedImage.pData);
+                              gl::ExtractType(mInternalFormat), mappedImage.RowPitch, false, 4, dataOffset);
 
         unmap();
     }
