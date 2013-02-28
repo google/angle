@@ -13,6 +13,8 @@
 #include "libGLESv2/renderer/SwapChain.h"
 #include "libGLESv2/renderer/Blit.h"
 #include "libGLESv2/renderer/RenderTarget.h"
+#include "libGLESv2/Renderbuffer.h"
+#include "libGLESv2/Texture.h"
 
 #include "common/debug.h"
 

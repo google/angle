@@ -8,6 +8,7 @@
 
 #include "libGLESv2/renderer/VertexBuffer9.h"
 #include "libGLESv2/renderer/vertexconversion.h"
+#include "libGLESv2/renderer/BufferStorage.h"
 
 #include "libGLESv2/Buffer.h"
 

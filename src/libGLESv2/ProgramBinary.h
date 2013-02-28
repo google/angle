@@ -17,18 +17,26 @@
 #include <string>
 #include <vector>
 
-#include "libGLESv2/Program.h"
-#include "libGLESv2/Context.h"
+#include "common/RefCountObject.h"
+#include "angletypes.h"
 #include "libGLESv2/mathutil.h"
-#include "libGLESv2/Shader.h"
 #include "libGLESv2/Uniform.h"
+#include "libGLESv2/Shader.h"
+#include "Context.h"
 
-#include "libGLESv2/renderer/ShaderExecutable.h"
+namespace rx
+{
+class ShaderExecutable;
+class Renderer;
+}
 
 namespace gl
 {
 class FragmentShader;
 class VertexShader;
+class InfoLog;
+class AttributeBindings;
+struct Varying;
 
 // Struct used for correlating uniforms/elements of uniform arrays to handles
 struct UniformLocation

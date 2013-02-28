@@ -28,6 +28,7 @@
 #include "libGLESv2/renderer/VertexDeclarationCache.h"
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/renderer/IndexDataManager.h"
+#include "libGLESv2/renderer/RenderTarget.h"
 
 namespace rx
 {

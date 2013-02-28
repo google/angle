@@ -8,6 +8,7 @@
 // runs the Buffer translation process.
 
 #include "libGLESv2/renderer/VertexDataManager.h"
+#include "libGLESv2/renderer/BufferStorage.h"
 
 #include "common/debug.h"
 
@@ -18,6 +19,7 @@
 
 #include "libGLESv2/renderer/vertexconversion.h"
 #include "libGLESv2/renderer/IndexDataManager.h"
+#include "libGLESv2/renderer/VertexBuffer.h"
 
 #include <limits>
 

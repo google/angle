@@ -11,6 +11,7 @@
 #include "libGLESv2/utilities.h"
 #include "libGLESv2/mathutil.h"
 #include "libGLESv2/Buffer.h"
+#include "libGLESv2/Texture.h"
 #include "libGLESv2/Framebuffer.h"
 #include "libGLESv2/Program.h"
 #include "libGLESv2/ProgramBinary.h"

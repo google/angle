@@ -26,6 +26,7 @@
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/renderer/RenderStateCache.h"
 #include "libGLESv2/renderer/InputLayoutCache.h"
+#include "libGLESv2/renderer/RenderTarget.h"
 
 namespace rx
 {

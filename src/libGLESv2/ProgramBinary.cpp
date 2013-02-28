@@ -9,12 +9,15 @@
 
 #include "libGLESv2/BinaryStream.h"
 #include "libGLESv2/ProgramBinary.h"
+#include "libGLESv2/renderer/ShaderExecutable.h"
 
 #include "common/debug.h"
 #include "common/version.h"
+#include "utilities.h"
 
 #include "libGLESv2/main.h"
 #include "libGLESv2/Shader.h"
+#include "libGLESv2/Program.h"
 
 #include <string>
 

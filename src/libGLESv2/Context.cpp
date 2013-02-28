@@ -26,6 +26,7 @@
 #include "libGLESv2/Shader.h"
 #include "libGLESv2/Texture.h"
 #include "libGLESv2/renderer/IndexDataManager.h"
+#include "libGLESv2/renderer/RenderTarget.h"
 
 #undef near
 #undef far

@@ -11,6 +11,7 @@
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/renderer/Renderer9.h"
 #include "libGLESv2/renderer/Renderer11.h"
+#include "libGLESv2/utilities.h"
 
 #if !defined(ANGLE_ENABLE_D3D11)
 // Enables use of the Direct3D 11 API, when available

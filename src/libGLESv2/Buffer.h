@@ -19,10 +19,14 @@
 
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
-#include "libGLESv2/renderer/IndexBuffer.h"
-#include "libGLESv2/renderer/Renderer.h"
-#include "libGLESv2/renderer/VertexBuffer.h"
-#include "libGLESv2/renderer/BufferStorage.h"
+
+namespace rx
+{
+class Renderer;
+class BufferStorage;
+class StaticIndexBufferInterface;
+class StaticVertexBufferInterface;
+};
 
 namespace gl
 {

@@ -18,12 +18,11 @@
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
 
-#include "renderer/SwapChain.h"
-#include "renderer/RenderTarget.h"
-
 namespace rx
 {
 class Renderer;
+class SwapChain;
+class RenderTarget;
 }
 
 namespace gl

@@ -7,6 +7,7 @@
 // VertexBuffer11.cpp: Defines the D3D11 VertexBuffer implementation.
 
 #include "libGLESv2/renderer/VertexBuffer11.h"
+#include "libGLESv2/renderer/BufferStorage.h"
 
 #include "libGLESv2/Buffer.h"
 

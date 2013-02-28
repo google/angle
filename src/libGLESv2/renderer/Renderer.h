@@ -18,11 +18,8 @@
 
 #include <D3Dcompiler.h>
 
-#include "libGLESv2/Texture.h"
 #include "libGLESv2/Uniform.h"
 #include "libGLESv2/angletypes.h"
-
-#include "libGLESv2/renderer/ShaderExecutable.h"
 
 const int versionWindowsVista = MAKEWORD(0x00, 0x06);
 const int versionWindows7 = MAKEWORD(0x01, 0x06);
@@ -48,6 +45,8 @@ class InfoLog;
 class ProgramBinary;
 class VertexAttribute;
 class Buffer;
+class Texture;
+class Framebuffer;
 }
 
 namespace rx
@@ -61,6 +60,11 @@ class FenceImpl;
 class BufferStorage;
 class Blit;
 struct TranslatedIndexData;
+class ShaderExecutable;
+class SwapChain;
+class RenderTarget;
+class Image;
+class TextureStorage;
 
 struct ConfigDesc
 {

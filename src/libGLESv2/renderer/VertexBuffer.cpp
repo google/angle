@@ -8,6 +8,8 @@
 // class with derivations, classes that perform graphics API agnostic vertex buffer operations.
 
 #include "libGLESv2/renderer/VertexBuffer.h"
+#include "libGLESv2/renderer/Renderer.h"
+#include "libGLESv2/Context.h"
 
 namespace rx
 {

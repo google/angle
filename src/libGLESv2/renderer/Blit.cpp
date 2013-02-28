@@ -16,6 +16,7 @@
 #include "libGLESv2/renderer/TextureStorage9.h"
 #include "libGLESv2/renderer/RenderTarget9.h"
 #include "libGLESv2/Framebuffer.h"
+#include "libGLESv2/Renderbuffer.h"
 
 namespace
 {

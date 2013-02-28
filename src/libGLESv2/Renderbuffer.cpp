@@ -9,6 +9,7 @@
 // objects and related functionality. [OpenGL ES 2.0.24] section 4.4.3 page 108.
 
 #include "libGLESv2/Renderbuffer.h"
+#include "libGLESv2/renderer/RenderTarget.h"
 
 #include "libGLESv2/main.h"
 #include "libGLESv2/Texture.h"

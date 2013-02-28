@@ -14,6 +14,7 @@
 #include "libGLESv2/renderer/Blit.h"
 #include "libGLESv2/renderer/RenderTarget9.h"
 #include "libGLESv2/renderer/renderer9_utils.h"
+#include "libGLESv2/Texture.h"
 
 #include "common/debug.h"
 

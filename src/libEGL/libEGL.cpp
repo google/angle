@@ -13,6 +13,7 @@
 #include "libGLESv2/Context.h"
 #include "libGLESv2/Texture.h"
 #include "libGLESv2/main.h"
+#include "libGLESv2/renderer/SwapChain.h"
 
 #include "libEGL/main.h"
 #include "libEGL/Display.h"

@@ -26,11 +26,13 @@
 
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
-#include "libGLESv2/ResourceManager.h"
 #include "libGLESv2/HandleAllocator.h"
 #include "libGLESv2/angletypes.h"
-#include "libGLESv2/renderer/Renderer.h"
-#include "libGLESv2/renderer/SwapChain.h"
+
+namespace rx
+{
+class Renderer;
+}
 
 namespace egl
 {
@@ -55,6 +57,8 @@ class Stencilbuffer;
 class DepthStencilbuffer;
 class Fence;
 class Query;
+class ResourceManager;
+class Buffer;
 
 enum
 {

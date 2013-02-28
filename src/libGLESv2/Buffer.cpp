@@ -11,6 +11,9 @@
 #include "libGLESv2/Buffer.h"
 
 #include "libGLESv2/main.h"
+#include "libGLESv2/renderer/VertexBuffer.h"
+#include "libGLESv2/renderer/IndexBuffer.h"
+#include "libGLESv2/renderer/BufferStorage.h"
 
 namespace gl
 {

@@ -17,10 +17,12 @@
 #include <GLES2/gl2.h>
 
 #include "libGLESv2/Context.h"
-#include "libGLESv2/renderer/VertexBuffer.h"
 
 namespace rx
 {
+class BufferStorage;
+class StreamingVertexBufferInterface;
+class VertexBuffer;
 
 struct TranslatedAttribute
 {

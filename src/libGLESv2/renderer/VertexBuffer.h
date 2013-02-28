@@ -16,11 +16,16 @@
 #define GL_APICALL
 #include <GLES2/gl2.h>
 
-#include "libGLESv2/Context.h"
-#include "libGLESv2/renderer/Renderer.h"
+#include "common/angleutils.h"
+
+namespace gl
+{
+class VertexAttribute;
+}
 
 namespace rx
 {
+class Renderer;
 
 class VertexBuffer
 {
