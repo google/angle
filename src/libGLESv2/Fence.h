@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -11,10 +11,9 @@
 
 #define GL_APICALL
 #include <GLES2/gl2.h>
-#include <d3d9.h>
 
 #include "common/angleutils.h"
-#include "libGLESv2/renderer/Renderer9.h"
+#include "libGLESv2/renderer/Renderer.h"
 
 namespace gl
 {
@@ -34,10 +33,7 @@ class Fence
   private:
     DISALLOW_COPY_AND_ASSIGN(Fence);
 
-    rx::Renderer9 *mRenderer;  // D3D9_REPLACE
-    IDirect3DQuery9* mQuery;  // D3D9_REPLACE
-    GLenum mCondition;
-    GLboolean mStatus;
+    rx::FenceImpl *mFence;
 };
 
 }
