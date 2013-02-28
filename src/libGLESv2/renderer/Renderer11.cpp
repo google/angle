@@ -1625,6 +1625,7 @@ void Renderer11::maskedClear(const gl::ClearParameters &clearParams)
     mDeviceContext->IASetInputLayout(mClearIL);
     mDeviceContext->VSSetShader(mClearVS, NULL, 0);
     mDeviceContext->PSSetShader(mClearPS, NULL, 0);
+    mDeviceContext->GSSetShader(NULL, NULL, 0);
 
     // Apply vertex buffer
     static UINT stride = sizeof(d3d11::PositionDepthColorVertex);
