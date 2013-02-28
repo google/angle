@@ -368,6 +368,29 @@ EGLint Renderer11::initialize()
         mDXT5TextureSupport = false;
     }
 
+    // Check depth texture support
+    DXGI_FORMAT depthTextureFormats[] =
+    {
+        DXGI_FORMAT_D16_UNORM,
+        DXGI_FORMAT_D24_UNORM_S8_UINT,
+    };
+
+    static const unsigned int requiredDepthTextureFlags = D3D11_FORMAT_SUPPORT_DEPTH_STENCIL |
+                                                          D3D11_FORMAT_SUPPORT_TEXTURE2D;
+
+    mDepthTextureSupport = true;
+    for (unsigned int i = 0; i < ArraySize(depthTextureFormats); i++)
+    {
+        if (SUCCEEDED(mDevice->CheckFormatSupport(depthTextureFormats[i], &formatSupport)))
+        {
+            mDepthTextureSupport = mDepthTextureSupport && ((formatSupport & requiredDepthTextureFlags) == requiredDepthTextureFlags);
+        }
+        else
+        {
+            mDepthTextureSupport = false;
+        }
+    }
+
     return EGL_SUCCESS;
 }
 
@@ -2026,9 +2049,7 @@ bool Renderer11::getDXT5TextureSupport()
 
 bool Renderer11::getDepthTextureSupport() const
 {
-    // TODO
-    // UNIMPLEMENTED();
-    return false;
+    return mDepthTextureSupport;
 }
 
 bool Renderer11::getFloat32TextureSupport(bool *filtering, bool *renderable)

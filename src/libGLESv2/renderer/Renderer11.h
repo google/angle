@@ -222,6 +222,8 @@ class Renderer11 : public Renderer
     bool mDXT3TextureSupport;
     bool mDXT5TextureSupport;
 
+    bool mDepthTextureSupport;
+
     // Multisample format support
     struct MultisampleSupportInfo
     {
