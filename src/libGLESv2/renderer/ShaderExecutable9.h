@@ -10,8 +10,6 @@
 #ifndef LIBGLESV2_RENDERER_SHADEREXECUTABLE9_H_
 #define LIBGLESV2_RENDERER_SHADEREXECUTABLE9_H_
 
-#include <d3d9.h>
-
 #include "libGLESv2/renderer/ShaderExecutable.h"
 
 namespace rx

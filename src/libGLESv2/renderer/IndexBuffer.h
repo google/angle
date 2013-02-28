@@ -10,11 +10,6 @@
 #ifndef LIBGLESV2_RENDERER_INDEXBUFFER_H_
 #define LIBGLESV2_RENDERER_INDEXBUFFER_H_
 
-#define GL_APICALL
-#include <GLES2/gl2.h>
-
-#include <map>
-
 #include "common/angleutils.h"
 
 namespace rx

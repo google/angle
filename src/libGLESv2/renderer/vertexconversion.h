@@ -10,9 +10,6 @@
 #ifndef LIBGLESV2_VERTEXCONVERSION_H_
 #define LIBGLESV2_VERTEXCONVERSION_H_
 
-#include <cstddef>
-#include <limits>
-
 namespace rx
 {
 

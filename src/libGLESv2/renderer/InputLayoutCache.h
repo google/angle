@@ -13,12 +13,6 @@
 #include "libGLESv2/Constants.h"
 #include "common/angleutils.h"
 
-#define GL_APICALL
-#include <GLES2/gl2.h>
-
-#include <D3D11.h>
-#include <unordered_map>
-
 namespace gl
 {
 class ProgramBinary;

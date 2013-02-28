@@ -11,8 +11,6 @@
 
 #include "libGLESv2/renderer/IndexBuffer.h"
 
-#include <d3d11.h>
-
 namespace rx
 {
 class Renderer11;

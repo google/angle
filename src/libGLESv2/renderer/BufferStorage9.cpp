@@ -1,3 +1,4 @@
+#include "precompiled.h"
 //
 // Copyright (c) 2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -8,7 +9,6 @@
 
 #include "libGLESv2/renderer/BufferStorage9.h"
 #include "common/debug.h"
-#include <algorithm> // for std::min and std::max
 
 namespace rx
 {

@@ -9,8 +9,6 @@
 #ifndef LIBGLESV2_RENDERER_SWAPCHAIN9_H_
 #define LIBGLESV2_RENDERER_SWAPCHAIN9_H_
 
-#include <d3d9.h>
-
 #include "common/angleutils.h"
 #include "libGLESv2/renderer/SwapChain.h"
 

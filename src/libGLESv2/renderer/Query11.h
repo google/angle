@@ -10,7 +10,6 @@
 #define LIBGLESV2_RENDERER_QUERY11_H_
 
 #include "libGLESv2/renderer/QueryImpl.h"
-#include <D3D11.h>
 
 namespace rx
 {

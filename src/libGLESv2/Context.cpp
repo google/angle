@@ -1,3 +1,4 @@
+#include "precompiled.h"
 //
 // Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -8,8 +9,6 @@
 // rendering operations. It is the GLES2 specific implementation of EGLContext.
 
 #include "libGLESv2/Context.h"
-
-#include <sstream>
 
 #include "libGLESv2/main.h"
 #include "libGLESv2/utilities.h"

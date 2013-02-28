@@ -10,8 +10,6 @@
 #ifndef LIBGLESV2_RENDERER_RENDERTARGET11_H_
 #define LIBGLESV2_RENDERER_RENDERTARGET11_H_
 
-#include <d3d11.h>
-
 #include "libGLESv2/renderer/RenderTarget.h"
 
 namespace rx

@@ -10,16 +10,8 @@
 #ifndef LIBGLESV2_RENDERER_VERTEXDATAMANAGER_H_
 #define LIBGLESV2_RENDERER_VERTEXDATAMANAGER_H_
 
-#include <vector>
-#include <cstddef>
-
-#define GL_APICALL
-#include <GLES2/gl2.h>
-
 #include "libGLESv2/Constants.h"
 #include "common/angleutils.h"
-
-#include <D3D11.h>
 
 namespace gl
 {

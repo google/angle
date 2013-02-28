@@ -10,11 +10,6 @@
 #ifndef LIBGLESV2_RENDERER_RENDERER9_UTILS_H
 #define LIBGLESV2_RENDERER_RENDERER9_UTILS_H
 
-#define GL_APICALL
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
-#include <d3d9.h>
-
 #include "libGLESv2/utilities.h"
 
 const D3DFORMAT D3DFMT_INTZ = ((D3DFORMAT)(MAKEFOURCC('I','N','T','Z')));

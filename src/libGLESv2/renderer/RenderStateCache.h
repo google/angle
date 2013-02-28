@@ -13,9 +13,6 @@
 #include "libGLESv2/angletypes.h"
 #include "common/angleutils.h"
 
-#include <D3D11.h>
-#include <unordered_map>
-
 namespace rx
 {
 

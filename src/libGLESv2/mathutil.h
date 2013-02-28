@@ -9,9 +9,6 @@
 #ifndef LIBGLESV2_MATHUTIL_H_
 #define LIBGLESV2_MATHUTIL_H_
 
-#include <intrin.h>
-#include <math.h>
-
 #include "common/system.h"
 #include "common/debug.h"
 

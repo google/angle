@@ -1,3 +1,4 @@
+#include "precompiled.h"
 //
 // Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -5,10 +6,6 @@
 //
 
 // libGLESv2.cpp: Implements the exported OpenGL ES 2.0 functions.
-
-#define GL_APICALL
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
 
 #include "common/version.h"
 

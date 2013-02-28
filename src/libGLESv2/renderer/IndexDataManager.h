@@ -10,12 +10,6 @@
 #ifndef LIBGLESV2_INDEXDATAMANAGER_H_
 #define LIBGLESV2_INDEXDATAMANAGER_H_
 
-#include <vector>
-#include <cstddef>
-
-#define GL_APICALL
-#include <GLES2/gl2.h>
-
 #include "common/angleutils.h"
 
 namespace

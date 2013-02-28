@@ -1,3 +1,4 @@
+#include "precompiled.h"
 //
 // Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -5,8 +6,6 @@
 //
 
 // Renderer9.cpp: Implements a back-end specific class for the D3D9 renderer.
-
-#include <D3Dcompiler.h>
 
 #include "libGLESv2/main.h"
 #include "libGLESv2/Buffer.h"
@@ -30,8 +29,6 @@
 #include "libGLESv2/renderer/Fence9.h"
 
 #include "libEGL/Display.h"
-
-#include <sstream>
 
 // Can also be enabled by defining FORCE_REF_RAST in the project's predefined macros
 #define REF_RAST 0

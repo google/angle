@@ -10,14 +10,6 @@
 #ifndef LIBGLESV2_RENDERER_SHADER_CACHE_H_
 #define LIBGLESV2_RENDERER_SHADER_CACHE_H_
 
-#include <d3d9.h>
-
-#ifdef _MSC_VER
-#include <hash_map>
-#else
-#include <unordered_map>
-#endif
-
 #include "common/debug.h"
 
 namespace rx

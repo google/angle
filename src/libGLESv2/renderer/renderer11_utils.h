@@ -10,11 +10,6 @@
 #ifndef LIBGLESV2_RENDERER_RENDERER11_UTILS_H
 #define LIBGLESV2_RENDERER_RENDERER11_UTILS_H
 
-#define GL_APICALL
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
-#include <d3d11.h>
-
 #include "libGLESv2/angletypes.h"
 
 namespace gl_d3d11

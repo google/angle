@@ -9,13 +9,6 @@
 #ifndef LIBGLESV2_MAIN_H_
 #define LIBGLESV2_MAIN_H_
 
-#define GL_APICALL
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
-
-#define EGLAPI
-#include <EGL/egl.h>
-
 #include "common/debug.h"
 #include "common/system.h"
 

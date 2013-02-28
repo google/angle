@@ -233,6 +233,8 @@
             'common/RefCountObject.cpp',
             'common/RefCountObject.h',
             'common/version.h',
+            'libGLESv2/precompiled.h',
+            'libGLESv2/precompiled.cpp',
             'libGLESv2/BinaryStream.h',
             'libGLESv2/Buffer.cpp',
             'libGLESv2/Buffer.h',

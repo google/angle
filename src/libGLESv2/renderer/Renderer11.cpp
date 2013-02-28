@@ -1,3 +1,4 @@
+#include "precompiled.h"
 //
 // Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -5,8 +6,6 @@
 //
 
 // Renderer11.cpp: Implements a back-end specific class for the D3D11 renderer.
-
-#include <D3Dcompiler.h>
 
 #include "libGLESv2/main.h"
 #include "libGLESv2/utilities.h"
@@ -39,8 +38,6 @@
 #include "libGLESv2/renderer/shaders/compiled/clear11ps.h"
 
 #include "libEGL/Display.h"
-
-#include <sstream>
 
 namespace rx
 {

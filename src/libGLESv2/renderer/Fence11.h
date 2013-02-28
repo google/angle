@@ -11,8 +11,6 @@
 
 #include "libGLESv2/renderer/FenceImpl.h"
 
-#include <D3D11.h>
-
 namespace rx
 {
 class Renderer11;

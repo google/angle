@@ -10,9 +10,6 @@
 #ifndef LIBGLESV2_FRAMEBUFFER_H_
 #define LIBGLESV2_FRAMEBUFFER_H_
 
-#define GL_APICALL
-#include <GLES2/gl2.h>
-
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
 

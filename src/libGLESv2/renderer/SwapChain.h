@@ -10,12 +10,6 @@
 #ifndef LIBGLESV2_RENDERER_SWAPCHAIN_H_
 #define LIBGLESV2_RENDERER_SWAPCHAIN_H_
 
-#define GL_APICALL
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
-#define EGLAPI
-#include <EGL/egl.h>
-
 #include "common/angleutils.h"
 
 namespace rx

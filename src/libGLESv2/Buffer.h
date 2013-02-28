@@ -11,12 +11,6 @@
 #ifndef LIBGLESV2_BUFFER_H_
 #define LIBGLESV2_BUFFER_H_
 
-#include <cstddef>
-#include <vector>
-
-#define GL_APICALL
-#include <GLES2/gl2.h>
-
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
 

@@ -10,10 +10,6 @@
 #ifndef LIBGLESV2_RENDERER_IMAGE9_H_
 #define LIBGLESV2_RENDERER_IMAGE9_H_
 
-#define GL_APICALL
-#include <GLES2/gl2.h>
-#include <d3d9.h>
-
 #include "libGLESv2/renderer/Image.h"
 #include "common/debug.h"
 

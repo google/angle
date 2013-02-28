@@ -1,3 +1,4 @@
+#include "precompiled.h"
 //
 // Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -10,8 +11,6 @@
 #include "libGLESv2/renderer/renderer11_utils.h"
 
 #include "common/debug.h"
-
-#include <float.h>
 
 namespace gl_d3d11
 {

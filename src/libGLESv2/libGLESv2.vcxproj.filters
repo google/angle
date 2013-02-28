@@ -215,6 +215,9 @@
     <ClCompile Include="renderer\VertexDeclarationCache.cpp">
       <Filter>Source Files\Renderer9</Filter>
     </ClCompile>
+    <ClCompile Include="precompiled.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinaryStream.h">
@@ -473,6 +476,9 @@
       <Filter>Header Files\Renderer9</Filter>
     </ClInclude>
     <ClInclude Include="constants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="precompiled.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

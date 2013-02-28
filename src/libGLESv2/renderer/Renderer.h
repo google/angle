@@ -10,12 +10,6 @@
 #ifndef LIBGLESV2_RENDERER_RENDERER_H_
 #define LIBGLESV2_RENDERER_RENDERER_H_
 
-#define GL_APICALL
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
-#define EGLAPI
-#include <EGL/egl.h>
-
 #include "libGLESv2/Uniform.h"
 #include "libGLESv2/angletypes.h"
 
