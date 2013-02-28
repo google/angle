@@ -191,6 +191,9 @@
     <ClCompile Include="renderer\Fence11.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\BufferStorage.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinaryStream.h">
@@ -437,6 +440,9 @@
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="renderer\Fence11.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\BufferStorage.h">
       <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
