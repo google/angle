@@ -8,14 +8,14 @@
 
 #include "common/angleutils.h"
 #include "compiler/debug.h"
-#include "compiler/InfoSink.h"
-#include "compiler/UnfoldShortCircuit.h"
-#include "compiler/SearchSymbol.h"
 #include "compiler/DetectDiscontinuity.h"
+#include "compiler/InfoSink.h"
+#include "compiler/SearchSymbol.h"
+#include "compiler/UnfoldShortCircuit.h"
 
-#include <limits.h>
-#include <stdio.h>
 #include <algorithm>
+#include <cfloat>
+#include <stdio.h>
 
 namespace sh
 {
