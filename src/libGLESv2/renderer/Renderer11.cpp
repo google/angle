@@ -1588,7 +1588,7 @@ void Renderer11::maskedClear(const gl::ClearParameters &clearParams)
     glBlendState.colorMaskRed = (clearParams.mask & GL_COLOR_BUFFER_BIT) ? clearParams.colorMaskRed : false;
     glBlendState.colorMaskGreen = (clearParams.mask & GL_COLOR_BUFFER_BIT) ? clearParams.colorMaskGreen : false;
     glBlendState.colorMaskBlue = (clearParams.mask & GL_COLOR_BUFFER_BIT) ? clearParams.colorMaskBlue : false;
-    glBlendState.colorMaskBlue = (clearParams.mask & GL_COLOR_BUFFER_BIT) ? clearParams.colorMaskBlue : false;
+    glBlendState.colorMaskAlpha = (clearParams.mask & GL_COLOR_BUFFER_BIT) ? clearParams.colorMaskAlpha : false;
     glBlendState.sampleAlphaToCoverage = false;
     glBlendState.dither = false;
 
