@@ -36,7 +36,7 @@ class TextureStorage11 : public TextureStorage
 
     UINT getBindFlags() const;
 
-    virtual ID3D11Texture2D *getBaseTexture() const = 0;
+    virtual ID3D11Texture2D *getBaseTexture() const;
     virtual ID3D11ShaderResourceView *getSRV() = 0;
     virtual RenderTarget *getRenderTarget() { return getRenderTarget(0); }
     virtual RenderTarget *getRenderTarget(int level) { return NULL; }
@@ -61,6 +61,16 @@ class TextureStorage11 : public TextureStorage
     int mLodOffset;
     unsigned int mMipLevels;
 
+    ID3D11Texture2D *mTexture;
+    DXGI_FORMAT mTextureFormat;
+    DXGI_FORMAT mShaderResourceFormat;
+    DXGI_FORMAT mRenderTargetFormat;
+    DXGI_FORMAT mDepthStencilFormat;
+    unsigned int mTextureWidth;
+    unsigned int mTextureHeight;
+
+    ID3D11ShaderResourceView *mSRV;
+
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage11);
 
@@ -76,7 +86,6 @@ class TextureStorage11_2D : public TextureStorage11
 
     static TextureStorage11_2D *makeTextureStorage11_2D(TextureStorage *storage);
 
-    virtual ID3D11Texture2D *getBaseTexture() const;
     virtual ID3D11ShaderResourceView *getSRV();
     virtual RenderTarget *getRenderTarget(int level);
 
@@ -85,15 +94,6 @@ class TextureStorage11_2D : public TextureStorage11
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage11_2D);
 
-    ID3D11Texture2D *mTexture;
-    DXGI_FORMAT mTextureFormat;
-    DXGI_FORMAT mShaderResourceFormat;
-    DXGI_FORMAT mRenderTargetFormat;
-    DXGI_FORMAT mDepthStencilFormat;
-    unsigned int mTextureWidth;
-    unsigned int mTextureHeight;
-
-    ID3D11ShaderResourceView *mSRV;
     RenderTarget11 *mRenderTarget[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
 
@@ -105,7 +105,6 @@ class TextureStorage11_Cube : public TextureStorage11
 
     static TextureStorage11_Cube *makeTextureStorage11_Cube(TextureStorage *storage);
 
-    virtual ID3D11Texture2D *getBaseTexture() const;
     virtual ID3D11ShaderResourceView *getSRV();
     virtual RenderTarget *getRenderTarget(GLenum faceTarget, int level);
 
@@ -114,15 +113,6 @@ class TextureStorage11_Cube : public TextureStorage11
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage11_Cube);
 
-    ID3D11Texture2D *mTexture;
-    DXGI_FORMAT mTextureFormat;
-    DXGI_FORMAT mShaderResourceFormat;
-    DXGI_FORMAT mRenderTargetFormat;
-    DXGI_FORMAT mDepthStencilFormat;
-    unsigned int mTextureWidth;
-    unsigned int mTextureHeight;
-
-    ID3D11ShaderResourceView *mSRV;
     RenderTarget11 *mRenderTarget[6][gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
 

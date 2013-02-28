@@ -22,7 +22,14 @@ namespace rx
 TextureStorage11::TextureStorage11(Renderer *renderer, UINT bindFlags)
     : mBindFlags(bindFlags),
       mLodOffset(0),
-      mMipLevels(0)
+      mMipLevels(0),
+      mTexture(NULL),
+      mTextureFormat(DXGI_FORMAT_UNKNOWN),
+      mShaderResourceFormat(DXGI_FORMAT_UNKNOWN),
+      mRenderTargetFormat(DXGI_FORMAT_UNKNOWN),
+      mDepthStencilFormat(DXGI_FORMAT_UNKNOWN),
+      mTextureWidth(0),
+      mTextureHeight(0)
 {
     mRenderer = Renderer11::makeRenderer11(renderer);
 }
@@ -80,6 +87,11 @@ bool TextureStorage11::IsTextureFormatRenderable(DXGI_FORMAT format)
 UINT TextureStorage11::getBindFlags() const
 {
     return mBindFlags;
+}
+
+ID3D11Texture2D *TextureStorage11::getBaseTexture() const
+{
+    return mTexture;
 }
 
 int TextureStorage11::getLodOffset() const
@@ -210,11 +222,6 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, SwapChain11 *swapch
 TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height)
     : TextureStorage11(renderer, GetTextureBindFlags(gl_d3d11::ConvertTextureFormat(internalformat), usage, forceRenderable))
 {
-    mTexture = NULL;
-    mSRV = NULL;
-    mTextureWidth = 0;
-    mTextureHeight = 0;
-
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
     {
         mRenderTarget[i] = NULL;
@@ -398,11 +405,6 @@ RenderTarget *TextureStorage11_2D::getRenderTarget(int level)
     }
 }
 
-ID3D11Texture2D *TextureStorage11_2D::getBaseTexture() const
-{
-    return mTexture;
-}
-
 ID3D11ShaderResourceView *TextureStorage11_2D::getSRV()
 {
     if (!mSRV)
@@ -438,11 +440,6 @@ void TextureStorage11_2D::generateMipmap(int level)
 TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
     : TextureStorage11(renderer, GetTextureBindFlags(gl_d3d11::ConvertTextureFormat(internalformat), usage, forceRenderable))
 {
-    mTexture = NULL;
-    mSRV = NULL;
-    mTextureWidth = 0;
-    mTextureHeight = 0;
-
     for (unsigned int i = 0; i < 6; i++)
     {
         for (unsigned int j = 0; j < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; j++)
@@ -631,11 +628,6 @@ RenderTarget *TextureStorage11_Cube::getRenderTarget(GLenum faceTarget, int leve
     {
         return NULL;
     }
-}
-
-ID3D11Texture2D *TextureStorage11_Cube::getBaseTexture() const
-{
-    return mTexture;
 }
 
 ID3D11ShaderResourceView *TextureStorage11_Cube::getSRV()
