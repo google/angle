@@ -1618,7 +1618,7 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
     stream.read(&mUsedPixelSamplerRange);
     stream.read(&mUsesPointSize);
 
-    unsigned int size;
+    size_t size;
     stream.read(&size);
     if (stream.error())
     {
