@@ -906,12 +906,28 @@ GLenum Renderer11::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementAr
 
     if (err == GL_NO_ERROR)
     {
-        if (indexInfo->serial != mAppliedIBSerial || indexInfo->startOffset != mAppliedIBOffset)
+        if (indexInfo->storage)
+        {
+            if (indexInfo->serial != mAppliedStorageIBSerial || indexInfo->startOffset != mAppliedIBOffset)
+            {
+                BufferStorage11 *storage = BufferStorage11::makeBufferStorage11(indexInfo->storage);
+                IndexBuffer11* indexBuffer = IndexBuffer11::makeIndexBuffer11(indexInfo->indexBuffer);
+
+                mDeviceContext->IASetIndexBuffer(storage->getBuffer(), indexBuffer->getIndexFormat(), indexInfo->startOffset);
+
+                mAppliedIBSerial = 0;
+                mAppliedStorageIBSerial = storage->getSerial();
+                mAppliedIBOffset = indexInfo->startOffset;
+            }
+        }
+        else if (indexInfo->serial != mAppliedIBSerial || indexInfo->startOffset != mAppliedIBOffset)
         {
             IndexBuffer11* indexBuffer = IndexBuffer11::makeIndexBuffer11(indexInfo->indexBuffer);
 
             mDeviceContext->IASetIndexBuffer(indexBuffer->getBuffer(), indexBuffer->getIndexFormat(), indexInfo->startOffset);
+
             mAppliedIBSerial = indexInfo->serial;
+            mAppliedStorageIBSerial = 0;
             mAppliedIBOffset = indexInfo->startOffset;
         }
     }
@@ -1046,6 +1062,7 @@ void Renderer11::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices,
 
         mDeviceContext->IASetIndexBuffer(indexBuffer->getBuffer(), indexBuffer->getIndexFormat(), indexBufferOffset);
         mAppliedIBSerial = mLineLoopIB->getSerial();
+        mAppliedStorageIBSerial = 0;
         mAppliedIBOffset = indexBufferOffset;
     }
 
@@ -1144,6 +1161,7 @@ void Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indic
 
         mDeviceContext->IASetIndexBuffer(indexBuffer->getBuffer(), indexBuffer->getIndexFormat(), indexBufferOffset);
         mAppliedIBSerial = mTriangleFanIB->getSerial();
+        mAppliedStorageIBSerial = 0;
         mAppliedIBOffset = indexBufferOffset;
     }
 
@@ -1696,6 +1714,7 @@ void Renderer11::markAllStateDirty()
     mForceSetViewport = true;
 
     mAppliedIBSerial = 0;
+    mAppliedStorageIBSerial = 0;
     mAppliedIBOffset = 0;
 
     mAppliedProgramBinarySerial = 0;

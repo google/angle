@@ -284,6 +284,7 @@ class Renderer11 : public Renderer
     float mCurFar;
 
     unsigned int mAppliedIBSerial;
+    unsigned int mAppliedStorageIBSerial;
     unsigned int mAppliedIBOffset;
 
     unsigned int mAppliedProgramBinarySerial;

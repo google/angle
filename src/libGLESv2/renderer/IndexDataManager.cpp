@@ -128,9 +128,11 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
     intptr_t offset = reinterpret_cast<intptr_t>(indices);
     bool alignedOffset = false;
 
+    BufferStorage *storage = NULL;
+
     if (buffer != NULL)
     {
-        BufferStorage *storage = buffer->getStorage();
+        storage = buffer->getStorage();
 
         switch (type)
         {
@@ -152,10 +154,18 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
 
     StaticIndexBufferInterface *staticBuffer = buffer ? buffer->getStaticIndexBuffer() : NULL;
     IndexBufferInterface *indexBuffer = streamingBuffer;
-    BufferStorage *storage = buffer ? buffer->getStorage() : NULL;
+    bool directStorage = alignedOffset && storage && storage->supportsDirectBinding() &&
+                         destinationIndexType == type;
     UINT streamOffset = 0;
 
-    if (staticBuffer && staticBuffer->getIndexType() == type && alignedOffset)
+    if (directStorage)
+    {
+        indexBuffer = streamingBuffer;
+        streamOffset = offset;
+        storage->markBufferUsage();
+        computeRange(type, indices, count, &translated->minIndex, &translated->maxIndex);
+    }
+    else if (staticBuffer && staticBuffer->getIndexType() == type && alignedOffset)
     {
         indexBuffer = staticBuffer;
         streamOffset = staticBuffer->lookupRange(offset, count, &translated->minIndex, &translated->maxIndex);
@@ -219,8 +229,9 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
         }
     }
 
+    translated->storage = directStorage ? storage : NULL;
     translated->indexBuffer = indexBuffer->getIndexBuffer();
-    translated->serial = indexBuffer->getSerial();
+    translated->serial = directStorage ? storage->getSerial() : indexBuffer->getSerial();
     translated->startIndex = streamOffset / indexTypeSize(destinationIndexType);
     translated->startOffset = streamOffset;
 

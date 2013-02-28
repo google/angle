@@ -35,6 +35,7 @@ struct TranslatedIndexData
     UINT startOffset;   // In bytes
 
     IndexBuffer *indexBuffer;
+    BufferStorage *storage;
     unsigned int serial;
 };
 

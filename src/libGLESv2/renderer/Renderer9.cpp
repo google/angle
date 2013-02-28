@@ -1362,6 +1362,9 @@ GLenum Renderer9::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArr
 
     if (err == GL_NO_ERROR)
     {
+        // Directly binding the storage buffer is not supported for d3d9
+        ASSERT(indexInfo->storage == NULL);
+
         if (indexInfo->serial != mAppliedIBSerial)
         {
             IndexBuffer9* indexBuffer = IndexBuffer9::makeIndexBuffer9(indexInfo->indexBuffer);
