@@ -2648,6 +2648,7 @@ bool Renderer11::copyTexture(ID3D11ShaderResourceView *source, const gl::Rectang
     }
 
     mDeviceContext->PSSetShader(ps, NULL, 0);
+    mDeviceContext->GSSetShader(NULL, NULL, 0);
 
     // Unset the currently bound shader resource to avoid conflicts
     static ID3D11ShaderResourceView *const nullSRV = NULL;
