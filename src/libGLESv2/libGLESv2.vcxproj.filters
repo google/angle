@@ -412,6 +412,9 @@
     <ClInclude Include="renderer\Query9.h">
       <Filter>Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\FenceImpl.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="libGLESv2.def">
