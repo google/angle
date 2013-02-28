@@ -16,7 +16,7 @@
 #define GL_APICALL
 #include <GLES2/gl2.h>
 
-#include "libGLESv2/Context.h"
+#include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/renderer/IndexBuffer.h"
 
 namespace
@@ -26,7 +26,6 @@ namespace
 
 namespace rx
 {
-class Renderer9;
 
 struct TranslatedIndexData
 {

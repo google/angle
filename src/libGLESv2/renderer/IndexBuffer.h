@@ -13,7 +13,8 @@
 #define GL_APICALL
 #include <GLES2/gl2.h>
 
-#include "libGLESv2/Context.h"
+#include <map>
+
 #include "libGLESv2/renderer/Renderer.h"
 
 namespace rx
