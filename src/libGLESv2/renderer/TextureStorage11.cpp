@@ -324,7 +324,11 @@ RenderTarget *TextureStorage11_2D::getRenderTarget(int level)
             }
             ASSERT(SUCCEEDED(result));
 
-            mRenderTarget[level] = new RenderTarget11(mRenderer, rtv, srv,
+            // RenderTarget11 expects to be the owner of the resources it is given but TextureStorage11
+            // also needs to keep a reference to the texture.
+            mTexture->AddRef();
+
+            mRenderTarget[level] = new RenderTarget11(mRenderer, rtv, mTexture, srv,
                                                       std::max(mTextureWidth >> level, 1U),
                                                       std::max(mTextureHeight >> level, 1U));
         }
@@ -509,7 +513,11 @@ RenderTarget *TextureStorage11_Cube::getRenderTarget(GLenum faceTarget, int leve
                 }
                 ASSERT(SUCCEEDED(result));
 
-                mRenderTarget[faceIdx][level] = new RenderTarget11(mRenderer, rtv, srv,
+                // RenderTarget11 expects to be the owner of the resources it is given but TextureStorage11
+                // also needs to keep a reference to the texture.
+                mTexture->AddRef();
+
+                mRenderTarget[faceIdx][level] = new RenderTarget11(mRenderer, rtv, mTexture, srv,
                                                                    std::max(mTextureWidth >> level, 1U),
                                                                    std::max(mTextureHeight >> level, 1U));
             }

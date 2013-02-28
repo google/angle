@@ -32,6 +32,7 @@ class SwapChain11 : public SwapChain
     virtual ID3D11RenderTargetView *getRenderTarget();
     virtual ID3D11ShaderResourceView *getRenderTargetShaderResource();
 
+    virtual ID3D11Texture2D *getDepthStencilTexture();
     virtual ID3D11DepthStencilView *getDepthStencil();
 
     EGLint getWidth() const { return mWidth; }

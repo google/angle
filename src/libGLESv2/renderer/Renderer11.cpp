@@ -2568,12 +2568,14 @@ RenderTarget *Renderer11::createRenderTarget(SwapChain *swapChain, bool depth)
     RenderTarget11 *renderTarget = NULL;
     if (depth)
     {
-        renderTarget = new RenderTarget11(this, swapChain11->getDepthStencil(), NULL,
+        renderTarget = new RenderTarget11(this, swapChain11->getDepthStencil(),
+                                          swapChain11->getDepthStencilTexture(), NULL,
                                           swapChain11->getWidth(), swapChain11->getHeight());
     }
     else
     {
         renderTarget = new RenderTarget11(this, swapChain11->getRenderTarget(),
+                                          swapChain11->getOffscreenTexture(),
                                           swapChain11->getRenderTargetShaderResource(),
                                           swapChain11->getWidth(), swapChain11->getHeight());
     }

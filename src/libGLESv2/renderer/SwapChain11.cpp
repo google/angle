@@ -682,6 +682,16 @@ ID3D11DepthStencilView *SwapChain11::getDepthStencil()
     return mDepthStencilDSView;
 }
 
+ID3D11Texture2D *SwapChain11::getDepthStencilTexture()
+{
+    if (mDepthStencilTexture)
+    {
+        mDepthStencilTexture->AddRef();
+    }
+
+    return mDepthStencilTexture;
+}
+
 SwapChain11 *SwapChain11::makeSwapChain11(SwapChain *swapChain)
 {
     ASSERT(HAS_DYNAMIC_TYPE(rx::SwapChain11*, swapChain));

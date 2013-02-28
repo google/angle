@@ -16,46 +16,13 @@
 namespace rx
 {
 
-static ID3D11Texture2D *getTextureResource(ID3D11View *view)
-{
-    ID3D11Resource *textureResource = NULL;
-    view->GetResource(&textureResource);
-    if (!textureResource)
-    {
-        return NULL;
-    }
-
-    ID3D11Texture2D *texture = NULL;
-    HRESULT result = textureResource->QueryInterface(IID_ID3D11Texture2D, (void**)&texture);
-
-    textureResource->Release();
-    textureResource = NULL;
-
-    if (FAILED(result))
-    {
-        return NULL;
-    }
-
-    return texture;
-}
-
-static unsigned int getRTVSubresourceIndex(ID3D11RenderTargetView *view)
+static unsigned int getRTVSubresourceIndex(ID3D11Texture2D *texture, ID3D11RenderTargetView *view)
 {
     D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
     view->GetDesc(&rtvDesc);
 
-    ID3D11Texture2D *texture = getTextureResource(view);
-    if (!texture)
-    {
-        ERR("Failed to extract the ID3D11Texture2D from the render target view.");
-        return 0;
-    }
-
     D3D11_TEXTURE2D_DESC texDesc;
     texture->GetDesc(&texDesc);
-
-    texture->Release();
-    texture = NULL;
 
     unsigned int mipSlice = 0;
     unsigned int arraySlice = 0;
@@ -111,23 +78,13 @@ static unsigned int getRTVSubresourceIndex(ID3D11RenderTargetView *view)
     return D3D11CalcSubresource(mipSlice, arraySlice, mipLevels);
 }
 
-static unsigned int getDSVSubresourceIndex(ID3D11DepthStencilView *view)
+static unsigned int getDSVSubresourceIndex(ID3D11Texture2D *texture, ID3D11DepthStencilView *view)
 {
     D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
     view->GetDesc(&dsvDesc);
 
-    ID3D11Texture2D *texture = getTextureResource(view);
-    if (!texture)
-    {
-        ERR("Failed to extract the ID3D11Texture2D from the depth stencil view.");
-        return 0;
-    }
-
     D3D11_TEXTURE2D_DESC texDesc;
     texture->GetDesc(&texDesc);
-
-    texture->Release();
-    texture = NULL;
 
     unsigned int mipSlice = 0;
     unsigned int arraySlice = 0;
@@ -177,53 +134,63 @@ static unsigned int getDSVSubresourceIndex(ID3D11DepthStencilView *view)
     return D3D11CalcSubresource(mipSlice, arraySlice, mipLevels);
 }
 
-RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11RenderTargetView *rtv, ID3D11ShaderResourceView *srv, GLsizei width, GLsizei height)
+RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11RenderTargetView *rtv, ID3D11Texture2D *tex, ID3D11ShaderResourceView *srv, GLsizei width, GLsizei height)
 {
     mRenderer = Renderer11::makeRenderer11(renderer);
+    mTexture = tex;
     mRenderTarget = rtv;
     mDepthStencil = NULL;
     mShaderResource = srv;
 
-    if (mRenderTarget)
+    if (mRenderTarget && mTexture)
     {
         D3D11_RENDER_TARGET_VIEW_DESC desc;
         mRenderTarget->GetDesc(&desc);
 
-        mSubresourceIndex = getRTVSubresourceIndex(mRenderTarget);
+        D3D11_TEXTURE2D_DESC texDesc;
+        mTexture->GetDesc(&texDesc);
+
+        mSubresourceIndex = getRTVSubresourceIndex(mTexture, mRenderTarget);
         mWidth = width;
         mHeight = height;
+        mSamples = (texDesc.SampleDesc.Count > 1) ? texDesc.SampleDesc.Count : 0;
 
         mInternalFormat = d3d11_gl::ConvertTextureInternalFormat(desc.Format);
         mActualFormat = d3d11_gl::ConvertTextureInternalFormat(desc.Format);
-        mSamples = 1; // TEMP?
     }
 }
 
-RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11DepthStencilView *dsv, ID3D11ShaderResourceView *srv, GLsizei width, GLsizei height)
+RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11DepthStencilView *dsv, ID3D11Texture2D *tex, ID3D11ShaderResourceView *srv, GLsizei width, GLsizei height)
 {
     mRenderer = Renderer11::makeRenderer11(renderer);
+    mTexture = tex;
     mRenderTarget = NULL;
     mDepthStencil = dsv;
     mShaderResource = srv;
+    mTexture = tex;
 
-    if (mDepthStencil)
+    if (mDepthStencil && mTexture)
     {
         D3D11_DEPTH_STENCIL_VIEW_DESC desc;
         mDepthStencil->GetDesc(&desc);
 
-        mSubresourceIndex = getDSVSubresourceIndex(mDepthStencil);
+        D3D11_TEXTURE2D_DESC texDesc;
+        mTexture->GetDesc(&texDesc);
+
+        mSubresourceIndex = getDSVSubresourceIndex(mTexture, mDepthStencil);
         mWidth = width;
         mHeight = height;
+        mSamples = (texDesc.SampleDesc.Count > 1) ? texDesc.SampleDesc.Count : 0;
 
         mInternalFormat = d3d11_gl::ConvertTextureInternalFormat(desc.Format);
         mActualFormat = d3d11_gl::ConvertTextureInternalFormat(desc.Format);
-        mSamples = 1; // TEMP?
     }
 }
 
 RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height, GLenum format, GLsizei samples, bool depth)
 {
     mRenderer = Renderer11::makeRenderer11(renderer);
+    mTexture = NULL;
     mRenderTarget = NULL;
     mDepthStencil = NULL;
     mShaderResource = NULL;
@@ -234,12 +201,11 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
     if (supportedSamples < 0)
     {
         gl::error(GL_OUT_OF_MEMORY);
-
         return;
     }
 
-    HRESULT result = E_FAIL;
-    
+    HRESULT result = D3DERR_INVALIDCALL;
+
     if (width > 0 && height > 0)
     {
         // Create texture resource
@@ -255,10 +221,9 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
         desc.CPUAccessFlags = 0;
         desc.MiscFlags = 0;
         desc.BindFlags = (depth ? D3D11_BIND_DEPTH_STENCIL : (D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE));
-        ID3D11Texture2D *rtTexture = NULL;
 
         ID3D11Device *device = mRenderer->getDevice();
-        HRESULT result = device->CreateTexture2D(&desc, NULL, &rtTexture);
+        HRESULT result = device->CreateTexture2D(&desc, NULL, &mTexture);
 
         if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
         {
@@ -274,13 +239,13 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
             dsvDesc.ViewDimension = (supportedSamples == 0) ? D3D11_DSV_DIMENSION_TEXTURE2D : D3D11_DSV_DIMENSION_TEXTURE2DMS;
             dsvDesc.Texture2D.MipSlice = 0;
             dsvDesc.Flags = 0;
-            result = device->CreateDepthStencilView(rtTexture, &dsvDesc, &mDepthStencil);
+            result = device->CreateDepthStencilView(mTexture, &dsvDesc, &mDepthStencil);
 
             if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
             {
-                rtTexture->Release();
+                mTexture->Release();
+                mTexture = NULL;
                 gl::error(GL_OUT_OF_MEMORY);
-                return;
             }
             ASSERT(SUCCEEDED(result));
         }
@@ -290,11 +255,12 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
             rtvDesc.Format = requestedFormat;
             rtvDesc.ViewDimension = (supportedSamples == 0) ? D3D11_RTV_DIMENSION_TEXTURE2D : D3D11_RTV_DIMENSION_TEXTURE2DMS;
             rtvDesc.Texture2D.MipSlice = 0;
-            result = device->CreateRenderTargetView(rtTexture, &rtvDesc, &mRenderTarget);
+            result = device->CreateRenderTargetView(mTexture, &rtvDesc, &mRenderTarget);
 
             if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
             {
-                rtTexture->Release();
+                mTexture->Release();
+                mTexture = NULL;
                 gl::error(GL_OUT_OF_MEMORY);
                 return;
             }
@@ -305,12 +271,14 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
             srvDesc.ViewDimension = (supportedSamples == 0) ? D3D11_SRV_DIMENSION_TEXTURE2D : D3D11_SRV_DIMENSION_TEXTURE2DMS;
             srvDesc.Texture2D.MostDetailedMip = 0;
             srvDesc.Texture2D.MipLevels = 1;
-            result = device->CreateShaderResourceView(rtTexture, &srvDesc, &mShaderResource);
+            result = device->CreateShaderResourceView(mTexture, &srvDesc, &mShaderResource);
 
             if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY)
             {
-                rtTexture->Release();
+                mTexture->Release();
+                mTexture = NULL;
                 mRenderTarget->Release();
+                mRenderTarget = NULL;
                 gl::error(GL_OUT_OF_MEMORY);
                 return;
             }
@@ -328,6 +296,12 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
 
 RenderTarget11::~RenderTarget11()
 {
+    if (mTexture)
+    {
+        mTexture->Release();
+        mTexture = NULL;
+    }
+
     if (mRenderTarget)
     {
         mRenderTarget->Release();
@@ -351,6 +325,16 @@ RenderTarget11 *RenderTarget11::makeRenderTarget11(RenderTarget *target)
 {
     ASSERT(HAS_DYNAMIC_TYPE(rx::RenderTarget11*, target));
     return static_cast<rx::RenderTarget11*>(target);
+}
+
+ID3D11Texture2D *RenderTarget11::getTexture() const
+{
+    if (mTexture)
+    {
+        mTexture->AddRef();
+    }
+
+    return mTexture;
 }
 
 // Adds reference, caller must call Release
