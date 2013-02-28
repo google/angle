@@ -85,7 +85,7 @@ class Renderer11 : public Renderer
     virtual void markAllStateDirty();
 
     // lost device
-    virtual void markDeviceLost();
+    void notifyDeviceLost();
     virtual bool isDeviceLost();
     virtual bool testDeviceLost(bool notify);
     virtual bool testDeviceResettable();

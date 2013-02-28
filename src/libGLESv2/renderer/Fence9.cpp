@@ -62,9 +62,10 @@ GLboolean Fence9::testFence()
 
     HRESULT result = mQuery->GetData(NULL, 0, D3DGETDATA_FLUSH);
 
-    if (d3d9::checkDeviceLost(result))
+    if (d3d9::isDeviceLostError(result))
     {
-       return error(GL_OUT_OF_MEMORY, GL_TRUE);
+        mRenderer->notifyDeviceLost();
+        return error(GL_OUT_OF_MEMORY, GL_TRUE);
     }
 
     ASSERT(result == S_OK || result == S_FALSE);
@@ -107,9 +108,10 @@ void Fence9::getFenceiv(GLenum pname, GLint *params)
             
             HRESULT result = mQuery->GetData(NULL, 0, 0);
 
-            if (d3d9::checkDeviceLost(result))
+            if (d3d9::isDeviceLostError(result))
             {
                 params[0] = GL_TRUE;
+                mRenderer->notifyDeviceLost();
                 return error(GL_OUT_OF_MEMORY);
             }
 

@@ -636,7 +636,7 @@ void Renderer9::sync(bool block)
 
     if (d3d9::isDeviceLostError(result))
     {
-        mDisplay->notifyDeviceLost();
+        notifyDeviceLost();
     }
 }
 
@@ -2016,9 +2016,10 @@ void Renderer9::releaseDeviceResources()
 }
 
 
-void Renderer9::markDeviceLost()
+void Renderer9::notifyDeviceLost()
 {
     mDeviceLost = true;
+    mDisplay->notifyDeviceLost();
 }
 
 bool Renderer9::isDeviceLost()
@@ -2047,14 +2048,12 @@ bool Renderer9::testDeviceLost(bool notify)
     if (isLost)
     {
         // ensure we note the device loss --
-        // we'll probably get this done again by markDeviceLost
-        // but best to remember it!
         // Note that we don't want to clear the device loss status here
         // -- this needs to be done by resetDevice
         mDeviceLost = true;
         if (notify)
         {
-            mDisplay->notifyDeviceLost();
+            notifyDeviceLost();
         }
     }
 
@@ -2705,8 +2704,11 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
 
         // It turns out that D3D will sometimes produce more error
         // codes than those documented.
-        if (d3d9::checkDeviceLost(result))
+        if (d3d9::isDeviceLostError(result))
+        {
+            notifyDeviceLost();
             return error(GL_OUT_OF_MEMORY);
+        }
         else
         {
             UNREACHABLE();

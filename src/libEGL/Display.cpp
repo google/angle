@@ -436,7 +436,6 @@ void Display::notifyDeviceLost()
     {
         (*context)->markContextLost();
     }
-    mRenderer->markDeviceLost();
     error(EGL_CONTEXT_LOST);
 }
 

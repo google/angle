@@ -1759,9 +1759,10 @@ void Renderer11::releaseDeviceResources()
     }
 }
 
-void Renderer11::markDeviceLost()
+void Renderer11::notifyDeviceLost()
 {
     mDeviceLost = true;
+    mDisplay->notifyDeviceLost();
 }
 
 bool Renderer11::isDeviceLost()
@@ -1780,14 +1781,12 @@ bool Renderer11::testDeviceLost(bool notify)
     if (isLost)
     {
         // ensure we note the device loss --
-        // we'll probably get this done again by markDeviceLost
-        // but best to remember it!
         // Note that we don't want to clear the device loss status here
         // -- this needs to be done by resetDevice
         mDeviceLost = true;
         if (notify)
         {
-            mDisplay->notifyDeviceLost();
+            notifyDeviceLost();
         }
     }
 

@@ -75,19 +75,6 @@ inline bool isDeviceLostError(HRESULT errorCode)
     }
 }
 
-inline bool checkDeviceLost(HRESULT errorCode)
-{
-    egl::Display *display = NULL;
-
-    if (isDeviceLostError(errorCode))
-    {
-        display = gl::getDisplay();
-        display->notifyDeviceLost();
-        return true;
-    }
-    return false;
-};
-
 }
 
 #endif // LIBGLESV2_RENDERER_RENDERER9_UTILS_H

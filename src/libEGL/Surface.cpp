@@ -162,7 +162,7 @@ bool Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
 
     if (status == EGL_CONTEXT_LOST)
     {
-        mDisplay->notifyDeviceLost();
+        mRenderer->notifyDeviceLost();
         return false;
     }
     else if (status != EGL_SUCCESS)
@@ -203,7 +203,7 @@ bool Surface::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
 
     if (status == EGL_CONTEXT_LOST)
     {
-        mDisplay->notifyDeviceLost();
+        mRenderer->notifyDeviceLost();
         return false;
     }
     else if (status != EGL_SUCCESS)

@@ -133,7 +133,7 @@ class Renderer
     virtual void markAllStateDirty() = 0;
 
     // lost device
-    virtual void markDeviceLost() = 0;
+    virtual void notifyDeviceLost() = 0;
     virtual bool isDeviceLost() = 0;
     virtual bool testDeviceLost(bool notify) = 0;
     virtual bool testDeviceResettable() = 0;
