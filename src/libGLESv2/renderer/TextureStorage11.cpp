@@ -555,7 +555,7 @@ RenderTarget *TextureStorage11_Cube::getRenderTarget(GLenum faceTarget, int leve
 
             D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
             srvDesc.Format = mShaderResourceFormat;
-            srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+            srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURECUBE;
             srvDesc.Texture2DArray.MostDetailedMip = level;
             srvDesc.Texture2DArray.MipLevels = 1;
             srvDesc.Texture2DArray.FirstArraySlice = faceIdx;
