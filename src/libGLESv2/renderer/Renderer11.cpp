@@ -92,6 +92,8 @@ Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(
 
     mDeviceLost = false;
 
+    mMaxSupportedSamples = 0;
+
     mDevice = NULL;
     mDeviceContext = NULL;
     mDxgiAdapter = NULL;
@@ -141,14 +143,14 @@ EGLint Renderer11::initialize()
         ERR("Could not retrieve D3D11CreateDevice address - aborting!\n");
         return EGL_NOT_INITIALIZED;
     }
-    
+
     D3D_FEATURE_LEVEL featureLevel[] = 
     {
         D3D_FEATURE_LEVEL_11_0,
         D3D_FEATURE_LEVEL_10_1,
         D3D_FEATURE_LEVEL_10_0,
     };
-        
+
     HRESULT result = D3D11CreateDevice(NULL,
                                        D3D_DRIVER_TYPE_HARDWARE,
                                        NULL,
@@ -163,7 +165,7 @@ EGLint Renderer11::initialize()
                                        &mDevice,
                                        &mFeatureLevel,
                                        &mDeviceContext);
-    
+
     if (!mDevice || FAILED(result))
     {
         ERR("Could not create D3D11 device - aborting!\n");
@@ -200,6 +202,39 @@ EGLint Renderer11::initialize()
         ERR("Could not create DXGI factory - aborting!\n");
         return EGL_NOT_INITIALIZED;
     }
+
+    unsigned int maxSupportedSamples = 0;
+    unsigned int rtFormatCount = sizeof(RenderTargetFormats) / sizeof(DXGI_FORMAT);
+    unsigned int dsFormatCount = sizeof(DepthStencilFormats) / sizeof(DXGI_FORMAT);
+    for (unsigned int i = 0; i < rtFormatCount + dsFormatCount; ++i)
+    {
+        DXGI_FORMAT format = (i < rtFormatCount) ? RenderTargetFormats[i] : DepthStencilFormats[i - rtFormatCount];
+        if (format != DXGI_FORMAT_UNKNOWN)
+        {
+            UINT formatSupport;
+            result = mDevice->CheckFormatSupport(format, &formatSupport);
+            if (SUCCEEDED(result) && (formatSupport & D3D11_FORMAT_SUPPORT_MULTISAMPLE_RENDERTARGET))
+            {
+                MultisampleSupportInfo supportInfo;
+
+                for (unsigned int j = 1; j <= D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT; j++)
+                {
+                    result = mDevice->CheckMultisampleQualityLevels(format, j, &supportInfo.qualityLevels[j - 1]);
+                    if (SUCCEEDED(result) && supportInfo.qualityLevels[j - 1] > 0)
+                    {
+                        maxSupportedSamples = std::max(j, maxSupportedSamples);
+                    }
+                    else
+                    {
+                        supportInfo.qualityLevels[j - 1] = 0;
+                    }
+                }
+
+                mMultisampleSupportMap.insert(std::make_pair(format, supportInfo));
+            }
+        }
+    }
+    mMaxSupportedSamples = maxSupportedSamples;
 
     initializeDevice();
 
@@ -249,7 +284,7 @@ int Renderer11::generateConfigs(ConfigDesc **configDescList)
 
             UINT formatSupport = 0;
             HRESULT result = mDevice->CheckFormatSupport(renderTargetFormat, &formatSupport);
-            
+
             if (SUCCEEDED(result) && (formatSupport & D3D11_FORMAT_SUPPORT_RENDER_TARGET))
             {
                 DXGI_FORMAT depthStencilFormat = DepthStencilFormats[depthStencilIndex];
@@ -2169,9 +2204,7 @@ int Renderer11::getMaxSwapInterval() const
 
 int Renderer11::getMaxSupportedSamples() const
 {
-    // TODO
-    // UNIMPLEMENTED();
-    return 1;
+    return mMaxSupportedSamples;
 }
 
 bool Renderer11::copyToRenderTarget(TextureStorageInterface2D *dest, TextureStorageInterface2D *source)
