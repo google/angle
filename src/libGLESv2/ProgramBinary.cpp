@@ -2222,7 +2222,7 @@ std::string ProgramBinary::generatePointSpriteHLSL(int registers, const Varying 
     geomHLSL += "    \n"
                 "    float gl_PointSize = clamp(input[0].gl_PointSize, minPointSize, maxPointSize);\n"
                 "    float4 gl_Position = input[0].gl_Position;\n"
-                "    float2 viewportScale = float2(1.0f / dx_ViewCoords.x, 1.0f / dx_ViewCoords.y);\n";
+                "    float2 viewportScale = float2(1.0f / dx_ViewCoords.x, 1.0f / dx_ViewCoords.y) * gl_Position.w;\n";
 
     for (int corner = 0; corner < 4; corner++)
     {
