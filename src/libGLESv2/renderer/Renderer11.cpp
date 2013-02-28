@@ -3153,4 +3153,42 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
     stagingTex = NULL;
 }
 
+ID3D11Texture2D *Renderer11::resolveMultisampledTexture(ID3D11Texture2D *source, unsigned int subresource)
+{
+    D3D11_TEXTURE2D_DESC textureDesc;
+    source->GetDesc(&textureDesc);
+
+    if (textureDesc.SampleDesc.Count > 1)
+    {
+        D3D11_TEXTURE2D_DESC resolveDesc;
+        resolveDesc.Width = textureDesc.Width;
+        resolveDesc.Height = textureDesc.Height;
+        resolveDesc.MipLevels = 1;
+        resolveDesc.ArraySize = 1;
+        resolveDesc.Format = textureDesc.Format;
+        resolveDesc.SampleDesc.Count = 1;
+        resolveDesc.SampleDesc.Quality = 0;
+        resolveDesc.Usage = textureDesc.Usage;
+        resolveDesc.BindFlags = textureDesc.BindFlags;
+        resolveDesc.CPUAccessFlags = 0;
+        resolveDesc.MiscFlags = 0;
+
+        ID3D11Texture2D *resolveTexture = NULL;
+        HRESULT result = mDevice->CreateTexture2D(&resolveDesc, NULL, &resolveTexture);
+        if (FAILED(result))
+        {
+            ERR("Failed to create a multisample resolve texture, HRESULT: 0x%X.", result);
+            return NULL;
+        }
+
+        mDeviceContext->ResolveSubresource(resolveTexture, 0, source, subresource, textureDesc.Format);
+        return resolveTexture;
+    }
+    else
+    {
+        source->AddRef();
+        return source;
+    }
+}
+
 }

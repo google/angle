@@ -188,6 +188,8 @@ class Renderer11 : public Renderer
 
     void maskedClear(const gl::ClearParameters &clearParams);
 
+    ID3D11Texture2D *resolveMultisampledTexture(ID3D11Texture2D *source, unsigned int subresource);
+
     HMODULE mD3d11Module;
     HMODULE mDxgiModule;
     HDC mDc;
