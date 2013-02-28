@@ -59,6 +59,7 @@ Context::Context(const gl::Context *shareContext, rx::Renderer *renderer, bool n
     mState.rasterizer.polygonOffsetFill = false;
     mState.rasterizer.polygonOffsetFactor = 0.0f;
     mState.rasterizer.polygonOffsetUnits = 0.0f;
+    mState.rasterizer.pointDrawMode = false;
     mState.scissorTest = false;
     mState.scissor.x = 0;
     mState.scissor.y = 0;
@@ -1712,17 +1713,8 @@ bool Context::applyRenderTarget(GLenum drawMode, bool ignoreViewport)
 // Applies the fixed-function state (culling, depth test, alpha blending, stenciling, etc) to the Direct3D 9 device
 void Context::applyState(GLenum drawMode)
 {
-    // disable face culling for point sprite emulation (done as geometry shader quads)
-    if (getCurrentProgramBinary()->usesPointSpriteEmulation())
-    {
-        RasterizerState rasterizerStateCopy = mState.rasterizer;
-        rasterizerStateCopy.cullFace = false;
-        mRenderer->setRasterizerState(rasterizerStateCopy);
-    }
-    else
-    {
-        mRenderer->setRasterizerState(mState.rasterizer);
-    }
+    mState.rasterizer.pointDrawMode = (drawMode == GL_POINTS);
+    mRenderer->setRasterizerState(mState.rasterizer);
 
     unsigned int mask = 0;
     if (mState.sampleCoverage)

@@ -101,6 +101,8 @@ Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(
     mDriverConstantBufferPS = NULL;
 
     mBGRATextureSupport = false;
+
+    mIsGeometryShaderActive = false;
 }
 
 Renderer11::~Renderer11()
@@ -1096,7 +1098,6 @@ void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
     {
         ShaderExecutable *vertexExe = programBinary->getVertexExecutable();
         ShaderExecutable *pixelExe = programBinary->getPixelExecutable();
-        ShaderExecutable *geometryExe = programBinary->getGeometryExecutable();
 
         ID3D11VertexShader *vertexShader = NULL;
         if (vertexExe) vertexShader = ShaderExecutable11::makeShaderExecutable11(vertexExe)->getVertexShader();
@@ -1104,14 +1105,23 @@ void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
         ID3D11PixelShader *pixelShader = NULL;
         if (pixelExe) pixelShader = ShaderExecutable11::makeShaderExecutable11(pixelExe)->getPixelShader();
 
-        ID3D11GeometryShader *geometryShader = NULL;
-        if (geometryExe) geometryShader = ShaderExecutable11::makeShaderExecutable11(geometryExe)->getGeometryShader();
-
         mDeviceContext->PSSetShader(pixelShader, NULL, 0);
         mDeviceContext->VSSetShader(vertexShader, NULL, 0);
 
-        if (geometryShader)
+        programBinary->dirtyAllUniforms();
+
+        mAppliedProgramBinarySerial = programBinarySerial;
+    }
+
+    // Only use the geometry shader currently for point sprite drawing
+    const bool usesGeometryShader = programBinary->usesGeometryShader() && mCurRasterState.pointDrawMode;
+
+    if (programBinarySerial != mAppliedProgramBinarySerial || usesGeometryShader != mIsGeometryShaderActive)
+    {
+        if (usesGeometryShader)
         {
+            ShaderExecutable *geometryExe = programBinary->getGeometryExecutable();
+            ID3D11GeometryShader *geometryShader = ShaderExecutable11::makeShaderExecutable11(geometryExe)->getGeometryShader();
             mDeviceContext->GSSetShader(geometryShader, NULL, 0);
         }
         else
@@ -1119,9 +1129,7 @@ void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
             mDeviceContext->GSSetShader(NULL, NULL, 0);
         }
 
-        programBinary->dirtyAllUniforms();
-
-        mAppliedProgramBinarySerial = programBinarySerial;
+        mIsGeometryShaderActive = usesGeometryShader;
     }
 }
 

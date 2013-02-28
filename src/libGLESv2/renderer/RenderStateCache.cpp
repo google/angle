@@ -213,9 +213,17 @@ ID3D11RasterizerState *RenderStateCache::getRasterizerState(const gl::Rasterizer
             mRasterizerStateCache.erase(leastRecentlyUsed);
         }
 
+        D3D11_CULL_MODE cullMode = gl_d3d11::ConvertCullMode(rasterState.cullFace, rasterState.cullMode);
+
+        // Disable culling if drawing points
+        if (rasterState.pointDrawMode)
+        {
+            cullMode = D3D11_CULL_NONE;
+        }
+
         D3D11_RASTERIZER_DESC rasterDesc;
         rasterDesc.FillMode = D3D11_FILL_SOLID;
-        rasterDesc.CullMode = gl_d3d11::ConvertCullMode(rasterState.cullFace, rasterState.cullMode);
+        rasterDesc.CullMode = cullMode;
         rasterDesc.FrontCounterClockwise = (rasterState.frontFace == GL_CCW) ? FALSE: TRUE;
         rasterDesc.DepthBias = ldexp(rasterState.polygonOffsetUnits, -static_cast<int>(depthSize));
         rasterDesc.DepthBiasClamp = 0.0f; // MSDN documentation of DepthBiasClamp implies a value of zero will preform no clamping, must be tested though.

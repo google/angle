@@ -55,6 +55,8 @@ struct RasterizerState
     bool polygonOffsetFill;
     GLfloat polygonOffsetFactor;
     GLfloat polygonOffsetUnits;
+
+    bool pointDrawMode;
 };
 
 struct BlendState
