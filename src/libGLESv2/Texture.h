@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -180,7 +180,7 @@ class Texture2D : public Texture
 
     bool isMipmapComplete() const;
 
-    void redefineImage(GLint level, GLint internalformat, GLsizei width, GLsizei height, bool discardMismatchedStorage);
+    void redefineImage(GLint level, GLint internalformat, GLsizei width, GLsizei height);
     void commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
 
     rx::Image *mImageArray[IMPLEMENTATION_MAX_TEXTURE_LEVELS];
@@ -256,7 +256,7 @@ class TextureCubeMap : public Texture
 
     void setImage(int faceIndex, GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void commitRect(int faceIndex, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
-    void redefineImage(int faceIndex, GLint level, GLint internalformat, GLsizei width, GLsizei height, bool discardMismatchedStorage);
+    void redefineImage(int faceIndex, GLint level, GLint internalformat, GLsizei width, GLsizei height);
 
     rx::Image *mImageArray[6][IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 

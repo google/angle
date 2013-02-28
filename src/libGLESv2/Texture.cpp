@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -378,29 +378,42 @@ GLenum Texture2D::getActualFormat(GLint level) const
         return D3DFMT_UNKNOWN;
 }
 
-void Texture2D::redefineImage(GLint level, GLint internalformat, GLsizei width, GLsizei height, bool discardMismatchedStorage)
+void Texture2D::redefineImage(GLint level, GLint internalformat, GLsizei width, GLsizei height)
 {
     releaseTexImage();
 
-    bool redefined = mImageArray[level]->redefine(mRenderer, internalformat, width, height, false);
+    // If there currently is a corresponding storage texture image, it has these parameters
+    const int storageWidth = std::max(1, mImageArray[0]->getWidth() >> level);
+    const int storageHeight = std::max(1, mImageArray[0]->getHeight() >> level);
+    const int storageFormat = mImageArray[0]->getInternalFormat();
 
-    if (mTexStorage && redefined && discardMismatchedStorage)
+    mImageArray[level]->redefine(mRenderer, internalformat, width, height, false);
+
+    if (mTexStorage)
     {
-        for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
+        const int storageLevels = mTexStorage->levelCount();
+        
+        if ((level >= storageLevels && storageLevels != 0) ||
+            width != storageWidth ||
+            height != storageHeight ||
+            internalformat != storageFormat)   // Discard mismatched storage
         {
-            mImageArray[i]->markDirty();
-        }
+            for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
+            {
+                mImageArray[i]->markDirty();
+            }
 
-        delete mTexStorage;
-        mTexStorage = NULL;
-        mDirtyImages = true;
+            delete mTexStorage;
+            mTexStorage = NULL;
+            mDirtyImages = true;
+        }
     }
 }
 
 void Texture2D::setImage(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
     GLint internalformat = ConvertSizedInternalFormat(format, type);
-    redefineImage(level, internalformat, width, height, true);
+    redefineImage(level, internalformat, width, height);
 
     Texture::setImage(unpackAlignment, pixels, mImageArray[level]);
 }
@@ -444,7 +457,7 @@ void Texture2D::releaseTexImage()
 void Texture2D::setCompressedImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels)
 {
     // compressed formats don't have separate sized internal formats-- we can just use the compressed format directly
-    redefineImage(level, format, width, height, true);
+    redefineImage(level, format, width, height);
 
     Texture::setCompressedImage(imageSize, pixels, mImageArray[level]);
 }
@@ -480,7 +493,7 @@ void Texture2D::subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GL
 void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
 {
     GLint internalformat = ConvertSizedInternalFormat(format, GL_UNSIGNED_BYTE);
-    redefineImage(level, internalformat, width, height, true);
+    redefineImage(level, internalformat, width, height);
 
     if (!mImageArray[level]->isRenderableFormat())
     {
@@ -767,8 +780,7 @@ void Texture2D::generateMipmaps()
     {
         redefineImage(i, mImageArray[0]->getInternalFormat(),
                       std::max(mImageArray[0]->getWidth() >> i, 1),
-                      std::max(mImageArray[0]->getHeight() >> i, 1),
-                      false);
+                      std::max(mImageArray[0]->getHeight() >> i, 1));
     }
 
     if (mTexStorage && mTexStorage->isRenderTarget())
@@ -997,7 +1009,7 @@ void TextureCubeMap::setImageNegZ(GLint level, GLsizei width, GLsizei height, GL
 void TextureCubeMap::setCompressedImage(GLenum face, GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels)
 {
     // compressed formats don't have separate sized internal formats-- we can just use the compressed format directly
-    redefineImage(faceIndex(face), level, format, width, height, true);
+    redefineImage(faceIndex(face), level, format, width, height);
 
     Texture::setCompressedImage(imageSize, pixels, mImageArray[faceIndex(face)][level]);
 }
@@ -1214,7 +1226,7 @@ void TextureCubeMap::convertToRenderTarget()
 void TextureCubeMap::setImage(int faceIndex, GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
     GLint internalformat = ConvertSizedInternalFormat(format, type);
-    redefineImage(faceIndex, level, internalformat, width, height, true);
+    redefineImage(faceIndex, level, internalformat, width, height);
 
     Texture::setImage(unpackAlignment, pixels, mImageArray[faceIndex][level]);
 }
@@ -1230,24 +1242,37 @@ unsigned int TextureCubeMap::faceIndex(GLenum face)
     return face - GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 }
 
-void TextureCubeMap::redefineImage(int face, GLint level, GLint internalformat, GLsizei width, GLsizei height, bool discardMismatchedStorage)
+void TextureCubeMap::redefineImage(int face, GLint level, GLint internalformat, GLsizei width, GLsizei height)
 {
-    bool redefined = mImageArray[face][level]->redefine(mRenderer, internalformat, width, height, false);
+    // If there currently is a corresponding storage texture image, it has these parameters
+    const int storageWidth = std::max(1, mImageArray[0][0]->getWidth() >> level);
+    const int storageHeight = std::max(1, mImageArray[0][0]->getHeight() >> level);
+    const int storageFormat = mImageArray[0][0]->getInternalFormat();
 
-    if (mTexStorage && redefined && discardMismatchedStorage)
+    mImageArray[face][level]->redefine(mRenderer, internalformat, width, height, false);
+
+    if (mTexStorage)
     {
-        for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
+        const int storageLevels = mTexStorage->levelCount();
+        
+        if ((level >= storageLevels && storageLevels != 0) ||
+            width != storageWidth ||
+            height != storageHeight ||
+            internalformat != storageFormat)   // Discard mismatched storage
         {
-            for (int f = 0; f < 6; f++)
+            for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
             {
-                mImageArray[f][i]->markDirty();
+                for (int f = 0; f < 6; f++)
+                {
+                    mImageArray[f][i]->markDirty();
+                }
             }
+
+            delete mTexStorage;
+            mTexStorage = NULL;
+
+            mDirtyImages = true;
         }
-
-        delete mTexStorage;
-        mTexStorage = NULL;
-
-        mDirtyImages = true;
     }
 }
 
@@ -1255,7 +1280,7 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint 
 {
     unsigned int faceindex = faceIndex(target);
     GLint internalformat = gl::ConvertSizedInternalFormat(format, GL_UNSIGNED_BYTE);
-    redefineImage(faceindex, level, internalformat, width, height, true);
+    redefineImage(faceindex, level, internalformat, width, height);
 
     if (!mImageArray[faceindex][level]->isRenderableFormat())
     {
@@ -1385,8 +1410,7 @@ void TextureCubeMap::generateMipmaps()
         {
             redefineImage(f, i, mImageArray[f][0]->getInternalFormat(),
                           std::max(mImageArray[f][0]->getWidth() >> i, 1),
-                          std::max(mImageArray[f][0]->getWidth() >> i, 1),
-                          false);
+                          std::max(mImageArray[f][0]->getWidth() >> i, 1));
         }
     }
 
