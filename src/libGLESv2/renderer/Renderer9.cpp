@@ -27,6 +27,7 @@
 #include "libGLESv2/renderer/VertexBuffer9.h"
 #include "libGLESv2/renderer/IndexBuffer9.h"
 #include "libGLESv2/renderer/Query9.h"
+#include "libGLESv2/renderer/Fence9.h"
 
 #include <sstream>
 
@@ -709,6 +710,11 @@ IndexBuffer *Renderer9::createIndexBuffer()
 QueryImpl *Renderer9::createQuery(GLenum type)
 {
     return new Query9(this, type);
+}
+
+FenceImpl *Renderer9::createFence()
+{
+    return new Fence9(this);
 }
 
 void Renderer9::setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &samplerState)

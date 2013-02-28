@@ -2556,6 +2556,13 @@ QueryImpl *Renderer11::createQuery(GLenum type)
     return NULL;
 }
 
+FenceImpl *Renderer11::createFence()
+{
+    // TODO
+    UNIMPLEMENTED();
+    return NULL;
+}
+
 bool Renderer11::getRenderTargetResource(gl::Framebuffer *framebuffer, unsigned int *subresourceIndex, ID3D11Texture2D **resource)
 {
     gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer();

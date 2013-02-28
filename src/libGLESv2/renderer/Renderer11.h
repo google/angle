@@ -164,8 +164,9 @@ class Renderer11 : public Renderer
     virtual VertexBuffer *createVertexBuffer();
     virtual IndexBuffer *createIndexBuffer();
 
-    // Query creation
+    // Query and Fence creation
     virtual QueryImpl *createQuery(GLenum type);
+    virtual FenceImpl *createFence();
 
     // D3D11-renderer specific methods
     ID3D11Device *getDevice() { return mDevice; }
