@@ -2185,14 +2185,18 @@ float Renderer11::getMaxPointSize() const
 
 int Renderer11::getMaxViewportDimension() const
 {
-    // Clamp viewport width/height to half of the maximum right/bottom edge
+    // Maximum viewport size must be at least as large as the largest render buffer (or larger).
+    // In our case return the maximum texture size, which is the maximum render buffer size.
+    META_ASSERT(D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION * 2 - 1 <= D3D11_VIEWPORT_BOUNDS_MAX);
+    META_ASSERT(D3D10_REQ_TEXTURE2D_U_OR_V_DIMENSION * 2 - 1 <= D3D10_VIEWPORT_BOUNDS_MAX);
+
     switch (mFeatureLevel)
     {
       case D3D_FEATURE_LEVEL_11_0: 
-        return D3D11_VIEWPORT_BOUNDS_MAX - D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION;   // 16384
+        return D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION;   // 16384
       case D3D_FEATURE_LEVEL_10_1:
       case D3D_FEATURE_LEVEL_10_0: 
-        return D3D10_VIEWPORT_BOUNDS_MAX - D3D10_REQ_TEXTURE2D_U_OR_V_DIMENSION;   // 8192
+        return D3D10_REQ_TEXTURE2D_U_OR_V_DIMENSION;   // 8192
       default: UNREACHABLE();      
         return 0;
     }
