@@ -135,7 +135,7 @@ bool TCompiler::Init(const ShBuiltInResources& resources)
 }
 
 bool TCompiler::compile(const char* const shaderStrings[],
-                        const int numStrings,
+                        size_t numStrings,
                         int compileOptions)
 {
     TScopedPoolAllocator scopedAlloc(&allocator, true);
@@ -150,7 +150,7 @@ bool TCompiler::compile(const char* const shaderStrings[],
 
     // First string is path of source file if flag is set. The actual source follows.
     const char* sourcePath = NULL;
-    int firstSource = 0;
+    size_t firstSource = 0;
     if (compileOptions & SH_SOURCE_PATH)
     {
         sourcePath = shaderStrings[0];

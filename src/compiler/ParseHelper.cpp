@@ -493,7 +493,7 @@ bool TParseContext::constructorErrorCheck(int line, TIntermNode* node, TFunction
     bool overFull = false;
     bool matrixInMatrix = false;
     bool arrayArg = false;
-    for (int i = 0; i < function.getParamCount(); ++i) {
+    for (size_t i = 0; i < function.getParamCount(); ++i) {
         const TParameter& param = function.getParam(i);
         size += param.type->getObjectSize();
         
@@ -1507,7 +1507,7 @@ bool TParseContext::structNestingErrorCheck(TSourceLoc line, const TType& fieldT
 //
 // Returns 0 for success.
 //
-int PaParseStrings(int count, const char* const string[], const int length[],
+int PaParseStrings(size_t count, const char* const string[], const int length[],
                    TParseContext* context) {
     if ((count == 0) || (string == NULL))
         return 1;

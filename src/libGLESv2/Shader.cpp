@@ -370,7 +370,7 @@ void Shader::compileToHLSL(void *compiler)
 
     if (result)
     {
-        int objCodeLen = 0;
+        size_t objCodeLen = 0;
         ShGetInfo(compiler, SH_OBJECT_CODE_LENGTH, &objCodeLen);
         mHlsl = new char[objCodeLen];
         ShGetObjectCode(compiler, mHlsl);
@@ -381,7 +381,7 @@ void Shader::compileToHLSL(void *compiler)
     }
     else
     {
-        int infoLogLen = 0;
+        size_t infoLogLen = 0;
         ShGetInfo(compiler, SH_INFO_LOG_LENGTH, &infoLogLen);
         mInfoLog = new char[infoLogLen];
         ShGetInfoLog(compiler, mInfoLog);
