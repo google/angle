@@ -570,6 +570,40 @@ size_t ComputeBlockSizeBits(DXGI_FORMAT format)
     }
 }
 
+bool IsCompressed(DXGI_FORMAT format)
+{
+    switch (format)
+    {
+      case DXGI_FORMAT_BC1_TYPELESS:
+      case DXGI_FORMAT_BC1_UNORM:
+      case DXGI_FORMAT_BC1_UNORM_SRGB:
+      case DXGI_FORMAT_BC4_SNORM:
+      case DXGI_FORMAT_BC4_TYPELESS:
+      case DXGI_FORMAT_BC4_UNORM:
+      case DXGI_FORMAT_BC2_TYPELESS:
+      case DXGI_FORMAT_BC2_UNORM:
+      case DXGI_FORMAT_BC2_UNORM_SRGB:
+      case DXGI_FORMAT_BC3_TYPELESS:
+      case DXGI_FORMAT_BC3_UNORM:
+      case DXGI_FORMAT_BC3_UNORM_SRGB:
+      case DXGI_FORMAT_BC5_SNORM:
+      case DXGI_FORMAT_BC5_TYPELESS:
+      case DXGI_FORMAT_BC5_UNORM:
+      case DXGI_FORMAT_BC6H_SF16:
+      case DXGI_FORMAT_BC6H_TYPELESS:
+      case DXGI_FORMAT_BC6H_UF16:
+      case DXGI_FORMAT_BC7_TYPELESS:
+      case DXGI_FORMAT_BC7_UNORM:
+      case DXGI_FORMAT_BC7_UNORM_SRGB:
+        return true;
+      case DXGI_FORMAT_UNKNOWN:
+        UNREACHABLE();
+        return false;
+      default:
+        return false;
+    }
+}
+
 unsigned int GetTextureFormatDimensionAlignment(DXGI_FORMAT format)
 {
     switch (format)
