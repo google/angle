@@ -167,6 +167,7 @@ class Renderer
     virtual float getTextureMaxAnisotropy() const = 0;
     virtual bool getShareHandleSupport() const = 0;
     virtual bool getDerivativeInstructionSupport() const = 0;
+    virtual bool getPostSubBufferSupport() const = 0;
 
     virtual int getMajorShaderModel() const = 0;
     virtual float getMaxPointSize() const = 0;

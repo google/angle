@@ -2235,6 +2235,12 @@ bool Renderer11::getDerivativeInstructionSupport() const
     }
 }
 
+bool Renderer11::getPostSubBufferSupport() const
+{
+    // D3D11 does not support present with dirty rectangles until D3D11.1 and DXGI 1.2.
+    return false;
+}
+
 int Renderer11::getMajorShaderModel() const
 {
     switch (mFeatureLevel)

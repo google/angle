@@ -2306,6 +2306,11 @@ bool Renderer9::getDerivativeInstructionSupport() const
     return (mDeviceCaps.PS20Caps.Caps & D3DPS20CAPS_GRADIENTINSTRUCTIONS) != 0;
 }
 
+bool Renderer9::getPostSubBufferSupport() const
+{
+    return true;
+}
+
 int Renderer9::getMajorShaderModel() const
 {
     return D3DSHADER_VERSION_MAJOR(mDeviceCaps.PixelShaderVersion);
