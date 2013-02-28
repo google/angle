@@ -2001,16 +2001,21 @@ bool Renderer11::getLuminanceAlphaTextureSupport()
 
 bool Renderer11::getTextureFilterAnisotropySupport() const
 {
-    // TODO
-    // UNIMPLEMENTED();
-    return false;
+    return true;
 }
 
 float Renderer11::getTextureMaxAnisotropy() const
 {
-    // TODO
-    // UNIMPLEMENTED();
-    return 1.0f;
+    switch (mFeatureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_0:
+        return D3D11_MAX_MAXANISOTROPY;
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0:
+        return D3D10_MAX_MAXANISOTROPY;
+      default: UNREACHABLE();
+        return 0;
+    }
 }
 
 bool Renderer11::getEventQuerySupport()
