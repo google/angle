@@ -114,13 +114,13 @@ bool Image11::isDirty() const
 bool Image11::updateSurface(TextureStorageInterface2D *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
     TextureStorage11_2D *storage11 = TextureStorage11_2D::makeTextureStorage11_2D(storage->getStorageInstance());
-    return storage11->updateSubresourceLevel(getStagingTexture(), level, 0, xoffset, yoffset, width, height);
+    return storage11->updateSubresourceLevel(getStagingTexture(), getStagingSubresource(), level, 0, xoffset, yoffset, width, height);
 }
 
 bool Image11::updateSurface(TextureStorageInterfaceCube *storage, int face, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
     TextureStorage11_Cube *storage11 = TextureStorage11_Cube::makeTextureStorage11_Cube(storage->getStorageInstance());
-    return storage11->updateSubresourceLevel(getStagingTexture(), level, face, xoffset, yoffset, width, height);
+    return storage11->updateSubresourceLevel(getStagingTexture(), getStagingSubresource(), level, face, xoffset, yoffset, width, height);
 }
 
 bool Image11::redefine(Renderer *renderer, GLint internalformat, GLsizei width, GLsizei height, bool forceRelease)
@@ -362,6 +362,13 @@ ID3D11Texture2D *Image11::getStagingTexture()
     return mStagingTexture;
 }
 
+unsigned int Image11::getStagingSubresource()
+{
+    createStagingTexture();
+
+    return mStagingSubresource;
+}
+
 void Image11::createStagingTexture()
 {
     if (mStagingTexture)
@@ -370,22 +377,24 @@ void Image11::createStagingTexture()
     }
 
     ID3D11Texture2D *newTexture = NULL;
+    int lodOffset = 1;
     const DXGI_FORMAT dxgiFormat = getDXGIFormat();
     ASSERT(!d3d11::IsDepthStencilFormat(dxgiFormat)); // We should never get here for depth textures
 
     if (mWidth != 0 && mHeight != 0)
     {
-        ID3D11Device *device = mRenderer->getDevice();
+        GLsizei width = mWidth;
+        GLsizei height = mHeight;
 
-        // Round up the width and height to the nearest multiple of dimension alignment
-        unsigned int dimensionAlignment = d3d11::GetTextureFormatDimensionAlignment(dxgiFormat);
-        unsigned int width = mWidth + dimensionAlignment - 1 - (mWidth - 1) % dimensionAlignment;
-        unsigned int height = mHeight + dimensionAlignment - 1 - (mHeight - 1) % dimensionAlignment;
+        // adjust size if needed for compressed textures
+        gl::MakeValidSize(false, d3d11::IsCompressed(dxgiFormat), &width, &height, &lodOffset);
+        ID3D11Device *device = mRenderer->getDevice();
 
         D3D11_TEXTURE2D_DESC desc;
         desc.Width = width;
         desc.Height = height;
-        desc.MipLevels = desc.ArraySize = 1;
+        desc.MipLevels = lodOffset + 1;
+        desc.ArraySize = 1;
         desc.Format = dxgiFormat;
         desc.SampleDesc.Count = 1;
         desc.SampleDesc.Quality = 0;
@@ -405,6 +414,7 @@ void Image11::createStagingTexture()
     }
 
     mStagingTexture = newTexture;
+    mStagingSubresource = D3D11CalcSubresource(lodOffset, 0, lodOffset + 1);
     mDirty = false;
 }
 
@@ -417,7 +427,7 @@ HRESULT Image11::map(D3D11_MAPPED_SUBRESOURCE *map)
     if (mStagingTexture)
     {
         ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
-        result = deviceContext->Map(mStagingTexture, 0, D3D11_MAP_WRITE, 0, map);
+        result = deviceContext->Map(mStagingTexture, mStagingSubresource, D3D11_MAP_WRITE, 0, map);
 
         // this can fail if the device is removed (from TDR)
         if (d3d11::isDeviceLostError(result))
@@ -438,7 +448,7 @@ void Image11::unmap()
     if (mStagingTexture)
     {
         ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
-        deviceContext->Unmap(mStagingTexture, 0);
+        deviceContext->Unmap(mStagingTexture, mStagingSubresource);
     }
 }
 

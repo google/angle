@@ -61,12 +61,14 @@ class Image11 : public Image
     DISALLOW_COPY_AND_ASSIGN(Image11);
 
     ID3D11Texture2D *getStagingTexture();
+    unsigned int getStagingSubresource();
     void createStagingTexture();
 
     Renderer11 *mRenderer;
 
     DXGI_FORMAT mDXGIFormat;
     ID3D11Texture2D *mStagingTexture;
+    unsigned int mStagingSubresource;
 };
 
 }

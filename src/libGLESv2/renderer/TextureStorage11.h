@@ -50,7 +50,8 @@ class TextureStorage11 : public TextureStorage
     virtual int levelCount();
     UINT getSubresourceIndex(int level, int faceTarget);
 
-    bool updateSubresourceLevel(ID3D11Texture2D *texture, int level, int faceTarget, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
+    bool updateSubresourceLevel(ID3D11Texture2D *texture, unsigned int sourceSubresource, int level,
+                                int faceTarget, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
 
   protected:
     void generateMipmapLayer(RenderTarget11 *source, RenderTarget11 *dest);

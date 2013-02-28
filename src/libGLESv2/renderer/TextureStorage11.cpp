@@ -132,7 +132,9 @@ UINT TextureStorage11::getSubresourceIndex(int level, int faceIndex)
     return index;
 }
 
-bool TextureStorage11::updateSubresourceLevel(ID3D11Texture2D *srcTexture, int level, int face, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
+bool TextureStorage11::updateSubresourceLevel(ID3D11Texture2D *srcTexture, unsigned int sourceSubresource,
+                                              int level, int face, GLint xoffset, GLint yoffset,
+                                              GLsizei width, GLsizei height)
 {
     if (srcTexture)
     {
@@ -152,7 +154,8 @@ bool TextureStorage11::updateSubresourceLevel(ID3D11Texture2D *srcTexture, int l
         ID3D11DeviceContext *context = mRenderer->getDeviceContext();
         
         ASSERT(getBaseTexture());
-        context->CopySubresourceRegion(getBaseTexture(), getSubresourceIndex(level, face), xoffset, yoffset, 0, srcTexture, 0, &srcBox);
+        context->CopySubresourceRegion(getBaseTexture(), getSubresourceIndex(level + mLodOffset, face),
+                                       xoffset, yoffset, 0, srcTexture, sourceSubresource, &srcBox);
         return true;
     }
 
