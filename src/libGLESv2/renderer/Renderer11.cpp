@@ -1467,7 +1467,7 @@ void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *
                     clearFlags |= D3D11_CLEAR_STENCIL;
                 }
 
-                float depthClear = clearParams.depthClearValue;
+                float depthClear = gl::clamp01(clearParams.depthClearValue);
                 UINT8 stencilClear = clearParams.stencilClearValue & 0x000000FF;
 
                 mDeviceContext->ClearDepthStencilView(framebufferDSV, clearFlags, depthClear, stencilClear);
