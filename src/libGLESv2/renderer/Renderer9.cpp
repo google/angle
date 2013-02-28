@@ -2085,14 +2085,12 @@ bool Renderer9::testDeviceResettable()
     }
 
     // On D3D9Ex, DEVICELOST represents a hung device that needs to be restarted
-    // On some systems, they return S_PRESENT_MODE_CHANGED
     // DEVICEREMOVED indicates the device has been stopped and must be recreated
     switch (status)
     {
       case D3DERR_DEVICENOTRESET:
       case D3DERR_DEVICEHUNG:
         return true;
-      case S_PRESENT_MODE_CHANGED:
       case D3DERR_DEVICELOST:
         return (mDeviceEx != NULL);
       case D3DERR_DEVICEREMOVED:
