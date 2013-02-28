@@ -107,45 +107,7 @@ Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(
 
 Renderer11::~Renderer11()
 {
-    releaseDeviceResources();
-
-    if (mDxgiFactory)
-    {
-        mDxgiFactory->Release();
-        mDxgiFactory = NULL;
-    }
-
-    if (mDxgiAdapter)
-    {
-        mDxgiAdapter->Release();
-        mDxgiAdapter = NULL;
-    }
-
-    if (mDeviceContext)
-    {
-        mDeviceContext->ClearState();
-        mDeviceContext->Flush();
-        mDeviceContext->Release();
-        mDeviceContext = NULL;
-    }
-
-    if (mDevice)
-    {
-        mDevice->Release();
-        mDevice = NULL;
-    }
-
-    if (mD3d11Module)
-    {
-        FreeLibrary(mD3d11Module);
-        mD3d11Module = NULL;
-    }
-
-    if (mDxgiModule)
-    {
-        FreeLibrary(mDxgiModule);
-        mDxgiModule = NULL;
-    }
+    release();
 }
 
 Renderer11 *Renderer11::makeRenderer11(Renderer *renderer)
@@ -170,6 +132,8 @@ EGLint Renderer11::initialize()
         return EGL_NOT_INITIALIZED;
     }
 
+    // create the D3D11 device
+    ASSERT(mDevice == NULL);
     PFN_D3D11_CREATE_DEVICE D3D11CreateDevice = (PFN_D3D11_CREATE_DEVICE)GetProcAddress(mD3d11Module, "D3D11CreateDevice");
 
     if (D3D11CreateDevice == NULL)
@@ -1775,11 +1739,18 @@ bool Renderer11::testDeviceLost(bool notify)
 {
     bool isLost = false;
 
-    // TODO
-    //UNIMPLEMENTED();
+    // GetRemovedReason is used to test if the device is removed
+    HRESULT result = mDevice->GetDeviceRemovedReason();
+    isLost = d3d11::isDeviceLostError(result);
 
     if (isLost)
     {
+        // Log error if this is a new device lost event
+        if (mDeviceLost == false)
+        {
+            ERR("The D3D11 device was removed: 0x%08X", result);
+        }
+
         // ensure we note the device loss --
         // we'll probably get this done again by notifyDeviceLost
         // but best to remember it!
@@ -1797,30 +1768,106 @@ bool Renderer11::testDeviceLost(bool notify)
 
 bool Renderer11::testDeviceResettable()
 {
-    HRESULT status = D3D_OK;
+    // determine if the device is resettable by creating a dummy device
+    PFN_D3D11_CREATE_DEVICE D3D11CreateDevice = (PFN_D3D11_CREATE_DEVICE)GetProcAddress(mD3d11Module, "D3D11CreateDevice");
 
-    // TODO
-    UNIMPLEMENTED();
-
-    switch (status)
+    if (D3D11CreateDevice == NULL)
     {
-      case D3DERR_DEVICENOTRESET:
-      case D3DERR_DEVICEHUNG:
-        return true;
-      default:
         return false;
+    }
+
+    D3D_FEATURE_LEVEL featureLevel[] =
+    {
+        D3D_FEATURE_LEVEL_11_0,
+        D3D_FEATURE_LEVEL_10_1,
+        D3D_FEATURE_LEVEL_10_0,
+    };
+
+    ID3D11Device* dummyDevice;
+    D3D_FEATURE_LEVEL dummyFeatureLevel;
+    ID3D11DeviceContext* dummyContext;
+
+    HRESULT result = D3D11CreateDevice(NULL,
+                                       D3D_DRIVER_TYPE_HARDWARE,
+                                       NULL,
+                                       #if defined(_DEBUG)
+                                       D3D11_CREATE_DEVICE_DEBUG,
+                                       #else
+                                       0,
+                                       #endif
+                                       featureLevel,
+                                       sizeof(featureLevel)/sizeof(featureLevel[0]),
+                                       D3D11_SDK_VERSION,
+                                       &dummyDevice,
+                                       &dummyFeatureLevel,
+                                       &dummyContext);
+
+    if (!mDevice || FAILED(result))
+    {
+        return false;
+    }
+
+    dummyContext->Release();
+    dummyDevice->Release();
+
+    return true;
+}
+
+void Renderer11::release()
+{
+    releaseDeviceResources();
+
+    if (mDxgiFactory)
+    {
+        mDxgiFactory->Release();
+        mDxgiFactory = NULL;
+    }
+
+    if (mDxgiAdapter)
+    {
+        mDxgiAdapter->Release();
+        mDxgiAdapter = NULL;
+    }
+
+    if (mDeviceContext)
+    {
+        mDeviceContext->ClearState();
+        mDeviceContext->Flush();
+        mDeviceContext->Release();
+        mDeviceContext = NULL;
+    }
+
+    if (mDevice)
+    {
+        mDevice->Release();
+        mDevice = NULL;
+    }
+
+    if (mD3d11Module)
+    {
+        FreeLibrary(mD3d11Module);
+        mD3d11Module = NULL;
+    }
+
+    if (mDxgiModule)
+    {
+        FreeLibrary(mDxgiModule);
+        mDxgiModule = NULL;
     }
 }
 
 bool Renderer11::resetDevice()
 {
-    releaseDeviceResources();
+    // recreate everything
+    release();
+    EGLint result = initialize();
 
-    // TODO
-    UNIMPLEMENTED();
+    if (result != EGL_SUCCESS)
+    {
+        ERR("Could not reinitialize D3D11 device: %08X", result);
+        return false;
+    }
 
-    // reset device defaults
-    initializeDevice();
     mDeviceLost = false;
 
     return true;

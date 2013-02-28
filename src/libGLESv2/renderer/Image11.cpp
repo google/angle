@@ -401,15 +401,22 @@ HRESULT Image11::map(D3D11_MAPPED_SUBRESOURCE *map)
 {
     createStagingTexture();
 
-    HRESULT result = D3DERR_INVALIDCALL;
+    HRESULT result = E_FAIL;
 
     if (mStagingTexture)
     {
         ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
         result = deviceContext->Map(mStagingTexture, 0, D3D11_MAP_WRITE, 0, map);
-        ASSERT(SUCCEEDED(result));
 
-        mDirty = true;
+        // this can fail if the device is removed (from TDR)
+        if (d3d11::isDeviceLostError(result))
+        {
+            mRenderer->notifyDeviceLost();
+        }
+        else if (SUCCEEDED(result))
+        {
+            mDirty = true;
+        }
     }
 
     return result;

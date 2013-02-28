@@ -235,7 +235,13 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int levels, GLenum 
 
         HRESULT result = device->CreateTexture2D(&desc, NULL, &mTexture);
 
-        if (FAILED(result))
+        // this can happen from windows TDR
+        if (d3d11::isDeviceLostError(result))
+        {
+            mRenderer->notifyDeviceLost();
+            gl::error(GL_OUT_OF_MEMORY);
+        }
+        else if (FAILED(result))
         {
             ASSERT(result == E_OUTOFMEMORY);
             ERR("Creating image failed.");

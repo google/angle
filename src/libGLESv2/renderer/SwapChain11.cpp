@@ -536,7 +536,23 @@ EGLint SwapChain11::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
 
     // Draw
     deviceContext->Draw(4, 0);
-    mSwapChain->Present(mSwapInterval, 0);
+    result = mSwapChain->Present(mSwapInterval, 0);
+
+    if (result == DXGI_ERROR_DEVICE_REMOVED)
+    {
+        HRESULT removedReason = device->GetDeviceRemovedReason();
+        ERR("Present failed: the D3D11 device was removed: 0x%08X", removedReason);
+        return EGL_CONTEXT_LOST;
+    }
+    else if (result == DXGI_ERROR_DEVICE_RESET)
+    {
+        ERR("Present failed: the D3D11 device was reset from a bad command.");
+        return EGL_CONTEXT_LOST;
+    }
+    else if (FAILED(result))
+    {
+        ERR("Present failed with error code 0x%08X", result);
+    }
 
     // Unbind
     static ID3D11ShaderResourceView *const nullSRV = NULL;

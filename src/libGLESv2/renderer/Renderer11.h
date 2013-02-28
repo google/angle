@@ -196,6 +196,7 @@ class Renderer11 : public Renderer
     void initializeDevice();
     void releaseDeviceResources();
     int getMinorShaderModel() const;
+    void release();
 
     RenderStateCache mStateCache;
 

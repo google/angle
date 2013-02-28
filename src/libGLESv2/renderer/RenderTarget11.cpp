@@ -238,7 +238,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
         return;
     }
 
-    HRESULT result = D3DERR_INVALIDCALL;
+    HRESULT result = E_FAIL;
     
     if (width > 0 && height > 0)
     {

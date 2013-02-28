@@ -2092,7 +2092,7 @@ GLenum Context::getError()
 
 GLenum Context::getResetStatus()
 {
-    if (mResetStatus == GL_NO_ERROR)
+    if (mResetStatus == GL_NO_ERROR && !mContextLost)
     {
         // mResetStatus will be set by the markContextLost callback
         // in the case a notification is sent
@@ -2103,6 +2103,8 @@ GLenum Context::getResetStatus()
 
     if (mResetStatus != GL_NO_ERROR)
     {
+        ASSERT(mContextLost);
+
         if (mRenderer->testDeviceResettable())
         {
             mResetStatus = GL_NO_ERROR;
