@@ -25,6 +25,7 @@
 #include "libGLESv2/renderer/VertexDataManager.h"
 #include "libGLESv2/renderer/IndexDataManager.h"
 #include "libGLESv2/renderer/TextureStorage11.h"
+#include "libGLESv2/renderer/Query11.h"
 
 #include "libGLESv2/renderer/shaders/compiled/passthrough11vs.h"
 #include "libGLESv2/renderer/shaders/compiled/passthroughrgba11ps.h"
@@ -1984,9 +1985,15 @@ bool Renderer11::getNonPower2TextureSupport() const
 
 bool Renderer11::getOcclusionQuerySupport() const
 {
-    // TODO
-    // UNIMPLEMENTED();
-    return false;
+    switch (mFeatureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_0:
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0:
+        return true;
+      default: UNREACHABLE();
+        return false;
+    }
 }
 
 bool Renderer11::getInstancingSupport() const
@@ -2551,9 +2558,7 @@ IndexBuffer *Renderer11::createIndexBuffer()
 
 QueryImpl *Renderer11::createQuery(GLenum type)
 {
-    // TODO
-    UNIMPLEMENTED();
-    return NULL;
+    return new Query11(this, type);
 }
 
 FenceImpl *Renderer11::createFence()
