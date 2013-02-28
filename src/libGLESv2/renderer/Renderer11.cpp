@@ -1650,15 +1650,42 @@ void Renderer11::markAllStateDirty()
     mDepthStencilInitialized = false;
     mRenderTargetDescInitialized = false;
 
+    bool clearVertexTextureResources = false;
+
     for (int i = 0; i < gl::IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS; i++)
     {
+        if (mCurVertexTextureSerials[i] != 0)
+        {
+            clearVertexTextureResources = true;
+        }
+
         mForceSetVertexSamplerStates[i] = true;
         mCurVertexTextureSerials[i] = 0;
     }
+
+    if (clearVertexTextureResources && mDeviceContext)
+    {
+        ID3D11ShaderResourceView *nullSRVs[gl::IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS] = {0};
+        mDeviceContext->VSSetShaderResources(0, getMaxVertexTextureImageUnits(), nullSRVs);
+    }
+
+    bool clearPixelTextureResources = false;
+
     for (int i = 0; i < gl::MAX_TEXTURE_IMAGE_UNITS; i++)
     {
+        if (mCurPixelTextureSerials[i] != 0)
+        {
+            clearPixelTextureResources = true;
+        }
+
         mForceSetPixelSamplerStates[i] = true;
         mCurPixelTextureSerials[i] = 0;
+    }
+
+    if (clearPixelTextureResources && mDeviceContext)
+    {
+        ID3D11ShaderResourceView *nullSRVs[gl::MAX_TEXTURE_IMAGE_UNITS] = {0};
+        mDeviceContext->PSSetShaderResources(0, gl::MAX_TEXTURE_IMAGE_UNITS, nullSRVs);
     }
 
     mForceSetBlendState = true;
