@@ -169,7 +169,7 @@ IDirect3DSurface9 *TextureStorage9_2D::getSurfaceLevel(int level, bool dirty)
         ASSERT(SUCCEEDED(result));
 
         // With managed textures the driver needs to be informed of updates to the lower mipmap levels
-        if (level != 0 && isManaged() && dirty)
+        if (level + mLodOffset != 0 && isManaged() && dirty)
         {
             mTexture->AddDirtyRect(NULL);
         }
