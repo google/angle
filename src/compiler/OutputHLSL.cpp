@@ -100,7 +100,7 @@ OutputHLSL::OutputHLSL(TParseContext &context, ShShaderOutput outputType)
         }
         else
         {
-            mUniformRegister = 2;   // Reserve registers for dx_DepthRange and dx_HalfPixelSize
+            mUniformRegister = 2;   // Reserve registers for dx_DepthRange and dx_ViewAdjust
         }
     }
     else
@@ -629,7 +629,7 @@ void OutputHLSL::header()
                 out << "uniform float3 dx_DepthRange : register(c0);\n";
             }
 
-            out << "uniform float2 dx_HalfPixelSize : register(c1);\n"
+            out << "uniform float4 dx_ViewAdjust : register(c1);\n"
                    "\n";
         }
 

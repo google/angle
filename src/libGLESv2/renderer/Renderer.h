@@ -72,7 +72,7 @@ struct ConfigDesc
 struct dx_VertexConstants
 {
     float depthRange[4];
-    float halfPixelSize[4];
+    float viewAdjust[4];
 };
 
 struct dx_PixelConstants

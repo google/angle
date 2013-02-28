@@ -1093,8 +1093,10 @@ bool Renderer9::setViewport(const gl::Rectangle &viewport, float zNear, float zF
         dx_VertexConstants vc = {0};
         dx_PixelConstants pc = {0};
 
-        vc.halfPixelSize[0] = 1.0f / dxViewport.Width;
-        vc.halfPixelSize[1] = -1.0f / dxViewport.Height;
+        vc.viewAdjust[0] = (float)((actualViewport.width - (int)dxViewport.Width) + 2 * (actualViewport.x - (int)dxViewport.X) - 1) / dxViewport.Width;
+        vc.viewAdjust[1] = (float)((actualViewport.height - (int)dxViewport.Height) + 2 * (actualViewport.y - (int)dxViewport.Y) - 1) / dxViewport.Height;
+        vc.viewAdjust[2] = (float)actualViewport.width / dxViewport.Width;
+        vc.viewAdjust[3] = (float)actualViewport.height / dxViewport.Height;
 
         pc.viewCoords[0] = actualViewport.width  * 0.5f;
         pc.viewCoords[1] = actualViewport.height * 0.5f;
@@ -2273,12 +2275,12 @@ unsigned int Renderer9::getMaxCombinedTextureImageUnits() const
 
 unsigned int Renderer9::getReservedVertexUniformVectors() const
 {
-	return 2;   // dx_HalfPixelSize and dx_DepthRange.
+    return 2;   // dx_ViewAdjust and dx_DepthRange.
 }
 
 unsigned int Renderer9::getReservedFragmentUniformVectors() const
 {
-	return 3;   // dx_ViewCoords, dx_DepthFront and dx_DepthRange.
+    return 3;   // dx_ViewCoords, dx_DepthFront and dx_DepthRange.
 }
 
 unsigned int Renderer9::getMaxVertexUniformVectors() const

@@ -1317,8 +1317,8 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
                       "    gl_main();\n"
                       "\n"
                       "    VS_OUTPUT output;\n"
-                      "    output.gl_Position.x = gl_Position.x - dx_HalfPixelSize.x * gl_Position.w;\n"
-                      "    output.gl_Position.y = -(gl_Position.y + dx_HalfPixelSize.y * gl_Position.w);\n"
+                      "    output.gl_Position.x = gl_Position.x * dx_ViewAdjust.z + dx_ViewAdjust.x * gl_Position.w;\n"
+                      "    output.gl_Position.y = -(gl_Position.y * dx_ViewAdjust.w + dx_ViewAdjust.y * gl_Position.w);\n"
                       "    output.gl_Position.z = (gl_Position.z + gl_Position.w) * 0.5;\n"
                       "    output.gl_Position.w = gl_Position.w;\n";
     }
