@@ -236,6 +236,7 @@
             'libGLESv2/BinaryStream.h',
             'libGLESv2/Buffer.cpp',
             'libGLESv2/Buffer.h',
+            'libGLESv2/constants.h',
             'libGLESv2/Context.cpp',
             'libGLESv2/Context.h',
             'libGLESv2/angletypes.h',

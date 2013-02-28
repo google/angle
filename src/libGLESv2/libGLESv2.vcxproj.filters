@@ -472,6 +472,9 @@
     <ClInclude Include="renderer\VertexDeclarationCache.h">
       <Filter>Header Files\Renderer9</Filter>
     </ClInclude>
+    <ClInclude Include="constants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\shaders\Blit.ps">

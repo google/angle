@@ -28,6 +28,7 @@
 #include "common/RefCountObject.h"
 #include "libGLESv2/HandleAllocator.h"
 #include "libGLESv2/angletypes.h"
+#include "libGLESv2/Constants.h"
 
 namespace rx
 {
@@ -60,20 +61,6 @@ class Query;
 class ResourceManager;
 class Buffer;
 
-enum
-{
-    MAX_DRAW_BUFFERS = 1,
-
-    MAX_VERTEX_ATTRIBS = 16,
-    MAX_TEXTURE_IMAGE_UNITS = 16,
-
-    // Implementation upper limits, real maximums depend on the hardware
-    IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS = 16,
-    IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS = MAX_TEXTURE_IMAGE_UNITS + IMPLEMENTATION_MAX_VERTEX_TEXTURE_IMAGE_UNITS,    
-
-    IMPLEMENTATION_MAX_VARYING_VECTORS = 32
-};
-
 enum QueryType
 {
     QUERY_ANY_SAMPLES_PASSED,
@@ -81,10 +68,6 @@ enum QueryType
 
     QUERY_TYPE_COUNT
 };
-
-const float ALIASED_LINE_WIDTH_RANGE_MIN = 1.0f;
-const float ALIASED_LINE_WIDTH_RANGE_MAX = 1.0f;
-const float ALIASED_POINT_SIZE_RANGE_MIN = 1.0f;
 
 // Helper structure describing a single vertex attribute
 class VertexAttribute
