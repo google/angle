@@ -28,6 +28,7 @@ TextureStorage11::TextureStorage11(Renderer *renderer, UINT bindFlags)
       mShaderResourceFormat(DXGI_FORMAT_UNKNOWN),
       mRenderTargetFormat(DXGI_FORMAT_UNKNOWN),
       mDepthStencilFormat(DXGI_FORMAT_UNKNOWN),
+      mSRV(NULL),
       mTextureWidth(0),
       mTextureHeight(0)
 {
