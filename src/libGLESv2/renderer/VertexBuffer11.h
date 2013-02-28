@@ -55,6 +55,7 @@ class VertexBuffer11 : public VertexBuffer
     struct VertexConverter
     {
         VertexConversionFunction conversionFunc;
+        bool identity;
         DXGI_FORMAT dxgiFormat;
         unsigned int outputElementSize;
     };
