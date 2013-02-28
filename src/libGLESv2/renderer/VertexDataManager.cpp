@@ -94,8 +94,23 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
         {
             gl::Buffer *buffer = attribs[i].mBoundBuffer.get();
             StaticVertexBufferInterface *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
-            VertexBufferInterface *vertexBuffer = staticBuffer ? staticBuffer : static_cast<VertexBufferInterface*>(mStreamingBuffer);
 
+            if (staticBuffer && staticBuffer->getBufferSize() > 0 && staticBuffer->lookupAttribute(attribs[i]) == -1 &&
+                !directStoragePossible(staticBuffer, attribs[i]))
+            {
+                buffer->invalidateStaticData();
+            }
+        }
+    }
+
+    // Reserve the required space in the buffers
+    for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
+    {
+        if (translated[i].active && attribs[i].mArrayEnabled)
+        {
+            gl::Buffer *buffer = attribs[i].mBoundBuffer.get();
+            StaticVertexBufferInterface *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
+            VertexBufferInterface *vertexBuffer = staticBuffer ? staticBuffer : static_cast<VertexBufferInterface*>(mStreamingBuffer);
 
             if (!directStoragePossible(vertexBuffer, attribs[i]))
             {
@@ -105,11 +120,6 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
                     {
                         int totalCount = elementsInBuffer(attribs[i], buffer->size());
                         staticBuffer->reserveVertexSpace(attribs[i], totalCount, 0);
-                    }
-                    else if (staticBuffer->lookupAttribute(attribs[i]) == -1)
-                    {
-                        mStreamingBuffer->reserveVertexSpace(attribs[i], count, instances);
-                        buffer->invalidateStaticData();
                     }
                 }
                 else
