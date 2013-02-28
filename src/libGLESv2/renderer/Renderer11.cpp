@@ -26,6 +26,7 @@
 #include "libGLESv2/renderer/IndexDataManager.h"
 #include "libGLESv2/renderer/TextureStorage11.h"
 #include "libGLESv2/renderer/Query11.h"
+#include "libGLESv2/renderer/Fence11.h"
 
 #include "libGLESv2/renderer/shaders/compiled/passthrough11vs.h"
 #include "libGLESv2/renderer/shaders/compiled/passthroughrgba11ps.h"
@@ -1917,9 +1918,7 @@ float Renderer11::getTextureMaxAnisotropy() const
 
 bool Renderer11::getEventQuerySupport()
 {
-    // TODO
-    // UNIMPLEMENTED();
-    return false;
+    return true;
 }
 
 unsigned int Renderer11::getMaxVertexTextureImageUnits() const
@@ -2563,9 +2562,7 @@ QueryImpl *Renderer11::createQuery(GLenum type)
 
 FenceImpl *Renderer11::createFence()
 {
-    // TODO
-    UNIMPLEMENTED();
-    return NULL;
+    return new Fence11(this);
 }
 
 bool Renderer11::getRenderTargetResource(gl::Framebuffer *framebuffer, unsigned int *subresourceIndex, ID3D11Texture2D **resource)
