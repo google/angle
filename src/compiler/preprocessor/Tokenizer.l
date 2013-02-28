@@ -279,9 +279,8 @@ Tokenizer::~Tokenizer()
     destroyScanner();
 }
 
-bool Tokenizer::init(int count, const char* const string[], const int length[])
+bool Tokenizer::init(size_t count, const char* const string[], const int length[])
 {
-    if (count < 0) return false;
     if ((count > 0) && (string == 0)) return false;
 
     mContext.input = Input(count, string, length);
