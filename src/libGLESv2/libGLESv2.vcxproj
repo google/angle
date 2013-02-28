@@ -247,6 +247,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClCompile Include="renderer\Fence11.cpp" />
     <ClCompile Include="renderer\Fence9.cpp" />
     <ClCompile Include="renderer\BufferStorage.cpp" />
+    <ClCompile Include="renderer\BufferStorage11.cpp" />
     <ClCompile Include="renderer\BufferStorage9.cpp" />
     <ClCompile Include="renderer\Image.cpp" />
     <ClCompile Include="renderer\Image9.cpp" />
@@ -311,6 +312,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="renderer\Fence9.h" />
     <ClInclude Include="renderer\FenceImpl.h" />
     <ClInclude Include="renderer\BufferStorage.h" />
+    <ClInclude Include="renderer\BufferStorage11.h" />
     <ClInclude Include="renderer\BufferStorage9.h" />
     <ClInclude Include="renderer\generatemip.h" />
     <ClInclude Include="renderer\Image.h" />
