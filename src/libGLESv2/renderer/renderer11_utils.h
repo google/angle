@@ -72,6 +72,9 @@ size_t ComputePixelSizeBits(DXGI_FORMAT format);
 size_t ComputeBlockSizeBits(DXGI_FORMAT format);
 
 bool IsDepthStencilFormat(DXGI_FORMAT format);
+DXGI_FORMAT GetDepthTextureFormat(DXGI_FORMAT format);
+DXGI_FORMAT GetDepthShaderResourceFormat(DXGI_FORMAT format);
+
 HRESULT SetDebugName(ID3D11DeviceChild *resource, const char *name);
 
 inline bool isDeviceLostError(HRESULT errorCode)
