@@ -1099,7 +1099,9 @@ void Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indic
 void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
 {
     unsigned int programBinarySerial = programBinary->getSerial();
-    if (programBinarySerial != mAppliedProgramBinarySerial)
+    const bool updateProgramState = (programBinarySerial != mAppliedProgramBinarySerial);
+
+    if (updateProgramState)
     {
         ShaderExecutable *vertexExe = programBinary->getVertexExecutable();
         ShaderExecutable *pixelExe = programBinary->getPixelExecutable();
@@ -1119,9 +1121,9 @@ void Renderer11::applyShaders(gl::ProgramBinary *programBinary)
     }
 
     // Only use the geometry shader currently for point sprite drawing
-    const bool usesGeometryShader = programBinary->usesGeometryShader() && mCurRasterState.pointDrawMode;
+    const bool usesGeometryShader = (programBinary->usesGeometryShader() && mCurRasterState.pointDrawMode);
 
-    if (programBinarySerial != mAppliedProgramBinarySerial || usesGeometryShader != mIsGeometryShaderActive)
+    if (updateProgramState || usesGeometryShader != mIsGeometryShaderActive)
     {
         if (usesGeometryShader)
         {
