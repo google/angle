@@ -136,22 +136,15 @@ void SwapChain11::release()
     }
 }
 
-EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHeight)
+void SwapChain11::releaseOffscreenTexture()
 {
-    ID3D11Device *device = mRenderer->getDevice();
-
-    if (device == NULL)
-    {
-        return EGL_BAD_ACCESS;
-    }
-
     if (mOffscreenTexture)
     {
         mOffscreenTexture->Release();
         mOffscreenTexture = NULL;
     }
 
-    if (mOffscreenRTView)   // TODO: Preserve the render target content
+    if (mOffscreenRTView)
     {
         mOffscreenRTView->Release();
         mOffscreenRTView = NULL;
@@ -174,6 +167,28 @@ EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHei
         mDepthStencilDSView->Release();
         mDepthStencilDSView = NULL;
     }
+}
+
+EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHeight)
+{
+    ID3D11Device *device = mRenderer->getDevice();
+
+    ASSERT(device != NULL);
+
+    // D3D11 does not allow zero size textures
+    ASSERT(backbufferWidth >= 1);
+    ASSERT(backbufferHeight >= 1);
+
+    // Preserve the render target content
+    ID3D11Texture2D *previousOffscreenTexture = mOffscreenTexture;
+    if (previousOffscreenTexture)
+    {
+        previousOffscreenTexture->AddRef();
+    }
+    const int previousWidth = mWidth;
+    const int previousHeight = mHeight;
+
+    releaseOffscreenTexture();
 
     // If the app passed in a share handle, open the resource
     // See EGL_ANGLE_d3d_share_handle_client_buffer
@@ -322,6 +337,28 @@ EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHei
 
     mWidth = backbufferWidth;
     mHeight = backbufferHeight;
+
+    if (previousOffscreenTexture != NULL)
+    {
+        D3D11_BOX sourceBox = {0};
+        sourceBox.left = 0;
+        sourceBox.right = std::min(previousWidth, mWidth);
+        sourceBox.top = std::max(previousHeight - mHeight, 0);
+        sourceBox.bottom = previousHeight;
+        sourceBox.front = 0;
+        sourceBox.back = 1;
+
+        ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
+        const int yoffset = std::max(mHeight - previousHeight, 0);
+        deviceContext->CopySubresourceRegion(mOffscreenTexture, 0, 0, yoffset, 0, previousOffscreenTexture, 0, &sourceBox);
+
+        previousOffscreenTexture->Release();
+
+        if (mSwapChain)
+        {
+            swapRect(0, 0, mWidth, mHeight);
+        }
+    }
 
     return EGL_SUCCESS;
 }
