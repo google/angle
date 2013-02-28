@@ -280,6 +280,7 @@
             'libGLESv2/renderer/IndexDataManager.h',
             'libGLESv2/renderer/InputLayoutCache.cpp',
             'libGLESv2/renderer/InputLayoutCache.h',
+            'libGLESv2/renderer/QueryImpl.h',
             'libGLESv2/renderer/Renderer.cpp',
             'libGLESv2/renderer/Renderer.h',
             'libGLESv2/renderer/Renderer11.cpp',

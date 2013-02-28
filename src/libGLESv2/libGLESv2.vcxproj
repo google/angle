@@ -310,6 +310,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="renderer\IndexBuffer9.h" />
     <ClInclude Include="renderer\IndexDataManager.h" />
     <ClInclude Include="renderer\InputLayoutCache.h" />
+    <ClInclude Include="renderer\QueryImpl.h" />
     <ClInclude Include="renderer\Renderer.h" />
     <ClInclude Include="renderer\Renderer11.h" />
     <ClInclude Include="renderer\renderer11_utils.h" />

@@ -403,6 +403,9 @@
     <ClInclude Include="..\common\debug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\QueryImpl.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="libGLESv2.def">
