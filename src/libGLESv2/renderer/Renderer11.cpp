@@ -22,6 +22,7 @@
 #include "libGLESv2/renderer/Image11.h"
 #include "libGLESv2/renderer/VertexBuffer11.h"
 #include "libGLESv2/renderer/IndexBuffer11.h"
+#include "libGLESv2/renderer/BufferStorage11.h"
 #include "libGLESv2/renderer/VertexDataManager.h"
 #include "libGLESv2/renderer/IndexDataManager.h"
 #include "libGLESv2/renderer/TextureStorage11.h"
@@ -2766,6 +2767,11 @@ VertexBuffer *Renderer11::createVertexBuffer()
 IndexBuffer *Renderer11::createIndexBuffer()
 {
     return new IndexBuffer11(this);
+}
+
+BufferStorage *Renderer11::createBufferStorage()
+{
+    return new BufferStorage11(this);
 }
 
 QueryImpl *Renderer11::createQuery(GLenum type)

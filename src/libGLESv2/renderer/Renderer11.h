@@ -166,6 +166,7 @@ class Renderer11 : public Renderer
     // Buffer creation
     virtual VertexBuffer *createVertexBuffer();
     virtual IndexBuffer *createIndexBuffer();
+    virtual BufferStorage *createBufferStorage();
 
     // Query and Fence creation
     virtual QueryImpl *createQuery(GLenum type);

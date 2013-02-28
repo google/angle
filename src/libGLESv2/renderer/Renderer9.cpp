@@ -26,6 +26,7 @@
 #include "libGLESv2/renderer/RenderTarget9.h"
 #include "libGLESv2/renderer/VertexBuffer9.h"
 #include "libGLESv2/renderer/IndexBuffer9.h"
+#include "libGLESv2/renderer/BufferStorage9.h"
 #include "libGLESv2/renderer/Query9.h"
 #include "libGLESv2/renderer/Fence9.h"
 
@@ -705,6 +706,11 @@ HRESULT Renderer9::createIndexBuffer(UINT Length, DWORD Usage, D3DFORMAT Format,
 IndexBuffer *Renderer9::createIndexBuffer()
 {
     return new IndexBuffer9(this);
+}
+
+BufferStorage *Renderer9::createBufferStorage()
+{
+    return new BufferStorage9();
 }
 
 QueryImpl *Renderer9::createQuery(GLenum type)
