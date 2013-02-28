@@ -178,7 +178,7 @@ class Texture2D : public Texture
 
     bool isMipmapComplete() const;
 
-    void redefineImage(GLint level, GLint internalformat, GLsizei width, GLsizei height);
+    void redefineImage(GLint level, GLint internalformat, GLsizei width, GLsizei height, bool discardMismatchedStorage);
     void commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
 
     rx::Image *mImageArray[IMPLEMENTATION_MAX_TEXTURE_LEVELS];
@@ -254,7 +254,7 @@ class TextureCubeMap : public Texture
 
     void setImage(int faceIndex, GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void commitRect(int faceIndex, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
-    void redefineImage(int faceIndex, GLint level, GLint internalformat, GLsizei width, GLsizei height);
+    void redefineImage(int faceIndex, GLint level, GLint internalformat, GLsizei width, GLsizei height, bool discardMismatchedStorage);
 
     rx::Image *mImageArray[6][IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 

@@ -378,13 +378,13 @@ GLenum Texture2D::getActualFormat(GLint level) const
         return D3DFMT_UNKNOWN;
 }
 
-void Texture2D::redefineImage(GLint level, GLint internalformat, GLsizei width, GLsizei height)
+void Texture2D::redefineImage(GLint level, GLint internalformat, GLsizei width, GLsizei height, bool discardMismatchedStorage)
 {
     releaseTexImage();
-   
+
     bool redefined = mImageArray[level]->redefine(mRenderer, internalformat, width, height, false);
 
-    if (mTexStorage && redefined)
+    if (mTexStorage && redefined && discardMismatchedStorage)
     {
         for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
         {
@@ -400,7 +400,7 @@ void Texture2D::redefineImage(GLint level, GLint internalformat, GLsizei width, 
 void Texture2D::setImage(GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
     GLint internalformat = ConvertSizedInternalFormat(format, type);
-    redefineImage(level, internalformat, width, height);
+    redefineImage(level, internalformat, width, height, true);
 
     Texture::setImage(unpackAlignment, pixels, mImageArray[level]);
 }
@@ -444,7 +444,7 @@ void Texture2D::releaseTexImage()
 void Texture2D::setCompressedImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels)
 {
     // compressed formats don't have separate sized internal formats-- we can just use the compressed format directly
-    redefineImage(level, format, width, height);
+    redefineImage(level, format, width, height, true);
 
     Texture::setCompressedImage(imageSize, pixels, mImageArray[level]);
 }
@@ -480,8 +480,8 @@ void Texture2D::subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GL
 void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
 {
     GLint internalformat = ConvertSizedInternalFormat(format, GL_UNSIGNED_BYTE);
-    redefineImage(level, internalformat, width, height);
-   
+    redefineImage(level, internalformat, width, height, true);
+
     if (!mImageArray[level]->isRenderableFormat())
     {
         mImageArray[level]->copy(0, 0, x, y, width, height, source);
@@ -765,9 +765,10 @@ void Texture2D::generateMipmaps()
     unsigned int q = log2(std::max(mImageArray[0]->getWidth(), mImageArray[0]->getHeight()));
     for (unsigned int i = 1; i <= q; i++)
     {
-        redefineImage(i, mImageArray[0]->getInternalFormat(), 
-                         std::max(mImageArray[0]->getWidth() >> i, 1),
-                         std::max(mImageArray[0]->getHeight() >> i, 1));
+        redefineImage(i, mImageArray[0]->getInternalFormat(),
+                      std::max(mImageArray[0]->getWidth() >> i, 1),
+                      std::max(mImageArray[0]->getHeight() >> i, 1),
+                      false);
     }
 
     if (mTexStorage && mTexStorage->isRenderTarget())
@@ -996,7 +997,7 @@ void TextureCubeMap::setImageNegZ(GLint level, GLsizei width, GLsizei height, GL
 void TextureCubeMap::setCompressedImage(GLenum face, GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei imageSize, const void *pixels)
 {
     // compressed formats don't have separate sized internal formats-- we can just use the compressed format directly
-    redefineImage(faceIndex(face), level, format, width, height);
+    redefineImage(faceIndex(face), level, format, width, height, true);
 
     Texture::setCompressedImage(imageSize, pixels, mImageArray[faceIndex(face)][level]);
 }
@@ -1213,7 +1214,7 @@ void TextureCubeMap::convertToRenderTarget()
 void TextureCubeMap::setImage(int faceIndex, GLint level, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
     GLint internalformat = ConvertSizedInternalFormat(format, type);
-    redefineImage(faceIndex, level, internalformat, width, height);
+    redefineImage(faceIndex, level, internalformat, width, height, true);
 
     Texture::setImage(unpackAlignment, pixels, mImageArray[faceIndex][level]);
 }
@@ -1229,11 +1230,11 @@ unsigned int TextureCubeMap::faceIndex(GLenum face)
     return face - GL_TEXTURE_CUBE_MAP_POSITIVE_X;
 }
 
-void TextureCubeMap::redefineImage(int face, GLint level, GLint internalformat, GLsizei width, GLsizei height)
+void TextureCubeMap::redefineImage(int face, GLint level, GLint internalformat, GLsizei width, GLsizei height, bool discardMismatchedStorage)
 {
     bool redefined = mImageArray[face][level]->redefine(mRenderer, internalformat, width, height, false);
 
-    if (mTexStorage && redefined)
+    if (mTexStorage && redefined && discardMismatchedStorage)
     {
         for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
         {
@@ -1254,7 +1255,7 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint 
 {
     unsigned int faceindex = faceIndex(target);
     GLint internalformat = gl::ConvertSizedInternalFormat(format, GL_UNSIGNED_BYTE);
-    redefineImage(faceindex, level, internalformat, width, height);
+    redefineImage(faceindex, level, internalformat, width, height, true);
 
     if (!mImageArray[faceindex][level]->isRenderableFormat())
     {
@@ -1383,8 +1384,9 @@ void TextureCubeMap::generateMipmaps()
         for (unsigned int i = 1; i <= q; i++)
         {
             redefineImage(f, i, mImageArray[f][0]->getInternalFormat(),
-                                std::max(mImageArray[f][0]->getWidth() >> i, 1),
-                                std::max(mImageArray[f][0]->getWidth() >> i, 1));
+                          std::max(mImageArray[f][0]->getWidth() >> i, 1),
+                          std::max(mImageArray[f][0]->getWidth() >> i, 1),
+                          false);
         }
     }
 
