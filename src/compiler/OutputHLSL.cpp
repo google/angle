@@ -1735,158 +1735,163 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         break;
       case EOpFunctionCall:
         {
-            if (visit == PreVisit)
+            TString name = TFunction::unmangleName(node->getName());
+            bool lod0 = mInsideDiscontinuousLoop || mOutputLod0Function;
+
+            if (node->isUserDefined())
             {
-                TString name = TFunction::unmangleName(node->getName());
-                bool lod0 = mInsideDiscontinuousLoop || mOutputLod0Function;
-
-                if (node->isUserDefined())
-                {
-                    out << decorate(name) << (lod0 ? "Lod0(" : "(");
-                }
-                else
-                {
-                    if (name == "texture2D")
-                    {
-                        if (!lod0)
-                        {
-                            if (node->getSequence().size() == 2)
-                            {
-                                mUsesTexture2D = true;
-                            }
-                            else if (node->getSequence().size() == 3)
-                            {
-                                mUsesTexture2D_bias = true;
-                            }
-                            else UNREACHABLE();
-
-                            out << "gl_texture2D(";
-                        }
-                        else
-                        {
-                            if (node->getSequence().size() == 2)
-                            {
-                                mUsesTexture2DLod0 = true;
-                            }
-                            else if (node->getSequence().size() == 3)
-                            {
-                                mUsesTexture2DLod0_bias = true;
-                            }
-                            else UNREACHABLE();
-
-                            out << "gl_texture2DLod0(";
-                        }
-                    }
-                    else if (name == "texture2DProj")
-                    {
-                        if (!lod0)
-                        {
-                            if (node->getSequence().size() == 2)
-                            {
-                                mUsesTexture2DProj = true;
-                            }
-                            else if (node->getSequence().size() == 3)
-                            {
-                                mUsesTexture2DProj_bias = true;
-                            }
-                            else UNREACHABLE();
-
-                            out << "gl_texture2DProj(";
-                        }
-                        else
-                        {
-                            if (node->getSequence().size() == 2)
-                            {
-                                mUsesTexture2DProjLod0 = true;
-                            }
-                            else if (node->getSequence().size() == 3)
-                            {
-                                mUsesTexture2DProjLod0_bias = true;
-                            }
-                            else UNREACHABLE();
-
-                            out << "gl_texture2DProjLod0(";
-                        }
-                    }
-                    else if (name == "textureCube")
-                    {
-                        if (!lod0)
-                        {
-                            if (node->getSequence().size() == 2)
-                            {
-                                mUsesTextureCube = true;
-                            }
-                            else if (node->getSequence().size() == 3)
-                            {
-                                mUsesTextureCube_bias = true;
-                            }
-                            else UNREACHABLE();
-
-                            out << "gl_textureCube(";
-                        }
-                        else
-                        {
-                            if (node->getSequence().size() == 2)
-                            {
-                                mUsesTextureCubeLod0 = true;
-                            }
-                            else if (node->getSequence().size() == 3)
-                            {
-                                mUsesTextureCubeLod0_bias = true;
-                            }
-                            else UNREACHABLE();
-
-                            out << "gl_textureCubeLod0(";
-                        }
-                    }
-                    else if (name == "texture2DLod")
-                    {
-                        if (node->getSequence().size() == 3)
-                        {
-                            mUsesTexture2DLod = true;
-                        }
-                        else UNREACHABLE();
-
-                        out << "gl_texture2DLod(";
-                    }
-                    else if (name == "texture2DProjLod")
-                    {
-                        if (node->getSequence().size() == 3)
-                        {
-                            mUsesTexture2DProjLod = true;
-                        }
-                        else UNREACHABLE();
-
-                        out << "gl_texture2DProjLod(";
-                    }
-                    else if (name == "textureCubeLod")
-                    {
-                        if (node->getSequence().size() == 3)
-                        {
-                            mUsesTextureCubeLod = true;
-                        }
-                        else UNREACHABLE();
-
-                        out << "gl_textureCubeLod(";
-                    }
-                    else UNREACHABLE();
-
-                    if (mOutputType == SH_HLSL11_OUTPUT)
-                    {
-                        out << "texture_";
-                        node->getSequence()[0]->traverse(this);
-                        out << ", sampler_";
-                    }
-                }
-            }
-            else if (visit == InVisit)
-            {
-                out << ", ";
+                out << decorate(name) << (lod0 ? "Lod0(" : "(");
             }
             else
             {
-                out << ")";
+                if (name == "texture2D")
+                {
+                    if (!lod0)
+                    {
+                        if (node->getSequence().size() == 2)
+                        {
+                            mUsesTexture2D = true;
+                        }
+                        else if (node->getSequence().size() == 3)
+                        {
+                            mUsesTexture2D_bias = true;
+                        }
+                        else UNREACHABLE();
+
+                        out << "gl_texture2D(";
+                    }
+                    else
+                    {
+                        if (node->getSequence().size() == 2)
+                        {
+                            mUsesTexture2DLod0 = true;
+                        }
+                        else if (node->getSequence().size() == 3)
+                        {
+                            mUsesTexture2DLod0_bias = true;
+                        }
+                        else UNREACHABLE();
+
+                        out << "gl_texture2DLod0(";
+                    }
+                }
+                else if (name == "texture2DProj")
+                {
+                    if (!lod0)
+                    {
+                        if (node->getSequence().size() == 2)
+                        {
+                            mUsesTexture2DProj = true;
+                        }
+                        else if (node->getSequence().size() == 3)
+                        {
+                            mUsesTexture2DProj_bias = true;
+                        }
+                        else UNREACHABLE();
+
+                        out << "gl_texture2DProj(";
+                    }
+                    else
+                    {
+                        if (node->getSequence().size() == 2)
+                        {
+                            mUsesTexture2DProjLod0 = true;
+                        }
+                        else if (node->getSequence().size() == 3)
+                        {
+                            mUsesTexture2DProjLod0_bias = true;
+                        }
+                        else UNREACHABLE();
+
+                        out << "gl_texture2DProjLod0(";
+                    }
+                }
+                else if (name == "textureCube")
+                {
+                    if (!lod0)
+                    {
+                        if (node->getSequence().size() == 2)
+                        {
+                            mUsesTextureCube = true;
+                        }
+                        else if (node->getSequence().size() == 3)
+                        {
+                            mUsesTextureCube_bias = true;
+                        }
+                        else UNREACHABLE();
+
+                        out << "gl_textureCube(";
+                    }
+                    else
+                    {
+                        if (node->getSequence().size() == 2)
+                        {
+                            mUsesTextureCubeLod0 = true;
+                        }
+                        else if (node->getSequence().size() == 3)
+                        {
+                            mUsesTextureCubeLod0_bias = true;
+                        }
+                        else UNREACHABLE();
+
+                        out << "gl_textureCubeLod0(";
+                    }
+                }
+                else if (name == "texture2DLod")
+                {
+                    if (node->getSequence().size() == 3)
+                    {
+                        mUsesTexture2DLod = true;
+                    }
+                    else UNREACHABLE();
+
+                    out << "gl_texture2DLod(";
+                }
+                else if (name == "texture2DProjLod")
+                {
+                    if (node->getSequence().size() == 3)
+                    {
+                        mUsesTexture2DProjLod = true;
+                    }
+                    else UNREACHABLE();
+
+                    out << "gl_texture2DProjLod(";
+                }
+                else if (name == "textureCubeLod")
+                {
+                    if (node->getSequence().size() == 3)
+                    {
+                        mUsesTextureCubeLod = true;
+                    }
+                    else UNREACHABLE();
+
+                    out << "gl_textureCubeLod(";
+                }
+                else UNREACHABLE();
             }
+
+            TIntermSequence &arguments = node->getSequence();
+
+            for (TIntermSequence::iterator arg = arguments.begin(); arg != arguments.end(); arg++)
+            {
+                if (mOutputType == SH_HLSL11_OUTPUT && IsSampler((*arg)->getAsTyped()->getBasicType()))
+                {
+                    out << "texture_";
+                    (*arg)->traverse(this);
+                    out << ", sampler_";
+                }
+
+                (*arg)->traverse(this);
+
+                if (arg < arguments.end() - 1)
+                {
+                    out << ", ";
+                }
+            }
+
+            out << ")";
+
+            return false;
         }
         break;
       case EOpParameters:       outputTriplet(visit, "(", ", ", ")\n{\n");             break;
@@ -2491,6 +2496,12 @@ TString OutputHLSL::argumentString(const TIntermSymbol *symbol)
     else
     {
         name = decorate(name);
+    }
+
+    if (mOutputType == SH_HLSL11_OUTPUT && IsSampler(type.getBasicType()))
+    {
+       return qualifierString(qualifier) + " " + textureString(type) + " texture_" + name + arrayString(type) + ", " +
+              qualifierString(qualifier) + " SamplerState sampler_" + name + arrayString(type);
     }
 
     return qualifierString(qualifier) + " " + typeString(type) + " " + name + arrayString(type);
