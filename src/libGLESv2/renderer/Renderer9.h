@@ -194,6 +194,9 @@ class Renderer9 : public Renderer
     virtual VertexBuffer *createVertexBuffer();
     virtual IndexBuffer *createIndexBuffer();
 
+    // Query creation
+    virtual QueryImpl *createQuery(GLenum type);
+
     // D3D9-renderer specific methods
     bool boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest);
 

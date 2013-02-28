@@ -2549,6 +2549,13 @@ IndexBuffer *Renderer11::createIndexBuffer()
     return new IndexBuffer11(this);
 }
 
+QueryImpl *Renderer11::createQuery(GLenum type)
+{
+    // TODO
+    UNIMPLEMENTED();
+    return NULL;
+}
+
 bool Renderer11::getRenderTargetResource(gl::Framebuffer *framebuffer, unsigned int *subresourceIndex, ID3D11Texture2D **resource)
 {
     gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer();

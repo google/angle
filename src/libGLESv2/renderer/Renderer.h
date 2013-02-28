@@ -56,6 +56,7 @@ class TextureStorageInterface2D;
 class TextureStorageInterfaceCube;
 class VertexBuffer;
 class IndexBuffer;
+class QueryImpl;
 class Blit;
 struct TranslatedIndexData;
 
@@ -207,6 +208,9 @@ class Renderer
     // Buffer creation
     virtual VertexBuffer *createVertexBuffer() = 0;
     virtual IndexBuffer *createIndexBuffer() = 0;
+
+    // Query creation
+    virtual QueryImpl *createQuery(GLenum type) = 0;
 
   protected:
     bool initializeCompiler();

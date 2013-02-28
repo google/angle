@@ -164,6 +164,9 @@ class Renderer11 : public Renderer
     virtual VertexBuffer *createVertexBuffer();
     virtual IndexBuffer *createIndexBuffer();
 
+    // Query creation
+    virtual QueryImpl *createQuery(GLenum type);
+
     // D3D11-renderer specific methods
     ID3D11Device *getDevice() { return mDevice; }
     ID3D11DeviceContext *getDeviceContext() { return mDeviceContext; };

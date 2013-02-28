@@ -26,6 +26,7 @@
 #include "libGLESv2/renderer/RenderTarget9.h"
 #include "libGLESv2/renderer/VertexBuffer9.h"
 #include "libGLESv2/renderer/IndexBuffer9.h"
+#include "libGLESv2/renderer/Query9.h"
 
 #include <sstream>
 
@@ -703,6 +704,11 @@ HRESULT Renderer9::createIndexBuffer(UINT Length, DWORD Usage, D3DFORMAT Format,
 IndexBuffer *Renderer9::createIndexBuffer()
 {
     return new IndexBuffer9(this);
+}
+
+QueryImpl *Renderer9::createQuery(GLenum type)
+{
+    return new Query9(this, type);
 }
 
 void Renderer9::setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &samplerState)
