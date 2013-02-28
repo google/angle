@@ -60,11 +60,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="libEGL.def">
-      <Filter>Source Files</Filter>
-    </None>
+    <ResourceCompile Include="libEGL.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="libEGL.rc" />
+    <None Include="libEGL.def" />
   </ItemGroup>
 </Project>
