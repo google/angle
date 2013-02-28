@@ -12,8 +12,8 @@
 namespace gl
 {
 
-Uniform::Uniform(GLenum type, const std::string &name, unsigned int arraySize)
-    : type(type), name(name), arraySize(arraySize)
+Uniform::Uniform(GLenum type, GLenum precision, const std::string &name, unsigned int arraySize)
+    : type(type), precision(precision), name(name), arraySize(arraySize)
 {
     int bytes = gl::UniformInternalSize(type) * elementCount();
     data = new unsigned char[bytes];

@@ -1627,14 +1627,16 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
     for (unsigned int i = 0; i < size; ++i)
     {
         GLenum type;
+        GLenum precision;
         std::string name;
         unsigned int arraySize;
 
         stream.read(&type);
+        stream.read(&precision);
         stream.read(&name);
         stream.read(&arraySize);
 
-        mUniforms[i] = new Uniform(type, name, arraySize);
+        mUniforms[i] = new Uniform(type, precision, name, arraySize);
         
         stream.read(&mUniforms[i]->psRegisterIndex);
         stream.read(&mUniforms[i]->vsRegisterIndex);
@@ -1762,6 +1764,7 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
     for (unsigned int i = 0; i < mUniforms.size(); ++i)
     {
         stream.write(mUniforms[i]->type);
+        stream.write(mUniforms[i]->precision);
         stream.write(mUniforms[i]->name);
         stream.write(mUniforms[i]->arraySize);
 
@@ -2054,18 +2057,18 @@ bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, In
     Uniform *uniform = NULL;
     GLint location = getUniformLocation(constant.name);
 
-    if (location >= 0)   // Previously defined, types must match
+    if (location >= 0)   // Previously defined, type and precision must match
     {
         uniform = mUniforms[mUniformIndex[location].index];
 
-        if (uniform->type != constant.type)
+        if (uniform->type != constant.type || uniform->precision != constant.precision)
         {
             return false;
         }
     }
     else
     {
-        uniform = new Uniform(constant.type, constant.name, constant.arraySize);
+        uniform = new Uniform(constant.type, constant.precision, constant.name, constant.arraySize);
     }
 
     if (!uniform)

@@ -21,7 +21,7 @@ namespace gl
 // Helper struct representing a single shader uniform
 struct Uniform
 {
-    Uniform(GLenum type, const std::string &name, unsigned int arraySize);
+    Uniform(GLenum type, GLenum precision, const std::string &name, unsigned int arraySize);
 
     ~Uniform();
 
@@ -29,6 +29,7 @@ struct Uniform
     unsigned int elementCount() const;
 
     const GLenum type;
+    const GLenum precision;
     const std::string name;
     const unsigned int arraySize;
 
