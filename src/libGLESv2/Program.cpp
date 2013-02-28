@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -85,7 +85,7 @@ void InfoLog::appendSanitized(const char *message)
     }
     while (found != std::string::npos);
 
-    append("%s\n", msg.c_str());
+    append("%s", msg.c_str());
 }
 
 void InfoLog::append(const char *format, ...)
@@ -106,15 +106,17 @@ void InfoLog::append(const char *format, ...)
 
     if (!mInfoLog)
     {
-        mInfoLog = new char[infoLength + 1];
+        mInfoLog = new char[infoLength + 2];
         strcpy(mInfoLog, info);
+        strcpy(mInfoLog + infoLength, "\n");
     }
     else
     {
         size_t logLength = strlen(mInfoLog);
-        char *newLog = new char[logLength + infoLength + 1];
+        char *newLog = new char[logLength + infoLength + 2];
         strcpy(newLog, mInfoLog);
         strcpy(newLog + logLength, info);
+        strcpy(newLog + logLength + infoLength, "\n");
 
         delete[] mInfoLog;
         mInfoLog = newLog;
