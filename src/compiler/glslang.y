@@ -991,7 +991,10 @@ declaration
         $$ = $1.intermAggregate;
     }
     | PRECISION precision_qualifier type_specifier_no_prec SEMICOLON {
-        context->symbolTable.setDefaultPrecision( $3.type, $2 );
+        if (!context->symbolTable.setDefaultPrecision( $3, $2 )) {
+            context->error($1.line, "illegal type argument for default precision qualifier", getBasicString($3.type));
+            context->recover();
+        }
         $$ = 0;
     }
     ;
