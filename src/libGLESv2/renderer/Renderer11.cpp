@@ -1304,6 +1304,10 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArra
           case GL_INT_VEC2:
           case GL_INT_VEC3:
           case GL_INT_VEC4:
+          case GL_BOOL:
+          case GL_BOOL_VEC2:
+          case GL_BOOL_VEC3:
+          case GL_BOOL_VEC4:
             if (uniform->vsRegisterIndex >= 0 && mapVS)
             {
                 int (*c)[4] = (int(*)[4])mapVS;
@@ -1330,39 +1334,6 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArra
                     if (count >= 2) c[uniform->psRegisterIndex + i][1] = x[i * count + 1];
                     if (count >= 3) c[uniform->psRegisterIndex + i][2] = x[i * count + 2];
                     if (count >= 4) c[uniform->psRegisterIndex + i][3] = x[i * count + 3];
-                }
-            }
-            break;
-          case GL_BOOL:
-          case GL_BOOL_VEC2:
-          case GL_BOOL_VEC3:
-          case GL_BOOL_VEC4:
-            if (uniform->vsRegisterIndex >= 0 && mapVS)
-            {
-                int (*c)[4] = (int(*)[4])mapVS;
-                GLboolean *b = (GLboolean*)uniform->data;
-                int count = gl::VariableColumnCount(uniform->type);
-
-                for (unsigned int i = 0; i < uniform->registerCount; i++)
-                {
-                    if (count >= 1) c[uniform->vsRegisterIndex + i][0] = b[i * count + 0];
-                    if (count >= 2) c[uniform->vsRegisterIndex + i][1] = b[i * count + 1];
-                    if (count >= 3) c[uniform->vsRegisterIndex + i][2] = b[i * count + 2];
-                    if (count >= 4) c[uniform->vsRegisterIndex + i][3] = b[i * count + 3];
-                }
-            }
-            if (uniform->psRegisterIndex >= 0 && mapPS)
-            {
-                int (*c)[4] = (int(*)[4])mapPS;
-                GLboolean *b = (GLboolean*)uniform->data;
-                int count = gl::VariableColumnCount(uniform->type);
-
-                for (unsigned int i = 0; i < uniform->registerCount; i++)
-                {
-                    if (count >= 1) c[uniform->psRegisterIndex + i][0] = b[i * count + 0];
-                    if (count >= 2) c[uniform->psRegisterIndex + i][1] = b[i * count + 1];
-                    if (count >= 3) c[uniform->psRegisterIndex + i][2] = b[i * count + 2];
-                    if (count >= 4) c[uniform->psRegisterIndex + i][3] = b[i * count + 3];
                 }
             }
             break;

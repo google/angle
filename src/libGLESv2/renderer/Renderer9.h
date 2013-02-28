@@ -214,7 +214,7 @@ class Renderer9 : public Renderer
     void applyUniform2iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v);
     void applyUniform3iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v);
     void applyUniform4iv(gl::Uniform *targetUniform, GLsizei count, const GLint *v);
-    void applyUniformnbv(gl::Uniform *targetUniform, GLsizei count, int width, const GLboolean *v);
+    void applyUniformnbv(gl::Uniform *targetUniform, GLsizei count, int width, const GLint *v);
 
     void drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
 

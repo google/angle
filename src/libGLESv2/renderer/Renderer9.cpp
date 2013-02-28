@@ -1636,17 +1636,16 @@ void Renderer9::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArray
             int count = targetUniform->elementCount();
             GLfloat *f = (GLfloat*)targetUniform->data;
             GLint *i = (GLint*)targetUniform->data;
-            GLboolean *b = (GLboolean*)targetUniform->data;
 
             switch (targetUniform->type)
             {
               case GL_SAMPLER_2D:
               case GL_SAMPLER_CUBE:
                   break;
-              case GL_BOOL:       applyUniformnbv(targetUniform, count, 1, b);    break;
-              case GL_BOOL_VEC2:  applyUniformnbv(targetUniform, count, 2, b);    break;
-              case GL_BOOL_VEC3:  applyUniformnbv(targetUniform, count, 3, b);    break;
-              case GL_BOOL_VEC4:  applyUniformnbv(targetUniform, count, 4, b);    break;
+              case GL_BOOL:       applyUniformnbv(targetUniform, count, 1, i);    break;
+              case GL_BOOL_VEC2:  applyUniformnbv(targetUniform, count, 2, i);    break;
+              case GL_BOOL_VEC3:  applyUniformnbv(targetUniform, count, 3, i);    break;
+              case GL_BOOL_VEC4:  applyUniformnbv(targetUniform, count, 4, i);    break;
               case GL_FLOAT:
               case GL_FLOAT_VEC2:
               case GL_FLOAT_VEC3:
@@ -1675,7 +1674,7 @@ void Renderer9::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArray
     }
 }
 
-void Renderer9::applyUniformnbv(gl::Uniform *targetUniform, GLsizei count, int width, const GLboolean *v)
+void Renderer9::applyUniformnbv(gl::Uniform *targetUniform, GLsizei count, int width, const GLint *v)
 {
     float vector[D3D9_MAX_FLOAT_CONSTANTS * 4];
 
