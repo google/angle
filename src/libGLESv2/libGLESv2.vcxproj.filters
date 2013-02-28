@@ -194,6 +194,9 @@
     <ClCompile Include="renderer\BufferStorage.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\BufferStorage9.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinaryStream.h">
@@ -443,6 +446,9 @@
       <Filter>Renderer</Filter>
     </ClInclude>
     <ClInclude Include="renderer\BufferStorage.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\BufferStorage9.h">
       <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
