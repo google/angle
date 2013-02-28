@@ -512,7 +512,7 @@ bool TParseContext::constructorErrorCheck(int line, TIntermNode* node, TFunction
     if (constType)
         type->setQualifier(EvqConst);
 
-    if (type->isArray() && type->getArraySize() != function.getParamCount()) {
+    if (type->isArray() && static_cast<size_t>(type->getArraySize()) != function.getParamCount()) {
         error(line, "array constructor needs one argument per array element", "constructor");
         return true;
     }
