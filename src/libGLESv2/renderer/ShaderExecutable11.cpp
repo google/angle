@@ -92,9 +92,9 @@ ID3D11Buffer *ShaderExecutable11::getConstantBuffer(ID3D11Device *device, unsign
     {
         D3D11_BUFFER_DESC constantBufferDescription = {0};
         constantBufferDescription.ByteWidth = registerCount * sizeof(float[4]);
-        constantBufferDescription.Usage = D3D11_USAGE_DEFAULT;
+        constantBufferDescription.Usage = D3D11_USAGE_DYNAMIC;
         constantBufferDescription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-        constantBufferDescription.CPUAccessFlags = 0;
+        constantBufferDescription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
         constantBufferDescription.MiscFlags = 0;
         constantBufferDescription.StructureByteStride = 0;
 

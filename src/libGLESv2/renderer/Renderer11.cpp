@@ -1254,8 +1254,24 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArra
     ID3D11Buffer *vertexConstantBuffer = vertexExecutable->getConstantBuffer(mDevice, totalRegisterCountVS);
     ID3D11Buffer *pixelConstantBuffer = pixelExecutable->getConstantBuffer(mDevice, totalRegisterCountPS);
 
-    float (*mapVS)[4] = (totalRegisterCountVS > 0 && vertexUniformsDirty) ? new float[totalRegisterCountVS][4] : NULL;
-    float (*mapPS)[4] = (totalRegisterCountPS > 0 && pixelUniformsDirty) ? new float[totalRegisterCountPS][4] : NULL;
+    float (*mapVS)[4] = NULL;
+    float (*mapPS)[4] = NULL;
+
+	if (totalRegisterCountVS > 0 && vertexUniformsDirty)
+	{
+		D3D11_MAPPED_SUBRESOURCE map = {0};
+		HRESULT result = mDeviceContext->Map(vertexConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+		ASSERT(SUCCEEDED(result));
+		mapVS = (float(*)[4])map.pData;
+	}
+
+	if (totalRegisterCountPS > 0 && pixelUniformsDirty)
+	{
+		D3D11_MAPPED_SUBRESOURCE map = {0};
+		HRESULT result = mDeviceContext->Map(pixelConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+		ASSERT(SUCCEEDED(result));
+		mapPS = (float(*)[4])map.pData;
+	}
 
     for (gl::UniformArray::iterator uniform_iterator = uniformArray->begin(); uniform_iterator != uniformArray->end(); uniform_iterator++)
     {
@@ -1277,21 +1293,18 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArra
         uniform->dirty = false;
     }
 
-    if (vertexConstantBuffer && mapVS)
+    if (mapVS)
     {
-        mDeviceContext->UpdateSubresource(vertexConstantBuffer, 0, NULL, mapVS, 0, 0);
+        mDeviceContext->Unmap(vertexConstantBuffer, 0);
     }
 
-    if (pixelConstantBuffer && mapPS)
+    if (mapPS)
     {
-        mDeviceContext->UpdateSubresource(pixelConstantBuffer, 0, NULL, mapPS, 0, 0);
+        mDeviceContext->Unmap(pixelConstantBuffer, 0);
     }
     
     mDeviceContext->VSSetConstantBuffers(0, 1, &vertexConstantBuffer);
     mDeviceContext->PSSetConstantBuffers(0, 1, &pixelConstantBuffer);
-
-    delete[] mapVS;
-    delete[] mapPS;
 
     // Driver uniforms
     if (!mDriverConstantBufferVS)
@@ -2688,7 +2701,7 @@ ShaderExecutable *Renderer11::compileToExecutable(gl::InfoLog &infoLog, const ch
         return NULL;
     }
 
-    ID3DBlob *binary = (ID3DBlob*) compileToBinary(infoLog, shaderHLSL, profile, false);
+    ID3DBlob *binary = (ID3DBlob*)compileToBinary(infoLog, shaderHLSL, profile, false);
     if (!binary)
         return NULL;
 
