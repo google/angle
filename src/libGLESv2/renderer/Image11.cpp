@@ -365,7 +365,7 @@ void Image11::createStagingTexture()
 
     ID3D11Texture2D *newTexture = NULL;
     const DXGI_FORMAT dxgiFormat = getDXGIFormat();
-    ASSERT(dxgiFormat != DXGI_FORMAT_D24_UNORM_S8_UINT); // We should never get here for depth textures
+    ASSERT(!d3d11::IsDepthStencilFormat(dxgiFormat)); // We should never get here for depth textures
 
     if (mWidth != 0 && mHeight != 0)
     {

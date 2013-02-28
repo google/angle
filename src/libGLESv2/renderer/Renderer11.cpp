@@ -49,7 +49,9 @@ static const DXGI_FORMAT RenderTargetFormats[] =
 
 static const DXGI_FORMAT DepthStencilFormats[] =
     {
-        DXGI_FORMAT_D24_UNORM_S8_UINT
+        DXGI_FORMAT_UNKNOWN,
+        DXGI_FORMAT_D24_UNORM_S8_UINT,
+        DXGI_FORMAT_D16_UNORM
     };
 
 enum
@@ -286,10 +288,16 @@ int Renderer11::generateConfigs(ConfigDesc **configDescList)
             {
                 DXGI_FORMAT depthStencilFormat = DepthStencilFormats[depthStencilIndex];
 
-                UINT formatSupport = 0;
-                HRESULT result = mDevice->CheckFormatSupport(depthStencilFormat, &formatSupport);
+                bool depthStencilFormatOK = true;
 
-                if (SUCCEEDED(result) && (formatSupport & D3D11_FORMAT_SUPPORT_DEPTH_STENCIL))
+                if (depthStencilFormat != DXGI_FORMAT_UNKNOWN)
+                {
+                    UINT formatSupport = 0;
+                    result = mDevice->CheckFormatSupport(depthStencilFormat, &formatSupport);
+                    depthStencilFormatOK = SUCCEEDED(result) && (formatSupport & D3D11_FORMAT_SUPPORT_DEPTH_STENCIL);
+                }
+
+                if (depthStencilFormatOK)
                 {
                     ConfigDesc newConfig;
                     newConfig.renderTargetFormat = d3d11_gl::ConvertBackBufferFormat(renderTargetFormat);

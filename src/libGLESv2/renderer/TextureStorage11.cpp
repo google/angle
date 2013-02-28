@@ -41,7 +41,7 @@ DWORD TextureStorage11::GetTextureBindFlags(DXGI_FORMAT format, GLenum glusage, 
 {
     UINT bindFlags = D3D11_BIND_SHADER_RESOURCE;
     
-    if (format == DXGI_FORMAT_D24_UNORM_S8_UINT)
+    if (d3d11::IsDepthStencilFormat(format))
     {
         bindFlags |= D3D11_BIND_DEPTH_STENCIL;
     }

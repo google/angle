@@ -68,6 +68,7 @@ void SetPositionDepthColorVertex(PositionDepthColorVertex* vertex, float x, floa
 size_t ComputePixelSizeBits(DXGI_FORMAT format);
 size_t ComputeBlockSizeBits(DXGI_FORMAT format);
 
+bool IsDepthStencilFormat(DXGI_FORMAT format);
 HRESULT SetDebugName(ID3D11DeviceChild *resource, const char *name);
 }
 
