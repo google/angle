@@ -127,6 +127,7 @@ class Renderer11 : public Renderer
     virtual int getMaxSwapInterval() const;
 
     virtual GLsizei getMaxSupportedSamples() const;
+    int getNearestSupportedSamples(DXGI_FORMAT format, unsigned int requested) const;
 
     // Pixel operations
     virtual bool copyToRenderTarget(TextureStorageInterface2D *dest, TextureStorageInterface2D *source);

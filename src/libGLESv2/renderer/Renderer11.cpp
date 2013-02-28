@@ -2207,6 +2207,29 @@ int Renderer11::getMaxSupportedSamples() const
     return mMaxSupportedSamples;
 }
 
+int Renderer11::getNearestSupportedSamples(DXGI_FORMAT format, unsigned int requested) const
+{
+    if (requested == 0)
+    {
+        return 0;
+    }
+
+    MultisampleSupportMap::const_iterator iter = mMultisampleSupportMap.find(format);
+    if (iter != mMultisampleSupportMap.end())
+    {
+        const MultisampleSupportInfo& info = iter->second;
+        for (unsigned int i = requested - 1; i < D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT; i++)
+        {
+            if (info.qualityLevels[i] > 0)
+            {
+                return i + 1;
+            }
+        }
+    }
+
+    return -1;
+}
+
 bool Renderer11::copyToRenderTarget(TextureStorageInterface2D *dest, TextureStorageInterface2D *source)
 {
     if (source && dest)
