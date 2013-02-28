@@ -15,6 +15,12 @@
   TypeName(const TypeName&);               \
   void operator=(const TypeName&)
 
+template <typename T, unsigned int N>
+inline unsigned int ArraySize(T(&)[N])
+{
+    return N;
+}
+
 #if defined(_MSC_VER)
 #define snprintf _snprintf
 #endif
