@@ -223,6 +223,7 @@
           'include_dirs': [
             '.',
             '../include',
+            'libGLESv2',
           ],
           'sources': [
             'third_party/murmurhash/MurmurHash3.h',
@@ -373,6 +374,7 @@
           'include_dirs': [
             '.',
             '../include',
+            'libGLESv2',
           ],
           'sources': [
             'common/angleutils.h',
