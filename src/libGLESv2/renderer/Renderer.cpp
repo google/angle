@@ -47,7 +47,7 @@ bool Renderer::initializeCompiler()
     // Find a D3DCompiler module that had already been loaded based on a predefined list of versions.
     static TCHAR* d3dCompilerNames[] = ANGLE_PRELOADED_D3DCOMPILER_MODULE_NAMES;
 
-    for (int i = 0; i < ArraySize(d3dCompilerNames); ++i)
+    for (size_t i = 0; i < ArraySize(d3dCompilerNames); ++i)
     {
         if (GetModuleHandleEx(0, d3dCompilerNames[i], &mD3dCompilerModule))
         {
