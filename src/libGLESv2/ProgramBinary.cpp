@@ -1265,6 +1265,11 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
                   "struct VS_OUTPUT\n"
                   "{\n";
 
+    if (shaderModel < 4)
+    {
+        vertexHLSL += "    float4 gl_Position : " + positionSemantic + ";\n";
+    }
+
     for (int r = 0; r < registers; r++)
     {
         int registerSize = packing[r][3] ? 4 : (packing[r][2] ? 3 : (packing[r][1] ? 2 : 1));
@@ -1282,8 +1287,12 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
         vertexHLSL += "    float gl_PointSize : PSIZE;\n";
     }
 
-    vertexHLSL += "    float4 gl_Position : " + positionSemantic + ";\n"
-                  "};\n"
+    if (shaderModel >= 4)
+    {
+        vertexHLSL += "    float4 gl_Position : " + positionSemantic + ";\n";
+    }
+
+    vertexHLSL += "};\n"
                   "\n"
                   "VS_OUTPUT main(VS_INPUT input)\n"
                   "{\n";
