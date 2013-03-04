@@ -908,16 +908,32 @@ D3DADAPTER_IDENTIFIER9 *Display::getAdapterIdentifier()
 
 bool Display::testDeviceLost()
 {
+    bool isLost = false;
+
     if (mDeviceEx)
     {
-        return FAILED(mDeviceEx->CheckDeviceState(NULL));
+        HRESULT hr = mDeviceEx->CheckDeviceState(NULL);
+        if (hr == S_PRESENT_MODE_CHANGED)
+        {
+            // Reset the device so that D3D stops reporting S_PRESENT_MODE_CHANGED. Otherwise it will report
+            // it continuously, potentially masking a lost device. D3D resources are not lost on a mode change with WDDM.
+            D3DPRESENT_PARAMETERS presentParameters = getDefaultPresentParameters();
+            mDeviceEx->Reset(&presentParameters);
+
+            // Reset will not always cause the device loss to be reported so issue a dummy present.
+            mDeviceEx->Present(NULL, NULL, NULL, NULL);
+
+            // Retest the device status to see if the mode change really indicated a lost device.
+            hr = mDeviceEx->CheckDeviceState(NULL);
+        }
+        isLost = FAILED(hr);
     }
     else if (mDevice)
     {
-        return FAILED(mDevice->TestCooperativeLevel());
+        isLost = FAILED(mDevice->TestCooperativeLevel());
     }
 
-    return false;   // No device yet, so no reset required
+    return isLost;
 }
 
 bool Display::testDeviceResettable()
