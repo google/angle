@@ -37,7 +37,7 @@ extern "C" {
 
 // Version number for shader translation API.
 // It is incremented everytime the API changes.
-#define ANGLE_SH_VERSION 109
+#define ANGLE_SH_VERSION 110
 
 //
 // The names of the following enums have been derived by replacing GL prefix
