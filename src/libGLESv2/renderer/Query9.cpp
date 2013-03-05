@@ -55,8 +55,8 @@ void Query9::end()
     HRESULT result = mQuery->Issue(D3DISSUE_END);
     ASSERT(SUCCEEDED(result));
 
-    setStatus(GL_FALSE);
-    setResult(GL_FALSE);
+    mStatus = GL_FALSE;
+    mResult = GL_FALSE;
 }
 
 GLuint Query9::getResult()
@@ -76,7 +76,7 @@ GLuint Query9::getResult()
         }
     }
 
-    return getResult();
+    return mResult;
 }
 
 GLboolean Query9::isResultAvailable()
@@ -86,25 +86,25 @@ GLboolean Query9::isResultAvailable()
         testQuery();
     }
 
-    return getStatus();
+    return mStatus;
 }
 
 GLboolean Query9::testQuery()
 {
-    if (mQuery != NULL && getStatus() != GL_TRUE)
+    if (mQuery != NULL && mStatus != GL_TRUE)
     {
         DWORD numPixels = 0;
 
         HRESULT hres = mQuery->GetData(&numPixels, sizeof(DWORD), D3DGETDATA_FLUSH);
         if (hres == S_OK)
         {
-            setStatus(GL_TRUE);
+            mStatus =  GL_TRUE;
 
             switch (getType())
             {
               case GL_ANY_SAMPLES_PASSED_EXT:
               case GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT:
-                setResult((numPixels > 0) ? GL_TRUE : GL_FALSE);
+                mResult = (numPixels > 0) ? GL_TRUE : GL_FALSE;
                 break;
               default:
                 ASSERT(false);
@@ -116,7 +116,7 @@ GLboolean Query9::testQuery()
             return gl::error(GL_OUT_OF_MEMORY, GL_TRUE);
         }
 
-        return getStatus();
+        return mStatus;
     }
 
     return GL_TRUE; // prevent blocking when query is null

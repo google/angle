@@ -55,8 +55,8 @@ void Query11::end()
 
     mRenderer->getDeviceContext()->End(mQuery);
 
-    setStatus(GL_FALSE);
-    setResult(GL_FALSE);
+    mStatus = GL_FALSE;
+    mResult = GL_FALSE;
 }
 
 GLuint Query11::getResult()
@@ -75,7 +75,7 @@ GLuint Query11::getResult()
         }
     }
 
-    return getResult();
+    return mResult;
 }
 
 GLboolean Query11::isResultAvailable()
@@ -85,24 +85,24 @@ GLboolean Query11::isResultAvailable()
         testQuery();
     }
 
-    return getStatus();
+    return mStatus;
 }
 
 GLboolean Query11::testQuery()
 {
-    if (mQuery != NULL && getStatus() != GL_TRUE)
+    if (mQuery != NULL && mStatus != GL_TRUE)
     {
         UINT64 numPixels = 0;
         HRESULT result = mRenderer->getDeviceContext()->GetData(mQuery, &numPixels, sizeof(UINT64), 0);
         if (result == S_OK)
         {
-            setStatus(GL_TRUE);
+            mStatus = GL_TRUE;
 
             switch (getType())
             {
               case GL_ANY_SAMPLES_PASSED_EXT:
               case GL_ANY_SAMPLES_PASSED_CONSERVATIVE_EXT:
-                setResult((numPixels > 0) ? GL_TRUE : GL_FALSE);
+                mResult = (numPixels > 0) ? GL_TRUE : GL_FALSE;
                 break;
               default:
                 UNREACHABLE();
@@ -113,7 +113,7 @@ GLboolean Query11::testQuery()
             return gl::error(GL_OUT_OF_MEMORY, GL_TRUE);
         }
 
-        return getStatus();
+        return mStatus;
     }
 
     return GL_TRUE; // prevent blocking when query is null
