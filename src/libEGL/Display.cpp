@@ -920,6 +920,12 @@ bool Display::testDeviceLost()
             D3DPRESENT_PARAMETERS presentParameters = getDefaultPresentParameters();
             mDeviceEx->Reset(&presentParameters);
 
+            // Existing swap chains sometimes crash on the next present after a reset.
+            for (SurfaceSet::iterator it = mSurfaceSet.begin(); it != mSurfaceSet.end(); ++it)
+            {
+                (*it)->recreateAdditionalSwapChain();
+            }
+
             // Reset will not always cause the device loss to be reported so issue a dummy present.
             mDeviceEx->Present(NULL, NULL, NULL, NULL);
 
