@@ -1313,7 +1313,6 @@ TIntermTyped* TParseContext::addConstVectorNode(TVectorFields& fields, TIntermTy
     ConstantUnion *unionArray;
     if (tempConstantNode) {
         unionArray = tempConstantNode->getUnionArrayPointer();
-        ASSERT(unionArray);
 
         if (!unionArray) {
             return node;
