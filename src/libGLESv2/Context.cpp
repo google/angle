@@ -2679,6 +2679,21 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
                    (rect.right - rect.left) * fastPixelSize);
             continue;
         }
+        else if (desc.Format == D3DFMT_A8R8G8B8 &&
+                 format == GL_RGBA &&
+                 type == GL_UNSIGNED_BYTE)
+        {
+            // Fast path for swapping red with blue
+            for (int i = 0; i < rect.right - rect.left; i++)
+            {
+                unsigned int argb = *(unsigned int*)(source + 4 * i + j * inputPitch);
+                *(unsigned int*)(dest + 4 * i + j * outputPitch) =
+                    (argb & 0xFF00FF00) |       // Keep alpha and green
+                    (argb & 0x00FF0000) >> 16 | // Move red to blue
+                    (argb & 0x000000FF) << 16;  // Move blue to red
+            }
+            continue;
+        }
 
         for (int i = 0; i < rect.right - rect.left; i++)
         {
