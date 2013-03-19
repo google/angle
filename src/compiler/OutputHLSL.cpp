@@ -974,7 +974,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
 
                     if (element)
                     {
-                        int i = element->getUnionArrayPointer()[0].getIConst();
+                        int i = element->getIConst(0);
 
                         switch (i)
                         {
@@ -1977,7 +1977,7 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
                         if (constant->getBasicType() == EbtInt && constant->getNominalSize() == 1)
                         {
                             index = symbol;
-                            initial = constant->getUnionArrayPointer()[0].getIConst();
+                            initial = constant->getIConst(0);
                         }
                     }
                 }
@@ -1999,7 +1999,7 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
                 if (constant->getBasicType() == EbtInt && constant->getNominalSize() == 1)
                 {
                     comparator = test->getOp();
-                    limit = constant->getUnionArrayPointer()[0].getIConst();
+                    limit = constant->getIConst(0);
                 }
             }
         }
@@ -2020,7 +2020,7 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
             {
                 if (constant->getBasicType() == EbtInt && constant->getNominalSize() == 1)
                 {
-                    int value = constant->getUnionArrayPointer()[0].getIConst();
+                    int value = constant->getIConst(0);
 
                     switch (op)
                     {

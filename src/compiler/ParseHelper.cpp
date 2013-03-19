@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -286,7 +286,7 @@ bool TParseContext::lValueErrorCheck(int line, const char* op, TIntermTyped* nod
                 
                 for (TIntermSequence::iterator p = aggrNode->getSequence().begin(); 
                                                p != aggrNode->getSequence().end(); p++) {
-                    int value = (*p)->getAsTyped()->getAsConstantUnion()->getUnionArrayPointer()->getIConst();
+                    int value = (*p)->getAsTyped()->getAsConstantUnion()->getIConst(0);
                     offset[value]++;     
                     if (offset[value] > 1) {
                         error(line, " l-value of swizzle cannot have duplicate components", op);
@@ -680,7 +680,7 @@ bool TParseContext::arraySizeErrorCheck(int line, TIntermTyped* expr, int& size)
         return true;
     }
 
-    size = constant->getUnionArrayPointer()->getIConst();
+    size = constant->getIConst(0);
 
     if (size <= 0) {
         error(line, "array size must be a positive integer", "");
