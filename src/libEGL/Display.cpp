@@ -477,6 +477,10 @@ bool Display::getConfigAttrib(EGLConfig config, EGLint attribute, EGLint *value)
 
 bool Display::createDevice()
 {
+    if (!isInitialized())
+    {
+        return error(EGL_NOT_INITIALIZED, false);
+    }
     D3DPRESENT_PARAMETERS presentParameters = getDefaultPresentParameters();
     DWORD behaviorFlags = D3DCREATE_FPU_PRESERVE | D3DCREATE_NOWINDOWCHANGES;
 
@@ -1163,7 +1167,7 @@ float Display::getTextureFilterAnisotropySupport() const
     // Must support a minimum of 2:1 anisotropy for max anisotropy to be considered supported, per the spec
     if ((mDeviceCaps.RasterCaps & D3DPRASTERCAPS_ANISOTROPY) && (mDeviceCaps.MaxAnisotropy >= 2))
     {
-        return mDeviceCaps.MaxAnisotropy;
+        return static_cast<float>(mDeviceCaps.MaxAnisotropy);
     }
     return 1.0f;
 }
