@@ -18,8 +18,6 @@
 #include "libEGL/main.h"
 #include "libEGL/Display.h"
 
-#include <dwmapi.h>
-
 namespace egl
 {
 
@@ -77,24 +75,6 @@ bool Surface::initialize()
 
     if (!resetSwapChain())
       return false;
-
-    // Modify present parameters for this window, if we are composited,
-    // to minimize the amount of queuing done by DWM between our calls to
-    // present and the actual screen.
-    if (mWindow && (getComparableOSVersion() >= versionWindowsVista)) {
-      BOOL isComposited;
-      HRESULT result = DwmIsCompositionEnabled(&isComposited);
-      if (SUCCEEDED(result) && isComposited) {
-        DWM_PRESENT_PARAMETERS presentParams;
-        memset(&presentParams, 0, sizeof(presentParams));
-        presentParams.cbSize = sizeof(DWM_PRESENT_PARAMETERS);
-        presentParams.cBuffer = 2;
-
-        result = DwmSetPresentParameters(mWindow, &presentParams);
-        if (FAILED(result))
-          ERR("Unable to set present parameters: 0x%08X", result);
-      }
-    }
 
     return true;
 }
