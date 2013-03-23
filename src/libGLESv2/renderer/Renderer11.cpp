@@ -816,13 +816,13 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
 {
     // TODO: mrt support
     // Get the color render buffer and serial
-    gl::Renderbuffer *renderbufferObject = NULL;
+    gl::Renderbuffer *colorbuffer = NULL;
     unsigned int renderTargetSerial = 0;
     if (framebuffer->getColorbufferType(0) != GL_NONE)
     {
-        renderbufferObject = framebuffer->getColorbuffer(0);
+        colorbuffer = framebuffer->getColorbuffer(0);
 
-        if (!renderbufferObject)
+        if (!colorbuffer)
         {
             ERR("render target pointer unexpectedly null.");
             return false;
@@ -831,12 +831,12 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
         // check for zero-sized default framebuffer, which is a special case.
         // in this case we do not wish to modify any state and just silently return false.
         // this will not report any gl error but will cause the calling method to return.
-        if (renderbufferObject->getWidth() == 0 || renderbufferObject->getHeight() == 0)
+        if (colorbuffer->getWidth() == 0 || colorbuffer->getHeight() == 0)
         {
             return false;
         }
 
-        renderTargetSerial = renderbufferObject->getSerial();
+        renderTargetSerial = colorbuffer->getSerial();
     }
 
     // Get the depth stencil render buffer and serials
@@ -871,9 +871,9 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
     unsigned int renderTargetHeight = 0;
     GLenum renderTargetFormat = 0;
     ID3D11RenderTargetView* framebufferRTV = NULL;
-    if (renderbufferObject)
+    if (colorbuffer)
     {
-        RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(renderbufferObject->getRenderTarget());
+        RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(colorbuffer->getRenderTarget());
         if (!renderTarget)
         {
             ERR("render target pointer unexpectedly null.");
@@ -887,9 +887,9 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
             return false;
         }
 
-        renderTargetWidth = renderbufferObject->getWidth();
-        renderTargetHeight = renderbufferObject->getHeight();
-        renderTargetFormat = renderbufferObject->getActualFormat();
+        renderTargetWidth = colorbuffer->getWidth();
+        renderTargetHeight = colorbuffer->getHeight();
+        renderTargetFormat = colorbuffer->getActualFormat();
     }
 
     // Extract the depth stencil sizes and view
@@ -922,7 +922,7 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
 
         // If there is no render buffer, the width, height and format values come from
         // the depth stencil
-        if (!renderbufferObject)
+        if (!colorbuffer)
         {
             renderTargetWidth = depthStencil->getWidth();
             renderTargetHeight = depthStencil->getHeight();
