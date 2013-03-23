@@ -814,29 +814,60 @@ bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count)
 
 bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
 {
-    // TODO: mrt support
     // Get the color render buffer and serial
-    gl::Renderbuffer *colorbuffer = NULL;
-    unsigned int renderTargetSerial = 0;
-    if (framebuffer->getColorbufferType(0) != GL_NONE)
+    // Also extract the render target dimensions and view
+    unsigned int renderTargetWidth = 0;
+    unsigned int renderTargetHeight = 0;
+    GLenum renderTargetFormat = 0;
+    unsigned int renderTargetSerials[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS] = {0};
+    ID3D11RenderTargetView* framebufferRTVs[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS] = {NULL};
+    bool missingColorRenderTarget = true;
+
+    for (unsigned int colorAttachment = 0; colorAttachment < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
     {
-        colorbuffer = framebuffer->getColorbuffer(0);
-
-        if (!colorbuffer)
+        if (framebuffer->getColorbufferType(colorAttachment) != GL_NONE)
         {
-            ERR("render target pointer unexpectedly null.");
-            return false;
-        }
+            gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer(colorAttachment);
 
-        // check for zero-sized default framebuffer, which is a special case.
-        // in this case we do not wish to modify any state and just silently return false.
-        // this will not report any gl error but will cause the calling method to return.
-        if (colorbuffer->getWidth() == 0 || colorbuffer->getHeight() == 0)
-        {
-            return false;
-        }
+            if (!colorbuffer)
+            {
+                ERR("render target pointer unexpectedly null.");
+                return false;
+            }
 
-        renderTargetSerial = colorbuffer->getSerial();
+            // check for zero-sized default framebuffer, which is a special case.
+            // in this case we do not wish to modify any state and just silently return false.
+            // this will not report any gl error but will cause the calling method to return.
+            if (colorbuffer->getWidth() == 0 || colorbuffer->getHeight() == 0)
+            {
+                return false;
+            }
+
+            renderTargetSerials[colorAttachment] = colorbuffer->getSerial();
+
+            // Extract the render target dimensions and view
+            RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(colorbuffer->getRenderTarget());
+            if (!renderTarget)
+            {
+                ERR("render target pointer unexpectedly null.");
+                return false;
+            }
+
+            framebufferRTVs[colorAttachment] = renderTarget->getRenderTargetView();
+            if (!framebufferRTVs[colorAttachment])
+            {
+                ERR("render target view pointer unexpectedly null.");
+                return false;
+            }
+
+            if (missingColorRenderTarget)
+            {
+                renderTargetWidth = colorbuffer->getWidth();
+                renderTargetHeight = colorbuffer->getHeight();
+                renderTargetFormat = colorbuffer->getActualFormat();
+                missingColorRenderTarget = false;
+            }
+        }
     }
 
     // Get the depth stencil render buffer and serials
@@ -849,6 +880,7 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
         if (!depthStencil)
         {
             ERR("Depth stencil pointer unexpectedly null.");
+            SafeRelease(framebufferRTVs);
             return false;
         }
 
@@ -860,36 +892,11 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
         if (!depthStencil)
         {
             ERR("Depth stencil pointer unexpectedly null.");
+            SafeRelease(framebufferRTVs);
             return false;
         }
 
         stencilbufferSerial = depthStencil->getSerial();
-    }
-
-    // Extract the render target dimensions and view
-    unsigned int renderTargetWidth = 0;
-    unsigned int renderTargetHeight = 0;
-    GLenum renderTargetFormat = 0;
-    ID3D11RenderTargetView* framebufferRTV = NULL;
-    if (colorbuffer)
-    {
-        RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(colorbuffer->getRenderTarget());
-        if (!renderTarget)
-        {
-            ERR("render target pointer unexpectedly null.");
-            return false;
-        }
-
-        framebufferRTV = renderTarget->getRenderTargetView();
-        if (!framebufferRTV)
-        {
-            ERR("render target view pointer unexpectedly null.");
-            return false;
-        }
-
-        renderTargetWidth = colorbuffer->getWidth();
-        renderTargetHeight = colorbuffer->getHeight();
-        renderTargetFormat = colorbuffer->getActualFormat();
     }
 
     // Extract the depth stencil sizes and view
@@ -902,10 +909,7 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
         if (!depthStencilRenderTarget)
         {
             ERR("render target pointer unexpectedly null.");
-            if (framebufferRTV)
-            {
-                framebufferRTV->Release();
-            }
+            SafeRelease(framebufferRTVs);
             return false;
         }
 
@@ -913,16 +917,13 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
         if (!framebufferDSV)
         {
             ERR("depth stencil view pointer unexpectedly null.");
-            if (framebufferRTV)
-            {
-                framebufferRTV->Release();
-            }
+            SafeRelease(framebufferRTVs);
             return false;
         }
 
         // If there is no render buffer, the width, height and format values come from
         // the depth stencil
-        if (!colorbuffer)
+        if (missingColorRenderTarget)
         {
             renderTargetWidth = depthStencil->getWidth();
             renderTargetHeight = depthStencil->getHeight();
@@ -935,11 +936,11 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
 
     // Apply the render target and depth stencil
     if (!mRenderTargetDescInitialized || !mDepthStencilInitialized ||
-        renderTargetSerial != mAppliedRenderTargetSerial ||
+        memcmp(renderTargetSerials, mAppliedRenderTargetSerials, sizeof(renderTargetSerials)) != 0 ||
         depthbufferSerial != mAppliedDepthbufferSerial ||
         stencilbufferSerial != mAppliedStencilbufferSerial)
     {
-        mDeviceContext->OMSetRenderTargets(1, &framebufferRTV, framebufferDSV);
+        mDeviceContext->OMSetRenderTargets(getMaxRenderTargets(), framebufferRTVs, framebufferDSV);
 
         mRenderTargetDesc.width = renderTargetWidth;
         mRenderTargetDesc.height = renderTargetHeight;
@@ -955,21 +956,18 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
 
         mCurStencilSize = stencilSize;
 
-        mAppliedRenderTargetSerial = renderTargetSerial;
+        for (unsigned int rtIndex = 0; rtIndex < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; rtIndex++)
+        {
+            mAppliedRenderTargetSerials[rtIndex] = renderTargetSerials[rtIndex];
+        }
         mAppliedDepthbufferSerial = depthbufferSerial;
         mAppliedStencilbufferSerial = stencilbufferSerial;
         mRenderTargetDescInitialized = true;
         mDepthStencilInitialized = true;
     }
 
-    if (framebufferRTV)
-    {
-        framebufferRTV->Release();
-    }
-    if (framebufferDSV)
-    {
-        framebufferDSV->Release();
-    }
+    SafeRelease(framebufferRTVs);
+    SafeRelease(framebufferDSV);
 
     return true;
 }
@@ -1695,7 +1693,10 @@ void Renderer11::maskedClear(const gl::ClearParameters &clearParams)
 
 void Renderer11::markAllStateDirty()
 {
-    mAppliedRenderTargetSerial = 0;
+    for (unsigned int rtIndex = 0; rtIndex < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; rtIndex++)
+    {
+        mAppliedRenderTargetSerials[rtIndex] = 0;
+    }
     mAppliedDepthbufferSerial = 0;
     mAppliedStencilbufferSerial = 0;
     mDepthStencilInitialized = false;
