@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -12,6 +12,7 @@
 
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
+#include "constants.h"
 
 namespace rx
 {
@@ -40,27 +41,27 @@ class Framebuffer
     void detachTexture(GLuint texture);
     void detachRenderbuffer(GLuint renderbuffer);
 
-    unsigned int getRenderTargetSerial();
-    unsigned int getDepthbufferSerial();
-    unsigned int getStencilbufferSerial();
+    unsigned int getRenderTargetSerial() const;
+    unsigned int getDepthbufferSerial() const;
+    unsigned int getStencilbufferSerial() const;
 
-    Renderbuffer *getColorbuffer();
-    Renderbuffer *getDepthbuffer();
-    Renderbuffer *getStencilbuffer();
-    Renderbuffer *getDepthOrStencilbuffer();
+    Renderbuffer *getColorbuffer() const;
+    Renderbuffer *getDepthbuffer() const;
+    Renderbuffer *getStencilbuffer() const;
+    Renderbuffer *getDepthOrStencilbuffer() const;
 
-    GLenum getColorbufferType();
-    GLenum getDepthbufferType();
-    GLenum getStencilbufferType();
+    GLenum getColorbufferType() const;
+    GLenum getDepthbufferType() const;
+    GLenum getStencilbufferType() const;
 
-    GLuint getColorbufferHandle();
-    GLuint getDepthbufferHandle();
-    GLuint getStencilbufferHandle();
+    GLuint getColorbufferHandle() const;
+    GLuint getDepthbufferHandle() const;
+    GLuint getStencilbufferHandle() const;
 
-    bool hasStencil();
-    int getSamples();
+    bool hasStencil() const;
+    int getSamples() const;
 
-    virtual GLenum completeness();
+    virtual GLenum completeness() const;
 
   protected:
     GLenum mColorbufferType;
@@ -85,7 +86,7 @@ class DefaultFramebuffer : public Framebuffer
   public:
     DefaultFramebuffer(rx::Renderer *Renderer, Colorbuffer *colorbuffer, DepthStencilbuffer *depthStencil);
 
-    virtual GLenum completeness();
+    virtual GLenum completeness() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(DefaultFramebuffer);
