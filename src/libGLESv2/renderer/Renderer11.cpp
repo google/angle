@@ -124,6 +124,10 @@ Renderer11 *Renderer11::makeRenderer11(Renderer *renderer)
     return static_cast<rx::Renderer11*>(renderer);
 }
 
+#ifndef __d3d11_1_h__
+#define D3D11_MESSAGE_ID_DEVICE_DRAW_RENDERTARGETVIEW_NOT_SET ((D3D11_MESSAGE_ID)3146081)
+#endif
+
 EGLint Renderer11::initialize()
 {
     if (!initializeCompiler())
@@ -219,7 +223,8 @@ EGLint Renderer11::initialize()
         D3D11_MESSAGE_ID hideMessages[] =
         {
             D3D11_MESSAGE_ID_DEVICE_OMSETRENDERTARGETS_HAZARD,
-            D3D11_MESSAGE_ID_DEVICE_PSSETSHADERRESOURCES_HAZARD
+            D3D11_MESSAGE_ID_DEVICE_PSSETSHADERRESOURCES_HAZARD,
+            D3D11_MESSAGE_ID_DEVICE_DRAW_RENDERTARGETVIEW_NOT_SET
         };
 
         D3D11_INFO_QUEUE_FILTER filter = {0};
