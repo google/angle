@@ -181,6 +181,8 @@ class Renderer
 
     virtual GLsizei getMaxSupportedSamples() const = 0;
 
+    virtual unsigned int getMaxRenderTargets() const = 0;
+
     // Pixel operations
     virtual bool copyToRenderTarget(TextureStorageInterface2D *dest, TextureStorageInterface2D *source) = 0;
     virtual bool copyToRenderTarget(TextureStorageInterfaceCube *dest, TextureStorageInterfaceCube *source) = 0;

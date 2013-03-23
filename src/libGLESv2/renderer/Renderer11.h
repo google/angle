@@ -125,6 +125,8 @@ class Renderer11 : public Renderer
     virtual GLsizei getMaxSupportedSamples() const;
     int getNearestSupportedSamples(DXGI_FORMAT format, unsigned int requested) const;
 
+    virtual unsigned int getMaxRenderTargets() const;
+
     // Pixel operations
     virtual bool copyToRenderTarget(TextureStorageInterface2D *dest, TextureStorageInterface2D *source);
     virtual bool copyToRenderTarget(TextureStorageInterfaceCube *dest, TextureStorageInterfaceCube *source);
