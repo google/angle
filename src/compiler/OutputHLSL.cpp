@@ -27,7 +27,7 @@ TString str(int i)
     return buffer;
 }
 
-OutputHLSL::OutputHLSL(TParseContext &context, ShShaderOutput outputType)
+OutputHLSL::OutputHLSL(TParseContext &context, const ShBuiltInResources& resources, ShShaderOutput outputType)
     : TIntermTraverser(true, true, true), mContext(context), mOutputType(outputType)
 {
     mUnfoldShortCircuit = new UnfoldShortCircuit(context, this);

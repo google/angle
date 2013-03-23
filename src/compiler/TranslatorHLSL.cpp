@@ -17,7 +17,7 @@ TranslatorHLSL::TranslatorHLSL(ShShaderType type, ShShaderSpec spec, ShShaderOut
 void TranslatorHLSL::translate(TIntermNode *root)
 {
     TParseContext& parseContext = *GetGlobalParseContext();
-    sh::OutputHLSL outputHLSL(parseContext, mOutputType);
+    sh::OutputHLSL outputHLSL(parseContext, getResources(), mOutputType);
 
     outputHLSL.output();
     mActiveUniforms = outputHLSL.getUniforms();
