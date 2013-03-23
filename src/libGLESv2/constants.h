@@ -14,8 +14,6 @@ namespace gl
 
 enum
 {
-    MAX_DRAW_BUFFERS = 1,
-
     MAX_VERTEX_ATTRIBS = 16,
     MAX_TEXTURE_IMAGE_UNITS = 16,
 

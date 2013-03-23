@@ -242,8 +242,9 @@ void Shader::initializeCompiler()
             resources.MaxCombinedTextureImageUnits = mRenderer->getMaxCombinedTextureImageUnits();
             resources.MaxTextureImageUnits = MAX_TEXTURE_IMAGE_UNITS;
             resources.MaxFragmentUniformVectors = mRenderer->getMaxFragmentUniformVectors();
-            resources.MaxDrawBuffers = MAX_DRAW_BUFFERS;
+            resources.MaxDrawBuffers = mRenderer->getMaxRenderTargets();
             resources.OES_standard_derivatives = mRenderer->getDerivativeInstructionSupport();
+            resources.EXT_draw_buffers = mRenderer->getMaxRenderTargets() > 1;
             // resources.OES_EGL_image_external = mRenderer->getShareHandleSupport() ? 1 : 0; // TODO: commented out until the extension is actually supported.
             resources.FragmentPrecisionHigh = 1;   // Shader Model 2+ always supports FP24 (s16e7) which corresponds to highp
 
