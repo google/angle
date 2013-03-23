@@ -48,6 +48,8 @@ OutputHLSL::OutputHLSL(TParseContext &context, const ShBuiltInResources& resourc
     mUsesTexture2DProjLod0_bias = false;
     mUsesTextureCubeLod0 = false;
     mUsesTextureCubeLod0_bias = false;
+    mUsesFragColor = false;
+    mUsesFragData = false;
     mUsesDepthRange = false;
     mUsesFragCoord = false;
     mUsesPointCoord = false;
@@ -81,6 +83,8 @@ OutputHLSL::OutputHLSL(TParseContext &context, const ShBuiltInResources& resourc
     mUsesAtan2_2 = false;
     mUsesAtan2_3 = false;
     mUsesAtan2_4 = false;
+
+    mNumRenderTargets = resources.EXT_draw_buffers ? resources.MaxDrawBuffers : 1;
 
     mScopeDepth = 0;
 
@@ -205,6 +209,11 @@ void OutputHLSL::header()
 
     if (shaderType == SH_FRAGMENT_SHADER)
     {
+        TExtensionBehavior::const_iterator iter = mContext.extensionBehavior().find("GL_EXT_draw_buffers");
+        bool usingMRTExtension = iter != mContext.extensionBehavior().end() && iter->second == EBhEnable;
+
+        unsigned int numColorValues = usingMRTExtension ? mNumRenderTargets : 1;
+
         out << "// Varyings\n";
         out <<  varyings;
         out << "\n"
@@ -581,6 +590,21 @@ void OutputHLSL::header()
                        "\n";
             }
             else UNREACHABLE();
+        }
+
+        if (usingMRTExtension && mNumRenderTargets > 1)
+        {
+            out << "#define GL_USES_MRT\n";
+        }
+
+        if (mUsesFragColor)
+        {
+            out << "#define GL_USES_FRAG_COLOR\n";
+        }
+
+        if (mUsesFragData)
+        {
+            out << "#define GL_USES_FRAG_DATA\n";
         }
     }
     else   // Vertex shader
@@ -1099,10 +1123,12 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
     if (name == "gl_FragColor")
     {
         out << "gl_Color[0]";
+        mUsesFragColor = true;
     }
     else if (name == "gl_FragData")
     {
         out << "gl_Color";
+        mUsesFragData = true;
     }
     else if (name == "gl_DepthRange")
     {

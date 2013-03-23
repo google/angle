@@ -297,6 +297,9 @@ void Shader::parseVaryings()
             input = strstr(input, ";") + 2;
         }
 
+        mUsesMultipleRenderTargets = strstr(mHlsl, "GL_USES_MRT") != NULL;
+        mUsesFragColor = strstr(mHlsl, "GL_USES_FRAG_COLOR") != NULL;
+        mUsesFragData = strstr(mHlsl, "GL_USES_FRAG_DATA") != NULL;
         mUsesFragCoord = strstr(mHlsl, "GL_USES_FRAG_COORD") != NULL;
         mUsesFrontFacing = strstr(mHlsl, "GL_USES_FRONT_FACING") != NULL;
         mUsesPointSize = strstr(mHlsl, "GL_USES_POINT_SIZE") != NULL;
@@ -325,6 +328,9 @@ void Shader::uncompile()
     // set by parseVaryings
     mVaryings.clear();
 
+    mUsesMultipleRenderTargets = false;
+    mUsesFragColor = false;
+    mUsesFragData = false;
     mUsesFragCoord = false;
     mUsesFrontFacing = false;
     mUsesPointSize = false;
