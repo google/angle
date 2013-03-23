@@ -2359,6 +2359,9 @@ int Renderer11::getNearestSupportedSamples(DXGI_FORMAT format, unsigned int requ
 
 unsigned int Renderer11::getMaxRenderTargets() const
 {
+    META_ASSERT(D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT <= gl::IMPLEMENTATION_MAX_DRAW_BUFFERS);
+    META_ASSERT(D3D10_SIMULTANEOUS_RENDER_TARGET_COUNT <= gl::IMPLEMENTATION_MAX_DRAW_BUFFERS);
+
     switch (mFeatureLevel)
     {
       case D3D_FEATURE_LEVEL_11_0:
