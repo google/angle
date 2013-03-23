@@ -179,6 +179,8 @@ class Renderer11 : public Renderer
     IDXGIFactory *getDxgiFactory() { return mDxgiFactory; };
 
     bool getRenderTargetResource(gl::Renderbuffer *colorbuffer, unsigned int *subresourceIndex, ID3D11Texture2D **resource);
+    void unapplyRenderTargets();
+    void setOneTimeRenderTarget(ID3D11RenderTargetView *renderTargetView);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer11);
