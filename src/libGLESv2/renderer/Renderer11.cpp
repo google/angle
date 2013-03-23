@@ -2945,7 +2945,7 @@ bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &read
 
                 RenderTarget *drawRenderTarget = drawBuffer->getRenderTarget();
 
-                if (!blitRenderbufferRect(readRect, drawRect, readRenderTarget, drawRenderTarget))
+                if (!blitRenderbufferRect(readRect, drawRect, readRenderTarget, drawRenderTarget, false))
                 {
                     return false;
                 }
@@ -2973,7 +2973,7 @@ bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &read
         RenderTarget *readRenderTarget = readBuffer->getDepthStencil();
         RenderTarget *drawRenderTarget = drawBuffer->getDepthStencil();
 
-        if (!blitRenderbufferRect(readRect, drawRect, readRenderTarget, drawRenderTarget))
+        if (!blitRenderbufferRect(readRect, drawRect, readRenderTarget, drawRenderTarget, true))
         {
             return false;
         }
@@ -3404,7 +3404,8 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
     stagingTex = NULL;
 }
 
-bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::Rectangle &drawRect, RenderTarget *readRenderTarget, RenderTarget *drawRenderTarget)
+bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::Rectangle &drawRect, RenderTarget *readRenderTarget, 
+                                      RenderTarget *drawRenderTarget, bool wholeBufferCopy)
 {
     ASSERT(readRect.width == drawRect.width && readRect.height == drawRect.height);
 
@@ -3457,8 +3458,12 @@ bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::R
     readBox.front = 0;
     readBox.back = 1;
 
+    // D3D11 needs depth-stencil CopySubresourceRegions to have a NULL pSrcBox
+    // We also require complete framebuffer copies for depth-stencil blit.
+    D3D11_BOX *pSrcBox = wholeBufferCopy ? NULL : &readBox;
+
     mDeviceContext->CopySubresourceRegion(drawTexture, drawSubresource, drawRect.x, drawRect.y, 0,
-                                          readTexture, readSubresource, &readBox);
+                                          readTexture, readSubresource, pSrcBox);
 
     readTexture->Release();
     drawTexture->Release();

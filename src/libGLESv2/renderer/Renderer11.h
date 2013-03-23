@@ -195,7 +195,8 @@ class Renderer11 : public Renderer
     void maskedClear(const gl::ClearParameters &clearParams);
     rx::Range getViewportBounds() const;
 
-    bool blitRenderbufferRect(const gl::Rectangle &readRect, const gl::Rectangle &drawRect, RenderTarget *readRenderTarget, RenderTarget *drawRenderTarget);
+    bool blitRenderbufferRect(const gl::Rectangle &readRect, const gl::Rectangle &drawRect, RenderTarget *readRenderTarget, 
+                              RenderTarget *drawRenderTarget, bool wholeBufferCopy);
     ID3D11Texture2D *resolveMultisampledTexture(ID3D11Texture2D *source, unsigned int subresource);
 
     HMODULE mD3d11Module;
