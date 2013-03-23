@@ -484,7 +484,7 @@ void Image9::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width,
 {
     RenderTarget9 *renderTarget = NULL;
     IDirect3DSurface9 *surface = NULL;
-    gl::Renderbuffer *colorbuffer = source->getColorbuffer();
+    gl::Renderbuffer *colorbuffer = source->getColorbuffer(0);
 
     if (colorbuffer)
     {

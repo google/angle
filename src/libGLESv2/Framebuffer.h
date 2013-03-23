@@ -35,7 +35,6 @@ class Framebuffer
     virtual ~Framebuffer();
 
     void setColorbuffer(unsigned int colorAttachment, GLenum type, GLuint colorbuffer);
-    void setColorbuffer(GLenum type, GLuint colorbuffer);
     void setDepthbuffer(GLenum type, GLuint depthbuffer);
     void setStencilbuffer(GLenum type, GLuint stencilbuffer);
 
@@ -43,12 +42,10 @@ class Framebuffer
     void detachRenderbuffer(GLuint renderbuffer);
 
     unsigned int getRenderTargetSerial(unsigned int colorAttachment) const;
-    unsigned int getRenderTargetSerial() const;
     unsigned int getDepthbufferSerial() const;
     unsigned int getStencilbufferSerial() const;
 
     Renderbuffer *getColorbuffer(unsigned int colorAttachment) const;
-    Renderbuffer *getColorbuffer() const;
     Renderbuffer *getDepthbuffer() const;
     Renderbuffer *getStencilbuffer() const;
     Renderbuffer *getDepthOrStencilbuffer() const;
@@ -56,12 +53,10 @@ class Framebuffer
     Renderbuffer *getFirstColorBuffer() const;
 
     GLenum getColorbufferType(unsigned int colorAttachment) const;
-    GLenum getColorbufferType() const;
     GLenum getDepthbufferType() const;
     GLenum getStencilbufferType() const;
 
     GLuint getColorbufferHandle(unsigned int colorAttachment) const;
-    GLuint getColorbufferHandle() const;
     GLuint getDepthbufferHandle() const;
     GLuint getStencilbufferHandle() const;
 

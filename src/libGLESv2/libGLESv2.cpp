@@ -1317,12 +1317,12 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
                 return gl::error(GL_INVALID_FRAMEBUFFER_OPERATION);
             }
 
-            if (context->getReadFramebufferHandle() != 0 && framebuffer->getColorbuffer()->getSamples() != 0)
+            if (context->getReadFramebufferHandle() != 0 && framebuffer->getSamples() != 0)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            gl::Renderbuffer *source = framebuffer->getColorbuffer();
+            gl::Renderbuffer *source = framebuffer->getReadColorbuffer();
             GLenum colorbufferFormat = source->getInternalFormat();
 
             // [OpenGL ES 2.0.24] table 3.9
@@ -1493,12 +1493,12 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
                 return gl::error(GL_INVALID_FRAMEBUFFER_OPERATION);
             }
 
-            if (context->getReadFramebufferHandle() != 0 && framebuffer->getColorbuffer()->getSamples() != 0)
+            if (context->getReadFramebufferHandle() != 0 && framebuffer->getSamples() != 0)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            gl::Renderbuffer *source = framebuffer->getColorbuffer();
+            gl::Renderbuffer *source = framebuffer->getReadColorbuffer();
             GLenum colorbufferFormat = source->getInternalFormat();
             gl::Texture *texture = NULL;
             GLenum textureFormat = GL_RGBA;
@@ -2398,19 +2398,30 @@ void __stdcall glFramebufferRenderbuffer(GLenum target, GLenum attachment, GLenu
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            switch (attachment)
+            if (attachment >= GL_COLOR_ATTACHMENT0_EXT && attachment <= GL_COLOR_ATTACHMENT15_EXT)
             {
-              case GL_COLOR_ATTACHMENT0:
-                framebuffer->setColorbuffer(GL_RENDERBUFFER, renderbuffer);
-                break;
-              case GL_DEPTH_ATTACHMENT:
-                framebuffer->setDepthbuffer(GL_RENDERBUFFER, renderbuffer);
-                break;
-              case GL_STENCIL_ATTACHMENT:
-                framebuffer->setStencilbuffer(GL_RENDERBUFFER, renderbuffer);
-                break;
-              default:
-                return gl::error(GL_INVALID_ENUM);
+                const unsigned int colorAttachment = (attachment - GL_COLOR_ATTACHMENT0_EXT);
+
+                if (colorAttachment >= context->getMaximumRenderTargets())
+                {
+                    return gl::error(GL_INVALID_VALUE);
+                }
+
+                framebuffer->setColorbuffer(colorAttachment, GL_RENDERBUFFER, renderbuffer);
+            }
+            else
+            {
+                switch (attachment)
+                {
+                  case GL_DEPTH_ATTACHMENT:
+                    framebuffer->setDepthbuffer(GL_RENDERBUFFER, renderbuffer);
+                    break;
+                  case GL_STENCIL_ATTACHMENT:
+                    framebuffer->setStencilbuffer(GL_RENDERBUFFER, renderbuffer);
+                    break;
+                  default:
+                    return gl::error(GL_INVALID_ENUM);
+                }
             }
         }
     }
@@ -2432,20 +2443,31 @@ void __stdcall glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum t
             return gl::error(GL_INVALID_ENUM);
         }
 
-        switch (attachment)
-        {
-          case GL_COLOR_ATTACHMENT0:
-          case GL_DEPTH_ATTACHMENT:
-          case GL_STENCIL_ATTACHMENT:
-            break;
-          default:
-            return gl::error(GL_INVALID_ENUM);
-        }
-
         gl::Context *context = gl::getNonLostContext();
 
         if (context)
         {
+            if (attachment >= GL_COLOR_ATTACHMENT0_EXT && attachment <= GL_COLOR_ATTACHMENT15_EXT)
+            {
+                const unsigned int colorAttachment = (attachment - GL_COLOR_ATTACHMENT0_EXT);
+
+                if (colorAttachment >= context->getMaximumRenderTargets())
+                {
+                    return gl::error(GL_INVALID_VALUE);
+                }
+            }
+            else
+            {
+                switch (attachment)
+                {
+                  case GL_DEPTH_ATTACHMENT:
+                  case GL_STENCIL_ATTACHMENT:
+                    break;
+                  default:
+                    return gl::error(GL_INVALID_ENUM);
+                }
+            }
+
             if (texture == 0)
             {
                 textarget = GL_NONE;
@@ -2522,11 +2544,24 @@ void __stdcall glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum t
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            switch (attachment)
+            if (attachment >= GL_COLOR_ATTACHMENT0_EXT && attachment <= GL_COLOR_ATTACHMENT15_EXT)
             {
-              case GL_COLOR_ATTACHMENT0:  framebuffer->setColorbuffer(textarget, texture);   break;
-              case GL_DEPTH_ATTACHMENT:   framebuffer->setDepthbuffer(textarget, texture);   break;
-              case GL_STENCIL_ATTACHMENT: framebuffer->setStencilbuffer(textarget, texture); break;
+                const unsigned int colorAttachment = (attachment - GL_COLOR_ATTACHMENT0_EXT);
+
+                if (colorAttachment >= context->getMaximumRenderTargets())
+                {
+                    return gl::error(GL_INVALID_VALUE);
+                }
+
+                framebuffer->setColorbuffer(colorAttachment, textarget, texture);
+            }
+            else
+            {
+                switch (attachment)
+                {
+                  case GL_DEPTH_ATTACHMENT:   framebuffer->setDepthbuffer(textarget, texture);   break;
+                  case GL_STENCIL_ATTACHMENT: framebuffer->setStencilbuffer(textarget, texture); break;
+                }
             }
         }
     }
@@ -3200,21 +3235,33 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
 
             GLenum attachmentType;
             GLuint attachmentHandle;
-            switch (attachment)
+
+            if (attachment >= GL_COLOR_ATTACHMENT0_EXT && attachment <= GL_COLOR_ATTACHMENT15_EXT)
             {
-              case GL_COLOR_ATTACHMENT0:    
-                attachmentType = framebuffer->getColorbufferType();
-                attachmentHandle = framebuffer->getColorbufferHandle(); 
-                break;
-              case GL_DEPTH_ATTACHMENT:     
-                attachmentType = framebuffer->getDepthbufferType();
-                attachmentHandle = framebuffer->getDepthbufferHandle();
-                break;
-              case GL_STENCIL_ATTACHMENT:   
-                attachmentType = framebuffer->getStencilbufferType();
-                attachmentHandle = framebuffer->getStencilbufferHandle();
-                break;
-              default: return gl::error(GL_INVALID_ENUM);
+                const unsigned int colorAttachment = (attachment - GL_COLOR_ATTACHMENT0_EXT);
+
+                if (colorAttachment >= context->getMaximumRenderTargets())
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+
+                attachmentType = framebuffer->getColorbufferType(colorAttachment);
+                attachmentHandle = framebuffer->getColorbufferHandle(colorAttachment);
+            }
+            else
+            {
+                switch (attachment)
+                {
+                  case GL_DEPTH_ATTACHMENT:
+                    attachmentType = framebuffer->getDepthbufferType();
+                    attachmentHandle = framebuffer->getDepthbufferHandle();
+                    break;
+                  case GL_STENCIL_ATTACHMENT:
+                    attachmentType = framebuffer->getStencilbufferType();
+                    attachmentHandle = framebuffer->getStencilbufferHandle();
+                    break;
+                  default: return gl::error(GL_INVALID_ENUM);
+                }
             }
 
             GLenum attachmentObjectType;   // Type category

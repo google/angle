@@ -77,11 +77,6 @@ void Framebuffer::setColorbuffer(unsigned int colorAttachment, GLenum type, GLui
     mColorbufferPointers[colorAttachment].set(lookupRenderbuffer(type, colorbuffer));
 }
 
-void Framebuffer::setColorbuffer(GLenum type, GLuint colorbuffer)
-{
-    setColorbuffer(0, type, colorbuffer);
-}
-
 void Framebuffer::setDepthbuffer(GLenum type, GLuint depthbuffer)
 {
     mDepthbufferType = (depthbuffer != 0) ? type : GL_NONE;
@@ -156,11 +151,6 @@ unsigned int Framebuffer::getRenderTargetSerial(unsigned int colorAttachment) co
     return 0;
 }
 
-unsigned int Framebuffer::getRenderTargetSerial() const
-{
-    return getRenderTargetSerial(0);
-}
-
 unsigned int Framebuffer::getDepthbufferSerial() const
 {
     Renderbuffer *depthbuffer = mDepthbufferPointer.get();
@@ -189,11 +179,6 @@ Renderbuffer *Framebuffer::getColorbuffer(unsigned int colorAttachment) const
 {
     ASSERT(colorAttachment < IMPLEMENTATION_MAX_DRAW_BUFFERS);
     return mColorbufferPointers[colorAttachment].get();
-}
-
-Renderbuffer *Framebuffer::getColorbuffer() const
-{
-    return getColorbuffer(0);
 }
 
 Renderbuffer *Framebuffer::getDepthbuffer() const
@@ -243,11 +228,6 @@ GLenum Framebuffer::getColorbufferType(unsigned int colorAttachment) const
     return mColorbufferTypes[colorAttachment];
 }
 
-GLenum Framebuffer::getColorbufferType() const
-{
-    return getColorbufferType(0);
-}
-
 GLenum Framebuffer::getDepthbufferType() const
 {
     return mDepthbufferType;
@@ -262,11 +242,6 @@ GLuint Framebuffer::getColorbufferHandle(unsigned int colorAttachment) const
 {
     ASSERT(colorAttachment < IMPLEMENTATION_MAX_DRAW_BUFFERS);
     return mColorbufferPointers[colorAttachment].id();
-}
-
-GLuint Framebuffer::getColorbufferHandle() const
-{
-    return getColorbufferHandle(0);
 }
 
 GLuint Framebuffer::getDepthbufferHandle() const

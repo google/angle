@@ -1221,9 +1221,9 @@ bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
     // if there is no color attachment we must synthesize a NULL colorattachment
     // to keep the D3D runtime happy.  This should only be possible if depth texturing.
     gl::Renderbuffer *renderbufferObject = NULL;
-    if (framebuffer->getColorbufferType() != GL_NONE)
+    if (framebuffer->getColorbufferType(0) != GL_NONE)
     {
-        renderbufferObject = framebuffer->getColorbuffer();
+        renderbufferObject = framebuffer->getColorbuffer(0);
     }
     else
     {
@@ -2567,8 +2567,8 @@ bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, const gl::Rectangle &
 
     if (blitRenderTarget)
     {
-        gl::Renderbuffer *readBuffer = readFramebuffer->getColorbuffer();
-        gl::Renderbuffer *drawBuffer = drawFramebuffer->getColorbuffer();
+        gl::Renderbuffer *readBuffer = readFramebuffer->getColorbuffer(0);
+        gl::Renderbuffer *drawBuffer = drawFramebuffer->getColorbuffer(0);
         RenderTarget9 *readRenderTarget = NULL;
         RenderTarget9 *drawRenderTarget = NULL;
         IDirect3DSurface9* readSurface = NULL;
@@ -2675,7 +2675,7 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
 {
     RenderTarget9 *renderTarget = NULL;
     IDirect3DSurface9 *surface = NULL;
-    gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer();
+    gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer(0);
 
     if (colorbuffer)
     {
