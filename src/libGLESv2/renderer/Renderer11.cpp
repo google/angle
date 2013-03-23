@@ -1468,32 +1468,37 @@ void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *
      {
          if (clearParams.mask & GL_COLOR_BUFFER_BIT)
          {
-             // TODO: mrt clear
-             gl::Renderbuffer *renderbufferObject = frameBuffer->getColorbuffer(0);
-             if (renderbufferObject)
+             for (unsigned int colorAttachment = 0; colorAttachment < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
              {
-                RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(renderbufferObject->getRenderTarget());
-                if (!renderTarget)
-                {
-                    ERR("render target pointer unexpectedly null.");
-                    return;
-                }
+                 if (frameBuffer->isEnabledColorAttachment(colorAttachment))
+                 {
+                     gl::Renderbuffer *renderbufferObject = frameBuffer->getColorbuffer(colorAttachment);
+                     if (renderbufferObject)
+                     {
+                        RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(renderbufferObject->getRenderTarget());
+                        if (!renderTarget)
+                        {
+                            ERR("render target pointer unexpectedly null.");
+                            return;
+                        }
 
-                ID3D11RenderTargetView *framebufferRTV = renderTarget->getRenderTargetView();
-                if (!framebufferRTV)
-                {
-                    ERR("render target view pointer unexpectedly null.");
-                    return;
-                }
+                        ID3D11RenderTargetView *framebufferRTV = renderTarget->getRenderTargetView();
+                        if (!framebufferRTV)
+                        {
+                            ERR("render target view pointer unexpectedly null.");
+                            return;
+                        }
 
-                const float clearValues[4] = { clearParams.colorClearValue.red,
-                                               clearParams.colorClearValue.green,
-                                               clearParams.colorClearValue.blue,
-                                               clearParams.colorClearValue.alpha };
-                mDeviceContext->ClearRenderTargetView(framebufferRTV, clearValues);
+                        const float clearValues[4] = { clearParams.colorClearValue.red,
+                                                       clearParams.colorClearValue.green,
+                                                       clearParams.colorClearValue.blue,
+                                                       clearParams.colorClearValue.alpha };
+                        mDeviceContext->ClearRenderTargetView(framebufferRTV, clearValues);
 
-                framebufferRTV->Release();
-            }
+                        framebufferRTV->Release();
+                    }
+                 }
+             }
         }
         if (clearParams.mask & GL_DEPTH_BUFFER_BIT || clearParams.mask & GL_STENCIL_BUFFER_BIT)
         {

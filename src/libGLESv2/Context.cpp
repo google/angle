@@ -1892,8 +1892,7 @@ void Context::clear(GLbitfield mask)
     {
         mask &= ~GL_COLOR_BUFFER_BIT;
 
-        // TODO: MRT clear
-        if (framebufferObject->getColorbufferType(0) != GL_NONE)
+        if (framebufferObject->hasEnabledColorAttachment())
         {
             finalMask |= GL_COLOR_BUFFER_BIT;
         }
