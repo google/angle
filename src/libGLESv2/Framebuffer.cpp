@@ -209,6 +209,12 @@ Renderbuffer *Framebuffer::getReadColorbuffer() const
     return mColorbufferPointers[0].get();
 }
 
+GLenum Framebuffer::getReadColorbufferType() const
+{
+    // Will require more logic if glReadBuffers is supported
+    return mColorbufferTypes[0];
+}
+
 Renderbuffer *Framebuffer::getFirstColorBuffer() const
 {
     for (unsigned int colorAttachment = 0; colorAttachment < IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
