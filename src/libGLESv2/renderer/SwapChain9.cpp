@@ -399,4 +399,36 @@ SwapChain9 *SwapChain9::makeSwapChain9(SwapChain *swapChain)
     return static_cast<rx::SwapChain9*>(swapChain);
 }
 
+void SwapChain9::recreate()
+{
+    if (!mSwapChain)
+    {
+        return;
+    }
+
+    IDirect3DDevice9 *device = mRenderer->getDevice();
+    if (device == NULL)
+    {
+        return;
+    }
+
+    D3DPRESENT_PARAMETERS presentParameters;
+    HRESULT result = mSwapChain->GetPresentParameters(&presentParameters);
+    ASSERT(SUCCEEDED(result));
+
+    IDirect3DSwapChain9* newSwapChain = NULL;
+    result = device->CreateAdditionalSwapChain(&presentParameters, &newSwapChain);
+    if (FAILED(result))
+    {
+        return;
+    }
+
+    mSwapChain->Release();
+    mSwapChain = newSwapChain;
+
+    mBackBuffer->Release();
+    result = mSwapChain->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &mBackBuffer);
+    ASSERT(SUCCEEDED(result));
+}
+
 }

@@ -18,6 +18,7 @@
 #include "libGLESv2/mathutil.h"
 #include "libGLESv2/main.h"
 #include "libGLESv2/Context.h"
+#include "libGLESv2/renderer/SwapChain.h"
 
 #include "libEGL/main.h"
 #include "libEGL/Surface.h"
@@ -439,6 +440,14 @@ void Display::notifyDeviceLost()
         (*context)->markContextLost();
     }
     egl::error(EGL_CONTEXT_LOST);
+}
+
+void Display::recreateSwapChains()
+{
+    for (SurfaceSet::iterator surface = mSurfaceSet.begin(); surface != mSurfaceSet.end(); surface++)
+    {
+        (*surface)->getSwapChain()->recreate();
+    }
 }
 
 bool Display::isInitialized() const

@@ -759,4 +759,9 @@ SwapChain11 *SwapChain11::makeSwapChain11(SwapChain *swapChain)
     return static_cast<rx::SwapChain11*>(swapChain);
 }
 
+void SwapChain11::recreate()
+{
+    // possibly should use this method instead of reset
+}
+
 }
