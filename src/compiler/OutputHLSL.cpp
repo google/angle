@@ -217,7 +217,18 @@ void OutputHLSL::header()
         out << "// Varyings\n";
         out <<  varyings;
         out << "\n"
-               "static float4 gl_Color[1] = {float4(0, 0, 0, 0)};\n";
+               "static float4 gl_Color[" << numColorValues << "] =\n"
+               "{\n";
+        for (unsigned int i = 0; i < numColorValues; i++)
+        {
+            out << "    float4(0, 0, 0, 0)";
+            if (i + 1 != numColorValues)
+            {
+                out << ",";
+            }
+            out << "\n";
+        }
+        out << "};\n";
 
         if (mUsesFragCoord)
         {

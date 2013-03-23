@@ -1162,6 +1162,15 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
         return false;
     }
 
+    bool usesMRT = fragmentShader->mUsesMultipleRenderTargets;
+    bool usesFragColor = fragmentShader->mUsesFragColor;
+    bool usesFragData = fragmentShader->mUsesFragData;
+    if (usesMRT && usesFragColor && usesFragData)
+    {
+        infoLog.append("Cannot use both gl_FragColor and gl_FragData in the same fragment shader.");
+        return false;
+    }
+
     // Write the HLSL input/output declarations
     const int shaderModel = mRenderer->getMajorShaderModel();
     const int maxVaryingVectors = mRenderer->getMaxVaryingVectors();
@@ -1212,6 +1221,8 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
     std::string varyingSemantic = (mUsesPointSize && shaderModel == 3) ? "COLOR" : "TEXCOORD";
     std::string targetSemantic = (shaderModel >= 4) ? "SV_Target" : "COLOR";
     std::string positionSemantic = (shaderModel >= 4) ? "SV_Position" : "POSITION";
+
+    const unsigned int renderTargetCount = usesMRT ? mRenderer->getMaxRenderTargets() : 1;
 
     // special varyings that use reserved registers
     int reservedRegisterIndex = registers;
@@ -1459,11 +1470,16 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
     pixelHLSL += "};\n"
                  "\n"
                  "struct PS_OUTPUT\n"
-                 "{\n"
-                 "    float4 gl_Color[1] : " + targetSemantic + ";\n"
-                 "};\n"
+                 "{\n";
+
+    for (unsigned int i = 0; i < renderTargetCount; i++)
+    {
+        pixelHLSL += "    float4 gl_Color" + str(i) + " : " + targetSemantic + str(i) + ";\n";
+    }
+
+    pixelHLSL += "};\n"
                  "\n";
-    
+
     if (fragmentShader->mUsesFrontFacing)
     {
         if (shaderModel >= 4)
@@ -1565,9 +1581,16 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
     pixelHLSL += "\n"
                  "    gl_main();\n"
                  "\n"
-                 "    PS_OUTPUT output;\n"                 
-                 "    output.gl_Color[0] = gl_Color[0];\n"
-                 "\n"
+                 "    PS_OUTPUT output;\n";
+
+    for (unsigned int i = 0; i < renderTargetCount; i++)
+    {
+        unsigned int sourceColor = fragmentShader->mUsesFragData ? i : 0;
+
+        pixelHLSL += "    output.gl_Color" + str(i) + " = gl_Color[" + str(sourceColor) + "];\n";
+    }
+
+    pixelHLSL += "\n"
                  "    return output;\n"
                  "}\n";
 
