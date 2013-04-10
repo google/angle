@@ -323,38 +323,6 @@ bool Surface::resetSwapChain(int backbufferWidth, int backbufferHeight)
     return true;
 }
 
-void Surface::recreateAdditionalSwapChain()
-{
-    if (!mSwapChain)
-    {
-        return;
-    }
-
-    IDirect3DDevice9 *device = mDisplay->getDevice();
-    if (device == NULL)
-    {
-        return;
-    }
-
-    D3DPRESENT_PARAMETERS presentParameters;
-    HRESULT result = mSwapChain->GetPresentParameters(&presentParameters);
-    ASSERT(SUCCEEDED(result));
-
-    IDirect3DSwapChain9* newSwapChain = NULL;
-    result = device->CreateAdditionalSwapChain(&presentParameters, &newSwapChain);
-    if (FAILED(result))
-    {
-        return;
-    }
-
-    mSwapChain->Release();
-    mSwapChain = newSwapChain;
-
-    mBackBuffer->Release();
-    result = mSwapChain->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &mBackBuffer);
-    ASSERT(SUCCEEDED(result));
-}
-
 bool Surface::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
 {
     if (!mSwapChain)
