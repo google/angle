@@ -1165,7 +1165,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
     bool usesMRT = fragmentShader->mUsesMultipleRenderTargets;
     bool usesFragColor = fragmentShader->mUsesFragColor;
     bool usesFragData = fragmentShader->mUsesFragData;
-    if (usesMRT && usesFragColor && usesFragData)
+    if (usesFragColor && usesFragData)
     {
         infoLog.append("Cannot use both gl_FragColor and gl_FragData in the same fragment shader.");
         return false;
@@ -1176,6 +1176,10 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
     const int maxVaryingVectors = mRenderer->getMaxVaryingVectors();
 
     const int registersNeeded = registers + (fragmentShader->mUsesFragCoord ? 1 : 0) + (fragmentShader->mUsesPointCoord ? 1 : 0);
+
+    // The output color is broadcast to all enabled draw buffers when writing to gl_FragColor 
+    const bool broadcast = fragmentShader->mUsesFragColor;
+    const unsigned int numRenderTargets = (broadcast || usesMRT ? mRenderer->getMaxRenderTargets() : 1);
 
     if (registersNeeded > maxVaryingVectors)
     {
@@ -1221,8 +1225,6 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
     std::string varyingSemantic = (mUsesPointSize && shaderModel == 3) ? "COLOR" : "TEXCOORD";
     std::string targetSemantic = (shaderModel >= 4) ? "SV_Target" : "COLOR";
     std::string positionSemantic = (shaderModel >= 4) ? "SV_Position" : "POSITION";
-
-    const unsigned int renderTargetCount = usesMRT ? mRenderer->getMaxRenderTargets() : 1;
 
     // special varyings that use reserved registers
     int reservedRegisterIndex = registers;
@@ -1472,9 +1474,9 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
                  "struct PS_OUTPUT\n"
                  "{\n";
 
-    for (unsigned int i = 0; i < renderTargetCount; i++)
+    for (unsigned int renderTargetIndex = 0; renderTargetIndex < numRenderTargets; renderTargetIndex++)
     {
-        pixelHLSL += "    float4 gl_Color" + str(i) + " : " + targetSemantic + str(i) + ";\n";
+        pixelHLSL += "    float4 gl_Color" + str(renderTargetIndex) + " : " + targetSemantic + str(renderTargetIndex) + ";\n";
     }
 
     pixelHLSL += "};\n"
@@ -1583,11 +1585,11 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
                  "\n"
                  "    PS_OUTPUT output;\n";
 
-    for (unsigned int i = 0; i < renderTargetCount; i++)
+    for (unsigned int renderTargetIndex = 0; renderTargetIndex < numRenderTargets; renderTargetIndex++)
     {
-        unsigned int sourceColor = fragmentShader->mUsesFragData ? i : 0;
+        unsigned int sourceColorIndex = broadcast ? 0 : renderTargetIndex;
 
-        pixelHLSL += "    output.gl_Color" + str(i) + " = gl_Color[" + str(sourceColor) + "];\n";
+        pixelHLSL += "    output.gl_Color" + str(renderTargetIndex) + " = gl_Color[" + str(sourceColorIndex) + "];\n";
     }
 
     pixelHLSL += "\n"
