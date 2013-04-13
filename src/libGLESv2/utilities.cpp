@@ -22,18 +22,22 @@ int UniformComponentCount(GLenum type)
       case GL_INT:
       case GL_SAMPLER_2D:
       case GL_SAMPLER_CUBE:
+      case GL_UNSIGNED_INT:
           return 1;
       case GL_BOOL_VEC2:
       case GL_FLOAT_VEC2:
       case GL_INT_VEC2:
+      case GL_UNSIGNED_INT_VEC2:
           return 2;
       case GL_INT_VEC3:
       case GL_FLOAT_VEC3:
       case GL_BOOL_VEC3:
+      case GL_UNSIGNED_INT_VEC3:
           return 3;
       case GL_BOOL_VEC4:
       case GL_FLOAT_VEC4:
       case GL_INT_VEC4:
+      case GL_UNSIGNED_INT_VEC4:
       case GL_FLOAT_MAT2:
           return 4;
       case GL_FLOAT_MAT3:
@@ -71,6 +75,11 @@ GLenum UniformComponentType(GLenum type)
       case GL_INT_VEC3:
       case GL_INT_VEC4:
           return GL_INT;
+      case GL_UNSIGNED_INT:
+      case GL_UNSIGNED_INT_VEC2:
+      case GL_UNSIGNED_INT_VEC3:
+      case GL_UNSIGNED_INT_VEC4:
+          return GL_UNSIGNED_INT;
       default:
           UNREACHABLE();
     }
@@ -82,9 +91,10 @@ size_t UniformComponentSize(GLenum type)
 {
     switch(type)
     {
-      case GL_BOOL:  return sizeof(GLint);
-      case GL_FLOAT: return sizeof(GLfloat);
-      case GL_INT:   return sizeof(GLint);
+      case GL_BOOL:         return sizeof(GLint);
+      case GL_FLOAT:        return sizeof(GLfloat);
+      case GL_INT:          return sizeof(GLint);
+      case GL_UNSIGNED_INT: return sizeof(GLuint);
       default:       UNREACHABLE();
     }
 
@@ -108,15 +118,19 @@ GLenum UniformBoolVectorType(GLenum type)
     {
       case GL_FLOAT:
       case GL_INT:
+      case GL_UNSIGNED_INT:
         return GL_BOOL;
       case GL_FLOAT_VEC2:
       case GL_INT_VEC2:
+      case GL_UNSIGNED_INT_VEC2:
         return GL_BOOL_VEC2;
       case GL_FLOAT_VEC3:
       case GL_INT_VEC3:
+      case GL_UNSIGNED_INT_VEC3:
         return GL_BOOL_VEC3;
       case GL_FLOAT_VEC4:
       case GL_INT_VEC4:
+      case GL_UNSIGNED_INT_VEC4:
         return GL_BOOL_VEC4;
 
       default:
