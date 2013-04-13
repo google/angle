@@ -11,6 +11,7 @@
 #define LIBGLESV2_RENDERER_VERTEXDATAMANAGER_H_
 
 #include "libGLESv2/Constants.h"
+#include "libGLESv2/Context.h"
 #include "common/angleutils.h"
 
 namespace gl
@@ -55,7 +56,8 @@ class VertexDataManager
 
     StreamingVertexBufferInterface *mStreamingBuffer;
 
-    float mCurrentValue[gl::MAX_VERTEX_ATTRIBS][4];
+    gl::VertexAttribute::CurrentValueData mCurrentValue[gl::MAX_VERTEX_ATTRIBS];
+
     StreamingVertexBufferInterface *mCurrentValueBuffer[gl::MAX_VERTEX_ATTRIBS];
     std::size_t mCurrentValueOffsets[gl::MAX_VERTEX_ATTRIBS];
 };

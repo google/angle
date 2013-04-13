@@ -36,10 +36,11 @@ VertexDataManager::VertexDataManager(Renderer *renderer) : mRenderer(renderer)
 {
     for (int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
-        mCurrentValue[i][0] = std::numeric_limits<float>::quiet_NaN();
-        mCurrentValue[i][1] = std::numeric_limits<float>::quiet_NaN();
-        mCurrentValue[i][2] = std::numeric_limits<float>::quiet_NaN();
-        mCurrentValue[i][3] = std::numeric_limits<float>::quiet_NaN();
+        mCurrentValue[i].FloatValues[0] = std::numeric_limits<float>::quiet_NaN();
+        mCurrentValue[i].FloatValues[1] = std::numeric_limits<float>::quiet_NaN();
+        mCurrentValue[i].FloatValues[2] = std::numeric_limits<float>::quiet_NaN();
+        mCurrentValue[i].FloatValues[3] = std::numeric_limits<float>::quiet_NaN();
+        mCurrentValue[i].Type = GL_FLOAT;
         mCurrentValueBuffer[i] = NULL;
         mCurrentValueOffsets[i] = 0;
     }
@@ -211,14 +212,11 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
 
                 StreamingVertexBufferInterface *buffer = mCurrentValueBuffer[i];
 
-                if (mCurrentValue[i][0] != attribs[i].mCurrentValue[0] ||
-                    mCurrentValue[i][1] != attribs[i].mCurrentValue[1] ||
-                    mCurrentValue[i][2] != attribs[i].mCurrentValue[2] ||
-                    mCurrentValue[i][3] != attribs[i].mCurrentValue[3])
+                if (memcmp(&mCurrentValue[i], &attribs[i].mCurrentValue, sizeof(gl::VertexAttribute::CurrentValueData)) != 0)
                 {
                     unsigned int requiredSpace = sizeof(float) * 4;
                     buffer->reserveRawDataSpace(requiredSpace);
-                    int streamOffset = buffer->storeRawData(attribs[i].mCurrentValue, requiredSpace);
+                    int streamOffset = buffer->storeRawData(attribs[i].mCurrentValue.FloatValues, requiredSpace);
                     if (streamOffset == -1)
                     {
                         return GL_OUT_OF_MEMORY;

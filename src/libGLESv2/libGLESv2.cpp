@@ -4256,7 +4256,7 @@ void __stdcall glGetVertexAttribfv(GLuint index, GLenum pname, GLfloat* params)
               case GL_CURRENT_VERTEX_ATTRIB:
                 for (int i = 0; i < 4; ++i)
                 {
-                    params[i] = attribState.mCurrentValue[i];
+                    params[i] = attribState.mCurrentValue.FloatValues[i];
                 }
                 break;
               case GL_VERTEX_ATTRIB_ARRAY_DIVISOR:
@@ -4314,7 +4314,7 @@ void __stdcall glGetVertexAttribiv(GLuint index, GLenum pname, GLint* params)
               case GL_CURRENT_VERTEX_ATTRIB:
                 for (int i = 0; i < 4; ++i)
                 {
-                    float currentValue = attribState.mCurrentValue[i];
+                    float currentValue = attribState.mCurrentValue.FloatValues[i];
                     params[i] = (GLint)(currentValue > 0.0f ? floor(currentValue + 0.5f) : ceil(currentValue - 0.5f));
                 }
                 break;

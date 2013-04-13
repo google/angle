@@ -2540,10 +2540,11 @@ void Context::setVertexAttrib(GLuint index, const GLfloat *values)
 {
     ASSERT(index < gl::MAX_VERTEX_ATTRIBS);
 
-    mState.vertexAttribute[index].mCurrentValue[0] = values[0];
-    mState.vertexAttribute[index].mCurrentValue[1] = values[1];
-    mState.vertexAttribute[index].mCurrentValue[2] = values[2];
-    mState.vertexAttribute[index].mCurrentValue[3] = values[3];
+    mState.vertexAttribute[index].mCurrentValue.FloatValues[0] = values[0];
+    mState.vertexAttribute[index].mCurrentValue.FloatValues[1] = values[1];
+    mState.vertexAttribute[index].mCurrentValue.FloatValues[2] = values[2];
+    mState.vertexAttribute[index].mCurrentValue.FloatValues[3] = values[3];
+    mState.vertexAttribute[index].mCurrentValue.Type = GL_FLOAT;
 }
 
 void Context::setVertexAttribDivisor(GLuint index, GLuint divisor)
