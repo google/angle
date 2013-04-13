@@ -21,6 +21,7 @@
 #include "libGLESv2/Program.h"
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/renderer/VertexDataManager.h"
+#include "libGLESv2/Context.h"
 
 #undef near
 #undef far
@@ -1583,9 +1584,14 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
                  "\n"
                  "    PS_OUTPUT output;\n";
 
+    // Two cases when writing to gl_FragColor and using ESSL 1.0:
+    // - with a 3.0 context, the output color is copied to channel 0
+    // - with a 2.0 context using EXT_draw_buffers, the output color is broadcast to all channels
+    const bool broadcast = fragmentShader->mUsesFragColor && mRenderer->getCurrentClientVersion() < 3;
+
     for (unsigned int i = 0; i < renderTargetCount; i++)
     {
-        unsigned int sourceColor = fragmentShader->mUsesFragData ? i : 0;
+        unsigned int sourceColor = !broadcast ? i : 0;
 
         pixelHLSL += "    output.gl_Color" + str(i) + " = gl_Color[" + str(sourceColor) + "];\n";
     }
