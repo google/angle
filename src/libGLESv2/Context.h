@@ -192,6 +192,9 @@ struct State
     BindingPointer<Buffer> copyReadBuffer;
     BindingPointer<Buffer> copyWriteBuffer;
 
+    BindingPointer<Buffer> pixelPackBuffer;
+    BindingPointer<Buffer> pixelUnpackBuffer;
+
     GLint unpackAlignment;
     GLint packAlignment;
     bool packReverseRowOrder;
@@ -342,6 +345,8 @@ class Context
     void bindIndexedTransformFeedbackBuffer(GLuint buffer, GLuint index, GLintptr offset, GLsizeiptr size);
     void bindCopyReadBuffer(GLuint buffer);
     void bindCopyWriteBuffer(GLuint buffer);
+    void bindPixelPackBuffer(GLuint buffer);
+    void bindPixelUnpackBuffer(GLuint buffer);
     void useProgram(GLuint program);
     void linkProgram(GLuint program);
     void setProgramBinary(GLuint program, const void *binary, GLint length);
@@ -376,6 +381,8 @@ class Context
     Buffer *getGenericTransformFeedbackBuffer();
     Buffer *getCopyReadBuffer();
     Buffer *getCopyWriteBuffer();
+    Buffer *getPixelPackBuffer();
+    Buffer *getPixelUnpackBuffer();
     Texture *getSamplerTexture(unsigned int sampler, TextureType type);
     Framebuffer *getReadFramebuffer();
     Framebuffer *getDrawFramebuffer();

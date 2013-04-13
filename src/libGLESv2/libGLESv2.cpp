@@ -422,6 +422,8 @@ void __stdcall glBindBuffer(GLenum target, GLuint buffer)
             {
               case GL_COPY_READ_BUFFER:
               case GL_COPY_WRITE_BUFFER:
+              case GL_PIXEL_PACK_BUFFER:
+              case GL_PIXEL_UNPACK_BUFFER:
               case GL_UNIFORM_BUFFER:
               case GL_TRANSFORM_FEEDBACK_BUFFER:
                 if (context->getClientVersion() < 3)
@@ -443,6 +445,12 @@ void __stdcall glBindBuffer(GLenum target, GLuint buffer)
                 return;
               case GL_COPY_WRITE_BUFFER:
                 context->bindCopyWriteBuffer(buffer);
+                return;
+              case GL_PIXEL_PACK_BUFFER:
+                context->bindPixelPackBuffer(buffer);
+                return;
+              case GL_PIXEL_UNPACK_BUFFER:
+                context->bindPixelUnpackBuffer(buffer);
                 return;
               case GL_UNIFORM_BUFFER:
                 context->bindGenericUniformBuffer(buffer);
@@ -802,6 +810,8 @@ void __stdcall glBufferData(GLenum target, GLsizeiptr size, const GLvoid* data, 
             {
               case GL_COPY_READ_BUFFER:
               case GL_COPY_WRITE_BUFFER:
+              case GL_PIXEL_PACK_BUFFER:
+              case GL_PIXEL_UNPACK_BUFFER:
               case GL_UNIFORM_BUFFER:
               case GL_TRANSFORM_FEEDBACK_BUFFER:
                 if (context->getClientVersion() < 3)
@@ -825,6 +835,12 @@ void __stdcall glBufferData(GLenum target, GLsizeiptr size, const GLvoid* data, 
                 break;
               case GL_COPY_WRITE_BUFFER:
                 buffer = context->getCopyWriteBuffer();
+                break;
+              case GL_PIXEL_PACK_BUFFER:
+                buffer = context->getPixelPackBuffer();
+                break;
+              case GL_PIXEL_UNPACK_BUFFER:
+                buffer = context->getPixelUnpackBuffer();
                 break;
               case GL_TRANSFORM_FEEDBACK_BUFFER:
                 buffer = context->getGenericTransformFeedbackBuffer();
@@ -876,6 +892,8 @@ void __stdcall glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, 
             {
               case GL_COPY_READ_BUFFER:
               case GL_COPY_WRITE_BUFFER:
+              case GL_PIXEL_PACK_BUFFER:
+              case GL_PIXEL_UNPACK_BUFFER:
               case GL_UNIFORM_BUFFER:
               case GL_TRANSFORM_FEEDBACK_BUFFER:
                 if (context->getClientVersion() < 3)
@@ -899,6 +917,12 @@ void __stdcall glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, 
                 break;
               case GL_COPY_WRITE_BUFFER:
                 buffer = context->getCopyWriteBuffer();
+                break;
+              case GL_PIXEL_PACK_BUFFER:
+                buffer = context->getPixelPackBuffer();
+                break;
+              case GL_PIXEL_UNPACK_BUFFER:
+                buffer = context->getPixelUnpackBuffer();
                 break;
               case GL_TRANSFORM_FEEDBACK_BUFFER:
                 buffer = context->getGenericTransformFeedbackBuffer();

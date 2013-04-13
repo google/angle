@@ -165,6 +165,8 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
 
     bindCopyReadBuffer(0);
     bindCopyWriteBuffer(0);
+    bindPixelPackBuffer(0);
+    bindPixelUnpackBuffer(0);
 
     mState.currentProgram = 0;
     mCurrentProgramBinary.set(NULL);
@@ -269,6 +271,9 @@ Context::~Context()
 
     mState.copyReadBuffer.set(NULL);
     mState.copyWriteBuffer.set(NULL);
+
+    mState.pixelPackBuffer.set(NULL);
+    mState.pixelUnpackBuffer.set(NULL);
 
     mResourceManager->release();
 }
@@ -988,6 +993,20 @@ void Context::bindCopyWriteBuffer(GLuint buffer)
     mState.copyWriteBuffer.set(getBuffer(buffer));
 }
 
+void Context::bindPixelPackBuffer(GLuint buffer)
+{
+    mResourceManager->checkBufferAllocation(buffer);
+
+    mState.pixelPackBuffer.set(getBuffer(buffer));
+}
+
+void Context::bindPixelUnpackBuffer(GLuint buffer)
+{
+    mResourceManager->checkBufferAllocation(buffer);
+
+    mState.pixelUnpackBuffer.set(getBuffer(buffer));
+}
+
 void Context::useProgram(GLuint program)
 {
     GLuint priorProgram = mState.currentProgram;
@@ -1259,6 +1278,16 @@ Buffer *Context::getCopyReadBuffer()
 Buffer *Context::getCopyWriteBuffer()
 {
     return mState.copyWriteBuffer.get();
+}
+
+Buffer *Context::getPixelPackBuffer()
+{
+    return mState.pixelPackBuffer.get();
+}
+
+Buffer *Context::getPixelUnpackBuffer()
+{
+    return mState.pixelUnpackBuffer.get();
 }
 
 Texture *Context::getSamplerTexture(unsigned int sampler, TextureType type)
@@ -1627,6 +1656,12 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_COPY_WRITE_BUFFER_BINDING:
         *params = mState.copyWriteBuffer.id();
         break;
+      case GL_PIXEL_PACK_BUFFER_BINDING:
+        *params = mState.pixelPackBuffer.id();
+        break;
+      case GL_PIXEL_UNPACK_BUFFER_BINDING:
+        *params = mState.pixelUnpackBuffer.id();
+        break;
       default:
         return false;
     }
@@ -1831,6 +1866,8 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_TRANSFORM_FEEDBACK_BINDING:
       case GL_COPY_READ_BUFFER_BINDING:
       case GL_COPY_WRITE_BUFFER_BINDING:
+      case GL_PIXEL_PACK_BUFFER_BINDING:
+      case GL_PIXEL_UNPACK_BUFFER_BINDING:
         {
             *type = GL_INT;
             *numParams = 1;
