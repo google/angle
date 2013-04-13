@@ -87,7 +87,7 @@ GLenum InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::M
 
             ilKey.elements[ilKey.elementCount].SemanticName = semanticName;
             ilKey.elements[ilKey.elementCount].SemanticIndex = sortedSemanticIndices[i];
-            ilKey.elements[ilKey.elementCount].Format = attributes[i].attribute->mArrayEnabled ? vertexBuffer->getDXGIFormat(*attributes[i].attribute) : DXGI_FORMAT_R32G32B32A32_FLOAT;
+            ilKey.elements[ilKey.elementCount].Format = vertexBuffer->getDXGIFormat(*attributes[i].attribute);
             ilKey.elements[ilKey.elementCount].InputSlot = i;
             ilKey.elements[ilKey.elementCount].AlignedByteOffset = 0;
             ilKey.elements[ilKey.elementCount].InputSlotClass = inputClass;

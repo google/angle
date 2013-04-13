@@ -136,7 +136,7 @@ GLenum VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, Transl
 
             element->Stream = stream;
             element->Offset = 0;
-            element->Type = attributes[i].attribute->mArrayEnabled ? vertexBuffer->getDeclType(*attributes[i].attribute) : D3DDECLTYPE_FLOAT4;
+            element->Type = vertexBuffer->getDeclType(*attributes[i].attribute);
             element->Method = D3DDECLMETHOD_DEFAULT;
             element->Usage = D3DDECLUSAGE_TEXCOORD;
             element->UsageIndex = programBinary->getSemanticIndex(i);

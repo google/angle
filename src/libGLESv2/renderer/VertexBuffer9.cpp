@@ -104,14 +104,21 @@ bool VertexBuffer9::storeVertexAttributes(const gl::VertexAttribute &attrib, GLi
         }
 
         const char *input = NULL;
-        if (buffer)
+        if (attrib.mArrayEnabled)
         {
-            BufferStorage *storage = buffer->getStorage();
-            input = static_cast<const char*>(storage->getData()) + static_cast<int>(attrib.mOffset);
+            if (buffer)
+            {
+                BufferStorage *storage = buffer->getStorage();
+                input = static_cast<const char*>(storage->getData()) + static_cast<int>(attrib.mOffset);
+            }
+            else
+            {
+                input = static_cast<const char*>(attrib.mPointer);
+            }
         }
         else
         {
-            input = static_cast<const char*>(attrib.mPointer);
+            input = reinterpret_cast<const char*>(attrib.mCurrentValue.FloatValues);
         }
 
         if (instances == 0 || attrib.mDivisor == 0)
@@ -127,34 +134,6 @@ bool VertexBuffer9::storeVertexAttributes(const gl::VertexAttribute &attrib, GLi
         {
             converter.convertArray(input, inputStride, count, mapPtr);
         }
-
-        mVertexBuffer->Unlock();
-
-        return true;
-    }
-    else
-    {
-        ERR("Vertex buffer not initialized.");
-        return false;
-    }
-}
-
-bool VertexBuffer9::storeRawData(const void* data, unsigned int size, unsigned int offset)
-{
-    if (mVertexBuffer)
-    {
-        DWORD lockFlags = mDynamicUsage ? D3DLOCK_NOOVERWRITE : 0;
-
-        void *mapPtr = NULL;
-        HRESULT result = mVertexBuffer->Lock(offset, size, &mapPtr, lockFlags);
-
-        if (FAILED(result))
-        {
-            ERR("Lock failed with error 0x%08x", result);
-            return false;
-        }
-
-        memcpy(mapPtr, data, size);
 
         mVertexBuffer->Unlock();
 
@@ -466,20 +445,28 @@ unsigned int VertexBuffer9::typeIndex(GLenum type)
 
 const VertexBuffer9::FormatConverter &VertexBuffer9::formatConverter(const gl::VertexAttribute &attribute)
 {
-    return mFormatConverters[typeIndex(attribute.mType)][attribute.mNormalized][attribute.mSize - 1];
+    GLenum type = attribute.mArrayEnabled ? attribute.mType : attribute.mCurrentValue.Type;
+    return mFormatConverters[typeIndex(type)][attribute.mNormalized][attribute.mSize - 1];
 }
 
 unsigned int VertexBuffer9::spaceRequired(const gl::VertexAttribute &attrib, std::size_t count, GLsizei instances)
 {
     unsigned int elementSize = formatConverter(attrib).outputElementSize;
 
-    if (instances == 0 || attrib.mDivisor == 0)
+    if (attrib.mArrayEnabled)
     {
-        return elementSize * count;
+        if (instances == 0 || attrib.mDivisor == 0)
+        {
+            return elementSize * count;
+        }
+        else
+        {
+            return elementSize * ((instances + attrib.mDivisor - 1) / attrib.mDivisor);
+        }
     }
     else
     {
-        return elementSize * ((instances + attrib.mDivisor - 1) / attrib.mDivisor);
+        return elementSize * 4;
     }
 }
 

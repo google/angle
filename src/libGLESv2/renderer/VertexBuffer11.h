@@ -26,8 +26,7 @@ class VertexBuffer11 : public VertexBuffer
     static VertexBuffer11 *makeVertexBuffer11(VertexBuffer *vetexBuffer);
 
     virtual bool storeVertexAttributes(const gl::VertexAttribute &attrib, GLint start, GLsizei count, GLsizei instances,
-                                 unsigned int offset);
-    virtual bool storeRawData(const void* data, unsigned int size, unsigned int offset);
+                                       unsigned int offset);
 
     virtual unsigned int getSpaceRequired(const gl::VertexAttribute &attrib, GLsizei count, GLsizei instances) const;
 

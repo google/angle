@@ -31,8 +31,6 @@ class VertexBuffer
 
     virtual bool storeVertexAttributes(const gl::VertexAttribute &attrib, GLint start, GLsizei count,
                                        GLsizei instances, unsigned int offset) = 0;
-    virtual bool storeRawData(const void* data, unsigned int size, unsigned int offset) = 0;
-
     virtual unsigned int getSpaceRequired(const gl::VertexAttribute &attrib, GLsizei count,
                                           GLsizei instances) const = 0;
 
@@ -61,14 +59,12 @@ class VertexBufferInterface
     virtual ~VertexBufferInterface();
 
     void reserveVertexSpace(const gl::VertexAttribute &attribute, GLsizei count, GLsizei instances);
-    void reserveRawDataSpace(unsigned int size);
 
     unsigned int getBufferSize() const;
 
     unsigned int getSerial() const;
 
     virtual int storeVertexAttributes(const gl::VertexAttribute &attrib, GLint start, GLsizei count, GLsizei instances);
-    virtual int storeRawData(const void* data, unsigned int size);
 
     VertexBuffer* getVertexBuffer() const;
 

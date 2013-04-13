@@ -106,33 +106,9 @@ int VertexBufferInterface::storeVertexAttributes(const gl::VertexAttribute &attr
     return oldWritePos;
 }
 
-int VertexBufferInterface::storeRawData(const void* data, unsigned int size)
-{
-    if (!reserveSpace(mReservedSpace))
-    {
-        return -1;
-    }
-    mReservedSpace = 0;
-
-    if (!mVertexBuffer->storeRawData(data, size, mWritePosition))
-    {
-        return -1;
-    }
-
-    int oldWritePos = static_cast<int>(mWritePosition);
-    mWritePosition += size;
-
-    return oldWritePos;
-}
-
 void VertexBufferInterface::reserveVertexSpace(const gl::VertexAttribute &attribute, GLsizei count, GLsizei instances)
 {
     mReservedSpace += mVertexBuffer->getSpaceRequired(attribute, count, instances);
-}
-
-void VertexBufferInterface::reserveRawDataSpace(unsigned int size)
-{
-    mReservedSpace += size;
 }
 
 VertexBuffer* VertexBufferInterface::getVertexBuffer() const

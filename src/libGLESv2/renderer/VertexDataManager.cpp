@@ -214,9 +214,8 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
 
                 if (memcmp(&mCurrentValue[i], &attribs[i].mCurrentValue, sizeof(gl::VertexAttribute::CurrentValueData)) != 0)
                 {
-                    unsigned int requiredSpace = sizeof(float) * 4;
-                    buffer->reserveRawDataSpace(requiredSpace);
-                    int streamOffset = buffer->storeRawData(attribs[i].mCurrentValue.FloatValues, requiredSpace);
+                    buffer->reserveVertexSpace(attribs[i], 1, 0);
+                    int streamOffset = buffer->storeVertexAttributes(attribs[i], 0, 1, 0);
                     if (streamOffset == -1)
                     {
                         return GL_OUT_OF_MEMORY;

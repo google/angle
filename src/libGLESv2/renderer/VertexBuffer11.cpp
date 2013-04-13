@@ -99,14 +99,21 @@ bool VertexBuffer11::storeVertexAttributes(const gl::VertexAttribute &attrib, GL
         char* output = reinterpret_cast<char*>(mappedResource.pData) + offset;
 
         const char *input = NULL;
-        if (buffer)
+        if (attrib.mArrayEnabled)
         {
-            BufferStorage *storage = buffer->getStorage();
-            input = static_cast<const char*>(storage->getData()) + static_cast<int>(attrib.mOffset);
+            if (buffer)
+            {
+                BufferStorage *storage = buffer->getStorage();
+                input = static_cast<const char*>(storage->getData()) + static_cast<int>(attrib.mOffset);
+            }
+            else
+            {
+                input = static_cast<const char*>(attrib.mPointer);
+            }
         }
         else
         {
-            input = static_cast<const char*>(attrib.mPointer);
+            input = reinterpret_cast<const char*>(attrib.mCurrentValue.FloatValues);
         }
 
         if (instances == 0 || attrib.mDivisor == 0)
@@ -127,46 +134,25 @@ bool VertexBuffer11::storeVertexAttributes(const gl::VertexAttribute &attrib, GL
     }
 }
 
-bool VertexBuffer11::storeRawData(const void* data, unsigned int size, unsigned int offset)
-{
-    if (mBuffer)
-    {
-        ID3D11DeviceContext *dxContext = mRenderer->getDeviceContext();
-
-        D3D11_MAPPED_SUBRESOURCE mappedResource;
-        HRESULT result = dxContext->Map(mBuffer, 0, D3D11_MAP_WRITE_NO_OVERWRITE, 0, &mappedResource);
-        if (FAILED(result))
-        {
-            ERR("Vertex buffer map failed with error 0x%08x", result);
-            return false;
-        }
-
-        char* bufferData = static_cast<char*>(mappedResource.pData);
-        memcpy(bufferData + offset, data, size);
-
-        dxContext->Unmap(mBuffer, 0);
-
-        return true;
-    }
-    else
-    {
-        ERR("Vertex buffer not initialized.");
-        return false;
-    }
-}
-
 unsigned int VertexBuffer11::getSpaceRequired(const gl::VertexAttribute &attrib, GLsizei count,
                                               GLsizei instances) const
 {
     unsigned int elementSize = getVertexConversion(attrib).outputElementSize;
 
-    if (instances == 0 || attrib.mDivisor == 0)
+    if (attrib.mArrayEnabled)
     {
-        return elementSize * count;
+        if (instances == 0 || attrib.mDivisor == 0)
+        {
+            return elementSize * count;
+        }
+        else
+        {
+            return elementSize * ((instances + attrib.mDivisor - 1) / attrib.mDivisor);
+        }
     }
     else
     {
-        return elementSize * ((instances + attrib.mDivisor - 1) / attrib.mDivisor);
+        return elementSize * 4;
     }
 }
 
@@ -419,8 +405,10 @@ const VertexBuffer11::VertexConverter VertexBuffer11::mPossibleTranslations[NUM_
 
 const VertexBuffer11::VertexConverter &VertexBuffer11::getVertexConversion(const gl::VertexAttribute &attribute)
 {
+    GLenum type = attribute.mArrayEnabled ? attribute.mType : attribute.mCurrentValue.Type;
+
     unsigned int typeIndex = 0;
-    switch (attribute.mType)
+    switch (type)
     {
       case GL_BYTE:             typeIndex = 0; break;
       case GL_UNSIGNED_BYTE:    typeIndex = 1; break;
