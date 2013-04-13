@@ -21,6 +21,25 @@ inline unsigned int ArraySize(T(&)[N])
     return N;
 }
 
+template <typename T, unsigned int N>
+void SafeRelease(T (&resourceBlock)[N])
+{
+    for (unsigned int i = 0; i < N; i++)
+    {
+        SafeRelease(resourceBlock[i]);
+    }
+}
+
+template <typename T>
+void SafeRelease(T& resource)
+{
+    if (resource)
+    {
+        resource->Release();
+        resource = NULL;
+    }
+}
+
 #if defined(_MSC_VER)
 #define snprintf _snprintf
 #endif
