@@ -2920,11 +2920,9 @@ bool Renderer11::getRenderTargetResource(gl::Renderbuffer *colorbuffer, unsigned
 bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &readRect, gl::Framebuffer *drawTarget, const gl::Rectangle &drawRect,
                           bool blitRenderTarget, bool blitDepthStencil)
 {
-    // TODO: mrt blit support
     if (blitRenderTarget)
     {
         gl::Renderbuffer *readBuffer = readTarget->getReadColorbuffer();
-        gl::Renderbuffer *drawBuffer = drawTarget->getColorbuffer(0);
 
         if (!readBuffer)
         {
@@ -2932,18 +2930,27 @@ bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &read
             return gl::error(GL_OUT_OF_MEMORY, false);
         }
 
-        if (!drawBuffer)
-        {
-            ERR("Failed to retrieve the draw buffer from the draw framebuffer.");
-            return gl::error(GL_OUT_OF_MEMORY, false);
-        }
-
         RenderTarget *readRenderTarget = readBuffer->getRenderTarget();
-        RenderTarget *drawRenderTarget = drawBuffer->getRenderTarget();
 
-        if (!blitRenderbufferRect(readRect, drawRect, readRenderTarget, drawRenderTarget))
+        for (unsigned int colorAttachment = 0; colorAttachment < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
         {
-            return false;
+            if (drawTarget->isEnabledColorAttachment(colorAttachment))
+            {
+                gl::Renderbuffer *drawBuffer = drawTarget->getColorbuffer(colorAttachment);
+
+                if (!drawBuffer)
+                {
+                    ERR("Failed to retrieve the draw buffer from the draw framebuffer.");
+                    return gl::error(GL_OUT_OF_MEMORY, false);
+                }
+
+                RenderTarget *drawRenderTarget = drawBuffer->getRenderTarget();
+
+                if (!blitRenderbufferRect(readRect, drawRect, readRenderTarget, drawRenderTarget))
+                {
+                    return false;
+                }
+            }
         }
     }
 

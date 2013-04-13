@@ -2655,7 +2655,6 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
                               GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
                               GLbitfield mask)
 {
-    // TODO: mrt support for blit
     Framebuffer *readFramebuffer = getReadFramebuffer();
     Framebuffer *drawFramebuffer = getDrawFramebuffer();
 
@@ -2670,10 +2669,19 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
         return gl::error(GL_INVALID_OPERATION);
     }
 
-    int readBufferWidth = readFramebuffer->getColorbuffer(0)->getWidth();
-    int readBufferHeight = readFramebuffer->getColorbuffer(0)->getHeight();
-    int drawBufferWidth = drawFramebuffer->getColorbuffer(0)->getWidth();
-    int drawBufferHeight = drawFramebuffer->getColorbuffer(0)->getHeight();
+    Renderbuffer *readColorBuffer = readFramebuffer->getReadColorbuffer();
+    Renderbuffer *drawColorBuffer = drawFramebuffer->getFirstColorBuffer();
+
+    if (drawColorBuffer == NULL)
+    {
+        ERR("Draw buffers formats don't match, which is not supported in this implementation of BlitFramebufferANGLE");
+        return gl::error(GL_INVALID_OPERATION);
+    }
+
+    int readBufferWidth = readColorBuffer->getWidth();
+    int readBufferHeight = readColorBuffer->getHeight();
+    int drawBufferWidth = drawColorBuffer->getWidth();
+    int drawBufferHeight = drawColorBuffer->getHeight();
 
     Rectangle sourceRect;
     Rectangle destRect;
@@ -2832,12 +2840,29 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
 
     if (mask & GL_COLOR_BUFFER_BIT)
     {
-        const bool validReadType = readFramebuffer->getColorbufferType(0) == GL_TEXTURE_2D ||
-            readFramebuffer->getColorbufferType(0) == GL_RENDERBUFFER;
-        const bool validDrawType = drawFramebuffer->getColorbufferType(0) == GL_TEXTURE_2D ||
-            drawFramebuffer->getColorbufferType(0) == GL_RENDERBUFFER;
-        if (!validReadType || !validDrawType ||
-            readFramebuffer->getColorbuffer(0)->getActualFormat() != drawFramebuffer->getColorbuffer(0)->getActualFormat())
+        const GLenum readColorbufferType = readFramebuffer->getReadColorbufferType();
+        const bool validReadType = (readColorbufferType == GL_TEXTURE_2D) || (readColorbufferType == GL_RENDERBUFFER);
+        bool validDrawType = true;
+        bool validDrawFormat = true;
+
+        for (unsigned int colorAttachment = 0; colorAttachment < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
+        {
+            if (drawFramebuffer->isEnabledColorAttachment(colorAttachment))
+            {
+                if (drawFramebuffer->getColorbufferType(colorAttachment) != GL_TEXTURE_2D &&
+                    drawFramebuffer->getColorbufferType(colorAttachment) != GL_RENDERBUFFER)
+                {
+                    validDrawType = false;
+                }
+
+                if (drawFramebuffer->getColorbuffer(colorAttachment)->getActualFormat() != readColorBuffer->getActualFormat())
+                {
+                    validDrawFormat = false;
+                }
+            }
+        }
+
+        if (!validReadType || !validDrawType || !validDrawFormat)
         {
             ERR("Color buffer format conversion in BlitFramebufferANGLE not supported by this implementation");
             return gl::error(GL_INVALID_OPERATION);
