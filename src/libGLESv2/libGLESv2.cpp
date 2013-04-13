@@ -4249,7 +4249,6 @@ void __stdcall glGetVertexAttribfv(GLuint index, GLenum pname, GLfloat* params)
               case GL_VERTEX_ATTRIB_ARRAY_DIVISOR:
                 // Don't verify ES3 context because GL_VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE uses
                 // the same constant.
-                META_ASSERT(GL_VERTEX_ATTRIB_ARRAY_DIVISOR == GL_VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE);
                 *params = (GLfloat)attribState.mDivisor;
                 break;
               default: return gl::error(GL_INVALID_ENUM);
@@ -9072,6 +9071,11 @@ void __stdcall glVertexAttribDivisor(GLuint index, GLuint divisor)
 
     try
     {
+        if (index >= gl::MAX_VERTEX_ATTRIBS)
+        {
+            return gl::error(GL_INVALID_VALUE);
+        }
+
         gl::Context *context = gl::getNonLostContext();
 
         if (context)
@@ -9080,9 +9084,9 @@ void __stdcall glVertexAttribDivisor(GLuint index, GLuint divisor)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            context->setVertexAttribDivisor(index, divisor);
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -9395,11 +9399,6 @@ void __stdcall glTexStorage3D(GLenum target, GLsizei levels, GLenum internalform
 
     try
     {
-        if (index >= gl::MAX_VERTEX_ATTRIBS)
-        {
-            return gl::error(GL_INVALID_VALUE);
-        }
-
         gl::Context *context = gl::getNonLostContext();
 
         if (context)
@@ -9408,8 +9407,6 @@ void __stdcall glTexStorage3D(GLenum target, GLsizei levels, GLenum internalform
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-
-            context->setVertexAttribDivisor(index, divisor);
         }
     }
     catch(std::bad_alloc&)
