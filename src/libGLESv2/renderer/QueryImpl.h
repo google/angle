@@ -28,18 +28,13 @@ class QueryImpl
     GLenum getType() const { return mType; }
 
   protected:
-    void setStatus(GLboolean status) { mStatus = status; }
-    GLboolean getStatus() const { return mStatus; }
-
-    void setResult(GLuint result) { mResult = result; }
-    GLuint getResult() const { return mResult; }
+    GLuint mResult;
+    GLboolean mStatus;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(QueryImpl);
 
     GLenum mType;
-    GLboolean mStatus;
-    GLuint mResult;
 };
 
 }
