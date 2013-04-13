@@ -211,9 +211,9 @@ void OutputHLSL::header()
     if (shaderType == SH_FRAGMENT_SHADER)
     {
         TExtensionBehavior::const_iterator iter = mContext.extensionBehavior().find("GL_EXT_draw_buffers");
-        bool usingMRTExtension = iter != mContext.extensionBehavior().end() && iter->second == EBhEnable;
+        const bool usingMRTExtension = (iter != mContext.extensionBehavior().end() && (iter->second == EBhEnable || iter->second == EBhRequire));
 
-        unsigned int numColorValues = usingMRTExtension ? mNumRenderTargets : 1;
+        const unsigned int numColorValues = usingMRTExtension ? mNumRenderTargets : 1;
 
         out << "// Varyings\n";
         out <<  varyings;
