@@ -48,7 +48,7 @@ GLuint Shader::getHandle() const
     return mHandle;
 }
 
-void Shader::setSource(GLsizei count, const char **string, const GLint *length)
+void Shader::setSource(GLsizei count, const char *const *string, const GLint *length)
 {
     delete[] mSource;
     int totalLength = 0;

@@ -61,7 +61,7 @@ class Shader
     GLuint getHandle() const;
 
     void deleteSource();
-    void setSource(GLsizei count, const char **string, const GLint *length);
+    void setSource(GLsizei count, const char *const *string, const GLint *length);
     int getInfoLogLength() const;
     void getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog);
     int getSourceLength() const;
