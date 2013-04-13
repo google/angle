@@ -490,8 +490,39 @@ void transposeMatrix(T *target, const GLfloat *value, int targetWidth, int targe
     }
 }
 
+template<typename T>
+void expandMatrix(T *target, const GLfloat *value, int targetWidth, int targetHeight, int srcWidth, int srcHeight)
+{
+    int copyWidth = std::min(targetWidth, srcWidth);
+    int copyHeight = std::min(targetHeight, srcHeight);
+
+    for (int y = 0; y < copyHeight; y++)
+    {
+        for (int x = 0; x < copyWidth; x++)
+        {
+            target[y * targetWidth + x] = static_cast<T>(value[y * srcWidth + x]);
+        }
+    }
+    // clear unfilled right side
+    for (int y = 0; y < copyHeight; y++)
+    {
+        for (int x = copyWidth; x < targetWidth; x++)
+        {
+            target[y * targetWidth + x] = static_cast<T>(0);
+        }
+    }
+    // clear unfilled bottom.
+    for (int y = copyHeight; y < targetHeight; y++)
+    {
+        for (int x = 0; x < targetWidth; x++)
+        {
+            target[y * targetWidth + x] = static_cast<T>(0);
+        }
+    }
+}
+
 template <int cols, int rows>
-bool ProgramBinary::setUniformMatrixfv(GLint location, GLsizei count, const GLfloat *value, GLenum targetUniformType) 
+bool ProgramBinary::setUniformMatrixfv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value, GLenum targetUniformType) 
 {
     if (location < 0 || location >= (int)mUniformIndex.size())
     {
@@ -516,7 +547,15 @@ bool ProgramBinary::setUniformMatrixfv(GLint location, GLsizei count, const GLfl
 
     for (int i = 0; i < count; i++)
     {
-        transposeMatrix<GLfloat>(target, value, 4, rows, rows, cols);
+        // Internally store matrices as transposed versions to accomodate HLSL matrix indexing
+        if (transpose == GL_FALSE)
+        {
+            transposeMatrix<GLfloat>(target, value, 4, rows, rows, cols);
+        }
+        else
+        {
+            expandMatrix<GLfloat>(target, value, 4, rows, cols, rows);
+        }
         target += 4 * rows;
         value += cols * rows;
     }
@@ -524,49 +563,49 @@ bool ProgramBinary::setUniformMatrixfv(GLint location, GLsizei count, const GLfl
     return true;
 }
 
-bool ProgramBinary::setUniformMatrix2fv(GLint location, GLsizei count, const GLfloat *value)
+bool ProgramBinary::setUniformMatrix2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
 {
-    return setUniformMatrixfv<2, 2>(location, count, value, GL_FLOAT_MAT2);
+    return setUniformMatrixfv<2, 2>(location, count, transpose, value, GL_FLOAT_MAT2);
 }
 
-bool ProgramBinary::setUniformMatrix3fv(GLint location, GLsizei count, const GLfloat *value)
+bool ProgramBinary::setUniformMatrix3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
 {
-    return setUniformMatrixfv<3, 3>(location, count, value, GL_FLOAT_MAT3);
+    return setUniformMatrixfv<3, 3>(location, count, transpose, value, GL_FLOAT_MAT3);
 }
 
-bool ProgramBinary::setUniformMatrix4fv(GLint location, GLsizei count, const GLfloat *value)
+bool ProgramBinary::setUniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
 {
-    return setUniformMatrixfv<4, 4>(location, count, value, GL_FLOAT_MAT4);
+    return setUniformMatrixfv<4, 4>(location, count, transpose, value, GL_FLOAT_MAT4);
 }
 
-bool ProgramBinary::setUniformMatrix2x3fv(GLint location, GLsizei count, const GLfloat *value)
+bool ProgramBinary::setUniformMatrix2x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
 {
-    return setUniformMatrixfv<2, 3>(location, count, value, GL_FLOAT_MAT2x3);
+    return setUniformMatrixfv<2, 3>(location, count, transpose, value, GL_FLOAT_MAT2x3);
 }
 
-bool ProgramBinary::setUniformMatrix3x2fv(GLint location, GLsizei count, const GLfloat *value)
+bool ProgramBinary::setUniformMatrix3x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
 {
-    return setUniformMatrixfv<3, 2>(location, count, value, GL_FLOAT_MAT3x2);
+    return setUniformMatrixfv<3, 2>(location, count, transpose, value, GL_FLOAT_MAT3x2);
 }
 
-bool ProgramBinary::setUniformMatrix2x4fv(GLint location, GLsizei count, const GLfloat *value)
+bool ProgramBinary::setUniformMatrix2x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
 {
-    return setUniformMatrixfv<2, 4>(location, count, value, GL_FLOAT_MAT2x4);
+    return setUniformMatrixfv<2, 4>(location, count, transpose, value, GL_FLOAT_MAT2x4);
 }
 
-bool ProgramBinary::setUniformMatrix4x2fv(GLint location, GLsizei count, const GLfloat *value)
+bool ProgramBinary::setUniformMatrix4x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
 {
-    return setUniformMatrixfv<4, 2>(location, count, value, GL_FLOAT_MAT4x2);
+    return setUniformMatrixfv<4, 2>(location, count, transpose, value, GL_FLOAT_MAT4x2);
 }
 
-bool ProgramBinary::setUniformMatrix3x4fv(GLint location, GLsizei count, const GLfloat *value)
+bool ProgramBinary::setUniformMatrix3x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
 {
-    return setUniformMatrixfv<3, 4>(location, count, value, GL_FLOAT_MAT3x4);
+    return setUniformMatrixfv<3, 4>(location, count, transpose, value, GL_FLOAT_MAT3x4);
 }
 
-bool ProgramBinary::setUniformMatrix4x3fv(GLint location, GLsizei count, const GLfloat *value)
+bool ProgramBinary::setUniformMatrix4x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
 {
-    return setUniformMatrixfv<4, 3>(location, count, value, GL_FLOAT_MAT4x3);
+    return setUniformMatrixfv<4, 3>(location, count, transpose, value, GL_FLOAT_MAT4x3);
 }
 
 bool ProgramBinary::setUniform1iv(GLint location, GLsizei count, const GLint *v)
