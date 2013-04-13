@@ -381,10 +381,14 @@ GLenum Framebuffer::completeness() const
                     return GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_EXT;
                 }
 
-                // all color attachments attachments must have the same number of bitplanes
-                if (gl::ComputePixelSize(colorbuffer->getInternalFormat()) != colorbufferSize)
+                // in GLES 2.0, all color attachments attachments must have the same number of bitplanes
+                // in GLES 3.0, there is no such restriction
+                if (mRenderer->getCurrentClientVersion() < 3)
                 {
-                    return GL_FRAMEBUFFER_UNSUPPORTED;
+                    if (ComputePixelSize(colorbuffer->getInternalFormat()) != colorbufferSize)
+                    {
+                        return GL_FRAMEBUFFER_UNSUPPORTED;
+                    }
                 }
 
                 // D3D11 does not allow for overlapping RenderTargetViews, so ensure uniqueness
