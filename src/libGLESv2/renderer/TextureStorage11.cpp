@@ -857,4 +857,183 @@ void TextureStorage11_3D::generateMipmap(int level)
     UNIMPLEMENTED();
 }
 
+TextureStorage11_2DArray::TextureStorage11_2DArray(Renderer *renderer, int levels, GLenum internalformat, GLenum usage,
+                                                   GLsizei width, GLsizei height, GLsizei depth)
+    : TextureStorage11(renderer, GetTextureBindFlags(gl_d3d11::ConvertTextureFormat(internalformat), usage, false))
+{
+    mTexture = NULL;
+
+    DXGI_FORMAT convertedFormat = gl_d3d11::ConvertTextureFormat(internalformat);
+    ASSERT(!d3d11::IsDepthStencilFormat(convertedFormat));
+
+    mTextureFormat = convertedFormat;
+    mShaderResourceFormat = convertedFormat;
+    mDepthStencilFormat = DXGI_FORMAT_UNKNOWN;
+    mRenderTargetFormat = convertedFormat;
+
+        // if the width, height or depth is not positive this should be treated as an incomplete texture
+    // we handle that here by skipping the d3d texture creation
+    if (width > 0 && height > 0 && depth > 0)
+    {
+        // adjust size if needed for compressed textures
+        gl::MakeValidSize(false, gl::IsCompressed(internalformat), &width, &height, &mLodOffset);
+
+        ID3D11Device *device = mRenderer->getDevice();
+
+        D3D11_TEXTURE2D_DESC desc;
+        desc.Width = width;
+        desc.Height = height;
+        desc.MipLevels = (levels > 0) ? levels + mLodOffset : 0;
+        desc.ArraySize = depth;
+        desc.Format = mTextureFormat;
+        desc.SampleDesc.Count = 1;
+        desc.SampleDesc.Quality = 0;
+        desc.Usage = D3D11_USAGE_DEFAULT;
+        desc.BindFlags = getBindFlags();
+        desc.CPUAccessFlags = 0;
+        desc.MiscFlags = 0;
+
+        HRESULT result = device->CreateTexture2D(&desc, NULL, &mTexture);
+
+        // this can happen from windows TDR
+        if (d3d11::isDeviceLostError(result))
+        {
+            mRenderer->notifyDeviceLost();
+            gl::error(GL_OUT_OF_MEMORY);
+        }
+        else if (FAILED(result))
+        {
+            ASSERT(result == E_OUTOFMEMORY);
+            ERR("Creating image failed.");
+            gl::error(GL_OUT_OF_MEMORY);
+        }
+        else
+        {
+            mTexture->GetDesc(&desc);
+            mMipLevels = desc.MipLevels;
+            mTextureWidth = desc.Width;
+            mTextureHeight = desc.Height;
+            mTextureDepth = desc.ArraySize;
+        }
+    }
+}
+
+TextureStorage11_2DArray::~TextureStorage11_2DArray()
+{
+    if (mTexture)
+    {
+        mTexture->Release();
+        mTexture = NULL;
+    }
+
+    if (mSRV)
+    {
+        mSRV->Release();
+        mSRV = NULL;
+    }
+
+    for (RenderTargetMap::const_iterator i = mRenderTargets.begin(); i != mRenderTargets.end(); i++)
+    {
+        RenderTarget11* renderTarget = i->second;
+        delete renderTarget;
+    }
+    mRenderTargets.clear();
+}
+
+TextureStorage11_2DArray *TextureStorage11_2DArray::makeTextureStorage11_2DArray(TextureStorage *storage)
+{
+    ASSERT(HAS_DYNAMIC_TYPE(TextureStorage11_2DArray*, storage));
+    return static_cast<TextureStorage11_2DArray*>(storage);
+}
+
+ID3D11Resource *TextureStorage11_2DArray::getBaseTexture() const
+{
+    return mTexture;
+}
+
+ID3D11ShaderResourceView *TextureStorage11_2DArray::getSRV()
+{
+    if (!mSRV)
+    {
+        ID3D11Device *device = mRenderer->getDevice();
+
+        D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+        srvDesc.Format = mShaderResourceFormat;
+        srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+        srvDesc.Texture2DArray.MostDetailedMip = 0;
+        srvDesc.Texture2DArray.MipLevels = (mMipLevels == 0 ? -1 : mMipLevels);
+        srvDesc.Texture2DArray.FirstArraySlice = 0;
+        srvDesc.Texture2DArray.ArraySize = mTextureDepth;
+
+        HRESULT result = device->CreateShaderResourceView(mTexture, &srvDesc, &mSRV);
+
+        if (result == E_OUTOFMEMORY)
+        {
+            return gl::error(GL_OUT_OF_MEMORY, static_cast<ID3D11ShaderResourceView*>(NULL));
+        }
+        ASSERT(SUCCEEDED(result));
+    }
+
+    return mSRV;
+}
+
+RenderTarget *TextureStorage11_2DArray::getRenderTargetLayer(int mipLevel, int layer)
+{
+    if (mipLevel >= 0 && mipLevel < static_cast<int>(mMipLevels))
+    {
+        LevelLayerKey key(mipLevel, layer);
+        if (mRenderTargets.find(key) == mRenderTargets.end())
+        {
+            ID3D11Device *device = mRenderer->getDevice();
+            HRESULT result;
+
+            // TODO, what kind of SRV is expected here?
+            ID3D11ShaderResourceView *srv = NULL;
+
+            if (mRenderTargetFormat != DXGI_FORMAT_UNKNOWN)
+            {
+                D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
+                rtvDesc.Format = mRenderTargetFormat;
+                rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
+                rtvDesc.Texture2DArray.MipSlice = mipLevel;
+                rtvDesc.Texture2DArray.FirstArraySlice = layer;
+                rtvDesc.Texture2DArray.ArraySize = 1;
+
+                ID3D11RenderTargetView *rtv;
+                result = device->CreateRenderTargetView(mTexture, &rtvDesc, &rtv);
+
+                if (result == E_OUTOFMEMORY)
+                {
+                    SafeRelease(srv);
+                    return gl::error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
+                }
+                ASSERT(SUCCEEDED(result));
+
+                // RenderTarget11 expects to be the owner of the resources it is given but TextureStorage11
+                // also needs to keep a reference to the texture.
+                mTexture->AddRef();
+
+                mRenderTargets[key] = new RenderTarget11(mRenderer, rtv, mTexture, srv,
+                                                         std::max(mTextureWidth >> mipLevel, 1U),
+                                                         std::max(mTextureHeight >> mipLevel, 1U));
+            }
+            else
+            {
+                UNREACHABLE();
+            }
+        }
+
+        return mRenderTargets[key];
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+void TextureStorage11_2DArray::generateMipmap(int level)
+{
+    UNIMPLEMENTED();
+}
+
 }

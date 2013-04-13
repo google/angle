@@ -144,6 +144,31 @@ class TextureStorage11_3D : public TextureStorage11
     ID3D11Texture3D *mTexture;
 };
 
+class TextureStorage11_2DArray : public TextureStorage11
+{
+  public:
+    TextureStorage11_2DArray(Renderer *renderer, int levels, GLenum internalformat, GLenum usage,
+                             GLsizei width, GLsizei height, GLsizei depth);
+    virtual ~TextureStorage11_2DArray();
+
+    static TextureStorage11_2DArray *makeTextureStorage11_2DArray(TextureStorage *storage);
+
+    virtual ID3D11Resource *getBaseTexture() const;
+    virtual ID3D11ShaderResourceView *getSRV();
+    virtual RenderTarget *getRenderTargetLayer(int mipLevel, int layer);
+
+    virtual void generateMipmap(int level);
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(TextureStorage11_2DArray);
+
+    typedef std::pair<int, int> LevelLayerKey;
+    typedef std::map<LevelLayerKey, RenderTarget11*> RenderTargetMap;
+    RenderTargetMap mRenderTargets;
+
+    ID3D11Texture2D *mTexture;
+};
+
 }
 
 #endif // LIBGLESV2_RENDERER_TEXTURESTORAGE11_H_
