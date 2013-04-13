@@ -1265,6 +1265,22 @@ bool Context::getFloatv(GLenum pname, GLfloat *params)
 
 bool Context::getIntegerv(GLenum pname, GLint *params)
 {
+    if (pname >= GL_DRAW_BUFFER0_EXT && pname <= GL_DRAW_BUFFER15_EXT)
+    {
+        unsigned int colorAttachment = (pname - GL_DRAW_BUFFER0_EXT);
+
+        if (colorAttachment >= mRenderer->getMaxRenderTargets())
+        {
+            // return true to stop further operation in the parent call
+            return gl::error(GL_INVALID_OPERATION, true);
+        }
+
+        Framebuffer *framebuffer = getDrawFramebuffer();
+
+        *params = framebuffer->getDrawBufferState(colorAttachment);
+        return true;
+    }
+
     // Please note: DEPTH_CLEAR_VALUE is not included in our internal getIntegerv implementation
     // because it is stored as a float, despite the fact that the GL ES 2.0 spec names
     // GetIntegerv as its native query function. As it would require conversion in any
@@ -1281,6 +1297,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_MAX_FRAGMENT_UNIFORM_VECTORS:     *params = mRenderer->getMaxFragmentUniformVectors(); break;
       case GL_MAX_RENDERBUFFER_SIZE:            *params = getMaximumRenderbufferDimension();    break;
       case GL_MAX_COLOR_ATTACHMENTS_EXT:        *params = mRenderer->getMaxRenderTargets();     break;
+      case GL_MAX_DRAW_BUFFERS_EXT:             *params = mRenderer->getMaxRenderTargets();     break;
       case GL_NUM_SHADER_BINARY_FORMATS:        *params = 0;                                    break;
       case GL_SHADER_BINARY_FORMATS:      /* no shader binary formats are supported */          break;
       case GL_ARRAY_BUFFER_BINDING:             *params = mState.arrayBuffer.id();              break;
@@ -1511,6 +1528,13 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
 
 bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams)
 {
+    if (pname >= GL_DRAW_BUFFER0_EXT && pname <= GL_DRAW_BUFFER15_EXT)
+    {
+        *type = GL_INT;
+        *numParams = 1;
+        return true;
+    }
+
     // Please note: the query type returned for DEPTH_CLEAR_VALUE in this implementation
     // is FLOAT rather than INT, as would be suggested by the GL ES 2.0 spec. This is due
     // to the fact that it is stored internally as a float, and so would require conversion
@@ -1541,6 +1565,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_MAX_FRAGMENT_UNIFORM_VECTORS:
       case GL_MAX_RENDERBUFFER_SIZE:
       case GL_MAX_COLOR_ATTACHMENTS_EXT:
+      case GL_MAX_DRAW_BUFFERS_EXT:
       case GL_NUM_SHADER_BINARY_FORMATS:
       case GL_NUM_COMPRESSED_TEXTURE_FORMATS:
       case GL_ARRAY_BUFFER_BINDING:
