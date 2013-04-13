@@ -8858,7 +8858,11 @@ void __stdcall glCopyBufferSubData(GLenum readTarget, GLenum writeTarget, GLintp
 
             // TODO: Verify that readBuffer and writeBuffer are not currently mapped (GL_INVALID_OPERATION)
 
-            writeBuffer->copyBufferSubData(readBuffer, readOffset, writeOffset, size);
+            // if size is zero, the copy is a successful no-op
+            if (size > 0)
+            {
+                writeBuffer->copyBufferSubData(readBuffer, readOffset, writeOffset, size);
+            }
         }
     }
     catch(std::bad_alloc&)
