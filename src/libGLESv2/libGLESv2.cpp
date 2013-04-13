@@ -7285,8 +7285,6 @@ void __stdcall glGetBufferPointerv(GLenum target, GLenum pname, GLvoid** params)
 
 void __stdcall glDrawBuffers(GLsizei n, const GLenum* bufs)
 {
-    EVENT("(GLsizei n = %d, const GLenum* bufs = 0x%0.8p)", n, bufs);
-
     try
     {
         gl::Context *context = gl::getNonLostContext();
@@ -7297,9 +7295,9 @@ void __stdcall glDrawBuffers(GLsizei n, const GLenum* bufs)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            glDrawBuffersEXT(n, bufs);
+        }
     }
     catch(std::bad_alloc&)
     {
