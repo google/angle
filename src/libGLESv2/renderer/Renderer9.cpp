@@ -2379,6 +2379,12 @@ int Renderer9::getMaxTextureDepth() const
     return 1;
 }
 
+int Renderer9::getMaxTextureArrayLayers() const
+{
+    // 2D array textures are not available in the D3D9 backend.
+    return 1;
+}
+
 bool Renderer9::get32BitIndexSupport() const
 {
     return mDeviceCaps.MaxVertexIndex >= (1 << 16);

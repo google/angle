@@ -296,11 +296,13 @@ void Context::makeCurrent(egl::Surface *surface)
         mMaxCubeTextureDimension = std::min(mMax2DTextureDimension, (int)gl::IMPLEMENTATION_MAX_CUBE_MAP_TEXTURE_SIZE);
         mMax3DTextureDimension = std::min(std::min(mMax2DTextureDimension, mRenderer->getMaxTextureDepth()),
                                           (int)gl::IMPLEMENTATION_MAX_3D_TEXTURE_SIZE);
+        mMax2DArrayTextureLayers = mRenderer->getMaxTextureArrayLayers();
         mMaxRenderbufferDimension = mMax2DTextureDimension;
         mMaxTextureLevel = log2(mMax2DTextureDimension) + 1;
         mMaxTextureAnisotropy = mRenderer->getTextureMaxAnisotropy();
-        TRACE("Max2DTextureDimension=%d, MaxCubeTextureDimension=%d, Max3DTextureDimension=%d, MaxRenderbufferDimension=%d, "
-              "MaxTextureLevel=%d, MaxTextureAnisotropy=%f", mMax2DTextureDimension, mMaxCubeTextureDimension, mMax3DTextureDimension,
+        TRACE("Max2DTextureDimension=%d, MaxCubeTextureDimension=%d, Max3DTextureDimension=%d, Max2DArrayTextureLayers = %d, "
+              "MaxRenderbufferDimension=%d, MaxTextureLevel=%d, MaxTextureAnisotropy=%f",
+              mMax2DTextureDimension, mMaxCubeTextureDimension, mMax3DTextureDimension, mMax2DArrayTextureLayers,
               mMaxRenderbufferDimension, mMaxTextureLevel, mMaxTextureAnisotropy);
 
         mSupportsEventQueries = mRenderer->getEventQuerySupport();
@@ -1487,6 +1489,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_MAX_TEXTURE_SIZE:                 *params = getMaximum2DTextureDimension();       break;
       case GL_MAX_CUBE_MAP_TEXTURE_SIZE:        *params = getMaximumCubeTextureDimension();     break;
       case GL_MAX_3D_TEXTURE_SIZE:              *params = getMaximum3DTextureDimension();       break;
+      case GL_MAX_ARRAY_TEXTURE_LAYERS:         *params = getMaximum2DArrayTextureLayers();     break;
       case GL_NUM_COMPRESSED_TEXTURE_FORMATS:   
         params[0] = mNumCompressedTextureFormats;
         break;
@@ -1905,6 +1908,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_PIXEL_UNPACK_BUFFER_BINDING:
       case GL_TEXTURE_BINDING_3D:
       case GL_MAX_3D_TEXTURE_SIZE:
+      case GL_MAX_ARRAY_TEXTURE_LAYERS:
         {
             *type = GL_INT;
             *numParams = 1;
@@ -2467,6 +2471,11 @@ int Context::getMaximumCubeTextureDimension() const
 int Context::getMaximum3DTextureDimension() const
 {
     return mMax3DTextureDimension;
+}
+
+int Context::getMaximum2DArrayTextureLayers() const
+{
+    return mMax2DArrayTextureLayers;
 }
 
 int Context::getMaximumTextureLevel() const

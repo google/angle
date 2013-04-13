@@ -182,6 +182,7 @@ class Renderer
     virtual int getMaxTextureWidth() const = 0;
     virtual int getMaxTextureHeight() const = 0;
     virtual int getMaxTextureDepth() const = 0;
+    virtual int getMaxTextureArrayLayers() const = 0;
     virtual bool get32BitIndexSupport() const = 0;
     virtual int getMinSwapInterval() const = 0;
     virtual int getMaxSwapInterval() const = 0;

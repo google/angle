@@ -422,6 +422,7 @@ class Context
     int getMaximum2DTextureDimension() const;
     int getMaximumCubeTextureDimension() const;
     int getMaximum3DTextureDimension() const;
+    int getMaximum2DArrayTextureLayers() const;
     int getMaximumTextureLevel() const;
     unsigned int getMaximumRenderTargets() const;
     GLsizei getMaxSupportedSamples() const;
@@ -539,6 +540,7 @@ class Context
     int  mMax2DTextureDimension;
     int  mMaxCubeTextureDimension;
     int  mMax3DTextureDimension;
+    int  mMax2DArrayTextureLayers;
     int  mMaxTextureLevel;
     float mMaxTextureAnisotropy;
     bool mSupportsEventQueries;

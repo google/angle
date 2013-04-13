@@ -127,6 +127,7 @@ class Renderer11 : public Renderer
     virtual int getMaxTextureWidth() const;
     virtual int getMaxTextureHeight() const;
     virtual int getMaxTextureDepth() const;
+    virtual int getMaxTextureArrayLayers() const;
     virtual bool get32BitIndexSupport() const;
     virtual int getMinSwapInterval() const;
     virtual int getMaxSwapInterval() const;
