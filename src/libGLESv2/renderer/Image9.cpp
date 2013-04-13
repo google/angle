@@ -141,10 +141,14 @@ void Image9::copyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface9 *so
     else UNREACHABLE();
 }
 
-bool Image9::redefine(rx::Renderer *renderer, GLint internalformat, GLsizei width, GLsizei height, bool forceRelease)
+bool Image9::redefine(rx::Renderer *renderer, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease)
 {
+    // 3D textures are not supported by the D3D9 backend.
+    ASSERT(depth <= 1);
+
     if (mWidth != width ||
         mHeight != height ||
+        mDepth != depth ||
         mInternalFormat != internalformat ||
         forceRelease)
     {
@@ -152,6 +156,7 @@ bool Image9::redefine(rx::Renderer *renderer, GLint internalformat, GLsizei widt
 
         mWidth = width;
         mHeight = height;
+        mDepth = depth;
         mInternalFormat = internalformat;
         // compute the d3d format that will be used
         mD3DFormat = mRenderer->ConvertTextureInternalFormat(internalformat);
@@ -351,9 +356,12 @@ bool Image9::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint 
 
 // Store the pixel rectangle designated by xoffset,yoffset,width,height with pixels stored as format/type at input
 // into the target pixel rectangle.
-void Image9::loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+void Image9::loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                       GLint unpackAlignment, const void *input)
 {
+    // 3D textures are not supported by the D3D9 backend.
+    ASSERT(zoffset == 0 && depth == 1);
+
     RECT lockRect =
     {
         xoffset, yoffset,
@@ -368,81 +376,81 @@ void Image9::loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heigh
     }
 
 
-    GLsizei inputPitch = gl::ComputePitch(width, mInternalFormat, unpackAlignment);
+    GLsizei inputPitch = gl::ComputeRowPitch(width, mInternalFormat, unpackAlignment);
 
     switch (mInternalFormat)
     {
       case GL_ALPHA8_EXT:
         if (gl::supportsSSE2())
         {
-            loadAlphaDataToBGRASSE2(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+            loadAlphaDataToBGRASSE2(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
         }
         else
         {
-            loadAlphaDataToBGRA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+            loadAlphaDataToBGRA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
         }
         break;
       case GL_LUMINANCE8_EXT:
-        loadLuminanceDataToNativeOrBGRA(width, height, inputPitch, input, locked.Pitch, locked.pBits, getD3DFormat() == D3DFMT_L8);
+        loadLuminanceDataToNativeOrBGRA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits, getD3DFormat() == D3DFMT_L8);
         break;
       case GL_ALPHA32F_EXT:
-        loadAlphaFloatDataToRGBA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadAlphaFloatDataToRGBA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
         break;
       case GL_LUMINANCE32F_EXT:
-        loadLuminanceFloatDataToRGBA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadLuminanceFloatDataToRGBA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
         break;
       case GL_ALPHA16F_EXT:
-        loadAlphaHalfFloatDataToRGBA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadAlphaHalfFloatDataToRGBA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
         break;
       case GL_LUMINANCE16F_EXT:
-        loadLuminanceHalfFloatDataToRGBA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadLuminanceHalfFloatDataToRGBA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
         break;
       case GL_LUMINANCE8_ALPHA8_EXT:
-        loadLuminanceAlphaDataToNativeOrBGRA(width, height, inputPitch, input, locked.Pitch, locked.pBits, getD3DFormat() == D3DFMT_A8L8);
+        loadLuminanceAlphaDataToNativeOrBGRA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits, getD3DFormat() == D3DFMT_A8L8);
         break;
       case GL_LUMINANCE_ALPHA32F_EXT:
-        loadLuminanceAlphaFloatDataToRGBA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadLuminanceAlphaFloatDataToRGBA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
         break;
       case GL_LUMINANCE_ALPHA16F_EXT:
-        loadLuminanceAlphaHalfFloatDataToRGBA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadLuminanceAlphaHalfFloatDataToRGBA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
         break;
       case GL_RGB8_OES:
-        loadRGBUByteDataToBGRX(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadRGBUByteDataToBGRX(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
         break;
       case GL_RGB565:
-        loadRGB565DataToBGRA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadRGB565DataToBGRA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
         break;
       case GL_RGBA8_OES:
         if (gl::supportsSSE2())
         {
-            loadRGBAUByteDataToBGRASSE2(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+            loadRGBAUByteDataToBGRASSE2(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
         }
         else
         {
-            loadRGBAUByteDataToBGRA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+            loadRGBAUByteDataToBGRA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
         }
         break;
       case GL_RGBA4:
-        loadRGBA4444DataToBGRA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadRGBA4444DataToBGRA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
         break;
       case GL_RGB5_A1:
-        loadRGBA5551DataToBGRA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadRGBA5551DataToBGRA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
         break;
       case GL_BGRA8_EXT:
-        loadBGRADataToBGRA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadBGRADataToBGRA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
         break;
       // float textures are converted to RGBA, not BGRA, as they're stored that way in D3D
       case GL_RGB32F_EXT:
-        loadRGBFloatDataToRGBA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadRGBFloatDataToRGBA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
         break;
       case GL_RGB16F_EXT:
-        loadRGBHalfFloatDataToRGBA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadRGBHalfFloatDataToRGBA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
         break;
       case GL_RGBA32F_EXT:
-        loadRGBAFloatDataToRGBA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadRGBAFloatDataToRGBA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
         break;
       case GL_RGBA16F_EXT:
-        loadRGBAHalfFloatDataToRGBA(width, height, inputPitch, input, locked.Pitch, locked.pBits);
+        loadRGBAHalfFloatDataToRGBA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
         break;
       default: UNREACHABLE(); 
     }
@@ -450,11 +458,14 @@ void Image9::loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heigh
     unlock();
 }
 
-void Image9::loadCompressedData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+void Image9::loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                                 const void *input)
 {
     ASSERT(xoffset % 4 == 0);
     ASSERT(yoffset % 4 == 0);
+
+    // 3D textures are not supported by the D3D9 backend.
+    ASSERT(zoffset == 0 && depth == 1);
 
     RECT lockRect = {
         xoffset, yoffset,
@@ -469,7 +480,7 @@ void Image9::loadCompressedData(GLint xoffset, GLint yoffset, GLsizei width, GLs
     }
 
     GLsizei inputSize = gl::ComputeCompressedSize(width, height, mInternalFormat);
-    GLsizei inputPitch = gl::ComputeCompressedPitch(width, mInternalFormat);
+    GLsizei inputPitch = gl::ComputeCompressedRowPitch(width, mInternalFormat);
     int rows = inputSize / inputPitch;
     for (int i = 0; i < rows; ++i)
     {

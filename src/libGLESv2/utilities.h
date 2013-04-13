@@ -35,8 +35,10 @@ int AllocateFirstFreeBits(unsigned int *bits, unsigned int allocationSize, unsig
 
 void MakeValidSize(bool isImage, bool isCompressed, GLsizei *requestWidth, GLsizei *requestHeight, int *levelOffset);
 int ComputePixelSize(GLint internalformat);
-GLsizei ComputePitch(GLsizei width, GLint internalformat, GLint alignment);
-GLsizei ComputeCompressedPitch(GLsizei width, GLenum format);
+GLsizei ComputeRowPitch(GLsizei width, GLint internalformat, GLint alignment);
+GLsizei ComputeDepthPitch(GLsizei width, GLsizei height, GLint internalformat, GLint alignment);
+GLsizei ComputeCompressedRowPitch(GLsizei width, GLenum format);
+GLsizei ComputeCompressedDepthPitch(GLsizei width, GLsizei height, GLenum format);
 GLsizei ComputeCompressedSize(GLsizei width, GLsizei height, GLenum format);
 bool IsCompressed(GLenum format);
 bool IsDepthTexture(GLenum format);

@@ -37,7 +37,7 @@ class Image9 : public Image
     static void generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 *sourceSurface);
     static void copyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface9 *source);
 
-    virtual bool redefine(Renderer *renderer, GLint internalformat, GLsizei width, GLsizei height, bool forceRelease);
+    virtual bool redefine(Renderer *renderer, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease);
 
     virtual bool isRenderableFormat() const;
     D3DFORMAT getD3DFormat() const;
@@ -50,9 +50,9 @@ class Image9 : public Image
     virtual bool updateSurface(TextureStorageInterface2D *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
     virtual bool updateSurface(TextureStorageInterfaceCube *storage, int face, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
 
-    virtual void loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
-                  GLint unpackAlignment, const void *input);
-    virtual void loadCompressedData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
+    virtual void loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
+                          GLint unpackAlignment, const void *input);
+    virtual void loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                                     const void *input);
 
     virtual void copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);

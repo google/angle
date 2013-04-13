@@ -101,9 +101,11 @@ class Texture : public RefCountObject
 
   protected:
     void setImage(GLint unpackAlignment, const void *pixels, rx::Image *image);
-    bool subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, rx::Image *image);
+    bool subImage(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
+                  GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, rx::Image *image);
     void setCompressedImage(GLsizei imageSize, const void *pixels, rx::Image *image);
-    bool subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels, rx::Image *image);
+    bool subImageCompressed(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
+                            GLenum format, GLsizei imageSize, const void *pixels, rx::Image *image);
 
     GLint creationLevels(GLsizei width, GLsizei height) const;
     GLint creationLevels(GLsizei size) const;

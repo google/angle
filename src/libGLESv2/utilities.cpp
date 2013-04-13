@@ -259,7 +259,7 @@ int AllocateFirstFreeBits(unsigned int *bits, unsigned int allocationSize, unsig
     return -1;
 }
 
-GLsizei ComputePitch(GLsizei width, GLint internalformat, GLint alignment)
+GLsizei ComputeRowPitch(GLsizei width, GLint internalformat, GLint alignment)
 {
     ASSERT(alignment > 0 && isPow2(alignment));
 
@@ -267,9 +267,19 @@ GLsizei ComputePitch(GLsizei width, GLint internalformat, GLint alignment)
     return (rawPitch + alignment - 1) & ~(alignment - 1);
 }
 
-GLsizei ComputeCompressedPitch(GLsizei width, GLenum internalformat)
+GLsizei ComputeDepthPitch(GLsizei width, GLsizei height, GLint internalformat, GLint alignment)
+{
+    return ComputeRowPitch(width, internalformat, alignment) * height;
+}
+
+GLsizei ComputeCompressedRowPitch(GLsizei width, GLenum internalformat)
 {
     return ComputeCompressedSize(width, 1, internalformat);
+}
+
+GLsizei ComputeCompressedDepthPitch(GLsizei width, GLsizei height, GLenum internalformat)
+{
+    return ComputeCompressedSize(width, height, internalformat);
 }
 
 GLsizei ComputeCompressedSize(GLsizei width, GLsizei height, GLenum internalformat)

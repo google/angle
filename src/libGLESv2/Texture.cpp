@@ -198,7 +198,7 @@ void Texture::setImage(GLint unpackAlignment, const void *pixels, rx::Image *ima
 {
     if (pixels != NULL)
     {
-        image->loadData(0, 0, image->getWidth(), image->getHeight(), unpackAlignment, pixels);
+        image->loadData(0, 0, 0, image->getWidth(), image->getHeight(), image->getDepth(), unpackAlignment, pixels);
         mDirtyImages = true;
     }
 }
@@ -207,27 +207,29 @@ void Texture::setCompressedImage(GLsizei imageSize, const void *pixels, rx::Imag
 {
     if (pixels != NULL)
     {
-        image->loadCompressedData(0, 0, image->getWidth(), image->getHeight(), pixels);
+        image->loadCompressedData(0, 0, 0, image->getWidth(), image->getHeight(), image->getDepth(), pixels);
         mDirtyImages = true;
     }
 }
 
-bool Texture::subImage(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, rx::Image *image)
+bool Texture::subImage(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
+                       GLenum format, GLenum type, GLint unpackAlignment, const void *pixels, rx::Image *image)
 {
     if (pixels != NULL)
     {
-        image->loadData(xoffset, yoffset, width, height, unpackAlignment, pixels);
+        image->loadData(xoffset, yoffset, zoffset, width, height, depth, unpackAlignment, pixels);
         mDirtyImages = true;
     }
 
     return true;
 }
 
-bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels, rx::Image *image)
+bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
+                                 GLenum format, GLsizei imageSize, const void *pixels, rx::Image *image)
 {
     if (pixels != NULL)
     {
-        image->loadCompressedData(xoffset, yoffset, width, height, pixels);
+        image->loadCompressedData(xoffset, yoffset, zoffset, width, height, depth, pixels);
         mDirtyImages = true;
     }
 
@@ -387,7 +389,7 @@ void Texture2D::redefineImage(GLint level, GLint internalformat, GLsizei width, 
     const int storageHeight = std::max(1, mImageArray[0]->getHeight() >> level);
     const int storageFormat = mImageArray[0]->getInternalFormat();
 
-    mImageArray[level]->redefine(mRenderer, internalformat, width, height, false);
+    mImageArray[level]->redefine(mRenderer, internalformat, width, height, 1, false);
 
     if (mTexStorage)
     {
@@ -424,7 +426,7 @@ void Texture2D::bindTexImage(egl::Surface *surface)
 
     GLint internalformat = surface->getFormat();
 
-    mImageArray[0]->redefine(mRenderer, internalformat, surface->getWidth(), surface->getHeight(), true);
+    mImageArray[0]->redefine(mRenderer, internalformat, surface->getWidth(), surface->getHeight(), 1, true);
 
     delete mTexStorage;
     mTexStorage = new rx::TextureStorageInterface2D(mRenderer, surface->getSwapChain());
@@ -449,7 +451,7 @@ void Texture2D::releaseTexImage()
 
         for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
         {
-            mImageArray[i]->redefine(mRenderer, GL_NONE, 0, 0, true);
+            mImageArray[i]->redefine(mRenderer, GL_NONE, 0, 0, 0, true);
         }
     }
 }
@@ -476,7 +478,7 @@ void Texture2D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei wi
 
 void Texture2D::subImage(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    if (Texture::subImage(xoffset, yoffset, width, height, format, type, unpackAlignment, pixels, mImageArray[level]))
+    if (Texture::subImage(xoffset, yoffset, 0, width, height, 1, format, type, unpackAlignment, pixels, mImageArray[level]))
     {
         commitRect(level, xoffset, yoffset, width, height);
     }
@@ -484,7 +486,7 @@ void Texture2D::subImage(GLint level, GLint xoffset, GLint yoffset, GLsizei widt
 
 void Texture2D::subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels)
 {
-    if (Texture::subImageCompressed(xoffset, yoffset, width, height, format, imageSize, pixels, mImageArray[level]))
+    if (Texture::subImageCompressed(xoffset, yoffset, 0, width, height, 1, format, imageSize, pixels, mImageArray[level]))
     {
         commitRect(level, xoffset, yoffset, width, height);
     }
@@ -566,14 +568,14 @@ void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GL
 
     for (int level = 0; level < levels; level++)
     {
-        mImageArray[level]->redefine(mRenderer, internalformat, width, height, true);
+        mImageArray[level]->redefine(mRenderer, internalformat, width, height, 1, true);
         width = std::max(1, width >> 1);
         height = std::max(1, height >> 1);
     }
 
     for (int level = levels; level < IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
     {
-        mImageArray[level]->redefine(mRenderer, GL_NONE, 0, 0, true);
+        mImageArray[level]->redefine(mRenderer, GL_NONE, 0, 0, 0, true);
     }
 
     if (mTexStorage->isManaged())
@@ -1026,7 +1028,7 @@ void TextureCubeMap::commitRect(int face, GLint level, GLint xoffset, GLint yoff
 
 void TextureCubeMap::subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
 {
-    if (Texture::subImage(xoffset, yoffset, width, height, format, type, unpackAlignment, pixels, mImageArray[faceIndex(target)][level]))
+    if (Texture::subImage(xoffset, yoffset, 0, width, height, 1, format, type, unpackAlignment, pixels, mImageArray[faceIndex(target)][level]))
     {
         commitRect(faceIndex(target), level, xoffset, yoffset, width, height);
     }
@@ -1034,7 +1036,7 @@ void TextureCubeMap::subImage(GLenum target, GLint level, GLint xoffset, GLint y
 
 void TextureCubeMap::subImageCompressed(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels)
 {
-    if (Texture::subImageCompressed(xoffset, yoffset, width, height, format, imageSize, pixels, mImageArray[faceIndex(target)][level]))
+    if (Texture::subImageCompressed(xoffset, yoffset, 0, width, height, 1, format, imageSize, pixels, mImageArray[faceIndex(target)][level]))
     {
         commitRect(faceIndex(target), level, xoffset, yoffset, width, height);
     }
@@ -1249,7 +1251,7 @@ void TextureCubeMap::redefineImage(int face, GLint level, GLint internalformat, 
     const int storageHeight = std::max(1, mImageArray[0][0]->getHeight() >> level);
     const int storageFormat = mImageArray[0][0]->getInternalFormat();
 
-    mImageArray[face][level]->redefine(mRenderer, internalformat, width, height, false);
+    mImageArray[face][level]->redefine(mRenderer, internalformat, width, height, 1, false);
 
     if (mTexStorage)
     {
@@ -1360,7 +1362,7 @@ void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size
     {
         for (int face = 0; face < 6; face++)
         {
-            mImageArray[face][level]->redefine(mRenderer, internalformat, size, size, true);
+            mImageArray[face][level]->redefine(mRenderer, internalformat, size, size, 1, true);
             size = std::max(1, size >> 1);
         }
     }
@@ -1369,7 +1371,7 @@ void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size
     {
         for (int face = 0; face < 6; face++)
         {
-            mImageArray[face][level]->redefine(mRenderer, GL_NONE, 0, 0, true);
+            mImageArray[face][level]->redefine(mRenderer, GL_NONE, 0, 0, 0, true);
         }
     }
 
