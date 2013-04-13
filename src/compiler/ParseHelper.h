@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -66,6 +66,7 @@ struct TParseContext {
     pp::Preprocessor preprocessor;
     void* scanner;
 
+    int shaderVersion() const { return diagnostics.shaderVersion(); }
     int numErrors() const { return diagnostics.numErrors(); }
     TInfoSink& infoSink() { return diagnostics.infoSink(); }
     void error(TSourceLoc loc, const char *reason, const char* token,

@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -17,10 +17,13 @@ class TDiagnostics : public pp::Diagnostics
     TDiagnostics(TInfoSink& infoSink);
     virtual ~TDiagnostics();
 
+    int shaderVersion() const { return mShaderVersion; }
     TInfoSink& infoSink() { return mInfoSink; }
 
     int numErrors() const { return mNumErrors; }
     int numWarnings() const { return mNumWarnings; }
+
+    void setShaderVersion(int version);
 
     void writeInfo(Severity severity,
                    const pp::SourceLocation& loc,
@@ -36,6 +39,8 @@ class TDiagnostics : public pp::Diagnostics
                        const std::string& text);
 
   private:
+    int mShaderVersion;
+
     TInfoSink& mInfoSink;
     int mNumErrors;
     int mNumWarnings;

@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -249,6 +249,9 @@ void ShGetInfo(const ShHandle handle, ShShaderInfo pname, size_t* params)
         break;
     case SH_HASHED_NAMES_COUNT:
         *params = compiler->getNameMap().size();
+        break;
+    case SH_SHADER_VERSION:
+        *params = compiler->getShaderVersion();
         break;
     default: UNREACHABLE();
     }

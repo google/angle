@@ -376,7 +376,18 @@ void Shader::compileToHLSL(void *compiler)
         result = ShCompile(compiler, sourceStrings, 2, compileOptions | SH_SOURCE_PATH);
     }
 
-    if (result)
+    size_t shaderVersion = 100;
+    ShGetInfo(compiler, SH_SHADER_VERSION, &shaderVersion);
+
+    if (shaderVersion == 300 && mRenderer->getCurrentClientVersion() < 3)
+    {
+        const char versionError[] = "GLSL ES 3.00 is not supported by OpenGL ES 2.0 contexts";
+        mInfoLog = new char[sizeof(versionError) + 1];
+        strcpy(mInfoLog, versionError);
+
+        TRACE("\n%s", mInfoLog);
+    }
+    else if (result)
     {
         size_t objCodeLen = 0;
         ShGetInfo(compiler, SH_OBJECT_CODE_LENGTH, &objCodeLen);

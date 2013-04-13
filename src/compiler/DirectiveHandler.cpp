@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -148,9 +148,12 @@ void TDirectiveHandler::handleExtension(const pp::SourceLocation& loc,
 void TDirectiveHandler::handleVersion(const pp::SourceLocation& loc,
                                       int version)
 {
-    static const int kVersion = 100;
-
-    if (version != kVersion)
+    if (version == 100 ||
+        version == 300)
+    {
+        mDiagnostics.setShaderVersion(version);
+    }
+    else
     {
         std::stringstream stream;
         stream << version;

@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -67,6 +67,7 @@ public:
                  int compileOptions);
 
     // Get results of the last compilation.
+    int getShaderVersion() const { return shaderVersion; }
     TInfoSink& getInfoSink() { return infoSink; }
     const TVariableInfoList& getAttribs() const { return attribs; }
     const TVariableInfoList& getUniforms() const { return uniforms; }
@@ -135,6 +136,7 @@ private:
     BuiltInFunctionEmulator builtInFunctionEmulator;
 
     // Results of compilation.
+    int shaderVersion;
     TInfoSink infoSink;  // Output sink.
     TVariableInfoList attribs;  // Active attributes in the compiled shader.
     TVariableInfoList uniforms;  // Active uniforms in the compiled shader.
