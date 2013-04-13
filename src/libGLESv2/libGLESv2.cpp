@@ -6561,7 +6561,7 @@ void __stdcall glVertexAttrib1f(GLuint index, GLfloat x)
         if (context)
         {
             GLfloat vals[4] = { x, 0, 0, 1 };
-            context->setVertexAttrib(index, vals);
+            context->setVertexAttribf(index, vals);
         }
     }
     catch(std::bad_alloc&)
@@ -6586,7 +6586,7 @@ void __stdcall glVertexAttrib1fv(GLuint index, const GLfloat* values)
         if (context)
         {
             GLfloat vals[4] = { values[0], 0, 0, 1 };
-            context->setVertexAttrib(index, vals);
+            context->setVertexAttribf(index, vals);
         }
     }
     catch(std::bad_alloc&)
@@ -6611,7 +6611,7 @@ void __stdcall glVertexAttrib2f(GLuint index, GLfloat x, GLfloat y)
         if (context)
         {
             GLfloat vals[4] = { x, y, 0, 1 };
-            context->setVertexAttrib(index, vals);
+            context->setVertexAttribf(index, vals);
         }
     }
     catch(std::bad_alloc&)
@@ -6636,7 +6636,7 @@ void __stdcall glVertexAttrib2fv(GLuint index, const GLfloat* values)
         if (context)
         {
             GLfloat vals[4] = { values[0], values[1], 0, 1 };
-            context->setVertexAttrib(index, vals);
+            context->setVertexAttribf(index, vals);
         }
     }
     catch(std::bad_alloc&)
@@ -6661,7 +6661,7 @@ void __stdcall glVertexAttrib3f(GLuint index, GLfloat x, GLfloat y, GLfloat z)
         if (context)
         {
             GLfloat vals[4] = { x, y, z, 1 };
-            context->setVertexAttrib(index, vals);
+            context->setVertexAttribf(index, vals);
         }
     }
     catch(std::bad_alloc&)
@@ -6686,7 +6686,7 @@ void __stdcall glVertexAttrib3fv(GLuint index, const GLfloat* values)
         if (context)
         {
             GLfloat vals[4] = { values[0], values[1], values[2], 1 };
-            context->setVertexAttrib(index, vals);
+            context->setVertexAttribf(index, vals);
         }
     }
     catch(std::bad_alloc&)
@@ -6711,7 +6711,7 @@ void __stdcall glVertexAttrib4f(GLuint index, GLfloat x, GLfloat y, GLfloat z, G
         if (context)
         {
             GLfloat vals[4] = { x, y, z, w };
-            context->setVertexAttrib(index, vals);
+            context->setVertexAttribf(index, vals);
         }
     }
     catch(std::bad_alloc&)
@@ -6735,7 +6735,7 @@ void __stdcall glVertexAttrib4fv(GLuint index, const GLfloat* values)
 
         if (context)
         {
-            context->setVertexAttrib(index, values);
+            context->setVertexAttribf(index, values);
         }
     }
     catch(std::bad_alloc&)
@@ -6797,8 +6797,9 @@ void __stdcall glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLbo
           case GL_FIXED:
           case GL_FLOAT:
             break;
-
           case GL_HALF_FLOAT:
+          case GL_INT:
+          case GL_UNSIGNED_INT:
             if (context && context->getClientVersion() < 3)
             {
                 return gl::error(GL_INVALID_ENUM);
@@ -6807,7 +6808,6 @@ void __stdcall glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLbo
             {
                 break;
             }
-
           default:
             return gl::error(GL_INVALID_ENUM);
         }
@@ -7931,7 +7931,39 @@ void __stdcall glVertexAttribIPointer(GLuint index, GLint size, GLenum type, GLs
             }
         }
 
-        UNIMPLEMENTED();
+        if (index >= gl::MAX_VERTEX_ATTRIBS)
+        {
+            return gl::error(GL_INVALID_VALUE);
+        }
+
+        if (size < 1 || size > 4)
+        {
+            return gl::error(GL_INVALID_VALUE);
+        }
+
+        switch (type)
+        {
+          case GL_BYTE:
+          case GL_UNSIGNED_BYTE:
+          case GL_SHORT:
+          case GL_UNSIGNED_SHORT:
+          case GL_INT:
+          case GL_UNSIGNED_INT:
+            break;
+          default:
+            return gl::error(GL_INVALID_ENUM);
+        }
+
+        if (stride < 0)
+        {
+            return gl::error(GL_INVALID_VALUE);
+        }
+
+        if (context)
+        {
+            context->setVertexAttribState(index, context->getArrayBuffer(), size, type, false, true,
+                                          stride, pointer);
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8004,9 +8036,15 @@ void __stdcall glVertexAttribI4i(GLuint index, GLint x, GLint y, GLint z, GLint 
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            if (index >= gl::MAX_VERTEX_ATTRIBS)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            GLint vals[4] = { x, y, z, w };
+            context->setVertexAttribi(index, vals);
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8029,9 +8067,15 @@ void __stdcall glVertexAttribI4ui(GLuint index, GLuint x, GLuint y, GLuint z, GL
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            if (index >= gl::MAX_VERTEX_ATTRIBS)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            GLuint vals[4] = { x, y, z, w };
+            context->setVertexAttribu(index, vals);
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8053,9 +8097,14 @@ void __stdcall glVertexAttribI4iv(GLuint index, const GLint* v)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            if (index >= gl::MAX_VERTEX_ATTRIBS)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            context->setVertexAttribi(index, v);
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8077,9 +8126,14 @@ void __stdcall glVertexAttribI4uiv(GLuint index, const GLuint* v)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            if (index >= gl::MAX_VERTEX_ATTRIBS)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            context->setVertexAttribu(index, v);
+        }
     }
     catch(std::bad_alloc&)
     {

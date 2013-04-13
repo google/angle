@@ -2537,7 +2537,7 @@ bool Context::skipDraw(GLenum drawMode)
     return false;
 }
 
-void Context::setVertexAttrib(GLuint index, const GLfloat *values)
+void Context::setVertexAttribf(GLuint index, const GLfloat values[4])
 {
     ASSERT(index < gl::MAX_VERTEX_ATTRIBS);
 
@@ -2546,6 +2546,31 @@ void Context::setVertexAttrib(GLuint index, const GLfloat *values)
     mState.vertexAttribute[index].mCurrentValue.FloatValues[2] = values[2];
     mState.vertexAttribute[index].mCurrentValue.FloatValues[3] = values[3];
     mState.vertexAttribute[index].mCurrentValue.Type = GL_FLOAT;
+    mState.vertexAttribute[index].mPureInteger = false;
+}
+
+void Context::setVertexAttribu(GLuint index, const GLuint values[4])
+{
+    ASSERT(index < gl::MAX_VERTEX_ATTRIBS);
+
+    mState.vertexAttribute[index].mCurrentValue.UnsignedIntValues[0] = values[0];
+    mState.vertexAttribute[index].mCurrentValue.UnsignedIntValues[1] = values[1];
+    mState.vertexAttribute[index].mCurrentValue.UnsignedIntValues[2] = values[2];
+    mState.vertexAttribute[index].mCurrentValue.UnsignedIntValues[3] = values[3];
+    mState.vertexAttribute[index].mCurrentValue.Type = GL_UNSIGNED_INT;
+    mState.vertexAttribute[index].mPureInteger = true;
+}
+
+void Context::setVertexAttribi(GLuint index, const GLint values[4])
+{
+    ASSERT(index < gl::MAX_VERTEX_ATTRIBS);
+
+    mState.vertexAttribute[index].mCurrentValue.IntValues[0] = values[0];
+    mState.vertexAttribute[index].mCurrentValue.IntValues[1] = values[1];
+    mState.vertexAttribute[index].mCurrentValue.IntValues[2] = values[2];
+    mState.vertexAttribute[index].mCurrentValue.IntValues[3] = values[3];
+    mState.vertexAttribute[index].mCurrentValue.Type = GL_INT;
+    mState.vertexAttribute[index].mPureInteger = true;
 }
 
 void Context::setVertexAttribDivisor(GLuint index, GLuint divisor)
