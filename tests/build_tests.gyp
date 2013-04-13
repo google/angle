@@ -36,7 +36,7 @@
         'gmock',
       ],
       'include_dirs': [
-        '../src/compiler/preprocessor/new',
+        '../src/compiler/preprocessor',
         '../third_party/googletest/include',
         '../third_party/googlemock/include',
       ],
