@@ -9695,17 +9695,14 @@ void __stdcall glDrawBuffersEXT(GLsizei n, const GLenum *bufs)
 
             if (context->getDrawFramebufferHandle() == 0)
             {
-                if (n > 1)
+                if (n != 1)
                 {
                     return gl::error(GL_INVALID_OPERATION);
                 }
 
-                if (n == 1)
+                if (bufs[0] != GL_NONE && bufs[0] != GL_BACK)
                 {
-                    if (bufs[0] != GL_NONE && bufs[0] != GL_BACK)
-                    {
-                        return gl::error(GL_INVALID_OPERATION);
-                    }
+                    return gl::error(GL_INVALID_OPERATION);
                 }
             }
             else
@@ -9725,6 +9722,11 @@ void __stdcall glDrawBuffersEXT(GLsizei n, const GLenum *bufs)
             for (int colorAttachment = 0; colorAttachment < n; colorAttachment++)
             {
                 framebuffer->setDrawBufferState(colorAttachment, bufs[colorAttachment]);
+            }
+
+            for (int colorAttachment = n; colorAttachment < (int)context->getMaximumRenderTargets(); colorAttachment++)
+            {
+                framebuffer->setDrawBufferState(colorAttachment, GL_NONE);
             }
         }
     }
