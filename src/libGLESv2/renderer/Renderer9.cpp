@@ -2408,6 +2408,12 @@ int Renderer9::getNearestSupportedSamples(D3DFORMAT format, int requested) const
     return -1;
 }
 
+unsigned int Renderer9::getMaxRenderTargets() const
+{
+    // we do not support MRT in d3d9
+    return 1;
+}
+
 D3DFORMAT Renderer9::ConvertTextureInternalFormat(GLint internalformat)
 {
     switch (internalformat)

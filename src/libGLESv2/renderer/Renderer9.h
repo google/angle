@@ -146,6 +146,8 @@ class Renderer9 : public Renderer
     virtual GLsizei getMaxSupportedSamples() const;
     int getNearestSupportedSamples(D3DFORMAT format, int requested) const;
     
+    virtual unsigned int getMaxRenderTargets() const;
+
     D3DFORMAT ConvertTextureInternalFormat(GLint internalformat);
 
     // Pixel operations

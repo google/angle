@@ -2357,6 +2357,21 @@ int Renderer11::getNearestSupportedSamples(DXGI_FORMAT format, unsigned int requ
     return -1;
 }
 
+unsigned int Renderer11::getMaxRenderTargets() const
+{
+    switch (mFeatureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_0:
+        return D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT;  // 8
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0:
+        return D3D10_SIMULTANEOUS_RENDER_TARGET_COUNT;  // 8
+      default:
+        UNREACHABLE();
+        return 1;
+    }
+}
+
 bool Renderer11::copyToRenderTarget(TextureStorageInterface2D *dest, TextureStorageInterface2D *source)
 {
     if (source && dest)
