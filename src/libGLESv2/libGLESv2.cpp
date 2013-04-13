@@ -4246,7 +4246,10 @@ void __stdcall glGetVertexAttribfv(GLuint index, GLenum pname, GLfloat* params)
                     params[i] = attribState.mCurrentValue[i];
                 }
                 break;
-              case GL_VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE:
+              case GL_VERTEX_ATTRIB_ARRAY_DIVISOR:
+                // Don't verify ES3 context because GL_VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE uses
+                // the same constant.
+                META_ASSERT(GL_VERTEX_ATTRIB_ARRAY_DIVISOR == GL_VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE);
                 *params = (GLfloat)attribState.mDivisor;
                 break;
               default: return gl::error(GL_INVALID_ENUM);
@@ -4303,7 +4306,10 @@ void __stdcall glGetVertexAttribiv(GLuint index, GLenum pname, GLint* params)
                     params[i] = (GLint)(currentValue > 0.0f ? floor(currentValue + 0.5f) : ceil(currentValue - 0.5f));
                 }
                 break;
-              case GL_VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE:
+              case GL_VERTEX_ATTRIB_ARRAY_DIVISOR:
+                // Don't verify ES3 context because GL_VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE uses
+                // the same constant.
+                META_ASSERT(GL_VERTEX_ATTRIB_ARRAY_DIVISOR == GL_VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE);
                 *params = (GLint)attribState.mDivisor;
                 break;
               default: return gl::error(GL_INVALID_ENUM);
@@ -9389,6 +9395,11 @@ void __stdcall glTexStorage3D(GLenum target, GLsizei levels, GLenum internalform
 
     try
     {
+        if (index >= gl::MAX_VERTEX_ATTRIBS)
+        {
+            return gl::error(GL_INVALID_VALUE);
+        }
+
         gl::Context *context = gl::getNonLostContext();
 
         if (context)
@@ -9397,9 +9408,9 @@ void __stdcall glTexStorage3D(GLenum target, GLsizei levels, GLenum internalform
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            context->setVertexAttribDivisor(index, divisor);
+        }
     }
     catch(std::bad_alloc&)
     {
