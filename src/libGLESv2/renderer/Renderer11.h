@@ -138,11 +138,14 @@ class Renderer11 : public Renderer
     // Pixel operations
     virtual bool copyToRenderTarget(TextureStorageInterface2D *dest, TextureStorageInterface2D *source);
     virtual bool copyToRenderTarget(TextureStorageInterfaceCube *dest, TextureStorageInterfaceCube *source);
+    virtual bool copyToRenderTarget(TextureStorageInterface3D *dest, TextureStorageInterface3D *source);
 
     virtual bool copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                            GLint xoffset, GLint yoffset, TextureStorageInterface2D *storage, GLint level);
     virtual bool copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                            GLint xoffset, GLint yoffset, TextureStorageInterfaceCube *storage, GLenum target, GLint level);
+    virtual bool copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
+                           GLint xoffset, GLint yoffset, GLint zOffset, TextureStorageInterface3D *storage, GLint level);
 
     bool copyTexture(ID3D11ShaderResourceView *source, const gl::Rectangle &sourceArea, unsigned int sourceWidth, unsigned int sourceHeight,
                      ID3D11RenderTargetView *dest, const gl::Rectangle &destArea, unsigned int destWidth, unsigned int destHeight, GLenum destFormat);

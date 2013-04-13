@@ -2473,6 +2473,20 @@ bool Renderer11::copyToRenderTarget(TextureStorageInterfaceCube *dest, TextureSt
     return false;
 }
 
+bool Renderer11::copyToRenderTarget(TextureStorageInterface3D *dest, TextureStorageInterface3D *source)
+{
+    if (source && dest)
+    {
+        TextureStorage11_3D *source11 = TextureStorage11_3D::makeTextureStorage11_3D(source->getStorageInstance());
+        TextureStorage11_3D *dest11 = TextureStorage11_3D::makeTextureStorage11_3D(dest->getStorageInstance());
+
+        mDeviceContext->CopyResource(dest11->getBaseTexture(), source11->getBaseTexture());
+        return true;
+    }
+
+    return false;
+}
+
 bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                            GLint xoffset, GLint yoffset, TextureStorageInterface2D *storage, GLint level)
 {
@@ -2569,6 +2583,69 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     }
 
     RenderTarget11 *destRenderTarget = RenderTarget11::makeRenderTarget11(storage11->getRenderTarget(target, level));
+    if (!destRenderTarget)
+    {
+        source->Release();
+        ERR("Failed to retrieve the render target from the destination storage.");
+        return gl::error(GL_OUT_OF_MEMORY, false);
+    }
+
+    ID3D11RenderTargetView *dest = destRenderTarget->getRenderTargetView();
+    if (!dest)
+    {
+        source->Release();
+        ERR("Failed to retrieve the render target view from the destination render target.");
+        return gl::error(GL_OUT_OF_MEMORY, false);
+    }
+
+    gl::Rectangle destRect;
+    destRect.x = xoffset;
+    destRect.y = yoffset;
+    destRect.width = sourceRect.width;
+    destRect.height = sourceRect.height;
+
+    bool ret = copyTexture(source, sourceRect, sourceRenderTarget->getWidth(), sourceRenderTarget->getHeight(),
+                           dest, destRect, destRenderTarget->getWidth(), destRenderTarget->getHeight(), destFormat);
+
+    source->Release();
+    dest->Release();
+
+    return ret;
+}
+
+bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
+                           GLint xoffset, GLint yoffset, GLint zOffset, TextureStorageInterface3D *storage, GLint level)
+{
+    gl::Renderbuffer *colorbuffer = framebuffer->getReadColorbuffer();
+    if (!colorbuffer)
+    {
+        ERR("Failed to retrieve the color buffer from the frame buffer.");
+        return gl::error(GL_OUT_OF_MEMORY, false);
+    }
+
+    RenderTarget11 *sourceRenderTarget = RenderTarget11::makeRenderTarget11(colorbuffer->getRenderTarget());
+    if (!sourceRenderTarget)
+    {
+        ERR("Failed to retrieve the render target from the frame buffer.");
+        return gl::error(GL_OUT_OF_MEMORY, false);
+    }
+
+    ID3D11ShaderResourceView *source = sourceRenderTarget->getShaderResourceView();
+    if (!source)
+    {
+        ERR("Failed to retrieve the render target view from the render target.");
+        return gl::error(GL_OUT_OF_MEMORY, false);
+    }
+
+    TextureStorage11_3D *storage11 = TextureStorage11_3D::makeTextureStorage11_3D(storage->getStorageInstance());
+    if (!storage11)
+    {
+        source->Release();
+        ERR("Failed to retrieve the texture storage from the destination.");
+        return gl::error(GL_OUT_OF_MEMORY, false);
+    }
+
+    RenderTarget11 *destRenderTarget = RenderTarget11::makeRenderTarget11(storage11->getRenderTargetLayer(level, zOffset));
     if (!destRenderTarget)
     {
         source->Release();

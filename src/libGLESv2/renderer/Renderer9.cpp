@@ -2535,6 +2535,13 @@ bool Renderer9::copyToRenderTarget(TextureStorageInterfaceCube *dest, TextureSto
     return result;
 }
 
+bool Renderer9::copyToRenderTarget(TextureStorageInterface3D *dest, TextureStorageInterface3D *source)
+{
+    // 3D textures are not available in the D3D9 backend.
+    UNREACHABLE();
+    return false;
+}
+
 D3DPOOL Renderer9::getBufferPool(DWORD usage) const
 {
     if (mD3d9Ex != NULL)
@@ -2574,6 +2581,14 @@ bool Renderer9::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sou
     rect.bottom = sourceRect.y + sourceRect.height;
 
     return mBlit->copy(framebuffer, rect, destFormat, xoffset, yoffset, storage, target, level);
+}
+
+bool Renderer9::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
+                          GLint xoffset, GLint yoffset, GLint zOffset, TextureStorageInterface3D *storage, GLint level)
+{
+    // 3D textures are not available in the D3D9 backend.
+    UNREACHABLE();
+    return false;
 }
 
 bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, const gl::Rectangle &readRect, gl::Framebuffer *drawFramebuffer, const gl::Rectangle &drawRect,
