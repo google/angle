@@ -21,9 +21,9 @@
 #include "libGLESv2/Query.h"
 #include "libGLESv2/Context.h"
 
-bool validImageSize(GLint level, GLsizei width, GLsizei height)
+bool validImageSize(GLint level, GLsizei width, GLsizei height, GLsizei depth)
 {
-    if (level < 0 || width < 0 || height < 0)
+    if (level < 0 || width < 0 || height < 0 || depth < 0)
     {
         return false;
     }
@@ -38,7 +38,7 @@ bool validImageSize(GLint level, GLsizei width, GLsizei height)
         return true;
     }
 
-    if (gl::isPow2(width) && gl::isPow2(height))
+    if (gl::isPow2(width) && gl::isPow2(height) && gl::isPow2(depth))
     {
         return true;
     }
@@ -215,6 +215,48 @@ bool validateSubImageParamsCube(bool compressed, GLsizei width, GLsizei height,
 
     if (xoffset + width > texture->getWidth(target, level) ||
         yoffset + height > texture->getHeight(target, level))
+    {
+        return gl::error(GL_INVALID_VALUE, false);
+    }
+
+    return true;
+}
+
+bool validateSubImageParams3D(bool compressed, GLsizei width, GLsizei height, GLsizei depth,
+                              GLint xoffset, GLint yoffset,GLint zoffset, GLint level, GLenum format, GLenum type,
+                              gl::Texture3D *texture)
+{
+    if (!texture)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    if (compressed != texture->isCompressed(level))
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    if (format != GL_NONE)
+    {
+        GLenum internalformat = gl::ConvertSizedInternalFormat(format, type);
+        if (internalformat != texture->getInternalFormat(level))
+        {
+            return gl::error(GL_INVALID_OPERATION, false);
+        }
+    }
+
+    if (compressed)
+    {
+        if ((width % 4 != 0 && width != texture->getWidth(0)) ||
+            (height % 4 != 0 && height != texture->getHeight(0)))
+        {
+            return gl::error(GL_INVALID_OPERATION, false);
+        }
+    }
+
+    if (xoffset + width > texture->getWidth(level) ||
+        yoffset + height > texture->getHeight(level) ||
+        zoffset + depth > texture->getDepth(level))
     {
         return gl::error(GL_INVALID_VALUE, false);
     }
@@ -1135,7 +1177,7 @@ void __stdcall glCompressedTexImage2D(GLenum target, GLint level, GLenum interna
 
     try
     {
-        if (!validImageSize(level, width, height) || border != 0 || imageSize < 0)
+        if (!validImageSize(level, width, height, 1) || border != 0 || imageSize < 0)
         {
             return gl::error(GL_INVALID_VALUE);
         }
@@ -1300,7 +1342,7 @@ void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
             return gl::error(GL_INVALID_ENUM);
         }
 
-        if (xoffset < 0 || yoffset < 0 || !validImageSize(level, width, height) || imageSize < 0)
+        if (xoffset < 0 || yoffset < 0 || !validImageSize(level, width, height, 1) || imageSize < 0)
         {
             return gl::error(GL_INVALID_VALUE);
         }
@@ -1400,7 +1442,7 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
 
     try
     {
-        if (!validImageSize(level, width, height))
+        if (!validImageSize(level, width, height, 1))
         {
             return gl::error(GL_INVALID_VALUE);
         }
@@ -5449,7 +5491,7 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
 
     try
     {
-        if (!validImageSize(level, width, height))
+        if (!validImageSize(level, width, height, 1))
         {
             return gl::error(GL_INVALID_VALUE);
         }
