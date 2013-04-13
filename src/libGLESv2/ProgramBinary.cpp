@@ -459,8 +459,8 @@ bool ProgramBinary::setUniform4fv(GLint location, GLsizei count, const GLfloat *
     return true;
 }
 
-template<typename T, int targetWidth, int targetHeight, int srcWidth, int srcHeight>
-void transposeMatrix(T *target, const GLfloat *value)
+template<typename T>
+void transposeMatrix(T *target, const GLfloat *value, int targetWidth, int targetHeight, int srcWidth, int srcHeight)
 {
     int copyWidth = std::min(targetWidth, srcWidth);
     int copyHeight = std::min(targetHeight, srcHeight);
@@ -469,23 +469,23 @@ void transposeMatrix(T *target, const GLfloat *value)
     {
         for (int y = 0; y < copyHeight; y++)
         {
-            target[x * targetWidth + y] = (T)value[y * srcWidth + x];
+            target[x * targetWidth + y] = static_cast<T>(value[y * srcWidth + x]);
         }
     }
     // clear unfilled right side
-    for (int y = 0; y < copyHeight; y++)
+    for (int y = 0; y < copyWidth; y++)
     {
-        for (int x = srcWidth; x < targetWidth; x++)
+        for (int x = copyHeight; x < targetWidth; x++)
         {
-            target[y * targetWidth + x] = (T)0;
+            target[y * targetWidth + x] = static_cast<T>(0);
         }
     }
     // clear unfilled bottom.
-    for (int y = srcHeight; y < targetHeight; y++)
+    for (int y = copyWidth; y < targetHeight; y++)
     {
         for (int x = 0; x < targetWidth; x++)
         {
-            target[y * targetWidth + x] = (T)0;
+            target[y * targetWidth + x] = static_cast<T>(0);
         }
     }
 }
@@ -515,7 +515,7 @@ bool ProgramBinary::setUniformMatrix2fv(GLint location, GLsizei count, const GLf
 
     for (int i = 0; i < count; i++)
     {
-        transposeMatrix<GLfloat,4,2,2,2>(target, value);
+        transposeMatrix<GLfloat>(target, value, 4, 2, 2, 2);
         target += 8;
         value += 4;
     }
@@ -548,7 +548,7 @@ bool ProgramBinary::setUniformMatrix3fv(GLint location, GLsizei count, const GLf
 
     for (int i = 0; i < count; i++)
     {
-        transposeMatrix<GLfloat,4,3,3,3>(target, value);
+        transposeMatrix<GLfloat>(target, value, 4, 3, 3, 3);
         target += 12;
         value += 9;
     }
@@ -582,7 +582,7 @@ bool ProgramBinary::setUniformMatrix4fv(GLint location, GLsizei count, const GLf
 
     for (int i = 0; i < count; i++)
     {
-        transposeMatrix<GLfloat,4,4,4,4>(target, value);
+        transposeMatrix<GLfloat>(target, value, 4, 4, 4, 4);
         target += 16;
         value += 16;
     }
@@ -826,13 +826,13 @@ bool ProgramBinary::getUniformfv(GLint location, GLsizei *bufSize, GLfloat *para
     switch (targetUniform->type)
     {
       case GL_FLOAT_MAT2:
-        transposeMatrix<GLfloat,2,2,4,2>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 8);
+        transposeMatrix<GLfloat>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 8, 2, 2, 4, 2);
         break;
       case GL_FLOAT_MAT3:
-        transposeMatrix<GLfloat,3,3,4,3>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 12);
+        transposeMatrix<GLfloat>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 12, 3, 3, 4, 3);
         break;
       case GL_FLOAT_MAT4:
-        transposeMatrix<GLfloat,4,4,4,4>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 16);
+        transposeMatrix<GLfloat>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 16, 4, 4, 4, 4);
         break;
       default:
         {
@@ -894,13 +894,13 @@ bool ProgramBinary::getUniformiv(GLint location, GLsizei *bufSize, GLint *params
     switch (targetUniform->type)
     {
       case GL_FLOAT_MAT2:
-        transposeMatrix<GLint,2,2,4,2>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 8);
+        transposeMatrix<GLint>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 8, 2, 2, 4, 2);
         break;
       case GL_FLOAT_MAT3:
-        transposeMatrix<GLint,3,3,4,3>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 12);
+        transposeMatrix<GLint>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 12, 3, 3, 4, 3);
         break;
       case GL_FLOAT_MAT4:
-        transposeMatrix<GLint,4,4,4,4>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 16);
+        transposeMatrix<GLint>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 16, 4, 4, 4, 4);
         break;
       default:
         {
