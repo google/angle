@@ -15,6 +15,7 @@
 #include <cstddef>
 
 #define GL_APICALL
+#include <GLES3/gl3.h>
 #include <GLES2/gl2.h>
 
 #include "common/debug.h"

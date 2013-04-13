@@ -303,6 +303,12 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClCompile Include="utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\GLES2\gl2.h" />
+    <ClInclude Include="..\..\include\GLES2\gl2ext.h" />
+    <ClInclude Include="..\..\include\GLES2\gl2platform.h" />
+    <ClInclude Include="..\..\include\GLES3\gl3.h" />
+    <ClInclude Include="..\..\include\GLES3\gl3ext.h" />
+    <ClInclude Include="..\..\include\GLES3\gl3platform.h" />
     <ClInclude Include="..\common\debug.h" />
     <ClInclude Include="..\common\system.h" />
     <ClInclude Include="..\third_party\murmurhash\MurmurHash3.h" />
@@ -313,9 +319,6 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="Context.h" />
     <ClInclude Include="Fence.h" />
     <ClInclude Include="Framebuffer.h" />
-    <ClInclude Include="..\..\include\GLES2\gl2.h" />
-    <ClInclude Include="..\..\include\GLES2\gl2ext.h" />
-    <ClInclude Include="..\..\include\GLES2\gl2platform.h" />
     <ClInclude Include="HandleAllocator.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="mathutil.h" />

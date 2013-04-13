@@ -20,6 +20,7 @@
 //
 #include <stdio.h>
 #include <stdlib.h>
+#include <GLES3/gl3.h>
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
 #include <EGL/eglext.h>

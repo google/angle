@@ -235,15 +235,6 @@
     <ClInclude Include="Framebuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\include\GLES2\gl2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\GLES2\gl2ext.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\include\GLES2\gl2platform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="HandleAllocator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -479,6 +470,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="precompiled.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\GLES3\gl3ext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\GLES3\gl3platform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\GLES3\gl3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\GLES2\gl2ext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\GLES2\gl2platform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\GLES2\gl2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
