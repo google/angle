@@ -63,4 +63,32 @@ class BindingPointer : public RefCountObjectBindingPointer
     ObjectType *operator -> () const { return get(); }
 };
 
+template <class ObjectType>
+class OffsetBindingPointer : public RefCountObjectBindingPointer
+{
+  public:
+    OffsetBindingPointer() : mOffset(0), mSize(-1) { }
+
+    void set(ObjectType *newObject)
+    {
+        RefCountObjectBindingPointer::set(newObject);
+        mOffset = 0;
+        mSize = -1;
+    }
+
+    void set(ObjectType *newObject, GLintptr offset, GLsizeiptr size)
+    {
+        RefCountObjectBindingPointer::set(newObject);
+        mOffset = offset;
+        mSize = size;
+    }
+
+    ObjectType *get() const { return static_cast<ObjectType*>(RefCountObjectBindingPointer::get()); }
+    ObjectType *operator -> () const { return get(); }
+
+  private:
+    GLintptr mOffset;
+    GLsizeiptr mSize;
+};
+
 #endif   // COMMON_REFCOUNTOBJECT_H_
