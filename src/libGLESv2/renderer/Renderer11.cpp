@@ -2687,8 +2687,8 @@ bool Renderer11::copyTexture(ID3D11ShaderResourceView *source, const gl::Rectang
     static ID3D11ShaderResourceView *const nullSRV = NULL;
     mDeviceContext->PSSetShaderResources(0, 1, &nullSRV);
 
-    // Apply render targets
-    mDeviceContext->OMSetRenderTargets(1, &dest, NULL);
+    // Apply render target
+    setOneTimeRenderTarget(dest);
 
     // Set the viewport
     D3D11_VIEWPORT viewport;
@@ -2710,16 +2710,35 @@ bool Renderer11::copyTexture(ID3D11ShaderResourceView *source, const gl::Rectang
     // Unbind textures and render targets and vertex buffer
     mDeviceContext->PSSetShaderResources(0, 1, &nullSRV);
 
-    static ID3D11RenderTargetView *const nullRTV = NULL;
-    mDeviceContext->OMSetRenderTargets(1, &nullRTV, NULL);
+    unapplyRenderTargets();
 
-    static UINT zero = 0;
-    static ID3D11Buffer *const nullBuffer = NULL;
+    UINT zero = 0;
+    ID3D11Buffer *const nullBuffer = NULL;
     mDeviceContext->IASetVertexBuffers(0, 1, &nullBuffer, &zero, &zero);
 
     markAllStateDirty();
 
     return true;
+}
+
+void Renderer11::unapplyRenderTargets()
+{
+    setOneTimeRenderTarget(NULL);
+}
+
+void Renderer11::setOneTimeRenderTarget(ID3D11RenderTargetView *renderTargetView)
+{
+    ID3D11RenderTargetView *rtvArray[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS] = {NULL};
+
+    rtvArray[0] = renderTargetView;
+
+    mDeviceContext->OMSetRenderTargets(getMaxRenderTargets(), rtvArray, NULL);
+
+    // Do not preserve the serial for this one-time-use render target
+    for (unsigned int rtIndex = 0; rtIndex < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; rtIndex++)
+    {
+        mAppliedRenderTargetSerials[rtIndex] = 0;
+    }
 }
 
 RenderTarget *Renderer11::createRenderTarget(SwapChain *swapChain, bool depth)

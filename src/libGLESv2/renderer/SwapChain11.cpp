@@ -649,7 +649,7 @@ EGLint SwapChain11::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
     deviceContext->GSSetShader(NULL, NULL, 0);
 
     // Apply render targets
-    deviceContext->OMSetRenderTargets(1, &mBackBufferRTView, NULL);
+    mRenderer->setOneTimeRenderTarget(mBackBufferRTView);
 
     // Set the viewport
     D3D11_VIEWPORT viewport;
@@ -689,9 +689,7 @@ EGLint SwapChain11::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
     static ID3D11ShaderResourceView *const nullSRV = NULL;
     deviceContext->PSSetShaderResources(0, 1, &nullSRV);
 
-    static ID3D11RenderTargetView *const nullRTV = NULL;
-    deviceContext->OMSetRenderTargets(1, &nullRTV, NULL);
-
+    mRenderer->unapplyRenderTargets();
     mRenderer->markAllStateDirty();
 
     return EGL_SUCCESS;
