@@ -366,6 +366,7 @@ class Context
     int getMaximumTextureDimension() const;
     int getMaximumCubeTextureDimension() const;
     int getMaximumTextureLevel() const;
+    unsigned int getMaximumRenderTargets() const;
     GLsizei getMaxSupportedSamples() const;
     const char *getExtensionString() const;
     const char *getRendererString() const;

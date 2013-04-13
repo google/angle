@@ -1421,7 +1421,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_ALPHA_BITS:
         {
             gl::Framebuffer *framebuffer = getDrawFramebuffer();
-            gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer();
+            gl::Renderbuffer *colorbuffer = framebuffer->getFirstColorBuffer();
 
             if (colorbuffer)
             {
@@ -1867,7 +1867,8 @@ void Context::clear(GLbitfield mask)
     {
         mask &= ~GL_COLOR_BUFFER_BIT;
 
-        if (framebufferObject->getColorbufferType() != GL_NONE)
+        // TODO: MRT clear
+        if (framebufferObject->getColorbufferType(0) != GL_NONE)
         {
             finalMask |= GL_COLOR_BUFFER_BIT;
         }
@@ -2142,6 +2143,11 @@ int Context::getMaxSupportedSamples() const
     return mRenderer->getMaxSupportedSamples();
 }
 
+unsigned int Context::getMaximumRenderTargets() const
+{
+    return mRenderer->getMaxRenderTargets();
+}
+
 bool Context::supportsEventQueries() const
 {
     return mSupportsEventQueries;
@@ -2270,7 +2276,7 @@ bool Context::getCurrentReadFormatType(GLenum *format, GLenum *type)
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
-    Renderbuffer *renderbuffer = framebuffer->getColorbuffer();
+    Renderbuffer *renderbuffer = framebuffer->getReadColorbuffer();
     if (!renderbuffer)
     {
         return gl::error(GL_INVALID_OPERATION, false);
@@ -2618,6 +2624,7 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
                               GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
                               GLbitfield mask)
 {
+    // TODO: mrt support for blit
     Framebuffer *readFramebuffer = getReadFramebuffer();
     Framebuffer *drawFramebuffer = getDrawFramebuffer();
 
@@ -2632,10 +2639,10 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
         return gl::error(GL_INVALID_OPERATION);
     }
 
-    int readBufferWidth = readFramebuffer->getColorbuffer()->getWidth();
-    int readBufferHeight = readFramebuffer->getColorbuffer()->getHeight();
-    int drawBufferWidth = drawFramebuffer->getColorbuffer()->getWidth();
-    int drawBufferHeight = drawFramebuffer->getColorbuffer()->getHeight();
+    int readBufferWidth = readFramebuffer->getColorbuffer(0)->getWidth();
+    int readBufferHeight = readFramebuffer->getColorbuffer(0)->getHeight();
+    int drawBufferWidth = drawFramebuffer->getColorbuffer(0)->getWidth();
+    int drawBufferHeight = drawFramebuffer->getColorbuffer(0)->getHeight();
 
     Rectangle sourceRect;
     Rectangle destRect;
@@ -2794,12 +2801,12 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
 
     if (mask & GL_COLOR_BUFFER_BIT)
     {
-        const bool validReadType = readFramebuffer->getColorbufferType() == GL_TEXTURE_2D ||
-            readFramebuffer->getColorbufferType() == GL_RENDERBUFFER;
-        const bool validDrawType = drawFramebuffer->getColorbufferType() == GL_TEXTURE_2D ||
-            drawFramebuffer->getColorbufferType() == GL_RENDERBUFFER;
+        const bool validReadType = readFramebuffer->getColorbufferType(0) == GL_TEXTURE_2D ||
+            readFramebuffer->getColorbufferType(0) == GL_RENDERBUFFER;
+        const bool validDrawType = drawFramebuffer->getColorbufferType(0) == GL_TEXTURE_2D ||
+            drawFramebuffer->getColorbufferType(0) == GL_RENDERBUFFER;
         if (!validReadType || !validDrawType ||
-            readFramebuffer->getColorbuffer()->getActualFormat() != drawFramebuffer->getColorbuffer()->getActualFormat())
+            readFramebuffer->getColorbuffer(0)->getActualFormat() != drawFramebuffer->getColorbuffer(0)->getActualFormat())
         {
             ERR("Color buffer format conversion in BlitFramebufferANGLE not supported by this implementation");
             return gl::error(GL_INVALID_OPERATION);

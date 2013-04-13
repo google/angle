@@ -814,12 +814,13 @@ bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count)
 
 bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
 {
+    // TODO: mrt support
     // Get the color render buffer and serial
     gl::Renderbuffer *renderbufferObject = NULL;
     unsigned int renderTargetSerial = 0;
-    if (framebuffer->getColorbufferType() != GL_NONE)
+    if (framebuffer->getColorbufferType(0) != GL_NONE)
     {
-        renderbufferObject = framebuffer->getColorbuffer();
+        renderbufferObject = framebuffer->getColorbuffer(0);
 
         if (!renderbufferObject)
         {
@@ -1464,7 +1465,8 @@ void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *
      {
          if (clearParams.mask & GL_COLOR_BUFFER_BIT)
          {
-             gl::Renderbuffer *renderbufferObject = frameBuffer->getColorbuffer();
+             // TODO: mrt clear
+             gl::Renderbuffer *renderbufferObject = frameBuffer->getColorbuffer(0);
              if (renderbufferObject)
              {
                 RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(renderbufferObject->getRenderTarget());
@@ -2406,7 +2408,7 @@ bool Renderer11::copyToRenderTarget(TextureStorageInterfaceCube *dest, TextureSt
 bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                            GLint xoffset, GLint yoffset, TextureStorageInterface2D *storage, GLint level)
 {
-    gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer();
+    gl::Renderbuffer *colorbuffer = framebuffer->getReadColorbuffer();
     if (!colorbuffer)
     {
         ERR("Failed to retrieve the color buffer from the frame buffer.");
@@ -2469,7 +2471,7 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
 bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                            GLint xoffset, GLint yoffset, TextureStorageInterfaceCube *storage, GLenum target, GLint level)
 {
-    gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer();
+    gl::Renderbuffer *colorbuffer = framebuffer->getReadColorbuffer();
     if (!colorbuffer)
     {
         ERR("Failed to retrieve the color buffer from the frame buffer.");
@@ -2844,7 +2846,8 @@ FenceImpl *Renderer11::createFence()
 
 bool Renderer11::getRenderTargetResource(gl::Framebuffer *framebuffer, unsigned int *subresourceIndex, ID3D11Texture2D **resource)
 {
-    gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer();
+    // TODO: mrt supprt
+    gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer(0);
     if (colorbuffer)
     {
         RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(colorbuffer->getRenderTarget());
@@ -3320,13 +3323,14 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
 bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &readRect, gl::Framebuffer *drawTarget,
                           const gl::Rectangle &drawRect, BlitTarget target)
 {
+    // TODO: mrt support
     ASSERT(readRect.width == drawRect.width && readRect.height == drawRect.height);
 
     gl::Renderbuffer *readBuffer = NULL;
     switch (target)
     {
       case BLIT_RENDERTARGET:
-        readBuffer = readTarget->getColorbuffer();
+        readBuffer = readTarget->getColorbuffer(0);
         break;
       case BLIT_DEPTHSTENCIL:
         readBuffer = readTarget->getDepthOrStencilbuffer();
@@ -3384,7 +3388,7 @@ bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &read
     switch (target)
     {
       case BLIT_RENDERTARGET:
-        drawBuffer = drawTarget->getColorbuffer();
+        drawBuffer = drawTarget->getColorbuffer(0);
         break;
       case BLIT_DEPTHSTENCIL:
         drawBuffer = drawTarget->getDepthOrStencilbuffer();
