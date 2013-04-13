@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -378,18 +378,25 @@ EGLContext Display::createContext(EGLConfig configHandle, EGLint clientVersion, 
 {
     if (!mRenderer)
     {
-        return NULL;
+        return EGL_NO_CONTEXT;
     }
     else if (mRenderer->testDeviceLost(false))   // Lost device
     {
         if (!restoreLostDevice())
-            return NULL;
+        {
+            return error(EGL_CONTEXT_LOST, EGL_NO_CONTEXT);
+        }
+    }
+
+    if (clientVersion > 2 && mRenderer->getMajorShaderModel() < 4)
+    {
+        return error(EGL_BAD_CONFIG, EGL_NO_CONTEXT);
     }
 
     gl::Context *context = glCreateContext(clientVersion, shareContext, mRenderer, notifyResets, robustAccess);
     mContextSet.insert(context);
 
-    return context;
+    return success(context);
 }
 
 bool Display::restoreLostDevice()
