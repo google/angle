@@ -172,6 +172,7 @@ EXPORTS
     glDrawElementsInstancedANGLE    @174
     glProgramBinaryOES              @175
     glGetProgramBinaryOES           @176
+    glDrawBuffersEXT                @179
 
     ; GLES 3.0 Functions
     glReadBuffer                    @180

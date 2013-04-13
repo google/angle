@@ -2583,6 +2583,11 @@ void Context::initExtensionString()
         extensionString += "GL_EXT_texture_format_BGRA8888 ";
     }
 
+    if (mRenderer->getMaxRenderTargets() > 1)
+    {
+        extensionString += "GL_EXT_draw_buffers ";
+    }
+
     extensionString += "GL_EXT_texture_storage ";
 
     // ANGLE-specific extensions
