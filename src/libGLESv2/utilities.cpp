@@ -102,6 +102,29 @@ size_t UniformExternalSize(GLenum type)
     return UniformComponentSize(UniformComponentType(type)) * UniformComponentCount(type);
 }
 
+GLenum UniformBoolVectorType(GLenum type)
+{
+    switch (type)
+    {
+      case GL_FLOAT:
+      case GL_INT:
+        return GL_BOOL;
+      case GL_FLOAT_VEC2:
+      case GL_INT_VEC2:
+        return GL_BOOL_VEC2;
+      case GL_FLOAT_VEC3:
+      case GL_INT_VEC3:
+        return GL_BOOL_VEC3;
+      case GL_FLOAT_VEC4:
+      case GL_INT_VEC4:
+        return GL_BOOL_VEC4;
+
+      default:
+        UNREACHABLE();
+        return GL_NONE;
+    }
+}
+
 int VariableRowCount(GLenum type)
 {
     switch (type)

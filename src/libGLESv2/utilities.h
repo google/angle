@@ -26,6 +26,7 @@ int UniformComponentCount(GLenum type);
 GLenum UniformComponentType(GLenum type);
 size_t UniformInternalSize(GLenum type);
 size_t UniformExternalSize(GLenum type);
+GLenum UniformBoolVectorType(GLenum type);
 int VariableRowCount(GLenum type);
 int VariableColumnCount(GLenum type);
 
