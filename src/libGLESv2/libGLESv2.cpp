@@ -8457,102 +8457,25 @@ GLint __stdcall glGetFragDataLocation(GLuint program, const GLchar *name)
 
 void __stdcall glUniform1ui(GLint location, GLuint v0)
 {
-    EVENT("(GLint location = %d, GLuint v0 = %u)",
-          location, v0);
-
-    try
-    {
-        gl::Context *context = gl::getNonLostContext();
-
-        if (context)
-        {
-            if (context->getClientVersion() < 3)
-            {
-                return gl::error(GL_INVALID_OPERATION);
-            }
-        }
-
-        UNIMPLEMENTED();
-    }
-    catch(std::bad_alloc&)
-    {
-        return gl::error(GL_OUT_OF_MEMORY);
-    }
+    glUniform1uiv(location, 1, &v0);
 }
 
 void __stdcall glUniform2ui(GLint location, GLuint v0, GLuint v1)
 {
-    EVENT("(GLint location = %d, GLuint v0 = %u, GLuint v1 = %u)",
-          location, v0, v1);
-
-    try
-    {
-        gl::Context *context = gl::getNonLostContext();
-
-        if (context)
-        {
-            if (context->getClientVersion() < 3)
-            {
-                return gl::error(GL_INVALID_OPERATION);
-            }
-        }
-
-        UNIMPLEMENTED();
-    }
-    catch(std::bad_alloc&)
-    {
-        return gl::error(GL_OUT_OF_MEMORY);
-    }
+    const GLuint xy[] = { v0, v1 };
+    glUniform2uiv(location, 1, xy);
 }
 
 void __stdcall glUniform3ui(GLint location, GLuint v0, GLuint v1, GLuint v2)
 {
-    EVENT("(GLint location = %d, GLuint v0 = %u, GLuint v1 = %u, GLuint v2 = %u)",
-          location, v0, v1, v2);
-
-    try
-    {
-        gl::Context *context = gl::getNonLostContext();
-
-        if (context)
-        {
-            if (context->getClientVersion() < 3)
-            {
-                return gl::error(GL_INVALID_OPERATION);
-            }
-        }
-
-        UNIMPLEMENTED();
-    }
-    catch(std::bad_alloc&)
-    {
-        return gl::error(GL_OUT_OF_MEMORY);
-    }
+    const GLuint xyz[] = { v0, v1, v2 };
+    glUniform3uiv(location, 1, xyz);
 }
 
 void __stdcall glUniform4ui(GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3)
 {
-    EVENT("(GLint location = %d, GLuint v0 = %u, GLuint v1 = %u, GLuint v2 = %u, GLuint v3 = %u)",
-          location, v0, v1, v2, v3);
-
-    try
-    {
-        gl::Context *context = gl::getNonLostContext();
-
-        if (context)
-        {
-            if (context->getClientVersion() < 3)
-            {
-                return gl::error(GL_INVALID_OPERATION);
-            }
-        }
-
-        UNIMPLEMENTED();
-    }
-    catch(std::bad_alloc&)
-    {
-        return gl::error(GL_OUT_OF_MEMORY);
-    }
+    const GLuint xyzw[] = { v0, v1, v2, v3 };
+    glUniform4uiv(location, 1, xyzw);
 }
 
 void __stdcall glUniform1uiv(GLint location, GLsizei count, const GLuint* value)
