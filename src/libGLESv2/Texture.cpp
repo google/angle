@@ -297,6 +297,12 @@ bool Texture::isImmutable() const
     return mImmutable;
 }
 
+GLint Texture::creationLevels(GLsizei width, GLsizei height, GLsizei depth) const
+{
+    // NPOT checks are not required in ES 3.0, NPOT texture support is assumed.
+    return 0;   // Maximum number of levels
+}
+
 GLint Texture::creationLevels(GLsizei width, GLsizei height) const
 {
     if ((isPow2(width) && isPow2(height)) || mRenderer->getNonPower2TextureSupport())
@@ -545,9 +551,9 @@ void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei 
     }
 }
 
-void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
+void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
 {
-    if (xoffset + width > mImageArray[level]->getWidth() || yoffset + height > mImageArray[level]->getHeight())
+    if (xoffset + width > mImageArray[level]->getWidth() || yoffset + height > mImageArray[level]->getHeight() || zoffset != 0)
     {
         return gl::error(GL_INVALID_VALUE);
     }
@@ -1334,11 +1340,11 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint 
     }
 }
 
-void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
+void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
 {
     GLsizei size = mImageArray[faceIndex(target)][level]->getWidth();
 
-    if (xoffset + width > size || yoffset + height > size)
+    if (xoffset + width > size || yoffset + height > size || zoffset != 0)
     {
         return gl::error(GL_INVALID_VALUE);
     }
@@ -1513,6 +1519,418 @@ rx::TextureStorageInterface *TextureCubeMap::getStorage(bool renderTarget)
     }
 
     return mTexStorage;
+}
+
+Texture3D::Texture3D(rx::Renderer *renderer, GLuint id) : Texture(renderer, id)
+{
+    mTexStorage = NULL;
+    mColorbufferProxy = NULL;
+    mProxyRefs = 0;
+
+    for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++i)
+    {
+        mImageArray[i] = renderer->createImage();
+    }
+}
+
+Texture3D::~Texture3D()
+{
+    mColorbufferProxy = NULL;
+
+    delete mTexStorage;
+    mTexStorage = NULL;
+
+    for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++i)
+    {
+        delete mImageArray[i];
+    }
+}
+
+void Texture3D::addProxyRef(const Renderbuffer *proxy)
+{
+    mProxyRefs++;
+}
+
+void Texture3D::releaseProxy(const Renderbuffer *proxy)
+{
+    if (mProxyRefs > 0)
+        mProxyRefs--;
+
+    if (mProxyRefs == 0)
+        mColorbufferProxy = NULL;
+}
+
+GLenum Texture3D::getTarget() const
+{
+    return GL_TEXTURE_3D;
+}
+
+GLsizei Texture3D::getWidth(GLint level) const
+{
+    return (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS) ? mImageArray[level]->getWidth() : 0;
+}
+
+GLsizei Texture3D::getHeight(GLint level) const
+{
+    return (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS) ? mImageArray[level]->getHeight() : 0;
+}
+
+GLsizei Texture3D::getDepth(GLint level) const
+{
+    return (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS) ? mImageArray[level]->getDepth() : 0;
+}
+
+GLenum Texture3D::getInternalFormat(GLint level) const
+{
+    return (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS) ? mImageArray[level]->getInternalFormat() : GL_NONE;
+}
+
+GLenum Texture3D::getActualFormat(GLint level) const
+{
+    return (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS) ? mImageArray[level]->getActualFormat() : D3DFMT_UNKNOWN;
+}
+
+bool Texture3D::isCompressed(GLint level) const
+{
+    return IsCompressed(getInternalFormat(level));
+}
+
+bool Texture3D::isDepth(GLint level) const
+{
+    return IsDepthTexture(getInternalFormat(level));
+}
+
+void Texture3D::setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
+{
+    GLint internalformat = ConvertSizedInternalFormat(format, type);
+    redefineImage(level, internalformat, width, height, depth);
+
+    Texture::setImage(unpackAlignment, pixels, mImageArray[level]);
+}
+
+void Texture3D::setCompressedImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei depth, GLsizei imageSize, const void *pixels)
+{
+    // compressed formats don't have separate sized internal formats-- we can just use the compressed format directly
+    redefineImage(level, format, width, height, depth);
+
+    Texture::setCompressedImage(imageSize, pixels, mImageArray[level]);
+}
+
+void Texture3D::subImage(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
+{
+    if (Texture::subImage(xoffset, yoffset, zoffset, width, height, depth, format, type, unpackAlignment, pixels, mImageArray[level]))
+    {
+        commitRect(level, xoffset, yoffset, zoffset, width, height, depth);
+    }
+}
+
+void Texture3D::subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *pixels)
+{
+    if (Texture::subImageCompressed(xoffset, yoffset, zoffset, width, height, depth, format, imageSize, pixels, mImageArray[level]))
+    {
+        commitRect(level, xoffset, yoffset, zoffset, width, height, depth);
+    }
+}
+
+void Texture3D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth)
+{
+    delete mTexStorage;
+    mTexStorage = new rx::TextureStorageInterface3D(mRenderer, levels, internalformat, mUsage, width, height, depth);
+    mImmutable = true;
+
+    for (int level = 0; level < levels; level++)
+    {
+        mImageArray[level]->redefine(mRenderer, internalformat, width, height, depth, true);
+        width = std::max(1, width >> 1);
+        height = std::max(1, height >> 1);
+        depth = std::max(1, depth >> 1);
+    }
+
+    for (int level = levels; level < IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
+    {
+        mImageArray[level]->redefine(mRenderer, GL_NONE, 0, 0, 0, true);
+    }
+
+    if (mTexStorage->isManaged())
+    {
+        int levels = levelCount();
+
+        for (int level = 0; level < levels; level++)
+        {
+            mImageArray[level]->setManagedSurface(mTexStorage, level);
+        }
+    }
+}
+
+
+void Texture3D::generateMipmaps()
+{
+    UNIMPLEMENTED();
+}
+
+void Texture3D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
+{
+    if (xoffset + width > mImageArray[level]->getWidth() || yoffset + height > mImageArray[level]->getHeight() || zoffset >= mImageArray[level]->getDepth())
+    {
+        return gl::error(GL_INVALID_VALUE);
+    }
+
+    if (!mImageArray[level]->isRenderableFormat() || (!mTexStorage && !isSamplerComplete()))
+    {
+        mImageArray[level]->copy(xoffset, yoffset, zoffset, x, y, width, height, source);
+        mDirtyImages = true;
+    }
+    else
+    {
+        if (!mTexStorage || !mTexStorage->isRenderTarget())
+        {
+            convertToRenderTarget();
+        }
+
+        updateTexture();
+
+        if (level < levelCount())
+        {
+            gl::Rectangle sourceRect;
+            sourceRect.x = x;
+            sourceRect.width = width;
+            sourceRect.y = y;
+            sourceRect.height = height;
+
+            mRenderer->copyImage(source, sourceRect,
+                                 gl::ExtractFormat(mImageArray[0]->getInternalFormat()),
+                                 xoffset, yoffset, zoffset, mTexStorage, level);
+        }
+    }
+}
+
+bool Texture3D::isSamplerComplete() const
+{
+    GLsizei width = mImageArray[0]->getWidth();
+    GLsizei height = mImageArray[0]->getHeight();
+    GLsizei depth = mImageArray[0]->getDepth();
+
+    if (width <= 0 || height <= 0 || depth <= 0)
+    {
+        return false;
+    }
+
+    bool mipmapping = isMipmapFiltered();
+    bool filtering, renderable;
+
+    if ((IsFloat32Format(getInternalFormat(0)) && !mRenderer->getFloat32TextureSupport(&filtering, &renderable)) ||
+        (IsFloat16Format(getInternalFormat(0)) && !mRenderer->getFloat16TextureSupport(&filtering, &renderable)))
+    {
+        if (mSamplerState.magFilter != GL_NEAREST ||
+            (mSamplerState.minFilter != GL_NEAREST && mSamplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST))
+        {
+            return false;
+        }
+    }
+
+    if (mipmapping && !isMipmapComplete())
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool Texture3D::isMipmapComplete() const
+{
+    if (isImmutable())
+    {
+        return true;
+    }
+
+    GLsizei width = mImageArray[0]->getWidth();
+    GLsizei height = mImageArray[0]->getHeight();
+    GLsizei depth = mImageArray[0]->getDepth();
+
+    if (width <= 0 || height <= 0 || depth <= 0)
+    {
+        return false;
+    }
+
+    int q = log2(std::max(std::max(width, height), depth));
+
+    for (int level = 1; level <= q; level++)
+    {
+        if (mImageArray[level]->getInternalFormat() != mImageArray[0]->getInternalFormat())
+        {
+            return false;
+        }
+
+        if (mImageArray[level]->getWidth() != std::max(1, width >> level))
+        {
+            return false;
+        }
+
+        if (mImageArray[level]->getHeight() != std::max(1, height >> level))
+        {
+            return false;
+        }
+
+        if (mImageArray[level]->getDepth() != std::max(1, depth >> level))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+Renderbuffer *Texture3D::getRenderbuffer(GLenum target)
+{
+    UNIMPLEMENTED();
+    return NULL;
+}
+
+int Texture3D::levelCount()
+{
+    return mTexStorage ? mTexStorage->levelCount() : 0;
+}
+
+void Texture3D::createTexture()
+{
+    GLsizei width = mImageArray[0]->getWidth();
+    GLsizei height = mImageArray[0]->getHeight();
+    GLsizei depth = mImageArray[0]->getDepth();
+
+    if (!(width > 0 && height > 0 && depth > 0))
+        return; // do not attempt to create native textures for nonexistant data
+
+    GLint levels = creationLevels(width, height, depth);
+    GLenum internalformat = mImageArray[0]->getInternalFormat();
+
+    delete mTexStorage;
+    mTexStorage = new rx::TextureStorageInterface3D(mRenderer, levels, internalformat, mUsage, width, height, depth);
+
+    if (mTexStorage->isManaged())
+    {
+        int levels = levelCount();
+
+        for (int level = 0; level < levels; level++)
+        {
+            mImageArray[level]->setManagedSurface(mTexStorage, level);
+        }
+    }
+
+    mDirtyImages = true;
+}
+
+void Texture3D::updateTexture()
+{
+    bool mipmapping = (isMipmapFiltered() && isMipmapComplete());
+
+    int levels = (mipmapping ? levelCount() : 1);
+
+    for (int level = 0; level < levels; level++)
+    {
+        rx::Image *image = mImageArray[level];
+
+        if (image->isDirty())
+        {
+            commitRect(level, 0, 0, 0, mImageArray[level]->getWidth(), mImageArray[level]->getHeight(), mImageArray[level]->getDepth());
+        }
+    }
+}
+
+void Texture3D::convertToRenderTarget()
+{
+    rx::TextureStorageInterface3D *newTexStorage = NULL;
+
+    if (mImageArray[0]->getWidth() != 0 && mImageArray[0]->getHeight() != 0 && mImageArray[0]->getDepth() != 0)
+    {
+        GLsizei width = mImageArray[0]->getWidth();
+        GLsizei height = mImageArray[0]->getHeight();
+        GLsizei depth = mImageArray[0]->getDepth();
+        GLint levels = mTexStorage != NULL ? mTexStorage->levelCount() : creationLevels(width, height, depth);
+        GLenum internalformat = mImageArray[0]->getInternalFormat();
+
+        newTexStorage = new rx::TextureStorageInterface3D(mRenderer, levels, internalformat, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, width, height, depth);
+
+        if (mTexStorage != NULL)
+        {
+            if (!mRenderer->copyToRenderTarget(newTexStorage, mTexStorage))
+            {
+                delete newTexStorage;
+                return gl::error(GL_OUT_OF_MEMORY);
+            }
+        }
+    }
+
+    delete mTexStorage;
+    mTexStorage = newTexStorage;
+
+    mDirtyImages = true;
+}
+
+rx::RenderTarget *Texture3D::getRenderTarget(GLenum target)
+{
+    UNIMPLEMENTED();
+    return NULL;
+}
+
+rx::TextureStorageInterface *Texture3D::getStorage(bool renderTarget)
+{
+    if (!mTexStorage || (renderTarget && !mTexStorage->isRenderTarget()))
+    {
+        if (renderTarget)
+        {
+            convertToRenderTarget();
+        }
+        else
+        {
+            createTexture();
+        }
+    }
+
+    return mTexStorage;
+}
+
+void Texture3D::redefineImage(GLint level, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth)
+{
+    // If there currently is a corresponding storage texture image, it has these parameters
+    const int storageWidth = std::max(1, mImageArray[0]->getWidth() >> level);
+    const int storageHeight = std::max(1, mImageArray[0]->getHeight() >> level);
+    const int storageDepth = std::max(1, mImageArray[0]->getDepth() >> level);
+    const int storageFormat = mImageArray[0]->getInternalFormat();
+
+    mImageArray[level]->redefine(mRenderer, internalformat, width, height, depth, false);
+
+    if (mTexStorage)
+    {
+        const int storageLevels = mTexStorage->levelCount();
+
+        if ((level >= storageLevels && storageLevels != 0) ||
+            width != storageWidth ||
+            height != storageHeight ||
+            depth != storageDepth ||
+            internalformat != storageFormat)   // Discard mismatched storage
+        {
+            for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
+            {
+                mImageArray[i]->markDirty();
+            }
+
+            delete mTexStorage;
+            mTexStorage = NULL;
+            mDirtyImages = true;
+        }
+    }
+}
+
+void Texture3D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth)
+{
+    if (level < levelCount())
+    {
+        rx::Image *image = mImageArray[level];
+        if (image->updateSurface(mTexStorage, level, xoffset, yoffset, zoffset, width, height, depth))
+        {
+            image->markClean();
+        }
+    }
 }
 
 }

@@ -32,6 +32,7 @@ class Renderer;
 class TextureStorageInterface;
 class TextureStorageInterface2D;
 class TextureStorageInterfaceCube;
+class TextureStorageInterface3D;
 class RenderTarget;
 class Image;
 }
@@ -90,7 +91,7 @@ class Texture : public RefCountObject
     virtual Renderbuffer *getRenderbuffer(GLenum target) = 0;
 
     virtual void generateMipmaps() = 0;
-    virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source) = 0;
+    virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source) = 0;
 
     bool hasDirtyParameters() const;
     bool hasDirtyImages() const;
@@ -110,6 +111,7 @@ class Texture : public RefCountObject
     bool subImageCompressed(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                             GLenum format, GLsizei imageSize, const void *pixels, rx::Image *image);
 
+    GLint creationLevels(GLsizei width, GLsizei height, GLsizei depth) const;
     GLint creationLevels(GLsizei width, GLsizei height) const;
     GLint creationLevels(GLsizei size) const;
 
@@ -159,7 +161,7 @@ class Texture2D : public Texture
     void subImage(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels);
     void copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
-    virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
+    virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
     void storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height);
 
     virtual bool isSamplerComplete() const;
@@ -233,7 +235,7 @@ class TextureCubeMap : public Texture
     void subImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void subImageCompressed(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *pixels);
     void copyImage(GLenum target, GLint level, GLenum format, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
-    virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
+    virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
     void storage(GLsizei levels, GLenum internalformat, GLsizei size);
 
     virtual bool isSamplerComplete() const;
@@ -276,6 +278,70 @@ class TextureCubeMap : public Texture
     Renderbuffer *mFaceProxies[6];
     unsigned int *mFaceProxyRefs[6];
 };
+
+class Texture3D : public Texture
+{
+  public:
+    Texture3D(rx::Renderer *renderer, GLuint id);
+
+    ~Texture3D();
+
+    void addProxyRef(const Renderbuffer *proxy);
+    void releaseProxy(const Renderbuffer *proxy);
+
+    virtual GLenum getTarget() const;
+
+    GLsizei getWidth(GLint level) const;
+    GLsizei getHeight(GLint level) const;
+    GLsizei getDepth(GLint level) const;
+    GLenum getInternalFormat(GLint level) const;
+    GLenum getActualFormat(GLint level) const;
+    bool isCompressed(GLint level) const;
+    bool isDepth(GLint level) const;
+
+    void setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
+    void setCompressedImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei depth, GLsizei imageSize, const void *pixels);
+    void subImage(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
+    void subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *pixels);
+    void storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
+
+    virtual void generateMipmaps();
+    virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
+
+    virtual bool isSamplerComplete() const;
+    virtual bool isMipmapComplete() const;
+
+    virtual Renderbuffer *getRenderbuffer(GLenum target);
+
+  protected:
+    virtual int levelCount();
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(Texture3D);
+
+    virtual void createTexture();
+    virtual void updateTexture();
+    virtual void convertToRenderTarget();
+    virtual rx::RenderTarget *getRenderTarget(GLenum target);
+
+    virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
+
+    void redefineImage(GLint level, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth);
+    void commitRect(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth);
+
+    rx::Image *mImageArray[IMPLEMENTATION_MAX_TEXTURE_LEVELS];
+
+    rx::TextureStorageInterface3D *mTexStorage;
+
+    // A specific internal reference count is kept for colorbuffer proxy references,
+    // because, as the renderbuffer acting as proxy will maintain a binding pointer
+    // back to this texture, there would be a circular reference if we used a binding
+    // pointer here. This reference count will cause the pointer to be set to NULL if
+    // the count drops to zero, but will not cause deletion of the Renderbuffer.
+    Renderbuffer *mColorbufferProxy;
+    unsigned int mProxyRefs;
+};
+
 }
 
 #endif   // LIBGLESV2_TEXTURE_H_

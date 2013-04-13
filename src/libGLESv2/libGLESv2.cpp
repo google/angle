@@ -1703,7 +1703,7 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            texture->copySubImage(target, level, xoffset, yoffset, x, y, width, height, framebuffer);
+            texture->copySubImage(target, level, xoffset, yoffset, 0, x, y, width, height, framebuffer);
         }
     }
 
