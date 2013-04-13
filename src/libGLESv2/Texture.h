@@ -69,6 +69,7 @@ class Texture : public RefCountObject
     bool setMagFilter(GLenum filter);
     bool setWrapS(GLenum wrap);
     bool setWrapT(GLenum wrap);
+    bool setWrapR(GLenum wrap);
     bool setMaxAnisotropy(float textureMaxAnisotropy, float contextMaxAnisotropy);
     bool setUsage(GLenum usage);
 
@@ -76,6 +77,7 @@ class Texture : public RefCountObject
     GLenum getMagFilter() const;
     GLenum getWrapS() const;
     GLenum getWrapT() const;
+    GLenum getWrapR() const;
     float getMaxAnisotropy() const;
     int getLodOffset();
     void getSamplerState(SamplerState *sampler);

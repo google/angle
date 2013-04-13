@@ -4029,6 +4029,13 @@ void __stdcall glGetTexParameterfv(GLenum target, GLenum pname, GLfloat* params)
               case GL_TEXTURE_WRAP_T:
                 *params = (GLfloat)texture->getWrapT();
                 break;
+              case GL_TEXTURE_WRAP_R:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                *params = (GLfloat)texture->getWrapR();
+                break;
               case GL_TEXTURE_IMMUTABLE_FORMAT_EXT:
                 *params = (GLfloat)(texture->isImmutable() ? GL_TRUE : GL_FALSE);
                 break;
@@ -4090,6 +4097,13 @@ void __stdcall glGetTexParameteriv(GLenum target, GLenum pname, GLint* params)
                 break;
               case GL_TEXTURE_WRAP_T:
                 *params = texture->getWrapT();
+                break;
+              case GL_TEXTURE_WRAP_R:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                *params = texture->getWrapR();
                 break;
               case GL_TEXTURE_IMMUTABLE_FORMAT_EXT:
                 *params = texture->isImmutable() ? GL_TRUE : GL_FALSE;
@@ -5732,6 +5746,12 @@ void __stdcall glTexParameterf(GLenum target, GLenum pname, GLfloat param)
                     return gl::error(GL_INVALID_ENUM);
                 }
                 break;
+              case GL_TEXTURE_WRAP_R:
+                if (context->getClientVersion() < 3 || !texture->setWrapR((GLenum)param))
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                break;
               case GL_TEXTURE_MIN_FILTER:
                 if (!texture->setMinFilter((GLenum)param))
                 {
@@ -5814,6 +5834,12 @@ void __stdcall glTexParameteri(GLenum target, GLenum pname, GLint param)
                     return gl::error(GL_INVALID_ENUM);
                 }
                 break;
+              case GL_TEXTURE_WRAP_R:
+                  if (context->getClientVersion() < 3 || !texture->setWrapR((GLenum)param))
+                  {
+                      return gl::error(GL_INVALID_ENUM);
+                  }
+                  break;
               case GL_TEXTURE_MIN_FILTER:
                 if (!texture->setMinFilter((GLenum)param))
                 {

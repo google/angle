@@ -378,7 +378,7 @@ ID3D11SamplerState *RenderStateCache::getSamplerState(const gl::SamplerState &sa
         samplerDesc.Filter = gl_d3d11::ConvertFilter(samplerState.minFilter, samplerState.magFilter, samplerState.maxAnisotropy);
         samplerDesc.AddressU = gl_d3d11::ConvertTextureWrap(samplerState.wrapS);
         samplerDesc.AddressV = gl_d3d11::ConvertTextureWrap(samplerState.wrapT);
-        samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+        samplerDesc.AddressW = gl_d3d11::ConvertTextureWrap(samplerState.wrapR);
         samplerDesc.MipLODBias = static_cast<float>(samplerState.lodOffset);
         samplerDesc.MaxAnisotropy = samplerState.maxAnisotropy;
         samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;

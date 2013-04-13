@@ -32,6 +32,7 @@ Texture::Texture(rx::Renderer *renderer, GLuint id) : RefCountObject(id)
     mSamplerState.magFilter = GL_LINEAR;
     mSamplerState.wrapS = GL_REPEAT;
     mSamplerState.wrapT = GL_REPEAT;
+    mSamplerState.wrapR = GL_REPEAT;
     mSamplerState.maxAnisotropy = 1.0f;
     mSamplerState.lodOffset = 0;
     mUsage = GL_NONE;
@@ -107,6 +108,21 @@ bool Texture::setWrapT(GLenum wrap)
     }
 }
 
+// Returns true on successful wrap state update (valid enum parameter)
+bool Texture::setWrapR(GLenum wrap)
+{
+    switch (wrap)
+    {
+      case GL_REPEAT:
+      case GL_CLAMP_TO_EDGE:
+      case GL_MIRRORED_REPEAT:
+        mSamplerState.wrapR = wrap;
+        return true;
+      default:
+        return false;
+    }
+}
+
 // Returns true on successful max anisotropy update (valid anisotropy value)
 bool Texture::setMaxAnisotropy(float textureMaxAnisotropy, float contextMaxAnisotropy)
 {
@@ -153,6 +169,11 @@ GLenum Texture::getWrapS() const
 GLenum Texture::getWrapT() const
 {
     return mSamplerState.wrapT;
+}
+
+GLenum Texture::getWrapR() const
+{
+    return mSamplerState.wrapR;
 }
 
 float Texture::getMaxAnisotropy() const

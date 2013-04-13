@@ -103,6 +103,7 @@ struct SamplerState
     GLenum magFilter;
     GLenum wrapS;
     GLenum wrapT;
+    GLenum wrapR;
     float maxAnisotropy;
     int lodOffset;
 };
