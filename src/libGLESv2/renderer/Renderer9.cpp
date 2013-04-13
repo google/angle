@@ -2251,7 +2251,7 @@ float Renderer9::getTextureMaxAnisotropy() const
 {
     if (mSupportsTextureFilterAnisotropy)
     {
-        return mDeviceCaps.MaxAnisotropy;
+        return static_cast<float>(mDeviceCaps.MaxAnisotropy);
     }
     return 1.0f;
 }
