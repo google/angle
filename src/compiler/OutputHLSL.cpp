@@ -1131,39 +1131,9 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
 
     TString name = node->getSymbol();
 
-    if (name == "gl_FragColor")
-    {
-        out << "gl_Color[0]";
-        mUsesFragColor = true;
-    }
-    else if (name == "gl_FragData")
-    {
-        out << "gl_Color";
-        mUsesFragData = true;
-    }
-    else if (name == "gl_DepthRange")
+    if (name == "gl_DepthRange")
     {
         mUsesDepthRange = true;
-        out << name;
-    }
-    else if (name == "gl_FragCoord")
-    {
-        mUsesFragCoord = true;
-        out << name;
-    }
-    else if (name == "gl_PointCoord")
-    {
-        mUsesPointCoord = true;
-        out << name;
-    }
-    else if (name == "gl_FrontFacing")
-    {
-        mUsesFrontFacing = true;
-        out << name;
-    }
-    else if (name == "gl_PointSize")
-    {
-        mUsesPointSize = true;
         out << name;
     }
     else
@@ -1184,6 +1154,36 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
         {
             mReferencedVaryings[name] = node;
             out << decorate(name);
+        }
+        else if (qualifier == EvqFragColor)
+        {
+            out << "gl_Color[0]";
+            mUsesFragColor = true;
+        }
+        else if (qualifier == EvqFragData)
+        {
+            out << "gl_Color";
+            mUsesFragData = true;
+        }
+        else if (qualifier == EvqFragCoord)
+        {
+            mUsesFragCoord = true;
+            out << name;
+        }
+        else if (qualifier == EvqPointCoord)
+        {
+            mUsesPointCoord = true;
+            out << name;
+        }
+        else if (qualifier == EvqFrontFacing)
+        {
+            mUsesFrontFacing = true;
+            out << name;
+        }
+        else if (qualifier == EvqPointSize)
+        {
+            mUsesPointSize = true;
+            out << name;
         }
         else
         {
