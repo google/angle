@@ -3503,16 +3503,21 @@ bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::R
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
-    ID3D11Texture2D *readTexture = NULL;
+    ID3D11Resource *readTexture = NULL;
     unsigned int readSubresource = 0;
     if (readRenderTarget->getSamples() > 0)
     {
-        ID3D11Texture2D *unresolvedTexture = readRenderTarget11->getTexture();
+        ID3D11Resource *unresolvedResource = readRenderTarget11->getTexture();
+        ID3D11Texture2D *unresolvedTexture = d3d11::DynamicCastComObject<ID3D11Texture2D>(unresolvedResource);
+        unresolvedResource->Release();
 
-        readTexture = resolveMultisampledTexture(unresolvedTexture, readRenderTarget11->getSubresourceIndex());
-        readSubresource = 0;
+        if (unresolvedTexture)
+        {
+            readTexture = resolveMultisampledTexture(unresolvedTexture, readRenderTarget11->getSubresourceIndex());
+            readSubresource = 0;
 
-        unresolvedTexture->Release();
+            unresolvedTexture->Release();
+        }
     }
     else
     {
@@ -3534,7 +3539,7 @@ bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::R
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
-    ID3D11Texture2D *drawTexture = drawRenderTarget11->getTexture();
+    ID3D11Resource *drawTexture = drawRenderTarget11->getTexture();
     unsigned int drawSubresource = drawRenderTarget11->getSubresourceIndex();
 
     D3D11_BOX readBox;

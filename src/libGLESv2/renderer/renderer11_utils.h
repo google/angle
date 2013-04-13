@@ -75,6 +75,25 @@ DXGI_FORMAT GetDepthShaderResourceFormat(DXGI_FORMAT format);
 
 HRESULT SetDebugName(ID3D11DeviceChild *resource, const char *name);
 
+template <typename outType>
+outType* DynamicCastComObject(IUnknown* object)
+{
+    outType *outObject = NULL;
+    HRESULT result = object->QueryInterface(__uuidof(outType), reinterpret_cast<void**>(&outObject));
+    if (SUCCEEDED(result))
+    {
+        return outObject;
+    }
+    else
+    {
+        if (outObject)
+        {
+            outObject->Release();
+        }
+        return NULL;
+    }
+}
+
 inline bool isDeviceLostError(HRESULT errorCode)
 {
     switch (errorCode)
