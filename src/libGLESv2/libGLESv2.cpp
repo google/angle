@@ -7731,9 +7731,53 @@ void __stdcall glBindBufferRange(GLenum target, GLuint index, GLuint buffer, GLi
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            switch (target)
+            {
+              case GL_TRANSFORM_FEEDBACK_BUFFER:
+                if (index > context->getMaxTransformFeedbackBufferBindings())
+                {
+                    return gl::error(GL_INVALID_VALUE);
+                }
+                break;
+
+              case GL_UNIFORM_BUFFER:
+                if (index >= context->getMaximumCombinedUniformBufferBindings())
+                {
+                    return gl::error(GL_INVALID_VALUE);
+                }
+                break;
+
+              default:
+                return gl::error(GL_INVALID_ENUM);
+            }
+
+            gl::Buffer *bufferObject = context->getBuffer(buffer);
+            if (!bufferObject)
+            {
+                // Buffer index must not have been valid
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            if (size <= 0 || static_cast<unsigned int>(offset + size) > bufferObject->size())
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            switch (target)
+            {
+              case GL_TRANSFORM_FEEDBACK_BUFFER:
+                context->bindTransformFeedbackBuffer(buffer, index, offset, size);
+                break;
+
+              case GL_UNIFORM_BUFFER:
+                context->bindUniformBuffer(buffer, index, offset, size);
+                break;
+
+              default:
+                UNREACHABLE();
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -7756,9 +7800,48 @@ void __stdcall glBindBufferBase(GLenum target, GLuint index, GLuint buffer)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            switch (target)
+            {
+              case GL_TRANSFORM_FEEDBACK_BUFFER:
+                if (index > context->getMaxTransformFeedbackBufferBindings())
+                {
+                    return gl::error(GL_INVALID_VALUE);
+                }
+                break;
+
+              case GL_UNIFORM_BUFFER:
+                if (index > context->getMaximumCombinedUniformBufferBindings())
+                {
+                    return gl::error(GL_INVALID_VALUE);
+                }
+                break;
+
+              default:
+                return gl::error(GL_INVALID_ENUM);
+            }
+
+            gl::Buffer *bufferObject = context->getBuffer(buffer);
+            if (!bufferObject)
+            {
+                // Buffer index must not have been valid
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            switch (target)
+            {
+              case GL_TRANSFORM_FEEDBACK_BUFFER:
+                context->bindTransformFeedbackBuffer(buffer, index, 0, -1);
+                break;
+
+              case GL_UNIFORM_BUFFER:
+                context->bindUniformBuffer(buffer, index, 0, -1);
+                break;
+
+              default:
+                UNREACHABLE();
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
