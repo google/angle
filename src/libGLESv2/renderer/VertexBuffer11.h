@@ -60,7 +60,7 @@ class VertexBuffer11 : public VertexBuffer
         unsigned int outputElementSize;
     };
 
-    enum { NUM_GL_VERTEX_ATTRIB_TYPES = 6 };
+    enum { NUM_GL_VERTEX_ATTRIB_TYPES = 7 };
 
     // This table is used to generate mAttributeTypes.
     static const VertexConverter mPossibleTranslations[NUM_GL_VERTEX_ATTRIB_TYPES][2][4]; // [GL types as enumerated by typeIndex()][normalized][size - 1]

@@ -6768,6 +6768,8 @@ void __stdcall glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLbo
             return gl::error(GL_INVALID_VALUE);
         }
 
+        gl::Context *context = gl::getNonLostContext();
+
         switch (type)
         {
           case GL_BYTE:
@@ -6777,6 +6779,17 @@ void __stdcall glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLbo
           case GL_FIXED:
           case GL_FLOAT:
             break;
+
+          case GL_HALF_FLOAT:
+            if (context && context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_ENUM);
+            }
+            else
+            {
+                break;
+            }
+
           default:
             return gl::error(GL_INVALID_ENUM);
         }
@@ -6785,8 +6798,6 @@ void __stdcall glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLbo
         {
             return gl::error(GL_INVALID_VALUE);
         }
-
-        gl::Context *context = gl::getNonLostContext();
 
         if (context)
         {

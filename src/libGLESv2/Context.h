@@ -92,6 +92,7 @@ class VertexAttribute
           case GL_SHORT:          return mSize * sizeof(GLshort);
           case GL_UNSIGNED_SHORT: return mSize * sizeof(GLushort);
           case GL_FIXED:          return mSize * sizeof(GLfixed);
+          case GL_HALF_FLOAT:     return mSize * sizeof(GLhalf);
           case GL_FLOAT:          return mSize * sizeof(GLfloat);
           default: UNREACHABLE(); return mSize * sizeof(GLfloat);
         }

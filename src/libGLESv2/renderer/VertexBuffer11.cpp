@@ -15,6 +15,7 @@
 #include "libGLESv2/Context.h"
 
 #define FLOAT32_ONE_BITS (0x3f800000)
+#define FLOAT16_ONE_BITS (0x3c00)
 
 namespace rx
 {
@@ -386,6 +387,20 @@ const VertexBuffer11::VertexConverter VertexBuffer11::mPossibleTranslations[NUM_
             { &copyFixedVertexData<4>, false, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
         },
     },
+    { // GL_HALF_FLOAT
+        { // unnormalized
+            { &copyVertexData<GLhalf, 1, false, FLOAT16_ONE_BITS>, true, DXGI_FORMAT_R16_FLOAT, 2 },
+            { &copyVertexData<GLhalf, 2, false, FLOAT16_ONE_BITS>, true, DXGI_FORMAT_R16G16_FLOAT, 4 },
+            { &copyVertexData<GLhalf, 3, true, FLOAT16_ONE_BITS>, false, DXGI_FORMAT_R16G16B16A16_FLOAT, 8 },
+            { &copyVertexData<GLhalf, 4, false, FLOAT16_ONE_BITS>, true, DXGI_FORMAT_R16G16B16A16_FLOAT, 8 },
+        },
+        { // normalized
+            { &copyVertexData<GLhalf, 1, false, FLOAT16_ONE_BITS>, true, DXGI_FORMAT_R16_FLOAT, 2 },
+            { &copyVertexData<GLhalf, 2, false, FLOAT16_ONE_BITS>, true, DXGI_FORMAT_R16G16_FLOAT, 4 },
+            { &copyVertexData<GLhalf, 3, true, FLOAT16_ONE_BITS>, false, DXGI_FORMAT_R16G16B16A16_FLOAT, 8 },
+            { &copyVertexData<GLhalf, 4, false, FLOAT16_ONE_BITS>, true, DXGI_FORMAT_R16G16B16A16_FLOAT, 8 },
+        },
+    },
     { // GL_FLOAT
         { // unnormalized
             { &copyVertexData<GLfloat, 1, false, FLOAT32_ONE_BITS>, true, DXGI_FORMAT_R32_FLOAT, 4 },
@@ -412,7 +427,8 @@ const VertexBuffer11::VertexConverter &VertexBuffer11::getVertexConversion(const
       case GL_SHORT:            typeIndex = 2; break;
       case GL_UNSIGNED_SHORT:   typeIndex = 3; break;
       case GL_FIXED:            typeIndex = 4; break;
-      case GL_FLOAT:            typeIndex = 5; break;
+      case GL_HALF_FLOAT:       typeIndex = 5; break;
+      case GL_FLOAT:            typeIndex = 6; break;
       default:                  UNREACHABLE(); break;
     }
 
