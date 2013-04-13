@@ -36,10 +36,9 @@ class TextureStorage11 : public TextureStorage
 
     virtual ID3D11Resource *getBaseTexture() const = 0;
     virtual ID3D11ShaderResourceView *getSRV() = 0;
-    virtual RenderTarget *getRenderTarget() { return getRenderTarget(0); }
     virtual RenderTarget *getRenderTarget(int level) { return NULL; }
-    virtual RenderTarget *getRenderTarget(GLenum faceTarget) { return getRenderTarget(faceTarget, 0); }
     virtual RenderTarget *getRenderTarget(GLenum faceTarget, int level) { return NULL; }
+    virtual RenderTarget *getRenderTargetLayer(int mipLevel, int layer) { return NULL; }
 
     virtual void generateMipmap(int level) {};
     virtual void generateMipmap(int face, int level) {};
@@ -131,11 +130,16 @@ class TextureStorage11_3D : public TextureStorage11
 
     virtual ID3D11Resource *getBaseTexture() const;
     virtual ID3D11ShaderResourceView *getSRV();
+    virtual RenderTarget *getRenderTargetLayer(int mipLevel, int layer);
 
     virtual void generateMipmap(int level);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(TextureStorage11_3D);
+
+    typedef std::pair<int, int> LevelLayerKey;
+    typedef std::map<LevelLayerKey, RenderTarget11*> RenderTargetMap;
+    RenderTargetMap mRenderTargets;
 
     ID3D11Texture3D *mTexture;
 };

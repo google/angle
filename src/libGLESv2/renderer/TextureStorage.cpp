@@ -79,7 +79,7 @@ TextureStorageInterface2D::~TextureStorageInterface2D()
 
 RenderTarget *TextureStorageInterface2D::getRenderTarget() const
 {
-    return mInstance->getRenderTarget();
+    return mInstance->getRenderTarget(0);
 }
 
 void TextureStorageInterface2D::generateMipmap(int level)

@@ -754,6 +754,13 @@ TextureStorage11_3D::~TextureStorage11_3D()
         mSRV->Release();
         mSRV = NULL;
     }
+
+    for (RenderTargetMap::const_iterator i = mRenderTargets.begin(); i != mRenderTargets.end(); i++)
+    {
+        RenderTarget11* renderTarget = i->second;
+        delete renderTarget;
+    }
+    mRenderTargets.clear();
 }
 
 TextureStorage11_3D *TextureStorage11_3D::makeTextureStorage11_3D(TextureStorage *storage)
@@ -789,6 +796,60 @@ ID3D11ShaderResourceView *TextureStorage11_3D::getSRV()
     }
 
     return mSRV;
+}
+
+RenderTarget *TextureStorage11_3D::getRenderTargetLayer(int mipLevel, int layer)
+{
+    if (mipLevel >= 0 && mipLevel < static_cast<int>(mMipLevels))
+    {
+        LevelLayerKey key(mipLevel, layer);
+        if (mRenderTargets.find(key) == mRenderTargets.end())
+        {
+            ID3D11Device *device = mRenderer->getDevice();
+            HRESULT result;
+
+            // TODO, what kind of SRV is expected here?
+            ID3D11ShaderResourceView *srv = NULL;
+
+            if (mRenderTargetFormat != DXGI_FORMAT_UNKNOWN)
+            {
+                D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
+                rtvDesc.Format = mRenderTargetFormat;
+                rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE3D;
+                rtvDesc.Texture3D.MipSlice = mipLevel;
+                rtvDesc.Texture3D.FirstWSlice = layer;
+                rtvDesc.Texture3D.WSize = 1;
+
+                ID3D11RenderTargetView *rtv;
+                result = device->CreateRenderTargetView(mTexture, &rtvDesc, &rtv);
+
+                if (result == E_OUTOFMEMORY)
+                {
+                    srv->Release();
+                    return gl::error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
+                }
+                ASSERT(SUCCEEDED(result));
+
+                // RenderTarget11 expects to be the owner of the resources it is given but TextureStorage11
+                // also needs to keep a reference to the texture.
+                mTexture->AddRef();
+
+                mRenderTargets[key] = new RenderTarget11(mRenderer, rtv, mTexture, srv,
+                                                         std::max(mTextureWidth >> mipLevel, 1U),
+                                                         std::max(mTextureHeight >> mipLevel, 1U));
+            }
+            else
+            {
+                UNREACHABLE();
+            }
+        }
+
+        return mRenderTargets[key];
+    }
+    else
+    {
+        return NULL;
+    }
 }
 
 void TextureStorage11_3D::generateMipmap(int level)

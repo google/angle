@@ -31,8 +31,9 @@ class TextureStorage
     virtual bool isManaged() const = 0;
     virtual int levelCount() = 0;
 
-    virtual RenderTarget *getRenderTarget() = 0;
-    virtual RenderTarget *getRenderTarget(GLenum faceTarget) = 0;
+    virtual RenderTarget *getRenderTarget(int level) = 0;
+    virtual RenderTarget *getRenderTarget(GLenum faceTarget, int level) = 0;
+    virtual RenderTarget *getRenderTargetLayer(int mipLevel, int layer) = 0;
     virtual void generateMipmap(int level) = 0;
     virtual void generateMipmap(int face, int level) = 0;
 
