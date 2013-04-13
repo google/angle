@@ -125,8 +125,8 @@ bool Image11::updateSurface(TextureStorageInterfaceCube *storage, int face, int 
 
 bool Image11::updateSurface(TextureStorageInterface3D *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth)
 {
-    UNIMPLEMENTED();
-    return false;
+    TextureStorage11_3D *storage11 = TextureStorage11_3D::makeTextureStorage11_3D(storage->getStorageInstance());
+    return storage11->updateSubresourceLevel(getStagingTexture(), getStagingSubresource(), level, 0, xoffset, yoffset, zoffset, width, height, depth);
 }
 
 bool Image11::redefine(Renderer *renderer, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease)
@@ -373,7 +373,7 @@ void Image11::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width
     }
 }
 
-ID3D11Texture2D *Image11::getStagingTexture()
+ID3D11Resource *Image11::getStagingTexture()
 {
     createStagingTexture();
 
@@ -394,45 +394,77 @@ void Image11::createStagingTexture()
         return;
     }
 
-    ID3D11Texture2D *newTexture = NULL;
     int lodOffset = 1;
     const DXGI_FORMAT dxgiFormat = getDXGIFormat();
     ASSERT(!d3d11::IsDepthStencilFormat(dxgiFormat)); // We should never get here for depth textures
 
-    if (mWidth != 0 && mHeight != 0)
+    if (mWidth > 0 && mHeight > 0 && mDepth > 0)
     {
+        ID3D11Device *device = mRenderer->getDevice();
+
         GLsizei width = mWidth;
         GLsizei height = mHeight;
 
         // adjust size if needed for compressed textures
         gl::MakeValidSize(false, d3d11::IsCompressed(dxgiFormat), &width, &height, &lodOffset);
-        ID3D11Device *device = mRenderer->getDevice();
 
-        D3D11_TEXTURE2D_DESC desc;
-        desc.Width = width;
-        desc.Height = height;
-        desc.MipLevels = lodOffset + 1;
-        desc.ArraySize = 1;
-        desc.Format = dxgiFormat;
-        desc.SampleDesc.Count = 1;
-        desc.SampleDesc.Quality = 0;
-        desc.Usage = D3D11_USAGE_STAGING;
-        desc.BindFlags = 0;
-        desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-        desc.MiscFlags = 0;
-
-        HRESULT result = device->CreateTexture2D(&desc, NULL, &newTexture);
-
-        if (FAILED(result))
+        if (mDepth > 1)
         {
-            ASSERT(result == E_OUTOFMEMORY);
-            ERR("Creating image failed.");
-            return gl::error(GL_OUT_OF_MEMORY);
+            ID3D11Texture3D *newTexture = NULL;
+
+            D3D11_TEXTURE3D_DESC desc;
+            desc.Width = width;
+            desc.Height = height;
+            desc.Depth = mDepth;
+            desc.MipLevels = lodOffset + 1;
+            desc.Format = dxgiFormat;
+            desc.Usage = D3D11_USAGE_STAGING;
+            desc.BindFlags = 0;
+            desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+            desc.MiscFlags = 0;
+
+            HRESULT result = device->CreateTexture3D(&desc, NULL, &newTexture);
+            if (FAILED(result))
+            {
+                ASSERT(result == E_OUTOFMEMORY);
+                ERR("Creating image failed.");
+                return gl::error(GL_OUT_OF_MEMORY);
+            }
+
+            mStagingTexture = newTexture;
+            mStagingSubresource = D3D11CalcSubresource(lodOffset, 0, lodOffset + 1);
+        }
+        else
+        {
+            ID3D11Texture2D *newTexture = NULL;
+
+            D3D11_TEXTURE2D_DESC desc;
+            desc.Width = width;
+            desc.Height = height;
+            desc.MipLevels = lodOffset + 1;
+            desc.ArraySize = 1;
+            desc.Format = dxgiFormat;
+            desc.SampleDesc.Count = 1;
+            desc.SampleDesc.Quality = 0;
+            desc.Usage = D3D11_USAGE_STAGING;
+            desc.BindFlags = 0;
+            desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+            desc.MiscFlags = 0;
+
+            HRESULT result = device->CreateTexture2D(&desc, NULL, &newTexture);
+
+            if (FAILED(result))
+            {
+                ASSERT(result == E_OUTOFMEMORY);
+                ERR("Creating image failed.");
+                return gl::error(GL_OUT_OF_MEMORY);
+            }
+
+            mStagingTexture = newTexture;
+            mStagingSubresource = D3D11CalcSubresource(lodOffset, 0, lodOffset + 1);
         }
     }
 
-    mStagingTexture = newTexture;
-    mStagingSubresource = D3D11CalcSubresource(lodOffset, 0, lodOffset + 1);
     mDirty = false;
 }
 
