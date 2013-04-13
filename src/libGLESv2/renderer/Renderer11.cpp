@@ -2498,6 +2498,20 @@ bool Renderer11::copyToRenderTarget(TextureStorageInterface3D *dest, TextureStor
     return false;
 }
 
+bool Renderer11::copyToRenderTarget(TextureStorageInterface2DArray *dest, TextureStorageInterface2DArray *source)
+{
+    if (source && dest)
+    {
+        TextureStorage11_2DArray *source11 = TextureStorage11_2DArray::makeTextureStorage11_2DArray(source->getStorageInstance());
+        TextureStorage11_2DArray *dest11 = TextureStorage11_2DArray::makeTextureStorage11_2DArray(dest->getStorageInstance());
+
+        mDeviceContext->CopyResource(dest11->getBaseTexture(), source11->getBaseTexture());
+        return true;
+    }
+
+    return false;
+}
+
 bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                            GLint xoffset, GLint yoffset, TextureStorageInterface2D *storage, GLint level)
 {
@@ -2649,6 +2663,69 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     }
 
     TextureStorage11_3D *storage11 = TextureStorage11_3D::makeTextureStorage11_3D(storage->getStorageInstance());
+    if (!storage11)
+    {
+        source->Release();
+        ERR("Failed to retrieve the texture storage from the destination.");
+        return gl::error(GL_OUT_OF_MEMORY, false);
+    }
+
+    RenderTarget11 *destRenderTarget = RenderTarget11::makeRenderTarget11(storage11->getRenderTargetLayer(level, zOffset));
+    if (!destRenderTarget)
+    {
+        source->Release();
+        ERR("Failed to retrieve the render target from the destination storage.");
+        return gl::error(GL_OUT_OF_MEMORY, false);
+    }
+
+    ID3D11RenderTargetView *dest = destRenderTarget->getRenderTargetView();
+    if (!dest)
+    {
+        source->Release();
+        ERR("Failed to retrieve the render target view from the destination render target.");
+        return gl::error(GL_OUT_OF_MEMORY, false);
+    }
+
+    gl::Rectangle destRect;
+    destRect.x = xoffset;
+    destRect.y = yoffset;
+    destRect.width = sourceRect.width;
+    destRect.height = sourceRect.height;
+
+    bool ret = copyTexture(source, sourceRect, sourceRenderTarget->getWidth(), sourceRenderTarget->getHeight(),
+                           dest, destRect, destRenderTarget->getWidth(), destRenderTarget->getHeight(), destFormat);
+
+    source->Release();
+    dest->Release();
+
+    return ret;
+}
+
+bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
+                           GLint xoffset, GLint yoffset, GLint zOffset, TextureStorageInterface2DArray *storage, GLint level)
+{
+    gl::Renderbuffer *colorbuffer = framebuffer->getReadColorbuffer();
+    if (!colorbuffer)
+    {
+        ERR("Failed to retrieve the color buffer from the frame buffer.");
+        return gl::error(GL_OUT_OF_MEMORY, false);
+    }
+
+    RenderTarget11 *sourceRenderTarget = RenderTarget11::makeRenderTarget11(colorbuffer->getRenderTarget());
+    if (!sourceRenderTarget)
+    {
+        ERR("Failed to retrieve the render target from the frame buffer.");
+        return gl::error(GL_OUT_OF_MEMORY, false);
+    }
+
+    ID3D11ShaderResourceView *source = sourceRenderTarget->getShaderResourceView();
+    if (!source)
+    {
+        ERR("Failed to retrieve the render target view from the render target.");
+        return gl::error(GL_OUT_OF_MEMORY, false);
+    }
+
+    TextureStorage11_2DArray *storage11 = TextureStorage11_2DArray::makeTextureStorage11_2DArray(storage->getStorageInstance());
     if (!storage11)
     {
         source->Release();
@@ -3177,6 +3254,11 @@ TextureStorage *Renderer11::createTextureStorageCube(int levels, GLenum internal
 TextureStorage *Renderer11::createTextureStorage3D(int levels, GLenum internalformat, GLenum usage, GLsizei width, GLsizei height, GLsizei depth)
 {
     return new TextureStorage11_3D(this, levels, internalformat, usage, width, height, depth);
+}
+
+TextureStorage *Renderer11::createTextureStorage2DArray(int levels, GLenum internalformat, GLenum usage, GLsizei width, GLsizei height, GLsizei depth)
+{
+    return new TextureStorage11_2DArray(this, levels, internalformat, usage, width, height, depth);
 }
 
 static inline unsigned int getFastPixelCopySize(DXGI_FORMAT sourceFormat, GLenum destFormat, GLenum destType)

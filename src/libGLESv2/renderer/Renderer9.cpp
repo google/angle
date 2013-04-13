@@ -2548,6 +2548,13 @@ bool Renderer9::copyToRenderTarget(TextureStorageInterface3D *dest, TextureStora
     return false;
 }
 
+bool Renderer9::copyToRenderTarget(TextureStorageInterface2DArray *dest, TextureStorageInterface2DArray *source)
+{
+    // 2D array textures are not supported by the D3D9 backend.
+    UNREACHABLE();
+    return false;
+}
+
 D3DPOOL Renderer9::getBufferPool(DWORD usage) const
 {
     if (mD3d9Ex != NULL)
@@ -2593,6 +2600,14 @@ bool Renderer9::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sou
                           GLint xoffset, GLint yoffset, GLint zOffset, TextureStorageInterface3D *storage, GLint level)
 {
     // 3D textures are not available in the D3D9 backend.
+    UNREACHABLE();
+    return false;
+}
+
+bool Renderer9::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
+                          GLint xoffset, GLint yoffset, GLint zOffset, TextureStorageInterface2DArray *storage, GLint level)
+{
+    // 2D array textures are not available in the D3D9 backend.
     UNREACHABLE();
     return false;
 }
@@ -3231,6 +3246,14 @@ TextureStorage *Renderer9::createTextureStorageCube(int levels, GLenum internalf
 TextureStorage *Renderer9::createTextureStorage3D(int levels, GLenum internalformat, GLenum usage, GLsizei width, GLsizei height, GLsizei depth)
 {
     // 3D textures are not supported by the D3D9 backend.
+    UNREACHABLE();
+
+    return NULL;
+}
+
+TextureStorage *Renderer9::createTextureStorage2DArray(int levels, GLenum internalformat, GLenum usage, GLsizei width, GLsizei height, GLsizei depth)
+{
+    // 2D array textures are not supported by the D3D9 backend.
     UNREACHABLE();
 
     return NULL;

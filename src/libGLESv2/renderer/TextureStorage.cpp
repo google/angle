@@ -138,4 +138,24 @@ unsigned int TextureStorageInterface3D::getRenderTargetSerial(GLenum target) con
     return 0;
 }
 
+TextureStorageInterface2DArray::TextureStorageInterface2DArray(Renderer *renderer, int levels, GLenum internalformat, GLenum usage,
+                                                               GLsizei width, GLsizei height, GLsizei depth)
+{
+    mInstance = renderer->createTextureStorage2DArray(levels, internalformat, usage, width, height, depth);
+}
+
+TextureStorageInterface2DArray::~TextureStorageInterface2DArray()
+{
+}
+
+void TextureStorageInterface2DArray::generateMipmap(int level)
+{
+    mInstance->generateMipmap(level);
+}
+
+unsigned int TextureStorageInterface2DArray::getRenderTargetSerial(GLenum target) const
+{
+    return 0;
+}
+
 }

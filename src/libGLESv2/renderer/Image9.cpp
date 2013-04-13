@@ -317,6 +317,13 @@ bool Image9::updateSurface(TextureStorageInterface3D *storage, int level, GLint 
     return false;
 }
 
+bool Image9::updateSurface(TextureStorageInterface2DArray *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height)
+{
+    // 2D array textures are not supported by the D3D9 backend.
+    UNREACHABLE();
+    return false;
+}
+
 bool Image9::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
     if (!destSurface)

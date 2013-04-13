@@ -116,18 +116,18 @@ int TextureStorage11::levelCount()
     return levels;
 }
 
-UINT TextureStorage11::getSubresourceIndex(int level, int faceIndex)
+UINT TextureStorage11::getSubresourceIndex(int mipLevel, int layerTarget)
 {
     UINT index = 0;
     if (getBaseTexture())
     {
-        index = D3D11CalcSubresource(level, faceIndex, mMipLevels);
+        index = D3D11CalcSubresource(mipLevel, layerTarget, mMipLevels);
     }
     return index;
 }
 
 bool TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture, unsigned int sourceSubresource,
-                                              int level, int face, GLint xoffset, GLint yoffset, GLint zoffset,
+                                              int level, int layerTarget, GLint xoffset, GLint yoffset, GLint zoffset,
                                               GLsizei width, GLsizei height, GLsizei depth)
 {
     if (srcTexture)
@@ -148,7 +148,7 @@ bool TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture, unsign
         ID3D11DeviceContext *context = mRenderer->getDeviceContext();
 
         ASSERT(getBaseTexture());
-        context->CopySubresourceRegion(getBaseTexture(), getSubresourceIndex(level + mLodOffset, face),
+        context->CopySubresourceRegion(getBaseTexture(), getSubresourceIndex(level + mLodOffset, layerTarget),
                                        xoffset, yoffset, zoffset, srcTexture, sourceSubresource, &srcBox);
         return true;
     }

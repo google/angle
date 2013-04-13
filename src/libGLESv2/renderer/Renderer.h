@@ -46,6 +46,7 @@ namespace rx
 class TextureStorageInterface2D;
 class TextureStorageInterfaceCube;
 class TextureStorageInterface3D;
+class TextureStorageInterface2DArray;
 class VertexBuffer;
 class IndexBuffer;
 class QueryImpl;
@@ -193,6 +194,7 @@ class Renderer
     virtual bool copyToRenderTarget(TextureStorageInterface2D *dest, TextureStorageInterface2D *source) = 0;
     virtual bool copyToRenderTarget(TextureStorageInterfaceCube *dest, TextureStorageInterfaceCube *source) = 0;
     virtual bool copyToRenderTarget(TextureStorageInterface3D *dest, TextureStorageInterface3D *source) = 0;
+    virtual bool copyToRenderTarget(TextureStorageInterface2DArray *dest, TextureStorageInterface2DArray *source) = 0;
 
     virtual bool copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                            GLint xoffset, GLint yoffset, TextureStorageInterface2D *storage, GLint level) = 0;
@@ -200,6 +202,8 @@ class Renderer
                            GLint xoffset, GLint yoffset, TextureStorageInterfaceCube *storage, GLenum target, GLint level) = 0;
     virtual bool copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                            GLint xoffset, GLint yoffset, GLint zOffset, TextureStorageInterface3D *storage, GLint level) = 0;
+    virtual bool copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
+                           GLint xoffset, GLint yoffset, GLint zOffset, TextureStorageInterface2DArray *storage, GLint level) = 0;
 
     virtual bool blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &readRect, gl::Framebuffer *drawTarget, const gl::Rectangle &drawRect,
                           bool blitRenderTarget, bool blitDepthStencil) = 0;
@@ -221,6 +225,7 @@ class Renderer
     virtual TextureStorage *createTextureStorage2D(int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height) = 0;
     virtual TextureStorage *createTextureStorageCube(int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size) = 0;
     virtual TextureStorage *createTextureStorage3D(int levels, GLenum internalformat, GLenum usage, GLsizei width, GLsizei height, GLsizei depth) = 0;
+    virtual TextureStorage *createTextureStorage2DArray(int levels, GLenum internalformat, GLenum usage, GLsizei width, GLsizei height, GLsizei depth) = 0;
 
     // Buffer creation
     virtual VertexBuffer *createVertexBuffer() = 0;

@@ -120,6 +120,21 @@ class TextureStorageInterface3D : public TextureStorageInterface
     DISALLOW_COPY_AND_ASSIGN(TextureStorageInterface3D);
 };
 
+class TextureStorageInterface2DArray : public TextureStorageInterface
+{
+  public:
+    TextureStorageInterface2DArray(Renderer *renderer, int levels, GLenum internalformat, GLenum usage,
+                              GLsizei width, GLsizei height, GLsizei depth);
+    virtual ~TextureStorageInterface2DArray();
+
+    void generateMipmap(int level);
+
+    virtual unsigned int getRenderTargetSerial(GLenum target) const;
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(TextureStorageInterface2DArray);
+};
+
 }
 
 #endif // LIBGLESV2_RENDERER_TEXTURESTORAGE_H_

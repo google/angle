@@ -47,10 +47,10 @@ class TextureStorage11 : public TextureStorage
     virtual bool isRenderTarget() const;
     virtual bool isManaged() const;
     virtual int levelCount();
-    UINT getSubresourceIndex(int level, int faceTarget);
+    UINT getSubresourceIndex(int mipLevel, int layerTarget);
 
     bool updateSubresourceLevel(ID3D11Resource *texture, unsigned int sourceSubresource, int level,
-                                int faceTarget, GLint xoffset, GLint yoffset, GLint zoffset,
+                                int layerTarget, GLint xoffset, GLint yoffset, GLint zoffset,
                                 GLsizei width, GLsizei height, GLsizei depth);
 
   protected:
