@@ -18,6 +18,7 @@
 #include <assert.h>
 #include <cstddef>
 #include <float.h>
+#include <stdint.h>
 #include <intrin.h>
 #include <math.h>
 #include <stdarg.h>

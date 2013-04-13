@@ -14,6 +14,8 @@
 #include "libGLESv2/renderer/Renderer11.h"
 #include "libGLESv2/Context.h"
 
+#define FLOAT32_ONE_BITS (0x3f800000)
+
 namespace rx
 {
 
@@ -229,10 +231,13 @@ ID3D11Buffer *VertexBuffer11::getBuffer() const
     return mBuffer;
 }
 
-template <typename T, unsigned int componentCount, bool widen, bool normalized>
+template <typename T, unsigned int componentCount, bool widen, unsigned int defaultValueBits>
 static void copyVertexData(const void *input, unsigned int stride, unsigned int count, void *output)
 {
-    unsigned int attribSize = sizeof(T) * componentCount;
+    const unsigned int attribSize = sizeof(T) * componentCount;
+
+    const unsigned int defaultBits = defaultValueBits;
+    const T defaultValue = *reinterpret_cast<const T*>(&defaultBits);
 
     if (attribSize == stride && !widen)
     {
@@ -241,7 +246,6 @@ static void copyVertexData(const void *input, unsigned int stride, unsigned int 
     else
     {
         unsigned int outputStride = widen ? 4 : componentCount;
-        T defaultVal = normalized ? std::numeric_limits<T>::max() : T(1);
 
         for (unsigned int i = 0; i < count; i++)
         {
@@ -255,7 +259,7 @@ static void copyVertexData(const void *input, unsigned int stride, unsigned int 
 
             if (widen)
             {
-                offsetOutput[3] = defaultVal;
+                offsetOutput[3] = defaultValue;
             }
         }
     }
@@ -320,10 +324,10 @@ const VertexBuffer11::VertexConverter VertexBuffer11::mPossibleTranslations[NUM_
             { &copyToFloatVertexData<GLbyte, 4, false>, false, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
         },
         { // normalized
-            { &copyVertexData<GLbyte, 1, false, true>, true, DXGI_FORMAT_R8_SNORM, 1 },
-            { &copyVertexData<GLbyte, 2, false, true>, true, DXGI_FORMAT_R8G8_SNORM, 2 },
-            { &copyVertexData<GLbyte, 3, true, true>, false, DXGI_FORMAT_R8G8B8A8_SNORM, 4 },
-            { &copyVertexData<GLbyte, 4, false, true>, true, DXGI_FORMAT_R8G8B8A8_SNORM, 4 },
+            { &copyVertexData<GLbyte, 1, false, INT8_MAX>, true, DXGI_FORMAT_R8_SNORM, 1 },
+            { &copyVertexData<GLbyte, 2, false, INT8_MAX>, true, DXGI_FORMAT_R8G8_SNORM, 2 },
+            { &copyVertexData<GLbyte, 3, true, INT8_MAX>, false, DXGI_FORMAT_R8G8B8A8_SNORM, 4 },
+            { &copyVertexData<GLbyte, 4, false, INT8_MAX>, true, DXGI_FORMAT_R8G8B8A8_SNORM, 4 },
         },
     },
     { // GL_UNSIGNED_BYTE
@@ -334,10 +338,10 @@ const VertexBuffer11::VertexConverter VertexBuffer11::mPossibleTranslations[NUM_
             { &copyToFloatVertexData<GLubyte, 4, false>, false, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
         },
         { // normalized
-            { &copyVertexData<GLubyte, 1, false, true>, true, DXGI_FORMAT_R8_UNORM, 1 },
-            { &copyVertexData<GLubyte, 2, false, true>, true, DXGI_FORMAT_R8G8_UNORM, 2 },
-            { &copyVertexData<GLubyte, 3, true, true>, false, DXGI_FORMAT_R8G8B8A8_UNORM, 4 },
-            { &copyVertexData<GLubyte, 4, false, true>, true, DXGI_FORMAT_R8G8B8A8_UNORM, 4 },
+            { &copyVertexData<GLubyte, 1, false, UINT8_MAX>, true, DXGI_FORMAT_R8_UNORM, 1 },
+            { &copyVertexData<GLubyte, 2, false, UINT8_MAX>, true, DXGI_FORMAT_R8G8_UNORM, 2 },
+            { &copyVertexData<GLubyte, 3, true, UINT8_MAX>, false, DXGI_FORMAT_R8G8B8A8_UNORM, 4 },
+            { &copyVertexData<GLubyte, 4, false, UINT8_MAX>, true, DXGI_FORMAT_R8G8B8A8_UNORM, 4 },
         },
     },
     { // GL_SHORT
@@ -348,10 +352,10 @@ const VertexBuffer11::VertexConverter VertexBuffer11::mPossibleTranslations[NUM_
             { &copyToFloatVertexData<GLshort, 4, false>, false, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
         },
         { // normalized
-            { &copyVertexData<GLshort, 1, false, true>, true, DXGI_FORMAT_R16_SNORM, 2 },
-            { &copyVertexData<GLshort, 2, false, true>, true, DXGI_FORMAT_R16G16_SNORM, 4 },
-            { &copyVertexData<GLshort, 3, true, true>, false, DXGI_FORMAT_R16G16B16A16_SNORM, 8 },
-            { &copyVertexData<GLshort, 4, false, true>, true, DXGI_FORMAT_R16G16B16A16_SNORM, 8 },
+            { &copyVertexData<GLshort, 1, false, INT16_MAX>, true, DXGI_FORMAT_R16_SNORM, 2 },
+            { &copyVertexData<GLshort, 2, false, INT16_MAX>, true, DXGI_FORMAT_R16G16_SNORM, 4 },
+            { &copyVertexData<GLshort, 3, true, INT16_MAX>, false, DXGI_FORMAT_R16G16B16A16_SNORM, 8 },
+            { &copyVertexData<GLshort, 4, false, INT16_MAX>, true, DXGI_FORMAT_R16G16B16A16_SNORM, 8 },
         },
     },
     { // GL_UNSIGNED_SHORT
@@ -362,10 +366,10 @@ const VertexBuffer11::VertexConverter VertexBuffer11::mPossibleTranslations[NUM_
             { &copyToFloatVertexData<GLushort, 4, false>, false, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
         },
         { // normalized
-            { &copyVertexData<GLushort, 1, false, true>, true, DXGI_FORMAT_R16_UNORM, 2 },
-            { &copyVertexData<GLushort, 2, false, true>, true, DXGI_FORMAT_R16G16_UNORM, 4 },
-            { &copyVertexData<GLushort, 3, true, true>, false, DXGI_FORMAT_R16G16B16A16_UNORM, 8 },
-            { &copyVertexData<GLushort, 4, false, true>, true, DXGI_FORMAT_R16G16B16A16_UNORM, 8 },
+            { &copyVertexData<GLushort, 1, false, UINT16_MAX>, true, DXGI_FORMAT_R16_UNORM, 2 },
+            { &copyVertexData<GLushort, 2, false, UINT16_MAX>, true, DXGI_FORMAT_R16G16_UNORM, 4 },
+            { &copyVertexData<GLushort, 3, true, UINT16_MAX>, false, DXGI_FORMAT_R16G16B16A16_UNORM, 8 },
+            { &copyVertexData<GLushort, 4, false, UINT16_MAX>, true, DXGI_FORMAT_R16G16B16A16_UNORM, 8 },
         },
     },
     { // GL_FIXED
@@ -384,16 +388,16 @@ const VertexBuffer11::VertexConverter VertexBuffer11::mPossibleTranslations[NUM_
     },
     { // GL_FLOAT
         { // unnormalized
-            { &copyVertexData<GLfloat, 1, false, false>, true, DXGI_FORMAT_R32_FLOAT, 4 },
-            { &copyVertexData<GLfloat, 2, false, false>, true, DXGI_FORMAT_R32G32_FLOAT, 8 },
-            { &copyVertexData<GLfloat, 3, false, false>, true, DXGI_FORMAT_R32G32B32_FLOAT, 12 },
-            { &copyVertexData<GLfloat, 4, false, false>, true, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
+            { &copyVertexData<GLfloat, 1, false, FLOAT32_ONE_BITS>, true, DXGI_FORMAT_R32_FLOAT, 4 },
+            { &copyVertexData<GLfloat, 2, false, FLOAT32_ONE_BITS>, true, DXGI_FORMAT_R32G32_FLOAT, 8 },
+            { &copyVertexData<GLfloat, 3, false, FLOAT32_ONE_BITS>, true, DXGI_FORMAT_R32G32B32_FLOAT, 12 },
+            { &copyVertexData<GLfloat, 4, false, FLOAT32_ONE_BITS>, true, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
         },
         { // normalized
-            { &copyVertexData<GLfloat, 1, false, false>, true, DXGI_FORMAT_R32_FLOAT, 4 },
-            { &copyVertexData<GLfloat, 2, false, false>, true, DXGI_FORMAT_R32G32_FLOAT, 8 },
-            { &copyVertexData<GLfloat, 3, false, false>, true, DXGI_FORMAT_R32G32B32_FLOAT, 12 },
-            { &copyVertexData<GLfloat, 4, false, false>, true, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
+            { &copyVertexData<GLfloat, 1, false, FLOAT32_ONE_BITS>, true, DXGI_FORMAT_R32_FLOAT, 4 },
+            { &copyVertexData<GLfloat, 2, false, FLOAT32_ONE_BITS>, true, DXGI_FORMAT_R32G32_FLOAT, 8 },
+            { &copyVertexData<GLfloat, 3, false, FLOAT32_ONE_BITS>, true, DXGI_FORMAT_R32G32B32_FLOAT, 12 },
+            { &copyVertexData<GLfloat, 4, false, FLOAT32_ONE_BITS>, true, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
         },
     },
 };
