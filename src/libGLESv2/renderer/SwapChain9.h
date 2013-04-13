@@ -26,6 +26,7 @@ class SwapChain9 : public SwapChain
     EGLint resize(EGLint backbufferWidth, EGLint backbufferHeight);
     virtual EGLint reset(EGLint backbufferWidth, EGLint backbufferHeight, EGLint swapInterval);
     virtual EGLint swapRect(EGLint x, EGLint y, EGLint width, EGLint height);
+    virtual void recreate();
 
     virtual IDirect3DSurface9 *getRenderTarget();
     virtual IDirect3DSurface9 *getDepthStencil();
