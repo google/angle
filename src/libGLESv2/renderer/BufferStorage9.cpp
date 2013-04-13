@@ -57,6 +57,19 @@ void BufferStorage9::setData(const void* data, unsigned int size, unsigned int o
     memcpy(reinterpret_cast<char*>(mMemory) + offset, data, size);
 }
 
+void BufferStorage9::copyData(BufferStorage* sourceStorage, unsigned int size,
+                              unsigned int sourceOffset, unsigned int destOffset)
+{
+    BufferStorage9* source = makeBufferStorage9(sourceStorage);
+    if (source)
+    {
+        void* sourceMemory = reinterpret_cast<char*>(source->mMemory) + sourceOffset;
+        void* destMemory = reinterpret_cast<char*>(mMemory) + destOffset;
+
+        memcpy(destMemory, sourceMemory, size);
+    }
+}
+
 void BufferStorage9::clear()
 {
     mSize = 0;

@@ -295,6 +295,26 @@ void BufferStorage11::setData(const void* data, unsigned int size, unsigned int 
     mResolvedDataValid = false;
 }
 
+void BufferStorage11::copyData(BufferStorage* sourceStorage, unsigned int size,
+                               unsigned int sourceOffset, unsigned int destOffset)
+{
+    BufferStorage11* source = makeBufferStorage11(sourceStorage);
+    if (source)
+    {
+        ID3D11DeviceContext *context = mRenderer->getDeviceContext();
+
+        D3D11_BOX srcBox;
+        srcBox.left = sourceOffset;
+        srcBox.right = sourceOffset + size;
+        srcBox.top = 0;
+        srcBox.bottom = 1;
+        srcBox.front = 0;
+        srcBox.back = 1;
+
+        context->CopySubresourceRegion(mBuffer, 0, destOffset, 0, 0, source->mBuffer, 0, &srcBox);
+    }
+}
+
 void BufferStorage11::clear()
 {
     mResolvedDataValid = false;
