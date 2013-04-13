@@ -42,13 +42,15 @@ static const char* makeStaticString(const std::string& str)
     return strings.insert(str).first->c_str();
 }
 
-Context::Context(const gl::Context *shareContext, rx::Renderer *renderer, bool notifyResets, bool robustAccess) : mRenderer(renderer)
+Context::Context(int clientVersion, const gl::Context *shareContext, rx::Renderer *renderer, bool notifyResets, bool robustAccess) : mRenderer(renderer)
 {
     ASSERT(robustAccess == false);   // Unimplemented
 
     mFenceHandleAllocator.setBaseHandle(0);
 
     setClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+    mClientVersion = clientVersion;
 
     mState.depthClearValue = 1.0f;
     mState.stencilClearValue = 0;
@@ -2123,6 +2125,11 @@ bool Context::isResetNotificationEnabled()
     return (mResetStrategy == GL_LOSE_CONTEXT_ON_RESET_EXT);
 }
 
+int Context::getClientVersion() const
+{
+    return mClientVersion;
+}
+
 int Context::getMajorShaderModel() const
 {
     return mMajorShaderModel;
@@ -2884,9 +2891,9 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
 
 extern "C"
 {
-gl::Context *glCreateContext(const gl::Context *shareContext, rx::Renderer *renderer, bool notifyResets, bool robustAccess)
+gl::Context *glCreateContext(int clientVersion, const gl::Context *shareContext, rx::Renderer *renderer, bool notifyResets, bool robustAccess)
 {
-    return new gl::Context(shareContext, renderer, notifyResets, robustAccess);
+    return new gl::Context(clientVersion, shareContext, renderer, notifyResets, robustAccess);
 }
 
 void glDestroyContext(gl::Context *context)

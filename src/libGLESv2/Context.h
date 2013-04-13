@@ -169,7 +169,7 @@ struct State
 class Context
 {
   public:
-    Context(const gl::Context *shareContext, rx::Renderer *renderer, bool notifyResets, bool robustAccess);
+    Context(int clientVersion, const gl::Context *shareContext, rx::Renderer *renderer, bool notifyResets, bool robustAccess);
 
     ~Context();
 
@@ -359,6 +359,8 @@ class Context
     GLenum getResetStatus();
     virtual bool isResetNotificationEnabled();
 
+    virtual int getClientVersion() const;
+
     int getMajorShaderModel() const;
     float getMaximumPointSize() const;
     unsigned int getMaximumCombinedTextureImageUnits() const;
@@ -420,6 +422,8 @@ class Context
     void initRendererString();
 
     rx::Renderer *const mRenderer;
+
+    int mClientVersion;
 
     State mState;
 

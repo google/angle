@@ -373,7 +373,7 @@ EGLSurface Display::createOffscreenSurface(EGLConfig config, HANDLE shareHandle,
     return success(surface);
 }
 
-EGLContext Display::createContext(EGLConfig configHandle, const gl::Context *shareContext, bool notifyResets, bool robustAccess)
+EGLContext Display::createContext(EGLConfig configHandle, EGLint clientVersion, const gl::Context *shareContext, bool notifyResets, bool robustAccess)
 {
     if (!mRenderer)
     {
@@ -385,7 +385,7 @@ EGLContext Display::createContext(EGLConfig configHandle, const gl::Context *sha
             return NULL;
     }
 
-    gl::Context *context = glCreateContext(shareContext, mRenderer, notifyResets, robustAccess);
+    gl::Context *context = glCreateContext(clientVersion, shareContext, mRenderer, notifyResets, robustAccess);
     mContextSet.insert(context);
 
     return context;

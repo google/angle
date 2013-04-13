@@ -814,14 +814,22 @@ EGLContext __stdcall eglCreateContext(EGLDisplay dpy, EGLConfig config, EGLConte
             }
         }
 
-        if (client_version != 2)
+        if (client_version != 2 && client_version != 3)
         {
             return egl::error(EGL_BAD_CONFIG, EGL_NO_CONTEXT);
         }
 
-        if (share_context && static_cast<gl::Context*>(share_context)->isResetNotificationEnabled() != reset_notification)
+        if (share_context)
         {
-            return egl::error(EGL_BAD_MATCH, EGL_NO_CONTEXT);
+            gl::Context* glContext = static_cast<gl::Context*>(share_context);
+            if (glContext->isResetNotificationEnabled() != reset_notification)
+            {
+                return egl::error(EGL_BAD_MATCH, EGL_NO_CONTEXT);
+            }
+            if (glContext->getClientVersion() != client_version)
+            {
+                return egl::error(EGL_BAD_CONTEXT, EGL_NO_CONTEXT);
+            }
         }
 
         egl::Display *display = static_cast<egl::Display*>(dpy);
@@ -831,7 +839,7 @@ EGLContext __stdcall eglCreateContext(EGLDisplay dpy, EGLConfig config, EGLConte
             return EGL_NO_CONTEXT;
         }
 
-        EGLContext context = display->createContext(config, static_cast<gl::Context*>(share_context), reset_notification, robust_access);
+        EGLContext context = display->createContext(config, client_version, static_cast<gl::Context*>(share_context), reset_notification, robust_access);
 
         if (context)
             return egl::success(context);
