@@ -551,6 +551,26 @@ bool ProgramBinary::setUniform4iv(GLint location, GLsizei count, const GLint *v)
     return setUniform(location, count, v, GL_INT_VEC4);
 }
 
+bool ProgramBinary::setUniform1uiv(GLint location, GLsizei count, const GLuint *v)
+{
+    return setUniform(location, count, v, GL_UNSIGNED_INT);
+}
+
+bool ProgramBinary::setUniform2uiv(GLint location, GLsizei count, const GLuint *v)
+{
+    return setUniform(location, count, v, GL_UNSIGNED_INT_VEC2);
+}
+
+bool ProgramBinary::setUniform3uiv(GLint location, GLsizei count, const GLuint *v)
+{
+    return setUniform(location, count, v, GL_UNSIGNED_INT_VEC3);
+}
+
+bool ProgramBinary::setUniform4uiv(GLint location, GLsizei count, const GLuint *v)
+{
+    return setUniform(location, count, v, GL_UNSIGNED_INT_VEC4);
+}
+
 bool ProgramBinary::getUniformfv(GLint location, GLsizei *bufSize, GLfloat *params)
 {
     if (location < 0 || location >= (int)mUniformIndex.size())

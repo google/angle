@@ -8493,9 +8493,18 @@ void __stdcall glUniform1uiv(GLint location, GLsizei count, const GLuint* value)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            gl::ProgramBinary *programBinary = context->getCurrentProgramBinary();
+            if (!programBinary)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            if (!programBinary->setUniform1uiv(location, count, value))
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8518,9 +8527,18 @@ void __stdcall glUniform2uiv(GLint location, GLsizei count, const GLuint* value)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            gl::ProgramBinary *programBinary = context->getCurrentProgramBinary();
+            if (!programBinary)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            if (!programBinary->setUniform2uiv(location, count, value))
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8543,9 +8561,18 @@ void __stdcall glUniform3uiv(GLint location, GLsizei count, const GLuint* value)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            gl::ProgramBinary *programBinary = context->getCurrentProgramBinary();
+            if (!programBinary)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            if (!programBinary->setUniform3uiv(location, count, value))
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8568,9 +8595,18 @@ void __stdcall glUniform4uiv(GLint location, GLsizei count, const GLuint* value)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            gl::ProgramBinary *programBinary = context->getCurrentProgramBinary();
+            if (!programBinary)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            if (!programBinary->setUniform4uiv(location, count, value))
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
