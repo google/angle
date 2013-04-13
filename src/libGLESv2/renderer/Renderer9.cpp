@@ -569,6 +569,7 @@ int Renderer9::generateConfigs(ConfigDesc **configDescList)
                         newConfig.depthStencilFormat = d3d9_gl::ConvertDepthStencilFormat(depthStencilFormat);
                         newConfig.multiSample = 0; // FIXME: enumerate multi-sampling
                         newConfig.fastConfig = (currentDisplayMode.Format == renderTargetFormat);
+                        newConfig.es3Capable = false;
 
                         (*configDescList)[numConfigs++] = newConfig;
                     }

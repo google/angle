@@ -67,6 +67,7 @@ struct ConfigDesc
     GLenum  depthStencilFormat;
     GLint   multiSample;
     bool    fastConfig;
+    bool    es3Capable;
 };
 
 struct dx_VertexConstants

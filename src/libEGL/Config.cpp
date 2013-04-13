@@ -17,6 +17,7 @@
 #include <GLES3/gl3ext.h>
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
+#include <EGL/eglext.h>
 
 #include "common/debug.h"
 
@@ -124,6 +125,12 @@ Config::Config(rx::ConfigDesc desc, EGLint minInterval, EGLint maxInterval, EGLi
     mTransparentRedValue = 0;
     mTransparentGreenValue = 0;
     mTransparentBlueValue = 0;
+
+    if (desc.es3Capable)
+    {
+        mRenderableType |= EGL_OPENGL_ES3_BIT_KHR;
+        mConformant |= EGL_OPENGL_ES3_BIT_KHR;
+    }
 }
 
 EGLConfig Config::getHandle() const
