@@ -727,17 +727,30 @@ void __stdcall glBufferData(GLenum target, GLsizeiptr size, const GLvoid* data, 
             return gl::error(GL_INVALID_VALUE);
         }
 
+        gl::Context *context = gl::getNonLostContext();
+
         switch (usage)
         {
           case GL_STREAM_DRAW:
           case GL_STATIC_DRAW:
           case GL_DYNAMIC_DRAW:
             break;
+
+          case GL_STREAM_READ:
+          case GL_STREAM_COPY:
+          case GL_STATIC_READ:
+          case GL_STATIC_COPY:
+          case GL_DYNAMIC_READ:
+          case GL_DYNAMIC_COPY:
+            if (context && context->getClientVersion() < 3)
+            {
+              return gl::error(GL_INVALID_ENUM);
+            }
+            break;
+
           default:
             return gl::error(GL_INVALID_ENUM);
         }
-
-        gl::Context *context = gl::getNonLostContext();
 
         if (context)
         {
