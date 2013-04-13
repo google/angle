@@ -372,9 +372,15 @@ int ComputePixelSize(GLint internalformat)
       case GL_RGBA32F_EXT:                      return sizeof(float) * 4;
       case GL_RGBA16F_EXT:                      return sizeof(unsigned short) * 4;
       case GL_BGRA8_EXT:                        return sizeof(unsigned char) * 4;
+      case GL_SRGB8_ALPHA8:                     return sizeof(unsigned char) * 4;
+      case GL_RGB10_A2:                         return sizeof(unsigned char) * 4;
+      case GL_RG8:                              return sizeof(unsigned char) * 2;
+      case GL_R8:                               return sizeof(unsigned char);
       case GL_BGRA4_ANGLEX:                     return sizeof(unsigned short);
       case GL_BGR5_A1_ANGLEX:                   return sizeof(unsigned short);
-      default: UNREACHABLE();
+      default:
+        UNIMPLEMENTED();   // TODO: Remaining ES3 formats
+        UNREACHABLE();
     }
 
     return 0;
@@ -556,15 +562,19 @@ bool IsColorRenderable(GLenum internalformat)
       case GL_RGB565:
       case GL_RGB8_OES:
       case GL_RGBA8_OES:
+      case GL_BGRA8_EXT:
+      case GL_SRGB8_ALPHA8:
+      case GL_RGB10_A2:
+      case GL_RG8:
+      case GL_R8:
         return true;
       case GL_DEPTH_COMPONENT16:
       case GL_STENCIL_INDEX8:
       case GL_DEPTH24_STENCIL8_OES:
         return false;
-      case GL_BGRA8_EXT:
-          return true;
       default:
-        UNIMPLEMENTED();
+        UNIMPLEMENTED();   // TODO: Remaining ES3 formats
+        UNREACHABLE();
     }
 
     return false;

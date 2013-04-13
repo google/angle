@@ -1172,6 +1172,10 @@ void Context::setRenderbufferStorage(GLsizei width, GLsizei height, GLenum inter
       case GL_RGB565:
       case GL_RGB8_OES:
       case GL_RGBA8_OES:
+      case GL_SRGB8_ALPHA8:
+      case GL_RGB10_A2:
+      case GL_RG8:
+      case GL_R8:
         renderbuffer = new gl::Colorbuffer(mRenderer,width, height, internalformat, samples);
         break;
       case GL_STENCIL_INDEX8:
@@ -1181,6 +1185,7 @@ void Context::setRenderbufferStorage(GLsizei width, GLsizei height, GLenum inter
         renderbuffer = new gl::DepthStencilbuffer(mRenderer, width, height, samples);
         break;
       default:
+        UNIMPLEMENTED();   // TODO: Remaining ES3 formats
         UNREACHABLE(); return;
     }
 

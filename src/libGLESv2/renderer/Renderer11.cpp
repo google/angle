@@ -3136,6 +3136,7 @@ static inline void readPixelColor(const unsigned char *data, DXGI_FORMAT format,
     switch (format)
     {
       case DXGI_FORMAT_R8G8B8A8_UNORM:
+      case DXGI_FORMAT_R8G8B8A8_UNORM_SRGB:
         {
             unsigned int rgba = *reinterpret_cast<const unsigned int*>(data + 4 * x + y * inputPitch);
             outColor->red =   (rgba & 0x000000FF) * (1.0f / 0x000000FF);
@@ -3226,6 +3227,16 @@ static inline void readPixelColor(const unsigned char *data, DXGI_FORMAT format,
             outColor->green = gl::float16ToFloat32(*(reinterpret_cast<const unsigned short*>(data + 4 * x + y * inputPitch) + 1));
             outColor->blue =  0.0f;
             outColor->alpha = 1.0f;
+        }
+        break;
+
+      case DXGI_FORMAT_R10G10B10A2_UNORM:
+        {
+            unsigned int rgba = *reinterpret_cast<const unsigned int*>(data + 4 * x + y * inputPitch);
+            outColor->red =   (rgba & 0x000003FF) * (1.0f / 0x000003FF);
+            outColor->green = (rgba & 0x000FFC00) * (1.0f / 0x000FFC00);
+            outColor->blue =  (rgba & 0x3FF00000) * (1.0f / 0x3FF00000);
+            outColor->alpha = (rgba & 0xC0000000) * (1.0f / 0xC0000000);
         }
         break;
 

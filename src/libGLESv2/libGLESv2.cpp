@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -5032,11 +5032,21 @@ void __stdcall glRenderbufferStorageMultisampleANGLE(GLenum target, GLsizei samp
               case GL_RGBA8_OES:
               case GL_STENCIL_INDEX8:
               case GL_DEPTH24_STENCIL8_OES:
-                context->setRenderbufferStorage(width, height, internalformat, samples);
+                break;
+              case GL_SRGB8_ALPHA8:
+              case GL_RGB10_A2:
+              case GL_RG8:
+              case GL_R8:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
                 break;
               default:
                 return gl::error(GL_INVALID_ENUM);
             }
+
+            context->setRenderbufferStorage(width, height, internalformat, samples);
         }
     }
     catch(std::bad_alloc&)

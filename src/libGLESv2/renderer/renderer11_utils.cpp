@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -282,9 +282,13 @@ GLenum ConvertTextureInternalFormat(DXGI_FORMAT format)
       case DXGI_FORMAT_B8G8R8A8_UNORM:
         return GL_BGRA8_EXT;
       case DXGI_FORMAT_R8_UNORM:
-        return GL_R8_EXT;
+        return GL_R8;
+      case DXGI_FORMAT_R8G8B8A8_UNORM_SRGB:
+        return GL_SRGB8_ALPHA8;
+      case DXGI_FORMAT_R10G10B10A2_UNORM:
+        return GL_RGB10_A2;
       case DXGI_FORMAT_R8G8_UNORM:
-        return GL_RG8_EXT;
+        return GL_RG8;
       case DXGI_FORMAT_R16_FLOAT:
         return GL_R16F_EXT;
       case DXGI_FORMAT_R16G16_FLOAT:
@@ -296,6 +300,7 @@ GLenum ConvertTextureInternalFormat(DXGI_FORMAT format)
       case DXGI_FORMAT_UNKNOWN:
         return GL_NONE;
       default:
+        UNIMPLEMENTED();   // TODO: Remaining ES3 formats
         UNREACHABLE();
     }
 
@@ -319,12 +324,21 @@ DXGI_FORMAT ConvertRenderbufferFormat(GLenum format)
         return DXGI_FORMAT_R8G8B8A8_UNORM;
       case GL_BGRA8_EXT:
         return DXGI_FORMAT_B8G8R8A8_UNORM;
+      case GL_SRGB8_ALPHA8:
+        return DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+      case GL_RGB10_A2:
+        return DXGI_FORMAT_R10G10B10A2_UNORM;
+      case GL_RG8:
+        return DXGI_FORMAT_R8G8_UNORM;
+      case GL_R8:
+        return DXGI_FORMAT_R8_UNORM;
       case GL_DEPTH_COMPONENT16:
         return DXGI_FORMAT_D16_UNORM;
       case GL_STENCIL_INDEX8:
       case GL_DEPTH24_STENCIL8_OES:
         return DXGI_FORMAT_D24_UNORM_S8_UINT;
       default:
+        UNIMPLEMENTED();   // TODO: Remaining ES3 formats
         UNREACHABLE();
     }
 
