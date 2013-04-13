@@ -3386,6 +3386,25 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
             memcpy(dest + j * outputPitch, source + j * inputPitch, area.width * fastPixelSize);
         }
     }
+    else if (textureDesc.Format == DXGI_FORMAT_B8G8R8A8_UNORM &&
+             format == GL_RGBA &&
+             type == GL_UNSIGNED_BYTE)
+    {
+        // Fast path for swapping red with blue
+        unsigned char *dest = static_cast<unsigned char*>(pixels);
+
+        for (int j = 0; j < area.height; j++)
+        {
+            for (int i = 0; i < area.width; i++)
+            {
+                unsigned int argb = *(unsigned int*)(source + 4 * i + j * inputPitch);
+                *(unsigned int*)(dest + 4 * i + j * outputPitch) =
+                    (argb & 0xFF00FF00) |       // Keep alpha and green
+                    (argb & 0x00FF0000) >> 16 | // Move red to blue
+                    (argb & 0x000000FF) << 16;  // Move blue to red
+            }
+        }
+    }
     else
     {
         gl::Color pixelColor;
