@@ -3155,6 +3155,23 @@ void __stdcall glGenerateMipmap(GLenum target)
                     break;
                 }
 
+              case GL_TEXTURE_3D:
+                {
+                    if (context->getClientVersion() < 3)
+                    {
+                        return gl::error(GL_INVALID_ENUM);
+                    }
+
+                    gl::Texture3D *tex3D = context->getTexture3D();
+                    if (tex3D->isCompressed(0))
+                    {
+                        return gl::error(GL_INVALID_OPERATION);
+                    }
+
+                    tex3D->generateMipmaps();
+                    break;
+                }
+
               default:
                 return gl::error(GL_INVALID_ENUM);
             }
