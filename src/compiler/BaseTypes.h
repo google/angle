@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -113,6 +113,16 @@ enum TQualifier
     EvqFragColor,
     EvqFragData,
 
+    // GLSL ES 3.0 vertex output and fragment input
+    EvqSmooth,        // Incomplete qualifier, smooth is the default
+    EvqFlat,          // Incomplete qualifier
+    EvqSmoothOut = EvqSmooth,
+    EvqFlatOut = EvqFlat,
+    EvqCentroidOut,   // Implies smooth
+    EvqSmoothIn,
+    EvqFlatIn,
+    EvqCentroidIn,    // Implies smooth
+
     // end of list
     EvqLast
 };
@@ -144,8 +154,28 @@ inline const char* getQualifierString(TQualifier q)
     case EvqFragCoord:      return "FragCoord";      break;
     case EvqFrontFacing:    return "FrontFacing";    break;
     case EvqFragColor:      return "FragColor";      break;
-    case EvqFragData:       return "FragData";      break;
+    case EvqFragData:       return "FragData";       break;
+    case EvqSmoothOut:      return "smooth out";     break;
+    case EvqCentroidOut:    return "centroid out";   break;
+    case EvqFlatOut:        return "flat out";       break;
+    case EvqSmoothIn:       return "smooth in";      break;
+    case EvqCentroidIn:     return "centroid in";    break;
+    case EvqFlatIn:         return "flat in";        break;
     default:                return "unknown qualifier";
+    }
+}
+
+inline const char* getInterpolationString(TQualifier q)
+{
+    switch(q)
+    {
+    case EvqSmoothOut:      return "smooth";   break;
+    case EvqCentroidOut:    return "centroid"; break;
+    case EvqFlatOut:        return "flat";     break;
+    case EvqSmoothIn:       return "smooth";   break;
+    case EvqCentroidIn:     return "centroid"; break;
+    case EvqFlatIn:         return "flat";     break;
+    default:                return "unknown interpolation";
     }
 }
 

@@ -1150,7 +1150,7 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
             mReferencedAttributes[name] = node;
             out << decorate(name);
         }
-        else if (qualifier == EvqVaryingOut || qualifier == EvqInvariantVaryingOut || qualifier == EvqVaryingIn || qualifier == EvqInvariantVaryingIn)
+        else if (isVarying(qualifier))
         {
             mReferencedVaryings[name] = node;
             out << decorate(name);
@@ -1644,7 +1644,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 }
                 else UNREACHABLE();
             }
-            else if (variable && (variable->getQualifier() == EvqVaryingOut || variable->getQualifier() == EvqInvariantVaryingOut))
+            else if (variable && isVaryingOut(variable->getQualifier()))
             {
                 for (TIntermSequence::iterator sit = sequence.begin(); sit != sequence.end(); sit++)
                 {
@@ -3219,6 +3219,41 @@ GLenum OutputHLSL::glVariablePrecision(const TType &type)
 
     // Other types (boolean, sampler) don't have a precision
     return GL_NONE;
+}
+
+bool OutputHLSL::isVaryingOut(TQualifier qualifier)
+{
+    switch(qualifier)
+    {
+      case EvqVaryingOut:
+      case EvqInvariantVaryingOut:
+      case EvqSmoothOut:
+      case EvqFlatOut:
+      case EvqCentroidOut:
+        return true;
+    }
+
+    return false;
+}
+
+bool OutputHLSL::isVaryingIn(TQualifier qualifier)
+{
+    switch(qualifier)
+    {
+      case EvqVaryingIn:
+      case EvqInvariantVaryingIn:
+      case EvqSmoothIn:
+      case EvqFlatIn:
+      case EvqCentroidIn:
+        return true;
+    }
+
+    return false;
+}
+
+bool OutputHLSL::isVarying(TQualifier qualifier)
+{
+    return isVaryingIn(qualifier) || isVaryingOut(qualifier);
 }
 
 }

@@ -167,7 +167,7 @@ extern void yyerror(TParseContext* context, const char* reason);
 %type <interm.qualifier> parameter_qualifier parameter_type_qualifier 
 
 %type <interm.precision> precision_qualifier
-%type <interm.type> type_qualifier fully_specified_type type_specifier storage_qualifier
+%type <interm.type> type_qualifier fully_specified_type type_specifier storage_qualifier interpolation_qualifier
 %type <interm.type> type_specifier_no_prec type_specifier_nonarray
 %type <interm.type> struct_specifier
 %type <interm.typeLine> struct_declarator
@@ -1502,6 +1502,17 @@ fully_specified_type
     }
     ;
 
+interpolation_qualifier
+    : SMOOTH {
+        $$.qualifier = EvqSmooth;
+        $$.line = $1.line;
+    }
+    | FLAT {
+        $$.qualifier = EvqFlat;
+        $$.line = $1.line;
+    }
+    ;
+
 parameter_type_qualifier
     : CONST_QUAL {
         $$ = EvqConst;
@@ -1511,13 +1522,13 @@ parameter_type_qualifier
 type_qualifier
     : ATTRIBUTE {
         VERTEX_ONLY("attribute", $1.line);
-		ES2_ONLY("attribute", $1.line);
+        ES2_ONLY("attribute", $1.line);
         if (context->globalErrorCheck($1.line, context->symbolTable.atGlobalLevel(), "attribute"))
             context->recover();
         $$.setBasic(EbtVoid, EvqAttribute, $1.line);
     }
     | VARYING {
-	    ES2_ONLY("varying", $1.line);
+        ES2_ONLY("varying", $1.line);
         if (context->globalErrorCheck($1.line, context->symbolTable.atGlobalLevel(), "varying"))
             context->recover();
         if (context->shaderType == SH_VERTEX_SHADER)
@@ -1526,7 +1537,7 @@ type_qualifier
             $$.setBasic(EbtVoid, EvqVaryingIn, $1.line);
     }
     | INVARIANT VARYING {
-	    ES2_ONLY("varying", $1.line);
+        ES2_ONLY("varying", $1.line);
         if (context->globalErrorCheck($1.line, context->symbolTable.atGlobalLevel(), "invariant varying"))
             context->recover();
         if (context->shaderType == SH_VERTEX_SHADER)
@@ -1534,43 +1545,84 @@ type_qualifier
         else
             $$.setBasic(EbtVoid, EvqInvariantVaryingIn, $1.line);
     }
-	| storage_qualifier {
+    | storage_qualifier {
         $$.setBasic(EbtVoid, $1.qualifier, $1.line);
+    }
+    | interpolation_qualifier storage_qualifier {
+        if ($2.qualifier == EvqSmoothIn) {
+            if ($1.qualifier == EvqSmooth)
+                $$.setBasic(EbtVoid, EvqSmoothIn, $2.line);
+            else if ($1.qualifier == EvqFlat)
+                $$.setBasic(EbtVoid, EvqFlatIn, $2.line);
+            else UNREACHABLE();
+        }
+        else if ($2.qualifier == EvqCentroidIn) {
+            if ($1.qualifier == EvqSmooth)
+                $$.setBasic(EbtVoid, EvqCentroidIn, $2.line);
+            else if ($1.qualifier == EvqFlat)
+                $$.setBasic(EbtVoid, EvqFlatIn, $2.line);
+            else UNREACHABLE();
+        }
+        else if ($2.qualifier == EvqSmoothOut) {
+            if ($1.qualifier == EvqSmooth)
+                $$.setBasic(EbtVoid, EvqSmoothOut, $2.line);
+            else if ($1.qualifier == EvqFlat)
+                $$.setBasic(EbtVoid, EvqFlatOut, $2.line);
+            else UNREACHABLE();
+        }
+        else if ($2.qualifier == EvqCentroidOut) {
+            if ($1.qualifier == EvqSmooth)
+                $$.setBasic(EbtVoid, EvqCentroidOut, $2.line);
+            else if ($1.qualifier == EvqFlat)
+                $$.setBasic(EbtVoid, EvqFlatOut, $2.line);
+            else UNREACHABLE();
+        }
+        else {
+            context->error($1.line, "interpolation qualifier requires a fragment 'in' or vertex 'out' storage qualifier", getInterpolationString($1.qualifier));
+            context->recover();
+
+            $$.setBasic(EbtVoid, $2.qualifier, $2.line);
+        }
+    }
+    | interpolation_qualifier {
+        context->error($1.line, "interpolation qualifier requires a fragment 'in' or vertex 'out' storage qualifier", getInterpolationString($1.qualifier));
+        context->recover();
+        
+        TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
+        $$.setBasic(EbtVoid, qual, $1.line);
     }
     ;
 
 storage_qualifier
     : CONST_QUAL {
         $$.qualifier = EvqConst;
-		$$.line = $1.line;
+        $$.line = $1.line;
     }
     | IN_QUAL {
-		ES3_ONLY("in", $1.line);
-        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqVaryingIn : EvqAttribute;
-		$$.line = $1.line;
+        ES3_ONLY("in", $1.line);
+        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqSmoothIn : EvqAttribute;
+        $$.line = $1.line;
     }
     | OUT_QUAL {
-		ES3_ONLY("out", $1.line);
-        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragColor : EvqVaryingOut;
-		$$.line = $1.line;
+        ES3_ONLY("out", $1.line);
+        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragColor : EvqSmoothOut;
+        $$.line = $1.line;
     }
     | CENTROID IN_QUAL {
-		ES3_ONLY("in", $1.line);
-	    // FIXME: Handle centroid qualifier
-        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqVaryingIn : EvqAttribute;
-		$$.line = $2.line;
+        ES3_ONLY("centroid in", $1.line);
+        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqCentroidIn : EvqAttribute;
+        $$.line = $1.line;
     }
-	| CENTROID OUT_QUAL {
-		ES3_ONLY("out", $1.line);
-	    // FIXME: Handle centroid qualifier
-        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragColor : EvqVaryingOut;
-		$$.line = $2.line;
+    | CENTROID OUT_QUAL {
+        ES3_ONLY("centroid out", $1.line);
+        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragColor : EvqCentroidOut;
+        $$.line = $1.line;
     }
-	| UNIFORM {
+    | UNIFORM {
         if (context->globalErrorCheck($1.line, context->symbolTable.atGlobalLevel(), "uniform"))
             context->recover();
         $$.qualifier = EvqUniform;
-		$$.line = $1.line;
+        $$.line = $1.line;
     }
     ;
 
