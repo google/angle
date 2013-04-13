@@ -238,7 +238,7 @@ class Renderer11 : public Renderer
     unsigned int mMaxSupportedSamples;
 
     // current render target states
-    unsigned int mAppliedRenderTargetSerial;
+    unsigned int mAppliedRenderTargetSerials[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS];
     unsigned int mAppliedDepthbufferSerial;
     unsigned int mAppliedStencilbufferSerial;
     bool mDepthStencilInitialized;
