@@ -2043,23 +2043,6 @@ bool Renderer9::testDeviceLost(bool notify)
     if (mDeviceEx)
     {
         status = mDeviceEx->CheckDeviceState(NULL);
-
-        if (status == S_PRESENT_MODE_CHANGED)
-        {
-            // Reset the device so that D3D stops reporting S_PRESENT_MODE_CHANGED. Otherwise it will report
-            // it continuously, potentially masking a lost device. D3D resources are not lost on a mode change with WDDM.
-            D3DPRESENT_PARAMETERS presentParameters = getDefaultPresentParameters();
-            mDeviceEx->Reset(&presentParameters);
-
-            // Existing swap chains sometimes crash on the next present after a reset.
-            mDisplay->recreateSwapChains();
-
-            // Reset will not always cause the device loss to be reported so issue a dummy present.
-            mDeviceEx->Present(NULL, NULL, NULL, NULL);
-
-            // Retest the device status to see if the mode change really indicated a lost device.
-            status = mDeviceEx->CheckDeviceState(NULL);
-        }
     }
     else if (mDevice)
     {
