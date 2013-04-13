@@ -590,49 +590,43 @@ bool ProgramBinary::getUniformfv(GLint location, GLsizei *bufSize, GLfloat *para
         }
     }
 
-    switch (targetUniform->type)
+    if (IsMatrixType(targetUniform->type))
     {
-      case GL_FLOAT_MAT2:
-        transposeMatrix<GLfloat>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 8, 2, 2, 4, 2);
-        break;
-      case GL_FLOAT_MAT3:
-        transposeMatrix<GLfloat>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 12, 3, 3, 4, 3);
-        break;
-      case GL_FLOAT_MAT4:
-        transposeMatrix<GLfloat>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 16, 4, 4, 4, 4);
-        break;
-      default:
+        const int rows = VariableRowCount(targetUniform->type);
+        const int cols = VariableColumnCount(targetUniform->type);
+        transposeMatrix(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 4 * rows, cols, rows, 4, rows);
+    }
+    else
+    {
+        unsigned int size = UniformComponentCount(targetUniform->type);
+
+        switch (UniformComponentType(targetUniform->type))
         {
-            unsigned int size = UniformComponentCount(targetUniform->type);
-
-            switch (UniformComponentType(targetUniform->type))
+          case GL_BOOL:
             {
-              case GL_BOOL:
-                {
-                    GLint *boolParams = (GLint*)targetUniform->data + mUniformIndex[location].element * 4;
+                GLint *boolParams = (GLint*)targetUniform->data + mUniformIndex[location].element * 4;
 
-                    for (unsigned int i = 0; i < size; i++)
-                    {
-                        params[i] = (boolParams[i] == GL_FALSE) ? 0.0f : 1.0f;
-                    }
-                }
-                break;
-              case GL_FLOAT:
-                memcpy(params, targetUniform->data + mUniformIndex[location].element * 4 * sizeof(GLfloat),
-                       size * sizeof(GLfloat));
-                break;
-              case GL_INT:
+                for (unsigned int i = 0; i < size; i++)
                 {
-                    GLint *intParams = (GLint*)targetUniform->data + mUniformIndex[location].element * 4;
-
-                    for (unsigned int i = 0; i < size; i++)
-                    {
-                        params[i] = (float)intParams[i];
-                    }
+                    params[i] = (boolParams[i] == GL_FALSE) ? 0.0f : 1.0f;
                 }
-                break;
-              default: UNREACHABLE();
             }
+            break;
+          case GL_FLOAT:
+            memcpy(params, targetUniform->data + mUniformIndex[location].element * 4 * sizeof(GLfloat),
+                   size * sizeof(GLfloat));
+            break;
+          case GL_INT:
+            {
+                GLint *intParams = (GLint*)targetUniform->data + mUniformIndex[location].element * 4;
+
+                for (unsigned int i = 0; i < size; i++)
+                {
+                    params[i] = (float)intParams[i];
+                }
+            }
+            break;
+          default: UNREACHABLE();
         }
     }
 
@@ -658,49 +652,43 @@ bool ProgramBinary::getUniformiv(GLint location, GLsizei *bufSize, GLint *params
         }
     }
 
-    switch (targetUniform->type)
+    if (IsMatrixType(targetUniform->type))
     {
-      case GL_FLOAT_MAT2:
-        transposeMatrix<GLint>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 8, 2, 2, 4, 2);
-        break;
-      case GL_FLOAT_MAT3:
-        transposeMatrix<GLint>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 12, 3, 3, 4, 3);
-        break;
-      case GL_FLOAT_MAT4:
-        transposeMatrix<GLint>(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 16, 4, 4, 4, 4);
-        break;
-      default:
+        const int rows = VariableRowCount(targetUniform->type);
+        const int cols = VariableColumnCount(targetUniform->type);
+        transposeMatrix(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 4 * rows, cols, rows, 4, rows);
+    }
+    else
+    {
+        unsigned int size = VariableColumnCount(targetUniform->type);
+
+        switch (UniformComponentType(targetUniform->type))
         {
-            unsigned int size = VariableColumnCount(targetUniform->type);
-
-            switch (UniformComponentType(targetUniform->type))
+          case GL_BOOL:
             {
-              case GL_BOOL:
-                {
-                    GLint *boolParams = (GLint*)targetUniform->data + mUniformIndex[location].element * 4;
+                GLint *boolParams = (GLint*)targetUniform->data + mUniformIndex[location].element * 4;
 
-                    for (unsigned int i = 0; i < size; i++)
-                    {
-                        params[i] = boolParams[i];
-                    }
-                }
-                break;
-              case GL_FLOAT:
+                for (unsigned int i = 0; i < size; i++)
                 {
-                    GLfloat *floatParams = (GLfloat*)targetUniform->data + mUniformIndex[location].element * 4;
-
-                    for (unsigned int i = 0; i < size; i++)
-                    {
-                        params[i] = (GLint)floatParams[i];
-                    }
+                    params[i] = boolParams[i];
                 }
-                break;
-              case GL_INT:
-                memcpy(params, targetUniform->data + mUniformIndex[location].element * 4 * sizeof(GLint),
-                    size * sizeof(GLint));
-                break;
-              default: UNREACHABLE();
             }
+            break;
+          case GL_FLOAT:
+            {
+                GLfloat *floatParams = (GLfloat*)targetUniform->data + mUniformIndex[location].element * 4;
+
+                for (unsigned int i = 0; i < size; i++)
+                {
+                    params[i] = (GLint)floatParams[i];
+                }
+            }
+            break;
+          case GL_INT:
+            memcpy(params, targetUniform->data + mUniformIndex[location].element * 4 * sizeof(GLint),
+                size * sizeof(GLint));
+            break;
+          default: UNREACHABLE();
         }
     }
 
