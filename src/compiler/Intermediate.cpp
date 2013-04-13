@@ -846,6 +846,7 @@ bool TIntermUnary::promote(TInfoSink&)
     }
 
     setType(operand->getType());
+    type.setQualifier(EvqTemporary);
 
     return true;
 }
