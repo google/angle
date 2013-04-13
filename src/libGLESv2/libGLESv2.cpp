@@ -559,12 +559,23 @@ void __stdcall glBlendEquationSeparate(GLenum modeRGB, GLenum modeAlpha)
 
     try
     {
+        gl::Context *context = gl::getNonLostContext();
+
         switch (modeRGB)
         {
           case GL_FUNC_ADD:
           case GL_FUNC_SUBTRACT:
           case GL_FUNC_REVERSE_SUBTRACT:
             break;
+
+          case GL_MIN:
+          case GL_MAX:
+            if (context && context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_ENUM);
+            }
+            break;
+
           default:
             return gl::error(GL_INVALID_ENUM);
         }
@@ -575,11 +586,18 @@ void __stdcall glBlendEquationSeparate(GLenum modeRGB, GLenum modeAlpha)
           case GL_FUNC_SUBTRACT:
           case GL_FUNC_REVERSE_SUBTRACT:
             break;
+
+          case GL_MIN:
+          case GL_MAX:
+            if (context && context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_ENUM);
+            }
+            break;
+
           default:
             return gl::error(GL_INVALID_ENUM);
         }
-
-        gl::Context *context = gl::getNonLostContext();
 
         if (context)
         {

@@ -51,6 +51,8 @@ D3D11_BLEND_OP ConvertBlendOp(GLenum glBlendOp)
       case GL_FUNC_ADD:              d3dBlendOp = D3D11_BLEND_OP_ADD;           break;
       case GL_FUNC_SUBTRACT:         d3dBlendOp = D3D11_BLEND_OP_SUBTRACT;      break;
       case GL_FUNC_REVERSE_SUBTRACT: d3dBlendOp = D3D11_BLEND_OP_REV_SUBTRACT;  break;
+      case GL_MIN:                   d3dBlendOp = D3D11_BLEND_OP_MIN;           break;
+      case GL_MAX:                   d3dBlendOp = D3D11_BLEND_OP_MAX;           break;
       default: UNREACHABLE();
     }
 
