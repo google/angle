@@ -29,6 +29,7 @@ size_t UniformExternalSize(GLenum type);
 GLenum UniformBoolVectorType(GLenum type);
 int VariableRowCount(GLenum type);
 int VariableColumnCount(GLenum type);
+bool IsMatrixType(GLenum type);
 
 int AllocateFirstFreeBits(unsigned int *bits, unsigned int allocationSize, unsigned int bitsSize);
 

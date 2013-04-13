@@ -176,10 +176,16 @@ int VariableRowCount(GLenum type)
       case GL_SAMPLER_CUBE:
         return 1;
       case GL_FLOAT_MAT2:
+      case GL_FLOAT_MAT3x2:
+      case GL_FLOAT_MAT4x2:
         return 2;
       case GL_FLOAT_MAT3:
+      case GL_FLOAT_MAT2x3:
+      case GL_FLOAT_MAT4x3:
         return 3;
       case GL_FLOAT_MAT4:
+      case GL_FLOAT_MAT2x4:
+      case GL_FLOAT_MAT3x4:
         return 4;
       default:
         UNREACHABLE();
@@ -204,22 +210,33 @@ int VariableColumnCount(GLenum type)
       case GL_FLOAT_VEC2:
       case GL_INT_VEC2:
       case GL_FLOAT_MAT2:
+      case GL_FLOAT_MAT2x3:
+      case GL_FLOAT_MAT2x4:
         return 2;
       case GL_INT_VEC3:
       case GL_FLOAT_VEC3:
       case GL_BOOL_VEC3:
       case GL_FLOAT_MAT3:
+      case GL_FLOAT_MAT3x2:
+      case GL_FLOAT_MAT3x4:
         return 3;
       case GL_BOOL_VEC4:
       case GL_FLOAT_VEC4:
       case GL_INT_VEC4:
       case GL_FLOAT_MAT4:
+      case GL_FLOAT_MAT4x2:
+      case GL_FLOAT_MAT4x3:
         return 4;
       default:
         UNREACHABLE();
     }
 
     return 0;
+}
+
+bool IsMatrixType(GLenum type)
+{
+    return VariableRowCount(type) > 1;
 }
 
 int AllocateFirstFreeBits(unsigned int *bits, unsigned int allocationSize, unsigned int bitsSize)
