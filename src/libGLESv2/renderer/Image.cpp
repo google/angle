@@ -23,19 +23,31 @@ Image::Image()
     mActualFormat = GL_NONE;
 }
 
+template <typename T>
+inline static T *offsetDataPointer(void *data, int y, int z, int rowPitch, int depthPitch)
+{
+    return reinterpret_cast<T*>(reinterpret_cast<unsigned char*>(data) + (y * rowPitch) + (z * depthPitch));
+}
+
+template <typename T>
+inline static const T *offsetDataPointer(const void *data, int y, int z, int rowPitch, int depthPitch)
+{
+    return reinterpret_cast<const T*>(reinterpret_cast<const unsigned char*>(data) + (y * rowPitch) + (z * depthPitch));
+}
+
 void Image::loadAlphaDataToBGRA(GLsizei width, GLsizei height, GLsizei depth,
                                 int inputRowPitch, int inputDepthPitch, const void *input,
                                 size_t outputRowPitch, size_t outputDepthPitch, void *output)
 {
     const unsigned char *source = NULL;
     unsigned char *dest = NULL;
-    
+
     for (int z = 0; z < depth; z++)
     {
         for (int y = 0; y < height; y++)
         {
-            source = static_cast<const unsigned char*>(input) + y * inputRowPitch + z * inputDepthPitch;
-            dest = static_cast<unsigned char*>(output) + y * outputRowPitch + z * outputDepthPitch;
+            source = offsetDataPointer<unsigned char>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned char>(output, y, z, outputRowPitch, outputDepthPitch);
             for (int x = 0; x < width; x++)
             {
                 dest[4 * x + 0] = 0;
@@ -58,8 +70,8 @@ void Image::loadAlphaDataToNative(GLsizei width, GLsizei height, GLsizei depth,
     {
         for (int y = 0; y < height; y++)
         {
-            source = static_cast<const unsigned char*>(input) + y * inputRowPitch + z * inputDepthPitch;
-            dest = static_cast<unsigned char*>(output) + y * outputRowPitch + z * outputDepthPitch;
+            source = offsetDataPointer<unsigned char>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned char>(output, y, z, outputRowPitch, outputDepthPitch);
             memcpy(dest, source, width);
         }
     }
@@ -76,8 +88,8 @@ void Image::loadAlphaFloatDataToRGBA(GLsizei width, GLsizei height, GLsizei dept
     {
         for (int y = 0; y < height; y++)
         {
-            source = reinterpret_cast<const float*>(static_cast<const unsigned char*>(input) + y * inputRowPitch + z * inputDepthPitch);
-            dest = reinterpret_cast<float*>(static_cast<unsigned char*>(output) + y * outputRowPitch + z * outputDepthPitch);
+            source = offsetDataPointer<float>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<float>(output, y, z, outputRowPitch, outputDepthPitch);
             for (int x = 0; x < width; x++)
             {
                 dest[4 * x + 0] = 0;
@@ -100,8 +112,8 @@ void Image::loadAlphaHalfFloatDataToRGBA(GLsizei width, GLsizei height, GLsizei 
     {
         for (int y = 0; y < height; y++)
         {
-            source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputRowPitch + z * inputDepthPitch);
-            dest = reinterpret_cast<unsigned short*>(static_cast<unsigned char*>(output) + y * outputRowPitch + z * outputDepthPitch);
+            source = offsetDataPointer<unsigned short>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned short>(output, y, z, outputRowPitch, outputDepthPitch);
             for (int x = 0; x < width; x++)
             {
                 dest[4 * x + 0] = 0;
@@ -125,9 +137,8 @@ void Image::loadLuminanceDataToNativeOrBGRA(GLsizei width, GLsizei height, GLsiz
     {
         for (int y = 0; y < height; y++)
         {
-            source = static_cast<const unsigned char*>(input) + y * inputRowPitch + z * inputDepthPitch;
-            dest = static_cast<unsigned char*>(output) + y * outputRowPitch + z * outputDepthPitch;
-
+            source = offsetDataPointer<unsigned char>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned char>(output, y, z, outputRowPitch, outputDepthPitch);
             if (!native)   // BGRA8 destination format
             {
                 for (int x = 0; x < width; x++)
@@ -157,8 +168,8 @@ void Image::loadLuminanceFloatDataToRGBA(GLsizei width, GLsizei height, GLsizei 
     {
         for (int y = 0; y < height; y++)
         {
-            source = reinterpret_cast<const float*>(static_cast<const unsigned char*>(input) + y * inputRowPitch + z * inputDepthPitch);
-            dest = reinterpret_cast<float*>(static_cast<unsigned char*>(output) + y * outputRowPitch + z * outputDepthPitch);
+            source = offsetDataPointer<float>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<float>(output, y, z, outputRowPitch, outputDepthPitch);
             for (int x = 0; x < width; x++)
             {
                 dest[4 * x + 0] = source[x];
@@ -181,8 +192,8 @@ void Image::loadLuminanceFloatDataToRGB(GLsizei width, GLsizei height, GLsizei d
     {
         for (int y = 0; y < height; y++)
         {
-            source = reinterpret_cast<const float*>(static_cast<const unsigned char*>(input) + y * inputRowPitch + z * inputDepthPitch);
-            dest = reinterpret_cast<float*>(static_cast<unsigned char*>(output) + y * outputRowPitch + z * outputDepthPitch);
+            source = offsetDataPointer<float>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<float>(output, y, z, outputRowPitch, outputDepthPitch);
             for (int x = 0; x < width; x++)
             {
                 dest[3 * x + 0] = source[x];
@@ -204,8 +215,8 @@ void Image::loadLuminanceHalfFloatDataToRGBA(GLsizei width, GLsizei height, GLsi
     {
         for (int y = 0; y < height; y++)
         {
-            source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputRowPitch + z * inputDepthPitch);
-            dest = reinterpret_cast<unsigned short*>(static_cast<unsigned char*>(output) + y * outputRowPitch + z * outputDepthPitch);
+            source = offsetDataPointer<unsigned short>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned short>(output, y, z, outputRowPitch, outputDepthPitch);
             for (int x = 0; x < width; x++)
             {
                 dest[4 * x + 0] = source[x];
@@ -229,8 +240,8 @@ void Image::loadLuminanceAlphaDataToNativeOrBGRA(GLsizei width, GLsizei height, 
     {
         for (int y = 0; y < height; y++)
         {
-            source = static_cast<const unsigned char*>(input) + y * inputRowPitch + z * inputDepthPitch;
-            dest = static_cast<unsigned char*>(output) + y * outputRowPitch + z * outputDepthPitch;
+            source = offsetDataPointer<unsigned char>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned char>(output, y, z, outputRowPitch, outputDepthPitch);
 
             if (!native)   // BGRA8 destination format
             {
@@ -261,8 +272,8 @@ void Image::loadLuminanceAlphaFloatDataToRGBA(GLsizei width, GLsizei height, GLs
     {
         for (int y = 0; y < height; y++)
         {
-            source = reinterpret_cast<const float*>(static_cast<const unsigned char*>(input) + y * inputRowPitch + z * inputDepthPitch);
-            dest = reinterpret_cast<float*>(static_cast<unsigned char*>(output) + y * outputRowPitch + z * outputDepthPitch);
+            source = offsetDataPointer<float>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<float>(output, y, z, outputRowPitch, outputDepthPitch);
             for (int x = 0; x < width; x++)
             {
                 dest[4 * x + 0] = source[2*x+0];
@@ -285,8 +296,8 @@ void Image::loadLuminanceAlphaHalfFloatDataToRGBA(GLsizei width, GLsizei height,
     {
         for (int y = 0; y < height; y++)
         {
-            source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputRowPitch + z * inputDepthPitch);
-            dest = reinterpret_cast<unsigned short*>(static_cast<unsigned char*>(output) + y * outputRowPitch + z * outputDepthPitch);
+            source = offsetDataPointer<unsigned short>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned short>(output, y, z, outputRowPitch, outputDepthPitch);
             for (int x = 0; x < width; x++)
             {
                 dest[4 * x + 0] = source[2*x+0];
@@ -309,8 +320,8 @@ void Image::loadRGBUByteDataToBGRX(GLsizei width, GLsizei height, GLsizei depth,
     {
         for (int y = 0; y < height; y++)
         {
-            source = static_cast<const unsigned char*>(input) + y * inputRowPitch + z * inputDepthPitch;
-            dest = static_cast<unsigned char*>(output) + y * outputRowPitch + z * outputDepthPitch;
+            source = offsetDataPointer<unsigned char>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned char>(output, y, z, outputRowPitch, outputDepthPitch);
             for (int x = 0; x < width; x++)
             {
                 dest[4 * x + 0] = source[x * 3 + 2];
@@ -333,8 +344,8 @@ void Image::loadRGBUByteDataToRGBA(GLsizei width, GLsizei height, GLsizei depth,
     {
         for (int y = 0; y < height; y++)
         {
-            source = static_cast<const unsigned char*>(input) + y * inputRowPitch + z * inputDepthPitch;
-            dest = static_cast<unsigned char*>(output) + y * outputRowPitch + z * outputDepthPitch;
+            source = offsetDataPointer<unsigned char>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned char>(output, y, z, outputRowPitch, outputDepthPitch);
             for (int x = 0; x < width; x++)
             {
                 dest[4 * x + 0] = source[x * 3 + 0];
@@ -357,8 +368,8 @@ void Image::loadRGB565DataToBGRA(GLsizei width, GLsizei height, GLsizei depth,
     {
         for (int y = 0; y < height; y++)
         {
-            source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputRowPitch + z * inputDepthPitch);
-            dest = static_cast<unsigned char*>(output) + y * outputRowPitch + z * outputDepthPitch;
+            source = offsetDataPointer<unsigned short>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned char>(output, y, z, outputRowPitch, outputDepthPitch);
             for (int x = 0; x < width; x++)
             {
                 unsigned short rgba = source[x];
@@ -382,8 +393,8 @@ void Image::loadRGB565DataToRGBA(GLsizei width, GLsizei height, GLsizei depth,
     {
         for (int y = 0; y < height; y++)
         {
-            source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputRowPitch + z * inputDepthPitch);
-            dest = static_cast<unsigned char*>(output) + y * outputRowPitch + z * outputDepthPitch;
+            source = offsetDataPointer<unsigned short>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned char>(output, y, z, outputRowPitch, outputDepthPitch);
             for (int x = 0; x < width; x++)
             {
                 unsigned short rgba = source[x];
@@ -407,8 +418,8 @@ void Image::loadRGBFloatDataToRGBA(GLsizei width, GLsizei height, GLsizei depth,
     {
         for (int y = 0; y < height; y++)
         {
-            source = reinterpret_cast<const float*>(static_cast<const unsigned char*>(input) + y * inputRowPitch + z * inputDepthPitch);
-            dest = reinterpret_cast<float*>(static_cast<unsigned char*>(output) + y * outputRowPitch + z * outputDepthPitch);
+            source = offsetDataPointer<float>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<float>(output, y, z, outputRowPitch, outputDepthPitch);
             for (int x = 0; x < width; x++)
             {
                 dest[4 * x + 0] = source[x * 3 + 0];
@@ -431,8 +442,8 @@ void Image::loadRGBFloatDataToNative(GLsizei width, GLsizei height, GLsizei dept
     {
         for (int y = 0; y < height; y++)
         {
-            source = reinterpret_cast<const float*>(static_cast<const unsigned char*>(input) + y * inputRowPitch + z * inputDepthPitch);
-            dest = reinterpret_cast<float*>(static_cast<unsigned char*>(output) + y * outputRowPitch + z * outputDepthPitch);
+            source = offsetDataPointer<float>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<float>(output, y, z, outputRowPitch, outputDepthPitch);
             memcpy(dest, source, width * 12);
         }
     }
@@ -449,8 +460,8 @@ void Image::loadRGBHalfFloatDataToRGBA(GLsizei width, GLsizei height, GLsizei de
     {
         for (int y = 0; y < height; y++)
         {
-            source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputRowPitch + z * inputDepthPitch);
-            dest = reinterpret_cast<unsigned short*>(static_cast<unsigned char*>(output) + y * outputRowPitch + z * outputDepthPitch);
+            source = offsetDataPointer<unsigned short>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned short>(output, y, z, outputRowPitch, outputDepthPitch);
             for (int x = 0; x < width; x++)
             {
                 dest[4 * x + 0] = source[x * 3 + 0];
@@ -473,8 +484,8 @@ void Image::loadRGBAUByteDataToBGRA(GLsizei width, GLsizei height, GLsizei depth
     {
         for (int y = 0; y < height; y++)
         {
-            source = reinterpret_cast<const unsigned int*>(static_cast<const unsigned char*>(input) + y * inputRowPitch + z * inputDepthPitch);
-            dest = reinterpret_cast<unsigned int*>(static_cast<unsigned char*>(output) + y * outputRowPitch + z * outputDepthPitch);
+            source = offsetDataPointer<unsigned int>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned int>(output, y, z, outputRowPitch, outputDepthPitch);
 
             for (int x = 0; x < width; x++)
             {
@@ -496,8 +507,8 @@ void Image::loadRGBAUByteDataToNative(GLsizei width, GLsizei height, GLsizei dep
     {
         for (int y = 0; y < height; y++)
         {
-            source = reinterpret_cast<const unsigned int*>(static_cast<const unsigned char*>(input) + y * inputRowPitch + z * inputDepthPitch);
-            dest = reinterpret_cast<unsigned int*>(static_cast<unsigned char*>(output) + y * outputRowPitch + z * outputDepthPitch);
+            source = offsetDataPointer<unsigned int>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned int>(output, y, z, outputRowPitch, outputDepthPitch);
 
             memcpy(dest, source, width * 4);
         }
@@ -515,8 +526,8 @@ void Image::loadRGBA4444DataToBGRA(GLsizei width, GLsizei height, GLsizei depth,
     {
         for (int y = 0; y < height; y++)
         {
-            source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputRowPitch + z * inputDepthPitch);
-            dest = static_cast<unsigned char*>(output) + y * outputRowPitch + z * outputDepthPitch;
+            source = offsetDataPointer<unsigned short>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned char>(output, y, z, outputRowPitch, outputDepthPitch);
             for (int x = 0; x < width; x++)
             {
                 unsigned short rgba = source[x];
@@ -540,8 +551,8 @@ void Image::loadRGBA4444DataToRGBA(GLsizei width, GLsizei height, GLsizei depth,
     {
         for (int y = 0; y < height; y++)
         {
-            source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputRowPitch + z * inputDepthPitch);
-            dest = static_cast<unsigned char*>(output) + y * outputRowPitch + z * outputDepthPitch;
+            source = offsetDataPointer<unsigned short>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned char>(output, y, z, outputRowPitch, outputDepthPitch);
             for (int x = 0; x < width; x++)
             {
                 unsigned short rgba = source[x];
@@ -565,8 +576,8 @@ void Image::loadRGBA5551DataToBGRA(GLsizei width, GLsizei height, GLsizei depth,
     {
         for (int y = 0; y < height; y++)
         {
-            source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputRowPitch + z * inputDepthPitch);
-            dest = static_cast<unsigned char*>(output) + y * outputRowPitch + z * outputDepthPitch;
+            source = offsetDataPointer<unsigned short>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned char>(output, y, z, outputRowPitch, outputDepthPitch);
             for (int x = 0; x < width; x++)
             {
                 unsigned short rgba = source[x];
@@ -590,8 +601,8 @@ void Image::loadRGBA5551DataToRGBA(GLsizei width, GLsizei height, GLsizei depth,
     {
         for (int y = 0; y < height; y++)
         {
-            source = reinterpret_cast<const unsigned short*>(static_cast<const unsigned char*>(input) + y * inputRowPitch + z * inputDepthPitch);
-            dest = static_cast<unsigned char*>(output) + y * outputRowPitch + z * outputDepthPitch;
+            source = offsetDataPointer<unsigned short>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned char>(output, y, z, outputRowPitch, outputDepthPitch);
             for (int x = 0; x < width; x++)
             {
                 unsigned short rgba = source[x];
@@ -615,8 +626,8 @@ void Image::loadRGBAFloatDataToRGBA(GLsizei width, GLsizei height, GLsizei depth
     {
         for (int y = 0; y < height; y++)
         {
-            source = reinterpret_cast<const float*>(static_cast<const unsigned char*>(input) + y * inputRowPitch + z * inputDepthPitch);
-            dest = reinterpret_cast<float*>(static_cast<unsigned char*>(output) + y * outputRowPitch + z * outputDepthPitch);
+            source = offsetDataPointer<float>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<float>(output, y, z, outputRowPitch, outputDepthPitch);
             memcpy(dest, source, width * 16);
         }
     }
@@ -633,8 +644,8 @@ void Image::loadRGBAHalfFloatDataToRGBA(GLsizei width, GLsizei height, GLsizei d
     {
         for (int y = 0; y < height; y++)
         {
-            source = static_cast<const unsigned char*>(input) + y * inputRowPitch + z * inputDepthPitch;
-            dest = static_cast<unsigned char*>(output) + y * outputRowPitch + z * outputDepthPitch;
+            source = offsetDataPointer<unsigned char>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned char>(output, y, z, outputRowPitch, outputDepthPitch);
             memcpy(dest, source, width * 8);
         }
     }
@@ -651,8 +662,8 @@ void Image::loadBGRADataToBGRA(GLsizei width, GLsizei height, GLsizei depth,
     {
         for (int y = 0; y < height; y++)
         {
-            source = static_cast<const unsigned char*>(input) + y * inputRowPitch + z * inputDepthPitch;
-            dest = static_cast<unsigned char*>(output) + y * outputRowPitch + z * outputDepthPitch;
+            source = offsetDataPointer<unsigned char>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned char>(output, y, z, outputRowPitch, outputDepthPitch);
             memcpy(dest, source, width*4);
         }
     }
