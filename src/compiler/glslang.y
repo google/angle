@@ -164,10 +164,10 @@ extern void yyerror(TParseContext* context, const char* reason);
 %type <interm> single_declaration init_declarator_list
 
 %type <interm> parameter_declaration parameter_declarator parameter_type_specifier
-%type <interm.qualifier> parameter_qualifier
+%type <interm.qualifier> parameter_qualifier parameter_type_qualifier 
 
 %type <interm.precision> precision_qualifier
-%type <interm.type> type_qualifier fully_specified_type type_specifier
+%type <interm.type> type_qualifier fully_specified_type type_specifier storage_qualifier
 %type <interm.type> type_specifier_no_prec type_specifier_nonarray
 %type <interm.type> struct_specifier
 %type <interm.typeLine> struct_declarator
@@ -1158,9 +1158,9 @@ parameter_declaration
     //
     // Type + name
     //
-    : type_qualifier parameter_qualifier parameter_declarator {
+    : parameter_type_qualifier parameter_qualifier parameter_declarator {
         $$ = $3;
-        if (context->paramErrorCheck($3.line, $1.qualifier, $2, $$.param.type))
+        if (context->paramErrorCheck($3.line, $1, $2, $$.param.type))
             context->recover();
     }
     | parameter_qualifier parameter_declarator {
@@ -1173,9 +1173,9 @@ parameter_declaration
     //
     // Only type
     //
-    | type_qualifier parameter_qualifier parameter_type_specifier {
+    | parameter_type_qualifier parameter_qualifier parameter_type_specifier {
         $$ = $3;
-        if (context->paramErrorCheck($3.line, $1.qualifier, $2, $$.param.type))
+        if (context->paramErrorCheck($3.line, $1, $2, $$.param.type))
             context->recover();
     }
     | parameter_qualifier parameter_type_specifier {
@@ -1502,11 +1502,14 @@ fully_specified_type
     }
     ;
 
-type_qualifier
+parameter_type_qualifier
     : CONST_QUAL {
-        $$.setBasic(EbtVoid, EvqConst, $1.line);
+        $$ = EvqConst;
     }
-    | ATTRIBUTE {
+    ;
+
+type_qualifier
+    : ATTRIBUTE {
         VERTEX_ONLY("attribute", $1.line);
 		ES2_ONLY("attribute", $1.line);
         if (context->globalErrorCheck($1.line, context->symbolTable.atGlobalLevel(), "attribute"))
@@ -1531,10 +1534,43 @@ type_qualifier
         else
             $$.setBasic(EbtVoid, EvqInvariantVaryingIn, $1.line);
     }
-    | UNIFORM {
+	| storage_qualifier {
+        $$.setBasic(EbtVoid, $1.qualifier, $1.line);
+    }
+    ;
+
+storage_qualifier
+    : CONST_QUAL {
+        $$.qualifier = EvqConst;
+		$$.line = $1.line;
+    }
+    | IN_QUAL {
+		ES3_ONLY("in", $1.line);
+        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqVaryingIn : EvqAttribute;
+		$$.line = $1.line;
+    }
+    | OUT_QUAL {
+		ES3_ONLY("out", $1.line);
+        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragColor : EvqVaryingOut;
+		$$.line = $1.line;
+    }
+    | CENTROID IN_QUAL {
+		ES3_ONLY("in", $1.line);
+	    // FIXME: Handle centroid qualifier
+        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqVaryingIn : EvqAttribute;
+		$$.line = $2.line;
+    }
+	| CENTROID OUT_QUAL {
+		ES3_ONLY("out", $1.line);
+	    // FIXME: Handle centroid qualifier
+        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragColor : EvqVaryingOut;
+		$$.line = $2.line;
+    }
+	| UNIFORM {
         if (context->globalErrorCheck($1.line, context->symbolTable.atGlobalLevel(), "uniform"))
             context->recover();
-        $$.setBasic(EbtVoid, EvqUniform, $1.line);
+        $$.qualifier = EvqUniform;
+		$$.line = $1.line;
     }
     ;
 
