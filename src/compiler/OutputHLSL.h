@@ -102,6 +102,8 @@ class OutputHLSL : public TIntermTraverser
     bool mUsesTexture2DProjLod0_bias;
     bool mUsesTextureCubeLod0;
     bool mUsesTextureCubeLod0_bias;
+    bool mUsesFragColor;
+    bool mUsesFragData;
     bool mUsesDepthRange;
     bool mUsesFragCoord;
     bool mUsesPointCoord;
@@ -135,6 +137,8 @@ class OutputHLSL : public TIntermTraverser
     bool mUsesAtan2_2;
     bool mUsesAtan2_3;
     bool mUsesAtan2_4;
+
+    int mNumRenderTargets;
 
     typedef std::set<TString> Constructors;
     Constructors mConstructors;

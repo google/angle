@@ -99,6 +99,9 @@ class Shader
 
     VaryingList mVaryings;
 
+    bool mUsesMultipleRenderTargets;
+    bool mUsesFragColor;
+    bool mUsesFragData;
     bool mUsesFragCoord;
     bool mUsesFrontFacing;
     bool mUsesPointSize;
