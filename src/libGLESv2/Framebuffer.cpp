@@ -264,6 +264,24 @@ void Framebuffer::setDrawBufferState(unsigned int colorAttachment, GLenum drawBu
     mDrawBufferStates[colorAttachment] = drawBuffer;
 }
 
+bool Framebuffer::isEnabledColorAttachment(unsigned int colorAttachment) const
+{
+    return (mColorbufferTypes[colorAttachment] != GL_NONE && mDrawBufferStates[colorAttachment] != GL_NONE);
+}
+
+bool Framebuffer::hasEnabledColorAttachment() const
+{
+    for (unsigned int colorAttachment = 0; colorAttachment < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
+    {
+        if (isEnabledColorAttachment(colorAttachment))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 bool Framebuffer::hasStencil() const
 {
     if (mStencilbufferType != GL_NONE)
