@@ -108,6 +108,8 @@ protected:
     bool enforceFragmentShaderTimingRestrictions(const TDependencyGraph& graph);
     // Get built-in extensions with default behavior.
     const TExtensionBehavior& getExtensionBehavior() const;
+    // Get the resources set by InitBuiltInSymbolTable
+    const ShBuiltInResources& getResources() const;
 
     const ArrayBoundsClamper& getArrayBoundsClamper() const;
     ShArrayIndexClampingStrategy getArrayIndexClampingStrategy() const;
@@ -118,6 +120,8 @@ private:
     ShShaderSpec shaderSpec;
 
     int maxUniformVectors;
+
+    ShBuiltInResources compileResources;
 
     // Built-in symbol table for the given language, spec, and resources.
     // It is preserved from compile-to-compile.

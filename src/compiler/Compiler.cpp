@@ -243,6 +243,7 @@ bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources& resources)
 {
     TBuiltIns builtIns;
 
+    compileResources = resources;
     builtIns.initialize(shaderType, shaderSpec, resources);
     return InitializeSymbolTable(builtIns.getBuiltInStrings(),
         shaderType, shaderSpec, resources, infoSink, symbolTable);
@@ -361,6 +362,11 @@ int TCompiler::getMappedNameMaxLength() const
 const TExtensionBehavior& TCompiler::getExtensionBehavior() const
 {
     return extensionBehavior;
+}
+
+const ShBuiltInResources& TCompiler::getResources() const
+{
+    return compileResources;
 }
 
 const ArrayBoundsClamper& TCompiler::getArrayBoundsClamper() const
