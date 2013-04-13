@@ -222,43 +222,348 @@ bool validateSubImageParamsCube(bool compressed, GLsizei width, GLsizei height,
     return true;
 }
 
-bool validateSubImageParams3D(bool compressed, GLsizei width, GLsizei height, GLsizei depth,
-                              GLint xoffset, GLint yoffset,GLint zoffset, GLint level, GLenum format, GLenum type,
-                              gl::Texture3D *texture)
+bool validateES3TexImageFormat(gl::Context *context, GLenum target, GLint level, GLint internalformat, bool isCompressed, bool isSubImage,
+    GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
+    GLint border, GLenum format, GLenum type)
 {
+    // Validate image size
+    if (level < 0 || width < 0 || height < 0 || depth < 0 )
+    {
+        return gl::error(GL_INVALID_VALUE, false);
+    }
+
+    if (isCompressed)
+    {
+        if (width != 1 && width != 2 && width % 4 != 0)
+        {
+            return gl::error(GL_INVALID_OPERATION, false);
+        }
+
+        if (height != 1 && height != 2 && height % 4 != 0)
+        {
+            return gl::error(GL_INVALID_OPERATION, false);
+        }
+    }
+
+    // Verify zero border
+    if (border != 0)
+    {
+        return gl::error(GL_INVALID_VALUE, false);
+    }
+
+    // Validate dimensions based on Context limits and validate the texture
+    if (level > context->getMaximumTextureLevel())
+    {
+        return gl::error(GL_INVALID_VALUE, false);
+    }
+
+    gl::Texture *texture = NULL;
+    bool textureCompressed = false;
+    GLenum textureInternalFormat = GL_NONE;
+    GLint textureLevelWidth = 0;
+    GLint textureLevelHeight = 0;
+    GLint textureLevelDepth = 0;
+    switch (target)
+    {
+      case GL_TEXTURE_2D:
+        {
+            if (width > (context->getMaximum2DTextureDimension() >> level) ||
+                height > (context->getMaximum2DTextureDimension() >> level))
+            {
+                return gl::error(GL_INVALID_VALUE, false);
+            }
+
+            gl::Texture2D *texture2d = context->getTexture2D();
+            if (texture2d)
+            {
+                textureCompressed = texture2d->isCompressed(level);
+                textureInternalFormat = texture2d->getInternalFormat(level);
+                textureLevelWidth = texture2d->getWidth(level);
+                textureLevelHeight = texture2d->getHeight(level);
+                textureLevelDepth = 1;
+                texture = texture2d;
+            }
+        }
+        break;
+
+      case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
+      case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
+      case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
+      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
+      case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
+      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
+        {
+            if (width != height)
+            {
+                return gl::error(GL_INVALID_VALUE, false);
+            }
+
+            if (width > (context->getMaximumCubeTextureDimension() >> level))
+            {
+                return gl::error(GL_INVALID_VALUE, false);
+            }
+
+            gl::TextureCubeMap *textureCube = context->getTextureCubeMap();
+            if (textureCube)
+            {
+                textureCompressed = textureCube->isCompressed(target, level);
+                textureInternalFormat = textureCube->getInternalFormat(target, level);
+                textureLevelWidth = textureCube->getWidth(target, level);
+                textureLevelHeight = textureCube->getHeight(target, level);
+                textureLevelDepth = 1;
+                texture = textureCube;
+            }
+        }
+        break;
+
+      case GL_TEXTURE_3D:
+        {
+            if (width > (context->getMaximum3DTextureDimension() >> level) ||
+                height > (context->getMaximum3DTextureDimension() >> level) ||
+                depth > (context->getMaximum3DTextureDimension() >> level))
+            {
+                return gl::error(GL_INVALID_VALUE, false);
+            }
+
+            gl::Texture3D *texture3d = context->getTexture3D();
+            if (texture3d)
+            {
+                textureCompressed = texture3d->isCompressed(level);
+                textureInternalFormat = texture3d->getInternalFormat(level);
+                textureLevelWidth = texture3d->getWidth(level);
+                textureLevelHeight = texture3d->getHeight(level);
+                textureLevelDepth = texture3d->getDepth(level);
+                texture = texture3d;
+            }
+        }
+        break;
+
+      default:
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+
     if (!texture)
     {
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
-    if (compressed != texture->isCompressed(level))
+    if (texture->isImmutable())
     {
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
-    if (format != GL_NONE)
+    // Validate texture formats
+    GLenum actualInternalFormat = isSubImage ? textureInternalFormat : internalformat;
+    if (isCompressed)
     {
-        GLenum internalformat = gl::ConvertSizedInternalFormat(format, type);
-        if (internalformat != texture->getInternalFormat(level))
+        if (!gl::IsValidES3CompressedFormat(actualInternalFormat))
+        {
+            return gl::error(GL_INVALID_ENUM, false);
+        }
+
+        if (target == GL_TEXTURE_3D)
+        {
+            return gl::error(GL_INVALID_OPERATION, false);
+        }
+    }
+    else
+    {
+        GLenum err;
+        if (!gl::IsValidES3FormatCombination(actualInternalFormat, format, type, &err))
+        {
+            return gl::error(err, false);
+        }
+
+        if ((target == GL_TEXTURE_3D || target == GL_TEXTURE_2D_ARRAY) &&
+            (format == GL_DEPTH_COMPONENT || format == GL_DEPTH_STENCIL))
         {
             return gl::error(GL_INVALID_OPERATION, false);
         }
     }
 
-    if (compressed)
+    // Validate sub image parameters
+    if (isSubImage)
     {
-        if ((width % 4 != 0 && width != texture->getWidth(0)) ||
-            (height % 4 != 0 && height != texture->getHeight(0)))
+        if (isCompressed != textureCompressed)
         {
             return gl::error(GL_INVALID_OPERATION, false);
         }
+
+        if (format != GL_NONE)
+        {
+            GLenum internalformat = gl::ConvertSizedInternalFormat(format, type);
+            if (internalformat != textureInternalFormat)
+            {
+                return gl::error(GL_INVALID_OPERATION, false);
+            }
+        }
+
+        if (isCompressed)
+        {
+            if ((width % 4 != 0 && width != textureLevelWidth) ||
+                (height % 4 != 0 && height != textureLevelHeight))
+            {
+                return gl::error(GL_INVALID_OPERATION, false);
+            }
+        }
+
+        if (width == 0 || height == 0 || depth == 0)
+        {
+            return false;
+        }
+
+        if (xoffset < 0 || yoffset < 0 || zoffset < 0)
+        {
+            return gl::error(GL_INVALID_VALUE, false);
+        }
+
+        if (std::numeric_limits<GLsizei>::max() - xoffset < width ||
+            std::numeric_limits<GLsizei>::max() - yoffset < height ||
+            std::numeric_limits<GLsizei>::max() - zoffset < depth)
+        {
+            return gl::error(GL_INVALID_VALUE, false);
+        }
+
+        if (xoffset + width > textureLevelWidth ||
+            yoffset + height > textureLevelHeight ||
+            zoffset + depth > textureLevelDepth)
+        {
+            return gl::error(GL_INVALID_VALUE, false);
+        }
     }
 
-    if (xoffset + width > texture->getWidth(level) ||
-        yoffset + height > texture->getHeight(level) ||
-        zoffset + depth > texture->getDepth(level))
+    return true;
+}
+
+bool validateCopyTexImageParameters(gl::Context *context, GLenum target, bool isCompressed, GLint level,
+                                    GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y,
+                                    GLsizei width, GLsizei height)
+{
+    if (level < 0 || xoffset < 0 || yoffset < 0 || zoffset < 0 || width < 0 || height < 0)
     {
         return gl::error(GL_INVALID_VALUE, false);
+    }
+
+    if (std::numeric_limits<GLsizei>::max() - xoffset < width || std::numeric_limits<GLsizei>::max() - yoffset < height)
+    {
+        return gl::error(GL_INVALID_VALUE, false);
+    }
+
+    if (width == 0 || height == 0)
+    {
+        return false;
+    }
+
+    if (level > context->getMaximumTextureLevel())
+    {
+        return gl::error(GL_INVALID_VALUE, false);
+    }
+
+    gl::Framebuffer *framebuffer = context->getReadFramebuffer();
+
+    if (framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
+    {
+        return gl::error(GL_INVALID_FRAMEBUFFER_OPERATION, false);
+    }
+
+    if (context->getReadFramebufferHandle() != 0 && framebuffer->getSamples() != 0)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    gl::Renderbuffer *source = framebuffer->getReadColorbuffer();
+    GLenum colorbufferFormat = source->getInternalFormat();
+    gl::Texture *texture = NULL;
+    GLenum textureFormat = GL_RGBA;
+    bool textureCompressed = false;
+    GLint textureLevelWidth = 0;
+    GLint textureLevelHeight = 0;
+    GLint textureLevelDepth = 0;
+    switch (target)
+    {
+      case GL_TEXTURE_2D:
+        {
+            gl::Texture2D *texture2d = context->getTexture2D();
+            if (texture2d)
+            {
+                textureFormat = gl::ExtractFormat(texture2d->getInternalFormat(level));
+                textureCompressed = texture2d->isCompressed(level);
+                textureLevelWidth = texture2d->getWidth(level);
+                textureLevelHeight = texture2d->getHeight(level);
+                textureLevelDepth = 1;
+                texture = texture2d;
+            }
+        }
+        break;
+
+      case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
+      case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
+      case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
+      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
+      case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
+      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
+        {
+            gl::TextureCubeMap *textureCube = context->getTextureCubeMap();
+            if (textureCube)
+            {
+                textureFormat = gl::ExtractFormat(textureCube->getInternalFormat(target, level));
+                textureCompressed = textureCube->isCompressed(target, level);
+                textureLevelWidth = textureCube->getWidth(target, level);
+                textureLevelHeight = textureCube->getHeight(target, level);
+                textureLevelDepth = 1;
+                texture = textureCube;
+            }
+        }
+        break;
+
+      case GL_TEXTURE_3D:
+        {
+            gl::Texture3D *texture3d = context->getTexture3D();
+            if (texture3d)
+            {
+                textureFormat = gl::ExtractFormat(texture3d->getInternalFormat(level));
+                textureCompressed = texture3d->isCompressed(level);
+                textureLevelWidth = texture3d->getWidth(level);
+                textureLevelHeight = texture3d->getHeight(level);
+                textureLevelDepth = texture3d->getDepth(level);
+                texture = texture3d;
+            }
+        }
+        break;
+
+      default:
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+
+    if (!texture)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    if (isCompressed != textureCompressed)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    if (isCompressed)
+    {
+        if ((width % 4 != 0 && width != textureLevelWidth) ||
+            (height % 4 != 0 && height != textureLevelHeight))
+        {
+            return gl::error(GL_INVALID_OPERATION, false);
+        }
+    }
+
+    if (xoffset + width > textureLevelWidth ||
+        yoffset + height > textureLevelHeight ||
+        zoffset >= textureLevelDepth)
+    {
+        return gl::error(GL_INVALID_VALUE, false);
+    }
+
+    if (!gl::IsValidES3CopyTexImageCombination(textureFormat, colorbufferFormat))
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
     }
 
     return true;
@@ -7172,9 +7477,31 @@ void __stdcall glTexImage3D(GLenum target, GLint level, GLint internalformat, GL
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            // validateES3TexImageFormat sets the error code if there is an error
+            if (!validateES3TexImageFormat(context, target, level, internalformat, false, false,
+                                               0, 0, 0, width, height, depth, border, format, type))
+            {
+                return;
+            }
+
+            switch(target)
+            {
+              case GL_TEXTURE_3D:
+                {
+                    gl::Texture3D *texture = context->getTexture3D();
+                    texture->setImage(level, width, height, depth, format, type, context->getUnpackAlignment(), pixels);
+                }
+                break;
+
+              case GL_TEXTURE_2D_ARRAY:
+                UNIMPLEMENTED();
+                break;
+
+              default:
+                return gl::error(GL_INVALID_ENUM);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -7199,9 +7526,37 @@ void __stdcall glTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint 
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            if (!pixels)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            // validateES3TexImageFormat sets the error code if there is an error
+            if (!validateES3TexImageFormat(context, target, level, GL_NONE, false, true,
+                                               xoffset, yoffset, zoffset, width, height, depth, 0,
+                                               format, type))
+            {
+                return;
+            }
+
+            switch(target)
+            {
+              case GL_TEXTURE_3D:
+                {
+                    gl::Texture3D *texture = context->getTexture3D();
+                    texture->subImage(level, xoffset, yoffset, zoffset, width, height, depth, format, type, context->getUnpackAlignment(), pixels);
+                }
+                break;
+
+              case GL_TEXTURE_2D_ARRAY:
+                UNIMPLEMENTED();
+                break;
+
+              default:
+                return gl::error(GL_INVALID_ENUM);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -7225,9 +7580,31 @@ void __stdcall glCopyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GL
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            if (!validateCopyTexImageParameters(context, target, false, level, xoffset, yoffset, zoffset,
+                                                x, y, width, height))
+            {
+                return;
+            }
+
+            gl::Framebuffer *framebuffer = context->getReadFramebuffer();
+            gl::Texture *texture = NULL;
+            switch (target)
+            {
+              case GL_TEXTURE_3D:
+                texture = context->getTexture3D();
+                break;
+
+              case GL_TEXTURE_2D_ARRAY:
+                UNIMPLEMENTED();
+                break;
+
+              default:
+                return gl::error(GL_INVALID_ENUM);
+            }
+
+            texture->copySubImage(target, level, xoffset, yoffset, zoffset, x, y, width, height, framebuffer);
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -7252,9 +7629,36 @@ void __stdcall glCompressedTexImage3D(GLenum target, GLint level, GLenum interna
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            if (imageSize < 0 || imageSize != gl::ComputeCompressedSize(width, height, internalformat))
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            // validateES3TexImageFormat sets the error code if there is an error
+            if (!validateES3TexImageFormat(context, target, level, internalformat, true, false,
+                                           0, 0, 0, width, height, depth, border, GL_NONE, GL_NONE))
+            {
+                return;
+            }
+
+            switch(target)
+            {
+              case GL_TEXTURE_3D:
+                {
+                    gl::Texture3D *texture = context->getTexture3D();
+                    texture->setCompressedImage(level, internalformat, width, height, depth, imageSize, data);
+                }
+                break;
+
+              case GL_TEXTURE_2D_ARRAY:
+                UNIMPLEMENTED();
+                break;
+
+              default:
+                return gl::error(GL_INVALID_ENUM);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -7279,9 +7683,42 @@ void __stdcall glCompressedTexSubImage3D(GLenum target, GLint level, GLint xoffs
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            if (imageSize < 0 || imageSize != gl::ComputeCompressedSize(width, height, format))
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            if (!data)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            // validateES3TexImageFormat sets the error code if there is an error
+            if (!validateES3TexImageFormat(context, target, level, GL_NONE, true, true,
+                                           0, 0, 0, width, height, depth, 0, GL_NONE, GL_NONE))
+            {
+                return;
+            }
+
+            switch(target)
+            {
+              case GL_TEXTURE_3D:
+                {
+                    gl::Texture3D *texture = context->getTexture3D();
+                    texture->subImageCompressed(level, xoffset, yoffset, zoffset, width, height, depth,
+                                                format, imageSize, data);
+                }
+                break;
+
+              case GL_TEXTURE_2D_ARRAY:
+                UNIMPLEMENTED();
+                break;
+
+            default:
+                return gl::error(GL_INVALID_ENUM);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {

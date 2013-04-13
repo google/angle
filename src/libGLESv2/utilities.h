@@ -64,6 +64,10 @@ GLuint GetDepthSize(GLenum depthFormat);
 GLuint GetStencilSize(GLenum stencilFormat);
 bool IsTriangleMode(GLenum drawMode);
 
+bool IsValidES3FormatCombination(GLint internalformat, GLenum format, GLenum type, GLenum* err);
+bool IsValidES3CompressedFormat(GLenum format);
+bool IsValidES3CopyTexImageCombination(GLenum textureFormat, GLenum frameBufferFormat);
+
 }
 
 std::string getTempPath();

@@ -799,6 +799,259 @@ bool IsTriangleMode(GLenum drawMode)
     return false;
 }
 
+struct FormatInfo
+{
+    GLenum mFormat;
+    GLenum mType;
+    GLint mInternalformat;
+
+    FormatInfo(GLenum format, GLenum type, GLint internalformat)
+        : mFormat(format), mType(type), mInternalformat(internalformat) { }
+
+    bool operator<(const FormatInfo& other) const
+    {
+        return memcmp(this, &other, sizeof(FormatInfo)) < 0;
+    }
+};
+
+typedef std::set<FormatInfo> formatInfoSet;
+static formatInfoSet buildValidES3FormatCombinationSet()
+{
+    formatInfoSet set;
+
+    // From ES 3.0.1 spec, table 3.2
+    set.insert(FormatInfo(GL_RGBA,            GL_UNSIGNED_BYTE,                   GL_RGBA8             ));
+    set.insert(FormatInfo(GL_RGBA,            GL_UNSIGNED_BYTE,                   GL_RGB5_A1           ));
+    set.insert(FormatInfo(GL_RGBA,            GL_UNSIGNED_BYTE,                   GL_RGBA4             ));
+    set.insert(FormatInfo(GL_RGBA,            GL_UNSIGNED_BYTE,                   GL_SRGB8_ALPHA8      ));
+    set.insert(FormatInfo(GL_RGBA,            GL_BYTE,                            GL_RGBA8_SNORM       ));
+    set.insert(FormatInfo(GL_RGBA,            GL_UNSIGNED_SHORT_4_4_4_4,          GL_RGBA4             ));
+    set.insert(FormatInfo(GL_RGBA,            GL_UNSIGNED_INT_2_10_10_10_REV,     GL_RGB10_A2          ));
+    set.insert(FormatInfo(GL_RGBA,            GL_UNSIGNED_INT_2_10_10_10_REV,     GL_RGB5_A1           ));
+    set.insert(FormatInfo(GL_RGBA,            GL_HALF_FLOAT,                      GL_RGBA16F           ));
+    set.insert(FormatInfo(GL_RGBA,            GL_FLOAT,                           GL_RGBA32F           ));
+    set.insert(FormatInfo(GL_RGBA,            GL_FLOAT,                           GL_RGBA16F           ));
+    set.insert(FormatInfo(GL_RGBA_INTEGER,    GL_UNSIGNED_BYTE,                   GL_RGBA8UI           ));
+    set.insert(FormatInfo(GL_RGBA_INTEGER,    GL_BYTE,                            GL_RGBA8I            ));
+    set.insert(FormatInfo(GL_RGBA_INTEGER,    GL_UNSIGNED_SHORT,                  GL_RGBA16UI          ));
+    set.insert(FormatInfo(GL_RGBA_INTEGER,    GL_SHORT,                           GL_RGBA16I           ));
+    set.insert(FormatInfo(GL_RGBA_INTEGER,    GL_UNSIGNED_INT,                    GL_RGBA32UI          ));
+    set.insert(FormatInfo(GL_RGBA_INTEGER,    GL_INT,                             GL_RGBA32I           ));
+    set.insert(FormatInfo(GL_RGBA_INTEGER,    GL_UNSIGNED_INT_2_10_10_10_REV,     GL_RGB10_A2UI        ));
+    set.insert(FormatInfo(GL_RGB,             GL_UNSIGNED_BYTE,                   GL_RGB8              ));
+    set.insert(FormatInfo(GL_RGB,             GL_UNSIGNED_BYTE,                   GL_RGB565            ));
+    set.insert(FormatInfo(GL_RGB,             GL_UNSIGNED_BYTE,                   GL_SRGB8             ));
+    set.insert(FormatInfo(GL_RGB,             GL_BYTE,                            GL_RGB8_SNORM        ));
+    set.insert(FormatInfo(GL_RGB,             GL_UNSIGNED_SHORT_5_6_5,            GL_RGB565            ));
+    set.insert(FormatInfo(GL_RGB,             GL_UNSIGNED_INT_10F_11F_11F_REV,    GL_R11F_G11F_B10F    ));
+    set.insert(FormatInfo(GL_RGB,             GL_UNSIGNED_INT_5_9_9_9_REV,        GL_RGB9_E5           ));
+    set.insert(FormatInfo(GL_RGB,             GL_HALF_FLOAT,                      GL_RGB16F            ));
+    set.insert(FormatInfo(GL_RGB,             GL_HALF_FLOAT,                      GL_R11F_G11F_B10F    ));
+    set.insert(FormatInfo(GL_RGB,             GL_HALF_FLOAT,                      GL_RGB9_E5           ));
+    set.insert(FormatInfo(GL_RGB,             GL_FLOAT,                           GL_RGB32F            ));
+    set.insert(FormatInfo(GL_RGB,             GL_FLOAT,                           GL_RGB16F            ));
+    set.insert(FormatInfo(GL_RGB,             GL_FLOAT,                           GL_R11F_G11F_B10F    ));
+    set.insert(FormatInfo(GL_RGB,             GL_FLOAT,                           GL_RGB9_E5           ));
+    set.insert(FormatInfo(GL_RGB_INTEGER,     GL_UNSIGNED_BYTE,                   GL_RGB8UI            ));
+    set.insert(FormatInfo(GL_RGB_INTEGER,     GL_BYTE,                            GL_RGB8I             ));
+    set.insert(FormatInfo(GL_RGB_INTEGER,     GL_UNSIGNED_SHORT,                  GL_RGB16UI           ));
+    set.insert(FormatInfo(GL_RGB_INTEGER,     GL_SHORT,                           GL_RGB16I            ));
+    set.insert(FormatInfo(GL_RGB_INTEGER,     GL_UNSIGNED_INT,                    GL_RGB32UI           ));
+    set.insert(FormatInfo(GL_RGB_INTEGER,     GL_INT,                             GL_RGB32I            ));
+    set.insert(FormatInfo(GL_RG,              GL_UNSIGNED_BYTE,                   GL_RG8               ));
+    set.insert(FormatInfo(GL_RG,              GL_BYTE,                            GL_RG8_SNORM         ));
+    set.insert(FormatInfo(GL_RG,              GL_HALF_FLOAT,                      GL_RG16F             ));
+    set.insert(FormatInfo(GL_RG,              GL_FLOAT,                           GL_RG32F             ));
+    set.insert(FormatInfo(GL_RG,              GL_FLOAT,                           GL_RG16F             ));
+    set.insert(FormatInfo(GL_RG_INTEGER,      GL_UNSIGNED_BYTE,                   GL_RG8UI             ));
+    set.insert(FormatInfo(GL_RG_INTEGER,      GL_BYTE,                            GL_RG8I              ));
+    set.insert(FormatInfo(GL_RG_INTEGER,      GL_UNSIGNED_SHORT,                  GL_RG16UI            ));
+    set.insert(FormatInfo(GL_RG_INTEGER,      GL_SHORT,                           GL_RG16I             ));
+    set.insert(FormatInfo(GL_RG_INTEGER,      GL_UNSIGNED_INT,                    GL_RG32UI            ));
+    set.insert(FormatInfo(GL_RG_INTEGER,      GL_INT,                             GL_RG32I             ));
+    set.insert(FormatInfo(GL_RED,             GL_UNSIGNED_BYTE,                   GL_R8                ));
+    set.insert(FormatInfo(GL_RED,             GL_BYTE,                            GL_R8_SNORM          ));
+    set.insert(FormatInfo(GL_RED,             GL_HALF_FLOAT,                      GL_R16F              ));
+    set.insert(FormatInfo(GL_RED,             GL_FLOAT,                           GL_R32F              ));
+    set.insert(FormatInfo(GL_RED,             GL_FLOAT,                           GL_R16F              ));
+    set.insert(FormatInfo(GL_RED_INTEGER,     GL_UNSIGNED_BYTE,                   GL_R8UI              ));
+    set.insert(FormatInfo(GL_RED_INTEGER,     GL_BYTE,                            GL_R8I               ));
+    set.insert(FormatInfo(GL_RED_INTEGER,     GL_UNSIGNED_SHORT,                  GL_R16UI             ));
+    set.insert(FormatInfo(GL_RED_INTEGER,     GL_SHORT,                           GL_R16I              ));
+    set.insert(FormatInfo(GL_RED_INTEGER,     GL_UNSIGNED_INT,                    GL_R32UI             ));
+    set.insert(FormatInfo(GL_RED_INTEGER,     GL_INT,                             GL_R32I              ));
+    set.insert(FormatInfo(GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT,                  GL_DEPTH_COMPONENT16 ));
+    set.insert(FormatInfo(GL_DEPTH_COMPONENT, GL_UNSIGNED_INT,                    GL_DEPTH_COMPONENT24 ));
+    set.insert(FormatInfo(GL_DEPTH_COMPONENT, GL_UNSIGNED_INT,                    GL_DEPTH_COMPONENT16 ));
+    set.insert(FormatInfo(GL_DEPTH_COMPONENT, GL_FLOAT,                           GL_DEPTH_COMPONENT32F));
+    set.insert(FormatInfo(GL_DEPTH_STENCIL,   GL_UNSIGNED_INT_24_8,               GL_DEPTH24_STENCIL8  ));
+    set.insert(FormatInfo(GL_DEPTH_STENCIL,   GL_FLOAT_32_UNSIGNED_INT_24_8_REV,  GL_DEPTH32F_STENCIL8 ));
+
+    // From ES 3.0.1 spec, table 3.3
+    set.insert(FormatInfo(GL_RGBA,            GL_UNSIGNED_BYTE,                   GL_RGBA              ));
+    set.insert(FormatInfo(GL_RGBA,            GL_UNSIGNED_SHORT_4_4_4_4,          GL_RGBA              ));
+    set.insert(FormatInfo(GL_RGBA,            GL_UNSIGNED_SHORT_5_5_5_1,          GL_RGBA              ));
+    set.insert(FormatInfo(GL_RGB,             GL_UNSIGNED_BYTE,                   GL_RGB               ));
+    set.insert(FormatInfo(GL_RGB,             GL_UNSIGNED_SHORT_5_6_5,            GL_RGB               ));
+    set.insert(FormatInfo(GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE,                   GL_LUMINANCE_ALPHA   ));
+    set.insert(FormatInfo(GL_LUMINANCE,       GL_UNSIGNED_BYTE,                   GL_LUMINANCE         ));
+    set.insert(FormatInfo(GL_ALPHA,           GL_UNSIGNED_BYTE,                   GL_ALPHA             ));
+
+    // From GL_OES_texture_float
+    set.insert(FormatInfo(GL_LUMINANCE_ALPHA, GL_FLOAT,                           GL_LUMINANCE_ALPHA   ));
+    set.insert(FormatInfo(GL_LUMINANCE,       GL_FLOAT,                           GL_LUMINANCE         ));
+    set.insert(FormatInfo(GL_ALPHA,           GL_FLOAT,                           GL_ALPHA             ));
+
+    // From GL_OES_texture_half_float
+    set.insert(FormatInfo(GL_LUMINANCE_ALPHA, GL_HALF_FLOAT,                      GL_LUMINANCE_ALPHA   ));
+    set.insert(FormatInfo(GL_LUMINANCE,       GL_HALF_FLOAT,                      GL_LUMINANCE         ));
+    set.insert(FormatInfo(GL_ALPHA,           GL_HALF_FLOAT,                      GL_ALPHA             ));
+
+    return set;
+}
+
+typedef std::set<GLint> internalFormatSet;
+static internalFormatSet buildValidES3InternalFormatSet(const formatInfoSet& formatCombos)
+{
+    internalFormatSet internalFormats;
+    for (formatInfoSet::const_iterator i = formatCombos.begin(); i != formatCombos.end(); i++)
+    {
+        internalFormats.insert(i->mInternalformat);
+    }
+    return internalFormats;
+}
+
+typedef std::set<GLenum> formatSet;
+static formatSet buildValidES3FormatSet(const formatInfoSet& formatCombos)
+{
+    formatSet formats;
+    for (formatInfoSet::const_iterator i = formatCombos.begin(); i != formatCombos.end(); i++)
+    {
+        formats.insert(i->mFormat);
+    }
+    return formats;
+}
+
+typedef std::set<GLenum> typeSet;
+static typeSet buildValidES3TypeSet(const formatInfoSet& formatCombos)
+{
+    typeSet types;
+    for (formatInfoSet::const_iterator i = formatCombos.begin(); i != formatCombos.end(); i++)
+    {
+        types.insert(i->mType);
+    }
+    return types;
+}
+
+bool IsValidES3FormatCombination(GLint internalformat, GLenum format, GLenum type, GLenum* err)
+{
+    static const formatInfoSet combinations = buildValidES3FormatCombinationSet();
+    static const internalFormatSet internalFormats = buildValidES3InternalFormatSet(combinations);
+    static const formatSet formats = buildValidES3FormatSet(combinations);
+    static const typeSet types = buildValidES3TypeSet(combinations);
+
+    // Invalid internal format, format or type results in an INVALID_ENUM
+    if (internalFormats.find(internalformat) == internalFormats.end() ||
+        formats.find(format) == formats.end() ||
+        types.find(type) == types.end())
+    {
+        *err = GL_INVALID_ENUM;
+        return false;
+    }
+
+    // Invalid internal format + format + type combination results in an INVALID_OPERATION
+    if (combinations.find(FormatInfo(format, type, internalformat)) == combinations.end())
+    {
+        *err = GL_INVALID_OPERATION;
+        return false;
+    }
+
+    return true;
+}
+
+typedef std::set<GLenum> compressedFormatSet;
+static compressedFormatSet buildValidES3CompressedFormats()
+{
+    compressedFormatSet formats;
+
+    // From ES 3.0.1 spec, table 3.16
+    formats.insert(GL_COMPRESSED_R11_EAC                       );
+    formats.insert(GL_COMPRESSED_R11_EAC                       );
+    formats.insert(GL_COMPRESSED_SIGNED_R11_EAC                );
+    formats.insert(GL_COMPRESSED_RG11_EAC                      );
+    formats.insert(GL_COMPRESSED_SIGNED_RG11_EAC               );
+    formats.insert(GL_COMPRESSED_RGB8_ETC2                     );
+    formats.insert(GL_COMPRESSED_SRGB8_ETC2                    );
+    formats.insert(GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2 );
+    formats.insert(GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2);
+    formats.insert(GL_COMPRESSED_RGBA8_ETC2_EAC                );
+    formats.insert(GL_COMPRESSED_SRGB8_ALPHA8_ETC2_EAC         );
+
+    // From GL_EXT_texture_compression_dxt1
+    formats.insert(GL_COMPRESSED_RGB_S3TC_DXT1_EXT             );
+    formats.insert(GL_COMPRESSED_RGBA_S3TC_DXT1_EXT            );
+
+    // From GL_ANGLE_texture_compression_dxt3
+    formats.insert(GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE          );
+
+    // From GL_ANGLE_texture_compression_dxt5
+    formats.insert(GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE          );
+
+    return formats;
+}
+
+bool IsValidES3CompressedFormat(GLenum format)
+{
+    static const compressedFormatSet validCompressedFormats = buildValidES3CompressedFormats();
+    return validCompressedFormats.find(format) != validCompressedFormats.end();
+}
+
+struct CopyConversion
+{
+    GLenum mTextureFormat;
+    GLenum mFramebufferFormat;
+
+    CopyConversion(GLenum textureFormat, GLenum framebufferFormat)
+        : mTextureFormat(textureFormat), mFramebufferFormat(framebufferFormat) { }
+
+    bool operator<(const CopyConversion& other) const
+    {
+        return memcmp(this, &other, sizeof(CopyConversion)) < 0;
+    }
+};
+
+typedef std::set<CopyConversion> copyConversionSet;
+static copyConversionSet buildValidES3CopyTexImageCombinations()
+{
+    copyConversionSet set;
+
+    // From ES 3.0.1 spec, table 3.15
+    set.insert(CopyConversion(GL_ALPHA,           GL_RGBA));
+    set.insert(CopyConversion(GL_LUMINANCE,       GL_RED));
+    set.insert(CopyConversion(GL_LUMINANCE,       GL_RG));
+    set.insert(CopyConversion(GL_LUMINANCE,       GL_RGB));
+    set.insert(CopyConversion(GL_LUMINANCE,       GL_RGBA));
+    set.insert(CopyConversion(GL_LUMINANCE_ALPHA, GL_RGBA));
+    set.insert(CopyConversion(GL_RED,             GL_RED));
+    set.insert(CopyConversion(GL_RED,             GL_RG));
+    set.insert(CopyConversion(GL_RED,             GL_RGB));
+    set.insert(CopyConversion(GL_RED,             GL_RGBA));
+    set.insert(CopyConversion(GL_RG,              GL_RG));
+    set.insert(CopyConversion(GL_RG,              GL_RGB));
+    set.insert(CopyConversion(GL_RG,              GL_RGBA));
+    set.insert(CopyConversion(GL_RGB,             GL_RGB));
+    set.insert(CopyConversion(GL_RGB,             GL_RGBA));
+    set.insert(CopyConversion(GL_RGBA,            GL_RGBA));
+
+    return set;
+}
+
+bool IsValidES3CopyTexImageCombination(GLenum textureFormat, GLenum frameBufferFormat)
+{
+    static const copyConversionSet conversions = buildValidES3CopyTexImageCombinations();
+    return conversions.find(CopyConversion(textureFormat, frameBufferFormat)) != conversions.end();
+}
+
 }
 
 std::string getTempPath()
