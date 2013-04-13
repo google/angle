@@ -256,6 +256,8 @@ bool validReadFormatType(GLenum format, GLenum type)
 extern "C"
 {
 
+// OpenGL ES 2.0 functions
+
 void __stdcall glActiveTexture(GLenum texture)
 {
     EVENT("(GLenum texture = 0x%X)", texture);
@@ -859,7 +861,7 @@ GLenum __stdcall glCheckFramebufferStatus(GLenum target)
 
 void __stdcall glClear(GLbitfield mask)
 {
-    EVENT("(GLbitfield mask = %X)", mask);
+    EVENT("(GLbitfield mask = 0x%X)", mask);
 
     try
     {
@@ -936,7 +938,7 @@ void __stdcall glClearStencil(GLint s)
 
 void __stdcall glColorMask(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha)
 {
-    EVENT("(GLboolean red = %d, GLboolean green = %d, GLboolean blue = %d, GLboolean alpha = %d)",
+    EVENT("(GLboolean red = %d, GLboolean green = %u, GLboolean blue = %u, GLboolean alpha = %u)",
           red, green, blue, alpha);
 
     try
@@ -1936,7 +1938,7 @@ void __stdcall glDepthFunc(GLenum func)
 
 void __stdcall glDepthMask(GLboolean flag)
 {
-    EVENT("(GLboolean flag = %d)", flag);
+    EVENT("(GLboolean flag = %u)", flag);
 
     try
     {
@@ -4915,7 +4917,7 @@ void __stdcall glRenderbufferStorage(GLenum target, GLenum internalformat, GLsiz
 
 void __stdcall glSampleCoverage(GLclampf value, GLboolean invert)
 {
-    EVENT("(GLclampf value = %f, GLboolean invert = %d)", value, invert);
+    EVENT("(GLclampf value = %f, GLboolean invert = %u)", value, invert);
 
     try
     {
@@ -6339,7 +6341,7 @@ void __stdcall glUniform4iv(GLint location, GLsizei count, const GLint* v)
 
 void __stdcall glUniformMatrix2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
 {
-    EVENT("(GLint location = %d, GLsizei count = %d, GLboolean transpose = %d, const GLfloat* value = 0x%0.8p)",
+    EVENT("(GLint location = %d, GLsizei count = %d, GLboolean transpose = %u, const GLfloat* value = 0x%0.8p)",
           location, count, transpose, value);
 
     try
@@ -6378,7 +6380,7 @@ void __stdcall glUniformMatrix2fv(GLint location, GLsizei count, GLboolean trans
 
 void __stdcall glUniformMatrix3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
 {
-    EVENT("(GLint location = %d, GLsizei count = %d, GLboolean transpose = %d, const GLfloat* value = 0x%0.8p)",
+    EVENT("(GLint location = %d, GLsizei count = %d, GLboolean transpose = %u, const GLfloat* value = 0x%0.8p)",
           location, count, transpose, value);
 
     try
@@ -6417,7 +6419,7 @@ void __stdcall glUniformMatrix3fv(GLint location, GLsizei count, GLboolean trans
 
 void __stdcall glUniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
 {
-    EVENT("(GLint location = %d, GLsizei count = %d, GLboolean transpose = %d, const GLfloat* value = 0x%0.8p)",
+    EVENT("(GLint location = %d, GLsizei count = %d, GLboolean transpose = %u, const GLfloat* value = 0x%0.8p)",
           location, count, transpose, value);
 
     try
@@ -6751,7 +6753,7 @@ void __stdcall glVertexAttribDivisorANGLE(GLuint index, GLuint divisor)
 void __stdcall glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* ptr)
 {
     EVENT("(GLuint index = %d, GLint size = %d, GLenum type = 0x%X, "
-          "GLboolean normalized = %d, GLsizei stride = %d, const GLvoid* ptr = 0x%0.8p)",
+          "GLboolean normalized = %u, GLsizei stride = %d, const GLvoid* ptr = 0x%0.8p)",
           index, size, type, normalized, stride, ptr);
 
     try
@@ -6820,6 +6822,2607 @@ void __stdcall glViewport(GLint x, GLint y, GLsizei width, GLsizei height)
         return gl::error(GL_OUT_OF_MEMORY);
     }
 }
+
+// OpenGL ES 3.0 functions
+
+void __stdcall glReadBuffer(GLenum mode)
+{
+    EVENT("(GLenum mode = 0x%X)", mode);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glDrawRangeElements(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, const GLvoid* indices)
+{
+    EVENT("(GLenum mode = 0x%X, GLuint start = %u, GLuint end = %u, GLsizei count = %d, GLenum type = 0x%X, "
+          "const GLvoid* indices = 0x%0.8p)", mode, start, end, count, type, indices);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glTexImage3D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type, const GLvoid* pixels)
+{
+    EVENT("(GLenum target = 0x%X, GLint level = %d, GLint internalformat = %d, GLsizei width = %d, "
+          "GLsizei height = %d, GLsizei depth = %d, GLint border = %d, GLenum format = 0x%X, "
+          "GLenum type = 0x%X, const GLvoid* pixels = 0x%0.8p)",
+          target, level, internalformat, width, height, depth, border, format, type, pixels);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const GLvoid* pixels)
+{
+    EVENT("(GLenum target = 0x%X, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, "
+          "GLint zoffset = %d, GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d, "
+          "GLenum format = 0x%X, GLenum type = 0x%X, const GLvoid* pixels = 0x%0.8p)",
+          target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glCopyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height)
+{
+    EVENT("(GLenum target = 0x%X, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, "
+          "GLint zoffset = %d, GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei height = %d)",
+          target, level, xoffset, yoffset, zoffset, x, y, width, height);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glCompressedTexImage3D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLsizei imageSize, const GLvoid* data)
+{
+    EVENT("(GLenum target = 0x%X, GLint level = %d, GLint internalformat = %d, GLsizei width = %d, "
+          "GLsizei height = %d, GLsizei depth = %d, GLint border = %d, GLsizei imageSize = %d, "
+          "const GLvoid* data = 0x%0.8p)",
+          target, level, internalformat, width, height, depth, border, imageSize, data);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glCompressedTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const GLvoid* data)
+{
+    EVENT("(GLenum target = 0x%X, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, "
+        "GLint zoffset = %d, GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d, "
+        "GLenum format = 0x%X, GLsizei imageSize = %d, const GLvoid* data = 0x%0.8p)",
+        target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glGenQueries(GLsizei n, GLuint* ids)
+{
+    EVENT("(GLsizei n = %d, GLuint* ids = 0x%0.8p)", n, ids);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glDeleteQueries(GLsizei n, const GLuint* ids)
+{
+    EVENT("(GLsizei n = %d, GLuint* ids = 0x%0.8p)", n, ids);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+GLboolean __stdcall glIsQuery(GLuint id)
+{
+    EVENT("(GLuint id = %u)", id);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION, GL_FALSE);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY, GL_FALSE);
+    }
+
+    return GL_FALSE;
+}
+
+void __stdcall glBeginQuery(GLenum target, GLuint id)
+{
+    EVENT("(GLenum target = 0x%X, GLuint id = %u)", target, id);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glEndQuery(GLenum target)
+{
+    EVENT("(GLenum target = 0x%X)", target);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glGetQueryiv(GLenum target, GLenum pname, GLint* params)
+{
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint* params = 0x%0.8p)", target, pname, params);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glGetQueryObjectuiv(GLuint id, GLenum pname, GLuint* params)
+{
+    EVENT("(GLuint id = %u, GLenum pname = 0x%X, GLint* params = 0x%0.8p)", id, pname, params);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+GLboolean __stdcall glUnmapBuffer(GLenum target)
+{
+    EVENT("(GLenum target = 0x%X)", target);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION, GL_FALSE);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY, GL_FALSE);
+    }
+
+    return GL_FALSE;
+}
+
+void __stdcall glGetBufferPointerv(GLenum target, GLenum pname, GLvoid** params)
+{
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLvoid** params = 0x%0.8p)", target, pname, params);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glDrawBuffers(GLsizei n, const GLenum* bufs)
+{
+    EVENT("(GLsizei n = %d, const GLenum* bufs = 0x%0.8p)", n, bufs);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glUniformMatrix2x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
+{
+    EVENT("(GLint location = %d, GLsizei count = %d, GLboolean transpose = %u, const GLfloat* value = 0x%0.8p)",
+          location, count, transpose, value);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glUniformMatrix3x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
+{
+    EVENT("(GLint location = %d, GLsizei count = %d, GLboolean transpose = %u, const GLfloat* value = 0x%0.8p)",
+          location, count, transpose, value);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glUniformMatrix2x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
+{
+    EVENT("(GLint location = %d, GLsizei count = %d, GLboolean transpose = %u, const GLfloat* value = 0x%0.8p)",
+          location, count, transpose, value);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glUniformMatrix4x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
+{
+    EVENT("(GLint location = %d, GLsizei count = %d, GLboolean transpose = %u, const GLfloat* value = 0x%0.8p)",
+          location, count, transpose, value);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glUniformMatrix3x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
+{
+    EVENT("(GLint location = %d, GLsizei count = %d, GLboolean transpose = %u, const GLfloat* value = 0x%0.8p)",
+          location, count, transpose, value);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glUniformMatrix4x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
+{
+    EVENT("(GLint location = %d, GLsizei count = %d, GLboolean transpose = %u, const GLfloat* value = 0x%0.8p)",
+          location, count, transpose, value);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glBlitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter)
+{
+    EVENT("(GLint srcX0 = %d, GLint srcY0 = %d, GLint srcX1 = %d, GLint srcY1 = %d, GLint dstX0 = %d, "
+          "GLint dstY0 = %d, GLint dstX1 = %d, GLint dstY1 = %d, GLbitfield mask = 0x%X, GLenum filter = 0x%X)",
+          srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glRenderbufferStorageMultisample(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height)
+{
+    EVENT("(GLenum target = 0x%X, GLsizei samples = %d, GLenum internalformat = 0x%X, GLsizei width = %d, GLsizei height = %d)",
+        target, samples, internalformat, width, height);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glFramebufferTextureLayer(GLenum target, GLenum attachment, GLuint texture, GLint level, GLint layer)
+{
+    EVENT("(GLenum target = 0x%X, GLenum attachment = 0x%X, GLuint texture = %u, GLint level = %d, GLint layer = %d)",
+        target, attachment, texture, level, layer);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+GLvoid* __stdcall glMapBufferRange(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access)
+{
+    EVENT("(GLenum target = 0x%X, GLintptr offset = %d, GLsizeiptr length = %d, GLbitfield access = 0x%X)",
+          target, offset, length, access);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLvoid*>(NULL));
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY, reinterpret_cast<GLvoid*>(NULL));
+    }
+
+    return NULL;
+}
+
+void __stdcall glFlushMappedBufferRange(GLenum target, GLintptr offset, GLsizeiptr length)
+{
+    EVENT("(GLenum target = 0x%X, GLintptr offset = %d, GLsizeiptr length = %d)", target, offset, length);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glBindVertexArray(GLuint array)
+{
+    EVENT("(GLuint array = %u)", array);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glDeleteVertexArrays(GLsizei n, const GLuint* arrays)
+{
+    EVENT("(GLsizei n = %d, const GLuint* arrays = 0x%0.8p)", n, arrays);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glGenVertexArrays(GLsizei n, GLuint* arrays)
+{
+    EVENT("(GLsizei n = %d, GLuint* arrays = 0x%0.8p)", n, arrays);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+GLboolean __stdcall glIsVertexArray(GLuint array)
+{
+    EVENT("(GLuint array = %u)", array);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION, GL_FALSE);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY, GL_FALSE);
+    }
+
+    return GL_FALSE;
+}
+
+void __stdcall glGetIntegeri_v(GLenum target, GLuint index, GLint* data)
+{
+    EVENT("(GLenum target = 0x%X, GLuint index = %u, GLint* data = 0x%0.8p)",
+          target, index, data);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glBeginTransformFeedback(GLenum primitiveMode)
+{
+    EVENT("(GLenum primitiveMode = 0x%X)", primitiveMode);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glEndTransformFeedback(void)
+{
+    EVENT("(void)");
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glBindBufferRange(GLenum target, GLuint index, GLuint buffer, GLintptr offset, GLsizeiptr size)
+{
+    EVENT("(GLenum target = 0x%X, GLuint index = %u, GLuint buffer = %u, GLintptr offset = %d, GLsizeiptr size = %d)",
+          target, index, buffer, offset, size);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glBindBufferBase(GLenum target, GLuint index, GLuint buffer)
+{
+    EVENT("(GLenum target = 0x%X, GLuint index = %u, GLuint buffer = %u)",
+          target, index, buffer);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glTransformFeedbackVaryings(GLuint program, GLsizei count, const GLchar* const* varyings, GLenum bufferMode)
+{
+    EVENT("(GLuint program = %u, GLsizei count = %d, const GLchar* const* varyings = 0x%0.8p, GLenum bufferMode = 0x%X)",
+          program, count, varyings, bufferMode);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glGetTransformFeedbackVarying(GLuint program, GLuint index, GLsizei bufSize, GLsizei* length, GLsizei* size, GLenum* type, GLchar* name)
+{
+    EVENT("(GLuint program = %u, GLuint index = %u, GLsizei bufSize = %d, GLsizei* length = 0x%0.8p, "
+          "GLsizei* size = 0x%0.8p, GLenum* type = 0x%0.8p, GLchar* name = 0x%0.8p)",
+          program, index, bufSize, length, size, type, name);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glVertexAttribIPointer(GLuint index, GLint size, GLenum type, GLsizei stride, const GLvoid* pointer)
+{
+    EVENT("(GLuint index = %u, GLint size = %d, GLenum type = 0x%X, GLsizei stride = %d, const GLvoid* pointer = 0x%0.8p)",
+          index, size, type, stride, pointer);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glGetVertexAttribIiv(GLuint index, GLenum pname, GLint* params)
+{
+    EVENT("(GLuint index = %u, GLenum pname = 0x%X, GLint* params = 0x%0.8p)",
+          index, pname, params);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glGetVertexAttribIuiv(GLuint index, GLenum pname, GLuint* params)
+{
+    EVENT("(GLuint index = %u, GLenum pname = 0x%X, GLuint* params = 0x%0.8p)",
+          index, pname, params);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glVertexAttribI4i(GLuint index, GLint x, GLint y, GLint z, GLint w)
+{
+    EVENT("(GLuint index = %u, GLint x = %d, GLint y = %d, GLint z = %d, GLint w = %d)",
+          index, x, y, z, w);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glVertexAttribI4ui(GLuint index, GLuint x, GLuint y, GLuint z, GLuint w)
+{
+    EVENT("(GLuint index = %u, GLuint x = %u, GLuint y = %u, GLuint z = %u, GLuint w = %u)",
+          index, x, y, z, w);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glVertexAttribI4iv(GLuint index, const GLint* v)
+{
+    EVENT("(GLuint index = %u, const GLint* v = 0x%0.8p)", index, v);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glVertexAttribI4uiv(GLuint index, const GLuint* v)
+{
+    EVENT("(GLuint index = %u, const GLuint* v = 0x%0.8p)", index, v);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glGetUniformuiv(GLuint program, GLint location, GLuint* params)
+{
+    EVENT("(GLuint program = %u, GLint location = %d, GLuint* params = 0x%0.8p)",
+          program, location, params);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+GLint __stdcall glGetFragDataLocation(GLuint program, const GLchar *name)
+{
+    EVENT("(GLuint program = %u, const GLchar *name = 0x%0.8p)",
+          program, name);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION, 0);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY, 0);
+    }
+
+    return 0;
+}
+
+void __stdcall glUniform1ui(GLint location, GLuint v0)
+{
+    EVENT("(GLint location = %d, GLuint v0 = %u)",
+          location, v0);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glUniform2ui(GLint location, GLuint v0, GLuint v1)
+{
+    EVENT("(GLint location = %d, GLuint v0 = %u, GLuint v1 = %u)",
+          location, v0, v1);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glUniform3ui(GLint location, GLuint v0, GLuint v1, GLuint v2)
+{
+    EVENT("(GLint location = %d, GLuint v0 = %u, GLuint v1 = %u, GLuint v2 = %u)",
+          location, v0, v1, v2);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glUniform4ui(GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3)
+{
+    EVENT("(GLint location = %d, GLuint v0 = %u, GLuint v1 = %u, GLuint v2 = %u, GLuint v3 = %u)",
+          location, v0, v1, v2, v3);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glUniform1uiv(GLint location, GLsizei count, const GLuint* value)
+{
+    EVENT("(GLint location = %d, GLsizei count = %d, const GLuint* value = 0x%0.8p)",
+          location, count, value);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glUniform2uiv(GLint location, GLsizei count, const GLuint* value)
+{
+    EVENT("(GLint location = %d, GLsizei count = %d, const GLuint* value = 0x%0.8p)",
+          location, count, value);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glUniform3uiv(GLint location, GLsizei count, const GLuint* value)
+{
+    EVENT("(GLint location = %d, GLsizei count = %d, const GLuint* value)",
+          location, count, value);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glUniform4uiv(GLint location, GLsizei count, const GLuint* value)
+{
+    EVENT("(GLint location = %d, GLsizei count = %d, const GLuint* value = 0x%0.8p)",
+          location, count, value);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glClearBufferiv(GLenum buffer, GLint drawbuffer, const GLint* value)
+{
+    EVENT("(GLenum buffer = 0x%X, GLint drawbuffer = %d, const GLint* value = 0x%0.8p)",
+          buffer, drawbuffer, value);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glClearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint* value)
+{
+    EVENT("(GLenum buffer = 0x%X, GLint drawbuffer = %d, const GLuint* value = 0x%0.8p)",
+          buffer, drawbuffer, value);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glClearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat* value)
+{
+    EVENT("(GLenum buffer = 0x%X, GLint drawbuffer = %d, const GLfloat* value = 0x%0.8p)",
+          buffer, drawbuffer, value);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glClearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil)
+{
+    EVENT("(GLenum buffer = 0x%X, GLint drawbuffer = %d, GLfloat depth, GLint stencil = %d)",
+          buffer, drawbuffer, depth, stencil);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+const GLubyte* __stdcall glGetStringi(GLenum name, GLuint index)
+{
+    EVENT("(GLenum name = 0x%X, GLuint index = %u)", name, index);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLubyte*>(NULL));
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY, reinterpret_cast<GLubyte*>(NULL));
+    }
+
+    return NULL;
+}
+
+void __stdcall glCopyBufferSubData(GLenum readTarget, GLenum writeTarget, GLintptr readOffset, GLintptr writeOffset, GLsizeiptr size)
+{
+    EVENT("(GLenum readTarget = 0x%X, GLenum writeTarget = 0x%X, GLintptr readOffset = %d, GLintptr writeOffset = %d, GLsizeiptr size = %d)",
+          readTarget, writeTarget, readOffset, writeOffset, size);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glGetUniformIndices(GLuint program, GLsizei uniformCount, const GLchar* const* uniformNames, GLuint* uniformIndices)
+{
+    EVENT("(GLuint program = %u, GLsizei uniformCount = %d, const GLchar* const* uniformNames = 0x%0.8p, GLuint* uniformIndices = 0x%0.8p)",
+          program, uniformCount, uniformNames, uniformIndices);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glGetActiveUniformsiv(GLuint program, GLsizei uniformCount, const GLuint* uniformIndices, GLenum pname, GLint* params)
+{
+    EVENT("(GLuint program = %u, GLsizei uniformCount = %d, const GLuint* uniformIndices = 0x%0.8p, GLenum pname = 0x%X, GLint* params = 0x%0.8p)",
+          program, uniformCount, uniformIndices, pname, params);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+GLuint __stdcall glGetUniformBlockIndex(GLuint program, const GLchar* uniformBlockName)
+{
+    EVENT("(GLuint program = %u, const GLchar* uniformBlockName = 0x%0.8p)", program, uniformBlockName);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION, 0);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY, 0);
+    }
+
+    return 0;
+}
+
+void __stdcall glGetActiveUniformBlockiv(GLuint program, GLuint uniformBlockIndex, GLenum pname, GLint* params)
+{
+    EVENT("(GLuint program = %u, GLuint uniformBlockIndex = %u, GLenum pname = 0x%X, GLint* params = 0x%0.8p)",
+          program, uniformBlockIndex, pname, params);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glGetActiveUniformBlockName(GLuint program, GLuint uniformBlockIndex, GLsizei bufSize, GLsizei* length, GLchar* uniformBlockName)
+{
+    EVENT("(GLuint program = %u, GLuint uniformBlockIndex = %u, GLsizei bufSize = %d, GLsizei* length = 0x%0.8p, GLchar* uniformBlockName = 0x%0.8p)",
+          program, uniformBlockIndex, bufSize, length, uniformBlockName);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glUniformBlockBinding(GLuint program, GLuint uniformBlockIndex, GLuint uniformBlockBinding)
+{
+    EVENT("(GLuint program = %u, GLuint uniformBlockIndex = %u, GLuint uniformBlockBinding = %u)",
+          program, uniformBlockIndex, uniformBlockBinding);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glDrawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei instanceCount)
+{
+    EVENT("(GLenum mode = 0x%X, GLint first = %d, GLsizei count = %d, GLsizei instanceCount = %d)",
+          mode, first, count, instanceCount);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glDrawElementsInstanced(GLenum mode, GLsizei count, GLenum type, const GLvoid* indices, GLsizei instanceCount)
+{
+    EVENT("(GLenum mode = 0x%X, GLsizei count = %d, GLenum type = 0x%X, const GLvoid* indices = 0x%0.8p, GLsizei instanceCount = %d)",
+          mode, count, type, indices, instanceCount);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+GLsync __stdcall glFenceSync(GLenum condition, GLbitfield flags)
+{
+    EVENT("(GLenum condition = 0x%X, GLbitfield flags = 0x%X)", condition, flags);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLsync>(NULL));
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY, reinterpret_cast<GLsync>(NULL));
+    }
+
+    return NULL;
+}
+
+GLboolean __stdcall glIsSync(GLsync sync)
+{
+    EVENT("(GLsync sync = 0x%0.8p)", sync);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION, GL_FALSE);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY, GL_FALSE);
+    }
+
+    return GL_FALSE;
+}
+
+void __stdcall glDeleteSync(GLsync sync)
+{
+    EVENT("(GLsync sync = 0x%0.8p)", sync);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+GLenum __stdcall glClientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
+{
+    EVENT("(GLsync sync = 0x%0.8p, GLbitfield flags = 0x%X, GLuint64 timeout = %llu)",
+          sync, flags, timeout);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION, GL_FALSE);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY, GL_FALSE);
+    }
+
+    return GL_FALSE;
+}
+
+void __stdcall glWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
+{
+    EVENT("(GLsync sync = 0x%0.8p, GLbitfield flags = 0x%X, GLuint64 timeout = %llu)",
+          sync, flags, timeout);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glGetInteger64v(GLenum pname, GLint64* params)
+{
+    EVENT("(GLenum pname = 0x%X, GLint64* params = 0x%0.8p)",
+          pname, params);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glGetSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei* length, GLint* values)
+{
+    EVENT("(GLsync sync = 0x%0.8p, GLenum pname = 0x%X, GLsizei bufSize = %d, GLsizei* length = 0x%0.8p, GLint* values = 0x%0.8p)",
+          sync, pname, bufSize, length, values);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glGetInteger64i_v(GLenum target, GLuint index, GLint64* data)
+{
+    EVENT("(GLenum target = 0x%X, GLuint index = %u, GLint64* data = 0x%0.8p)",
+          target, index, data);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glGetBufferParameteri64v(GLenum target, GLenum pname, GLint64* params)
+{
+    EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, GLint64* params = 0x%0.8p)",
+          target, pname, params);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glGenSamplers(GLsizei count, GLuint* samplers)
+{
+    EVENT("(GLsizei count = %d, GLuint* samplers = 0x%0.8p)", count, samplers);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glDeleteSamplers(GLsizei count, const GLuint* samplers)
+{
+    EVENT("(GLsizei count = %d, const GLuint* samplers = 0x%0.8p)", count, samplers);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+GLboolean __stdcall glIsSampler(GLuint sampler)
+{
+    EVENT("(GLuint sampler = %u)", sampler);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION, GL_FALSE);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY, GL_FALSE);
+    }
+
+    return GL_FALSE;
+}
+
+void __stdcall glBindSampler(GLuint unit, GLuint sampler)
+{
+    EVENT("(GLuint unit = %u, GLuint sampler = %u)", unit, sampler);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glSamplerParameteri(GLuint sampler, GLenum pname, GLint param)
+{
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLint param = %d)", sampler, pname, param);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glSamplerParameteriv(GLuint sampler, GLenum pname, const GLint* param)
+{
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, const GLint* param = 0x%0.8p)",
+          sampler, pname, param);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glSamplerParameterf(GLuint sampler, GLenum pname, GLfloat param)
+{
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLfloat param = %g)", sampler, pname, param);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glSamplerParameterfv(GLuint sampler, GLenum pname, const GLfloat* param)
+{
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, const GLfloat* param = 0x%0.8p)", sampler, pname, param);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glGetSamplerParameteriv(GLuint sampler, GLenum pname, GLint* params)
+{
+    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, GLint* params = 0x%0.8p)", sampler, pname, params);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glGetSamplerParameterfv(GLuint sampler, GLenum pname, GLfloat* params)
+{
+    EVENT("(GLuint sample = %ur, GLenum pname = 0x%X, GLfloat* params = 0x%0.8p)", sampler, pname, params);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glVertexAttribDivisor(GLuint index, GLuint divisor)
+{
+    EVENT("(GLuint index = %u, GLuint divisor = %u)", index, divisor);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glBindTransformFeedback(GLenum target, GLuint id)
+{
+    EVENT("(GLenum target = 0x%X, GLuint id = %u)", target, id);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glDeleteTransformFeedbacks(GLsizei n, const GLuint* ids)
+{
+    EVENT("(GLsizei n = %d, const GLuint* ids = 0x%0.8p)", n, ids);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glGenTransformFeedbacks(GLsizei n, GLuint* ids)
+{
+    EVENT("(GLsizei n = %d, GLuint* ids = 0x%0.8p)", n, ids);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+GLboolean __stdcall glIsTransformFeedback(GLuint id)
+{
+    EVENT("(GLuint id = %u)", id);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION, GL_FALSE);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY, GL_FALSE);
+    }
+
+    return GL_FALSE;
+}
+
+void __stdcall glPauseTransformFeedback(void)
+{
+    EVENT("(void)");
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glResumeTransformFeedback(void)
+{
+    EVENT("(void)");
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glGetProgramBinary(GLuint program, GLsizei bufSize, GLsizei* length, GLenum* binaryFormat, GLvoid* binary)
+{
+    EVENT("(GLuint program = %u, GLsizei bufSize = %d, GLsizei* length = 0x%0.8p, GLenum* binaryFormat = 0x%0.8p, GLvoid* binary = 0x%0.8p)",
+          program, bufSize, length, binaryFormat, binary);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glProgramBinary(GLuint program, GLenum binaryFormat, const GLvoid* binary, GLsizei length)
+{
+    EVENT("(GLuint program = %u, GLenum binaryFormat = 0x%X, const GLvoid* binary = 0x%0.8p, GLsizei length = %d)",
+          program, binaryFormat, binary, length);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glProgramParameteri(GLuint program, GLenum pname, GLint value)
+{
+    EVENT("(GLuint program = %u, GLenum pname = 0x%X, GLint value = %d)",
+          program, pname, value);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glInvalidateFramebuffer(GLenum target, GLsizei numAttachments, const GLenum* attachments)
+{
+    EVENT("(GLenum target = 0x%X, GLsizei numAttachments = %d, const GLenum* attachments = 0x%0.8p)",
+          target, numAttachments, attachments);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glInvalidateSubFramebuffer(GLenum target, GLsizei numAttachments, const GLenum* attachments, GLint x, GLint y, GLsizei width, GLsizei height)
+{
+    EVENT("(GLenum target = 0x%X, GLsizei numAttachments = %d, const GLenum* attachments = 0x%0.8p, GLint x = %d, "
+          "GLint y = %d, GLsizei width = %d, GLsizei height = %d)",
+          target, numAttachments, attachments, x, y, width, height);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glTexStorage2D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height)
+{
+    EVENT("(GLenum target = 0x%X, GLsizei levels = %d, GLenum internalformat = 0x%X, GLsizei width = %d, GLsizei height = %d)",
+          target, levels, internalformat, width, height);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glTexStorage3D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth)
+{
+    EVENT("(GLenum target = 0x%X, GLsizei levels = %d, GLenum internalformat = 0x%X, GLsizei width = %d, "
+          "GLsizei height = %d, GLsizei depth = %d)",
+          target, levels, internalformat, width, height, depth);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+void __stdcall glGetInternalformativ(GLenum target, GLenum internalformat, GLenum pname, GLsizei bufSize, GLint* params)
+{
+    EVENT("(GLenum target = 0x%X, GLenum internalformat = 0x%X, GLenum pname = 0x%X, GLsizei bufSize = %d, "
+          "GLint* params = 0x%0.8p)",
+          target, internalformat, pname, bufSize, params);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
+
+        UNIMPLEMENTED();
+    }
+    catch(std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
+// Extension functions
 
 void __stdcall glBlitFramebufferANGLE(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
                                       GLbitfield mask, GLenum filter)
