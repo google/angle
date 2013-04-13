@@ -101,6 +101,7 @@ class ProgramBinary : public RefCountObject
 
     bool getUniformfv(GLint location, GLsizei *bufSize, GLfloat *params);
     bool getUniformiv(GLint location, GLsizei *bufSize, GLint *params);
+    bool getUniformuiv(GLint location, GLsizei *bufSize, GLuint *params);
 
     void dirtyAllUniforms();
     void applyUniforms();

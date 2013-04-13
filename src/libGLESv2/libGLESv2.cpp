@@ -8418,9 +8418,30 @@ void __stdcall glGetUniformuiv(GLuint program, GLint location, GLuint* params)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            if (program == 0)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            gl::Program *programObject = context->getProgram(program);
+
+            if (!programObject || !programObject->isLinked())
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            gl::ProgramBinary *programBinary = programObject->getProgramBinary();
+            if (!programBinary)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            if (!programBinary->getUniformuiv(location, NULL, params))
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {

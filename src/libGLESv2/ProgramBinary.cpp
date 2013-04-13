@@ -640,7 +640,18 @@ bool ProgramBinary::getUniformv(GLint location, GLsizei *bufSize, T *params, GLe
                 }
             }
             break;
+       
+          case GL_UNSIGNED_INT:
+            {
+                GLuint *uintParams = (GLuint*)targetUniform->data + mUniformIndex[location].element * 4;
 
+                for (unsigned int i = 0; i < size; i++)
+                {
+                    params[i] = static_cast<T>(uintParams[i]);
+                }
+            }
+            break;
+          
           default: UNREACHABLE();
         }
     }
@@ -656,6 +667,11 @@ bool ProgramBinary::getUniformfv(GLint location, GLsizei *bufSize, GLfloat *para
 bool ProgramBinary::getUniformiv(GLint location, GLsizei *bufSize, GLint *params)
 {
     return getUniformv(location, bufSize, params, GL_INT);
+}
+
+bool ProgramBinary::getUniformuiv(GLint location, GLsizei *bufSize, GLuint *params)
+{
+    return getUniformv(location, bufSize, params, GL_UNSIGNED_INT);
 }
 
 void ProgramBinary::dirtyAllUniforms()
