@@ -142,6 +142,7 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
     mTexture2DZero.set(new Texture2D(mRenderer, 0));
     mTextureCubeMapZero.set(new TextureCubeMap(mRenderer, 0));
     mTexture3DZero.set(new Texture3D(mRenderer, 0));
+    mTexture2DArrayZero.set(new Texture2DArray(mRenderer, 0));
 
     mState.activeSampler = 0;
     bindArrayBuffer(0);
@@ -258,6 +259,7 @@ Context::~Context()
     mTexture2DZero.set(NULL);
     mTextureCubeMapZero.set(NULL);
     mTexture3DZero.set(NULL);
+    mTexture2DArrayZero.set(NULL);
 
     mState.genericUniformBuffer.set(NULL);
     for (int i = 0; i < IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS; i++)
@@ -936,6 +938,13 @@ void Context::bindTexture3D(GLuint texture)
     mState.samplerTexture[TEXTURE_3D][mState.activeSampler].set(getTexture(texture));
 }
 
+void Context::bindTexture2DArray(GLuint texture)
+{
+    mResourceManager->checkTextureAllocation(texture, TEXTURE_2D_ARRAY);
+
+    mState.samplerTexture[TEXTURE_2D_ARRAY][mState.activeSampler].set(getTexture(texture));
+}
+
 void Context::bindReadFramebuffer(GLuint framebuffer)
 {
     if (!getFramebuffer(framebuffer))
@@ -1284,6 +1293,11 @@ Texture3D *Context::getTexture3D()
     return static_cast<Texture3D*>(getSamplerTexture(mState.activeSampler, TEXTURE_3D));
 }
 
+Texture2DArray *Context::getTexture2DArray()
+{
+    return static_cast<Texture2DArray*>(getSamplerTexture(mState.activeSampler, TEXTURE_2D_ARRAY));
+}
+
 Buffer *Context::getGenericUniformBuffer()
 {
     return mState.genericUniformBuffer.get();
@@ -1323,9 +1337,10 @@ Texture *Context::getSamplerTexture(unsigned int sampler, TextureType type)
         switch (type)
         {
           default: UNREACHABLE();
-          case TEXTURE_2D: return mTexture2DZero.get();
-          case TEXTURE_CUBE: return mTextureCubeMapZero.get();
-          case TEXTURE_3D: return mTexture3DZero.get();
+          case TEXTURE_2D:       return mTexture2DZero.get();
+          case TEXTURE_CUBE:     return mTextureCubeMapZero.get();
+          case TEXTURE_3D:       return mTexture3DZero.get();
+          case TEXTURE_2D_ARRAY: return mTexture2DArrayZero.get();
         }
     }
 
@@ -1673,6 +1688,17 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
             *params = mState.samplerTexture[TEXTURE_3D][mState.activeSampler].id();
         }
         break;
+      case GL_TEXTURE_BINDING_2D_ARRAY:
+        {
+            if (mState.activeSampler > mRenderer->getMaxCombinedTextureImageUnits() - 1)
+            {
+                gl::error(GL_INVALID_OPERATION);
+                return false;
+            }
+
+            *params = mState.samplerTexture[TEXTURE_2D_ARRAY][mState.activeSampler].id();
+        }
+        break;
       case GL_RESET_NOTIFICATION_STRATEGY_EXT:
         *params = mResetStrategy;
         break;
@@ -1907,6 +1933,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_PIXEL_PACK_BUFFER_BINDING:
       case GL_PIXEL_UNPACK_BUFFER_BINDING:
       case GL_TEXTURE_BINDING_3D:
+      case GL_TEXTURE_BINDING_2D_ARRAY:
       case GL_MAX_3D_TEXTURE_SIZE:
       case GL_MAX_ARRAY_TEXTURE_LAYERS:
         {

@@ -52,6 +52,7 @@ class Texture;
 class Texture2D;
 class TextureCubeMap;
 class Texture3D;
+class Texture2DArray;
 class Framebuffer;
 class Renderbuffer;
 class RenderbufferStorage;
@@ -338,6 +339,7 @@ class Context
     void bindTexture2D(GLuint texture);
     void bindTextureCubeMap(GLuint texture);
     void bindTexture3D(GLuint texture);
+    void bindTexture2DArray(GLuint texture);
     void bindReadFramebuffer(GLuint framebuffer);
     void bindDrawFramebuffer(GLuint framebuffer);
     void bindRenderbuffer(GLuint renderbuffer);
@@ -380,6 +382,7 @@ class Context
     Texture2D *getTexture2D();
     TextureCubeMap *getTextureCubeMap();
     Texture3D *getTexture3D();
+    Texture2DArray *getTexture2DArray();
     Buffer *getGenericUniformBuffer();
     Buffer *getGenericTransformFeedbackBuffer();
     Buffer *getCopyReadBuffer();
@@ -487,6 +490,7 @@ class Context
     BindingPointer<Texture2D> mTexture2DZero;
     BindingPointer<TextureCubeMap> mTextureCubeMapZero;
     BindingPointer<Texture3D> mTexture3DZero;
+    BindingPointer<Texture2DArray> mTexture2DArrayZero;
 
 #ifndef HASH_MAP
 # ifdef _MSC_VER

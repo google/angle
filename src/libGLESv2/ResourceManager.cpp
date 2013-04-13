@@ -302,6 +302,10 @@ void ResourceManager::checkTextureAllocation(GLuint texture, TextureType type)
         {
             textureObject = new Texture3D(mRenderer, texture);
         }
+        else if (type == TEXTURE_2D_ARRAY)
+        {
+            textureObject = new Texture2DArray(mRenderer, texture);
+        }
         else
         {
             UNREACHABLE();
