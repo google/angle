@@ -315,6 +315,9 @@ void Context::makeCurrent(egl::Surface *surface)
     Framebuffer *framebufferZero = new DefaultFramebuffer(mRenderer, colorbufferZero, depthStencilbufferZero);
 
     setFramebufferZero(framebufferZero);
+
+    // Store the current client version in the renderer
+    mRenderer->setCurrentClientVersion(mClientVersion);
 }
 
 // NOTE: this function should not assume that this context is current!

@@ -222,6 +222,10 @@ class Renderer
     virtual QueryImpl *createQuery(GLenum type) = 0;
     virtual FenceImpl *createFence() = 0;
 
+    // Current GLES client version
+    void setCurrentClientVersion(int clientVersion) { mCurrentClientVersion = clientVersion; }
+    int getCurrentClientVersion() const { return mCurrentClientVersion; }
+
   protected:
     bool initializeCompiler();
     ShaderBlob *compileToBinary(gl::InfoLog &infoLog, const char *hlsl, const char *profile, UINT optimizationFlags, bool alternateFlags);
@@ -233,6 +237,7 @@ class Renderer
 
     HMODULE mD3dCompilerModule;
     pCompileFunc mD3DCompileFunc;
+    int mCurrentClientVersion;
 };
 
 }
