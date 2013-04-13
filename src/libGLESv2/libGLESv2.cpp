@@ -9563,6 +9563,62 @@ void __stdcall glProgramBinaryOES(GLuint program, GLenum binaryFormat,
     }
 }
 
+void __stdcall glDrawBuffersEXT(GLsizei n, const GLenum *bufs)
+{
+    EVENT("(GLenum n = %d, bufs = 0x%0.8p)", n, bufs);
+
+    try
+    {
+        gl::Context *context = gl::getNonLostContext();
+
+        if (context)
+        {
+            if (n < 0 || (unsigned int)n > context->getMaximumRenderTargets())
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            if (context->getDrawFramebufferHandle() == 0)
+            {
+                if (n > 1)
+                {
+                    return gl::error(GL_INVALID_OPERATION);
+                }
+
+                if (n == 1)
+                {
+                    if (bufs[0] != GL_NONE && bufs[0] != GL_BACK)
+                    {
+                        return gl::error(GL_INVALID_OPERATION);
+                    }
+                }
+            }
+            else
+            {
+                for (int colorAttachment = 0; colorAttachment < n; colorAttachment++)
+                {
+                    const GLenum attachment = GL_COLOR_ATTACHMENT0_EXT + colorAttachment;
+                    if (bufs[colorAttachment] != GL_NONE && bufs[colorAttachment] != attachment)
+                    {
+                        return gl::error(GL_INVALID_OPERATION);
+                    }
+                }
+            }
+
+            gl::Framebuffer *framebuffer = context->getDrawFramebuffer();
+
+            for (int colorAttachment = 0; colorAttachment < n; colorAttachment++)
+            {
+                framebuffer->setDrawBufferState(colorAttachment, bufs[colorAttachment]);
+            }
+        }
+    }
+    catch (std::bad_alloc&)
+    {
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+}
+
 __eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *procname)
 {
     struct Extension

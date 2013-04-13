@@ -825,8 +825,13 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
 
     for (unsigned int colorAttachment = 0; colorAttachment < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
     {
-        if (framebuffer->getColorbufferType(colorAttachment) != GL_NONE)
+        const GLenum drawBufferState = framebuffer->getDrawBufferState(colorAttachment);
+
+        if (framebuffer->getColorbufferType(colorAttachment) != GL_NONE && drawBufferState != GL_NONE)
         {
+            // the draw buffer must be either "none", "back" for the default buffer or the same index as this color (in order)
+            ASSERT(drawBufferState == GL_BACK || drawBufferState == (GL_COLOR_ATTACHMENT0_EXT + colorAttachment));
+
             gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer(colorAttachment);
 
             if (!colorbuffer)
