@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -138,6 +138,7 @@ class ProgramBinary : public RefCountObject
     bool linkVaryings(InfoLog &infoLog, int registers, const Varying *packing[][4],
                       std::string& pixelHLSL, std::string& vertexHLSL,
                       FragmentShader *fragmentShader, VertexShader *vertexShader);
+    std::string generateVaryingHLSL(FragmentShader *fragmentShader, const std::string &varyingSemantic) const;
 
     bool linkAttributes(InfoLog &infoLog, const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader);
 

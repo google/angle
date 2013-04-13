@@ -957,6 +957,8 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
     std::string targetSemantic = (shaderModel >= 4) ? "SV_Target" : "COLOR";
     std::string positionSemantic = (shaderModel >= 4) ? "SV_Position" : "POSITION";
 
+    std::string varyingHLSL = generateVaryingHLSL(fragmentShader, varyingSemantic);
+
     const unsigned int renderTargetCount = usesMRT ? mRenderer->getMaxRenderTargets() : 1;
 
     // special varyings that use reserved registers
@@ -1016,12 +1018,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
         vertexHLSL += "    float4 gl_Position : " + positionSemantic + ";\n";
     }
 
-    for (int r = 0; r < registers; r++)
-    {
-        int registerSize = packing[r][3] ? 4 : (packing[r][2] ? 3 : (packing[r][1] ? 2 : 1));
-
-        vertexHLSL += "    float" + str(registerSize) + " v" + str(r) + " : " + varyingSemantic + str(r) + ";\n";
-    }
+    vertexHLSL += varyingHLSL;
 
     if (fragmentShader->mUsesFragCoord)
     {
@@ -1156,22 +1153,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
     pixelHLSL += "struct PS_INPUT\n"
                  "{\n";
     
-    for (VaryingList::iterator varying = fragmentShader->mVaryings.begin(); varying != fragmentShader->mVaryings.end(); varying++)
-    {
-        if (varying->reg >= 0)
-        {
-            for (int i = 0; i < varying->size; i++)
-            {
-                int rows = VariableRowCount(varying->type);
-                for (int j = 0; j < rows; j++)
-                {
-                    std::string n = str(varying->reg + i * rows + j);
-                    pixelHLSL += "    float" + str(VariableColumnCount(varying->type)) + " v" + n + " : " + varyingSemantic + n + ";\n";
-                }
-            }
-        }
-        else UNREACHABLE();
-    }
+    pixelHLSL += varyingHLSL;
 
     if (fragmentShader->mUsesFragCoord)
     {
@@ -1335,6 +1317,38 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
                  "}\n";
 
     return true;
+}
+
+std::string ProgramBinary::generateVaryingHLSL(FragmentShader *fragmentShader, const std::string &varyingSemantic) const
+{
+    std::string varyingHLSL;
+
+    for (VaryingList::iterator varying = fragmentShader->mVaryings.begin(); varying != fragmentShader->mVaryings.end(); varying++)
+    {
+        if (varying->reg >= 0)
+        {
+            for (int i = 0; i < varying->size; i++)
+            {
+                int rows = VariableRowCount(varying->type);
+                for (int j = 0; j < rows; j++)
+                {
+                    switch (varying->interpolation)
+                    {
+                      case Smooth:   varyingHLSL += "    ";                 break;
+                      case Flat:     varyingHLSL += "    nointerpolation "; break;
+                      case Centroid: varyingHLSL += "    centroid ";        break;
+                      default:  UNREACHABLE();
+                    }
+
+                    std::string n = str(varying->reg + i * rows + j);
+                    varyingHLSL += "float" + str(VariableColumnCount(varying->type)) + " v" + n + " : " + varyingSemantic + n + ";\n";
+                }
+            }
+        }
+        else UNREACHABLE();
+    }
+
+    return varyingHLSL;
 }
 
 bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
@@ -1939,12 +1953,9 @@ std::string ProgramBinary::generatePointSpriteHLSL(int registers, const Varying 
                 "struct GS_INPUT\n"
                 "{\n";
 
-    for (int r = 0; r < registers; r++)
-    {
-        int registerSize = packing[r][3] ? 4 : (packing[r][2] ? 3 : (packing[r][1] ? 2 : 1));
+    std::string varyingHLSL = generateVaryingHLSL(fragmentShader, varyingSemantic);
 
-        geomHLSL += "    float" + str(registerSize) + " v" + str(r) + " : " + varyingSemantic + str(r) + ";\n";
-    }
+    geomHLSL += varyingHLSL;
 
     if (fragmentShader->mUsesFragCoord)
     {
@@ -1958,12 +1969,7 @@ std::string ProgramBinary::generatePointSpriteHLSL(int registers, const Varying 
                 "struct GS_OUTPUT\n"
                 "{\n";
 
-    for (int r = 0; r < registers; r++)
-    {
-        int registerSize = packing[r][3] ? 4 : (packing[r][2] ? 3 : (packing[r][1] ? 2 : 1));
-
-        geomHLSL += "    float" + str(registerSize) + " v" + str(r) + " : " + varyingSemantic + str(r) + ";\n";
-    }
+    geomHLSL += varyingHLSL;
 
     if (fragmentShader->mUsesFragCoord)
     {
