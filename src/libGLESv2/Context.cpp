@@ -1278,6 +1278,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_MAX_TEXTURE_IMAGE_UNITS:          *params = gl::MAX_TEXTURE_IMAGE_UNITS;          break;
       case GL_MAX_FRAGMENT_UNIFORM_VECTORS:     *params = mRenderer->getMaxFragmentUniformVectors(); break;
       case GL_MAX_RENDERBUFFER_SIZE:            *params = getMaximumRenderbufferDimension();    break;
+      case GL_MAX_COLOR_ATTACHMENTS_EXT:        *params = mRenderer->getMaxRenderTargets();     break;
       case GL_NUM_SHADER_BINARY_FORMATS:        *params = 0;                                    break;
       case GL_SHADER_BINARY_FORMATS:      /* no shader binary formats are supported */          break;
       case GL_ARRAY_BUFFER_BINDING:             *params = mState.arrayBuffer.id();              break;
@@ -1537,6 +1538,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_MAX_TEXTURE_IMAGE_UNITS:
       case GL_MAX_FRAGMENT_UNIFORM_VECTORS:
       case GL_MAX_RENDERBUFFER_SIZE:
+      case GL_MAX_COLOR_ATTACHMENTS_EXT:
       case GL_NUM_SHADER_BINARY_FORMATS:
       case GL_NUM_COMPRESSED_TEXTURE_FORMATS:
       case GL_ARRAY_BUFFER_BINDING:
