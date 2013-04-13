@@ -8667,9 +8667,90 @@ void __stdcall glCopyBufferSubData(GLenum readTarget, GLenum writeTarget, GLintp
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            gl::Buffer *readBuffer = NULL;
+            switch (readTarget)
+            {
+              case GL_ARRAY_BUFFER:
+                readBuffer = context->getArrayBuffer();
+                break;
+              case GL_COPY_READ_BUFFER:
+                readBuffer = context->getCopyReadBuffer();
+                break;
+              case GL_COPY_WRITE_BUFFER:
+                readBuffer = context->getCopyWriteBuffer();
+                break;
+              case GL_ELEMENT_ARRAY_BUFFER:
+                readBuffer = context->getElementArrayBuffer();
+                break;
+              case GL_PIXEL_PACK_BUFFER:
+                readBuffer = context->getPixelPackBuffer();
+                break;
+              case GL_PIXEL_UNPACK_BUFFER:
+                readBuffer = context->getPixelUnpackBuffer();
+                break;
+              case GL_TRANSFORM_FEEDBACK_BUFFER:
+                readBuffer = context->getGenericTransformFeedbackBuffer();
+                break;
+              case GL_UNIFORM_BUFFER:
+                readBuffer = context->getGenericUniformBuffer();
+                break;
+              default:
+                return gl::error(GL_INVALID_ENUM);
+            }
+
+            gl::Buffer *writeBuffer = NULL;
+            switch (writeTarget)
+            {
+              case GL_ARRAY_BUFFER:
+                writeBuffer = context->getArrayBuffer();
+                break;
+              case GL_COPY_READ_BUFFER:
+                writeBuffer = context->getCopyReadBuffer();
+                break;
+              case GL_COPY_WRITE_BUFFER:
+                writeBuffer = context->getCopyWriteBuffer();
+                break;
+              case GL_ELEMENT_ARRAY_BUFFER:
+                writeBuffer = context->getElementArrayBuffer();
+                break;
+              case GL_PIXEL_PACK_BUFFER:
+                writeBuffer = context->getPixelPackBuffer();
+                break;
+              case GL_PIXEL_UNPACK_BUFFER:
+                writeBuffer = context->getPixelUnpackBuffer();
+                break;
+              case GL_TRANSFORM_FEEDBACK_BUFFER:
+                writeBuffer = context->getGenericTransformFeedbackBuffer();
+                break;
+              case GL_UNIFORM_BUFFER:
+                writeBuffer = context->getGenericUniformBuffer();
+                break;
+              default:
+                return gl::error(GL_INVALID_ENUM);
+            }
+
+            if (!readBuffer || !writeBuffer)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            if (readOffset < 0 || writeOffset < 0 || size < 0 ||
+                static_cast<unsigned int>(readOffset + size) > readBuffer->size() ||
+                static_cast<unsigned int>(writeOffset + size) > writeBuffer->size())
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            if (readBuffer == writeBuffer && abs(readOffset - writeOffset) < size)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            // TODO: Verify that readBuffer and writeBuffer are not currently mapped (GL_INVALID_OPERATION)
+
+            writeBuffer->copyBufferSubData(readBuffer, readOffset, writeOffset, size);
+        }
     }
     catch(std::bad_alloc&)
     {
