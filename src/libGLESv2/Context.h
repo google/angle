@@ -416,8 +416,9 @@ class Context
     unsigned int getMaximumCombinedTextureImageUnits() const;
     unsigned int getMaximumCombinedUniformBufferBindings() const;
     int getMaximumRenderbufferDimension() const;
-    int getMaximumTextureDimension() const;
+    int getMaximum2DTextureDimension() const;
     int getMaximumCubeTextureDimension() const;
+    int getMaximum3DTextureDimension() const;
     int getMaximumTextureLevel() const;
     unsigned int getMaximumRenderTargets() const;
     GLsizei getMaxSupportedSamples() const;
@@ -531,8 +532,9 @@ class Context
     bool mSupportsInstancing;
     int  mMaxViewportDimension;
     int  mMaxRenderbufferDimension;
-    int  mMaxTextureDimension;
+    int  mMax2DTextureDimension;
     int  mMaxCubeTextureDimension;
+    int  mMax3DTextureDimension;
     int  mMaxTextureLevel;
     float mMaxTextureAnisotropy;
     bool mSupportsEventQueries;

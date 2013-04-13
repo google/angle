@@ -289,14 +289,17 @@ void Context::makeCurrent(egl::Surface *surface)
         mSupportsInstancing = mRenderer->getInstancingSupport();
 
         mMaxViewportDimension = mRenderer->getMaxViewportDimension();
-        mMaxTextureDimension = std::min(std::min(mRenderer->getMaxTextureWidth(), mRenderer->getMaxTextureHeight()),
-                                        (int)gl::IMPLEMENTATION_MAX_TEXTURE_SIZE);
-        mMaxCubeTextureDimension = std::min(mMaxTextureDimension, (int)gl::IMPLEMENTATION_MAX_CUBE_MAP_TEXTURE_SIZE);
-        mMaxRenderbufferDimension = mMaxTextureDimension;
-        mMaxTextureLevel = log2(mMaxTextureDimension) + 1;
+        mMax2DTextureDimension = std::min(std::min(mRenderer->getMaxTextureWidth(), mRenderer->getMaxTextureHeight()),
+                                          (int)gl::IMPLEMENTATION_MAX_2D_TEXTURE_SIZE);
+        mMaxCubeTextureDimension = std::min(mMax2DTextureDimension, (int)gl::IMPLEMENTATION_MAX_CUBE_MAP_TEXTURE_SIZE);
+        mMax3DTextureDimension = std::min(std::min(mMax2DTextureDimension, mRenderer->getMaxTextureDepth()),
+                                          (int)gl::IMPLEMENTATION_MAX_3D_TEXTURE_SIZE);
+        mMaxRenderbufferDimension = mMax2DTextureDimension;
+        mMaxTextureLevel = log2(mMax2DTextureDimension) + 1;
         mMaxTextureAnisotropy = mRenderer->getTextureMaxAnisotropy();
-        TRACE("MaxTextureDimension=%d, MaxCubeTextureDimension=%d, MaxRenderbufferDimension=%d, MaxTextureLevel=%d, MaxTextureAnisotropy=%f",
-              mMaxTextureDimension, mMaxCubeTextureDimension, mMaxRenderbufferDimension, mMaxTextureLevel, mMaxTextureAnisotropy);
+        TRACE("Max2DTextureDimension=%d, MaxCubeTextureDimension=%d, Max3DTextureDimension=%d, MaxRenderbufferDimension=%d, "
+              "MaxTextureLevel=%d, MaxTextureAnisotropy=%f", mMax2DTextureDimension, mMaxCubeTextureDimension, mMax3DTextureDimension,
+              mMaxRenderbufferDimension, mMaxTextureLevel, mMaxTextureAnisotropy);
 
         mSupportsEventQueries = mRenderer->getEventQuerySupport();
         mSupportsOcclusionQueries = mRenderer->getOcclusionQuerySupport();
@@ -1466,8 +1469,9 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_STENCIL_BACK_WRITEMASK:           *params = mState.depthStencil.stencilBackWritemask;    break;
       case GL_STENCIL_CLEAR_VALUE:              *params = mState.stencilClearValue;             break;
       case GL_SUBPIXEL_BITS:                    *params = 4;                                    break;
-      case GL_MAX_TEXTURE_SIZE:                 *params = getMaximumTextureDimension();         break;
+      case GL_MAX_TEXTURE_SIZE:                 *params = getMaximum2DTextureDimension();       break;
       case GL_MAX_CUBE_MAP_TEXTURE_SIZE:        *params = getMaximumCubeTextureDimension();     break;
+      case GL_MAX_3D_TEXTURE_SIZE:              *params = getMaximum3DTextureDimension();       break;
       case GL_NUM_COMPRESSED_TEXTURE_FORMATS:   
         params[0] = mNumCompressedTextureFormats;
         break;
@@ -1873,6 +1877,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_COPY_WRITE_BUFFER_BINDING:
       case GL_PIXEL_PACK_BUFFER_BINDING:
       case GL_PIXEL_UNPACK_BUFFER_BINDING:
+      case GL_MAX_3D_TEXTURE_SIZE:
         {
             *type = GL_INT;
             *numParams = 1;
@@ -2422,14 +2427,19 @@ int Context::getMaximumRenderbufferDimension() const
     return mMaxRenderbufferDimension;
 }
 
-int Context::getMaximumTextureDimension() const
+int Context::getMaximum2DTextureDimension() const
 {
-    return mMaxTextureDimension;
+    return mMax2DTextureDimension;
 }
 
 int Context::getMaximumCubeTextureDimension() const
 {
     return mMaxCubeTextureDimension;
+}
+
+int Context::getMaximum3DTextureDimension() const
+{
+    return mMax3DTextureDimension;
 }
 
 int Context::getMaximumTextureLevel() const

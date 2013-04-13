@@ -2359,7 +2359,7 @@ float Renderer9::getMaxPointSize() const
 int Renderer9::getMaxViewportDimension() const
 {
     int maxTextureDimension = std::min(std::min(getMaxTextureWidth(), getMaxTextureHeight()),
-                                       (int)gl::IMPLEMENTATION_MAX_TEXTURE_SIZE);
+                                       (int)gl::IMPLEMENTATION_MAX_2D_TEXTURE_SIZE);
     return maxTextureDimension;
 }
 
@@ -2371,6 +2371,12 @@ int Renderer9::getMaxTextureWidth() const
 int Renderer9::getMaxTextureHeight() const
 {
     return (int)mDeviceCaps.MaxTextureHeight;
+}
+
+int Renderer9::getMaxTextureDepth() const
+{
+    // 3D textures are not available in the D3D9 backend.
+    return 1;
 }
 
 bool Renderer9::get32BitIndexSupport() const

@@ -1171,8 +1171,8 @@ void __stdcall glCompressedTexImage2D(GLenum target, GLint level, GLenum interna
             switch (target)
             {
               case GL_TEXTURE_2D:
-                if (width > (context->getMaximumTextureDimension() >> level) ||
-                    height > (context->getMaximumTextureDimension() >> level))
+                if (width > (context->getMaximum2DTextureDimension() >> level) ||
+                    height > (context->getMaximum2DTextureDimension() >> level))
                 {
                     return gl::error(GL_INVALID_VALUE);
                 }
@@ -1415,8 +1415,8 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
             switch (target)
             {
               case GL_TEXTURE_2D:
-                if (width > (context->getMaximumTextureDimension() >> level) ||
-                    height > (context->getMaximumTextureDimension() >> level))
+                if (width > (context->getMaximum2DTextureDimension() >> level) ||
+                    height > (context->getMaximum2DTextureDimension() >> level))
                 {
                     return gl::error(GL_INVALID_VALUE);
                 }
@@ -5538,8 +5538,8 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
             switch (target)
             {
               case GL_TEXTURE_2D:
-                if (width > (context->getMaximumTextureDimension() >> level) ||
-                    height > (context->getMaximumTextureDimension() >> level))
+                if (width > (context->getMaximum2DTextureDimension() >> level) ||
+                    height > (context->getMaximum2DTextureDimension() >> level))
                 {
                     return gl::error(GL_INVALID_VALUE);
                 }
@@ -5900,8 +5900,8 @@ void __stdcall glTexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalf
             switch (target)
             {
               case GL_TEXTURE_2D:
-                if (width > context->getMaximumTextureDimension() ||
-                    height > context->getMaximumTextureDimension())
+                if (width > context->getMaximum2DTextureDimension() ||
+                    height > context->getMaximum2DTextureDimension())
                 {
                     return gl::error(GL_INVALID_VALUE);
                 }

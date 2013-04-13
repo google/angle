@@ -46,8 +46,9 @@ enum
     // These are the maximums the implementation can support
     // The actual GL caps are limited by the device caps
     // and should be queried from the Context
-    IMPLEMENTATION_MAX_TEXTURE_SIZE = 16384,
+    IMPLEMENTATION_MAX_2D_TEXTURE_SIZE = 16384,
     IMPLEMENTATION_MAX_CUBE_MAP_TEXTURE_SIZE = 16384,
+    IMPLEMENTATION_MAX_3D_TEXTURE_SIZE = 2048,
 
     IMPLEMENTATION_MAX_TEXTURE_LEVELS = 15   // 1+log2 of MAX_TEXTURE_SIZE
 };

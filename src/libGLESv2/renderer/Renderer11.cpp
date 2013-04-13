@@ -2378,6 +2378,17 @@ int Renderer11::getMaxTextureHeight() const
     }
 }
 
+int Renderer11::getMaxTextureDepth() const
+{
+    switch (mFeatureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_0: return D3D11_REQ_TEXTURE3D_U_V_OR_W_DIMENSION;   // 2048
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0: return D3D10_REQ_TEXTURE3D_U_V_OR_W_DIMENSION;   // 2048
+      default: UNREACHABLE();      return 0;
+    }
+}
+
 bool Renderer11::get32BitIndexSupport() const
 {
     switch (mFeatureLevel)
