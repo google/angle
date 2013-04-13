@@ -196,7 +196,8 @@ void OutputHLSL::header()
         const TString &name = varying->second->getSymbol();
 
         // Program linking depends on this exact format
-        varyings += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
+        varyings += "static " + interpolationString(type.getQualifier()) + " " + typeString(type) + " " +
+                    decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
     }
 
     for (ReferencedSymbols::const_iterator attribute = mReferencedAttributes.begin(); attribute != mReferencedAttributes.end(); attribute++)
@@ -2545,6 +2546,26 @@ TString OutputHLSL::argumentString(const TIntermSymbol *symbol)
     }
 
     return qualifierString(qualifier) + " " + typeString(type) + " " + name + arrayString(type);
+}
+
+TString OutputHLSL::interpolationString(TQualifier qualifier)
+{
+    switch(qualifier)
+    {
+      case EvqVaryingIn:           return "";
+      case EvqInvariantVaryingIn:  return "";
+      case EvqSmoothIn:            return "linear";
+      case EvqFlatIn:              return "nointerpolation";
+      case EvqCentroidIn:          return "centroid";
+      case EvqVaryingOut:          return "";
+      case EvqInvariantVaryingOut: return "";
+      case EvqSmoothOut:           return "linear";
+      case EvqFlatOut:             return "nointerpolation";
+      case EvqCentroidOut:         return "centroid";
+      default: UNREACHABLE();
+    }
+
+    return "";
 }
 
 TString OutputHLSL::qualifierString(TQualifier qualifier)

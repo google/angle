@@ -929,7 +929,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
         {
             if (output->name == input->name)
             {
-                if (output->type != input->type || output->size != input->size)
+                if (output->type != input->type || output->size != input->size || output->interpolation != input->interpolation)
                 {
                     infoLog.append("Type of vertex varying %s does not match that of the fragment varying", output->name.c_str());
 

@@ -31,13 +31,21 @@ namespace gl
 {
 class ResourceManager;
 
+enum Interpolation
+{
+    Smooth,
+    Centroid,
+    Flat
+};
+
 struct Varying
 {
-    Varying(GLenum type, const std::string &name, int size, bool array)
-        : type(type), name(name), size(size), array(array), reg(-1), col(-1)
+    Varying(Interpolation interpolation, GLenum type, const std::string &name, int size, bool array)
+        : interpolation(interpolation), type(type), name(name), size(size), array(array), reg(-1), col(-1)
     {
     }
 
+    Interpolation interpolation;
     GLenum type;
     std::string name;
     int size;   // Number of 'type' elements
@@ -92,6 +100,7 @@ class Shader
 
     void getSourceImpl(char *source, GLsizei bufSize, GLsizei *length, char *buffer);
 
+    static Interpolation parseInterpolation(const std::string &type);
     static GLenum parseType(const std::string &type);
     static bool compareVarying(const Varying &x, const Varying &y);
 

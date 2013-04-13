@@ -273,17 +273,31 @@ void Shader::parseVaryings()
 
         while(true)
         {
-            char varyingType[256];
-            char varyingName[256];
+            char string1[256];
+            char string2[256];
+            char string3[256];
 
-            int matches = sscanf(input, "static %255s %255s", varyingType, varyingName);
+            int matches = sscanf(input, "static %255s %255s %255s", string1, string2, string3);
 
-            if (matches != 2)
+            char *interpolation = "linear";   // Default
+            char *type = string1;
+            char *name = string2;
+
+            if (matches == 0)
             {
                 break;
             }
+            else if (matches == 3)
+            {
+                if (string3[0] != '=')   // Explicit interpolation qualifier
+                {
+                    type = string2;
+                    name = string3;
+                }
+            }
+            else UNREACHABLE();
 
-            char *array = strstr(varyingName, "[");
+            char *array = strstr(name, "[");
             int size = 1;
 
             if (array)
@@ -292,7 +306,7 @@ void Shader::parseVaryings()
                 *array = '\0';
             }
 
-            mVaryings.push_back(Varying(parseType(varyingType), varyingName, size, array != NULL));
+            mVaryings.push_back(Varying(parseInterpolation(interpolation), parseType(type), name, size, array != NULL));
 
             input = strstr(input, ";") + 2;
         }
@@ -407,6 +421,25 @@ void Shader::compileToHLSL(void *compiler)
 
         TRACE("\n%s", mInfoLog);
     }
+}
+
+Interpolation Shader::parseInterpolation(const std::string &type)
+{
+    if (type == "linear")
+    {
+        return Smooth;
+    }
+    else if (type == "centroid")
+    {
+        return Centroid;
+    }
+    else if (type == "nointerpolation")
+    {
+        return Flat;
+    }
+    else UNREACHABLE();
+
+    return Smooth;
 }
 
 GLenum Shader::parseType(const std::string &type)
