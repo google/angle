@@ -571,7 +571,8 @@ bool ProgramBinary::setUniform4uiv(GLint location, GLsizei count, const GLuint *
     return setUniform(location, count, v, GL_UNSIGNED_INT_VEC4);
 }
 
-bool ProgramBinary::getUniformfv(GLint location, GLsizei *bufSize, GLfloat *params)
+template <typename T>
+bool ProgramBinary::getUniformv(GLint location, GLsizei *bufSize, T *params, GLenum uniformType)
 {
     if (location < 0 || location >= (int)mUniformIndex.size())
     {
@@ -596,10 +597,15 @@ bool ProgramBinary::getUniformfv(GLint location, GLsizei *bufSize, GLfloat *para
         const int cols = VariableColumnCount(targetUniform->type);
         transposeMatrix(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 4 * rows, cols, rows, 4, rows);
     }
+    else if (uniformType == UniformComponentType(targetUniform->type))
+    {
+        unsigned int size = UniformComponentCount(targetUniform->type);
+        memcpy(params, targetUniform->data + mUniformIndex[location].element * 4 * sizeof(T),
+                size * sizeof(T));
+    }
     else
     {
         unsigned int size = UniformComponentCount(targetUniform->type);
-
         switch (UniformComponentType(targetUniform->type))
         {
           case GL_BOOL:
@@ -608,24 +614,33 @@ bool ProgramBinary::getUniformfv(GLint location, GLsizei *bufSize, GLfloat *para
 
                 for (unsigned int i = 0; i < size; i++)
                 {
-                    params[i] = (boolParams[i] == GL_FALSE) ? 0.0f : 1.0f;
+                    params[i] = (boolParams[i] == GL_FALSE) ? static_cast<T>(0) : static_cast<T>(1);
                 }
             }
             break;
+
           case GL_FLOAT:
-            memcpy(params, targetUniform->data + mUniformIndex[location].element * 4 * sizeof(GLfloat),
-                   size * sizeof(GLfloat));
+            {
+                GLfloat *floatParams = (GLfloat*)targetUniform->data + mUniformIndex[location].element * 4;
+
+                for (unsigned int i = 0; i < size; i++)
+                {
+                    params[i] = static_cast<T>(floatParams[i]);
+                }
+            }
             break;
+
           case GL_INT:
             {
                 GLint *intParams = (GLint*)targetUniform->data + mUniformIndex[location].element * 4;
 
                 for (unsigned int i = 0; i < size; i++)
                 {
-                    params[i] = (float)intParams[i];
+                    params[i] = static_cast<T>(intParams[i]);
                 }
             }
             break;
+
           default: UNREACHABLE();
         }
     }
@@ -633,66 +648,14 @@ bool ProgramBinary::getUniformfv(GLint location, GLsizei *bufSize, GLfloat *para
     return true;
 }
 
+bool ProgramBinary::getUniformfv(GLint location, GLsizei *bufSize, GLfloat *params)
+{
+    return getUniformv(location, bufSize, params, GL_FLOAT);
+}
+
 bool ProgramBinary::getUniformiv(GLint location, GLsizei *bufSize, GLint *params)
 {
-    if (location < 0 || location >= (int)mUniformIndex.size())
-    {
-        return false;
-    }
-
-    Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
-
-    // sized queries -- ensure the provided buffer is large enough
-    if (bufSize)
-    {
-        int requiredBytes = UniformExternalSize(targetUniform->type);
-        if (*bufSize < requiredBytes)
-        {
-            return false;
-        }
-    }
-
-    if (IsMatrixType(targetUniform->type))
-    {
-        const int rows = VariableRowCount(targetUniform->type);
-        const int cols = VariableColumnCount(targetUniform->type);
-        transposeMatrix(params, (GLfloat*)targetUniform->data + mUniformIndex[location].element * 4 * rows, cols, rows, 4, rows);
-    }
-    else
-    {
-        unsigned int size = VariableColumnCount(targetUniform->type);
-
-        switch (UniformComponentType(targetUniform->type))
-        {
-          case GL_BOOL:
-            {
-                GLint *boolParams = (GLint*)targetUniform->data + mUniformIndex[location].element * 4;
-
-                for (unsigned int i = 0; i < size; i++)
-                {
-                    params[i] = boolParams[i];
-                }
-            }
-            break;
-          case GL_FLOAT:
-            {
-                GLfloat *floatParams = (GLfloat*)targetUniform->data + mUniformIndex[location].element * 4;
-
-                for (unsigned int i = 0; i < size; i++)
-                {
-                    params[i] = (GLint)floatParams[i];
-                }
-            }
-            break;
-          case GL_INT:
-            memcpy(params, targetUniform->data + mUniformIndex[location].element * 4 * sizeof(GLint),
-                size * sizeof(GLint));
-            break;
-          default: UNREACHABLE();
-        }
-    }
-
-    return true;
+    return getUniformv(location, bufSize, params, GL_INT);
 }
 
 void ProgramBinary::dirtyAllUniforms()

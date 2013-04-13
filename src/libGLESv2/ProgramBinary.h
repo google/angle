@@ -152,6 +152,9 @@ class ProgramBinary : public RefCountObject
     template <int cols, int rows>
     bool setUniformMatrixfv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value, GLenum targetUniformType);
 
+    template <typename T>
+    bool getUniformv(GLint location, GLsizei *bufSize, T *params, GLenum uniformType);
+
     rx::Renderer *const mRenderer;
 
     rx::ShaderExecutable *mPixelExecutable;
