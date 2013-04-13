@@ -59,10 +59,10 @@ class VertexBuffer11 : public VertexBuffer
         unsigned int outputElementSize;
     };
 
-    static const unsigned int  NUM_GL_FLOAT_VERTEX_ATTRIB_TYPES = 9;
+    static const unsigned int  NUM_GL_FLOAT_VERTEX_ATTRIB_TYPES = 11;
     static const VertexConverter mFloatVertexTranslations[NUM_GL_FLOAT_VERTEX_ATTRIB_TYPES][2][4]; // [GL types as enumerated by typeIndex()][normalized][size - 1]
 
-    static const unsigned int NUM_GL_INTEGER_VERTEX_ATTRIB_TYPES = 6;
+    static const unsigned int NUM_GL_INTEGER_VERTEX_ATTRIB_TYPES = 8;
     static const VertexConverter mIntegerVertexTranslations[NUM_GL_INTEGER_VERTEX_ATTRIB_TYPES][4]; // [GL types as enumerated by typeIndex()][size - 1]
 
     static const VertexConverter &getVertexConversion(const gl::VertexAttribute &attribute);

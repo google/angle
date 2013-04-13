@@ -121,6 +121,7 @@ bool VertexBuffer11::storeVertexAttributes(const gl::VertexAttribute &attrib, GL
             input += inputStride * start;
         }
 
+        ASSERT(converter.conversionFunc != NULL);
         converter.conversionFunc(input, inputStride, count, output);
 
         dxContext->Unmap(mBuffer, 0);
@@ -301,6 +302,217 @@ static void copyToFloatVertexData(const void* input, unsigned int stride, unsign
     }
 }
 
+static void copyPackedUnsignedVertexData(const void* input, unsigned int stride, unsigned int count, void* output)
+{
+    const unsigned int attribSize = 4;
+
+    if (attribSize == stride)
+    {
+        memcpy(output, input, count * attribSize);
+    }
+    else
+    {
+        for (unsigned int i = 0; i < count; i++)
+        {
+            const GLuint *offsetInput = reinterpret_cast<const GLuint*>(reinterpret_cast<const char*>(input) + (i * stride));
+            GLuint *offsetOutput = reinterpret_cast<GLuint*>(output) + (i * attribSize);
+
+            offsetOutput[i] = offsetInput[i];
+        }
+    }
+}
+
+template <bool isSigned, bool normalized, bool toFloat>
+static inline void copyPackedRGB(unsigned int data, void *output)
+{
+    const unsigned int rgbSignMask = 0x200;       // 1 set at the 9 bit
+    const unsigned int negativeMask = 0xFFFFFC00; // All bits from 10 to 31 set to 1
+
+    if (toFloat)
+    {
+        GLfloat *floatOutput = reinterpret_cast<GLfloat*>(output);
+        if (isSigned)
+        {
+            GLfloat finalValue = 0;
+            if (data & rgbSignMask)
+            {
+                int negativeNumber = data | negativeMask;
+                finalValue = static_cast<GLfloat>(negativeNumber);
+            }
+            else
+            {
+                finalValue = static_cast<GLfloat>(data);
+            }
+
+            if (normalized)
+            {
+                const int maxValue = 0x1FF;      // 1 set in bits 0 through 8
+                const int minValue = 0xFFFFFE01; // Inverse of maxValue
+
+                // A 10-bit two's complement number has the possibility of being minValue - 1 but
+                // OpenGL's normalization rules dictate that it should be clamped to minValue in this
+                // case.
+                if (finalValue < minValue)
+                {
+                    finalValue = minValue;
+                }
+
+                const int halfRange = (maxValue - minValue) >> 1;
+                *floatOutput = ((finalValue - minValue) / halfRange) - 1.0f;
+            }
+            else
+            {
+                *floatOutput = finalValue;
+            }
+        }
+        else
+        {
+            if (normalized)
+            {
+                const unsigned int maxValue = 0x3FF; // 1 set in bits 0 through 9
+                *floatOutput = static_cast<GLfloat>(data) / static_cast<GLfloat>(maxValue);
+            }
+            else
+            {
+                *floatOutput = static_cast<GLfloat>(data);
+            }
+        }
+    }
+    else
+    {
+        if (isSigned)
+        {
+            GLshort *intOutput = reinterpret_cast<GLshort*>(output);
+
+            if (data & rgbSignMask)
+            {
+                *intOutput = data | negativeMask;
+            }
+            else
+            {
+                *intOutput = data;
+            }
+        }
+        else
+        {
+            GLushort *uintOutput = reinterpret_cast<GLushort*>(output);
+            *uintOutput = data;
+        }
+    }
+}
+
+template <bool isSigned, bool normalized, bool toFloat>
+static inline void copyPackedAlpha(unsigned int data, void *output)
+{
+    if (toFloat)
+    {
+        GLfloat *floatOutput = reinterpret_cast<GLfloat*>(output);
+        if (isSigned)
+        {
+            if (normalized)
+            {
+                switch (data)
+                {
+                  case 0x0: *floatOutput =  0.0f; break;
+                  case 0x1: *floatOutput =  1.0f; break;
+                  case 0x2: *floatOutput = -1.0f; break;
+                  case 0x3: *floatOutput = -1.0f; break;
+                  default: UNREACHABLE();
+                }
+            }
+            else
+            {
+                switch (data)
+                {
+                  case 0x0: *floatOutput =  0.0f; break;
+                  case 0x1: *floatOutput =  1.0f; break;
+                  case 0x2: *floatOutput = -2.0f; break;
+                  case 0x3: *floatOutput = -1.0f; break;
+                  default: UNREACHABLE();
+                }
+            }
+        }
+        else
+        {
+            if (normalized)
+            {
+                switch (data)
+                {
+                  case 0x0: *floatOutput = 0.0f / 3.0f; break;
+                  case 0x1: *floatOutput = 1.0f / 3.0f; break;
+                  case 0x2: *floatOutput = 2.0f / 3.0f; break;
+                  case 0x3: *floatOutput = 3.0f / 3.0f; break;
+                  default: UNREACHABLE();
+                }
+            }
+            else
+            {
+                switch (data)
+                {
+                  case 0x0: *floatOutput = 0.0f; break;
+                  case 0x1: *floatOutput = 1.0f; break;
+                  case 0x2: *floatOutput = 2.0f; break;
+                  case 0x3: *floatOutput = 3.0f; break;
+                  default: UNREACHABLE();
+                }
+            }
+        }
+    }
+    else
+    {
+        if (isSigned)
+        {
+            GLshort *intOutput = reinterpret_cast<GLshort*>(output);
+            switch (data)
+            {
+              case 0x0: *intOutput =  0; break;
+              case 0x1: *intOutput =  1; break;
+              case 0x2: *intOutput = -2; break;
+              case 0x3: *intOutput = -1; break;
+              default: UNREACHABLE();
+            }
+        }
+        else
+        {
+            GLushort *uintOutput = reinterpret_cast<GLushort*>(output);
+            switch (data)
+            {
+              case 0x0: *uintOutput = 0; break;
+              case 0x1: *uintOutput = 1; break;
+              case 0x2: *uintOutput = 2; break;
+              case 0x3: *uintOutput = 3; break;
+              default: UNREACHABLE();
+            }
+        }
+    }
+}
+
+template <bool isSigned, bool normalized, bool toFloat>
+static void copyPackedVertexData(const void* input, unsigned int stride, unsigned int count, void* output)
+{
+    const unsigned int outputComponentSize = toFloat ? 4 : 2;
+    const unsigned int componentCount = 4;
+
+    const unsigned int rgbMask = 0x3FF; // 1 set in bits 0 through 9
+    const unsigned int redShift = 0;    // red is bits 0 through 9
+    const unsigned int greenShift = 10; // green is bits 10 through 19
+    const unsigned int blueShift = 20;  // blue is bits 20 through 29
+
+    const unsigned int alphaMask = 0x3; // 1 set in bits 0 and 1
+    const unsigned int alphaShift = 30; // Alpha is the 30 and 31 bits
+
+    for (unsigned int i = 0; i < count; i++)
+    {
+        GLuint packedValue = *reinterpret_cast<const GLuint*>(reinterpret_cast<const char*>(input) + (i * stride));
+        GLbyte *offsetOutput = reinterpret_cast<GLbyte*>(output) + (i * outputComponentSize * componentCount);
+
+        copyPackedRGB<isSigned, normalized, toFloat>(  (packedValue >> redShift) & rgbMask,     offsetOutput + (0 * outputComponentSize));
+        copyPackedRGB<isSigned, normalized, toFloat>(  (packedValue >> greenShift) & rgbMask,   offsetOutput + (1 * outputComponentSize));
+        copyPackedRGB<isSigned, normalized, toFloat>(  (packedValue >> blueShift) & rgbMask,    offsetOutput + (2 * outputComponentSize));
+        copyPackedAlpha<isSigned, normalized, toFloat>((packedValue >> alphaShift) & alphaMask, offsetOutput + (3* outputComponentSize));
+    }
+}
+
 const VertexBuffer11::VertexConverter VertexBuffer11::mFloatVertexTranslations[NUM_GL_FLOAT_VERTEX_ATTRIB_TYPES][2][4] =
 {
     { // GL_BYTE
@@ -387,6 +599,34 @@ const VertexBuffer11::VertexConverter VertexBuffer11::mFloatVertexTranslations[N
             { &copyToFloatVertexData<GLuint, 4, true>, false, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
         },
     },
+    { // GL_INT_2_10_10_10_REV
+        { // unnormalized
+            { NULL, false, DXGI_FORMAT_UNKNOWN, 0 },
+            { NULL, false, DXGI_FORMAT_UNKNOWN, 0 },
+            { NULL, false, DXGI_FORMAT_UNKNOWN, 0 },
+            { &copyPackedVertexData<true, false, true>, false, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
+        },
+        { // normalized
+            { NULL, false, DXGI_FORMAT_UNKNOWN, 0 },
+            { NULL, false, DXGI_FORMAT_UNKNOWN, 0 },
+            { NULL, false, DXGI_FORMAT_UNKNOWN, 0 },
+            { &copyPackedVertexData<true, true, true>, true, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
+        },
+    },
+    { // GL_UNSIGNED_INT_2_10_10_10_REV
+        { // unnormalized
+            { NULL, false, DXGI_FORMAT_UNKNOWN, 0 },
+            { NULL, false, DXGI_FORMAT_UNKNOWN, 0 },
+            { NULL, false, DXGI_FORMAT_UNKNOWN, 0 },
+            { &copyPackedVertexData<true, false, true>, false, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
+        },
+        { // normalized
+            { NULL, false, DXGI_FORMAT_UNKNOWN, 0 },
+            { NULL, false, DXGI_FORMAT_UNKNOWN, 0 },
+            { NULL, false, DXGI_FORMAT_UNKNOWN, 0 },
+            { &copyPackedUnsignedVertexData, true, DXGI_FORMAT_R10G10B10A2_UNORM, 4 },
+        },
+    },
     { // GL_FIXED
         { // unnormalized
             { &copyFixedVertexData<1>, false, DXGI_FORMAT_R32_FLOAT, 4 },
@@ -469,6 +709,18 @@ const VertexBuffer11::VertexConverter VertexBuffer11::mIntegerVertexTranslations
         { &copyVertexData<GLuint, 3, false, 1>, true, DXGI_FORMAT_R32G32B32_UINT, 12 },
         { &copyVertexData<GLuint, 4, false, 1>, true, DXGI_FORMAT_R32G32B32A32_UINT, 16 },
     },
+    { // GL_INT_2_10_10_10_REV
+        { NULL, false, DXGI_FORMAT_UNKNOWN, 0 },
+        { NULL, false, DXGI_FORMAT_UNKNOWN, 0 },
+        { NULL, false, DXGI_FORMAT_UNKNOWN, 0 },
+        { &copyPackedVertexData<true, true, false>, true, DXGI_FORMAT_R16G16B16A16_SINT, 8 },
+    },
+    { // GL_UNSIGNED_INT_2_10_10_10_REV
+        { NULL, false, DXGI_FORMAT_UNKNOWN, 0 },
+        { NULL, false, DXGI_FORMAT_UNKNOWN, 0 },
+        { NULL, false, DXGI_FORMAT_UNKNOWN, 0 },
+        { &copyPackedUnsignedVertexData, true, DXGI_FORMAT_R10G10B10A2_UINT, 4 },
+    },
 };
 
 const VertexBuffer11::VertexConverter &VertexBuffer11::getVertexConversion(const gl::VertexAttribute &attribute)
@@ -485,6 +737,8 @@ const VertexBuffer11::VertexConverter &VertexBuffer11::getVertexConversion(const
           case GL_UNSIGNED_SHORT:              typeIndex = 3; break;
           case GL_INT:                         typeIndex = 4; break;
           case GL_UNSIGNED_INT:                typeIndex = 5; break;
+          case GL_INT_2_10_10_10_REV:          typeIndex = 6; break;
+          case GL_UNSIGNED_INT_2_10_10_10_REV: typeIndex = 7; break;
           default:                             UNREACHABLE(); break;
         }
 
@@ -495,15 +749,17 @@ const VertexBuffer11::VertexConverter &VertexBuffer11::getVertexConversion(const
         unsigned int typeIndex = 0;
         switch (type)
         {
-          case GL_BYTE:                        typeIndex = 0; break;
-          case GL_UNSIGNED_BYTE:               typeIndex = 1; break;
-          case GL_SHORT:                       typeIndex = 2; break;
-          case GL_UNSIGNED_SHORT:              typeIndex = 3; break;
-          case GL_INT:                         typeIndex = 4; break;
-          case GL_UNSIGNED_INT:                typeIndex = 5; break;
-          case GL_FIXED:                       typeIndex = 6; break;
-          case GL_HALF_FLOAT:                  typeIndex = 7; break;
-          case GL_FLOAT:                       typeIndex = 8; break;
+          case GL_BYTE:                        typeIndex =  0; break;
+          case GL_UNSIGNED_BYTE:               typeIndex =  1; break;
+          case GL_SHORT:                       typeIndex =  2; break;
+          case GL_UNSIGNED_SHORT:              typeIndex =  3; break;
+          case GL_INT:                         typeIndex =  4; break;
+          case GL_UNSIGNED_INT:                typeIndex =  5; break;
+          case GL_INT_2_10_10_10_REV:          typeIndex =  6; break;
+          case GL_UNSIGNED_INT_2_10_10_10_REV: typeIndex =  7; break;
+          case GL_FIXED:                       typeIndex =  8; break;
+          case GL_HALF_FLOAT:                  typeIndex =  9; break;
+          case GL_FLOAT:                       typeIndex = 10; break;
           default:                             UNREACHABLE(); break;
         }
 

@@ -95,6 +95,8 @@ class VertexAttribute
           case GL_UNSIGNED_SHORT:              return mSize * sizeof(GLushort);
           case GL_INT:                         return mSize * sizeof(GLint);
           case GL_UNSIGNED_INT:                return mSize * sizeof(GLuint);
+          case GL_INT_2_10_10_10_REV:          return 4;
+          case GL_UNSIGNED_INT_2_10_10_10_REV: return 4;
           case GL_FIXED:                       return mSize * sizeof(GLfixed);
           case GL_HALF_FLOAT:                  return mSize * sizeof(GLhalf);
           case GL_FLOAT:                       return mSize * sizeof(GLfloat);

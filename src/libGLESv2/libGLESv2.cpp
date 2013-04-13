@@ -6818,6 +6818,8 @@ void __stdcall glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLbo
           case GL_HALF_FLOAT:
           case GL_INT:
           case GL_UNSIGNED_INT:
+          case GL_INT_2_10_10_10_REV:
+          case GL_UNSIGNED_INT_2_10_10_10_REV:
             if (context && context->getClientVersion() < 3)
             {
                 return gl::error(GL_INVALID_ENUM);
@@ -6833,6 +6835,11 @@ void __stdcall glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLbo
         if (stride < 0)
         {
             return gl::error(GL_INVALID_VALUE);
+        }
+
+        if ((type == GL_INT_2_10_10_10_REV || type == GL_UNSIGNED_INT_2_10_10_10_REV) && size != 4)
+        {
+            return gl::error(GL_INVALID_OPERATION);
         }
 
         if (context)
@@ -7967,6 +7974,8 @@ void __stdcall glVertexAttribIPointer(GLuint index, GLint size, GLenum type, GLs
           case GL_UNSIGNED_SHORT:
           case GL_INT:
           case GL_UNSIGNED_INT:
+          case GL_INT_2_10_10_10_REV:
+          case GL_UNSIGNED_INT_2_10_10_10_REV:
             break;
           default:
             return gl::error(GL_INVALID_ENUM);
@@ -7975,6 +7984,11 @@ void __stdcall glVertexAttribIPointer(GLuint index, GLint size, GLenum type, GLs
         if (stride < 0)
         {
             return gl::error(GL_INVALID_VALUE);
+        }
+
+        if ((type == GL_INT_2_10_10_10_REV || type == GL_UNSIGNED_INT_2_10_10_10_REV) && size != 4)
+        {
+            return gl::error(GL_INVALID_OPERATION);
         }
 
         if (context)
