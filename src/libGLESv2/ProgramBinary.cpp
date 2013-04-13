@@ -539,6 +539,36 @@ bool ProgramBinary::setUniformMatrix4fv(GLint location, GLsizei count, const GLf
     return setUniformMatrixfv<4, 4>(location, count, value, GL_FLOAT_MAT4);
 }
 
+bool ProgramBinary::setUniformMatrix2x3fv(GLint location, GLsizei count, const GLfloat *value)
+{
+    return setUniformMatrixfv<2, 3>(location, count, value, GL_FLOAT_MAT2x3);
+}
+
+bool ProgramBinary::setUniformMatrix3x2fv(GLint location, GLsizei count, const GLfloat *value)
+{
+    return setUniformMatrixfv<3, 2>(location, count, value, GL_FLOAT_MAT3x2);
+}
+
+bool ProgramBinary::setUniformMatrix2x4fv(GLint location, GLsizei count, const GLfloat *value)
+{
+    return setUniformMatrixfv<2, 4>(location, count, value, GL_FLOAT_MAT2x4);
+}
+
+bool ProgramBinary::setUniformMatrix4x2fv(GLint location, GLsizei count, const GLfloat *value)
+{
+    return setUniformMatrixfv<4, 2>(location, count, value, GL_FLOAT_MAT4x2);
+}
+
+bool ProgramBinary::setUniformMatrix3x4fv(GLint location, GLsizei count, const GLfloat *value)
+{
+    return setUniformMatrixfv<3, 4>(location, count, value, GL_FLOAT_MAT3x4);
+}
+
+bool ProgramBinary::setUniformMatrix4x3fv(GLint location, GLsizei count, const GLfloat *value)
+{
+    return setUniformMatrixfv<4, 3>(location, count, value, GL_FLOAT_MAT4x3);
+}
+
 bool ProgramBinary::setUniform1iv(GLint location, GLsizei count, const GLint *v)
 {
     if (location < 0 || location >= (int)mUniformIndex.size())

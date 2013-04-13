@@ -7411,6 +7411,16 @@ void __stdcall glUniformMatrix2x3fv(GLint location, GLsizei count, GLboolean tra
 
     try
     {
+        if (count < 0)
+        {
+            return gl::error(GL_INVALID_VALUE);
+        }
+
+        if (location == -1)
+        {
+            return;
+        }
+
         gl::Context *context = gl::getNonLostContext();
 
         if (context)
@@ -7419,9 +7429,18 @@ void __stdcall glUniformMatrix2x3fv(GLint location, GLsizei count, GLboolean tra
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            gl::ProgramBinary *programBinary = context->getCurrentProgramBinary();
+            if (!programBinary)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            if (!programBinary->setUniformMatrix2x3fv(location, count, value))
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -7436,6 +7455,16 @@ void __stdcall glUniformMatrix3x2fv(GLint location, GLsizei count, GLboolean tra
 
     try
     {
+        if (count < 0)
+        {
+            return gl::error(GL_INVALID_VALUE);
+        }
+
+        if (location == -1)
+        {
+            return;
+        }
+
         gl::Context *context = gl::getNonLostContext();
 
         if (context)
@@ -7444,9 +7473,18 @@ void __stdcall glUniformMatrix3x2fv(GLint location, GLsizei count, GLboolean tra
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            gl::ProgramBinary *programBinary = context->getCurrentProgramBinary();
+            if (!programBinary)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            if (!programBinary->setUniformMatrix3x2fv(location, count, value))
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -7461,6 +7499,16 @@ void __stdcall glUniformMatrix2x4fv(GLint location, GLsizei count, GLboolean tra
 
     try
     {
+        if (count < 0)
+        {
+            return gl::error(GL_INVALID_VALUE);
+        }
+
+        if (location == -1)
+        {
+            return;
+        }
+
         gl::Context *context = gl::getNonLostContext();
 
         if (context)
@@ -7469,9 +7517,18 @@ void __stdcall glUniformMatrix2x4fv(GLint location, GLsizei count, GLboolean tra
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            gl::ProgramBinary *programBinary = context->getCurrentProgramBinary();
+            if (!programBinary)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            if (!programBinary->setUniformMatrix2x4fv(location, count, value))
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -7486,6 +7543,16 @@ void __stdcall glUniformMatrix4x2fv(GLint location, GLsizei count, GLboolean tra
 
     try
     {
+        if (count < 0)
+        {
+            return gl::error(GL_INVALID_VALUE);
+        }
+
+        if (location == -1)
+        {
+            return;
+        }
+
         gl::Context *context = gl::getNonLostContext();
 
         if (context)
@@ -7494,9 +7561,18 @@ void __stdcall glUniformMatrix4x2fv(GLint location, GLsizei count, GLboolean tra
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            gl::ProgramBinary *programBinary = context->getCurrentProgramBinary();
+            if (!programBinary)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            if (!programBinary->setUniformMatrix4x2fv(location, count, value))
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -7511,6 +7587,16 @@ void __stdcall glUniformMatrix3x4fv(GLint location, GLsizei count, GLboolean tra
 
     try
     {
+        if (count < 0)
+        {
+            return gl::error(GL_INVALID_VALUE);
+        }
+
+        if (location == -1)
+        {
+            return;
+        }
+
         gl::Context *context = gl::getNonLostContext();
 
         if (context)
@@ -7519,9 +7605,18 @@ void __stdcall glUniformMatrix3x4fv(GLint location, GLsizei count, GLboolean tra
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            gl::ProgramBinary *programBinary = context->getCurrentProgramBinary();
+            if (!programBinary)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            if (!programBinary->setUniformMatrix3x4fv(location, count, value))
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -7536,6 +7631,16 @@ void __stdcall glUniformMatrix4x3fv(GLint location, GLsizei count, GLboolean tra
 
     try
     {
+        if (count < 0)
+        {
+            return gl::error(GL_INVALID_VALUE);
+        }
+
+        if (location == -1)
+        {
+            return;
+        }
+
         gl::Context *context = gl::getNonLostContext();
 
         if (context)
@@ -7544,9 +7649,18 @@ void __stdcall glUniformMatrix4x3fv(GLint location, GLsizei count, GLboolean tra
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            gl::ProgramBinary *programBinary = context->getCurrentProgramBinary();
+            if (!programBinary)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            if (!programBinary->setUniformMatrix4x3fv(location, count, value))
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {

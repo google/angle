@@ -88,6 +88,12 @@ class ProgramBinary : public RefCountObject
     bool setUniform2iv(GLint location, GLsizei count, const GLint *v);
     bool setUniform3iv(GLint location, GLsizei count, const GLint *v);
     bool setUniform4iv(GLint location, GLsizei count, const GLint *v);
+    bool setUniformMatrix2x3fv(GLint location, GLsizei count, const GLfloat *value);
+    bool setUniformMatrix3x2fv(GLint location, GLsizei count, const GLfloat *value);
+    bool setUniformMatrix2x4fv(GLint location, GLsizei count, const GLfloat *value);
+    bool setUniformMatrix4x2fv(GLint location, GLsizei count, const GLfloat *value);
+    bool setUniformMatrix3x4fv(GLint location, GLsizei count, const GLfloat *value);
+    bool setUniformMatrix4x3fv(GLint location, GLsizei count, const GLfloat *value);
 
     bool getUniformfv(GLint location, GLsizei *bufSize, GLfloat *params);
     bool getUniformiv(GLint location, GLsizei *bufSize, GLint *params);
