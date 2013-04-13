@@ -40,8 +40,17 @@ int UniformComponentCount(GLenum type)
       case GL_UNSIGNED_INT_VEC4:
       case GL_FLOAT_MAT2:
           return 4;
+      case GL_FLOAT_MAT2x3:
+      case GL_FLOAT_MAT3x2:
+          return 6;
+      case GL_FLOAT_MAT2x4:
+      case GL_FLOAT_MAT4x2:
+          return 8;
       case GL_FLOAT_MAT3:
           return 9;
+      case GL_FLOAT_MAT3x4:
+      case GL_FLOAT_MAT4x3:
+          return 12;
       case GL_FLOAT_MAT4:
           return 16;
       default:
@@ -67,6 +76,12 @@ GLenum UniformComponentType(GLenum type)
       case GL_FLOAT_MAT2:
       case GL_FLOAT_MAT3:
       case GL_FLOAT_MAT4:
+      case GL_FLOAT_MAT2x3:
+      case GL_FLOAT_MAT3x2:
+      case GL_FLOAT_MAT2x4:
+      case GL_FLOAT_MAT4x2:
+      case GL_FLOAT_MAT3x4:
+      case GL_FLOAT_MAT4x3:
           return GL_FLOAT;
       case GL_INT:
       case GL_SAMPLER_2D:
