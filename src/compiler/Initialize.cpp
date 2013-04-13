@@ -475,7 +475,7 @@ static TString DefaultPrecisionFragment()
 // Implementation dependent built-in constants.
 //
 //============================================================================
-static TString BuiltInConstants(ShShaderSpec spec, const ShBuiltInResources &resources)
+static TString BuiltInConstants(ShShaderSpec spec, const ShBuiltInResources &resources, const TExtensionBehavior& extensionBehavior)
 {
     TStringStream s;
 
@@ -489,13 +489,20 @@ static TString BuiltInConstants(ShShaderSpec spec, const ShBuiltInResources &res
     s << "const int gl_MaxFragmentUniformVectors = " << resources.MaxFragmentUniformVectors << ";";
 
     if (spec != SH_CSS_SHADERS_SPEC)
-        s << "const int gl_MaxDrawBuffers = " << resources.MaxDrawBuffers << ";";
+    {
+        TExtensionBehavior::const_iterator iter = extensionBehavior.find("GL_EXT_draw_buffers");
+        const bool usingMRTExtension = (iter != extensionBehavior.end() && (iter->second == EBhEnable || iter->second == EBhRequire));
+        const int maxDrawBuffers = (usingMRTExtension ? resources.MaxDrawBuffers : 1);
+
+        s << "const int gl_MaxDrawBuffers = " << maxDrawBuffers << ";";
+    }
 
     return s.str();
 }
 
 void TBuiltIns::initialize(ShShaderType type, ShShaderSpec spec,
-                           const ShBuiltInResources& resources)
+                           const ShBuiltInResources& resources, 
+                           const TExtensionBehavior& extensionBehavior)
 {
     switch (type) {
     case SH_FRAGMENT_SHADER:
@@ -515,7 +522,7 @@ void TBuiltIns::initialize(ShShaderType type, ShShaderSpec spec,
     default: assert(false && "Language not supported");
     }
 
-    builtInStrings.push_back(BuiltInConstants(spec, resources));
+    builtInStrings.push_back(BuiltInConstants(spec, resources, extensionBehavior));
 }
 
 void IdentifyBuiltIns(ShShaderType type, ShShaderSpec spec,

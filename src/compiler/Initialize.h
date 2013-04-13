@@ -18,7 +18,8 @@ public:
     POOL_ALLOCATOR_NEW_DELETE(GlobalPoolAllocator)
 
     void initialize(ShShaderType type, ShShaderSpec spec,
-                    const ShBuiltInResources& resources);
+                    const ShBuiltInResources& resources,
+                    const TExtensionBehavior& extensionBehavior);
     const TBuiltInStrings& getBuiltInStrings() { return builtInStrings; }
 
 protected:

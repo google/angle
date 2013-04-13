@@ -248,7 +248,7 @@ bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources& resources)
     TBuiltIns builtIns;
 
     compileResources = resources;
-    builtIns.initialize(shaderType, shaderSpec, resources);
+    builtIns.initialize(shaderType, shaderSpec, resources, extensionBehavior);
     return InitializeSymbolTable(builtIns.getBuiltInStrings(),
         shaderType, shaderSpec, resources, infoSink, symbolTable);
 }
