@@ -2954,7 +2954,7 @@ yy_size_t string_input(char* buf, yy_size_t max_size, yyscan_t yyscanner) {
     yy_size_t len = token.type == pp::Token::LAST ? 0 : token.text.size();
     if (len < max_size)
         memcpy(buf, token.text.c_str(), len);
-    yyset_lineno(EncodeSourceLoc(token.location.file, token.location.line), yyscanner);
+    yyset_lineno(EncodeSourceLoc(token.location.file, token.location.line),yyscanner);
 
     if (len >= max_size)
         YY_FATAL_ERROR("Input buffer overflow");
@@ -3033,6 +3033,9 @@ int glslang_scan(size_t count, const char* const string[], const int length[],
          iter != extBehavior.end(); ++iter) {
         context->preprocessor.predefineMacro(iter->first.c_str(), 1);
     }
+    if (context->fragmentPrecisionHigh)
+        context->preprocessor.predefineMacro("GL_FRAGMENT_PRECISION_HIGH", 1);
+
     return 0;
 }
 

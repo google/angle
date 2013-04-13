@@ -213,6 +213,10 @@ typedef struct
     int ARB_texture_rectangle;
     int EXT_draw_buffers;
 
+    // Set to 1 if highp precision is supported in the fragment language.
+    // Default is 0.
+    int FragmentPrecisionHigh;
+
     // Name Hashing.
     // Set a 64 bit hash function to enable user-defined name hashing.
     // Default is NULL.
