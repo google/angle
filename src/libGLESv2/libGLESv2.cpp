@@ -338,6 +338,28 @@ bool validateES3TexImageFormat(gl::Context *context, GLenum target, GLint level,
         }
         break;
 
+        case GL_TEXTURE_2D_ARRAY:
+          {
+              if (width > (context->getMaximum2DTextureDimension() >> level) ||
+                  height > (context->getMaximum2DTextureDimension() >> level) ||
+                  depth > (context->getMaximum2DArrayTextureLayers() >> level))
+              {
+                  return gl::error(GL_INVALID_VALUE, false);
+              }
+
+              gl::Texture2DArray *texture2darray = context->getTexture2DArray();
+              if (texture2darray)
+              {
+                  textureCompressed = texture2darray->isCompressed(level);
+                  textureInternalFormat = texture2darray->getInternalFormat(level);
+                  textureLevelWidth = texture2darray->getWidth(level);
+                  textureLevelHeight = texture2darray->getHeight(level);
+                  textureLevelDepth = texture2darray->getDepth(level);
+                  texture = texture2darray;
+              }
+          }
+          break;
+
       default:
         return gl::error(GL_INVALID_ENUM, false);
     }
@@ -7533,7 +7555,10 @@ void __stdcall glTexImage3D(GLenum target, GLint level, GLint internalformat, GL
                 break;
 
               case GL_TEXTURE_2D_ARRAY:
-                UNIMPLEMENTED();
+                {
+                    gl::Texture2DArray *texture = context->getTexture2DArray();
+                    texture->setImage(level, width, height, depth, format, type, context->getUnpackAlignment(), pixels);
+                }
                 break;
 
               default:
@@ -7588,7 +7613,10 @@ void __stdcall glTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint 
                 break;
 
               case GL_TEXTURE_2D_ARRAY:
-                UNIMPLEMENTED();
+                {
+                    gl::Texture2DArray *texture = context->getTexture2DArray();
+                    texture->subImage(level, xoffset, yoffset, zoffset, width, height, depth, format, type, context->getUnpackAlignment(), pixels);
+                }
                 break;
 
               default:
@@ -7634,7 +7662,7 @@ void __stdcall glCopyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GL
                 break;
 
               case GL_TEXTURE_2D_ARRAY:
-                UNIMPLEMENTED();
+                texture = context->getTexture2DArray();
                 break;
 
               default:
@@ -7690,7 +7718,10 @@ void __stdcall glCompressedTexImage3D(GLenum target, GLint level, GLenum interna
                 break;
 
               case GL_TEXTURE_2D_ARRAY:
-                UNIMPLEMENTED();
+                {
+                    gl::Texture2DArray *texture = context->getTexture2DArray();
+                    texture->setCompressedImage(level, internalformat, width, height, depth, imageSize, data);
+                }
                 break;
 
               default:
@@ -7750,7 +7781,11 @@ void __stdcall glCompressedTexSubImage3D(GLenum target, GLint level, GLint xoffs
                 break;
 
               case GL_TEXTURE_2D_ARRAY:
-                UNIMPLEMENTED();
+                {
+                    gl::Texture2DArray *texture = context->getTexture2DArray();
+                    texture->subImageCompressed(level, xoffset, yoffset, zoffset, width, height, depth,
+                                                format, imageSize, data);
+                }
                 break;
 
             default:
