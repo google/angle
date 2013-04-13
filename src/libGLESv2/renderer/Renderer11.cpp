@@ -2191,6 +2191,48 @@ unsigned int Renderer11::getMaxVaryingVectors() const
     }
 }
 
+unsigned int Renderer11::getMaxVertexShaderUniformBuffers() const
+{
+    switch (mFeatureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_0:
+        return D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT;
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0:
+        return D3D10_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT;
+      default: UNREACHABLE();
+        return 0;
+    }
+}
+
+unsigned int Renderer11::getMaxFragmentShaderUniformBuffers() const
+{
+    switch (mFeatureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_0:
+        return D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT;
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0:
+        return D3D10_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT;
+      default: UNREACHABLE();
+        return 0;
+    }
+}
+
+unsigned int Renderer11::getMaxTransformFeedbackBuffers() const
+{
+    switch (mFeatureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_0:
+        return D3D11_SO_BUFFER_SLOT_COUNT;
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0:
+        return D3D10_SO_BUFFER_SLOT_COUNT;
+      default: UNREACHABLE();
+        return 0;
+    }
+}
+
 bool Renderer11::getNonPower2TextureSupport() const
 {
     switch (mFeatureLevel)

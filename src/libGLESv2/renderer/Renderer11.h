@@ -108,6 +108,9 @@ class Renderer11 : public Renderer
     virtual unsigned int getMaxVertexUniformVectors() const;
     virtual unsigned int getMaxFragmentUniformVectors() const;
     virtual unsigned int getMaxVaryingVectors() const;
+    virtual unsigned int getMaxVertexShaderUniformBuffers() const;
+    virtual unsigned int getMaxFragmentShaderUniformBuffers() const;
+    virtual unsigned int getMaxTransformFeedbackBuffers() const;
     virtual bool getNonPower2TextureSupport() const;
     virtual bool getDepthTextureSupport() const;
     virtual bool getOcclusionQuerySupport() const;

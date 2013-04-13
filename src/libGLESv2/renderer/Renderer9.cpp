@@ -2316,6 +2316,21 @@ unsigned int Renderer9::getMaxVaryingVectors() const
     return (getMajorShaderModel() >= 3) ? MAX_VARYING_VECTORS_SM3 : MAX_VARYING_VECTORS_SM2;
 }
 
+unsigned int Renderer9::getMaxVertexShaderUniformBuffers() const
+{
+    return 0;
+}
+
+unsigned int Renderer9::getMaxFragmentShaderUniformBuffers() const
+{
+    return 0;
+}
+
+unsigned int Renderer9::getMaxTransformFeedbackBuffers() const
+{
+    return 0;
+}
+
 bool Renderer9::getNonPower2TextureSupport() const
 {
     return mSupportsNonPower2Textures;
