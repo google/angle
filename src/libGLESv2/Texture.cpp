@@ -1933,4 +1933,476 @@ void Texture3D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLint zoff
     }
 }
 
+Texture2DArray::Texture2DArray(rx::Renderer *renderer, GLuint id) : Texture(renderer, id)
+{
+    mTexStorage = NULL;
+    mColorbufferProxy = NULL;
+    mProxyRefs = 0;
+
+    for (int level = 0; level < IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++level)
+    {
+        mLayerCounts[level] = 0;
+        for (int layer = 0; layer < IMPLEMENTATION_MAX_2D_ARRAY_TEXTURE_LAYERS; ++layer)
+        {
+            mImageArray[level][layer] = renderer->createImage();
+        }
+    }
+}
+
+Texture2DArray::~Texture2DArray()
+{
+    mColorbufferProxy = NULL;
+
+    delete mTexStorage;
+    mTexStorage = NULL;
+    for (int level = 0; level < IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++level)
+    {
+        for (int layer = 0; layer < IMPLEMENTATION_MAX_2D_ARRAY_TEXTURE_LAYERS; ++layer)
+        {
+            delete mImageArray[level][layer];
+        }
+    }
+}
+
+void Texture2DArray::addProxyRef(const Renderbuffer *proxy)
+{
+    mProxyRefs++;
+}
+
+void Texture2DArray::releaseProxy(const Renderbuffer *proxy)
+{
+    if (mProxyRefs > 0)
+        mProxyRefs--;
+
+    if (mProxyRefs == 0)
+        mColorbufferProxy = NULL;
+}
+
+GLenum Texture2DArray::getTarget() const
+{
+    return GL_TEXTURE_2D_ARRAY;
+}
+
+GLsizei Texture2DArray::getWidth(GLint level) const
+{
+    return (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS) ? mImageArray[level][0]->getWidth() : 0;
+}
+
+GLsizei Texture2DArray::getHeight(GLint level) const
+{
+    return (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS) ? mImageArray[level][0]->getHeight() : 0;
+}
+
+GLsizei Texture2DArray::getDepth(GLint level) const
+{
+    return (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS) ? mLayerCounts[level] : 0;
+}
+
+GLenum Texture2DArray::getInternalFormat(GLint level) const
+{
+    return (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS) ? mImageArray[level][0]->getInternalFormat() : GL_NONE;
+}
+
+GLenum Texture2DArray::getActualFormat(GLint level) const
+{
+    return (level < IMPLEMENTATION_MAX_TEXTURE_LEVELS) ? mImageArray[level][0]->getActualFormat() : D3DFMT_UNKNOWN;
+}
+
+bool Texture2DArray::isCompressed(GLint level) const
+{
+    return IsCompressed(getInternalFormat(level));
+}
+
+bool Texture2DArray::isDepth(GLint level) const
+{
+    return IsDepthTexture(getInternalFormat(level));
+}
+
+void Texture2DArray::setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
+{
+    GLint internalformat = ConvertSizedInternalFormat(format, type);
+    redefineImage(level, internalformat, width, height, depth);
+
+    GLsizei inputDepthPitch = gl::ComputeDepthPitch(width, height, internalformat, unpackAlignment);
+
+    for (int i = 0; i < depth; i++)
+    {
+        const void *layerPixels = reinterpret_cast<const unsigned char*>(pixels) + (inputDepthPitch * i);
+        Texture::setImage(unpackAlignment, layerPixels, mImageArray[level][i]);
+    }
+}
+
+void Texture2DArray::setCompressedImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei depth, GLsizei imageSize, const void *pixels)
+{
+    // compressed formats don't have separate sized internal formats-- we can just use the compressed format directly
+    redefineImage(level, format, width, height, depth);
+
+    GLsizei inputDepthPitch = gl::ComputeCompressedDepthPitch(width, height, format);
+
+    for (int i = 0; i < depth; i++)
+    {
+        const void *layerPixels = reinterpret_cast<const unsigned char*>(pixels) + (inputDepthPitch * i);
+        Texture::setCompressedImage(imageSize, layerPixels, mImageArray[level][i]);
+    }
+}
+
+void Texture2DArray::subImage(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
+{
+    GLint internalformat = ConvertSizedInternalFormat(format, type);
+    GLsizei inputDepthPitch = gl::ComputeDepthPitch(width, height, internalformat, unpackAlignment);
+
+    for (int i = 0; i < depth; i++)
+    {
+        int layer = zoffset + i;
+        const void *layerPixels = reinterpret_cast<const unsigned char*>(pixels) + (inputDepthPitch * i);
+
+        if (Texture::subImage(xoffset, yoffset, zoffset, width, height, 1, format, type, unpackAlignment, layerPixels, mImageArray[level][layer]))
+        {
+            commitRect(level, xoffset, yoffset, layer, width, height);
+        }
+    }
+}
+
+void Texture2DArray::subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *pixels)
+{
+    GLsizei inputDepthPitch = gl::ComputeCompressedDepthPitch(width, height, format);
+
+    for (int i = 0; i < depth; i++)
+    {
+        int layer = zoffset + i;
+        const void *layerPixels = reinterpret_cast<const unsigned char*>(pixels) + (inputDepthPitch * i);
+
+        if (Texture::subImageCompressed(xoffset, yoffset, zoffset, width, height, 1, format, imageSize, layerPixels, mImageArray[level][layer]))
+        {
+            commitRect(level, xoffset, yoffset, layer, width, height);
+        }
+    }
+}
+
+void Texture2DArray::storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth)
+{
+    delete mTexStorage;
+    mTexStorage = new rx::TextureStorageInterface2DArray(mRenderer, levels, internalformat, mUsage, width, height, depth);
+    mImmutable = true;
+
+    for (int level = 0; level < IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
+    {
+        for (int layer = 0; layer < IMPLEMENTATION_MAX_2D_ARRAY_TEXTURE_LAYERS; layer++)
+        {
+            if (layer < depth && level < levels)
+            {
+                mImageArray[level][layer]->redefine(mRenderer, GL_TEXTURE_2D_ARRAY, internalformat, std::max(width >> level, 1),
+                                                    std::max(height >> level, 1), 1, true);
+                mLayerCounts[level] = depth;
+            }
+            else
+            {
+                mImageArray[level][layer]->redefine(mRenderer, GL_TEXTURE_2D_ARRAY, GL_NONE, 0, 0, 0, true);
+                mLayerCounts[level] = 0;
+            }
+        }
+    }
+
+    if (mTexStorage->isManaged())
+    {
+        int levels = levelCount();
+
+        for (int level = 0; level < levels; level++)
+        {
+            for (int layer = 0; layer < mLayerCounts[level]; layer++)
+            {
+                mImageArray[level][layer]->setManagedSurface(mTexStorage, layer, level);
+            }
+        }
+    }
+}
+
+void Texture2DArray::generateMipmaps()
+{
+    UNIMPLEMENTED();
+}
+
+void Texture2DArray::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
+{
+    if (xoffset + width > mImageArray[level][0]->getWidth() || yoffset + height > mImageArray[level][0]->getHeight() || zoffset >= mLayerCounts[level])
+    {
+        return gl::error(GL_INVALID_VALUE);
+    }
+
+    if (!mImageArray[level][0]->isRenderableFormat() || (!mTexStorage && !isSamplerComplete()))
+    {
+        mImageArray[level][zoffset]->copy(xoffset, yoffset, 0, x, y, width, height, source);
+        mDirtyImages = true;
+    }
+    else
+    {
+        if (!mTexStorage || !mTexStorage->isRenderTarget())
+        {
+            convertToRenderTarget();
+        }
+
+        updateTexture();
+
+        if (level < levelCount())
+        {
+            gl::Rectangle sourceRect;
+            sourceRect.x = x;
+            sourceRect.width = width;
+            sourceRect.y = y;
+            sourceRect.height = height;
+
+            mRenderer->copyImage(source, sourceRect,
+                                 gl::ExtractFormat(mImageArray[0][0]->getInternalFormat()),
+                                 xoffset, yoffset, zoffset, mTexStorage, level);
+        }
+    }
+}
+
+bool Texture2DArray::isSamplerComplete() const
+{
+    GLsizei width = mImageArray[0][0]->getWidth();
+    GLsizei height = mImageArray[0][0]->getHeight();
+    GLsizei depth = mLayerCounts[0];
+
+    if (width <= 0 || height <= 0 || depth <= 0)
+    {
+        return false;
+    }
+
+    bool mipmapping = isMipmapFiltered();
+    bool filtering, renderable;
+
+    if ((IsFloat32Format(getInternalFormat(0)) && !mRenderer->getFloat32TextureSupport(&filtering, &renderable)) ||
+        (IsFloat16Format(getInternalFormat(0)) && !mRenderer->getFloat16TextureSupport(&filtering, &renderable)))
+    {
+        if (mSamplerState.magFilter != GL_NEAREST ||
+            (mSamplerState.minFilter != GL_NEAREST && mSamplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST))
+        {
+            return false;
+        }
+    }
+
+    if (mipmapping && !isMipmapComplete())
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool Texture2DArray::isMipmapComplete() const
+{
+    if (isImmutable())
+    {
+        return true;
+    }
+
+    GLsizei width = mImageArray[0][0]->getWidth();
+    GLsizei height = mImageArray[0][0]->getHeight();
+    GLsizei depth = mLayerCounts[0];
+
+    if (width <= 0 || height <= 0 || depth <= 0)
+    {
+        return false;
+    }
+
+    int q = log2(std::max(width, height));
+
+    for (int level = 1; level <= q; level++)
+    {
+        if (mImageArray[level][0]->getInternalFormat() != mImageArray[0][0]->getInternalFormat())
+        {
+            return false;
+        }
+
+        if (mImageArray[level][0]->getWidth() != std::max(1, width >> level))
+        {
+            return false;
+        }
+
+        if (mImageArray[level][0]->getHeight() != std::max(1, height >> level))
+        {
+            return false;
+        }
+
+        if (mLayerCounts[level] != mLayerCounts[0])
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+Renderbuffer *Texture2DArray::getRenderbuffer(GLenum target)
+{
+    UNIMPLEMENTED();
+    return NULL;
+}
+
+int Texture2DArray::levelCount()
+{
+    return mTexStorage ? mTexStorage->levelCount() : 0;
+}
+
+void Texture2DArray::createTexture()
+{
+    GLsizei width = mImageArray[0][0]->getWidth();
+    GLsizei height = mImageArray[0][0]->getHeight();
+    GLsizei depth = mLayerCounts[0];
+
+    if (width <= 0 || height <= 0 || depth <= 0)
+    {
+        return; // do not attempt to create native textures for nonexistant data
+    }
+
+    GLint levels = creationLevels(width, height);
+    GLenum internalformat = mImageArray[0][0]->getInternalFormat();
+
+    delete mTexStorage;
+    mTexStorage = new rx::TextureStorageInterface2DArray(mRenderer, levels, internalformat, mUsage, width, height, depth);
+
+    if (mTexStorage->isManaged())
+    {
+        int levels = levelCount();
+        for (int level = 0; level < levels; level++)
+        {
+            for (int layer = 0; layer < mLayerCounts[level]; layer++)
+            {
+                mImageArray[level][layer]->setManagedSurface(mTexStorage, layer, level);
+            }
+        }
+    }
+
+    mDirtyImages = true;
+}
+
+void Texture2DArray::updateTexture()
+{
+    bool mipmapping = (isMipmapFiltered() && isMipmapComplete());
+
+    int levels = (mipmapping ? levelCount() : 1);
+    for (int level = 0; level < levels; level++)
+    {
+        for (int layer = 0; layer < mLayerCounts[level]; layer++)
+        {
+            rx::Image *image = mImageArray[level][layer];
+
+            if (image->isDirty())
+            {
+                commitRect(level, 0, 0, layer, image->getWidth(), image->getHeight());
+            }
+        }
+    }
+}
+
+void Texture2DArray::convertToRenderTarget()
+{
+    rx::TextureStorageInterface2DArray *newTexStorage = NULL;
+
+    if (mImageArray[0][0]->getWidth() != 0 && mImageArray[0][0]->getHeight() != 0 && mLayerCounts[0] != 0)
+    {
+        GLsizei width = mImageArray[0][0]->getWidth();
+        GLsizei height = mImageArray[0][0]->getHeight();
+        GLsizei depth = mLayerCounts[0];
+        GLint levels = mTexStorage != NULL ? mTexStorage->levelCount() : creationLevels(width, height);
+        GLenum internalformat = mImageArray[0][0]->getInternalFormat();
+
+        newTexStorage = new rx::TextureStorageInterface2DArray(mRenderer, levels, internalformat, GL_FRAMEBUFFER_ATTACHMENT_ANGLE, width, height, depth);
+
+        if (mTexStorage != NULL)
+        {
+            if (!mRenderer->copyToRenderTarget(newTexStorage, mTexStorage))
+            {
+                delete newTexStorage;
+                return gl::error(GL_OUT_OF_MEMORY);
+            }
+        }
+    }
+
+    delete mTexStorage;
+    mTexStorage = newTexStorage;
+
+    mDirtyImages = true;
+}
+
+rx::RenderTarget *Texture2DArray::getRenderTarget(GLenum target)
+{
+    UNIMPLEMENTED();
+    return NULL;
+}
+
+rx::TextureStorageInterface *Texture2DArray::getStorage(bool renderTarget)
+{
+    if (!mTexStorage || (renderTarget && !mTexStorage->isRenderTarget()))
+    {
+        if (renderTarget)
+        {
+            convertToRenderTarget();
+        }
+        else
+        {
+            createTexture();
+        }
+    }
+
+    return mTexStorage;
+}
+
+void Texture2DArray::redefineImage(GLint level, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth)
+{
+    // If there currently is a corresponding storage texture image, it has these parameters
+    const int storageWidth = std::max(1, mImageArray[0][0]->getWidth() >> level);
+    const int storageHeight = std::max(1, mImageArray[0][0]->getHeight() >> level);
+    const int storageDepth = mLayerCounts[0];
+    const int storageFormat = mImageArray[0][0]->getInternalFormat();
+
+    for (int i = 0; i < depth; i++)
+    {
+        mImageArray[level][i]->redefine(mRenderer, GL_TEXTURE_2D_ARRAY, internalformat, width, height, 1, false);
+    }
+    for (int i = depth; i < mLayerCounts[level]; i++)
+    {
+        mImageArray[level][i]->redefine(mRenderer, GL_TEXTURE_2D_ARRAY, GL_NONE, 0, 0, 0, true);
+    }
+
+    mLayerCounts[level] = depth;
+
+    if (mTexStorage)
+    {
+        const int storageLevels = mTexStorage->levelCount();
+
+        if ((level >= storageLevels && storageLevels != 0) ||
+            width != storageWidth ||
+            height != storageHeight ||
+            depth != storageDepth ||
+            internalformat != storageFormat)   // Discard mismatched storage
+        {
+            for (int level = 0; level < IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++level)
+            {
+                for (int layer = 0; layer < IMPLEMENTATION_MAX_2D_ARRAY_TEXTURE_LAYERS; ++layer)
+                {
+                    mImageArray[level][layer]->markDirty();
+                }
+            }
+
+            delete mTexStorage;
+            mTexStorage = NULL;
+            mDirtyImages = true;
+        }
+    }
+}
+
+void Texture2DArray::commitRect(GLint level, GLint xoffset, GLint yoffset, GLint layerTarget, GLsizei width, GLsizei height)
+{
+    if (level < levelCount() && layerTarget < mLayerCounts[level])
+    {
+        rx::Image *image = mImageArray[level][layerTarget];
+        if (image->updateSurface(mTexStorage, level, xoffset, yoffset, layerTarget, width, height))
+        {
+            image->markClean();
+        }
+    }
+}
+
 }

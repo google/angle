@@ -33,6 +33,7 @@ class TextureStorageInterface;
 class TextureStorageInterface2D;
 class TextureStorageInterfaceCube;
 class TextureStorageInterface3D;
+class TextureStorageInterface2DArray;
 class RenderTarget;
 class Image;
 }
@@ -333,6 +334,77 @@ class Texture3D : public Texture
     rx::Image *mImageArray[IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
     rx::TextureStorageInterface3D *mTexStorage;
+
+    // A specific internal reference count is kept for colorbuffer proxy references,
+    // because, as the renderbuffer acting as proxy will maintain a binding pointer
+    // back to this texture, there would be a circular reference if we used a binding
+    // pointer here. This reference count will cause the pointer to be set to NULL if
+    // the count drops to zero, but will not cause deletion of the Renderbuffer.
+    Renderbuffer *mColorbufferProxy;
+    unsigned int mProxyRefs;
+};
+
+class Texture2DArray : public Texture
+{
+  public:
+    Texture2DArray(rx::Renderer *renderer, GLuint id);
+
+    ~Texture2DArray();
+
+    void addProxyRef(const Renderbuffer *proxy);
+    void releaseProxy(const Renderbuffer *proxy);
+
+    virtual GLenum getTarget() const;
+
+    GLsizei getWidth(GLint level) const;
+    GLsizei getHeight(GLint level) const;
+    GLsizei getDepth(GLint level) const;
+    GLenum getInternalFormat(GLint level) const;
+    GLenum getActualFormat(GLint level) const;
+    bool isCompressed(GLint level) const;
+    bool isDepth(GLint level) const;
+
+    void setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
+    void setCompressedImage(GLint level, GLenum format, GLsizei width, GLsizei height, GLsizei depth, GLsizei imageSize, const void *pixels);
+    void subImage(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
+    void subImageCompressed(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *pixels);
+    void storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth);
+
+    virtual void generateMipmaps();
+    virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
+
+    virtual bool isSamplerComplete() const;
+    virtual bool isMipmapComplete() const;
+
+    virtual Renderbuffer *getRenderbuffer(GLenum target);
+
+  protected:
+    virtual int levelCount();
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(Texture2DArray);
+
+    virtual void createTexture();
+    virtual void updateTexture();
+    virtual void convertToRenderTarget();
+    virtual rx::RenderTarget *getRenderTarget(GLenum target);
+
+    virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
+
+    void redefineImage(GLint level, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth);
+    void commitRect(GLint level, GLint xoffset, GLint yoffset, GLint layerTarget, GLsizei width, GLsizei height);
+
+    // Storing images as an array of single depth textures since D3D11 treats each array level of a
+    // Texture2D object as a separate subresource.  Each layer would have to be looped over
+    // to update all the texture layers since they cannot all be updated at once and it makes the most
+    // sense for the Image class to not have to worry about layer subresource as well as mip subresources.
+
+    // A future optimization is to dynamically allocate each mip's layers so that such a large number
+    // of Image classes are not required.
+    GLsizei mLayerCounts[IMPLEMENTATION_MAX_TEXTURE_LEVELS];
+    rx::Image *mImageArray[IMPLEMENTATION_MAX_TEXTURE_LEVELS][IMPLEMENTATION_MAX_2D_ARRAY_TEXTURE_LAYERS];
+
+    rx::TextureStorageInterface2DArray *mTexStorage;
 
     // A specific internal reference count is kept for colorbuffer proxy references,
     // because, as the renderbuffer acting as proxy will maintain a binding pointer
