@@ -215,7 +215,7 @@ GLenum Framebuffer::getReadColorbufferType() const
     return mColorbufferTypes[0];
 }
 
-Renderbuffer *Framebuffer::getFirstColorBuffer() const
+Renderbuffer *Framebuffer::getFirstColorbuffer() const
 {
     for (unsigned int colorAttachment = 0; colorAttachment < IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
     {

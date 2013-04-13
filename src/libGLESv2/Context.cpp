@@ -1440,7 +1440,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_ALPHA_BITS:
         {
             gl::Framebuffer *framebuffer = getDrawFramebuffer();
-            gl::Renderbuffer *colorbuffer = framebuffer->getFirstColorBuffer();
+            gl::Renderbuffer *colorbuffer = framebuffer->getFirstColorbuffer();
 
             if (colorbuffer)
             {
@@ -2670,7 +2670,7 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
     }
 
     Renderbuffer *readColorBuffer = readFramebuffer->getReadColorbuffer();
-    Renderbuffer *drawColorBuffer = drawFramebuffer->getFirstColorBuffer();
+    Renderbuffer *drawColorBuffer = drawFramebuffer->getFirstColorbuffer();
 
     if (drawColorBuffer == NULL)
     {
