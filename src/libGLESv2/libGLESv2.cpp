@@ -417,6 +417,17 @@ void __stdcall glBindBuffer(GLenum target, GLuint buffer)
 
         if (context)
         {
+            // Check ES3 specific targets
+            switch (target)
+            {
+              case GL_UNIFORM_BUFFER:
+              case GL_TRANSFORM_FEEDBACK_BUFFER:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+            }
+
             switch (target)
             {
               case GL_ARRAY_BUFFER:
@@ -424,6 +435,12 @@ void __stdcall glBindBuffer(GLenum target, GLuint buffer)
                 return;
               case GL_ELEMENT_ARRAY_BUFFER:
                 context->bindElementArrayBuffer(buffer);
+                return;
+              case GL_UNIFORM_BUFFER:
+                context->bindGenericUniformBuffer(buffer);
+                return;
+              case GL_TRANSFORM_FEEDBACK_BUFFER:
+                context->bindGenericUniformBuffer(buffer);
                 return;
               default:
                 return gl::error(GL_INVALID_ENUM);
@@ -772,6 +789,17 @@ void __stdcall glBufferData(GLenum target, GLsizeiptr size, const GLvoid* data, 
 
         if (context)
         {
+            // Check ES3 specific targets
+            switch (target)
+            {
+              case GL_UNIFORM_BUFFER:
+              case GL_TRANSFORM_FEEDBACK_BUFFER:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+            }
+
             gl::Buffer *buffer;
 
             switch (target)
@@ -781,6 +809,12 @@ void __stdcall glBufferData(GLenum target, GLsizeiptr size, const GLvoid* data, 
                 break;
               case GL_ELEMENT_ARRAY_BUFFER:
                 buffer = context->getElementArrayBuffer();
+                break;
+              case GL_TRANSFORM_FEEDBACK_BUFFER:
+                buffer = context->getGenericTransformFeedbackBuffer();
+                break;
+              case GL_UNIFORM_BUFFER:
+                buffer = context->getGenericUniformBuffer();
                 break;
               default:
                 return gl::error(GL_INVALID_ENUM);
@@ -821,6 +855,17 @@ void __stdcall glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, 
 
         if (context)
         {
+            // Check ES3 specific targets
+            switch (target)
+            {
+              case GL_UNIFORM_BUFFER:
+              case GL_TRANSFORM_FEEDBACK_BUFFER:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+            }
+
             gl::Buffer *buffer;
 
             switch (target)
@@ -830,6 +875,12 @@ void __stdcall glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, 
                 break;
               case GL_ELEMENT_ARRAY_BUFFER:
                 buffer = context->getElementArrayBuffer();
+                break;
+              case GL_TRANSFORM_FEEDBACK_BUFFER:
+                buffer = context->getGenericTransformFeedbackBuffer();
+                break;
+              case GL_UNIFORM_BUFFER:
+                buffer = context->getGenericUniformBuffer();
                 break;
               default:
                 return gl::error(GL_INVALID_ENUM);
@@ -7804,11 +7855,13 @@ void __stdcall glBindBufferRange(GLenum target, GLuint index, GLuint buffer, GLi
             switch (target)
             {
               case GL_TRANSFORM_FEEDBACK_BUFFER:
-                context->bindTransformFeedbackBuffer(buffer, index, offset, size);
+                context->bindIndexedTransformFeedbackBuffer(buffer, index, offset, size);
+                context->bindGenericTransformFeedbackBuffer(buffer);
                 break;
 
               case GL_UNIFORM_BUFFER:
-                context->bindUniformBuffer(buffer, index, offset, size);
+                context->bindIndexedUniformBuffer(buffer, index, offset, size);
+                context->bindGenericUniformBuffer(buffer);
                 break;
 
               default:
@@ -7868,11 +7921,13 @@ void __stdcall glBindBufferBase(GLenum target, GLuint index, GLuint buffer)
             switch (target)
             {
               case GL_TRANSFORM_FEEDBACK_BUFFER:
-                context->bindTransformFeedbackBuffer(buffer, index, 0, -1);
+                context->bindIndexedTransformFeedbackBuffer(buffer, index, 0, -1);
+                context->bindGenericTransformFeedbackBuffer(buffer);
                 break;
 
               case GL_UNIFORM_BUFFER:
-                context->bindUniformBuffer(buffer, index, 0, -1);
+                context->bindIndexedUniformBuffer(buffer, index, 0, -1);
+                context->bindGenericUniformBuffer(buffer);
                 break;
 
               default:

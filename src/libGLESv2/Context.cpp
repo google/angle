@@ -151,6 +151,18 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
     bindDrawFramebuffer(0);
     bindRenderbuffer(0);
 
+    bindGenericUniformBuffer(0);
+    for (int i = 0; i < IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS; i++)
+    {
+        bindIndexedUniformBuffer(0, i, 0, -1);
+    }
+
+    bindGenericTransformFeedbackBuffer(0);
+    for (int i = 0; i < IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS; i++)
+    {
+        bindIndexedTransformFeedbackBuffer(0, i, 0, -1);
+    }
+
     mState.currentProgram = 0;
     mCurrentProgramBinary.set(NULL);
 
@@ -240,11 +252,13 @@ Context::~Context()
     mTexture2DZero.set(NULL);
     mTextureCubeMapZero.set(NULL);
 
+    mState.genericUniformBuffer.set(NULL);
     for (int i = 0; i < IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS; i++)
     {
         mState.uniformBuffers[i].set(NULL);
     }
 
+    mState.genericTransformFeedbackBuffer.set(NULL);
     for (int i = 0; i < IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS; i++)
     {
         mState.transformFeedbackBuffers[i].set(NULL);
@@ -926,14 +940,28 @@ void Context::bindRenderbuffer(GLuint renderbuffer)
     mState.renderbuffer.set(getRenderbuffer(renderbuffer));
 }
 
-void Context::bindUniformBuffer(GLuint buffer, GLuint index, GLintptr offset, GLsizeiptr size)
+void Context::bindGenericUniformBuffer(GLuint buffer)
+{
+    mResourceManager->checkBufferAllocation(buffer);
+
+    mState.genericUniformBuffer.set(getBuffer(buffer));
+}
+
+void Context::bindIndexedUniformBuffer(GLuint buffer, GLuint index, GLintptr offset, GLsizeiptr size)
 {
     mResourceManager->checkBufferAllocation(buffer);
 
     mState.uniformBuffers[index].set(getBuffer(buffer), offset, size);
 }
 
-void Context::bindTransformFeedbackBuffer(GLuint buffer, GLuint index, GLintptr offset, GLsizeiptr size)
+void Context::bindGenericTransformFeedbackBuffer(GLuint buffer)
+{
+    mResourceManager->checkBufferAllocation(buffer);
+
+    mState.genericTransformFeedbackBuffer.set(getBuffer(buffer));
+}
+
+void Context::bindIndexedTransformFeedbackBuffer(GLuint buffer, GLuint index, GLintptr offset, GLsizeiptr size)
 {
     mResourceManager->checkBufferAllocation(buffer);
 
@@ -1191,6 +1219,16 @@ Texture2D *Context::getTexture2D()
 TextureCubeMap *Context::getTextureCubeMap()
 {
     return static_cast<TextureCubeMap*>(getSamplerTexture(mState.activeSampler, TEXTURE_CUBE));
+}
+
+Buffer *Context::getGenericUniformBuffer()
+{
+    return mState.genericUniformBuffer.get();
+}
+
+Buffer *Context::getGenericTransformFeedbackBuffer()
+{
+    return mState.genericTransformFeedbackBuffer.get();
 }
 
 Texture *Context::getSamplerTexture(unsigned int sampler, TextureType type)
@@ -1547,6 +1585,12 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_PROGRAM_BINARY_FORMATS_OES:
         *params = GL_PROGRAM_BINARY_ANGLE;
         break;
+      case GL_UNIFORM_BUFFER_BINDING:
+        *params = mState.genericUniformBuffer.id();
+        break;
+      case GL_TRANSFORM_FEEDBACK_BUFFER_BINDING:
+        *params = mState.genericTransformFeedbackBuffer.id();
+        break;
       default:
         return false;
     }
@@ -1577,13 +1621,13 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
             *type = GL_INT;
             *numParams = mNumCompressedTextureFormats;
         }
-        break;
+        return true;
       case GL_SHADER_BINARY_FORMATS:
         {
             *type = GL_INT;
             *numParams = 0;
         }
-        break;
+        return true;
       case GL_MAX_VERTEX_ATTRIBS:
       case GL_MAX_VERTEX_UNIFORM_VECTORS:
       case GL_MAX_VARYING_VECTORS:
@@ -1653,7 +1697,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
             *type = GL_INT;
             *numParams = 1;
         }
-        break;
+        return true;
       case GL_MAX_SAMPLES_ANGLE:
         {
             if (getMaxSupportedSamples() != 0)
@@ -1666,20 +1710,20 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
                 return false;
             }
         }
-        break;
+        return true;
       case GL_MAX_VIEWPORT_DIMS:
         {
             *type = GL_INT;
             *numParams = 2;
         }
-        break;
+        return true;
       case GL_VIEWPORT:
       case GL_SCISSOR_BOX:
         {
             *type = GL_INT;
             *numParams = 4;
         }
-        break;
+        return true;
       case GL_SHADER_COMPILER:
       case GL_SAMPLE_COVERAGE_INVERT:
       case GL_DEPTH_WRITEMASK:
@@ -1697,13 +1741,13 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
             *type = GL_BOOL;
             *numParams = 1;
         }
-        break;
+        return true;
       case GL_COLOR_WRITEMASK:
         {
             *type = GL_BOOL;
             *numParams = 4;
         }
-        break;
+        return true;
       case GL_POLYGON_OFFSET_FACTOR:
       case GL_POLYGON_OFFSET_UNITS:
       case GL_SAMPLE_COVERAGE_VALUE:
@@ -1713,7 +1757,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
             *type = GL_FLOAT;
             *numParams = 1;
         }
-        break;
+        return true;
       case GL_ALIASED_LINE_WIDTH_RANGE:
       case GL_ALIASED_POINT_SIZE_RANGE:
       case GL_DEPTH_RANGE:
@@ -1721,14 +1765,14 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
             *type = GL_FLOAT;
             *numParams = 2;
         }
-        break;
+        return true;
       case GL_COLOR_CLEAR_VALUE:
       case GL_BLEND_COLOR:
         {
             *type = GL_FLOAT;
             *numParams = 4;
         }
-        break;
+        return true;
       case GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT:
         if (!supportsTextureFilterAnisotropy())
         {
@@ -1736,12 +1780,27 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
         }
         *type = GL_FLOAT;
         *numParams = 1;
-        break;
-      default:
+        return true;
+    }
+
+    if (mClientVersion < 3)
+    {
         return false;
     }
 
-    return true;
+    // Check for ES3.0+ parameter names
+    switch (pname)
+    {
+      case GL_UNIFORM_BUFFER_BINDING:
+      case GL_TRANSFORM_FEEDBACK_BINDING:
+        {
+            *type = GL_INT;
+            *numParams = 1;
+        }
+        return true;
+    }
+
+    return false;
 }
 
 // Applies the render target surface, depth stencil surface, viewport rectangle and

@@ -183,8 +183,10 @@ struct State
     BindingPointer<Texture> samplerTexture[TEXTURE_TYPE_COUNT][IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS];
     BindingPointer<Query> activeQuery[QUERY_TYPE_COUNT];
 
+    BindingPointer<Buffer> genericUniformBuffer;
     OffsetBindingPointer<Buffer> uniformBuffers[IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS];
 
+    BindingPointer<Buffer> genericTransformFeedbackBuffer;
     OffsetBindingPointer<Buffer> transformFeedbackBuffers[IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS];
 
     GLint unpackAlignment;
@@ -331,8 +333,10 @@ class Context
     void bindReadFramebuffer(GLuint framebuffer);
     void bindDrawFramebuffer(GLuint framebuffer);
     void bindRenderbuffer(GLuint renderbuffer);
-    void bindUniformBuffer(GLuint buffer, GLuint index, GLintptr offset, GLsizeiptr size);
-    void bindTransformFeedbackBuffer(GLuint buffer, GLuint index, GLintptr offset, GLsizeiptr size);
+    void bindGenericUniformBuffer(GLuint buffer);
+    void bindIndexedUniformBuffer(GLuint buffer, GLuint index, GLintptr offset, GLsizeiptr size);
+    void bindGenericTransformFeedbackBuffer(GLuint buffer);
+    void bindIndexedTransformFeedbackBuffer(GLuint buffer, GLuint index, GLintptr offset, GLsizeiptr size);
     void useProgram(GLuint program);
     void linkProgram(GLuint program);
     void setProgramBinary(GLuint program, const void *binary, GLint length);
@@ -363,6 +367,8 @@ class Context
     ProgramBinary *getCurrentProgramBinary();
     Texture2D *getTexture2D();
     TextureCubeMap *getTextureCubeMap();
+    Buffer *getGenericUniformBuffer();
+    Buffer *getGenericTransformFeedbackBuffer();
     Texture *getSamplerTexture(unsigned int sampler, TextureType type);
     Framebuffer *getReadFramebuffer();
     Framebuffer *getDrawFramebuffer();
