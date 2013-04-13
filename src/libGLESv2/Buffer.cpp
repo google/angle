@@ -65,6 +65,18 @@ void Buffer::bufferSubData(const void *data, GLsizeiptr size, GLintptr offset)
     mUnmodifiedDataUse = 0;
 }
 
+void Buffer::copyBufferSubData(Buffer* source, GLintptr sourceOffset, GLintptr destOffset, GLsizeiptr size)
+{
+    mBufferStorage->copyData(source->mBufferStorage, size, sourceOffset, destOffset);
+
+    if ((mStaticVertexBuffer && mStaticVertexBuffer->getBufferSize() != 0) || (mStaticIndexBuffer && mStaticIndexBuffer->getBufferSize() != 0))
+    {
+        invalidateStaticData();
+    }
+
+    mUnmodifiedDataUse = 0;
+}
+
 rx::BufferStorage *Buffer::getStorage() const
 {
     return mBufferStorage;
