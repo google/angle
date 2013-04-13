@@ -26,9 +26,11 @@ static TBehavior getBehavior(const std::string& str)
 }
 
 TDirectiveHandler::TDirectiveHandler(TExtensionBehavior& extBehavior,
-                                     TDiagnostics& diagnostics)
+                                     TDiagnostics& diagnostics,
+                                     int& shaderVersion)
     : mExtensionBehavior(extBehavior),
-      mDiagnostics(diagnostics)
+      mDiagnostics(diagnostics),
+      mShaderVersion(shaderVersion)
 {
 }
 
@@ -151,7 +153,7 @@ void TDirectiveHandler::handleVersion(const pp::SourceLocation& loc,
     if (version == 100 ||
         version == 300)
     {
-        mDiagnostics.setShaderVersion(version);
+        mShaderVersion = version;
     }
     else
     {

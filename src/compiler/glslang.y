@@ -15,7 +15,7 @@ WHICH GENERATES THE GLSL ES PARSER (glslang_tab.cpp AND glslang_tab.h).
 
 %{
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -105,15 +105,31 @@ extern void yyerror(TParseContext* context, const char* reason);
         context->recover();  \
     }  \
 }
+
+#define ES2_ONLY(S, L) {  \
+    if (context->shaderVersion != 100) {  \
+        context->error(L, " supported in GLSL ES 1.00 only ", S);  \
+        context->recover();  \
+    }  \
+}
+
+#define ES3_ONLY(S, L) {  \
+    if (context->shaderVersion != 300) {  \
+        context->error(L, " supported in GLSL ES 3.00 only ", S);  \
+        context->recover();  \
+    }  \
+}
 %}
 
 %token <lex> INVARIANT HIGH_PRECISION MEDIUM_PRECISION LOW_PRECISION PRECISION
 %token <lex> ATTRIBUTE CONST_QUAL BOOL_TYPE FLOAT_TYPE INT_TYPE
-%token <lex> BREAK CONTINUE DO ELSE FOR IF DISCARD RETURN
+%token <lex> BREAK CONTINUE DO ELSE FOR IF DISCARD RETURN SWITCH CASE DEFAULT
 %token <lex> BVEC2 BVEC3 BVEC4 IVEC2 IVEC3 IVEC4 VEC2 VEC3 VEC4
 %token <lex> MATRIX2 MATRIX3 MATRIX4 IN_QUAL OUT_QUAL INOUT_QUAL UNIFORM VARYING
+%token <lex> CENTROID FLAT SMOOTH
 %token <lex> STRUCT VOID_TYPE WHILE
 %token <lex> SAMPLER2D SAMPLERCUBE SAMPLER_EXTERNAL_OES SAMPLER2DRECT
+%token <lex> SAMPLER3D SAMPLER3DRECT SAMPLER2DSHADOW
 
 %token <lex> IDENTIFIER TYPE_NAME FLOATCONSTANT INTCONSTANT BOOLCONSTANT
 %token <lex> FIELD_SELECTION
@@ -1492,11 +1508,13 @@ type_qualifier
     }
     | ATTRIBUTE {
         VERTEX_ONLY("attribute", $1.line);
+		ES2_ONLY("attribute", $1.line);
         if (context->globalErrorCheck($1.line, context->symbolTable.atGlobalLevel(), "attribute"))
             context->recover();
         $$.setBasic(EbtVoid, EvqAttribute, $1.line);
     }
     | VARYING {
+	    ES2_ONLY("varying", $1.line);
         if (context->globalErrorCheck($1.line, context->symbolTable.atGlobalLevel(), "varying"))
             context->recover();
         if (context->shaderType == SH_VERTEX_SHADER)
@@ -1505,6 +1523,7 @@ type_qualifier
             $$.setBasic(EbtVoid, EvqVaryingIn, $1.line);
     }
     | INVARIANT VARYING {
+	    ES2_ONLY("varying", $1.line);
         if (context->globalErrorCheck($1.line, context->symbolTable.atGlobalLevel(), "invariant varying"))
             context->recover();
         if (context->shaderType == SH_VERTEX_SHADER)

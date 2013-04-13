@@ -179,7 +179,7 @@ bool TCompiler::compile(const char* const shaderStrings[],
         (PaParseStrings(numStrings - firstSource, &shaderStrings[firstSource], NULL, &parseContext) == 0) &&
         (parseContext.treeRoot != NULL);
 
-    shaderVersion = parseContext.shaderVersion();
+    shaderVersion = parseContext.getShaderVersion();
 
     if (success) {
         TIntermNode* root = parseContext.treeRoot;

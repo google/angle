@@ -41,13 +41,15 @@ struct TParseContext {
             functionReturnsValue(false),
             checksPrecisionErrors(checksPrecErrors),
             diagnostics(is),
-            directiveHandler(ext, diagnostics),
+            shaderVersion(100),
+            directiveHandler(ext, diagnostics, shaderVersion),
             preprocessor(&diagnostics, &directiveHandler),
             scanner(NULL) {  }
     TIntermediate& intermediate; // to hold and build a parse tree
     TSymbolTable& symbolTable;   // symbol table that goes with the language currently being parsed
     ShShaderType shaderType;              // vertex or fragment language (future: pack or unpack)
     ShShaderSpec shaderSpec;              // The language specification compiler conforms to - GLES2 or WebGL.
+    int shaderVersion;
     int compileOptions;
     const char* sourcePath;      // Path of source file or NULL.
     TIntermNode* treeRoot;       // root of parse tree being created
@@ -66,7 +68,7 @@ struct TParseContext {
     pp::Preprocessor preprocessor;
     void* scanner;
 
-    int shaderVersion() const { return diagnostics.shaderVersion(); }
+    int getShaderVersion() const { return shaderVersion; }
     int numErrors() const { return diagnostics.numErrors(); }
     TInfoSink& infoSink() { return diagnostics.infoSink(); }
     void error(TSourceLoc loc, const char *reason, const char* token,

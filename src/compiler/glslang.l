@@ -1,6 +1,6 @@
 /*
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -15,7 +15,7 @@ WHICH GENERATES THE GLSL ES LEXER (glslang_lex.cpp).
 
 %top{
 //
-// Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -89,10 +89,10 @@ O           [0-7]
 "lowp"         { return(LOW_PRECISION); }
 "precision"    { return(PRECISION); }
 
-"attribute"    { return(ATTRIBUTE); }
+"attribute"    { if (context->shaderVersion < 300) return(ATTRIBUTE); return reserved_word(yyscanner); }
 "const"        { return(CONST_QUAL); }
 "uniform"      { return(UNIFORM); }
-"varying"      { return(VARYING); }
+"varying"      { if (context->shaderVersion < 300) return(VARYING); return reserved_word(yyscanner); }
 
 "break"        { return(BREAK); }
 "continue"     { return(CONTINUE); }
@@ -102,6 +102,13 @@ O           [0-7]
 
 "if"           { return(IF); }
 "else"         { return(ELSE); }
+"switch"       { if (context->shaderVersion < 300) return reserved_word(yyscanner); return(SWITCH); }
+"case"         { if (context->shaderVersion < 300) return reserved_word(yyscanner); return(CASE); }
+"default"      { if (context->shaderVersion < 300) return reserved_word(yyscanner); return(DEFAULT); }
+
+"centroid"     { if (context->shaderVersion < 300) return reserved_word(yyscanner); return(CENTROID); }
+"flat"         { if (context->shaderVersion < 300) return reserved_word(yyscanner); return(FLAT); }
+"smooth"       { if (context->shaderVersion < 300) return reserved_word(yyscanner); return(SMOOTH); }
 
 "in"           { return(IN_QUAL); }
 "out"          { return(OUT_QUAL); }
@@ -131,71 +138,133 @@ O           [0-7]
 "bvec3"        { context->lexAfterType = true; return (BVEC3); }
 "bvec4"        { context->lexAfterType = true; return (BVEC4); }
 
-"sampler2D"       { context->lexAfterType = true; return SAMPLER2D; }
-"samplerCube"     { context->lexAfterType = true; return SAMPLERCUBE; }
+"sampler2D"          { context->lexAfterType = true; return SAMPLER2D; }
+"samplerCube"        { context->lexAfterType = true; return SAMPLERCUBE; }
 "samplerExternalOES" { context->lexAfterType = true; return SAMPLER_EXTERNAL_OES; }
-"sampler2DRect" { context->lexAfterType = true; return SAMPLER2DRECT; }
+"sampler3D"          { if (context->shaderVersion < 300) return reserved_word(yyscanner); context->lexAfterType = true; return SAMPLER3D; }
+"sampler3DRect"      { if (context->shaderVersion < 300) return reserved_word(yyscanner); context->lexAfterType = true; return SAMPLER3DRECT; }
+"sampler2DShadow"    { if (context->shaderVersion < 300) return reserved_word(yyscanner); context->lexAfterType = true; return SAMPLER2DSHADOW; }
+"sampler2DRect"      { context->lexAfterType = true; return SAMPLER2DRECT; }
 
 "struct"       { context->lexAfterType = true; return(STRUCT); }
 
-"asm"          { return reserved_word(yyscanner); }
+    /* Reserved keywords for GLSL ES 3.00 that are not reserved for GLSL ES 1.00 */
+"coherent"          |
+"restrict"          |
+"readonly"          |
+"writeonly"         |
+"resource"          |
+"atomic_uint"       |
+"noperspective"     |
+"patch"             |
+"sample"            |
+"subroutine"        |
+"common"            |
+"partition"         |
+"active"            |
 
-"class"        { return reserved_word(yyscanner); }
-"union"        { return reserved_word(yyscanner); }
-"enum"         { return reserved_word(yyscanner); }
-"typedef"      { return reserved_word(yyscanner); }
-"template"     { return reserved_word(yyscanner); }
-"this"         { return reserved_word(yyscanner); }
-"packed"       { return reserved_word(yyscanner); }
+"filter"            |
+"image1D"           |
+"image2D"           |
+"image3D"           |
+"imageCube"	        |
+"iimage1D"          |
+"iimage2D"          |
+"iimage3D"          |
+"iimageCube"        |
+"uimage1D"          |
+"uimage2D"          |
+"uimage3D"          |
+"uimageCube"        |
+"image1DArray"      |
+"image2DArray"      |
+"iimage1DArray"     |
+"iimage2DArray"     |
+"uimage1DArray"     |
+"uimage2DArray"     |
+"image1DShadow"     |
+"image2DShadow"     |
+"image1DArrayShadow" |
+"image2DArrayShadow" |
+"imageBuffer"       |
+"iimageBuffer"      |
+"uimageBuffer"      |
 
-"goto"         { return reserved_word(yyscanner); }
-"switch"       { return reserved_word(yyscanner); }
-"default"      { return reserved_word(yyscanner); }
+"sampler1DArray"    |
+"sampler1DArrayShadow" |
+"isampler1D"        |
+"isampler1DArray"   |
+"usampler1D"        |
+"usampler1DArray"   |
+"isampler2DRect"    |
+"usampler2DRect"    |
+"samplerBuffer"     |
+"isamplerBuffer"    |
+"usamplerBuffer"    |
+"sampler2DMS"       |
+"isampler2DMS"      |
+"usampler2DMS"      |
+"sampler2DMSArray"  |
+"isampler2DMSArray" |
+"usampler2DMSArray" { 
+    if (context->shaderVersion < 300) {
+		yylval->lex.string = NewPoolTString(yytext); 
+	    return check_type(yyscanner); 
+	}
+	return reserved_word(yyscanner);
+}
 
-"inline"       { return reserved_word(yyscanner); }
-"noinline"     { return reserved_word(yyscanner); }
-"volatile"     { return reserved_word(yyscanner); }
-"public"       { return reserved_word(yyscanner); }
-"static"       { return reserved_word(yyscanner); }
-"extern"       { return reserved_word(yyscanner); }
-"external"     { return reserved_word(yyscanner); }
-"interface"    { return reserved_word(yyscanner); }
-"flat"         { return reserved_word(yyscanner); }
+    /* Reserved keywords */
+"asm"          |
 
-"long"         { return reserved_word(yyscanner); }
-"short"        { return reserved_word(yyscanner); }
-"double"       { return reserved_word(yyscanner); }
-"half"         { return reserved_word(yyscanner); }
-"fixed"        { return reserved_word(yyscanner); }
-"unsigned"     { return reserved_word(yyscanner); }
-"superp"       { return reserved_word(yyscanner); }
+"class"        |
+"union"        |
+"enum"         |
+"typedef"      |
+"template"     |
+"this"         |
+"packed"       |
 
-"input"        { return reserved_word(yyscanner); }
-"output"       { return reserved_word(yyscanner); }
+"goto"         |
 
-"hvec2"        { return reserved_word(yyscanner); }
-"hvec3"        { return reserved_word(yyscanner); }
-"hvec4"        { return reserved_word(yyscanner); }
-"dvec2"        { return reserved_word(yyscanner); }
-"dvec3"        { return reserved_word(yyscanner); }
-"dvec4"        { return reserved_word(yyscanner); }
-"fvec2"        { return reserved_word(yyscanner); }
-"fvec3"        { return reserved_word(yyscanner); }
-"fvec4"        { return reserved_word(yyscanner); }
+"inline"       |
+"noinline"     |
+"volatile"     |
+"public"       |
+"static"       |
+"extern"       |
+"external"     |
+"interface"    |
 
-"sampler1D"    { return reserved_word(yyscanner); }
-"sampler3D"    { return reserved_word(yyscanner); }
+"long"         |
+"short"        |
+"double"       |
+"half"         |
+"fixed"        |
+"unsigned"     |
+"superp"       |
 
-"sampler1DShadow" { return reserved_word(yyscanner); }
-"sampler2DShadow" { return reserved_word(yyscanner); }
+"input"        |
+"output"       |
 
-"sampler3DRect" { return reserved_word(yyscanner); }
-"sampler2DRectShadow" { return reserved_word(yyscanner); }
+"hvec2"        |
+"hvec3"        |
+"hvec4"        |
+"dvec2"        |
+"dvec3"        |
+"dvec4"        |
+"fvec2"        |
+"fvec3"        |
+"fvec4"        |
 
-"sizeof"       { return reserved_word(yyscanner); }
-"cast"         { return reserved_word(yyscanner); }
+"sampler1D"    |
+"sampler1DShadow" |
+"sampler2DRectShadow" |
 
-"namespace"    { return reserved_word(yyscanner); }
+"sizeof"       |
+"cast"         |
+
+"namespace"    |
 "using"        { return reserved_word(yyscanner); }
 
 {L}({L}|{D})*       {
@@ -237,27 +306,27 @@ O           [0-7]
 ";"             { context->lexAfterType = false; return(SEMICOLON); }
 ("{"|"<%")      { context->lexAfterType = false; return(LEFT_BRACE); }
 ("}"|"%>")      { return(RIGHT_BRACE); }
-","         { if (context->inTypeParen) context->lexAfterType = false; return(COMMA); }
-":"         { return(COLON); }
-"="         { context->lexAfterType = false; return(EQUAL); }
-"("         { context->lexAfterType = false; context->inTypeParen = true; return(LEFT_PAREN); }
-")"         { context->inTypeParen = false; return(RIGHT_PAREN); }
+","             { if (context->inTypeParen) context->lexAfterType = false; return(COMMA); }
+":"             { return(COLON); }
+"="             { context->lexAfterType = false; return(EQUAL); }
+"("             { context->lexAfterType = false; context->inTypeParen = true; return(LEFT_PAREN); }
+")"             { context->inTypeParen = false; return(RIGHT_PAREN); }
 ("["|"<:")      { return(LEFT_BRACKET); }
 ("]"|":>")      { return(RIGHT_BRACKET); }
-"."         { BEGIN(FIELDS);  return(DOT); }
-"!"         { return(BANG); }
-"-"         { return(DASH); }
-"~"         { return(TILDE); }
-"+"         { return(PLUS); }
-"*"         { return(STAR); }
-"/"         { return(SLASH); }
-"%"         { return(PERCENT); }
-"<"         { return(LEFT_ANGLE); }
-">"         { return(RIGHT_ANGLE); }
-"|"         { return(VERTICAL_BAR); }
-"^"         { return(CARET); }
-"&"         { return(AMPERSAND); }
-"?"         { return(QUESTION); }
+"."             { BEGIN(FIELDS);  return(DOT); }
+"!"             { return(BANG); }
+"-"             { return(DASH); }
+"~"             { return(TILDE); }
+"+"             { return(PLUS); }
+"*"             { return(STAR); }
+"/"             { return(SLASH); }
+"%"             { return(PERCENT); }
+"<"             { return(LEFT_ANGLE); }
+">"             { return(RIGHT_ANGLE); }
+"|"             { return(VERTICAL_BAR); }
+"^"             { return(CARET); }
+"&"             { return(AMPERSAND); }
+"?"             { return(QUESTION); }
 
 <FIELDS>{L}({L}|{D})* { 
     BEGIN(INITIAL);
