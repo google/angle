@@ -416,7 +416,7 @@ void Texture2D::redefineImage(GLint level, GLint internalformat, GLsizei width, 
     const int storageHeight = std::max(1, mImageArray[0]->getHeight() >> level);
     const int storageFormat = mImageArray[0]->getInternalFormat();
 
-    mImageArray[level]->redefine(mRenderer, internalformat, width, height, 1, false);
+    mImageArray[level]->redefine(mRenderer, GL_TEXTURE_2D, internalformat, width, height, 1, false);
 
     if (mTexStorage)
     {
@@ -453,7 +453,7 @@ void Texture2D::bindTexImage(egl::Surface *surface)
 
     GLint internalformat = surface->getFormat();
 
-    mImageArray[0]->redefine(mRenderer, internalformat, surface->getWidth(), surface->getHeight(), 1, true);
+    mImageArray[0]->redefine(mRenderer, GL_TEXTURE_2D, internalformat, surface->getWidth(), surface->getHeight(), 1, true);
 
     delete mTexStorage;
     mTexStorage = new rx::TextureStorageInterface2D(mRenderer, surface->getSwapChain());
@@ -478,7 +478,7 @@ void Texture2D::releaseTexImage()
 
         for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
         {
-            mImageArray[i]->redefine(mRenderer, GL_NONE, 0, 0, 0, true);
+            mImageArray[i]->redefine(mRenderer, GL_TEXTURE_2D, GL_NONE, 0, 0, 0, true);
         }
     }
 }
@@ -595,14 +595,14 @@ void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GL
 
     for (int level = 0; level < levels; level++)
     {
-        mImageArray[level]->redefine(mRenderer, internalformat, width, height, 1, true);
+        mImageArray[level]->redefine(mRenderer, GL_TEXTURE_2D, internalformat, width, height, 1, true);
         width = std::max(1, width >> 1);
         height = std::max(1, height >> 1);
     }
 
     for (int level = levels; level < IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
     {
-        mImageArray[level]->redefine(mRenderer, GL_NONE, 0, 0, 0, true);
+        mImageArray[level]->redefine(mRenderer, GL_TEXTURE_2D, GL_NONE, 0, 0, 0, true);
     }
 
     if (mTexStorage->isManaged())
@@ -1278,7 +1278,7 @@ void TextureCubeMap::redefineImage(int face, GLint level, GLint internalformat, 
     const int storageHeight = std::max(1, mImageArray[0][0]->getHeight() >> level);
     const int storageFormat = mImageArray[0][0]->getInternalFormat();
 
-    mImageArray[face][level]->redefine(mRenderer, internalformat, width, height, 1, false);
+    mImageArray[face][level]->redefine(mRenderer, GL_TEXTURE_CUBE_MAP, internalformat, width, height, 1, false);
 
     if (mTexStorage)
     {
@@ -1389,7 +1389,7 @@ void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size
     {
         for (int face = 0; face < 6; face++)
         {
-            mImageArray[face][level]->redefine(mRenderer, internalformat, size, size, 1, true);
+            mImageArray[face][level]->redefine(mRenderer, GL_TEXTURE_CUBE_MAP, internalformat, size, size, 1, true);
             size = std::max(1, size >> 1);
         }
     }
@@ -1398,7 +1398,7 @@ void TextureCubeMap::storage(GLsizei levels, GLenum internalformat, GLsizei size
     {
         for (int face = 0; face < 6; face++)
         {
-            mImageArray[face][level]->redefine(mRenderer, GL_NONE, 0, 0, 0, true);
+            mImageArray[face][level]->redefine(mRenderer, GL_TEXTURE_CUBE_MAP, GL_NONE, 0, 0, 0, true);
         }
     }
 
@@ -1640,7 +1640,7 @@ void Texture3D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GL
 
     for (int level = 0; level < levels; level++)
     {
-        mImageArray[level]->redefine(mRenderer, internalformat, width, height, depth, true);
+        mImageArray[level]->redefine(mRenderer, GL_TEXTURE_3D, internalformat, width, height, depth, true);
         width = std::max(1, width >> 1);
         height = std::max(1, height >> 1);
         depth = std::max(1, depth >> 1);
@@ -1648,7 +1648,7 @@ void Texture3D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GL
 
     for (int level = levels; level < IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
     {
-        mImageArray[level]->redefine(mRenderer, GL_NONE, 0, 0, 0, true);
+        mImageArray[level]->redefine(mRenderer, GL_TEXTURE_3D, GL_NONE, 0, 0, 0, true);
     }
 
     if (mTexStorage->isManaged())
@@ -1897,7 +1897,7 @@ void Texture3D::redefineImage(GLint level, GLint internalformat, GLsizei width, 
     const int storageDepth = std::max(1, mImageArray[0]->getDepth() >> level);
     const int storageFormat = mImageArray[0]->getInternalFormat();
 
-    mImageArray[level]->redefine(mRenderer, internalformat, width, height, depth, false);
+    mImageArray[level]->redefine(mRenderer, GL_TEXTURE_3D, internalformat, width, height, depth, false);
 
     if (mTexStorage)
     {

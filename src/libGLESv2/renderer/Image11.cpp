@@ -129,7 +129,7 @@ bool Image11::updateSurface(TextureStorageInterface3D *storage, int level, GLint
     return storage11->updateSubresourceLevel(getStagingTexture(), getStagingSubresource(), level, 0, xoffset, yoffset, zoffset, width, height, depth);
 }
 
-bool Image11::redefine(Renderer *renderer, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease)
+bool Image11::redefine(Renderer *renderer, GLenum target, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease)
 {
     if (mWidth != width ||
         mHeight != height ||
@@ -142,6 +142,7 @@ bool Image11::redefine(Renderer *renderer, GLint internalformat, GLsizei width, 
         mHeight = height;
         mDepth = depth;
         mInternalFormat = internalformat;
+        mTarget = target;
         // compute the d3d format that will be used
         mDXGIFormat = gl_d3d11::ConvertTextureFormat(internalformat);
         mActualFormat = d3d11_gl::ConvertTextureInternalFormat(mDXGIFormat);
@@ -394,7 +395,6 @@ void Image11::createStagingTexture()
         return;
     }
 
-    int lodOffset = 1;
     const DXGI_FORMAT dxgiFormat = getDXGIFormat();
     ASSERT(!d3d11::IsDepthStencilFormat(dxgiFormat)); // We should never get here for depth textures
 
@@ -402,13 +402,14 @@ void Image11::createStagingTexture()
     {
         ID3D11Device *device = mRenderer->getDevice();
 
+        int lodOffset = 1;
         GLsizei width = mWidth;
         GLsizei height = mHeight;
 
         // adjust size if needed for compressed textures
         gl::MakeValidSize(false, d3d11::IsCompressed(dxgiFormat), &width, &height, &lodOffset);
 
-        if (mDepth > 1)
+        if (mTarget == GL_TEXTURE_3D)
         {
             ID3D11Texture3D *newTexture = NULL;
 
@@ -434,7 +435,7 @@ void Image11::createStagingTexture()
             mStagingTexture = newTexture;
             mStagingSubresource = D3D11CalcSubresource(lodOffset, 0, lodOffset + 1);
         }
-        else
+        else if (mTarget == GL_TEXTURE_2D || mTarget == GL_TEXTURE_2D_ARRAY || mTarget == GL_TEXTURE_CUBE_MAP)
         {
             ID3D11Texture2D *newTexture = NULL;
 
@@ -462,6 +463,10 @@ void Image11::createStagingTexture()
 
             mStagingTexture = newTexture;
             mStagingSubresource = D3D11CalcSubresource(lodOffset, 0, lodOffset + 1);
+        }
+        else
+        {
+            UNREACHABLE();
         }
     }
 

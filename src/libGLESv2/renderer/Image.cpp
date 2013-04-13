@@ -21,6 +21,7 @@ Image::Image()
     mDepth = 0;
     mInternalFormat = GL_NONE;
     mActualFormat = GL_NONE;
+    mTarget = GL_NONE;
 }
 
 template <typename T>

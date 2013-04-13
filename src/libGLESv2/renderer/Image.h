@@ -36,6 +36,7 @@ class Image
     GLsizei getDepth() const { return mDepth; }
     GLenum getInternalFormat() const { return mInternalFormat; }
     GLenum getActualFormat() const { return mActualFormat; }
+    GLenum getTarget() const { return mTarget; }
 
     void markDirty() {mDirty = true;}
     void markClean() {mDirty = false;}
@@ -48,7 +49,7 @@ class Image
     virtual bool updateSurface(TextureStorageInterfaceCube *storage, int face, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height) = 0;
     virtual bool updateSurface(TextureStorageInterface3D *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth) = 0;
 
-    virtual bool redefine(Renderer *renderer, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease) = 0;
+    virtual bool redefine(Renderer *renderer, GLenum target, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease) = 0;
 
     virtual bool isRenderableFormat() const = 0;
     
@@ -155,6 +156,7 @@ class Image
     GLsizei mDepth;
     GLint mInternalFormat;
     GLenum mActualFormat;
+    GLenum mTarget;
 
     bool mDirty;
 
