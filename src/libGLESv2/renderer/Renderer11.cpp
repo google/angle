@@ -2193,6 +2193,9 @@ unsigned int Renderer11::getMaxVaryingVectors() const
 
 unsigned int Renderer11::getMaxVertexShaderUniformBuffers() const
 {
+    META_ASSERT(gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS >= D3D10_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT &&
+                gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS >= D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT);
+
     switch (mFeatureLevel)
     {
       case D3D_FEATURE_LEVEL_11_0:
@@ -2207,6 +2210,9 @@ unsigned int Renderer11::getMaxVertexShaderUniformBuffers() const
 
 unsigned int Renderer11::getMaxFragmentShaderUniformBuffers() const
 {
+    META_ASSERT(gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS >= D3D10_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT &&
+                gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS >= D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT);
+
     switch (mFeatureLevel)
     {
       case D3D_FEATURE_LEVEL_11_0:
@@ -2221,6 +2227,9 @@ unsigned int Renderer11::getMaxFragmentShaderUniformBuffers() const
 
 unsigned int Renderer11::getMaxTransformFeedbackBuffers() const
 {
+    META_ASSERT(gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS >= D3D11_SO_BUFFER_SLOT_COUNT &&
+                gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS >= D3D10_SO_BUFFER_SLOT_COUNT);
+
     switch (mFeatureLevel)
     {
       case D3D_FEATURE_LEVEL_11_0:

@@ -240,6 +240,16 @@ Context::~Context()
     mTexture2DZero.set(NULL);
     mTextureCubeMapZero.set(NULL);
 
+    for (int i = 0; i < IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS; i++)
+    {
+        mState.uniformBuffers[i].set(NULL);
+    }
+
+    for (int i = 0; i < IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS; i++)
+    {
+        mState.transformFeedbackBuffers[i].set(NULL);
+    }
+
     mResourceManager->release();
 }
 
@@ -913,6 +923,20 @@ void Context::bindRenderbuffer(GLuint renderbuffer)
     mResourceManager->checkRenderbufferAllocation(renderbuffer);
 
     mState.renderbuffer.set(getRenderbuffer(renderbuffer));
+}
+
+void Context::bindUniformBuffer(GLuint buffer, GLuint index, GLintptr offset, GLsizeiptr size)
+{
+    mResourceManager->checkBufferAllocation(buffer);
+
+    mState.uniformBuffers[index].set(getBuffer(buffer), offset, size);
+}
+
+void Context::bindTransformFeedbackBuffer(GLuint buffer, GLuint index, GLintptr offset, GLsizeiptr size)
+{
+    mResourceManager->checkBufferAllocation(buffer);
+
+    mState.transformFeedbackBuffers[index].set(getBuffer(buffer), offset, size);
 }
 
 void Context::useProgram(GLuint program)
@@ -2172,9 +2196,20 @@ unsigned int Context::getMaximumCombinedTextureImageUnits() const
     return mRenderer->getMaxCombinedTextureImageUnits();
 }
 
+unsigned int Context::getMaximumCombinedUniformBufferBindings() const
+{
+    return mRenderer->getMaxVertexShaderUniformBuffers() +
+           mRenderer->getMaxFragmentShaderUniformBuffers();
+}
+
 int Context::getMaxSupportedSamples() const
 {
     return mRenderer->getMaxSupportedSamples();
+}
+
+unsigned int Context::getMaxTransformFeedbackBufferBindings() const
+{
+    return mRenderer->getMaxTransformFeedbackBuffers();
 }
 
 unsigned int Context::getMaximumRenderTargets() const
