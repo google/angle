@@ -141,6 +141,7 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
 
     mTexture2DZero.set(new Texture2D(mRenderer, 0));
     mTextureCubeMapZero.set(new TextureCubeMap(mRenderer, 0));
+    mTexture3DZero.set(new Texture3D(mRenderer, 0));
 
     mState.activeSampler = 0;
     bindArrayBuffer(0);
@@ -256,6 +257,7 @@ Context::~Context()
 
     mTexture2DZero.set(NULL);
     mTextureCubeMapZero.set(NULL);
+    mTexture3DZero.set(NULL);
 
     mState.genericUniformBuffer.set(NULL);
     for (int i = 0; i < IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS; i++)
@@ -925,6 +927,13 @@ void Context::bindTextureCubeMap(GLuint texture)
     mState.samplerTexture[TEXTURE_CUBE][mState.activeSampler].set(getTexture(texture));
 }
 
+void Context::bindTexture3D(GLuint texture)
+{
+    mResourceManager->checkTextureAllocation(texture, TEXTURE_3D);
+
+    mState.samplerTexture[TEXTURE_3D][mState.activeSampler].set(getTexture(texture));
+}
+
 void Context::bindReadFramebuffer(GLuint framebuffer)
 {
     if (!getFramebuffer(framebuffer))
@@ -1268,6 +1277,11 @@ TextureCubeMap *Context::getTextureCubeMap()
     return static_cast<TextureCubeMap*>(getSamplerTexture(mState.activeSampler, TEXTURE_CUBE));
 }
 
+Texture3D *Context::getTexture3D()
+{
+    return static_cast<Texture3D*>(getSamplerTexture(mState.activeSampler, TEXTURE_3D));
+}
+
 Buffer *Context::getGenericUniformBuffer()
 {
     return mState.genericUniformBuffer.get();
@@ -1309,6 +1323,7 @@ Texture *Context::getSamplerTexture(unsigned int sampler, TextureType type)
           default: UNREACHABLE();
           case TEXTURE_2D: return mTexture2DZero.get();
           case TEXTURE_CUBE: return mTextureCubeMapZero.get();
+          case TEXTURE_3D: return mTexture3DZero.get();
         }
     }
 
@@ -1644,6 +1659,17 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
             *params = mState.samplerTexture[TEXTURE_CUBE][mState.activeSampler].id();
         }
         break;
+      case GL_TEXTURE_BINDING_3D:
+        {
+            if (mState.activeSampler > mRenderer->getMaxCombinedTextureImageUnits() - 1)
+            {
+                gl::error(GL_INVALID_OPERATION);
+                return false;
+            }
+
+            *params = mState.samplerTexture[TEXTURE_3D][mState.activeSampler].id();
+        }
+        break;
       case GL_RESET_NOTIFICATION_STRATEGY_EXT:
         *params = mResetStrategy;
         break;
@@ -1877,6 +1903,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_COPY_WRITE_BUFFER_BINDING:
       case GL_PIXEL_PACK_BUFFER_BINDING:
       case GL_PIXEL_UNPACK_BUFFER_BINDING:
+      case GL_TEXTURE_BINDING_3D:
       case GL_MAX_3D_TEXTURE_SIZE:
         {
             *type = GL_INT;

@@ -298,6 +298,10 @@ void ResourceManager::checkTextureAllocation(GLuint texture, TextureType type)
         {
             textureObject = new TextureCubeMap(mRenderer, texture);
         }
+        else if (type == TEXTURE_3D)
+        {
+            textureObject = new Texture3D(mRenderer, texture);
+        }
         else
         {
             UNREACHABLE();

@@ -550,6 +550,13 @@ void __stdcall glBindTexture(GLenum target, GLuint texture)
               case GL_TEXTURE_CUBE_MAP:
                 context->bindTextureCubeMap(texture);
                 return;
+              case GL_TEXTURE_3D:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                context->bindTexture3D(texture);
+                return;
               default:
                 return gl::error(GL_INVALID_ENUM);
             }
@@ -4011,6 +4018,13 @@ void __stdcall glGetTexParameterfv(GLenum target, GLenum pname, GLfloat* params)
               case GL_TEXTURE_CUBE_MAP:
                 texture = context->getTextureCubeMap();
                 break;
+              case GL_TEXTURE_3D:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                texture = context->getTexture3D();
+                break;
               default:
                 return gl::error(GL_INVALID_ENUM);
             }
@@ -4079,6 +4093,13 @@ void __stdcall glGetTexParameteriv(GLenum target, GLenum pname, GLint* params)
                 break;
               case GL_TEXTURE_CUBE_MAP:
                 texture = context->getTextureCubeMap();
+                break;
+              case GL_TEXTURE_3D:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                texture = context->getTexture3D();
                 break;
               default:
                 return gl::error(GL_INVALID_ENUM);
@@ -5728,6 +5749,12 @@ void __stdcall glTexParameterf(GLenum target, GLenum pname, GLfloat param)
               case GL_TEXTURE_CUBE_MAP:
                 texture = context->getTextureCubeMap();
                 break;
+              case GL_TEXTURE_3D:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                texture = context->getTexture3D();
               default:
                 return gl::error(GL_INVALID_ENUM);
             }
@@ -5815,6 +5842,13 @@ void __stdcall glTexParameteri(GLenum target, GLenum pname, GLint param)
                 break;
               case GL_TEXTURE_CUBE_MAP:
                 texture = context->getTextureCubeMap();
+                break;
+              case GL_TEXTURE_3D:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                texture = context->getTexture3D();
                 break;
               default:
                 return gl::error(GL_INVALID_ENUM);

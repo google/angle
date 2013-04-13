@@ -16,6 +16,7 @@ enum TextureType
 {
     TEXTURE_2D,
     TEXTURE_CUBE,
+    TEXTURE_3D,
 
     TEXTURE_TYPE_COUNT,
     TEXTURE_UNKNOWN

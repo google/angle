@@ -51,6 +51,7 @@ class ProgramBinary;
 class Texture;
 class Texture2D;
 class TextureCubeMap;
+class Texture3D;
 class Framebuffer;
 class Renderbuffer;
 class RenderbufferStorage;
@@ -336,6 +337,7 @@ class Context
     void bindElementArrayBuffer(GLuint buffer);
     void bindTexture2D(GLuint texture);
     void bindTextureCubeMap(GLuint texture);
+    void bindTexture3D(GLuint texture);
     void bindReadFramebuffer(GLuint framebuffer);
     void bindDrawFramebuffer(GLuint framebuffer);
     void bindRenderbuffer(GLuint renderbuffer);
@@ -377,6 +379,7 @@ class Context
     ProgramBinary *getCurrentProgramBinary();
     Texture2D *getTexture2D();
     TextureCubeMap *getTextureCubeMap();
+    Texture3D *getTexture3D();
     Buffer *getGenericUniformBuffer();
     Buffer *getGenericTransformFeedbackBuffer();
     Buffer *getCopyReadBuffer();
@@ -482,6 +485,7 @@ class Context
 
     BindingPointer<Texture2D> mTexture2DZero;
     BindingPointer<TextureCubeMap> mTextureCubeMapZero;
+    BindingPointer<Texture3D> mTexture3DZero;
 
 #ifndef HASH_MAP
 # ifdef _MSC_VER
