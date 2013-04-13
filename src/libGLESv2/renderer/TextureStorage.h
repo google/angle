@@ -104,7 +104,21 @@ class TextureStorageInterfaceCube : public TextureStorageInterface
     const unsigned int mFirstRenderTargetSerial;
 };
 
+class TextureStorageInterface3D : public TextureStorageInterface
+{
+  public:
+    TextureStorageInterface3D(Renderer *renderer, int levels, GLenum internalformat, GLenum usage,
+                              GLsizei width, GLsizei height, GLsizei depth);
+    virtual ~TextureStorageInterface3D();
+
+    void generateMipmap(int level);
+
+    virtual unsigned int getRenderTargetSerial(GLenum target) const;
+
+  private:
+    DISALLOW_COPY_AND_ASSIGN(TextureStorageInterface3D);
+};
+
 }
 
 #endif // LIBGLESV2_RENDERER_TEXTURESTORAGE_H_
-

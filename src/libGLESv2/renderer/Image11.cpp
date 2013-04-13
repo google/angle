@@ -114,13 +114,19 @@ bool Image11::isDirty() const
 bool Image11::updateSurface(TextureStorageInterface2D *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
     TextureStorage11_2D *storage11 = TextureStorage11_2D::makeTextureStorage11_2D(storage->getStorageInstance());
-    return storage11->updateSubresourceLevel(getStagingTexture(), getStagingSubresource(), level, 0, xoffset, yoffset, width, height);
+    return storage11->updateSubresourceLevel(getStagingTexture(), getStagingSubresource(), level, 0, xoffset, yoffset, 0, width, height, 1);
 }
 
 bool Image11::updateSurface(TextureStorageInterfaceCube *storage, int face, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
     TextureStorage11_Cube *storage11 = TextureStorage11_Cube::makeTextureStorage11_Cube(storage->getStorageInstance());
-    return storage11->updateSubresourceLevel(getStagingTexture(), getStagingSubresource(), level, face, xoffset, yoffset, width, height);
+    return storage11->updateSubresourceLevel(getStagingTexture(), getStagingSubresource(), level, face, xoffset, yoffset, 0, width, height, 1);
+}
+
+bool Image11::updateSurface(TextureStorageInterface3D *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth)
+{
+    UNIMPLEMENTED();
+    return false;
 }
 
 bool Image11::redefine(Renderer *renderer, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease)

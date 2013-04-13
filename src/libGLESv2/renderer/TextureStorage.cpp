@@ -36,7 +36,6 @@ bool TextureStorageInterface::isRenderTarget() const
     return mInstance->isRenderTarget();
 }
 
-
 bool TextureStorageInterface::isManaged() const
 {
     return mInstance->isManaged();
@@ -56,7 +55,6 @@ int TextureStorageInterface::getLodOffset() const
 {
     return mInstance->getLodOffset();
 }
-
 
 int TextureStorageInterface::levelCount()
 {
@@ -117,6 +115,27 @@ void TextureStorageInterfaceCube::generateMipmap(int face, int level)
 unsigned int TextureStorageInterfaceCube::getRenderTargetSerial(GLenum target) const
 {
     return mFirstRenderTargetSerial + gl::TextureCubeMap::faceIndex(target);
+}
+
+TextureStorageInterface3D::TextureStorageInterface3D(Renderer *renderer, int levels, GLenum internalformat, GLenum usage,
+                                                     GLsizei width, GLsizei height, GLsizei depth)
+{
+    mInstance = renderer->createTextureStorage3D(levels, internalformat, usage, width, height, depth);
+}
+
+TextureStorageInterface3D::~TextureStorageInterface3D()
+{
+}
+
+void TextureStorageInterface3D::generateMipmap(int level)
+{
+    mInstance->generateMipmap(level);
+}
+
+unsigned int TextureStorageInterface3D::getRenderTargetSerial(GLenum target) const
+{
+    // TODO: 3D render targets not supported yet.
+    return 0;
 }
 
 }

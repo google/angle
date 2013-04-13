@@ -3086,6 +3086,11 @@ TextureStorage *Renderer11::createTextureStorageCube(int levels, GLenum internal
     return new TextureStorage11_Cube(this, levels, internalformat, usage, forceRenderable, size);
 }
 
+TextureStorage *Renderer11::createTextureStorage3D(int levels, GLenum internalformat, GLenum usage, GLsizei width, GLsizei height, GLsizei depth)
+{
+    return new TextureStorage11_3D(this, levels, internalformat, usage, width, height, depth);
+}
+
 static inline unsigned int getFastPixelCopySize(DXGI_FORMAT sourceFormat, GLenum destFormat, GLenum destType)
 {
     if (sourceFormat == DXGI_FORMAT_A8_UNORM &&

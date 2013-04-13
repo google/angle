@@ -23,6 +23,7 @@ namespace rx
 class Renderer;
 class TextureStorageInterface2D;
 class TextureStorageInterfaceCube;
+class TextureStorageInterface3D;
 
 class Image
 {
@@ -42,8 +43,10 @@ class Image
 
     virtual void setManagedSurface(TextureStorageInterface2D *storage, int level) {};
     virtual void setManagedSurface(TextureStorageInterfaceCube *storage, int face, int level) {};
+    virtual void setManagedSurface(TextureStorageInterface3D *storage, int level) {};
     virtual bool updateSurface(TextureStorageInterface2D *storage, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height) = 0;
     virtual bool updateSurface(TextureStorageInterfaceCube *storage, int face, int level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height) = 0;
+    virtual bool updateSurface(TextureStorageInterface3D *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth) = 0;
 
     virtual bool redefine(Renderer *renderer, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease) = 0;
 

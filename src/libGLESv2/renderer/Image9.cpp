@@ -307,6 +307,13 @@ bool Image9::updateSurface(TextureStorageInterfaceCube *storage, int face, int l
     return updateSurface(storage9->getCubeMapSurface(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level, true), xoffset, yoffset, width, height);
 }
 
+bool Image9::updateSurface(TextureStorageInterface3D *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth)
+{
+    // 3D textures are not supported by the D3D9 backend.
+    UNREACHABLE();
+    return false;
+}
+
 bool Image9::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height)
 {
     if (!destSurface)

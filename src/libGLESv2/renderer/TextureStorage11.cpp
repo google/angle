@@ -25,14 +25,14 @@ TextureStorage11::TextureStorage11(Renderer *renderer, UINT bindFlags)
     : mBindFlags(bindFlags),
       mLodOffset(0),
       mMipLevels(0),
-      mTexture(NULL),
       mTextureFormat(DXGI_FORMAT_UNKNOWN),
       mShaderResourceFormat(DXGI_FORMAT_UNKNOWN),
       mRenderTargetFormat(DXGI_FORMAT_UNKNOWN),
       mDepthStencilFormat(DXGI_FORMAT_UNKNOWN),
       mSRV(NULL),
       mTextureWidth(0),
-      mTextureHeight(0)
+      mTextureHeight(0),
+      mTextureDepth(0)
 {
     mRenderer = Renderer11::makeRenderer11(renderer);
 }
@@ -91,12 +91,6 @@ UINT TextureStorage11::getBindFlags() const
 {
     return mBindFlags;
 }
-
-ID3D11Texture2D *TextureStorage11::getBaseTexture() const
-{
-    return mTexture;
-}
-
 int TextureStorage11::getLodOffset() const
 {
     return mLodOffset;
@@ -106,7 +100,7 @@ bool TextureStorage11::isRenderTarget() const
 {
     return (mBindFlags & (D3D11_BIND_RENDER_TARGET | D3D11_BIND_DEPTH_STENCIL)) != 0;
 }
-    
+
 bool TextureStorage11::isManaged() const
 {
     return false;
@@ -132,9 +126,9 @@ UINT TextureStorage11::getSubresourceIndex(int level, int faceIndex)
     return index;
 }
 
-bool TextureStorage11::updateSubresourceLevel(ID3D11Texture2D *srcTexture, unsigned int sourceSubresource,
-                                              int level, int face, GLint xoffset, GLint yoffset,
-                                              GLsizei width, GLsizei height)
+bool TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture, unsigned int sourceSubresource,
+                                              int level, int face, GLint xoffset, GLint yoffset, GLint zoffset,
+                                              GLsizei width, GLsizei height, GLsizei depth)
 {
     if (srcTexture)
     {
@@ -148,14 +142,14 @@ bool TextureStorage11::updateSubresourceLevel(ID3D11Texture2D *srcTexture, unsig
         srcBox.top = yoffset;
         srcBox.right = xoffset + width;
         srcBox.bottom = yoffset + height;
-        srcBox.front = 0;
-        srcBox.back = 1;
+        srcBox.front = zoffset;
+        srcBox.back = zoffset + depth;
 
         ID3D11DeviceContext *context = mRenderer->getDeviceContext();
-        
+
         ASSERT(getBaseTexture());
         context->CopySubresourceRegion(getBaseTexture(), getSubresourceIndex(level + mLodOffset, face),
-                                       xoffset, yoffset, 0, srcTexture, sourceSubresource, &srcBox);
+                                       xoffset, yoffset, zoffset, srcTexture, sourceSubresource, &srcBox);
         return true;
     }
 
@@ -216,6 +210,7 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, SwapChain11 *swapch
     mTextureFormat = texDesc.Format;
     mTextureWidth = texDesc.Width;
     mTextureHeight = texDesc.Height;
+    mTextureDepth = 1;
 
     D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
     mSRV->GetDesc(&srvDesc);
@@ -233,6 +228,7 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, SwapChain11 *swapch
 TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height)
     : TextureStorage11(renderer, GetTextureBindFlags(gl_d3d11::ConvertTextureFormat(internalformat), usage, forceRenderable))
 {
+    mTexture = NULL;
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
     {
         mRenderTarget[i] = NULL;
@@ -296,6 +292,7 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int levels, GLenum 
             mMipLevels = desc.MipLevels;
             mTextureWidth = desc.Width;
             mTextureHeight = desc.Height;
+            mTextureDepth = 1;
         }
     }
 }
@@ -325,6 +322,11 @@ TextureStorage11_2D *TextureStorage11_2D::makeTextureStorage11_2D(TextureStorage
 {
     ASSERT(HAS_DYNAMIC_TYPE(TextureStorage11_2D*, storage));
     return static_cast<TextureStorage11_2D*>(storage);
+}
+
+ID3D11Resource *TextureStorage11_2D::getBaseTexture() const
+{
+    return mTexture;
 }
 
 RenderTarget *TextureStorage11_2D::getRenderTarget(int level)
@@ -451,6 +453,7 @@ void TextureStorage11_2D::generateMipmap(int level)
 TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
     : TextureStorage11(renderer, GetTextureBindFlags(gl_d3d11::ConvertTextureFormat(internalformat), usage, forceRenderable))
 {
+    mTexture = NULL;
     for (unsigned int i = 0; i < 6; i++)
     {
         for (unsigned int j = 0; j < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; j++)
@@ -512,6 +515,7 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int levels, GLe
             mMipLevels = desc.MipLevels;
             mTextureWidth = desc.Width;
             mTextureHeight = desc.Height;
+            mTextureDepth = 1;
         }
     }
 }
@@ -544,6 +548,11 @@ TextureStorage11_Cube *TextureStorage11_Cube::makeTextureStorage11_Cube(TextureS
 {
     ASSERT(HAS_DYNAMIC_TYPE(TextureStorage11_Cube*, storage));
     return static_cast<TextureStorage11_Cube*>(storage);
+}
+
+ID3D11Resource *TextureStorage11_Cube::getBaseTexture() const
+{
+    return mTexture;
 }
 
 RenderTarget *TextureStorage11_Cube::getRenderTarget(GLenum faceTarget, int level)
@@ -671,6 +680,120 @@ void TextureStorage11_Cube::generateMipmap(int face, int level)
     RenderTarget11 *dest = RenderTarget11::makeRenderTarget11(getRenderTarget(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level));
 
     generateMipmapLayer(source, dest);
+}
+
+TextureStorage11_3D::TextureStorage11_3D(Renderer *renderer, int levels, GLenum internalformat, GLenum usage,
+                                         GLsizei width, GLsizei height, GLsizei depth)
+    : TextureStorage11(renderer, GetTextureBindFlags(gl_d3d11::ConvertTextureFormat(internalformat), usage, false))
+{
+    mTexture = NULL;
+
+    DXGI_FORMAT convertedFormat = gl_d3d11::ConvertTextureFormat(internalformat);
+    ASSERT(!d3d11::IsDepthStencilFormat(convertedFormat));
+
+    mTextureFormat = convertedFormat;
+    mShaderResourceFormat = convertedFormat;
+    mDepthStencilFormat = DXGI_FORMAT_UNKNOWN;
+    mRenderTargetFormat = convertedFormat;
+
+    // If the width, height or depth are not positive this should be treated as an incomplete texture
+    // we handle that here by skipping the d3d texture creation
+    if (width > 0 && height > 0 && depth > 0)
+    {
+        // adjust size if needed for compressed textures
+        gl::MakeValidSize(false, gl::IsCompressed(internalformat), &width, &height, &mLodOffset);
+
+        ID3D11Device *device = mRenderer->getDevice();
+
+        D3D11_TEXTURE3D_DESC desc;
+        desc.Width = width;
+        desc.Height = height;
+        desc.Depth = depth;
+        desc.MipLevels = (levels > 0) ? levels + mLodOffset : 0;
+        desc.Format = mTextureFormat;
+        desc.Usage = D3D11_USAGE_DEFAULT;
+        desc.BindFlags = getBindFlags();
+        desc.CPUAccessFlags = 0;
+        desc.MiscFlags = 0;
+
+        HRESULT result = device->CreateTexture3D(&desc, NULL, &mTexture);
+
+        // this can happen from windows TDR
+        if (d3d11::isDeviceLostError(result))
+        {
+            mRenderer->notifyDeviceLost();
+            gl::error(GL_OUT_OF_MEMORY);
+        }
+        else if (FAILED(result))
+        {
+            ASSERT(result == E_OUTOFMEMORY);
+            ERR("Creating image failed.");
+            gl::error(GL_OUT_OF_MEMORY);
+        }
+        else
+        {
+            mTexture->GetDesc(&desc);
+            mMipLevels = desc.MipLevels;
+            mTextureWidth = desc.Width;
+            mTextureHeight = desc.Height;
+            mTextureDepth = desc.Depth;
+        }
+    }
+}
+
+TextureStorage11_3D::~TextureStorage11_3D()
+{
+    if (mTexture)
+    {
+        mTexture->Release();
+        mTexture = NULL;
+    }
+
+    if (mSRV)
+    {
+        mSRV->Release();
+        mSRV = NULL;
+    }
+}
+
+TextureStorage11_3D *TextureStorage11_3D::makeTextureStorage11_3D(TextureStorage *storage)
+{
+    ASSERT(HAS_DYNAMIC_TYPE(TextureStorage11_3D*, storage));
+    return static_cast<TextureStorage11_3D*>(storage);
+}
+
+ID3D11Resource *TextureStorage11_3D::getBaseTexture() const
+{
+    return mTexture;
+}
+
+ID3D11ShaderResourceView *TextureStorage11_3D::getSRV()
+{
+    if (!mSRV)
+    {
+        ID3D11Device *device = mRenderer->getDevice();
+
+        D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+        srvDesc.Format = mShaderResourceFormat;
+        srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE3D;
+        srvDesc.Texture3D.MipLevels = (mMipLevels == 0 ? -1 : mMipLevels);
+        srvDesc.Texture3D.MostDetailedMip = 0;
+
+        HRESULT result = device->CreateShaderResourceView(mTexture, &srvDesc, &mSRV);
+
+        if (result == E_OUTOFMEMORY)
+        {
+            return gl::error(GL_OUT_OF_MEMORY, static_cast<ID3D11ShaderResourceView*>(NULL));
+        }
+        ASSERT(SUCCEEDED(result));
+    }
+
+    return mSRV;
+}
+
+void TextureStorage11_3D::generateMipmap(int level)
+{
+    UNIMPLEMENTED();
 }
 
 }

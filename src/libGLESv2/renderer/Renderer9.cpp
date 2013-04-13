@@ -3207,4 +3207,12 @@ TextureStorage *Renderer9::createTextureStorageCube(int levels, GLenum internalf
     return new TextureStorage9_Cube(this, levels, internalformat, usage, forceRenderable, size);
 }
 
+TextureStorage *Renderer9::createTextureStorage3D(int levels, GLenum internalformat, GLenum usage, GLsizei width, GLsizei height, GLsizei depth)
+{
+    // 3D textures are not supported by the D3D9 backend.
+    UNREACHABLE();
+
+    return NULL;
+}
+
 }
