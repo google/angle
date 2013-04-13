@@ -301,7 +301,7 @@ static void copyToFloatVertexData(const void* input, unsigned int stride, unsign
     }
 }
 
-const VertexBuffer11::VertexConverter VertexBuffer11::mPossibleTranslations[NUM_GL_VERTEX_ATTRIB_TYPES][2][4] =
+const VertexBuffer11::VertexConverter VertexBuffer11::mFloatVertexTranslations[NUM_GL_FLOAT_VERTEX_ATTRIB_TYPES][2][4] =
 {
     { // GL_BYTE
         { // unnormalized
@@ -359,6 +359,34 @@ const VertexBuffer11::VertexConverter VertexBuffer11::mPossibleTranslations[NUM_
             { &copyVertexData<GLushort, 4, false, UINT16_MAX>, true, DXGI_FORMAT_R16G16B16A16_UNORM, 8 },
         },
     },
+    { // GL_INT
+        { // unnormalized
+            { &copyToFloatVertexData<GLint, 1, false>, false, DXGI_FORMAT_R32_FLOAT, 4 },
+            { &copyToFloatVertexData<GLint, 2, false>, false, DXGI_FORMAT_R32G32_FLOAT, 8 },
+            { &copyToFloatVertexData<GLint, 3, false>, false, DXGI_FORMAT_R32G32B32_FLOAT, 12 },
+            { &copyToFloatVertexData<GLint, 4, false>, false, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
+        },
+        { // normalized
+            { &copyToFloatVertexData<GLint, 1, true>, false, DXGI_FORMAT_R32_FLOAT, 4 },
+            { &copyToFloatVertexData<GLint, 2, true>, false, DXGI_FORMAT_R32G32_FLOAT, 8 },
+            { &copyToFloatVertexData<GLint, 3, true>, false, DXGI_FORMAT_R32G32B32_FLOAT, 12 },
+            { &copyToFloatVertexData<GLint, 4, true>, false, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
+        },
+    },
+    { // GL_UNSIGNED_INT
+        { // unnormalized
+            { &copyToFloatVertexData<GLuint, 1, false>, false, DXGI_FORMAT_R32_FLOAT, 4 },
+            { &copyToFloatVertexData<GLuint, 2, false>, false, DXGI_FORMAT_R32G32_FLOAT, 8 },
+            { &copyToFloatVertexData<GLuint, 3, false>, false, DXGI_FORMAT_R32G32B32_FLOAT, 12 },
+            { &copyToFloatVertexData<GLuint, 4, false>, false, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
+        },
+        { // normalized
+            { &copyToFloatVertexData<GLuint, 1, true>, false, DXGI_FORMAT_R32_FLOAT, 4 },
+            { &copyToFloatVertexData<GLuint, 2, true>, false, DXGI_FORMAT_R32G32_FLOAT, 8 },
+            { &copyToFloatVertexData<GLuint, 3, true>, false, DXGI_FORMAT_R32G32B32_FLOAT, 12 },
+            { &copyToFloatVertexData<GLuint, 4, true>, false, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
+        },
+    },
     { // GL_FIXED
         { // unnormalized
             { &copyFixedVertexData<1>, false, DXGI_FORMAT_R32_FLOAT, 4 },
@@ -403,24 +431,84 @@ const VertexBuffer11::VertexConverter VertexBuffer11::mPossibleTranslations[NUM_
     },
 };
 
+const VertexBuffer11::VertexConverter VertexBuffer11::mIntegerVertexTranslations[NUM_GL_INTEGER_VERTEX_ATTRIB_TYPES][4] =
+{
+    { // GL_BYTE
+        { &copyVertexData<GLbyte, 1, false, 1>, true, DXGI_FORMAT_R8_SINT, 1 },
+        { &copyVertexData<GLbyte, 2, false, 1>, true, DXGI_FORMAT_R8G8_SINT, 2 },
+        { &copyVertexData<GLbyte, 3, true, 1>, false, DXGI_FORMAT_R8G8B8A8_SINT, 4 },
+        { &copyVertexData<GLbyte, 4, false, 1>, true, DXGI_FORMAT_R8G8B8A8_SINT, 4 },
+    },
+    { // GL_UNSIGNED_BYTE
+        { &copyVertexData<GLubyte, 1, false, 1>, true, DXGI_FORMAT_R8_UINT, 1 },
+        { &copyVertexData<GLubyte, 2, false, 1>, true, DXGI_FORMAT_R8G8_UINT, 2 },
+        { &copyVertexData<GLubyte, 3, true, 1>, false, DXGI_FORMAT_R8G8B8A8_UINT, 4 },
+        { &copyVertexData<GLubyte, 4, false, 1>, true, DXGI_FORMAT_R8G8B8A8_UINT, 4 },
+    },
+    { // GL_SHORT
+        { &copyVertexData<GLshort, 1, false, 1>, true, DXGI_FORMAT_R16_SINT, 2 },
+        { &copyVertexData<GLshort, 2, false, 1>, true, DXGI_FORMAT_R16G16_SINT, 4 },
+        { &copyVertexData<GLshort, 3, true, 1>, false, DXGI_FORMAT_R16G16B16A16_SINT, 8 },
+        { &copyVertexData<GLshort, 4, false, 1>, true, DXGI_FORMAT_R16G16B16A16_SINT, 8 },
+    },
+    { // GL_UNSIGNED_SHORT
+        { &copyVertexData<GLushort, 1, false, 1>, true, DXGI_FORMAT_R16_UINT, 2 },
+        { &copyVertexData<GLushort, 2, false, 1>, true, DXGI_FORMAT_R16G16_UINT, 4 },
+        { &copyVertexData<GLushort, 3, true, 1>, false, DXGI_FORMAT_R16G16B16A16_UINT, 8 },
+        { &copyVertexData<GLushort, 4, false, 1>, true, DXGI_FORMAT_R16G16B16A16_UINT, 8 },
+    },
+    { // GL_INT
+        { &copyVertexData<GLint, 1, false, 1>, true, DXGI_FORMAT_R32_SINT, 4 },
+        { &copyVertexData<GLint, 2, false, 1>, true, DXGI_FORMAT_R32G32_SINT, 8 },
+        { &copyVertexData<GLint, 3, false, 1>, true, DXGI_FORMAT_R32G32B32_SINT, 12 },
+        { &copyVertexData<GLint, 4, false, 1>, true, DXGI_FORMAT_R32G32B32A32_SINT, 16 },
+    },
+    { // GL_UNSIGNED_INT
+        { &copyVertexData<GLuint, 1, false, 1>, true, DXGI_FORMAT_R32_UINT, 4 },
+        { &copyVertexData<GLuint, 2, false, 1>, true, DXGI_FORMAT_R32G32_UINT, 8 },
+        { &copyVertexData<GLuint, 3, false, 1>, true, DXGI_FORMAT_R32G32B32_UINT, 12 },
+        { &copyVertexData<GLuint, 4, false, 1>, true, DXGI_FORMAT_R32G32B32A32_UINT, 16 },
+    },
+};
+
 const VertexBuffer11::VertexConverter &VertexBuffer11::getVertexConversion(const gl::VertexAttribute &attribute)
 {
     GLenum type = attribute.mArrayEnabled ? attribute.mType : attribute.mCurrentValue.Type;
-
-    unsigned int typeIndex = 0;
-    switch (type)
+    if (attribute.mPureInteger)
     {
-      case GL_BYTE:             typeIndex = 0; break;
-      case GL_UNSIGNED_BYTE:    typeIndex = 1; break;
-      case GL_SHORT:            typeIndex = 2; break;
-      case GL_UNSIGNED_SHORT:   typeIndex = 3; break;
-      case GL_FIXED:            typeIndex = 4; break;
-      case GL_HALF_FLOAT:       typeIndex = 5; break;
-      case GL_FLOAT:            typeIndex = 6; break;
-      default:                  UNREACHABLE(); break;
-    }
+        unsigned int typeIndex = 0;
+        switch (type)
+        {
+          case GL_BYTE:                        typeIndex = 0; break;
+          case GL_UNSIGNED_BYTE:               typeIndex = 1; break;
+          case GL_SHORT:                       typeIndex = 2; break;
+          case GL_UNSIGNED_SHORT:              typeIndex = 3; break;
+          case GL_INT:                         typeIndex = 4; break;
+          case GL_UNSIGNED_INT:                typeIndex = 5; break;
+          default:                             UNREACHABLE(); break;
+        }
 
-    return mPossibleTranslations[typeIndex][attribute.mNormalized ? 1 : 0][attribute.mSize - 1];
+        return mIntegerVertexTranslations[typeIndex][attribute.mSize - 1];
+    }
+    else
+    {
+        unsigned int typeIndex = 0;
+        switch (type)
+        {
+          case GL_BYTE:                        typeIndex = 0; break;
+          case GL_UNSIGNED_BYTE:               typeIndex = 1; break;
+          case GL_SHORT:                       typeIndex = 2; break;
+          case GL_UNSIGNED_SHORT:              typeIndex = 3; break;
+          case GL_INT:                         typeIndex = 4; break;
+          case GL_UNSIGNED_INT:                typeIndex = 5; break;
+          case GL_FIXED:                       typeIndex = 6; break;
+          case GL_HALF_FLOAT:                  typeIndex = 7; break;
+          case GL_FLOAT:                       typeIndex = 8; break;
+          default:                             UNREACHABLE(); break;
+        }
+
+        return mFloatVertexTranslations[typeIndex][attribute.mNormalized ? 1 : 0][attribute.mSize - 1];
+    }
 }
 
 }

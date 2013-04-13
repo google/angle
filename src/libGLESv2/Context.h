@@ -75,7 +75,8 @@ enum QueryType
 class VertexAttribute
 {
   public:
-    VertexAttribute() : mType(GL_FLOAT), mSize(0), mNormalized(false), mStride(0), mPointer(NULL), mArrayEnabled(false), mDivisor(0)
+    VertexAttribute() : mType(GL_FLOAT), mSize(0), mNormalized(false), mPureInteger(false),
+                        mStride(0), mPointer(NULL), mArrayEnabled(false), mDivisor(0)
     {
         mCurrentValue.FloatValues[0] = 0.0f;
         mCurrentValue.FloatValues[1] = 0.0f;
@@ -108,6 +109,7 @@ class VertexAttribute
     GLenum mType;
     GLint mSize;
     bool mNormalized;
+    bool mPureInteger;
     GLsizei mStride;   // 0 means natural stride
 
     union
@@ -280,7 +282,7 @@ class Context
     void setEnableVertexAttribArray(unsigned int attribNum, bool enabled);
     const VertexAttribute &getVertexAttribState(unsigned int attribNum);
     void setVertexAttribState(unsigned int attribNum, Buffer *boundBuffer, GLint size, GLenum type,
-                              bool normalized, GLsizei stride, const void *pointer);
+                              bool normalized, bool pureInteger, GLsizei stride, const void *pointer);
     const void *getVertexAttribPointer(unsigned int attribNum) const;
 
     void setUnpackAlignment(GLint alignment);

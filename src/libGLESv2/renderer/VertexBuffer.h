@@ -121,6 +121,7 @@ class StaticVertexBufferInterface : public VertexBufferInterface
         GLint size;
         GLsizei stride;
         bool normalized;
+        bool pureInteger;
         int attributeOffset;
 
         unsigned int streamOffset;

@@ -445,6 +445,9 @@ unsigned int VertexBuffer9::typeIndex(GLenum type)
 
 const VertexBuffer9::FormatConverter &VertexBuffer9::formatConverter(const gl::VertexAttribute &attribute)
 {
+    // Pure integer attributes only supported in ES3.0
+    ASSERT(!attribute.mPureInteger);
+
     GLenum type = attribute.mArrayEnabled ? attribute.mType : attribute.mCurrentValue.Type;
     return mFormatConverters[typeIndex(type)][attribute.mNormalized][attribute.mSize - 1];
 }

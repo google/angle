@@ -162,7 +162,8 @@ int StaticVertexBufferInterface::lookupAttribute(const gl::VertexAttribute &attr
         if (mCache[element].type == attribute.mType &&
             mCache[element].size == attribute.mSize &&
             mCache[element].stride == attribute.stride() &&
-            mCache[element].normalized == attribute.mNormalized)
+            mCache[element].normalized == attribute.mNormalized &&
+            mCache[element].pureInteger == attribute.mPureInteger)
         {
             if (mCache[element].attributeOffset == attribute.mOffset % attribute.stride())
             {
@@ -196,7 +197,7 @@ bool StaticVertexBufferInterface::reserveSpace(unsigned int size)
 int StaticVertexBufferInterface::storeVertexAttributes(const gl::VertexAttribute &attrib, GLint start, GLsizei count, GLsizei instances)
 {
     int attributeOffset = attrib.mOffset % attrib.stride();
-    VertexElement element = { attrib.mType, attrib.mSize, attrib.stride(), attrib.mNormalized, attributeOffset, getWritePosition() };
+    VertexElement element = { attrib.mType, attrib.mSize, attrib.stride(), attrib.mNormalized, attrib.mPureInteger, attributeOffset, getWritePosition() };
     mCache.push_back(element);
 
     return VertexBufferInterface::storeVertexAttributes(attrib, start, count, instances);

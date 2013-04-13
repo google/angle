@@ -6819,7 +6819,8 @@ void __stdcall glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLbo
 
         if (context)
         {
-            context->setVertexAttribState(index, context->getArrayBuffer(), size, type, (normalized == GL_TRUE), stride, ptr);
+            context->setVertexAttribState(index, context->getArrayBuffer(), size, type,
+                                          normalized == GL_TRUE, false, stride, ptr);
         }
     }
     catch(std::bad_alloc&)

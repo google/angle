@@ -59,10 +59,11 @@ class VertexBuffer11 : public VertexBuffer
         unsigned int outputElementSize;
     };
 
-    enum { NUM_GL_VERTEX_ATTRIB_TYPES = 7 };
+    static const unsigned int  NUM_GL_FLOAT_VERTEX_ATTRIB_TYPES = 9;
+    static const VertexConverter mFloatVertexTranslations[NUM_GL_FLOAT_VERTEX_ATTRIB_TYPES][2][4]; // [GL types as enumerated by typeIndex()][normalized][size - 1]
 
-    // This table is used to generate mAttributeTypes.
-    static const VertexConverter mPossibleTranslations[NUM_GL_VERTEX_ATTRIB_TYPES][2][4]; // [GL types as enumerated by typeIndex()][normalized][size - 1]
+    static const unsigned int NUM_GL_INTEGER_VERTEX_ATTRIB_TYPES = 6;
+    static const VertexConverter mIntegerVertexTranslations[NUM_GL_INTEGER_VERTEX_ATTRIB_TYPES][4]; // [GL types as enumerated by typeIndex()][size - 1]
 
     static const VertexConverter &getVertexConversion(const gl::VertexAttribute &attribute);
 };
