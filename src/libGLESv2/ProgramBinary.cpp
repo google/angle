@@ -900,7 +900,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
     bool usesMRT = fragmentShader->mUsesMultipleRenderTargets;
     bool usesFragColor = fragmentShader->mUsesFragColor;
     bool usesFragData = fragmentShader->mUsesFragData;
-    if (usesMRT && usesFragColor && usesFragData)
+    if (usesFragColor && usesFragData)
     {
         infoLog.append("Cannot use both gl_FragColor and gl_FragData in the same fragment shader.");
         return false;
@@ -911,6 +911,12 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
     const int maxVaryingVectors = mRenderer->getMaxVaryingVectors();
 
     const int registersNeeded = registers + (fragmentShader->mUsesFragCoord ? 1 : 0) + (fragmentShader->mUsesPointCoord ? 1 : 0);
+
+    // Two cases when writing to gl_FragColor and using ESSL 1.0:
+    // - with a 3.0 context, the output color is copied to channel 0
+    // - with a 2.0 context, the output color is broadcast to all channels
+    const bool broadcast = (fragmentShader->mUsesFragColor && mRenderer->getCurrentClientVersion() < 3);
+    const unsigned int numRenderTargets = (broadcast || usesMRT ? mRenderer->getMaxRenderTargets() : 1);
 
     if (registersNeeded > maxVaryingVectors)
     {
@@ -958,8 +964,6 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
     std::string positionSemantic = (shaderModel >= 4) ? "SV_Position" : "POSITION";
 
     std::string varyingHLSL = generateVaryingHLSL(fragmentShader, varyingSemantic);
-
-    const unsigned int renderTargetCount = usesMRT ? mRenderer->getMaxRenderTargets() : 1;
 
     // special varyings that use reserved registers
     int reservedRegisterIndex = registers;
@@ -1189,9 +1193,9 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
                  "struct PS_OUTPUT\n"
                  "{\n";
 
-    for (unsigned int i = 0; i < renderTargetCount; i++)
+    for (unsigned int renderTargetIndex = 0; renderTargetIndex < numRenderTargets; renderTargetIndex++)
     {
-        pixelHLSL += "    float4 gl_Color" + str(i) + " : " + targetSemantic + str(i) + ";\n";
+        pixelHLSL += "    float4 gl_Color" + str(renderTargetIndex) + " : " + targetSemantic + str(renderTargetIndex) + ";\n";
     }
 
     pixelHLSL += "};\n"
@@ -1300,16 +1304,11 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
                  "\n"
                  "    PS_OUTPUT output;\n";
 
-    // Two cases when writing to gl_FragColor and using ESSL 1.0:
-    // - with a 3.0 context, the output color is copied to channel 0
-    // - with a 2.0 context using EXT_draw_buffers, the output color is broadcast to all channels
-    const bool broadcast = fragmentShader->mUsesFragColor && mRenderer->getCurrentClientVersion() < 3;
-
-    for (unsigned int i = 0; i < renderTargetCount; i++)
+    for (unsigned int renderTargetIndex = 0; renderTargetIndex < numRenderTargets; renderTargetIndex++)
     {
-        unsigned int sourceColor = !broadcast ? i : 0;
+        unsigned int sourceColorIndex = broadcast ? 0 : renderTargetIndex;
 
-        pixelHLSL += "    output.gl_Color" + str(i) + " = gl_Color[" + str(sourceColor) + "];\n";
+        pixelHLSL += "    output.gl_Color" + str(renderTargetIndex) + " = gl_Color[" + str(sourceColorIndex) + "];\n";
     }
 
     pixelHLSL += "\n"
