@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -120,7 +120,7 @@ void Framebuffer::detachRenderbuffer(GLuint renderbuffer)
     }
 }
 
-unsigned int Framebuffer::getRenderTargetSerial()
+unsigned int Framebuffer::getRenderTargetSerial() const
 {
     Renderbuffer *colorbuffer = mColorbufferPointer.get();
 
@@ -132,7 +132,7 @@ unsigned int Framebuffer::getRenderTargetSerial()
     return 0;
 }
 
-unsigned int Framebuffer::getDepthbufferSerial()
+unsigned int Framebuffer::getDepthbufferSerial() const
 {
     Renderbuffer *depthbuffer = mDepthbufferPointer.get();
 
@@ -144,7 +144,7 @@ unsigned int Framebuffer::getDepthbufferSerial()
     return 0;
 }
 
-unsigned int Framebuffer::getStencilbufferSerial()
+unsigned int Framebuffer::getStencilbufferSerial() const
 {
     Renderbuffer *stencilbuffer = mStencilbufferPointer.get();
 
@@ -156,22 +156,22 @@ unsigned int Framebuffer::getStencilbufferSerial()
     return 0;
 }
 
-Renderbuffer *Framebuffer::getColorbuffer()
+Renderbuffer *Framebuffer::getColorbuffer() const
 {
     return mColorbufferPointer.get();
 }
 
-Renderbuffer *Framebuffer::getDepthbuffer()
+Renderbuffer *Framebuffer::getDepthbuffer() const
 {
     return mDepthbufferPointer.get();
 }
 
-Renderbuffer *Framebuffer::getStencilbuffer()
+Renderbuffer *Framebuffer::getStencilbuffer() const
 {
     return mStencilbufferPointer.get();
 }
 
-Renderbuffer *Framebuffer::getDepthOrStencilbuffer()
+Renderbuffer *Framebuffer::getDepthOrStencilbuffer() const
 {
     Renderbuffer *depthstencilbuffer = mDepthbufferPointer.get();
     
@@ -183,41 +183,41 @@ Renderbuffer *Framebuffer::getDepthOrStencilbuffer()
     return depthstencilbuffer;
 }
 
-GLenum Framebuffer::getColorbufferType()
+GLenum Framebuffer::getColorbufferType() const
 {
     return mColorbufferType;
 }
 
-GLenum Framebuffer::getDepthbufferType()
+GLenum Framebuffer::getDepthbufferType() const
 {
     return mDepthbufferType;
 }
 
-GLenum Framebuffer::getStencilbufferType()
+GLenum Framebuffer::getStencilbufferType() const
 {
     return mStencilbufferType;
 }
 
-GLuint Framebuffer::getColorbufferHandle()
+GLuint Framebuffer::getColorbufferHandle() const
 {
     return mColorbufferPointer.id();
 }
 
-GLuint Framebuffer::getDepthbufferHandle()
+GLuint Framebuffer::getDepthbufferHandle() const
 {
     return mDepthbufferPointer.id();
 }
 
-GLuint Framebuffer::getStencilbufferHandle()
+GLuint Framebuffer::getStencilbufferHandle() const
 {
     return mStencilbufferPointer.id();
 }
 
-bool Framebuffer::hasStencil()
+bool Framebuffer::hasStencil() const
 {
     if (mStencilbufferType != GL_NONE)
     {
-        Renderbuffer *stencilbufferObject = getStencilbuffer();
+        const Renderbuffer *stencilbufferObject = getStencilbuffer();
 
         if (stencilbufferObject)
         {
@@ -228,7 +228,7 @@ bool Framebuffer::hasStencil()
     return false;
 }
 
-GLenum Framebuffer::completeness()
+GLenum Framebuffer::completeness() const
 {
     int width = 0;
     int height = 0;
@@ -237,7 +237,7 @@ GLenum Framebuffer::completeness()
 
     if (mColorbufferType != GL_NONE)
     {
-        Renderbuffer *colorbuffer = getColorbuffer();
+        const Renderbuffer *colorbuffer = getColorbuffer();
 
         if (!colorbuffer)
         {
@@ -294,8 +294,8 @@ GLenum Framebuffer::completeness()
         missingAttachment = false;
     }
 
-    Renderbuffer *depthbuffer = NULL;
-    Renderbuffer *stencilbuffer = NULL;
+    const Renderbuffer *depthbuffer = NULL;
+    const Renderbuffer *stencilbuffer = NULL;
 
     if (mDepthbufferType != GL_NONE)
     {
@@ -446,7 +446,7 @@ DefaultFramebuffer::DefaultFramebuffer(rx::Renderer *renderer, Colorbuffer *colo
     mStencilbufferType = (depthStencilRenderbuffer->getStencilSize() != 0) ? GL_RENDERBUFFER : GL_NONE;
 }
 
-int Framebuffer::getSamples()
+int Framebuffer::getSamples() const
 {
     if (completeness() == GL_FRAMEBUFFER_COMPLETE)
     {
@@ -458,7 +458,7 @@ int Framebuffer::getSamples()
     }
 }
 
-GLenum DefaultFramebuffer::completeness()
+GLenum DefaultFramebuffer::completeness() const
 {
     // The default framebuffer *must* always be complete, though it may not be
     // subject to the same rules as application FBOs. ie, it could have 0x0 size.
