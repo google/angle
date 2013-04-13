@@ -18,6 +18,11 @@
 #include "libGLESv2/renderer/InputLayoutCache.h"
 #include "libGLESv2/renderer/RenderTarget.h"
 
+namespace gl
+{
+class Renderbuffer;
+}
+
 namespace rx
 {
 
@@ -173,7 +178,7 @@ class Renderer11 : public Renderer
     ID3D11DeviceContext *getDeviceContext() { return mDeviceContext; };
     IDXGIFactory *getDxgiFactory() { return mDxgiFactory; };
 
-    bool getRenderTargetResource(gl::Framebuffer *framebuffer, unsigned int *subresourceIndex, ID3D11Texture2D **resource);
+    bool getRenderTargetResource(gl::Renderbuffer *colorbuffer, unsigned int *subresourceIndex, ID3D11Texture2D **resource);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer11);

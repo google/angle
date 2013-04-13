@@ -2845,38 +2845,35 @@ FenceImpl *Renderer11::createFence()
     return new Fence11(this);
 }
 
-bool Renderer11::getRenderTargetResource(gl::Framebuffer *framebuffer, unsigned int *subresourceIndex, ID3D11Texture2D **resource)
+bool Renderer11::getRenderTargetResource(gl::Renderbuffer *colorbuffer, unsigned int *subresourceIndex, ID3D11Texture2D **resource)
 {
-    // TODO: mrt supprt
-    gl::Renderbuffer *colorbuffer = framebuffer->getColorbuffer(0);
-    if (colorbuffer)
+    ASSERT(colorbuffer != NULL);
+
+    RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(colorbuffer->getRenderTarget());
+    if (renderTarget)
     {
-        RenderTarget11 *renderTarget = RenderTarget11::makeRenderTarget11(colorbuffer->getRenderTarget());
-        if (renderTarget)
+        *subresourceIndex = renderTarget->getSubresourceIndex();
+
+        ID3D11RenderTargetView *colorBufferRTV = renderTarget->getRenderTargetView();
+        if (colorBufferRTV)
         {
-            *subresourceIndex = renderTarget->getSubresourceIndex();
+            ID3D11Resource *textureResource = NULL;
+            colorBufferRTV->GetResource(&textureResource);
+            colorBufferRTV->Release();
 
-            ID3D11RenderTargetView *colorBufferRTV = renderTarget->getRenderTargetView();
-            if (colorBufferRTV)
+            if (textureResource)
             {
-                ID3D11Resource *textureResource = NULL;
-                colorBufferRTV->GetResource(&textureResource);
-                colorBufferRTV->Release();
+                HRESULT result = textureResource->QueryInterface(IID_ID3D11Texture2D, (void**)resource);
+                textureResource->Release();
 
-                if (textureResource)
+                if (SUCCEEDED(result))
                 {
-                    HRESULT result = textureResource->QueryInterface(IID_ID3D11Texture2D, (void**)resource);
-                    textureResource->Release();
-
-                    if (SUCCEEDED(result))
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        ERR("Failed to extract the ID3D11Texture2D from the render target resource, "
-                            "HRESULT: 0x%X.", result);
-                    }
+                    return true;
+                }
+                else
+                {
+                    ERR("Failed to extract the ID3D11Texture2D from the render target resource, "
+                        "HRESULT: 0x%X.", result);
                 }
             }
         }
@@ -2907,7 +2904,9 @@ void Renderer11::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsi
     ID3D11Texture2D *colorBufferTexture = NULL;
     unsigned int subresourceIndex = 0;
 
-    if (getRenderTargetResource(framebuffer, &subresourceIndex, &colorBufferTexture))
+    gl::Renderbuffer *colorbuffer = framebuffer->getReadColorbuffer();
+
+    if (colorbuffer && getRenderTargetResource(colorbuffer, &subresourceIndex, &colorBufferTexture))
     {
         gl::Rectangle area;
         area.x = x;
