@@ -189,6 +189,9 @@ struct State
     BindingPointer<Buffer> genericTransformFeedbackBuffer;
     OffsetBindingPointer<Buffer> transformFeedbackBuffers[IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_BUFFERS];
 
+    BindingPointer<Buffer> copyReadBuffer;
+    BindingPointer<Buffer> copyWriteBuffer;
+
     GLint unpackAlignment;
     GLint packAlignment;
     bool packReverseRowOrder;
@@ -337,6 +340,8 @@ class Context
     void bindIndexedUniformBuffer(GLuint buffer, GLuint index, GLintptr offset, GLsizeiptr size);
     void bindGenericTransformFeedbackBuffer(GLuint buffer);
     void bindIndexedTransformFeedbackBuffer(GLuint buffer, GLuint index, GLintptr offset, GLsizeiptr size);
+    void bindCopyReadBuffer(GLuint buffer);
+    void bindCopyWriteBuffer(GLuint buffer);
     void useProgram(GLuint program);
     void linkProgram(GLuint program);
     void setProgramBinary(GLuint program, const void *binary, GLint length);
@@ -369,6 +374,8 @@ class Context
     TextureCubeMap *getTextureCubeMap();
     Buffer *getGenericUniformBuffer();
     Buffer *getGenericTransformFeedbackBuffer();
+    Buffer *getCopyReadBuffer();
+    Buffer *getCopyWriteBuffer();
     Texture *getSamplerTexture(unsigned int sampler, TextureType type);
     Framebuffer *getReadFramebuffer();
     Framebuffer *getDrawFramebuffer();

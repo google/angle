@@ -163,6 +163,9 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
         bindIndexedTransformFeedbackBuffer(0, i, 0, -1);
     }
 
+    bindCopyReadBuffer(0);
+    bindCopyWriteBuffer(0);
+
     mState.currentProgram = 0;
     mCurrentProgramBinary.set(NULL);
 
@@ -263,6 +266,9 @@ Context::~Context()
     {
         mState.transformFeedbackBuffers[i].set(NULL);
     }
+
+    mState.copyReadBuffer.set(NULL);
+    mState.copyWriteBuffer.set(NULL);
 
     mResourceManager->release();
 }
@@ -968,6 +974,20 @@ void Context::bindIndexedTransformFeedbackBuffer(GLuint buffer, GLuint index, GL
     mState.transformFeedbackBuffers[index].set(getBuffer(buffer), offset, size);
 }
 
+void Context::bindCopyReadBuffer(GLuint buffer)
+{
+    mResourceManager->checkBufferAllocation(buffer);
+
+    mState.copyReadBuffer.set(getBuffer(buffer));
+}
+
+void Context::bindCopyWriteBuffer(GLuint buffer)
+{
+    mResourceManager->checkBufferAllocation(buffer);
+
+    mState.copyWriteBuffer.set(getBuffer(buffer));
+}
+
 void Context::useProgram(GLuint program)
 {
     GLuint priorProgram = mState.currentProgram;
@@ -1229,6 +1249,16 @@ Buffer *Context::getGenericUniformBuffer()
 Buffer *Context::getGenericTransformFeedbackBuffer()
 {
     return mState.genericTransformFeedbackBuffer.get();
+}
+
+Buffer *Context::getCopyReadBuffer()
+{
+    return mState.copyReadBuffer.get();
+}
+
+Buffer *Context::getCopyWriteBuffer()
+{
+    return mState.copyWriteBuffer.get();
 }
 
 Texture *Context::getSamplerTexture(unsigned int sampler, TextureType type)
@@ -1591,6 +1621,12 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_TRANSFORM_FEEDBACK_BUFFER_BINDING:
         *params = mState.genericTransformFeedbackBuffer.id();
         break;
+      case GL_COPY_READ_BUFFER_BINDING:
+        *params = mState.copyReadBuffer.id();
+        break;
+      case GL_COPY_WRITE_BUFFER_BINDING:
+        *params = mState.copyWriteBuffer.id();
+        break;
       default:
         return false;
     }
@@ -1793,6 +1829,8 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
     {
       case GL_UNIFORM_BUFFER_BINDING:
       case GL_TRANSFORM_FEEDBACK_BINDING:
+      case GL_COPY_READ_BUFFER_BINDING:
+      case GL_COPY_WRITE_BUFFER_BINDING:
         {
             *type = GL_INT;
             *numParams = 1;

@@ -420,6 +420,8 @@ void __stdcall glBindBuffer(GLenum target, GLuint buffer)
             // Check ES3 specific targets
             switch (target)
             {
+              case GL_COPY_READ_BUFFER:
+              case GL_COPY_WRITE_BUFFER:
               case GL_UNIFORM_BUFFER:
               case GL_TRANSFORM_FEEDBACK_BUFFER:
                 if (context->getClientVersion() < 3)
@@ -435,6 +437,12 @@ void __stdcall glBindBuffer(GLenum target, GLuint buffer)
                 return;
               case GL_ELEMENT_ARRAY_BUFFER:
                 context->bindElementArrayBuffer(buffer);
+                return;
+              case GL_COPY_READ_BUFFER:
+                context->bindCopyReadBuffer(buffer);
+                return;
+              case GL_COPY_WRITE_BUFFER:
+                context->bindCopyWriteBuffer(buffer);
                 return;
               case GL_UNIFORM_BUFFER:
                 context->bindGenericUniformBuffer(buffer);
@@ -792,6 +800,8 @@ void __stdcall glBufferData(GLenum target, GLsizeiptr size, const GLvoid* data, 
             // Check ES3 specific targets
             switch (target)
             {
+              case GL_COPY_READ_BUFFER:
+              case GL_COPY_WRITE_BUFFER:
               case GL_UNIFORM_BUFFER:
               case GL_TRANSFORM_FEEDBACK_BUFFER:
                 if (context->getClientVersion() < 3)
@@ -809,6 +819,12 @@ void __stdcall glBufferData(GLenum target, GLsizeiptr size, const GLvoid* data, 
                 break;
               case GL_ELEMENT_ARRAY_BUFFER:
                 buffer = context->getElementArrayBuffer();
+                break;
+              case GL_COPY_READ_BUFFER:
+                buffer = context->getCopyReadBuffer();
+                break;
+              case GL_COPY_WRITE_BUFFER:
+                buffer = context->getCopyWriteBuffer();
                 break;
               case GL_TRANSFORM_FEEDBACK_BUFFER:
                 buffer = context->getGenericTransformFeedbackBuffer();
@@ -858,6 +874,8 @@ void __stdcall glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, 
             // Check ES3 specific targets
             switch (target)
             {
+              case GL_COPY_READ_BUFFER:
+              case GL_COPY_WRITE_BUFFER:
               case GL_UNIFORM_BUFFER:
               case GL_TRANSFORM_FEEDBACK_BUFFER:
                 if (context->getClientVersion() < 3)
@@ -875,6 +893,12 @@ void __stdcall glBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, 
                 break;
               case GL_ELEMENT_ARRAY_BUFFER:
                 buffer = context->getElementArrayBuffer();
+                break;
+              case GL_COPY_READ_BUFFER:
+                buffer = context->getCopyReadBuffer();
+                break;
+              case GL_COPY_WRITE_BUFFER:
+                buffer = context->getCopyWriteBuffer();
                 break;
               case GL_TRANSFORM_FEEDBACK_BUFFER:
                 buffer = context->getGenericTransformFeedbackBuffer();
