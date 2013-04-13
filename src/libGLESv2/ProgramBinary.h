@@ -136,6 +136,9 @@ class ProgramBinary : public RefCountObject
     std::string generateGeometryShaderHLSL(int registers, const Varying *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const;
     std::string generatePointSpriteHLSL(int registers, const Varying *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const;
 
+    template <int cols, int rows>
+    bool setUniformMatrixfv(GLint location, GLsizei count, const GLfloat *value, GLenum targetUniformType);
+
     rx::Renderer *const mRenderer;
 
     rx::ShaderExecutable *mPixelExecutable;

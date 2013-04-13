@@ -490,7 +490,8 @@ void transposeMatrix(T *target, const GLfloat *value, int targetWidth, int targe
     }
 }
 
-bool ProgramBinary::setUniformMatrix2fv(GLint location, GLsizei count, const GLfloat *value)
+template <int cols, int rows>
+bool ProgramBinary::setUniformMatrixfv(GLint location, GLsizei count, const GLfloat *value, GLenum targetUniformType) 
 {
     if (location < 0 || location >= (int)mUniformIndex.size())
     {
@@ -500,7 +501,7 @@ bool ProgramBinary::setUniformMatrix2fv(GLint location, GLsizei count, const GLf
     Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
     targetUniform->dirty = true;
 
-    if (targetUniform->type != GL_FLOAT_MAT2)
+    if (targetUniform->type != targetUniformType)
     {
         return false;
     }
@@ -511,83 +512,31 @@ bool ProgramBinary::setUniformMatrix2fv(GLint location, GLsizei count, const GLf
         return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
 
     count = std::min(elementCount - (int)mUniformIndex[location].element, count);
-    GLfloat *target = (GLfloat*)targetUniform->data + mUniformIndex[location].element * 8;
+    GLfloat *target = (GLfloat*)(targetUniform->data + mUniformIndex[location].element * sizeof(GLfloat) * 4 * rows);
 
     for (int i = 0; i < count; i++)
     {
-        transposeMatrix<GLfloat>(target, value, 4, 2, 2, 2);
-        target += 8;
-        value += 4;
+        transposeMatrix<GLfloat>(target, value, 4, rows, rows, cols);
+        target += 4 * rows;
+        value += cols * rows;
     }
 
     return true;
+}
+
+bool ProgramBinary::setUniformMatrix2fv(GLint location, GLsizei count, const GLfloat *value)
+{
+    return setUniformMatrixfv<2, 2>(location, count, value, GL_FLOAT_MAT2);
 }
 
 bool ProgramBinary::setUniformMatrix3fv(GLint location, GLsizei count, const GLfloat *value)
 {
-    if (location < 0 || location >= (int)mUniformIndex.size())
-    {
-        return false;
-    }
-
-    Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
-    targetUniform->dirty = true;
-
-    if (targetUniform->type != GL_FLOAT_MAT3)
-    {
-        return false;
-    }
-
-    int elementCount = targetUniform->elementCount();
-
-    if (elementCount == 1 && count > 1)
-        return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
-
-    count = std::min(elementCount - (int)mUniformIndex[location].element, count);
-    GLfloat *target = (GLfloat*)targetUniform->data + mUniformIndex[location].element * 12;
-
-    for (int i = 0; i < count; i++)
-    {
-        transposeMatrix<GLfloat>(target, value, 4, 3, 3, 3);
-        target += 12;
-        value += 9;
-    }
-
-    return true;
+    return setUniformMatrixfv<3, 3>(location, count, value, GL_FLOAT_MAT3);
 }
-
 
 bool ProgramBinary::setUniformMatrix4fv(GLint location, GLsizei count, const GLfloat *value)
 {
-    if (location < 0 || location >= (int)mUniformIndex.size())
-    {
-        return false;
-    }
-
-    Uniform *targetUniform = mUniforms[mUniformIndex[location].index];
-    targetUniform->dirty = true;
-
-    if (targetUniform->type != GL_FLOAT_MAT4)
-    {
-        return false;
-    }
-
-    int elementCount = targetUniform->elementCount();
-
-    if (elementCount == 1 && count > 1)
-        return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
-
-    count = std::min(elementCount - (int)mUniformIndex[location].element, count);
-    GLfloat *target = (GLfloat*)(targetUniform->data + mUniformIndex[location].element * sizeof(GLfloat) * 16);
-
-    for (int i = 0; i < count; i++)
-    {
-        transposeMatrix<GLfloat>(target, value, 4, 4, 4, 4);
-        target += 16;
-        value += 16;
-    }
-
-    return true;
+    return setUniformMatrixfv<4, 4>(location, count, value, GL_FLOAT_MAT4);
 }
 
 bool ProgramBinary::setUniform1iv(GLint location, GLsizei count, const GLint *v)
