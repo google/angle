@@ -292,7 +292,7 @@ void Image11::loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset, GL
     unmap();
 }
 
-void Image11::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source)
+void Image11::copy(GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source)
 {
     gl::Renderbuffer *colorbuffer = source->getReadColorbuffer();
 
@@ -350,7 +350,7 @@ void Image11::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width
             srcBox.front = 0;
             srcBox.back = 1;
 
-            deviceContext->CopySubresourceRegion(mStagingTexture, 0, xoffset, yoffset, 0, srcTex, subresourceIndex, &srcBox);
+            deviceContext->CopySubresourceRegion(mStagingTexture, 0, xoffset, yoffset, zoffset, srcTex, subresourceIndex, &srcBox);
 
             srcTex->Release();
             colorBufferTexture->Release();
@@ -364,7 +364,7 @@ void Image11::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width
             
         // determine the offset coordinate into the destination buffer
         GLsizei rowOffset = gl::ComputePixelSize(mActualFormat) * xoffset;
-        void *dataOffset = static_cast<unsigned char*>(mappedImage.pData) + mappedImage.RowPitch * yoffset + rowOffset;
+        void *dataOffset = static_cast<unsigned char*>(mappedImage.pData) + mappedImage.RowPitch * yoffset + rowOffset + zoffset * mappedImage.DepthPitch;
 
         mRenderer->readPixels(source, x, y, width, height, gl::ExtractFormat(mInternalFormat), 
                               gl::ExtractType(mInternalFormat), mappedImage.RowPitch, false, 4, dataOffset);

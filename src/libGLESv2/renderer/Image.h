@@ -57,7 +57,7 @@ class Image
     virtual void loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                                     const void *input) = 0;
 
-    virtual void copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source) = 0;
+    virtual void copy(GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source) = 0;
 
     static void loadAlphaDataToBGRA(GLsizei width, GLsizei height, GLsizei depth,
                                     int inputRowPitch, int inputDepthPitch, const void *input,

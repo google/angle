@@ -498,8 +498,11 @@ void Image9::loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset, GLs
 }
 
 // This implements glCopyTex[Sub]Image2D for non-renderable internal texture formats and incomplete textures
-void Image9::copy(GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source)
+void Image9::copy(GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source)
 {
+    // ES3.0 only behaviour to copy into a 3d texture
+    ASSERT(zoffset == 0);
+
     RenderTarget9 *renderTarget = NULL;
     IDirect3DSurface9 *surface = NULL;
     gl::Renderbuffer *colorbuffer = source->getColorbuffer(0);

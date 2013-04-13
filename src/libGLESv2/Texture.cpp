@@ -499,7 +499,7 @@ void Texture2D::copyImage(GLint level, GLenum format, GLint x, GLint y, GLsizei 
 
     if (!mImageArray[level]->isRenderableFormat())
     {
-        mImageArray[level]->copy(0, 0, x, y, width, height, source);
+        mImageArray[level]->copy(0, 0, 0, x, y, width, height, source);
         mDirtyImages = true;
     }
     else
@@ -533,7 +533,7 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
 
     if (!mImageArray[level]->isRenderableFormat() || (!mTexStorage && !isSamplerComplete()))
     {
-        mImageArray[level]->copy(xoffset, yoffset, x, y, width, height, source);
+        mImageArray[level]->copy(xoffset, yoffset, 0, x, y, width, height, source);
         mDirtyImages = true;
     }
     else
@@ -1286,7 +1286,7 @@ void TextureCubeMap::copyImage(GLenum target, GLint level, GLenum format, GLint 
 
     if (!mImageArray[faceindex][level]->isRenderableFormat())
     {
-        mImageArray[faceindex][level]->copy(0, 0, x, y, width, height, source);
+        mImageArray[faceindex][level]->copy(0, 0, 0, x, y, width, height, source);
         mDirtyImages = true;
     }
     else
@@ -1326,7 +1326,7 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
 
     if (!mImageArray[faceindex][level]->isRenderableFormat() || (!mTexStorage && !isSamplerComplete()))
     {
-        mImageArray[faceindex][level]->copy(0, 0, x, y, width, height, source);
+        mImageArray[faceindex][level]->copy(0, 0, 0, x, y, width, height, source);
         mDirtyImages = true;
     }
     else
