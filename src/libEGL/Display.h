@@ -125,6 +125,7 @@ class Display
     
     UINT mAdapter;
     D3DDEVTYPE mDeviceType;
+    D3DDISPLAYMODE mDisplayMode;
     IDirect3D9 *mD3d9;  // Always valid after successful initialization.
     IDirect3D9Ex *mD3d9Ex;  // Might be null if D3D9Ex is not supported.
     IDirect3DDevice9 *mDevice;
