@@ -65,7 +65,7 @@ int main(int argc, char* argv[])
     ShHandle vertexCompiler = 0;
     ShHandle fragmentCompiler = 0;
     char* buffer = 0;
-    int bufferLen = 0;
+    size_t bufferLen = 0;
     int numAttribs = 0, numUniforms = 0;
     ShShaderSpec spec = SH_GLES2_SPEC;
     ShShaderOutput output = SH_ESSL_OUTPUT;
@@ -272,7 +272,7 @@ void LogMsg(const char* msg, const char* name, const int num, const char* logNam
 
 void PrintActiveVariables(ShHandle compiler, ShShaderInfo varType, bool mapLongVariableNames)
 {
-    int nameSize = 0;
+    size_t nameSize = 0;
     switch (varType) {
         case SH_ACTIVE_ATTRIBUTES:
             ShGetInfo(compiler, SH_ACTIVE_ATTRIBUTE_MAX_LENGTH, &nameSize);
@@ -287,16 +287,17 @@ void PrintActiveVariables(ShHandle compiler, ShShaderInfo varType, bool mapLongV
 
     char* mappedName = NULL;
     if (mapLongVariableNames) {
-        int mappedNameSize = 0;
+        size_t mappedNameSize = 0;
         ShGetInfo(compiler, SH_MAPPED_NAME_MAX_LENGTH, &mappedNameSize);
         mappedName = new char[mappedNameSize];
     }
 
-    int activeVars = 0, size = 0;
+    size_t activeVars = 0;
+    int size = 0;
     ShDataType type = SH_NONE;
     const char* typeName = NULL;
     ShGetInfo(compiler, varType, &activeVars);
-    for (int i = 0; i < activeVars; ++i) {
+    for (size_t i = 0; i < activeVars; ++i) {
         switch (varType) {
             case SH_ACTIVE_ATTRIBUTES:
                 ShGetActiveAttrib(compiler, i, NULL, &size, &type, name, mappedName);
