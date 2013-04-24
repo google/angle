@@ -60,7 +60,6 @@ struct TParseContext {
     bool checksPrecisionErrors;  // true if an error will be generated when a variable is declared without precision, explicit or implicit.
     bool fragmentPrecisionHigh;  // true if highp precision is supported in the fragment language.
     TString HashErrMsg;
-    bool AfterEOF;
     TDiagnostics diagnostics;
     TDirectiveHandler directiveHandler;
     pp::Preprocessor preprocessor;
