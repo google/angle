@@ -60,7 +60,7 @@ static int reserved_word(yyscan_t yyscanner);
 %option yylineno reentrant bison-bridge
 %option stack
 %option extra-type="TParseContext*"
-%x COMMENT FIELDS
+%x FIELDS
 
 D           [0-9]
 L           [a-zA-Z_]
@@ -73,15 +73,6 @@ O           [0-7]
 %{
     TParseContext* context = yyextra;
 %}
-
-    /* Single-line comments */
-"//"[^\n]* ;
-
-    /* Multi-line comments */
-"/*"           { yy_push_state(COMMENT, yyscanner); }
-<COMMENT>. |
-<COMMENT>\n ;
-<COMMENT>"*/"  { yy_pop_state(yyscanner); }
 
 "invariant"    { return INVARIANT; }
 "highp"        { return HIGH_PRECISION; }
@@ -203,7 +194,6 @@ O           [0-7]
 
 0[xX]{H}+         { yylval->lex.i = static_cast<int>(strtol(yytext, 0, 0)); return INTCONSTANT; }
 0{O}+             { yylval->lex.i = static_cast<int>(strtol(yytext, 0, 0)); return INTCONSTANT; }
-0{D}+             { context->error(yylineno, "Invalid Octal number.", yytext); context->recover(); return 0;}
 {D}+              { yylval->lex.i = static_cast<int>(strtol(yytext, 0, 0)); return INTCONSTANT; }
 
 {D}+{E}           { yylval->lex.f = static_cast<float>(atof_dot(yytext)); return FLOATCONSTANT; }
