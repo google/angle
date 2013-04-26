@@ -932,12 +932,6 @@ static int input (yyscan_t yyscanner );
 
 #endif
 
-    static void yy_push_state (int new_state ,yyscan_t yyscanner);
-    
-    static void yy_pop_state (yyscan_t yyscanner );
-    
-    static int yy_top_state (yyscan_t yyscanner );
-    
 /* Amount of stuff to slurp up with each read. */
 #ifndef YY_READ_BUF_SIZE
 #define YY_READ_BUF_SIZE 8192
@@ -2512,46 +2506,6 @@ YY_BUFFER_STATE yy_scan_bytes  (yyconst char * yybytes, yy_size_t  _yybytes_len 
 	b->yy_is_our_buffer = 1;
 
 	return b;
-}
-
-    static void yy_push_state (int  new_state , yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-	if ( yyg->yy_start_stack_ptr >= yyg->yy_start_stack_depth )
-		{
-		yy_size_t new_size;
-
-		yyg->yy_start_stack_depth += YY_START_STACK_INCR;
-		new_size = yyg->yy_start_stack_depth * sizeof( int );
-
-		if ( ! yyg->yy_start_stack )
-			yyg->yy_start_stack = (int *) yyalloc(new_size ,yyscanner );
-
-		else
-			yyg->yy_start_stack = (int *) yyrealloc((void *) yyg->yy_start_stack,new_size ,yyscanner );
-
-		if ( ! yyg->yy_start_stack )
-			YY_FATAL_ERROR( "out of memory expanding start-condition stack" );
-		}
-
-	yyg->yy_start_stack[yyg->yy_start_stack_ptr++] = YY_START;
-
-	BEGIN(new_state);
-}
-
-    static void yy_pop_state  (yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-	if ( --yyg->yy_start_stack_ptr < 0 )
-		YY_FATAL_ERROR( "start-condition stack underflow" );
-
-	BEGIN(yyg->yy_start_stack[yyg->yy_start_stack_ptr]);
-}
-
-    static int yy_top_state  (yyscan_t yyscanner)
-{
-    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
-	return yyg->yy_start_stack[yyg->yy_start_stack_ptr - 1];
 }
 
 #ifndef YY_EXIT_FAILURE

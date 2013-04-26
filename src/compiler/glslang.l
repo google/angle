@@ -58,7 +58,6 @@ static int reserved_word(yyscan_t yyscanner);
 
 %option noyywrap nounput never-interactive
 %option yylineno reentrant bison-bridge
-%option stack
 %option extra-type="TParseContext*"
 %x FIELDS
 
