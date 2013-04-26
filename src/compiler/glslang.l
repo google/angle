@@ -98,36 +98,36 @@ O           [0-7]
 "out"          { return OUT_QUAL; }
 "inout"        { return INOUT_QUAL; }
 
-"float"        { context->lexAfterType = true; return FLOAT_TYPE; }
-"int"          { context->lexAfterType = true; return INT_TYPE; }
-"void"         { context->lexAfterType = true; return VOID_TYPE; }
-"bool"         { context->lexAfterType = true; return BOOL_TYPE; }
+"float"        { return FLOAT_TYPE; }
+"int"          { return INT_TYPE; }
+"void"         { return VOID_TYPE; }
+"bool"         { return BOOL_TYPE; }
 "true"         { yylval->lex.b = true;  return BOOLCONSTANT; }
 "false"        { yylval->lex.b = false; return BOOLCONSTANT; }
 
 "discard"      { return DISCARD; }
 "return"       { return RETURN; }
 
-"mat2"         { context->lexAfterType = true; return MATRIX2; }
-"mat3"         { context->lexAfterType = true; return MATRIX3; }
-"mat4"         { context->lexAfterType = true; return MATRIX4; }
+"mat2"         { return MATRIX2; }
+"mat3"         { return MATRIX3; }
+"mat4"         { return MATRIX4; }
 
-"vec2"         { context->lexAfterType = true; return VEC2; }
-"vec3"         { context->lexAfterType = true; return VEC3; }
-"vec4"         { context->lexAfterType = true; return VEC4; }
-"ivec2"        { context->lexAfterType = true; return IVEC2; }
-"ivec3"        { context->lexAfterType = true; return IVEC3; }
-"ivec4"        { context->lexAfterType = true; return IVEC4; }
-"bvec2"        { context->lexAfterType = true; return BVEC2; }
-"bvec3"        { context->lexAfterType = true; return BVEC3; }
-"bvec4"        { context->lexAfterType = true; return BVEC4; }
+"vec2"         { return VEC2; }
+"vec3"         { return VEC3; }
+"vec4"         { return VEC4; }
+"ivec2"        { return IVEC2; }
+"ivec3"        { return IVEC3; }
+"ivec4"        { return IVEC4; }
+"bvec2"        { return BVEC2; }
+"bvec3"        { return BVEC3; }
+"bvec4"        { return BVEC4; }
 
-"sampler2D"          { context->lexAfterType = true; return SAMPLER2D; }
-"samplerCube"        { context->lexAfterType = true; return SAMPLERCUBE; }
-"samplerExternalOES" { context->lexAfterType = true; return SAMPLER_EXTERNAL_OES; }
-"sampler2DRect"      { context->lexAfterType = true; return SAMPLER2DRECT; }
+"sampler2D"          { return SAMPLER2D; }
+"samplerCube"        { return SAMPLERCUBE; }
+"samplerExternalOES" { return SAMPLER_EXTERNAL_OES; }
+"sampler2DRect"      { return SAMPLER2DRECT; }
 
-"struct"       { context->lexAfterType = true; return STRUCT; }
+"struct"       { return STRUCT; }
 
 "asm"          { return reserved_word(yyscanner); }
 
@@ -222,14 +222,14 @@ O           [0-7]
 "!="            { return NE_OP; }
 "<<"            { return LEFT_OP; }
 ">>"            { return RIGHT_OP; }
-";"             { context->lexAfterType = false; return SEMICOLON; }
-("{"|"<%")      { context->lexAfterType = false; return LEFT_BRACE; }
+";"             { return SEMICOLON; }
+("{"|"<%")      { return LEFT_BRACE; }
 ("}"|"%>")      { return RIGHT_BRACE; }
-","         { if (context->inTypeParen) context->lexAfterType = false; return COMMA; }
+","         { return COMMA; }
 ":"         { return COLON; }
-"="         { context->lexAfterType = false; return EQUAL; }
-"("         { context->lexAfterType = false; context->inTypeParen = true; return LEFT_PAREN; }
-")"         { context->inTypeParen = false; return RIGHT_PAREN; }
+"="         { return EQUAL; }
+"("         { return LEFT_PAREN; }
+")"         { return RIGHT_PAREN; }
 ("["|"<:")  { return LEFT_BRACKET; }
 ("]"|":>")  { return RIGHT_BRACKET; }
 "."         { BEGIN(FIELDS); return DOT; }
@@ -280,12 +280,10 @@ int check_type(yyscan_t yyscanner) {
     
     int token = IDENTIFIER;
     TSymbol* symbol = yyextra->symbolTable.find(yytext);
-    if (yyextra->lexAfterType == false && symbol && symbol->isVariable()) {
+    if (symbol && symbol->isVariable()) {
         TVariable* variable = static_cast<TVariable*>(symbol);
-        if (variable->isUserType()) {
-            yyextra->lexAfterType = true;
+        if (variable->isUserType())
             token = TYPE_NAME;
-        }
     }
     yylval->lex.symbol = symbol;
     return token;
