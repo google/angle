@@ -58,7 +58,9 @@ static int reserved_word(yyscan_t yyscanner);
 
 %option noyywrap nounput never-interactive
 %option yylineno reentrant bison-bridge
+%option stack
 %option extra-type="TParseContext*"
+%x FIELDS
 
 D           [0-9]
 L           [a-zA-Z_]
@@ -230,7 +232,7 @@ O           [0-7]
 ")"         { return RIGHT_PAREN; }
 ("["|"<:")  { return LEFT_BRACKET; }
 ("]"|":>")  { return RIGHT_BRACKET; }
-"."         { return DOT; }
+"."         { BEGIN(FIELDS); return DOT; }
 "!"         { return BANG; }
 "-"         { return DASH; }
 "~"         { return TILDE; }
@@ -245,9 +247,16 @@ O           [0-7]
 "&"         { return AMPERSAND; }
 "?"         { return QUESTION; }
 
-[ \t\v\n\f\r] { }
-<<EOF>>       { yyterminate(); }
-.             { context->warning(yylineno, "Unknown char", yytext, ""); return 0; }
+<FIELDS>{L}({L}|{D})* { 
+    BEGIN(INITIAL);
+    yylval->lex.string = NewPoolTString(yytext); 
+    return FIELD_SELECTION;
+}
+<FIELDS>[ \t\v\f\r] {}
+
+[ \t\v\n\f\r]   {  }
+<*><<EOF>>      { yyterminate(); }
+<*>.            { context->warning(yylineno, "Unknown char", yytext, ""); return 0; }
 
 %%
 

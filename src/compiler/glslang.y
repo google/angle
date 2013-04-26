@@ -116,6 +116,7 @@ extern void yyerror(TParseContext* context, const char* reason);
 %token <lex> SAMPLER2D SAMPLERCUBE SAMPLER_EXTERNAL_OES SAMPLER2DRECT
 
 %token <lex> IDENTIFIER TYPE_NAME FLOATCONSTANT INTCONSTANT BOOLCONSTANT
+%token <lex> FIELD_SELECTION
 %token <lex> LEFT_OP RIGHT_OP
 %token <lex> INC_OP DEC_OP LE_OP GE_OP EQ_OP NE_OP
 %token <lex> AND_OP OR_OP XOR_OP MUL_ASSIGN DIV_ASSIGN ADD_ASSIGN
@@ -321,7 +322,7 @@ postfix_expression
     | function_call {
         $$ = $1;
     }
-    | postfix_expression DOT identifier {
+    | postfix_expression DOT FIELD_SELECTION {
         if ($1->isArray()) {
             context->error($3.line, "cannot apply dot operator to an array", ".");
             context->recover();
@@ -665,6 +666,13 @@ function_identifier
         $$ = function;
     }
     | IDENTIFIER {
+        if (context->reservedErrorCheck($1.line, *$1.string))
+            context->recover();
+        TType type(EbtVoid, EbpUndefined);
+        TFunction *function = new TFunction($1.string, type);
+        $$ = function;
+    }
+    | FIELD_SELECTION {
         if (context->reservedErrorCheck($1.line, *$1.string))
             context->recover();
         TType type(EbtVoid, EbpUndefined);
