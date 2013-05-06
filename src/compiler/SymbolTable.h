@@ -32,6 +32,7 @@
 
 #include <assert.h>
 
+#include "common/angleutils.h"
 #include "compiler/InfoSink.h"
 #include "compiler/intermediate.h"
 
@@ -50,10 +51,10 @@ public:
     void setUniqueId(int id) { uniqueId = id; }
     int getUniqueId() const { return uniqueId; }
     virtual void dump(TInfoSink &infoSink) const = 0;	
-    TSymbol(const TSymbol&);
-    virtual TSymbol* clone(TStructureMap& remapper) = 0;
 
-protected:
+private:
+    DISALLOW_COPY_AND_ASSIGN(TSymbol);
+
     const TString *name;
     unsigned int uniqueId;      // For real comparing during code generation
 };
@@ -100,10 +101,10 @@ public:
         delete[] unionArray;
         unionArray = constArray;  
     }
-    TVariable(const TVariable&, TStructureMap& remapper); // copy constructor
-    virtual TVariable* clone(TStructureMap& remapper);
 
-protected:
+private:
+    DISALLOW_COPY_AND_ASSIGN(TVariable);
+
     TType type;
     bool userType;
     // we are assuming that Pool Allocator will free the memory allocated to unionArray
@@ -119,11 +120,6 @@ protected:
 struct TParameter {
     TString *name;
     TType* type;
-    void copyParam(const TParameter& param, TStructureMap& remapper)
-    {
-        name = NewPoolTString(param.name->c_str());
-        type = param.type->clone(remapper);
-    }
 };
 
 //
@@ -173,10 +169,10 @@ public:
     const TParameter& getParam(size_t i) const { return parameters[i]; }
 
     virtual void dump(TInfoSink &infoSink) const;
-    TFunction(const TFunction&, TStructureMap& remapper);
-    virtual TFunction* clone(TStructureMap& remapper);
 
-protected:
+private:
+    DISALLOW_COPY_AND_ASSIGN(TFunction);
+
     typedef TVector<TParameter> TParamList;
     TParamList parameters;
     TType returnType;
@@ -231,7 +227,6 @@ public:
     void relateToOperator(const char* name, TOperator op);
     void relateToExtension(const char* name, const TString& ext);
     void dump(TInfoSink &infoSink) const;
-    TSymbolTableLevel* clone(TStructureMap& remapper);
 
 protected:
     tLevel level;
@@ -321,7 +316,6 @@ public:
     }
     int getMaxSymbolId() { return uniqueId; }
     void dump(TInfoSink &infoSink) const;
-    void copyTable(const TSymbolTable& copyOf);
 
     bool setDefaultPrecision( const TPublicType& type, TPrecision prec ){
         if (IsSampler(type.type))

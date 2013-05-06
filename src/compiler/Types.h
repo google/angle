@@ -29,9 +29,6 @@ inline TTypeList* NewPoolTTypeList()
     return new(memory) TTypeList;
 }
 
-typedef TMap<TTypeList*, TTypeList*> TStructureMap;
-typedef TMap<TTypeList*, TTypeList*>::iterator TStructureMapIterator;
-
 //
 // Base class for things that have a type.
 //
@@ -51,59 +48,6 @@ public:
             maxArraySize(0), arrayInformationType(0), structure(userDef), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0)
     {
         typeName = NewPoolTString(n.c_str());
-    }
-
-    void copyType(const TType& copyOf, TStructureMap& remapper)
-    {
-        type = copyOf.type;
-        precision = copyOf.precision;
-        qualifier = copyOf.qualifier;
-        size = copyOf.size;
-        matrix = copyOf.matrix;
-        array = copyOf.array;
-        arraySize = copyOf.arraySize;
-
-        TStructureMapIterator iter;
-        if (copyOf.structure) {
-            if ((iter = remapper.find(structure)) == remapper.end()) {
-                // create the new structure here
-                structure = NewPoolTTypeList();
-                for (unsigned int i = 0; i < copyOf.structure->size(); ++i) {
-                    TTypeLine typeLine;
-                    typeLine.line = (*copyOf.structure)[i].line;
-                    typeLine.type = (*copyOf.structure)[i].type->clone(remapper);
-                    structure->push_back(typeLine);
-                }
-            } else {
-                structure = iter->second;
-            }
-        } else
-            structure = 0;
-
-        fieldName = 0;
-        if (copyOf.fieldName)
-            fieldName = NewPoolTString(copyOf.fieldName->c_str());
-        typeName = 0;
-        if (copyOf.typeName)
-            typeName = NewPoolTString(copyOf.typeName->c_str());
-
-        mangled = 0;
-        if (copyOf.mangled)
-            mangled = NewPoolTString(copyOf.mangled->c_str());
-
-        structureSize = copyOf.structureSize;
-        maxArraySize = copyOf.maxArraySize;
-        deepestStructNesting = copyOf.deepestStructNesting;
-        assert(copyOf.arrayInformationType == 0);
-        arrayInformationType = 0; // arrayInformationType should not be set for builtIn symbol table level
-    }
-
-    TType* clone(TStructureMap& remapper)
-    {
-        TType *newType = new TType();
-        newType->copyType(*this, remapper);
-
-        return newType;
     }
 
     TBasicType getBasicType() const { return type; }
@@ -234,7 +178,7 @@ public:
 
     bool isStructureContainingArrays() const;
 
-protected:
+private:
     void buildMangledName(TString&);
     int getStructSize() const;
     void computeDeepestStructNesting();
