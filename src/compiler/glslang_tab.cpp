@@ -3085,9 +3085,9 @@ yyreduce:
             const TParameter &param = function.getParam(i);
             if (param.name != 0)
             {
-                TVariable *variable = new TVariable(param.name, *param.type);
+                TVariable variable(param.name, *param.type);
                 
-                prototype = context->intermediate.growAggregate(prototype, context->intermediate.addSymbol(variable->getUniqueId(), variable->getName(), variable->getType(), (yyvsp[(1) - (2)].interm).line), (yyvsp[(1) - (2)].interm).line);
+                prototype = context->intermediate.growAggregate(prototype, context->intermediate.addSymbol(variable.getUniqueId(), variable.getName(), variable.getType(), (yyvsp[(1) - (2)].interm).line), (yyvsp[(1) - (2)].interm).line);
             }
             else
             {
