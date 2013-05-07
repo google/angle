@@ -1041,10 +1041,10 @@ bool CompareStruct(const TType& leftNodeType, ConstantUnion* rightUnionArray, Co
     int index = 0;
 
     for (size_t j = 0; j < structSize; j++) {
-        int size = (*fields)[j].type->getObjectSize();
+        int size = (*fields)[j]->getObjectSize();
         for (int i = 0; i < size; i++) {
-            if ((*fields)[j].type->getBasicType() == EbtStruct) {
-                if (!CompareStructure(*(*fields)[j].type, &rightUnionArray[index], &leftUnionArray[index]))
+            if ((*fields)[j]->getBasicType() == EbtStruct) {
+                if (!CompareStructure(*(*fields)[j], &rightUnionArray[index], &leftUnionArray[index]))
                     return false;
             } else {
                 if (leftUnionArray[index] != rightUnionArray[index])

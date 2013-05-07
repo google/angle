@@ -14,14 +14,7 @@
 class TType;
 struct TPublicType;
 
-//
-// Need to have association of line numbers to types in a list for building structs.
-//
-struct TTypeLine {
-    TType* type;
-    int line;
-};
-typedef TVector<TTypeLine> TTypeList;
+typedef TVector<TType*> TTypeList;
 
 inline TTypeList* NewPoolTTypeList()
 {

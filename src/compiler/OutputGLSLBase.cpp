@@ -87,7 +87,7 @@ void TOutputGLSLBase::writeVariableType(const TType& type)
         ASSERT(structure != NULL);
         for (size_t i = 0; i < structure->size(); ++i)
         {
-            const TType* fieldType = (*structure)[i].type;
+            const TType* fieldType = (*structure)[i];
             ASSERT(fieldType != NULL);
             if (writeVariablePrecision(fieldType->getPrecision()))
                 out << " ";
@@ -143,7 +143,7 @@ const ConstantUnion* TOutputGLSLBase::writeConstantUnion(const TType& type,
         ASSERT(structure != NULL);
         for (size_t i = 0; i < structure->size(); ++i)
         {
-            const TType* fieldType = (*structure)[i].type;
+            const TType* fieldType = (*structure)[i];
             ASSERT(fieldType != NULL);
             pConstUnion = writeConstantUnion(*fieldType, pConstUnion);
             if (i != structure->size() - 1) out << ", ";

@@ -659,7 +659,7 @@ bool TParseContext::containsSampler(TType& type)
     if (type.getBasicType() == EbtStruct) {
         TTypeList& structure = *type.getStruct();
         for (unsigned int i = 0; i < structure.size(); ++i) {
-            if (containsSampler(*structure[i].type))
+            if (containsSampler(*structure[i]))
                 return true;
         }
     }
@@ -1139,7 +1139,7 @@ TIntermTyped* TParseContext::addConstructor(TIntermNode* node, const TType* type
         if (type->isArray())
             newNode = constructStruct(node, &elementType, 1, node->getLine(), false);
         else if (op == EOpConstructStruct)
-            newNode = constructStruct(node, (*memberTypes).type, 1, node->getLine(), false);
+            newNode = constructStruct(node, *memberTypes, 1, node->getLine(), false);
         else
             newNode = constructBuiltIn(type, op, node, node->getLine(), false);
 
@@ -1170,7 +1170,7 @@ TIntermTyped* TParseContext::addConstructor(TIntermNode* node, const TType* type
         if (type->isArray())
             newNode = constructStruct(*p, &elementType, paramCount+1, node->getLine(), true);
         else if (op == EOpConstructStruct)
-            newNode = constructStruct(*p, (memberTypes[paramCount]).type, paramCount+1, node->getLine(), true);
+            newNode = constructStruct(*p, memberTypes[paramCount], paramCount+1, node->getLine(), true);
         else
             newNode = constructBuiltIn(type, op, *p, node->getLine(), true);
         
@@ -1430,10 +1430,10 @@ TIntermTyped* TParseContext::addConstStruct(TString& identifier, TIntermTyped* n
     TIntermConstantUnion *tempConstantNode = node->getAsConstantUnion();
 
     for ( index = 0; index < fields->size(); ++index) {
-        if ((*fields)[index].type->getFieldName() == identifier) {
+        if ((*fields)[index]->getFieldName() == identifier) {
             break;
         } else {
-            instanceSize += (*fields)[index].type->getObjectSize();
+            instanceSize += (*fields)[index]->getObjectSize();
         }
     }
 
