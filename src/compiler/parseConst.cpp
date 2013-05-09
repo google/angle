@@ -61,7 +61,7 @@ protected:
 
 void TConstTraverser::visitSymbol(TIntermSymbol* node)
 {
-    infoSink.info.message(EPrefixInternalError, "Symbol Node found in constant constructor", node->getLine());
+    infoSink.info.message(EPrefixInternalError, node->getLine(), "Symbol Node found in constant constructor");
     return;
 
 }
@@ -74,12 +74,12 @@ bool TConstTraverser::visitBinary(Visit visit, TIntermBinary* node)
         TString buf;
         buf.append("'constructor' : assigning non-constant to ");
         buf.append(type.getCompleteString());
-        infoSink.info.message(EPrefixError, buf.c_str(), node->getLine());
+        infoSink.info.message(EPrefixError, node->getLine(), buf.c_str());
         error = true;
         return false;  
     }
 
-   infoSink.info.message(EPrefixInternalError, "Binary Node found in constant constructor", node->getLine());
+   infoSink.info.message(EPrefixInternalError, node->getLine(), "Binary Node found in constant constructor");
     
     return false;
 }
@@ -89,7 +89,7 @@ bool TConstTraverser::visitUnary(Visit visit, TIntermUnary* node)
     TString buf;
     buf.append("'constructor' : assigning non-constant to ");
     buf.append(type.getCompleteString());
-    infoSink.info.message(EPrefixError, buf.c_str(), node->getLine());
+    infoSink.info.message(EPrefixError, node->getLine(), buf.c_str());
     error = true;
     return false;  
 }
@@ -100,7 +100,7 @@ bool TConstTraverser::visitAggregate(Visit visit, TIntermAggregate* node)
         TString buf;
         buf.append("'constructor' : assigning non-constant to ");
         buf.append(type.getCompleteString());
-        infoSink.info.message(EPrefixError, buf.c_str(), node->getLine());
+        infoSink.info.message(EPrefixError, node->getLine(), buf.c_str());
         error = true;
         return false;  
     }
@@ -144,7 +144,7 @@ bool TConstTraverser::visitAggregate(Visit visit, TIntermAggregate* node)
 
 bool TConstTraverser::visitSelection(Visit visit, TIntermSelection* node)
 {
-    infoSink.info.message(EPrefixInternalError, "Selection Node found in constant constructor", node->getLine());
+    infoSink.info.message(EPrefixInternalError, node->getLine(), "Selection Node found in constant constructor");
     error = true;
     return false;
 }
@@ -213,14 +213,14 @@ void TConstTraverser::visitConstantUnion(TIntermConstantUnion* node)
 
 bool TConstTraverser::visitLoop(Visit visit, TIntermLoop* node)
 {
-    infoSink.info.message(EPrefixInternalError, "Loop Node found in constant constructor", node->getLine());
+    infoSink.info.message(EPrefixInternalError, node->getLine(), "Loop Node found in constant constructor");
     error = true;
     return false;
 }
 
 bool TConstTraverser::visitBranch(Visit visit, TIntermBranch* node)
 {
-    infoSink.info.message(EPrefixInternalError, "Branch Node found in constant constructor", node->getLine());
+    infoSink.info.message(EPrefixInternalError, node->getLine(), "Branch Node found in constant constructor");
     error = true;
     return false;
 }
@@ -230,7 +230,7 @@ bool TConstTraverser::visitBranch(Visit visit, TIntermBranch* node)
 // Individual functions can be initialized to 0 to skip processing of that
 // type of node.  It's children will still be processed.
 //
-bool TIntermediate::parseConstTree(TSourceLoc line, TIntermNode* root, ConstantUnion* unionArray, TOperator constructorType, TSymbolTable& symbolTable, TType t, bool singleConstantParam)
+bool TIntermediate::parseConstTree(const TSourceLoc& line, TIntermNode* root, ConstantUnion* unionArray, TOperator constructorType, TSymbolTable& symbolTable, TType t, bool singleConstantParam)
 {
     if (root == 0)
         return false;

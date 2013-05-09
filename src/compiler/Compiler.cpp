@@ -62,7 +62,8 @@ bool InitializeSymbolTable(
 
         if (PaParseStrings(1, &builtInShaders, &builtInLengths, &parseContext) != 0)
         {
-            infoSink.info.message(EPrefixInternalError, "Unable to parse built-ins");
+            infoSink.info.prefix(EPrefixInternalError);
+            infoSink.info << "Unable to parse built-ins";
             return false;
         }
     }
@@ -170,8 +171,10 @@ bool TCompiler::compile(const char* const shaderStrings[],
     // We preserve symbols at the built-in level from compile-to-compile.
     // Start pushing the user-defined symbols at global level.
     symbolTable.push();
-    if (!symbolTable.atGlobalLevel())
-        infoSink.info.message(EPrefixInternalError, "Wrong symbol table level");
+    if (!symbolTable.atGlobalLevel()) {
+        infoSink.info.prefix(EPrefixInternalError);
+        infoSink.info << "Wrong symbol table level";
+    }
 
     // Parse shader.
     bool success =
@@ -217,7 +220,8 @@ bool TCompiler::compile(const char* const shaderStrings[],
             if (compileOptions & SH_ENFORCE_PACKING_RESTRICTIONS) {
                 success = enforcePackingRestrictions();
                 if (!success) {
-                    infoSink.info.message(EPrefixError, "too many uniforms");
+                    infoSink.info.prefix(EPrefixError);
+                    infoSink.info << "too many uniforms";
                 }
             }
         }
@@ -271,10 +275,12 @@ bool TCompiler::detectRecursion(TIntermNode* root)
         case DetectRecursion::kErrorNone:
             return true;
         case DetectRecursion::kErrorMissingMain:
-            infoSink.info.message(EPrefixError, "Missing main()");
+            infoSink.info.prefix(EPrefixError);
+            infoSink.info << "Missing main()";
             return false;
         case DetectRecursion::kErrorRecursion:
-            infoSink.info.message(EPrefixError, "Function recursion detected");
+            infoSink.info.prefix(EPrefixError);
+            infoSink.info << "Function recursion detected";
             return false;
         default:
             UNREACHABLE();

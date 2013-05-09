@@ -214,9 +214,9 @@ struct TPublicType
     bool array;
     int arraySize;
     TType* userDef;
-    int line;
+    TSourceLoc line;
 
-    void setBasic(TBasicType bt, TQualifier q, int ln = 0)
+    void setBasic(TBasicType bt, TQualifier q, const TSourceLoc& ln)
     {
         type = bt;
         qualifier = q;

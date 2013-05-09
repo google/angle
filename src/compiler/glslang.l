@@ -47,7 +47,10 @@ WHICH GENERATES THE GLSL ES LEXER (glslang_lex.cpp).
 #pragma warning(disable : 4102)
 #endif
 
-#define YY_USER_ACTION yylval->lex.line = yylineno;
+#define YY_USER_ACTION                                 \
+    yylloc->first_file = yylloc->last_file = yycolumn; \
+    yylloc->first_line = yylloc->last_line = yylineno;
+
 #define YY_INPUT(buf, result, max_size) \
     result = string_input(buf, max_size, yyscanner);
 
@@ -57,7 +60,7 @@ static int reserved_word(yyscan_t yyscanner);
 %}
 
 %option noyywrap nounput never-interactive
-%option yylineno reentrant bison-bridge
+%option yylineno reentrant bison-bridge bison-locations
 %option extra-type="TParseContext*"
 
 D           [0-9]
@@ -253,7 +256,8 @@ yy_size_t string_input(char* buf, yy_size_t max_size, yyscan_t yyscanner) {
     yy_size_t len = token.type == pp::Token::LAST ? 0 : token.text.size();
     if (len < max_size)
         memcpy(buf, token.text.c_str(), len);
-    yyset_lineno(EncodeSourceLoc(token.location.file, token.location.line), yyscanner);
+    yyset_column(token.location.file, yyscanner);
+    yyset_lineno(token.location.line, yyscanner);
 
     if (len >= max_size)
         YY_FATAL_ERROR("Input buffer overflow");
@@ -279,16 +283,9 @@ int check_type(yyscan_t yyscanner) {
 int reserved_word(yyscan_t yyscanner) {
     struct yyguts_t* yyg = (struct yyguts_t*) yyscanner;
 
-    yyextra->error(yylineno, "Illegal use of reserved word", yytext, "");
+    yyextra->error(*yylloc, "Illegal use of reserved word", yytext, "");
     yyextra->recover();
     return 0;
-}
-
-void yyerror(TParseContext* context, const char* reason) {
-    struct yyguts_t* yyg = (struct yyguts_t*) context->scanner;
-
-    context->error(yylineno, reason, yytext);
-    context->recover();
 }
 
 int glslang_initialize(TParseContext* context) {
@@ -313,7 +310,8 @@ int glslang_finalize(TParseContext* context) {
 int glslang_scan(size_t count, const char* const string[], const int length[],
                  TParseContext* context) {
     yyrestart(NULL, context->scanner);
-    yyset_lineno(EncodeSourceLoc(0, 1), context->scanner);
+    yyset_column(0, context->scanner);
+    yyset_lineno(1, context->scanner);
 
     // Initialize preprocessor.
     if (!context->preprocessor.init(count, string, length))
