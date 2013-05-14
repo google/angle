@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -2160,6 +2160,9 @@ IDirect3DBaseTexture9 *Texture2D::getBaseTexture() const
 // Constructs a Direct3D 9 texture resource from the texture images
 void Texture2D::createTexture()
 {
+    delete mTexStorage;
+    mTexStorage = NULL;
+
     GLsizei width = mImageArray[0].getWidth();
     GLsizei height = mImageArray[0].getHeight();
 
@@ -2170,7 +2173,6 @@ void Texture2D::createTexture()
     D3DFORMAT d3dfmt = mImageArray[0].getD3DFormat();
     DWORD d3dusage = GetTextureUsage(d3dfmt, mUsage, false);
 
-    delete mTexStorage;
     mTexStorage = new TextureStorage2D(levels, d3dfmt, d3dusage, width, height);
     
     if (mTexStorage->isManaged())
@@ -2708,6 +2710,9 @@ IDirect3DBaseTexture9 *TextureCubeMap::getBaseTexture() const
 // Constructs a Direct3D 9 texture resource from the texture images, or returns an existing one
 void TextureCubeMap::createTexture()
 {
+    delete mTexStorage;
+    mTexStorage = NULL;
+
     GLsizei size = mImageArray[0][0].getWidth();
 
     if (!(size > 0))
@@ -2717,7 +2722,6 @@ void TextureCubeMap::createTexture()
     D3DFORMAT d3dfmt = mImageArray[0][0].getD3DFormat();
     DWORD d3dusage = GetTextureUsage(d3dfmt, mUsage, false);
 
-    delete mTexStorage;
     mTexStorage = new TextureStorageCubeMap(levels, d3dfmt, d3dusage, size);
 
     if (mTexStorage->isManaged())
