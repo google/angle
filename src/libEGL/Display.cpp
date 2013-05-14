@@ -319,6 +319,7 @@ bool Display::initialize()
     }
 
     initExtensionString();
+    initVendorString();
 
     static const TCHAR windowName[] = TEXT("AngleHiddenWindow");
     static const TCHAR className[] = TEXT("STATIC");
@@ -1242,6 +1243,27 @@ void Display::initExtensionString()
 const char *Display::getExtensionString() const
 {
     return mExtensionString.c_str();
+}
+
+void Display::initVendorString()
+{
+    mVendorString = "Google Inc.";
+
+    if (mD3d9Ex)
+    {
+        LUID adapterLuid = {0};
+        mD3d9Ex->GetAdapterLUID(mAdapter, &adapterLuid);
+
+        char adapterLuidString[64];
+        sprintf_s(adapterLuidString, sizeof(adapterLuidString), " (adapter LUID: %08x%08x)", adapterLuid.HighPart, adapterLuid.LowPart);
+
+        mVendorString += adapterLuidString;
+    }
+}
+
+const char *Display::getVendorString() const
+{
+    return mVendorString.c_str();
 }
 
 bool Display::shareHandleSupported() const 

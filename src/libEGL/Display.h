@@ -102,6 +102,7 @@ class Display
 
     bool isD3d9ExDevice() const { return mD3d9Ex != NULL; }
     const char *getExtensionString() const;
+    const char *getVendorString() const;
     bool shareHandleSupported() const;
 
     virtual IDirect3DVertexShader9 *createVertexShader(const DWORD *function, size_t length);
@@ -162,6 +163,9 @@ class Display
 
     void initExtensionString();
     std::string mExtensionString;
+
+    void initVendorString();
+    std::string mVendorString;
 
     typedef HRESULT (WINAPI *D3DCompileFunc)(LPCVOID pSrcData,
                                              SIZE_T SrcDataSize,

@@ -178,9 +178,9 @@ const char *__stdcall eglQueryString(EGLDisplay dpy, EGLint name)
           case EGL_CLIENT_APIS:
             return success("OpenGL_ES");
           case EGL_EXTENSIONS:
-            return display->getExtensionString();
+            return success(display->getExtensionString());
           case EGL_VENDOR:
-            return success("Google Inc.");
+            return success(display->getVendorString());
           case EGL_VERSION:
             return success("1.4 (ANGLE " VERSION_STRING ")");
         }
