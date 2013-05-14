@@ -1535,11 +1535,6 @@ bool Texture::subImageCompressed(GLint xoffset, GLint yoffset, GLsizei width, GL
 
 IDirect3DBaseTexture9 *Texture::getTexture()
 {
-    if (!isSamplerComplete())
-    {
-        return NULL;
-    }
-
     // ensure the underlying texture is created
     if (getStorage(false) == NULL)
     {
