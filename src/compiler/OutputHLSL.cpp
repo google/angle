@@ -2304,11 +2304,12 @@ TString OutputHLSL::initializer(const TType &type)
 {
     TString string;
 
-    for (int component = 0; component < type.getObjectSize(); component++)
+    size_t size = type.getObjectSize();
+    for (size_t component = 0; component < size; component++)
     {
         string += "0";
 
-        if (component < type.getObjectSize() - 1)
+        if (component + 1 < size)
         {
             string += ", ";
         }
@@ -2458,27 +2459,30 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
     }
     else
     {
-        int remainingComponents = ctorType.getObjectSize();
-        int parameterIndex = 0;
+        size_t remainingComponents = ctorType.getObjectSize();
+        size_t parameterIndex = 0;
 
         while (remainingComponents > 0)
         {
             const TType &parameter = ctorParameters[parameterIndex];
-            bool moreParameters = parameterIndex < (int)ctorParameters.size() - 1;
+            const size_t parameterSize = parameter.getObjectSize();
+            bool moreParameters = parameterIndex + 1 < ctorParameters.size();
 
             constructor += "x" + str(parameterIndex);
 
             if (parameter.isScalar())
             {
-                remainingComponents -= parameter.getObjectSize();
+                ASSERT(parameterSize <= remainingComponents);
+                remainingComponents -= parameterSize;
             }
             else if (parameter.isVector())
             {
-                if (remainingComponents == parameter.getObjectSize() || moreParameters)
+                if (remainingComponents == parameterSize || moreParameters)
                 {
-                    remainingComponents -= parameter.getObjectSize();
+                    ASSERT(parameterSize <= remainingComponents);
+                    remainingComponents -= parameterSize;
                 }
-                else if (remainingComponents < parameter.getNominalSize())
+                else if (remainingComponents < static_cast<size_t>(parameter.getNominalSize()))
                 {
                     switch (remainingComponents)
                     {
@@ -2495,9 +2499,10 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
             }
             else if (parameter.isMatrix() || parameter.getStruct())
             {
-                ASSERT(remainingComponents == parameter.getObjectSize() || moreParameters);
+                ASSERT(remainingComponents == parameterSize || moreParameters);
+                ASSERT(parameterSize <= remainingComponents);
                 
-                remainingComponents -= parameter.getObjectSize();
+                remainingComponents -= parameterSize;
             }
             else UNREACHABLE();
 
@@ -2554,7 +2559,7 @@ const ConstantUnion *OutputHLSL::writeConstantUnion(const TType &type, const Con
     }
     else
     {
-        int size = type.getObjectSize();
+        size_t size = type.getObjectSize();
         bool writeType = size > 1;
         
         if (writeType)
@@ -2562,7 +2567,7 @@ const ConstantUnion *OutputHLSL::writeConstantUnion(const TType &type, const Con
             out << typeString(type) << "(";
         }
 
-        for (int i = 0; i < size; i++, constUnion++)
+        for (size_t i = 0; i < size; i++, constUnion++)
         {
             switch (constUnion->getType())
             {

@@ -316,9 +316,9 @@ void TOutputTraverser::visitConstantUnion(TIntermConstantUnion* node)
 {
     TInfoSinkBase& out = sink;
 
-    int size = node->getType().getObjectSize();
+    size_t size = node->getType().getObjectSize();
 
-    for (int i = 0; i < size; i++) {
+    for (size_t i = 0; i < size; i++) {
         OutputTreeText(out, node, depth);
         switch (node->getUnionArrayPointer()[i].getType()) {
             case EbtBool:

@@ -152,10 +152,10 @@ const ConstantUnion* TOutputGLSLBase::writeConstantUnion(const TType& type,
     }
     else
     {
-        int size = type.getObjectSize();
+        size_t size = type.getObjectSize();
         bool writeType = size > 1;
         if (writeType) out << getTypeName(type) << "(";
-        for (int i = 0; i < size; ++i, ++pConstUnion)
+        for (size_t i = 0; i < size; ++i, ++pConstUnion)
         {
             switch (pConstUnion->getType())
             {
