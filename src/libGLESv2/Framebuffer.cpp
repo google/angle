@@ -303,6 +303,19 @@ bool Framebuffer::hasStencil() const
     return false;
 }
 
+bool Framebuffer::usingExtendedDrawBuffers() const
+{
+    for (unsigned int colorAttachment = 1; colorAttachment < IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
+    {
+        if (isEnabledColorAttachment(colorAttachment))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 GLenum Framebuffer::completeness() const
 {
     int width = 0;
