@@ -267,53 +267,62 @@ postfix_expression
                 context->error(@2, " left of '[' is not of type array, matrix, or vector ", "expression");
             context->recover();
         }
-        if ($1->getType().getQualifier() == EvqConst && $3->getQualifier() == EvqConst) {
-            if ($1->isArray()) { // constant folding for arrays
-                $$ = context->addConstArrayNode($3->getAsConstantUnion()->getIConst(0), $1, @2);
-            } else if ($1->isVector()) {  // constant folding for vectors
-                TVectorFields fields;
-                fields.num = 1;
-                fields.offsets[0] = $3->getAsConstantUnion()->getIConst(0); // need to do it this way because v.xy sends fields integer array
-                $$ = context->addConstVectorNode(fields, $1, @2);
-            } else if ($1->isMatrix()) { // constant folding for matrices
-                $$ = context->addConstMatrixNode($3->getAsConstantUnion()->getIConst(0), $1, @2);
+        if ($3->getQualifier() == EvqConst) {
+            int index = $3->getAsConstantUnion()->getIConst(0);
+            if (index < 0) {
+                std::stringstream infoStream;
+                infoStream << index;
+                std::string info = infoStream.str();
+                context->error(@3, "negative index", info.c_str());
+                context->recover();
+                index = 0;
             }
-        } else {
-            if ($3->getQualifier() == EvqConst) {
-                if (($1->isVector() || $1->isMatrix()) && $1->getType().getNominalSize() <= $3->getAsConstantUnion()->getIConst(0) && !$1->isArray() ) {
+            if ($1->getType().getQualifier() == EvqConst) {
+                if ($1->isArray()) { // constant folding for arrays
+                    $$ = context->addConstArrayNode(index, $1, @2);
+                } else if ($1->isVector()) {  // constant folding for vectors
+                    TVectorFields fields;
+                    fields.num = 1;
+                    fields.offsets[0] = index; // need to do it this way because v.xy sends fields integer array
+                    $$ = context->addConstVectorNode(fields, $1, @2);
+                } else if ($1->isMatrix()) { // constant folding for matrices
+                    $$ = context->addConstMatrixNode(index, $1, @2);
+                }
+            } else {
+                if ($1->isArray()) {
+                    if ($1->getType().getArraySize() == 0) {
+                        if ($1->getType().getMaxArraySize() <= index) {
+                            if (context->arraySetMaxSize($1->getAsSymbolNode(), $1->getTypePointer(), index, true, @2))
+                                context->recover();
+                        } else {
+                            if (context->arraySetMaxSize($1->getAsSymbolNode(), $1->getTypePointer(), 0, false, @2))
+                                context->recover();
+                        }
+                    } else if (index >= $1->getType().getArraySize()) {
+                        std::stringstream extraInfoStream;
+                        extraInfoStream << "array index out of range '" << index << "'";
+                        std::string extraInfo = extraInfoStream.str();
+                        context->error(@2, "", "[", extraInfo.c_str());
+                        context->recover();
+                        index = $1->getType().getArraySize() - 1;
+                    }
+                } else if (($1->isVector() || $1->isMatrix()) && $1->getType().getNominalSize() <= index) {
                     std::stringstream extraInfoStream;
-                    extraInfoStream << "field selection out of range '" << $3->getAsConstantUnion()->getIConst(0) << "'";
+                    extraInfoStream << "field selection out of range '" << index << "'";
                     std::string extraInfo = extraInfoStream.str();
                     context->error(@2, "", "[", extraInfo.c_str());
                     context->recover();
-                } else {
-                    if ($1->isArray()) {
-                        if ($1->getType().getArraySize() == 0) {
-                            if ($1->getType().getMaxArraySize() <= $3->getAsConstantUnion()->getIConst(0)) {
-                                if (context->arraySetMaxSize($1->getAsSymbolNode(), $1->getTypePointer(), $3->getAsConstantUnion()->getIConst(0), true, @2))
-                                    context->recover();
-                            } else {
-                                if (context->arraySetMaxSize($1->getAsSymbolNode(), $1->getTypePointer(), 0, false, @2))
-                                    context->recover();
-                            }
-                        } else if ( $3->getAsConstantUnion()->getIConst(0) >= $1->getType().getArraySize()) {
-                            std::stringstream extraInfoStream;
-                            extraInfoStream << "array index out of range '" << $3->getAsConstantUnion()->getIConst(0) << "'";
-                            std::string extraInfo = extraInfoStream.str();
-                            context->error(@2, "", "[", extraInfo.c_str());
-                            context->recover();
-                        }
-                    }
-                    $$ = context->intermediate.addIndex(EOpIndexDirect, $1, $3, @2);
+                    index =  $1->getType().getNominalSize() - 1;
                 }
-            } else {
-                if ($1->isArray() && $1->getType().getArraySize() == 0) {
-                    context->error(@2, "", "[", "array must be redeclared with a size before being indexed with a variable");
-                    context->recover();
-                }
-
-                $$ = context->intermediate.addIndex(EOpIndexIndirect, $1, $3, @2);
+                $3->getAsConstantUnion()->getUnionArrayPointer()->setIConst(index);
+                $$ = context->intermediate.addIndex(EOpIndexDirect, $1, $3, @2);
             }
+        } else {
+            if ($1->isArray() && $1->getType().getArraySize() == 0) {
+                context->error(@2, "", "[", "array must be redeclared with a size before being indexed with a variable");
+                context->recover();
+            }
+            $$ = context->intermediate.addIndex(EOpIndexIndirect, $1, $3, @2);
         }
         if ($$ == 0) {
             ConstantUnion *unionArray = new ConstantUnion[1];
@@ -327,16 +336,15 @@ postfix_expression
 
             if ($1->getType().getQualifier() == EvqConst)
                 $$->getTypePointer()->setQualifier(EvqConst);
-        } else if ($1->isMatrix() && $1->getType().getQualifier() == EvqConst)
-            $$->setType(TType($1->getBasicType(), $1->getPrecision(), EvqConst, $1->getNominalSize()));
-        else if ($1->isMatrix())
-            $$->setType(TType($1->getBasicType(), $1->getPrecision(), EvqTemporary, $1->getNominalSize()));
-        else if ($1->isVector() && $1->getType().getQualifier() == EvqConst)
-            $$->setType(TType($1->getBasicType(), $1->getPrecision(), EvqConst));
-        else if ($1->isVector())
-            $$->setType(TType($1->getBasicType(), $1->getPrecision(), EvqTemporary));
-        else
+        } else if ($1->isMatrix()) {
+            TQualifier qualifier = $1->getType().getQualifier() == EvqConst ? EvqConst : EvqTemporary;
+            $$->setType(TType($1->getBasicType(), $1->getPrecision(), qualifier, $1->getNominalSize()));
+        } else if ($1->isVector()) {
+            TQualifier qualifier = $1->getType().getQualifier() == EvqConst ? EvqConst : EvqTemporary;
+            $$->setType(TType($1->getBasicType(), $1->getPrecision(), qualifier));
+        } else {
             $$->setType($1->getType());
+        }
     }
     | function_call {
         $$ = $1;
