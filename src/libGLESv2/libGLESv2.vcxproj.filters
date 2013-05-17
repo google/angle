@@ -325,10 +325,13 @@
     <ClInclude Include="renderer\shaders\compiled\passthroughlumalpha11ps.h">
       <Filter>Shaders\Compiled</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\shaders\compiled\clear11ps.h">
+    <ClInclude Include="renderer\shaders\compiled\clear11vs.h">
       <Filter>Shaders\Compiled</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\shaders\compiled\clear11vs.h">
+    <ClInclude Include="renderer\shaders\compiled\clearmultiple11ps.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\clearsingle11ps.h">
       <Filter>Shaders\Compiled</Filter>
     </ClInclude>
     <ClInclude Include="..\common\system.h">

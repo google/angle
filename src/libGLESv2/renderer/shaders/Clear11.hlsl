@@ -6,7 +6,7 @@ void VS_Clear( in float3  inPosition :    POSITION,  in float4  inColor : COLOR,
 }
 
 // Assume we are in SM4+, which has 8 color outputs
-struct PS_Output
+struct PS_OutputMultiple
 {
 	float4 color0 : SV_TARGET0;
 	float4 color1 : SV_TARGET1;
@@ -18,9 +18,9 @@ struct PS_Output
 	float4 color7 : SV_TARGET7;
 };
 
-PS_Output PS_Clear(in float4 inPosition : SV_POSITION, in float4 inColor : COLOR)
+PS_OutputMultiple PS_ClearMultiple(in float4 inPosition : SV_POSITION, in float4 inColor : COLOR)
 {
-	PS_Output outColor;
+	PS_OutputMultiple outColor;
 	outColor.color0 = inColor;
 	outColor.color1 = inColor;
 	outColor.color2 = inColor;
@@ -30,4 +30,9 @@ PS_Output PS_Clear(in float4 inPosition : SV_POSITION, in float4 inColor : COLOR
 	outColor.color6 = inColor;
 	outColor.color7 = inColor;
 	return outColor;
+}
+
+float4 PS_ClearSingle(in float4 inPosition : SV_Position, in float4 inColor : COLOR) : SV_Target0
+{
+	return inColor;
 }
