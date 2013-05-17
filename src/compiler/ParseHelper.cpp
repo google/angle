@@ -945,20 +945,6 @@ bool TParseContext::supportsExtension(const char* extension)
     return (iter != extbehavior.end());
 }
 
-void TParseContext::handleExtensionDirective(int line, const char* extName, const char* behavior)
-{
-    pp::SourceLocation loc;
-    DecodeSourceLoc(line, &loc.file, &loc.line);
-    directiveHandler.handleExtension(loc, extName, behavior);
-}
-
-void TParseContext::handlePragmaDirective(int line, const char* name, const char* value)
-{
-    pp::SourceLocation loc;
-    DecodeSourceLoc(line, &loc.file, &loc.line);
-    directiveHandler.handlePragma(loc, name, value);
-}
-
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Non-Errors.
