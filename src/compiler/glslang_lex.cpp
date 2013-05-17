@@ -1037,8 +1037,6 @@ YY_DECL
 	register int yy_act;
     struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
-    TParseContext* context = yyextra;
-
     yylval = yylval_param;
 
 	if ( !yyg->yy_init )
@@ -1724,7 +1722,7 @@ YY_RULE_SETUP
 case 147:
 /* rule 147 can match eol */
 YY_RULE_SETUP
-{  }
+{ }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(FIELDS):
@@ -1732,7 +1730,7 @@ case YY_STATE_EOF(FIELDS):
 	YY_BREAK
 case 148:
 YY_RULE_SETUP
-{ context->warning(yylineno, "Unknown char", yytext, ""); return 0; }
+{ assert(false); return 0; }
 	YY_BREAK
 case 149:
 YY_RULE_SETUP
