@@ -265,7 +265,7 @@ O           [0-7]
 <FIELDS>[ \t\v\f\r] {}
 
 [ \t\v\n\f\r]   {  }
-<*><<EOF>>      { context->AfterEOF = true; yyterminate(); }
+<*><<EOF>>      { yyterminate(); }
 <*>.            { context->warning(yylineno, "Unknown char", yytext, ""); return 0; }
 
 %%
@@ -312,11 +312,7 @@ int reserved_word(yyscan_t yyscanner) {
 void yyerror(TParseContext* context, const char* reason) {
     struct yyguts_t* yyg = (struct yyguts_t*) context->scanner;
 
-    if (context->AfterEOF) {
-        context->error(yylineno, reason, "unexpected EOF");
-    } else {
-        context->error(yylineno, reason, yytext);
-    }
+    context->error(yylineno, reason, yytext);
     context->recover();
 }
 
@@ -343,7 +339,6 @@ int glslang_scan(size_t count, const char* const string[], const int length[],
                  TParseContext* context) {
     yyrestart(NULL, context->scanner);
     yyset_lineno(EncodeSourceLoc(0, 1), context->scanner);
-    context->AfterEOF = false;
 
     // Initialize preprocessor.
     if (!context->preprocessor.init(count, string, length))
