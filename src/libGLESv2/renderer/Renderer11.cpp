@@ -163,25 +163,44 @@ EGLint Renderer11::initialize()
         D3D_FEATURE_LEVEL_10_0,
     };
 
-    HRESULT result = D3D11CreateDevice(NULL,
-                                       D3D_DRIVER_TYPE_HARDWARE,
-                                       NULL,
-                                       #if defined(_DEBUG)
-                                       D3D11_CREATE_DEVICE_DEBUG,
-                                       #else
-                                       0,
-                                       #endif
-                                       featureLevels,
-                                       ArraySize(featureLevels),
-                                       D3D11_SDK_VERSION,
-                                       &mDevice,
-                                       &mFeatureLevel,
-                                       &mDeviceContext);
+    HRESULT result = S_OK;
+
+#ifdef _DEBUG
+    result = D3D11CreateDevice(NULL,
+                               D3D_DRIVER_TYPE_HARDWARE,
+                               NULL,
+                               D3D11_CREATE_DEVICE_DEBUG,
+                               featureLevels,
+                               ArraySize(featureLevels),
+                               D3D11_SDK_VERSION,
+                               &mDevice,
+                               &mFeatureLevel,
+                               &mDeviceContext);
 
     if (!mDevice || FAILED(result))
     {
-        ERR("Could not create D3D11 device - aborting!\n");
-        return EGL_NOT_INITIALIZED;   // Cleanup done by destructor through glDestroyRenderer
+        ERR("Failed creating Debug D3D11 device - falling back to release runtime.\n");
+    }
+
+    if (!mDevice || FAILED(result))
+#endif
+    {
+        result = D3D11CreateDevice(NULL,
+                                   D3D_DRIVER_TYPE_HARDWARE,
+                                   NULL,
+                                   0,
+                                   featureLevels,
+                                   ArraySize(featureLevels),
+                                   D3D11_SDK_VERSION,
+                                   &mDevice,
+                                   &mFeatureLevel,
+                                   &mDeviceContext);
+
+        if (!mDevice || FAILED(result))
+        {
+            ERR("Could not create D3D11 device - aborting!\n");
+            return EGL_NOT_INITIALIZED;   // Cleanup done by destructor through glDestroyRenderer
+        }
     }
 
     IDXGIDevice *dxgiDevice = NULL;
