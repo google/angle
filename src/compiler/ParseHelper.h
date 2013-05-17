@@ -33,10 +33,8 @@ struct TParseContext {
             compileOptions(options),
             sourcePath(sourcePath),
             treeRoot(0),
-            lexAfterType(false),
             loopNestingLevel(0),
             structNestingLevel(0),
-            inTypeParen(false),
             currentFunctionType(NULL),
             functionReturnsValue(false),
             checksPrecisionErrors(checksPrecErrors),
@@ -51,10 +49,8 @@ struct TParseContext {
     int compileOptions;
     const char* sourcePath;      // Path of source file or NULL.
     TIntermNode* treeRoot;       // root of parse tree being created
-    bool lexAfterType;           // true if we've recognized a type, so can only be looking for an identifier
     int loopNestingLevel;        // 0 if outside all loops
     int structNestingLevel;      // incremented while parsing a struct declaration
-    bool inTypeParen;            // true if in parentheses, looking only for an identifier
     const TType* currentFunctionType;  // the return type of the function that's currently being parsed
     bool functionReturnsValue;   // true if a non-void function has a return
     bool checksPrecisionErrors;  // true if an error will be generated when a variable is declared without precision, explicit or implicit.
