@@ -18,8 +18,6 @@
 #include <stdio.h>
 #include <algorithm>
 
-#include "common/angleutils.h"
-
 TType::TType(const TPublicType &p) :
             type(p.type), precision(p.precision), qualifier(p.qualifier), size(p.size), matrix(p.matrix), array(p.array), arraySize(p.arraySize),
             maxArraySize(0), arrayInformationType(0), structure(0), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0), typeName(0)
@@ -201,79 +199,5 @@ void TSymbolTableLevel::relateToExtension(const char* name, const TString& ext)
             if (function->getName() == name)
                 function->relateToExtension(ext);
         }
-    }
-}
-
-TSymbol::TSymbol(const TSymbol& copyOf)
-{
-    name = NewPoolTString(copyOf.name->c_str());
-    uniqueId = copyOf.uniqueId;
-}
-
-TVariable::TVariable(const TVariable& copyOf, TStructureMap& remapper) : TSymbol(copyOf)
-{
-    type.copyType(copyOf.type, remapper);
-    userType = copyOf.userType;
-    // for builtIn symbol table level, unionArray and arrayInformation pointers should be NULL
-    assert(copyOf.arrayInformationType == 0);
-    arrayInformationType = 0;
-
-    if (copyOf.unionArray) {
-        assert(!copyOf.type.getStruct());
-        assert(copyOf.type.getObjectSize() == 1);
-        unionArray = new ConstantUnion[1];
-        unionArray[0] = copyOf.unionArray[0];
-    } else
-        unionArray = 0;
-}
-
-TVariable* TVariable::clone(TStructureMap& remapper)
-{
-    TVariable *variable = new TVariable(*this, remapper);
-
-    return variable;
-}
-
-TFunction::TFunction(const TFunction& copyOf, TStructureMap& remapper) : TSymbol(copyOf)
-{
-    for (unsigned int i = 0; i < copyOf.parameters.size(); ++i) {
-        TParameter param;
-        parameters.push_back(param);
-        parameters.back().copyParam(copyOf.parameters[i], remapper);
-    }
-
-    returnType.copyType(copyOf.returnType, remapper);
-    mangledName = copyOf.mangledName;
-    op = copyOf.op;
-    defined = copyOf.defined;
-}
-
-TFunction* TFunction::clone(TStructureMap& remapper)
-{
-    TFunction *function = new TFunction(*this, remapper);
-
-    return function;
-}
-
-TSymbolTableLevel* TSymbolTableLevel::clone(TStructureMap& remapper)
-{
-    TSymbolTableLevel *symTableLevel = new TSymbolTableLevel();
-    tLevel::iterator iter;
-    for (iter = level.begin(); iter != level.end(); ++iter) {
-        symTableLevel->insert(*iter->second->clone(remapper));
-    }
-
-    return symTableLevel;
-}
-
-void TSymbolTable::copyTable(const TSymbolTable& copyOf)
-{
-    TStructureMap remapper;
-    uniqueId = copyOf.uniqueId;
-    for (unsigned int i = 0; i < copyOf.table.size(); ++i) {
-        table.push_back(copyOf.table[i]->clone(remapper));
-    }
-    for( unsigned int i = 0; i < copyOf.precisionStack.size(); i++) {
-        precisionStack.push_back( copyOf.precisionStack[i] );
     }
 }
