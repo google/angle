@@ -189,7 +189,9 @@ bool TOutputTraverser::visitUnary(Visit visit, TIntermUnary* node)
         case EOpAny:            out << "any";                  break;
         case EOpAll:            out << "all";                  break;
 
-        default: out.message(EPrefixError, "Bad unary op");
+        default:
+            out.prefix(EPrefixError);
+            out << "Bad unary op";
     }
 
     out << " (" << node->getCompleteString() << ")";
@@ -204,7 +206,8 @@ bool TOutputTraverser::visitAggregate(Visit visit, TIntermAggregate* node)
     TInfoSinkBase& out = sink;
 
     if (node->getOp() == EOpNull) {
-        out.message(EPrefixError, "node is still EOpNull!");
+        out.prefix(EPrefixError);
+        out << "node is still EOpNull!";
         return true;
     }
 
@@ -263,7 +266,9 @@ bool TOutputTraverser::visitAggregate(Visit visit, TIntermAggregate* node)
 
         case EOpDeclaration:   out << "Declaration: ";   break;
 
-        default: out.message(EPrefixError, "Bad aggregation op");
+        default:
+            out.prefix(EPrefixError);
+            out << "Bad aggregation op";
     }
 
     if (node->getOp() != EOpSequence && node->getOp() != EOpParameters)
@@ -334,7 +339,7 @@ void TOutputTraverser::visitConstantUnion(TIntermConstantUnion* node)
                 out << " (const int)\n";
                 break;
             default:
-                out.message(EPrefixInternalError, "Unknown constant", node->getLine());
+                out.message(EPrefixInternalError, node->getLine(), "Unknown constant");
                 break;
         }
     }

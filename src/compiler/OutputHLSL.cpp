@@ -1566,7 +1566,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         {
             if (mInsideFunction)
             {
-                outputLineDirective(node->getLine());
+                outputLineDirective(node->getLine().first_line);
                 out << "{\n";
 
                 mScopeDepth++;
@@ -1583,7 +1583,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
             for (TIntermSequence::iterator sit = node->getSequence().begin(); sit != node->getSequence().end(); sit++)
             {
-                outputLineDirective((*sit)->getLine());
+                outputLineDirective((*sit)->getLine().first_line);
 
                 traverseStatements(*sit);
 
@@ -1592,7 +1592,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
             if (mInsideFunction)
             {
-                outputLineDirective(node->getEndLine());
+                outputLineDirective(node->getLine().last_line);
                 out << "}\n";
 
                 mScopeDepth--;
@@ -2089,7 +2089,7 @@ bool OutputHLSL::visitSelection(Visit visit, TIntermSelection *node)
 
         out << ")\n";
         
-        outputLineDirective(node->getLine());
+        outputLineDirective(node->getLine().first_line);
         out << "{\n";
 
         if (node->getTrueBlock())
@@ -2097,20 +2097,20 @@ bool OutputHLSL::visitSelection(Visit visit, TIntermSelection *node)
             traverseStatements(node->getTrueBlock());
         }
 
-        outputLineDirective(node->getLine());
+        outputLineDirective(node->getLine().first_line);
         out << ";\n}\n";
 
         if (node->getFalseBlock())
         {
             out << "else\n";
 
-            outputLineDirective(node->getFalseBlock()->getLine());
+            outputLineDirective(node->getFalseBlock()->getLine().first_line);
             out << "{\n";
 
-            outputLineDirective(node->getFalseBlock()->getLine());
+            outputLineDirective(node->getFalseBlock()->getLine().first_line);
             traverseStatements(node->getFalseBlock());
 
-            outputLineDirective(node->getFalseBlock()->getLine());
+            outputLineDirective(node->getFalseBlock()->getLine().first_line);
             out << ";\n}\n";
         }
     }
@@ -2146,7 +2146,7 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
     {
         out << "{do\n";
 
-        outputLineDirective(node->getLine());
+        outputLineDirective(node->getLine().first_line);
         out << "{\n";
     }
     else
@@ -2174,7 +2174,7 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
 
         out << ")\n";
         
-        outputLineDirective(node->getLine());
+        outputLineDirective(node->getLine().first_line);
         out << "{\n";
     }
 
@@ -2183,12 +2183,12 @@ bool OutputHLSL::visitLoop(Visit visit, TIntermLoop *node)
         traverseStatements(node->getBody());
     }
 
-    outputLineDirective(node->getLine());
+    outputLineDirective(node->getLine().first_line);
     out << ";}\n";
 
     if (node->getType() == ELoopDoWhile)
     {
-        outputLineDirective(node->getCondition()->getLine());
+        outputLineDirective(node->getCondition()->getLine().first_line);
         out << "while(\n";
 
         node->getCondition()->traverse(this);
@@ -2460,7 +2460,7 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
                 out << increment;
                 out << ")\n";
                 
-                outputLineDirective(node->getLine());
+                outputLineDirective(node->getLine().first_line);
                 out << "{\n";
 
                 if (node->getBody())
@@ -2468,7 +2468,7 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
                     node->getBody()->traverse(this);
                 }
 
-                outputLineDirective(node->getLine());
+                outputLineDirective(node->getLine().first_line);
                 out << ";}\n";
 
                 if (!firstLoopFragment)
