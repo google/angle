@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -58,7 +58,7 @@ gl::Context *glCreateContext(const gl::Context *shareContext, rx::Renderer *rend
 void glDestroyContext(gl::Context *context);
 void glMakeCurrent(gl::Context *context, egl::Display *display, egl::Surface *surface);
 gl::Context *glGetCurrentContext();
-rx::Renderer *glCreateRenderer(egl::Display *display, HDC hDc, bool softwareDevice);
+rx::Renderer *glCreateRenderer(egl::Display *display, HDC hDc, EGLNativeDisplayType displayId);
 void glDestroyRenderer(rx::Renderer *renderer);
 
 __eglMustCastToProperFunctionPointerType __stdcall glGetProcAddress(const char *procname);
