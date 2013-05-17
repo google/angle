@@ -56,22 +56,7 @@ public:
     int getNominalSize() const { return size; }
     void setNominalSize(int s) { size = s; }
     // Full size of single instance of type
-    int getObjectSize() const
-    {
-        int totalSize;
-
-        if (getBasicType() == EbtStruct)
-            totalSize = getStructSize();
-        else if (matrix)
-            totalSize = size * size;
-        else
-            totalSize = size;
-
-        if (isArray())
-            totalSize *= std::max(getArraySize(), getMaxArraySize());
-
-        return totalSize;
-    }
+    size_t getObjectSize() const;
 
     int elementRegisterCount() const
     {
@@ -210,7 +195,7 @@ public:
 
 private:
     void buildMangledName(TString&);
-    int getStructSize() const;
+    size_t getStructSize() const;
     void computeDeepestStructNesting();
 
     TBasicType type      : 6;
@@ -224,7 +209,7 @@ private:
     TType* arrayInformationType;
 
     TTypeList* structure;      // 0 unless this is a struct
-    mutable int structureSize;
+    mutable size_t structureSize;
     int deepestStructNesting;
 
     TString *fieldName;         // for structure field names

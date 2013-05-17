@@ -17,6 +17,7 @@
 
 #include <stdio.h>
 #include <algorithm>
+#include <climits>
 
 TType::TType(const TPublicType &p) :
             type(p.type), precision(p.precision), qualifier(p.qualifier), size(p.size), matrix(p.matrix), array(p.array), arraySize(p.arraySize),
@@ -69,16 +70,44 @@ void TType::buildMangledName(TString& mangledName)
     }
 }
 
-int TType::getStructSize() const
+size_t TType::getObjectSize() const
+{
+    size_t totalSize = 0;
+
+    if (getBasicType() == EbtStruct)
+        totalSize = getStructSize();
+    else if (matrix)
+        totalSize = size * size;
+    else
+        totalSize = size;
+
+    if (isArray()) {
+        size_t arraySize = std::max(getArraySize(), getMaxArraySize());
+        if (arraySize > INT_MAX / totalSize)
+            totalSize = INT_MAX;
+        else
+            totalSize *= arraySize;
+    }
+
+    return totalSize;
+}
+
+size_t TType::getStructSize() const
 {
     if (!getStruct()) {
         assert(false && "Not a struct");
         return 0;
     }
 
-    if (structureSize == 0)
-        for (TTypeList::const_iterator tl = getStruct()->begin(); tl != getStruct()->end(); tl++)
-            structureSize += (*tl)->getObjectSize();
+    if (structureSize == 0) {
+        for (TTypeList::const_iterator tl = getStruct()->begin(); tl != getStruct()->end(); tl++) {
+            size_t fieldSize = (*tl)->getObjectSize();
+            if (fieldSize > INT_MAX - structureSize)
+                structureSize = INT_MAX;
+            else
+                structureSize += fieldSize;
+        }
+    }
 
     return structureSize;
 }
