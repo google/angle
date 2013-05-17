@@ -1353,7 +1353,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
 
             for (size_t i = 0; i < fields->size(); i++)
             {
-                const TType *fieldType = (*fields)[i].type;
+                const TType *fieldType = (*fields)[i];
 
                 node->getLeft()->traverse(this);
                 out << "." + decorateField(fieldType->getFieldName(), node->getLeft()->getType()) + " == ";
@@ -2583,7 +2583,7 @@ TString OutputHLSL::typeString(const TType &type)
 
             for (unsigned int i = 0; i < fields.size(); i++)
             {
-                const TType &field = *fields[i].type;
+                const TType &field = *fields[i];
 
                 string += "    " + typeString(field) + " " + decorate(field.getFieldName()) + arrayString(field) + ";\n";
             }
@@ -2726,7 +2726,7 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
 
         for (unsigned int i = 0; i < fields.size(); i++)
         {
-            const TType &field = *fields[i].type;
+            const TType &field = *fields[i];
 
             structure += "    " + typeString(field) + " " + decorateField(field.getFieldName(), type) + arrayString(field) + ";\n";
         }
@@ -2740,7 +2740,7 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
 
         for (unsigned int i = 0; i < fields.size(); i++)
         {
-            ctorParameters.push_back(*fields[i].type);
+            ctorParameters.push_back(*fields[i]);
         }
     }
     else if (parameters)
@@ -2915,7 +2915,7 @@ const ConstantUnion *OutputHLSL::writeConstantUnion(const TType &type, const Con
 
         for (size_t i = 0; i < structure->size(); i++)
         {
-            const TType *fieldType = (*structure)[i].type;
+            const TType *fieldType = (*structure)[i];
 
             constUnion = writeConstantUnion(*fieldType, constUnion);
 
@@ -3090,7 +3090,7 @@ void OutputHLSL::declareUniform(const TType &type, const TString &name, int inde
             {
                 for (size_t j = 0; j < structure->size(); j++)
                 {
-                    const TType &fieldType = *(*structure)[j].type;
+                    const TType &fieldType = *(*structure)[j];
                     const TString &fieldName = fieldType.getFieldName();
 
                     const TString uniformName = name + "[" + str(i) + "]." + fieldName;
@@ -3105,7 +3105,7 @@ void OutputHLSL::declareUniform(const TType &type, const TString &name, int inde
 
             for (size_t i = 0; i < structure->size(); i++)
             {
-                const TType &fieldType = *(*structure)[i].type;
+                const TType &fieldType = *(*structure)[i];
                 const TString &fieldName = fieldType.getFieldName();
 
                 const TString uniformName = name + "." + fieldName;

@@ -255,8 +255,8 @@ typedef union YYSTYPE
             TQualifier qualifier;
             TFunction* function;
             TParameter param;
-            TTypeLine typeLine;
-            TTypeList* typeList;
+            TType* field;
+            TTypeList* structure;
         };
     } interm;
 
@@ -699,13 +699,13 @@ static const yytype_uint16 yyrline[] =
     1520,  1530,  1537,  1540,  1543,  1549,  1552,  1567,  1571,  1575,
     1579,  1588,  1593,  1598,  1603,  1608,  1613,  1618,  1623,  1628,
     1633,  1639,  1645,  1651,  1656,  1661,  1670,  1679,  1684,  1697,
-    1697,  1711,  1711,  1720,  1723,  1738,  1774,  1778,  1784,  1792,
-    1808,  1812,  1816,  1817,  1823,  1824,  1825,  1826,  1827,  1831,
-    1832,  1832,  1832,  1842,  1843,  1847,  1847,  1848,  1848,  1853,
-    1856,  1866,  1869,  1875,  1876,  1880,  1888,  1892,  1902,  1907,
-    1924,  1924,  1929,  1929,  1936,  1936,  1944,  1947,  1953,  1956,
-    1962,  1966,  1973,  1980,  1987,  1994,  2005,  2014,  2018,  2025,
-    2028,  2034,  2034
+    1697,  1711,  1711,  1720,  1723,  1739,  1775,  1779,  1785,  1792,
+    1807,  1811,  1815,  1816,  1822,  1823,  1824,  1825,  1826,  1830,
+    1831,  1831,  1831,  1841,  1842,  1846,  1846,  1847,  1847,  1852,
+    1855,  1865,  1868,  1874,  1875,  1879,  1887,  1891,  1901,  1906,
+    1923,  1923,  1928,  1928,  1935,  1935,  1943,  1946,  1952,  1955,
+    1961,  1965,  1972,  1979,  1986,  1993,  2004,  2013,  2017,  2024,
+    2027,  2033,  2033
 };
 #endif
 
@@ -2354,7 +2354,7 @@ yyreduce:
             } else {
                 unsigned int i;
                 for (i = 0; i < fields->size(); ++i) {
-                    if ((*fields)[i].type->getFieldName() == *(yyvsp[(3) - (3)].lex).string) {
+                    if ((*fields)[i]->getFieldName() == *(yyvsp[(3) - (3)].lex).string) {
                         fieldFound = true;
                         break;
                     }
@@ -2367,7 +2367,7 @@ yyreduce:
                             (yyval.interm.intermTypedNode) = (yyvsp[(1) - (3)].interm.intermTypedNode);
                         }
                         else {
-                            (yyval.interm.intermTypedNode)->setType(*(*fields)[i].type);
+                            (yyval.interm.intermTypedNode)->setType(*(*fields)[i]);
                             // change the qualifier of the return type, not of the structure field
                             // as the structure definition is shared between various structures.
                             (yyval.interm.intermTypedNode)->getTypePointer()->setQualifier(EvqConst);
@@ -2375,9 +2375,9 @@ yyreduce:
                     } else {
                         ConstantUnion *unionArray = new ConstantUnion[1];
                         unionArray->setIConst(i);
-                        TIntermTyped* index = context->intermediate.addConstantUnion(unionArray, *(*fields)[i].type, (yyvsp[(3) - (3)].lex).line);
+                        TIntermTyped* index = context->intermediate.addConstantUnion(unionArray, *(*fields)[i], (yyvsp[(3) - (3)].lex).line);
                         (yyval.interm.intermTypedNode) = context->intermediate.addIndex(EOpIndexDirectStruct, (yyvsp[(1) - (3)].interm.intermTypedNode), index, (yyvsp[(2) - (3)].lex).line);
-                        (yyval.interm.intermTypedNode)->setType(*(*fields)[i].type);
+                        (yyval.interm.intermTypedNode)->setType(*(*fields)[i]);
                     }
                 } else {
                     context->error((yyvsp[(2) - (3)].lex).line, " no such field in structure", (yyvsp[(3) - (3)].lex).string->c_str());
@@ -3955,7 +3955,7 @@ yyreduce:
         if (context->reservedErrorCheck((yyvsp[(2) - (6)].lex).line, *(yyvsp[(2) - (6)].lex).string))
             context->recover();
 
-        TType* structure = new TType((yyvsp[(5) - (6)].interm.typeList), *(yyvsp[(2) - (6)].lex).string);
+        TType* structure = new TType((yyvsp[(5) - (6)].interm).structure, *(yyvsp[(2) - (6)].lex).string);
         TVariable* userTypeDef = new TVariable((yyvsp[(2) - (6)].lex).string, *structure, true);
         if (! context->symbolTable.insert(*userTypeDef)) {
             context->error((yyvsp[(2) - (6)].lex).line, "redefinition", (yyvsp[(2) - (6)].lex).string->c_str(), "struct");
@@ -3975,7 +3975,7 @@ yyreduce:
   case 142:
 
     {
-        TType* structure = new TType((yyvsp[(4) - (5)].interm.typeList), TString(""));
+        TType* structure = new TType((yyvsp[(4) - (5)].interm).structure, TString(""));
         (yyval.interm.type).setBasic(EbtStruct, EvqTemporary, (yyvsp[(1) - (5)].lex).line);
         (yyval.interm.type).userDef = structure;
         context->exitStructDeclaration();
@@ -3985,22 +3985,23 @@ yyreduce:
   case 143:
 
     {
-        (yyval.interm.typeList) = (yyvsp[(1) - (1)].interm.typeList);
+        (yyval.interm) = (yyvsp[(1) - (1)].interm);
     }
     break;
 
   case 144:
 
     {
-        (yyval.interm.typeList) = (yyvsp[(1) - (2)].interm.typeList);
-        for (unsigned int i = 0; i < (yyvsp[(2) - (2)].interm.typeList)->size(); ++i) {
-            for (unsigned int j = 0; j < (yyval.interm.typeList)->size(); ++j) {
-                if ((*(yyval.interm.typeList))[j].type->getFieldName() == (*(yyvsp[(2) - (2)].interm.typeList))[i].type->getFieldName()) {
-                    context->error((*(yyvsp[(2) - (2)].interm.typeList))[i].line, "duplicate field name in structure:", "struct", (*(yyvsp[(2) - (2)].interm.typeList))[i].type->getFieldName().c_str());
+        (yyval.interm) = (yyvsp[(1) - (2)].interm);
+        for (size_t i = 0; i < (yyvsp[(2) - (2)].interm).structure->size(); ++i) {
+            TType* field = (*(yyvsp[(2) - (2)].interm).structure)[i];
+            for (size_t j = 0; j < (yyval.interm).structure->size(); ++j) {
+                if ((*(yyval.interm).structure)[j]->getFieldName() == field->getFieldName()) {
+                    context->error((yyvsp[(2) - (2)].interm).line, "duplicate field name in structure:", "struct", field->getFieldName().c_str());
                     context->recover();
                 }
             }
-            (yyval.interm.typeList)->push_back((*(yyvsp[(2) - (2)].interm.typeList))[i]);
+            (yyval.interm).structure->push_back(field);
         }
     }
     break;
@@ -4008,16 +4009,16 @@ yyreduce:
   case 145:
 
     {
-        (yyval.interm.typeList) = (yyvsp[(2) - (3)].interm.typeList);
+        (yyval.interm) = (yyvsp[(2) - (3)].interm);
 
-        if (context->voidErrorCheck((yyvsp[(1) - (3)].interm.type).line, (*(yyvsp[(2) - (3)].interm.typeList))[0].type->getFieldName(), (yyvsp[(1) - (3)].interm.type))) {
+        if (context->voidErrorCheck((yyvsp[(1) - (3)].interm.type).line, (*(yyvsp[(2) - (3)].interm).structure)[0]->getFieldName(), (yyvsp[(1) - (3)].interm.type))) {
             context->recover();
         }
-        for (unsigned int i = 0; i < (yyval.interm.typeList)->size(); ++i) {
+        for (unsigned int i = 0; i < (yyval.interm).structure->size(); ++i) {
             //
             // Careful not to replace already known aspects of type, like array-ness
             //
-            TType* type = (*(yyval.interm.typeList))[i].type;
+            TType* type = (*(yyval.interm).structure)[i];
             type->setBasicType((yyvsp[(1) - (3)].interm.type).type);
             type->setNominalSize((yyvsp[(1) - (3)].interm.type).size);
             type->setMatrix((yyvsp[(1) - (3)].interm.type).matrix);
@@ -4045,15 +4046,15 @@ yyreduce:
   case 146:
 
     {
-        (yyval.interm.typeList) = NewPoolTTypeList();
-        (yyval.interm.typeList)->push_back((yyvsp[(1) - (1)].interm.typeLine));
+        (yyval.interm).structure = NewPoolTTypeList();
+        (yyval.interm).structure->push_back((yyvsp[(1) - (1)].interm.field));
     }
     break;
 
   case 147:
 
     {
-        (yyval.interm.typeList)->push_back((yyvsp[(3) - (3)].interm.typeLine));
+        (yyval.interm).structure->push_back((yyvsp[(3) - (3)].interm.field));
     }
     break;
 
@@ -4063,9 +4064,8 @@ yyreduce:
         if (context->reservedErrorCheck((yyvsp[(1) - (1)].lex).line, *(yyvsp[(1) - (1)].lex).string))
             context->recover();
 
-        (yyval.interm.typeLine).type = new TType(EbtVoid, EbpUndefined);
-        (yyval.interm.typeLine).line = (yyvsp[(1) - (1)].lex).line;
-        (yyval.interm.typeLine).type->setFieldName(*(yyvsp[(1) - (1)].lex).string);
+        (yyval.interm.field) = new TType(EbtVoid, EbpUndefined);
+        (yyval.interm.field)->setFieldName(*(yyvsp[(1) - (1)].lex).string);
     }
     break;
 
@@ -4075,14 +4075,13 @@ yyreduce:
         if (context->reservedErrorCheck((yyvsp[(1) - (4)].lex).line, *(yyvsp[(1) - (4)].lex).string))
             context->recover();
 
-        (yyval.interm.typeLine).type = new TType(EbtVoid, EbpUndefined);
-        (yyval.interm.typeLine).line = (yyvsp[(1) - (4)].lex).line;
-        (yyval.interm.typeLine).type->setFieldName(*(yyvsp[(1) - (4)].lex).string);
+        (yyval.interm.field) = new TType(EbtVoid, EbpUndefined);
+        (yyval.interm.field)->setFieldName(*(yyvsp[(1) - (4)].lex).string);
 
         int size;
         if (context->arraySizeErrorCheck((yyvsp[(2) - (4)].lex).line, (yyvsp[(3) - (4)].interm.intermTypedNode), size))
             context->recover();
-        (yyval.interm.typeLine).type->setArraySize(size);
+        (yyval.interm.field)->setArraySize(size);
     }
     break;
 

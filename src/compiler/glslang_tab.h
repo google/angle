@@ -172,8 +172,8 @@ typedef union YYSTYPE
             TQualifier qualifier;
             TFunction* function;
             TParameter param;
-            TTypeLine typeLine;
-            TTypeList* typeList;
+            TType* field;
+            TTypeList* structure;
         };
     } interm;
 

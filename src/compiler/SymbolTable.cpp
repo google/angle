@@ -52,7 +52,7 @@ void TType::buildMangledName(TString& mangledName)
         {// support MSVC++6.0
             for (unsigned int i = 0; i < structure->size(); ++i) {
                 mangledName += '-';
-                (*structure)[i].type->buildMangledName(mangledName);
+                (*structure)[i]->buildMangledName(mangledName);
             }
         }
     default:
@@ -78,7 +78,7 @@ int TType::getStructSize() const
 
     if (structureSize == 0)
         for (TTypeList::const_iterator tl = getStruct()->begin(); tl != getStruct()->end(); tl++)
-            structureSize += ((*tl).type)->getObjectSize();
+            structureSize += (*tl)->getObjectSize();
 
     return structureSize;
 }
@@ -91,7 +91,7 @@ void TType::computeDeepestStructNesting()
 
     int maxNesting = 0;
     for (TTypeList::const_iterator tl = getStruct()->begin(); tl != getStruct()->end(); ++tl) {
-        maxNesting = std::max(maxNesting, ((*tl).type)->getDeepestStructNesting());
+        maxNesting = std::max(maxNesting, (*tl)->getDeepestStructNesting());
     }
 
     deepestStructNesting = 1 + maxNesting;
@@ -106,8 +106,8 @@ bool TType::isStructureContainingArrays() const
 
     for (TTypeList::const_iterator member = structure->begin(); member != structure->end(); member++)
     {
-        if (member->type->isArray() ||
-            member->type->isStructureContainingArrays())
+        if ((*member)->isArray() ||
+            (*member)->isStructureContainingArrays())
         {
             return true;
         }

@@ -133,7 +133,7 @@ void getUserDefinedVariableInfo(const TType& type,
 
     const TTypeList* structure = type.getStruct();
     for (size_t i = 0; i < structure->size(); ++i) {
-        const TType* fieldType = (*structure)[i].type;
+        const TType* fieldType = (*structure)[i];
         getVariableInfo(*fieldType,
                         name + "." + fieldType->getFieldName(),
                         mappedName + "." + TIntermTraverser::hash(fieldType->getFieldName(), hashFunction),
