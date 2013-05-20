@@ -38,7 +38,7 @@
     <ClCompile Include="debug.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DetectRecursion.cpp">
+    <ClCompile Include="DetectCallDepth.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Diagnostics.cpp">
@@ -151,7 +151,7 @@
     <ClInclude Include="debug.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DetectRecursion.h">
+    <ClInclude Include="DetectCallDepth.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Diagnostics.h">

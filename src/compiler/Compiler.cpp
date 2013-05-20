@@ -5,7 +5,7 @@
 //
 
 #include "compiler/BuiltInFunctionEmulator.h"
-#include "compiler/DetectRecursion.h"
+#include "compiler/DetectCallDepth.h"
 #include "compiler/ForLoopUnroll.h"
 #include "compiler/Initialize.h"
 #include "compiler/InitializeParseContext.h"
@@ -104,6 +104,9 @@ TShHandleBase::~TShHandleBase() {
 TCompiler::TCompiler(ShShaderType type, ShShaderSpec spec)
     : shaderType(type),
       shaderSpec(spec),
+      maxUniformVectors(0),
+      maxExpressionComplexity(0),
+      maxCallStackDepth(0),
       fragmentPrecisionHigh(false),
       clampingStrategy(SH_CLAMP_WITH_CLAMP_INTRINSIC),
       builtInFunctionEmulator(type)
@@ -122,6 +125,8 @@ bool TCompiler::Init(const ShBuiltInResources& resources)
     maxUniformVectors = (shaderType == SH_VERTEX_SHADER) ?
         resources.MaxVertexUniformVectors :
         resources.MaxFragmentUniformVectors;
+    maxExpressionComplexity = resources.MaxExpressionComplexity;
+    maxCallStackDepth = resources.MaxCallStackDepth;
     TScopedPoolAllocator scopedAlloc(&allocator, false);
 
     // Generate built-in symbol table.
@@ -185,7 +190,7 @@ bool TCompiler::compile(const char* const shaderStrings[],
         success = intermediate.postProcess(root);
 
         if (success)
-            success = detectRecursion(root);
+            success = detectCallDepth(root, infoSink, (compileOptions & SH_LIMIT_CALL_STACK_DEPTH) != 0);
 
         if (success && (compileOptions & SH_VALIDATE_LOOP_INDEXING))
             success = validateLimitations(root);
@@ -207,6 +212,10 @@ bool TCompiler::compile(const char* const shaderStrings[],
         // Clamping uniform array bounds needs to happen after validateLimitations pass.
         if (success && (compileOptions & SH_CLAMP_INDIRECT_ARRAY_BOUNDS))
             arrayBoundsClamper.MarkIndirectArrayBoundsForClamping(root);
+
+        // Disallow expressions deemed too complex.
+        if (success && (compileOptions & SH_LIMIT_EXPRESSION_COMPLEXITY))
+            success = limitExpressionComplexity(root);
 
         // Call mapLongVariableNames() before collectAttribsUniforms() so in
         // collectAttribsUniforms() we already have the mapped symbol names and
@@ -267,24 +276,27 @@ void TCompiler::clearResults()
     nameMap.clear();
 }
 
-bool TCompiler::detectRecursion(TIntermNode* root)
+bool TCompiler::detectCallDepth(TIntermNode* root, TInfoSink& infoSink, bool limitCallStackDepth)
 {
-    DetectRecursion detect;
+    DetectCallDepth detect(infoSink, limitCallStackDepth, maxCallStackDepth);
     root->traverse(&detect);
-    switch (detect.detectRecursion()) {
-        case DetectRecursion::kErrorNone:
+    switch (detect.detectCallDepth()) {
+        case DetectCallDepth::kErrorNone:
             return true;
-        case DetectRecursion::kErrorMissingMain:
+        case DetectCallDepth::kErrorMissingMain:
             infoSink.info.prefix(EPrefixError);
             infoSink.info << "Missing main()";
             return false;
-        case DetectRecursion::kErrorRecursion:
+        case DetectCallDepth::kErrorRecursion:
             infoSink.info.prefix(EPrefixError);
             infoSink.info << "Function recursion detected";
             return false;
+        case DetectCallDepth::kErrorMaxDepthExceeded:
+            infoSink.info.prefix(EPrefixError);
+            infoSink.info << "Function call stack too deep";
+            return false;
         default:
             UNREACHABLE();
-            return false;
     }
 }
 
@@ -324,6 +336,28 @@ bool TCompiler::enforceTimingRestrictions(TIntermNode* root, bool outputGraph)
     else {
         return enforceVertexShaderTimingRestrictions(root);
     }
+}
+
+bool TCompiler::limitExpressionComplexity(TIntermNode* root)
+{
+    TIntermTraverser traverser;
+    root->traverse(&traverser);
+    TDependencyGraph graph(root);
+
+    for (TFunctionCallVector::const_iterator iter = graph.beginUserDefinedFunctionCalls();
+         iter != graph.endUserDefinedFunctionCalls();
+         ++iter)
+    {
+        TGraphFunctionCall* samplerSymbol = *iter;
+        TDependencyGraphTraverser graphTraverser;
+        samplerSymbol->traverse(&graphTraverser);
+    }
+
+    if (traverser.getMaxDepth() > maxExpressionComplexity) {
+        infoSink.info << "Expression too complex.";
+        return false;
+    }
+    return true;
 }
 
 bool TCompiler::enforceFragmentShaderTimingRestrictions(const TDependencyGraph& graph)

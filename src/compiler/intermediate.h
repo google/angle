@@ -18,6 +18,7 @@
 
 #include "GLSLANG/ShaderLang.h"
 
+#include <algorithm>
 #include "compiler/Common.h"
 #include "compiler/Types.h"
 #include "compiler/ConstantUnion.h"
@@ -542,7 +543,8 @@ public:
             inVisit(inVisit),
             postVisit(postVisit),
             rightToLeft(rightToLeft),
-            depth(0) {}
+            depth(0),
+            maxDepth(0) {}
     virtual ~TIntermTraverser() {};
 
     virtual void visitSymbol(TIntermSymbol*) {}
@@ -554,7 +556,8 @@ public:
     virtual bool visitLoop(Visit visit, TIntermLoop*) {return true;}
     virtual bool visitBranch(Visit visit, TIntermBranch*) {return true;}
 
-    void incrementDepth() {depth++;}
+    int getMaxDepth() const {return maxDepth;}
+    void incrementDepth() {depth++; maxDepth = std::max(maxDepth, depth); }
     void decrementDepth() {depth--;}
 
     // Return the original name if hash function pointer is NULL;
@@ -568,6 +571,7 @@ public:
 
 protected:
     int depth;
+    int maxDepth;
 };
 
 #endif // __INTERMEDIATE_H
