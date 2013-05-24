@@ -88,25 +88,25 @@ O           [0-7]
 <COMMENT>\n ;
 <COMMENT>"*/"  { yy_pop_state(yyscanner); }
 
-"invariant"    { return(INVARIANT); }
-"highp"        { return(HIGH_PRECISION); }
-"mediump"      { return(MEDIUM_PRECISION); }
-"lowp"         { return(LOW_PRECISION); }
-"precision"    { return(PRECISION); }
+"invariant"    { return INVARIANT; }
+"highp"        { return HIGH_PRECISION; }
+"mediump"      { return MEDIUM_PRECISION; }
+"lowp"         { return LOW_PRECISION; }
+"precision"    { return PRECISION; }
 
 "attribute"    { return ES2_keyword_ES3_reserved(context, ATTRIBUTE); }
-"const"        { return(CONST_QUAL); }
-"uniform"      { return(UNIFORM); }
+"const"        { return CONST_QUAL; }
+"uniform"      { return UNIFORM; }
 "varying"      { return ES2_keyword_ES3_reserved(context, VARYING); }
 
-"break"        { return(BREAK); }
-"continue"     { return(CONTINUE); }
-"do"           { return(DO); }
-"for"          { return(FOR); }
-"while"        { return(WHILE); }
+"break"        { return BREAK; }
+"continue"     { return CONTINUE; }
+"do"           { return DO; }
+"for"          { return FOR; }
+"while"        { return WHILE; }
 
-"if"           { return(IF); }
-"else"         { return(ELSE); }
+"if"           { return IF; }
+"else"         { return ELSE; }
 "switch"       { return ES2_reserved_ES3_keyword(context, SWITCH); }
 "case"         { return ES2_reserved_ES3_keyword(context, CASE); }
 "default"      { return ES2_reserved_ES3_keyword(context, DEFAULT); }
@@ -115,24 +115,24 @@ O           [0-7]
 "flat"         { return ES2_reserved_ES3_keyword(context, FLAT); }
 "smooth"       { return ES2_reserved_ES3_keyword(context, SMOOTH); }
 
-"in"           { return(IN_QUAL); }
-"out"          { return(OUT_QUAL); }
-"inout"        { return(INOUT_QUAL); }
+"in"           { return IN_QUAL; }
+"out"          { return OUT_QUAL; }
+"inout"        { return INOUT_QUAL; }
 
-"float"        { context->lexAfterType = true; return(FLOAT_TYPE); }
-"int"          { context->lexAfterType = true; return(INT_TYPE); }
+"float"        { context->lexAfterType = true; return FLOAT_TYPE; }
+"int"          { context->lexAfterType = true; return INT_TYPE; }
 "uint"         { return ES2_ident_ES3_keyword(context, UINT_TYPE); }
-"void"         { context->lexAfterType = true; return(VOID_TYPE); }
-"bool"         { context->lexAfterType = true; return(BOOL_TYPE); }
-"true"         { yylval->lex.b = true;  return(BOOLCONSTANT); }
-"false"        { yylval->lex.b = false; return(BOOLCONSTANT); }
+"void"         { context->lexAfterType = true; return VOID_TYPE; }
+"bool"         { context->lexAfterType = true; return BOOL_TYPE; }
+"true"         { yylval->lex.b = true;  return BOOLCONSTANT; }
+"false"        { yylval->lex.b = false; return BOOLCONSTANT; }
 
-"discard"      { return(DISCARD); }
-"return"       { return(RETURN); }
+"discard"      { return DISCARD; }
+"return"       { return RETURN; }
 
-"mat2"         { context->lexAfterType = true; return(MATRIX2); }
-"mat3"         { context->lexAfterType = true; return(MATRIX3); }
-"mat4"         { context->lexAfterType = true; return(MATRIX4); }
+"mat2"         { context->lexAfterType = true; return MATRIX2; }
+"mat3"         { context->lexAfterType = true; return MATRIX3; }
+"mat4"         { context->lexAfterType = true; return MATRIX4; }
 
 "mat2x2"         { return ES2_ident_ES3_keyword(context, MATRIX2); }
 "mat3x3"         { return ES2_ident_ES3_keyword(context, MATRIX3); }
@@ -145,18 +145,18 @@ O           [0-7]
 "mat3x4"         { return ES2_ident_ES3_keyword(context, MATRIX3x4); }
 "mat4x3"         { return ES2_ident_ES3_keyword(context, MATRIX4x3); }
 
-"vec2"         { context->lexAfterType = true; return (VEC2); }
-"vec3"         { context->lexAfterType = true; return (VEC3); }
-"vec4"         { context->lexAfterType = true; return (VEC4); }
-"ivec2"        { context->lexAfterType = true; return (IVEC2); }
-"ivec3"        { context->lexAfterType = true; return (IVEC3); }
-"ivec4"        { context->lexAfterType = true; return (IVEC4); }
+"vec2"         { context->lexAfterType = true; return VEC2; }
+"vec3"         { context->lexAfterType = true; return VEC3; }
+"vec4"         { context->lexAfterType = true; return VEC4; }
+"ivec2"        { context->lexAfterType = true; return IVEC2; }
+"ivec3"        { context->lexAfterType = true; return IVEC3; }
+"ivec4"        { context->lexAfterType = true; return IVEC4; }
+"bvec2"        { context->lexAfterType = true; return BVEC2; }
+"bvec3"        { context->lexAfterType = true; return BVEC3; }
+"bvec4"        { context->lexAfterType = true; return BVEC4; }
 "uvec2"        { return ES2_ident_ES3_keyword(context, UVEC2); }
 "uvec3"        { return ES2_ident_ES3_keyword(context, UVEC3); }
 "uvec4"        { return ES2_ident_ES3_keyword(context, UVEC4); }
-"bvec2"        { context->lexAfterType = true; return (BVEC2); }
-"bvec3"        { context->lexAfterType = true; return (BVEC3); }
-"bvec4"        { context->lexAfterType = true; return (BVEC4); }
 
 "sampler2D"          { context->lexAfterType = true; return SAMPLER2D; }
 "samplerCube"        { context->lexAfterType = true; return SAMPLERCUBE; }
@@ -166,7 +166,7 @@ O           [0-7]
 "sampler2DShadow"    { return ES2_reserved_ES3_keyword(context, SAMPLER2DSHADOW); }
 "sampler2DRect"      { context->lexAfterType = true; return SAMPLER2DRECT; }
 
-"struct"       { context->lexAfterType = true; return(STRUCT); }
+"struct"       { context->lexAfterType = true; return STRUCT; }
 
 "layout"  { return ES2_ident_ES3_keyword(context, LAYOUT); }
 
@@ -304,67 +304,69 @@ O           [0-7]
    return check_type(yyscanner);
 }
 
-0[xX]{H}+         { yylval->lex.i = static_cast<int>(strtol(yytext, 0, 0)); return(INTCONSTANT); }
-0{O}+             { yylval->lex.i = static_cast<int>(strtol(yytext, 0, 0)); return(INTCONSTANT); }
+0[xX]{H}+         { yylval->lex.i = static_cast<int>(strtol(yytext, 0, 0)); return INTCONSTANT; }
+0{O}+             { yylval->lex.i = static_cast<int>(strtol(yytext, 0, 0)); return INTCONSTANT; }
 0{D}+             { context->error(yylineno, "Invalid Octal number.", yytext); context->recover(); return 0;}
-{D}+              { yylval->lex.i = static_cast<int>(strtol(yytext, 0, 0)); return(INTCONSTANT); }
+{D}+              { yylval->lex.i = static_cast<int>(strtol(yytext, 0, 0)); return INTCONSTANT; }
+
 0[xX]{H}+[uU]     { return uint_constant(context); }
 0{O}+[uU]         { return uint_constant(context); }
 {D}+[uU]          { return uint_constant(context); }
 
-{D}+{E}           { yylval->lex.f = static_cast<float>(atof_dot(yytext)); return(FLOATCONSTANT); }
-{D}+"."{D}*({E})? { yylval->lex.f = static_cast<float>(atof_dot(yytext)); return(FLOATCONSTANT); }
-"."{D}+({E})?     { yylval->lex.f = static_cast<float>(atof_dot(yytext)); return(FLOATCONSTANT); }
+{D}+{E}           { yylval->lex.f = static_cast<float>(atof_dot(yytext)); return FLOATCONSTANT; }
+{D}+"."{D}*({E})? { yylval->lex.f = static_cast<float>(atof_dot(yytext)); return FLOATCONSTANT; }
+"."{D}+({E})?     { yylval->lex.f = static_cast<float>(atof_dot(yytext)); return FLOATCONSTANT; }
+
 {D}+{E}[fF]           { return floatsuffix_check(context); }
 {D}+"."{D}*({E})?[fF] { return floatsuffix_check(context); }
 "."{D}+({E})?[fF]     { return floatsuffix_check(context); }
 
-"+="            {  return(ADD_ASSIGN); }
-"-="            {  return(SUB_ASSIGN); }
-"*="            {  return(MUL_ASSIGN); }
-"/="            {  return(DIV_ASSIGN); }
-"%="            {  return(MOD_ASSIGN); }
-"<<="           {  return(LEFT_ASSIGN); }
-">>="           {  return(RIGHT_ASSIGN); }
-"&="            {  return(AND_ASSIGN); }
-"^="            {  return(XOR_ASSIGN); }
-"|="            {  return(OR_ASSIGN); }
+"+="            { return ADD_ASSIGN; }
+"-="            { return SUB_ASSIGN; }
+"*="            { return MUL_ASSIGN; }
+"/="            { return DIV_ASSIGN; }
+"%="            { return MOD_ASSIGN; }
+"<<="           { return LEFT_ASSIGN; }
+">>="           { return RIGHT_ASSIGN; }
+"&="            { return AND_ASSIGN; }
+"^="            { return XOR_ASSIGN; }
+"|="            { return OR_ASSIGN; }
 
-"++"            {  return(INC_OP); }
-"--"            {  return(DEC_OP); }
-"&&"            {  return(AND_OP); }
-"||"            {  return(OR_OP); }
-"^^"            {  return(XOR_OP); }
-"<="            {  return(LE_OP); }
-">="            {  return(GE_OP); }
-"=="            {  return(EQ_OP); }
-"!="            {  return(NE_OP); }
-"<<"            {  return(LEFT_OP); }
-">>"            {  return(RIGHT_OP); }
-";"             { context->lexAfterType = false; return(SEMICOLON); }
-("{"|"<%")      { context->lexAfterType = false; return(LEFT_BRACE); }
-("}"|"%>")      { return(RIGHT_BRACE); }
-","             { if (context->inTypeParen) context->lexAfterType = false; return(COMMA); }
-":"             { return(COLON); }
-"="             { context->lexAfterType = false; return(EQUAL); }
-"("             { context->lexAfterType = false; context->inTypeParen = true; return(LEFT_PAREN); }
-")"             { context->inTypeParen = false; return(RIGHT_PAREN); }
-("["|"<:")      { return(LEFT_BRACKET); }
-("]"|":>")      { return(RIGHT_BRACKET); }
-"."             { BEGIN(FIELDS);  return(DOT); }
-"!"             { return(BANG); }
-"-"             { return(DASH); }
-"~"             { return(TILDE); }
-"+"             { return(PLUS); }
-"*"             { return(STAR); }
-"/"             { return(SLASH); }
-"%"             { return(PERCENT); }
-"<"             { return(LEFT_ANGLE); }
-">"             { return(RIGHT_ANGLE); }
-"|"             { return(VERTICAL_BAR); }
-"^"             { return(CARET); }
-"&"             { return(AMPERSAND); }
-"?"             { return(QUESTION); }
+"++"            { return INC_OP; }
+"--"            { return DEC_OP; }
+"&&"            { return AND_OP; }
+"||"            { return OR_OP; }
+"^^"            { return XOR_OP; }
+"<="            { return LE_OP; }
+">="            { return GE_OP; }
+"=="            { return EQ_OP; }
+"!="            { return NE_OP; }
+"<<"            { return LEFT_OP; }
+">>"            { return RIGHT_OP; }
+";"             { context->lexAfterType = false; return SEMICOLON; }
+("{"|"<%")      { context->lexAfterType = false; return LEFT_BRACE; }
+("}"|"%>")      { return RIGHT_BRACE; }
+","             { if (context->inTypeParen) context->lexAfterType = false; return COMMA; }
+":"             { return COLON; }
+"="             { context->lexAfterType = false; return EQUAL; }
+"("             { context->lexAfterType = false; context->inTypeParen = true; return LEFT_PAREN; }
+")"             { context->inTypeParen = false; return RIGHT_PAREN; }
+("["|"<:")      { return LEFT_BRACKET; }
+("]"|":>")      { return RIGHT_BRACKET; }
+"."             { BEGIN(FIELDS);  return DOT; }
+"!"             { return BANG; }
+"-"             { return DASH; }
+"~"             { return TILDE; }
+"+"             { return PLUS; }
+"*"             { return STAR; }
+"/"             { return SLASH; }
+"%"             { return PERCENT; }
+"<"             { return LEFT_ANGLE; }
+">"             { return RIGHT_ANGLE; }
+"|"             { return VERTICAL_BAR; }
+"^"             { return CARET; }
+"&"             { return AMPERSAND; }
+"?"             { return QUESTION; }
 
 <FIELDS>{L}({L}|{D})* { 
     BEGIN(INITIAL);
