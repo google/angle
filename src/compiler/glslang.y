@@ -268,7 +268,7 @@ postfix_expression
     | function_call {
         $$ = $1;
     }
-    | postfix_expression DOT FIELD_SELECTION {
+    | postfix_expression DOT identifier {
         $$ = context->addFieldSelectionExpression($1, $2.line, *$3.string, $3.line);
     }
     | postfix_expression INC_OP {
@@ -462,13 +462,6 @@ function_identifier
         $$ = context->addConstructorFunc($1);
     }
     | IDENTIFIER {
-        if (context->reservedErrorCheck($1.line, *$1.string))
-            context->recover();
-        TType type(EbtVoid, EbpUndefined);
-        TFunction *function = new TFunction($1.string, type);
-        $$ = function;
-    }
-    | FIELD_SELECTION {
         if (context->reservedErrorCheck($1.line, *$1.string))
             context->recover();
         TType type(EbtVoid, EbpUndefined);
