@@ -21,7 +21,7 @@
 
 TType::TType(const TPublicType &p) :
             type(p.type), precision(p.precision), qualifier(p.qualifier), size(p.size), matrix(p.matrix), array(p.array), arraySize(p.arraySize),
-            maxArraySize(0), arrayInformationType(0), structure(0), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0), typeName(0)
+            structure(0), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0), typeName(0)
 {
     if (p.userDef) {
         structure = p.userDef->getStruct();
@@ -82,7 +82,7 @@ size_t TType::getObjectSize() const
         totalSize = size;
 
     if (isArray()) {
-        size_t arraySize = std::max(getArraySize(), getMaxArraySize());
+        size_t arraySize = getArraySize();
         if (arraySize > INT_MAX / totalSize)
             totalSize = INT_MAX;
         else

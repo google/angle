@@ -71,15 +71,13 @@ private:
 //
 class TVariable : public TSymbol {
 public:
-    TVariable(const TString *name, const TType& t, bool uT = false ) : TSymbol(name), type(t), userType(uT), unionArray(0), arrayInformationType(0) { }
+    TVariable(const TString *name, const TType& t, bool uT = false ) : TSymbol(name), type(t), userType(uT), unionArray(0) { }
     virtual ~TVariable() { }
     virtual bool isVariable() const { return true; }    
     TType& getType() { return type; }    
     const TType& getType() const { return type; }
     bool isUserType() const { return userType; }
     void setQualifier(TQualifier qualifier) { type.setQualifier(qualifier); }
-    void updateArrayInformationType(TType *t) { arrayInformationType = t; }
-    TType* getArrayInformationType() { return arrayInformationType; }
 
     virtual void dump(TInfoSink &infoSink) const;
 
@@ -110,7 +108,6 @@ private:
     // we are assuming that Pool Allocator will free the memory allocated to unionArray
     // when this object is destroyed
     ConstantUnion *unionArray;
-    TType *arrayInformationType;  // this is used for updating maxArraySize in all the references to a given symbol
 };
 
 //

@@ -32,13 +32,13 @@ public:
     TType() {}
     TType(TBasicType t, TPrecision p, TQualifier q = EvqTemporary, int s = 1, bool m = false, bool a = false) :
             type(t), precision(p), qualifier(q), size(s), matrix(m), array(a), arraySize(0),
-            maxArraySize(0), arrayInformationType(0), structure(0), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0), typeName(0)
+            structure(0), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0), typeName(0)
     {
     }
     explicit TType(const TPublicType &p);
     TType(TTypeList* userDef, const TString& n, TPrecision p = EbpUndefined) :
             type(EbtStruct), precision(p), qualifier(EvqTemporary), size(1), matrix(false), array(false), arraySize(0),
-            maxArraySize(0), arrayInformationType(0), structure(userDef), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0)
+            structure(userDef), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0)
     {
         typeName = NewPoolTString(n.c_str());
     }
@@ -64,11 +64,7 @@ public:
     bool isArray() const  { return array ? true : false; }
     int getArraySize() const { return arraySize; }
     void setArraySize(int s) { array = true; arraySize = s; }
-    int getMaxArraySize () const { return maxArraySize; }
-    void setMaxArraySize (int s) { maxArraySize = s; }
-    void clearArrayness() { array = false; arraySize = 0; maxArraySize = 0; }
-    void setArrayInformationType(TType* t) { arrayInformationType = t; }
-    TType* getArrayInformationType() const { return arrayInformationType; }
+    void clearArrayness() { array = false; arraySize = 0; }
 
     bool isVector() const { return size > 1 && !matrix; }
     bool isScalar() const { return size == 1 && !matrix && !structure; }
@@ -168,8 +164,6 @@ private:
     unsigned int matrix  : 1;
     unsigned int array   : 1;
     int arraySize;
-    int maxArraySize;
-    TType* arrayInformationType;
 
     TTypeList* structure;      // 0 unless this is a struct
     mutable size_t structureSize;

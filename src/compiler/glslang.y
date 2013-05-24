@@ -282,15 +282,7 @@ postfix_expression
                 }
             } else {
                 if ($1->isArray()) {
-                    if ($1->getType().getArraySize() == 0) {
-                        if ($1->getType().getMaxArraySize() <= index) {
-                            if (context->arraySetMaxSize($1->getAsSymbolNode(), $1->getTypePointer(), index, true, @2))
-                                context->recover();
-                        } else {
-                            if (context->arraySetMaxSize($1->getAsSymbolNode(), $1->getTypePointer(), 0, false, @2))
-                                context->recover();
-                        }
-                    } else if (index >= $1->getType().getArraySize()) {
+                    if (index >= $1->getType().getArraySize()) {
                         std::stringstream extraInfoStream;
                         extraInfoStream << "array index out of range '" << index << "'";
                         std::string extraInfo = extraInfoStream.str();
@@ -310,10 +302,6 @@ postfix_expression
                 $$ = context->intermediate.addIndex(EOpIndexDirect, $1, $3, @2);
             }
         } else {
-            if ($1->isArray() && $1->getType().getArraySize() == 0) {
-                context->error(@2, "", "[", "array must be redeclared with a size before being indexed with a variable");
-                context->recover();
-            }
             $$ = context->intermediate.addIndex(EOpIndexIndirect, $1, $3, @2);
         }
         if ($$ == 0) {
