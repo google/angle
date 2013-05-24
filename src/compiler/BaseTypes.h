@@ -90,10 +90,6 @@ enum TQualifier
     EvqInvariantVaryingOut,    // vertex shaders only  read/write
     EvqUniform,       // Readonly, vertex and fragment
 
-    // pack/unpack input and output
-    EvqInput,
-    EvqOutput,
-
     // parameters
     EvqIn,
     EvqOut,
@@ -137,8 +133,6 @@ inline const char* getQualifierString(TQualifier q)
     case EvqIn:             return "in";             break;
     case EvqOut:            return "out";            break;
     case EvqInOut:          return "inout";          break;
-    case EvqInput:          return "input";          break;
-    case EvqOutput:         return "output";         break;
     case EvqPosition:       return "Position";       break;
     case EvqPointSize:      return "PointSize";      break;
     case EvqFragCoord:      return "FragCoord";      break;
