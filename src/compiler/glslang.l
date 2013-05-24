@@ -63,7 +63,6 @@ static int floatsuffix_check(TParseContext* context);
 
 %option noyywrap nounput never-interactive
 %option yylineno reentrant bison-bridge
-%option stack
 %option extra-type="TParseContext*"
 %x FIELDS
 
