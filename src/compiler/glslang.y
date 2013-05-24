@@ -148,6 +148,7 @@ extern void yyerror(TParseContext* context, const char* reason);
 %token <lex> COMMA COLON EQUAL SEMICOLON BANG DASH TILDE PLUS STAR SLASH PERCENT
 %token <lex> LEFT_ANGLE RIGHT_ANGLE VERTICAL_BAR CARET AMPERSAND QUESTION
 
+%type <lex> identifier
 %type <interm> assignment_operator unary_operator
 %type <interm.intermTypedNode> variable_identifier primary_expression postfix_expression
 %type <interm.intermTypedNode> expression integer_expression assignment_expression
@@ -188,6 +189,10 @@ extern void yyerror(TParseContext* context, const char* reason);
 
 %start translation_unit
 %%
+
+identifier
+    : IDENTIFIER
+    | TYPE_NAME
 
 variable_identifier
     : IDENTIFIER {
@@ -918,7 +923,7 @@ function_header
 
 parameter_declarator
     // Type + name
-    : type_specifier IDENTIFIER {
+    : type_specifier identifier {
         if ($1.type == EbtVoid) {
             context->error($2.line, "illegal use of type 'void'", $2.string->c_str());
             context->recover();
@@ -929,7 +934,7 @@ parameter_declarator
         $$.line = $2.line;
         $$.param = param;
     }
-    | type_specifier IDENTIFIER LEFT_BRACKET constant_expression RIGHT_BRACKET {
+    | type_specifier identifier LEFT_BRACKET constant_expression RIGHT_BRACKET {
         // Check that we can make an array out of this type
         if (context->arrayTypeErrorCheck($3.line, $1))
             context->recover();
@@ -1013,7 +1018,7 @@ init_declarator_list
     : single_declaration {
         $$ = $1;
     }
-    | init_declarator_list COMMA IDENTIFIER {
+    | init_declarator_list COMMA identifier {
         if ($1.type.type == EbtInvariant && !$3.symbol)
         {
             context->error($3.line, "undeclared identifier declared as invariant", $3.string->c_str());
@@ -1035,7 +1040,7 @@ init_declarator_list
         if (symbol && variable)
             symbol->setId(variable->getUniqueId());
     }
-    | init_declarator_list COMMA IDENTIFIER LEFT_BRACKET RIGHT_BRACKET {
+    | init_declarator_list COMMA identifier LEFT_BRACKET RIGHT_BRACKET {
         if (context->structQualifierErrorCheck($3.line, $1.type))
             context->recover();
 
@@ -1053,7 +1058,7 @@ init_declarator_list
                 context->recover();
         }
     }
-    | init_declarator_list COMMA IDENTIFIER LEFT_BRACKET constant_expression RIGHT_BRACKET {
+    | init_declarator_list COMMA identifier LEFT_BRACKET constant_expression RIGHT_BRACKET {
         if (context->structQualifierErrorCheck($3.line, $1.type))
             context->recover();
 
@@ -1077,7 +1082,7 @@ init_declarator_list
             $$.intermAggregate = context->intermediate.growAggregate($1.intermNode, context->intermediate.addSymbol(variable ? variable->getUniqueId() : 0, *$3.string, type, $3.line), $3.line);
         }
     }
-    | init_declarator_list COMMA IDENTIFIER EQUAL initializer {
+    | init_declarator_list COMMA identifier EQUAL initializer {
         if (context->structQualifierErrorCheck($3.line, $1.type))
             context->recover();
 
@@ -1104,7 +1109,7 @@ single_declaration
         $$.type = $1;
         $$.intermAggregate = context->intermediate.makeAggregate(context->intermediate.addSymbol(0, "", TType($1), $1.line), $1.line);
     }
-    | fully_specified_type IDENTIFIER {
+    | fully_specified_type identifier {
         TIntermSymbol* symbol = context->intermediate.addSymbol(0, *$2.string, TType($1), $2.line);
         $$.intermAggregate = context->intermediate.makeAggregate(symbol, $2.line);
         
@@ -1122,7 +1127,7 @@ single_declaration
         if (variable && symbol)
             symbol->setId(variable->getUniqueId());
     }
-    | fully_specified_type IDENTIFIER LEFT_BRACKET RIGHT_BRACKET {
+    | fully_specified_type identifier LEFT_BRACKET RIGHT_BRACKET {
         context->error($2.line, "unsized array declarations not supported", $2.string->c_str());
         context->recover();
 
@@ -1130,7 +1135,7 @@ single_declaration
         $$.intermAggregate = context->intermediate.makeAggregate(symbol, $2.line);
         $$.type = $1;
     }
-    | fully_specified_type IDENTIFIER LEFT_BRACKET constant_expression RIGHT_BRACKET {
+    | fully_specified_type identifier LEFT_BRACKET constant_expression RIGHT_BRACKET {
         TType type = TType($1);
         int size;
         if (context->arraySizeErrorCheck($2.line, $4, size))
@@ -1162,7 +1167,7 @@ single_declaration
                 symbol->setId(variable->getUniqueId());
         }
     }
-    | fully_specified_type IDENTIFIER EQUAL initializer {
+    | fully_specified_type identifier EQUAL initializer {
         if (context->structQualifierErrorCheck($2.line, $1))
             context->recover();
 
@@ -1667,7 +1672,7 @@ type_specifier_nonarray
     ;
 
 struct_specifier
-    : STRUCT IDENTIFIER LEFT_BRACE { if (context->enterStructDeclaration($2.line, *$2.string)) context->recover(); } struct_declaration_list RIGHT_BRACE {
+    : STRUCT identifier LEFT_BRACE { if (context->enterStructDeclaration($2.line, *$2.string)) context->recover(); } struct_declaration_list RIGHT_BRACE {
         $$ = context->addStructure($1.line, $2.line, *$2.string, $5);
     }
     | STRUCT LEFT_BRACE { if (context->enterStructDeclaration($2.line, *$2.string)) context->recover(); } struct_declaration_list RIGHT_BRACE {
@@ -1715,7 +1720,7 @@ struct_declarator_list
     ;
 
 struct_declarator
-    : IDENTIFIER {
+    : identifier {
         if (context->reservedErrorCheck($1.line, *$1.string))
             context->recover();
 
@@ -1723,7 +1728,7 @@ struct_declarator
         $$.line = $1.line;
         $$.type->setFieldName(*$1.string);
     }
-    | IDENTIFIER LEFT_BRACKET constant_expression RIGHT_BRACKET {
+    | identifier LEFT_BRACKET constant_expression RIGHT_BRACKET {
         if (context->reservedErrorCheck($1.line, *$1.string))
             context->recover();
 
@@ -1838,7 +1843,7 @@ condition
         if (context->boolErrorCheck($1->getLine(), $1))
             context->recover();
     }
-    | fully_specified_type IDENTIFIER EQUAL initializer {
+    | fully_specified_type identifier EQUAL initializer {
         TIntermNode* intermNode;
         if (context->structQualifierErrorCheck($2.line, $1))
             context->recover();

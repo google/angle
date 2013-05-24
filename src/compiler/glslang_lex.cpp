@@ -1427,11 +1427,11 @@ YY_RULE_SETUP
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-{ context->lexAfterType = true; return FLOAT_TYPE; }
+{ return FLOAT_TYPE; }
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-{ context->lexAfterType = true; return INT_TYPE; }
+{ return INT_TYPE; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
@@ -1439,11 +1439,11 @@ YY_RULE_SETUP
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-{ context->lexAfterType = true; return VOID_TYPE; }
+{ return VOID_TYPE; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-{ context->lexAfterType = true; return BOOL_TYPE; }
+{ return BOOL_TYPE; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
@@ -1463,15 +1463,15 @@ YY_RULE_SETUP
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-{ context->lexAfterType = true; return MATRIX2; }
+{ return MATRIX2; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-{ context->lexAfterType = true; return MATRIX3; }
+{ return MATRIX3; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-{ context->lexAfterType = true; return MATRIX4; }
+{ return MATRIX4; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
@@ -1511,39 +1511,39 @@ YY_RULE_SETUP
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-{ context->lexAfterType = true; return VEC2; }
+{ return VEC2; }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-{ context->lexAfterType = true; return VEC3; }
+{ return VEC3; }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-{ context->lexAfterType = true; return VEC4; }
+{ return VEC4; }
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-{ context->lexAfterType = true; return IVEC2; }
+{ return IVEC2; }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-{ context->lexAfterType = true; return IVEC3; }
+{ return IVEC3; }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-{ context->lexAfterType = true; return IVEC4; }
+{ return IVEC4; }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-{ context->lexAfterType = true; return BVEC2; }
+{ return BVEC2; }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-{ context->lexAfterType = true; return BVEC3; }
+{ return BVEC3; }
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-{ context->lexAfterType = true; return BVEC4; }
+{ return BVEC4; }
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
@@ -1559,15 +1559,15 @@ YY_RULE_SETUP
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-{ context->lexAfterType = true; return SAMPLER2D; }
+{ return SAMPLER2D; }
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-{ context->lexAfterType = true; return SAMPLERCUBE; }
+{ return SAMPLERCUBE; }
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-{ context->lexAfterType = true; return SAMPLER_EXTERNAL_OES; }
+{ return SAMPLER_EXTERNAL_OES; }
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
@@ -1583,11 +1583,11 @@ YY_RULE_SETUP
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-{ context->lexAfterType = true; return SAMPLER2DRECT; }
+{ return SAMPLER2DRECT; }
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-{ context->lexAfterType = true; return STRUCT; }
+{ return STRUCT; }
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
@@ -1858,11 +1858,11 @@ YY_RULE_SETUP
 	YY_BREAK
 case 200:
 YY_RULE_SETUP
-{ context->lexAfterType = false; return SEMICOLON; }
+{ return SEMICOLON; }
 	YY_BREAK
 case 201:
 YY_RULE_SETUP
-{ context->lexAfterType = false; return LEFT_BRACE; }
+{ return LEFT_BRACE; }
 	YY_BREAK
 case 202:
 YY_RULE_SETUP
@@ -1870,7 +1870,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 203:
 YY_RULE_SETUP
-{ if (context->inTypeParen) context->lexAfterType = false; return COMMA; }
+{ return COMMA; }
 	YY_BREAK
 case 204:
 YY_RULE_SETUP
@@ -1878,15 +1878,15 @@ YY_RULE_SETUP
 	YY_BREAK
 case 205:
 YY_RULE_SETUP
-{ context->lexAfterType = false; return EQUAL; }
+{ return EQUAL; }
 	YY_BREAK
 case 206:
 YY_RULE_SETUP
-{ context->lexAfterType = false; context->inTypeParen = true; return LEFT_PAREN; }
+{ return LEFT_PAREN; }
 	YY_BREAK
 case 207:
 YY_RULE_SETUP
-{ context->inTypeParen = false; return RIGHT_PAREN; }
+{ return RIGHT_PAREN; }
 	YY_BREAK
 case 208:
 YY_RULE_SETUP
@@ -3170,10 +3170,9 @@ int check_type(yyscan_t yyscanner) {
     
     int token = IDENTIFIER;
     TSymbol* symbol = yyextra->symbolTable.find(yytext, yyextra->shaderVersion);
-    if (yyextra->lexAfterType == false && symbol && symbol->isVariable()) {
+    if (symbol && symbol->isVariable()) {
         TVariable* variable = static_cast<TVariable*>(symbol);
         if (variable->isUserType()) {
-            yyextra->lexAfterType = true;
             token = TYPE_NAME;
         }
     }
