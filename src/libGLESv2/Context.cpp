@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -2436,46 +2436,45 @@ void Context::applyTextures(SamplerType type)
             TextureType textureType = programBinary->getSamplerTextureType(type, samplerIndex);
 
             Texture *texture = getSamplerTexture(textureUnit, textureType);
+            
+            if (!texture->isSamplerComplete())
+            {
+                texture = getIncompleteTexture(textureType);
+            }
+
             unsigned int texSerial = texture->getTextureSerial();
 
             if (appliedTextureSerial[samplerIndex] != texSerial || texture->hasDirtyParameters() || texture->hasDirtyImages())
             {
                 IDirect3DBaseTexture9 *d3dTexture = texture->getTexture();
 
-                if (d3dTexture)
+                if (appliedTextureSerial[samplerIndex] != texSerial || texture->hasDirtyParameters())
                 {
-                    if (appliedTextureSerial[samplerIndex] != texSerial || texture->hasDirtyParameters())
+                    GLenum wrapS = texture->getWrapS();
+                    GLenum wrapT = texture->getWrapT();
+                    GLenum minFilter = texture->getMinFilter();
+                    GLenum magFilter = texture->getMagFilter();
+                    float maxAnisotropy = texture->getMaxAnisotropy();
+
+                    mDevice->SetSamplerState(d3dSampler, D3DSAMP_ADDRESSU, es2dx::ConvertTextureWrap(wrapS));
+                    mDevice->SetSamplerState(d3dSampler, D3DSAMP_ADDRESSV, es2dx::ConvertTextureWrap(wrapT));
+
+                    mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAGFILTER, es2dx::ConvertMagFilter(magFilter, maxAnisotropy));
+                    D3DTEXTUREFILTERTYPE d3dMinFilter, d3dMipFilter;
+                    es2dx::ConvertMinFilter(minFilter, &d3dMinFilter, &d3dMipFilter, maxAnisotropy);
+                    mDevice->SetSamplerState(d3dSampler, D3DSAMP_MINFILTER, d3dMinFilter);
+                    mDevice->SetSamplerState(d3dSampler, D3DSAMP_MIPFILTER, d3dMipFilter);
+                    mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAXMIPLEVEL, texture->getLodOffset());
+
+                    if (supportsTextureFilterAnisotropy())
                     {
-                        GLenum wrapS = texture->getWrapS();
-                        GLenum wrapT = texture->getWrapT();
-                        GLenum minFilter = texture->getMinFilter();
-                        GLenum magFilter = texture->getMagFilter();
-                        float maxAnisotropy = texture->getMaxAnisotropy();
-
-                        mDevice->SetSamplerState(d3dSampler, D3DSAMP_ADDRESSU, es2dx::ConvertTextureWrap(wrapS));
-                        mDevice->SetSamplerState(d3dSampler, D3DSAMP_ADDRESSV, es2dx::ConvertTextureWrap(wrapT));
-
-                        mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAGFILTER, es2dx::ConvertMagFilter(magFilter, maxAnisotropy));
-                        D3DTEXTUREFILTERTYPE d3dMinFilter, d3dMipFilter;
-                        es2dx::ConvertMinFilter(minFilter, &d3dMinFilter, &d3dMipFilter, maxAnisotropy);
-                        mDevice->SetSamplerState(d3dSampler, D3DSAMP_MINFILTER, d3dMinFilter);
-                        mDevice->SetSamplerState(d3dSampler, D3DSAMP_MIPFILTER, d3dMipFilter);
-                        mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAXMIPLEVEL, texture->getLodOffset());
-
-                        if (supportsTextureFilterAnisotropy())
-                        {
-                            mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAXANISOTROPY, (DWORD)maxAnisotropy);
-                        }
-                    }
-
-                    if (appliedTextureSerial[samplerIndex] != texSerial || texture->hasDirtyImages())
-                    {
-                        mDevice->SetTexture(d3dSampler, d3dTexture);
+                        mDevice->SetSamplerState(d3dSampler, D3DSAMP_MAXANISOTROPY, (DWORD)maxAnisotropy);
                     }
                 }
-                else
+
+                if (appliedTextureSerial[samplerIndex] != texSerial || texture->hasDirtyImages())
                 {
-                    mDevice->SetTexture(d3dSampler, getIncompleteTexture(textureType)->getTexture());
+                    mDevice->SetTexture(d3dSampler, d3dTexture);
                 }
 
                 appliedTextureSerial[samplerIndex] = texSerial;
