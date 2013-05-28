@@ -223,10 +223,8 @@ void TSymbolTableLevel::relateToOperator(const char* name, TOperator op)
 void TSymbolTableLevel::relateToExtension(const char* name, const TString& ext)
 {
     for (tLevel::iterator it = level.begin(); it != level.end(); ++it) {
-        if (it->second->isFunction()) {
-            TFunction* function = static_cast<TFunction*>(it->second);
-            if (function->getName() == name)
-                function->relateToExtension(ext);
-        }
+        TSymbol* symbol = it->second;
+        if (symbol->getName() == name)
+            symbol->relateToExtension(ext);
     }
 }

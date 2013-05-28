@@ -925,6 +925,27 @@ const TFunction* TParseContext::findFunction(const TSourceLoc& line, TFunction* 
     return static_cast<const TFunction*>(symbol);
 }
 
+bool TParseContext::isVariableBuiltIn(const TVariable* var)
+{
+    bool builtIn = false;
+    // First find by unmangled name to check whether the function name has been
+    // hidden by a variable name or struct typename.
+    const TSymbol* symbol = symbolTable.find(var->getName(), &builtIn);
+    if (symbol == 0) {
+        symbol = symbolTable.find(var->getMangledName(), &builtIn);
+    }
+
+    if (symbol == 0) {
+        return false;
+    }
+
+    if (!symbol->isVariable()) {
+        return false;
+    }
+
+    return builtIn;
+}
+
 //
 // Initializers show up in several places in the grammar.  Have one set of
 // code to handle them here.

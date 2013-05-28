@@ -90,6 +90,7 @@ class Shader
     bool mUsesFrontFacing;
     bool mUsesPointSize;
     bool mUsesPointCoord;
+    bool mUsesFragDepth;
 
     static void *mFragmentCompiler;
     static void *mVertexCompiler;

@@ -3964,6 +3964,7 @@ void Context::initExtensionString()
 
     extensionString += "GL_EXT_texture_format_BGRA8888 ";
     extensionString += "GL_EXT_texture_storage ";
+    extensionString += "GL_EXT_frag_depth ";
 
     // ANGLE-specific extensions
     if (supportsDepthTextures())

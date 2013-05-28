@@ -108,6 +108,7 @@ enum TQualifier
     // built-ins written by fragment shader
     EvqFragColor,
     EvqFragData,
+    EvqFragDepth,
 
     // end of list
     EvqLast
@@ -139,6 +140,7 @@ inline const char* getQualifierString(TQualifier q)
     case EvqFrontFacing:    return "FrontFacing";    break;
     case EvqFragColor:      return "FragColor";      break;
     case EvqFragData:       return "FragData";      break;
+    case EvqFragDepth:      return "FragDepth";     break;
     default:                return "unknown qualifier";
     }
 }

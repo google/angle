@@ -1549,8 +1549,14 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
                   "\n"
                   "struct PS_OUTPUT\n"
                   "{\n"
-                  "    float4 gl_Color[1] : COLOR;\n"
-                  "};\n"
+                  "    float4 gl_Color[1] : COLOR;\n";
+
+    if (fragmentShader->mUsesFragDepth)
+    {
+        pixelHLSL += "    float gl_Depth : DEPTH;\n";
+    }
+
+    pixelHLSL +=  "};\n"
                   "\n"
                   "PS_OUTPUT main(PS_INPUT input)\n"
                   "{\n";
@@ -1625,9 +1631,15 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, std::string& pixelHLSL, std::
     pixelHLSL += "\n"
                   "    gl_main();\n"
                   "\n"
-                  "    PS_OUTPUT output;\n"                 
-                  "    output.gl_Color[0] = gl_Color[0];\n"
-                  "\n"
+                  "    PS_OUTPUT output;\n"
+                  "    output.gl_Color[0] = gl_Color[0];\n";
+
+    if (fragmentShader->mUsesFragDepth)
+    {
+        pixelHLSL += "    output.gl_Depth = gl_Depth;\n";
+    }
+
+    pixelHLSL += "\n"
                   "    return output;\n"
                   "}\n";
 

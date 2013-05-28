@@ -215,6 +215,7 @@ typedef struct
     int OES_EGL_image_external;
     int ARB_texture_rectangle;
     int EXT_draw_buffers;
+    int EXT_frag_depth;
 
     // Set to 1 if highp precision is supported in the fragment language.
     // Default is 0.
