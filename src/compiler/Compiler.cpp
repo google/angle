@@ -298,6 +298,7 @@ bool TCompiler::detectCallDepth(TIntermNode* root, TInfoSink& infoSink, bool lim
             return false;
         default:
             UNREACHABLE();
+            return false;
     }
 }
 
