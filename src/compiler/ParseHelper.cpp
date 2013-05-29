@@ -778,66 +778,12 @@ bool TParseContext::arrayErrorCheck(const TSourceLoc& line, TString& identifier,
             return true;
         }
 
-        TType* t = variable->getArrayInformationType();
-        while (t != 0) {
-            if (t->getMaxArraySize() > type.arraySize) {
-                error(line, "higher index value already used for the array", identifier.c_str());
-                return true;
-            }
-            t->setArraySize(type.arraySize);
-            t = t->getArrayInformationType();
-        }
-
         if (type.arraySize)
             variable->getType().setArraySize(type.arraySize);
     } 
 
     if (voidErrorCheck(line, identifier, type))
         return true;
-
-    return false;
-}
-
-bool TParseContext::arraySetMaxSize(TIntermSymbol *node, TType* type, int size, bool updateFlag, const TSourceLoc& line)
-{
-    bool builtIn = false;
-    TSymbol* symbol = symbolTable.find(node->getSymbol(), &builtIn);
-    if (symbol == 0) {
-        error(line, " undeclared identifier", node->getSymbol().c_str());
-        return true;
-    }
-    TVariable* variable = static_cast<TVariable*>(symbol);
-
-    type->setArrayInformationType(variable->getArrayInformationType());
-    variable->updateArrayInformationType(type);
-
-    // special casing to test index value of gl_FragData. If the accessed index is >= gl_MaxDrawBuffers
-    // its an error
-    if (node->getSymbol() == "gl_FragData") {
-        TSymbol* fragData = symbolTable.find("gl_MaxDrawBuffers", &builtIn);
-        ASSERT(fragData);
-
-        int fragDataValue = static_cast<TVariable*>(fragData)->getConstPointer()[0].getIConst();
-        if (fragDataValue <= size) {
-            error(line, "", "[", "gl_FragData can only have a max array size of up to gl_MaxDrawBuffers");
-            return true;
-        }
-    }
-
-    // we dont want to update the maxArraySize when this flag is not set, we just want to include this 
-    // node type in the chain of node types so that its updated when a higher maxArraySize comes in.
-    if (!updateFlag)
-        return false;
-
-    size++;
-    variable->getType().setMaxArraySize(size);
-    type->setMaxArraySize(size);
-    TType* tt = type;
-
-    while(tt->getArrayInformationType() != 0) {
-        tt = tt->getArrayInformationType();
-        tt->setMaxArraySize(size);
-    }
 
     return false;
 }

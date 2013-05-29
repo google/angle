@@ -107,7 +107,6 @@ struct TParseContext {
     const TFunction* findFunction(const TSourceLoc& line, TFunction* pfnCall, bool *builtIn = 0);
     bool executeInitializer(const TSourceLoc& line, TString& identifier, TPublicType& pType,
                             TIntermTyped* initializer, TIntermNode*& intermNode, TVariable* variable = 0);
-    bool arraySetMaxSize(TIntermSymbol*, TType*, int, bool, const TSourceLoc&);
 
     TIntermTyped* addConstructor(TIntermNode*, const TType*, TOperator, TFunction*, const TSourceLoc&);
     TIntermTyped* foldConstConstructor(TIntermAggregate* aggrNode, const TType& type);

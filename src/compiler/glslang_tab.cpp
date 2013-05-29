@@ -714,26 +714,26 @@ static const yytype_int16 yyrhs[] =
 static const yytype_uint16 yyrline[] =
 {
        0,   179,   179,   180,   183,   219,   222,   235,   240,   245,
-     251,   254,   341,   344,   445,   455,   468,   476,   576,   579,
-     587,   590,   596,   600,   607,   613,   622,   630,   685,   695,
-     698,   708,   718,   739,   740,   741,   746,   747,   755,   766,
-     767,   775,   786,   790,   791,   801,   811,   821,   834,   835,
-     845,   858,   862,   866,   870,   871,   884,   885,   898,   899,
-     912,   913,   930,   931,   944,   945,   946,   947,   948,   952,
-     955,   966,   974,  1001,  1006,  1020,  1057,  1060,  1067,  1075,
-    1096,  1117,  1127,  1155,  1160,  1170,  1175,  1185,  1188,  1191,
-    1194,  1200,  1207,  1210,  1232,  1250,  1274,  1297,  1301,  1319,
-    1327,  1359,  1379,  1400,  1409,  1432,  1435,  1441,  1449,  1457,
-    1465,  1475,  1482,  1485,  1488,  1494,  1497,  1512,  1516,  1520,
-    1524,  1528,  1533,  1538,  1543,  1548,  1553,  1558,  1563,  1568,
-    1573,  1578,  1583,  1588,  1592,  1596,  1604,  1612,  1616,  1629,
-    1629,  1643,  1643,  1652,  1655,  1671,  1707,  1711,  1717,  1724,
-    1739,  1743,  1747,  1748,  1754,  1755,  1756,  1757,  1758,  1762,
-    1763,  1763,  1763,  1773,  1774,  1778,  1778,  1779,  1779,  1784,
-    1787,  1797,  1800,  1806,  1807,  1811,  1819,  1823,  1833,  1838,
-    1855,  1855,  1860,  1860,  1867,  1867,  1875,  1878,  1884,  1887,
-    1893,  1897,  1904,  1911,  1918,  1925,  1936,  1945,  1949,  1956,
-    1959,  1965,  1965
+     251,   254,   329,   332,   433,   443,   456,   464,   564,   567,
+     575,   578,   584,   588,   595,   601,   610,   618,   673,   683,
+     686,   696,   706,   727,   728,   729,   734,   735,   743,   754,
+     755,   763,   774,   778,   779,   789,   799,   809,   822,   823,
+     833,   846,   850,   854,   858,   859,   872,   873,   886,   887,
+     900,   901,   918,   919,   932,   933,   934,   935,   936,   940,
+     943,   954,   962,   989,   994,  1008,  1045,  1048,  1055,  1063,
+    1084,  1105,  1115,  1143,  1148,  1158,  1163,  1173,  1176,  1179,
+    1182,  1188,  1195,  1198,  1220,  1238,  1262,  1285,  1289,  1307,
+    1315,  1347,  1367,  1388,  1397,  1420,  1423,  1429,  1437,  1445,
+    1453,  1463,  1470,  1473,  1476,  1482,  1485,  1500,  1504,  1508,
+    1512,  1516,  1521,  1526,  1531,  1536,  1541,  1546,  1551,  1556,
+    1561,  1566,  1571,  1576,  1580,  1584,  1592,  1600,  1604,  1617,
+    1617,  1631,  1631,  1640,  1643,  1659,  1695,  1699,  1705,  1712,
+    1727,  1731,  1735,  1736,  1742,  1743,  1744,  1745,  1746,  1750,
+    1751,  1751,  1751,  1761,  1762,  1766,  1766,  1767,  1767,  1772,
+    1775,  1785,  1788,  1794,  1795,  1799,  1807,  1811,  1821,  1826,
+    1843,  1843,  1848,  1848,  1855,  1855,  1863,  1866,  1872,  1875,
+    1881,  1885,  1892,  1899,  1906,  1913,  1924,  1933,  1937,  1944,
+    1947,  1953,  1953
 };
 #endif
 
@@ -2369,15 +2369,7 @@ yyreduce:
                 }
             } else {
                 if ((yyvsp[(1) - (4)].interm.intermTypedNode)->isArray()) {
-                    if ((yyvsp[(1) - (4)].interm.intermTypedNode)->getType().getArraySize() == 0) {
-                        if ((yyvsp[(1) - (4)].interm.intermTypedNode)->getType().getMaxArraySize() <= index) {
-                            if (context->arraySetMaxSize((yyvsp[(1) - (4)].interm.intermTypedNode)->getAsSymbolNode(), (yyvsp[(1) - (4)].interm.intermTypedNode)->getTypePointer(), index, true, (yylsp[(2) - (4)])))
-                                context->recover();
-                        } else {
-                            if (context->arraySetMaxSize((yyvsp[(1) - (4)].interm.intermTypedNode)->getAsSymbolNode(), (yyvsp[(1) - (4)].interm.intermTypedNode)->getTypePointer(), 0, false, (yylsp[(2) - (4)])))
-                                context->recover();
-                        }
-                    } else if (index >= (yyvsp[(1) - (4)].interm.intermTypedNode)->getType().getArraySize()) {
+                    if (index >= (yyvsp[(1) - (4)].interm.intermTypedNode)->getType().getArraySize()) {
                         std::stringstream extraInfoStream;
                         extraInfoStream << "array index out of range '" << index << "'";
                         std::string extraInfo = extraInfoStream.str();
@@ -2397,10 +2389,6 @@ yyreduce:
                 (yyval.interm.intermTypedNode) = context->intermediate.addIndex(EOpIndexDirect, (yyvsp[(1) - (4)].interm.intermTypedNode), (yyvsp[(3) - (4)].interm.intermTypedNode), (yylsp[(2) - (4)]));
             }
         } else {
-            if ((yyvsp[(1) - (4)].interm.intermTypedNode)->isArray() && (yyvsp[(1) - (4)].interm.intermTypedNode)->getType().getArraySize() == 0) {
-                context->error((yylsp[(2) - (4)]), "", "[", "array must be redeclared with a size before being indexed with a variable");
-                context->recover();
-            }
             (yyval.interm.intermTypedNode) = context->intermediate.addIndex(EOpIndexIndirect, (yyvsp[(1) - (4)].interm.intermTypedNode), (yyvsp[(3) - (4)].interm.intermTypedNode), (yylsp[(2) - (4)]));
         }
         if ((yyval.interm.intermTypedNode) == 0) {
