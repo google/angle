@@ -225,6 +225,8 @@ class Renderer
     virtual QueryImpl *createQuery(GLenum type) = 0;
     virtual FenceImpl *createFence() = 0;
 
+    virtual bool getLUID(LUID *adapterLuid) const = 0;
+
   protected:
     bool initializeCompiler();
     ShaderBlob *compileToBinary(gl::InfoLog &infoLog, const char *hlsl, const char *profile, UINT optimizationFlags, bool alternateFlags);

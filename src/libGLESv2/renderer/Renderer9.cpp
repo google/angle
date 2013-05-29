@@ -3187,4 +3187,18 @@ TextureStorage *Renderer9::createTextureStorageCube(int levels, GLenum internalf
     return new TextureStorage9_Cube(this, levels, internalformat, usage, forceRenderable, size);
 }
 
+bool Renderer9::getLUID(LUID *adapterLuid) const
+{
+    adapterLuid->HighPart = 0;
+    adapterLuid->LowPart = 0;
+
+    if (mD3d9Ex)
+    {
+        mD3d9Ex->GetAdapterLUID(mAdapter, adapterLuid);
+        return true;
+    }
+
+    return false;
+}
+
 }

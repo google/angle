@@ -182,6 +182,8 @@ class Renderer11 : public Renderer
     void unapplyRenderTargets();
     void setOneTimeRenderTarget(ID3D11RenderTargetView *renderTargetView);
 
+    virtual bool getLUID(LUID *adapterLuid) const;
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer11);
 
