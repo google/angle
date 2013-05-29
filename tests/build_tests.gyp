@@ -67,7 +67,7 @@
       'target_name': 'compiler_tests',
       'type': 'executable',
       'dependencies': [
-        '../src/build_angle.gyp:translator_common',
+        '../src/build_angle.gyp:translator_glsl',
         'gtest',
         'gmock',
       ],
@@ -79,6 +79,7 @@
       ],
       'sources': [
         '../third_party/googlemock/src/gmock_main.cc',
+        'compiler_tests/ExpressionLimit_test.cpp',
         'compiler_tests/VariablePacker_test.cpp',
       ],
     },

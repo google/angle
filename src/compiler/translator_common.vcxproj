@@ -141,7 +141,7 @@
     <ClCompile Include="BuiltInFunctionEmulator.cpp" />
     <ClCompile Include="Compiler.cpp" />
     <ClCompile Include="debug.cpp" />
-    <ClCompile Include="DetectRecursion.cpp" />
+    <ClCompile Include="DetectCallDepth.cpp" />
     <ClCompile Include="Diagnostics.cpp" />
     <ClCompile Include="DirectiveHandler.cpp" />
     <ClCompile Include="ForLoopUnroll.cpp" />
@@ -231,7 +231,7 @@
     <ClInclude Include="Common.h" />
     <ClInclude Include="ConstantUnion.h" />
     <ClInclude Include="debug.h" />
-    <ClInclude Include="DetectRecursion.h" />
+    <ClInclude Include="DetectCallDepth.h" />
     <ClInclude Include="Diagnostics.h" />
     <ClInclude Include="DirectiveHandler.h" />
     <ClInclude Include="ForLoopUnroll.h" />
