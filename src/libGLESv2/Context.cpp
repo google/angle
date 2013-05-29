@@ -1189,32 +1189,32 @@ void Context::setFramebufferZero(Framebuffer *buffer)
 
 void Context::setRenderbufferStorage(GLsizei width, GLsizei height, GLenum internalformat, GLsizei samples)
 {
+    const bool color = gl::IsColorRenderingSupported(internalformat, this);
+    const bool depth = gl::IsDepthRenderingSupported(internalformat, this);
+    const bool stencil = gl::IsStencilRenderingSupported(internalformat, this);
+
     RenderbufferStorage *renderbuffer = NULL;
-    switch (internalformat)
+
+    if (color)
     {
-      case GL_DEPTH_COMPONENT16:
-        renderbuffer = new gl::Depthbuffer(mRenderer, width, height, samples);
-        break;
-      case GL_RGBA4:
-      case GL_RGB5_A1:
-      case GL_RGB565:
-      case GL_RGB8_OES:
-      case GL_RGBA8_OES:
-      case GL_SRGB8_ALPHA8:
-      case GL_RGB10_A2:
-      case GL_RG8:
-      case GL_R8:
         renderbuffer = new gl::Colorbuffer(mRenderer,width, height, internalformat, samples);
-        break;
-      case GL_STENCIL_INDEX8:
-        renderbuffer = new gl::Stencilbuffer(mRenderer, width, height, samples);
-        break;
-      case GL_DEPTH24_STENCIL8_OES:
+    }
+    else if (depth && stencil)
+    {
         renderbuffer = new gl::DepthStencilbuffer(mRenderer, width, height, samples);
-        break;
-      default:
-        UNIMPLEMENTED();   // TODO: Remaining ES3 formats
-        UNREACHABLE(); return;
+    }
+    else if (depth)
+    {
+        renderbuffer = new gl::Depthbuffer(mRenderer, width, height, samples);
+    }
+    else if (stencil)
+    {
+        renderbuffer = new gl::Stencilbuffer(mRenderer, width, height, samples);
+    }
+    else
+    {
+        UNREACHABLE();
+        return;
     }
 
     Renderbuffer *renderbufferObject = mState.renderbuffer.get();

@@ -1454,6 +1454,82 @@ bool validateES3TexStorageParameters(gl::Context *context, GLenum target, GLsize
     return true;
 }
 
+bool validateRenderbufferStorageParameters(const gl::Context *context, GLenum target, GLsizei samples,
+                                           GLenum internalformat, GLsizei width, GLsizei height,
+                                           bool angleExtension)
+{
+    switch (target)
+    {
+      case GL_RENDERBUFFER:
+        break;
+      default:
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+
+    if (width < 0 || height < 0 || samples < 0)
+    {
+        return gl::error(GL_INVALID_VALUE, false);
+    }
+
+    if (!gl::IsValidInternalFormat(internalformat, context))
+    {
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+
+    // ANGLE_framebuffer_multisample does not explicitly state that the internal format must be
+    // sized but it does state that the format must be in the ES2.0 spec table 4.5 which contains
+    // only sized internal formats. The ES3 spec (section 4.4.2) does, however, state that the
+    // internal format must be sized and not an integer format if samples is greater than zero.
+    if (!gl::IsSizedInternalFormat(internalformat, context->getClientVersion()))
+    {
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+
+    if (gl::IsIntegerFormat(internalformat, context->getClientVersion()) && samples > 0)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    if (!gl::IsColorRenderingSupported(internalformat, context) &&
+        !gl::IsDepthRenderingSupported(internalformat, context) &&
+        !gl::IsStencilRenderingSupported(internalformat, context))
+    {
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+
+    if (std::max(width, height) > context->getMaximumRenderbufferDimension())
+    {
+        return gl::error(GL_INVALID_VALUE, false);
+    }
+
+    // ANGLE_framebuffer_multisample states that the value of samples must be less than or equal
+    // to MAX_SAMPLES_ANGLE (Context::getMaxSupportedSamples) while the ES3.0 spec (section 4.4.2)
+    // states that samples must be less than or equal to the maximum samples for the specified
+    // internal format.
+    if (angleExtension)
+    {
+        if (samples > context->getMaxSupportedSamples())
+        {
+            return gl::error(GL_INVALID_VALUE, false);
+        }
+    }
+    else
+    {
+        if (samples > context->getMaxSupportedFormatSamples(internalformat))
+        {
+            return gl::error(GL_INVALID_VALUE, false);
+        }
+    }
+
+    GLuint handle = context->getRenderbufferHandle();
+    if (handle == 0)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    return true;
+}
+
 // check for combinations of format and type that are valid for ReadPixels
 bool validES2ReadFormatType(GLenum format, GLenum type)
 {
@@ -6168,70 +6244,14 @@ void __stdcall glRenderbufferStorageMultisampleANGLE(GLenum target, GLsizei samp
 
     try
     {
-        switch (target)
-        {
-          case GL_RENDERBUFFER:
-            break;
-          default:
-            return gl::error(GL_INVALID_ENUM);
-        }
-
-        if (width < 0 || height < 0 || samples < 0)
-        {
-            return gl::error(GL_INVALID_VALUE);
-        }
-
         gl::Context *context = gl::getNonLostContext();
 
         if (context)
         {
-            if (!gl::IsValidInternalFormat(internalformat, context))
+            if (!validateRenderbufferStorageParameters(context, target, samples, internalformat,
+                                                       width, height, true))
             {
-                return gl::error(GL_INVALID_ENUM);
-            }
-
-            if (!gl::IsColorRenderingSupported(internalformat, context) &&
-                !gl::IsDepthRenderingSupported(internalformat, context) &&
-                !gl::IsStencilRenderingSupported(internalformat, context))
-            {
-                return gl::error(GL_INVALID_ENUM);
-            }
-
-            if (width > context->getMaximumRenderbufferDimension() || 
-                height > context->getMaximumRenderbufferDimension() ||
-                samples > context->getMaxSupportedSamples())
-            {
-                return gl::error(GL_INVALID_VALUE);
-            }
-
-            GLuint handle = context->getRenderbufferHandle();
-            if (handle == 0)
-            {
-                return gl::error(GL_INVALID_OPERATION);
-            }
-
-            switch (internalformat)
-            {
-              case GL_DEPTH_COMPONENT16:
-              case GL_RGBA4:
-              case GL_RGB5_A1:
-              case GL_RGB565:
-              case GL_RGB8_OES:
-              case GL_RGBA8_OES:
-              case GL_STENCIL_INDEX8:
-              case GL_DEPTH24_STENCIL8_OES:
-                break;
-              case GL_SRGB8_ALPHA8:
-              case GL_RGB10_A2:
-              case GL_RG8:
-              case GL_R8:
-                if (context->getClientVersion() < 3)
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                break;
-              default:
-                return gl::error(GL_INVALID_ENUM);
+                return;
             }
 
             context->setRenderbufferStorage(width, height, internalformat, samples);
@@ -8770,7 +8790,13 @@ void __stdcall glRenderbufferStorageMultisample(GLenum target, GLsizei samples, 
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            glRenderbufferStorageMultisampleANGLE(target, samples, internalformat, width, height);
+            if (!validateRenderbufferStorageParameters(context, target, samples, internalformat,
+                                                       width, height, false))
+            {
+                return;
+            }
+
+            context->setRenderbufferStorage(width, height, internalformat, samples);
         }
     }
     catch(std::bad_alloc&)
