@@ -7,8 +7,6 @@
 #include "compiler/DetectCallDepth.h"
 #include "compiler/InfoSink.h"
 
-const int DetectCallDepth::FunctionNode::kInfiniteCallDepth;
-
 DetectCallDepth::FunctionNode::FunctionNode(const TString& fname)
     : name(fname),
       visit(PreVisit)
