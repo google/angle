@@ -319,7 +319,6 @@ bool TParseContext::lValueErrorCheck(const TSourceLoc& line, const char* op, TIn
     case EvqAttribute:      message = "can't modify an attribute";   break;
     case EvqUniform:        message = "can't modify a uniform";      break;
     case EvqVaryingIn:      message = "can't modify a varying";      break;
-    case EvqInput:          message = "can't modify an input";       break;
     case EvqFragCoord:      message = "can't modify gl_FragCoord";   break;
     case EvqFrontFacing:    message = "can't modify gl_FrontFacing"; break;
     case EvqPointCoord:     message = "can't modify gl_PointCoord";  break;
