@@ -2468,6 +2468,11 @@ int Context::getMaxSupportedSamples() const
     return mRenderer->getMaxSupportedSamples();
 }
 
+GLsizei Context::getMaxSupportedFormatSamples(GLint internalFormat) const
+{
+    return mRenderer->getMaxSupportedFormatSamples(internalFormat);
+}
+
 unsigned int Context::getMaxTransformFeedbackBufferBindings() const
 {
     return mRenderer->getMaxTransformFeedbackBuffers();

@@ -201,6 +201,7 @@ class Renderer
     virtual int getMaxSwapInterval() const = 0;
 
     virtual GLsizei getMaxSupportedSamples() const = 0;
+    virtual GLsizei getMaxSupportedFormatSamples(GLint internalFormat) const = 0;
 
     virtual unsigned int getMaxRenderTargets() const = 0;
 

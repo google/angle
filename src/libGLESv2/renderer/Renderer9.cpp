@@ -2436,6 +2436,13 @@ int Renderer9::getMaxSupportedSamples() const
     return mMaxSupportedSamples;
 }
 
+GLsizei Renderer9::getMaxSupportedFormatSamples(GLint internalFormat) const
+{
+    D3DFORMAT format = gl_d3d9::GetTexureFormat(internalFormat, this);
+    MultisampleSupportMap::const_iterator itr = mMultiSampleSupport.find(format);
+    return (itr != mMultiSampleSupport.end()) ? mMaxSupportedSamples : 0;
+}
+
 int Renderer9::getNearestSupportedSamples(D3DFORMAT format, int requested) const
 {
     if (requested == 0)

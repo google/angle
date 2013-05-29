@@ -142,6 +142,7 @@ class Renderer11 : public Renderer
     virtual int getMaxSwapInterval() const;
 
     virtual GLsizei getMaxSupportedSamples() const;
+    virtual GLsizei getMaxSupportedFormatSamples(GLint internalFormat) const;
     int getNearestSupportedSamples(DXGI_FORMAT format, unsigned int requested) const;
 
     virtual unsigned int getMaxRenderTargets() const;

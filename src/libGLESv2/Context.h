@@ -431,6 +431,7 @@ class Context
     int getMaximumTextureLevel() const;
     unsigned int getMaximumRenderTargets() const;
     GLsizei getMaxSupportedSamples() const;
+    GLsizei getMaxSupportedFormatSamples(GLint internalFormat) const;
     unsigned int getMaxTransformFeedbackBufferBindings() const;
     GLintptr getUniformBufferOffsetAlignment() const;
     const char *getCombinedExtensionsString() const;
