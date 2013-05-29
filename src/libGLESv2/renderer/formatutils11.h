@@ -18,6 +18,8 @@ namespace rx
 namespace d3d11
 {
 
+typedef std::set<DXGI_FORMAT> DXGIFormatSet;
+
 MipGenerationFunction GetMipGenerationFunction(DXGI_FORMAT format);
 LoadImageFunction GetImageLoadFunction(GLint internalFormat, GLenum type, GLuint clientVersion);
 
@@ -26,6 +28,8 @@ GLuint GetBlockWidth(DXGI_FORMAT format);
 GLuint GetBlockHeight(DXGI_FORMAT format);
 
 void MakeValidSize(bool isImage, DXGI_FORMAT format, GLsizei *requestWidth, GLsizei *requestHeight, int *levelOffset);
+
+const DXGIFormatSet &GetAllUsedDXGIFormats();
 
 }
 

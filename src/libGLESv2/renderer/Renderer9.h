@@ -227,7 +227,6 @@ class Renderer9 : public Renderer
     void drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
     void drawIndexedPoints(GLsizei count, GLenum type, const GLvoid *indices, gl::Buffer *elementArrayBuffer);
 
-    void getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray);
     bool copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *source, bool fromManaged);
     gl::Renderbuffer *getNullColorbuffer(gl::Renderbuffer *depthbuffer);
 
@@ -287,8 +286,16 @@ class Renderer9 : public Renderer
     bool mLuminanceTextureSupport;
     bool mLuminanceAlphaTextureSupport;
 
-    std::map<D3DFORMAT, bool *> mMultiSampleSupport;
-    GLsizei mMaxSupportedSamples;
+    struct MultisampleSupportInfo
+    {
+        bool supportedSamples[D3DMULTISAMPLE_16_SAMPLES + 1];
+        unsigned int maxSupportedSamples;
+    };
+    typedef std::map<D3DFORMAT, MultisampleSupportInfo> MultisampleSupportMap;
+    MultisampleSupportMap mMultiSampleSupport;
+    unsigned int mMaxSupportedSamples;
+
+    MultisampleSupportInfo getMultiSampleSupport(D3DFORMAT format);
 
     // current render target states
     unsigned int mAppliedRenderTargetSerial;

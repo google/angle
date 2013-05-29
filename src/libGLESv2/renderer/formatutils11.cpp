@@ -512,9 +512,15 @@ static DXGIFormatInfoMap buildDXGIFormatInfoMap()
     return map;
 }
 
-static bool getDXGIFormatInfo(DXGI_FORMAT format, DXGIFormatInfo *outFormatInfo)
+static const DXGIFormatInfoMap &GetDXGIFormatInfoMap()
 {
     static const DXGIFormatInfoMap infoMap = buildDXGIFormatInfoMap();
+    return infoMap;
+}
+
+static bool getDXGIFormatInfo(DXGI_FORMAT format, DXGIFormatInfo *outFormatInfo)
+{
+    const DXGIFormatInfoMap &infoMap = GetDXGIFormatInfoMap();
     DXGIFormatInfoMap::const_iterator iter = infoMap.find(format);
     if (iter != infoMap.end())
     {
@@ -528,6 +534,19 @@ static bool getDXGIFormatInfo(DXGI_FORMAT format, DXGIFormatInfo *outFormatInfo)
     {
         return false;
     }
+}
+
+static d3d11::DXGIFormatSet BuildAllDXGIFormatSet()
+{
+    d3d11::DXGIFormatSet set;
+
+    const DXGIFormatInfoMap &infoMap = GetDXGIFormatInfoMap();
+    for (DXGIFormatInfoMap::const_iterator i = infoMap.begin(); i != infoMap.end(); ++i)
+    {
+        set.insert(i->first);
+    }
+
+    return set;
 }
 
 namespace d3d11
@@ -651,6 +670,12 @@ void MakeValidSize(bool isImage, DXGI_FORMAT format, GLsizei *requestWidth, GLsi
     {
         UNREACHABLE();
     }
+}
+
+const DXGIFormatSet &GetAllUsedDXGIFormats()
+{
+    static DXGIFormatSet formatSet = BuildAllDXGIFormatSet();
+    return formatSet;
 }
 
 }

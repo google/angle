@@ -169,12 +169,6 @@ Renderer9::~Renderer9()
     {
         mD3d9Module = NULL;
     }
-
-    while (!mMultiSampleSupport.empty())
-    {
-        delete [] mMultiSampleSupport.begin()->second;
-        mMultiSampleSupport.erase(mMultiSampleSupport.begin());
-    }
 }
 
 Renderer9 *Renderer9::makeRenderer9(Renderer *renderer)
@@ -308,41 +302,15 @@ EGLint Renderer9::initialize()
         mMaxSwapInterval = std::max(mMaxSwapInterval, 4);
     }
 
-    int max = 0;
-    for (unsigned int i = 0; i < ArraySize(RenderTargetFormats); ++i)
+    mMaxSupportedSamples = 0;
+
+    const d3d9::D3DFormatSet &d3d9Formats = d3d9::GetAllUsedD3DFormats();
+    for (d3d9::D3DFormatSet::const_iterator i = d3d9Formats.begin(); i != d3d9Formats.end(); ++i)
     {
-        bool *multisampleArray = new bool[D3DMULTISAMPLE_16_SAMPLES + 1];
-        getMultiSampleSupport(RenderTargetFormats[i], multisampleArray);
-        mMultiSampleSupport[RenderTargetFormats[i]] = multisampleArray;
-
-        for (int j = D3DMULTISAMPLE_16_SAMPLES; j >= 0; --j)
-        {
-            if (multisampleArray[j] && j != D3DMULTISAMPLE_NONMASKABLE && j > max)
-            {
-                max = j;
-            }
-        }
+        MultisampleSupportInfo support = getMultiSampleSupport(*i);
+        mMultiSampleSupport[*i] = support;
+        mMaxSupportedSamples = std::max(mMaxSupportedSamples, support.maxSupportedSamples);
     }
-
-    for (unsigned int i = 0; i < ArraySize(DepthStencilFormats); ++i)
-    {
-        if (DepthStencilFormats[i] == D3DFMT_UNKNOWN)
-            continue;
-
-        bool *multisampleArray = new bool[D3DMULTISAMPLE_16_SAMPLES + 1];
-        getMultiSampleSupport(DepthStencilFormats[i], multisampleArray);
-        mMultiSampleSupport[DepthStencilFormats[i]] = multisampleArray;
-
-        for (int j = D3DMULTISAMPLE_16_SAMPLES; j >= 0; --j)
-        {
-            if (multisampleArray[j] && j != D3DMULTISAMPLE_NONMASKABLE && j > max)
-            {
-                max = j;
-            }
-        }
-    }
-
-    mMaxSupportedSamples = max;
 
     static const TCHAR windowName[] = TEXT("AngleHiddenWindow");
     static const TCHAR className[] = TEXT("STATIC");
@@ -2193,15 +2161,30 @@ GUID Renderer9::getAdapterIdentifier() const
     return mAdapterIdentifier.DeviceIdentifier;
 }
 
-void Renderer9::getMultiSampleSupport(D3DFORMAT format, bool *multiSampleArray)
+Renderer9::MultisampleSupportInfo Renderer9::getMultiSampleSupport(D3DFORMAT format)
 {
-    for (int multiSampleIndex = 0; multiSampleIndex <= D3DMULTISAMPLE_16_SAMPLES; multiSampleIndex++)
-    {
-        HRESULT result = mD3d9->CheckDeviceMultiSampleType(mAdapter, mDeviceType, format,
-                                                           TRUE, (D3DMULTISAMPLE_TYPE)multiSampleIndex, NULL);
+    MultisampleSupportInfo support = { 0 };
 
-        multiSampleArray[multiSampleIndex] = SUCCEEDED(result);
+    for (unsigned int multiSampleIndex = 0; multiSampleIndex < ArraySize(support.supportedSamples); multiSampleIndex++)
+    {
+        HRESULT result = mD3d9->CheckDeviceMultiSampleType(mAdapter, mDeviceType, format, TRUE,
+                                                           (D3DMULTISAMPLE_TYPE)multiSampleIndex, NULL);
+
+        if (SUCCEEDED(result))
+        {
+             support.supportedSamples[multiSampleIndex] = true;
+             if (multiSampleIndex != D3DMULTISAMPLE_NONMASKABLE)
+             {
+                 support.maxSupportedSamples = std::max(support.maxSupportedSamples, multiSampleIndex);
+             }
+        }
+        else
+        {
+            support.supportedSamples[multiSampleIndex] = false;
+        }
     }
+
+    return support;
 }
 
 bool Renderer9::getBGRATextureSupport() const
@@ -2460,7 +2443,7 @@ int Renderer9::getNearestSupportedSamples(D3DFORMAT format, int requested) const
         return requested;
     }
 
-    std::map<D3DFORMAT, bool *>::const_iterator itr = mMultiSampleSupport.find(format);
+    MultisampleSupportMap::const_iterator itr = mMultiSampleSupport.find(format);
     if (itr == mMultiSampleSupport.end())
     {
         if (format == D3DFMT_UNKNOWN)
@@ -2468,9 +2451,9 @@ int Renderer9::getNearestSupportedSamples(D3DFORMAT format, int requested) const
         return -1;
     }
 
-    for (int i = requested; i <= D3DMULTISAMPLE_16_SAMPLES; ++i)
+    for (unsigned int i = requested; i < ArraySize(itr->second.supportedSamples); ++i)
     {
-        if (itr->second[i] && i != D3DMULTISAMPLE_NONMASKABLE)
+        if (itr->second.supportedSamples[i] && i != D3DMULTISAMPLE_NONMASKABLE)
         {
             return i;
         }

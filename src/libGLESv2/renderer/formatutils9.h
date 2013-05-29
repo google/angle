@@ -20,6 +20,8 @@ class Renderer9;
 namespace d3d9
 {
 
+typedef std::set<D3DFORMAT> D3DFormatSet;
+
 MipGenerationFunction GetMipGenerationFunction(D3DFORMAT format);
 LoadImageFunction GetImageLoadFunction(GLint internalFormat, const Renderer9 *renderer);
 
@@ -29,6 +31,8 @@ GLuint GetBlockHeight(D3DFORMAT format);
 GLuint GetBlockSize(D3DFORMAT format, GLuint width, GLuint height);
 
 void MakeValidSize(bool isImage, D3DFORMAT format, GLsizei *requestWidth, GLsizei *requestHeight, int *levelOffset);
+
+const D3DFormatSet &GetAllUsedD3DFormats();
 
 }
 

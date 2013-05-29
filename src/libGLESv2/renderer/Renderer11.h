@@ -256,7 +256,9 @@ class Renderer11 : public Renderer
     struct MultisampleSupportInfo
     {
         unsigned int qualityLevels[D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT];
+        unsigned int maxSupportedSamples;
     };
+    MultisampleSupportInfo getMultisampleSupportInfo(DXGI_FORMAT format);
 
     typedef std::unordered_map<DXGI_FORMAT, MultisampleSupportInfo> MultisampleSupportMap;
     MultisampleSupportMap mMultisampleSupportMap;

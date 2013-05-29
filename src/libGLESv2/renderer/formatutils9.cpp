@@ -209,9 +209,15 @@ static D3D9FormatInfoMap buildD3D9FormatInfoMap()
     return map;
 }
 
-static bool getD3D9FormatInfo(D3DFORMAT format, D3DFormatInfo *outFormatInfo)
+static const D3D9FormatInfoMap &GetD3D9FormatInfoMap()
 {
     static const D3D9FormatInfoMap infoMap = buildD3D9FormatInfoMap();
+    return infoMap;
+}
+
+static bool getD3D9FormatInfo(D3DFORMAT format, D3DFormatInfo *outFormatInfo)
+{
+    const D3D9FormatInfoMap &infoMap = GetD3D9FormatInfoMap();
     D3D9FormatInfoMap::const_iterator iter = infoMap.find(format);
     if (iter != infoMap.end())
     {
@@ -225,6 +231,18 @@ static bool getD3D9FormatInfo(D3DFORMAT format, D3DFormatInfo *outFormatInfo)
     {
         return false;
     }
+}
+static d3d9::D3DFormatSet BuildAllD3DFormatSet()
+{
+    d3d9::D3DFormatSet set;
+
+    const D3D9FormatInfoMap &infoMap = GetD3D9FormatInfoMap();
+    for (D3D9FormatInfoMap::const_iterator i = infoMap.begin(); i != infoMap.end(); ++i)
+    {
+        set.insert(i->first);
+    }
+
+    return set;
 }
 
 namespace d3d9
@@ -346,6 +364,12 @@ void MakeValidSize(bool isImage, D3DFORMAT format, GLsizei *requestWidth, GLsize
         }
         *levelOffset = upsampleCount;
     }
+}
+
+const D3DFormatSet &GetAllUsedD3DFormats()
+{
+    static const D3DFormatSet formatSet = BuildAllD3DFormatSet();
+    return formatSet;
 }
 
 }

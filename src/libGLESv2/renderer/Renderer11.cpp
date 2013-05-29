@@ -273,38 +273,15 @@ EGLint Renderer11::initialize()
     }
 #endif
 
-    unsigned int maxSupportedSamples = 0;
-    unsigned int rtFormatCount = ArraySize(RenderTargetFormats);
-    unsigned int dsFormatCount = ArraySize(DepthStencilFormats);
-    for (unsigned int i = 0; i < rtFormatCount + dsFormatCount; ++i)
+    mMaxSupportedSamples = 0;
+
+    const d3d11::DXGIFormatSet &dxgiFormats = d3d11::GetAllUsedDXGIFormats();
+    for (d3d11::DXGIFormatSet::const_iterator i = dxgiFormats.begin(); i != dxgiFormats.end(); ++i)
     {
-        DXGI_FORMAT format = (i < rtFormatCount) ? RenderTargetFormats[i] : DepthStencilFormats[i - rtFormatCount];
-        if (format != DXGI_FORMAT_UNKNOWN)
-        {
-            UINT formatSupport;
-            result = mDevice->CheckFormatSupport(format, &formatSupport);
-            if (SUCCEEDED(result) && (formatSupport & D3D11_FORMAT_SUPPORT_MULTISAMPLE_RENDERTARGET))
-            {
-                MultisampleSupportInfo supportInfo;
-
-                for (unsigned int j = 1; j <= D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT; j++)
-                {
-                    result = mDevice->CheckMultisampleQualityLevels(format, j, &supportInfo.qualityLevels[j - 1]);
-                    if (SUCCEEDED(result) && supportInfo.qualityLevels[j - 1] > 0)
-                    {
-                        maxSupportedSamples = std::max(j, maxSupportedSamples);
-                    }
-                    else
-                    {
-                        supportInfo.qualityLevels[j - 1] = 0;
-                    }
-                }
-
-                mMultisampleSupportMap.insert(std::make_pair(format, supportInfo));
-            }
-        }
+        MultisampleSupportInfo support = getMultisampleSupportInfo(*i);
+        mMultisampleSupportMap.insert(std::make_pair(*i, support));
+        mMaxSupportedSamples = std::max(mMaxSupportedSamples, support.maxSupportedSamples);
     }
-    mMaxSupportedSamples = maxSupportedSamples;
 
     initializeDevice();
 
@@ -4002,6 +3979,33 @@ bool Renderer11::getLUID(LUID *adapterLuid) const
 
     *adapterLuid = adapterDesc.AdapterLuid;
     return true;
+}
+
+Renderer11::MultisampleSupportInfo Renderer11::getMultisampleSupportInfo(DXGI_FORMAT format)
+{
+    MultisampleSupportInfo supportInfo = { 0 };
+
+    UINT formatSupport;
+    HRESULT result;
+
+    result = mDevice->CheckFormatSupport(format, &formatSupport);
+    if (SUCCEEDED(result) && (formatSupport & D3D11_FORMAT_SUPPORT_MULTISAMPLE_RENDERTARGET))
+    {
+        for (unsigned int i = 1; i <= D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT; i++)
+        {
+            result = mDevice->CheckMultisampleQualityLevels(format, i, &supportInfo.qualityLevels[i - 1]);
+            if (SUCCEEDED(result) && supportInfo.qualityLevels[i - 1] > 0)
+            {
+                supportInfo.maxSupportedSamples = std::max(supportInfo.maxSupportedSamples, i);
+            }
+            else
+            {
+                supportInfo.qualityLevels[i - 1] = 0;
+            }
+        }
+    }
+
+    return supportInfo;
 }
 
 }
