@@ -1043,7 +1043,7 @@ GLenum Renderer11::applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementAr
                 BufferStorage11 *storage = BufferStorage11::makeBufferStorage11(indexInfo->storage);
                 IndexBuffer11* indexBuffer = IndexBuffer11::makeIndexBuffer11(indexInfo->indexBuffer);
 
-                mDeviceContext->IASetIndexBuffer(storage->getBuffer(), indexBuffer->getIndexFormat(), indexInfo->startOffset);
+                mDeviceContext->IASetIndexBuffer(storage->getBuffer(GL_ELEMENT_ARRAY_BUFFER), indexBuffer->getIndexFormat(), indexInfo->startOffset);
 
                 mAppliedIBSerial = 0;
                 mAppliedStorageIBSerial = storage->getSerial();

@@ -94,7 +94,7 @@ GLenum InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::M
             ilKey.elements[ilKey.elementCount].InstanceDataStepRate = attributes[i].divisor;
             ilKey.elementCount++;
 
-            vertexBuffers[i] = bufferStorage ? bufferStorage->getBuffer() : vertexBuffer->getBuffer();
+            vertexBuffers[i] = bufferStorage ? bufferStorage->getBuffer(GL_ARRAY_BUFFER) : vertexBuffer->getBuffer();
             vertexStrides[i] = attributes[i].stride;
             vertexOffsets[i] = attributes[i].offset;
         }
