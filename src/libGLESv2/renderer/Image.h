@@ -38,6 +38,7 @@ class Image
     GLenum getInternalFormat() const { return mInternalFormat; }
     GLenum getActualFormat() const { return mActualFormat; }
     GLenum getTarget() const { return mTarget; }
+    bool isRenderableFormat() const { return mRenderable; }
 
     void markDirty() {mDirty = true;}
     void markClean() {mDirty = false;}
@@ -54,8 +55,6 @@ class Image
 
     virtual bool redefine(Renderer *renderer, GLenum target, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease) = 0;
 
-    virtual bool isRenderableFormat() const = 0;
-    
     virtual void loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                           GLint unpackAlignment, GLenum type, const void *input) = 0;
     virtual void loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
@@ -69,6 +68,7 @@ class Image
     GLsizei mDepth;
     GLint mInternalFormat;
     GLenum mActualFormat;
+    bool mRenderable;
     GLenum mTarget;
 
     bool mDirty;

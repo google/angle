@@ -22,6 +22,7 @@ Image::Image()
     mInternalFormat = GL_NONE;
     mActualFormat = GL_NONE;
     mTarget = GL_NONE;
+    mRenderable = false;
 }
 
 }

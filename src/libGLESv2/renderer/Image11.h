@@ -45,7 +45,6 @@ class Image11 : public Image
 
     virtual bool redefine(Renderer *renderer, GLenum target, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease);
 
-    virtual bool isRenderableFormat() const;
     DXGI_FORMAT getDXGIFormat() const;
     
     virtual void loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,

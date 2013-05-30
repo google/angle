@@ -119,15 +119,18 @@ bool Image11::redefine(Renderer *renderer, GLenum target, GLint internalformat, 
         forceRelease)
     {
         mRenderer = Renderer11::makeRenderer11(renderer);
+        GLuint clientVersion = mRenderer->getCurrentClientVersion();
 
         mWidth = width;
         mHeight = height;
         mDepth = depth;
         mInternalFormat = internalformat;
         mTarget = target;
+
         // compute the d3d format that will be used
-        mDXGIFormat = gl_d3d11::ConvertTextureFormat(internalformat);
-        mActualFormat = d3d11_gl::ConvertTextureInternalFormat(mDXGIFormat);
+        mDXGIFormat = gl_d3d11::GetTexFormat(internalformat, clientVersion);
+        mActualFormat = d3d11_gl::GetInternalFormat(mDXGIFormat);
+        mRenderable = gl_d3d11::GetTexFormat(internalformat, clientVersion) != DXGI_FORMAT_UNKNOWN;
 
         if (mStagingTexture)
         {
@@ -139,11 +142,6 @@ bool Image11::redefine(Renderer *renderer, GLenum target, GLint internalformat, 
     }
 
     return false;
-}
-
-bool Image11::isRenderableFormat() const
-{
-    return TextureStorage11::IsTextureFormatRenderable(mDXGIFormat);
 }
 
 DXGI_FORMAT Image11::getDXGIFormat() const
@@ -286,13 +284,14 @@ void Image11::copy(GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y
         // This format requires conversion, so we must copy the texture to staging and manually convert via readPixels
         D3D11_MAPPED_SUBRESOURCE mappedImage;
         HRESULT result = map(D3D11_MAP_WRITE, &mappedImage);
-            
+
         // determine the offset coordinate into the destination buffer
-        GLsizei rowOffset = gl::ComputePixelSize(mActualFormat) * xoffset;
+        GLuint clientVersion = mRenderer->getCurrentClientVersion();
+        GLsizei rowOffset = gl::GetPixelBytes(mActualFormat, clientVersion) * xoffset;
         void *dataOffset = static_cast<unsigned char*>(mappedImage.pData) + mappedImage.RowPitch * yoffset + rowOffset + zoffset * mappedImage.DepthPitch;
 
-        mRenderer->readPixels(source, x, y, width, height, gl::ExtractFormat(mInternalFormat), 
-                              gl::ExtractType(mInternalFormat), mappedImage.RowPitch, false, 4, dataOffset);
+        mRenderer->readPixels(source, x, y, width, height, gl::GetFormat(mInternalFormat, clientVersion),
+                              gl::GetType(mInternalFormat, clientVersion), mappedImage.RowPitch, false, 4, dataOffset);
 
         unmap();
     }
@@ -320,7 +319,6 @@ void Image11::createStagingTexture()
     }
 
     const DXGI_FORMAT dxgiFormat = getDXGIFormat();
-    ASSERT(!d3d11::IsDepthStencilFormat(dxgiFormat)); // We should never get here for depth textures
 
     if (mWidth > 0 && mHeight > 0 && mDepth > 0)
     {
@@ -331,7 +329,7 @@ void Image11::createStagingTexture()
         GLsizei height = mHeight;
 
         // adjust size if needed for compressed textures
-        gl::MakeValidSize(false, d3d11::IsCompressed(dxgiFormat), &width, &height, &lodOffset);
+        d3d11::MakeValidSize(false, dxgiFormat, &width, &height, &lodOffset);
 
         if (mTarget == GL_TEXTURE_3D)
         {

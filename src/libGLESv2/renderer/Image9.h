@@ -39,7 +39,6 @@ class Image9 : public Image
 
     virtual bool redefine(Renderer *renderer, GLenum target, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, bool forceRelease);
 
-    virtual bool isRenderableFormat() const;
     D3DFORMAT getD3DFormat() const;
 
     virtual bool isDirty() const {return mSurface && mDirty;}

@@ -109,8 +109,10 @@ void Image9::copyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface9 *so
         D3DSURFACE_DESC desc;
         source->GetDesc(&desc);
 
-        int rows = d3d9::IsCompressedFormat(desc.Format) ? desc.Height / 4 : desc.Height;
-        int bytes = d3d9::ComputeRowSize(desc.Format, desc.Width);
+        int blockHeight = d3d9::GetBlockHeight(desc.Format);
+        int rows = desc.Height / blockHeight;
+
+        int bytes = d3d9::GetBlockSize(desc.Format, desc.Width, blockHeight);
         ASSERT(bytes <= sourceLock.Pitch && bytes <= destLock.Pitch);
 
         for(int i = 0; i < rows; i++)
@@ -139,14 +141,17 @@ bool Image9::redefine(rx::Renderer *renderer, GLenum target, GLint internalforma
         forceRelease)
     {
         mRenderer = Renderer9::makeRenderer9(renderer);
+        GLuint clientVersion = mRenderer->getCurrentClientVersion();
 
         mWidth = width;
         mHeight = height;
         mDepth = depth;
         mInternalFormat = internalformat;
+
         // compute the d3d format that will be used
-        mD3DFormat = mRenderer->ConvertTextureInternalFormat(internalformat);
-        mActualFormat = d3d9_gl::GetEquivalentFormat(mD3DFormat);
+        mD3DFormat = gl_d3d9::GetTexureFormat(internalformat, mRenderer);
+        mActualFormat = d3d9_gl::GetInternalFormat(mD3DFormat);
+        mRenderable = gl_d3d9::GetRenderFormat(internalformat, mRenderer) != D3DFMT_UNKNOWN;
 
         if (mSurface)
         {
@@ -171,14 +176,13 @@ void Image9::createSurface()
     IDirect3DSurface9 *newSurface = NULL;
     const D3DPOOL poolToUse = D3DPOOL_SYSTEMMEM;
     const D3DFORMAT d3dFormat = getD3DFormat();
-    ASSERT(d3dFormat != D3DFMT_INTZ); // We should never get here for depth textures
 
     if (mWidth != 0 && mHeight != 0)
     {
         int levelToFetch = 0;
         GLsizei requestWidth = mWidth;
         GLsizei requestHeight = mHeight;
-        gl::MakeValidSize(true, gl::IsCompressed(mInternalFormat), &requestWidth, &requestHeight, &levelToFetch);
+        d3d9::MakeValidSize(true, d3dFormat, &requestWidth, &requestHeight, &levelToFetch);
 
         IDirect3DDevice9 *device = mRenderer->getDevice();
 
@@ -225,11 +229,6 @@ void Image9::unlock()
         HRESULT result = mSurface->UnlockRect();
         ASSERT(SUCCEEDED(result));
     }
-}
-
-bool Image9::isRenderableFormat() const
-{    
-    return TextureStorage9::IsTextureFormatRenderable(getD3DFormat());
 }
 
 D3DFORMAT Image9::getD3DFormat() const
