@@ -8381,7 +8381,7 @@ void __stdcall glGetBufferPointerv(GLenum target, GLenum pname, GLvoid** params)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            glRenderbufferStorageMultisampleANGLE(target, samples, internalformat, width, height);
+            UNIMPLEMENTED();
         }
     }
     catch(std::bad_alloc&)
@@ -8718,7 +8718,7 @@ void __stdcall glRenderbufferStorageMultisample(GLenum target, GLsizei samples, 
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            UNIMPLEMENTED();
+            glRenderbufferStorageMultisampleANGLE(target, samples, internalformat, width, height);
         }
     }
     catch(std::bad_alloc&)
