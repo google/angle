@@ -136,6 +136,14 @@ void loadBGRADataToBGRA(int width, int height, int depth,
                         const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
                         void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch);
 
+void loadRGBA2101010ToNative(int width, int height, int depth,
+                             const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
+                             void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch);
+
+void loadRGBA2101010ToRGBA(int width, int height, int depth,
+                           const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
+                           void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch);
+
 template <unsigned int blockWidth, unsigned int blockHeight, unsigned int blockSize>
 void loadCompressedBlockDataToNative(int width, int height, int depth,
                                      const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,

@@ -678,4 +678,48 @@ void loadBGRADataToBGRA(int width, int height, int depth,
     }
 }
 
+void loadRGBA2101010ToNative(int width, int height, int depth,
+                             const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
+                             void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch)
+{
+    const unsigned int *source = NULL;
+    unsigned int *dest = NULL;
+
+    for (int z = 0; z < depth; z++)
+    {
+        for (int y = 0; y < height; y++)
+        {
+            source = offsetDataPointer<unsigned int>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned int>(output, y, z, outputRowPitch, outputDepthPitch);
+            memcpy(dest, source, width * sizeof(unsigned int));
+        }
+    }
+}
+
+void loadRGBA2101010ToRGBA(int width, int height, int depth,
+                           const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
+                           void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch)
+{
+    const unsigned int *source = NULL;
+    unsigned char *dest = NULL;
+
+    for (int z = 0; z < depth; z++)
+    {
+        for (int y = 0; y < height; y++)
+        {
+            source = offsetDataPointer<unsigned int>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned char>(output, y, z, outputRowPitch, outputDepthPitch);
+
+            for (int x = 0; x < width; x++)
+            {
+                unsigned int rgba = source[x];
+                dest[4 * x + 0] = (rgba & 0x000003FF) >>  2;
+                dest[4 * x + 1] = (rgba & 0x000FFC00) >> 12;
+                dest[4 * x + 2] = (rgba & 0x3FF00000) >> 22;
+                dest[4 * x + 3] = ((rgba & 0xC0000000) >> 30) * 0x55;
+            }
+        }
+    }
+}
+
 }

@@ -3660,6 +3660,7 @@ static inline void writePixelColor(const gl::Color &color, GLenum format, GLenum
 {
     unsigned char* byteData = reinterpret_cast<unsigned char*>(outData);
     unsigned short* shortData = reinterpret_cast<unsigned short*>(outData);
+    unsigned int* intData = reinterpret_cast<unsigned int*>(outData);
 
     switch (format)
     {
@@ -3671,6 +3672,13 @@ static inline void writePixelColor(const gl::Color &color, GLenum format, GLenum
             byteData[4 * x + y * outputPitch + 1] = static_cast<unsigned char>(255 * color.green + 0.5f);
             byteData[4 * x + y * outputPitch + 2] = static_cast<unsigned char>(255 * color.blue  + 0.5f);
             byteData[4 * x + y * outputPitch + 3] = static_cast<unsigned char>(255 * color.alpha + 0.5f);
+            break;
+
+          case GL_UNSIGNED_INT_2_10_10_10_REV:
+            intData[x + y * outputPitch / sizeof(unsigned int)] = (static_cast<unsigned int>(   3 * color.alpha) << 30) |
+                                                                  (static_cast<unsigned int>(1023 * color.red  ) << 20) |
+                                                                  (static_cast<unsigned int>(1023 * color.green) << 10) |
+                                                                  (static_cast<unsigned int>(1023 * color.blue ) <<  0);
             break;
 
           default:

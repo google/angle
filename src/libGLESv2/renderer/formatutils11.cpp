@@ -54,7 +54,7 @@ static D3D11ES3FormatMap buildD3D11ES3FormatMap()
     map.insert(D3D11ES3FormatPair(GL_RGB5_A1,           D3D11ES3FormatInfo(DXGI_FORMAT_R8G8B8A8_UNORM,       DXGI_FORMAT_R8G8B8A8_UNORM,      DXGI_FORMAT_R8G8B8A8_UNORM,      DXGI_FORMAT_UNKNOWN)));
     map.insert(D3D11ES3FormatPair(GL_RGBA8,             D3D11ES3FormatInfo(DXGI_FORMAT_R8G8B8A8_UNORM,       DXGI_FORMAT_R8G8B8A8_UNORM,      DXGI_FORMAT_R8G8B8A8_UNORM,      DXGI_FORMAT_UNKNOWN)));
     map.insert(D3D11ES3FormatPair(GL_RGBA8_SNORM,       D3D11ES3FormatInfo(DXGI_FORMAT_UNKNOWN,              DXGI_FORMAT_UNKNOWN,             DXGI_FORMAT_UNKNOWN,             DXGI_FORMAT_UNKNOWN)));
-    map.insert(D3D11ES3FormatPair(GL_RGB10_A2,          D3D11ES3FormatInfo(DXGI_FORMAT_UNKNOWN,              DXGI_FORMAT_UNKNOWN,             DXGI_FORMAT_UNKNOWN,             DXGI_FORMAT_UNKNOWN)));
+    map.insert(D3D11ES3FormatPair(GL_RGB10_A2,          D3D11ES3FormatInfo(DXGI_FORMAT_R10G10B10A2_UNORM,    DXGI_FORMAT_R10G10B10A2_UNORM,   DXGI_FORMAT_R10G10B10A2_UNORM,   DXGI_FORMAT_UNKNOWN)));
     map.insert(D3D11ES3FormatPair(GL_RGB10_A2UI,        D3D11ES3FormatInfo(DXGI_FORMAT_UNKNOWN,              DXGI_FORMAT_UNKNOWN,             DXGI_FORMAT_UNKNOWN,             DXGI_FORMAT_UNKNOWN)));
     map.insert(D3D11ES3FormatPair(GL_SRGB8,             D3D11ES3FormatInfo(DXGI_FORMAT_UNKNOWN,              DXGI_FORMAT_UNKNOWN,             DXGI_FORMAT_UNKNOWN,             DXGI_FORMAT_UNKNOWN)));
     map.insert(D3D11ES3FormatPair(GL_SRGB8_ALPHA8,      D3D11ES3FormatInfo(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,  DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, DXGI_FORMAT_UNKNOWN)));
@@ -172,7 +172,8 @@ static bool getD3D11ES3FormatInfo(GLint internalFormat, GLuint clientVersion, D3
 
 // ES3 image loading functions vary based on the internal format and data type given,
 // this map type determines the loading function from the internal format and type supplied
-// to glTex*Image*D
+// to glTex*Image*D and the destination DXGI_FORMAT. Source formats and types are taken from
+// Tables 3.2 and 3.3 of the ES 3 spec.
 typedef std::pair<GLint, GLenum> InternalFormatTypePair;
 typedef std::pair<InternalFormatTypePair, LoadImageFunction> D3D11LoadFunctionPair;
 typedef std::map<InternalFormatTypePair, LoadImageFunction> D3D11LoadFunctionMap;
@@ -202,9 +203,9 @@ D3D11LoadFunctionMap buildD3D11LoadFunctionMap()
     insertLoadFunction(&map, GL_SRGB8_ALPHA8,       GL_UNSIGNED_BYTE,                  loadRGBAUByteDataToNative            );
     insertLoadFunction(&map, GL_RGBA8_SNORM,        GL_BYTE,                           UnimplementedLoadFunction            );
     insertLoadFunction(&map, GL_RGBA4,              GL_UNSIGNED_SHORT_4_4_4_4,         loadRGBA4444DataToRGBA               );
-    insertLoadFunction(&map, GL_RGB10_A2,           GL_UNSIGNED_INT_2_10_10_10_REV,    UnimplementedLoadFunction            );
+    insertLoadFunction(&map, GL_RGB10_A2,           GL_UNSIGNED_INT_2_10_10_10_REV,    loadRGBA2101010ToNative              );
     insertLoadFunction(&map, GL_RGB5_A1,            GL_UNSIGNED_SHORT_5_5_5_1,         loadRGBA5551DataToRGBA               );
-    insertLoadFunction(&map, GL_RGB5_A1,            GL_UNSIGNED_INT_2_10_10_10_REV,    UnimplementedLoadFunction            );
+    insertLoadFunction(&map, GL_RGB5_A1,            GL_UNSIGNED_INT_2_10_10_10_REV,    loadRGBA2101010ToRGBA                );
     insertLoadFunction(&map, GL_RGBA16F,            GL_HALF_FLOAT,                     loadRGBAHalfFloatDataToRGBA          );
     insertLoadFunction(&map, GL_RGBA32F,            GL_FLOAT,                          loadRGBAFloatDataToRGBA              );
     insertLoadFunction(&map, GL_RGBA16F,            GL_FLOAT,                          UnimplementedLoadFunction            );
@@ -440,6 +441,8 @@ static FormatMipMap buildFormatMipMap()
     map.insert(FormatMipPair(DXGI_FORMAT_R32G32_FLOAT,       GenerateMip<R32G32F>      ));
     map.insert(FormatMipPair(DXGI_FORMAT_R32G32B32_FLOAT,    GenerateMip<R32G32B32F>   ));
     map.insert(FormatMipPair(DXGI_FORMAT_R32G32B32A32_FLOAT, GenerateMip<R32G32B32A32F>));
+
+    map.insert(FormatMipPair(DXGI_FORMAT_R10G10B10A2_UNORM,  GenerateMip<R10G10B10A2>  ));
 
     return map;
 }

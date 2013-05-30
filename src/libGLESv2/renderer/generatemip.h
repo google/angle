@@ -150,6 +150,22 @@ struct R32G32B32F
 
 typedef A32B32G32R32F R32G32B32A32F;
 
+struct R10G10B10A2
+{
+    unsigned int R : 10;
+    unsigned int G : 10;
+    unsigned int B : 10;
+    unsigned int A : 2;
+
+    static void average(R10G10B10A2 *dst, const R10G10B10A2 *src1, const R10G10B10A2 *src2)
+    {
+        dst->R = (src1->R + src2->R) >> 1;
+        dst->G = (src1->G + src2->G) >> 1;
+        dst->B = (src1->B + src2->B) >> 1;
+        dst->A = (src1->A + src2->A) >> 1;
+    }
+};
+
 namespace priv
 {
 
