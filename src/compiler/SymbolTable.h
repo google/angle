@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -237,6 +237,15 @@ protected:
     tLevel level;
 };
 
+enum ESymbolLevel
+{
+    COMMON_BUILTINS = 0,
+    ESSL1_BUILTINS = 1,
+    ESSL3_BUILTINS = 2,
+    LAST_BUILTIN_LEVEL = ESSL3_BUILTINS,
+    GLOBAL_LEVEL = 3
+};
+
 class TSymbolTable {
 public:
     TSymbolTable() : uniqueId(0)
@@ -250,8 +259,7 @@ public:
 
     ~TSymbolTable()
     {
-        // level 0 is always built In symbols, so we never pop that out
-        while (table.size() > 1)
+        while (table.size() > 0)
             pop();
     }
 
@@ -260,9 +268,9 @@ public:
     // 'push' calls, so that built-ins are at level 0 and the shader
     // globals are at level 1.
     //
-    bool isEmpty() { return table.size() == 0; }
-    bool atBuiltInLevel() { return table.size() == 1; }
-    bool atGlobalLevel() { return table.size() <= 2; }
+    bool isEmpty() { return table.empty(); }
+    bool atBuiltInLevel() { return currentLevel() <= LAST_BUILTIN_LEVEL; }
+    bool atGlobalLevel() { return currentLevel() <= GLOBAL_LEVEL; }
     void push()
     {
         table.push_back(new TSymbolTableLevel);
@@ -282,7 +290,7 @@ public:
         return table[currentLevel()]->insert(symbol);
     }
 
-    TSymbol* find(const TString& name, bool* builtIn = 0, bool *sameScope = 0) 
+    TSymbol *find(const TString &name, bool *builtIn = false, bool *sameScope = false) 
     {
         int level = currentLevel();
         TSymbol* symbol;
@@ -292,32 +300,34 @@ public:
         } while (symbol == 0 && level >= 0);
         level++;
         if (builtIn)
-            *builtIn = level == 0;
+            *builtIn = (level <= LAST_BUILTIN_LEVEL);
         if (sameScope)
-            *sameScope = level == currentLevel();
+            *sameScope = (level == currentLevel());
         return symbol;
     }
 
     TSymbol *findBuiltIn(const TString &name)
     {
-        return table[0]->find(name);
-    }
+        for (int i = LAST_BUILTIN_LEVEL; i >= 0; i--) {
+            TSymbol *symbol = table[i]->find(name);
 
-    TSymbolTableLevel* getGlobalLevel() {
-        assert(table.size() >= 2);
-        return table[1];
-    }
+            if (symbol)
+                return symbol;
+        }
 
-    TSymbolTableLevel* getOuterLevel() {
-        assert(table.size() >= 2);
+        return 0;
+    }
+    
+    TSymbolTableLevel *getOuterLevel() {
+        assert(currentLevel() >= 1);
         return table[currentLevel() - 1];
     }
 
-    void relateToOperator(const char* name, TOperator op) {
-        table[0]->relateToOperator(name, op);
+    void relateToOperator(ESymbolLevel level, const char* name, TOperator op) {
+        table[level]->relateToOperator(name, op);
     }
-    void relateToExtension(const char* name, const TString& ext) {
-        table[0]->relateToExtension(name, ext);
+    void relateToExtension(ESymbolLevel level, const char* name, const TString& ext) {
+        table[level]->relateToExtension(name, ext);
     }
     int getMaxSymbolId() { return uniqueId; }
     void dump(TInfoSink &infoSink) const;
@@ -353,7 +363,7 @@ public:
         return prec;
     }
 
-protected:    
+protected:
     int currentLevel() const { return static_cast<int>(table.size()) - 1; }
 
     std::vector<TSymbolTableLevel*> table;

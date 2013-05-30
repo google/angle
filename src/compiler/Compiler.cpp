@@ -51,8 +51,11 @@ bool InitializeSymbolTable(
     // push should not have a corresponding pop, so that built-ins
     // are preserved, and the test for an empty table fails.
     //
-    symbolTable.push();
 
+    symbolTable.push();   // TODO: Common built-ins.
+
+    // GLSL ES 1.0 built-ins
+    symbolTable.push();
     for (TBuiltInStrings::const_iterator i = builtInStrings.begin(); i != builtInStrings.end(); ++i)
     {
         const char* builtInShaders = i->c_str();
@@ -66,6 +69,8 @@ bool InitializeSymbolTable(
             return false;
         }
     }
+
+    symbolTable.push();   // TODO: GLSL ES 3.0 built-ins.
 
     IdentifyBuiltIns(type, spec, resources, symbolTable);
 

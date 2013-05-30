@@ -567,58 +567,58 @@ void IdentifyBuiltIns(ShShaderType type, ShShaderSpec spec,
     // expected to be resolved through a library of functions, versus as
     // operations.
     //
-    symbolTable.relateToOperator("not",              EOpVectorLogicalNot);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "not",              EOpVectorLogicalNot);
 
-    symbolTable.relateToOperator("matrixCompMult",   EOpMul);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "matrixCompMult",   EOpMul);
 
-    symbolTable.relateToOperator("equal",            EOpVectorEqual);
-    symbolTable.relateToOperator("notEqual",         EOpVectorNotEqual);
-    symbolTable.relateToOperator("lessThan",         EOpLessThan);
-    symbolTable.relateToOperator("greaterThan",      EOpGreaterThan);
-    symbolTable.relateToOperator("lessThanEqual",    EOpLessThanEqual);
-    symbolTable.relateToOperator("greaterThanEqual", EOpGreaterThanEqual);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "equal",            EOpVectorEqual);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "notEqual",         EOpVectorNotEqual);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "lessThan",         EOpLessThan);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "greaterThan",      EOpGreaterThan);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "lessThanEqual",    EOpLessThanEqual);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "greaterThanEqual", EOpGreaterThanEqual);
     
-    symbolTable.relateToOperator("radians",      EOpRadians);
-    symbolTable.relateToOperator("degrees",      EOpDegrees);
-    symbolTable.relateToOperator("sin",          EOpSin);
-    symbolTable.relateToOperator("cos",          EOpCos);
-    symbolTable.relateToOperator("tan",          EOpTan);
-    symbolTable.relateToOperator("asin",         EOpAsin);
-    symbolTable.relateToOperator("acos",         EOpAcos);
-    symbolTable.relateToOperator("atan",         EOpAtan);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "radians",      EOpRadians);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "degrees",      EOpDegrees);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "sin",          EOpSin);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "cos",          EOpCos);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "tan",          EOpTan);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "asin",         EOpAsin);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "acos",         EOpAcos);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "atan",         EOpAtan);
 
-    symbolTable.relateToOperator("pow",          EOpPow);
-    symbolTable.relateToOperator("exp2",         EOpExp2);
-    symbolTable.relateToOperator("log",          EOpLog);
-    symbolTable.relateToOperator("exp",          EOpExp);
-    symbolTable.relateToOperator("log2",         EOpLog2);
-    symbolTable.relateToOperator("sqrt",         EOpSqrt);
-    symbolTable.relateToOperator("inversesqrt",  EOpInverseSqrt);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "pow",          EOpPow);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "exp2",         EOpExp2);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "log",          EOpLog);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "exp",          EOpExp);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "log2",         EOpLog2);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "sqrt",         EOpSqrt);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "inversesqrt",  EOpInverseSqrt);
 
-    symbolTable.relateToOperator("abs",          EOpAbs);
-    symbolTable.relateToOperator("sign",         EOpSign);
-    symbolTable.relateToOperator("floor",        EOpFloor);
-    symbolTable.relateToOperator("ceil",         EOpCeil);
-    symbolTable.relateToOperator("fract",        EOpFract);
-    symbolTable.relateToOperator("mod",          EOpMod);
-    symbolTable.relateToOperator("min",          EOpMin);
-    symbolTable.relateToOperator("max",          EOpMax);
-    symbolTable.relateToOperator("clamp",        EOpClamp);
-    symbolTable.relateToOperator("mix",          EOpMix);
-    symbolTable.relateToOperator("step",         EOpStep);
-    symbolTable.relateToOperator("smoothstep",   EOpSmoothStep);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "abs",          EOpAbs);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "sign",         EOpSign);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "floor",        EOpFloor);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "ceil",         EOpCeil);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "fract",        EOpFract);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "mod",          EOpMod);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "min",          EOpMin);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "max",          EOpMax);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "clamp",        EOpClamp);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "mix",          EOpMix);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "step",         EOpStep);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "smoothstep",   EOpSmoothStep);
 
-    symbolTable.relateToOperator("length",       EOpLength);
-    symbolTable.relateToOperator("distance",     EOpDistance);
-    symbolTable.relateToOperator("dot",          EOpDot);
-    symbolTable.relateToOperator("cross",        EOpCross);
-    symbolTable.relateToOperator("normalize",    EOpNormalize);
-    symbolTable.relateToOperator("faceforward",  EOpFaceForward);
-    symbolTable.relateToOperator("reflect",      EOpReflect);
-    symbolTable.relateToOperator("refract",      EOpRefract);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "length",       EOpLength);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "distance",     EOpDistance);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "dot",          EOpDot);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "cross",        EOpCross);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "normalize",    EOpNormalize);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "faceforward",  EOpFaceForward);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "reflect",      EOpReflect);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "refract",      EOpRefract);
     
-    symbolTable.relateToOperator("any",          EOpAny);
-    symbolTable.relateToOperator("all",          EOpAll);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "any",          EOpAny);
+    symbolTable.relateToOperator(ESSL1_BUILTINS, "all",          EOpAll);
 
     // Map language-specific operators.
     switch(type) {
@@ -626,13 +626,13 @@ void IdentifyBuiltIns(ShShaderType type, ShShaderSpec spec,
         break;
     case SH_FRAGMENT_SHADER:
         if (resources.OES_standard_derivatives) {
-            symbolTable.relateToOperator("dFdx",   EOpDFdx);
-            symbolTable.relateToOperator("dFdy",   EOpDFdy);
-            symbolTable.relateToOperator("fwidth", EOpFwidth);
+            symbolTable.relateToOperator(ESSL1_BUILTINS, "dFdx",   EOpDFdx);
+            symbolTable.relateToOperator(ESSL1_BUILTINS, "dFdy",   EOpDFdy);
+            symbolTable.relateToOperator(ESSL1_BUILTINS, "fwidth", EOpFwidth);
 
-            symbolTable.relateToExtension("dFdx", "GL_OES_standard_derivatives");
-            symbolTable.relateToExtension("dFdy", "GL_OES_standard_derivatives");
-            symbolTable.relateToExtension("fwidth", "GL_OES_standard_derivatives");
+            symbolTable.relateToExtension(ESSL1_BUILTINS, "dFdx", "GL_OES_standard_derivatives");
+            symbolTable.relateToExtension(ESSL1_BUILTINS, "dFdy", "GL_OES_standard_derivatives");
+            symbolTable.relateToExtension(ESSL1_BUILTINS, "fwidth", "GL_OES_standard_derivatives");
         }
         break;
     default: break;
