@@ -1022,7 +1022,13 @@ bool IsValidCopyTexImageCombination(GLenum textureInternalFormat, GLenum frameBu
             if (conversionSet.find(conversion) != conversionSet.end())
             {
                 // Section 3.8.5 of the GLES3 3.0.2 spec states that source and destination formats
-                // must both be signed or unsigned or fixed/floating point
+                // must both be signed or unsigned or fixed/floating point and both source and destinations
+                // must be either both SRGB or both not SRGB
+
+                if (textureInternalFormatInfo.mIsSRGB != framebufferInternalFormatInfo.mIsSRGB)
+                {
+                    return false;
+                }
 
                 if ((textureInternalFormatInfo.mStorageType == SignedInteger   && framebufferInternalFormatInfo.mStorageType == SignedInteger  ) ||
                     (textureInternalFormatInfo.mStorageType == UnsignedInteger && framebufferInternalFormatInfo.mStorageType == UnsignedInteger))
