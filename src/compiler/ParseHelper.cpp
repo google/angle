@@ -751,7 +751,7 @@ bool TParseContext::arrayErrorCheck(int line, TString& identifier, TPublicType t
         if (type.arraySize)
             variable->getType().setArraySize(type.arraySize);
 
-        if (! symbolTable.insert(*variable)) {
+        if (! symbolTable.declare(*variable)) {
             delete variable;
             error(line, "INTERNAL ERROR inserting new symbol", identifier.c_str());
             return true;
@@ -885,7 +885,7 @@ bool TParseContext::nonInitErrorCheck(int line, TString& identifier, TPublicType
 
     variable = new TVariable(&identifier, TType(type));
 
-    if (! symbolTable.insert(*variable)) {
+    if (! symbolTable.declare(*variable)) {
         error(line, "redefinition", variable->getName().c_str());
         delete variable;
         variable = 0;
@@ -1012,7 +1012,7 @@ bool TParseContext::executeInitializer(TSourceLoc line, TString& identifier, TPu
         // add variable to symbol table
         //
         variable = new TVariable(&identifier, type);
-        if (! symbolTable.insert(*variable)) {
+        if (! symbolTable.declare(*variable)) {
             error(line, "redefinition", variable->getName().c_str());
             return true;
             // don't delete variable, it's used by error recovery, and the pool 

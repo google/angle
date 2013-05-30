@@ -2143,7 +2143,7 @@ yyreduce:
             context->recover();
             TType type(EbtFloat, EbpUndefined);
             TVariable* fakeVariable = new TVariable((yyvsp[(1) - (1)].lex).string, type);
-            context->symbolTable.insert(*fakeVariable);
+            context->symbolTable.declare(*fakeVariable);
             variable = fakeVariable;
         } else {
             // This identifier can only be a variable type symbol
@@ -4115,7 +4115,7 @@ yyreduce:
 
         TType* structure = new TType((yyvsp[(5) - (6)].interm.typeList), *(yyvsp[(2) - (6)].lex).string);
         TVariable* userTypeDef = new TVariable((yyvsp[(2) - (6)].lex).string, *structure, true);
-        if (! context->symbolTable.insert(*userTypeDef)) {
+        if (! context->symbolTable.declare(*userTypeDef)) {
             context->error((yyvsp[(2) - (6)].lex).line, "redefinition", (yyvsp[(2) - (6)].lex).string->c_str(), "struct");
             context->recover();
         }
@@ -4677,7 +4677,7 @@ yyreduce:
                 //
                 // Insert the parameters with name in the symbol table.
                 //
-                if (! context->symbolTable.insert(*variable)) {
+                if (! context->symbolTable.declare(*variable)) {
                     context->error((yyvsp[(1) - (1)].interm).line, "redefinition", variable->getName().c_str());
                     context->recover();
                     delete variable;

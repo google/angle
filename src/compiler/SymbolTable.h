@@ -284,10 +284,15 @@ public:
         precisionStack.pop_back();
     }
 
-    bool insert(TSymbol& symbol)
+    bool declare(TSymbol& symbol)
+    {
+        return insert(currentLevel(), symbol);
+    }
+
+    bool insert(ESymbolLevel level, TSymbol& symbol)
     {
         symbol.setUniqueId(++uniqueId);
-        return table[currentLevel()]->insert(symbol);
+        return table[level]->insert(symbol);
     }
 
     TSymbol *find(const TString &name, bool *builtIn = false, bool *sameScope = false) 
@@ -364,7 +369,7 @@ public:
     }
 
 protected:
-    int currentLevel() const { return static_cast<int>(table.size()) - 1; }
+    ESymbolLevel currentLevel() const { return static_cast<ESymbolLevel>(table.size() - 1); }
 
     std::vector<TSymbolTableLevel*> table;
     typedef std::map< TBasicType, TPrecision > PrecisionStackLevel;

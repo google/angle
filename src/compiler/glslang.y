@@ -190,7 +190,7 @@ variable_identifier
             context->recover();
             TType type(EbtFloat, EbpUndefined);
             TVariable* fakeVariable = new TVariable($1.string, type);
-            context->symbolTable.insert(*fakeVariable);
+            context->symbolTable.declare(*fakeVariable);
             variable = fakeVariable;
         } else {
             // This identifier can only be a variable type symbol
@@ -1462,7 +1462,7 @@ single_declaration
 //        if (context->reservedErrorCheck($2.line, *$2.string, context))
 //            context->recover();
 //        $$.variable = new TVariable($2.string, $1);
-//        if (! context->symbolTable.insert(*$$.variable)) {
+//        if (! context->symbolTable.declare(*$$.variable)) {
 //            context->error($2.line, "redefinition", $$.variable->getName().c_str());
 //            context->recover();
 //            // don't have to delete $$.variable, the pool pop will take care of it
@@ -1810,7 +1810,7 @@ struct_specifier
 
         TType* structure = new TType($5, *$2.string);
         TVariable* userTypeDef = new TVariable($2.string, *structure, true);
-        if (! context->symbolTable.insert(*userTypeDef)) {
+        if (! context->symbolTable.declare(*userTypeDef)) {
             context->error($2.line, "redefinition", $2.string->c_str(), "struct");
             context->recover();
         }
@@ -2203,7 +2203,7 @@ function_definition
                 //
                 // Insert the parameters with name in the symbol table.
                 //
-                if (! context->symbolTable.insert(*variable)) {
+                if (! context->symbolTable.declare(*variable)) {
                     context->error($1.line, "redefinition", variable->getName().c_str());
                     context->recover();
                     delete variable;
