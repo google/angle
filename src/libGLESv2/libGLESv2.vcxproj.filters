@@ -218,6 +218,21 @@
     <ClCompile Include="precompiled.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\loadimage.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\loadimageSSE2.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\formatutils9.cpp">
+      <Filter>Source Files\Renderer9</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\formatutils11.cpp">
+      <Filter>Source Files\Renderer11</Filter>
+    </ClCompile>
+    <ClCompile Include="formatutils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinaryStream.h">
@@ -492,6 +507,18 @@
     </ClInclude>
     <ClInclude Include="renderer\shaders\compiled\clearsingle11ps.h">
       <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\loadimage.h">
+      <Filter>Header Files\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\formatutils11.h">
+      <Filter>Header Files\Renderer11</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\formatutils9.h">
+      <Filter>Header Files\Renderer9</Filter>
+    </ClInclude>
+    <ClInclude Include="formatutils.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

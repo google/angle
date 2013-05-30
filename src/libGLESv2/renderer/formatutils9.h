@@ -1,0 +1,56 @@
+//
+// Copyright (c) 2013 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+
+// formatutils9.h: Queries for GL image formats and their translations to D3D9
+// formats.
+
+#ifndef LIBGLESV2_RENDERER_FORMATUTILS9_H_
+#define LIBGLESV2_RENDERER_FORMATUTILS9_H_
+
+#include "libGLESv2/formatutils.h"
+
+namespace rx
+{
+
+class Renderer9;
+
+namespace d3d9
+{
+
+MipGenerationFunction GetMipGenerationFunction(D3DFORMAT format);
+LoadImageFunction GetImageLoadFunction(GLint internalFormat, const Renderer9 *renderer);
+
+GLuint GetFormatPixelBytes(D3DFORMAT format);
+GLuint GetBlockWidth(D3DFORMAT format);
+GLuint GetBlockHeight(D3DFORMAT format);
+GLuint GetBlockSize(D3DFORMAT format, GLuint width, GLuint height);
+
+void MakeValidSize(bool isImage, D3DFORMAT format, GLsizei *requestWidth, GLsizei *requestHeight, int *levelOffset);
+
+}
+
+namespace gl_d3d9
+{
+
+D3DFORMAT GetTexureFormat(GLint internalFormat, const Renderer9 *renderer);
+D3DFORMAT GetRenderFormat(GLint internalFormat, const Renderer9 *renderer);
+
+D3DMULTISAMPLE_TYPE GetMultisampleType(GLsizei samples);
+
+}
+
+namespace d3d9_gl
+{
+
+GLint GetInternalFormat(D3DFORMAT format);
+GLsizei GetSamplesCount(D3DMULTISAMPLE_TYPE type);
+bool IsFormatChannelEquivalent(D3DFORMAT d3dformat, GLenum format, GLuint clientVersion);
+
+}
+
+}
+
+#endif // LIBGLESV2_RENDERER_FORMATUTILS9_H_

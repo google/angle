@@ -54,6 +54,7 @@ struct A8R8G8B8
 };
 
 typedef A8R8G8B8 R8G8B8A8; // R8G8B8A8 type is functionally equivalent for mip purposes
+typedef A8R8G8B8 B8G8R8A8; // B8G8R8A8 type is functionally equivalent for mip purposes
 
 struct A16B16G16R16F
 {
@@ -92,6 +93,8 @@ struct R16G16F
         dst->G = gl::float32ToFloat16((gl::float16ToFloat32(src1->G) + gl::float16ToFloat32(src2->G)) * 0.5f);
     }
 };
+
+typedef A16B16G16R16F R16G16B16A16F;
 
 struct A32B32G32R32F
 {
@@ -144,6 +147,11 @@ struct R32G32B32F
         dst->B = (src1->B + src2->B) * 0.5f;
     }
 };
+
+typedef A32B32G32R32F R32G32B32A32F;
+
+namespace priv
+{
 
 template <typename T>
 static inline T *GetPixel(void *data, unsigned int x, unsigned int y, unsigned int z, unsigned int rowPitch, unsigned int depthPitch)
@@ -346,6 +354,7 @@ static void GenerateMip_XYZ(unsigned int sourceWidth, unsigned int sourceHeight,
     }
 }
 
+
 typedef void (*MipGenerationFunction)(unsigned int sourceWidth, unsigned int sourceHeight, unsigned int sourceDepth,
                                       const unsigned char *sourceData, int sourceRowPitch, int sourceDepthPitch,
                                       unsigned int destWidth, unsigned int destHeight, unsigned int destDepth,
@@ -371,6 +380,8 @@ static MipGenerationFunction GetMipGenerationFunction(unsigned int sourceWidth, 
     }
 }
 
+}
+
 template <typename T>
 static void GenerateMip(unsigned int sourceWidth, unsigned int sourceHeight, unsigned int sourceDepth,
                         const unsigned char *sourceData, int sourceRowPitch, int sourceDepthPitch,
@@ -380,7 +391,7 @@ static void GenerateMip(unsigned int sourceWidth, unsigned int sourceHeight, uns
     unsigned int mipHeight = std::max(1U, sourceHeight >> 1);
     unsigned int mipDepth = std::max(1U, sourceDepth >> 1);
 
-    MipGenerationFunction generationFunction = GetMipGenerationFunction<T>(sourceWidth, sourceHeight, sourceDepth);
+    priv::MipGenerationFunction generationFunction = priv::GetMipGenerationFunction<T>(sourceWidth, sourceHeight, sourceDepth);
     ASSERT(generationFunction != NULL);
 
     generationFunction(sourceWidth, sourceHeight, sourceDepth, sourceData, sourceRowPitch, sourceDepthPitch,
