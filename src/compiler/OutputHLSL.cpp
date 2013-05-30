@@ -3094,48 +3094,36 @@ int OutputHLSL::uniformRegister(TIntermSymbol *uniform)
     return index;
 }
 
-void OutputHLSL::declareUniform(const TType &type, const TString &name, int index)
+void OutputHLSL::declareUniformToList(const TType &type, const TString &name, int index, ActiveUniforms& output)
 {
     const TTypeList *structure = type.getStruct();
 
     if (!structure)
     {
-        mActiveUniforms.push_back(Uniform(glVariableType(type), glVariablePrecision(type), name.c_str(), (unsigned int)type.getArraySize(), (unsigned int)index));
+        output.push_back(Uniform(glVariableType(type), glVariablePrecision(type), name.c_str(), (unsigned int)type.getArraySize(), (unsigned int)index));
     }
     else
     {
-        if (type.isArray())
+        Uniform structUniform(GL_NONE, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(), (unsigned int)index);
+
+        int fieldIndex = index;
+
+        for (size_t i = 0; i < structure->size(); i++)
         {
-            int elementIndex = index;
+            const TType &fieldType = *(*structure)[i].type;
+            const TString &fieldName = fieldType.getFieldName();
 
-            for (int i = 0; i < type.getArraySize(); i++)
-            {
-                for (size_t j = 0; j < structure->size(); j++)
-                {
-                    const TType &fieldType = *(*structure)[j].type;
-                    const TString &fieldName = fieldType.getFieldName();
-
-                    const TString uniformName = name + "[" + str(i) + "]." + fieldName;
-                    declareUniform(fieldType, uniformName, elementIndex);
-                    elementIndex += fieldType.totalRegisterCount();
-                }
-            }
+            declareUniformToList(fieldType, fieldName, fieldIndex, structUniform.fields);
+            fieldIndex += fieldType.totalRegisterCount();
         }
-        else
-        {
-            int fieldIndex = index;
 
-            for (size_t i = 0; i < structure->size(); i++)
-            {
-                const TType &fieldType = *(*structure)[i].type;
-                const TString &fieldName = fieldType.getFieldName();
-
-                const TString uniformName = name + "." + fieldName;
-                declareUniform(fieldType, uniformName, fieldIndex);
-                fieldIndex += fieldType.totalRegisterCount();
-            }
-        }
+        output.push_back(structUniform);
     }
+}
+
+void OutputHLSL::declareUniform(const TType &type, const TString &name, int index)
+{
+    declareUniformToList(type, name, index, mActiveUniforms);
 }
 
 GLenum OutputHLSL::glVariableType(const TType &type)

@@ -150,6 +150,7 @@ class ProgramBinary : public RefCountObject
 
     bool linkAttributes(InfoLog &infoLog, const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader);
 
+    bool areMatchingUniforms(InfoLog &infoLog, const std::string& uniformName, const sh::Uniform &vertexUniform, const sh::Uniform &fragmentUniform);
     bool linkUniforms(InfoLog &infoLog, const sh::ActiveUniforms &vertexUniforms, const sh::ActiveUniforms &fragmentUniforms);
     bool defineUniform(GLenum shader, const sh::Uniform &constant, InfoLog &infoLog);
     

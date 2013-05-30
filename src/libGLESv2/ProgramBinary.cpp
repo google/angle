@@ -1936,8 +1936,78 @@ bool ProgramBinary::linkAttributes(InfoLog &infoLog, const AttributeBindings &at
     return true;
 }
 
+bool ProgramBinary::areMatchingUniforms(InfoLog &infoLog, const std::string &uniformName, const sh::Uniform &vertexUniform, const sh::Uniform &fragmentUniform)
+{
+    if (vertexUniform.type != fragmentUniform.type)
+    {
+        infoLog.append("Types for %s differ between vertex and fragment shaders", uniformName.c_str());
+        return false;
+    }
+    else if (vertexUniform.arraySize != fragmentUniform.arraySize)
+    {
+        infoLog.append("Array sizes for %s differ between vertex and fragment shaders", uniformName.c_str());
+        return false;
+    }
+    else if (vertexUniform.precision != fragmentUniform.precision)
+    {
+        infoLog.append("Precisions for %s differ between vertex and fragment shaders", uniformName.c_str());
+        return false;
+    }
+    else if (vertexUniform.fields.size() != fragmentUniform.fields.size())
+    {
+        infoLog.append("Structure lengths for %s differ between vertex and fragment shaders", uniformName.c_str());
+    }
+
+    const unsigned int numMembers = vertexUniform.fields.size();
+    for (unsigned int memberIndex = 0; memberIndex < numMembers; memberIndex++)
+    {
+        const sh::Uniform &vertexMember = vertexUniform.fields[memberIndex];
+        const sh::Uniform &fragmentMember = fragmentUniform.fields[memberIndex];
+
+        if (vertexMember.name != fragmentMember.name)
+        {
+            infoLog.append("Name mismatch for field %d of %s: (in vertex: '%s', in fragment: '%s')",
+                           memberIndex, uniformName.c_str(), vertexMember.name.c_str(), fragmentMember.name.c_str());
+            return false;
+        }
+
+        const std::string memberName = uniformName + "." + vertexUniform.name;
+        if (!areMatchingUniforms(infoLog, memberName, vertexMember, fragmentMember))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 bool ProgramBinary::linkUniforms(InfoLog &infoLog, const sh::ActiveUniforms &vertexUniforms, const sh::ActiveUniforms &fragmentUniforms)
 {
+    // Check that uniforms defined in the vertex and fragment shaders are identical
+    typedef std::map<std::string, const sh::Uniform*> UniformMap;
+    UniformMap linkedUniforms;
+
+    for (unsigned int vertexUniformIndex = 0; vertexUniformIndex < vertexUniforms.size(); vertexUniformIndex++)
+    {
+        const sh::Uniform &vertexUniform = vertexUniforms[vertexUniformIndex];
+        linkedUniforms[vertexUniform.name] = &vertexUniform;
+    }
+
+    for (unsigned int fragmentUniformIndex = 0; fragmentUniformIndex < fragmentUniforms.size(); fragmentUniformIndex++)
+    {
+        const sh::Uniform &fragmentUniform = fragmentUniforms[fragmentUniformIndex];
+        UniformMap::const_iterator entry = linkedUniforms.find(fragmentUniform.name);
+        if (entry != linkedUniforms.end())
+        {
+            const sh::Uniform &vertexUniform = *entry->second;
+            const std::string &uniformName = "uniform " + vertexUniform.name;
+            if (!areMatchingUniforms(infoLog, uniformName, vertexUniform, fragmentUniform))
+            {
+                return false;
+            }
+        }
+    }
+
     for (sh::ActiveUniforms::const_iterator uniform = vertexUniforms.begin(); uniform != vertexUniforms.end(); uniform++)
     {
         if (!defineUniform(GL_VERTEX_SHADER, *uniform, infoLog))
@@ -1957,8 +2027,71 @@ bool ProgramBinary::linkUniforms(InfoLog &infoLog, const sh::ActiveUniforms &ver
     return true;
 }
 
+int totalRegisterCount(const sh::Uniform &uniform)
+{
+    int registerCount = 0;
+
+    if (!uniform.fields.empty())
+    {
+        for (unsigned int fieldIndex = 0; fieldIndex < uniform.fields.size(); fieldIndex++)
+        {
+            registerCount += totalRegisterCount(uniform.fields[fieldIndex]);
+        }
+    }
+    else
+    {
+        registerCount = 1;
+    }
+
+    return (uniform.arraySize > 0) ? uniform.arraySize * registerCount : registerCount;
+}
+
 bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, InfoLog &infoLog)
 {
+    if (!constant.fields.empty())
+    {
+        if (constant.arraySize > 0)
+        {
+            unsigned int elementRegisterIndex = constant.registerIndex;
+
+            for (unsigned int elementIndex = 0; elementIndex < constant.arraySize; elementIndex++)
+            {
+                for (size_t fieldIndex = 0; fieldIndex < constant.fields.size(); fieldIndex++)
+                {
+                    const sh::Uniform &field = constant.fields[fieldIndex];
+                    const std::string &uniformName = constant.name + "[" + str(elementIndex) + "]." + field.name;
+                    const sh::Uniform fieldUniform(field.type, field.precision, uniformName.c_str(), field.arraySize, elementRegisterIndex);
+                    if (!defineUniform(shader, fieldUniform, infoLog))
+                    {
+                        return false;
+                    }
+                    elementRegisterIndex += totalRegisterCount(field);
+                }
+            }
+        }
+        else
+        {
+            unsigned int fieldRegisterIndex = constant.registerIndex;
+
+            for (size_t fieldIndex = 0; fieldIndex < constant.fields.size(); fieldIndex++)
+            {
+                const sh::Uniform &field = constant.fields[fieldIndex];
+                const std::string &uniformName = constant.name + "." + field.name;
+
+                sh::Uniform fieldUniform(field.type, field.precision, uniformName.c_str(), field.arraySize, fieldRegisterIndex);
+                fieldUniform.fields = field.fields;
+
+                if (!defineUniform(shader, fieldUniform, infoLog))
+                {
+                    return false;
+                }
+                fieldRegisterIndex += totalRegisterCount(field);
+            }
+        }
+
+        return true;
+    }
+
     if (constant.type == GL_SAMPLER_2D ||
         constant.type == GL_SAMPLER_CUBE)
     {
@@ -2009,18 +2142,6 @@ bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, In
     if (location >= 0)   // Previously defined, type and precision must match
     {
         uniform = mUniforms[mUniformIndex[location].index];
-
-        if (uniform->type != constant.type)
-        {
-            infoLog.append("Types for uniform %s do not match between the vertex and fragment shader", uniform->name.c_str());
-            return false;
-        }
-
-        if (uniform->precision != constant.precision)
-        {
-            infoLog.append("Precisions for uniform %s do not match between the vertex and fragment shader", uniform->name.c_str());
-            return false;
-        }
     }
     else
     {

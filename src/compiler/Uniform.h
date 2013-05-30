@@ -27,6 +27,8 @@ struct Uniform
     unsigned int arraySize;
 
     unsigned int registerIndex;
+
+    std::vector<Uniform> fields;
 };
 
 typedef std::vector<Uniform> ActiveUniforms;
