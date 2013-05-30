@@ -1116,17 +1116,34 @@ TPublicType TParseContext::addFullySpecifiedType(TQualifier qualifier, const TPu
         returnType.setArray(false);
     }
 
-    if (qualifier == EvqAttribute && (typeSpecifier.type == EbtBool || typeSpecifier.type == EbtInt))
+    if (shaderVersion < 300)
     {
-        error(typeSpecifier.line, "cannot be bool or int", getQualifierString(qualifier));
-        recover();
-    }
+        if (qualifier == EvqAttribute && (typeSpecifier.type == EbtBool || typeSpecifier.type == EbtInt))
+        {
+            error(typeSpecifier.line, "cannot be bool or int", getQualifierString(qualifier));
+            recover();
+        }
 
-    if ((qualifier == EvqVaryingIn || qualifier == EvqVaryingOut) &&
-        (typeSpecifier.type == EbtBool || typeSpecifier.type == EbtInt))
+        if ((qualifier == EvqVaryingIn || qualifier == EvqVaryingOut) &&
+            (typeSpecifier.type == EbtBool || typeSpecifier.type == EbtInt))
+        {
+            error(typeSpecifier.line, "cannot be bool or int", getQualifierString(qualifier));
+            recover();
+        }
+    }
+    else
     {
-        error(typeSpecifier.line, "cannot be bool or int", getQualifierString(qualifier));
-        recover();
+        if (qualifier == EvqAttribute && typeSpecifier.type == EbtBool)
+        {
+            error(typeSpecifier.line, "cannot be bool", getQualifierString(qualifier));
+            recover();
+        }
+
+        if ((qualifier == EvqVaryingIn || qualifier == EvqVaryingOut) && typeSpecifier.type == EbtBool)
+        {
+            error(typeSpecifier.line, "cannot be bool", getQualifierString(qualifier));
+            recover();
+        }
     }
 
     return returnType;

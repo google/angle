@@ -46,6 +46,10 @@ namespace gl_d3d
           case GL_FLOAT_VEC2:   return "float2";
           case GL_FLOAT_VEC3:   return "float3";
           case GL_FLOAT_VEC4:   return "float4";
+          case GL_INT:          return "int";
+          case GL_INT_VEC2:     return "int2";
+          case GL_INT_VEC3:     return "int3";
+          case GL_INT_VEC4:     return "int4";
           case GL_FLOAT_MAT2:   return "float2x2";
           case GL_FLOAT_MAT3:   return "float3x3";
           case GL_FLOAT_MAT4:   return "float4x4";
@@ -1497,8 +1501,9 @@ std::string ProgramBinary::generateVaryingHLSL(FragmentShader *fragmentShader, c
                     }
 
                     std::string n = str(varying->reg + i * rows + j);
+                    std::string typeString = gl_d3d::TypeString(UniformComponentType(transposedType)) + str(VariableColumnCount(transposedType));
 
-                    varyingHLSL += "float" + str(VariableColumnCount(transposedType)) + " v" + n + " : " + varyingSemantic + n + ";\n";
+                    varyingHLSL += typeString + " v" + n + " : " + varyingSemantic + n + ";\n";
                 }
             }
         }

@@ -517,6 +517,22 @@ GLenum Shader::parseType(const std::string &type)
     {
         return GL_FLOAT_MAT4x3;
     }
+    else if (type == "int")
+    {
+        return GL_INT;
+    }
+    else if (type == "int2")
+    {
+        return GL_INT_VEC2;
+    }
+    else if (type == "int3")
+    {
+        return GL_INT_VEC3;
+    }
+    else if (type == "int4")
+    {
+        return GL_INT_VEC4;
+    }
     else UNREACHABLE();
 
     return GL_NONE;
@@ -534,12 +550,16 @@ static void makeVaryingPriorityMap()
     varyingPriorities[GL_FLOAT_MAT4x2]  = 40;
     varyingPriorities[GL_FLOAT_MAT2]    = 50;
     varyingPriorities[GL_FLOAT_VEC4]    = 60;
+    varyingPriorities[GL_INT_VEC4]      = 61;
     varyingPriorities[GL_FLOAT_MAT3]    = 70;
     varyingPriorities[GL_FLOAT_MAT2x3]  = 80;
     varyingPriorities[GL_FLOAT_MAT3x2]  = 90;
     varyingPriorities[GL_FLOAT_VEC3]    = 100;
+    varyingPriorities[GL_INT_VEC3]      = 101;
     varyingPriorities[GL_FLOAT_VEC2]    = 110;
+    varyingPriorities[GL_INT_VEC2]      = 111;
     varyingPriorities[GL_FLOAT]         = 120;
+    varyingPriorities[GL_INT]           = 125;
 }
 
 // true if varying x has a higher priority in packing than y
