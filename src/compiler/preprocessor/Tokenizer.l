@@ -115,7 +115,7 @@ FRACTIONAL_CONSTANT  ({DIGIT}*"."{DIGIT}+)|({DIGIT}+".")
     return pp::Token::IDENTIFIER;
 }
 
-{DECIMAL_CONSTANT}|{OCTAL_CONSTANT}|{HEXADECIMAL_CONSTANT} {
+({DECIMAL_CONSTANT}[uU]?)|({OCTAL_CONSTANT}[uU]?)|({HEXADECIMAL_CONSTANT}[uU]?) {
     yylval->assign(yytext, yyleng);
     return pp::Token::CONST_INT;
 }
