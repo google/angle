@@ -33,40 +33,10 @@ bool IsMatrixType(GLenum type);
 
 int AllocateFirstFreeBits(unsigned int *bits, unsigned int allocationSize, unsigned int bitsSize);
 
-void MakeValidSize(bool isImage, bool isCompressed, GLsizei *requestWidth, GLsizei *requestHeight, int *levelOffset);
-int ComputePixelSize(GLint internalformat);
-GLsizei ComputeRowPitch(GLsizei width, GLint internalformat, GLint alignment);
-GLsizei ComputeDepthPitch(GLsizei width, GLsizei height, GLint internalformat, GLint alignment);
-GLsizei ComputeCompressedRowPitch(GLsizei width, GLenum format);
-GLsizei ComputeCompressedDepthPitch(GLsizei width, GLsizei height, GLenum format);
-GLsizei ComputeCompressedSize(GLsizei width, GLsizei height, GLenum format);
-bool IsCompressed(GLenum format);
-bool IsDepthTexture(GLenum format);
-bool IsStencilTexture(GLenum format);
 bool IsCubemapTextureTarget(GLenum target);
 bool IsInternalTextureTarget(GLenum target);
-GLint ConvertSizedInternalFormat(GLenum format, GLenum type);
-GLenum ExtractFormat(GLenum internalformat);
-GLenum ExtractType(GLenum internalformat);
 
-bool IsColorRenderable(GLenum internalformat);
-bool IsDepthRenderable(GLenum internalformat);
-bool IsStencilRenderable(GLenum internalformat);
-
-bool IsFloat32Format(GLint internalformat);
-bool IsFloat16Format(GLint internalformat);
-
-GLuint GetAlphaSize(GLenum colorFormat);
-GLuint GetRedSize(GLenum colorFormat);
-GLuint GetGreenSize(GLenum colorFormat);
-GLuint GetBlueSize(GLenum colorFormat);
-GLuint GetDepthSize(GLenum depthFormat);
-GLuint GetStencilSize(GLenum stencilFormat);
 bool IsTriangleMode(GLenum drawMode);
-
-bool IsValidES3FormatCombination(GLint internalformat, GLenum format, GLenum type, GLenum* err);
-bool IsValidES3CompressedFormat(GLenum format);
-bool IsValidES3CopyTexImageCombination(GLenum textureFormat, GLenum frameBufferFormat);
 
 }
 

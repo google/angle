@@ -34,18 +34,6 @@ D3D11_TEXTURE_ADDRESS_MODE ConvertTextureWrap(GLenum wrap);
 FLOAT ConvertMinLOD(GLenum minFilter, unsigned int lodOffset);
 FLOAT ConvertMaxLOD(GLenum minFilter, unsigned int lodOffset);
 
-DXGI_FORMAT ConvertRenderbufferFormat(GLenum format);
-DXGI_FORMAT ConvertTextureFormat(GLenum format);
-}
-
-namespace d3d11_gl
-{
-
-GLenum ConvertBackBufferFormat(DXGI_FORMAT format);
-GLenum ConvertDepthStencilFormat(DXGI_FORMAT format);
-GLenum ConvertRenderbufferFormat(DXGI_FORMAT format);
-GLenum ConvertTextureInternalFormat(DXGI_FORMAT format);
-
 }
 
 namespace d3d11
@@ -74,16 +62,6 @@ struct PositionDepthColorVertex
 };
 void SetPositionDepthColorVertex(PositionDepthColorVertex* vertex, float x, float y, float z,
                                  const gl::Color &color);
-
-size_t ComputePixelSizeBits(DXGI_FORMAT format);
-size_t ComputeBlockSizeBits(DXGI_FORMAT format);
-
-bool IsCompressed(DXGI_FORMAT format);
-unsigned int GetTextureFormatDimensionAlignment(DXGI_FORMAT format);
-
-bool IsDepthStencilFormat(DXGI_FORMAT format);
-DXGI_FORMAT GetDepthTextureFormat(DXGI_FORMAT format);
-DXGI_FORMAT GetDepthShaderResourceFormat(DXGI_FORMAT format);
 
 HRESULT SetDebugName(ID3D11DeviceChild *resource, const char *name);
 
