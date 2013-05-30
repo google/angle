@@ -58,6 +58,7 @@ static int ES2_reserved_ES3_keyword(TParseContext *context, int token);
 static int ES2_keyword_ES3_reserved(TParseContext *context, int token);
 static int ES2_ident_ES3_keyword(TParseContext *context, int token);
 static int uint_constant(TParseContext *context);
+static int floatsuffix_check(TParseContext* context);
 %}
 
 %option noyywrap nounput never-interactive
@@ -314,6 +315,9 @@ O           [0-7]
 {D}+{E}           { yylval->lex.f = static_cast<float>(atof_dot(yytext)); return(FLOATCONSTANT); }
 {D}+"."{D}*({E})? { yylval->lex.f = static_cast<float>(atof_dot(yytext)); return(FLOATCONSTANT); }
 "."{D}+({E})?     { yylval->lex.f = static_cast<float>(atof_dot(yytext)); return(FLOATCONSTANT); }
+{D}+{E}[fF]           { return floatsuffix_check(context); }
+{D}+"."{D}*({E})?[fF] { return floatsuffix_check(context); }
+"."{D}+({E})?[fF]     { return floatsuffix_check(context); }
 
 "+="            {  return(ADD_ASSIGN); }
 "-="            {  return(SUB_ASSIGN); }
@@ -458,6 +462,8 @@ int uint_constant(TParseContext *context)
     struct yyguts_t* yyg = (struct yyguts_t*) context->scanner;
     yyscan_t yyscanner = (yyscan_t) context->scanner;
 
+    yylval->lex.u = static_cast<unsigned int>(strtol(yytext, 0, 0));
+
     if (context->shaderVersion < 300)
     {
         context->error(yylineno, "Unsigned integers are unsupported prior to GLSL ES 3.00", yytext, "");
@@ -465,8 +471,23 @@ int uint_constant(TParseContext *context)
         return 0;
     }
 
-    yylval->lex.u = static_cast<unsigned int>(strtol(yytext, 0, 0));
     return UINTCONSTANT;
+}
+
+int floatsuffix_check(TParseContext* context)
+{
+    struct yyguts_t* yyg = (struct yyguts_t*) context->scanner;
+
+    yylval->lex.f = static_cast<float>(atof_dot(yytext));
+
+    if (context->shaderVersion < 300)
+    {
+        context->error(yylineno, "Floating-point suffix unsupported prior to GLSL ES 3.00", yytext);
+        context->recover();
+        return 0;
+    }
+
+    return(FLOATCONSTANT);
 }
 
 void yyerror(TParseContext* context, const char* reason) {
