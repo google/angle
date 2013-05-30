@@ -8678,6 +8678,13 @@ void __stdcall glBindBufferRange(GLenum target, GLuint index, GLuint buffer, GLi
             switch (target)
             {
               case GL_TRANSFORM_FEEDBACK_BUFFER:
+
+                // size and offset must be a multiple of 4
+                if (buffer != 0 && ((offset % 4) != 0 || (size % 4) != 0))
+                {
+                    return gl::error(GL_INVALID_VALUE);
+                }
+
                 context->bindIndexedTransformFeedbackBuffer(buffer, index, offset, size);
                 context->bindGenericTransformFeedbackBuffer(buffer);
                 break;
