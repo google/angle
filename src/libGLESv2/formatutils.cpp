@@ -154,6 +154,7 @@ ES3FormatSet buildES3FormatSet()
     set.insert(FormatInfo(GL_RGBA4,              GL_RGBA,            GL_UNSIGNED_SHORT_4_4_4_4        ));
     set.insert(FormatInfo(GL_RGB10_A2,           GL_RGBA,            GL_UNSIGNED_INT_2_10_10_10_REV   ));
     set.insert(FormatInfo(GL_RGB5_A1,            GL_RGBA,            GL_UNSIGNED_INT_2_10_10_10_REV   ));
+    set.insert(FormatInfo(GL_RGB5_A1,            GL_RGBA,            GL_UNSIGNED_SHORT_5_5_5_1        ));
     set.insert(FormatInfo(GL_RGBA16F,            GL_RGBA,            GL_HALF_FLOAT                    ));
     set.insert(FormatInfo(GL_RGBA32F,            GL_RGBA,            GL_FLOAT                         ));
     set.insert(FormatInfo(GL_RGBA16F,            GL_RGBA,            GL_FLOAT                         ));
