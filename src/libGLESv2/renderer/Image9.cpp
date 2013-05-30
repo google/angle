@@ -70,20 +70,20 @@ void Image9::generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 *sour
         switch (sourceDesc.Format)
         {
           case D3DFMT_L8:
-            GenerateMip<L8>(sourceDesc.Width, sourceDesc.Height, sourceData, sourceLocked.Pitch, destData, destLocked.Pitch);
+            GenerateMip<L8>(sourceDesc.Width, sourceDesc.Height, 1, sourceData, sourceLocked.Pitch, 0, destData, destLocked.Pitch, 0);
             break;
           case D3DFMT_A8L8:
-            GenerateMip<A8L8>(sourceDesc.Width, sourceDesc.Height, sourceData, sourceLocked.Pitch, destData, destLocked.Pitch);
+            GenerateMip<A8L8>(sourceDesc.Width, sourceDesc.Height, 1, sourceData, sourceLocked.Pitch, 0, destData, destLocked.Pitch, 0);
             break;
           case D3DFMT_A8R8G8B8:
           case D3DFMT_X8R8G8B8:
-            GenerateMip<A8R8G8B8>(sourceDesc.Width, sourceDesc.Height, sourceData, sourceLocked.Pitch, destData, destLocked.Pitch);
+            GenerateMip<A8R8G8B8>(sourceDesc.Width, sourceDesc.Height, 1, sourceData, sourceLocked.Pitch, 0, destData, destLocked.Pitch, 0);
             break;
           case D3DFMT_A16B16G16R16F:
-            GenerateMip<A16B16G16R16F>(sourceDesc.Width, sourceDesc.Height, sourceData, sourceLocked.Pitch, destData, destLocked.Pitch);
+            GenerateMip<A16B16G16R16F>(sourceDesc.Width, sourceDesc.Height, 1, sourceData, sourceLocked.Pitch, 0, destData, destLocked.Pitch, 0);
             break;
           case D3DFMT_A32B32G32R32F:
-            GenerateMip<A32B32G32R32F>(sourceDesc.Width, sourceDesc.Height, sourceData, sourceLocked.Pitch, destData, destLocked.Pitch);
+            GenerateMip<A32B32G32R32F>(sourceDesc.Width, sourceDesc.Height, 1, sourceData, sourceLocked.Pitch, 0, destData, destLocked.Pitch, 0);
             break;
           default:
             UNREACHABLE();
