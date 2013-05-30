@@ -1375,6 +1375,7 @@ bool Context::getBooleanv(GLenum pname, GLboolean *params)
       case GL_BLEND:                     *params = mState.blend.blend;                  break;
       case GL_DITHER:                    *params = mState.blend.dither;                 break;
       case GL_CONTEXT_ROBUST_ACCESS_EXT: *params = mRobustAccess ? GL_TRUE : GL_FALSE;  break;
+      case GL_TRANSFORM_FEEDBACK_ACTIVE: *params = GL_FALSE; UNIMPLEMENTED();           break;
       default:
         return false;
     }
@@ -1515,6 +1516,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_MAX_VERTEX_UNIFORM_BLOCKS:        *params = mRenderer->getMaxVertexShaderUniformBuffers(); break;
       case GL_MAX_FRAGMENT_UNIFORM_BLOCKS:      *params = mRenderer->getMaxFragmentShaderUniformBuffers(); break;
       case GL_MAX_COMBINED_UNIFORM_BLOCKS:      *params = getMaximumCombinedUniformBufferBindings();   break;
+      case GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS: *params = 0; UNIMPLEMENTED();                   break;
       case GL_NUM_COMPRESSED_TEXTURE_FORMATS:   
         params[0] = mNumCompressedTextureFormats;
         break;

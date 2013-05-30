@@ -3203,6 +3203,16 @@ void __stdcall glDisable(GLenum cap)
               case GL_DEPTH_TEST:               context->setDepthTest(false);             break;
               case GL_BLEND:                    context->setBlend(false);                 break;
               case GL_DITHER:                   context->setDither(false);                break;
+
+              case GL_PRIMITIVE_RESTART_FIXED_INDEX:
+              case GL_RASTERIZER_DISCARD:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                UNIMPLEMENTED();
+                break;
+
               default:
                 return gl::error(GL_INVALID_ENUM);
             }
@@ -5251,6 +5261,7 @@ void __stdcall glGetTexParameteriv(GLenum target, GLenum pname, GLint* params)
                 }
                 *params = (GLint)texture->getMaxAnisotropy();
                 break;
+
               default:
                 return gl::error(GL_INVALID_ENUM);
             }
@@ -6002,6 +6013,21 @@ void __stdcall glPixelStorei(GLenum pname, GLint param)
                 context->setPackReverseRowOrder(param != 0);
                 break;
 
+              case GL_UNPACK_IMAGE_HEIGHT:
+              case GL_UNPACK_SKIP_IMAGES:
+              case GL_UNPACK_ROW_LENGTH:
+              case GL_UNPACK_SKIP_ROWS:
+              case GL_UNPACK_SKIP_PIXELS:
+              case GL_PACK_ROW_LENGTH:
+              case GL_PACK_SKIP_ROWS:
+              case GL_PACK_SKIP_PIXELS:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                UNIMPLEMENTED();
+                break;
+
               default:
                 return gl::error(GL_INVALID_ENUM);
             }
@@ -6733,6 +6759,16 @@ void __stdcall glTexParameterf(GLenum target, GLenum pname, GLfloat param)
                     return gl::error(GL_INVALID_VALUE);
                 }
                 break;
+
+              case GL_TEXTURE_MIN_LOD:
+              case GL_TEXTURE_MAX_LOD:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                UNIMPLEMENTED();
+                break;
+
               default:
                 return gl::error(GL_INVALID_ENUM);
             }
@@ -6835,6 +6871,22 @@ void __stdcall glTexParameteri(GLenum target, GLenum pname, GLint param)
                     return gl::error(GL_INVALID_VALUE);
                 }
                 break;
+
+              case GL_TEXTURE_SWIZZLE_R:
+              case GL_TEXTURE_SWIZZLE_G:
+              case GL_TEXTURE_SWIZZLE_B:
+              case GL_TEXTURE_SWIZZLE_A:
+              case GL_TEXTURE_BASE_LEVEL:
+              case GL_TEXTURE_MAX_LEVEL:
+              case GL_TEXTURE_COMPARE_MODE:
+              case GL_TEXTURE_COMPARE_FUNC:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                UNIMPLEMENTED();
+                break;
+
               default:
                 return gl::error(GL_INVALID_ENUM);
             }
