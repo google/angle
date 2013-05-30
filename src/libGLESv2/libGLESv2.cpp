@@ -8670,14 +8670,7 @@ void __stdcall glBindBufferRange(GLenum target, GLuint index, GLuint buffer, GLi
                 return gl::error(GL_INVALID_ENUM);
             }
 
-            gl::Buffer *bufferObject = context->getBuffer(buffer);
-            if (!bufferObject)
-            {
-                // Buffer index must not have been valid
-                return gl::error(GL_INVALID_VALUE);
-            }
-
-            if (size <= 0 || static_cast<unsigned int>(offset + size) > bufferObject->size())
+            if (buffer != 0 && size <= 0)
             {
                 return gl::error(GL_INVALID_VALUE);
             }
@@ -8746,13 +8739,6 @@ void __stdcall glBindBufferBase(GLenum target, GLuint index, GLuint buffer)
 
               default:
                 return gl::error(GL_INVALID_ENUM);
-            }
-
-            gl::Buffer *bufferObject = context->getBuffer(buffer);
-            if (!bufferObject)
-            {
-                // Buffer index must not have been valid
-                return gl::error(GL_INVALID_VALUE);
             }
 
             switch (target)
