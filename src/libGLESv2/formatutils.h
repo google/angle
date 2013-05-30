@@ -39,7 +39,7 @@ bool IsValidFormat(GLenum format, GLuint clientVersion);
 bool IsValidType(GLenum type, GLuint clientVersion);
 
 bool IsValidFormatCombination(GLint internalFormat, GLenum format, GLenum type, GLuint clientVersion);
-bool IsValidCopyTexImageCombination(GLenum textureFormat, GLenum frameBufferFormat, GLuint clientVersion);
+bool IsValidCopyTexImageCombination(GLenum textureInternalFormat, GLenum frameBufferInternalFormat, GLuint clientVersion);
 
 bool IsSizedInternalFormat(GLint internalFormat, GLuint clientVersion);
 GLint GetSizedInternalFormat(GLenum format, GLenum type, GLuint clientVersion);

@@ -1092,9 +1092,9 @@ bool validateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
     }
 
     gl::Renderbuffer *source = framebuffer->getReadColorbuffer();
-    GLenum colorbufferFormat = source->getInternalFormat();
+    GLenum colorbufferInternalFormat = source->getInternalFormat();
     gl::Texture *texture = NULL;
-    GLenum textureFormat = GL_RGBA;
+    GLenum textureInternalFormat = GL_NONE;
     bool textureCompressed = false;
     GLint textureLevelWidth = 0;
     GLint textureLevelHeight = 0;
@@ -1106,7 +1106,7 @@ bool validateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
             gl::Texture2D *texture2d = context->getTexture2D();
             if (texture2d)
             {
-                textureFormat = gl::GetFormat(texture2d->getInternalFormat(level), context->getClientVersion());
+                textureInternalFormat = texture2d->getInternalFormat(level);
                 textureCompressed = texture2d->isCompressed(level);
                 textureLevelWidth = texture2d->getWidth(level);
                 textureLevelHeight = texture2d->getHeight(level);
@@ -1126,7 +1126,7 @@ bool validateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
             gl::TextureCubeMap *textureCube = context->getTextureCubeMap();
             if (textureCube)
             {
-                textureFormat = gl::GetFormat(textureCube->getInternalFormat(target, level), context->getClientVersion());
+                textureInternalFormat = textureCube->getInternalFormat(target, level);
                 textureCompressed = textureCube->isCompressed(target, level);
                 textureLevelWidth = textureCube->getWidth(target, level);
                 textureLevelHeight = textureCube->getHeight(target, level);
@@ -1141,7 +1141,7 @@ bool validateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
             gl::Texture2DArray *texture2dArray = context->getTexture2DArray();
             if (texture2dArray)
             {
-                textureFormat = gl::GetFormat(texture2dArray->getInternalFormat(level), context->getClientVersion());
+                textureInternalFormat = texture2dArray->getInternalFormat(level);
                 textureCompressed = texture2dArray->isCompressed(level);
                 textureLevelWidth = texture2dArray->getWidth(level);
                 textureLevelHeight = texture2dArray->getHeight(level);
@@ -1156,7 +1156,7 @@ bool validateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
             gl::Texture3D *texture3d = context->getTexture3D();
             if (texture3d)
             {
-                textureFormat = gl::GetFormat(texture3d->getInternalFormat(level), context->getClientVersion());
+                textureInternalFormat = texture3d->getInternalFormat(level);
                 textureCompressed = texture3d->isCompressed(level);
                 textureLevelWidth = texture3d->getWidth(level);
                 textureLevelHeight = texture3d->getHeight(level);
@@ -1196,7 +1196,8 @@ bool validateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
         return gl::error(GL_INVALID_VALUE, false);
     }
 
-    if (!gl::IsValidCopyTexImageCombination(textureFormat, colorbufferFormat, context->getClientVersion()))
+    if (!gl::IsValidCopyTexImageCombination(textureInternalFormat, colorbufferInternalFormat,
+                                            context->getClientVersion()))
     {
         return gl::error(GL_INVALID_OPERATION, false);
     }

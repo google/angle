@@ -623,8 +623,8 @@ static InternalFormatInfoMap buildES3InternalFormatInfoMap()
     map.insert(InternalFormatInfoPair(GL_BGR5_A1_ANGLEX,    InternalFormatInfo::RGBAFormat( 5,  5,  5,  1, 0, GL_BGRA_EXT,     GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT, NormalizedFixedPoint, AlwaysSupported, AlwaysSupported, AlwaysSupported     )));
 
     // Floating point renderability and filtering is provided by OES_texture_float and OES_texture_half_float
-    //                               | Internal format        |                                   | D |S | Format             | Type                           | Internal fmt |Color                                                                                                      | Texture                                                                                             | Supported           |
-    //                               |                        |                                   |   |  |                    |                                | type          |                                                                                                 | filterable                                                                                          |                     |
+    //                               | Internal format        |                                   | D |S | Format             | Type                           | Internal fmt | Color                                                                                                     | Texture                                                                                             | Supported           |
+    //                               |                        |                                   |   |  |                    |                                | type         | renderable                                                                                                | filterable                                                                                          |                     |
     map.insert(InternalFormatInfoPair(GL_R16F,              InternalFormatInfo::RGBAFormat(16,  0,  0,  0, 0, GL_RED,          GL_HALF_FLOAT,                   FloatingPoint, CheckSupport<&Context::supportsFloat16RenderableTextures, &rx::Renderer::getFloat16TextureRenderingSupport>, CheckSupport<&Context::supportsFloat16LinearFilter, &rx::Renderer::getFloat16TextureFilteringSupport>, AlwaysSupported     )));
     map.insert(InternalFormatInfoPair(GL_RG16F,             InternalFormatInfo::RGBAFormat(16, 16,  0,  0, 0, GL_RG,           GL_HALF_FLOAT,                   FloatingPoint, CheckSupport<&Context::supportsFloat16RenderableTextures, &rx::Renderer::getFloat16TextureRenderingSupport>, CheckSupport<&Context::supportsFloat16LinearFilter, &rx::Renderer::getFloat16TextureFilteringSupport>, AlwaysSupported     )));
     map.insert(InternalFormatInfoPair(GL_RGB16F,            InternalFormatInfo::RGBAFormat(16, 16, 16,  0, 0, GL_RGB,          GL_HALF_FLOAT,                   FloatingPoint, CheckSupport<&Context::supportsFloat16RenderableTextures, &rx::Renderer::getFloat16TextureRenderingSupport>, CheckSupport<&Context::supportsFloat16LinearFilter, &rx::Renderer::getFloat16TextureFilteringSupport>, AlwaysSupported     )));
@@ -907,6 +907,17 @@ static CopyConversionSet buildValidES3CopyTexImageCombinations()
     set.insert(CopyConversion(GL_RGB,             GL_RGBA));
     set.insert(CopyConversion(GL_RGBA,            GL_RGBA));
 
+    set.insert(CopyConversion(GL_RED_INTEGER,     GL_RED_INTEGER));
+    set.insert(CopyConversion(GL_RED_INTEGER,     GL_RG_INTEGER));
+    set.insert(CopyConversion(GL_RED_INTEGER,     GL_RGB_INTEGER));
+    set.insert(CopyConversion(GL_RED_INTEGER,     GL_RGBA_INTEGER));
+    set.insert(CopyConversion(GL_RG_INTEGER,      GL_RG_INTEGER));
+    set.insert(CopyConversion(GL_RG_INTEGER,      GL_RGB_INTEGER));
+    set.insert(CopyConversion(GL_RG_INTEGER,      GL_RGBA_INTEGER));
+    set.insert(CopyConversion(GL_RGB_INTEGER,     GL_RGB_INTEGER));
+    set.insert(CopyConversion(GL_RGB_INTEGER,     GL_RGBA_INTEGER));
+    set.insert(CopyConversion(GL_RGBA_INTEGER,    GL_RGBA_INTEGER));
+
     return set;
 }
 
@@ -988,17 +999,48 @@ bool IsValidFormatCombination(GLint internalFormat, GLenum format, GLenum type, 
     }
 }
 
-bool IsValidCopyTexImageCombination(GLenum textureFormat, GLenum frameBufferFormat, GLuint clientVersion)
+bool IsValidCopyTexImageCombination(GLenum textureInternalFormat, GLenum frameBufferInternalFormat, GLuint clientVersion)
 {
-    if (clientVersion == 2)
+    InternalFormatInfo textureInternalFormatInfo;
+    InternalFormatInfo framebufferInternalFormatInfo;
+    if (getInternalFormatInfo(textureInternalFormat, clientVersion, &textureInternalFormatInfo) &&
+        getInternalFormatInfo(frameBufferInternalFormat, clientVersion, &framebufferInternalFormatInfo))
     {
-        UNIMPLEMENTED();
-        return false;
-    }
-    else if (clientVersion == 3)
-    {
-        static const CopyConversionSet conversionSet = buildValidES3CopyTexImageCombinations();
-        return conversionSet.find(CopyConversion(textureFormat, frameBufferFormat)) != conversionSet.end();
+        if (clientVersion == 2)
+        {
+            UNIMPLEMENTED();
+            return false;
+        }
+        else if (clientVersion == 3)
+        {
+            static const CopyConversionSet conversionSet = buildValidES3CopyTexImageCombinations();
+            const CopyConversion conversion = CopyConversion(textureInternalFormatInfo.mFormat,
+                                                             framebufferInternalFormatInfo.mFormat);
+            if (conversionSet.find(conversion) != conversionSet.end())
+            {
+                // Section 3.8.5 of the GLES3 3.0.2 spec states that source and destination formats
+                // must both be signed or unsigned or fixed/floating point
+
+                if ((textureInternalFormatInfo.mStorageType == SignedInteger   && framebufferInternalFormatInfo.mStorageType == SignedInteger  ) ||
+                    (textureInternalFormatInfo.mStorageType == UnsignedInteger && framebufferInternalFormatInfo.mStorageType == UnsignedInteger))
+                {
+                    return true;
+                }
+
+                if ((textureInternalFormatInfo.mStorageType     == NormalizedFixedPoint || textureInternalFormatInfo.mStorageType     == FloatingPoint) &&
+                    (framebufferInternalFormatInfo.mStorageType == NormalizedFixedPoint || framebufferInternalFormatInfo.mStorageType == FloatingPoint))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+        else
+        {
+            UNREACHABLE();
+            return false;
+        }
     }
     else
     {
