@@ -7856,9 +7856,9 @@ void __stdcall glReadBuffer(GLenum mode)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -7881,9 +7881,9 @@ void __stdcall glDrawRangeElements(GLenum mode, GLuint start, GLuint end, GLsize
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8184,9 +8184,9 @@ void __stdcall glGenQueries(GLsizei n, GLuint* ids)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8208,9 +8208,9 @@ void __stdcall glDeleteQueries(GLsizei n, const GLuint* ids)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8232,9 +8232,9 @@ GLboolean __stdcall glIsQuery(GLuint id)
             {
                 return gl::error(GL_INVALID_OPERATION, GL_FALSE);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8258,9 +8258,9 @@ void __stdcall glBeginQuery(GLenum target, GLuint id)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8282,9 +8282,9 @@ void __stdcall glEndQuery(GLenum target)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8306,9 +8306,9 @@ void __stdcall glGetQueryiv(GLenum target, GLenum pname, GLint* params)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8330,9 +8330,9 @@ void __stdcall glGetQueryObjectuiv(GLuint id, GLenum pname, GLuint* params)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8354,9 +8354,9 @@ GLboolean __stdcall glUnmapBuffer(GLenum target)
             {
                 return gl::error(GL_INVALID_OPERATION, GL_FALSE);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8380,9 +8380,9 @@ void __stdcall glGetBufferPointerv(GLenum target, GLenum pname, GLvoid** params)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8692,9 +8692,9 @@ void __stdcall glBlitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint sr
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8717,9 +8717,9 @@ void __stdcall glRenderbufferStorageMultisample(GLenum target, GLsizei samples, 
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8742,9 +8742,9 @@ void __stdcall glFramebufferTextureLayer(GLenum target, GLenum attachment, GLuin
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8767,9 +8767,9 @@ GLvoid* __stdcall glMapBufferRange(GLenum target, GLintptr offset, GLsizeiptr le
             {
                 return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLvoid*>(NULL));
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8793,9 +8793,9 @@ void __stdcall glFlushMappedBufferRange(GLenum target, GLintptr offset, GLsizeip
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8817,9 +8817,9 @@ void __stdcall glBindVertexArray(GLuint array)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8841,9 +8841,9 @@ void __stdcall glDeleteVertexArrays(GLsizei n, const GLuint* arrays)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8865,9 +8865,9 @@ void __stdcall glGenVertexArrays(GLsizei n, GLuint* arrays)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8889,9 +8889,9 @@ GLboolean __stdcall glIsVertexArray(GLuint array)
             {
                 return gl::error(GL_INVALID_OPERATION, GL_FALSE);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8916,9 +8916,9 @@ void __stdcall glGetIntegeri_v(GLenum target, GLuint index, GLint* data)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8940,9 +8940,9 @@ void __stdcall glBeginTransformFeedback(GLenum primitiveMode)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -8964,9 +8964,9 @@ void __stdcall glEndTransformFeedback(void)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -9126,9 +9126,9 @@ void __stdcall glTransformFeedbackVaryings(GLuint program, GLsizei count, const 
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -9152,9 +9152,9 @@ void __stdcall glGetTransformFeedbackVarying(GLuint program, GLuint index, GLsiz
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -9241,9 +9241,9 @@ void __stdcall glGetVertexAttribIiv(GLuint index, GLenum pname, GLint* params)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -9266,9 +9266,9 @@ void __stdcall glGetVertexAttribIuiv(GLuint index, GLenum pname, GLuint* params)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -9457,9 +9457,9 @@ GLint __stdcall glGetFragDataLocation(GLuint program, const GLchar *name)
             {
                 return gl::error(GL_INVALID_OPERATION, 0);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -9643,9 +9643,9 @@ void __stdcall glClearBufferiv(GLenum buffer, GLint drawbuffer, const GLint* val
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -9668,9 +9668,9 @@ void __stdcall glClearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint* v
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -9693,9 +9693,9 @@ void __stdcall glClearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat* v
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -9718,9 +9718,9 @@ void __stdcall glClearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, G
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10233,9 +10233,9 @@ void __stdcall glDrawArraysInstanced(GLenum mode, GLint first, GLsizei count, GL
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10258,9 +10258,9 @@ void __stdcall glDrawElementsInstanced(GLenum mode, GLsizei count, GLenum type, 
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10282,9 +10282,9 @@ GLsync __stdcall glFenceSync(GLenum condition, GLbitfield flags)
             {
                 return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLsync>(NULL));
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10308,9 +10308,9 @@ GLboolean __stdcall glIsSync(GLsync sync)
             {
                 return gl::error(GL_INVALID_OPERATION, GL_FALSE);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10334,9 +10334,9 @@ void __stdcall glDeleteSync(GLsync sync)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10359,9 +10359,9 @@ GLenum __stdcall glClientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeou
             {
                 return gl::error(GL_INVALID_OPERATION, GL_FALSE);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10386,9 +10386,9 @@ void __stdcall glWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10411,9 +10411,9 @@ void __stdcall glGetInteger64v(GLenum pname, GLint64* params)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10436,9 +10436,9 @@ void __stdcall glGetSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei* 
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10461,9 +10461,9 @@ void __stdcall glGetInteger64i_v(GLenum target, GLuint index, GLint64* data)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10486,9 +10486,9 @@ void __stdcall glGetBufferParameteri64v(GLenum target, GLenum pname, GLint64* pa
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10510,9 +10510,9 @@ void __stdcall glGenSamplers(GLsizei count, GLuint* samplers)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10534,9 +10534,9 @@ void __stdcall glDeleteSamplers(GLsizei count, const GLuint* samplers)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10558,9 +10558,9 @@ GLboolean __stdcall glIsSampler(GLuint sampler)
             {
                 return gl::error(GL_INVALID_OPERATION, GL_FALSE);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10584,9 +10584,9 @@ void __stdcall glBindSampler(GLuint unit, GLuint sampler)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10608,9 +10608,9 @@ void __stdcall glSamplerParameteri(GLuint sampler, GLenum pname, GLint param)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10633,9 +10633,9 @@ void __stdcall glSamplerParameteriv(GLuint sampler, GLenum pname, const GLint* p
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10657,9 +10657,9 @@ void __stdcall glSamplerParameterf(GLuint sampler, GLenum pname, GLfloat param)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10681,9 +10681,9 @@ void __stdcall glSamplerParameterfv(GLuint sampler, GLenum pname, const GLfloat*
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10705,9 +10705,9 @@ void __stdcall glGetSamplerParameteriv(GLuint sampler, GLenum pname, GLint* para
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10729,9 +10729,9 @@ void __stdcall glGetSamplerParameterfv(GLuint sampler, GLenum pname, GLfloat* pa
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10782,9 +10782,9 @@ void __stdcall glBindTransformFeedback(GLenum target, GLuint id)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10806,9 +10806,9 @@ void __stdcall glDeleteTransformFeedbacks(GLsizei n, const GLuint* ids)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10830,9 +10830,9 @@ void __stdcall glGenTransformFeedbacks(GLsizei n, GLuint* ids)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10854,9 +10854,9 @@ GLboolean __stdcall glIsTransformFeedback(GLuint id)
             {
                 return gl::error(GL_INVALID_OPERATION, GL_FALSE);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10880,9 +10880,9 @@ void __stdcall glPauseTransformFeedback(void)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10904,9 +10904,9 @@ void __stdcall glResumeTransformFeedback(void)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10929,9 +10929,9 @@ void __stdcall glGetProgramBinary(GLuint program, GLsizei bufSize, GLsizei* leng
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10954,9 +10954,9 @@ void __stdcall glProgramBinary(GLuint program, GLenum binaryFormat, const GLvoid
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10979,9 +10979,9 @@ void __stdcall glProgramParameteri(GLuint program, GLenum pname, GLint value)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -11169,9 +11169,9 @@ void __stdcall glGetInternalformativ(GLenum target, GLenum internalformat, GLenu
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            UNIMPLEMENTED();
+        }
     }
     catch(std::bad_alloc&)
     {
