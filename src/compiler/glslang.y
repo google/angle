@@ -55,6 +55,7 @@ WHICH GENERATES THE GLSL ES PARSER (glslang_tab.cpp AND glslang_tab.h).
             TString *string;
             float f;
             int i;
+            unsigned int u;
             bool b;
         };
         TSymbol* symbol;
@@ -132,7 +133,7 @@ extern void yyerror(TParseContext* context, const char* reason);
 %token <lex> SAMPLER2D SAMPLERCUBE SAMPLER_EXTERNAL_OES SAMPLER2DRECT
 %token <lex> SAMPLER3D SAMPLER3DRECT SAMPLER2DSHADOW
 
-%token <lex> IDENTIFIER TYPE_NAME FLOATCONSTANT INTCONSTANT BOOLCONSTANT
+%token <lex> IDENTIFIER TYPE_NAME FLOATCONSTANT INTCONSTANT UINTCONSTANT BOOLCONSTANT
 %token <lex> FIELD_SELECTION
 %token <lex> LEFT_OP RIGHT_OP
 %token <lex> INC_OP DEC_OP LE_OP GE_OP EQ_OP NE_OP
@@ -226,6 +227,11 @@ primary_expression
         ConstantUnion *unionArray = new ConstantUnion[1];
         unionArray->setIConst($1.i);
         $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtInt, EbpUndefined, EvqConst), $1.line);
+    }
+    | UINTCONSTANT {
+        ConstantUnion *unionArray = new ConstantUnion[1];
+        unionArray->setUConst($1.u);
+        $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtUInt, EbpUndefined, EvqConst), $1.line);
     }
     | FLOATCONSTANT {
         ConstantUnion *unionArray = new ConstantUnion[1];

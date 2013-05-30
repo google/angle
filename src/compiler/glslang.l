@@ -57,6 +57,7 @@ static int reserved_word(yyscan_t yyscanner);
 static int ES2_reserved_ES3_keyword(TParseContext *context, int token);
 static int ES2_keyword_ES3_reserved(TParseContext *context, int token);
 static int ES2_ident_ES3_keyword(TParseContext *context, int token);
+static int uint_constant(TParseContext *context);
 %}
 
 %option noyywrap nounput never-interactive
@@ -294,6 +295,9 @@ O           [0-7]
 0{O}+             { yylval->lex.i = static_cast<int>(strtol(yytext, 0, 0)); return(INTCONSTANT); }
 0{D}+             { context->error(yylineno, "Invalid Octal number.", yytext); context->recover(); return 0;}
 {D}+              { yylval->lex.i = static_cast<int>(strtol(yytext, 0, 0)); return(INTCONSTANT); }
+0[xX]{H}+[uU]     { return uint_constant(context); }
+0{O}+[uU]         { return uint_constant(context); }
+{D}+[uU]          { return uint_constant(context); }
 
 {D}+{E}           { yylval->lex.f = static_cast<float>(atof_dot(yytext)); return(FLOATCONSTANT); }
 {D}+"."{D}*({E})? { yylval->lex.f = static_cast<float>(atof_dot(yytext)); return(FLOATCONSTANT); }
@@ -435,6 +439,22 @@ int ES2_ident_ES3_keyword(TParseContext *context, int token)
     }
 
     return token;
+}
+
+int uint_constant(TParseContext *context)
+{
+    struct yyguts_t* yyg = (struct yyguts_t*) context->scanner;
+    yyscan_t yyscanner = (yyscan_t) context->scanner;
+
+    if (context->shaderVersion < 300)
+    {
+        context->error(yylineno, "Unsigned integers are unsupported prior to GLSL ES 3.00", yytext, "");
+        context->recover();
+        return 0;
+    }
+
+    yylval->lex.u = static_cast<unsigned int>(strtol(yytext, 0, 0));
+    return UINTCONSTANT;
 }
 
 void yyerror(TParseContext* context, const char* reason) {

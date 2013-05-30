@@ -96,5 +96,8 @@
     <None Include="Tokenizer.l">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="ExpressionParser.y">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

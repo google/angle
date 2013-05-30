@@ -79,9 +79,9 @@ NEWLINE     \n|\r|\r\n
 IDENTIFIER  [_a-zA-Z][_a-zA-Z0-9]*
 PUNCTUATOR  [][<>(){}.+-/*%^|&~=!:;,?]
 
-DECIMAL_CONSTANT      [1-9][0-9]*
-OCTAL_CONSTANT        0[0-7]*
-HEXADECIMAL_CONSTANT  0[xX][0-9a-fA-F]+
+DECIMAL_CONSTANT      [1-9][0-9]*[uU]?
+OCTAL_CONSTANT        0[0-7]*[uU]?
+HEXADECIMAL_CONSTANT  0[xX][0-9a-fA-F]+[uU]?
 
 DIGIT                [0-9]
 EXPONENT_PART        [eE][+-]?{DIGIT}+
