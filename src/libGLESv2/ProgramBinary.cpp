@@ -1702,6 +1702,14 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
         success = false;
     }
 
+    // special case for gl_DepthRange, the only built-in uniform (also a struct)
+    if (vertexShader->mUsesDepthRange || fragmentShader->mUsesDepthRange)
+    {
+        mUniforms.push_back(new Uniform(GL_FLOAT, GL_HIGH_FLOAT, "gl_DepthRange.near", 0));
+        mUniforms.push_back(new Uniform(GL_FLOAT, GL_HIGH_FLOAT, "gl_DepthRange.far", 0));
+        mUniforms.push_back(new Uniform(GL_FLOAT, GL_HIGH_FLOAT, "gl_DepthRange.diff", 0));
+    }
+
     return success;
 }
 

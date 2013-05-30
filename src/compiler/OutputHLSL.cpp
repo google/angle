@@ -845,6 +845,11 @@ void OutputHLSL::header()
         out << "#define GL_USES_POINT_SIZE\n";
     }
 
+    if (mUsesDepthRange)
+    {
+        out << "#define GL_USES_DEPTH_RANGE\n";
+    }
+
     if (mUsesXor)
     {
         out << "bool xor(bool p, bool q)\n"

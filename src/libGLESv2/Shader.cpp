@@ -323,6 +323,7 @@ void Shader::parseVaryings()
         mUsesFrontFacing = strstr(mHlsl, "GL_USES_FRONT_FACING") != NULL;
         mUsesPointSize = strstr(mHlsl, "GL_USES_POINT_SIZE") != NULL;
         mUsesPointCoord = strstr(mHlsl, "GL_USES_POINT_COORD") != NULL;
+        mUsesDepthRange = strstr(mHlsl, "GL_USES_DEPTH_RANGE") != NULL;
     }
 }
 
@@ -354,6 +355,7 @@ void Shader::uncompile()
     mUsesFrontFacing = false;
     mUsesPointSize = false;
     mUsesPointCoord = false;
+    mUsesDepthRange = false;
 
     mActiveUniforms.clear();
 }
