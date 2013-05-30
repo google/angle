@@ -223,7 +223,7 @@ TextureType ProgramBinary::getSamplerTextureType(SamplerType type, unsigned int 
 
 GLint ProgramBinary::getUniformLocation(std::string name)
 {
-    unsigned int subscript = 0;
+    unsigned int subscript = GL_INVALID_INDEX;
 
     // Strip any trailing array operator and retrieve the subscript
     size_t open = name.find_last_of('[');
@@ -237,10 +237,16 @@ GLint ProgramBinary::getUniformLocation(std::string name)
     unsigned int numUniforms = mUniformIndex.size();
     for (unsigned int location = 0; location < numUniforms; location++)
     {
-        if (mUniformIndex[location].name == name &&
-            mUniformIndex[location].element == subscript)
+        if (mUniformIndex[location].name == name)
         {
-            return location;
+            const int index = mUniformIndex[location].index;
+            const bool isArray = mUniforms[index]->isArray();
+
+            if ((isArray && mUniformIndex[location].element == subscript) || 
+                (subscript == GL_INVALID_INDEX))
+            {
+                return location;
+            }
         }
     }
 
