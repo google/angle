@@ -115,6 +115,8 @@ class Renderer
     virtual void setSamplerState(gl::SamplerType type, int index, const gl::SamplerState &sampler) = 0;
     virtual void setTexture(gl::SamplerType type, int index, gl::Texture *texture) = 0;
 
+    virtual bool setUniformBuffers(const gl::Buffer *vertexUniformBuffers[], const gl::Buffer *fragmentUniformBuffers[]) = 0;
+
     virtual void setRasterizerState(const gl::RasterizerState &rasterState) = 0;
     virtual void setBlendState(const gl::BlendState &blendState, const gl::Color &blendColor,
                                unsigned int sampleMask) = 0;

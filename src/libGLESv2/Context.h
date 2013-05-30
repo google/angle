@@ -474,6 +474,7 @@ class Context
     void applyShaders();
     void applyTextures();
     void applyTextures(SamplerType type);
+    bool applyUniformBuffers();
 
     void detachBuffer(GLuint buffer);
     void detachTexture(GLuint texture);

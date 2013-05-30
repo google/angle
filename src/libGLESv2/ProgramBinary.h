@@ -40,6 +40,7 @@ class VertexShader;
 class InfoLog;
 class AttributeBindings;
 struct Varying;
+class Buffer;
 
 // Struct used for correlating uniforms/elements of uniform arrays to handles
 struct UniformLocation
@@ -107,6 +108,7 @@ class ProgramBinary : public RefCountObject
 
     void dirtyAllUniforms();
     void applyUniforms();
+    bool applyUniformBuffers(const std::vector<gl::Buffer*> boundBuffers);
 
     bool load(InfoLog &infoLog, const void *binary, GLsizei length);
     bool save(void* binary, GLsizei bufSize, GLsizei *length);
@@ -128,6 +130,7 @@ class ProgramBinary : public RefCountObject
     void getActiveUniformBlockiv(GLuint uniformBlockIndex, GLenum pname, GLint *params) const;
     GLuint getActiveUniformBlockCount() const;
     GLuint getActiveUniformBlockMaxLength() const;
+    UniformBlock *getUniformBlockByIndex(GLuint blockIndex);
 
     void validate(InfoLog &infoLog);
     bool validateSamplers(InfoLog *infoLog);

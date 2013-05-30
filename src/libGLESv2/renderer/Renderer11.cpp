@@ -657,6 +657,52 @@ void Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *textur
     else UNREACHABLE();
 }
 
+bool Renderer11::setUniformBuffers(const gl::Buffer *vertexUniformBuffers[], const gl::Buffer *fragmentUniformBuffers[])
+{
+    // convert buffers to ID3D11Buffer*
+    ID3D11Buffer *vertexConstantBuffers[gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS] = { NULL };
+    ID3D11Buffer *pixelConstantBuffers[gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS] = { NULL };
+
+    for (unsigned int uniformBufferIndex = 0; uniformBufferIndex < gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS; uniformBufferIndex++)
+    {
+        const gl::Buffer *uniformBuffer = vertexUniformBuffers[uniformBufferIndex];
+        if (uniformBuffer)
+        {
+            BufferStorage11 *bufferStorage = BufferStorage11::makeBufferStorage11(uniformBuffer->getStorage());
+            ID3D11Buffer *constantBuffer = bufferStorage->getBuffer(GL_UNIFORM_BUFFER);
+
+            if (!constantBuffer)
+            {
+                return false;
+            }
+
+            vertexConstantBuffers[uniformBufferIndex] = constantBuffer;
+        }
+    }
+
+    for (unsigned int uniformBufferIndex = 0; uniformBufferIndex < gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS; uniformBufferIndex++)
+    {
+        const gl::Buffer *uniformBuffer = fragmentUniformBuffers[uniformBufferIndex];
+        if (uniformBuffer)
+        {
+            BufferStorage11 *bufferStorage = BufferStorage11::makeBufferStorage11(uniformBuffer->getStorage());
+            ID3D11Buffer *constantBuffer = bufferStorage->getBuffer(GL_UNIFORM_BUFFER);
+
+            if (!constantBuffer)
+            {
+                return false;
+            }
+
+            pixelConstantBuffers[uniformBufferIndex] = constantBuffer;
+        }
+    }
+
+    mDeviceContext->VSSetConstantBuffers(getReservedVertexUniformBuffers(), getMaxVertexShaderUniformBuffers(), vertexConstantBuffers);
+    mDeviceContext->PSSetConstantBuffers(getReservedFragmentUniformBuffers(), getMaxFragmentShaderUniformBuffers(), pixelConstantBuffers);
+
+    return true;
+}
+
 void Renderer11::setRasterizerState(const gl::RasterizerState &rasterState)
 {
     if (mForceSetRasterState || memcmp(&rasterState, &mCurRasterState, sizeof(gl::RasterizerState)) != 0)

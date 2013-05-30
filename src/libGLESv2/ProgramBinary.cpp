@@ -22,6 +22,7 @@
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/renderer/VertexDataManager.h"
 #include "libGLESv2/Context.h"
+#include "libGLESv2/Buffer.h"
 
 #undef near
 #undef far
@@ -315,6 +316,12 @@ GLuint ProgramBinary::getUniformBlockIndex(std::string name)
     }
 
     return GL_INVALID_INDEX;
+}
+
+UniformBlock *ProgramBinary::getUniformBlockByIndex(GLuint blockIndex)
+{
+    ASSERT(blockIndex < mUniformBlocks.size());
+    return mUniformBlocks[blockIndex];
 }
 
 template <typename T>
@@ -805,6 +812,51 @@ void ProgramBinary::applyUniforms()
     }
 
     mRenderer->applyUniforms(this, &mUniforms);
+}
+
+bool ProgramBinary::applyUniformBuffers(const std::vector<gl::Buffer*> boundBuffers)
+{
+    const gl::Buffer *vertexUniformBuffers[gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS] = {NULL};
+    const gl::Buffer *fragmentUniformBuffers[gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS] = {NULL};
+
+    const unsigned int reservedBuffersInVS = mRenderer->getReservedVertexUniformBuffers();
+    const unsigned int reservedBuffersInFS = mRenderer->getReservedFragmentUniformBuffers();
+
+    ASSERT(boundBuffers.size() == mUniformBlocks.size());
+
+    for (unsigned int uniformBlockIndex = 0; uniformBlockIndex < mUniformBlocks.size(); uniformBlockIndex++)
+    {
+        gl::UniformBlock *uniformBlock = getUniformBlockByIndex(uniformBlockIndex);
+        gl::Buffer *uniformBuffer = boundBuffers[uniformBlockIndex];
+
+        ASSERT(uniformBlock && uniformBuffer);
+
+        if (uniformBuffer->size() < uniformBlock->dataSize)
+        {
+            // undefined behaviour
+            return false;
+        }
+
+        ASSERT(uniformBlock->isReferencedByVertexShader() || uniformBlock->isReferencedByFragmentShader());
+
+        if (uniformBlock->isReferencedByVertexShader())
+        {
+            unsigned int registerIndex = uniformBlock->vsRegisterIndex - reservedBuffersInVS;
+            ASSERT(vertexUniformBuffers[registerIndex] == NULL);
+            ASSERT(registerIndex < mRenderer->getMaxVertexShaderUniformBuffers());
+            vertexUniformBuffers[registerIndex] = uniformBuffer;
+        }
+
+        if (uniformBlock->isReferencedByFragmentShader())
+        {
+            unsigned int registerIndex = uniformBlock->psRegisterIndex - reservedBuffersInFS;
+            ASSERT(fragmentUniformBuffers[registerIndex] == NULL);
+            ASSERT(registerIndex < mRenderer->getMaxFragmentShaderUniformBuffers());
+            fragmentUniformBuffers[registerIndex] = uniformBuffer;
+        }
+    }
+
+    return mRenderer->setUniformBuffers(vertexUniformBuffers, fragmentUniformBuffers);
 }
 
 // Packs varyings into generic varying registers, using the algorithm from [OpenGL ES Shading Language 1.00 rev. 17] appendix A section 7 page 111

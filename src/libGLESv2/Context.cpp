@@ -2094,6 +2094,33 @@ void Context::applyTextures(SamplerType type)
     }
 }
 
+bool Context::applyUniformBuffers()
+{
+    Program *programObject = getProgram(mState.currentProgram);
+    ProgramBinary *programBinary = programObject->getProgramBinary();
+
+    std::vector<gl::Buffer*> boundBuffers;
+
+    for (unsigned int uniformBlockIndex = 0; uniformBlockIndex < programBinary->getActiveUniformBlockCount(); uniformBlockIndex++)
+    {
+        GLuint blockBinding = programObject->getUniformBlockBinding(uniformBlockIndex);
+        const OffsetBindingPointer<Buffer>& boundBuffer = mState.uniformBuffers[blockBinding];
+        if (boundBuffer.id() == 0)
+        {
+            // undefined behaviour
+            return false;
+        }
+        else
+        {
+            gl::Buffer *uniformBuffer = boundBuffer.get();
+            ASSERT(uniformBuffer);
+            boundBuffers.push_back(uniformBuffer);
+        }
+    }
+
+    return programBinary->applyUniformBuffers(boundBuffers);
+}
+
 void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
                          GLenum format, GLenum type, GLsizei *bufSize, void* pixels)
 {
@@ -2230,6 +2257,11 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
     applyShaders();
     applyTextures();
 
+    if (!applyUniformBuffers())
+    {
+        return;
+    }
+
     if (!programBinary->validateSamplers(NULL))
     {
         return gl::error(GL_INVALID_OPERATION);
@@ -2283,6 +2315,11 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
 
     applyShaders();
     applyTextures();
+
+    if (!applyUniformBuffers())
+    {
+        return;
+    }
 
     if (!programBinary->validateSamplers(NULL))
     {

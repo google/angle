@@ -799,6 +799,12 @@ void Renderer9::setTexture(gl::SamplerType type, int index, gl::Texture *texture
     appliedSerials[index] = serial;
 }
 
+bool Renderer9::setUniformBuffers(const gl::Buffer* /*vertexUniformBuffers*/[], const gl::Buffer* /*fragmentUniformBuffers*/[])
+{
+    // No effect in ES2/D3D9
+    return true;
+}
+
 void Renderer9::setRasterizerState(const gl::RasterizerState &rasterState)
 {
     bool rasterStateChanged = mForceSetRasterState || memcmp(&rasterState, &mCurRasterState, sizeof(gl::RasterizerState)) != 0;
