@@ -208,7 +208,7 @@ D3D11LoadFunctionMap buildD3D11LoadFunctionMap()
     insertLoadFunction(&map, GL_RGB5_A1,            GL_UNSIGNED_INT_2_10_10_10_REV,    loadRGBA2101010ToRGBA                );
     insertLoadFunction(&map, GL_RGBA16F,            GL_HALF_FLOAT,                     loadToNative<GLhalf, 4>              );
     insertLoadFunction(&map, GL_RGBA32F,            GL_FLOAT,                          loadToNative<GLfloat, 4>             );
-    insertLoadFunction(&map, GL_RGBA16F,            GL_FLOAT,                          UnimplementedLoadFunction            );
+    insertLoadFunction(&map, GL_RGBA16F,            GL_FLOAT,                          loadFloatDataToHalfFloat<4>          );
     insertLoadFunction(&map, GL_RGBA8UI,            GL_UNSIGNED_BYTE,                  loadToNative<GLubyte, 4>             );
     insertLoadFunction(&map, GL_RGBA8I,             GL_BYTE,                           loadToNative<GLbyte, 4>              );
     insertLoadFunction(&map, GL_RGBA16UI,           GL_UNSIGNED_SHORT,                 loadToNative<GLushort, 4>            );
@@ -223,11 +223,11 @@ D3D11LoadFunctionMap buildD3D11LoadFunctionMap()
     insertLoadFunction(&map, GL_RGB565,             GL_UNSIGNED_SHORT_5_6_5,           loadRGB565DataToRGBA                 );
     insertLoadFunction(&map, GL_R11F_G11F_B10F,     GL_UNSIGNED_INT_10F_11F_11F_REV,   loadToNative<GLuint, 1>              );
     insertLoadFunction(&map, GL_RGB9_E5,            GL_UNSIGNED_INT_5_9_9_9_REV,       loadToNative<GLuint, 1>              );
-    insertLoadFunction(&map, GL_RGB16F,             GL_HALF_FLOAT,                     loadRGBHalfFloatDataToRGBA           );
+    insertLoadFunction(&map, GL_RGB16F,             GL_HALF_FLOAT,                     loadToNative3To4<GLhalf, gl::Float16One>);
     insertLoadFunction(&map, GL_R11F_G11F_B10F,     GL_HALF_FLOAT,                     loadRGBHalfFloatDataTo111110Float    );
     insertLoadFunction(&map, GL_RGB9_E5,            GL_HALF_FLOAT,                     loadRGBHalfFloatDataTo999E5          );
     insertLoadFunction(&map, GL_RGB32F,             GL_FLOAT,                          loadToNative<GLfloat, 3>             );
-    insertLoadFunction(&map, GL_RGB16F,             GL_FLOAT,                          UnimplementedLoadFunction            );
+    insertLoadFunction(&map, GL_RGB16F,             GL_FLOAT,                          loadFloatRGBDataToHalfFloatRGBA      );
     insertLoadFunction(&map, GL_R11F_G11F_B10F,     GL_FLOAT,                          loadRGBFloatDataTo111110Float        );
     insertLoadFunction(&map, GL_RGB9_E5,            GL_FLOAT,                          loadRGBFloatDataTo999E5              );
     insertLoadFunction(&map, GL_RGB8UI,             GL_UNSIGNED_BYTE,                  loadToNative3To4<GLubyte, 0x0>       );

@@ -828,4 +828,29 @@ void loadRGBFloatDataTo111110Float(int width, int height, int depth,
     }
 }
 
+void loadFloatRGBDataToHalfFloatRGBA(int width, int height, int depth,
+                                     const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
+                                     void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch)
+{
+    const float *source = NULL;
+    unsigned short *dest = NULL;
+
+    for (int z = 0; z < depth; z++)
+    {
+        for (int y = 0; y < height; y++)
+        {
+            source = offsetDataPointer<float>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned short>(output, y, z, outputRowPitch, outputDepthPitch);
+
+            for (int x = 0; x < width; x++)
+            {
+                dest[x * 4 + 0] = gl::float32ToFloat16(source[x * 3 + 0]);
+                dest[x * 4 + 1] = gl::float32ToFloat16(source[x * 3 + 1]);
+                dest[x * 4 + 2] = gl::float32ToFloat16(source[x * 3 + 2]);
+                dest[x * 4 + 3] = gl::Float16One;
+            }
+        }
+    }
+}
+
 }
