@@ -2331,6 +2331,16 @@ unsigned int Renderer9::getMaxFragmentShaderUniformBuffers() const
     return 0;
 }
 
+unsigned int Renderer9::getReservedVertexUniformBuffers() const
+{
+    return 0;
+}
+
+unsigned int Renderer9::getReservedFragmentUniformBuffers() const
+{
+    return 0;
+}
+
 unsigned int Renderer9::getMaxTransformFeedbackBuffers() const
 {
     return 0;

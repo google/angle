@@ -173,6 +173,8 @@ class Renderer
     virtual unsigned int getMaxVaryingVectors() const = 0;
     virtual unsigned int getMaxVertexShaderUniformBuffers() const = 0;
     virtual unsigned int getMaxFragmentShaderUniformBuffers() const = 0;
+    virtual unsigned int getReservedVertexUniformBuffers() const = 0;
+    virtual unsigned int getReservedFragmentUniformBuffers() const = 0;
     virtual unsigned int getMaxTransformFeedbackBuffers() const = 0;
     virtual unsigned int getMaxUniformBufferSize() const = 0;
     virtual bool getNonPower2TextureSupport() const = 0;

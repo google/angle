@@ -2187,10 +2187,10 @@ unsigned int Renderer11::getMaxVertexShaderUniformBuffers() const
     switch (mFeatureLevel)
     {
       case D3D_FEATURE_LEVEL_11_0:
-        return D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT;
+        return D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - getReservedVertexUniformBuffers();
       case D3D_FEATURE_LEVEL_10_1:
       case D3D_FEATURE_LEVEL_10_0:
-        return D3D10_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT;
+        return D3D10_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - getReservedVertexUniformBuffers();
       default: UNREACHABLE();
         return 0;
     }
@@ -2204,13 +2204,25 @@ unsigned int Renderer11::getMaxFragmentShaderUniformBuffers() const
     switch (mFeatureLevel)
     {
       case D3D_FEATURE_LEVEL_11_0:
-        return D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT;
+        return D3D11_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - getReservedFragmentUniformBuffers();
       case D3D_FEATURE_LEVEL_10_1:
       case D3D_FEATURE_LEVEL_10_0:
-        return D3D10_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT;
+        return D3D10_COMMONSHADER_CONSTANT_BUFFER_API_SLOT_COUNT - getReservedFragmentUniformBuffers();
       default: UNREACHABLE();
         return 0;
     }
+}
+
+unsigned int Renderer11::getReservedVertexUniformBuffers() const
+{
+    // we reserve one buffer for the application uniforms, and one for driver uniforms
+    return 2;
+}
+
+unsigned int Renderer11::getReservedFragmentUniformBuffers() const
+{
+    // we reserve one buffer for the application uniforms, and one for driver uniforms
+    return 2;
 }
 
 unsigned int Renderer11::getMaxTransformFeedbackBuffers() const
