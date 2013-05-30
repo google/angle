@@ -12,18 +12,6 @@
 namespace rx
 {
 
-template <typename T>
-inline static T *offsetDataPointer(void *data, int y, int z, int rowPitch, int depthPitch)
-{
-    return reinterpret_cast<T*>(reinterpret_cast<unsigned char*>(data) + (y * rowPitch) + (z * depthPitch));
-}
-
-template <typename T>
-inline static const T *offsetDataPointer(const void *data, int y, int z, int rowPitch, int depthPitch)
-{
-    return reinterpret_cast<const T*>(reinterpret_cast<const unsigned char*>(data) + (y * rowPitch) + (z * depthPitch));
-}
-
 void loadAlphaDataToBGRA(int width, int height, int depth,
                          const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
                          void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch)
