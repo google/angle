@@ -223,9 +223,9 @@ bool validateSubImageParamsCube(bool compressed, GLsizei width, GLsizei height,
     return true;
 }
 
-bool validateES3TexImageFormat(gl::Context *context, GLenum target, GLint level, GLint internalformat, bool isCompressed, bool isSubImage,
-    GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
-    GLint border, GLenum format, GLenum type)
+bool validateES3TexImageParameters(gl::Context *context, GLenum target, GLint level, GLint internalformat, bool isCompressed, bool isSubImage,
+                                   GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
+                                   GLint border, GLenum format, GLenum type)
 {
     // Validate image size
     if (level < 0 || width < 0 || height < 0 || depth < 0 )
@@ -464,9 +464,9 @@ bool validateES3TexImageFormat(gl::Context *context, GLenum target, GLint level,
     return true;
 }
 
-bool validateCopyTexImageParameters(gl::Context *context, GLenum target, bool isCompressed, GLint level,
-                                    GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y,
-                                    GLsizei width, GLsizei height)
+bool validateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLint level, GLenum internalformat,
+                                       bool isSubImage, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y,
+                                       GLsizei width, GLsizei height, GLint border)
 {
     if (level < 0 || xoffset < 0 || yoffset < 0 || zoffset < 0 || width < 0 || height < 0)
     {
@@ -481,6 +481,11 @@ bool validateCopyTexImageParameters(gl::Context *context, GLenum target, bool is
     if (width == 0 || height == 0)
     {
         return false;
+    }
+
+    if (border != 0)
+    {
+        return gl::error(GL_INVALID_VALUE, false);
     }
 
     if (level > context->getMaximumTextureLevel())
@@ -569,12 +574,12 @@ bool validateCopyTexImageParameters(gl::Context *context, GLenum target, bool is
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
-    if (isCompressed != textureCompressed)
+    if (texture->isImmutable() && !isSubImage)
     {
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
-    if (isCompressed)
+    if (textureCompressed)
     {
         if ((width % 4 != 0 && width != textureLevelWidth) ||
             (height % 4 != 0 && height != textureLevelHeight))
@@ -7683,7 +7688,7 @@ void __stdcall glTexImage3D(GLenum target, GLint level, GLint internalformat, GL
             }
 
             // validateES3TexImageFormat sets the error code if there is an error
-            if (!validateES3TexImageFormat(context, target, level, internalformat, false, false,
+            if (!validateES3TexImageParameters(context, target, level, internalformat, false, false,
                                                0, 0, 0, width, height, depth, border, format, type))
             {
                 return;
@@ -7740,7 +7745,7 @@ void __stdcall glTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint 
             }
 
             // validateES3TexImageFormat sets the error code if there is an error
-            if (!validateES3TexImageFormat(context, target, level, GL_NONE, false, true,
+            if (!validateES3TexImageParameters(context, target, level, GL_NONE, false, true,
                                                xoffset, yoffset, zoffset, width, height, depth, 0,
                                                format, type))
             {
@@ -7791,8 +7796,8 @@ void __stdcall glCopyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GL
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (!validateCopyTexImageParameters(context, target, false, level, xoffset, yoffset, zoffset,
-                                                x, y, width, height))
+            if (!validateES3CopyTexImageParameters(context, target, level, GL_NONE, false, xoffset, yoffset, zoffset,
+                                                   x, y, width, height, 0))
             {
                 return;
             }
@@ -7846,8 +7851,8 @@ void __stdcall glCompressedTexImage3D(GLenum target, GLint level, GLenum interna
             }
 
             // validateES3TexImageFormat sets the error code if there is an error
-            if (!validateES3TexImageFormat(context, target, level, internalformat, true, false,
-                                           0, 0, 0, width, height, depth, border, GL_NONE, GL_NONE))
+            if (!validateES3TexImageParameters(context, target, level, internalformat, true, false,
+                                               0, 0, 0, width, height, depth, border, GL_NONE, GL_NONE))
             {
                 return;
             }
@@ -7908,8 +7913,8 @@ void __stdcall glCompressedTexSubImage3D(GLenum target, GLint level, GLint xoffs
             }
 
             // validateES3TexImageFormat sets the error code if there is an error
-            if (!validateES3TexImageFormat(context, target, level, GL_NONE, true, true,
-                                           0, 0, 0, width, height, depth, 0, GL_NONE, GL_NONE))
+            if (!validateES3TexImageParameters(context, target, level, GL_NONE, true, true,
+                                               0, 0, 0, width, height, depth, 0, GL_NONE, GL_NONE))
             {
                 return;
             }
