@@ -861,7 +861,8 @@ bool TIntermUnary::promote(TInfoSink&)
 bool TIntermBinary::promote(TInfoSink& infoSink)
 {
     // This function only handles scalars, vectors, and matrices.
-    if (left->isArray() || right->isArray()) {
+    if (left->isArray() || right->isArray())
+    {
         infoSink.info.message(EPrefixInternalError, "Invalid operation for arrays", getLine());
         return false;
     }
@@ -883,7 +884,8 @@ bool TIntermBinary::promote(TInfoSink& infoSink)
 
     // Binary operations results in temporary variables unless both
     // operands are const.
-    if (left->getQualifier() != EvqConst || right->getQualifier() != EvqConst) {
+    if (left->getQualifier() != EvqConst || right->getQualifier() != EvqConst)
+    {
         getTypePointer()->setQualifier(EvqTemporary);
     }
 
@@ -892,8 +894,10 @@ bool TIntermBinary::promote(TInfoSink& infoSink)
     //
     // All scalars. Code after this test assumes this case is removed!
     //
-    if (size == 1) {
-        switch (op) {
+    if (size == 1)
+    {
+        switch (op)
+        {
             //
             // Promote to conditional
             //
@@ -913,7 +917,9 @@ bool TIntermBinary::promote(TInfoSink& infoSink)
             case EOpLogicalOr:
                 // Both operands must be of type bool.
                 if (left->getBasicType() != EbtBool || right->getBasicType() != EbtBool)
+                {
                     return false;
+                }
                 setType(TType(EbtBool, EbpUndefined));
                 break;
 
@@ -927,7 +933,8 @@ bool TIntermBinary::promote(TInfoSink& infoSink)
     // The other operand could be a scalar, vector, or matrix.
     // Are the sizes compatible?
     //
-    if (left->getNominalSize() != right->getNominalSize()) {
+    if (left->getNominalSize() != right->getNominalSize())
+    {
         // If the nominal size of operands do not match:
         // One of them must be scalar.
         if (left->getNominalSize() != 1 && right->getNominalSize() != 1)
@@ -941,61 +948,98 @@ bool TIntermBinary::promote(TInfoSink& infoSink)
     // Can these two operands be combined?
     //
     TBasicType basicType = left->getBasicType();
-    switch (op) {
+    switch (op)
+    {
         case EOpMul:
-            if (!left->isMatrix() && right->isMatrix()) {
+            if (!left->isMatrix() && right->isMatrix())
+            {
                 if (left->isVector())
+                {
                     op = EOpVectorTimesMatrix;
-                else {
+                }
+                else
+                {
                     op = EOpMatrixTimesScalar;
                     setType(TType(basicType, higherPrecision, EvqTemporary, size, true));
                 }
-            } else if (left->isMatrix() && !right->isMatrix()) {
-                if (right->isVector()) {
+            }
+            else if (left->isMatrix() && !right->isMatrix())
+            {
+                if (right->isVector())
+                {
                     op = EOpMatrixTimesVector;
                     setType(TType(basicType, higherPrecision, EvqTemporary, size, false));
-                } else {
+                }
+                else
+                {
                     op = EOpMatrixTimesScalar;
                 }
-            } else if (left->isMatrix() && right->isMatrix()) {
+            }
+            else if (left->isMatrix() && right->isMatrix())
+            {
                 op = EOpMatrixTimesMatrix;
-            } else if (!left->isMatrix() && !right->isMatrix()) {
-                if (left->isVector() && right->isVector()) {
+            }
+            else if (!left->isMatrix() && !right->isMatrix())
+            {
+                if (left->isVector() && right->isVector())
+                {
                     // leave as component product
-                } else if (left->isVector() || right->isVector()) {
+                }
+                else if (left->isVector() || right->isVector())
+                {
                     op = EOpVectorTimesScalar;
                     setType(TType(basicType, higherPrecision, EvqTemporary, size, false));
                 }
-            } else {
+            }
+            else
+            {
                 infoSink.info.message(EPrefixInternalError, "Missing elses", getLine());
                 return false;
             }
             break;
         case EOpMulAssign:
-            if (!left->isMatrix() && right->isMatrix()) {
+            if (!left->isMatrix() && right->isMatrix())
+            {
                 if (left->isVector())
+                {
                     op = EOpVectorTimesMatrixAssign;
-                else {
+                }
+                else
+                {
                     return false;
                 }
-            } else if (left->isMatrix() && !right->isMatrix()) {
-                if (right->isVector()) {
+            }
+            else if (left->isMatrix() && !right->isMatrix())
+            {
+                if (right->isVector())
+                {
                     return false;
-                } else {
+                }
+                else
+                {
                     op = EOpMatrixTimesScalarAssign;
                 }
-            } else if (left->isMatrix() && right->isMatrix()) {
+            }
+            else if (left->isMatrix() && right->isMatrix())
+            {
                 op = EOpMatrixTimesMatrixAssign;
-            } else if (!left->isMatrix() && !right->isMatrix()) {
-                if (left->isVector() && right->isVector()) {
+            }
+            else if (!left->isMatrix() && !right->isMatrix())
+            {
+                if (left->isVector() && right->isVector())
+                {
                     // leave as component product
-                } else if (left->isVector() || right->isVector()) {
+                }
+                else if (left->isVector() || right->isVector())
+                {
                     if (! left->isVector())
                         return false;
                     op = EOpVectorTimesScalarAssign;
                     setType(TType(basicType, higherPrecision, EvqTemporary, size, false));
                 }
-            } else {
+            }
+            else
+            {
                 infoSink.info.message(EPrefixInternalError, "Missing elses", getLine());
                 return false;
             }
