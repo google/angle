@@ -825,7 +825,7 @@ void __stdcall glBindBuffer(GLenum target, GLuint buffer)
                 context->bindGenericUniformBuffer(buffer);
                 return;
               case GL_TRANSFORM_FEEDBACK_BUFFER:
-                context->bindGenericUniformBuffer(buffer);
+                context->bindGenericTransformFeedbackBuffer(buffer);
                 return;
               default:
                 return gl::error(GL_INVALID_ENUM);
