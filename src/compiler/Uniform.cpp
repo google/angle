@@ -28,4 +28,11 @@ BlockMemberInfo::BlockMemberInfo(int offset, int arrayStride, int matrixStride, 
 
 const BlockMemberInfo BlockMemberInfo::defaultBlockInfo(-1, -1, -1, false);
 
+InterfaceBlock::InterfaceBlock(const char *name, unsigned int arraySize, unsigned int registerIndex)
+    : name(name),
+      arraySize(arraySize),
+      registerIndex(registerIndex)
+{
+}
+
 }

@@ -78,6 +78,7 @@ class Shader
     int getTranslatedSourceLength() const;
     void getTranslatedSource(GLsizei bufSize, GLsizei *length, char *buffer);
     const sh::ActiveUniforms &getUniforms();
+    const sh::ActiveInterfaceBlocks &getInterfaceBlocks();
 
     virtual void compile() = 0;
     virtual void uncompile();
@@ -133,6 +134,7 @@ class Shader
     char *mHlsl;
     char *mInfoLog;
     sh::ActiveUniforms mActiveUniforms;
+    sh::ActiveInterfaceBlocks mActiveInterfaceBlocks;
 
     ResourceManager *mResourceManager;
 };

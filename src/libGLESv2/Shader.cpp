@@ -181,6 +181,11 @@ const sh::ActiveUniforms &Shader::getUniforms()
     return mActiveUniforms;
 }
 
+const sh::ActiveInterfaceBlocks &Shader::getInterfaceBlocks()
+{
+    return mActiveInterfaceBlocks;
+}
+
 bool Shader::isCompiled()
 {
     return mHlsl != NULL;
@@ -358,6 +363,7 @@ void Shader::uncompile()
     mUsesDepthRange = false;
 
     mActiveUniforms.clear();
+    mActiveInterfaceBlocks.clear();
 }
 
 void Shader::compileToHLSL(void *compiler)

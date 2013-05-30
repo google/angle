@@ -45,6 +45,21 @@ struct BlockMemberInfo
     static const BlockMemberInfo defaultBlockInfo;
 };
 
+struct InterfaceBlock
+{
+    InterfaceBlock(const char *name, unsigned int arraySize, unsigned int registerIndex);
+
+    std::string name;
+    unsigned int arraySize;
+    ActiveUniforms activeUniforms;
+    size_t dataSize;
+    std::vector<BlockMemberInfo> blockInfo;
+
+    unsigned int registerIndex;
+};
+
+typedef std::vector<InterfaceBlock> ActiveInterfaceBlocks;
+
 }
 
 #endif   // COMPILER_UNIFORM_H_
