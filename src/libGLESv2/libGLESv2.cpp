@@ -624,7 +624,7 @@ bool validateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
       case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
       case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
         {
-            if (width != height)
+            if (!isSubImage && width != height)
             {
                 return gl::error(GL_INVALID_VALUE, false);
             }
