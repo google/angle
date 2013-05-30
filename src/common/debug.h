@@ -80,10 +80,17 @@ namespace gl
 #endif
 
 // A macro to indicate unimplemented functionality
+
+// Define NOASSERT_UNIMPLEMENTED to non zero to skip the assert fail in the unimplemented checks
+// This will allow us to test with some automated test suites (eg dEQP) without crashing
+#ifndef NOASSERT_UNIMPLEMENTED
+#define NOASSERT_UNIMPLEMENTED 0
+#endif
+
 #if !defined(NDEBUG)
 #define UNIMPLEMENTED() do { \
     FIXME("\t! Unimplemented: %s(%d)\n", __FUNCTION__, __LINE__); \
-    assert(false); \
+    assert(NOASSERT_UNIMPLEMENTED); \
     } while(0)
 #else
     #define UNIMPLEMENTED() FIXME("\t! Unimplemented: %s(%d)\n", __FUNCTION__, __LINE__)
