@@ -134,8 +134,8 @@ bool TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture, unsign
     {
         // Round up the width and height to the nearest multiple of dimension alignment
         unsigned int dimensionAlignment = d3d11::GetTextureFormatDimensionAlignment(mTextureFormat);
-        width = width + dimensionAlignment - 1 - (width - 1) % dimensionAlignment;
-        height = height + dimensionAlignment - 1 - (height - 1) % dimensionAlignment;
+        width = roundUp(width, (GLsizei)dimensionAlignment);
+        height = roundUp(height, (GLsizei)dimensionAlignment);
 
         D3D11_BOX srcBox;
         srcBox.left = xoffset;

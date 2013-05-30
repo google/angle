@@ -154,6 +154,12 @@ struct Range
     int end;
 };
 
+template <typename T>
+T roundUp(const T value, const T alignment)
+{
+    return value + alignment - 1 - (value - 1) % alignment;
+}
+
 }
 
 #endif   // LIBGLESV2_MATHUTIL_H_
