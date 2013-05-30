@@ -430,6 +430,7 @@ class Context
     unsigned int getMaximumRenderTargets() const;
     GLsizei getMaxSupportedSamples() const;
     unsigned int getMaxTransformFeedbackBufferBindings() const;
+    GLintptr getUniformBufferOffsetAlignment() const;
     const char *getExtensionString() const;
     const char *getRendererString() const;
     bool supportsEventQueries() const;

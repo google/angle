@@ -8676,6 +8676,13 @@ void __stdcall glBindBufferRange(GLenum target, GLuint index, GLuint buffer, GLi
                 break;
 
               case GL_UNIFORM_BUFFER:
+
+                // it is an error to bind an offset not a multiple of the alignment
+                if (buffer != 0 && (offset % context->getUniformBufferOffsetAlignment()) != 0)
+                {
+                    return gl::error(GL_INVALID_VALUE);
+                }
+
                 context->bindIndexedUniformBuffer(buffer, index, offset, size);
                 context->bindGenericUniformBuffer(buffer);
                 break;

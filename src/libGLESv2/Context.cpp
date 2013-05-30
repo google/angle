@@ -1499,12 +1499,14 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_BLEND_EQUATION_ALPHA:             *params = mState.blend.blendEquationAlpha;             break;
       case GL_STENCIL_WRITEMASK:                *params = mState.depthStencil.stencilWritemask;        break;
       case GL_STENCIL_BACK_WRITEMASK:           *params = mState.depthStencil.stencilBackWritemask;    break;
-      case GL_STENCIL_CLEAR_VALUE:              *params = mState.stencilClearValue;             break;
-      case GL_SUBPIXEL_BITS:                    *params = 4;                                    break;
-      case GL_MAX_TEXTURE_SIZE:                 *params = getMaximum2DTextureDimension();       break;
-      case GL_MAX_CUBE_MAP_TEXTURE_SIZE:        *params = getMaximumCubeTextureDimension();     break;
-      case GL_MAX_3D_TEXTURE_SIZE:              *params = getMaximum3DTextureDimension();       break;
-      case GL_MAX_ARRAY_TEXTURE_LAYERS:         *params = getMaximum2DArrayTextureLayers();     break;
+      case GL_STENCIL_CLEAR_VALUE:              *params = mState.stencilClearValue;                    break;
+      case GL_SUBPIXEL_BITS:                    *params = 4;                                           break;
+      case GL_MAX_TEXTURE_SIZE:                 *params = getMaximum2DTextureDimension();              break;
+      case GL_MAX_CUBE_MAP_TEXTURE_SIZE:        *params = getMaximumCubeTextureDimension();            break;
+      case GL_MAX_3D_TEXTURE_SIZE:              *params = getMaximum3DTextureDimension();              break;
+      case GL_MAX_ARRAY_TEXTURE_LAYERS:         *params = getMaximum2DArrayTextureLayers();            break;
+      case GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT:  *params = getUniformBufferOffsetAlignment();           break;
+      case GL_MAX_UNIFORM_BUFFER_BINDINGS:      *params = getMaximumCombinedUniformBufferBindings();   break;
       case GL_NUM_COMPRESSED_TEXTURE_FORMATS:   
         params[0] = mNumCompressedTextureFormats;
         break;
@@ -1926,6 +1928,8 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
     // Check for ES3.0+ parameter names
     switch (pname)
     {
+      case GL_MAX_UNIFORM_BUFFER_BINDINGS:
+      case GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT:
       case GL_UNIFORM_BUFFER_BINDING:
       case GL_TRANSFORM_FEEDBACK_BINDING:
       case GL_COPY_READ_BUFFER_BINDING:
@@ -2413,6 +2417,12 @@ int Context::getMaxSupportedSamples() const
 unsigned int Context::getMaxTransformFeedbackBufferBindings() const
 {
     return mRenderer->getMaxTransformFeedbackBuffers();
+}
+
+GLintptr Context::getUniformBufferOffsetAlignment() const
+{
+    // setting a large alignment forces uniform buffers to bind with zero offset
+    return static_cast<GLintptr>(std::numeric_limits<GLint>::max());
 }
 
 unsigned int Context::getMaximumRenderTargets() const
