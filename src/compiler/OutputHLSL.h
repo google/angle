@@ -33,6 +33,7 @@ class OutputHLSL : public TIntermTraverser
 
     TInfoSinkBase &getBodyStream();
     const ActiveUniforms &getUniforms();
+    const ActiveInterfaceBlocks &getInterfaceBlocks() const;
 
     TString typeString(const TType &type);
     TString textureString(const TType &type);
@@ -84,6 +85,7 @@ class OutputHLSL : public TIntermTraverser
 
     typedef std::map<TString, TIntermSymbol*> ReferencedSymbols;
     ReferencedSymbols mReferencedUniforms;
+    ReferencedSymbols mReferencedInterfaceBlocks;
     ReferencedSymbols mReferencedAttributes;
     ReferencedSymbols mReferencedVaryings;
 
@@ -163,6 +165,7 @@ class OutputHLSL : public TIntermTraverser
     TIntermSymbol *mExcessiveLoopIndex;
 
     int mUniformRegister;
+    int mInterfaceBlockRegister;
     int mSamplerRegister;
 
     TString registerString(TIntermSymbol *operand);
@@ -178,6 +181,7 @@ class OutputHLSL : public TIntermTraverser
     static bool isVarying(TQualifier qualifier);
 
     ActiveUniforms mActiveUniforms;
+    ActiveInterfaceBlocks mActiveInterfaceBlocks;
 };
 }
 

@@ -7,6 +7,7 @@
 #include "compiler/OutputHLSL.h"
 
 #include "common/angleutils.h"
+#include "common/utilities.h"
 #include "compiler/debug.h"
 #include "compiler/DetectDiscontinuity.h"
 #include "compiler/InfoSink.h"
@@ -113,6 +114,7 @@ OutputHLSL::OutputHLSL(TParseContext &context, const ShBuiltInResources& resourc
     }
 
     mSamplerRegister = 0;
+    mInterfaceBlockRegister = 2; // Reserve registers for the default uniform block and driver constants
 }
 
 OutputHLSL::~OutputHLSL()
@@ -141,6 +143,11 @@ const ActiveUniforms &OutputHLSL::getUniforms()
     return mActiveUniforms;
 }
 
+const ActiveInterfaceBlocks &OutputHLSL::getInterfaceBlocks() const
+{
+    return mActiveInterfaceBlocks;
+}
+
 int OutputHLSL::vectorSize(const TType &type) const
 {
     int elementSize = type.isMatrix() ? type.getNominalSize() : 1;
@@ -165,6 +172,7 @@ void OutputHLSL::header()
     }
 
     TString uniforms;
+    TString interfaceBlocks;
     TString varyings;
     TString attributes;
 
@@ -180,7 +188,7 @@ void OutputHLSL::header()
             uniforms += "uniform SamplerState sampler_" + decorateUniform(name, type) + arrayString(type) + 
                         " : register(s" + str(index) + ");\n";
 
-            uniforms += "uniform " + textureString(type) + " texture_" + decorateUniform(name, type) + arrayString(type) + 
+            uniforms += "uniform " + textureString(type) + " texture_" + decorateUniform(name, type) + arrayString(type) +
                         " : register(t" + str(index) + ");\n";
         }
         else
@@ -188,6 +196,36 @@ void OutputHLSL::header()
             uniforms += "uniform " + typeString(type) + " " + decorateUniform(name, type) + arrayString(type) + 
                         " : register(" + registerString(mReferencedUniforms[name]) + ");\n";
         }
+    }
+
+    for (ReferencedSymbols::const_iterator interfaceBlockIt = mReferencedInterfaceBlocks.begin(); interfaceBlockIt != mReferencedInterfaceBlocks.end(); interfaceBlockIt++)
+    {
+        const TType &interfaceBlockType = *interfaceBlockIt->second->getType().getInterfaceBlockType();
+        const TString &blockName = interfaceBlockType.getTypeName();
+        const TTypeList &typeList = *interfaceBlockType.getStruct();
+
+        sh::InterfaceBlock interfaceBlock(blockName.c_str(), 0, mInterfaceBlockRegister++);
+        for (unsigned int typeIndex = 0; typeIndex < typeList.size(); typeIndex++)
+        {
+            const TType &memberType = *typeList[typeIndex].type;
+            declareUniformToList(memberType, memberType.getFieldName(), typeIndex, interfaceBlock.activeUniforms);
+        }
+
+        // TODO: handle other block layouts
+        interfaceBlock.setPackedBlockLayout();
+        mActiveInterfaceBlocks.push_back(interfaceBlock);
+
+        interfaceBlocks += "cbuffer " + blockName + " : register(b" + str(interfaceBlock.registerIndex) + ")\n"
+                           "{\n";
+
+        for (unsigned int typeIndex = 0; typeIndex < typeList.size(); typeIndex++)
+        {
+            // TODO: padding for standard layout
+            const TType &memberType = *typeList[typeIndex].type;
+            interfaceBlocks += "    " + typeString(memberType) + " " + decorate(memberType.getFieldName()) + arrayString(memberType) + ";\n";
+        }
+
+        interfaceBlocks += "};\n\n";
     }
 
     for (ReferencedSymbols::const_iterator varying = mReferencedVaryings.begin(); varying != mReferencedVaryings.end(); varying++)
@@ -309,6 +347,12 @@ void OutputHLSL::header()
         
         out <<  uniforms;
         out << "\n";
+
+        if (!interfaceBlocks.empty())
+        {
+            out << interfaceBlocks;
+            out << "\n";
+        }
 
         if (mUsesTexture2D)
         {
@@ -678,6 +722,12 @@ void OutputHLSL::header()
         out << uniforms;
         out << "\n";
         
+        if (!interfaceBlocks.empty())
+        {
+            out << interfaceBlocks;
+            out << "\n";
+        }
+
         if (mUsesTexture2D)
         {
             if (mOutputType == SH_HLSL9_OUTPUT)
@@ -1148,8 +1198,17 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
 
         if (qualifier == EvqUniform)
         {
-            mReferencedUniforms[name] = node;
-            out << decorateUniform(name, node->getType());
+            if (node->getType().isInterfaceBlockMember())
+            {
+                const TString& interfaceBlockTypeName = node->getType().getInterfaceBlockType()->getTypeName();
+                mReferencedInterfaceBlocks[interfaceBlockTypeName] = node;
+                out << decorateUniform(name, node->getType());
+            }
+            else
+            {
+                mReferencedUniforms[name] = node;
+                out << decorateUniform(name, node->getType());
+            }
         }
         else if (qualifier == EvqAttribute)
         {
