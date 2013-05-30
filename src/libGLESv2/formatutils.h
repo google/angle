@@ -56,6 +56,12 @@ GLuint GetStencilBits(GLint internalFormat, GLuint clientVersion);
 GLenum GetFormat(GLint internalFormat, GLuint clientVersion);
 GLenum GetType(GLint internalFormat, GLuint clientVersion);
 
+bool IsNormalizedFixedPointFormat(GLint internalFormat, GLuint clientVersion);
+bool IsIntegerFormat(GLint internalFormat, GLuint clientVersion);
+bool IsSignedIntegerFormat(GLint internalFormat, GLuint clientVersion);
+bool IsUnsignedIntegerFormat(GLint internalFormat, GLuint clientVersion);
+bool IsFloatingPointFormat(GLint internalFormat, GLuint clientVersion);
+
 bool IsColorRenderingSupported(GLint internalFormat, const rx::Renderer *renderer);
 bool IsColorRenderingSupported(GLint internalFormat, const Context *context);
 bool IsTextureFilteringSupported(GLint internalFormat, const rx::Renderer *renderer);
