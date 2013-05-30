@@ -2370,7 +2370,18 @@ void ProgramBinary::defineUniformBlockMembers(const sh::ActiveUniforms &uniforms
 
         if (!uniform.fields.empty())
         {
-            defineUniformBlockMembers(uniform.fields, uniform.name, blockIndex, blockInfoItr, blockUniformIndexes);
+            if (uniform.arraySize > 0)
+            {
+                for (unsigned int arrayElement = 0; arrayElement < uniform.arraySize; arrayElement++)
+                {
+                    const std::string uniformElementName = uniform.name + "[" + str(arrayElement) + "]";
+                    defineUniformBlockMembers(uniform.fields, uniformElementName, blockIndex, blockInfoItr, blockUniformIndexes);
+                }
+            }
+            else
+            {
+                defineUniformBlockMembers(uniform.fields, uniform.name, blockIndex, blockInfoItr, blockUniformIndexes);
+            }
         }
         else
         {

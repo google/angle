@@ -92,7 +92,17 @@ bool InterfaceBlock::getBlockLayoutInfo(const sh::Uniform &uniform, unsigned int
 {
     if (!uniform.fields.empty())
     {
-        getBlockLayoutInfo(uniform.fields, currentOffset);
+        if (uniform.arraySize > 0)
+        {
+            for (unsigned int arrayElement = 0; arrayElement < uniform.arraySize; arrayElement++)
+            {
+                getBlockLayoutInfo(uniform.fields, currentOffset);
+            }
+        }
+        else
+        {
+            getBlockLayoutInfo(uniform.fields, currentOffset);
+        }
         return false;
     }
 
