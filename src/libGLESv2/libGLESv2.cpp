@@ -9532,9 +9532,42 @@ void __stdcall glGetUniformIndices(GLuint program, GLsizei uniformCount, const G
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            if (uniformCount < 0)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            gl::Program *programObject = context->getProgram(program);
+
+            if (!programObject)
+            {
+                if (context->getShader(program))
+                {
+                    return gl::error(GL_INVALID_OPERATION);
+                }
+                else
+                {
+                    return gl::error(GL_INVALID_VALUE);
+                }
+            }
+
+            gl::ProgramBinary *programBinary = programObject->getProgramBinary();
+            if (!programObject->isLinked() || !programBinary)
+            {
+                for (int uniformId = 0; uniformId < uniformCount; uniformId++)
+                {
+                    uniformIndices[uniformId] = GL_INVALID_INDEX;
+                }
+            }
+            else
+            {
+                for (int uniformId = 0; uniformId < uniformCount; uniformId++)
+                {
+                    uniformIndices[uniformId] = programBinary->getUniformIndex(uniformNames[uniformId]);
+                }
+            }
+        }
     }
     catch(std::bad_alloc&)
     {

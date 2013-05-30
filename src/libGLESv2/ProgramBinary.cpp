@@ -247,6 +247,40 @@ GLint ProgramBinary::getUniformLocation(std::string name)
     return -1;
 }
 
+GLuint ProgramBinary::getUniformIndex(std::string name)
+{
+    unsigned int subscript = GL_INVALID_INDEX;
+
+    // Strip any trailing array operator and retrieve the subscript
+    size_t open = name.find_last_of('[');
+    size_t close = name.find_last_of(']');
+    if (open != std::string::npos && close == name.length() - 1)
+    {
+        subscript = atoi(name.substr(open + 1).c_str());
+        name.erase(open);
+    }
+
+    // The app is not allowed to specify array indices other than 0 for arrays of basic types
+    if (subscript != 0 && subscript != GL_INVALID_INDEX)
+    {
+        return GL_INVALID_INDEX;
+    }
+
+    unsigned int numUniforms = mUniforms.size();
+    for (unsigned int index = 0; index < numUniforms; index++)
+    {
+        if (mUniforms[index]->name == name)
+        {
+            if (mUniforms[index]->isArray() || subscript == GL_INVALID_INDEX)
+            {
+                return index;
+            }
+        }
+    }
+
+    return GL_INVALID_INDEX;
+}
+
 template <typename T>
 bool ProgramBinary::setUniform(GLint location, GLsizei count, const T* v, GLenum targetUniformType)
 {
