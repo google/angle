@@ -1440,6 +1440,14 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
         return false;
     }
 
+    int compileFlags = 0;
+    stream.read(&compileFlags);
+    if (compileFlags != ANGLE_COMPILE_OPTIMIZATION_LEVEL)
+    {
+        infoLog.append("Mismatched compilation flags.");
+        return false;
+    }
+
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; ++i)
     {
         stream.read(&mLinkedAttribute[i].type);
@@ -1639,6 +1647,7 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
 
     stream.write(GL_PROGRAM_BINARY_ANGLE);
     stream.write(VERSION_DWORD);
+    stream.write(ANGLE_COMPILE_OPTIMIZATION_LEVEL);
 
     for (unsigned int i = 0; i < MAX_VERTEX_ATTRIBS; ++i)
     {
