@@ -463,6 +463,9 @@ class Context
                          GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
                          GLbitfield mask);
 
+    void invalidateFrameBuffer(GLenum target, GLsizei numAttachments, const GLenum* attachments,
+                               GLint x, GLint y, GLsizei width, GLsizei height);
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Context);
 

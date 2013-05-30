@@ -3257,6 +3257,79 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
     }
 }
 
+void Context::invalidateFrameBuffer(GLenum target, GLsizei numAttachments, const GLenum* attachments,
+                                    GLint x, GLint y, GLsizei width, GLsizei height)
+{
+    Framebuffer *frameBuffer = NULL;
+    switch (target)
+    {
+      case GL_FRAMEBUFFER:
+      case GL_DRAW_FRAMEBUFFER:
+        frameBuffer = getDrawFramebuffer();
+        break;
+      case GL_READ_FRAMEBUFFER:
+        frameBuffer = getReadFramebuffer();
+        break;
+      default:
+        UNREACHABLE();
+    }
+
+    if (frameBuffer && frameBuffer->completeness() == GL_FRAMEBUFFER_COMPLETE)
+    {
+        for (int i = 0; i < numAttachments; ++i)
+        {
+            rx::RenderTarget *renderTarget = NULL;
+
+            if (attachments[i] >= GL_COLOR_ATTACHMENT0 && attachments[i] <= GL_COLOR_ATTACHMENT15)
+            {
+                gl::Renderbuffer *renderBuffer = frameBuffer->getColorbuffer(attachments[i] - GL_COLOR_ATTACHMENT0);
+                if (renderBuffer)
+                {
+                    renderTarget = renderBuffer->getRenderTarget();
+                }
+            }
+            else if (attachments[i] == GL_COLOR)
+            {
+                 gl::Renderbuffer *renderBuffer = frameBuffer->getColorbuffer(0);
+                 if (renderBuffer)
+                 {
+                     renderTarget = renderBuffer->getRenderTarget();
+                 }
+            }
+            else
+            {
+                gl::Renderbuffer *renderBuffer = NULL;
+                switch (attachments[i])
+                {
+                  case GL_DEPTH_ATTACHMENT:
+                  case GL_DEPTH:
+                    renderBuffer = frameBuffer->getDepthbuffer();
+                    break;
+                  case GL_STENCIL_ATTACHMENT:
+                  case GL_STENCIL:
+                    renderBuffer = frameBuffer->getStencilbuffer();
+                    break;
+                  case GL_DEPTH_STENCIL_ATTACHMENT:
+                    renderBuffer = frameBuffer->getDepthOrStencilbuffer();
+                    break;
+                  default:
+                    UNREACHABLE();
+                }
+
+                if (renderBuffer)
+                {
+                    renderTarget = renderBuffer->getDepthStencil();
+                }
+            }
+
+            if (renderTarget)
+            {
+                renderTarget->invalidate(x, y, width, height);
+            }
+        }
+    }
+}
+
 }
 
 extern "C"

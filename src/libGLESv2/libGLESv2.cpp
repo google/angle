@@ -629,6 +629,67 @@ bool validReadFormatType(GLenum format, GLenum type)
     return true;
 }
 
+bool validateInvalidateFramebufferParameters(gl::Context *context, GLenum target, GLsizei numAttachments,
+                                             const GLenum* attachments)
+{
+    bool defaultFramebuffer = false;
+
+    switch (target)
+    {
+      case GL_DRAW_FRAMEBUFFER:
+      case GL_FRAMEBUFFER:
+        defaultFramebuffer = context->getDrawFramebufferHandle() == 0;
+        break;
+      case GL_READ_FRAMEBUFFER:
+        defaultFramebuffer = context->getReadFramebufferHandle() == 0;
+        break;
+      default:
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+
+    for (int i = 0; i < numAttachments; ++i)
+    {
+        if (attachments[i] >= GL_COLOR_ATTACHMENT0 && attachments[i] <= GL_COLOR_ATTACHMENT15)
+        {
+            if (defaultFramebuffer)
+            {
+                return gl::error(GL_INVALID_ENUM, false);
+            }
+
+            if (attachments[i] >= GL_COLOR_ATTACHMENT0 + context->getMaximumRenderTargets())
+            {
+                return gl::error(GL_INVALID_OPERATION, false);
+            }
+        }
+        else
+        {
+            switch (attachments[i])
+            {
+              case GL_DEPTH_ATTACHMENT:
+              case GL_STENCIL_ATTACHMENT:
+              case GL_DEPTH_STENCIL_ATTACHMENT:
+                if (defaultFramebuffer)
+                {
+                    return gl::error(GL_INVALID_ENUM, false);
+                }
+                break;
+              case GL_COLOR:
+              case GL_DEPTH:
+              case GL_STENCIL:
+                if (!defaultFramebuffer)
+                {
+                    return gl::error(GL_INVALID_ENUM, false);
+                }
+                break;
+              default:
+                return gl::error(GL_INVALID_ENUM, false);
+            }
+        }
+    }
+
+    return true;
+}
+
 extern "C"
 {
 
@@ -10700,9 +10761,15 @@ void __stdcall glInvalidateFramebuffer(GLenum target, GLsizei numAttachments, co
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            if (!validateInvalidateFramebufferParameters(context, target, numAttachments, attachments))
+            {
+                return;
+            }
+
+            int maxDimension = context->getMaximumRenderbufferDimension();
+            context->invalidateFrameBuffer(target, numAttachments, attachments, 0, 0, maxDimension, maxDimension);
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10726,9 +10793,14 @@ void __stdcall glInvalidateSubFramebuffer(GLenum target, GLsizei numAttachments,
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            if (!validateInvalidateFramebufferParameters(context, target, numAttachments, attachments))
+            {
+                return;
+            }
+
+            context->invalidateFrameBuffer(target, numAttachments, attachments, x, y, width, height);
+        }
     }
     catch(std::bad_alloc&)
     {
