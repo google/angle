@@ -56,6 +56,10 @@ struct InterfaceBlock
     std::vector<BlockMemberInfo> blockInfo;
 
     unsigned int registerIndex;
+
+    void setSharedBlockLayout();
+    void setPackedBlockLayout();
+    void setStandardBlockLayout();
 };
 
 typedef std::vector<InterfaceBlock> ActiveInterfaceBlocks;
