@@ -2723,7 +2723,7 @@ GLint ProgramBinary::getActiveUniformi(GLuint index, GLenum pname) const
     {
       case GL_UNIFORM_TYPE:         return static_cast<GLint>(uniform.type);
       case GL_UNIFORM_SIZE:         return static_cast<GLint>(uniform.elementCount());
-      case GL_UNIFORM_NAME_LENGTH:  return static_cast<GLint>(uniform.name.size() + 1);
+      case GL_UNIFORM_NAME_LENGTH:  return static_cast<GLint>(uniform.name.size() + 1 + (uniform.isArray() ? 3 : 0));
       case GL_UNIFORM_BLOCK_INDEX:  return uniform.blockIndex;
 
       case GL_UNIFORM_OFFSET:       return uniform.blockInfo.offset;
