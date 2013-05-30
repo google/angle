@@ -363,6 +363,43 @@ static TString BuiltInFunctionsCommonTexture1_0(const ShBuiltInResources& resour
     return s;
 }
 
+static TString BuiltInFunctionsCommonTexture3_0()
+{
+    TString s;
+
+    //
+    // Texture Functions for GLSL ES 3.0
+    //
+    s.append(TString("vec4 texture(sampler2D sampler, vec2 coord);"));
+    s.append(TString("vec4 texture(samplerCube sampler, vec3 coord);"));
+    s.append(TString("vec4 textureProj(sampler2D sampler, vec3 coord);"));
+    s.append(TString("vec4 textureProj(sampler2D sampler, vec4 coord);"));
+
+    return s;
+}
+
+static TString BuiltInFunctionsFragmentGradient3_0()
+{
+    TString s;
+
+    s.append(TString("float dFdx(float p);"));
+    s.append(TString("vec2  dFdx(vec2  p);"));
+    s.append(TString("vec3  dFdx(vec3  p);"));
+    s.append(TString("vec4  dFdx(vec4  p);"));
+
+    s.append(TString("float dFdy(float p);"));
+    s.append(TString("vec2  dFdy(vec2  p);"));
+    s.append(TString("vec3  dFdy(vec3  p);"));
+    s.append(TString("vec4  dFdy(vec4  p);"));
+
+    s.append(TString("float fwidth(float p);"));
+    s.append(TString("vec2  fwidth(vec2  p);"));
+    s.append(TString("vec3  fwidth(vec3  p);"));
+    s.append(TString("vec4  fwidth(vec4  p);"));
+
+    return s;
+}
+
 //============================================================================
 //
 // Prototypes for built-in functions seen by vertex shaders only.
@@ -517,6 +554,8 @@ void TBuiltIns::initialize(ShShaderType type, ShShaderSpec spec,
         commonBuiltIns.push_back(BuiltInFunctionsCommon());
         essl1BuiltIns.push_back(BuiltInFunctionsCommonTexture1_0(resources));
         essl1BuiltIns.push_back(BuiltInFunctionsFragmentTexture1_0(resources));
+        essl3BuiltIns.push_back(BuiltInFunctionsCommonTexture3_0());
+        essl3BuiltIns.push_back(BuiltInFunctionsFragmentGradient3_0());
         commonBuiltIns.push_back(StandardUniforms());
         break;
 
@@ -525,6 +564,7 @@ void TBuiltIns::initialize(ShShaderType type, ShShaderSpec spec,
         commonBuiltIns.push_back(BuiltInFunctionsCommon());
         essl1BuiltIns.push_back(BuiltInFunctionsCommonTexture1_0(resources));
         essl1BuiltIns.push_back(BuiltInFunctionsVertexTexture1_0());
+        essl3BuiltIns.push_back(BuiltInFunctionsCommonTexture3_0());
         commonBuiltIns.push_back(StandardUniforms());
         break;
 
@@ -634,13 +674,17 @@ void IdentifyBuiltIns(ShShaderType type, ShShaderSpec spec,
         break;
     case SH_FRAGMENT_SHADER:
         if (resources.OES_standard_derivatives) {
-            symbolTable.relateToOperator(COMMON_BUILTINS, "dFdx",   EOpDFdx);
-            symbolTable.relateToOperator(COMMON_BUILTINS, "dFdy",   EOpDFdy);
-            symbolTable.relateToOperator(COMMON_BUILTINS, "fwidth", EOpFwidth);
+            symbolTable.relateToOperator(ESSL1_BUILTINS, "dFdx",   EOpDFdx);
+            symbolTable.relateToOperator(ESSL1_BUILTINS, "dFdy",   EOpDFdy);
+            symbolTable.relateToOperator(ESSL1_BUILTINS, "fwidth", EOpFwidth);
 
-            symbolTable.relateToExtension(COMMON_BUILTINS, "dFdx", "GL_OES_standard_derivatives");
-            symbolTable.relateToExtension(COMMON_BUILTINS, "dFdy", "GL_OES_standard_derivatives");
-            symbolTable.relateToExtension(COMMON_BUILTINS, "fwidth", "GL_OES_standard_derivatives");
+            symbolTable.relateToExtension(ESSL1_BUILTINS, "dFdx", "GL_OES_standard_derivatives");
+            symbolTable.relateToExtension(ESSL1_BUILTINS, "dFdy", "GL_OES_standard_derivatives");
+            symbolTable.relateToExtension(ESSL1_BUILTINS, "fwidth", "GL_OES_standard_derivatives");
+
+            symbolTable.relateToOperator(ESSL3_BUILTINS, "dFdx",   EOpDFdx);
+            symbolTable.relateToOperator(ESSL3_BUILTINS, "dFdy",   EOpDFdy);
+            symbolTable.relateToOperator(ESSL3_BUILTINS, "fwidth", EOpFwidth);
         }
         break;
     default: break;

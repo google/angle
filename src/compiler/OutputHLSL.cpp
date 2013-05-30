@@ -1775,6 +1775,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         {
             TString name = TFunction::unmangleName(node->getName());
             bool lod0 = mInsideDiscontinuousLoop || mOutputLod0Function;
+            TIntermSequence &arguments = node->getSequence();
 
             if (node->isUserDefined())
             {
@@ -1782,15 +1783,17 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             }
             else
             {
-                if (name == "texture2D")
+                TBasicType samplerType = arguments[0]->getAsTyped()->getType().getBasicType();
+
+                if (name == "texture2D" || (name == "texture" && samplerType == EbtSampler2D))
                 {
                     if (!lod0)
                     {
-                        if (node->getSequence().size() == 2)
+                        if (arguments.size() == 2)
                         {
                             mUsesTexture2D = true;
                         }
-                        else if (node->getSequence().size() == 3)
+                        else if (arguments.size() == 3)
                         {
                             mUsesTexture2D_bias = true;
                         }
@@ -1800,11 +1803,11 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                     }
                     else
                     {
-                        if (node->getSequence().size() == 2)
+                        if (arguments.size() == 2)
                         {
                             mUsesTexture2DLod0 = true;
                         }
-                        else if (node->getSequence().size() == 3)
+                        else if (arguments.size() == 3)
                         {
                             mUsesTexture2DLod0_bias = true;
                         }
@@ -1813,15 +1816,15 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                         out << "gl_texture2DLod0(";
                     }
                 }
-                else if (name == "texture2DProj")
+                else if (name == "texture2DProj" || (name == "textureProj" && samplerType == EbtSampler2D))
                 {
                     if (!lod0)
                     {
-                        if (node->getSequence().size() == 2)
+                        if (arguments.size() == 2)
                         {
                             mUsesTexture2DProj = true;
                         }
-                        else if (node->getSequence().size() == 3)
+                        else if (arguments.size() == 3)
                         {
                             mUsesTexture2DProj_bias = true;
                         }
@@ -1831,11 +1834,11 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                     }
                     else
                     {
-                        if (node->getSequence().size() == 2)
+                        if (arguments.size() == 2)
                         {
                             mUsesTexture2DProjLod0 = true;
                         }
-                        else if (node->getSequence().size() == 3)
+                        else if (arguments.size() == 3)
                         {
                             mUsesTexture2DProjLod0_bias = true;
                         }
@@ -1844,15 +1847,15 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                         out << "gl_texture2DProjLod0(";
                     }
                 }
-                else if (name == "textureCube")
+                else if (name == "textureCube" || (name == "texture" && samplerType == EbtSamplerCube))
                 {
                     if (!lod0)
                     {
-                        if (node->getSequence().size() == 2)
+                        if (arguments.size() == 2)
                         {
                             mUsesTextureCube = true;
                         }
-                        else if (node->getSequence().size() == 3)
+                        else if (arguments.size() == 3)
                         {
                             mUsesTextureCube_bias = true;
                         }
@@ -1862,11 +1865,11 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                     }
                     else
                     {
-                        if (node->getSequence().size() == 2)
+                        if (arguments.size() == 2)
                         {
                             mUsesTextureCubeLod0 = true;
                         }
-                        else if (node->getSequence().size() == 3)
+                        else if (arguments.size() == 3)
                         {
                             mUsesTextureCubeLod0_bias = true;
                         }
@@ -1875,9 +1878,9 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                         out << "gl_textureCubeLod0(";
                     }
                 }
-                else if (name == "texture2DLod")
+                else if (name == "texture2DLod" || (name == "textureLod" && samplerType == EbtSampler2D))
                 {
-                    if (node->getSequence().size() == 3)
+                    if (arguments.size() == 3)
                     {
                         mUsesTexture2DLod = true;
                     }
@@ -1885,9 +1888,9 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
                     out << "gl_texture2DLod(";
                 }
-                else if (name == "texture2DProjLod")
+                else if (name == "texture2DProjLod" || (name == "textureProjLod" && samplerType == EbtSampler2D))
                 {
-                    if (node->getSequence().size() == 3)
+                    if (arguments.size() == 3)
                     {
                         mUsesTexture2DProjLod = true;
                     }
@@ -1895,9 +1898,9 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
                     out << "gl_texture2DProjLod(";
                 }
-                else if (name == "textureCubeLod")
+                else if (name == "textureCubeLod" || (name == "textureLod" && samplerType == EbtSamplerCube))
                 {
-                    if (node->getSequence().size() == 3)
+                    if (arguments.size() == 3)
                     {
                         mUsesTextureCubeLod = true;
                     }
@@ -1907,9 +1910,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 }
                 else UNREACHABLE();
             }
-
-            TIntermSequence &arguments = node->getSequence();
-
+            
             for (TIntermSequence::iterator arg = arguments.begin(); arg != arguments.end(); arg++)
             {
                 if (mOutputType == SH_HLSL11_OUTPUT && IsSampler((*arg)->getAsTyped()->getBasicType()))
