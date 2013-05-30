@@ -19,7 +19,6 @@
 
 #include "libGLESv2/renderer/renderer9_utils.h"
 #include "libGLESv2/renderer/formatutils9.h"
-#include "libGLESv2/renderer/generatemip.h"
 
 namespace rx
 {
@@ -55,6 +54,9 @@ void Image9::generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 *sour
     ASSERT(sourceDesc.Width == 1 || sourceDesc.Width / 2 == destDesc.Width);
     ASSERT(sourceDesc.Height == 1 || sourceDesc.Height / 2 == destDesc.Height);
 
+    MipGenerationFunction mipFunction = d3d9::GetMipGenerationFunction(sourceDesc.Format);
+    ASSERT(mipFunction != NULL);
+
     D3DLOCKED_RECT sourceLocked = {0};
     result = sourceSurface->LockRect(&sourceLocked, NULL, D3DLOCK_READONLY);
     ASSERT(SUCCEEDED(result));
@@ -68,32 +70,12 @@ void Image9::generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 *sour
 
     if (sourceData && destData)
     {
-        switch (sourceDesc.Format)
-        {
-          case D3DFMT_L8:
-            GenerateMip<L8>(sourceDesc.Width, sourceDesc.Height, 1, sourceData, sourceLocked.Pitch, 0, destData, destLocked.Pitch, 0);
-            break;
-          case D3DFMT_A8L8:
-            GenerateMip<A8L8>(sourceDesc.Width, sourceDesc.Height, 1, sourceData, sourceLocked.Pitch, 0, destData, destLocked.Pitch, 0);
-            break;
-          case D3DFMT_A8R8G8B8:
-          case D3DFMT_X8R8G8B8:
-            GenerateMip<A8R8G8B8>(sourceDesc.Width, sourceDesc.Height, 1, sourceData, sourceLocked.Pitch, 0, destData, destLocked.Pitch, 0);
-            break;
-          case D3DFMT_A16B16G16R16F:
-            GenerateMip<A16B16G16R16F>(sourceDesc.Width, sourceDesc.Height, 1, sourceData, sourceLocked.Pitch, 0, destData, destLocked.Pitch, 0);
-            break;
-          case D3DFMT_A32B32G32R32F:
-            GenerateMip<A32B32G32R32F>(sourceDesc.Width, sourceDesc.Height, 1, sourceData, sourceLocked.Pitch, 0, destData, destLocked.Pitch, 0);
-            break;
-          default:
-            UNREACHABLE();
-            break;
-        }
-
-        destSurface->UnlockRect();
-        sourceSurface->UnlockRect();
+        mipFunction(sourceDesc.Width, sourceDesc.Height, 1, sourceData, sourceLocked.Pitch, 0,
+                    destData, destLocked.Pitch, 0);
     }
+
+    destSurface->UnlockRect();
+    sourceSurface->UnlockRect();
 }
 
 Image9 *Image9::makeImage9(Image *img)

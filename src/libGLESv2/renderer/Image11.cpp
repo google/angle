@@ -18,7 +18,6 @@
 #include "libGLESv2/utilities.h"
 #include "libGLESv2/renderer/formatutils11.h"
 #include "libGLESv2/renderer/renderer11_utils.h"
-#include "libGLESv2/renderer/generatemip.h"
 
 namespace rx
 {
@@ -50,59 +49,35 @@ void Image11::generateMipmap(Image11 *dest, Image11 *src)
     ASSERT(src->getWidth() == 1 || src->getWidth() / 2 == dest->getWidth());
     ASSERT(src->getHeight() == 1 || src->getHeight() / 2 == dest->getHeight());
 
-    D3D11_MAPPED_SUBRESOURCE destMapped, srcMapped;
-    dest->map(D3D11_MAP_WRITE, &destMapped);
-    src->map(D3D11_MAP_READ, &srcMapped);
+    MipGenerationFunction mipFunction = d3d11::GetMipGenerationFunction(src->getDXGIFormat());
+    ASSERT(mipFunction != NULL);
+
+    D3D11_MAPPED_SUBRESOURCE destMapped;
+    HRESULT destMapResult = dest->map(D3D11_MAP_WRITE, &destMapped);
+    if (FAILED(destMapResult))
+    {
+        ERR("Failed to map destination image for mip map generation. HRESULT:0x%X", destMapResult);
+        return;
+    }
+
+    D3D11_MAPPED_SUBRESOURCE srcMapped;
+    HRESULT srcMapResult = src->map(D3D11_MAP_READ, &srcMapped);
+    if (FAILED(srcMapResult))
+    {
+        ERR("Failed to map source image for mip map generation. HRESULT:0x%X", srcMapResult);
+
+        dest->unmap();
+        return;
+    }
 
     const unsigned char *sourceData = reinterpret_cast<const unsigned char*>(srcMapped.pData);
     unsigned char *destData = reinterpret_cast<unsigned char*>(destMapped.pData);
 
-    if (sourceData && destData)
-    {
-        switch (src->getDXGIFormat())
-        {
-          case DXGI_FORMAT_R8G8B8A8_UNORM:
-          case DXGI_FORMAT_B8G8R8A8_UNORM:
-            GenerateMip<R8G8B8A8>(src->getWidth(), src->getHeight(), src->getDepth(), sourceData, srcMapped.RowPitch, srcMapped.DepthPitch, destData, destMapped.RowPitch, destMapped.DepthPitch);
-            break;
-          case DXGI_FORMAT_A8_UNORM:
-            GenerateMip<A8>(src->getWidth(), src->getHeight(), src->getDepth(), sourceData, srcMapped.RowPitch, srcMapped.DepthPitch, destData, destMapped.RowPitch, destMapped.DepthPitch);
-            break;
-          case DXGI_FORMAT_R8_UNORM:
-            GenerateMip<R8>(src->getWidth(), src->getHeight(), src->getDepth(), sourceData, srcMapped.RowPitch, srcMapped.DepthPitch, destData, destMapped.RowPitch, destMapped.DepthPitch);
-            break;
-          case DXGI_FORMAT_R32G32B32A32_FLOAT:
-            GenerateMip<A32B32G32R32F>(src->getWidth(), src->getHeight(), src->getDepth(), sourceData, srcMapped.RowPitch, srcMapped.DepthPitch, destData, destMapped.RowPitch, destMapped.DepthPitch);
-            break;
-          case DXGI_FORMAT_R32G32B32_FLOAT:
-            GenerateMip<R32G32B32F>(src->getWidth(), src->getHeight(), src->getDepth(), sourceData, srcMapped.RowPitch, srcMapped.DepthPitch, destData, destMapped.RowPitch, destMapped.DepthPitch);
-            break;
-          case DXGI_FORMAT_R16G16B16A16_FLOAT:
-            GenerateMip<A16B16G16R16F>(src->getWidth(), src->getHeight(), src->getDepth(), sourceData, srcMapped.RowPitch, srcMapped.DepthPitch, destData, destMapped.RowPitch, destMapped.DepthPitch);
-            break;
-          case DXGI_FORMAT_R8G8_UNORM:
-            GenerateMip<R8G8>(src->getWidth(), src->getHeight(), src->getDepth(), sourceData, srcMapped.RowPitch, srcMapped.DepthPitch, destData, destMapped.RowPitch, destMapped.DepthPitch);
-            break;
-          case DXGI_FORMAT_R16_FLOAT:
-            GenerateMip<R16F>(src->getWidth(), src->getHeight(), src->getDepth(), sourceData, srcMapped.RowPitch, srcMapped.DepthPitch, destData, destMapped.RowPitch, destMapped.DepthPitch);
-            break;
-          case DXGI_FORMAT_R16G16_FLOAT:
-            GenerateMip<R16G16F>(src->getWidth(), src->getHeight(), src->getDepth(), sourceData, srcMapped.RowPitch, srcMapped.DepthPitch, destData, destMapped.RowPitch, destMapped.DepthPitch);
-            break;
-          case DXGI_FORMAT_R32_FLOAT:
-            GenerateMip<R32F>(src->getWidth(), src->getHeight(), src->getDepth(), sourceData, srcMapped.RowPitch, srcMapped.DepthPitch, destData, destMapped.RowPitch, destMapped.DepthPitch);
-            break;
-          case DXGI_FORMAT_R32G32_FLOAT:
-            GenerateMip<R32G32F>(src->getWidth(), src->getHeight(), src->getDepth(), sourceData, srcMapped.RowPitch, srcMapped.DepthPitch, destData, destMapped.RowPitch, destMapped.DepthPitch);
-            break;
-          default:
-            UNREACHABLE();
-            break;
-        }
+    mipFunction(src->getWidth(), src->getHeight(), src->getDepth(), sourceData, srcMapped.RowPitch, srcMapped.DepthPitch,
+                destData, destMapped.RowPitch, destMapped.DepthPitch);
 
-        dest->unmap();
-        src->unmap();
-    }
+    dest->unmap();
+    src->unmap();
 
     dest->markDirty();
 }
