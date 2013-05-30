@@ -756,4 +756,52 @@ void loadRGBFloatDataTo999E5(int width, int height, int depth,
     }
 }
 
+void loadRGBHalfFloatDataTo111110Float(int width, int height, int depth,
+                                       const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
+                                       void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch)
+{
+    const unsigned short *source = NULL;
+    unsigned int *dest = NULL;
+
+    for (int z = 0; z < depth; z++)
+    {
+        for (int y = 0; y < height; y++)
+        {
+            source = offsetDataPointer<unsigned short>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned int>(output, y, z, outputRowPitch, outputDepthPitch);
+
+            for (int x = 0; x < width; x++)
+            {
+                dest[x] = (gl::float32ToFloat11(gl::float16ToFloat32(source[x * 3 + 0])) <<  0) |
+                          (gl::float32ToFloat11(gl::float16ToFloat32(source[x * 3 + 1])) << 11) |
+                          (gl::float32ToFloat10(gl::float16ToFloat32(source[x * 3 + 2])) << 22);
+            }
+        }
+    }
+}
+
+void loadRGBFloatDataTo111110Float(int width, int height, int depth,
+                                   const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
+                                   void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch)
+{
+    const float *source = NULL;
+    unsigned int *dest = NULL;
+
+    for (int z = 0; z < depth; z++)
+    {
+        for (int y = 0; y < height; y++)
+        {
+            source = offsetDataPointer<float>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned int>(output, y, z, outputRowPitch, outputDepthPitch);
+
+            for (int x = 0; x < width; x++)
+            {
+                dest[x] = (gl::float32ToFloat11(source[x * 3 + 0]) <<  0) |
+                          (gl::float32ToFloat11(source[x * 3 + 1]) << 11) |
+                          (gl::float32ToFloat10(source[x * 3 + 2]) << 22);
+            }
+        }
+    }
+}
+
 }

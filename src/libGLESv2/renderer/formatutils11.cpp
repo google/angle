@@ -66,7 +66,7 @@ static D3D11ES3FormatMap buildD3D11ES3FormatMap()
     map.insert(D3D11ES3FormatPair(GL_RG32F,             D3D11ES3FormatInfo(DXGI_FORMAT_R32G32_FLOAT,         DXGI_FORMAT_R32G32_FLOAT,        DXGI_FORMAT_R32G32_FLOAT,        DXGI_FORMAT_UNKNOWN)));
     map.insert(D3D11ES3FormatPair(GL_RGB32F,            D3D11ES3FormatInfo(DXGI_FORMAT_R32G32B32_FLOAT,      DXGI_FORMAT_R32G32B32_FLOAT,     DXGI_FORMAT_R32G32B32_FLOAT,     DXGI_FORMAT_UNKNOWN)));
     map.insert(D3D11ES3FormatPair(GL_RGBA32F,           D3D11ES3FormatInfo(DXGI_FORMAT_R32G32B32A32_FLOAT,   DXGI_FORMAT_R32G32B32A32_FLOAT,  DXGI_FORMAT_R32G32B32A32_FLOAT,  DXGI_FORMAT_UNKNOWN)));
-    map.insert(D3D11ES3FormatPair(GL_R11F_G11F_B10F,    D3D11ES3FormatInfo(DXGI_FORMAT_UNKNOWN,              DXGI_FORMAT_UNKNOWN,             DXGI_FORMAT_UNKNOWN,             DXGI_FORMAT_UNKNOWN)));
+    map.insert(D3D11ES3FormatPair(GL_R11F_G11F_B10F,    D3D11ES3FormatInfo(DXGI_FORMAT_R11G11B10_FLOAT,      DXGI_FORMAT_R11G11B10_FLOAT,     DXGI_FORMAT_UNKNOWN,             DXGI_FORMAT_UNKNOWN)));
     map.insert(D3D11ES3FormatPair(GL_RGB9_E5,           D3D11ES3FormatInfo(DXGI_FORMAT_R9G9B9E5_SHAREDEXP,   DXGI_FORMAT_R9G9B9E5_SHAREDEXP,  DXGI_FORMAT_UNKNOWN,             DXGI_FORMAT_UNKNOWN)));
     map.insert(D3D11ES3FormatPair(GL_R8I,               D3D11ES3FormatInfo(DXGI_FORMAT_UNKNOWN,              DXGI_FORMAT_UNKNOWN,             DXGI_FORMAT_UNKNOWN,             DXGI_FORMAT_UNKNOWN)));
     map.insert(D3D11ES3FormatPair(GL_R8UI,              D3D11ES3FormatInfo(DXGI_FORMAT_UNKNOWN,              DXGI_FORMAT_UNKNOWN,             DXGI_FORMAT_UNKNOWN,             DXGI_FORMAT_UNKNOWN)));
@@ -221,14 +221,14 @@ D3D11LoadFunctionMap buildD3D11LoadFunctionMap()
     insertLoadFunction(&map, GL_SRGB8,              GL_UNSIGNED_BYTE,                  UnimplementedLoadFunction            );
     insertLoadFunction(&map, GL_RGB8_SNORM,         GL_BYTE,                           UnimplementedLoadFunction            );
     insertLoadFunction(&map, GL_RGB565,             GL_UNSIGNED_SHORT_5_6_5,           loadRGB565DataToRGBA                 );
-    insertLoadFunction(&map, GL_R11F_G11F_B10F,     GL_UNSIGNED_INT_10F_11F_11F_REV,   UnimplementedLoadFunction            );
+    insertLoadFunction(&map, GL_R11F_G11F_B10F,     GL_UNSIGNED_INT_10F_11F_11F_REV,   loadToNative<GLuint, 1>              );
     insertLoadFunction(&map, GL_RGB9_E5,            GL_UNSIGNED_INT_5_9_9_9_REV,       loadToNative<GLuint, 1>              );
     insertLoadFunction(&map, GL_RGB16F,             GL_HALF_FLOAT,                     loadRGBHalfFloatDataToRGBA           );
-    insertLoadFunction(&map, GL_R11F_G11F_B10F,     GL_HALF_FLOAT,                     UnimplementedLoadFunction            );
+    insertLoadFunction(&map, GL_R11F_G11F_B10F,     GL_HALF_FLOAT,                     loadRGBHalfFloatDataTo111110Float    );
     insertLoadFunction(&map, GL_RGB9_E5,            GL_HALF_FLOAT,                     loadRGBHalfFloatDataTo999E5          );
     insertLoadFunction(&map, GL_RGB32F,             GL_FLOAT,                          loadToNative<GLfloat, 3>             );
     insertLoadFunction(&map, GL_RGB16F,             GL_FLOAT,                          UnimplementedLoadFunction            );
-    insertLoadFunction(&map, GL_R11F_G11F_B10F,     GL_FLOAT,                          UnimplementedLoadFunction            );
+    insertLoadFunction(&map, GL_R11F_G11F_B10F,     GL_FLOAT,                          loadRGBFloatDataTo111110Float        );
     insertLoadFunction(&map, GL_RGB9_E5,            GL_FLOAT,                          loadRGBFloatDataTo999E5              );
     insertLoadFunction(&map, GL_RGB8UI,             GL_UNSIGNED_BYTE,                  UnimplementedLoadFunction            );
     insertLoadFunction(&map, GL_RGB8I,              GL_BYTE,                           UnimplementedLoadFunction            );
@@ -467,6 +467,7 @@ static DXGIFormatInfoMap buildDXGIFormatInfoMap()
     map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R32G32B32A32_FLOAT,  DXGIFormatInfo(128, 1, 1, GL_RGBA32F,                         GenerateMip<R32G32B32A32F>)));
 
     map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R9G9B9E5_SHAREDEXP,  DXGIFormatInfo( 32, 1, 1, GL_RGB9_E5,                         GenerateMip<R9G9B9E5>     )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R11G11B10_FLOAT,     DXGIFormatInfo( 32, 1, 1, GL_R11F_G11F_B10F,                  GenerateMip<R11G11B10F>   )));
 
     map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R16_TYPELESS,        DXGIFormatInfo( 16, 1, 1, GL_DEPTH_COMPONENT16,               NULL                      )));
     map.insert(DXGIFormatInfoPair(DXGI_FORMAT_D16_UNORM,           DXGIFormatInfo( 16, 1, 1, GL_DEPTH_COMPONENT16,               NULL                      )));

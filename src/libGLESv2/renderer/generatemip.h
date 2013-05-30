@@ -185,6 +185,20 @@ struct R9G9B9E5
     }
 };
 
+struct R11G11B10F
+{
+    unsigned int R : 11;
+    unsigned int G : 11;
+    unsigned int B : 10;
+
+    static void average(R11G11B10F *dst, const R11G11B10F *src1, const R11G11B10F *src2)
+    {
+        dst->R = gl::float32ToFloat11((gl::float11ToFloat32(src1->R) + gl::float11ToFloat32(src2->R)) * 0.5f);
+        dst->G = gl::float32ToFloat11((gl::float11ToFloat32(src1->G) + gl::float11ToFloat32(src2->G)) * 0.5f);
+        dst->B = gl::float32ToFloat10((gl::float10ToFloat32(src1->B) + gl::float10ToFloat32(src2->B)) * 0.5f);
+    }
+};
+
 namespace priv
 {
 
