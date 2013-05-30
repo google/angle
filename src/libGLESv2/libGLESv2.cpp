@@ -11,6 +11,7 @@
 
 #include "libGLESv2/main.h"
 #include "libGLESv2/utilities.h"
+#include "libGLESv2/formatutils.h"
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/Fence.h"
 #include "libGLESv2/Framebuffer.h"
@@ -156,7 +157,7 @@ bool validateSubImageParams2D(bool compressed, GLsizei width, GLsizei height,
 
     if (format != GL_NONE)
     {
-        GLenum internalformat = gl::ConvertSizedInternalFormat(format, type);
+        GLenum internalformat = gl::GetSizedInternalFormat(format, type, 2);
         if (internalformat != texture->getInternalFormat(level))
         {
             return gl::error(GL_INVALID_OPERATION, false);
@@ -197,7 +198,7 @@ bool validateSubImageParamsCube(bool compressed, GLsizei width, GLsizei height,
 
     if (format != GL_NONE)
     {
-        GLenum internalformat = gl::ConvertSizedInternalFormat(format, type);
+        GLenum internalformat = gl::GetSizedInternalFormat(format, type, 2);
         if (internalformat != texture->getInternalFormat(target, level))
         {
             return gl::error(GL_INVALID_OPERATION, false);
@@ -378,7 +379,7 @@ bool validateES3TexImageFormat(gl::Context *context, GLenum target, GLint level,
     GLenum actualInternalFormat = isSubImage ? textureInternalFormat : internalformat;
     if (isCompressed)
     {
-        if (!gl::IsValidES3CompressedFormat(actualInternalFormat))
+        if (!gl::IsFormatCompressed(actualInternalFormat, context->getClientVersion()))
         {
             return gl::error(GL_INVALID_ENUM, false);
         }
@@ -390,10 +391,16 @@ bool validateES3TexImageFormat(gl::Context *context, GLenum target, GLint level,
     }
     else
     {
-        GLenum err;
-        if (!gl::IsValidES3FormatCombination(actualInternalFormat, format, type, &err))
+        if (!gl::IsValidInternalFormat(actualInternalFormat, context) ||
+            !gl::IsValidFormat(format, context->getClientVersion()) ||
+            !gl::IsValidType(type, context->getClientVersion()))
         {
-            return gl::error(err, false);
+            return gl::error(GL_INVALID_ENUM, false);
+        }
+
+        if (!gl::IsValidFormatCombination(actualInternalFormat, format, type, context->getClientVersion()))
+        {
+            return gl::error(GL_INVALID_OPERATION, false);
         }
 
         if ((target == GL_TEXTURE_3D || target == GL_TEXTURE_2D_ARRAY) &&
@@ -413,7 +420,7 @@ bool validateES3TexImageFormat(gl::Context *context, GLenum target, GLint level,
 
         if (format != GL_NONE)
         {
-            GLenum internalformat = gl::ConvertSizedInternalFormat(format, type);
+            GLenum internalformat = gl::GetSizedInternalFormat(format, type, context->getClientVersion());
             if (internalformat != textureInternalFormat)
             {
                 return gl::error(GL_INVALID_OPERATION, false);
@@ -508,7 +515,7 @@ bool validateCopyTexImageParameters(gl::Context *context, GLenum target, bool is
             gl::Texture2D *texture2d = context->getTexture2D();
             if (texture2d)
             {
-                textureFormat = gl::ExtractFormat(texture2d->getInternalFormat(level));
+                textureFormat = gl::GetFormat(texture2d->getInternalFormat(level), context->getClientVersion());
                 textureCompressed = texture2d->isCompressed(level);
                 textureLevelWidth = texture2d->getWidth(level);
                 textureLevelHeight = texture2d->getHeight(level);
@@ -528,7 +535,7 @@ bool validateCopyTexImageParameters(gl::Context *context, GLenum target, bool is
             gl::TextureCubeMap *textureCube = context->getTextureCubeMap();
             if (textureCube)
             {
-                textureFormat = gl::ExtractFormat(textureCube->getInternalFormat(target, level));
+                textureFormat = gl::GetFormat(textureCube->getInternalFormat(target, level), context->getClientVersion());
                 textureCompressed = textureCube->isCompressed(target, level);
                 textureLevelWidth = textureCube->getWidth(target, level);
                 textureLevelHeight = textureCube->getHeight(target, level);
@@ -543,7 +550,7 @@ bool validateCopyTexImageParameters(gl::Context *context, GLenum target, bool is
             gl::Texture3D *texture3d = context->getTexture3D();
             if (texture3d)
             {
-                textureFormat = gl::ExtractFormat(texture3d->getInternalFormat(level));
+                textureFormat = gl::GetFormat(texture3d->getInternalFormat(level), context->getClientVersion());
                 textureCompressed = texture3d->isCompressed(level);
                 textureLevelWidth = texture3d->getWidth(level);
                 textureLevelHeight = texture3d->getHeight(level);
@@ -583,7 +590,7 @@ bool validateCopyTexImageParameters(gl::Context *context, GLenum target, bool is
         return gl::error(GL_INVALID_VALUE, false);
     }
 
-    if (!gl::IsValidES3CopyTexImageCombination(textureFormat, colorbufferFormat))
+    if (!gl::IsValidCopyTexImageCombination(textureFormat, colorbufferFormat, context->getClientVersion()))
     {
         return gl::error(GL_INVALID_OPERATION, false);
     }
@@ -1604,7 +1611,7 @@ void __stdcall glCompressedTexImage2D(GLenum target, GLint level, GLenum interna
               default: UNREACHABLE();
             }
 
-            if (imageSize != gl::ComputeCompressedSize(width, height, internalformat))
+            if (imageSize != (GLsizei)gl::GetBlockSize(internalformat, GL_UNSIGNED_BYTE, context->getClientVersion(), width, height))
             {
                 return gl::error(GL_INVALID_VALUE);
             }
@@ -1729,7 +1736,7 @@ void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
               default: UNREACHABLE();
             }
 
-            if (imageSize != gl::ComputeCompressedSize(width, height, format))
+            if (imageSize != (GLsizei)gl::GetBlockSize(format, GL_UNSIGNED_BYTE, context->getClientVersion(), width, height))
             {
                 return gl::error(GL_INVALID_VALUE);
             }
@@ -1743,7 +1750,7 @@ void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
             if (target == GL_TEXTURE_2D)
             {
                 gl::Texture2D *texture = context->getTexture2D();
-                if (validateSubImageParams2D(true, width, height, xoffset, yoffset, level, format, GL_NONE, texture))
+                if (validateSubImageParams2D(true, width, height, xoffset, yoffset, level, format, GL_UNSIGNED_BYTE, texture))
                 {
                     texture->subImageCompressed(level, xoffset, yoffset, width, height, format, imageSize, data);
                 }
@@ -1751,7 +1758,7 @@ void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
             else if (gl::IsCubemapTextureTarget(target))
             {
                 gl::TextureCubeMap *texture = context->getTextureCubeMap();
-                if (validateSubImageParamsCube(true, width, height, xoffset, yoffset, target, level, format, GL_NONE, texture))
+                if (validateSubImageParamsCube(true, width, height, xoffset, yoffset, target, level, format, GL_UNSIGNED_BYTE, texture))
                 {
                     texture->subImageCompressed(target, level, xoffset, yoffset, width, height, format, imageSize, data);
                 }
@@ -2026,7 +2033,7 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
                 {
                     return; // error already registered by validateSubImageParams
                 }
-                textureFormat = gl::ExtractFormat(tex2d->getInternalFormat(level));
+                textureFormat = gl::GetFormat(tex2d->getInternalFormat(level), context->getClientVersion());
                 texture = tex2d;
             }
             else if (gl::IsCubemapTextureTarget(target))
@@ -2037,7 +2044,7 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
                 {
                     return; // error already registered by validateSubImageParams
                 }
-                textureFormat = gl::ExtractFormat(texcube->getInternalFormat(target, level));
+                textureFormat = gl::GetFormat(texcube->getInternalFormat(target, level), context->getClientVersion());
                 texture = texcube;
             }
             else UNREACHABLE();
@@ -5470,11 +5477,6 @@ void __stdcall glRenderbufferStorageMultisampleANGLE(GLenum target, GLsizei samp
             return gl::error(GL_INVALID_ENUM);
         }
 
-        if (!gl::IsColorRenderable(internalformat) && !gl::IsDepthRenderable(internalformat) && !gl::IsStencilRenderable(internalformat))
-        {
-            return gl::error(GL_INVALID_ENUM);
-        }
-
         if (width < 0 || height < 0 || samples < 0)
         {
             return gl::error(GL_INVALID_VALUE);
@@ -5484,6 +5486,18 @@ void __stdcall glRenderbufferStorageMultisampleANGLE(GLenum target, GLsizei samp
 
         if (context)
         {
+            if (!gl::IsValidInternalFormat(internalformat, context))
+            {
+                return gl::error(GL_INVALID_ENUM);
+            }
+
+            if (!gl::IsColorRenderingSupported(internalformat, context) &&
+                !gl::IsDepthRenderingSupported(internalformat, context) &&
+                !gl::IsStencilRenderingSupported(internalformat, context))
+            {
+                return gl::error(GL_INVALID_ENUM);
+            }
+
             if (width > context->getMaximumRenderbufferDimension() || 
                 height > context->getMaximumRenderbufferDimension() ||
                 samples > context->getMaxSupportedSamples())
@@ -6399,18 +6413,23 @@ void __stdcall glTexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalf
             return gl::error(GL_INVALID_OPERATION);
         }
 
-        GLenum format = gl::ExtractFormat(internalformat);
-        GLenum type = gl::ExtractType(internalformat);
-
-        if (format == GL_NONE || type == GL_NONE)
-        {
-            return gl::error(GL_INVALID_ENUM);
-        }
-
         gl::Context *context = gl::getNonLostContext();
 
         if (context)
         {
+            if (!gl::IsValidInternalFormat(internalformat, context))
+            {
+                return gl::error(GL_INVALID_ENUM);
+            }
+
+            GLenum format = gl::GetFormat(internalformat, context->getClientVersion());
+            GLenum type = gl::GetType(internalformat, context->getClientVersion());
+
+            if (format == GL_NONE || type == GL_NONE)
+            {
+                return gl::error(GL_INVALID_ENUM);
+            }
+
             switch (target)
             {
               case GL_TEXTURE_2D:
@@ -6581,21 +6600,22 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
                 return gl::error(GL_INVALID_VALUE);
             }
 
-            if (format == GL_FLOAT)
+            if (type == GL_FLOAT)
             {
                 if (!context->supportsFloat32Textures())
                 {
                     return gl::error(GL_INVALID_ENUM);
                 }
             }
-            else if (format == GL_HALF_FLOAT_OES)
+            else if (type == GL_HALF_FLOAT_OES)
             {
                 if (!context->supportsFloat16Textures())
                 {
                     return gl::error(GL_INVALID_ENUM);
                 }
             }
-            else if (gl::IsDepthTexture(format))
+
+            if (format == GL_DEPTH_COMPONENT)
             {
                 if (!context->supportsDepthTextures())
                 {
@@ -7743,7 +7763,7 @@ void __stdcall glCompressedTexImage3D(GLenum target, GLint level, GLenum interna
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (imageSize < 0 || imageSize != gl::ComputeCompressedSize(width, height, internalformat))
+            if (imageSize < 0 || imageSize != (GLsizei)gl::GetBlockSize(internalformat, GL_UNSIGNED_BYTE, context->getClientVersion(), width, height))
             {
                 return gl::error(GL_INVALID_VALUE);
             }
@@ -7800,7 +7820,7 @@ void __stdcall glCompressedTexSubImage3D(GLenum target, GLint level, GLint xoffs
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (imageSize < 0 || imageSize != gl::ComputeCompressedSize(width, height, format))
+            if (imageSize < 0 || imageSize != (GLsizei)gl::GetBlockSize(format, GL_UNSIGNED_BYTE, context->getClientVersion(), width, height))
             {
                 return gl::error(GL_INVALID_VALUE);
             }
