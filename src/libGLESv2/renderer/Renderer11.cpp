@@ -1761,111 +1761,30 @@ void Renderer11::releaseDeviceResources()
     delete mTriangleFanIB;
     mTriangleFanIB = NULL;
 
-    if (mCopyVB)
-    {
-        mCopyVB->Release();
-        mCopyVB = NULL;
-    }
-
-    if (mCopySampler)
-    {
-        mCopySampler->Release();
-        mCopySampler = NULL;
-    }
-
-    if (mCopyIL)
-    {
-        mCopyIL->Release();
-        mCopyIL = NULL;
-    }
-
-    if (mCopyVS)
-    {
-        mCopyVS->Release();
-        mCopyVS = NULL;
-    }
-
-    if (mCopyRGBAPS)
-    {
-        mCopyRGBAPS->Release();
-        mCopyRGBAPS = NULL;
-    }
-
-    if (mCopyRGBPS)
-    {
-        mCopyRGBPS->Release();
-        mCopyRGBPS = NULL;
-    }
-
-    if (mCopyLumPS)
-    {
-        mCopyLumPS->Release();
-        mCopyLumPS = NULL;
-    }
-
-    if (mCopyLumAlphaPS)
-    {
-        mCopyLumAlphaPS->Release();
-        mCopyLumAlphaPS = NULL;
-    }
+    SafeRelease(mCopyVB);
+    SafeRelease(mCopySampler);
+    SafeRelease(mCopyIL);
+    SafeRelease(mCopyIL);
+    SafeRelease(mCopyVS);
+    SafeRelease(mCopyRGBAPS);
+    SafeRelease(mCopyRGBPS);
+    SafeRelease(mCopyLumPS);
+    SafeRelease(mCopyLumAlphaPS);
 
     mCopyResourcesInitialized = false;
 
-    if (mClearVB)
-    {
-        mClearVB->Release();
-        mClearVB = NULL;
-    }
-
-    if (mClearIL)
-    {
-        mClearIL->Release();
-        mClearIL = NULL;
-    }
-
-    if (mClearVS)
-    {
-        mClearVS->Release();
-        mClearVS = NULL;
-    }
-
-    if (mClearPS)
-    {
-        mClearPS->Release();
-        mClearPS = NULL;
-    }
-
-    if (mClearScissorRS)
-    {
-        mClearScissorRS->Release();
-        mClearScissorRS = NULL;
-    }
-
-    if (mClearNoScissorRS)
-    {
-        mClearNoScissorRS->Release();
-        mClearNoScissorRS = NULL;
-    }
+    SafeRelease(mClearVB);
+    SafeRelease(mClearIL);
+    SafeRelease(mClearVS);
+    SafeRelease(mClearPS);
+    SafeRelease(mClearScissorRS);
+    SafeRelease(mClearNoScissorRS);
 
     mClearResourcesInitialized = false;
 
-    if (mDriverConstantBufferVS)
-    {
-        mDriverConstantBufferVS->Release();
-        mDriverConstantBufferVS = NULL;
-    }
-
-    if (mDriverConstantBufferPS)
-    {
-        mDriverConstantBufferPS->Release();
-        mDriverConstantBufferPS = NULL;
-    }
-
-    if (mSyncQuery)
-    {
-        mSyncQuery->Release();
-        mSyncQuery = NULL;
-    }
+    SafeRelease(mDriverConstantBufferVS);
+    SafeRelease(mDriverConstantBufferPS);
+    SafeRelease(mSyncQuery);
 }
 
 void Renderer11::notifyDeviceLost()
