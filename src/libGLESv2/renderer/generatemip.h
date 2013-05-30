@@ -166,6 +166,25 @@ struct R10G10B10A2
     }
 };
 
+struct R9G9B9E5
+{
+    unsigned int R : 9;
+    unsigned int G : 9;
+    unsigned int B : 9;
+    unsigned int E : 5;
+
+    static void average(R9G9B9E5 *dst, const R9G9B9E5 *src1, const R9G9B9E5 *src2)
+    {
+        float r1, g1, b1;
+        gl::convert999E5toRGBFloats(*reinterpret_cast<const unsigned int*>(src1), &r1, &g1, &b1);
+
+        float r2, g2, b2;
+        gl::convert999E5toRGBFloats(*reinterpret_cast<const unsigned int*>(src2), &r2, &g2, &b2);
+
+        *reinterpret_cast<unsigned int*>(dst) = gl::convertRGBFloatsTo999E5((r1 + r2) * 0.5f, (g1 + g2) * 0.5f, (b1 + b2) * 0.5f);
+    }
+};
+
 namespace priv
 {
 

@@ -231,6 +231,7 @@
             'common/angleutils.h',
             'common/debug.cpp',
             'common/debug.h',
+            'common/mathutil.cpp',
             'common/mathutil.h',
             'common/RefCountObject.cpp',
             'common/RefCountObject.h',

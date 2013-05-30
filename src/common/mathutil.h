@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -143,6 +143,9 @@ inline unsigned short float32ToFloat16(float fp32)
 }
 
 float float16ToFloat32(unsigned short h);
+
+unsigned int convertRGBFloatsTo999E5(float red, float green, float blue);
+void convert999E5toRGBFloats(unsigned int input, float *red, float *green, float *blue);
 
 }
 

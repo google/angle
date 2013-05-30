@@ -710,4 +710,50 @@ void loadRGBA2101010ToRGBA(int width, int height, int depth,
     }
 }
 
+void loadRGBHalfFloatDataTo999E5(int width, int height, int depth,
+                                 const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
+                                 void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch)
+{
+    const unsigned short *source = NULL;
+    unsigned int *dest = NULL;
+
+    for (int z = 0; z < depth; z++)
+    {
+        for (int y = 0; y < height; y++)
+        {
+            source = offsetDataPointer<unsigned short>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned int>(output, y, z, outputRowPitch, outputDepthPitch);
+
+            for (int x = 0; x < width; x++)
+            {
+                dest[x] = gl::convertRGBFloatsTo999E5(gl::float16ToFloat32(source[x * 3 + 0]),
+                                                      gl::float16ToFloat32(source[x * 3 + 1]),
+                                                      gl::float16ToFloat32(source[x * 3 + 2]));
+            }
+        }
+    }
+}
+
+void loadRGBFloatDataTo999E5(int width, int height, int depth,
+                             const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
+                             void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch)
+{
+    const float *source = NULL;
+    unsigned int *dest = NULL;
+
+    for (int z = 0; z < depth; z++)
+    {
+        for (int y = 0; y < height; y++)
+        {
+            source = offsetDataPointer<float>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned int>(output, y, z, outputRowPitch, outputDepthPitch);
+
+            for (int x = 0; x < width; x++)
+            {
+                dest[x] = gl::convertRGBFloatsTo999E5(source[x * 3 + 0], source[x * 3 + 1], source[x * 3 + 2]);
+            }
+        }
+    }
+}
+
 }
