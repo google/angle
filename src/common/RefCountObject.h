@@ -67,13 +67,13 @@ template <class ObjectType>
 class OffsetBindingPointer : public RefCountObjectBindingPointer
 {
   public:
-    OffsetBindingPointer() : mOffset(0), mSize(-1) { }
+    OffsetBindingPointer() : mOffset(0), mSize(0) { }
 
     void set(ObjectType *newObject)
     {
         RefCountObjectBindingPointer::set(newObject);
         mOffset = 0;
-        mSize = -1;
+        mSize = 0;
     }
 
     void set(ObjectType *newObject, GLintptr offset, GLsizeiptr size)

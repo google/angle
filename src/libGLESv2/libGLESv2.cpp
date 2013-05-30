@@ -8737,12 +8737,12 @@ void __stdcall glBindBufferBase(GLenum target, GLuint index, GLuint buffer)
             switch (target)
             {
               case GL_TRANSFORM_FEEDBACK_BUFFER:
-                context->bindIndexedTransformFeedbackBuffer(buffer, index, 0, -1);
+                context->bindIndexedTransformFeedbackBuffer(buffer, index, 0, 0);
                 context->bindGenericTransformFeedbackBuffer(buffer);
                 break;
 
               case GL_UNIFORM_BUFFER:
-                context->bindIndexedUniformBuffer(buffer, index, 0, -1);
+                context->bindIndexedUniformBuffer(buffer, index, 0, 0);
                 context->bindGenericUniformBuffer(buffer);
                 break;
 
