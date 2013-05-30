@@ -401,11 +401,7 @@
             'VCLinkerTool': {
               'AdditionalDependencies': [
                 'd3d9.lib',
-                'dwmapi.lib',
               ],
-              'DelayLoadDLLs': [
-                'dwmapi.dll',
-              ]
             }
           },
         },
