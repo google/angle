@@ -20,4 +20,5 @@ fxc /E PS_PassthroughLum /T ps_4_0 /Fh compiled/passthroughlum11ps.h Passthrough
 fxc /E PS_PassthroughLumAlpha /T ps_4_0 /Fh compiled/passthroughlumalpha11ps.h Passthrough11.hlsl
 
 fxc /E VS_Clear /T vs_4_0 /Fh compiled/clear11vs.h Clear11.hlsl
-fxc /E PS_Clear /T ps_4_0 /Fh compiled/clear11ps.h Clear11.hlsl
+fxc /E PS_ClearSingle /T ps_4_0 /Fh compiled/clearsingle11ps.h Clear11.hlsl
+fxc /E PS_ClearMultiple /T ps_4_0 /Fh compiled/clearmultiple11ps.h Clear11.hlsl

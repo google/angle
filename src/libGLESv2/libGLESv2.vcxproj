@@ -360,8 +360,9 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="renderer\ShaderExecutable.h" />
     <ClInclude Include="renderer\ShaderExecutable11.h" />
     <ClInclude Include="renderer\ShaderExecutable9.h" />
-    <ClInclude Include="renderer\shaders\compiled\clear11ps.h" />
     <ClInclude Include="renderer\shaders\compiled\clear11vs.h" />
+    <ClInclude Include="renderer\shaders\compiled\clearmultiple11ps.h" />
+    <ClInclude Include="renderer\shaders\compiled\clearsingle11ps.h" />
     <ClInclude Include="renderer\shaders\compiled\componentmaskps.h" />
     <ClInclude Include="renderer\shaders\compiled\flipyvs.h" />
     <ClInclude Include="renderer\shaders\compiled\luminanceps.h" />

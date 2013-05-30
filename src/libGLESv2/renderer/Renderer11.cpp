@@ -35,7 +35,8 @@
 #include "libGLESv2/renderer/shaders/compiled/passthroughlumalpha11ps.h"
 
 #include "libGLESv2/renderer/shaders/compiled/clear11vs.h"
-#include "libGLESv2/renderer/shaders/compiled/clear11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/clearsingle11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/clearmultiple11ps.h"
 
 #include "libEGL/Display.h"
 
@@ -87,7 +88,8 @@ Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(
     mClearVB = NULL;
     mClearIL = NULL;
     mClearVS = NULL;
-    mClearPS = NULL;
+    mClearSinglePS = NULL;
+    mClearMultiplePS = NULL;
     mClearScissorRS = NULL;
     mClearNoScissorRS = NULL;
 
@@ -1468,7 +1470,7 @@ void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *
 
      if (needMaskedColorClear || needMaskedStencilClear || needScissoredClear)
      {
-         maskedClear(clearParams);
+         maskedClear(clearParams, frameBuffer->usingExtendedDrawBuffers());
      }
      else
      {
@@ -1546,13 +1548,13 @@ void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *
     }
 }
 
-void Renderer11::maskedClear(const gl::ClearParameters &clearParams)
+void Renderer11::maskedClear(const gl::ClearParameters &clearParams, bool usingExtendedDrawBuffers)
 {
     HRESULT result;
 
     if (!mClearResourcesInitialized)
     {
-        ASSERT(!mClearVB && !mClearVS && !mClearPS && !mClearScissorRS && !mClearNoScissorRS);
+        ASSERT(!mClearVB && !mClearVS && !mClearSinglePS && !mClearMultiplePS && !mClearScissorRS && !mClearNoScissorRS);
 
         D3D11_BUFFER_DESC vbDesc;
         vbDesc.ByteWidth = sizeof(d3d11::PositionDepthColorVertex) * 4;
@@ -1580,9 +1582,13 @@ void Renderer11::maskedClear(const gl::ClearParameters &clearParams)
         ASSERT(SUCCEEDED(result));
         d3d11::SetDebugName(mClearVS, "Renderer11 masked clear vertex shader");
 
-        result = mDevice->CreatePixelShader(g_PS_Clear, sizeof(g_PS_Clear), NULL, &mClearPS);
+        result = mDevice->CreatePixelShader(g_PS_ClearSingle, sizeof(g_PS_ClearSingle), NULL, &mClearSinglePS);
         ASSERT(SUCCEEDED(result));
-        d3d11::SetDebugName(mClearPS, "Renderer11 masked clear pixel shader");
+        d3d11::SetDebugName(mClearSinglePS, "Renderer11 masked clear pixel shader (1 RT)");
+
+        result = mDevice->CreatePixelShader(g_PS_ClearMultiple, sizeof(g_PS_ClearMultiple), NULL, &mClearMultiplePS);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mClearMultiplePS, "Renderer11 masked clear pixel shader (MRT)");
 
         D3D11_RASTERIZER_DESC rsScissorDesc;
         rsScissorDesc.FillMode = D3D11_FILL_SOLID;
@@ -1689,9 +1695,11 @@ void Renderer11::maskedClear(const gl::ClearParameters &clearParams)
     mDeviceContext->RSSetState(mScissorEnabled ? mClearScissorRS : mClearNoScissorRS);
 
     // Apply shaders
+    ID3D11PixelShader *pixelShader = usingExtendedDrawBuffers ? mClearMultiplePS : mClearSinglePS;
+
     mDeviceContext->IASetInputLayout(mClearIL);
     mDeviceContext->VSSetShader(mClearVS, NULL, 0);
-    mDeviceContext->PSSetShader(mClearPS, NULL, 0);
+    mDeviceContext->PSSetShader(pixelShader, NULL, 0);
     mDeviceContext->GSSetShader(NULL, NULL, 0);
 
     // Apply vertex buffer
@@ -1776,7 +1784,8 @@ void Renderer11::releaseDeviceResources()
     SafeRelease(mClearVB);
     SafeRelease(mClearIL);
     SafeRelease(mClearVS);
-    SafeRelease(mClearPS);
+    SafeRelease(mClearSinglePS);
+    SafeRelease(mClearMultiplePS);
     SafeRelease(mClearScissorRS);
     SafeRelease(mClearNoScissorRS);
 
