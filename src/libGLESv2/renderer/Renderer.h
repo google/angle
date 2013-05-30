@@ -166,6 +166,7 @@ class Renderer
     virtual unsigned int getMaxVertexShaderUniformBuffers() const = 0;
     virtual unsigned int getMaxFragmentShaderUniformBuffers() const = 0;
     virtual unsigned int getMaxTransformFeedbackBuffers() const = 0;
+    virtual unsigned int getMaxUniformBufferSize() const = 0;
     virtual bool getNonPower2TextureSupport() const = 0;
     virtual bool getDepthTextureSupport() const = 0;
     virtual bool getOcclusionQuerySupport() const = 0;

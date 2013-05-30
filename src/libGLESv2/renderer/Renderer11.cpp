@@ -2211,6 +2211,23 @@ unsigned int Renderer11::getMaxTransformFeedbackBuffers() const
     }
 }
 
+unsigned int Renderer11::getMaxUniformBufferSize() const
+{
+    // Each component is a 4-element vector of 4-byte units (floats)
+    const unsigned int bytesPerComponent = 4 * sizeof(float);
+
+    switch (mFeatureLevel)
+    {
+      case D3D_FEATURE_LEVEL_11_0:
+        return D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT * bytesPerComponent;
+      case D3D_FEATURE_LEVEL_10_1:
+      case D3D_FEATURE_LEVEL_10_0:
+        return D3D10_REQ_CONSTANT_BUFFER_ELEMENT_COUNT * bytesPerComponent;
+      default: UNREACHABLE();
+        return 0;
+    }
+}
+
 bool Renderer11::getNonPower2TextureSupport() const
 {
     switch (mFeatureLevel)

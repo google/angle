@@ -126,6 +126,7 @@ class Renderer9 : public Renderer
     virtual unsigned int getMaxVertexShaderUniformBuffers() const;
     virtual unsigned int getMaxFragmentShaderUniformBuffers() const;
     virtual unsigned int getMaxTransformFeedbackBuffers() const;
+    virtual unsigned int getMaxUniformBufferSize() const;
     virtual bool getNonPower2TextureSupport() const;
     virtual bool getDepthTextureSupport() const;
     virtual bool getOcclusionQuerySupport() const;
