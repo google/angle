@@ -25,7 +25,7 @@ struct Uniform
     GLenum precision;
     std::string name;
     unsigned int arraySize;
-    
+
     int registerIndex;
 };
 
