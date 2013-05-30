@@ -114,16 +114,11 @@ bool TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture, unsign
 {
     if (srcTexture)
     {
-        // Round up the width and height to the nearest multiple of dimension alignment
-        unsigned int dimensionAlignment = d3d11::GetTextureFormatDimensionAlignment(mTextureFormat);
-        width = roundUp(width, (GLsizei)dimensionAlignment);
-        height = roundUp(height, (GLsizei)dimensionAlignment);
-
         D3D11_BOX srcBox;
         srcBox.left = xoffset;
         srcBox.top = yoffset;
-        srcBox.right = xoffset + width;
-        srcBox.bottom = yoffset + height;
+        srcBox.right = xoffset + roundUp((unsigned int)width, d3d11::GetBlockWidth(mTextureFormat));
+        srcBox.bottom = yoffset + roundUp((unsigned int)height, d3d11::GetBlockHeight(mTextureFormat));
         srcBox.front = zoffset;
         srcBox.back = zoffset + depth;
 
@@ -220,28 +215,19 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int levels, GLenum 
         mRenderTarget[i] = NULL;
     }
 
-    DXGI_FORMAT convertedFormat = gl_d3d11::ConvertTextureFormat(internalformat);
-    if (d3d11::IsDepthStencilFormat(convertedFormat))
-    {
-        mTextureFormat = d3d11::GetDepthTextureFormat(convertedFormat);
-        mShaderResourceFormat = d3d11::GetDepthShaderResourceFormat(convertedFormat);
-        mDepthStencilFormat = convertedFormat;
-        mRenderTargetFormat = DXGI_FORMAT_UNKNOWN;
-    }
-    else
-    {
-        mTextureFormat = convertedFormat;
-        mShaderResourceFormat = convertedFormat;
-        mDepthStencilFormat = DXGI_FORMAT_UNKNOWN;
-        mRenderTargetFormat = convertedFormat;
-    }
+    GLuint clientVersion = mRenderer->getCurrentClientVersion();
+
+    mTextureFormat = gl_d3d11::GetTexFormat(internalformat, clientVersion);
+    mShaderResourceFormat = gl_d3d11::GetSRVFormat(internalformat, clientVersion);
+    mDepthStencilFormat = gl_d3d11::GetDSVFormat(internalformat, clientVersion);
+    mRenderTargetFormat = gl_d3d11::GetRTVFormat(internalformat, clientVersion);
 
     // if the width or height is not positive this should be treated as an incomplete texture
     // we handle that here by skipping the d3d texture creation
     if (width > 0 && height > 0)
     {
         // adjust size if needed for compressed textures
-        gl::MakeValidSize(false, gl::IsCompressed(internalformat), &width, &height, &mLodOffset);
+        d3d11::MakeValidSize(false, mTextureFormat, &width, &height, &mLodOffset);
 
         ID3D11Device *device = mRenderer->getDevice();
 
@@ -450,21 +436,12 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int levels, GLe
         }
     }
 
-    DXGI_FORMAT convertedFormat = gl_d3d11::ConvertTextureFormat(internalformat);
-    if (d3d11::IsDepthStencilFormat(convertedFormat))
-    {
-        mTextureFormat = d3d11::GetDepthTextureFormat(convertedFormat);
-        mShaderResourceFormat = d3d11::GetDepthShaderResourceFormat(convertedFormat);
-        mDepthStencilFormat = convertedFormat;
-        mRenderTargetFormat = DXGI_FORMAT_UNKNOWN;
-    }
-    else
-    {
-        mTextureFormat = convertedFormat;
-        mShaderResourceFormat = convertedFormat;
-        mDepthStencilFormat = DXGI_FORMAT_UNKNOWN;
-        mRenderTargetFormat = convertedFormat;
-    }
+    GLuint clientVersion = mRenderer->getCurrentClientVersion();
+
+    mTextureFormat = gl_d3d11::GetTexFormat(internalformat, clientVersion);
+    mShaderResourceFormat = gl_d3d11::GetSRVFormat(internalformat, clientVersion);
+    mDepthStencilFormat = gl_d3d11::GetDSVFormat(internalformat, clientVersion);
+    mRenderTargetFormat = gl_d3d11::GetRTVFormat(internalformat, clientVersion);
 
     // if the size is not positive this should be treated as an incomplete texture
     // we handle that here by skipping the d3d texture creation
@@ -472,7 +449,7 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int levels, GLe
     {
         // adjust size if needed for compressed textures
         int height = size;
-        gl::MakeValidSize(false, gl::IsCompressed(internalformat), &size, &height, &mLodOffset);
+        d3d11::MakeValidSize(false, mTextureFormat, &size, &height, &mLodOffset);
 
         ID3D11Device *device = mRenderer->getDevice();
 
@@ -683,20 +660,19 @@ TextureStorage11_3D::TextureStorage11_3D(Renderer *renderer, int levels, GLenum 
         mLevelRenderTargets[i] = NULL;
     }
 
-    DXGI_FORMAT convertedFormat = gl_d3d11::ConvertTextureFormat(internalformat);
-    ASSERT(!d3d11::IsDepthStencilFormat(convertedFormat));
+    GLuint clientVersion = mRenderer->getCurrentClientVersion();
 
-    mTextureFormat = convertedFormat;
-    mShaderResourceFormat = convertedFormat;
-    mDepthStencilFormat = DXGI_FORMAT_UNKNOWN;
-    mRenderTargetFormat = convertedFormat;
+    mTextureFormat = gl_d3d11::GetTexFormat(internalformat, clientVersion);
+    mShaderResourceFormat = gl_d3d11::GetSRVFormat(internalformat, clientVersion);
+    mDepthStencilFormat = gl_d3d11::GetDSVFormat(internalformat, clientVersion);
+    mRenderTargetFormat = gl_d3d11::GetRTVFormat(internalformat, clientVersion);
 
     // If the width, height or depth are not positive this should be treated as an incomplete texture
     // we handle that here by skipping the d3d texture creation
     if (width > 0 && height > 0 && depth > 0)
     {
         // adjust size if needed for compressed textures
-        gl::MakeValidSize(false, gl::IsCompressed(internalformat), &width, &height, &mLodOffset);
+        d3d11::MakeValidSize(false, mTextureFormat, &width, &height, &mLodOffset);
 
         ID3D11Device *device = mRenderer->getDevice();
 
@@ -934,20 +910,19 @@ TextureStorage11_2DArray::TextureStorage11_2DArray(Renderer *renderer, int level
 {
     mTexture = NULL;
 
-    DXGI_FORMAT convertedFormat = gl_d3d11::ConvertTextureFormat(internalformat);
-    ASSERT(!d3d11::IsDepthStencilFormat(convertedFormat));
+    GLuint clientVersion = mRenderer->getCurrentClientVersion();
 
-    mTextureFormat = convertedFormat;
-    mShaderResourceFormat = convertedFormat;
-    mDepthStencilFormat = DXGI_FORMAT_UNKNOWN;
-    mRenderTargetFormat = convertedFormat;
+    mTextureFormat = gl_d3d11::GetTexFormat(internalformat, clientVersion);
+    mShaderResourceFormat = gl_d3d11::GetSRVFormat(internalformat, clientVersion);
+    mDepthStencilFormat = gl_d3d11::GetDSVFormat(internalformat, clientVersion);
+    mRenderTargetFormat = gl_d3d11::GetRTVFormat(internalformat, clientVersion);
 
-        // if the width, height or depth is not positive this should be treated as an incomplete texture
+    // if the width, height or depth is not positive this should be treated as an incomplete texture
     // we handle that here by skipping the d3d texture creation
     if (width > 0 && height > 0 && depth > 0)
     {
         // adjust size if needed for compressed textures
-        gl::MakeValidSize(false, gl::IsCompressed(internalformat), &width, &height, &mLodOffset);
+        d3d11::MakeValidSize(false, mTextureFormat, &width, &height, &mLodOffset);
 
         ID3D11Device *device = mRenderer->getDevice();
 

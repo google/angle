@@ -109,9 +109,10 @@ TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, int levels, GLenum in
     if (width > 0 && height > 0)
     {
         IDirect3DDevice9 *device = mRenderer->getDevice();
-        gl::MakeValidSize(false, gl::IsCompressed(internalformat), &width, &height, &mLodOffset);
+        D3DFORMAT format = gl_d3d9::GetTexureFormat(internalformat, mRenderer);
+        d3d9::MakeValidSize(false, format, &width, &height, &mLodOffset);
         HRESULT result = device->CreateTexture(width, height, levels ? levels + mLodOffset : 0, getUsage(),
-                                               mRenderer->ConvertTextureInternalFormat(internalformat), getPool(), &mTexture, NULL);
+                                               format, getPool(), &mTexture, NULL);
 
         if (FAILED(result))
         {
@@ -211,9 +212,10 @@ TextureStorage9_Cube::TextureStorage9_Cube(Renderer *renderer, int levels, GLenu
     {
         IDirect3DDevice9 *device = mRenderer->getDevice();
         int height = size;
-        gl::MakeValidSize(false, gl::IsCompressed(internalformat), &size, &height, &mLodOffset);
+        D3DFORMAT format = gl_d3d9::GetTexureFormat(internalformat, mRenderer);
+        d3d9::MakeValidSize(false, format, &size, &height, &mLodOffset);
         HRESULT result = device->CreateCubeTexture(size, levels ? levels + mLodOffset : 0, getUsage(),
-                                                   mRenderer->ConvertTextureInternalFormat(internalformat), getPool(), &mTexture, NULL);
+                                                   format, getPool(), &mTexture, NULL);
 
         if (FAILED(result))
         {
