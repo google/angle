@@ -14,6 +14,9 @@
 
 #include "common/debug.h"
 
+namespace rx
+{
+
 namespace gl_d3d9
 {
 
@@ -495,6 +498,8 @@ size_t ComputeRowSize(D3DFORMAT format, unsigned int width)
         UNREACHABLE();
         return 0;
     }
+}
+
 }
 
 }

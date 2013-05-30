@@ -12,6 +12,9 @@
 
 #include "libGLESv2/utilities.h"
 
+namespace rx
+{
+
 const D3DFORMAT D3DFMT_INTZ = ((D3DFORMAT)(MAKEFOURCC('I','N','T','Z')));
 const D3DFORMAT D3DFMT_NULL = ((D3DFORMAT)(MAKEFOURCC('N','U','L','L')));
 
@@ -67,6 +70,8 @@ inline bool isDeviceLostError(HRESULT errorCode)
       default:
         return false;
     }
+}
+
 }
 
 }

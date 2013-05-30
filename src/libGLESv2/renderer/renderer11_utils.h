@@ -12,6 +12,9 @@
 
 #include "libGLESv2/angletypes.h"
 
+namespace rx
+{
+
 namespace gl_d3d11
 {
 
@@ -116,6 +119,8 @@ inline bool isDeviceLostError(HRESULT errorCode)
       default:
         return false;
     }
+}
+
 }
 
 }

@@ -12,6 +12,9 @@
 
 #include "common/debug.h"
 
+namespace rx
+{
+
 namespace gl_d3d11
 {
 
@@ -710,6 +713,8 @@ HRESULT SetDebugName(ID3D11DeviceChild *resource, const char *name)
 #else
     return S_OK;
 #endif
+}
+
 }
 
 }
