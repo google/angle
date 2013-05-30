@@ -2775,7 +2775,7 @@ void ProgramBinary::getActiveUniformBlockiv(GLuint uniformBlockIndex, GLenum pna
         *params = static_cast<GLint>(uniformBlock.dataSize);
         break;
       case GL_UNIFORM_BLOCK_NAME_LENGTH:
-        *params = static_cast<GLint>(uniformBlock.name.size() + 1);
+        *params = static_cast<GLint>(uniformBlock.name.size() + 1 + (uniformBlock.isArrayElement() ? 3 : 0));
         break;
       case GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS:
         *params = static_cast<GLint>(uniformBlock.memberUniformIndexes.size());
