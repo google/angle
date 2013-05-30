@@ -56,7 +56,7 @@ class Image11 : public Image
     virtual void copy(GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, gl::Framebuffer *source);
 
   protected:
-    HRESULT map(D3D11_MAPPED_SUBRESOURCE *map);
+    HRESULT map(D3D11_MAP mapType, D3D11_MAPPED_SUBRESOURCE *map);
     void unmap();
 
   private:
