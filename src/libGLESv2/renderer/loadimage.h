@@ -90,6 +90,10 @@ void loadRGBUByteDataToRGBA(int width, int height, int depth,
                             const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
                             void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch);
 
+void loadRGBSByteDataToRGBA(int width, int height, int depth,
+                            const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
+                            void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch);
+
 void loadRGB565DataToBGRA(int width, int height, int depth,
                           const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
                           void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch);

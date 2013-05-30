@@ -56,6 +56,44 @@ struct A8R8G8B8
 typedef A8R8G8B8 R8G8B8A8; // R8G8B8A8 type is functionally equivalent for mip purposes
 typedef A8R8G8B8 B8G8R8A8; // B8G8R8A8 type is functionally equivalent for mip purposes
 
+struct R8S
+{
+    char R;
+
+    static void average(R8S *dst, const R8S *src1, const R8S *src2)
+    {
+        dst->R = ((short)src1->R + (short)src2->R) / 2;
+    }
+};
+
+struct R8G8S
+{
+    char R;
+    char G;
+
+    static void average(R8G8S *dst, const R8G8S *src1, const R8G8S *src2)
+    {
+        dst->R = ((short)src1->R + (short)src2->R) / 2;
+        dst->G = ((short)src1->G + (short)src2->G) / 2;
+    }
+};
+
+struct R8G8B8A8S
+{
+    char R;
+    char G;
+    char B;
+    char A;
+
+    static void average(R8G8B8A8S *dst, const R8G8B8A8S *src1, const R8G8B8A8S *src2)
+    {
+        dst->R = ((short)src1->R + (short)src2->R) / 2;
+        dst->G = ((short)src1->G + (short)src2->G) / 2;
+        dst->B = ((short)src1->B + (short)src2->B) / 2;
+        dst->A = ((short)src1->A + (short)src2->A) / 2;
+    }
+};
+
 struct A16B16G16R16F
 {
     unsigned short R;

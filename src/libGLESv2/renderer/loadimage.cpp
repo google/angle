@@ -355,6 +355,30 @@ void loadRGBUByteDataToRGBA(int width, int height, int depth,
     }
 }
 
+void loadRGBSByteDataToRGBA(int width, int height, int depth,
+                            const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
+                            void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch)
+{
+    const char *source = NULL;
+    char *dest = NULL;
+
+    for (int z = 0; z < depth; z++)
+    {
+        for (int y = 0; y < height; y++)
+        {
+            source = offsetDataPointer<char>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<char>(output, y, z, outputRowPitch, outputDepthPitch);
+            for (int x = 0; x < width; x++)
+            {
+                dest[4 * x + 0] = source[x * 3 + 0];
+                dest[4 * x + 1] = source[x * 3 + 1];
+                dest[4 * x + 2] = source[x * 3 + 2];
+                dest[4 * x + 3] = 0x7F;
+            }
+        }
+    }
+}
+
 void loadRGB565DataToBGRA(int width, int height, int depth,
                           const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
                           void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch)
