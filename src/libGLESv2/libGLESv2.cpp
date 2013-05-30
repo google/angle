@@ -5106,6 +5106,13 @@ void __stdcall glGetTexParameterfv(GLenum target, GLenum pname, GLfloat* params)
                 }
                 texture = context->getTexture3D();
                 break;
+              case GL_TEXTURE_2D_ARRAY:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                texture = context->getTexture2DArray();
+                break;
               default:
                 return gl::error(GL_INVALID_ENUM);
             }
@@ -5189,6 +5196,13 @@ void __stdcall glGetTexParameteriv(GLenum target, GLenum pname, GLint* params)
                     return gl::error(GL_INVALID_ENUM);
                 }
                 texture = context->getTexture3D();
+                break;
+              case GL_TEXTURE_2D_ARRAY:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                texture = context->getTexture2DArray();
                 break;
               default:
                 return gl::error(GL_INVALID_ENUM);
