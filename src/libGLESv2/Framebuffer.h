@@ -68,6 +68,7 @@ class Framebuffer
     bool hasEnabledColorAttachment() const;
     bool hasStencil() const;
     int getSamples() const;
+    bool usingExtendedDrawBuffers() const;
 
     virtual GLenum completeness() const;
 
