@@ -9733,9 +9733,46 @@ void __stdcall glGetActiveUniformBlockiv(GLuint program, GLuint uniformBlockInde
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
+            gl::Program *programObject = context->getProgram(program);
 
-        UNIMPLEMENTED();
+            if (!programObject)
+            {
+                if (context->getShader(program))
+                {
+                    return gl::error(GL_INVALID_OPERATION);
+                }
+                else
+                {
+                    return gl::error(GL_INVALID_VALUE);
+                }
+            }
+
+            gl::ProgramBinary *programBinary = programObject->getProgramBinary();
+
+            if (!programBinary || uniformBlockIndex >= programBinary->getActiveUniformBlockCount())
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            switch (pname)
+            {
+              case GL_UNIFORM_BLOCK_BINDING:
+                *params = static_cast<GLint>(programObject->getUniformBlockBinding(uniformBlockIndex));
+                break;
+
+              case GL_UNIFORM_BLOCK_DATA_SIZE:
+              case GL_UNIFORM_BLOCK_NAME_LENGTH:
+              case GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS:
+              case GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES:
+              case GL_UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER:
+              case GL_UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER:
+                programBinary->getActiveUniformBlockiv(uniformBlockIndex, pname, params);
+                break;
+
+              default:
+                return gl::error(GL_INVALID_ENUM);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {

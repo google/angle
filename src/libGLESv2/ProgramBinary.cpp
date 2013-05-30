@@ -2381,6 +2381,41 @@ void ProgramBinary::getActiveUniformBlockName(GLuint uniformBlockIndex, GLsizei 
     }
 }
 
+void ProgramBinary::getActiveUniformBlockiv(GLuint uniformBlockIndex, GLenum pname, GLint *params) const
+{
+    ASSERT(uniformBlockIndex < mUniformBlocks.size());   // index must be smaller than getActiveUniformBlockCount()
+
+    const UniformBlock &uniformBlock = *mUniformBlocks[uniformBlockIndex];
+
+    switch (pname)
+    {
+      case GL_UNIFORM_BLOCK_DATA_SIZE:
+        *params = static_cast<GLint>(uniformBlock.dataSize);
+        break;
+      case GL_UNIFORM_BLOCK_NAME_LENGTH:
+        *params = static_cast<GLint>(uniformBlock.name.size() + 1);
+        break;
+      case GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS:
+        *params = static_cast<GLint>(uniformBlock.memberUniformIndexes.size());
+        break;
+      case GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES:
+        {
+            for (unsigned int blockMemberIndex = 0; blockMemberIndex < uniformBlock.memberUniformIndexes.size(); blockMemberIndex++)
+            {
+                params[blockMemberIndex] = static_cast<GLint>(uniformBlock.memberUniformIndexes[blockMemberIndex]);
+            }
+        }
+        break;
+      case GL_UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER:
+        *params = static_cast<GLint>(uniformBlock.isReferencedByVertexShader());
+        break;
+      case GL_UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER:
+        *params = static_cast<GLint>(uniformBlock.isReferencedByFragmentShader());
+        break;
+      default: UNREACHABLE();
+    }
+}
+
 GLuint ProgramBinary::getActiveUniformBlockCount() const
 {
     return mUniformBlocks.size();
