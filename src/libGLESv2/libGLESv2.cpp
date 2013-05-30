@@ -9758,9 +9758,30 @@ void __stdcall glGetActiveUniformBlockName(GLuint program, GLuint uniformBlockIn
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            gl::Program *programObject = context->getProgram(program);
+
+            if (!programObject)
+            {
+                if (context->getShader(program))
+                {
+                    return gl::error(GL_INVALID_OPERATION);
+                }
+                else
+                {
+                    return gl::error(GL_INVALID_VALUE);
+                }
+            }
+
+            gl::ProgramBinary *programBinary = programObject->getProgramBinary();
+
+            if (!programBinary || uniformBlockIndex >= programBinary->getActiveUniformBlockCount())
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            programBinary->getActiveUniformBlockName(uniformBlockIndex, bufSize, length, uniformBlockName);
+        }
     }
     catch(std::bad_alloc&)
     {

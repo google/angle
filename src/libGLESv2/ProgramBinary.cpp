@@ -2356,6 +2356,31 @@ GLint ProgramBinary::getActiveUniformi(GLuint index, GLenum pname) const
     return 0;
 }
 
+void ProgramBinary::getActiveUniformBlockName(GLuint uniformBlockIndex, GLsizei bufSize, GLsizei *length, GLchar *uniformBlockName) const
+{
+    ASSERT(uniformBlockIndex < mUniformBlocks.size());   // index must be smaller than getActiveUniformBlockCount()
+
+    const UniformBlock &uniformBlock = *mUniformBlocks[uniformBlockIndex];
+
+    if (bufSize > 0)
+    {
+        std::string string = uniformBlock.name;
+
+        if (uniformBlock.isArrayElement())
+        {
+            string += "[" + str(uniformBlock.elementIndex) + "]";
+        }
+
+        strncpy(uniformBlockName, string.c_str(), bufSize);
+        uniformBlockName[bufSize - 1] = '\0';
+
+        if (length)
+        {
+            *length = strlen(uniformBlockName);
+        }
+    }
+}
+
 GLuint ProgramBinary::getActiveUniformBlockCount() const
 {
     return mUniformBlocks.size();
