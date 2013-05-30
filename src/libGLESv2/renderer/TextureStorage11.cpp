@@ -940,7 +940,10 @@ RenderTarget *TextureStorage11_3D::getRenderTargetLayer(int mipLevel, int layer)
 
 void TextureStorage11_3D::generateMipmap(int level)
 {
-    UNIMPLEMENTED();
+    RenderTarget11 *source = RenderTarget11::makeRenderTarget11(getRenderTarget(level - 1));
+    RenderTarget11 *dest = RenderTarget11::makeRenderTarget11(getRenderTarget(level));
+
+    generateMipmapLayer(source, dest);
 }
 
 TextureStorage11_2DArray::TextureStorage11_2DArray(Renderer *renderer, int levels, GLenum internalformat, GLenum usage,

@@ -1665,7 +1665,32 @@ void Texture3D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GL
 
 void Texture3D::generateMipmaps()
 {
-    UNIMPLEMENTED();
+    // Purge array levels 1 through q and reset them to represent the generated mipmap levels.
+    unsigned int q = log2(std::max(mImageArray[0]->getWidth(), mImageArray[0]->getHeight()));
+    for (unsigned int i = 1; i <= q; i++)
+    {
+        redefineImage(i, mImageArray[0]->getInternalFormat(),
+                      std::max(mImageArray[0]->getWidth() >> i, 1),
+                      std::max(mImageArray[0]->getHeight() >> i, 1),
+                      std::max(mImageArray[0]->getDepth() >> i, 1));
+    }
+
+    if (mTexStorage && mTexStorage->isRenderTarget())
+    {
+        for (unsigned int i = 1; i <= q; i++)
+        {
+            mTexStorage->generateMipmap(i);
+
+            mImageArray[i]->markClean();
+        }
+    }
+    else
+    {
+        for (unsigned int i = 1; i <= q; i++)
+        {
+            mRenderer->generateMipmap(mImageArray[i], mImageArray[i - 1]);
+        }
+    }
 }
 
 void Texture3D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)
