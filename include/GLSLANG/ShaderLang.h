@@ -218,6 +218,12 @@ typedef struct
     // Default is 0.
     int FragmentPrecisionHigh;
 
+    // GLSL ES 3.0 constants.
+    int MaxVertexOutputVectors;
+    int MaxFragmentInputVectors;
+    int MinProgramTexelOffset;
+    int MaxProgramTexelOffset;
+
     // Name Hashing.
     // Set a 64 bit hash function to enable user-defined name hashing.
     // Default is NULL.

@@ -519,18 +519,26 @@ static TString DefaultPrecisionFragment()
 // Implementation dependent built-in constants.
 //
 //============================================================================
-static TString BuiltInConstants(ShShaderSpec spec, const ShBuiltInResources &resources, const TExtensionBehavior& extensionBehavior)
+static TString BuiltInConstants(const ShBuiltInResources &resources)
 {
     TStringStream s;
 
-    s << "const int gl_MaxVertexAttribs = " << resources.MaxVertexAttribs << ";";
-    s << "const int gl_MaxVertexUniformVectors = " << resources.MaxVertexUniformVectors << ";";
+    s << "const mediump int gl_MaxVertexAttribs = " << resources.MaxVertexAttribs << ";";
+    s << "const mediump int gl_MaxVertexUniformVectors = " << resources.MaxVertexUniformVectors << ";";
 
-    s << "const int gl_MaxVaryingVectors = " << resources.MaxVaryingVectors << ";";
-    s << "const int gl_MaxVertexTextureImageUnits = " << resources.MaxVertexTextureImageUnits << ";";
-    s << "const int gl_MaxCombinedTextureImageUnits = " << resources.MaxCombinedTextureImageUnits << ";";
-    s << "const int gl_MaxTextureImageUnits = " << resources.MaxTextureImageUnits << ";";
-    s << "const int gl_MaxFragmentUniformVectors = " << resources.MaxFragmentUniformVectors << ";";
+    s << "const mediump int gl_MaxVertexTextureImageUnits = " << resources.MaxVertexTextureImageUnits << ";";
+    s << "const mediump int gl_MaxCombinedTextureImageUnits = " << resources.MaxCombinedTextureImageUnits << ";";
+    s << "const mediump int gl_MaxTextureImageUnits = " << resources.MaxTextureImageUnits << ";";
+    s << "const mediump int gl_MaxFragmentUniformVectors = " << resources.MaxFragmentUniformVectors << ";";
+    
+    return s.str();
+}
+
+static TString BuiltInConstants1_0(ShShaderSpec spec, const ShBuiltInResources &resources, const TExtensionBehavior& extensionBehavior)
+{
+    TStringStream s;
+
+    s << "const mediump int gl_MaxVaryingVectors = " << resources.MaxVaryingVectors << ";";
 
     if (spec != SH_CSS_SHADERS_SPEC)
     {
@@ -538,8 +546,20 @@ static TString BuiltInConstants(ShShaderSpec spec, const ShBuiltInResources &res
         const bool usingMRTExtension = (iter != extensionBehavior.end() && (iter->second == EBhEnable || iter->second == EBhRequire));
         const int maxDrawBuffers = (usingMRTExtension ? resources.MaxDrawBuffers : 1);
 
-        s << "const int gl_MaxDrawBuffers = " << maxDrawBuffers << ";";
+        s << "const mediump int gl_MaxDrawBuffers = " << maxDrawBuffers << ";";
     }
+
+    return s.str();
+}
+
+static TString BuiltInConstants3_0(const ShBuiltInResources &resources)
+{
+    TStringStream s;
+
+    s << "const mediump int gl_MaxVertexOutputVectors = " << resources.MaxVertexOutputVectors << ";";
+    s << "const mediump int gl_MaxFragmentInputVectors = " << resources.MaxFragmentInputVectors << ";";
+    s << "const mediump int gl_MinProgramTexelOffset = " << resources.MinProgramTexelOffset << ";";
+    s << "const mediump int gl_MaxProgramTexelOffset = " << resources.MaxProgramTexelOffset << ";";
 
     return s.str();
 }
@@ -571,7 +591,9 @@ void TBuiltIns::initialize(ShShaderType type, ShShaderSpec spec,
     default: assert(false && "Language not supported");
     }
 
-    commonBuiltIns.push_back(BuiltInConstants(spec, resources, extensionBehavior));
+    commonBuiltIns.push_back(BuiltInConstants(resources));
+    essl1BuiltIns.push_back(BuiltInConstants1_0(spec, resources, extensionBehavior));
+    essl3BuiltIns.push_back(BuiltInConstants3_0(resources));
 }
 
 void IdentifyBuiltIns(ShShaderType type, ShShaderSpec spec,

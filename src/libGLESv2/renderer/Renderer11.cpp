@@ -2126,6 +2126,8 @@ unsigned int Renderer11::getMaxFragmentUniformVectors() const
 unsigned int Renderer11::getMaxVaryingVectors() const
 {
     META_ASSERT(gl::IMPLEMENTATION_MAX_VARYING_VECTORS == D3D11_VS_OUTPUT_REGISTER_COUNT);
+    META_ASSERT(D3D11_VS_OUTPUT_REGISTER_COUNT <= D3D11_PS_INPUT_REGISTER_COUNT);
+    META_ASSERT(D3D10_VS_OUTPUT_REGISTER_COUNT <= D3D10_PS_INPUT_REGISTER_COUNT);
     switch (mFeatureLevel)
     {
       case D3D_FEATURE_LEVEL_11_0:

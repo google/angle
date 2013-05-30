@@ -131,6 +131,12 @@ void ShInitBuiltInResources(ShBuiltInResources* resources)
     // Disable highp precision in fragment shader by default.
     resources->FragmentPrecisionHigh = 0;
 
+    // GLSL ES 3.0 constants.
+    resources->MaxVertexOutputVectors = 16;
+    resources->MaxFragmentInputVectors = 15;
+    resources->MinProgramTexelOffset = -8;
+    resources->MaxProgramTexelOffset = 7;
+
     // Disable name hashing by default.
     resources->HashFunction = NULL;
 
