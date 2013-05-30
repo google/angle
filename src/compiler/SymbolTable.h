@@ -295,33 +295,8 @@ public:
         return table[level]->insert(symbol);
     }
 
-    TSymbol *find(const TString &name, bool *builtIn = false, bool *sameScope = false) 
-    {
-        int level = currentLevel();
-        TSymbol* symbol;
-        do {
-            symbol = table[level]->find(name);
-            --level;
-        } while (symbol == 0 && level >= 0);
-        level++;
-        if (builtIn)
-            *builtIn = (level <= LAST_BUILTIN_LEVEL);
-        if (sameScope)
-            *sameScope = (level == currentLevel());
-        return symbol;
-    }
-
-    TSymbol *findBuiltIn(const TString &name)
-    {
-        for (int i = LAST_BUILTIN_LEVEL; i >= 0; i--) {
-            TSymbol *symbol = table[i]->find(name);
-
-            if (symbol)
-                return symbol;
-        }
-
-        return 0;
-    }
+    TSymbol *find(const TString &name, int shaderVersion, bool *builtIn = false, bool *sameScope = false);
+    TSymbol *findBuiltIn(const TString &name, int shaderVersion);
     
     TSymbolTableLevel *getOuterLevel() {
         assert(currentLevel() >= 1);

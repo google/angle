@@ -741,7 +741,7 @@ bool TParseContext::arrayErrorCheck(int line, TString& identifier, TPublicType t
 
     bool builtIn = false; 
     bool sameScope = false;
-    TSymbol* symbol = symbolTable.find(identifier, &builtIn, &sameScope);
+    TSymbol* symbol = symbolTable.find(identifier, 0, &builtIn, &sameScope);
     if (symbol == 0 || !sameScope) {
         if (reservedErrorCheck(line, identifier))
             return true;
@@ -800,7 +800,7 @@ bool TParseContext::arrayErrorCheck(int line, TString& identifier, TPublicType t
 bool TParseContext::arraySetMaxSize(TIntermSymbol *node, TType* type, int size, bool updateFlag, TSourceLoc line)
 {
     bool builtIn = false;
-    TSymbol* symbol = symbolTable.find(node->getSymbol(), &builtIn);
+    TSymbol* symbol = symbolTable.find(node->getSymbol(), 0, &builtIn);
     if (symbol == 0) {
         error(line, " undeclared identifier", node->getSymbol().c_str());
         return true;
@@ -813,7 +813,7 @@ bool TParseContext::arraySetMaxSize(TIntermSymbol *node, TType* type, int size, 
     // special casing to test index value of gl_FragData. If the accessed index is >= gl_MaxDrawBuffers
     // its an error
     if (node->getSymbol() == "gl_FragData") {
-        TSymbol* fragData = symbolTable.find("gl_MaxDrawBuffers", &builtIn);
+        TSymbol* fragData = symbolTable.find("gl_MaxDrawBuffers", 0, &builtIn);
         ASSERT(fragData);
 
         int fragDataValue = static_cast<TVariable*>(fragData)->getConstPointer()[0].getIConst();
@@ -970,13 +970,13 @@ void TParseContext::handlePragmaDirective(int line, const char* name, const char
 //
 // Return the function symbol if found, otherwise 0.
 //
-const TFunction* TParseContext::findFunction(int line, TFunction* call, bool *builtIn)
+const TFunction* TParseContext::findFunction(int line, TFunction* call, int shaderVersion, bool *builtIn)
 {
     // First find by unmangled name to check whether the function name has been
     // hidden by a variable name or struct typename.
-    const TSymbol* symbol = symbolTable.find(call->getName(), builtIn);
+    const TSymbol* symbol = symbolTable.find(call->getName(), shaderVersion, builtIn);
     if (symbol == 0) {
-        symbol = symbolTable.find(call->getMangledName(), builtIn);
+        symbol = symbolTable.find(call->getMangledName(), shaderVersion, builtIn);
     }
 
     if (symbol == 0) {
@@ -1056,7 +1056,7 @@ bool TParseContext::executeInitializer(TSourceLoc line, TString& identifier, TPu
                 variable->shareConstPointer(initializer->getAsConstantUnion()->getUnionArrayPointer());
             }
         } else if (initializer->getAsSymbolNode()) {
-            const TSymbol* symbol = symbolTable.find(initializer->getAsSymbolNode()->getSymbol());
+            const TSymbol* symbol = symbolTable.find(initializer->getAsSymbolNode()->getSymbol(), 0);
             const TVariable* tVar = static_cast<const TVariable*>(symbol);
 
             ConstantUnion* constArray = tVar->getConstPointer();

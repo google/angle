@@ -2490,7 +2490,7 @@ yyreduce:
             //
             const TFunction* fnCandidate;
             bool builtIn;
-            fnCandidate = context->findFunction((yyvsp[(1) - (1)].interm).line, fnCall, &builtIn);
+            fnCandidate = context->findFunction((yyvsp[(1) - (1)].interm).line, fnCall, context->shaderVersion, &builtIn);
             if (fnCandidate) {
                 //
                 // A declared function.
@@ -3176,7 +3176,7 @@ yyreduce:
         //
         // Redeclarations are allowed.  But, return types and parameter qualifiers must match.
         //
-        TFunction* prevDec = static_cast<TFunction*>(context->symbolTable.find((yyvsp[(1) - (2)].interm.function)->getMangledName()));
+        TFunction* prevDec = static_cast<TFunction*>(context->symbolTable.find((yyvsp[(1) - (2)].interm.function)->getMangledName(), context->shaderVersion));
         if (prevDec) {
             if (prevDec->getReturnType() != (yyvsp[(1) - (2)].interm.function)->getReturnType()) {
                 context->error((yyvsp[(2) - (2)].lex).line, "overloaded functions must have the same return type", (yyvsp[(1) - (2)].interm.function)->getReturnType().getBasicString());
@@ -4618,7 +4618,7 @@ yyreduce:
     {
         TFunction* function = (yyvsp[(1) - (1)].interm).function;
         
-        const TSymbol *builtIn = context->symbolTable.findBuiltIn(function->getMangledName());
+        const TSymbol *builtIn = context->symbolTable.findBuiltIn(function->getMangledName(), context->shaderVersion);
         
         if (builtIn)
         {
@@ -4626,7 +4626,7 @@ yyreduce:
             context->recover();
         }
         
-        TFunction* prevDec = static_cast<TFunction*>(context->symbolTable.find(function->getMangledName()));
+        TFunction* prevDec = static_cast<TFunction*>(context->symbolTable.find(function->getMangledName(), context->shaderVersion));
         //
         // Note:  'prevDec' could be 'function' if this is the first time we've seen function
         // as it would have just been put in the symbol table.  Otherwise, we're looking up

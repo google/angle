@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -276,4 +276,42 @@ void TSymbolTable::copyTable(const TSymbolTable& copyOf)
     for( unsigned int i = 0; i < copyOf.precisionStack.size(); i++) {
         precisionStack.push_back( copyOf.precisionStack[i] );
     }
+}
+
+TSymbol *TSymbolTable::find(const TString &name, int shaderVersion, bool *builtIn, bool *sameScope)
+{
+    int level = currentLevel();
+    TSymbol *symbol;
+
+    do
+    {
+        if (level == ESSL3_BUILTINS && shaderVersion != 300) level--;
+        if (level == ESSL1_BUILTINS && shaderVersion != 100) level--;
+
+        symbol = table[level]->find(name);
+    }
+    while (symbol == 0 && --level >= 0);
+
+    if (builtIn)
+        *builtIn = (level <= LAST_BUILTIN_LEVEL);
+    if (sameScope)
+        *sameScope = (level == currentLevel());
+
+    return symbol;
+}
+
+TSymbol *TSymbolTable::findBuiltIn(const TString &name, int shaderVersion)
+{
+    for (int level = LAST_BUILTIN_LEVEL; level >= 0; level--)
+    {
+        if (level == ESSL3_BUILTINS && shaderVersion != 300) level--;
+        if (level == ESSL1_BUILTINS && shaderVersion != 100) level--;
+
+        TSymbol *symbol = table[level]->find(name);
+
+        if (symbol)
+            return symbol;
+    }
+
+    return 0;
 }

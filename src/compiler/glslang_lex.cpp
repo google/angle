@@ -1,4 +1,4 @@
-#line 17 "./glslang.l"
+
 //
 // Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -20,8 +20,6 @@
 #endif
 
 
-
-#line 25 "./glslang_lex.cpp"
 
 #define  YY_INT_ALIGNED short int
 
@@ -3094,7 +3092,7 @@ int check_type(yyscan_t yyscanner) {
     struct yyguts_t* yyg = (struct yyguts_t*) yyscanner;
     
     int token = IDENTIFIER;
-    TSymbol* symbol = yyextra->symbolTable.find(yytext);
+    TSymbol* symbol = yyextra->symbolTable.find(yytext, yyextra->shaderVersion);
     if (yyextra->lexAfterType == false && symbol && symbol->isVariable()) {
         TVariable* variable = static_cast<TVariable*>(symbol);
         if (variable->isUserType()) {

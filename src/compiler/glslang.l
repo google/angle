@@ -360,7 +360,7 @@ int check_type(yyscan_t yyscanner) {
     struct yyguts_t* yyg = (struct yyguts_t*) yyscanner;
     
     int token = IDENTIFIER;
-    TSymbol* symbol = yyextra->symbolTable.find(yytext);
+    TSymbol* symbol = yyextra->symbolTable.find(yytext, yyextra->shaderVersion);
     if (yyextra->lexAfterType == false && symbol && symbol->isVariable()) {
         TVariable* variable = static_cast<TVariable*>(symbol);
         if (variable->isUserType()) {

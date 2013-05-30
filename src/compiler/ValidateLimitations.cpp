@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -436,7 +436,7 @@ bool ValidateLimitations::validateFunctionCall(TIntermAggregate* node)
 
     bool valid = true;
     TSymbolTable& symbolTable = GlobalParseContext->symbolTable;
-    TSymbol* symbol = symbolTable.find(node->getName());
+    TSymbol* symbol = symbolTable.find(node->getName(), GlobalParseContext->shaderVersion);
     ASSERT(symbol && symbol->isFunction());
     TFunction* function = static_cast<TFunction*>(symbol);
     for (ParamIndex::const_iterator i = pIndex.begin();

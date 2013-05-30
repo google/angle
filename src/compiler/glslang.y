@@ -497,7 +497,7 @@ function_call
             //
             const TFunction* fnCandidate;
             bool builtIn;
-            fnCandidate = context->findFunction($1.line, fnCall, &builtIn);
+            fnCandidate = context->findFunction($1.line, fnCall, context->shaderVersion, &builtIn);
             if (fnCandidate) {
                 //
                 // A declared function.
@@ -1029,7 +1029,7 @@ function_prototype
         //
         // Redeclarations are allowed.  But, return types and parameter qualifiers must match.
         //
-        TFunction* prevDec = static_cast<TFunction*>(context->symbolTable.find($1->getMangledName()));
+        TFunction* prevDec = static_cast<TFunction*>(context->symbolTable.find($1->getMangledName(), context->shaderVersion));
         if (prevDec) {
             if (prevDec->getReturnType() != $1->getReturnType()) {
                 context->error($2.line, "overloaded functions must have the same return type", $1->getReturnType().getBasicString());
@@ -2144,7 +2144,7 @@ function_definition
     : function_prototype {
         TFunction* function = $1.function;
         
-        const TSymbol *builtIn = context->symbolTable.findBuiltIn(function->getMangledName());
+        const TSymbol *builtIn = context->symbolTable.findBuiltIn(function->getMangledName(), context->shaderVersion);
         
         if (builtIn)
         {
@@ -2152,7 +2152,7 @@ function_definition
             context->recover();
         }
         
-        TFunction* prevDec = static_cast<TFunction*>(context->symbolTable.find(function->getMangledName()));
+        TFunction* prevDec = static_cast<TFunction*>(context->symbolTable.find(function->getMangledName(), context->shaderVersion));
         //
         // Note:  'prevDec' could be 'function' if this is the first time we've seen function
         // as it would have just been put in the symbol table.  Otherwise, we're looking up

@@ -115,7 +115,7 @@ struct TParseContext {
 
     bool containsSampler(TType& type);
     bool areAllChildConst(TIntermAggregate* aggrNode);
-    const TFunction* findFunction(int line, TFunction* pfnCall, bool *builtIn = 0);
+    const TFunction* findFunction(int line, TFunction* pfnCall, int shaderVersion, bool *builtIn = 0);
     bool executeInitializer(TSourceLoc line, TString& identifier, TPublicType& pType,
                             TIntermTyped* initializer, TIntermNode*& intermNode, TVariable* variable = 0);
     bool arraySetMaxSize(TIntermSymbol*, TType*, int, bool, TSourceLoc);
