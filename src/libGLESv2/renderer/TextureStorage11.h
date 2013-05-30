@@ -130,6 +130,7 @@ class TextureStorage11_3D : public TextureStorage11
 
     virtual ID3D11Resource *getBaseTexture() const;
     virtual ID3D11ShaderResourceView *getSRV();
+    virtual RenderTarget *getRenderTarget(int mipLevel);
     virtual RenderTarget *getRenderTargetLayer(int mipLevel, int layer);
 
     virtual void generateMipmap(int level);
@@ -139,7 +140,9 @@ class TextureStorage11_3D : public TextureStorage11
 
     typedef std::pair<int, int> LevelLayerKey;
     typedef std::map<LevelLayerKey, RenderTarget11*> RenderTargetMap;
-    RenderTargetMap mRenderTargets;
+    RenderTargetMap mLevelLayerRenderTargets;
+
+    RenderTarget11 *mLevelRenderTargets[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
     ID3D11Texture3D *mTexture;
 };

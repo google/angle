@@ -692,6 +692,11 @@ TextureStorage11_3D::TextureStorage11_3D(Renderer *renderer, int levels, GLenum 
 {
     mTexture = NULL;
 
+    for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
+    {
+        mLevelRenderTargets[i] = NULL;
+    }
+
     DXGI_FORMAT convertedFormat = gl_d3d11::ConvertTextureFormat(internalformat);
     ASSERT(!d3d11::IsDepthStencilFormat(convertedFormat));
 
@@ -759,12 +764,18 @@ TextureStorage11_3D::~TextureStorage11_3D()
         mSRV = NULL;
     }
 
-    for (RenderTargetMap::const_iterator i = mRenderTargets.begin(); i != mRenderTargets.end(); i++)
+    for (RenderTargetMap::const_iterator i = mLevelLayerRenderTargets.begin(); i != mLevelLayerRenderTargets.end(); i++)
     {
         RenderTarget11* renderTarget = i->second;
         delete renderTarget;
     }
-    mRenderTargets.clear();
+    mLevelLayerRenderTargets.clear();
+
+    for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
+    {
+        delete mLevelRenderTargets[i];
+        mLevelRenderTargets[i] = NULL;
+    }
 }
 
 TextureStorage11_3D *TextureStorage11_3D::makeTextureStorage11_3D(TextureStorage *storage)
@@ -802,12 +813,78 @@ ID3D11ShaderResourceView *TextureStorage11_3D::getSRV()
     return mSRV;
 }
 
+RenderTarget *TextureStorage11_3D::getRenderTarget(int mipLevel)
+{
+    if (mipLevel >= 0 && mipLevel < static_cast<int>(mMipLevels))
+    {
+        if (!mLevelRenderTargets[mipLevel])
+        {
+            ID3D11Device *device = mRenderer->getDevice();
+            HRESULT result;
+
+            D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+            srvDesc.Format = mShaderResourceFormat;
+            srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE3D;
+            srvDesc.Texture3D.MostDetailedMip = mipLevel;
+            srvDesc.Texture3D.MipLevels = 1;
+
+            ID3D11ShaderResourceView *srv;
+            result = device->CreateShaderResourceView(mTexture, &srvDesc, &srv);
+
+            if (result == E_OUTOFMEMORY)
+            {
+                return gl::error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
+            }
+            ASSERT(SUCCEEDED(result));
+
+            if (mRenderTargetFormat != DXGI_FORMAT_UNKNOWN)
+            {
+                D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
+                rtvDesc.Format = mRenderTargetFormat;
+                rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE3D;
+                rtvDesc.Texture3D.MipSlice = mipLevel;
+                rtvDesc.Texture3D.FirstWSlice = 0;
+                rtvDesc.Texture3D.WSize = -1;
+
+                ID3D11RenderTargetView *rtv;
+                result = device->CreateRenderTargetView(mTexture, &rtvDesc, &rtv);
+
+                if (result == E_OUTOFMEMORY)
+                {
+                    srv->Release();
+                    return gl::error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
+                }
+                ASSERT(SUCCEEDED(result));
+
+                // RenderTarget11 expects to be the owner of the resources it is given but TextureStorage11
+                // also needs to keep a reference to the texture.
+                mTexture->AddRef();
+
+                mLevelRenderTargets[mipLevel] = new RenderTarget11(mRenderer, rtv, mTexture, srv,
+                                                                   std::max(mTextureWidth >> mipLevel, 1U),
+                                                                   std::max(mTextureHeight >> mipLevel, 1U),
+                                                                   std::max(mTextureDepth >> mipLevel, 1U));
+            }
+            else
+            {
+                UNREACHABLE();
+            }
+        }
+
+        return mLevelRenderTargets[mipLevel];
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
 RenderTarget *TextureStorage11_3D::getRenderTargetLayer(int mipLevel, int layer)
 {
     if (mipLevel >= 0 && mipLevel < static_cast<int>(mMipLevels))
     {
         LevelLayerKey key(mipLevel, layer);
-        if (mRenderTargets.find(key) == mRenderTargets.end())
+        if (mLevelLayerRenderTargets.find(key) == mLevelLayerRenderTargets.end())
         {
             ID3D11Device *device = mRenderer->getDevice();
             HRESULT result;
@@ -838,10 +915,10 @@ RenderTarget *TextureStorage11_3D::getRenderTargetLayer(int mipLevel, int layer)
                 // also needs to keep a reference to the texture.
                 mTexture->AddRef();
 
-                mRenderTargets[key] = new RenderTarget11(mRenderer, rtv, mTexture, srv,
-                                                         std::max(mTextureWidth >> mipLevel, 1U),
-                                                         std::max(mTextureHeight >> mipLevel, 1U),
-                                                         1);
+                mLevelLayerRenderTargets[key] = new RenderTarget11(mRenderer, rtv, mTexture, srv,
+                                                                   std::max(mTextureWidth >> mipLevel, 1U),
+                                                                   std::max(mTextureHeight >> mipLevel, 1U),
+                                                                   1);
             }
             else
             {
@@ -849,7 +926,7 @@ RenderTarget *TextureStorage11_3D::getRenderTargetLayer(int mipLevel, int layer)
             }
         }
 
-        return mRenderTargets[key];
+        return mLevelLayerRenderTargets[key];
     }
     else
     {
