@@ -396,7 +396,7 @@ bool TParseContext::constErrorCheck(TIntermTyped* node)
 //
 bool TParseContext::integerErrorCheck(TIntermTyped* node, const char* token)
 {
-    if (node->getBasicType() == EbtInt && node->isScalar())
+    if (node->isScalarInt())
         return false;
 
     error(node->getLine(), "integer expression required", token);
@@ -676,17 +676,35 @@ bool TParseContext::containsSampler(TType& type)
 bool TParseContext::arraySizeErrorCheck(int line, TIntermTyped* expr, int& size)
 {
     TIntermConstantUnion* constant = expr->getAsConstantUnion();
-    if (constant == 0 || constant->getBasicType() != EbtInt) {
+
+    if (constant == 0 || !constant->isScalarInt())
+    {
         error(line, "array size must be a constant integer expression", "");
         return true;
     }
 
-    size = constant->getIConst(0);
+    if (constant->getBasicType() == EbtUInt)
+    {
+        unsigned int uintSize = constant->getUConst(0);
+        if (uintSize > static_cast<unsigned int>(std::numeric_limits<int>::max()))
+        {
+            error(line, "array size too large", "");
+            size = 1;
+            return true;
+        }
 
-    if (size <= 0) {
-        error(line, "array size must be a positive integer", "");
-        size = 1;
-        return true;
+        size = static_cast<int>(uintSize);
+    }
+    else
+    {
+        size = constant->getIConst(0);
+
+        if (size <= 0)
+        {
+            error(line, "array size must be a positive integer", "");
+            size = 1;
+            return true;
+        }
     }
 
     return false;
@@ -1193,6 +1211,14 @@ TFunction *TParseContext::addConstructorFunc(TPublicType publicType)
             }
             break;
 
+          case EbtUInt:
+            switch(publicType.getNominalSize())
+            {
+              case 1:       op = EOpConstructUnsignedInt;   break;
+              default:      UNIMPLEMENTED(); break;
+            }
+            break;
+
           case EbtBool:
             switch(publicType.getNominalSize())
             {
@@ -1357,6 +1383,10 @@ TIntermTyped* TParseContext::constructBuiltIn(const TType* type, TOperator op, T
     case EOpConstructIVec4:
     case EOpConstructInt:
         basicOp = EOpConstructInt;
+        break;
+
+    case EOpConstructUnsignedInt:
+        basicOp = EOpConstructUnsignedInt;
         break;
 
     case EOpConstructBVec2:

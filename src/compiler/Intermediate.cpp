@@ -77,15 +77,23 @@ const char* getOperatorString(TOperator op) {
 
       // Fall-through.
       case EOpConvIntToBool:
+      case EOpConvUnsignedIntToBool:
       case EOpConvFloatToBool: return "bool";
  
       // Fall-through.
       case EOpConvBoolToFloat:
+      case EOpConvUnsignedIntToFloat:
       case EOpConvIntToFloat: return "float";
  
       // Fall-through.
       case EOpConvFloatToInt:
+      case EOpConvUnsignedIntToInt:
       case EOpConvBoolToInt: return "int";
+
+      // Fall-through.
+      case EOpConvIntToUnsignedInt:
+      case EOpConvFloatToUnsignedInt:
+      case EOpConvBoolToUnsignedInt: return "uint";
 
       case EOpRadians: return "radians";
       case EOpDegrees: return "degrees";
@@ -315,6 +323,7 @@ TIntermTyped* TIntermediate::addUnaryMath(TOperator op, TIntermNode* childNode, 
     TBasicType newType = EbtVoid;
     switch (op) {
         case EOpConstructInt:   newType = EbtInt;   break;
+        case EOpConstructUnsignedInt: newType = EbtUInt; break;
         case EOpConstructBool:  newType = EbtBool;  break;
         case EOpConstructFloat: newType = EbtFloat; break;
         default: break;
@@ -335,6 +344,7 @@ TIntermTyped* TIntermediate::addUnaryMath(TOperator op, TIntermNode* childNode, 
     //
     switch (op) {
         case EOpConstructInt:
+        case EOpConstructUnsignedInt:
         case EOpConstructBool:
         case EOpConstructFloat:
             return child;
@@ -462,6 +472,9 @@ TIntermTyped* TIntermediate::addConversion(TOperator op, const TType& type, TInt
         case EOpConstructInt:
             promoteTo = EbtInt;
             break;
+        case EOpConstructUnsignedInt:
+            promoteTo = EbtUInt;
+            break;
         default:
             //
             // implicit conversions were removed from the language.
@@ -489,8 +502,9 @@ TIntermTyped* TIntermediate::addConversion(TOperator op, const TType& type, TInt
         switch (promoteTo) {
             case EbtFloat:
                 switch (node->getBasicType()) {
-                    case EbtInt:   newOp = EOpConvIntToFloat;  break;
-                    case EbtBool:  newOp = EOpConvBoolToFloat; break;
+                    case EbtInt:    newOp = EOpConvIntToFloat;         break;
+                    case EbtUInt:   newOp = EOpConvFloatToUnsignedInt; break;
+                    case EbtBool:   newOp = EOpConvBoolToFloat;        break;
                     default:
                         infoSink.info.message(EPrefixInternalError, "Bad promotion node", node->getLine());
                         return 0;
@@ -498,8 +512,9 @@ TIntermTyped* TIntermediate::addConversion(TOperator op, const TType& type, TInt
                 break;
             case EbtBool:
                 switch (node->getBasicType()) {
-                    case EbtInt:   newOp = EOpConvIntToBool;   break;
-                    case EbtFloat: newOp = EOpConvFloatToBool; break;
+                    case EbtInt:    newOp = EOpConvIntToBool;         break;
+                    case EbtUInt:   newOp = EOpConvBoolToUnsignedInt; break;
+                    case EbtFloat:  newOp = EOpConvFloatToBool;       break;
                     default:
                         infoSink.info.message(EPrefixInternalError, "Bad promotion node", node->getLine());
                         return 0;
@@ -507,8 +522,19 @@ TIntermTyped* TIntermediate::addConversion(TOperator op, const TType& type, TInt
                 break;
             case EbtInt:
                 switch (node->getBasicType()) {
-                    case EbtBool:   newOp = EOpConvBoolToInt;  break;
-                    case EbtFloat:  newOp = EOpConvFloatToInt; break;
+                    case EbtUInt:   newOp = EOpConvUnsignedIntToInt; break;
+                    case EbtBool:   newOp = EOpConvBoolToInt;        break;
+                    case EbtFloat:  newOp = EOpConvFloatToInt;       break;
+                    default:
+                        infoSink.info.message(EPrefixInternalError, "Bad promotion node", node->getLine());
+                        return 0;
+                }
+                break;
+            case EbtUInt:
+                switch (node->getBasicType()) {
+                    case EbtInt:    newOp = EOpConvIntToUnsignedInt;   break;
+                    case EbtBool:   newOp = EOpConvBoolToUnsignedInt;  break;
+                    case EbtFloat:  newOp = EOpConvFloatToUnsignedInt; break;
                     default:
                         infoSink.info.message(EPrefixInternalError, "Bad promotion node", node->getLine());
                         return 0;
@@ -803,6 +829,7 @@ bool TIntermOperator::isConstructor() const
         case EOpConstructIVec3:
         case EOpConstructIVec4:
         case EOpConstructInt:
+        case EOpConstructUnsignedInt:
         case EOpConstructBVec2:
         case EOpConstructBVec3:
         case EOpConstructBVec4:
@@ -1281,7 +1308,7 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, TIntermTyped* constantNod
                 {
                     switch (getType().getBasicType())
                     {
-                        case EbtFloat:
+                      case EbtFloat:
                         if (rightUnionArray[i] == 0.0f)
                         {
                             infoSink.info.message(EPrefixWarning, "Divide by zero error during constant folding", getLine());
@@ -1293,7 +1320,7 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, TIntermTyped* constantNod
                         }
                         break;
 
-                        case EbtInt:
+                      case EbtInt:
                         if (rightUnionArray[i] == 0)
                         {
                             infoSink.info.message(EPrefixWarning, "Divide by zero error during constant folding", getLine());
@@ -1305,7 +1332,19 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, TIntermTyped* constantNod
                         }
                         break;
 
-                        default:
+                      case EbtUInt:
+                        if (rightUnionArray[i] == 0)
+                        {
+                            infoSink.info.message(EPrefixWarning, "Divide by zero error during constant folding", getLine());
+                            tempConstArray[i].setUConst(UINT_MAX);
+                        }
+                        else
+                        {
+                            tempConstArray[i].setUConst(unionArray[i].getUConst() / rightUnionArray[i].getUConst());
+                        }
+                        break;
+
+                      default:
                         infoSink.info.message(EPrefixInternalError, "Constant folding cannot be done for \"/\"", getLine());
                         return 0;
                     }
@@ -1575,6 +1614,9 @@ TIntermTyped* TIntermediate::promoteConstantUnion(TBasicType promoteTo, TIntermC
                     case EbtInt:
                         leftUnionArray[i].setFConst(static_cast<float>(node->getIConst(i)));
                         break;
+                    case EbtUInt:
+                        leftUnionArray[i].setFConst(static_cast<float>(node->getUConst(i)));
+                        break;
                     case EbtBool:
                         leftUnionArray[i].setFConst(static_cast<float>(node->getBConst(i)));
                         break;
@@ -1591,6 +1633,9 @@ TIntermTyped* TIntermediate::promoteConstantUnion(TBasicType promoteTo, TIntermC
                     case EbtInt:
                         leftUnionArray[i].setIConst(static_cast<int>(node->getIConst(i)));
                         break;
+                    case EbtUInt:
+                        leftUnionArray[i].setIConst(static_cast<int>(node->getUConst(i)));
+                        break;
                     case EbtBool:
                         leftUnionArray[i].setIConst(static_cast<int>(node->getBConst(i)));
                         break;
@@ -1602,10 +1647,32 @@ TIntermTyped* TIntermediate::promoteConstantUnion(TBasicType promoteTo, TIntermC
                         return 0;
                 }
                 break;
+            case EbtUInt:
+                switch (node->getType().getBasicType()) {
+                    case EbtInt:
+                        leftUnionArray[i].setUConst(static_cast<unsigned int>(node->getIConst(i)));
+                        break;
+                    case EbtUInt:
+                        leftUnionArray[i].setUConst(static_cast<unsigned int>(node->getUConst(i)));
+                        break;
+                    case EbtBool:
+                        leftUnionArray[i].setUConst(static_cast<unsigned int>(node->getBConst(i)));
+                        break;
+                    case EbtFloat:
+                        leftUnionArray[i].setUConst(static_cast<unsigned int>(node->getFConst(i)));
+                        break;
+                    default:
+                        infoSink.info.message(EPrefixInternalError, "Cannot promote", node->getLine());
+                        return 0;
+                }
+                break;
             case EbtBool:
                 switch (node->getType().getBasicType()) {
                     case EbtInt:
                         leftUnionArray[i].setBConst(node->getIConst(i) != 0);
+                        break;
+                    case EbtUInt:
+                        leftUnionArray[i].setBConst(node->getUConst(i) != 0);
                         break;
                     case EbtBool:
                         leftUnionArray[i].setBConst(node->getBConst(i));

@@ -122,7 +122,7 @@ extern void yyerror(TParseContext* context, const char* reason);
 %}
 
 %token <lex> INVARIANT HIGH_PRECISION MEDIUM_PRECISION LOW_PRECISION PRECISION
-%token <lex> ATTRIBUTE CONST_QUAL BOOL_TYPE FLOAT_TYPE INT_TYPE
+%token <lex> ATTRIBUTE CONST_QUAL BOOL_TYPE FLOAT_TYPE INT_TYPE UINT_TYPE
 %token <lex> BREAK CONTINUE DO ELSE FOR IF DISCARD RETURN SWITCH CASE DEFAULT
 %token <lex> BVEC2 BVEC3 BVEC4 IVEC2 IVEC3 IVEC4 VEC2 VEC3 VEC4
 %token <lex> MATRIX2 MATRIX3 MATRIX4 IN_QUAL OUT_QUAL INOUT_QUAL UNIFORM VARYING
@@ -1458,15 +1458,14 @@ type_specifier_nonarray
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtInt, qual, $1.line);
     }
+    | UINT_TYPE {
+        TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
+        $$.setBasic(EbtUInt, qual, $1.line);
+    }
     | BOOL_TYPE {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtBool, qual, $1.line);
     }
-//    | UNSIGNED INT_TYPE {
-//        PACK_UNPACK_ONLY("unsigned", $1.line);
-//        TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-//        $$.setBasic(EbtInt, qual, $1.line);
-//    }
     | VEC2 {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtFloat, qual, $1.line);

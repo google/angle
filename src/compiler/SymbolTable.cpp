@@ -44,6 +44,7 @@ void TType::buildMangledName(TString& mangledName)
     switch (type) {
     case EbtFloat:              mangledName += 'f';      break;
     case EbtInt:                mangledName += 'i';      break;
+    case EbtUInt:               mangledName += 'u';      break;
     case EbtBool:               mangledName += 'b';      break;
     case EbtSampler2D:          mangledName += "s2";     break;
     case EbtSamplerCube:        mangledName += "sC";     break;

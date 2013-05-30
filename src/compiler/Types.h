@@ -195,6 +195,7 @@ public:
 
     bool isVector() const { return primarySize > 1 && secondarySize == 1; }
     bool isScalar() const { return primarySize == 1 && secondarySize == 1 && !structure; }
+    bool isScalarInt() const { return isScalar() && (type == EbtInt || type == EbtUInt); }
 
     TTypeList* getStruct() const { return structure; }
     void setStruct(TTypeList* s) { structure = s; computeDeepestStructNesting(); }

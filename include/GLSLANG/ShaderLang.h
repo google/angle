@@ -88,6 +88,7 @@ typedef enum {
 typedef enum {
   SH_NONE           = 0,
   SH_INT            = 0x1404,
+  SH_UNSIGNED_INT   = 0x1405,
   SH_FLOAT          = 0x1406,
   SH_FLOAT_VEC2     = 0x8B50,
   SH_FLOAT_VEC3     = 0x8B51,
@@ -95,6 +96,9 @@ typedef enum {
   SH_INT_VEC2       = 0x8B53,
   SH_INT_VEC3       = 0x8B54,
   SH_INT_VEC4       = 0x8B55,
+  SH_UNSIGNED_INT_VEC2 = 0x8DC6,
+  SH_UNSIGNED_INT_VEC3 = 0x8DC7,
+  SH_UNSIGNED_INT_VEC4 = 0x8DC8,
   SH_BOOL           = 0x8B56,
   SH_BOOL_VEC2      = 0x8B57,
   SH_BOOL_VEC3      = 0x8B58,

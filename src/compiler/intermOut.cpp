@@ -153,11 +153,16 @@ bool TOutputTraverser::visitUnary(Visit visit, TIntermUnary* node)
         case EOpPreDecrement:   out << "Pre-Decrement";        break;
 
         case EOpConvIntToBool:  out << "Convert int to bool";  break;
+        case EOpConvUnsignedIntToBool:  out << "Convert unsigned int to bool";  break;
         case EOpConvFloatToBool:out << "Convert float to bool";break;
         case EOpConvBoolToFloat:out << "Convert bool to float";break;
         case EOpConvIntToFloat: out << "Convert int to float"; break;
+        case EOpConvUnsignedIntToFloat: out << "Convert unsigned int to float"; break;
         case EOpConvFloatToInt: out << "Convert float to int"; break;
         case EOpConvBoolToInt:  out << "Convert bool to int";  break;
+        case EOpConvIntToUnsignedInt: out << "Convert int to unsigned int"; break;
+        case EOpConvFloatToUnsignedInt: out << "Convert float to unsigned int"; break;
+        case EOpConvBoolToUnsignedInt:  out << "Convert bool to unsigned int";  break;
 
         case EOpRadians:        out << "radians";              break;
         case EOpDegrees:        out << "degrees";              break;
@@ -230,6 +235,7 @@ bool TOutputTraverser::visitAggregate(Visit visit, TIntermAggregate* node)
         case EOpConstructIVec2: out << "Construct ivec2"; break;
         case EOpConstructIVec3: out << "Construct ivec3"; break;
         case EOpConstructIVec4: out << "Construct ivec4"; break;
+        case EOpConstructUnsignedInt:   out << "Construct uint";   break;
         case EOpConstructMat2:  out << "Construct mat2";  break;
         case EOpConstructMat3:  out << "Construct mat3";  break;
         case EOpConstructMat4:  out << "Construct mat4";  break;
@@ -333,6 +339,10 @@ void TOutputTraverser::visitConstantUnion(TIntermConstantUnion* node)
             case EbtInt:
                 out << node->getUnionArrayPointer()[i].getIConst();
                 out << " (const int)\n";
+                break;
+            case EbtUInt:
+                out << node->getUnionArrayPointer()[i].getUConst();
+                out << " (const uint)\n";
                 break;
             default:
                 out.message(EPrefixInternalError, "Unknown constant", node->getLine());

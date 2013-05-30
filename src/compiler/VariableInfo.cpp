@@ -69,6 +69,19 @@ static ShDataType getVariableDataType(const TType& type)
           } else {
               return SH_INT;
           }
+      case EbtUInt:
+          if (type.isMatrix()) {
+              UNREACHABLE();
+          } else if (type.isVector()) {
+              switch (type.getCols()) {
+                case 2: return SH_UNSIGNED_INT_VEC2;
+                case 3: return SH_UNSIGNED_INT_VEC3;
+                case 4: return SH_UNSIGNED_INT_VEC4;
+                default: UNREACHABLE();
+              }
+          } else {
+              return SH_UNSIGNED_INT;
+          }
       case EbtBool:
           if (type.isMatrix()) {
               UNREACHABLE();

@@ -326,6 +326,10 @@ void PrintActiveVariables(ShHandle compiler, ShShaderInfo varType, bool mapLongV
             case SH_INT_VEC2: typeName = "GL_INT_VEC2"; break;
             case SH_INT_VEC3: typeName = "GL_INT_VEC3"; break;
             case SH_INT_VEC4: typeName = "GL_INT_VEC4"; break;
+            case SH_UNSIGNED_INT: typeName = "GL_UNSIGNED_INT"; break;
+            case SH_UNSIGNED_INT_VEC2: typeName = "GL_UNSIGNED_INT_VEC2"; break;
+            case SH_UNSIGNED_INT_VEC3: typeName = "GL_UNSIGNED_INT_VEC3"; break;
+            case SH_UNSIGNED_INT_VEC4: typeName = "GL_UNSIGNED_INT_VEC4"; break;
             case SH_BOOL: typeName = "GL_BOOL"; break;
             case SH_BOOL_VEC2: typeName = "GL_BOOL_VEC2"; break;
             case SH_BOOL_VEC3: typeName = "GL_BOOL_VEC3"; break;

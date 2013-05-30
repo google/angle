@@ -164,6 +164,7 @@ int VariableRowCount(GLenum type)
       case GL_BOOL:
       case GL_FLOAT:
       case GL_INT:
+      case GL_UNSIGNED_INT:
       case GL_BOOL_VEC2:
       case GL_FLOAT_VEC2:
       case GL_INT_VEC2:
@@ -204,6 +205,7 @@ int VariableColumnCount(GLenum type)
       case GL_BOOL:
       case GL_FLOAT:
       case GL_INT:
+      case GL_UNSIGNED_INT:
       case GL_SAMPLER_2D:
       case GL_SAMPLER_CUBE:
         return 1;

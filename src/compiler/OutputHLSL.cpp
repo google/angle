@@ -1619,6 +1619,10 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
                       default: UNREACHABLE();
                     }
                     break;
+                  case EbtUInt:
+                    // TODO
+                    UNIMPLEMENTED();
+                    break;
                   case EbtBool:
                     switch (node->getLeft()->getNominalSize())
                     {
@@ -1680,6 +1684,7 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
       case EOpPreIncrement:     outputTriplet(visit, "(++", "", ")"); break;
       case EOpPreDecrement:     outputTriplet(visit, "(--", "", ")"); break;
       case EOpConvIntToBool:
+      case EOpConvUnsignedIntToBool:
       case EOpConvFloatToBool:
         switch (node->getOperand()->getType().getNominalSize())
         {
@@ -1692,6 +1697,7 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
         break;
       case EOpConvBoolToFloat:
       case EOpConvIntToFloat:
+      case EOpConvUnsignedIntToFloat:
         switch (node->getOperand()->getType().getNominalSize())
         {
           case 1:    outputTriplet(visit, "float(", "", ")");  break;
@@ -1703,12 +1709,25 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
         break;
       case EOpConvFloatToInt:
       case EOpConvBoolToInt:
+      case EOpConvUnsignedIntToInt:
         switch (node->getOperand()->getType().getNominalSize())
         {
           case 1:    outputTriplet(visit, "int(", "", ")");  break;
           case 2:    outputTriplet(visit, "int2(", "", ")"); break;
           case 3:    outputTriplet(visit, "int3(", "", ")"); break;
           case 4:    outputTriplet(visit, "int4(", "", ")"); break;
+          default: UNREACHABLE();
+        }
+        break;
+      case EOpConvFloatToUnsignedInt:
+      case EOpConvBoolToUnsignedInt:
+      case EOpConvIntToUnsignedInt:
+        switch (node->getOperand()->getType().getCols())
+        {
+          case 1:    outputTriplet(visit, "uint(", "", ")");  break;
+          case 2:
+          case 3:
+          case 4:    UNIMPLEMENTED(); break;
           default: UNREACHABLE();
         }
         break;
@@ -2200,6 +2219,10 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpConstructIVec4:
         addConstructor(node->getType(), "ivec4", &node->getSequence());
         outputTriplet(visit, "ivec4(", ", ", ")");
+        break;
+      case EOpConstructUnsignedInt:
+        addConstructor(node->getType(), "uvec1", &node->getSequence());
+        outputTriplet(visit, "uvec1(", "", ")");
         break;
       case EOpConstructMat2:
         addConstructor(node->getType(), "mat2", &node->getSequence());
@@ -2856,6 +2879,12 @@ TString OutputHLSL::typeString(const TType &type)
               case 3: return "int3";
               case 4: return "int4";
             }
+          case EbtUInt:
+            switch (type.getCols())
+            {
+              case 1: return "uint";
+              default: UNIMPLEMENTED(); return "error";
+            }
           case EbtBool:
             switch (type.getNominalSize())
             {
@@ -3184,6 +3213,7 @@ const ConstantUnion *OutputHLSL::writeConstantUnion(const TType &type, const Con
             {
               case EbtFloat: out << std::min(FLT_MAX, std::max(-FLT_MAX, constUnion->getFConst())); break;
               case EbtInt:   out << constUnion->getIConst(); break;
+              case EbtUInt: out << constUnion->getUConst(); break;
               case EbtBool:  out << constUnion->getBConst(); break;
               default: UNREACHABLE();
             }
@@ -3417,6 +3447,18 @@ GLenum OutputHLSL::glVariableType(const TType &type)
         }
         else UNREACHABLE();
     }
+    else if (type.getBasicType() == EbtUInt)
+    {
+        if (type.isScalar())
+        {
+            return GL_UNSIGNED_INT;
+        }
+        else if (type.isVector())
+        {
+            UNIMPLEMENTED();
+        }
+        else UNREACHABLE();
+    }
     else if (type.getBasicType() == EbtBool)
     {
         if (type.isScalar())
@@ -3462,7 +3504,7 @@ GLenum OutputHLSL::glVariablePrecision(const TType &type)
           default: UNREACHABLE();
         }
     }
-    else if (type.getBasicType() == EbtInt)
+    else if (type.getBasicType() == EbtInt || type.getBasicType() == EbtUInt)
     {
         switch (type.getPrecision())
         {

@@ -50,6 +50,7 @@ namespace gl_d3d
           case GL_INT_VEC2:     return "int2";
           case GL_INT_VEC3:     return "int3";
           case GL_INT_VEC4:     return "int4";
+          case GL_UNSIGNED_INT: return "uint";
           case GL_FLOAT_MAT2:   return "float2x2";
           case GL_FLOAT_MAT3:   return "float3x3";
           case GL_FLOAT_MAT4:   return "float4x4";

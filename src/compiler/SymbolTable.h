@@ -342,6 +342,10 @@ public:
 
     // Searches down the precisionStack for a precision qualifier for the specified TBasicType
     TPrecision getDefaultPrecision( TBasicType type){
+
+        // unsigned integers use the same precision as signed
+        if (type == EbtUInt) type = EbtInt;
+
         if( type != EbtFloat && type != EbtInt ) return EbpUndefined;
         int level = static_cast<int>(precisionStack.size()) - 1;
         assert( level >= 0); // Just to be safe. Should not happen.

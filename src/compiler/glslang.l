@@ -119,6 +119,7 @@ O           [0-7]
 
 "float"        { context->lexAfterType = true; return(FLOAT_TYPE); }
 "int"          { context->lexAfterType = true; return(INT_TYPE); }
+"uint"         { return ES2_ident_ES3_keyword(context, UINT_TYPE); }
 "void"         { context->lexAfterType = true; return(VOID_TYPE); }
 "bool"         { context->lexAfterType = true; return(BOOL_TYPE); }
 "true"         { yylval->lex.b = true;  return(BOOLCONSTANT); }

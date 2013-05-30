@@ -79,6 +79,10 @@ public:
               case EbtFloat:
                 mUsesFloatLoopIndex = true;
                 break;
+              case EbtUInt:
+                mUsesIntLoopIndex = true;
+                MarkLoopForUnroll(symbol, mLoopStack);
+                break;
               case EbtInt:
                 mUsesIntLoopIndex = true;
                 MarkLoopForUnroll(symbol, mLoopStack);
@@ -269,7 +273,7 @@ bool ValidateLimitations::validateForLoopInit(TIntermLoop* node,
     }
     // The loop index has type int or float.
     TBasicType type = symbol->getBasicType();
-    if ((type != EbtInt) && (type != EbtFloat)) {
+    if ((type != EbtInt) && (type != EbtUInt) && (type != EbtFloat)) {
         error(symbol->getLine(),
               "Invalid type for loop index", getBasicString(type));
         return false;
@@ -492,7 +496,7 @@ bool ValidateLimitations::validateIndexing(TIntermBinary* node)
     bool valid = true;
     TIntermTyped* index = node->getRight();
     // The index expression must have integral type.
-    if (!index->isScalar() || (index->getBasicType() != EbtInt)) {
+    if (!index->isScalarInt()) {
         error(index->getLine(),
               "Index expression must have integral type",
               index->getCompleteString().c_str());
