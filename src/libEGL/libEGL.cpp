@@ -180,9 +180,9 @@ const char *__stdcall eglQueryString(EGLDisplay dpy, EGLint name)
           case EGL_CLIENT_APIS:
             return egl::success("OpenGL_ES");
           case EGL_EXTENSIONS:
-            return display->getExtensionString();
+            return egl::success(display->getExtensionString());
           case EGL_VENDOR:
-            return egl::success("Google Inc.");
+            return egl::success(display->getVendorString());
           case EGL_VERSION:
             return egl::success("1.4 (ANGLE " VERSION_STRING ")");
         }

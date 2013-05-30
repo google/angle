@@ -60,6 +60,7 @@ class Display
     virtual void recreateSwapChains();
 
     const char *getExtensionString() const;
+    const char *getVendorString() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Display);
@@ -84,7 +85,9 @@ class Display
     rx::Renderer *mRenderer;
 
     void initExtensionString();
+    void initVendorString();
     std::string mExtensionString;
+    std::string mVendorString;
 };
 }
 

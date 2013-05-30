@@ -113,6 +113,7 @@ bool Display::initialize()
     }
 
     initExtensionString();
+    initVendorString();
 
     return true;
 }
@@ -520,5 +521,24 @@ const char *Display::getExtensionString() const
     return mExtensionString.c_str();
 }
 
+void Display::initVendorString()
+{
+    mVendorString = "Google Inc.";
+
+    LUID adapterLuid = {0};
+
+    if (mRenderer && mRenderer->getLUID(&adapterLuid))
+    {
+        char adapterLuidString[64];
+        sprintf_s(adapterLuidString, sizeof(adapterLuidString), " (adapter LUID: %08x%08x)", adapterLuid.HighPart, adapterLuid.LowPart);
+
+        mVendorString += adapterLuidString;
+    }
+}
+
+const char *Display::getVendorString() const
+{
+    return mVendorString.c_str();
+}
 
 }

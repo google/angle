@@ -3308,4 +3308,18 @@ TextureStorage *Renderer9::createTextureStorage2DArray(int levels, GLenum intern
     return NULL;
 }
 
+bool Renderer9::getLUID(LUID *adapterLuid) const
+{
+    adapterLuid->HighPart = 0;
+    adapterLuid->LowPart = 0;
+
+    if (mD3d9Ex)
+    {
+        mD3d9Ex->GetAdapterLUID(mAdapter, adapterLuid);
+        return true;
+    }
+
+    return false;
+}
+
 }

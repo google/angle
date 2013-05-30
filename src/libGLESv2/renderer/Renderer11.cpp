@@ -4012,4 +4012,24 @@ ID3D11Texture2D *Renderer11::resolveMultisampledTexture(ID3D11Texture2D *source,
     }
 }
 
+bool Renderer11::getLUID(LUID *adapterLuid) const
+{
+    adapterLuid->HighPart = 0;
+    adapterLuid->LowPart = 0;
+
+    if (!mDxgiAdapter)
+    {
+        return false;
+    }
+
+    DXGI_ADAPTER_DESC adapterDesc;
+    if (FAILED(mDxgiAdapter->GetDesc(&adapterDesc)))
+    {
+        return false;
+    }
+
+    *adapterLuid = adapterDesc.AdapterLuid;
+    return true;
+}
+
 }

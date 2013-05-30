@@ -215,6 +215,8 @@ class Renderer9 : public Renderer
 
     D3DPOOL getTexturePool(DWORD usage) const;
 
+    virtual bool getLUID(LUID *adapterLuid) const;
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderer9);
 

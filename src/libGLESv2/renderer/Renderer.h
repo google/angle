@@ -254,6 +254,8 @@ class Renderer
     void setCurrentClientVersion(int clientVersion) { mCurrentClientVersion = clientVersion; }
     int getCurrentClientVersion() const { return mCurrentClientVersion; }
 
+    virtual bool getLUID(LUID *adapterLuid) const = 0;
+
   protected:
     bool initializeCompiler();
     ShaderBlob *compileToBinary(gl::InfoLog &infoLog, const char *hlsl, const char *profile, UINT optimizationFlags, bool alternateFlags);
