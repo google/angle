@@ -1364,13 +1364,13 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArra
     {
         const gl::Uniform *uniform = *uniform_iterator;
 
-        if (uniform->vsRegisterIndex >= 0)
+        if (uniform->isReferencedByVertexShader())
         {
             totalRegisterCountVS += uniform->registerCount;
             vertexUniformsDirty = vertexUniformsDirty || uniform->dirty;
         }
 
-        if (uniform->psRegisterIndex >= 0)
+        if (uniform->isReferencedByFragmentShader())
         {
             totalRegisterCountPS += uniform->registerCount;
             pixelUniformsDirty = pixelUniformsDirty || uniform->dirty;
@@ -1405,12 +1405,12 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArra
 
         if (uniform->type !=  GL_SAMPLER_2D && uniform->type != GL_SAMPLER_CUBE)
         {
-            if (uniform->vsRegisterIndex >= 0 && mapVS)
+            if (uniform->isReferencedByVertexShader() && mapVS)
             {
                 memcpy(mapVS + uniform->vsRegisterIndex, uniform->data, uniform->registerCount * sizeof(float[4]));
             }
 
-            if (uniform->psRegisterIndex >= 0 && mapPS)
+            if (uniform->isReferencedByFragmentShader() && mapPS)
             {
                 memcpy(mapPS + uniform->psRegisterIndex, uniform->data, uniform->registerCount * sizeof(float[4]));
             }

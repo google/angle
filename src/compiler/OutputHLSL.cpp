@@ -3100,7 +3100,7 @@ void OutputHLSL::declareUniform(const TType &type, const TString &name, int inde
 
     if (!structure)
     {
-        mActiveUniforms.push_back(Uniform(glVariableType(type), glVariablePrecision(type), name.c_str(), type.getArraySize(), index));
+        mActiveUniforms.push_back(Uniform(glVariableType(type), glVariablePrecision(type), name.c_str(), (unsigned int)type.getArraySize(), (unsigned int)index));
     }
     else
     {

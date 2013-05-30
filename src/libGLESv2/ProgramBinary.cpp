@@ -742,7 +742,7 @@ void ProgramBinary::applyUniforms()
                 int count = targetUniform->elementCount();
                 GLint (*v)[4] = (GLint(*)[4])targetUniform->data;
 
-                if (targetUniform->psRegisterIndex >= 0)
+                if (targetUniform->isReferencedByFragmentShader())
                 {
                     unsigned int firstIndex = targetUniform->psRegisterIndex;
 
@@ -758,7 +758,7 @@ void ProgramBinary::applyUniforms()
                     }
                 }
 
-                if (targetUniform->vsRegisterIndex >= 0)
+                if (targetUniform->isReferencedByVertexShader())
                 {
                     unsigned int firstIndex = targetUniform->vsRegisterIndex;
 

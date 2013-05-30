@@ -20,8 +20,8 @@ Uniform::Uniform(GLenum type, GLenum precision, const std::string &name, unsigne
     memset(data, 0, bytes);
     dirty = true;
 
-    psRegisterIndex = -1;
-    vsRegisterIndex = -1;
+    psRegisterIndex = GL_INVALID_INDEX;
+    vsRegisterIndex = GL_INVALID_INDEX;
     registerCount = VariableRowCount(type) * elementCount();
 }
 
@@ -38,6 +38,16 @@ bool Uniform::isArray() const
 unsigned int Uniform::elementCount() const
 {
     return arraySize > 0 ? arraySize : 1;
+}
+
+bool Uniform::isReferencedByVertexShader() const
+{
+    return vsRegisterIndex != GL_INVALID_INDEX;
+}
+
+bool Uniform::isReferencedByFragmentShader() const
+{
+    return psRegisterIndex != GL_INVALID_INDEX;
 }
 
 }

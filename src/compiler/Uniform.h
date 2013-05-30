@@ -19,14 +19,14 @@ namespace sh
 
 struct Uniform
 {
-    Uniform(GLenum type, GLenum precision, const char *name, int arraySize, int registerIndex);
+    Uniform(GLenum type, GLenum precision, const char *name, unsigned int arraySize, unsigned int registerIndex);
 
     GLenum type;
     GLenum precision;
     std::string name;
     unsigned int arraySize;
 
-    int registerIndex;
+    unsigned int registerIndex;
 };
 
 typedef std::vector<Uniform> ActiveUniforms;

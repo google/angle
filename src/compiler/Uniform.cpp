@@ -9,7 +9,7 @@
 namespace sh
 {
 
-Uniform::Uniform(GLenum type, GLenum precision, const char *name, int arraySize, int registerIndex)
+Uniform::Uniform(GLenum type, GLenum precision, const char *name, unsigned int arraySize, unsigned int registerIndex)
 {
     this->type = type;
     this->precision = precision;

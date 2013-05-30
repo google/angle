@@ -1727,12 +1727,12 @@ void Renderer9::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArray
 
 void Renderer9::applyUniformnfv(gl::Uniform *targetUniform, const GLfloat *v)
 {
-    if (targetUniform->psRegisterIndex >= 0)
+    if (targetUniform->isReferencedByFragmentShader())
     {
         mDevice->SetPixelShaderConstantF(targetUniform->psRegisterIndex, v, targetUniform->registerCount);
     }
 
-    if (targetUniform->vsRegisterIndex >= 0)
+    if (targetUniform->isReferencedByVertexShader())
     {
         mDevice->SetVertexShaderConstantF(targetUniform->vsRegisterIndex, v, targetUniform->registerCount);
     }

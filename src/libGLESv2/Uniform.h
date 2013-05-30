@@ -28,6 +28,8 @@ struct Uniform
 
     bool isArray() const;
     unsigned int elementCount() const;
+    bool isReferencedByVertexShader() const;
+    bool isReferencedByFragmentShader() const;
 
     const GLenum type;
     const GLenum precision;
@@ -37,8 +39,8 @@ struct Uniform
     unsigned char *data;
     bool dirty;
 
-    int psRegisterIndex;
-    int vsRegisterIndex;
+    unsigned int psRegisterIndex;
+    unsigned int vsRegisterIndex;
     unsigned int registerCount;
 };
 
