@@ -4393,9 +4393,23 @@ const GLubyte* __stdcall glGetString(GLenum name)
           case GL_RENDERER:
             return (GLubyte*)((context != NULL) ? context->getRendererString() : "ANGLE");
           case GL_VERSION:
-            return (GLubyte*)"OpenGL ES 2.0 (ANGLE " VERSION_STRING ")";
+            if (context->getClientVersion() == 2)
+            {
+                return (GLubyte*)"OpenGL ES 2.0 (ANGLE " VERSION_STRING ")";
+            }
+            else
+            {
+                return (GLubyte*)"OpenGL ES 3.0 (ANGLE " VERSION_STRING ")";
+            }
           case GL_SHADING_LANGUAGE_VERSION:
-            return (GLubyte*)"OpenGL ES GLSL ES 1.00 (ANGLE " VERSION_STRING ")";
+            if (context->getClientVersion() == 2)
+            {
+                return (GLubyte*)"OpenGL ES GLSL ES 1.00 (ANGLE " VERSION_STRING ")";
+            }
+            else
+            {
+                return (GLubyte*)"OpenGL ES GLSL ES 3.00 (ANGLE " VERSION_STRING ")";
+            }
           case GL_EXTENSIONS:
             return (GLubyte*)((context != NULL) ? context->getCombinedExtensionsString() : "");
           default:
