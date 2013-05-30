@@ -11,7 +11,7 @@
 
 #include "common/angleutils.h"
 #include "libGLESv2/angletypes.h"
-#include "libGLESv2/mathutil.h"
+#include "common/mathutil.h"
 
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/renderer/RenderStateCache.h"

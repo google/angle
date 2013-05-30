@@ -16,7 +16,7 @@
 #include "libGLESv2/renderer/renderer11_utils.h"
 #include "libGLESv2/renderer/formatutils11.h"
 
-#include "libGLESv2/utilities.h"
+#include "common/utilities.h"
 #include "libGLESv2/main.h"
 
 namespace rx

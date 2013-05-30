@@ -12,6 +12,10 @@
 #include "common/system.h"
 #include "common/debug.h"
 
+#ifdef _WINDOWS_
+#include <intrin.h>
+#endif
+
 namespace gl
 {
 struct Vector4
@@ -93,7 +97,7 @@ inline bool supportsSSE2()
 
     int info[4];
     __cpuid(info, 0);
-    
+
     if (info[0] >= 1)
     {
         __cpuid(info, 1);
@@ -118,7 +122,7 @@ inline unsigned short float32ToFloat16(float fp32)
     }
     else if(abs < 0x38800000)   // Denormal
     {
-        unsigned int mantissa = (abs & 0x007FFFFF) | 0x00800000;   
+        unsigned int mantissa = (abs & 0x007FFFFF) | 0x00800000;
         int e = 113 - (abs >> 23);
 
         if(e < 24)

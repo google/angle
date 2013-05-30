@@ -14,7 +14,7 @@
 
 #include "common/debug.h"
 #include "common/version.h"
-#include "utilities.h"
+#include "common/utilities.h"
 
 #include "libGLESv2/main.h"
 #include "libGLESv2/Shader.h"

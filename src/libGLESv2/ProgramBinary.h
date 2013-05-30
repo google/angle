@@ -21,7 +21,7 @@
 
 #include "common/RefCountObject.h"
 #include "angletypes.h"
-#include "libGLESv2/mathutil.h"
+#include "common/mathutil.h"
 #include "libGLESv2/Uniform.h"
 #include "libGLESv2/Shader.h"
 #include "libGLESv2/Constants.h"

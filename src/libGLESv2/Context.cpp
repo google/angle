@@ -11,7 +11,7 @@
 #include "libGLESv2/Context.h"
 
 #include "libGLESv2/main.h"
-#include "libGLESv2/utilities.h"
+#include "common/utilities.h"
 #include "libGLESv2/formatutils.h"
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/Fence.h"

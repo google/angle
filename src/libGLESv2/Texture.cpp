@@ -12,8 +12,8 @@
 #include "libGLESv2/Texture.h"
 
 #include "libGLESv2/main.h"
-#include "libGLESv2/mathutil.h"
-#include "libGLESv2/utilities.h"
+#include "common/mathutil.h"
+#include "common/utilities.h"
 #include "libGLESv2/formatutils.h"
 #include "libGLESv2/renderer/Blit.h"
 #include "libGLESv2/Renderbuffer.h"

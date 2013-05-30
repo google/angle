@@ -9,7 +9,7 @@
 
 #include "libGLESv2/formatutils.h"
 #include "libGLESv2/Context.h"
-#include "libGLESv2/mathutil.h"
+#include "common/mathutil.h"
 #include "libGLESv2/renderer/Renderer.h"
 
 namespace gl

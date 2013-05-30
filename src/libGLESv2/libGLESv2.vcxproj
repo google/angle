@@ -228,6 +228,12 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\common\utilities.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\third_party\murmurhash\MurmurHash3.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -304,7 +310,6 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Uniform.cpp" />
-    <ClCompile Include="utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\GLES2\gl2.h" />
@@ -313,8 +318,11 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="..\..\include\GLES3\gl3.h" />
     <ClInclude Include="..\..\include\GLES3\gl3ext.h" />
     <ClInclude Include="..\..\include\GLES3\gl3platform.h" />
+    <ClInclude Include="..\common\angleutils.h" />
     <ClInclude Include="..\common\debug.h" />
+    <ClInclude Include="..\common\mathutil.h" />
     <ClInclude Include="..\common\system.h" />
+    <ClInclude Include="..\common\utilities.h" />
     <ClInclude Include="..\third_party\murmurhash\MurmurHash3.h" />
     <ClInclude Include="angletypes.h" />
     <ClInclude Include="BinaryStream.h" />
@@ -326,7 +334,6 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="Framebuffer.h" />
     <ClInclude Include="HandleAllocator.h" />
     <ClInclude Include="main.h" />
-    <ClInclude Include="mathutil.h" />
     <ClInclude Include="precompiled.h" />
     <ClInclude Include="Program.h" />
     <ClInclude Include="ProgramBinary.h" />
@@ -398,7 +405,6 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Uniform.h" />
-    <ClInclude Include="utilities.h" />
     <ClInclude Include="..\common\version.h" />
   </ItemGroup>
   <ItemGroup>

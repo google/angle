@@ -1,4 +1,3 @@
-#include "precompiled.h"
 //
 // Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -7,8 +6,10 @@
 
 // utilities.cpp: Conversion functions and other utility routines.
 
-#include "libGLESv2/utilities.h"
-#include "libGLESv2/mathutil.h"
+#include "common/utilities.h"
+#include "common/mathutil.h"
+
+#include <set>
 
 namespace gl
 {
@@ -376,7 +377,7 @@ std::string getTempPath()
         UNREACHABLE();
         return std::string();
     }
-    
+
     return path;
 }
 

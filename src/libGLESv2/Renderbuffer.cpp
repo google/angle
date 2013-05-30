@@ -14,7 +14,7 @@
 
 #include "libGLESv2/Texture.h"
 #include "libGLESv2/renderer/Renderer.h"
-#include "libGLESv2/utilities.h"
+#include "common/utilities.h"
 #include "libGLESv2/formatutils.h"
 
 namespace gl

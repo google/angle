@@ -10,7 +10,7 @@
 #define LIBGLESV2_RENDERER_RENDERER9_H_
 
 #include "common/angleutils.h"
-#include "libGLESv2/mathutil.h"
+#include "common/mathutil.h"
 #include "libGLESv2/renderer/ShaderCache.h"
 #include "libGLESv2/renderer/VertexDeclarationCache.h"
 #include "libGLESv2/renderer/Renderer.h"

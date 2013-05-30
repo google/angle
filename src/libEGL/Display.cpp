@@ -15,7 +15,7 @@
 #include <vector>
 
 #include "common/debug.h"
-#include "libGLESv2/mathutil.h"
+#include "common/mathutil.h"
 #include "libGLESv2/main.h"
 #include "libGLESv2/Context.h"
 #include "libGLESv2/renderer/SwapChain.h"

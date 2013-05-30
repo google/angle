@@ -7,7 +7,7 @@
 
 #include "libGLESv2/Uniform.h"
 
-#include "libGLESv2/utilities.h"
+#include "common/utilities.h"
 
 namespace gl
 {

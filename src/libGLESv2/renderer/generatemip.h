@@ -10,7 +10,7 @@
 #ifndef LIBGLESV2_RENDERER_GENERATEMIP_H_
 #define LIBGLESV2_RENDERER_GENERATEMIP_H_
 
-#include "libGLESv2/mathutil.h"
+#include "common/mathutil.h"
 
 namespace rx
 {

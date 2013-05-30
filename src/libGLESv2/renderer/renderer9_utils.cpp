@@ -9,7 +9,7 @@
 // specific to the D3D9 renderer.
 
 #include "libGLESv2/renderer/renderer9_utils.h"
-#include "libGLESv2/mathutil.h"
+#include "common/mathutil.h"
 #include "libGLESv2/Context.h"
 
 #include "common/debug.h"

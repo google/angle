@@ -12,7 +12,7 @@
 #include "libGLESv2/Shader.h"
 
 #include "GLSLANG/ShaderLang.h"
-#include "libGLESv2/utilities.h"
+#include "common/utilities.h"
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/Constants.h"
 #include "libGLESv2/ResourceManager.h"

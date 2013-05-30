@@ -15,7 +15,7 @@
 #include "libGLESv2/Renderbuffer.h"
 
 #include "libGLESv2/main.h"
-#include "libGLESv2/utilities.h"
+#include "common/utilities.h"
 #include "libGLESv2/renderer/formatutils11.h"
 #include "libGLESv2/renderer/renderer11_utils.h"
 

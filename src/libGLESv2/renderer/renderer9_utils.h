@@ -10,7 +10,7 @@
 #ifndef LIBGLESV2_RENDERER_RENDERER9_UTILS_H
 #define LIBGLESV2_RENDERER_RENDERER9_UTILS_H
 
-#include "libGLESv2/utilities.h"
+#include "common/utilities.h"
 
 namespace rx
 {
