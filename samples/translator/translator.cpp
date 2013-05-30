@@ -333,6 +333,12 @@ void PrintActiveVariables(ShHandle compiler, ShShaderInfo varType, bool mapLongV
             case SH_FLOAT_MAT2: typeName = "GL_FLOAT_MAT2"; break;
             case SH_FLOAT_MAT3: typeName = "GL_FLOAT_MAT3"; break;
             case SH_FLOAT_MAT4: typeName = "GL_FLOAT_MAT4"; break;
+            case SH_FLOAT_MAT2x3: typeName = "GL_FLOAT_MAT2x3"; break;
+            case SH_FLOAT_MAT3x2: typeName = "GL_FLOAT_MAT3x2"; break;
+            case SH_FLOAT_MAT4x2: typeName = "GL_FLOAT_MAT4x2"; break;
+            case SH_FLOAT_MAT2x4: typeName = "GL_FLOAT_MAT2x4"; break;
+            case SH_FLOAT_MAT3x4: typeName = "GL_FLOAT_MAT3x4"; break;
+            case SH_FLOAT_MAT4x3: typeName = "GL_FLOAT_MAT4x3"; break;
             case SH_SAMPLER_2D: typeName = "GL_SAMPLER_2D"; break;
             case SH_SAMPLER_CUBE: typeName = "GL_SAMPLER_CUBE"; break;
             case SH_SAMPLER_EXTERNAL_OES: typeName = "GL_SAMPLER_EXTERNAL_OES"; break;

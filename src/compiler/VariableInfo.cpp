@@ -19,11 +19,32 @@ static ShDataType getVariableDataType(const TType& type)
     switch (type.getBasicType()) {
       case EbtFloat:
           if (type.isMatrix()) {
-              switch (type.getRows()) {
-                case 2: return SH_FLOAT_MAT2;
-                case 3: return SH_FLOAT_MAT3;
-                case 4: return SH_FLOAT_MAT4;
-                default: UNREACHABLE();
+              switch (type.getCols())
+              {
+                case 2:
+                  switch (type.getRows())
+                  {
+                    case 2: return SH_FLOAT_MAT2;
+                    case 3: return SH_FLOAT_MAT2x3;
+                    case 4: return SH_FLOAT_MAT2x4;
+                    default: UNREACHABLE();
+                  }
+                case 3:
+                  switch (type.getRows())
+                  {
+                    case 2: return SH_FLOAT_MAT3x2;
+                    case 3: return SH_FLOAT_MAT3;
+                    case 4: return SH_FLOAT_MAT3x4;
+                    default: UNREACHABLE();
+                  }
+                case 4:
+                  switch (type.getRows())
+                  {
+                    case 2: return SH_FLOAT_MAT4x2;
+                    case 3: return SH_FLOAT_MAT4x3;
+                    case 4: return SH_FLOAT_MAT4;
+                    default: UNREACHABLE();
+                  }
               }
           } else if (type.isVector()) {
               switch (type.getNominalSize()) {
