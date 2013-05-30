@@ -156,6 +156,18 @@ int OutputHLSL::vectorSize(const TType &type) const
     return elementSize * arraySize;
 }
 
+TString OutputHLSL::interfaceBlockUniformName(const TType &interfaceBlockType, const TType &uniformType)
+{
+    if (interfaceBlockType.hasInstanceName())
+    {
+        return interfaceBlockType.getTypeName() + "." + uniformType.getFieldName();
+    }
+    else
+    {
+        return uniformType.getFieldName();
+    }
+}
+
 void OutputHLSL::header()
 {
     ShShaderType shaderType = mContext.shaderType;
@@ -200,7 +212,8 @@ void OutputHLSL::header()
 
     for (ReferencedSymbols::const_iterator interfaceBlockIt = mReferencedInterfaceBlocks.begin(); interfaceBlockIt != mReferencedInterfaceBlocks.end(); interfaceBlockIt++)
     {
-        const TType &interfaceBlockType = *interfaceBlockIt->second->getType().getInterfaceBlockType();
+        const TType &nodeType = interfaceBlockIt->second->getType();
+        const TType &interfaceBlockType = nodeType.isInterfaceBlockMember() ? *nodeType.getInterfaceBlockType() : nodeType;
         const TString &blockName = interfaceBlockType.getTypeName();
         const TTypeList &typeList = *interfaceBlockType.getStruct();
 
@@ -208,7 +221,8 @@ void OutputHLSL::header()
         for (unsigned int typeIndex = 0; typeIndex < typeList.size(); typeIndex++)
         {
             const TType &memberType = *typeList[typeIndex].type;
-            declareUniformToList(memberType, memberType.getFieldName(), typeIndex, interfaceBlock.activeUniforms);
+            const TString &fullUniformName = interfaceBlockUniformName(interfaceBlockType, memberType);
+            declareUniformToList(memberType, fullUniformName, typeIndex, interfaceBlock.activeUniforms);
         }
 
         // TODO: handle other block layouts
@@ -218,11 +232,21 @@ void OutputHLSL::header()
         interfaceBlocks += "cbuffer " + blockName + " : register(b" + str(interfaceBlock.registerIndex) + ")\n"
                            "{\n";
 
+        if (interfaceBlockType.hasInstanceName())
+        {
+            interfaceBlocks += "  struct {\n";
+        }
+
         for (unsigned int typeIndex = 0; typeIndex < typeList.size(); typeIndex++)
         {
             // TODO: padding for standard layout
             const TType &memberType = *typeList[typeIndex].type;
             interfaceBlocks += "    " + typeString(memberType) + " " + decorate(memberType.getFieldName()) + arrayString(memberType) + ";\n";
+        }
+
+        if (interfaceBlockType.hasInstanceName())
+        {
+            interfaceBlocks += "  } " + decorate(interfaceBlockType.getInstanceName()) + ";\n";
         }
 
         interfaceBlocks += "};\n\n";
@@ -1204,6 +1228,12 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
                 mReferencedInterfaceBlocks[interfaceBlockTypeName] = node;
                 out << decorateUniform(name, node->getType());
             }
+            else if (node->getBasicType() == EbtInterfaceBlock)
+            {
+                const TString& interfaceBlockTypeName = node->getType().getTypeName();
+                mReferencedInterfaceBlocks[interfaceBlockTypeName] = node;
+                out << decorateUniform(name, node->getType());
+            }
             else
             {
                 mReferencedUniforms[name] = node;
@@ -1338,6 +1368,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
       case EOpIndexDirect:             outputTriplet(visit, "", "[", "]");              break;
       case EOpIndexIndirect:           outputTriplet(visit, "", "[", "]");              break;
       case EOpIndexDirectStruct:
+      case EOpIndexDirectInterfaceBlock:
         if (visit == InVisit)
         {
             out << "." + decorateField(node->getType().getFieldName(), node->getLeft()->getType());

@@ -42,7 +42,8 @@ const char* getOperatorString(TOperator op) {
       case EOpIndexDirect:
       case EOpIndexIndirect: return "[]";
 
-      case EOpIndexDirectStruct: return ".";
+      case EOpIndexDirectStruct:
+      case EOpIndexDirectInterfaceBlock: return ".";
       case EOpVectorSwizzle: return ".";
       case EOpAdd: return "+";
       case EOpSub: return "-";

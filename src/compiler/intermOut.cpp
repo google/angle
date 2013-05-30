@@ -103,6 +103,7 @@ bool TOutputTraverser::visitBinary(Visit visit, TIntermBinary* node)
         case EOpIndexDirect:   out << "direct index";   break;
         case EOpIndexIndirect: out << "indirect index"; break;
         case EOpIndexDirectStruct:   out << "direct index for structure";   break;
+        case EOpIndexDirectInterfaceBlock: out << "direct index for interface block"; break;
         case EOpVectorSwizzle: out << "vector swizzle"; break;
 
         case EOpAdd:    out << "add";                     break;
