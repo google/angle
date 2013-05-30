@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -20,10 +20,14 @@ public:
     void initialize(ShShaderType type, ShShaderSpec spec,
                     const ShBuiltInResources& resources,
                     const TExtensionBehavior& extensionBehavior);
-    const TBuiltInStrings& getBuiltInStrings() { return builtInStrings; }
+    const TBuiltInStrings &getCommonBuiltIns() const { return commonBuiltIns; }
+    const TBuiltInStrings &getEssl1BuiltIns() const { return essl1BuiltIns; }
+    const TBuiltInStrings &getEssl3BuiltIns() const { return essl3BuiltIns; }
 
 protected:
-    TBuiltInStrings builtInStrings;
+    TBuiltInStrings commonBuiltIns;
+    TBuiltInStrings essl1BuiltIns;
+    TBuiltInStrings essl3BuiltIns;
 };
 
 void IdentifyBuiltIns(ShShaderType type, ShShaderSpec spec,

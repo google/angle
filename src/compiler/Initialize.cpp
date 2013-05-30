@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -19,7 +19,7 @@
 // Prototypes for built-in functions seen by both vertex and fragment shaders.
 //
 //============================================================================
-static TString BuiltInFunctionsCommon(const ShBuiltInResources& resources)
+static TString BuiltInFunctionsCommon()
 {
     TString s;
 
@@ -311,26 +311,6 @@ static TString BuiltInFunctionsCommon(const ShBuiltInResources& resources)
     s.append(TString("bvec4 not(bvec4 x);"));
 
     //
-    // Texture Functions.
-    //
-    s.append(TString("vec4 texture2D(sampler2D sampler, vec2 coord);"));
-    s.append(TString("vec4 texture2DProj(sampler2D sampler, vec3 coord);"));
-    s.append(TString("vec4 texture2DProj(sampler2D sampler, vec4 coord);"));
-    s.append(TString("vec4 textureCube(samplerCube sampler, vec3 coord);"));
-
-    if (resources.OES_EGL_image_external) {
-        s.append(TString("vec4 texture2D(samplerExternalOES sampler, vec2 coord);"));
-        s.append(TString("vec4 texture2DProj(samplerExternalOES sampler, vec3 coord);"));
-        s.append(TString("vec4 texture2DProj(samplerExternalOES sampler, vec4 coord);"));
-    }
-
-    if (resources.ARB_texture_rectangle) {
-        s.append(TString("vec4 texture2DRect(sampler2DRect sampler, vec2 coord);"));
-        s.append(TString("vec4 texture2DRectProj(sampler2DRect sampler, vec3 coord);"));
-        s.append(TString("vec4 texture2DRectProj(sampler2DRect sampler, vec4 coord);"));
-    }
-
-    //
     // Noise functions.
     //
     //s.append(TString("float noise1(float x);"));
@@ -356,12 +336,39 @@ static TString BuiltInFunctionsCommon(const ShBuiltInResources& resources)
     return s;
 }
 
+static TString BuiltInFunctionsCommonTexture1_0(const ShBuiltInResources& resources)
+{
+    TString s;
+
+    //
+    // Texture Functions for GLSL ES 1.0
+    //
+    s.append(TString("vec4 texture2D(sampler2D sampler, vec2 coord);"));
+    s.append(TString("vec4 texture2DProj(sampler2D sampler, vec3 coord);"));
+    s.append(TString("vec4 texture2DProj(sampler2D sampler, vec4 coord);"));
+    s.append(TString("vec4 textureCube(samplerCube sampler, vec3 coord);"));
+
+    if (resources.OES_EGL_image_external) {
+        s.append(TString("vec4 texture2D(samplerExternalOES sampler, vec2 coord);"));
+        s.append(TString("vec4 texture2DProj(samplerExternalOES sampler, vec3 coord);"));
+        s.append(TString("vec4 texture2DProj(samplerExternalOES sampler, vec4 coord);"));
+    }
+
+    if (resources.ARB_texture_rectangle) {
+        s.append(TString("vec4 texture2DRect(sampler2DRect sampler, vec2 coord);"));
+        s.append(TString("vec4 texture2DRectProj(sampler2DRect sampler, vec3 coord);"));
+        s.append(TString("vec4 texture2DRectProj(sampler2DRect sampler, vec4 coord);"));
+    }
+
+    return s;
+}
+
 //============================================================================
 //
 // Prototypes for built-in functions seen by vertex shaders only.
 //
 //============================================================================
-static TString BuiltInFunctionsVertex(const ShBuiltInResources& resources)
+static TString BuiltInFunctionsVertexTexture1_0()
 {
     TString s;
 
@@ -386,7 +393,7 @@ static TString BuiltInFunctionsVertex(const ShBuiltInResources& resources)
 // Prototypes for built-in functions seen by fragment shaders only.
 //
 //============================================================================
-static TString BuiltInFunctionsFragment(const ShBuiltInResources& resources)
+static TString BuiltInFunctionsFragmentTexture1_0(const ShBuiltInResources& resources)
 {
     TString s;
 
@@ -506,23 +513,25 @@ void TBuiltIns::initialize(ShShaderType type, ShShaderSpec spec,
 {
     switch (type) {
     case SH_FRAGMENT_SHADER:
-        builtInStrings.push_back(DefaultPrecisionFragment());
-        builtInStrings.push_back(BuiltInFunctionsCommon(resources));
-        builtInStrings.push_back(BuiltInFunctionsFragment(resources));
-        builtInStrings.push_back(StandardUniforms());
+        commonBuiltIns.push_back(DefaultPrecisionFragment());
+        commonBuiltIns.push_back(BuiltInFunctionsCommon());
+        essl1BuiltIns.push_back(BuiltInFunctionsCommonTexture1_0(resources));
+        essl1BuiltIns.push_back(BuiltInFunctionsFragmentTexture1_0(resources));
+        commonBuiltIns.push_back(StandardUniforms());
         break;
 
     case SH_VERTEX_SHADER:
-        builtInStrings.push_back(DefaultPrecisionVertex());
-        builtInStrings.push_back(BuiltInFunctionsCommon(resources));
-        builtInStrings.push_back(BuiltInFunctionsVertex(resources));
-        builtInStrings.push_back(StandardUniforms());
+        commonBuiltIns.push_back(DefaultPrecisionVertex());
+        commonBuiltIns.push_back(BuiltInFunctionsCommon());
+        essl1BuiltIns.push_back(BuiltInFunctionsCommonTexture1_0(resources));
+        essl1BuiltIns.push_back(BuiltInFunctionsVertexTexture1_0());
+        commonBuiltIns.push_back(StandardUniforms());
         break;
 
     default: assert(false && "Language not supported");
     }
 
-    builtInStrings.push_back(BuiltInConstants(spec, resources, extensionBehavior));
+    commonBuiltIns.push_back(BuiltInConstants(spec, resources, extensionBehavior));
 }
 
 void IdentifyBuiltIns(ShShaderType type, ShShaderSpec spec,

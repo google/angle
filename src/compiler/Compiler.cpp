@@ -27,8 +27,27 @@ bool isWebGLBasedSpec(ShShaderSpec spec)
 }
 
 namespace {
+bool InitializeBuiltIns(const TBuiltInStrings &builtInStrings, TInfoSink &infoSink, TParseContext &parseContext)
+{
+    for (TBuiltInStrings::const_iterator i = builtInStrings.begin(); i != builtInStrings.end(); ++i)
+    {
+        const char* builtInShaders = i->c_str();
+        int builtInLengths = static_cast<int>(i->size());
+        if (builtInLengths <= 0)
+            continue;
+
+        if (PaParseStrings(1, &builtInShaders, &builtInLengths, &parseContext) != 0)
+        {
+            infoSink.info.message(EPrefixInternalError, "Unable to parse built-ins");
+            return false;
+        }
+    }
+
+    return true;
+}
+
 bool InitializeSymbolTable(
-    const TBuiltInStrings& builtInStrings,
+    const TBuiltIns &builtIns,
     ShShaderType type, ShShaderSpec spec, const ShBuiltInResources& resources,
     TInfoSink& infoSink, TSymbolTable& symbolTable)
 {
@@ -42,35 +61,26 @@ bool InitializeSymbolTable(
 
     GlobalParseContext = &parseContext;
 
-    assert(symbolTable.isEmpty());       
+    assert(symbolTable.isEmpty());
+
     //
-    // Parse the built-ins.  This should only happen once per
-    // language symbol table.
-    //
-    // Push the symbol table to give it an initial scope.  This
-    // push should not have a corresponding pop, so that built-ins
-    // are preserved, and the test for an empty table fails.
+    // Parse the built-ins into the symbol table levels corresponding to each shader version (cf. ESymbolLevel).
     //
 
-    symbolTable.push();   // TODO: Common built-ins.
+    // Common built-ins
+    symbolTable.push();
+    if (!InitializeBuiltIns(builtIns.getCommonBuiltIns(), infoSink, parseContext))
+        return false;
 
     // GLSL ES 1.0 built-ins
     symbolTable.push();
-    for (TBuiltInStrings::const_iterator i = builtInStrings.begin(); i != builtInStrings.end(); ++i)
-    {
-        const char* builtInShaders = i->c_str();
-        int builtInLengths = static_cast<int>(i->size());
-        if (builtInLengths <= 0)
-          continue;
+    if (!InitializeBuiltIns(builtIns.getEssl1BuiltIns(), infoSink, parseContext))
+        return false;
 
-        if (PaParseStrings(1, &builtInShaders, &builtInLengths, &parseContext) != 0)
-        {
-            infoSink.info.message(EPrefixInternalError, "Unable to parse built-ins");
-            return false;
-        }
-    }
-
-    symbolTable.push();   // TODO: GLSL ES 3.0 built-ins.
+    // GLSL ES 3.0 built-ins
+    symbolTable.push();
+    if (!InitializeBuiltIns(builtIns.getEssl3BuiltIns(), infoSink, parseContext))
+        return false;
 
     IdentifyBuiltIns(type, spec, resources, symbolTable);
 
@@ -250,12 +260,12 @@ bool TCompiler::compile(const char* const shaderStrings[],
 
 bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources& resources)
 {
-    TBuiltIns builtIns;
-
     compileResources = resources;
+
+    TBuiltIns builtIns;
     builtIns.initialize(shaderType, shaderSpec, resources, extensionBehavior);
-    return InitializeSymbolTable(builtIns.getBuiltInStrings(),
-        shaderType, shaderSpec, resources, infoSink, symbolTable);
+
+    return InitializeSymbolTable(builtIns, shaderType, shaderSpec, resources, infoSink, symbolTable);
 }
 
 void TCompiler::clearResults()
