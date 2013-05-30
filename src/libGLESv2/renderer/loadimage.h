@@ -9,6 +9,8 @@
 #ifndef LIBGLESV2_RENDERER_LOADIMAGE_H_
 #define LIBGLESV2_RENDERER_LOADIMAGE_H_
 
+#include "common/mathutil.h"
+
 namespace rx
 {
 
@@ -189,6 +191,31 @@ void loadToNative(int width, int height, int depth,
                 const type *source = offsetDataPointer<type>(input, y, z, inputRowPitch, inputDepthPitch);
                 type *dest = offsetDataPointer<type>(output, y, z, outputRowPitch, outputDepthPitch);
                 memcpy(dest, source, width * sizeof(type) * componentCount);
+            }
+        }
+    }
+}
+
+template <unsigned int componentCount>
+void loadFloatDataToHalfFloat(int width, int height, int depth,
+                              const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
+                              void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch)
+{
+    const float *source = NULL;
+    unsigned short *dest = NULL;
+
+    const int elementWidth = componentCount * width;
+
+    for (int z = 0; z < depth; z++)
+    {
+        for (int y = 0; y < height; y++)
+        {
+            source = offsetDataPointer<float>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned short>(output, y, z, outputRowPitch, outputDepthPitch);
+
+            for (int x = 0; x < elementWidth; x++)
+            {
+                dest[x] = gl::float32ToFloat16(source[x]);
             }
         }
     }
