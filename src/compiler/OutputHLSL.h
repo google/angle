@@ -131,6 +131,9 @@ class OutputHLSL : public TIntermTraverser
     bool mUsesEqualIVec2;
     bool mUsesEqualIVec3;
     bool mUsesEqualIVec4;
+    bool mUsesEqualUVec2;
+    bool mUsesEqualUVec3;
+    bool mUsesEqualUVec4;
     bool mUsesEqualBVec2;
     bool mUsesEqualBVec3;
     bool mUsesEqualBVec4;

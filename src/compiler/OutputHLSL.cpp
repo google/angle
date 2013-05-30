@@ -82,6 +82,9 @@ OutputHLSL::OutputHLSL(TParseContext &context, const ShBuiltInResources& resourc
     mUsesEqualIVec2 = false;
     mUsesEqualIVec3 = false;
     mUsesEqualIVec4 = false;
+    mUsesEqualUVec2 = false;
+    mUsesEqualUVec3 = false;
+    mUsesEqualUVec4 = false;
     mUsesEqualBVec2 = false;
     mUsesEqualBVec3 = false;
     mUsesEqualBVec4 = false;
@@ -1268,6 +1271,30 @@ void OutputHLSL::header()
                "}\n";
     }
 
+    if (mUsesEqualUVec2)
+    {
+        out << "bool equal(uint2 v, uint2 u)\n"
+               "{\n"
+               "    return v.x == u.x && v.y == u.y;\n"
+               "}\n";
+    }
+
+    if (mUsesEqualUVec3)
+    {
+        out << "bool equal(uint3 v, uint3 u)\n"
+               "{\n"
+               "    return v.x == u.x && v.y == u.y && v.z == u.z;\n"
+               "}\n";
+    }
+
+    if (mUsesEqualUVec4)
+    {
+        out << "bool equal(uint4 v, uint4 u)\n"
+               "{\n"
+               "    return v.x == u.x && v.y == u.y && v.z == u.z && v.w == u.w;\n"
+               "}\n";
+    }
+
     if (mUsesEqualBVec2)
     {
         out << "bool equal(bool2 v, bool2 u)\n"
@@ -1620,8 +1647,13 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
                     }
                     break;
                   case EbtUInt:
-                    // TODO
-                    UNIMPLEMENTED();
+                    switch (node->getLeft()->getNominalSize())
+                    {
+                      case 2: mUsesEqualUVec2 = true; break;
+                      case 3: mUsesEqualUVec3 = true; break;
+                      case 4: mUsesEqualUVec4 = true; break;
+                      default: UNREACHABLE();
+                    }
                     break;
                   case EbtBool:
                     switch (node->getLeft()->getNominalSize())
@@ -1725,9 +1757,9 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
         switch (node->getOperand()->getType().getCols())
         {
           case 1:    outputTriplet(visit, "uint(", "", ")");  break;
-          case 2:
-          case 3:
-          case 4:    UNIMPLEMENTED(); break;
+          case 2:    outputTriplet(visit, "uint2(", "", ")");  break;
+          case 3:    outputTriplet(visit, "uint3(", "", ")");  break;
+          case 4:    outputTriplet(visit, "uint4(", "", ")");  break;
           default: UNREACHABLE();
         }
         break;
@@ -2223,6 +2255,18 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpConstructUnsignedInt:
         addConstructor(node->getType(), "uvec1", &node->getSequence());
         outputTriplet(visit, "uvec1(", "", ")");
+        break;
+      case EOpConstructUVec2:
+        addConstructor(node->getType(), "uvec2", &node->getSequence());
+        outputTriplet(visit, "uvec2(", ", ", ")");
+        break;
+      case EOpConstructUVec3:
+        addConstructor(node->getType(), "uvec3", &node->getSequence());
+        outputTriplet(visit, "uvec3(", ", ", ")");
+        break;
+      case EOpConstructUVec4:
+        addConstructor(node->getType(), "uvec4", &node->getSequence());
+        outputTriplet(visit, "uvec4(", ", ", ")");
         break;
       case EOpConstructMat2:
         addConstructor(node->getType(), "mat2", &node->getSequence());
@@ -2883,7 +2927,9 @@ TString OutputHLSL::typeString(const TType &type)
             switch (type.getCols())
             {
               case 1: return "uint";
-              default: UNIMPLEMENTED(); return "error";
+              case 2: return "uint2";
+              case 3: return "uint3";
+              case 4: return "uint4";
             }
           case EbtBool:
             switch (type.getNominalSize())
@@ -3455,7 +3501,13 @@ GLenum OutputHLSL::glVariableType(const TType &type)
         }
         else if (type.isVector())
         {
-            UNIMPLEMENTED();
+            switch(type.getCols())
+            {
+              case 2: return GL_UNSIGNED_INT_VEC2;
+              case 3: return GL_UNSIGNED_INT_VEC3;
+              case 4: return GL_UNSIGNED_INT_VEC4;
+              default: UNREACHABLE();
+            }
         }
         else UNREACHABLE();
     }

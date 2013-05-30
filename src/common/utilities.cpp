@@ -168,12 +168,15 @@ int VariableRowCount(GLenum type)
       case GL_BOOL_VEC2:
       case GL_FLOAT_VEC2:
       case GL_INT_VEC2:
-      case GL_INT_VEC3:
-      case GL_FLOAT_VEC3:
+      case GL_UNSIGNED_INT_VEC2:
       case GL_BOOL_VEC3:
+      case GL_FLOAT_VEC3:
+      case GL_INT_VEC3:
+      case GL_UNSIGNED_INT_VEC3:
       case GL_BOOL_VEC4:
       case GL_FLOAT_VEC4:
       case GL_INT_VEC4:
+      case GL_UNSIGNED_INT_VEC4:
       case GL_SAMPLER_2D:
       case GL_SAMPLER_CUBE:
         return 1;
@@ -212,13 +215,15 @@ int VariableColumnCount(GLenum type)
       case GL_BOOL_VEC2:
       case GL_FLOAT_VEC2:
       case GL_INT_VEC2:
+      case GL_UNSIGNED_INT_VEC2:
       case GL_FLOAT_MAT2:
       case GL_FLOAT_MAT2x3:
       case GL_FLOAT_MAT2x4:
         return 2;
-      case GL_INT_VEC3:
-      case GL_FLOAT_VEC3:
       case GL_BOOL_VEC3:
+      case GL_FLOAT_VEC3:
+      case GL_INT_VEC3:
+      case GL_UNSIGNED_INT_VEC3:
       case GL_FLOAT_MAT3:
       case GL_FLOAT_MAT3x2:
       case GL_FLOAT_MAT3x4:
@@ -226,6 +231,7 @@ int VariableColumnCount(GLenum type)
       case GL_BOOL_VEC4:
       case GL_FLOAT_VEC4:
       case GL_INT_VEC4:
+      case GL_UNSIGNED_INT_VEC4:
       case GL_FLOAT_MAT4:
       case GL_FLOAT_MAT4x2:
       case GL_FLOAT_MAT4x3:

@@ -1215,7 +1215,9 @@ TFunction *TParseContext::addConstructorFunc(TPublicType publicType)
             switch(publicType.getNominalSize())
             {
               case 1:       op = EOpConstructUnsignedInt;   break;
-              default:      UNIMPLEMENTED(); break;
+              case 2:       op = EOpConstructUVec2; break;
+              case 3:       op = EOpConstructUVec3; break;
+              case 4:       op = EOpConstructUVec4; break;
             }
             break;
 
@@ -1385,6 +1387,9 @@ TIntermTyped* TParseContext::constructBuiltIn(const TType* type, TOperator op, T
         basicOp = EOpConstructInt;
         break;
 
+    case EOpConstructUVec2:
+    case EOpConstructUVec3:
+    case EOpConstructUVec4:
     case EOpConstructUnsignedInt:
         basicOp = EOpConstructUnsignedInt;
         break;

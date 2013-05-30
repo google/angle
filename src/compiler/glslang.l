@@ -149,6 +149,9 @@ O           [0-7]
 "ivec2"        { context->lexAfterType = true; return (IVEC2); }
 "ivec3"        { context->lexAfterType = true; return (IVEC3); }
 "ivec4"        { context->lexAfterType = true; return (IVEC4); }
+"uvec2"        { return ES2_ident_ES3_keyword(context, UVEC2); }
+"uvec3"        { return ES2_ident_ES3_keyword(context, UVEC3); }
+"uvec4"        { return ES2_ident_ES3_keyword(context, UVEC4); }
 "bvec2"        { context->lexAfterType = true; return (BVEC2); }
 "bvec3"        { context->lexAfterType = true; return (BVEC3); }
 "bvec4"        { context->lexAfterType = true; return (BVEC4); }
