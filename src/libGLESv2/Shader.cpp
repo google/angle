@@ -498,87 +498,40 @@ GLenum Shader::parseType(const std::string &type)
     return GL_NONE;
 }
 
+typedef std::map<GLenum, int> VaryingPriorityMap;
+static VaryingPriorityMap varyingPriorities;
+
+static void makeVaryingPriorityMap()
+{
+    varyingPriorities[GL_FLOAT_MAT4]    = 0;
+    varyingPriorities[GL_FLOAT_MAT2]    = 50;
+    varyingPriorities[GL_FLOAT_VEC4]    = 60;
+    varyingPriorities[GL_FLOAT_MAT3]    = 70;
+    varyingPriorities[GL_FLOAT_VEC3]    = 100;
+    varyingPriorities[GL_FLOAT_VEC2]    = 110;
+    varyingPriorities[GL_FLOAT]         = 120;
+}
+
 // true if varying x has a higher priority in packing than y
 bool Shader::compareVarying(const Varying &x, const Varying &y)
 {
+    if (varyingPriorities.empty())
+    {
+        makeVaryingPriorityMap();
+    }
+
     if(x.type == y.type)
     {
         return x.size > y.size;
     }
 
-    switch (x.type)
-    {
-      case GL_FLOAT_MAT4: return true;
-      case GL_FLOAT_MAT2:
-        switch(y.type)
-        {
-          case GL_FLOAT_MAT4: return false;
-          case GL_FLOAT_MAT2: return true;
-          case GL_FLOAT_VEC4: return true;
-          case GL_FLOAT_MAT3: return true;
-          case GL_FLOAT_VEC3: return true;
-          case GL_FLOAT_VEC2: return true;
-          case GL_FLOAT:      return true;
-          default: UNREACHABLE();
-        }
-        break;
-      case GL_FLOAT_VEC4:
-        switch(y.type)
-        {
-          case GL_FLOAT_MAT4: return false;
-          case GL_FLOAT_MAT2: return false;
-          case GL_FLOAT_VEC4: return true;
-          case GL_FLOAT_MAT3: return true;
-          case GL_FLOAT_VEC3: return true;
-          case GL_FLOAT_VEC2: return true;
-          case GL_FLOAT:      return true;
-          default: UNREACHABLE();
-        }
-        break;
-      case GL_FLOAT_MAT3:
-        switch(y.type)
-        {
-          case GL_FLOAT_MAT4: return false;
-          case GL_FLOAT_MAT2: return false;
-          case GL_FLOAT_VEC4: return false;
-          case GL_FLOAT_MAT3: return true;
-          case GL_FLOAT_VEC3: return true;
-          case GL_FLOAT_VEC2: return true;
-          case GL_FLOAT:      return true;
-          default: UNREACHABLE();
-        }
-        break;
-      case GL_FLOAT_VEC3:
-        switch(y.type)
-        {
-          case GL_FLOAT_MAT4: return false;
-          case GL_FLOAT_MAT2: return false;
-          case GL_FLOAT_VEC4: return false;
-          case GL_FLOAT_MAT3: return false;
-          case GL_FLOAT_VEC3: return true;
-          case GL_FLOAT_VEC2: return true;
-          case GL_FLOAT:      return true;
-          default: UNREACHABLE();
-        }
-        break;
-      case GL_FLOAT_VEC2:
-        switch(y.type)
-        {
-          case GL_FLOAT_MAT4: return false;
-          case GL_FLOAT_MAT2: return false;
-          case GL_FLOAT_VEC4: return false;
-          case GL_FLOAT_MAT3: return false;
-          case GL_FLOAT_VEC3: return false;
-          case GL_FLOAT_VEC2: return true;
-          case GL_FLOAT:      return true;
-          default: UNREACHABLE();
-        }
-        break;
-      case GL_FLOAT: return false;
-      default: UNREACHABLE();
-    }
+    VaryingPriorityMap::iterator xPriority = varyingPriorities.find(x.type);
+    VaryingPriorityMap::iterator yPriority = varyingPriorities.find(y.type);
 
-    return false;
+    ASSERT(xPriority != varyingPriorities.end());
+    ASSERT(yPriority != varyingPriorities.end());
+
+    return xPriority->second <= yPriority->second;
 }
 
 int Shader::getShaderVersion() const
