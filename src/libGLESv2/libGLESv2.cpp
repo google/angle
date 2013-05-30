@@ -6122,7 +6122,7 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
                     return gl::error(GL_INVALID_OPERATION);
                 }
 
-                texture->setImage(level, width, height, format, type, context->getUnpackAlignment(), pixels);
+                texture->setImage(level, width, height, internalformat, format, type, context->getUnpackAlignment(), pixels);
             }
             else
             {
@@ -6141,22 +6141,22 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
                 switch (target)
                 {
                   case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
-                    texture->setImagePosX(level, width, height, format, type, context->getUnpackAlignment(), pixels);
+                    texture->setImagePosX(level, width, height, internalformat, format, type, context->getUnpackAlignment(), pixels);
                     break;
                   case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
-                    texture->setImageNegX(level, width, height, format, type, context->getUnpackAlignment(), pixels);
+                    texture->setImageNegX(level, width, height, internalformat, format, type, context->getUnpackAlignment(), pixels);
                     break;
                   case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-                    texture->setImagePosY(level, width, height, format, type, context->getUnpackAlignment(), pixels);
+                    texture->setImagePosY(level, width, height, internalformat, format, type, context->getUnpackAlignment(), pixels);
                     break;
                   case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-                    texture->setImageNegY(level, width, height, format, type, context->getUnpackAlignment(), pixels);
+                    texture->setImageNegY(level, width, height, internalformat, format, type, context->getUnpackAlignment(), pixels);
                     break;
                   case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-                    texture->setImagePosZ(level, width, height, format, type, context->getUnpackAlignment(), pixels);
+                    texture->setImagePosZ(level, width, height, internalformat, format, type, context->getUnpackAlignment(), pixels);
                     break;
                   case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
-                    texture->setImageNegZ(level, width, height, format, type, context->getUnpackAlignment(), pixels);
+                    texture->setImageNegZ(level, width, height, internalformat, format, type, context->getUnpackAlignment(), pixels);
                     break;
                   default: UNREACHABLE();
                 }
@@ -7597,14 +7597,14 @@ void __stdcall glTexImage3D(GLenum target, GLint level, GLint internalformat, GL
               case GL_TEXTURE_3D:
                 {
                     gl::Texture3D *texture = context->getTexture3D();
-                    texture->setImage(level, width, height, depth, format, type, context->getUnpackAlignment(), pixels);
+                    texture->setImage(level, width, height, depth, internalformat, format, type, context->getUnpackAlignment(), pixels);
                 }
                 break;
 
               case GL_TEXTURE_2D_ARRAY:
                 {
                     gl::Texture2DArray *texture = context->getTexture2DArray();
-                    texture->setImage(level, width, height, depth, format, type, context->getUnpackAlignment(), pixels);
+                    texture->setImage(level, width, height, depth, internalformat, format, type, context->getUnpackAlignment(), pixels);
                 }
                 break;
 
