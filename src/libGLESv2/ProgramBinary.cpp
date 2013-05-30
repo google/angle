@@ -36,6 +36,30 @@ std::string str(int i)
     return buffer;
 }
 
+namespace gl_d3d
+{
+    std::string TypeString(GLenum type)
+    {
+        switch (type)
+        {
+          case GL_FLOAT:        return "float";
+          case GL_FLOAT_VEC2:   return "float2";
+          case GL_FLOAT_VEC3:   return "float3";
+          case GL_FLOAT_VEC4:   return "float4";
+          case GL_FLOAT_MAT2:   return "float2x2";
+          case GL_FLOAT_MAT3:   return "float3x3";
+          case GL_FLOAT_MAT4:   return "float4x4";
+          case GL_FLOAT_MAT2x3: return "float2x3";
+          case GL_FLOAT_MAT3x2: return "float3x2";
+          case GL_FLOAT_MAT2x4: return "float2x4";
+          case GL_FLOAT_MAT4x2: return "float4x2";
+          case GL_FLOAT_MAT3x4: return "float3x4";
+          case GL_FLOAT_MAT4x3: return "float4x3";
+          default:  UNREACHABLE(); return "invalid-gl-type";
+        }
+    }
+}
+
 namespace 
 {
 
@@ -1125,24 +1149,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
     int semanticIndex = 0;
     for (AttributeArray::iterator attribute = vertexShader->mAttributes.begin(); attribute != vertexShader->mAttributes.end(); attribute++)
     {
-        switch (TransposeMatrixType(attribute->type))
-        {
-          case GL_FLOAT:      vertexHLSL += "    float ";    break;
-          case GL_FLOAT_VEC2: vertexHLSL += "    float2 ";   break;
-          case GL_FLOAT_VEC3: vertexHLSL += "    float3 ";   break;
-          case GL_FLOAT_VEC4: vertexHLSL += "    float4 ";   break;
-          case GL_FLOAT_MAT2: vertexHLSL += "    float2x2 "; break;
-          case GL_FLOAT_MAT3: vertexHLSL += "    float3x3 "; break;
-          case GL_FLOAT_MAT4: vertexHLSL += "    float4x4 "; break;
-          case GL_FLOAT_MAT2x3: vertexHLSL += "    float2x3 "; break;
-          case GL_FLOAT_MAT3x2: vertexHLSL += "    float3x2 "; break;
-          case GL_FLOAT_MAT2x4: vertexHLSL += "    float2x4 "; break;
-          case GL_FLOAT_MAT4x2: vertexHLSL += "    float4x2 "; break;
-          case GL_FLOAT_MAT3x4: vertexHLSL += "    float3x4 "; break;
-          case GL_FLOAT_MAT4x3: vertexHLSL += "    float4x3 "; break;
-          default:  UNREACHABLE();
-        }
-
+        vertexHLSL += "    " + gl_d3d::TypeString(TransposeMatrixType(attribute->type)) + " ";
         vertexHLSL += decorateAttribute(attribute->name) + " : TEXCOORD" + str(semanticIndex) + ";\n";
 
         semanticIndex += AttributeRegisterCount(attribute->type);
@@ -1490,6 +1497,7 @@ std::string ProgramBinary::generateVaryingHLSL(FragmentShader *fragmentShader, c
                     }
 
                     std::string n = str(varying->reg + i * rows + j);
+
                     varyingHLSL += "float" + str(VariableColumnCount(transposedType)) + " v" + n + " : " + varyingSemantic + n + ";\n";
                 }
             }
