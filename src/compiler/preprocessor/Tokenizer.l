@@ -24,6 +24,7 @@ IF YOU MODIFY THIS FILE YOU ALSO NEED TO RUN generate_parser.sh.
 
 %{
 #include "Tokenizer.h"
+#include "length_limits.h"
 
 #include "DiagnosticsBase.h"
 #include "Token.h"
@@ -269,7 +270,7 @@ namespace pp {
 
 // TODO(alokp): Maximum token length should ideally be specified by
 // the preprocessor client, i.e., the compiler.
-const size_t Tokenizer::kMaxTokenLength = 256;
+const size_t Tokenizer::kMaxTokenLength = MAX_SYMBOL_NAME_LEN;
 
 Tokenizer::Tokenizer(Diagnostics* diagnostics) : mHandle(0)
 {

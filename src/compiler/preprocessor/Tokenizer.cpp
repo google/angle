@@ -1,4 +1,4 @@
-#line 16 "./Tokenizer.l"
+#line 16 "preprocessor/Tokenizer.l"
 //
 // Copyright (c) 2011-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
@@ -9,7 +9,7 @@
 
 
 
-#line 13 "./Tokenizer.cpp"
+#line 13 "preprocessor/Tokenizer.cpp"
 
 #define  YY_INT_ALIGNED short int
 
@@ -519,6 +519,7 @@ IF YOU MODIFY THIS FILE YOU ALSO NEED TO RUN generate_parser.sh.
 */
 
 #include "Tokenizer.h"
+#include "length_limits.h"
 
 #include "DiagnosticsBase.h"
 #include "Token.h"
@@ -2292,7 +2293,7 @@ namespace pp {
 
 // TODO(alokp): Maximum token length should ideally be specified by
 // the preprocessor client, i.e., the compiler.
-const size_t Tokenizer::kMaxTokenLength = 256;
+const size_t Tokenizer::kMaxTokenLength = MAX_SYMBOL_NAME_LEN;
 
 Tokenizer::Tokenizer(Diagnostics* diagnostics) : mHandle(0)
 {
