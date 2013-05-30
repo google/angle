@@ -8653,7 +8653,7 @@ void __stdcall glBindBufferRange(GLenum target, GLuint index, GLuint buffer, GLi
             switch (target)
             {
               case GL_TRANSFORM_FEEDBACK_BUFFER:
-                if (index > context->getMaxTransformFeedbackBufferBindings())
+                if (index >= context->getMaxTransformFeedbackBufferBindings())
                 {
                     return gl::error(GL_INVALID_VALUE);
                 }
@@ -8731,14 +8731,14 @@ void __stdcall glBindBufferBase(GLenum target, GLuint index, GLuint buffer)
             switch (target)
             {
               case GL_TRANSFORM_FEEDBACK_BUFFER:
-                if (index > context->getMaxTransformFeedbackBufferBindings())
+                if (index >= context->getMaxTransformFeedbackBufferBindings())
                 {
                     return gl::error(GL_INVALID_VALUE);
                 }
                 break;
 
               case GL_UNIFORM_BUFFER:
-                if (index > context->getMaximumCombinedUniformBufferBindings())
+                if (index >= context->getMaximumCombinedUniformBufferBindings())
                 {
                     return gl::error(GL_INVALID_VALUE);
                 }
