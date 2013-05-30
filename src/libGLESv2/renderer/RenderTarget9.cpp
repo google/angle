@@ -107,6 +107,11 @@ RenderTarget9 *RenderTarget9::makeRenderTarget9(RenderTarget *target)
     return static_cast<rx::RenderTarget9*>(target);
 }
 
+void RenderTarget9::invalidate(GLint x, GLint y, GLsizei width, GLsizei height)
+{
+    // Currently a no-op
+}
+
 IDirect3DSurface9 *RenderTarget9::getSurface()
 {
     // Caller is responsible for releasing the returned surface reference.

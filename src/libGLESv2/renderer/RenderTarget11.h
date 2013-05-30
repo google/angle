@@ -27,6 +27,8 @@ class RenderTarget11 : public RenderTarget
 
     static RenderTarget11 *makeRenderTarget11(RenderTarget *renderTarget);
 
+    virtual void invalidate(GLint x, GLint y, GLsizei width, GLsizei height);
+
     // Adds reference, caller must call Release
     ID3D11Resource *getTexture() const;
 

@@ -386,6 +386,11 @@ RenderTarget11 *RenderTarget11::makeRenderTarget11(RenderTarget *target)
     return static_cast<rx::RenderTarget11*>(target);
 }
 
+void RenderTarget11::invalidate(GLint x, GLint y, GLsizei width, GLsizei height)
+{
+    // Currently a no-op
+}
+
 ID3D11Resource *RenderTarget11::getTexture() const
 {
     if (mTexture)

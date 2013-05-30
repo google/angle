@@ -35,7 +35,9 @@ class RenderTarget
     GLenum getInternalFormat() { return mInternalFormat; }
     GLenum getActualFormat() { return mActualFormat; }
     GLsizei getSamples() { return mSamples; }
-    
+
+    virtual void invalidate(GLint x, GLint y, GLsizei width, GLsizei height) = 0;
+
     struct Desc {
         GLsizei width;
         GLsizei height;

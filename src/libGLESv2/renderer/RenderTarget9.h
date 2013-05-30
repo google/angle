@@ -25,6 +25,9 @@ class RenderTarget9 : public RenderTarget
     virtual ~RenderTarget9();
 
     static RenderTarget9 *makeRenderTarget9(RenderTarget *renderTarget);
+
+    virtual void invalidate(GLint x, GLint y, GLsizei width, GLsizei height);
+
     IDirect3DSurface9 *getSurface();
 
   private:
