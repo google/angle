@@ -417,39 +417,7 @@ static bool getD3D11ES2FormatInfo(GLint internalFormat, GLuint clientVersion, D3
     }
 }
 
-// A map for determining the mip map generation function given a texture's internal DXGI format
-typedef std::pair<DXGI_FORMAT, MipGenerationFunction> FormatMipPair;
-typedef std::map<DXGI_FORMAT, MipGenerationFunction> FormatMipMap;
-
-static FormatMipMap buildFormatMipMap()
-{
-    FormatMipMap map;
-
-    //                      | DXGI format                   | Mip generation function  |
-    map.insert(FormatMipPair(DXGI_FORMAT_A8_UNORM,           GenerateMip<A8>           ));
-
-    map.insert(FormatMipPair(DXGI_FORMAT_R8_UNORM,           GenerateMip<R8>           ));
-    map.insert(FormatMipPair(DXGI_FORMAT_R8G8_UNORM,         GenerateMip<R8G8>         ));
-    map.insert(FormatMipPair(DXGI_FORMAT_R8G8B8A8_UNORM,     GenerateMip<R8G8B8A8>     ));
-    map.insert(FormatMipPair(DXGI_FORMAT_B8G8R8A8_UNORM,     GenerateMip<B8G8R8A8>     ));
-
-    map.insert(FormatMipPair(DXGI_FORMAT_R16_FLOAT,          GenerateMip<R16F>         ));
-    map.insert(FormatMipPair(DXGI_FORMAT_R16G16_FLOAT,       GenerateMip<R16G16F>      ));
-    map.insert(FormatMipPair(DXGI_FORMAT_R16G16B16A16_FLOAT, GenerateMip<R16G16B16A16F>));
-
-    map.insert(FormatMipPair(DXGI_FORMAT_R32_FLOAT,          GenerateMip<R32F>         ));
-    map.insert(FormatMipPair(DXGI_FORMAT_R32G32_FLOAT,       GenerateMip<R32G32F>      ));
-    map.insert(FormatMipPair(DXGI_FORMAT_R32G32B32_FLOAT,    GenerateMip<R32G32B32F>   ));
-    map.insert(FormatMipPair(DXGI_FORMAT_R32G32B32A32_FLOAT, GenerateMip<R32G32B32A32F>));
-
-    map.insert(FormatMipPair(DXGI_FORMAT_R10G10B10A2_UNORM,  GenerateMip<R10G10B10A2>  ));
-
-    map.insert(FormatMipPair(DXGI_FORMAT_R9G9B9E5_SHAREDEXP, GenerateMip<R9G9B9E5>     ));
-
-    return map;
-}
-
-// A map to determine the pixel size of a given DXGI format
+// A map to determine the pixel size and mipmap generation function of a given DXGI format
 struct DXGIFormatInfo
 {
     GLuint mPixelBits;
@@ -457,12 +425,16 @@ struct DXGIFormatInfo
     GLuint mBlockHeight;
     GLint mInternalFormat;
 
+    MipGenerationFunction mMipGenerationFunction;
+
     DXGIFormatInfo()
-        : mPixelBits(0), mInternalFormat(GL_NONE)
+        : mPixelBits(0), mBlockWidth(0), mBlockHeight(0), mInternalFormat(GL_NONE), mMipGenerationFunction(NULL)
     { }
 
-    DXGIFormatInfo(GLuint pixelBits, GLuint blockWidth, GLuint blockHeight, GLint internalFormat)
-        : mPixelBits(pixelBits), mBlockWidth(blockWidth), mBlockHeight(blockHeight), mInternalFormat(internalFormat)
+    DXGIFormatInfo(GLuint pixelBits, GLuint blockWidth, GLuint blockHeight, GLint internalFormat,
+                   MipGenerationFunction mipFunc)
+        : mPixelBits(pixelBits), mBlockWidth(blockWidth), mBlockHeight(blockHeight), mInternalFormat(internalFormat),
+          mMipGenerationFunction(mipFunc)
     { }
 };
 
@@ -473,39 +445,39 @@ static DXGIFormatInfoMap buildDXGIFormatInfoMap()
 {
     DXGIFormatInfoMap map;
 
-    //                           | DXGI format                                   | S  |W |H | Internal format                  |
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_UNKNOWN,             DXGIFormatInfo(  0, 0, 0, GL_NONE                           )));
+    //                           | DXGI format                                   | S  |W |H | Internal format                   | Mip generation function  |
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_UNKNOWN,             DXGIFormatInfo(  0, 0, 0, GL_NONE,                            NULL                      )));
 
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_A8_UNORM,            DXGIFormatInfo(  8, 1, 1, GL_ALPHA8_EXT                     )));
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R8_UNORM,            DXGIFormatInfo(  8, 1, 1, GL_R8                             )));
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R8G8_UNORM,          DXGIFormatInfo( 16, 1, 1, GL_RG8                            )));
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R8G8B8A8_UNORM,      DXGIFormatInfo( 32, 1, 1, GL_RGBA8                          )));
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, DXGIFormatInfo( 32, 1, 1, GL_SRGB8_ALPHA8                   )));
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_B8G8R8A8_UNORM,      DXGIFormatInfo( 32, 1, 1, GL_BGRA8_EXT                      )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_A8_UNORM,            DXGIFormatInfo(  8, 1, 1, GL_ALPHA8_EXT,                      GenerateMip<A8>           )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R8_UNORM,            DXGIFormatInfo(  8, 1, 1, GL_R8,                              GenerateMip<R8>           )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R8G8_UNORM,          DXGIFormatInfo( 16, 1, 1, GL_RG8,                             GenerateMip<R8G8>         )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R8G8B8A8_UNORM,      DXGIFormatInfo( 32, 1, 1, GL_RGBA8,                           GenerateMip<R8G8B8A8>     )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, DXGIFormatInfo( 32, 1, 1, GL_SRGB8_ALPHA8,                    NULL                      )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_B8G8R8A8_UNORM,      DXGIFormatInfo( 32, 1, 1, GL_BGRA8_EXT,                       GenerateMip<B8G8R8A8>     )));
 
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R10G10B10A2_UNORM,   DXGIFormatInfo( 32, 1, 1, GL_RGB10_A2                       )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R10G10B10A2_UNORM,   DXGIFormatInfo( 32, 1, 1, GL_RGB10_A2,                        GenerateMip<R10G10B10A2>  )));
 
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R16_FLOAT,           DXGIFormatInfo( 16, 1, 1, GL_R16F                           )));
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R16G16_FLOAT,        DXGIFormatInfo( 32, 1, 1, GL_RG16F                          )));
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R16G16B16A16_FLOAT,  DXGIFormatInfo( 64, 1, 1, GL_RGBA16F                        )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R16_FLOAT,           DXGIFormatInfo( 16, 1, 1, GL_R16F,                            GenerateMip<R16F>         )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R16G16_FLOAT,        DXGIFormatInfo( 32, 1, 1, GL_RG16F,                           GenerateMip<R16G16F>      )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R16G16B16A16_FLOAT,  DXGIFormatInfo( 64, 1, 1, GL_RGBA16F,                         GenerateMip<R16G16B16A16F>)));
 
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R32_FLOAT,           DXGIFormatInfo( 32, 1, 1, GL_R32F                           )));
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R32G32_FLOAT,        DXGIFormatInfo( 64, 1, 1, GL_RG32F                          )));
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R32G32B32_FLOAT,     DXGIFormatInfo( 96, 1, 1, GL_RGB32F                         )));
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R32G32B32A32_FLOAT,  DXGIFormatInfo(128, 1, 1, GL_RGBA32F                        )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R32_FLOAT,           DXGIFormatInfo( 32, 1, 1, GL_R32F,                            GenerateMip<R32F>         )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R32G32_FLOAT,        DXGIFormatInfo( 64, 1, 1, GL_RG32F,                           GenerateMip<R32G32F>      )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R32G32B32_FLOAT,     DXGIFormatInfo( 96, 1, 1, GL_RGB32F,                          GenerateMip<R32G32B32F>   )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R32G32B32A32_FLOAT,  DXGIFormatInfo(128, 1, 1, GL_RGBA32F,                         GenerateMip<R32G32B32A32F>)));
 
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R9G9B9E5_SHAREDEXP,  DXGIFormatInfo( 32, 1, 1, GL_RGB9_E5                        )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R9G9B9E5_SHAREDEXP,  DXGIFormatInfo( 32, 1, 1, GL_RGB9_E5,                         GenerateMip<R9G9B9E5>     )));
 
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R16_TYPELESS,        DXGIFormatInfo( 16, 1, 1, GL_DEPTH_COMPONENT16              )));
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_D16_UNORM,           DXGIFormatInfo( 16, 1, 1, GL_DEPTH_COMPONENT16              )));
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R32_TYPELESS,        DXGIFormatInfo( 32, 1, 1, GL_DEPTH_COMPONENT32_OES          )));
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_D32_FLOAT,           DXGIFormatInfo( 32, 1, 1, GL_DEPTH_COMPONENT32_OES          )));
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R24G8_TYPELESS,      DXGIFormatInfo( 32, 1, 1, GL_DEPTH24_STENCIL8_OES           )));
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_D24_UNORM_S8_UINT,   DXGIFormatInfo( 32, 1, 1, GL_DEPTH24_STENCIL8_OES           )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R16_TYPELESS,        DXGIFormatInfo( 16, 1, 1, GL_DEPTH_COMPONENT16,               NULL                      )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_D16_UNORM,           DXGIFormatInfo( 16, 1, 1, GL_DEPTH_COMPONENT16,               NULL                      )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R32_TYPELESS,        DXGIFormatInfo( 32, 1, 1, GL_DEPTH_COMPONENT32_OES,           NULL                      )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_D32_FLOAT,           DXGIFormatInfo( 32, 1, 1, GL_DEPTH_COMPONENT32_OES,           NULL                      )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R24G8_TYPELESS,      DXGIFormatInfo( 32, 1, 1, GL_DEPTH24_STENCIL8_OES,            NULL                      )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_D24_UNORM_S8_UINT,   DXGIFormatInfo( 32, 1, 1, GL_DEPTH24_STENCIL8_OES,            NULL                      )));
 
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_BC1_UNORM,           DXGIFormatInfo( 64, 4, 4, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT  )));
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_BC2_UNORM,           DXGIFormatInfo(128, 4, 4, GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE)));
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_BC3_UNORM,           DXGIFormatInfo(128, 4, 4, GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE)));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_BC1_UNORM,           DXGIFormatInfo( 64, 4, 4, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,   NULL                      )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_BC2_UNORM,           DXGIFormatInfo(128, 4, 4, GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE, NULL                      )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_BC3_UNORM,           DXGIFormatInfo(128, 4, 4, GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE, NULL                      )));
 
     return map;
 }
@@ -533,11 +505,10 @@ namespace d3d11
 
 MipGenerationFunction GetMipGenerationFunction(DXGI_FORMAT format)
 {
-    static const FormatMipMap formatMipMap = buildFormatMipMap();
-    FormatMipMap::const_iterator iter = formatMipMap.find(format);
-    if (iter != formatMipMap.end())
+    DXGIFormatInfo formatInfo;
+    if (getDXGIFormatInfo(format, &formatInfo))
     {
-        return iter->second;
+        return formatInfo.mMipGenerationFunction;
     }
     else
     {
@@ -802,11 +773,10 @@ namespace d3d11_gl
 
 GLint GetInternalFormat(DXGI_FORMAT format)
 {
-    static const DXGIFormatInfoMap infoMap = buildDXGIFormatInfoMap();
-    DXGIFormatInfoMap::const_iterator iter = infoMap.find(format);
-    if (iter != infoMap.end())
+    DXGIFormatInfo formatInfo;
+    if (getDXGIFormatInfo(format, &formatInfo))
     {
-        return iter->second.mInternalFormat;
+        return formatInfo.mInternalFormat;
     }
     else
     {
@@ -818,4 +788,3 @@ GLint GetInternalFormat(DXGI_FORMAT format)
 }
 
 }
-

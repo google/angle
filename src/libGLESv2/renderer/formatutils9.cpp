@@ -152,26 +152,7 @@ static bool getD3D9FormatInfo(GLint internalFormat, D3D9FormatInfo *outFormatInf
     }
 }
 
-// A map for determining the mip map generation function given a texture's internal D3D format
-typedef std::pair<D3DFORMAT, MipGenerationFunction> FormatMipPair;
-typedef std::map<D3DFORMAT, MipGenerationFunction> FormatMipMap;
-
-static FormatMipMap buildFormatMipMap()
-{
-    FormatMipMap map;
-
-    //                      | D3DFORMAT           | Mip generation function  |
-    map.insert(FormatMipPair(D3DFMT_L8,            GenerateMip<L8>           ));
-    map.insert(FormatMipPair(D3DFMT_A8L8,          GenerateMip<A8L8>         ));
-    map.insert(FormatMipPair(D3DFMT_A8R8G8B8,      GenerateMip<A8R8G8B8>     ));
-    map.insert(FormatMipPair(D3DFMT_X8R8G8B8,      GenerateMip<A8R8G8B8>     ));
-    map.insert(FormatMipPair(D3DFMT_A16B16G16R16F, GenerateMip<A16B16G16R16F>));
-    map.insert(FormatMipPair(D3DFMT_A32B32G32R32F, GenerateMip<A32B32G32R32F>));
-
-    return map;
-}
-
-// A map to determine the pixel size of a given D3D format
+// A map to determine the pixel size and mip generation function of a given D3D format
 struct D3DFormatInfo
 {
     GLuint mPixelBits;
@@ -179,12 +160,16 @@ struct D3DFormatInfo
     GLuint mBlockHeight;
     GLint mInternalFormat;
 
+    MipGenerationFunction mMipGenerationFunction;
+
     D3DFormatInfo()
-        : mPixelBits(0), mBlockWidth(0), mBlockHeight(0), mInternalFormat(GL_NONE)
+        : mPixelBits(0), mBlockWidth(0), mBlockHeight(0), mInternalFormat(GL_NONE), mMipGenerationFunction(NULL)
     { }
 
-    D3DFormatInfo(GLuint pixelBits, GLuint blockWidth, GLuint blockHeight, GLint internalFormat)
-        : mPixelBits(pixelBits), mBlockWidth(blockWidth), mBlockHeight(blockHeight), mInternalFormat(internalFormat)
+    D3DFormatInfo(GLuint pixelBits, GLuint blockWidth, GLuint blockHeight, GLint internalFormat,
+                  MipGenerationFunction mipFunc)
+        : mPixelBits(pixelBits), mBlockWidth(blockWidth), mBlockHeight(blockHeight), mInternalFormat(internalFormat),
+          mMipGenerationFunction(mipFunc)
     { }
 };
 
@@ -195,31 +180,31 @@ static D3D9FormatInfoMap buildD3D9FormatInfoMap()
 {
     D3D9FormatInfoMap map;
 
-    //                           | D3DFORMAT           |             | S  |W |H | Internal format                  |
-    map.insert(D3D9FormatInfoPair(D3DFMT_NULL,          D3DFormatInfo(  0, 0, 0, GL_NONE                           )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_UNKNOWN,       D3DFormatInfo(  0, 0, 0, GL_NONE                           )));
+    //                           | D3DFORMAT           |             | S  |W |H | Internal format                   | Mip generation function  |
+    map.insert(D3D9FormatInfoPair(D3DFMT_NULL,          D3DFormatInfo(  0, 0, 0, GL_NONE,                            NULL                      )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_UNKNOWN,       D3DFormatInfo(  0, 0, 0, GL_NONE,                            NULL                      )));
 
-    map.insert(D3D9FormatInfoPair(D3DFMT_L8,            D3DFormatInfo(  8, 1, 1, GL_LUMINANCE8_EXT                 )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_A8,            D3DFormatInfo(  8, 1, 1, GL_ALPHA8_EXT                     )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_A8L8,          D3DFormatInfo( 16, 1, 1, GL_LUMINANCE8_ALPHA8_EXT          )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_A4R4G4B4,      D3DFormatInfo( 16, 1, 1, GL_RGBA4                          )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_A1R5G5B5,      D3DFormatInfo( 16, 1, 1, GL_RGB5_A1                        )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_R5G6B5,        D3DFormatInfo( 16, 1, 1, GL_RGB565                         )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_X8R8G8B8,      D3DFormatInfo( 32, 1, 1, GL_RGB8_OES                       )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_A8R8G8B8,      D3DFormatInfo( 32, 1, 1, GL_RGBA8_OES                      )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_A16B16G16R16F, D3DFormatInfo( 64, 1, 1, GL_RGBA16F_EXT                    )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_A32B32G32R32F, D3DFormatInfo(128, 1, 1, GL_RGBA32F_EXT                    )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_L8,            D3DFormatInfo(  8, 1, 1, GL_LUMINANCE8_EXT,                  GenerateMip<L8>           )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_A8,            D3DFormatInfo(  8, 1, 1, GL_ALPHA8_EXT,                      GenerateMip<A8>           )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_A8L8,          D3DFormatInfo( 16, 1, 1, GL_LUMINANCE8_ALPHA8_EXT,           GenerateMip<A8L8>         )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_A4R4G4B4,      D3DFormatInfo( 16, 1, 1, GL_RGBA4,                           NULL                      )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_A1R5G5B5,      D3DFormatInfo( 16, 1, 1, GL_RGB5_A1,                         NULL                      )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_R5G6B5,        D3DFormatInfo( 16, 1, 1, GL_RGB565,                          NULL                      )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_X8R8G8B8,      D3DFormatInfo( 32, 1, 1, GL_RGB8_OES,                        GenerateMip<A8R8G8B8>     )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_A8R8G8B8,      D3DFormatInfo( 32, 1, 1, GL_RGBA8_OES,                       GenerateMip<A8R8G8B8>     )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_A16B16G16R16F, D3DFormatInfo( 64, 1, 1, GL_RGBA16F_EXT,                     GenerateMip<A16B16G16R16F>)));
+    map.insert(D3D9FormatInfoPair(D3DFMT_A32B32G32R32F, D3DFormatInfo(128, 1, 1, GL_RGBA32F_EXT,                     GenerateMip<A32B32G32R32F>)));
 
-    map.insert(D3D9FormatInfoPair(D3DFMT_D16,           D3DFormatInfo( 16, 1, 1, GL_DEPTH_COMPONENT16              )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_D24S8,         D3DFormatInfo( 32, 1, 1, GL_DEPTH24_STENCIL8_OES           )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_D24X8,         D3DFormatInfo( 32, 1, 1, GL_DEPTH_COMPONENT16              )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_D32,           D3DFormatInfo( 32, 1, 1, GL_DEPTH_COMPONENT32_OES          )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_D16,           D3DFormatInfo( 16, 1, 1, GL_DEPTH_COMPONENT16,               NULL                      )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_D24S8,         D3DFormatInfo( 32, 1, 1, GL_DEPTH24_STENCIL8_OES,            NULL                      )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_D24X8,         D3DFormatInfo( 32, 1, 1, GL_DEPTH_COMPONENT16,               NULL                      )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_D32,           D3DFormatInfo( 32, 1, 1, GL_DEPTH_COMPONENT32_OES,           NULL                      )));
 
-    map.insert(D3D9FormatInfoPair(D3DFMT_INTZ,          D3DFormatInfo( 32, 1, 1, GL_DEPTH24_STENCIL8_OES           )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_INTZ,          D3DFormatInfo( 32, 1, 1, GL_DEPTH24_STENCIL8_OES,            NULL                      )));
 
-    map.insert(D3D9FormatInfoPair(D3DFMT_DXT1,          D3DFormatInfo( 64, 4, 4, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT  )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_DXT3,          D3DFormatInfo(128, 4, 4, GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE)));
-    map.insert(D3D9FormatInfoPair(D3DFMT_DXT5,          D3DFormatInfo(128, 4, 4, GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE)));
+    map.insert(D3D9FormatInfoPair(D3DFMT_DXT1,          D3DFormatInfo( 64, 4, 4, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,   NULL                      )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_DXT3,          D3DFormatInfo(128, 4, 4, GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE, NULL                      )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_DXT5,          D3DFormatInfo(128, 4, 4, GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE, NULL                      )));
 
     return map;
 }
@@ -247,11 +232,10 @@ namespace d3d9
 
 MipGenerationFunction GetMipGenerationFunction(D3DFORMAT format)
 {
-    static const FormatMipMap mipFunctionMap = buildFormatMipMap();
-    FormatMipMap::const_iterator iter = mipFunctionMap.find(format);
-    if (iter != mipFunctionMap.end())
+    D3DFormatInfo d3dFormatInfo;
+    if (getD3D9FormatInfo(format, &d3dFormatInfo))
     {
-        return iter->second;
+        return d3dFormatInfo.mMipGenerationFunction;
     }
     else
     {
