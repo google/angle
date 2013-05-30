@@ -121,6 +121,7 @@ class ProgramBinary : public RefCountObject
     void getActiveUniform(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name) const;
     GLint getActiveUniformCount() const;
     GLint getActiveUniformMaxLength() const;
+    GLint getActiveUniformi(GLuint index, GLenum pname) const;
 
     void validate(InfoLog &infoLog);
     bool validateSamplers(InfoLog *infoLog);

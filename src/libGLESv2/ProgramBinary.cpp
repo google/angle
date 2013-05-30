@@ -2223,6 +2223,34 @@ GLint ProgramBinary::getActiveUniformMaxLength() const
     return maxLength;
 }
 
+GLint ProgramBinary::getActiveUniformi(GLuint index, GLenum pname) const
+{
+    const gl::Uniform& uniform = *mUniforms[index];
+
+    switch (pname)
+    {
+      case GL_UNIFORM_TYPE:         return static_cast<GLint>(uniform.type);
+      case GL_UNIFORM_SIZE:         return static_cast<GLint>(uniform.elementCount());
+      case GL_UNIFORM_NAME_LENGTH:  return static_cast<GLint>(uniform.name.size() + 1);
+
+      case GL_UNIFORM_BLOCK_INDEX:
+      case GL_UNIFORM_OFFSET:
+      case GL_UNIFORM_ARRAY_STRIDE:
+      case GL_UNIFORM_MATRIX_STRIDE:
+        // the default block gives a value of -1 for these parameters
+        return -1;
+
+      case GL_UNIFORM_IS_ROW_MAJOR:
+        // TODO: column/row major layout for uniform blocks
+        return 0;
+
+      default:
+        UNREACHABLE();
+        break;
+    }
+    return 0;
+}
+
 void ProgramBinary::validate(InfoLog &infoLog)
 {
     applyUniforms();

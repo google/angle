@@ -9590,9 +9590,64 @@ void __stdcall glGetActiveUniformsiv(GLuint program, GLsizei uniformCount, const
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            if (uniformCount < 0)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            gl::Program *programObject = context->getProgram(program);
+
+            if (!programObject)
+            {
+                if (context->getShader(program))
+                {
+                    return gl::error(GL_INVALID_OPERATION);
+                }
+                else
+                {
+                    return gl::error(GL_INVALID_VALUE);
+                }
+            }
+
+            switch (pname)
+            {
+              case GL_UNIFORM_TYPE:
+              case GL_UNIFORM_SIZE:
+              case GL_UNIFORM_NAME_LENGTH:
+              case GL_UNIFORM_BLOCK_INDEX:
+              case GL_UNIFORM_OFFSET:
+              case GL_UNIFORM_ARRAY_STRIDE:
+              case GL_UNIFORM_MATRIX_STRIDE:
+              case GL_UNIFORM_IS_ROW_MAJOR:
+                break;
+              default:
+                return gl::error(GL_INVALID_ENUM);
+            }
+
+            gl::ProgramBinary *programBinary = programObject->getProgramBinary();
+
+            if (!programBinary && uniformCount > 0)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            for (int uniformId = 0; uniformId < uniformCount; uniformId++)
+            {
+                const GLuint index = uniformIndices[uniformId];
+
+                if (index >= (GLuint)programBinary->getActiveUniformCount())
+                {
+                    return gl::error(GL_INVALID_VALUE);
+                }
+            }
+
+            for (int uniformId = 0; uniformId < uniformCount; uniformId++)
+            {
+                const GLuint index = uniformIndices[uniformId];
+                params[uniformId] = programBinary->getActiveUniformi(index, pname);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
