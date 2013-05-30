@@ -20,8 +20,8 @@ class Renderer11;
 class RenderTarget11 : public RenderTarget
 {
   public:
-    RenderTarget11(Renderer *renderer, ID3D11RenderTargetView *rtv, ID3D11Resource *resource, ID3D11ShaderResourceView *srv, GLsizei width, GLsizei height);
-    RenderTarget11(Renderer *renderer, ID3D11DepthStencilView *dsv, ID3D11Resource *resource, ID3D11ShaderResourceView *srv, GLsizei width, GLsizei height);
+    RenderTarget11(Renderer *renderer, ID3D11RenderTargetView *rtv, ID3D11Resource *resource, ID3D11ShaderResourceView *srv, GLsizei width, GLsizei height, GLsizei depth);
+    RenderTarget11(Renderer *renderer, ID3D11DepthStencilView *dsv, ID3D11Resource *resource, ID3D11ShaderResourceView *srv, GLsizei width, GLsizei height, GLsizei depth);
     RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height, GLenum format, GLsizei samples, bool depth);
     virtual ~RenderTarget11();
 

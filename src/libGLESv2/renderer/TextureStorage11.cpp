@@ -376,7 +376,8 @@ RenderTarget *TextureStorage11_2D::getRenderTarget(int level)
 
                 mRenderTarget[level] = new RenderTarget11(mRenderer, rtv, mTexture, srv,
                                                           std::max(mTextureWidth >> level, 1U),
-                                                          std::max(mTextureHeight >> level, 1U));
+                                                          std::max(mTextureHeight >> level, 1U),
+                                                          1);
             }
             else if (mDepthStencilFormat != DXGI_FORMAT_UNKNOWN)
             {
@@ -402,7 +403,8 @@ RenderTarget *TextureStorage11_2D::getRenderTarget(int level)
 
                 mRenderTarget[level] = new RenderTarget11(mRenderer, dsv, mTexture, srv,
                                                           std::max(mTextureWidth >> level, 1U),
-                                                          std::max(mTextureHeight >> level, 1U));
+                                                          std::max(mTextureHeight >> level, 1U),
+                                                          1);
             }
             else
             {
@@ -607,7 +609,8 @@ RenderTarget *TextureStorage11_Cube::getRenderTarget(GLenum faceTarget, int leve
 
                 mRenderTarget[faceIdx][level] = new RenderTarget11(mRenderer, rtv, mTexture, srv,
                                                                    std::max(mTextureWidth >> level, 1U),
-                                                                   std::max(mTextureHeight >> level, 1U));
+                                                                   std::max(mTextureHeight >> level, 1U),
+                                                                   1);
             }
             else if (mDepthStencilFormat != DXGI_FORMAT_UNKNOWN)
             {
@@ -634,7 +637,8 @@ RenderTarget *TextureStorage11_Cube::getRenderTarget(GLenum faceTarget, int leve
 
                 mRenderTarget[faceIdx][level] = new RenderTarget11(mRenderer, dsv, mTexture, srv,
                                                                    std::max(mTextureWidth >> level, 1U),
-                                                                   std::max(mTextureHeight >> level, 1U));
+                                                                   std::max(mTextureHeight >> level, 1U),
+                                                                   1);
             }
             else
             {
@@ -836,7 +840,8 @@ RenderTarget *TextureStorage11_3D::getRenderTargetLayer(int mipLevel, int layer)
 
                 mRenderTargets[key] = new RenderTarget11(mRenderer, rtv, mTexture, srv,
                                                          std::max(mTextureWidth >> mipLevel, 1U),
-                                                         std::max(mTextureHeight >> mipLevel, 1U));
+                                                         std::max(mTextureHeight >> mipLevel, 1U),
+                                                         1);
             }
             else
             {
@@ -1029,7 +1034,8 @@ RenderTarget *TextureStorage11_2DArray::getRenderTargetLayer(int mipLevel, int l
 
                 mRenderTargets[key] = new RenderTarget11(mRenderer, rtv, mTexture, srv,
                                                          std::max(mTextureWidth >> mipLevel, 1U),
-                                                         std::max(mTextureHeight >> mipLevel, 1U));
+                                                         std::max(mTextureHeight >> mipLevel, 1U),
+                                                         1);
             }
             else
             {

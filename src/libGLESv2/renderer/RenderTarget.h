@@ -21,6 +21,7 @@ class RenderTarget
     {
         mWidth = 0;
         mHeight = 0;
+        mDepth = 0;
         mInternalFormat = GL_NONE;
         mActualFormat = GL_NONE;
         mSamples = 0;
@@ -30,6 +31,7 @@ class RenderTarget
 
     GLsizei getWidth() { return mWidth; }
     GLsizei getHeight() { return mHeight; }
+    GLsizei getDepth() { return mDepth; }
     GLenum getInternalFormat() { return mInternalFormat; }
     GLenum getActualFormat() { return mActualFormat; }
     GLsizei getSamples() { return mSamples; }
@@ -37,12 +39,14 @@ class RenderTarget
     struct Desc {
         GLsizei width;
         GLsizei height;
+        GLsizei depth;
         GLenum  format;
     };
 
   protected:
     GLsizei mWidth;
     GLsizei mHeight;
+    GLsizei mDepth;
     GLenum mInternalFormat;
     GLenum mActualFormat;
     GLsizei mSamples;

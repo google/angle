@@ -177,7 +177,8 @@ static unsigned int getDSVSubresourceIndex(ID3D11Resource *resource, ID3D11Depth
     return D3D11CalcSubresource(mipSlice, arraySlice, mipLevels);
 }
 
-RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11RenderTargetView *rtv, ID3D11Resource *resource, ID3D11ShaderResourceView *srv, GLsizei width, GLsizei height)
+RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11RenderTargetView *rtv, ID3D11Resource *resource,
+                               ID3D11ShaderResourceView *srv, GLsizei width, GLsizei height, GLsizei depth)
 {
     mRenderer = Renderer11::makeRenderer11(renderer);
     mTexture = resource;
@@ -197,6 +198,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11RenderTargetView *rtv, 
         mSubresourceIndex = getRTVSubresourceIndex(mTexture, mRenderTarget);
         mWidth = width;
         mHeight = height;
+        mDepth = depth;
         mSamples = samples;
 
         mInternalFormat = d3d11_gl::ConvertTextureInternalFormat(desc.Format);
@@ -204,7 +206,8 @@ RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11RenderTargetView *rtv, 
     }
 }
 
-RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11DepthStencilView *dsv, ID3D11Resource *resource, ID3D11ShaderResourceView *srv, GLsizei width, GLsizei height)
+RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11DepthStencilView *dsv, ID3D11Resource *resource,
+                               ID3D11ShaderResourceView *srv, GLsizei width, GLsizei height, GLsizei depth)
 {
     mRenderer = Renderer11::makeRenderer11(renderer);
     mTexture = resource;
@@ -224,6 +227,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11DepthStencilView *dsv, 
         mSubresourceIndex = getDSVSubresourceIndex(mTexture, mDepthStencil);
         mWidth = width;
         mHeight = height;
+        mDepth = depth;
         mSamples = samples;
 
         mInternalFormat = d3d11_gl::ConvertTextureInternalFormat(desc.Format);
@@ -231,7 +235,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11DepthStencilView *dsv, 
     }
 }
 
-RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height, GLenum format, GLsizei samples, bool depth)
+RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height, GLenum format, GLsizei samples, bool depthStencil)
 {
     mRenderer = Renderer11::makeRenderer11(renderer);
     mTexture = NULL;
@@ -262,7 +266,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
         desc.Usage = D3D11_USAGE_DEFAULT;
         desc.CPUAccessFlags = 0;
         desc.MiscFlags = 0;
-        desc.BindFlags = (depth ? D3D11_BIND_DEPTH_STENCIL : (D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE));
+        desc.BindFlags = (depthStencil ? D3D11_BIND_DEPTH_STENCIL : (D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE));
 
         ID3D11Device *device = mRenderer->getDevice();
         ID3D11Texture2D *texture = NULL;
@@ -276,7 +280,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
         }
         ASSERT(SUCCEEDED(result));
 
-        if (depth)
+        if (depthStencil)
         {
             D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
             dsvDesc.Format = requestedFormat;
@@ -332,6 +336,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
 
     mWidth = width;
     mHeight = height;
+    mDepth = 1;
     mInternalFormat = format;
     mSamples = supportedSamples;
     mActualFormat = d3d11_gl::ConvertTextureInternalFormat(requestedFormat);

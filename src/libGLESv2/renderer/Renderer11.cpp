@@ -2933,7 +2933,7 @@ RenderTarget *Renderer11::createRenderTarget(SwapChain *swapChain, bool depth)
         // Note: depth stencil may be NULL for 0 sized surfaces
         renderTarget = new RenderTarget11(this, swapChain11->getDepthStencil(),
                                           swapChain11->getDepthStencilTexture(), NULL,
-                                          swapChain11->getWidth(), swapChain11->getHeight());
+                                          swapChain11->getWidth(), swapChain11->getHeight(), 1);
     }
     else
     {
@@ -2941,7 +2941,7 @@ RenderTarget *Renderer11::createRenderTarget(SwapChain *swapChain, bool depth)
         renderTarget = new RenderTarget11(this, swapChain11->getRenderTarget(),
                                           swapChain11->getOffscreenTexture(),
                                           swapChain11->getRenderTargetShaderResource(),
-                                          swapChain11->getWidth(), swapChain11->getHeight());
+                                          swapChain11->getWidth(), swapChain11->getHeight(), 1);
     }
     return renderTarget;
 }
