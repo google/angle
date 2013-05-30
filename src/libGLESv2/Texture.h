@@ -398,11 +398,8 @@ class Texture2DArray : public Texture
     // Texture2D object as a separate subresource.  Each layer would have to be looped over
     // to update all the texture layers since they cannot all be updated at once and it makes the most
     // sense for the Image class to not have to worry about layer subresource as well as mip subresources.
-
-    // A future optimization is to dynamically allocate each mip's layers so that such a large number
-    // of Image classes are not required.
     GLsizei mLayerCounts[IMPLEMENTATION_MAX_TEXTURE_LEVELS];
-    rx::Image *mImageArray[IMPLEMENTATION_MAX_TEXTURE_LEVELS][IMPLEMENTATION_MAX_2D_ARRAY_TEXTURE_LAYERS];
+    rx::Image **mImageArray[IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
     rx::TextureStorageInterface2DArray *mTexStorage;
 
