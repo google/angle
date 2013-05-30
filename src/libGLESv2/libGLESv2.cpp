@@ -1106,6 +1106,8 @@ void __stdcall glBlendFuncSeparate(GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha
 
     try
     {
+        gl::Context *context = gl::getNonLostContext();
+
         switch (srcRGB)
         {
           case GL_ZERO:
@@ -1145,6 +1147,14 @@ void __stdcall glBlendFuncSeparate(GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha
           case GL_CONSTANT_ALPHA:
           case GL_ONE_MINUS_CONSTANT_ALPHA:
             break;
+
+          case GL_SRC_ALPHA_SATURATE:
+            if (!context || context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_ENUM);
+            }
+            break;
+
           default:
             return gl::error(GL_INVALID_ENUM);
         }
@@ -1188,6 +1198,14 @@ void __stdcall glBlendFuncSeparate(GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha
           case GL_CONSTANT_ALPHA:
           case GL_ONE_MINUS_CONSTANT_ALPHA:
             break;
+
+          case GL_SRC_ALPHA_SATURATE:
+            if (!context || context->getClientVersion() < 3)
+            {
+                return gl::error(GL_INVALID_ENUM);
+            }
+            break;
+
           default:
             return gl::error(GL_INVALID_ENUM);
         }
@@ -1203,8 +1221,6 @@ void __stdcall glBlendFuncSeparate(GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha
             ERR("Simultaneous use of GL_CONSTANT_ALPHA/GL_ONE_MINUS_CONSTANT_ALPHA and GL_CONSTANT_COLOR/GL_ONE_MINUS_CONSTANT_COLOR invalid under WebGL");
             return gl::error(GL_INVALID_OPERATION);
         }
-
-        gl::Context *context = gl::getNonLostContext();
 
         if (context)
         {
