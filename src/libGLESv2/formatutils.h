@@ -62,6 +62,8 @@ bool IsSignedIntegerFormat(GLint internalFormat, GLuint clientVersion);
 bool IsUnsignedIntegerFormat(GLint internalFormat, GLuint clientVersion);
 bool IsFloatingPointFormat(GLint internalFormat, GLuint clientVersion);
 
+bool IsSRGBFormat(GLint internalFormat, GLuint clientVersion);
+
 bool IsColorRenderingSupported(GLint internalFormat, const rx::Renderer *renderer);
 bool IsColorRenderingSupported(GLint internalFormat, const Context *context);
 bool IsTextureFilteringSupported(GLint internalFormat, const rx::Renderer *renderer);
