@@ -1204,6 +1204,255 @@ bool validateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
     return true;
 }
 
+bool validateES2TexStorageParameters(gl::Context *context, GLenum target, GLsizei levels, GLenum internalformat,
+                                     GLsizei width, GLsizei height)
+{
+    if (target != GL_TEXTURE_2D && target != GL_TEXTURE_CUBE_MAP)
+    {
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+
+    if (width < 1 || height < 1 || levels < 1)
+    {
+        return gl::error(GL_INVALID_VALUE, false);
+    }
+
+    if (target == GL_TEXTURE_CUBE_MAP && width != height)
+    {
+        return gl::error(GL_INVALID_VALUE, false);
+    }
+
+    if (levels != 1 && levels != gl::log2(std::max(width, height)) + 1)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    GLenum format = gl::GetFormat(internalformat, context->getClientVersion());
+    GLenum type = gl::GetType(internalformat, context->getClientVersion());
+
+    if (format == GL_NONE || type == GL_NONE)
+    {
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+
+    switch (target)
+    {
+      case GL_TEXTURE_2D:
+        if (width > context->getMaximum2DTextureDimension() ||
+            height > context->getMaximum2DTextureDimension())
+        {
+            return gl::error(GL_INVALID_VALUE, false);
+        }
+        break;
+      case GL_TEXTURE_CUBE_MAP:
+        if (width > context->getMaximumCubeTextureDimension() ||
+            height > context->getMaximumCubeTextureDimension())
+        {
+            return gl::error(GL_INVALID_VALUE, false);
+        }
+        break;
+      default:
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+
+    if (levels != 1 && !context->supportsNonPower2Texture())
+    {
+        if (!gl::isPow2(width) || !gl::isPow2(height))
+        {
+            return gl::error(GL_INVALID_OPERATION, false);
+        }
+    }
+
+    switch (internalformat)
+    {
+      case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
+      case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
+        if (!context->supportsDXT1Textures())
+        {
+            return gl::error(GL_INVALID_ENUM, false);
+        }
+        break;
+      case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
+        if (!context->supportsDXT3Textures())
+        {
+            return gl::error(GL_INVALID_ENUM, false);
+        }
+        break;
+      case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
+        if (!context->supportsDXT5Textures())
+        {
+            return gl::error(GL_INVALID_ENUM, false);
+        }
+        break;
+      case GL_RGBA32F_EXT:
+      case GL_RGB32F_EXT:
+      case GL_ALPHA32F_EXT:
+      case GL_LUMINANCE32F_EXT:
+      case GL_LUMINANCE_ALPHA32F_EXT:
+        if (!context->supportsFloat32Textures())
+        {
+            return gl::error(GL_INVALID_ENUM, false);
+        }
+        break;
+      case GL_RGBA16F_EXT:
+      case GL_RGB16F_EXT:
+      case GL_ALPHA16F_EXT:
+      case GL_LUMINANCE16F_EXT:
+      case GL_LUMINANCE_ALPHA16F_EXT:
+        if (!context->supportsFloat16Textures())
+        {
+            return gl::error(GL_INVALID_ENUM, false);
+        }
+        break;
+      case GL_DEPTH_COMPONENT16:
+      case GL_DEPTH_COMPONENT32_OES:
+      case GL_DEPTH24_STENCIL8_OES:
+        if (!context->supportsDepthTextures())
+        {
+            return gl::error(GL_INVALID_ENUM, false);
+        }
+        if (target != GL_TEXTURE_2D)
+        {
+            return gl::error(GL_INVALID_OPERATION, false);
+        }
+        // ANGLE_depth_texture only supports 1-level textures
+        if (levels != 1)
+        {
+            return gl::error(GL_INVALID_OPERATION, false);
+        }
+        break;
+      default:
+        break;
+    }
+
+    gl::Texture *texture = NULL;
+    switch(target)
+    {
+      case GL_TEXTURE_2D:
+        texture = context->getTexture2D();
+        break;
+      case GL_TEXTURE_CUBE_MAP:
+        texture = context->getTextureCubeMap();
+        break;
+      default:
+        UNREACHABLE();
+    }
+
+    if (!texture || texture->id() == 0)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    if (texture->isImmutable())
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    return true;
+}
+
+bool validateES3TexStorageParameters(gl::Context *context, GLenum target, GLsizei levels, GLenum internalformat,
+                                     GLsizei width, GLsizei height, GLsizei depth)
+{
+    if (width < 1 || height < 1 || depth < 1 || levels < 1)
+    {
+        return gl::error(GL_INVALID_VALUE, false);
+    }
+
+    if (levels > gl::log2(std::max(std::max(width, height), depth)) + 1)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    gl::Texture *texture = NULL;
+    switch (target)
+    {
+      case GL_TEXTURE_2D:
+        {
+            texture = context->getTexture2D();
+
+            if (width > (context->getMaximum2DTextureDimension()) ||
+                height > (context->getMaximum2DTextureDimension()))
+            {
+                return gl::error(GL_INVALID_VALUE, false);
+            }
+        }
+        break;
+
+      case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
+      case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
+      case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
+      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
+      case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
+      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
+        {
+            texture = context->getTextureCubeMap();
+
+            if (width != height)
+            {
+                return gl::error(GL_INVALID_VALUE, false);
+            }
+
+            if (width > (context->getMaximumCubeTextureDimension()))
+            {
+                return gl::error(GL_INVALID_VALUE, false);
+            }
+        }
+        break;
+
+      case GL_TEXTURE_3D:
+        {
+            texture = context->getTexture3D();
+
+            if (width > (context->getMaximum3DTextureDimension()) ||
+                height > (context->getMaximum3DTextureDimension()) ||
+                depth > (context->getMaximum3DTextureDimension()))
+            {
+                return gl::error(GL_INVALID_VALUE, false);
+            }
+        }
+        break;
+
+      case GL_TEXTURE_2D_ARRAY:
+        {
+            texture = context->getTexture2DArray();
+
+            if (width > (context->getMaximum2DTextureDimension()) ||
+                height > (context->getMaximum2DTextureDimension()) ||
+                depth > (context->getMaximum2DArrayTextureLayers()))
+            {
+                return gl::error(GL_INVALID_VALUE, false);
+            }
+        }
+        break;
+
+      default:
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+
+    if (!texture || texture->id() == 0)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    if (texture->isImmutable())
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    if (!gl::IsValidInternalFormat(internalformat, context))
+    {
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+
+    if (!gl::IsSizedInternalFormat(internalformat, context->getClientVersion()))
+    {
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+
+    return true;
+}
+
 // check for combinations of format and type that are valid for ReadPixels
 bool validES2ReadFormatType(GLenum format, GLenum type)
 {
@@ -4882,8 +5131,16 @@ void __stdcall glGetTexParameterfv(GLenum target, GLenum pname, GLfloat* params)
                 }
                 *params = (GLfloat)texture->getWrapR();
                 break;
-              case GL_TEXTURE_IMMUTABLE_FORMAT_EXT:
+              case GL_TEXTURE_IMMUTABLE_FORMAT:
+                // Exposed to ES2.0 through EXT_texture_storage, no client version validation.
                 *params = (GLfloat)(texture->isImmutable() ? GL_TRUE : GL_FALSE);
+                break;
+              case GL_TEXTURE_IMMUTABLE_LEVELS:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                *params = (GLfloat)(texture->isImmutable() ? texture->levelCount() : 0);
                 break;
               case GL_TEXTURE_USAGE_ANGLE:
                 *params = (GLfloat)texture->getUsage();
@@ -4958,8 +5215,16 @@ void __stdcall glGetTexParameteriv(GLenum target, GLenum pname, GLint* params)
                 }
                 *params = texture->getWrapR();
                 break;
-              case GL_TEXTURE_IMMUTABLE_FORMAT_EXT:
+              case GL_TEXTURE_IMMUTABLE_FORMAT:
+                // Exposed to ES2.0 through EXT_texture_storage, no client version validation.
                 *params = texture->isImmutable() ? GL_TRUE : GL_FALSE;
+                break;
+              case GL_TEXTURE_IMMUTABLE_LEVELS:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                *params = texture->isImmutable() ? texture->levelCount() : 0;
                 break;
               case GL_TEXTURE_USAGE_ANGLE:
                 *params = texture->getUsage();
@@ -6578,166 +6843,46 @@ void __stdcall glTexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalf
 
     try
     {
-        if (target != GL_TEXTURE_2D && target != GL_TEXTURE_CUBE_MAP)
-        {
-            return gl::error(GL_INVALID_ENUM);
-        }
-
-        if (width < 1 || height < 1 || levels < 1)
-        {
-            return gl::error(GL_INVALID_VALUE);
-        }
-
-        if (target == GL_TEXTURE_CUBE_MAP && width != height)
-        {
-            return gl::error(GL_INVALID_VALUE);
-        }
-
-        if (levels != 1 && levels != gl::log2(std::max(width, height)) + 1)
-        {
-            return gl::error(GL_INVALID_OPERATION);
-        }
-
         gl::Context *context = gl::getNonLostContext();
 
         if (context)
         {
-            if (!gl::IsValidInternalFormat(internalformat, context))
+            if (context->getClientVersion() < 3 &&
+                !validateES2TexStorageParameters(context, target, levels, internalformat, width, height))
             {
-                return gl::error(GL_INVALID_ENUM);
+                return;
             }
 
-            GLenum format = gl::GetFormat(internalformat, context->getClientVersion());
-            GLenum type = gl::GetType(internalformat, context->getClientVersion());
-
-            if (format == GL_NONE || type == GL_NONE)
+            if (context->getClientVersion() >= 3 &&
+                !validateES3TexStorageParameters(context, target, levels, internalformat, width, height, 1))
             {
-                return gl::error(GL_INVALID_ENUM);
+                return;
             }
 
             switch (target)
             {
               case GL_TEXTURE_2D:
-                if (width > context->getMaximum2DTextureDimension() ||
-                    height > context->getMaximum2DTextureDimension())
                 {
-                    return gl::error(GL_INVALID_VALUE);
+                    gl::Texture2D *texture2d = context->getTexture2D();
+                    texture2d->storage(levels, internalformat, width, height);
                 }
                 break;
-              case GL_TEXTURE_CUBE_MAP:
-                if (width > context->getMaximumCubeTextureDimension() ||
-                    height > context->getMaximumCubeTextureDimension())
+
+              case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
+              case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
+              case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
+              case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
+              case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
+              case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
                 {
-                    return gl::error(GL_INVALID_VALUE);
+                    gl::TextureCubeMap *textureCube = context->getTextureCubeMap();
+                    textureCube->storage(levels, internalformat, width);
                 }
                 break;
+
               default:
                 return gl::error(GL_INVALID_ENUM);
             }
-
-            if (levels != 1 && !context->supportsNonPower2Texture())
-            {
-                if (!gl::isPow2(width) || !gl::isPow2(height))
-                {
-                    return gl::error(GL_INVALID_OPERATION);
-                }
-            }
-
-            switch (internalformat)
-            {
-              case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
-              case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
-                if (!context->supportsDXT1Textures())
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                break;
-              case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
-                if (!context->supportsDXT3Textures())
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                break;
-              case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
-                if (!context->supportsDXT5Textures())
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                break;
-              case GL_RGBA32F_EXT:
-              case GL_RGB32F_EXT:
-              case GL_ALPHA32F_EXT:
-              case GL_LUMINANCE32F_EXT:
-              case GL_LUMINANCE_ALPHA32F_EXT:
-                if (!context->supportsFloat32Textures())
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                break;
-              case GL_RGBA16F_EXT:
-              case GL_RGB16F_EXT:
-              case GL_ALPHA16F_EXT:
-              case GL_LUMINANCE16F_EXT:
-              case GL_LUMINANCE_ALPHA16F_EXT:
-                if (!context->supportsFloat16Textures())
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                break;
-              case GL_DEPTH_COMPONENT16:
-              case GL_DEPTH_COMPONENT32_OES:
-              case GL_DEPTH24_STENCIL8_OES:
-                if (!context->supportsDepthTextures())
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                if (target != GL_TEXTURE_2D)
-                {
-                    return gl::error(GL_INVALID_OPERATION);
-                }
-                // ANGLE_depth_texture only supports 1-level textures
-                if (levels != 1)
-                {
-                    return gl::error(GL_INVALID_OPERATION);
-                }
-                break;
-              default:
-                break;
-            }
-
-            if (target == GL_TEXTURE_2D)
-            {
-                gl::Texture2D *texture = context->getTexture2D();
-
-                if (!texture || texture->id() == 0)
-                {
-                    return gl::error(GL_INVALID_OPERATION);
-                }
-
-                if (texture->isImmutable())
-                {
-                    return gl::error(GL_INVALID_OPERATION);
-                }
-
-                texture->storage(levels, internalformat, width, height);
-            }
-            else if (target == GL_TEXTURE_CUBE_MAP)
-            {
-                gl::TextureCubeMap *texture = context->getTextureCubeMap();
-
-                if (!texture || texture->id() == 0)
-                {
-                    return gl::error(GL_INVALID_OPERATION);
-                }
-
-                if (texture->isImmutable())
-                {
-                    return gl::error(GL_INVALID_OPERATION);
-                }
-
-                texture->storage(levels, internalformat, width);
-            }
-            else UNREACHABLE();
         }
     }
     catch(std::bad_alloc&)
@@ -10906,9 +11051,37 @@ void __stdcall glTexStorage2D(GLenum target, GLsizei levels, GLenum internalform
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            if (!validateES3TexStorageParameters(context, target, levels, internalformat, width, height, 1))
+            {
+                return;
+            }
+
+            switch (target)
+            {
+              case GL_TEXTURE_2D:
+                {
+                    gl::Texture2D *texture2d = context->getTexture2D();
+                    texture2d->storage(levels, internalformat, width, height);
+                }
+                break;
+
+              case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
+              case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
+              case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
+              case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
+              case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
+              case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
+                {
+                    gl::TextureCubeMap *textureCube = context->getTextureCubeMap();
+                    textureCube->storage(levels, internalformat, width);
+                }
+                break;
+
+              default:
+                return gl::error(GL_INVALID_ENUM);
+            }
+        }
     }
     catch(std::bad_alloc&)
     {
@@ -10931,6 +11104,31 @@ void __stdcall glTexStorage3D(GLenum target, GLsizei levels, GLenum internalform
             if (context->getClientVersion() < 3)
             {
                 return gl::error(GL_INVALID_OPERATION);
+            }
+
+            if (!validateES3TexStorageParameters(context, target, levels, internalformat, width, height, depth))
+            {
+                return;
+            }
+
+            switch (target)
+            {
+              case GL_TEXTURE_3D:
+                {
+                    gl::Texture3D *texture3d = context->getTexture3D();
+                    texture3d->storage(levels, internalformat, width, height, depth);
+                }
+                break;
+
+              case GL_TEXTURE_2D_ARRAY:
+                {
+                    gl::Texture2DArray *texture2darray = context->getTexture2DArray();
+                    texture2darray->storage(levels, internalformat, width, height, depth);
+                }
+                break;
+
+              default:
+                return gl::error(GL_INVALID_ENUM);
             }
         }
     }

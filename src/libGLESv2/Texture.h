@@ -86,6 +86,7 @@ class Texture : public RefCountObject
     void getSamplerState(SamplerState *sampler);
     GLenum getUsage() const;
     bool isMipmapFiltered() const;
+    virtual int levelCount() = 0;
 
     virtual bool isSamplerComplete() const = 0;
 
@@ -121,8 +122,6 @@ class Texture : public RefCountObject
     virtual void updateTexture() = 0;
     virtual void convertToRenderTarget() = 0;
     virtual rx::RenderTarget *getRenderTarget(GLenum target) = 0;
-
-    virtual int levelCount() = 0;
 
     rx::Renderer *mRenderer;
 
