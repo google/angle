@@ -376,6 +376,9 @@ void ShGetInfoPointer(const ShHandle handle, ShShaderInfo pname, void** params)
     case SH_ACTIVE_UNIFORMS_ARRAY:
         *params = (void*)&translator->getUniforms();
         break;
+    case SH_ACTIVE_INTERFACE_BLOCKS_ARRAY:
+        *params = (void*)&translator->getInterfaceBlocks();
+        break;
     default: UNREACHABLE();
     }
 }

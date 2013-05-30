@@ -424,6 +424,10 @@ void Shader::compileToHLSL(void *compiler)
         void *activeUniforms;
         ShGetInfoPointer(compiler, SH_ACTIVE_UNIFORMS_ARRAY, &activeUniforms);
         mActiveUniforms = *(sh::ActiveUniforms*)activeUniforms;
+
+        void *activeInterfaceBlocks;
+        ShGetInfoPointer(compiler, SH_ACTIVE_INTERFACE_BLOCKS_ARRAY, &activeInterfaceBlocks);
+        mActiveInterfaceBlocks = *(sh::ActiveInterfaceBlocks*)activeInterfaceBlocks;
     }
     else
     {
