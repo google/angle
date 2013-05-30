@@ -162,7 +162,6 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
     {
         indexBuffer = streamingBuffer;
         streamOffset = offset;
-        storage->markBufferUsage();
         computeRange(type, indices, count, &translated->minIndex, &translated->maxIndex);
     }
     else if (staticBuffer && staticBuffer->getBufferSize() != 0 && staticBuffer->getIndexType() == type && alignedOffset)

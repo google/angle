@@ -157,7 +157,6 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
                 {
                     outputElementSize = attribs[i].stride();
                     streamOffset = attribs[i].mOffset + outputElementSize * start;
-                    storage->markBufferUsage();
                 }
                 else if (staticBuffer)
                 {

@@ -31,7 +31,6 @@ class BufferStorage11 : public BufferStorage
     virtual void clear();
     virtual unsigned int getSize() const;
     virtual bool supportsDirectBinding() const;
-    virtual void markBufferUsage();
 
     ID3D11Buffer *getBuffer(GLenum usage);
 
@@ -51,6 +50,8 @@ class BufferStorage11 : public BufferStorage
 
     unsigned int mReadUsageCount;
     unsigned int mWriteUsageCount;
+
+    void markBufferUsage();
 };
 
 // Each instance of BufferStorageD3DBuffer11 is specialized for a class of D3D binding points

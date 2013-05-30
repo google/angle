@@ -222,7 +222,7 @@ void BufferStorage11::markBufferUsage()
     mReadUsageCount++;
     mWriteUsageCount++;
 
-    static const unsigned int usageLimit = 5;
+    const unsigned int usageLimit = 5;
 
     if (mReadUsageCount > usageLimit && mResolvedData)
     {
@@ -235,6 +235,8 @@ void BufferStorage11::markBufferUsage()
 
 ID3D11Buffer *BufferStorage11::getBuffer(GLenum usage)
 {
+    markBufferUsage();
+
     for (DirectBufferList::iterator it = mDirectBuffers.begin(); it != mDirectBuffers.end(); it++)
     {
         DirectBufferStorage11 *directBuffer = *it;

@@ -28,7 +28,6 @@ class BufferStorage
     virtual void clear() = 0;
     virtual unsigned int getSize() const = 0;
     virtual bool supportsDirectBinding() const = 0;
-    virtual void markBufferUsage();
     unsigned int getSerial() const;
 
   protected:
