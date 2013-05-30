@@ -1421,7 +1421,7 @@ TIntermTyped* TParseContext::addConstArrayNode(int index, TIntermTyped* node, TS
 // If there is an embedded/nested struct, it appropriately calls addConstStructNested or addConstStructFromAggr
 // function and returns the parse-tree with the values of the embedded/nested struct.
 //
-TIntermTyped* TParseContext::addConstStruct(TString& identifier, TIntermTyped* node, TSourceLoc line)
+TIntermTyped* TParseContext::addConstStruct(const TString &identifier, TIntermTyped *node, TSourceLoc line)
 {
     const TTypeList* fields = node->getType().getStruct();
     TIntermTyped *typedNode;
@@ -1499,6 +1499,362 @@ bool TParseContext::structNestingErrorCheck(TSourceLoc line, const TType& fieldT
     }
 
     return false;
+}
+
+//
+// Parse an array index expression
+//
+TIntermTyped* TParseContext::addIndexExpression(TIntermTyped *baseExpression, TSourceLoc location, TIntermTyped *indexExpression)
+{
+    TIntermTyped *indexedExpression = NULL;
+
+    if (!baseExpression->isArray() && !baseExpression->isMatrix() && !baseExpression->isVector())
+    {
+        if (baseExpression->getAsSymbolNode())
+        {
+            error(location, " left of '[' is not of type array, matrix, or vector ", baseExpression->getAsSymbolNode()->getSymbol().c_str());
+        }
+        else
+        {
+            error(location, " left of '[' is not of type array, matrix, or vector ", "expression");
+        }
+        recover();
+    }
+    if (baseExpression->getType().getQualifier() == EvqConst && indexExpression->getQualifier() == EvqConst)
+    {
+        if (baseExpression->isArray())
+        {
+            // constant folding for arrays
+            indexedExpression = addConstArrayNode(indexExpression->getAsConstantUnion()->getIConst(0), baseExpression, location);
+        }
+        else if (baseExpression->isVector())
+        {
+            // constant folding for vectors
+            TVectorFields fields;
+            fields.num = 1;
+            fields.offsets[0] = indexExpression->getAsConstantUnion()->getIConst(0); // need to do it this way because v.xy sends fields integer array
+            indexedExpression = addConstVectorNode(fields, baseExpression, location);
+        }
+        else if (baseExpression->isMatrix())
+        {
+            // constant folding for matrices
+            indexedExpression = addConstMatrixNode(indexExpression->getAsConstantUnion()->getIConst(0), baseExpression, location);
+        }
+    }
+    else
+    {
+        if (indexExpression->getQualifier() == EvqConst)
+        {
+            if ((baseExpression->isVector() || baseExpression->isMatrix()) && baseExpression->getType().getNominalSize() <= indexExpression->getAsConstantUnion()->getIConst(0) && !baseExpression->isArray() )
+            {
+                std::stringstream extraInfoStream;
+                extraInfoStream << "field selection out of range '" << indexExpression->getAsConstantUnion()->getIConst(0) << "'";
+                std::string extraInfo = extraInfoStream.str();
+                error(location, "", "[", extraInfo.c_str());
+                recover();
+            }
+            else
+            {
+                if (baseExpression->isArray())
+                {
+                    if (baseExpression->getType().getArraySize() == 0)
+                    {
+                        if (baseExpression->getType().getMaxArraySize() <= indexExpression->getAsConstantUnion()->getIConst(0))
+                        {
+                            if (arraySetMaxSize(baseExpression->getAsSymbolNode(), baseExpression->getTypePointer(), indexExpression->getAsConstantUnion()->getIConst(0), true, location))
+                                recover();
+                        }
+                        else
+                        {
+                            if (arraySetMaxSize(baseExpression->getAsSymbolNode(), baseExpression->getTypePointer(), 0, false, location))
+                                recover();
+                        }
+                    }
+                    else if ( indexExpression->getAsConstantUnion()->getIConst(0) >= baseExpression->getType().getArraySize())
+                    {
+                        std::stringstream extraInfoStream;
+                        extraInfoStream << "array index out of range '" << indexExpression->getAsConstantUnion()->getIConst(0) << "'";
+                        std::string extraInfo = extraInfoStream.str();
+                        error(location, "", "[", extraInfo.c_str());
+                        recover();
+                    }
+                }
+                indexedExpression = intermediate.addIndex(EOpIndexDirect, baseExpression, indexExpression, location);
+            }
+        }
+        else
+        {
+            if (baseExpression->isArray() && baseExpression->getType().getArraySize() == 0)
+            {
+                error(location, "", "[", "array must be redeclared with a size before being indexed with a variable");
+                recover();
+            }
+
+            indexedExpression = intermediate.addIndex(EOpIndexIndirect, baseExpression, indexExpression, location);
+        }
+    }
+    if (indexedExpression == 0)
+    {
+        ConstantUnion *unionArray = new ConstantUnion[1];
+        unionArray->setFConst(0.0f);
+        indexedExpression = intermediate.addConstantUnion(unionArray, TType(EbtFloat, EbpHigh, EvqConst), location);
+    }
+    else if (baseExpression->isArray())
+    {
+        if (baseExpression->getType().getStruct())
+        {
+            indexedExpression->setType(TType(baseExpression->getType().getStruct(), baseExpression->getType().getTypeName()));
+        }
+        else
+        {
+            indexedExpression->setType(TType(baseExpression->getBasicType(), baseExpression->getPrecision(), EvqTemporary, baseExpression->getNominalSize(), baseExpression->isMatrix()));
+        }
+
+        if (baseExpression->getType().getQualifier() == EvqConst)
+        {
+            indexedExpression->getTypePointer()->setQualifier(EvqConst);
+        }
+    }
+    else if (baseExpression->isMatrix() && baseExpression->getType().getQualifier() == EvqConst)
+    {
+        indexedExpression->setType(TType(baseExpression->getBasicType(), baseExpression->getPrecision(), EvqConst, baseExpression->getNominalSize()));
+    }
+    else if (baseExpression->isMatrix())
+    {
+        indexedExpression->setType(TType(baseExpression->getBasicType(), baseExpression->getPrecision(), EvqTemporary, baseExpression->getNominalSize()));
+    }
+    else if (baseExpression->isVector() && baseExpression->getType().getQualifier() == EvqConst)
+    {
+        indexedExpression->setType(TType(baseExpression->getBasicType(), baseExpression->getPrecision(), EvqConst));
+    }
+    else if (baseExpression->isVector())
+    {
+        indexedExpression->setType(TType(baseExpression->getBasicType(), baseExpression->getPrecision(), EvqTemporary));
+    }
+    else
+    {
+        indexedExpression->setType(baseExpression->getType());
+    }
+
+    return indexedExpression;
+}
+
+TIntermTyped* TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpression, TSourceLoc dotLocation, const TString &fieldString, TSourceLoc fieldLocation)
+{
+    TIntermTyped *indexedExpression = NULL;
+
+    if (baseExpression->isArray())
+    {
+        error(fieldLocation, "cannot apply dot operator to an array", ".");
+        recover();
+    }
+
+    if (baseExpression->isVector())
+    {
+        TVectorFields fields;
+        if (!parseVectorFields(fieldString, baseExpression->getNominalSize(), fields, fieldLocation))
+        {
+            fields.num = 1;
+            fields.offsets[0] = 0;
+            recover();
+        }
+
+        if (baseExpression->getType().getQualifier() == EvqConst)
+        {
+            // constant folding for vector fields
+            indexedExpression = addConstVectorNode(fields, baseExpression, fieldLocation);
+            if (indexedExpression == 0)
+            {
+                recover();
+                indexedExpression = baseExpression;
+            }
+            else
+            {
+                indexedExpression->setType(TType(baseExpression->getBasicType(), baseExpression->getPrecision(), EvqConst, (int) (fieldString).size()));
+            }
+        }
+        else
+        {
+            TString vectorString = fieldString;
+            TIntermTyped* index = intermediate.addSwizzle(fields, fieldLocation);
+            indexedExpression = intermediate.addIndex(EOpVectorSwizzle, baseExpression, index, dotLocation);
+            indexedExpression->setType(TType(baseExpression->getBasicType(), baseExpression->getPrecision(), EvqTemporary, (int) vectorString.size()));
+        }
+    }
+    else if (baseExpression->isMatrix())
+    {
+        TMatrixFields fields;
+        if (!parseMatrixFields(fieldString, baseExpression->getNominalSize(), fields, fieldLocation))
+        {
+            fields.wholeRow = false;
+            fields.wholeCol = false;
+            fields.row = 0;
+            fields.col = 0;
+            recover();
+        }
+
+        if (fields.wholeRow || fields.wholeCol)
+        {
+            error(dotLocation, " non-scalar fields not implemented yet", ".");
+            recover();
+            ConstantUnion *unionArray = new ConstantUnion[1];
+            unionArray->setIConst(0);
+            TIntermTyped* index = intermediate.addConstantUnion(unionArray, TType(EbtInt, EbpUndefined, EvqConst), fieldLocation);
+            indexedExpression = intermediate.addIndex(EOpIndexDirect, baseExpression, index, dotLocation);
+            indexedExpression->setType(TType(baseExpression->getBasicType(), baseExpression->getPrecision(),EvqTemporary, baseExpression->getNominalSize()));
+        }
+        else
+        {
+            ConstantUnion *unionArray = new ConstantUnion[1];
+            unionArray->setIConst(fields.col * baseExpression->getNominalSize() + fields.row);
+            TIntermTyped* index = intermediate.addConstantUnion(unionArray, TType(EbtInt, EbpUndefined, EvqConst), fieldLocation);
+            indexedExpression = intermediate.addIndex(EOpIndexDirect, baseExpression, index, dotLocation);
+            indexedExpression->setType(TType(baseExpression->getBasicType(), baseExpression->getPrecision()));
+        }
+    }
+    else if (baseExpression->getBasicType() == EbtStruct)
+    {
+        bool fieldFound = false;
+        const TTypeList* fields = baseExpression->getType().getStruct();
+        if (fields == 0)
+        {
+            error(dotLocation, "structure has no fields", "Internal Error");
+            recover();
+            indexedExpression = baseExpression;
+        }
+        else
+        {
+            unsigned int i;
+            for (i = 0; i < fields->size(); ++i)
+            {
+                if ((*fields)[i].type->getFieldName() == fieldString)
+                {
+                    fieldFound = true;
+                    break;
+                }
+            }
+            if (fieldFound)
+            {
+                if (baseExpression->getType().getQualifier() == EvqConst)
+                {
+                    indexedExpression = addConstStruct(fieldString, baseExpression, dotLocation);
+                    if (indexedExpression == 0)
+                    {
+                        recover();
+                        indexedExpression = baseExpression;
+                    }
+                    else
+                    {
+                        indexedExpression->setType(*(*fields)[i].type);
+                        // change the qualifier of the return type, not of the structure field
+                        // as the structure definition is shared between various structures.
+                        indexedExpression->getTypePointer()->setQualifier(EvqConst);
+                    }
+                }
+                else
+                {
+                    ConstantUnion *unionArray = new ConstantUnion[1];
+                    unionArray->setIConst(i);
+                    TIntermTyped* index = intermediate.addConstantUnion(unionArray, *(*fields)[i].type, fieldLocation);
+                    indexedExpression = intermediate.addIndex(EOpIndexDirectStruct, baseExpression, index, dotLocation);
+                    indexedExpression->setType(*(*fields)[i].type);
+                }
+            }
+            else
+            {
+                error(dotLocation, " no such field in structure", fieldString.c_str());
+                recover();
+                indexedExpression = baseExpression;
+            }
+        }
+    }
+    else
+    {
+        error(dotLocation, " field selection requires structure, vector, or matrix on left hand side", fieldString.c_str());
+        recover();
+        indexedExpression = baseExpression;
+    }
+
+    return indexedExpression;
+}
+
+TTypeList *TParseContext::addStructDeclaratorList(const TPublicType& typeSpecifier, TTypeList *typeList)
+{
+    if (voidErrorCheck(typeSpecifier.line, (*typeList)[0].type->getFieldName(), typeSpecifier)) {
+        recover();
+    }
+
+    for (unsigned int i = 0; i < typeList->size(); ++i) {
+        //
+        // Careful not to replace already known aspects of type, like array-ness
+        //
+        TType* type = (*typeList)[i].type;
+        type->setBasicType(typeSpecifier.type);
+        type->setNominalSize(typeSpecifier.size);
+        type->setMatrix(typeSpecifier.matrix);
+        type->setPrecision(typeSpecifier.precision);
+        type->setQualifier(typeSpecifier.qualifier);
+
+        // don't allow arrays of arrays
+        if (type->isArray()) {
+            if (arrayTypeErrorCheck(typeSpecifier.line, typeSpecifier))
+                recover();
+        }
+        if (typeSpecifier.array)
+            type->setArraySize(typeSpecifier.arraySize);
+        if (typeSpecifier.userDef) {
+            type->setStruct(typeSpecifier.userDef->getStruct());
+            type->setTypeName(typeSpecifier.userDef->getTypeName());
+        }
+
+        if (structNestingErrorCheck(typeSpecifier.line, *type)) {
+            recover();
+        }
+    }
+
+    return typeList;
+}
+
+TPublicType TParseContext::addStructure(TSourceLoc structLine, TSourceLoc nameLine, const TString &structName, TTypeList* typeList)
+{
+    TType* structure = new TType(typeList, structName);
+
+    if (!structName.empty())
+    {
+        if (reservedErrorCheck(nameLine, structName))
+        {
+            recover();
+        }
+        TVariable* userTypeDef = new TVariable(&structName, *structure, true);
+        if (!symbolTable.declare(*userTypeDef)) {
+            error(nameLine, "redefinition", structName.c_str(), "struct");
+            recover();
+        }
+    }
+
+    // ensure we do not specify any storage qualifiers on the struct members
+    for (unsigned int typeListIndex = 0; typeListIndex < typeList->size(); typeListIndex++)
+    {
+        const TTypeLine &typeLine = (*typeList)[typeListIndex];
+        const TQualifier qualifier = typeLine.type->getQualifier();
+        switch (qualifier)
+        {
+          case EvqGlobal:
+          case EvqTemporary:
+            break;
+          default:
+            error(typeLine.line, "invalid qualifier on struct member", getQualifierString(qualifier));
+            recover();
+            break;
+        }
+    }
+
+    TPublicType publicType;
+    publicType.setBasic(EbtStruct, EvqTemporary, structLine);
+    publicType.userDef = structure;
+    exitStructDeclaration();
+
+    return publicType;
 }
 
 //

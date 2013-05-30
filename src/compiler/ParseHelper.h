@@ -127,7 +127,12 @@ struct TParseContext {
     TIntermTyped* addConstVectorNode(TVectorFields&, TIntermTyped*, TSourceLoc);
     TIntermTyped* addConstMatrixNode(int , TIntermTyped*, TSourceLoc);
     TIntermTyped* addConstArrayNode(int index, TIntermTyped* node, TSourceLoc line);
-    TIntermTyped* addConstStruct(TString& , TIntermTyped*, TSourceLoc);
+    TIntermTyped* addConstStruct(const TString &identifier, TIntermTyped *node, TSourceLoc line);
+    TIntermTyped* addIndexExpression(TIntermTyped *baseExpression, TSourceLoc location, TIntermTyped *indexExpression);
+    TIntermTyped* addFieldSelectionExpression(TIntermTyped *baseExpression, TSourceLoc dotLocation, const TString &fieldString, TSourceLoc fieldLocation);
+
+    TTypeList *addStructDeclaratorList(const TPublicType& typeSpecifier, TTypeList *typeList);
+    TPublicType addStructure(TSourceLoc structLine, TSourceLoc nameLine, const TString &structName, TTypeList* typeList);
 
     // Performs an error check for embedded struct declarations.
     // Returns true if an error was raised due to the declaration of

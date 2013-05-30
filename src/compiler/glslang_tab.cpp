@@ -714,27 +714,27 @@ static const yytype_int16 yyrhs[] =
 static const yytype_uint16 yyrline[] =
 {
        0,   184,   184,   219,   222,   235,   240,   245,   251,   254,
-     333,   336,   437,   447,   460,   468,   568,   571,   579,   583,
-     590,   594,   601,   607,   616,   624,   679,   686,   696,   699,
-     709,   719,   740,   741,   742,   747,   748,   757,   769,   770,
-     778,   789,   793,   794,   804,   814,   824,   837,   838,   848,
-     861,   865,   869,   873,   874,   887,   888,   901,   902,   915,
-     916,   933,   934,   947,   948,   949,   950,   951,   955,   958,
-     969,   977,  1004,  1009,  1023,  1061,  1064,  1071,  1079,  1100,
-    1121,  1132,  1161,  1166,  1176,  1181,  1191,  1194,  1197,  1200,
-    1206,  1213,  1216,  1238,  1256,  1280,  1303,  1307,  1325,  1333,
-    1365,  1385,  1474,  1483,  1506,  1510,  1517,  1523,  1530,  1539,
-    1548,  1551,  1587,  1597,  1601,  1606,  1611,  1616,  1621,  1630,
-    1640,  1647,  1650,  1653,  1659,  1662,  1677,  1681,  1685,  1689,
-    1698,  1703,  1708,  1713,  1718,  1723,  1728,  1733,  1738,  1743,
-    1749,  1755,  1761,  1766,  1771,  1780,  1789,  1794,  1807,  1807,
-    1821,  1821,  1830,  1833,  1848,  1884,  1888,  1894,  1902,  1918,
-    1922,  1926,  1927,  1933,  1934,  1935,  1936,  1937,  1941,  1942,
-    1942,  1942,  1952,  1953,  1957,  1957,  1958,  1958,  1963,  1966,
-    1976,  1979,  1985,  1986,  1990,  1998,  2002,  2012,  2017,  2034,
-    2034,  2039,  2039,  2046,  2046,  2054,  2057,  2063,  2066,  2072,
-    2076,  2083,  2090,  2097,  2104,  2115,  2124,  2128,  2135,  2138,
-    2144,  2144
+     257,   260,   263,   273,   286,   294,   394,   397,   405,   409,
+     416,   420,   427,   433,   442,   450,   505,   512,   522,   525,
+     535,   545,   566,   567,   568,   573,   574,   583,   595,   596,
+     604,   615,   619,   620,   630,   640,   650,   663,   664,   674,
+     687,   691,   695,   699,   700,   713,   714,   727,   728,   741,
+     742,   759,   760,   773,   774,   775,   776,   777,   781,   784,
+     795,   803,   830,   835,   849,   887,   890,   897,   905,   926,
+     947,   958,   987,   992,  1002,  1007,  1017,  1020,  1023,  1026,
+    1032,  1039,  1042,  1064,  1082,  1106,  1129,  1133,  1151,  1159,
+    1191,  1211,  1300,  1309,  1332,  1336,  1343,  1349,  1356,  1365,
+    1374,  1377,  1413,  1423,  1427,  1432,  1437,  1442,  1447,  1456,
+    1466,  1473,  1476,  1479,  1485,  1488,  1503,  1507,  1511,  1515,
+    1524,  1529,  1534,  1539,  1544,  1549,  1554,  1559,  1564,  1569,
+    1575,  1581,  1587,  1592,  1597,  1606,  1615,  1620,  1633,  1633,
+    1636,  1636,  1642,  1645,  1660,  1666,  1670,  1676,  1684,  1700,
+    1704,  1708,  1709,  1715,  1716,  1717,  1718,  1719,  1723,  1724,
+    1724,  1724,  1734,  1735,  1739,  1739,  1740,  1740,  1745,  1748,
+    1758,  1761,  1767,  1768,  1772,  1780,  1784,  1794,  1799,  1816,
+    1816,  1821,  1821,  1828,  1828,  1836,  1839,  1845,  1848,  1854,
+    1858,  1865,  1872,  1879,  1886,  1897,  1906,  1910,  1917,  1920,
+    1926,  1926
 };
 #endif
 
@@ -2252,83 +2252,7 @@ yyreduce:
   case 9:
 
     {
-        if (!(yyvsp[(1) - (4)].interm.intermTypedNode)->isArray() && !(yyvsp[(1) - (4)].interm.intermTypedNode)->isMatrix() && !(yyvsp[(1) - (4)].interm.intermTypedNode)->isVector()) {
-            if ((yyvsp[(1) - (4)].interm.intermTypedNode)->getAsSymbolNode())
-                context->error((yyvsp[(2) - (4)].lex).line, " left of '[' is not of type array, matrix, or vector ", (yyvsp[(1) - (4)].interm.intermTypedNode)->getAsSymbolNode()->getSymbol().c_str());
-            else
-                context->error((yyvsp[(2) - (4)].lex).line, " left of '[' is not of type array, matrix, or vector ", "expression");
-            context->recover();
-        }
-        if ((yyvsp[(1) - (4)].interm.intermTypedNode)->getType().getQualifier() == EvqConst && (yyvsp[(3) - (4)].interm.intermTypedNode)->getQualifier() == EvqConst) {
-            if ((yyvsp[(1) - (4)].interm.intermTypedNode)->isArray()) { // constant folding for arrays
-                (yyval.interm.intermTypedNode) = context->addConstArrayNode((yyvsp[(3) - (4)].interm.intermTypedNode)->getAsConstantUnion()->getIConst(0), (yyvsp[(1) - (4)].interm.intermTypedNode), (yyvsp[(2) - (4)].lex).line);
-            } else if ((yyvsp[(1) - (4)].interm.intermTypedNode)->isVector()) {  // constant folding for vectors
-                TVectorFields fields;
-                fields.num = 1;
-                fields.offsets[0] = (yyvsp[(3) - (4)].interm.intermTypedNode)->getAsConstantUnion()->getIConst(0); // need to do it this way because v.xy sends fields integer array
-                (yyval.interm.intermTypedNode) = context->addConstVectorNode(fields, (yyvsp[(1) - (4)].interm.intermTypedNode), (yyvsp[(2) - (4)].lex).line);
-            } else if ((yyvsp[(1) - (4)].interm.intermTypedNode)->isMatrix()) { // constant folding for matrices
-                (yyval.interm.intermTypedNode) = context->addConstMatrixNode((yyvsp[(3) - (4)].interm.intermTypedNode)->getAsConstantUnion()->getIConst(0), (yyvsp[(1) - (4)].interm.intermTypedNode), (yyvsp[(2) - (4)].lex).line);
-            }
-        } else {
-            if ((yyvsp[(3) - (4)].interm.intermTypedNode)->getQualifier() == EvqConst) {
-                if (((yyvsp[(1) - (4)].interm.intermTypedNode)->isVector() || (yyvsp[(1) - (4)].interm.intermTypedNode)->isMatrix()) && (yyvsp[(1) - (4)].interm.intermTypedNode)->getType().getNominalSize() <= (yyvsp[(3) - (4)].interm.intermTypedNode)->getAsConstantUnion()->getIConst(0) && !(yyvsp[(1) - (4)].interm.intermTypedNode)->isArray() ) {
-                    std::stringstream extraInfoStream;
-                    extraInfoStream << "field selection out of range '" << (yyvsp[(3) - (4)].interm.intermTypedNode)->getAsConstantUnion()->getIConst(0) << "'";
-                    std::string extraInfo = extraInfoStream.str();
-                    context->error((yyvsp[(2) - (4)].lex).line, "", "[", extraInfo.c_str());
-                    context->recover();
-                } else {
-                    if ((yyvsp[(1) - (4)].interm.intermTypedNode)->isArray()) {
-                        if ((yyvsp[(1) - (4)].interm.intermTypedNode)->getType().getArraySize() == 0) {
-                            if ((yyvsp[(1) - (4)].interm.intermTypedNode)->getType().getMaxArraySize() <= (yyvsp[(3) - (4)].interm.intermTypedNode)->getAsConstantUnion()->getIConst(0)) {
-                                if (context->arraySetMaxSize((yyvsp[(1) - (4)].interm.intermTypedNode)->getAsSymbolNode(), (yyvsp[(1) - (4)].interm.intermTypedNode)->getTypePointer(), (yyvsp[(3) - (4)].interm.intermTypedNode)->getAsConstantUnion()->getIConst(0), true, (yyvsp[(2) - (4)].lex).line))
-                                    context->recover();
-                            } else {
-                                if (context->arraySetMaxSize((yyvsp[(1) - (4)].interm.intermTypedNode)->getAsSymbolNode(), (yyvsp[(1) - (4)].interm.intermTypedNode)->getTypePointer(), 0, false, (yyvsp[(2) - (4)].lex).line))
-                                    context->recover();
-                            }
-                        } else if ( (yyvsp[(3) - (4)].interm.intermTypedNode)->getAsConstantUnion()->getIConst(0) >= (yyvsp[(1) - (4)].interm.intermTypedNode)->getType().getArraySize()) {
-                            std::stringstream extraInfoStream;
-                            extraInfoStream << "array index out of range '" << (yyvsp[(3) - (4)].interm.intermTypedNode)->getAsConstantUnion()->getIConst(0) << "'";
-                            std::string extraInfo = extraInfoStream.str();
-                            context->error((yyvsp[(2) - (4)].lex).line, "", "[", extraInfo.c_str());
-                            context->recover();
-                        }
-                    }
-                    (yyval.interm.intermTypedNode) = context->intermediate.addIndex(EOpIndexDirect, (yyvsp[(1) - (4)].interm.intermTypedNode), (yyvsp[(3) - (4)].interm.intermTypedNode), (yyvsp[(2) - (4)].lex).line);
-                }
-            } else {
-                if ((yyvsp[(1) - (4)].interm.intermTypedNode)->isArray() && (yyvsp[(1) - (4)].interm.intermTypedNode)->getType().getArraySize() == 0) {
-                    context->error((yyvsp[(2) - (4)].lex).line, "", "[", "array must be redeclared with a size before being indexed with a variable");
-                    context->recover();
-                }
-
-                (yyval.interm.intermTypedNode) = context->intermediate.addIndex(EOpIndexIndirect, (yyvsp[(1) - (4)].interm.intermTypedNode), (yyvsp[(3) - (4)].interm.intermTypedNode), (yyvsp[(2) - (4)].lex).line);
-            }
-        }
-        if ((yyval.interm.intermTypedNode) == 0) {
-            ConstantUnion *unionArray = new ConstantUnion[1];
-            unionArray->setFConst(0.0f);
-            (yyval.interm.intermTypedNode) = context->intermediate.addConstantUnion(unionArray, TType(EbtFloat, EbpHigh, EvqConst), (yyvsp[(2) - (4)].lex).line);
-        } else if ((yyvsp[(1) - (4)].interm.intermTypedNode)->isArray()) {
-            if ((yyvsp[(1) - (4)].interm.intermTypedNode)->getType().getStruct())
-                (yyval.interm.intermTypedNode)->setType(TType((yyvsp[(1) - (4)].interm.intermTypedNode)->getType().getStruct(), (yyvsp[(1) - (4)].interm.intermTypedNode)->getType().getTypeName()));
-            else
-                (yyval.interm.intermTypedNode)->setType(TType((yyvsp[(1) - (4)].interm.intermTypedNode)->getBasicType(), (yyvsp[(1) - (4)].interm.intermTypedNode)->getPrecision(), EvqTemporary, (yyvsp[(1) - (4)].interm.intermTypedNode)->getNominalSize(), (yyvsp[(1) - (4)].interm.intermTypedNode)->isMatrix()));
-
-            if ((yyvsp[(1) - (4)].interm.intermTypedNode)->getType().getQualifier() == EvqConst)
-                (yyval.interm.intermTypedNode)->getTypePointer()->setQualifier(EvqConst);
-        } else if ((yyvsp[(1) - (4)].interm.intermTypedNode)->isMatrix() && (yyvsp[(1) - (4)].interm.intermTypedNode)->getType().getQualifier() == EvqConst)
-            (yyval.interm.intermTypedNode)->setType(TType((yyvsp[(1) - (4)].interm.intermTypedNode)->getBasicType(), (yyvsp[(1) - (4)].interm.intermTypedNode)->getPrecision(), EvqConst, (yyvsp[(1) - (4)].interm.intermTypedNode)->getNominalSize()));
-        else if ((yyvsp[(1) - (4)].interm.intermTypedNode)->isMatrix())
-            (yyval.interm.intermTypedNode)->setType(TType((yyvsp[(1) - (4)].interm.intermTypedNode)->getBasicType(), (yyvsp[(1) - (4)].interm.intermTypedNode)->getPrecision(), EvqTemporary, (yyvsp[(1) - (4)].interm.intermTypedNode)->getNominalSize()));
-        else if ((yyvsp[(1) - (4)].interm.intermTypedNode)->isVector() && (yyvsp[(1) - (4)].interm.intermTypedNode)->getType().getQualifier() == EvqConst)
-            (yyval.interm.intermTypedNode)->setType(TType((yyvsp[(1) - (4)].interm.intermTypedNode)->getBasicType(), (yyvsp[(1) - (4)].interm.intermTypedNode)->getPrecision(), EvqConst));
-        else if ((yyvsp[(1) - (4)].interm.intermTypedNode)->isVector())
-            (yyval.interm.intermTypedNode)->setType(TType((yyvsp[(1) - (4)].interm.intermTypedNode)->getBasicType(), (yyvsp[(1) - (4)].interm.intermTypedNode)->getPrecision(), EvqTemporary));
-        else
-            (yyval.interm.intermTypedNode)->setType((yyvsp[(1) - (4)].interm.intermTypedNode)->getType());
+        (yyval.interm.intermTypedNode) = context->addIndexExpression((yyvsp[(1) - (4)].interm.intermTypedNode), (yyvsp[(2) - (4)].lex).line, (yyvsp[(3) - (4)].interm.intermTypedNode));
     }
     break;
 
@@ -2342,105 +2266,7 @@ yyreduce:
   case 11:
 
     {
-        if ((yyvsp[(1) - (3)].interm.intermTypedNode)->isArray()) {
-            context->error((yyvsp[(3) - (3)].lex).line, "cannot apply dot operator to an array", ".");
-            context->recover();
-        }
-
-        if ((yyvsp[(1) - (3)].interm.intermTypedNode)->isVector()) {
-            TVectorFields fields;
-            if (! context->parseVectorFields(*(yyvsp[(3) - (3)].lex).string, (yyvsp[(1) - (3)].interm.intermTypedNode)->getNominalSize(), fields, (yyvsp[(3) - (3)].lex).line)) {
-                fields.num = 1;
-                fields.offsets[0] = 0;
-                context->recover();
-            }
-
-            if ((yyvsp[(1) - (3)].interm.intermTypedNode)->getType().getQualifier() == EvqConst) { // constant folding for vector fields
-                (yyval.interm.intermTypedNode) = context->addConstVectorNode(fields, (yyvsp[(1) - (3)].interm.intermTypedNode), (yyvsp[(3) - (3)].lex).line);
-                if ((yyval.interm.intermTypedNode) == 0) {
-                    context->recover();
-                    (yyval.interm.intermTypedNode) = (yyvsp[(1) - (3)].interm.intermTypedNode);
-                }
-                else
-                    (yyval.interm.intermTypedNode)->setType(TType((yyvsp[(1) - (3)].interm.intermTypedNode)->getBasicType(), (yyvsp[(1) - (3)].interm.intermTypedNode)->getPrecision(), EvqConst, (int) (*(yyvsp[(3) - (3)].lex).string).size()));
-            } else {
-                TString vectorString = *(yyvsp[(3) - (3)].lex).string;
-                TIntermTyped* index = context->intermediate.addSwizzle(fields, (yyvsp[(3) - (3)].lex).line);
-                (yyval.interm.intermTypedNode) = context->intermediate.addIndex(EOpVectorSwizzle, (yyvsp[(1) - (3)].interm.intermTypedNode), index, (yyvsp[(2) - (3)].lex).line);
-                (yyval.interm.intermTypedNode)->setType(TType((yyvsp[(1) - (3)].interm.intermTypedNode)->getBasicType(), (yyvsp[(1) - (3)].interm.intermTypedNode)->getPrecision(), EvqTemporary, (int) vectorString.size()));
-            }
-        } else if ((yyvsp[(1) - (3)].interm.intermTypedNode)->isMatrix()) {
-            TMatrixFields fields;
-            if (! context->parseMatrixFields(*(yyvsp[(3) - (3)].lex).string, (yyvsp[(1) - (3)].interm.intermTypedNode)->getNominalSize(), fields, (yyvsp[(3) - (3)].lex).line)) {
-                fields.wholeRow = false;
-                fields.wholeCol = false;
-                fields.row = 0;
-                fields.col = 0;
-                context->recover();
-            }
-
-            if (fields.wholeRow || fields.wholeCol) {
-                context->error((yyvsp[(2) - (3)].lex).line, " non-scalar fields not implemented yet", ".");
-                context->recover();
-                ConstantUnion *unionArray = new ConstantUnion[1];
-                unionArray->setIConst(0);
-                TIntermTyped* index = context->intermediate.addConstantUnion(unionArray, TType(EbtInt, EbpUndefined, EvqConst), (yyvsp[(3) - (3)].lex).line);
-                (yyval.interm.intermTypedNode) = context->intermediate.addIndex(EOpIndexDirect, (yyvsp[(1) - (3)].interm.intermTypedNode), index, (yyvsp[(2) - (3)].lex).line);
-                (yyval.interm.intermTypedNode)->setType(TType((yyvsp[(1) - (3)].interm.intermTypedNode)->getBasicType(), (yyvsp[(1) - (3)].interm.intermTypedNode)->getPrecision(),EvqTemporary, (yyvsp[(1) - (3)].interm.intermTypedNode)->getNominalSize()));
-            } else {
-                ConstantUnion *unionArray = new ConstantUnion[1];
-                unionArray->setIConst(fields.col * (yyvsp[(1) - (3)].interm.intermTypedNode)->getNominalSize() + fields.row);
-                TIntermTyped* index = context->intermediate.addConstantUnion(unionArray, TType(EbtInt, EbpUndefined, EvqConst), (yyvsp[(3) - (3)].lex).line);
-                (yyval.interm.intermTypedNode) = context->intermediate.addIndex(EOpIndexDirect, (yyvsp[(1) - (3)].interm.intermTypedNode), index, (yyvsp[(2) - (3)].lex).line);
-                (yyval.interm.intermTypedNode)->setType(TType((yyvsp[(1) - (3)].interm.intermTypedNode)->getBasicType(), (yyvsp[(1) - (3)].interm.intermTypedNode)->getPrecision()));
-            }
-        } else if ((yyvsp[(1) - (3)].interm.intermTypedNode)->getBasicType() == EbtStruct) {
-            bool fieldFound = false;
-            const TTypeList* fields = (yyvsp[(1) - (3)].interm.intermTypedNode)->getType().getStruct();
-            if (fields == 0) {
-                context->error((yyvsp[(2) - (3)].lex).line, "structure has no fields", "Internal Error");
-                context->recover();
-                (yyval.interm.intermTypedNode) = (yyvsp[(1) - (3)].interm.intermTypedNode);
-            } else {
-                unsigned int i;
-                for (i = 0; i < fields->size(); ++i) {
-                    if ((*fields)[i].type->getFieldName() == *(yyvsp[(3) - (3)].lex).string) {
-                        fieldFound = true;
-                        break;
-                    }
-                }
-                if (fieldFound) {
-                    if ((yyvsp[(1) - (3)].interm.intermTypedNode)->getType().getQualifier() == EvqConst) {
-                        (yyval.interm.intermTypedNode) = context->addConstStruct(*(yyvsp[(3) - (3)].lex).string, (yyvsp[(1) - (3)].interm.intermTypedNode), (yyvsp[(2) - (3)].lex).line);
-                        if ((yyval.interm.intermTypedNode) == 0) {
-                            context->recover();
-                            (yyval.interm.intermTypedNode) = (yyvsp[(1) - (3)].interm.intermTypedNode);
-                        }
-                        else {
-                            (yyval.interm.intermTypedNode)->setType(*(*fields)[i].type);
-                            // change the qualifier of the return type, not of the structure field
-                            // as the structure definition is shared between various structures.
-                            (yyval.interm.intermTypedNode)->getTypePointer()->setQualifier(EvqConst);
-                        }
-                    } else {
-                        ConstantUnion *unionArray = new ConstantUnion[1];
-                        unionArray->setIConst(i);
-                        TIntermTyped* index = context->intermediate.addConstantUnion(unionArray, *(*fields)[i].type, (yyvsp[(3) - (3)].lex).line);
-                        (yyval.interm.intermTypedNode) = context->intermediate.addIndex(EOpIndexDirectStruct, (yyvsp[(1) - (3)].interm.intermTypedNode), index, (yyvsp[(2) - (3)].lex).line);
-                        (yyval.interm.intermTypedNode)->setType(*(*fields)[i].type);
-                    }
-                } else {
-                    context->error((yyvsp[(2) - (3)].lex).line, " no such field in structure", (yyvsp[(3) - (3)].lex).string->c_str());
-                    context->recover();
-                    (yyval.interm.intermTypedNode) = (yyvsp[(1) - (3)].interm.intermTypedNode);
-                }
-            }
-        } else {
-            context->error((yyvsp[(2) - (3)].lex).line, " field selection requires structure, vector, or matrix on left hand side", (yyvsp[(3) - (3)].lex).string->c_str());
-            context->recover();
-            (yyval.interm.intermTypedNode) = (yyvsp[(1) - (3)].interm.intermTypedNode);
-        }
-        // don't delete $3.string, it's from the pool
+        (yyval.interm.intermTypedNode) = context->addFieldSelectionExpression((yyvsp[(1) - (3)].interm.intermTypedNode), (yyvsp[(2) - (3)].lex).line, *(yyvsp[(3) - (3)].lex).string, (yyvsp[(3) - (3)].lex).line);
     }
     break;
 
@@ -4135,18 +3961,7 @@ yyreduce:
   case 149:
 
     {
-        if (context->reservedErrorCheck((yyvsp[(2) - (6)].lex).line, *(yyvsp[(2) - (6)].lex).string))
-            context->recover();
-
-        TType* structure = new TType((yyvsp[(5) - (6)].interm.typeList), *(yyvsp[(2) - (6)].lex).string);
-        TVariable* userTypeDef = new TVariable((yyvsp[(2) - (6)].lex).string, *structure, true);
-        if (! context->symbolTable.declare(*userTypeDef)) {
-            context->error((yyvsp[(2) - (6)].lex).line, "redefinition", (yyvsp[(2) - (6)].lex).string->c_str(), "struct");
-            context->recover();
-        }
-        (yyval.interm.type).setBasic(EbtStruct, EvqTemporary, (yyvsp[(1) - (6)].lex).line);
-        (yyval.interm.type).userDef = structure;
-        context->exitStructDeclaration();
+        (yyval.interm.type) = context->addStructure((yyvsp[(1) - (6)].lex).line, (yyvsp[(2) - (6)].lex).line, *(yyvsp[(2) - (6)].lex).string, (yyvsp[(5) - (6)].interm.typeList));
     }
     break;
 
@@ -4158,10 +3973,7 @@ yyreduce:
   case 151:
 
     {
-        TType* structure = new TType((yyvsp[(4) - (5)].interm.typeList), TString(""));
-        (yyval.interm.type).setBasic(EbtStruct, EvqTemporary, (yyvsp[(1) - (5)].lex).line);
-        (yyval.interm.type).userDef = structure;
-        context->exitStructDeclaration();
+        (yyval.interm.type) = context->addStructure((yyvsp[(1) - (5)].lex).line, 0, "", (yyvsp[(4) - (5)].interm.typeList));
     }
     break;
 
@@ -4191,37 +4003,7 @@ yyreduce:
   case 154:
 
     {
-        (yyval.interm.typeList) = (yyvsp[(2) - (3)].interm.typeList);
-
-        if (context->voidErrorCheck((yyvsp[(1) - (3)].interm.type).line, (*(yyvsp[(2) - (3)].interm.typeList))[0].type->getFieldName(), (yyvsp[(1) - (3)].interm.type))) {
-            context->recover();
-        }
-        for (unsigned int i = 0; i < (yyval.interm.typeList)->size(); ++i) {
-            //
-            // Careful not to replace already known aspects of type, like array-ness
-            //
-            TType* type = (*(yyval.interm.typeList))[i].type;
-            type->setBasicType((yyvsp[(1) - (3)].interm.type).type);
-            type->setNominalSize((yyvsp[(1) - (3)].interm.type).size);
-            type->setMatrix((yyvsp[(1) - (3)].interm.type).matrix);
-            type->setPrecision((yyvsp[(1) - (3)].interm.type).precision);
-
-            // don't allow arrays of arrays
-            if (type->isArray()) {
-                if (context->arrayTypeErrorCheck((yyvsp[(1) - (3)].interm.type).line, (yyvsp[(1) - (3)].interm.type)))
-                    context->recover();
-            }
-            if ((yyvsp[(1) - (3)].interm.type).array)
-                type->setArraySize((yyvsp[(1) - (3)].interm.type).arraySize);
-            if ((yyvsp[(1) - (3)].interm.type).userDef) {
-                type->setStruct((yyvsp[(1) - (3)].interm.type).userDef->getStruct());
-                type->setTypeName((yyvsp[(1) - (3)].interm.type).userDef->getTypeName());
-            }
-
-            if (context->structNestingErrorCheck((yyvsp[(1) - (3)].interm.type).line, *type)) {
-                context->recover();
-            }
-        }
+        (yyval.interm.typeList) = context->addStructDeclaratorList((yyvsp[(1) - (3)].interm.type), (yyvsp[(2) - (3)].interm.typeList));
     }
     break;
 
