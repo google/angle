@@ -9684,11 +9684,31 @@ GLuint __stdcall glGetUniformBlockIndex(GLuint program, const GLchar* uniformBlo
         {
             if (context->getClientVersion() < 3)
             {
-                return gl::error(GL_INVALID_OPERATION, 0);
+                return gl::error(GL_INVALID_OPERATION, GL_INVALID_INDEX);
             }
-        }
 
-        UNIMPLEMENTED();
+            gl::Program *programObject = context->getProgram(program);
+
+            if (!programObject)
+            {
+                if (context->getShader(program))
+                {
+                    return gl::error(GL_INVALID_OPERATION, GL_INVALID_INDEX);
+                }
+                else
+                {
+                    return gl::error(GL_INVALID_VALUE, GL_INVALID_INDEX);
+                }
+            }
+
+            gl::ProgramBinary *programBinary = programObject->getProgramBinary();
+            if (!programBinary)
+            {
+                return GL_INVALID_INDEX;
+            }
+
+            return programBinary->getUniformBlockIndex(uniformBlockName);
+        }
     }
     catch(std::bad_alloc&)
     {

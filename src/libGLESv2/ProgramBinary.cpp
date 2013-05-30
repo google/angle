@@ -296,6 +296,27 @@ GLuint ProgramBinary::getUniformIndex(std::string name)
     return GL_INVALID_INDEX;
 }
 
+GLuint ProgramBinary::getUniformBlockIndex(std::string name)
+{
+    unsigned int subscript = parseAndStripArrayIndex(&name);
+
+    unsigned int numUniformBlocks = mUniformBlocks.size();
+    for (unsigned int blockIndex = 0; blockIndex < numUniformBlocks; blockIndex++)
+    {
+        const UniformBlock &uniformBlock = *mUniformBlocks[blockIndex];
+        if (uniformBlock.name == name)
+        {
+            const bool arrayElementZero = (subscript == GL_INVALID_INDEX && uniformBlock.elementIndex == 0);
+            if (subscript == uniformBlock.elementIndex || arrayElementZero)
+            {
+                return blockIndex;
+            }
+        }
+    }
+
+    return GL_INVALID_INDEX;
+}
+
 template <typename T>
 bool ProgramBinary::setUniform(GLint location, GLsizei count, const T* v, GLenum targetUniformType)
 {

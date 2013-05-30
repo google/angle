@@ -78,6 +78,7 @@ class ProgramBinary : public RefCountObject
 
     GLint getUniformLocation(std::string name);
     GLuint getUniformIndex(std::string name);
+    GLuint getUniformBlockIndex(std::string name);
     bool setUniform1fv(GLint location, GLsizei count, const GLfloat *v);
     bool setUniform2fv(GLint location, GLsizei count, const GLfloat *v);
     bool setUniform3fv(GLint location, GLsizei count, const GLfloat *v);
