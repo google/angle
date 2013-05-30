@@ -37,32 +37,17 @@ egl::Display *Display::getDisplay(EGLNativeDisplayType displayId)
     {
         return displays[displayId];
     }
+    
+    // FIXME: Check if displayId is a valid display device context
 
-    egl::Display *display = NULL;
-
-    if (displayId == EGL_DEFAULT_DISPLAY)
-    {
-        display = new egl::Display(displayId, (HDC)NULL, false);
-    }
-    else if (displayId == EGL_SOFTWARE_DISPLAY_ANGLE)
-    {
-        display = new egl::Display(displayId, (HDC)NULL, true);
-    }
-    else
-    {
-        // FIXME: Check if displayId is a valid display device context
-
-        display = new egl::Display(displayId, (HDC)displayId, false);
-    }
+    egl::Display *display = new egl::Display(displayId, (HDC)displayId);
 
     displays[displayId] = display;
     return display;
 }
 
-Display::Display(EGLNativeDisplayType displayId, HDC deviceContext, bool software) : mDc(deviceContext)
+Display::Display(EGLNativeDisplayType displayId, HDC deviceContext) : mDc(deviceContext)
 {
-
-    mSoftwareDevice = software;
     mDisplayId = displayId;
     mRenderer = NULL;
 }
@@ -86,7 +71,7 @@ bool Display::initialize()
         return true;
     }
 
-    mRenderer = glCreateRenderer(this, mDc, mSoftwareDevice);
+    mRenderer = glCreateRenderer(this, mDc, mDisplayId);
     
     if (!mRenderer)
     {

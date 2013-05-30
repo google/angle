@@ -7,6 +7,7 @@
 
 // Renderer.cpp: Implements EGL dependencies for creating and destroying Renderer instances.
 
+#include <EGL/eglext.h>
 #include "libGLESv2/main.h"
 #include "libGLESv2/Program.h"
 #include "libGLESv2/renderer/Renderer.h"
@@ -15,7 +16,7 @@
 #include "libGLESv2/utilities.h"
 
 #if !defined(ANGLE_ENABLE_D3D11)
-// Enables use of the Direct3D 11 API, when available
+// Enables use of the Direct3D 11 API for a default display, when available
 #define ANGLE_ENABLE_D3D11 0
 #endif
 
@@ -171,12 +172,14 @@ ShaderBlob *Renderer::compileToBinary(gl::InfoLog &infoLog, const char *hlsl, co
 extern "C"
 {
 
-rx::Renderer *glCreateRenderer(egl::Display *display, HDC hDc, bool softwareDevice)
+rx::Renderer *glCreateRenderer(egl::Display *display, HDC hDc, EGLNativeDisplayType displayId)
 {
     rx::Renderer *renderer = NULL;
     EGLint status = EGL_BAD_ALLOC;
     
-    if (ANGLE_ENABLE_D3D11)
+    if (ANGLE_ENABLE_D3D11 ||
+        displayId == EGL_D3D11_ELSE_D3D9_DISPLAY_ANGLE ||
+        displayId == EGL_D3D11_ONLY_DISPLAY_ANGLE)
     {
         renderer = new rx::Renderer11(display, hDc);
     
@@ -189,11 +192,16 @@ rx::Renderer *glCreateRenderer(egl::Display *display, HDC hDc, bool softwareDevi
         {
             return renderer;
         }
+        else if (displayId == EGL_D3D11_ONLY_DISPLAY_ANGLE)
+        {
+            return NULL;
+        }
 
         // Failed to create a D3D11 renderer, try creating a D3D9 renderer
         delete renderer;
     }
 
+    bool softwareDevice = (displayId == EGL_SOFTWARE_DISPLAY_ANGLE);
     renderer = new rx::Renderer9(display, hDc, softwareDevice);
     
     if (renderer)
