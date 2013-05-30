@@ -3494,43 +3494,15 @@ TextureStorage *Renderer11::createTextureStorage2DArray(int levels, GLenum inter
     return new TextureStorage11_2DArray(this, levels, internalformat, usage, width, height, depth);
 }
 
-static inline unsigned int getFastPixelCopySize(DXGI_FORMAT sourceFormat, GLenum destFormat, GLenum destType)
+static inline unsigned int getFastPixelCopySize(DXGI_FORMAT sourceFormat, GLenum destFormat, GLenum destType, GLuint clientVersion)
 {
-    if (sourceFormat == DXGI_FORMAT_A8_UNORM &&
-        destFormat   == GL_ALPHA &&
-        destType     == GL_UNSIGNED_BYTE)
+    GLint sourceInternalFormat = d3d11_gl::GetInternalFormat(sourceFormat);
+    GLenum sourceGLFormat = gl::GetFormat(sourceInternalFormat, clientVersion);
+    GLenum sourceGLType = gl::GetType(sourceInternalFormat, clientVersion);
+
+    if (sourceGLFormat == destFormat && sourceGLType == destType)
     {
-        return 1;
-    }
-    else if (sourceFormat == DXGI_FORMAT_R8G8B8A8_UNORM &&
-             destFormat   == GL_RGBA &&
-             destType     == GL_UNSIGNED_BYTE)
-    {
-        return 4;
-    }
-    else if (sourceFormat == DXGI_FORMAT_B8G8R8A8_UNORM &&
-             destFormat   == GL_BGRA_EXT &&
-             destType     == GL_UNSIGNED_BYTE)
-    {
-        return 4;
-    }
-    else if (sourceFormat == DXGI_FORMAT_R16G16B16A16_FLOAT &&
-             destFormat   == GL_RGBA &&
-             destType     == GL_HALF_FLOAT_OES)
-    {
-        return 8;
-    }
-    else if (sourceFormat == DXGI_FORMAT_R32G32B32_FLOAT &&
-             destFormat   == GL_RGB &&
-             destType     == GL_FLOAT)
-    {
-        return 12;
-    }
-    else if (sourceFormat == DXGI_FORMAT_R32G32B32A32_FLOAT &&
-             destFormat   == GL_RGBA &&
-             destType     == GL_FLOAT)
-    {
-        return 16;
+        return gl::GetPixelBytes(sourceInternalFormat, clientVersion);
     }
     else
     {
@@ -3855,7 +3827,7 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
         inputPitch = static_cast<int>(mapping.RowPitch);
     }
 
-    unsigned int fastPixelSize = getFastPixelCopySize(textureDesc.Format, format, type);
+    unsigned int fastPixelSize = getFastPixelCopySize(textureDesc.Format, format, type, getCurrentClientVersion());
     if (fastPixelSize != 0)
     {
         unsigned char *dest = static_cast<unsigned char*>(pixels);
