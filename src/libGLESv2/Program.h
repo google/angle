@@ -92,6 +92,9 @@ class Program
     GLint getActiveUniformCount();
     GLint getActiveUniformMaxLength();
 
+    GLint getActiveUniformBlockCount();
+    GLint getActiveUniformBlockMaxLength();
+
     void bindUniformBlock(GLuint uniformBlockIndex, GLuint uniformBlockBinding);
     GLuint getUniformBlockBinding(GLuint uniformBlockIndex) const;
 

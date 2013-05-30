@@ -3984,6 +3984,16 @@ void __stdcall glGetProgramiv(GLuint program, GLenum pname, GLint* params)
                 return gl::error(GL_INVALID_VALUE);
             }
 
+            if (context->getClientVersion() < 3)
+            {
+                switch (pname)
+                {
+                  case GL_ACTIVE_UNIFORM_BLOCKS:
+                  case GL_ACTIVE_UNIFORM_BLOCK_MAX_NAME_LENGTH:
+                    return gl::error(GL_INVALID_ENUM);
+                }
+            }
+
             switch (pname)
             {
               case GL_DELETE_STATUS:
@@ -4016,6 +4026,12 @@ void __stdcall glGetProgramiv(GLuint program, GLenum pname, GLint* params)
               case GL_PROGRAM_BINARY_LENGTH_OES:
                 *params = programObject->getProgramBinaryLength();
                 return;
+              case GL_ACTIVE_UNIFORM_BLOCKS:
+                *params = programObject->getActiveUniformBlockCount();
+                return;
+              case GL_ACTIVE_UNIFORM_BLOCK_MAX_NAME_LENGTH:
+                *params = programObject->getActiveUniformBlockMaxLength();
+                break;
               default:
                 return gl::error(GL_INVALID_ENUM);
             }

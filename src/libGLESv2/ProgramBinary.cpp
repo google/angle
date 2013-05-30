@@ -2421,6 +2421,28 @@ GLuint ProgramBinary::getActiveUniformBlockCount() const
     return mUniformBlocks.size();
 }
 
+GLuint ProgramBinary::getActiveUniformBlockMaxLength() const
+{
+    unsigned int maxLength = 0;
+
+    unsigned int numUniformBlocks = mUniformBlocks.size();
+    for (unsigned int uniformBlockIndex = 0; uniformBlockIndex < numUniformBlocks; uniformBlockIndex++)
+    {
+        const UniformBlock &uniformBlock = *mUniformBlocks[uniformBlockIndex];
+        if (!uniformBlock.name.empty())
+        {
+            const unsigned int length = uniformBlock.name.length() + 1;
+
+            // Counting in "[0]".
+            const unsigned int arrayLength = (uniformBlock.isArrayElement() ? 3 : 0);
+
+            maxLength = std::max(length + arrayLength, maxLength);
+        }
+    }
+
+    return maxLength;
+}
+
 void ProgramBinary::validate(InfoLog &infoLog)
 {
     applyUniforms();

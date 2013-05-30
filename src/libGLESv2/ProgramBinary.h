@@ -127,6 +127,7 @@ class ProgramBinary : public RefCountObject
     void getActiveUniformBlockName(GLuint uniformBlockIndex, GLsizei bufSize, GLsizei *length, GLchar *uniformBlockName) const;
     void getActiveUniformBlockiv(GLuint uniformBlockIndex, GLenum pname, GLint *params) const;
     GLuint getActiveUniformBlockCount() const;
+    GLuint getActiveUniformBlockMaxLength() const;
 
     void validate(InfoLog &infoLog);
     bool validateSamplers(InfoLog *infoLog);

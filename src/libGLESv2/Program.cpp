@@ -525,6 +525,32 @@ bool Program::isValidated() const
     }
 }
 
+GLint Program::getActiveUniformBlockCount()
+{
+    ProgramBinary *programBinary = getProgramBinary();
+    if (programBinary)
+    {
+        return static_cast<GLint>(programBinary->getActiveUniformBlockCount());
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+GLint Program::getActiveUniformBlockMaxLength()
+{
+    ProgramBinary *programBinary = getProgramBinary();
+    if (programBinary)
+    {
+        return static_cast<GLint>(programBinary->getActiveUniformBlockMaxLength());
+    }
+    else
+    {
+        return 0;
+    }
+}
+
 void Program::bindUniformBlock(GLuint uniformBlockIndex, GLuint uniformBlockBinding)
 {
     mUniformBlockBindings[uniformBlockIndex] = uniformBlockBinding;
