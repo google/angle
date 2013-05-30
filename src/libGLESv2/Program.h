@@ -92,6 +92,9 @@ class Program
     GLint getActiveUniformCount();
     GLint getActiveUniformMaxLength();
 
+    void bindUniformBlock(GLuint uniformBlockIndex, GLuint uniformBlockBinding);
+    GLuint getUniformBlockBinding(GLuint uniformBlockIndex) const;
+
     void addRef();
     void release();
     unsigned int getRefCount() const;
@@ -107,11 +110,14 @@ class Program
     DISALLOW_COPY_AND_ASSIGN(Program);
 
     void unlink(bool destroy = false);
+    void resetUniformBlockBindings();
 
     FragmentShader *mFragmentShader;
     VertexShader *mVertexShader;
 
     AttributeBindings mAttributeBindings;
+
+    GLuint mUniformBlockBindings[IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS];
 
     BindingPointer<ProgramBinary> mProgramBinary;
     bool mLinked;

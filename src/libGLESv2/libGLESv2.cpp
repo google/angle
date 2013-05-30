@@ -9783,9 +9783,36 @@ void __stdcall glUniformBlockBinding(GLuint program, GLuint uniformBlockIndex, G
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
-        }
 
-        UNIMPLEMENTED();
+            if (uniformBlockBinding >= context->getMaximumCombinedUniformBufferBindings())
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            gl::Program *programObject = context->getProgram(program);
+
+            if (!programObject)
+            {
+                if (context->getShader(program))
+                {
+                    return gl::error(GL_INVALID_OPERATION);
+                }
+                else
+                {
+                    return gl::error(GL_INVALID_VALUE);
+                }
+            }
+
+            gl::ProgramBinary *programBinary = programObject->getProgramBinary();
+
+            // if never linked, there won't be any uniform blocks
+            if (!programBinary || uniformBlockIndex >= programBinary->getActiveUniformBlockCount())
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            programObject->bindUniformBlock(uniformBlockIndex, uniformBlockBinding);
+        }
     }
     catch(std::bad_alloc&)
     {

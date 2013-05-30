@@ -2356,6 +2356,11 @@ GLint ProgramBinary::getActiveUniformi(GLuint index, GLenum pname) const
     return 0;
 }
 
+GLuint ProgramBinary::getActiveUniformBlockCount() const
+{
+    return mUniformBlocks.size();
+}
+
 void ProgramBinary::validate(InfoLog &infoLog)
 {
     applyUniforms();

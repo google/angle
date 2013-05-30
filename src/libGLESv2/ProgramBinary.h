@@ -124,6 +124,8 @@ class ProgramBinary : public RefCountObject
     GLint getActiveUniformMaxLength() const;
     GLint getActiveUniformi(GLuint index, GLenum pname) const;
 
+    GLuint getActiveUniformBlockCount() const;
+
     void validate(InfoLog &infoLog);
     bool validateSamplers(InfoLog *infoLog);
     bool isValidated() const;
