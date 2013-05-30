@@ -700,7 +700,7 @@ bool validateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
-    if (texture->isImmutable())
+    if (texture->isImmutable() && !isSubImage)
     {
         return gl::error(GL_INVALID_OPERATION, false);
     }
