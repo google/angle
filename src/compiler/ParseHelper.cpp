@@ -2081,6 +2081,87 @@ TIntermTyped* TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
     return indexedExpression;
 }
 
+TLayoutQualifierId TParseContext::addLayoutQualifierId(const TString &qualifierType, TSourceLoc qualifierTypeLine)
+{
+    TLayoutQualifierId qualifierId;
+
+    qualifierId.type = ElqError;
+    qualifierId.location = -1;
+
+    if (qualifierType == "shared")
+    {
+        qualifierId.type = ElqShared;
+    }
+    else if (qualifierType == "packed")
+    {
+        qualifierId.type = ElqPacked;
+    }
+    else if (qualifierType == "std140")
+    {
+        qualifierId.type = ElqStd140;
+    }
+    else if (qualifierType == "row_major")
+    {
+        qualifierId.type = ElqRowMajor;
+    }
+    else if (qualifierType == "column_major")
+    {
+        qualifierId.type = ElqColumnMajor;
+    }
+    else if (qualifierType == "location")
+    {
+        error(qualifierTypeLine, "invalid layout qualifier", qualifierType.c_str(), "location requires an argument");
+        recover();
+    }
+    else
+    {
+        error(qualifierTypeLine, "invalid layout qualifier", qualifierType.c_str());
+        recover();
+    }
+
+    return qualifierId;
+}
+
+TLayoutQualifierId TParseContext::addLayoutQualifierId(const TString &qualifierType, TSourceLoc qualifierTypeLine, const TString &intValueString, int intValue, TSourceLoc intValueLine)
+{
+    TLayoutQualifierId qualifierId;
+
+    qualifierId.type = ElqError;
+    qualifierId.location = -1;
+
+    if (qualifierType != "location")
+    {
+        error(qualifierTypeLine, "invalid layout qualifier", qualifierType.c_str(), "only location may have arguments");
+        recover();
+    }
+    else
+    {
+        if (intValue < 0)
+        {
+            error(intValueLine, "out of range", intValueString.c_str(), "value must be non-negative and < MAX_DRAW_BUFFERS");
+            recover();
+        }
+        else
+        {
+            qualifierId.location = intValue;
+        }
+
+        // TODO: must check that location is < MAX_DRAW_BUFFERS
+    }
+
+    return qualifierId;
+}
+
+TLayoutQualifier* TParseContext::makeLayoutQualifierFromId(TLayoutQualifierId layoutQualifierId)
+{
+    return NULL;
+}
+
+TLayoutQualifier* TParseContext::extendLayoutQualifier(TLayoutQualifier *layoutQualifier, TLayoutQualifierId layoutQualifierId)
+{
+    return NULL;
+}
+
 TTypeList *TParseContext::addStructDeclaratorList(const TPublicType& typeSpecifier, TTypeList *typeList)
 {
     if (voidErrorCheck(typeSpecifier.line, (*typeList)[0].type->getFieldName(), typeSpecifier)) {

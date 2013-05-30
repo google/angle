@@ -131,6 +131,26 @@ enum TQualifier
     EvqLast
 };
 
+// Layout qualifiers
+enum TLayoutQualifierType
+{
+    ElqLocation,
+    ElqShared,
+    ElqPacked,
+    ElqStd140,
+    ElqRowMajor,
+    ElqColumnMajor,
+    ElqError
+};
+
+struct TLayoutQualifierId
+{
+    TLayoutQualifierType type;
+    int location;
+};
+
+typedef std::vector<TLayoutQualifierId> TLayoutQualifier;
+
 //
 // This is just for debug print out, carried along with the definitions above.
 //

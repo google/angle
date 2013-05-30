@@ -167,6 +167,8 @@ O           [0-7]
 
 "struct"       { context->lexAfterType = true; return(STRUCT); }
 
+"layout"  { return ES2_ident_ES3_keyword(context, LAYOUT); }
+
     /* Reserved keywords for GLSL ES 3.00 that are not reserved for GLSL ES 1.00 */
 "coherent"          |
 "restrict"          |
@@ -233,6 +235,17 @@ O           [0-7]
 	return reserved_word(yyscanner);
 }
 
+    /* Reserved keywords in GLSL ES 1.00 that are not reserved in GLSL ES 3.00 */
+"packed"  {
+    if (context->shaderVersion >= 300)
+    {
+        yylval->lex.string = NewPoolTString(yytext);
+        return check_type(yyscanner);
+    }
+
+    return reserved_word(yyscanner);
+}
+
     /* Reserved keywords */
 "asm"          |
 
@@ -242,7 +255,6 @@ O           [0-7]
 "typedef"      |
 "template"     |
 "this"         |
-"packed"       |
 
 "goto"         |
 

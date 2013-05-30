@@ -139,6 +139,11 @@ struct TParseContext {
     TIntermAggregate* addInterfaceBlock(const TPublicType& typeQualifier, TSourceLoc nameLine, const TString& blockName, TTypeList* typeList, 
                                         const TString& instanceName, TSourceLoc instanceLine, TIntermTyped* arrayIndex, TSourceLoc arrayIndexLine);
 
+    TLayoutQualifierId addLayoutQualifierId(const TString &qualifierType, TSourceLoc qualifierTypeLine);
+    TLayoutQualifierId addLayoutQualifierId(const TString &qualifierType, TSourceLoc qualifierTypeLine, const TString &intValueString, int intValue, TSourceLoc intValueLine);
+    TLayoutQualifier* makeLayoutQualifierFromId(TLayoutQualifierId layoutQualifierId);
+    TLayoutQualifier* extendLayoutQualifier(TLayoutQualifier *layoutQualifier, TLayoutQualifierId layoutQualifierId);
+
     // Performs an error check for embedded struct declarations.
     // Returns true if an error was raised due to the declaration of
     // this struct.

@@ -337,6 +337,7 @@ protected:
 struct TPublicType
 {
     TBasicType type;
+    TLayoutQualifier* layoutQualifier;
     TQualifier qualifier;
     TPrecision precision;
     int primarySize;          // size of vector or cols of matrix
@@ -349,6 +350,7 @@ struct TPublicType
     void setBasic(TBasicType bt, TQualifier q, int ln = 0)
     {
         type = bt;
+        layoutQualifier = NULL;
         qualifier = q;
         precision = EbpUndefined;
         primarySize = 1;

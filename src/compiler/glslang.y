@@ -72,6 +72,8 @@ WHICH GENERATES THE GLSL ES PARSER (glslang_tab.cpp AND glslang_tab.h).
         union {
             TPublicType type;
             TPrecision precision;
+            TLayoutQualifierId layoutQualifierId;
+            TLayoutQualifier* layoutQualifier;
             TQualifier qualifier;
             TFunction* function;
             TParameter param;
@@ -132,6 +134,7 @@ extern void yyerror(TParseContext* context, const char* reason);
 %token <lex> STRUCT VOID_TYPE WHILE
 %token <lex> SAMPLER2D SAMPLERCUBE SAMPLER_EXTERNAL_OES SAMPLER2DRECT
 %token <lex> SAMPLER3D SAMPLER3DRECT SAMPLER2DSHADOW
+%token <lex> LAYOUT
 
 %token <lex> IDENTIFIER TYPE_NAME FLOATCONSTANT INTCONSTANT UINTCONSTANT BOOLCONSTANT
 %token <lex> FIELD_SELECTION
@@ -167,6 +170,8 @@ extern void yyerror(TParseContext* context, const char* reason);
 
 %type <interm> parameter_declaration parameter_declarator parameter_type_specifier
 %type <interm.qualifier> parameter_qualifier parameter_type_qualifier 
+%type <interm.layoutQualifier> layout_qualifier layout_qualifier_id_list
+%type <interm.layoutQualifierId> layout_qualifier_id
 
 %type <interm.precision> precision_qualifier
 %type <interm.type> type_qualifier fully_specified_type type_specifier storage_qualifier interpolation_qualifier
@@ -1369,6 +1374,14 @@ type_qualifier
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtVoid, qual, $1.line);
     }
+    | layout_qualifier {
+        $$.qualifier = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
+        $$.layoutQualifier = $1;
+    }
+    | layout_qualifier storage_qualifier {
+        $$.setBasic(EbtVoid, $2.qualifier, $2.line);
+        $$.layoutQualifier = $1;
+    }
     ;
 
 storage_qualifier
@@ -1430,6 +1443,34 @@ precision_qualifier
     }
     | LOW_PRECISION  {
         $$ = EbpLow;
+    }
+    ;
+
+layout_qualifier
+    : LAYOUT LEFT_PAREN layout_qualifier_id_list RIGHT_PAREN {
+        ES3_ONLY("layout", $1.line, "qualifier");
+        $$ = $3;
+    }
+    ;
+
+layout_qualifier_id_list
+    : layout_qualifier_id {
+        $$ = context->makeLayoutQualifierFromId($1);
+    }
+    | layout_qualifier_id_list COMMA layout_qualifier_id {
+        $$ = context->extendLayoutQualifier($1, $3);
+    }
+    ;
+
+layout_qualifier_id
+    : IDENTIFIER {
+        $$ = context->addLayoutQualifierId(*$1.string, $1.line);
+    }
+    | IDENTIFIER EQUAL INTCONSTANT {
+        $$ = context->addLayoutQualifierId(*$1.string, $1.line, *$3.string, $3.i, $3.line);
+    }
+    | IDENTIFIER EQUAL UINTCONSTANT {
+        $$ = context->addLayoutQualifierId(*$1.string, $1.line, *$3.string, $3.i, $3.line);
     }
     ;
 
