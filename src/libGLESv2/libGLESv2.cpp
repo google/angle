@@ -3201,6 +3201,23 @@ void __stdcall glGenerateMipmap(GLenum target)
                     break;
                 }
 
+                case GL_TEXTURE_2D_ARRAY:
+                  {
+                      if (context->getClientVersion() < 3)
+                      {
+                          return gl::error(GL_INVALID_ENUM);
+                      }
+
+                      gl::Texture2DArray *tex2darr = context->getTexture2DArray();
+                      if (tex2darr->isCompressed(0))
+                      {
+                          return gl::error(GL_INVALID_OPERATION);
+                      }
+
+                      tex2darr->generateMipmaps();
+                      break;
+                  }
+
               default:
                 return gl::error(GL_INVALID_ENUM);
             }

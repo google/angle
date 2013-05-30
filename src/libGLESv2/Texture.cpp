@@ -2128,7 +2128,35 @@ void Texture2DArray::storage(GLsizei levels, GLenum internalformat, GLsizei widt
 
 void Texture2DArray::generateMipmaps()
 {
-    UNIMPLEMENTED();
+    // Purge array levels 1 through q and reset them to represent the generated mipmap levels.
+    int q = log2(std::max(getWidth(0), getHeight(0)));
+    for (int i = 1; i <= q; i++)
+    {
+        redefineImage(i, getInternalFormat(0), std::max(getWidth(0) >> i, 1), std::max(getHeight(0) >> i, 1), getDepth(0));
+    }
+
+    if (mTexStorage && mTexStorage->isRenderTarget())
+    {
+        for (int level = 1; level <= q; level++)
+        {
+            mTexStorage->generateMipmap(level);
+
+            for (int layer = 0; layer < mLayerCounts[level]; layer++)
+            {
+                mImageArray[level][layer]->markClean();
+            }
+        }
+    }
+    else
+    {
+        for (int level = 1; level <= q; level++)
+        {
+            for (int layer = 0; layer < mLayerCounts[level]; layer++)
+            {
+                mRenderer->generateMipmap(mImageArray[level][layer], mImageArray[level - 1][layer]);
+            }
+        }
+    }
 }
 
 void Texture2DArray::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source)

@@ -987,8 +987,22 @@ RenderTarget *TextureStorage11_2DArray::getRenderTargetLayer(int mipLevel, int l
             ID3D11Device *device = mRenderer->getDevice();
             HRESULT result;
 
-            // TODO, what kind of SRV is expected here?
-            ID3D11ShaderResourceView *srv = NULL;
+            D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+            srvDesc.Format = mShaderResourceFormat;
+            srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+            srvDesc.Texture2DArray.MostDetailedMip = mipLevel;
+            srvDesc.Texture2DArray.MipLevels = 1;
+            srvDesc.Texture2DArray.FirstArraySlice = layer;
+            srvDesc.Texture2DArray.ArraySize = 1;
+
+            ID3D11ShaderResourceView *srv;
+            result = device->CreateShaderResourceView(mTexture, &srvDesc, &srv);
+
+            if (result == E_OUTOFMEMORY)
+            {
+                return gl::error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
+            }
+            ASSERT(SUCCEEDED(result));
 
             if (mRenderTargetFormat != DXGI_FORMAT_UNKNOWN)
             {
@@ -1033,7 +1047,13 @@ RenderTarget *TextureStorage11_2DArray::getRenderTargetLayer(int mipLevel, int l
 
 void TextureStorage11_2DArray::generateMipmap(int level)
 {
-    UNIMPLEMENTED();
+    for (unsigned int layer = 0; layer < mTextureDepth; layer++)
+    {
+        RenderTarget11 *source = RenderTarget11::makeRenderTarget11(getRenderTargetLayer(level - 1, layer));
+        RenderTarget11 *dest = RenderTarget11::makeRenderTarget11(getRenderTargetLayer(level, layer));
+
+        generateMipmapLayer(source, dest);
+    }
 }
 
 }
