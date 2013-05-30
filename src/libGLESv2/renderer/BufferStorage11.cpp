@@ -360,6 +360,17 @@ void DirectBufferStorage11::fillBufferDesc(D3D11_BUFFER_DESC* bufferDesc, unsign
         bufferDesc->CPUAccessFlags = 0;
         break;
 
+      case GL_UNIFORM_BUFFER:
+        bufferDesc->Usage = D3D11_USAGE_DYNAMIC;
+        bufferDesc->BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+        bufferDesc->CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+        // Constant buffers must be of a limited size, and aligned to 16 byte boundaries
+        // For our purposes we ignore any buffer data past the maximum constant buffer size
+        bufferDesc->ByteWidth = roundUp(bufferDesc->ByteWidth, 16u);
+        bufferDesc->ByteWidth = std::min(bufferDesc->ByteWidth, mRenderer->getMaxUniformBufferSize());
+        break;
+
       default:
         UNREACHABLE();
         break;
