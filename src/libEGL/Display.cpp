@@ -509,6 +509,9 @@ void Display::initExtensionString()
         mExtensionString += "EGL_NV_post_sub_buffer";
     }
 
+    // TODO: complete support for the EGL_KHR_create_context extension
+    mExtensionString += "EGL_KHR_create_context";
+
     std::string::size_type end = mExtensionString.find_last_not_of(' ');
     if (end != std::string::npos)
     {
