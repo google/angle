@@ -35,6 +35,27 @@ std::string str(int i)
     return buffer;
 }
 
+namespace 
+{
+
+unsigned int parseAndStripArrayIndex(std::string* name)
+{
+    unsigned int subscript = GL_INVALID_INDEX;
+
+    // Strip any trailing array operator and retrieve the subscript
+    size_t open = name->find_last_of('[');
+    size_t close = name->find_last_of(']');
+    if (open != std::string::npos && close == name->length() - 1)
+    {
+        subscript = atoi(name->substr(open + 1).c_str());
+        name->erase(open);
+    }
+
+    return subscript;
+}
+
+}
+
 UniformLocation::UniformLocation(const std::string &name, unsigned int element, unsigned int index) 
     : name(name), element(element), index(index)
 {
@@ -223,16 +244,7 @@ TextureType ProgramBinary::getSamplerTextureType(SamplerType type, unsigned int 
 
 GLint ProgramBinary::getUniformLocation(std::string name)
 {
-    unsigned int subscript = GL_INVALID_INDEX;
-
-    // Strip any trailing array operator and retrieve the subscript
-    size_t open = name.find_last_of('[');
-    size_t close = name.find_last_of(']');
-    if (open != std::string::npos && close == name.length() - 1)
-    {
-        subscript = atoi(name.substr(open + 1).c_str());
-        name.erase(open);
-    }
+    unsigned int subscript = parseAndStripArrayIndex(&name);
 
     unsigned int numUniforms = mUniformIndex.size();
     for (unsigned int location = 0; location < numUniforms; location++)
@@ -255,16 +267,7 @@ GLint ProgramBinary::getUniformLocation(std::string name)
 
 GLuint ProgramBinary::getUniformIndex(std::string name)
 {
-    unsigned int subscript = GL_INVALID_INDEX;
-
-    // Strip any trailing array operator and retrieve the subscript
-    size_t open = name.find_last_of('[');
-    size_t close = name.find_last_of(']');
-    if (open != std::string::npos && close == name.length() - 1)
-    {
-        subscript = atoi(name.substr(open + 1).c_str());
-        name.erase(open);
-    }
+    unsigned int subscript = parseAndStripArrayIndex(&name);
 
     // The app is not allowed to specify array indices other than 0 for arrays of basic types
     if (subscript != 0 && subscript != GL_INVALID_INDEX)
