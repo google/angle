@@ -2362,6 +2362,30 @@ bool ProgramBinary::linkUniformBlocks(InfoLog &infoLog, const sh::ActiveInterfac
     return true;
 }
 
+void ProgramBinary::defineUniformBlockMembers(const sh::ActiveUniforms &uniforms, const std::string &prefix, int blockIndex, BlockInfoItr *blockInfoItr, std::vector<unsigned int> *blockUniformIndexes)
+{
+    for (unsigned int uniformIndex = 0; uniformIndex < uniforms.size(); uniformIndex++)
+    {
+        const sh::Uniform &uniform = uniforms[uniformIndex];
+
+        if (!uniform.fields.empty())
+        {
+            defineUniformBlockMembers(uniform.fields, uniform.name, blockIndex, blockInfoItr, blockUniformIndexes);
+        }
+        else
+        {
+            const std::string &uniformName = (prefix.empty() ? uniform.name : prefix + "." + uniform.name);
+            Uniform *newUniform = new Uniform(uniform.type, uniform.precision, uniformName, uniform.arraySize,
+                                              blockIndex, **blockInfoItr);
+
+            // add to uniform list, but not index, since uniform block uniforms have no location
+            blockUniformIndexes->push_back(mUniforms.size());
+            mUniforms.push_back(newUniform);
+            (*blockInfoItr)++;
+        }
+    }
+}
+
 bool ProgramBinary::defineUniformBlock(InfoLog &infoLog, GLenum shader, const sh::InterfaceBlock &interfaceBlock)
 {
     // create uniform block entries if they do not exist
@@ -2371,16 +2395,8 @@ bool ProgramBinary::defineUniformBlock(InfoLog &infoLog, GLenum shader, const sh
         const unsigned int blockIndex = mUniformBlocks.size();
 
         // define member uniforms
-        for (unsigned int activeUniformIndex = 0; activeUniformIndex < interfaceBlock.activeUniforms.size(); activeUniformIndex++)
-        {
-            const sh::Uniform &constant = interfaceBlock.activeUniforms[activeUniformIndex];
-            Uniform *uniform = new Uniform(constant.type, constant.precision, constant.name, constant.arraySize,
-                                           blockIndex, interfaceBlock.blockInfo[activeUniformIndex]);
-
-            // add to uniform list, but not index, since uniform block uniforms have no location
-            blockUniformIndexes.push_back(mUniforms.size());
-            mUniforms.push_back(uniform);
-        }
+        BlockInfoItr blockInfoItr = interfaceBlock.blockInfo.cbegin();
+        defineUniformBlockMembers(interfaceBlock.activeUniforms, "", blockIndex, &blockInfoItr, &blockUniformIndexes);
 
         // create all the uniform blocks
         if (interfaceBlock.arraySize > 0)

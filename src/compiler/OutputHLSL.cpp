@@ -194,6 +194,24 @@ TString OutputHLSL::interfaceBlockInstanceString(const TType& interfaceBlockType
     }
 }
 
+TString OutputHLSL::interfaceBlockMemberTypeString(const TType &memberType)
+{
+    // TODO: layout support
+
+    if (memberType.isMatrix())
+    {
+        return " row_major " + typeString(memberType);
+    }
+    else if (memberType.getBasicType() == EbtStruct)
+    {
+        return "rm" + typeString(memberType);
+    }
+    else
+    {
+        return typeString(memberType);
+    }
+}
+
 TString OutputHLSL::interfaceBlockMemberString(const TTypeList &typeList)
 {
     TString hlsl;
@@ -203,7 +221,8 @@ TString OutputHLSL::interfaceBlockMemberString(const TTypeList &typeList)
     for (unsigned int typeIndex = 0; typeIndex < typeList.size(); typeIndex++)
     {
         const TType &memberType = *typeList[typeIndex].type;
-        hlsl += "    " + typeString(memberType) + " " + decorate(memberType.getFieldName()) + arrayString(memberType) + ";\n";
+        hlsl += "    " + interfaceBlockMemberTypeString(memberType) +
+                " " + decorate(memberType.getFieldName()) + arrayString(memberType) + ";\n";
     }
 
     return hlsl;
@@ -305,7 +324,7 @@ void OutputHLSL::header()
         mInterfaceBlockRegister += std::max(1u, interfaceBlock.arraySize);
 
         // TODO: handle other block layouts
-        interfaceBlock.setPackedBlockLayout();
+        interfaceBlock.setBlockLayout(BLOCKLAYOUT_SHARED);
         mActiveInterfaceBlocks.push_back(interfaceBlock);
 
         if (interfaceBlockType.hasInstanceName())
@@ -2920,8 +2939,7 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
         mStructNames.insert(decorate(name));
 
         TString structure;
-        structure += "struct " + decorate(name) + "\n"
-                     "{\n";
+        structure += "{\n";
 
         const TTypeList &fields = *type.getStruct();
 
@@ -2936,7 +2954,14 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
 
         if (std::find(mStructDeclarations.begin(), mStructDeclarations.end(), structure) == mStructDeclarations.end())
         {
-            mStructDeclarations.push_back(structure);
+            TString columnMajorString = "struct " + decorate(name) + "\n" + structure;
+            TString rowMajorString = "#pragma pack_matrix(row_major)\n"
+                                     "struct rm" + decorate(name) + "\n" +
+                                     structure +
+                                     "#pragma pack_matrix(column_major)\n";
+
+            mStructDeclarations.push_back(columnMajorString);
+            mStructDeclarations.push_back(rowMajorString);
         }
 
         for (unsigned int i = 0; i < fields.size(); i++)

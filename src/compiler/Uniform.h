@@ -45,6 +45,15 @@ struct BlockMemberInfo
     static const BlockMemberInfo defaultBlockInfo;
 };
 
+typedef std::vector<BlockMemberInfo> BlockMemberInfoArray;
+
+enum BlockLayoutType
+{
+    BLOCKLAYOUT_STANDARD,
+    BLOCKLAYOUT_PACKED,
+    BLOCKLAYOUT_SHARED
+};
+
 struct InterfaceBlock
 {
     InterfaceBlock(const char *name, unsigned int arraySize, unsigned int registerIndex);
@@ -54,12 +63,17 @@ struct InterfaceBlock
     ActiveUniforms activeUniforms;
     size_t dataSize;
     std::vector<BlockMemberInfo> blockInfo;
+    BlockLayoutType layout;
 
     unsigned int registerIndex;
 
-    void setSharedBlockLayout();
-    void setPackedBlockLayout();
-    void setStandardBlockLayout();
+    void setBlockLayout(BlockLayoutType newLayout);
+
+  private:
+    void getBlockLayoutInfo(const sh::ActiveUniforms &fields, unsigned int *currentOffset);
+    bool getBlockLayoutInfo(const sh::Uniform &uniform, unsigned int *currentOffset, int *arrayStrideOut, int *matrixStrideOut);
+    void getD3DLayoutInfo(const sh::Uniform &uniform, unsigned int *currentOffset, int *arrayStrideOut, int *matrixStrideOut);
+    void getStandardLayoutInfo(const sh::Uniform &uniform, unsigned int *currentOffset, int *arrayStrideOut, int *matrixStrideOut);
 };
 
 typedef std::vector<InterfaceBlock> ActiveInterfaceBlocks;

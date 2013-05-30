@@ -178,6 +178,7 @@ class OutputHLSL : public TIntermTraverser
     TString decoratePrivate(const TString &privateText);
     TString interfaceBlockStructName(const TType &interfaceBlockType);
     TString interfaceBlockInstanceString(const TType& interfaceBlockType, unsigned int arrayIndex);
+    TString interfaceBlockMemberTypeString(const TType &memberType);
     TString interfaceBlockMemberString(const TTypeList &typeList);
     TString interfaceBlockStructString(const TType &interfaceBlockType);
     TString interfaceBlockString(const TType &interfaceBlockType, unsigned int registerIndex, unsigned int arrayIndex);
