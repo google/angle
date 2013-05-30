@@ -1178,6 +1178,12 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
         vertexHLSL += "(input." + decorateAttribute(attribute->name) + ");\n";
     }
 
+    if (vertexHLSL.find("dx_initConstantBuffers") != std::string::npos)
+    {
+        vertexHLSL += "\n"
+                      "    dx_initConstantBuffers();\n";
+    }
+
     if (shaderModel >= 4)
     {
         vertexHLSL += "\n"
@@ -1419,6 +1425,12 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
             }
         }
         else UNREACHABLE();
+    }
+
+    if (pixelHLSL.find("dx_initConstantBuffers") != std::string::npos)
+    {
+        pixelHLSL += "\n"
+                     "    dx_initConstantBuffers();\n";
     }
 
     pixelHLSL += "\n"

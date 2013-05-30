@@ -168,6 +168,81 @@ TString OutputHLSL::interfaceBlockUniformName(const TType &interfaceBlockType, c
     }
 }
 
+TString OutputHLSL::decoratePrivate(const TString &privateText)
+{
+    return "dx_" + privateText;
+}
+
+TString OutputHLSL::interfaceBlockStructName(const TType &interfaceBlockType)
+{
+    return decoratePrivate(interfaceBlockType.getTypeName()) + "_type";
+}
+
+TString OutputHLSL::interfaceBlockInstanceString(const TType& interfaceBlockType, unsigned int arrayIndex)
+{
+    if (!interfaceBlockType.hasInstanceName())
+    {
+        return "";
+    }
+    else if (interfaceBlockType.isArray())
+    {
+        return decoratePrivate(interfaceBlockType.getInstanceName()) + "_" + str(arrayIndex);
+    }
+    else
+    {
+        return decorate(interfaceBlockType.getInstanceName());
+    }
+}
+
+TString OutputHLSL::interfaceBlockMemberString(const TTypeList &typeList)
+{
+    TString hlsl;
+
+    // TODO: padding for standard layout
+
+    for (unsigned int typeIndex = 0; typeIndex < typeList.size(); typeIndex++)
+    {
+        const TType &memberType = *typeList[typeIndex].type;
+        hlsl += "    " + typeString(memberType) + " " + decorate(memberType.getFieldName()) + arrayString(memberType) + ";\n";
+    }
+
+    return hlsl;
+}
+
+TString OutputHLSL::interfaceBlockStructString(const TType &interfaceBlockType)
+{
+    const TTypeList &typeList = *interfaceBlockType.getStruct();
+
+    return "struct " + interfaceBlockStructName(interfaceBlockType) + "\n"
+           "{\n" +
+           interfaceBlockMemberString(typeList) +
+           "};\n\n";
+}
+
+TString OutputHLSL::interfaceBlockString(const TType &interfaceBlockType, unsigned int registerIndex, unsigned int arrayIndex)
+{
+    const TString &arrayIndexString =  (arrayIndex != GL_INVALID_INDEX ? decorate(str(arrayIndex)) : "");
+    const TString &blockName = interfaceBlockType.getTypeName() + arrayIndexString;
+    TString hlsl;
+
+    hlsl += "cbuffer " + blockName + " : register(b" + str(registerIndex) + ")\n"
+            "{\n";
+
+    if (interfaceBlockType.hasInstanceName())
+    {
+        hlsl += "    " + interfaceBlockStructName(interfaceBlockType) + " " + interfaceBlockInstanceString(interfaceBlockType, arrayIndex) + ";\n";
+    }
+    else
+    {
+        const TTypeList &typeList = *interfaceBlockType.getStruct();
+        hlsl += interfaceBlockMemberString(typeList);
+    }
+
+    hlsl += "};\n\n";
+
+    return hlsl;
+}
+
 void OutputHLSL::header()
 {
     ShShaderType shaderType = mContext.shaderType;
@@ -185,6 +260,7 @@ void OutputHLSL::header()
 
     TString uniforms;
     TString interfaceBlocks;
+    TString interfaceBlockInit;
     TString varyings;
     TString attributes;
 
@@ -217,7 +293,8 @@ void OutputHLSL::header()
         const TString &blockName = interfaceBlockType.getTypeName();
         const TTypeList &typeList = *interfaceBlockType.getStruct();
 
-        sh::InterfaceBlock interfaceBlock(blockName.c_str(), 0, mInterfaceBlockRegister++);
+        const unsigned int arraySize = interfaceBlockType.isArray() ? interfaceBlockType.getArraySize() : 0;
+        sh::InterfaceBlock interfaceBlock(blockName.c_str(), arraySize, mInterfaceBlockRegister);
         for (unsigned int typeIndex = 0; typeIndex < typeList.size(); typeIndex++)
         {
             const TType &memberType = *typeList[typeIndex].type;
@@ -225,31 +302,43 @@ void OutputHLSL::header()
             declareUniformToList(memberType, fullUniformName, typeIndex, interfaceBlock.activeUniforms);
         }
 
+        mInterfaceBlockRegister += std::max(1u, interfaceBlock.arraySize);
+
         // TODO: handle other block layouts
         interfaceBlock.setPackedBlockLayout();
         mActiveInterfaceBlocks.push_back(interfaceBlock);
 
-        interfaceBlocks += "cbuffer " + blockName + " : register(b" + str(interfaceBlock.registerIndex) + ")\n"
-                           "{\n";
-
         if (interfaceBlockType.hasInstanceName())
         {
-            interfaceBlocks += "  struct {\n";
+            interfaceBlocks += interfaceBlockStructString(interfaceBlockType);
         }
 
-        for (unsigned int typeIndex = 0; typeIndex < typeList.size(); typeIndex++)
+        if (arraySize > 0)
         {
-            // TODO: padding for standard layout
-            const TType &memberType = *typeList[typeIndex].type;
-            interfaceBlocks += "    " + typeString(memberType) + " " + decorate(memberType.getFieldName()) + arrayString(memberType) + ";\n";
-        }
+            interfaceBlocks += "static " + interfaceBlockStructName(interfaceBlockType) + " " + decorate(interfaceBlockType.getInstanceName()) +
+                               arrayString(interfaceBlockType) + ";\n\n";
 
-        if (interfaceBlockType.hasInstanceName())
+            for (unsigned int arrayIndex = 0; arrayIndex < arraySize; arrayIndex++)
+            {
+                interfaceBlocks += interfaceBlockString(interfaceBlockType, interfaceBlock.registerIndex + arrayIndex, arrayIndex);
+
+                const TString &instanceName = interfaceBlockType.getInstanceName();
+                interfaceBlockInit += "   " + decorate(instanceName) + "[" + str(arrayIndex) + "] = " +
+                                      interfaceBlockInstanceString(interfaceBlockType, arrayIndex) + ";\n";
+            }
+        }
+        else
         {
-            interfaceBlocks += "  } " + decorate(interfaceBlockType.getInstanceName()) + ";\n";
+            interfaceBlocks += interfaceBlockString(interfaceBlockType, interfaceBlock.registerIndex, GL_INVALID_INDEX);
         }
+    }
 
-        interfaceBlocks += "};\n\n";
+    if (!interfaceBlockInit.empty())
+    {
+        interfaceBlocks += "void dx_initConstantBuffers()\n"
+                           "{\n" +
+                           interfaceBlockInit +
+                           "}\n\n";
     }
 
     for (ReferencedSymbols::const_iterator varying = mReferencedVaryings.begin(); varying != mReferencedVaryings.end(); varying++)

@@ -1686,6 +1686,11 @@ TIntermTyped* TParseContext::addIndexExpression(TIntermTyped *baseExpression, TS
                 error(location, "", "[", "array must be redeclared with a size before being indexed with a variable");
                 recover();
             }
+            else if (baseExpression->getBasicType() == EbtInterfaceBlock)
+            {
+                error(location, "", "[", "array indexes for interface blocks arrays must be constant integeral expressions");
+                recover();
+            }
 
             indexedExpression = intermediate.addIndex(EOpIndexIndirect, baseExpression, indexExpression, location);
         }
@@ -1700,7 +1705,9 @@ TIntermTyped* TParseContext::addIndexExpression(TIntermTyped *baseExpression, TS
     {
         if (baseExpression->getType().getStruct())
         {
-            indexedExpression->setType(TType(baseExpression->getType().getStruct(), baseExpression->getType().getTypeName()));
+            TType copyOfType(baseExpression->getType().getStruct(), baseExpression->getType().getTypeName());
+            copyOfType.setBasicType(baseExpression->getType().getBasicType()); // necessary to preserve interface block basic type
+            indexedExpression->setType(copyOfType);
         }
         else
         {

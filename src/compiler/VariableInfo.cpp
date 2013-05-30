@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -208,7 +208,7 @@ bool CollectAttribsUniforms::visitAggregate(Visit, TIntermAggregate* node)
                 const TIntermSymbol* variable = (*i)->getAsSymbolNode();
                 // The only case in which the sequence will not contain a
                 // TIntermSymbol node is initialization. It will contain a
-                // TInterBinary node in that case. Since attributes and unifroms
+                // TIntermBinary node in that case. Since attributes and uniforms
                 // cannot be initialized in a shader, we must have only
                 // TIntermSymbol nodes in the sequence.
                 ASSERT(variable != NULL);

@@ -175,6 +175,12 @@ class OutputHLSL : public TIntermTraverser
     void declareUniform(const TType &type, const TString &name, int index);
 
     TString interfaceBlockUniformName(const TType &interfaceBlockType, const TType &uniformType);
+    TString decoratePrivate(const TString &privateText);
+    TString interfaceBlockStructName(const TType &interfaceBlockType);
+    TString interfaceBlockInstanceString(const TType& interfaceBlockType, unsigned int arrayIndex);
+    TString interfaceBlockMemberString(const TTypeList &typeList);
+    TString interfaceBlockStructString(const TType &interfaceBlockType);
+    TString interfaceBlockString(const TType &interfaceBlockType, unsigned int registerIndex, unsigned int arrayIndex);
     
     static GLenum glVariableType(const TType &type);
     static GLenum glVariablePrecision(const TType &type);
