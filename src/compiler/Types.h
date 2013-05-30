@@ -40,14 +40,14 @@ class TType
 public:
     POOL_ALLOCATOR_NEW_DELETE(GlobalPoolAllocator)
     TType() {}
-    TType(TBasicType t, TPrecision p, TQualifier q = EvqTemporary, int s = 1, bool m = false, bool a = false) :
-            type(t), precision(p), qualifier(q), size(s), matrix(m), array(a), arraySize(0),
+    TType(TBasicType t, TPrecision p, TQualifier q = EvqTemporary, int ps = 1, int ss = 1, bool a = false) :
+            type(t), precision(p), qualifier(q), primarySize(ps), secondarySize(ss), array(a), arraySize(0),
             maxArraySize(0), arrayInformationType(0), interfaceBlockType(0), structure(0), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0), typeName(0), instanceName(0)
     {
     }
     explicit TType(const TPublicType &p);
     TType(TTypeList* userDef, const TString& n, TPrecision p = EbpUndefined) :
-            type(EbtStruct), precision(p), qualifier(EvqTemporary), size(1), matrix(false), array(false), arraySize(0),
+            type(EbtStruct), precision(p), qualifier(EvqTemporary), primarySize(1), secondarySize(1), array(false), arraySize(0),
             maxArraySize(0), arrayInformationType(0), interfaceBlockType(0), structure(userDef), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0), instanceName(0)
     {
         typeName = NewPoolTString(n.c_str());
@@ -58,8 +58,8 @@ public:
         type = copyOf.type;
         precision = copyOf.precision;
         qualifier = copyOf.qualifier;
-        size = copyOf.size;
-        matrix = copyOf.matrix;
+        primarySize = copyOf.primarySize;
+        secondarySize = copyOf.secondarySize;
         array = copyOf.array;
         arraySize = copyOf.arraySize;
 
@@ -120,9 +120,13 @@ public:
     TQualifier getQualifier() const { return qualifier; }
     void setQualifier(TQualifier q) { qualifier = q; }
 
-    // One-dimensional size of single instance type
-    int getNominalSize() const { return size; }
-    void setNominalSize(int s) { size = s; }
+    int getNominalSize() const { return primarySize; }
+    int getSecondarySize() const { return secondarySize; }
+    int getCols() const { ASSERT(isMatrix()); return primarySize; }
+    int getRows() const { ASSERT(isMatrix()); return secondarySize; }
+    void setPrimarySize(int ps) { primarySize = ps; }
+    void setSecondarySize(int ss) { secondarySize = ss; }
+
     // Full size of single instance of type
     int getObjectSize() const
     {
@@ -130,10 +134,8 @@ public:
 
         if (getBasicType() == EbtStruct)
             totalSize = getStructSize();
-        else if (matrix)
-            totalSize = size * size;
         else
-            totalSize = size;
+            totalSize = primarySize * secondarySize;
 
         if (isArray())
             totalSize *= std::max(getArraySize(), getMaxArraySize());
@@ -158,7 +160,7 @@ public:
         }
         else if (isMatrix())
         {
-            return getNominalSize();
+            return getRows();
         }
         else
         {
@@ -178,9 +180,7 @@ public:
         }
     }
 
-    bool isMatrix() const { return matrix ? true : false; }
-    void setMatrix(bool m) { matrix = m; }
-
+    bool isMatrix() const { return primarySize > 1 && secondarySize > 1; }
     bool isArray() const  { return array ? true : false; }
     int getArraySize() const { return arraySize; }
     void setArraySize(int s) { array = true; arraySize = s; }
@@ -193,8 +193,8 @@ public:
     TType* getInterfaceBlockType() const { return interfaceBlockType; }
     bool isInterfaceBlockMember() const { return interfaceBlockType != NULL; }
 
-    bool isVector() const { return size > 1 && !matrix; }
-    bool isScalar() const { return size == 1 && !matrix && !structure; }
+    bool isVector() const { return primarySize > 1 && secondarySize == 1; }
+    bool isScalar() const { return primarySize == 1 && secondarySize == 1 && !structure; }
 
     TTypeList* getStruct() const { return structure; }
     void setStruct(TTypeList* s) { structure = s; computeDeepestStructNesting(); }
@@ -250,16 +250,16 @@ public:
     }
 
     bool sameElementType(const TType& right) const {
-        return      type == right.type   &&
-                    size == right.size   &&
-                  matrix == right.matrix &&
+        return      type == right.type          &&
+             primarySize == right.primarySize   &&
+           secondarySize == right.secondarySize &&
                structure == right.structure;
     }
     bool operator==(const TType& right) const {
-        return      type == right.type   &&
-                    size == right.size   &&
-                  matrix == right.matrix &&
-                   array == right.array  && (!array || arraySize == right.arraySize) &&
+        return      type == right.type          &&
+             primarySize == right.primarySize   &&
+           secondarySize == right.secondarySize &&
+                   array == right.array && (!array || arraySize == right.arraySize) &&
                structure == right.structure;
         // don't check the qualifier, it's not ever what's being sought after
     }
@@ -268,8 +268,8 @@ public:
     }
     bool operator<(const TType& right) const {
         if (type != right.type) return type < right.type;
-        if (size != right.size) return size < right.size;
-        if (matrix != right.matrix) return matrix < right.matrix;
+        if (primarySize != right.primarySize) return primarySize < right.primarySize;
+        if (secondarySize != right.secondarySize) return secondarySize < right.secondarySize;
         if (array != right.array) return array < right.array;
         if (arraySize != right.arraySize) return arraySize < right.arraySize;
         if (structure != right.structure) return structure < right.structure;
@@ -306,9 +306,9 @@ protected:
     TBasicType type      : 6;
     TPrecision precision : 4;
     TQualifier qualifier : 7;
-    int size             : 8; // size of vector or matrix, not size of array
-    unsigned int matrix  : 1;
     unsigned int array   : 1;
+    int primarySize; // size of vector or cols matrix
+    int secondarySize; // rows of a matrix
     int arraySize;
     int maxArraySize;
     TType* arrayInformationType;
@@ -338,8 +338,8 @@ struct TPublicType
     TBasicType type;
     TQualifier qualifier;
     TPrecision precision;
-    int size;          // size of vector or matrix, not size of array
-    bool matrix;
+    int primarySize;          // size of vector or cols of matrix
+    int secondarySize;        // rows of matrix
     bool array;
     int arraySize;
     TType* userDef;
@@ -350,18 +350,24 @@ struct TPublicType
         type = bt;
         qualifier = q;
         precision = EbpUndefined;
-        size = 1;
-        matrix = false;
+        primarySize = 1;
+        secondarySize = 1;
         array = false;
         arraySize = 0;
         userDef = 0;
         line = ln;
     }
 
-    void setAggregate(int s, bool m = false)
+    void setAggregate(int size)
     {
-        size = s;
-        matrix = m;
+        primarySize = size;
+    }
+
+    void setMatrix(int c, int r)
+    {
+        ASSERT(c > 1 && r > 1 && c <= 4 && r <= 4);
+        primarySize = c;
+        secondarySize = r;
     }
 
     void setArray(bool a, int s = 0)
@@ -378,6 +384,38 @@ struct TPublicType
         }
 
         return userDef->isStructureContainingArrays();
+    }
+
+    bool isMatrix() const
+    {
+        return primarySize > 1 && secondarySize > 1;
+    }
+
+    bool isVector() const
+    {
+        return primarySize > 1 && secondarySize == 1;
+    }
+
+    int getCols() const
+    {
+        ASSERT(isMatrix());
+        return primarySize;
+    }
+
+    int getRows() const
+    {
+        ASSERT(isMatrix());
+        return secondarySize;
+    }
+
+    int getNominalSize() const
+    {
+        return primarySize;
+    }
+
+    bool isAggregate() const
+    {
+        return array || isMatrix() || isVector();
     }
 };
 

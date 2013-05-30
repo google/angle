@@ -21,7 +21,7 @@
 #include "common/angleutils.h"
 
 TType::TType(const TPublicType &p) :
-            type(p.type), precision(p.precision), qualifier(p.qualifier), size(p.size), matrix(p.matrix), array(p.array), arraySize(p.arraySize),
+            type(p.type), precision(p.precision), qualifier(p.qualifier), primarySize(p.primarySize), secondarySize(p.secondarySize), array(p.array), arraySize(p.arraySize),
             maxArraySize(0), arrayInformationType(0), interfaceBlockType(0), structure(0), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0), typeName(0)
 {
     if (p.userDef) {
@@ -76,7 +76,16 @@ void TType::buildMangledName(TString& mangledName)
         break;
     }
 
-    mangledName += static_cast<char>('0' + getNominalSize());
+    if (isMatrix())
+    {
+        mangledName += static_cast<char>('0' + getCols());
+        mangledName += static_cast<char>('x');
+        mangledName += static_cast<char>('0' + getRows());
+    }
+    else
+    {
+        mangledName += static_cast<char>('0' + getNominalSize());
+    }
     if (isArray()) {
         char buf[20];
         snprintf(buf, sizeof(buf), "%d", arraySize);

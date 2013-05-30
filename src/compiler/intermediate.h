@@ -250,7 +250,10 @@ public:
     TBasicType getBasicType() const { return type.getBasicType(); }
     TQualifier getQualifier() const { return type.getQualifier(); }
     TPrecision getPrecision() const { return type.getPrecision(); }
+    int getCols() const { return type.getCols(); }
+    int getRows() const { return type.getRows(); }
     int getNominalSize() const { return type.getNominalSize(); }
+    int getSecondarySize() const { return type.getSecondarySize(); }
     
     bool isMatrix() const { return type.isMatrix(); }
     bool isArray()  const { return type.isArray(); }

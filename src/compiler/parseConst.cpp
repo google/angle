@@ -119,7 +119,7 @@ bool TConstTraverser::visitAggregate(Visit visit, TIntermAggregate* node)
 
         if (node->getType().isMatrix()) {
             isMatrix = true;
-            matrixSize = node->getType().getNominalSize();
+            matrixSize = node->getType().getRows();
         }
     }       
 
@@ -165,10 +165,10 @@ void TConstTraverser::visitConstantUnion(TIntermConstantUnion* node)
         return;
 
     if (!singleConstantParam) {
-        int size = node->getType().getObjectSize();
+        int objectSize = node->getType().getObjectSize();
     
         ConstantUnion *rightUnionArray = node->getUnionArrayPointer();
-        for (int i=0; i < size; i++) {
+        for (int i=0; i < objectSize; i++) {
             if (index >= instanceSize)
                 return;
             leftUnionArray[index] = rightUnionArray[i];

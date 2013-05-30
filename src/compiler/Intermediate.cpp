@@ -323,7 +323,7 @@ TIntermTyped* TIntermediate::addUnaryMath(TOperator op, TIntermNode* childNode, 
     if (newType != EbtVoid) {
         child = addConversion(op, TType(newType, child->getPrecision(), EvqTemporary,
             child->getNominalSize(),
-            child->isMatrix(),
+            child->getSecondarySize(),
             child->isArray()),
             child);
         if (child == 0)
@@ -519,7 +519,7 @@ TIntermTyped* TIntermediate::addConversion(TOperator op, const TType& type, TInt
                 return 0;
         }
 
-        TType type(promoteTo, node->getPrecision(), EvqTemporary, node->getNominalSize(), node->isMatrix(), node->isArray());
+        TType type(promoteTo, node->getPrecision(), EvqTemporary, node->getNominalSize(), node->getSecondarySize(), node->isArray());
         newNode = new TIntermUnary(newOp, type);
         newNode->setLine(node->getLine());
         newNode->setOperand(node);
@@ -852,6 +852,36 @@ bool TIntermUnary::promote(TInfoSink&)
     return true;
 }
 
+bool validateMultiplication(TOperator op, const TType &left, const TType &right)
+{
+    switch (op)
+    {
+      case EOpMul:
+      case EOpMulAssign:
+        return left.getNominalSize() == right.getNominalSize() && left.getSecondarySize() == right.getSecondarySize();
+      case EOpVectorTimesScalar:
+      case EOpVectorTimesScalarAssign:
+        return true;
+      case EOpVectorTimesMatrix:
+        return left.getNominalSize() == right.getRows();
+      case EOpVectorTimesMatrixAssign:
+        return left.getNominalSize() == right.getRows() && left.getNominalSize() == right.getCols();
+      case EOpMatrixTimesVector:
+        return left.getCols() == right.getNominalSize();
+      case EOpMatrixTimesScalar:
+      case EOpMatrixTimesScalarAssign:
+        return true;
+      case EOpMatrixTimesMatrix:
+        return left.getCols() == right.getRows();
+      case EOpMatrixTimesMatrixAssign:
+        return left.getCols() == right.getCols() && left.getRows() == right.getRows();
+
+      default:
+        UNREACHABLE();
+        return false;
+    }
+}
+
 //
 // Establishes the type of the resultant operation, as well as
 // makes the operator the correct one for the operands.
@@ -889,12 +919,12 @@ bool TIntermBinary::promote(TInfoSink& infoSink)
         getTypePointer()->setQualifier(EvqTemporary);
     }
 
-    int size = std::max(left->getNominalSize(), right->getNominalSize());
+    const int nominalSize = std::max(left->getNominalSize(), right->getNominalSize());
 
     //
-    // All scalars. Code after this test assumes this case is removed!
+    // All scalars or structs. Code after this test assumes this case is removed!
     //
-    if (size == 1)
+    if (nominalSize == 1)
     {
         switch (op)
         {
@@ -931,20 +961,6 @@ bool TIntermBinary::promote(TInfoSink& infoSink)
 
     // If we reach here, at least one of the operands is vector or matrix.
     // The other operand could be a scalar, vector, or matrix.
-    // Are the sizes compatible?
-    //
-    if (left->getNominalSize() != right->getNominalSize())
-    {
-        // If the nominal size of operands do not match:
-        // One of them must be scalar.
-        if (left->getNominalSize() != 1 && right->getNominalSize() != 1)
-            return false;
-        // Operator cannot be of type pure assignment.
-        if (op == EOpAssign || op == EOpInitialize)
-            return false;
-    }
-
-    //
     // Can these two operands be combined?
     //
     TBasicType basicType = left->getBasicType();
@@ -960,7 +976,7 @@ bool TIntermBinary::promote(TInfoSink& infoSink)
                 else
                 {
                     op = EOpMatrixTimesScalar;
-                    setType(TType(basicType, higherPrecision, EvqTemporary, size, true));
+                    setType(TType(basicType, higherPrecision, EvqTemporary, right->getCols(), right->getRows()));
                 }
             }
             else if (left->isMatrix() && !right->isMatrix())
@@ -968,7 +984,7 @@ bool TIntermBinary::promote(TInfoSink& infoSink)
                 if (right->isVector())
                 {
                     op = EOpMatrixTimesVector;
-                    setType(TType(basicType, higherPrecision, EvqTemporary, size, false));
+                    setType(TType(basicType, higherPrecision, EvqTemporary, left->getRows(), 1));
                 }
                 else
                 {
@@ -988,7 +1004,7 @@ bool TIntermBinary::promote(TInfoSink& infoSink)
                 else if (left->isVector() || right->isVector())
                 {
                     op = EOpVectorTimesScalar;
-                    setType(TType(basicType, higherPrecision, EvqTemporary, size, false));
+                    setType(TType(basicType, higherPrecision, EvqTemporary, nominalSize, 1));
                 }
             }
             else
@@ -996,7 +1012,13 @@ bool TIntermBinary::promote(TInfoSink& infoSink)
                 infoSink.info.message(EPrefixInternalError, "Missing elses", getLine());
                 return false;
             }
+
+            if (!validateMultiplication(op, left->getType(), right->getType()))
+            {
+                return false;
+            }
             break;
+
         case EOpMulAssign:
             if (!left->isMatrix() && right->isMatrix())
             {
@@ -1035,12 +1057,17 @@ bool TIntermBinary::promote(TInfoSink& infoSink)
                     if (! left->isVector())
                         return false;
                     op = EOpVectorTimesScalarAssign;
-                    setType(TType(basicType, higherPrecision, EvqTemporary, size, false));
+                    setType(TType(basicType, higherPrecision, EvqTemporary, left->getNominalSize(), 1));
                 }
             }
             else
             {
                 infoSink.info.message(EPrefixInternalError, "Missing elses", getLine());
+                return false;
+            }
+
+            if (!validateMultiplication(op, left->getType(), right->getType()))
+            {
                 return false;
             }
             break;
@@ -1053,10 +1080,28 @@ bool TIntermBinary::promote(TInfoSink& infoSink)
         case EOpAddAssign:
         case EOpSubAssign:
         case EOpDivAssign:
-            if ((left->isMatrix() && right->isVector()) ||
-                (left->isVector() && right->isMatrix()))
-                return false;
-            setType(TType(basicType, higherPrecision, EvqTemporary, size, left->isMatrix() || right->isMatrix()));
+            {
+                if ((left->isMatrix() && right->isVector()) ||
+                    (left->isVector() && right->isMatrix()))
+                    return false;
+
+                // Are the sizes compatible?
+                if (left->getNominalSize() != right->getNominalSize() || left->getSecondarySize() != right->getSecondarySize())
+                {
+                    // If the nominal size of operands do not match:
+                    // One of them must be scalar.
+                    if (!left->isScalar() && !right->isScalar())
+                        return false;
+
+                    // Operator cannot be of type pure assignment.
+                    if (op == EOpAssign || op == EOpInitialize)
+                        return false;
+                }
+
+                const int secondarySize = std::max(left->getSecondarySize(), right->getSecondarySize());
+
+                setType(TType(basicType, higherPrecision, EvqTemporary, nominalSize, secondarySize));
+            }
             break;
 
         case EOpEqual:
@@ -1065,8 +1110,8 @@ bool TIntermBinary::promote(TInfoSink& infoSink)
         case EOpGreaterThan:
         case EOpLessThanEqual:
         case EOpGreaterThanEqual:
-            if ((left->isMatrix() && right->isVector()) ||
-                (left->isVector() && right->isMatrix()))
+            if ((left->getNominalSize() != right->getNominalSize()) ||
+                (left->getSecondarySize() != right->getSecondarySize()))
                 return false;
             setType(TType(EbtBool, EbpUndefined));
             break;
@@ -1188,13 +1233,14 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, TIntermTyped* constantNod
                     return 0;
                 }
                 {// support MSVC++6.0
-                    int size = getNominalSize();
-                    tempConstArray = new ConstantUnion[size*size];
-                    for (int row = 0; row < size; row++) {
-                        for (int column = 0; column < size; column++) {
-                            tempConstArray[size * column + row].setFConst(0.0f);
-                            for (int i = 0; i < size; i++) {
-                                tempConstArray[size * column + row].setFConst(tempConstArray[size * column + row].getFConst() + unionArray[i * size + row].getFConst() * (rightUnionArray[column * size + i].getFConst()));
+                    int cols = getCols();
+                    int rows = getRows();
+                    tempConstArray = new ConstantUnion[cols*rows];
+                    for (int row = 0; row < rows; row++) {
+                        for (int column = 0; column < cols; column++) {
+                            tempConstArray[rows * column + row].setFConst(0.0f);
+                            for (int i = 0; i < cols; i++) {
+                                tempConstArray[rows * column + row].setFConst(tempConstArray[rows * column + row].getFConst() + unionArray[i * rows + row].getFConst() * (rightUnionArray[column * rows + i].getFConst()));
                             }
                         }
                     }
@@ -1488,7 +1534,7 @@ TIntermTyped* TIntermediate::promoteConstantUnion(TBasicType promoteTo, TIntermC
 
     const TType& t = node->getType();
 
-    return addConstantUnion(leftUnionArray, TType(promoteTo, t.getPrecision(), t.getQualifier(), t.getNominalSize(), t.isMatrix(), t.isArray()), node->getLine());
+    return addConstantUnion(leftUnionArray, TType(promoteTo, t.getPrecision(), t.getQualifier(), t.getNominalSize(), t.getSecondarySize(), t.isArray()), node->getLine());
 }
 
 // static

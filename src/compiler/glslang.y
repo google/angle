@@ -459,14 +459,14 @@ function_identifier
         } else {
             switch ($1.type) {
             case EbtFloat:
-                if ($1.matrix) {
-                    switch($1.size) {
+                if ($1.isMatrix()) {
+                    switch($1.getCols()) {
                     case 2:                                     op = EOpConstructMat2;  break;
                     case 3:                                     op = EOpConstructMat3;  break;
                     case 4:                                     op = EOpConstructMat4;  break;
                     }
                 } else {
-                    switch($1.size) {
+                    switch($1.getNominalSize()) {
                     case 1:                                     op = EOpConstructFloat; break;
                     case 2:                                     op = EOpConstructVec2;  break;
                     case 3:                                     op = EOpConstructVec3;  break;
@@ -475,7 +475,7 @@ function_identifier
                 }
                 break;
             case EbtInt:
-                switch($1.size) {
+                switch($1.getNominalSize()) {
                 case 1:                                         op = EOpConstructInt;   break;
                 case 2:       FRAG_VERT_ONLY("ivec2", $1.line); op = EOpConstructIVec2; break;
                 case 3:       FRAG_VERT_ONLY("ivec3", $1.line); op = EOpConstructIVec3; break;
@@ -483,7 +483,7 @@ function_identifier
                 }
                 break;
             case EbtBool:
-                switch($1.size) {
+                switch($1.getNominalSize()) {
                 case 1:                                         op = EOpConstructBool;  break;
                 case 2:       FRAG_VERT_ONLY("bvec2", $1.line); op = EOpConstructBVec2; break;
                 case 3:       FRAG_VERT_ONLY("bvec3", $1.line); op = EOpConstructBVec3; break;
@@ -1592,19 +1592,19 @@ type_specifier_nonarray
         FRAG_VERT_ONLY("mat2", $1.line);
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtFloat, qual, $1.line);
-        $$.setAggregate(2, true);
+        $$.setMatrix(2, 2);
     }
     | MATRIX3 {
         FRAG_VERT_ONLY("mat3", $1.line);
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtFloat, qual, $1.line);
-        $$.setAggregate(3, true);
+        $$.setMatrix(3, 3);
     }
     | MATRIX4 {
         FRAG_VERT_ONLY("mat4", $1.line);
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtFloat, qual, $1.line);
-        $$.setAggregate(4, true);
+        $$.setMatrix(4, 4);
     }
     | SAMPLER2D {
         FRAG_VERT_ONLY("sampler2D", $1.line);

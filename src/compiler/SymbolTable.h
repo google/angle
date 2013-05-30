@@ -333,7 +333,7 @@ public:
             return true;  // Skip sampler types for the time being
         if (type.type != EbtFloat && type.type != EbtInt)
             return false; // Only set default precision for int/float
-        if (type.size != 1 || type.matrix || type.array)
+        if (type.isAggregate())
             return false; // Not allowed to set for aggregate types
         int indexOfLastElement = static_cast<int>(precisionStack.size()) - 1;
         precisionStack[indexOfLastElement][type.type] = prec; // Uses map operator [], overwrites the current value

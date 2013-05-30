@@ -2540,14 +2540,14 @@ yyreduce:
         } else {
             switch ((yyvsp[(1) - (1)].interm.type).type) {
             case EbtFloat:
-                if ((yyvsp[(1) - (1)].interm.type).matrix) {
-                    switch((yyvsp[(1) - (1)].interm.type).size) {
+                if ((yyvsp[(1) - (1)].interm.type).isMatrix()) {
+                    switch((yyvsp[(1) - (1)].interm.type).getCols()) {
                     case 2:                                     op = EOpConstructMat2;  break;
                     case 3:                                     op = EOpConstructMat3;  break;
                     case 4:                                     op = EOpConstructMat4;  break;
                     }
                 } else {
-                    switch((yyvsp[(1) - (1)].interm.type).size) {
+                    switch((yyvsp[(1) - (1)].interm.type).getNominalSize()) {
                     case 1:                                     op = EOpConstructFloat; break;
                     case 2:                                     op = EOpConstructVec2;  break;
                     case 3:                                     op = EOpConstructVec3;  break;
@@ -2556,7 +2556,7 @@ yyreduce:
                 }
                 break;
             case EbtInt:
-                switch((yyvsp[(1) - (1)].interm.type).size) {
+                switch((yyvsp[(1) - (1)].interm.type).getNominalSize()) {
                 case 1:                                         op = EOpConstructInt;   break;
                 case 2:       FRAG_VERT_ONLY("ivec2", (yyvsp[(1) - (1)].interm.type).line); op = EOpConstructIVec2; break;
                 case 3:       FRAG_VERT_ONLY("ivec3", (yyvsp[(1) - (1)].interm.type).line); op = EOpConstructIVec3; break;
@@ -2564,7 +2564,7 @@ yyreduce:
                 }
                 break;
             case EbtBool:
-                switch((yyvsp[(1) - (1)].interm.type).size) {
+                switch((yyvsp[(1) - (1)].interm.type).getNominalSize()) {
                 case 1:                                         op = EOpConstructBool;  break;
                 case 2:       FRAG_VERT_ONLY("bvec2", (yyvsp[(1) - (1)].interm.type).line); op = EOpConstructBVec2; break;
                 case 3:       FRAG_VERT_ONLY("bvec3", (yyvsp[(1) - (1)].interm.type).line); op = EOpConstructBVec3; break;
@@ -3940,7 +3940,7 @@ yyreduce:
         FRAG_VERT_ONLY("mat2", (yyvsp[(1) - (1)].lex).line);
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         (yyval.interm.type).setBasic(EbtFloat, qual, (yyvsp[(1) - (1)].lex).line);
-        (yyval.interm.type).setAggregate(2, true);
+        (yyval.interm.type).setMatrix(2, 2);
     }
     break;
 
@@ -3950,7 +3950,7 @@ yyreduce:
         FRAG_VERT_ONLY("mat3", (yyvsp[(1) - (1)].lex).line);
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         (yyval.interm.type).setBasic(EbtFloat, qual, (yyvsp[(1) - (1)].lex).line);
-        (yyval.interm.type).setAggregate(3, true);
+        (yyval.interm.type).setMatrix(3, 3);
     }
     break;
 
@@ -3960,7 +3960,7 @@ yyreduce:
         FRAG_VERT_ONLY("mat4", (yyvsp[(1) - (1)].lex).line);
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         (yyval.interm.type).setBasic(EbtFloat, qual, (yyvsp[(1) - (1)].lex).line);
-        (yyval.interm.type).setAggregate(4, true);
+        (yyval.interm.type).setMatrix(4, 4);
     }
     break;
 

@@ -115,7 +115,7 @@ bool TParseContext::parseVectorFields(const TString& compString, int vecSize, TV
 // Look at a '.' field selector string and change it into offsets
 // for a matrix.
 //
-bool TParseContext::parseMatrixFields(const TString& compString, int matSize, TMatrixFields& fields, int line)
+bool TParseContext::parseMatrixFields(const TString& compString, int matCols, int matRows, TMatrixFields& fields, int line)
 {
     fields.wholeRow = false;
     fields.wholeCol = false;
@@ -151,7 +151,7 @@ bool TParseContext::parseMatrixFields(const TString& compString, int matSize, TM
         fields.col = compString[1] - '0';
     }
 
-    if (fields.row >= matSize || fields.col >= matSize) {
+    if (fields.row >= matRows || fields.col >= matCols) {
         error(line, "matrix field selection out of range", compString.c_str());
         return false;
     }
@@ -396,7 +396,7 @@ bool TParseContext::constErrorCheck(TIntermTyped* node)
 //
 bool TParseContext::integerErrorCheck(TIntermTyped* node, const char* token)
 {
-    if (node->getBasicType() == EbtInt && node->getNominalSize() == 1)
+    if (node->getBasicType() == EbtInt && node->isScalar())
         return false;
 
     error(node->getLine(), "integer expression required", token);
@@ -599,7 +599,7 @@ bool TParseContext::boolErrorCheck(int line, const TIntermTyped* type)
 //
 bool TParseContext::boolErrorCheck(int line, const TPublicType& pType)
 {
-    if (pType.type != EbtBool || pType.array || pType.matrix || (pType.size > 1)) {
+    if (pType.type != EbtBool || pType.isAggregate()) {
         error(line, "boolean expression expected", "");
         return true;
     } 
@@ -1355,7 +1355,7 @@ TIntermTyped* TParseContext::addConstMatrixNode(int index, TIntermTyped* node, T
     TIntermTyped* typedNode;
     TIntermConstantUnion* tempConstantNode = node->getAsConstantUnion();
 
-    if (index >= node->getType().getNominalSize()) {
+    if (index >= node->getType().getRows()) {
         std::stringstream extraInfoStream;
         extraInfoStream << "matrix field selection out of range '" << index << "'";
         std::string extraInfo = extraInfoStream.str();
@@ -1366,7 +1366,7 @@ TIntermTyped* TParseContext::addConstMatrixNode(int index, TIntermTyped* node, T
 
     if (tempConstantNode) {
          ConstantUnion* unionArray = tempConstantNode->getUnionArrayPointer();
-         int size = tempConstantNode->getType().getNominalSize();
+         int size = tempConstantNode->getType().getCols();
          typedNode = intermediate.addConstantUnion(&unionArray[size*index], tempConstantNode->getType(), line);
     } else {
         error(line, "Cannot offset into the matrix", "Error");
@@ -1642,7 +1642,11 @@ TIntermTyped* TParseContext::addIndexExpression(TIntermTyped *baseExpression, TS
     {
         if (indexExpression->getQualifier() == EvqConst)
         {
-            if ((baseExpression->isVector() || baseExpression->isMatrix()) && baseExpression->getType().getNominalSize() <= indexExpression->getAsConstantUnion()->getIConst(0) && !baseExpression->isArray() )
+            const bool isMatrixOrVector = (baseExpression->isVector() || baseExpression->isMatrix());
+            const bool indexOOR = (isMatrixOrVector && baseExpression->getType().getNominalSize() <= indexExpression->getAsConstantUnion()->getIConst(0));
+
+            // check for index out-of-range
+            if (indexOOR && !baseExpression->isArray())
             {
                 std::stringstream extraInfoStream;
                 extraInfoStream << "field selection out of range '" << indexExpression->getAsConstantUnion()->getIConst(0) << "'";
@@ -1711,7 +1715,7 @@ TIntermTyped* TParseContext::addIndexExpression(TIntermTyped *baseExpression, TS
         }
         else
         {
-            indexedExpression->setType(TType(baseExpression->getBasicType(), baseExpression->getPrecision(), EvqTemporary, baseExpression->getNominalSize(), baseExpression->isMatrix()));
+            indexedExpression->setType(TType(baseExpression->getBasicType(), baseExpression->getPrecision(), EvqTemporary, baseExpression->getNominalSize(), baseExpression->getSecondarySize()));
         }
 
         if (baseExpression->getType().getQualifier() == EvqConst)
@@ -1721,11 +1725,11 @@ TIntermTyped* TParseContext::addIndexExpression(TIntermTyped *baseExpression, TS
     }
     else if (baseExpression->isMatrix() && baseExpression->getType().getQualifier() == EvqConst)
     {
-        indexedExpression->setType(TType(baseExpression->getBasicType(), baseExpression->getPrecision(), EvqConst, baseExpression->getNominalSize()));
+        indexedExpression->setType(TType(baseExpression->getBasicType(), baseExpression->getPrecision(), EvqConst, baseExpression->getRows()));
     }
     else if (baseExpression->isMatrix())
     {
-        indexedExpression->setType(TType(baseExpression->getBasicType(), baseExpression->getPrecision(), EvqTemporary, baseExpression->getNominalSize()));
+        indexedExpression->setType(TType(baseExpression->getBasicType(), baseExpression->getPrecision(), EvqTemporary, baseExpression->getRows()));
     }
     else if (baseExpression->isVector() && baseExpression->getType().getQualifier() == EvqConst)
     {
@@ -1788,7 +1792,7 @@ TIntermTyped* TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
     else if (baseExpression->isMatrix())
     {
         TMatrixFields fields;
-        if (!parseMatrixFields(fieldString, baseExpression->getNominalSize(), fields, fieldLocation))
+        if (!parseMatrixFields(fieldString, baseExpression->getCols(), baseExpression->getRows(), fields, fieldLocation))
         {
             fields.wholeRow = false;
             fields.wholeCol = false;
@@ -1805,12 +1809,12 @@ TIntermTyped* TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
             unionArray->setIConst(0);
             TIntermTyped* index = intermediate.addConstantUnion(unionArray, TType(EbtInt, EbpUndefined, EvqConst), fieldLocation);
             indexedExpression = intermediate.addIndex(EOpIndexDirect, baseExpression, index, dotLocation);
-            indexedExpression->setType(TType(baseExpression->getBasicType(), baseExpression->getPrecision(),EvqTemporary, baseExpression->getNominalSize()));
+            indexedExpression->setType(TType(baseExpression->getBasicType(), baseExpression->getPrecision(),EvqTemporary, baseExpression->getCols(), baseExpression->getRows()));
         }
         else
         {
             ConstantUnion *unionArray = new ConstantUnion[1];
-            unionArray->setIConst(fields.col * baseExpression->getNominalSize() + fields.row);
+            unionArray->setIConst(fields.col * baseExpression->getRows() + fields.row);
             TIntermTyped* index = intermediate.addConstantUnion(unionArray, TType(EbtInt, EbpUndefined, EvqConst), fieldLocation);
             indexedExpression = intermediate.addIndex(EOpIndexDirect, baseExpression, index, dotLocation);
             indexedExpression->setType(TType(baseExpression->getBasicType(), baseExpression->getPrecision()));
@@ -1938,8 +1942,8 @@ TTypeList *TParseContext::addStructDeclaratorList(const TPublicType& typeSpecifi
         //
         TType* type = (*typeList)[i].type;
         type->setBasicType(typeSpecifier.type);
-        type->setNominalSize(typeSpecifier.size);
-        type->setMatrix(typeSpecifier.matrix);
+        type->setPrimarySize(typeSpecifier.primarySize);
+        type->setSecondarySize(typeSpecifier.secondarySize);
         type->setPrecision(typeSpecifier.precision);
         type->setQualifier(typeSpecifier.qualifier);
 

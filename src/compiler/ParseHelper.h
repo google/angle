@@ -79,7 +79,7 @@ struct TParseContext {
     void recover();
 
     bool parseVectorFields(const TString&, int vecSize, TVectorFields&, int line);
-    bool parseMatrixFields(const TString&, int matSize, TMatrixFields&, int line);
+    bool parseMatrixFields(const TString&, int matCols, int matRows, TMatrixFields&, int line);
 
     bool reservedErrorCheck(int line, const TString& identifier);
     void assignError(int line, const char* op, TString left, TString right);

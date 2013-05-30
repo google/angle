@@ -19,7 +19,7 @@ static ShDataType getVariableDataType(const TType& type)
     switch (type.getBasicType()) {
       case EbtFloat:
           if (type.isMatrix()) {
-              switch (type.getNominalSize()) {
+              switch (type.getRows()) {
                 case 2: return SH_FLOAT_MAT2;
                 case 3: return SH_FLOAT_MAT3;
                 case 4: return SH_FLOAT_MAT4;

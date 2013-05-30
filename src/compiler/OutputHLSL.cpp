@@ -150,7 +150,7 @@ const ActiveInterfaceBlocks &OutputHLSL::getInterfaceBlocks() const
 
 int OutputHLSL::vectorSize(const TType &type) const
 {
-    int elementSize = type.isMatrix() ? type.getNominalSize() : 1;
+    int elementSize = type.isMatrix() ? type.getRows() : 1;
     int arraySize = type.isArray() ? type.getArraySize() : 1;
 
     return elementSize * arraySize;
@@ -1573,7 +1573,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
         {
             if (node->getLeft()->isMatrix())
             {
-                switch (node->getLeft()->getNominalSize())
+                switch (node->getLeft()->getRows())
                 {
                   case 2: mUsesEqualMat2 = true; break;
                   case 3: mUsesEqualMat3 = true; break;
@@ -2210,8 +2210,9 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
       case EOpMod:
         {
             // We need to look at the number of components in both arguments
-            switch (node->getSequence()[0]->getAsTyped()->getNominalSize() * 10
-                     + node->getSequence()[1]->getAsTyped()->getNominalSize())
+            const int modValue = node->getSequence()[0]->getAsTyped()->getNominalSize() * 10
+                               + node->getSequence()[1]->getAsTyped()->getNominalSize();
+            switch (modValue)
             {
               case 11: mUsesMod1 = true; break;
               case 22: mUsesMod2v = true; break;
@@ -2525,7 +2526,7 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
 
                     if (symbol && constant)
                     {
-                        if (constant->getBasicType() == EbtInt && constant->getNominalSize() == 1)
+                        if (constant->getBasicType() == EbtInt && constant->isScalar())
                         {
                             index = symbol;
                             initial = constant->getIConst(0);
@@ -2547,7 +2548,7 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
 
             if (constant)
             {
-                if (constant->getBasicType() == EbtInt && constant->getNominalSize() == 1)
+                if (constant->getBasicType() == EbtInt && constant->isScalar())
                 {
                     comparator = test->getOp();
                     limit = constant->getIConst(0);
@@ -2569,7 +2570,7 @@ bool OutputHLSL::handleExcessiveLoop(TIntermLoop *node)
 
             if (constant)
             {
-                if (constant->getBasicType() == EbtInt && constant->getNominalSize() == 1)
+                if (constant->getBasicType() == EbtInt && constant->isScalar())
                 {
                     int value = constant->getIConst(0);
 
@@ -2815,7 +2816,7 @@ TString OutputHLSL::typeString(const TType &type)
     }
     else if (type.isMatrix())
     {
-        switch (type.getNominalSize())
+        switch (type.getRows())
         {
           case 2: return "float2x2";
           case 3: return "float3x3";
@@ -3015,18 +3016,19 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
 
     if (ctorType.isMatrix() && ctorParameters.size() == 1)
     {
-        int dim = ctorType.getNominalSize();
+        int rows = ctorType.getRows();
+        int cols = ctorType.getCols();
         const TType &parameter = ctorParameters[0];
 
         if (parameter.isScalar())
         {
-            for (int row = 0; row < dim; row++)
+            for (int row = 0; row < rows; row++)
             {
-                for (int col = 0; col < dim; col++)
+                for (int col = 0; col < cols; col++)
                 {
                     constructor += TString((row == col) ? "x0" : "0.0");
                     
-                    if (row < dim - 1 || col < dim - 1)
+                    if (row < rows - 1 || col < cols - 1)
                     {
                         constructor += ", ";
                     }
@@ -3035,11 +3037,11 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
         }
         else if (parameter.isMatrix())
         {
-            for (int row = 0; row < dim; row++)
+            for (int row = 0; row < rows; row++)
             {
-                for (int col = 0; col < dim; col++)
+                for (int col = 0; col < cols; col++)
                 {
-                    if (row < parameter.getNominalSize() && col < parameter.getNominalSize())
+                    if (row < parameter.getRows() && col < parameter.getCols())
                     {
                         constructor += TString("x0") + "[" + str(row) + "]" + "[" + str(col) + "]";
                     }
@@ -3048,7 +3050,7 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
                         constructor += TString((row == col) ? "1.0" : "0.0");
                     }
 
-                    if (row < dim - 1 || col < dim - 1)
+                    if (row < rows - 1 || col < cols - 1)
                     {
                         constructor += ", ";
                     }
@@ -3079,7 +3081,7 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
                 {
                     remainingComponents -= parameter.getObjectSize();
                 }
-                else if (remainingComponents < parameter.getNominalSize())
+                else if (remainingComponents < parameter.getCols())
                 {
                     switch (remainingComponents)
                     {
@@ -3350,7 +3352,7 @@ GLenum OutputHLSL::glVariableType(const TType &type)
         }
         else if (type.isMatrix())
         {
-            switch(type.getNominalSize())
+            switch(type.getRows())
             {
               case 2: return GL_FLOAT_MAT2;
               case 3: return GL_FLOAT_MAT3;

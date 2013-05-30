@@ -43,10 +43,10 @@ TString TType::getCompleteString() const
         stream << getQualifierString() << " " << getPrecisionString() << " ";
     if (array)
         stream << "array[" << getArraySize() << "] of ";
-    if (matrix)
-        stream << size << "X" << size << " matrix of ";
-    else if (size > 1)
-        stream << size << "-component vector of ";
+    if (isMatrix())
+        stream << getCols() << "X" << getRows() << " matrix of ";
+    else if (isVector())
+        stream << getNominalSize() << "-component vector of ";
 
     stream << getBasicString();
     return stream.str();
