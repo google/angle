@@ -30,6 +30,7 @@ Renderer::Renderer(egl::Display *display) : mDisplay(display)
 {
     mD3dCompilerModule = NULL;
     mD3DCompileFunc = NULL;
+    mCurrentClientVersion = 2;
 }
 
 Renderer::~Renderer()
