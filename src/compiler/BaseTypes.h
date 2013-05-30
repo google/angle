@@ -38,6 +38,7 @@ enum TBasicType
     EbtVoid,
     EbtFloat,
     EbtInt,
+    EbtUInt,
     EbtBool,
     EbtGuardSamplerBegin,  // non type:  see implementation of IsSampler()
     EbtSampler2D,
@@ -58,6 +59,7 @@ inline const char* getBasicString(TBasicType t)
     case EbtVoid:              return "void";              break;
     case EbtFloat:             return "float";             break;
     case EbtInt:               return "int";               break;
+    case EbtUInt:              return "uint";              break;
     case EbtBool:              return "bool";              break;
     case EbtSampler2D:         return "sampler2D";         break;
     case EbtSamplerCube:       return "samplerCube";       break;
