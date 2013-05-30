@@ -636,8 +636,7 @@ bool Texture2D::isSamplerComplete() const
 
     bool mipmapping = isMipmapFiltered();
 
-    if ((IsFloat32Format(getInternalFormat(0)) && !mRenderer->getFloat32TextureSupport()) ||
-        (IsFloat16Format(getInternalFormat(0)) && !mRenderer->getFloat16TextureSupport()))
+    if (!IsTextureFilteringSupported(getInternalFormat(0), mRenderer))
     {
         if (mSamplerState.magFilter != GL_NEAREST ||
             (mSamplerState.minFilter != GL_NEAREST && mSamplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST))
@@ -717,12 +716,12 @@ bool Texture2D::isMipmapComplete() const
 
 bool Texture2D::isCompressed(GLint level) const
 {
-    return IsCompressed(getInternalFormat(level));
+    return IsFormatCompressed(getInternalFormat(level), mRenderer->getCurrentClientVersion());
 }
 
 bool Texture2D::isDepth(GLint level) const
 {
-    return IsDepthTexture(getInternalFormat(level));
+    return GetDepthBits(getInternalFormat(level), mRenderer->getCurrentClientVersion()) > 0;
 }
 
 // Constructs a native texture resource from the texture images
@@ -1082,8 +1081,7 @@ bool TextureCubeMap::isSamplerComplete() const
 
     bool mipmapping = isMipmapFiltered();
 
-    if ((gl::ExtractType(getInternalFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0)) == GL_FLOAT && !mRenderer->getFloat32TextureSupport()) ||
-        (gl::ExtractType(getInternalFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0) == GL_HALF_FLOAT_OES) && !mRenderer->getFloat16TextureSupport()))
+    if (!IsTextureFilteringSupported(getInternalFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0), mRenderer))
     {
         if (mSamplerState.magFilter != GL_NEAREST ||
             (mSamplerState.minFilter != GL_NEAREST && mSamplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST))
@@ -1176,7 +1174,7 @@ bool TextureCubeMap::isMipmapCubeComplete() const
 
 bool TextureCubeMap::isCompressed(GLenum target, GLint level) const
 {
-    return IsCompressed(getInternalFormat(target, level));
+    return IsFormatCompressed(getInternalFormat(target, level), mRenderer->getCurrentClientVersion());
 }
 
 // Constructs a native texture resource from the texture images, or returns an existing one
@@ -1604,12 +1602,12 @@ GLenum Texture3D::getActualFormat(GLint level) const
 
 bool Texture3D::isCompressed(GLint level) const
 {
-    return IsCompressed(getInternalFormat(level));
+    return IsFormatCompressed(getInternalFormat(level), mRenderer->getCurrentClientVersion());
 }
 
 bool Texture3D::isDepth(GLint level) const
 {
-    return IsDepthTexture(getInternalFormat(level));
+    return GetDepthBits(getInternalFormat(level), mRenderer->getCurrentClientVersion()) > 0;
 }
 
 void Texture3D::setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLint internalFormat, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
@@ -1758,8 +1756,7 @@ bool Texture3D::isSamplerComplete() const
 
     bool mipmapping = isMipmapFiltered();
 
-    if ((IsFloat32Format(getInternalFormat(0)) && !mRenderer->getFloat32TextureSupport()) ||
-        (IsFloat16Format(getInternalFormat(0)) && !mRenderer->getFloat16TextureSupport()))
+    if (!IsTextureFilteringSupported(getInternalFormat(0), mRenderer))
     {
         if (mSamplerState.magFilter != GL_NEAREST ||
             (mSamplerState.minFilter != GL_NEAREST && mSamplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST))
@@ -2048,12 +2045,12 @@ GLenum Texture2DArray::getActualFormat(GLint level) const
 
 bool Texture2DArray::isCompressed(GLint level) const
 {
-    return IsCompressed(getInternalFormat(level));
+    return IsFormatCompressed(getInternalFormat(level), mRenderer->getCurrentClientVersion());
 }
 
 bool Texture2DArray::isDepth(GLint level) const
 {
-    return IsDepthTexture(getInternalFormat(level));
+    return GetDepthBits(getInternalFormat(level), mRenderer->getCurrentClientVersion()) > 0;
 }
 
 void Texture2DArray::setImage(GLint level, GLsizei width, GLsizei height, GLsizei depth, GLint internalFormat, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels)
@@ -2254,8 +2251,7 @@ bool Texture2DArray::isSamplerComplete() const
 
     bool mipmapping = isMipmapFiltered();
 
-    if ((IsFloat32Format(getInternalFormat(0)) && !mRenderer->getFloat32TextureSupport()) ||
-        (IsFloat16Format(getInternalFormat(0)) && !mRenderer->getFloat16TextureSupport()))
+    if (!IsTextureFilteringSupported(getInternalFormat(0), mRenderer))
     {
         if (mSamplerState.magFilter != GL_NEAREST ||
             (mSamplerState.minFilter != GL_NEAREST && mSamplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST))

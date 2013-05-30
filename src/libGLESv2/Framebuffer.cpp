@@ -12,6 +12,7 @@
 
 #include "libGLESv2/main.h"
 #include "libGLESv2/utilities.h"
+#include "libGLESv2/formatutils.h"
 #include "libGLESv2/Texture.h"
 #include "libGLESv2/Context.h"
 #include "libGLESv2/renderer/Renderer.h"
@@ -320,9 +321,10 @@ GLenum Framebuffer::completeness() const
 {
     int width = 0;
     int height = 0;
-    int colorbufferSize = 0;
+    unsigned int colorbufferSize = 0;
     int samples = -1;
     bool missingAttachment = true;
+    GLuint clientVersion = mRenderer->getCurrentClientVersion();
 
     for (unsigned int colorAttachment = 0; colorAttachment < IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
     {
@@ -342,7 +344,7 @@ GLenum Framebuffer::completeness() const
 
             if (mColorbufferTypes[colorAttachment] == GL_RENDERBUFFER)
             {
-                if (!gl::IsColorRenderable(colorbuffer->getInternalFormat()))
+                if (!gl::IsColorRenderingSupported(colorbuffer->getInternalFormat(), mRenderer))
                 {
                     return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
                 }
@@ -350,23 +352,14 @@ GLenum Framebuffer::completeness() const
             else if (IsInternalTextureTarget(mColorbufferTypes[colorAttachment]))
             {
                 GLint internalformat = colorbuffer->getInternalFormat();
-                GLenum format = gl::ExtractFormat(internalformat);
 
-                if (IsCompressed(format) ||
-                    format == GL_ALPHA ||
-                    format == GL_LUMINANCE ||
-                    format == GL_LUMINANCE_ALPHA)
+                if (!gl::IsColorRenderingSupported(internalformat, mRenderer))
                 {
                     return GL_FRAMEBUFFER_UNSUPPORTED;
                 }
 
-                if ((gl::IsFloat32Format(internalformat) && !mRenderer->getFloat32TextureSupport()) ||
-                    (gl::IsFloat16Format(internalformat) && !mRenderer->getFloat16TextureSupport()))
-                {
-                    return GL_FRAMEBUFFER_UNSUPPORTED;
-                }
-
-                if (gl::IsDepthTexture(internalformat) || gl::IsStencilTexture(internalformat))
+                if (gl::GetDepthBits(internalformat, clientVersion) > 0 ||
+                    gl::GetStencilBits(internalformat, clientVersion) > 0)
                 {
                     return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
                 }
@@ -394,9 +387,9 @@ GLenum Framebuffer::completeness() const
 
                 // in GLES 2.0, all color attachments attachments must have the same number of bitplanes
                 // in GLES 3.0, there is no such restriction
-                if (mRenderer->getCurrentClientVersion() < 3)
+                if (clientVersion < 3)
                 {
-                    if (ComputePixelSize(colorbuffer->getInternalFormat()) != colorbufferSize)
+                    if (gl::GetPixelBytes(colorbuffer->getInternalFormat(), clientVersion) != colorbufferSize)
                     {
                         return GL_FRAMEBUFFER_UNSUPPORTED;
                     }
@@ -416,7 +409,7 @@ GLenum Framebuffer::completeness() const
                 width = colorbuffer->getWidth();
                 height = colorbuffer->getHeight();
                 samples = colorbuffer->getSamples();
-                colorbufferSize = gl::ComputePixelSize(colorbuffer->getInternalFormat());
+                colorbufferSize = gl::GetPixelBytes(colorbuffer->getInternalFormat(), clientVersion);
                 missingAttachment = false;
             }
         }
@@ -441,7 +434,7 @@ GLenum Framebuffer::completeness() const
 
         if (mDepthbufferType == GL_RENDERBUFFER)
         {
-            if (!gl::IsDepthRenderable(depthbuffer->getInternalFormat()))
+            if (!gl::IsDepthRenderingSupported(depthbuffer->getInternalFormat(), mRenderer))
             {
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
@@ -456,7 +449,7 @@ GLenum Framebuffer::completeness() const
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
 
-            if (!gl::IsDepthTexture(internalformat))
+            if (gl::GetDepthBits(internalformat, clientVersion) == 0)
             {
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
@@ -500,7 +493,7 @@ GLenum Framebuffer::completeness() const
 
         if (mStencilbufferType == GL_RENDERBUFFER)
         {
-            if (!gl::IsStencilRenderable(stencilbuffer->getInternalFormat()))
+            if (!gl::IsStencilRenderingSupported(stencilbuffer->getInternalFormat(), mRenderer))
             {
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
@@ -516,7 +509,7 @@ GLenum Framebuffer::completeness() const
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
 
-            if (!gl::IsStencilTexture(internalformat))
+            if (gl::GetStencilBits(internalformat, clientVersion) == 0)
             {
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }

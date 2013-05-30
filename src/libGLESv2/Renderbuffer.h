@@ -53,13 +53,6 @@ class RenderbufferInterface
     virtual GLenum getActualFormat() const = 0;
     virtual GLsizei getSamples() const = 0;
 
-    GLuint getRedSize() const;
-    GLuint getGreenSize() const;
-    GLuint getBlueSize() const;
-    GLuint getAlphaSize() const;
-    GLuint getDepthSize() const;
-    GLuint getStencilSize() const;
-
     virtual unsigned int getSerial() const = 0;
 
   private:
@@ -200,6 +193,7 @@ class Renderbuffer : public RefCountObject
   private:
     DISALLOW_COPY_AND_ASSIGN(Renderbuffer);
 
+    rx::Renderer const *mRenderer;
     RenderbufferInterface *mInstance;
 };
 

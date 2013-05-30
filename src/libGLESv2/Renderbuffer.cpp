@@ -15,6 +15,7 @@
 #include "libGLESv2/Texture.h"
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/utilities.h"
+#include "libGLESv2/formatutils.h"
 
 namespace gl
 {
@@ -33,36 +34,6 @@ void RenderbufferInterface::addProxyRef(const Renderbuffer *proxy)
 
 void RenderbufferInterface::releaseProxy(const Renderbuffer *proxy)
 {
-}
-
-GLuint RenderbufferInterface::getRedSize() const
-{
-    return gl::GetRedSize(getActualFormat());
-}
-
-GLuint RenderbufferInterface::getGreenSize() const
-{
-    return gl::GetGreenSize(getActualFormat());
-}
-
-GLuint RenderbufferInterface::getBlueSize() const
-{
-    return gl::GetBlueSize(getActualFormat());
-}
-
-GLuint RenderbufferInterface::getAlphaSize() const
-{
-    return gl::GetAlphaSize(getActualFormat());
-}
-
-GLuint RenderbufferInterface::getDepthSize() const
-{
-    return gl::GetDepthSize(getActualFormat());
-}
-
-GLuint RenderbufferInterface::getStencilSize() const
-{
-    return gl::GetStencilSize(getActualFormat());
 }
 
 ///// RenderbufferTexture2D Implementation ////////
@@ -199,6 +170,9 @@ Renderbuffer::Renderbuffer(rx::Renderer *renderer, GLuint id, RenderbufferInterf
 {
     ASSERT(instance != NULL);
     mInstance = instance;
+
+    ASSERT(renderer != NULL);
+    mRenderer = renderer;
 }
 
 Renderbuffer::~Renderbuffer()
@@ -254,32 +228,32 @@ GLenum Renderbuffer::getActualFormat() const
 
 GLuint Renderbuffer::getRedSize() const
 {
-    return mInstance->getRedSize();
+    return gl::GetRedBits(getActualFormat(), mRenderer->getCurrentClientVersion());
 }
 
 GLuint Renderbuffer::getGreenSize() const
 {
-    return mInstance->getGreenSize();
+    return gl::GetGreenBits(getActualFormat(), mRenderer->getCurrentClientVersion());
 }
 
 GLuint Renderbuffer::getBlueSize() const
 {
-    return mInstance->getBlueSize();
+    return gl::GetBlueBits(getActualFormat(), mRenderer->getCurrentClientVersion());
 }
 
 GLuint Renderbuffer::getAlphaSize() const
 {
-    return mInstance->getAlphaSize();
+    return gl::GetAlphaBits(getActualFormat(), mRenderer->getCurrentClientVersion());
 }
 
 GLuint Renderbuffer::getDepthSize() const
 {
-    return mInstance->getDepthSize();
+    return gl::GetDepthBits(getActualFormat(), mRenderer->getCurrentClientVersion());
 }
 
 GLuint Renderbuffer::getStencilSize() const
 {
-    return mInstance->getStencilSize();
+    return gl::GetStencilBits(getActualFormat(), mRenderer->getCurrentClientVersion());
 }
 
 GLsizei Renderbuffer::getSamples() const

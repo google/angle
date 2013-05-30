@@ -12,6 +12,7 @@
 
 #include "libGLESv2/main.h"
 #include "libGLESv2/utilities.h"
+#include "libGLESv2/formatutils.h"
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/Fence.h"
 #include "libGLESv2/Framebuffer.h"
@@ -2108,7 +2109,10 @@ void Context::readPixels(GLint x, GLint y, GLsizei width, GLsizei height,
         return gl::error(GL_INVALID_OPERATION);
     }
 
-    GLsizei outputPitch = ComputeRowPitch(width, ConvertSizedInternalFormat(format, type), getPackAlignment());
+    GLint sizedInternalFormat = IsSizedInternalFormat(format, mClientVersion) ? format
+                                                                              : GetSizedInternalFormat(format, type, mClientVersion);
+
+    GLsizei outputPitch = GetRowPitch(sizedInternalFormat, type, mClientVersion, width, getPackAlignment());
     // sized query sanity check
     if (bufSize)
     {
@@ -2165,7 +2169,7 @@ void Context::clear(GLbitfield mask)
                 return;
             }
 
-            if (GetStencilSize(depthStencil->getActualFormat()) > 0)
+            if (gl::GetStencilBits(depthStencil->getActualFormat(), mClientVersion) > 0)
             {
                 finalMask |= GL_STENCIL_BUFFER_BIT;
             }
@@ -2584,8 +2588,8 @@ bool Context::getCurrentReadFormatType(GLenum *format, GLenum *type)
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
-    *format = gl::ExtractFormat(renderbuffer->getActualFormat()); 
-    *type = gl::ExtractType(renderbuffer->getActualFormat());
+    *format = gl::GetFormat(renderbuffer->getActualFormat(), mClientVersion);
+    *type = gl::GetType(renderbuffer->getActualFormat(), mClientVersion);
 
     return true;
 }
