@@ -2777,6 +2777,24 @@ Texture *Context::getIncompleteTexture(TextureType type)
               t = incompleteCube;
             }
             break;
+
+          case TEXTURE_3D:
+            {
+                Texture3D *incomplete3d = new Texture3D(mRenderer, Texture::INCOMPLETE_TEXTURE_ID);
+                incomplete3d->setImage(0, 1, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, 1, color);
+
+                t = incomplete3d;
+            }
+            break;
+
+          case TEXTURE_2D_ARRAY:
+            {
+                Texture2DArray *incomplete2darray = new Texture2DArray(mRenderer, Texture::INCOMPLETE_TEXTURE_ID);
+                incomplete2darray->setImage(0, 1, 1, 1, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, 1, color);
+
+                t = incomplete2darray;
+            }
+            break;
         }
 
         mIncompleteTextures[type].set(t);
