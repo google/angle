@@ -412,8 +412,8 @@ bool ProgramBinary::setUniform4fv(GLint location, GLsizei count, const GLfloat *
 template<typename T>
 void transposeMatrix(T *target, const GLfloat *value, int targetWidth, int targetHeight, int srcWidth, int srcHeight)
 {
-    int copyWidth = std::min(targetWidth, srcWidth);
-    int copyHeight = std::min(targetHeight, srcHeight);
+    int copyWidth = std::min(targetHeight, srcWidth);
+    int copyHeight = std::min(targetWidth, srcHeight);
 
     for (int x = 0; x < copyWidth; x++)
     {
@@ -493,7 +493,8 @@ bool ProgramBinary::setUniformMatrixfv(GLint location, GLsizei count, GLboolean 
         return false; // attempting to write an array to a non-array uniform is an INVALID_OPERATION
 
     count = std::min(elementCount - (int)mUniformIndex[location].element, count);
-    GLfloat *target = (GLfloat*)(targetUniform->data + mUniformIndex[location].element * sizeof(GLfloat) * 4 * rows);
+    const unsigned int targetMatrixStride = (4 * rows);
+    GLfloat *target = (GLfloat*)(targetUniform->data + mUniformIndex[location].element * sizeof(GLfloat) * targetMatrixStride);
 
     for (int i = 0; i < count; i++)
     {
@@ -506,7 +507,7 @@ bool ProgramBinary::setUniformMatrixfv(GLint location, GLsizei count, GLboolean 
         {
             expandMatrix<GLfloat>(target, value, 4, rows, cols, rows);
         }
-        target += 4 * rows;
+        target += targetMatrixStride;
         value += cols * rows;
     }
 
