@@ -177,7 +177,7 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
     mState.unpackAlignment = 4;
     mState.packReverseRowOrder = false;
 
-    mExtensionString = NULL;
+    mCombinedExtensionsString = NULL;
     mRendererString = NULL;
 
     mInvalidEnum = false;
@@ -2808,124 +2808,139 @@ void Context::setVertexAttribDivisor(GLuint index, GLuint divisor)
 // Vendor extensions
 void Context::initExtensionString()
 {
-    std::string extensionString = "";
-
-    // OES extensions
-    if (supports32bitIndices())
+    // Do not report extension in GLES 3 contexts for now
+    if (mClientVersion == 2)
     {
-        extensionString += "GL_OES_element_index_uint ";
+        // OES extensions
+        if (supports32bitIndices())
+        {
+            mExtensionStringList.push_back("GL_OES_element_index_uint");
+        }
+
+        mExtensionStringList.push_back("GL_OES_packed_depth_stencil");
+        mExtensionStringList.push_back("GL_OES_get_program_binary");
+        mExtensionStringList.push_back("GL_OES_rgb8_rgba8");
+        if (mRenderer->getDerivativeInstructionSupport())
+        {
+            mExtensionStringList.push_back("GL_OES_standard_derivatives");
+        }
+
+        if (supportsFloat16Textures())
+        {
+            mExtensionStringList.push_back("GL_OES_texture_half_float");
+        }
+        if (supportsFloat16LinearFilter())
+        {
+            mExtensionStringList.push_back("GL_OES_texture_half_float_linear");
+        }
+        if (supportsFloat32Textures())
+        {
+            mExtensionStringList.push_back("GL_OES_texture_float");
+        }
+        if (supportsFloat32LinearFilter())
+        {
+            mExtensionStringList.push_back("GL_OES_texture_float_linear");
+        }
+
+        if (supportsNonPower2Texture())
+        {
+            mExtensionStringList.push_back("GL_OES_texture_npot");
+        }
+
+        // Multi-vendor (EXT) extensions
+        if (supportsOcclusionQueries())
+        {
+            mExtensionStringList.push_back("GL_EXT_occlusion_query_boolean");
+        }
+
+        mExtensionStringList.push_back("GL_EXT_read_format_bgra");
+        mExtensionStringList.push_back("GL_EXT_robustness");
+
+        if (supportsDXT1Textures())
+        {
+            mExtensionStringList.push_back("GL_EXT_texture_compression_dxt1");
+        }
+
+        if (supportsTextureFilterAnisotropy())
+        {
+            mExtensionStringList.push_back("GL_EXT_texture_filter_anisotropic");
+        }
+
+        if (supportsBGRATextures())
+        {
+            mExtensionStringList.push_back("GL_EXT_texture_format_BGRA8888");
+        }
+
+        if (mRenderer->getMaxRenderTargets() > 1)
+        {
+            mExtensionStringList.push_back("GL_EXT_draw_buffers");
+        }
+
+        mExtensionStringList.push_back("GL_EXT_texture_storage");
+
+        // ANGLE-specific extensions
+        if (supportsDepthTextures())
+        {
+            mExtensionStringList.push_back("GL_ANGLE_depth_texture");
+        }
+
+        mExtensionStringList.push_back("GL_ANGLE_framebuffer_blit");
+        if (getMaxSupportedSamples() != 0)
+        {
+            mExtensionStringList.push_back("GL_ANGLE_framebuffer_multisample");
+        }
+
+        if (supportsInstancing())
+        {
+            mExtensionStringList.push_back("GL_ANGLE_instanced_arrays");
+        }
+
+        mExtensionStringList.push_back("GL_ANGLE_pack_reverse_row_order");
+
+        if (supportsDXT3Textures())
+        {
+            mExtensionStringList.push_back("GL_ANGLE_texture_compression_dxt3");
+        }
+        if (supportsDXT5Textures())
+        {
+            mExtensionStringList.push_back("GL_ANGLE_texture_compression_dxt5");
+        }
+
+        mExtensionStringList.push_back("GL_ANGLE_texture_usage");
+        mExtensionStringList.push_back("GL_ANGLE_translated_shader_source");
+
+        // Other vendor-specific extensions
+        if (supportsEventQueries())
+        {
+            mExtensionStringList.push_back("GL_NV_fence");
+        }
     }
 
-    extensionString += "GL_OES_packed_depth_stencil ";
-    extensionString += "GL_OES_get_program_binary ";
-    extensionString += "GL_OES_rgb8_rgba8 ";
-    if (mRenderer->getDerivativeInstructionSupport())
+    // Join the extension strings to one long string for use with GetString
+    std::stringstream strstr;
+    for (unsigned int extensionIndex = 0; extensionIndex < mExtensionStringList.size(); extensionIndex++)
     {
-        extensionString += "GL_OES_standard_derivatives ";
+        strstr << mExtensionStringList[extensionIndex];
+        strstr << " ";
     }
 
-    if (supportsFloat16Textures())
-    {
-        extensionString += "GL_OES_texture_half_float ";
-    }
-    if (supportsFloat16LinearFilter())
-    {
-        extensionString += "GL_OES_texture_half_float_linear ";
-    }
-    if (supportsFloat32Textures())
-    {
-        extensionString += "GL_OES_texture_float ";
-    }
-    if (supportsFloat32LinearFilter())
-    {
-        extensionString += "GL_OES_texture_float_linear ";
-    }
-
-    if (supportsNonPower2Texture())
-    {
-        extensionString += "GL_OES_texture_npot ";
-    }
-
-    // Multi-vendor (EXT) extensions
-    if (supportsOcclusionQueries())
-    {
-        extensionString += "GL_EXT_occlusion_query_boolean ";
-    }
-
-    extensionString += "GL_EXT_read_format_bgra ";
-    extensionString += "GL_EXT_robustness ";
-
-    if (supportsDXT1Textures())
-    {
-        extensionString += "GL_EXT_texture_compression_dxt1 ";
-    }
-
-    if (supportsTextureFilterAnisotropy())
-    {
-        extensionString += "GL_EXT_texture_filter_anisotropic ";
-    }
-
-    if (supportsBGRATextures())
-    {
-        extensionString += "GL_EXT_texture_format_BGRA8888 ";
-    }
-
-    if (mRenderer->getMaxRenderTargets() > 1)
-    {
-        extensionString += "GL_EXT_draw_buffers ";
-    }
-
-    extensionString += "GL_EXT_texture_storage ";
-
-    // ANGLE-specific extensions
-    if (supportsDepthTextures())
-    {
-        extensionString += "GL_ANGLE_depth_texture ";
-    }
-
-    extensionString += "GL_ANGLE_framebuffer_blit ";
-    if (getMaxSupportedSamples() != 0)
-    {
-        extensionString += "GL_ANGLE_framebuffer_multisample ";
-    }
-
-    if (supportsInstancing())
-    {
-        extensionString += "GL_ANGLE_instanced_arrays ";
-    }
-
-    extensionString += "GL_ANGLE_pack_reverse_row_order ";
-
-    if (supportsDXT3Textures())
-    {
-        extensionString += "GL_ANGLE_texture_compression_dxt3 ";
-    }
-    if (supportsDXT5Textures())
-    {
-        extensionString += "GL_ANGLE_texture_compression_dxt5 ";
-    }
-
-    extensionString += "GL_ANGLE_texture_usage ";
-    extensionString += "GL_ANGLE_translated_shader_source ";
-
-    // Other vendor-specific extensions
-    if (supportsEventQueries())
-    {
-        extensionString += "GL_NV_fence ";
-    }
-
-    std::string::size_type end = extensionString.find_last_not_of(' ');
-    if (end != std::string::npos)
-    {
-        extensionString.resize(end+1);
-    }
-
-    mExtensionString = makeStaticString(extensionString);
+    mCombinedExtensionsString = makeStaticString(strstr.str());
 }
 
-const char *Context::getExtensionString() const
+const char *Context::getCombinedExtensionsString() const
 {
-    return mExtensionString;
+    return mCombinedExtensionsString;
+}
+
+const char *Context::getExtensionString(const GLuint index) const
+{
+    ASSERT(index < mExtensionStringList.size());
+    return mExtensionStringList[index].c_str();
+}
+
+unsigned int Context::getNumExtensions() const
+{
+    return mExtensionStringList.size();
 }
 
 void Context::initRendererString()

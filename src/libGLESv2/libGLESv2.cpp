@@ -4397,7 +4397,7 @@ const GLubyte* __stdcall glGetString(GLenum name)
           case GL_SHADING_LANGUAGE_VERSION:
             return (GLubyte*)"OpenGL ES GLSL ES 1.00 (ANGLE " VERSION_STRING ")";
           case GL_EXTENSIONS:
-            return (GLubyte*)((context != NULL) ? context->getExtensionString() : "");
+            return (GLubyte*)((context != NULL) ? context->getCombinedExtensionsString() : "");
           default:
             return gl::error(GL_INVALID_ENUM, (GLubyte*)NULL);
         }
@@ -9395,9 +9395,19 @@ const GLubyte* __stdcall glGetStringi(GLenum name, GLuint index)
             {
                 return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLubyte*>(NULL));
             }
-        }
 
-        UNIMPLEMENTED();
+            if (name != GL_EXTENSIONS)
+            {
+                return gl::error(GL_INVALID_ENUM, reinterpret_cast<GLubyte*>(NULL));
+            }
+
+            if (index >= context->getNumExtensions())
+            {
+                return gl::error(GL_INVALID_VALUE, reinterpret_cast<GLubyte*>(NULL));
+            }
+            
+            return reinterpret_cast<const GLubyte*>(context->getExtensionString(index));
+        }
     }
     catch(std::bad_alloc&)
     {

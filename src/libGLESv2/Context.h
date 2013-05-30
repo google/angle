@@ -431,7 +431,9 @@ class Context
     GLsizei getMaxSupportedSamples() const;
     unsigned int getMaxTransformFeedbackBufferBindings() const;
     GLintptr getUniformBufferOffsetAlignment() const;
-    const char *getExtensionString() const;
+    const char *getCombinedExtensionsString() const;
+    const char *getExtensionString(const GLuint index) const;
+    unsigned int getNumExtensions() const;
     const char *getRendererString() const;
     bool supportsEventQueries() const;
     bool supportsOcclusionQueries() const;
@@ -513,7 +515,8 @@ class Context
     QueryMap mQueryMap;
     HandleAllocator mQueryHandleAllocator;
 
-    const char *mExtensionString;
+    std::vector<std::string> mExtensionStringList;
+    const char *mCombinedExtensionsString;
     const char *mRendererString;
     
     BindingPointer<Texture> mIncompleteTextures[TEXTURE_TYPE_COUNT];
