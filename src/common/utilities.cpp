@@ -240,6 +240,33 @@ bool IsMatrixType(GLenum type)
     return VariableRowCount(type) > 1;
 }
 
+GLenum TransposeMatrixType(GLenum type)
+{
+    if (!IsMatrixType(type))
+    {
+        return type;
+    }
+
+    switch (type)
+    {
+      case GL_FLOAT_MAT2:   return GL_FLOAT_MAT2;
+      case GL_FLOAT_MAT3:   return GL_FLOAT_MAT3;
+      case GL_FLOAT_MAT4:   return GL_FLOAT_MAT4;
+      case GL_FLOAT_MAT2x3: return GL_FLOAT_MAT3x2;
+      case GL_FLOAT_MAT3x2: return GL_FLOAT_MAT2x3;
+      case GL_FLOAT_MAT2x4: return GL_FLOAT_MAT4x2;
+      case GL_FLOAT_MAT4x2: return GL_FLOAT_MAT2x4;
+      case GL_FLOAT_MAT3x4: return GL_FLOAT_MAT4x3;
+      case GL_FLOAT_MAT4x3: return GL_FLOAT_MAT3x4;
+      default: UNREACHABLE(); return GL_NONE;
+    }
+}
+
+int AttributeRegisterCount(GLenum type)
+{
+    return IsMatrixType(type) ? VariableColumnCount(type) : 1;
+}
+
 int AllocateFirstFreeBits(unsigned int *bits, unsigned int allocationSize, unsigned int bitsSize)
 {
     ASSERT(allocationSize <= bitsSize);

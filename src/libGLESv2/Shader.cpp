@@ -493,6 +493,30 @@ GLenum Shader::parseType(const std::string &type)
     {
         return GL_FLOAT_MAT4;
     }
+    else if (type == "float2x3")
+    {
+        return GL_FLOAT_MAT2x3;
+    }
+    else if (type == "float3x2")
+    {
+        return GL_FLOAT_MAT3x2;
+    }
+    else if (type == "float2x4")
+    {
+        return GL_FLOAT_MAT2x4;
+    }
+    else if (type == "float4x2")
+    {
+        return GL_FLOAT_MAT4x2;
+    }
+    else if (type == "float3x4")
+    {
+        return GL_FLOAT_MAT3x4;
+    }
+    else if (type == "float4x3")
+    {
+        return GL_FLOAT_MAT4x3;
+    }
     else UNREACHABLE();
 
     return GL_NONE;
@@ -504,9 +528,15 @@ static VaryingPriorityMap varyingPriorities;
 static void makeVaryingPriorityMap()
 {
     varyingPriorities[GL_FLOAT_MAT4]    = 0;
+    varyingPriorities[GL_FLOAT_MAT3x4]  = 10;
+    varyingPriorities[GL_FLOAT_MAT4x3]  = 20;
+    varyingPriorities[GL_FLOAT_MAT2x4]  = 30;
+    varyingPriorities[GL_FLOAT_MAT4x2]  = 40;
     varyingPriorities[GL_FLOAT_MAT2]    = 50;
     varyingPriorities[GL_FLOAT_VEC4]    = 60;
     varyingPriorities[GL_FLOAT_MAT3]    = 70;
+    varyingPriorities[GL_FLOAT_MAT2x3]  = 80;
+    varyingPriorities[GL_FLOAT_MAT3x2]  = 90;
     varyingPriorities[GL_FLOAT_VEC3]    = 100;
     varyingPriorities[GL_FLOAT_VEC2]    = 110;
     varyingPriorities[GL_FLOAT]         = 120;
@@ -582,7 +612,7 @@ int VertexShader::getSemanticIndex(const std::string &attributeName)
                 return semanticIndex;
             }
 
-            semanticIndex += VariableRowCount(attribute->type);
+            semanticIndex += AttributeRegisterCount(attribute->type);
         }
     }
 

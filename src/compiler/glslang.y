@@ -126,6 +126,7 @@ extern void yyerror(TParseContext* context, const char* reason);
 %token <lex> BREAK CONTINUE DO ELSE FOR IF DISCARD RETURN SWITCH CASE DEFAULT
 %token <lex> BVEC2 BVEC3 BVEC4 IVEC2 IVEC3 IVEC4 VEC2 VEC3 VEC4
 %token <lex> MATRIX2 MATRIX3 MATRIX4 IN_QUAL OUT_QUAL INOUT_QUAL UNIFORM VARYING
+%token <lex> MATRIX2x3 MATRIX3x2 MATRIX2x4 MATRIX4x2 MATRIX3x4 MATRIX4x3
 %token <lex> CENTROID FLAT SMOOTH
 %token <lex> STRUCT VOID_TYPE WHILE
 %token <lex> SAMPLER2D SAMPLERCUBE SAMPLER_EXTERNAL_OES SAMPLER2DRECT
@@ -1605,6 +1606,36 @@ type_specifier_nonarray
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtFloat, qual, $1.line);
         $$.setMatrix(4, 4);
+    }
+    | MATRIX2x3 {
+        TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
+        $$.setBasic(EbtFloat, qual, $1.line);
+        $$.setMatrix(2, 3);
+    }
+    | MATRIX3x2 {
+        TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
+        $$.setBasic(EbtFloat, qual, $1.line);
+        $$.setMatrix(3, 2);
+    }
+    | MATRIX2x4 {
+        TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
+        $$.setBasic(EbtFloat, qual, $1.line);
+        $$.setMatrix(2, 4);
+    }
+    | MATRIX4x2 {
+        TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
+        $$.setBasic(EbtFloat, qual, $1.line);
+        $$.setMatrix(4, 2);
+    }
+    | MATRIX3x4 {
+        TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
+        $$.setBasic(EbtFloat, qual, $1.line);
+        $$.setMatrix(3, 4);
+    }
+    | MATRIX4x3 {
+        TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
+        $$.setBasic(EbtFloat, qual, $1.line);
+        $$.setMatrix(4, 3);
     }
     | SAMPLER2D {
         FRAG_VERT_ONLY("sampler2D", $1.line);

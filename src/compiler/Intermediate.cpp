@@ -972,6 +972,7 @@ bool TIntermBinary::promote(TInfoSink& infoSink)
                 if (left->isVector())
                 {
                     op = EOpVectorTimesMatrix;
+                    setType(TType(basicType, higherPrecision, EvqTemporary, right->getCols(), 1));
                 }
                 else
                 {
@@ -994,6 +995,7 @@ bool TIntermBinary::promote(TInfoSink& infoSink)
             else if (left->isMatrix() && right->isMatrix())
             {
                 op = EOpMatrixTimesMatrix;
+                setType(TType(basicType, higherPrecision, EvqTemporary, right->getCols(), left->getRows()));
             }
             else if (!left->isMatrix() && !right->isMatrix())
             {
@@ -1045,6 +1047,7 @@ bool TIntermBinary::promote(TInfoSink& infoSink)
             else if (left->isMatrix() && right->isMatrix())
             {
                 op = EOpMatrixTimesMatrixAssign;
+                setType(TType(basicType, higherPrecision, EvqTemporary, right->getCols(), left->getRows()));
             }
             else if (!left->isMatrix() && !right->isMatrix())
             {

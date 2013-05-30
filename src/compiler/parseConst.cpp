@@ -22,8 +22,9 @@ public:
           infoSink(sink),
           symbolTable(symTable),
           size(0),
-          isMatrix(false),
-          matrixSize(0) {
+          isDiagonalMatrixInit(false),
+          matrixCols(0),
+          matrixRows(0) {
     }
 
     bool error;
@@ -46,8 +47,9 @@ protected:
     TInfoSink& infoSink;
     TSymbolTable& symbolTable;
     int size; // size of the constructor ( 4 for vec4)
-    bool isMatrix;
-    int matrixSize; // dimension of the matrix (nominal size and not the instance size)
+    bool isDiagonalMatrixInit;
+    int matrixCols; // columns of the matrix
+    int matrixRows; // rows of the matrix
 };
 
 //
@@ -118,8 +120,9 @@ bool TConstTraverser::visitAggregate(Visit visit, TIntermAggregate* node)
         size = node->getType().getObjectSize();
 
         if (node->getType().isMatrix()) {
-            isMatrix = true;
-            matrixSize = node->getType().getRows();
+            isDiagonalMatrixInit = true;
+            matrixCols = node->getType().getCols();
+            matrixRows = node->getType().getRows();
         }
     }       
 
@@ -136,8 +139,9 @@ bool TConstTraverser::visitAggregate(Visit visit, TIntermAggregate* node)
         singleConstantParam = false;   
         constructorType = EOpNull;
         size = 0;
-        isMatrix = false;
-        matrixSize = 0;
+        isDiagonalMatrixInit = false;
+        matrixCols = 0;
+        matrixRows = 0;
     }
     return false;
 }
@@ -178,7 +182,7 @@ void TConstTraverser::visitConstantUnion(TIntermConstantUnion* node)
     } else {
         int totalSize = index + size;
         ConstantUnion *rightUnionArray = node->getUnionArrayPointer();
-        if (!isMatrix) {
+        if (!isDiagonalMatrixInit) {
             int count = 0;
             for (int i = index; i < totalSize; i++) {
                 if (i >= instanceSize)
@@ -191,21 +195,25 @@ void TConstTraverser::visitConstantUnion(TIntermConstantUnion* node)
                 if (node->getType().getObjectSize() > 1)
                     count++;
             }
-        } else {  // for matrix constructors
-            int count = 0;
-            int element = index;
-            for (int i = index; i < totalSize; i++) {
-                if (i >= instanceSize)
-                    return;
-                if (element - i == 0 || (i - element) % (matrixSize + 1) == 0 )
-                    leftUnionArray[i] = rightUnionArray[count];
-                else 
-                    leftUnionArray[i].setFConst(0.0f);
+        }
+        else
+        {
+            // for matrix diagonal constructors from a single scalar
+            for (int i = 0, col = 0; col < matrixCols; col++)
+            {
+                for (int row = 0; row < matrixRows; row++, i++)
+                {
+                    if (col == row)
+                    {
+                        leftUnionArray[i] = rightUnionArray[0];
+                    }
+                    else
+                    {
+                        leftUnionArray[i].setFConst(0.0f);
+                    }
 
-                (index)++;
-
-                if (node->getType().getObjectSize() > 1)
-                    count++;                
+                    (index)++;
+                }
             }
         }
     }

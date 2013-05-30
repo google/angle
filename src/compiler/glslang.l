@@ -131,6 +131,17 @@ O           [0-7]
 "mat3"         { context->lexAfterType = true; return(MATRIX3); }
 "mat4"         { context->lexAfterType = true; return(MATRIX4); }
 
+"mat2x2"         { return ES2_ident_ES3_keyword(context, MATRIX2); }
+"mat3x3"         { return ES2_ident_ES3_keyword(context, MATRIX3); }
+"mat4x4"         { return ES2_ident_ES3_keyword(context, MATRIX4); }
+
+"mat2x3"         { return ES2_ident_ES3_keyword(context, MATRIX2x3); }
+"mat3x2"         { return ES2_ident_ES3_keyword(context, MATRIX3x2); }
+"mat2x4"         { return ES2_ident_ES3_keyword(context, MATRIX2x4); }
+"mat4x2"         { return ES2_ident_ES3_keyword(context, MATRIX4x2); }
+"mat3x4"         { return ES2_ident_ES3_keyword(context, MATRIX3x4); }
+"mat4x3"         { return ES2_ident_ES3_keyword(context, MATRIX4x3); }
+
 "vec2"         { context->lexAfterType = true; return (VEC2); }
 "vec3"         { context->lexAfterType = true; return (VEC3); }
 "vec4"         { context->lexAfterType = true; return (VEC4); }

@@ -876,8 +876,9 @@ int ProgramBinary::packVaryings(InfoLog &infoLog, const Varying *packing[][4], F
 
     for (VaryingList::iterator varying = fragmentShader->mVaryings.begin(); varying != fragmentShader->mVaryings.end(); varying++)
     {
-        int n = VariableRowCount(varying->type) * varying->size;
-        int m = VariableColumnCount(varying->type);
+        GLenum transposedType = TransposeMatrixType(varying->type);
+        int n = VariableRowCount(transposedType) * varying->size;
+        int m = VariableColumnCount(transposedType);
         bool success = false;
 
         if (m == 2 || m == 3 || m == 4)
@@ -1124,7 +1125,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
     int semanticIndex = 0;
     for (AttributeArray::iterator attribute = vertexShader->mAttributes.begin(); attribute != vertexShader->mAttributes.end(); attribute++)
     {
-        switch (attribute->type)
+        switch (TransposeMatrixType(attribute->type))
         {
           case GL_FLOAT:      vertexHLSL += "    float ";    break;
           case GL_FLOAT_VEC2: vertexHLSL += "    float2 ";   break;
@@ -1133,12 +1134,18 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
           case GL_FLOAT_MAT2: vertexHLSL += "    float2x2 "; break;
           case GL_FLOAT_MAT3: vertexHLSL += "    float3x3 "; break;
           case GL_FLOAT_MAT4: vertexHLSL += "    float4x4 "; break;
+          case GL_FLOAT_MAT2x3: vertexHLSL += "    float2x3 "; break;
+          case GL_FLOAT_MAT3x2: vertexHLSL += "    float3x2 "; break;
+          case GL_FLOAT_MAT2x4: vertexHLSL += "    float2x4 "; break;
+          case GL_FLOAT_MAT4x2: vertexHLSL += "    float4x2 "; break;
+          case GL_FLOAT_MAT3x4: vertexHLSL += "    float3x4 "; break;
+          case GL_FLOAT_MAT4x3: vertexHLSL += "    float4x3 "; break;
           default:  UNREACHABLE();
         }
 
         vertexHLSL += decorateAttribute(attribute->name) + " : TEXCOORD" + str(semanticIndex) + ";\n";
 
-        semanticIndex += VariableRowCount(attribute->type);
+        semanticIndex += AttributeRegisterCount(attribute->type);
     }
 
     vertexHLSL += "};\n"
@@ -1177,7 +1184,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
     {
         vertexHLSL += "    " + decorateAttribute(attribute->name) + " = ";
 
-        if (VariableRowCount(attribute->type) > 1)   // Matrix
+        if (IsMatrixType(attribute->type))   // Matrix
         {
             vertexHLSL += "transpose";
         }
@@ -1230,7 +1237,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
         {
             for (int i = 0; i < varying->size; i++)
             {
-                int rows = VariableRowCount(varying->type);
+                int rows = VariableRowCount(TransposeMatrixType(varying->type));
 
                 for (int j = 0; j < rows; j++)
                 {
@@ -1404,7 +1411,8 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
         {
             for (int i = 0; i < varying->size; i++)
             {
-                int rows = VariableRowCount(varying->type);
+                GLenum transposedType = TransposeMatrixType(varying->type);
+                int rows = VariableRowCount(transposedType);
                 for (int j = 0; j < rows; j++)
                 {
                     std::string n = str(varying->reg + i * rows + j);
@@ -1420,7 +1428,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
                         pixelHLSL += "[" + str(j) + "]";
                     }
 
-                    switch (VariableColumnCount(varying->type))
+                    switch (VariableColumnCount(transposedType))
                     {
                       case 1: pixelHLSL += " = input.v" + n + ".x;\n";   break;
                       case 2: pixelHLSL += " = input.v" + n + ".xy;\n";  break;
@@ -1469,7 +1477,8 @@ std::string ProgramBinary::generateVaryingHLSL(FragmentShader *fragmentShader, c
         {
             for (int i = 0; i < varying->size; i++)
             {
-                int rows = VariableRowCount(varying->type);
+                GLenum transposedType = TransposeMatrixType(varying->type);
+                int rows = VariableRowCount(transposedType);
                 for (int j = 0; j < rows; j++)
                 {
                     switch (varying->interpolation)
@@ -1481,7 +1490,7 @@ std::string ProgramBinary::generateVaryingHLSL(FragmentShader *fragmentShader, c
                     }
 
                     std::string n = str(varying->reg + i * rows + j);
-                    varyingHLSL += "float" + str(VariableColumnCount(varying->type)) + " v" + n + " : " + varyingSemantic + n + ";\n";
+                    varyingHLSL += "float" + str(VariableColumnCount(transposedType)) + " v" + n + " : " + varyingSemantic + n + ";\n";
                 }
             }
         }
@@ -1988,7 +1997,7 @@ bool ProgramBinary::linkAttributes(InfoLog &infoLog, const AttributeBindings &at
 
         if (location == -1)   // Not set by glBindAttribLocation
         {
-            int rows = VariableRowCount(attribute->type);
+            int rows = AttributeRegisterCount(attribute->type);
             int availableIndex = AllocateFirstFreeBits(&usedLocations, rows, MAX_VERTEX_ATTRIBS);
 
             if (availableIndex == -1 || availableIndex + rows > MAX_VERTEX_ATTRIBS)
@@ -2005,7 +2014,7 @@ bool ProgramBinary::linkAttributes(InfoLog &infoLog, const AttributeBindings &at
     for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; )
     {
         int index = vertexShader->getSemanticIndex(mLinkedAttribute[attributeIndex].name);
-        int rows = std::max(VariableRowCount(mLinkedAttribute[attributeIndex].type), 1);
+        int rows = std::max(AttributeRegisterCount(mLinkedAttribute[attributeIndex].type), 1);
 
         for (int r = 0; r < rows; r++)
         {

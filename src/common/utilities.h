@@ -33,6 +33,8 @@ GLenum UniformBoolVectorType(GLenum type);
 int VariableRowCount(GLenum type);
 int VariableColumnCount(GLenum type);
 bool IsMatrixType(GLenum type);
+GLenum TransposeMatrixType(GLenum type);
+int AttributeRegisterCount(GLenum type);
 
 int AllocateFirstFreeBits(unsigned int *bits, unsigned int allocationSize, unsigned int bitsSize);
 

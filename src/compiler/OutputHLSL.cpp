@@ -68,9 +68,14 @@ OutputHLSL::OutputHLSL(TParseContext &context, const ShBuiltInResources& resourc
     mUsesFaceforward2 = false;
     mUsesFaceforward3 = false;
     mUsesFaceforward4 = false;
-    mUsesEqualMat2 = false;
-    mUsesEqualMat3 = false;
-    mUsesEqualMat4 = false;
+
+    for (unsigned int col = 0; col <= 4; col++)
+    {
+        for (unsigned int row = 0; row <= 4; row++)
+        {
+            mUsesEqualMat[col][row] = false;
+        }
+    }
     mUsesEqualVec2 = false;
     mUsesEqualVec3 = false;
     mUsesEqualVec4 = false;
@@ -150,7 +155,7 @@ const ActiveInterfaceBlocks &OutputHLSL::getInterfaceBlocks() const
 
 int OutputHLSL::vectorSize(const TType &type) const
 {
-    int elementSize = type.isMatrix() ? type.getRows() : 1;
+    int elementSize = type.isMatrix() ? type.getCols() : 1;
     int arraySize = type.isArray() ? type.getArraySize() : 1;
 
     return elementSize * arraySize;
@@ -1168,34 +1173,51 @@ void OutputHLSL::header()
                "\n";
     }
 
-    if (mUsesEqualMat2)
+    for (unsigned int cols = 2; cols <= 4; cols++)
     {
-        out << "bool equal(float2x2 m, float2x2 n)\n"
-               "{\n"
-               "    return m[0][0] == n[0][0] && m[0][1] == n[0][1] &&\n"
-               "           m[1][0] == n[1][0] && m[1][1] == n[1][1];\n"
-               "}\n";
-    }
+        for (unsigned int rows = 2; rows <= 4; rows++)
+        {
+            if (mUsesEqualMat[cols][rows])
+            {
+                TString matrixType = "float" + str(cols) + "x" + str(rows);
 
-    if (mUsesEqualMat3)
-    {
-        out << "bool equal(float3x3 m, float3x3 n)\n"
-               "{\n"
-               "    return m[0][0] == n[0][0] && m[0][1] == n[0][1] && m[0][2] == n[0][2] &&\n"
-               "           m[1][0] == n[1][0] && m[1][1] == n[1][1] && m[1][2] == n[1][2] &&\n"
-               "           m[2][0] == n[2][0] && m[2][1] == n[2][1] && m[2][2] == n[2][2];\n"
-               "}\n";
-    }
+                out << "bool equal(" + matrixType + " m, " + matrixType + " n)\n"
+                       "{\n";
 
-    if (mUsesEqualMat4)
-    {
-        out << "bool equal(float4x4 m, float4x4 n)\n"
-               "{\n"
-               "    return m[0][0] == n[0][0] && m[0][1] == n[0][1] && m[0][2] == n[0][2] && m[0][3] == n[0][3] &&\n"
-               "           m[1][0] == n[1][0] && m[1][1] == n[1][1] && m[1][2] == n[1][2] && m[1][3] == n[1][3] &&\n"
-               "           m[2][0] == n[2][0] && m[2][1] == n[2][1] && m[2][2] == n[2][2] && m[2][3] == n[2][3] &&\n"
-               "           m[3][0] == n[3][0] && m[3][1] == n[3][1] && m[3][2] == n[3][2] && m[3][3] == n[3][3];\n"
-               "}\n";
+                for (unsigned int row = 0; row < rows; row++)
+                {
+                    if (row == 0)
+                    {
+                        out << "    return ";
+                    }
+                    else
+                    {
+                        out << "           ";
+                    }
+
+                    for (unsigned int col = 0; col < cols; col++)
+                    {
+                        TString index = "[" + str(col) + "][" + str(row) + "]";
+                        out << "m" + index + " == n" + index;
+
+                        if (col == cols-1 && row == rows-1)
+                        {
+                            out << ";\n";
+                        }
+                        else if (col == cols-1)
+                        {
+                            out << " &&\n";
+                        }
+                        else
+                        {
+                            out << " && ";
+                        }
+                    }
+                }
+
+                out << "}\n";
+            }
+        }
     }
 
     if (mUsesEqualVec2)
@@ -1573,13 +1595,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
         {
             if (node->getLeft()->isMatrix())
             {
-                switch (node->getLeft()->getRows())
-                {
-                  case 2: mUsesEqualMat2 = true; break;
-                  case 3: mUsesEqualMat3 = true; break;
-                  case 4: mUsesEqualMat4 = true; break;
-                  default: UNREACHABLE();
-                }
+                mUsesEqualMat[node->getLeft()->getCols()][node->getLeft()->getRows()] = true;
             }
             else if (node->getLeft()->isVector())
             {
@@ -2816,12 +2832,9 @@ TString OutputHLSL::typeString(const TType &type)
     }
     else if (type.isMatrix())
     {
-        switch (type.getRows())
-        {
-          case 2: return "float2x2";
-          case 3: return "float3x3";
-          case 4: return "float4x4";
-        }
+        int cols = type.getCols();
+        int rows = type.getRows();
+        return "float" + str(cols) + "x" + str(rows);
     }
     else
     {
@@ -3352,11 +3365,35 @@ GLenum OutputHLSL::glVariableType(const TType &type)
         }
         else if (type.isMatrix())
         {
-            switch(type.getRows())
+            switch (type.getCols())
             {
-              case 2: return GL_FLOAT_MAT2;
-              case 3: return GL_FLOAT_MAT3;
-              case 4: return GL_FLOAT_MAT4;
+              case 2:
+                switch(type.getRows())
+                {
+                  case 2: return GL_FLOAT_MAT2;
+                  case 3: return GL_FLOAT_MAT2x3;
+                  case 4: return GL_FLOAT_MAT2x4;
+                  default: UNREACHABLE();
+                }
+
+              case 3:
+                switch(type.getRows())
+                {
+                  case 2: return GL_FLOAT_MAT3x2;
+                  case 3: return GL_FLOAT_MAT3;
+                  case 4: return GL_FLOAT_MAT3x4;
+                  default: UNREACHABLE();
+                }
+
+              case 4:
+                switch(type.getRows())
+                {
+                  case 2: return GL_FLOAT_MAT4x2;
+                  case 3: return GL_FLOAT_MAT4x3;
+                  case 4: return GL_FLOAT_MAT4;
+                  default: UNREACHABLE();
+                }
+
               default: UNREACHABLE();
             }
         }
