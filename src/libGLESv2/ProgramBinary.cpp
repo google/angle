@@ -107,6 +107,12 @@ ProgramBinary::~ProgramBinary()
         delete mUniforms.back();
         mUniforms.pop_back();
     }
+
+    while (!mUniformBlocks.empty())
+    {
+        delete mUniformBlocks.back();
+        mUniformBlocks.pop_back();
+    }
 }
 
 unsigned int ProgramBinary::getSerial() const
@@ -1461,17 +1467,64 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
         GLenum precision;
         std::string name;
         unsigned int arraySize;
+        int blockIndex;
 
         stream.read(&type);
         stream.read(&precision);
         stream.read(&name);
         stream.read(&arraySize);
+        stream.read(&blockIndex);
 
-        mUniforms[i] = new Uniform(type, precision, name, arraySize);
+        int offset;
+        int arrayStride;
+        int matrixStride;
+        bool isRowMajorMatrix;
+
+        stream.read(&offset);
+        stream.read(&arrayStride);
+        stream.read(&matrixStride);
+        stream.read(&isRowMajorMatrix);
+
+        const sh::BlockMemberInfo blockInfo(offset, arrayStride, matrixStride, isRowMajorMatrix);
+
+        mUniforms[i] = new Uniform(type, precision, name, arraySize, blockIndex, blockInfo);
         
         stream.read(&mUniforms[i]->psRegisterIndex);
         stream.read(&mUniforms[i]->vsRegisterIndex);
         stream.read(&mUniforms[i]->registerCount);
+    }
+
+    stream.read(&size);
+    if (stream.error())
+    {
+        infoLog.append("Invalid program binary.");
+        return false;
+    }
+
+    mUniformBlocks.resize(size);
+    for (unsigned int uniformBlockIndex = 0; uniformBlockIndex < size; ++uniformBlockIndex)
+    {
+        std::string name;
+        unsigned int elementIndex;
+        unsigned int dataSize;
+
+        stream.read(&name);
+        stream.read(&elementIndex);
+        stream.read(&dataSize);
+
+        mUniformBlocks[uniformBlockIndex] = new UniformBlock(name, elementIndex, dataSize);
+
+        UniformBlock& uniformBlock = *mUniformBlocks[uniformBlockIndex];
+        stream.read(&uniformBlock.psRegisterIndex);
+        stream.read(&uniformBlock.vsRegisterIndex);
+
+        size_t numMembers;
+        stream.read(&numMembers);
+        uniformBlock.memberUniformIndexes.resize(numMembers);
+        for (unsigned int blockMemberIndex = 0; blockMemberIndex < numMembers; blockMemberIndex++)
+        {
+            stream.read(&uniformBlock.memberUniformIndexes[blockMemberIndex]);
+        }
     }
 
     stream.read(&size);
@@ -1592,16 +1645,43 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
     stream.write(mUsesPointSize);
 
     stream.write(mUniforms.size());
-    for (unsigned int i = 0; i < mUniforms.size(); ++i)
+    for (unsigned int uniformIndex = 0; uniformIndex < mUniforms.size(); ++uniformIndex)
     {
-        stream.write(mUniforms[i]->type);
-        stream.write(mUniforms[i]->precision);
-        stream.write(mUniforms[i]->name);
-        stream.write(mUniforms[i]->arraySize);
+        const Uniform &uniform = *mUniforms[uniformIndex];
 
-        stream.write(mUniforms[i]->psRegisterIndex);
-        stream.write(mUniforms[i]->vsRegisterIndex);
-        stream.write(mUniforms[i]->registerCount);
+        stream.write(uniform.type);
+        stream.write(uniform.precision);
+        stream.write(uniform.name);
+        stream.write(uniform.arraySize);
+        stream.write(uniform.blockIndex);
+
+        stream.write(uniform.blockInfo.offset);
+        stream.write(uniform.blockInfo.arrayStride);
+        stream.write(uniform.blockInfo.matrixStride);
+        stream.write(uniform.blockInfo.isRowMajorMatrix);
+
+        stream.write(uniform.psRegisterIndex);
+        stream.write(uniform.vsRegisterIndex);
+        stream.write(uniform.registerCount);
+    }
+
+    stream.write(mUniformBlocks.size());
+    for (unsigned int uniformBlockIndex = 0; uniformBlockIndex < mUniformBlocks.size(); ++uniformBlockIndex)
+    {
+        const UniformBlock& uniformBlock = *mUniformBlocks[uniformBlockIndex];
+
+        stream.write(uniformBlock.name);
+        stream.write(uniformBlock.elementIndex);
+        stream.write(uniformBlock.dataSize);
+
+        stream.write(uniformBlock.memberUniformIndexes.size());
+        for (unsigned int blockMemberIndex = 0; blockMemberIndex < uniformBlock.memberUniformIndexes.size(); blockMemberIndex++)
+        {
+            stream.write(uniformBlock.memberUniformIndexes[blockMemberIndex]);
+        }
+
+        stream.write(uniformBlock.psRegisterIndex);
+        stream.write(uniformBlock.vsRegisterIndex);
     }
 
     stream.write(mUniformIndex.size());
@@ -1748,9 +1828,9 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
     // special case for gl_DepthRange, the only built-in uniform (also a struct)
     if (vertexShader->mUsesDepthRange || fragmentShader->mUsesDepthRange)
     {
-        mUniforms.push_back(new Uniform(GL_FLOAT, GL_HIGH_FLOAT, "gl_DepthRange.near", 0));
-        mUniforms.push_back(new Uniform(GL_FLOAT, GL_HIGH_FLOAT, "gl_DepthRange.far", 0));
-        mUniforms.push_back(new Uniform(GL_FLOAT, GL_HIGH_FLOAT, "gl_DepthRange.diff", 0));
+        mUniforms.push_back(new Uniform(GL_FLOAT, GL_HIGH_FLOAT, "gl_DepthRange.near", 0, -1, sh::BlockMemberInfo::defaultBlockInfo));
+        mUniforms.push_back(new Uniform(GL_FLOAT, GL_HIGH_FLOAT, "gl_DepthRange.far", 0, -1, sh::BlockMemberInfo::defaultBlockInfo));
+        mUniforms.push_back(new Uniform(GL_FLOAT, GL_HIGH_FLOAT, "gl_DepthRange.diff", 0, -1, sh::BlockMemberInfo::defaultBlockInfo));
     }
 
     return success;
@@ -1914,7 +1994,7 @@ bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, In
     }
     else
     {
-        uniform = new Uniform(constant.type, constant.precision, constant.name, constant.arraySize);
+        uniform = new Uniform(constant.type, constant.precision, constant.name, constant.arraySize, -1, sh::BlockMemberInfo::defaultBlockInfo);
     }
 
     if (!uniform)
@@ -2241,17 +2321,12 @@ GLint ProgramBinary::getActiveUniformi(GLuint index, GLenum pname) const
       case GL_UNIFORM_TYPE:         return static_cast<GLint>(uniform.type);
       case GL_UNIFORM_SIZE:         return static_cast<GLint>(uniform.elementCount());
       case GL_UNIFORM_NAME_LENGTH:  return static_cast<GLint>(uniform.name.size() + 1);
+      case GL_UNIFORM_BLOCK_INDEX:  return uniform.blockIndex;
 
-      case GL_UNIFORM_BLOCK_INDEX:
-      case GL_UNIFORM_OFFSET:
-      case GL_UNIFORM_ARRAY_STRIDE:
-      case GL_UNIFORM_MATRIX_STRIDE:
-        // the default block gives a value of -1 for these parameters
-        return -1;
-
-      case GL_UNIFORM_IS_ROW_MAJOR:
-        // TODO: column/row major layout for uniform blocks
-        return 0;
+      case GL_UNIFORM_OFFSET:       return uniform.blockInfo.offset;
+      case GL_UNIFORM_ARRAY_STRIDE: return uniform.blockInfo.arrayStride;
+      case GL_UNIFORM_MATRIX_STRIDE: return uniform.blockInfo.matrixStride;
+      case GL_UNIFORM_IS_ROW_MAJOR: return static_cast<GLint>(uniform.blockInfo.isRowMajorMatrix);
 
       default:
         UNREACHABLE();

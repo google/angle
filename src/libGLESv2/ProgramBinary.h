@@ -184,6 +184,7 @@ class ProgramBinary : public RefCountObject
     bool mUsesPointSize;
 
     UniformArray mUniforms;
+    UniformBlockArray mUniformBlocks;
     typedef std::vector<UniformLocation> UniformIndex;
     UniformIndex mUniformIndex;
 

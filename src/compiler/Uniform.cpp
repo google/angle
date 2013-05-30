@@ -18,4 +18,14 @@ Uniform::Uniform(GLenum type, GLenum precision, const char *name, unsigned int a
     this->registerIndex = registerIndex;
 }
 
+BlockMemberInfo::BlockMemberInfo(int offset, int arrayStride, int matrixStride, bool isRowMajorMatrix)
+    : offset(offset),
+      arrayStride(arrayStride),
+      matrixStride(matrixStride),
+      isRowMajorMatrix(isRowMajorMatrix)
+{
+}
+
+const BlockMemberInfo BlockMemberInfo::defaultBlockInfo(-1, -1, -1, false);
+
 }

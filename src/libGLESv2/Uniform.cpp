@@ -12,17 +12,28 @@
 namespace gl
 {
 
-Uniform::Uniform(GLenum type, GLenum precision, const std::string &name, unsigned int arraySize)
-    : type(type), precision(precision), name(name), arraySize(arraySize)
+Uniform::Uniform(GLenum type, GLenum precision, const std::string &name, unsigned int arraySize, const int blockIndex, const sh::BlockMemberInfo &blockInfo)
+    : type(type),
+      precision(precision),
+      name(name),
+      arraySize(arraySize),
+      blockIndex(blockIndex),
+      blockInfo(blockInfo),
+      data(NULL),
+      dirty(true),
+      psRegisterIndex(GL_INVALID_INDEX),
+      vsRegisterIndex(GL_INVALID_INDEX),
+      registerCount(0)
 {
-    int bytes = gl::UniformInternalSize(type) * elementCount();
-    data = new unsigned char[bytes];
-    memset(data, 0, bytes);
-    dirty = true;
-
-    psRegisterIndex = GL_INVALID_INDEX;
-    vsRegisterIndex = GL_INVALID_INDEX;
-    registerCount = VariableRowCount(type) * elementCount();
+    // We use data storage for default block uniforms to cache values that are sent to D3D during rendering
+    // Uniform blocks/buffers are treated separately by the Renderer (ES3 path only)
+    if (isInDefaultBlock())
+    {
+        size_t bytes = UniformInternalSize(type) * elementCount();
+        data = new unsigned char[bytes];
+        memset(data, 0, bytes);
+        registerCount = VariableRowCount(type) * elementCount();
+    }
 }
 
 Uniform::~Uniform()
@@ -46,6 +57,35 @@ bool Uniform::isReferencedByVertexShader() const
 }
 
 bool Uniform::isReferencedByFragmentShader() const
+{
+    return psRegisterIndex != GL_INVALID_INDEX;
+}
+
+bool Uniform::isInDefaultBlock() const
+{
+    return blockIndex == -1;
+}
+
+UniformBlock::UniformBlock(const std::string &name, unsigned int elementIndex, unsigned int dataSize)
+    : name(name),
+      elementIndex(elementIndex),
+      dataSize(dataSize),
+      psRegisterIndex(GL_INVALID_INDEX),
+      vsRegisterIndex(GL_INVALID_INDEX)
+{
+}
+
+bool UniformBlock::isArrayElement() const
+{
+    return elementIndex != GL_INVALID_INDEX;
+}
+
+bool UniformBlock::isReferencedByVertexShader() const
+{
+    return vsRegisterIndex != GL_INVALID_INDEX;
+}
+
+bool UniformBlock::isReferencedByFragmentShader() const
 {
     return psRegisterIndex != GL_INVALID_INDEX;
 }

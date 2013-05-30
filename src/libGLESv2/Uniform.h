@@ -15,6 +15,8 @@
 #include <GLES2/gl2.h>
 
 #include "common/debug.h"
+#include "angletypes.h"
+#include "compiler/Uniform.h"
 
 namespace gl
 {
@@ -22,7 +24,7 @@ namespace gl
 // Helper struct representing a single shader uniform
 struct Uniform
 {
-    Uniform(GLenum type, GLenum precision, const std::string &name, unsigned int arraySize);
+    Uniform(GLenum type, GLenum precision, const std::string &name, unsigned int arraySize, const int blockIndex, const sh::BlockMemberInfo &blockInfo);
 
     ~Uniform();
 
@@ -30,11 +32,14 @@ struct Uniform
     unsigned int elementCount() const;
     bool isReferencedByVertexShader() const;
     bool isReferencedByFragmentShader() const;
+    bool isInDefaultBlock() const;
 
     const GLenum type;
     const GLenum precision;
     const std::string name;
     const unsigned int arraySize;
+    const int blockIndex;
+    const sh::BlockMemberInfo blockInfo;
 
     unsigned char *data;
     bool dirty;
@@ -45,6 +50,28 @@ struct Uniform
 };
 
 typedef std::vector<Uniform*> UniformArray;
+
+// Helper struct representing a single shader uniform block
+struct UniformBlock
+{
+    // use GL_INVALID_INDEX for non-array elements
+    UniformBlock(const std::string &name, unsigned int elementIndex, unsigned int dataSize);
+
+    bool isArrayElement() const;
+    bool isReferencedByVertexShader() const;
+    bool isReferencedByFragmentShader() const;
+
+    const std::string name;
+    const unsigned int elementIndex;
+    const unsigned int dataSize;
+
+    std::vector<unsigned int> memberUniformIndexes;
+
+    unsigned int psRegisterIndex;
+    unsigned int vsRegisterIndex;
+};
+
+typedef std::vector<UniformBlock*> UniformBlockArray;
 
 }
 

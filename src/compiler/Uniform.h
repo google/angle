@@ -31,6 +31,18 @@ struct Uniform
 
 typedef std::vector<Uniform> ActiveUniforms;
 
+struct BlockMemberInfo
+{
+    BlockMemberInfo(int offset, int arrayStride, int matrixStride, bool isRowMajorMatrix);
+
+    int offset;
+    int arrayStride;
+    int matrixStride;
+    bool isRowMajorMatrix;
+
+    static const BlockMemberInfo defaultBlockInfo;
+};
+
 }
 
 #endif   // COMPILER_UNIFORM_H_
