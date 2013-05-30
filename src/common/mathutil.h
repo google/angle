@@ -18,6 +18,10 @@
 
 namespace gl
 {
+
+const unsigned int Float32One = 0x3F800000;
+const unsigned short Float16One = 0x3C00;
+
 struct Vector4
 {
     Vector4() {}

@@ -14,9 +14,6 @@
 #include "libGLESv2/renderer/Renderer11.h"
 #include "libGLESv2/Context.h"
 
-#define FLOAT32_ONE_BITS (0x3f800000)
-#define FLOAT16_ONE_BITS (0x3c00)
-
 namespace rx
 {
 
@@ -643,30 +640,30 @@ const VertexBuffer11::VertexConverter VertexBuffer11::mFloatVertexTranslations[N
     },
     { // GL_HALF_FLOAT
         { // unnormalized
-            { &copyVertexData<GLhalf, 1, false, FLOAT16_ONE_BITS>, true, DXGI_FORMAT_R16_FLOAT, 2 },
-            { &copyVertexData<GLhalf, 2, false, FLOAT16_ONE_BITS>, true, DXGI_FORMAT_R16G16_FLOAT, 4 },
-            { &copyVertexData<GLhalf, 3, true, FLOAT16_ONE_BITS>, false, DXGI_FORMAT_R16G16B16A16_FLOAT, 8 },
-            { &copyVertexData<GLhalf, 4, false, FLOAT16_ONE_BITS>, true, DXGI_FORMAT_R16G16B16A16_FLOAT, 8 },
+            { &copyVertexData<GLhalf, 1, false, gl::Float16One>, true, DXGI_FORMAT_R16_FLOAT, 2 },
+            { &copyVertexData<GLhalf, 2, false, gl::Float16One>, true, DXGI_FORMAT_R16G16_FLOAT, 4 },
+            { &copyVertexData<GLhalf, 3, true, gl::Float16One>, false, DXGI_FORMAT_R16G16B16A16_FLOAT, 8 },
+            { &copyVertexData<GLhalf, 4, false, gl::Float16One>, true, DXGI_FORMAT_R16G16B16A16_FLOAT, 8 },
         },
         { // normalized
-            { &copyVertexData<GLhalf, 1, false, FLOAT16_ONE_BITS>, true, DXGI_FORMAT_R16_FLOAT, 2 },
-            { &copyVertexData<GLhalf, 2, false, FLOAT16_ONE_BITS>, true, DXGI_FORMAT_R16G16_FLOAT, 4 },
-            { &copyVertexData<GLhalf, 3, true, FLOAT16_ONE_BITS>, false, DXGI_FORMAT_R16G16B16A16_FLOAT, 8 },
-            { &copyVertexData<GLhalf, 4, false, FLOAT16_ONE_BITS>, true, DXGI_FORMAT_R16G16B16A16_FLOAT, 8 },
+            { &copyVertexData<GLhalf, 1, false, gl::Float16One>, true, DXGI_FORMAT_R16_FLOAT, 2 },
+            { &copyVertexData<GLhalf, 2, false, gl::Float16One>, true, DXGI_FORMAT_R16G16_FLOAT, 4 },
+            { &copyVertexData<GLhalf, 3, true, gl::Float16One>, false, DXGI_FORMAT_R16G16B16A16_FLOAT, 8 },
+            { &copyVertexData<GLhalf, 4, false, gl::Float16One>, true, DXGI_FORMAT_R16G16B16A16_FLOAT, 8 },
         },
     },
     { // GL_FLOAT
         { // unnormalized
-            { &copyVertexData<GLfloat, 1, false, FLOAT32_ONE_BITS>, true, DXGI_FORMAT_R32_FLOAT, 4 },
-            { &copyVertexData<GLfloat, 2, false, FLOAT32_ONE_BITS>, true, DXGI_FORMAT_R32G32_FLOAT, 8 },
-            { &copyVertexData<GLfloat, 3, false, FLOAT32_ONE_BITS>, true, DXGI_FORMAT_R32G32B32_FLOAT, 12 },
-            { &copyVertexData<GLfloat, 4, false, FLOAT32_ONE_BITS>, true, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
+            { &copyVertexData<GLfloat, 1, false, gl::Float32One>, true, DXGI_FORMAT_R32_FLOAT, 4 },
+            { &copyVertexData<GLfloat, 2, false, gl::Float32One>, true, DXGI_FORMAT_R32G32_FLOAT, 8 },
+            { &copyVertexData<GLfloat, 3, false, gl::Float32One>, true, DXGI_FORMAT_R32G32B32_FLOAT, 12 },
+            { &copyVertexData<GLfloat, 4, false, gl::Float32One>, true, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
         },
         { // normalized
-            { &copyVertexData<GLfloat, 1, false, FLOAT32_ONE_BITS>, true, DXGI_FORMAT_R32_FLOAT, 4 },
-            { &copyVertexData<GLfloat, 2, false, FLOAT32_ONE_BITS>, true, DXGI_FORMAT_R32G32_FLOAT, 8 },
-            { &copyVertexData<GLfloat, 3, false, FLOAT32_ONE_BITS>, true, DXGI_FORMAT_R32G32B32_FLOAT, 12 },
-            { &copyVertexData<GLfloat, 4, false, FLOAT32_ONE_BITS>, true, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
+            { &copyVertexData<GLfloat, 1, false, gl::Float32One>, true, DXGI_FORMAT_R32_FLOAT, 4 },
+            { &copyVertexData<GLfloat, 2, false, gl::Float32One>, true, DXGI_FORMAT_R32G32_FLOAT, 8 },
+            { &copyVertexData<GLfloat, 3, false, gl::Float32One>, true, DXGI_FORMAT_R32G32B32_FLOAT, 12 },
+            { &copyVertexData<GLfloat, 4, false, gl::Float32One>, true, DXGI_FORMAT_R32G32B32A32_FLOAT, 16 },
         },
     },
 };
