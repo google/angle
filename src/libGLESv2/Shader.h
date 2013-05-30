@@ -90,6 +90,7 @@ class Shader
     unsigned int getRefCount() const;
     bool isFlaggedForDeletion() const;
     void flagForDeletion();
+    int getShaderVersion() const;
 
     static void releaseCompiler();
 
@@ -117,6 +118,7 @@ class Shader
     bool mUsesPointSize;
     bool mUsesPointCoord;
     bool mUsesDepthRange;
+    int mShaderVersion;
 
     static void *mFragmentCompiler;
     static void *mVertexCompiler;

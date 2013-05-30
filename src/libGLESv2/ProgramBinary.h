@@ -137,6 +137,7 @@ class ProgramBinary : public RefCountObject
     bool isValidated() const;
 
     unsigned int getSerial() const;
+    int getShaderVersion() const;
 
     void sortAttributesByLayout(rx::TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS], int sortedSemanticIndices[MAX_VERTEX_ATTRIBS]) const;
 
@@ -196,6 +197,7 @@ class ProgramBinary : public RefCountObject
     GLuint mUsedVertexSamplerRange;
     GLuint mUsedPixelSamplerRange;
     bool mUsesPointSize;
+    int mShaderVersion;
 
     UniformArray mUniforms;
     UniformBlockArray mUniformBlocks;

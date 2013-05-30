@@ -34,6 +34,7 @@ Shader::Shader(ResourceManager *manager, const rx::Renderer *renderer, GLuint ha
 
     mRefCount = 0;
     mDeleteStatus = false;
+    mShaderVersion = 100;
 }
 
 Shader::~Shader()
@@ -361,6 +362,7 @@ void Shader::uncompile()
     mUsesPointSize = false;
     mUsesPointCoord = false;
     mUsesDepthRange = false;
+    mShaderVersion = 100;
 
     mActiveUniforms.clear();
     mActiveInterfaceBlocks.clear();
@@ -405,6 +407,8 @@ void Shader::compileToHLSL(void *compiler)
 
     size_t shaderVersion = 100;
     ShGetInfo(compiler, SH_SHADER_VERSION, &shaderVersion);
+
+    mShaderVersion = static_cast<int>(shaderVersion);
 
     if (shaderVersion == 300 && mRenderer->getCurrentClientVersion() < 3)
     {
@@ -575,6 +579,11 @@ bool Shader::compareVarying(const Varying &x, const Varying &y)
     }
 
     return false;
+}
+
+int Shader::getShaderVersion() const
+{
+    return mShaderVersion;
 }
 
 VertexShader::VertexShader(ResourceManager *manager, const rx::Renderer *renderer, GLuint handle)

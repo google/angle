@@ -90,6 +90,7 @@ ProgramBinary::ProgramBinary(rx::Renderer *renderer) : mRenderer(renderer), RefC
     mUsedVertexSamplerRange = 0;
     mUsedPixelSamplerRange = 0;
     mUsesPointSize = false;
+    mShaderVersion = 100;
 }
 
 ProgramBinary::~ProgramBinary()
@@ -119,6 +120,11 @@ ProgramBinary::~ProgramBinary()
 unsigned int ProgramBinary::getSerial() const
 {
     return mSerial;
+}
+
+int ProgramBinary::getShaderVersion() const
+{
+    return mShaderVersion;
 }
 
 unsigned int ProgramBinary::issueSerial()
@@ -1545,6 +1551,7 @@ bool ProgramBinary::load(InfoLog &infoLog, const void *binary, GLsizei length)
     stream.read(&mUsedVertexSamplerRange);
     stream.read(&mUsedPixelSamplerRange);
     stream.read(&mUsesPointSize);
+    stream.read(&mShaderVersion);
 
     size_t size;
     stream.read(&size);
@@ -1738,6 +1745,7 @@ bool ProgramBinary::save(void* binary, GLsizei bufSize, GLsizei *length)
     stream.write(mUsedVertexSamplerRange);
     stream.write(mUsedPixelSamplerRange);
     stream.write(mUsesPointSize);
+    stream.write(mShaderVersion);
 
     stream.write(mUniforms.size());
     for (unsigned int uniformIndex = 0; uniformIndex < mUniforms.size(); ++uniformIndex)
@@ -1869,6 +1877,8 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
     {
         return false;
     }
+
+    mShaderVersion = vertexShader->getShaderVersion();
 
     std::string pixelHLSL = fragmentShader->getHLSL();
     std::string vertexHLSL = vertexShader->getHLSL();
