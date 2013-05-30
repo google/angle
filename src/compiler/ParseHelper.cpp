@@ -1104,6 +1104,34 @@ bool TParseContext::areAllChildConst(TIntermAggregate* aggrNode)
     return allConstant;
 }
 
+TPublicType TParseContext::addFullySpecifiedType(TQualifier qualifier, const TPublicType& typeSpecifier)
+{
+    TPublicType returnType = typeSpecifier;
+    returnType.qualifier = qualifier;
+
+    if (typeSpecifier.array)
+    {
+        error(typeSpecifier.line, "not supported", "first-class array");
+        recover();
+        returnType.setArray(false);
+    }
+
+    if (qualifier == EvqAttribute && (typeSpecifier.type == EbtBool || typeSpecifier.type == EbtInt))
+    {
+        error(typeSpecifier.line, "cannot be bool or int", getQualifierString(qualifier));
+        recover();
+    }
+
+    if ((qualifier == EvqVaryingIn || qualifier == EvqVaryingOut) &&
+        (typeSpecifier.type == EbtBool || typeSpecifier.type == EbtInt))
+    {
+        error(typeSpecifier.line, "cannot be bool or int", getQualifierString(qualifier));
+        recover();
+    }
+
+    return returnType;
+}
+
 // This function is used to test for the correctness of the parameters passed to various constructor functions
 // and also convert them to the right datatype if it is allowed and required. 
 //

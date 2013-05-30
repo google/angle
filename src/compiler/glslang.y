@@ -1330,24 +1330,7 @@ fully_specified_type
         }
     }
     | type_qualifier type_specifier  {
-        if ($2.array) {
-            context->error($2.line, "not supported", "first-class array");
-            context->recover();
-            $2.setArray(false);
-        }
-
-        if ($1.qualifier == EvqAttribute &&
-            ($2.type == EbtBool || $2.type == EbtInt)) {
-            context->error($2.line, "cannot be bool or int", getQualifierString($1.qualifier));
-            context->recover();
-        }
-        if (($1.qualifier == EvqVaryingIn || $1.qualifier == EvqVaryingOut) &&
-            ($2.type == EbtBool || $2.type == EbtInt)) {
-            context->error($2.line, "cannot be bool or int", getQualifierString($1.qualifier));
-            context->recover();
-        }
-        $$ = $2;
-        $$.qualifier = $1.qualifier;
+        $$ = context->addFullySpecifiedType($1.qualifier, $2);
     }
     ;
 
