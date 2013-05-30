@@ -116,9 +116,6 @@
     <ClCompile Include="renderer\Image.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\ImageSSE2.cpp">
-      <Filter>Source Files\Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\VertexBuffer.cpp">
       <Filter>Source Files\Renderer</Filter>
     </ClCompile>
