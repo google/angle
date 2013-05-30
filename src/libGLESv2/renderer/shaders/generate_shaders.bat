@@ -19,6 +19,13 @@ fxc /E PS_PassthroughRGB2D /T ps_4_0 /Fh compiled/passthroughrgb2d11ps.h Passthr
 fxc /E PS_PassthroughLum2D /T ps_4_0 /Fh compiled/passthroughlum2d11ps.h Passthrough2D11.hlsl
 fxc /E PS_PassthroughLumAlpha2D /T ps_4_0 /Fh compiled/passthroughlumalpha2d11ps.h Passthrough2D11.hlsl
 
+fxc /E VS_Passthrough3D /T vs_4_0 /Fh compiled/passthrough3d11vs.h Passthrough3D11.hlsl
+fxc /E GS_Passthrough3D /T gs_4_0 /Fh compiled/passthrough3d11gs.h Passthrough3D11.hlsl
+fxc /E PS_PassthroughRGBA3D /T ps_4_0 /Fh compiled/passthroughrgba3d11ps.h Passthrough3D11.hlsl
+fxc /E PS_PassthroughRGB3D /T ps_4_0 /Fh compiled/passthroughrgb3d11ps.h Passthrough3D11.hlsl
+fxc /E PS_PassthroughLum3D /T ps_4_0 /Fh compiled/passthroughlum3d11ps.h Passthrough3D11.hlsl
+fxc /E PS_PassthroughLumAlpha3D /T ps_4_0 /Fh compiled/passthroughlumalpha3d11ps.h Passthrough3D11.hlsl
+
 fxc /E VS_Clear /T vs_4_0 /Fh compiled/clear11vs.h Clear11.hlsl
 fxc /E PS_ClearSingle /T ps_4_0 /Fh compiled/clearsingle11ps.h Clear11.hlsl
 fxc /E PS_ClearMultiple /T ps_4_0 /Fh compiled/clearmultiple11ps.h Clear11.hlsl

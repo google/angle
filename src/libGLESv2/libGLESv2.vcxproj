@@ -400,6 +400,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <None Include="renderer\shaders\Clear11.hlsl" />
     <None Include="renderer\shaders\generate_shaders.bat" />
     <None Include="renderer\shaders\Passthrough2D11.hlsl" />
+    <None Include="renderer\shaders\Passthrough3D11.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="libGLESv2.rc" />
