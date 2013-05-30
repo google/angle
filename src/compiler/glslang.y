@@ -443,59 +443,7 @@ function_call_header
 
 function_identifier
     : type_specifier_nonarray {
-        //
-        // Constructor
-        //
-        TOperator op = EOpNull;
-        if ($1.userDef) {
-            op = EOpConstructStruct;
-        } else {
-            switch ($1.type) {
-            case EbtFloat:
-                if ($1.isMatrix()) {
-                    switch($1.getCols()) {
-                    case 2:                                     op = EOpConstructMat2;  break;
-                    case 3:                                     op = EOpConstructMat3;  break;
-                    case 4:                                     op = EOpConstructMat4;  break;
-                    }
-                } else {
-                    switch($1.getNominalSize()) {
-                    case 1:                                     op = EOpConstructFloat; break;
-                    case 2:                                     op = EOpConstructVec2;  break;
-                    case 3:                                     op = EOpConstructVec3;  break;
-                    case 4:                                     op = EOpConstructVec4;  break;
-                    }
-                }
-                break;
-            case EbtInt:
-                switch($1.getNominalSize()) {
-                case 1:                                         op = EOpConstructInt;   break;
-                case 2:       FRAG_VERT_ONLY("ivec2", $1.line); op = EOpConstructIVec2; break;
-                case 3:       FRAG_VERT_ONLY("ivec3", $1.line); op = EOpConstructIVec3; break;
-                case 4:       FRAG_VERT_ONLY("ivec4", $1.line); op = EOpConstructIVec4; break;
-                }
-                break;
-            case EbtBool:
-                switch($1.getNominalSize()) {
-                case 1:                                         op = EOpConstructBool;  break;
-                case 2:       FRAG_VERT_ONLY("bvec2", $1.line); op = EOpConstructBVec2; break;
-                case 3:       FRAG_VERT_ONLY("bvec3", $1.line); op = EOpConstructBVec3; break;
-                case 4:       FRAG_VERT_ONLY("bvec4", $1.line); op = EOpConstructBVec4; break;
-                }
-                break;
-            default: break;
-            }
-            if (op == EOpNull) {
-                context->error($1.line, "cannot construct this type", getBasicString($1.type));
-                context->recover();
-                $1.type = EbtFloat;
-                op = EOpConstructFloat;
-            }
-        }
-        TString tempString;
-        TType type($1);
-        TFunction *function = new TFunction(&tempString, type, op);
-        $$ = function;
+        $$ = context->addConstructorFunc($1);
     }
     | IDENTIFIER {
         if (context->reservedErrorCheck($1.line, *$1.string))

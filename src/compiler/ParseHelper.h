@@ -121,6 +121,7 @@ struct TParseContext {
     bool arraySetMaxSize(TIntermSymbol*, TType*, int, bool, TSourceLoc);
 
     TPublicType addFullySpecifiedType(TQualifier qualifier, const TPublicType& typeSpecifier);
+    TFunction *addConstructorFunc(TPublicType publicType);
     TIntermTyped* addConstructor(TIntermNode*, const TType*, TOperator, TFunction*, TSourceLoc);
     TIntermTyped* foldConstConstructor(TIntermAggregate* aggrNode, const TType& type);
     TIntermTyped* constructStruct(TIntermNode*, TType*, int, TSourceLoc, bool subset);

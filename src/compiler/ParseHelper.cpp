@@ -1149,6 +1149,77 @@ TPublicType TParseContext::addFullySpecifiedType(TQualifier qualifier, const TPu
     return returnType;
 }
 
+TFunction *TParseContext::addConstructorFunc(TPublicType publicType)
+{
+    TOperator op = EOpNull;
+    if (publicType.userDef)
+    {
+        op = EOpConstructStruct;
+    }
+    else
+    {
+        switch (publicType.type)
+        {
+          case EbtFloat:
+            if (publicType.isMatrix())
+            {
+                // TODO: non-square matrices
+                switch(publicType.getCols())
+                {
+                  case 2:       op = EOpConstructMat2;  break;
+                  case 3:       op = EOpConstructMat3;  break;
+                  case 4:       op = EOpConstructMat4;  break;
+                }
+            }
+            else
+            {
+                switch(publicType.getNominalSize())
+                {
+                  case 1:       op = EOpConstructFloat; break;
+                  case 2:       op = EOpConstructVec2;  break;
+                  case 3:       op = EOpConstructVec3;  break;
+                  case 4:       op = EOpConstructVec4;  break;
+                }
+            }
+            break;
+
+          case EbtInt:
+            switch(publicType.getNominalSize())
+            {
+              case 1:       op = EOpConstructInt;   break;
+              case 2:       op = EOpConstructIVec2; break;
+              case 3:       op = EOpConstructIVec3; break;
+              case 4:       op = EOpConstructIVec4; break;
+            }
+            break;
+
+          case EbtBool:
+            switch(publicType.getNominalSize())
+            {
+                case 1:     op = EOpConstructBool;  break;
+                case 2:     op = EOpConstructBVec2; break;
+                case 3:     op = EOpConstructBVec3; break;
+                case 4:     op = EOpConstructBVec4; break;
+            }
+            break;
+
+          default: break;
+        }
+
+        if (op == EOpNull)
+        {
+            error(publicType.line, "cannot construct this type", getBasicString(publicType.type));
+            recover();
+            publicType.type = EbtFloat;
+            op = EOpConstructFloat;
+        }
+    }
+
+    TString tempString;
+    TType type(publicType);
+    return new TFunction(&tempString, type, op);
+}
+
 // This function is used to test for the correctness of the parameters passed to various constructor functions
 // and also convert them to the right datatype if it is allowed and required. 
 //
