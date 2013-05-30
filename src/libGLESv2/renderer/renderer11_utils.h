@@ -55,6 +55,15 @@ struct PositionTexCoordVertex
 };
 void SetPositionTexCoordVertex(PositionTexCoordVertex* vertex, float x, float y, float u, float v);
 
+struct PositionLayerTexCoord3DVertex
+{
+    float x, y;
+    unsigned int l;
+    float u, v, s;
+};
+void SetPositionLayerTexCoord3DVertex(PositionLayerTexCoord3DVertex* vertex, float x, float y,
+                                      unsigned int layer, float u, float v, float s);
+
 struct PositionDepthColorVertex
 {
     float x, y, z;

@@ -165,20 +165,24 @@ void TextureStorage11::generateMipmapLayer(RenderTarget11 *source, RenderTarget1
 
         if (sourceSRV && destRTV)
         {
-            gl::Rectangle sourceArea;
+            gl::Box sourceArea;
             sourceArea.x = 0;
             sourceArea.y = 0;
+            sourceArea.z = 0;
             sourceArea.width = source->getWidth();
             sourceArea.height = source->getHeight();
+            sourceArea.depth = source->getDepth();
 
-            gl::Rectangle destArea;
+            gl::Box destArea;
             destArea.x = 0;
             destArea.y = 0;
+            destArea.z = 0;
             destArea.width = dest->getWidth();
             destArea.height = dest->getHeight();
+            destArea.depth = dest->getDepth();
 
-            mRenderer->copyTexture(sourceSRV, sourceArea, source->getWidth(), source->getHeight(),
-                                   destRTV, destArea, dest->getWidth(), dest->getHeight(),
+            mRenderer->copyTexture(sourceSRV, sourceArea, source->getWidth(), source->getHeight(), source->getDepth(),
+                                   destRTV, destArea, dest->getWidth(), dest->getHeight(), dest->getDepth(),
                                    GL_RGBA);
         }
 

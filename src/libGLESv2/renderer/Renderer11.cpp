@@ -34,6 +34,13 @@
 #include "libGLESv2/renderer/shaders/compiled/passthroughlum2d11ps.h"
 #include "libGLESv2/renderer/shaders/compiled/passthroughlumalpha2d11ps.h"
 
+#include "libGLESv2/renderer/shaders/compiled/passthrough3d11vs.h"
+#include "libGLESv2/renderer/shaders/compiled/passthrough3d11gs.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughrgba3d11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughrgb3d11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughlum3d11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughlumalpha3d11ps.h"
+
 #include "libGLESv2/renderer/shaders/compiled/clear11vs.h"
 #include "libGLESv2/renderer/shaders/compiled/clearsingle11ps.h"
 #include "libGLESv2/renderer/shaders/compiled/clearmultiple11ps.h"
@@ -83,6 +90,13 @@ Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(
     mCopyRGB2DPS = NULL;
     mCopyLum2DPS = NULL;
     mCopyLumAlpha2DPS = NULL;
+    mCopy3DIL = NULL;
+    mCopy3DVS = NULL;
+    mCopy3DGS = NULL;
+    mCopyRGBA3DPS = NULL;
+    mCopyRGB3DPS = NULL;
+    mCopyLum3DPS = NULL;
+    mCopyLumAlpha3DPS = NULL;
 
     mClearResourcesInitialized = false;
     mClearVB = NULL;
@@ -1797,7 +1811,13 @@ void Renderer11::releaseDeviceResources()
     SafeRelease(mCopyRGB2DPS);
     SafeRelease(mCopyLum2DPS);
     SafeRelease(mCopyLumAlpha2DPS);
-
+    SafeRelease(mCopy3DIL);
+    SafeRelease(mCopy3DVS);
+    SafeRelease(mCopy3DGS);
+    SafeRelease(mCopyRGBA3DPS);
+    SafeRelease(mCopyRGB3DPS);
+    SafeRelease(mCopyLum3DPS);
+    SafeRelease(mCopyLumAlpha3DPS);
     mCopyResourcesInitialized = false;
 
     SafeRelease(mClearVB);
@@ -2520,14 +2540,24 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
-    gl::Rectangle destRect;
-    destRect.x = xoffset;
-    destRect.y = yoffset;
-    destRect.width = sourceRect.width;
-    destRect.height = sourceRect.height;
+    gl::Box sourceArea;
+    sourceArea.x = sourceRect.x;
+    sourceArea.y = sourceRect.y;
+    sourceArea.z = 0;
+    sourceArea.width = sourceRect.width;
+    sourceArea.height = sourceRect.height;
+    sourceArea.depth = 1;
 
-    bool ret = copyTexture(source, sourceRect, sourceRenderTarget->getWidth(), sourceRenderTarget->getHeight(),
-                           dest, destRect, destRenderTarget->getWidth(), destRenderTarget->getHeight(), destFormat);
+    gl::Box destArea;
+    destArea.x = xoffset;
+    destArea.y = yoffset;
+    destArea.z = 0;
+    destArea.width = sourceRect.width;
+    destArea.height = sourceRect.height;
+    destArea.depth = 1;
+
+    bool ret = copyTexture(source, sourceArea, sourceRenderTarget->getWidth(), sourceRenderTarget->getHeight(), 1,
+                           dest, destArea, destRenderTarget->getWidth(), destRenderTarget->getHeight(), 1, destFormat);
 
     source->Release();
     dest->Release();
@@ -2583,14 +2613,24 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
-    gl::Rectangle destRect;
-    destRect.x = xoffset;
-    destRect.y = yoffset;
-    destRect.width = sourceRect.width;
-    destRect.height = sourceRect.height;
+    gl::Box sourceArea;
+    sourceArea.x = sourceRect.x;
+    sourceArea.y = sourceRect.y;
+    sourceArea.z = 0;
+    sourceArea.width = sourceRect.width;
+    sourceArea.height = sourceRect.height;
+    sourceArea.depth = 1;
 
-    bool ret = copyTexture(source, sourceRect, sourceRenderTarget->getWidth(), sourceRenderTarget->getHeight(),
-                           dest, destRect, destRenderTarget->getWidth(), destRenderTarget->getHeight(), destFormat);
+    gl::Box destArea;
+    destArea.x = xoffset;
+    destArea.y = yoffset;
+    destArea.z = 0;
+    destArea.width = sourceRect.width;
+    destArea.height = sourceRect.height;
+    destArea.depth = 1;
+
+    bool ret = copyTexture(source, sourceArea, sourceRenderTarget->getWidth(), sourceRenderTarget->getHeight(), 1,
+                           dest, destArea, destRenderTarget->getWidth(), destRenderTarget->getHeight(), 1, destFormat);
 
     source->Release();
     dest->Release();
@@ -2646,14 +2686,24 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
-    gl::Rectangle destRect;
-    destRect.x = xoffset;
-    destRect.y = yoffset;
-    destRect.width = sourceRect.width;
-    destRect.height = sourceRect.height;
+    gl::Box sourceArea;
+    sourceArea.x = sourceRect.x;
+    sourceArea.y = sourceRect.y;
+    sourceArea.z = 0;
+    sourceArea.width = sourceRect.width;
+    sourceArea.height = sourceRect.height;
+    sourceArea.depth = 1;
 
-    bool ret = copyTexture(source, sourceRect, sourceRenderTarget->getWidth(), sourceRenderTarget->getHeight(),
-                           dest, destRect, destRenderTarget->getWidth(), destRenderTarget->getHeight(), destFormat);
+    gl::Box destArea;
+    destArea.x = xoffset;
+    destArea.y = yoffset;
+    destArea.z = 0;
+    destArea.width = sourceRect.width;
+    destArea.height = sourceRect.height;
+    destArea.depth = 1;
+
+    bool ret = copyTexture(source, sourceArea, sourceRenderTarget->getWidth(), sourceRenderTarget->getHeight(), 1,
+                           dest, destArea, destRenderTarget->getWidth(), destRenderTarget->getHeight(), 1, destFormat);
 
     source->Release();
     dest->Release();
@@ -2709,14 +2759,24 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
-    gl::Rectangle destRect;
-    destRect.x = xoffset;
-    destRect.y = yoffset;
-    destRect.width = sourceRect.width;
-    destRect.height = sourceRect.height;
+    gl::Box sourceArea;
+    sourceArea.x = sourceRect.x;
+    sourceArea.y = sourceRect.y;
+    sourceArea.z = 0;
+    sourceArea.width = sourceRect.width;
+    sourceArea.height = sourceRect.height;
+    sourceArea.depth = 1;
 
-    bool ret = copyTexture(source, sourceRect, sourceRenderTarget->getWidth(), sourceRenderTarget->getHeight(),
-                           dest, destRect, destRenderTarget->getWidth(), destRenderTarget->getHeight(), destFormat);
+    gl::Box destArea;
+    destArea.x = xoffset;
+    destArea.y = yoffset;
+    destArea.z = 0;
+    destArea.width = sourceRect.width;
+    destArea.height = sourceRect.height;
+    destArea.depth = 1;
+
+    bool ret = copyTexture(source, sourceArea, sourceRenderTarget->getWidth(), sourceRenderTarget->getHeight(), 1,
+                           dest, destArea, destRenderTarget->getWidth(), destRenderTarget->getHeight(), 1, destFormat);
 
     source->Release();
     dest->Release();
@@ -2724,17 +2784,20 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     return ret;
 }
 
-bool Renderer11::copyTexture(ID3D11ShaderResourceView *source, const gl::Rectangle &sourceArea, unsigned int sourceWidth, unsigned int sourceHeight,
-                             ID3D11RenderTargetView *dest, const gl::Rectangle &destArea, unsigned int destWidth, unsigned int destHeight, GLenum destFormat)
+bool Renderer11::copyTexture(ID3D11ShaderResourceView *source, const gl::Box &sourceArea, unsigned int sourceWidth, unsigned int sourceHeight, unsigned int sourceDepth,
+                             ID3D11RenderTargetView *dest, const gl::Box &destArea, unsigned int destWidth, unsigned int destHeight, unsigned int destDepth,
+                             GLenum destFormat)
 {
     HRESULT result;
 
     if (!mCopyResourcesInitialized)
     {
-        ASSERT(!mCopyVB && !mCopySampler && !mCopy2DIL && !mCopy2DVS && !mCopyRGBA2DPS && !mCopyRGB2DPS && !mCopyLum2DPS && !mCopyLumAlpha2DPS);
+        ASSERT(!mCopyVB && !mCopySampler && !mCopy2DIL && !mCopy2DVS && !mCopyRGBA2DPS && !mCopyRGB2DPS && !mCopyLum2DPS && !mCopyLumAlpha2DPS &&
+               !mCopy3DIL && !mCopy3DVS && !mCopy3DGS && !mCopyRGBA3DPS && !mCopyRGB3DPS && !mCopyLum3DPS && !mCopyLumAlpha3DPS);
 
         D3D11_BUFFER_DESC vbDesc;
-        vbDesc.ByteWidth = sizeof(d3d11::PositionTexCoordVertex) * 4;
+        vbDesc.ByteWidth = std::max(sizeof(d3d11::PositionLayerTexCoord3DVertex) * 6 * getMaxTextureDepth(),
+                                    sizeof(d3d11::PositionTexCoordVertex) * 4);
         vbDesc.Usage = D3D11_USAGE_DYNAMIC;
         vbDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
         vbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
@@ -2771,7 +2834,7 @@ bool Renderer11::copyTexture(ID3D11ShaderResourceView *source, const gl::Rectang
             { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 8, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         };
 
-        result = mDevice->CreateInputLayout(quad2DLayout, 2, g_VS_Passthrough2D, sizeof(g_VS_Passthrough2D), &mCopy2DIL);
+        result = mDevice->CreateInputLayout(quad2DLayout, ArraySize(quad2DLayout), g_VS_Passthrough2D, sizeof(g_VS_Passthrough2D), &mCopy2DIL);
         ASSERT(SUCCEEDED(result));
         d3d11::SetDebugName(mCopy2DIL, "Renderer11 copy 2D texture input layout");
 
@@ -2795,17 +2858,57 @@ bool Renderer11::copyTexture(ID3D11ShaderResourceView *source, const gl::Rectang
         ASSERT(SUCCEEDED(result));
         d3d11::SetDebugName(mCopyLumAlpha2DPS, "Renderer11 2D copy texture luminance alpha pixel shader");
 
+        // Create 3D copy resources
+        D3D11_INPUT_ELEMENT_DESC quad3DLayout[] =
+        {
+            { "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT,    0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "LAYER",    0, DXGI_FORMAT_R32_UINT,        0,  8, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "TEXCOORD", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        };
+
+        result = mDevice->CreateInputLayout(quad3DLayout, ArraySize(quad3DLayout), g_VS_Passthrough3D, sizeof(g_VS_Passthrough3D), &mCopy3DIL);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mCopy3DIL, "Renderer11 copy 3D texture input layout");
+
+        result = mDevice->CreateVertexShader(g_VS_Passthrough3D, sizeof(g_VS_Passthrough3D), NULL, &mCopy3DVS);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mCopy3DVS, "Renderer11 copy 3D texture vertex shader");
+
+        result = mDevice->CreateGeometryShader(g_GS_Passthrough3D, sizeof(g_GS_Passthrough3D), NULL, &mCopy3DGS);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mCopy3DGS, "Renderer11 copy 3D texture geometry shader");
+
+        result = mDevice->CreatePixelShader(g_PS_PassthroughRGBA3D, sizeof(g_PS_PassthroughRGBA3D), NULL, &mCopyRGBA3DPS);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mCopyRGBA3DPS, "Renderer11 copy 3D texture RGBA pixel shader");
+
+        result = mDevice->CreatePixelShader(g_PS_PassthroughRGB3D, sizeof(g_PS_PassthroughRGB3D), NULL, &mCopyRGB3DPS);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mCopyRGB3DPS, "Renderer11 copy 3D texture RGB pixel shader");
+
+        result = mDevice->CreatePixelShader(g_PS_PassthroughLum3D, sizeof(g_PS_PassthroughLum3D), NULL, &mCopyLum3DPS);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mCopyLum3DPS, "Renderer11 copy 3D texture luminance pixel shader");
+
+        result = mDevice->CreatePixelShader(g_PS_PassthroughLumAlpha3D, sizeof(g_PS_PassthroughLumAlpha3D), NULL, &mCopyLumAlpha3DPS);
+        ASSERT(SUCCEEDED(result));
+        d3d11::SetDebugName(mCopyLumAlpha3DPS, "Renderer11 3D copy texture luminance alpha pixel shader");
+
         mCopyResourcesInitialized = true;
     }
 
     // Verify the source and destination area sizes
     if (sourceArea.x < 0 || sourceArea.x + sourceArea.width > static_cast<int>(sourceWidth) ||
         sourceArea.y < 0 || sourceArea.y + sourceArea.height > static_cast<int>(sourceHeight) ||
+        sourceArea.z < 0 || sourceArea.z + sourceArea.depth > static_cast<int>(sourceDepth) ||
         destArea.x < 0 || destArea.x + destArea.width > static_cast<int>(destWidth) ||
-        destArea.y < 0 || destArea.y + destArea.height > static_cast<int>(destHeight))
+        destArea.y < 0 || destArea.y + destArea.height > static_cast<int>(destHeight) ||
+        destArea.z < 0 || destArea.z + destArea.depth > static_cast<int>(destDepth))
     {
         return gl::error(GL_INVALID_VALUE, false);
     }
+
+    bool use3DCopy = sourceArea.depth > 1;
 
     // Set vertices
     D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -2815,8 +2918,6 @@ bool Renderer11::copyTexture(ID3D11ShaderResourceView *source, const gl::Rectang
         ERR("Failed to map vertex buffer for texture copy, HRESULT: 0x%X.", result);
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
-
-    d3d11::PositionTexCoordVertex *vertices = static_cast<d3d11::PositionTexCoordVertex*>(mappedResource.pData);
 
     // Create a quad in homogeneous coordinates
     float x1 = (destArea.x / float(destWidth)) * 2.0f - 1.0f;
@@ -2829,15 +2930,48 @@ bool Renderer11::copyTexture(ID3D11ShaderResourceView *source, const gl::Rectang
     float u2 = (sourceArea.x + sourceArea.width) / float(sourceWidth);
     float v2 = (sourceArea.y + sourceArea.height) / float(sourceHeight);
 
-    d3d11::SetPositionTexCoordVertex(&vertices[0], x1, y1, u1, v2);
-    d3d11::SetPositionTexCoordVertex(&vertices[1], x1, y2, u1, v1);
-    d3d11::SetPositionTexCoordVertex(&vertices[2], x2, y1, u2, v2);
-    d3d11::SetPositionTexCoordVertex(&vertices[3], x2, y2, u2, v1);
+    UINT stride = 0;
+    UINT startIdx = 0;
+    UINT drawCount = 0;
+    D3D11_PRIMITIVE_TOPOLOGY topology = D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
+
+    if (use3DCopy)
+    {
+        d3d11::PositionLayerTexCoord3DVertex *vertices = static_cast<d3d11::PositionLayerTexCoord3DVertex*>(mappedResource.pData);
+
+        for (unsigned int i = 0; i < destDepth; i++)
+        {
+            float readDepth = ((i * 2) + 0.5f) / (sourceDepth - 1);
+
+            d3d11::SetPositionLayerTexCoord3DVertex(&vertices[i * 6 + 0], x1, y1, i, u1, v2, readDepth);
+            d3d11::SetPositionLayerTexCoord3DVertex(&vertices[i * 6 + 1], x1, y2, i, u1, v1, readDepth);
+            d3d11::SetPositionLayerTexCoord3DVertex(&vertices[i * 6 + 2], x2, y1, i, u2, v2, readDepth);
+
+            d3d11::SetPositionLayerTexCoord3DVertex(&vertices[i * 6 + 3], x1, y2, i, u1, v1, readDepth);
+            d3d11::SetPositionLayerTexCoord3DVertex(&vertices[i * 6 + 4], x2, y2, i, u2, v1, readDepth);
+            d3d11::SetPositionLayerTexCoord3DVertex(&vertices[i * 6 + 5], x2, y1, i, u2, v2, readDepth);
+        }
+
+        stride = sizeof(d3d11::PositionLayerTexCoord3DVertex);
+        drawCount = destDepth * 6;
+        topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+    }
+    else
+    {
+        d3d11::PositionTexCoordVertex *vertices = static_cast<d3d11::PositionTexCoordVertex*>(mappedResource.pData);
+
+        d3d11::SetPositionTexCoordVertex(&vertices[0], x1, y1, u1, v2);
+        d3d11::SetPositionTexCoordVertex(&vertices[1], x1, y2, u1, v1);
+        d3d11::SetPositionTexCoordVertex(&vertices[2], x2, y1, u2, v2);
+        d3d11::SetPositionTexCoordVertex(&vertices[3], x2, y2, u2, v1);
+
+        stride = sizeof(d3d11::PositionTexCoordVertex);
+        drawCount = 4;
+        topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+    }
 
     mDeviceContext->Unmap(mCopyVB, 0);
 
-    static UINT stride = sizeof(d3d11::PositionTexCoordVertex);
-    static UINT startIdx = 0;
     mDeviceContext->IASetVertexBuffers(0, 1, &mCopyVB, &stride, &startIdx);
 
     // Apply state
@@ -2846,24 +2980,52 @@ bool Renderer11::copyTexture(ID3D11ShaderResourceView *source, const gl::Rectang
     mDeviceContext->RSSetState(NULL);
 
     // Apply shaders
-    mDeviceContext->IASetInputLayout(mCopy2DIL);
-    mDeviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-    mDeviceContext->VSSetShader(mCopy2DVS, NULL, 0);
-
+    ID3D11InputLayout *il = NULL;
+    ID3D11VertexShader *vs = NULL;
+    ID3D11GeometryShader *gs = NULL;
     ID3D11PixelShader *ps = NULL;
-    switch(destFormat)
+
+    if (use3DCopy)
     {
-      case GL_RGBA:            ps = mCopyRGBA2DPS;     break;
-      case GL_RGB:             ps = mCopyRGB2DPS;      break;
-      case GL_ALPHA:           ps = mCopyRGBA2DPS;     break;
-      case GL_BGRA_EXT:        ps = mCopyRGBA2DPS;     break;
-      case GL_LUMINANCE:       ps = mCopyLum2DPS;      break;
-      case GL_LUMINANCE_ALPHA: ps = mCopyLumAlpha2DPS; break;
-      default: UNREACHABLE();  ps = NULL;            break;
+        il = mCopy3DIL;
+        vs = mCopy3DVS;
+        gs = mCopy3DGS;
+
+        switch(destFormat)
+        {
+          case GL_RGBA:            ps = mCopyRGBA3DPS;     break;
+          case GL_RGB:             ps = mCopyRGB3DPS;      break;
+          case GL_ALPHA:           ps = mCopyRGBA3DPS;     break;
+          case GL_BGRA_EXT:        ps = mCopyRGBA3DPS;     break;
+          case GL_LUMINANCE:       ps = mCopyLum3DPS;      break;
+          case GL_LUMINANCE_ALPHA: ps = mCopyLumAlpha3DPS; break;
+          default: UNREACHABLE();  ps = NULL;              break;
+        }
+    }
+    else
+    {
+        il = mCopy2DIL;
+        vs = mCopy2DVS;
+        gs = NULL;
+
+        switch(destFormat)
+        {
+          case GL_RGBA:            ps = mCopyRGBA2DPS;     break;
+          case GL_RGB:             ps = mCopyRGB2DPS;      break;
+          case GL_ALPHA:           ps = mCopyRGBA2DPS;     break;
+          case GL_BGRA_EXT:        ps = mCopyRGBA2DPS;     break;
+          case GL_LUMINANCE:       ps = mCopyLum2DPS;      break;
+          case GL_LUMINANCE_ALPHA: ps = mCopyLumAlpha2DPS; break;
+          default: UNREACHABLE();  ps = NULL;              break;
+        }
     }
 
+    mDeviceContext->IASetInputLayout(il);
+    mDeviceContext->IASetPrimitiveTopology(topology);
+    mDeviceContext->VSSetShader(vs, NULL, 0);
+
     mDeviceContext->PSSetShader(ps, NULL, 0);
-    mDeviceContext->GSSetShader(NULL, NULL, 0);
+    mDeviceContext->GSSetShader(gs, NULL, 0);
 
     // Unset the currently bound shader resource to avoid conflicts
     static ID3D11ShaderResourceView *const nullSRV = NULL;
@@ -2887,7 +3049,7 @@ bool Renderer11::copyTexture(ID3D11ShaderResourceView *source, const gl::Rectang
     mDeviceContext->PSSetSamplers(0, 1, &mCopySampler);
 
     // Draw the quad
-    mDeviceContext->Draw(4, 0);
+    mDeviceContext->Draw(drawCount, 0);
 
     // Unbind textures and render targets and vertex buffer
     mDeviceContext->PSSetShaderResources(0, 1, &nullSRV);

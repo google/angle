@@ -416,6 +416,17 @@ void SetPositionTexCoordVertex(PositionTexCoordVertex* vertex, float x, float y,
     vertex->v = v;
 }
 
+void SetPositionLayerTexCoord3DVertex(PositionLayerTexCoord3DVertex* vertex, float x, float y,
+                                      unsigned int layer, float u, float v, float s)
+{
+    vertex->x = x;
+    vertex->y = y;
+    vertex->l = layer;
+    vertex->u = u;
+    vertex->v = v;
+    vertex->s = s;
+}
+
 void SetPositionDepthColorVertex(PositionDepthColorVertex* vertex, float x, float y, float z,
                                  const gl::Color &color)
 {

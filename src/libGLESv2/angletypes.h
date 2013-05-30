@@ -45,6 +45,16 @@ struct Rectangle
     int height;
 };
 
+struct Box
+{
+    int x;
+    int y;
+    int z;
+    int width;
+    int height;
+    int depth;
+};
+
 struct RasterizerState
 {
     bool cullFace;

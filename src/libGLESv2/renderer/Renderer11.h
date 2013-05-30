@@ -152,8 +152,9 @@ class Renderer11 : public Renderer
     virtual bool copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                            GLint xoffset, GLint yoffset, GLint zOffset, TextureStorageInterface2DArray *storage, GLint level);
 
-    bool copyTexture(ID3D11ShaderResourceView *source, const gl::Rectangle &sourceArea, unsigned int sourceWidth, unsigned int sourceHeight,
-                     ID3D11RenderTargetView *dest, const gl::Rectangle &destArea, unsigned int destWidth, unsigned int destHeight, GLenum destFormat);
+    bool copyTexture(ID3D11ShaderResourceView *source, const gl::Box &sourceArea, unsigned int sourceWidth, unsigned int sourceHeight, unsigned int sourceDepth,
+                     ID3D11RenderTargetView *dest, const gl::Box &destArea, unsigned int destWidth, unsigned int destHeight, unsigned int destDepth,
+                     GLenum destFormat);
 
     virtual bool blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &readRect, gl::Framebuffer *drawTarget, const gl::Rectangle &drawRect,
                           bool blitRenderTarget, bool blitDepthStencil);
@@ -333,6 +334,14 @@ class Renderer11 : public Renderer
     ID3D11PixelShader *mCopyRGB2DPS;
     ID3D11PixelShader *mCopyLum2DPS;
     ID3D11PixelShader *mCopyLumAlpha2DPS;
+
+    ID3D11InputLayout *mCopy3DIL;
+    ID3D11VertexShader *mCopy3DVS;
+    ID3D11GeometryShader *mCopy3DGS;
+    ID3D11PixelShader *mCopyRGBA3DPS;
+    ID3D11PixelShader *mCopyRGB3DPS;
+    ID3D11PixelShader *mCopyLum3DPS;
+    ID3D11PixelShader *mCopyLumAlpha3DPS;
 
     // Masked clear resources
     bool mClearResourcesInitialized;
