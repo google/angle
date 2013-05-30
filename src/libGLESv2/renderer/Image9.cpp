@@ -407,13 +407,25 @@ void Image9::loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width
 void Image9::loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                                 const void *input)
 {
-    ASSERT(xoffset % 4 == 0);
-    ASSERT(yoffset % 4 == 0);
-
     // 3D textures are not supported by the D3D9 backend.
     ASSERT(zoffset == 0 && depth == 1);
 
-    RECT lockRect = {
+    GLuint clientVersion = mRenderer->getCurrentClientVersion();
+    GLsizei inputRowPitch = gl::GetRowPitch(mInternalFormat, GL_UNSIGNED_BYTE, clientVersion, width, 1);
+    GLsizei inputDepthPitch = gl::GetDepthPitch(mInternalFormat, GL_UNSIGNED_BYTE, clientVersion, width, height, 1);
+
+    GLuint outputPixelSize = d3d9::GetFormatPixelBytes(mD3DFormat);
+    GLuint outputBlockWidth = d3d9::GetBlockWidth(mD3DFormat);
+    GLuint outputBlockHeight = d3d9::GetBlockHeight(mD3DFormat);
+
+    ASSERT(xoffset % outputBlockWidth == 0);
+    ASSERT(yoffset % outputBlockHeight == 0);
+
+    LoadImageFunction loadFunction = d3d9::GetImageLoadFunction(mInternalFormat, mRenderer);
+    ASSERT(loadFunction != NULL);
+
+    RECT lockRect =
+    {
         xoffset, yoffset,
         xoffset + width, yoffset + height
     };
@@ -425,13 +437,8 @@ void Image9::loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset, GLs
         return;
     }
 
-    GLsizei inputSize = gl::ComputeCompressedSize(width, height, mInternalFormat);
-    GLsizei inputPitch = gl::ComputeCompressedRowPitch(width, mInternalFormat);
-    int rows = inputSize / inputPitch;
-    for (int i = 0; i < rows; ++i)
-    {
-        memcpy((void*)((BYTE*)locked.pBits + i * locked.Pitch), (void*)((BYTE*)input + i * inputPitch), inputPitch);
-    }
+    loadFunction(width, height, depth, input, inputRowPitch, inputDepthPitch,
+                 locked.pBits, locked.Pitch, 0);
 
     unlock();
 }

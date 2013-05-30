@@ -210,8 +210,19 @@ void Image11::loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei widt
 void Image11::loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                                  const void *input)
 {
-    ASSERT(xoffset % 4 == 0);
-    ASSERT(yoffset % 4 == 0);
+    GLuint clientVersion = mRenderer->getCurrentClientVersion();
+    GLsizei inputRowPitch = gl::GetRowPitch(mInternalFormat, GL_UNSIGNED_BYTE, clientVersion, width, 1);
+    GLsizei inputDepthPitch = gl::GetDepthPitch(mInternalFormat, GL_UNSIGNED_BYTE, clientVersion, width, height, 1);
+
+    GLuint outputPixelSize = d3d11::GetFormatPixelBytes(mDXGIFormat);
+    GLuint outputBlockWidth = d3d11::GetBlockWidth(mDXGIFormat);
+    GLuint outputBlockHeight = d3d11::GetBlockHeight(mDXGIFormat);
+
+    ASSERT(xoffset % outputBlockWidth == 0);
+    ASSERT(yoffset % outputBlockHeight == 0);
+
+    LoadImageFunction loadFunction = d3d11::GetImageLoadFunction(mInternalFormat, GL_UNSIGNED_BYTE, clientVersion);
+    ASSERT(loadFunction != NULL);
 
     D3D11_MAPPED_SUBRESOURCE mappedImage;
     HRESULT result = map(D3D11_MAP_WRITE, &mappedImage);
@@ -221,25 +232,12 @@ void Image11::loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset, GL
         return;
     }
 
-    // Size computation assumes a 4x4 block compressed texture format
-    size_t blockSize = d3d11::ComputeBlockSizeBits(mDXGIFormat) / 8;
-    void* offsetMappedData = (void*)((BYTE*)mappedImage.pData + ((yoffset / 4) * mappedImage.RowPitch + (xoffset / 4) * blockSize + zoffset * mappedImage.DepthPitch));
+    void* offsetMappedData = (void*)((BYTE*)mappedImage.pData + ((yoffset / outputBlockHeight) * mappedImage.RowPitch +
+                                                                 (xoffset / outputBlockWidth) * outputPixelSize +
+                                                                 zoffset * mappedImage.DepthPitch));
 
-    GLsizei inputSize = gl::ComputeCompressedSize(width, height, mInternalFormat);
-    GLsizei inputRowPitch = gl::ComputeCompressedRowPitch(width, mInternalFormat);
-    GLsizei inputDepthPitch = gl::ComputeCompressedDepthPitch(width, height, mInternalFormat);
-    int rows = inputSize / inputRowPitch;
-
-    for (int z = 0; z < depth; ++z)
-    {
-        for (int y = 0; y < rows; ++y)
-        {
-            void *source = (void*)((BYTE*)input + y * inputRowPitch + z * inputDepthPitch);
-            void *dest = (void*)((BYTE*)offsetMappedData + y * mappedImage.RowPitch + z * mappedImage.DepthPitch);
-
-            memcpy(dest, source, inputRowPitch);
-        }
-    }
+    loadFunction(width, height, depth, input, inputRowPitch, inputDepthPitch,
+                 offsetMappedData, mappedImage.RowPitch, mappedImage.DepthPitch);
 
     unmap();
 }
