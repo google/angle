@@ -16,6 +16,7 @@
 #include "libGLESv2/renderer/Renderer11.h"
 #include "libGLESv2/renderer/RenderTarget11.h"
 #include "libGLESv2/renderer/renderer11_utils.h"
+#include "libGLESv2/renderer/formatutils11.h"
 #include "libGLESv2/renderer/ShaderExecutable11.h"
 #include "libGLESv2/renderer/SwapChain11.h"
 #include "libGLESv2/renderer/Image11.h"
@@ -481,8 +482,8 @@ int Renderer11::generateConfigs(ConfigDesc **configDescList)
                 if (depthStencilFormatOK)
                 {
                     ConfigDesc newConfig;
-                    newConfig.renderTargetFormat = d3d11_gl::ConvertBackBufferFormat(renderTargetFormat);
-                    newConfig.depthStencilFormat = d3d11_gl::ConvertDepthStencilFormat(depthStencilFormat);
+                    newConfig.renderTargetFormat = d3d11_gl::GetInternalFormat(renderTargetFormat);
+                    newConfig.depthStencilFormat = d3d11_gl::GetInternalFormat(depthStencilFormat);
                     newConfig.multiSample = 0;     // FIXME: enumerate multi-sampling
                     newConfig.fastConfig = true;   // Assume all DX11 format conversions to be fast
                     newConfig.es3Capable = true;
@@ -1483,7 +1484,8 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArra
 
 void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer)
 {
-     bool alphaUnmasked = (gl::GetAlphaSize(mRenderTargetDesc.format) == 0) || clearParams.colorMaskAlpha;
+     bool alphaUnmasked = gl::GetAlphaBits(mRenderTargetDesc.format, getCurrentClientVersion()) == 0 ||
+                          clearParams.colorMaskAlpha;
      bool needMaskedColorClear = (clearParams.mask & GL_COLOR_BUFFER_BIT) &&
                                  !(clearParams.colorMaskRed && clearParams.colorMaskGreen &&
                                    clearParams.colorMaskBlue && alphaUnmasked);
@@ -1491,7 +1493,8 @@ void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *
      unsigned int stencilUnmasked = 0x0;
      if (frameBuffer->hasStencil())
      {
-         unsigned int stencilSize = gl::GetStencilSize(frameBuffer->getStencilbuffer()->getActualFormat());
+         unsigned int stencilSize = gl::GetStencilBits(frameBuffer->getStencilbuffer()->getActualFormat(),
+                                                       getCurrentClientVersion());
          stencilUnmasked = (0x1 << stencilSize) - 1;
      }
      bool needMaskedStencilClear = (clearParams.mask & GL_STENCIL_BUFFER_BIT) &&

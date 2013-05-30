@@ -11,6 +11,7 @@
 
 #include "libGLESv2/main.h"
 #include "libGLESv2/renderer/renderer9_utils.h"
+#include "libGLESv2/renderer/formatutils9.h"
 #include "libGLESv2/renderer/TextureStorage9.h"
 #include "libGLESv2/renderer/RenderTarget9.h"
 #include "libGLESv2/renderer/Renderer9.h"
@@ -298,7 +299,7 @@ bool Blit::copy(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum destFo
     dest->GetDesc(&destDesc);
 
     if (sourceDesc.Format == destDesc.Format && destDesc.Usage & D3DUSAGE_RENDERTARGET &&
-        d3d9_gl::IsFormatChannelEquivalent(destDesc.Format, destFormat))   // Can use StretchRect
+        d3d9_gl::IsFormatChannelEquivalent(destDesc.Format, destFormat, mRenderer->getCurrentClientVersion()))   // Can use StretchRect
     {
         RECT destRect = {xoffset, yoffset, xoffset + (sourceRect.right - sourceRect.left), yoffset + (sourceRect.bottom - sourceRect.top)};
         HRESULT result = device->StretchRect(source, &sourceRect, dest, &destRect, D3DTEXF_POINT);

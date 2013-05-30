@@ -16,6 +16,7 @@
 #include "libGLESv2/renderer/IndexDataManager.h"
 #include "libGLESv2/renderer/Renderer9.h"
 #include "libGLESv2/renderer/renderer9_utils.h"
+#include "libGLESv2/renderer/formatutils9.h"
 #include "libGLESv2/renderer/ShaderExecutable9.h"
 #include "libGLESv2/renderer/SwapChain9.h"
 #include "libGLESv2/renderer/TextureStorage9.h"
@@ -44,6 +45,9 @@
 #if !defined(ANGLE_COMPILE_OPTIMIZATION_LEVEL)
 #define ANGLE_COMPILE_OPTIMIZATION_LEVEL D3DCOMPILE_OPTIMIZATION_LEVEL3
 #endif
+
+const D3DFORMAT D3DFMT_INTZ = ((D3DFORMAT)(MAKEFOURCC('I','N','T','Z')));
+const D3DFORMAT D3DFMT_NULL = ((D3DFORMAT)(MAKEFOURCC('N','U','L','L')));
 
 namespace rx
 {
@@ -565,8 +569,8 @@ int Renderer9::generateConfigs(ConfigDesc **configDescList)
                     if (SUCCEEDED(result))
                     {
                         ConfigDesc newConfig;
-                        newConfig.renderTargetFormat = d3d9_gl::ConvertBackBufferFormat(renderTargetFormat);
-                        newConfig.depthStencilFormat = d3d9_gl::ConvertDepthStencilFormat(depthStencilFormat);
+                        newConfig.renderTargetFormat = d3d9_gl::GetInternalFormat(renderTargetFormat);
+                        newConfig.depthStencilFormat = d3d9_gl::GetInternalFormat(depthStencilFormat);
                         newConfig.multiSample = 0; // FIXME: enumerate multi-sampling
                         newConfig.fastConfig = (currentDisplayMode.Format == renderTargetFormat);
                         newConfig.es3Capable = false;
@@ -1782,11 +1786,13 @@ void Renderer9::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *f
     unsigned int stencilUnmasked = 0x0;
     if ((clearParams.mask & GL_STENCIL_BUFFER_BIT) && frameBuffer->hasStencil())
     {
-        unsigned int stencilSize = gl::GetStencilSize(frameBuffer->getStencilbuffer()->getActualFormat());
+        unsigned int stencilSize = gl::GetStencilBits(frameBuffer->getStencilbuffer()->getActualFormat(),
+                                                      getCurrentClientVersion());
         stencilUnmasked = (0x1 << stencilSize) - 1;
     }
 
-    bool alphaUnmasked = (gl::GetAlphaSize(mRenderTargetDesc.format) == 0) || clearParams.colorMaskAlpha;
+    bool alphaUnmasked = gl::GetAlphaBits(mRenderTargetDesc.format, getCurrentClientVersion()) == 0 ||
+                         clearParams.colorMaskAlpha;
 
     const bool needMaskedStencilClear = (clearParams.mask & GL_STENCIL_BUFFER_BIT) &&
                                         (clearParams.stencilWriteMask & stencilUnmasked) != stencilUnmasked;

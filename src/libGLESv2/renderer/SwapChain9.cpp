@@ -9,6 +9,7 @@
 
 #include "libGLESv2/renderer/SwapChain9.h"
 #include "libGLESv2/renderer/renderer9_utils.h"
+#include "libGLESv2/renderer/formatutils9.h"
 #include "libGLESv2/renderer/Renderer9.h"
 
 namespace rx
@@ -138,8 +139,8 @@ EGLint SwapChain9::reset(int backbufferWidth, int backbufferHeight, EGLint swapI
     }
 
     result = device->CreateTexture(backbufferWidth, backbufferHeight, 1, D3DUSAGE_RENDERTARGET,
-                                   gl_d3d9::ConvertRenderbufferFormat(mBackBufferFormat), D3DPOOL_DEFAULT,
-                                   &mOffscreenTexture, pShareHandle);
+                                   gl_d3d9::GetTexureFormat(mBackBufferFormat, mRenderer),
+                                   D3DPOOL_DEFAULT, &mOffscreenTexture, pShareHandle);
     if (FAILED(result))
     {
         ERR("Could not create offscreen texture: %08lX", result);
@@ -189,9 +190,9 @@ EGLint SwapChain9::reset(int backbufferWidth, int backbufferHeight, EGLint swapI
     if (mWindow)
     {
         D3DPRESENT_PARAMETERS presentParameters = {0};
-        presentParameters.AutoDepthStencilFormat = gl_d3d9::ConvertRenderbufferFormat(mDepthBufferFormat);
+        presentParameters.AutoDepthStencilFormat = gl_d3d9::GetRenderFormat(mDepthBufferFormat, mRenderer);
         presentParameters.BackBufferCount = 1;
-        presentParameters.BackBufferFormat = gl_d3d9::ConvertRenderbufferFormat(mBackBufferFormat);
+        presentParameters.BackBufferFormat = gl_d3d9::GetRenderFormat(mBackBufferFormat, mRenderer);
         presentParameters.EnableAutoDepthStencil = FALSE;
         presentParameters.Flags = 0;
         presentParameters.hDeviceWindow = mWindow;
@@ -243,7 +244,7 @@ EGLint SwapChain9::reset(int backbufferWidth, int backbufferHeight, EGLint swapI
     if (mDepthBufferFormat != GL_NONE)
     {
         result = device->CreateDepthStencilSurface(backbufferWidth, backbufferHeight,
-                                                   gl_d3d9::ConvertRenderbufferFormat(mDepthBufferFormat),
+                                                   gl_d3d9::GetRenderFormat(mDepthBufferFormat, mRenderer),
                                                    D3DMULTISAMPLE_NONE, 0, FALSE, &mDepthStencil, NULL);
 
         if (FAILED(result))
