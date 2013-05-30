@@ -49,7 +49,7 @@ class Image11 : public Image
     DXGI_FORMAT getDXGIFormat() const;
     
     virtual void loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
-                          GLint unpackAlignment, const void *input);
+                          GLint unpackAlignment, GLenum type, const void *input);
     virtual void loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                                     const void *input);
 

@@ -53,7 +53,7 @@ class Image9 : public Image
     virtual bool updateSurface(TextureStorageInterface2DArray *storage, int level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height);
 
     virtual void loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
-                          GLint unpackAlignment, const void *input);
+                          GLint unpackAlignment, GLenum type, const void *input);
     virtual void loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                                     const void *input);
 

@@ -57,7 +57,7 @@ class Image
     virtual bool isRenderableFormat() const = 0;
     
     virtual void loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
-                          GLint unpackAlignment, const void *input) = 0;
+                          GLint unpackAlignment, GLenum type, const void *input) = 0;
     virtual void loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                                     const void *input) = 0;
 

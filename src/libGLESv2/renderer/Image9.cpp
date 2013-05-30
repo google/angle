@@ -18,6 +18,7 @@
 #include "libGLESv2/renderer/TextureStorage9.h"
 
 #include "libGLESv2/renderer/renderer9_utils.h"
+#include "libGLESv2/renderer/formatutils9.h"
 #include "libGLESv2/renderer/generatemip.h"
 
 namespace rx
@@ -374,10 +375,16 @@ bool Image9::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint 
 // Store the pixel rectangle designated by xoffset,yoffset,width,height with pixels stored as format/type at input
 // into the target pixel rectangle.
 void Image9::loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
-                      GLint unpackAlignment, const void *input)
+                      GLint unpackAlignment, GLenum type, const void *input)
 {
     // 3D textures are not supported by the D3D9 backend.
     ASSERT(zoffset == 0 && depth == 1);
+
+    GLuint clientVersion = mRenderer->getCurrentClientVersion();
+    GLsizei inputRowPitch = gl::GetRowPitch(mInternalFormat, type, clientVersion, width, unpackAlignment);
+
+    LoadImageFunction loadFunction = d3d9::GetImageLoadFunction(mInternalFormat, mRenderer);
+    ASSERT(loadFunction != NULL);
 
     RECT lockRect =
     {
@@ -392,85 +399,7 @@ void Image9::loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width
         return;
     }
 
-
-    GLsizei inputPitch = gl::ComputeRowPitch(width, mInternalFormat, unpackAlignment);
-
-    switch (mInternalFormat)
-    {
-      case GL_ALPHA8_EXT:
-        if (gl::supportsSSE2())
-        {
-            loadAlphaDataToBGRASSE2(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
-        }
-        else
-        {
-            loadAlphaDataToBGRA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
-        }
-        break;
-      case GL_LUMINANCE8_EXT:
-        loadLuminanceDataToNativeOrBGRA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits, getD3DFormat() == D3DFMT_L8);
-        break;
-      case GL_ALPHA32F_EXT:
-        loadAlphaFloatDataToRGBA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
-        break;
-      case GL_LUMINANCE32F_EXT:
-        loadLuminanceFloatDataToRGBA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
-        break;
-      case GL_ALPHA16F_EXT:
-        loadAlphaHalfFloatDataToRGBA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
-        break;
-      case GL_LUMINANCE16F_EXT:
-        loadLuminanceHalfFloatDataToRGBA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
-        break;
-      case GL_LUMINANCE8_ALPHA8_EXT:
-        loadLuminanceAlphaDataToNativeOrBGRA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits, getD3DFormat() == D3DFMT_A8L8);
-        break;
-      case GL_LUMINANCE_ALPHA32F_EXT:
-        loadLuminanceAlphaFloatDataToRGBA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
-        break;
-      case GL_LUMINANCE_ALPHA16F_EXT:
-        loadLuminanceAlphaHalfFloatDataToRGBA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
-        break;
-      case GL_RGB8_OES:
-        loadRGBUByteDataToBGRX(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
-        break;
-      case GL_RGB565:
-        loadRGB565DataToBGRA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
-        break;
-      case GL_RGBA8_OES:
-        if (gl::supportsSSE2())
-        {
-            loadRGBAUByteDataToBGRASSE2(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
-        }
-        else
-        {
-            loadRGBAUByteDataToBGRA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
-        }
-        break;
-      case GL_RGBA4:
-        loadRGBA4444DataToBGRA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
-        break;
-      case GL_RGB5_A1:
-        loadRGBA5551DataToBGRA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
-        break;
-      case GL_BGRA8_EXT:
-        loadBGRADataToBGRA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
-        break;
-      // float textures are converted to RGBA, not BGRA, as they're stored that way in D3D
-      case GL_RGB32F_EXT:
-        loadRGBFloatDataToRGBA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
-        break;
-      case GL_RGB16F_EXT:
-        loadRGBHalfFloatDataToRGBA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
-        break;
-      case GL_RGBA32F_EXT:
-        loadRGBAFloatDataToRGBA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
-        break;
-      case GL_RGBA16F_EXT:
-        loadRGBAHalfFloatDataToRGBA(width, height, depth, inputPitch, 0, input, locked.Pitch, 0, locked.pBits);
-        break;
-      default: UNREACHABLE(); 
-    }
+    loadFunction(width, height, depth, input, inputRowPitch, 0, locked.pBits, locked.Pitch, 0);
 
     unlock();
 }

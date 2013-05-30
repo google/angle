@@ -16,6 +16,7 @@
 
 #include "libGLESv2/main.h"
 #include "libGLESv2/utilities.h"
+#include "libGLESv2/renderer/formatutils11.h"
 #include "libGLESv2/renderer/renderer11_utils.h"
 #include "libGLESv2/renderer/generatemip.h"
 
@@ -182,8 +183,16 @@ DXGI_FORMAT Image11::getDXGIFormat() const
 // Store the pixel rectangle designated by xoffset,yoffset,width,height with pixels stored as format/type at input
 // into the target pixel rectangle.
 void Image11::loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
-                       GLint unpackAlignment, const void *input)
+                       GLint unpackAlignment, GLenum type, const void *input)
 {
+    GLuint clientVersion = mRenderer->getCurrentClientVersion();
+    GLsizei inputRowPitch = gl::GetRowPitch(mInternalFormat, type, clientVersion, width, unpackAlignment);
+    GLsizei inputDepthPitch = gl::GetDepthPitch(mInternalFormat, type, clientVersion, width, height, unpackAlignment);
+    GLuint outputPixelSize = d3d11::GetFormatPixelBytes(mDXGIFormat);
+
+    LoadImageFunction loadFunction = d3d11::GetImageLoadFunction(mInternalFormat, type, clientVersion);
+    ASSERT(loadFunction != NULL);
+
     D3D11_MAPPED_SUBRESOURCE mappedImage;
     HRESULT result = map(D3D11_MAP_WRITE, &mappedImage);
     if (FAILED(result))
@@ -192,72 +201,8 @@ void Image11::loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei widt
         return;
     }
 
-    GLsizei inputRowPitch = gl::ComputeRowPitch(width, mInternalFormat, unpackAlignment);
-    GLsizei inputDepthPitch = gl::ComputeDepthPitch(width, height, mInternalFormat, unpackAlignment);
-    size_t pixelSize = d3d11::ComputePixelSizeBits(mDXGIFormat) / 8;
-    void* offsetMappedData = (void*)((BYTE *)mappedImage.pData + (yoffset * mappedImage.RowPitch + xoffset * pixelSize + zoffset * mappedImage.DepthPitch));
-
-    switch (mInternalFormat)
-    {
-      case GL_ALPHA8_EXT:
-        loadAlphaDataToNative(width, height, depth, inputRowPitch, inputDepthPitch, input, mappedImage.RowPitch, mappedImage.DepthPitch, offsetMappedData);
-        break;
-      case GL_LUMINANCE8_EXT:
-        loadLuminanceDataToNativeOrBGRA(width, height, depth, inputRowPitch, inputDepthPitch, input, mappedImage.RowPitch, mappedImage.DepthPitch, offsetMappedData, false);
-        break;
-      case GL_ALPHA32F_EXT:
-        loadAlphaFloatDataToRGBA(width, height, depth, inputRowPitch, inputDepthPitch, input, mappedImage.RowPitch, mappedImage.DepthPitch, offsetMappedData);
-        break;
-      case GL_LUMINANCE32F_EXT:
-        loadLuminanceFloatDataToRGB(width, height, depth, inputRowPitch, inputDepthPitch, input, mappedImage.RowPitch, mappedImage.DepthPitch, offsetMappedData);
-        break;
-      case GL_ALPHA16F_EXT:
-        loadAlphaHalfFloatDataToRGBA(width, height, depth, inputRowPitch, inputDepthPitch, input, mappedImage.RowPitch, mappedImage.DepthPitch, offsetMappedData);
-        break;
-      case GL_LUMINANCE16F_EXT:
-        loadLuminanceHalfFloatDataToRGBA(width, height, depth, inputRowPitch, inputDepthPitch, input, mappedImage.RowPitch, mappedImage.DepthPitch, offsetMappedData);
-        break;
-      case GL_LUMINANCE8_ALPHA8_EXT:
-        loadLuminanceAlphaDataToNativeOrBGRA(width, height, depth, inputRowPitch, inputDepthPitch, input, mappedImage.RowPitch, mappedImage.DepthPitch, offsetMappedData, false);
-        break;
-      case GL_LUMINANCE_ALPHA32F_EXT:
-        loadLuminanceAlphaFloatDataToRGBA(width, height, depth, inputRowPitch, inputDepthPitch, input, mappedImage.RowPitch, mappedImage.DepthPitch, offsetMappedData);
-        break;
-      case GL_LUMINANCE_ALPHA16F_EXT:
-        loadLuminanceAlphaHalfFloatDataToRGBA(width, height, depth, inputRowPitch, inputDepthPitch, input, mappedImage.RowPitch, mappedImage.DepthPitch, offsetMappedData);
-        break;
-      case GL_RGB8_OES:
-        loadRGBUByteDataToRGBA(width, height, depth, inputRowPitch, inputDepthPitch, input, mappedImage.RowPitch, mappedImage.DepthPitch, offsetMappedData);
-        break;
-      case GL_RGB565:
-        loadRGB565DataToRGBA(width, height, depth, inputRowPitch, inputDepthPitch, input, mappedImage.RowPitch, mappedImage.DepthPitch, offsetMappedData);
-        break;
-      case GL_RGBA8_OES:
-        loadRGBAUByteDataToNative(width, height, depth, inputRowPitch, inputDepthPitch, input, mappedImage.RowPitch, mappedImage.DepthPitch, offsetMappedData);
-        break;
-      case GL_RGBA4:
-        loadRGBA4444DataToRGBA(width, height, depth, inputRowPitch, inputDepthPitch, input, mappedImage.RowPitch, mappedImage.DepthPitch, offsetMappedData);
-        break;
-      case GL_RGB5_A1:
-        loadRGBA5551DataToRGBA(width, height, depth, inputRowPitch, inputDepthPitch, input, mappedImage.RowPitch, mappedImage.DepthPitch, offsetMappedData);
-        break;
-      case GL_BGRA8_EXT:
-        loadBGRADataToBGRA(width, height, depth, inputRowPitch, inputDepthPitch, input, mappedImage.RowPitch, mappedImage.DepthPitch, offsetMappedData);
-        break;
-      case GL_RGB32F_EXT:
-        loadRGBFloatDataToNative(width, height, depth, inputRowPitch, inputDepthPitch, input, mappedImage.RowPitch, mappedImage.DepthPitch, offsetMappedData);
-        break;
-      case GL_RGB16F_EXT:
-        loadRGBHalfFloatDataToRGBA(width, height, depth, inputRowPitch, inputDepthPitch, input, mappedImage.RowPitch, mappedImage.DepthPitch, offsetMappedData);
-        break;
-      case GL_RGBA32F_EXT:
-        loadRGBAFloatDataToRGBA(width, height, depth, inputRowPitch, inputDepthPitch, input, mappedImage.RowPitch, mappedImage.DepthPitch, offsetMappedData);
-        break;
-      case GL_RGBA16F_EXT:
-        loadRGBAHalfFloatDataToRGBA(width, height, depth, inputRowPitch, inputDepthPitch, input, mappedImage.RowPitch, mappedImage.DepthPitch, offsetMappedData);
-        break;
-      default: UNREACHABLE(); 
-    }
+    void* offsetMappedData = (void*)((BYTE *)mappedImage.pData + (yoffset * mappedImage.RowPitch + xoffset * outputPixelSize + zoffset * mappedImage.DepthPitch));
+    loadFunction(width, height, depth, input, inputRowPitch, inputDepthPitch, offsetMappedData, mappedImage.RowPitch, mappedImage.DepthPitch);
 
     unmap();
 }
