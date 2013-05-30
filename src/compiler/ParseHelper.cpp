@@ -1340,10 +1340,10 @@ TIntermTyped* TParseContext::foldConstConstructor(TIntermAggregate* aggrNode, co
         bool returnVal = false;
         ConstantUnion* unionArray = new ConstantUnion[type.getObjectSize()];
         if (aggrNode->getSequence().size() == 1)  {
-            returnVal = intermediate.parseConstTree(aggrNode->getLine(), aggrNode, unionArray, aggrNode->getOp(), symbolTable,  type, true);
+            returnVal = intermediate.parseConstTree(aggrNode->getLine(), aggrNode, unionArray, aggrNode->getOp(), type, true);
         }
         else {
-            returnVal = intermediate.parseConstTree(aggrNode->getLine(), aggrNode, unionArray, aggrNode->getOp(), symbolTable,  type);
+            returnVal = intermediate.parseConstTree(aggrNode->getLine(), aggrNode, unionArray, aggrNode->getOp(), type);
         }
         if (returnVal)
             return 0;
@@ -1407,7 +1407,7 @@ TIntermTyped* TParseContext::constructBuiltIn(const TType* type, TOperator op, T
 
         return 0;
     }
-    newNode = intermediate.addUnaryMath(basicOp, node, node->getLine(), symbolTable);
+    newNode = intermediate.addUnaryMath(basicOp, node, node->getLine());
     if (newNode == 0) {
         error(line, "can't convert", "constructor");
         return 0;

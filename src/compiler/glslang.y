@@ -269,7 +269,7 @@ postfix_expression
     | postfix_expression INC_OP {
         if (context->lValueErrorCheck($2.line, "++", $1))
             context->recover();
-        $$ = context->intermediate.addUnaryMath(EOpPostIncrement, $1, $2.line, context->symbolTable);
+        $$ = context->intermediate.addUnaryMath(EOpPostIncrement, $1, $2.line);
         if ($$ == 0) {
             context->unaryOpError($2.line, "++", $1->getCompleteString());
             context->recover();
@@ -279,7 +279,7 @@ postfix_expression
     | postfix_expression DEC_OP {
         if (context->lValueErrorCheck($2.line, "--", $1))
             context->recover();
-        $$ = context->intermediate.addUnaryMath(EOpPostDecrement, $1, $2.line, context->symbolTable);
+        $$ = context->intermediate.addUnaryMath(EOpPostDecrement, $1, $2.line);
         if ($$ == 0) {
             context->unaryOpError($2.line, "--", $1->getCompleteString());
             context->recover();
@@ -347,7 +347,7 @@ function_call
                         //
                         // Treat it like a built-in unary operator.
                         //
-                        $$ = context->intermediate.addUnaryMath(op, $1.intermNode, 0, context->symbolTable);
+                        $$ = context->intermediate.addUnaryMath(op, $1.intermNode, 0);
                         if ($$ == 0)  {
                             std::stringstream extraInfoStream;
                             extraInfoStream << "built in unary operator function.  Type: " << static_cast<TIntermTyped*>($1.intermNode)->getCompleteString();
@@ -479,7 +479,7 @@ unary_expression
     | INC_OP unary_expression {
         if (context->lValueErrorCheck($1.line, "++", $2))
             context->recover();
-        $$ = context->intermediate.addUnaryMath(EOpPreIncrement, $2, $1.line, context->symbolTable);
+        $$ = context->intermediate.addUnaryMath(EOpPreIncrement, $2, $1.line);
         if ($$ == 0) {
             context->unaryOpError($1.line, "++", $2->getCompleteString());
             context->recover();
@@ -489,7 +489,7 @@ unary_expression
     | DEC_OP unary_expression {
         if (context->lValueErrorCheck($1.line, "--", $2))
             context->recover();
-        $$ = context->intermediate.addUnaryMath(EOpPreDecrement, $2, $1.line, context->symbolTable);
+        $$ = context->intermediate.addUnaryMath(EOpPreDecrement, $2, $1.line);
         if ($$ == 0) {
             context->unaryOpError($1.line, "--", $2->getCompleteString());
             context->recover();
@@ -498,7 +498,7 @@ unary_expression
     }
     | unary_operator unary_expression {
         if ($1.op != EOpNull) {
-            $$ = context->intermediate.addUnaryMath($1.op, $2, $1.line, context->symbolTable);
+            $$ = context->intermediate.addUnaryMath($1.op, $2, $1.line);
             if ($$ == 0) {
                 const char* errorOp = "";
                 switch($1.op) {
@@ -527,7 +527,7 @@ multiplicative_expression
     : unary_expression { $$ = $1; }
     | multiplicative_expression STAR unary_expression {
         FRAG_VERT_ONLY("*", $2.line);
-        $$ = context->intermediate.addBinaryMath(EOpMul, $1, $3, $2.line, context->symbolTable);
+        $$ = context->intermediate.addBinaryMath(EOpMul, $1, $3, $2.line);
         if ($$ == 0) {
             context->binaryOpError($2.line, "*", $1->getCompleteString(), $3->getCompleteString());
             context->recover();
@@ -536,7 +536,7 @@ multiplicative_expression
     }
     | multiplicative_expression SLASH unary_expression {
         FRAG_VERT_ONLY("/", $2.line);
-        $$ = context->intermediate.addBinaryMath(EOpDiv, $1, $3, $2.line, context->symbolTable);
+        $$ = context->intermediate.addBinaryMath(EOpDiv, $1, $3, $2.line);
         if ($$ == 0) {
             context->binaryOpError($2.line, "/", $1->getCompleteString(), $3->getCompleteString());
             context->recover();
@@ -548,7 +548,7 @@ multiplicative_expression
 additive_expression
     : multiplicative_expression { $$ = $1; }
     | additive_expression PLUS multiplicative_expression {
-        $$ = context->intermediate.addBinaryMath(EOpAdd, $1, $3, $2.line, context->symbolTable);
+        $$ = context->intermediate.addBinaryMath(EOpAdd, $1, $3, $2.line);
         if ($$ == 0) {
             context->binaryOpError($2.line, "+", $1->getCompleteString(), $3->getCompleteString());
             context->recover();
@@ -556,7 +556,7 @@ additive_expression
         }
     }
     | additive_expression DASH multiplicative_expression {
-        $$ = context->intermediate.addBinaryMath(EOpSub, $1, $3, $2.line, context->symbolTable);
+        $$ = context->intermediate.addBinaryMath(EOpSub, $1, $3, $2.line);
         if ($$ == 0) {
             context->binaryOpError($2.line, "-", $1->getCompleteString(), $3->getCompleteString());
             context->recover();
@@ -572,7 +572,7 @@ shift_expression
 relational_expression
     : shift_expression { $$ = $1; }
     | relational_expression LEFT_ANGLE shift_expression {
-        $$ = context->intermediate.addBinaryMath(EOpLessThan, $1, $3, $2.line, context->symbolTable);
+        $$ = context->intermediate.addBinaryMath(EOpLessThan, $1, $3, $2.line);
         if ($$ == 0) {
             context->binaryOpError($2.line, "<", $1->getCompleteString(), $3->getCompleteString());
             context->recover();
@@ -582,7 +582,7 @@ relational_expression
         }
     }
     | relational_expression RIGHT_ANGLE shift_expression  {
-        $$ = context->intermediate.addBinaryMath(EOpGreaterThan, $1, $3, $2.line, context->symbolTable);
+        $$ = context->intermediate.addBinaryMath(EOpGreaterThan, $1, $3, $2.line);
         if ($$ == 0) {
             context->binaryOpError($2.line, ">", $1->getCompleteString(), $3->getCompleteString());
             context->recover();
@@ -592,7 +592,7 @@ relational_expression
         }
     }
     | relational_expression LE_OP shift_expression  {
-        $$ = context->intermediate.addBinaryMath(EOpLessThanEqual, $1, $3, $2.line, context->symbolTable);
+        $$ = context->intermediate.addBinaryMath(EOpLessThanEqual, $1, $3, $2.line);
         if ($$ == 0) {
             context->binaryOpError($2.line, "<=", $1->getCompleteString(), $3->getCompleteString());
             context->recover();
@@ -602,7 +602,7 @@ relational_expression
         }
     }
     | relational_expression GE_OP shift_expression  {
-        $$ = context->intermediate.addBinaryMath(EOpGreaterThanEqual, $1, $3, $2.line, context->symbolTable);
+        $$ = context->intermediate.addBinaryMath(EOpGreaterThanEqual, $1, $3, $2.line);
         if ($$ == 0) {
             context->binaryOpError($2.line, ">=", $1->getCompleteString(), $3->getCompleteString());
             context->recover();
@@ -616,7 +616,7 @@ relational_expression
 equality_expression
     : relational_expression { $$ = $1; }
     | equality_expression EQ_OP relational_expression  {
-        $$ = context->intermediate.addBinaryMath(EOpEqual, $1, $3, $2.line, context->symbolTable);
+        $$ = context->intermediate.addBinaryMath(EOpEqual, $1, $3, $2.line);
         if ($$ == 0) {
             context->binaryOpError($2.line, "==", $1->getCompleteString(), $3->getCompleteString());
             context->recover();
@@ -626,7 +626,7 @@ equality_expression
         }
     }
     | equality_expression NE_OP relational_expression {
-        $$ = context->intermediate.addBinaryMath(EOpNotEqual, $1, $3, $2.line, context->symbolTable);
+        $$ = context->intermediate.addBinaryMath(EOpNotEqual, $1, $3, $2.line);
         if ($$ == 0) {
             context->binaryOpError($2.line, "!=", $1->getCompleteString(), $3->getCompleteString());
             context->recover();
@@ -652,7 +652,7 @@ inclusive_or_expression
 logical_and_expression
     : inclusive_or_expression { $$ = $1; }
     | logical_and_expression AND_OP inclusive_or_expression {
-        $$ = context->intermediate.addBinaryMath(EOpLogicalAnd, $1, $3, $2.line, context->symbolTable);
+        $$ = context->intermediate.addBinaryMath(EOpLogicalAnd, $1, $3, $2.line);
         if ($$ == 0) {
             context->binaryOpError($2.line, "&&", $1->getCompleteString(), $3->getCompleteString());
             context->recover();
@@ -666,7 +666,7 @@ logical_and_expression
 logical_xor_expression
     : logical_and_expression { $$ = $1; }
     | logical_xor_expression XOR_OP logical_and_expression  {
-        $$ = context->intermediate.addBinaryMath(EOpLogicalXor, $1, $3, $2.line, context->symbolTable);
+        $$ = context->intermediate.addBinaryMath(EOpLogicalXor, $1, $3, $2.line);
         if ($$ == 0) {
             context->binaryOpError($2.line, "^^", $1->getCompleteString(), $3->getCompleteString());
             context->recover();
@@ -680,7 +680,7 @@ logical_xor_expression
 logical_or_expression
     : logical_xor_expression { $$ = $1; }
     | logical_or_expression OR_OP logical_xor_expression  {
-        $$ = context->intermediate.addBinaryMath(EOpLogicalOr, $1, $3, $2.line, context->symbolTable);
+        $$ = context->intermediate.addBinaryMath(EOpLogicalOr, $1, $3, $2.line);
         if ($$ == 0) {
             context->binaryOpError($2.line, "||", $1->getCompleteString(), $3->getCompleteString());
             context->recover();

@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -12,7 +12,7 @@
 //
 class TConstTraverser : public TIntermTraverser {
 public:
-    TConstTraverser(ConstantUnion* cUnion, bool singleConstParam, TOperator constructType, TInfoSink& sink, TSymbolTable& symTable, TType& t)
+    TConstTraverser(ConstantUnion* cUnion, bool singleConstParam, TOperator constructType, TInfoSink& sink, TType& t)
         : error(false),
           index(0),
           unionArray(cUnion),
@@ -20,7 +20,6 @@ public:
           constructorType(constructType),
           singleConstantParam(singleConstParam),
           infoSink(sink),
-          symbolTable(symTable),
           size(0),
           isDiagonalMatrixInit(false),
           matrixCols(0),
@@ -45,7 +44,6 @@ protected:
     TOperator constructorType;
     bool singleConstantParam;
     TInfoSink& infoSink;
-    TSymbolTable& symbolTable;
     int size; // size of the constructor ( 4 for vec4)
     bool isDiagonalMatrixInit;
     int matrixCols; // columns of the matrix
@@ -238,12 +236,12 @@ bool TConstTraverser::visitBranch(Visit visit, TIntermBranch* node)
 // Individual functions can be initialized to 0 to skip processing of that
 // type of node.  It's children will still be processed.
 //
-bool TIntermediate::parseConstTree(TSourceLoc line, TIntermNode* root, ConstantUnion* unionArray, TOperator constructorType, TSymbolTable& symbolTable, TType t, bool singleConstantParam)
+bool TIntermediate::parseConstTree(TSourceLoc line, TIntermNode* root, ConstantUnion* unionArray, TOperator constructorType, TType t, bool singleConstantParam)
 {
     if (root == 0)
         return false;
 
-    TConstTraverser it(unionArray, singleConstantParam, constructorType, infoSink, symbolTable, t);
+    TConstTraverser it(unionArray, singleConstantParam, constructorType, infoSink, t);
 
     root->traverse(&it);
     if (it.error)
