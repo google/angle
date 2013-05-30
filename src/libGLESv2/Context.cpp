@@ -1507,6 +1507,9 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_MAX_ARRAY_TEXTURE_LAYERS:         *params = getMaximum2DArrayTextureLayers();            break;
       case GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT:  *params = getUniformBufferOffsetAlignment();           break;
       case GL_MAX_UNIFORM_BUFFER_BINDINGS:      *params = getMaximumCombinedUniformBufferBindings();   break;
+      case GL_MAX_VERTEX_UNIFORM_BLOCKS:        *params = mRenderer->getMaxVertexShaderUniformBuffers(); break;
+      case GL_MAX_FRAGMENT_UNIFORM_BLOCKS:      *params = mRenderer->getMaxFragmentShaderUniformBuffers(); break;
+      case GL_MAX_COMBINED_UNIFORM_BLOCKS:      *params = getMaximumCombinedUniformBufferBindings();   break;
       case GL_NUM_COMPRESSED_TEXTURE_FORMATS:   
         params[0] = mNumCompressedTextureFormats;
         break;
@@ -1940,6 +1943,9 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_TEXTURE_BINDING_2D_ARRAY:
       case GL_MAX_3D_TEXTURE_SIZE:
       case GL_MAX_ARRAY_TEXTURE_LAYERS:
+      case GL_MAX_VERTEX_UNIFORM_BLOCKS:
+      case GL_MAX_FRAGMENT_UNIFORM_BLOCKS:
+      case GL_MAX_COMBINED_UNIFORM_BLOCKS:
         {
             *type = GL_INT;
             *numParams = 1;
