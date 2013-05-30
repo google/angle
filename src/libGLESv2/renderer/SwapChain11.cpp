@@ -11,8 +11,8 @@
 
 #include "libGLESv2/renderer/renderer11_utils.h"
 #include "libGLESv2/renderer/Renderer11.h"
-#include "libGLESv2/renderer/shaders/compiled/passthrough11vs.h"
-#include "libGLESv2/renderer/shaders/compiled/passthroughrgba11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthrough2d11vs.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughrgba2d11ps.h"
 
 namespace rx
 {
@@ -577,15 +577,15 @@ void SwapChain11::initPassThroughResources()
         { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 8, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
 
-    result = device->CreateInputLayout(quadLayout, 2, g_VS_Passthrough, sizeof(g_VS_Passthrough), &mPassThroughIL);
+    result = device->CreateInputLayout(quadLayout, 2, g_VS_Passthrough2D, sizeof(g_VS_Passthrough2D), &mPassThroughIL);
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mPassThroughIL, "Swap chain pass through layout");
 
-    result = device->CreateVertexShader(g_VS_Passthrough, sizeof(g_VS_Passthrough), NULL, &mPassThroughVS);
+    result = device->CreateVertexShader(g_VS_Passthrough2D, sizeof(g_VS_Passthrough2D), NULL, &mPassThroughVS);
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mPassThroughVS, "Swap chain pass through vertex shader");
 
-    result = device->CreatePixelShader(g_PS_PassthroughRGBA, sizeof(g_PS_PassthroughRGBA), NULL, &mPassThroughPS);
+    result = device->CreatePixelShader(g_PS_PassthroughRGBA2D, sizeof(g_PS_PassthroughRGBA2D), NULL, &mPassThroughPS);
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mPassThroughPS, "Swap chain pass through pixel shader");
 }

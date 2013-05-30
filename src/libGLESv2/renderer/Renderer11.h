@@ -326,12 +326,13 @@ class Renderer11 : public Renderer
     bool mCopyResourcesInitialized;
     ID3D11Buffer *mCopyVB;
     ID3D11SamplerState *mCopySampler;
-    ID3D11InputLayout *mCopyIL;
-    ID3D11VertexShader *mCopyVS;
-    ID3D11PixelShader *mCopyRGBAPS;
-    ID3D11PixelShader *mCopyRGBPS;
-    ID3D11PixelShader *mCopyLumPS;
-    ID3D11PixelShader *mCopyLumAlphaPS;
+
+    ID3D11InputLayout *mCopy2DIL;
+    ID3D11VertexShader *mCopy2DVS;
+    ID3D11PixelShader *mCopyRGBA2DPS;
+    ID3D11PixelShader *mCopyRGB2DPS;
+    ID3D11PixelShader *mCopyLum2DPS;
+    ID3D11PixelShader *mCopyLumAlpha2DPS;
 
     // Masked clear resources
     bool mClearResourcesInitialized;

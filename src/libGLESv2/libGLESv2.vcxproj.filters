@@ -504,13 +504,13 @@
     <None Include="renderer\shaders\generate_shaders.bat">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="renderer\shaders\Passthrough11.hlsl">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="renderer\shaders\Clear11.hlsl">
       <Filter>Shaders</Filter>
     </None>
     <None Include="libGLESv2.def" />
+    <None Include="renderer\shaders\Passthrough2D11.hlsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="libGLESv2.rc" />

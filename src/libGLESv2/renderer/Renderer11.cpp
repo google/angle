@@ -28,11 +28,11 @@
 #include "libGLESv2/renderer/Query11.h"
 #include "libGLESv2/renderer/Fence11.h"
 
-#include "libGLESv2/renderer/shaders/compiled/passthrough11vs.h"
-#include "libGLESv2/renderer/shaders/compiled/passthroughrgba11ps.h"
-#include "libGLESv2/renderer/shaders/compiled/passthroughrgb11ps.h"
-#include "libGLESv2/renderer/shaders/compiled/passthroughlum11ps.h"
-#include "libGLESv2/renderer/shaders/compiled/passthroughlumalpha11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthrough2d11vs.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughrgba2d11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughrgb2d11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughlum2d11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughlumalpha2d11ps.h"
 
 #include "libGLESv2/renderer/shaders/compiled/clear11vs.h"
 #include "libGLESv2/renderer/shaders/compiled/clearsingle11ps.h"
@@ -77,12 +77,12 @@ Renderer11::Renderer11(egl::Display *display, HDC hDc) : Renderer(display), mDc(
     mCopyResourcesInitialized = false;
     mCopyVB = NULL;
     mCopySampler = NULL;
-    mCopyIL = NULL;
-    mCopyVS = NULL;
-    mCopyRGBAPS = NULL;
-    mCopyRGBPS = NULL;
-    mCopyLumPS = NULL;
-    mCopyLumAlphaPS = NULL;
+    mCopy2DIL = NULL;
+    mCopy2DVS = NULL;
+    mCopyRGBA2DPS = NULL;
+    mCopyRGB2DPS = NULL;
+    mCopyLum2DPS = NULL;
+    mCopyLumAlpha2DPS = NULL;
 
     mClearResourcesInitialized = false;
     mClearVB = NULL;
@@ -1790,13 +1790,13 @@ void Renderer11::releaseDeviceResources()
 
     SafeRelease(mCopyVB);
     SafeRelease(mCopySampler);
-    SafeRelease(mCopyIL);
-    SafeRelease(mCopyIL);
-    SafeRelease(mCopyVS);
-    SafeRelease(mCopyRGBAPS);
-    SafeRelease(mCopyRGBPS);
-    SafeRelease(mCopyLumPS);
-    SafeRelease(mCopyLumAlphaPS);
+
+    SafeRelease(mCopy2DIL);
+    SafeRelease(mCopy2DVS);
+    SafeRelease(mCopyRGBA2DPS);
+    SafeRelease(mCopyRGB2DPS);
+    SafeRelease(mCopyLum2DPS);
+    SafeRelease(mCopyLumAlpha2DPS);
 
     mCopyResourcesInitialized = false;
 
@@ -2731,7 +2731,7 @@ bool Renderer11::copyTexture(ID3D11ShaderResourceView *source, const gl::Rectang
 
     if (!mCopyResourcesInitialized)
     {
-        ASSERT(!mCopyVB && !mCopySampler && !mCopyIL && !mCopyVS && !mCopyRGBAPS && !mCopyRGBPS && !mCopyLumPS && !mCopyLumAlphaPS);
+        ASSERT(!mCopyVB && !mCopySampler && !mCopy2DIL && !mCopy2DVS && !mCopyRGBA2DPS && !mCopyRGB2DPS && !mCopyLum2DPS && !mCopyLumAlpha2DPS);
 
         D3D11_BUFFER_DESC vbDesc;
         vbDesc.ByteWidth = sizeof(d3d11::PositionTexCoordVertex) * 4;
@@ -2764,35 +2764,36 @@ bool Renderer11::copyTexture(ID3D11ShaderResourceView *source, const gl::Rectang
         ASSERT(SUCCEEDED(result));
         d3d11::SetDebugName(mCopySampler, "Renderer11 copy sampler");
 
-        D3D11_INPUT_ELEMENT_DESC quadLayout[] =
+        // Create 2D copy resources
+        D3D11_INPUT_ELEMENT_DESC quad2DLayout[] =
         {
             { "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
             { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 8, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         };
 
-        result = mDevice->CreateInputLayout(quadLayout, 2, g_VS_Passthrough, sizeof(g_VS_Passthrough), &mCopyIL);
+        result = mDevice->CreateInputLayout(quad2DLayout, 2, g_VS_Passthrough2D, sizeof(g_VS_Passthrough2D), &mCopy2DIL);
         ASSERT(SUCCEEDED(result));
-        d3d11::SetDebugName(mCopyIL, "Renderer11 copy texture input layout");
+        d3d11::SetDebugName(mCopy2DIL, "Renderer11 copy 2D texture input layout");
 
-        result = mDevice->CreateVertexShader(g_VS_Passthrough, sizeof(g_VS_Passthrough), NULL, &mCopyVS);
+        result = mDevice->CreateVertexShader(g_VS_Passthrough2D, sizeof(g_VS_Passthrough2D), NULL, &mCopy2DVS);
         ASSERT(SUCCEEDED(result));
-        d3d11::SetDebugName(mCopyVS, "Renderer11 copy texture vertex shader");
+        d3d11::SetDebugName(mCopy2DVS, "Renderer11 copy 2D texture vertex shader");
 
-        result = mDevice->CreatePixelShader(g_PS_PassthroughRGBA, sizeof(g_PS_PassthroughRGBA), NULL, &mCopyRGBAPS);
+        result = mDevice->CreatePixelShader(g_PS_PassthroughRGBA2D, sizeof(g_PS_PassthroughRGBA2D), NULL, &mCopyRGBA2DPS);
         ASSERT(SUCCEEDED(result));
-        d3d11::SetDebugName(mCopyRGBAPS, "Renderer11 copy texture RGBA pixel shader");
+        d3d11::SetDebugName(mCopyRGBA2DPS, "Renderer11 copy 2D texture RGBA pixel shader");
 
-        result = mDevice->CreatePixelShader(g_PS_PassthroughRGB, sizeof(g_PS_PassthroughRGB), NULL, &mCopyRGBPS);
+        result = mDevice->CreatePixelShader(g_PS_PassthroughRGB2D, sizeof(g_PS_PassthroughRGB2D), NULL, &mCopyRGB2DPS);
         ASSERT(SUCCEEDED(result));
-        d3d11::SetDebugName(mCopyRGBPS, "Renderer11 copy texture RGB pixel shader");
+        d3d11::SetDebugName(mCopyRGB2DPS, "Renderer11 copy 2D texture RGB pixel shader");
 
-        result = mDevice->CreatePixelShader(g_PS_PassthroughLum, sizeof(g_PS_PassthroughLum), NULL, &mCopyLumPS);
+        result = mDevice->CreatePixelShader(g_PS_PassthroughLum2D, sizeof(g_PS_PassthroughLum2D), NULL, &mCopyLum2DPS);
         ASSERT(SUCCEEDED(result));
-        d3d11::SetDebugName(mCopyLumPS, "Renderer11 copy texture luminance pixel shader");
+        d3d11::SetDebugName(mCopyLum2DPS, "Renderer11 copy 2D texture luminance pixel shader");
 
-        result = mDevice->CreatePixelShader(g_PS_PassthroughLumAlpha, sizeof(g_PS_PassthroughLumAlpha), NULL, &mCopyLumAlphaPS);
+        result = mDevice->CreatePixelShader(g_PS_PassthroughLumAlpha2D, sizeof(g_PS_PassthroughLumAlpha2D), NULL, &mCopyLumAlpha2DPS);
         ASSERT(SUCCEEDED(result));
-        d3d11::SetDebugName(mCopyLumAlphaPS, "Renderer11 copy texture luminance alpha pixel shader");
+        d3d11::SetDebugName(mCopyLumAlpha2DPS, "Renderer11 2D copy texture luminance alpha pixel shader");
 
         mCopyResourcesInitialized = true;
     }
@@ -2845,19 +2846,19 @@ bool Renderer11::copyTexture(ID3D11ShaderResourceView *source, const gl::Rectang
     mDeviceContext->RSSetState(NULL);
 
     // Apply shaders
-    mDeviceContext->IASetInputLayout(mCopyIL);
+    mDeviceContext->IASetInputLayout(mCopy2DIL);
     mDeviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-    mDeviceContext->VSSetShader(mCopyVS, NULL, 0);
+    mDeviceContext->VSSetShader(mCopy2DVS, NULL, 0);
 
     ID3D11PixelShader *ps = NULL;
     switch(destFormat)
     {
-      case GL_RGBA:            ps = mCopyRGBAPS;     break;
-      case GL_RGB:             ps = mCopyRGBPS;      break;
-      case GL_ALPHA:           ps = mCopyRGBAPS;     break;
-      case GL_BGRA_EXT:        ps = mCopyRGBAPS;     break;
-      case GL_LUMINANCE:       ps = mCopyLumPS;      break;
-      case GL_LUMINANCE_ALPHA: ps = mCopyLumAlphaPS; break;
+      case GL_RGBA:            ps = mCopyRGBA2DPS;     break;
+      case GL_RGB:             ps = mCopyRGB2DPS;      break;
+      case GL_ALPHA:           ps = mCopyRGBA2DPS;     break;
+      case GL_BGRA_EXT:        ps = mCopyRGBA2DPS;     break;
+      case GL_LUMINANCE:       ps = mCopyLum2DPS;      break;
+      case GL_LUMINANCE_ALPHA: ps = mCopyLumAlpha2DPS; break;
       default: UNREACHABLE();  ps = NULL;            break;
     }
 
