@@ -42,13 +42,13 @@ public:
     TType() {}
     TType(TBasicType t, TPrecision p, TQualifier q = EvqTemporary, int s = 1, bool m = false, bool a = false) :
             type(t), precision(p), qualifier(q), size(s), matrix(m), array(a), arraySize(0),
-            maxArraySize(0), arrayInformationType(0), structure(0), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0), typeName(0)
+            maxArraySize(0), arrayInformationType(0), interfaceBlockType(0), structure(0), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0), typeName(0), instanceName(0)
     {
     }
     explicit TType(const TPublicType &p);
     TType(TTypeList* userDef, const TString& n, TPrecision p = EbpUndefined) :
             type(EbtStruct), precision(p), qualifier(EvqTemporary), size(1), matrix(false), array(false), arraySize(0),
-            maxArraySize(0), arrayInformationType(0), structure(userDef), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0)
+            maxArraySize(0), arrayInformationType(0), interfaceBlockType(0), structure(userDef), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0), instanceName(0)
     {
         typeName = NewPoolTString(n.c_str());
     }
@@ -91,11 +91,16 @@ public:
         if (copyOf.mangled)
             mangled = NewPoolTString(copyOf.mangled->c_str());
 
+        instanceName = 0;
+        if (copyOf.instanceName)
+            instanceName = NewPoolTString(copyOf.instanceName->c_str());
+
         structureSize = copyOf.structureSize;
         maxArraySize = copyOf.maxArraySize;
         deepestStructNesting = copyOf.deepestStructNesting;
         assert(copyOf.arrayInformationType == 0);
         arrayInformationType = 0; // arrayInformationType should not be set for builtIn symbol table level
+        interfaceBlockType = 0;
     }
 
     TType* clone(TStructureMap& remapper)
@@ -184,6 +189,9 @@ public:
     void clearArrayness() { array = false; arraySize = 0; maxArraySize = 0; }
     void setArrayInformationType(TType* t) { arrayInformationType = t; }
     TType* getArrayInformationType() const { return arrayInformationType; }
+    void setInterfaceBlockType(TType* t) { interfaceBlockType = t; }
+    TType* getInterfaceBlockType() const { return interfaceBlockType; }
+    bool isInterfaceBlockMember() const { return interfaceBlockType != NULL; }
 
     bool isVector() const { return size > 1 && !matrix; }
     bool isScalar() const { return size == 1 && !matrix && !structure; }
@@ -220,6 +228,25 @@ public:
         }
 
         return *mangled;
+    }
+
+    void setInstanceName(const TString& n)
+    {
+        assert(type == EbtInterfaceBlock);
+        instanceName = NewPoolTString(n.c_str());
+    }
+
+    bool hasInstanceName() const
+    {
+        assert(type == EbtInterfaceBlock);
+        return instanceName != NULL;
+    }
+
+    const TString& getInstanceName() const
+    {
+        assert(type == EbtInterfaceBlock);
+        assert(instanceName);
+        return *instanceName;
     }
 
     bool sameElementType(const TType& right) const {
@@ -285,6 +312,7 @@ protected:
     int arraySize;
     int maxArraySize;
     TType* arrayInformationType;
+    TType* interfaceBlockType;
 
     TTypeList* structure;      // 0 unless this is a struct
     mutable int structureSize;
@@ -293,6 +321,7 @@ protected:
     TString *fieldName;         // for structure field names
     TString *mangled;
     TString *typeName;          // for structure field type name
+    TString *instanceName;      // for interface block instance names
 };
 
 //

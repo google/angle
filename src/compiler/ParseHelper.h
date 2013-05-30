@@ -134,6 +134,9 @@ struct TParseContext {
     TTypeList *addStructDeclaratorList(const TPublicType& typeSpecifier, TTypeList *typeList);
     TPublicType addStructure(TSourceLoc structLine, TSourceLoc nameLine, const TString &structName, TTypeList* typeList);
 
+    TIntermAggregate* addInterfaceBlock(const TPublicType& typeQualifier, TSourceLoc nameLine, const TString& blockName, TTypeList* typeList, 
+                                        const TString& instanceName, TSourceLoc instanceLine, TIntermTyped* arrayIndex, TSourceLoc arrayIndexLine);
+
     // Performs an error check for embedded struct declarations.
     // Returns true if an error was raised due to the declaration of
     // this struct.

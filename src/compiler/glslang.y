@@ -42,8 +42,8 @@ WHICH GENERATES THE GLSL ES PARSER (glslang_tab.cpp AND glslang_tab.h).
 #define YYLTYPE_IS_TRIVIAL 1
 
 #define YYLEX_PARAM context->scanner
-%}
 
+%}
 %expect 1 /* One shift reduce conflict because of if | else */
 %pure-parser
 %parse-param {TParseContext* context}
@@ -113,9 +113,9 @@ extern void yyerror(TParseContext* context, const char* reason);
     }  \
 }
 
-#define ES3_ONLY(S, L) {  \
+#define ES3_ONLY(TOKEN, LINE, REASON) {  \
     if (context->shaderVersion != 300) {  \
-        context->error(L, " supported in GLSL ES 3.00 only ", S);  \
+        context->error(LINE, REASON " supported in GLSL ES 3.00 only ", TOKEN);  \
         context->recover();  \
     }  \
 }
@@ -176,6 +176,8 @@ extern void yyerror(TParseContext* context, const char* reason);
 %type <interm.function> function_header_with_parameters function_call_header
 %type <interm> function_call_header_with_parameters function_call_header_no_parameters function_call_generic function_prototype
 %type <interm> function_call_or_method
+
+%type <lex> enter_struct
 
 %start translation_unit
 %%
@@ -799,6 +801,14 @@ constant_expression
     }
     ;
 
+enter_struct
+    : IDENTIFIER LEFT_BRACE {
+        if (context->enterStructDeclaration($1.line, *$1.string))
+            context->recover();
+        $$ = $1;
+    }
+    ;
+
 declaration
     : function_prototype SEMICOLON   {
         TFunction &function = *($1.function);
@@ -842,6 +852,18 @@ declaration
             context->recover();
         }
         $$ = 0;
+    }
+    | type_qualifier enter_struct struct_declaration_list RIGHT_BRACE SEMICOLON {
+        ES3_ONLY(getQualifierString($1.qualifier), $1.line, "interface blocks");
+        $$ = context->addInterfaceBlock($1, $2.line, *$2.string, $3, "", 0, NULL, 0);
+    }
+    | type_qualifier enter_struct struct_declaration_list RIGHT_BRACE IDENTIFIER SEMICOLON {
+        ES3_ONLY(getQualifierString($1.qualifier), $1.line, "interface blocks");
+        $$ = context->addInterfaceBlock($1, $2.line, *$2.string, $3, *$5.string, $5.line, NULL, 0);
+    }
+    | type_qualifier enter_struct struct_declaration_list RIGHT_BRACE IDENTIFIER LEFT_BRACKET constant_expression RIGHT_BRACKET SEMICOLON {
+        ES3_ONLY(getQualifierString($1.qualifier), $1.line, "interface blocks");
+        $$ = context->addInterfaceBlock($1, $2.line, *$2.string, $3, *$5.string, $5.line, $7, $6.line);
     }
     ;
 
@@ -1425,22 +1447,22 @@ storage_qualifier
         $$.line = $1.line;
     }
     | IN_QUAL {
-        ES3_ONLY("in", $1.line);
+        ES3_ONLY("in", $1.line, "storage qualifier");
         $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqSmoothIn : EvqAttribute;
         $$.line = $1.line;
     }
     | OUT_QUAL {
-        ES3_ONLY("out", $1.line);
+        ES3_ONLY("out", $1.line, "storage qualifier");
         $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragColor : EvqSmoothOut;
         $$.line = $1.line;
     }
     | CENTROID IN_QUAL {
-        ES3_ONLY("centroid in", $1.line);
+        ES3_ONLY("centroid in", $1.line, "storage qualifier");
         $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqCentroidIn : EvqAttribute;
         $$.line = $1.line;
     }
     | CENTROID OUT_QUAL {
-        ES3_ONLY("centroid out", $1.line);
+        ES3_ONLY("centroid out", $1.line, "storage qualifier");
         $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragColor : EvqCentroidOut;
         $$.line = $1.line;
     }
@@ -1659,6 +1681,11 @@ struct_declaration_list
 struct_declaration
     : type_specifier struct_declarator_list SEMICOLON {
         $$ = context->addStructDeclaratorList($1, $2);
+    }
+    | type_qualifier type_specifier struct_declarator_list SEMICOLON {
+        // ES3 Only, but errors should be handled elsewhere
+        $2.qualifier = $1.qualifier;
+        $$ = context->addStructDeclaratorList($2, $3);
     }
     ;
 

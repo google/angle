@@ -22,7 +22,7 @@
 
 TType::TType(const TPublicType &p) :
             type(p.type), precision(p.precision), qualifier(p.qualifier), size(p.size), matrix(p.matrix), array(p.array), arraySize(p.arraySize),
-            maxArraySize(0), arrayInformationType(0), structure(0), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0), typeName(0)
+            maxArraySize(0), arrayInformationType(0), interfaceBlockType(0), structure(0), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0), typeName(0)
 {
     if (p.userDef) {
         structure = p.userDef->getStruct();
@@ -57,6 +57,21 @@ void TType::buildMangledName(TString& mangledName)
                 (*structure)[i].type->buildMangledName(mangledName);
             }
         }
+        break;
+    case EbtInterfaceBlock:
+        {
+            mangledName += "interface-block-";
+            if (typeName)
+            {
+                mangledName += *typeName;
+            }
+            for (unsigned int i = 0; i < structure->size(); ++i)
+            {
+                mangledName += '-';
+                (*structure)[i].type->buildMangledName(mangledName);
+            }
+        }
+        break;
     default:
         break;
     }
@@ -134,6 +149,11 @@ void TVariable::dump(TInfoSink& infoSink) const
 void TFunction::dump(TInfoSink &infoSink) const
 {
     infoSink.debug << getName().c_str() << ": " <<  returnType.getBasicString() << " " << getMangledName().c_str() << "\n";
+}
+
+void TInterfaceBlockName::dump(TInfoSink &infoSink) const
+{
+    infoSink.debug << "interface block " << getName().c_str() << "\n";
 }
 
 void TSymbolTableLevel::dump(TInfoSink &infoSink) const
@@ -253,6 +273,11 @@ TFunction* TFunction::clone(TStructureMap& remapper)
     TFunction *function = new TFunction(*this, remapper);
 
     return function;
+}
+
+TInterfaceBlockName* TInterfaceBlockName::clone(TStructureMap& remapper)
+{
+    return new TInterfaceBlockName(this->name);
 }
 
 TSymbolTableLevel* TSymbolTableLevel::clone(TStructureMap& remapper)

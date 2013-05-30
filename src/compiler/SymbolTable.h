@@ -186,6 +186,21 @@ protected:
     bool defined;
 };
 
+//
+// Interface block name sub-symbol
+//
+class TInterfaceBlockName : public TSymbol
+{
+public:
+    TInterfaceBlockName(const TString *name)
+        : TSymbol(name)
+    {}
+
+    virtual ~TInterfaceBlockName() {}
+
+    virtual void dump(TInfoSink &infoSink) const;
+    virtual TInterfaceBlockName* clone(TStructureMap& remapper);
+};
 
 class TSymbolTableLevel {
 public:

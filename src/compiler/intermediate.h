@@ -85,6 +85,7 @@ enum TOperator {
     EOpIndexDirect,
     EOpIndexIndirect,
     EOpIndexDirectStruct,
+    EOpIndexDirectInterfaceBlock,
 
     EOpVectorSwizzle,
 

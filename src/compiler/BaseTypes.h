@@ -46,6 +46,7 @@ enum TBasicType
     EbtSampler2DRect,       // Only valid if GL_ARB_texture_rectangle exists.
     EbtGuardSamplerEnd,    // non type:  see implementation of IsSampler()
     EbtStruct,
+    EbtInterfaceBlock,
     EbtAddress,            // should be deprecated??
     EbtInvariant          // used as a type when qualifying a previously declared variable as being invariant
 };
@@ -63,6 +64,7 @@ inline const char* getBasicString(TBasicType t)
     case EbtSamplerExternalOES: return "samplerExternalOES"; break;
     case EbtSampler2DRect:     return "sampler2DRect";     break;
     case EbtStruct:            return "structure";         break;
+    case EbtInterfaceBlock:    return "interface block";   break;
     default:                   return "unknown type";
     }
 }

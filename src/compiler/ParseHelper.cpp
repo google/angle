@@ -656,7 +656,7 @@ bool TParseContext::containsSampler(TType& type)
     if (IsSampler(type.getBasicType()))
         return true;
 
-    if (type.getBasicType() == EbtStruct) {
+    if (type.getBasicType() == EbtStruct || type.getBasicType() == EbtInterfaceBlock) {
         TTypeList& structure = *type.getStruct();
         for (unsigned int i = 0; i < structure.size(); ++i) {
             if (containsSampler(*structure[i].type))
@@ -1451,6 +1451,102 @@ TIntermTyped* TParseContext::addConstStruct(const TString &identifier, TIntermTy
     return typedNode;
 }
 
+//
+// Interface/uniform blocks
+//
+TIntermAggregate* TParseContext::addInterfaceBlock(const TPublicType& typeQualifier, TSourceLoc nameLine, const TString& blockName, TTypeList* typeList, 
+                                                   const TString& instanceName, TSourceLoc instanceLine, TIntermTyped* arrayIndex, TSourceLoc arrayIndexLine)
+{
+    if (reservedErrorCheck(nameLine, blockName))
+        recover();
+
+    if (typeQualifier.qualifier != EvqUniform)
+    {
+        error(typeQualifier.line, "invalid qualifier:", getQualifierString(typeQualifier.qualifier), "interface blocks must be uniform");
+        recover();
+    }
+
+    TSymbol* blockNameSymbol = new TInterfaceBlockName(&blockName);
+    if (!symbolTable.declare(*blockNameSymbol)) {
+        error(nameLine, "redefinition", blockName.c_str(), "interface block name");
+        recover();
+    }
+
+    // check for sampler types
+    for (size_t memberIndex = 0; memberIndex < typeList->size(); ++memberIndex) {
+        const TTypeLine& memberTypeLine = (*typeList)[memberIndex];
+        TType* memberType = memberTypeLine.type;
+        if (IsSampler(memberType->getBasicType())) {
+            error(memberTypeLine.line, "unsupported type", memberType->getBasicString(), "sampler types are not allowed in interface blocks");
+            recover();
+        }
+
+        const TQualifier qualifier = memberTypeLine.type->getQualifier();
+        switch (qualifier)
+        {
+          case EvqGlobal:
+          case EvqUniform:
+            break;
+          default:
+            error(memberTypeLine.line, "invalid qualifier on interface block member", getQualifierString(qualifier));
+            recover();
+            break;
+        }
+    }
+
+    TType* interfaceBlock = new TType(typeList, blockName);
+    interfaceBlock->setBasicType(EbtInterfaceBlock);
+    interfaceBlock->setQualifier(typeQualifier.qualifier);
+
+    TString symbolName = "";
+    int symbolId = 0;
+
+    if (instanceName == "")
+    {
+        // define symbols for the members of the interface block
+        for (size_t memberIndex = 0; memberIndex < typeList->size(); ++memberIndex) {
+            const TTypeLine& memberTypeLine = (*typeList)[memberIndex];
+            TType* memberType = memberTypeLine.type;
+            memberType->setInterfaceBlockType(interfaceBlock);
+            TVariable* memberVariable = new TVariable(&memberType->getFieldName(), *memberType);
+            memberVariable->setQualifier(typeQualifier.qualifier);
+            if (!symbolTable.declare(*memberVariable)) {
+                error(memberTypeLine.line, "redefinition", memberType->getFieldName().c_str(), "interface block member name");
+                recover();
+            }
+        }
+    }
+    else
+    {
+        interfaceBlock->setInstanceName(instanceName);
+
+        // add array index
+        if (arrayIndex != NULL)
+        {
+            int size;
+            if (arraySizeErrorCheck(arrayIndexLine, arrayIndex, size))
+                recover();
+            interfaceBlock->setArraySize(size);
+        }
+
+        // add a symbol for this interface block
+        TVariable* instanceTypeDef = new TVariable(&instanceName, *interfaceBlock, false);
+        instanceTypeDef->setQualifier(typeQualifier.qualifier);
+        if (!symbolTable.declare(*instanceTypeDef)) {
+            error(instanceLine, "redefinition", instanceName.c_str(), "interface block instance name");
+            recover();
+        }
+
+        symbolId = instanceTypeDef->getUniqueId();
+        symbolName = instanceTypeDef->getName();
+    }
+
+    exitStructDeclaration();
+    TIntermAggregate *aggregate = intermediate.makeAggregate(intermediate.addSymbol(symbolId, symbolName, *interfaceBlock, typeQualifier.line), nameLine);
+    aggregate->setOp(EOpDeclaration);
+    return aggregate;
+}
+
 bool TParseContext::enterStructDeclaration(int line, const TString& identifier)
 {
     ++structNestingLevel;
@@ -1768,9 +1864,53 @@ TIntermTyped* TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
             }
         }
     }
+    else if (baseExpression->getBasicType() == EbtInterfaceBlock)
+    {
+        bool fieldFound = false;
+        const TTypeList* fields = baseExpression->getType().getStruct();
+        if (fields == 0)
+        {
+            error(dotLocation, "interface block has no fields", "Internal Error");
+            recover();
+            indexedExpression = baseExpression;
+        }
+        else
+        {
+            unsigned int i;
+            for (i = 0; i < fields->size(); ++i)
+            {
+                if ((*fields)[i].type->getFieldName() == fieldString)
+                {
+                    fieldFound = true;
+                    break;
+                }
+            }
+            if (fieldFound)
+            {
+                ConstantUnion *unionArray = new ConstantUnion[1];
+                unionArray->setIConst(i);
+                TIntermTyped* index = intermediate.addConstantUnion(unionArray, *(*fields)[i].type, fieldLocation);
+                indexedExpression = intermediate.addIndex(EOpIndexDirectInterfaceBlock, baseExpression, index, dotLocation);
+                indexedExpression->setType(*(*fields)[i].type);
+            }
+            else
+            {
+                error(dotLocation, " no such field in interface block", fieldString.c_str());
+                recover();
+                indexedExpression = baseExpression;
+            }
+        }
+    }
     else
     {
-        error(dotLocation, " field selection requires structure, vector, or matrix on left hand side", fieldString.c_str());
+        if (shaderVersion < 300)
+        {
+            error(dotLocation, " field selection requires structure, vector, or matrix on left hand side", fieldString.c_str());
+        }
+        else
+        {
+            error(dotLocation, " field selection requires structure, vector, matrix, or interface block on left hand side", fieldString.c_str());
+        }
         recover();
         indexedExpression = baseExpression;
     }
