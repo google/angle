@@ -216,6 +216,35 @@ void loadToNative(int width, int height, int depth,
     }
 }
 
+template <typename type, unsigned int fourthComponentBits>
+void loadToNative3To4(int width, int height, int depth,
+                      const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
+                      void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch)
+{
+    const type *source = NULL;
+    type *dest = NULL;
+
+    const unsigned int fourthBits = fourthComponentBits;
+    const type fourthValue = *reinterpret_cast<const type*>(&fourthBits);
+
+    for (int z = 0; z < depth; z++)
+    {
+        for (int y = 0; y < height; y++)
+        {
+            source = offsetDataPointer<type>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<type>(output, y, z, outputRowPitch, outputDepthPitch);
+
+            for (int x = 0; x < width; x++)
+            {
+                dest[x * 4 + 0] = source[x * 3 + 0];
+                dest[x * 4 + 1] = source[x * 3 + 1];
+                dest[x * 4 + 2] = source[x * 3 + 2];
+                dest[x * 4 + 3] = fourthValue;
+            }
+        }
+    }
+}
+
 template <unsigned int componentCount>
 void loadFloatDataToHalfFloat(int width, int height, int depth,
                               const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,

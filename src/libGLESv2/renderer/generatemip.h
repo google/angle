@@ -56,6 +56,96 @@ struct A8R8G8B8
 typedef A8R8G8B8 R8G8B8A8; // R8G8B8A8 type is functionally equivalent for mip purposes
 typedef A8R8G8B8 B8G8R8A8; // B8G8R8A8 type is functionally equivalent for mip purposes
 
+struct R16
+{
+    unsigned short R;
+
+    static void average(R16 *dst, const R16 *src1, const R16 *src2)
+    {
+        dst->R = ((src1->R ^ src2->R) >> 1) + (src1->R & src2->R);
+    }
+};
+
+struct R16G16
+{
+    unsigned short R;
+    unsigned short G;
+
+    static void average(R16G16 *dst, const R16G16 *src1, const R16G16 *src2)
+    {
+        dst->R = ((src1->R ^ src2->R) >> 1) + (src1->R & src2->R);
+        dst->G = ((src1->G ^ src2->G) >> 1) + (src1->G & src2->G);
+    }
+};
+
+struct R16G16B16A16
+{
+    unsigned short R;
+    unsigned short G;
+    unsigned short B;
+    unsigned short A;
+
+    static void average(R16G16B16A16 *dst, const R16G16B16A16 *src1, const R16G16B16A16 *src2)
+    {
+        dst->R = ((src1->R ^ src2->R) >> 1) + (src1->R & src2->R);
+        dst->G = ((src1->G ^ src2->G) >> 1) + (src1->G & src2->G);
+        dst->B = ((src1->B ^ src2->B) >> 1) + (src1->B & src2->B);
+        dst->A = ((src1->A ^ src2->A) >> 1) + (src1->A & src2->A);
+    }
+};
+
+struct R32
+{
+    unsigned int R;
+
+    static void average(R32 *dst, const R32 *src1, const R32 *src2)
+    {
+        dst->R = ((src1->R ^ src2->R) >> 1) + (src1->R & src2->R);
+    }
+};
+
+struct R32G32
+{
+    unsigned int R;
+    unsigned int G;
+
+    static void average(R32G32 *dst, const R32G32 *src1, const R32G32 *src2)
+    {
+        dst->R = ((src1->R ^ src2->R) >> 1) + (src1->R & src2->R);
+        dst->G = ((src1->G ^ src2->G) >> 1) + (src1->G & src2->G);
+    }
+};
+
+struct R32G32B32
+{
+    unsigned int R;
+    unsigned int G;
+    unsigned int B;
+
+    static void average(R32G32B32 *dst, const R32G32B32 *src1, const R32G32B32 *src2)
+    {
+        dst->R = ((src1->R ^ src2->R) >> 1) + (src1->R & src2->R);
+        dst->G = ((src1->G ^ src2->G) >> 1) + (src1->G & src2->G);
+        dst->B = ((src1->B ^ src2->B) >> 1) + (src1->B & src2->B);
+    }
+};
+
+struct R32G32B32A32
+{
+    unsigned int R;
+    unsigned int G;
+    unsigned int B;
+    unsigned int A;
+
+    static void average(R32G32B32A32 *dst, const R32G32B32A32 *src1, const R32G32B32A32 *src2)
+    {
+        dst->R = ((src1->R ^ src2->R) >> 1) + (src1->R & src2->R);
+        dst->G = ((src1->G ^ src2->G) >> 1) + (src1->G & src2->G);
+        dst->B = ((src1->B ^ src2->B) >> 1) + (src1->B & src2->B);
+        dst->A = ((src1->A ^ src2->A) >> 1) + (src1->A & src2->A);
+    }
+};
+
 struct R8S
 {
     char R;
@@ -91,6 +181,96 @@ struct R8G8B8A8S
         dst->G = ((short)src1->G + (short)src2->G) / 2;
         dst->B = ((short)src1->B + (short)src2->B) / 2;
         dst->A = ((short)src1->A + (short)src2->A) / 2;
+    }
+};
+
+struct R16S
+{
+    unsigned short R;
+
+    static void average(R16S *dst, const R16S *src1, const R16S *src2)
+    {
+        dst->R = ((int)src1->R + (int)src2->R) / 2;
+    }
+};
+
+struct R16G16S
+{
+    unsigned short R;
+    unsigned short G;
+
+    static void average(R16G16S *dst, const R16G16S *src1, const R16G16S *src2)
+    {
+        dst->R = ((int)src1->R + (int)src2->R) / 2;
+        dst->G = ((int)src1->G + (int)src2->G) / 2;
+    }
+};
+
+struct R16G16B16A16S
+{
+    unsigned short R;
+    unsigned short G;
+    unsigned short B;
+    unsigned short A;
+
+    static void average(R16G16B16A16S *dst, const R16G16B16A16S *src1, const R16G16B16A16S *src2)
+    {
+        dst->R = ((int)src1->R + (int)src2->R) / 2;
+        dst->G = ((int)src1->G + (int)src2->G) / 2;
+        dst->B = ((int)src1->B + (int)src2->B) / 2;
+        dst->A = ((int)src1->A + (int)src2->A) / 2;
+    }
+};
+
+struct R32S
+{
+    unsigned int R;
+
+    static void average(R32S *dst, const R32S *src1, const R32S *src2)
+    {
+        dst->R = ((long long)src1->R + (long long)src2->R) / 2;
+    }
+};
+
+struct R32G32S
+{
+    unsigned int R;
+    unsigned int G;
+
+    static void average(R32G32S *dst, const R32G32S *src1, const R32G32S *src2)
+    {
+        dst->R = ((long long)src1->R + (long long)src2->R) / 2;
+        dst->G = ((long long)src1->G + (long long)src2->G) / 2;
+    }
+};
+
+struct R32G32B32S
+{
+    unsigned int R;
+    unsigned int G;
+    unsigned int B;
+
+    static void average(R32G32B32S *dst, const R32G32B32S *src1, const R32G32B32S *src2)
+    {
+        dst->R = ((long long)src1->R + (long long)src2->R) / 2;
+        dst->G = ((long long)src1->G + (long long)src2->G) / 2;
+        dst->B = ((long long)src1->B + (long long)src2->B) / 2;
+    }
+};
+
+struct R32G32B32A32S
+{
+    unsigned int R;
+    unsigned int G;
+    unsigned int B;
+    unsigned int A;
+
+    static void average(R32G32B32A32S *dst, const R32G32B32A32S *src1, const R32G32B32A32S *src2)
+    {
+        dst->R = ((long long)src1->R + (long long)src2->R) / 2;
+        dst->G = ((long long)src1->G + (long long)src2->G) / 2;
+        dst->B = ((long long)src1->B + (long long)src2->B) / 2;
+        dst->A = ((long long)src1->A + (long long)src2->A) / 2;
     }
 };
 
