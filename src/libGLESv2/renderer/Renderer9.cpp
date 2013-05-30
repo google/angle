@@ -2198,17 +2198,17 @@ bool Renderer9::getBGRATextureSupport() const
     return true;
 }
 
-bool Renderer9::getDXT1TextureSupport()
+bool Renderer9::getDXT1TextureSupport() const
 {
     return mDXT1TextureSupport;
 }
 
-bool Renderer9::getDXT3TextureSupport()
+bool Renderer9::getDXT3TextureSupport() const
 {
     return mDXT3TextureSupport;
 }
 
-bool Renderer9::getDXT5TextureSupport()
+bool Renderer9::getDXT5TextureSupport() const
 {
     return mDXT5TextureSupport;
 }
@@ -2218,26 +2218,42 @@ bool Renderer9::getDepthTextureSupport() const
     return mDepthTextureSupport;
 }
 
-bool Renderer9::getFloat32TextureSupport(bool *filtering, bool *renderable)
+bool Renderer9::getFloat32TextureSupport() const
 {
-    *filtering = mFloat32FilterSupport;
-    *renderable = mFloat32RenderSupport;
     return mFloat32TextureSupport;
 }
 
-bool Renderer9::getFloat16TextureSupport(bool *filtering, bool *renderable)
+bool Renderer9::getFloat32TextureFilteringSupport() const
 {
-    *filtering = mFloat16FilterSupport;
-    *renderable = mFloat16RenderSupport;
+    return mFloat32FilterSupport;
+}
+
+bool Renderer9::getFloat32TextureRenderingSupport() const
+{
+    return mFloat32RenderSupport;
+}
+
+bool Renderer9::getFloat16TextureSupport() const
+{
     return mFloat16TextureSupport;
 }
 
-bool Renderer9::getLuminanceTextureSupport()
+bool Renderer9::getFloat16TextureFilteringSupport() const
+{
+    return mFloat16FilterSupport;
+}
+
+bool Renderer9::getFloat16TextureRenderingSupport() const
+{
+    return mFloat16RenderSupport;
+}
+
+bool Renderer9::getLuminanceTextureSupport() const
 {
     return mLuminanceTextureSupport;
 }
 
-bool Renderer9::getLuminanceAlphaTextureSupport()
+bool Renderer9::getLuminanceAlphaTextureSupport() const
 {
     return mLuminanceAlphaTextureSupport;
 }
@@ -2256,7 +2272,7 @@ float Renderer9::getTextureMaxAnisotropy() const
     return 1.0f;
 }
 
-bool Renderer9::getEventQuerySupport()
+bool Renderer9::getEventQuerySupport() const
 {
     return mEventQuerySupport;
 }

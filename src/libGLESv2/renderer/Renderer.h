@@ -147,14 +147,18 @@ class Renderer
     virtual GUID getAdapterIdentifier() const = 0;
 
     virtual bool getBGRATextureSupport() const = 0;
-    virtual bool getDXT1TextureSupport() = 0;
-    virtual bool getDXT3TextureSupport() = 0;
-    virtual bool getDXT5TextureSupport() = 0;
-    virtual bool getEventQuerySupport() = 0;
-    virtual bool getFloat32TextureSupport(bool *filtering, bool *renderable) = 0;
-    virtual bool getFloat16TextureSupport(bool *filtering, bool *renderable) = 0;
-    virtual bool getLuminanceTextureSupport() = 0;
-    virtual bool getLuminanceAlphaTextureSupport() = 0;
+    virtual bool getDXT1TextureSupport() const = 0;
+    virtual bool getDXT3TextureSupport() const = 0;
+    virtual bool getDXT5TextureSupport() const = 0;
+    virtual bool getEventQuerySupport() const = 0;
+    virtual bool getFloat32TextureSupport() const = 0;
+    virtual bool getFloat32TextureFilteringSupport() const= 0;
+    virtual bool getFloat32TextureRenderingSupport() const= 0;
+    virtual bool getFloat16TextureSupport()  const= 0;
+    virtual bool getFloat16TextureFilteringSupport() const= 0;
+    virtual bool getFloat16TextureRenderingSupport() const = 0;
+    virtual bool getLuminanceTextureSupport() const = 0;
+    virtual bool getLuminanceAlphaTextureSupport() const = 0;
     bool getVertexTextureSupport() const { return getMaxVertexTextureImageUnits() > 0; }
     virtual unsigned int getMaxVertexTextureImageUnits() const = 0;
     virtual unsigned int getMaxCombinedTextureImageUnits() const = 0;

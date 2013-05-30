@@ -313,8 +313,12 @@ void Context::makeCurrent(egl::Surface *surface)
         mSupportsDXT1Textures = mRenderer->getDXT1TextureSupport();
         mSupportsDXT3Textures = mRenderer->getDXT3TextureSupport();
         mSupportsDXT5Textures = mRenderer->getDXT5TextureSupport();
-        mSupportsFloat32Textures = mRenderer->getFloat32TextureSupport(&mSupportsFloat32LinearFilter, &mSupportsFloat32RenderableTextures);
-        mSupportsFloat16Textures = mRenderer->getFloat16TextureSupport(&mSupportsFloat16LinearFilter, &mSupportsFloat16RenderableTextures);
+        mSupportsFloat32Textures = mRenderer->getFloat32TextureSupport();
+        mSupportsFloat32LinearFilter = mRenderer->getFloat32TextureFilteringSupport();
+        mSupportsFloat32RenderableTextures = mRenderer->getFloat32TextureRenderingSupport();
+        mSupportsFloat16Textures = mRenderer->getFloat16TextureSupport();
+        mSupportsFloat16LinearFilter = mRenderer->getFloat16TextureFilteringSupport();
+        mSupportsFloat16RenderableTextures = mRenderer->getFloat16TextureRenderingSupport();
         mSupportsLuminanceTextures = mRenderer->getLuminanceTextureSupport();
         mSupportsLuminanceAlphaTextures = mRenderer->getLuminanceAlphaTextureSupport();
         mSupportsDepthTextures = mRenderer->getDepthTextureSupport();

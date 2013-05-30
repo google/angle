@@ -360,10 +360,8 @@ GLenum Framebuffer::completeness() const
                     return GL_FRAMEBUFFER_UNSUPPORTED;
                 }
 
-                bool filtering, renderable;
-
-                if ((gl::IsFloat32Format(internalformat) && !mRenderer->getFloat32TextureSupport(&filtering, &renderable)) ||
-                    (gl::IsFloat16Format(internalformat) && !mRenderer->getFloat16TextureSupport(&filtering, &renderable)))
+                if ((gl::IsFloat32Format(internalformat) && !mRenderer->getFloat32TextureSupport()) ||
+                    (gl::IsFloat16Format(internalformat) && !mRenderer->getFloat16TextureSupport()))
                 {
                     return GL_FRAMEBUFFER_UNSUPPORTED;
                 }

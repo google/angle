@@ -108,14 +108,18 @@ class Renderer9 : public Renderer
     virtual GUID getAdapterIdentifier() const;
 
     virtual bool getBGRATextureSupport() const;
-    virtual bool getDXT1TextureSupport();
-    virtual bool getDXT3TextureSupport();
-    virtual bool getDXT5TextureSupport();
-    virtual bool getEventQuerySupport();
-    virtual bool getFloat32TextureSupport(bool *filtering, bool *renderable);
-    virtual bool getFloat16TextureSupport(bool *filtering, bool *renderable);
-    virtual bool getLuminanceTextureSupport();
-    virtual bool getLuminanceAlphaTextureSupport();
+    virtual bool getDXT1TextureSupport() const;
+    virtual bool getDXT3TextureSupport() const;
+    virtual bool getDXT5TextureSupport() const;
+    virtual bool getEventQuerySupport() const;
+    virtual bool getFloat32TextureSupport() const;
+    virtual bool getFloat32TextureFilteringSupport() const;
+    virtual bool getFloat32TextureRenderingSupport() const;
+    virtual bool getFloat16TextureSupport() const;
+    virtual bool getFloat16TextureFilteringSupport() const;
+    virtual bool getFloat16TextureRenderingSupport() const;
+    virtual bool getLuminanceTextureSupport() const;
+    virtual bool getLuminanceAlphaTextureSupport() const;
     virtual unsigned int getMaxVertexTextureImageUnits() const;
     virtual unsigned int getMaxCombinedTextureImageUnits() const;
     virtual unsigned int getReservedVertexUniformVectors() const;
