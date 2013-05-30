@@ -14,6 +14,7 @@
 #include "libGLESv2/renderer/RenderTarget11.h"
 #include "libGLESv2/renderer/SwapChain11.h"
 #include "libGLESv2/renderer/renderer11_utils.h"
+#include "libGLESv2/renderer/formatutils11.h"
 
 #include "libGLESv2/utilities.h"
 #include "libGLESv2/main.h"
@@ -47,44 +48,25 @@ TextureStorage11 *TextureStorage11::makeTextureStorage11(TextureStorage *storage
     return static_cast<TextureStorage11*>(storage);
 }
 
-DWORD TextureStorage11::GetTextureBindFlags(DXGI_FORMAT format, GLenum glusage, bool forceRenderable)
+DWORD TextureStorage11::GetTextureBindFlags(GLint internalFormat, GLuint clientVersion, GLenum glusage)
 {
-    UINT bindFlags = D3D11_BIND_SHADER_RESOURCE;
-    
-    if (d3d11::IsDepthStencilFormat(format))
+    UINT bindFlags = 0;
+
+    if (gl_d3d11::GetSRVFormat(internalFormat, clientVersion) != DXGI_FORMAT_UNKNOWN)
+    {
+        bindFlags |= D3D11_BIND_SHADER_RESOURCE;
+    }
+    if (gl_d3d11::GetDSVFormat(internalFormat, clientVersion) != DXGI_FORMAT_UNKNOWN)
     {
         bindFlags |= D3D11_BIND_DEPTH_STENCIL;
     }
-    else if(forceRenderable || (TextureStorage11::IsTextureFormatRenderable(format) && (glusage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE)))
+    if (gl_d3d11::GetRTVFormat(internalFormat, clientVersion) != DXGI_FORMAT_UNKNOWN &&
+        glusage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE)
     {
         bindFlags |= D3D11_BIND_RENDER_TARGET;
     }
-    return bindFlags;
-}
 
-bool TextureStorage11::IsTextureFormatRenderable(DXGI_FORMAT format)
-{
-    switch(format)
-    {
-      case DXGI_FORMAT_R8G8B8A8_UNORM:
-      case DXGI_FORMAT_A8_UNORM:
-      case DXGI_FORMAT_R32G32B32A32_FLOAT:
-      case DXGI_FORMAT_R32G32B32_FLOAT:
-      case DXGI_FORMAT_R16G16B16A16_FLOAT:
-      case DXGI_FORMAT_B8G8R8A8_UNORM:
-      case DXGI_FORMAT_R8_UNORM:
-      case DXGI_FORMAT_R8G8_UNORM:
-      case DXGI_FORMAT_R16_FLOAT:
-      case DXGI_FORMAT_R16G16_FLOAT:
-        return true;
-      case DXGI_FORMAT_BC1_UNORM:
-      case DXGI_FORMAT_BC2_UNORM: 
-      case DXGI_FORMAT_BC3_UNORM:
-        return false;
-      default:
-        UNREACHABLE();
-        return false;
-    }
+    return bindFlags;
 }
 
 UINT TextureStorage11::getBindFlags() const
@@ -230,7 +212,7 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, SwapChain11 *swapch
 }
 
 TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height)
-    : TextureStorage11(renderer, GetTextureBindFlags(gl_d3d11::ConvertTextureFormat(internalformat), usage, forceRenderable))
+    : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderer->getCurrentClientVersion(), usage))
 {
     mTexture = NULL;
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
@@ -457,7 +439,7 @@ void TextureStorage11_2D::generateMipmap(int level)
 }
 
 TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
-    : TextureStorage11(renderer, GetTextureBindFlags(gl_d3d11::ConvertTextureFormat(internalformat), usage, forceRenderable))
+    : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderer->getCurrentClientVersion(), usage))
 {
     mTexture = NULL;
     for (unsigned int i = 0; i < 6; i++)
@@ -692,7 +674,7 @@ void TextureStorage11_Cube::generateMipmap(int face, int level)
 
 TextureStorage11_3D::TextureStorage11_3D(Renderer *renderer, int levels, GLenum internalformat, GLenum usage,
                                          GLsizei width, GLsizei height, GLsizei depth)
-    : TextureStorage11(renderer, GetTextureBindFlags(gl_d3d11::ConvertTextureFormat(internalformat), usage, false))
+    : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderer->getCurrentClientVersion(), usage))
 {
     mTexture = NULL;
 
@@ -948,7 +930,7 @@ void TextureStorage11_3D::generateMipmap(int level)
 
 TextureStorage11_2DArray::TextureStorage11_2DArray(Renderer *renderer, int levels, GLenum internalformat, GLenum usage,
                                                    GLsizei width, GLsizei height, GLsizei depth)
-    : TextureStorage11(renderer, GetTextureBindFlags(gl_d3d11::ConvertTextureFormat(internalformat), usage, false))
+    : TextureStorage11(renderer, GetTextureBindFlags(internalformat, renderer->getCurrentClientVersion(), usage))
 {
     mTexture = NULL;
 

@@ -15,6 +15,7 @@
 #include "libGLESv2/renderer/SwapChain9.h"
 #include "libGLESv2/renderer/RenderTarget9.h"
 #include "libGLESv2/renderer/renderer9_utils.h"
+#include "libGLESv2/renderer/formatutils9.h"
 #include "libGLESv2/Texture.h"
 
 namespace rx
@@ -37,46 +38,27 @@ TextureStorage9 *TextureStorage9::makeTextureStorage9(TextureStorage *storage)
     return static_cast<TextureStorage9*>(storage);
 }
 
-DWORD TextureStorage9::GetTextureUsage(D3DFORMAT d3dfmt, GLenum glusage, bool forceRenderable)
+DWORD TextureStorage9::GetTextureUsage(GLenum internalformat, Renderer9 *renderer, GLenum glusage, bool forceRenderable)
 {
+    GLuint clientVersion = renderer->getCurrentClientVersion();
+
     DWORD d3dusage = 0;
 
-    if (d3dfmt == D3DFMT_INTZ)
+    if (gl::GetDepthBits(internalformat, clientVersion) > 0 ||
+        gl::GetStencilBits(internalformat, clientVersion) > 0)
     {
         d3dusage |= D3DUSAGE_DEPTHSTENCIL;
     }
-    else if(forceRenderable || (TextureStorage9::IsTextureFormatRenderable(d3dfmt) && (glusage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE)))
+    else if (forceRenderable ||
+             (gl_d3d9::GetRenderFormat(internalformat, renderer) != D3DFMT_UNKNOWN &&
+              glusage == GL_FRAMEBUFFER_ATTACHMENT_ANGLE))
     {
         d3dusage |= D3DUSAGE_RENDERTARGET;
     }
+
     return d3dusage;
 }
 
-bool TextureStorage9::IsTextureFormatRenderable(D3DFORMAT format)
-{
-    if (format == D3DFMT_INTZ)
-    {
-        return true;
-    }
-    switch(format)
-    {
-      case D3DFMT_L8:
-      case D3DFMT_A8L8:
-      case D3DFMT_DXT1:
-      case D3DFMT_DXT3:
-      case D3DFMT_DXT5:
-        return false;
-      case D3DFMT_A8R8G8B8:
-      case D3DFMT_X8R8G8B8:
-      case D3DFMT_A16B16G16R16F:
-      case D3DFMT_A32B32G32R32F:
-        return true;
-      default:
-        UNREACHABLE();
-    }
-
-    return false;
-}
 
 bool TextureStorage9::isRenderTarget() const
 {
@@ -118,7 +100,7 @@ TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, SwapChain9 *swapchain
 }
 
 TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, GLsizei width, GLsizei height)
-    : TextureStorage9(renderer, GetTextureUsage(Renderer9::makeRenderer9(renderer)->ConvertTextureInternalFormat(internalformat), usage, forceRenderable))
+    : TextureStorage9(renderer, GetTextureUsage(internalformat, Renderer9::makeRenderer9(renderer), usage, forceRenderable))
 {
     mTexture = NULL;
     mRenderTarget = NULL;
@@ -215,7 +197,7 @@ void TextureStorage9_2D::initializeRenderTarget()
 }
 
 TextureStorage9_Cube::TextureStorage9_Cube(Renderer *renderer, int levels, GLenum internalformat, GLenum usage, bool forceRenderable, int size)
-    : TextureStorage9(renderer, GetTextureUsage(Renderer9::makeRenderer9(renderer)->ConvertTextureInternalFormat(internalformat), usage, forceRenderable))
+    : TextureStorage9(renderer, GetTextureUsage(internalformat, Renderer9::makeRenderer9(renderer), usage, forceRenderable))
 {
     mTexture = NULL;
     for (int i = 0; i < 6; ++i)

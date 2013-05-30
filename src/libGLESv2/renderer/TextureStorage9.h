@@ -30,8 +30,7 @@ class TextureStorage9 : public TextureStorage
 
     static TextureStorage9 *makeTextureStorage9(TextureStorage *storage);
 
-    static DWORD GetTextureUsage(D3DFORMAT d3dfmt, GLenum glusage, bool forceRenderable);
-    static bool IsTextureFormatRenderable(D3DFORMAT format);
+    static DWORD GetTextureUsage(GLenum internalformat, Renderer9 *renderer, GLenum glusage, bool forceRenderable);
 
     D3DPOOL getPool() const;
     DWORD getUsage() const;

@@ -29,8 +29,7 @@ class TextureStorage11 : public TextureStorage
 
     static TextureStorage11 *makeTextureStorage11(TextureStorage *storage);
 
-    static DWORD GetTextureBindFlags(DXGI_FORMAT d3dfmt, GLenum glusage, bool forceRenderable);
-    static bool IsTextureFormatRenderable(DXGI_FORMAT format);
+    static DWORD GetTextureBindFlags(GLint internalFormat, GLuint clientVersion, GLenum glusage);
 
     UINT getBindFlags() const;
 
