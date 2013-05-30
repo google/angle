@@ -1205,7 +1205,7 @@ bool validateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
 }
 
 // check for combinations of format and type that are valid for ReadPixels
-bool validReadFormatType(GLenum format, GLenum type)
+bool validES2ReadFormatType(GLenum format, GLenum type)
 {
     switch (format)
     {
@@ -1213,6 +1213,52 @@ bool validReadFormatType(GLenum format, GLenum type)
         switch (type)
         {
           case GL_UNSIGNED_BYTE:
+            break;
+          default:
+            return false;
+        }
+        break;
+      case GL_BGRA_EXT:
+        switch (type)
+        {
+          case GL_UNSIGNED_BYTE:
+          case GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT:
+          case GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT:
+            break;
+          default:
+            return false;
+        }
+        break;
+      default:
+        return false;
+    }
+    return true;
+}
+
+bool validES3ReadFormatType(GLenum internalFormat, GLenum format, GLenum type)
+{
+    switch (format)
+    {
+      case GL_RGBA:
+        switch (type)
+        {
+          case GL_UNSIGNED_BYTE:
+            break;
+          case GL_UNSIGNED_INT_2_10_10_10_REV:
+            if (internalFormat != GL_RGB10_A2)
+            {
+                return false;
+            }
+            break;
+          default:
+            return false;
+        }
+        break;
+      case GL_RGBA_INTEGER:
+        switch (type)
+        {
+          case GL_INT:
+          case GL_UNSIGNED_INT:
             break;
           default:
             return false;
@@ -5725,15 +5771,19 @@ void __stdcall glReadnPixelsEXT(GLint x, GLint y, GLsizei width, GLsizei height,
 
         if (context)
         {
+            GLint currentInternalFormat;
             GLenum currentFormat, currentType;
-    
+
             // Failure in getCurrentReadFormatType indicates that no color attachment is currently bound,
             // and attempting to read back if that's the case is an error. The error will be registered
             // by getCurrentReadFormat.
-            if (!context->getCurrentReadFormatType(&currentFormat, &currentType))
+            if (!context->getCurrentReadFormatType(&currentInternalFormat, &currentFormat, &currentType))
                 return;
 
-            if (!(currentFormat == format && currentType == type) && !validReadFormatType(format, type))
+            bool validReadFormat = (context->getClientVersion() < 3) ? validES2ReadFormatType(format, type) :
+                                                                       validES3ReadFormatType(currentInternalFormat, format, type);
+
+            if (!(currentFormat == format && currentType == type) && !validReadFormat)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }
@@ -5765,15 +5815,19 @@ void __stdcall glReadPixels(GLint x, GLint y, GLsizei width, GLsizei height,
 
         if (context)
         {
+            GLint currentInternalFormat;
             GLenum currentFormat, currentType;
-    
+
             // Failure in getCurrentReadFormatType indicates that no color attachment is currently bound,
             // and attempting to read back if that's the case is an error. The error will be registered
             // by getCurrentReadFormat.
-            if (!context->getCurrentReadFormatType(&currentFormat, &currentType))
+            if (!context->getCurrentReadFormatType(&currentInternalFormat, &currentFormat, &currentType))
                 return;
 
-            if (!(currentFormat == format && currentType == type) && !validReadFormatType(format, type))
+            bool validReadFormat = (context->getClientVersion() < 3) ? validES2ReadFormatType(format, type) :
+                                                                       validES3ReadFormatType(currentInternalFormat, format, type);
+
+            if (!(currentFormat == format && currentType == type) && !validReadFormat)
             {
                 return gl::error(GL_INVALID_OPERATION);
             }

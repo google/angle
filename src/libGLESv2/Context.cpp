@@ -1564,8 +1564,9 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_IMPLEMENTATION_COLOR_READ_TYPE:
       case GL_IMPLEMENTATION_COLOR_READ_FORMAT:
         {
+            GLint internalFormat;
             GLenum format, type;
-            if (getCurrentReadFormatType(&format, &type))
+            if (getCurrentReadFormatType(&internalFormat, &format, &type))
             {
                 if (pname == GL_IMPLEMENTATION_COLOR_READ_FORMAT)
                     *params = format;
@@ -2611,7 +2612,7 @@ float Context::getTextureMaxAnisotropy() const
     return mMaxTextureAnisotropy;
 }
 
-bool Context::getCurrentReadFormatType(GLenum *format, GLenum *type)
+bool Context::getCurrentReadFormatType(GLint *internalFormat, GLenum *format, GLenum *type)
 {
     Framebuffer *framebuffer = getReadFramebuffer();
     if (!framebuffer || framebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
@@ -2625,6 +2626,7 @@ bool Context::getCurrentReadFormatType(GLenum *format, GLenum *type)
         return gl::error(GL_INVALID_OPERATION, false);
     }
 
+    *internalFormat = renderbuffer->getActualFormat();
     *format = gl::GetFormat(renderbuffer->getActualFormat(), mClientVersion);
     *type = gl::GetType(renderbuffer->getActualFormat(), mClientVersion);
 

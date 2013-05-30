@@ -457,7 +457,7 @@ class Context
     bool supportsInstancing() const;
     bool supportsTextureFilterAnisotropy() const;
 
-    bool getCurrentReadFormatType(GLenum *format, GLenum *type);
+    bool getCurrentReadFormatType(GLint *internalFormat, GLenum *format, GLenum *type);
 
     float getTextureMaxAnisotropy() const;
 
