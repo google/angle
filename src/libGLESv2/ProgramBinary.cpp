@@ -1225,6 +1225,7 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
     std::string varyingSemantic = (mUsesPointSize && shaderModel == 3) ? "COLOR" : "TEXCOORD";
     std::string targetSemantic = (shaderModel >= 4) ? "SV_Target" : "COLOR";
     std::string positionSemantic = (shaderModel >= 4) ? "SV_Position" : "POSITION";
+    std::string depthSemantic = (shaderModel >= 4) ? "SV_Depth" : "DEPTH";
 
     // special varyings that use reserved registers
     int reservedRegisterIndex = registers;
@@ -1479,6 +1480,11 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
         pixelHLSL += "    float4 gl_Color" + str(renderTargetIndex) + " : " + targetSemantic + str(renderTargetIndex) + ";\n";
     }
 
+    if (fragmentShader->mUsesFragDepth)
+    {
+        pixelHLSL += "    float gl_Depth : " + depthSemantic + ";\n";
+    }
+
     pixelHLSL += "};\n"
                  "\n";
 
@@ -1590,6 +1596,11 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
         unsigned int sourceColorIndex = broadcast ? 0 : renderTargetIndex;
 
         pixelHLSL += "    output.gl_Color" + str(renderTargetIndex) + " = gl_Color[" + str(sourceColorIndex) + "];\n";
+    }
+
+    if (fragmentShader->mUsesFragDepth)
+    {
+        pixelHLSL += "    output.gl_Depth = gl_Depth;\n";
     }
 
     pixelHLSL += "\n"

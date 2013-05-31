@@ -247,6 +247,7 @@ void Shader::initializeCompiler()
             resources.EXT_draw_buffers = mRenderer->getMaxRenderTargets() > 1;
             // resources.OES_EGL_image_external = mRenderer->getShareHandleSupport() ? 1 : 0; // TODO: commented out until the extension is actually supported.
             resources.FragmentPrecisionHigh = 1;   // Shader Model 2+ always supports FP24 (s16e7) which corresponds to highp
+            resources.EXT_frag_depth = 1; // Shader Model 2+ always supports explicit depth output
 
             mFragmentCompiler = ShConstructCompiler(SH_FRAGMENT_SHADER, SH_GLES2_SPEC, hlslVersion, &resources);
             mVertexCompiler = ShConstructCompiler(SH_VERTEX_SHADER, SH_GLES2_SPEC, hlslVersion, &resources);
@@ -305,6 +306,7 @@ void Shader::parseVaryings()
         mUsesPointSize = strstr(mHlsl, "GL_USES_POINT_SIZE") != NULL;
         mUsesPointCoord = strstr(mHlsl, "GL_USES_POINT_COORD") != NULL;
         mUsesDepthRange = strstr(mHlsl, "GL_USES_DEPTH_RANGE") != NULL;
+        mUsesFragDepth = strstr(mHlsl, "GL_USES_FRAG_DEPTH") != NULL;
     }
 }
 
@@ -337,6 +339,7 @@ void Shader::uncompile()
     mUsesPointSize = false;
     mUsesPointCoord = false;
     mUsesDepthRange = false;
+    mUsesFragDepth = false;
 
     mActiveUniforms.clear();
 }
