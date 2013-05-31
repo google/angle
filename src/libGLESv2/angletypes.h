@@ -29,13 +29,18 @@ enum SamplerType
     SAMPLER_VERTEX
 };
 
+template <typename T>
 struct Color
 {
-    float red;
-    float green;
-    float blue;
-    float alpha;
+    T red;
+    T green;
+    T blue;
+    T alpha;
 };
+
+typedef Color<float> ColorF;
+typedef Color<int> ColorI;
+typedef Color<unsigned int> ColorUI;
 
 struct Rectangle
 {
@@ -125,7 +130,7 @@ struct ClearParameters
 {
     GLbitfield mask;
 
-    Color colorClearValue;
+    ColorF colorClearValue;
     bool colorMaskRed;
     bool colorMaskGreen;
     bool colorMaskBlue;

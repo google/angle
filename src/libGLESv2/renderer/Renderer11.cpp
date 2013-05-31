@@ -700,12 +700,12 @@ void Renderer11::setRasterizerState(const gl::RasterizerState &rasterState)
     mForceSetRasterState = false;
 }
 
-void Renderer11::setBlendState(const gl::BlendState &blendState, const gl::Color &blendColor,
+void Renderer11::setBlendState(const gl::BlendState &blendState, const gl::ColorF &blendColor,
                                unsigned int sampleMask)
 {
     if (mForceSetBlendState ||
         memcmp(&blendState, &mCurBlendState, sizeof(gl::BlendState)) != 0 ||
-        memcmp(&blendColor, &mCurBlendColor, sizeof(gl::Color)) != 0 ||
+        memcmp(&blendColor, &mCurBlendColor, sizeof(gl::ColorF)) != 0 ||
         sampleMask != mCurSampleMask)
     {
         ID3D11BlendState *dxBlendState = mStateCache.getBlendState(blendState);
@@ -3500,7 +3500,7 @@ static inline unsigned int getFastPixelCopySize(DXGI_FORMAT sourceFormat, GLenum
 }
 
 static inline void readPixelColor(const unsigned char *data, DXGI_FORMAT format, unsigned int x,
-                                  unsigned int y, int inputPitch, gl::Color *outColor)
+                                  unsigned int y, int inputPitch, gl::ColorF *outColor)
 {
     switch (format)
     {
@@ -3616,7 +3616,7 @@ static inline void readPixelColor(const unsigned char *data, DXGI_FORMAT format,
     }
 }
 
-static inline void writePixelColor(const gl::Color &color, GLenum format, GLenum type, unsigned int x,
+static inline void writePixelColor(const gl::ColorF &color, GLenum format, GLenum type, unsigned int x,
                                    unsigned int y, int outputPitch, void *outData)
 {
     unsigned char* byteData = reinterpret_cast<unsigned char*>(outData);
@@ -3846,7 +3846,7 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
     }
     else
     {
-        gl::Color pixelColor;
+        gl::ColorF pixelColor;
         for (int j = 0; j < area.height; j++)
         {
             for (int i = 0; i < area.width; i++)

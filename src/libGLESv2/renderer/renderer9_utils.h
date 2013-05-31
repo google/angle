@@ -10,7 +10,7 @@
 #ifndef LIBGLESV2_RENDERER_RENDERER9_UTILS_H
 #define LIBGLESV2_RENDERER_RENDERER9_UTILS_H
 
-#include "common/utilities.h"
+#include "libGLESv2/angletypes.h"
 
 namespace rx
 {
@@ -19,7 +19,7 @@ namespace gl_d3d9
 {
 
 D3DCMPFUNC ConvertComparison(GLenum comparison);
-D3DCOLOR ConvertColor(gl::Color color);
+D3DCOLOR ConvertColor(gl::ColorF color);
 D3DBLEND ConvertBlendFunc(GLenum blend);
 D3DBLENDOP ConvertBlendOp(GLenum blendOp);
 D3DSTENCILOP ConvertStencilOp(GLenum stencilOp);

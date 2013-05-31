@@ -148,7 +148,7 @@ class VertexAttribute
 // Helper structure to store all raw state
 struct State
 {
-    Color colorClearValue;
+    ColorF colorClearValue;
     GLclampf depthClearValue;
     int stencilClearValue;
 
@@ -157,7 +157,7 @@ struct State
     Rectangle scissor;
 
     BlendState blend;
-    Color blendColor;
+    ColorF blendColor;
     bool sampleCoverage;
     GLclampf sampleCoverageValue;
     bool sampleCoverageInvert;

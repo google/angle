@@ -7,6 +7,8 @@
 
 // Renderer9.cpp: Implements a back-end specific class for the D3D9 renderer.
 
+#include "common/utilities.h"
+
 #include "libGLESv2/main.h"
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/Texture.h"
@@ -815,10 +817,10 @@ void Renderer9::setRasterizerState(const gl::RasterizerState &rasterState)
     mForceSetRasterState = false;
 }
 
-void Renderer9::setBlendState(const gl::BlendState &blendState, const gl::Color &blendColor, unsigned int sampleMask)
+void Renderer9::setBlendState(const gl::BlendState &blendState, const gl::ColorF &blendColor, unsigned int sampleMask)
 {
     bool blendStateChanged = mForceSetBlendState || memcmp(&blendState, &mCurBlendState, sizeof(gl::BlendState)) != 0;
-    bool blendColorChanged = mForceSetBlendState || memcmp(&blendColor, &mCurBlendColor, sizeof(gl::Color)) != 0;
+    bool blendColorChanged = mForceSetBlendState || memcmp(&blendColor, &mCurBlendColor, sizeof(gl::ColorF)) != 0;
     bool sampleMaskChanged = mForceSetBlendState || sampleMask != mCurSampleMask;
 
     if (blendStateChanged || blendColorChanged)

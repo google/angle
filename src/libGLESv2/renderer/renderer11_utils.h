@@ -61,7 +61,7 @@ struct PositionDepthColorVertex
     float r, g, b, a;
 };
 void SetPositionDepthColorVertex(PositionDepthColorVertex* vertex, float x, float y, float z,
-                                 const gl::Color &color);
+                                 const gl::ColorF &color);
 
 HRESULT SetDebugName(ID3D11DeviceChild *resource, const char *name);
 
