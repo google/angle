@@ -160,12 +160,20 @@ void BufferStorage11::setData(const void* data, unsigned int size, unsigned int 
             bufferDesc.MiscFlags = 0;
             bufferDesc.StructureByteStride = 0;
 
-            D3D11_SUBRESOURCE_DATA initialData;
-            initialData.pSysMem = data;
-            initialData.SysMemPitch = size;
-            initialData.SysMemSlicePitch = 0;
+            if (data)
+            {
+                D3D11_SUBRESOURCE_DATA initialData;
+                initialData.pSysMem = data;
+                initialData.SysMemPitch = size;
+                initialData.SysMemSlicePitch = 0;
 
-            result = device->CreateBuffer(&bufferDesc, &initialData, &mStagingBuffer);
+                result = device->CreateBuffer(&bufferDesc, &initialData, &mStagingBuffer);
+            }
+            else
+            {
+                result = device->CreateBuffer(&bufferDesc, NULL, &mStagingBuffer);
+            }
+
             if (FAILED(result))
             {
                 return gl::error(GL_OUT_OF_MEMORY);
@@ -173,7 +181,7 @@ void BufferStorage11::setData(const void* data, unsigned int size, unsigned int 
 
             mStagingBufferSize = size;
         }
-        else
+        else if (data)
         {
             D3D11_MAPPED_SUBRESOURCE mappedResource;
             result = context->Map(mStagingBuffer, 0, D3D11_MAP_WRITE, 0, &mappedResource);
@@ -211,12 +219,20 @@ void BufferStorage11::setData(const void* data, unsigned int size, unsigned int 
                 mBufferSize = 0;
             }
 
-            D3D11_SUBRESOURCE_DATA initialData;
-            initialData.pSysMem = data;
-            initialData.SysMemPitch = size;
-            initialData.SysMemSlicePitch = 0;
+            if (data)
+            {
+                D3D11_SUBRESOURCE_DATA initialData;
+                initialData.pSysMem = data;
+                initialData.SysMemPitch = size;
+                initialData.SysMemSlicePitch = 0;
 
-            result = device->CreateBuffer(&bufferDesc, &initialData, &mBuffer);
+                result = device->CreateBuffer(&bufferDesc, &initialData, &mBuffer);
+            }
+            else
+            {
+                result = device->CreateBuffer(&bufferDesc, NULL, &mBuffer);
+            }
+
             if (FAILED(result))
             {
                 return gl::error(GL_OUT_OF_MEMORY);
