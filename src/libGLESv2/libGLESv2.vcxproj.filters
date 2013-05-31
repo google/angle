@@ -541,6 +541,9 @@
     <ClInclude Include="renderer\shaders\compiled\passthroughrgba3d11ps.h">
       <Filter>Shaders\Compiled</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\imageformats.h">
+      <Filter>Header Files\Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\shaders\Blit.ps">

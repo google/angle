@@ -287,6 +287,7 @@
             'libGLESv2/renderer/formatutils11.cpp',
             'libGLESv2/renderer/formatutils11.h',
             'libGLESv2/renderer/generatemip.h',
+            'libGLESv2/renderer/imageformats.h',
             'libGLESv2/renderer/Image.cpp',
             'libGLESv2/renderer/Image.h',
             'libGLESv2/renderer/Image11.cpp',

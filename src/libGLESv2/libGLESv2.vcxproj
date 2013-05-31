@@ -354,6 +354,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="renderer\Image.h" />
     <ClInclude Include="renderer\Image11.h" />
     <ClInclude Include="renderer\Image9.h" />
+    <ClInclude Include="renderer\imageformats.h" />
     <ClInclude Include="renderer\IndexBuffer.h" />
     <ClInclude Include="renderer\IndexBuffer11.h" />
     <ClInclude Include="renderer\IndexBuffer9.h" />
