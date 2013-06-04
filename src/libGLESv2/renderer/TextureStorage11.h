@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -36,7 +36,7 @@ class TextureStorage11 : public TextureStorage
     virtual ID3D11Resource *getBaseTexture() const = 0;
     virtual ID3D11ShaderResourceView *getSRV() = 0;
     virtual RenderTarget *getRenderTarget(int level) { return NULL; }
-    virtual RenderTarget *getRenderTarget(GLenum faceTarget, int level) { return NULL; }
+    virtual RenderTarget *getRenderTargetFace(GLenum faceTarget, int level) { return NULL; }
     virtual RenderTarget *getRenderTargetLayer(int mipLevel, int layer) { return NULL; }
 
     virtual void generateMipmap(int level) {};
@@ -107,7 +107,7 @@ class TextureStorage11_Cube : public TextureStorage11
 
     virtual ID3D11Resource *getBaseTexture() const;
     virtual ID3D11ShaderResourceView *getSRV();
-    virtual RenderTarget *getRenderTarget(GLenum faceTarget, int level);
+    virtual RenderTarget *getRenderTargetFace(GLenum faceTarget, int level);
 
     virtual void generateMipmap(int face, int level);
 

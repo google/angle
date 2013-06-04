@@ -104,7 +104,7 @@ TextureStorageInterfaceCube::~TextureStorageInterfaceCube()
 
 RenderTarget *TextureStorageInterfaceCube::getRenderTarget(GLenum faceTarget) const
 {
-    return mInstance->getRenderTarget(faceTarget, 0);
+    return mInstance->getRenderTargetFace(faceTarget, 0);
 }
 
 void TextureStorageInterfaceCube::generateMipmap(int face, int level)

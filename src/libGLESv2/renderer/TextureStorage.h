@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -32,7 +32,7 @@ class TextureStorage
     virtual int levelCount() = 0;
 
     virtual RenderTarget *getRenderTarget(int level) = 0;
-    virtual RenderTarget *getRenderTarget(GLenum faceTarget, int level) = 0;
+    virtual RenderTarget *getRenderTargetFace(GLenum faceTarget, int level) = 0;
     virtual RenderTarget *getRenderTargetLayer(int mipLevel, int layer) = 0;
     virtual void generateMipmap(int level) = 0;
     virtual void generateMipmap(int face, int level) = 0;

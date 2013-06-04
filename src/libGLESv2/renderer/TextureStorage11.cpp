@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -520,7 +520,7 @@ ID3D11Resource *TextureStorage11_Cube::getBaseTexture() const
     return mTexture;
 }
 
-RenderTarget *TextureStorage11_Cube::getRenderTarget(GLenum faceTarget, int level)
+RenderTarget *TextureStorage11_Cube::getRenderTargetFace(GLenum faceTarget, int level)
 {
     unsigned int faceIdx = gl::TextureCubeMap::faceIndex(faceTarget);
     if (level >= 0 && level < static_cast<int>(mMipLevels))
@@ -643,8 +643,8 @@ ID3D11ShaderResourceView *TextureStorage11_Cube::getSRV()
 
 void TextureStorage11_Cube::generateMipmap(int face, int level)
 {
-    RenderTarget11 *source = RenderTarget11::makeRenderTarget11(getRenderTarget(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level - 1));
-    RenderTarget11 *dest = RenderTarget11::makeRenderTarget11(getRenderTarget(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level));
+    RenderTarget11 *source = RenderTarget11::makeRenderTarget11(getRenderTargetFace(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level - 1));
+    RenderTarget11 *dest = RenderTarget11::makeRenderTarget11(getRenderTargetFace(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level));
 
     generateMipmapLayer(source, dest);
 }
