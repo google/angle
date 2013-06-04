@@ -56,7 +56,6 @@ class IndexBuffer;
 class QueryImpl;
 class FenceImpl;
 class BufferStorage;
-class Blit;
 struct TranslatedIndexData;
 class ShaderExecutable;
 class SwapChain;

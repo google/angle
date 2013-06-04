@@ -5,9 +5,9 @@
 // found in the LICENSE file.
 //
 
-// Blit.cpp: Surface copy utility class.
+// Blit9.cpp: Surface copy utility class.
 
-#include "libGLESv2/renderer/Blit.h"
+#include "libGLESv2/renderer/Blit9.h"
 
 #include "libGLESv2/main.h"
 #include "libGLESv2/renderer/renderer9_utils.h"
@@ -47,14 +47,14 @@ const size_t g_shaderSize[] =
 
 namespace rx
 {
-Blit::Blit(rx::Renderer9 *renderer)
+Blit9::Blit9(rx::Renderer9 *renderer)
   : mRenderer(renderer), mQuadVertexBuffer(NULL), mQuadVertexDeclaration(NULL), mSavedStateBlock(NULL), mSavedRenderTarget(NULL), mSavedDepthStencil(NULL)
 {
     initGeometry();
     memset(mCompiledShaders, 0, sizeof(mCompiledShaders));
 }
 
-Blit::~Blit()
+Blit9::~Blit9()
 {
     if (mSavedStateBlock) mSavedStateBlock->Release();
     if (mQuadVertexBuffer) mQuadVertexBuffer->Release();
@@ -69,7 +69,7 @@ Blit::~Blit()
     }
 }
 
-void Blit::initGeometry()
+void Blit9::initGeometry()
 {
     static const float quad[] =
     {
@@ -117,7 +117,7 @@ void Blit::initGeometry()
 }
 
 template <class D3DShaderType>
-bool Blit::setShader(ShaderId source, const char *profile,
+bool Blit9::setShader(ShaderId source, const char *profile,
                      D3DShaderType *(rx::Renderer9::*createShader)(const DWORD *, size_t length),
                      HRESULT (WINAPI IDirect3DDevice9::*setShader)(D3DShaderType*))
 {
@@ -155,17 +155,17 @@ bool Blit::setShader(ShaderId source, const char *profile,
     return true;
 }
 
-bool Blit::setVertexShader(ShaderId shader)
+bool Blit9::setVertexShader(ShaderId shader)
 {
     return setShader<IDirect3DVertexShader9>(shader, "vs_2_0", &rx::Renderer9::createVertexShader, &IDirect3DDevice9::SetVertexShader);
 }
 
-bool Blit::setPixelShader(ShaderId shader)
+bool Blit9::setPixelShader(ShaderId shader)
 {
     return setShader<IDirect3DPixelShader9>(shader, "ps_2_0", &rx::Renderer9::createPixelShader, &IDirect3DDevice9::SetPixelShader);
 }
 
-RECT Blit::getSurfaceRect(IDirect3DSurface9 *surface) const
+RECT Blit9::getSurfaceRect(IDirect3DSurface9 *surface) const
 {
     D3DSURFACE_DESC desc;
     surface->GetDesc(&desc);
@@ -179,7 +179,7 @@ RECT Blit::getSurfaceRect(IDirect3DSurface9 *surface) const
     return rect;
 }
 
-bool Blit::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
+bool Blit9::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
 {
     IDirect3DTexture9 *texture = copySurfaceToTexture(source, getSurfaceRect(source));
     if (!texture)
@@ -212,7 +212,7 @@ bool Blit::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
     return true;
 }
 
-bool Blit::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorageInterface2D *storage, GLint level)
+bool Blit9::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorageInterface2D *storage, GLint level)
 {
     RenderTarget9 *renderTarget = NULL;
     IDirect3DSurface9 *source = NULL;
@@ -248,7 +248,7 @@ bool Blit::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum des
     return result;
 }
 
-bool Blit::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorageInterfaceCube *storage, GLenum target, GLint level)
+bool Blit9::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, TextureStorageInterfaceCube *storage, GLenum target, GLint level)
 {
     RenderTarget9 *renderTarget = NULL;
     IDirect3DSurface9 *source = NULL;
@@ -284,7 +284,7 @@ bool Blit::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum des
     return result;
 }
 
-bool Blit::copy(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, IDirect3DSurface9 *dest)
+bool Blit9::copy(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, IDirect3DSurface9 *dest)
 {
     if (!dest)
     {
@@ -317,7 +317,7 @@ bool Blit::copy(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum destFo
     return true;
 }
 
-bool Blit::formatConvert(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, IDirect3DSurface9 *dest)
+bool Blit9::formatConvert(IDirect3DSurface9 *source, const RECT &sourceRect, GLenum destFormat, GLint xoffset, GLint yoffset, IDirect3DSurface9 *dest)
 {
     IDirect3DTexture9 *texture = copySurfaceToTexture(source, sourceRect);
     if (!texture)
@@ -347,7 +347,7 @@ bool Blit::formatConvert(IDirect3DSurface9 *source, const RECT &sourceRect, GLen
     return true;
 }
 
-bool Blit::setFormatConvertShaders(GLenum destFormat)
+bool Blit9::setFormatConvertShaders(GLenum destFormat)
 {
     bool okay = setVertexShader(SHADER_VS_STANDARD);
 
@@ -410,7 +410,7 @@ bool Blit::setFormatConvertShaders(GLenum destFormat)
     return true;
 }
 
-IDirect3DTexture9 *Blit::copySurfaceToTexture(IDirect3DSurface9 *surface, const RECT &sourceRect)
+IDirect3DTexture9 *Blit9::copySurfaceToTexture(IDirect3DSurface9 *surface, const RECT &sourceRect)
 {
     if (!surface)
     {
@@ -457,7 +457,7 @@ IDirect3DTexture9 *Blit::copySurfaceToTexture(IDirect3DSurface9 *surface, const 
     return texture;
 }
 
-void Blit::setViewport(const RECT &sourceRect, GLint xoffset, GLint yoffset)
+void Blit9::setViewport(const RECT &sourceRect, GLint xoffset, GLint yoffset)
 {
     IDirect3DDevice9 *device = mRenderer->getDevice();
 
@@ -474,7 +474,7 @@ void Blit::setViewport(const RECT &sourceRect, GLint xoffset, GLint yoffset)
     device->SetVertexShaderConstantF(0, halfPixelAdjust, 1);
 }
 
-void Blit::setCommonBlitState()
+void Blit9::setCommonBlitState()
 {
     IDirect3DDevice9 *device = mRenderer->getDevice();
 
@@ -504,7 +504,7 @@ void Blit::setCommonBlitState()
     }
 }
 
-void Blit::render()
+void Blit9::render()
 {
     IDirect3DDevice9 *device = mRenderer->getDevice();
 
@@ -515,7 +515,7 @@ void Blit::render()
     hr = device->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2);
 }
 
-void Blit::saveState()
+void Blit9::saveState()
 {
     IDirect3DDevice9 *device = mRenderer->getDevice();
 
@@ -567,7 +567,7 @@ void Blit::saveState()
     }
 }
 
-void Blit::restoreState()
+void Blit9::restoreState()
 {
     IDirect3DDevice9 *device = mRenderer->getDevice();
 

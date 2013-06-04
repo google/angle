@@ -197,9 +197,6 @@
     <ClCompile Include="renderer\VertexBuffer9.cpp">
       <Filter>Source Files\Renderer9</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\Blit.cpp">
-      <Filter>Source Files\Renderer9</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\InputLayoutCache.cpp">
       <Filter>Source Files\Renderer11</Filter>
     </ClCompile>
@@ -235,6 +232,9 @@
     </ClCompile>
     <ClCompile Include="renderer\copyimage.cpp">
       <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\Blit9.cpp">
+      <Filter>Source Files\Renderer9</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -445,9 +445,6 @@
     <ClInclude Include="renderer\Query11.h">
       <Filter>Header Files\Renderer\Renderer11</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\Blit.h">
-      <Filter>Header Files\Renderer9</Filter>
-    </ClInclude>
     <ClInclude Include="renderer\ShaderCache.h">
       <Filter>Header Files\Renderer9</Filter>
     </ClInclude>
@@ -549,6 +546,9 @@
     </ClInclude>
     <ClInclude Include="renderer\copyimage.h">
       <Filter>Header Files\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\Blit9.h">
+      <Filter>Header Files\Renderer9</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

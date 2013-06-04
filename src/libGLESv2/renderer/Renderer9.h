@@ -27,6 +27,7 @@ class VertexDataManager;
 class IndexDataManager;
 class StreamingIndexBufferInterface;
 struct TranslatedAttribute;
+class Blit9;
 
 class Renderer9 : public Renderer
 {
@@ -249,7 +250,7 @@ class Renderer9 : public Renderer
     IDirect3DDevice9 *mDevice;
     IDirect3DDevice9Ex *mDeviceEx;  // Might be null if D3D9Ex is not supported.
 
-    Blit *mBlit;
+    Blit9 *mBlit;
 
     HWND mDeviceWindow;
 

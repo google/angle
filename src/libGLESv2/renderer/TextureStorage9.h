@@ -20,7 +20,6 @@ class Renderer9;
 class SwapChain9;
 class RenderTarget;
 class RenderTarget9;
-class Blit;
 
 class TextureStorage9 : public TextureStorage
 {

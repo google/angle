@@ -4,10 +4,10 @@
 // found in the LICENSE file.
 //
 
-// Blit.cpp: Surface copy utility class.
+// Blit9.cpp: Surface copy utility class.
 
-#ifndef LIBGLESV2_BLIT_H_
-#define LIBGLESV2_BLIT_H_
+#ifndef LIBGLESV2_BLIT9_H_
+#define LIBGLESV2_BLIT9_H_
 
 #include "common/angleutils.h"
 
@@ -22,11 +22,11 @@ class Renderer9;
 class TextureStorageInterface2D;
 class TextureStorageInterfaceCube;
 
-class Blit
+class Blit9
 {
   public:
-    explicit Blit(Renderer9 *renderer);
-    ~Blit();
+    explicit Blit9(Renderer9 *renderer);
+    ~Blit9();
 
     // Copy from source surface to dest surface.
     // sourceRect, xoffset, yoffset are in D3D coordinates (0,0 in upper-left)
@@ -87,8 +87,8 @@ class Blit
     IDirect3DSurface9 *mSavedRenderTarget;
     IDirect3DSurface9 *mSavedDepthStencil;
 
-    DISALLOW_COPY_AND_ASSIGN(Blit);
+    DISALLOW_COPY_AND_ASSIGN(Blit9);
 };
 }
 
-#endif   // LIBGLESV2_BLIT_H_
+#endif   // LIBGLESV2_BLIT9_H_

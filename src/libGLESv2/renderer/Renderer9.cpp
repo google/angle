@@ -23,7 +23,7 @@
 #include "libGLESv2/renderer/SwapChain9.h"
 #include "libGLESv2/renderer/TextureStorage9.h"
 #include "libGLESv2/renderer/Image9.h"
-#include "libGLESv2/renderer/Blit.h"
+#include "libGLESv2/renderer/Blit9.h"
 #include "libGLESv2/renderer/RenderTarget9.h"
 #include "libGLESv2/renderer/VertexBuffer9.h"
 #include "libGLESv2/renderer/IndexBuffer9.h"
@@ -478,7 +478,7 @@ void Renderer9::initializeDevice()
     mSceneStarted = false;
 
     ASSERT(!mBlit && !mVertexDataManager && !mIndexDataManager);
-    mBlit = new Blit(this);
+    mBlit = new Blit9(this);
     mVertexDataManager = new rx::VertexDataManager(this);
     mIndexDataManager = new rx::IndexDataManager(this);
 }
