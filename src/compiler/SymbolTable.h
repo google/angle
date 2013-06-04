@@ -49,9 +49,8 @@ public:
     virtual bool isVariable() const { return false; }
     void setUniqueId(int id) { uniqueId = id; }
     int getUniqueId() const { return uniqueId; }
-    virtual void dump(TInfoSink &infoSink) const = 0;	
+
     TSymbol(const TSymbol&);
-    virtual TSymbol* clone(TStructureMap& remapper) = 0;
 
 protected:
     const TString *name;
@@ -80,8 +79,6 @@ public:
     void updateArrayInformationType(TType *t) { arrayInformationType = t; }
     TType* getArrayInformationType() { return arrayInformationType; }
 
-    virtual void dump(TInfoSink &infoSink) const;
-
     ConstantUnion* getConstPointer()
     { 
         if (!unionArray)
@@ -100,8 +97,6 @@ public:
         delete[] unionArray;
         unionArray = constArray;  
     }
-    TVariable(const TVariable&, TStructureMap& remapper); // copy constructor
-    virtual TVariable* clone(TStructureMap& remapper);
 
 protected:
     TType type;
@@ -119,11 +114,6 @@ protected:
 struct TParameter {
     TString *name;
     TType* type;
-    void copyParam(const TParameter& param, TStructureMap& remapper)
-    {
-        name = NewPoolTString(param.name->c_str());
-        type = param.type->clone(remapper);
-    }
 };
 
 //
@@ -172,10 +162,6 @@ public:
     size_t getParamCount() const { return parameters.size(); }  
     const TParameter& getParam(size_t i) const { return parameters[i]; }
 
-    virtual void dump(TInfoSink &infoSink) const;
-    TFunction(const TFunction&, TStructureMap& remapper);
-    virtual TFunction* clone(TStructureMap& remapper);
-
 protected:
     typedef TVector<TParameter> TParamList;
     TParamList parameters;
@@ -197,9 +183,6 @@ public:
     {}
 
     virtual ~TInterfaceBlockName() {}
-
-    virtual void dump(TInfoSink &infoSink) const;
-    virtual TInterfaceBlockName* clone(TStructureMap& remapper);
 };
 
 class TSymbolTableLevel {
@@ -245,8 +228,6 @@ public:
 
     void relateToOperator(const char* name, TOperator op);
     void relateToExtension(const char* name, const TString& ext);
-    void dump(TInfoSink &infoSink) const;
-    TSymbolTableLevel* clone(TStructureMap& remapper);
 
 protected:
     tLevel level;
@@ -325,8 +306,6 @@ public:
         table[level]->relateToExtension(name, ext);
     }
     int getMaxSymbolId() { return uniqueId; }
-    void dump(TInfoSink &infoSink) const;
-    void copyTable(const TSymbolTable& copyOf);
 
     bool setDefaultPrecision( const TPublicType& type, TPrecision prec ){
         if (IsSampler(type.type))
