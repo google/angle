@@ -267,6 +267,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClCompile Include="Query.cpp" />
     <ClCompile Include="..\common\RefCountObject.cpp" />
     <ClCompile Include="Renderbuffer.cpp" />
+    <ClCompile Include="renderer\Blit11.cpp" />
     <ClCompile Include="renderer\Blit9.cpp" />
     <ClCompile Include="renderer\copyimage.cpp" />
     <ClCompile Include="renderer\Fence11.cpp" />
@@ -342,6 +343,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="Query.h" />
     <ClInclude Include="..\common\RefCountObject.h" />
     <ClInclude Include="Renderbuffer.h" />
+    <ClInclude Include="renderer\Blit11.h" />
     <ClInclude Include="renderer\Blit9.h" />
     <ClInclude Include="renderer\copyimage.h" />
     <ClInclude Include="renderer\Fence11.h" />

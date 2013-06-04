@@ -14,6 +14,7 @@
 #include "libGLESv2/renderer/RenderTarget11.h"
 #include "libGLESv2/renderer/SwapChain11.h"
 #include "libGLESv2/renderer/renderer11_utils.h"
+#include "libGLESv2/renderer/Blit11.h"
 #include "libGLESv2/renderer/formatutils11.h"
 
 #include "common/utilities.h"
@@ -142,25 +143,16 @@ void TextureStorage11::generateMipmapLayer(RenderTarget11 *source, RenderTarget1
 
         if (sourceSRV && destRTV)
         {
-            gl::Box sourceArea;
-            sourceArea.x = 0;
-            sourceArea.y = 0;
-            sourceArea.z = 0;
-            sourceArea.width = source->getWidth();
-            sourceArea.height = source->getHeight();
-            sourceArea.depth = source->getDepth();
+            gl::Box sourceArea(0, 0, 0, source->getWidth(), source->getHeight(), source->getDepth());
+            gl::Extents sourceSize(source->getWidth(), source->getHeight(), source->getDepth());
 
-            gl::Box destArea;
-            destArea.x = 0;
-            destArea.y = 0;
-            destArea.z = 0;
-            destArea.width = dest->getWidth();
-            destArea.height = dest->getHeight();
-            destArea.depth = dest->getDepth();
+            gl::Box destArea(0, 0, 0, dest->getWidth(), dest->getHeight(), dest->getDepth());
+            gl::Extents destSize(dest->getWidth(), dest->getHeight(), dest->getDepth());
 
-            mRenderer->copyTexture(sourceSRV, sourceArea, source->getWidth(), source->getHeight(), source->getDepth(),
-                                   destRTV, destArea, dest->getWidth(), dest->getHeight(), dest->getDepth(),
-                                   GL_RGBA);
+            Blit11 *blitter = mRenderer->getBlitter();
+
+            blitter->copyTexture(sourceSRV, sourceArea, sourceSize, destRTV, destArea, destSize,
+                                 GL_RGBA, GL_LINEAR);
         }
 
         if (sourceSRV)

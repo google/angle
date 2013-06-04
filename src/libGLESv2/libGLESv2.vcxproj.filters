@@ -236,6 +236,9 @@
     <ClCompile Include="renderer\Blit9.cpp">
       <Filter>Source Files\Renderer9</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\Blit11.cpp">
+      <Filter>Source Files\Renderer11</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinaryStream.h">
@@ -549,6 +552,9 @@
     </ClInclude>
     <ClInclude Include="renderer\Blit9.h">
       <Filter>Header Files\Renderer9</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\Blit11.h">
+      <Filter>Header Files\Renderer11</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

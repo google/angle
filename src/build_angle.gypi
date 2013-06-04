@@ -271,6 +271,8 @@
             'libGLESv2/Renderbuffer.h',
             'libGLESv2/renderer/Blit9.cpp',
             'libGLESv2/renderer/Blit9.h',
+            'libGLESv2/renderer/Blit11.cpp',
+            'libGLESv2/renderer/Blit11.h',
             'libGLESv2/renderer/copyimage.cpp',
             'libGLESv2/renderer/copyimage.h',
             'libGLESv2/renderer/BufferStorage.h',

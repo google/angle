@@ -29,6 +29,7 @@ namespace rx
 class VertexDataManager;
 class IndexDataManager;
 class StreamingIndexBufferInterface;
+class Blit11;
 
 enum
 {
@@ -163,10 +164,6 @@ class Renderer11 : public Renderer
     virtual bool copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
                            GLint xoffset, GLint yoffset, GLint zOffset, TextureStorageInterface2DArray *storage, GLint level);
 
-    bool copyTexture(ID3D11ShaderResourceView *source, const gl::Box &sourceArea, unsigned int sourceWidth, unsigned int sourceHeight, unsigned int sourceDepth,
-                     ID3D11RenderTargetView *dest, const gl::Box &destArea, unsigned int destWidth, unsigned int destHeight, unsigned int destDepth,
-                     GLenum destFormat);
-
     virtual bool blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &readRect, gl::Framebuffer *drawTarget, const gl::Rectangle &drawRect,
                           bool blitRenderTarget, bool blitDepthStencil);
     virtual void readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,
@@ -202,6 +199,8 @@ class Renderer11 : public Renderer
     ID3D11Device *getDevice() { return mDevice; }
     ID3D11DeviceContext *getDeviceContext() { return mDeviceContext; };
     IDXGIFactory *getDxgiFactory() { return mDxgiFactory; };
+
+    Blit11 *getBlitter() { return mBlit; }
 
     bool getRenderTargetResource(gl::Renderbuffer *colorbuffer, unsigned int *subresourceIndex, ID3D11Texture2D **resource);
     void unapplyRenderTargets();
@@ -339,24 +338,7 @@ class Renderer11 : public Renderer
     StreamingIndexBufferInterface *mTriangleFanIB;
 
     // Texture copy resources
-    bool mCopyResourcesInitialized;
-    ID3D11Buffer *mCopyVB;
-    ID3D11SamplerState *mCopySampler;
-
-    ID3D11InputLayout *mCopy2DIL;
-    ID3D11VertexShader *mCopy2DVS;
-    ID3D11PixelShader *mCopyRGBA2DPS;
-    ID3D11PixelShader *mCopyRGB2DPS;
-    ID3D11PixelShader *mCopyLum2DPS;
-    ID3D11PixelShader *mCopyLumAlpha2DPS;
-
-    ID3D11InputLayout *mCopy3DIL;
-    ID3D11VertexShader *mCopy3DVS;
-    ID3D11GeometryShader *mCopy3DGS;
-    ID3D11PixelShader *mCopyRGBA3DPS;
-    ID3D11PixelShader *mCopyRGB3DPS;
-    ID3D11PixelShader *mCopyLum3DPS;
-    ID3D11PixelShader *mCopyLumAlpha3DPS;
+    Blit11 *mBlit;
 
     // Masked clear resources
     bool mClearResourcesInitialized;
