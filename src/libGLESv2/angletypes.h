@@ -36,6 +36,9 @@ struct Color
     T green;
     T blue;
     T alpha;
+
+    Color() : red(0), green(0), blue(0), alpha(0) { }
+    Color(T r, T g, T b, T a) : red(r), green(g), blue(b), alpha(a) { }
 };
 
 typedef Color<float> ColorF;
@@ -48,6 +51,9 @@ struct Rectangle
     int y;
     int width;
     int height;
+
+    Rectangle() : x(0), y(0), width(0), height(0) { }
+    Rectangle(int x_in, int y_in, int width_in, int height_in) : x(x_in), y(y_in), width(width_in), height(height_in) { }
 };
 
 struct Box
@@ -58,6 +64,19 @@ struct Box
     int width;
     int height;
     int depth;
+
+    Box() : x(0), y(0), z(0), width(0), height(0), depth(0) { }
+    Box(int x_in, int y_in, int z_in, int width_in, int height_in, int depth_in) : x(x_in), y(y_in), z(z_in), width(width_in), height(height_in), depth(depth_in) { }
+};
+
+struct Extents
+{
+    int width;
+    int height;
+    int depth;
+
+    Extents() : width(0), height(0), depth(0) { }
+    Extents(int width_, int height_, int depth_) : width(width_), height(height_), depth(depth_) { }
 };
 
 struct RasterizerState
