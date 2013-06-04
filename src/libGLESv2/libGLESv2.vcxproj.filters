@@ -556,6 +556,63 @@
     <ClInclude Include="renderer\Blit11.h">
       <Filter>Header Files\Renderer11</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\passthroughrg2di11ps.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\passthroughrg2dui11ps.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\passthroughrg3d11ps.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\passthroughrg3di11ps.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\passthroughrg3dui11ps.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\passthroughrgb2di11ps.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\passthroughrgb2dui11ps.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\passthroughrgb3di11ps.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\passthroughrgb3dui11ps.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\passthroughrgba2di11ps.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\passthroughrgba2dui11ps.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\passthroughrgba3di11ps.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\passthroughrgba3dui11ps.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\passthroughr2di11ps.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\passthroughr2dui11ps.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\passthroughr3d11ps.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\passthroughr3di11ps.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\passthroughr3dui11ps.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\passthroughrg2d11ps.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\shaders\Blit.ps">

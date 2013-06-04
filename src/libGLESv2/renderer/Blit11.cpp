@@ -12,17 +12,38 @@
 #include "libGLESv2/renderer/Blit11.h"
 #include "libGLESv2/renderer/Renderer11.h"
 #include "libGLESv2/renderer/renderer11_utils.h"
+#include "libGLESv2/renderer/formatutils11.h"
 
 #include "libGLESv2/renderer/shaders/compiled/passthrough2d11vs.h"
 #include "libGLESv2/renderer/shaders/compiled/passthroughrgba2d11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughrgba2dui11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughrgba2di11ps.h"
 #include "libGLESv2/renderer/shaders/compiled/passthroughrgb2d11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughrgb2dui11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughrgb2di11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughrg2d11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughrg2dui11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughrg2di11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughr2d11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughr2dui11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughr2di11ps.h"
 #include "libGLESv2/renderer/shaders/compiled/passthroughlum2d11ps.h"
 #include "libGLESv2/renderer/shaders/compiled/passthroughlumalpha2d11ps.h"
 
 #include "libGLESv2/renderer/shaders/compiled/passthrough3d11vs.h"
 #include "libGLESv2/renderer/shaders/compiled/passthrough3d11gs.h"
 #include "libGLESv2/renderer/shaders/compiled/passthroughrgba3d11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughrgba3dui11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughrgba3di11ps.h"
 #include "libGLESv2/renderer/shaders/compiled/passthroughrgb3d11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughrgb3dui11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughrgb3di11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughrg3d11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughrg3dui11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughrg3di11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughr3d11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughr3dui11ps.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughr3di11ps.h"
 #include "libGLESv2/renderer/shaders/compiled/passthroughlum3d11ps.h"
 #include "libGLESv2/renderer/shaders/compiled/passthroughlumalpha3d11ps.h"
 
@@ -157,9 +178,15 @@ bool Blit11::copyTexture(ID3D11ShaderResourceView *source, const gl::Box &source
     HRESULT result;
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
 
+    // Determine if the source format is a signed integer format, the destFormat will already
+    // be GL_XXXX_INTEGER but it does not tell us if it is signed or unsigned.
+    D3D11_SHADER_RESOURCE_VIEW_DESC sourceSRVDesc;
+    source->GetDesc(&sourceSRVDesc);
+    GLint sourceInternalFormat = d3d11_gl::GetInternalFormat(sourceSRVDesc.Format);
+
     BlitParameters parameters = { 0 };
     parameters.mDestinationFormat = destFormat;
-    parameters.mSignedInteger = false;
+    parameters.mSignedInteger = gl::IsSignedIntegerFormat(sourceInternalFormat, mRenderer->getCurrentClientVersion());
     parameters.m3DBlit = sourceArea.depth > 1;
 
     BlitShaderMap::const_iterator i = mShaderMap.find(parameters);
@@ -377,15 +404,35 @@ void Blit11::buildShaderMap()
     ID3D11Device *device = mRenderer->getDevice();
 
     add2DShaderToMap(GL_RGBA,            false, compilePS(device, g_PS_PassthroughRGBA2D,     "Blit11 2D RGBA pixel shader"           ));
+    add2DShaderToMap(GL_RGBA_INTEGER,    false, compilePS(device, g_PS_PassthroughRGBA2DUI,   "Blit11 2D RGBA UI pixel shader"        ));
+    add2DShaderToMap(GL_RGBA_INTEGER,    true,  compilePS(device, g_PS_PassthroughRGBA2DI,    "Blit11 2D RGBA I pixel shader"         ));
     add2DShaderToMap(GL_BGRA_EXT,        false, compilePS(device, g_PS_PassthroughRGBA2D,     "Blit11 2D BGRA pixel shader"           ));
     add2DShaderToMap(GL_RGB,             false, compilePS(device, g_PS_PassthroughRGB2D,      "Blit11 2D RGB pixel shader"            ));
+    add2DShaderToMap(GL_RGB_INTEGER,     false, compilePS(device, g_PS_PassthroughRGB2DUI,    "Blit11 2D RGB UI pixel shader"         ));
+    add2DShaderToMap(GL_RGB_INTEGER,     true,  compilePS(device, g_PS_PassthroughRGB2DI,     "Blit11 2D RGB I pixel shader"          ));
+    add2DShaderToMap(GL_RG,              false, compilePS(device, g_PS_PassthroughRG2D,       "Blit11 2D RG pixel shader"             ));
+    add2DShaderToMap(GL_RG_INTEGER,      false, compilePS(device, g_PS_PassthroughRG2DUI,     "Blit11 2D RG UI pixel shader"          ));
+    add2DShaderToMap(GL_RG_INTEGER,      true,  compilePS(device, g_PS_PassthroughRG2DI,      "Blit11 2D RG I pixel shader"           ));
+    add2DShaderToMap(GL_RED,             false, compilePS(device, g_PS_PassthroughR2D,        "Blit11 2D R pixel shader"              ));
+    add2DShaderToMap(GL_RED_INTEGER,     false, compilePS(device, g_PS_PassthroughR2DUI,      "Blit11 2D R UI pixel shader"           ));
+    add2DShaderToMap(GL_RED_INTEGER,     true,  compilePS(device, g_PS_PassthroughR2DI,       "Blit11 2D R I pixel shader"            ));
     add2DShaderToMap(GL_ALPHA,           false, compilePS(device, g_PS_PassthroughRGBA2D,     "Blit11 2D alpha pixel shader"          ));
     add2DShaderToMap(GL_LUMINANCE,       false, compilePS(device, g_PS_PassthroughLum2D,      "Blit11 2D lum pixel shader"            ));
     add2DShaderToMap(GL_LUMINANCE_ALPHA, false, compilePS(device, g_PS_PassthroughLumAlpha2D, "Blit11 2D luminance alpha pixel shader"));
 
     add3DShaderToMap(GL_RGBA,            false, compilePS(device, g_PS_PassthroughRGBA3D,     "Blit11 3D RGBA pixel shader"           ));
+    add3DShaderToMap(GL_RGBA_INTEGER,    false, compilePS(device, g_PS_PassthroughRGBA3DUI,   "Blit11 3D UI RGBA pixel shader"        ));
+    add3DShaderToMap(GL_RGBA_INTEGER,    true,  compilePS(device, g_PS_PassthroughRGBA3DI,    "Blit11 3D I RGBA pixel shader"         ));
     add3DShaderToMap(GL_BGRA_EXT,        false, compilePS(device, g_PS_PassthroughRGBA3D,     "Blit11 3D BGRA pixel shader"           ));
     add3DShaderToMap(GL_RGB,             false, compilePS(device, g_PS_PassthroughRGB3D,      "Blit11 3D RGB pixel shader"            ));
+    add3DShaderToMap(GL_RGB_INTEGER,     false, compilePS(device, g_PS_PassthroughRGB3DUI,    "Blit11 3D RGB UI pixel shader"         ));
+    add3DShaderToMap(GL_RGB_INTEGER,     true,  compilePS(device, g_PS_PassthroughRGB3DI,     "Blit11 3D RGB I pixel shader"          ));
+    add3DShaderToMap(GL_RG,              false, compilePS(device, g_PS_PassthroughRG3D,       "Blit11 3D RG pixel shader"             ));
+    add3DShaderToMap(GL_RG_INTEGER,      false, compilePS(device, g_PS_PassthroughRG3DUI,     "Blit11 3D RG UI pixel shader"          ));
+    add3DShaderToMap(GL_RG_INTEGER,      true,  compilePS(device, g_PS_PassthroughRG3DI,      "Blit11 3D RG I pixel shader"           ));
+    add3DShaderToMap(GL_RED,             false, compilePS(device, g_PS_PassthroughR3D,        "Blit11 3D R pixel shader"              ));
+    add3DShaderToMap(GL_RED_INTEGER,     false, compilePS(device, g_PS_PassthroughR3DUI,      "Blit11 3D R UI pixel shader"           ));
+    add3DShaderToMap(GL_RED_INTEGER,     true,  compilePS(device, g_PS_PassthroughR3DI,       "Blit11 3D R I pixel shader"            ));
     add3DShaderToMap(GL_ALPHA,           false, compilePS(device, g_PS_PassthroughRGBA3D,     "Blit11 3D alpha pixel shader"          ));
     add3DShaderToMap(GL_LUMINANCE,       false, compilePS(device, g_PS_PassthroughLum3D,      "Blit11 3D luminance pixel shader"      ));
     add3DShaderToMap(GL_LUMINANCE_ALPHA, false, compilePS(device, g_PS_PassthroughLumAlpha3D, "Blit11 3D luminance alpha pixel shader"));
