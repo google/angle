@@ -39,6 +39,13 @@ Config::Config(rx::ConfigDesc desc, EGLint minInterval, EGLint maxInterval, EGLi
         mBlueSize = 5;
         mAlphaSize = 1;
         break;
+      case GL_BGR5_A1_ANGLEX:
+        mBufferSize = 16;
+        mRedSize = 5;
+        mGreenSize = 5;
+        mBlueSize = 5;
+        mAlphaSize = 1;
+        break;
       case GL_RGBA8_OES:
         mBufferSize = 32;
         mRedSize = 8;

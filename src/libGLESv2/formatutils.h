@@ -14,6 +14,8 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 
+#include "libGLESv2/angletypes.h"
+
 typedef void (*MipGenerationFunction)(unsigned int sourceWidth, unsigned int sourceHeight, unsigned int sourceDepth,
                                       const unsigned char *sourceData, int sourceRowPitch, int sourceDepthPitch,
                                       unsigned char *destData, int destRowPitch, int destDepthPitch);
@@ -21,6 +23,10 @@ typedef void (*MipGenerationFunction)(unsigned int sourceWidth, unsigned int sou
 typedef void (*LoadImageFunction)(int width, int height, int depth,
                                   const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
                                   void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch);
+
+typedef void (*ColorReadFunction)(const void *source, void *dest);
+typedef void (*ColorWriteFunction)(const void *source, void *dest);
+typedef void (*ColorCopyFunction)(const void *source, void *dest);
 
 namespace rx
 {
@@ -80,6 +86,8 @@ GLuint GetBlockSize(GLint internalFormat, GLenum type, GLuint clientVersion, GLs
 bool IsFormatCompressed(GLint internalFormat, GLuint clientVersion);
 GLuint GetCompressedBlockWidth(GLint internalFormat, GLuint clientVersion);
 GLuint GetCompressedBlockHeight(GLint internalFormat, GLuint clientVersion);
+
+ColorWriteFunction GetColorWriteFunction(GLenum format, GLenum type, GLuint clientVersion);
 
 }
 

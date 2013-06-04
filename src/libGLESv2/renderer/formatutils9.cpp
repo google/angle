@@ -12,6 +12,7 @@
 #include "libGLESv2/renderer/Renderer9.h"
 #include "libGLESv2/renderer/generatemip.h"
 #include "libGLESv2/renderer/loadimage.h"
+#include "libGLESv2/renderer/copyimage.h"
 
 namespace rx
 {
@@ -161,15 +162,17 @@ struct D3DFormatInfo
     GLint mInternalFormat;
 
     MipGenerationFunction mMipGenerationFunction;
+    ColorReadFunction mColorReadFunction;
 
     D3DFormatInfo()
-        : mPixelBits(0), mBlockWidth(0), mBlockHeight(0), mInternalFormat(GL_NONE), mMipGenerationFunction(NULL)
+        : mPixelBits(0), mBlockWidth(0), mBlockHeight(0), mInternalFormat(GL_NONE), mMipGenerationFunction(NULL),
+          mColorReadFunction(NULL)
     { }
 
     D3DFormatInfo(GLuint pixelBits, GLuint blockWidth, GLuint blockHeight, GLint internalFormat,
-                  MipGenerationFunction mipFunc)
+                  MipGenerationFunction mipFunc, ColorReadFunction readFunc)
         : mPixelBits(pixelBits), mBlockWidth(blockWidth), mBlockHeight(blockHeight), mInternalFormat(internalFormat),
-          mMipGenerationFunction(mipFunc)
+          mMipGenerationFunction(mipFunc), mColorReadFunction(readFunc)
     { }
 };
 
@@ -180,31 +183,31 @@ static D3D9FormatInfoMap BuildD3D9FormatInfoMap()
 {
     D3D9FormatInfoMap map;
 
-    //                           | D3DFORMAT           |             | S  |W |H | Internal format                   | Mip generation function  |
-    map.insert(D3D9FormatInfoPair(D3DFMT_NULL,          D3DFormatInfo(  0, 0, 0, GL_NONE,                            NULL                      )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_UNKNOWN,       D3DFormatInfo(  0, 0, 0, GL_NONE,                            NULL                      )));
+    //                           | D3DFORMAT           |             | S  |W |H | Internal format                   | Mip generation function   | Color read function             |
+    map.insert(D3D9FormatInfoPair(D3DFMT_NULL,          D3DFormatInfo(  0, 0, 0, GL_NONE,                            NULL,                       NULL                             )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_UNKNOWN,       D3DFormatInfo(  0, 0, 0, GL_NONE,                            NULL,                       NULL                             )));
 
-    map.insert(D3D9FormatInfoPair(D3DFMT_L8,            D3DFormatInfo(  8, 1, 1, GL_LUMINANCE8_EXT,                  GenerateMip<L8>           )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_A8,            D3DFormatInfo(  8, 1, 1, GL_ALPHA8_EXT,                      GenerateMip<A8>           )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_A8L8,          D3DFormatInfo( 16, 1, 1, GL_LUMINANCE8_ALPHA8_EXT,           GenerateMip<A8L8>         )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_A4R4G4B4,      D3DFormatInfo( 16, 1, 1, GL_RGBA4,                           NULL                      )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_A1R5G5B5,      D3DFormatInfo( 16, 1, 1, GL_RGB5_A1,                         NULL                      )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_R5G6B5,        D3DFormatInfo( 16, 1, 1, GL_RGB565,                          NULL                      )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_X8R8G8B8,      D3DFormatInfo( 32, 1, 1, GL_RGB8_OES,                        GenerateMip<A8R8G8B8>     )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_A8R8G8B8,      D3DFormatInfo( 32, 1, 1, GL_RGBA8_OES,                       GenerateMip<A8R8G8B8>     )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_A16B16G16R16F, D3DFormatInfo( 64, 1, 1, GL_RGBA16F_EXT,                     GenerateMip<A16B16G16R16F>)));
-    map.insert(D3D9FormatInfoPair(D3DFMT_A32B32G32R32F, D3DFormatInfo(128, 1, 1, GL_RGBA32F_EXT,                     GenerateMip<A32B32G32R32F>)));
+    map.insert(D3D9FormatInfoPair(D3DFMT_L8,            D3DFormatInfo(  8, 1, 1, GL_LUMINANCE8_EXT,                  GenerateMip<L8>,            ReadColor<L8, GLfloat>           )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_A8,            D3DFormatInfo(  8, 1, 1, GL_ALPHA8_EXT,                      GenerateMip<A8>,            ReadColor<A8, GLfloat>           )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_A8L8,          D3DFormatInfo( 16, 1, 1, GL_LUMINANCE8_ALPHA8_EXT,           GenerateMip<A8L8>,          ReadColor<A8L8, GLfloat>         )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_A4R4G4B4,      D3DFormatInfo( 16, 1, 1, GL_BGRA4_ANGLEX,                    GenerateMip<B4G4R4A4>,      ReadColor<B4G4R4A4, GLfloat>     )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_A1R5G5B5,      D3DFormatInfo( 16, 1, 1, GL_BGR5_A1_ANGLEX,                  GenerateMip<B5G5R5A1>,      ReadColor<B5G5R5A1, GLfloat>     )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_R5G6B5,        D3DFormatInfo( 16, 1, 1, GL_RGB565,                          GenerateMip<R5G6B5>,        ReadColor<R5G6B5, GLfloat>       )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_X8R8G8B8,      D3DFormatInfo( 32, 1, 1, GL_BGRA8_EXT,                       GenerateMip<A8R8G8B8>,      ReadColor<A8R8G8B8, GLfloat>     )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_A8R8G8B8,      D3DFormatInfo( 32, 1, 1, GL_BGRA8_EXT,                       GenerateMip<A8R8G8B8>,      ReadColor<A8R8G8B8, GLfloat>     )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_A16B16G16R16F, D3DFormatInfo( 64, 1, 1, GL_RGBA16F_EXT,                     GenerateMip<A16B16G16R16F>, ReadColor<A16B16G16R16F, GLfloat>)));
+    map.insert(D3D9FormatInfoPair(D3DFMT_A32B32G32R32F, D3DFormatInfo(128, 1, 1, GL_RGBA32F_EXT,                     GenerateMip<A32B32G32R32F>, ReadColor<A32B32G32R32F, GLfloat>)));
 
-    map.insert(D3D9FormatInfoPair(D3DFMT_D16,           D3DFormatInfo( 16, 1, 1, GL_DEPTH_COMPONENT16,               NULL                      )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_D24S8,         D3DFormatInfo( 32, 1, 1, GL_DEPTH24_STENCIL8_OES,            NULL                      )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_D24X8,         D3DFormatInfo( 32, 1, 1, GL_DEPTH_COMPONENT16,               NULL                      )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_D32,           D3DFormatInfo( 32, 1, 1, GL_DEPTH_COMPONENT32_OES,           NULL                      )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_D16,           D3DFormatInfo( 16, 1, 1, GL_DEPTH_COMPONENT16,               NULL,                       NULL                             )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_D24S8,         D3DFormatInfo( 32, 1, 1, GL_DEPTH24_STENCIL8_OES,            NULL,                       NULL                             )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_D24X8,         D3DFormatInfo( 32, 1, 1, GL_DEPTH_COMPONENT16,               NULL,                       NULL                             )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_D32,           D3DFormatInfo( 32, 1, 1, GL_DEPTH_COMPONENT32_OES,           NULL,                       NULL                             )));
 
-    map.insert(D3D9FormatInfoPair(D3DFMT_INTZ,          D3DFormatInfo( 32, 1, 1, GL_DEPTH24_STENCIL8_OES,            NULL                      )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_INTZ,          D3DFormatInfo( 32, 1, 1, GL_DEPTH24_STENCIL8_OES,            NULL,                       NULL                             )));
 
-    map.insert(D3D9FormatInfoPair(D3DFMT_DXT1,          D3DFormatInfo( 64, 4, 4, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,   NULL                      )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_DXT3,          D3DFormatInfo(128, 4, 4, GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE, NULL                      )));
-    map.insert(D3D9FormatInfoPair(D3DFMT_DXT5,          D3DFormatInfo(128, 4, 4, GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE, NULL                      )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_DXT1,          D3DFormatInfo( 64, 4, 4, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,   NULL,                       NULL                             )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_DXT3,          D3DFormatInfo(128, 4, 4, GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE, NULL,                       NULL                             )));
+    map.insert(D3D9FormatInfoPair(D3DFMT_DXT5,          D3DFormatInfo(128, 4, 4, GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE, NULL,                       NULL                             )));
 
     return map;
 }
@@ -243,6 +246,34 @@ static d3d9::D3DFormatSet BuildAllD3DFormatSet()
     }
 
     return set;
+}
+
+struct D3D9FastCopyFormat
+{
+    D3DFORMAT mSourceFormat;
+    GLenum mDestFormat;
+    GLenum mDestType;
+
+    D3D9FastCopyFormat(D3DFORMAT sourceFormat, GLenum destFormat, GLenum destType)
+        : mSourceFormat(sourceFormat), mDestFormat(destFormat), mDestType(destType)
+    { }
+
+    bool operator<(const D3D9FastCopyFormat& other) const
+    {
+        return memcmp(this, &other, sizeof(D3D9FastCopyFormat)) < 0;
+    }
+};
+
+typedef std::map<D3D9FastCopyFormat, ColorCopyFunction> D3D9FastCopyMap;
+typedef std::pair<D3D9FastCopyFormat, ColorCopyFunction> D3D9FastCopyPair;
+
+static D3D9FastCopyMap BuildFastCopyMap()
+{
+    D3D9FastCopyMap map;
+
+    map.insert(D3D9FastCopyPair(D3D9FastCopyFormat(D3DFMT_A8R8G8B8, GL_RGBA, GL_UNSIGNED_BYTE), CopyBGRAUByteToRGBAUByte));
+
+    return map;
 }
 
 namespace d3d9
@@ -370,6 +401,27 @@ const D3DFormatSet &GetAllUsedD3DFormats()
 {
     static const D3DFormatSet formatSet = BuildAllD3DFormatSet();
     return formatSet;
+}
+
+ColorReadFunction GetColorReadFunction(D3DFORMAT format)
+{
+    D3DFormatInfo d3dFormatInfo;
+    if (GetD3D9FormatInfo(format, &d3dFormatInfo))
+    {
+        return d3dFormatInfo.mColorReadFunction;
+    }
+    else
+    {
+        UNREACHABLE();
+        return NULL;
+    }
+}
+
+ColorCopyFunction GetFastCopyFunction(D3DFORMAT sourceFormat, GLenum destFormat, GLenum destType, GLuint clientVersion)
+{
+    static const D3D9FastCopyMap fastCopyMap = BuildFastCopyMap();
+    D3D9FastCopyMap::const_iterator iter = fastCopyMap.find(D3D9FastCopyFormat(sourceFormat, destFormat, destType));
+    return (iter != fastCopyMap.end()) ? iter->second : NULL;
 }
 
 }

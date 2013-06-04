@@ -31,6 +31,9 @@ void MakeValidSize(bool isImage, DXGI_FORMAT format, GLsizei *requestWidth, GLsi
 
 const DXGIFormatSet &GetAllUsedDXGIFormats();
 
+ColorReadFunction GetColorReadFunction(DXGI_FORMAT format);
+ColorCopyFunction GetFastCopyFunction(DXGI_FORMAT sourceFormat, GLenum destFormat, GLenum destType, GLuint clientVersion);
+
 }
 
 namespace gl_d3d11

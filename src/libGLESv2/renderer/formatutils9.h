@@ -34,6 +34,9 @@ void MakeValidSize(bool isImage, D3DFORMAT format, GLsizei *requestWidth, GLsize
 
 const D3DFormatSet &GetAllUsedD3DFormats();
 
+ColorReadFunction GetColorReadFunction(D3DFORMAT format);
+ColorCopyFunction GetFastCopyFunction(D3DFORMAT sourceFormat, GLenum destFormat, GLenum destType, GLuint clientVersion);
+
 }
 
 namespace gl_d3d9
