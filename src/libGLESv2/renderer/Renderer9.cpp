@@ -2880,9 +2880,6 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
         return;   // No sensible error to generate
     }
 
-    unsigned char *dest = (unsigned char*)pixels;
-    unsigned short *dest16 = (unsigned short*)pixels;
-
     unsigned char *source;
     int inputPitch;
     if (packReverseRowOrder)
@@ -2896,224 +2893,63 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
         inputPitch = lock.Pitch;
     }
 
-    unsigned int fastPixelSize = 0;
+    GLuint clientVersion = getCurrentClientVersion();
 
-    if (desc.Format == D3DFMT_A8R8G8B8 &&
-        format == GL_BGRA_EXT &&
-        type == GL_UNSIGNED_BYTE)
-    {
-        fastPixelSize = 4;
-    }
-    else if ((desc.Format == D3DFMT_A4R4G4B4 &&
-             format == GL_BGRA_EXT &&
-             type == GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT) ||
-             (desc.Format == D3DFMT_A1R5G5B5 &&
-             format == GL_BGRA_EXT &&
-             type == GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT))
-    {
-        fastPixelSize = 2;
-    }
-    else if (desc.Format == D3DFMT_A16B16G16R16F &&
-             format == GL_RGBA &&
-             type == GL_HALF_FLOAT_OES)
-    {
-        fastPixelSize = 8;
-    }
-    else if (desc.Format == D3DFMT_A32B32G32R32F &&
-             format == GL_RGBA &&
-             type == GL_FLOAT)
-    {
-        fastPixelSize = 16;
-    }
+    GLint sourceInternalFormat = d3d9_gl::GetInternalFormat(desc.Format);
+    GLenum sourceFormat = gl::GetFormat(sourceInternalFormat, clientVersion);
+    GLenum sourceType = gl::GetType(sourceInternalFormat, clientVersion);
 
-    for (int j = 0; j < rect.bottom - rect.top; j++)
+    GLuint sourcePixelSize = gl::GetPixelBytes(sourceInternalFormat, clientVersion);
+
+    if (sourceFormat == format && sourceType == type)
     {
-        if (fastPixelSize != 0)
+        // Direct copy possible
+        unsigned char *dest = static_cast<unsigned char*>(pixels);
+        for (int y = 0; y < rect.bottom - rect.top; y++)
         {
-            // Fast path for formats which require no translation:
-            // D3DFMT_A8R8G8B8 to BGRA/UNSIGNED_BYTE
-            // D3DFMT_A4R4G4B4 to BGRA/UNSIGNED_SHORT_4_4_4_4_REV_EXT
-            // D3DFMT_A1R5G5B5 to BGRA/UNSIGNED_SHORT_1_5_5_5_REV_EXT
-            // D3DFMT_A16B16G16R16F to RGBA/HALF_FLOAT_OES
-            // D3DFMT_A32B32G32R32F to RGBA/FLOAT
-            // 
-            // Note that buffers with no alpha go through the slow path below.
-            memcpy(dest + j * outputPitch,
-                   source + j * inputPitch,
-                   (rect.right - rect.left) * fastPixelSize);
-            continue;
+            memcpy(dest + y * outputPitch, source + y * inputPitch, (rect.right - rect.left) * sourcePixelSize);
         }
-        else if (desc.Format == D3DFMT_A8R8G8B8 &&
-                 format == GL_RGBA &&
-                 type == GL_UNSIGNED_BYTE)
+    }
+    else
+    {
+        GLint destInternalFormat = gl::GetSizedInternalFormat(format, type, clientVersion);
+        GLuint destPixelSize = gl::GetPixelBytes(destInternalFormat, clientVersion);
+        GLuint sourcePixelSize = gl::GetPixelBytes(sourceInternalFormat, clientVersion);
+
+        ColorCopyFunction fastCopyFunc = d3d9::GetFastCopyFunction(desc.Format, format, type, getCurrentClientVersion());
+        if (fastCopyFunc)
         {
-            // Fast path for swapping red with blue
-            for (int i = 0; i < rect.right - rect.left; i++)
+            // Fast copy is possible through some special function
+            for (int y = 0; y < rect.bottom - rect.top; y++)
             {
-                unsigned int argb = *(unsigned int*)(source + 4 * i + j * inputPitch);
-                *(unsigned int*)(dest + 4 * i + j * outputPitch) =
-                    (argb & 0xFF00FF00) |       // Keep alpha and green
-                    (argb & 0x00FF0000) >> 16 | // Move red to blue
-                    (argb & 0x000000FF) << 16;  // Move blue to red
+                for (int x = 0; x < rect.right - rect.left; x++)
+                {
+                    void *dest = static_cast<unsigned char*>(pixels) + y * outputPitch + x * destPixelSize;
+                    void *src = static_cast<unsigned char*>(source) + y * inputPitch + x * sourcePixelSize;
+
+                    fastCopyFunc(src, dest);
+                }
             }
-            continue;
         }
-
-        for (int i = 0; i < rect.right - rect.left; i++)
+        else
         {
-            float r;
-            float g;
-            float b;
-            float a;
+            ColorReadFunction readFunc = d3d9::GetColorReadFunction(desc.Format);
+            ColorWriteFunction writeFunc = gl::GetColorWriteFunction(format, type, clientVersion);
 
-            switch (desc.Format)
+            gl::ColorF temp;
+
+            for (int y = 0; y < rect.bottom - rect.top; y++)
             {
-              case D3DFMT_R5G6B5:
+                for (int x = 0; x < rect.right - rect.left; x++)
                 {
-                    unsigned short rgb = *(unsigned short*)(source + 2 * i + j * inputPitch);
+                    void *dest = reinterpret_cast<unsigned char*>(pixels) + y * outputPitch + x * destPixelSize;
+                    void *src = source + y * inputPitch + x * sourcePixelSize;
 
-                    a = 1.0f;
-                    b = (rgb & 0x001F) * (1.0f / 0x001F);
-                    g = (rgb & 0x07E0) * (1.0f / 0x07E0);
-                    r = (rgb & 0xF800) * (1.0f / 0xF800);
+                    // readFunc and writeFunc will be using the same type of color, CopyTexImage
+                    // will not allow the copy otherwise.
+                    readFunc(src, &temp);
+                    writeFunc(&temp, dest);
                 }
-                break;
-              case D3DFMT_A1R5G5B5:
-                {
-                    unsigned short argb = *(unsigned short*)(source + 2 * i + j * inputPitch);
-
-                    a = (argb & 0x8000) ? 1.0f : 0.0f;
-                    b = (argb & 0x001F) * (1.0f / 0x001F);
-                    g = (argb & 0x03E0) * (1.0f / 0x03E0);
-                    r = (argb & 0x7C00) * (1.0f / 0x7C00);
-                }
-                break;
-              case D3DFMT_A8R8G8B8:
-                {
-                    unsigned int argb = *(unsigned int*)(source + 4 * i + j * inputPitch);
-
-                    a = (argb & 0xFF000000) * (1.0f / 0xFF000000);
-                    b = (argb & 0x000000FF) * (1.0f / 0x000000FF);
-                    g = (argb & 0x0000FF00) * (1.0f / 0x0000FF00);
-                    r = (argb & 0x00FF0000) * (1.0f / 0x00FF0000);
-                }
-                break;
-              case D3DFMT_X8R8G8B8:
-                {
-                    unsigned int xrgb = *(unsigned int*)(source + 4 * i + j * inputPitch);
-
-                    a = 1.0f;
-                    b = (xrgb & 0x000000FF) * (1.0f / 0x000000FF);
-                    g = (xrgb & 0x0000FF00) * (1.0f / 0x0000FF00);
-                    r = (xrgb & 0x00FF0000) * (1.0f / 0x00FF0000);
-                }
-                break;
-              case D3DFMT_A2R10G10B10:
-                {
-                    unsigned int argb = *(unsigned int*)(source + 4 * i + j * inputPitch);
-
-                    a = (argb & 0xC0000000) * (1.0f / 0xC0000000);
-                    b = (argb & 0x000003FF) * (1.0f / 0x000003FF);
-                    g = (argb & 0x000FFC00) * (1.0f / 0x000FFC00);
-                    r = (argb & 0x3FF00000) * (1.0f / 0x3FF00000);
-                }
-                break;
-              case D3DFMT_A32B32G32R32F:
-                {
-                    // float formats in D3D are stored rgba, rather than the other way round
-                    r = *((float*)(source + 16 * i + j * inputPitch) + 0);
-                    g = *((float*)(source + 16 * i + j * inputPitch) + 1);
-                    b = *((float*)(source + 16 * i + j * inputPitch) + 2);
-                    a = *((float*)(source + 16 * i + j * inputPitch) + 3);
-                }
-                break;
-              case D3DFMT_A16B16G16R16F:
-                {
-                    // float formats in D3D are stored rgba, rather than the other way round
-                    r = gl::float16ToFloat32(*((unsigned short*)(source + 8 * i + j * inputPitch) + 0));
-                    g = gl::float16ToFloat32(*((unsigned short*)(source + 8 * i + j * inputPitch) + 1));
-                    b = gl::float16ToFloat32(*((unsigned short*)(source + 8 * i + j * inputPitch) + 2));
-                    a = gl::float16ToFloat32(*((unsigned short*)(source + 8 * i + j * inputPitch) + 3));
-                }
-                break;
-              default:
-                UNIMPLEMENTED();   // FIXME
-                UNREACHABLE();
-                return;
-            }
-
-            switch (format)
-            {
-              case GL_RGBA:
-                switch (type)
-                {
-                  case GL_UNSIGNED_BYTE:
-                    dest[4 * i + j * outputPitch + 0] = (unsigned char)(255 * r + 0.5f);
-                    dest[4 * i + j * outputPitch + 1] = (unsigned char)(255 * g + 0.5f);
-                    dest[4 * i + j * outputPitch + 2] = (unsigned char)(255 * b + 0.5f);
-                    dest[4 * i + j * outputPitch + 3] = (unsigned char)(255 * a + 0.5f);
-                    break;
-                  default: UNREACHABLE();
-                }
-                break;
-              case GL_BGRA_EXT:
-                switch (type)
-                {
-                  case GL_UNSIGNED_BYTE:
-                    dest[4 * i + j * outputPitch + 0] = (unsigned char)(255 * b + 0.5f);
-                    dest[4 * i + j * outputPitch + 1] = (unsigned char)(255 * g + 0.5f);
-                    dest[4 * i + j * outputPitch + 2] = (unsigned char)(255 * r + 0.5f);
-                    dest[4 * i + j * outputPitch + 3] = (unsigned char)(255 * a + 0.5f);
-                    break;
-                  case GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT:
-                    // According to the desktop GL spec in the "Transfer of Pixel Rectangles" section
-                    // this type is packed as follows:
-                    //   15   14   13   12   11   10    9    8    7    6    5    4    3    2    1    0
-                    //  --------------------------------------------------------------------------------
-                    // |       4th         |        3rd         |        2nd        |   1st component   |
-                    //  --------------------------------------------------------------------------------
-                    // in the case of BGRA_EXT, B is the first component, G the second, and so forth.
-                    dest16[i + j * outputPitch / sizeof(unsigned short)] =
-                        ((unsigned short)(15 * a + 0.5f) << 12)|
-                        ((unsigned short)(15 * r + 0.5f) << 8) |
-                        ((unsigned short)(15 * g + 0.5f) << 4) |
-                        ((unsigned short)(15 * b + 0.5f) << 0);
-                    break;
-                  case GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT:
-                    // According to the desktop GL spec in the "Transfer of Pixel Rectangles" section
-                    // this type is packed as follows:
-                    //   15   14   13   12   11   10    9    8    7    6    5    4    3    2    1    0
-                    //  --------------------------------------------------------------------------------
-                    // | 4th |          3rd           |           2nd          |      1st component     |
-                    //  --------------------------------------------------------------------------------
-                    // in the case of BGRA_EXT, B is the first component, G the second, and so forth.
-                    dest16[i + j * outputPitch / sizeof(unsigned short)] =
-                        ((unsigned short)(     a + 0.5f) << 15) |
-                        ((unsigned short)(31 * r + 0.5f) << 10) |
-                        ((unsigned short)(31 * g + 0.5f) << 5) |
-                        ((unsigned short)(31 * b + 0.5f) << 0);
-                    break;
-                  default: UNREACHABLE();
-                }
-                break;
-              case GL_RGB:
-                switch (type)
-                {
-                  case GL_UNSIGNED_SHORT_5_6_5:
-                    dest16[i + j * outputPitch / sizeof(unsigned short)] = 
-                        ((unsigned short)(31 * b + 0.5f) << 0) |
-                        ((unsigned short)(63 * g + 0.5f) << 5) |
-                        ((unsigned short)(31 * r + 0.5f) << 11);
-                    break;
-                  case GL_UNSIGNED_BYTE:
-                    dest[3 * i + j * outputPitch + 0] = (unsigned char)(255 * r + 0.5f);
-                    dest[3 * i + j * outputPitch + 1] = (unsigned char)(255 * g + 0.5f);
-                    dest[3 * i + j * outputPitch + 2] = (unsigned char)(255 * b + 0.5f);
-                    break;
-                  default: UNREACHABLE();
-                }
-                break;
-              default: UNREACHABLE();
             }
         }
     }

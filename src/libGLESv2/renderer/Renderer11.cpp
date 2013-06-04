@@ -3483,249 +3483,6 @@ TextureStorage *Renderer11::createTextureStorage2DArray(int levels, GLenum inter
     return new TextureStorage11_2DArray(this, levels, internalformat, usage, width, height, depth);
 }
 
-static inline unsigned int getFastPixelCopySize(DXGI_FORMAT sourceFormat, GLenum destFormat, GLenum destType, GLuint clientVersion)
-{
-    GLint sourceInternalFormat = d3d11_gl::GetInternalFormat(sourceFormat);
-    GLenum sourceGLFormat = gl::GetFormat(sourceInternalFormat, clientVersion);
-    GLenum sourceGLType = gl::GetType(sourceInternalFormat, clientVersion);
-
-    if (sourceGLFormat == destFormat && sourceGLType == destType)
-    {
-        return gl::GetPixelBytes(sourceInternalFormat, clientVersion);
-    }
-    else
-    {
-        return 0;
-    }
-}
-
-static inline void readPixelColor(const unsigned char *data, DXGI_FORMAT format, unsigned int x,
-                                  unsigned int y, int inputPitch, gl::ColorF *outColor)
-{
-    switch (format)
-    {
-      case DXGI_FORMAT_R8G8B8A8_UNORM:
-      case DXGI_FORMAT_R8G8B8A8_UNORM_SRGB:
-        {
-            unsigned int rgba = *reinterpret_cast<const unsigned int*>(data + 4 * x + y * inputPitch);
-            outColor->red =   (rgba & 0x000000FF) * (1.0f / 0x000000FF);
-            outColor->green = (rgba & 0x0000FF00) * (1.0f / 0x0000FF00);
-            outColor->blue =  (rgba & 0x00FF0000) * (1.0f / 0x00FF0000);
-            outColor->alpha = (rgba & 0xFF000000) * (1.0f / 0xFF000000);
-        }
-        break;
-
-      case DXGI_FORMAT_A8_UNORM:
-        {
-            outColor->red =   0.0f;
-            outColor->green = 0.0f;
-            outColor->blue =  0.0f;
-            outColor->alpha = *(data + x + y * inputPitch) / 255.0f;
-        }
-        break;
-
-      case DXGI_FORMAT_R32G32B32A32_FLOAT:
-        {
-            outColor->red =   *(reinterpret_cast<const float*>(data + 16 * x + y * inputPitch) + 0);
-            outColor->green = *(reinterpret_cast<const float*>(data + 16 * x + y * inputPitch) + 1);
-            outColor->blue =  *(reinterpret_cast<const float*>(data + 16 * x + y * inputPitch) + 2);
-            outColor->alpha = *(reinterpret_cast<const float*>(data + 16 * x + y * inputPitch) + 3);
-        }
-        break;
-
-      case DXGI_FORMAT_R32G32B32_FLOAT:
-        {
-            outColor->red =   *(reinterpret_cast<const float*>(data + 12 * x + y * inputPitch) + 0);
-            outColor->green = *(reinterpret_cast<const float*>(data + 12 * x + y * inputPitch) + 1);
-            outColor->blue =  *(reinterpret_cast<const float*>(data + 12 * x + y * inputPitch) + 2);
-            outColor->alpha = 1.0f;
-        }
-        break;
-
-      case DXGI_FORMAT_R16G16B16A16_FLOAT:
-        {
-            outColor->red =   gl::float16ToFloat32(*(reinterpret_cast<const unsigned short*>(data + 8 * x + y * inputPitch) + 0));
-            outColor->green = gl::float16ToFloat32(*(reinterpret_cast<const unsigned short*>(data + 8 * x + y * inputPitch) + 1));
-            outColor->blue =  gl::float16ToFloat32(*(reinterpret_cast<const unsigned short*>(data + 8 * x + y * inputPitch) + 2));
-            outColor->alpha = gl::float16ToFloat32(*(reinterpret_cast<const unsigned short*>(data + 8 * x + y * inputPitch) + 3));
-        }
-        break;
-
-      case DXGI_FORMAT_B8G8R8A8_UNORM:
-        {
-            unsigned int bgra = *reinterpret_cast<const unsigned int*>(data + 4 * x + y * inputPitch);
-            outColor->red =   (bgra & 0x00FF0000) * (1.0f / 0x00FF0000);
-            outColor->blue =  (bgra & 0x000000FF) * (1.0f / 0x000000FF);
-            outColor->green = (bgra & 0x0000FF00) * (1.0f / 0x0000FF00);
-            outColor->alpha = (bgra & 0xFF000000) * (1.0f / 0xFF000000);
-        }
-        break;
-
-      case DXGI_FORMAT_R8_UNORM:
-        {
-            outColor->red =   *(data + x + y * inputPitch) / 255.0f;
-            outColor->green = 0.0f;
-            outColor->blue =  0.0f;
-            outColor->alpha = 1.0f;
-        }
-        break;
-
-      case DXGI_FORMAT_R8G8_UNORM:
-        {
-            unsigned short rg = *reinterpret_cast<const unsigned short*>(data + 2 * x + y * inputPitch);
-
-            outColor->red =   (rg & 0xFF00) * (1.0f / 0xFF00);
-            outColor->green = (rg & 0x00FF) * (1.0f / 0x00FF);
-            outColor->blue =  0.0f;
-            outColor->alpha = 1.0f;
-        }
-        break;
-
-      case DXGI_FORMAT_R16_FLOAT:
-        {
-            outColor->red =   gl::float16ToFloat32(*reinterpret_cast<const unsigned short*>(data + 2 * x + y * inputPitch));
-            outColor->green = 0.0f;
-            outColor->blue =  0.0f;
-            outColor->alpha = 1.0f;
-        }
-        break;
-
-      case DXGI_FORMAT_R16G16_FLOAT:
-        {
-            outColor->red =   gl::float16ToFloat32(*(reinterpret_cast<const unsigned short*>(data + 4 * x + y * inputPitch) + 0));
-            outColor->green = gl::float16ToFloat32(*(reinterpret_cast<const unsigned short*>(data + 4 * x + y * inputPitch) + 1));
-            outColor->blue =  0.0f;
-            outColor->alpha = 1.0f;
-        }
-        break;
-
-      case DXGI_FORMAT_R10G10B10A2_UNORM:
-        {
-            unsigned int rgba = *reinterpret_cast<const unsigned int*>(data + 4 * x + y * inputPitch);
-            outColor->red =   (rgba & 0x000003FF) * (1.0f / 0x000003FF);
-            outColor->green = (rgba & 0x000FFC00) * (1.0f / 0x000FFC00);
-            outColor->blue =  (rgba & 0x3FF00000) * (1.0f / 0x3FF00000);
-            outColor->alpha = (rgba & 0xC0000000) * (1.0f / 0xC0000000);
-        }
-        break;
-
-      default:
-        ERR("ReadPixelColor not implemented for DXGI format %u.", format);
-        UNIMPLEMENTED();
-        break;
-    }
-}
-
-static inline void writePixelColor(const gl::ColorF &color, GLenum format, GLenum type, unsigned int x,
-                                   unsigned int y, int outputPitch, void *outData)
-{
-    unsigned char* byteData = reinterpret_cast<unsigned char*>(outData);
-    unsigned short* shortData = reinterpret_cast<unsigned short*>(outData);
-    unsigned int* intData = reinterpret_cast<unsigned int*>(outData);
-
-    switch (format)
-    {
-      case GL_RGBA:
-        switch (type)
-        {
-          case GL_UNSIGNED_BYTE:
-            byteData[4 * x + y * outputPitch + 0] = static_cast<unsigned char>(255 * color.red   + 0.5f);
-            byteData[4 * x + y * outputPitch + 1] = static_cast<unsigned char>(255 * color.green + 0.5f);
-            byteData[4 * x + y * outputPitch + 2] = static_cast<unsigned char>(255 * color.blue  + 0.5f);
-            byteData[4 * x + y * outputPitch + 3] = static_cast<unsigned char>(255 * color.alpha + 0.5f);
-            break;
-
-          case GL_UNSIGNED_INT_2_10_10_10_REV:
-            intData[x + y * outputPitch / sizeof(unsigned int)] = (static_cast<unsigned int>(   3 * color.alpha) << 30) |
-                                                                  (static_cast<unsigned int>(1023 * color.red  ) << 20) |
-                                                                  (static_cast<unsigned int>(1023 * color.green) << 10) |
-                                                                  (static_cast<unsigned int>(1023 * color.blue ) <<  0);
-            break;
-
-          default:
-            ERR("WritePixelColor not implemented for format GL_RGBA and type 0x%X.", type);
-            UNIMPLEMENTED();
-            break;
-        }
-        break;
-
-      case GL_BGRA_EXT:
-        switch (type)
-        {
-          case GL_UNSIGNED_BYTE:
-            byteData[4 * x + y * outputPitch + 0] = static_cast<unsigned char>(255 * color.blue  + 0.5f);
-            byteData[4 * x + y * outputPitch + 1] = static_cast<unsigned char>(255 * color.green + 0.5f);
-            byteData[4 * x + y * outputPitch + 2] = static_cast<unsigned char>(255 * color.red   + 0.5f);
-            byteData[4 * x + y * outputPitch + 3] = static_cast<unsigned char>(255 * color.alpha + 0.5f);
-            break;
-
-          case GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT:
-            // According to the desktop GL spec in the "Transfer of Pixel Rectangles" section
-            // this type is packed as follows:
-            //   15   14   13   12   11   10    9    8    7    6    5    4    3    2    1    0
-            //  --------------------------------------------------------------------------------
-            // |       4th         |        3rd         |        2nd        |   1st component   |
-            //  --------------------------------------------------------------------------------
-            // in the case of BGRA_EXT, B is the first component, G the second, and so forth.
-            shortData[x + y * outputPitch / sizeof(unsigned short)] =
-                (static_cast<unsigned short>(15 * color.alpha + 0.5f) << 12) |
-                (static_cast<unsigned short>(15 * color.red   + 0.5f) <<  8) |
-                (static_cast<unsigned short>(15 * color.green + 0.5f) <<  4) |
-                (static_cast<unsigned short>(15 * color.blue  + 0.5f) <<  0);
-            break;
-
-          case GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT:
-            // According to the desktop GL spec in the "Transfer of Pixel Rectangles" section
-            // this type is packed as follows:
-            //   15   14   13   12   11   10    9    8    7    6    5    4    3    2    1    0
-            //  --------------------------------------------------------------------------------
-            // | 4th |          3rd           |           2nd          |      1st component     |
-            //  --------------------------------------------------------------------------------
-            // in the case of BGRA_EXT, B is the first component, G the second, and so forth.
-            shortData[x + y * outputPitch / sizeof(unsigned short)] =
-                (static_cast<unsigned short>(     color.alpha + 0.5f) << 15) |
-                (static_cast<unsigned short>(31 * color.red   + 0.5f) << 10) |
-                (static_cast<unsigned short>(31 * color.green + 0.5f) <<  5) |
-                (static_cast<unsigned short>(31 * color.blue  + 0.5f) <<  0);
-            break;
-
-          default:
-            ERR("WritePixelColor not implemented for format GL_BGRA_EXT and type 0x%X.", type);
-            UNIMPLEMENTED();
-            break;
-        }
-        break;
-
-      case GL_RGB:
-        switch (type)
-        {
-          case GL_UNSIGNED_SHORT_5_6_5:
-            shortData[x + y * outputPitch / sizeof(unsigned short)] =
-                (static_cast<unsigned short>(31 * color.blue  + 0.5f) <<  0) |
-                (static_cast<unsigned short>(63 * color.green + 0.5f) <<  5) |
-                (static_cast<unsigned short>(31 * color.red   + 0.5f) << 11);
-            break;
-
-          case GL_UNSIGNED_BYTE:
-            byteData[3 * x + y * outputPitch + 0] = static_cast<unsigned char>(255 * color.red +   0.5f);
-            byteData[3 * x + y * outputPitch + 1] = static_cast<unsigned char>(255 * color.green + 0.5f);
-            byteData[3 * x + y * outputPitch + 2] = static_cast<unsigned char>(255 * color.blue +  0.5f);
-            break;
-
-          default:
-            ERR("WritePixelColor not implemented for format GL_RGB and type 0x%X.", type);
-            UNIMPLEMENTED();
-            break;
-        }
-        break;
-
-      default:
-        ERR("WritePixelColor not implemented for format 0x%X.", format);
-        UNIMPLEMENTED();
-        break;
-    }
-}
-
 void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResource, const gl::Rectangle &area,
                                  GLenum format, GLenum type, GLsizei outputPitch, bool packReverseRowOrder,
                                  GLint packAlignment, void *pixels)
@@ -3816,43 +3573,65 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
         inputPitch = static_cast<int>(mapping.RowPitch);
     }
 
-    unsigned int fastPixelSize = getFastPixelCopySize(textureDesc.Format, format, type, getCurrentClientVersion());
-    if (fastPixelSize != 0)
-    {
-        unsigned char *dest = static_cast<unsigned char*>(pixels);
-        for (int j = 0; j < area.height; j++)
-        {
-            memcpy(dest + j * outputPitch, source + j * inputPitch, area.width * fastPixelSize);
-        }
-    }
-    else if (textureDesc.Format == DXGI_FORMAT_B8G8R8A8_UNORM &&
-             format == GL_RGBA &&
-             type == GL_UNSIGNED_BYTE)
-    {
-        // Fast path for swapping red with blue
-        unsigned char *dest = static_cast<unsigned char*>(pixels);
+    GLuint clientVersion = getCurrentClientVersion();
 
-        for (int j = 0; j < area.height; j++)
+    GLint sourceInternalFormat = d3d11_gl::GetInternalFormat(textureDesc.Format);
+    GLenum sourceFormat = gl::GetFormat(sourceInternalFormat, clientVersion);
+    GLenum sourceType = gl::GetType(sourceInternalFormat, clientVersion);
+
+    GLuint sourcePixelSize = gl::GetPixelBytes(sourceInternalFormat, clientVersion);
+
+    if (sourceFormat == format && sourceType == type)
+    {
+        // Direct copy possible
+        unsigned char *dest = static_cast<unsigned char*>(pixels);
+        for (int y = 0; y < area.height; y++)
         {
-            for (int i = 0; i < area.width; i++)
-            {
-                unsigned int argb = *(unsigned int*)(source + 4 * i + j * inputPitch);
-                *(unsigned int*)(dest + 4 * i + j * outputPitch) =
-                    (argb & 0xFF00FF00) |       // Keep alpha and green
-                    (argb & 0x00FF0000) >> 16 | // Move red to blue
-                    (argb & 0x000000FF) << 16;  // Move blue to red
-            }
+            memcpy(dest + y * outputPitch, source + y * inputPitch, area.width * sourcePixelSize);
         }
     }
     else
     {
-        gl::ColorF pixelColor;
-        for (int j = 0; j < area.height; j++)
+        GLint destInternalFormat = gl::GetSizedInternalFormat(format, type, clientVersion);
+        GLuint destPixelSize = gl::GetPixelBytes(destInternalFormat, clientVersion);
+
+        ColorCopyFunction fastCopyFunc = d3d11::GetFastCopyFunction(textureDesc.Format, format, type, getCurrentClientVersion());
+        if (fastCopyFunc)
         {
-            for (int i = 0; i < area.width; i++)
+            // Fast copy is possible through some special function
+            for (int y = 0; y < area.height; y++)
             {
-                readPixelColor(source, textureDesc.Format, i, j, inputPitch, &pixelColor);
-                writePixelColor(pixelColor, format, type, i, j, outputPitch, pixels);
+                for (int x = 0; x < area.width; x++)
+                {
+                    void *dest = static_cast<unsigned char*>(pixels) + y * outputPitch + x * destPixelSize;
+                    void *src = static_cast<unsigned char*>(source) + y * inputPitch + x * sourcePixelSize;
+
+                    fastCopyFunc(src, dest);
+                }
+            }
+        }
+        else
+        {
+            ColorReadFunction readFunc = d3d11::GetColorReadFunction(textureDesc.Format);
+            ColorWriteFunction writeFunc = gl::GetColorWriteFunction(format, type, clientVersion);
+
+            unsigned char temp[16]; // Maximum size of any Color<T> type used.
+            META_ASSERT(sizeof(temp) >= sizeof(gl::ColorF)  &&
+                        sizeof(temp) >= sizeof(gl::ColorUI) &&
+                        sizeof(temp) >= sizeof(gl::ColorI));
+
+            for (int y = 0; y < area.height; y++)
+            {
+                for (int x = 0; x < area.width; x++)
+                {
+                    void *dest = static_cast<unsigned char*>(pixels) + y * outputPitch + x * destPixelSize;
+                    void *src = static_cast<unsigned char*>(source) + y * inputPitch + x * sourcePixelSize;
+
+                    // readFunc and writeFunc will be using the same type of color, CopyTexImage
+                    // will not allow the copy otherwise.
+                    readFunc(src, temp);
+                    writeFunc(temp, dest);
+                }
             }
         }
     }
