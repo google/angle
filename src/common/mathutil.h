@@ -377,6 +377,105 @@ inline float float10ToFloat32(unsigned short fp11)
     }
 }
 
+template <typename T>
+inline float normalizedToFloat(T input)
+{
+    META_ASSERT(std::numeric_limits<T>::is_integer);
+
+    const float inverseMax = 1.0f / std::numeric_limits<T>::max();
+    return input * inverseMax;
+}
+
+template <unsigned int inputBitCount, typename T>
+inline float normalizedToFloat(T input)
+{
+    META_ASSERT(std::numeric_limits<T>::is_integer);
+    META_ASSERT(inputBitCount < (sizeof(T) * 8));
+
+    const float inverseMax = 1.0f / ((1 << inputBitCount) - 1);
+    return input * inverseMax;
+}
+
+template <typename T>
+inline T floatToNormalized(float input)
+{
+    return std::numeric_limits<T>::max() * input + 0.5f;
+}
+
+template <unsigned int outputBitCount, typename T>
+inline T floatToNormalized(float input)
+{
+    META_ASSERT(outputBitCount < (sizeof(T) * 8));
+    return ((1 << outputBitCount) - 1) * input + 0.5f;
+}
+
+template <unsigned int inputBitCount, unsigned int inputBitStart, typename T>
+inline T getShiftedData(T input)
+{
+    META_ASSERT(inputBitCount + inputBitStart <= (sizeof(T) * 8));
+    const T mask = (1 << inputBitCount) - 1;
+    return (input >> inputBitStart) & mask;
+}
+
+template <unsigned int inputBitCount, unsigned int inputBitStart, typename T>
+inline T shiftData(T input)
+{
+    META_ASSERT(inputBitCount + inputBitStart <= (sizeof(T) * 8));
+    const T mask = (1 << inputBitCount) - 1;
+    return (input & mask) << inputBitStart;
+}
+
+
+inline unsigned char average(unsigned char a, unsigned char b)
+{
+    return ((a ^ b) >> 1) + (a & b);
+}
+
+inline signed char average(signed char a, signed char b)
+{
+    return ((short)a + (short)b) / 2;
+}
+
+inline unsigned short average(unsigned short a, unsigned short b)
+{
+    return ((a ^ b) >> 1) + (a & b);
+}
+
+inline signed short average(signed short a, signed short b)
+{
+    return ((int)a + (int)b) / 2;
+}
+
+inline unsigned int average(unsigned int a, unsigned int b)
+{
+    return ((a ^ b) >> 1) + (a & b);
+}
+
+inline signed int average(signed int a, signed int b)
+{
+    return ((long long)a + (long long)b) / 2;
+}
+
+inline float average(float a, float b)
+{
+    return (a + b) * 0.5f;
+}
+
+inline unsigned short averageHalfFloat(unsigned short a, unsigned short b)
+{
+    return float32ToFloat16((float16ToFloat32(a) + float16ToFloat32(b)) * 0.5f);
+}
+
+inline unsigned int averageFloat11(unsigned int a, unsigned int b)
+{
+    return float32ToFloat11((float11ToFloat32(a) + float11ToFloat32(b)) * 0.5f);
+}
+
+inline unsigned int averageFloat10(unsigned int a, unsigned int b)
+{
+    return float32ToFloat10((float10ToFloat32(a) + float10ToFloat32(b)) * 0.5f);
+}
+
 }
 
 namespace rx
