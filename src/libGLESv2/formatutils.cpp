@@ -1155,7 +1155,7 @@ GLuint GetBlueBits(GLint internalFormat, GLuint clientVersion)
     InternalFormatInfo internalFormatInfo;
     if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
     {
-        return internalFormatInfo.mGreenBits;
+        return internalFormatInfo.mBlueBits;
     }
     else
     {
