@@ -710,7 +710,7 @@ static InternalFormatInfoMap BuildES2InternalFormatInfoMap()
     //                               |                        |                              |   |   |   |   |  |                 |                          | type                |      | renderable    | filterable     |                |
     map.insert(InternalFormatInfoPair(GL_RGBA4,                InternalFormatInfo::RGBAFormat( 4,  4,  4,  4, 0, GL_RGBA,          GL_UNSIGNED_SHORT_4_4_4_4, NormalizedFixedPoint, false, AlwaysSupported, AlwaysSupported, AlwaysSupported)));
     map.insert(InternalFormatInfoPair(GL_RGB5_A1,              InternalFormatInfo::RGBAFormat( 5,  5,  5,  1, 0, GL_RGBA,          GL_UNSIGNED_SHORT_5_5_5_1, NormalizedFixedPoint, false, AlwaysSupported, AlwaysSupported, AlwaysSupported)));
-    map.insert(InternalFormatInfoPair(GL_RGB565,               InternalFormatInfo::RGBAFormat( 5,  6,  5,  0, 0, GL_RGBA,          GL_UNSIGNED_SHORT_5_6_5,   NormalizedFixedPoint, false, AlwaysSupported, AlwaysSupported, AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_RGB565,               InternalFormatInfo::RGBAFormat( 5,  6,  5,  0, 0, GL_RGB,           GL_UNSIGNED_SHORT_5_6_5,   NormalizedFixedPoint, false, AlwaysSupported, AlwaysSupported, AlwaysSupported)));
 
     // Extension formats
     map.insert(InternalFormatInfoPair(GL_RGB8_OES,             InternalFormatInfo::RGBAFormat( 8,  8,  8,  0, 0, GL_RGB,           GL_UNSIGNED_BYTE,          NormalizedFixedPoint, false, AlwaysSupported, AlwaysSupported, AlwaysSupported)));
