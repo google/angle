@@ -1189,17 +1189,20 @@ bool validateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
         }
     }
 
-    if (xoffset + width > textureLevelWidth ||
-        yoffset + height > textureLevelHeight ||
-        zoffset >= textureLevelDepth)
+    if (isSubImage)
     {
-        return gl::error(GL_INVALID_VALUE, false);
-    }
+        if (xoffset + width > textureLevelWidth ||
+            yoffset + height > textureLevelHeight ||
+            zoffset >= textureLevelDepth)
+        {
+            return gl::error(GL_INVALID_VALUE, false);
+        }
 
-    if (!gl::IsValidCopyTexImageCombination(textureInternalFormat, colorbufferInternalFormat,
-                                            context->getClientVersion()))
-    {
-        return gl::error(GL_INVALID_OPERATION, false);
+        if (!gl::IsValidCopyTexImageCombination(textureInternalFormat, colorbufferInternalFormat,
+                                                context->getClientVersion()))
+        {
+            return gl::error(GL_INVALID_OPERATION, false);
+        }
     }
 
     return true;
