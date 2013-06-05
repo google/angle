@@ -3880,35 +3880,36 @@ void __stdcall glGenerateMipmap(GLenum target)
 
         if (context)
         {
+            gl::Texture *texture = NULL;
+            GLint internalFormat = GL_NONE;
+            bool isCompressed = false;
+            bool isDepth = false;
+
             switch (target)
             {
               case GL_TEXTURE_2D:
                 {
                     gl::Texture2D *tex2d = context->getTexture2D();
-
-                    if (tex2d->isCompressed(0))
+                    if (tex2d)
                     {
-                        return gl::error(GL_INVALID_OPERATION);
+                        internalFormat = tex2d->getInternalFormat(0);
+                        isCompressed = tex2d->isCompressed(0);
+                        isDepth = tex2d->isDepth(0);
+                        texture = tex2d;
                     }
-                    if (tex2d->isDepth(0))
-                    {
-                        return gl::error(GL_INVALID_OPERATION);
-                    }
-
-                    tex2d->generateMipmaps();
                     break;
                 }
 
               case GL_TEXTURE_CUBE_MAP:
                 {
                     gl::TextureCubeMap *texcube = context->getTextureCubeMap();
-
-                    if (texcube->isCompressed(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0))
+                    if (texcube)
                     {
-                        return gl::error(GL_INVALID_OPERATION);
+                        internalFormat = texcube->getInternalFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0);
+                        isCompressed = texcube->isCompressed(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0);
+                        isDepth = false;
+                        texture = texcube;
                     }
-
-                    texcube->generateMipmaps();
                     break;
                 }
 
@@ -3920,12 +3921,13 @@ void __stdcall glGenerateMipmap(GLenum target)
                     }
 
                     gl::Texture3D *tex3D = context->getTexture3D();
-                    if (tex3D->isCompressed(0))
+                    if (tex3D)
                     {
-                        return gl::error(GL_INVALID_OPERATION);
+                        internalFormat = tex3D->getInternalFormat(0);
+                        isCompressed = tex3D->isCompressed(0);
+                        isDepth = tex3D->isDepth(0);
+                        texture = tex3D;
                     }
-
-                    tex3D->generateMipmaps();
                     break;
                 }
 
@@ -3937,18 +3939,35 @@ void __stdcall glGenerateMipmap(GLenum target)
                       }
 
                       gl::Texture2DArray *tex2darr = context->getTexture2DArray();
-                      if (tex2darr->isCompressed(0))
+                      if (tex2darr)
                       {
-                          return gl::error(GL_INVALID_OPERATION);
+                          internalFormat = tex2darr->getInternalFormat(0);
+                          isCompressed = tex2darr->isCompressed(0);
+                          isDepth = tex2darr->isDepth(0);
+                          texture = tex2darr;
                       }
-
-                      tex2darr->generateMipmaps();
                       break;
                   }
 
               default:
                 return gl::error(GL_INVALID_ENUM);
             }
+
+            if (!texture)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            // Internally, all texture formats are sized so checking if the format
+            // is color renderable and filterable will not fail.
+            if (isDepth || isCompressed ||
+                !gl::IsColorRenderingSupported(internalFormat, context) ||
+                !gl::IsTextureFilteringSupported(internalFormat, context))
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            texture->generateMipmaps();
         }
     }
     catch(std::bad_alloc&)
