@@ -1214,7 +1214,7 @@ TFunction *TParseContext::addConstructorFunc(TPublicType publicType)
           case EbtUInt:
             switch(publicType.getNominalSize())
             {
-              case 1:       op = EOpConstructUnsignedInt;   break;
+              case 1:       op = EOpConstructUInt;  break;
               case 2:       op = EOpConstructUVec2; break;
               case 3:       op = EOpConstructUVec3; break;
               case 4:       op = EOpConstructUVec4; break;
@@ -1390,8 +1390,8 @@ TIntermTyped* TParseContext::constructBuiltIn(const TType* type, TOperator op, T
     case EOpConstructUVec2:
     case EOpConstructUVec3:
     case EOpConstructUVec4:
-    case EOpConstructUnsignedInt:
-        basicOp = EOpConstructUnsignedInt;
+    case EOpConstructUInt:
+        basicOp = EOpConstructUInt;
         break;
 
     case EOpConstructBVec2:

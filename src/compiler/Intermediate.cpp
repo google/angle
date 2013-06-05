@@ -78,23 +78,23 @@ const char* getOperatorString(TOperator op) {
 
       // Fall-through.
       case EOpConvIntToBool:
-      case EOpConvUnsignedIntToBool:
+      case EOpConvUIntToBool:
       case EOpConvFloatToBool: return "bool";
  
       // Fall-through.
       case EOpConvBoolToFloat:
-      case EOpConvUnsignedIntToFloat:
+      case EOpConvUIntToFloat:
       case EOpConvIntToFloat: return "float";
  
       // Fall-through.
       case EOpConvFloatToInt:
-      case EOpConvUnsignedIntToInt:
+      case EOpConvUIntToInt:
       case EOpConvBoolToInt: return "int";
 
       // Fall-through.
-      case EOpConvIntToUnsignedInt:
-      case EOpConvFloatToUnsignedInt:
-      case EOpConvBoolToUnsignedInt: return "uint";
+      case EOpConvIntToUInt:
+      case EOpConvFloatToUInt:
+      case EOpConvBoolToUInt: return "uint";
 
       case EOpRadians: return "radians";
       case EOpDegrees: return "degrees";
@@ -324,7 +324,7 @@ TIntermTyped* TIntermediate::addUnaryMath(TOperator op, TIntermNode* childNode, 
     TBasicType newType = EbtVoid;
     switch (op) {
         case EOpConstructInt:   newType = EbtInt;   break;
-        case EOpConstructUnsignedInt: newType = EbtUInt; break;
+        case EOpConstructUInt:  newType = EbtUInt;  break;
         case EOpConstructBool:  newType = EbtBool;  break;
         case EOpConstructFloat: newType = EbtFloat; break;
         default: break;
@@ -345,7 +345,7 @@ TIntermTyped* TIntermediate::addUnaryMath(TOperator op, TIntermNode* childNode, 
     //
     switch (op) {
         case EOpConstructInt:
-        case EOpConstructUnsignedInt:
+        case EOpConstructUInt:
         case EOpConstructBool:
         case EOpConstructFloat:
             return child;
@@ -473,7 +473,7 @@ TIntermTyped* TIntermediate::addConversion(TOperator op, const TType& type, TInt
         case EOpConstructInt:
             promoteTo = EbtInt;
             break;
-        case EOpConstructUnsignedInt:
+        case EOpConstructUInt:
             promoteTo = EbtUInt;
             break;
         default:
@@ -503,9 +503,9 @@ TIntermTyped* TIntermediate::addConversion(TOperator op, const TType& type, TInt
         switch (promoteTo) {
             case EbtFloat:
                 switch (node->getBasicType()) {
-                    case EbtInt:    newOp = EOpConvIntToFloat;         break;
-                    case EbtUInt:   newOp = EOpConvFloatToUnsignedInt; break;
-                    case EbtBool:   newOp = EOpConvBoolToFloat;        break;
+                    case EbtInt:    newOp = EOpConvIntToFloat;  break;
+                    case EbtUInt:   newOp = EOpConvFloatToUInt; break;
+                    case EbtBool:   newOp = EOpConvBoolToFloat; break;
                     default:
                         infoSink.info.message(EPrefixInternalError, "Bad promotion node", node->getLine());
                         return 0;
@@ -513,9 +513,9 @@ TIntermTyped* TIntermediate::addConversion(TOperator op, const TType& type, TInt
                 break;
             case EbtBool:
                 switch (node->getBasicType()) {
-                    case EbtInt:    newOp = EOpConvIntToBool;         break;
-                    case EbtUInt:   newOp = EOpConvBoolToUnsignedInt; break;
-                    case EbtFloat:  newOp = EOpConvFloatToBool;       break;
+                    case EbtInt:    newOp = EOpConvIntToBool;   break;
+                    case EbtUInt:   newOp = EOpConvBoolToUInt;  break;
+                    case EbtFloat:  newOp = EOpConvFloatToBool; break;
                     default:
                         infoSink.info.message(EPrefixInternalError, "Bad promotion node", node->getLine());
                         return 0;
@@ -523,9 +523,9 @@ TIntermTyped* TIntermediate::addConversion(TOperator op, const TType& type, TInt
                 break;
             case EbtInt:
                 switch (node->getBasicType()) {
-                    case EbtUInt:   newOp = EOpConvUnsignedIntToInt; break;
-                    case EbtBool:   newOp = EOpConvBoolToInt;        break;
-                    case EbtFloat:  newOp = EOpConvFloatToInt;       break;
+                    case EbtUInt:   newOp = EOpConvUIntToInt;  break;
+                    case EbtBool:   newOp = EOpConvBoolToInt;  break;
+                    case EbtFloat:  newOp = EOpConvFloatToInt; break;
                     default:
                         infoSink.info.message(EPrefixInternalError, "Bad promotion node", node->getLine());
                         return 0;
@@ -533,9 +533,9 @@ TIntermTyped* TIntermediate::addConversion(TOperator op, const TType& type, TInt
                 break;
             case EbtUInt:
                 switch (node->getBasicType()) {
-                    case EbtInt:    newOp = EOpConvIntToUnsignedInt;   break;
-                    case EbtBool:   newOp = EOpConvBoolToUnsignedInt;  break;
-                    case EbtFloat:  newOp = EOpConvFloatToUnsignedInt; break;
+                    case EbtInt:    newOp = EOpConvIntToUInt;   break;
+                    case EbtBool:   newOp = EOpConvBoolToUInt;  break;
+                    case EbtFloat:  newOp = EOpConvFloatToUInt; break;
                     default:
                         infoSink.info.message(EPrefixInternalError, "Bad promotion node", node->getLine());
                         return 0;
@@ -833,7 +833,7 @@ bool TIntermOperator::isConstructor() const
         case EOpConstructUVec2:
         case EOpConstructUVec3:
         case EOpConstructUVec4:
-        case EOpConstructUnsignedInt:
+        case EOpConstructUInt:
         case EOpConstructBVec2:
         case EOpConstructBVec3:
         case EOpConstructBVec4:

@@ -1716,7 +1716,7 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
       case EOpPreIncrement:     outputTriplet(visit, "(++", "", ")"); break;
       case EOpPreDecrement:     outputTriplet(visit, "(--", "", ")"); break;
       case EOpConvIntToBool:
-      case EOpConvUnsignedIntToBool:
+      case EOpConvUIntToBool:
       case EOpConvFloatToBool:
         switch (node->getOperand()->getType().getNominalSize())
         {
@@ -1729,7 +1729,7 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
         break;
       case EOpConvBoolToFloat:
       case EOpConvIntToFloat:
-      case EOpConvUnsignedIntToFloat:
+      case EOpConvUIntToFloat:
         switch (node->getOperand()->getType().getNominalSize())
         {
           case 1:    outputTriplet(visit, "float(", "", ")");  break;
@@ -1741,7 +1741,7 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
         break;
       case EOpConvFloatToInt:
       case EOpConvBoolToInt:
-      case EOpConvUnsignedIntToInt:
+      case EOpConvUIntToInt:
         switch (node->getOperand()->getType().getNominalSize())
         {
           case 1:    outputTriplet(visit, "int(", "", ")");  break;
@@ -1751,9 +1751,9 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
           default: UNREACHABLE();
         }
         break;
-      case EOpConvFloatToUnsignedInt:
-      case EOpConvBoolToUnsignedInt:
-      case EOpConvIntToUnsignedInt:
+      case EOpConvFloatToUInt:
+      case EOpConvBoolToUInt:
+      case EOpConvIntToUInt:
         switch (node->getOperand()->getType().getCols())
         {
           case 1:    outputTriplet(visit, "uint(", "", ")");  break;
@@ -2252,7 +2252,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         addConstructor(node->getType(), "ivec4", &node->getSequence());
         outputTriplet(visit, "ivec4(", ", ", ")");
         break;
-      case EOpConstructUnsignedInt:
+      case EOpConstructUInt:
         addConstructor(node->getType(), "uvec1", &node->getSequence());
         outputTriplet(visit, "uvec1(", "", ")");
         break;
