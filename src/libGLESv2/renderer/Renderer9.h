@@ -120,6 +120,7 @@ class Renderer9 : public Renderer
     virtual bool getFloat16TextureSupport() const;
     virtual bool getFloat16TextureFilteringSupport() const;
     virtual bool getFloat16TextureRenderingSupport() const;
+    virtual bool getRGB565TextureSupport() const;
     virtual bool getLuminanceTextureSupport() const;
     virtual bool getLuminanceAlphaTextureSupport() const;
     virtual unsigned int getMaxVertexTextureImageUnits() const;
@@ -271,6 +272,8 @@ class Renderer9 : public Renderer
     bool mVertexTextureSupport;
 
     bool mDepthTextureSupport;
+
+    bool mRGB565TextureSupport;
 
     bool mFloat32TextureSupport;
     bool mFloat32FilterSupport;

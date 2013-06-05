@@ -112,7 +112,7 @@ static D3D9FormatMap BuildD3D9FormatMap()
     map.insert(D3D9FormatPair(GL_ALPHA8_EXT,                       D3D9FormatInfo(D3D9Format<D3DFMT_A8R8G8B8>,      D3D9Format<D3DFMT_A8R8G8B8>,       FallbackLoadFunction<gl::supportsSSE2, loadAlphaDataToBGRASSE2, loadAlphaDataToBGRA>)));
 
     map.insert(D3D9FormatPair(GL_RGB8_OES,                         D3D9FormatInfo(D3D9Format<D3DFMT_X8R8G8B8>,      D3D9Format<D3DFMT_X8R8G8B8>,       SimpleLoad<loadRGBUByteDataToBGRX>                )));
-    map.insert(D3D9FormatPair(GL_RGB565,                           D3D9FormatInfo(D3D9Format<D3DFMT_X8R8G8B8>,      D3D9Format<D3DFMT_R5G6B5>,         SimpleLoad<loadRGB565DataToBGRA>                  )));
+    map.insert(D3D9FormatPair(GL_RGB565,                           D3D9FormatInfo(CheckFormatSupport<&Renderer9::getRGB565TextureSupport, D3DFMT_R5G6B5, D3DFMT_X8R8G8B8>, CheckFormatSupport<&Renderer9::getRGB565TextureSupport, D3DFMT_R5G6B5, D3DFMT_X8R8G8B8>, RendererCheckLoad<&Renderer9::getRGB565TextureSupport, loadToNative<GLushort, 1>, loadRGB565DataToBGRA>)));
     map.insert(D3D9FormatPair(GL_RGBA8_OES,                        D3D9FormatInfo(D3D9Format<D3DFMT_A8R8G8B8>,      D3D9Format<D3DFMT_A8R8G8B8>,       FallbackLoadFunction<gl::supportsSSE2, loadRGBAUByteDataToBGRASSE2, loadRGBAUByteDataToBGRA>)));
     map.insert(D3D9FormatPair(GL_RGBA4,                            D3D9FormatInfo(D3D9Format<D3DFMT_A8R8G8B8>,      D3D9Format<D3DFMT_A8R8G8B8>,       SimpleLoad<loadRGBA4444DataToBGRA>                )));
     map.insert(D3D9FormatPair(GL_RGB5_A1,                          D3D9FormatInfo(D3D9Format<D3DFMT_A8R8G8B8>,      D3D9Format<D3DFMT_A8R8G8B8>,       SimpleLoad<loadRGBA5551DataToBGRA>                )));

@@ -380,6 +380,10 @@ EGLint Renderer9::initialize()
                             SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format,
                                                                D3DUSAGE_QUERY_VERTEXTEXTURE, D3DRTYPE_TEXTURE, D3DFMT_R16F));
 
+    // Check RGB565 texture support
+    mRGB565TextureSupport = SUCCEEDED(mD3d9->CheckDeviceFormat(mAdapter, mDeviceType, currentDisplayMode.Format,
+                                                               D3DUSAGE_RENDERTARGET, D3DRTYPE_TEXTURE, D3DFMT_R5G6B5));
+
     // Check depth texture support
     // we use INTZ for depth textures in Direct3D9
     // we also want NULL texture support to ensure the we can make depth-only FBOs
@@ -2241,6 +2245,11 @@ bool Renderer9::getFloat16TextureFilteringSupport() const
 bool Renderer9::getFloat16TextureRenderingSupport() const
 {
     return mFloat16RenderSupport;
+}
+
+bool Renderer9::getRGB565TextureSupport() const
+{
+    return mRGB565TextureSupport;
 }
 
 bool Renderer9::getLuminanceTextureSupport() const

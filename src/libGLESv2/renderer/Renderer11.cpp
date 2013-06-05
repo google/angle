@@ -2110,6 +2110,11 @@ bool Renderer11::getFloat16TextureRenderingSupport() const
     return mFloat16RenderSupport;
 }
 
+bool Renderer11::getRGB565TextureSupport() const
+{
+    return false;
+}
+
 bool Renderer11::getLuminanceTextureSupport() const
 {
     return false;
