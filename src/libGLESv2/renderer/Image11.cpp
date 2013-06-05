@@ -130,7 +130,7 @@ bool Image11::redefine(Renderer *renderer, GLenum target, GLint internalformat, 
         // compute the d3d format that will be used
         mDXGIFormat = gl_d3d11::GetTexFormat(internalformat, clientVersion);
         mActualFormat = d3d11_gl::GetInternalFormat(mDXGIFormat);
-        mRenderable = gl_d3d11::GetTexFormat(internalformat, clientVersion) != DXGI_FORMAT_UNKNOWN;
+        mRenderable = gl_d3d11::GetRTVFormat(internalformat, clientVersion) != DXGI_FORMAT_UNKNOWN;
 
         if (mStagingTexture)
         {
