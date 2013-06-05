@@ -237,6 +237,9 @@ bool TOutputTraverser::visitAggregate(Visit visit, TIntermAggregate* node)
         case EOpConstructIVec3: out << "Construct ivec3"; break;
         case EOpConstructIVec4: out << "Construct ivec4"; break;
         case EOpConstructUInt:  out << "Construct uint";  break;
+        case EOpConstructUVec2: out << "Construct uvec2"; break;
+        case EOpConstructUVec3: out << "Construct uvec3"; break;
+        case EOpConstructUVec4: out << "Construct uvec4"; break;
         case EOpConstructMat2:  out << "Construct mat2";  break;
         case EOpConstructMat3:  out << "Construct mat3";  break;
         case EOpConstructMat4:  out << "Construct mat4";  break;

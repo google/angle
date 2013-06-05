@@ -379,7 +379,7 @@ public:
     ConstantUnion* getUnionArrayPointer() const { return unionArrayPointer; }
     
     int getIConst(int index) const { return unionArrayPointer ? unionArrayPointer[index].getIConst() : 0; }
-    int getUConst(int index) const { return unionArrayPointer ? unionArrayPointer[index].getUConst() : 0; }
+    unsigned int getUConst(int index) const { return unionArrayPointer ? unionArrayPointer[index].getUConst() : 0; }
     float getFConst(int index) const { return unionArrayPointer ? unionArrayPointer[index].getFConst() : 0.0f; }
     bool getBConst(int index) const { return unionArrayPointer ? unionArrayPointer[index].getBConst() : false; }
 

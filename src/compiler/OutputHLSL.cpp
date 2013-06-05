@@ -3259,7 +3259,7 @@ const ConstantUnion *OutputHLSL::writeConstantUnion(const TType &type, const Con
             {
               case EbtFloat: out << std::min(FLT_MAX, std::max(-FLT_MAX, constUnion->getFConst())); break;
               case EbtInt:   out << constUnion->getIConst(); break;
-              case EbtUInt: out << constUnion->getUConst(); break;
+              case EbtUInt:  out << constUnion->getUConst(); break;
               case EbtBool:  out << constUnion->getBConst(); break;
               default: UNREACHABLE();
             }

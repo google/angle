@@ -24,7 +24,7 @@ public:
     void setBConst(bool b) {bConst = b; type = EbtBool; }
 
     int getIConst() const { return iConst; }
-    int getUConst() const { return uConst; }
+    unsigned int getUConst() const { return uConst; }
     float getFConst() const { return fConst; }
     bool getBConst() const { return bConst; }
 
