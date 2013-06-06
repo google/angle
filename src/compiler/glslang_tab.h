@@ -192,8 +192,7 @@ typedef union YYSTYPE
         union {
             TPublicType type;
             TPrecision precision;
-            TLayoutQualifierId layoutQualifierId;
-            TLayoutQualifier* layoutQualifier;
+            TLayoutQualifier layoutQualifier;
             TQualifier qualifier;
             TFunction* function;
             TParameter param;

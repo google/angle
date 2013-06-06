@@ -38,13 +38,13 @@ public:
     POOL_ALLOCATOR_NEW_DELETE(GlobalPoolAllocator)
     TType() {}
     TType(TBasicType t, TPrecision p, TQualifier q = EvqTemporary, int ps = 1, int ss = 1, bool a = false) :
-            type(t), precision(p), qualifier(q), primarySize(ps), secondarySize(ss), array(a), arraySize(0),
+            type(t), precision(p), qualifier(q), primarySize(ps), secondarySize(ss), array(a), layoutQualifier(TLayoutQualifier::create()), arraySize(0),
             maxArraySize(0), arrayInformationType(0), interfaceBlockType(0), structure(0), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0), typeName(0), instanceName(0)
     {
     }
     explicit TType(const TPublicType &p);
     TType(TTypeList* userDef, const TString& n, TPrecision p = EbpUndefined) :
-            type(EbtStruct), precision(p), qualifier(EvqTemporary), primarySize(1), secondarySize(1), array(false), arraySize(0),
+            type(EbtStruct), precision(p), qualifier(EvqTemporary), primarySize(1), secondarySize(1), array(false), layoutQualifier(TLayoutQualifier::create()), arraySize(0),
             maxArraySize(0), arrayInformationType(0), interfaceBlockType(0), structure(userDef), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0), instanceName(0)
     {
         typeName = NewPoolTString(n.c_str());
@@ -58,6 +58,9 @@ public:
 
     TQualifier getQualifier() const { return qualifier; }
     void setQualifier(TQualifier q) { qualifier = q; }
+
+    TLayoutQualifier getLayoutQualifier() const { return layoutQualifier; }
+    void setLayoutQualifier(TLayoutQualifier lq) { layoutQualifier = lq; }
 
     int getNominalSize() const { return primarySize; }
     int getSecondarySize() const { return secondarySize; }
@@ -247,6 +250,7 @@ protected:
     TPrecision precision : 4;
     TQualifier qualifier : 7;
     unsigned int array   : 1;
+    TLayoutQualifier layoutQualifier;
     int primarySize; // size of vector or cols matrix
     int secondarySize; // rows of a matrix
     int arraySize;
@@ -276,7 +280,7 @@ protected:
 struct TPublicType
 {
     TBasicType type;
-    TLayoutQualifier* layoutQualifier;
+    TLayoutQualifier layoutQualifier;
     TQualifier qualifier;
     TPrecision precision;
     int primarySize;          // size of vector or cols of matrix
@@ -289,7 +293,7 @@ struct TPublicType
     void setBasic(TBasicType bt, TQualifier q, int ln = 0)
     {
         type = bt;
-        layoutQualifier = NULL;
+        layoutQualifier = TLayoutQualifier::create();
         qualifier = q;
         precision = EbpUndefined;
         primarySize = 1;

@@ -72,8 +72,7 @@ WHICH GENERATES THE GLSL ES PARSER (glslang_tab.cpp AND glslang_tab.h).
         union {
             TPublicType type;
             TPrecision precision;
-            TLayoutQualifierId layoutQualifierId;
-            TLayoutQualifier* layoutQualifier;
+            TLayoutQualifier layoutQualifier;
             TQualifier qualifier;
             TFunction* function;
             TParameter param;
@@ -171,8 +170,7 @@ extern void yyerror(TParseContext* context, const char* reason);
 
 %type <interm> parameter_declaration parameter_declarator parameter_type_specifier
 %type <interm.qualifier> parameter_qualifier parameter_type_qualifier 
-%type <interm.layoutQualifier> layout_qualifier layout_qualifier_id_list
-%type <interm.layoutQualifierId> layout_qualifier_id
+%type <interm.layoutQualifier> layout_qualifier layout_qualifier_id_list layout_qualifier_id
 
 %type <interm.precision> precision_qualifier
 %type <interm.type> type_qualifier fully_specified_type type_specifier storage_qualifier interpolation_qualifier
@@ -1220,7 +1218,7 @@ fully_specified_type
         }
     }
     | type_qualifier type_specifier  {
-        $$ = context->addFullySpecifiedType($1.qualifier, $2);
+        $$ = context->addFullySpecifiedType($1.qualifier, $1.layoutQualifier, $2);
     }
     ;
 
@@ -1404,22 +1402,22 @@ layout_qualifier
 
 layout_qualifier_id_list
     : layout_qualifier_id {
-        $$ = context->makeLayoutQualifierFromId($1);
+        $$ = $1;
     }
     | layout_qualifier_id_list COMMA layout_qualifier_id {
-        $$ = context->extendLayoutQualifier($1, $3);
+        $$ = context->joinLayoutQualifiers($1, $3);
     }
     ;
 
 layout_qualifier_id
     : IDENTIFIER {
-        $$ = context->addLayoutQualifierId(*$1.string, $1.line);
+        $$ = context->parseLayoutQualifier(*$1.string, $1.line);
     }
     | IDENTIFIER EQUAL INTCONSTANT {
-        $$ = context->addLayoutQualifierId(*$1.string, $1.line, *$3.string, $3.i, $3.line);
+        $$ = context->parseLayoutQualifier(*$1.string, $1.line, *$3.string, $3.i, $3.line);
     }
     | IDENTIFIER EQUAL UINTCONSTANT {
-        $$ = context->addLayoutQualifierId(*$1.string, $1.line, *$3.string, $3.i, $3.line);
+        $$ = context->parseLayoutQualifier(*$1.string, $1.line, *$3.string, $3.i, $3.line);
     }
     ;
 
@@ -1649,6 +1647,7 @@ struct_declaration
     | type_qualifier type_specifier struct_declarator_list SEMICOLON {
         // ES3 Only, but errors should be handled elsewhere
         $2.qualifier = $1.qualifier;
+        $2.layoutQualifier = $1.layoutQualifier;
         $$ = context->addStructDeclaratorList($2, $3);
     }
     ;

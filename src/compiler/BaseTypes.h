@@ -133,25 +133,38 @@ enum TQualifier
     EvqLast
 };
 
-// Layout qualifiers
-enum TLayoutQualifierType
+enum TLayoutMatrixPacking
 {
-    ElqLocation,
-    ElqShared,
-    ElqPacked,
-    ElqStd140,
-    ElqRowMajor,
-    ElqColumnMajor,
-    ElqError
+    EmpUnspecified,
+    EmpRowMajor,
+    EmpColumnMajor
 };
 
-struct TLayoutQualifierId
+enum TLayoutBlockStorage
 {
-    TLayoutQualifierType type;
+    EbsUnspecified,
+    EbsShared,
+    EbsPacked,
+    EbsStd140
+};
+
+struct TLayoutQualifier
+{
     int location;
-};
+    TLayoutMatrixPacking matrixPacking;
+    TLayoutBlockStorage blockStorage;
 
-typedef std::vector<TLayoutQualifierId> TLayoutQualifier;
+    static TLayoutQualifier create()
+    {
+        TLayoutQualifier layoutQualifier;
+
+        layoutQualifier.location = -1;
+        layoutQualifier.matrixPacking = EmpUnspecified;
+        layoutQualifier.blockStorage = EbsUnspecified;
+
+        return layoutQualifier;
+    }
+};
 
 //
 // This is just for debug print out, carried along with the definitions above.
@@ -190,6 +203,29 @@ inline const char* getQualifierString(TQualifier q)
     case EvqCentroidIn:     return "centroid in";    break;
     case EvqFlatIn:         return "flat in";        break;
     default:                return "unknown qualifier";
+    }
+}
+
+inline const char* getMatrixPackingString(TLayoutMatrixPacking mpq)
+{
+    switch (mpq)
+    {
+    case EmpUnspecified:    return "mp_unspecified";
+    case EmpRowMajor:       return "row_major";
+    case EmpColumnMajor:    return "column_major";
+    default:                return "unknown matrix packing";
+    }
+}
+
+inline const char* getBlockStorageString(TLayoutBlockStorage bsq)
+{
+    switch (bsq)
+    {
+    case EbsUnspecified:    return "bs_unspecified";
+    case EbsShared:         return "shared";
+    case EbsPacked:         return "packed";
+    case EbsStd140:         return "std140";
+    default:                return "unknown block storage";
     }
 }
 

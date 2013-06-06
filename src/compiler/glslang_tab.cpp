@@ -276,8 +276,7 @@ typedef union YYSTYPE
         union {
             TPublicType type;
             TPrecision precision;
-            TLayoutQualifierId layoutQualifierId;
-            TLayoutQualifier* layoutQualifier;
+            TLayoutQualifier layoutQualifier;
             TQualifier qualifier;
             TFunction* function;
             TParameter param;
@@ -741,30 +740,30 @@ static const yytype_int16 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   194,   194,   195,   198,   233,   236,   241,   246,   251,
-     256,   262,   265,   268,   271,   274,   284,   297,   305,   405,
-     408,   416,   420,   427,   431,   438,   444,   453,   461,   464,
-     474,   477,   487,   497,   518,   519,   520,   525,   526,   535,
-     547,   548,   556,   567,   571,   572,   582,   592,   602,   615,
-     616,   626,   639,   643,   647,   651,   652,   665,   666,   679,
-     680,   693,   694,   711,   712,   725,   726,   727,   728,   729,
-     733,   736,   747,   755,   763,   790,   795,   806,   810,   814,
-     821,   859,   862,   869,   877,   898,   919,   930,   959,   964,
-     974,   979,   989,   992,   995,   998,  1004,  1011,  1014,  1036,
-    1054,  1078,  1101,  1105,  1109,  1116,  1120,  1124,  1213,  1222,
-    1228,  1232,  1239,  1245,  1252,  1261,  1270,  1273,  1309,  1316,
-    1320,  1327,  1331,  1336,  1341,  1351,  1361,  1370,  1380,  1387,
-    1390,  1393,  1399,  1406,  1409,  1415,  1418,  1421,  1427,  1430,
-    1445,  1449,  1453,  1457,  1461,  1465,  1470,  1475,  1480,  1485,
-    1490,  1495,  1500,  1505,  1510,  1515,  1520,  1525,  1531,  1537,
-    1543,  1548,  1553,  1558,  1563,  1568,  1573,  1578,  1583,  1592,
-    1601,  1606,  1619,  1619,  1622,  1622,  1628,  1631,  1646,  1649,
-    1657,  1661,  1667,  1675,  1691,  1695,  1699,  1700,  1706,  1707,
-    1708,  1709,  1710,  1714,  1715,  1715,  1715,  1725,  1726,  1730,
-    1730,  1731,  1731,  1736,  1739,  1749,  1752,  1758,  1759,  1763,
-    1771,  1775,  1785,  1790,  1807,  1807,  1812,  1812,  1819,  1819,
-    1827,  1830,  1836,  1839,  1845,  1849,  1856,  1863,  1870,  1877,
-    1888,  1897,  1901,  1908,  1911,  1917,  1917
+       0,   192,   192,   193,   196,   231,   234,   239,   244,   249,
+     254,   260,   263,   266,   269,   272,   282,   295,   303,   403,
+     406,   414,   418,   425,   429,   436,   442,   451,   459,   462,
+     472,   475,   485,   495,   516,   517,   518,   523,   524,   533,
+     545,   546,   554,   565,   569,   570,   580,   590,   600,   613,
+     614,   624,   637,   641,   645,   649,   650,   663,   664,   677,
+     678,   691,   692,   709,   710,   723,   724,   725,   726,   727,
+     731,   734,   745,   753,   761,   788,   793,   804,   808,   812,
+     819,   857,   860,   867,   875,   896,   917,   928,   957,   962,
+     972,   977,   987,   990,   993,   996,  1002,  1009,  1012,  1034,
+    1052,  1076,  1099,  1103,  1107,  1114,  1118,  1122,  1211,  1220,
+    1226,  1230,  1237,  1243,  1250,  1259,  1268,  1271,  1307,  1314,
+    1318,  1325,  1329,  1334,  1339,  1349,  1359,  1368,  1378,  1385,
+    1388,  1391,  1397,  1404,  1407,  1413,  1416,  1419,  1425,  1428,
+    1443,  1447,  1451,  1455,  1459,  1463,  1468,  1473,  1478,  1483,
+    1488,  1493,  1498,  1503,  1508,  1513,  1518,  1523,  1529,  1535,
+    1541,  1546,  1551,  1556,  1561,  1566,  1571,  1576,  1581,  1590,
+    1599,  1604,  1617,  1617,  1620,  1620,  1626,  1629,  1644,  1647,
+    1656,  1660,  1666,  1674,  1690,  1694,  1698,  1699,  1705,  1706,
+    1707,  1708,  1709,  1713,  1714,  1714,  1714,  1724,  1725,  1729,
+    1729,  1730,  1730,  1735,  1738,  1748,  1751,  1757,  1758,  1762,
+    1770,  1774,  1784,  1789,  1806,  1806,  1811,  1811,  1818,  1818,
+    1826,  1829,  1835,  1838,  1844,  1848,  1855,  1862,  1869,  1876,
+    1887,  1896,  1900,  1907,  1910,  1916,  1916
 };
 #endif
 
@@ -3547,7 +3546,7 @@ yyreduce:
   case 109:
 
     {
-        (yyval.interm.type) = context->addFullySpecifiedType((yyvsp[(1) - (2)].interm.type).qualifier, (yyvsp[(2) - (2)].interm.type));
+        (yyval.interm.type) = context->addFullySpecifiedType((yyvsp[(1) - (2)].interm.type).qualifier, (yyvsp[(1) - (2)].interm.type).layoutQualifier, (yyvsp[(2) - (2)].interm.type));
     }
     break;
 
@@ -3803,35 +3802,35 @@ yyreduce:
   case 133:
 
     {
-        (yyval.interm.layoutQualifier) = context->makeLayoutQualifierFromId((yyvsp[(1) - (1)].interm.layoutQualifierId));
+        (yyval.interm.layoutQualifier) = (yyvsp[(1) - (1)].interm.layoutQualifier);
     }
     break;
 
   case 134:
 
     {
-        (yyval.interm.layoutQualifier) = context->extendLayoutQualifier((yyvsp[(1) - (3)].interm.layoutQualifier), (yyvsp[(3) - (3)].interm.layoutQualifierId));
+        (yyval.interm.layoutQualifier) = context->joinLayoutQualifiers((yyvsp[(1) - (3)].interm.layoutQualifier), (yyvsp[(3) - (3)].interm.layoutQualifier));
     }
     break;
 
   case 135:
 
     {
-        (yyval.interm.layoutQualifierId) = context->addLayoutQualifierId(*(yyvsp[(1) - (1)].lex).string, (yyvsp[(1) - (1)].lex).line);
+        (yyval.interm.layoutQualifier) = context->parseLayoutQualifier(*(yyvsp[(1) - (1)].lex).string, (yyvsp[(1) - (1)].lex).line);
     }
     break;
 
   case 136:
 
     {
-        (yyval.interm.layoutQualifierId) = context->addLayoutQualifierId(*(yyvsp[(1) - (3)].lex).string, (yyvsp[(1) - (3)].lex).line, *(yyvsp[(3) - (3)].lex).string, (yyvsp[(3) - (3)].lex).i, (yyvsp[(3) - (3)].lex).line);
+        (yyval.interm.layoutQualifier) = context->parseLayoutQualifier(*(yyvsp[(1) - (3)].lex).string, (yyvsp[(1) - (3)].lex).line, *(yyvsp[(3) - (3)].lex).string, (yyvsp[(3) - (3)].lex).i, (yyvsp[(3) - (3)].lex).line);
     }
     break;
 
   case 137:
 
     {
-        (yyval.interm.layoutQualifierId) = context->addLayoutQualifierId(*(yyvsp[(1) - (3)].lex).string, (yyvsp[(1) - (3)].lex).line, *(yyvsp[(3) - (3)].lex).string, (yyvsp[(3) - (3)].lex).i, (yyvsp[(3) - (3)].lex).line);
+        (yyval.interm.layoutQualifier) = context->parseLayoutQualifier(*(yyvsp[(1) - (3)].lex).string, (yyvsp[(1) - (3)].lex).line, *(yyvsp[(3) - (3)].lex).string, (yyvsp[(3) - (3)].lex).i, (yyvsp[(3) - (3)].lex).line);
     }
     break;
 
@@ -4216,6 +4215,7 @@ yyreduce:
     {
         // ES3 Only, but errors should be handled elsewhere
         (yyvsp[(2) - (4)].interm.type).qualifier = (yyvsp[(1) - (4)].interm.type).qualifier;
+        (yyvsp[(2) - (4)].interm.type).layoutQualifier = (yyvsp[(1) - (4)].interm.type).layoutQualifier;
         (yyval.interm.typeList) = context->addStructDeclaratorList((yyvsp[(2) - (4)].interm.type), (yyvsp[(3) - (4)].interm.typeList));
     }
     break;

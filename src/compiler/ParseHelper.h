@@ -100,6 +100,8 @@ struct TParseContext {
     bool nonInitErrorCheck(int line, const TString& identifier, const TPublicType& type, TVariable*& variable);
     bool paramErrorCheck(int line, TQualifier qualifier, TQualifier paramQualifier, TType* type);
     bool extensionErrorCheck(int line, const TString&);
+    bool singleDeclarationErrorCheck(TPublicType &publicType, TSourceLoc identifierLocation, const TString &identifier);
+    bool layoutLocationErrorCheck(TSourceLoc location, const TLayoutQualifier &layoutQualifier);
 
     const TExtensionBehavior& extensionBehavior() const { return directiveHandler.extensionBehavior(); }
     bool supportsExtension(const char* extension);
@@ -116,6 +118,7 @@ struct TParseContext {
     bool arraySetMaxSize(TIntermSymbol*, TType*, int, bool, TSourceLoc);
 
     TPublicType addFullySpecifiedType(TQualifier qualifier, const TPublicType& typeSpecifier);
+    TPublicType addFullySpecifiedType(TQualifier qualifier, TLayoutQualifier layoutQualifier, const TPublicType& typeSpecifier);
     TIntermAggregate* parseSingleDeclaration(TPublicType &publicType, TSourceLoc identifierLocation, const TString &identifier);
     TIntermAggregate* parseSingleArrayDeclaration(TPublicType &publicType, TSourceLoc identifierLocation, const TString &identifier, TSourceLoc indexLocation, TIntermTyped *indexExpression);
     TIntermAggregate* parseSingleInitDeclaration(TPublicType &publicType, TSourceLoc identifierLocation, const TString &identifier, TSourceLoc initLocation, TIntermTyped *initializer);
@@ -137,10 +140,9 @@ struct TParseContext {
     TIntermAggregate* addInterfaceBlock(const TPublicType& typeQualifier, TSourceLoc nameLine, const TString& blockName, TTypeList* typeList, 
                                         const TString& instanceName, TSourceLoc instanceLine, TIntermTyped* arrayIndex, TSourceLoc arrayIndexLine);
 
-    TLayoutQualifierId addLayoutQualifierId(const TString &qualifierType, TSourceLoc qualifierTypeLine);
-    TLayoutQualifierId addLayoutQualifierId(const TString &qualifierType, TSourceLoc qualifierTypeLine, const TString &intValueString, int intValue, TSourceLoc intValueLine);
-    TLayoutQualifier* makeLayoutQualifierFromId(TLayoutQualifierId layoutQualifierId);
-    TLayoutQualifier* extendLayoutQualifier(TLayoutQualifier *layoutQualifier, TLayoutQualifierId layoutQualifierId);
+    TLayoutQualifier parseLayoutQualifier(const TString &qualifierType, TSourceLoc qualifierTypeLine);
+    TLayoutQualifier parseLayoutQualifier(const TString &qualifierType, TSourceLoc qualifierTypeLine, const TString &intValueString, int intValue, TSourceLoc intValueLine);
+    TLayoutQualifier joinLayoutQualifiers(TLayoutQualifier leftQualifier, TLayoutQualifier rightQualifier);
 
     // Performs an error check for embedded struct declarations.
     // Returns true if an error was raised due to the declaration of

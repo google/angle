@@ -965,6 +965,45 @@ bool TParseContext::extensionErrorCheck(int line, const TString& extension)
     return false;
 }
 
+bool TParseContext::singleDeclarationErrorCheck(TPublicType &publicType, TSourceLoc identifierLocation, const TString &identifier)
+{
+    if (structQualifierErrorCheck(identifierLocation, publicType))
+        return true;
+
+    // check for layout qualifier issues
+    const TLayoutQualifier layoutQualifier = publicType.layoutQualifier;
+
+    if (layoutQualifier.matrixPacking != EmpUnspecified)
+    {
+        error(identifierLocation, "layout qualifier", getMatrixPackingString(layoutQualifier.matrixPacking), "only valid for interface blocks");
+        return false;
+    }
+
+    if (layoutQualifier.blockStorage != EbsUnspecified)
+    {
+        error(identifierLocation, "layout qualifier", getBlockStorageString(layoutQualifier.blockStorage), "only valid for interface blocks");
+        return false;
+    }
+
+    if (publicType.qualifier != EvqVertexInput && publicType.qualifier != EvqFragmentOutput && layoutLocationErrorCheck(identifierLocation, publicType.layoutQualifier))
+    {
+        return false;
+    }
+
+    return false;
+}
+
+bool TParseContext::layoutLocationErrorCheck(TSourceLoc location, const TLayoutQualifier &layoutQualifier)
+{
+    if (layoutQualifier.location != -1)
+    {
+        error(location, "invalid layout qualifier:", "location", "only valid on program inputs and outputs");
+        return true;
+    }
+
+    return false;
+}
+
 bool TParseContext::supportsExtension(const char* extension)
 {
     const TExtensionBehavior& extbehavior = extensionBehavior();
@@ -1130,10 +1169,11 @@ bool TParseContext::areAllChildConst(TIntermAggregate* aggrNode)
     return allConstant;
 }
 
-TPublicType TParseContext::addFullySpecifiedType(TQualifier qualifier, const TPublicType& typeSpecifier)
+TPublicType TParseContext::addFullySpecifiedType(TQualifier qualifier, TLayoutQualifier layoutQualifier, const TPublicType& typeSpecifier)
 {
     TPublicType returnType = typeSpecifier;
     returnType.qualifier = qualifier;
+    returnType.layoutQualifier = layoutQualifier;
 
     if (typeSpecifier.array)
     {
@@ -1250,7 +1290,7 @@ TIntermAggregate* TParseContext::parseSingleArrayDeclaration(TPublicType &public
 
 TIntermAggregate* TParseContext::parseSingleInitDeclaration(TPublicType &publicType, TSourceLoc identifierLocation, const TString &identifier, TSourceLoc initLocation, TIntermTyped *initializer)
 {
-    if (structQualifierErrorCheck(identifierLocation, publicType))
+    if (singleDeclarationErrorCheck(publicType, identifierLocation, identifier))
         recover();
 
     TIntermNode* intermNode;
@@ -1719,6 +1759,12 @@ TIntermAggregate* TParseContext::addInterfaceBlock(const TPublicType& typeQualif
         recover();
     }
 
+    const TLayoutQualifier layoutQualifier = typeQualifier.layoutQualifier;
+    if (layoutLocationErrorCheck(typeQualifier.line, layoutQualifier))
+    {
+        recover();
+    }
+
     TSymbol* blockNameSymbol = new TInterfaceBlockName(&blockName);
     if (!symbolTable.declare(*blockNameSymbol)) {
         error(nameLine, "redefinition", blockName.c_str(), "interface block name");
@@ -1745,11 +1791,18 @@ TIntermAggregate* TParseContext::addInterfaceBlock(const TPublicType& typeQualif
             recover();
             break;
         }
+
+        // check layout qualifiers
+        if (layoutLocationErrorCheck(memberTypeLine.line, memberType->getLayoutQualifier()))
+        {
+            recover();
+        }
     }
 
     TType* interfaceBlock = new TType(typeList, blockName);
     interfaceBlock->setBasicType(EbtInterfaceBlock);
     interfaceBlock->setQualifier(typeQualifier.qualifier);
+    interfaceBlock->setLayoutQualifier(layoutQualifier);
 
     TString symbolName = "";
     int symbolId = 0;
@@ -2182,32 +2235,33 @@ TIntermTyped* TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
     return indexedExpression;
 }
 
-TLayoutQualifierId TParseContext::addLayoutQualifierId(const TString &qualifierType, TSourceLoc qualifierTypeLine)
+TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierType, TSourceLoc qualifierTypeLine)
 {
-    TLayoutQualifierId qualifierId;
+    TLayoutQualifier qualifier;
 
-    qualifierId.type = ElqError;
-    qualifierId.location = -1;
+    qualifier.location = -1;
+    qualifier.matrixPacking = EmpUnspecified;
+    qualifier.blockStorage = EbsUnspecified;
 
     if (qualifierType == "shared")
     {
-        qualifierId.type = ElqShared;
+        qualifier.blockStorage = EbsShared;
     }
     else if (qualifierType == "packed")
     {
-        qualifierId.type = ElqPacked;
+        qualifier.blockStorage = EbsPacked;
     }
     else if (qualifierType == "std140")
     {
-        qualifierId.type = ElqStd140;
+        qualifier.blockStorage = EbsStd140;
     }
     else if (qualifierType == "row_major")
     {
-        qualifierId.type = ElqRowMajor;
+        qualifier.matrixPacking = EmpRowMajor;
     }
     else if (qualifierType == "column_major")
     {
-        qualifierId.type = ElqColumnMajor;
+        qualifier.matrixPacking = EmpColumnMajor;
     }
     else if (qualifierType == "location")
     {
@@ -2220,15 +2274,16 @@ TLayoutQualifierId TParseContext::addLayoutQualifierId(const TString &qualifierT
         recover();
     }
 
-    return qualifierId;
+    return qualifier;
 }
 
-TLayoutQualifierId TParseContext::addLayoutQualifierId(const TString &qualifierType, TSourceLoc qualifierTypeLine, const TString &intValueString, int intValue, TSourceLoc intValueLine)
+TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierType, TSourceLoc qualifierTypeLine, const TString &intValueString, int intValue, TSourceLoc intValueLine)
 {
-    TLayoutQualifierId qualifierId;
+    TLayoutQualifier qualifier;
 
-    qualifierId.type = ElqError;
-    qualifierId.location = -1;
+    qualifier.location = -1;
+    qualifier.matrixPacking = EmpUnspecified;
+    qualifier.blockStorage = EbsUnspecified;
 
     if (qualifierType != "location")
     {
@@ -2244,23 +2299,33 @@ TLayoutQualifierId TParseContext::addLayoutQualifierId(const TString &qualifierT
         }
         else
         {
-            qualifierId.location = intValue;
+            qualifier.location = intValue;
         }
 
         // TODO: must check that location is < MAX_DRAW_BUFFERS
     }
 
-    return qualifierId;
+    return qualifier;
 }
 
-TLayoutQualifier* TParseContext::makeLayoutQualifierFromId(TLayoutQualifierId layoutQualifierId)
+TLayoutQualifier TParseContext::joinLayoutQualifiers(TLayoutQualifier leftQualifier, TLayoutQualifier rightQualifier)
 {
-    return NULL;
-}
+    TLayoutQualifier joinedQualifier = leftQualifier;
 
-TLayoutQualifier* TParseContext::extendLayoutQualifier(TLayoutQualifier *layoutQualifier, TLayoutQualifierId layoutQualifierId)
-{
-    return NULL;
+    if (rightQualifier.location != -1)
+    {
+        joinedQualifier.location = rightQualifier.location;
+    }
+    if (rightQualifier.matrixPacking != EmpUnspecified)
+    {
+        joinedQualifier.matrixPacking = rightQualifier.matrixPacking;
+    }
+    if (rightQualifier.blockStorage != EbsUnspecified)
+    {
+        joinedQualifier.blockStorage = rightQualifier.blockStorage;
+    }
+
+    return joinedQualifier;
 }
 
 TTypeList *TParseContext::addStructDeclaratorList(const TPublicType& typeSpecifier, TTypeList *typeList)
@@ -2279,6 +2344,7 @@ TTypeList *TParseContext::addStructDeclaratorList(const TPublicType& typeSpecifi
         type->setSecondarySize(typeSpecifier.secondarySize);
         type->setPrecision(typeSpecifier.precision);
         type->setQualifier(typeSpecifier.qualifier);
+        type->setLayoutQualifier(typeSpecifier.layoutQualifier);
 
         // don't allow arrays of arrays
         if (type->isArray()) {
