@@ -164,6 +164,11 @@ struct TLayoutQualifier
 
         return layoutQualifier;
     }
+
+    bool isEmpty() const
+    {
+        return location == -1 && matrixPacking == EmpUnspecified && blockStorage == EbsUnspecified;
+    }
 };
 
 //

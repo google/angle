@@ -813,6 +813,10 @@ declaration
         ES3_ONLY(getQualifierString($1.qualifier), $1.line, "interface blocks");
         $$ = context->addInterfaceBlock($1, $2.line, *$2.string, $3, *$5.string, $5.line, $7, $6.line);
     }
+    | type_qualifier SEMICOLON {
+        context->parseGlobalLayoutQualifier($1);
+        $$ = 0;
+    }
     ;
 
 function_prototype

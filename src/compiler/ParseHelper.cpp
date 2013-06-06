@@ -1308,6 +1308,34 @@ TIntermAggregate* TParseContext::parseSingleInitDeclaration(TPublicType &publicT
     }
 }
 
+void TParseContext::parseGlobalLayoutQualifier(const TPublicType &typeQualifier)
+{
+    if (typeQualifier.qualifier != EvqUniform)
+    {
+        error(typeQualifier.line, "invalid qualifier:", getQualifierString(typeQualifier.qualifier), "global layout must be uniform");
+        recover();
+        return;
+    }
+
+    const TLayoutQualifier layoutQualifier = typeQualifier.layoutQualifier;
+    ASSERT(!layoutQualifier.isEmpty());
+
+    if (shaderVersion < 300)
+    {
+        error(typeQualifier.line, "layout qualifiers supported in GLSL ES 3.00 only", "layout");
+        recover();
+        return;
+    }
+
+    if (layoutLocationErrorCheck(typeQualifier.line, typeQualifier.layoutQualifier))
+    {
+        recover();
+        return;
+    }
+
+    // TODO: global matrix packing and block storage
+}
+
 TFunction *TParseContext::addConstructorFunc(TPublicType publicType)
 {
     TOperator op = EOpNull;
