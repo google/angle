@@ -3169,7 +3169,7 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
                 {
                     remainingComponents -= parameter.getObjectSize();
                 }
-                else if (remainingComponents < parameter.getCols())
+                else if (remainingComponents < parameter.getNominalSize())
                 {
                     switch (remainingComponents)
                     {
