@@ -36,6 +36,11 @@ std::string str(int i)
     return buffer;
 }
 
+std::string arrayString(int i)
+{
+    return "[" + str(i) + "]";
+}
+
 namespace gl_d3d
 {
     std::string TypeString(GLenum type)
@@ -89,7 +94,7 @@ unsigned int parseAndStripArrayIndex(std::string* name)
 
 }
 
-UniformLocation::UniformLocation(const std::string &name, unsigned int element, unsigned int index) 
+VariableLocation::VariableLocation(const std::string &name, unsigned int element, unsigned int index) 
     : name(name), element(element), index(index)
 {
 }
@@ -1293,12 +1298,12 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
                     
                     if (varying->array)
                     {
-                        vertexHLSL += "[" + str(i) + "]";
+                        vertexHLSL += arrayString(i);
                     }
 
                     if (rows > 1)
                     {
-                        vertexHLSL += "[" + str(j) + "]";
+                        vertexHLSL += arrayString(j);
                     }
                     
                     vertexHLSL += ";\n";
@@ -1435,12 +1440,12 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
 
                     if (varying->array)
                     {
-                        pixelHLSL += "[" + str(i) + "]";
+                        pixelHLSL += arrayString(i);
                     }
 
                     if (rows > 1)
                     {
-                        pixelHLSL += "[" + str(j) + "]";
+                        pixelHLSL += arrayString(j);
                     }
 
                     switch (VariableColumnCount(transposedType))
@@ -2165,7 +2170,7 @@ bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, In
                 for (size_t fieldIndex = 0; fieldIndex < constant.fields.size(); fieldIndex++)
                 {
                     const sh::Uniform &field = constant.fields[fieldIndex];
-                    const std::string &uniformName = constant.name + "[" + str(elementIndex) + "]." + field.name;
+                    const std::string &uniformName = constant.name + arrayString(elementIndex) + "." + field.name;
                     const sh::Uniform fieldUniform(field.type, field.precision, uniformName.c_str(), field.arraySize, elementRegisterIndex);
                     if (!defineUniform(shader, fieldUniform, infoLog))
                     {
@@ -2279,7 +2284,7 @@ bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, In
 
     for (unsigned int arrayElementIndex = 0; arrayElementIndex < uniform->elementCount(); arrayElementIndex++)
     {
-        mUniformIndex.push_back(UniformLocation(uniform->name, arrayElementIndex, uniformIndex));
+        mUniformIndex.push_back(VariableLocation(uniform->name, arrayElementIndex, uniformIndex));
     }
 
     if (shader == GL_VERTEX_SHADER)
@@ -2400,7 +2405,7 @@ void ProgramBinary::defineUniformBlockMembers(const sh::ActiveUniforms &uniforms
             {
                 for (unsigned int arrayElement = 0; arrayElement < uniform.arraySize; arrayElement++)
                 {
-                    const std::string uniformElementName = uniform.name + "[" + str(arrayElement) + "]";
+                    const std::string uniformElementName = uniform.name + arrayString(arrayElement);
                     defineUniformBlockMembers(uniform.fields, uniformElementName, blockIndex, blockInfoItr, blockUniformIndexes);
                 }
             }
@@ -2803,7 +2808,7 @@ void ProgramBinary::getActiveUniformBlockName(GLuint uniformBlockIndex, GLsizei 
 
         if (uniformBlock.isArrayElement())
         {
-            string += "[" + str(uniformBlock.elementIndex) + "]";
+            string += arrayString(uniformBlock.elementIndex);
         }
 
         strncpy(uniformBlockName, string.c_str(), bufSize);

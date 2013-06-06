@@ -43,13 +43,13 @@ struct Varying;
 class Buffer;
 
 // Struct used for correlating uniforms/elements of uniform arrays to handles
-struct UniformLocation
+struct VariableLocation
 {
-    UniformLocation()
+    VariableLocation()
     {
     }
 
-    UniformLocation(const std::string &name, unsigned int element, unsigned int index);
+    VariableLocation(const std::string &name, unsigned int element, unsigned int index);
 
     std::string name;
     unsigned int element;
@@ -204,7 +204,7 @@ class ProgramBinary : public RefCountObject
 
     UniformArray mUniforms;
     UniformBlockArray mUniformBlocks;
-    typedef std::vector<UniformLocation> UniformIndex;
+    typedef std::vector<VariableLocation> UniformIndex;
     UniformIndex mUniformIndex;
 
     bool mValidated;
