@@ -1019,23 +1019,22 @@ bool TIntermBinary::promote(TInfoSink& infoSink)
 
 bool CompareStruct(const TType& leftNodeType, ConstantUnion* rightUnionArray, ConstantUnion* leftUnionArray)
 {
-    const TTypeList* fields = leftNodeType.getStruct();
+    const TFieldList& fields = leftNodeType.getStruct()->fields();
 
-    size_t structSize = fields->size();
+    size_t structSize = fields.size();
     size_t index = 0;
 
     for (size_t j = 0; j < structSize; j++) {
-        size_t size = (*fields)[j]->getObjectSize();
+        size_t size = fields[j]->type()->getObjectSize();
         for (size_t i = 0; i < size; i++) {
-            if ((*fields)[j]->getBasicType() == EbtStruct) {
-                if (!CompareStructure(*(*fields)[j], &rightUnionArray[index], &leftUnionArray[index]))
+            if (fields[j]->type()->getBasicType() == EbtStruct) {
+                if (!CompareStructure(*(fields[j]->type()), &rightUnionArray[index], &leftUnionArray[index]))
                     return false;
             } else {
                 if (leftUnionArray[index] != rightUnionArray[index])
                     return false;
                 index++;
             }
-
         }
     }
     return true;

@@ -77,8 +77,8 @@ WHICH GENERATES THE GLSL ES PARSER (glslang_tab.cpp AND glslang_tab.h).
             TQualifier qualifier;
             TFunction* function;
             TParameter param;
-            TType* field;
-            TTypeList* structure;
+            TField* field;
+            TFieldList* fieldList;
         };
     } interm;
 }
@@ -166,7 +166,7 @@ static void yyerror(YYLTYPE* yylloc, TParseContext* context, const char* reason)
 %type <interm.type> type_specifier_no_prec type_specifier_nonarray
 %type <interm.type> struct_specifier
 %type <interm.field> struct_declarator
-%type <interm> struct_declarator_list struct_declaration struct_declaration_list
+%type <interm.fieldList> struct_declarator_list struct_declaration struct_declaration_list
 %type <interm.function> function_header function_declarator function_identifier
 %type <interm.function> function_header_with_parameters function_call_header
 %type <interm> function_call_header_with_parameters function_call_header_no_parameters function_call_generic function_prototype
@@ -317,7 +317,7 @@ postfix_expression
             $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtFloat, EbpHigh, EvqConst), @2);
         } else if ($1->isArray()) {
             if ($1->getType().getStruct())
-                $$->setType(TType($1->getType().getStruct(), $1->getType().getTypeName()));
+                $$->setType(TType($1->getType().getStruct()));
             else
                 $$->setType(TType($1->getBasicType(), $1->getPrecision(), EvqTemporary, $1->getNominalSize(), $1->isMatrix()));
 
@@ -391,44 +391,38 @@ postfix_expression
             }
         } else if ($1->getBasicType() == EbtStruct) {
             bool fieldFound = false;
-            const TTypeList* fields = $1->getType().getStruct();
-            if (fields == 0) {
-                context->error(@2, "structure has no fields", "Internal Error");
-                context->recover();
-                $$ = $1;
-            } else {
-                unsigned int i;
-                for (i = 0; i < fields->size(); ++i) {
-                    if ((*fields)[i]->getFieldName() == *$3.string) {
-                        fieldFound = true;
-                        break;
-                    }
+            const TFieldList& fields = $1->getType().getStruct()->fields();
+            unsigned int i;
+            for (i = 0; i < fields.size(); ++i) {
+                if (fields[i]->name() == *$3.string) {
+                    fieldFound = true;
+                    break;
                 }
-                if (fieldFound) {
-                    if ($1->getType().getQualifier() == EvqConst) {
-                        $$ = context->addConstStruct(*$3.string, $1, @2);
-                        if ($$ == 0) {
-                            context->recover();
-                            $$ = $1;
-                        }
-                        else {
-                            $$->setType(*(*fields)[i]);
-                            // change the qualifier of the return type, not of the structure field
-                            // as the structure definition is shared between various structures.
-                            $$->getTypePointer()->setQualifier(EvqConst);
-                        }
-                    } else {
-                        ConstantUnion *unionArray = new ConstantUnion[1];
-                        unionArray->setIConst(i);
-                        TIntermTyped* index = context->intermediate.addConstantUnion(unionArray, *(*fields)[i], @3);
-                        $$ = context->intermediate.addIndex(EOpIndexDirectStruct, $1, index, @2);
-                        $$->setType(*(*fields)[i]);
+            }
+            if (fieldFound) {
+                if ($1->getType().getQualifier() == EvqConst) {
+                    $$ = context->addConstStruct(*$3.string, $1, @2);
+                    if ($$ == 0) {
+                        context->recover();
+                        $$ = $1;
+                    }
+                    else {
+                        $$->setType(*fields[i]->type());
+                        // change the qualifier of the return type, not of the structure field
+                        // as the structure definition is shared between various structures.
+                        $$->getTypePointer()->setQualifier(EvqConst);
                     }
                 } else {
-                    context->error(@2, " no such field in structure", $3.string->c_str());
-                    context->recover();
-                    $$ = $1;
+                    ConstantUnion *unionArray = new ConstantUnion[1];
+                    unionArray->setIConst(i);
+                    TIntermTyped* index = context->intermediate.addConstantUnion(unionArray, *fields[i]->type(), @3);
+                    $$ = context->intermediate.addIndex(EOpIndexDirectStruct, $1, index, @2);
+                    $$->setType(*fields[i]->type());
                 }
+            } else {
+                context->error(@2, " no such field in structure", $3.string->c_str());
+                context->recover();
+                $$ = $1;
             }
         } else {
             context->error(@2, " field selection requires structure, vector, or matrix on left hand side", $3.string->c_str());
@@ -1625,7 +1619,7 @@ struct_specifier
         if (context->reservedErrorCheck(@2, *$2.string))
             context->recover();
 
-        TType* structure = new TType($5.structure, *$2.string);
+        TType* structure = new TType(new TStructure($2.string, $5));
         TVariable* userTypeDef = new TVariable($2.string, *structure, true);
         if (! context->symbolTable.insert(*userTypeDef)) {
             context->error(@2, "redefinition", $2.string->c_str(), "struct");
@@ -1636,7 +1630,7 @@ struct_specifier
         context->exitStructDeclaration();
     }
     | STRUCT LEFT_BRACE { if (context->enterStructDeclaration(@2, *$2.string)) context->recover(); } struct_declaration_list RIGHT_BRACE {
-        TType* structure = new TType($4.structure, TString(""));
+        TType* structure = new TType(new TStructure(NewPoolTString(""), $4));
         $$.setBasic(EbtStruct, EvqTemporary, @1);
         $$.userDef = structure;
         context->exitStructDeclaration();
@@ -1649,15 +1643,15 @@ struct_declaration_list
     }
     | struct_declaration_list struct_declaration {
         $$ = $1;
-        for (size_t i = 0; i < $2.structure->size(); ++i) {
-            TType* field = (*$2.structure)[i];
-            for (size_t j = 0; j < $$.structure->size(); ++j) {
-                if ((*$$.structure)[j]->getFieldName() == field->getFieldName()) {
-                    context->error(@2, "duplicate field name in structure:", "struct", field->getFieldName().c_str());
+        for (size_t i = 0; i < $2->size(); ++i) {
+            TField* field = (*$2)[i];
+            for (size_t j = 0; j < $$->size(); ++j) {
+                if ((*$$)[j]->name() == field->name()) {
+                    context->error(@2, "duplicate field name in structure:", "struct", field->name().c_str());
                     context->recover();
                 }
             }
-            $$.structure->push_back(field);
+            $$->push_back(field);
         }
     }
     ;
@@ -1666,14 +1660,14 @@ struct_declaration
     : type_specifier struct_declarator_list SEMICOLON {
         $$ = $2;
 
-        if (context->voidErrorCheck(@1, (*$2.structure)[0]->getFieldName(), $1)) {
+        if (context->voidErrorCheck(@1, (*$2)[0]->name(), $1)) {
             context->recover();
         }
-        for (unsigned int i = 0; i < $$.structure->size(); ++i) {
+        for (unsigned int i = 0; i < $$->size(); ++i) {
             //
             // Careful not to replace already known aspects of type, like array-ness
             //
-            TType* type = (*$$.structure)[i];
+            TType* type = (*$$)[i]->type();
             type->setBasicType($1.type);
             type->setNominalSize($1.size);
             type->setMatrix($1.matrix);
@@ -1686,25 +1680,22 @@ struct_declaration
             }
             if ($1.array)
                 type->setArraySize($1.arraySize);
-            if ($1.userDef) {
+            if ($1.userDef)
                 type->setStruct($1.userDef->getStruct());
-                type->setTypeName($1.userDef->getTypeName());
-            }
 
-            if (context->structNestingErrorCheck(@1, *type)) {
+            if (context->structNestingErrorCheck(@1, *(*$$)[i]))
                 context->recover();
-            }
         }
     }
     ;
 
 struct_declarator_list
     : struct_declarator {
-        $$.structure = NewPoolTTypeList();
-        $$.structure->push_back($1);
+        $$ = NewPoolTFieldList();
+        $$->push_back($1);
     }
     | struct_declarator_list COMMA struct_declarator {
-        $$.structure->push_back($3);
+        $$->push_back($3);
     }
     ;
 
@@ -1713,20 +1704,20 @@ struct_declarator
         if (context->reservedErrorCheck(@1, *$1.string))
             context->recover();
 
-        $$ = new TType(EbtVoid, EbpUndefined);
-        $$->setFieldName(*$1.string);
+        TType* type = new TType(EbtVoid, EbpUndefined);
+        $$ = new TField(type, $1.string);
     }
     | identifier LEFT_BRACKET constant_expression RIGHT_BRACKET {
         if (context->reservedErrorCheck(@1, *$1.string))
             context->recover();
 
-        $$ = new TType(EbtVoid, EbpUndefined);
-        $$->setFieldName(*$1.string);
-
-        int size;
-        if (context->arraySizeErrorCheck(@2, $3, size))
+        TType* type = new TType(EbtVoid, EbpUndefined);
+        int size = 0;
+        if (context->arraySizeErrorCheck(@3, $3, size))
             context->recover();
-        $$->setArraySize(size);
+        type->setArraySize(size);
+
+        $$ = new TField(type, $1.string);
     }
     ;
 

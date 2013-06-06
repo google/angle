@@ -968,7 +968,10 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
       case EOpIndexDirectStruct:
         if (visit == InVisit)
         {
-            out << "." + decorateField(node->getType().getFieldName(), node->getLeft()->getType());
+            const TStructure* structure = node->getLeft()->getType().getStruct();
+            const TIntermConstantUnion* index = node->getRight()->getAsConstantUnion();
+            const TField* field = structure->fields()[index->getIConst(0)];
+            out << "." + decorateField(field->name(), node->getLeft()->getType());
 
             return false;
         }
@@ -1037,18 +1040,18 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
                 out << "!(";
             }
 
-            const TTypeList *fields = node->getLeft()->getType().getStruct();
+            const TFieldList &fields = node->getLeft()->getType().getStruct()->fields();
 
-            for (size_t i = 0; i < fields->size(); i++)
+            for (size_t i = 0; i < fields.size(); i++)
             {
-                const TType *fieldType = (*fields)[i];
+                const TField *field = fields[i];
 
                 node->getLeft()->traverse(this);
-                out << "." + decorateField(fieldType->getFieldName(), node->getLeft()->getType()) + " == ";
+                out << "." + decorateField(field->name(), node->getLeft()->getType()) + " == ";
                 node->getRight()->traverse(this);
-                out << "." + decorateField(fieldType->getFieldName(), node->getLeft()->getType());
+                out << "." + decorateField(field->name(), node->getLeft()->getType());
 
-                if (i < fields->size() - 1)
+                if (i < fields.size() - 1)
                 {
                     out << " && ";
                 }
@@ -1299,7 +1302,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             {
                 if (variable->getType().getStruct())
                 {
-                    addConstructor(variable->getType(), scopedStruct(variable->getType().getTypeName()), NULL);
+                    addConstructor(variable->getType(), scopedStruct(variable->getType().getStruct()->name()), NULL);
                 }
 
                 if (!variable->getAsSymbolNode() || variable->getAsSymbolNode()->getSymbol() != "")   // Variable declaration
@@ -1417,7 +1420,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 {
                     if (symbol->getType().getStruct())
                     {
-                        addConstructor(symbol->getType(), scopedStruct(symbol->getType().getTypeName()), NULL);
+                        addConstructor(symbol->getType(), scopedStruct(symbol->getType().getStruct()->name()), NULL);
                     }
 
                     out << argumentString(symbol);
@@ -1666,8 +1669,8 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         outputTriplet(visit, "mat4(", ", ", ")");
         break;
       case EOpConstructStruct:
-        addConstructor(node->getType(), scopedStruct(node->getType().getTypeName()), &node->getSequence());
-        outputTriplet(visit, structLookup(node->getType().getTypeName()) + "_ctor(", ", ", ")");
+        addConstructor(node->getType(), scopedStruct(node->getType().getStruct()->name()), &node->getSequence());
+        outputTriplet(visit, structLookup(node->getType().getStruct()->name()) + "_ctor(", ", ", ")");
         break;
       case EOpLessThan:         outputTriplet(visit, "(", " < ", ")");                 break;
       case EOpGreaterThan:      outputTriplet(visit, "(", " > ", ")");                 break;
@@ -2229,22 +2232,23 @@ TString OutputHLSL::typeString(const TType &type)
 {
     if (type.getBasicType() == EbtStruct)
     {
-        if (type.getTypeName() != "")
+        const TString& typeName = type.getStruct()->name();
+        if (typeName != "")
         {
-            return structLookup(type.getTypeName());
+            return structLookup(typeName);
         }
         else   // Nameless structure, define in place
         {
-            const TTypeList &fields = *type.getStruct();
+            const TFieldList &fields = type.getStruct()->fields();
 
             TString string = "struct\n"
                              "{\n";
 
             for (unsigned int i = 0; i < fields.size(); i++)
             {
-                const TType &field = *fields[i];
+                const TField *field = fields[i];
 
-                string += "    " + typeString(field) + " " + decorate(field.getFieldName()) + arrayString(field) + ";\n";
+                string += "    " + typeString(*field->type()) + " " + decorate(field->name()) + arrayString(*field->type()) + ";\n";
             }
 
             string += "} ";
@@ -2364,13 +2368,13 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
         structure += "struct " + decorate(name) + "\n"
                      "{\n";
 
-        const TTypeList &fields = *type.getStruct();
+        const TFieldList &fields = type.getStruct()->fields();
 
         for (unsigned int i = 0; i < fields.size(); i++)
         {
-            const TType &field = *fields[i];
+            const TField *field = fields[i];
 
-            structure += "    " + typeString(field) + " " + decorateField(field.getFieldName(), type) + arrayString(field) + ";\n";
+            structure += "    " + typeString(*field->type()) + " " + decorateField(field->name(), type) + arrayString(*field->type()) + ";\n";
         }
 
         structure += "};\n";
@@ -2382,7 +2386,7 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
 
         for (unsigned int i = 0; i < fields.size(); i++)
         {
-            ctorParameters.push_back(*fields[i]);
+            ctorParameters.push_back(*fields[i]->type());
         }
     }
     else if (parameters)
@@ -2555,17 +2559,17 @@ const ConstantUnion *OutputHLSL::writeConstantUnion(const TType &type, const Con
 
     if (type.getBasicType() == EbtStruct)
     {
-        out << structLookup(type.getTypeName()) + "_ctor(";
+        out << structLookup(type.getStruct()->name()) + "_ctor(";
         
-        const TTypeList *structure = type.getStruct();
+        const TFieldList &fields = type.getStruct()->fields();
 
-        for (size_t i = 0; i < structure->size(); i++)
+        for (size_t i = 0; i < fields.size(); i++)
         {
-            const TType *fieldType = (*structure)[i];
+            const TType *fieldType = fields[i]->type();
 
             constUnion = writeConstantUnion(*fieldType, constUnion);
 
-            if (i != structure->size() - 1)
+            if (i != fields.size() - 1)
             {
                 out << ", ";
             }
@@ -2676,7 +2680,7 @@ TString OutputHLSL::decorateUniform(const TString &string, const TType &type)
 
 TString OutputHLSL::decorateField(const TString &string, const TType &structure)
 {
-    if (structure.getTypeName().compare(0, 3, "gl_") != 0)
+    if (structure.getStruct()->name().compare(0, 3, "gl_") != 0)
     {
         return decorate(string);
     }
