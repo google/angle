@@ -751,20 +751,20 @@ static const yytype_uint16 yyrline[] =
      733,   736,   747,   755,   763,   790,   795,   806,   810,   814,
      821,   859,   862,   869,   877,   898,   919,   930,   959,   964,
      974,   979,   989,   992,   995,   998,  1004,  1011,  1014,  1036,
-    1054,  1078,  1101,  1105,  1123,  1131,  1163,  1183,  1272,  1281,
-    1287,  1291,  1298,  1304,  1311,  1320,  1329,  1332,  1368,  1375,
-    1379,  1386,  1390,  1395,  1400,  1410,  1420,  1429,  1439,  1446,
-    1449,  1452,  1458,  1465,  1468,  1474,  1477,  1480,  1486,  1489,
-    1504,  1508,  1512,  1516,  1520,  1524,  1529,  1534,  1539,  1544,
-    1549,  1554,  1559,  1564,  1569,  1574,  1579,  1584,  1590,  1596,
-    1602,  1607,  1612,  1617,  1622,  1627,  1632,  1637,  1642,  1651,
-    1660,  1665,  1678,  1678,  1681,  1681,  1687,  1690,  1705,  1708,
-    1716,  1720,  1726,  1734,  1750,  1754,  1758,  1759,  1765,  1766,
-    1767,  1768,  1769,  1773,  1774,  1774,  1774,  1784,  1785,  1789,
-    1789,  1790,  1790,  1795,  1798,  1808,  1811,  1817,  1818,  1822,
-    1830,  1834,  1844,  1849,  1866,  1866,  1871,  1871,  1878,  1878,
-    1886,  1889,  1895,  1898,  1904,  1908,  1915,  1922,  1929,  1936,
-    1947,  1956,  1960,  1967,  1970,  1976,  1976
+    1054,  1078,  1101,  1105,  1109,  1116,  1120,  1124,  1213,  1222,
+    1228,  1232,  1239,  1245,  1252,  1261,  1270,  1273,  1309,  1316,
+    1320,  1327,  1331,  1336,  1341,  1351,  1361,  1370,  1380,  1387,
+    1390,  1393,  1399,  1406,  1409,  1415,  1418,  1421,  1427,  1430,
+    1445,  1449,  1453,  1457,  1461,  1465,  1470,  1475,  1480,  1485,
+    1490,  1495,  1500,  1505,  1510,  1515,  1520,  1525,  1531,  1537,
+    1543,  1548,  1553,  1558,  1563,  1568,  1573,  1578,  1583,  1592,
+    1601,  1606,  1619,  1619,  1622,  1622,  1628,  1631,  1646,  1649,
+    1657,  1661,  1667,  1675,  1691,  1695,  1699,  1700,  1706,  1707,
+    1708,  1709,  1710,  1714,  1715,  1715,  1715,  1725,  1726,  1730,
+    1730,  1731,  1731,  1736,  1739,  1749,  1752,  1758,  1759,  1763,
+    1771,  1775,  1785,  1790,  1807,  1807,  1812,  1812,  1819,  1819,
+    1827,  1830,  1836,  1839,  1845,  1849,  1856,  1863,  1870,  1877,
+    1888,  1897,  1901,  1908,  1911,  1917,  1917
 };
 #endif
 
@@ -3470,29 +3470,15 @@ yyreduce:
 
     {
         (yyval.interm).type = (yyvsp[(1) - (1)].interm.type);
-        (yyval.interm).intermAggregate = context->intermediate.makeAggregate(context->intermediate.addSymbol(0, "", TType((yyvsp[(1) - (1)].interm.type)), (yyvsp[(1) - (1)].interm.type).line), (yyvsp[(1) - (1)].interm.type).line);
+        (yyval.interm).intermAggregate = context->parseSingleDeclaration((yyval.interm).type, (yyvsp[(1) - (1)].interm.type).line, "");
     }
     break;
 
   case 103:
 
     {
-        TIntermSymbol* symbol = context->intermediate.addSymbol(0, *(yyvsp[(2) - (2)].lex).string, TType((yyvsp[(1) - (2)].interm.type)), (yyvsp[(2) - (2)].lex).line);
-        (yyval.interm).intermAggregate = context->intermediate.makeAggregate(symbol, (yyvsp[(2) - (2)].lex).line);
-        
-        if (context->structQualifierErrorCheck((yyvsp[(2) - (2)].lex).line, (yyval.interm).type))
-            context->recover();
-
-        if (context->nonInitConstErrorCheck((yyvsp[(2) - (2)].lex).line, *(yyvsp[(2) - (2)].lex).string, (yyval.interm).type, false))
-            context->recover();
-            
-            (yyval.interm).type = (yyvsp[(1) - (2)].interm.type);
-
-        TVariable* variable = 0;
-        if (context->nonInitErrorCheck((yyvsp[(2) - (2)].lex).line, *(yyvsp[(2) - (2)].lex).string, (yyval.interm).type, variable))
-            context->recover();
-        if (variable && symbol)
-            symbol->setId(variable->getUniqueId());
+        (yyval.interm).type = (yyvsp[(1) - (2)].interm.type);
+        (yyval.interm).intermAggregate = context->parseSingleDeclaration((yyval.interm).type, (yyvsp[(2) - (2)].lex).line, *(yyvsp[(2) - (2)].lex).string);
     }
     break;
 
@@ -3502,69 +3488,24 @@ yyreduce:
         context->error((yyvsp[(2) - (4)].lex).line, "unsized array declarations not supported", (yyvsp[(2) - (4)].lex).string->c_str());
         context->recover();
 
-        TIntermSymbol* symbol = context->intermediate.addSymbol(0, *(yyvsp[(2) - (4)].lex).string, TType((yyvsp[(1) - (4)].interm.type)), (yyvsp[(2) - (4)].lex).line);
-        (yyval.interm).intermAggregate = context->intermediate.makeAggregate(symbol, (yyvsp[(2) - (4)].lex).line);
         (yyval.interm).type = (yyvsp[(1) - (4)].interm.type);
+        (yyval.interm).intermAggregate = context->parseSingleDeclaration((yyval.interm).type, (yyvsp[(2) - (4)].lex).line, *(yyvsp[(2) - (4)].lex).string);
     }
     break;
 
   case 105:
 
     {
-        TType type = TType((yyvsp[(1) - (5)].interm.type));
-        int size;
-        if (context->arraySizeErrorCheck((yyvsp[(2) - (5)].lex).line, (yyvsp[(4) - (5)].interm.intermTypedNode), size))
-            context->recover();
-        type.setArraySize(size);
-        TIntermSymbol* symbol = context->intermediate.addSymbol(0, *(yyvsp[(2) - (5)].lex).string, type, (yyvsp[(2) - (5)].lex).line);
-        (yyval.interm).intermAggregate = context->intermediate.makeAggregate(symbol, (yyvsp[(2) - (5)].lex).line);
-        
-        if (context->structQualifierErrorCheck((yyvsp[(2) - (5)].lex).line, (yyvsp[(1) - (5)].interm.type)))
-            context->recover();
-
-        if (context->nonInitConstErrorCheck((yyvsp[(2) - (5)].lex).line, *(yyvsp[(2) - (5)].lex).string, (yyvsp[(1) - (5)].interm.type), true))
-            context->recover();
-
         (yyval.interm).type = (yyvsp[(1) - (5)].interm.type);
-
-        if (context->arrayTypeErrorCheck((yyvsp[(3) - (5)].lex).line, (yyvsp[(1) - (5)].interm.type)) || context->arrayQualifierErrorCheck((yyvsp[(3) - (5)].lex).line, (yyvsp[(1) - (5)].interm.type)))
-            context->recover();
-        else {
-            int size;
-            if (context->arraySizeErrorCheck((yyvsp[(3) - (5)].lex).line, (yyvsp[(4) - (5)].interm.intermTypedNode), size))
-                context->recover();
-
-            (yyvsp[(1) - (5)].interm.type).setArray(true, size);
-            TVariable* variable = 0;
-            if (context->arrayErrorCheck((yyvsp[(3) - (5)].lex).line, *(yyvsp[(2) - (5)].lex).string, (yyvsp[(1) - (5)].interm.type), variable))
-                context->recover();
-            if (variable && symbol)
-                symbol->setId(variable->getUniqueId());
-        }
+        (yyval.interm).intermAggregate = context->parseSingleArrayDeclaration((yyval.interm).type, (yyvsp[(2) - (5)].lex).line, *(yyvsp[(2) - (5)].lex).string, (yyvsp[(3) - (5)].lex).line, (yyvsp[(4) - (5)].interm.intermTypedNode));
     }
     break;
 
   case 106:
 
     {
-        if (context->structQualifierErrorCheck((yyvsp[(2) - (4)].lex).line, (yyvsp[(1) - (4)].interm.type)))
-            context->recover();
-
         (yyval.interm).type = (yyvsp[(1) - (4)].interm.type);
-
-        TIntermNode* intermNode;
-        if (!context->executeInitializer((yyvsp[(2) - (4)].lex).line, *(yyvsp[(2) - (4)].lex).string, (yyvsp[(1) - (4)].interm.type), (yyvsp[(4) - (4)].interm.intermTypedNode), intermNode)) {
-        //
-        // Build intermediate representation
-        //
-            if(intermNode)
-                (yyval.interm).intermAggregate = context->intermediate.makeAggregate(intermNode, (yyvsp[(3) - (4)].lex).line);
-            else
-                (yyval.interm).intermAggregate = 0;
-        } else {
-            context->recover();
-            (yyval.interm).intermAggregate = 0;
-        }
+        (yyval.interm).intermAggregate = context->parseSingleInitDeclaration((yyval.interm).type, (yyvsp[(2) - (4)].lex).line, *(yyvsp[(2) - (4)].lex).string, (yyvsp[(3) - (4)].lex).line, (yyvsp[(4) - (4)].interm.intermTypedNode));
     }
     break;
 

@@ -1100,85 +1100,26 @@ init_declarator_list
 single_declaration
     : fully_specified_type {
         $$.type = $1;
-        $$.intermAggregate = context->intermediate.makeAggregate(context->intermediate.addSymbol(0, "", TType($1), $1.line), $1.line);
+        $$.intermAggregate = context->parseSingleDeclaration($$.type, $1.line, "");
     }
     | fully_specified_type identifier {
-        TIntermSymbol* symbol = context->intermediate.addSymbol(0, *$2.string, TType($1), $2.line);
-        $$.intermAggregate = context->intermediate.makeAggregate(symbol, $2.line);
-        
-        if (context->structQualifierErrorCheck($2.line, $$.type))
-            context->recover();
-
-        if (context->nonInitConstErrorCheck($2.line, *$2.string, $$.type, false))
-            context->recover();
-            
-            $$.type = $1;
-
-        TVariable* variable = 0;
-        if (context->nonInitErrorCheck($2.line, *$2.string, $$.type, variable))
-            context->recover();
-        if (variable && symbol)
-            symbol->setId(variable->getUniqueId());
+        $$.type = $1;
+        $$.intermAggregate = context->parseSingleDeclaration($$.type, $2.line, *$2.string);
     }
     | fully_specified_type identifier LEFT_BRACKET RIGHT_BRACKET {
         context->error($2.line, "unsized array declarations not supported", $2.string->c_str());
         context->recover();
 
-        TIntermSymbol* symbol = context->intermediate.addSymbol(0, *$2.string, TType($1), $2.line);
-        $$.intermAggregate = context->intermediate.makeAggregate(symbol, $2.line);
         $$.type = $1;
+        $$.intermAggregate = context->parseSingleDeclaration($$.type, $2.line, *$2.string);
     }
     | fully_specified_type identifier LEFT_BRACKET constant_expression RIGHT_BRACKET {
-        TType type = TType($1);
-        int size;
-        if (context->arraySizeErrorCheck($2.line, $4, size))
-            context->recover();
-        type.setArraySize(size);
-        TIntermSymbol* symbol = context->intermediate.addSymbol(0, *$2.string, type, $2.line);
-        $$.intermAggregate = context->intermediate.makeAggregate(symbol, $2.line);
-        
-        if (context->structQualifierErrorCheck($2.line, $1))
-            context->recover();
-
-        if (context->nonInitConstErrorCheck($2.line, *$2.string, $1, true))
-            context->recover();
-
         $$.type = $1;
-
-        if (context->arrayTypeErrorCheck($3.line, $1) || context->arrayQualifierErrorCheck($3.line, $1))
-            context->recover();
-        else {
-            int size;
-            if (context->arraySizeErrorCheck($3.line, $4, size))
-                context->recover();
-
-            $1.setArray(true, size);
-            TVariable* variable = 0;
-            if (context->arrayErrorCheck($3.line, *$2.string, $1, variable))
-                context->recover();
-            if (variable && symbol)
-                symbol->setId(variable->getUniqueId());
-        }
+        $$.intermAggregate = context->parseSingleArrayDeclaration($$.type, $2.line, *$2.string, $3.line, $4);
     }
     | fully_specified_type identifier EQUAL initializer {
-        if (context->structQualifierErrorCheck($2.line, $1))
-            context->recover();
-
         $$.type = $1;
-
-        TIntermNode* intermNode;
-        if (!context->executeInitializer($2.line, *$2.string, $1, $4, intermNode)) {
-        //
-        // Build intermediate representation
-        //
-            if(intermNode)
-                $$.intermAggregate = context->intermediate.makeAggregate(intermNode, $3.line);
-            else
-                $$.intermAggregate = 0;
-        } else {
-            context->recover();
-            $$.intermAggregate = 0;
-        }
+        $$.intermAggregate = context->parseSingleInitDeclaration($$.type, $2.line, *$2.string, $3.line, $4);
     }
     | INVARIANT IDENTIFIER {
         VERTEX_ONLY("invariant declaration", $1.line);

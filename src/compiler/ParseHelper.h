@@ -89,15 +89,15 @@ struct TParseContext {
     bool arraySizeErrorCheck(int line, TIntermTyped* expr, int& size);
     bool arrayQualifierErrorCheck(int line, TPublicType type);
     bool arrayTypeErrorCheck(int line, TPublicType type);
-    bool arrayErrorCheck(int line, TString& identifier, TPublicType type, TVariable*& variable);
+    bool arrayErrorCheck(int line, const TString& identifier, const TPublicType &type, TVariable*& variable);
     bool voidErrorCheck(int, const TString&, const TPublicType&);
     bool boolErrorCheck(int, const TIntermTyped*);
     bool boolErrorCheck(int, const TPublicType&);
     bool samplerErrorCheck(int line, const TPublicType& pType, const char* reason);
     bool structQualifierErrorCheck(int line, const TPublicType& pType);
     bool parameterSamplerErrorCheck(int line, TQualifier qualifier, const TType& type);
-    bool nonInitConstErrorCheck(int line, TString& identifier, TPublicType& type, bool array);
-    bool nonInitErrorCheck(int line, TString& identifier, TPublicType& type, TVariable*& variable);
+    bool nonInitConstErrorCheck(int line, const TString& identifier, TPublicType& type, bool array);
+    bool nonInitErrorCheck(int line, const TString& identifier, const TPublicType& type, TVariable*& variable);
     bool paramErrorCheck(int line, TQualifier qualifier, TQualifier paramQualifier, TType* type);
     bool extensionErrorCheck(int line, const TString&);
 
@@ -111,11 +111,14 @@ struct TParseContext {
     bool containsSampler(TType& type);
     bool areAllChildConst(TIntermAggregate* aggrNode);
     const TFunction* findFunction(int line, TFunction* pfnCall, int shaderVersion, bool *builtIn = 0);
-    bool executeInitializer(TSourceLoc line, TString& identifier, TPublicType& pType,
+    bool executeInitializer(TSourceLoc line, const TString& identifier, TPublicType& pType,
                             TIntermTyped* initializer, TIntermNode*& intermNode, TVariable* variable = 0);
     bool arraySetMaxSize(TIntermSymbol*, TType*, int, bool, TSourceLoc);
 
     TPublicType addFullySpecifiedType(TQualifier qualifier, const TPublicType& typeSpecifier);
+    TIntermAggregate* parseSingleDeclaration(TPublicType &publicType, TSourceLoc identifierLocation, const TString &identifier);
+    TIntermAggregate* parseSingleArrayDeclaration(TPublicType &publicType, TSourceLoc identifierLocation, const TString &identifier, TSourceLoc indexLocation, TIntermTyped *indexExpression);
+    TIntermAggregate* parseSingleInitDeclaration(TPublicType &publicType, TSourceLoc identifierLocation, const TString &identifier, TSourceLoc initLocation, TIntermTyped *initializer);
     TFunction *addConstructorFunc(TPublicType publicType);
     TIntermTyped* addConstructor(TIntermNode*, const TType*, TOperator, TFunction*, TSourceLoc);
     TIntermTyped* foldConstConstructor(TIntermAggregate* aggrNode, const TType& type);

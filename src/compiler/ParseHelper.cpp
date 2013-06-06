@@ -759,7 +759,7 @@ bool TParseContext::arrayTypeErrorCheck(int line, TPublicType type)
 //
 // Returns true if there was an error.
 //
-bool TParseContext::arrayErrorCheck(int line, TString& identifier, TPublicType type, TVariable*& variable)
+bool TParseContext::arrayErrorCheck(int line, const TString& identifier, const TPublicType &type, TVariable*& variable)
 {
     //
     // Don't check for reserved word use until after we know it's not in the symbol table,
@@ -873,7 +873,7 @@ bool TParseContext::arraySetMaxSize(TIntermSymbol *node, TType* type, int size, 
 //
 // Returns true if there was an error.
 //
-bool TParseContext::nonInitConstErrorCheck(int line, TString& identifier, TPublicType& type, bool array)
+bool TParseContext::nonInitConstErrorCheck(int line, const TString& identifier, TPublicType& type, bool array)
 {
     if (type.qualifier == EvqConst)
     {
@@ -905,7 +905,7 @@ bool TParseContext::nonInitConstErrorCheck(int line, TString& identifier, TPubli
 //
 // Returns true if there was an error.
 //
-bool TParseContext::nonInitErrorCheck(int line, TString& identifier, TPublicType& type, TVariable*& variable)
+bool TParseContext::nonInitErrorCheck(int line, const TString& identifier, const TPublicType& type, TVariable*& variable)
 {
     if (reservedErrorCheck(line, identifier))
         recover();
@@ -1023,7 +1023,7 @@ const TFunction* TParseContext::findFunction(int line, TFunction* call, int shad
 // Initializers show up in several places in the grammar.  Have one set of
 // code to handle them here.
 //
-bool TParseContext::executeInitializer(TSourceLoc line, TString& identifier, TPublicType& pType, 
+bool TParseContext::executeInitializer(TSourceLoc line, const TString& identifier, TPublicType& pType, 
                                        TIntermTyped* initializer, TIntermNode*& intermNode, TVariable* variable)
 {
     TType type = TType(pType);
@@ -1177,6 +1177,95 @@ TPublicType TParseContext::addFullySpecifiedType(TQualifier qualifier, const TPu
     }
 
     return returnType;
+}
+
+TIntermAggregate* TParseContext::parseSingleDeclaration(TPublicType &publicType, TSourceLoc identifierLocation, const TString &identifier)
+{
+    TIntermSymbol* symbol = intermediate.addSymbol(0, identifier, TType(publicType), identifierLocation);
+    TIntermAggregate* aggregate = intermediate.makeAggregate(symbol, identifierLocation);
+
+    if (identifier != "")
+    {
+        if (structQualifierErrorCheck(identifierLocation, publicType))
+            recover();
+
+        // this error check can mutate the type
+        if (nonInitConstErrorCheck(identifierLocation, identifier, publicType, false))
+            recover();
+
+        TVariable* variable = 0;
+
+        if (nonInitErrorCheck(identifierLocation, identifier, publicType, variable))
+            recover();
+
+        if (variable && symbol)
+        {
+            symbol->setId(variable->getUniqueId());
+        }
+    }
+
+    return aggregate;
+}
+
+TIntermAggregate* TParseContext::parseSingleArrayDeclaration(TPublicType &publicType, TSourceLoc identifierLocation, const TString &identifier, TSourceLoc indexLocation, TIntermTyped *indexExpression)
+{
+    if (structQualifierErrorCheck(identifierLocation, publicType))
+        recover();
+
+    // this error check can mutate the type
+    if (nonInitConstErrorCheck(identifierLocation, identifier, publicType, true))
+        recover();
+
+    if (arrayTypeErrorCheck(indexLocation, publicType) || arrayQualifierErrorCheck(indexLocation, publicType))
+    {
+        recover();
+    }
+
+    TPublicType arrayType = publicType;
+
+    int size;
+    if (arraySizeErrorCheck(identifierLocation, indexExpression, size))
+    {
+        recover();
+    }
+    else
+    {
+        arrayType.setArray(true, size);
+    }
+
+    TIntermSymbol* symbol = intermediate.addSymbol(0, identifier, TType(arrayType), identifierLocation);
+    TIntermAggregate* aggregate = intermediate.makeAggregate(symbol, identifierLocation);
+    TVariable* variable = 0;
+
+    if (arrayErrorCheck(identifierLocation, identifier, arrayType, variable))
+        recover();
+
+    if (variable && symbol)
+    {
+        symbol->setId(variable->getUniqueId());
+    }
+
+    return aggregate;
+}
+
+TIntermAggregate* TParseContext::parseSingleInitDeclaration(TPublicType &publicType, TSourceLoc identifierLocation, const TString &identifier, TSourceLoc initLocation, TIntermTyped *initializer)
+{
+    if (structQualifierErrorCheck(identifierLocation, publicType))
+        recover();
+
+    TIntermNode* intermNode;
+    if (!executeInitializer(identifierLocation, identifier, publicType, initializer, intermNode))
+    {
+        //
+        // Build intermediate representation
+        //
+        return intermNode ? intermediate.makeAggregate(intermNode, initLocation) : NULL;
+    }
+    else
+    {
+        recover();
+        return NULL;
+    }
 }
 
 TFunction *TParseContext::addConstructorFunc(TPublicType publicType)
