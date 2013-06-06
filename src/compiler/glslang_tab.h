@@ -178,8 +178,8 @@ typedef union YYSTYPE
             TQualifier qualifier;
             TFunction* function;
             TParameter param;
-            TType* field;
-            TTypeList* structure;
+            TField* field;
+            TFieldList* fieldList;
         };
     } interm;
 

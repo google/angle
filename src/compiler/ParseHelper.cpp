@@ -535,7 +535,7 @@ bool TParseContext::constructorErrorCheck(const TSourceLoc& line, TIntermNode* n
         return true;
     }
     
-    if (op == EOpConstructStruct && !type->isArray() && int(type->getStruct()->size()) != function.getParamCount()) {
+    if (op == EOpConstructStruct && !type->isArray() && int(type->getStruct()->fields().size()) != function.getParamCount()) {
         error(line, "Number of constructor parameters does not match the number of structure fields", "constructor");
         return true;
     }
@@ -658,9 +658,9 @@ bool TParseContext::containsSampler(TType& type)
         return true;
 
     if (type.getBasicType() == EbtStruct) {
-        TTypeList& structure = *type.getStruct();
-        for (unsigned int i = 0; i < structure.size(); ++i) {
-            if (containsSampler(*structure[i]))
+        const TFieldList& fields = type.getStruct()->fields();
+        for (unsigned int i = 0; i < fields.size(); ++i) {
+            if (containsSampler(*fields[i]->type()))
                 return true;
         }
     }
@@ -1063,9 +1063,9 @@ TIntermTyped* TParseContext::addConstructor(TIntermNode* node, const TType* type
 
     TIntermAggregate* aggrNode = node->getAsAggregate();
     
-    TTypeList::const_iterator memberTypes;
+    TFieldList::const_iterator memberFields;
     if (op == EOpConstructStruct)
-        memberTypes = type->getStruct()->begin();
+        memberFields = type->getStruct()->fields().begin();
     
     TType elementType = *type;
     if (type->isArray())
@@ -1087,7 +1087,7 @@ TIntermTyped* TParseContext::addConstructor(TIntermNode* node, const TType* type
         if (type->isArray())
             newNode = constructStruct(node, &elementType, 1, node->getLine(), false);
         else if (op == EOpConstructStruct)
-            newNode = constructStruct(node, *memberTypes, 1, node->getLine(), false);
+            newNode = constructStruct(node, (*memberFields)->type(), 1, node->getLine(), false);
         else
             newNode = constructBuiltIn(type, op, node, node->getLine(), false);
 
@@ -1118,7 +1118,7 @@ TIntermTyped* TParseContext::addConstructor(TIntermNode* node, const TType* type
         if (type->isArray())
             newNode = constructStruct(*p, &elementType, paramCount+1, node->getLine(), true);
         else if (op == EOpConstructStruct)
-            newNode = constructStruct(*p, memberTypes[paramCount], paramCount+1, node->getLine(), true);
+            newNode = constructStruct(*p, memberFields[paramCount]->type(), paramCount+1, node->getLine(), true);
         else
             newNode = constructBuiltIn(type, op, *p, node->getLine(), true);
         
@@ -1370,14 +1370,14 @@ TIntermTyped* TParseContext::addConstArrayNode(int index, TIntermTyped* node, co
 //
 TIntermTyped* TParseContext::addConstStruct(TString& identifier, TIntermTyped* node, const TSourceLoc& line)
 {
-    const TTypeList* fields = node->getType().getStruct();
+    const TFieldList& fields = node->getType().getStruct()->fields();
 
     size_t instanceSize = 0;
-    for (size_t index = 0; index < fields->size(); ++index) {
-        if ((*fields)[index]->getFieldName() == identifier) {
+    for (size_t index = 0; index < fields.size(); ++index) {
+        if (fields[index]->name() == identifier) {
             break;
         } else {
-            instanceSize += (*fields)[index]->getObjectSize();
+            instanceSize += fields[index]->type()->getObjectSize();
         }
     }
 
@@ -1423,21 +1423,21 @@ const int kWebGLMaxStructNesting = 4;
 
 }  // namespace
 
-bool TParseContext::structNestingErrorCheck(const TSourceLoc& line, const TType& fieldType)
+bool TParseContext::structNestingErrorCheck(const TSourceLoc& line, const TField& field)
 {
     if (!isWebGLBasedSpec(shaderSpec)) {
         return false;
     }
 
-    if (fieldType.getBasicType() != EbtStruct) {
+    if (field.type()->getBasicType() != EbtStruct) {
         return false;
     }
 
     // We're already inside a structure definition at this point, so add
     // one to the field's struct nesting.
-    if (1 + fieldType.getDeepestStructNesting() > kWebGLMaxStructNesting) {
+    if (1 + field.type()->getDeepestStructNesting() > kWebGLMaxStructNesting) {
         std::stringstream extraInfoStream;
-        extraInfoStream << "Reference of struct type " << fieldType.getTypeName() 
+        extraInfoStream << "Reference of struct type " << field.name()
                         << " exceeds maximum struct nesting of " << kWebGLMaxStructNesting;
         std::string extraInfo = extraInfoStream.str();
         error(line, "", "", extraInfo.c_str());

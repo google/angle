@@ -124,7 +124,7 @@ struct TParseContext {
     bool enterStructDeclaration(const TSourceLoc& line, const TString& identifier);
     void exitStructDeclaration();
 
-    bool structNestingErrorCheck(const TSourceLoc& line, const TType& fieldType);
+    bool structNestingErrorCheck(const TSourceLoc& line, const TField& field);
 };
 
 int PaParseStrings(size_t count, const char* const string[], const int length[],
