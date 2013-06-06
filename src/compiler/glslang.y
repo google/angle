@@ -1399,11 +1399,21 @@ storage_qualifier
     }
     | CENTROID IN_QUAL {
         ES3_ONLY("centroid in", $1.line, "storage qualifier");
+        if (context->shaderType == SH_VERTEX_SHADER)
+        {
+            context->error($1.line, "invalid storage qualifier", "it is an error to use 'centroid in' in the vertex shader");
+            context->recover();
+        }
         $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqCentroidIn : EvqVertexInput;
         $$.line = $1.line;
     }
     | CENTROID OUT_QUAL {
         ES3_ONLY("centroid out", $1.line, "storage qualifier");
+        if (context->shaderType == SH_FRAGMENT_SHADER)
+        {
+            context->error($1.line, "invalid storage qualifier", "it is an error to use 'centroid out' in the fragment shader");
+            context->recover();
+        }
         $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragmentOutput : EvqCentroidOut;
         $$.line = $1.line;
     }
