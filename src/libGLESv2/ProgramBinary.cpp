@@ -2398,6 +2398,7 @@ void ProgramBinary::defineUniformBlockMembers(const sh::ActiveUniforms &uniforms
     for (unsigned int uniformIndex = 0; uniformIndex < uniforms.size(); uniformIndex++)
     {
         const sh::Uniform &uniform = uniforms[uniformIndex];
+        const std::string &uniformName = (prefix.empty() ? uniform.name : prefix + "." + uniform.name);
 
         if (!uniform.fields.empty())
         {
@@ -2405,18 +2406,17 @@ void ProgramBinary::defineUniformBlockMembers(const sh::ActiveUniforms &uniforms
             {
                 for (unsigned int arrayElement = 0; arrayElement < uniform.arraySize; arrayElement++)
                 {
-                    const std::string uniformElementName = uniform.name + arrayString(arrayElement);
+                    const std::string uniformElementName = uniformName + arrayString(arrayElement);
                     defineUniformBlockMembers(uniform.fields, uniformElementName, blockIndex, blockInfoItr, blockUniformIndexes);
                 }
             }
             else
             {
-                defineUniformBlockMembers(uniform.fields, uniform.name, blockIndex, blockInfoItr, blockUniformIndexes);
+                defineUniformBlockMembers(uniform.fields, uniformName, blockIndex, blockInfoItr, blockUniformIndexes);
             }
         }
         else
         {
-            const std::string &uniformName = (prefix.empty() ? uniform.name : prefix + "." + uniform.name);
             Uniform *newUniform = new Uniform(uniform.type, uniform.precision, uniformName, uniform.arraySize,
                                               blockIndex, **blockInfoItr);
 
