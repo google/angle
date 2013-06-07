@@ -205,8 +205,8 @@ D3D11LoadFunctionMap buildD3D11LoadFunctionMap()
 
     //                      | Internal format      | Type                             | Load function                       |
     insertLoadFunction(&map, GL_RGBA8,              GL_UNSIGNED_BYTE,                  loadToNative<GLubyte, 4>             );
-    insertLoadFunction(&map, GL_RGB5_A1,            GL_UNSIGNED_BYTE,                  UnimplementedLoadFunction            );
-    insertLoadFunction(&map, GL_RGBA4,              GL_UNSIGNED_BYTE,                  UnimplementedLoadFunction            );
+    insertLoadFunction(&map, GL_RGB5_A1,            GL_UNSIGNED_BYTE,                  loadToNative<GLubyte, 4>             );
+    insertLoadFunction(&map, GL_RGBA4,              GL_UNSIGNED_BYTE,                  loadToNative<GLubyte, 4>             );
     insertLoadFunction(&map, GL_SRGB8_ALPHA8,       GL_UNSIGNED_BYTE,                  loadToNative<GLubyte, 4>             );
     insertLoadFunction(&map, GL_RGBA8_SNORM,        GL_BYTE,                           loadToNative<GLbyte, 4>              );
     insertLoadFunction(&map, GL_RGBA4,              GL_UNSIGNED_SHORT_4_4_4_4,         loadRGBA4444DataToRGBA               );
@@ -224,7 +224,7 @@ D3D11LoadFunctionMap buildD3D11LoadFunctionMap()
     insertLoadFunction(&map, GL_RGBA32I,            GL_INT,                            loadToNative<GLint, 4>               );
     insertLoadFunction(&map, GL_RGB10_A2UI,         GL_UNSIGNED_INT_2_10_10_10_REV,    loadToNative<GLuint, 1>              );
     insertLoadFunction(&map, GL_RGB8,               GL_UNSIGNED_BYTE,                  loadRGBUByteDataToRGBA               );
-    insertLoadFunction(&map, GL_RGB565,             GL_UNSIGNED_BYTE,                  UnimplementedLoadFunction            );
+    insertLoadFunction(&map, GL_RGB565,             GL_UNSIGNED_BYTE,                  loadToNative3To4<GLubyte, 0xFF>      );
     insertLoadFunction(&map, GL_SRGB8,              GL_UNSIGNED_BYTE,                  loadToNative3To4<GLubyte, 0xFF>      );
     insertLoadFunction(&map, GL_RGB8_SNORM,         GL_BYTE,                           loadRGBSByteDataToRGBA               );
     insertLoadFunction(&map, GL_RGB565,             GL_UNSIGNED_SHORT_5_6_5,           loadRGB565DataToRGBA                 );
@@ -307,9 +307,9 @@ D3D11LoadFunctionMap buildD3D11LoadFunctionMap()
 
     insertLoadFunction(&map, GL_BGRA8_EXT,              GL_UNSIGNED_BYTE,                  loadToNative<GLubyte, 4>         );
     insertLoadFunction(&map, GL_BGRA4_ANGLEX,           GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT, loadRGBA4444DataToRGBA           );
-    insertLoadFunction(&map, GL_BGRA4_ANGLEX,           GL_UNSIGNED_BYTE,                  UnimplementedLoadFunction        );
+    insertLoadFunction(&map, GL_BGRA4_ANGLEX,           GL_UNSIGNED_BYTE,                  loadToNative<GLubyte, 4>         );
     insertLoadFunction(&map, GL_BGR5_A1_ANGLEX,         GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT, loadRGBA5551DataToRGBA           );
-    insertLoadFunction(&map, GL_BGR5_A1_ANGLEX,         GL_UNSIGNED_BYTE,                  UnimplementedLoadFunction        );
+    insertLoadFunction(&map, GL_BGR5_A1_ANGLEX,         GL_UNSIGNED_BYTE,                  loadToNative<GLubyte, 4>         );
 
     // Compressed formats
     // From ES 3.0.1 spec, table 3.16
