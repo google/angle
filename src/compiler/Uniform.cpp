@@ -92,17 +92,15 @@ bool InterfaceBlock::getBlockLayoutInfo(const sh::Uniform &uniform, unsigned int
 {
     if (!uniform.fields.empty())
     {
-        if (uniform.arraySize > 0)
+        const unsigned int elementCount = std::max(1u, uniform.arraySize);
+
+        for (unsigned int elementIndex = 0; elementIndex < elementCount; elementIndex++)
         {
-            for (unsigned int arrayElement = 0; arrayElement < uniform.arraySize; arrayElement++)
-            {
-                getBlockLayoutInfo(uniform.fields, currentOffset);
-            }
-        }
-        else
-        {
+            // align struct to register size
+            *currentOffset = rx::roundUp(*currentOffset, 4u);
             getBlockLayoutInfo(uniform.fields, currentOffset);
         }
+
         return false;
     }
 
