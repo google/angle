@@ -4,6 +4,7 @@
 // found in the LICENSE file.
 //
 
+#include "compiler/builtin_symbol_table.h"
 #include "compiler/BuiltInFunctionEmulator.h"
 #include "compiler/DetectCallDepth.h"
 #include "compiler/ForLoopUnroll.h"
@@ -68,6 +69,7 @@ bool InitializeSymbolTable(
         }
     }
 
+    InsertBuiltInFunctionsCommon(resources, &symbolTable);
     IdentifyBuiltIns(type, spec, resources, symbolTable);
 
     return true;
@@ -132,6 +134,7 @@ bool TCompiler::Init(const ShBuiltInResources& resources)
     // Generate built-in symbol table.
     if (!InitBuiltInSymbolTable(resources))
         return false;
+
     InitExtensionBehavior(resources, extensionBehavior);
     fragmentPrecisionHigh = resources.FragmentPrecisionHigh == 1;
 

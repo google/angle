@@ -64,6 +64,8 @@
         'COMPILER_IMPLEMENTATION',
       ],
       'sources': [
+        'compiler/builtin_symbol_table.h',
+        'compiler/builtin_symbol_table.cpp',
         'compiler/BaseTypes.h',
         'compiler/BuiltInFunctionEmulator.cpp',
         'compiler/BuiltInFunctionEmulator.h',
