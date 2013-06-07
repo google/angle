@@ -185,6 +185,13 @@ static void UnimplementedLoadFunction(int width, int height, int depth,
     UNIMPLEMENTED();
 }
 
+static void UnreachableLoadFunction(int width, int height, int depth,
+                                    const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
+                                    void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch)
+{
+    UNREACHABLE();
+}
+
 // A helper function to insert data into the D3D11LoadFunctionMap with fewer characters.
 static inline void insertLoadFunction(D3D11LoadFunctionMap *map, GLint internalFormat, GLenum type,
                                       LoadImageFunction loadFunc)
@@ -266,14 +273,16 @@ D3D11LoadFunctionMap buildD3D11LoadFunctionMap()
     insertLoadFunction(&map, GL_DEPTH32F_STENCIL8,  GL_FLOAT_32_UNSIGNED_INT_24_8_REV, UnimplementedLoadFunction            );
 
     // Unsized formats
-    insertLoadFunction(&map, GL_RGBA,               GL_UNSIGNED_BYTE,                  UnimplementedLoadFunction            );
-    insertLoadFunction(&map, GL_RGBA,               GL_UNSIGNED_SHORT_4_4_4_4,         UnimplementedLoadFunction            );
-    insertLoadFunction(&map, GL_RGBA,               GL_UNSIGNED_SHORT_5_5_5_1,         UnimplementedLoadFunction            );
-    insertLoadFunction(&map, GL_RGB,                GL_UNSIGNED_BYTE,                  UnimplementedLoadFunction            );
-    insertLoadFunction(&map, GL_RGB,                GL_UNSIGNED_SHORT_5_6_5,           UnimplementedLoadFunction            );
-    insertLoadFunction(&map, GL_LUMINANCE_ALPHA,    GL_UNSIGNED_BYTE,                  UnimplementedLoadFunction            );
-    insertLoadFunction(&map, GL_LUMINANCE,          GL_UNSIGNED_BYTE,                  UnimplementedLoadFunction            );
-    insertLoadFunction(&map, GL_ALPHA,              GL_UNSIGNED_BYTE,                  UnimplementedLoadFunction            );
+    // Load functions are unreachable because they are converted to sized internal formats based on
+    // the format and type before loading takes place.
+    insertLoadFunction(&map, GL_RGBA,               GL_UNSIGNED_BYTE,                  UnreachableLoadFunction              );
+    insertLoadFunction(&map, GL_RGBA,               GL_UNSIGNED_SHORT_4_4_4_4,         UnreachableLoadFunction              );
+    insertLoadFunction(&map, GL_RGBA,               GL_UNSIGNED_SHORT_5_5_5_1,         UnreachableLoadFunction              );
+    insertLoadFunction(&map, GL_RGB,                GL_UNSIGNED_BYTE,                  UnreachableLoadFunction              );
+    insertLoadFunction(&map, GL_RGB,                GL_UNSIGNED_SHORT_5_6_5,           UnreachableLoadFunction              );
+    insertLoadFunction(&map, GL_LUMINANCE_ALPHA,    GL_UNSIGNED_BYTE,                  UnreachableLoadFunction              );
+    insertLoadFunction(&map, GL_LUMINANCE,          GL_UNSIGNED_BYTE,                  UnreachableLoadFunction              );
+    insertLoadFunction(&map, GL_ALPHA,              GL_UNSIGNED_BYTE,                  UnreachableLoadFunction              );
 
     // From GL_OES_texture_float
     insertLoadFunction(&map, GL_LUMINANCE_ALPHA,    GL_FLOAT,                          loadLuminanceAlphaFloatDataToRGBA    );
