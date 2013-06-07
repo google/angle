@@ -24,98 +24,98 @@ typedef std::pair<FormatTypePair, GLint> FormatPair;
 typedef std::map<FormatTypePair, GLint> FormatMap;
 
 // A helper function to insert data into the D3D11LoadFunctionMap with fewer characters.
-static inline void insertFormatMapping(FormatMap *map, GLenum format, GLenum type, GLint internalFormat)
+static inline void InsertFormatMapping(FormatMap *map, GLenum format, GLenum type, GLint internalFormat)
 {
     map->insert(FormatPair(FormatTypePair(format, type), internalFormat));
 }
 
-FormatMap buildES2FormatMap()
+FormatMap BuildES2FormatMap()
 {
     FormatMap map;
 
     //                       | Format                            | Type                             | Internal format                  |
-    insertFormatMapping(&map, GL_ALPHA,                           GL_UNSIGNED_BYTE,                  GL_ALPHA8_EXT                     );
-    insertFormatMapping(&map, GL_ALPHA,                           GL_FLOAT,                          GL_ALPHA32F_EXT                   );
-    insertFormatMapping(&map, GL_ALPHA,                           GL_HALF_FLOAT_OES,                 GL_ALPHA16F_EXT                   );
+    InsertFormatMapping(&map, GL_ALPHA,                           GL_UNSIGNED_BYTE,                  GL_ALPHA8_EXT                     );
+    InsertFormatMapping(&map, GL_ALPHA,                           GL_FLOAT,                          GL_ALPHA32F_EXT                   );
+    InsertFormatMapping(&map, GL_ALPHA,                           GL_HALF_FLOAT_OES,                 GL_ALPHA16F_EXT                   );
 
-    insertFormatMapping(&map, GL_LUMINANCE,                       GL_UNSIGNED_BYTE,                  GL_LUMINANCE8_EXT                 );
-    insertFormatMapping(&map, GL_LUMINANCE,                       GL_FLOAT,                          GL_LUMINANCE32F_EXT               );
-    insertFormatMapping(&map, GL_LUMINANCE,                       GL_HALF_FLOAT_OES,                 GL_LUMINANCE16F_EXT               );
+    InsertFormatMapping(&map, GL_LUMINANCE,                       GL_UNSIGNED_BYTE,                  GL_LUMINANCE8_EXT                 );
+    InsertFormatMapping(&map, GL_LUMINANCE,                       GL_FLOAT,                          GL_LUMINANCE32F_EXT               );
+    InsertFormatMapping(&map, GL_LUMINANCE,                       GL_HALF_FLOAT_OES,                 GL_LUMINANCE16F_EXT               );
 
-    insertFormatMapping(&map, GL_LUMINANCE_ALPHA,                 GL_UNSIGNED_BYTE,                  GL_LUMINANCE8_ALPHA8_EXT          );
-    insertFormatMapping(&map, GL_LUMINANCE_ALPHA,                 GL_FLOAT,                          GL_LUMINANCE_ALPHA32F_EXT         );
-    insertFormatMapping(&map, GL_LUMINANCE_ALPHA,                 GL_HALF_FLOAT_OES,                 GL_LUMINANCE_ALPHA16F_EXT         );
+    InsertFormatMapping(&map, GL_LUMINANCE_ALPHA,                 GL_UNSIGNED_BYTE,                  GL_LUMINANCE8_ALPHA8_EXT          );
+    InsertFormatMapping(&map, GL_LUMINANCE_ALPHA,                 GL_FLOAT,                          GL_LUMINANCE_ALPHA32F_EXT         );
+    InsertFormatMapping(&map, GL_LUMINANCE_ALPHA,                 GL_HALF_FLOAT_OES,                 GL_LUMINANCE_ALPHA16F_EXT         );
 
-    insertFormatMapping(&map, GL_RGB,                             GL_UNSIGNED_BYTE,                  GL_RGB8_OES                       );
-    insertFormatMapping(&map, GL_RGB,                             GL_UNSIGNED_SHORT_5_6_5,           GL_RGB565                         );
-    insertFormatMapping(&map, GL_RGB,                             GL_FLOAT,                          GL_RGB32F_EXT                     );
-    insertFormatMapping(&map, GL_RGB,                             GL_HALF_FLOAT_OES,                 GL_RGB16F_EXT                     );
+    InsertFormatMapping(&map, GL_RGB,                             GL_UNSIGNED_BYTE,                  GL_RGB8_OES                       );
+    InsertFormatMapping(&map, GL_RGB,                             GL_UNSIGNED_SHORT_5_6_5,           GL_RGB565                         );
+    InsertFormatMapping(&map, GL_RGB,                             GL_FLOAT,                          GL_RGB32F_EXT                     );
+    InsertFormatMapping(&map, GL_RGB,                             GL_HALF_FLOAT_OES,                 GL_RGB16F_EXT                     );
 
-    insertFormatMapping(&map, GL_RGBA,                            GL_UNSIGNED_BYTE,                  GL_RGBA8_OES                      );
-    insertFormatMapping(&map, GL_RGBA,                            GL_UNSIGNED_SHORT_4_4_4_4,         GL_RGBA4                          );
-    insertFormatMapping(&map, GL_RGBA,                            GL_UNSIGNED_SHORT_5_5_5_1,         GL_RGB5_A1                        );
-    insertFormatMapping(&map, GL_RGBA,                            GL_FLOAT,                          GL_RGBA32F_EXT                    );
-    insertFormatMapping(&map, GL_RGBA,                            GL_HALF_FLOAT_OES,                 GL_RGBA16F_EXT                    );
+    InsertFormatMapping(&map, GL_RGBA,                            GL_UNSIGNED_BYTE,                  GL_RGBA8_OES                      );
+    InsertFormatMapping(&map, GL_RGBA,                            GL_UNSIGNED_SHORT_4_4_4_4,         GL_RGBA4                          );
+    InsertFormatMapping(&map, GL_RGBA,                            GL_UNSIGNED_SHORT_5_5_5_1,         GL_RGB5_A1                        );
+    InsertFormatMapping(&map, GL_RGBA,                            GL_FLOAT,                          GL_RGBA32F_EXT                    );
+    InsertFormatMapping(&map, GL_RGBA,                            GL_HALF_FLOAT_OES,                 GL_RGBA16F_EXT                    );
 
-    insertFormatMapping(&map, GL_BGRA_EXT,                        GL_UNSIGNED_BYTE,                  GL_BGRA8_EXT                      );
-    insertFormatMapping(&map, GL_BGRA_EXT,                        GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT, GL_BGRA4_ANGLEX                   );
-    insertFormatMapping(&map, GL_BGRA_EXT,                        GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT, GL_BGR5_A1_ANGLEX                 );
+    InsertFormatMapping(&map, GL_BGRA_EXT,                        GL_UNSIGNED_BYTE,                  GL_BGRA8_EXT                      );
+    InsertFormatMapping(&map, GL_BGRA_EXT,                        GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT, GL_BGRA4_ANGLEX                   );
+    InsertFormatMapping(&map, GL_BGRA_EXT,                        GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT, GL_BGR5_A1_ANGLEX                 );
 
-    insertFormatMapping(&map, GL_COMPRESSED_RGB_S3TC_DXT1_EXT,    GL_UNSIGNED_BYTE,                  GL_COMPRESSED_RGB_S3TC_DXT1_EXT   );
-    insertFormatMapping(&map, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,   GL_UNSIGNED_BYTE,                  GL_COMPRESSED_RGBA_S3TC_DXT1_EXT  );
-    insertFormatMapping(&map, GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE, GL_UNSIGNED_BYTE,                  GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE);
-    insertFormatMapping(&map, GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE, GL_UNSIGNED_BYTE,                  GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE);
+    InsertFormatMapping(&map, GL_COMPRESSED_RGB_S3TC_DXT1_EXT,    GL_UNSIGNED_BYTE,                  GL_COMPRESSED_RGB_S3TC_DXT1_EXT   );
+    InsertFormatMapping(&map, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,   GL_UNSIGNED_BYTE,                  GL_COMPRESSED_RGBA_S3TC_DXT1_EXT  );
+    InsertFormatMapping(&map, GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE, GL_UNSIGNED_BYTE,                  GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE);
+    InsertFormatMapping(&map, GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE, GL_UNSIGNED_BYTE,                  GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE);
 
-    insertFormatMapping(&map, GL_DEPTH_COMPONENT,                 GL_UNSIGNED_SHORT,                 GL_DEPTH_COMPONENT16              );
-    insertFormatMapping(&map, GL_DEPTH_COMPONENT,                 GL_UNSIGNED_INT,                   GL_DEPTH_COMPONENT32_OES          );
+    InsertFormatMapping(&map, GL_DEPTH_COMPONENT,                 GL_UNSIGNED_SHORT,                 GL_DEPTH_COMPONENT16              );
+    InsertFormatMapping(&map, GL_DEPTH_COMPONENT,                 GL_UNSIGNED_INT,                   GL_DEPTH_COMPONENT32_OES          );
 
-    insertFormatMapping(&map, GL_DEPTH_STENCIL_OES,               GL_UNSIGNED_INT_24_8_OES,          GL_DEPTH24_STENCIL8_OES           );
+    InsertFormatMapping(&map, GL_DEPTH_STENCIL_OES,               GL_UNSIGNED_INT_24_8_OES,          GL_DEPTH24_STENCIL8_OES           );
 
     return map;
 }
 
-static const FormatMap &getES2FormatMap()
+static const FormatMap &GetES2FormatMap()
 {
-    static const FormatMap es2FormatMap = buildES2FormatMap();
+    static const FormatMap es2FormatMap = BuildES2FormatMap();
     return es2FormatMap;
 }
 
-FormatMap buildES3FormatMap()
+FormatMap BuildES3FormatMap()
 {
     FormatMap map;
 
     //                       | Format               | Type                             | Internal format         |
-    insertFormatMapping(&map, GL_RGBA,               GL_UNSIGNED_BYTE,                  GL_RGBA8                 );
-    insertFormatMapping(&map, GL_RGBA,               GL_UNSIGNED_SHORT_4_4_4_4,         GL_RGBA4                 );
-    insertFormatMapping(&map, GL_RGBA,               GL_UNSIGNED_SHORT_5_5_5_1,         GL_RGB5_A1               );
-    insertFormatMapping(&map, GL_RGBA,               GL_FLOAT,                          GL_RGBA32F               );
-    insertFormatMapping(&map, GL_RGBA,               GL_HALF_FLOAT,                     GL_RGBA16F               );
+    InsertFormatMapping(&map, GL_RGBA,               GL_UNSIGNED_BYTE,                  GL_RGBA8                 );
+    InsertFormatMapping(&map, GL_RGBA,               GL_UNSIGNED_SHORT_4_4_4_4,         GL_RGBA4                 );
+    InsertFormatMapping(&map, GL_RGBA,               GL_UNSIGNED_SHORT_5_5_5_1,         GL_RGB5_A1               );
+    InsertFormatMapping(&map, GL_RGBA,               GL_FLOAT,                          GL_RGBA32F               );
+    InsertFormatMapping(&map, GL_RGBA,               GL_HALF_FLOAT,                     GL_RGBA16F               );
 
-    insertFormatMapping(&map, GL_RGB,                GL_UNSIGNED_BYTE,                  GL_RGB8                  );
-    insertFormatMapping(&map, GL_RGB,                GL_UNSIGNED_SHORT_5_6_5,           GL_RGB565                );
-    insertFormatMapping(&map, GL_RGB,                GL_FLOAT,                          GL_RGB32F                );
-    insertFormatMapping(&map, GL_RGB,                GL_HALF_FLOAT,                     GL_RGB16F                );
+    InsertFormatMapping(&map, GL_RGB,                GL_UNSIGNED_BYTE,                  GL_RGB8                  );
+    InsertFormatMapping(&map, GL_RGB,                GL_UNSIGNED_SHORT_5_6_5,           GL_RGB565                );
+    InsertFormatMapping(&map, GL_RGB,                GL_FLOAT,                          GL_RGB32F                );
+    InsertFormatMapping(&map, GL_RGB,                GL_HALF_FLOAT,                     GL_RGB16F                );
 
-    insertFormatMapping(&map, GL_LUMINANCE_ALPHA,    GL_UNSIGNED_BYTE,                  GL_LUMINANCE8_ALPHA8_EXT );
-    insertFormatMapping(&map, GL_LUMINANCE,          GL_UNSIGNED_BYTE,                  GL_LUMINANCE8_EXT        );
-    insertFormatMapping(&map, GL_ALPHA,              GL_UNSIGNED_BYTE,                  GL_ALPHA8_EXT            );
-    insertFormatMapping(&map, GL_LUMINANCE_ALPHA,    GL_FLOAT,                          GL_LUMINANCE_ALPHA32F_EXT);
-    insertFormatMapping(&map, GL_LUMINANCE,          GL_FLOAT,                          GL_LUMINANCE32F_EXT      );
-    insertFormatMapping(&map, GL_ALPHA,              GL_FLOAT,                          GL_ALPHA32F_EXT          );
-    insertFormatMapping(&map, GL_LUMINANCE_ALPHA,    GL_HALF_FLOAT,                     GL_LUMINANCE_ALPHA16F_EXT);
-    insertFormatMapping(&map, GL_LUMINANCE,          GL_HALF_FLOAT,                     GL_LUMINANCE16F_EXT      );
-    insertFormatMapping(&map, GL_ALPHA,              GL_HALF_FLOAT,                     GL_ALPHA16F_EXT          );
+    InsertFormatMapping(&map, GL_LUMINANCE_ALPHA,    GL_UNSIGNED_BYTE,                  GL_LUMINANCE8_ALPHA8_EXT );
+    InsertFormatMapping(&map, GL_LUMINANCE,          GL_UNSIGNED_BYTE,                  GL_LUMINANCE8_EXT        );
+    InsertFormatMapping(&map, GL_ALPHA,              GL_UNSIGNED_BYTE,                  GL_ALPHA8_EXT            );
+    InsertFormatMapping(&map, GL_LUMINANCE_ALPHA,    GL_FLOAT,                          GL_LUMINANCE_ALPHA32F_EXT);
+    InsertFormatMapping(&map, GL_LUMINANCE,          GL_FLOAT,                          GL_LUMINANCE32F_EXT      );
+    InsertFormatMapping(&map, GL_ALPHA,              GL_FLOAT,                          GL_ALPHA32F_EXT          );
+    InsertFormatMapping(&map, GL_LUMINANCE_ALPHA,    GL_HALF_FLOAT,                     GL_LUMINANCE_ALPHA16F_EXT);
+    InsertFormatMapping(&map, GL_LUMINANCE,          GL_HALF_FLOAT,                     GL_LUMINANCE16F_EXT      );
+    InsertFormatMapping(&map, GL_ALPHA,              GL_HALF_FLOAT,                     GL_ALPHA16F_EXT          );
 
-    insertFormatMapping(&map, GL_BGRA_EXT,           GL_UNSIGNED_BYTE,                  GL_BGRA8_EXT             );
-    insertFormatMapping(&map, GL_BGRA_EXT,           GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT, GL_BGRA4_ANGLEX          );
-    insertFormatMapping(&map, GL_BGRA_EXT,           GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT, GL_BGR5_A1_ANGLEX        );
+    InsertFormatMapping(&map, GL_BGRA_EXT,           GL_UNSIGNED_BYTE,                  GL_BGRA8_EXT             );
+    InsertFormatMapping(&map, GL_BGRA_EXT,           GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT, GL_BGRA4_ANGLEX          );
+    InsertFormatMapping(&map, GL_BGRA_EXT,           GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT, GL_BGR5_A1_ANGLEX        );
 
-    insertFormatMapping(&map, GL_DEPTH_COMPONENT,    GL_UNSIGNED_SHORT,                 GL_DEPTH_COMPONENT16     );
-    insertFormatMapping(&map, GL_DEPTH_COMPONENT,    GL_UNSIGNED_INT,                   GL_DEPTH_COMPONENT24     );
-    insertFormatMapping(&map, GL_DEPTH_COMPONENT,    GL_FLOAT,                          GL_DEPTH_COMPONENT32F    );
+    InsertFormatMapping(&map, GL_DEPTH_COMPONENT,    GL_UNSIGNED_SHORT,                 GL_DEPTH_COMPONENT16     );
+    InsertFormatMapping(&map, GL_DEPTH_COMPONENT,    GL_UNSIGNED_INT,                   GL_DEPTH_COMPONENT24     );
+    InsertFormatMapping(&map, GL_DEPTH_COMPONENT,    GL_FLOAT,                          GL_DEPTH_COMPONENT32F    );
 
-    insertFormatMapping(&map, GL_DEPTH_STENCIL,      GL_UNSIGNED_INT_24_8,              GL_DEPTH24_STENCIL8      );
-    insertFormatMapping(&map, GL_DEPTH_STENCIL,      GL_FLOAT_32_UNSIGNED_INT_24_8_REV, GL_DEPTH32F_STENCIL8     );
+    InsertFormatMapping(&map, GL_DEPTH_STENCIL,      GL_UNSIGNED_INT_24_8,              GL_DEPTH24_STENCIL8      );
+    InsertFormatMapping(&map, GL_DEPTH_STENCIL,      GL_FLOAT_32_UNSIGNED_INT_24_8_REV, GL_DEPTH32F_STENCIL8     );
 
     return map;
 }
@@ -138,7 +138,7 @@ struct FormatInfo
 // ES3 has a specific set of permutations of internal formats, formats and types which are acceptable.
 typedef std::set<FormatInfo> ES3FormatSet;
 
-ES3FormatSet buildES3FormatSet()
+ES3FormatSet BuildES3FormatSet()
 {
     ES3FormatSet set;
 
@@ -288,9 +288,9 @@ ES3FormatSet buildES3FormatSet()
     return set;
 }
 
-static const ES3FormatSet &getES3FormatSet()
+static const ES3FormatSet &GetES3FormatSet()
 {
-    static const ES3FormatSet es3FormatSet = buildES3FormatSet();
+    static const ES3FormatSet es3FormatSet = BuildES3FormatSet();
     return es3FormatSet;
 }
 
@@ -315,7 +315,7 @@ struct TypeInfo
 typedef std::pair<GLenum, TypeInfo> TypeInfoPair;
 typedef std::map<GLenum, TypeInfo> TypeInfoMap;
 
-static TypeInfoMap buildTypeInfoMap()
+static TypeInfoMap BuildTypeInfoMap()
 {
     TypeInfoMap map;
 
@@ -342,9 +342,9 @@ static TypeInfoMap buildTypeInfoMap()
     return map;
 }
 
-static bool getTypeInfo(GLenum type, TypeInfo *outTypeInfo)
+static bool GetTypeInfo(GLenum type, TypeInfo *outTypeInfo)
 {
-    static const TypeInfoMap infoMap = buildTypeInfoMap();
+    static const TypeInfoMap infoMap = BuildTypeInfoMap();
     TypeInfoMap::const_iterator iter = infoMap.find(type);
     if (iter != infoMap.end())
     {
@@ -571,7 +571,7 @@ struct InternalFormatInfo
 typedef std::pair<GLuint, InternalFormatInfo> InternalFormatInfoPair;
 typedef std::map<GLuint, InternalFormatInfo> InternalFormatInfoMap;
 
-static InternalFormatInfoMap buildES3InternalFormatInfoMap()
+static InternalFormatInfoMap BuildES3InternalFormatInfoMap()
 {
     InternalFormatInfoMap map;
 
@@ -699,7 +699,7 @@ static InternalFormatInfoMap buildES3InternalFormatInfoMap()
     return map;
 }
 
-static InternalFormatInfoMap buildES2InternalFormatInfoMap()
+static InternalFormatInfoMap BuildES2InternalFormatInfoMap()
 {
     InternalFormatInfoMap map;
 
@@ -775,18 +775,18 @@ static InternalFormatInfoMap buildES2InternalFormatInfoMap()
     return map;
 }
 
-static bool getInternalFormatInfo(GLint internalFormat, GLuint clientVersion, InternalFormatInfo *outFormatInfo)
+static bool GetInternalFormatInfo(GLint internalFormat, GLuint clientVersion, InternalFormatInfo *outFormatInfo)
 {
     const InternalFormatInfoMap* map = NULL;
 
     if (clientVersion == 2)
     {
-        static const InternalFormatInfoMap formatMap = buildES2InternalFormatInfoMap();
+        static const InternalFormatInfoMap formatMap = BuildES2InternalFormatInfoMap();
         map = &formatMap;
     }
     else if (clientVersion == 3)
     {
-        static const InternalFormatInfoMap formatMap = buildES3InternalFormatInfoMap();
+        static const InternalFormatInfoMap formatMap = BuildES3InternalFormatInfoMap();
         map = &formatMap;
     }
     else
@@ -811,9 +811,9 @@ static bool getInternalFormatInfo(GLint internalFormat, GLuint clientVersion, In
 
 typedef std::set<GLenum> FormatSet;
 
-static FormatSet buildES2ValidFormatSet()
+static FormatSet BuildES2ValidFormatSet()
 {
-    static const FormatMap &formatMap = getES2FormatMap();
+    static const FormatMap &formatMap = GetES2FormatMap();
 
     FormatSet set;
 
@@ -826,9 +826,9 @@ static FormatSet buildES2ValidFormatSet()
     return set;
 }
 
-static FormatSet buildES3ValidFormatSet()
+static FormatSet BuildES3ValidFormatSet()
 {
-    static const ES3FormatSet &formatSet = getES3FormatSet();
+    static const ES3FormatSet &formatSet = GetES3FormatSet();
 
     FormatSet set;
 
@@ -843,9 +843,9 @@ static FormatSet buildES3ValidFormatSet()
 
 typedef std::set<GLenum> TypeSet;
 
-static TypeSet buildES2ValidTypeSet()
+static TypeSet BuildES2ValidTypeSet()
 {
-    static const FormatMap &formatMap = getES2FormatMap();
+    static const FormatMap &formatMap = GetES2FormatMap();
 
     TypeSet set;
 
@@ -858,9 +858,9 @@ static TypeSet buildES2ValidTypeSet()
     return set;
 }
 
-static TypeSet buildES3ValidTypeSet()
+static TypeSet BuildES3ValidTypeSet()
 {
-    static const ES3FormatSet &formatSet = getES3FormatSet();
+    static const ES3FormatSet &formatSet = GetES3FormatSet();
 
     TypeSet set;
 
@@ -889,7 +889,7 @@ struct CopyConversion
 
 typedef std::set<CopyConversion> CopyConversionSet;
 
-static CopyConversionSet buildValidES3CopyTexImageCombinations()
+static CopyConversionSet BuildValidES3CopyTexImageCombinations()
 {
     CopyConversionSet set;
 
@@ -933,7 +933,7 @@ bool IsValidInternalFormat(GLint internalFormat, const Context *context)
     }
 
     InternalFormatInfo internalFormatInfo;
-    if (getInternalFormatInfo(internalFormat, context->getClientVersion(), &internalFormatInfo))
+    if (GetInternalFormatInfo(internalFormat, context->getClientVersion(), &internalFormatInfo))
     {
         ASSERT(internalFormatInfo.mSupportFunction != NULL);
         return internalFormatInfo.mSupportFunction(context);
@@ -948,12 +948,12 @@ bool IsValidFormat(GLenum format, GLuint clientVersion)
 {
     if (clientVersion == 2)
     {
-        static const FormatSet formatSet = buildES2ValidFormatSet();
+        static const FormatSet formatSet = BuildES2ValidFormatSet();
         return formatSet.find(format) != formatSet.end();
     }
     else if (clientVersion == 3)
     {
-        static const FormatSet formatSet = buildES3ValidFormatSet();
+        static const FormatSet formatSet = BuildES3ValidFormatSet();
         return formatSet.find(format) != formatSet.end();
     }
     else
@@ -967,12 +967,12 @@ bool IsValidType(GLenum type, GLuint clientVersion)
 {
     if (clientVersion == 2)
     {
-        static const TypeSet typeSet = buildES2ValidTypeSet();
+        static const TypeSet typeSet = BuildES2ValidTypeSet();
         return typeSet.find(type) != typeSet.end();
     }
     else if (clientVersion == 3)
     {
-        static const TypeSet typeSet = buildES3ValidTypeSet();
+        static const TypeSet typeSet = BuildES3ValidTypeSet();
         return typeSet.find(type) != typeSet.end();
     }
     else
@@ -986,14 +986,14 @@ bool IsValidFormatCombination(GLint internalFormat, GLenum format, GLenum type, 
 {
     if (clientVersion == 2)
     {
-        static const FormatMap &formats = getES2FormatMap();
+        static const FormatMap &formats = GetES2FormatMap();
         FormatMap::const_iterator iter = formats.find(FormatTypePair(format, type));
 
         return (iter != formats.end()) && ((internalFormat == (GLint)type) || (internalFormat == iter->second));
     }
     else if (clientVersion == 3)
     {
-        static const ES3FormatSet &formats = getES3FormatSet();
+        static const ES3FormatSet &formats = GetES3FormatSet();
         return formats.find(FormatInfo(internalFormat, format, type)) != formats.end();
     }
     else
@@ -1007,8 +1007,8 @@ bool IsValidCopyTexImageCombination(GLenum textureInternalFormat, GLenum frameBu
 {
     InternalFormatInfo textureInternalFormatInfo;
     InternalFormatInfo framebufferInternalFormatInfo;
-    if (getInternalFormatInfo(textureInternalFormat, clientVersion, &textureInternalFormatInfo) &&
-        getInternalFormatInfo(frameBufferInternalFormat, clientVersion, &framebufferInternalFormatInfo))
+    if (GetInternalFormatInfo(textureInternalFormat, clientVersion, &textureInternalFormatInfo) &&
+        GetInternalFormatInfo(frameBufferInternalFormat, clientVersion, &framebufferInternalFormatInfo))
     {
         if (clientVersion == 2)
         {
@@ -1017,7 +1017,7 @@ bool IsValidCopyTexImageCombination(GLenum textureInternalFormat, GLenum frameBu
         }
         else if (clientVersion == 3)
         {
-            static const CopyConversionSet conversionSet = buildValidES3CopyTexImageCombinations();
+            static const CopyConversionSet conversionSet = BuildValidES3CopyTexImageCombinations();
             const CopyConversion conversion = CopyConversion(textureInternalFormatInfo.mFormat,
                                                              framebufferInternalFormatInfo.mFormat);
             if (conversionSet.find(conversion) != conversionSet.end())
@@ -1062,7 +1062,7 @@ bool IsValidCopyTexImageCombination(GLenum textureInternalFormat, GLenum frameBu
 bool IsSizedInternalFormat(GLint internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
-    if (getInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
+    if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
     {
         return internalFormatInfo.mPixelBits > 0;
     }
@@ -1077,13 +1077,13 @@ GLint GetSizedInternalFormat(GLenum format, GLenum type, GLuint clientVersion)
 {
     if (clientVersion == 2)
     {
-        static const FormatMap &formats = getES2FormatMap();
+        static const FormatMap &formats = GetES2FormatMap();
         FormatMap::const_iterator iter = formats.find(FormatTypePair(format, type));
         return (iter != formats.end()) ? iter->second : GL_NONE;
     }
     else if (clientVersion == 3)
     {
-        static const FormatMap formats = buildES3FormatMap();
+        static const FormatMap formats = BuildES3FormatMap();
         FormatMap::const_iterator iter = formats.find(FormatTypePair(format, type));
         return (iter != formats.end()) ? iter->second : GL_NONE;
     }
@@ -1097,7 +1097,7 @@ GLint GetSizedInternalFormat(GLenum format, GLenum type, GLuint clientVersion)
 GLuint GetPixelBytes(GLint internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
-    if (getInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
+    if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
     {
         return internalFormatInfo.mPixelBits / 8;
     }
@@ -1111,7 +1111,7 @@ GLuint GetPixelBytes(GLint internalFormat, GLuint clientVersion)
 GLuint GetAlphaBits(GLint internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
-    if (getInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
+    if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
     {
         return internalFormatInfo.mAlphaBits;
     }
@@ -1125,7 +1125,7 @@ GLuint GetAlphaBits(GLint internalFormat, GLuint clientVersion)
 GLuint GetRedBits(GLint internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
-    if (getInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
+    if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
     {
         return internalFormatInfo.mRedBits;
     }
@@ -1139,7 +1139,7 @@ GLuint GetRedBits(GLint internalFormat, GLuint clientVersion)
 GLuint GetGreenBits(GLint internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
-    if (getInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
+    if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
     {
         return internalFormatInfo.mGreenBits;
     }
@@ -1153,7 +1153,7 @@ GLuint GetGreenBits(GLint internalFormat, GLuint clientVersion)
 GLuint GetBlueBits(GLint internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
-    if (getInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
+    if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
     {
         return internalFormatInfo.mGreenBits;
     }
@@ -1167,7 +1167,7 @@ GLuint GetBlueBits(GLint internalFormat, GLuint clientVersion)
 GLuint GetLuminanceBits(GLint internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
-    if (getInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
+    if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
     {
         return internalFormatInfo.mLuminanceBits;
     }
@@ -1181,7 +1181,7 @@ GLuint GetLuminanceBits(GLint internalFormat, GLuint clientVersion)
 GLuint GetDepthBits(GLint internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
-    if (getInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
+    if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
     {
         return internalFormatInfo.mDepthBits;
     }
@@ -1195,7 +1195,7 @@ GLuint GetDepthBits(GLint internalFormat, GLuint clientVersion)
 GLuint GetStencilBits(GLint internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
-    if (getInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
+    if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
     {
         return internalFormatInfo.mStencilBits;
     }
@@ -1209,7 +1209,7 @@ GLuint GetStencilBits(GLint internalFormat, GLuint clientVersion)
 GLenum GetFormat(GLint internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
-    if (getInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
+    if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
     {
         return internalFormatInfo.mFormat;
     }
@@ -1223,7 +1223,7 @@ GLenum GetFormat(GLint internalFormat, GLuint clientVersion)
 GLenum GetType(GLint internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
-    if (getInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
+    if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
     {
         return internalFormatInfo.mType;
     }
@@ -1237,7 +1237,7 @@ GLenum GetType(GLint internalFormat, GLuint clientVersion)
 bool IsNormalizedFixedPointFormat(GLint internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
-    if (getInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
+    if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
     {
         return internalFormatInfo.mStorageType == NormalizedFixedPoint;
     }
@@ -1251,7 +1251,7 @@ bool IsNormalizedFixedPointFormat(GLint internalFormat, GLuint clientVersion)
 bool IsIntegerFormat(GLint internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
-    if (getInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
+    if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
     {
         return internalFormatInfo.mStorageType == UnsignedInteger ||
                internalFormatInfo.mStorageType == SignedInteger;
@@ -1266,7 +1266,7 @@ bool IsIntegerFormat(GLint internalFormat, GLuint clientVersion)
 bool IsSignedIntegerFormat(GLint internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
-    if (getInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
+    if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
     {
         return internalFormatInfo.mStorageType == SignedInteger;
     }
@@ -1280,7 +1280,7 @@ bool IsSignedIntegerFormat(GLint internalFormat, GLuint clientVersion)
 bool IsUnsignedIntegerFormat(GLint internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
-    if (getInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
+    if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
     {
         return internalFormatInfo.mStorageType == UnsignedInteger;
     }
@@ -1294,7 +1294,7 @@ bool IsUnsignedIntegerFormat(GLint internalFormat, GLuint clientVersion)
 bool IsFloatingPointFormat(GLint internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
-    if (getInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
+    if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
     {
         return internalFormatInfo.mStorageType == FloatingPoint;
     }
@@ -1308,7 +1308,7 @@ bool IsFloatingPointFormat(GLint internalFormat, GLuint clientVersion)
 bool IsSRGBFormat(GLint internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
-    if (getInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
+    if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
     {
         return internalFormatInfo.mIsSRGB;
     }
@@ -1322,7 +1322,7 @@ bool IsSRGBFormat(GLint internalFormat, GLuint clientVersion)
 bool IsColorRenderingSupported(GLint internalFormat, const rx::Renderer *renderer)
 {
     InternalFormatInfo internalFormatInfo;
-    if (renderer && getInternalFormatInfo(internalFormat, renderer->getCurrentClientVersion(), &internalFormatInfo))
+    if (renderer && GetInternalFormatInfo(internalFormat, renderer->getCurrentClientVersion(), &internalFormatInfo))
     {
         return internalFormatInfo.mIsColorRenderable(NULL, renderer);
     }
@@ -1336,7 +1336,7 @@ bool IsColorRenderingSupported(GLint internalFormat, const rx::Renderer *rendere
 bool IsColorRenderingSupported(GLint internalFormat, const Context *context)
 {
     InternalFormatInfo internalFormatInfo;
-    if (context && getInternalFormatInfo(internalFormat, context->getClientVersion(), &internalFormatInfo))
+    if (context && GetInternalFormatInfo(internalFormat, context->getClientVersion(), &internalFormatInfo))
     {
         return internalFormatInfo.mIsColorRenderable(context, NULL);
     }
@@ -1350,7 +1350,7 @@ bool IsColorRenderingSupported(GLint internalFormat, const Context *context)
 bool IsTextureFilteringSupported(GLint internalFormat, const rx::Renderer *renderer)
 {
     InternalFormatInfo internalFormatInfo;
-    if (renderer && getInternalFormatInfo(internalFormat, renderer->getCurrentClientVersion(), &internalFormatInfo))
+    if (renderer && GetInternalFormatInfo(internalFormat, renderer->getCurrentClientVersion(), &internalFormatInfo))
     {
         return internalFormatInfo.mIsTextureFilterable(NULL, renderer);
     }
@@ -1364,7 +1364,7 @@ bool IsTextureFilteringSupported(GLint internalFormat, const rx::Renderer *rende
 bool IsTextureFilteringSupported(GLint internalFormat, const Context *context)
 {
     InternalFormatInfo internalFormatInfo;
-    if (context && getInternalFormatInfo(internalFormat, context->getClientVersion(), &internalFormatInfo))
+    if (context && GetInternalFormatInfo(internalFormat, context->getClientVersion(), &internalFormatInfo))
     {
         return internalFormatInfo.mIsTextureFilterable(context, NULL);
     }
@@ -1378,7 +1378,7 @@ bool IsTextureFilteringSupported(GLint internalFormat, const Context *context)
 bool IsDepthRenderingSupported(GLint internalFormat, const rx::Renderer *renderer)
 {
     InternalFormatInfo internalFormatInfo;
-    if (renderer && getInternalFormatInfo(internalFormat, renderer->getCurrentClientVersion(), &internalFormatInfo))
+    if (renderer && GetInternalFormatInfo(internalFormat, renderer->getCurrentClientVersion(), &internalFormatInfo))
     {
         return internalFormatInfo.mIsDepthRenderable(NULL, renderer);
     }
@@ -1392,7 +1392,7 @@ bool IsDepthRenderingSupported(GLint internalFormat, const rx::Renderer *rendere
 bool IsDepthRenderingSupported(GLint internalFormat, const Context *context)
 {
     InternalFormatInfo internalFormatInfo;
-    if (context && getInternalFormatInfo(internalFormat, context->getClientVersion(), &internalFormatInfo))
+    if (context && GetInternalFormatInfo(internalFormat, context->getClientVersion(), &internalFormatInfo))
     {
         return internalFormatInfo.mIsDepthRenderable(context, NULL);
     }
@@ -1406,7 +1406,7 @@ bool IsDepthRenderingSupported(GLint internalFormat, const Context *context)
 bool IsStencilRenderingSupported(GLint internalFormat, const rx::Renderer *renderer)
 {
     InternalFormatInfo internalFormatInfo;
-    if (renderer && getInternalFormatInfo(internalFormat, renderer->getCurrentClientVersion(), &internalFormatInfo))
+    if (renderer && GetInternalFormatInfo(internalFormat, renderer->getCurrentClientVersion(), &internalFormatInfo))
     {
         return internalFormatInfo.mIsStencilRenderable(NULL, renderer);
     }
@@ -1420,7 +1420,7 @@ bool IsStencilRenderingSupported(GLint internalFormat, const rx::Renderer *rende
 bool IsStencilRenderingSupported(GLint internalFormat, const Context *context)
 {
     InternalFormatInfo internalFormatInfo;
-    if (context && getInternalFormatInfo(internalFormat, context->getClientVersion(), &internalFormatInfo))
+    if (context && GetInternalFormatInfo(internalFormat, context->getClientVersion(), &internalFormatInfo))
     {
         return internalFormatInfo.mIsStencilRenderable(context, NULL);
     }
@@ -1445,7 +1445,7 @@ GLuint GetDepthPitch(GLint internalFormat, GLenum type, GLuint clientVersion, GL
 GLuint GetBlockSize(GLint internalFormat, GLenum type, GLuint clientVersion, GLsizei width, GLsizei height)
 {
     InternalFormatInfo internalFormatInfo;
-    if (getInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
+    if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
     {
         if (internalFormatInfo.mStorageType == Compressed)
         {
@@ -1457,7 +1457,7 @@ GLuint GetBlockSize(GLint internalFormat, GLenum type, GLuint clientVersion, GLs
         else
         {
             TypeInfo typeInfo;
-            if (getTypeInfo(type, &typeInfo))
+            if (GetTypeInfo(type, &typeInfo))
             {
                 if (typeInfo.mSpecialInterpretation)
                 {
@@ -1485,7 +1485,7 @@ GLuint GetBlockSize(GLint internalFormat, GLenum type, GLuint clientVersion, GLs
 bool IsFormatCompressed(GLint internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
-    if (getInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
+    if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
     {
         return internalFormatInfo.mStorageType == Compressed;
     }
@@ -1499,7 +1499,7 @@ bool IsFormatCompressed(GLint internalFormat, GLuint clientVersion)
 GLuint GetCompressedBlockWidth(GLint internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
-    if (getInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
+    if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
     {
         return internalFormatInfo.mCompressedBlockWidth;
     }
@@ -1513,7 +1513,7 @@ GLuint GetCompressedBlockWidth(GLint internalFormat, GLuint clientVersion)
 GLuint GetCompressedBlockHeight(GLint internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;
-    if (getInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
+    if (GetInternalFormatInfo(internalFormat, clientVersion, &internalFormatInfo))
     {
         return internalFormatInfo.mCompressedBlockHeight;
     }

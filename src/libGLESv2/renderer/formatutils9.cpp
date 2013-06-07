@@ -85,7 +85,7 @@ const D3DFORMAT D3DFMT_NULL = ((D3DFORMAT)(MAKEFOURCC('N','U','L','L')));
 typedef std::pair<GLint, D3D9FormatInfo> D3D9FormatPair;
 typedef std::map<GLint, D3D9FormatInfo> D3D9FormatMap;
 
-static D3D9FormatMap buildD3D9FormatMap()
+static D3D9FormatMap BuildD3D9FormatMap()
 {
     D3D9FormatMap map;
 
@@ -134,9 +134,9 @@ static D3D9FormatMap buildD3D9FormatMap()
     return map;
 }
 
-static bool getD3D9FormatInfo(GLint internalFormat, D3D9FormatInfo *outFormatInfo)
+static bool GetD3D9FormatInfo(GLint internalFormat, D3D9FormatInfo *outFormatInfo)
 {
-    static const D3D9FormatMap formatMap = buildD3D9FormatMap();
+    static const D3D9FormatMap formatMap = BuildD3D9FormatMap();
     D3D9FormatMap::const_iterator iter = formatMap.find(internalFormat);
     if (iter != formatMap.end())
     {
@@ -176,7 +176,7 @@ struct D3DFormatInfo
 typedef std::pair<D3DFORMAT, D3DFormatInfo> D3D9FormatInfoPair;
 typedef std::map<D3DFORMAT, D3DFormatInfo> D3D9FormatInfoMap;
 
-static D3D9FormatInfoMap buildD3D9FormatInfoMap()
+static D3D9FormatInfoMap BuildD3D9FormatInfoMap()
 {
     D3D9FormatInfoMap map;
 
@@ -211,11 +211,11 @@ static D3D9FormatInfoMap buildD3D9FormatInfoMap()
 
 static const D3D9FormatInfoMap &GetD3D9FormatInfoMap()
 {
-    static const D3D9FormatInfoMap infoMap = buildD3D9FormatInfoMap();
+    static const D3D9FormatInfoMap infoMap = BuildD3D9FormatInfoMap();
     return infoMap;
 }
 
-static bool getD3D9FormatInfo(D3DFORMAT format, D3DFormatInfo *outFormatInfo)
+static bool GetD3D9FormatInfo(D3DFORMAT format, D3DFormatInfo *outFormatInfo)
 {
     const D3D9FormatInfoMap &infoMap = GetD3D9FormatInfoMap();
     D3D9FormatInfoMap::const_iterator iter = infoMap.find(format);
@@ -251,7 +251,7 @@ namespace d3d9
 MipGenerationFunction GetMipGenerationFunction(D3DFORMAT format)
 {
     D3DFormatInfo d3dFormatInfo;
-    if (getD3D9FormatInfo(format, &d3dFormatInfo))
+    if (GetD3D9FormatInfo(format, &d3dFormatInfo))
     {
         return d3dFormatInfo.mMipGenerationFunction;
     }
@@ -272,7 +272,7 @@ LoadImageFunction GetImageLoadFunction(GLint internalFormat, const Renderer9 *re
     ASSERT(renderer->getCurrentClientVersion() == 2);
 
     D3D9FormatInfo d3d9FormatInfo;
-    if (getD3D9FormatInfo(internalFormat, &d3d9FormatInfo))
+    if (GetD3D9FormatInfo(internalFormat, &d3d9FormatInfo))
     {
         return d3d9FormatInfo.mLoadFunction(renderer);
     }
@@ -286,7 +286,7 @@ LoadImageFunction GetImageLoadFunction(GLint internalFormat, const Renderer9 *re
 GLuint GetFormatPixelBytes(D3DFORMAT format)
 {
     D3DFormatInfo d3dFormatInfo;
-    if (getD3D9FormatInfo(format, &d3dFormatInfo))
+    if (GetD3D9FormatInfo(format, &d3dFormatInfo))
     {
         return d3dFormatInfo.mPixelBits / 8;
     }
@@ -300,7 +300,7 @@ GLuint GetFormatPixelBytes(D3DFORMAT format)
 GLuint GetBlockWidth(D3DFORMAT format)
 {
     D3DFormatInfo d3dFormatInfo;
-    if (getD3D9FormatInfo(format, &d3dFormatInfo))
+    if (GetD3D9FormatInfo(format, &d3dFormatInfo))
     {
         return d3dFormatInfo.mBlockWidth;
     }
@@ -314,7 +314,7 @@ GLuint GetBlockWidth(D3DFORMAT format)
 GLuint GetBlockHeight(D3DFORMAT format)
 {
     D3DFormatInfo d3dFormatInfo;
-    if (getD3D9FormatInfo(format, &d3dFormatInfo))
+    if (GetD3D9FormatInfo(format, &d3dFormatInfo))
     {
         return d3dFormatInfo.mBlockHeight;
     }
@@ -328,7 +328,7 @@ GLuint GetBlockHeight(D3DFORMAT format)
 GLuint GetBlockSize(D3DFORMAT format, GLuint width, GLuint height)
 {
     D3DFormatInfo d3dFormatInfo;
-    if (getD3D9FormatInfo(format, &d3dFormatInfo))
+    if (GetD3D9FormatInfo(format, &d3dFormatInfo))
     {
         GLuint numBlocksWide = (width + d3dFormatInfo.mBlockWidth - 1) / d3dFormatInfo.mBlockWidth;
         GLuint numBlocksHight = (height + d3dFormatInfo.mBlockHeight - 1) / d3dFormatInfo.mBlockHeight;
@@ -345,7 +345,7 @@ GLuint GetBlockSize(D3DFORMAT format, GLuint width, GLuint height)
 void MakeValidSize(bool isImage, D3DFORMAT format, GLsizei *requestWidth, GLsizei *requestHeight, int *levelOffset)
 {
     D3DFormatInfo d3dFormatInfo;
-    if (getD3D9FormatInfo(format, &d3dFormatInfo))
+    if (GetD3D9FormatInfo(format, &d3dFormatInfo))
     {
         int upsampleCount = 0;
 
@@ -388,7 +388,7 @@ D3DFORMAT GetTexureFormat(GLint internalFormat, const Renderer9 *renderer)
     ASSERT(renderer->getCurrentClientVersion() == 2);
 
     D3D9FormatInfo d3d9FormatInfo;
-    if (getD3D9FormatInfo(internalFormat, &d3d9FormatInfo))
+    if (GetD3D9FormatInfo(internalFormat, &d3d9FormatInfo))
     {
         return d3d9FormatInfo.mTexFormat(renderer);
     }
@@ -410,7 +410,7 @@ D3DFORMAT GetRenderFormat(GLint internalFormat, const Renderer9 *renderer)
     ASSERT(renderer->getCurrentClientVersion() == 2);
 
     D3D9FormatInfo d3d9FormatInfo;
-    if (getD3D9FormatInfo(internalFormat, &d3d9FormatInfo))
+    if (GetD3D9FormatInfo(internalFormat, &d3d9FormatInfo))
     {
         return d3d9FormatInfo.mRenderFormat(renderer);
     }
@@ -433,7 +433,7 @@ namespace d3d9_gl
 
 GLint GetInternalFormat(D3DFORMAT format)
 {
-    static const D3D9FormatInfoMap infoMap = buildD3D9FormatInfoMap();
+    static const D3D9FormatInfoMap infoMap = BuildD3D9FormatInfoMap();
     D3D9FormatInfoMap::const_iterator iter = infoMap.find(format);
     if (iter != infoMap.end())
     {

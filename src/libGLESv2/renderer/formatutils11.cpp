@@ -37,7 +37,7 @@ struct D3D11ES3FormatInfo
 typedef std::pair<GLint, D3D11ES3FormatInfo> D3D11ES3FormatPair;
 typedef std::map<GLint, D3D11ES3FormatInfo> D3D11ES3FormatMap;
 
-static D3D11ES3FormatMap buildD3D11ES3FormatMap()
+static D3D11ES3FormatMap BuildD3D11ES3FormatMap()
 {
     D3D11ES3FormatMap map;
 
@@ -152,9 +152,9 @@ static D3D11ES3FormatMap buildD3D11ES3FormatMap()
     return map;
 }
 
-static bool getD3D11ES3FormatInfo(GLint internalFormat, GLuint clientVersion, D3D11ES3FormatInfo *outFormatInfo)
+static bool GetD3D11ES3FormatInfo(GLint internalFormat, GLuint clientVersion, D3D11ES3FormatInfo *outFormatInfo)
 {
-    static const D3D11ES3FormatMap formatMap = buildD3D11ES3FormatMap();
+    static const D3D11ES3FormatMap formatMap = BuildD3D11ES3FormatMap();
     D3D11ES3FormatMap::const_iterator iter = formatMap.find(internalFormat);
     if (iter != formatMap.end())
     {
@@ -355,7 +355,7 @@ struct D3D11ES2FormatInfo
 typedef std::pair<GLint, D3D11ES2FormatInfo> D3D11ES2FormatPair;
 typedef std::map<GLint, D3D11ES2FormatInfo> D3D11ES2FormatMap;
 
-static D3D11ES2FormatMap buildD3D11ES2FormatMap()
+static D3D11ES2FormatMap BuildD3D11ES2FormatMap()
 {
     D3D11ES2FormatMap map;
 
@@ -399,9 +399,9 @@ static D3D11ES2FormatMap buildD3D11ES2FormatMap()
     return map;
 }
 
-static bool getD3D11ES2FormatInfo(GLint internalFormat, GLuint clientVersion, D3D11ES2FormatInfo *outFormatInfo)
+static bool GetD3D11ES2FormatInfo(GLint internalFormat, GLuint clientVersion, D3D11ES2FormatInfo *outFormatInfo)
 {
-    static const D3D11ES2FormatMap formatMap = buildD3D11ES2FormatMap();
+    static const D3D11ES2FormatMap formatMap = BuildD3D11ES2FormatMap();
     D3D11ES2FormatMap::const_iterator iter = formatMap.find(internalFormat);
     if (iter != formatMap.end())
     {
@@ -441,7 +441,7 @@ struct DXGIFormatInfo
 typedef std::pair<DXGI_FORMAT, DXGIFormatInfo> DXGIFormatInfoPair;
 typedef std::map<DXGI_FORMAT, DXGIFormatInfo> DXGIFormatInfoMap;
 
-static DXGIFormatInfoMap buildDXGIFormatInfoMap()
+static DXGIFormatInfoMap BuildDXGIFormatInfoMap()
 {
     DXGIFormatInfoMap map;
 
@@ -514,11 +514,11 @@ static DXGIFormatInfoMap buildDXGIFormatInfoMap()
 
 static const DXGIFormatInfoMap &GetDXGIFormatInfoMap()
 {
-    static const DXGIFormatInfoMap infoMap = buildDXGIFormatInfoMap();
+    static const DXGIFormatInfoMap infoMap = BuildDXGIFormatInfoMap();
     return infoMap;
 }
 
-static bool getDXGIFormatInfo(DXGI_FORMAT format, DXGIFormatInfo *outFormatInfo)
+static bool GetDXGIFormatInfo(DXGI_FORMAT format, DXGIFormatInfo *outFormatInfo)
 {
     const DXGIFormatInfoMap &infoMap = GetDXGIFormatInfoMap();
     DXGIFormatInfoMap::const_iterator iter = infoMap.find(format);
@@ -555,7 +555,7 @@ namespace d3d11
 MipGenerationFunction GetMipGenerationFunction(DXGI_FORMAT format)
 {
     DXGIFormatInfo formatInfo;
-    if (getDXGIFormatInfo(format, &formatInfo))
+    if (GetDXGIFormatInfo(format, &formatInfo))
     {
         return formatInfo.mMipGenerationFunction;
     }
@@ -571,7 +571,7 @@ LoadImageFunction GetImageLoadFunction(GLint internalFormat, GLenum type, GLuint
     if (clientVersion == 2)
     {
         D3D11ES2FormatInfo d3d11FormatInfo;
-        if (getD3D11ES2FormatInfo(internalFormat, clientVersion, &d3d11FormatInfo))
+        if (GetD3D11ES2FormatInfo(internalFormat, clientVersion, &d3d11FormatInfo))
         {
             return d3d11FormatInfo.mLoadImageFunction;
         }
@@ -605,7 +605,7 @@ LoadImageFunction GetImageLoadFunction(GLint internalFormat, GLenum type, GLuint
 GLuint GetFormatPixelBytes(DXGI_FORMAT format)
 {
     DXGIFormatInfo dxgiFormatInfo;
-    if (getDXGIFormatInfo(format, &dxgiFormatInfo))
+    if (GetDXGIFormatInfo(format, &dxgiFormatInfo))
     {
         return dxgiFormatInfo.mPixelBits / 8;
     }
@@ -619,7 +619,7 @@ GLuint GetFormatPixelBytes(DXGI_FORMAT format)
 GLuint GetBlockWidth(DXGI_FORMAT format)
 {
     DXGIFormatInfo dxgiFormatInfo;
-    if (getDXGIFormatInfo(format, &dxgiFormatInfo))
+    if (GetDXGIFormatInfo(format, &dxgiFormatInfo))
     {
         return dxgiFormatInfo.mBlockWidth;
     }
@@ -633,7 +633,7 @@ GLuint GetBlockWidth(DXGI_FORMAT format)
 GLuint GetBlockHeight(DXGI_FORMAT format)
 {
     DXGIFormatInfo dxgiFormatInfo;
-    if (getDXGIFormatInfo(format, &dxgiFormatInfo))
+    if (GetDXGIFormatInfo(format, &dxgiFormatInfo))
     {
         return dxgiFormatInfo.mBlockHeight;
     }
@@ -647,7 +647,7 @@ GLuint GetBlockHeight(DXGI_FORMAT format)
 void MakeValidSize(bool isImage, DXGI_FORMAT format, GLsizei *requestWidth, GLsizei *requestHeight, int *levelOffset)
 {
     DXGIFormatInfo dxgiFormatInfo;
-    if (getDXGIFormatInfo(format, &dxgiFormatInfo))
+    if (GetDXGIFormatInfo(format, &dxgiFormatInfo))
     {
         int upsampleCount = 0;
 
@@ -688,7 +688,7 @@ DXGI_FORMAT GetTexFormat(GLint internalFormat, GLuint clientVersion)
     if (clientVersion == 2)
     {
         D3D11ES2FormatInfo d3d11FormatInfo;
-        if (getD3D11ES2FormatInfo(internalFormat, clientVersion, &d3d11FormatInfo))
+        if (GetD3D11ES2FormatInfo(internalFormat, clientVersion, &d3d11FormatInfo))
         {
             return d3d11FormatInfo.mTexFormat;
         }
@@ -701,7 +701,7 @@ DXGI_FORMAT GetTexFormat(GLint internalFormat, GLuint clientVersion)
     else if (clientVersion == 3)
     {
         D3D11ES3FormatInfo d3d11FormatInfo;
-        if (getD3D11ES3FormatInfo(internalFormat, clientVersion, &d3d11FormatInfo))
+        if (GetD3D11ES3FormatInfo(internalFormat, clientVersion, &d3d11FormatInfo))
         {
             return d3d11FormatInfo.mTexFormat;
         }
@@ -723,7 +723,7 @@ DXGI_FORMAT GetSRVFormat(GLint internalFormat, GLuint clientVersion)
     if (clientVersion == 2)
     {
         D3D11ES2FormatInfo d3d11FormatInfo;
-        if (getD3D11ES2FormatInfo(internalFormat, clientVersion, &d3d11FormatInfo))
+        if (GetD3D11ES2FormatInfo(internalFormat, clientVersion, &d3d11FormatInfo))
         {
             return d3d11FormatInfo.mSRVFormat;
         }
@@ -736,7 +736,7 @@ DXGI_FORMAT GetSRVFormat(GLint internalFormat, GLuint clientVersion)
     else if (clientVersion == 3)
     {
         D3D11ES3FormatInfo d3d11FormatInfo;
-        if (getD3D11ES3FormatInfo(internalFormat, clientVersion, &d3d11FormatInfo))
+        if (GetD3D11ES3FormatInfo(internalFormat, clientVersion, &d3d11FormatInfo))
         {
             return d3d11FormatInfo.mSRVFormat;
         }
@@ -758,7 +758,7 @@ DXGI_FORMAT GetRTVFormat(GLint internalFormat, GLuint clientVersion)
     if (clientVersion == 2)
     {
         D3D11ES2FormatInfo d3d11FormatInfo;
-        if (getD3D11ES2FormatInfo(internalFormat, clientVersion, &d3d11FormatInfo))
+        if (GetD3D11ES2FormatInfo(internalFormat, clientVersion, &d3d11FormatInfo))
         {
             return d3d11FormatInfo.mRTVFormat;
         }
@@ -771,7 +771,7 @@ DXGI_FORMAT GetRTVFormat(GLint internalFormat, GLuint clientVersion)
     else if (clientVersion == 3)
     {
         D3D11ES3FormatInfo d3d11FormatInfo;
-        if (getD3D11ES3FormatInfo(internalFormat, clientVersion, &d3d11FormatInfo))
+        if (GetD3D11ES3FormatInfo(internalFormat, clientVersion, &d3d11FormatInfo))
         {
             return d3d11FormatInfo.mRTVFormat;
         }
@@ -793,7 +793,7 @@ DXGI_FORMAT GetDSVFormat(GLint internalFormat, GLuint clientVersion)
     if (clientVersion == 2)
     {
         D3D11ES2FormatInfo d3d11FormatInfo;
-        if (getD3D11ES2FormatInfo(internalFormat, clientVersion, &d3d11FormatInfo))
+        if (GetD3D11ES2FormatInfo(internalFormat, clientVersion, &d3d11FormatInfo))
         {
             return d3d11FormatInfo.mDSVFormat;
         }
@@ -805,7 +805,7 @@ DXGI_FORMAT GetDSVFormat(GLint internalFormat, GLuint clientVersion)
     else if (clientVersion == 3)
     {
         D3D11ES3FormatInfo d3d11FormatInfo;
-        if (getD3D11ES3FormatInfo(internalFormat, clientVersion, &d3d11FormatInfo))
+        if (GetD3D11ES3FormatInfo(internalFormat, clientVersion, &d3d11FormatInfo))
         {
             return d3d11FormatInfo.mDSVFormat;
         }
@@ -829,7 +829,7 @@ namespace d3d11_gl
 GLint GetInternalFormat(DXGI_FORMAT format)
 {
     DXGIFormatInfo formatInfo;
-    if (getDXGIFormatInfo(format, &formatInfo))
+    if (GetDXGIFormatInfo(format, &formatInfo))
     {
         return formatInfo.mInternalFormat;
     }
