@@ -2924,7 +2924,7 @@ TString OutputHLSL::typeString(const TType &type)
               case 4: return "int4";
             }
           case EbtUInt:
-            switch (type.getCols())
+            switch (type.getNominalSize())
             {
               case 1: return "uint";
               case 2: return "uint2";
@@ -3501,7 +3501,7 @@ GLenum OutputHLSL::glVariableType(const TType &type)
         }
         else if (type.isVector())
         {
-            switch(type.getCols())
+            switch(type.getNominalSize())
             {
               case 2: return GL_UNSIGNED_INT_VEC2;
               case 3: return GL_UNSIGNED_INT_VEC3;

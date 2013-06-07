@@ -73,7 +73,7 @@ static ShDataType getVariableDataType(const TType& type)
           if (type.isMatrix()) {
               UNREACHABLE();
           } else if (type.isVector()) {
-              switch (type.getCols()) {
+              switch (type.getNominalSize()) {
                 case 2: return SH_UNSIGNED_INT_VEC2;
                 case 3: return SH_UNSIGNED_INT_VEC3;
                 case 4: return SH_UNSIGNED_INT_VEC4;
