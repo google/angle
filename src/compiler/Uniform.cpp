@@ -73,12 +73,15 @@ void InterfaceBlock::getBlockLayoutInfo(const sh::ActiveUniforms &fields, unsign
 
             if (uniform.arraySize > 0)
             {
-                *currentOffset += arrayStride * uniform.arraySize;
+                *currentOffset += arrayStride * (uniform.arraySize - 1);
             }
-            else if (gl::IsMatrixType(uniform.type))
+
+            if (gl::IsMatrixType(uniform.type))
             {
                 const int componentGroups = (isRowMajorMatrix ? gl::VariableRowCount(uniform.type) : gl::VariableColumnCount(uniform.type));
-                *currentOffset += matrixStride * componentGroups;
+                const int numComponents = (isRowMajorMatrix ? gl::VariableColumnCount(uniform.type) : gl::VariableRowCount(uniform.type));
+                *currentOffset += matrixStride * (componentGroups - 1);
+                *currentOffset += numComponents;
             }
             else
             {
@@ -156,7 +159,7 @@ void InterfaceBlock::getD3DLayoutInfo(const sh::Uniform &uniform, unsigned int *
     else
     {
         int numComponents = gl::UniformComponentCount(uniform.type);
-        if ((numComponents + (*currentOffset % registerSize)) >= registerSize)
+        if ((numComponents + (*currentOffset % registerSize)) > registerSize)
         {
             *currentOffset = rx::roundUp(*currentOffset, registerSize);
         }
