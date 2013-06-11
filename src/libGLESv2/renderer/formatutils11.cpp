@@ -508,14 +508,17 @@ static DXGIFormatInfoMap BuildDXGIFormatInfoMap()
     map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R9G9B9E5_SHAREDEXP,  DXGIFormatInfo( 32, 1, 1, GL_RGB9_E5,                         GenerateMip<R9G9B9E5>,      ReadColor<R9G9B9E5, GLfloat>     )));
     map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R11G11B10_FLOAT,     DXGIFormatInfo( 32, 1, 1, GL_R11F_G11F_B10F,                  GenerateMip<R11G11B10F>,    ReadColor<R11G11B10F, GLfloat>   )));
 
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R16_TYPELESS,        DXGIFormatInfo( 16, 1, 1, GL_DEPTH_COMPONENT16,               NULL,                       NULL                             )));
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_D16_UNORM,           DXGIFormatInfo( 16, 1, 1, GL_DEPTH_COMPONENT16,               NULL,                       NULL                             )));
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R24G8_TYPELESS,      DXGIFormatInfo( 32, 1, 1, GL_DEPTH24_STENCIL8_OES,            NULL,                       NULL                             )));
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_D24_UNORM_S8_UINT,   DXGIFormatInfo( 32, 1, 1, GL_DEPTH24_STENCIL8_OES,            NULL,                       NULL                             )));
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R32_TYPELESS,        DXGIFormatInfo( 32, 1, 1, GL_DEPTH_COMPONENT32_OES,           NULL,                       NULL                             )));
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_D32_FLOAT,           DXGIFormatInfo( 32, 1, 1, GL_DEPTH_COMPONENT32_OES,           NULL,                       NULL                             )));
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R32G8X24_TYPELESS,   DXGIFormatInfo( 32, 1, 1, GL_DEPTH32F_STENCIL8,               NULL,                       NULL                             )));
-    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_D32_FLOAT_S8X24_UINT,DXGIFormatInfo( 32, 1, 1, GL_DEPTH32F_STENCIL8,               NULL,                       NULL                             )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R16_TYPELESS,             DXGIFormatInfo( 16, 1, 1, GL_DEPTH_COMPONENT16,          NULL,                       NULL                             )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R16_UNORM,                DXGIFormatInfo( 16, 1, 1, GL_DEPTH_COMPONENT16,          NULL,                       NULL                             )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_D16_UNORM,                DXGIFormatInfo( 16, 1, 1, GL_DEPTH_COMPONENT16,          NULL,                       NULL                             )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R24G8_TYPELESS,           DXGIFormatInfo( 32, 1, 1, GL_DEPTH24_STENCIL8_OES,       NULL,                       NULL                             )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R24_UNORM_X8_TYPELESS,    DXGIFormatInfo( 32, 1, 1, GL_DEPTH24_STENCIL8_OES,       NULL,                       NULL                             )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_D24_UNORM_S8_UINT,        DXGIFormatInfo( 32, 1, 1, GL_DEPTH24_STENCIL8_OES,       NULL,                       NULL                             )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R32_TYPELESS,             DXGIFormatInfo( 32, 1, 1, GL_DEPTH_COMPONENT32_OES,      NULL,                       NULL                             )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_D32_FLOAT,                DXGIFormatInfo( 32, 1, 1, GL_DEPTH_COMPONENT32_OES,      NULL,                       NULL                             )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R32G8X24_TYPELESS,        DXGIFormatInfo( 64, 1, 1, GL_DEPTH32F_STENCIL8,          NULL,                       NULL                             )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS, DXGIFormatInfo( 64, 1, 1, GL_DEPTH32F_STENCIL8,          NULL,                       NULL                             )));
+    map.insert(DXGIFormatInfoPair(DXGI_FORMAT_D32_FLOAT_S8X24_UINT,     DXGIFormatInfo( 64, 1, 1, GL_DEPTH32F_STENCIL8,          NULL,                       NULL                             )));
 
     map.insert(DXGIFormatInfoPair(DXGI_FORMAT_BC1_UNORM,           DXGIFormatInfo( 64, 4, 4, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,   NULL,                       NULL                             )));
     map.insert(DXGIFormatInfoPair(DXGI_FORMAT_BC2_UNORM,           DXGIFormatInfo(128, 4, 4, GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE, NULL,                       NULL                             )));
