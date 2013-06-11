@@ -71,6 +71,7 @@ class Blit11
     ID3D11Buffer *mVertexBuffer;
     ID3D11SamplerState *mPointSampler;
     ID3D11SamplerState *mLinearSampler;
+    ID3D11RasterizerState *mRasterizerState;
 
     ID3D11InputLayout *mQuad2DIL;
     ID3D11VertexShader *mQuad2DVS;

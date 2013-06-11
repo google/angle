@@ -109,6 +109,23 @@ Blit11::Blit11(rx::Renderer11 *renderer)
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mLinearSampler, "Blit11 linear sampler");
 
+    // Use a rasterizer state that will not cull so that inverted quads will not be culled
+    D3D11_RASTERIZER_DESC rasterDesc;
+    rasterDesc.FillMode = D3D11_FILL_SOLID;
+    rasterDesc.CullMode = D3D11_CULL_NONE;
+    rasterDesc.FrontCounterClockwise = FALSE;
+    rasterDesc.DepthBias = 0;
+    rasterDesc.SlopeScaledDepthBias = 0.0f;
+    rasterDesc.DepthBiasClamp = 0.0f;
+    rasterDesc.DepthClipEnable = TRUE;
+    rasterDesc.ScissorEnable = FALSE;
+    rasterDesc.MultisampleEnable = FALSE;
+    rasterDesc.AntialiasedLineEnable = FALSE;
+
+    result = device->CreateRasterizerState(&rasterDesc, &mRasterizerState);
+    ASSERT(SUCCEEDED(result));
+    d3d11::SetDebugName(mRasterizerState, "Blit11 rasterizer state");
+
     D3D11_INPUT_ELEMENT_DESC quad2DLayout[] =
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -150,6 +167,7 @@ Blit11::~Blit11()
     SafeRelease(mVertexBuffer);
     SafeRelease(mPointSampler);
     SafeRelease(mLinearSampler);
+    SafeRelease(mRasterizerState);
 
     SafeRelease(mQuad2DIL);
     SafeRelease(mQuad2DVS);
@@ -223,7 +241,7 @@ bool Blit11::copyTexture(ID3D11ShaderResourceView *source, const gl::Box &source
     // Apply state
     deviceContext->OMSetBlendState(NULL, NULL, 0xFFFFFFF);
     deviceContext->OMSetDepthStencilState(NULL, 0xFFFFFFFF);
-    deviceContext->RSSetState(NULL);
+    deviceContext->RSSetState(mRasterizerState);
 
     // Apply shaders
     deviceContext->IASetInputLayout(shader.mInputLayout);
