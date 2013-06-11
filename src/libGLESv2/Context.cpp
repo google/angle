@@ -3041,31 +3041,24 @@ const char *Context::getRendererString() const
     return mRendererString;
 }
 
-void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, 
-                              GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
-                              GLbitfield mask)
+bool Context::clipBlitFramebufferCoordinates(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1,
+                                             GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
+                                             gl::Rectangle *outSourceRect, gl::Rectangle *outDestRect,
+                                             bool *outPartialCopy)
 {
     Framebuffer *readFramebuffer = getReadFramebuffer();
     Framebuffer *drawFramebuffer = getDrawFramebuffer();
-
     if (!readFramebuffer || readFramebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE ||
         !drawFramebuffer || drawFramebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
     {
-        return gl::error(GL_INVALID_FRAMEBUFFER_OPERATION);
-    }
-
-    if (drawFramebuffer->getSamples() != 0)
-    {
-        return gl::error(GL_INVALID_OPERATION);
+        return false;
     }
 
     Renderbuffer *readColorBuffer = readFramebuffer->getReadColorbuffer();
     Renderbuffer *drawColorBuffer = drawFramebuffer->getFirstColorbuffer();
-
-    if (drawColorBuffer == NULL)
+    if (!readColorBuffer || !drawColorBuffer)
     {
-        ERR("Draw buffers formats don't match, which is not supported in this implementation of BlitFramebufferANGLE");
-        return gl::error(GL_INVALID_OPERATION);
+        return false;
     }
 
     int readBufferWidth = readColorBuffer->getWidth();
@@ -3073,8 +3066,8 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
     int drawBufferWidth = drawColorBuffer->getWidth();
     int drawBufferHeight = drawColorBuffer->getHeight();
 
-    Rectangle sourceRect;
-    Rectangle destRect;
+    gl::Rectangle sourceRect;
+    gl::Rectangle destRect;
 
     if (srcX0 < srcX1)
     {
@@ -3101,7 +3094,7 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
     else
     {
         sourceRect.height = srcY0 - srcY1;
-        destRect.height = dstY0 - srcY1;
+        destRect.height = dstY0 - dstY1;
         sourceRect.y = srcY1;
         destRect.y = dstY1;
     }
@@ -3119,7 +3112,6 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
             destScissoredRect.width -= xDiff;
             sourceScissoredRect.x += xDiff;
             sourceScissoredRect.width -= xDiff;
-
         }
 
         if (destRect.x + destRect.width > mState.scissor.x + mState.scissor.width)
@@ -3145,9 +3137,6 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
             sourceScissoredRect.height -= yDiff;
         }
     }
-
-    bool blitRenderTarget = false;
-    bool blitDepthStencil = false;
 
     Rectangle sourceTrimmedRect = sourceScissoredRect;
     Rectangle destTrimmedRect = destScissoredRect;
@@ -3218,111 +3207,52 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
         sourceTrimmedRect.height -= yDiff;
     }
 
-    bool partialBufferCopy = false;
-    if (sourceTrimmedRect.height < readBufferHeight ||
-        sourceTrimmedRect.width < readBufferWidth || 
-        destTrimmedRect.height < drawBufferHeight ||
-        destTrimmedRect.width < drawBufferWidth ||
-        sourceTrimmedRect.y != 0 || destTrimmedRect.y != 0 || sourceTrimmedRect.x != 0 || destTrimmedRect.x != 0)
+    *outSourceRect = sourceTrimmedRect;
+    *outDestRect = destTrimmedRect;
+
+    *outPartialCopy = sourceTrimmedRect.height < readBufferHeight ||
+                      sourceTrimmedRect.width < readBufferWidth ||
+                      destTrimmedRect.height < drawBufferHeight ||
+                      destTrimmedRect.width < drawBufferWidth ||
+                      sourceTrimmedRect.x != 0 || destTrimmedRect.x != 0 ||
+                      sourceTrimmedRect.y != 0 || destTrimmedRect.y != 0;
+
+    return true;
+}
+
+void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
+                              GLbitfield mask, GLenum filter)
+{
+    Framebuffer *readFramebuffer = getReadFramebuffer();
+    Framebuffer *drawFramebuffer = getDrawFramebuffer();
+
+    bool blitRenderTarget = false;
+    bool blitDepthStencil = false;
+    if ((mask & GL_COLOR_BUFFER_BIT) && readFramebuffer->getReadColorbuffer() && drawFramebuffer->getFirstColorbuffer())
     {
-        partialBufferCopy = true;
-    }
-
-    if (mask & GL_COLOR_BUFFER_BIT)
-    {
-        const GLenum readColorbufferType = readFramebuffer->getReadColorbufferType();
-        const bool validReadType = (readColorbufferType == GL_TEXTURE_2D) || (readColorbufferType == GL_RENDERBUFFER);
-        bool validDrawType = true;
-        bool validDrawFormat = true;
-
-        for (unsigned int colorAttachment = 0; colorAttachment < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
-        {
-            if (drawFramebuffer->isEnabledColorAttachment(colorAttachment))
-            {
-                if (drawFramebuffer->getColorbufferType(colorAttachment) != GL_TEXTURE_2D &&
-                    drawFramebuffer->getColorbufferType(colorAttachment) != GL_RENDERBUFFER)
-                {
-                    validDrawType = false;
-                }
-
-                if (drawFramebuffer->getColorbuffer(colorAttachment)->getActualFormat() != readColorBuffer->getActualFormat())
-                {
-                    validDrawFormat = false;
-                }
-            }
-        }
-
-        if (!validReadType || !validDrawType || !validDrawFormat)
-        {
-            ERR("Color buffer format conversion in BlitFramebufferANGLE not supported by this implementation");
-            return gl::error(GL_INVALID_OPERATION);
-        }
-        
-        if (partialBufferCopy && readFramebuffer->getSamples() != 0)
-        {
-            return gl::error(GL_INVALID_OPERATION);
-        }
-
         blitRenderTarget = true;
-
+    }
+    if ((mask & GL_STENCIL_BUFFER_BIT) && readFramebuffer->getStencilbuffer() && drawFramebuffer->getStencilbuffer())
+    {
+        blitDepthStencil = true;
+    }
+    if ((mask & GL_DEPTH_BUFFER_BIT) && readFramebuffer->getDepthbuffer() && drawFramebuffer->getDepthbuffer())
+    {
+        blitDepthStencil = true;
     }
 
-    if (mask & (GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT))
+    gl::Rectangle sourceClippedRect, destClippedRect;
+    bool partialCopy;
+    if (!clipBlitFramebufferCoordinates(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1,
+                                        &sourceClippedRect, &destClippedRect, &partialCopy))
     {
-        Renderbuffer *readDSBuffer = NULL;
-        Renderbuffer *drawDSBuffer = NULL;
-
-        // We support OES_packed_depth_stencil, and do not support a separately attached depth and stencil buffer, so if we have
-        // both a depth and stencil buffer, it will be the same buffer.
-
-        if (mask & GL_DEPTH_BUFFER_BIT)
-        {
-            if (readFramebuffer->getDepthbuffer() && drawFramebuffer->getDepthbuffer())
-            {
-                if (readFramebuffer->getDepthbufferType() != drawFramebuffer->getDepthbufferType() ||
-                    readFramebuffer->getDepthbuffer()->getActualFormat() != drawFramebuffer->getDepthbuffer()->getActualFormat())
-                {
-                    return gl::error(GL_INVALID_OPERATION);
-                }
-
-                blitDepthStencil = true;
-                readDSBuffer = readFramebuffer->getDepthbuffer();
-                drawDSBuffer = drawFramebuffer->getDepthbuffer();
-            }
-        }
-
-        if (mask & GL_STENCIL_BUFFER_BIT)
-        {
-            if (readFramebuffer->getStencilbuffer() && drawFramebuffer->getStencilbuffer())
-            {
-                if (readFramebuffer->getStencilbufferType() != drawFramebuffer->getStencilbufferType() ||
-                    readFramebuffer->getStencilbuffer()->getActualFormat() != drawFramebuffer->getStencilbuffer()->getActualFormat())
-                {
-                    return gl::error(GL_INVALID_OPERATION);
-                }
-
-                blitDepthStencil = true;
-                readDSBuffer = readFramebuffer->getStencilbuffer();
-                drawDSBuffer = drawFramebuffer->getStencilbuffer();
-            }
-        }
-
-        if (partialBufferCopy)
-        {
-            ERR("Only whole-buffer depth and stencil blits are supported by this implementation.");
-            return gl::error(GL_INVALID_OPERATION); // only whole-buffer copies are permitted
-        }
-
-        if ((drawDSBuffer && drawDSBuffer->getSamples() != 0) || 
-            (readDSBuffer && readDSBuffer->getSamples() != 0))
-        {
-            return gl::error(GL_INVALID_OPERATION);
-        }
+        return;
     }
 
     if (blitRenderTarget || blitDepthStencil)
     {
-        mRenderer->blitRect(readFramebuffer, sourceTrimmedRect, drawFramebuffer, destTrimmedRect, blitRenderTarget, blitDepthStencil);
+        mRenderer->blitRect(readFramebuffer, sourceClippedRect, drawFramebuffer, destClippedRect,
+                            blitRenderTarget, blitDepthStencil, filter);
     }
 }
 

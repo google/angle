@@ -3004,7 +3004,7 @@ bool Renderer11::getRenderTargetResource(gl::Renderbuffer *colorbuffer, unsigned
 }
 
 bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &readRect, gl::Framebuffer *drawTarget, const gl::Rectangle &drawRect,
-                          bool blitRenderTarget, bool blitDepthStencil)
+                          bool blitRenderTarget, bool blitDepthStencil, GLenum filter)
 {
     if (blitRenderTarget)
     {
@@ -3032,7 +3032,7 @@ bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &read
 
                 RenderTarget *drawRenderTarget = drawBuffer->getRenderTarget();
 
-                if (!blitRenderbufferRect(readRect, drawRect, readRenderTarget, drawRenderTarget, false))
+                if (!blitRenderbufferRect(readRect, drawRect, readRenderTarget, drawRenderTarget, filter))
                 {
                     return false;
                 }
@@ -3060,7 +3060,7 @@ bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &read
         RenderTarget *readRenderTarget = readBuffer->getDepthStencil();
         RenderTarget *drawRenderTarget = drawBuffer->getDepthStencil();
 
-        if (!blitRenderbufferRect(readRect, drawRect, readRenderTarget, drawRenderTarget, true))
+        if (!blitRenderbufferRect(readRect, drawRect, readRenderTarget, drawRenderTarget, filter))
         {
             return false;
         }
@@ -3290,8 +3290,8 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
     stagingTex = NULL;
 }
 
-bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::Rectangle &drawRect, RenderTarget *readRenderTarget, 
-                                      RenderTarget *drawRenderTarget, bool wholeBufferCopy)
+bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::Rectangle &drawRect, RenderTarget *readRenderTarget,
+                                      RenderTarget *drawRenderTarget, GLenum filter)
 {
     ASSERT(readRect.width == drawRect.width && readRect.height == drawRect.height);
 
@@ -3348,6 +3348,10 @@ bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::R
     readBox.bottom = readRect.y + readRect.height;
     readBox.front = 0;
     readBox.back = 1;
+
+    bool wholeBufferCopy = readRect.x == 0 && readRect.y == 0 &&
+                           readRect.width == readRenderTarget->getWidth() &&
+                           readRect.height == readRenderTarget->getHeight();
 
     // D3D11 needs depth-stencil CopySubresourceRegions to have a NULL pSrcBox
     // We also require complete framebuffer copies for depth-stencil blit.

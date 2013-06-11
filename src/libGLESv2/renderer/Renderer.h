@@ -221,7 +221,7 @@ class Renderer
                            GLint xoffset, GLint yoffset, GLint zOffset, TextureStorageInterface2DArray *storage, GLint level) = 0;
 
     virtual bool blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &readRect, gl::Framebuffer *drawTarget, const gl::Rectangle &drawRect,
-                          bool blitRenderTarget, bool blitDepthStencil) = 0;
+                          bool blitRenderTarget, bool blitDepthStencil, GLenum filter) = 0;
     virtual void readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,
                             GLsizei outputPitch, bool packReverseRowOrder, GLint packAlignment, void* pixels) = 0;
 

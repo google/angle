@@ -165,7 +165,7 @@ class Renderer11 : public Renderer
                            GLint xoffset, GLint yoffset, GLint zOffset, TextureStorageInterface2DArray *storage, GLint level);
 
     virtual bool blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &readRect, gl::Framebuffer *drawTarget, const gl::Rectangle &drawRect,
-                          bool blitRenderTarget, bool blitDepthStencil);
+                          bool blitRenderTarget, bool blitDepthStencil, GLenum filter);
     virtual void readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type,
                             GLsizei outputPitch, bool packReverseRowOrder, GLint packAlignment, void* pixels);
 
@@ -222,7 +222,7 @@ class Renderer11 : public Renderer
     rx::Range getViewportBounds() const;
 
     bool blitRenderbufferRect(const gl::Rectangle &readRect, const gl::Rectangle &drawRect, RenderTarget *readRenderTarget, 
-                              RenderTarget *drawRenderTarget, bool wholeBufferCopy);
+                              RenderTarget *drawRenderTarget, GLenum filter);
     ID3D11Texture2D *resolveMultisampledTexture(ID3D11Texture2D *source, unsigned int subresource);
 
     HMODULE mD3d11Module;

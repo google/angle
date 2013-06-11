@@ -2663,8 +2663,10 @@ bool Renderer9::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sou
 }
 
 bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, const gl::Rectangle &readRect, gl::Framebuffer *drawFramebuffer, const gl::Rectangle &drawRect,
-                         bool blitRenderTarget, bool blitDepthStencil)
+                         bool blitRenderTarget, bool blitDepthStencil, GLenum filter)
 {
+    ASSERT(filter == GL_NEAREST);
+
     endScene();
 
     if (blitRenderTarget)

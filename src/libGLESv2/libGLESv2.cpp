@@ -1680,6 +1680,238 @@ bool validateInvalidateFramebufferParameters(gl::Context *context, GLenum target
     return true;
 }
 
+bool validateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1,
+                                       GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask,
+                                       GLenum filter, bool fromAngleExtension)
+{
+    switch (filter)
+    {
+      case GL_NEAREST:
+        break;
+      case GL_LINEAR:
+        if (fromAngleExtension)
+        {
+            return gl::error(GL_INVALID_ENUM, false);
+        }
+        break;
+      default:
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+
+    if ((mask & ~(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)) != 0)
+    {
+        return gl::error(GL_INVALID_VALUE, false);
+    }
+
+    if (mask == 0)
+    {
+        // ES3.0 spec, section 4.3.2 specifies that a mask of zero is valid and no
+        // buffers are copied.
+        return false;
+    }
+
+    if (fromAngleExtension && (srcX1 - srcX0 != dstX1 - dstX0 || srcY1 - srcY0 != dstY1 - dstY0))
+    {
+        ERR("Scaling and flipping in BlitFramebufferANGLE not supported by this implementation.");
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    // ES3.0 spec, section 4.3.2 states that linear filtering is only available for the
+    // color buffer, leaving only nearest being unfiltered from above
+    if ((mask & ~GL_COLOR_BUFFER_BIT) != 0 && filter != GL_NEAREST)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    if (context->getReadFramebufferHandle() == context->getDrawFramebufferHandle())
+    {
+        if (fromAngleExtension)
+        {
+            ERR("Blits with the same source and destination framebuffer are not supported by this "
+                "implementation.");
+        }
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    gl::Framebuffer *readFramebuffer = context->getReadFramebuffer();
+    gl::Framebuffer *drawFramebuffer = context->getDrawFramebuffer();
+    if (!readFramebuffer || readFramebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE ||
+        !drawFramebuffer || drawFramebuffer->completeness() != GL_FRAMEBUFFER_COMPLETE)
+    {
+        return gl::error(GL_INVALID_FRAMEBUFFER_OPERATION, false);
+    }
+
+    if (drawFramebuffer->getSamples() != 0)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    gl::Rectangle sourceClippedRect, destClippedRect;
+    bool partialCopy;
+    if (!context->clipBlitFramebufferCoordinates(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1,
+                                                 &sourceClippedRect, &destClippedRect, &partialCopy))
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    bool sameBounds = srcX0 == dstX0 && srcY0 == dstY0 && srcX1 == dstX1 && srcY1 == dstY1;
+
+    GLuint clientVersion = context->getClientVersion();
+
+    if (mask & GL_COLOR_BUFFER_BIT)
+    {
+        gl::Renderbuffer *readColorBuffer = readFramebuffer->getReadColorbuffer();
+        gl::Renderbuffer *drawColorBuffer = drawFramebuffer->getFirstColorbuffer();
+
+        if (readColorBuffer && drawColorBuffer)
+        {
+            GLint readInternalFormat = readColorBuffer->getActualFormat();
+            GLint drawInternalFormat = drawColorBuffer->getActualFormat();
+
+            for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; i++)
+            {
+                if (drawFramebuffer->isEnabledColorAttachment(i))
+                {
+                    GLint drawbufferAttachmentFormat = drawFramebuffer->getColorbuffer(i)->getActualFormat();
+
+                    if (gl::IsNormalizedFixedPointFormat(readInternalFormat, clientVersion) &&
+                        !gl::IsNormalizedFixedPointFormat(drawbufferAttachmentFormat, clientVersion))
+                    {
+                        return gl::error(GL_INVALID_OPERATION, false);
+                    }
+
+                    if (gl::IsUnsignedIntegerFormat(readInternalFormat, clientVersion) &&
+                        !gl::IsUnsignedIntegerFormat(drawbufferAttachmentFormat, clientVersion))
+                    {
+                        return gl::error(GL_INVALID_OPERATION, false);
+                    }
+
+                    if (gl::IsSignedIntegerFormat(readInternalFormat, clientVersion) &&
+                        !gl::IsSignedIntegerFormat(drawbufferAttachmentFormat, clientVersion))
+                    {
+                        return gl::error(GL_INVALID_OPERATION, false);
+                    }
+
+                    if (readColorBuffer->getSamples() > 0 && (readInternalFormat != drawbufferAttachmentFormat || !sameBounds))
+                    {
+                        return gl::error(GL_INVALID_OPERATION, false);
+                    }
+                }
+            }
+
+            if (gl::IsIntegerFormat(readInternalFormat, clientVersion) && filter == GL_LINEAR)
+            {
+                return gl::error(GL_INVALID_OPERATION, false);
+            }
+
+            if (fromAngleExtension)
+            {
+                const GLenum readColorbufferType = readFramebuffer->getReadColorbufferType();
+                if (readColorbufferType != GL_TEXTURE_2D && readColorbufferType != GL_RENDERBUFFER)
+                {
+                    return gl::error(GL_INVALID_OPERATION, false);
+                }
+
+                for (unsigned int colorAttachment = 0; colorAttachment < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
+                {
+                    if (drawFramebuffer->isEnabledColorAttachment(colorAttachment))
+                    {
+                        if (drawFramebuffer->getColorbufferType(colorAttachment) != GL_TEXTURE_2D &&
+                            drawFramebuffer->getColorbufferType(colorAttachment) != GL_RENDERBUFFER)
+                        {
+                            return gl::error(GL_INVALID_OPERATION, false);
+                        }
+
+                        if (drawFramebuffer->getColorbuffer(colorAttachment)->getActualFormat() != readColorBuffer->getActualFormat())
+                        {
+                            return gl::error(GL_INVALID_OPERATION, false);
+                        }
+                    }
+                }
+
+                if (partialCopy && readFramebuffer->getSamples() != 0)
+                {
+                    return gl::error(GL_INVALID_OPERATION, false);
+                }
+            }
+        }
+    }
+
+    if (mask & GL_DEPTH_BUFFER_BIT)
+    {
+        gl::Renderbuffer *readDepthBuffer = readFramebuffer->getDepthbuffer();
+        gl::Renderbuffer *drawDepthBuffer = drawFramebuffer->getDepthbuffer();
+
+        if (readDepthBuffer && drawDepthBuffer)
+        {
+            if (readDepthBuffer->getActualFormat() != drawDepthBuffer->getActualFormat())
+            {
+                return gl::error(GL_INVALID_OPERATION, false);
+            }
+
+            if (readDepthBuffer->getSamples() > 0 && !sameBounds)
+            {
+                return gl::error(GL_INVALID_OPERATION, false);
+            }
+
+            if (fromAngleExtension)
+            {
+                if (partialCopy)
+                {
+                    ERR("Only whole-buffer depth and stencil blits are supported by this implementation.");
+                    return gl::error(GL_INVALID_OPERATION, false); // only whole-buffer copies are permitted
+                }
+
+                if (readDepthBuffer->getSamples() != 0 || drawDepthBuffer->getSamples() != 0)
+                {
+                    return gl::error(GL_INVALID_OPERATION, false);
+                }
+            }
+        }
+    }
+
+    if (mask & GL_STENCIL_BUFFER_BIT)
+    {
+        gl::Renderbuffer *readStencilBuffer = readFramebuffer->getStencilbuffer();
+        gl::Renderbuffer *drawStencilBuffer = drawFramebuffer->getStencilbuffer();
+
+        if (fromAngleExtension && partialCopy)
+        {
+            ERR("Only whole-buffer depth and stencil blits are supported by this implementation.");
+            return gl::error(GL_INVALID_OPERATION, false); // only whole-buffer copies are permitted
+        }
+
+        if (readStencilBuffer && drawStencilBuffer)
+        {
+            if (readStencilBuffer->getActualFormat() != drawStencilBuffer->getActualFormat())
+            {
+                return gl::error(GL_INVALID_OPERATION, false);
+            }
+
+            if (readStencilBuffer->getSamples() > 0 && !sameBounds)
+            {
+                return gl::error(GL_INVALID_OPERATION, false);
+            }
+
+            if (fromAngleExtension)
+            {
+                if (partialCopy)
+                {
+                    ERR("Only whole-buffer depth and stencil blits are supported by this implementation.");
+                    return gl::error(GL_INVALID_OPERATION, false); // only whole-buffer copies are permitted
+                }
+
+                if (readStencilBuffer->getSamples() != 0 || drawStencilBuffer->getSamples() != 0)
+                {
+                    return gl::error(GL_INVALID_OPERATION, false);
+                }
+            }
+        }
+    }
+
+    return true;
+}
+
 extern "C"
 {
 
@@ -8796,7 +9028,15 @@ void __stdcall glBlitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint sr
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            glBlitFramebufferANGLE(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask, filter);
+            if (!validateBlitFramebufferParameters(context, srcX0, srcY0, srcX1, srcY1,
+                                                   dstX0, dstY0, dstX1, dstY1, mask, filter,
+                                                   false))
+            {
+                return;
+            }
+
+            context->blitFramebuffer(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1,
+                                     mask, filter);
         }
     }
     catch(std::bad_alloc&)
@@ -11300,36 +11540,19 @@ void __stdcall glBlitFramebufferANGLE(GLint srcX0, GLint srcY0, GLint srcX1, GLi
 
     try
     {
-        switch (filter)
-        {
-          case GL_NEAREST:
-            break;
-          default:
-            return gl::error(GL_INVALID_ENUM);
-        }
-
-        if ((mask & ~(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)) != 0)
-        {
-            return gl::error(GL_INVALID_VALUE);
-        }
-
-        if (srcX1 - srcX0 != dstX1 - dstX0 || srcY1 - srcY0 != dstY1 - dstY0)
-        {
-            ERR("Scaling and flipping in BlitFramebufferANGLE not supported by this implementation");
-            return gl::error(GL_INVALID_OPERATION);
-        }
-
         gl::Context *context = gl::getNonLostContext();
 
         if (context)
         {
-            if (context->getReadFramebufferHandle() == context->getDrawFramebufferHandle())
+            if (!validateBlitFramebufferParameters(context, srcX0, srcY0, srcX1, srcY1,
+                                                   dstX0, dstY0, dstX1, dstY1, mask, filter,
+                                                   true))
             {
-                ERR("Blits with the same source and destination framebuffer are not supported by this implementation.");
-                return gl::error(GL_INVALID_OPERATION);
+                return;
             }
 
-            context->blitFramebuffer(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1, mask);
+            context->blitFramebuffer(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1,
+                                     mask, filter);
         }
     }
     catch(std::bad_alloc&)
