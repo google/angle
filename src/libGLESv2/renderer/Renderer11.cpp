@@ -3293,7 +3293,7 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
 bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::Rectangle &drawRect, RenderTarget *readRenderTarget,
                                       RenderTarget *drawRenderTarget, GLenum filter)
 {
-    ASSERT(readRect.width == drawRect.width && readRect.height == drawRect.height);
+    bool result = true;
 
     RenderTarget11 *readRenderTarget11 = RenderTarget11::makeRenderTarget11(readRenderTarget);
     if (!readRenderTarget)
@@ -3303,6 +3303,7 @@ bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::R
     }
 
     ID3D11Resource *readTexture = NULL;
+    ID3D11ShaderResourceView *readSRV = NULL;
     unsigned int readSubresource = 0;
     if (readRenderTarget->getSamples() > 0)
     {
@@ -3316,12 +3317,20 @@ bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::R
             readSubresource = 0;
 
             unresolvedTexture->Release();
+
+            HRESULT result = mDevice->CreateShaderResourceView(readTexture, NULL, &readSRV);
+            if (FAILED(result))
+            {
+                readTexture->Release();
+                return gl::error(GL_OUT_OF_MEMORY, false);
+            }
         }
     }
     else
     {
         readTexture = readRenderTarget11->getTexture();
         readSubresource = readRenderTarget11->getSubresourceIndex();
+        readSRV = readRenderTarget11->getShaderResourceView();
     }
 
     if (!readTexture)
@@ -3340,30 +3349,65 @@ bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::R
 
     ID3D11Resource *drawTexture = drawRenderTarget11->getTexture();
     unsigned int drawSubresource = drawRenderTarget11->getSubresourceIndex();
+    ID3D11RenderTargetView *drawRTV = drawRenderTarget11->getRenderTargetView();
+    ID3D11DepthStencilView *drawDSV = drawRenderTarget11->getDepthStencilView();
 
-    D3D11_BOX readBox;
-    readBox.left = readRect.x;
-    readBox.right = readRect.x + readRect.width;
-    readBox.top = readRect.y;
-    readBox.bottom = readRect.y + readRect.height;
-    readBox.front = 0;
-    readBox.back = 1;
+    bool wholeBufferCopy = readRect.x == 0 && readRect.width == readRenderTarget11->getWidth() &&
+                           readRect.y == 0 && readRect.height == readRenderTarget11->getHeight() &&
+                           drawRect.x == 0 && drawRect.width == drawRenderTarget->getWidth() &&
+                           drawRect.y == 0 && drawRect.height == drawRenderTarget->getHeight();
 
-    bool wholeBufferCopy = readRect.x == 0 && readRect.y == 0 &&
-                           readRect.width == readRenderTarget->getWidth() &&
-                           readRect.height == readRenderTarget->getHeight();
+    bool stretchRequired = readRect.width != drawRect.width || readRect.height != drawRect.height;
 
-    // D3D11 needs depth-stencil CopySubresourceRegions to have a NULL pSrcBox
-    // We also require complete framebuffer copies for depth-stencil blit.
-    D3D11_BOX *pSrcBox = wholeBufferCopy ? NULL : &readBox;
+    bool depthStencilBlit = gl::GetDepthBits(readRenderTarget->getInternalFormat(), getCurrentClientVersion()) > 0 ||
+                            gl::GetStencilBits(readRenderTarget->getInternalFormat(), getCurrentClientVersion()) > 0;
 
-    mDeviceContext->CopySubresourceRegion(drawTexture, drawSubresource, drawRect.x, drawRect.y, 0,
-                                          readTexture, readSubresource, pSrcBox);
+    if (readRenderTarget11->getActualFormat() == drawRenderTarget->getActualFormat() &&
+        !stretchRequired && (!depthStencilBlit || wholeBufferCopy))
+    {
+        D3D11_BOX readBox;
+        readBox.left = readRect.x;
+        readBox.right = readRect.x + readRect.width;
+        readBox.top = readRect.y;
+        readBox.bottom = readRect.y + readRect.height;
+        readBox.front = 0;
+        readBox.back = 1;
 
-    readTexture->Release();
-    drawTexture->Release();
+        // D3D11 needs depth-stencil CopySubresourceRegions to have a NULL pSrcBox
+        // We also require complete framebuffer copies for depth-stencil blit.
+        D3D11_BOX *pSrcBox = wholeBufferCopy ? NULL : &readBox;
 
-    return true;
+        mDeviceContext->CopySubresourceRegion(drawTexture, drawSubresource, drawRect.x, drawRect.y, 0,
+                                              readTexture, readSubresource, pSrcBox);
+        result = true;
+    }
+    else
+    {
+        gl::Box readArea(readRect.x, readRect.y, 0, readRect.width, readRect.height, 1);
+        gl::Extents readSize(readRenderTarget->getWidth(), readRenderTarget->getHeight(), 1);
+
+        gl::Box drawArea(drawRect.x, drawRect.y, 0, drawRect.width, drawRect.height, 1);
+        gl::Extents drawSize(drawRenderTarget->getWidth(), drawRenderTarget->getHeight(), 1);
+
+        GLenum format = gl::GetFormat(drawRenderTarget->getInternalFormat(), getCurrentClientVersion());
+
+        if (depthStencilBlit)
+        {
+            UNIMPLEMENTED();
+        }
+        else
+        {
+            result = mBlit->copyTexture(readSRV, readArea, readSize, drawRTV, drawArea, drawSize, format, filter);
+        }
+    }
+
+    SafeRelease(readTexture);
+    SafeRelease(readSRV);
+    SafeRelease(drawTexture);
+    SafeRelease(drawRTV);
+    SafeRelease(drawDSV);
+
+    return result;
 }
 
 ID3D11Texture2D *Renderer11::resolveMultisampledTexture(ID3D11Texture2D *source, unsigned int subresource)
