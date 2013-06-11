@@ -355,7 +355,7 @@ Colorbuffer::Colorbuffer(rx::Renderer *renderer, rx::SwapChain *swapChain)
 
 Colorbuffer::Colorbuffer(rx::Renderer *renderer, int width, int height, GLenum format, GLsizei samples) : mRenderTarget(NULL)
 {
-    mRenderTarget = renderer->createRenderTarget(width, height, format, samples, false);
+    mRenderTarget = renderer->createRenderTarget(width, height, format, samples);
 
     if (mRenderTarget)
     {
@@ -401,7 +401,7 @@ DepthStencilbuffer::DepthStencilbuffer(rx::Renderer *renderer, rx::SwapChain *sw
 DepthStencilbuffer::DepthStencilbuffer(rx::Renderer *renderer, int width, int height, GLsizei samples)
 {
 
-    mDepthStencil = renderer->createRenderTarget(width, height, GL_DEPTH24_STENCIL8_OES, samples, true);
+    mDepthStencil = renderer->createRenderTarget(width, height, GL_DEPTH24_STENCIL8_OES, samples);
 
     mWidth = mDepthStencil->getWidth();
     mHeight = mDepthStencil->getHeight();

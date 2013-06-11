@@ -2855,9 +2855,9 @@ RenderTarget *Renderer11::createRenderTarget(SwapChain *swapChain, bool depth)
     return renderTarget;
 }
 
-RenderTarget *Renderer11::createRenderTarget(int width, int height, GLenum format, GLsizei samples, bool depth)
+RenderTarget *Renderer11::createRenderTarget(int width, int height, GLenum format, GLsizei samples)
 {
-    RenderTarget11 *renderTarget = new RenderTarget11(this, width, height, format, samples, depth);
+    RenderTarget11 *renderTarget = new RenderTarget11(this, width, height, format, samples);
     return renderTarget;
 }
 

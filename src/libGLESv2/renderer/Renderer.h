@@ -227,7 +227,7 @@ class Renderer
 
     // RenderTarget creation
     virtual RenderTarget *createRenderTarget(SwapChain *swapChain, bool depth) = 0;
-    virtual RenderTarget *createRenderTarget(int width, int height, GLenum format, GLsizei samples, bool depth) = 0;
+    virtual RenderTarget *createRenderTarget(int width, int height, GLenum format, GLsizei samples) = 0;
 
     // Shader operations
     virtual ShaderExecutable *loadExecutable(const void *function, size_t length, rx::ShaderType type) = 0;

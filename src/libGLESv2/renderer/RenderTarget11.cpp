@@ -236,7 +236,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11DepthStencilView *dsv, 
     }
 }
 
-RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height, GLenum internalFormat, GLsizei samples, bool depthStencil)
+RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height, GLenum internalFormat, GLsizei samples)
 {
     mRenderer = Renderer11::makeRenderer11(renderer);
     mTexture = NULL;
@@ -248,10 +248,10 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
 
     DXGI_FORMAT texFormat = gl_d3d11::GetTexFormat(internalFormat, clientVersion);
     DXGI_FORMAT srvFormat = gl_d3d11::GetSRVFormat(internalFormat, clientVersion);
-    DXGI_FORMAT rtvFormat = gl_d3d11::GetSRVFormat(internalFormat, clientVersion);
+    DXGI_FORMAT rtvFormat = gl_d3d11::GetRTVFormat(internalFormat, clientVersion);
     DXGI_FORMAT dsvFormat = gl_d3d11::GetDSVFormat(internalFormat, clientVersion);
 
-    int supportedSamples = mRenderer->getNearestSupportedSamples(depthStencil ? dsvFormat : rtvFormat, samples);
+    int supportedSamples = mRenderer->getNearestSupportedSamples(texFormat, samples);
     if (supportedSamples < 0)
     {
         gl::error(GL_OUT_OF_MEMORY);
@@ -272,7 +272,9 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
         desc.Usage = D3D11_USAGE_DEFAULT;
         desc.CPUAccessFlags = 0;
         desc.MiscFlags = 0;
-        desc.BindFlags = (depthStencil ? D3D11_BIND_DEPTH_STENCIL : (D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE));
+        desc.BindFlags = ((srvFormat != DXGI_FORMAT_UNKNOWN) ? D3D11_BIND_SHADER_RESOURCE : 0) |
+                         ((dsvFormat != DXGI_FORMAT_UNKNOWN) ? D3D11_BIND_DEPTH_STENCIL   : 0) |
+                         ((rtvFormat != DXGI_FORMAT_UNKNOWN) ? D3D11_BIND_RENDER_TARGET   : 0);
 
         ID3D11Device *device = mRenderer->getDevice();
         ID3D11Texture2D *texture = NULL;
@@ -286,44 +288,8 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
         }
         ASSERT(SUCCEEDED(result));
 
-        if (depthStencil)
+        if (srvFormat != DXGI_FORMAT_UNKNOWN)
         {
-            ASSERT(dsvFormat != DXGI_FORMAT_UNKNOWN);
-
-            D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
-            dsvDesc.Format = dsvFormat;
-            dsvDesc.ViewDimension = (supportedSamples == 0) ? D3D11_DSV_DIMENSION_TEXTURE2D : D3D11_DSV_DIMENSION_TEXTURE2DMS;
-            dsvDesc.Texture2D.MipSlice = 0;
-            dsvDesc.Flags = 0;
-            result = device->CreateDepthStencilView(mTexture, &dsvDesc, &mDepthStencil);
-
-            if (result == E_OUTOFMEMORY)
-            {
-                mTexture->Release();
-                mTexture = NULL;
-                gl::error(GL_OUT_OF_MEMORY);
-            }
-            ASSERT(SUCCEEDED(result));
-        }
-        else
-        {
-            ASSERT(rtvFormat != DXGI_FORMAT_UNKNOWN && srvFormat != DXGI_FORMAT_UNKNOWN);
-
-            D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
-            rtvDesc.Format = rtvFormat;
-            rtvDesc.ViewDimension = (supportedSamples == 0) ? D3D11_RTV_DIMENSION_TEXTURE2D : D3D11_RTV_DIMENSION_TEXTURE2DMS;
-            rtvDesc.Texture2D.MipSlice = 0;
-            result = device->CreateRenderTargetView(mTexture, &rtvDesc, &mRenderTarget);
-
-            if (result == E_OUTOFMEMORY)
-            {
-                mTexture->Release();
-                mTexture = NULL;
-                gl::error(GL_OUT_OF_MEMORY);
-                return;
-            }
-            ASSERT(SUCCEEDED(result));
-
             D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
             srvDesc.Format = srvFormat;
             srvDesc.ViewDimension = (supportedSamples == 0) ? D3D11_SRV_DIMENSION_TEXTURE2D : D3D11_SRV_DIMENSION_TEXTURE2DMS;
@@ -333,10 +299,45 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
 
             if (result == E_OUTOFMEMORY)
             {
-                mTexture->Release();
-                mTexture = NULL;
-                mRenderTarget->Release();
-                mRenderTarget = NULL;
+                SafeRelease(mTexture);
+                gl::error(GL_OUT_OF_MEMORY);
+                return;
+            }
+            ASSERT(SUCCEEDED(result));
+        }
+
+        if (dsvFormat != DXGI_FORMAT_UNKNOWN)
+        {
+            D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+            dsvDesc.Format = dsvFormat;
+            dsvDesc.ViewDimension = (supportedSamples == 0) ? D3D11_DSV_DIMENSION_TEXTURE2D : D3D11_DSV_DIMENSION_TEXTURE2DMS;
+            dsvDesc.Texture2D.MipSlice = 0;
+            dsvDesc.Flags = 0;
+            result = device->CreateDepthStencilView(mTexture, &dsvDesc, &mDepthStencil);
+
+            if (result == E_OUTOFMEMORY)
+            {
+                SafeRelease(mTexture);
+                SafeRelease(mShaderResource);
+                gl::error(GL_OUT_OF_MEMORY);
+                return;
+            }
+            ASSERT(SUCCEEDED(result));
+        }
+
+        if (rtvFormat != DXGI_FORMAT_UNKNOWN)
+        {
+            D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
+            rtvDesc.Format = rtvFormat;
+            rtvDesc.ViewDimension = (supportedSamples == 0) ? D3D11_RTV_DIMENSION_TEXTURE2D : D3D11_RTV_DIMENSION_TEXTURE2DMS;
+            rtvDesc.Texture2D.MipSlice = 0;
+            result = device->CreateRenderTargetView(mTexture, &rtvDesc, &mRenderTarget);
+
+            if (result == E_OUTOFMEMORY)
+            {
+                SafeRelease(mTexture);
+                SafeRelease(mShaderResource);
+                SafeRelease(mDepthStencil);
                 gl::error(GL_OUT_OF_MEMORY);
                 return;
             }

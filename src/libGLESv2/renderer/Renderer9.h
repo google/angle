@@ -189,7 +189,7 @@ class Renderer9 : public Renderer
 
     // RenderTarget creation
     virtual RenderTarget *createRenderTarget(SwapChain *swapChain, bool depth);
-    virtual RenderTarget *createRenderTarget(int width, int height, GLenum format, GLsizei samples, bool depth);
+    virtual RenderTarget *createRenderTarget(int width, int height, GLenum format, GLsizei samples);
 
     // Shader operations
     virtual ShaderExecutable *loadExecutable(const void *function, size_t length, rx::ShaderType type);
