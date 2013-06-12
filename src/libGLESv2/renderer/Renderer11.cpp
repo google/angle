@@ -3004,7 +3004,7 @@ bool Renderer11::getRenderTargetResource(gl::Renderbuffer *colorbuffer, unsigned
 }
 
 bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &readRect, gl::Framebuffer *drawTarget, const gl::Rectangle &drawRect,
-                          bool blitRenderTarget, bool blitDepthStencil, GLenum filter)
+                          bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter)
 {
     if (blitRenderTarget)
     {
@@ -3032,7 +3032,8 @@ bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &read
 
                 RenderTarget *drawRenderTarget = drawBuffer->getRenderTarget();
 
-                if (!blitRenderbufferRect(readRect, drawRect, readRenderTarget, drawRenderTarget, filter))
+                if (!blitRenderbufferRect(readRect, drawRect, readRenderTarget, drawRenderTarget, filter,
+                                          blitRenderTarget, false, false))
                 {
                     return false;
                 }
@@ -3040,7 +3041,7 @@ bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &read
         }
     }
 
-    if (blitDepthStencil)
+    if (blitDepth || blitStencil)
     {
         gl::Renderbuffer *readBuffer = readTarget->getDepthOrStencilbuffer();
         gl::Renderbuffer *drawBuffer = drawTarget->getDepthOrStencilbuffer();
@@ -3060,7 +3061,8 @@ bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &read
         RenderTarget *readRenderTarget = readBuffer->getDepthStencil();
         RenderTarget *drawRenderTarget = drawBuffer->getDepthStencil();
 
-        if (!blitRenderbufferRect(readRect, drawRect, readRenderTarget, drawRenderTarget, filter))
+        if (!blitRenderbufferRect(readRect, drawRect, readRenderTarget, drawRenderTarget, filter,
+                                  false, blitDepth, blitStencil))
         {
             return false;
         }
@@ -3291,7 +3293,7 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
 }
 
 bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::Rectangle &drawRect, RenderTarget *readRenderTarget,
-                                      RenderTarget *drawRenderTarget, GLenum filter)
+                                      RenderTarget *drawRenderTarget, GLenum filter, bool colorBlit, bool depthBlit, bool stencilBlit)
 {
     bool result = true;
 
@@ -3359,11 +3361,8 @@ bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::R
 
     bool stretchRequired = readRect.width != drawRect.width || readRect.height != drawRect.height;
 
-    bool depthStencilBlit = gl::GetDepthBits(readRenderTarget->getInternalFormat(), getCurrentClientVersion()) > 0 ||
-                            gl::GetStencilBits(readRenderTarget->getInternalFormat(), getCurrentClientVersion()) > 0;
-
     if (readRenderTarget11->getActualFormat() == drawRenderTarget->getActualFormat() &&
-        !stretchRequired && (!depthStencilBlit || wholeBufferCopy))
+        !stretchRequired && (!(depthBlit || stencilBlit) || wholeBufferCopy))
     {
         D3D11_BOX readBox;
         readBox.left = readRect.x;
@@ -3389,14 +3388,13 @@ bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::R
         gl::Box drawArea(drawRect.x, drawRect.y, 0, drawRect.width, drawRect.height, 1);
         gl::Extents drawSize(drawRenderTarget->getWidth(), drawRenderTarget->getHeight(), 1);
 
-        GLenum format = gl::GetFormat(drawRenderTarget->getInternalFormat(), getCurrentClientVersion());
-
-        if (depthStencilBlit)
+        if (depthBlit || stencilBlit)
         {
             UNIMPLEMENTED();
         }
         else
         {
+            GLenum format = gl::GetFormat(drawRenderTarget->getInternalFormat(), getCurrentClientVersion());
             result = mBlit->copyTexture(readSRV, readArea, readSize, drawRTV, drawArea, drawSize, format, filter);
         }
     }

@@ -3227,18 +3227,19 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
     Framebuffer *drawFramebuffer = getDrawFramebuffer();
 
     bool blitRenderTarget = false;
-    bool blitDepthStencil = false;
+    bool blitDepth = false;
+    bool blitStencil = false;
     if ((mask & GL_COLOR_BUFFER_BIT) && readFramebuffer->getReadColorbuffer() && drawFramebuffer->getFirstColorbuffer())
     {
         blitRenderTarget = true;
     }
     if ((mask & GL_STENCIL_BUFFER_BIT) && readFramebuffer->getStencilbuffer() && drawFramebuffer->getStencilbuffer())
     {
-        blitDepthStencil = true;
+        blitStencil = true;
     }
     if ((mask & GL_DEPTH_BUFFER_BIT) && readFramebuffer->getDepthbuffer() && drawFramebuffer->getDepthbuffer())
     {
-        blitDepthStencil = true;
+        blitDepth = true;
     }
 
     gl::Rectangle sourceClippedRect, destClippedRect;
@@ -3249,10 +3250,10 @@ void Context::blitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1
         return;
     }
 
-    if (blitRenderTarget || blitDepthStencil)
+    if (blitRenderTarget || blitDepth || blitStencil)
     {
         mRenderer->blitRect(readFramebuffer, sourceClippedRect, drawFramebuffer, destClippedRect,
-                            blitRenderTarget, blitDepthStencil, filter);
+                            blitRenderTarget, blitDepth, blitStencil, filter);
     }
 }
 
