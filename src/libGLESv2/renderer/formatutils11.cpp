@@ -592,6 +592,72 @@ static D3D11FastCopyMap BuildFastCopyMap()
     return map;
 }
 
+struct DXGIDepthStencilInfo
+{
+    unsigned int mDepthBits;
+    unsigned int mDepthOffset;
+    unsigned int mStencilBits;
+    unsigned int mStencilOffset;
+
+    DXGIDepthStencilInfo()
+        : mDepthBits(0), mDepthOffset(0), mStencilBits(0), mStencilOffset(0)
+    { }
+
+    DXGIDepthStencilInfo(unsigned int depthBits, unsigned int depthOffset, unsigned int stencilBits, unsigned int stencilOffset)
+        : mDepthBits(depthBits), mDepthOffset(depthOffset), mStencilBits(stencilBits), mStencilOffset(stencilOffset)
+    { }
+};
+
+typedef std::map<DXGI_FORMAT, DXGIDepthStencilInfo> DepthStencilInfoMap;
+typedef std::pair<DXGI_FORMAT, DXGIDepthStencilInfo> DepthStencilInfoPair;
+
+static DepthStencilInfoMap BuildDepthStencilInfoMap()
+{
+    DepthStencilInfoMap map;
+
+    map.insert(DepthStencilInfoPair(DXGI_FORMAT_R16_TYPELESS,             DXGIDepthStencilInfo(16, 0, 0,  0)));
+    map.insert(DepthStencilInfoPair(DXGI_FORMAT_R16_UNORM,                DXGIDepthStencilInfo(16, 0, 0,  0)));
+    map.insert(DepthStencilInfoPair(DXGI_FORMAT_D16_UNORM,                DXGIDepthStencilInfo(16, 0, 0,  0)));
+
+    map.insert(DepthStencilInfoPair(DXGI_FORMAT_R24G8_TYPELESS,           DXGIDepthStencilInfo(24, 0, 8, 24)));
+    map.insert(DepthStencilInfoPair(DXGI_FORMAT_R24_UNORM_X8_TYPELESS,    DXGIDepthStencilInfo(24, 0, 8, 24)));
+    map.insert(DepthStencilInfoPair(DXGI_FORMAT_D24_UNORM_S8_UINT,        DXGIDepthStencilInfo(24, 0, 8, 24)));
+
+    map.insert(DepthStencilInfoPair(DXGI_FORMAT_R32_TYPELESS,             DXGIDepthStencilInfo(32, 0, 0,  0)));
+    map.insert(DepthStencilInfoPair(DXGI_FORMAT_R32_FLOAT,                DXGIDepthStencilInfo(32, 0, 0,  0)));
+    map.insert(DepthStencilInfoPair(DXGI_FORMAT_D32_FLOAT,                DXGIDepthStencilInfo(32, 0, 0,  0)));
+
+    map.insert(DepthStencilInfoPair(DXGI_FORMAT_R32G8X24_TYPELESS,        DXGIDepthStencilInfo(32, 0, 8, 32)));
+    map.insert(DepthStencilInfoPair(DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS, DXGIDepthStencilInfo(32, 0, 8, 32)));
+    map.insert(DepthStencilInfoPair(DXGI_FORMAT_D32_FLOAT_S8X24_UINT,     DXGIDepthStencilInfo(32, 0, 8, 32)));
+
+    return map;
+}
+
+static const DepthStencilInfoMap &GetDepthStencilInfoMap()
+{
+    static const DepthStencilInfoMap infoMap = BuildDepthStencilInfoMap();
+    return infoMap;
+}
+
+bool GetDepthStencilInfo(DXGI_FORMAT format, DXGIDepthStencilInfo *outDepthStencilInfo)
+{
+    const DepthStencilInfoMap& infoMap = GetDepthStencilInfoMap();
+    DepthStencilInfoMap::const_iterator iter = infoMap.find(format);
+    if (iter != infoMap.end())
+    {
+        if (outDepthStencilInfo)
+        {
+            *outDepthStencilInfo = iter->second;
+        }
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 namespace d3d11
 {
 
@@ -683,6 +749,66 @@ GLuint GetBlockHeight(DXGI_FORMAT format)
     else
     {
         UNREACHABLE();
+        return 0;
+    }
+}
+
+GLuint GetDepthBits(DXGI_FORMAT format)
+{
+    DXGIDepthStencilInfo dxgiDSInfo;
+    if (GetDepthStencilInfo(format, &dxgiDSInfo))
+    {
+        return dxgiDSInfo.mDepthBits;
+    }
+    else
+    {
+        // Since the depth stencil info map does not contain all used DXGI formats,
+        // we should not assert that the format exists
+        return 0;
+    }
+}
+
+GLuint GetDepthOffset(DXGI_FORMAT format)
+{
+    DXGIDepthStencilInfo dxgiDSInfo;
+    if (GetDepthStencilInfo(format, &dxgiDSInfo))
+    {
+        return dxgiDSInfo.mDepthOffset;
+    }
+    else
+    {
+        // Since the depth stencil info map does not contain all used DXGI formats,
+        // we should not assert that the format exists
+        return 0;
+    }
+}
+
+GLuint GetStencilBits(DXGI_FORMAT format)
+{
+    DXGIDepthStencilInfo dxgiDSInfo;
+    if (GetDepthStencilInfo(format, &dxgiDSInfo))
+    {
+        return dxgiDSInfo.mStencilBits;
+    }
+    else
+    {
+        // Since the depth stencil info map does not contain all used DXGI formats,
+        // we should not assert that the format exists
+        return 0;
+    }
+}
+
+GLuint GetStencilOffset(DXGI_FORMAT format)
+{
+    DXGIDepthStencilInfo dxgiDSInfo;
+    if (GetDepthStencilInfo(format, &dxgiDSInfo))
+    {
+        return dxgiDSInfo.mStencilOffset;
+    }
+    else
+    {
+        // Since the depth stencil info map does not contain all used DXGI formats,
+        // we should not assert that the format exists
         return 0;
     }
 }

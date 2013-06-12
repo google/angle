@@ -27,6 +27,11 @@ GLuint GetFormatPixelBytes(DXGI_FORMAT format);
 GLuint GetBlockWidth(DXGI_FORMAT format);
 GLuint GetBlockHeight(DXGI_FORMAT format);
 
+GLuint GetDepthBits(DXGI_FORMAT format);
+GLuint GetDepthOffset(DXGI_FORMAT format);
+GLuint GetStencilBits(DXGI_FORMAT format);
+GLuint GetStencilOffset(DXGI_FORMAT format);
+
 void MakeValidSize(bool isImage, DXGI_FORMAT format, GLsizei *requestWidth, GLsizei *requestHeight, int *levelOffset);
 
 const DXGIFormatSet &GetAllUsedDXGIFormats();
