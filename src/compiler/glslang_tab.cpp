@@ -3756,7 +3756,7 @@ yyreduce:
 
     {
         ES3_ONLY("in", (yyvsp[(1) - (1)].lex).line, "storage qualifier");
-        (yyval.interm.type).qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqSmoothIn : EvqAttribute;
+        (yyval.interm.type).qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqSmoothIn : EvqVertexInput;
         (yyval.interm.type).line = (yyvsp[(1) - (1)].lex).line;
     }
     break;
@@ -3765,7 +3765,7 @@ yyreduce:
 
     {
         ES3_ONLY("out", (yyvsp[(1) - (1)].lex).line, "storage qualifier");
-        (yyval.interm.type).qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragColor : EvqSmoothOut;
+        (yyval.interm.type).qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragmentOutput : EvqSmoothOut;
         (yyval.interm.type).line = (yyvsp[(1) - (1)].lex).line;
     }
     break;
@@ -3774,7 +3774,7 @@ yyreduce:
 
     {
         ES3_ONLY("centroid in", (yyvsp[(1) - (2)].lex).line, "storage qualifier");
-        (yyval.interm.type).qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqCentroidIn : EvqAttribute;
+        (yyval.interm.type).qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqCentroidIn : EvqVertexInput;
         (yyval.interm.type).line = (yyvsp[(1) - (2)].lex).line;
     }
     break;
@@ -3783,7 +3783,7 @@ yyreduce:
 
     {
         ES3_ONLY("centroid out", (yyvsp[(1) - (2)].lex).line, "storage qualifier");
-        (yyval.interm.type).qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragColor : EvqCentroidOut;
+        (yyval.interm.type).qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragmentOutput : EvqCentroidOut;
         (yyval.interm.type).line = (yyvsp[(1) - (2)].lex).line;
     }
     break;

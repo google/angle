@@ -1397,7 +1397,7 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
                 out << decorateUniform(name, node->getType());
             }
         }
-        else if (qualifier == EvqAttribute)
+        else if (qualifier == EvqAttribute || qualifier == EvqVertexInput)
         {
             mReferencedAttributes[name] = node;
             out << decorate(name);
@@ -1407,7 +1407,7 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
             mReferencedVaryings[name] = node;
             out << decorate(name);
         }
-        else if (qualifier == EvqFragColor)
+        else if (qualifier == EvqFragColor || qualifier == EvqFragmentOutput)
         {
             out << "gl_Color[0]";
             mUsesFragColor = true;

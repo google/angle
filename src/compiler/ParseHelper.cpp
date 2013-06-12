@@ -316,6 +316,7 @@ bool TParseContext::lValueErrorCheck(int line, const char* op, TIntermTyped* nod
     case EvqConst:          message = "can't modify a const";        break;
     case EvqConstReadOnly:  message = "can't modify a const";        break;
     case EvqAttribute:      message = "can't modify an attribute";   break;
+    case EvqVertexInput:    message = "can't modify an input";       break;
     case EvqUniform:        message = "can't modify a uniform";      break;
     case EvqVaryingIn:      message = "can't modify a varying";      break;
     case EvqInput:          message = "can't modify an input";       break;
@@ -628,11 +629,18 @@ bool TParseContext::samplerErrorCheck(int line, const TPublicType& pType, const 
 
 bool TParseContext::structQualifierErrorCheck(int line, const TPublicType& pType)
 {
-    if ((pType.qualifier == EvqVaryingIn || pType.qualifier == EvqVaryingOut || pType.qualifier == EvqAttribute) &&
-        pType.type == EbtStruct) {
-        error(line, "cannot be used with a structure", getQualifierString(pType.qualifier));
-        
-        return true;
+    switch (pType.qualifier)
+    {
+      case EvqVaryingIn:
+      case EvqVaryingOut:
+      case EvqAttribute:
+      case EvqVertexInput:
+      case EvqFragmentOutput:
+        if (pType.type == EbtStruct)
+        {
+            error(line, "cannot be used with a structure", getQualifierString(pType.qualifier));
+            return true;
+        }
     }
 
     if (pType.qualifier != EvqUniform && samplerErrorCheck(line, pType, "samplers must be uniform"))
@@ -717,7 +725,7 @@ bool TParseContext::arraySizeErrorCheck(int line, TIntermTyped* expr, int& size)
 //
 bool TParseContext::arrayQualifierErrorCheck(int line, TPublicType type)
 {
-    if ((type.qualifier == EvqAttribute) || (type.qualifier == EvqConst)) {
+    if ((type.qualifier == EvqAttribute) || (type.qualifier == EvqVertexInput) || (type.qualifier == EvqConst)) {
         error(line, "cannot declare arrays of this qualifier", TType(type).getCompleteString().c_str());
         return true;
     }
@@ -1151,16 +1159,20 @@ TPublicType TParseContext::addFullySpecifiedType(TQualifier qualifier, const TPu
     }
     else
     {
-        if (qualifier == EvqAttribute && typeSpecifier.type == EbtBool)
+        switch (qualifier)
         {
-            error(typeSpecifier.line, "cannot be bool", getQualifierString(qualifier));
-            recover();
-        }
+          case EvqVertexInput:
+          case EvqFragmentOutput:
+          case EvqVaryingIn:
+          case EvqVaryingOut:
+            if (typeSpecifier.type == EbtBool)
+            {
+                error(typeSpecifier.line, "cannot be bool", getQualifierString(qualifier));
+                recover();
+            }
+            break;
 
-        if ((qualifier == EvqVaryingIn || qualifier == EvqVaryingOut) && typeSpecifier.type == EbtBool)
-        {
-            error(typeSpecifier.line, "cannot be bool", getQualifierString(qualifier));
-            recover();
+          default: break;
         }
     }
 

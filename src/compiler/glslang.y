@@ -1389,22 +1389,22 @@ storage_qualifier
     }
     | IN_QUAL {
         ES3_ONLY("in", $1.line, "storage qualifier");
-        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqSmoothIn : EvqAttribute;
+        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqSmoothIn : EvqVertexInput;
         $$.line = $1.line;
     }
     | OUT_QUAL {
         ES3_ONLY("out", $1.line, "storage qualifier");
-        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragColor : EvqSmoothOut;
+        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragmentOutput : EvqSmoothOut;
         $$.line = $1.line;
     }
     | CENTROID IN_QUAL {
         ES3_ONLY("centroid in", $1.line, "storage qualifier");
-        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqCentroidIn : EvqAttribute;
+        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqCentroidIn : EvqVertexInput;
         $$.line = $1.line;
     }
     | CENTROID OUT_QUAL {
         ES3_ONLY("centroid out", $1.line, "storage qualifier");
-        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragColor : EvqCentroidOut;
+        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragmentOutput : EvqCentroidOut;
         $$.line = $1.line;
     }
     | UNIFORM {
