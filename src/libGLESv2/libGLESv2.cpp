@@ -1096,6 +1096,7 @@ bool validateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
     gl::Texture *texture = NULL;
     GLenum textureInternalFormat = GL_NONE;
     bool textureCompressed = false;
+    bool textureIsDepth = false;
     GLint textureLevelWidth = 0;
     GLint textureLevelHeight = 0;
     GLint textureLevelDepth = 0;
@@ -1108,6 +1109,7 @@ bool validateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
             {
                 textureInternalFormat = texture2d->getInternalFormat(level);
                 textureCompressed = texture2d->isCompressed(level);
+                textureIsDepth = texture2d->isDepth(level);
                 textureLevelWidth = texture2d->getWidth(level);
                 textureLevelHeight = texture2d->getHeight(level);
                 textureLevelDepth = 1;
@@ -1128,6 +1130,7 @@ bool validateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
             {
                 textureInternalFormat = textureCube->getInternalFormat(target, level);
                 textureCompressed = textureCube->isCompressed(target, level);
+                textureIsDepth = false;
                 textureLevelWidth = textureCube->getWidth(target, level);
                 textureLevelHeight = textureCube->getHeight(target, level);
                 textureLevelDepth = 1;
@@ -1143,6 +1146,7 @@ bool validateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
             {
                 textureInternalFormat = texture2dArray->getInternalFormat(level);
                 textureCompressed = texture2dArray->isCompressed(level);
+                textureIsDepth = texture2dArray->isDepth(level);
                 textureLevelWidth = texture2dArray->getWidth(level);
                 textureLevelHeight = texture2dArray->getHeight(level);
                 textureLevelDepth = texture2dArray->getDepth(level);
@@ -1158,6 +1162,7 @@ bool validateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
             {
                 textureInternalFormat = texture3d->getInternalFormat(level);
                 textureCompressed = texture3d->isCompressed(level);
+                textureIsDepth = texture3d->isDepth(level);
                 textureLevelWidth = texture3d->getWidth(level);
                 textureLevelHeight = texture3d->getHeight(level);
                 textureLevelDepth = texture3d->getDepth(level);
@@ -1176,6 +1181,11 @@ bool validateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLin
     }
 
     if (texture->isImmutable() && !isSubImage)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    if (textureIsDepth)
     {
         return gl::error(GL_INVALID_OPERATION, false);
     }
