@@ -14,6 +14,7 @@ fxc /E luminanceps /T ps_2_0 /Fh compiled/luminanceps.h Blit.ps
 fxc /E componentmaskps /T ps_2_0 /Fh compiled/componentmaskps.h Blit.ps
 
 fxc /E VS_Passthrough2D /T vs_4_0 /Fh compiled/passthrough2d11vs.h Passthrough2D11.hlsl
+fxc /E PS_PassthroughDepth2D /T ps_4_0 /Fh compiled/passthroughdepth2d11ps.h Passthrough2D11.hlsl
 fxc /E PS_PassthroughRGBA2D /T ps_4_0 /Fh compiled/passthroughrgba2d11ps.h Passthrough2D11.hlsl
 fxc /E PS_PassthroughRGBA2DUI /T ps_4_0 /Fh compiled/passthroughrgba2dui11ps.h Passthrough2D11.hlsl
 fxc /E PS_PassthroughRGBA2DI /T ps_4_0 /Fh compiled/passthroughrgba2di11ps.h Passthrough2D11.hlsl

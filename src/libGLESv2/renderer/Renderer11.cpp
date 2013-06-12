@@ -3295,6 +3295,11 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
 bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::Rectangle &drawRect, RenderTarget *readRenderTarget,
                                       RenderTarget *drawRenderTarget, GLenum filter, bool colorBlit, bool depthBlit, bool stencilBlit)
 {
+    // Since blitRenderbufferRect is called for each render buffer that needs to be blitted,
+    // it should never be the case that both color and depth/stencil need to be blitted at
+    // at the same time.
+    ASSERT(colorBlit != (depthBlit || stencilBlit));
+
     bool result = true;
 
     RenderTarget11 *readRenderTarget11 = RenderTarget11::makeRenderTarget11(readRenderTarget);
@@ -3388,9 +3393,19 @@ bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::R
         gl::Box drawArea(drawRect.x, drawRect.y, 0, drawRect.width, drawRect.height, 1);
         gl::Extents drawSize(drawRenderTarget->getWidth(), drawRenderTarget->getHeight(), 1);
 
-        if (depthBlit || stencilBlit)
+        if (depthBlit && stencilBlit)
         {
-            UNIMPLEMENTED();
+            result = mBlit->copyDepthStencil(readTexture, readSubresource, readArea, readSize,
+                                             drawTexture, drawSubresource, drawArea, drawSize);
+        }
+        else if (depthBlit)
+        {
+            result = mBlit->copyDepth(readSRV, readArea, readSize, drawDSV, drawArea, drawSize);
+        }
+        else if (stencilBlit)
+        {
+            result = mBlit->copyStencil(readTexture, readSubresource, readArea, readSize,
+                                        drawTexture, drawSubresource, drawArea, drawSize);
         }
         else
         {

@@ -11,6 +11,11 @@ void VS_Passthrough2D( in float2  inPosition :    POSITION,  in float2  inTexCoo
     outTexCoord = inTexCoord;
 }
 
+float PS_PassthroughDepth2D(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_DEPTH
+{
+    return TextureF.Sample(Sampler, inTexCoord).r;
+}
+
 float4 PS_PassthroughRGBA2D(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
 {
     return TextureF.Sample(Sampler, inTexCoord).rgba;

@@ -15,6 +15,7 @@
 #include "libGLESv2/renderer/formatutils11.h"
 
 #include "libGLESv2/renderer/shaders/compiled/passthrough2d11vs.h"
+#include "libGLESv2/renderer/shaders/compiled/passthroughdepth2d11ps.h"
 #include "libGLESv2/renderer/shaders/compiled/passthroughrgba2d11ps.h"
 #include "libGLESv2/renderer/shaders/compiled/passthroughrgba2dui11ps.h"
 #include "libGLESv2/renderer/shaders/compiled/passthroughrgba2di11ps.h"
@@ -52,7 +53,8 @@ namespace rx
 
 Blit11::Blit11(rx::Renderer11 *renderer)
     : mRenderer(renderer), mShaderMap(compareBlitParameters), mVertexBuffer(NULL),
-      mPointSampler(NULL), mLinearSampler(NULL), mQuad2DIL(NULL), mQuad2DVS(NULL),
+      mPointSampler(NULL), mLinearSampler(NULL), mRasterizerState(NULL), mDepthStencilState(NULL),
+      mQuad2DIL(NULL), mQuad2DVS(NULL), mDepthPS(NULL),
       mQuad3DIL(NULL), mQuad3DVS(NULL), mQuad3DGS(NULL)
 {
     HRESULT result;
@@ -126,6 +128,26 @@ Blit11::Blit11(rx::Renderer11 *renderer)
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mRasterizerState, "Blit11 rasterizer state");
 
+    D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
+    depthStencilDesc.DepthEnable = true;
+    depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+    depthStencilDesc.DepthFunc = D3D11_COMPARISON_ALWAYS;
+    depthStencilDesc.StencilEnable = FALSE;
+    depthStencilDesc.StencilReadMask = D3D11_DEFAULT_STENCIL_READ_MASK;
+    depthStencilDesc.StencilWriteMask = D3D11_DEFAULT_STENCIL_WRITE_MASK;
+    depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+    depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+    depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+    depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+    depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+    depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+    depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+    depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+    result = device->CreateDepthStencilState(&depthStencilDesc, &mDepthStencilState);
+    ASSERT(SUCCEEDED(result));
+    d3d11::SetDebugName(mDepthStencilState, "Blit11 depth stencil state");
+
     D3D11_INPUT_ELEMENT_DESC quad2DLayout[] =
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -139,6 +161,10 @@ Blit11::Blit11(rx::Renderer11 *renderer)
     result = device->CreateVertexShader(g_VS_Passthrough2D, ArraySize(g_VS_Passthrough2D), NULL, &mQuad2DVS);
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mQuad2DVS, "Blit11 2D vertex shader");
+
+    result = device->CreatePixelShader(g_PS_PassthroughDepth2D, ArraySize(g_PS_PassthroughDepth2D), NULL, &mDepthPS);
+    ASSERT(SUCCEEDED(result));
+    d3d11::SetDebugName(mDepthPS, "Blit11 2D depth pixel shader");
 
     D3D11_INPUT_ELEMENT_DESC quad3DLayout[] =
     {
@@ -168,9 +194,11 @@ Blit11::~Blit11()
     SafeRelease(mPointSampler);
     SafeRelease(mLinearSampler);
     SafeRelease(mRasterizerState);
+    SafeRelease(mDepthStencilState);
 
     SafeRelease(mQuad2DIL);
     SafeRelease(mQuad2DVS);
+    SafeRelease(mDepthPS);
 
     SafeRelease(mQuad3DIL);
     SafeRelease(mQuad3DVS);
@@ -298,19 +326,63 @@ bool Blit11::copyTexture(ID3D11ShaderResourceView *source, const gl::Box &source
     return true;
 }
 
-bool Blit11::compareBlitParameters(const Blit11::BlitParameters &a, const Blit11::BlitParameters &b)
+static ID3D11Resource *createStagingTexture(ID3D11Device *device, ID3D11DeviceContext *context,
+                                            ID3D11Resource *source, unsigned int subresource,
+                                            const gl::Extents &size, unsigned int cpuAccessFlags)
 {
-    return memcmp(&a, &b, sizeof(Blit11::BlitParameters)) < 0;
+    ID3D11Texture2D *sourceTexture = d3d11::DynamicCastComObject<ID3D11Texture2D>(source);
+    if (!sourceTexture)
+    {
+        return NULL;
+    }
+
+    D3D11_TEXTURE2D_DESC sourceDesc;
+    sourceTexture->GetDesc(&sourceDesc);
+
+    if (sourceDesc.SampleDesc.Count > 1)
+    {
+        // Creating a staging texture of a multisampled texture is not supported
+        SafeRelease(sourceTexture);
+        return NULL;
+    }
+
+    D3D11_TEXTURE2D_DESC stagingDesc;
+    stagingDesc.Width = size.width;
+    stagingDesc.Height = size.height;
+    stagingDesc.MipLevels = 1;
+    stagingDesc.ArraySize = 1;
+    stagingDesc.Format = sourceDesc.Format;
+    stagingDesc.SampleDesc.Count = 1;
+    stagingDesc.SampleDesc.Quality = 0;
+    stagingDesc.Usage = D3D11_USAGE_STAGING;
+    stagingDesc.CPUAccessFlags = cpuAccessFlags;
+    stagingDesc.MiscFlags = 0;
+    stagingDesc.BindFlags = 0;
+
+    SafeRelease(sourceTexture);
+
+    ID3D11Texture2D *stagingTexture = NULL;
+    HRESULT result = device->CreateTexture2D(&stagingDesc, NULL, &stagingTexture);
+
+    context->CopySubresourceRegion(stagingTexture, 0, 0, 0, 0, source, subresource, NULL);
+
+    return stagingTexture;
 }
 
-template <unsigned int N>
-static ID3D11PixelShader *compilePS(ID3D11Device *device, const BYTE (&byteCode)[N], const char *name)
+static DXGI_FORMAT getTextureFormat(ID3D11Resource *resource)
 {
-    ID3D11PixelShader *ps = NULL;
-    HRESULT result = device->CreatePixelShader(byteCode, N, NULL, &ps);
-    ASSERT(SUCCEEDED(result));
-    d3d11::SetDebugName(ps, name);
-    return ps;
+    ID3D11Texture2D *texture = d3d11::DynamicCastComObject<ID3D11Texture2D>(resource);
+    if (!texture)
+    {
+        return DXGI_FORMAT_UNKNOWN;
+    }
+
+    D3D11_TEXTURE2D_DESC desc;
+    texture->GetDesc(&desc);
+
+    SafeRelease(texture);
+
+    return desc.Format;
 }
 
 inline static void generateVertexCoords(const gl::Box &sourceArea, const gl::Extents &sourceSize,
@@ -375,6 +447,205 @@ static void write3DVertices(const gl::Box &sourceArea, const gl::Extents &source
     *outStride = sizeof(d3d11::PositionLayerTexCoord3DVertex);
     *outVertexCount = destSize.depth * 6;
     *outTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+}
+
+bool Blit11::copyStencil(ID3D11Resource *source, unsigned int sourceSubresource, const gl::Box &sourceArea, const gl::Extents &sourceSize,
+                         ID3D11Resource *dest, unsigned int destSubresource, const gl::Box &destArea, const gl::Extents &destSize)
+{
+    return copyDepthStencil(source, sourceSubresource, sourceArea, sourceSize,
+                            dest, destSubresource, destArea, destSize,
+                            true);
+}
+
+bool Blit11::copyDepth(ID3D11ShaderResourceView *source, const gl::Box &sourceArea, const gl::Extents &sourceSize,
+                       ID3D11DepthStencilView *dest, const gl::Box &destArea, const gl::Extents &destSize)
+{
+    HRESULT result;
+    ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
+
+    // Set vertices
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    result = deviceContext->Map(mVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    if (FAILED(result))
+    {
+        ERR("Failed to map vertex buffer for texture copy, HRESULT: 0x%X.", result);
+        return false;
+    }
+
+    UINT stride = 0;
+    UINT startIdx = 0;
+    UINT drawCount = 0;
+    D3D11_PRIMITIVE_TOPOLOGY topology;
+
+    write2DVertices(sourceArea, sourceSize, destArea, destSize, mappedResource.pData,
+                    &stride, &drawCount, &topology);
+
+    deviceContext->Unmap(mVertexBuffer, 0);
+
+    // Apply vertex buffer
+    deviceContext->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &startIdx);
+
+    // Apply state
+    deviceContext->OMSetBlendState(NULL, NULL, 0xFFFFFFF);
+    deviceContext->OMSetDepthStencilState(mDepthStencilState, 0xFFFFFFFF);
+    deviceContext->RSSetState(mRasterizerState);
+
+    // Apply shaders
+    deviceContext->IASetInputLayout(mQuad2DIL);
+    deviceContext->IASetPrimitiveTopology(topology);
+    deviceContext->VSSetShader(mQuad2DVS, NULL, 0);
+
+    deviceContext->PSSetShader(mDepthPS, NULL, 0);
+    deviceContext->GSSetShader(NULL, NULL, 0);
+
+    // Unset the currently bound shader resource to avoid conflicts
+    ID3D11ShaderResourceView *const nullSRV = NULL;
+    deviceContext->PSSetShaderResources(0, 1, &nullSRV);
+
+    // Apply render target
+    deviceContext->OMSetRenderTargets(0, NULL, dest);
+
+    // Set the viewport
+    D3D11_VIEWPORT viewport;
+    viewport.TopLeftX = 0;
+    viewport.TopLeftY = 0;
+    viewport.Width = destSize.width;
+    viewport.Height = destSize.height;
+    viewport.MinDepth = 0.0f;
+    viewport.MaxDepth = 1.0f;
+    deviceContext->RSSetViewports(1, &viewport);
+
+    // Apply textures
+    deviceContext->PSSetShaderResources(0, 1, &source);
+
+    // Apply samplers
+    deviceContext->PSSetSamplers(0, 1, &mPointSampler);
+
+    // Draw the quad
+    deviceContext->Draw(drawCount, 0);
+
+    // Unbind textures and render targets and vertex buffer
+    deviceContext->PSSetShaderResources(0, 1, &nullSRV);
+
+    mRenderer->unapplyRenderTargets();
+
+    UINT zero = 0;
+    ID3D11Buffer *const nullBuffer = NULL;
+    deviceContext->IASetVertexBuffers(0, 1, &nullBuffer, &zero, &zero);
+
+    mRenderer->markAllStateDirty();
+
+    return true;
+}
+
+bool Blit11::copyDepthStencil(ID3D11Resource *source, unsigned int sourceSubresource, const gl::Box &sourceArea, const gl::Extents &sourceSize,
+                              ID3D11Resource *dest, unsigned int destSubresource, const gl::Box &destArea, const gl::Extents &destSize)
+{
+    return copyDepthStencil(source, sourceSubresource, sourceArea, sourceSize,
+                            dest, destSubresource, destArea, destSize,
+                            false);
+}
+
+bool Blit11::copyDepthStencil(ID3D11Resource *source, unsigned int sourceSubresource, const gl::Box &sourceArea, const gl::Extents &sourceSize,
+                              ID3D11Resource *dest, unsigned int destSubresource, const gl::Box &destArea, const gl::Extents &destSize,
+                              bool stencilOnly)
+{
+    ID3D11Device *device = mRenderer->getDevice();
+    ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
+
+    ID3D11Resource *sourceStaging = createStagingTexture(device, deviceContext, source, sourceSubresource, sourceSize, D3D11_CPU_ACCESS_READ);
+    ID3D11Resource *destStaging = createStagingTexture(device, deviceContext, dest, destSubresource, destSize, D3D11_CPU_ACCESS_WRITE);
+
+    DXGI_FORMAT format = getTextureFormat(source);
+    ASSERT(format == getTextureFormat(dest));
+
+    unsigned int pixelSize = d3d11::GetFormatPixelBytes(format);
+    unsigned int copyOffset = 0;
+    unsigned int copySize = pixelSize;
+    if (stencilOnly)
+    {
+        copyOffset = d3d11::GetStencilOffset(format) / 8;
+        copySize = d3d11::GetStencilBits(format) / 8;
+
+        // It would be expensive to have non-byte sized stencil sizes since it would
+        // require reading from the destination, currently there arn't any though.
+        ASSERT(d3d11::GetStencilBits(format)   % 8 == 0 &&
+               d3d11::GetStencilOffset(format) % 8 == 0);
+    }
+
+    D3D11_MAPPED_SUBRESOURCE sourceMapping, destMapping;
+    deviceContext->Map(sourceStaging, 0, D3D11_MAP_READ, 0, &sourceMapping);
+    deviceContext->Map(destStaging, 0, D3D11_MAP_WRITE, 0, &destMapping);
+
+    int startDestY = std::min(destArea.y, destArea.y + destArea.height);
+    int endDestY = std::max(destArea.y, destArea.y + destArea.height);
+
+    int startDestX = std::min(destArea.x, destArea.x + destArea.width);
+    int endDestX = std::max(destArea.x, destArea.x + destArea.width);
+
+    for (int y = startDestY; y < endDestY; y++)
+    {
+        float yPerc = static_cast<float>(y - startDestY) / (endDestY - startDestY - 1);
+        unsigned int readRow = sourceArea.y + yPerc * sourceArea.height;
+        unsigned int writeRow = y;
+
+        if (sourceArea.width == destArea.width && copySize == pixelSize)
+        {
+            void *sourceRow = reinterpret_cast<char*>(sourceMapping.pData) +
+                              readRow * sourceMapping.RowPitch;
+
+            void *destRow = reinterpret_cast<char*>(destMapping.pData) +
+                            writeRow * destMapping.RowPitch;
+
+            memcpy(destRow, sourceRow, pixelSize * destArea.width);
+        }
+        else
+        {
+            for (int x = startDestX; x < endDestX; x++)
+            {
+                float xPerc = static_cast<float>(x - startDestX) / (endDestX - startDestX - 1);
+                unsigned int readColumn = sourceArea.x + xPerc * sourceArea.width;
+                unsigned int writeColumn = x;
+
+                void *sourcePixel = reinterpret_cast<char*>(sourceMapping.pData) +
+                                    readRow * sourceMapping.RowPitch +
+                                    readColumn * pixelSize +
+                                    copyOffset;
+
+                void *destPixel = reinterpret_cast<char*>(destMapping.pData) +
+                                  writeRow * destMapping.RowPitch +
+                                  writeColumn * pixelSize +
+                                  copyOffset;
+
+                memcpy(destPixel, sourcePixel, copySize);
+            }
+        }
+    }
+
+    deviceContext->Unmap(sourceStaging, 0);
+    deviceContext->Unmap(destStaging, 0);
+
+    deviceContext->CopySubresourceRegion(dest, destSubresource, 0, 0, 0, destStaging, 0, NULL);
+
+    SafeRelease(sourceStaging);
+    SafeRelease(destStaging);
+
+    return true;
+}
+
+bool Blit11::compareBlitParameters(const Blit11::BlitParameters &a, const Blit11::BlitParameters &b)
+{
+    return memcmp(&a, &b, sizeof(Blit11::BlitParameters)) < 0;
+}
+
+template <unsigned int N>
+static ID3D11PixelShader *compilePS(ID3D11Device *device, const BYTE (&byteCode)[N], const char *name)
+{
+    ID3D11PixelShader *ps = NULL;
+    HRESULT result = device->CreatePixelShader(byteCode, N, NULL, &ps);
+    ASSERT(SUCCEEDED(result));
+    d3d11::SetDebugName(ps, name);
+    return ps;
 }
 
 void Blit11::add2DShaderToMap(GLenum destFormat, bool signedInteger, ID3D11PixelShader *ps)

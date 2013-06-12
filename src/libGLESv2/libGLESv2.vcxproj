@@ -390,6 +390,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="renderer\shaders\compiled\passthrough2d11vs.h" />
     <ClInclude Include="renderer\shaders\compiled\passthrough3d11gs.h" />
     <ClInclude Include="renderer\shaders\compiled\passthrough3d11vs.h" />
+    <ClInclude Include="renderer\shaders\compiled\passthroughdepth2d11ps.h" />
     <ClInclude Include="renderer\shaders\compiled\passthroughlum2d11ps.h" />
     <ClInclude Include="renderer\shaders\compiled\passthroughlum3d11ps.h" />
     <ClInclude Include="renderer\shaders\compiled\passthroughlumalpha2d11ps.h" />

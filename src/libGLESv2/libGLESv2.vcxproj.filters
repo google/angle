@@ -613,6 +613,9 @@
     <ClInclude Include="renderer\shaders\compiled\passthroughrg2d11ps.h">
       <Filter>Shaders\Compiled</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\shaders\compiled\passthroughdepth2d11ps.h">
+      <Filter>Shaders\Compiled</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="renderer\shaders\Blit.ps">
