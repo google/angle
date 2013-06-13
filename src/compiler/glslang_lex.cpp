@@ -1961,7 +1961,7 @@ YY_RULE_SETUP
 case 226:
 /* rule 226 can match eol */
 YY_RULE_SETUP
-{  }
+{ }
 	YY_BREAK
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(FIELDS):
@@ -1969,7 +1969,7 @@ case YY_STATE_EOF(FIELDS):
 	YY_BREAK
 case 227:
 YY_RULE_SETUP
-{ context->warning(yylineno, "Unknown char", yytext, ""); return 0; }
+{ assert(false); return 0; }
 	YY_BREAK
 case 228:
 YY_RULE_SETUP

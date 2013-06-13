@@ -364,9 +364,9 @@ O           [0-7]
 }
 <FIELDS>[ \t\v\f\r] {}
 
-[ \t\v\n\f\r]   {  }
-<*><<EOF>>      { yyterminate(); }
-<*>.            { context->warning(yylineno, "Unknown char", yytext, ""); return 0; }
+[ \t\v\n\f\r] { }
+<*><<EOF>>    { yyterminate(); }
+<*>.          { assert(false); return 0; }
 
 %%
 
