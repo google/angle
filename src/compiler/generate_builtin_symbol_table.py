@@ -38,6 +38,7 @@ static void builtin1(TSymbolTable* t, TType* rvalue, const char* name, TType* pt
   f->addParameter(param);
   t->insert(*f);
 }
+
 static void builtin2(TSymbolTable* t, TType* rvalue, const char* name, TType* ptype1, const char* pname1, TType* ptype2, const char* pname2)
 {
   TFunction* f = new TFunction(new TString(name), *rvalue);
@@ -59,33 +60,42 @@ static void builtin3(TSymbolTable* t, TType* rvalue, const char* name, TType* pt
   f->addParameter(param3);
   t->insert(*f);
 }
+
 """
 output.write(registerfunc)
 
-commonHeader = "void InsertBuiltInFunctionsCommon(const ShBuiltInResources& resources, TSymbolTable * t) {\n"
-output.write(commonHeader)
+# A function that parses the JSON representation of a list of builtin functions.
+def parseBuiltin(name):
+    for func in builtin[name]:
+        out = ""
+        indent = "    ";
+        size = len(func['parameter'])
+        if 'condition' in func:
+            out += indent + "if (" + func['condition'] + ") {\n"
+            indent += indent;
+        out += indent + "builtin" + str(size) + "(t, "
+        out += ttypeMap[func['return_type']]
+        out += ", \"" + func['name'] + "\""
+        paramlist = func['parameter']
+        paramdef = "";
+        for param in paramlist:
+            paramdef += ", "
+            paramdef += ttypeMap[param['type']] 
+            paramdef += ", \"" + param['name'] + "\""
+        out += paramdef + ");\n"
+        if 'condition' in func:
+            out += "    }\n"
+        output.write(out)
 
-for func in builtin["common"]:
-	out = ""
-	indent = "    ";
-	size = len(func['parameter'])
-	if 'condition' in func:
-		out += indent + "if (" + func['condition'] + ") {\n"
-		indent += indent;
-	out += indent + "builtin" + str(size) + "(t, "
-	out += ttypeMap[func['return_type']]
-	out += ", \"" + func['name'] + "\""
-	paramlist = func['parameter']
-	paramdef = "";
-	for param in paramlist:
-		paramdef += ", "
-		paramdef += ttypeMap[param['type']] 
-		paramdef += ", \"" + param['name'] + "\""
-	out += paramdef + ");\n"
-	if 'condition' in func:
-		out += "    }\n"
-	output.write(out)
-output.write("}\n")
+commonHeader = "void InsertBuiltInFunctionsCommon(const ShBuiltInResources& resources, TSymbolTable* t) {\n"
+output.write(commonHeader)
+parseBuiltin("common")
+output.write("}\n\n")
+
+vertexHeader = "void InsertBuiltInFunctionsVertex(const ShBuiltInResources& resources, TSymbolTable* t) {\n"
+output.write(vertexHeader)
+parseBuiltin("vertex")
+output.write("}\n\n")
 
 json_data.close()
 output.close()

@@ -69,7 +69,20 @@ bool InitializeSymbolTable(
         }
     }
 
-    InsertBuiltInFunctionsCommon(resources, &symbolTable);
+
+    switch (type) {
+    case SH_FRAGMENT_SHADER:
+        InsertBuiltInFunctionsCommon(resources, &symbolTable);
+        break;
+
+    case SH_VERTEX_SHADER:
+        InsertBuiltInFunctionsCommon(resources, &symbolTable);
+        InsertBuiltInFunctionsVertex(resources, &symbolTable);
+        break;
+
+    default: assert(false && "Language not supported");
+    }
+
     IdentifyBuiltIns(type, spec, resources, symbolTable);
 
     return true;

@@ -16,6 +16,7 @@ static void builtin1(TSymbolTable* t, TType* rvalue, const char* name, TType* pt
   f->addParameter(param);
   t->insert(*f);
 }
+
 static void builtin2(TSymbolTable* t, TType* rvalue, const char* name, TType* ptype1, const char* pname1, TType* ptype2, const char* pname2)
 {
   TFunction* f = new TFunction(new TString(name), *rvalue);
@@ -37,7 +38,8 @@ static void builtin3(TSymbolTable* t, TType* rvalue, const char* name, TType* pt
   f->addParameter(param3);
   t->insert(*f);
 }
-void InsertBuiltInFunctionsCommon(const ShBuiltInResources& resources, TSymbolTable * t) {
+
+void InsertBuiltInFunctionsCommon(const ShBuiltInResources& resources, TSymbolTable* t) {
     builtin1(t, new TType(EbtFloat, EbpUndefined, EvqGlobal, 1, false, false), "radians", new TType(EbtFloat, EbpUndefined, EvqGlobal, 1, false, false), "degrees");
     builtin1(t, new TType(EbtFloat, EbpUndefined, EvqGlobal, 2, false, false), "radians", new TType(EbtFloat, EbpUndefined, EvqGlobal, 2, false, false), "degrees");
     builtin1(t, new TType(EbtFloat, EbpUndefined, EvqGlobal, 3, false, false), "radians", new TType(EbtFloat, EbpUndefined, EvqGlobal, 3, false, false), "degrees");
@@ -277,3 +279,11 @@ void InsertBuiltInFunctionsCommon(const ShBuiltInResources& resources, TSymbolTa
         builtin2(t, new TType(EbtFloat, EbpUndefined, EvqGlobal, 4, false, false), "texture2DRectProj", new TType(EbtSampler2DRect, EbpUndefined, EvqGlobal, 1, false, false), "sampler", new TType(EbtFloat, EbpUndefined, EvqGlobal, 4, false, false), "coord");
     }
 }
+
+void InsertBuiltInFunctionsVertex(const ShBuiltInResources& resources, TSymbolTable* t) {
+    builtin3(t, new TType(EbtFloat, EbpUndefined, EvqGlobal, 4, false, false), "texture2DLod", new TType(EbtSampler2D, EbpUndefined, EvqGlobal, 1, false, false), "sampler", new TType(EbtFloat, EbpUndefined, EvqGlobal, 2, false, false), "coord", new TType(EbtFloat, EbpUndefined, EvqGlobal, 1, false, false), "lod");
+    builtin3(t, new TType(EbtFloat, EbpUndefined, EvqGlobal, 4, false, false), "texture2DProjLod", new TType(EbtSampler2D, EbpUndefined, EvqGlobal, 1, false, false), "sampler", new TType(EbtFloat, EbpUndefined, EvqGlobal, 3, false, false), "coord", new TType(EbtFloat, EbpUndefined, EvqGlobal, 1, false, false), "lod");
+    builtin3(t, new TType(EbtFloat, EbpUndefined, EvqGlobal, 4, false, false), "texture2DProjLod", new TType(EbtSampler2D, EbpUndefined, EvqGlobal, 1, false, false), "sampler", new TType(EbtFloat, EbpUndefined, EvqGlobal, 4, false, false), "coord", new TType(EbtFloat, EbpUndefined, EvqGlobal, 1, false, false), "lod");
+    builtin3(t, new TType(EbtFloat, EbpUndefined, EvqGlobal, 4, false, false), "textureCubeLod", new TType(EbtSamplerCube, EbpUndefined, EvqGlobal, 1, false, false), "sampler", new TType(EbtFloat, EbpUndefined, EvqGlobal, 3, false, false), "coord", new TType(EbtFloat, EbpUndefined, EvqGlobal, 1, false, false), "lod");
+}
+

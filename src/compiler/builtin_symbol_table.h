@@ -10,6 +10,7 @@
 
 class TSymbolTable;
 
-extern void InsertBuiltInFunctionsCommon(const ShBuiltInResources& resources, TSymbolTable * t);
+extern void InsertBuiltInFunctionsCommon(const ShBuiltInResources& resources, TSymbolTable* t);
+extern void InsertBuiltInFunctionsVertex(const ShBuiltInResources& resources, TSymbolTable* t);
 
 #endif // _BUILTIN_SYMBOL_TABLE_INCLUDED_

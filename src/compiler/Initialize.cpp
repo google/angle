@@ -16,31 +16,6 @@
 
 //============================================================================
 //
-// Prototypes for built-in functions seen by vertex shaders only.
-//
-//============================================================================
-static TString BuiltInFunctionsVertex(const ShBuiltInResources& resources)
-{
-    TString s;
-
-    //
-    // Geometric Functions.
-    //
-    //s.append(TString("vec4 ftransform();"));
-
-    //
-    // Texture Functions.
-    //
-    s.append(TString("vec4 texture2DLod(sampler2D sampler, vec2 coord, float lod);"));
-    s.append(TString("vec4 texture2DProjLod(sampler2D sampler, vec3 coord, float lod);"));
-    s.append(TString("vec4 texture2DProjLod(sampler2D sampler, vec4 coord, float lod);"));
-    s.append(TString("vec4 textureCubeLod(samplerCube sampler, vec3 coord, float lod);"));
-
-    return s;
-}
-
-//============================================================================
-//
 // Prototypes for built-in functions seen by fragment shaders only.
 //
 //============================================================================
@@ -164,7 +139,6 @@ void TBuiltIns::initialize(ShShaderType type, ShShaderSpec spec,
 
     case SH_VERTEX_SHADER:
         builtInStrings.push_back(DefaultPrecisionVertex());
-        builtInStrings.push_back(BuiltInFunctionsVertex(resources));
         builtInStrings.push_back(StandardUniforms());
         break;
 
