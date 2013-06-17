@@ -47,6 +47,8 @@ enum TBasicType
     EbtSampler2DRect,       // Only valid if GL_ARB_texture_rectangle exists.
     EbtISampler2D,
     EbtISamplerCube,
+    EbtUSampler2D,
+    EbtUSamplerCube,
     EbtGuardSamplerEnd,    // non type:  see implementation of IsSampler()
     EbtStruct,
     EbtInterfaceBlock,
