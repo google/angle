@@ -45,6 +45,8 @@ enum TBasicType
     EbtSamplerCube,
     EbtSamplerExternalOES,  // Only valid if OES_EGL_image_external exists.
     EbtSampler2DRect,       // Only valid if GL_ARB_texture_rectangle exists.
+    EbtISampler2D,
+    EbtISamplerCube,
     EbtGuardSamplerEnd,    // non type:  see implementation of IsSampler()
     EbtStruct,
     EbtInterfaceBlock,

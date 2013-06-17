@@ -393,6 +393,14 @@ void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltI
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureProj", sampler2D, "sampler", float3, "coord");
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureProj", sampler2D, "sampler", float4, "coord");
 
+    TType *isampler2D = new TType(EbtISampler2D, EbpUndefined, EvqGlobal, 1);
+    TType *isamplerCube = new TType(EbtISamplerCube, EbpUndefined, EvqGlobal, 1);
+
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "texture", isampler2D, "sampler", float2, "coord");
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "texture", isamplerCube, "sampler", float3, "coord");
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureProj", isampler2D, "sampler", float3, "coord");
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureProj", isampler2D, "sampler", float4, "coord");
+
     if(type == SH_FRAGMENT_SHADER)
     {
         symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "dFdx", float1, "p");
