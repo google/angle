@@ -294,6 +294,10 @@ void loadCompressedBlockDataToNative(int width, int height, int depth,
     }
 }
 
+void loadUintDataToUshort(int width, int height, int depth,
+                          const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
+                          void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch);
+
 }
 
 #endif // LIBGLESV2_RENDERER_LOADIMAGE_H_

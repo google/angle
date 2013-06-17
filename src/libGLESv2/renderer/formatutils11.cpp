@@ -266,12 +266,12 @@ D3D11LoadFunctionMap buildD3D11LoadFunctionMap()
     insertLoadFunction(&map, GL_R16I,               GL_SHORT,                          loadToNative<GLshort, 1>             );
     insertLoadFunction(&map, GL_R32UI,              GL_UNSIGNED_INT,                   loadToNative<GLuint, 1>              );
     insertLoadFunction(&map, GL_R32I,               GL_INT,                            loadToNative<GLint, 1>               );
-    insertLoadFunction(&map, GL_DEPTH_COMPONENT16,  GL_UNSIGNED_SHORT,                 UnimplementedLoadFunction            );
-    insertLoadFunction(&map, GL_DEPTH_COMPONENT24,  GL_UNSIGNED_INT,                   UnimplementedLoadFunction            );
-    insertLoadFunction(&map, GL_DEPTH_COMPONENT16,  GL_UNSIGNED_INT,                   UnimplementedLoadFunction            );
-    insertLoadFunction(&map, GL_DEPTH_COMPONENT32F, GL_FLOAT,                          UnimplementedLoadFunction            );
-    insertLoadFunction(&map, GL_DEPTH24_STENCIL8,   GL_UNSIGNED_INT_24_8,              UnimplementedLoadFunction            );
-    insertLoadFunction(&map, GL_DEPTH32F_STENCIL8,  GL_FLOAT_32_UNSIGNED_INT_24_8_REV, UnimplementedLoadFunction            );
+    insertLoadFunction(&map, GL_DEPTH_COMPONENT16,  GL_UNSIGNED_SHORT,                 loadToNative<GLushort, 1>            );
+    insertLoadFunction(&map, GL_DEPTH_COMPONENT24,  GL_UNSIGNED_INT,                   loadToNative<GLuint, 1>              );
+    insertLoadFunction(&map, GL_DEPTH_COMPONENT16,  GL_UNSIGNED_INT,                   loadUintDataToUshort                 );
+    insertLoadFunction(&map, GL_DEPTH_COMPONENT32F, GL_FLOAT,                          loadToNative<GLfloat, 1>             );
+    insertLoadFunction(&map, GL_DEPTH24_STENCIL8,   GL_UNSIGNED_INT_24_8,              loadToNative<GLuint, 1>              );
+    insertLoadFunction(&map, GL_DEPTH32F_STENCIL8,  GL_FLOAT_32_UNSIGNED_INT_24_8_REV, loadToNative<GLuint, 2>              );
 
     // Unsized formats
     // Load functions are unreachable because they are converted to sized internal formats based on
@@ -370,11 +370,11 @@ static D3D11ES2FormatMap BuildD3D11ES2FormatMap()
     D3D11ES2FormatMap map;
 
     //                           | Internal format                   |                  | Texture format                | SRV format                       | RTV format                    | DSV format                   | Load function                           |
-    map.insert(D3D11ES2FormatPair(GL_NONE,                            D3D11ES2FormatInfo(DXGI_FORMAT_UNKNOWN,            DXGI_FORMAT_UNKNOWN,               DXGI_FORMAT_UNKNOWN,            DXGI_FORMAT_UNKNOWN,           NULL                                     )));
-    map.insert(D3D11ES2FormatPair(GL_DEPTH_COMPONENT16,               D3D11ES2FormatInfo(DXGI_FORMAT_R16_TYPELESS,       DXGI_FORMAT_R16_UNORM,             DXGI_FORMAT_UNKNOWN,            DXGI_FORMAT_D16_UNORM,         NULL                                     )));
-    map.insert(D3D11ES2FormatPair(GL_DEPTH_COMPONENT32_OES,           D3D11ES2FormatInfo(DXGI_FORMAT_R32_TYPELESS,       DXGI_FORMAT_R32_FLOAT,             DXGI_FORMAT_UNKNOWN,            DXGI_FORMAT_D32_FLOAT,         NULL                                     )));
-    map.insert(D3D11ES2FormatPair(GL_DEPTH24_STENCIL8_OES,            D3D11ES2FormatInfo(DXGI_FORMAT_R24G8_TYPELESS,     DXGI_FORMAT_R24_UNORM_X8_TYPELESS, DXGI_FORMAT_UNKNOWN,            DXGI_FORMAT_D24_UNORM_S8_UINT, NULL                                     )));
-    map.insert(D3D11ES2FormatPair(GL_STENCIL_INDEX8,                  D3D11ES2FormatInfo(DXGI_FORMAT_R24G8_TYPELESS,     DXGI_FORMAT_X24_TYPELESS_G8_UINT,  DXGI_FORMAT_UNKNOWN,            DXGI_FORMAT_D24_UNORM_S8_UINT, NULL                                     )));
+    map.insert(D3D11ES2FormatPair(GL_NONE,                            D3D11ES2FormatInfo(DXGI_FORMAT_UNKNOWN,            DXGI_FORMAT_UNKNOWN,               DXGI_FORMAT_UNKNOWN,            DXGI_FORMAT_UNKNOWN,           UnreachableLoadFunction                  )));
+    map.insert(D3D11ES2FormatPair(GL_DEPTH_COMPONENT16,               D3D11ES2FormatInfo(DXGI_FORMAT_R16_TYPELESS,       DXGI_FORMAT_R16_UNORM,             DXGI_FORMAT_UNKNOWN,            DXGI_FORMAT_D16_UNORM,         UnreachableLoadFunction                  )));
+    map.insert(D3D11ES2FormatPair(GL_DEPTH_COMPONENT32_OES,           D3D11ES2FormatInfo(DXGI_FORMAT_R32_TYPELESS,       DXGI_FORMAT_R32_FLOAT,             DXGI_FORMAT_UNKNOWN,            DXGI_FORMAT_D32_FLOAT,         UnreachableLoadFunction                  )));
+    map.insert(D3D11ES2FormatPair(GL_DEPTH24_STENCIL8_OES,            D3D11ES2FormatInfo(DXGI_FORMAT_R24G8_TYPELESS,     DXGI_FORMAT_R24_UNORM_X8_TYPELESS, DXGI_FORMAT_UNKNOWN,            DXGI_FORMAT_D24_UNORM_S8_UINT, UnreachableLoadFunction                  )));
+    map.insert(D3D11ES2FormatPair(GL_STENCIL_INDEX8,                  D3D11ES2FormatInfo(DXGI_FORMAT_R24G8_TYPELESS,     DXGI_FORMAT_X24_TYPELESS_G8_UINT,  DXGI_FORMAT_UNKNOWN,            DXGI_FORMAT_D24_UNORM_S8_UINT, UnreachableLoadFunction                  )));
 
     map.insert(D3D11ES2FormatPair(GL_RGBA32F_EXT,                     D3D11ES2FormatInfo(DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_R32G32B32A32_FLOAT,    DXGI_FORMAT_R32G32B32A32_FLOAT, DXGI_FORMAT_UNKNOWN,           loadRGBAFloatDataToRGBA                  )));
     map.insert(D3D11ES2FormatPair(GL_RGB32F_EXT,                      D3D11ES2FormatInfo(DXGI_FORMAT_R32G32B32_FLOAT,    DXGI_FORMAT_R32G32B32_FLOAT,       DXGI_FORMAT_R32G32B32_FLOAT,    DXGI_FORMAT_UNKNOWN,           loadRGBFloatDataToNative                 )));

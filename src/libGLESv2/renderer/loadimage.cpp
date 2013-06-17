@@ -853,4 +853,26 @@ void loadFloatRGBDataToHalfFloatRGBA(int width, int height, int depth,
     }
 }
 
+void loadUintDataToUshort(int width, int height, int depth,
+                          const void *input, unsigned int inputRowPitch, unsigned int inputDepthPitch,
+                          void *output, unsigned int outputRowPitch, unsigned int outputDepthPitch)
+{
+    const unsigned int *source = NULL;
+    unsigned short *dest = NULL;
+
+    for (int z = 0; z < depth; z++)
+    {
+        for (int y = 0; y < height; y++)
+        {
+            source = offsetDataPointer<unsigned int>(input, y, z, inputRowPitch, inputDepthPitch);
+            dest = offsetDataPointer<unsigned short>(output, y, z, outputRowPitch, outputDepthPitch);
+
+            for (int x = 0; x < width; x++)
+            {
+                dest[x] = source[x] >> 16;
+            }
+        }
+    }
+}
+
 }
