@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2012-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -268,7 +268,7 @@ IDirect3DSurface9 *TextureStorage9_Cube::getCubeMapSurface(GLenum faceTarget, in
     return surface;
 }
 
-RenderTarget *TextureStorage9_Cube::getRenderTarget(GLenum faceTarget, int level)
+RenderTarget *TextureStorage9_Cube::getRenderTargetFace(GLenum faceTarget, int level)
 {
     return mRenderTarget[gl::TextureCubeMap::faceIndex(faceTarget)];
 }

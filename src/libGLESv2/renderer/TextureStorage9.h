@@ -90,7 +90,7 @@ class TextureStorage9_Cube : public TextureStorage9
     static TextureStorage9_Cube *makeTextureStorage9_Cube(TextureStorage *storage);
 
     IDirect3DSurface9 *getCubeMapSurface(GLenum faceTarget, int level, bool dirty);
-    virtual RenderTarget *getRenderTarget(GLenum faceTarget, int level);
+    virtual RenderTarget *getRenderTargetFace(GLenum faceTarget, int level);
     virtual IDirect3DBaseTexture9 *getBaseTexture() const;
     virtual void generateMipmap(int face, int level);
 
