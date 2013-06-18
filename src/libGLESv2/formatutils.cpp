@@ -712,13 +712,14 @@ static InternalFormatInfoMap BuildES3InternalFormatInfoMap()
     map.insert(InternalFormatInfoPair(GL_RGBA32F,           InternalFormatInfo::RGBAFormat(32, 32, 32, 32, 0, GL_RGBA,         GL_FLOAT,                        FloatingPoint, false, CheckSupport<&Context::supportsFloat32RenderableTextures, &rx::Renderer::getFloat32TextureRenderingSupport>, CheckSupport<&Context::supportsFloat32LinearFilter, &rx::Renderer::getFloat32TextureFilteringSupport>, AlwaysSupported     )));
 
     // Depth stencil formats
-    //                               | Internal format        |                                   | D |S | Format             | Type                             | Internal format     | Color          | Texture        | Supported     |
-    //                               |                        |                                   |   |  |                    |                                  | type                | renderable     | filterable     |               |
-    map.insert(InternalFormatInfoPair(GL_DEPTH_COMPONENT16, InternalFormatInfo::DepthStencilFormat(16, 0, GL_DEPTH_COMPONENT,  GL_UNSIGNED_SHORT,                 NormalizedFixedPoint, AlwaysSupported, NeverSupported,  AlwaysSupported)));
-    map.insert(InternalFormatInfoPair(GL_DEPTH_COMPONENT24, InternalFormatInfo::DepthStencilFormat(24, 0, GL_DEPTH_COMPONENT,  GL_UNSIGNED_INT,                   NormalizedFixedPoint, AlwaysSupported, NeverSupported,  AlwaysSupported)));
-    map.insert(InternalFormatInfoPair(GL_DEPTH_COMPONENT32F,InternalFormatInfo::DepthStencilFormat(32, 0, GL_DEPTH_COMPONENT,  GL_FLOAT,                          FloatingPoint,        AlwaysSupported, NeverSupported,  AlwaysSupported)));
-    map.insert(InternalFormatInfoPair(GL_DEPTH24_STENCIL8,  InternalFormatInfo::DepthStencilFormat(24, 8, GL_DEPTH_STENCIL,    GL_UNSIGNED_INT_24_8,              NormalizedFixedPoint, AlwaysSupported, AlwaysSupported, AlwaysSupported)));
-    map.insert(InternalFormatInfoPair(GL_DEPTH32F_STENCIL8, InternalFormatInfo::DepthStencilFormat(32, 8, GL_DEPTH_STENCIL,    GL_FLOAT_32_UNSIGNED_INT_24_8_REV, FloatingPoint,        AlwaysSupported, AlwaysSupported, AlwaysSupported)));
+    //                               | Internal format         |                                      | D |S | Format             | Type                            | Internal format     | Color          | Texture        | Supported     |
+    //                               |                         |                                      |   |  |                    |                                 | type                | renderable     | filterable     |               |
+    map.insert(InternalFormatInfoPair(GL_DEPTH_COMPONENT16,     InternalFormatInfo::DepthStencilFormat(16, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT,                 NormalizedFixedPoint, AlwaysSupported, NeverSupported,  AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_DEPTH_COMPONENT24,     InternalFormatInfo::DepthStencilFormat(24, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT,                   NormalizedFixedPoint, AlwaysSupported, NeverSupported,  AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_DEPTH_COMPONENT32F,    InternalFormatInfo::DepthStencilFormat(32, 0, GL_DEPTH_COMPONENT, GL_FLOAT,                          FloatingPoint,        AlwaysSupported, NeverSupported,  AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_DEPTH_COMPONENT32_OES, InternalFormatInfo::DepthStencilFormat(32, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT,                   NormalizedFixedPoint, AlwaysSupported, NeverSupported,  AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_DEPTH24_STENCIL8,      InternalFormatInfo::DepthStencilFormat(24, 8, GL_DEPTH_STENCIL,   GL_UNSIGNED_INT_24_8,              NormalizedFixedPoint, AlwaysSupported, AlwaysSupported, AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_DEPTH32F_STENCIL8,     InternalFormatInfo::DepthStencilFormat(32, 8, GL_DEPTH_STENCIL,   GL_FLOAT_32_UNSIGNED_INT_24_8_REV, FloatingPoint,        AlwaysSupported, AlwaysSupported, AlwaysSupported)));
 
     // Luminance alpha formats
     //                               | Internal format          |                              | L | A | Format            | Type            | Internal format     | Supported     |
