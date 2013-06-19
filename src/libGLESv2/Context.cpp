@@ -63,6 +63,7 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
     mState.rasterizer.polygonOffsetFactor = 0.0f;
     mState.rasterizer.polygonOffsetUnits = 0.0f;
     mState.rasterizer.pointDrawMode = false;
+    mState.rasterizer.multiSample = false;
     mState.scissorTest = false;
     mState.scissor.x = 0;
     mState.scissor.y = 0;
@@ -1991,7 +1992,11 @@ bool Context::applyRenderTarget(GLenum drawMode, bool ignoreViewport)
 // Applies the fixed-function state (culling, depth test, alpha blending, stenciling, etc) to the Direct3D 9 device
 void Context::applyState(GLenum drawMode)
 {
+    Framebuffer *framebufferObject = getDrawFramebuffer();
+    int samples = framebufferObject->getSamples();
+
     mState.rasterizer.pointDrawMode = (drawMode == GL_POINTS);
+    mState.rasterizer.multiSample = (samples != 0);
     mRenderer->setRasterizerState(mState.rasterizer);
 
     unsigned int mask = 0;
@@ -1999,10 +2004,10 @@ void Context::applyState(GLenum drawMode)
     {
         if (mState.sampleCoverageValue != 0)
         {
-            Framebuffer *framebufferObject = getDrawFramebuffer();
+            
             float threshold = 0.5f;
 
-            for (int i = 0; i < framebufferObject->getSamples(); ++i)
+            for (int i = 0; i < samples; ++i)
             {
                 mask <<= 1;
 
