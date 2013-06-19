@@ -231,7 +231,7 @@ ID3D11RasterizerState *RenderStateCache::getRasterizerState(const gl::Rasterizer
         rasterDesc.SlopeScaledDepthBias = rasterState.polygonOffsetFactor;
         rasterDesc.DepthClipEnable = TRUE;
         rasterDesc.ScissorEnable = scissorEnabled ? TRUE : FALSE;
-        rasterDesc.MultisampleEnable = TRUE;
+        rasterDesc.MultisampleEnable = rasterState.multiSample;
         rasterDesc.AntialiasedLineEnable = FALSE;
 
         ID3D11RasterizerState *dx11RasterizerState = NULL;
