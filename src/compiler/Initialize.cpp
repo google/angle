@@ -386,6 +386,7 @@ void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltI
     }
 
     TType *sampler3D = new TType(EbtSampler3D, EbpUndefined, EvqGlobal, 1);
+    TType *sampler2DArray = new TType(EbtSampler2DArray, EbpUndefined, EvqGlobal, 1);
 
     //
     // Texture Functions for GLSL ES 3.0
@@ -393,6 +394,7 @@ void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltI
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "texture", sampler2D, "sampler", float2, "coord");
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "texture", sampler3D, "sampler", float3, "coord");
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "texture", samplerCube, "sampler", float3, "coord");
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "texture", sampler2DArray, "sampler", float3, "coord");
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureProj", sampler2D, "sampler", float3, "coord");
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureProj", sampler2D, "sampler", float4, "coord");
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, float4, "textureProj", sampler3D, "sampler", float4, "coord");
@@ -400,10 +402,12 @@ void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltI
     TType *isampler2D = new TType(EbtISampler2D, EbpUndefined, EvqGlobal, 1);
     TType *isampler3D = new TType(EbtISampler3D, EbpUndefined, EvqGlobal, 1);
     TType *isamplerCube = new TType(EbtISamplerCube, EbpUndefined, EvqGlobal, 1);
+    TType *isampler2DArray = new TType(EbtISampler2DArray, EbpUndefined, EvqGlobal, 1);
 
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "texture", isampler2D, "sampler", float2, "coord");
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "texture", isampler3D, "sampler", float3, "coord");
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "texture", isamplerCube, "sampler", float3, "coord");
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "texture", isampler2DArray, "sampler", float3, "coord");
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureProj", isampler2D, "sampler", float3, "coord");
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureProj", isampler2D, "sampler", float4, "coord");
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, int4, "textureProj", isampler3D, "sampler", float4, "coord");
@@ -411,11 +415,13 @@ void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltI
     TType *usampler2D = new TType(EbtUSampler2D, EbpUndefined, EvqGlobal, 1);
     TType *usampler3D = new TType(EbtUSampler3D, EbpUndefined, EvqGlobal, 1);
     TType *usamplerCube = new TType(EbtUSamplerCube, EbpUndefined, EvqGlobal, 1);
+    TType *usampler2DArray = new TType(EbtUSampler2DArray, EbpUndefined, EvqGlobal, 1);
     TType *uint4 = new TType(EbtUInt, EbpUndefined, EvqGlobal, 4);
 
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "texture", usampler2D, "sampler", float2, "coord");
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "texture", usampler3D, "sampler", float3, "coord");
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "texture", usamplerCube, "sampler", float3, "coord");
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "texture", usampler2DArray, "sampler", float3, "coord");
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureProj", usampler2D, "sampler", float3, "coord");
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureProj", usampler2D, "sampler", float4, "coord");
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureProj", usampler3D, "sampler", float4, "coord");
