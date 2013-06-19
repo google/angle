@@ -976,18 +976,18 @@ bool TParseContext::singleDeclarationErrorCheck(TPublicType &publicType, TSource
     if (layoutQualifier.matrixPacking != EmpUnspecified)
     {
         error(identifierLocation, "layout qualifier", getMatrixPackingString(layoutQualifier.matrixPacking), "only valid for interface blocks");
-        return false;
+        return true;
     }
 
     if (layoutQualifier.blockStorage != EbsUnspecified)
     {
         error(identifierLocation, "layout qualifier", getBlockStorageString(layoutQualifier.blockStorage), "only valid for interface blocks");
-        return false;
+        return true;
     }
 
     if (publicType.qualifier != EvqVertexInput && publicType.qualifier != EvqFragmentOutput && layoutLocationErrorCheck(identifierLocation, publicType.layoutQualifier))
     {
-        return false;
+        return true;
     }
 
     return false;
@@ -1226,7 +1226,7 @@ TIntermAggregate* TParseContext::parseSingleDeclaration(TPublicType &publicType,
 
     if (identifier != "")
     {
-        if (structQualifierErrorCheck(identifierLocation, publicType))
+        if (singleDeclarationErrorCheck(publicType, identifierLocation, identifier))
             recover();
 
         // this error check can mutate the type
@@ -1249,7 +1249,7 @@ TIntermAggregate* TParseContext::parseSingleDeclaration(TPublicType &publicType,
 
 TIntermAggregate* TParseContext::parseSingleArrayDeclaration(TPublicType &publicType, TSourceLoc identifierLocation, const TString &identifier, TSourceLoc indexLocation, TIntermTyped *indexExpression)
 {
-    if (structQualifierErrorCheck(identifierLocation, publicType))
+    if (singleDeclarationErrorCheck(publicType, identifierLocation, identifier))
         recover();
 
     // this error check can mutate the type
