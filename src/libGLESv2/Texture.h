@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -147,8 +147,10 @@ class TextureStorage
     D3DPOOL getPool() const;
     DWORD getUsage() const;
     unsigned int getTextureSerial() const;
+    virtual IDirect3DBaseTexture9 *getBaseTexture() const = 0;
     virtual unsigned int getRenderTargetSerial(GLenum target) const = 0;
     int getLodOffset() const;
+    int levelCount();
 
   protected:
     int mLodOffset;
@@ -258,7 +260,7 @@ class TextureStorage2D : public TextureStorage
     virtual ~TextureStorage2D();
 
     IDirect3DSurface9 *getSurfaceLevel(int level, bool dirty);
-    IDirect3DBaseTexture9 *getBaseTexture() const;
+    virtual IDirect3DBaseTexture9 *getBaseTexture() const;
 
     virtual unsigned int getRenderTargetSerial(GLenum target) const;
 
@@ -345,7 +347,7 @@ class TextureStorageCubeMap : public TextureStorage
     virtual ~TextureStorageCubeMap();
 
     IDirect3DSurface9 *getCubeMapSurface(GLenum faceTarget, int level, bool dirty);
-    IDirect3DBaseTexture9 *getBaseTexture() const;
+    virtual IDirect3DBaseTexture9 *getBaseTexture() const;
 
     virtual unsigned int getRenderTargetSerial(GLenum target) const;
 

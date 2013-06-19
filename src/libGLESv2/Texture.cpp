@@ -1311,6 +1311,11 @@ int TextureStorage::getLodOffset() const
     return mLodOffset;
 }
 
+int TextureStorage::levelCount()
+{
+    return getBaseTexture() ? getBaseTexture()->GetLevelCount() - getLodOffset() : 0;
+}
+
 Texture::Texture(GLuint id) : RefCountObject(id)
 {
     mMinFilter = GL_NEAREST_MIPMAP_LINEAR;
@@ -1798,18 +1803,31 @@ void Texture2D::redefineImage(GLint level, GLint internalformat, GLsizei width, 
 {
     releaseTexImage();
 
-    bool redefined = mImageArray[level].redefine(internalformat, width, height, false);
+    // If there currently is a corresponding storage texture image, it has these parameters
+    const int storageWidth = std::max(1, mImageArray[0].getWidth() >> level);
+    const int storageHeight = std::max(1, mImageArray[0].getHeight() >> level);
+    const int storageFormat = mImageArray[0].getInternalFormat();
 
-    if (mTexStorage && redefined)
+     mImageArray[level].redefine(internalformat, width, height, false);
+
+    if (mTexStorage)
     {
-        for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
+        const int storageLevels = mTexStorage->levelCount();
+        
+        if ((level >= storageLevels && storageLevels != 0) ||
+            width != storageWidth ||
+            height != storageHeight ||
+            internalformat != storageFormat)   // Discard mismatched storage
         {
-            mImageArray[i].markDirty();
-        }
+            for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
+            {
+                mImageArray[i].markDirty();
+            }
 
-        delete mTexStorage;
-        mTexStorage = NULL;
-        mDirtyImages = true;
+            delete mTexStorage;
+            mTexStorage = NULL;
+            mDirtyImages = true;
+        }
     }
 }
 
@@ -2821,22 +2839,35 @@ unsigned int TextureCubeMap::faceIndex(GLenum face)
 
 void TextureCubeMap::redefineImage(int face, GLint level, GLint internalformat, GLsizei width, GLsizei height)
 {
-    bool redefined = mImageArray[face][level].redefine(internalformat, width, height, false);
+    // If there currently is a corresponding storage texture image, it has these parameters
+    const int storageWidth = std::max(1, mImageArray[0][0].getWidth() >> level);
+    const int storageHeight = std::max(1, mImageArray[0][0].getHeight() >> level);
+    const int storageFormat = mImageArray[0][0].getInternalFormat();
 
-    if (mTexStorage && redefined)
+    mImageArray[face][level].redefine(internalformat, width, height, false);
+
+    if (mTexStorage)
     {
-        for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
+        const int storageLevels = mTexStorage->levelCount();
+
+        if ((level >= storageLevels && storageLevels != 0) ||
+            width != storageWidth ||
+            height != storageHeight ||
+            internalformat != storageFormat)   // Discard mismatched storage
         {
-            for (int f = 0; f < 6; f++)
+            for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
             {
-                mImageArray[f][i].markDirty();
+                for (int f = 0; f < 6; f++)
+                {
+                    mImageArray[f][i].markDirty();
+                }
             }
+
+            delete mTexStorage;
+            mTexStorage = NULL;
+
+            mDirtyImages = true;
         }
-
-        delete mTexStorage;
-        mTexStorage = NULL;
-
-        mDirtyImages = true;
     }
 }
 
