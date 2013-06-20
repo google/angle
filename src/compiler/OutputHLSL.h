@@ -173,6 +173,7 @@ class OutputHLSL : public TIntermTraverser
     int mUniformRegister;
     int mInterfaceBlockRegister;
     int mSamplerRegister;
+    int mPaddingCounter;
 
     TString registerString(TIntermSymbol *operand);
     int samplerRegister(TIntermSymbol *sampler);
@@ -185,9 +186,11 @@ class OutputHLSL : public TIntermTraverser
     TString interfaceBlockStructName(const TType &interfaceBlockType);
     TString interfaceBlockInstanceString(const TType& interfaceBlockType, unsigned int arrayIndex);
     TString interfaceBlockMemberTypeString(const TType &memberType);
-    TString interfaceBlockMemberString(const TTypeList &typeList);
+    TString interfaceBlockMemberString(const TTypeList &typeList, TLayoutBlockStorage blockStorage);
     TString interfaceBlockStructString(const TType &interfaceBlockType);
     TString interfaceBlockString(const TType &interfaceBlockType, unsigned int registerIndex, unsigned int arrayIndex);
+    TString std140PrePaddingString(const TType &type, int *elementIndex);
+    TString std140PostPaddingString(const TType &type);
     
     static GLenum glVariableType(const TType &type);
     static GLenum glVariablePrecision(const TType &type);

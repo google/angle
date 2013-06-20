@@ -124,6 +124,7 @@ OutputHLSL::OutputHLSL(TParseContext &context, const ShBuiltInResources& resourc
 
     mSamplerRegister = 0;
     mInterfaceBlockRegister = 2; // Reserve registers for the default uniform block and driver constants
+    mPaddingCounter = 0;
 }
 
 OutputHLSL::~OutputHLSL()
@@ -235,17 +236,113 @@ TString OutputHLSL::interfaceBlockMemberTypeString(const TType &memberType)
     }
 }
 
-TString OutputHLSL::interfaceBlockMemberString(const TTypeList &typeList)
+TString OutputHLSL::std140PrePaddingString(const TType &type, int *elementIndex)
+{
+    if (type.getBasicType() == EbtStruct || type.isMatrix() || type.isArray())
+    {
+        // no padding needed, HLSL will align the field to a new register
+        *elementIndex = 0;
+        return "";
+    }
+
+    const GLenum glType = glVariableType(type);
+    const int numComponents = gl::UniformComponentCount(glType);
+
+    if (numComponents >= 4)
+    {
+        // no padding needed, HLSL will align the field to a new register
+        *elementIndex = 0;
+        return "";
+    }
+
+    if (*elementIndex + numComponents > 4)
+    {
+        // no padding needed, HLSL will align the field to a new register
+        *elementIndex = numComponents;
+        return "";
+    }
+
+    TString padding;
+
+    const int alignment = numComponents == 3 ? 4 : numComponents;
+    const int paddingOffset = (*elementIndex % alignment);
+
+    if (paddingOffset != 0)
+    {
+        // padding is neccessary
+        for (int paddingIndex = paddingOffset; paddingIndex < alignment; paddingIndex++)
+        {
+            padding += "    float pad_" + str(mPaddingCounter++) + ";\n";
+        }
+
+        *elementIndex += (alignment - paddingOffset);
+    }
+
+    *elementIndex += numComponents;
+    *elementIndex %= 4;
+
+    return padding;
+}
+
+TString OutputHLSL::std140PostPaddingString(const TType &type)
+{
+    if (!type.isMatrix() && !type.isArray())
+    {
+        return "";
+    }
+
+    const GLenum glType = glVariableType(type);
+    int numComponents = 0;
+
+    if (type.isMatrix())
+    {
+        const bool isRowMajorMatrix = (type.getLayoutQualifier().matrixPacking == EmpRowMajor);
+        numComponents = gl::MatrixComponentCount(glType, isRowMajorMatrix);
+    }
+    else
+    {
+        numComponents = gl::UniformComponentCount(glType);
+    }
+
+    TString padding;
+    for (int paddingOffset = numComponents; paddingOffset < 4; paddingOffset++)
+    {
+        padding += "    float pad_" + str(mPaddingCounter++) + ";\n";
+    }
+    return padding;
+}
+
+TString OutputHLSL::interfaceBlockMemberString(const TTypeList &typeList, TLayoutBlockStorage blockStorage)
 {
     TString hlsl;
 
-    // TODO: padding for standard layout
+    int elementIndex = 0;
 
     for (unsigned int typeIndex = 0; typeIndex < typeList.size(); typeIndex++)
     {
         const TType &memberType = *typeList[typeIndex].type;
+
+        if (blockStorage == EbsStd140)
+        {
+            if (memberType.getBasicType() == EbtStruct)
+            {
+                UNIMPLEMENTED();
+            }
+            else
+            {
+                // 2 and 3 component vector types in some cases need pre-padding
+                hlsl += std140PrePaddingString(memberType, &elementIndex);
+            }
+        }
+
         hlsl += "    " + interfaceBlockMemberTypeString(memberType) +
                 " " + decorate(memberType.getFieldName()) + arrayString(memberType) + ";\n";
+
+        // must pad out after matrices and arrays, where HLSL usually allows itself room to pack stuff
+        if (blockStorage == EbsStd140)
+        {
+            hlsl += std140PostPaddingString(memberType);
+        }
     }
 
     return hlsl;
@@ -254,10 +351,11 @@ TString OutputHLSL::interfaceBlockMemberString(const TTypeList &typeList)
 TString OutputHLSL::interfaceBlockStructString(const TType &interfaceBlockType)
 {
     const TTypeList &typeList = *interfaceBlockType.getStruct();
+    const TLayoutBlockStorage blockStorage = interfaceBlockType.getLayoutQualifier().blockStorage;
 
     return "struct " + interfaceBlockStructName(interfaceBlockType) + "\n"
            "{\n" +
-           interfaceBlockMemberString(typeList) +
+           interfaceBlockMemberString(typeList, blockStorage) +
            "};\n\n";
 }
 
@@ -277,7 +375,8 @@ TString OutputHLSL::interfaceBlockString(const TType &interfaceBlockType, unsign
     else
     {
         const TTypeList &typeList = *interfaceBlockType.getStruct();
-        hlsl += interfaceBlockMemberString(typeList);
+        const TLayoutBlockStorage blockStorage = interfaceBlockType.getLayoutQualifier().blockStorage;
+        hlsl += interfaceBlockMemberString(typeList, blockStorage);
     }
 
     hlsl += "};\n\n";
@@ -313,6 +412,17 @@ void setBlockLayout(InterfaceBlock *interfaceBlock, BlockLayoutType newLayout)
       default:
         UNREACHABLE();
         break;
+    }
+}
+
+BlockLayoutType convertBlockLayoutType(TLayoutBlockStorage blockStorage)
+{
+    switch (blockStorage)
+    {
+      case EbsPacked: return BLOCKLAYOUT_PACKED;
+      case EbsShared: return BLOCKLAYOUT_SHARED;
+      case EbsStd140: return BLOCKLAYOUT_STANDARD;
+      default: UNREACHABLE(); return BLOCKLAYOUT_SHARED;
     }
 }
 
@@ -366,8 +476,8 @@ void OutputHLSL::header()
 
         mInterfaceBlockRegister += std::max(1u, interfaceBlock.arraySize);
 
-        // TODO: handle other block layouts
-        setBlockLayout(&interfaceBlock, BLOCKLAYOUT_SHARED);
+        BlockLayoutType blockLayoutType = convertBlockLayoutType(interfaceBlockType.getLayoutQualifier().blockStorage);
+        setBlockLayout(&interfaceBlock, blockLayoutType);
         mActiveInterfaceBlocks.push_back(interfaceBlock);
 
         if (interfaceBlockType.hasInstanceName())
