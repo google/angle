@@ -270,6 +270,18 @@ GLenum TransposeMatrixType(GLenum type)
     }
 }
 
+int MatrixRegisterCount(GLenum type, bool isRowMajorMatrix)
+{
+    ASSERT(IsMatrixType(type));
+    return isRowMajorMatrix ? VariableRowCount(type) : VariableColumnCount(type);
+}
+
+int MatrixComponentCount(GLenum type, bool isRowMajorMatrix)
+{
+    ASSERT(IsMatrixType(type));
+    return isRowMajorMatrix ? VariableColumnCount(type) : VariableRowCount(type);
+}
+
 int AttributeRegisterCount(GLenum type)
 {
     return IsMatrixType(type) ? VariableColumnCount(type) : 1;
