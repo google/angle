@@ -95,6 +95,7 @@ struct TParseContext {
     bool boolErrorCheck(int, const TPublicType&);
     bool samplerErrorCheck(int line, const TPublicType& pType, const char* reason);
     bool structQualifierErrorCheck(int line, const TPublicType& pType);
+    bool locationDeclaratorListCheck(int line, const TPublicType &pType);
     bool parameterSamplerErrorCheck(int line, TQualifier qualifier, const TType& type);
     bool nonInitConstErrorCheck(int line, const TString& identifier, TPublicType& type, bool array);
     bool nonInitErrorCheck(int line, const TString& identifier, const TPublicType& type, TVariable*& variable);

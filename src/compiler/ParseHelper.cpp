@@ -649,6 +649,17 @@ bool TParseContext::structQualifierErrorCheck(int line, const TPublicType& pType
     return false;
 }
 
+bool TParseContext::locationDeclaratorListCheck(int line, const TPublicType &pType)
+{
+    if (pType.layoutQualifier.location != -1)
+    {
+        error(line, "location must only be specified for a single input or output variable", "location");
+        return true;
+    }
+
+    return false;
+}
+
 bool TParseContext::parameterSamplerErrorCheck(int line, TQualifier qualifier, const TType& type)
 {
     if ((qualifier == EvqOut || qualifier == EvqInOut) && 
@@ -1322,6 +1333,9 @@ TIntermAggregate* TParseContext::parseDeclarator(TPublicType &publicType, TInter
     if (structQualifierErrorCheck(identifierLocation, publicType))
         recover();
 
+    if (locationDeclaratorListCheck(identifierLocation, publicType))
+        recover();
+
     if (nonInitConstErrorCheck(identifierLocation, identifier, publicType, false))
         recover();
 
@@ -1337,6 +1351,9 @@ TIntermAggregate* TParseContext::parseDeclarator(TPublicType &publicType, TInter
 TIntermAggregate* TParseContext::parseArrayDeclarator(TPublicType &publicType, TSourceLoc identifierLocation, const TString &identifier, TSourceLoc arrayLocation, TIntermNode *declaratorList, TIntermTyped *indexExpression)
 {
     if (structQualifierErrorCheck(identifierLocation, publicType))
+        recover();
+
+    if (locationDeclaratorListCheck(identifierLocation, publicType))
         recover();
 
     if (nonInitConstErrorCheck(identifierLocation, identifier, publicType, true))
@@ -1376,6 +1393,9 @@ TIntermAggregate* TParseContext::parseArrayDeclarator(TPublicType &publicType, T
 TIntermAggregate* TParseContext::parseInitDeclarator(TPublicType &publicType, TIntermAggregate *declaratorList, TSourceLoc identifierLocation, const TString &identifier, TSourceLoc initLocation, TIntermTyped *initializer)
 {
     if (structQualifierErrorCheck(identifierLocation, publicType))
+        recover();
+
+    if (locationDeclaratorListCheck(identifierLocation, publicType))
         recover();
 
     TIntermNode* intermNode;
