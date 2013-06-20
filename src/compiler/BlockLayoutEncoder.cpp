@@ -83,26 +83,30 @@ void Std140BlockEncoder::getBlockLayoutInfo(const Uniform &uniform, int *arraySt
     ASSERT(gl::UniformComponentSize(gl::UniformComponentType(uniform.type)) == ComponentSize);
 
     int numComponents = gl::UniformComponentCount(uniform.type);
-    size_t baseAlignment = (numComponents == 3 ? 4u : static_cast<size_t>(numComponents));
+    size_t baseAlignment = 0;
     int matrixStride = 0;
     int arrayStride = 0;
 
     if (gl::IsMatrixType(uniform.type))
     {
-        numComponents = gl::MatrixComponentCount(uniform.type, uniform.isRowMajorMatrix);
-        baseAlignment = rx::roundUp(baseAlignment, RegisterSize);
-        matrixStride = baseAlignment;
+        baseAlignment = RegisterSize;
+        matrixStride = RegisterSize;
 
         if (uniform.arraySize > 0)
         {
             const int numRegisters = gl::MatrixRegisterCount(uniform.type, uniform.isRowMajorMatrix);
-            arrayStride = matrixStride * numRegisters;
+            arrayStride = RegisterSize * numRegisters;
         }
     }
     else if (uniform.arraySize > 0)
     {
-        baseAlignment = rx::roundUp(baseAlignment, RegisterSize);
-        arrayStride = baseAlignment;
+        baseAlignment = RegisterSize;
+        arrayStride = RegisterSize;
+    }
+    else
+    {
+        const int numComponents = gl::UniformComponentCount(uniform.type);
+        baseAlignment = (numComponents == 3 ? 4u : static_cast<size_t>(numComponents));
     }
 
     mCurrentOffset = rx::roundUp(mCurrentOffset, baseAlignment);
