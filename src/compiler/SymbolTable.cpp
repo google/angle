@@ -20,6 +20,8 @@
 
 #include "common/angleutils.h"
 
+int TSymbolTableLevel::uniqueId = 0;
+
 TType::TType(const TPublicType &p) :
             type(p.type), precision(p.precision), qualifier(p.qualifier), primarySize(p.primarySize), secondarySize(p.secondarySize), array(p.array), layoutQualifier(p.layoutQualifier), arraySize(p.arraySize),
             maxArraySize(0), arrayInformationType(0), interfaceBlockType(0), structure(0), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0), typeName(0)

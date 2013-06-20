@@ -113,7 +113,7 @@ protected:
 //
 struct TParameter {
     TString *name;
-    TType* type;
+    TType *type;
 };
 
 //
@@ -196,8 +196,10 @@ public:
     TSymbolTableLevel() { }
     ~TSymbolTableLevel();
 
-    bool insert(TSymbol& symbol) 
+    bool insert(TSymbol &symbol) 
     {
+        symbol.setUniqueId(++uniqueId);
+
         //
         // returning true means symbol was added to the table
         //
@@ -216,21 +218,12 @@ public:
             return (*it).second;
     }
 
-    const_iterator begin() const
-    {
-        return level.begin();
-    }
-
-    const_iterator end() const
-    {
-        return level.end();
-    }
-
     void relateToOperator(const char* name, TOperator op);
     void relateToExtension(const char* name, const TString& ext);
 
 protected:
     tLevel level;
+    static int uniqueId;     // for unique identification in code generation
 };
 
 enum ESymbolLevel
@@ -244,7 +237,7 @@ enum ESymbolLevel
 
 class TSymbolTable {
 public:
-    TSymbolTable() : uniqueId(0)
+    TSymbolTable()
     {
         //
         // The symbol table cannot be used until push() is called, but
@@ -280,14 +273,13 @@ public:
         precisionStack.pop_back();
     }
 
-    bool declare(TSymbol& symbol)
+    bool declare(TSymbol &symbol)
     {
         return insert(currentLevel(), symbol);
     }
 
-    bool insert(ESymbolLevel level, TSymbol& symbol)
+    bool insert(ESymbolLevel level, TSymbol &symbol)
     {
-        symbol.setUniqueId(++uniqueId);
         return table[level]->insert(symbol);
     }
 
@@ -305,7 +297,6 @@ public:
     void relateToExtension(ESymbolLevel level, const char* name, const TString& ext) {
         table[level]->relateToExtension(name, ext);
     }
-    int getMaxSymbolId() { return uniqueId; }
 
     bool setDefaultPrecision( const TPublicType& type, TPrecision prec ){
         if (IsSampler(type.type))
@@ -347,7 +338,6 @@ protected:
     std::vector<TSymbolTableLevel*> table;
     typedef std::map< TBasicType, TPrecision > PrecisionStackLevel;
     std::vector< PrecisionStackLevel > precisionStack;
-    int uniqueId;     // for unique identification in code generation
 };
 
 #endif // _SYMBOL_TABLE_INCLUDED_
