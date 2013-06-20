@@ -1450,7 +1450,10 @@ void TParseContext::parseGlobalLayoutQualifier(const TPublicType &typeQualifier)
         defaultMatrixPacking = layoutQualifier.matrixPacking;
     }
 
-    // TODO: block storage
+    if (layoutQualifier.blockStorage != EmpUnspecified)
+    {
+        defaultBlockStorage = layoutQualifier.blockStorage;
+    }
 }
 
 TFunction *TParseContext::addConstructorFunc(TPublicType publicType)
@@ -1915,6 +1918,11 @@ TIntermAggregate* TParseContext::addInterfaceBlock(const TPublicType& typeQualif
         blockLayoutQualifier.matrixPacking = defaultMatrixPacking;
     }
 
+    if (blockLayoutQualifier.blockStorage == EbsUnspecified)
+    {
+        blockLayoutQualifier.blockStorage = defaultBlockStorage;
+    }
+
     TSymbol* blockNameSymbol = new TInterfaceBlockName(&blockName);
     if (!symbolTable.declare(*blockNameSymbol)) {
         error(nameLine, "redefinition", blockName.c_str(), "interface block name");
@@ -1946,6 +1954,12 @@ TIntermAggregate* TParseContext::addInterfaceBlock(const TPublicType& typeQualif
         TLayoutQualifier memberLayoutQualifier = memberType->getLayoutQualifier();
         if (layoutLocationErrorCheck(memberTypeLine.line, memberLayoutQualifier))
         {
+            recover();
+        }
+
+        if (memberLayoutQualifier.blockStorage != EbsUnspecified)
+        {
+            error(memberTypeLine.line, "invalid layout qualifier:", getBlockStorageString(memberLayoutQualifier.blockStorage), "cannot be used here");
             recover();
         }
 
