@@ -11,24 +11,8 @@
 #include "compiler/ShHandle.h"
 #include "compiler/SymbolTable.h"
 
-typedef TVector<TString> TBuiltInStrings;
-
-class TBuiltIns {
-public:
-    POOL_ALLOCATOR_NEW_DELETE(GlobalPoolAllocator)
-
-    void initialize(ShShaderType type, ShShaderSpec spec,
-                    const ShBuiltInResources& resources,
-                    const TExtensionBehavior& extensionBehavior);
-    const TBuiltInStrings &getCommonBuiltIns() const { return commonBuiltIns; }
-    const TBuiltInStrings &getEssl1BuiltIns() const { return essl1BuiltIns; }
-    const TBuiltInStrings &getEssl3BuiltIns() const { return essl3BuiltIns; }
-
-protected:
-    TBuiltInStrings commonBuiltIns;
-    TBuiltInStrings essl1BuiltIns;
-    TBuiltInStrings essl3BuiltIns;
-};
+void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltInResources &resources,
+                            const TExtensionBehavior &extensionBehavior, TSymbolTable &table);
 
 void IdentifyBuiltIns(ShShaderType type, ShShaderSpec spec,
                       const ShBuiltInResources& resources,

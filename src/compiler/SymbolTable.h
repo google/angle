@@ -283,6 +283,35 @@ public:
         return table[level]->insert(symbol);
     }
 
+    bool insertConstInt(ESymbolLevel level, const char *name, int value)
+    {
+        TVariable *constant = new TVariable(NewPoolTString(name), TType(EbtInt, EbpUndefined, EvqConst, 1));
+        constant->getConstPointer()->setIConst(value);
+        return insert(level, *constant);
+    }
+
+    bool insertBuiltIn(ESymbolLevel level, TType *rvalue, const char *name, TType *ptype1, const char *pname1, TType *ptype2 = 0, const char *pname2 = 0, TType *ptype3 = 0, const char *pname3 = 0)
+    {
+        TFunction *function = new TFunction(NewPoolTString(name), *rvalue);
+
+        TParameter param1 = {NewPoolTString(pname1), ptype1};
+        function->addParameter(param1);
+
+        if(pname2)
+        {
+            TParameter param2 = {NewPoolTString(pname2), ptype2};
+            function->addParameter(param2);
+        }
+
+        if(pname3)
+        {
+            TParameter param3 = {NewPoolTString(pname3), ptype3};
+            function->addParameter(param3);
+        }
+
+        return insert(level, *function);
+    }
+
     TSymbol *find(const TString &name, int shaderVersion, bool *builtIn = false, bool *sameScope = false);
     TSymbol *findBuiltIn(const TString &name, int shaderVersion);
     

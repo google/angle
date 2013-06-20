@@ -27,66 +27,6 @@ bool isWebGLBasedSpec(ShShaderSpec spec)
 }
 
 namespace {
-bool InitializeBuiltIns(const TBuiltInStrings &builtInStrings, TInfoSink &infoSink, TParseContext &parseContext)
-{
-    for (TBuiltInStrings::const_iterator i = builtInStrings.begin(); i != builtInStrings.end(); ++i)
-    {
-        const char* builtInShaders = i->c_str();
-        int builtInLengths = static_cast<int>(i->size());
-        if (builtInLengths <= 0)
-            continue;
-
-        if (PaParseStrings(1, &builtInShaders, &builtInLengths, &parseContext) != 0)
-        {
-            infoSink.info.message(EPrefixInternalError, "Unable to parse built-ins");
-            return false;
-        }
-    }
-
-    return true;
-}
-
-bool InitializeSymbolTable(
-    const TBuiltIns &builtIns,
-    ShShaderType type, ShShaderSpec spec, const ShBuiltInResources& resources,
-    TInfoSink& infoSink, TSymbolTable& symbolTable)
-{
-    TIntermediate intermediate(infoSink);
-    TExtensionBehavior extBehavior;
-    InitExtensionBehavior(resources, extBehavior);
-    // The builtins deliberately don't specify precisions for the function
-    // arguments and return types. For that reason we don't try to check them.
-    TParseContext parseContext(symbolTable, extBehavior, intermediate, type, spec, 0, false, NULL, infoSink);
-    parseContext.fragmentPrecisionHigh = resources.FragmentPrecisionHigh == 1;
-
-    GlobalParseContext = &parseContext;
-
-    assert(symbolTable.isEmpty());
-
-    //
-    // Parse the built-ins into the symbol table levels corresponding to each shader version (cf. ESymbolLevel).
-    //
-
-    // Common built-ins
-    symbolTable.push();
-    if (!InitializeBuiltIns(builtIns.getCommonBuiltIns(), infoSink, parseContext))
-        return false;
-
-    // GLSL ES 1.0 built-ins
-    symbolTable.push();
-    if (!InitializeBuiltIns(builtIns.getEssl1BuiltIns(), infoSink, parseContext))
-        return false;
-
-    // GLSL ES 3.0 built-ins
-    symbolTable.push();
-    if (!InitializeBuiltIns(builtIns.getEssl3BuiltIns(), infoSink, parseContext))
-        return false;
-
-    IdentifyBuiltIns(type, spec, resources, symbolTable);
-
-    return true;
-}
-
 class TScopedPoolAllocator {
 public:
     TScopedPoolAllocator(TPoolAllocator* allocator, bool pushPop)
@@ -258,14 +198,44 @@ bool TCompiler::compile(const char* const shaderStrings[],
     return success;
 }
 
-bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources& resources)
+bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources &resources)
 {
     compileResources = resources;
 
-    TBuiltIns builtIns;
-    builtIns.initialize(shaderType, shaderSpec, resources, extensionBehavior);
+    assert(symbolTable.isEmpty());
+    symbolTable.push();   // COMMON_BUILTINS
+    symbolTable.push();   // ESSL1_BUILTINS
+    symbolTable.push();   // ESSL3_BUILTINS
 
-    return InitializeSymbolTable(builtIns, shaderType, shaderSpec, resources, infoSink, symbolTable);
+    TPublicType integer;
+    integer.type = EbtInt;
+    integer.primarySize = 1;
+    integer.secondarySize = 1;
+    integer.array = false;
+
+    TPublicType floatingPoint;
+    floatingPoint.type = EbtFloat;
+    floatingPoint.primarySize = 1;
+    floatingPoint.secondarySize = 1;
+    floatingPoint.array = false;
+
+    switch(shaderType)
+    {
+      case SH_FRAGMENT_SHADER:
+        symbolTable.setDefaultPrecision(integer, EbpMedium);
+        break;
+      case SH_VERTEX_SHADER:
+        symbolTable.setDefaultPrecision(integer, EbpHigh);
+        symbolTable.setDefaultPrecision(floatingPoint, EbpHigh);
+        break;
+      default: assert(false && "Language not supported");
+    }
+
+    InsertBuiltInFunctions(shaderType, shaderSpec, resources, extensionBehavior, symbolTable);
+
+    IdentifyBuiltIns(shaderType, shaderSpec, resources, symbolTable);
+
+    return true;
 }
 
 void TCompiler::clearResults()
