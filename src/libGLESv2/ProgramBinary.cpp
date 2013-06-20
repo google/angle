@@ -2080,7 +2080,7 @@ bool ProgramBinary::linkAttributes(InfoLog &infoLog, const AttributeBindings &at
 
             mLinkedAttribute[location] = *attribute;
 
-            int rows = VariableRowCount(attribute->type);
+            int rows = AttributeRegisterCount(attribute->type);
 
             if (rows + location > MAX_VERTEX_ATTRIBS)
             {
@@ -2120,7 +2120,7 @@ bool ProgramBinary::linkAttributes(InfoLog &infoLog, const AttributeBindings &at
     for (int attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; )
     {
         int index = vertexShader->getSemanticIndex(mLinkedAttribute[attributeIndex].name);
-        int rows = std::max(AttributeRegisterCount(mLinkedAttribute[attributeIndex].type), 1);
+        int rows = AttributeRegisterCount(mLinkedAttribute[attributeIndex].type);
 
         for (int r = 0; r < rows; r++)
         {
