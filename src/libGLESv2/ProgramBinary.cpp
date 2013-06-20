@@ -2074,18 +2074,11 @@ bool ProgramBinary::linkAttributes(InfoLog &infoLog, const AttributeBindings &at
     for (unsigned int attributeIndex = 0; attributeIndex < activeAttributes.size(); attributeIndex++)
     {
         const sh::ShaderVariable &attribute = activeAttributes[attributeIndex];
-        const int location = attributeBindings.getAttributeBinding(attribute.name);
+        const int location = attribute.location == -1 ? attributeBindings.getAttributeBinding(attribute.name) : attribute.location;
 
-        if (location != -1)   // Set by glBindAttribLocation
+        if (location != -1)   // Set by glBindAttribLocation or by location layout qualifier
         {
-            if (!mLinkedAttribute[location].name.empty())
-            {
-                // Multiple active attributes bound to the same location; not an error
-            }
-
-            mLinkedAttribute[location] = attribute;
-
-            int rows = AttributeRegisterCount(attribute.type);
+            const int rows = AttributeRegisterCount(attribute.type);
 
             if (rows + location > MAX_VERTEX_ATTRIBS)
             {
@@ -2094,9 +2087,24 @@ bool ProgramBinary::linkAttributes(InfoLog &infoLog, const AttributeBindings &at
                 return false;
             }
 
-            for (int i = 0; i < rows; i++)
+            for (int row = 0; row < rows; row++)
             {
-                usedLocations |= 1 << (location + i);
+                const int rowLocation = location + row;
+                sh::ShaderVariable &linkedAttribute = mLinkedAttribute[rowLocation];
+
+                // In GLSL 3.00, attribute aliasing produces a link error
+                // In GLSL 1.00, attribute aliasing is allowed
+                if (mShaderVersion >= 300)
+                {
+                    if (!linkedAttribute.name.empty())
+                    {
+                        infoLog.append("Attribute '%s' aliases attribute '%s' at location %d", attribute.name.c_str(), linkedAttribute.name.c_str(), rowLocation);
+                        return false;
+                    }
+                }
+
+                linkedAttribute = attribute;
+                usedLocations |= 1 << rowLocation;
             }
         }
     }
@@ -2105,9 +2113,9 @@ bool ProgramBinary::linkAttributes(InfoLog &infoLog, const AttributeBindings &at
     for (unsigned int attributeIndex = 0; attributeIndex < activeAttributes.size(); attributeIndex++)
     {
         const sh::ShaderVariable &attribute = activeAttributes[attributeIndex];
-        int location = attributeBindings.getAttributeBinding(attribute.name);
+        const int location = attribute.location == -1 ? attributeBindings.getAttributeBinding(attribute.name) : attribute.location;
 
-        if (location == -1)   // Not set by glBindAttribLocation
+        if (location == -1)   // Not set by glBindAttribLocation or by location layout qualifier
         {
             int rows = AttributeRegisterCount(attribute.type);
             int availableIndex = AllocateFirstFreeBits(&usedLocations, rows, MAX_VERTEX_ATTRIBS);
