@@ -1445,7 +1445,12 @@ void TParseContext::parseGlobalLayoutQualifier(const TPublicType &typeQualifier)
         return;
     }
 
-    // TODO: global matrix packing and block storage
+    if (layoutQualifier.matrixPacking != EmpUnspecified)
+    {
+        defaultMatrixPacking = layoutQualifier.matrixPacking;
+    }
+
+    // TODO: block storage
 }
 
 TFunction *TParseContext::addConstructorFunc(TPublicType publicType)
@@ -1899,10 +1904,15 @@ TIntermAggregate* TParseContext::addInterfaceBlock(const TPublicType& typeQualif
         recover();
     }
 
-    const TLayoutQualifier layoutQualifier = typeQualifier.layoutQualifier;
-    if (layoutLocationErrorCheck(typeQualifier.line, layoutQualifier))
+    TLayoutQualifier blockLayoutQualifier = typeQualifier.layoutQualifier;
+    if (layoutLocationErrorCheck(typeQualifier.line, blockLayoutQualifier))
     {
         recover();
+    }
+
+    if (blockLayoutQualifier.matrixPacking == EmpUnspecified)
+    {
+        blockLayoutQualifier.matrixPacking = defaultMatrixPacking;
     }
 
     TSymbol* blockNameSymbol = new TInterfaceBlockName(&blockName);
@@ -1933,16 +1943,29 @@ TIntermAggregate* TParseContext::addInterfaceBlock(const TPublicType& typeQualif
         }
 
         // check layout qualifiers
-        if (layoutLocationErrorCheck(memberTypeLine.line, memberType->getLayoutQualifier()))
+        TLayoutQualifier memberLayoutQualifier = memberType->getLayoutQualifier();
+        if (layoutLocationErrorCheck(memberTypeLine.line, memberLayoutQualifier))
         {
             recover();
         }
+
+        if (memberLayoutQualifier.matrixPacking == EmpUnspecified)
+        {
+            memberLayoutQualifier.matrixPacking = blockLayoutQualifier.matrixPacking;
+        }
+        else if (!memberType->isMatrix())
+        {
+            error(memberTypeLine.line, "invalid layout qualifier:", getMatrixPackingString(memberLayoutQualifier.matrixPacking), "can only be used on matrix types");
+            recover();
+        }
+
+        memberType->setLayoutQualifier(memberLayoutQualifier);
     }
 
     TType* interfaceBlock = new TType(typeList, blockName);
     interfaceBlock->setBasicType(EbtInterfaceBlock);
     interfaceBlock->setQualifier(typeQualifier.qualifier);
-    interfaceBlock->setLayoutQualifier(layoutQualifier);
+    interfaceBlock->setLayoutQualifier(blockLayoutQualifier);
 
     TString symbolName = "";
     int symbolId = 0;

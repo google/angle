@@ -38,6 +38,7 @@ struct TParseContext {
             currentFunctionType(NULL),
             functionReturnsValue(false),
             checksPrecisionErrors(checksPrecErrors),
+            defaultMatrixPacking(EmpColumnMajor),
             diagnostics(is),
             shaderVersion(100),
             directiveHandler(ext, diagnostics, shaderVersion),
@@ -57,6 +58,7 @@ struct TParseContext {
     bool functionReturnsValue;   // true if a non-void function has a return
     bool checksPrecisionErrors;  // true if an error will be generated when a variable is declared without precision, explicit or implicit.
     bool fragmentPrecisionHigh;  // true if highp precision is supported in the fragment language.
+    TLayoutMatrixPacking defaultMatrixPacking;
     TString HashErrMsg;
     TDiagnostics diagnostics;
     TDirectiveHandler directiveHandler;
