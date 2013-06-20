@@ -3435,18 +3435,22 @@ void OutputHLSL::declareUniformToList(const TType &type, const TString &name, in
 
     if (!structure)
     {
-        output.push_back(Uniform(glVariableType(type), glVariablePrecision(type), name.c_str(), (unsigned int)type.getArraySize(), (unsigned int)index));
+        const bool isRowMajorMatrix = (type.isMatrix() && type.getLayoutQualifier().matrixPacking == EmpRowMajor);
+        output.push_back(Uniform(glVariableType(type), glVariablePrecision(type), name.c_str(), (unsigned int)type.getArraySize(), (unsigned int)index, isRowMajorMatrix));
     }
     else
     {
-        Uniform structUniform(GL_NONE, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(), (unsigned int)index);
+        Uniform structUniform(GL_NONE, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(), (unsigned int)index, false);
 
         int fieldIndex = index;
 
         for (size_t i = 0; i < structure->size(); i++)
         {
-            const TType &fieldType = *(*structure)[i].type;
+            TType fieldType = *(*structure)[i].type;
             const TString &fieldName = fieldType.getFieldName();
+
+            // make sure to copy matrix packing information
+            fieldType.setLayoutQualifier(type.getLayoutQualifier());
 
             declareUniformToList(fieldType, fieldName, fieldIndex, structUniform.fields);
             fieldIndex += fieldType.totalRegisterCount();

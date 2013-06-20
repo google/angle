@@ -2166,6 +2166,11 @@ bool ProgramBinary::areMatchingUniforms(InfoLog &infoLog, const std::string &uni
     {
         infoLog.append("Structure lengths for %s differ between vertex and fragment shaders", uniformName.c_str());
     }
+    else if (vertexUniform.isRowMajorMatrix != fragmentUniform.isRowMajorMatrix)
+    {
+        infoLog.append("Matrix packings for %s differ between vertex and fragment shaders", uniformName.c_str());
+        return false;
+    }
 
     const unsigned int numMembers = vertexUniform.fields.size();
     for (unsigned int memberIndex = 0; memberIndex < numMembers; memberIndex++)
@@ -2269,7 +2274,7 @@ bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, In
                 {
                     const sh::Uniform &field = constant.fields[fieldIndex];
                     const std::string &uniformName = constant.name + arrayString(elementIndex) + "." + field.name;
-                    const sh::Uniform fieldUniform(field.type, field.precision, uniformName.c_str(), field.arraySize, elementRegisterIndex);
+                    const sh::Uniform fieldUniform(field.type, field.precision, uniformName.c_str(), field.arraySize, elementRegisterIndex, field.isRowMajorMatrix);
                     if (!defineUniform(shader, fieldUniform, infoLog))
                     {
                         return false;
@@ -2287,7 +2292,7 @@ bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, In
                 const sh::Uniform &field = constant.fields[fieldIndex];
                 const std::string &uniformName = constant.name + "." + field.name;
 
-                sh::Uniform fieldUniform(field.type, field.precision, uniformName.c_str(), field.arraySize, fieldRegisterIndex);
+                sh::Uniform fieldUniform(field.type, field.precision, uniformName.c_str(), field.arraySize, fieldRegisterIndex, field.isRowMajorMatrix);
                 fieldUniform.fields = field.fields;
 
                 if (!defineUniform(shader, fieldUniform, infoLog))

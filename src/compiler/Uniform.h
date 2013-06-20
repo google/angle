@@ -33,7 +33,7 @@ typedef std::vector<ShaderVariable> ActiveShaderVariables;
 
 struct Uniform
 {
-    Uniform(GLenum type, GLenum precision, const char *name, unsigned int arraySize, unsigned int registerIndex);
+    Uniform(GLenum type, GLenum precision, const char *name, unsigned int arraySize, unsigned int registerIndex, bool isRowMajorMatrix);
 
     GLenum type;
     GLenum precision;
@@ -41,6 +41,7 @@ struct Uniform
     unsigned int arraySize;
 
     unsigned int registerIndex;
+    bool isRowMajorMatrix;
 
     std::vector<Uniform> fields;
 };

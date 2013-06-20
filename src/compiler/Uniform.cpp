@@ -28,13 +28,14 @@ ShaderVariable::ShaderVariable(GLenum type, GLenum precision, const char *name, 
 {
 }
 
-Uniform::Uniform(GLenum type, GLenum precision, const char *name, unsigned int arraySize, unsigned int registerIndex)
+Uniform::Uniform(GLenum type, GLenum precision, const char *name, unsigned int arraySize, unsigned int registerIndex, bool isRowMajorMatrix)
 {
     this->type = type;
     this->precision = precision;
     this->name = name;
     this->arraySize = arraySize;
     this->registerIndex = registerIndex;
+    this->isRowMajorMatrix = isRowMajorMatrix;
 }
 
 BlockMemberInfo::BlockMemberInfo(int offset, int arrayStride, int matrixStride, bool isRowMajorMatrix)
@@ -73,9 +74,6 @@ void InterfaceBlock::getBlockLayoutInfo(const sh::ActiveUniforms &fields, unsign
 {
     const size_t componentSize = 4;
 
-    // TODO: row major matrices
-    bool isRowMajorMatrix = false;
-
     for (unsigned int fieldIndex = 0; fieldIndex < fields.size(); fieldIndex++)
     {
         int arrayStride;
@@ -85,7 +83,7 @@ void InterfaceBlock::getBlockLayoutInfo(const sh::ActiveUniforms &fields, unsign
 
         if (getBlockLayoutInfo(uniform, currentOffset, &arrayStride, &matrixStride))
         {
-            const BlockMemberInfo memberInfo(*currentOffset * componentSize, arrayStride * componentSize, matrixStride * componentSize, isRowMajorMatrix);
+            const BlockMemberInfo memberInfo(*currentOffset * componentSize, arrayStride * componentSize, matrixStride * componentSize, uniform.isRowMajorMatrix);
             blockInfo.push_back(memberInfo);
 
             if (uniform.arraySize > 0)
@@ -95,8 +93,8 @@ void InterfaceBlock::getBlockLayoutInfo(const sh::ActiveUniforms &fields, unsign
 
             if (gl::IsMatrixType(uniform.type))
             {
-                const int componentGroups = (isRowMajorMatrix ? gl::VariableRowCount(uniform.type) : gl::VariableColumnCount(uniform.type));
-                const int numComponents = (isRowMajorMatrix ? gl::VariableColumnCount(uniform.type) : gl::VariableRowCount(uniform.type));
+                const int componentGroups = (uniform.isRowMajorMatrix ? gl::VariableRowCount(uniform.type) : gl::VariableColumnCount(uniform.type));
+                const int numComponents = (uniform.isRowMajorMatrix ? gl::VariableColumnCount(uniform.type) : gl::VariableRowCount(uniform.type));
                 *currentOffset += matrixStride * (componentGroups - 1);
                 *currentOffset += numComponents;
             }
@@ -150,8 +148,6 @@ void InterfaceBlock::getD3DLayoutInfo(const sh::Uniform &uniform, unsigned int *
     const unsigned int registerSize = 4;
     const size_t componentSize = 4;
 
-    // TODO: row major matrices
-    bool isRowMajorMatrix = false;
     // We assume we are only dealing with 4 byte components (no doubles or half-words currently)
     ASSERT(gl::UniformComponentSize(gl::UniformComponentType(uniform.type)) == componentSize);
     int matrixStride = 0;
@@ -164,7 +160,7 @@ void InterfaceBlock::getD3DLayoutInfo(const sh::Uniform &uniform, unsigned int *
 
         if (uniform.arraySize > 0)
         {
-            const int componentGroups = (isRowMajorMatrix ? gl::VariableRowCount(uniform.type) : gl::VariableColumnCount(uniform.type));
+            const int componentGroups = (uniform.isRowMajorMatrix ? gl::VariableRowCount(uniform.type) : gl::VariableColumnCount(uniform.type));
             arrayStride = matrixStride * componentGroups;
         }
     }
@@ -194,9 +190,6 @@ void InterfaceBlock::getStandardLayoutInfo(const sh::Uniform &uniform, unsigned 
 
     const size_t componentSize = 4;
 
-    // TODO: row major matrices
-    bool isRowMajorMatrix = false;
-
     // We assume we are only dealing with 4 byte components (no doubles or half-words currently)
     ASSERT(gl::UniformComponentSize(gl::UniformComponentType(uniform.type)) == componentSize);
 
@@ -207,13 +200,13 @@ void InterfaceBlock::getStandardLayoutInfo(const sh::Uniform &uniform, unsigned 
 
     if (gl::IsMatrixType(uniform.type))
     {
-        numComponents = (isRowMajorMatrix ? gl::VariableColumnCount(uniform.type) : gl::VariableRowCount(uniform.type));
+        numComponents = (uniform.isRowMajorMatrix ? gl::VariableColumnCount(uniform.type) : gl::VariableRowCount(uniform.type));
         baseAlignment = rx::roundUp(baseAlignment, 4u);
         matrixStride = baseAlignment;
 
         if (uniform.arraySize > 0)
         {
-            const int componentGroups = (isRowMajorMatrix ? gl::VariableRowCount(uniform.type) : gl::VariableColumnCount(uniform.type));
+            const int componentGroups = (uniform.isRowMajorMatrix ? gl::VariableRowCount(uniform.type) : gl::VariableColumnCount(uniform.type));
             arrayStride = matrixStride * componentGroups;
         }
     }
