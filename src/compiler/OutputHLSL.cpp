@@ -291,7 +291,6 @@ void OutputHLSL::header()
 
     TString uniforms;
     TString interfaceBlocks;
-    TString interfaceBlockInit;
     TString varyings;
     TString attributes;
 
@@ -346,30 +345,15 @@ void OutputHLSL::header()
 
         if (arraySize > 0)
         {
-            interfaceBlocks += "static " + interfaceBlockStructName(interfaceBlockType) + " " + decorate(interfaceBlockType.getInstanceName()) +
-                               arrayString(interfaceBlockType) + ";\n\n";
-
             for (unsigned int arrayIndex = 0; arrayIndex < arraySize; arrayIndex++)
             {
                 interfaceBlocks += interfaceBlockString(interfaceBlockType, interfaceBlock.registerIndex + arrayIndex, arrayIndex);
-
-                const TString &instanceName = interfaceBlockType.getInstanceName();
-                interfaceBlockInit += "   " + decorate(instanceName) + "[" + str(arrayIndex) + "] = " +
-                                      interfaceBlockInstanceString(interfaceBlockType, arrayIndex) + ";\n";
             }
         }
         else
         {
             interfaceBlocks += interfaceBlockString(interfaceBlockType, interfaceBlock.registerIndex, GL_INVALID_INDEX);
         }
-    }
-
-    if (!interfaceBlockInit.empty())
-    {
-        interfaceBlocks += "void dx_initConstantBuffers()\n"
-                           "{\n" +
-                           interfaceBlockInit +
-                           "}\n\n";
     }
 
     for (ReferencedSymbols::const_iterator varying = mReferencedVaryings.begin(); varying != mReferencedVaryings.end(); varying++)
@@ -1566,8 +1550,27 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
         }
         break;
       case EOpDivAssign:               outputTriplet(visit, "(", " /= ", ")");          break;
-      case EOpIndexDirect:             outputTriplet(visit, "", "[", "]");              break;
-      case EOpIndexIndirect:           outputTriplet(visit, "", "[", "]");              break;
+      case EOpIndexDirect:
+        if (node->getLeft()->getBasicType() == EbtInterfaceBlock)
+        {
+            if (visit == PreVisit)
+            {
+                const TType &interfaceBlockType = node->getLeft()->getType();
+                mReferencedInterfaceBlocks[interfaceBlockType.getInstanceName()] = node->getLeft()->getAsSymbolNode();
+                out << interfaceBlockInstanceString(interfaceBlockType, node->getRight()->getAsConstantUnion()->getIConst(0));
+                return false;
+            }
+        }
+        else
+        {
+            outputTriplet(visit, "", "[", "]");
+        }
+        break;
+      case EOpIndexIndirect:
+        // We do not currently support indirect references to interface blocks
+        ASSERT(node->getLeft()->getBasicType() != EbtInterfaceBlock);
+        outputTriplet(visit, "", "[", "]");
+        break;
       case EOpIndexDirectStruct:
       case EOpIndexDirectInterfaceBlock:
         if (visit == InVisit)
