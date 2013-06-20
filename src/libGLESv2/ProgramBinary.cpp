@@ -372,6 +372,25 @@ UniformBlock *ProgramBinary::getUniformBlockByIndex(GLuint blockIndex)
     return mUniformBlocks[blockIndex];
 }
 
+GLint ProgramBinary::getFragDataLocation(const char *name) const
+{
+    std::string baseName(name);
+    unsigned int arrayIndex;
+    arrayIndex = parseAndStripArrayIndex(&baseName);
+
+    for (auto locationIt = mOutputVariables.begin(); locationIt != mOutputVariables.end(); locationIt++)
+    {
+        const VariableLocation &outputVariable = locationIt->second;
+
+        if (outputVariable.name == baseName && (arrayIndex == GL_INVALID_INDEX || arrayIndex == outputVariable.element))
+        {
+            return static_cast<GLint>(locationIt->first);
+        }
+    }
+
+    return -1;
+}
+
 template <typename T>
 bool ProgramBinary::setUniform(GLint location, GLsizei count, const T* v, GLenum targetUniformType)
 {

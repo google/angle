@@ -132,6 +132,8 @@ class ProgramBinary : public RefCountObject
     GLuint getActiveUniformBlockMaxLength() const;
     UniformBlock *getUniformBlockByIndex(GLuint blockIndex);
 
+    GLint getFragDataLocation(const char *name) const;
+
     void validate(InfoLog &infoLog);
     bool validateSamplers(InfoLog *infoLog);
     bool isValidated() const;

@@ -9804,10 +9804,28 @@ GLint __stdcall glGetFragDataLocation(GLuint program, const GLchar *name)
         {
             if (context->getClientVersion() < 3)
             {
-                return gl::error(GL_INVALID_OPERATION, 0);
+                return gl::error(GL_INVALID_OPERATION, -1);
             }
 
-            UNIMPLEMENTED();
+            if (program == 0)
+            {
+                return gl::error(GL_INVALID_VALUE, -1);
+            }
+
+            gl::Program *programObject = context->getProgram(program);
+
+            if (!programObject || !programObject->isLinked())
+            {
+                return gl::error(GL_INVALID_OPERATION, -1);
+            }
+
+            gl::ProgramBinary *programBinary = programObject->getProgramBinary();
+            if (!programBinary)
+            {
+                return gl::error(GL_INVALID_OPERATION, -1);
+            }
+
+            return programBinary->getFragDataLocation(name);
         }
     }
     catch(std::bad_alloc&)
