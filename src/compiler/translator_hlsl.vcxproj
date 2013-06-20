@@ -144,6 +144,7 @@
   <ItemGroup>
     <ClCompile Include="CodeGenHLSL.cpp" />
     <ClCompile Include="DetectDiscontinuity.cpp" />
+    <ClCompile Include="HLSLLayoutEncoder.cpp" />
     <ClCompile Include="OutputHLSL.cpp" />
     <ClCompile Include="SearchSymbol.cpp" />
     <ClCompile Include="TranslatorHLSL.cpp" />
@@ -152,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DetectDiscontinuity.h" />
+    <ClInclude Include="HLSLLayoutEncoder.h" />
     <ClInclude Include="OutputHLSL.h" />
     <ClInclude Include="SearchSymbol.h" />
     <ClInclude Include="TranslatorHLSL.h" />

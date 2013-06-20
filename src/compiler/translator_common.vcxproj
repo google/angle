@@ -139,6 +139,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\common\utilities.cpp" />
+    <ClCompile Include="BlockLayoutEncoder.cpp" />
     <ClCompile Include="BuiltInFunctionEmulator.cpp" />
     <ClCompile Include="Compiler.cpp" />
     <ClCompile Include="debug.cpp" />
@@ -229,6 +230,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseTypes.h" />
+    <ClInclude Include="BlockLayoutEncoder.h" />
     <ClInclude Include="BuiltInFunctionEmulator.h" />
     <ClInclude Include="Common.h" />
     <ClInclude Include="ConstantUnion.h" />

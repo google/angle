@@ -65,6 +65,8 @@
       ],
       'sources': [
         'compiler/BaseTypes.h',
+        'compiler/BlockLayoutEncoder.cpp',
+        'compiler/BlockLayoutEncoder.h',
         'compiler/BuiltInFunctionEmulator.cpp',
         'compiler/BuiltInFunctionEmulator.h',
         'compiler/Common.h',
@@ -206,6 +208,8 @@
             'compiler/DetectDiscontinuity.cpp',
             'compiler/DetectDiscontinuity.h',
             'compiler/CodeGenHLSL.cpp',
+            'compiler/HLSLLayoutEncoder.cpp',
+            'compiler/HLSLLayoutEncoder.h',
             'compiler/OutputHLSL.cpp',
             'compiler/OutputHLSL.h',
             'compiler/TranslatorHLSL.cpp',

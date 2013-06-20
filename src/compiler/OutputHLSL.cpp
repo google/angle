@@ -13,6 +13,7 @@
 #include "compiler/InfoSink.h"
 #include "compiler/SearchSymbol.h"
 #include "compiler/UnfoldShortCircuit.h"
+#include "compiler/HLSLLayoutEncoder.h"
 
 #include <algorithm>
 #include <cfloat>
@@ -284,6 +285,37 @@ TString OutputHLSL::interfaceBlockString(const TType &interfaceBlockType, unsign
     return hlsl;
 }
 
+// Use the same layout for packed and shared
+void setBlockLayout(InterfaceBlock *interfaceBlock, BlockLayoutType newLayout)
+{
+    interfaceBlock->layout = newLayout;
+    interfaceBlock->blockInfo.clear();
+
+    switch (newLayout)
+    {
+      case BLOCKLAYOUT_SHARED:
+      case BLOCKLAYOUT_PACKED:
+        {
+            HLSLBlockEncoder hlslEncoder(&interfaceBlock->blockInfo);
+            hlslEncoder.encodeFields(interfaceBlock->activeUniforms);
+            interfaceBlock->dataSize = hlslEncoder.getBlockSize();
+        }
+        break;
+
+      case BLOCKLAYOUT_STANDARD:
+        {
+            Std140BlockEncoder stdEncoder(&interfaceBlock->blockInfo);
+            stdEncoder.encodeFields(interfaceBlock->activeUniforms);
+            interfaceBlock->dataSize = stdEncoder.getBlockSize();
+        }
+        break;
+
+      default:
+        UNREACHABLE();
+        break;
+    }
+}
+
 void OutputHLSL::header()
 {
     ShShaderType shaderType = mContext.shaderType;
@@ -335,7 +367,7 @@ void OutputHLSL::header()
         mInterfaceBlockRegister += std::max(1u, interfaceBlock.arraySize);
 
         // TODO: handle other block layouts
-        interfaceBlock.setBlockLayout(BLOCKLAYOUT_SHARED);
+        setBlockLayout(&interfaceBlock, BLOCKLAYOUT_SHARED);
         mActiveInterfaceBlocks.push_back(interfaceBlock);
 
         if (interfaceBlockType.hasInstanceName())

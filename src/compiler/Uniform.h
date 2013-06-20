@@ -81,14 +81,6 @@ struct InterfaceBlock
     BlockLayoutType layout;
 
     unsigned int registerIndex;
-
-    void setBlockLayout(BlockLayoutType newLayout);
-
-  private:
-    void getBlockLayoutInfo(const sh::ActiveUniforms &fields, unsigned int *currentOffset);
-    bool getBlockLayoutInfo(const sh::Uniform &uniform, unsigned int *currentOffset, int *arrayStrideOut, int *matrixStrideOut);
-    void getD3DLayoutInfo(const sh::Uniform &uniform, unsigned int *currentOffset, int *arrayStrideOut, int *matrixStrideOut);
-    void getStandardLayoutInfo(const sh::Uniform &uniform, unsigned int *currentOffset, int *arrayStrideOut, int *matrixStrideOut);
 };
 
 typedef std::vector<InterfaceBlock> ActiveInterfaceBlocks;

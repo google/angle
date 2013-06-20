@@ -143,6 +143,9 @@
     <ClCompile Include="ValidateOutputs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BlockLayoutEncoder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseTypes.h">
@@ -266,6 +269,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ValidateOutputs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockLayoutEncoder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
