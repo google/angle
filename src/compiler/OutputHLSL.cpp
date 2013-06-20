@@ -214,17 +214,19 @@ TString OutputHLSL::interfaceBlockInstanceString(const TType& interfaceBlockType
 
 TString OutputHLSL::interfaceBlockMemberTypeString(const TType &memberType)
 {
-    // TODO: layout support
+    const TLayoutMatrixPacking matrixPacking = memberType.getLayoutQualifier().matrixPacking;
+    ASSERT(matrixPacking != EmpUnspecified);
 
     if (memberType.isMatrix())
     {
         // Use HLSL row-major packing for GLSL column-major matrices
-        return "row_major " + typeString(memberType);
+        const TString &matrixPackString = (matrixPacking == EmpRowMajor ? "column_major" : "row_major");
+        return matrixPackString + " " + typeString(memberType);
     }
     else if (memberType.getBasicType() == EbtStruct)
     {
         // Use HLSL row-major packing for GLSL column-major matrices
-        return structureTypeName(memberType, true);
+        return structureTypeName(memberType, matrixPacking == EmpColumnMajor);
     }
     else
     {
@@ -286,16 +288,6 @@ void OutputHLSL::header()
 {
     ShShaderType shaderType = mContext.shaderType;
     TInfoSinkBase &out = mHeader;
-
-    for (StructDeclarations::iterator structDeclaration = mStructDeclarations.begin(); structDeclaration != mStructDeclarations.end(); structDeclaration++)
-    {
-        out << *structDeclaration;
-    }
-
-    for (Constructors::iterator constructor = mConstructors.begin(); constructor != mConstructors.end(); constructor++)
-    {
-        out << *constructor;
-    }
 
     TString uniforms;
     TString interfaceBlocks;
@@ -400,6 +392,16 @@ void OutputHLSL::header()
         ShaderVariable shaderVar(glVariableType(type), glVariablePrecision(type), name.c_str(),
                                  (unsigned int)type.getArraySize(), type.getLayoutQualifier().location);
         mActiveAttributes.push_back(shaderVar);
+    }
+
+    for (StructDeclarations::iterator structDeclaration = mStructDeclarations.begin(); structDeclaration != mStructDeclarations.end(); structDeclaration++)
+    {
+        out << *structDeclaration;
+    }
+
+    for (Constructors::iterator constructor = mConstructors.begin(); constructor != mConstructors.end(); constructor++)
+    {
+        out << *constructor;
     }
 
     if (shaderType == SH_FRAGMENT_SHADER)
