@@ -86,6 +86,8 @@ protected:
     void clearResults();
     // Return true if function recursion is detected.
     bool detectRecursion(TIntermNode* root);
+    // Returns true if a program has no conflicting or missing fragment outputs
+    bool validateOutputs(TIntermNode* root);
     // Rewrites a shader's intermediate tree according to the CSS Shaders spec.
     void rewriteCSSShader(TIntermNode* root);
     // Returns true if the given shader does not exceed the minimum

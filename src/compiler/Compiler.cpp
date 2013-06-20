@@ -14,6 +14,7 @@
 #include "compiler/RenameFunction.h"
 #include "compiler/ShHandle.h"
 #include "compiler/ValidateLimitations.h"
+#include "compiler/ValidateOutputs.h"
 #include "compiler/VariablePacker.h"
 #include "compiler/depgraph/DependencyGraph.h"
 #include "compiler/depgraph/DependencyGraphOutput.h"
@@ -143,6 +144,9 @@ bool TCompiler::compile(const char* const shaderStrings[],
         if (success)
             success = detectRecursion(root);
 
+        if (success && shaderVersion == 300 && shaderType == SH_FRAGMENT_SHADER)
+            success = validateOutputs(root);
+
         if (success && (compileOptions & SH_VALIDATE_LOOP_INDEXING))
             success = validateLimitations(root);
 
@@ -270,6 +274,13 @@ bool TCompiler::detectRecursion(TIntermNode* root)
             UNREACHABLE();
             return false;
     }
+}
+
+bool TCompiler::validateOutputs(TIntermNode* root)
+{
+    ValidateOutputs validateOutputs(infoSink.info, compileResources.MaxDrawBuffers);
+    root->traverse(&validateOutputs);
+    return (validateOutputs.numErrors() == 0);
 }
 
 void TCompiler::rewriteCSSShader(TIntermNode* root)

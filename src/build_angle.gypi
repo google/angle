@@ -124,6 +124,8 @@
         'compiler/util.h',
         'compiler/ValidateLimitations.cpp',
         'compiler/ValidateLimitations.h',
+        'compiler/ValidateOutput.cpp',
+        'compiler/ValidateOutput.h',
         'compiler/VariableInfo.cpp',
         'compiler/VariableInfo.h',
         'compiler/VariablePacker.cpp',

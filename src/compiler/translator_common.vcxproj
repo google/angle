@@ -164,6 +164,7 @@
     <ClCompile Include="SymbolTable.cpp" />
     <ClCompile Include="util.cpp" />
     <ClCompile Include="ValidateLimitations.cpp" />
+    <ClCompile Include="ValidateOutputs.cpp" />
     <ClCompile Include="VariableInfo.cpp" />
     <ClCompile Include="VariablePacker.cpp" />
     <ClCompile Include="glslang_lex.cpp" />
@@ -258,6 +259,7 @@
     <ClInclude Include="Types.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="ValidateLimitations.h" />
+    <ClInclude Include="ValidateOutputs.h" />
     <ClInclude Include="VariableInfo.h" />
     <ClInclude Include="VariablePacker.h" />
     <ClInclude Include="glslang_tab.h" />

@@ -2320,17 +2320,16 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierTyp
     }
     else
     {
+        // must check that location is non-negative
         if (intValue < 0)
         {
-            error(intValueLine, "out of range", intValueString.c_str(), "value must be non-negative and < MAX_DRAW_BUFFERS");
+            error(intValueLine, "out of range:", intValueString.c_str(), "location must be non-negative");
             recover();
         }
         else
         {
             qualifier.location = intValue;
         }
-
-        // TODO: must check that location is < MAX_DRAW_BUFFERS
     }
 
     return qualifier;
