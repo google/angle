@@ -41,6 +41,11 @@ std::string arrayString(int i)
     return "[" + str(i) + "]";
 }
 
+std::string arrayString(unsigned int i)
+{
+    return (i == GL_INVALID_INDEX ? "" : "[" + str(i) + "]");
+}
+
 namespace gl_d3d
 {
     std::string TypeString(GLenum type)
@@ -1055,6 +1060,32 @@ int ProgramBinary::packVaryings(InfoLog &infoLog, const Varying *packing[][4], F
     return registers;
 }
 
+void ProgramBinary::defineOutputVariables(FragmentShader *fragmentShader)
+{
+    const sh::ActiveShaderVariables &outputVars = fragmentShader->getOutputVariables();
+
+    for (unsigned int outputVariableIndex = 0; outputVariableIndex < outputVars.size(); outputVariableIndex++)
+    {
+        const sh::ShaderVariable &outputVariable = outputVars[outputVariableIndex];
+        const int baseLocation = outputVariable.location == -1 ? 0 : outputVariable.location;
+
+        if (outputVariable.arraySize > 0)
+        {
+            for (unsigned int elementIndex = 0; elementIndex < outputVariable.arraySize; elementIndex++)
+            {
+                const int location = baseLocation + elementIndex;
+                ASSERT(mOutputVariables.count(location) == 0);
+                mOutputVariables[location] = VariableLocation(outputVariable.name, elementIndex, outputVariableIndex);
+            }
+        }
+        else
+        {
+            ASSERT(mOutputVariables.count(baseLocation) == 0);
+            mOutputVariables[baseLocation] = VariableLocation(outputVariable.name, GL_INVALID_INDEX, outputVariableIndex);
+        }
+    }
+}
+
 bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying *packing[][4],
                                  std::string& pixelHLSL, std::string& vertexHLSL,
                                  FragmentShader *fragmentShader, VertexShader *vertexShader)
@@ -1355,9 +1386,28 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
                  "struct PS_OUTPUT\n"
                  "{\n";
 
-    for (unsigned int renderTargetIndex = 0; renderTargetIndex < numRenderTargets; renderTargetIndex++)
+    if (mShaderVersion < 300)
     {
-        pixelHLSL += "    float4 gl_Color" + str(renderTargetIndex) + " : " + targetSemantic + str(renderTargetIndex) + ";\n";
+        for (unsigned int renderTargetIndex = 0; renderTargetIndex < numRenderTargets; renderTargetIndex++)
+        {
+            pixelHLSL += "    float4 gl_Color" + str(renderTargetIndex) + " : " + targetSemantic + str(renderTargetIndex) + ";\n";
+        }
+    }
+    else
+    {
+        defineOutputVariables(fragmentShader);
+
+        const sh::ActiveShaderVariables &outputVars = fragmentShader->getOutputVariables();
+        for (auto locationIt = mOutputVariables.begin(); locationIt != mOutputVariables.end(); locationIt++)
+        {
+            const VariableLocation &outputLocation = locationIt->second;
+            const sh::ShaderVariable &outputVariable = outputVars[outputLocation.index];
+            const std::string &elementString = (outputLocation.element == GL_INVALID_INDEX ? "" : str(outputLocation.element));
+
+            pixelHLSL += "    " + gl_d3d::TypeString(outputVariable.type) +
+                         " out_" + outputLocation.name + elementString +
+                         " : " + targetSemantic + str(locationIt->first) + ";\n";
+        }
     }
 
     pixelHLSL += "};\n"
@@ -1473,11 +1523,26 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
                  "\n"
                  "    PS_OUTPUT output;\n";
 
-    for (unsigned int renderTargetIndex = 0; renderTargetIndex < numRenderTargets; renderTargetIndex++)
+    if (mShaderVersion < 300)
     {
-        unsigned int sourceColorIndex = broadcast ? 0 : renderTargetIndex;
+        for (unsigned int renderTargetIndex = 0; renderTargetIndex < numRenderTargets; renderTargetIndex++)
+        {
+            unsigned int sourceColorIndex = broadcast ? 0 : renderTargetIndex;
 
-        pixelHLSL += "    output.gl_Color" + str(renderTargetIndex) + " = gl_Color[" + str(sourceColorIndex) + "];\n";
+            pixelHLSL += "    output.gl_Color" + str(renderTargetIndex) + " = gl_Color[" + str(sourceColorIndex) + "];\n";
+        }
+    }
+    else
+    {
+        for (auto locationIt = mOutputVariables.begin(); locationIt != mOutputVariables.end(); locationIt++)
+        {
+            const VariableLocation &outputLocation = locationIt->second;
+            const std::string &variableName = "out_" + outputLocation.name;
+            const std::string &outVariableName = variableName + (outputLocation.element == GL_INVALID_INDEX ? "" : str(outputLocation.element));
+            const std::string &staticVariableName = variableName + arrayString(outputLocation.element);
+
+            pixelHLSL += "    output." + outVariableName + " = " + staticVariableName + ";\n";
+        }
     }
 
     pixelHLSL += "\n"

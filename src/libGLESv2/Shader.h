@@ -188,9 +188,13 @@ class FragmentShader : public Shader
 
     virtual GLenum getType();
     virtual void compile();
+    virtual void uncompile();
+    const sh::ActiveShaderVariables &getOutputVariables() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(FragmentShader);
+
+    sh::ActiveShaderVariables mActiveOutputVariables;
 };
 }
 

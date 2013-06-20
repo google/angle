@@ -11,6 +11,15 @@
 namespace sh
 {
 
+ShaderVariable::ShaderVariable(GLenum type, GLenum precision, const char *name, unsigned int arraySize, int location)
+    : type(type),
+      precision(precision),
+      name(name),
+      arraySize(arraySize),
+      location(location)
+{
+}
+
 Uniform::Uniform(GLenum type, GLenum precision, const char *name, unsigned int arraySize, unsigned int registerIndex)
 {
     this->type = type;

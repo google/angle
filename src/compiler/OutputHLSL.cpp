@@ -156,6 +156,11 @@ const ActiveInterfaceBlocks &OutputHLSL::getInterfaceBlocks() const
     return mActiveInterfaceBlocks;
 }
 
+const ActiveShaderVariables &OutputHLSL::getOutputVariables() const
+{
+    return mActiveOutputVariables;
+}
+
 int OutputHLSL::vectorSize(const TType &type) const
 {
     int elementSize = type.isMatrix() ? type.getCols() : 1;
@@ -391,23 +396,44 @@ void OutputHLSL::header()
         TExtensionBehavior::const_iterator iter = mContext.extensionBehavior().find("GL_EXT_draw_buffers");
         const bool usingMRTExtension = (iter != mContext.extensionBehavior().end() && (iter->second == EBhEnable || iter->second == EBhRequire));
 
-        const unsigned int numColorValues = usingMRTExtension ? mNumRenderTargets : 1;
-
         out << "// Varyings\n";
         out <<  varyings;
-        out << "\n"
-               "static float4 gl_Color[" << numColorValues << "] =\n"
-               "{\n";
-        for (unsigned int i = 0; i < numColorValues; i++)
+        out << "\n";
+
+        if (mContext.getShaderVersion() >= 300)
         {
-            out << "    float4(0, 0, 0, 0)";
-            if (i + 1 != numColorValues)
+            for (auto outputVariableIt = mReferencedOutputVariables.begin(); outputVariableIt != mReferencedOutputVariables.end(); outputVariableIt++)
             {
-                out << ",";
+                const TString &variableName = outputVariableIt->first;
+                const TType &variableType = outputVariableIt->second->getType();
+                const TLayoutQualifier &layoutQualifier = variableType.getLayoutQualifier();
+
+                out << "static " + typeString(variableType) + " out_" + variableName + arrayString(variableType) +
+                       " = " + initializer(variableType) + ";\n";
+
+                ShaderVariable outputVar(glVariableType(variableType), glVariablePrecision(variableType), variableName.c_str(),
+                                         (unsigned int)variableType.getArraySize(), layoutQualifier.location);
+                mActiveOutputVariables.push_back(outputVar);
             }
-            out << "\n";
         }
-        out << "};\n";
+        else
+        {
+            const unsigned int numColorValues = usingMRTExtension ? mNumRenderTargets : 1;
+
+            out << "static float4 gl_Color[" << numColorValues << "] =\n"
+                   "{\n";
+            for (unsigned int i = 0; i < numColorValues; i++)
+            {
+                out << "    float4(0, 0, 0, 0)";
+                if (i + 1 != numColorValues)
+                {
+                    out << ",";
+                }
+                out << "\n";
+            }
+
+            out << "};\n";
+        }
 
         if (mUsesFragCoord)
         {
@@ -1407,7 +1433,12 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
             mReferencedVaryings[name] = node;
             out << decorate(name);
         }
-        else if (qualifier == EvqFragColor || qualifier == EvqFragmentOutput)
+        else if (qualifier == EvqFragmentOutput)
+        {
+            mReferencedOutputVariables[name] = node;
+            out << "out_" << name;
+        }
+        else if (qualifier == EvqFragColor)
         {
             out << "gl_Color[0]";
             mUsesFragColor = true;

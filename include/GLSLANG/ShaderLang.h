@@ -37,7 +37,7 @@ extern "C" {
 
 // Version number for shader translation API.
 // It is incremented everytime the API changes.
-#define ANGLE_SH_VERSION 113
+#define ANGLE_SH_VERSION 114
 
 //
 // The names of the following enums have been derived by replacing GL prefix
@@ -132,6 +132,7 @@ typedef enum {
   SH_ACTIVE_UNIFORMS_ARRAY       =  0x6004,
   SH_SHADER_VERSION              =  0x6005,
   SH_ACTIVE_INTERFACE_BLOCKS_ARRAY =  0x6006,
+  SH_ACTIVE_OUTPUT_VARIABLES_ARRAY =  0x6007,
 } ShShaderInfo;
 
 // Compile options.

@@ -34,6 +34,7 @@ class OutputHLSL : public TIntermTraverser
     TInfoSinkBase &getBodyStream();
     const ActiveUniforms &getUniforms();
     const ActiveInterfaceBlocks &getInterfaceBlocks() const;
+    const ActiveShaderVariables &getOutputVariables() const;
 
     TString typeString(const TType &type);
     TString textureString(const TType &type);
@@ -88,6 +89,7 @@ class OutputHLSL : public TIntermTraverser
     ReferencedSymbols mReferencedInterfaceBlocks;
     ReferencedSymbols mReferencedAttributes;
     ReferencedSymbols mReferencedVaryings;
+    ReferencedSymbols mReferencedOutputVariables;
 
     // Parameters determining what goes in the header output
     bool mUsesTexture2D;
@@ -192,6 +194,7 @@ class OutputHLSL : public TIntermTraverser
 
     ActiveUniforms mActiveUniforms;
     ActiveInterfaceBlocks mActiveInterfaceBlocks;
+    ActiveShaderVariables mActiveOutputVariables;
 };
 }
 

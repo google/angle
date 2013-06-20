@@ -706,5 +706,26 @@ void FragmentShader::compile()
     compileToHLSL(mFragmentCompiler);
     parseVaryings();
     mVaryings.sort(compareVarying);
+
+    const char *hlsl = getHLSL();
+    if (hlsl)
+    {
+        void *activeOutputVariables;
+        ShGetInfoPointer(mFragmentCompiler, SH_ACTIVE_OUTPUT_VARIABLES_ARRAY, &activeOutputVariables);
+        mActiveOutputVariables = *(sh::ActiveShaderVariables*)activeOutputVariables;
+    }
 }
+
+void FragmentShader::uncompile()
+{
+    Shader::uncompile();
+
+    mActiveOutputVariables.clear();
+}
+
+const sh::ActiveShaderVariables &FragmentShader::getOutputVariables() const
+{
+    return mActiveOutputVariables;
+}
+
 }

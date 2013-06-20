@@ -17,12 +17,14 @@ public:
     virtual TranslatorHLSL *getAsTranslatorHLSL() { return this; }
     const sh::ActiveUniforms &getUniforms() { return mActiveUniforms; }
     const sh::ActiveInterfaceBlocks &getInterfaceBlocks() const { return mActiveInterfaceBlocks; }
+    const sh::ActiveShaderVariables &getOutputVariables() { return mActiveOutputVariables; }
 
 protected:
     virtual void translate(TIntermNode* root);
 
     sh::ActiveUniforms mActiveUniforms;
     sh::ActiveInterfaceBlocks mActiveInterfaceBlocks;
+    sh::ActiveShaderVariables mActiveOutputVariables;
     ShShaderOutput mOutputType;
 };
 

@@ -164,7 +164,8 @@ class ProgramBinary : public RefCountObject
     void defineUniformBlockMembers(const sh::ActiveUniforms &uniforms, const std::string &prefix, int blockIndex, BlockInfoItr *blockInfoItr, std::vector<unsigned int> *blockUniformIndexes);
     bool defineUniformBlock(InfoLog &infoLog, GLenum shader, const sh::InterfaceBlock &interfaceBlock);
     bool assignUniformBlockRegister(InfoLog &infoLog, UniformBlock *uniformBlock, GLenum shader, unsigned int registerIndex);
-    
+    void defineOutputVariables(FragmentShader *fragmentShader);
+
     std::string generateGeometryShaderHLSL(int registers, const Varying *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const;
     std::string generatePointSpriteHLSL(int registers, const Varying *packing[][4], FragmentShader *fragmentShader, VertexShader *vertexShader) const;
 
@@ -206,6 +207,8 @@ class ProgramBinary : public RefCountObject
     UniformBlockArray mUniformBlocks;
     typedef std::vector<VariableLocation> UniformIndex;
     UniformIndex mUniformIndex;
+    typedef std::map<int, VariableLocation> ShaderVariableIndex;
+    ShaderVariableIndex mOutputVariables;
 
     bool mValidated;
 

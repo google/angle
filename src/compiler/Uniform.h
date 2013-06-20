@@ -17,6 +17,19 @@
 namespace sh
 {
 
+struct ShaderVariable
+{
+    ShaderVariable(GLenum type, GLenum precision, const char *name, unsigned int arraySize, int location);
+
+    GLenum type;
+    GLenum precision;
+    std::string name;
+    unsigned int arraySize;
+    int location;
+};
+
+typedef std::vector<ShaderVariable> ActiveShaderVariables;
+
 struct Uniform
 {
     Uniform(GLenum type, GLenum precision, const char *name, unsigned int arraySize, unsigned int registerIndex);

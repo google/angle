@@ -2028,6 +2028,11 @@ TIntermTyped* TParseContext::addIndexExpression(TIntermTyped *baseExpression, TS
                 error(location, "", "[", "array indexes for interface blocks arrays must be constant integeral expressions");
                 recover();
             }
+            else if (baseExpression->getQualifier() == EvqFragmentOutput)
+            {
+                error(location, "", "[", "array indexes for output variables must be constant integeral expressions");
+                recover();
+            }
 
             indexedExpression = intermediate.addIndex(EOpIndexIndirect, baseExpression, indexExpression, location);
         }
