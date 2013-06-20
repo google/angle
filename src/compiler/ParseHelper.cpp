@@ -1308,6 +1308,98 @@ TIntermAggregate* TParseContext::parseSingleInitDeclaration(TPublicType &publicT
     }
 }
 
+TIntermAggregate* TParseContext::parseDeclarator(TPublicType &publicType, TIntermAggregate *aggregateDeclaration, TSymbol *identifierSymbol, TSourceLoc identifierLocation, const TString &identifier)
+{
+    if (publicType.type == EbtInvariant && !identifierSymbol)
+    {
+        error(identifierLocation, "undeclared identifier declared as invariant", identifier.c_str());
+        recover();
+    }
+
+    TIntermSymbol* symbol = intermediate.addSymbol(0, identifier, TType(publicType), identifierLocation);
+    TIntermAggregate* intermAggregate = intermediate.growAggregate(aggregateDeclaration, symbol, identifierLocation);
+
+    if (structQualifierErrorCheck(identifierLocation, publicType))
+        recover();
+
+    if (nonInitConstErrorCheck(identifierLocation, identifier, publicType, false))
+        recover();
+
+    TVariable* variable = 0;
+    if (nonInitErrorCheck(identifierLocation, identifier, publicType, variable))
+        recover();
+    if (symbol && variable)
+        symbol->setId(variable->getUniqueId());
+
+    return intermAggregate;
+}
+
+TIntermAggregate* TParseContext::parseArrayDeclarator(TPublicType &publicType, TSourceLoc identifierLocation, const TString &identifier, TSourceLoc arrayLocation, TIntermNode *declaratorList, TIntermTyped *indexExpression)
+{
+    if (structQualifierErrorCheck(identifierLocation, publicType))
+        recover();
+
+    if (nonInitConstErrorCheck(identifierLocation, identifier, publicType, true))
+        recover();
+
+    if (arrayTypeErrorCheck(arrayLocation, publicType) || arrayQualifierErrorCheck(arrayLocation, publicType))
+    {
+        recover();
+    }
+    else if (indexExpression)
+    {
+        int size;
+        if (arraySizeErrorCheck(arrayLocation, indexExpression, size))
+            recover();
+        TPublicType arrayType(publicType);
+        arrayType.setArray(true, size);
+        TVariable* variable = NULL;
+        if (arrayErrorCheck(arrayLocation, identifier, arrayType, variable))
+            recover();
+        TType type = TType(arrayType);
+        type.setArraySize(size);
+
+        return intermediate.growAggregate(declaratorList, intermediate.addSymbol(variable ? variable->getUniqueId() : 0, identifier, type, identifierLocation), identifierLocation);
+    }
+    else
+    {
+        TPublicType arrayType(publicType);
+        arrayType.setArray(true);
+        TVariable* variable = NULL;
+        if (arrayErrorCheck(arrayLocation, identifier, arrayType, variable))
+            recover();
+    }
+
+    return NULL;
+}
+
+TIntermAggregate* TParseContext::parseInitDeclarator(TPublicType &publicType, TIntermAggregate *declaratorList, TSourceLoc identifierLocation, const TString &identifier, TSourceLoc initLocation, TIntermTyped *initializer)
+{
+    if (structQualifierErrorCheck(identifierLocation, publicType))
+        recover();
+
+    TIntermNode* intermNode;
+    if (!executeInitializer(identifierLocation, identifier, publicType, initializer, intermNode))
+    {
+        //
+        // build the intermediate representation
+        //
+        if (intermNode)
+        {
+            return intermediate.growAggregate(declaratorList, intermNode, initLocation);
+        }
+        else
+        {
+            return declaratorList;
+        }
+    }
+    else
+    {
+        recover();
+        return NULL;
+    }
+}
+
 void TParseContext::parseGlobalLayoutQualifier(const TPublicType &typeQualifier)
 {
     if (typeQualifier.qualifier != EvqUniform)
