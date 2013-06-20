@@ -11,6 +11,14 @@
 namespace sh
 {
 
+ShaderVariable::ShaderVariable()
+    : type(GL_NONE),
+      precision(GL_NONE),
+      arraySize(0),
+      location(-1)
+{
+}
+
 ShaderVariable::ShaderVariable(GLenum type, GLenum precision, const char *name, unsigned int arraySize, int location)
     : type(type),
       precision(precision),

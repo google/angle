@@ -186,7 +186,7 @@ class ProgramBinary : public RefCountObject
     rx::ShaderExecutable *mVertexExecutable;
     rx::ShaderExecutable *mGeometryExecutable;
 
-    Attribute mLinkedAttribute[MAX_VERTEX_ATTRIBS];
+    sh::ShaderVariable mLinkedAttribute[MAX_VERTEX_ATTRIBS];
     int mSemanticIndex[MAX_VERTEX_ATTRIBS];
 
     struct Sampler

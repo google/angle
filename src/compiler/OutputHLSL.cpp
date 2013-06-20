@@ -161,6 +161,11 @@ const ActiveShaderVariables &OutputHLSL::getOutputVariables() const
     return mActiveOutputVariables;
 }
 
+const ActiveShaderVariables &OutputHLSL::getAttributes() const
+{
+    return mActiveAttributes;
+}
+
 int OutputHLSL::vectorSize(const TType &type) const
 {
     int elementSize = type.isMatrix() ? type.getCols() : 1;
@@ -389,6 +394,10 @@ void OutputHLSL::header()
         const TString &name = attribute->second->getSymbol();
 
         attributes += "static " + typeString(type) + " " + decorate(name) + arrayString(type) + " = " + initializer(type) + ";\n";
+
+        ShaderVariable shaderVar(glVariableType(type), glVariablePrecision(type), name.c_str(),
+                                 (unsigned int)type.getArraySize(), type.getLayoutQualifier().location);
+        mActiveAttributes.push_back(shaderVar);
     }
 
     if (shaderType == SH_FRAGMENT_SHADER)

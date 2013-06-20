@@ -1210,12 +1210,14 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
                   "{\n";
 
     int semanticIndex = 0;
-    for (AttributeArray::iterator attribute = vertexShader->mAttributes.begin(); attribute != vertexShader->mAttributes.end(); attribute++)
+    const sh::ActiveShaderVariables &activeAttributes = vertexShader->mActiveAttributes;
+    for (unsigned int attributeIndex = 0; attributeIndex < activeAttributes.size(); attributeIndex++)
     {
-        vertexHLSL += "    " + gl_d3d::TypeString(TransposeMatrixType(attribute->type)) + " ";
-        vertexHLSL += decorateAttribute(attribute->name) + " : TEXCOORD" + str(semanticIndex) + ";\n";
+        const sh::ShaderVariable &attribute = activeAttributes[attributeIndex];
+        vertexHLSL += "    " + gl_d3d::TypeString(TransposeMatrixType(attribute.type)) + " ";
+        vertexHLSL += decorateAttribute(attribute.name) + " : TEXCOORD" + str(semanticIndex) + ";\n";
 
-        semanticIndex += AttributeRegisterCount(attribute->type);
+        semanticIndex += AttributeRegisterCount(attribute.type);
     }
 
     vertexHLSL += "};\n"
@@ -1250,16 +1252,17 @@ bool ProgramBinary::linkVaryings(InfoLog &infoLog, int registers, const Varying 
                   "VS_OUTPUT main(VS_INPUT input)\n"
                   "{\n";
 
-    for (AttributeArray::iterator attribute = vertexShader->mAttributes.begin(); attribute != vertexShader->mAttributes.end(); attribute++)
+    for (unsigned int attributeIndex = 0; attributeIndex < activeAttributes.size(); attributeIndex++)
     {
-        vertexHLSL += "    " + decorateAttribute(attribute->name) + " = ";
+        const sh::ShaderVariable &attribute = activeAttributes[attributeIndex];
+        vertexHLSL += "    " + decorateAttribute(attribute.name) + " = ";
 
-        if (IsMatrixType(attribute->type))   // Matrix
+        if (IsMatrixType(attribute.type))   // Matrix
         {
             vertexHLSL += "transpose";
         }
 
-        vertexHLSL += "(input." + decorateAttribute(attribute->name) + ");\n";
+        vertexHLSL += "(input." + decorateAttribute(attribute.name) + ");\n";
     }
 
     if (vertexHLSL.find("dx_initConstantBuffers") != std::string::npos)
@@ -2065,11 +2068,13 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
 bool ProgramBinary::linkAttributes(InfoLog &infoLog, const AttributeBindings &attributeBindings, FragmentShader *fragmentShader, VertexShader *vertexShader)
 {
     unsigned int usedLocations = 0;
+    const sh::ActiveShaderVariables &activeAttributes = vertexShader->mActiveAttributes;
 
     // Link attributes that have a binding location
-    for (AttributeArray::iterator attribute = vertexShader->mAttributes.begin(); attribute != vertexShader->mAttributes.end(); attribute++)
+    for (unsigned int attributeIndex = 0; attributeIndex < activeAttributes.size(); attributeIndex++)
     {
-        int location = attributeBindings.getAttributeBinding(attribute->name);
+        const sh::ShaderVariable &attribute = activeAttributes[attributeIndex];
+        const int location = attributeBindings.getAttributeBinding(attribute.name);
 
         if (location != -1)   // Set by glBindAttribLocation
         {
@@ -2078,13 +2083,13 @@ bool ProgramBinary::linkAttributes(InfoLog &infoLog, const AttributeBindings &at
                 // Multiple active attributes bound to the same location; not an error
             }
 
-            mLinkedAttribute[location] = *attribute;
+            mLinkedAttribute[location] = attribute;
 
-            int rows = AttributeRegisterCount(attribute->type);
+            int rows = AttributeRegisterCount(attribute.type);
 
             if (rows + location > MAX_VERTEX_ATTRIBS)
             {
-                infoLog.append("Active attribute (%s) at location %d is too big to fit", attribute->name.c_str(), location);
+                infoLog.append("Active attribute (%s) at location %d is too big to fit", attribute.name.c_str(), location);
 
                 return false;
             }
@@ -2097,23 +2102,24 @@ bool ProgramBinary::linkAttributes(InfoLog &infoLog, const AttributeBindings &at
     }
 
     // Link attributes that don't have a binding location
-    for (AttributeArray::iterator attribute = vertexShader->mAttributes.begin(); attribute != vertexShader->mAttributes.end(); attribute++)
+    for (unsigned int attributeIndex = 0; attributeIndex < activeAttributes.size(); attributeIndex++)
     {
-        int location = attributeBindings.getAttributeBinding(attribute->name);
+        const sh::ShaderVariable &attribute = activeAttributes[attributeIndex];
+        int location = attributeBindings.getAttributeBinding(attribute.name);
 
         if (location == -1)   // Not set by glBindAttribLocation
         {
-            int rows = AttributeRegisterCount(attribute->type);
+            int rows = AttributeRegisterCount(attribute.type);
             int availableIndex = AllocateFirstFreeBits(&usedLocations, rows, MAX_VERTEX_ATTRIBS);
 
             if (availableIndex == -1 || availableIndex + rows > MAX_VERTEX_ATTRIBS)
             {
-                infoLog.append("Too many active attributes (%s)", attribute->name.c_str());
+                infoLog.append("Too many active attributes (%s)", attribute.name.c_str());
 
                 return false;   // Fail to link
             }
 
-            mLinkedAttribute[availableIndex] = *attribute;
+            mLinkedAttribute[availableIndex] = attribute;
         }
     }
 

@@ -18,6 +18,7 @@ public:
     const sh::ActiveUniforms &getUniforms() { return mActiveUniforms; }
     const sh::ActiveInterfaceBlocks &getInterfaceBlocks() const { return mActiveInterfaceBlocks; }
     const sh::ActiveShaderVariables &getOutputVariables() { return mActiveOutputVariables; }
+    const sh::ActiveShaderVariables &getAttributes() { return mActiveAttributes; }
 
 protected:
     virtual void translate(TIntermNode* root);
@@ -25,6 +26,7 @@ protected:
     sh::ActiveUniforms mActiveUniforms;
     sh::ActiveInterfaceBlocks mActiveInterfaceBlocks;
     sh::ActiveShaderVariables mActiveOutputVariables;
+    sh::ActiveShaderVariables mActiveAttributes;
     ShShaderOutput mOutputType;
 };
 

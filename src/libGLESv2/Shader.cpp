@@ -628,7 +628,7 @@ void VertexShader::uncompile()
     Shader::uncompile();
 
     // set by ParseAttributes
-    mAttributes.clear();
+    mActiveAttributes.clear();
 }
 
 void VertexShader::compile()
@@ -645,14 +645,16 @@ int VertexShader::getSemanticIndex(const std::string &attributeName)
     if (!attributeName.empty())
     {
         int semanticIndex = 0;
-        for (AttributeArray::iterator attribute = mAttributes.begin(); attribute != mAttributes.end(); attribute++)
+        for (unsigned int attributeIndex = 0; attributeIndex < mActiveAttributes.size(); attributeIndex++)
         {
-            if (attribute->name == attributeName)
+            const sh::ShaderVariable &attribute = mActiveAttributes[attributeIndex];
+
+            if (attribute.name == attributeName)
             {
                 return semanticIndex;
             }
 
-            semanticIndex += AttributeRegisterCount(attribute->type);
+            semanticIndex += AttributeRegisterCount(attribute.type);
         }
     }
 
@@ -664,24 +666,9 @@ void VertexShader::parseAttributes()
     const char *hlsl = getHLSL();
     if (hlsl)
     {
-        const char *input = strstr(hlsl, "// Attributes") + 14;
-
-        while(true)
-        {
-            char attributeType[256];
-            char attributeName[256];
-
-            int matches = sscanf(input, "static %255s _%255s", attributeType, attributeName);
-
-            if (matches != 2)
-            {
-                break;
-            }
-
-            mAttributes.push_back(Attribute(parseType(attributeType), attributeName));
-
-            input = strstr(input, ";") + 2;
-        }
+        void *activeAttributes;
+        ShGetInfoPointer(mVertexCompiler, SH_ACTIVE_ATTRIBUTES_ARRAY, &activeAttributes);
+        mActiveAttributes = *(sh::ActiveShaderVariables*)activeAttributes;
     }
 }
 

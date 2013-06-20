@@ -35,6 +35,7 @@ class OutputHLSL : public TIntermTraverser
     const ActiveUniforms &getUniforms();
     const ActiveInterfaceBlocks &getInterfaceBlocks() const;
     const ActiveShaderVariables &getOutputVariables() const;
+    const ActiveShaderVariables &getAttributes() const;
 
     TString typeString(const TType &type);
     TString textureString(const TType &type);
@@ -195,6 +196,7 @@ class OutputHLSL : public TIntermTraverser
     ActiveUniforms mActiveUniforms;
     ActiveInterfaceBlocks mActiveInterfaceBlocks;
     ActiveShaderVariables mActiveOutputVariables;
+    ActiveShaderVariables mActiveAttributes;
 };
 }
 

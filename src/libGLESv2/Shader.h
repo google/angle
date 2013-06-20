@@ -141,22 +141,6 @@ class Shader
     ResourceManager *mResourceManager;
 };
 
-struct Attribute
-{
-    Attribute() : type(GL_NONE), name("")
-    {
-    }
-
-    Attribute(GLenum type, const std::string &name) : type(type), name(name)
-    {
-    }
-
-    GLenum type;
-    std::string name;
-};
-
-typedef std::vector<Attribute> AttributeArray;
-
 class VertexShader : public Shader
 {
     friend class ProgramBinary;
@@ -176,7 +160,7 @@ class VertexShader : public Shader
 
     void parseAttributes();
 
-    AttributeArray mAttributes;
+    sh::ActiveShaderVariables mActiveAttributes;
 };
 
 class FragmentShader : public Shader

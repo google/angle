@@ -19,6 +19,7 @@ namespace sh
 
 struct ShaderVariable
 {
+    ShaderVariable();
     ShaderVariable(GLenum type, GLenum precision, const char *name, unsigned int arraySize, int location);
 
     GLenum type;
