@@ -218,11 +218,13 @@ TString OutputHLSL::interfaceBlockMemberTypeString(const TType &memberType)
 
     if (memberType.isMatrix())
     {
-        return " row_major " + typeString(memberType);
+        // Use HLSL row-major packing for GLSL column-major matrices
+        return "row_major " + typeString(memberType);
     }
     else if (memberType.getBasicType() == EbtStruct)
     {
-        return "rm" + typeString(memberType);
+        // Use HLSL row-major packing for GLSL column-major matrices
+        return structureTypeName(memberType, true);
     }
     else
     {
@@ -2920,21 +2922,7 @@ TString OutputHLSL::typeString(const TType &type)
         }
         else   // Nameless structure, define in place
         {
-            const TTypeList &fields = *type.getStruct();
-
-            TString string = "struct\n"
-                             "{\n";
-
-            for (unsigned int i = 0; i < fields.size(); i++)
-            {
-                const TType &field = *fields[i].type;
-
-                string += "    " + typeString(field) + " " + decorate(field.getFieldName()) + arrayString(field) + ";\n";
-            }
-
-            string += "} ";
-
-            return string;
+            return structureString(type, false);
         }
     }
     else if (type.isMatrix())
@@ -3041,6 +3029,58 @@ TString OutputHLSL::initializer(const TType &type)
     return "{" + string + "}";
 }
 
+TString OutputHLSL::structureString(const TType &structType, bool useHLSLRowMajorPacking)
+{
+    ASSERT(structType.getStruct());
+
+    const TTypeList &fields = *structType.getStruct();
+    const bool isNameless = (structType.getTypeName() == "");
+    const TString &structName = structureTypeName(structType, useHLSLRowMajorPacking);
+
+    const TString declareString = (isNameless ? "struct" : "struct " + structName);
+
+    TString structure;
+    structure += declareString + "\n"
+                 "{\n";
+
+    for (unsigned int i = 0; i < fields.size(); i++)
+    {
+        const TType &field = *fields[i].type;
+
+        structure += "    " + structureTypeName(field, useHLSLRowMajorPacking) + " " +
+                     decorateField(field.getFieldName(), structType) + arrayString(field) + ";\n";
+    }
+
+    // Nameless structs do not finish with a semicolon and newline, to leave room for an instance variable
+    structure += (isNameless ? "} " : "};\n");
+
+    return structure;
+}
+
+TString OutputHLSL::structureTypeName(const TType &structType, bool useHLSLRowMajorPacking)
+{
+    if (structType.getBasicType() != EbtStruct)
+    {
+        return typeString(structType);
+    }
+
+    if (structType.getTypeName() == "")
+    {
+        return "";
+    }
+
+    TString prefix = "";
+
+    // Structs packed with row-major matrices in HLSL are prefixed with "rm"
+    // GLSL column-major maps to HLSL row-major, and the converse is true
+    if (useHLSLRowMajorPacking)
+    {
+        prefix += "rm";
+    }
+
+    return prefix + typeString(structType);
+}
+
 void OutputHLSL::addConstructor(const TType &type, const TString &name, const TIntermSequence *parameters)
 {
     if (name == "")
@@ -3067,32 +3107,20 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
     {
         mStructNames.insert(decorate(name));
 
-        TString structure;
-        structure += "{\n";
-
-        const TTypeList &fields = *type.getStruct();
-
-        for (unsigned int i = 0; i < fields.size(); i++)
-        {
-            const TType &field = *fields[i].type;
-
-            structure += "    " + typeString(field) + " " + decorateField(field.getFieldName(), type) + arrayString(field) + ";\n";
-        }
-
-        structure += "};\n";
+        const TString &structure = structureString(type, false);
 
         if (std::find(mStructDeclarations.begin(), mStructDeclarations.end(), structure) == mStructDeclarations.end())
         {
-            TString columnMajorString = "struct " + decorate(name) + "\n" + structure;
-            TString rowMajorString = "#pragma pack_matrix(row_major)\n"
-                                     "struct rm" + decorate(name) + "\n" +
-                                     structure +
+            // Add row-major packed struct for interface blocks
+            TString rowMajorString = "#pragma pack_matrix(row_major)\n" +
+                                     structureString(type, true) +
                                      "#pragma pack_matrix(column_major)\n";
 
-            mStructDeclarations.push_back(columnMajorString);
+            mStructDeclarations.push_back(structure);
             mStructDeclarations.push_back(rowMajorString);
         }
 
+        const TTypeList &fields = *type.getStruct();
         for (unsigned int i = 0; i < fields.size(); i++)
         {
             ctorParameters.push_back(*fields[i].type);
