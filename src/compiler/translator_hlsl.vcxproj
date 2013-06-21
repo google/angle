@@ -143,6 +143,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CodeGenHLSL.cpp" />
+    <ClCompile Include="FlagStd140Structs.cpp" />
     <ClCompile Include="DetectDiscontinuity.cpp" />
     <ClCompile Include="HLSLLayoutEncoder.cpp" />
     <ClCompile Include="OutputHLSL.cpp" />
@@ -152,6 +153,7 @@
     <ClCompile Include="Uniform.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="FlagStd140Structs.h" />
     <ClInclude Include="DetectDiscontinuity.h" />
     <ClInclude Include="HLSLLayoutEncoder.h" />
     <ClInclude Include="OutputHLSL.h" />

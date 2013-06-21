@@ -208,6 +208,8 @@
             'compiler/DetectDiscontinuity.cpp',
             'compiler/DetectDiscontinuity.h',
             'compiler/CodeGenHLSL.cpp',
+            'compiler/FlagStd140Structs.cpp',
+            'compiler/FlagStd140Structs.h',
             'compiler/HLSLLayoutEncoder.cpp',
             'compiler/HLSLLayoutEncoder.h',
             'compiler/OutputHLSL.cpp',

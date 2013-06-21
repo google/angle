@@ -14,6 +14,7 @@
 #include "compiler/SearchSymbol.h"
 #include "compiler/UnfoldShortCircuit.h"
 #include "compiler/HLSLLayoutEncoder.h"
+#include "compiler/FlagStd140Structs.h"
 
 #include <algorithm>
 #include <cfloat>
@@ -174,12 +175,36 @@ OutputHLSL::~OutputHLSL()
 void OutputHLSL::output()
 {
     mContainsLoopDiscontinuity = mContext.shaderType == SH_FRAGMENT_SHADER && containsLoopDiscontinuity(mContext.treeRoot);
+    const std::vector<TIntermTyped*> &flaggedStructs = FlagStd140ValueStructs(mContext.treeRoot);
+    makeFlaggedStructMaps(flaggedStructs);
 
     mContext.treeRoot->traverse(this);   // Output the body first to determine what has to go in the header
     header();
 
     mContext.infoSink().obj << mHeader.c_str();
     mContext.infoSink().obj << mBody.c_str();
+}
+
+void OutputHLSL::makeFlaggedStructMaps(const std::vector<TIntermTyped *> &flaggedStructs)
+{
+    for (unsigned int structIndex = 0; structIndex < flaggedStructs.size(); structIndex++)
+    {
+        TIntermTyped *flaggedNode = flaggedStructs[structIndex];
+
+        // This will mark the necessary block elements as referenced
+        flaggedNode->traverse(this);
+        TString structName(mBody.c_str());
+        mBody.erase();
+
+        mFlaggedStructOriginalNames[flaggedNode] = structName;
+
+        for (size_t pos = structName.find('.'); pos != std::string::npos; pos = structName.find('.'))
+        {
+            structName.erase(pos, 1);
+        }
+
+        mFlaggedStructMappedNames[flaggedNode] = "map" + structName;
+    }
 }
 
 TInfoSinkBase &OutputHLSL::getBodyStream()
@@ -476,6 +501,46 @@ BlockLayoutType convertBlockLayoutType(TLayoutBlockStorage blockStorage)
     }
 }
 
+TString OutputHLSL::structInitializerString(int indent, const TTypeList &structMembers, const TString &structName)
+{
+    TString init;
+
+    TString preIndentString;
+    TString fullIndentString;
+
+    for (int spaces = 0; spaces < (indent * 4); spaces++)
+    {
+        preIndentString += ' ';
+    }
+
+    for (int spaces = 0; spaces < ((indent+1) * 4); spaces++)
+    {
+        fullIndentString += ' ';
+    }
+
+    init += preIndentString + "{\n";
+
+    for (unsigned int memberIndex = 0; memberIndex < structMembers.size(); memberIndex++)
+    {
+        const TType &memberType = *structMembers[memberIndex].type;
+        const TString &fieldName = decorate(memberType.getFieldName());
+
+        if (memberType.getBasicType() == EbtStruct)
+        {
+            const TTypeList &nestedStructMembers = *memberType.getStruct();
+            init += structInitializerString(indent + 1, nestedStructMembers, structName + "." + fieldName);
+        }
+        else
+        {
+            init += fullIndentString + structName + "." + fieldName + ",\n";
+        }
+    }
+
+    init += preIndentString + "}" + (indent == 0 ? ";" : ",") + "\n";
+
+    return init;
+}
+
 void OutputHLSL::header()
 {
     TInfoSinkBase &out = mHeader;
@@ -484,6 +549,7 @@ void OutputHLSL::header()
     TString interfaceBlocks;
     TString varyings;
     TString attributes;
+    TString flaggedStructs;
 
     for (ReferencedSymbols::const_iterator uniform = mReferencedUniforms.begin(); uniform != mReferencedUniforms.end(); uniform++)
     {
@@ -545,6 +611,19 @@ void OutputHLSL::header()
         {
             interfaceBlocks += interfaceBlockString(interfaceBlockType, interfaceBlock.registerIndex, GL_INVALID_INDEX);
         }
+    }
+
+    for (auto flaggedStructIt = mFlaggedStructMappedNames.begin(); flaggedStructIt != mFlaggedStructMappedNames.end(); flaggedStructIt++)
+    {
+        TIntermTyped *structNode = flaggedStructIt->first;
+        const TString &mappedName = flaggedStructIt->second;
+        const TType &structType = structNode->getType();
+        const TTypeList &structMembers = *structType.getStruct();
+        const TString &originalName = mFlaggedStructOriginalNames[structNode];
+
+        flaggedStructs += "static " + decorate(structType.getTypeName()) + " " + mappedName + " =\n";
+        flaggedStructs += structInitializerString(0, structMembers, originalName);
+        flaggedStructs += "\n";
     }
 
     for (ReferencedSymbols::const_iterator varying = mReferencedVaryings.begin(); varying != mReferencedVaryings.end(); varying++)
@@ -706,6 +785,14 @@ void OutputHLSL::header()
         {
             out << interfaceBlocks;
             out << "\n";
+
+            if (!flaggedStructs.empty())
+            {
+                out << "// Std140 Structures accessed by value\n";
+                out << "\n";
+                out << flaggedStructs;
+                out << "\n";
+            }
         }
 
         if (usingMRTExtension && mNumRenderTargets > 1)
@@ -786,6 +873,14 @@ void OutputHLSL::header()
         {
             out << interfaceBlocks;
             out << "\n";
+
+            if (!flaggedStructs.empty())
+            {
+                out << "// Std140 Structures accessed by value\n";
+                out << "\n";
+                out << flaggedStructs;
+                out << "\n";
+            }
         }
     }
 
@@ -1337,6 +1432,13 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
 {
     TInfoSinkBase &out = mBody;
 
+    // Handle accessing std140 structs by value
+    if (mFlaggedStructMappedNames.count(node) > 0)
+    {
+        out << mFlaggedStructMappedNames[node];
+        return;
+    }
+
     TString name = node->getSymbol();
 
     if (name == "gl_DepthRange")
@@ -1423,6 +1525,13 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
 bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
 {
     TInfoSinkBase &out = mBody;
+
+    // Handle accessing std140 structs by value
+    if (mFlaggedStructMappedNames.count(node) > 0)
+    {
+        out << mFlaggedStructMappedNames[node];
+        return false;
+    }
 
     switch (node->getOp())
     {
