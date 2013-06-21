@@ -2593,7 +2593,7 @@ bool ProgramBinary::assignUniformBlockRegister(InfoLog &infoLog, UniformBlock *u
 
         if (registerIndex - mRenderer->getReservedFragmentUniformBuffers() >= maximumBlocks)
         {
-            infoLog.append("Vertex shader uniform block count exceed GL_MAX_VERTEX_UNIFORM_BLOCKS (%u)", maximumBlocks);
+            infoLog.append("Fragment shader uniform block count exceed GL_MAX_FRAGMENT_UNIFORM_BLOCKS (%u)", maximumBlocks);
             return false;
         }
     }
