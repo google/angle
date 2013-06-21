@@ -323,7 +323,7 @@ TString OutputHLSL::std140PrePaddingString(const TType &type, int *elementIndex)
     return padding;
 }
 
-TString OutputHLSL::std140PostPaddingString(const TType &type)
+TString OutputHLSL::std140PostPaddingString(const TType &type, bool useHLSLRowMajorPacking)
 {
     if (!type.isMatrix() && !type.isArray() && type.getBasicType() != EbtStruct)
     {
@@ -334,13 +334,25 @@ TString OutputHLSL::std140PostPaddingString(const TType &type)
 
     if (type.isMatrix())
     {
-        const bool isRowMajorMatrix = (type.getLayoutQualifier().matrixPacking == EmpRowMajor);
+        // This method can also be called from structureString, which does not use layout qualifiers.
+        // Thus, use the method parameter for determining the matrix packing.
+        //
+        // Note HLSL row major packing corresponds to GL API column-major, and vice-versa, since we
+        // wish to always transpose GL matrices to play well with HLSL's matrix array indexing.
+        //
+        const bool isRowMajorMatrix = !useHLSLRowMajorPacking;
         const GLenum glType = glVariableType(type);
         numComponents = gl::MatrixComponentCount(glType, isRowMajorMatrix);
     }
     else if (type.getBasicType() == EbtStruct)
     {
-        // TODO
+        const TString &structName = structureTypeName(type, useHLSLRowMajorPacking, true);
+        numComponents = mStd140StructElementIndexes[structName];
+
+        if (numComponents == 0)
+        {
+            return "";
+        }
     }
     else
     {
@@ -378,7 +390,8 @@ TString OutputHLSL::interfaceBlockMemberString(const TTypeList &typeList, TLayou
         // must pad out after matrices and arrays, where HLSL usually allows itself room to pack stuff
         if (blockStorage == EbsStd140)
         {
-            hlsl += std140PostPaddingString(memberType);
+            const bool useHLSLRowMajorPacking = (memberType.getLayoutQualifier().matrixPacking == EmpColumnMajor);
+            hlsl += std140PostPaddingString(memberType, useHLSLRowMajorPacking);
         }
     }
 
@@ -2928,12 +2941,18 @@ TString OutputHLSL::structureString(const TType &structType, bool useHLSLRowMajo
 
         if (useStd140Packing)
         {
-            structure += std140PostPaddingString(field);
+            structure += std140PostPaddingString(field, useHLSLRowMajorPacking);
         }
     }
 
     // Nameless structs do not finish with a semicolon and newline, to leave room for an instance variable
     structure += (isNameless ? "} " : "};\n");
+
+    // Add remaining element index to the global map, for use with nested structs in standard layouts
+    if (useStd140Packing)
+    {
+        mStd140StructElementIndexes[structName] = elementIndex;
+    }
 
     return structure;
 }

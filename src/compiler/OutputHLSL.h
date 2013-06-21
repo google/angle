@@ -198,7 +198,7 @@ class OutputHLSL : public TIntermTraverser
     TString interfaceBlockStructString(const TType &interfaceBlockType);
     TString interfaceBlockString(const TType &interfaceBlockType, unsigned int registerIndex, unsigned int arrayIndex);
     TString std140PrePaddingString(const TType &type, int *elementIndex);
-    TString std140PostPaddingString(const TType &type);
+    TString std140PostPaddingString(const TType &type, bool useHLSLRowMajorPacking);
     
     static GLenum glVariableType(const TType &type);
     static GLenum glVariablePrecision(const TType &type);
@@ -210,6 +210,7 @@ class OutputHLSL : public TIntermTraverser
     ActiveInterfaceBlocks mActiveInterfaceBlocks;
     ActiveShaderVariables mActiveOutputVariables;
     ActiveShaderVariables mActiveAttributes;
+    std::map<TString, int> mStd140StructElementIndexes;
 };
 }
 
