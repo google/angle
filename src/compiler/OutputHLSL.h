@@ -40,8 +40,8 @@ class OutputHLSL : public TIntermTraverser
     TString typeString(const TType &type);
     TString textureString(const TType &type);
     TString interpolationString(TQualifier qualifier);
-    TString structureString(const TType &structType, bool useHLSLRowMajorPacking);
-    TString structureTypeName(const TType &structType, bool useHLSLRowMajorPacking);
+    TString structureString(const TType &structType, bool useHLSLRowMajorPacking, bool useStd140Packing);
+    TString structureTypeName(const TType &structType, bool useHLSLRowMajorPacking, bool useStd140Packing);
     static TString qualifierString(TQualifier qualifier);
     static TString arrayString(const TType &type);
     static TString initializer(const TType &type);
@@ -193,7 +193,7 @@ class OutputHLSL : public TIntermTraverser
     TString decoratePrivate(const TString &privateText);
     TString interfaceBlockStructName(const TType &interfaceBlockType);
     TString interfaceBlockInstanceString(const TType& interfaceBlockType, unsigned int arrayIndex);
-    TString interfaceBlockMemberTypeString(const TType &memberType);
+    TString interfaceBlockMemberTypeString(const TType &memberType, TLayoutBlockStorage blockStorage);
     TString interfaceBlockMemberString(const TTypeList &typeList, TLayoutBlockStorage blockStorage);
     TString interfaceBlockStructString(const TType &interfaceBlockType);
     TString interfaceBlockString(const TType &interfaceBlockType, unsigned int registerIndex, unsigned int arrayIndex);
