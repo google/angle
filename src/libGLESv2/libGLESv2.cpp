@@ -8202,6 +8202,7 @@ void __stdcall glReadBuffer(GLenum mode)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glReadBuffer
             UNIMPLEMENTED();
         }
     }
@@ -8227,6 +8228,7 @@ void __stdcall glDrawRangeElements(GLenum mode, GLuint start, GLuint end, GLsize
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glDrawRangeElements
             UNIMPLEMENTED();
         }
     }
@@ -8530,6 +8532,7 @@ void __stdcall glGenQueries(GLsizei n, GLuint* ids)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glGenQueries
             UNIMPLEMENTED();
         }
     }
@@ -8554,6 +8557,7 @@ void __stdcall glDeleteQueries(GLsizei n, const GLuint* ids)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glDeleteQueries
             UNIMPLEMENTED();
         }
     }
@@ -8578,6 +8582,7 @@ GLboolean __stdcall glIsQuery(GLuint id)
                 return gl::error(GL_INVALID_OPERATION, GL_FALSE);
             }
 
+            // glIsQuery
             UNIMPLEMENTED();
         }
     }
@@ -8604,6 +8609,7 @@ void __stdcall glBeginQuery(GLenum target, GLuint id)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glBeginQuery
             UNIMPLEMENTED();
         }
     }
@@ -8628,6 +8634,7 @@ void __stdcall glEndQuery(GLenum target)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glEndQuery
             UNIMPLEMENTED();
         }
     }
@@ -8652,6 +8659,7 @@ void __stdcall glGetQueryiv(GLenum target, GLenum pname, GLint* params)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glGetQueryiv
             UNIMPLEMENTED();
         }
     }
@@ -8676,6 +8684,7 @@ void __stdcall glGetQueryObjectuiv(GLuint id, GLenum pname, GLuint* params)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glGetQueryObjectuiv
             UNIMPLEMENTED();
         }
     }
@@ -8700,6 +8709,7 @@ GLboolean __stdcall glUnmapBuffer(GLenum target)
                 return gl::error(GL_INVALID_OPERATION, GL_FALSE);
             }
 
+            // glUnmapBuffer
             UNIMPLEMENTED();
         }
     }
@@ -8726,6 +8736,7 @@ void __stdcall glGetBufferPointerv(GLenum target, GLenum pname, GLvoid** params)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glGetBufferPointerv
             UNIMPLEMENTED();
         }
     }
@@ -9102,6 +9113,7 @@ void __stdcall glFramebufferTextureLayer(GLenum target, GLenum attachment, GLuin
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glFramebufferTextureLayer
             UNIMPLEMENTED();
         }
     }
@@ -9127,6 +9139,7 @@ GLvoid* __stdcall glMapBufferRange(GLenum target, GLintptr offset, GLsizeiptr le
                 return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLvoid*>(NULL));
             }
 
+            // glMapBufferRange
             UNIMPLEMENTED();
         }
     }
@@ -9153,6 +9166,7 @@ void __stdcall glFlushMappedBufferRange(GLenum target, GLintptr offset, GLsizeip
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glFlushMappedBufferRange
             UNIMPLEMENTED();
         }
     }
@@ -9177,6 +9191,7 @@ void __stdcall glBindVertexArray(GLuint array)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glBindVertexArray
             UNIMPLEMENTED();
         }
     }
@@ -9201,6 +9216,7 @@ void __stdcall glDeleteVertexArrays(GLsizei n, const GLuint* arrays)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glDeleteVertexArrays
             UNIMPLEMENTED();
         }
     }
@@ -9225,6 +9241,7 @@ void __stdcall glGenVertexArrays(GLsizei n, GLuint* arrays)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glGenVertexArrays
             UNIMPLEMENTED();
         }
     }
@@ -9249,6 +9266,7 @@ GLboolean __stdcall glIsVertexArray(GLuint array)
                 return gl::error(GL_INVALID_OPERATION, GL_FALSE);
             }
 
+            // glIsVertexArray
             UNIMPLEMENTED();
         }
     }
@@ -9276,6 +9294,7 @@ void __stdcall glGetIntegeri_v(GLenum target, GLuint index, GLint* data)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glGetIntegeri_v
             UNIMPLEMENTED();
         }
     }
@@ -9300,6 +9319,7 @@ void __stdcall glBeginTransformFeedback(GLenum primitiveMode)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glBeginTransformFeedback
             UNIMPLEMENTED();
         }
     }
@@ -9324,6 +9344,7 @@ void __stdcall glEndTransformFeedback(void)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glEndTransformFeedback
             UNIMPLEMENTED();
         }
     }
@@ -9486,6 +9507,7 @@ void __stdcall glTransformFeedbackVaryings(GLuint program, GLsizei count, const 
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glTransformFeedbackVaryings
             UNIMPLEMENTED();
         }
     }
@@ -9512,6 +9534,7 @@ void __stdcall glGetTransformFeedbackVarying(GLuint program, GLuint index, GLsiz
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glGetTransformFeedbackVarying
             UNIMPLEMENTED();
         }
     }
@@ -9601,6 +9624,7 @@ void __stdcall glGetVertexAttribIiv(GLuint index, GLenum pname, GLint* params)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glGetVertexAttribIiv
             UNIMPLEMENTED();
         }
     }
@@ -9626,6 +9650,7 @@ void __stdcall glGetVertexAttribIuiv(GLuint index, GLenum pname, GLuint* params)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glGetVertexAttribIuiv
             UNIMPLEMENTED();
         }
     }
@@ -10021,6 +10046,7 @@ void __stdcall glClearBufferiv(GLenum buffer, GLint drawbuffer, const GLint* val
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glClearBufferiv
             UNIMPLEMENTED();
         }
     }
@@ -10046,6 +10072,7 @@ void __stdcall glClearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint* v
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glClearBufferuiv
             UNIMPLEMENTED();
         }
     }
@@ -10071,6 +10098,7 @@ void __stdcall glClearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat* v
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glClearBufferfv
             UNIMPLEMENTED();
         }
     }
@@ -10096,6 +10124,7 @@ void __stdcall glClearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, G
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glClearBufferfi
             UNIMPLEMENTED();
         }
     }
@@ -10611,6 +10640,7 @@ void __stdcall glDrawArraysInstanced(GLenum mode, GLint first, GLsizei count, GL
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glDrawArraysInstanced
             UNIMPLEMENTED();
         }
     }
@@ -10636,6 +10666,7 @@ void __stdcall glDrawElementsInstanced(GLenum mode, GLsizei count, GLenum type, 
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glDrawElementsInstanced
             UNIMPLEMENTED();
         }
     }
@@ -10660,6 +10691,7 @@ GLsync __stdcall glFenceSync(GLenum condition, GLbitfield flags)
                 return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLsync>(NULL));
             }
 
+            // glFenceSync
             UNIMPLEMENTED();
         }
     }
@@ -10686,6 +10718,7 @@ GLboolean __stdcall glIsSync(GLsync sync)
                 return gl::error(GL_INVALID_OPERATION, GL_FALSE);
             }
 
+            // glIsSync
             UNIMPLEMENTED();
         }
     }
@@ -10712,6 +10745,7 @@ void __stdcall glDeleteSync(GLsync sync)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glDeleteSync
             UNIMPLEMENTED();
         }
     }
@@ -10737,6 +10771,7 @@ GLenum __stdcall glClientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeou
                 return gl::error(GL_INVALID_OPERATION, GL_FALSE);
             }
 
+            // glClientWaitSync
             UNIMPLEMENTED();
         }
     }
@@ -10764,6 +10799,7 @@ void __stdcall glWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glWaitSync
             UNIMPLEMENTED();
         }
     }
@@ -10789,6 +10825,7 @@ void __stdcall glGetInteger64v(GLenum pname, GLint64* params)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glGetInteger64v
             UNIMPLEMENTED();
         }
     }
@@ -10814,6 +10851,7 @@ void __stdcall glGetSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei* 
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glGetSynciv
             UNIMPLEMENTED();
         }
     }
@@ -10839,6 +10877,7 @@ void __stdcall glGetInteger64i_v(GLenum target, GLuint index, GLint64* data)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glGetInteger64i_v
             UNIMPLEMENTED();
         }
     }
@@ -10864,6 +10903,7 @@ void __stdcall glGetBufferParameteri64v(GLenum target, GLenum pname, GLint64* pa
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glGetBufferParameteri64v
             UNIMPLEMENTED();
         }
     }
@@ -10888,6 +10928,7 @@ void __stdcall glGenSamplers(GLsizei count, GLuint* samplers)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glGenSamplers
             UNIMPLEMENTED();
         }
     }
@@ -10912,6 +10953,7 @@ void __stdcall glDeleteSamplers(GLsizei count, const GLuint* samplers)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glDeleteSamplers
             UNIMPLEMENTED();
         }
     }
@@ -10936,6 +10978,7 @@ GLboolean __stdcall glIsSampler(GLuint sampler)
                 return gl::error(GL_INVALID_OPERATION, GL_FALSE);
             }
 
+            // glIsSampler
             UNIMPLEMENTED();
         }
     }
@@ -10962,6 +11005,7 @@ void __stdcall glBindSampler(GLuint unit, GLuint sampler)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glBindSampler
             UNIMPLEMENTED();
         }
     }
@@ -10986,6 +11030,7 @@ void __stdcall glSamplerParameteri(GLuint sampler, GLenum pname, GLint param)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glSamplerParameteri
             UNIMPLEMENTED();
         }
     }
@@ -11011,6 +11056,7 @@ void __stdcall glSamplerParameteriv(GLuint sampler, GLenum pname, const GLint* p
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glSamplerParameteriv
             UNIMPLEMENTED();
         }
     }
@@ -11035,6 +11081,7 @@ void __stdcall glSamplerParameterf(GLuint sampler, GLenum pname, GLfloat param)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glSamplerParameterf
             UNIMPLEMENTED();
         }
     }
@@ -11059,6 +11106,7 @@ void __stdcall glSamplerParameterfv(GLuint sampler, GLenum pname, const GLfloat*
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glSamplerParameterfv
             UNIMPLEMENTED();
         }
     }
@@ -11083,6 +11131,7 @@ void __stdcall glGetSamplerParameteriv(GLuint sampler, GLenum pname, GLint* para
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glGetSamplerParameteriv
             UNIMPLEMENTED();
         }
     }
@@ -11107,6 +11156,7 @@ void __stdcall glGetSamplerParameterfv(GLuint sampler, GLenum pname, GLfloat* pa
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glGetSamplerParameterfv
             UNIMPLEMENTED();
         }
     }
@@ -11160,6 +11210,7 @@ void __stdcall glBindTransformFeedback(GLenum target, GLuint id)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glBindTransformFeedback
             UNIMPLEMENTED();
         }
     }
@@ -11184,6 +11235,7 @@ void __stdcall glDeleteTransformFeedbacks(GLsizei n, const GLuint* ids)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glDeleteTransformFeedbacks
             UNIMPLEMENTED();
         }
     }
@@ -11208,6 +11260,7 @@ void __stdcall glGenTransformFeedbacks(GLsizei n, GLuint* ids)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glGenTransformFeedbacks
             UNIMPLEMENTED();
         }
     }
@@ -11232,6 +11285,7 @@ GLboolean __stdcall glIsTransformFeedback(GLuint id)
                 return gl::error(GL_INVALID_OPERATION, GL_FALSE);
             }
 
+            // glIsTransformFeedback
             UNIMPLEMENTED();
         }
     }
@@ -11258,6 +11312,7 @@ void __stdcall glPauseTransformFeedback(void)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glPauseTransformFeedback
             UNIMPLEMENTED();
         }
     }
@@ -11282,6 +11337,7 @@ void __stdcall glResumeTransformFeedback(void)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glResumeTransformFeedback
             UNIMPLEMENTED();
         }
     }
@@ -11307,6 +11363,7 @@ void __stdcall glGetProgramBinary(GLuint program, GLsizei bufSize, GLsizei* leng
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glGetProgramBinary
             UNIMPLEMENTED();
         }
     }
@@ -11332,6 +11389,7 @@ void __stdcall glProgramBinary(GLuint program, GLenum binaryFormat, const GLvoid
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glProgramBinary
             UNIMPLEMENTED();
         }
     }
@@ -11357,6 +11415,7 @@ void __stdcall glProgramParameteri(GLuint program, GLenum pname, GLint value)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glProgramParameteri
             UNIMPLEMENTED();
         }
     }
@@ -11547,6 +11606,7 @@ void __stdcall glGetInternalformativ(GLenum target, GLenum internalformat, GLenu
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            // glGetInternalformativ
             UNIMPLEMENTED();
         }
     }
