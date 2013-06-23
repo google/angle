@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -271,6 +271,35 @@ public:
     {
         symbol.setUniqueId(++uniqueId);
         return table[currentLevel()]->insert(symbol);
+    }
+
+    bool insertConstInt(const char *name, int value)
+    {
+        TVariable *constant = new TVariable(NewPoolTString(name), TType(EbtInt, EbpUndefined, EvqConst, 1));
+        constant->getConstPointer()->setIConst(value);
+        return insert(*constant);
+    }
+
+    bool insertBuiltIn(TType *rvalue, const char *name, TType *ptype1, const char *pname1, TType *ptype2 = 0, const char *pname2 = 0, TType *ptype3 = 0, const char *pname3 = 0)
+    {
+        TFunction *function = new TFunction(NewPoolTString(name), *rvalue);
+
+        TParameter param1 = {NewPoolTString(pname1), ptype1};
+        function->addParameter(param1);
+
+        if (pname2)
+        {
+            TParameter param2 = {NewPoolTString(pname2), ptype2};
+            function->addParameter(param2);
+        }
+
+        if (pname3)
+        {
+            TParameter param3 = {NewPoolTString(pname3), ptype3};
+            function->addParameter(param3);
+        }
+
+        return insert(*function);
     }
 
     TSymbol* find(const TString& name, bool* builtIn = 0, bool *sameScope = 0) 

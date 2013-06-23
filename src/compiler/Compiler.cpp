@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -27,52 +27,6 @@ bool isWebGLBasedSpec(ShShaderSpec spec)
 }
 
 namespace {
-bool InitializeSymbolTable(
-    const TBuiltInStrings& builtInStrings,
-    ShShaderType type, ShShaderSpec spec, const ShBuiltInResources& resources,
-    TInfoSink& infoSink, TSymbolTable& symbolTable)
-{
-    TIntermediate intermediate(infoSink);
-    TExtensionBehavior extBehavior;
-    InitExtensionBehavior(resources, extBehavior);
-    // The builtins deliberately don't specify precisions for the function
-    // arguments and return types. For that reason we don't try to check them.
-    TParseContext parseContext(symbolTable, extBehavior, intermediate, type, spec, 0, false, NULL, infoSink);
-    parseContext.fragmentPrecisionHigh = resources.FragmentPrecisionHigh == 1;
-
-    GlobalParseContext = &parseContext;
-
-    assert(symbolTable.isEmpty());       
-    //
-    // Parse the built-ins.  This should only happen once per
-    // language symbol table.
-    //
-    // Push the symbol table to give it an initial scope.  This
-    // push should not have a corresponding pop, so that built-ins
-    // are preserved, and the test for an empty table fails.
-    //
-    symbolTable.push();
-
-    for (TBuiltInStrings::const_iterator i = builtInStrings.begin(); i != builtInStrings.end(); ++i)
-    {
-        const char* builtInShaders = i->c_str();
-        int builtInLengths = static_cast<int>(i->size());
-        if (builtInLengths <= 0)
-          continue;
-
-        if (PaParseStrings(1, &builtInShaders, &builtInLengths, &parseContext) != 0)
-        {
-            infoSink.info.prefix(EPrefixInternalError);
-            infoSink.info << "Unable to parse built-ins";
-            return false;
-        }
-    }
-
-    IdentifyBuiltIns(type, spec, resources, symbolTable);
-
-    return true;
-}
-
 class TScopedPoolAllocator {
 public:
     TScopedPoolAllocator(TPoolAllocator* allocator, bool pushPop)
@@ -252,14 +206,42 @@ bool TCompiler::compile(const char* const shaderStrings[],
     return success;
 }
 
-bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources& resources)
+bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources &resources)
 {
-    TBuiltIns builtIns;
-
     compileResources = resources;
-    builtIns.initialize(shaderType, shaderSpec, resources, extensionBehavior);
-    return InitializeSymbolTable(builtIns.getBuiltInStrings(),
-        shaderType, shaderSpec, resources, infoSink, symbolTable);
+
+    assert(symbolTable.isEmpty());
+    symbolTable.push();
+
+    TPublicType integer;
+    integer.type = EbtInt;
+    integer.size = 1;
+    integer.matrix = false;
+    integer.array = false;
+
+    TPublicType floatingPoint;
+    floatingPoint.type = EbtFloat;
+    floatingPoint.size = 1;
+    floatingPoint.matrix = false;
+    floatingPoint.array = false;
+
+    switch(shaderType)
+    {
+      case SH_FRAGMENT_SHADER:
+        symbolTable.setDefaultPrecision(integer, EbpMedium);
+        break;
+      case SH_VERTEX_SHADER:
+        symbolTable.setDefaultPrecision(integer, EbpHigh);
+        symbolTable.setDefaultPrecision(floatingPoint, EbpHigh);
+        break;
+      default: assert(false && "Language not supported");
+    }
+
+    InsertBuiltInFunctions(shaderType, shaderSpec, resources, extensionBehavior, symbolTable);
+
+    IdentifyBuiltIns(shaderType, shaderSpec, resources, symbolTable);
+
+    return true;
 }
 
 void TCompiler::clearResults()
