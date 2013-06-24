@@ -67,6 +67,8 @@ inline const char* getBasicString(TBasicType t)
     case EbtSamplerCube:       return "samplerCube";       break;
     case EbtSamplerExternalOES: return "samplerExternalOES"; break;
     case EbtSampler2DRect:     return "sampler2DRect";     break;
+    case EbtISampler2D:        return "isampler2D";        break;
+    case EbtISamplerCube:      return "isamplerCube";      break;
     case EbtStruct:            return "structure";         break;
     case EbtInterfaceBlock:    return "interface block";   break;
     default:                   return "unknown type";

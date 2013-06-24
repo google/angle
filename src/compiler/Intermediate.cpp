@@ -432,12 +432,10 @@ TIntermTyped* TIntermediate::addConversion(TOperator op, const TType& type, TInt
     //
     // Does the base type allow operation?
     //
-    switch (node->getBasicType()) {
-        case EbtVoid:
-        case EbtSampler2D:
-        case EbtSamplerCube:
-            return 0;
-        default: break;
+    if (node->getBasicType() == EbtVoid ||
+        IsSampler(node->getBasicType()))
+    {
+        return 0;
     }
 
     //

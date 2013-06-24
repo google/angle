@@ -328,16 +328,11 @@ bool TParseContext::lValueErrorCheck(int line, const char* op, TIntermTyped* nod
         //
         // Type that can't be written to?
         //
-        switch (node->getBasicType()) {
-        case EbtSampler2D:
-        case EbtSamplerCube:
-            message = "can't modify a sampler";
-            break;
-        case EbtVoid:
+        if (node->getBasicType() == EbtVoid) {
             message = "can't modify void";
-            break;
-        default: 
-            break;
+        }
+        if (IsSampler(node->getBasicType())) {
+            message = "can't modify a sampler";
         }
     }
 
