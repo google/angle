@@ -37,7 +37,7 @@ extern "C" {
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 117
+#define ANGLE_SH_VERSION 118
 
 //
 // The names of the following enums have been derived by replacing GL prefix
@@ -113,12 +113,15 @@ typedef enum {
   SH_FLOAT_MAT4x2   = 0x8B69,
   SH_FLOAT_MAT4x3   = 0x8B6A,
   SH_SAMPLER_2D     = 0x8B5E,
+  SH_SAMPLER_3D     = 0x8B5F,
   SH_SAMPLER_CUBE   = 0x8B60,
   SH_SAMPLER_2D_RECT_ARB = 0x8B63,
   SH_SAMPLER_EXTERNAL_OES = 0x8D66,
   SH_INT_SAMPLER_2D     = 0x8DCA,
+  SH_INT_SAMPLER_3D     = 0x8DCB,
   SH_INT_SAMPLER_CUBE   = 0x8DCC,
   SH_UNSIGNED_INT_SAMPLER_2D     = 0x8DD2,
+  SH_UNSIGNED_INT_SAMPLER_3D     = 0x8DD3,
   SH_UNSIGNED_INT_SAMPLER_CUBE   = 0x8DD4,
 } ShDataType;
 

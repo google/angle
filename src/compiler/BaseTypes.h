@@ -69,12 +69,15 @@ inline const char* getBasicString(TBasicType t)
     case EbtUInt:              return "uint";              break;
     case EbtBool:              return "bool";              break;
     case EbtSampler2D:         return "sampler2D";         break;
+    case EbtSampler3D:         return "sampler3D";         break;
     case EbtSamplerCube:       return "samplerCube";       break;
     case EbtSamplerExternalOES: return "samplerExternalOES"; break;
     case EbtSampler2DRect:     return "sampler2DRect";     break;
     case EbtISampler2D:        return "isampler2D";        break;
+    case EbtISampler3D:        return "isampler3D";        break;
     case EbtISamplerCube:      return "isamplerCube";      break;
     case EbtUSampler2D:        return "usampler2D";        break;
+    case EbtUSampler3D:        return "usampler3D";        break;
     case EbtUSamplerCube:      return "usamplerCube";      break;
     case EbtStruct:            return "structure";         break;
     case EbtInterfaceBlock:    return "interface block";   break;
