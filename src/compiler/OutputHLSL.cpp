@@ -35,7 +35,10 @@ TString OutputHLSL::TextureFunction::name() const
 
     if (sampler == EbtSampler2D ||
         sampler == EbtISampler2D ||
-        sampler == EbtUSampler2D)
+        sampler == EbtUSampler2D ||
+        sampler == EbtSampler2DArray ||
+        sampler == EbtISampler2DArray ||
+        sampler == EbtUSampler2DArray)
     {
         name += "2D";
     }
@@ -780,15 +783,18 @@ void OutputHLSL::header()
         // Return type
         switch(textureFunction->sampler)
         {
-          case EbtSampler2D:    out << "float4 "; break;
-          case EbtSampler3D:    out << "float4 "; break;
-          case EbtSamplerCube:  out << "float4 "; break;
-          case EbtISampler2D:   out << "int4 ";   break;
-          case EbtISampler3D:   out << "int4 ";   break;
-          case EbtISamplerCube: out << "int4 ";   break;
-          case EbtUSampler2D:   out << "uint4 ";  break;
-          case EbtUSampler3D:   out << "uint4 ";  break;
-          case EbtUSamplerCube: out << "uint4 ";  break;
+          case EbtSampler2D:       out << "float4 "; break;
+          case EbtSampler3D:       out << "float4 "; break;
+          case EbtSamplerCube:     out << "float4 "; break;
+          case EbtSampler2DArray:  out << "float4 "; break;
+          case EbtISampler2D:      out << "int4 ";   break;
+          case EbtISampler3D:      out << "int4 ";   break;
+          case EbtISamplerCube:    out << "int4 ";   break;
+          case EbtISampler2DArray: out << "int4 ";   break;
+          case EbtUSampler2D:      out << "uint4 ";  break;
+          case EbtUSampler3D:      out << "uint4 ";  break;
+          case EbtUSamplerCube:    out << "uint4 ";  break;
+          case EbtUSampler2DArray: out << "uint4 ";  break;
           default: UNREACHABLE();
         }
 
@@ -820,15 +826,18 @@ void OutputHLSL::header()
         {
             switch(textureFunction->sampler)
             {
-              case EbtSampler2D:    out << "Texture2D x, SamplerState s";          hlslCoords = 2; break;
-              case EbtSampler3D:    out << "Texture3D x, SamplerState s";          hlslCoords = 3; break;
-              case EbtSamplerCube:  out << "TextureCube x, SamplerState s";        hlslCoords = 3; break;
-              case EbtISampler2D:   out << "Texture2D<int4> x, SamplerState s";    hlslCoords = 2; break;
-              case EbtISampler3D:   out << "Texture3D<int4> x, SamplerState s";    hlslCoords = 3; break;
-              case EbtISamplerCube: out << "TextureCube<int4> x, SamplerState s";  hlslCoords = 3; break;
-              case EbtUSampler2D:   out << "Texture2D<uint4> x, SamplerState s";   hlslCoords = 2; break;
-              case EbtUSampler3D:   out << "Texture3D<uint4> x, SamplerState s";   hlslCoords = 3; break;
-              case EbtUSamplerCube: out << "TextureCube<uint4> x, SamplerState s"; hlslCoords = 3; break;
+              case EbtSampler2D:       out << "Texture2D x, SamplerState s";             hlslCoords = 2; break;
+              case EbtSampler3D:       out << "Texture3D x, SamplerState s";             hlslCoords = 3; break;
+              case EbtSamplerCube:     out << "TextureCube x, SamplerState s";           hlslCoords = 3; break;
+              case EbtSampler2DArray:  out << "Texture2DArray x, SamplerState s";        hlslCoords = 2; break;
+              case EbtISampler2D:      out << "Texture2D<int4> x, SamplerState s";       hlslCoords = 2; break;
+              case EbtISampler3D:      out << "Texture3D<int4> x, SamplerState s";       hlslCoords = 3; break;
+              case EbtISamplerCube:    out << "TextureCube<int4> x, SamplerState s";     hlslCoords = 3; break;
+              case EbtISampler2DArray: out << "Texture2DArray<int4> x, SamplerState s";  hlslCoords = 2; break;
+              case EbtUSampler2D:      out << "Texture2D<uint4> x, SamplerState s";      hlslCoords = 2; break;
+              case EbtUSampler3D:      out << "Texture3D<uint4> x, SamplerState s";      hlslCoords = 3; break;
+              case EbtUSamplerCube:    out << "TextureCube<uint4> x, SamplerState s";    hlslCoords = 3; break;
+              case EbtUSampler2DArray: out << "Texture2DArray<uint4> x, SamplerState s"; hlslCoords = 2; break;
               default: UNREACHABLE();
             }
         }
@@ -2823,6 +2832,9 @@ TString OutputHLSL::typeString(const TType &type)
           case EbtSampler2D:
           case EbtISampler2D:
           case EbtUSampler2D:
+          case EbtSampler2DArray:
+          case EbtISampler2DArray:
+          case EbtUSampler2DArray:
             return "sampler2D";
           case EbtSamplerCube:
           case EbtISamplerCube:
@@ -2843,20 +2855,16 @@ TString OutputHLSL::textureString(const TType &type)
 {
     switch (type.getBasicType())
     {
-      case EbtSampler2D:
-        return "Texture2D";
-      case EbtSamplerCube:
-        return "TextureCube";
-      case EbtSamplerExternalOES:
-        return "Texture2D";
-      case EbtISampler2D:
-        return "Texture2D<int4>";
-      case EbtISamplerCube:
-        return "TextureCube<int4>";
-      case EbtUSampler2D:
-        return "Texture2D<uint4>";
-      case EbtUSamplerCube:
-        return "TextureCube<uint4>";
+      case EbtSampler2D:          return "Texture2D";
+      case EbtSamplerCube:        return "TextureCube";
+      case EbtSamplerExternalOES: return "Texture2D";
+      case EbtSampler2DArray:     return "Texture2DArray";
+      case EbtISampler2D:         return "Texture2D<int4>";
+      case EbtISamplerCube:       return "TextureCube<int4>";
+      case EbtISampler2DArray:    return "Texture2DArray<int4>";
+      case EbtUSampler2D:         return "Texture2D<uint4>";
+      case EbtUSamplerCube:       return "TextureCube<uint4>";
+      case EbtUSampler2DArray:    return "Texture2DArray<uint4>";
       default:
         break;
     }
@@ -3476,6 +3484,10 @@ GLenum OutputHLSL::glVariableType(const TType &type)
     {
         return GL_SAMPLER_CUBE;
     }
+    else if (type.getBasicType() == EbtSampler2DArray)
+    {
+        return GL_SAMPLER_2D_ARRAY;
+    }
     else if (type.getBasicType() == EbtISampler2D)
     {
         return GL_INT_SAMPLER_2D;
@@ -3488,6 +3500,10 @@ GLenum OutputHLSL::glVariableType(const TType &type)
     {
         return GL_INT_SAMPLER_CUBE;
     }
+    else if (type.getBasicType() == EbtISampler2DArray)
+    {
+        return GL_INT_SAMPLER_2D_ARRAY;
+    }
     else if (type.getBasicType() == EbtUSampler2D)
     {
         return GL_UNSIGNED_INT_SAMPLER_2D;
@@ -3499,6 +3515,10 @@ GLenum OutputHLSL::glVariableType(const TType &type)
     else if (type.getBasicType() == EbtUSamplerCube)
     {
         return GL_UNSIGNED_INT_SAMPLER_CUBE;
+    }
+    else if (type.getBasicType() == EbtUSampler2DArray)
+    {
+        return GL_UNSIGNED_INT_SAMPLER_2D_ARRAY;
     }
     else UNREACHABLE();
 
