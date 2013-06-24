@@ -131,8 +131,9 @@ extern void yyerror(TParseContext* context, const char* reason);
 %token <lex> MATRIX2x3 MATRIX3x2 MATRIX2x4 MATRIX4x2 MATRIX3x4 MATRIX4x3
 %token <lex> CENTROID FLAT SMOOTH
 %token <lex> STRUCT VOID_TYPE WHILE
-%token <lex> SAMPLER2D SAMPLERCUBE SAMPLER_EXTERNAL_OES SAMPLER2DRECT
-%token <lex> ISAMPLER2D ISAMPLER3D ISAMPLERCUBE USAMPLER2D USAMPLER3D USAMPLERCUBE
+%token <lex> SAMPLER2D SAMPLERCUBE SAMPLER_EXTERNAL_OES SAMPLER2DRECT SAMPLER2DARRAY
+%token <lex> ISAMPLER2D ISAMPLER3D ISAMPLERCUBE ISAMPLER2DARRAY
+%token <lex> USAMPLER2D USAMPLER3D USAMPLERCUBE USAMPLER2DARRAY
 %token <lex> SAMPLER3D SAMPLER3DRECT SAMPLER2DSHADOW
 %token <lex> LAYOUT
 
@@ -1519,6 +1520,10 @@ type_specifier_nonarray
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtSamplerCube, qual, $1.line);
     }
+    | SAMPLER2DARRAY {
+        TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
+        $$.setBasic(EbtSampler2DArray, qual, $1.line);
+    }
     | ISAMPLER2D {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtISampler2D, qual, $1.line);
@@ -1531,6 +1536,10 @@ type_specifier_nonarray
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtISamplerCube, qual, $1.line);
     }
+    | ISAMPLER2DARRAY {
+        TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
+        $$.setBasic(EbtISampler2DArray, qual, $1.line);
+    }
     | USAMPLER2D {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtUSampler2D, qual, $1.line);
@@ -1542,6 +1551,10 @@ type_specifier_nonarray
     | USAMPLERCUBE {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtUSamplerCube, qual, $1.line);
+    }
+    | USAMPLER2DARRAY {
+        TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
+        $$.setBasic(EbtUSampler2DArray, qual, $1.line);
     }
     | SAMPLER_EXTERNAL_OES {
         if (!context->supportsExtension("GL_OES_EGL_image_external")) {
