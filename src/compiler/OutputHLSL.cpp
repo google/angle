@@ -680,6 +680,11 @@ void OutputHLSL::header()
                        "{\n"
                        "    return t.Sample(s, uv);\n"
                        "}\n"
+                       "\n"
+                       "uint4 gl_texture2D(Texture2D<uint4> t, SamplerState s, float2 uv)\n"
+                       "{\n"
+                       "    return t.Sample(s, uv);\n"
+                       "}\n"
                        "\n";
             }
             else UNREACHABLE();
@@ -703,6 +708,11 @@ void OutputHLSL::header()
                        "}\n"
                        "\n"
                        "int4 gl_texture2D(Texture2D<int4> t, SamplerState s, float2 uv, float bias)\n"
+                       "{\n"
+                       "    return t.SampleBias(s, uv, bias);\n"
+                       "}\n"
+                       "\n"
+                       "uint4 gl_texture2D(Texture2D<uint4> t, SamplerState s, float2 uv, float bias)\n"
                        "{\n"
                        "    return t.SampleBias(s, uv, bias);\n"
                        "}\n"
@@ -747,6 +757,16 @@ void OutputHLSL::header()
                        "{\n"
                        "    return t.Sample(s, float2(uvw.x / uvw.w, uvw.y / uvw.w));\n"
                        "}\n"
+                       "\n"
+                       "uint4 gl_texture2DProj(Texture2D<uint4> t, SamplerState s, float3 uvw)\n"
+                       "{\n"
+                       "    return t.Sample(s, float2(uvw.x / uvw.z, uvw.y / uvw.z));\n"
+                       "}\n"
+                       "\n"
+                       "uint4 gl_texture2DProj(Texture2D<uint4> t, SamplerState s, float4 uvw)\n"
+                       "{\n"
+                       "    return t.Sample(s, float2(uvw.x / uvw.w, uvw.y / uvw.w));\n"
+                       "}\n"
                        "\n";
             }
             else UNREACHABLE();
@@ -788,6 +808,16 @@ void OutputHLSL::header()
                        "{\n"
                        "    return t.SampleBias(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), bias);\n"
                        "}\n"
+                       "\n"
+                       "uint4 gl_texture2DProj(Texture2D<uint4> t, SamplerState s, float3 uvw, float bias)\n"
+                       "{\n"
+                       "    return t.SampleBias(s, float2(uvw.x / uvw.z, uvw.y / uvw.z), bias);\n"
+                       "}\n"
+                       "\n"
+                       "uint4 gl_texture2DProj(Texture2D<uint4> t, SamplerState s, float4 uvw, float bias)\n"
+                       "{\n"
+                       "    return t.SampleBias(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), bias);\n"
+                       "}\n"
                        "\n";
             }
             else UNREACHABLE();
@@ -814,6 +844,11 @@ void OutputHLSL::header()
                        "{\n"
                        "    return t.Sample(s, uvw);\n"
                        "}\n"
+                       "\n"
+                       "uint4 gl_textureCube(TextureCube<uint4> t, SamplerState s, float3 uvw)\n"
+                       "{\n"
+                       "    return t.Sample(s, uvw);\n"
+                       "}\n"
                        "\n";
             }
             else UNREACHABLE();
@@ -837,6 +872,11 @@ void OutputHLSL::header()
                        "}\n"
                        "\n"
                        "int4 gl_textureCube(TextureCube<int4> t, SamplerState s, float3 uvw, float bias)\n"
+                       "{\n"
+                       "    return t.SampleBias(s, uvw, bias);\n"
+                       "}\n"
+                       "\n"
+                       "uint4 gl_textureCube(TextureCube<uint4> t, SamplerState s, float3 uvw, float bias)\n"
                        "{\n"
                        "    return t.SampleBias(s, uvw, bias);\n"
                        "}\n"
@@ -868,6 +908,11 @@ void OutputHLSL::header()
                        "{\n"
                        "    return t.SampleLevel(s, uv, 0);\n"
                        "}\n"
+                       "\n"
+                       "uint4 gl_texture2DLod0(Texture2D<uint4> t, SamplerState s, float2 uv)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, uv, 0);\n"
+                       "}\n"
                        "\n";
             }
             else UNREACHABLE();
@@ -891,6 +936,11 @@ void OutputHLSL::header()
                        "}\n"
                        "\n"
                        "int4 gl_texture2DLod0(Texture2D<int4> t, SamplerState s, float2 uv, float bias)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, uv, 0);\n"
+                       "}\n"
+                       "\n"
+                       "uint4 gl_texture2DLod0(Texture2D<uint4> t, SamplerState s, float2 uv, float bias)\n"
                        "{\n"
                        "    return t.SampleLevel(s, uv, 0);\n"
                        "}\n"
@@ -935,6 +985,16 @@ void OutputHLSL::header()
                        "{\n"
                        "    return t.SampleLevel(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), 0);\n"
                        "}\n"
+                       "\n"
+                       "uint4 gl_texture2DProjLod0(Texture2D<uint4> t, SamplerState s, float3 uvw)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float2(uvw.x / uvw.z, uvw.y / uvw.z), 0);\n"
+                       "}\n"
+                       "\n"
+                       "uint4 gl_texture2DProjLod0(Texture2D<uint4> t, SamplerState s, float4 uvw)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), 0);\n"
+                       "}\n"
                        "\n";
             }
             else UNREACHABLE();
@@ -976,6 +1036,16 @@ void OutputHLSL::header()
                        "{\n"
                        "    return t.SampleLevel(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), 0);\n"
                        "}\n"
+                       "\n"
+                       "uint4 gl_texture2DProjLod_bias(Texture2D<uint4> t, SamplerState s, float3 uvw, float bias)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float2(uvw.x / uvw.z, uvw.y / uvw.z), 0);\n"
+                       "}\n"
+                       "\n"
+                       "uint4 gl_texture2DProjLod_bias(Texture2D<uint4> t, SamplerState s, float4 uvw, float bias)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), 0);\n"
+                       "}\n"
                        "\n";
             }
             else UNREACHABLE();
@@ -1002,6 +1072,11 @@ void OutputHLSL::header()
                        "{\n"
                        "    return t.SampleLevel(s, uvw, 0);\n"
                        "}\n"
+                       "\n"
+                       "uint4 gl_textureCubeLod0(TextureCube<uint4> t, SamplerState s, float3 uvw)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, uvw, 0);\n"
+                       "}\n"
                        "\n";
             }
             else UNREACHABLE();
@@ -1025,6 +1100,11 @@ void OutputHLSL::header()
                        "}\n"
                        "\n"
                        "int4 gl_textureCubeLod0(TextureCube<int4> t, SamplerState s, float3 uvw, float bias)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, uvw, 0);\n"
+                       "}\n"
+                       "\n"
+                       "uint4 gl_textureCubeLod0(TextureCube<uint4> t, SamplerState s, float3 uvw, float bias)\n"
                        "{\n"
                        "    return t.SampleLevel(s, uvw, 0);\n"
                        "}\n"
@@ -1134,6 +1214,11 @@ void OutputHLSL::header()
                        "{\n"
                        "    return t.SampleLevel(s, uv, 0);\n"
                        "}\n"
+                       "\n"
+                       "uint4 gl_texture2D(Texture2D<uint> t, SamplerState s, float2 uv)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, uv, 0);\n"
+                       "}\n"
                        "\n";
             }
             else UNREACHABLE();
@@ -1157,6 +1242,11 @@ void OutputHLSL::header()
                        "}\n"
                        "\n"
                        "int4 gl_texture2DLod(Texture2D<int> t, SamplerState s, float2 uv, float lod)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, uv, lod);\n"
+                       "}\n"
+                       "\n"
+                       "uint4 gl_texture2DLod(Texture2D<uint> t, SamplerState s, float2 uv, float lod)\n"
                        "{\n"
                        "    return t.SampleLevel(s, uv, lod);\n"
                        "}\n"
@@ -1201,6 +1291,16 @@ void OutputHLSL::header()
                        "{\n"
                        "    return t.SampleLevel(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), 0);\n"
                        "}\n"
+                       "\n"
+                       "uint4 gl_texture2DProj(Texture2D<uint4> t, SamplerState s, float3 uvw)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float2(uvw.x / uvw.z, uvw.y / uvw.z), 0);\n"
+                       "}\n"
+                       "\n"
+                       "uint4 gl_texture2DProj(Texture2D<uint4> t, SamplerState s, float4 uvw)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), 0);\n"
+                       "}\n"
                        "\n";
             }
             else UNREACHABLE();
@@ -1242,6 +1342,16 @@ void OutputHLSL::header()
                        "{\n"
                        "    return t.SampleLevel(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), lod);\n"
                        "}\n"
+                       "\n"
+                       "uint4 gl_texture2DProj(Texture2D<uint4> t, SamplerState s, float3 uvw, float lod)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float2(uvw.x / uvw.z, uvw.y / uvw.z), lod);\n"
+                       "}\n"
+                       "\n"
+                       "uint4 gl_texture2DProj(Texture2D<uint4> t, SamplerState s, float4 uvw)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), lod);\n"
+                       "}\n"
                        "\n";
             }
             else UNREACHABLE();
@@ -1268,6 +1378,11 @@ void OutputHLSL::header()
                        "{\n"
                        "    return t.SampleLevel(s, uvw, 0);\n"
                        "}\n"
+                       "\n"
+                       "uint4 gl_textureCube(TextureCube<uint4> t, SamplerState s, float3 uvw)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, uvw, 0);\n"
+                       "}\n"
                        "\n";
             }
             else UNREACHABLE();
@@ -1291,6 +1406,11 @@ void OutputHLSL::header()
                        "}\n"
                        "\n"
                        "int4 gl_textureCubeLod(TextureCube<int4> t, SamplerState s, float3 uvw, float lod)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, uvw, lod);\n"
+                       "}\n"
+                       "\n"
+                       "uint4 gl_textureCubeLod(TextureCube<uint4> t, SamplerState s, float3 uvw, float lod)\n"
                        "{\n"
                        "    return t.SampleLevel(s, uvw, lod);\n"
                        "}\n"
@@ -2365,7 +2485,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 TBasicType samplerType = arguments[0]->getAsTyped()->getType().getBasicType();
 
                 if (name == "texture2D" ||
-                    (name == "texture" && (samplerType == EbtSampler2D || samplerType == EbtISampler2D)))
+                    (name == "texture" && (samplerType == EbtSampler2D || samplerType == EbtISampler2D || samplerType == EbtUSampler2D)))
                 {
                     if (!lod0)
                     {
@@ -2397,7 +2517,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                     }
                 }
                 else if (name == "texture2DProj" ||
-                         (name == "textureProj" && (samplerType == EbtSampler2D || samplerType == EbtISampler2D)))
+                         (name == "textureProj" && (samplerType == EbtSampler2D || samplerType == EbtISampler2D || samplerType == EbtUSampler2D)))
                 {
                     if (!lod0)
                     {
@@ -2429,7 +2549,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                     }
                 }
                 else if (name == "textureCube" ||
-                         (name == "texture" && (samplerType == EbtSamplerCube || samplerType == EbtISamplerCube)))
+                         (name == "texture" && (samplerType == EbtSamplerCube || samplerType == EbtISamplerCube || samplerType == EbtUSamplerCube)))
                 {
                     if (!lod0)
                     {
@@ -2461,7 +2581,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                     }
                 }
                 else if (name == "texture2DLod" ||
-                         (name == "textureLod" && (samplerType == EbtSampler2D || samplerType == EbtISampler2D)))
+                         (name == "textureLod" && (samplerType == EbtSampler2D || samplerType == EbtISampler2D || samplerType == EbtUSampler2D)))
                 {
                     if (arguments.size() == 3)
                     {
@@ -2472,7 +2592,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                     out << "gl_texture2DLod(";
                 }
                 else if (name == "texture2DProjLod" ||
-                         (name == "textureProjLod" && (samplerType == EbtSampler2D || samplerType == EbtISampler2D)))
+                         (name == "textureProjLod" && (samplerType == EbtSampler2D || samplerType == EbtISampler2D || samplerType == EbtUSampler2D)))
                 {
                     if (arguments.size() == 3)
                     {
@@ -2483,7 +2603,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                     out << "gl_texture2DProjLod(";
                 }
                 else if (name == "textureCubeLod" ||
-                         (name == "textureLod" && (samplerType == EbtSamplerCube || samplerType == EbtISamplerCube)))
+                         (name == "textureLod" && (samplerType == EbtSamplerCube || samplerType == EbtISamplerCube || samplerType == EbtUSamplerCube)))
                 {
                     if (arguments.size() == 3)
                     {
@@ -3244,9 +3364,11 @@ TString OutputHLSL::typeString(const TType &type)
             return "void";
           case EbtSampler2D:
           case EbtISampler2D:
+          case EbtUSampler2D:
             return "sampler2D";
           case EbtSamplerCube:
           case EbtISamplerCube:
+          case EbtUSamplerCube:
             return "samplerCUBE";
           case EbtSamplerExternalOES:
             return "sampler2D";
@@ -3273,6 +3395,10 @@ TString OutputHLSL::textureString(const TType &type)
         return "Texture2D<int4>";
       case EbtISamplerCube:
         return "TextureCube<int4>";
+      case EbtUSampler2D:
+        return "Texture2D<uint4>";
+      case EbtUSamplerCube:
+        return "TextureCube<uint4>";
       default:
         break;
     }
@@ -3895,6 +4021,14 @@ GLenum OutputHLSL::glVariableType(const TType &type)
     else if (type.getBasicType() == EbtISamplerCube)
     {
         return GL_INT_SAMPLER_CUBE;
+    }
+    else if (type.getBasicType() == EbtUSampler2D)
+    {
+        return GL_UNSIGNED_INT_SAMPLER_2D;
+    }
+    else if (type.getBasicType() == EbtUSamplerCube)
+    {
+        return GL_UNSIGNED_INT_SAMPLER_CUBE;
     }
     else UNREACHABLE();
 
