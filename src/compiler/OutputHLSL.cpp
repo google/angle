@@ -41,6 +41,12 @@ OutputHLSL::OutputHLSL(TParseContext &context, const ShBuiltInResources& resourc
     mUsesTexture2DProj_bias = false;
     mUsesTexture2DProjLod = false;
     mUsesTexture2DLod = false;
+    mUsesTexture3D = false;
+    mUsesTexture3D_bias = false;
+    mUsesTexture3DProj = false;
+    mUsesTexture3DProj_bias = false;
+    mUsesTexture3DProjLod = false;
+    mUsesTexture3DLod = false;
     mUsesTextureCube = false;
     mUsesTextureCube_bias = false;
     mUsesTextureCubeLod = false;
@@ -48,6 +54,10 @@ OutputHLSL::OutputHLSL(TParseContext &context, const ShBuiltInResources& resourc
     mUsesTexture2DLod0_bias = false;
     mUsesTexture2DProjLod0 = false;
     mUsesTexture2DProjLod0_bias = false;
+    mUsesTexture3DLod0 = false;
+    mUsesTexture3DLod0_bias = false;
+    mUsesTexture3DProjLod0 = false;
+    mUsesTexture3DProjLod0_bias = false;
     mUsesTextureCubeLod0 = false;
     mUsesTextureCubeLod0_bias = false;
     mUsesFragColor = false;
@@ -823,6 +833,98 @@ void OutputHLSL::header()
             else UNREACHABLE();
         }
 
+        if (mUsesTexture3D)
+        {
+            if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_texture3D(Texture3D t, SamplerState s, float3 uvw)\n"
+                       "{\n"
+                       "    return t.Sample(s, uvw);\n"
+                       "}\n"
+                       "\n"
+                       "int4 gl_texture3D(Texture3D<int4> t, SamplerState s, float3 uvw)\n"
+                       "{\n"
+                       "    return t.Sample(s, uvw);\n"
+                       "}\n"
+                       "\n"
+                       "uint4 gl_texture3D(Texture3D<uint4> t, SamplerState s, float3 uvw)\n"
+                       "{\n"
+                       "    return t.Sample(s, uvw);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
+        }
+
+        if (mUsesTexture3D_bias)
+        {
+            if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_texture3D(Texture3D t, SamplerState s, float3 uvw, float bias)\n"
+                       "{\n"
+                       "    return t.SampleBias(s, uvw, bias);\n"
+                       "}\n"
+                       "\n"
+                       "int4 gl_texture3D(Texture3D<int4> t, SamplerState s, float3 uvw, float bias)\n"
+                       "{\n"
+                       "    return t.SampleBias(s, uvw, bias);\n"
+                       "}\n"
+                       "\n"
+                       "uint4 gl_texture3D(Texture3D<uint4> t, SamplerState s, float3 uvw, float bias)\n"
+                       "{\n"
+                       "    return t.SampleBias(s, uvw, bias);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
+        }
+
+        if (mUsesTexture3DProj)
+        {
+            if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_texture3DProj(Texture3D t, SamplerState s, float4 uvw)\n"
+                       "{\n"
+                       "    return t.Sample(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w));\n"
+                       "}\n"
+                       "\n"
+                       "int4 gl_texture3DProj(Texture3D<int4> t, SamplerState s, float4 uvw)\n"
+                       "{\n"
+                       "    return t.Sample(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w));\n"
+                       "}\n"
+                       "\n"
+                       "uint4 gl_texture3DProj(Texture3D<uint4> t, SamplerState s, float4 uvw)\n"
+                       "{\n"
+                       "    return t.Sample(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w));\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
+        }
+
+        if (mUsesTexture3DProj_bias)
+        {
+            if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_texture3DProj(Texture3D t, SamplerState s, float4 uvw, float bias)\n"
+                       "{\n"
+                       "    return t.SampleBias(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), bias);\n"
+                       "}\n"
+                       "\n"
+                       "int4 gl_texture3DProj(Texture3D<int4> t, SamplerState s, float4 uvw, float bias)\n"
+                       "{\n"
+                       "    return t.SampleBias(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), bias);\n"
+                       "}\n"
+                       "\n"
+                       "uint4 gl_texture3DProj(Texture3D<uint4> t, SamplerState s, float4 uvw, float bias)\n"
+                       "{\n"
+                       "    return t.SampleBias(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), bias);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
+        }
+
         if (mUsesTextureCube)
         {
             if (mOutputType == SH_HLSL9_OUTPUT)
@@ -1045,6 +1147,99 @@ void OutputHLSL::header()
                        "uint4 gl_texture2DProjLod_bias(Texture2D<uint4> t, SamplerState s, float4 uvw, float bias)\n"
                        "{\n"
                        "    return t.SampleLevel(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), 0);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
+        }
+
+        if (mUsesTexture3DLod0)
+        {
+            if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_texture3DLod0(Texture3D t, SamplerState s, float3 uvw)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, uvw, 0);\n"
+                       "}\n"
+                       "\n"
+                       "int4 gl_texture3DLod0(Texture3D<int4> t, SamplerState s, float3 uvw)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, uvw, 0);\n"
+                       "}\n"
+                       "\n"
+                       "uint4 gl_texture3DLod0(Texture3D<uint4> t, SamplerState s, float3 uvw)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, uvw, 0);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
+        }
+
+        if (mUsesTexture3DLod0_bias)
+        {
+            if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_texture3DLod0(Texture3D t, SamplerState s, float3 uvw, float bias)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, uvw, 0);\n"
+                       "}\n"
+                       "\n"
+                       "int4 gl_texture3DLod0(Texture3D<int4> t, SamplerState s, float3 uvw, float bias)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, uvw, 0);\n"
+                       "}\n"
+                       "\n"
+                       "uint4 gl_texture3DLod0(Texture3D<uint4> t, SamplerState s, float3 uvw, float bias)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, uvw, 0);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
+        }
+
+        if (mUsesTexture3DProjLod0)
+        {
+            if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_texture3DProjLod0(Texture3D t, SamplerState s, float4 uvw)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), 0);\n"
+                       "}\n"
+                       "\n"
+                       "int4 gl_texture3DProjLod0(Texture3D<int4> t, SamplerState s, float4 uvw)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), 0);\n"
+                       "}\n"
+                       "\n"
+                       "uint4 gl_texture3DProjLod0(Texture3D<uint4> t, SamplerState s, float4 uvw)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), 0);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
+        }
+
+        if (mUsesTexture3DProjLod0_bias)
+        {
+            if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_texture3DProjLod_bias(Texture3D t, SamplerState s, float4 uvw, float bias)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), 0);\n"
+                       "}\n"
+                       "\n"
+                       "int4 gl_texture3DProjLod_bias(Texture3D<int4> t, SamplerState s, float4 uvw, float bias)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), 0);\n"
+                       "}\n"
+                       "\n"
+                       "\n"
+                       "uint4 gl_texture3DProjLod_bias(Texture3D<uint4> t, SamplerState s, float4 uvw, float bias)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), 0);\n"
                        "}\n"
                        "\n";
             }
@@ -1351,6 +1546,88 @@ void OutputHLSL::header()
                        "uint4 gl_texture2DProj(Texture2D<uint4> t, SamplerState s, float4 uvw, float lod)\n"
                        "{\n"
                        "    return t.SampleLevel(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), lod);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
+        }
+
+        if (mUsesTexture3D)
+        {
+            if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_texture3D(Texture3D t, SamplerState s, float3 uvw)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, uvw, 0);\n"
+                       "}\n"
+                       "\n"
+                       "int4 gl_texture3D(Texture3D<int> t, SamplerState s, float3 uvw)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, uvw, 0);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
+        }
+
+        if (mUsesTexture3DLod)
+        {
+            if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_texture3DLod(Texture3D t, SamplerState s, float3 uvw, float lod)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, uvw, lod);\n"
+                       "}\n"
+                       "\n"
+                       "int4 gl_texture3DLod(Texture3D<int> t, SamplerState s, float3 uvw, float lod)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, uvw, lod);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
+        }
+
+        if (mUsesTexture3DProj)
+        {
+            if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_texture3DProj(Texture3D t, SamplerState s, float4 uvw)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), 0);\n"
+                       "}\n"
+                       "\n"
+                       "int4 gl_texture3DProj(Texture3D<int4> t, SamplerState s, float4 uvw)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), 0);\n"
+                       "}\n"
+                       "\n"
+                       "uint4 gl_texture3DProj(Texture3D<uint4> t, SamplerState s, float4 uvw)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), 0);\n"
+                       "}\n"
+                       "\n";
+            }
+            else UNREACHABLE();
+        }
+
+        if (mUsesTexture3DProjLod)
+        {
+            if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                out << "float4 gl_texture3DProj(Texture3D t, SamplerState s, float4 uvw, float lod)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), lod);\n"
+                       "}\n"
+                       "\n"
+                       "int4 gl_texture3DProj(Texture3D<int4> t, SamplerState s, float4 uvw, float lod)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), lod);\n"
+                       "}\n"
+                       "\n"
+                       "uint4 gl_texture3DProj(Texture3D<uint4> t, SamplerState s, float4 uvw, float lod)\n"
+                       "{\n"
+                       "    return t.SampleLevel(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), lod);\n"
                        "}\n"
                        "\n";
             }
@@ -2548,6 +2825,68 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                         out << "gl_texture2DProjLod0(";
                     }
                 }
+                else if (name == "texture" && (samplerType == EbtSampler3D || samplerType == EbtISampler3D || samplerType == EbtUSampler3D))
+                {
+                    if (!lod0)
+                    {
+                        if (arguments.size() == 2)
+                        {
+                            mUsesTexture3D = true;
+                        }
+                        else if (arguments.size() == 3)
+                        {
+                            mUsesTexture3D_bias = true;
+                        }
+                        else UNREACHABLE();
+
+                        out << "gl_texture3D(";
+                    }
+                    else
+                    {
+                        if (arguments.size() == 2)
+                        {
+                            mUsesTexture3DLod0 = true;
+                        }
+                        else if (arguments.size() == 3)
+                        {
+                            mUsesTexture3DLod0_bias = true;
+                        }
+                        else UNREACHABLE();
+
+                        out << "gl_texture3DLod0(";
+                    }
+                }
+                else if (name == "textureProj" && (samplerType == EbtSampler3D || samplerType == EbtISampler3D || samplerType == EbtUSampler3D))
+                {
+                    if (!lod0)
+                    {
+                        if (arguments.size() == 2)
+                        {
+                            mUsesTexture3DProj = true;
+                        }
+                        else if (arguments.size() == 3)
+                        {
+                            mUsesTexture3DProj_bias = true;
+                        }
+                        else UNREACHABLE();
+
+                        out << "gl_texture3DProj(";
+                    }
+                    else
+                    {
+                        if (arguments.size() == 2)
+                        {
+                            mUsesTexture3DProjLod0 = true;
+                        }
+                        else if (arguments.size() == 3)
+                        {
+                            mUsesTexture3DProjLod0_bias = true;
+                        }
+                        else UNREACHABLE();
+
+                        out << "gl_texture3DProjLod0(";
+                    }
+                }
                 else if (name == "textureCube" ||
                          (name == "texture" && (samplerType == EbtSamplerCube || samplerType == EbtISamplerCube || samplerType == EbtUSamplerCube)))
                 {
@@ -2601,6 +2940,26 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                     else UNREACHABLE();
 
                     out << "gl_texture2DProjLod(";
+                }
+                else if (name == "textureLod" && (samplerType == EbtSampler3D || samplerType == EbtISampler3D || samplerType == EbtUSampler3D))
+                {
+                    if (arguments.size() == 3)
+                    {
+                        mUsesTexture3DLod = true;
+                    }
+                    else UNREACHABLE();
+
+                    out << "gl_texture3DLod(";
+                }
+                else if (name == "textureProjLod" && (samplerType == EbtSampler3D || samplerType == EbtISampler3D || samplerType == EbtUSampler3D))
+                {
+                    if (arguments.size() == 3)
+                    {
+                        mUsesTexture3DProjLod = true;
+                    }
+                    else UNREACHABLE();
+
+                    out << "gl_texture3DProjLod(";
                 }
                 else if (name == "textureCubeLod" ||
                          (name == "textureLod" && (samplerType == EbtSamplerCube || samplerType == EbtISamplerCube || samplerType == EbtUSamplerCube)))
@@ -4010,6 +4369,10 @@ GLenum OutputHLSL::glVariableType(const TType &type)
     {
         return GL_SAMPLER_2D;
     }
+    else if (type.getBasicType() == EbtSampler3D)
+    {
+        return GL_SAMPLER_3D;
+    }
     else if (type.getBasicType() == EbtSamplerCube)
     {
         return GL_SAMPLER_CUBE;
@@ -4018,6 +4381,10 @@ GLenum OutputHLSL::glVariableType(const TType &type)
     {
         return GL_INT_SAMPLER_2D;
     }
+    else if (type.getBasicType() == EbtISampler3D)
+    {
+        return GL_INT_SAMPLER_3D;
+    }
     else if (type.getBasicType() == EbtISamplerCube)
     {
         return GL_INT_SAMPLER_CUBE;
@@ -4025,6 +4392,10 @@ GLenum OutputHLSL::glVariableType(const TType &type)
     else if (type.getBasicType() == EbtUSampler2D)
     {
         return GL_UNSIGNED_INT_SAMPLER_2D;
+    }
+    else if (type.getBasicType() == EbtUSampler3D)
+    {
+        return GL_UNSIGNED_INT_SAMPLER_3D;
     }
     else if (type.getBasicType() == EbtUSamplerCube)
     {
