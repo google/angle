@@ -155,8 +155,10 @@ O           [0-7]
 "sampler2DShadow"    { return ES2_reserved_ES3_keyword(context, SAMPLER2DSHADOW); }
 "sampler2DRect"      { return SAMPLER2DRECT; }
 "isampler2D"         { return ES2_ident_ES3_keyword(context, ISAMPLER2D); }
+"isampler3D"         { return ES2_ident_ES3_keyword(context, ISAMPLER3D); }
 "isamplerCube"       { return ES2_ident_ES3_keyword(context, ISAMPLERCUBE); }
 "usampler2D"         { return ES2_ident_ES3_keyword(context, USAMPLER2D); }
+"usampler3D"         { return ES2_ident_ES3_keyword(context, USAMPLER3D); }
 "usamplerCube"       { return ES2_ident_ES3_keyword(context, USAMPLERCUBE); }
 
 "struct"       { return STRUCT; }

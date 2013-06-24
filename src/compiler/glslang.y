@@ -131,7 +131,8 @@ extern void yyerror(TParseContext* context, const char* reason);
 %token <lex> MATRIX2x3 MATRIX3x2 MATRIX2x4 MATRIX4x2 MATRIX3x4 MATRIX4x3
 %token <lex> CENTROID FLAT SMOOTH
 %token <lex> STRUCT VOID_TYPE WHILE
-%token <lex> SAMPLER2D SAMPLERCUBE SAMPLER_EXTERNAL_OES SAMPLER2DRECT ISAMPLER2D ISAMPLERCUBE  USAMPLER2D USAMPLERCUBE
+%token <lex> SAMPLER2D SAMPLERCUBE SAMPLER_EXTERNAL_OES SAMPLER2DRECT
+%token <lex> ISAMPLER2D ISAMPLER3D ISAMPLERCUBE USAMPLER2D USAMPLER3D USAMPLERCUBE
 %token <lex> SAMPLER3D SAMPLER3DRECT SAMPLER2DSHADOW
 %token <lex> LAYOUT
 
@@ -1509,6 +1510,10 @@ type_specifier_nonarray
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtSampler2D, qual, $1.line);
     }
+    | SAMPLER3D {
+        TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
+        $$.setBasic(EbtSampler3D, qual, $1.line);
+    }
     | SAMPLERCUBE {
         FRAG_VERT_ONLY("samplerCube", $1.line);
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
@@ -1518,6 +1523,10 @@ type_specifier_nonarray
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtISampler2D, qual, $1.line);
     }
+    | ISAMPLER3D {
+        TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
+        $$.setBasic(EbtISampler3D, qual, $1.line);
+    }
     | ISAMPLERCUBE {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtISamplerCube, qual, $1.line);
@@ -1525,6 +1534,10 @@ type_specifier_nonarray
     | USAMPLER2D {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtUSampler2D, qual, $1.line);
+    }
+    | USAMPLER3D {
+        TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
+        $$.setBasic(EbtUSampler3D, qual, $1.line);
     }
     | USAMPLERCUBE {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
