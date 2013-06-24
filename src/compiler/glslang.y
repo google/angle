@@ -131,7 +131,7 @@ extern void yyerror(TParseContext* context, const char* reason);
 %token <lex> MATRIX2x3 MATRIX3x2 MATRIX2x4 MATRIX4x2 MATRIX3x4 MATRIX4x3
 %token <lex> CENTROID FLAT SMOOTH
 %token <lex> STRUCT VOID_TYPE WHILE
-%token <lex> SAMPLER2D SAMPLERCUBE SAMPLER_EXTERNAL_OES SAMPLER2DRECT
+%token <lex> SAMPLER2D SAMPLERCUBE SAMPLER_EXTERNAL_OES SAMPLER2DRECT ISAMPLER2D ISAMPLERCUBE
 %token <lex> SAMPLER3D SAMPLER3DRECT SAMPLER2DSHADOW
 %token <lex> LAYOUT
 
@@ -1513,6 +1513,14 @@ type_specifier_nonarray
         FRAG_VERT_ONLY("samplerCube", $1.line);
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtSamplerCube, qual, $1.line);
+    }
+    | ISAMPLER2D {
+        TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
+        $$.setBasic(EbtISampler2D, qual, $1.line);
+    }
+    | ISAMPLERCUBE {
+        TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
+        $$.setBasic(EbtISamplerCube, qual, $1.line);
     }
     | SAMPLER_EXTERNAL_OES {
         if (!context->supportsExtension("GL_OES_EGL_image_external")) {

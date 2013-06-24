@@ -154,6 +154,8 @@ O           [0-7]
 "sampler3DRect"      { return ES2_reserved_ES3_keyword(context, SAMPLER3DRECT); }
 "sampler2DShadow"    { return ES2_reserved_ES3_keyword(context, SAMPLER2DSHADOW); }
 "sampler2DRect"      { return SAMPLER2DRECT; }
+"isampler2D"         { return ES2_ident_ES3_keyword(context, ISAMPLER2D); }
+"isamplerCube"       { return ES2_ident_ES3_keyword(context, ISAMPLERCUBE); }
 
 "struct"       { return STRUCT; }
 
