@@ -96,13 +96,19 @@ static ShDataType getVariableDataType(const TType& type)
               return SH_BOOL;
           }
       case EbtSampler2D: return SH_SAMPLER_2D;
+      case EbtSampler3D: return SH_SAMPLER_3D;
       case EbtSamplerCube: return SH_SAMPLER_CUBE;
       case EbtSamplerExternalOES: return SH_SAMPLER_EXTERNAL_OES;
       case EbtSampler2DRect: return SH_SAMPLER_2D_RECT_ARB;
+      case EbtSampler2DArray: return SH_SAMPLER_2D_ARRAY;
       case EbtISampler2D: return SH_INT_SAMPLER_2D;
+      case EbtISampler3D: return SH_INT_SAMPLER_3D;
       case EbtISamplerCube: return SH_INT_SAMPLER_CUBE;
+      case EbtISampler2DArray: return SH_INT_SAMPLER_2D_ARRAY;
       case EbtUSampler2D: return SH_UNSIGNED_INT_SAMPLER_2D;
+      case EbtUSampler3D: return SH_UNSIGNED_INT_SAMPLER_3D;
       case EbtUSamplerCube: return SH_UNSIGNED_INT_SAMPLER_CUBE;
+      case EbtUSampler2DArray: return SH_UNSIGNED_INT_SAMPLER_2D_ARRAY;
       default: UNREACHABLE();
     }
     return SH_NONE;
