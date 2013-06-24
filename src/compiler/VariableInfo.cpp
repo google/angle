@@ -101,6 +101,8 @@ static ShDataType getVariableDataType(const TType& type)
       case EbtSampler2DRect: return SH_SAMPLER_2D_RECT_ARB;
       case EbtISampler2D: return SH_INT_SAMPLER_2D;
       case EbtISamplerCube: return SH_INT_SAMPLER_CUBE;
+      case EbtUSampler2D: return SH_UNSIGNED_INT_SAMPLER_2D;
+      case EbtUSamplerCube: return SH_UNSIGNED_INT_SAMPLER_CUBE;
       default: UNREACHABLE();
     }
     return SH_NONE;
