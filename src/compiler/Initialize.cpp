@@ -591,14 +591,14 @@ void IdentifyBuiltIns(ShShaderType type, ShShaderSpec spec,
             symbolTable.relateToExtension(ESSL1_BUILTINS, "dFdx", "GL_OES_standard_derivatives");
             symbolTable.relateToExtension(ESSL1_BUILTINS, "dFdy", "GL_OES_standard_derivatives");
             symbolTable.relateToExtension(ESSL1_BUILTINS, "fwidth", "GL_OES_standard_derivatives");
-
-            symbolTable.relateToOperator(ESSL3_BUILTINS, "dFdx",   EOpDFdx);
-            symbolTable.relateToOperator(ESSL3_BUILTINS, "dFdy",   EOpDFdy);
-            symbolTable.relateToOperator(ESSL3_BUILTINS, "fwidth", EOpFwidth);
         }
         break;
     default: break;
     }
+
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "dFdx",   EOpDFdx);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "dFdy",   EOpDFdy);
+    symbolTable.relateToOperator(ESSL3_BUILTINS, "fwidth", EOpFwidth);
 
     // Finally add resource-specific variables.
     switch(type) {
