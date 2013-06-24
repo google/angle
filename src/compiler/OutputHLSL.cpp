@@ -29,37 +29,63 @@ TString str(int i)
     return buffer;
 }
 
+TString OutputHLSL::TextureFunction::name() const
+{
+    TString name = "gl_texture";
+
+    if (sampler == EbtSampler2D ||
+        sampler == EbtISampler2D ||
+        sampler == EbtUSampler2D)
+    {
+        name += "2D";
+    }
+    else if (sampler == EbtSampler3D ||
+             sampler == EbtISampler3D ||
+             sampler == EbtUSampler3D)
+    {
+        name += "3D";
+    }
+    else if (sampler == EbtSamplerCube ||
+             sampler == EbtISamplerCube ||
+             sampler == EbtUSamplerCube)
+    {
+        name += "Cube";
+    }
+    else UNREACHABLE();
+
+    if (proj)
+    {
+        name += "Proj";
+    }
+
+    switch(mipmap)
+    {
+      case IMPLICIT:                 break;
+      case BIAS:                     break;
+      case LOD:      name += "Lod";  break;
+      case LOD0:     name += "Lod0"; break;
+      default: UNREACHABLE();
+    }
+
+    return name + "(";
+}
+
+bool OutputHLSL::TextureFunction::operator<(const TextureFunction &rhs) const
+{
+    if (sampler < rhs.sampler) return true;
+    if (coords < rhs.coords)   return true;
+    if (!proj && rhs.proj)     return true;
+    if (mipmap < rhs.mipmap)   return true;
+
+    return false;
+}
+
 OutputHLSL::OutputHLSL(TParseContext &context, const ShBuiltInResources& resources, ShShaderOutput outputType)
     : TIntermTraverser(true, true, true), mContext(context), mOutputType(outputType)
 {
     mUnfoldShortCircuit = new UnfoldShortCircuit(context, this);
     mInsideFunction = false;
 
-    mUsesTexture2D = false;
-    mUsesTexture2D_bias = false;
-    mUsesTexture2DProj = false;
-    mUsesTexture2DProj_bias = false;
-    mUsesTexture2DProjLod = false;
-    mUsesTexture2DLod = false;
-    mUsesTexture3D = false;
-    mUsesTexture3D_bias = false;
-    mUsesTexture3DProj = false;
-    mUsesTexture3DProj_bias = false;
-    mUsesTexture3DProjLod = false;
-    mUsesTexture3DLod = false;
-    mUsesTextureCube = false;
-    mUsesTextureCube_bias = false;
-    mUsesTextureCubeLod = false;
-    mUsesTexture2DLod0 = false;
-    mUsesTexture2DLod0_bias = false;
-    mUsesTexture2DProjLod0 = false;
-    mUsesTexture2DProjLod0_bias = false;
-    mUsesTexture3DLod0 = false;
-    mUsesTexture3DLod0_bias = false;
-    mUsesTexture3DProjLod0 = false;
-    mUsesTexture3DProjLod0_bias = false;
-    mUsesTextureCubeLod0 = false;
-    mUsesTextureCubeLod0_bias = false;
     mUsesFragColor = false;
     mUsesFragData = false;
     mUsesDepthRange = false;
@@ -438,7 +464,6 @@ BlockLayoutType convertBlockLayoutType(TLayoutBlockStorage blockStorage)
 
 void OutputHLSL::header()
 {
-    ShShaderType shaderType = mContext.shaderType;
     TInfoSinkBase &out = mHeader;
 
     TString uniforms;
@@ -540,7 +565,7 @@ void OutputHLSL::header()
         out << *constructor;
     }
 
-    if (shaderType == SH_FRAGMENT_SHADER)
+    if (mContext.shaderType == SH_FRAGMENT_SHADER)
     {
         TExtensionBehavior::const_iterator iter = mContext.extensionBehavior().find("GL_EXT_draw_buffers");
         const bool usingMRTExtension = (iter != mContext.extensionBehavior().end() && (iter->second == EBhEnable || iter->second == EBhRequire));
@@ -669,645 +694,6 @@ void OutputHLSL::header()
             out << "\n";
         }
 
-        if (mUsesTexture2D)
-        {
-            if (mOutputType == SH_HLSL9_OUTPUT)
-            {
-                out << "float4 gl_texture2D(sampler2D s, float2 t)\n"
-                       "{\n"
-                       "    return tex2D(s, t);\n"
-                       "}\n"
-                       "\n";
-            }
-            else if (mOutputType == SH_HLSL11_OUTPUT)
-            {
-                out << "float4 gl_texture2D(Texture2D t, SamplerState s, float2 uv)\n"
-                       "{\n"
-                       "    return t.Sample(s, uv);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture2D(Texture2D<int4> t, SamplerState s, float2 uv)\n"
-                       "{\n"
-                       "    return t.Sample(s, uv);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_texture2D(Texture2D<uint4> t, SamplerState s, float2 uv)\n"
-                       "{\n"
-                       "    return t.Sample(s, uv);\n"
-                       "}\n"
-                       "\n";
-            }
-            else UNREACHABLE();
-        }
-
-        if (mUsesTexture2D_bias)
-        {
-            if (mOutputType == SH_HLSL9_OUTPUT)
-            {
-                out << "float4 gl_texture2D(sampler2D s, float2 t, float bias)\n"
-                       "{\n"
-                       "    return tex2Dbias(s, float4(t.x, t.y, 0, bias));\n"
-                       "}\n"
-                       "\n";
-            }
-            else if (mOutputType == SH_HLSL11_OUTPUT)
-            {
-                out << "float4 gl_texture2D(Texture2D t, SamplerState s, float2 uv, float bias)\n"
-                       "{\n"
-                       "    return t.SampleBias(s, uv, bias);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture2D(Texture2D<int4> t, SamplerState s, float2 uv, float bias)\n"
-                       "{\n"
-                       "    return t.SampleBias(s, uv, bias);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_texture2D(Texture2D<uint4> t, SamplerState s, float2 uv, float bias)\n"
-                       "{\n"
-                       "    return t.SampleBias(s, uv, bias);\n"
-                       "}\n"
-                       "\n";
-            }
-            else UNREACHABLE();
-        }
-
-        if (mUsesTexture2DProj)
-        {
-            if (mOutputType == SH_HLSL9_OUTPUT)
-            {
-                out << "float4 gl_texture2DProj(sampler2D s, float3 t)\n"
-                       "{\n"
-                       "    return tex2Dproj(s, float4(t.x, t.y, 0, t.z));\n"
-                       "}\n"
-                       "\n"
-                       "float4 gl_texture2DProj(sampler2D s, float4 t)\n"
-                       "{\n"
-                       "    return tex2Dproj(s, t);\n"
-                       "}\n"
-                       "\n";
-            }
-            else if (mOutputType == SH_HLSL11_OUTPUT)
-            {
-                out << "float4 gl_texture2DProj(Texture2D t, SamplerState s, float3 uvw)\n"
-                       "{\n"
-                       "    return t.Sample(s, float2(uvw.x / uvw.z, uvw.y / uvw.z));\n"
-                       "}\n"
-                       "\n"
-                       "float4 gl_texture2DProj(Texture2D t, SamplerState s, float4 uvw)\n"
-                       "{\n"
-                       "    return t.Sample(s, float2(uvw.x / uvw.w, uvw.y / uvw.w));\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture2DProj(Texture2D<int4> t, SamplerState s, float3 uvw)\n"
-                       "{\n"
-                       "    return t.Sample(s, float2(uvw.x / uvw.z, uvw.y / uvw.z));\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture2DProj(Texture2D<int4> t, SamplerState s, float4 uvw)\n"
-                       "{\n"
-                       "    return t.Sample(s, float2(uvw.x / uvw.w, uvw.y / uvw.w));\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_texture2DProj(Texture2D<uint4> t, SamplerState s, float3 uvw)\n"
-                       "{\n"
-                       "    return t.Sample(s, float2(uvw.x / uvw.z, uvw.y / uvw.z));\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_texture2DProj(Texture2D<uint4> t, SamplerState s, float4 uvw)\n"
-                       "{\n"
-                       "    return t.Sample(s, float2(uvw.x / uvw.w, uvw.y / uvw.w));\n"
-                       "}\n"
-                       "\n";
-            }
-            else UNREACHABLE();
-        }
-
-        if (mUsesTexture2DProj_bias)
-        {
-            if (mOutputType == SH_HLSL9_OUTPUT)
-            {
-                out << "float4 gl_texture2DProj(sampler2D s, float3 t, float bias)\n"
-                       "{\n"
-                       "    return tex2Dbias(s, float4(t.x / t.z, t.y / t.z, 0, bias));\n"
-                       "}\n"
-                       "\n"
-                       "float4 gl_texture2DProj(sampler2D s, float4 t, float bias)\n"
-                       "{\n"
-                       "    return tex2Dbias(s, float4(t.x / t.w, t.y / t.w, 0, bias));\n"
-                       "}\n"
-                       "\n";
-            }
-            else if (mOutputType == SH_HLSL11_OUTPUT)
-            {
-                out << "float4 gl_texture2DProj(Texture2D t, SamplerState s, float3 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleBias(s, float2(uvw.x / uvw.z, uvw.y / uvw.z), bias);\n"
-                       "}\n"
-                       "\n"
-                       "float4 gl_texture2DProj(Texture2D t, SamplerState s, float4 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleBias(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), bias);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture2DProj(Texture2D<int4> t, SamplerState s, float3 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleBias(s, float2(uvw.x / uvw.z, uvw.y / uvw.z), bias);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture2DProj(Texture2D<int4> t, SamplerState s, float4 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleBias(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), bias);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_texture2DProj(Texture2D<uint4> t, SamplerState s, float3 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleBias(s, float2(uvw.x / uvw.z, uvw.y / uvw.z), bias);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_texture2DProj(Texture2D<uint4> t, SamplerState s, float4 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleBias(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), bias);\n"
-                       "}\n"
-                       "\n";
-            }
-            else UNREACHABLE();
-        }
-
-        if (mUsesTexture3D)
-        {
-            if (mOutputType == SH_HLSL11_OUTPUT)
-            {
-                out << "float4 gl_texture3D(Texture3D t, SamplerState s, float3 uvw)\n"
-                       "{\n"
-                       "    return t.Sample(s, uvw);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture3D(Texture3D<int4> t, SamplerState s, float3 uvw)\n"
-                       "{\n"
-                       "    return t.Sample(s, uvw);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_texture3D(Texture3D<uint4> t, SamplerState s, float3 uvw)\n"
-                       "{\n"
-                       "    return t.Sample(s, uvw);\n"
-                       "}\n"
-                       "\n";
-            }
-            else UNREACHABLE();
-        }
-
-        if (mUsesTexture3D_bias)
-        {
-            if (mOutputType == SH_HLSL11_OUTPUT)
-            {
-                out << "float4 gl_texture3D(Texture3D t, SamplerState s, float3 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleBias(s, uvw, bias);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture3D(Texture3D<int4> t, SamplerState s, float3 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleBias(s, uvw, bias);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_texture3D(Texture3D<uint4> t, SamplerState s, float3 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleBias(s, uvw, bias);\n"
-                       "}\n"
-                       "\n";
-            }
-            else UNREACHABLE();
-        }
-
-        if (mUsesTexture3DProj)
-        {
-            if (mOutputType == SH_HLSL11_OUTPUT)
-            {
-                out << "float4 gl_texture3DProj(Texture3D t, SamplerState s, float4 uvw)\n"
-                       "{\n"
-                       "    return t.Sample(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w));\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture3DProj(Texture3D<int4> t, SamplerState s, float4 uvw)\n"
-                       "{\n"
-                       "    return t.Sample(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w));\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_texture3DProj(Texture3D<uint4> t, SamplerState s, float4 uvw)\n"
-                       "{\n"
-                       "    return t.Sample(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w));\n"
-                       "}\n"
-                       "\n";
-            }
-            else UNREACHABLE();
-        }
-
-        if (mUsesTexture3DProj_bias)
-        {
-            if (mOutputType == SH_HLSL11_OUTPUT)
-            {
-                out << "float4 gl_texture3DProj(Texture3D t, SamplerState s, float4 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleBias(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), bias);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture3DProj(Texture3D<int4> t, SamplerState s, float4 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleBias(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), bias);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_texture3DProj(Texture3D<uint4> t, SamplerState s, float4 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleBias(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), bias);\n"
-                       "}\n"
-                       "\n";
-            }
-            else UNREACHABLE();
-        }
-
-        if (mUsesTextureCube)
-        {
-            if (mOutputType == SH_HLSL9_OUTPUT)
-            {
-                out << "float4 gl_textureCube(samplerCUBE s, float3 t)\n"
-                       "{\n"
-                       "    return texCUBE(s, t);\n"
-                       "}\n"
-                       "\n";
-            }
-            else if (mOutputType == SH_HLSL11_OUTPUT)
-            {
-                out << "float4 gl_textureCube(TextureCube t, SamplerState s, float3 uvw)\n"
-                       "{\n"
-                       "    return t.Sample(s, uvw);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_textureCube(TextureCube<int4> t, SamplerState s, float3 uvw)\n"
-                       "{\n"
-                       "    return t.Sample(s, uvw);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_textureCube(TextureCube<uint4> t, SamplerState s, float3 uvw)\n"
-                       "{\n"
-                       "    return t.Sample(s, uvw);\n"
-                       "}\n"
-                       "\n";
-            }
-            else UNREACHABLE();
-        }
-
-        if (mUsesTextureCube_bias)
-        {
-            if (mOutputType == SH_HLSL9_OUTPUT)
-            {
-                out << "float4 gl_textureCube(samplerCUBE s, float3 t, float bias)\n"
-                       "{\n"
-                       "    return texCUBEbias(s, float4(t.x, t.y, t.z, bias));\n"
-                       "}\n"
-                       "\n";
-            }
-            else if (mOutputType == SH_HLSL11_OUTPUT)
-            {
-                out << "float4 gl_textureCube(TextureCube t, SamplerState s, float3 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleBias(s, uvw, bias);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_textureCube(TextureCube<int4> t, SamplerState s, float3 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleBias(s, uvw, bias);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_textureCube(TextureCube<uint4> t, SamplerState s, float3 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleBias(s, uvw, bias);\n"
-                       "}\n"
-                       "\n";
-            }
-            else UNREACHABLE();
-        }
-
-        // These *Lod0 intrinsics are not available in GL fragment shaders.
-        // They are used to sample using discontinuous texture coordinates.
-        if (mUsesTexture2DLod0)
-        {
-            if (mOutputType == SH_HLSL9_OUTPUT)
-            {
-                out << "float4 gl_texture2DLod0(sampler2D s, float2 t)\n"
-                       "{\n"
-                       "    return tex2Dlod(s, float4(t.x, t.y, 0, 0));\n"
-                       "}\n"
-                       "\n";
-            }
-            else if (mOutputType == SH_HLSL11_OUTPUT)
-            {
-                out << "float4 gl_texture2DLod0(Texture2D t, SamplerState s, float2 uv)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uv, 0);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture2DLod0(Texture2D<int4> t, SamplerState s, float2 uv)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uv, 0);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_texture2DLod0(Texture2D<uint4> t, SamplerState s, float2 uv)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uv, 0);\n"
-                       "}\n"
-                       "\n";
-            }
-            else UNREACHABLE();
-        }
-
-        if (mUsesTexture2DLod0_bias)
-        {
-            if (mOutputType == SH_HLSL9_OUTPUT)
-            {
-                out << "float4 gl_texture2DLod0(sampler2D s, float2 t, float bias)\n"
-                       "{\n"
-                       "    return tex2Dlod(s, float4(t.x, t.y, 0, 0));\n"
-                       "}\n"
-                       "\n";
-            }
-            else if (mOutputType == SH_HLSL11_OUTPUT)
-            {
-                out << "float4 gl_texture2DLod0(Texture2D t, SamplerState s, float2 uv, float bias)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uv, 0);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture2DLod0(Texture2D<int4> t, SamplerState s, float2 uv, float bias)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uv, 0);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_texture2DLod0(Texture2D<uint4> t, SamplerState s, float2 uv, float bias)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uv, 0);\n"
-                       "}\n"
-                       "\n";
-            }
-            else UNREACHABLE();
-        }
-
-        if (mUsesTexture2DProjLod0)
-        {
-            if (mOutputType == SH_HLSL9_OUTPUT)
-            {
-                out << "float4 gl_texture2DProjLod0(sampler2D s, float3 t)\n"
-                       "{\n"
-                       "    return tex2Dlod(s, float4(t.x / t.z, t.y / t.z, 0, 0));\n"
-                       "}\n"
-                       "\n"
-                       "float4 gl_texture2DProjLod(sampler2D s, float4 t)\n"
-                       "{\n"
-                       "    return tex2Dlod(s, float4(t.x / t.w, t.y / t.w, 0, 0));\n"
-                       "}\n"
-                       "\n";
-            }
-            else if (mOutputType == SH_HLSL11_OUTPUT)
-            {
-                out << "float4 gl_texture2DProjLod0(Texture2D t, SamplerState s, float3 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float2(uvw.x / uvw.z, uvw.y / uvw.z), 0);\n"
-                       "}\n"
-                       "\n"
-                       "float4 gl_texture2DProjLod0(Texture2D t, SamplerState s, float4 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), 0);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture2DProjLod0(Texture2D<int4> t, SamplerState s, float3 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float2(uvw.x / uvw.z, uvw.y / uvw.z), 0);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture2DProjLod0(Texture2D<int4> t, SamplerState s, float4 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), 0);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_texture2DProjLod0(Texture2D<uint4> t, SamplerState s, float3 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float2(uvw.x / uvw.z, uvw.y / uvw.z), 0);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_texture2DProjLod0(Texture2D<uint4> t, SamplerState s, float4 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), 0);\n"
-                       "}\n"
-                       "\n";
-            }
-            else UNREACHABLE();
-        }
-
-        if (mUsesTexture2DProjLod0_bias)
-        {
-            if (mOutputType == SH_HLSL9_OUTPUT)
-            {
-                out << "float4 gl_texture2DProjLod0_bias(sampler2D s, float3 t, float bias)\n"
-                       "{\n"
-                       "    return tex2Dlod(s, float4(t.x / t.z, t.y / t.z, 0, 0));\n"
-                       "}\n"
-                       "\n"
-                       "float4 gl_texture2DProjLod_bias(sampler2D s, float4 t, float bias)\n"
-                       "{\n"
-                       "    return tex2Dlod(s, float4(t.x / t.w, t.y / t.w, 0, 0));\n"
-                       "}\n"
-                       "\n";
-            }
-            else if (mOutputType == SH_HLSL11_OUTPUT)
-            {
-                out << "float4 gl_texture2DProjLod_bias(Texture2D t, SamplerState s, float3 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float2(uvw.x / uvw.z, uvw.y / uvw.z), 0);\n"
-                       "}\n"
-                       "\n"
-                       "float4 gl_texture2DProjLod_bias(Texture2D t, SamplerState s, float4 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), 0);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture2DProjLod_bias(Texture2D<int4> t, SamplerState s, float3 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float2(uvw.x / uvw.z, uvw.y / uvw.z), 0);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture2DProjLod_bias(Texture2D<int4> t, SamplerState s, float4 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), 0);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_texture2DProjLod_bias(Texture2D<uint4> t, SamplerState s, float3 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float2(uvw.x / uvw.z, uvw.y / uvw.z), 0);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_texture2DProjLod_bias(Texture2D<uint4> t, SamplerState s, float4 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), 0);\n"
-                       "}\n"
-                       "\n";
-            }
-            else UNREACHABLE();
-        }
-
-        if (mUsesTexture3DLod0)
-        {
-            if (mOutputType == SH_HLSL11_OUTPUT)
-            {
-                out << "float4 gl_texture3DLod0(Texture3D t, SamplerState s, float3 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uvw, 0);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture3DLod0(Texture3D<int4> t, SamplerState s, float3 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uvw, 0);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_texture3DLod0(Texture3D<uint4> t, SamplerState s, float3 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uvw, 0);\n"
-                       "}\n"
-                       "\n";
-            }
-            else UNREACHABLE();
-        }
-
-        if (mUsesTexture3DLod0_bias)
-        {
-            if (mOutputType == SH_HLSL11_OUTPUT)
-            {
-                out << "float4 gl_texture3DLod0(Texture3D t, SamplerState s, float3 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uvw, 0);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture3DLod0(Texture3D<int4> t, SamplerState s, float3 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uvw, 0);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_texture3DLod0(Texture3D<uint4> t, SamplerState s, float3 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uvw, 0);\n"
-                       "}\n"
-                       "\n";
-            }
-            else UNREACHABLE();
-        }
-
-        if (mUsesTexture3DProjLod0)
-        {
-            if (mOutputType == SH_HLSL11_OUTPUT)
-            {
-                out << "float4 gl_texture3DProjLod0(Texture3D t, SamplerState s, float4 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), 0);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture3DProjLod0(Texture3D<int4> t, SamplerState s, float4 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), 0);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_texture3DProjLod0(Texture3D<uint4> t, SamplerState s, float4 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), 0);\n"
-                       "}\n"
-                       "\n";
-            }
-            else UNREACHABLE();
-        }
-
-        if (mUsesTexture3DProjLod0_bias)
-        {
-            if (mOutputType == SH_HLSL11_OUTPUT)
-            {
-                out << "float4 gl_texture3DProjLod_bias(Texture3D t, SamplerState s, float4 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), 0);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture3DProjLod_bias(Texture3D<int4> t, SamplerState s, float4 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), 0);\n"
-                       "}\n"
-                       "\n"
-                       "\n"
-                       "uint4 gl_texture3DProjLod_bias(Texture3D<uint4> t, SamplerState s, float4 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), 0);\n"
-                       "}\n"
-                       "\n";
-            }
-            else UNREACHABLE();
-        }
-
-        if (mUsesTextureCubeLod0)
-        {
-            if (mOutputType == SH_HLSL9_OUTPUT)
-            {
-                out << "float4 gl_textureCubeLod0(samplerCUBE s, float3 t)\n"
-                       "{\n"
-                       "    return texCUBElod(s, float4(t.x, t.y, t.z, 0));\n"
-                       "}\n"
-                       "\n";
-            }
-            else if (mOutputType == SH_HLSL11_OUTPUT)
-            {
-                out << "float4 gl_textureCubeLod0(TextureCube t, SamplerState s, float3 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uvw, 0);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_textureCubeLod0(TextureCube<int4> t, SamplerState s, float3 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uvw, 0);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_textureCubeLod0(TextureCube<uint4> t, SamplerState s, float3 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uvw, 0);\n"
-                       "}\n"
-                       "\n";
-            }
-            else UNREACHABLE();
-        }
-
-        if (mUsesTextureCubeLod0_bias)
-        {
-            if (mOutputType == SH_HLSL9_OUTPUT)
-            {
-                out << "float4 gl_textureCubeLod0(samplerCUBE s, float3 t, float bias)\n"
-                       "{\n"
-                       "    return texCUBElod(s, float4(t.x, t.y, t.z, 0));\n"
-                       "}\n"
-                       "\n";
-            }
-            else if (mOutputType == SH_HLSL11_OUTPUT)
-            {
-                out << "float4 gl_textureCubeLod0(TextureCube t, SamplerState s, float3 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uvw, 0);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_textureCubeLod0(TextureCube<int4> t, SamplerState s, float3 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uvw, 0);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_textureCubeLod0(TextureCube<uint4> t, SamplerState s, float3 uvw, float bias)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uvw, 0);\n"
-                       "}\n"
-                       "\n";
-            }
-            else UNREACHABLE();
-        }
-
         if (usingMRTExtension && mNumRenderTargets > 1)
         {
             out << "#define GL_USES_MRT\n";
@@ -1387,314 +773,197 @@ void OutputHLSL::header()
             out << interfaceBlocks;
             out << "\n";
         }
+    }
 
-        if (mUsesTexture2D)
+    for (TextureFunctionSet::const_iterator textureFunction = mUsesTexture.begin(); textureFunction != mUsesTexture.end(); textureFunction++)
+    {
+        // Return type
+        switch(textureFunction->sampler)
         {
-            if (mOutputType == SH_HLSL9_OUTPUT)
-            {
-                out << "float4 gl_texture2D(sampler2D s, float2 t)\n"
-                       "{\n"
-                       "    return tex2Dlod(s, float4(t.x, t.y, 0, 0));\n"
-                       "}\n"
-                       "\n";
-            }
-            else if (mOutputType == SH_HLSL11_OUTPUT)
-            {
-                out << "float4 gl_texture2D(Texture2D t, SamplerState s, float2 uv)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uv, 0);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture2D(Texture2D<int> t, SamplerState s, float2 uv)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uv, 0);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_texture2D(Texture2D<uint> t, SamplerState s, float2 uv)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uv, 0);\n"
-                       "}\n"
-                       "\n";
-            }
-            else UNREACHABLE();
+          case EbtSampler2D:    out << "float4 "; break;
+          case EbtSampler3D:    out << "float4 "; break;
+          case EbtSamplerCube:  out << "float4 "; break;
+          case EbtISampler2D:   out << "int4 ";   break;
+          case EbtISampler3D:   out << "int4 ";   break;
+          case EbtISamplerCube: out << "int4 ";   break;
+          case EbtUSampler2D:   out << "uint4 ";  break;
+          case EbtUSampler3D:   out << "uint4 ";  break;
+          case EbtUSamplerCube: out << "uint4 ";  break;
+          default: UNREACHABLE();
         }
 
-        if (mUsesTexture2DLod)
+        // Function name
+        out << textureFunction->name();
+
+        // Argument list
+        int hlslCoords = 4;
+
+        if (mOutputType == SH_HLSL9_OUTPUT)
         {
-            if (mOutputType == SH_HLSL9_OUTPUT)
+            switch(textureFunction->sampler)
             {
-                out << "float4 gl_texture2DLod(sampler2D s, float2 t, float lod)\n"
-                       "{\n"
-                       "    return tex2Dlod(s, float4(t.x, t.y, 0, lod));\n"
-                       "}\n"
-                       "\n";
+              case EbtSampler2D:   out << "sampler2D s";   hlslCoords = 2; break;
+              case EbtSamplerCube: out << "samplerCUBE s"; hlslCoords = 3; break;
+              default: UNREACHABLE();
             }
-            else if (mOutputType == SH_HLSL11_OUTPUT)
+
+            switch(textureFunction->mipmap)
             {
-                out << "float4 gl_texture2DLod(Texture2D t, SamplerState s, float2 uv, float lod)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uv, lod);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture2DLod(Texture2D<int> t, SamplerState s, float2 uv, float lod)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uv, lod);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_texture2DLod(Texture2D<uint> t, SamplerState s, float2 uv, float lod)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uv, lod);\n"
-                       "}\n"
-                       "\n";
+              case TextureFunction::IMPLICIT:                 break;
+              case TextureFunction::BIAS:     hlslCoords = 4; break;
+              case TextureFunction::LOD:      hlslCoords = 4; break;
+              case TextureFunction::LOD0:     hlslCoords = 4; break;
+              default: UNREACHABLE();
             }
-            else UNREACHABLE();
+        }
+        else if (mOutputType == SH_HLSL11_OUTPUT)
+        {
+            switch(textureFunction->sampler)
+            {
+              case EbtSampler2D:    out << "Texture2D x, SamplerState s";          hlslCoords = 2; break;
+              case EbtSampler3D:    out << "Texture3D x, SamplerState s";          hlslCoords = 3; break;
+              case EbtSamplerCube:  out << "TextureCube x, SamplerState s";        hlslCoords = 3; break;
+              case EbtISampler2D:   out << "Texture2D<int4> x, SamplerState s";    hlslCoords = 2; break;
+              case EbtISampler3D:   out << "Texture3D<int4> x, SamplerState s";    hlslCoords = 3; break;
+              case EbtISamplerCube: out << "TextureCube<int4> x, SamplerState s";  hlslCoords = 3; break;
+              case EbtUSampler2D:   out << "Texture2D<uint4> x, SamplerState s";   hlslCoords = 2; break;
+              case EbtUSampler3D:   out << "Texture3D<uint4> x, SamplerState s";   hlslCoords = 3; break;
+              case EbtUSamplerCube: out << "TextureCube<uint4> x, SamplerState s"; hlslCoords = 3; break;
+              default: UNREACHABLE();
+            }
+        }
+        else UNREACHABLE();
+
+        switch(textureFunction->coords)
+        {
+          case 2: out << ", float2 t"; break;
+          case 3: out << ", float3 t"; break;
+          case 4: out << ", float4 t"; break;
+          default: UNREACHABLE();
         }
 
-        if (mUsesTexture2DProj)
+        switch(textureFunction->mipmap)
         {
-            if (mOutputType == SH_HLSL9_OUTPUT)
-            {
-                out << "float4 gl_texture2DProj(sampler2D s, float3 t)\n"
-                       "{\n"
-                       "    return tex2Dlod(s, float4(t.x / t.z, t.y / t.z, 0, 0));\n"
-                       "}\n"
-                       "\n"
-                       "float4 gl_texture2DProj(sampler2D s, float4 t)\n"
-                       "{\n"
-                       "    return tex2Dlod(s, float4(t.x / t.w, t.y / t.w, 0, 0));\n"
-                       "}\n"
-                       "\n";
-            }
-            else if (mOutputType == SH_HLSL11_OUTPUT)
-            {
-                out << "float4 gl_texture2DProj(Texture2D t, SamplerState s, float3 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float2(uvw.x / uvw.z, uvw.y / uvw.z), 0);\n"
-                       "}\n"
-                       "\n"
-                       "float4 gl_texture2DProj(Texture2D t, SamplerState s, float4 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), 0);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture2DProj(Texture2D<int4> t, SamplerState s, float3 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float2(uvw.x / uvw.z, uvw.y / uvw.z), 0);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture2DProj(Texture2D<int4> t, SamplerState s, float4 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), 0);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_texture2DProj(Texture2D<uint4> t, SamplerState s, float3 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float2(uvw.x / uvw.z, uvw.y / uvw.z), 0);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_texture2DProj(Texture2D<uint4> t, SamplerState s, float4 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), 0);\n"
-                       "}\n"
-                       "\n";
-            }
-            else UNREACHABLE();
+          case TextureFunction::IMPLICIT:                        break;
+          case TextureFunction::BIAS:     out << ", float bias"; break;
+          case TextureFunction::LOD:      out << ", float lod";  break;
+          case TextureFunction::LOD0:                            break;
+          default: UNREACHABLE();
         }
 
-        if (mUsesTexture2DProjLod)
+        out << ")\n"
+               "{\n"
+               "    return ";
+
+        // HLSL intrinsic
+        if (mOutputType == SH_HLSL9_OUTPUT)
         {
-            if (mOutputType == SH_HLSL9_OUTPUT)
+            switch(textureFunction->sampler)
             {
-                out << "float4 gl_texture2DProjLod(sampler2D s, float3 t, float lod)\n"
-                       "{\n"
-                       "    return tex2Dlod(s, float4(t.x / t.z, t.y / t.z, 0, lod));\n"
-                       "}\n"
-                       "\n"
-                       "float4 gl_texture2DProjLod(sampler2D s, float4 t, float lod)\n"
-                       "{\n"
-                       "    return tex2Dlod(s, float4(t.x / t.w, t.y / t.w, 0, lod));\n"
-                       "}\n"
-                       "\n";
+              case EbtSampler2D:   out << "tex2D";   break;
+              case EbtSamplerCube: out << "texCUBE"; break;
+              default: UNREACHABLE();
             }
-            else if (mOutputType == SH_HLSL11_OUTPUT)
+        }
+        else if (mOutputType == SH_HLSL11_OUTPUT)
+        {
+            out << "x.Sample";
+        }
+        else UNREACHABLE();
+
+        if (mOutputType == SH_HLSL9_OUTPUT)
+        {
+            switch(textureFunction->mipmap)
             {
-                out << "float4 gl_texture2DProj(Texture2D t, SamplerState s, float3 uvw, float lod)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float2(uvw.x / uvw.z, uvw.y / uvw.z), lod);\n"
-                       "}\n"
-                       "\n"
-                       "float4 gl_texture2DProj(Texture2D t, SamplerState s, float4 uvw, float lod)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), lod);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture2DProj(Texture2D<int4> t, SamplerState s, float3 uvw, float lod)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float2(uvw.x / uvw.z, uvw.y / uvw.z), lod);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture2DProj(Texture2D<int4> t, SamplerState s, float4 uvw, float lod)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), lod);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_texture2DProj(Texture2D<uint4> t, SamplerState s, float3 uvw, float lod)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float2(uvw.x / uvw.z, uvw.y / uvw.z), lod);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_texture2DProj(Texture2D<uint4> t, SamplerState s, float4 uvw, float lod)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float2(uvw.x / uvw.w, uvw.y / uvw.w), lod);\n"
-                       "}\n"
-                       "\n";
+              case TextureFunction::IMPLICIT: out << "(s, ";     break;
+              case TextureFunction::BIAS:     out << "bias(s, "; break;
+              case TextureFunction::LOD:      out << "lod(s, ";  break;
+              case TextureFunction::LOD0:     out << "lod(s, ";  break;
+              default: UNREACHABLE();
             }
-            else UNREACHABLE();
+        }
+        else if (mOutputType == SH_HLSL11_OUTPUT)
+        {
+            switch(textureFunction->mipmap)
+            {
+              case TextureFunction::IMPLICIT: out << "(s, ";      break;
+              case TextureFunction::BIAS:     out << "Bias(s, ";  break;
+              case TextureFunction::LOD:      out << "Level(s, "; break;
+              case TextureFunction::LOD0:     out << "Level(s, "; break;
+              default: UNREACHABLE();
+            }
+        }
+        else UNREACHABLE();
+
+        switch(hlslCoords)
+        {
+          case 2: out << "float2("; break;
+          case 3: out << "float3("; break;
+          case 4: out << "float4("; break;
+          default: UNREACHABLE();
         }
 
-        if (mUsesTexture3D)
+        TString proj = "";
+        
+        if (textureFunction->proj)
         {
-            if (mOutputType == SH_HLSL11_OUTPUT)
+            switch(textureFunction->coords)
             {
-                out << "float4 gl_texture3D(Texture3D t, SamplerState s, float3 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uvw, 0);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture3D(Texture3D<int> t, SamplerState s, float3 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uvw, 0);\n"
-                       "}\n"
-                       "\n";
+              case 3: proj = " / t.z"; break;
+              case 4: proj = " / t.w"; break;
+              default: UNREACHABLE();
             }
-            else UNREACHABLE();
         }
 
-        if (mUsesTexture3DLod)
-        {
-            if (mOutputType == SH_HLSL11_OUTPUT)
-            {
-                out << "float4 gl_texture3DLod(Texture3D t, SamplerState s, float3 uvw, float lod)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uvw, lod);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture3DLod(Texture3D<int> t, SamplerState s, float3 uvw, float lod)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uvw, lod);\n"
-                       "}\n"
-                       "\n";
-            }
-            else UNREACHABLE();
-        }
+        out << "t.x" + proj + ", t.y" + proj;
 
-        if (mUsesTexture3DProj)
+        if (mOutputType == SH_HLSL9_OUTPUT)
         {
-            if (mOutputType == SH_HLSL11_OUTPUT)
+            if (hlslCoords >= 3)
             {
-                out << "float4 gl_texture3DProj(Texture3D t, SamplerState s, float4 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), 0);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture3DProj(Texture3D<int4> t, SamplerState s, float4 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), 0);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_texture3DProj(Texture3D<uint4> t, SamplerState s, float4 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), 0);\n"
-                       "}\n"
-                       "\n";
+                if (textureFunction->coords < 3)
+                {
+                    out << ", 0";
+                }
+                else
+                {
+                    out << ", t.z" + proj;
+                }
             }
-            else UNREACHABLE();
-        }
 
-        if (mUsesTexture3DProjLod)
-        {
-            if (mOutputType == SH_HLSL11_OUTPUT)
+            if (hlslCoords == 4)
             {
-                out << "float4 gl_texture3DProj(Texture3D t, SamplerState s, float4 uvw, float lod)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), lod);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_texture3DProj(Texture3D<int4> t, SamplerState s, float4 uvw, float lod)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), lod);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_texture3DProj(Texture3D<uint4> t, SamplerState s, float4 uvw, float lod)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, float3(uvw.x / uvw.w, uvw.y / uvw.w, uvw.z / uvw.w), lod);\n"
-                       "}\n"
-                       "\n";
+                switch(textureFunction->mipmap)
+                {
+                  case TextureFunction::BIAS: out << ", bias"; break;
+                  case TextureFunction::LOD:  out << ", lod";  break;
+                  case TextureFunction::LOD0: out << ", 0";    break;
+                  default: UNREACHABLE();
+                }
             }
-            else UNREACHABLE();
-        }
 
-        if (mUsesTextureCube)
-        {
-            if (mOutputType == SH_HLSL9_OUTPUT)
-            {
-                out << "float4 gl_textureCube(samplerCUBE s, float3 t)\n"
-                       "{\n"
-                       "    return texCUBElod(s, float4(t.x, t.y, t.z, 0));\n"
-                       "}\n"
-                       "\n";
-            }
-            else if (mOutputType == SH_HLSL11_OUTPUT)
-            {
-                out << "float4 gl_textureCube(TextureCube t, SamplerState s, float3 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uvw, 0);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_textureCube(TextureCube<int4> t, SamplerState s, float3 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uvw, 0);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_textureCube(TextureCube<uint4> t, SamplerState s, float3 uvw)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uvw, 0);\n"
-                       "}\n"
-                       "\n";
-            }
-            else UNREACHABLE();
+            out << "));\n";
         }
+        else if (mOutputType == SH_HLSL11_OUTPUT)
+        {
+            if (hlslCoords >= 3)
+            {
+                out << ", t.z" + proj;
+            }
 
-        if (mUsesTextureCubeLod)
-        {
-            if (mOutputType == SH_HLSL9_OUTPUT)
+            switch(textureFunction->mipmap)
             {
-                out << "float4 gl_textureCubeLod(samplerCUBE s, float3 t, float lod)\n"
-                       "{\n"
-                       "    return texCUBElod(s, float4(t.x, t.y, t.z, lod));\n"
-                       "}\n"
-                       "\n";
+              case TextureFunction::IMPLICIT: out << "));";       break;
+              case TextureFunction::BIAS:     out << "), bias);"; break;
+              case TextureFunction::LOD:      out << "), lod);";  break;
+              case TextureFunction::LOD0:     out << "), 0);";    break;
+              default: UNREACHABLE();
             }
-            else if (mOutputType == SH_HLSL11_OUTPUT)
-            {
-                out << "float4 gl_textureCubeLod(TextureCube t, SamplerState s, float3 uvw, float lod)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uvw, lod);\n"
-                       "}\n"
-                       "\n"
-                       "int4 gl_textureCubeLod(TextureCube<int4> t, SamplerState s, float3 uvw, float lod)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uvw, lod);\n"
-                       "}\n"
-                       "\n"
-                       "uint4 gl_textureCubeLod(TextureCube<uint4> t, SamplerState s, float3 uvw, float lod)\n"
-                       "{\n"
-                       "    return t.SampleLevel(s, uvw, lod);\n"
-                       "}\n"
-                       "\n";
-            }
-            else UNREACHABLE();
         }
+        else UNREACHABLE();
+
+        out << "}\n"
+               "\n";
     }
 
     if (mUsesFragCoord)
@@ -2761,218 +2030,48 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             {
                 TBasicType samplerType = arguments[0]->getAsTyped()->getType().getBasicType();
 
-                if (name == "texture2D" ||
-                    (name == "texture" && (samplerType == EbtSampler2D || samplerType == EbtISampler2D || samplerType == EbtUSampler2D)))
+                TextureFunction textureFunction;
+                textureFunction.sampler = samplerType;
+                textureFunction.coords = arguments[1]->getAsTyped()->getNominalSize();
+                textureFunction.mipmap = TextureFunction::IMPLICIT;
+
+                if (name == "texture2D" || name == "textureCube" || name == "texture")
                 {
-                    if (!lod0)
-                    {
-                        if (arguments.size() == 2)
-                        {
-                            mUsesTexture2D = true;
-                        }
-                        else if (arguments.size() == 3)
-                        {
-                            mUsesTexture2D_bias = true;
-                        }
-                        else UNREACHABLE();
-
-                        out << "gl_texture2D(";
-                    }
-                    else
-                    {
-                        if (arguments.size() == 2)
-                        {
-                            mUsesTexture2DLod0 = true;
-                        }
-                        else if (arguments.size() == 3)
-                        {
-                            mUsesTexture2DLod0_bias = true;
-                        }
-                        else UNREACHABLE();
-
-                        out << "gl_texture2DLod0(";
-                    }
+                    textureFunction.mipmap = TextureFunction::IMPLICIT;
+                    textureFunction.proj = false;
                 }
-                else if (name == "texture2DProj" ||
-                         (name == "textureProj" && (samplerType == EbtSampler2D || samplerType == EbtISampler2D || samplerType == EbtUSampler2D)))
+                else if (name == "texture2DProj" || name == "textureProj")
                 {
-                    if (!lod0)
-                    {
-                        if (arguments.size() == 2)
-                        {
-                            mUsesTexture2DProj = true;
-                        }
-                        else if (arguments.size() == 3)
-                        {
-                            mUsesTexture2DProj_bias = true;
-                        }
-                        else UNREACHABLE();
-
-                        out << "gl_texture2DProj(";
-                    }
-                    else
-                    {
-                        if (arguments.size() == 2)
-                        {
-                            mUsesTexture2DProjLod0 = true;
-                        }
-                        else if (arguments.size() == 3)
-                        {
-                            mUsesTexture2DProjLod0_bias = true;
-                        }
-                        else UNREACHABLE();
-
-                        out << "gl_texture2DProjLod0(";
-                    }
+                    textureFunction.mipmap = TextureFunction::IMPLICIT;
+                    textureFunction.proj = true;
                 }
-                else if (name == "texture" && (samplerType == EbtSampler3D || samplerType == EbtISampler3D || samplerType == EbtUSampler3D))
+                else if (name == "texture2DLod" || name == "textureCubeLod" || name == "textureLod")
                 {
-                    if (!lod0)
-                    {
-                        if (arguments.size() == 2)
-                        {
-                            mUsesTexture3D = true;
-                        }
-                        else if (arguments.size() == 3)
-                        {
-                            mUsesTexture3D_bias = true;
-                        }
-                        else UNREACHABLE();
-
-                        out << "gl_texture3D(";
-                    }
-                    else
-                    {
-                        if (arguments.size() == 2)
-                        {
-                            mUsesTexture3DLod0 = true;
-                        }
-                        else if (arguments.size() == 3)
-                        {
-                            mUsesTexture3DLod0_bias = true;
-                        }
-                        else UNREACHABLE();
-
-                        out << "gl_texture3DLod0(";
-                    }
+                    textureFunction.mipmap = TextureFunction::LOD;
+                    textureFunction.proj = false;
                 }
-                else if (name == "textureProj" && (samplerType == EbtSampler3D || samplerType == EbtISampler3D || samplerType == EbtUSampler3D))
+                else if (name == "texture2DProjLod" || name == "textureProjLod")
                 {
-                    if (!lod0)
-                    {
-                        if (arguments.size() == 2)
-                        {
-                            mUsesTexture3DProj = true;
-                        }
-                        else if (arguments.size() == 3)
-                        {
-                            mUsesTexture3DProj_bias = true;
-                        }
-                        else UNREACHABLE();
-
-                        out << "gl_texture3DProj(";
-                    }
-                    else
-                    {
-                        if (arguments.size() == 2)
-                        {
-                            mUsesTexture3DProjLod0 = true;
-                        }
-                        else if (arguments.size() == 3)
-                        {
-                            mUsesTexture3DProjLod0_bias = true;
-                        }
-                        else UNREACHABLE();
-
-                        out << "gl_texture3DProjLod0(";
-                    }
-                }
-                else if (name == "textureCube" ||
-                         (name == "texture" && (samplerType == EbtSamplerCube || samplerType == EbtISamplerCube || samplerType == EbtUSamplerCube)))
-                {
-                    if (!lod0)
-                    {
-                        if (arguments.size() == 2)
-                        {
-                            mUsesTextureCube = true;
-                        }
-                        else if (arguments.size() == 3)
-                        {
-                            mUsesTextureCube_bias = true;
-                        }
-                        else UNREACHABLE();
-
-                        out << "gl_textureCube(";
-                    }
-                    else
-                    {
-                        if (arguments.size() == 2)
-                        {
-                            mUsesTextureCubeLod0 = true;
-                        }
-                        else if (arguments.size() == 3)
-                        {
-                            mUsesTextureCubeLod0_bias = true;
-                        }
-                        else UNREACHABLE();
-
-                        out << "gl_textureCubeLod0(";
-                    }
-                }
-                else if (name == "texture2DLod" ||
-                         (name == "textureLod" && (samplerType == EbtSampler2D || samplerType == EbtISampler2D || samplerType == EbtUSampler2D)))
-                {
-                    if (arguments.size() == 3)
-                    {
-                        mUsesTexture2DLod = true;
-                    }
-                    else UNREACHABLE();
-
-                    out << "gl_texture2DLod(";
-                }
-                else if (name == "texture2DProjLod" ||
-                         (name == "textureProjLod" && (samplerType == EbtSampler2D || samplerType == EbtISampler2D || samplerType == EbtUSampler2D)))
-                {
-                    if (arguments.size() == 3)
-                    {
-                        mUsesTexture2DProjLod = true;
-                    }
-                    else UNREACHABLE();
-
-                    out << "gl_texture2DProjLod(";
-                }
-                else if (name == "textureLod" && (samplerType == EbtSampler3D || samplerType == EbtISampler3D || samplerType == EbtUSampler3D))
-                {
-                    if (arguments.size() == 3)
-                    {
-                        mUsesTexture3DLod = true;
-                    }
-                    else UNREACHABLE();
-
-                    out << "gl_texture3DLod(";
-                }
-                else if (name == "textureProjLod" && (samplerType == EbtSampler3D || samplerType == EbtISampler3D || samplerType == EbtUSampler3D))
-                {
-                    if (arguments.size() == 3)
-                    {
-                        mUsesTexture3DProjLod = true;
-                    }
-                    else UNREACHABLE();
-
-                    out << "gl_texture3DProjLod(";
-                }
-                else if (name == "textureCubeLod" ||
-                         (name == "textureLod" && (samplerType == EbtSamplerCube || samplerType == EbtISamplerCube || samplerType == EbtUSamplerCube)))
-                {
-                    if (arguments.size() == 3)
-                    {
-                        mUsesTextureCubeLod = true;
-                    }
-                    else UNREACHABLE();
-
-                    out << "gl_textureCubeLod(";
+                    textureFunction.mipmap = TextureFunction::LOD;
+                    textureFunction.proj = true;
                 }
                 else UNREACHABLE();
+
+                if (textureFunction.mipmap != TextureFunction::LOD)
+                {
+                    if (lod0 || mContext.shaderType == SH_VERTEX_SHADER)
+                    {
+                        textureFunction.mipmap = TextureFunction::LOD0;
+                    }
+                    else if (arguments.size() == 3)
+                    {
+                        textureFunction.mipmap = TextureFunction::BIAS;
+                    }
+                }
+
+                mUsesTexture.insert(textureFunction);
+                
+                out << textureFunction.name();
             }
             
             for (TIntermSequence::iterator arg = arguments.begin(); arg != arguments.end(); arg++)

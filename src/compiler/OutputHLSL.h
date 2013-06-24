@@ -94,32 +94,30 @@ class OutputHLSL : public TIntermTraverser
     ReferencedSymbols mReferencedVaryings;
     ReferencedSymbols mReferencedOutputVariables;
 
+    struct TextureFunction
+    {
+        enum Mipmap
+        {
+            IMPLICIT,
+            BIAS,
+            LOD,
+            LOD0
+        };
+
+        TBasicType sampler;
+        int coords;
+        bool proj;
+        Mipmap mipmap;
+
+        TString name() const;
+
+        bool operator<(const TextureFunction &rhs) const;
+    };
+
+    typedef std::set<TextureFunction> TextureFunctionSet;
+
     // Parameters determining what goes in the header output
-    bool mUsesTexture2D;
-    bool mUsesTexture2D_bias;
-    bool mUsesTexture2DLod;
-    bool mUsesTexture2DProj;
-    bool mUsesTexture2DProj_bias;
-    bool mUsesTexture2DProjLod;
-    bool mUsesTexture3D;
-    bool mUsesTexture3D_bias;
-    bool mUsesTexture3DLod;
-    bool mUsesTexture3DProj;
-    bool mUsesTexture3DProj_bias;
-    bool mUsesTexture3DProjLod;
-    bool mUsesTextureCube;
-    bool mUsesTextureCube_bias;
-    bool mUsesTextureCubeLod;
-    bool mUsesTexture2DLod0;
-    bool mUsesTexture2DLod0_bias;
-    bool mUsesTexture2DProjLod0;
-    bool mUsesTexture2DProjLod0_bias;
-    bool mUsesTexture3DLod0;
-    bool mUsesTexture3DLod0_bias;
-    bool mUsesTexture3DProjLod0;
-    bool mUsesTexture3DProjLod0_bias;
-    bool mUsesTextureCubeLod0;
-    bool mUsesTextureCubeLod0_bias;
+    TextureFunctionSet mUsesTexture;
     bool mUsesFragColor;
     bool mUsesFragData;
     bool mUsesDepthRange;
