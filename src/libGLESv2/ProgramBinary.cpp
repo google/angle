@@ -1939,27 +1939,6 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
     }
 
     bool success = true;
-    mVertexExecutable = mRenderer->compileToExecutable(infoLog, vertexHLSL.c_str(), rx::SHADER_VERTEX);
-    mPixelExecutable = mRenderer->compileToExecutable(infoLog, pixelHLSL.c_str(), rx::SHADER_PIXEL);
-
-    if (usesGeometryShader())
-    {
-        std::string geometryHLSL = generateGeometryShaderHLSL(registers, packing, fragmentShader, vertexShader);
-        mGeometryExecutable = mRenderer->compileToExecutable(infoLog, geometryHLSL.c_str(), rx::SHADER_GEOMETRY);
-    }
-
-    if (!mVertexExecutable || !mPixelExecutable || (usesGeometryShader() && !mGeometryExecutable))
-    {
-        infoLog.append("Failed to create D3D shaders.");
-        success = false;
-
-        delete mVertexExecutable;
-        mVertexExecutable = NULL;
-        delete mPixelExecutable;
-        mPixelExecutable = NULL;
-        delete mGeometryExecutable;
-        mGeometryExecutable = NULL;
-    }
 
     if (!linkAttributes(infoLog, attributeBindings, fragmentShader, vertexShader))
     {
@@ -1977,6 +1956,31 @@ bool ProgramBinary::link(InfoLog &infoLog, const AttributeBindings &attributeBin
         mUniforms.push_back(new Uniform(GL_FLOAT, GL_HIGH_FLOAT, "gl_DepthRange.near", 0));
         mUniforms.push_back(new Uniform(GL_FLOAT, GL_HIGH_FLOAT, "gl_DepthRange.far", 0));
         mUniforms.push_back(new Uniform(GL_FLOAT, GL_HIGH_FLOAT, "gl_DepthRange.diff", 0));
+    }
+
+    if (success)
+    {
+        mVertexExecutable = mRenderer->compileToExecutable(infoLog, vertexHLSL.c_str(), rx::SHADER_VERTEX);
+        mPixelExecutable = mRenderer->compileToExecutable(infoLog, pixelHLSL.c_str(), rx::SHADER_PIXEL);
+
+        if (usesGeometryShader())
+        {
+            std::string geometryHLSL = generateGeometryShaderHLSL(registers, packing, fragmentShader, vertexShader);
+            mGeometryExecutable = mRenderer->compileToExecutable(infoLog, geometryHLSL.c_str(), rx::SHADER_GEOMETRY);
+        }
+
+        if (!mVertexExecutable || !mPixelExecutable || (usesGeometryShader() && !mGeometryExecutable))
+        {
+            infoLog.append("Failed to create D3D shaders.");
+            success = false;
+
+            delete mVertexExecutable;
+            mVertexExecutable = NULL;
+            delete mPixelExecutable;
+            mPixelExecutable = NULL;
+            delete mGeometryExecutable;
+            mGeometryExecutable = NULL;
+        }
     }
 
     return success;
