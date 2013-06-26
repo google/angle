@@ -154,7 +154,7 @@ void BufferStorage11::setData(const void* data, unsigned int size, unsigned int 
         mStagingBuffer = newStagingBuffer;
     }
 
-    if (offset != 0 || !createStagingBuffer)
+    if (data && (offset != 0 || !createStagingBuffer))
     {
         D3D11_MAPPED_SUBRESOURCE mappedResource;
         result = context->Map(mStagingBuffer, 0, D3D11_MAP_WRITE, 0, &mappedResource);
