@@ -844,7 +844,7 @@ bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count)
       case GL_TRIANGLES:      primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;  break;
       case GL_TRIANGLE_STRIP: primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP; break;
           // emulate fans via rewriting index buffer
-      case GL_TRIANGLE_FAN:   primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;	break;
+      case GL_TRIANGLE_FAN:   primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;  break;
       default:
         return gl::error(GL_INVALID_ENUM, false);
     }
@@ -1384,21 +1384,21 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArra
     float (*mapVS)[4] = NULL;
     float (*mapPS)[4] = NULL;
 
-	if (totalRegisterCountVS > 0 && vertexUniformsDirty)
-	{
-		D3D11_MAPPED_SUBRESOURCE map = {0};
-		HRESULT result = mDeviceContext->Map(vertexConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-		ASSERT(SUCCEEDED(result));
-		mapVS = (float(*)[4])map.pData;
-	}
+    if (totalRegisterCountVS > 0 && vertexUniformsDirty)
+    {
+        D3D11_MAPPED_SUBRESOURCE map = {0};
+        HRESULT result = mDeviceContext->Map(vertexConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+        ASSERT(SUCCEEDED(result));
+        mapVS = (float(*)[4])map.pData;
+    }
 
-	if (totalRegisterCountPS > 0 && pixelUniformsDirty)
-	{
-		D3D11_MAPPED_SUBRESOURCE map = {0};
-		HRESULT result = mDeviceContext->Map(pixelConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-		ASSERT(SUCCEEDED(result));
-		mapPS = (float(*)[4])map.pData;
-	}
+    if (totalRegisterCountPS > 0 && pixelUniformsDirty)
+    {
+        D3D11_MAPPED_SUBRESOURCE map = {0};
+        HRESULT result = mDeviceContext->Map(pixelConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+        ASSERT(SUCCEEDED(result));
+        mapPS = (float(*)[4])map.pData;
+    }
 
     for (gl::UniformArray::iterator uniform_iterator = uniformArray->begin(); uniform_iterator != uniformArray->end(); uniform_iterator++)
     {
@@ -2116,12 +2116,12 @@ unsigned int Renderer11::getMaxCombinedTextureImageUnits() const
 
 unsigned int Renderer11::getReservedVertexUniformVectors() const
 {
-	return 0;   // Driver uniforms are stored in a separate constant buffer
+    return 0;   // Driver uniforms are stored in a separate constant buffer
 }
 
 unsigned int Renderer11::getReservedFragmentUniformVectors() const
 {
-	return 0;   // Driver uniforms are stored in a separate constant buffer
+    return 0;   // Driver uniforms are stored in a separate constant buffer
 }
 
 unsigned int Renderer11::getMaxVertexUniformVectors() const
