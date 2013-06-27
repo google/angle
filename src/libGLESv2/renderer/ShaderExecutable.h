@@ -26,7 +26,7 @@ class ShaderExecutable
     
     virtual ~ShaderExecutable()
     {
-        delete mFunction;
+        delete[] mFunction;
     }
 
     void *getFunction() const
