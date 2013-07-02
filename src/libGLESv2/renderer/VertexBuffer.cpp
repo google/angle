@@ -10,7 +10,7 @@
 
 #include "libGLESv2/renderer/VertexBuffer.h"
 #include "libGLESv2/renderer/Renderer.h"
-#include "libGLESv2/Context.h"
+#include "libGLESv2/VertexAttribute.h"
 
 namespace rx
 {

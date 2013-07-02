@@ -11,7 +11,7 @@
 #define LIBGLESV2_RENDERER_VERTEXDATAMANAGER_H_
 
 #include "libGLESv2/Constants.h"
-#include "libGLESv2/Context.h"
+#include "libGLESv2/VertexAttribute.h"
 #include "common/angleutils.h"
 
 namespace gl

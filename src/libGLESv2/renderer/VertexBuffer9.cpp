@@ -10,7 +10,7 @@
 #include "libGLESv2/renderer/VertexBuffer9.h"
 #include "libGLESv2/renderer/vertexconversion.h"
 #include "libGLESv2/renderer/BufferStorage.h"
-#include "libGLESv2/Context.h"
+#include "libGLESv2/VertexAttribute.h"
 #include "libGLESv2/renderer/Renderer9.h"
 
 #include "libGLESv2/Buffer.h"

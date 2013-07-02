@@ -12,7 +12,7 @@
 
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/renderer/Renderer11.h"
-#include "libGLESv2/Context.h"
+#include "libGLESv2/VertexAttribute.h"
 
 namespace rx
 {

@@ -438,6 +438,7 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Uniform.h" />
     <ClInclude Include="..\common\version.h" />
+    <ClInclude Include="VertexAttribute.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="libGLESv2.def" />

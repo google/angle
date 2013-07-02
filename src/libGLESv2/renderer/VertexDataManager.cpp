@@ -13,7 +13,7 @@
 
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/ProgramBinary.h"
-#include "libGLESv2/Context.h"
+#include "libGLESv2/VertexAttribute.h"
 #include "libGLESv2/renderer/VertexBuffer.h"
 
 namespace
