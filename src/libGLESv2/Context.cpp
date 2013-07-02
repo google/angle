@@ -1539,6 +1539,7 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_DRAW_FRAMEBUFFER_BINDING_ANGLE:   *params = mState.drawFramebuffer;               break;
       case GL_READ_FRAMEBUFFER_BINDING_ANGLE:   *params = mState.readFramebuffer;               break;
       case GL_RENDERBUFFER_BINDING:             *params = mState.renderbuffer.id();             break;
+      case GL_VERTEX_ARRAY_BINDING:             *params = mState.vertexArray;                   break;
       case GL_CURRENT_PROGRAM:                  *params = mState.currentProgram;                break;
       case GL_PACK_ALIGNMENT:                   *params = mState.packAlignment;                 break;
       case GL_PACK_REVERSE_ROW_ORDER_ANGLE:     *params = mState.packReverseRowOrder;           break;
@@ -2016,6 +2017,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_MAX_VERTEX_UNIFORM_BLOCKS:
       case GL_MAX_FRAGMENT_UNIFORM_BLOCKS:
       case GL_MAX_COMBINED_UNIFORM_BLOCKS:
+      case GL_VERTEX_ARRAY_BINDING:
         {
             *type = GL_INT;
             *numParams = 1;
