@@ -1942,6 +1942,9 @@ bool validateGetVertexAttribParameters(GLenum pname, int clientVersion)
         META_ASSERT(GL_VERTEX_ATTRIB_ARRAY_DIVISOR == GL_VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE);
         return true;
 
+      case GL_VERTEX_ATTRIB_ARRAY_INTEGER:
+        return ((clientVersion >= 3) ? true : gl::error(GL_INVALID_ENUM, false));
+
       default:
         return gl::error(GL_INVALID_ENUM, false);
     }

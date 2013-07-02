@@ -77,6 +77,8 @@ class VertexAttribute
             return static_cast<T>(mBoundBuffer.id());
           case GL_VERTEX_ATTRIB_ARRAY_DIVISOR:
             return static_cast<T>(mDivisor);
+          case GL_VERTEX_ATTRIB_ARRAY_INTEGER:
+            return static_cast<T>(mPureInteger ? GL_TRUE : GL_FALSE);
           default:
             UNREACHABLE();
             return static_cast<T>(0);
