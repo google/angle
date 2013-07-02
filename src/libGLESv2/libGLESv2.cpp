@@ -9619,8 +9619,30 @@ void __stdcall glGetVertexAttribIiv(GLuint index, GLenum pname, GLint* params)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glGetVertexAttribIiv
-            UNIMPLEMENTED();
+            if (index >= gl::MAX_VERTEX_ATTRIBS)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            const gl::VertexAttribute &attribState = context->getVertexAttribState(index);
+
+            if (!validateGetVertexAttribParameters(pname, context->getClientVersion()))
+            {
+                return;
+            }
+
+            if (pname == GL_CURRENT_VERTEX_ATTRIB)
+            {
+                const gl::VertexAttribCurrentValueData &currentValueData = context->getVertexAttribCurrentValue(index);
+                for (int i = 0; i < 4; ++i)
+                {
+                    params[i] = currentValueData.IntValues[i];
+                }
+            }
+            else
+            {
+                *params = attribState.querySingleParameter<GLint>(pname);
+            }
         }
     }
     catch(std::bad_alloc&)
@@ -9645,8 +9667,30 @@ void __stdcall glGetVertexAttribIuiv(GLuint index, GLenum pname, GLuint* params)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glGetVertexAttribIuiv
-            UNIMPLEMENTED();
+            if (index >= gl::MAX_VERTEX_ATTRIBS)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            const gl::VertexAttribute &attribState = context->getVertexAttribState(index);
+
+            if (!validateGetVertexAttribParameters(pname, context->getClientVersion()))
+            {
+                return;
+            }
+
+            if (pname == GL_CURRENT_VERTEX_ATTRIB)
+            {
+                const gl::VertexAttribCurrentValueData &currentValueData = context->getVertexAttribCurrentValue(index);
+                for (int i = 0; i < 4; ++i)
+                {
+                    params[i] = currentValueData.UnsignedIntValues[i];
+                }
+            }
+            else
+            {
+                *params = attribState.querySingleParameter<GLuint>(pname);
+            }
         }
     }
     catch(std::bad_alloc&)
