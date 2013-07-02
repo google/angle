@@ -21,11 +21,6 @@ class VertexAttribute
     VertexAttribute() : mType(GL_FLOAT), mSize(0), mNormalized(false), mPureInteger(false),
                         mStride(0), mPointer(NULL), mArrayEnabled(false), mDivisor(0)
     {
-        mCurrentValue.FloatValues[0] = 0.0f;
-        mCurrentValue.FloatValues[1] = 0.0f;
-        mCurrentValue.FloatValues[2] = 0.0f;
-        mCurrentValue.FloatValues[3] = 1.0f;
-        mCurrentValue.Type = GL_FLOAT;
     }
 
     int typeSize() const
@@ -67,20 +62,45 @@ class VertexAttribute
 
     BindingPointer<Buffer> mBoundBuffer;   // Captured when glVertexAttribPointer is called.
     bool mArrayEnabled;   // From glEnable/DisableVertexAttribArray
-
-    struct CurrentValueData
-    {
-        union
-        {
-            GLfloat FloatValues[4];
-            GLint IntValues[4];
-            GLuint UnsignedIntValues[4];
-        };
-        GLenum Type;
-    };
-    CurrentValueData mCurrentValue; // From glVertexAttrib
-
     unsigned int mDivisor;
+};
+
+struct VertexAttribCurrentValueData
+{
+    union
+    {
+        GLfloat FloatValues[4];
+        GLint IntValues[4];
+        GLuint UnsignedIntValues[4];
+    };
+    GLenum Type;
+
+    void setFloatValues(const GLfloat floatValues[4])
+    {
+        for (unsigned int valueIndex = 0; valueIndex < 4; valueIndex++)
+        {
+            FloatValues[valueIndex] = floatValues[valueIndex];
+        }
+        Type = GL_FLOAT;
+    }
+
+    void setIntValues(const GLint intValues[4])
+    {
+        for (unsigned int valueIndex = 0; valueIndex < 4; valueIndex++)
+        {
+            IntValues[valueIndex] = intValues[valueIndex];
+        }
+        Type = GL_INT;
+    }
+
+    void setUnsignedIntValues(const GLuint unsignedIntValues[4])
+    {
+        for (unsigned int valueIndex = 0; valueIndex < 4; valueIndex++)
+        {
+            UnsignedIntValues[valueIndex] = unsignedIntValues[valueIndex];
+        }
+        Type = GL_UNSIGNED_INT;
+    }
 };
 
 }

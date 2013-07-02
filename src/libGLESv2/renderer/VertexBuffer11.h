@@ -25,19 +25,20 @@ class VertexBuffer11 : public VertexBuffer
 
     static VertexBuffer11 *makeVertexBuffer11(VertexBuffer *vetexBuffer);
 
-    virtual bool storeVertexAttributes(const gl::VertexAttribute &attrib, GLint start, GLsizei count, GLsizei instances,
-                                       unsigned int offset);
+    virtual bool storeVertexAttributes(const gl::VertexAttribute &attrib, const gl::VertexAttribCurrentValueData &currentValue,
+                                       GLint start, GLsizei count, GLsizei instances, unsigned int offset);
 
     virtual unsigned int getSpaceRequired(const gl::VertexAttribute &attrib, GLsizei count, GLsizei instances) const;
 
     virtual bool requiresConversion(const gl::VertexAttribute &attrib) const;
+    virtual bool requiresConversion(const gl::VertexAttribCurrentValueData &currentValue) const;
 
     virtual unsigned int getBufferSize() const;
     virtual bool setBufferSize(unsigned int size);
     virtual bool discard();
 
-    unsigned int getVertexSize(const gl::VertexAttribute &attrib) const;
-    DXGI_FORMAT getDXGIFormat(const gl::VertexAttribute &attrib) const;
+    static DXGI_FORMAT getAttributeDXGIFormat(const gl::VertexAttribute &attrib);
+    static DXGI_FORMAT getCurrentValueDXGIFormat(GLenum currentValueType);
 
     ID3D11Buffer *getBuffer() const;
 
@@ -66,6 +67,7 @@ class VertexBuffer11 : public VertexBuffer
     static const VertexConverter mIntegerVertexTranslations[NUM_GL_INTEGER_VERTEX_ATTRIB_TYPES][4]; // [GL types as enumerated by typeIndex()][size - 1]
 
     static const VertexConverter &getVertexConversion(const gl::VertexAttribute &attribute);
+    static const VertexConverter &getVertexConversion(GLenum type, bool pureInteger, bool normalized, int size);
 };
 
 }

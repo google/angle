@@ -15,6 +15,7 @@
 namespace gl
 {
 class VertexAttribute;
+struct VertexAttribCurrentValueData;
 }
 
 namespace rx
@@ -29,12 +30,13 @@ class VertexBuffer
 
     virtual bool initialize(unsigned int size, bool dynamicUsage) = 0;
 
-    virtual bool storeVertexAttributes(const gl::VertexAttribute &attrib, GLint start, GLsizei count,
-                                       GLsizei instances, unsigned int offset) = 0;
+    virtual bool storeVertexAttributes(const gl::VertexAttribute &attrib, const gl::VertexAttribCurrentValueData &currentValue,
+                                       GLint start, GLsizei count, GLsizei instances, unsigned int offset) = 0;
     virtual unsigned int getSpaceRequired(const gl::VertexAttribute &attrib, GLsizei count,
                                           GLsizei instances) const = 0;
 
     virtual bool requiresConversion(const gl::VertexAttribute &attrib) const = 0;
+    virtual bool requiresConversion(const gl::VertexAttribCurrentValueData &currentValue) const = 0;
 
     virtual unsigned int getBufferSize() const = 0;
     virtual bool setBufferSize(unsigned int size) = 0;
@@ -64,7 +66,8 @@ class VertexBufferInterface
 
     unsigned int getSerial() const;
 
-    virtual int storeVertexAttributes(const gl::VertexAttribute &attrib, GLint start, GLsizei count, GLsizei instances);
+    virtual int storeVertexAttributes(const gl::VertexAttribute &attrib, const gl::VertexAttribCurrentValueData &currentValue,
+                                      GLint start, GLsizei count, GLsizei instances);
 
     VertexBuffer* getVertexBuffer() const;
 
@@ -106,7 +109,8 @@ class StaticVertexBufferInterface : public VertexBufferInterface
     explicit StaticVertexBufferInterface(rx::Renderer *renderer);
     ~StaticVertexBufferInterface();
 
-    int storeVertexAttributes(const gl::VertexAttribute &attrib, GLint start, GLsizei count, GLsizei instances);
+    int storeVertexAttributes(const gl::VertexAttribute &attrib, const gl::VertexAttribCurrentValueData &currentValue,
+                              GLint start, GLsizei count, GLsizei instances);
 
     // Returns the offset into the vertex buffer, or -1 if not found
     int lookupAttribute(const gl::VertexAttribute &attribute);

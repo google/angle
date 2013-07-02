@@ -87,7 +87,8 @@ bool VertexBufferInterface::discard()
     return mVertexBuffer->discard();
 }
 
-int VertexBufferInterface::storeVertexAttributes(const gl::VertexAttribute &attrib, GLint start, GLsizei count, GLsizei instances)
+int VertexBufferInterface::storeVertexAttributes(const gl::VertexAttribute &attrib, const gl::VertexAttribCurrentValueData &currentValue,
+                                                 GLint start, GLsizei count, GLsizei instances)
 {
     if (!reserveSpace(mReservedSpace))
     {
@@ -95,7 +96,7 @@ int VertexBufferInterface::storeVertexAttributes(const gl::VertexAttribute &attr
     }
     mReservedSpace = 0;
 
-    if (!mVertexBuffer->storeVertexAttributes(attrib, start, count, instances, mWritePosition))
+    if (!mVertexBuffer->storeVertexAttributes(attrib, currentValue, start, count, instances, mWritePosition))
     {
         return -1;
     }
@@ -194,13 +195,14 @@ bool StaticVertexBufferInterface::reserveSpace(unsigned int size)
     }
 }
 
-int StaticVertexBufferInterface::storeVertexAttributes(const gl::VertexAttribute &attrib, GLint start, GLsizei count, GLsizei instances)
+int StaticVertexBufferInterface::storeVertexAttributes(const gl::VertexAttribute &attrib, const gl::VertexAttribCurrentValueData &currentValue,
+                                                       GLint start, GLsizei count, GLsizei instances)
 {
     int attributeOffset = attrib.mOffset % attrib.stride();
     VertexElement element = { attrib.mType, attrib.mSize, attrib.stride(), attrib.mNormalized, attrib.mPureInteger, attributeOffset, getWritePosition() };
     mCache.push_back(element);
 
-    return VertexBufferInterface::storeVertexAttributes(attrib, start, count, instances);
+    return VertexBufferInterface::storeVertexAttributes(attrib, currentValue, start, count, instances);
 }
 
 }

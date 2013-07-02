@@ -14,6 +14,46 @@
 #include "libGLESv2/renderer/Renderer11.h"
 #include "libGLESv2/VertexAttribute.h"
 
+namespace
+{
+
+unsigned int GetIntegerTypeIndex(GLenum type)
+{
+    switch (type)
+    {
+      case GL_BYTE:                        return 0;
+      case GL_UNSIGNED_BYTE:               return 1;
+      case GL_SHORT:                       return 2;
+      case GL_UNSIGNED_SHORT:              return 3;
+      case GL_INT:                         return 4;
+      case GL_UNSIGNED_INT:                return 5;
+      case GL_INT_2_10_10_10_REV:          return 6;
+      case GL_UNSIGNED_INT_2_10_10_10_REV: return 7;
+      default:                             UNREACHABLE(); return 0;
+    }
+}
+
+unsigned int GetFloatTypeIndex(GLenum type)
+{
+    switch (type)
+    {
+      case GL_BYTE:                        return 0;
+      case GL_UNSIGNED_BYTE:               return 1;
+      case GL_SHORT:                       return 2;
+      case GL_UNSIGNED_SHORT:              return 3;
+      case GL_INT:                         return 4;
+      case GL_UNSIGNED_INT:                return 5;
+      case GL_INT_2_10_10_10_REV:          return 6;
+      case GL_UNSIGNED_INT_2_10_10_10_REV: return 7;
+      case GL_FIXED:                       return 8;
+      case GL_HALF_FLOAT:                  return 9;
+      case GL_FLOAT:                       return 10;
+      default:                             UNREACHABLE(); return 0;
+    }
+}
+
+}
+
 namespace rx
 {
 
@@ -73,15 +113,17 @@ VertexBuffer11 *VertexBuffer11::makeVertexBuffer11(VertexBuffer *vetexBuffer)
     return static_cast<VertexBuffer11*>(vetexBuffer);
 }
 
-bool VertexBuffer11::storeVertexAttributes(const gl::VertexAttribute &attrib, GLint start, GLsizei count,
-                                           GLsizei instances, unsigned int offset)
+bool VertexBuffer11::storeVertexAttributes(const gl::VertexAttribute &attrib, const gl::VertexAttribCurrentValueData &currentValue,
+                                           GLint start, GLsizei count, GLsizei instances, unsigned int offset)
 {
     if (mBuffer)
     {
         gl::Buffer *buffer = attrib.mBoundBuffer.get();
 
         int inputStride = attrib.stride();
-        const VertexConverter &converter = getVertexConversion(attrib);
+        const VertexConverter &converter = attrib.mArrayEnabled ?
+                                           getVertexConversion(attrib) :
+                                           getVertexConversion(currentValue.Type, currentValue.Type != GL_FLOAT, false, 4);
 
         ID3D11DeviceContext *dxContext = mRenderer->getDeviceContext();
 
@@ -110,7 +152,7 @@ bool VertexBuffer11::storeVertexAttributes(const gl::VertexAttribute &attrib, GL
         }
         else
         {
-            input = reinterpret_cast<const char*>(attrib.mCurrentValue.FloatValues);
+            input = reinterpret_cast<const char*>(currentValue.FloatValues);
         }
 
         if (instances == 0 || attrib.mDivisor == 0)
@@ -135,10 +177,10 @@ bool VertexBuffer11::storeVertexAttributes(const gl::VertexAttribute &attrib, GL
 unsigned int VertexBuffer11::getSpaceRequired(const gl::VertexAttribute &attrib, GLsizei count,
                                               GLsizei instances) const
 {
-    unsigned int elementSize = getVertexConversion(attrib).outputElementSize;
-
     if (attrib.mArrayEnabled)
     {
+        unsigned int elementSize = getVertexConversion(attrib).outputElementSize;
+
         if (instances == 0 || attrib.mDivisor == 0)
         {
             return elementSize * count;
@@ -150,6 +192,7 @@ unsigned int VertexBuffer11::getSpaceRequired(const gl::VertexAttribute &attrib,
     }
     else
     {
+        unsigned int elementSize = 4;
         return elementSize * 4;
     }
 }
@@ -157,6 +200,11 @@ unsigned int VertexBuffer11::getSpaceRequired(const gl::VertexAttribute &attrib,
 bool VertexBuffer11::requiresConversion(const gl::VertexAttribute &attrib) const
 {
     return !getVertexConversion(attrib).identity;
+}
+
+bool VertexBuffer11::requiresConversion(const gl::VertexAttribCurrentValueData &currentValue) const
+{
+    return !getVertexConversion(currentValue.Type, currentValue.Type != GL_FLOAT, false, 4).identity;
 }
 
 unsigned int VertexBuffer11::getBufferSize() const
@@ -201,14 +249,22 @@ bool VertexBuffer11::discard()
     }
 }
 
-unsigned int VertexBuffer11::getVertexSize(const gl::VertexAttribute &attrib) const
-{
-    return getVertexConversion(attrib).outputElementSize;
-}
-
-DXGI_FORMAT VertexBuffer11::getDXGIFormat(const gl::VertexAttribute &attrib) const
+DXGI_FORMAT VertexBuffer11::getAttributeDXGIFormat(const gl::VertexAttribute &attrib)
 {
     return getVertexConversion(attrib).dxgiFormat;
+}
+
+DXGI_FORMAT VertexBuffer11::getCurrentValueDXGIFormat(GLenum currentValueType)
+{
+    if (currentValueType == GL_FLOAT)
+    {
+        return mFloatVertexTranslations[GetFloatTypeIndex(GL_FLOAT)][0][3].dxgiFormat;
+    }
+    else
+    {
+        ASSERT(currentValueType == GL_INT || currentValueType == GL_UNSIGNED_INT);
+        return mIntegerVertexTranslations[GetIntegerTypeIndex(currentValueType)][3].dxgiFormat;
+    }
 }
 
 ID3D11Buffer *VertexBuffer11::getBuffer() const
@@ -722,45 +778,20 @@ const VertexBuffer11::VertexConverter VertexBuffer11::mIntegerVertexTranslations
 
 const VertexBuffer11::VertexConverter &VertexBuffer11::getVertexConversion(const gl::VertexAttribute &attribute)
 {
-    GLenum type = attribute.mArrayEnabled ? attribute.mType : attribute.mCurrentValue.Type;
-    if (attribute.mPureInteger)
-    {
-        unsigned int typeIndex = 0;
-        switch (type)
-        {
-          case GL_BYTE:                        typeIndex = 0; break;
-          case GL_UNSIGNED_BYTE:               typeIndex = 1; break;
-          case GL_SHORT:                       typeIndex = 2; break;
-          case GL_UNSIGNED_SHORT:              typeIndex = 3; break;
-          case GL_INT:                         typeIndex = 4; break;
-          case GL_UNSIGNED_INT:                typeIndex = 5; break;
-          case GL_INT_2_10_10_10_REV:          typeIndex = 6; break;
-          case GL_UNSIGNED_INT_2_10_10_10_REV: typeIndex = 7; break;
-          default:                             UNREACHABLE(); break;
-        }
+    return getVertexConversion(attribute.mType, attribute.mPureInteger, attribute.mNormalized, attribute.mSize);
+}
 
-        return mIntegerVertexTranslations[typeIndex][attribute.mSize - 1];
+const VertexBuffer11::VertexConverter &VertexBuffer11::getVertexConversion(GLenum type, bool pureInteger, bool normalized, int size)
+{
+    if (pureInteger)
+    {
+        const unsigned int typeIndex = GetIntegerTypeIndex(type);
+        return mIntegerVertexTranslations[typeIndex][size - 1];
     }
     else
     {
-        unsigned int typeIndex = 0;
-        switch (type)
-        {
-          case GL_BYTE:                        typeIndex =  0; break;
-          case GL_UNSIGNED_BYTE:               typeIndex =  1; break;
-          case GL_SHORT:                       typeIndex =  2; break;
-          case GL_UNSIGNED_SHORT:              typeIndex =  3; break;
-          case GL_INT:                         typeIndex =  4; break;
-          case GL_UNSIGNED_INT:                typeIndex =  5; break;
-          case GL_INT_2_10_10_10_REV:          typeIndex =  6; break;
-          case GL_UNSIGNED_INT_2_10_10_10_REV: typeIndex =  7; break;
-          case GL_FIXED:                       typeIndex =  8; break;
-          case GL_HALF_FLOAT:                  typeIndex =  9; break;
-          case GL_FLOAT:                       typeIndex = 10; break;
-          default:                             UNREACHABLE(); break;
-        }
-
-        return mFloatVertexTranslations[typeIndex][attribute.mNormalized ? 1 : 0][attribute.mSize - 1];
+        const unsigned int typeIndex = GetFloatTypeIndex(type);
+        return mFloatVertexTranslations[typeIndex][normalized ? 1 : 0][size - 1];
     }
 }
 

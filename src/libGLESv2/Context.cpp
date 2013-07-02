@@ -244,9 +244,11 @@ Context::~Context()
         mIncompleteTextures[type].set(NULL);
     }
 
-    for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
+    const GLfloat defaultFloatValues[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+    for (int attribIndex = 0; attribIndex < MAX_VERTEX_ATTRIBS; attribIndex++)
     {
-        mState.vertexAttribute[i].mBoundBuffer.set(NULL);
+        mState.vertexAttribCurrentValues[attribIndex].setFloatValues(defaultFloatValues);
+        mState.vertexAttribute[attribIndex].mBoundBuffer.set(NULL);
     }
 
     for (int i = 0; i < QUERY_TYPE_COUNT; i++)
@@ -685,12 +687,20 @@ GLuint Context::getActiveQuery(GLenum target) const
 
 void Context::setEnableVertexAttribArray(unsigned int attribNum, bool enabled)
 {
+    ASSERT(attribNum < MAX_VERTEX_ATTRIBS);
     mState.vertexAttribute[attribNum].mArrayEnabled = enabled;
 }
 
-const VertexAttribute &Context::getVertexAttribState(unsigned int attribNum)
+const VertexAttribute &Context::getVertexAttribState(unsigned int attribNum) const
 {
+    ASSERT(attribNum < MAX_VERTEX_ATTRIBS);
     return mState.vertexAttribute[attribNum];
+}
+
+const VertexAttribCurrentValueData &Context::getVertexAttribCurrentValue(unsigned int attribNum) const
+{
+    ASSERT(attribNum < MAX_VERTEX_ATTRIBS);
+    return mState.vertexAttribCurrentValues[attribNum];
 }
 
 void Context::setVertexAttribState(unsigned int attribNum, Buffer *boundBuffer, GLint size, GLenum type, bool normalized,
@@ -2256,7 +2266,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count, GLsizei instan
 
     ProgramBinary *programBinary = getCurrentProgramBinary();
 
-    GLenum err = mRenderer->applyVertexBuffer(programBinary, mState.vertexAttribute, first, count, instances);
+    GLenum err = mRenderer->applyVertexBuffer(programBinary, mState.vertexAttribute, mState.vertexAttribCurrentValues, first, count, instances);
     if (err != GL_NO_ERROR)
     {
         return gl::error(err);
@@ -2315,7 +2325,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid
     ProgramBinary *programBinary = getCurrentProgramBinary();
 
     GLsizei vertexCount = indexInfo.maxIndex - indexInfo.minIndex + 1;
-    err = mRenderer->applyVertexBuffer(programBinary, mState.vertexAttribute, indexInfo.minIndex, vertexCount, instances);
+    err = mRenderer->applyVertexBuffer(programBinary, mState.vertexAttribute, mState.vertexAttribCurrentValues, indexInfo.minIndex, vertexCount, instances);
     if (err != GL_NO_ERROR)
     {
         return gl::error(err);
@@ -2845,37 +2855,19 @@ bool Context::skipDraw(GLenum drawMode)
 void Context::setVertexAttribf(GLuint index, const GLfloat values[4])
 {
     ASSERT(index < gl::MAX_VERTEX_ATTRIBS);
-
-    mState.vertexAttribute[index].mCurrentValue.FloatValues[0] = values[0];
-    mState.vertexAttribute[index].mCurrentValue.FloatValues[1] = values[1];
-    mState.vertexAttribute[index].mCurrentValue.FloatValues[2] = values[2];
-    mState.vertexAttribute[index].mCurrentValue.FloatValues[3] = values[3];
-    mState.vertexAttribute[index].mCurrentValue.Type = GL_FLOAT;
-    mState.vertexAttribute[index].mPureInteger = false;
+    mState.vertexAttribCurrentValues[index].setFloatValues(values);
 }
 
 void Context::setVertexAttribu(GLuint index, const GLuint values[4])
 {
     ASSERT(index < gl::MAX_VERTEX_ATTRIBS);
-
-    mState.vertexAttribute[index].mCurrentValue.UnsignedIntValues[0] = values[0];
-    mState.vertexAttribute[index].mCurrentValue.UnsignedIntValues[1] = values[1];
-    mState.vertexAttribute[index].mCurrentValue.UnsignedIntValues[2] = values[2];
-    mState.vertexAttribute[index].mCurrentValue.UnsignedIntValues[3] = values[3];
-    mState.vertexAttribute[index].mCurrentValue.Type = GL_UNSIGNED_INT;
-    mState.vertexAttribute[index].mPureInteger = true;
+    mState.vertexAttribCurrentValues[index].setUnsignedIntValues(values);
 }
 
 void Context::setVertexAttribi(GLuint index, const GLint values[4])
 {
     ASSERT(index < gl::MAX_VERTEX_ATTRIBS);
-
-    mState.vertexAttribute[index].mCurrentValue.IntValues[0] = values[0];
-    mState.vertexAttribute[index].mCurrentValue.IntValues[1] = values[1];
-    mState.vertexAttribute[index].mCurrentValue.IntValues[2] = values[2];
-    mState.vertexAttribute[index].mCurrentValue.IntValues[3] = values[3];
-    mState.vertexAttribute[index].mCurrentValue.Type = GL_INT;
-    mState.vertexAttribute[index].mPureInteger = true;
+    mState.vertexAttribCurrentValues[index].setIntValues(values);
 }
 
 void Context::setVertexAttribDivisor(GLuint index, GLuint divisor)

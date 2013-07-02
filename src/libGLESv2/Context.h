@@ -114,7 +114,9 @@ struct State
     BindingPointer<Renderbuffer> renderbuffer;
     GLuint currentProgram;
 
+    VertexAttribCurrentValueData vertexAttribCurrentValues[MAX_VERTEX_ATTRIBS]; // From glVertexAttrib
     VertexAttribute vertexAttribute[MAX_VERTEX_ATTRIBS];
+
     BindingPointer<Texture> samplerTexture[TEXTURE_TYPE_COUNT][IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS];
     BindingPointer<Query> activeQuery[QUERY_TYPE_COUNT];
 
@@ -227,7 +229,8 @@ class Context
     GLuint getActiveQuery(GLenum target) const;
 
     void setEnableVertexAttribArray(unsigned int attribNum, bool enabled);
-    const VertexAttribute &getVertexAttribState(unsigned int attribNum);
+    const VertexAttribute &getVertexAttribState(unsigned int attribNum) const;
+    const VertexAttribCurrentValueData &getVertexAttribCurrentValue(unsigned int attribNum) const;
     void setVertexAttribState(unsigned int attribNum, Buffer *boundBuffer, GLint size, GLenum type,
                               bool normalized, bool pureInteger, GLsizei stride, const void *pointer);
     const void *getVertexAttribPointer(unsigned int attribNum) const;

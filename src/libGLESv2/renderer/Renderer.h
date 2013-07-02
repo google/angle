@@ -43,6 +43,7 @@ class VertexAttribute;
 class Buffer;
 class Texture;
 class Framebuffer;
+struct VertexAttribCurrentValueData;
 }
 
 namespace rx
@@ -130,7 +131,8 @@ class Renderer
     virtual void applyShaders(gl::ProgramBinary *programBinary) = 0;
     virtual void applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArray *uniformArray) = 0;
     virtual bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount) = 0;
-    virtual GLenum applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], GLint first, GLsizei count, GLsizei instances) = 0;
+    virtual GLenum applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], gl::VertexAttribCurrentValueData currentValues[],
+                                     GLint first, GLsizei count, GLsizei instances) = 0;
     virtual GLenum applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo) = 0;
 
     virtual void drawArrays(GLenum mode, GLsizei count, GLsizei instances) = 0;

@@ -25,14 +25,14 @@ class VertexBuffer9 : public VertexBuffer
 
     static VertexBuffer9 *makeVertexBuffer9(VertexBuffer *vertexBuffer);
 
-    virtual bool storeVertexAttributes(const gl::VertexAttribute &attrib, GLint start, GLsizei count, GLsizei instances,
-                                       unsigned int offset);
+    virtual bool storeVertexAttributes(const gl::VertexAttribute &attrib, const gl::VertexAttribCurrentValueData &currentValue,
+                                       GLint start, GLsizei count, GLsizei instances, unsigned int offset);
 
     virtual unsigned int getSpaceRequired(const gl::VertexAttribute &attrib, GLsizei count, GLsizei instances) const;
 
     virtual bool requiresConversion(const gl::VertexAttribute &attrib) const;
+    virtual bool requiresConversion(const gl::VertexAttribCurrentValueData &currentValue) const;
 
-    unsigned int getVertexSize(const gl::VertexAttribute &attrib) const;
     D3DDECLTYPE getDeclType(const gl::VertexAttribute &attrib) const;
 
     virtual unsigned int getBufferSize() const;
@@ -80,6 +80,7 @@ class VertexBuffer9 : public VertexBuffer
 
     static unsigned int typeIndex(GLenum type);
     static const FormatConverter &formatConverter(const gl::VertexAttribute &attribute);
+    static const FormatConverter &getCurrentValueFormatConverter();
 
     static unsigned int spaceRequired(const gl::VertexAttribute &attrib, std::size_t count, GLsizei instances);
 };

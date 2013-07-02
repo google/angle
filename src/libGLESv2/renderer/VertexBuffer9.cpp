@@ -81,8 +81,8 @@ VertexBuffer9 *VertexBuffer9::makeVertexBuffer9(VertexBuffer *vertexBuffer)
     return static_cast<VertexBuffer9*>(vertexBuffer);
 }
 
-bool VertexBuffer9::storeVertexAttributes(const gl::VertexAttribute &attrib, GLint start, GLsizei count,
-                                             GLsizei instances, unsigned int offset)
+bool VertexBuffer9::storeVertexAttributes(const gl::VertexAttribute &attrib, const gl::VertexAttribCurrentValueData &currentValue,
+                                          GLint start, GLsizei count, GLsizei instances, unsigned int offset)
 {
     if (mVertexBuffer)
     {
@@ -118,7 +118,7 @@ bool VertexBuffer9::storeVertexAttributes(const gl::VertexAttribute &attrib, GLi
         }
         else
         {
-            input = reinterpret_cast<const char*>(attrib.mCurrentValue.FloatValues);
+            input = reinterpret_cast<const char*>(currentValue.FloatValues);
         }
 
         if (instances == 0 || attrib.mDivisor == 0)
@@ -156,9 +156,10 @@ bool VertexBuffer9::requiresConversion(const gl::VertexAttribute &attrib) const
     return formatConverter(attrib).identity;
 }
 
-unsigned int VertexBuffer9::getVertexSize(const gl::VertexAttribute &attrib) const
+bool VertexBuffer9::requiresConversion(const gl::VertexAttribCurrentValueData &currentValue) const
 {
-    return spaceRequired(attrib, 1, 0);
+    ASSERT(currentValue.Type == GL_FLOAT);
+    return getCurrentValueFormatConverter().identity;
 }
 
 D3DDECLTYPE VertexBuffer9::getDeclType(const gl::VertexAttribute &attrib) const
@@ -445,11 +446,19 @@ unsigned int VertexBuffer9::typeIndex(GLenum type)
 
 const VertexBuffer9::FormatConverter &VertexBuffer9::formatConverter(const gl::VertexAttribute &attribute)
 {
+    if (!attribute.mArrayEnabled)
+    {
+        return getCurrentValueFormatConverter();
+    }
+
     // Pure integer attributes only supported in ES3.0
     ASSERT(!attribute.mPureInteger);
+    return mFormatConverters[typeIndex(attribute.mType)][attribute.mNormalized][attribute.mSize - 1];
+}
 
-    GLenum type = attribute.mArrayEnabled ? attribute.mType : attribute.mCurrentValue.Type;
-    return mFormatConverters[typeIndex(type)][attribute.mNormalized][attribute.mSize - 1];
+const VertexBuffer9::FormatConverter &VertexBuffer9::getCurrentValueFormatConverter()
+{
+    return mFormatConverters[typeIndex(GL_FLOAT)][0][3];
 }
 
 unsigned int VertexBuffer9::spaceRequired(const gl::VertexAttribute &attrib, std::size_t count, GLsizei instances)
