@@ -9186,8 +9186,16 @@ void __stdcall glBindVertexArray(GLuint array)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glBindVertexArray
-            UNIMPLEMENTED();
+            gl::VertexArray *vao = context->getVertexArray(array);
+
+            if (!vao)
+            {
+                // The default VAO should always exist
+                ASSERT(array != 0);
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            context->bindVertexArray(array);
         }
     }
     catch(std::bad_alloc&)
@@ -9211,8 +9219,18 @@ void __stdcall glDeleteVertexArrays(GLsizei n, const GLuint* arrays)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glDeleteVertexArrays
-            UNIMPLEMENTED();
+            if (n < 0)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            for (int arrayIndex = 0; arrayIndex < n; arrayIndex++)
+            {
+                if (arrays[arrayIndex] != 0)
+                {
+                    context->deleteVertexArray(arrays[arrayIndex]);
+                }
+            }
         }
     }
     catch(std::bad_alloc&)
@@ -9236,8 +9254,15 @@ void __stdcall glGenVertexArrays(GLsizei n, GLuint* arrays)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glGenVertexArrays
-            UNIMPLEMENTED();
+            if (n < 0)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            for (int arrayIndex = 0; arrayIndex < n; arrayIndex++)
+            {
+                arrays[arrayIndex] = context->createVertexArray();
+            }
         }
     }
     catch(std::bad_alloc&)
@@ -9261,8 +9286,14 @@ GLboolean __stdcall glIsVertexArray(GLuint array)
                 return gl::error(GL_INVALID_OPERATION, GL_FALSE);
             }
 
-            // glIsVertexArray
-            UNIMPLEMENTED();
+            if (array == 0)
+            {
+                return GL_FALSE;
+            }
+
+            gl::VertexArray *vao = context->getVertexArray(array);
+
+            return (vao != NULL ? GL_TRUE : GL_FALSE);
         }
     }
     catch(std::bad_alloc&)

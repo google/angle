@@ -776,6 +776,9 @@ GLuint Context::createVertexArray()
 {
     GLuint handle = mVertexArrayHandleAllocator.allocate();
 
+    // Although the spec states VAO state is not initialized until the object is bound,
+    // we create it immediately. The resulting behaviour is transparent to the application,
+    // since it's not currently possible to access the state until the object is bound.
     mVertexArrayMap[handle] = new VertexArray(mRenderer, handle);
 
     return handle;
