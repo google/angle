@@ -1034,7 +1034,7 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
     return true;
 }
 
-GLenum Renderer11::applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], gl::VertexAttribCurrentValueData currentValues[],
+GLenum Renderer11::applyVertexBuffer(gl::ProgramBinary *programBinary, const gl::VertexAttribute vertexAttributes[], gl::VertexAttribCurrentValueData currentValues[],
                                      GLint first, GLsizei count, GLsizei instances)
 {
     TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS];

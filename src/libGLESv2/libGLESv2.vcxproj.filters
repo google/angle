@@ -239,6 +239,9 @@
     <ClCompile Include="renderer\Blit11.cpp">
       <Filter>Source Files\Renderer11</Filter>
     </ClCompile>
+    <ClCompile Include="VertexArray.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinaryStream.h">
@@ -617,6 +620,9 @@
       <Filter>Shaders\Compiled</Filter>
     </ClInclude>
     <ClInclude Include="VertexAttribute.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

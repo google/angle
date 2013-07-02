@@ -74,7 +74,7 @@ class Renderer11 : public Renderer
     virtual bool applyRenderTarget(gl::Framebuffer *frameBuffer);
     virtual void applyShaders(gl::ProgramBinary *programBinary);
     virtual void applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArray *uniformArray);
-    virtual GLenum applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], gl::VertexAttribCurrentValueData currentValues[],
+    virtual GLenum applyVertexBuffer(gl::ProgramBinary *programBinary, const gl::VertexAttribute vertexAttributes[], gl::VertexAttribCurrentValueData currentValues[],
                                      GLint first, GLsizei count, GLsizei instances);
     virtual GLenum applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo);
 

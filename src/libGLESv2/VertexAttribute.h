@@ -9,11 +9,10 @@
 #ifndef LIBGLESV2_VERTEXATTRIBUTE_H_
 #define LIBGLESV2_VERTEXATTRIBUTE_H_
 
-#include "common/RefCountObject.h"
+#include "libGLESv2/Buffer.h"
 
 namespace gl
 {
-class Buffer;
 
 class VertexAttribute
 {
@@ -45,6 +44,18 @@ class VertexAttribute
     GLsizei stride() const
     {
         return mStride ? mStride : typeSize();
+    }
+
+    void setState(gl::Buffer *boundBuffer, GLint size, GLenum type, bool normalized,
+                  bool pureInteger, GLsizei stride, const void *pointer)
+    {
+        mBoundBuffer.set(boundBuffer);
+        mSize = size;
+        mType = type;
+        mNormalized = normalized;
+        mPureInteger = pureInteger;
+        mStride = stride;
+        mPointer = pointer;
     }
 
     // From glVertexAttribPointer

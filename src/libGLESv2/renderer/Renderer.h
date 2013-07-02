@@ -131,7 +131,7 @@ class Renderer
     virtual void applyShaders(gl::ProgramBinary *programBinary) = 0;
     virtual void applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArray *uniformArray) = 0;
     virtual bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount) = 0;
-    virtual GLenum applyVertexBuffer(gl::ProgramBinary *programBinary, gl::VertexAttribute vertexAttributes[], gl::VertexAttribCurrentValueData currentValues[],
+    virtual GLenum applyVertexBuffer(gl::ProgramBinary *programBinary, const gl::VertexAttribute vertexAttributes[], gl::VertexAttribCurrentValueData currentValues[],
                                      GLint first, GLsizei count, GLsizei instances) = 0;
     virtual GLenum applyIndexBuffer(const GLvoid *indices, gl::Buffer *elementArrayBuffer, GLsizei count, GLenum mode, GLenum type, TranslatedIndexData *indexInfo) = 0;
 

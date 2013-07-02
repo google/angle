@@ -67,6 +67,8 @@ class Fence;
 class Query;
 class ResourceManager;
 class Buffer;
+class VertexAttribute;
+class VertexArray;
 
 enum QueryType
 {
@@ -108,14 +110,13 @@ struct State
 
     unsigned int activeSampler;   // Active texture unit selector - GL_TEXTURE0
     BindingPointer<Buffer> arrayBuffer;
-    BindingPointer<Buffer> elementArrayBuffer;
     GLuint readFramebuffer;
     GLuint drawFramebuffer;
     BindingPointer<Renderbuffer> renderbuffer;
     GLuint currentProgram;
 
     VertexAttribCurrentValueData vertexAttribCurrentValues[MAX_VERTEX_ATTRIBS]; // From glVertexAttrib
-    VertexAttribute vertexAttribute[MAX_VERTEX_ATTRIBS];
+    unsigned int vertexArray;
 
     BindingPointer<Texture> samplerTexture[TEXTURE_TYPE_COUNT][IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS];
     BindingPointer<Query> activeQuery[QUERY_TYPE_COUNT];
@@ -251,12 +252,14 @@ class Context
     GLuint createProgram();
     GLuint createTexture();
     GLuint createRenderbuffer();
+    GLuint createVertexArray();
 
     void deleteBuffer(GLuint buffer);
     void deleteShader(GLuint shader);
     void deleteProgram(GLuint program);
     void deleteTexture(GLuint texture);
     void deleteRenderbuffer(GLuint renderbuffer);
+    void deleteVertexArray(GLuint vertexArray);
 
     // Framebuffers are owned by the Context, so these methods do not pass through
     GLuint createFramebuffer();
@@ -279,6 +282,7 @@ class Context
     void bindReadFramebuffer(GLuint framebuffer);
     void bindDrawFramebuffer(GLuint framebuffer);
     void bindRenderbuffer(GLuint renderbuffer);
+    void bindVertexArray(GLuint vertexArray);
     void bindGenericUniformBuffer(GLuint buffer);
     void bindIndexedUniformBuffer(GLuint buffer, GLuint index, GLintptr offset, GLsizeiptr size);
     void bindGenericTransformFeedbackBuffer(GLuint buffer);
@@ -310,6 +314,7 @@ class Context
     Texture *getTexture(GLuint handle);
     Framebuffer *getFramebuffer(GLuint handle);
     Renderbuffer *getRenderbuffer(GLuint handle);
+    VertexArray *getVertexArray(GLuint handle) const;
     Query *getQuery(GLuint handle, bool create, GLenum type);
 
     Buffer *getArrayBuffer();
@@ -328,6 +333,7 @@ class Context
     Texture *getSamplerTexture(unsigned int sampler, TextureType type);
     Framebuffer *getReadFramebuffer();
     Framebuffer *getDrawFramebuffer();
+    VertexArray *getCurrentVertexArray() const;
 
     bool getFloatv(GLenum pname, GLfloat *params);
     bool getIntegerv(GLenum pname, GLint *params);
@@ -421,6 +427,7 @@ class Context
     void detachTexture(GLuint texture);
     void detachFramebuffer(GLuint framebuffer);
     void detachRenderbuffer(GLuint renderbuffer);
+    void detachVertexArray(GLuint vertexArray);
 
     Texture *getIncompleteTexture(TextureType type);
 
@@ -459,6 +466,10 @@ class Context
     typedef HASH_MAP<GLuint, Query*> QueryMap;
     QueryMap mQueryMap;
     HandleAllocator mQueryHandleAllocator;
+
+    typedef HASH_MAP<GLuint, VertexArray*> VertexArrayMap;
+    VertexArrayMap mVertexArrayMap;
+    HandleAllocator mVertexArrayHandleAllocator;
 
     std::vector<std::string> mExtensionStringList;
     const char *mCombinedExtensionsString;

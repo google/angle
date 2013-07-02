@@ -18,6 +18,7 @@ namespace gl
 {
 class VertexAttribute;
 class ProgramBinary;
+struct VertexAttribCurrentValueData;
 }
 
 namespace rx

@@ -21,6 +21,7 @@
 #include "libGLESv2/Texture.h"
 #include "libGLESv2/Query.h"
 #include "libGLESv2/Context.h"
+#include "libGLESv2/VertexArray.h"
 
 bool validImageSize(const gl::Context *context, GLint level, GLsizei width, GLsizei height, GLsizei depth)
 {

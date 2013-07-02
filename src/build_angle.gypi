@@ -377,6 +377,8 @@
             'libGLESv2/Texture.h',
             'libGLESv2/Uniform.cpp',
             'libGLESv2/Uniform.h',
+            'libGLESv2/VertexArray.cpp',
+            'libGLESv2/VertexArray.h',
             'libGLESv2/VertexAttribute.h',
           ],
           # TODO(jschuh): http://crbug.com/167187 size_t -> int
