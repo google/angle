@@ -8146,6 +8146,15 @@ void __stdcall glVertexAttribPointer(GLuint index, GLint size, GLenum type, GLbo
 
         if (context)
         {
+            // [OpenGL ES 3.0.2] Section 2.8 page 24:
+            // An INVALID_OPERATION error is generated when a non-zero vertex array object
+            // is bound, zero is bound to the ARRAY_BUFFER buffer object binding point,
+            // and the pointer argument is not NULL.
+            if (context->getVertexArrayHandle() != 0 && context->getArrayBufferHandle() == 0 && ptr != NULL)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
             context->setVertexAttribState(index, context->getArrayBuffer(), size, type,
                                           normalized == GL_TRUE, false, stride, ptr);
         }
@@ -9624,6 +9633,15 @@ void __stdcall glVertexAttribIPointer(GLuint index, GLint size, GLenum type, GLs
 
         if (context)
         {
+            // [OpenGL ES 3.0.2] Section 2.8 page 24:
+            // An INVALID_OPERATION error is generated when a non-zero vertex array object
+            // is bound, zero is bound to the ARRAY_BUFFER buffer object binding point,
+            // and the pointer argument is not NULL.
+            if (context->getVertexArrayHandle() != 0 && context->getArrayBufferHandle() == 0 && pointer != NULL)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
             context->setVertexAttribState(index, context->getArrayBuffer(), size, type, false, true,
                                           stride, pointer);
         }

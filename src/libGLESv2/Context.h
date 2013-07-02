@@ -224,6 +224,7 @@ class Context
     GLuint getReadFramebufferHandle() const;
     GLuint getDrawFramebufferHandle() const;
     GLuint getRenderbufferHandle() const;
+    GLuint getVertexArrayHandle() const;
 
     GLuint getArrayBufferHandle() const;
 

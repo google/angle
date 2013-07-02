@@ -659,6 +659,11 @@ GLuint Context::getRenderbufferHandle() const
     return mState.renderbuffer.id();
 }
 
+GLuint Context::getVertexArrayHandle() const
+{
+    return mState.vertexArray;
+}
+
 GLuint Context::getArrayBufferHandle() const
 {
     return mState.arrayBuffer.id();
