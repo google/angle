@@ -1923,6 +1923,30 @@ bool validateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
     return true;
 }
 
+bool validateGetVertexAttribParameters(GLenum pname, int clientVersion)
+{
+    switch (pname)
+    {
+      case GL_VERTEX_ATTRIB_ARRAY_ENABLED:
+      case GL_VERTEX_ATTRIB_ARRAY_SIZE:
+      case GL_VERTEX_ATTRIB_ARRAY_STRIDE:
+      case GL_VERTEX_ATTRIB_ARRAY_TYPE:
+      case GL_VERTEX_ATTRIB_ARRAY_NORMALIZED:
+      case GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING:
+      case GL_CURRENT_VERTEX_ATTRIB:
+        return true;
+
+      case GL_VERTEX_ATTRIB_ARRAY_DIVISOR:
+        // Don't verify ES3 context because GL_VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE uses
+        // the same constant.
+        META_ASSERT(GL_VERTEX_ATTRIB_ARRAY_DIVISOR == GL_VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE);
+        return true;
+
+      default:
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+}
+
 extern "C"
 {
 
@@ -5858,41 +5882,22 @@ void __stdcall glGetVertexAttribfv(GLuint index, GLenum pname, GLfloat* params)
 
             const gl::VertexAttribute &attribState = context->getVertexAttribState(index);
 
-            switch (pname)
+            if (!validateGetVertexAttribParameters(pname, context->getClientVersion()))
             {
-              case GL_VERTEX_ATTRIB_ARRAY_ENABLED:
-                *params = (GLfloat)(attribState.mArrayEnabled ? GL_TRUE : GL_FALSE);
-                break;
-              case GL_VERTEX_ATTRIB_ARRAY_SIZE:
-                *params = (GLfloat)attribState.mSize;
-                break;
-              case GL_VERTEX_ATTRIB_ARRAY_STRIDE:
-                *params = (GLfloat)attribState.mStride;
-                break;
-              case GL_VERTEX_ATTRIB_ARRAY_TYPE:
-                *params = (GLfloat)attribState.mType;
-                break;
-              case GL_VERTEX_ATTRIB_ARRAY_NORMALIZED:
-                *params = (GLfloat)(attribState.mNormalized ? GL_TRUE : GL_FALSE);
-                break;
-              case GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING:
-                *params = (GLfloat)attribState.mBoundBuffer.id();
-                break;
-              case GL_CURRENT_VERTEX_ATTRIB:
+                return;
+            }
+
+            if (pname == GL_CURRENT_VERTEX_ATTRIB)
+            {
+                const gl::VertexAttribCurrentValueData &currentValueData = context->getVertexAttribCurrentValue(index);
+                for (int i = 0; i < 4; ++i)
                 {
-                    const gl::VertexAttribCurrentValueData &currentValueData = context->getVertexAttribCurrentValue(index);
-                    for (int i = 0; i < 4; ++i)
-                    {
-                        params[i] = currentValueData.FloatValues[i];
-                    }
+                    params[i] = currentValueData.FloatValues[i];
                 }
-                break;
-              case GL_VERTEX_ATTRIB_ARRAY_DIVISOR:
-                // Don't verify ES3 context because GL_VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE uses
-                // the same constant.
-                *params = (GLfloat)attribState.mDivisor;
-                break;
-              default: return gl::error(GL_INVALID_ENUM);
+            }
+            else
+            {
+                *params = attribState.querySingleParameter<GLfloat>(pname);
             }
         }
     }
@@ -5919,43 +5924,23 @@ void __stdcall glGetVertexAttribiv(GLuint index, GLenum pname, GLint* params)
 
             const gl::VertexAttribute &attribState = context->getVertexAttribState(index);
 
-            switch (pname)
+            if (!validateGetVertexAttribParameters(pname, context->getClientVersion()))
             {
-              case GL_VERTEX_ATTRIB_ARRAY_ENABLED:
-                *params = (attribState.mArrayEnabled ? GL_TRUE : GL_FALSE);
-                break;
-              case GL_VERTEX_ATTRIB_ARRAY_SIZE:
-                *params = attribState.mSize;
-                break;
-              case GL_VERTEX_ATTRIB_ARRAY_STRIDE:
-                *params = attribState.mStride;
-                break;
-              case GL_VERTEX_ATTRIB_ARRAY_TYPE:
-                *params = attribState.mType;
-                break;
-              case GL_VERTEX_ATTRIB_ARRAY_NORMALIZED:
-                *params = (attribState.mNormalized ? GL_TRUE : GL_FALSE);
-                break;
-              case GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING:
-                *params = attribState.mBoundBuffer.id();
-                break;
-              case GL_CURRENT_VERTEX_ATTRIB:
+                return;
+            }
+
+            if (pname == GL_CURRENT_VERTEX_ATTRIB)
+            {
+                const gl::VertexAttribCurrentValueData &currentValueData = context->getVertexAttribCurrentValue(index);
+                for (int i = 0; i < 4; ++i)
                 {
-                    const gl::VertexAttribCurrentValueData &currentValueData = context->getVertexAttribCurrentValue(index);
-                    for (int i = 0; i < 4; ++i)
-                    {
-                        float currentValue = currentValueData.FloatValues[i];
-                        params[i] = (GLint)(currentValue > 0.0f ? floor(currentValue + 0.5f) : ceil(currentValue - 0.5f));
-                    }
+                    float currentValue = currentValueData.FloatValues[i];
+                    params[i] = (GLint)(currentValue > 0.0f ? floor(currentValue + 0.5f) : ceil(currentValue - 0.5f));
                 }
-                break;
-              case GL_VERTEX_ATTRIB_ARRAY_DIVISOR:
-                // Don't verify ES3 context because GL_VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE uses
-                // the same constant.
-                META_ASSERT(GL_VERTEX_ATTRIB_ARRAY_DIVISOR == GL_VERTEX_ATTRIB_ARRAY_DIVISOR_ANGLE);
-                *params = (GLint)attribState.mDivisor;
-                break;
-              default: return gl::error(GL_INVALID_ENUM);
+            }
+            else
+            {
+                *params = attribState.querySingleParameter<GLint>(pname);
             }
         }
     }

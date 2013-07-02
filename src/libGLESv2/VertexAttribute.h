@@ -58,6 +58,31 @@ class VertexAttribute
         mPointer = pointer;
     }
 
+    template <typename T>
+    T querySingleParameter(GLenum pname) const
+    {
+        switch (pname)
+        {
+          case GL_VERTEX_ATTRIB_ARRAY_ENABLED:
+            return static_cast<T>(mArrayEnabled ? GL_TRUE : GL_FALSE);
+          case GL_VERTEX_ATTRIB_ARRAY_SIZE:
+            return static_cast<T>(mSize);
+          case GL_VERTEX_ATTRIB_ARRAY_STRIDE:
+            return static_cast<T>(mStride);
+          case GL_VERTEX_ATTRIB_ARRAY_TYPE:
+            return static_cast<T>(mType);
+          case GL_VERTEX_ATTRIB_ARRAY_NORMALIZED:
+            return static_cast<T>(mNormalized ? GL_TRUE : GL_FALSE);
+          case GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING:
+            return static_cast<T>(mBoundBuffer.id());
+          case GL_VERTEX_ATTRIB_ARRAY_DIVISOR:
+            return static_cast<T>(mDivisor);
+          default:
+            UNREACHABLE();
+            return static_cast<T>(0);
+        }
+    }
+
     // From glVertexAttribPointer
     GLenum mType;
     GLint mSize;
