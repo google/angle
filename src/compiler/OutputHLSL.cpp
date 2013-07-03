@@ -1858,7 +1858,7 @@ bool OutputHLSL::visitUnary(Visit visit, TIntermUnary *node)
       case EOpConvFloatToUInt:
       case EOpConvBoolToUInt:
       case EOpConvIntToUInt:
-        switch (node->getOperand()->getType().getCols())
+        switch (node->getOperand()->getType().getNominalSize())
         {
           case 1:    outputTriplet(visit, "uint(", "", ")");  break;
           case 2:    outputTriplet(visit, "uint2(", "", ")");  break;
