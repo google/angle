@@ -2107,6 +2107,26 @@ gl::Texture *getTargetTexture(gl::Context *context, GLenum target)
     }
 }
 
+bool validateSamplerObjectParameter(GLenum pname)
+{
+    switch (pname)
+    {
+      case GL_TEXTURE_MIN_FILTER:
+      case GL_TEXTURE_MAG_FILTER:
+      case GL_TEXTURE_WRAP_S:
+      case GL_TEXTURE_WRAP_T:
+      case GL_TEXTURE_WRAP_R:
+      case GL_TEXTURE_MIN_LOD:
+      case GL_TEXTURE_MAX_LOD:
+      case GL_TEXTURE_COMPARE_MODE:
+      case GL_TEXTURE_COMPARE_FUNC:
+        return true;
+
+      default:
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+}
+
 extern "C"
 {
 
@@ -11135,8 +11155,15 @@ void __stdcall glGenSamplers(GLsizei count, GLuint* samplers)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glGenSamplers
-            UNIMPLEMENTED();
+            if (count < 0)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                samplers[i] = context->createSampler();
+            }
         }
     }
     catch(std::bad_alloc&)
@@ -11160,8 +11187,15 @@ void __stdcall glDeleteSamplers(GLsizei count, const GLuint* samplers)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glDeleteSamplers
-            UNIMPLEMENTED();
+            if (count < 0)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                context->deleteSampler(samplers[i]);
+            }
         }
     }
     catch(std::bad_alloc&)
@@ -11185,8 +11219,7 @@ GLboolean __stdcall glIsSampler(GLuint sampler)
                 return gl::error(GL_INVALID_OPERATION, GL_FALSE);
             }
 
-            // glIsSampler
-            UNIMPLEMENTED();
+            return context->isSampler(sampler);
         }
     }
     catch(std::bad_alloc&)
@@ -11212,8 +11245,17 @@ void __stdcall glBindSampler(GLuint unit, GLuint sampler)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glBindSampler
-            UNIMPLEMENTED();
+            if (sampler != 0 && !context->isSampler(sampler))
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            if (unit >= context->getMaximumCombinedTextureImageUnits())
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            context->bindSampler(unit, sampler);
         }
     }
     catch(std::bad_alloc&)
@@ -11237,8 +11279,22 @@ void __stdcall glSamplerParameteri(GLuint sampler, GLenum pname, GLint param)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glSamplerParameteri
-            UNIMPLEMENTED();
+            if (!validateSamplerObjectParameter(pname))
+            {
+                return;
+            }
+
+            if (!validateTexParamParameters(context, pname, param))
+            {
+                return;
+            }
+
+            if (!context->isSampler(sampler))
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            context->samplerParameteri(sampler, pname, param);
         }
     }
     catch(std::bad_alloc&)
@@ -11249,28 +11305,7 @@ void __stdcall glSamplerParameteri(GLuint sampler, GLenum pname, GLint param)
 
 void __stdcall glSamplerParameteriv(GLuint sampler, GLenum pname, const GLint* param)
 {
-    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, const GLint* param = 0x%0.8p)",
-          sampler, pname, param);
-
-    try
-    {
-        gl::Context *context = gl::getNonLostContext();
-
-        if (context)
-        {
-            if (context->getClientVersion() < 3)
-            {
-                return gl::error(GL_INVALID_OPERATION);
-            }
-
-            // glSamplerParameteriv
-            UNIMPLEMENTED();
-        }
-    }
-    catch(std::bad_alloc&)
-    {
-        return gl::error(GL_OUT_OF_MEMORY);
-    }
+    glSamplerParameteri(sampler, pname, *param);
 }
 
 void __stdcall glSamplerParameterf(GLuint sampler, GLenum pname, GLfloat param)
@@ -11288,8 +11323,22 @@ void __stdcall glSamplerParameterf(GLuint sampler, GLenum pname, GLfloat param)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glSamplerParameterf
-            UNIMPLEMENTED();
+            if (!validateSamplerObjectParameter(pname))
+            {
+                return;
+            }
+
+            if (!validateTexParamParameters(context, pname, static_cast<GLint>(param)))
+            {
+                return;
+            }
+
+            if (!context->isSampler(sampler))
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            context->samplerParameterf(sampler, pname, param);
         }
     }
     catch(std::bad_alloc&)
@@ -11300,27 +11349,7 @@ void __stdcall glSamplerParameterf(GLuint sampler, GLenum pname, GLfloat param)
 
 void __stdcall glSamplerParameterfv(GLuint sampler, GLenum pname, const GLfloat* param)
 {
-    EVENT("(GLuint sampler = %u, GLenum pname = 0x%X, const GLfloat* param = 0x%0.8p)", sampler, pname, param);
-
-    try
-    {
-        gl::Context *context = gl::getNonLostContext();
-
-        if (context)
-        {
-            if (context->getClientVersion() < 3)
-            {
-                return gl::error(GL_INVALID_OPERATION);
-            }
-
-            // glSamplerParameterfv
-            UNIMPLEMENTED();
-        }
-    }
-    catch(std::bad_alloc&)
-    {
-        return gl::error(GL_OUT_OF_MEMORY);
-    }
+    glSamplerParameterf(sampler, pname, *param);
 }
 
 void __stdcall glGetSamplerParameteriv(GLuint sampler, GLenum pname, GLint* params)
@@ -11338,8 +11367,17 @@ void __stdcall glGetSamplerParameteriv(GLuint sampler, GLenum pname, GLint* para
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glGetSamplerParameteriv
-            UNIMPLEMENTED();
+            if (!validateSamplerObjectParameter(pname))
+            {
+                return;
+            }
+
+            if (!context->isSampler(sampler))
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            *params = context->getSamplerParameteri(sampler, pname);
         }
     }
     catch(std::bad_alloc&)
@@ -11363,8 +11401,17 @@ void __stdcall glGetSamplerParameterfv(GLuint sampler, GLenum pname, GLfloat* pa
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glGetSamplerParameterfv
-            UNIMPLEMENTED();
+            if (!validateSamplerObjectParameter(pname))
+            {
+                return;
+            }
+
+            if (!context->isSampler(sampler))
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            *params = context->getSamplerParameterf(sampler, pname);
         }
     }
     catch(std::bad_alloc&)
