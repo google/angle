@@ -2087,6 +2087,25 @@ bool validateTexParamParameters(gl::Context *context, GLenum pname, GLint param)
 }
 
 
+gl::Texture *getTargetTexture(gl::Context *context, GLenum target)
+{
+    if (context->getClientVersion() < 3)
+    {
+        if (target == GL_TEXTURE_3D || target == GL_TEXTURE_2D_ARRAY)
+        {
+            return NULL;
+        }
+    }
+
+    switch (target)
+    {
+      case GL_TEXTURE_2D:       return context->getTexture2D();
+      case GL_TEXTURE_CUBE_MAP: return context->getTextureCubeMap();
+      case GL_TEXTURE_3D:       return context->getTexture3D();
+      case GL_TEXTURE_2D_ARRAY: return context->getTexture2DArray();
+      default:                  return NULL;
+    }
+}
 
 extern "C"
 {
@@ -5666,31 +5685,10 @@ void __stdcall glGetTexParameterfv(GLenum target, GLenum pname, GLfloat* params)
 
         if (context)
         {
-            gl::Texture *texture;
+            gl::Texture *texture = getTargetTexture(context, target);
 
-            switch (target)
+            if (!texture)
             {
-              case GL_TEXTURE_2D:
-                texture = context->getTexture2D();
-                break;
-              case GL_TEXTURE_CUBE_MAP:
-                texture = context->getTextureCubeMap();
-                break;
-              case GL_TEXTURE_3D:
-                if (context->getClientVersion() < 3)
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                texture = context->getTexture3D();
-                break;
-              case GL_TEXTURE_2D_ARRAY:
-                if (context->getClientVersion() < 3)
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                texture = context->getTexture2DArray();
-                break;
-              default:
                 return gl::error(GL_INVALID_ENUM);
             }
 
@@ -5757,31 +5755,10 @@ void __stdcall glGetTexParameteriv(GLenum target, GLenum pname, GLint* params)
 
         if (context)
         {
-            gl::Texture *texture;
+            gl::Texture *texture = getTargetTexture(context, target);
 
-            switch (target)
+            if (!texture)
             {
-              case GL_TEXTURE_2D:
-                texture = context->getTexture2D();
-                break;
-              case GL_TEXTURE_CUBE_MAP:
-                texture = context->getTextureCubeMap();
-                break;
-              case GL_TEXTURE_3D:
-                if (context->getClientVersion() < 3)
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                texture = context->getTexture3D();
-                break;
-              case GL_TEXTURE_2D_ARRAY:
-                if (context->getClientVersion() < 3)
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                texture = context->getTexture2DArray();
-                break;
-              default:
                 return gl::error(GL_INVALID_ENUM);
             }
 
@@ -7166,30 +7143,10 @@ void __stdcall glTexParameterf(GLenum target, GLenum pname, GLfloat param)
                 return;
             }
 
-            gl::Texture *texture;
+            gl::Texture *texture = getTargetTexture(context, target);
 
-            switch (target)
+            if (!texture)
             {
-              case GL_TEXTURE_2D:
-                texture = context->getTexture2D();
-                break;
-              case GL_TEXTURE_CUBE_MAP:
-                texture = context->getTextureCubeMap();
-                break;
-              case GL_TEXTURE_3D:
-                if (context->getClientVersion() < 3)
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                texture = context->getTexture3D();
-              case GL_TEXTURE_2D_ARRAY:
-                if (context->getClientVersion() < 3)
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                texture = context->getTexture2DArray();
-                break;
-              default:
                 return gl::error(GL_INVALID_ENUM);
             }
 
@@ -7246,31 +7203,10 @@ void __stdcall glTexParameteri(GLenum target, GLenum pname, GLint param)
                 return;
             }
 
-            gl::Texture *texture;
+            gl::Texture *texture = getTargetTexture(context, target);
 
-            switch (target)
+            if (!texture)
             {
-              case GL_TEXTURE_2D:
-                texture = context->getTexture2D();
-                break;
-              case GL_TEXTURE_CUBE_MAP:
-                texture = context->getTextureCubeMap();
-                break;
-              case GL_TEXTURE_3D:
-                if (context->getClientVersion() < 3)
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                texture = context->getTexture3D();
-                break;
-              case GL_TEXTURE_2D_ARRAY:
-                if (context->getClientVersion() < 3)
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                texture = context->getTexture2DArray();
-                break;
-              default:
                 return gl::error(GL_INVALID_ENUM);
             }
 
