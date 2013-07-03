@@ -2979,6 +2979,7 @@ TString OutputHLSL::textureString(const TType &type)
       case EbtSamplerCube:        return "TextureCube";
       case EbtSamplerExternalOES: return "Texture2D";
       case EbtSampler2DArray:     return "Texture2DArray";
+      case EbtSampler3D:          return "Texture3D";
       case EbtISampler2D:         return "Texture2D<int4>";
       case EbtISamplerCube:       return "TextureCube<int4>";
       case EbtISampler2DArray:    return "Texture2DArray<int4>";
