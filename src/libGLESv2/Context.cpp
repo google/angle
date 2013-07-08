@@ -2550,6 +2550,16 @@ GLsizei Context::getMaxSupportedFormatSamples(GLint internalFormat) const
     return mRenderer->getMaxSupportedFormatSamples(internalFormat);
 }
 
+GLsizei Context::getNumSampleCounts(GLint internalFormat) const
+{
+    return mRenderer->getNumSampleCounts(internalFormat);
+}
+
+void Context::getSampleCounts(GLint internalFormat, GLsizei bufSize, GLint *params) const
+{
+    mRenderer->getSampleCounts(internalFormat, bufSize, params);
+}
+
 unsigned int Context::getMaxTransformFeedbackBufferBindings() const
 {
     return mRenderer->getMaxTransformFeedbackBuffers();

@@ -2456,6 +2456,55 @@ GLsizei Renderer11::getMaxSupportedFormatSamples(GLint internalFormat) const
     return (iter != mMultisampleSupportMap.end()) ? iter->second.maxSupportedSamples : 0;
 }
 
+GLsizei Renderer11::getNumSampleCounts(GLint internalFormat) const
+{
+    unsigned int numCounts = 0;
+
+    // D3D11 supports multisampling for signed and unsigned format, but ES 3.0 does not
+    if (!gl::IsIntegerFormat(internalFormat, getCurrentClientVersion()))
+    {
+        DXGI_FORMAT format = gl_d3d11::GetRenderableFormat(internalFormat, getCurrentClientVersion());
+        MultisampleSupportMap::const_iterator iter = mMultisampleSupportMap.find(format);
+
+        if (iter != mMultisampleSupportMap.end())
+        {
+            const MultisampleSupportInfo& info = iter->second;
+            for (int i = 0; i < D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT; i++)
+            {
+                if (info.qualityLevels[i] > 0)
+                {
+                    numCounts++;
+                }
+            }
+        }
+    }
+
+    return numCounts;
+}
+
+void Renderer11::getSampleCounts(GLint internalFormat, GLsizei bufSize, GLint *params) const
+{
+    // D3D11 supports multisampling for signed and unsigned format, but ES 3.0 does not
+    if (gl::IsIntegerFormat(internalFormat, getCurrentClientVersion()))
+        return;
+
+    DXGI_FORMAT format = gl_d3d11::GetRenderableFormat(internalFormat, getCurrentClientVersion());
+    MultisampleSupportMap::const_iterator iter = mMultisampleSupportMap.find(format);
+
+    if (iter != mMultisampleSupportMap.end())
+    {
+        const MultisampleSupportInfo& info = iter->second;
+        int bufPos = 0;
+        for (int i = D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT - 1; i >= 0 && bufPos < bufSize; i--)
+        {
+            if (info.qualityLevels[i] > 0)
+            {
+                params[bufPos++] = i + 1;
+            }
+        }
+    }
+}
+
 int Renderer11::getNearestSupportedSamples(DXGI_FORMAT format, unsigned int requested) const
 {
     if (requested == 0)

@@ -373,6 +373,8 @@ class Context
     unsigned int getMaximumRenderTargets() const;
     GLsizei getMaxSupportedSamples() const;
     GLsizei getMaxSupportedFormatSamples(GLint internalFormat) const;
+    GLsizei getNumSampleCounts(GLint internalFormat) const;
+    void getSampleCounts(GLint internalFormat, GLsizei bufSize, GLint *params) const;
     unsigned int getMaxTransformFeedbackBufferBindings() const;
     GLintptr getUniformBufferOffsetAlignment() const;
     const char *getCombinedExtensionsString() const;

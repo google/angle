@@ -204,6 +204,8 @@ class Renderer
 
     virtual GLsizei getMaxSupportedSamples() const = 0;
     virtual GLsizei getMaxSupportedFormatSamples(GLint internalFormat) const = 0;
+    virtual GLsizei getNumSampleCounts(GLint internalFormat) const = 0;
+    virtual void getSampleCounts(GLint internalFormat, GLsizei bufSize, GLint *params) const = 0;
 
     virtual unsigned int getMaxRenderTargets() const = 0;
 

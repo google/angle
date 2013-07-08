@@ -2455,6 +2455,46 @@ GLsizei Renderer9::getMaxSupportedFormatSamples(GLint internalFormat) const
     return (itr != mMultiSampleSupport.end()) ? mMaxSupportedSamples : 0;
 }
 
+GLsizei Renderer9::getNumSampleCounts(GLint internalFormat) const
+{
+    D3DFORMAT format = gl_d3d9::GetTextureFormat(internalFormat, this);
+    MultisampleSupportMap::const_iterator iter = mMultiSampleSupport.find(format);
+    
+    unsigned int numCounts = 0;
+    if (iter != mMultiSampleSupport.end())
+    {
+        const MultisampleSupportInfo& info = iter->second;
+        for (int i = 0; i < D3DMULTISAMPLE_16_SAMPLES; i++)
+        {
+            if (i != D3DMULTISAMPLE_NONMASKABLE && info.supportedSamples[i])
+            {
+                numCounts++;
+            }
+        }
+    }
+
+    return numCounts;
+}
+
+void Renderer9::getSampleCounts(GLint internalFormat, GLsizei bufSize, GLint *params) const
+{
+    D3DFORMAT format = gl_d3d9::GetTextureFormat(internalFormat, this);
+    MultisampleSupportMap::const_iterator iter = mMultiSampleSupport.find(format);
+
+    if (iter != mMultiSampleSupport.end())
+    {
+        const MultisampleSupportInfo& info = iter->second;
+        int bufPos = 0;
+        for (int i = D3DMULTISAMPLE_16_SAMPLES; i >= 0 && bufPos < bufSize; i--)
+        {
+            if (i != D3DMULTISAMPLE_NONMASKABLE && info.supportedSamples[i])
+            {
+                params[bufPos++] = i;
+            }
+        }
+    }
+}
+
 int Renderer9::getNearestSupportedSamples(D3DFORMAT format, int requested) const
 {
     if (requested == 0)

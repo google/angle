@@ -162,6 +162,8 @@ class Renderer9 : public Renderer
 
     virtual GLsizei getMaxSupportedSamples() const;
     virtual GLsizei getMaxSupportedFormatSamples(GLint internalFormat) const;
+    virtual GLsizei getNumSampleCounts(GLint internalFormat) const;
+    virtual void getSampleCounts(GLint internalFormat, GLsizei bufSize, GLint *params) const;
     int getNearestSupportedSamples(D3DFORMAT format, int requested) const;
     
     virtual unsigned int getMaxRenderTargets() const;
