@@ -559,6 +559,10 @@ struct InternalFormatInfo
         InternalFormatInfo formatInfo;
         formatInfo.mFormat = format;
         formatInfo.mSupportFunction = supportFunction;
+
+        if (format == GL_RGB || format == GL_RGBA)
+            formatInfo.mIsColorRenderable = AlwaysSupported;
+
         return formatInfo;
     }
 
@@ -659,7 +663,7 @@ static InternalFormatInfoMap BuildES3InternalFormatInfoMap()
     map.insert(InternalFormatInfoPair(GL_RG8_SNORM,         InternalFormatInfo::RGBAFormat( 8,  8,  0,  0, 0, GL_RG,           GL_BYTE,                         NormalizedFixedPoint, false, NeverSupported,  AlwaysSupported, AlwaysSupported     )));
     map.insert(InternalFormatInfoPair(GL_RGB8,              InternalFormatInfo::RGBAFormat( 8,  8,  8,  0, 0, GL_RGB,          GL_UNSIGNED_BYTE,                NormalizedFixedPoint, false, AlwaysSupported, AlwaysSupported, AlwaysSupported     )));
     map.insert(InternalFormatInfoPair(GL_RGB8_SNORM,        InternalFormatInfo::RGBAFormat( 8,  8,  8,  0, 0, GL_RGB,          GL_BYTE,                         NormalizedFixedPoint, false, NeverSupported,  AlwaysSupported, AlwaysSupported     )));
-    map.insert(InternalFormatInfoPair(GL_RGB565,            InternalFormatInfo::RGBAFormat( 5,  6,  5,  0, 0, GL_RGB,          GL_UNSIGNED_SHORT_5_5_5_1,       NormalizedFixedPoint, false, NeverSupported,  AlwaysSupported, AlwaysSupported     )));
+    map.insert(InternalFormatInfoPair(GL_RGB565,            InternalFormatInfo::RGBAFormat( 5,  6,  5,  0, 0, GL_RGB,          GL_UNSIGNED_SHORT_5_5_5_1,       NormalizedFixedPoint, false, AlwaysSupported,  AlwaysSupported, AlwaysSupported     )));
     map.insert(InternalFormatInfoPair(GL_RGBA4,             InternalFormatInfo::RGBAFormat( 4,  4,  4,  4, 0, GL_RGBA,         GL_UNSIGNED_SHORT_4_4_4_4,       NormalizedFixedPoint, false, AlwaysSupported, AlwaysSupported, AlwaysSupported     )));
     map.insert(InternalFormatInfoPair(GL_RGB5_A1,           InternalFormatInfo::RGBAFormat( 5,  5,  5,  1, 0, GL_RGBA,         GL_UNSIGNED_SHORT_5_5_5_1,       NormalizedFixedPoint, false, AlwaysSupported, AlwaysSupported, AlwaysSupported     )));
     map.insert(InternalFormatInfoPair(GL_RGBA8,             InternalFormatInfo::RGBAFormat( 8,  8,  8,  8, 0, GL_RGBA,         GL_UNSIGNED_BYTE,                NormalizedFixedPoint, false, AlwaysSupported, AlwaysSupported, AlwaysSupported     )));
@@ -712,14 +716,15 @@ static InternalFormatInfoMap BuildES3InternalFormatInfoMap()
     map.insert(InternalFormatInfoPair(GL_RGBA32F,           InternalFormatInfo::RGBAFormat(32, 32, 32, 32, 0, GL_RGBA,         GL_FLOAT,                        FloatingPoint, false, CheckSupport<&Context::supportsFloat32RenderableTextures, &rx::Renderer::getFloat32TextureRenderingSupport>, CheckSupport<&Context::supportsFloat32LinearFilter, &rx::Renderer::getFloat32TextureFilteringSupport>, AlwaysSupported     )));
 
     // Depth stencil formats
-    //                               | Internal format         |                                      | D |S | Format             | Type                            | Internal format     | Color          | Texture        | Supported     |
-    //                               |                         |                                      |   |  |                    |                                 | type                | renderable     | filterable     |               |
+    //                               | Internal format         |                                      | D |S | Format             | Type                            | Internal format     | Depth          | Stencil        | Supported     |
+    //                               |                         |                                      |   |  |                    |                                 | type                | renderable     | renderable     |               |
     map.insert(InternalFormatInfoPair(GL_DEPTH_COMPONENT16,     InternalFormatInfo::DepthStencilFormat(16, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT,                 NormalizedFixedPoint, AlwaysSupported, NeverSupported,  AlwaysSupported)));
     map.insert(InternalFormatInfoPair(GL_DEPTH_COMPONENT24,     InternalFormatInfo::DepthStencilFormat(24, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT,                   NormalizedFixedPoint, AlwaysSupported, NeverSupported,  AlwaysSupported)));
     map.insert(InternalFormatInfoPair(GL_DEPTH_COMPONENT32F,    InternalFormatInfo::DepthStencilFormat(32, 0, GL_DEPTH_COMPONENT, GL_FLOAT,                          FloatingPoint,        AlwaysSupported, NeverSupported,  AlwaysSupported)));
     map.insert(InternalFormatInfoPair(GL_DEPTH_COMPONENT32_OES, InternalFormatInfo::DepthStencilFormat(32, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT,                   NormalizedFixedPoint, AlwaysSupported, NeverSupported,  AlwaysSupported)));
     map.insert(InternalFormatInfoPair(GL_DEPTH24_STENCIL8,      InternalFormatInfo::DepthStencilFormat(24, 8, GL_DEPTH_STENCIL,   GL_UNSIGNED_INT_24_8,              NormalizedFixedPoint, AlwaysSupported, AlwaysSupported, AlwaysSupported)));
     map.insert(InternalFormatInfoPair(GL_DEPTH32F_STENCIL8,     InternalFormatInfo::DepthStencilFormat(32, 8, GL_DEPTH_STENCIL,   GL_FLOAT_32_UNSIGNED_INT_24_8_REV, FloatingPoint,        AlwaysSupported, AlwaysSupported, AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_STENCIL_INDEX8,        InternalFormatInfo::DepthStencilFormat( 0, 8, GL_DEPTH_STENCIL,   GL_UNSIGNED_BYTE,                  NormalizedFixedPoint, NeverSupported,  AlwaysSupported, AlwaysSupported)));
 
     // Luminance alpha formats
     //                               | Internal format          |                              | L | A | Format            | Type            | Internal format     | Supported     |
@@ -802,8 +807,8 @@ static InternalFormatInfoMap BuildES2InternalFormatInfoMap()
     map.insert(InternalFormatInfoPair(GL_RGBA32F_EXT,          InternalFormatInfo::RGBAFormat(32, 32, 32, 32, 0, GL_RGBA,          GL_FLOAT,                  FloatingPoint, false, CheckSupport<&Context::supportsFloat32RenderableTextures, &rx::Renderer::getFloat32TextureRenderingSupport>, CheckSupport<&Context::supportsFloat32LinearFilter, &rx::Renderer::getFloat32TextureFilteringSupport>, CheckSupport<&Context::supportsFloat32Textures>)));
 
     // Depth and stencil formats
-    //                               | Internal format        |                                      | D |S | Format              | Type                     | Internal format     | Color          | Texture         | Supported                                  |
-    //                               |                        |                                      |   |  |                     |                          | type                | renderable     | filterable      |                                            |
+    //                               | Internal format        |                                      | D |S | Format              | Type                     | Internal format     | Depth          | Stencil         | Supported                                  |
+    //                               |                        |                                      |   |  |                     |                          | type                | renderable     | renderable      |                                            |
     map.insert(InternalFormatInfoPair(GL_DEPTH_COMPONENT32_OES,InternalFormatInfo::DepthStencilFormat(32, 0, GL_DEPTH_COMPONENT,   GL_UNSIGNED_INT,           NormalizedFixedPoint, AlwaysSupported, NeverSupported,  CheckSupport<&Context::supportsDepthTextures>)));
     map.insert(InternalFormatInfoPair(GL_DEPTH24_STENCIL8_OES, InternalFormatInfo::DepthStencilFormat(24, 8, GL_DEPTH_STENCIL_OES, GL_UNSIGNED_INT_24_8_OES,  NormalizedFixedPoint, AlwaysSupported, AlwaysSupported, CheckSupport<&Context::supportsDepthTextures>)));
     map.insert(InternalFormatInfoPair(GL_DEPTH_COMPONENT16,    InternalFormatInfo::DepthStencilFormat(16, 0, GL_DEPTH_COMPONENT,   GL_UNSIGNED_SHORT,         NormalizedFixedPoint, AlwaysSupported, NeverSupported,  AlwaysSupported)));
