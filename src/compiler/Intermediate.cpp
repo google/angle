@@ -1145,11 +1145,11 @@ bool CompareStruct(const TType& leftNodeType, ConstantUnion* rightUnionArray, Co
     const TTypeList* fields = leftNodeType.getStruct();
 
     size_t structSize = fields->size();
-    int index = 0;
+    size_t index = 0;
 
     for (size_t j = 0; j < structSize; j++) {
-        int size = (*fields)[j].type->getObjectSize();
-        for (int i = 0; i < size; i++) {
+        size_t size = (*fields)[j].type->getObjectSize();
+        for (size_t i = 0; i < size; i++) {
             if ((*fields)[j].type->getBasicType() == EbtStruct) {
                 if (!CompareStructure(*(*fields)[j].type, &rightUnionArray[index], &leftUnionArray[index]))
                     return false;
@@ -1170,10 +1170,10 @@ bool CompareStructure(const TType& leftNodeType, ConstantUnion* rightUnionArray,
         TType typeWithoutArrayness = leftNodeType;
         typeWithoutArrayness.clearArrayness();
 
-        int arraySize = leftNodeType.getArraySize();
+        size_t arraySize = leftNodeType.getArraySize();
 
-        for (int i = 0; i < arraySize; ++i) {
-            int offset = typeWithoutArrayness.getObjectSize() * i;
+        for (size_t i = 0; i < arraySize; ++i) {
+            size_t offset = typeWithoutArrayness.getObjectSize() * i;
             if (!CompareStruct(typeWithoutArrayness, &rightUnionArray[offset], &leftUnionArray[offset]))
                 return false;
         }
@@ -1193,7 +1193,7 @@ bool CompareStructure(const TType& leftNodeType, ConstantUnion* rightUnionArray,
 TIntermTyped* TIntermConstantUnion::fold(TOperator op, TIntermTyped* constantNode, TInfoSink& infoSink)
 {
     ConstantUnion *unionArray = getUnionArrayPointer();
-    int objectSize = getType().getObjectSize();
+    size_t objectSize = getType().getObjectSize();
 
     if (constantNode)
     {
@@ -1206,7 +1206,7 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, TIntermTyped* constantNod
         if (constantNode->getType().getObjectSize() == 1 && objectSize > 1)
         {
             rightUnionArray = new ConstantUnion[objectSize];
-            for (int i = 0; i < objectSize; ++i)
+            for (size_t i = 0; i < objectSize; ++i)
             {
                 rightUnionArray[i] = *node->getUnionArrayPointer();
             }
@@ -1216,7 +1216,7 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, TIntermTyped* constantNod
         {
             // for a case like float f = vec4(2,3,4,5) + 1.2;
             unionArray = new ConstantUnion[constantNode->getType().getObjectSize()];
-            for (int i = 0; i < constantNode->getType().getObjectSize(); ++i)
+            for (size_t i = 0; i < constantNode->getType().getObjectSize(); ++i)
             {
                 unionArray[i] = *getUnionArrayPointer();
             }
@@ -1232,14 +1232,14 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, TIntermTyped* constantNod
           case EOpAdd:
             tempConstArray = new ConstantUnion[objectSize];
             {
-                for (int i = 0; i < objectSize; i++)
+                for (size_t i = 0; i < objectSize; i++)
                     tempConstArray[i] = unionArray[i] + rightUnionArray[i];
             }
             break;
           case EOpSub:
             tempConstArray = new ConstantUnion[objectSize];
             {
-                for (int i = 0; i < objectSize; i++)
+                for (size_t i = 0; i < objectSize; i++)
                     tempConstArray[i] = unionArray[i] - rightUnionArray[i];
             }
             break;
@@ -1249,7 +1249,7 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, TIntermTyped* constantNod
           case EOpMatrixTimesScalar:
             tempConstArray = new ConstantUnion[objectSize];
             {
-                for (int i = 0; i < objectSize; i++)
+                for (size_t i = 0; i < objectSize; i++)
                     tempConstArray[i] = unionArray[i] * rightUnionArray[i];
             }
             break;
@@ -1291,7 +1291,7 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, TIntermTyped* constantNod
           case EOpDiv:
             {
                 tempConstArray = new ConstantUnion[objectSize];
-                for (int i = 0; i < objectSize; i++)
+                for (size_t i = 0; i < objectSize; i++)
                 {
                     switch (getType().getBasicType())
                     {
@@ -1399,7 +1399,7 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, TIntermTyped* constantNod
           case EOpLogicalAnd: // this code is written for possible future use, will not get executed currently
             {
                 tempConstArray = new ConstantUnion[objectSize];
-                for (int i = 0; i < objectSize; i++)
+                for (size_t i = 0; i < objectSize; i++)
                 {
                     tempConstArray[i] = unionArray[i] && rightUnionArray[i];
                 }
@@ -1409,7 +1409,7 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, TIntermTyped* constantNod
           case EOpLogicalOr: // this code is written for possible future use, will not get executed currently
             {
                 tempConstArray = new ConstantUnion[objectSize];
-                for (int i = 0; i < objectSize; i++)
+                for (size_t i = 0; i < objectSize; i++)
                 {
                     tempConstArray[i] = unionArray[i] || rightUnionArray[i];
                 }
@@ -1419,7 +1419,7 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, TIntermTyped* constantNod
           case EOpLogicalXor:
             {
                 tempConstArray = new ConstantUnion[objectSize];
-                for (int i = 0; i < objectSize; i++)
+                for (size_t i = 0; i < objectSize; i++)
                 {
                     switch (getType().getBasicType())
                     {
@@ -1478,7 +1478,7 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, TIntermTyped* constantNod
             }
             else
             {
-                for (int i = 0; i < objectSize; i++)
+                for (size_t i = 0; i < objectSize; i++)
                 {
                     if (unionArray[i] != rightUnionArray[i])
                     {
@@ -1511,7 +1511,7 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, TIntermTyped* constantNod
             }
             else
             {
-                for (int i = 0; i < objectSize; i++)
+                for (size_t i = 0; i < objectSize; i++)
                 {
                     if (unionArray[i] == rightUnionArray[i])
                     {
@@ -1552,7 +1552,7 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, TIntermTyped* constantNod
         //
         TIntermConstantUnion *newNode = 0;
         ConstantUnion* tempConstArray = new ConstantUnion[objectSize];
-        for (int i = 0; i < objectSize; i++)
+        for (size_t i = 0; i < objectSize; i++)
         {
             switch(op)
             {
@@ -1590,11 +1590,11 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, TIntermTyped* constantNod
 
 TIntermTyped* TIntermediate::promoteConstantUnion(TBasicType promoteTo, TIntermConstantUnion* node)
 {
-    int size = node->getType().getObjectSize();
+    size_t size = node->getType().getObjectSize();
 
     ConstantUnion *leftUnionArray = new ConstantUnion[size];
 
-    for (int i=0; i < size; i++) {
+    for (size_t i=0; i < size; i++) {
 
         switch (promoteTo) {
             case EbtFloat:

@@ -17,6 +17,7 @@
 
 #include <stdio.h>
 #include <algorithm>
+#include <climits>
 
 int TSymbolTableLevel::uniqueId = 0;
 
@@ -106,16 +107,42 @@ void TType::buildMangledName(TString& mangledName)
     }
 }
 
-int TType::getStructSize() const
+size_t TType::getObjectSize() const
+{
+    size_t totalSize;
+
+    if (getBasicType() == EbtStruct)
+        totalSize = getStructSize();
+    else
+        totalSize = primarySize * secondarySize;
+
+    if (isArray()) {
+        size_t arraySize = std::max(getArraySize(), getMaxArraySize());
+        if (arraySize > INT_MAX / totalSize)
+            totalSize = INT_MAX;
+        else
+            totalSize *= arraySize;
+    }
+
+    return totalSize;
+}
+
+size_t TType::getStructSize() const
 {
     if (!getStruct()) {
         assert(false && "Not a struct");
         return 0;
     }
 
-    if (structureSize == 0)
-        for (TTypeList::const_iterator tl = getStruct()->begin(); tl != getStruct()->end(); tl++)
-            structureSize += ((*tl).type)->getObjectSize();
+    if (structureSize == 0) {
+        for (TTypeList::const_iterator tl = getStruct()->begin(); tl != getStruct()->end(); tl++) {
+            size_t fieldSize = ((*tl).type)->getObjectSize();
+            if (fieldSize > INT_MAX - structureSize)
+                structureSize = INT_MAX;
+            else
+                structureSize += fieldSize;
+        }
+    }
 
     return structureSize;
 }

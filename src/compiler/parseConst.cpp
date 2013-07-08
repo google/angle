@@ -38,13 +38,13 @@ protected:
     bool visitLoop(Visit visit, TIntermLoop*);
     bool visitBranch(Visit visit, TIntermBranch*);
 
-    int index;
+    size_t index;
     ConstantUnion *unionArray;
     TType type;
     TOperator constructorType;
     bool singleConstantParam;
     TInfoSink& infoSink;
-    int size; // size of the constructor ( 4 for vec4)
+    size_t size; // size of the constructor ( 4 for vec4)
     bool isDiagonalMatrixInit;
     int matrixCols; // columns of the matrix
     int matrixRows; // rows of the matrix
@@ -161,16 +161,16 @@ void TConstTraverser::visitConstantUnion(TIntermConstantUnion* node)
     }
 
     ConstantUnion* leftUnionArray = unionArray;
-    int instanceSize = type.getObjectSize();
+    size_t instanceSize = type.getObjectSize();
 
     if (index >= instanceSize)
         return;
 
     if (!singleConstantParam) {
-        int objectSize = node->getType().getObjectSize();
+        size_t objectSize = node->getType().getObjectSize();
     
         ConstantUnion *rightUnionArray = node->getUnionArrayPointer();
-        for (int i=0; i < objectSize; i++) {
+        for (size_t i=0; i < objectSize; i++) {
             if (index >= instanceSize)
                 return;
             leftUnionArray[index] = rightUnionArray[i];
@@ -178,11 +178,11 @@ void TConstTraverser::visitConstantUnion(TIntermConstantUnion* node)
             (index)++;
         }
     } else {
-        int totalSize = index + size;
+        size_t totalSize = index + size;
         ConstantUnion *rightUnionArray = node->getUnionArrayPointer();
         if (!isDiagonalMatrixInit) {
             int count = 0;
-            for (int i = index; i < totalSize; i++) {
+            for (size_t i = index; i < totalSize; i++) {
                 if (i >= instanceSize)
                     return;
 

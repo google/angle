@@ -486,7 +486,7 @@ bool TParseContext::constructorErrorCheck(const TSourceLoc& line, TIntermNode* n
     // again, there is an extra argument, so 'overfull' will become true.
     //
 
-    int size = 0;
+    size_t size = 0;
     bool constType = true;
     bool full = false;
     bool overFull = false;
@@ -1124,13 +1124,7 @@ bool TParseContext::executeInitializer(const TSourceLoc& line, const TString& id
             return true;
         }
         if (initializer->getAsConstantUnion()) { 
-            ConstantUnion* unionArray = variable->getConstPointer();
-
-            if (type.getObjectSize() == 1 && type.getBasicType() != EbtStruct) {
-                *unionArray = (initializer->getAsConstantUnion()->getUnionArrayPointer())[0];
-            } else {
-                variable->shareConstPointer(initializer->getAsConstantUnion()->getUnionArrayPointer());
-            }
+            variable->shareConstPointer(initializer->getAsConstantUnion()->getUnionArrayPointer());
         } else if (initializer->getAsSymbolNode()) {
             const TSymbol* symbol = symbolTable.find(initializer->getAsSymbolNode()->getSymbol(), 0);
             const TVariable* tVar = static_cast<const TVariable*>(symbol);
@@ -1767,7 +1761,7 @@ TIntermTyped* TParseContext::addConstVectorNode(TVectorFields& fields, TIntermTy
     ConstantUnion* constArray = new ConstantUnion[fields.num];
 
     for (int i = 0; i < fields.num; i++) {
-        if (fields.offsets[i] >= node->getType().getObjectSize()) {
+        if (fields.offsets[i] >= node->getType().getNominalSize()) {
             std::stringstream extraInfoStream;
             extraInfoStream << "vector field selection out of range '" << fields.offsets[i] << "'";
             std::string extraInfo = extraInfoStream.str();
@@ -1840,11 +1834,10 @@ TIntermTyped* TParseContext::addConstArrayNode(int index, TIntermTyped* node, co
         index = 0;
     }
 
-    int arrayElementSize = arrayElementType.getObjectSize();
-
     if (tempConstantNode) {
-         ConstantUnion* unionArray = tempConstantNode->getUnionArrayPointer();
-         typedNode = intermediate.addConstantUnion(&unionArray[arrayElementSize * index], tempConstantNode->getType(), line);
+        size_t arrayElementSize = arrayElementType.getObjectSize();
+        ConstantUnion* unionArray = tempConstantNode->getUnionArrayPointer();
+        typedNode = intermediate.addConstantUnion(&unionArray[arrayElementSize * index], tempConstantNode->getType(), line);
     } else {
         error(line, "Cannot offset into the array", "Error");
         recover();
@@ -1864,12 +1857,9 @@ TIntermTyped* TParseContext::addConstArrayNode(int index, TIntermTyped* node, co
 TIntermTyped* TParseContext::addConstStruct(const TString &identifier, TIntermTyped *node, const TSourceLoc& line)
 {
     const TTypeList* fields = node->getType().getStruct();
-    TIntermTyped *typedNode;
-    int instanceSize = 0;
-    unsigned int index = 0;
-    TIntermConstantUnion *tempConstantNode = node->getAsConstantUnion();
+    size_t instanceSize = 0;
 
-    for ( index = 0; index < fields->size(); ++index) {
+    for (size_t index = 0; index < fields->size(); ++index) {
         if ((*fields)[index].type->getFieldName() == identifier) {
             break;
         } else {
@@ -1877,6 +1867,8 @@ TIntermTyped* TParseContext::addConstStruct(const TString &identifier, TIntermTy
         }
     }
 
+    TIntermTyped *typedNode;
+    TIntermConstantUnion *tempConstantNode = node->getAsConstantUnion();
     if (tempConstantNode) {
          ConstantUnion* constArray = tempConstantNode->getUnionArrayPointer();
 

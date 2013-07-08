@@ -70,20 +70,7 @@ public:
     void setSecondarySize(int ss) { secondarySize = ss; }
 
     // Full size of single instance of type
-    int getObjectSize() const
-    {
-        int totalSize;
-
-        if (getBasicType() == EbtStruct)
-            totalSize = getStructSize();
-        else
-            totalSize = primarySize * secondarySize;
-
-        if (isArray())
-            totalSize *= std::max(getArraySize(), getMaxArraySize());
-
-        return totalSize;
-    }
+    size_t getObjectSize() const;
 
     int elementRegisterCount() const
     {
@@ -243,7 +230,7 @@ public:
 
 private:
     void buildMangledName(TString&);
-    int getStructSize() const;
+    size_t getStructSize() const;
     void computeDeepestStructNesting();
 
     TBasicType type      : 6;
@@ -259,7 +246,7 @@ private:
     TType* interfaceBlockType;
 
     TTypeList* structure;      // 0 unless this is a struct
-    mutable int structureSize;
+    mutable size_t structureSize;
     int deepestStructNesting;
 
     TString *fieldName;         // for structure field names
