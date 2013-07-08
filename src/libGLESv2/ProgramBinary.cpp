@@ -21,6 +21,7 @@
 #include "libGLESv2/Program.h"
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/renderer/VertexDataManager.h"
+#include "libGLESv2/Context.h"
 #include "libGLESv2/Buffer.h"
 
 #undef near
@@ -642,9 +643,7 @@ bool ProgramBinary::setUniform1iv(GLint location, GLsizei count, const GLint *v)
 
     count = std::min(elementCount - (int)mUniformIndex[location].element, count);
 
-    if (targetUniform->type == GL_INT ||
-        targetUniform->type == GL_SAMPLER_2D ||
-        targetUniform->type == GL_SAMPLER_CUBE)
+    if (targetUniform->type == GL_INT || IsSampler(targetUniform->type))
     {
         GLint *target = (GLint*)targetUniform->data + mUniformIndex[location].element * 4;
 
@@ -837,8 +836,7 @@ void ProgramBinary::applyUniforms()
 
         if (targetUniform->dirty)
         {
-            if (targetUniform->type == GL_SAMPLER_2D || 
-                targetUniform->type == GL_SAMPLER_CUBE)
+            if (IsSampler(targetUniform->type))
             {
                 int count = targetUniform->elementCount();
                 GLint (*v)[4] = (GLint(*)[4])targetUniform->data;
@@ -2308,8 +2306,7 @@ bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, In
         return true;
     }
 
-    if (constant.type == GL_SAMPLER_2D ||
-        constant.type == GL_SAMPLER_CUBE)
+    if (IsSampler(constant.type))
     {
         unsigned int samplerIndex = constant.registerIndex;
             

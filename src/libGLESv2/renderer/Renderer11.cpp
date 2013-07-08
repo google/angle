@@ -1420,7 +1420,7 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArra
     {
         gl::Uniform *uniform = *uniform_iterator;
 
-        if (uniform->type !=  GL_SAMPLER_2D && uniform->type != GL_SAMPLER_CUBE)
+        if (!gl::IsSampler(uniform->type))
         {
             if (uniform->isReferencedByVertexShader() && mapVS)
             {

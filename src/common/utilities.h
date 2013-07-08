@@ -30,6 +30,7 @@ size_t UniformExternalSize(GLenum type);
 GLenum UniformBoolVectorType(GLenum type);
 int VariableRowCount(GLenum type);
 int VariableColumnCount(GLenum type);
+bool IsSampler(GLenum type);
 bool IsMatrixType(GLenum type);
 GLenum TransposeMatrixType(GLenum type);
 int AttributeRegisterCount(GLenum type);

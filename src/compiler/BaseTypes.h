@@ -7,6 +7,8 @@
 #ifndef _BASICTYPES_INCLUDED_
 #define _BASICTYPES_INCLUDED_
 
+#include <assert.h>
+
 //
 // Precision qualifiers
 //
@@ -94,6 +96,114 @@ inline const char* getBasicString(TBasicType t)
 inline bool IsSampler(TBasicType type)
 {
     return type > EbtGuardSamplerBegin && type < EbtGuardSamplerEnd;
+}
+
+inline bool IsIntegerSampler(TBasicType type)
+{
+    switch (type)
+    {
+      case EbtISampler2D:
+      case EbtISampler3D:
+      case EbtISamplerCube:
+      case EbtISampler2DArray:
+      case EbtUSampler2D:
+      case EbtUSampler3D:
+      case EbtUSamplerCube:
+      case EbtUSampler2DArray:
+        return true;
+      case EbtSampler2D:
+      case EbtSampler3D:
+      case EbtSamplerCube:
+      case EbtSamplerExternalOES:
+      case EbtSampler2DRect:
+      case EbtSampler2DArray:
+        return false;
+      default:
+        assert(!IsSampler(type));
+    }
+
+    return false;
+}
+
+inline bool IsSampler2D(TBasicType type)
+{
+    switch (type)
+    {
+      case EbtSampler2D:
+      case EbtISampler2D:
+      case EbtUSampler2D:
+      case EbtSampler2DArray:
+      case EbtISampler2DArray:
+      case EbtUSampler2DArray:
+      case EbtSampler2DRect:
+      case EbtSamplerExternalOES:
+        return true;
+      case EbtSampler3D:
+      case EbtISampler3D:
+      case EbtUSampler3D:
+      case EbtISamplerCube:
+      case EbtUSamplerCube:
+      case EbtSamplerCube:
+        return false;
+      default:
+        assert(!IsSampler(type));
+    }
+
+    return false;
+}
+
+inline bool IsSamplerCube(TBasicType type)
+{
+    switch (type)
+    {
+      case EbtSamplerCube:
+      case EbtISamplerCube:
+      case EbtUSamplerCube:
+        return true;
+      case EbtSampler2D:
+      case EbtSampler3D:
+      case EbtSamplerExternalOES:
+      case EbtSampler2DRect:
+      case EbtSampler2DArray:
+      case EbtISampler2D:
+      case EbtISampler3D:
+      case EbtISampler2DArray:
+      case EbtUSampler2D:
+      case EbtUSampler3D:
+      case EbtUSampler2DArray:
+        return false;
+      default:
+        assert(!IsSampler(type));
+    }
+
+    return false;
+}
+
+inline bool IsSampler3D(TBasicType type)
+{
+    switch (type)
+    {
+      case EbtSampler3D:
+      case EbtISampler3D:
+      case EbtUSampler3D:
+        return true;
+      case EbtSampler2D:
+      case EbtSamplerCube:
+      case EbtSamplerExternalOES:
+      case EbtSampler2DRect:
+      case EbtSampler2DArray:
+      case EbtISampler2D:
+      case EbtISamplerCube:
+      case EbtISampler2DArray:
+      case EbtUSampler2D:
+      case EbtUSamplerCube:
+      case EbtUSampler2DArray:
+        return false;
+      default:
+        assert(!IsSampler(type));
+    }
+
+    return false;
 }
 
 //
