@@ -117,6 +117,7 @@ struct TParseContext {
     bool containsSampler(TType& type);
     bool areAllChildConst(TIntermAggregate* aggrNode);
     const TFunction* findFunction(const TSourceLoc& line, TFunction* pfnCall, int shaderVersion, bool *builtIn = 0);
+    bool isVariableBuiltIn(const TVariable* var);
     bool executeInitializer(const TSourceLoc& line, const TString& identifier, TPublicType& pType,
                             TIntermTyped* initializer, TIntermNode*& intermNode, TVariable* variable = 0);
 

@@ -50,12 +50,15 @@ public:
     virtual bool isVariable() const { return false; }
     void setUniqueId(int id) { uniqueId = id; }
     int getUniqueId() const { return uniqueId; }
+    void relateToExtension(const TString& ext) { extension = ext; }
+    const TString& getExtension() const { return extension; }
 
 private:
     DISALLOW_COPY_AND_ASSIGN(TSymbol);
 
     const TString *name;
     unsigned int uniqueId;      // For real comparing during code generation
+    TString extension;
 };
 
 //
@@ -153,9 +156,6 @@ public:
     void relateToOperator(TOperator o) { op = o; }
     TOperator getBuiltInOp() const { return op; }
 
-    void relateToExtension(const TString& ext) { extension = ext; }
-    const TString& getExtension() const { return extension; }
-
     void setDefined() { defined = true; }
     bool isDefined() { return defined; }
 
@@ -170,7 +170,6 @@ private:
     TType returnType;
     TString mangledName;
     TOperator op;
-    TString extension;
     bool defined;
 };
 

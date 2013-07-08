@@ -511,6 +511,10 @@ void IdentifyBuiltIns(ShShaderType type, ShShaderSpec spec,
         if (spec != SH_CSS_SHADERS_SPEC) {
             symbolTable.insert(ESSL1_BUILTINS, *new TVariable(NewPoolTString("gl_FragColor"), TType(EbtFloat, EbpMedium, EvqFragColor,   4)));
             symbolTable.insert(ESSL1_BUILTINS, *new TVariable(NewPoolTString("gl_FragData[gl_MaxDrawBuffers]"), TType(EbtFloat, EbpMedium, EvqFragData,    4)));
+            if (resources.EXT_frag_depth) {
+                symbolTable.insert(ESSL1_BUILTINS, *new TVariable(NewPoolTString("gl_FragDepthEXT"), TType(EbtFloat, resources.FragmentPrecisionHigh ? EbpHigh : EbpMedium, EvqFragDepth, 1)));
+                symbolTable.relateToExtension(ESSL1_BUILTINS, "gl_FragDepthEXT", "GL_EXT_frag_depth");
+            }
         } else {
             symbolTable.insert(ESSL1_BUILTINS, *new TVariable(NewPoolTString("css_MixColor"), TType(EbtFloat, EbpMedium, EvqGlobal,      4)));
             symbolTable.insert(ESSL1_BUILTINS, *new TVariable(NewPoolTString("css_ColorMatrix"), TType(EbtFloat, EbpMedium, EvqGlobal,      4, 4)));
@@ -631,4 +635,6 @@ void InitExtensionBehavior(const ShBuiltInResources& resources,
         extBehavior["GL_ARB_texture_rectangle"] = EBhUndefined;
     if (resources.EXT_draw_buffers)
         extBehavior["GL_EXT_draw_buffers"] = EBhUndefined;
+    if (resources.EXT_frag_depth)
+        extBehavior["GL_EXT_frag_depth"] = EBhUndefined;
 }

@@ -224,6 +224,12 @@ variable_identifier
                 context->recover();
             }
             variable = static_cast<const TVariable*>(symbol);
+
+            if (context->isVariableBuiltIn(variable) &&
+                !variable->getExtension().empty() &&
+                context->extensionErrorCheck(@1, variable->getExtension())) {
+                context->recover();
+            }
         }
 
         // don't delete $1.string, it's used by error recovery, and the pool

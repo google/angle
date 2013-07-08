@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 2.7.  */
+/* A Bison parser, made by GNU Bison 2.7.12-4996.  */
 
 /* Bison implementation for Yacc-like parsers in C
    
-      Copyright (C) 1984, 1989-1990, 2000-2012 Free Software Foundation, Inc.
+      Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
    
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "2.7"
+#define YYBISON_VERSION "2.7.12-4996"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -448,12 +448,21 @@ typedef short int yytype_int16;
 # endif
 #endif
 
+#ifndef __attribute__
+/* This feature is available in gcc versions 2.5 and later.  */
+# if (! defined __GNUC__ || __GNUC__ < 2 \
+      || (__GNUC__ == 2 && __GNUC_MINOR__ < 5))
+#  define __attribute__(Spec) /* empty */
+# endif
+#endif
+
 /* Suppress unused-variable warnings by "using" E.  */
 #if ! defined lint || defined __GNUC__
 # define YYUSE(E) ((void) (E))
 #else
 # define YYUSE(E) /* empty */
 #endif
+
 
 /* Identity function, used to suppress warnings about constant conditions.  */
 #ifndef lint
@@ -781,31 +790,31 @@ static const yytype_int16 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   205,   205,   206,   209,   244,   247,   252,   257,   262,
-     267,   273,   276,   279,   282,   285,   295,   308,   316,   416,
-     419,   427,   430,   436,   440,   447,   453,   462,   470,   473,
-     483,   486,   496,   506,   527,   528,   529,   534,   535,   543,
-     554,   555,   563,   574,   578,   579,   589,   599,   609,   622,
-     623,   633,   646,   650,   654,   658,   659,   672,   673,   686,
-     687,   700,   701,   718,   719,   732,   733,   734,   735,   736,
-     740,   743,   754,   762,   770,   797,   802,   813,   817,   821,
-     825,   832,   869,   872,   879,   887,   908,   929,   939,   967,
-     972,   982,   987,   997,  1000,  1003,  1006,  1012,  1019,  1022,
-    1026,  1030,  1034,  1041,  1045,  1049,  1056,  1060,  1064,  1085,
-    1094,  1100,  1103,  1109,  1115,  1122,  1131,  1140,  1143,  1179,
-    1186,  1190,  1197,  1200,  1204,  1208,  1217,  1226,  1234,  1244,
-    1251,  1254,  1257,  1263,  1270,  1273,  1279,  1282,  1285,  1291,
-    1294,  1309,  1313,  1317,  1321,  1325,  1329,  1334,  1339,  1344,
-    1349,  1354,  1359,  1364,  1369,  1374,  1379,  1384,  1389,  1394,
-    1399,  1404,  1409,  1414,  1419,  1424,  1429,  1434,  1438,  1442,
-    1446,  1450,  1454,  1458,  1462,  1466,  1470,  1474,  1478,  1482,
-    1490,  1498,  1502,  1515,  1515,  1518,  1518,  1524,  1527,  1542,
-    1545,  1554,  1558,  1564,  1571,  1586,  1590,  1594,  1595,  1601,
-    1602,  1603,  1604,  1605,  1609,  1610,  1610,  1610,  1620,  1621,
-    1625,  1625,  1626,  1626,  1631,  1634,  1644,  1647,  1653,  1654,
-    1658,  1666,  1670,  1680,  1685,  1702,  1702,  1707,  1707,  1714,
-    1714,  1722,  1725,  1731,  1734,  1740,  1744,  1751,  1758,  1765,
-    1772,  1783,  1792,  1796,  1803,  1806,  1812,  1812
+       0,   205,   205,   206,   209,   250,   253,   258,   263,   268,
+     273,   279,   282,   285,   288,   291,   301,   314,   322,   422,
+     425,   433,   436,   442,   446,   453,   459,   468,   476,   479,
+     489,   492,   502,   512,   533,   534,   535,   540,   541,   549,
+     560,   561,   569,   580,   584,   585,   595,   605,   615,   628,
+     629,   639,   652,   656,   660,   664,   665,   678,   679,   692,
+     693,   706,   707,   724,   725,   738,   739,   740,   741,   742,
+     746,   749,   760,   768,   776,   803,   808,   819,   823,   827,
+     831,   838,   875,   878,   885,   893,   914,   935,   945,   973,
+     978,   988,   993,  1003,  1006,  1009,  1012,  1018,  1025,  1028,
+    1032,  1036,  1040,  1047,  1051,  1055,  1062,  1066,  1070,  1091,
+    1100,  1106,  1109,  1115,  1121,  1128,  1137,  1146,  1149,  1185,
+    1192,  1196,  1203,  1206,  1210,  1214,  1223,  1232,  1240,  1250,
+    1257,  1260,  1263,  1269,  1276,  1279,  1285,  1288,  1291,  1297,
+    1300,  1315,  1319,  1323,  1327,  1331,  1335,  1340,  1345,  1350,
+    1355,  1360,  1365,  1370,  1375,  1380,  1385,  1390,  1395,  1400,
+    1405,  1410,  1415,  1420,  1425,  1430,  1435,  1440,  1444,  1448,
+    1452,  1456,  1460,  1464,  1468,  1472,  1476,  1480,  1484,  1488,
+    1496,  1504,  1508,  1521,  1521,  1524,  1524,  1530,  1533,  1548,
+    1551,  1560,  1564,  1570,  1577,  1592,  1596,  1600,  1601,  1607,
+    1608,  1609,  1610,  1611,  1615,  1616,  1616,  1616,  1626,  1627,
+    1631,  1631,  1632,  1632,  1637,  1640,  1650,  1653,  1659,  1660,
+    1664,  1672,  1676,  1686,  1691,  1708,  1708,  1713,  1713,  1720,
+    1720,  1728,  1731,  1737,  1740,  1746,  1750,  1757,  1764,  1771,
+    1778,  1789,  1798,  1802,  1809,  1812,  1818,  1818
 };
 #endif
 
@@ -1789,11 +1798,7 @@ yy_symbol_value_print (yyoutput, yytype, yyvaluep, yylocationp, context)
 # else
   YYUSE (yyoutput);
 # endif
-  switch (yytype)
-    {
-      default:
-        break;
-    }
+  YYUSE (yytype);
 }
 
 
@@ -2193,12 +2198,7 @@ yydestruct (yymsg, yytype, yyvaluep, yylocationp, context)
     yymsg = "Deleting";
   YY_SYMBOL_PRINT (yymsg, yytype, yyvaluep, yylocationp);
 
-  switch (yytype)
-    {
-
-      default:
-        break;
-    }
+  YYUSE (yytype);
 }
 
 
@@ -2541,6 +2541,12 @@ yyreduce:
                 context->recover();
             }
             variable = static_cast<const TVariable*>(symbol);
+
+            if (context->isVariableBuiltIn(variable) &&
+                !variable->getExtension().empty() &&
+                context->extensionErrorCheck((yylsp[(1) - (1)]), variable->getExtension())) {
+                context->recover();
+            }
         }
 
         // don't delete $1.string, it's used by error recovery, and the pool

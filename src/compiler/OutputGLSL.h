@@ -20,6 +20,7 @@ public:
 
 protected:
     virtual bool writeVariablePrecision(TPrecision);
+    virtual bool visitSymbol(TIntermSymbol* node);
 };
 
 #endif  // CROSSCOMPILERGLSL_OUTPUTGLSL_H_

@@ -97,6 +97,7 @@ OutputHLSL::OutputHLSL(TParseContext &context, const ShBuiltInResources& resourc
     mUsesPointCoord = false;
     mUsesFrontFacing = false;
     mUsesPointSize = false;
+    mUsesFragDepth = false;
     mUsesXor = false;
     mUsesMod1 = false;
     mUsesMod2v = false;
@@ -702,6 +703,11 @@ void OutputHLSL::header()
             out << "};\n";
         }
 
+        if (mUsesFragDepth)
+        {
+            out << "static float gl_Depth = 0.0;\n";
+        }
+
         if (mUsesFragCoord)
         {
             out << "static float4 gl_FragCoord = float4(0, 0, 0, 0);\n";
@@ -1099,6 +1105,11 @@ void OutputHLSL::header()
     if (mUsesPointSize)
     {
         out << "#define GL_USES_POINT_SIZE\n";
+    }
+
+    if (mUsesFragDepth)
+    {
+        out << "#define GL_USES_FRAG_DEPTH\n";
     }
 
     if (mUsesDepthRange)
@@ -1514,6 +1525,11 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
         {
             mUsesPointSize = true;
             out << name;
+        }
+        else if (name == "gl_FragDepthEXT")
+        {
+            mUsesFragDepth = true;
+            out << "gl_Depth";
         }
         else
         {

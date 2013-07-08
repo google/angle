@@ -118,6 +118,7 @@ class Shader
     bool mUsesPointSize;
     bool mUsesPointCoord;
     bool mUsesDepthRange;
+    bool mUsesFragDepth;
     int mShaderVersion;
 
     static void *mFragmentCompiler;
