@@ -84,8 +84,8 @@ protected:
     bool InitBuiltInSymbolTable(const ShBuiltInResources& resources);
     // Clears the results from the previous compilation.
     void clearResults();
-    // Return true if function recursion is detected.
-    bool detectRecursion(TIntermNode* root);
+    // Return true if function recursion is detected or call depth exceeded.
+    bool detectCallDepth(TIntermNode* root, TInfoSink& infoSink, bool limitCallStackDepth);
     // Returns true if a program has no conflicting or missing fragment outputs
     bool validateOutputs(TIntermNode* root);
     // Rewrites a shader's intermediate tree according to the CSS Shaders spec.
@@ -109,6 +109,8 @@ protected:
     // Returns true if the shader does not use sampler dependent values to affect control 
     // flow or in operations whose time can depend on the input values.
     bool enforceFragmentShaderTimingRestrictions(const TDependencyGraph& graph);
+    // Return true if the maximum expression complexity is below the limit.
+    bool limitExpressionComplexity(TIntermNode* root);
     // Get built-in extensions with default behavior.
     const TExtensionBehavior& getExtensionBehavior() const;
     // Get the resources set by InitBuiltInSymbolTable
@@ -123,6 +125,8 @@ private:
     ShShaderSpec shaderSpec;
 
     int maxUniformVectors;
+    int maxExpressionComplexity;
+    int maxCallStackDepth;
 
     ShBuiltInResources compileResources;
 
