@@ -42,7 +42,7 @@ ColorCopyFunction GetFastCopyFunction(D3DFORMAT sourceFormat, GLenum destFormat,
 namespace gl_d3d9
 {
 
-D3DFORMAT GetTexureFormat(GLint internalFormat, const Renderer9 *renderer);
+D3DFORMAT GetTextureFormat(GLint internalFormat, const Renderer9 *renderer);
 D3DFORMAT GetRenderFormat(GLint internalFormat, const Renderer9 *renderer);
 
 D3DMULTISAMPLE_TYPE GetMultisampleType(GLsizei samples);

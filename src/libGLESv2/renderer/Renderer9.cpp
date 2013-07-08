@@ -2450,7 +2450,7 @@ int Renderer9::getMaxSupportedSamples() const
 
 GLsizei Renderer9::getMaxSupportedFormatSamples(GLint internalFormat) const
 {
-    D3DFORMAT format = gl_d3d9::GetTexureFormat(internalFormat, this);
+    D3DFORMAT format = gl_d3d9::GetTextureFormat(internalFormat, this);
     MultisampleSupportMap::const_iterator itr = mMultiSampleSupport.find(format);
     return (itr != mMultiSampleSupport.end()) ? mMaxSupportedSamples : 0;
 }

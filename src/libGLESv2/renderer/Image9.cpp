@@ -149,7 +149,7 @@ bool Image9::redefine(rx::Renderer *renderer, GLenum target, GLint internalforma
         mInternalFormat = internalformat;
 
         // compute the d3d format that will be used
-        mD3DFormat = gl_d3d9::GetTexureFormat(internalformat, mRenderer);
+        mD3DFormat = gl_d3d9::GetTextureFormat(internalformat, mRenderer);
         mActualFormat = d3d9_gl::GetInternalFormat(mD3DFormat);
         mRenderable = gl_d3d9::GetRenderFormat(internalformat, mRenderer) != D3DFMT_UNKNOWN;
 
