@@ -11694,8 +11694,35 @@ void __stdcall glGetInternalformativ(GLenum target, GLenum internalformat, GLenu
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glGetInternalformativ
-            UNIMPLEMENTED();
+            if (!gl::IsColorRenderingSupported(internalformat, context) &&
+                !gl::IsDepthRenderingSupported(internalformat, context) &&
+                !gl::IsStencilRenderingSupported(internalformat, context))
+            {
+                return gl::error(GL_INVALID_ENUM);
+            }
+
+            if (target != GL_RENDERBUFFER)
+            {
+                return gl::error(GL_INVALID_ENUM);
+            }
+
+            if (bufSize < 0)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            switch (pname)
+            {
+              case GL_NUM_SAMPLE_COUNTS:
+                if (bufSize != 0)
+                    *params = context->getNumSampleCounts(internalformat);
+                break;
+              case GL_SAMPLES:
+                context->getSampleCounts(internalformat, bufSize, params);
+                break;
+              default:
+                return gl::error(GL_INVALID_ENUM);
+            }
         }
     }
     catch(std::bad_alloc&)
