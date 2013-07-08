@@ -34,24 +34,15 @@ TString OutputHLSL::TextureFunction::name() const
 {
     TString name = "gl_texture";
 
-    if (sampler == EbtSampler2D ||
-        sampler == EbtISampler2D ||
-        sampler == EbtUSampler2D ||
-        sampler == EbtSampler2DArray ||
-        sampler == EbtISampler2DArray ||
-        sampler == EbtUSampler2DArray)
+    if (IsSampler2D(sampler))
     {
         name += "2D";
     }
-    else if (sampler == EbtSampler3D ||
-             sampler == EbtISampler3D ||
-             sampler == EbtUSampler3D)
+    else if (IsSampler3D(sampler))
     {
         name += "3D";
     }
-    else if (sampler == EbtSamplerCube ||
-             sampler == EbtISamplerCube ||
-             sampler == EbtUSamplerCube)
+    else if (IsSamplerCube(sampler))
     {
         name += "Cube";
     }
@@ -972,117 +963,180 @@ void OutputHLSL::header()
         }
 
         out << ")\n"
-               "{\n"
-               "    return ";
+               "{\n";
 
-        // HLSL intrinsic
-        if (mOutputType == SH_HLSL9_OUTPUT)
+        if (IsIntegerSampler(textureFunction->sampler) && IsSamplerCube(textureFunction->sampler))
         {
-            switch(textureFunction->sampler)
+            // Currently unsupported because TextureCube does not support Load
+            // This will require emulation using a Texture2DArray with 6 faces
+            if (textureFunction->sampler == EbtISamplerCube)
             {
-              case EbtSampler2D:   out << "tex2D";   break;
-              case EbtSamplerCube: out << "texCUBE"; break;
-              default: UNREACHABLE();
+                out << "    return int4(0, 0, 0, 0);";
             }
-        }
-        else if (mOutputType == SH_HLSL11_OUTPUT)
-        {
-            out << "x.Sample";
-        }
-        else UNREACHABLE();
-
-        if (mOutputType == SH_HLSL9_OUTPUT)
-        {
-            switch(textureFunction->mipmap)
+            else if (textureFunction->sampler == EbtUSamplerCube)
             {
-              case TextureFunction::IMPLICIT: out << "(s, ";     break;
-              case TextureFunction::BIAS:     out << "bias(s, "; break;
-              case TextureFunction::LOD:      out << "lod(s, ";  break;
-              case TextureFunction::LOD0:     out << "lod(s, ";  break;
-              default: UNREACHABLE();
+                out << "    return uint4(0, 0, 0, 0);";
             }
+            else UNREACHABLE();
         }
-        else if (mOutputType == SH_HLSL11_OUTPUT)
+        else
         {
-            switch(textureFunction->mipmap)
+            if (IsIntegerSampler(textureFunction->sampler))
             {
-              case TextureFunction::IMPLICIT: out << "(s, ";      break;
-              case TextureFunction::BIAS:     out << "Bias(s, ";  break;
-              case TextureFunction::LOD:      out << "Level(s, "; break;
-              case TextureFunction::LOD0:     out << "Level(s, "; break;
-              default: UNREACHABLE();
-            }
-        }
-        else UNREACHABLE();
-
-        switch(hlslCoords)
-        {
-          case 2: out << "float2("; break;
-          case 3: out << "float3("; break;
-          case 4: out << "float4("; break;
-          default: UNREACHABLE();
-        }
-
-        TString proj = "";
-        
-        if (textureFunction->proj)
-        {
-            switch(textureFunction->coords)
-            {
-              case 3: proj = " / t.z"; break;
-              case 4: proj = " / t.w"; break;
-              default: UNREACHABLE();
-            }
-        }
-
-        out << "t.x" + proj + ", t.y" + proj;
-
-        if (mOutputType == SH_HLSL9_OUTPUT)
-        {
-            if (hlslCoords >= 3)
-            {
-                if (textureFunction->coords < 3)
+                if (IsSampler2D(textureFunction->sampler))
                 {
-                    out << ", 0";
+                    out << "    uint width; uint height; uint numberOfLevels;\n"
+                           "    x.GetDimensions(0, width, height, numberOfLevels);\n";
+                }
+                else if (IsSampler3D(textureFunction->sampler))
+                {
+                    out << "    uint width; uint height; uint depth; uint numberOfLevels;\n"
+                           "    x.GetDimensions(0, width, height, depth, numberOfLevels);\n";
+                }
+                else UNREACHABLE();
+            }
+
+            out << "    return ";
+
+            // HLSL intrinsic
+            if (mOutputType == SH_HLSL9_OUTPUT)
+            {
+                switch(textureFunction->sampler)
+                {
+                  case EbtSampler2D:   out << "tex2D";   break;
+                  case EbtSamplerCube: out << "texCUBE"; break;
+                  default: UNREACHABLE();
+                }
+
+                switch(textureFunction->mipmap)
+                {
+                  case TextureFunction::IMPLICIT: out << "(s, ";     break;
+                  case TextureFunction::BIAS:     out << "bias(s, "; break;
+                  case TextureFunction::LOD:      out << "lod(s, ";  break;
+                  case TextureFunction::LOD0:     out << "lod(s, ";  break;
+                  default: UNREACHABLE();
+                }
+            }
+            else if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                if (IsIntegerSampler(textureFunction->sampler))
+                {
+                    out << "x.Load(";
                 }
                 else
                 {
-                    out << ", t.z" + proj;
+                    switch(textureFunction->mipmap)
+                    {
+                      case TextureFunction::IMPLICIT: out << "x.Sample(s, ";      break;
+                      case TextureFunction::BIAS:     out << "x.SampleBias(s, ";  break;
+                      case TextureFunction::LOD:      out << "x.SampleLevel(s, "; break;
+                      case TextureFunction::LOD0:     out << "x.SampleLevel(s, "; break;
+                      default: UNREACHABLE();
+                    }
                 }
             }
+            else UNREACHABLE();
 
-            if (hlslCoords == 4)
+            // Integer sampling requires integer addresses
+            TString addressx = "";
+            TString addressy = "";
+            TString addressz = "";
+            TString close = "";
+
+            if (IsIntegerSampler(textureFunction->sampler))
             {
-                switch(textureFunction->mipmap)
+                switch(hlslCoords)
                 {
-                  case TextureFunction::BIAS: out << ", bias"; break;
-                  case TextureFunction::LOD:  out << ", lod";  break;
-                  case TextureFunction::LOD0: out << ", 0";    break;
+                  case 2: out << "int3("; break;
+                  case 3: out << "int4("; break;
+                  default: UNREACHABLE();
+                }
+            
+                addressx = "int(floor(float(width) * frac(";
+                addressy = "int(floor(float(height) * frac(";
+                addressz = "int(floor(float(depth) * frac(";
+                close = ")))";
+            }
+            else
+            {
+                switch(hlslCoords)
+                {
+                  case 2: out << "float2("; break;
+                  case 3: out << "float3("; break;
+                  case 4: out << "float4("; break;
                   default: UNREACHABLE();
                 }
             }
 
-            out << "));\n";
-        }
-        else if (mOutputType == SH_HLSL11_OUTPUT)
-        {
-            if (hlslCoords >= 3)
+            TString proj = "";   // Only used for projected textures
+        
+            if (textureFunction->proj)
             {
-                out << ", t.z" + proj;
+                switch(textureFunction->coords)
+                {
+                  case 3: proj = " / t.z"; break;
+                  case 4: proj = " / t.w"; break;
+                  default: UNREACHABLE();
+                }
             }
 
-            switch(textureFunction->mipmap)
-            {
-              case TextureFunction::IMPLICIT: out << "));";       break;
-              case TextureFunction::BIAS:     out << "), bias);"; break;
-              case TextureFunction::LOD:      out << "), lod);";  break;
-              case TextureFunction::LOD0:     out << "), 0);";    break;
-              default: UNREACHABLE();
-            }
-        }
-        else UNREACHABLE();
+            out << addressx + ("t.x" + proj) + close + ", " + addressy + ("t.y" + proj) + close;
 
-        out << "}\n"
+            if (mOutputType == SH_HLSL9_OUTPUT)
+            {
+                if (hlslCoords >= 3)
+                {
+                    if (textureFunction->coords < 3)
+                    {
+                        out << ", 0";
+                    }
+                    else
+                    {
+                        out << ", t.z" + proj;
+                    }
+                }
+
+                if (hlslCoords == 4)
+                {
+                    switch(textureFunction->mipmap)
+                    {
+                      case TextureFunction::BIAS: out << ", bias"; break;
+                      case TextureFunction::LOD:  out << ", lod";  break;
+                      case TextureFunction::LOD0: out << ", 0";    break;
+                      default: UNREACHABLE();
+                    }
+                }
+
+                out << "));\n";
+            }
+            else if (mOutputType == SH_HLSL11_OUTPUT)
+            {
+                if (hlslCoords >= 3)
+                {
+                    out << ", " + addressz + ("t.z" + proj) + close;
+                }
+
+                if (!IsIntegerSampler(textureFunction->sampler))
+                {
+                    switch(textureFunction->mipmap)
+                    {
+                      case TextureFunction::IMPLICIT: out << "));";       break;
+                      case TextureFunction::BIAS:     out << "), bias);"; break;
+                      case TextureFunction::LOD:      out << "), lod);";  break;
+                      case TextureFunction::LOD0:     out << "), 0);";    break;
+                      default: UNREACHABLE();
+                    }
+                }
+                else
+                {
+                    out << ", 0));";   // Sample from the top level
+                }
+            }
+            else UNREACHABLE();
+        }
+
+        out << "\n"
+               "}\n"
                "\n";
     }
 
@@ -3014,9 +3068,11 @@ TString OutputHLSL::textureString(const TType &type)
       case EbtSampler2DArray:     return "Texture2DArray";
       case EbtSampler3D:          return "Texture3D";
       case EbtISampler2D:         return "Texture2D<int4>";
+      case EbtISampler3D:         return "Texture3D<int4>";
       case EbtISamplerCube:       return "TextureCube<int4>";
       case EbtISampler2DArray:    return "Texture2DArray<int4>";
       case EbtUSampler2D:         return "Texture2D<uint4>";
+      case EbtUSampler3D:         return "Texture3D<uint4>";
       case EbtUSamplerCube:       return "TextureCube<uint4>";
       case EbtUSampler2DArray:    return "Texture2DArray<uint4>";
       default:
