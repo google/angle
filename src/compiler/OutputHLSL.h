@@ -40,14 +40,14 @@ class OutputHLSL : public TIntermTraverser
     TString typeString(const TType &type);
     TString textureString(const TType &type);
     TString interpolationString(TQualifier qualifier);
-    TString structureString(const TType &structType, bool useHLSLRowMajorPacking, bool useStd140Packing);
-    TString structureTypeName(const TType &structType, bool useHLSLRowMajorPacking, bool useStd140Packing);
+    TString structureString(const TStructure &structure, bool useHLSLRowMajorPacking, bool useStd140Packing);
+    TString structureTypeName(const TStructure &structure, bool useHLSLRowMajorPacking, bool useStd140Packing);
     static TString qualifierString(TQualifier qualifier);
     static TString arrayString(const TType &type);
     static TString initializer(const TType &type);
     static TString decorate(const TString &string);                      // Prepends an underscore to avoid naming clashes
     static TString decorateUniform(const TString &string, const TType &type);
-    static TString decorateField(const TString &string, const TType &structure);
+    static TString decorateField(const TString &string, const TStructure &structure);
 
   protected:
     void header();
@@ -187,20 +187,20 @@ class OutputHLSL : public TIntermTraverser
     TString registerString(TIntermSymbol *operand);
     int samplerRegister(TIntermSymbol *sampler);
     int uniformRegister(TIntermSymbol *uniform);
-    void declareUniformToList(const TType &type, const TString &name, int index, ActiveUniforms& output);
+    void declareUniformToList(const TType &type, const TString &name, int registerIndex, ActiveUniforms& output);
     void declareUniform(const TType &type, const TString &name, int index);
 
-    TString interfaceBlockUniformName(const TType &interfaceBlockType, const TType &uniformType);
+    TString interfaceBlockFieldString(const TInterfaceBlock &interfaceBlock, const TField &field);
     TString decoratePrivate(const TString &privateText);
-    TString interfaceBlockStructName(const TType &interfaceBlockType);
-    TString interfaceBlockInstanceString(const TType& interfaceBlockType, unsigned int arrayIndex);
-    TString interfaceBlockMemberTypeString(const TType &memberType, TLayoutBlockStorage blockStorage);
-    TString interfaceBlockMemberString(const TTypeList &typeList, TLayoutBlockStorage blockStorage);
-    TString interfaceBlockStructString(const TType &interfaceBlockType);
-    TString interfaceBlockString(const TType &interfaceBlockType, unsigned int registerIndex, unsigned int arrayIndex);
+    TString interfaceBlockStructNameString(const TInterfaceBlock &interfaceBlockType);
+    TString interfaceBlockInstanceString(const TInterfaceBlock& interfaceBlock, unsigned int arrayIndex);
+    TString interfaceBlockFieldTypeString(const TField &field, TLayoutBlockStorage blockStorage);
+    TString interfaceBlockFieldString(const TInterfaceBlock &interfaceBlock, TLayoutBlockStorage blockStorage);
+    TString interfaceBlockStructString(const TInterfaceBlock &interfaceBlock);
+    TString interfaceBlockString(const TInterfaceBlock &interfaceBlock, unsigned int registerIndex, unsigned int arrayIndex);
     TString std140PrePaddingString(const TType &type, int *elementIndex);
     TString std140PostPaddingString(const TType &type, bool useHLSLRowMajorPacking);
-    TString structInitializerString(int indent, const TTypeList &structMembers, const TString &structName);
+    TString structInitializerString(int indent, const TStructure &structure, const TString &rhsStructName);
     
     static GLenum glVariableType(const TType &type);
     static GLenum glVariablePrecision(const TType &type);

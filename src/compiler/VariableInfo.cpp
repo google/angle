@@ -173,14 +173,15 @@ void getUserDefinedVariableInfo(const TType& type,
                                 TVariableInfoList& infoList,
                                 ShHashFunction64 hashFunction)
 {
-    ASSERT(type.getBasicType() == EbtStruct);
+    ASSERT(type.getBasicType() == EbtStruct || type.isInterfaceBlock());
 
-    const TTypeList* structure = type.getStruct();
-    for (size_t i = 0; i < structure->size(); ++i) {
-        const TType* fieldType = (*structure)[i].type;
-        getVariableInfo(*fieldType,
-                        name + "." + fieldType->getFieldName(),
-                        mappedName + "." + TIntermTraverser::hash(fieldType->getFieldName(), hashFunction),
+    const TFieldList& fields = type.getStruct()->fields();
+    for (size_t i = 0; i < fields.size(); ++i) {
+        const TType& fieldType = *(fields[i]->type());
+        const TString& fieldName = fields[i]->name();
+        getVariableInfo(fieldType,
+                        name + "." + fieldName,
+                        mappedName + "." + TIntermTraverser::hash(fieldName, hashFunction),
                         infoList,
                         hashFunction);
     }

@@ -23,20 +23,19 @@ int TSymbolTableLevel::uniqueId = 0;
 
 TType::TType(const TPublicType &p) :
             type(p.type), precision(p.precision), qualifier(p.qualifier), primarySize(p.primarySize), secondarySize(p.secondarySize), array(p.array), layoutQualifier(p.layoutQualifier), arraySize(p.arraySize),
-            interfaceBlockType(0), structure(0), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0), typeName(0)
+            interfaceBlock(0), structure(0)
 {
     if (p.userDef) {
         structure = p.userDef->getStruct();
-        typeName = NewPoolTString(p.userDef->getTypeName().c_str());
-        computeDeepestStructNesting();
     }
 }
 
 //
 // Recursively generate mangled names.
 //
-void TType::buildMangledName(TString& mangledName)
+TString TType::buildMangledName() const
 {
+    TString mangledName;
     if (isMatrix())
         mangledName += 'm';
     else if (isVector())
@@ -45,7 +44,6 @@ void TType::buildMangledName(TString& mangledName)
     switch (type) {
     case EbtFloat:              mangledName += 'f';      break;
     case EbtInt:                mangledName += 'i';      break;
-    case EbtUInt:               mangledName += 'u';      break;
     case EbtBool:               mangledName += 'b';      break;
     case EbtSampler2D:          mangledName += "s2";     break;
     case EbtSampler3D:          mangledName += "s3";     break;
@@ -59,33 +57,9 @@ void TType::buildMangledName(TString& mangledName)
     case EbtUSampler3D:         mangledName += "us3";    break;
     case EbtUSamplerCube:       mangledName += "usC";    break;
     case EbtUSampler2DArray:    mangledName += "us2a";   break;
-    case EbtStruct:
-        mangledName += "struct-";
-        if (typeName)
-            mangledName += *typeName;
-        {// support MSVC++6.0
-            for (unsigned int i = 0; i < structure->size(); ++i) {
-                mangledName += '-';
-                (*structure)[i].type->buildMangledName(mangledName);
-            }
-        }
-        break;
-    case EbtInterfaceBlock:
-        {
-            mangledName += "interface-block-";
-            if (typeName)
-            {
-                mangledName += *typeName;
-            }
-            for (unsigned int i = 0; i < structure->size(); ++i)
-            {
-                mangledName += '-';
-                (*structure)[i].type->buildMangledName(mangledName);
-            }
-        }
-        break;
-    default:
-        break;
+    case EbtStruct:             mangledName += structure->mangledName(); break;
+    case EbtInterfaceBlock:     mangledName += interfaceBlock->mangledName(); break;
+    default:                    break;
     }
 
     if (isMatrix())
@@ -98,6 +72,7 @@ void TType::buildMangledName(TString& mangledName)
     {
         mangledName += static_cast<char>('0' + getNominalSize());
     }
+
     if (isArray()) {
         char buf[20];
         snprintf(buf, sizeof(buf), "%d", arraySize);
@@ -105,6 +80,7 @@ void TType::buildMangledName(TString& mangledName)
         mangledName += buf;
         mangledName += ']';
     }
+    return mangledName;
 }
 
 size_t TType::getObjectSize() const
@@ -112,7 +88,7 @@ size_t TType::getObjectSize() const
     size_t totalSize;
 
     if (getBasicType() == EbtStruct)
-        totalSize = getStructSize();
+        totalSize = structure->objectSize();
     else
         totalSize = primarySize * secondarySize;
 
@@ -127,57 +103,47 @@ size_t TType::getObjectSize() const
     return totalSize;
 }
 
-size_t TType::getStructSize() const
+bool TStructure::containsArrays() const
 {
-    if (!getStruct()) {
-        assert(false && "Not a struct");
-        return 0;
-    }
-
-    if (structureSize == 0) {
-        for (TTypeList::const_iterator tl = getStruct()->begin(); tl != getStruct()->end(); tl++) {
-            size_t fieldSize = ((*tl).type)->getObjectSize();
-            if (fieldSize > INT_MAX - structureSize)
-                structureSize = INT_MAX;
-            else
-                structureSize += fieldSize;
-        }
-    }
-
-    return structureSize;
-}
-
-void TType::computeDeepestStructNesting()
-{
-    if (!getStruct()) {
-        return;
-    }
-
-    int maxNesting = 0;
-    for (TTypeList::const_iterator tl = getStruct()->begin(); tl != getStruct()->end(); ++tl) {
-        maxNesting = std::max(maxNesting, ((*tl).type)->getDeepestStructNesting());
-    }
-
-    deepestStructNesting = 1 + maxNesting;
-}
-
-bool TType::isStructureContainingArrays() const
-{
-    if (!structure)
-    {
-        return false;
-    }
-
-    for (TTypeList::const_iterator member = structure->begin(); member != structure->end(); member++)
-    {
-        if (member->type->isArray() ||
-            member->type->isStructureContainingArrays())
-        {
+    for (size_t i = 0; i < mFields->size(); ++i) {
+        const TType* fieldType = (*mFields)[i]->type();
+        if (fieldType->isArray() || fieldType->isStructureContainingArrays())
             return true;
-        }
     }
-
     return false;
+}
+
+TString TFieldListCollection::buildMangledName() const
+{
+    TString mangledName(mangledNamePrefix());
+    mangledName += *mName;
+    for (size_t i = 0; i < mFields->size(); ++i) {
+        mangledName += '-';
+        mangledName += (*mFields)[i]->type()->getMangledName();
+    }
+    return mangledName;
+}
+
+size_t TFieldListCollection::calculateObjectSize() const
+{
+    size_t size = 0;
+    for (size_t i = 0; i < mFields->size(); ++i) {
+        size_t fieldSize = (*mFields)[i]->type()->getObjectSize();
+        if (fieldSize > INT_MAX - size)
+            size = INT_MAX;
+        else
+            size += fieldSize;
+    }
+    return size;
+}
+
+int TStructure::calculateDeepestNesting() const
+{
+    int maxNesting = 0;
+    for (size_t i = 0; i < mFields->size(); ++i) {
+        maxNesting = std::max(maxNesting, (*mFields)[i]->type()->getDeepestStructNesting());
+    }
+    return 1 + maxNesting;
 }
 
 //

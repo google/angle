@@ -7,27 +7,130 @@
 #ifndef _TYPES_INCLUDED
 #define _TYPES_INCLUDED
 
+#include "common/angleutils.h"
+
 #include "compiler/BaseTypes.h"
 #include "compiler/Common.h"
 #include "compiler/debug.h"
 
-class TType;
 struct TPublicType;
+class TType;
 
-//
-// Need to have association of line numbers to types in a list for building structs.
-//
-struct TTypeLine {
-    TType* type;
-    TSourceLoc line;
-};
-typedef TVector<TTypeLine> TTypeList;
-
-inline TTypeList* NewPoolTTypeList()
+class TField
 {
-    void* memory = GlobalPoolAllocator.allocate(sizeof(TTypeList));
-    return new(memory) TTypeList;
+public:
+    POOL_ALLOCATOR_NEW_DELETE(GlobalPoolAllocator);
+    TField(TType* type, TString* name, const TSourceLoc& line) : mType(type), mName(name), mLine(line) {}
+
+    // TODO(alokp): We should only return const type.
+    // Fix it by tweaking grammar.
+    TType* type() { return mType; }
+    const TType* type() const { return mType; }
+
+    const TString& name() const { return *mName; }
+    const TSourceLoc& line() const { return mLine; }
+
+private:
+    DISALLOW_COPY_AND_ASSIGN(TField);
+    TType* mType;
+    TString* mName;
+    TSourceLoc mLine;
+};
+
+typedef TVector<TField*> TFieldList;
+inline TFieldList* NewPoolTFieldList()
+{
+    void* memory = GlobalPoolAllocator.allocate(sizeof(TFieldList));
+    return new(memory) TFieldList;
 }
+
+class TFieldListCollection
+{
+public:
+    const TString& name() const { return *mName; }
+    const TFieldList& fields() const { return *mFields; }
+
+    const TString& mangledName() const {
+        if (mMangledName.empty())
+            mMangledName = buildMangledName();
+        return mMangledName;
+    }
+    size_t objectSize() const {
+        if (mObjectSize == 0)
+            mObjectSize = calculateObjectSize();
+        return mObjectSize;
+    };
+
+protected:
+    TFieldListCollection(const TString* name, TFieldList* fields)
+        : mName(name),
+          mFields(fields),
+          mObjectSize(0) {
+    }
+    TString buildMangledName() const;
+    size_t calculateObjectSize() const;
+    virtual TString mangledNamePrefix() const = 0;
+
+    const TString* mName;
+    TFieldList* mFields;
+
+    mutable TString mMangledName;
+    mutable size_t mObjectSize;
+};
+
+// May also represent interface blocks
+class TStructure : public TFieldListCollection
+{
+public:
+    POOL_ALLOCATOR_NEW_DELETE(GlobalPoolAllocator);
+    TStructure(const TString* name, TFieldList* fields)
+        : TFieldListCollection(name, fields),
+          mDeepestNesting(0) {
+    }
+
+    int deepestNesting() const {
+        if (mDeepestNesting == 0)
+            mDeepestNesting = calculateDeepestNesting();
+        return mDeepestNesting;
+    }
+    bool containsArrays() const;
+
+private:
+    DISALLOW_COPY_AND_ASSIGN(TStructure);
+    virtual TString mangledNamePrefix() const { return "struct-"; }
+    int calculateDeepestNesting() const;
+
+    mutable int mDeepestNesting;
+};
+
+class TInterfaceBlock : public TFieldListCollection
+{
+public:
+    POOL_ALLOCATOR_NEW_DELETE(GlobalPoolAllocator);
+    TInterfaceBlock(const TString* name, TFieldList* fields, const TString* instanceName, int arraySize, const TLayoutQualifier& layoutQualifier)
+        : TFieldListCollection(name, fields),
+          mInstanceName(instanceName),
+          mArraySize(arraySize),
+          mBlockStorage(layoutQualifier.blockStorage),
+          mMatrixPacking(layoutQualifier.matrixPacking) {
+    }
+
+    const TString& instanceName() const { return *mInstanceName; }
+    bool hasInstanceName() const { return mInstanceName != NULL; }
+    bool isArray() const { return mArraySize > 0; }
+    int arraySize() const { return mArraySize; }
+    TLayoutBlockStorage blockStorage() const { return mBlockStorage; }
+    TLayoutMatrixPacking matrixPacking() const { return mMatrixPacking; }
+
+private:
+    DISALLOW_COPY_AND_ASSIGN(TInterfaceBlock);
+    virtual TString mangledNamePrefix() const { return "iblock-"; }
+
+    const TString* mInstanceName; // for interface block instance names
+    int mArraySize; // 0 if not an array
+    TLayoutBlockStorage mBlockStorage;
+    TLayoutMatrixPacking mMatrixPacking;
+};
 
 //
 // Base class for things that have a type.
@@ -39,15 +142,19 @@ public:
     TType() {}
     TType(TBasicType t, TPrecision p, TQualifier q = EvqTemporary, int ps = 1, int ss = 1, bool a = false) :
             type(t), precision(p), qualifier(q), primarySize(ps), secondarySize(ss), array(a), layoutQualifier(TLayoutQualifier::create()), arraySize(0),
-            interfaceBlockType(0), structure(0), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0), typeName(0), instanceName(0)
+            interfaceBlock(0), structure(0)
     {
     }
     explicit TType(const TPublicType &p);
-    TType(TTypeList* userDef, const TString& n, TPrecision p = EbpUndefined) :
+    TType(TStructure* userDef, TPrecision p = EbpUndefined) :
             type(EbtStruct), precision(p), qualifier(EvqTemporary), primarySize(1), secondarySize(1), array(false), layoutQualifier(TLayoutQualifier::create()), arraySize(0),
-            interfaceBlockType(0), structure(userDef), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0), instanceName(0)
+            interfaceBlock(0), structure(userDef)
     {
-        typeName = NewPoolTString(n.c_str());
+    }
+    TType(TInterfaceBlock* interfaceBlockIn, TQualifier qualifierIn, TLayoutQualifier layoutQualifierIn, int arraySizeIn) :
+            type(EbtInterfaceBlock), precision(EbpUndefined), qualifier(qualifierIn), primarySize(1), secondarySize(1), array(arraySizeIn > 0), layoutQualifier(layoutQualifierIn), arraySize(arraySizeIn),
+            interfaceBlock(interfaceBlockIn), structure(0)
+    {
     }
 
     TBasicType getBasicType() const { return type; }
@@ -74,15 +181,14 @@ public:
 
     int elementRegisterCount() const
     {
-        TTypeList *structure = getStruct();
-
         if (structure)
         {
+            const TFieldList& fields = structure->fields();
             int registerCount = 0;
 
-            for (size_t i = 0; i < structure->size(); i++)
+            for (size_t i = 0; i < fields.size(); i++)
             {
-                registerCount += (*structure)[i].type->totalRegisterCount();
+                registerCount += fields[i]->type()->totalRegisterCount();
             }
 
             return registerCount;
@@ -114,65 +220,25 @@ public:
     int getArraySize() const { return arraySize; }
     void setArraySize(int s) { array = true; arraySize = s; }
     void clearArrayness() { array = false; arraySize = 0; }
-    void setInterfaceBlockType(TType* t) { interfaceBlockType = t; }
-    TType* getInterfaceBlockType() const { return interfaceBlockType; }
-    bool isInterfaceBlockMember() const { return interfaceBlockType != NULL; }
+
+    TInterfaceBlock* getInterfaceBlock() const { return interfaceBlock; }
+    void setInterfaceBlock(TInterfaceBlock* interfaceBlockIn) { interfaceBlock = interfaceBlockIn; }
+    bool isInterfaceBlock() const { return type == EbtInterfaceBlock; }
 
     bool isVector() const { return primarySize > 1 && secondarySize == 1; }
     bool isScalar() const { return primarySize == 1 && secondarySize == 1 && !structure; }
     bool isScalarInt() const { return isScalar() && (type == EbtInt || type == EbtUInt); }
 
-    TTypeList* getStruct() const { return structure; }
-    void setStruct(TTypeList* s) { structure = s; computeDeepestStructNesting(); }
+    TStructure* getStruct() const { return structure; }
+    void setStruct(TStructure* s) { structure = s; }
 
-    const TString& getTypeName() const
-    {
-        assert(typeName);
-        return *typeName;
-    }
-    void setTypeName(const TString& n)
-    {
-        typeName = NewPoolTString(n.c_str());
-    }
-
-    bool isField() const { return fieldName != 0; }
-    const TString& getFieldName() const
-    {
-        assert(fieldName);
-        return *fieldName;
-    }
-    void setFieldName(const TString& n)
-    {
-        fieldName = NewPoolTString(n.c_str());
-    }
-
-    TString& getMangledName() {
-        if (!mangled) {
-            mangled = NewPoolTString("");
-            buildMangledName(*mangled);
-            *mangled += ';' ;
+    const TString& getMangledName() {
+        if (mangled.empty()) {
+            mangled = buildMangledName();
+            mangled += ';';
         }
 
-        return *mangled;
-    }
-
-    void setInstanceName(const TString& n)
-    {
-        assert(type == EbtInterfaceBlock);
-        instanceName = NewPoolTString(n.c_str());
-    }
-
-    bool hasInstanceName() const
-    {
-        assert(type == EbtInterfaceBlock);
-        return instanceName != NULL;
-    }
-
-    const TString& getInstanceName() const
-    {
-        assert(type == EbtInterfaceBlock);
-        assert(instanceName);
-        return *instanceName;
+        return mangled;
     }
 
     bool sameElementType(const TType& right) const {
@@ -220,12 +286,16 @@ public:
     // For type "nesting2", this method would return 2 -- the number
     // of structures through which indirection must occur to reach the
     // deepest field (nesting2.field1.position).
-    int getDeepestStructNesting() const { return deepestStructNesting; }
+    int getDeepestStructNesting() const {
+        return structure ? structure->deepestNesting() : 0;
+    }
 
-    bool isStructureContainingArrays() const;
+    bool isStructureContainingArrays() const {
+        return structure ? structure->containsArrays() : false;
+    }
 
-private:
-    void buildMangledName(TString&);
+protected:
+    TString buildMangledName() const;
     size_t getStructSize() const;
     void computeDeepestStructNesting();
 
@@ -237,16 +307,14 @@ private:
     int primarySize; // size of vector or cols matrix
     int secondarySize; // rows of a matrix
     int arraySize;
-    TType* interfaceBlockType;
 
-    TTypeList* structure;      // 0 unless this is a struct
-    mutable size_t structureSize;
-    int deepestStructNesting;
+    // 0 unless this is an interface block, or interface block member variable
+    TInterfaceBlock* interfaceBlock;
 
-    TString *fieldName;         // for structure field names
-    TString *mangled;
-    TString *typeName;          // for structure field type name
-    TString *instanceName;      // for interface block instance names
+    // 0 unless this is a struct
+    TStructure* structure;
+
+    mutable TString mangled;
 };
 
 //

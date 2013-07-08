@@ -447,19 +447,18 @@ void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltI
     //
     // Depth range in window coordinates
     //
-    TTypeList *members = NewPoolTTypeList();
-    TTypeLine near = {new TType(EbtFloat, EbpHigh, EvqGlobal, 1), 0};
-    TTypeLine far = {new TType(EbtFloat, EbpHigh, EvqGlobal, 1), 0};
-    TTypeLine diff = {new TType(EbtFloat, EbpHigh, EvqGlobal, 1), 0};
-    near.type->setFieldName("near");
-    far.type->setFieldName("far");
-    diff.type->setFieldName("diff");
-    members->push_back(near);
-    members->push_back(far);
-    members->push_back(diff);
-    TVariable *depthRangeParameters = new TVariable(NewPoolTString("gl_DepthRangeParameters"), TType(members, "gl_DepthRangeParameters"), true);
+    TFieldList *fields = NewPoolTFieldList();
+    TSourceLoc zeroSourceLoc = {0};
+    TField *near = new TField(new TType(EbtFloat, EbpHigh, EvqGlobal, 1), NewPoolTString("near"), zeroSourceLoc);
+    TField *far = new TField(new TType(EbtFloat, EbpHigh, EvqGlobal, 1), NewPoolTString("far"), zeroSourceLoc);
+    TField *diff = new TField(new TType(EbtFloat, EbpHigh, EvqGlobal, 1), NewPoolTString("diff"), zeroSourceLoc);
+    fields->push_back(near);
+    fields->push_back(far);
+    fields->push_back(diff);
+    TStructure *depthRangeStruct = new TStructure(NewPoolTString("gl_DepthRangeParameters"), fields);
+    TVariable *depthRangeParameters = new TVariable(&depthRangeStruct->name(), depthRangeStruct, true);
     symbolTable.insert(COMMON_BUILTINS, *depthRangeParameters);
-    TVariable *depthRange = new TVariable(NewPoolTString("gl_DepthRange"), TType(members, "gl_DepthRangeParameters"));
+    TVariable *depthRange = new TVariable(NewPoolTString("gl_DepthRange"), TType(depthRangeStruct));
     depthRange->setQualifier(EvqUniform);
     symbolTable.insert(COMMON_BUILTINS, *depthRange);
 

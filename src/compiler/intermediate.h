@@ -271,6 +271,7 @@ public:
     int getNominalSize() const { return type.getNominalSize(); }
     int getSecondarySize() const { return type.getSecondarySize(); }
     
+    bool isInterfaceBlock() const { return type.isInterfaceBlock(); }
     bool isMatrix() const { return type.isMatrix(); }
     bool isArray()  const { return type.isArray(); }
     bool isVector() const { return type.isVector(); }

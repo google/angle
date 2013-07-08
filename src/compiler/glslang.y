@@ -79,8 +79,8 @@ WHICH GENERATES THE GLSL ES PARSER (glslang_tab.cpp AND glslang_tab.h).
             TQualifier qualifier;
             TFunction* function;
             TParameter param;
-            TTypeLine typeLine;
-            TTypeList* typeList;
+            TField* field;
+            TFieldList* fieldList;
         };
     } interm;
 }
@@ -189,8 +189,8 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, const char* reason)
 %type <interm.type> type_qualifier fully_specified_type type_specifier storage_qualifier interpolation_qualifier
 %type <interm.type> type_specifier_no_prec type_specifier_nonarray
 %type <interm.type> struct_specifier
-%type <interm.typeLine> struct_declarator
-%type <interm.typeList> struct_declarator_list struct_declaration struct_declaration_list
+%type <interm.field> struct_declarator
+%type <interm.fieldList> struct_declarator_list struct_declaration struct_declaration_list
 %type <interm.function> function_header function_declarator function_identifier
 %type <interm.function> function_header_with_parameters function_call_header
 %type <interm> function_call_header_with_parameters function_call_header_no_parameters function_call_generic function_prototype
@@ -818,15 +818,15 @@ declaration
     }
     | type_qualifier enter_struct struct_declaration_list RIGHT_BRACE SEMICOLON {
         ES3_ONLY(getQualifierString($1.qualifier), @1, "interface blocks");
-        $$ = context->addInterfaceBlock($1, @2, *$2.string, $3, "", @$, NULL, @$);
+        $$ = context->addInterfaceBlock($1, @2, *$2.string, $3, NULL, @$, NULL, @$);
     }
     | type_qualifier enter_struct struct_declaration_list RIGHT_BRACE IDENTIFIER SEMICOLON {
         ES3_ONLY(getQualifierString($1.qualifier), @1, "interface blocks");
-        $$ = context->addInterfaceBlock($1, @2, *$2.string, $3, *$5.string, @5, NULL, @$);
+        $$ = context->addInterfaceBlock($1, @2, *$2.string, $3, $5.string, @5, NULL, @$);
     }
     | type_qualifier enter_struct struct_declaration_list RIGHT_BRACE IDENTIFIER LEFT_BRACKET constant_expression RIGHT_BRACKET SEMICOLON {
         ES3_ONLY(getQualifierString($1.qualifier), @1, "interface blocks");
-        $$ = context->addInterfaceBlock($1, @2, *$2.string, $3, *$5.string, @5, $7, @6);
+        $$ = context->addInterfaceBlock($1, @2, *$2.string, $3, $5.string, @5, $7, @6);
     }
     | type_qualifier SEMICOLON {
         context->parseGlobalLayoutQualifier($1);
@@ -1519,10 +1519,10 @@ type_specifier_nonarray
 
 struct_specifier
     : STRUCT identifier LEFT_BRACE { if (context->enterStructDeclaration(@2, *$2.string)) context->recover(); } struct_declaration_list RIGHT_BRACE {
-        $$ = context->addStructure(@1, @2, *$2.string, $5);
+        $$ = context->addStructure(@1, @2, $2.string, $5);
     }
     | STRUCT LEFT_BRACE { if (context->enterStructDeclaration(@2, *$2.string)) context->recover(); } struct_declaration_list RIGHT_BRACE {
-        $$ = context->addStructure(@1, @$, "", $4);
+        $$ = context->addStructure(@1, @$, NewPoolTString(""), $4);
     }
     ;
 
@@ -1532,14 +1532,15 @@ struct_declaration_list
     }
     | struct_declaration_list struct_declaration {
         $$ = $1;
-        for (unsigned int i = 0; i < $2->size(); ++i) {
-            for (unsigned int j = 0; j < $$->size(); ++j) {
-                if ((*$$)[j].type->getFieldName() == (*$2)[i].type->getFieldName()) {
-                    context->error((*$2)[i].line, "duplicate field name in structure:", "struct", (*$2)[i].type->getFieldName().c_str());
+        for (size_t i = 0; i < $2->size(); ++i) {
+            TField* field = (*$2)[i];
+            for (size_t j = 0; j < $$->size(); ++j) {
+                if ((*$$)[j]->name() == field->name()) {
+                    context->error(@2, "duplicate field name in structure:", "struct", field->name().c_str());
                     context->recover();
                 }
             }
-            $$->push_back((*$2)[i]);
+            $$->push_back(field);
         }
     }
     ;
@@ -1558,7 +1559,7 @@ struct_declaration
 
 struct_declarator_list
     : struct_declarator {
-        $$ = NewPoolTTypeList();
+        $$ = NewPoolTFieldList();
         $$->push_back($1);
     }
     | struct_declarator_list COMMA struct_declarator {
@@ -1571,20 +1572,20 @@ struct_declarator
         if (context->reservedErrorCheck(@1, *$1.string))
             context->recover();
 
-        $$.type = new TType(EbtVoid, EbpUndefined);
-        $$.type->setFieldName(*$1.string);
+        TType* type = new TType(EbtVoid, EbpUndefined);
+        $$ = new TField(type, $1.string, @1);
     }
     | identifier LEFT_BRACKET constant_expression RIGHT_BRACKET {
         if (context->reservedErrorCheck(@1, *$1.string))
             context->recover();
 
-        $$.type = new TType(EbtVoid, EbpUndefined);
-        $$.type->setFieldName(*$1.string);
-
+        TType* type = new TType(EbtVoid, EbpUndefined);
         int size;
-        if (context->arraySizeErrorCheck(@2, $3, size))
+        if (context->arraySizeErrorCheck(@3, $3, size))
             context->recover();
-        $$.type->setArraySize(size);
+        type->setArraySize(size);
+
+        $$ = new TField(type, $1.string, @1);
     }
     ;
 

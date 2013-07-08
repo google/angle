@@ -241,15 +241,15 @@ int OutputHLSL::vectorSize(const TType &type) const
     return elementSize * arraySize;
 }
 
-TString OutputHLSL::interfaceBlockUniformName(const TType &interfaceBlockType, const TType &uniformType)
+TString OutputHLSL::interfaceBlockFieldString(const TInterfaceBlock &interfaceBlock, const TField &field)
 {
-    if (interfaceBlockType.hasInstanceName())
+    if (interfaceBlock.hasInstanceName())
     {
-        return interfaceBlockType.getTypeName() + "." + uniformType.getFieldName();
+        return interfaceBlock.name() + "." + field.name();
     }
     else
     {
-        return uniformType.getFieldName();
+        return field.name();
     }
 }
 
@@ -258,47 +258,113 @@ TString OutputHLSL::decoratePrivate(const TString &privateText)
     return "dx_" + privateText;
 }
 
-TString OutputHLSL::interfaceBlockStructName(const TType &interfaceBlockType)
+TString OutputHLSL::interfaceBlockStructNameString(const TInterfaceBlock &interfaceBlock)
 {
-    return decoratePrivate(interfaceBlockType.getTypeName()) + "_type";
+    return decoratePrivate(interfaceBlock.name()) + "_type";
 }
 
-TString OutputHLSL::interfaceBlockInstanceString(const TType& interfaceBlockType, unsigned int arrayIndex)
+TString OutputHLSL::interfaceBlockInstanceString(const TInterfaceBlock& interfaceBlock, unsigned int arrayIndex)
 {
-    if (!interfaceBlockType.hasInstanceName())
+    if (!interfaceBlock.hasInstanceName())
     {
         return "";
     }
-    else if (interfaceBlockType.isArray())
+    else if (interfaceBlock.isArray())
     {
-        return decoratePrivate(interfaceBlockType.getInstanceName()) + "_" + str(arrayIndex);
+        return decoratePrivate(interfaceBlock.instanceName()) + "_" + str(arrayIndex);
     }
     else
     {
-        return decorate(interfaceBlockType.getInstanceName());
+        return decorate(interfaceBlock.instanceName());
     }
 }
 
-TString OutputHLSL::interfaceBlockMemberTypeString(const TType &memberType, TLayoutBlockStorage blockStorage)
+TString OutputHLSL::interfaceBlockFieldTypeString(const TField &field, TLayoutBlockStorage blockStorage)
 {
-    const TLayoutMatrixPacking matrixPacking = memberType.getLayoutQualifier().matrixPacking;
+    const TType &fieldType = *field.type();
+    const TLayoutMatrixPacking matrixPacking = fieldType.getLayoutQualifier().matrixPacking;
     ASSERT(matrixPacking != EmpUnspecified);
 
-    if (memberType.isMatrix())
+    if (fieldType.isMatrix())
     {
         // Use HLSL row-major packing for GLSL column-major matrices
         const TString &matrixPackString = (matrixPacking == EmpRowMajor ? "column_major" : "row_major");
-        return matrixPackString + " " + typeString(memberType);
+        return matrixPackString + " " + typeString(fieldType);
     }
-    else if (memberType.getBasicType() == EbtStruct)
+    else if (fieldType.getStruct())
     {
         // Use HLSL row-major packing for GLSL column-major matrices
-        return structureTypeName(memberType, matrixPacking == EmpColumnMajor, blockStorage == EbsStd140);
+        return structureTypeName(*fieldType.getStruct(), matrixPacking == EmpColumnMajor, blockStorage == EbsStd140);
     }
     else
     {
-        return typeString(memberType);
+        return typeString(fieldType);
     }
+}
+
+TString OutputHLSL::interfaceBlockFieldString(const TInterfaceBlock &interfaceBlock, TLayoutBlockStorage blockStorage)
+{
+    TString hlsl;
+
+    int elementIndex = 0;
+
+    for (unsigned int typeIndex = 0; typeIndex < interfaceBlock.fields().size(); typeIndex++)
+    {
+        const TField &field = *interfaceBlock.fields()[typeIndex];
+        const TType &fieldType = *field.type();
+
+        if (blockStorage == EbsStd140)
+        {
+            // 2 and 3 component vector types in some cases need pre-padding
+            hlsl += std140PrePaddingString(fieldType, &elementIndex);
+        }
+
+        hlsl += "    " + interfaceBlockFieldTypeString(field, blockStorage) +
+                " " + decorate(field.name()) + arrayString(fieldType) + ";\n";
+
+        // must pad out after matrices and arrays, where HLSL usually allows itself room to pack stuff
+        if (blockStorage == EbsStd140)
+        {
+            const bool useHLSLRowMajorPacking = (fieldType.getLayoutQualifier().matrixPacking == EmpColumnMajor);
+            hlsl += std140PostPaddingString(fieldType, useHLSLRowMajorPacking);
+        }
+    }
+
+    return hlsl;
+}
+
+TString OutputHLSL::interfaceBlockStructString(const TInterfaceBlock &interfaceBlock)
+{
+    const TLayoutBlockStorage blockStorage = interfaceBlock.blockStorage();
+
+    return "struct " + interfaceBlockStructNameString(interfaceBlock) + "\n"
+           "{\n" +
+           interfaceBlockFieldString(interfaceBlock, blockStorage) +
+           "};\n\n";
+}
+
+TString OutputHLSL::interfaceBlockString(const TInterfaceBlock &interfaceBlock, unsigned int registerIndex, unsigned int arrayIndex)
+{
+    const TString &arrayIndexString =  (arrayIndex != GL_INVALID_INDEX ? decorate(str(arrayIndex)) : "");
+    const TString &blockName = interfaceBlock.name() + arrayIndexString;
+    TString hlsl;
+
+    hlsl += "cbuffer " + blockName + " : register(b" + str(registerIndex) + ")\n"
+            "{\n";
+
+    if (interfaceBlock.hasInstanceName())
+    {
+        hlsl += "    " + interfaceBlockStructNameString(interfaceBlock) + " " + interfaceBlockInstanceString(interfaceBlock, arrayIndex) + ";\n";
+    }
+    else
+    {
+        const TLayoutBlockStorage blockStorage = interfaceBlock.blockStorage();
+        hlsl += interfaceBlockFieldString(interfaceBlock, blockStorage);
+    }
+
+    hlsl += "};\n\n";
+
+    return hlsl;
 }
 
 TString OutputHLSL::std140PrePaddingString(const TType &type, int *elementIndex)
@@ -370,9 +436,9 @@ TString OutputHLSL::std140PostPaddingString(const TType &type, bool useHLSLRowMa
         const GLenum glType = glVariableType(type);
         numComponents = gl::MatrixComponentCount(glType, isRowMajorMatrix);
     }
-    else if (type.getBasicType() == EbtStruct)
+    else if (type.getStruct())
     {
-        const TString &structName = structureTypeName(type, useHLSLRowMajorPacking, true);
+        const TString &structName = structureTypeName(*type.getStruct(), useHLSLRowMajorPacking, true);
         numComponents = mStd140StructElementIndexes[structName];
 
         if (numComponents == 0)
@@ -392,72 +458,6 @@ TString OutputHLSL::std140PostPaddingString(const TType &type, bool useHLSLRowMa
         padding += "    float pad_" + str(mPaddingCounter++) + ";\n";
     }
     return padding;
-}
-
-TString OutputHLSL::interfaceBlockMemberString(const TTypeList &typeList, TLayoutBlockStorage blockStorage)
-{
-    TString hlsl;
-
-    int elementIndex = 0;
-
-    for (unsigned int typeIndex = 0; typeIndex < typeList.size(); typeIndex++)
-    {
-        const TType &memberType = *typeList[typeIndex].type;
-
-        if (blockStorage == EbsStd140)
-        {
-            // 2 and 3 component vector types in some cases need pre-padding
-            hlsl += std140PrePaddingString(memberType, &elementIndex);
-        }
-
-        hlsl += "    " + interfaceBlockMemberTypeString(memberType, blockStorage) +
-                " " + decorate(memberType.getFieldName()) + arrayString(memberType) + ";\n";
-
-        // must pad out after matrices and arrays, where HLSL usually allows itself room to pack stuff
-        if (blockStorage == EbsStd140)
-        {
-            const bool useHLSLRowMajorPacking = (memberType.getLayoutQualifier().matrixPacking == EmpColumnMajor);
-            hlsl += std140PostPaddingString(memberType, useHLSLRowMajorPacking);
-        }
-    }
-
-    return hlsl;
-}
-
-TString OutputHLSL::interfaceBlockStructString(const TType &interfaceBlockType)
-{
-    const TTypeList &typeList = *interfaceBlockType.getStruct();
-    const TLayoutBlockStorage blockStorage = interfaceBlockType.getLayoutQualifier().blockStorage;
-
-    return "struct " + interfaceBlockStructName(interfaceBlockType) + "\n"
-           "{\n" +
-           interfaceBlockMemberString(typeList, blockStorage) +
-           "};\n\n";
-}
-
-TString OutputHLSL::interfaceBlockString(const TType &interfaceBlockType, unsigned int registerIndex, unsigned int arrayIndex)
-{
-    const TString &arrayIndexString =  (arrayIndex != GL_INVALID_INDEX ? decorate(str(arrayIndex)) : "");
-    const TString &blockName = interfaceBlockType.getTypeName() + arrayIndexString;
-    TString hlsl;
-
-    hlsl += "cbuffer " + blockName + " : register(b" + str(registerIndex) + ")\n"
-            "{\n";
-
-    if (interfaceBlockType.hasInstanceName())
-    {
-        hlsl += "    " + interfaceBlockStructName(interfaceBlockType) + " " + interfaceBlockInstanceString(interfaceBlockType, arrayIndex) + ";\n";
-    }
-    else
-    {
-        const TTypeList &typeList = *interfaceBlockType.getStruct();
-        const TLayoutBlockStorage blockStorage = interfaceBlockType.getLayoutQualifier().blockStorage;
-        hlsl += interfaceBlockMemberString(typeList, blockStorage);
-    }
-
-    hlsl += "};\n\n";
-
-    return hlsl;
 }
 
 // Use the same layout for packed and shared
@@ -502,7 +502,7 @@ BlockLayoutType convertBlockLayoutType(TLayoutBlockStorage blockStorage)
     }
 }
 
-TString OutputHLSL::structInitializerString(int indent, const TTypeList &structMembers, const TString &structName)
+TString OutputHLSL::structInitializerString(int indent, const TStructure &structure, const TString &rhsStructName)
 {
     TString init;
 
@@ -521,19 +521,20 @@ TString OutputHLSL::structInitializerString(int indent, const TTypeList &structM
 
     init += preIndentString + "{\n";
 
-    for (unsigned int memberIndex = 0; memberIndex < structMembers.size(); memberIndex++)
+    const TFieldList &fields = structure.fields();
+    for (unsigned int fieldIndex = 0; fieldIndex < fields.size(); fieldIndex++)
     {
-        const TType &memberType = *structMembers[memberIndex].type;
-        const TString &fieldName = decorate(memberType.getFieldName());
+        const TField &field = *fields[fieldIndex];
+        const TString &fieldName = rhsStructName + "." + decorate(field.name());
+        const TType &fieldType = *field.type();
 
-        if (memberType.getBasicType() == EbtStruct)
+        if (fieldType.getStruct())
         {
-            const TTypeList &nestedStructMembers = *memberType.getStruct();
-            init += structInitializerString(indent + 1, nestedStructMembers, structName + "." + fieldName);
+            init += structInitializerString(indent + 1, *fieldType.getStruct(), fieldName);
         }
         else
         {
-            init += fullIndentString + structName + "." + fieldName + ",\n";
+            init += fullIndentString + fieldName + ",\n";
         }
     }
 
@@ -577,40 +578,39 @@ void OutputHLSL::header()
     for (ReferencedSymbols::const_iterator interfaceBlockIt = mReferencedInterfaceBlocks.begin(); interfaceBlockIt != mReferencedInterfaceBlocks.end(); interfaceBlockIt++)
     {
         const TType &nodeType = interfaceBlockIt->second->getType();
-        const TType &interfaceBlockType = nodeType.isInterfaceBlockMember() ? *nodeType.getInterfaceBlockType() : nodeType;
-        const TString &blockName = interfaceBlockType.getTypeName();
-        const TTypeList &typeList = *interfaceBlockType.getStruct();
+        const TInterfaceBlock &interfaceBlock = *nodeType.getInterfaceBlock();
+        const TFieldList &fieldList = interfaceBlock.fields();
 
-        const unsigned int arraySize = interfaceBlockType.isArray() ? interfaceBlockType.getArraySize() : 0;
-        sh::InterfaceBlock interfaceBlock(blockName.c_str(), arraySize, mInterfaceBlockRegister);
-        for (unsigned int typeIndex = 0; typeIndex < typeList.size(); typeIndex++)
+        unsigned int arraySize = static_cast<unsigned int>(interfaceBlock.arraySize());
+        sh::InterfaceBlock activeBlock(interfaceBlock.name().c_str(), arraySize, mInterfaceBlockRegister);
+        for (unsigned int typeIndex = 0; typeIndex < fieldList.size(); typeIndex++)
         {
-            const TType &memberType = *typeList[typeIndex].type;
-            const TString &fullUniformName = interfaceBlockUniformName(interfaceBlockType, memberType);
-            declareUniformToList(memberType, fullUniformName, typeIndex, interfaceBlock.activeUniforms);
+            const TField &field = *fieldList[typeIndex];
+            const TString &fullUniformName = interfaceBlockFieldString(interfaceBlock, field);
+            declareUniformToList(*field.type(), fullUniformName, typeIndex, activeBlock.activeUniforms);
         }
 
-        mInterfaceBlockRegister += std::max(1u, interfaceBlock.arraySize);
+        mInterfaceBlockRegister += std::max(1u, arraySize);
 
-        BlockLayoutType blockLayoutType = convertBlockLayoutType(interfaceBlockType.getLayoutQualifier().blockStorage);
-        setBlockLayout(&interfaceBlock, blockLayoutType);
-        mActiveInterfaceBlocks.push_back(interfaceBlock);
+        BlockLayoutType blockLayoutType = convertBlockLayoutType(interfaceBlock.blockStorage());
+        setBlockLayout(&activeBlock, blockLayoutType);
+        mActiveInterfaceBlocks.push_back(activeBlock);
 
-        if (interfaceBlockType.hasInstanceName())
+        if (interfaceBlock.hasInstanceName())
         {
-            interfaceBlocks += interfaceBlockStructString(interfaceBlockType);
+            interfaceBlocks += interfaceBlockStructString(interfaceBlock);
         }
 
         if (arraySize > 0)
         {
             for (unsigned int arrayIndex = 0; arrayIndex < arraySize; arrayIndex++)
             {
-                interfaceBlocks += interfaceBlockString(interfaceBlockType, interfaceBlock.registerIndex + arrayIndex, arrayIndex);
+                interfaceBlocks += interfaceBlockString(interfaceBlock, activeBlock.registerIndex + arrayIndex, arrayIndex);
             }
         }
         else
         {
-            interfaceBlocks += interfaceBlockString(interfaceBlockType, interfaceBlock.registerIndex, GL_INVALID_INDEX);
+            interfaceBlocks += interfaceBlockString(interfaceBlock, activeBlock.registerIndex, GL_INVALID_INDEX);
         }
     }
 
@@ -618,12 +618,11 @@ void OutputHLSL::header()
     {
         TIntermTyped *structNode = flaggedStructIt->first;
         const TString &mappedName = flaggedStructIt->second;
-        const TType &structType = structNode->getType();
-        const TTypeList &structMembers = *structType.getStruct();
+        const TStructure &structure = *structNode->getType().getStruct();
         const TString &originalName = mFlaggedStructOriginalNames[structNode];
 
-        flaggedStructs += "static " + decorate(structType.getTypeName()) + " " + mappedName + " =\n";
-        flaggedStructs += structInitializerString(0, structMembers, originalName);
+        flaggedStructs += "static " + decorate(structure.name()) + " " + mappedName + " =\n";
+        flaggedStructs += structInitializerString(0, structure, originalName);
         flaggedStructs += "\n";
     }
 
@@ -1463,23 +1462,19 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
 
         if (qualifier == EvqUniform)
         {
-            if (node->getType().isInterfaceBlockMember())
+            const TType& nodeType = node->getType();
+            const TInterfaceBlock* interfaceBlock = nodeType.getInterfaceBlock();
+
+            if (interfaceBlock)
             {
-                const TString& interfaceBlockTypeName = node->getType().getInterfaceBlockType()->getTypeName();
-                mReferencedInterfaceBlocks[interfaceBlockTypeName] = node;
-                out << decorateUniform(name, node->getType());
-            }
-            else if (node->getBasicType() == EbtInterfaceBlock)
-            {
-                const TString& interfaceBlockTypeName = node->getType().getTypeName();
-                mReferencedInterfaceBlocks[interfaceBlockTypeName] = node;
-                out << decorateUniform(name, node->getType());
+                mReferencedInterfaceBlocks[interfaceBlock->name()] = node;
             }
             else
             {
                 mReferencedUniforms[name] = node;
-                out << decorateUniform(name, node->getType());
             }
+
+            out << decorateUniform(name, nodeType);
         }
         else if (qualifier == EvqAttribute || qualifier == EvqVertexInput)
         {
@@ -1624,19 +1619,25 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
         break;
       case EOpDivAssign:               outputTriplet(visit, "(", " /= ", ")");          break;
       case EOpIndexDirect:
-        if (node->getLeft()->getBasicType() == EbtInterfaceBlock)
         {
-            if (visit == PreVisit)
+            const TType& leftType = node->getLeft()->getType();
+            if (leftType.isInterfaceBlock())
             {
-                const TType &interfaceBlockType = node->getLeft()->getType();
-                mReferencedInterfaceBlocks[interfaceBlockType.getInstanceName()] = node->getLeft()->getAsSymbolNode();
-                out << interfaceBlockInstanceString(interfaceBlockType, node->getRight()->getAsConstantUnion()->getIConst(0));
-                return false;
+                if (visit == PreVisit)
+                {
+                    TInterfaceBlock* interfaceBlock = leftType.getInterfaceBlock();
+                    const int arrayIndex = node->getRight()->getAsConstantUnion()->getIConst(0);
+
+                    mReferencedInterfaceBlocks[interfaceBlock->instanceName()] = node->getLeft()->getAsSymbolNode();
+                    out << interfaceBlockInstanceString(*interfaceBlock, arrayIndex);
+
+                    return false;
+                }
             }
-        }
-        else
-        {
-            outputTriplet(visit, "", "[", "]");
+            else
+            {
+                outputTriplet(visit, "", "[", "]");
+            }
         }
         break;
       case EOpIndexIndirect:
@@ -1645,10 +1646,23 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
         outputTriplet(visit, "", "[", "]");
         break;
       case EOpIndexDirectStruct:
+        if (visit == InVisit)
+        {
+            const TStructure* structure = node->getLeft()->getType().getStruct();
+            const TIntermConstantUnion* index = node->getRight()->getAsConstantUnion();
+            const TField* field = structure->fields()[index->getIConst(0)];
+            out << "." + decorateField(field->name(), *structure);
+
+            return false;
+        }
+        break;
       case EOpIndexDirectInterfaceBlock:
         if (visit == InVisit)
         {
-            out << "." + decorateField(node->getType().getFieldName(), node->getLeft()->getType());
+            const TInterfaceBlock* interfaceBlock = node->getLeft()->getType().getInterfaceBlock();
+            const TIntermConstantUnion* index = node->getRight()->getAsConstantUnion();
+            const TField* field = interfaceBlock->fields()[index->getIConst(0)];
+            out << "." + decorate(field->name());
 
             return false;
         }
@@ -1717,18 +1731,19 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
                 out << "!(";
             }
 
-            const TTypeList *fields = node->getLeft()->getType().getStruct();
+            const TStructure &structure = *node->getLeft()->getType().getStruct();
+            const TFieldList &fields = structure.fields();
 
-            for (size_t i = 0; i < fields->size(); i++)
+            for (size_t i = 0; i < fields.size(); i++)
             {
-                const TType *fieldType = (*fields)[i].type;
+                const TField *field = fields[i];
 
                 node->getLeft()->traverse(this);
-                out << "." + decorateField(fieldType->getFieldName(), node->getLeft()->getType()) + " == ";
+                out << "." + decorateField(field->name(), structure) + " == ";
                 node->getRight()->traverse(this);
-                out << "." + decorateField(fieldType->getFieldName(), node->getLeft()->getType());
+                out << "." + decorateField(field->name(), structure);
 
-                if (i < fields->size() - 1)
+                if (i < fields.size() - 1)
                 {
                     out << " && ";
                 }
@@ -1996,7 +2011,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             {
                 if (variable->getType().getStruct())
                 {
-                    addConstructor(variable->getType(), scopedStruct(variable->getType().getTypeName()), NULL);
+                    addConstructor(variable->getType(), scopedStruct(variable->getType().getStruct()->name()), NULL);
                 }
 
                 if (!variable->getAsSymbolNode() || variable->getAsSymbolNode()->getSymbol() != "")   // Variable declaration
@@ -2123,7 +2138,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 {
                     if (symbol->getType().getStruct())
                     {
-                        addConstructor(symbol->getType(), scopedStruct(symbol->getType().getTypeName()), NULL);
+                        addConstructor(symbol->getType(), scopedStruct(symbol->getType().getStruct()->name()), NULL);
                     }
 
                     out << argumentString(symbol);
@@ -2319,8 +2334,8 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         outputTriplet(visit, "mat4(", ", ", ")");
         break;
       case EOpConstructStruct:
-        addConstructor(node->getType(), scopedStruct(node->getType().getTypeName()), &node->getSequence());
-        outputTriplet(visit, structLookup(node->getType().getTypeName()) + "_ctor(", ", ", ")");
+        addConstructor(node->getType(), scopedStruct(node->getType().getStruct()->name()), &node->getSequence());
+        outputTriplet(visit, structLookup(node->getType().getStruct()->name()) + "_ctor(", ", ", ")");
         break;
       case EOpLessThan:         outputTriplet(visit, "(", " < ", ")");                 break;
       case EOpGreaterThan:      outputTriplet(visit, "(", " > ", ")");                 break;
@@ -2910,15 +2925,17 @@ TString OutputHLSL::qualifierString(TQualifier qualifier)
 
 TString OutputHLSL::typeString(const TType &type)
 {
-    if (type.getBasicType() == EbtStruct)
+    const TStructure* structure = type.getStruct();
+    if (structure)
     {
-        if (type.getTypeName() != "")
+        const TString& typeName = structure->name();
+        if (typeName != "")
         {
-            return structLookup(type.getTypeName());
+            return structLookup(typeName);
         }
         else   // Nameless structure, define in place
         {
-            return structureString(type, false, false);
+            return structureString(*structure, false, false);
         }
     }
     else if (type.isMatrix())
@@ -3038,42 +3055,41 @@ TString OutputHLSL::initializer(const TType &type)
     return "{" + string + "}";
 }
 
-TString OutputHLSL::structureString(const TType &structType, bool useHLSLRowMajorPacking, bool useStd140Packing)
+TString OutputHLSL::structureString(const TStructure &structure, bool useHLSLRowMajorPacking, bool useStd140Packing)
 {
-    ASSERT(structType.getStruct());
-
-    const TTypeList &fields = *structType.getStruct();
-    const bool isNameless = (structType.getTypeName() == "");
-    const TString &structName = structureTypeName(structType, useHLSLRowMajorPacking, useStd140Packing);
-
+    const TFieldList &fields = structure.fields();
+    const bool isNameless = (structure.name() == "");
+    const TString &structName = structureTypeName(structure, useHLSLRowMajorPacking, useStd140Packing);
     const TString declareString = (isNameless ? "struct" : "struct " + structName);
 
-    TString structure;
-    structure += declareString + "\n"
-                 "{\n";
+    TString string;
+    string += declareString + "\n"
+              "{\n";
 
     int elementIndex = 0;
 
     for (unsigned int i = 0; i < fields.size(); i++)
     {
-        const TType &field = *fields[i].type;
+        const TField &field = *fields[i];
+        const TType &fieldType = *field.type();
+        const TStructure *fieldStruct = fieldType.getStruct();
+        const TString &fieldTypeString = fieldStruct ? structureTypeName(*fieldStruct, useHLSLRowMajorPacking, useStd140Packing) : typeString(fieldType);
 
         if (useStd140Packing)
         {
-            structure += std140PrePaddingString(field, &elementIndex);
+            string += std140PrePaddingString(*field.type(), &elementIndex);
         }
 
-        structure += "    " + structureTypeName(field, useHLSLRowMajorPacking, useStd140Packing) + " " +
-                     decorateField(field.getFieldName(), structType) + arrayString(field) + ";\n";
+        string += "    " + fieldTypeString + " " + decorateField(field.name(), structure) + arrayString(fieldType) + ";\n";
 
         if (useStd140Packing)
         {
-            structure += std140PostPaddingString(field, useHLSLRowMajorPacking);
+            string += std140PostPaddingString(*field.type(), useHLSLRowMajorPacking);
         }
     }
 
     // Nameless structs do not finish with a semicolon and newline, to leave room for an instance variable
-    structure += (isNameless ? "} " : "};\n");
+    string += (isNameless ? "} " : "};\n");
 
     // Add remaining element index to the global map, for use with nested structs in standard layouts
     if (useStd140Packing)
@@ -3081,17 +3097,12 @@ TString OutputHLSL::structureString(const TType &structType, bool useHLSLRowMajo
         mStd140StructElementIndexes[structName] = elementIndex;
     }
 
-    return structure;
+    return string;
 }
 
-TString OutputHLSL::structureTypeName(const TType &structType, bool useHLSLRowMajorPacking, bool useStd140Packing)
+TString OutputHLSL::structureTypeName(const TStructure &structure, bool useHLSLRowMajorPacking, bool useStd140Packing)
 {
-    if (structType.getBasicType() != EbtStruct)
-    {
-        return typeString(structType);
-    }
-
-    if (structType.getTypeName() == "")
+    if (structure.name() == "")
     {
         return "";
     }
@@ -3112,7 +3123,7 @@ TString OutputHLSL::structureTypeName(const TType &structType, bool useHLSLRowMa
         prefix += "rm";
     }
 
-    return prefix + typeString(structType);
+    return prefix + structLookup(structure.name());
 }
 
 void OutputHLSL::addConstructor(const TType &type, const TString &name, const TIntermSequence *parameters)
@@ -3137,37 +3148,38 @@ void OutputHLSL::addConstructor(const TType &type, const TString &name, const TI
     typedef std::vector<TType> ParameterArray;
     ParameterArray ctorParameters;
 
-    if (type.getStruct())
+    const TStructure* structure = type.getStruct();
+    if (structure)
     {
         mStructNames.insert(decorate(name));
 
-        const TString &structure = structureString(type, false, false);
+        const TString &structString = structureString(*structure, false, false);
 
-        if (std::find(mStructDeclarations.begin(), mStructDeclarations.end(), structure) == mStructDeclarations.end())
+        if (std::find(mStructDeclarations.begin(), mStructDeclarations.end(), structString) == mStructDeclarations.end())
         {
             // Add row-major packed struct for interface blocks
             TString rowMajorString = "#pragma pack_matrix(row_major)\n" +
-                                     structureString(type, true, false) +
+                                     structureString(*structure, true, false) +
                                      "#pragma pack_matrix(column_major)\n";
 
             const TString &std140Prefix = "std";
-            TString std140String = structureString(type, false, true);
+            TString std140String = structureString(*structure, false, true);
 
             const TString &std140RowMajorPrefix = "std_rm";
             TString std140RowMajorString = "#pragma pack_matrix(row_major)\n" +
-                                           structureString(type, true, true) +
+                                           structureString(*structure, true, true) +
                                            "#pragma pack_matrix(column_major)\n";
 
-            mStructDeclarations.push_back(structure);
+            mStructDeclarations.push_back(structString);
             mStructDeclarations.push_back(rowMajorString);
             mStructDeclarations.push_back(std140String);
             mStructDeclarations.push_back(std140RowMajorString);
         }
 
-        const TTypeList &fields = *type.getStruct();
+        const TFieldList &fields = structure->fields();
         for (unsigned int i = 0; i < fields.size(); i++)
         {
-            ctorParameters.push_back(*fields[i].type);
+            ctorParameters.push_back(*fields[i]->type());
         }
     }
     else if (parameters)
@@ -3338,19 +3350,20 @@ const ConstantUnion *OutputHLSL::writeConstantUnion(const TType &type, const Con
 {
     TInfoSinkBase &out = mBody;
 
-    if (type.getBasicType() == EbtStruct)
+    const TStructure* structure = type.getStruct();
+    if (structure)
     {
-        out << structLookup(type.getTypeName()) + "_ctor(";
+        out << structLookup(structure->name()) + "_ctor(";
         
-        const TTypeList *structure = type.getStruct();
+        const TFieldList& fields = structure->fields();
 
-        for (size_t i = 0; i < structure->size(); i++)
+        for (size_t i = 0; i < fields.size(); i++)
         {
-            const TType *fieldType = (*structure)[i].type;
+            const TType *fieldType = fields[i]->type();
 
             constUnion = writeConstantUnion(*fieldType, constUnion);
 
-            if (i != structure->size() - 1)
+            if (i != fields.size() - 1)
             {
                 out << ", ";
             }
@@ -3456,9 +3469,9 @@ TString OutputHLSL::decorateUniform(const TString &string, const TType &type)
     return decorate(string);
 }
 
-TString OutputHLSL::decorateField(const TString &string, const TType &structure)
+TString OutputHLSL::decorateField(const TString &string, const TStructure &structure)
 {
-    if (structure.getTypeName().compare(0, 3, "gl_") != 0)
+    if (structure.name().compare(0, 3, "gl_") != 0)
     {
         return decorate(string);
     }
@@ -3504,31 +3517,32 @@ int OutputHLSL::uniformRegister(TIntermSymbol *uniform)
     return index;
 }
 
-void OutputHLSL::declareUniformToList(const TType &type, const TString &name, int index, ActiveUniforms& output)
+void OutputHLSL::declareUniformToList(const TType &type, const TString &name, int registerIndex, ActiveUniforms& output)
 {
-    const TTypeList *structure = type.getStruct();
+    const TStructure *structure = type.getStruct();
 
     if (!structure)
     {
         const bool isRowMajorMatrix = (type.isMatrix() && type.getLayoutQualifier().matrixPacking == EmpRowMajor);
-        output.push_back(Uniform(glVariableType(type), glVariablePrecision(type), name.c_str(), (unsigned int)type.getArraySize(), (unsigned int)index, isRowMajorMatrix));
+        output.push_back(Uniform(glVariableType(type), glVariablePrecision(type), name.c_str(), (unsigned int)type.getArraySize(), (unsigned int)registerIndex, isRowMajorMatrix));
     }
     else
     {
-        Uniform structUniform(GL_NONE, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(), (unsigned int)index, false);
+        Uniform structUniform(GL_NONE, GL_NONE, name.c_str(), (unsigned int)type.getArraySize(), (unsigned int)registerIndex, false);
 
-        int fieldIndex = index;
+        int fieldRegister = registerIndex;
+        const TFieldList &fields = structure->fields();
 
-        for (size_t i = 0; i < structure->size(); i++)
+        for (size_t fieldIndex = 0; fieldIndex < fields.size(); fieldIndex++)
         {
-            TType fieldType = *(*structure)[i].type;
-            const TString &fieldName = fieldType.getFieldName();
+            TField *field = fields[fieldIndex];
+            TType *fieldType = field->type();
 
             // make sure to copy matrix packing information
-            fieldType.setLayoutQualifier(type.getLayoutQualifier());
+            fieldType->setLayoutQualifier(type.getLayoutQualifier());
 
-            declareUniformToList(fieldType, fieldName, fieldIndex, structUniform.fields);
-            fieldIndex += fieldType.totalRegisterCount();
+            declareUniformToList(*fieldType, field->name(), fieldRegister, structUniform.fields);
+            fieldRegister += fieldType->totalRegisterCount();
         }
 
         output.push_back(structUniform);

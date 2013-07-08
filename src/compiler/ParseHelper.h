@@ -142,11 +142,11 @@ struct TParseContext {
     TIntermTyped* addIndexExpression(TIntermTyped *baseExpression, const TSourceLoc& location, TIntermTyped *indexExpression);
     TIntermTyped* addFieldSelectionExpression(TIntermTyped *baseExpression, const TSourceLoc& dotLocation, const TString &fieldString, const TSourceLoc& fieldLocation);
 
-    TTypeList *addStructDeclaratorList(const TPublicType& typeSpecifier, TTypeList *typeList);
-    TPublicType addStructure(const TSourceLoc& structLine, const TSourceLoc& nameLine, const TString &structName, TTypeList* typeList);
+    TFieldList *addStructDeclaratorList(const TPublicType& typeSpecifier, TFieldList *fieldList);
+    TPublicType addStructure(const TSourceLoc& structLine, const TSourceLoc& nameLine, const TString *structName, TFieldList* fieldList);
 
-    TIntermAggregate* addInterfaceBlock(const TPublicType& typeQualifier, const TSourceLoc& nameLine, const TString& blockName, TTypeList* typeList, 
-                                        const TString& instanceName, const TSourceLoc& instanceLine, TIntermTyped* arrayIndex, const TSourceLoc& arrayIndexLine);
+    TIntermAggregate* addInterfaceBlock(const TPublicType& typeQualifier, const TSourceLoc& nameLine, const TString& blockName, TFieldList* fieldList, 
+                                        const TString* instanceName, const TSourceLoc& instanceLine, TIntermTyped* arrayIndex, const TSourceLoc& arrayIndexLine);
 
     TLayoutQualifier parseLayoutQualifier(const TString &qualifierType, const TSourceLoc& qualifierTypeLine);
     TLayoutQualifier parseLayoutQualifier(const TString &qualifierType, const TSourceLoc& qualifierTypeLine, const TString &intValueString, int intValue, const TSourceLoc& intValueLine);
@@ -158,7 +158,7 @@ struct TParseContext {
     bool enterStructDeclaration(const TSourceLoc& line, const TString& identifier);
     void exitStructDeclaration();
 
-    bool structNestingErrorCheck(const TSourceLoc& line, const TType& fieldType);
+    bool structNestingErrorCheck(const TSourceLoc& line, const TField& field);
 };
 
 int PaParseStrings(size_t count, const char* const string[], const int length[],

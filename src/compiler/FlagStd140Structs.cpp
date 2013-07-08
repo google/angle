@@ -55,11 +55,11 @@ bool FlagStd140Structs::isInStd140InterfaceBlock(TIntermTyped *node) const
 
     const TType &type = node->getType();
 
-    if (type.isInterfaceBlockMember() || type.getBasicType() == EbtInterfaceBlock)
+    // determine if we are in the standard layout
+    const TInterfaceBlock *interfaceBlock = type.getInterfaceBlock();
+    if (interfaceBlock)
     {
-        // determine if we are in the standard layout
-        const TType &interfaceBlockType = (type.isInterfaceBlockMember() ? *type.getInterfaceBlockType() : type);
-        return (interfaceBlockType.getLayoutQualifier().blockStorage == EbsStd140);
+        return (interfaceBlock->blockStorage() == EbsStd140);
     }
 
     return false;
