@@ -2451,7 +2451,7 @@ int Renderer11::getMaxSupportedSamples() const
 
 GLsizei Renderer11::getMaxSupportedFormatSamples(GLint internalFormat) const
 {
-    DXGI_FORMAT format = gl_d3d11::GetTexFormat(internalFormat, getCurrentClientVersion());
+    DXGI_FORMAT format = gl_d3d11::GetRenderableFormat(internalFormat, getCurrentClientVersion());
     MultisampleSupportMap::const_iterator iter = mMultisampleSupportMap.find(format);
     return (iter != mMultisampleSupportMap.end()) ? iter->second.maxSupportedSamples : 0;
 }

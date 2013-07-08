@@ -48,6 +48,7 @@ DXGI_FORMAT GetTexFormat(GLint internalFormat, GLuint clientVersion);
 DXGI_FORMAT GetSRVFormat(GLint internalFormat, GLuint clientVersion);
 DXGI_FORMAT GetRTVFormat(GLint internalFormat, GLuint clientVersion);
 DXGI_FORMAT GetDSVFormat(GLint internalFormat, GLuint clientVersion);
+DXGI_FORMAT GetRenderableFormat(GLint internalFormat, GLuint clientVersion);
 
 }
 

@@ -1011,6 +1011,19 @@ DXGI_FORMAT GetDSVFormat(GLint internalFormat, GLuint clientVersion)
     }
 }
 
+// Given a GL internal format, this function returns the DSV format if it is depth- or stencil-renderable,
+// the RTV format if it is color-renderable, and the (nonrenderable) texture format otherwise.
+DXGI_FORMAT GetRenderableFormat(GLint internalFormat, GLuint clientVersion)
+{
+    DXGI_FORMAT targetFormat = GetDSVFormat(internalFormat, clientVersion);
+    if (targetFormat == DXGI_FORMAT_UNKNOWN)
+        targetFormat = GetRTVFormat(internalFormat, clientVersion);
+    if (targetFormat == DXGI_FORMAT_UNKNOWN)
+        targetFormat = GetTexFormat(internalFormat, clientVersion);
+
+    return targetFormat;
+}
+
 }
 
 namespace d3d11_gl
