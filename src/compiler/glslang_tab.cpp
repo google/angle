@@ -359,14 +359,6 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, const char* reason)
       }                                                      \
   } while (0)
 
-#define FRAG_VERT_ONLY(S, L) {  \
-    if (context->shaderType != SH_FRAGMENT_SHADER &&  \
-        context->shaderType != SH_VERTEX_SHADER) {  \
-        context->error(L, " supported in vertex/fragment shaders only ", S);  \
-        context->recover();  \
-    }  \
-}
-
 #define VERTEX_ONLY(S, L) {  \
     if (context->shaderType != SH_VERTEX_SHADER) {  \
         context->error(L, " supported in vertex shaders only ", S);  \
@@ -789,31 +781,31 @@ static const yytype_int16 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   213,   213,   214,   217,   252,   255,   260,   265,   270,
-     275,   281,   284,   287,   290,   293,   303,   316,   324,   424,
-     427,   435,   438,   444,   448,   455,   461,   470,   478,   481,
-     491,   494,   504,   514,   535,   536,   537,   542,   543,   552,
-     564,   565,   573,   584,   588,   589,   599,   609,   619,   632,
-     633,   643,   656,   660,   664,   668,   669,   682,   683,   696,
-     697,   710,   711,   728,   729,   742,   743,   744,   745,   746,
-     750,   753,   764,   772,   780,   807,   812,   823,   827,   831,
-     835,   842,   879,   882,   889,   897,   918,   939,   949,   977,
-     982,   992,   997,  1007,  1010,  1013,  1016,  1022,  1029,  1032,
-    1036,  1040,  1044,  1051,  1055,  1059,  1066,  1070,  1074,  1163,
-    1172,  1178,  1181,  1187,  1193,  1200,  1209,  1218,  1221,  1257,
-    1264,  1268,  1275,  1278,  1282,  1286,  1295,  1304,  1312,  1322,
-    1329,  1332,  1335,  1341,  1348,  1351,  1357,  1360,  1363,  1369,
-    1372,  1387,  1391,  1395,  1399,  1403,  1407,  1412,  1417,  1422,
-    1427,  1432,  1437,  1442,  1447,  1452,  1457,  1462,  1467,  1473,
-    1479,  1485,  1490,  1495,  1500,  1505,  1510,  1515,  1520,  1524,
-    1529,  1533,  1537,  1541,  1545,  1549,  1553,  1557,  1561,  1565,
-    1574,  1583,  1588,  1601,  1601,  1604,  1604,  1610,  1613,  1628,
-    1631,  1640,  1644,  1650,  1657,  1672,  1676,  1680,  1681,  1687,
-    1688,  1689,  1690,  1691,  1695,  1696,  1696,  1696,  1706,  1707,
-    1711,  1711,  1712,  1712,  1717,  1720,  1730,  1733,  1739,  1740,
-    1744,  1752,  1756,  1766,  1771,  1788,  1788,  1793,  1793,  1800,
-    1800,  1808,  1811,  1817,  1820,  1826,  1830,  1837,  1844,  1851,
-    1858,  1869,  1878,  1882,  1889,  1892,  1898,  1898
+       0,   205,   205,   206,   209,   244,   247,   252,   257,   262,
+     267,   273,   276,   279,   282,   285,   295,   308,   316,   416,
+     419,   427,   430,   436,   440,   447,   453,   462,   470,   473,
+     483,   486,   496,   506,   527,   528,   529,   534,   535,   543,
+     554,   555,   563,   574,   578,   579,   589,   599,   609,   622,
+     623,   633,   646,   650,   654,   658,   659,   672,   673,   686,
+     687,   700,   701,   718,   719,   732,   733,   734,   735,   736,
+     740,   743,   754,   762,   770,   797,   802,   813,   817,   821,
+     825,   832,   869,   872,   879,   887,   908,   929,   939,   967,
+     972,   982,   987,   997,  1000,  1003,  1006,  1012,  1019,  1022,
+    1026,  1030,  1034,  1041,  1045,  1049,  1056,  1060,  1064,  1085,
+    1094,  1100,  1103,  1109,  1115,  1122,  1131,  1140,  1143,  1179,
+    1186,  1190,  1197,  1200,  1204,  1208,  1217,  1226,  1234,  1244,
+    1251,  1254,  1257,  1263,  1270,  1273,  1279,  1282,  1285,  1291,
+    1294,  1309,  1313,  1317,  1321,  1325,  1329,  1334,  1339,  1344,
+    1349,  1354,  1359,  1364,  1369,  1374,  1379,  1384,  1389,  1394,
+    1399,  1404,  1409,  1414,  1419,  1424,  1429,  1434,  1438,  1442,
+    1446,  1450,  1454,  1458,  1462,  1466,  1470,  1474,  1478,  1482,
+    1490,  1498,  1502,  1515,  1515,  1518,  1518,  1524,  1527,  1542,
+    1545,  1554,  1558,  1564,  1571,  1586,  1590,  1594,  1595,  1601,
+    1602,  1603,  1604,  1605,  1609,  1610,  1610,  1610,  1620,  1621,
+    1625,  1625,  1626,  1626,  1631,  1634,  1644,  1647,  1653,  1654,
+    1658,  1666,  1670,  1680,  1685,  1702,  1702,  1707,  1707,  1714,
+    1714,  1722,  1725,  1731,  1734,  1740,  1744,  1751,  1758,  1765,
+    1772,  1783,  1792,  1796,  1803,  1806,  1812,  1812
 };
 #endif
 
@@ -2951,7 +2943,6 @@ yyreduce:
   case 38:
 
     {
-        FRAG_VERT_ONLY("*", (yylsp[(2) - (3)]));
         (yyval.interm.intermTypedNode) = context->intermediate.addBinaryMath(EOpMul, (yyvsp[(1) - (3)].interm.intermTypedNode), (yyvsp[(3) - (3)].interm.intermTypedNode), (yylsp[(2) - (3)]));
         if ((yyval.interm.intermTypedNode) == 0) {
             context->binaryOpError((yylsp[(2) - (3)]), "*", (yyvsp[(1) - (3)].interm.intermTypedNode)->getCompleteString(), (yyvsp[(3) - (3)].interm.intermTypedNode)->getCompleteString());
@@ -2964,7 +2955,6 @@ yyreduce:
   case 39:
 
     {
-        FRAG_VERT_ONLY("/", (yylsp[(2) - (3)]));
         (yyval.interm.intermTypedNode) = context->intermediate.addBinaryMath(EOpDiv, (yyvsp[(1) - (3)].interm.intermTypedNode), (yyvsp[(3) - (3)].interm.intermTypedNode), (yylsp[(2) - (3)]));
         if ((yyval.interm.intermTypedNode) == 0) {
             context->binaryOpError((yylsp[(2) - (3)]), "/", (yyvsp[(1) - (3)].interm.intermTypedNode)->getCompleteString(), (yyvsp[(3) - (3)].interm.intermTypedNode)->getCompleteString());
@@ -3218,27 +3208,27 @@ yyreduce:
 
   case 65:
 
-    {                               (yyval.interm).op = EOpAssign; }
+    { (yyval.interm).op = EOpAssign; }
     break;
 
   case 66:
 
-    { FRAG_VERT_ONLY("*=", (yylsp[(1) - (1)]));     (yyval.interm).op = EOpMulAssign; }
+    { (yyval.interm).op = EOpMulAssign; }
     break;
 
   case 67:
 
-    { FRAG_VERT_ONLY("/=", (yylsp[(1) - (1)]));     (yyval.interm).op = EOpDivAssign; }
+    { (yyval.interm).op = EOpDivAssign; }
     break;
 
   case 68:
 
-    {                               (yyval.interm).op = EOpAddAssign; }
+    { (yyval.interm).op = EOpAddAssign; }
     break;
 
   case 69:
 
-    {                               (yyval.interm).op = EOpSubAssign; }
+    { (yyval.interm).op = EOpSubAssign; }
     break;
 
   case 70:
@@ -4157,7 +4147,6 @@ yyreduce:
   case 158:
 
     {
-        FRAG_VERT_ONLY("mat2", (yylsp[(1) - (1)]));
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         (yyval.interm.type).setBasic(EbtFloat, qual, (yylsp[(1) - (1)]));
         (yyval.interm.type).setMatrix(2, 2);
@@ -4167,7 +4156,6 @@ yyreduce:
   case 159:
 
     {
-        FRAG_VERT_ONLY("mat3", (yylsp[(1) - (1)]));
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         (yyval.interm.type).setBasic(EbtFloat, qual, (yylsp[(1) - (1)]));
         (yyval.interm.type).setMatrix(3, 3);
@@ -4177,7 +4165,6 @@ yyreduce:
   case 160:
 
     {
-        FRAG_VERT_ONLY("mat4", (yylsp[(1) - (1)]));
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         (yyval.interm.type).setBasic(EbtFloat, qual, (yylsp[(1) - (1)]));
         (yyval.interm.type).setMatrix(4, 4);
@@ -4241,7 +4228,6 @@ yyreduce:
   case 167:
 
     {
-        FRAG_VERT_ONLY("sampler2D", (yylsp[(1) - (1)]));
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         (yyval.interm.type).setBasic(EbtSampler2D, qual, (yylsp[(1) - (1)]));
     }
@@ -4258,7 +4244,6 @@ yyreduce:
   case 169:
 
     {
-        FRAG_VERT_ONLY("samplerCube", (yylsp[(1) - (1)]));
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         (yyval.interm.type).setBasic(EbtSamplerCube, qual, (yylsp[(1) - (1)]));
     }
@@ -4343,7 +4328,6 @@ yyreduce:
             context->error((yylsp[(1) - (1)]), "unsupported type", "samplerExternalOES");
             context->recover();
         }
-        FRAG_VERT_ONLY("samplerExternalOES", (yylsp[(1) - (1)]));
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         (yyval.interm.type).setBasic(EbtSamplerExternalOES, qual, (yylsp[(1) - (1)]));
     }
@@ -4356,7 +4340,6 @@ yyreduce:
             context->error((yylsp[(1) - (1)]), "unsupported type", "sampler2DRect");
             context->recover();
         }
-        FRAG_VERT_ONLY("sampler2DRect", (yylsp[(1) - (1)]));
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         (yyval.interm.type).setBasic(EbtSampler2DRect, qual, (yylsp[(1) - (1)]));
     }
@@ -4365,7 +4348,6 @@ yyreduce:
   case 181:
 
     {
-        FRAG_VERT_ONLY("struct", (yylsp[(1) - (1)]));
         (yyval.interm.type) = (yyvsp[(1) - (1)].interm.type);
         (yyval.interm.type).qualifier = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
     }

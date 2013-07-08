@@ -105,14 +105,6 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, const char* reason)
       }                                                      \
   } while (0)
 
-#define FRAG_VERT_ONLY(S, L) {  \
-    if (context->shaderType != SH_FRAGMENT_SHADER &&  \
-        context->shaderType != SH_VERTEX_SHADER) {  \
-        context->error(L, " supported in vertex/fragment shaders only ", S);  \
-        context->recover();  \
-    }  \
-}
-
 #define VERTEX_ONLY(S, L) {  \
     if (context->shaderType != SH_VERTEX_SHADER) {  \
         context->error(L, " supported in vertex shaders only ", S);  \
@@ -541,7 +533,6 @@ unary_operator
 multiplicative_expression
     : unary_expression { $$ = $1; }
     | multiplicative_expression STAR unary_expression {
-        FRAG_VERT_ONLY("*", @2);
         $$ = context->intermediate.addBinaryMath(EOpMul, $1, $3, @2);
         if ($$ == 0) {
             context->binaryOpError(@2, "*", $1->getCompleteString(), $3->getCompleteString());
@@ -550,7 +541,6 @@ multiplicative_expression
         }
     }
     | multiplicative_expression SLASH unary_expression {
-        FRAG_VERT_ONLY("/", @2);
         $$ = context->intermediate.addBinaryMath(EOpDiv, $1, $3, @2);
         if ($$ == 0) {
             context->binaryOpError(@2, "/", $1->getCompleteString(), $3->getCompleteString());
@@ -739,11 +729,11 @@ assignment_expression
     ;
 
 assignment_operator
-    : EQUAL        {                               $$.op = EOpAssign; }
-    | MUL_ASSIGN   { FRAG_VERT_ONLY("*=", @1);     $$.op = EOpMulAssign; }
-    | DIV_ASSIGN   { FRAG_VERT_ONLY("/=", @1);     $$.op = EOpDivAssign; }
-    | ADD_ASSIGN   {                               $$.op = EOpAddAssign; }
-    | SUB_ASSIGN   {                               $$.op = EOpSubAssign; }
+    : EQUAL        { $$.op = EOpAssign; }
+    | MUL_ASSIGN   { $$.op = EOpMulAssign; }
+    | DIV_ASSIGN   { $$.op = EOpDivAssign; }
+    | ADD_ASSIGN   { $$.op = EOpAddAssign; }
+    | SUB_ASSIGN   { $$.op = EOpSubAssign; }
     ;
 
 expression
@@ -1089,75 +1079,7 @@ single_declaration
             $$.intermAggregate = context->intermediate.makeAggregate(symbol, @2);
         }
     }
-
-//
-// Place holder for the pack/unpack languages.
-//
-//    | buffer_specifier {
-//        $$.intermAggregate = 0;
-//    }
     ;
-
-// Grammar Note:  No 'enum', or 'typedef'.
-
-//
-// Place holder for the pack/unpack languages.
-//
-//%type <interm> buffer_declaration
-//%type <interm.type> buffer_specifier input_or_output buffer_declaration_list
-//buffer_specifier
-//    : input_or_output LEFT_BRACE buffer_declaration_list RIGHT_BRACE {
-//    }
-//    ;
-//
-//input_or_output
-//    : INPUT {
-//        if (context->globalErrorCheck(@1, context->symbolTable.atGlobalLevel(), "input"))
-//            context->recover();
-//        UNPACK_ONLY("input", @1);
-//        $$.qualifier = EvqInput;
-//    }
-//    | OUTPUT {
-//        if (context->globalErrorCheck(@1, context->symbolTable.atGlobalLevel(), "output"))
-//            context->recover();
-//        PACK_ONLY("output", @1);
-//        $$.qualifier = EvqOutput;
-//    }
-//    ;
-
-//
-// Place holder for the pack/unpack languages.
-//
-//buffer_declaration_list
-//    : buffer_declaration {
-//    }
-//    | buffer_declaration_list buffer_declaration {
-//    }
-//    ;
-
-//
-// Input/output semantics:
-//   float must be 16 or 32 bits
-//   float alignment restrictions?
-//   check for only one input and only one output
-//   sum of bitfields has to be multiple of 32
-//
-
-//
-// Place holder for the pack/unpack languages.
-//
-//buffer_declaration
-//    : type_specifier IDENTIFIER COLON constant_expression SEMICOLON {
-//        if (context->reservedErrorCheck(@2, *$2.string, context))
-//            context->recover();
-//        $$.variable = new TVariable($2.string, $1);
-//        if (! context->symbolTable.declare(*$$.variable)) {
-//            context->error(@2, "redefinition", $$.variable->getName().c_str());
-//            context->recover();
-//            // don't have to delete $$.variable, the pool pop will take care of it
-//        }
-//    }
-//    ;
 
 fully_specified_type
     : type_specifier {
@@ -1465,19 +1387,16 @@ type_specifier_nonarray
         $$.setAggregate(4);
     }
     | MATRIX2 {
-        FRAG_VERT_ONLY("mat2", @1);
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtFloat, qual, @1);
         $$.setMatrix(2, 2);
     }
     | MATRIX3 {
-        FRAG_VERT_ONLY("mat3", @1);
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtFloat, qual, @1);
         $$.setMatrix(3, 3);
     }
     | MATRIX4 {
-        FRAG_VERT_ONLY("mat4", @1);
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtFloat, qual, @1);
         $$.setMatrix(4, 4);
@@ -1513,7 +1432,6 @@ type_specifier_nonarray
         $$.setMatrix(4, 3);
     }
     | SAMPLER2D {
-        FRAG_VERT_ONLY("sampler2D", @1);
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtSampler2D, qual, @1);
     }
@@ -1522,7 +1440,6 @@ type_specifier_nonarray
         $$.setBasic(EbtSampler3D, qual, @1);
     }
     | SAMPLERCUBE {
-        FRAG_VERT_ONLY("samplerCube", @1);
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtSamplerCube, qual, @1);
     }
@@ -1567,7 +1484,6 @@ type_specifier_nonarray
             context->error(@1, "unsupported type", "samplerExternalOES");
             context->recover();
         }
-        FRAG_VERT_ONLY("samplerExternalOES", @1);
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtSamplerExternalOES, qual, @1);
     }
@@ -1576,12 +1492,10 @@ type_specifier_nonarray
             context->error(@1, "unsupported type", "sampler2DRect");
             context->recover();
         }
-        FRAG_VERT_ONLY("sampler2DRect", @1);
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.setBasic(EbtSampler2DRect, qual, @1);
     }
     | struct_specifier {
-        FRAG_VERT_ONLY("struct", @1);
         $$ = $1;
         $$.qualifier = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
     }

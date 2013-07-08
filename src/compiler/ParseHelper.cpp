@@ -321,7 +321,6 @@ bool TParseContext::lValueErrorCheck(const TSourceLoc& line, const char* op, TIn
     case EvqVertexInput:    message = "can't modify an input";       break;
     case EvqUniform:        message = "can't modify a uniform";      break;
     case EvqVaryingIn:      message = "can't modify a varying";      break;
-    case EvqInput:          message = "can't modify an input";       break;
     case EvqFragCoord:      message = "can't modify gl_FragCoord";   break;
     case EvqFrontFacing:    message = "can't modify gl_FrontFacing"; break;
     case EvqPointCoord:     message = "can't modify gl_PointCoord";  break;
@@ -1466,19 +1465,19 @@ TFunction *TParseContext::addConstructorFunc(TPublicType publicType)
                 // TODO: non-square matrices
                 switch(publicType.getCols())
                 {
-                  case 2:       op = EOpConstructMat2;  break;
-                  case 3:       op = EOpConstructMat3;  break;
-                  case 4:       op = EOpConstructMat4;  break;
+                  case 2: op = EOpConstructMat2;  break;
+                  case 3: op = EOpConstructMat3;  break;
+                  case 4: op = EOpConstructMat4;  break;
                 }
             }
             else
             {
                 switch(publicType.getNominalSize())
                 {
-                  case 1:       op = EOpConstructFloat; break;
-                  case 2:       op = EOpConstructVec2;  break;
-                  case 3:       op = EOpConstructVec3;  break;
-                  case 4:       op = EOpConstructVec4;  break;
+                  case 1: op = EOpConstructFloat; break;
+                  case 2: op = EOpConstructVec2;  break;
+                  case 3: op = EOpConstructVec3;  break;
+                  case 4: op = EOpConstructVec4;  break;
                 }
             }
             break;
@@ -1486,30 +1485,30 @@ TFunction *TParseContext::addConstructorFunc(TPublicType publicType)
           case EbtInt:
             switch(publicType.getNominalSize())
             {
-              case 1:       op = EOpConstructInt;   break;
-              case 2:       op = EOpConstructIVec2; break;
-              case 3:       op = EOpConstructIVec3; break;
-              case 4:       op = EOpConstructIVec4; break;
+              case 1: op = EOpConstructInt;   break;
+              case 2: op = EOpConstructIVec2; break;
+              case 3: op = EOpConstructIVec3; break;
+              case 4: op = EOpConstructIVec4; break;
             }
             break;
 
           case EbtUInt:
             switch(publicType.getNominalSize())
             {
-              case 1:       op = EOpConstructUInt;  break;
-              case 2:       op = EOpConstructUVec2; break;
-              case 3:       op = EOpConstructUVec3; break;
-              case 4:       op = EOpConstructUVec4; break;
+              case 1: op = EOpConstructUInt;  break;
+              case 2: op = EOpConstructUVec2; break;
+              case 3: op = EOpConstructUVec3; break;
+              case 4: op = EOpConstructUVec4; break;
             }
             break;
 
           case EbtBool:
             switch(publicType.getNominalSize())
             {
-                case 1:     op = EOpConstructBool;  break;
-                case 2:     op = EOpConstructBVec2; break;
-                case 3:     op = EOpConstructBVec3; break;
-                case 4:     op = EOpConstructBVec4; break;
+                case 1: op = EOpConstructBool;  break;
+                case 2: op = EOpConstructBVec2; break;
+                case 3: op = EOpConstructBVec3; break;
+                case 4: op = EOpConstructBVec4; break;
             }
             break;
 
