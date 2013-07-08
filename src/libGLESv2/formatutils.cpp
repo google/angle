@@ -399,6 +399,7 @@ static TypeInfoMap BuildTypeInfoMap()
     map.insert(TypeInfoPair(GL_UNSIGNED_INT,                   TypeInfo( 4, false)));
     map.insert(TypeInfoPair(GL_INT,                            TypeInfo( 4, false)));
     map.insert(TypeInfoPair(GL_HALF_FLOAT,                     TypeInfo( 2, false)));
+    map.insert(TypeInfoPair(GL_HALF_FLOAT_OES,                 TypeInfo( 2, false)));
     map.insert(TypeInfoPair(GL_FLOAT,                          TypeInfo( 4, false)));
     map.insert(TypeInfoPair(GL_UNSIGNED_SHORT_5_6_5,           TypeInfo( 2, true )));
     map.insert(TypeInfoPair(GL_UNSIGNED_SHORT_4_4_4_4,         TypeInfo( 2, true )));
