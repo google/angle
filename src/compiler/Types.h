@@ -39,13 +39,13 @@ public:
     TType() {}
     TType(TBasicType t, TPrecision p, TQualifier q = EvqTemporary, int ps = 1, int ss = 1, bool a = false) :
             type(t), precision(p), qualifier(q), primarySize(ps), secondarySize(ss), array(a), layoutQualifier(TLayoutQualifier::create()), arraySize(0),
-            maxArraySize(0), arrayInformationType(0), interfaceBlockType(0), structure(0), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0), typeName(0), instanceName(0)
+            interfaceBlockType(0), structure(0), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0), typeName(0), instanceName(0)
     {
     }
     explicit TType(const TPublicType &p);
     TType(TTypeList* userDef, const TString& n, TPrecision p = EbpUndefined) :
             type(EbtStruct), precision(p), qualifier(EvqTemporary), primarySize(1), secondarySize(1), array(false), layoutQualifier(TLayoutQualifier::create()), arraySize(0),
-            maxArraySize(0), arrayInformationType(0), interfaceBlockType(0), structure(userDef), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0), instanceName(0)
+            interfaceBlockType(0), structure(userDef), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0), instanceName(0)
     {
         typeName = NewPoolTString(n.c_str());
     }
@@ -113,11 +113,7 @@ public:
     bool isArray() const  { return array ? true : false; }
     int getArraySize() const { return arraySize; }
     void setArraySize(int s) { array = true; arraySize = s; }
-    int getMaxArraySize () const { return maxArraySize; }
-    void setMaxArraySize (int s) { maxArraySize = s; }
-    void clearArrayness() { array = false; arraySize = 0; maxArraySize = 0; }
-    void setArrayInformationType(TType* t) { arrayInformationType = t; }
-    TType* getArrayInformationType() const { return arrayInformationType; }
+    void clearArrayness() { array = false; arraySize = 0; }
     void setInterfaceBlockType(TType* t) { interfaceBlockType = t; }
     TType* getInterfaceBlockType() const { return interfaceBlockType; }
     bool isInterfaceBlockMember() const { return interfaceBlockType != NULL; }
@@ -241,8 +237,6 @@ private:
     int primarySize; // size of vector or cols matrix
     int secondarySize; // rows of a matrix
     int arraySize;
-    int maxArraySize;
-    TType* arrayInformationType;
     TType* interfaceBlockType;
 
     TTypeList* structure;      // 0 unless this is a struct

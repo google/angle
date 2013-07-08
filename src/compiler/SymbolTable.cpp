@@ -23,7 +23,7 @@ int TSymbolTableLevel::uniqueId = 0;
 
 TType::TType(const TPublicType &p) :
             type(p.type), precision(p.precision), qualifier(p.qualifier), primarySize(p.primarySize), secondarySize(p.secondarySize), array(p.array), layoutQualifier(p.layoutQualifier), arraySize(p.arraySize),
-            maxArraySize(0), arrayInformationType(0), interfaceBlockType(0), structure(0), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0), typeName(0)
+            interfaceBlockType(0), structure(0), structureSize(0), deepestStructNesting(0), fieldName(0), mangled(0), typeName(0)
 {
     if (p.userDef) {
         structure = p.userDef->getStruct();
@@ -117,7 +117,7 @@ size_t TType::getObjectSize() const
         totalSize = primarySize * secondarySize;
 
     if (isArray()) {
-        size_t arraySize = std::max(getArraySize(), getMaxArraySize());
+        size_t arraySize = getArraySize();
         if (arraySize > INT_MAX / totalSize)
             totalSize = INT_MAX;
         else

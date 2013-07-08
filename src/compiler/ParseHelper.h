@@ -119,7 +119,6 @@ struct TParseContext {
     const TFunction* findFunction(const TSourceLoc& line, TFunction* pfnCall, int shaderVersion, bool *builtIn = 0);
     bool executeInitializer(const TSourceLoc& line, const TString& identifier, TPublicType& pType,
                             TIntermTyped* initializer, TIntermNode*& intermNode, TVariable* variable = 0);
-    bool arraySetMaxSize(TIntermSymbol*, TType*, int, bool, const TSourceLoc&);
 
     TPublicType addFullySpecifiedType(TQualifier qualifier, const TPublicType& typeSpecifier);
     TPublicType addFullySpecifiedType(TQualifier qualifier, TLayoutQualifier layoutQualifier, const TPublicType& typeSpecifier);
