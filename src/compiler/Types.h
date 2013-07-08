@@ -241,7 +241,7 @@ public:
 
     bool isStructureContainingArrays() const;
 
-protected:
+private:
     void buildMangledName(TString&);
     int getStructSize() const;
     void computeDeepestStructNesting();

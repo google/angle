@@ -32,6 +32,7 @@
 
 #include <assert.h>
 
+#include "common/angleutils.h"
 #include "compiler/InfoSink.h"
 #include "compiler/intermediate.h"
 
@@ -50,9 +51,9 @@ public:
     void setUniqueId(int id) { uniqueId = id; }
     int getUniqueId() const { return uniqueId; }
 
-    TSymbol(const TSymbol&);
+private:
+    DISALLOW_COPY_AND_ASSIGN(TSymbol);
 
-protected:
     const TString *name;
     unsigned int uniqueId;      // For real comparing during code generation
 };
@@ -98,7 +99,9 @@ public:
         unionArray = constArray;  
     }
 
-protected:
+private:
+    DISALLOW_COPY_AND_ASSIGN(TVariable);
+
     TType type;
     bool userType;
     // we are assuming that Pool Allocator will free the memory allocated to unionArray
@@ -162,7 +165,9 @@ public:
     size_t getParamCount() const { return parameters.size(); }  
     const TParameter& getParam(size_t i) const { return parameters[i]; }
 
-protected:
+private:
+    DISALLOW_COPY_AND_ASSIGN(TFunction);
+
     typedef TVector<TParameter> TParamList;
     TParamList parameters;
     TType returnType;

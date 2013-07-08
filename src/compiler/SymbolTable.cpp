@@ -18,8 +18,6 @@
 #include <stdio.h>
 #include <algorithm>
 
-#include "common/angleutils.h"
-
 int TSymbolTableLevel::uniqueId = 0;
 
 TType::TType(const TPublicType &p) :
