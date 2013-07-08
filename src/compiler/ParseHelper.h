@@ -108,12 +108,9 @@ struct TParseContext {
     bool singleDeclarationErrorCheck(TPublicType &publicType, TSourceLoc identifierLocation, const TString &identifier);
     bool layoutLocationErrorCheck(TSourceLoc location, const TLayoutQualifier &layoutQualifier);
 
+    const TPragma& pragma() const { return directiveHandler.pragma(); }
     const TExtensionBehavior& extensionBehavior() const { return directiveHandler.extensionBehavior(); }
     bool supportsExtension(const char* extension);
-    void handleExtensionDirective(int line, const char* extName, const char* behavior);
-
-    const TPragma& pragma() const { return directiveHandler.pragma(); }
-    void handlePragmaDirective(int line, const char* name, const char* value);
 
     bool containsSampler(TType& type);
     bool areAllChildConst(TIntermAggregate* aggrNode);
