@@ -39,7 +39,6 @@ WHICH GENERATES THE GLSL ES PARSER (glslang_tab.cpp AND glslang_tab.h).
 #include "GLSLANG/ShaderLang.h"
 
 #define YYENABLE_NLS 0
-#define YYLTYPE_IS_TRIVIAL 1
 
 #define YYLEX_PARAM context->scanner
 
@@ -47,10 +46,15 @@ WHICH GENERATES THE GLSL ES PARSER (glslang_tab.cpp AND glslang_tab.h).
 %expect 1 /* One shift reduce conflict because of if | else */
 %pure-parser
 %parse-param {TParseContext* context}
+%locations
+
+%code requires {
+#define YYLTYPE TSourceLoc
+#define YYLTYPE_IS_DECLARED 1
+}
 
 %union {
     struct {
-        TSourceLoc line;
         union {
             TString *string;
             float f;
@@ -61,7 +65,6 @@ WHICH GENERATES THE GLSL ES PARSER (glslang_tab.cpp AND glslang_tab.h).
         TSymbol* symbol;
     } lex;
     struct {
-        TSourceLoc line;
         TOperator op;
         union {
             TIntermNode* intermNode;
@@ -83,8 +86,24 @@ WHICH GENERATES THE GLSL ES PARSER (glslang_tab.cpp AND glslang_tab.h).
 }
 
 %{
-extern int yylex(YYSTYPE* yylval_param, void* yyscanner);
-extern void yyerror(TParseContext* context, const char* reason);
+extern int yylex(YYSTYPE* yylval_param, YYLTYPE* yylloc, void* yyscanner);
+extern void yyerror(YYLTYPE* yylloc, TParseContext* context, const char* reason);
+
+#define YYLLOC_DEFAULT(Current, Rhs, N)                      \
+  do {                                                       \
+      if (YYID(N)) {                                         \
+        (Current).first_file = YYRHSLOC(Rhs, 1).first_file;  \
+        (Current).first_line = YYRHSLOC(Rhs, 1).first_line;  \
+        (Current).last_file = YYRHSLOC(Rhs, N).last_file;    \
+        (Current).last_line = YYRHSLOC(Rhs, N).last_line;    \
+      }                                                      \
+      else {                                                 \
+        (Current).first_file = YYRHSLOC(Rhs, 0).last_file;   \
+        (Current).first_line = YYRHSLOC(Rhs, 0).last_line;   \
+        (Current).last_file = YYRHSLOC(Rhs, 0).last_file;    \
+        (Current).last_line = YYRHSLOC(Rhs, 0).last_line;    \
+      }                                                      \
+  } while (0)
 
 #define FRAG_VERT_ONLY(S, L) {  \
     if (context->shaderType != SH_FRAGMENT_SHADER &&  \
@@ -200,7 +219,7 @@ variable_identifier
         const TSymbol* symbol = $1.symbol;
         const TVariable* variable;
         if (symbol == 0) {
-            context->error($1.line, "undeclared identifier", $1.string->c_str());
+            context->error(@1, "undeclared identifier", $1.string->c_str());
             context->recover();
             TType type(EbtFloat, EbpUndefined);
             TVariable* fakeVariable = new TVariable($1.string, type);
@@ -209,7 +228,7 @@ variable_identifier
         } else {
             // This identifier can only be a variable type symbol
             if (! symbol->isVariable()) {
-                context->error($1.line, "variable expected", $1.string->c_str());
+                context->error(@1, "variable expected", $1.string->c_str());
                 context->recover();
             }
             variable = static_cast<const TVariable*>(symbol);
@@ -221,11 +240,11 @@ variable_identifier
         if (variable->getType().getQualifier() == EvqConst ) {
             ConstantUnion* constArray = variable->getConstPointer();
             TType t(variable->getType());
-            $$ = context->intermediate.addConstantUnion(constArray, t, $1.line);
+            $$ = context->intermediate.addConstantUnion(constArray, t, @1);
         } else
             $$ = context->intermediate.addSymbol(variable->getUniqueId(),
                                                      variable->getName(),
-                                                     variable->getType(), $1.line);
+                                                     variable->getType(), @1);
     }
     ;
 
@@ -236,22 +255,22 @@ primary_expression
     | INTCONSTANT {
         ConstantUnion *unionArray = new ConstantUnion[1];
         unionArray->setIConst($1.i);
-        $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtInt, EbpUndefined, EvqConst), $1.line);
+        $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtInt, EbpUndefined, EvqConst), @1);
     }
     | UINTCONSTANT {
         ConstantUnion *unionArray = new ConstantUnion[1];
         unionArray->setUConst($1.u);
-        $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtUInt, EbpUndefined, EvqConst), $1.line);
+        $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtUInt, EbpUndefined, EvqConst), @1);
     }
     | FLOATCONSTANT {
         ConstantUnion *unionArray = new ConstantUnion[1];
         unionArray->setFConst($1.f);
-        $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtFloat, EbpUndefined, EvqConst), $1.line);
+        $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtFloat, EbpUndefined, EvqConst), @1);
     }
     | BOOLCONSTANT {
         ConstantUnion *unionArray = new ConstantUnion[1];
         unionArray->setBConst($1.b);
-        $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtBool, EbpUndefined, EvqConst), $1.line);
+        $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtBool, EbpUndefined, EvqConst), @1);
     }
     | LEFT_PAREN expression RIGHT_PAREN {
         $$ = $2;
@@ -263,30 +282,30 @@ postfix_expression
         $$ = $1;
     }
     | postfix_expression LEFT_BRACKET integer_expression RIGHT_BRACKET {
-        $$ = context->addIndexExpression($1, $2.line, $3);
+        $$ = context->addIndexExpression($1, @2, $3);
     }
     | function_call {
         $$ = $1;
     }
     | postfix_expression DOT identifier {
-        $$ = context->addFieldSelectionExpression($1, $2.line, *$3.string, $3.line);
+        $$ = context->addFieldSelectionExpression($1, @2, *$3.string, @3);
     }
     | postfix_expression INC_OP {
-        if (context->lValueErrorCheck($2.line, "++", $1))
+        if (context->lValueErrorCheck(@2, "++", $1))
             context->recover();
-        $$ = context->intermediate.addUnaryMath(EOpPostIncrement, $1, $2.line);
+        $$ = context->intermediate.addUnaryMath(EOpPostIncrement, $1, @2);
         if ($$ == 0) {
-            context->unaryOpError($2.line, "++", $1->getCompleteString());
+            context->unaryOpError(@2, "++", $1->getCompleteString());
             context->recover();
             $$ = $1;
         }
     }
     | postfix_expression DEC_OP {
-        if (context->lValueErrorCheck($2.line, "--", $1))
+        if (context->lValueErrorCheck(@2, "--", $1))
             context->recover();
-        $$ = context->intermediate.addUnaryMath(EOpPostDecrement, $1, $2.line);
+        $$ = context->intermediate.addUnaryMath(EOpPostDecrement, $1, @2);
         if ($$ == 0) {
-            context->unaryOpError($2.line, "--", $1->getCompleteString());
+            context->unaryOpError(@2, "--", $1->getCompleteString());
             context->recover();
             $$ = $1;
         }
@@ -314,18 +333,18 @@ function_call
             // Their parameters will be verified algorithmically.
             //
             TType type(EbtVoid, EbpUndefined);  // use this to get the type back
-            if (context->constructorErrorCheck($1.line, $1.intermNode, *fnCall, op, &type)) {
+            if (context->constructorErrorCheck(@1, $1.intermNode, *fnCall, op, &type)) {
                 $$ = 0;
             } else {
                 //
                 // It's a constructor, of type 'type'.
                 //
-                $$ = context->addConstructor($1.intermNode, &type, op, fnCall, $1.line);
+                $$ = context->addConstructor($1.intermNode, &type, op, fnCall, @1);
             }
 
             if ($$ == 0) {
                 context->recover();
-                $$ = context->intermediate.setAggregateOperator(0, op, $1.line);
+                $$ = context->intermediate.setAggregateOperator(0, op, @1);
             }
             $$->setType(type);
         } else {
@@ -334,13 +353,13 @@ function_call
             //
             const TFunction* fnCandidate;
             bool builtIn;
-            fnCandidate = context->findFunction($1.line, fnCall, context->shaderVersion, &builtIn);
+            fnCandidate = context->findFunction(@1, fnCall, context->shaderVersion, &builtIn);
             if (fnCandidate) {
                 //
                 // A declared function.
                 //
                 if (builtIn && !fnCandidate->getExtension().empty() &&
-                    context->extensionErrorCheck($1.line, fnCandidate->getExtension())) {
+                    context->extensionErrorCheck(@1, fnCandidate->getExtension())) {
                     context->recover();
                 }
                 op = fnCandidate->getBuiltInOp();
@@ -352,7 +371,7 @@ function_call
                         //
                         // Treat it like a built-in unary operator.
                         //
-                        $$ = context->intermediate.addUnaryMath(op, $1.intermNode, 0);
+                        $$ = context->intermediate.addUnaryMath(op, $1.intermNode, @1);
                         if ($$ == 0)  {
                             std::stringstream extraInfoStream;
                             extraInfoStream << "built in unary operator function.  Type: " << static_cast<TIntermTyped*>($1.intermNode)->getCompleteString();
@@ -361,12 +380,12 @@ function_call
                             YYERROR;
                         }
                     } else {
-                        $$ = context->intermediate.setAggregateOperator($1.intermAggregate, op, $1.line);
+                        $$ = context->intermediate.setAggregateOperator($1.intermAggregate, op, @1);
                     }
                 } else {
                     // This is a real function call
 
-                    $$ = context->intermediate.setAggregateOperator($1.intermAggregate, EOpFunctionCall, $1.line);
+                    $$ = context->intermediate.setAggregateOperator($1.intermAggregate, EOpFunctionCall, @1);
                     $$->setType(fnCandidate->getReturnType());
 
                     // this is how we know whether the given function is a builtIn function or a user defined function
@@ -393,7 +412,7 @@ function_call
                 // Put on a dummy node for error recovery
                 ConstantUnion *unionArray = new ConstantUnion[1];
                 unionArray->setFConst(0.0f);
-                $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtFloat, EbpUndefined, EvqConst), $1.line);
+                $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtFloat, EbpUndefined, EvqConst), @1);
                 context->recover();
             }
         }
@@ -406,7 +425,7 @@ function_call_or_method
         $$ = $1;
     }
     | postfix_expression DOT function_call_generic {
-        context->error($3.line, "methods are not supported", "");
+        context->error(@3, "methods are not supported", "");
         context->recover();
         $$ = $3;
     }
@@ -415,11 +434,9 @@ function_call_or_method
 function_call_generic
     : function_call_header_with_parameters RIGHT_PAREN {
         $$ = $1;
-        $$.line = $2.line;
     }
     | function_call_header_no_parameters RIGHT_PAREN {
         $$ = $1;
-        $$.line = $2.line;
     }
     ;
 
@@ -445,7 +462,7 @@ function_call_header_with_parameters
         TParameter param = { 0, new TType($3->getType()) };
         $1.function->addParameter(param);
         $$.function = $1.function;
-        $$.intermNode = context->intermediate.growAggregate($1.intermNode, $3, $2.line);
+        $$.intermNode = context->intermediate.growAggregate($1.intermNode, $3, @2);
     }
     ;
 
@@ -462,7 +479,7 @@ function_identifier
         $$ = context->addConstructorFunc($1);
     }
     | IDENTIFIER {
-        if (context->reservedErrorCheck($1.line, *$1.string))
+        if (context->reservedErrorCheck(@1, *$1.string))
             context->recover();
         TType type(EbtVoid, EbpUndefined);
         TFunction *function = new TFunction($1.string, type);
@@ -475,28 +492,28 @@ unary_expression
         $$ = $1;
     }
     | INC_OP unary_expression {
-        if (context->lValueErrorCheck($1.line, "++", $2))
+        if (context->lValueErrorCheck(@1, "++", $2))
             context->recover();
-        $$ = context->intermediate.addUnaryMath(EOpPreIncrement, $2, $1.line);
+        $$ = context->intermediate.addUnaryMath(EOpPreIncrement, $2, @1);
         if ($$ == 0) {
-            context->unaryOpError($1.line, "++", $2->getCompleteString());
+            context->unaryOpError(@1, "++", $2->getCompleteString());
             context->recover();
             $$ = $2;
         }
     }
     | DEC_OP unary_expression {
-        if (context->lValueErrorCheck($1.line, "--", $2))
+        if (context->lValueErrorCheck(@1, "--", $2))
             context->recover();
-        $$ = context->intermediate.addUnaryMath(EOpPreDecrement, $2, $1.line);
+        $$ = context->intermediate.addUnaryMath(EOpPreDecrement, $2, @1);
         if ($$ == 0) {
-            context->unaryOpError($1.line, "--", $2->getCompleteString());
+            context->unaryOpError(@1, "--", $2->getCompleteString());
             context->recover();
             $$ = $2;
         }
     }
     | unary_operator unary_expression {
         if ($1.op != EOpNull) {
-            $$ = context->intermediate.addUnaryMath($1.op, $2, $1.line);
+            $$ = context->intermediate.addUnaryMath($1.op, $2, @1);
             if ($$ == 0) {
                 const char* errorOp = "";
                 switch($1.op) {
@@ -504,7 +521,7 @@ unary_expression
                 case EOpLogicalNot: errorOp = "!"; break;
                 default: break;
                 }
-                context->unaryOpError($1.line, errorOp, $2->getCompleteString());
+                context->unaryOpError(@1, errorOp, $2->getCompleteString());
                 context->recover();
                 $$ = $2;
             }
@@ -515,28 +532,28 @@ unary_expression
 // Grammar Note:  No traditional style type casts.
 
 unary_operator
-    : PLUS  { $$.line = $1.line; $$.op = EOpNull; }
-    | DASH  { $$.line = $1.line; $$.op = EOpNegative; }
-    | BANG  { $$.line = $1.line; $$.op = EOpLogicalNot; }
+    : PLUS  { $$.op = EOpNull; }
+    | DASH  { $$.op = EOpNegative; }
+    | BANG  { $$.op = EOpLogicalNot; }
     ;
 // Grammar Note:  No '*' or '&' unary ops.  Pointers are not supported.
 
 multiplicative_expression
     : unary_expression { $$ = $1; }
     | multiplicative_expression STAR unary_expression {
-        FRAG_VERT_ONLY("*", $2.line);
-        $$ = context->intermediate.addBinaryMath(EOpMul, $1, $3, $2.line);
+        FRAG_VERT_ONLY("*", @2);
+        $$ = context->intermediate.addBinaryMath(EOpMul, $1, $3, @2);
         if ($$ == 0) {
-            context->binaryOpError($2.line, "*", $1->getCompleteString(), $3->getCompleteString());
+            context->binaryOpError(@2, "*", $1->getCompleteString(), $3->getCompleteString());
             context->recover();
             $$ = $1;
         }
     }
     | multiplicative_expression SLASH unary_expression {
-        FRAG_VERT_ONLY("/", $2.line);
-        $$ = context->intermediate.addBinaryMath(EOpDiv, $1, $3, $2.line);
+        FRAG_VERT_ONLY("/", @2);
+        $$ = context->intermediate.addBinaryMath(EOpDiv, $1, $3, @2);
         if ($$ == 0) {
-            context->binaryOpError($2.line, "/", $1->getCompleteString(), $3->getCompleteString());
+            context->binaryOpError(@2, "/", $1->getCompleteString(), $3->getCompleteString());
             context->recover();
             $$ = $1;
         }
@@ -546,17 +563,17 @@ multiplicative_expression
 additive_expression
     : multiplicative_expression { $$ = $1; }
     | additive_expression PLUS multiplicative_expression {
-        $$ = context->intermediate.addBinaryMath(EOpAdd, $1, $3, $2.line);
+        $$ = context->intermediate.addBinaryMath(EOpAdd, $1, $3, @2);
         if ($$ == 0) {
-            context->binaryOpError($2.line, "+", $1->getCompleteString(), $3->getCompleteString());
+            context->binaryOpError(@2, "+", $1->getCompleteString(), $3->getCompleteString());
             context->recover();
             $$ = $1;
         }
     }
     | additive_expression DASH multiplicative_expression {
-        $$ = context->intermediate.addBinaryMath(EOpSub, $1, $3, $2.line);
+        $$ = context->intermediate.addBinaryMath(EOpSub, $1, $3, @2);
         if ($$ == 0) {
-            context->binaryOpError($2.line, "-", $1->getCompleteString(), $3->getCompleteString());
+            context->binaryOpError(@2, "-", $1->getCompleteString(), $3->getCompleteString());
             context->recover();
             $$ = $1;
         }
@@ -570,43 +587,43 @@ shift_expression
 relational_expression
     : shift_expression { $$ = $1; }
     | relational_expression LEFT_ANGLE shift_expression {
-        $$ = context->intermediate.addBinaryMath(EOpLessThan, $1, $3, $2.line);
+        $$ = context->intermediate.addBinaryMath(EOpLessThan, $1, $3, @2);
         if ($$ == 0) {
-            context->binaryOpError($2.line, "<", $1->getCompleteString(), $3->getCompleteString());
+            context->binaryOpError(@2, "<", $1->getCompleteString(), $3->getCompleteString());
             context->recover();
             ConstantUnion *unionArray = new ConstantUnion[1];
             unionArray->setBConst(false);
-            $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtBool, EbpUndefined, EvqConst), $2.line);
+            $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtBool, EbpUndefined, EvqConst), @2);
         }
     }
     | relational_expression RIGHT_ANGLE shift_expression  {
-        $$ = context->intermediate.addBinaryMath(EOpGreaterThan, $1, $3, $2.line);
+        $$ = context->intermediate.addBinaryMath(EOpGreaterThan, $1, $3, @2);
         if ($$ == 0) {
-            context->binaryOpError($2.line, ">", $1->getCompleteString(), $3->getCompleteString());
+            context->binaryOpError(@2, ">", $1->getCompleteString(), $3->getCompleteString());
             context->recover();
             ConstantUnion *unionArray = new ConstantUnion[1];
             unionArray->setBConst(false);
-            $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtBool, EbpUndefined, EvqConst), $2.line);
+            $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtBool, EbpUndefined, EvqConst), @2);
         }
     }
     | relational_expression LE_OP shift_expression  {
-        $$ = context->intermediate.addBinaryMath(EOpLessThanEqual, $1, $3, $2.line);
+        $$ = context->intermediate.addBinaryMath(EOpLessThanEqual, $1, $3, @2);
         if ($$ == 0) {
-            context->binaryOpError($2.line, "<=", $1->getCompleteString(), $3->getCompleteString());
+            context->binaryOpError(@2, "<=", $1->getCompleteString(), $3->getCompleteString());
             context->recover();
             ConstantUnion *unionArray = new ConstantUnion[1];
             unionArray->setBConst(false);
-            $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtBool, EbpUndefined, EvqConst), $2.line);
+            $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtBool, EbpUndefined, EvqConst), @2);
         }
     }
     | relational_expression GE_OP shift_expression  {
-        $$ = context->intermediate.addBinaryMath(EOpGreaterThanEqual, $1, $3, $2.line);
+        $$ = context->intermediate.addBinaryMath(EOpGreaterThanEqual, $1, $3, @2);
         if ($$ == 0) {
-            context->binaryOpError($2.line, ">=", $1->getCompleteString(), $3->getCompleteString());
+            context->binaryOpError(@2, ">=", $1->getCompleteString(), $3->getCompleteString());
             context->recover();
             ConstantUnion *unionArray = new ConstantUnion[1];
             unionArray->setBConst(false);
-            $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtBool, EbpUndefined, EvqConst), $2.line);
+            $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtBool, EbpUndefined, EvqConst), @2);
         }
     }
     ;
@@ -614,23 +631,23 @@ relational_expression
 equality_expression
     : relational_expression { $$ = $1; }
     | equality_expression EQ_OP relational_expression  {
-        $$ = context->intermediate.addBinaryMath(EOpEqual, $1, $3, $2.line);
+        $$ = context->intermediate.addBinaryMath(EOpEqual, $1, $3, @2);
         if ($$ == 0) {
-            context->binaryOpError($2.line, "==", $1->getCompleteString(), $3->getCompleteString());
+            context->binaryOpError(@2, "==", $1->getCompleteString(), $3->getCompleteString());
             context->recover();
             ConstantUnion *unionArray = new ConstantUnion[1];
             unionArray->setBConst(false);
-            $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtBool, EbpUndefined, EvqConst), $2.line);
+            $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtBool, EbpUndefined, EvqConst), @2);
         }
     }
     | equality_expression NE_OP relational_expression {
-        $$ = context->intermediate.addBinaryMath(EOpNotEqual, $1, $3, $2.line);
+        $$ = context->intermediate.addBinaryMath(EOpNotEqual, $1, $3, @2);
         if ($$ == 0) {
-            context->binaryOpError($2.line, "!=", $1->getCompleteString(), $3->getCompleteString());
+            context->binaryOpError(@2, "!=", $1->getCompleteString(), $3->getCompleteString());
             context->recover();
             ConstantUnion *unionArray = new ConstantUnion[1];
             unionArray->setBConst(false);
-            $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtBool, EbpUndefined, EvqConst), $2.line);
+            $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtBool, EbpUndefined, EvqConst), @2);
         }
     }
     ;
@@ -650,13 +667,13 @@ inclusive_or_expression
 logical_and_expression
     : inclusive_or_expression { $$ = $1; }
     | logical_and_expression AND_OP inclusive_or_expression {
-        $$ = context->intermediate.addBinaryMath(EOpLogicalAnd, $1, $3, $2.line);
+        $$ = context->intermediate.addBinaryMath(EOpLogicalAnd, $1, $3, @2);
         if ($$ == 0) {
-            context->binaryOpError($2.line, "&&", $1->getCompleteString(), $3->getCompleteString());
+            context->binaryOpError(@2, "&&", $1->getCompleteString(), $3->getCompleteString());
             context->recover();
             ConstantUnion *unionArray = new ConstantUnion[1];
             unionArray->setBConst(false);
-            $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtBool, EbpUndefined, EvqConst), $2.line);
+            $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtBool, EbpUndefined, EvqConst), @2);
         }
     }
     ;
@@ -664,13 +681,13 @@ logical_and_expression
 logical_xor_expression
     : logical_and_expression { $$ = $1; }
     | logical_xor_expression XOR_OP logical_and_expression  {
-        $$ = context->intermediate.addBinaryMath(EOpLogicalXor, $1, $3, $2.line);
+        $$ = context->intermediate.addBinaryMath(EOpLogicalXor, $1, $3, @2);
         if ($$ == 0) {
-            context->binaryOpError($2.line, "^^", $1->getCompleteString(), $3->getCompleteString());
+            context->binaryOpError(@2, "^^", $1->getCompleteString(), $3->getCompleteString());
             context->recover();
             ConstantUnion *unionArray = new ConstantUnion[1];
             unionArray->setBConst(false);
-            $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtBool, EbpUndefined, EvqConst), $2.line);
+            $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtBool, EbpUndefined, EvqConst), @2);
         }
     }
     ;
@@ -678,13 +695,13 @@ logical_xor_expression
 logical_or_expression
     : logical_xor_expression { $$ = $1; }
     | logical_or_expression OR_OP logical_xor_expression  {
-        $$ = context->intermediate.addBinaryMath(EOpLogicalOr, $1, $3, $2.line);
+        $$ = context->intermediate.addBinaryMath(EOpLogicalOr, $1, $3, @2);
         if ($$ == 0) {
-            context->binaryOpError($2.line, "||", $1->getCompleteString(), $3->getCompleteString());
+            context->binaryOpError(@2, "||", $1->getCompleteString(), $3->getCompleteString());
             context->recover();
             ConstantUnion *unionArray = new ConstantUnion[1];
             unionArray->setBConst(false);
-            $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtBool, EbpUndefined, EvqConst), $2.line);
+            $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtBool, EbpUndefined, EvqConst), @2);
         }
     }
     ;
@@ -692,15 +709,15 @@ logical_or_expression
 conditional_expression
     : logical_or_expression { $$ = $1; }
     | logical_or_expression QUESTION expression COLON assignment_expression {
-       if (context->boolErrorCheck($2.line, $1))
+       if (context->boolErrorCheck(@2, $1))
             context->recover();
 
-        $$ = context->intermediate.addSelection($1, $3, $5, $2.line);
+        $$ = context->intermediate.addSelection($1, $3, $5, @2);
         if ($3->getType() != $5->getType())
             $$ = 0;
 
         if ($$ == 0) {
-            context->binaryOpError($2.line, ":", $3->getCompleteString(), $5->getCompleteString());
+            context->binaryOpError(@2, ":", $3->getCompleteString(), $5->getCompleteString());
             context->recover();
             $$ = $5;
         }
@@ -710,11 +727,11 @@ conditional_expression
 assignment_expression
     : conditional_expression { $$ = $1; }
     | unary_expression assignment_operator assignment_expression {
-        if (context->lValueErrorCheck($2.line, "assign", $1))
+        if (context->lValueErrorCheck(@2, "assign", $1))
             context->recover();
-        $$ = context->intermediate.addAssign($2.op, $1, $3, $2.line);
+        $$ = context->intermediate.addAssign($2.op, $1, $3, @2);
         if ($$ == 0) {
-            context->assignError($2.line, "assign", $1->getCompleteString(), $3->getCompleteString());
+            context->assignError(@2, "assign", $1->getCompleteString(), $3->getCompleteString());
             context->recover();
             $$ = $1;
         }
@@ -722,11 +739,11 @@ assignment_expression
     ;
 
 assignment_operator
-    : EQUAL        {                                    $$.line = $1.line; $$.op = EOpAssign; }
-    | MUL_ASSIGN   { FRAG_VERT_ONLY("*=", $1.line);     $$.line = $1.line; $$.op = EOpMulAssign; }
-    | DIV_ASSIGN   { FRAG_VERT_ONLY("/=", $1.line);     $$.line = $1.line; $$.op = EOpDivAssign; }
-    | ADD_ASSIGN   {                                    $$.line = $1.line; $$.op = EOpAddAssign; }
-    | SUB_ASSIGN   {                                    $$.line = $1.line; $$.op = EOpSubAssign; }
+    : EQUAL        {                               $$.op = EOpAssign; }
+    | MUL_ASSIGN   { FRAG_VERT_ONLY("*=", @1);     $$.op = EOpMulAssign; }
+    | DIV_ASSIGN   { FRAG_VERT_ONLY("/=", @1);     $$.op = EOpDivAssign; }
+    | ADD_ASSIGN   {                               $$.op = EOpAddAssign; }
+    | SUB_ASSIGN   {                               $$.op = EOpSubAssign; }
     ;
 
 expression
@@ -734,9 +751,9 @@ expression
         $$ = $1;
     }
     | expression COMMA assignment_expression {
-        $$ = context->intermediate.addComma($1, $3, $2.line);
+        $$ = context->intermediate.addComma($1, $3, @2);
         if ($$ == 0) {
-            context->binaryOpError($2.line, ",", $1->getCompleteString(), $3->getCompleteString());
+            context->binaryOpError(@2, ",", $1->getCompleteString(), $3->getCompleteString());
             context->recover();
             $$ = $3;
         }
@@ -753,7 +770,7 @@ constant_expression
 
 enter_struct
     : IDENTIFIER LEFT_BRACE {
-        if (context->enterStructDeclaration($1.line, *$1.string))
+        if (context->enterStructDeclaration(@1, *$1.string))
             context->recover();
         $$ = $1;
     }
@@ -774,11 +791,11 @@ declaration
             {
                 TVariable variable(param.name, *param.type);
                 
-                prototype = context->intermediate.growAggregate(prototype, context->intermediate.addSymbol(variable.getUniqueId(), variable.getName(), variable.getType(), $1.line), $1.line);
+                prototype = context->intermediate.growAggregate(prototype, context->intermediate.addSymbol(variable.getUniqueId(), variable.getName(), variable.getType(), @1), @1);
             }
             else
             {
-                prototype = context->intermediate.growAggregate(prototype, context->intermediate.addSymbol(0, "", *param.type, $1.line), $1.line);
+                prototype = context->intermediate.growAggregate(prototype, context->intermediate.addSymbol(0, "", *param.type, @1), @1);
             }
         }
         
@@ -794,26 +811,26 @@ declaration
     }
     | PRECISION precision_qualifier type_specifier_no_prec SEMICOLON {
         if (($2 == EbpHigh) && (context->shaderType == SH_FRAGMENT_SHADER) && !context->fragmentPrecisionHigh) {
-            context->error($1.line, "precision is not supported in fragment shader", "highp");
+            context->error(@1, "precision is not supported in fragment shader", "highp");
             context->recover();
         }
         if (!context->symbolTable.setDefaultPrecision( $3, $2 )) {
-            context->error($1.line, "illegal type argument for default precision qualifier", getBasicString($3.type));
+            context->error(@1, "illegal type argument for default precision qualifier", getBasicString($3.type));
             context->recover();
         }
         $$ = 0;
     }
     | type_qualifier enter_struct struct_declaration_list RIGHT_BRACE SEMICOLON {
-        ES3_ONLY(getQualifierString($1.qualifier), $1.line, "interface blocks");
-        $$ = context->addInterfaceBlock($1, $2.line, *$2.string, $3, "", 0, NULL, 0);
+        ES3_ONLY(getQualifierString($1.qualifier), @1, "interface blocks");
+        $$ = context->addInterfaceBlock($1, @2, *$2.string, $3, "", @$, NULL, @$);
     }
     | type_qualifier enter_struct struct_declaration_list RIGHT_BRACE IDENTIFIER SEMICOLON {
-        ES3_ONLY(getQualifierString($1.qualifier), $1.line, "interface blocks");
-        $$ = context->addInterfaceBlock($1, $2.line, *$2.string, $3, *$5.string, $5.line, NULL, 0);
+        ES3_ONLY(getQualifierString($1.qualifier), @1, "interface blocks");
+        $$ = context->addInterfaceBlock($1, @2, *$2.string, $3, *$5.string, @5, NULL, @$);
     }
     | type_qualifier enter_struct struct_declaration_list RIGHT_BRACE IDENTIFIER LEFT_BRACKET constant_expression RIGHT_BRACKET SEMICOLON {
-        ES3_ONLY(getQualifierString($1.qualifier), $1.line, "interface blocks");
-        $$ = context->addInterfaceBlock($1, $2.line, *$2.string, $3, *$5.string, $5.line, $7, $6.line);
+        ES3_ONLY(getQualifierString($1.qualifier), @1, "interface blocks");
+        $$ = context->addInterfaceBlock($1, @2, *$2.string, $3, *$5.string, @5, $7, @6);
     }
     | type_qualifier SEMICOLON {
         context->parseGlobalLayoutQualifier($1);
@@ -834,12 +851,12 @@ function_prototype
         TFunction* prevDec = static_cast<TFunction*>(context->symbolTable.find($1->getMangledName(), context->shaderVersion));
         if (prevDec) {
             if (prevDec->getReturnType() != $1->getReturnType()) {
-                context->error($2.line, "overloaded functions must have the same return type", $1->getReturnType().getBasicString());
+                context->error(@2, "overloaded functions must have the same return type", $1->getReturnType().getBasicString());
                 context->recover();
             }
             for (size_t i = 0; i < prevDec->getParamCount(); ++i) {
                 if (prevDec->getParam(i).type->getQualifier() != $1->getParam(i).type->getQualifier()) {
-                    context->error($2.line, "overloaded functions must have the same parameter qualifiers", $1->getParam(i).type->getQualifierString());
+                    context->error(@2, "overloaded functions must have the same parameter qualifiers", $1->getParam(i).type->getQualifierString());
                     context->recover();
                 }
             }
@@ -851,7 +868,6 @@ function_prototype
         // being redeclared.  So, pass back up this declaration, not the one in the symbol table.
         //
         $$.function = $1;
-        $$.line = $2.line;
 
         // We're at the inner scope level of the function's arguments and body statement.
         // Add the function prototype to the surrounding scope instead.
@@ -887,7 +903,7 @@ function_header_with_parameters
             //
             // This parameter > first is void
             //
-            context->error($2.line, "cannot be an argument type except for '(void)'", "void");
+            context->error(@2, "cannot be an argument type except for '(void)'", "void");
             context->recover();
             delete $3.param.type;
         } else {
@@ -901,11 +917,11 @@ function_header_with_parameters
 function_header
     : fully_specified_type IDENTIFIER LEFT_PAREN {
         if ($1.qualifier != EvqGlobal && $1.qualifier != EvqTemporary) {
-            context->error($2.line, "no qualifiers allowed for function return", getQualifierString($1.qualifier));
+            context->error(@2, "no qualifiers allowed for function return", getQualifierString($1.qualifier));
             context->recover();
         }
         // make sure a sampler is not involved as well...
-        if (context->structQualifierErrorCheck($2.line, $1))
+        if (context->structQualifierErrorCheck(@2, $1))
             context->recover();
 
         // Add the function as a prototype after parsing it (we do not support recursion)
@@ -922,31 +938,29 @@ parameter_declarator
     // Type + name
     : type_specifier identifier {
         if ($1.type == EbtVoid) {
-            context->error($2.line, "illegal use of type 'void'", $2.string->c_str());
+            context->error(@2, "illegal use of type 'void'", $2.string->c_str());
             context->recover();
         }
-        if (context->reservedErrorCheck($2.line, *$2.string))
+        if (context->reservedErrorCheck(@2, *$2.string))
             context->recover();
         TParameter param = {$2.string, new TType($1)};
-        $$.line = $2.line;
         $$.param = param;
     }
     | type_specifier identifier LEFT_BRACKET constant_expression RIGHT_BRACKET {
         // Check that we can make an array out of this type
-        if (context->arrayTypeErrorCheck($3.line, $1))
+        if (context->arrayTypeErrorCheck(@3, $1))
             context->recover();
 
-        if (context->reservedErrorCheck($2.line, *$2.string))
+        if (context->reservedErrorCheck(@2, *$2.string))
             context->recover();
 
         int size;
-        if (context->arraySizeErrorCheck($3.line, $4, size))
+        if (context->arraySizeErrorCheck(@3, $4, size))
             context->recover();
         $1.setArray(true, size);
 
         TType* type = new TType($1);
         TParameter param = { $2.string, type };
-        $$.line = $2.line;
         $$.param = param;
     }
     ;
@@ -962,14 +976,14 @@ parameter_declaration
     //
     : parameter_type_qualifier parameter_qualifier parameter_declarator {
         $$ = $3;
-        if (context->paramErrorCheck($3.line, $1, $2, $$.param.type))
+        if (context->paramErrorCheck(@3, $1, $2, $$.param.type))
             context->recover();
     }
     | parameter_qualifier parameter_declarator {
         $$ = $2;
-        if (context->parameterSamplerErrorCheck($2.line, $1, *$2.param.type))
+        if (context->parameterSamplerErrorCheck(@2, $1, *$2.param.type))
             context->recover();
-        if (context->paramErrorCheck($2.line, EvqTemporary, $1, $$.param.type))
+        if (context->paramErrorCheck(@2, EvqTemporary, $1, $$.param.type))
             context->recover();
     }
     //
@@ -977,14 +991,14 @@ parameter_declaration
     //
     | parameter_type_qualifier parameter_qualifier parameter_type_specifier {
         $$ = $3;
-        if (context->paramErrorCheck($3.line, $1, $2, $$.param.type))
+        if (context->paramErrorCheck(@3, $1, $2, $$.param.type))
             context->recover();
     }
     | parameter_qualifier parameter_type_specifier {
         $$ = $2;
-        if (context->parameterSamplerErrorCheck($2.line, $1, *$2.param.type))
+        if (context->parameterSamplerErrorCheck(@2, $1, *$2.param.type))
             context->recover();
-        if (context->paramErrorCheck($2.line, EvqTemporary, $1, $$.param.type))
+        if (context->paramErrorCheck(@2, EvqTemporary, $1, $$.param.type))
             context->recover();
     }
     ;
@@ -1017,62 +1031,62 @@ init_declarator_list
     }
     | init_declarator_list COMMA identifier {
         $$ = $1;
-        $$.intermAggregate = context->parseDeclarator($$.type, $1.intermAggregate, $3.symbol, $3.line, *$3.string);
+        $$.intermAggregate = context->parseDeclarator($$.type, $1.intermAggregate, $3.symbol, @3, *$3.string);
     }
     | init_declarator_list COMMA identifier LEFT_BRACKET RIGHT_BRACKET {
         $$ = $1;
-        context->parseArrayDeclarator($$.type, $3.line, *$3.string, $4.line, NULL, NULL);
+        context->parseArrayDeclarator($$.type, @3, *$3.string, @4, NULL, NULL);
     }
     | init_declarator_list COMMA identifier LEFT_BRACKET constant_expression RIGHT_BRACKET {
         $$ = $1;
-        $$.intermAggregate = context->parseArrayDeclarator($$.type, $3.line, *$3.string, $4.line, $1.intermNode, $5);
+        $$.intermAggregate = context->parseArrayDeclarator($$.type, @3, *$3.string, @4, $1.intermNode, $5);
     }
     | init_declarator_list COMMA identifier EQUAL initializer {
         $$ = $1;
-        $$.intermAggregate = context->parseInitDeclarator($$.type, $1.intermAggregate, $3.line, *$3.string, $4.line, $5);
+        $$.intermAggregate = context->parseInitDeclarator($$.type, $1.intermAggregate, @3, *$3.string, @4, $5);
     }
     ;
 
 single_declaration
     : fully_specified_type {
         $$.type = $1;
-        $$.intermAggregate = context->parseSingleDeclaration($$.type, $1.line, "");
+        $$.intermAggregate = context->parseSingleDeclaration($$.type, @1, "");
     }
     | fully_specified_type identifier {
         $$.type = $1;
-        $$.intermAggregate = context->parseSingleDeclaration($$.type, $2.line, *$2.string);
+        $$.intermAggregate = context->parseSingleDeclaration($$.type, @2, *$2.string);
     }
     | fully_specified_type identifier LEFT_BRACKET RIGHT_BRACKET {
-        context->error($2.line, "unsized array declarations not supported", $2.string->c_str());
+        context->error(@2, "unsized array declarations not supported", $2.string->c_str());
         context->recover();
 
         $$.type = $1;
-        $$.intermAggregate = context->parseSingleDeclaration($$.type, $2.line, *$2.string);
+        $$.intermAggregate = context->parseSingleDeclaration($$.type, @2, *$2.string);
     }
     | fully_specified_type identifier LEFT_BRACKET constant_expression RIGHT_BRACKET {
         $$.type = $1;
-        $$.intermAggregate = context->parseSingleArrayDeclaration($$.type, $2.line, *$2.string, $3.line, $4);
+        $$.intermAggregate = context->parseSingleArrayDeclaration($$.type, @2, *$2.string, @3, $4);
     }
     | fully_specified_type identifier EQUAL initializer {
         $$.type = $1;
-        $$.intermAggregate = context->parseSingleInitDeclaration($$.type, $2.line, *$2.string, $3.line, $4);
+        $$.intermAggregate = context->parseSingleInitDeclaration($$.type, @2, *$2.string, @3, $4);
     }
     | INVARIANT IDENTIFIER {
-        VERTEX_ONLY("invariant declaration", $1.line);
-        if (context->globalErrorCheck($1.line, context->symbolTable.atGlobalLevel(), "invariant varying"))
+        VERTEX_ONLY("invariant declaration", @1);
+        if (context->globalErrorCheck(@1, context->symbolTable.atGlobalLevel(), "invariant varying"))
             context->recover();
-        $$.type.setBasic(EbtInvariant, EvqInvariantVaryingOut, $2.line);
+        $$.type.setBasic(EbtInvariant, EvqInvariantVaryingOut, @2);
         if (!$2.symbol)
         {
-            context->error($2.line, "undeclared identifier declared as invariant", $2.string->c_str());
+            context->error(@2, "undeclared identifier declared as invariant", $2.string->c_str());
             context->recover();
             
             $$.intermAggregate = 0;
         }
         else
         {
-            TIntermSymbol *symbol = context->intermediate.addSymbol(0, *$2.string, TType($$.type), $2.line);
-            $$.intermAggregate = context->intermediate.makeAggregate(symbol, $2.line);
+            TIntermSymbol *symbol = context->intermediate.addSymbol(0, *$2.string, TType($$.type), @2);
+            $$.intermAggregate = context->intermediate.makeAggregate(symbol, @2);
         }
     }
 
@@ -1098,15 +1112,15 @@ single_declaration
 //
 //input_or_output
 //    : INPUT {
-//        if (context->globalErrorCheck($1.line, context->symbolTable.atGlobalLevel(), "input"))
+//        if (context->globalErrorCheck(@1, context->symbolTable.atGlobalLevel(), "input"))
 //            context->recover();
-//        UNPACK_ONLY("input", $1.line);
+//        UNPACK_ONLY("input", @1);
 //        $$.qualifier = EvqInput;
 //    }
 //    | OUTPUT {
-//        if (context->globalErrorCheck($1.line, context->symbolTable.atGlobalLevel(), "output"))
+//        if (context->globalErrorCheck(@1, context->symbolTable.atGlobalLevel(), "output"))
 //            context->recover();
-//        PACK_ONLY("output", $1.line);
+//        PACK_ONLY("output", @1);
 //        $$.qualifier = EvqOutput;
 //    }
 //    ;
@@ -1134,11 +1148,11 @@ single_declaration
 //
 //buffer_declaration
 //    : type_specifier IDENTIFIER COLON constant_expression SEMICOLON {
-//        if (context->reservedErrorCheck($2.line, *$2.string, context))
+//        if (context->reservedErrorCheck(@2, *$2.string, context))
 //            context->recover();
 //        $$.variable = new TVariable($2.string, $1);
 //        if (! context->symbolTable.declare(*$$.variable)) {
-//            context->error($2.line, "redefinition", $$.variable->getName().c_str());
+//            context->error(@2, "redefinition", $$.variable->getName().c_str());
 //            context->recover();
 //            // don't have to delete $$.variable, the pool pop will take care of it
 //        }
@@ -1150,7 +1164,7 @@ fully_specified_type
         $$ = $1;
 
         if ($1.array) {
-            context->error($1.line, "not supported", "first-class array");
+            context->error(@1, "not supported", "first-class array");
             context->recover();
             $1.setArray(false);
         }
@@ -1163,11 +1177,9 @@ fully_specified_type
 interpolation_qualifier
     : SMOOTH {
         $$.qualifier = EvqSmooth;
-        $$.line = $1.line;
     }
     | FLAT {
         $$.qualifier = EvqFlat;
-        $$.line = $1.line;
     }
     ;
 
@@ -1179,82 +1191,82 @@ parameter_type_qualifier
 
 type_qualifier
     : ATTRIBUTE {
-        VERTEX_ONLY("attribute", $1.line);
-        ES2_ONLY("attribute", $1.line);
-        if (context->globalErrorCheck($1.line, context->symbolTable.atGlobalLevel(), "attribute"))
+        VERTEX_ONLY("attribute", @1);
+        ES2_ONLY("attribute", @1);
+        if (context->globalErrorCheck(@1, context->symbolTable.atGlobalLevel(), "attribute"))
             context->recover();
-        $$.setBasic(EbtVoid, EvqAttribute, $1.line);
+        $$.setBasic(EbtVoid, EvqAttribute, @1);
     }
     | VARYING {
-        ES2_ONLY("varying", $1.line);
-        if (context->globalErrorCheck($1.line, context->symbolTable.atGlobalLevel(), "varying"))
+        ES2_ONLY("varying", @1);
+        if (context->globalErrorCheck(@1, context->symbolTable.atGlobalLevel(), "varying"))
             context->recover();
         if (context->shaderType == SH_VERTEX_SHADER)
-            $$.setBasic(EbtVoid, EvqVaryingOut, $1.line);
+            $$.setBasic(EbtVoid, EvqVaryingOut, @1);
         else
-            $$.setBasic(EbtVoid, EvqVaryingIn, $1.line);
+            $$.setBasic(EbtVoid, EvqVaryingIn, @1);
     }
     | INVARIANT VARYING {
-        ES2_ONLY("varying", $1.line);
-        if (context->globalErrorCheck($1.line, context->symbolTable.atGlobalLevel(), "invariant varying"))
+        ES2_ONLY("varying", @1);
+        if (context->globalErrorCheck(@1, context->symbolTable.atGlobalLevel(), "invariant varying"))
             context->recover();
         if (context->shaderType == SH_VERTEX_SHADER)
-            $$.setBasic(EbtVoid, EvqInvariantVaryingOut, $1.line);
+            $$.setBasic(EbtVoid, EvqInvariantVaryingOut, @1);
         else
-            $$.setBasic(EbtVoid, EvqInvariantVaryingIn, $1.line);
+            $$.setBasic(EbtVoid, EvqInvariantVaryingIn, @1);
     }
     | storage_qualifier {
-        $$.setBasic(EbtVoid, $1.qualifier, $1.line);
+        $$.setBasic(EbtVoid, $1.qualifier, @1);
     }
     | interpolation_qualifier storage_qualifier {
         if ($2.qualifier == EvqSmoothIn) {
             if ($1.qualifier == EvqSmooth)
-                $$.setBasic(EbtVoid, EvqSmoothIn, $2.line);
+                $$.setBasic(EbtVoid, EvqSmoothIn, @2);
             else if ($1.qualifier == EvqFlat)
-                $$.setBasic(EbtVoid, EvqFlatIn, $2.line);
+                $$.setBasic(EbtVoid, EvqFlatIn, @2);
             else UNREACHABLE();
         }
         else if ($2.qualifier == EvqCentroidIn) {
             if ($1.qualifier == EvqSmooth)
-                $$.setBasic(EbtVoid, EvqCentroidIn, $2.line);
+                $$.setBasic(EbtVoid, EvqCentroidIn, @2);
             else if ($1.qualifier == EvqFlat)
-                $$.setBasic(EbtVoid, EvqFlatIn, $2.line);
+                $$.setBasic(EbtVoid, EvqFlatIn, @2);
             else UNREACHABLE();
         }
         else if ($2.qualifier == EvqSmoothOut) {
             if ($1.qualifier == EvqSmooth)
-                $$.setBasic(EbtVoid, EvqSmoothOut, $2.line);
+                $$.setBasic(EbtVoid, EvqSmoothOut, @2);
             else if ($1.qualifier == EvqFlat)
-                $$.setBasic(EbtVoid, EvqFlatOut, $2.line);
+                $$.setBasic(EbtVoid, EvqFlatOut, @2);
             else UNREACHABLE();
         }
         else if ($2.qualifier == EvqCentroidOut) {
             if ($1.qualifier == EvqSmooth)
-                $$.setBasic(EbtVoid, EvqCentroidOut, $2.line);
+                $$.setBasic(EbtVoid, EvqCentroidOut, @2);
             else if ($1.qualifier == EvqFlat)
-                $$.setBasic(EbtVoid, EvqFlatOut, $2.line);
+                $$.setBasic(EbtVoid, EvqFlatOut, @2);
             else UNREACHABLE();
         }
         else {
-            context->error($1.line, "interpolation qualifier requires a fragment 'in' or vertex 'out' storage qualifier", getInterpolationString($1.qualifier));
+            context->error(@1, "interpolation qualifier requires a fragment 'in' or vertex 'out' storage qualifier", getInterpolationString($1.qualifier));
             context->recover();
 
-            $$.setBasic(EbtVoid, $2.qualifier, $2.line);
+            $$.setBasic(EbtVoid, $2.qualifier, @2);
         }
     }
     | interpolation_qualifier {
-        context->error($1.line, "interpolation qualifier requires a fragment 'in' or vertex 'out' storage qualifier", getInterpolationString($1.qualifier));
+        context->error(@1, "interpolation qualifier requires a fragment 'in' or vertex 'out' storage qualifier", getInterpolationString($1.qualifier));
         context->recover();
         
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtVoid, qual, $1.line);
+        $$.setBasic(EbtVoid, qual, @1);
     }
     | layout_qualifier {
         $$.qualifier = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
         $$.layoutQualifier = $1;
     }
     | layout_qualifier storage_qualifier {
-        $$.setBasic(EbtVoid, $2.qualifier, $2.line);
+        $$.setBasic(EbtVoid, $2.qualifier, @2);
         $$.layoutQualifier = $1;
     }
     ;
@@ -1262,43 +1274,37 @@ type_qualifier
 storage_qualifier
     : CONST_QUAL {
         $$.qualifier = EvqConst;
-        $$.line = $1.line;
     }
     | IN_QUAL {
-        ES3_ONLY("in", $1.line, "storage qualifier");
+        ES3_ONLY("in", @1, "storage qualifier");
         $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqSmoothIn : EvqVertexInput;
-        $$.line = $1.line;
     }
     | OUT_QUAL {
-        ES3_ONLY("out", $1.line, "storage qualifier");
+        ES3_ONLY("out", @1, "storage qualifier");
         $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragmentOutput : EvqSmoothOut;
-        $$.line = $1.line;
     }
     | CENTROID IN_QUAL {
-        ES3_ONLY("centroid in", $1.line, "storage qualifier");
+        ES3_ONLY("centroid in", @1, "storage qualifier");
         if (context->shaderType == SH_VERTEX_SHADER)
         {
-            context->error($1.line, "invalid storage qualifier", "it is an error to use 'centroid in' in the vertex shader");
+            context->error(@1, "invalid storage qualifier", "it is an error to use 'centroid in' in the vertex shader");
             context->recover();
         }
         $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqCentroidIn : EvqVertexInput;
-        $$.line = $1.line;
     }
     | CENTROID OUT_QUAL {
-        ES3_ONLY("centroid out", $1.line, "storage qualifier");
+        ES3_ONLY("centroid out", @1, "storage qualifier");
         if (context->shaderType == SH_FRAGMENT_SHADER)
         {
-            context->error($1.line, "invalid storage qualifier", "it is an error to use 'centroid out' in the fragment shader");
+            context->error(@1, "invalid storage qualifier", "it is an error to use 'centroid out' in the fragment shader");
             context->recover();
         }
         $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragmentOutput : EvqCentroidOut;
-        $$.line = $1.line;
     }
     | UNIFORM {
-        if (context->globalErrorCheck($1.line, context->symbolTable.atGlobalLevel(), "uniform"))
+        if (context->globalErrorCheck(@1, context->symbolTable.atGlobalLevel(), "uniform"))
             context->recover();
         $$.qualifier = EvqUniform;
-        $$.line = $1.line;
     }
     ;
 
@@ -1308,7 +1314,7 @@ type_specifier
 
         if ($$.precision == EbpUndefined) {
             $$.precision = context->symbolTable.getDefaultPrecision($1.type);
-            if (context->precisionErrorCheck($1.line, $$.precision, $1.type)) {
+            if (context->precisionErrorCheck(@1, $$.precision, $1.type)) {
                 context->recover();
             }
         }
@@ -1333,7 +1339,7 @@ precision_qualifier
 
 layout_qualifier
     : LAYOUT LEFT_PAREN layout_qualifier_id_list RIGHT_PAREN {
-        ES3_ONLY("layout", $1.line, "qualifier");
+        ES3_ONLY("layout", @1, "qualifier");
         $$ = $3;
     }
     ;
@@ -1349,13 +1355,13 @@ layout_qualifier_id_list
 
 layout_qualifier_id
     : IDENTIFIER {
-        $$ = context->parseLayoutQualifier(*$1.string, $1.line);
+        $$ = context->parseLayoutQualifier(*$1.string, @1);
     }
     | IDENTIFIER EQUAL INTCONSTANT {
-        $$ = context->parseLayoutQualifier(*$1.string, $1.line, *$3.string, $3.i, $3.line);
+        $$ = context->parseLayoutQualifier(*$1.string, @1, *$3.string, $3.i, @3);
     }
     | IDENTIFIER EQUAL UINTCONSTANT {
-        $$ = context->parseLayoutQualifier(*$1.string, $1.line, *$3.string, $3.i, $3.line);
+        $$ = context->parseLayoutQualifier(*$1.string, @1, *$3.string, $3.i, @3);
     }
     ;
 
@@ -1366,11 +1372,11 @@ type_specifier_no_prec
     | type_specifier_nonarray LEFT_BRACKET constant_expression RIGHT_BRACKET {
         $$ = $1;
 
-        if (context->arrayTypeErrorCheck($2.line, $1))
+        if (context->arrayTypeErrorCheck(@2, $1))
             context->recover();
         else {
             int size;
-            if (context->arraySizeErrorCheck($2.line, $3, size))
+            if (context->arraySizeErrorCheck(@2, $3, size))
                 context->recover();
             $$.setArray(true, size);
         }
@@ -1380,202 +1386,202 @@ type_specifier_no_prec
 type_specifier_nonarray
     : VOID_TYPE {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtVoid, qual, $1.line);
+        $$.setBasic(EbtVoid, qual, @1);
     }
     | FLOAT_TYPE {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtFloat, qual, $1.line);
+        $$.setBasic(EbtFloat, qual, @1);
     }
     | INT_TYPE {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtInt, qual, $1.line);
+        $$.setBasic(EbtInt, qual, @1);
     }
     | UINT_TYPE {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtUInt, qual, $1.line);
+        $$.setBasic(EbtUInt, qual, @1);
     }
     | BOOL_TYPE {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtBool, qual, $1.line);
+        $$.setBasic(EbtBool, qual, @1);
     }
     | VEC2 {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtFloat, qual, $1.line);
+        $$.setBasic(EbtFloat, qual, @1);
         $$.setAggregate(2);
     }
     | VEC3 {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtFloat, qual, $1.line);
+        $$.setBasic(EbtFloat, qual, @1);
         $$.setAggregate(3);
     }
     | VEC4 {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtFloat, qual, $1.line);
+        $$.setBasic(EbtFloat, qual, @1);
         $$.setAggregate(4);
     }
     | BVEC2 {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtBool, qual, $1.line);
+        $$.setBasic(EbtBool, qual, @1);
         $$.setAggregate(2);
     }
     | BVEC3 {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtBool, qual, $1.line);
+        $$.setBasic(EbtBool, qual, @1);
         $$.setAggregate(3);
     }
     | BVEC4 {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtBool, qual, $1.line);
+        $$.setBasic(EbtBool, qual, @1);
         $$.setAggregate(4);
     }
     | IVEC2 {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtInt, qual, $1.line);
+        $$.setBasic(EbtInt, qual, @1);
         $$.setAggregate(2);
     }
     | IVEC3 {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtInt, qual, $1.line);
+        $$.setBasic(EbtInt, qual, @1);
         $$.setAggregate(3);
     }
     | IVEC4 {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtInt, qual, $1.line);
+        $$.setBasic(EbtInt, qual, @1);
         $$.setAggregate(4);
     }
     | UVEC2 {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtUInt, qual, $1.line);
+        $$.setBasic(EbtUInt, qual, @1);
         $$.setAggregate(2);
     }
     | UVEC3 {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtUInt, qual, $1.line);
+        $$.setBasic(EbtUInt, qual, @1);
         $$.setAggregate(3);
     }
     | UVEC4 {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtUInt, qual, $1.line);
+        $$.setBasic(EbtUInt, qual, @1);
         $$.setAggregate(4);
     }
     | MATRIX2 {
-        FRAG_VERT_ONLY("mat2", $1.line);
+        FRAG_VERT_ONLY("mat2", @1);
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtFloat, qual, $1.line);
+        $$.setBasic(EbtFloat, qual, @1);
         $$.setMatrix(2, 2);
     }
     | MATRIX3 {
-        FRAG_VERT_ONLY("mat3", $1.line);
+        FRAG_VERT_ONLY("mat3", @1);
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtFloat, qual, $1.line);
+        $$.setBasic(EbtFloat, qual, @1);
         $$.setMatrix(3, 3);
     }
     | MATRIX4 {
-        FRAG_VERT_ONLY("mat4", $1.line);
+        FRAG_VERT_ONLY("mat4", @1);
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtFloat, qual, $1.line);
+        $$.setBasic(EbtFloat, qual, @1);
         $$.setMatrix(4, 4);
     }
     | MATRIX2x3 {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtFloat, qual, $1.line);
+        $$.setBasic(EbtFloat, qual, @1);
         $$.setMatrix(2, 3);
     }
     | MATRIX3x2 {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtFloat, qual, $1.line);
+        $$.setBasic(EbtFloat, qual, @1);
         $$.setMatrix(3, 2);
     }
     | MATRIX2x4 {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtFloat, qual, $1.line);
+        $$.setBasic(EbtFloat, qual, @1);
         $$.setMatrix(2, 4);
     }
     | MATRIX4x2 {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtFloat, qual, $1.line);
+        $$.setBasic(EbtFloat, qual, @1);
         $$.setMatrix(4, 2);
     }
     | MATRIX3x4 {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtFloat, qual, $1.line);
+        $$.setBasic(EbtFloat, qual, @1);
         $$.setMatrix(3, 4);
     }
     | MATRIX4x3 {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtFloat, qual, $1.line);
+        $$.setBasic(EbtFloat, qual, @1);
         $$.setMatrix(4, 3);
     }
     | SAMPLER2D {
-        FRAG_VERT_ONLY("sampler2D", $1.line);
+        FRAG_VERT_ONLY("sampler2D", @1);
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtSampler2D, qual, $1.line);
+        $$.setBasic(EbtSampler2D, qual, @1);
     }
     | SAMPLER3D {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtSampler3D, qual, $1.line);
+        $$.setBasic(EbtSampler3D, qual, @1);
     }
     | SAMPLERCUBE {
-        FRAG_VERT_ONLY("samplerCube", $1.line);
+        FRAG_VERT_ONLY("samplerCube", @1);
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtSamplerCube, qual, $1.line);
+        $$.setBasic(EbtSamplerCube, qual, @1);
     }
     | SAMPLER2DARRAY {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtSampler2DArray, qual, $1.line);
+        $$.setBasic(EbtSampler2DArray, qual, @1);
     }
     | ISAMPLER2D {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtISampler2D, qual, $1.line);
+        $$.setBasic(EbtISampler2D, qual, @1);
     }
     | ISAMPLER3D {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtISampler3D, qual, $1.line);
+        $$.setBasic(EbtISampler3D, qual, @1);
     }
     | ISAMPLERCUBE {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtISamplerCube, qual, $1.line);
+        $$.setBasic(EbtISamplerCube, qual, @1);
     }
     | ISAMPLER2DARRAY {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtISampler2DArray, qual, $1.line);
+        $$.setBasic(EbtISampler2DArray, qual, @1);
     }
     | USAMPLER2D {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtUSampler2D, qual, $1.line);
+        $$.setBasic(EbtUSampler2D, qual, @1);
     }
     | USAMPLER3D {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtUSampler3D, qual, $1.line);
+        $$.setBasic(EbtUSampler3D, qual, @1);
     }
     | USAMPLERCUBE {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtUSamplerCube, qual, $1.line);
+        $$.setBasic(EbtUSamplerCube, qual, @1);
     }
     | USAMPLER2DARRAY {
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtUSampler2DArray, qual, $1.line);
+        $$.setBasic(EbtUSampler2DArray, qual, @1);
     }
     | SAMPLER_EXTERNAL_OES {
         if (!context->supportsExtension("GL_OES_EGL_image_external")) {
-            context->error($1.line, "unsupported type", "samplerExternalOES");
+            context->error(@1, "unsupported type", "samplerExternalOES");
             context->recover();
         }
-        FRAG_VERT_ONLY("samplerExternalOES", $1.line);
+        FRAG_VERT_ONLY("samplerExternalOES", @1);
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtSamplerExternalOES, qual, $1.line);
+        $$.setBasic(EbtSamplerExternalOES, qual, @1);
     }
     | SAMPLER2DRECT {
         if (!context->supportsExtension("GL_ARB_texture_rectangle")) {
-            context->error($1.line, "unsupported type", "sampler2DRect");
+            context->error(@1, "unsupported type", "sampler2DRect");
             context->recover();
         }
-        FRAG_VERT_ONLY("sampler2DRect", $1.line);
+        FRAG_VERT_ONLY("sampler2DRect", @1);
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtSampler2DRect, qual, $1.line);
+        $$.setBasic(EbtSampler2DRect, qual, @1);
     }
     | struct_specifier {
-        FRAG_VERT_ONLY("struct", $1.line);
+        FRAG_VERT_ONLY("struct", @1);
         $$ = $1;
         $$.qualifier = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
     }
@@ -1586,17 +1592,17 @@ type_specifier_nonarray
         //
         TType& structure = static_cast<TVariable*>($1.symbol)->getType();
         TQualifier qual = context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary;
-        $$.setBasic(EbtStruct, qual, $1.line);
+        $$.setBasic(EbtStruct, qual, @1);
         $$.userDef = &structure;
     }
     ;
 
 struct_specifier
-    : STRUCT identifier LEFT_BRACE { if (context->enterStructDeclaration($2.line, *$2.string)) context->recover(); } struct_declaration_list RIGHT_BRACE {
-        $$ = context->addStructure($1.line, $2.line, *$2.string, $5);
+    : STRUCT identifier LEFT_BRACE { if (context->enterStructDeclaration(@2, *$2.string)) context->recover(); } struct_declaration_list RIGHT_BRACE {
+        $$ = context->addStructure(@1, @2, *$2.string, $5);
     }
-    | STRUCT LEFT_BRACE { if (context->enterStructDeclaration($2.line, *$2.string)) context->recover(); } struct_declaration_list RIGHT_BRACE {
-        $$ = context->addStructure($1.line, 0, "", $4);
+    | STRUCT LEFT_BRACE { if (context->enterStructDeclaration(@2, *$2.string)) context->recover(); } struct_declaration_list RIGHT_BRACE {
+        $$ = context->addStructure(@1, @$, "", $4);
     }
     ;
 
@@ -1642,23 +1648,21 @@ struct_declarator_list
 
 struct_declarator
     : identifier {
-        if (context->reservedErrorCheck($1.line, *$1.string))
+        if (context->reservedErrorCheck(@1, *$1.string))
             context->recover();
 
         $$.type = new TType(EbtVoid, EbpUndefined);
-        $$.line = $1.line;
         $$.type->setFieldName(*$1.string);
     }
     | identifier LEFT_BRACKET constant_expression RIGHT_BRACKET {
-        if (context->reservedErrorCheck($1.line, *$1.string))
+        if (context->reservedErrorCheck(@1, *$1.string))
             context->recover();
 
         $$.type = new TType(EbtVoid, EbpUndefined);
-        $$.line = $1.line;
         $$.type->setFieldName(*$1.string);
 
         int size;
-        if (context->arraySizeErrorCheck($2.line, $3, size))
+        if (context->arraySizeErrorCheck(@2, $3, size))
             context->recover();
         $$.type->setArraySize(size);
     }
@@ -1692,7 +1696,7 @@ compound_statement
     | LEFT_BRACE { context->symbolTable.push(); } statement_list { context->symbolTable.pop(); } RIGHT_BRACE {
         if ($3 != 0) {
             $3->setOp(EOpSequence);
-            $3->setEndLine($5.line);
+            $3->setLine(@$);
         }
         $$ = $3;
     }
@@ -1716,7 +1720,7 @@ compound_statement_no_new_scope
     | LEFT_BRACE statement_list RIGHT_BRACE {
         if ($2) {
             $2->setOp(EOpSequence);
-            $2->setEndLine($3.line);
+            $2->setLine(@$);
         }
         $$ = $2;
     }
@@ -1724,10 +1728,10 @@ compound_statement_no_new_scope
 
 statement_list
     : statement {
-        $$ = context->intermediate.makeAggregate($1, 0);
+        $$ = context->intermediate.makeAggregate($1, @$);
     }
     | statement_list statement {
-        $$ = context->intermediate.growAggregate($1, $2, 0);
+        $$ = context->intermediate.growAggregate($1, $2, @$);
     }
     ;
 
@@ -1738,9 +1742,9 @@ expression_statement
 
 selection_statement
     : IF LEFT_PAREN expression RIGHT_PAREN selection_rest_statement {
-        if (context->boolErrorCheck($1.line, $3))
+        if (context->boolErrorCheck(@1, $3))
             context->recover();
-        $$ = context->intermediate.addSelection($3, $5, $1.line);
+        $$ = context->intermediate.addSelection($3, $5, @1);
     }
     ;
 
@@ -1766,12 +1770,12 @@ condition
     }
     | fully_specified_type identifier EQUAL initializer {
         TIntermNode* intermNode;
-        if (context->structQualifierErrorCheck($2.line, $1))
+        if (context->structQualifierErrorCheck(@2, $1))
             context->recover();
-        if (context->boolErrorCheck($2.line, $1))
+        if (context->boolErrorCheck(@2, $1))
             context->recover();
 
-        if (!context->executeInitializer($2.line, *$2.string, $1, $4, intermNode))
+        if (!context->executeInitializer(@2, *$2.string, $1, $4, intermNode))
             $$ = $4;
         else {
             context->recover();
@@ -1783,19 +1787,19 @@ condition
 iteration_statement
     : WHILE LEFT_PAREN { context->symbolTable.push(); ++context->loopNestingLevel; } condition RIGHT_PAREN statement_no_new_scope {
         context->symbolTable.pop();
-        $$ = context->intermediate.addLoop(ELoopWhile, 0, $4, 0, $6, $1.line);
+        $$ = context->intermediate.addLoop(ELoopWhile, 0, $4, 0, $6, @1);
         --context->loopNestingLevel;
     }
     | DO { ++context->loopNestingLevel; } statement_with_scope WHILE LEFT_PAREN expression RIGHT_PAREN SEMICOLON {
-        if (context->boolErrorCheck($8.line, $6))
+        if (context->boolErrorCheck(@8, $6))
             context->recover();
 
-        $$ = context->intermediate.addLoop(ELoopDoWhile, 0, $6, 0, $3, $4.line);
+        $$ = context->intermediate.addLoop(ELoopDoWhile, 0, $6, 0, $3, @4);
         --context->loopNestingLevel;
     }
     | FOR LEFT_PAREN { context->symbolTable.push(); ++context->loopNestingLevel; } for_init_statement for_rest_statement RIGHT_PAREN statement_no_new_scope {
         context->symbolTable.pop();
-        $$ = context->intermediate.addLoop(ELoopFor, $4, reinterpret_cast<TIntermTyped*>($5.node1), reinterpret_cast<TIntermTyped*>($5.node2), $7, $1.line);
+        $$ = context->intermediate.addLoop(ELoopFor, $4, reinterpret_cast<TIntermTyped*>($5.node1), reinterpret_cast<TIntermTyped*>($5.node2), $7, @1);
         --context->loopNestingLevel;
     }
     ;
@@ -1832,39 +1836,39 @@ for_rest_statement
 jump_statement
     : CONTINUE SEMICOLON {
         if (context->loopNestingLevel <= 0) {
-            context->error($1.line, "continue statement only allowed in loops", "");
+            context->error(@1, "continue statement only allowed in loops", "");
             context->recover();
         }
-        $$ = context->intermediate.addBranch(EOpContinue, $1.line);
+        $$ = context->intermediate.addBranch(EOpContinue, @1);
     }
     | BREAK SEMICOLON {
         if (context->loopNestingLevel <= 0) {
-            context->error($1.line, "break statement only allowed in loops", "");
+            context->error(@1, "break statement only allowed in loops", "");
             context->recover();
         }
-        $$ = context->intermediate.addBranch(EOpBreak, $1.line);
+        $$ = context->intermediate.addBranch(EOpBreak, @1);
     }
     | RETURN SEMICOLON {
-        $$ = context->intermediate.addBranch(EOpReturn, $1.line);
+        $$ = context->intermediate.addBranch(EOpReturn, @1);
         if (context->currentFunctionType->getBasicType() != EbtVoid) {
-            context->error($1.line, "non-void function must return a value", "return");
+            context->error(@1, "non-void function must return a value", "return");
             context->recover();
         }
     }
     | RETURN expression SEMICOLON {
-        $$ = context->intermediate.addBranch(EOpReturn, $2, $1.line);
+        $$ = context->intermediate.addBranch(EOpReturn, $2, @1);
         context->functionReturnsValue = true;
         if (context->currentFunctionType->getBasicType() == EbtVoid) {
-            context->error($1.line, "void function cannot return a value", "return");
+            context->error(@1, "void function cannot return a value", "return");
             context->recover();
         } else if (*(context->currentFunctionType) != $2->getType()) {
-            context->error($1.line, "function return is not matching type:", "return");
+            context->error(@1, "function return is not matching type:", "return");
             context->recover();
         }
     }
     | DISCARD SEMICOLON {
-        FRAG_ONLY("discard", $1.line);
-        $$ = context->intermediate.addBranch(EOpKill, $1.line);
+        FRAG_ONLY("discard", @1);
+        $$ = context->intermediate.addBranch(EOpKill, @1);
     }
     ;
 
@@ -1876,7 +1880,7 @@ translation_unit
         context->treeRoot = $$;
     }
     | translation_unit external_declaration {
-        $$ = context->intermediate.growAggregate($1, $2, 0);
+        $$ = context->intermediate.growAggregate($1, $2, @$);
         context->treeRoot = $$;
     }
     ;
@@ -1898,7 +1902,7 @@ function_definition
         
         if (builtIn)
         {
-            context->error($1.line, "built-in functions cannot be redefined", function->getName().c_str());
+            context->error(@1, "built-in functions cannot be redefined", function->getName().c_str());
             context->recover();
         }
         
@@ -1912,7 +1916,7 @@ function_definition
             //
             // Then this function already has a body.
             //
-            context->error($1.line, "function already has a body", function->getName().c_str());
+            context->error(@1, "function already has a body", function->getName().c_str());
             context->recover();
         }
         prevDec->setDefined();
@@ -1922,11 +1926,11 @@ function_definition
         //
         if (function->getName() == "main") {
             if (function->getParamCount() > 0) {
-                context->error($1.line, "function cannot take any parameter(s)", function->getName().c_str());
+                context->error(@1, "function cannot take any parameter(s)", function->getName().c_str());
                 context->recover();
             }
             if (function->getReturnType().getBasicType() != EbtVoid) {
-                context->error($1.line, "", function->getReturnType().getBasicString(), "main function cannot return a value");
+                context->error(@1, "", function->getReturnType().getBasicString(), "main function cannot return a value");
                 context->recover();
             }
         }
@@ -1954,7 +1958,7 @@ function_definition
                 // Insert the parameters with name in the symbol table.
                 //
                 if (! context->symbolTable.declare(*variable)) {
-                    context->error($1.line, "redefinition", variable->getName().c_str());
+                    context->error(@1, "redefinition", variable->getName().c_str());
                     context->recover();
                     delete variable;
                 }
@@ -1966,13 +1970,13 @@ function_definition
                                                paramNodes,
                                                context->intermediate.addSymbol(variable->getUniqueId(),
                                                                        variable->getName(),
-                                                                       variable->getType(), $1.line),
-                                               $1.line);
+                                                                       variable->getType(), @1),
+                                               @1);
             } else {
-                paramNodes = context->intermediate.growAggregate(paramNodes, context->intermediate.addSymbol(0, "", *param.type, $1.line), $1.line);
+                paramNodes = context->intermediate.growAggregate(paramNodes, context->intermediate.addSymbol(0, "", *param.type, @1), @1);
             }
         }
-        context->intermediate.setAggregateOperator(paramNodes, EOpParameters, $1.line);
+        context->intermediate.setAggregateOperator(paramNodes, EOpParameters, @1);
         $1.intermAggregate = paramNodes;
         context->loopNestingLevel = 0;
     }
@@ -1980,12 +1984,12 @@ function_definition
         //?? Check that all paths return a value if return type != void ?
         //   May be best done as post process phase on intermediate code
         if (context->currentFunctionType->getBasicType() != EbtVoid && ! context->functionReturnsValue) {
-            context->error($1.line, "function does not return a value:", "", $1.function->getName().c_str());
+            context->error(@1, "function does not return a value:", "", $1.function->getName().c_str());
             context->recover();
         }
         
-        $$ = context->intermediate.growAggregate($1.intermAggregate, $3, 0);
-        context->intermediate.setAggregateOperator($$, EOpFunction, $1.line);
+        $$ = context->intermediate.growAggregate($1.intermAggregate, $3, @$);
+        context->intermediate.setAggregateOperator($$, EOpFunction, @1);
         $$->getAsAggregate()->setName($1.function->getMangledName().c_str());
         $$->getAsAggregate()->setType($1.function->getReturnType());
 
@@ -1994,14 +1998,16 @@ function_definition
         $$->getAsAggregate()->setOptimize(context->pragma().optimize);
         $$->getAsAggregate()->setDebug(context->pragma().debug);
 
-        if ($3 && $3->getAsAggregate())
-            $$->getAsAggregate()->setEndLine($3->getAsAggregate()->getEndLine());
-
         context->symbolTable.pop();
     }
     ;
 
 %%
+
+void yyerror(YYLTYPE* yylloc, TParseContext* context, const char* reason) {
+    context->error(*yylloc, reason, "");
+    context->recover();
+}
 
 int glslang_parse(TParseContext* context) {
     return yyparse(context);

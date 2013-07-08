@@ -22,7 +22,7 @@
 // Look at a '.' field selector string and change it into offsets
 // for a vector.
 //
-bool TParseContext::parseVectorFields(const TString& compString, int vecSize, TVectorFields& fields, int line)
+bool TParseContext::parseVectorFields(const TString& compString, int vecSize, TVectorFields& fields, const TSourceLoc& line)
 {
     fields.num = (int) compString.size();
     if (fields.num > 4) {
@@ -115,7 +115,7 @@ bool TParseContext::parseVectorFields(const TString& compString, int vecSize, TV
 // Look at a '.' field selector string and change it into offsets
 // for a matrix.
 //
-bool TParseContext::parseMatrixFields(const TString& compString, int matCols, int matRows, TMatrixFields& fields, int line)
+bool TParseContext::parseMatrixFields(const TString& compString, int matCols, int matRows, TMatrixFields& fields, const TSourceLoc& line)
 {
     fields.wholeRow = false;
     fields.wholeCol = false;
@@ -175,22 +175,24 @@ void TParseContext::recover()
 //
 // Used by flex/bison to output all syntax and parsing errors.
 //
-void TParseContext::error(TSourceLoc loc,
+void TParseContext::error(const TSourceLoc& loc,
                           const char* reason, const char* token, 
                           const char* extraInfo)
 {
     pp::SourceLocation srcLoc;
-    DecodeSourceLoc(loc, &srcLoc.file, &srcLoc.line);
+    srcLoc.file = loc.first_file;
+    srcLoc.line = loc.first_line;
     diagnostics.writeInfo(pp::Diagnostics::ERROR,
                           srcLoc, reason, token, extraInfo);
 
 }
 
-void TParseContext::warning(TSourceLoc loc,
+void TParseContext::warning(const TSourceLoc& loc,
                             const char* reason, const char* token,
                             const char* extraInfo) {
     pp::SourceLocation srcLoc;
-    DecodeSourceLoc(loc, &srcLoc.file, &srcLoc.line);
+    srcLoc.file = loc.first_file;
+    srcLoc.line = loc.first_line;
     diagnostics.writeInfo(pp::Diagnostics::WARNING,
                           srcLoc, reason, token, extraInfo);
 }
@@ -203,7 +205,7 @@ void TParseContext::trace(const char* str)
 //
 // Same error message for all places assignments don't work.
 //
-void TParseContext::assignError(int line, const char* op, TString left, TString right)
+void TParseContext::assignError(const TSourceLoc& line, const char* op, TString left, TString right)
 {
     std::stringstream extraInfoStream;
     extraInfoStream << "cannot convert from '" << right << "' to '" << left << "'";
@@ -214,7 +216,7 @@ void TParseContext::assignError(int line, const char* op, TString left, TString 
 //
 // Same error message for all places unary operations don't work.
 //
-void TParseContext::unaryOpError(int line, const char* op, TString operand)
+void TParseContext::unaryOpError(const TSourceLoc& line, const char* op, TString operand)
 {
     std::stringstream extraInfoStream;
     extraInfoStream << "no operation '" << op << "' exists that takes an operand of type " << operand 
@@ -226,7 +228,7 @@ void TParseContext::unaryOpError(int line, const char* op, TString operand)
 //
 // Same error message for all binary operations don't work.
 //
-void TParseContext::binaryOpError(int line, const char* op, TString left, TString right)
+void TParseContext::binaryOpError(const TSourceLoc& line, const char* op, TString left, TString right)
 {
     std::stringstream extraInfoStream;
     extraInfoStream << "no operation '" << op << "' exists that takes a left-hand operand of type '" << left 
@@ -235,7 +237,7 @@ void TParseContext::binaryOpError(int line, const char* op, TString left, TStrin
     error(line, " wrong operand types ", op, extraInfo.c_str()); 
 }
 
-bool TParseContext::precisionErrorCheck(int line, TPrecision precision, TBasicType type){
+bool TParseContext::precisionErrorCheck(const TSourceLoc& line, TPrecision precision, TBasicType type){
     if (!checksPrecisionErrors)
         return false;
     switch( type ){
@@ -263,7 +265,7 @@ bool TParseContext::precisionErrorCheck(int line, TPrecision precision, TBasicTy
 //
 // Returns true if the was an error.
 //
-bool TParseContext::lValueErrorCheck(int line, const char* op, TIntermTyped* node)
+bool TParseContext::lValueErrorCheck(const TSourceLoc& line, const char* op, TIntermTyped* node)
 {
     TIntermSymbol* symNode = node->getAsSymbolNode();
     TIntermBinary* binaryNode = node->getAsBinaryNode();
@@ -406,7 +408,7 @@ bool TParseContext::integerErrorCheck(TIntermTyped* node, const char* token)
 //
 // Returns true if the was an error.
 //
-bool TParseContext::globalErrorCheck(int line, bool global, const char* token)
+bool TParseContext::globalErrorCheck(const TSourceLoc& line, bool global, const char* token)
 {
     if (global)
         return false;
@@ -425,7 +427,7 @@ bool TParseContext::globalErrorCheck(int line, bool global, const char* token)
 //
 // Returns true if there was an error.
 //
-bool TParseContext::reservedErrorCheck(int line, const TString& identifier)
+bool TParseContext::reservedErrorCheck(const TSourceLoc& line, const TString& identifier)
 {
     static const char* reservedErrMsg = "reserved built-in name";
     if (!symbolTable.atBuiltInLevel()) {
@@ -463,7 +465,7 @@ bool TParseContext::reservedErrorCheck(int line, const TString& identifier)
 //
 // Returns true if there was an error in construction.
 //
-bool TParseContext::constructorErrorCheck(int line, TIntermNode* node, TFunction& function, TOperator op, TType* type)
+bool TParseContext::constructorErrorCheck(const TSourceLoc& line, TIntermNode* node, TFunction& function, TOperator op, TType* type)
 {
     *type = function.getReturnType();
 
@@ -565,7 +567,7 @@ bool TParseContext::constructorErrorCheck(int line, TIntermNode* node, TFunction
 //
 // returns true in case of an error
 //
-bool TParseContext::voidErrorCheck(int line, const TString& identifier, const TPublicType& pubType)
+bool TParseContext::voidErrorCheck(const TSourceLoc& line, const TString& identifier, const TPublicType& pubType)
 {
     if (pubType.type == EbtVoid) {
         error(line, "illegal use of type 'void'", identifier.c_str());
@@ -579,7 +581,7 @@ bool TParseContext::voidErrorCheck(int line, const TString& identifier, const TP
 //
 // returns true in case of an error
 //
-bool TParseContext::boolErrorCheck(int line, const TIntermTyped* type)
+bool TParseContext::boolErrorCheck(const TSourceLoc& line, const TIntermTyped* type)
 {
     if (type->getBasicType() != EbtBool || type->isArray() || type->isMatrix() || type->isVector()) {
         error(line, "boolean expression expected", "");
@@ -593,7 +595,7 @@ bool TParseContext::boolErrorCheck(int line, const TIntermTyped* type)
 //
 // returns true in case of an error
 //
-bool TParseContext::boolErrorCheck(int line, const TPublicType& pType)
+bool TParseContext::boolErrorCheck(const TSourceLoc& line, const TPublicType& pType)
 {
     if (pType.type != EbtBool || pType.isAggregate()) {
         error(line, "boolean expression expected", "");
@@ -603,7 +605,7 @@ bool TParseContext::boolErrorCheck(int line, const TPublicType& pType)
     return false;
 }
 
-bool TParseContext::samplerErrorCheck(int line, const TPublicType& pType, const char* reason)
+bool TParseContext::samplerErrorCheck(const TSourceLoc& line, const TPublicType& pType, const char* reason)
 {
     if (pType.type == EbtStruct) {
         if (containsSampler(*pType.userDef)) {
@@ -622,7 +624,7 @@ bool TParseContext::samplerErrorCheck(int line, const TPublicType& pType, const 
     return false;
 }
 
-bool TParseContext::structQualifierErrorCheck(int line, const TPublicType& pType)
+bool TParseContext::structQualifierErrorCheck(const TSourceLoc& line, const TPublicType& pType)
 {
     switch (pType.qualifier)
     {
@@ -644,7 +646,7 @@ bool TParseContext::structQualifierErrorCheck(int line, const TPublicType& pType
     return false;
 }
 
-bool TParseContext::locationDeclaratorListCheck(int line, const TPublicType &pType)
+bool TParseContext::locationDeclaratorListCheck(const TSourceLoc& line, const TPublicType &pType)
 {
     if (pType.layoutQualifier.location != -1)
     {
@@ -655,7 +657,7 @@ bool TParseContext::locationDeclaratorListCheck(int line, const TPublicType &pTy
     return false;
 }
 
-bool TParseContext::parameterSamplerErrorCheck(int line, TQualifier qualifier, const TType& type)
+bool TParseContext::parameterSamplerErrorCheck(const TSourceLoc& line, TQualifier qualifier, const TType& type)
 {
     if ((qualifier == EvqOut || qualifier == EvqInOut) && 
              type.getBasicType() != EbtStruct && IsSampler(type.getBasicType())) {
@@ -687,7 +689,7 @@ bool TParseContext::containsSampler(TType& type)
 //
 // Returns true if there was an error.
 //
-bool TParseContext::arraySizeErrorCheck(int line, TIntermTyped* expr, int& size)
+bool TParseContext::arraySizeErrorCheck(const TSourceLoc& line, TIntermTyped* expr, int& size)
 {
     TIntermConstantUnion* constant = expr->getAsConstantUnion();
 
@@ -729,7 +731,7 @@ bool TParseContext::arraySizeErrorCheck(int line, TIntermTyped* expr, int& size)
 //
 // Returns true if there is an error.
 //
-bool TParseContext::arrayQualifierErrorCheck(int line, TPublicType type)
+bool TParseContext::arrayQualifierErrorCheck(const TSourceLoc& line, TPublicType type)
 {
     if ((type.qualifier == EvqAttribute) || (type.qualifier == EvqVertexInput) || (type.qualifier == EvqConst)) {
         error(line, "cannot declare arrays of this qualifier", TType(type).getCompleteString().c_str());
@@ -744,7 +746,7 @@ bool TParseContext::arrayQualifierErrorCheck(int line, TPublicType type)
 //
 // Returns true if there is an error.
 //
-bool TParseContext::arrayTypeErrorCheck(int line, TPublicType type)
+bool TParseContext::arrayTypeErrorCheck(const TSourceLoc& line, TPublicType type)
 {
     //
     // Can the type be an array?
@@ -765,7 +767,7 @@ bool TParseContext::arrayTypeErrorCheck(int line, TPublicType type)
 //
 // Returns true if there was an error.
 //
-bool TParseContext::arrayErrorCheck(int line, const TString& identifier, const TPublicType &type, TVariable*& variable)
+bool TParseContext::arrayErrorCheck(const TSourceLoc& line, const TString& identifier, const TPublicType &type, TVariable*& variable)
 {
     //
     // Don't check for reserved word use until after we know it's not in the symbol table,
@@ -830,7 +832,7 @@ bool TParseContext::arrayErrorCheck(int line, const TString& identifier, const T
     return false;
 }
 
-bool TParseContext::arraySetMaxSize(TIntermSymbol *node, TType* type, int size, bool updateFlag, TSourceLoc line)
+bool TParseContext::arraySetMaxSize(TIntermSymbol *node, TType* type, int size, bool updateFlag, const TSourceLoc& line)
 {
     bool builtIn = false;
     TSymbol* symbol = symbolTable.find(node->getSymbol(), 0, &builtIn);
@@ -879,7 +881,7 @@ bool TParseContext::arraySetMaxSize(TIntermSymbol *node, TType* type, int size, 
 //
 // Returns true if there was an error.
 //
-bool TParseContext::nonInitConstErrorCheck(int line, const TString& identifier, TPublicType& type, bool array)
+bool TParseContext::nonInitConstErrorCheck(const TSourceLoc& line, const TString& identifier, TPublicType& type, bool array)
 {
     if (type.qualifier == EvqConst)
     {
@@ -911,7 +913,7 @@ bool TParseContext::nonInitConstErrorCheck(int line, const TString& identifier, 
 //
 // Returns true if there was an error.
 //
-bool TParseContext::nonInitErrorCheck(int line, const TString& identifier, const TPublicType& type, TVariable*& variable)
+bool TParseContext::nonInitErrorCheck(const TSourceLoc& line, const TString& identifier, const TPublicType& type, TVariable*& variable)
 {
     if (reservedErrorCheck(line, identifier))
         recover();
@@ -931,7 +933,7 @@ bool TParseContext::nonInitErrorCheck(int line, const TString& identifier, const
     return false;
 }
 
-bool TParseContext::paramErrorCheck(int line, TQualifier qualifier, TQualifier paramQualifier, TType* type)
+bool TParseContext::paramErrorCheck(const TSourceLoc& line, TQualifier qualifier, TQualifier paramQualifier, TType* type)
 {    
     if (qualifier != EvqConst && qualifier != EvqTemporary) {
         error(line, "qualifier not allowed on function parameter", getQualifierString(qualifier));
@@ -950,7 +952,7 @@ bool TParseContext::paramErrorCheck(int line, TQualifier qualifier, TQualifier p
     return false;
 }
 
-bool TParseContext::extensionErrorCheck(int line, const TString& extension)
+bool TParseContext::extensionErrorCheck(const TSourceLoc& line, const TString& extension)
 {
     const TExtensionBehavior& extBehavior = extensionBehavior();
     TExtensionBehavior::const_iterator iter = extBehavior.find(extension.c_str());
@@ -971,7 +973,7 @@ bool TParseContext::extensionErrorCheck(int line, const TString& extension)
     return false;
 }
 
-bool TParseContext::singleDeclarationErrorCheck(TPublicType &publicType, TSourceLoc identifierLocation, const TString &identifier)
+bool TParseContext::singleDeclarationErrorCheck(TPublicType &publicType, const TSourceLoc& identifierLocation, const TString &identifier)
 {
     if (structQualifierErrorCheck(identifierLocation, publicType))
         return true;
@@ -999,7 +1001,7 @@ bool TParseContext::singleDeclarationErrorCheck(TPublicType &publicType, TSource
     return false;
 }
 
-bool TParseContext::layoutLocationErrorCheck(TSourceLoc location, const TLayoutQualifier &layoutQualifier)
+bool TParseContext::layoutLocationErrorCheck(const TSourceLoc& location, const TLayoutQualifier &layoutQualifier)
 {
     if (layoutQualifier.location != -1)
     {
@@ -1017,6 +1019,22 @@ bool TParseContext::supportsExtension(const char* extension)
     return (iter != extbehavior.end());
 }
 
+void TParseContext::handleExtensionDirective(const TSourceLoc& loc, const char* extName, const char* behavior)
+{
+    pp::SourceLocation srcLoc;
+    srcLoc.file = loc.first_file;
+    srcLoc.line = loc.first_line;
+    directiveHandler.handleExtension(srcLoc, extName, behavior);
+}
+
+void TParseContext::handlePragmaDirective(const TSourceLoc& loc, const char* name, const char* value)
+{
+    pp::SourceLocation srcLoc;
+    srcLoc.file = loc.first_file;
+    srcLoc.line = loc.first_line;
+    directiveHandler.handlePragma(srcLoc, name, value);
+}
+
 /////////////////////////////////////////////////////////////////////////////////
 //
 // Non-Errors.
@@ -1028,7 +1046,7 @@ bool TParseContext::supportsExtension(const char* extension)
 //
 // Return the function symbol if found, otherwise 0.
 //
-const TFunction* TParseContext::findFunction(int line, TFunction* call, int shaderVersion, bool *builtIn)
+const TFunction* TParseContext::findFunction(const TSourceLoc& line, TFunction* call, int shaderVersion, bool *builtIn)
 {
     // First find by unmangled name to check whether the function name has been
     // hidden by a variable name or struct typename.
@@ -1054,7 +1072,7 @@ const TFunction* TParseContext::findFunction(int line, TFunction* call, int shad
 // Initializers show up in several places in the grammar.  Have one set of
 // code to handle them here.
 //
-bool TParseContext::executeInitializer(TSourceLoc line, const TString& identifier, TPublicType& pType, 
+bool TParseContext::executeInitializer(const TSourceLoc& line, const TString& identifier, TPublicType& pType, 
                                        TIntermTyped* initializer, TIntermNode*& intermNode, TVariable* variable)
 {
     TType type = TType(pType);
@@ -1211,7 +1229,7 @@ TPublicType TParseContext::addFullySpecifiedType(TQualifier qualifier, TLayoutQu
     return returnType;
 }
 
-TIntermAggregate* TParseContext::parseSingleDeclaration(TPublicType &publicType, TSourceLoc identifierLocation, const TString &identifier)
+TIntermAggregate* TParseContext::parseSingleDeclaration(TPublicType &publicType, const TSourceLoc& identifierLocation, const TString &identifier)
 {
     TIntermSymbol* symbol = intermediate.addSymbol(0, identifier, TType(publicType), identifierLocation);
     TIntermAggregate* aggregate = intermediate.makeAggregate(symbol, identifierLocation);
@@ -1239,7 +1257,7 @@ TIntermAggregate* TParseContext::parseSingleDeclaration(TPublicType &publicType,
     return aggregate;
 }
 
-TIntermAggregate* TParseContext::parseSingleArrayDeclaration(TPublicType &publicType, TSourceLoc identifierLocation, const TString &identifier, TSourceLoc indexLocation, TIntermTyped *indexExpression)
+TIntermAggregate* TParseContext::parseSingleArrayDeclaration(TPublicType &publicType, const TSourceLoc& identifierLocation, const TString &identifier, const TSourceLoc& indexLocation, TIntermTyped *indexExpression)
 {
     if (singleDeclarationErrorCheck(publicType, identifierLocation, identifier))
         recover();
@@ -1280,7 +1298,7 @@ TIntermAggregate* TParseContext::parseSingleArrayDeclaration(TPublicType &public
     return aggregate;
 }
 
-TIntermAggregate* TParseContext::parseSingleInitDeclaration(TPublicType &publicType, TSourceLoc identifierLocation, const TString &identifier, TSourceLoc initLocation, TIntermTyped *initializer)
+TIntermAggregate* TParseContext::parseSingleInitDeclaration(TPublicType &publicType, const TSourceLoc& identifierLocation, const TString &identifier, const TSourceLoc& initLocation, TIntermTyped *initializer)
 {
     if (singleDeclarationErrorCheck(publicType, identifierLocation, identifier))
         recover();
@@ -1300,7 +1318,7 @@ TIntermAggregate* TParseContext::parseSingleInitDeclaration(TPublicType &publicT
     }
 }
 
-TIntermAggregate* TParseContext::parseDeclarator(TPublicType &publicType, TIntermAggregate *aggregateDeclaration, TSymbol *identifierSymbol, TSourceLoc identifierLocation, const TString &identifier)
+TIntermAggregate* TParseContext::parseDeclarator(TPublicType &publicType, TIntermAggregate *aggregateDeclaration, TSymbol *identifierSymbol, const TSourceLoc& identifierLocation, const TString &identifier)
 {
     if (publicType.type == EbtInvariant && !identifierSymbol)
     {
@@ -1329,7 +1347,7 @@ TIntermAggregate* TParseContext::parseDeclarator(TPublicType &publicType, TInter
     return intermAggregate;
 }
 
-TIntermAggregate* TParseContext::parseArrayDeclarator(TPublicType &publicType, TSourceLoc identifierLocation, const TString &identifier, TSourceLoc arrayLocation, TIntermNode *declaratorList, TIntermTyped *indexExpression)
+TIntermAggregate* TParseContext::parseArrayDeclarator(TPublicType &publicType, const TSourceLoc& identifierLocation, const TString &identifier, const TSourceLoc& arrayLocation, TIntermNode *declaratorList, TIntermTyped *indexExpression)
 {
     if (structQualifierErrorCheck(identifierLocation, publicType))
         recover();
@@ -1371,7 +1389,7 @@ TIntermAggregate* TParseContext::parseArrayDeclarator(TPublicType &publicType, T
     return NULL;
 }
 
-TIntermAggregate* TParseContext::parseInitDeclarator(TPublicType &publicType, TIntermAggregate *declaratorList, TSourceLoc identifierLocation, const TString &identifier, TSourceLoc initLocation, TIntermTyped *initializer)
+TIntermAggregate* TParseContext::parseInitDeclarator(TPublicType &publicType, TIntermAggregate *declaratorList, const TSourceLoc& identifierLocation, const TString &identifier, const TSourceLoc& initLocation, TIntermTyped *initializer)
 {
     if (structQualifierErrorCheck(identifierLocation, publicType))
         recover();
@@ -1523,7 +1541,7 @@ TFunction *TParseContext::addConstructorFunc(TPublicType publicType)
 //
 // Returns 0 for an error or the constructed node (aggregate or typed) for no error.
 //
-TIntermTyped* TParseContext::addConstructor(TIntermNode* node, const TType* type, TOperator op, TFunction* fnCall, TSourceLoc line)
+TIntermTyped* TParseContext::addConstructor(TIntermNode* node, const TType* type, TOperator op, TFunction* fnCall, const TSourceLoc& line)
 {
     if (node == 0)
         return 0;
@@ -1631,7 +1649,7 @@ TIntermTyped* TParseContext::foldConstConstructor(TIntermAggregate* aggrNode, co
 //
 // Returns 0 for an error or the constructed node.
 //
-TIntermTyped* TParseContext::constructBuiltIn(const TType* type, TOperator op, TIntermNode* node, TSourceLoc line, bool subset)
+TIntermTyped* TParseContext::constructBuiltIn(const TType* type, TOperator op, TIntermNode* node, const TSourceLoc& line, bool subset)
 {
     TIntermTyped* newNode;
     TOperator basicOp;
@@ -1700,7 +1718,7 @@ TIntermTyped* TParseContext::constructBuiltIn(const TType* type, TOperator op, T
 //
 // Returns 0 for an error or the input node itself if the expected and the given parameter types match.
 //
-TIntermTyped* TParseContext::constructStruct(TIntermNode* node, TType* type, int paramCount, TSourceLoc line, bool subset)
+TIntermTyped* TParseContext::constructStruct(TIntermNode* node, TType* type, int paramCount, const TSourceLoc& line, bool subset)
 {
     if (*type == node->getAsTyped()->getType()) {
         if (subset)
@@ -1727,7 +1745,7 @@ TIntermTyped* TParseContext::constructStruct(TIntermNode* node, TType* type, int
 // node or it could be the intermediate tree representation of accessing fields in a constant structure or column of 
 // a constant matrix.
 //
-TIntermTyped* TParseContext::addConstVectorNode(TVectorFields& fields, TIntermTyped* node, TSourceLoc line)
+TIntermTyped* TParseContext::addConstVectorNode(TVectorFields& fields, TIntermTyped* node, const TSourceLoc& line)
 {
     TIntermTyped* typedNode;
     TIntermConstantUnion* tempConstantNode = node->getAsConstantUnion();
@@ -1771,7 +1789,7 @@ TIntermTyped* TParseContext::addConstVectorNode(TVectorFields& fields, TIntermTy
 // to the function could either be a symbol node (m[0] where m is a constant matrix)that represents a 
 // constant matrix or it could be the tree representation of the constant matrix (s.m1[0] where s is a constant structure)
 //
-TIntermTyped* TParseContext::addConstMatrixNode(int index, TIntermTyped* node, TSourceLoc line)
+TIntermTyped* TParseContext::addConstMatrixNode(int index, TIntermTyped* node, const TSourceLoc& line)
 {
     TIntermTyped* typedNode;
     TIntermConstantUnion* tempConstantNode = node->getAsConstantUnion();
@@ -1806,7 +1824,7 @@ TIntermTyped* TParseContext::addConstMatrixNode(int index, TIntermTyped* node, T
 // to the function could either be a symbol node (a[0] where a is a constant array)that represents a 
 // constant array or it could be the tree representation of the constant array (s.a1[0] where s is a constant structure)
 //
-TIntermTyped* TParseContext::addConstArrayNode(int index, TIntermTyped* node, TSourceLoc line)
+TIntermTyped* TParseContext::addConstArrayNode(int index, TIntermTyped* node, const TSourceLoc& line)
 {
     TIntermTyped* typedNode;
     TIntermConstantUnion* tempConstantNode = node->getAsConstantUnion();
@@ -1843,7 +1861,7 @@ TIntermTyped* TParseContext::addConstArrayNode(int index, TIntermTyped* node, TS
 // If there is an embedded/nested struct, it appropriately calls addConstStructNested or addConstStructFromAggr
 // function and returns the parse-tree with the values of the embedded/nested struct.
 //
-TIntermTyped* TParseContext::addConstStruct(const TString &identifier, TIntermTyped *node, TSourceLoc line)
+TIntermTyped* TParseContext::addConstStruct(const TString &identifier, TIntermTyped *node, const TSourceLoc& line)
 {
     const TTypeList* fields = node->getType().getStruct();
     TIntermTyped *typedNode;
@@ -1876,8 +1894,8 @@ TIntermTyped* TParseContext::addConstStruct(const TString &identifier, TIntermTy
 //
 // Interface/uniform blocks
 //
-TIntermAggregate* TParseContext::addInterfaceBlock(const TPublicType& typeQualifier, TSourceLoc nameLine, const TString& blockName, TTypeList* typeList, 
-                                                   const TString& instanceName, TSourceLoc instanceLine, TIntermTyped* arrayIndex, TSourceLoc arrayIndexLine)
+TIntermAggregate* TParseContext::addInterfaceBlock(const TPublicType& typeQualifier, const TSourceLoc& nameLine, const TString& blockName, TTypeList* typeList, 
+                                                   const TString& instanceName, const TSourceLoc& instanceLine, TIntermTyped* arrayIndex, const TSourceLoc& arrayIndexLine)
 {
     if (reservedErrorCheck(nameLine, blockName))
         recover();
@@ -2011,7 +2029,7 @@ TIntermAggregate* TParseContext::addInterfaceBlock(const TPublicType& typeQualif
     return aggregate;
 }
 
-bool TParseContext::enterStructDeclaration(int line, const TString& identifier)
+bool TParseContext::enterStructDeclaration(const TSourceLoc& line, const TString& identifier)
 {
     ++structNestingLevel;
 
@@ -2037,7 +2055,7 @@ const int kWebGLMaxStructNesting = 4;
 
 }  // namespace
 
-bool TParseContext::structNestingErrorCheck(TSourceLoc line, const TType& fieldType)
+bool TParseContext::structNestingErrorCheck(const TSourceLoc& line, const TType& fieldType)
 {
     if (!isWebGLBasedSpec(shaderSpec)) {
         return false;
@@ -2064,7 +2082,7 @@ bool TParseContext::structNestingErrorCheck(TSourceLoc line, const TType& fieldT
 //
 // Parse an array index expression
 //
-TIntermTyped* TParseContext::addIndexExpression(TIntermTyped *baseExpression, TSourceLoc location, TIntermTyped *indexExpression)
+TIntermTyped* TParseContext::addIndexExpression(TIntermTyped *baseExpression, const TSourceLoc& location, TIntermTyped *indexExpression)
 {
     TIntermTyped *indexedExpression = NULL;
 
@@ -2215,7 +2233,7 @@ TIntermTyped* TParseContext::addIndexExpression(TIntermTyped *baseExpression, TS
     return indexedExpression;
 }
 
-TIntermTyped* TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpression, TSourceLoc dotLocation, const TString &fieldString, TSourceLoc fieldLocation)
+TIntermTyped* TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpression, const TSourceLoc& dotLocation, const TString &fieldString, const TSourceLoc& fieldLocation)
 {
     TIntermTyped *indexedExpression = NULL;
 
@@ -2398,7 +2416,7 @@ TIntermTyped* TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
     return indexedExpression;
 }
 
-TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierType, TSourceLoc qualifierTypeLine)
+TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierType, const TSourceLoc& qualifierTypeLine)
 {
     TLayoutQualifier qualifier;
 
@@ -2440,7 +2458,7 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierTyp
     return qualifier;
 }
 
-TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierType, TSourceLoc qualifierTypeLine, const TString &intValueString, int intValue, TSourceLoc intValueLine)
+TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierType, const TSourceLoc& qualifierTypeLine, const TString &intValueString, int intValue, const TSourceLoc& intValueLine)
 {
     TLayoutQualifier qualifier;
 
@@ -2528,7 +2546,7 @@ TTypeList *TParseContext::addStructDeclaratorList(const TPublicType& typeSpecifi
     return typeList;
 }
 
-TPublicType TParseContext::addStructure(TSourceLoc structLine, TSourceLoc nameLine, const TString &structName, TTypeList* typeList)
+TPublicType TParseContext::addStructure(const TSourceLoc& structLine, const TSourceLoc& nameLine, const TString &structName, TTypeList* typeList)
 {
     TType* structure = new TType(typeList, structName);
 
