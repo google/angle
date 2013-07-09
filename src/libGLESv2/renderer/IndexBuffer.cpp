@@ -130,12 +130,13 @@ bool StreamingIndexBufferInterface::reserveBufferSpace(unsigned int size, GLenum
 {
     bool result = true;
     unsigned int curBufferSize = getBufferSize();
+    unsigned int writePos = getWritePosition();
     if (size > curBufferSize)
     {
         result = setBufferSize(std::max(size, 2 * curBufferSize), indexType);
         setWritePosition(0);
     }
-    else if (getWritePosition() + size > curBufferSize)
+    else if (writePos + size > curBufferSize || writePos + size < writePos)
     {
         if (!discard())
         {
