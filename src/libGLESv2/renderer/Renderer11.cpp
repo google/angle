@@ -1130,7 +1130,13 @@ void Renderer11::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices,
         }
     }
 
-    const int spaceNeeded = (count + 1) * sizeof(unsigned int);
+    if (static_cast<unsigned int>(count + 1) > (std::numeric_limits<unsigned int>::max() / sizeof(unsigned int)))
+    {
+        ERR("Could not create a 32-bit looping index buffer for GL_LINE_LOOP, too many indices required.");
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+
+    const unsigned int spaceNeeded = (count + 1) * sizeof(unsigned int);
     if (!mLineLoopIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT))
     {
         ERR("Could not reserve enough space in looping index buffer for GL_LINE_LOOP.");
@@ -1224,8 +1230,15 @@ void Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indic
         }
     }
 
-    const int numTris = count - 2;
-    const int spaceNeeded = (numTris * 3) * sizeof(unsigned int);
+    const unsigned int numTris = count - 2;
+
+    if (numTris * 3 > (std::numeric_limits<unsigned int>::max() / sizeof(unsigned int)))
+    {
+        ERR("Could not create a scratch index buffer for GL_TRIANGLE_FAN, too many indices required.");
+        return gl::error(GL_OUT_OF_MEMORY);
+    }
+
+    const unsigned int spaceNeeded = (numTris * 3) * sizeof(unsigned int);
     if (!mTriangleFanIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT))
     {
         ERR("Could not reserve enough space in scratch index buffer for GL_TRIANGLE_FAN.");
@@ -1246,7 +1259,7 @@ void Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indic
     switch (type)
     {
       case GL_NONE:   // Non-indexed draw
-        for (int i = 0; i < numTris; i++)
+        for (unsigned int i = 0; i < numTris; i++)
         {
             data[i*3 + 0] = 0;
             data[i*3 + 1] = i + 1;
@@ -1254,7 +1267,7 @@ void Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indic
         }
         break;
       case GL_UNSIGNED_BYTE:
-        for (int i = 0; i < numTris; i++)
+        for (unsigned int i = 0; i < numTris; i++)
         {
             data[i*3 + 0] = static_cast<const GLubyte*>(indices)[0];
             data[i*3 + 1] = static_cast<const GLubyte*>(indices)[i + 1];
@@ -1262,7 +1275,7 @@ void Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indic
         }
         break;
       case GL_UNSIGNED_SHORT:
-        for (int i = 0; i < numTris; i++)
+        for (unsigned int i = 0; i < numTris; i++)
         {
             data[i*3 + 0] = static_cast<const GLushort*>(indices)[0];
             data[i*3 + 1] = static_cast<const GLushort*>(indices)[i + 1];
@@ -1270,7 +1283,7 @@ void Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indic
         }
         break;
       case GL_UNSIGNED_INT:
-        for (int i = 0; i < numTris; i++)
+        for (unsigned int i = 0; i < numTris; i++)
         {
             data[i*3 + 0] = static_cast<const GLuint*>(indices)[0];
             data[i*3 + 1] = static_cast<const GLuint*>(indices)[i + 1];
