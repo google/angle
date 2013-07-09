@@ -121,12 +121,18 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
                     if (staticBuffer->getBufferSize() == 0)
                     {
                         int totalCount = ElementsInBuffer(attribs[i], buffer->size());
-                        staticBuffer->reserveVertexSpace(attribs[i], totalCount, 0);
+                        if (!staticBuffer->reserveVertexSpace(attribs[i], totalCount, 0))
+                        {
+                            return GL_OUT_OF_MEMORY;
+                        }
                     }
                 }
                 else
                 {
-                    mStreamingBuffer->reserveVertexSpace(attribs[i], count, instances);
+                    if (!mStreamingBuffer->reserveVertexSpace(attribs[i], count, instances))
+                    {
+                        return GL_OUT_OF_MEMORY;
+                    }
                 }
             }
         }
@@ -218,7 +224,11 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
 
                 if (memcmp(&mCurrentValue[i], &currentValues[i], sizeof(gl::VertexAttribCurrentValueData)) != 0)
                 {
-                    buffer->reserveVertexSpace(attribs[i], 1, 0);
+                    if (!buffer->reserveVertexSpace(attribs[i], 1, 0))
+                    {
+                        return GL_OUT_OF_MEMORY;
+                    }
+
                     int streamOffset = buffer->storeVertexAttributes(attribs[i], currentValues[i], 0, 1, 0);
                     if (streamOffset == -1)
                     {

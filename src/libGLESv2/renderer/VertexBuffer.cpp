@@ -107,9 +107,18 @@ int VertexBufferInterface::storeVertexAttributes(const gl::VertexAttribute &attr
     return oldWritePos;
 }
 
-void VertexBufferInterface::reserveVertexSpace(const gl::VertexAttribute &attribute, GLsizei count, GLsizei instances)
+bool VertexBufferInterface::reserveVertexSpace(const gl::VertexAttribute &attribute, GLsizei count, GLsizei instances)
 {
-    mReservedSpace += mVertexBuffer->getSpaceRequired(attribute, count, instances);
+    unsigned int requiredSpace = mVertexBuffer->getSpaceRequired(attribute, count, instances);
+
+    // Protect against integer overflow
+    if (mReservedSpace + requiredSpace < mReservedSpace)
+    {
+         return false;
+    }
+
+    mReservedSpace += requiredSpace;
+    return true;
 }
 
 VertexBuffer* VertexBufferInterface::getVertexBuffer() const
