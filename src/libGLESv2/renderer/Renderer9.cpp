@@ -1461,7 +1461,13 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
             }
         }
 
-        const int spaceNeeded = (count + 1) * sizeof(unsigned int);
+        if (static_cast<unsigned int>(count + 1) > (std::numeric_limits<unsigned int>::max() / sizeof(unsigned int)))
+        {
+            ERR("Could not create a 32-bit looping index buffer for GL_LINE_LOOP, too many indices required.");
+            return gl::error(GL_OUT_OF_MEMORY);
+        }
+
+        const unsigned int spaceNeeded = (count + 1) * sizeof(unsigned int);
         if (!mLineLoopIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT))
         {
             ERR("Could not reserve enough space in looping index buffer for GL_LINE_LOOP.");
@@ -1533,7 +1539,13 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
             }
         }
 
-        const int spaceNeeded = (count + 1) * sizeof(unsigned short);
+        if (static_cast<unsigned int>(count + 1) > (std::numeric_limits<unsigned short>::max() / sizeof(unsigned short)))
+        {
+            ERR("Could not create a 16-bit looping index buffer for GL_LINE_LOOP, too many indices required.");
+            return gl::error(GL_OUT_OF_MEMORY);
+        }
+
+        const unsigned int spaceNeeded = (count + 1) * sizeof(unsigned short);
         if (!mLineLoopIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_SHORT))
         {
             ERR("Could not reserve enough space in looping index buffer for GL_LINE_LOOP.");
