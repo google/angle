@@ -931,15 +931,15 @@ void OutputHLSL::header()
               case EbtSampler2D:       out << "Texture2D x, SamplerState s";             hlslCoords = 2; break;
               case EbtSampler3D:       out << "Texture3D x, SamplerState s";             hlslCoords = 3; break;
               case EbtSamplerCube:     out << "TextureCube x, SamplerState s";           hlslCoords = 3; break;
-              case EbtSampler2DArray:  out << "Texture2DArray x, SamplerState s";        hlslCoords = 2; break;
+              case EbtSampler2DArray:  out << "Texture2DArray x, SamplerState s";        hlslCoords = 3; break;
               case EbtISampler2D:      out << "Texture2D<int4> x, SamplerState s";       hlslCoords = 2; break;
               case EbtISampler3D:      out << "Texture3D<int4> x, SamplerState s";       hlslCoords = 3; break;
               case EbtISamplerCube:    out << "TextureCube<int4> x, SamplerState s";     hlslCoords = 3; break;
-              case EbtISampler2DArray: out << "Texture2DArray<int4> x, SamplerState s";  hlslCoords = 2; break;
+              case EbtISampler2DArray: out << "Texture2DArray<int4> x, SamplerState s";  hlslCoords = 3; break;
               case EbtUSampler2D:      out << "Texture2D<uint4> x, SamplerState s";      hlslCoords = 2; break;
               case EbtUSampler3D:      out << "Texture3D<uint4> x, SamplerState s";      hlslCoords = 3; break;
               case EbtUSamplerCube:    out << "TextureCube<uint4> x, SamplerState s";    hlslCoords = 3; break;
-              case EbtUSampler2DArray: out << "Texture2DArray<uint4> x, SamplerState s"; hlslCoords = 2; break;
+              case EbtUSampler2DArray: out << "Texture2DArray<uint4> x, SamplerState s"; hlslCoords = 3; break;
               default: UNREACHABLE();
             }
         }
@@ -985,8 +985,16 @@ void OutputHLSL::header()
             {
                 if (IsSampler2D(textureFunction->sampler))
                 {
-                    out << "    uint width; uint height; uint numberOfLevels;\n"
-                           "    x.GetDimensions(0, width, height, numberOfLevels);\n";
+                    if (IsSamplerArray(textureFunction->sampler))
+                    {
+                        out << "    uint width; uint height; uint layers; uint numberOfLevels;\n"
+                               "    x.GetDimensions(0, width, height, layers, numberOfLevels);\n";
+                    }
+                    else
+                    {
+                        out << "    uint width; uint height; uint numberOfLevels;\n"
+                               "    x.GetDimensions(0, width, height, numberOfLevels);\n";
+                    }
                 }
                 else if (IsSampler3D(textureFunction->sampler))
                 {
@@ -1052,10 +1060,19 @@ void OutputHLSL::header()
                   default: UNREACHABLE();
                 }
             
-                addressx = "int(floor(float(width) * frac(";
-                addressy = "int(floor(float(height) * frac(";
-                addressz = "int(floor(float(depth) * frac(";
-                close = ")))";
+                addressx = "int(floor(float(width) * frac((";
+                addressy = "int(floor(float(height) * frac((";
+
+                if (IsSamplerArray(textureFunction->sampler))
+                {
+                    addressz = "int(max(0, min(layers - 1, floor(0.5 + ";
+                }
+                else
+                {
+                    addressz = "int(floor(float(depth) * frac((";
+                }
+
+                close = "))))";
             }
             else
             {
