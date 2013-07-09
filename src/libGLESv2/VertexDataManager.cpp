@@ -163,19 +163,28 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
 
                             if (staticBuffer == previousStaticBuffer)
                             {
-                                mStreamingBuffer->addRequiredSpace(spaceRequired(attribs[previous], count, instances));
+                                if (!mStreamingBuffer->addRequiredSpace(spaceRequired(attribs[previous], count, instances)))
+                                {
+                                    return GL_OUT_OF_MEMORY;
+                                }
                             }
                         }
                     }
 
-                    mStreamingBuffer->addRequiredSpace(spaceRequired(attribs[i], count, instances));
+                    if (!mStreamingBuffer->addRequiredSpace(spaceRequired(attribs[i], count, instances)))
+                    {
+                        return GL_OUT_OF_MEMORY;
+                    }
 
                     buffer->invalidateStaticData();
                 }    
             }
             else
             {
-                mStreamingBuffer->addRequiredSpace(spaceRequired(attribs[i], count, instances));
+                if (!mStreamingBuffer->addRequiredSpace(spaceRequired(attribs[i], count, instances)))
+                {
+                    return GL_OUT_OF_MEMORY;
+                }
             }
         }
     }
@@ -272,7 +281,10 @@ GLenum VertexDataManager::prepareVertexData(GLint start, GLsizei count, Translat
                 if (mDirtyCurrentValue[i])
                 {
                     const int requiredSpace = 4 * sizeof(float);
-                    buffer->addRequiredSpace(requiredSpace);
+                    if (!buffer->addRequiredSpace(requiredSpace))
+                    {
+                        return GL_OUT_OF_MEMORY;
+                    }
                     buffer->reserveRequiredSpace();
                     float *data = static_cast<float*>(buffer->map(VertexAttribute(), requiredSpace, &mCurrentValueOffsets[i]));
                     if (data)
@@ -628,9 +640,16 @@ ArrayVertexBuffer::~ArrayVertexBuffer()
 {
 }
 
-void ArrayVertexBuffer::addRequiredSpace(UINT requiredSpace)
+bool ArrayVertexBuffer::addRequiredSpace(UINT requiredSpace)
 {
+    // Protect against integer overflow
+    if (mRequiredSpace + requiredSpace < mRequiredSpace)
+    {
+        return false;
+    }
+
     mRequiredSpace += requiredSpace;
+    return true;
 }
 
 StreamingVertexBuffer::StreamingVertexBuffer(IDirect3DDevice9 *device, std::size_t initialSize) : ArrayVertexBuffer(device, initialSize, D3DUSAGE_DYNAMIC | D3DUSAGE_WRITEONLY)
@@ -685,7 +704,7 @@ void StreamingVertexBuffer::reserveRequiredSpace()
 
         mWritePosition = 0;
     }
-    else if (mWritePosition + mRequiredSpace > mBufferSize)   // Recycle
+    else if (mWritePosition + mRequiredSpace > mBufferSize || mWritePosition + mRequiredSpace < mWritePosition)   // Recycle
     {
         if (mVertexBuffer)
         {

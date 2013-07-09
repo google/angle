@@ -66,7 +66,7 @@ class ArrayVertexBuffer : public VertexBuffer
     std::size_t size() const { return mBufferSize; }
     virtual void *map(const VertexAttribute &attribute, std::size_t requiredSpace, std::size_t *streamOffset) = 0;
     virtual void reserveRequiredSpace() = 0;
-    void addRequiredSpace(UINT requiredSpace);
+    bool addRequiredSpace(UINT requiredSpace);
 
   protected:
     std::size_t mBufferSize;
