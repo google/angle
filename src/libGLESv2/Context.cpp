@@ -3253,7 +3253,11 @@ void Context::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, in
 
     if (supports32bitIndices())
     {
-        const int spaceNeeded = (count + 1) * sizeof(unsigned int);
+        if (static_cast<unsigned int>(count + 1) > (std::numeric_limits<unsigned int>::max() / sizeof(unsigned int)))
+        {
+            return error(GL_OUT_OF_MEMORY);
+        }
+        const unsigned int spaceNeeded = (count + 1) * sizeof(unsigned int);
 
         if (!mLineLoopIB)
         {
@@ -3310,7 +3314,11 @@ void Context::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, in
     }
     else
     {
-        const int spaceNeeded = (count + 1) * sizeof(unsigned short);
+        if (static_cast<unsigned short>(count + 1) > (std::numeric_limits<unsigned short>::max() / sizeof(unsigned short)))
+        {
+            return error(GL_OUT_OF_MEMORY);
+        }
+        const unsigned int spaceNeeded = (count + 1) * sizeof(unsigned short);
 
         if (!mLineLoopIB)
         {
