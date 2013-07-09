@@ -180,6 +180,8 @@ class ProgramBinary : public RefCountObject
     template <typename T>
     bool getUniformv(GLint location, GLsizei *bufSize, T *params, GLenum uniformType);
 
+    static TextureType getTextureType(GLenum samplerType, InfoLog &infoLog);
+
     rx::Renderer *const mRenderer;
 
     rx::ShaderExecutable *mPixelExecutable;

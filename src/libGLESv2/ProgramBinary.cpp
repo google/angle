@@ -2260,6 +2260,35 @@ int totalRegisterCount(const sh::Uniform &uniform)
     return (uniform.arraySize > 0) ? uniform.arraySize * registerCount : registerCount;
 }
 
+TextureType ProgramBinary::getTextureType(GLenum samplerType, InfoLog &infoLog)
+{
+    switch(samplerType)
+    {
+      case GL_SAMPLER_2D:
+      case GL_INT_SAMPLER_2D:
+      case GL_UNSIGNED_INT_SAMPLER_2D:
+        return TEXTURE_2D;
+      case GL_SAMPLER_3D:
+      case GL_INT_SAMPLER_3D:
+      case GL_UNSIGNED_INT_SAMPLER_3D:
+        return TEXTURE_3D;
+      case GL_SAMPLER_CUBE:
+        return TEXTURE_CUBE;
+      case GL_INT_SAMPLER_CUBE:
+      case GL_UNSIGNED_INT_SAMPLER_CUBE:
+        //UNIMPLEMENTED();
+        infoLog.append("Integer cube texture sampling is currently not supported by ANGLE and returns a black color.");
+        return TEXTURE_CUBE;
+      case GL_SAMPLER_2D_ARRAY:
+      case GL_INT_SAMPLER_2D_ARRAY:
+      case GL_UNSIGNED_INT_SAMPLER_2D_ARRAY:
+        return TEXTURE_2D_ARRAY;
+      default: UNREACHABLE();
+    }
+
+    return TEXTURE_2D;
+}
+
 bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, InfoLog &infoLog)
 {
     if (!constant.fields.empty())
@@ -2317,7 +2346,7 @@ bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, In
                 if (samplerIndex < mRenderer->getMaxVertexTextureImageUnits())
                 {
                     mSamplersVS[samplerIndex].active = true;
-                    mSamplersVS[samplerIndex].textureType = (constant.type == GL_SAMPLER_CUBE) ? TEXTURE_CUBE : TEXTURE_2D;
+                    mSamplersVS[samplerIndex].textureType = getTextureType(constant.type, infoLog);
                     mSamplersVS[samplerIndex].logicalTextureUnit = 0;
                     mUsedVertexSamplerRange = std::max(samplerIndex + 1, mUsedVertexSamplerRange);
                 }
@@ -2332,7 +2361,7 @@ bool ProgramBinary::defineUniform(GLenum shader, const sh::Uniform &constant, In
                 if (samplerIndex < MAX_TEXTURE_IMAGE_UNITS)
                 {
                     mSamplersPS[samplerIndex].active = true;
-                    mSamplersPS[samplerIndex].textureType = (constant.type == GL_SAMPLER_CUBE) ? TEXTURE_CUBE : TEXTURE_2D;
+                    mSamplersPS[samplerIndex].textureType = getTextureType(constant.type, infoLog);
                     mSamplersPS[samplerIndex].logicalTextureUnit = 0;
                     mUsedPixelSamplerRange = std::max(samplerIndex + 1, mUsedPixelSamplerRange);
                 }
