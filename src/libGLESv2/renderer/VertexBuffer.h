@@ -60,8 +60,8 @@ class VertexBufferInterface
     VertexBufferInterface(rx::Renderer *renderer, bool dynamic);
     virtual ~VertexBufferInterface();
 
-    void reserveVertexSpace(const gl::VertexAttribute &attribute, GLsizei count, GLsizei instances);
-    void reserveRawDataSpace(unsigned int size);
+    bool reserveVertexSpace(const gl::VertexAttribute &attribute, GLsizei count, GLsizei instances);
+    bool reserveRawDataSpace(unsigned int size);
 
     unsigned int getBufferSize() const;
 
