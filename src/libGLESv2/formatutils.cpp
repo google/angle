@@ -991,6 +991,15 @@ static CopyConversionSet BuildValidES3CopyTexImageCombinations()
     set.insert(CopyConversion(GL_RGB,             GL_RGBA));
     set.insert(CopyConversion(GL_RGBA,            GL_RGBA));
 
+    // Necessary for ANGLE back-buffers
+    set.insert(CopyConversion(GL_ALPHA,           GL_BGRA_EXT));
+    set.insert(CopyConversion(GL_LUMINANCE,       GL_BGRA_EXT));
+    set.insert(CopyConversion(GL_LUMINANCE_ALPHA, GL_BGRA_EXT));
+    set.insert(CopyConversion(GL_RED,             GL_BGRA_EXT));
+    set.insert(CopyConversion(GL_RG,              GL_BGRA_EXT));
+    set.insert(CopyConversion(GL_RGB,             GL_BGRA_EXT));
+    set.insert(CopyConversion(GL_RGBA,            GL_BGRA_EXT));
+
     set.insert(CopyConversion(GL_RED_INTEGER,     GL_RED_INTEGER));
     set.insert(CopyConversion(GL_RED_INTEGER,     GL_RG_INTEGER));
     set.insert(CopyConversion(GL_RED_INTEGER,     GL_RGB_INTEGER));
