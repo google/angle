@@ -987,19 +987,19 @@ void OutputHLSL::header()
                 {
                     if (IsSamplerArray(textureFunction->sampler))
                     {
-                        out << "    uint width; uint height; uint layers; uint numberOfLevels;\n"
-                               "    x.GetDimensions(0, width, height, layers, numberOfLevels);\n";
+                        out << "    float width; float height; float layers;\n"
+                               "    x.GetDimensions(width, height, layers);\n";
                     }
                     else
                     {
-                        out << "    uint width; uint height; uint numberOfLevels;\n"
-                               "    x.GetDimensions(0, width, height, numberOfLevels);\n";
+                        out << "    float width; float height;\n"
+                               "    x.GetDimensions(width, height);\n";
                     }
                 }
                 else if (IsSampler3D(textureFunction->sampler))
                 {
-                    out << "    uint width; uint height; uint depth; uint numberOfLevels;\n"
-                           "    x.GetDimensions(0, width, height, depth, numberOfLevels);\n";
+                    out << "    float width; float height; float depth;\n"
+                           "    x.GetDimensions(width, height, depth);\n";
                 }
                 else UNREACHABLE();
             }
@@ -1060,8 +1060,8 @@ void OutputHLSL::header()
                   default: UNREACHABLE();
                 }
             
-                addressx = "int(floor(float(width) * frac((";
-                addressy = "int(floor(float(height) * frac((";
+                addressx = "int(floor(width * frac((";
+                addressy = "int(floor(height * frac((";
 
                 if (IsSamplerArray(textureFunction->sampler))
                 {
@@ -1069,7 +1069,7 @@ void OutputHLSL::header()
                 }
                 else
                 {
-                    addressz = "int(floor(float(depth) * frac((";
+                    addressz = "int(floor(depth * frac((";
                 }
 
                 close = "))))";
