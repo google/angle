@@ -30,6 +30,7 @@ class VertexArray : public RefCountObject
 {
   public:
     VertexArray(rx::Renderer *renderer, GLuint id);
+    ~VertexArray();
 
     const VertexAttribute& getVertexAttribute(unsigned int attributeIndex) const;
     void detachBuffer(GLuint bufferName);

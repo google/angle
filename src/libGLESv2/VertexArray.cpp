@@ -16,6 +16,10 @@ namespace gl
 VertexArray::VertexArray(rx::Renderer *renderer, GLuint id)
     : RefCountObject(id)
 {
+}
+
+VertexArray::~VertexArray()
+{
     for (int i = 0; i < MAX_VERTEX_ATTRIBS; i++)
     {
         mVertexAttributes[i].mBoundBuffer.set(NULL);
