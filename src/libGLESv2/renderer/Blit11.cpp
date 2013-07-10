@@ -228,7 +228,7 @@ bool Blit11::copyTexture(ID3D11ShaderResourceView *source, const gl::Box &source
     // be GL_XXXX_INTEGER but it does not tell us if it is signed or unsigned.
     D3D11_SHADER_RESOURCE_VIEW_DESC sourceSRVDesc;
     source->GetDesc(&sourceSRVDesc);
-    GLint sourceInternalFormat = d3d11_gl::GetInternalFormat(sourceSRVDesc.Format);
+    GLint sourceInternalFormat = d3d11_gl::GetInternalFormat(sourceSRVDesc.Format, mRenderer->getCurrentClientVersion());
 
     BlitParameters parameters = { 0 };
     parameters.mDestinationFormat = destFormat;
@@ -559,7 +559,7 @@ bool Blit11::copyDepthStencil(ID3D11Resource *source, unsigned int sourceSubreso
     DXGI_FORMAT format = getTextureFormat(source);
     ASSERT(format == getTextureFormat(dest));
 
-    unsigned int pixelSize = d3d11::GetFormatPixelBytes(format);
+    unsigned int pixelSize = d3d11::GetFormatPixelBytes(format, mRenderer->getCurrentClientVersion());
     unsigned int copyOffset = 0;
     unsigned int copySize = pixelSize;
     if (stencilOnly)

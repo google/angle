@@ -202,8 +202,8 @@ RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11RenderTargetView *rtv, 
         mDepth = depth;
         mSamples = samples;
 
-        mInternalFormat = d3d11_gl::GetInternalFormat(desc.Format);
-        mActualFormat = d3d11_gl::GetInternalFormat(desc.Format);
+        mInternalFormat = d3d11_gl::GetInternalFormat(desc.Format, renderer->getCurrentClientVersion());
+        mActualFormat = d3d11_gl::GetInternalFormat(desc.Format, renderer->getCurrentClientVersion());
     }
 }
 
@@ -231,8 +231,8 @@ RenderTarget11::RenderTarget11(Renderer *renderer, ID3D11DepthStencilView *dsv, 
         mDepth = depth;
         mSamples = samples;
 
-        mInternalFormat = d3d11_gl::GetInternalFormat(desc.Format);
-        mActualFormat = d3d11_gl::GetInternalFormat(desc.Format);
+        mInternalFormat = d3d11_gl::GetInternalFormat(desc.Format, renderer->getCurrentClientVersion());
+        mActualFormat = d3d11_gl::GetInternalFormat(desc.Format, renderer->getCurrentClientVersion());
     }
 }
 
@@ -351,7 +351,7 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
     mDepth = 1;
     mInternalFormat = internalFormat;
     mSamples = supportedSamples;
-    mActualFormat = d3d11_gl::GetInternalFormat(texFormat);
+    mActualFormat = d3d11_gl::GetInternalFormat(texFormat, renderer->getCurrentClientVersion());
     mSubresourceIndex = D3D11CalcSubresource(0, 0, 1);
 }
 

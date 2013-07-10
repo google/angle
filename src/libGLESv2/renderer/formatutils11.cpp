@@ -534,7 +534,7 @@ static const DXGIFormatInfoMap &GetDXGIFormatInfoMap()
     return infoMap;
 }
 
-static bool GetDXGIFormatInfo(DXGI_FORMAT format, DXGIFormatInfo *outFormatInfo)
+static bool GetDXGIFormatInfo(DXGI_FORMAT format, GLuint clientVersion, DXGIFormatInfo *outFormatInfo)
 {
     const DXGIFormatInfoMap &infoMap = GetDXGIFormatInfoMap();
     DXGIFormatInfoMap::const_iterator iter = infoMap.find(format);
@@ -662,10 +662,10 @@ bool GetDepthStencilInfo(DXGI_FORMAT format, DXGIDepthStencilInfo *outDepthStenc
 namespace d3d11
 {
 
-MipGenerationFunction GetMipGenerationFunction(DXGI_FORMAT format)
+MipGenerationFunction GetMipGenerationFunction(DXGI_FORMAT format, GLuint clientVersion)
 {
     DXGIFormatInfo formatInfo;
-    if (GetDXGIFormatInfo(format, &formatInfo))
+    if (GetDXGIFormatInfo(format, clientVersion, &formatInfo))
     {
         return formatInfo.mMipGenerationFunction;
     }
@@ -712,10 +712,10 @@ LoadImageFunction GetImageLoadFunction(GLint internalFormat, GLenum type, GLuint
     }
 }
 
-GLuint GetFormatPixelBytes(DXGI_FORMAT format)
+GLuint GetFormatPixelBytes(DXGI_FORMAT format, GLuint clientVersion)
 {
     DXGIFormatInfo dxgiFormatInfo;
-    if (GetDXGIFormatInfo(format, &dxgiFormatInfo))
+    if (GetDXGIFormatInfo(format, clientVersion, &dxgiFormatInfo))
     {
         return dxgiFormatInfo.mPixelBits / 8;
     }
@@ -726,10 +726,10 @@ GLuint GetFormatPixelBytes(DXGI_FORMAT format)
     }
 }
 
-GLuint GetBlockWidth(DXGI_FORMAT format)
+GLuint GetBlockWidth(DXGI_FORMAT format, GLuint clientVersion)
 {
     DXGIFormatInfo dxgiFormatInfo;
-    if (GetDXGIFormatInfo(format, &dxgiFormatInfo))
+    if (GetDXGIFormatInfo(format, clientVersion, &dxgiFormatInfo))
     {
         return dxgiFormatInfo.mBlockWidth;
     }
@@ -740,10 +740,10 @@ GLuint GetBlockWidth(DXGI_FORMAT format)
     }
 }
 
-GLuint GetBlockHeight(DXGI_FORMAT format)
+GLuint GetBlockHeight(DXGI_FORMAT format, GLuint clientVersion)
 {
     DXGIFormatInfo dxgiFormatInfo;
-    if (GetDXGIFormatInfo(format, &dxgiFormatInfo))
+    if (GetDXGIFormatInfo(format, clientVersion, &dxgiFormatInfo))
     {
         return dxgiFormatInfo.mBlockHeight;
     }
@@ -814,10 +814,10 @@ GLuint GetStencilOffset(DXGI_FORMAT format)
     }
 }
 
-void MakeValidSize(bool isImage, DXGI_FORMAT format, GLsizei *requestWidth, GLsizei *requestHeight, int *levelOffset)
+void MakeValidSize(bool isImage, DXGI_FORMAT format, GLuint clientVersion, GLsizei *requestWidth, GLsizei *requestHeight, int *levelOffset)
 {
     DXGIFormatInfo dxgiFormatInfo;
-    if (GetDXGIFormatInfo(format, &dxgiFormatInfo))
+    if (GetDXGIFormatInfo(format, clientVersion, &dxgiFormatInfo))
     {
         int upsampleCount = 0;
 
@@ -848,10 +848,10 @@ const DXGIFormatSet &GetAllUsedDXGIFormats()
     return formatSet;
 }
 
-ColorReadFunction GetColorReadFunction(DXGI_FORMAT format)
+ColorReadFunction GetColorReadFunction(DXGI_FORMAT format, GLuint clientVersion)
 {
     DXGIFormatInfo dxgiFormatInfo;
-    if (GetDXGIFormatInfo(format, &dxgiFormatInfo))
+    if (GetDXGIFormatInfo(format, clientVersion, &dxgiFormatInfo))
     {
         return dxgiFormatInfo.mColorReadFunction;
     }
@@ -1030,10 +1030,10 @@ DXGI_FORMAT GetRenderableFormat(GLint internalFormat, GLuint clientVersion)
 namespace d3d11_gl
 {
 
-GLint GetInternalFormat(DXGI_FORMAT format)
+GLint GetInternalFormat(DXGI_FORMAT format, GLuint clientVersion)
 {
     DXGIFormatInfo formatInfo;
-    if (GetDXGIFormatInfo(format, &formatInfo))
+    if (GetDXGIFormatInfo(format, clientVersion, &formatInfo))
     {
         return formatInfo.mInternalFormat;
     }

@@ -43,13 +43,13 @@ Image11 *Image11::makeImage11(Image *img)
     return static_cast<rx::Image11*>(img);
 }
 
-void Image11::generateMipmap(Image11 *dest, Image11 *src)
+void Image11::generateMipmap(GLuint clientVersion, Image11 *dest, Image11 *src)
 {
     ASSERT(src->getDXGIFormat() == dest->getDXGIFormat());
     ASSERT(src->getWidth() == 1 || src->getWidth() / 2 == dest->getWidth());
     ASSERT(src->getHeight() == 1 || src->getHeight() / 2 == dest->getHeight());
 
-    MipGenerationFunction mipFunction = d3d11::GetMipGenerationFunction(src->getDXGIFormat());
+    MipGenerationFunction mipFunction = d3d11::GetMipGenerationFunction(src->getDXGIFormat(), clientVersion);
     ASSERT(mipFunction != NULL);
 
     D3D11_MAPPED_SUBRESOURCE destMapped;
@@ -129,7 +129,7 @@ bool Image11::redefine(Renderer *renderer, GLenum target, GLint internalformat, 
 
         // compute the d3d format that will be used
         mDXGIFormat = gl_d3d11::GetTexFormat(internalformat, clientVersion);
-        mActualFormat = d3d11_gl::GetInternalFormat(mDXGIFormat);
+        mActualFormat = d3d11_gl::GetInternalFormat(mDXGIFormat, clientVersion);
         mRenderable = gl_d3d11::GetRTVFormat(internalformat, clientVersion) != DXGI_FORMAT_UNKNOWN;
 
         if (mStagingTexture)
@@ -161,7 +161,7 @@ void Image11::loadData(GLint xoffset, GLint yoffset, GLint zoffset, GLsizei widt
     GLuint clientVersion = mRenderer->getCurrentClientVersion();
     GLsizei inputRowPitch = gl::GetRowPitch(mInternalFormat, type, clientVersion, width, unpackAlignment);
     GLsizei inputDepthPitch = gl::GetDepthPitch(mInternalFormat, type, clientVersion, width, height, unpackAlignment);
-    GLuint outputPixelSize = d3d11::GetFormatPixelBytes(mDXGIFormat);
+    GLuint outputPixelSize = d3d11::GetFormatPixelBytes(mDXGIFormat, clientVersion);
 
     LoadImageFunction loadFunction = d3d11::GetImageLoadFunction(mInternalFormat, type, clientVersion);
     ASSERT(loadFunction != NULL);
@@ -187,9 +187,9 @@ void Image11::loadCompressedData(GLint xoffset, GLint yoffset, GLint zoffset, GL
     GLsizei inputRowPitch = gl::GetRowPitch(mInternalFormat, GL_UNSIGNED_BYTE, clientVersion, width, 1);
     GLsizei inputDepthPitch = gl::GetDepthPitch(mInternalFormat, GL_UNSIGNED_BYTE, clientVersion, width, height, 1);
 
-    GLuint outputPixelSize = d3d11::GetFormatPixelBytes(mDXGIFormat);
-    GLuint outputBlockWidth = d3d11::GetBlockWidth(mDXGIFormat);
-    GLuint outputBlockHeight = d3d11::GetBlockHeight(mDXGIFormat);
+    GLuint outputPixelSize = d3d11::GetFormatPixelBytes(mDXGIFormat, clientVersion);
+    GLuint outputBlockWidth = d3d11::GetBlockWidth(mDXGIFormat, clientVersion);
+    GLuint outputBlockHeight = d3d11::GetBlockHeight(mDXGIFormat, clientVersion);
 
     ASSERT(xoffset % outputBlockWidth == 0);
     ASSERT(yoffset % outputBlockHeight == 0);
@@ -329,7 +329,7 @@ void Image11::createStagingTexture()
         GLsizei height = mHeight;
 
         // adjust size if needed for compressed textures
-        d3d11::MakeValidSize(false, dxgiFormat, &width, &height, &lodOffset);
+        d3d11::MakeValidSize(false, dxgiFormat, mRenderer->getCurrentClientVersion(), &width, &height, &lodOffset);
 
         if (mTarget == GL_TEXTURE_3D)
         {

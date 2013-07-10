@@ -434,9 +434,13 @@ int Renderer11::generateConfigs(ConfigDesc **configDescList)
 
                 if (depthStencilFormatOK)
                 {
+                    // FIXME: parse types from context version
+                    ASSERT(d3d11_gl::GetInternalFormat(renderTargetFormat, 2) == d3d11_gl::GetInternalFormat(renderTargetFormat, 3));
+                    ASSERT(d3d11_gl::GetInternalFormat(depthStencilFormat, 2) == d3d11_gl::GetInternalFormat(depthStencilFormat, 3));
+
                     ConfigDesc newConfig;
-                    newConfig.renderTargetFormat = d3d11_gl::GetInternalFormat(renderTargetFormat);
-                    newConfig.depthStencilFormat = d3d11_gl::GetInternalFormat(depthStencilFormat);
+                    newConfig.renderTargetFormat = d3d11_gl::GetInternalFormat(renderTargetFormat, getCurrentClientVersion());
+                    newConfig.depthStencilFormat = d3d11_gl::GetInternalFormat(depthStencilFormat, getCurrentClientVersion());
                     newConfig.multiSample = 0;     // FIXME: enumerate multi-sampling
                     newConfig.fastConfig = true;   // Assume all DX11 format conversions to be fast
                     newConfig.es3Capable = true;
@@ -3167,7 +3171,7 @@ void Renderer11::generateMipmap(Image *dest, Image *src)
 {
     Image11 *dest11 = Image11::makeImage11(dest);
     Image11 *src11 = Image11::makeImage11(src);
-    Image11::generateMipmap(dest11, src11);
+    Image11::generateMipmap(getCurrentClientVersion(), dest11, src11);
 }
 
 TextureStorage *Renderer11::createTextureStorage2D(SwapChain *swapChain)
@@ -3288,7 +3292,7 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
 
     GLuint clientVersion = getCurrentClientVersion();
 
-    GLint sourceInternalFormat = d3d11_gl::GetInternalFormat(textureDesc.Format);
+    GLint sourceInternalFormat = d3d11_gl::GetInternalFormat(textureDesc.Format, clientVersion);
     GLenum sourceFormat = gl::GetFormat(sourceInternalFormat, clientVersion);
     GLenum sourceType = gl::GetType(sourceInternalFormat, clientVersion);
 
@@ -3325,7 +3329,7 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
         }
         else
         {
-            ColorReadFunction readFunc = d3d11::GetColorReadFunction(textureDesc.Format);
+            ColorReadFunction readFunc = d3d11::GetColorReadFunction(textureDesc.Format, clientVersion);
             ColorWriteFunction writeFunc = gl::GetColorWriteFunction(format, type, clientVersion);
 
             unsigned char temp[16]; // Maximum size of any Color<T> type used.

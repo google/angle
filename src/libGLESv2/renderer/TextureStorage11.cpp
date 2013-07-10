@@ -115,11 +115,13 @@ bool TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture, unsign
 {
     if (srcTexture)
     {
+        GLuint clientVersion = mRenderer->getCurrentClientVersion();
+
         D3D11_BOX srcBox;
         srcBox.left = xoffset;
         srcBox.top = yoffset;
-        srcBox.right = xoffset + roundUp((unsigned int)width, d3d11::GetBlockWidth(mTextureFormat));
-        srcBox.bottom = yoffset + roundUp((unsigned int)height, d3d11::GetBlockHeight(mTextureFormat));
+        srcBox.right = xoffset + roundUp((unsigned int)width, d3d11::GetBlockWidth(mTextureFormat, clientVersion));
+        srcBox.bottom = yoffset + roundUp((unsigned int)height, d3d11::GetBlockHeight(mTextureFormat, clientVersion));
         srcBox.front = zoffset;
         srcBox.back = zoffset + depth;
 
@@ -214,7 +216,7 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int levels, GLenum 
     if (width > 0 && height > 0)
     {
         // adjust size if needed for compressed textures
-        d3d11::MakeValidSize(false, mTextureFormat, &width, &height, &mLodOffset);
+        d3d11::MakeValidSize(false, mTextureFormat, clientVersion, &width, &height, &mLodOffset);
 
         ID3D11Device *device = mRenderer->getDevice();
 
@@ -436,7 +438,7 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int levels, GLe
     {
         // adjust size if needed for compressed textures
         int height = size;
-        d3d11::MakeValidSize(false, mTextureFormat, &size, &height, &mLodOffset);
+        d3d11::MakeValidSize(false, mTextureFormat, clientVersion, &size, &height, &mLodOffset);
 
         ID3D11Device *device = mRenderer->getDevice();
 
@@ -659,7 +661,7 @@ TextureStorage11_3D::TextureStorage11_3D(Renderer *renderer, int levels, GLenum 
     if (width > 0 && height > 0 && depth > 0)
     {
         // adjust size if needed for compressed textures
-        d3d11::MakeValidSize(false, mTextureFormat, &width, &height, &mLodOffset);
+        d3d11::MakeValidSize(false, mTextureFormat, clientVersion, &width, &height, &mLodOffset);
 
         ID3D11Device *device = mRenderer->getDevice();
 
@@ -909,7 +911,7 @@ TextureStorage11_2DArray::TextureStorage11_2DArray(Renderer *renderer, int level
     if (width > 0 && height > 0 && depth > 0)
     {
         // adjust size if needed for compressed textures
-        d3d11::MakeValidSize(false, mTextureFormat, &width, &height, &mLodOffset);
+        d3d11::MakeValidSize(false, mTextureFormat, clientVersion, &width, &height, &mLodOffset);
 
         ID3D11Device *device = mRenderer->getDevice();
 
