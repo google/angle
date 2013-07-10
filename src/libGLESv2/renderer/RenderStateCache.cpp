@@ -375,13 +375,14 @@ ID3D11SamplerState *RenderStateCache::getSamplerState(const gl::SamplerState &sa
         }
 
         D3D11_SAMPLER_DESC samplerDesc;
-        samplerDesc.Filter = gl_d3d11::ConvertFilter(samplerState.minFilter, samplerState.magFilter, samplerState.maxAnisotropy);
+        samplerDesc.Filter = gl_d3d11::ConvertFilter(samplerState.minFilter, samplerState.magFilter,
+                                                     samplerState.maxAnisotropy, samplerState.compareMode);
         samplerDesc.AddressU = gl_d3d11::ConvertTextureWrap(samplerState.wrapS);
         samplerDesc.AddressV = gl_d3d11::ConvertTextureWrap(samplerState.wrapT);
         samplerDesc.AddressW = gl_d3d11::ConvertTextureWrap(samplerState.wrapR);
         samplerDesc.MipLODBias = static_cast<float>(samplerState.lodOffset);
         samplerDesc.MaxAnisotropy = samplerState.maxAnisotropy;
-        samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+        samplerDesc.ComparisonFunc = gl_d3d11::ConvertComparison(samplerState.compareFunc);
         samplerDesc.BorderColor[0] = 0.0f;
         samplerDesc.BorderColor[1] = 0.0f;
         samplerDesc.BorderColor[2] = 0.0f;

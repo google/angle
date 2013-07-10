@@ -36,8 +36,10 @@ Texture::Texture(rx::Renderer *renderer, GLuint id) : RefCountObject(id)
     mSamplerState.wrapR = GL_REPEAT;
     mSamplerState.maxAnisotropy = 1.0f;
     mSamplerState.lodOffset = 0;
+    mSamplerState.compareMode = GL_NONE;
+    mSamplerState.compareFunc = GL_LEQUAL;
     mUsage = GL_NONE;
-    
+
     mDirtyImages = true;
 
     mImmutable = false;
@@ -136,6 +138,40 @@ bool Texture::setMaxAnisotropy(float textureMaxAnisotropy, float contextMaxAniso
     mSamplerState.maxAnisotropy = textureMaxAnisotropy;
 
     return true;
+}
+
+bool Texture::setCompareMode(GLenum mode)
+{
+    // Acceptable mode parameters from GLES 3.0.2 spec, table 3.17
+    switch (mode)
+    {
+      case GL_NONE:
+      case GL_COMPARE_REF_TO_TEXTURE:
+        mSamplerState.compareMode = mode;
+        return true;
+      default:
+        return false;
+    }
+}
+
+bool Texture::setCompareFunc(GLenum func)
+{
+    // Acceptable function parameters from GLES 3.0.2 spec, table 3.17
+    switch (func)
+    {
+      case GL_LEQUAL:
+      case GL_GEQUAL:
+      case GL_LESS:
+      case GL_GREATER:
+      case GL_EQUAL:
+      case GL_NOTEQUAL:
+      case GL_ALWAYS:
+      case GL_NEVER:
+        mSamplerState.compareFunc = func;
+        return true;
+      default:
+        return false;
+    }
 }
 
 // Returns true on successful usage state update (valid enum parameter)
@@ -669,6 +705,23 @@ bool Texture2D::isSamplerComplete() const
         if (!isMipmapComplete())
         {
             return false;
+        }
+    }
+
+    // OpenGLES 3.0.2 spec section 3.8.13 states that a texture is not mipmap complete if:
+    // The internalformat specified for the texture arrays is a sized internal depth or
+    // depth and stencil format (see table 3.13), the value of TEXTURE_COMPARE_-
+    // MODE is NONE, and either the magnification filter is not NEAREST or the mini-
+    // fication filter is neither NEAREST nor NEAREST_MIPMAP_NEAREST.
+    if (gl::GetDepthBits(getInternalFormat(0), mRenderer->getCurrentClientVersion()) > 0)
+    {
+        if (mSamplerState.compareMode == GL_NONE)
+        {
+            if ((mSamplerState.minFilter != GL_NEAREST && mSamplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST) ||
+                mSamplerState.magFilter != GL_NEAREST)
+            {
+                return false;
+            }
         }
     }
 

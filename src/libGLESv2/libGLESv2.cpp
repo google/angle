@@ -7057,6 +7057,28 @@ void __stdcall glTexParameterf(GLenum target, GLenum pname, GLfloat param)
                 UNIMPLEMENTED();
                 break;
 
+              case GL_TEXTURE_COMPARE_MODE:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                if (!texture->setCompareMode((GLenum)param))
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                break;
+
+              case GL_TEXTURE_COMPARE_FUNC:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                if (!texture->setCompareFunc((GLenum)param))
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                break;
+
               default:
                 return gl::error(GL_INVALID_ENUM);
             }
@@ -7166,13 +7188,33 @@ void __stdcall glTexParameteri(GLenum target, GLenum pname, GLint param)
               case GL_TEXTURE_SWIZZLE_A:
               case GL_TEXTURE_BASE_LEVEL:
               case GL_TEXTURE_MAX_LEVEL:
-              case GL_TEXTURE_COMPARE_MODE:
-              case GL_TEXTURE_COMPARE_FUNC:
                 if (context->getClientVersion() < 3)
                 {
                     return gl::error(GL_INVALID_ENUM);
                 }
                 UNIMPLEMENTED();
+                break;
+
+              case GL_TEXTURE_COMPARE_MODE:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                if (!texture->setCompareMode((GLenum)param))
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                break;
+
+              case GL_TEXTURE_COMPARE_FUNC:
+                if (context->getClientVersion() < 3)
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
+                if (!texture->setCompareFunc((GLenum)param))
+                {
+                    return gl::error(GL_INVALID_ENUM);
+                }
                 break;
 
               default:

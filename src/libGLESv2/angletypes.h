@@ -143,6 +143,9 @@ struct SamplerState
     GLenum wrapR;
     float maxAnisotropy;
     int lodOffset;
+
+    GLenum compareMode;
+    GLenum compareFunc;
 };
 
 struct ClearParameters

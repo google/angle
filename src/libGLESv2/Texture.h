@@ -74,6 +74,8 @@ class Texture : public RefCountObject
     bool setWrapT(GLenum wrap);
     bool setWrapR(GLenum wrap);
     bool setMaxAnisotropy(float textureMaxAnisotropy, float contextMaxAnisotropy);
+    bool setCompareMode(GLenum mode);
+    bool setCompareFunc(GLenum func);
     bool setUsage(GLenum usage);
 
     GLenum getMinFilter() const;
