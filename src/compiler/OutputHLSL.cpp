@@ -53,12 +53,13 @@ TString OutputHLSL::TextureFunction::name() const
         name += "Proj";
     }
 
-    switch(mipmap)
+    switch(method)
     {
       case IMPLICIT:                 break;
       case BIAS:                     break;
       case LOD:      name += "Lod";  break;
       case LOD0:     name += "Lod0"; break;
+      case SIZE:     name += "Size"; break;
       default: UNREACHABLE();
     }
 
@@ -70,7 +71,7 @@ bool OutputHLSL::TextureFunction::operator<(const TextureFunction &rhs) const
     if (sampler < rhs.sampler) return true;
     if (coords < rhs.coords)   return true;
     if (!proj && rhs.proj)     return true;
-    if (mipmap < rhs.mipmap)   return true;
+    if (method < rhs.method)   return true;
 
     return false;
 }
@@ -883,21 +884,43 @@ void OutputHLSL::header()
     for (TextureFunctionSet::const_iterator textureFunction = mUsesTexture.begin(); textureFunction != mUsesTexture.end(); textureFunction++)
     {
         // Return type
-        switch(textureFunction->sampler)
+        if (textureFunction->method == TextureFunction::SIZE)
         {
-          case EbtSampler2D:       out << "float4 "; break;
-          case EbtSampler3D:       out << "float4 "; break;
-          case EbtSamplerCube:     out << "float4 "; break;
-          case EbtSampler2DArray:  out << "float4 "; break;
-          case EbtISampler2D:      out << "int4 ";   break;
-          case EbtISampler3D:      out << "int4 ";   break;
-          case EbtISamplerCube:    out << "int4 ";   break;
-          case EbtISampler2DArray: out << "int4 ";   break;
-          case EbtUSampler2D:      out << "uint4 ";  break;
-          case EbtUSampler3D:      out << "uint4 ";  break;
-          case EbtUSamplerCube:    out << "uint4 ";  break;
-          case EbtUSampler2DArray: out << "uint4 ";  break;
-          default: UNREACHABLE();
+            switch(textureFunction->sampler)
+            {
+              case EbtSampler2D:       out << "int2 "; break;
+              case EbtSampler3D:       out << "int3 "; break;
+              case EbtSamplerCube:     out << "int2 "; break;
+              case EbtSampler2DArray:  out << "int3 "; break;
+              case EbtISampler2D:      out << "int2 "; break;
+              case EbtISampler3D:      out << "int3 "; break;
+              case EbtISamplerCube:    out << "int2 "; break;
+              case EbtISampler2DArray: out << "int3 "; break;
+              case EbtUSampler2D:      out << "int2 "; break;
+              case EbtUSampler3D:      out << "int3 "; break;
+              case EbtUSamplerCube:    out << "int2 "; break;
+              case EbtUSampler2DArray: out << "int3 "; break;
+              default: UNREACHABLE();
+            }
+        }
+        else   // Sampling function
+        {
+            switch(textureFunction->sampler)
+            {
+              case EbtSampler2D:       out << "float4 "; break;
+              case EbtSampler3D:       out << "float4 "; break;
+              case EbtSamplerCube:     out << "float4 "; break;
+              case EbtSampler2DArray:  out << "float4 "; break;
+              case EbtISampler2D:      out << "int4 ";   break;
+              case EbtISampler3D:      out << "int4 ";   break;
+              case EbtISamplerCube:    out << "int4 ";   break;
+              case EbtISampler2DArray: out << "int4 ";   break;
+              case EbtUSampler2D:      out << "uint4 ";  break;
+              case EbtUSampler3D:      out << "uint4 ";  break;
+              case EbtUSamplerCube:    out << "uint4 ";  break;
+              case EbtUSampler2DArray: out << "uint4 ";  break;
+              default: UNREACHABLE();
+            }
         }
 
         // Function name
@@ -915,7 +938,7 @@ void OutputHLSL::header()
               default: UNREACHABLE();
             }
 
-            switch(textureFunction->mipmap)
+            switch(textureFunction->method)
             {
               case TextureFunction::IMPLICIT:                 break;
               case TextureFunction::BIAS:     hlslCoords = 4; break;
@@ -947,25 +970,66 @@ void OutputHLSL::header()
 
         switch(textureFunction->coords)
         {
+          case 1: out << ", int lod";  break;
           case 2: out << ", float2 t"; break;
           case 3: out << ", float3 t"; break;
           case 4: out << ", float4 t"; break;
           default: UNREACHABLE();
         }
 
-        switch(textureFunction->mipmap)
+        switch(textureFunction->method)
         {
           case TextureFunction::IMPLICIT:                        break;
           case TextureFunction::BIAS:     out << ", float bias"; break;
           case TextureFunction::LOD:      out << ", float lod";  break;
           case TextureFunction::LOD0:                            break;
+          case TextureFunction::SIZE:                            break;
           default: UNREACHABLE();
         }
 
         out << ")\n"
                "{\n";
 
-        if (IsIntegerSampler(textureFunction->sampler) && IsSamplerCube(textureFunction->sampler))
+        if (textureFunction->method == TextureFunction::SIZE)
+        {
+            if (IsSampler2D(textureFunction->sampler) || IsSamplerCube(textureFunction->sampler))
+            {
+                if (IsSamplerArray(textureFunction->sampler))
+                {
+                    out << "    uint width; uint height; uint layers; uint numberOfLevels;\n"
+                           "    x.GetDimensions(lod, width, height, layers, numberOfLevels);\n";
+                }
+                else
+                {
+                    out << "    uint width; uint height; uint numberOfLevels;\n"
+                           "    x.GetDimensions(lod, width, height, numberOfLevels);\n";
+                }
+            }
+            else if (IsSampler3D(textureFunction->sampler))
+            {
+                out << "    uint width; uint height; uint depth; uint numberOfLevels;\n"
+                       "    x.GetDimensions(lod, width, height, depth, numberOfLevels);\n";
+            }
+            else UNREACHABLE();
+
+            switch(textureFunction->sampler)
+            {
+              case EbtSampler2D:       out << "    return int2(width, height);";         break;
+              case EbtSampler3D:       out << "    return int3(width, height, depth);";  break;
+              case EbtSamplerCube:     out << "    return int2(width, height);";         break;
+              case EbtSampler2DArray:  out << "    return int3(width, height, layers);"; break;
+              case EbtISampler2D:      out << "    return int2(width, height);";         break;
+              case EbtISampler3D:      out << "    return int3(width, height, depth);";  break;
+              case EbtISamplerCube:    out << "    return int2(width, height);";         break;
+              case EbtISampler2DArray: out << "    return int3(width, height, layers);"; break;
+              case EbtUSampler2D:      out << "    return int2(width, height);";         break;
+              case EbtUSampler3D:      out << "    return int3(width, height, depth);";  break;
+              case EbtUSamplerCube:    out << "    return int2(width, height);";         break;
+              case EbtUSampler2DArray: out << "    return int3(width, height, layers);"; break;
+              default: UNREACHABLE();
+            }
+        }
+        else if (IsIntegerSampler(textureFunction->sampler) && IsSamplerCube(textureFunction->sampler))
         {
             // Currently unsupported because TextureCube does not support Load
             // This will require emulation using a Texture2DArray with 6 faces
@@ -1016,7 +1080,7 @@ void OutputHLSL::header()
                   default: UNREACHABLE();
                 }
 
-                switch(textureFunction->mipmap)
+                switch(textureFunction->method)
                 {
                   case TextureFunction::IMPLICIT: out << "(s, ";     break;
                   case TextureFunction::BIAS:     out << "bias(s, "; break;
@@ -1033,7 +1097,7 @@ void OutputHLSL::header()
                 }
                 else
                 {
-                    switch(textureFunction->mipmap)
+                    switch(textureFunction->method)
                     {
                       case TextureFunction::IMPLICIT: out << "x.Sample(s, ";      break;
                       case TextureFunction::BIAS:     out << "x.SampleBias(s, ";  break;
@@ -1115,7 +1179,7 @@ void OutputHLSL::header()
 
                 if (hlslCoords == 4)
                 {
-                    switch(textureFunction->mipmap)
+                    switch(textureFunction->method)
                     {
                       case TextureFunction::BIAS: out << ", bias"; break;
                       case TextureFunction::LOD:  out << ", lod";  break;
@@ -1135,7 +1199,7 @@ void OutputHLSL::header()
 
                 if (!IsIntegerSampler(textureFunction->sampler))
                 {
-                    switch(textureFunction->mipmap)
+                    switch(textureFunction->method)
                     {
                       case TextureFunction::IMPLICIT: out << "));";       break;
                       case TextureFunction::BIAS:     out << "), bias);"; break;
@@ -2264,39 +2328,43 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 TextureFunction textureFunction;
                 textureFunction.sampler = samplerType;
                 textureFunction.coords = arguments[1]->getAsTyped()->getNominalSize();
-                textureFunction.mipmap = TextureFunction::IMPLICIT;
+                textureFunction.method = TextureFunction::IMPLICIT;
+                textureFunction.proj = false;
 
                 if (name == "texture2D" || name == "textureCube" || name == "texture")
                 {
-                    textureFunction.mipmap = TextureFunction::IMPLICIT;
-                    textureFunction.proj = false;
+                    textureFunction.method = TextureFunction::IMPLICIT;
                 }
                 else if (name == "texture2DProj" || name == "textureProj")
                 {
-                    textureFunction.mipmap = TextureFunction::IMPLICIT;
+                    textureFunction.method = TextureFunction::IMPLICIT;
                     textureFunction.proj = true;
                 }
                 else if (name == "texture2DLod" || name == "textureCubeLod" || name == "textureLod")
                 {
-                    textureFunction.mipmap = TextureFunction::LOD;
-                    textureFunction.proj = false;
+                    textureFunction.method = TextureFunction::LOD;
                 }
                 else if (name == "texture2DProjLod" || name == "textureProjLod")
                 {
-                    textureFunction.mipmap = TextureFunction::LOD;
+                    textureFunction.method = TextureFunction::LOD;
                     textureFunction.proj = true;
+                }
+                else if (name == "textureSize")
+                {
+                    textureFunction.method = TextureFunction::SIZE;
                 }
                 else UNREACHABLE();
 
-                if (textureFunction.mipmap != TextureFunction::LOD)
+                if (textureFunction.method != TextureFunction::LOD &&
+                    textureFunction.method != TextureFunction::SIZE)
                 {
                     if (lod0 || mContext.shaderType == SH_VERTEX_SHADER)
                     {
-                        textureFunction.mipmap = TextureFunction::LOD0;
+                        textureFunction.method = TextureFunction::LOD0;
                     }
                     else if (arguments.size() == 3)
                     {
-                        textureFunction.mipmap = TextureFunction::BIAS;
+                        textureFunction.method = TextureFunction::BIAS;
                     }
                 }
 

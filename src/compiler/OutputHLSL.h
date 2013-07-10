@@ -96,18 +96,19 @@ class OutputHLSL : public TIntermTraverser
 
     struct TextureFunction
     {
-        enum Mipmap
+        enum Method
         {
-            IMPLICIT,
+            IMPLICIT,   // Mipmap LOD determined implicitly (standard lookup)
             BIAS,
             LOD,
-            LOD0
+            LOD0,
+            SIZE   // textureSize()
         };
 
         TBasicType sampler;
         int coords;
         bool proj;
-        Mipmap mipmap;
+        Method method;
 
         TString name() const;
 

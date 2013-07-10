@@ -22,6 +22,7 @@ void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltI
     TType *float3 = new TType(EbtFloat, EbpUndefined, EvqGlobal, 3);
     TType *float4 = new TType(EbtFloat, EbpUndefined, EvqGlobal, 4);
 
+    TType *int1 = new TType(EbtInt, EbpUndefined, EvqGlobal, 1);
     TType *int2 = new TType(EbtInt, EbpUndefined, EvqGlobal, 2);
     TType *int3 = new TType(EbtInt, EbpUndefined, EvqGlobal, 3);
     TType *int4 = new TType(EbtInt, EbpUndefined, EvqGlobal, 4);
@@ -458,6 +459,19 @@ void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltI
         symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureProj", usampler2D, "sampler", float4, "coord", float1, "bias");
         symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureProj", usampler3D, "sampler", float4, "coord", float1, "bias");
     }
+
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "textureSize", sampler2D, "sampler", int1, "lod");
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "textureSize", isampler2D, "sampler", int1, "lod");
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "textureSize", usampler2D, "sampler", int1, "lod");
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "textureSize", sampler3D, "sampler", int1, "lod");
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "textureSize", isampler3D, "sampler", int1, "lod");
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "textureSize", usampler3D, "sampler", int1, "lod");
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "textureSize", samplerCube, "sampler", int1, "lod");
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "textureSize", isamplerCube, "sampler", int1, "lod");
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "textureSize", usamplerCube, "sampler", int1, "lod");
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "textureSize", sampler2DArray, "sampler", int1, "lod");
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "textureSize", isampler2DArray, "sampler", int1, "lod");
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "textureSize", usampler2DArray, "sampler", int1, "lod");
 
     if(type == SH_FRAGMENT_SHADER)
     {
