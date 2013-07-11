@@ -37,6 +37,7 @@ class Framebuffer
     void setColorbuffer(unsigned int colorAttachment, GLenum type, GLuint colorbuffer);
     void setDepthbuffer(GLenum type, GLuint depthbuffer);
     void setStencilbuffer(GLenum type, GLuint stencilbuffer);
+    void setDepthStencilBuffer(GLenum type, GLuint depthStencilBuffer);
 
     void detachTexture(GLuint texture);
     void detachRenderbuffer(GLuint renderbuffer);
@@ -56,10 +57,12 @@ class Framebuffer
     GLenum getColorbufferType(unsigned int colorAttachment) const;
     GLenum getDepthbufferType() const;
     GLenum getStencilbufferType() const;
+    GLenum getDepthStencilbufferType() const;
 
     GLuint getColorbufferHandle(unsigned int colorAttachment) const;
     GLuint getDepthbufferHandle() const;
     GLuint getStencilbufferHandle() const;
+    GLenum getDepthStencilbufferHandle() const;
 
     GLenum getDrawBufferState(unsigned int colorAttachment) const;
     void setDrawBufferState(unsigned int colorAttachment, GLenum drawBuffer);

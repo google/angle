@@ -90,6 +90,24 @@ void Framebuffer::setStencilbuffer(GLenum type, GLuint stencilbuffer)
     mStencilbufferPointer.set(lookupRenderbuffer(type, stencilbuffer));
 }
 
+void Framebuffer::setDepthStencilBuffer(GLenum type, GLuint depthStencilBuffer)
+{
+    Renderbuffer *renderBuffer = lookupRenderbuffer(type, depthStencilBuffer);
+    if (renderBuffer && renderBuffer->getDepthSize() > 0 && renderBuffer->getStencilSize() > 0)
+    {
+        mDepthbufferType = type;
+        mDepthbufferPointer.set(renderBuffer);
+
+        mStencilbufferType = type;
+        mStencilbufferPointer.set(renderBuffer);
+    }
+    else
+    {
+        mDepthbufferType = GL_NONE;
+        mStencilbufferType = GL_NONE;
+    }
+}
+
 void Framebuffer::detachTexture(GLuint texture)
 {
     for (unsigned int colorAttachment = 0; colorAttachment < IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
@@ -245,6 +263,11 @@ GLenum Framebuffer::getStencilbufferType() const
     return mStencilbufferType;
 }
 
+GLenum Framebuffer::getDepthStencilbufferType() const
+{
+    return (mDepthbufferPointer.id() == mStencilbufferPointer.id()) ? mDepthbufferType : GL_NONE;
+}
+
 GLuint Framebuffer::getColorbufferHandle(unsigned int colorAttachment) const
 {
     ASSERT(colorAttachment < IMPLEMENTATION_MAX_DRAW_BUFFERS);
@@ -259,6 +282,11 @@ GLuint Framebuffer::getDepthbufferHandle() const
 GLuint Framebuffer::getStencilbufferHandle() const
 {
     return mStencilbufferPointer.id();
+}
+
+GLenum Framebuffer::getDepthStencilbufferHandle() const
+{
+    return (mDepthbufferPointer.id() == mStencilbufferPointer.id()) ? mDepthbufferPointer.id() : 0;
 }
 
 GLenum Framebuffer::getDrawBufferState(unsigned int colorAttachment) const

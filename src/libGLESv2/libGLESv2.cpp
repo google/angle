@@ -4170,6 +4170,12 @@ void __stdcall glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum t
                   case GL_DEPTH_ATTACHMENT:
                   case GL_STENCIL_ATTACHMENT:
                     break;
+                  case GL_DEPTH_STENCIL_ATTACHMENT:
+                    if (context->getClientVersion() < 3)
+                    {
+                        return gl::error(GL_INVALID_ENUM);
+                    }
+                    break;
                   default:
                     return gl::error(GL_INVALID_ENUM);
                 }
@@ -4266,8 +4272,9 @@ void __stdcall glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum t
             {
                 switch (attachment)
                 {
-                  case GL_DEPTH_ATTACHMENT:   framebuffer->setDepthbuffer(textarget, texture);   break;
-                  case GL_STENCIL_ATTACHMENT: framebuffer->setStencilbuffer(textarget, texture); break;
+                  case GL_DEPTH_ATTACHMENT:         framebuffer->setDepthbuffer(textarget, texture);        break;
+                  case GL_STENCIL_ATTACHMENT:       framebuffer->setStencilbuffer(textarget, texture);      break;
+                  case GL_DEPTH_STENCIL_ATTACHMENT: framebuffer->setDepthStencilBuffer(textarget, texture); break;
                 }
             }
         }
@@ -5065,6 +5072,17 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
                     attachmentType = framebuffer->getStencilbufferType();
                     attachmentHandle = framebuffer->getStencilbufferHandle();
                     break;
+                  case GL_DEPTH_STENCIL_ATTACHMENT:
+                    if (context->getClientVersion() < 3)
+                    {
+                        return gl::error(GL_INVALID_ENUM);
+                    }
+                    if (framebuffer->getDepthbufferHandle() != framebuffer->getStencilbufferHandle())
+                    {
+                        return gl::error(GL_INVALID_OPERATION);
+                    }
+                    attachmentType = framebuffer->getDepthStencilbufferType();
+                    attachmentHandle = framebuffer->getDepthStencilbufferHandle();
                   default: return gl::error(GL_INVALID_ENUM);
                 }
             }
