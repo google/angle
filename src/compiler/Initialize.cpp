@@ -459,6 +459,24 @@ void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltI
         symbolTable.insertBuiltIn(ESSL3_BUILTINS, uint4, "textureProj", usampler3D, "sampler", float4, "coord", float1, "bias");
     }
 
+    TType *sampler2DShadow = new TType(EbtSampler2DShadow, EbpUndefined, EvqGlobal, 1);
+    TType *samplerCubeShadow = new TType(EbtSamplerCubeShadow, EbpUndefined, EvqGlobal, 1);
+    TType *sampler2DArrayShadow = new TType(EbtSampler2DArrayShadow, EbpUndefined, EvqGlobal, 1);
+
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "texture", sampler2DShadow, "sampler", float3, "coord");
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "texture", samplerCubeShadow, "sampler", float4, "coord");
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "texture", sampler2DArrayShadow, "sampler", float4, "coord");
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "textureProj", sampler2DShadow, "sampler", float4, "coord");
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "textureLod", sampler2DShadow, "sampler", float3, "coord");
+
+    if (type == SH_FRAGMENT_SHADER)
+    {
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "texture", sampler2DShadow, "sampler", float3, "coord", float1, "bias");
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "texture", samplerCubeShadow, "sampler", float4, "coord", float1, "bias");
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "texture", sampler2DArrayShadow, "sampler", float4, "coord", float1, "bias");
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "textureProj", sampler2DShadow, "sampler", float4, "coord", float1, "bias");
+    }
+
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "textureSize", sampler2D, "sampler", int1, "lod");
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "textureSize", isampler2D, "sampler", int1, "lod");
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "textureSize", usampler2D, "sampler", int1, "lod");
@@ -471,6 +489,9 @@ void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltI
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "textureSize", sampler2DArray, "sampler", int1, "lod");
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "textureSize", isampler2DArray, "sampler", int1, "lod");
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "textureSize", usampler2DArray, "sampler", int1, "lod");
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "textureSize", sampler2DShadow, "sampler", int1, "lod");
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int2, "textureSize", samplerCubeShadow, "sampler", int1, "lod");
+    symbolTable.insertBuiltIn(ESSL3_BUILTINS, int3, "textureSize", sampler2DArrayShadow, "sampler", int1, "lod");
 
     if(type == SH_FRAGMENT_SHADER)
     {
