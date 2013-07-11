@@ -3803,55 +3803,27 @@ GLenum OutputHLSL::glVariableType(const TType &type)
         }
         else UNREACHABLE();
     }
-    else if (type.getBasicType() == EbtSampler2D)
+
+    switch(type.getBasicType())
     {
-        return GL_SAMPLER_2D;
+      case EbtSampler2D:            return GL_SAMPLER_2D;
+      case EbtSampler3D:            return GL_SAMPLER_3D;
+      case EbtSamplerCube:          return GL_SAMPLER_CUBE;
+      case EbtSampler2DArray:       return GL_SAMPLER_2D_ARRAY;
+      case EbtISampler2D:           return GL_INT_SAMPLER_2D;
+      case EbtISampler3D:           return GL_INT_SAMPLER_3D;
+      case EbtISamplerCube:         return GL_INT_SAMPLER_CUBE;
+      case EbtISampler2DArray:      return GL_INT_SAMPLER_2D_ARRAY;
+      case EbtUSampler2D:           return GL_UNSIGNED_INT_SAMPLER_2D;
+      case EbtUSampler3D:           return GL_UNSIGNED_INT_SAMPLER_3D;
+      case EbtUSamplerCube:         return GL_UNSIGNED_INT_SAMPLER_CUBE;
+      case EbtUSampler2DArray:      return GL_UNSIGNED_INT_SAMPLER_2D_ARRAY;
+      case EbtSampler2DShadow:      return GL_SAMPLER_2D_SHADOW;
+      case EbtSamplerCubeShadow:    return GL_SAMPLER_CUBE_SHADOW;
+      case EbtSampler2DArrayShadow: return GL_SAMPLER_2D_ARRAY_SHADOW;
+      default: UNREACHABLE();
     }
-    else if (type.getBasicType() == EbtSampler3D)
-    {
-        return GL_SAMPLER_3D;
-    }
-    else if (type.getBasicType() == EbtSamplerCube)
-    {
-        return GL_SAMPLER_CUBE;
-    }
-    else if (type.getBasicType() == EbtSampler2DArray)
-    {
-        return GL_SAMPLER_2D_ARRAY;
-    }
-    else if (type.getBasicType() == EbtISampler2D)
-    {
-        return GL_INT_SAMPLER_2D;
-    }
-    else if (type.getBasicType() == EbtISampler3D)
-    {
-        return GL_INT_SAMPLER_3D;
-    }
-    else if (type.getBasicType() == EbtISamplerCube)
-    {
-        return GL_INT_SAMPLER_CUBE;
-    }
-    else if (type.getBasicType() == EbtISampler2DArray)
-    {
-        return GL_INT_SAMPLER_2D_ARRAY;
-    }
-    else if (type.getBasicType() == EbtUSampler2D)
-    {
-        return GL_UNSIGNED_INT_SAMPLER_2D;
-    }
-    else if (type.getBasicType() == EbtUSampler3D)
-    {
-        return GL_UNSIGNED_INT_SAMPLER_3D;
-    }
-    else if (type.getBasicType() == EbtUSamplerCube)
-    {
-        return GL_UNSIGNED_INT_SAMPLER_CUBE;
-    }
-    else if (type.getBasicType() == EbtUSampler2DArray)
-    {
-        return GL_UNSIGNED_INT_SAMPLER_2D_ARRAY;
-    }
-    else UNREACHABLE();
+
 
     return GL_NONE;
 }
