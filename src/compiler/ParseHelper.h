@@ -101,6 +101,7 @@ struct TParseContext {
     const TPragma& pragma() const { return directiveHandler.pragma(); }
     const TExtensionBehavior& extensionBehavior() const { return directiveHandler.extensionBehavior(); }
     bool supportsExtension(const char* extension);
+    bool isExtensionEnabled(const char* extension) const;
 
     bool containsSampler(TType& type);
     bool areAllChildConst(TIntermAggregate* aggrNode);
