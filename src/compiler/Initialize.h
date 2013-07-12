@@ -11,8 +11,7 @@
 #include "compiler/ShHandle.h"
 #include "compiler/SymbolTable.h"
 
-void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltInResources &resources,
-                            const TExtensionBehavior &extensionBehavior, TSymbolTable &table);
+void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltInResources &resources, TSymbolTable &table);
 
 void IdentifyBuiltIns(ShShaderType type, ShShaderSpec spec,
                       const ShBuiltInResources& resources,

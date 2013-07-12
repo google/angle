@@ -247,7 +247,7 @@ bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources &resources)
       default: assert(false && "Language not supported");
     }
 
-    InsertBuiltInFunctions(shaderType, shaderSpec, resources, extensionBehavior, symbolTable);
+    InsertBuiltInFunctions(shaderType, shaderSpec, resources, symbolTable);
 
     IdentifyBuiltIns(shaderType, shaderSpec, resources, symbolTable);
 

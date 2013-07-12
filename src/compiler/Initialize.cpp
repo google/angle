@@ -14,8 +14,7 @@
 
 #include "compiler/intermediate.h"
 
-void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltInResources &resources,
-                            const TExtensionBehavior &extensionBehavior, TSymbolTable &symbolTable)
+void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltInResources &resources, TSymbolTable &symbolTable)
 {
     TType *float1 = new TType(EbtFloat, EbpUndefined, EvqGlobal, 1);
     TType *float2 = new TType(EbtFloat, EbpUndefined, EvqGlobal, 2);
@@ -523,11 +522,7 @@ void InsertBuiltInFunctions(ShShaderType type, ShShaderSpec spec, const ShBuiltI
 
     if (spec != SH_CSS_SHADERS_SPEC)
     {
-        TExtensionBehavior::const_iterator iter = extensionBehavior.find("GL_EXT_draw_buffers");
-        const bool usingMRTExtension = (iter != extensionBehavior.end() && (iter->second == EBhEnable || iter->second == EBhRequire));
-        const int maxDrawBuffers = (usingMRTExtension ? resources.MaxDrawBuffers : 1);
-
-        symbolTable.insertConstInt(ESSL1_BUILTINS, "gl_MaxDrawBuffers", maxDrawBuffers);
+        symbolTable.insertConstInt(ESSL1_BUILTINS, "gl_MaxDrawBuffers", resources.MaxDrawBuffers);
     }
 
     symbolTable.insertConstInt(ESSL3_BUILTINS, "gl_MaxVertexOutputVectors", resources.MaxVertexOutputVectors);
