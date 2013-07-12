@@ -964,6 +964,19 @@ bool TParseContext::supportsExtension(const char* extension)
     return (iter != extbehavior.end());
 }
 
+bool TParseContext::isExtensionEnabled(const char* extension) const
+{
+    const TExtensionBehavior& extbehavior = extensionBehavior();
+    auto iter = extbehavior.find(extension);
+
+    if (iter == extbehavior.end())
+    {
+        return false;
+    }
+
+    return (iter->second == EBhEnable || iter->second == EBhRequire);
+}
+
 void TParseContext::handleExtensionDirective(const TSourceLoc& loc, const char* extName, const char* behavior)
 {
     pp::SourceLocation srcLoc;
@@ -2099,6 +2112,12 @@ TIntermTyped* TParseContext::addIndexExpression(TIntermTyped *baseExpression, co
                     error(location, "", "[", extraInfo.c_str());
                     recover();
                     index = baseExpression->getType().getArraySize() - 1;
+                }
+                else if (baseExpression->getQualifier() == EvqFragData && index > 0 && !isExtensionEnabled("GL_EXT_draw_buffers"))
+                {
+                    error(location, "", "[", "array indexes for gl_FragData must be zero when GL_EXT_draw_buffers is disabled");
+                    recover();
+                    index = 0;
                 }
             }
             else if ((baseExpression->isVector() || baseExpression->isMatrix()) && baseExpression->getType().getNominalSize() <= index)

@@ -111,6 +111,7 @@ struct TParseContext {
     const TPragma& pragma() const { return directiveHandler.pragma(); }
     const TExtensionBehavior& extensionBehavior() const { return directiveHandler.extensionBehavior(); }
     bool supportsExtension(const char* extension);
+    bool isExtensionEnabled(const char* extension) const;
     void handleExtensionDirective(const TSourceLoc& loc, const char* extName, const char* behavior);
     void handlePragmaDirective(const TSourceLoc& loc, const char* name, const char* value);
 
