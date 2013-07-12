@@ -10,4 +10,6 @@ patches-*
 ipch
 debug.txt
 *.opensdf
+*.orig
+*.rej
 
