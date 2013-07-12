@@ -117,6 +117,7 @@ struct TParseContext {
     TIntermTyped* addConstMatrixNode(int , TIntermTyped*, const TSourceLoc&);
     TIntermTyped* addConstArrayNode(int index, TIntermTyped* node, const TSourceLoc& line);
     TIntermTyped* addConstStruct(TString& , TIntermTyped*, const TSourceLoc&);
+    TIntermTyped* addIndexExpression(TIntermTyped *baseExpression, const TSourceLoc& location, TIntermTyped *indexExpression);
 
     // Performs an error check for embedded struct declarations.
     // Returns true if an error was raised due to the declaration of

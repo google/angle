@@ -1448,6 +1448,134 @@ bool TParseContext::structNestingErrorCheck(const TSourceLoc& line, const TField
 }
 
 //
+// Parse an array index expression
+//
+TIntermTyped* TParseContext::addIndexExpression(TIntermTyped *baseExpression, const TSourceLoc& location, TIntermTyped *indexExpression)
+{
+    TIntermTyped *indexedExpression = NULL;
+
+    if (!baseExpression->isArray() && !baseExpression->isMatrix() && !baseExpression->isVector())
+    {
+        if (baseExpression->getAsSymbolNode())
+        {
+            error(location, " left of '[' is not of type array, matrix, or vector ", baseExpression->getAsSymbolNode()->getSymbol().c_str());
+        }
+        else
+        {
+            error(location, " left of '[' is not of type array, matrix, or vector ", "expression");
+        }
+        recover();
+    }
+
+    if (indexExpression->getQualifier() == EvqConst)
+    {
+        int index = indexExpression->getAsConstantUnion()->getIConst(0);
+        if (index < 0)
+        {
+            std::stringstream infoStream;
+            infoStream << index;
+            std::string info = infoStream.str();
+            error(location, "negative index", info.c_str());
+            recover();
+            index = 0;
+        }
+        if (baseExpression->getType().getQualifier() == EvqConst)
+        {
+            if (baseExpression->isArray())
+            {
+                // constant folding for arrays
+                indexedExpression = addConstArrayNode(index, baseExpression, location);
+            }
+            else if (baseExpression->isVector())
+            {
+                // constant folding for vectors
+                TVectorFields fields;
+                fields.num = 1;
+                fields.offsets[0] = index; // need to do it this way because v.xy sends fields integer array
+                indexedExpression = addConstVectorNode(fields, baseExpression, location);
+            }
+            else if (baseExpression->isMatrix())
+            {
+                // constant folding for matrices
+                indexedExpression = addConstMatrixNode(index, baseExpression, location);
+            }
+        }
+        else
+        {
+            if (baseExpression->isArray())
+            {
+                if (index >= baseExpression->getType().getArraySize())
+                {
+                    std::stringstream extraInfoStream;
+                    extraInfoStream << "array index out of range '" << index << "'";
+                    std::string extraInfo = extraInfoStream.str();
+                    error(location, "", "[", extraInfo.c_str());
+                    recover();
+                    index = baseExpression->getType().getArraySize() - 1;
+                }
+            }
+            else if ((baseExpression->isVector() || baseExpression->isMatrix()) && baseExpression->getType().getNominalSize() <= index)
+            {
+                std::stringstream extraInfoStream;
+                extraInfoStream << "field selection out of range '" << index << "'";
+                std::string extraInfo = extraInfoStream.str();
+                error(location, "", "[", extraInfo.c_str());
+                recover();
+                index = baseExpression->getType().getNominalSize() - 1;
+            }
+
+            indexExpression->getAsConstantUnion()->getUnionArrayPointer()->setIConst(index);
+            indexedExpression = intermediate.addIndex(EOpIndexDirect, baseExpression, indexExpression, location);
+        }
+    }
+    else
+    {
+        indexedExpression = intermediate.addIndex(EOpIndexIndirect, baseExpression, indexExpression, location);
+    }
+
+    if (indexedExpression == 0)
+    {
+        ConstantUnion *unionArray = new ConstantUnion[1];
+        unionArray->setFConst(0.0f);
+        indexedExpression = intermediate.addConstantUnion(unionArray, TType(EbtFloat, EbpHigh, EvqConst), location);
+    }
+    else if (baseExpression->isArray())
+    {
+        const TType &baseType = baseExpression->getType();
+        if (baseType.getStruct())
+        {
+            TType copyOfType(baseType.getStruct());
+            indexedExpression->setType(copyOfType);
+        }
+        else
+        {
+            indexedExpression->setType(TType(baseExpression->getBasicType(), baseExpression->getPrecision(), EvqTemporary, baseExpression->getNominalSize(), baseExpression->isMatrix()));
+        }
+
+        if (baseExpression->getType().getQualifier() == EvqConst)
+        {
+            indexedExpression->getTypePointer()->setQualifier(EvqConst);
+        }
+    }
+    else if (baseExpression->isMatrix())
+    {
+        TQualifier qualifier = baseExpression->getType().getQualifier() == EvqConst ? EvqConst : EvqTemporary;
+        indexedExpression->setType(TType(baseExpression->getBasicType(), baseExpression->getPrecision(), qualifier, baseExpression->getNominalSize()));
+    }
+    else if (baseExpression->isVector())
+    {
+        TQualifier qualifier = baseExpression->getType().getQualifier() == EvqConst ? EvqConst : EvqTemporary;
+        indexedExpression->setType(TType(baseExpression->getBasicType(), baseExpression->getPrecision(), qualifier));
+    }
+    else
+    {
+        indexedExpression->setType(baseExpression->getType());
+    }
+
+    return indexedExpression;
+}
+
+//
 // Parse an array of strings using yyparse.
 //
 // Returns 0 for success.
