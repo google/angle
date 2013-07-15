@@ -2267,12 +2267,14 @@ TextureType ProgramBinary::getTextureType(GLenum samplerType, InfoLog &infoLog)
       case GL_SAMPLER_2D:
       case GL_INT_SAMPLER_2D:
       case GL_UNSIGNED_INT_SAMPLER_2D:
+      case GL_SAMPLER_2D_SHADOW:
         return TEXTURE_2D;
       case GL_SAMPLER_3D:
       case GL_INT_SAMPLER_3D:
       case GL_UNSIGNED_INT_SAMPLER_3D:
         return TEXTURE_3D;
       case GL_SAMPLER_CUBE:
+      case GL_SAMPLER_CUBE_SHADOW:
         return TEXTURE_CUBE;
       case GL_INT_SAMPLER_CUBE:
       case GL_UNSIGNED_INT_SAMPLER_CUBE:
@@ -2282,6 +2284,7 @@ TextureType ProgramBinary::getTextureType(GLenum samplerType, InfoLog &infoLog)
       case GL_SAMPLER_2D_ARRAY:
       case GL_INT_SAMPLER_2D_ARRAY:
       case GL_UNSIGNED_INT_SAMPLER_2D_ARRAY:
+      case GL_SAMPLER_2D_ARRAY_SHADOW:
         return TEXTURE_2D_ARRAY;
       default: UNREACHABLE();
     }

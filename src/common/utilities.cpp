@@ -33,6 +33,9 @@ int UniformComponentCount(GLenum type)
       case GL_UNSIGNED_INT_SAMPLER_3D:
       case GL_UNSIGNED_INT_SAMPLER_CUBE:
       case GL_UNSIGNED_INT_SAMPLER_2D_ARRAY:
+      case GL_SAMPLER_2D_SHADOW:
+      case GL_SAMPLER_CUBE_SHADOW:
+      case GL_SAMPLER_2D_ARRAY_SHADOW:
       case GL_UNSIGNED_INT:
         return 1;
       case GL_BOOL_VEC2:
@@ -107,6 +110,9 @@ GLenum UniformComponentType(GLenum type)
       case GL_UNSIGNED_INT_SAMPLER_3D:
       case GL_UNSIGNED_INT_SAMPLER_CUBE:
       case GL_UNSIGNED_INT_SAMPLER_2D_ARRAY:
+      case GL_SAMPLER_2D_SHADOW:
+      case GL_SAMPLER_CUBE_SHADOW:
+      case GL_SAMPLER_2D_ARRAY_SHADOW:
       case GL_INT_VEC2:
       case GL_INT_VEC3:
       case GL_INT_VEC4:
@@ -209,6 +215,9 @@ int VariableRowCount(GLenum type)
       case GL_UNSIGNED_INT_SAMPLER_3D:
       case GL_UNSIGNED_INT_SAMPLER_CUBE:
       case GL_UNSIGNED_INT_SAMPLER_2D_ARRAY:
+      case GL_SAMPLER_2D_SHADOW:
+      case GL_SAMPLER_CUBE_SHADOW:
+      case GL_SAMPLER_2D_ARRAY_SHADOW:
         return 1;
       case GL_FLOAT_MAT2:
       case GL_FLOAT_MAT3x2:
@@ -251,6 +260,9 @@ int VariableColumnCount(GLenum type)
       case GL_UNSIGNED_INT_SAMPLER_3D:
       case GL_UNSIGNED_INT_SAMPLER_CUBE:
       case GL_UNSIGNED_INT_SAMPLER_2D_ARRAY:
+      case GL_SAMPLER_2D_SHADOW:
+      case GL_SAMPLER_CUBE_SHADOW:
+      case GL_SAMPLER_2D_ARRAY_SHADOW:
         return 1;
       case GL_BOOL_VEC2:
       case GL_FLOAT_VEC2:
@@ -299,6 +311,9 @@ bool IsSampler(GLenum type)
       case GL_UNSIGNED_INT_SAMPLER_3D:
       case GL_UNSIGNED_INT_SAMPLER_CUBE:
       case GL_UNSIGNED_INT_SAMPLER_2D_ARRAY:
+      case GL_SAMPLER_2D_SHADOW:
+      case GL_SAMPLER_CUBE_SHADOW:
+      case GL_SAMPLER_2D_ARRAY_SHADOW:
         return true;
     }
 

@@ -39,6 +39,7 @@ class OutputHLSL : public TIntermTraverser
 
     TString typeString(const TType &type);
     TString textureString(const TType &type);
+    TString samplerString(const TType &type);
     TString interpolationString(TQualifier qualifier);
     TString structureString(const TStructure &structure, bool useHLSLRowMajorPacking, bool useStd140Packing);
     TString structureTypeName(const TStructure &structure, bool useHLSLRowMajorPacking, bool useStd140Packing);

@@ -254,6 +254,36 @@ inline bool IsSamplerArray(TBasicType type)
     return false;
 }
 
+inline bool IsShadowSampler(TBasicType type)
+{
+    switch (type)
+    {
+      case EbtSampler2DShadow:
+      case EbtSamplerCubeShadow:
+      case EbtSampler2DArrayShadow:
+        return true;
+      case EbtISampler2D:
+      case EbtISampler3D:
+      case EbtISamplerCube:
+      case EbtISampler2DArray:
+      case EbtUSampler2D:
+      case EbtUSampler3D:
+      case EbtUSamplerCube:
+      case EbtUSampler2DArray:
+      case EbtSampler2D:
+      case EbtSampler3D:
+      case EbtSamplerCube:
+      case EbtSamplerExternalOES:
+      case EbtSampler2DRect:
+      case EbtSampler2DArray:
+        return false;
+      default:
+        assert(!IsSampler(type));
+    }
+
+    return false;
+}
+
 //
 // Qualifiers and built-ins.  These are mainly used to see what can be read
 // or written, and by the machine dependent translator to know which registers
