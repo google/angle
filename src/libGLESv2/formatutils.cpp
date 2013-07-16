@@ -624,6 +624,7 @@ struct InternalFormatInfo
         formatInfo.mStorageType = storageType;
         formatInfo.mIsDepthRenderable = depthRenderable;
         formatInfo.mIsStencilRenderable = stencilRenderable;
+        formatInfo.mIsTextureFilterable = AlwaysSupported;
         formatInfo.mSupportFunction = supportFunction;
         return formatInfo;
     }
@@ -664,7 +665,7 @@ static InternalFormatInfoMap BuildES3InternalFormatInfoMap()
     map.insert(InternalFormatInfoPair(GL_RG8_SNORM,         InternalFormatInfo::RGBAFormat( 8,  8,  0,  0, 0, GL_RG,           GL_BYTE,                         NormalizedFixedPoint, false, NeverSupported,  AlwaysSupported, AlwaysSupported     )));
     map.insert(InternalFormatInfoPair(GL_RGB8,              InternalFormatInfo::RGBAFormat( 8,  8,  8,  0, 0, GL_RGB,          GL_UNSIGNED_BYTE,                NormalizedFixedPoint, false, AlwaysSupported, AlwaysSupported, AlwaysSupported     )));
     map.insert(InternalFormatInfoPair(GL_RGB8_SNORM,        InternalFormatInfo::RGBAFormat( 8,  8,  8,  0, 0, GL_RGB,          GL_BYTE,                         NormalizedFixedPoint, false, NeverSupported,  AlwaysSupported, AlwaysSupported     )));
-    map.insert(InternalFormatInfoPair(GL_RGB565,            InternalFormatInfo::RGBAFormat( 5,  6,  5,  0, 0, GL_RGB,          GL_UNSIGNED_SHORT_5_5_5_1,       NormalizedFixedPoint, false, AlwaysSupported,  AlwaysSupported, AlwaysSupported     )));
+    map.insert(InternalFormatInfoPair(GL_RGB565,            InternalFormatInfo::RGBAFormat( 5,  6,  5,  0, 0, GL_RGB,          GL_UNSIGNED_SHORT_5_5_5_1,       NormalizedFixedPoint, false, AlwaysSupported, AlwaysSupported, AlwaysSupported     )));
     map.insert(InternalFormatInfoPair(GL_RGBA4,             InternalFormatInfo::RGBAFormat( 4,  4,  4,  4, 0, GL_RGBA,         GL_UNSIGNED_SHORT_4_4_4_4,       NormalizedFixedPoint, false, AlwaysSupported, AlwaysSupported, AlwaysSupported     )));
     map.insert(InternalFormatInfoPair(GL_RGB5_A1,           InternalFormatInfo::RGBAFormat( 5,  5,  5,  1, 0, GL_RGBA,         GL_UNSIGNED_SHORT_5_5_5_1,       NormalizedFixedPoint, false, AlwaysSupported, AlwaysSupported, AlwaysSupported     )));
     map.insert(InternalFormatInfoPair(GL_RGBA8,             InternalFormatInfo::RGBAFormat( 8,  8,  8,  8, 0, GL_RGBA,         GL_UNSIGNED_BYTE,                NormalizedFixedPoint, false, AlwaysSupported, AlwaysSupported, AlwaysSupported     )));
@@ -706,7 +707,7 @@ static InternalFormatInfoMap BuildES3InternalFormatInfoMap()
 
     // Floating point renderability and filtering is provided by OES_texture_float and OES_texture_half_float
     //                               | Internal format        |                                   | D |S | Format             | Type                           | Internal fmt | SRGB | Color                                                                                                     | Texture                                                                                             | Supported           |
-    //                               |                        |                                   |   |  |                    |                                | type         |      | renderable                                                                                                          | filterable                                                                                          |                     |
+    //                               |                        |                                   |   |  |                    |                                | type         |      | renderable                                                                                                | filterable                                                                                          |                     |
     map.insert(InternalFormatInfoPair(GL_R16F,              InternalFormatInfo::RGBAFormat(16,  0,  0,  0, 0, GL_RED,          GL_HALF_FLOAT,                   FloatingPoint, false, CheckSupport<&Context::supportsFloat16RenderableTextures, &rx::Renderer::getFloat16TextureRenderingSupport>, CheckSupport<&Context::supportsFloat16LinearFilter, &rx::Renderer::getFloat16TextureFilteringSupport>, AlwaysSupported     )));
     map.insert(InternalFormatInfoPair(GL_RG16F,             InternalFormatInfo::RGBAFormat(16, 16,  0,  0, 0, GL_RG,           GL_HALF_FLOAT,                   FloatingPoint, false, CheckSupport<&Context::supportsFloat16RenderableTextures, &rx::Renderer::getFloat16TextureRenderingSupport>, CheckSupport<&Context::supportsFloat16LinearFilter, &rx::Renderer::getFloat16TextureFilteringSupport>, AlwaysSupported     )));
     map.insert(InternalFormatInfoPair(GL_RGB16F,            InternalFormatInfo::RGBAFormat(16, 16, 16,  0, 0, GL_RGB,          GL_HALF_FLOAT,                   FloatingPoint, false, CheckSupport<&Context::supportsFloat16RenderableTextures, &rx::Renderer::getFloat16TextureRenderingSupport>, CheckSupport<&Context::supportsFloat16LinearFilter, &rx::Renderer::getFloat16TextureFilteringSupport>, AlwaysSupported     )));
