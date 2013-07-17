@@ -121,18 +121,6 @@ class OutputHLSL : public TIntermTraverser
     bool mUsesFaceforward2;
     bool mUsesFaceforward3;
     bool mUsesFaceforward4;
-    bool mUsesEqualMat2;
-    bool mUsesEqualMat3;
-    bool mUsesEqualMat4;
-    bool mUsesEqualVec2;
-    bool mUsesEqualVec3;
-    bool mUsesEqualVec4;
-    bool mUsesEqualIVec2;
-    bool mUsesEqualIVec3;
-    bool mUsesEqualIVec4;
-    bool mUsesEqualBVec2;
-    bool mUsesEqualBVec3;
-    bool mUsesEqualBVec4;
     bool mUsesAtan2_1;
     bool mUsesAtan2_2;
     bool mUsesAtan2_3;
