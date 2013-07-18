@@ -859,6 +859,24 @@ function_prototype
         }
 
         //
+        // Check for previously declared variables using the same name.
+        //
+        TSymbol *prevSym = context->symbolTable.find($1->getName(), context->shaderVersion);
+        if (prevSym)
+        {
+            if (!prevSym->isFunction())
+            {
+                context->error(@2, "redefinition", $1->getName().c_str(), "function");
+                context->recover();
+            }
+        }
+        else
+        {
+            // Insert the unmangled name to detect potential future redefinition as a variable.
+            context->symbolTable.getOuterLevel()->insert($1->getName(), *$1);
+        }
+
+        //
         // If this is a redeclaration, it could also be a definition,
         // in which case, we want to use the variable names from this one, and not the one that's
         // being redeclared.  So, pass back up this declaration, not the one in the symbol table.

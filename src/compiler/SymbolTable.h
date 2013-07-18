@@ -197,7 +197,7 @@ public:
     TSymbolTableLevel() { }
     ~TSymbolTableLevel();
 
-    bool insert(TSymbol &symbol) 
+    bool insert(const TString &name, TSymbol &symbol)
     {
         symbol.setUniqueId(++uniqueId);
 
@@ -205,9 +205,14 @@ public:
         // returning true means symbol was added to the table
         //
         tInsertResult result;
-        result = level.insert(tLevelPair(symbol.getMangledName(), &symbol));
+        result = level.insert(tLevelPair(name, &symbol));
 
         return result.second;
+    }
+
+    bool insert(TSymbol &symbol)
+    {
+        return insert(symbol.getMangledName(), symbol);
     }
 
     TSymbol* find(const TString& name) const
