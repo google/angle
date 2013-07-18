@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2012 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -105,7 +105,6 @@ struct TParseContext {
     bool containsSampler(TType& type);
     bool areAllChildConst(TIntermAggregate* aggrNode);
     const TFunction* findFunction(const TSourceLoc& line, TFunction* pfnCall, bool *builtIn = 0);
-    bool isVariableBuiltIn(const TVariable* pVar);
     bool executeInitializer(const TSourceLoc& line, TString& identifier, TPublicType& pType,
                             TIntermTyped* initializer, TIntermNode*& intermNode, TVariable* variable = 0);
 

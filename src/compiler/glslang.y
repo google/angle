@@ -200,7 +200,7 @@ variable_identifier
 
             variable = static_cast<const TVariable*>(symbol);
 
-            if (context->isVariableBuiltIn(variable) && 
+            if (context->symbolTable.findBuiltIn(variable->getName()) &&
                 !variable->getExtension().empty() &&
                 context->extensionErrorCheck(@1, variable->getExtension())) {
                 context->recover();
