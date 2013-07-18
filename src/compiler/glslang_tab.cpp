@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 2.7.12-4996.  */
+/* A Bison parser, made by GNU Bison 2.7.  */
 
 /* Bison implementation for Yacc-like parsers in C
    
-      Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
+      Copyright (C) 1984, 1989-1990, 2000-2012 Free Software Foundation, Inc.
    
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "2.7.12-4996"
+#define YYBISON_VERSION "2.7"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -400,21 +400,12 @@ typedef short int yytype_int16;
 # endif
 #endif
 
-#ifndef __attribute__
-/* This feature is available in gcc versions 2.5 and later.  */
-# if (! defined __GNUC__ || __GNUC__ < 2 \
-      || (__GNUC__ == 2 && __GNUC_MINOR__ < 5))
-#  define __attribute__(Spec) /* empty */
-# endif
-#endif
-
 /* Suppress unused-variable warnings by "using" E.  */
 #if ! defined lint || defined __GNUC__
 # define YYUSE(E) ((void) (E))
 #else
 # define YYUSE(E) /* empty */
 #endif
-
 
 /* Identity function, used to suppress warnings about constant conditions.  */
 #ifndef lint
@@ -729,20 +720,20 @@ static const yytype_uint16 yyrline[] =
      684,   692,   703,   707,   708,   718,   728,   738,   751,   752,
      762,   775,   779,   783,   787,   788,   801,   802,   815,   816,
      829,   830,   847,   848,   861,   862,   863,   864,   865,   869,
-     872,   883,   891,   918,   923,   937,   974,   977,   984,   992,
-    1013,  1034,  1044,  1072,  1077,  1087,  1092,  1102,  1105,  1108,
-    1111,  1117,  1124,  1127,  1149,  1167,  1191,  1214,  1218,  1236,
-    1244,  1276,  1296,  1317,  1326,  1349,  1352,  1358,  1366,  1374,
-    1382,  1392,  1399,  1402,  1405,  1411,  1414,  1429,  1433,  1437,
-    1441,  1445,  1450,  1455,  1460,  1465,  1470,  1475,  1480,  1485,
-    1490,  1495,  1500,  1505,  1509,  1513,  1521,  1529,  1533,  1546,
-    1546,  1560,  1560,  1569,  1572,  1588,  1621,  1625,  1631,  1638,
-    1653,  1657,  1661,  1662,  1668,  1669,  1670,  1671,  1672,  1676,
-    1677,  1677,  1677,  1687,  1688,  1692,  1692,  1693,  1693,  1698,
-    1701,  1711,  1714,  1720,  1721,  1725,  1733,  1737,  1747,  1752,
-    1769,  1769,  1774,  1774,  1781,  1781,  1789,  1792,  1798,  1801,
-    1807,  1811,  1818,  1825,  1832,  1839,  1850,  1859,  1863,  1870,
-    1873,  1879,  1879
+     872,   883,   891,   918,   923,   937,   992,   995,  1002,  1010,
+    1031,  1052,  1062,  1090,  1095,  1105,  1110,  1120,  1123,  1126,
+    1129,  1135,  1142,  1145,  1167,  1185,  1209,  1232,  1236,  1254,
+    1262,  1294,  1314,  1335,  1344,  1367,  1370,  1376,  1384,  1392,
+    1400,  1410,  1417,  1420,  1423,  1429,  1432,  1447,  1451,  1455,
+    1459,  1463,  1468,  1473,  1478,  1483,  1488,  1493,  1498,  1503,
+    1508,  1513,  1518,  1523,  1527,  1531,  1539,  1547,  1551,  1564,
+    1564,  1578,  1578,  1587,  1590,  1606,  1639,  1643,  1649,  1656,
+    1671,  1675,  1679,  1680,  1686,  1687,  1688,  1689,  1690,  1694,
+    1695,  1695,  1695,  1705,  1706,  1710,  1710,  1711,  1711,  1716,
+    1719,  1729,  1732,  1738,  1739,  1743,  1751,  1755,  1765,  1770,
+    1787,  1787,  1792,  1792,  1799,  1799,  1807,  1810,  1816,  1819,
+    1825,  1829,  1836,  1843,  1850,  1857,  1868,  1877,  1881,  1888,
+    1891,  1897,  1897
 };
 #endif
 
@@ -1520,7 +1511,11 @@ yy_symbol_value_print (yyoutput, yytype, yyvaluep, yylocationp, context)
 # else
   YYUSE (yyoutput);
 # endif
-  YYUSE (yytype);
+  switch (yytype)
+    {
+      default:
+        break;
+    }
 }
 
 
@@ -1920,7 +1915,12 @@ yydestruct (yymsg, yytype, yyvaluep, yylocationp, context)
     yymsg = "Deleting";
   YY_SYMBOL_PRINT (yymsg, yytype, yyvaluep, yylocationp);
 
-  YYUSE (yytype);
+  switch (yytype)
+    {
+
+      default:
+        break;
+    }
 }
 
 
@@ -3210,6 +3210,24 @@ yyreduce:
                     context->recover();
                 }
             }
+        }
+
+        //
+        // Check for previously declared variables using the same name.
+        //
+        TSymbol *prevSym = context->symbolTable.find((yyvsp[(1) - (2)].interm.function)->getName());
+        if (prevSym)
+        {
+            if (!prevSym->isFunction())
+            {
+                context->error((yylsp[(2) - (2)]), "redefinition", (yyvsp[(1) - (2)].interm.function)->getName().c_str(), "function");
+                context->recover();
+            }
+        }
+        else
+        {
+		    // Insert the unmangled name to detect potential future redefinition as a variable.
+            context->symbolTable.getOuterLevel()->insert((yyvsp[(1) - (2)].interm.function)->getName(), *(yyvsp[(1) - (2)].interm.function));
         }
 
         //

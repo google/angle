@@ -920,8 +920,9 @@ const TFunction* TParseContext::findFunction(const TSourceLoc& line, TFunction* 
 {
     // First find by unmangled name to check whether the function name has been
     // hidden by a variable name or struct typename.
+    // If a function is found, check for one with a matching argument list.
     const TSymbol* symbol = symbolTable.find(call->getName(), builtIn);
-    if (symbol == 0) {
+    if (symbol == 0 || symbol->isFunction()) {
         symbol = symbolTable.find(call->getMangledName(), builtIn);
     }
 
