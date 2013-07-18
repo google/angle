@@ -57,6 +57,9 @@ enum TBasicType
     EbtUSampler3D,
     EbtUSamplerCube,
     EbtUSampler2DArray,
+    EbtSampler2DShadow,
+    EbtSamplerCubeShadow,
+    EbtSampler2DArrayShadow,
     EbtGuardSamplerEnd,    // non type:  see implementation of IsSampler()
     EbtStruct,
     EbtInterfaceBlock,
@@ -68,28 +71,31 @@ inline const char* getBasicString(TBasicType t)
 {
     switch (t)
     {
-    case EbtVoid:              return "void";              break;
-    case EbtFloat:             return "float";             break;
-    case EbtInt:               return "int";               break;
-    case EbtUInt:              return "uint";              break;
-    case EbtBool:              return "bool";              break;
-    case EbtSampler2D:         return "sampler2D";         break;
-    case EbtSampler3D:         return "sampler3D";         break;
-    case EbtSamplerCube:       return "samplerCube";       break;
-    case EbtSamplerExternalOES: return "samplerExternalOES"; break;
-    case EbtSampler2DRect:     return "sampler2DRect";     break;
-    case EbtSampler2DArray:    return "sampler2DArray";    break;
-    case EbtISampler2D:        return "isampler2D";        break;
-    case EbtISampler3D:        return "isampler3D";        break;
-    case EbtISamplerCube:      return "isamplerCube";      break;
-    case EbtISampler2DArray:   return "isampler2DArray";   break;
-    case EbtUSampler2D:        return "usampler2D";        break;
-    case EbtUSampler3D:        return "usampler3D";        break;
-    case EbtUSamplerCube:      return "usamplerCube";      break;
-    case EbtUSampler2DArray:   return "usampler2DArray";   break;
-    case EbtStruct:            return "structure";         break;
-    case EbtInterfaceBlock:    return "interface block";   break;
-    default:                   return "unknown type";
+      case EbtVoid:                 return "void";                 break;
+      case EbtFloat:                return "float";                break;
+      case EbtInt:                  return "int";                  break;
+      case EbtUInt:                 return "uint";                 break;
+      case EbtBool:                 return "bool";                 break;
+      case EbtSampler2D:            return "sampler2D";            break;
+      case EbtSampler3D:            return "sampler3D";            break;
+      case EbtSamplerCube:          return "samplerCube";          break;
+      case EbtSamplerExternalOES:   return "samplerExternalOES";   break;
+      case EbtSampler2DRect:        return "sampler2DRect";        break;
+      case EbtSampler2DArray:       return "sampler2DArray";       break;
+      case EbtISampler2D:           return "isampler2D";           break;
+      case EbtISampler3D:           return "isampler3D";           break;
+      case EbtISamplerCube:         return "isamplerCube";         break;
+      case EbtISampler2DArray:      return "isampler2DArray";      break;
+      case EbtUSampler2D:           return "usampler2D";           break;
+      case EbtUSampler3D:           return "usampler3D";           break;
+      case EbtUSamplerCube:         return "usamplerCube";         break;
+      case EbtUSampler2DArray:      return "usampler2DArray";      break;
+      case EbtSampler2DShadow:      return "sampler2DShadow";      break;
+      case EbtSamplerCubeShadow:    return "samplerCubeShadow";    break;
+      case EbtSampler2DArrayShadow: return "sampler2DArrayShadow"; break;
+      case EbtStruct:               return "structure";            break;
+      case EbtInterfaceBlock:       return "interface block";      break;
+      default:                      return "unknown type";
     }
 }
 
@@ -117,6 +123,9 @@ inline bool IsIntegerSampler(TBasicType type)
       case EbtSamplerExternalOES:
       case EbtSampler2DRect:
       case EbtSampler2DArray:
+      case EbtSampler2DShadow:
+      case EbtSamplerCubeShadow:
+      case EbtSampler2DArrayShadow:
         return false;
       default:
         assert(!IsSampler(type));
@@ -137,6 +146,8 @@ inline bool IsSampler2D(TBasicType type)
       case EbtUSampler2DArray:
       case EbtSampler2DRect:
       case EbtSamplerExternalOES:
+      case EbtSampler2DShadow:
+      case EbtSampler2DArrayShadow:
         return true;
       case EbtSampler3D:
       case EbtISampler3D:
@@ -144,6 +155,7 @@ inline bool IsSampler2D(TBasicType type)
       case EbtISamplerCube:
       case EbtUSamplerCube:
       case EbtSamplerCube:
+      case EbtSamplerCubeShadow:
         return false;
       default:
         assert(!IsSampler(type));
@@ -159,6 +171,7 @@ inline bool IsSamplerCube(TBasicType type)
       case EbtSamplerCube:
       case EbtISamplerCube:
       case EbtUSamplerCube:
+      case EbtSamplerCubeShadow:
         return true;
       case EbtSampler2D:
       case EbtSampler3D:
@@ -171,6 +184,8 @@ inline bool IsSamplerCube(TBasicType type)
       case EbtUSampler2D:
       case EbtUSampler3D:
       case EbtUSampler2DArray:
+      case EbtSampler2DShadow:
+      case EbtSampler2DArrayShadow:
         return false;
       default:
         assert(!IsSampler(type));
@@ -198,6 +213,9 @@ inline bool IsSampler3D(TBasicType type)
       case EbtUSampler2D:
       case EbtUSamplerCube:
       case EbtUSampler2DArray:
+      case EbtSampler2DShadow:
+      case EbtSamplerCubeShadow:
+      case EbtSampler2DArrayShadow:
         return false;
       default:
         assert(!IsSampler(type));
@@ -213,6 +231,7 @@ inline bool IsSamplerArray(TBasicType type)
       case EbtSampler2DArray:
       case EbtISampler2DArray:
       case EbtUSampler2DArray:
+      case EbtSampler2DArrayShadow:
         return true;
       case EbtSampler2D:
       case EbtISampler2D:
@@ -225,6 +244,8 @@ inline bool IsSamplerArray(TBasicType type)
       case EbtISamplerCube:
       case EbtUSamplerCube:
       case EbtSamplerCube:
+      case EbtSampler2DShadow:
+      case EbtSamplerCubeShadow:
         return false;
       default:
         assert(!IsSampler(type));

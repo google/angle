@@ -41,25 +41,29 @@ TString TType::buildMangledName() const
     else if (isVector())
         mangledName += 'v';
 
-    switch (type) {
-    case EbtFloat:              mangledName += 'f';      break;
-    case EbtInt:                mangledName += 'i';      break;
-    case EbtBool:               mangledName += 'b';      break;
-    case EbtSampler2D:          mangledName += "s2";     break;
-    case EbtSampler3D:          mangledName += "s3";     break;
-    case EbtSamplerCube:        mangledName += "sC";     break;
-    case EbtSampler2DArray:     mangledName += "s2a";    break;
-    case EbtISampler2D:         mangledName += "is2";    break;
-    case EbtISampler3D:         mangledName += "is3";    break;
-    case EbtISamplerCube:       mangledName += "isC";    break;
-    case EbtISampler2DArray:    mangledName += "is2a";   break;
-    case EbtUSampler2D:         mangledName += "us2";    break;
-    case EbtUSampler3D:         mangledName += "us3";    break;
-    case EbtUSamplerCube:       mangledName += "usC";    break;
-    case EbtUSampler2DArray:    mangledName += "us2a";   break;
-    case EbtStruct:             mangledName += structure->mangledName(); break;
-    case EbtInterfaceBlock:     mangledName += interfaceBlock->mangledName(); break;
-    default:                    break;
+    switch (type)
+    {
+      case EbtFloat:                mangledName += 'f';      break;
+      case EbtInt:                  mangledName += 'i';      break;
+      case EbtBool:                 mangledName += 'b';      break;
+      case EbtSampler2D:            mangledName += "s2";     break;
+      case EbtSampler3D:            mangledName += "s3";     break;
+      case EbtSamplerCube:          mangledName += "sC";     break;
+      case EbtSampler2DArray:       mangledName += "s2a";    break;
+      case EbtISampler2D:           mangledName += "is2";    break;
+      case EbtISampler3D:           mangledName += "is3";    break;
+      case EbtISamplerCube:         mangledName += "isC";    break;
+      case EbtISampler2DArray:      mangledName += "is2a";   break;
+      case EbtUSampler2D:           mangledName += "us2";    break;
+      case EbtUSampler3D:           mangledName += "us3";    break;
+      case EbtUSamplerCube:         mangledName += "usC";    break;
+      case EbtUSampler2DArray:      mangledName += "us2a";   break;
+      case EbtSampler2DShadow:      mangledName += "s2s";    break;
+      case EbtSamplerCubeShadow:    mangledName += "sCs";    break;
+      case EbtSampler2DArrayShadow: mangledName += "s2as";   break;
+      case EbtStruct:               mangledName += structure->mangledName(); break;
+      case EbtInterfaceBlock:       mangledName += interfaceBlock->mangledName(); break;
+      default:                      UNREACHABLE();
     }
 
     if (isMatrix())
