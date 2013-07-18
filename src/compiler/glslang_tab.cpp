@@ -2265,7 +2265,7 @@ yyreduce:
             
             variable = static_cast<const TVariable*>(symbol);
 
-            if (context->isVariableBuiltIn(variable) && 
+            if (context->symbolTable.findBuiltIn(variable->getName()) &&
                 !variable->getExtension().empty() &&
                 context->extensionErrorCheck((yylsp[(1) - (1)]), variable->getExtension())) {
                 context->recover();
@@ -3226,7 +3226,7 @@ yyreduce:
         }
         else
         {
-		    // Insert the unmangled name to detect potential future redefinition as a variable.
+            // Insert the unmangled name to detect potential future redefinition as a variable.
             context->symbolTable.getOuterLevel()->insert((yyvsp[(1) - (2)].interm.function)->getName(), *(yyvsp[(1) - (2)].interm.function));
         }
 
