@@ -807,9 +807,7 @@ void Texture2D::createTexture()
 
 void Texture2D::updateTexture()
 {
-    bool mipmapping = (isMipmapFiltered() && isMipmapComplete());
-
-    int levels = (mipmapping ? levelCount() : 1);
+    int levels = (isMipmapComplete() ? levelCount() : 1);
 
     for (int level = 0; level < levels; level++)
     {
@@ -1262,12 +1260,10 @@ void TextureCubeMap::createTexture()
 
 void TextureCubeMap::updateTexture()
 {
-    bool mipmapping = isMipmapFiltered() && isMipmapCubeComplete();
+    int levels = (isMipmapCubeComplete() ? levelCount() : 1);
 
     for (int face = 0; face < 6; face++)
     {
-        int levels = (mipmapping ? levelCount() : 1);
-
         for (int level = 0; level < levels; level++)
         {
             rx::Image *image = mImageArray[face][level];
@@ -1911,9 +1907,7 @@ void Texture3D::createTexture()
 
 void Texture3D::updateTexture()
 {
-    bool mipmapping = (isMipmapFiltered() && isMipmapComplete());
-
-    int levels = (mipmapping ? levelCount() : 1);
+    int levels = (isMipmapComplete() ? levelCount() : 1);
 
     for (int level = 0; level < levels; level++)
     {
@@ -2410,9 +2404,7 @@ void Texture2DArray::createTexture()
 
 void Texture2DArray::updateTexture()
 {
-    bool mipmapping = (isMipmapFiltered() && isMipmapComplete());
-
-    int levels = (mipmapping ? levelCount() : 1);
+    int levels = (isMipmapComplete() ? levelCount() : 1);
     for (int level = 0; level < levels; level++)
     {
         for (int layer = 0; layer < mLayerCounts[level]; layer++)
