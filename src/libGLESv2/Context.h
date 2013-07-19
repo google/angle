@@ -316,6 +316,8 @@ class Context
 
     void samplerParameteri(GLuint sampler, GLenum pname, GLint param);
     void samplerParameterf(GLuint sampler, GLenum pname, GLfloat param);
+    GLint getSamplerParameteri(GLuint sampler, GLenum pname);
+    GLfloat getSamplerParameterf(GLuint sampler, GLenum pname);
 
     Buffer *getBuffer(GLuint handle);
     Fence *getFence(GLuint handle);

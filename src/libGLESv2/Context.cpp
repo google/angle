@@ -3099,16 +3099,60 @@ void Context::samplerParameterf(GLuint sampler, GLenum pname, GLfloat param)
 
     switch (pname)
     {
-      case GL_TEXTURE_MIN_FILTER:    samplerObject->setMinFilter(RoundedGLFloatCast<GLenum>(param));       break;
-      case GL_TEXTURE_MAG_FILTER:    samplerObject->setMagFilter(RoundedGLFloatCast<GLenum>(param));       break;
-      case GL_TEXTURE_WRAP_S:        samplerObject->setWrapS(RoundedGLFloatCast<GLenum>(param));           break;
-      case GL_TEXTURE_WRAP_T:        samplerObject->setWrapT(RoundedGLFloatCast<GLenum>(param));           break;
-      case GL_TEXTURE_WRAP_R:        samplerObject->setWrapR(RoundedGLFloatCast<GLenum>(param));           break;
+      case GL_TEXTURE_MIN_FILTER:    samplerObject->setMinFilter(uiround<GLenum>(param));       break;
+      case GL_TEXTURE_MAG_FILTER:    samplerObject->setMagFilter(uiround<GLenum>(param));       break;
+      case GL_TEXTURE_WRAP_S:        samplerObject->setWrapS(uiround<GLenum>(param));           break;
+      case GL_TEXTURE_WRAP_T:        samplerObject->setWrapT(uiround<GLenum>(param));           break;
+      case GL_TEXTURE_WRAP_R:        samplerObject->setWrapR(uiround<GLenum>(param));           break;
       case GL_TEXTURE_MIN_LOD:       samplerObject->setMinLod(param);                                      break;
       case GL_TEXTURE_MAX_LOD:       samplerObject->setMaxLod(param);                                      break;
-      case GL_TEXTURE_COMPARE_MODE:  samplerObject->setComparisonMode(RoundedGLFloatCast<GLenum>(param));  break;
-      case GL_TEXTURE_COMPARE_FUNC:  samplerObject->setComparisonFunc(RoundedGLFloatCast<GLenum>(param));  break;
+      case GL_TEXTURE_COMPARE_MODE:  samplerObject->setComparisonMode(uiround<GLenum>(param));  break;
+      case GL_TEXTURE_COMPARE_FUNC:  samplerObject->setComparisonFunc(uiround<GLenum>(param));  break;
       default:                       UNREACHABLE(); break;
+    }
+}
+
+GLint Context::getSamplerParameteri(GLuint sampler, GLenum pname)
+{
+    mResourceManager->checkSamplerAllocation(sampler);
+
+    Sampler *samplerObject = getSampler(sampler);
+    ASSERT(samplerObject);
+
+    switch (pname)
+    {
+      case GL_TEXTURE_MIN_FILTER:    return static_cast<GLint>(samplerObject->getMinFilter());
+      case GL_TEXTURE_MAG_FILTER:    return static_cast<GLint>(samplerObject->getMagFilter());
+      case GL_TEXTURE_WRAP_S:        return static_cast<GLint>(samplerObject->getWrapS());
+      case GL_TEXTURE_WRAP_T:        return static_cast<GLint>(samplerObject->getWrapT());
+      case GL_TEXTURE_WRAP_R:        return static_cast<GLint>(samplerObject->getWrapR());
+      case GL_TEXTURE_MIN_LOD:       return uiround<GLint>(samplerObject->getMinLod());
+      case GL_TEXTURE_MAX_LOD:       return uiround<GLint>(samplerObject->getMaxLod());
+      case GL_TEXTURE_COMPARE_MODE:  return static_cast<GLint>(samplerObject->getComparisonMode());
+      case GL_TEXTURE_COMPARE_FUNC:  return static_cast<GLint>(samplerObject->getComparisonFunc());
+      default:                       UNREACHABLE(); return 0;
+    }
+}
+
+GLfloat Context::getSamplerParameterf(GLuint sampler, GLenum pname)
+{
+    mResourceManager->checkSamplerAllocation(sampler);
+
+    Sampler *samplerObject = getSampler(sampler);
+    ASSERT(samplerObject);
+
+    switch (pname)
+    {
+      case GL_TEXTURE_MIN_FILTER:    return static_cast<GLfloat>(samplerObject->getMinFilter());
+      case GL_TEXTURE_MAG_FILTER:    return static_cast<GLfloat>(samplerObject->getMagFilter());
+      case GL_TEXTURE_WRAP_S:        return static_cast<GLfloat>(samplerObject->getWrapS());
+      case GL_TEXTURE_WRAP_T:        return static_cast<GLfloat>(samplerObject->getWrapT());
+      case GL_TEXTURE_WRAP_R:        return static_cast<GLfloat>(samplerObject->getWrapR());
+      case GL_TEXTURE_MIN_LOD:       return samplerObject->getMinLod();
+      case GL_TEXTURE_MAX_LOD:       return samplerObject->getMaxLod();
+      case GL_TEXTURE_COMPARE_MODE:  return static_cast<GLfloat>(samplerObject->getComparisonMode());
+      case GL_TEXTURE_COMPARE_FUNC:  return static_cast<GLfloat>(samplerObject->getComparisonFunc());
+      default:                       UNREACHABLE(); return 0;
     }
 }
 

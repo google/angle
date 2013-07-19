@@ -31,6 +31,16 @@ class Sampler : public RefCountObject
     void setComparisonMode(GLenum comparisonMode) { mComparisonMode = comparisonMode; }
     void setComparisonFunc(GLenum comparisonFunc) { mComparisonFunc = comparisonFunc; }
 
+    GLenum getMinFilter() const { return mMinFilter; }
+    GLenum getMagFilter() const { return mMagFilter; }
+    GLenum getWrapS() const { return mWrapS; }
+    GLenum getWrapT() const { return mWrapT; }
+    GLenum getWrapR() const { return mWrapR; }
+    GLfloat getMinLod() const { return mMinLod; }
+    GLfloat getMaxLod() const { return mMaxLod; }
+    GLenum getComparisonMode() const { return mComparisonMode; }
+    GLenum getComparisonFunc() const { return mComparisonFunc; }
+
     void getState(SamplerState *samplerState) const;
 
   private:
