@@ -26,6 +26,7 @@
 #include "libGLESv2/renderer/RenderTarget.h"
 #include "libGLESv2/renderer/Renderer.h"
 #include "libGLESv2/VertexArray.h"
+#include "libGLESv2/Sampler.h"
 
 #include "libEGL/Surface.h"
 
@@ -146,6 +147,11 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
     mTextureCubeMapZero.set(new TextureCubeMap(mRenderer, 0));
     mTexture3DZero.set(new Texture3D(mRenderer, 0));
     mTexture2DArrayZero.set(new Texture2DArray(mRenderer, 0));
+
+    for (unsigned int textureUnit = 0; textureUnit < ArraySize(mState.samplers); textureUnit++)
+    {
+        mState.samplers[textureUnit] = 0;
+    }
 
     mState.activeSampler = 0;
     bindVertexArray(0);
@@ -664,6 +670,12 @@ GLuint Context::getVertexArrayHandle() const
     return mState.vertexArray;
 }
 
+GLuint Context::getSamplerHandle(GLuint textureUnit) const
+{
+    ASSERT(textureUnit < ArraySize(mState.samplers));
+    return mState.samplers[textureUnit];
+}
+
 GLuint Context::getArrayBufferHandle() const
 {
     return mState.arrayBuffer.id();
@@ -789,6 +801,11 @@ GLuint Context::createVertexArray()
     return handle;
 }
 
+GLuint Context::createSampler()
+{
+    return mResourceManager->createSampler();
+}
+
 // Returns an unused framebuffer name
 GLuint Context::createFramebuffer()
 {
@@ -872,6 +889,16 @@ void Context::deleteVertexArray(GLuint vertexArray)
     }
 }
 
+void Context::deleteSampler(GLuint sampler)
+{
+    if (mResourceManager->getSampler(sampler))
+    {
+        detachSampler(sampler);
+    }
+
+    mResourceManager->deleteSampler(sampler);
+}
+
 void Context::deleteFramebuffer(GLuint framebuffer)
 {
     FramebufferMap::iterator framebufferObject = mFramebufferMap.find(framebuffer);
@@ -951,6 +978,11 @@ VertexArray *Context::getVertexArray(GLuint handle) const
     }
 }
 
+Sampler *Context::getSampler(GLuint handle) const
+{
+    return mResourceManager->getSampler(handle);
+}
+
 Framebuffer *Context::getReadFramebuffer()
 {
     return getFramebuffer(mState.readFramebuffer);
@@ -966,6 +998,11 @@ VertexArray *Context::getCurrentVertexArray() const
     VertexArray *vao = getVertexArray(mState.vertexArray);
     ASSERT(vao != NULL);
     return vao;
+}
+
+bool Context::isSampler(GLuint samplerName) const
+{
+    return mResourceManager->isSampler(samplerName);
 }
 
 void Context::bindArrayBuffer(unsigned int buffer)
@@ -1047,6 +1084,14 @@ void Context::bindVertexArray(GLuint vertexArray)
     }
 
     mState.vertexArray = vertexArray;
+}
+
+void Context::bindSampler(GLuint textureUnit, GLuint sampler)
+{
+    ASSERT(textureUnit < ArraySize(mState.samplers));
+    mResourceManager->checkSamplerAllocation(sampler);
+
+    mState.samplers[textureUnit] = sampler;
 }
 
 void Context::bindGenericUniformBuffer(GLuint buffer)
@@ -2886,6 +2931,21 @@ void Context::detachVertexArray(GLuint vertexArray)
     if (mState.vertexArray == vertexArray)
     {
         bindVertexArray(0);
+    }
+}
+
+void Context::detachSampler(GLuint sampler)
+{
+    // [OpenGL ES 3.0.2] section 3.8.2 pages 123-124:
+    // If a sampler object that is currently bound to one or more texture units is
+    // deleted, it is as though BindSampler is called once for each texture unit to
+    // which the sampler is bound, with unit set to the texture unit and sampler set to zero.
+    for (unsigned int textureUnit = 0; textureUnit < ArraySize(mState.samplers); textureUnit++)
+    {
+        if (mState.samplers[textureUnit] == sampler)
+        {
+            mState.samplers[textureUnit] = 0;
+        }
     }
 }
 

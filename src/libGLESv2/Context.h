@@ -69,6 +69,7 @@ class ResourceManager;
 class Buffer;
 class VertexAttribute;
 class VertexArray;
+class Sampler;
 
 enum QueryType
 {
@@ -120,6 +121,7 @@ struct State
 
     BindingPointer<Texture> samplerTexture[TEXTURE_TYPE_COUNT][IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS];
     BindingPointer<Query> activeQuery[QUERY_TYPE_COUNT];
+    GLuint samplers[IMPLEMENTATION_MAX_COMBINED_TEXTURE_IMAGE_UNITS];
 
     BindingPointer<Buffer> genericUniformBuffer;
     OffsetBindingPointer<Buffer> uniformBuffers[IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS];
@@ -225,6 +227,7 @@ class Context
     GLuint getDrawFramebufferHandle() const;
     GLuint getRenderbufferHandle() const;
     GLuint getVertexArrayHandle() const;
+    GLuint getSamplerHandle(GLuint textureUnit) const;
 
     GLuint getArrayBufferHandle() const;
 
@@ -254,6 +257,7 @@ class Context
     GLuint createTexture();
     GLuint createRenderbuffer();
     GLuint createVertexArray();
+    GLuint createSampler();
 
     void deleteBuffer(GLuint buffer);
     void deleteShader(GLuint shader);
@@ -261,6 +265,7 @@ class Context
     void deleteTexture(GLuint texture);
     void deleteRenderbuffer(GLuint renderbuffer);
     void deleteVertexArray(GLuint vertexArray);
+    void deleteSampler(GLuint sampler);
 
     // Framebuffers are owned by the Context, so these methods do not pass through
     GLuint createFramebuffer();
@@ -284,6 +289,7 @@ class Context
     void bindDrawFramebuffer(GLuint framebuffer);
     void bindRenderbuffer(GLuint renderbuffer);
     void bindVertexArray(GLuint vertexArray);
+    void bindSampler(GLuint textureUnit, GLuint sampler);
     void bindGenericUniformBuffer(GLuint buffer);
     void bindIndexedUniformBuffer(GLuint buffer, GLuint index, GLintptr offset, GLsizeiptr size);
     void bindGenericTransformFeedbackBuffer(GLuint buffer);
@@ -316,6 +322,7 @@ class Context
     Framebuffer *getFramebuffer(GLuint handle);
     Renderbuffer *getRenderbuffer(GLuint handle);
     VertexArray *getVertexArray(GLuint handle) const;
+    Sampler *getSampler(GLuint handle) const;
     Query *getQuery(GLuint handle, bool create, GLenum type);
 
     Buffer *getArrayBuffer();
@@ -335,6 +342,8 @@ class Context
     Framebuffer *getReadFramebuffer();
     Framebuffer *getDrawFramebuffer();
     VertexArray *getCurrentVertexArray() const;
+
+    bool isSampler(GLuint samplerName) const;
 
     bool getBooleanv(GLenum pname, GLboolean *params);
     bool getFloatv(GLenum pname, GLfloat *params);
@@ -432,6 +441,7 @@ class Context
     void detachFramebuffer(GLuint framebuffer);
     void detachRenderbuffer(GLuint renderbuffer);
     void detachVertexArray(GLuint vertexArray);
+    void detachSampler(GLuint sampler);
 
     Texture *getIncompleteTexture(TextureType type);
 

@@ -1,6 +1,6 @@
 #include "precompiled.h"
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -15,6 +15,7 @@
 #include "libGLESv2/Renderbuffer.h"
 #include "libGLESv2/Shader.h"
 #include "libGLESv2/Texture.h"
+#include "libGLESv2/Sampler.h"
 
 namespace gl
 {
@@ -49,6 +50,11 @@ ResourceManager::~ResourceManager()
     while (!mTextureMap.empty())
     {
         deleteTexture(mTextureMap.begin()->first);
+    }
+
+    while (!mSamplerMap.empty())
+    {
+        deleteSampler(mSamplerMap.begin()->first);
     }
 }
 
@@ -119,6 +125,16 @@ GLuint ResourceManager::createRenderbuffer()
     GLuint handle = mRenderbufferHandleAllocator.allocate();
 
     mRenderbufferMap[handle] = NULL;
+
+    return handle;
+}
+
+// Returns an unused sampler name
+GLuint ResourceManager::createSampler()
+{
+    GLuint handle = mSamplerHandleAllocator.allocate();
+
+    mSamplerMap[handle] = NULL;
 
     return handle;
 }
@@ -197,6 +213,18 @@ void ResourceManager::deleteRenderbuffer(GLuint renderbuffer)
     }
 }
 
+void ResourceManager::deleteSampler(GLuint sampler)
+{
+    auto samplerObject = mSamplerMap.find(sampler);
+
+    if (samplerObject != mSamplerMap.end())
+    {
+        mRenderbufferHandleAllocator.release(samplerObject->first);
+        if (samplerObject->second) samplerObject->second->release();
+        mSamplerMap.erase(samplerObject);
+    }
+}
+
 Buffer *ResourceManager::getBuffer(unsigned int handle)
 {
     BufferMap::iterator buffer = mBufferMap.find(handle);
@@ -269,6 +297,20 @@ Renderbuffer *ResourceManager::getRenderbuffer(unsigned int handle)
     }
 }
 
+Sampler *ResourceManager::getSampler(unsigned int handle)
+{
+    auto sampler = mSamplerMap.find(handle);
+
+    if (sampler == mSamplerMap.end())
+    {
+        return NULL;
+    }
+    else
+    {
+        return sampler->second;
+    }
+}
+
 void ResourceManager::setRenderbuffer(GLuint handle, Renderbuffer *buffer)
 {
     mRenderbufferMap[handle] = buffer;
@@ -325,6 +367,21 @@ void ResourceManager::checkRenderbufferAllocation(GLuint renderbuffer)
         mRenderbufferMap[renderbuffer] = renderbufferObject;
         renderbufferObject->addRef();
     }
+}
+
+void ResourceManager::checkSamplerAllocation(GLuint sampler)
+{
+    if (sampler != 0 && !getSampler(sampler))
+    {
+        Sampler *samplerObject = new Sampler(sampler);
+        mSamplerMap[sampler] = samplerObject;
+        samplerObject->addRef();
+    }
+}
+
+bool ResourceManager::isSampler(GLuint sampler)
+{
+    return mSamplerMap.find(sampler) != mSamplerMap.end();
 }
 
 }

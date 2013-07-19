@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2002-2010 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2002-2013 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -36,6 +36,7 @@ class Shader;
 class Program;
 class Texture;
 class Renderbuffer;
+class Sampler;
 
 class ResourceManager
 {
@@ -51,24 +52,30 @@ class ResourceManager
     GLuint createProgram();
     GLuint createTexture();
     GLuint createRenderbuffer();
+    GLuint createSampler();
 
     void deleteBuffer(GLuint buffer);
     void deleteShader(GLuint shader);
     void deleteProgram(GLuint program);
     void deleteTexture(GLuint texture);
     void deleteRenderbuffer(GLuint renderbuffer);
+    void deleteSampler(GLuint sampler);
 
     Buffer *getBuffer(GLuint handle);
     Shader *getShader(GLuint handle);
     Program *getProgram(GLuint handle);
     Texture *getTexture(GLuint handle);
     Renderbuffer *getRenderbuffer(GLuint handle);
+    Sampler *getSampler(GLuint handle);
     
     void setRenderbuffer(GLuint handle, Renderbuffer *renderbuffer);
 
     void checkBufferAllocation(unsigned int buffer);
     void checkTextureAllocation(GLuint texture, TextureType type);
     void checkRenderbufferAllocation(GLuint renderbuffer);
+    void checkSamplerAllocation(GLuint sampler);
+
+    bool isSampler(GLuint sampler);
 
   private:
     DISALLOW_COPY_AND_ASSIGN(ResourceManager);
@@ -102,6 +109,9 @@ class ResourceManager
     typedef HASH_MAP<GLuint, Renderbuffer*> RenderbufferMap;
     RenderbufferMap mRenderbufferMap;
     HandleAllocator mRenderbufferHandleAllocator;
+
+    HASH_MAP<GLuint, Sampler*> mSamplerMap;
+    HandleAllocator mSamplerHandleAllocator;
 };
 
 }
