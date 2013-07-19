@@ -14,6 +14,7 @@
 
 namespace gl
 {
+struct SamplerState;
 
 class Sampler : public RefCountObject
 {
@@ -29,6 +30,8 @@ class Sampler : public RefCountObject
     void setMaxLod(GLfloat maxLod) { mMaxLod = maxLod; }
     void setComparisonMode(GLenum comparisonMode) { mComparisonMode = comparisonMode; }
     void setComparisonFunc(GLenum comparisonFunc) { mComparisonFunc = comparisonFunc; }
+
+    void getState(SamplerState *samplerState) const;
 
   private:
     GLenum mMinFilter;

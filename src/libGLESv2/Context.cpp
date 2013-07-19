@@ -2244,6 +2244,12 @@ void Context::applyTextures(SamplerType type)
             SamplerState samplerState;
             texture->getSamplerState(&samplerState);
 
+            if (mState.samplers[textureUnit] != 0)
+            {
+                Sampler *samplerObject = getSampler(mState.samplers[textureUnit]);
+                samplerObject->getState(&samplerState);
+            }
+
             if (texture->isSamplerComplete(samplerState))
             {
                 mRenderer->setSamplerState(type, samplerIndex, samplerState);

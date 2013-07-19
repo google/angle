@@ -9,6 +9,7 @@
 // sampler object. Sampler objects store some state needed to sample textures.
 
 #include "libGLESv2/Sampler.h"
+#include "libGLESv2/angletypes.h"
 
 namespace gl
 {
@@ -25,6 +26,17 @@ Sampler::Sampler(GLuint id)
       mComparisonMode(GL_NONE),
       mComparisonFunc(GL_LEQUAL)
 {
+}
+
+void Sampler::getState(SamplerState *samplerState) const
+{
+    samplerState->minFilter = mMinFilter;
+    samplerState->magFilter = mMagFilter;
+    samplerState->wrapS     = mWrapS;
+    samplerState->wrapT     = mWrapT;
+    samplerState->wrapR     = mWrapR;
+
+    // TODO: comparison mode/func, min/max LOD
 }
 
 }
