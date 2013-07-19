@@ -25,6 +25,23 @@
 namespace gl
 {
 
+bool IsMipmapFiltered(const SamplerState &samplerState)
+{
+    switch (samplerState.minFilter)
+    {
+      case GL_NEAREST:
+      case GL_LINEAR:
+        return false;
+      case GL_NEAREST_MIPMAP_NEAREST:
+      case GL_LINEAR_MIPMAP_NEAREST:
+      case GL_NEAREST_MIPMAP_LINEAR:
+      case GL_LINEAR_MIPMAP_LINEAR:
+        return true;
+      default: UNREACHABLE();
+        return false;
+    }
+}
+
 Texture::Texture(rx::Renderer *renderer, GLuint id) : RefCountObject(id)
 {
     mRenderer = renderer;
@@ -233,23 +250,6 @@ void Texture::getSamplerState(SamplerState *sampler)
 GLenum Texture::getUsage() const
 {
     return mUsage;
-}
-
-bool Texture::isMipmapFiltered() const
-{
-    switch (mSamplerState.minFilter)
-    {
-      case GL_NEAREST:
-      case GL_LINEAR:
-        return false;
-      case GL_NEAREST_MIPMAP_NEAREST:
-      case GL_LINEAR_MIPMAP_NEAREST:
-      case GL_NEAREST_MIPMAP_LINEAR:
-      case GL_LINEAR_MIPMAP_LINEAR:
-        return true;
-      default: UNREACHABLE();
-        return false;
-    }
 }
 
 void Texture::setImage(GLint unpackAlignment, GLenum type, const void *pixels, rx::Image *image)
@@ -664,7 +664,7 @@ void Texture2D::storage(GLsizei levels, GLenum internalformat, GLsizei width, GL
 }
 
 // Tests for 2D texture sampling completeness. [OpenGL ES 2.0.24] section 3.8.2 page 85.
-bool Texture2D::isSamplerComplete() const
+bool Texture2D::isSamplerComplete(const SamplerState &samplerState) const
 {
     GLsizei width = mImageArray[0]->getWidth();
     GLsizei height = mImageArray[0]->getHeight();
@@ -674,12 +674,10 @@ bool Texture2D::isSamplerComplete() const
         return false;
     }
 
-    bool mipmapping = isMipmapFiltered();
-
     if (!IsTextureFilteringSupported(getInternalFormat(0), mRenderer))
     {
-        if (mSamplerState.magFilter != GL_NEAREST ||
-            (mSamplerState.minFilter != GL_NEAREST && mSamplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST))
+        if (samplerState.magFilter != GL_NEAREST ||
+            (samplerState.minFilter != GL_NEAREST && samplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST))
         {
             return false;
         }
@@ -689,14 +687,14 @@ bool Texture2D::isSamplerComplete() const
 
     if (!npotSupport)
     {
-        if ((mSamplerState.wrapS != GL_CLAMP_TO_EDGE && !isPow2(width)) ||
-            (mSamplerState.wrapT != GL_CLAMP_TO_EDGE && !isPow2(height)))
+        if ((samplerState.wrapS != GL_CLAMP_TO_EDGE && !isPow2(width)) ||
+            (samplerState.wrapT != GL_CLAMP_TO_EDGE && !isPow2(height)))
         {
             return false;
         }
     }
 
-    if (mipmapping)
+    if (IsMipmapFiltered(samplerState))
     {
         if (!npotSupport)
         {
@@ -1159,16 +1157,16 @@ void TextureCubeMap::subImageCompressed(GLenum target, GLint level, GLint xoffse
 }
 
 // Tests for cube map sampling completeness. [OpenGL ES 2.0.24] section 3.8.2 page 86.
-bool TextureCubeMap::isSamplerComplete() const
+bool TextureCubeMap::isSamplerComplete(const SamplerState &samplerState) const
 {
     int size = mImageArray[0][0]->getWidth();
 
-    bool mipmapping = isMipmapFiltered();
+    bool mipmapping = IsMipmapFiltered(samplerState);
 
     if (!IsTextureFilteringSupported(getInternalFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0), mRenderer))
     {
-        if (mSamplerState.magFilter != GL_NEAREST ||
-            (mSamplerState.minFilter != GL_NEAREST && mSamplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST))
+        if (samplerState.magFilter != GL_NEAREST ||
+            (samplerState.minFilter != GL_NEAREST && samplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST))
         {
             return false;
         }
@@ -1176,7 +1174,7 @@ bool TextureCubeMap::isSamplerComplete() const
 
     if (!isPow2(size) && !mRenderer->getNonPower2TextureSupport())
     {
-        if (mSamplerState.wrapS != GL_CLAMP_TO_EDGE || mSamplerState.wrapT != GL_CLAMP_TO_EDGE || mipmapping)
+        if (samplerState.wrapS != GL_CLAMP_TO_EDGE || samplerState.wrapT != GL_CLAMP_TO_EDGE || mipmapping)
         {
             return false;
         }
@@ -1871,7 +1869,7 @@ void Texture3D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
     }
 }
 
-bool Texture3D::isSamplerComplete() const
+bool Texture3D::isSamplerComplete(const SamplerState &samplerState) const
 {
     GLsizei width = mImageArray[0]->getWidth();
     GLsizei height = mImageArray[0]->getHeight();
@@ -1882,18 +1880,16 @@ bool Texture3D::isSamplerComplete() const
         return false;
     }
 
-    bool mipmapping = isMipmapFiltered();
-
     if (!IsTextureFilteringSupported(getInternalFormat(0), mRenderer))
     {
-        if (mSamplerState.magFilter != GL_NEAREST ||
-            (mSamplerState.minFilter != GL_NEAREST && mSamplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST))
+        if (samplerState.magFilter != GL_NEAREST ||
+            (samplerState.minFilter != GL_NEAREST && samplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST))
         {
             return false;
         }
     }
 
-    if (mipmapping && !isMipmapComplete())
+    if (IsMipmapFiltered(samplerState) && !isMipmapComplete())
     {
         return false;
     }
@@ -2400,7 +2396,7 @@ void Texture2DArray::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
     }
 }
 
-bool Texture2DArray::isSamplerComplete() const
+bool Texture2DArray::isSamplerComplete(const SamplerState &samplerState) const
 {
     GLsizei width = getWidth(0);
     GLsizei height = getHeight(0);
@@ -2411,18 +2407,16 @@ bool Texture2DArray::isSamplerComplete() const
         return false;
     }
 
-    bool mipmapping = isMipmapFiltered();
-
     if (!IsTextureFilteringSupported(getInternalFormat(0), mRenderer))
     {
-        if (mSamplerState.magFilter != GL_NEAREST ||
-            (mSamplerState.minFilter != GL_NEAREST && mSamplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST))
+        if (samplerState.magFilter != GL_NEAREST ||
+            (samplerState.minFilter != GL_NEAREST && samplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST))
         {
             return false;
         }
     }
 
-    if (mipmapping && !isMipmapComplete())
+    if (IsMipmapFiltered(samplerState) && !isMipmapComplete())
     {
         return false;
     }

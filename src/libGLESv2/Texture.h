@@ -87,10 +87,9 @@ class Texture : public RefCountObject
     int getLodOffset();
     void getSamplerState(SamplerState *sampler);
     GLenum getUsage() const;
-    bool isMipmapFiltered() const;
     virtual int levelCount() = 0;
 
-    virtual bool isSamplerComplete() const = 0;
+    virtual bool isSamplerComplete(const SamplerState &samplerState) const = 0;
 
     rx::TextureStorageInterface *getNativeTexture();
     virtual Renderbuffer *getRenderbuffer(GLenum target) = 0;
@@ -167,7 +166,7 @@ class Texture2D : public Texture
     virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
     void storage(GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height);
 
-    virtual bool isSamplerComplete() const;
+    virtual bool isSamplerComplete(const SamplerState &samplerState) const;
     virtual void bindTexImage(egl::Surface *surface);
     virtual void releaseTexImage();
 
@@ -243,7 +242,7 @@ class TextureCubeMap : public Texture
     virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
     void storage(GLsizei levels, GLenum internalformat, GLsizei size);
 
-    virtual bool isSamplerComplete() const;
+    virtual bool isSamplerComplete(const SamplerState &samplerState) const;
 
     virtual void generateMipmaps();
 
@@ -315,7 +314,7 @@ class Texture3D : public Texture
     virtual void generateMipmaps();
     virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
 
-    virtual bool isSamplerComplete() const;
+    virtual bool isSamplerComplete(const SamplerState &samplerState) const;
     virtual bool isMipmapComplete() const;
 
     virtual Renderbuffer *getRenderbuffer(GLenum target);
@@ -381,7 +380,7 @@ class Texture2DArray : public Texture
     virtual void generateMipmaps();
     virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source);
 
-    virtual bool isSamplerComplete() const;
+    virtual bool isSamplerComplete(const SamplerState &samplerState) const;
     virtual bool isMipmapComplete() const;
 
     virtual Renderbuffer *getRenderbuffer(GLenum target);

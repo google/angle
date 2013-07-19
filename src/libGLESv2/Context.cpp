@@ -2241,10 +2241,11 @@ void Context::applyTextures(SamplerType type)
             TextureType textureType = programBinary->getSamplerTextureType(type, samplerIndex);
             Texture *texture = getSamplerTexture(textureUnit, textureType);
 
-            if (texture->isSamplerComplete())
+            SamplerState samplerState;
+            texture->getSamplerState(&samplerState);
+
+            if (texture->isSamplerComplete(samplerState))
             {
-                SamplerState samplerState;
-                texture->getSamplerState(&samplerState);
                 mRenderer->setSamplerState(type, samplerIndex, samplerState);
 
                 mRenderer->setTexture(type, samplerIndex, texture);
