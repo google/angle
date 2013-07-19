@@ -176,27 +176,9 @@ bool StaticIndexBufferInterface::reserveBufferSpace(unsigned int size, GLenum in
     }
 }
 
-unsigned int StaticIndexBufferInterface::lookupRange(intptr_t offset, GLsizei count, unsigned int *minIndex, unsigned int *maxIndex)
+IndexRangeCache *StaticIndexBufferInterface::getIndexRangeCache()
 {
-    IndexRange range = {offset, count};
-
-    std::map<IndexRange, IndexResult>::iterator res = mCache.find(range);
-
-    if (res == mCache.end())
-    {
-        return -1;
-    }
-
-    *minIndex = res->second.minIndex;
-    *maxIndex = res->second.maxIndex;
-    return res->second.streamOffset;
-}
-
-void StaticIndexBufferInterface::addRange(intptr_t offset, GLsizei count, unsigned int minIndex, unsigned int maxIndex, unsigned int streamOffset)
-{
-    IndexRange indexRange = {offset, count};
-    IndexResult indexResult = {minIndex, maxIndex, streamOffset};
-    mCache[indexRange] = indexResult;
+    return &mIndexRangeCache;
 }
 
 }

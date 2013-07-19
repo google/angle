@@ -13,6 +13,7 @@
 
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
+#include "libGLESv2/renderer/IndexRangeCache.h"
 
 namespace rx
 {
@@ -45,6 +46,8 @@ class Buffer : public RefCountObject
     void invalidateStaticData();
     void promoteStaticUsage(int dataSize);
 
+    rx::IndexRangeCache *getIndexRangeCache();
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Buffer);
 
@@ -52,6 +55,8 @@ class Buffer : public RefCountObject
     GLenum mUsage;
 
     rx::BufferStorage *mBufferStorage;
+
+    rx::IndexRangeCache mIndexRangeCache;
 
     rx::StaticVertexBufferInterface *mStaticVertexBuffer;
     rx::StaticIndexBufferInterface *mStaticIndexBuffer;

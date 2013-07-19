@@ -13,6 +13,7 @@
 
 #include "libGLESv2/Buffer.h"
 #include "libGLESv2/main.h"
+#include "libGLESv2/utilities.h"
 #include "libGLESv2/renderer/IndexBuffer.h"
 
 namespace rx
@@ -51,17 +52,6 @@ IndexDataManager::~IndexDataManager()
     delete mStreamingBufferShort;
     delete mStreamingBufferInt;
     delete mCountingBuffer;
-}
-
-static unsigned int indexTypeSize(GLenum type)
-{
-    switch (type)
-    {
-      case GL_UNSIGNED_INT:   return sizeof(GLuint);
-      case GL_UNSIGNED_SHORT: return sizeof(GLushort);
-      case GL_UNSIGNED_BYTE:  return sizeof(GLubyte);
-      default: UNREACHABLE(); return sizeof(GLushort);
-    }
 }
 
 static void convertIndices(GLenum type, const void *input, GLsizei count, void *output)
@@ -142,7 +132,7 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
           default: UNREACHABLE(); alignedOffset = false;
         }
 
-        if (indexTypeSize(type) * count + offset > storage->getSize())
+        if (gl::ComputeTypeSize(type) * count + offset > static_cast<GLsizei>(storage->getSize()))
         {
             return GL_INVALID_OPERATION;
         }
@@ -163,18 +153,25 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
         indexBuffer = streamingBuffer;
         streamOffset = offset;
         storage->markBufferUsage();
-        computeRange(type, indices, count, &translated->minIndex, &translated->maxIndex);
+
+        if (!buffer->getIndexRangeCache()->findRange(type, offset, count, &translated->minIndex,
+                                                     &translated->maxIndex, NULL))
+        {
+            computeRange(type, indices, count, &translated->minIndex, &translated->maxIndex);
+            buffer->getIndexRangeCache()->addRange(type, offset, count, translated->minIndex,
+                                                   translated->maxIndex, offset);
+        }
     }
     else if (staticBuffer && staticBuffer->getBufferSize() != 0 && staticBuffer->getIndexType() == type && alignedOffset)
     {
         indexBuffer = staticBuffer;
-        streamOffset = staticBuffer->lookupRange(offset, count, &translated->minIndex, &translated->maxIndex);
-
-        if (streamOffset == -1)
+        if (!staticBuffer->getIndexRangeCache()->findRange(type, offset, count, &translated->minIndex,
+                                                           &translated->maxIndex, &streamOffset))
         {
-            streamOffset = (offset / indexTypeSize(type)) * indexTypeSize(destinationIndexType);
+            streamOffset = (offset / gl::ComputeTypeSize(type)) * gl::ComputeTypeSize(destinationIndexType);
             computeRange(type, indices, count, &translated->minIndex, &translated->maxIndex);
-            staticBuffer->addRange(offset, count, translated->minIndex, translated->maxIndex, streamOffset);
+            staticBuffer->getIndexRangeCache()->addRange(type, offset, count, translated->minIndex,
+                                                         translated->maxIndex, streamOffset);
         }
     }
     else
@@ -186,7 +183,7 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
             if (staticBuffer->getBufferSize() == 0 && alignedOffset)
             {
                 indexBuffer = staticBuffer;
-                convertCount = storage->getSize() / indexTypeSize(type);
+                convertCount = storage->getSize() / gl::ComputeTypeSize(type);
             }
             else
             {
@@ -201,7 +198,7 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
             return GL_INVALID_OPERATION;
         }
 
-        unsigned int bufferSizeRequired = convertCount * indexTypeSize(destinationIndexType);
+        unsigned int bufferSizeRequired = convertCount * gl::ComputeTypeSize(destinationIndexType);
         indexBuffer->reserveBufferSpace(bufferSizeRequired, type);
 
         void* output = NULL;
@@ -224,20 +221,21 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
 
         if (staticBuffer)
         {
-            streamOffset = (offset / indexTypeSize(type)) * indexTypeSize(destinationIndexType);
-            staticBuffer->addRange(offset, count, translated->minIndex, translated->maxIndex, streamOffset);
+            streamOffset = (offset / gl::ComputeTypeSize(type)) * gl::ComputeTypeSize(destinationIndexType);
+            staticBuffer->getIndexRangeCache()->addRange(type, offset, count, translated->minIndex,
+                                                         translated->maxIndex, streamOffset);
         }
     }
 
     translated->storage = directStorage ? storage : NULL;
     translated->indexBuffer = indexBuffer->getIndexBuffer();
     translated->serial = directStorage ? storage->getSerial() : indexBuffer->getSerial();
-    translated->startIndex = streamOffset / indexTypeSize(destinationIndexType);
+    translated->startIndex = streamOffset / gl::ComputeTypeSize(destinationIndexType);
     translated->startOffset = streamOffset;
 
     if (buffer)
     {
-        buffer->promoteStaticUsage(count * indexTypeSize(type));
+        buffer->promoteStaticUsage(count * gl::ComputeTypeSize(type));
     }
 
     return GL_NO_ERROR;

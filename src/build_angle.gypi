@@ -293,6 +293,8 @@
             'libGLESv2/renderer/IndexBuffer11.h',
             'libGLESv2/renderer/IndexDataManager.cpp',
             'libGLESv2/renderer/IndexDataManager.h',
+            'libGLESv2/renderer/IndexRangeCache.cpp',
+            'libGLESv2/renderer/IndexRangeCache.h',
             'libGLESv2/renderer/InputLayoutCache.cpp',
             'libGLESv2/renderer/InputLayoutCache.h',
             'libGLESv2/renderer/QueryImpl.h',
