@@ -314,6 +314,9 @@ class Context
     void setVertexAttribi(GLuint index, const GLint values[4]);
     void setVertexAttribDivisor(GLuint index, GLuint divisor);
 
+    void samplerParameteri(GLuint sampler, GLenum pname, GLint param);
+    void samplerParameterf(GLuint sampler, GLenum pname, GLfloat param);
+
     Buffer *getBuffer(GLuint handle);
     Fence *getFence(GLuint handle);
     Shader *getShader(GLuint handle);

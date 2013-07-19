@@ -20,6 +20,16 @@ class Sampler : public RefCountObject
   public:
     Sampler(GLuint id);
 
+    void setMinFilter(GLenum minFilter) { mMinFilter = minFilter; }
+    void setMagFilter(GLenum magFilter) { mMagFilter = magFilter; }
+    void setWrapS(GLenum wrapS) { mWrapS = wrapS; }
+    void setWrapT(GLenum wrapT) { mWrapT = wrapT; }
+    void setWrapR(GLenum wrapR) { mWrapR = wrapR; }
+    void setMinLod(GLfloat minLod) { mMinLod = minLod; }
+    void setMaxLod(GLfloat maxLod) { mMaxLod = maxLod; }
+    void setComparisonMode(GLenum comparisonMode) { mComparisonMode = comparisonMode; }
+    void setComparisonFunc(GLenum comparisonFunc) { mComparisonFunc = comparisonFunc; }
+
   private:
     GLenum mMinFilter;
     GLenum mMagFilter;

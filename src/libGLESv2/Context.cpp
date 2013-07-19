@@ -3061,6 +3061,50 @@ void Context::setVertexAttribDivisor(GLuint index, GLuint divisor)
     getCurrentVertexArray()->setVertexAttribDivisor(index, divisor);
 }
 
+void Context::samplerParameteri(GLuint sampler, GLenum pname, GLint param)
+{
+    mResourceManager->checkSamplerAllocation(sampler);
+
+    Sampler *samplerObject = getSampler(sampler);
+    ASSERT(samplerObject);
+
+    switch (pname)
+    {
+      case GL_TEXTURE_MIN_FILTER:    samplerObject->setMinFilter(static_cast<GLenum>(param));       break;
+      case GL_TEXTURE_MAG_FILTER:    samplerObject->setMagFilter(static_cast<GLenum>(param));       break;
+      case GL_TEXTURE_WRAP_S:        samplerObject->setWrapS(static_cast<GLenum>(param));           break;
+      case GL_TEXTURE_WRAP_T:        samplerObject->setWrapT(static_cast<GLenum>(param));           break;
+      case GL_TEXTURE_WRAP_R:        samplerObject->setWrapR(static_cast<GLenum>(param));           break;
+      case GL_TEXTURE_MIN_LOD:       samplerObject->setMinLod(static_cast<GLfloat>(param));         break;
+      case GL_TEXTURE_MAX_LOD:       samplerObject->setMaxLod(static_cast<GLfloat>(param));         break;
+      case GL_TEXTURE_COMPARE_MODE:  samplerObject->setComparisonMode(static_cast<GLenum>(param));  break;
+      case GL_TEXTURE_COMPARE_FUNC:  samplerObject->setComparisonFunc(static_cast<GLenum>(param));  break;
+      default:                       UNREACHABLE(); break;
+    }
+}
+
+void Context::samplerParameterf(GLuint sampler, GLenum pname, GLfloat param)
+{
+    mResourceManager->checkSamplerAllocation(sampler);
+
+    Sampler *samplerObject = getSampler(sampler);
+    ASSERT(samplerObject);
+
+    switch (pname)
+    {
+      case GL_TEXTURE_MIN_FILTER:    samplerObject->setMinFilter(RoundedGLFloatCast<GLenum>(param));       break;
+      case GL_TEXTURE_MAG_FILTER:    samplerObject->setMagFilter(RoundedGLFloatCast<GLenum>(param));       break;
+      case GL_TEXTURE_WRAP_S:        samplerObject->setWrapS(RoundedGLFloatCast<GLenum>(param));           break;
+      case GL_TEXTURE_WRAP_T:        samplerObject->setWrapT(RoundedGLFloatCast<GLenum>(param));           break;
+      case GL_TEXTURE_WRAP_R:        samplerObject->setWrapR(RoundedGLFloatCast<GLenum>(param));           break;
+      case GL_TEXTURE_MIN_LOD:       samplerObject->setMinLod(param);                                      break;
+      case GL_TEXTURE_MAX_LOD:       samplerObject->setMaxLod(param);                                      break;
+      case GL_TEXTURE_COMPARE_MODE:  samplerObject->setComparisonMode(RoundedGLFloatCast<GLenum>(param));  break;
+      case GL_TEXTURE_COMPARE_FUNC:  samplerObject->setComparisonFunc(RoundedGLFloatCast<GLenum>(param));  break;
+      default:                       UNREACHABLE(); break;
+    }
+}
+
 // keep list sorted in following order
 // OES extensions
 // EXT extensions
