@@ -599,7 +599,11 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
         return gl::error(GL_INVALID_VALUE);
     }
 
-    if (!mImageArray[level]->isRenderableFormat() || (!mTexStorage && !isSamplerComplete()))
+    // can only make our texture storage to a render target if level 0 is defined (with a width & height) and
+    // the current level we're copying to is defined (with appropriate format, width & height)
+    bool canCreateRenderTarget = isLevelComplete(level) && isLevelComplete(0);
+
+    if (!mImageArray[level]->isRenderableFormat() || (!mTexStorage && !canCreateRenderTarget))
     {
         mImageArray[level]->copy(xoffset, yoffset, 0, x, y, width, height, source);
         mDirtyImages = true;
@@ -611,10 +615,10 @@ void Texture2D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
             convertToRenderTarget();
         }
         
-        updateTexture();
-
         if (level < levelCount())
         {
+            updateTextureLevel(level);
+
             GLuint clientVersion = mRenderer->getCurrentClientVersion();
 
             gl::Rectangle sourceRect;
@@ -731,37 +735,60 @@ bool Texture2D::isSamplerComplete() const
 // Tests for 2D texture (mipmap) completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
 bool Texture2D::isMipmapComplete() const
 {
+    GLsizei width = mImageArray[0]->getWidth();
+    GLsizei height = mImageArray[0]->getHeight();
+
+    int q = log2(std::max(width, height));
+
+    for (int level = 0; level <= q; level++)
+    {
+        if (!isLevelComplete(level))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool Texture2D::isLevelComplete(int level) const
+{
     if (isImmutable())
     {
         return true;
     }
 
-    GLsizei width = mImageArray[0]->getWidth();
-    GLsizei height = mImageArray[0]->getHeight();
+    const rx::Image *baseImage = mImageArray[0];
+    GLsizei width = baseImage->getWidth();
+    GLsizei height = baseImage->getHeight();
 
     if (width <= 0 || height <= 0)
     {
         return false;
     }
 
-    int q = log2(std::max(width, height));
-
-    for (int level = 1; level <= q; level++)
+    // The base image level is complete if the width and height are positive
+    if (level == 0)
     {
-        if (mImageArray[level]->getInternalFormat() != mImageArray[0]->getInternalFormat())
-        {
-            return false;
-        }
+        return true;
+    }
 
-        if (mImageArray[level]->getWidth() != std::max(1, width >> level))
-        {
-            return false;
-        }
+    ASSERT(level >= 1 && level <= (int)ArraySize(mImageArray) && mImageArray[level] != NULL);
+    rx::Image *image = mImageArray[level];
 
-        if (mImageArray[level]->getHeight() != std::max(1, height >> level))
-        {
-            return false;
-        }
+    if (image->getInternalFormat() != baseImage->getInternalFormat())
+    {
+        return false;
+    }
+
+    if (image->getWidth() != std::max(1, width >> level))
+    {
+        return false;
+    }
+
+    if (image->getHeight() != std::max(1, height >> level))
+    {
+        return false;
     }
 
     return true;
@@ -811,12 +838,18 @@ void Texture2D::updateTexture()
 
     for (int level = 0; level < levels; level++)
     {
-        rx::Image *image = mImageArray[level];
+        updateTextureLevel(level);
+    }
+}
 
-        if (image->isDirty())
-        {
-            commitRect(level, 0, 0, mImageArray[level]->getWidth(), mImageArray[level]->getHeight());
-        }
+void Texture2D::updateTextureLevel(int level)
+{
+    ASSERT(level <= (int)ArraySize(mImageArray) && mImageArray[level] != NULL);
+    rx::Image *image = mImageArray[level];
+
+    if (image->isDirty())
+    {
+        commitRect(level, 0, 0, mImageArray[level]->getWidth(), mImageArray[level]->getHeight());
     }
 }
 
@@ -1201,23 +1234,55 @@ bool TextureCubeMap::isMipmapCubeComplete() const
     }
 
     GLsizei size = mImageArray[0][0]->getWidth();
-
     int q = log2(size);
 
     for (int face = 0; face < 6; face++)
     {
         for (int level = 1; level <= q; level++)
         {
-            if (mImageArray[face][level]->getInternalFormat() != mImageArray[0][0]->getInternalFormat())
-            {
-                return false;
-            }
-
-            if (mImageArray[face][level]->getWidth() != std::max(1, size >> level))
+            if (!isFaceLevelComplete(face, level))
             {
                 return false;
             }
         }
+    }
+
+    return true;
+}
+
+bool TextureCubeMap::isFaceLevelComplete(int face, int level) const
+{
+    ASSERT(level >= 0 && face < 6 && level < (int)ArraySize(mImageArray[face]) && mImageArray[face][level] != NULL);
+
+    if (isImmutable())
+    {
+        return true;
+    }
+
+    const rx::Image *baseImage = mImageArray[face][0];
+    GLsizei size = baseImage->getWidth();
+
+    if (size <= 0)
+    {
+        return false;
+    }
+
+    // The base image level is complete if the width and height are positive
+    if (level == 0)
+    {
+        return true;
+    }
+
+    rx::Image *image = mImageArray[face][level];
+
+    if (image->getInternalFormat() != baseImage->getInternalFormat())
+    {
+        return false;
+    }
+
+    if (mImageArray[face][level]->getWidth() != std::max(1, size >> level))
+    {
+        return false;
     }
 
     return true;
@@ -1266,13 +1331,19 @@ void TextureCubeMap::updateTexture()
     {
         for (int level = 0; level < levels; level++)
         {
-            rx::Image *image = mImageArray[face][level];
-
-            if (image->isDirty())
-            {
-                commitRect(face, level, 0, 0, image->getWidth(), image->getHeight());
-            }
+            updateTextureFaceLevel(face, level);
         }
+    }
+}
+
+void TextureCubeMap::updateTextureFaceLevel(int face, int level)
+{
+    ASSERT(level >= 0 && face < 6 && level < (int)ArraySize(mImageArray[face]) && mImageArray[face][level] != NULL);
+    rx::Image *image = mImageArray[face][level];
+
+    if (image->isDirty())
+    {
+        commitRect(face, level, 0, 0, image->getWidth(), image->getHeight());
     }
 }
 
@@ -1406,11 +1477,15 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
         return gl::error(GL_INVALID_VALUE);
     }
 
-    unsigned int faceindex = faceIndex(target);
+    unsigned int face = faceIndex(target);
 
-    if (!mImageArray[faceindex][level]->isRenderableFormat() || (!mTexStorage && !isSamplerComplete()))
+    // can only make our texture storage to a render target if level 0 is defined (with a width & height) and
+    // the current level we're copying to is defined (with appropriate format, width & height)
+    bool canCreateRenderTarget = isFaceLevelComplete(face, level) && isFaceLevelComplete(face, 0);
+
+    if (!mImageArray[face][level]->isRenderableFormat() || (!mTexStorage && !canCreateRenderTarget))
     {
-        mImageArray[faceindex][level]->copy(0, 0, 0, x, y, width, height, source);
+        mImageArray[face][level]->copy(0, 0, 0, x, y, width, height, source);
         mDirtyImages = true;
     }
     else
@@ -1420,10 +1495,10 @@ void TextureCubeMap::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
             convertToRenderTarget();
         }
         
-        updateTexture();
-
         if (level < levelCount())
         {
+            updateTextureFaceLevel(face, level);
+
             GLuint clientVersion = mRenderer->getCurrentClientVersion();
 
             gl::Rectangle sourceRect;
@@ -1761,7 +1836,11 @@ void Texture3D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
         return gl::error(GL_INVALID_VALUE);
     }
 
-    if (!mImageArray[level]->isRenderableFormat() || (!mTexStorage && !isSamplerComplete()))
+    // can only make our texture storage to a render target if level 0 is defined (with a width & height) and
+    // the current level we're copying to is defined (with appropriate format, width & height)
+    bool canCreateRenderTarget = isLevelComplete(level) && isLevelComplete(0);
+
+    if (!mImageArray[level]->isRenderableFormat() || (!mTexStorage && !canCreateRenderTarget))
     {
         mImageArray[level]->copy(xoffset, yoffset, zoffset, x, y, width, height, source);
         mDirtyImages = true;
@@ -1773,10 +1852,10 @@ void Texture3D::copySubImage(GLenum target, GLint level, GLint xoffset, GLint yo
             convertToRenderTarget();
         }
 
-        updateTexture();
-
         if (level < levelCount())
         {
+            updateTextureLevel(level);
+
             gl::Rectangle sourceRect;
             sourceRect.x = x;
             sourceRect.width = width;
@@ -1824,43 +1903,68 @@ bool Texture3D::isSamplerComplete() const
 
 bool Texture3D::isMipmapComplete() const
 {
+    GLsizei width = mImageArray[0]->getWidth();
+    GLsizei height = mImageArray[0]->getHeight();
+    GLsizei depth = mImageArray[0]->getDepth();
+
+    int q = log2(std::max(std::max(width, height), depth));
+
+    for (int level = 0; level <= q; level++)
+    {
+        if (!isLevelComplete(level))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool Texture3D::isLevelComplete(int level) const
+{
+    ASSERT(level >= 0 && level < (int)ArraySize(mImageArray) && mImageArray[level] != NULL);
+
     if (isImmutable())
     {
         return true;
     }
 
-    GLsizei width = mImageArray[0]->getWidth();
-    GLsizei height = mImageArray[0]->getHeight();
-    GLsizei depth = mImageArray[0]->getDepth();
+    rx::Image *baseImage = mImageArray[0];
+
+    GLsizei width = baseImage->getWidth();
+    GLsizei height = baseImage->getHeight();
+    GLsizei depth = baseImage->getDepth();
 
     if (width <= 0 || height <= 0 || depth <= 0)
     {
         return false;
     }
 
-    int q = log2(std::max(std::max(width, height), depth));
-
-    for (int level = 1; level <= q; level++)
+    if (level == 0)
     {
-        if (mImageArray[level]->getInternalFormat() != mImageArray[0]->getInternalFormat())
-        {
-            return false;
-        }
+        return true;
+    }
 
-        if (mImageArray[level]->getWidth() != std::max(1, width >> level))
-        {
-            return false;
-        }
+    rx::Image *levelImage = mImageArray[level];
 
-        if (mImageArray[level]->getHeight() != std::max(1, height >> level))
-        {
-            return false;
-        }
+    if (levelImage->getInternalFormat() != baseImage->getInternalFormat())
+    {
+        return false;
+    }
 
-        if (mImageArray[level]->getDepth() != std::max(1, depth >> level))
-        {
-            return false;
-        }
+    if (levelImage->getWidth() != std::max(1, width >> level))
+    {
+        return false;
+    }
+
+    if (levelImage->getHeight() != std::max(1, height >> level))
+    {
+        return false;
+    }
+
+    if (levelImage->getDepth() != std::max(1, depth >> level))
+    {
+        return false;
     }
 
     return true;
@@ -1911,12 +2015,19 @@ void Texture3D::updateTexture()
 
     for (int level = 0; level < levels; level++)
     {
-        rx::Image *image = mImageArray[level];
+        updateTextureLevel(level);
+    }
+}
 
-        if (image->isDirty())
-        {
-            commitRect(level, 0, 0, 0, mImageArray[level]->getWidth(), mImageArray[level]->getHeight(), mImageArray[level]->getDepth());
-        }
+void Texture3D::updateTextureLevel(int level)
+{
+    ASSERT(level >= 0 && level < (int)ArraySize(mImageArray) && mImageArray[level] != NULL);
+
+    rx::Image *image = mImageArray[level];
+
+    if (image->isDirty())
+    {
+        commitRect(level, 0, 0, 0, mImageArray[level]->getWidth(), mImageArray[level]->getHeight(), mImageArray[level]->getDepth());
     }
 }
 
@@ -2255,7 +2366,11 @@ void Texture2DArray::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
         return gl::error(GL_INVALID_VALUE);
     }
 
-    if (!mImageArray[level][0]->isRenderableFormat() || (!mTexStorage && !isSamplerComplete()))
+    // can only make our texture storage to a render target if level 0 is defined (with a width & height) and
+    // the current level we're copying to is defined (with appropriate format, width & height)
+    bool canCreateRenderTarget = isLevelComplete(level) && isLevelComplete(0);
+
+    if (!mImageArray[level][0]->isRenderableFormat() || (!mTexStorage && !canCreateRenderTarget))
     {
         mImageArray[level][zoffset]->copy(xoffset, yoffset, 0, x, y, width, height, source);
         mDirtyImages = true;
@@ -2267,10 +2382,10 @@ void Texture2DArray::copySubImage(GLenum target, GLint level, GLint xoffset, GLi
             convertToRenderTarget();
         }
 
-        updateTexture();
-
         if (level < levelCount())
         {
+            updateTextureLevel(level);
+
             GLuint clientVersion = mRenderer->getCurrentClientVersion();
 
             gl::Rectangle sourceRect;
@@ -2317,6 +2432,26 @@ bool Texture2DArray::isSamplerComplete() const
 
 bool Texture2DArray::isMipmapComplete() const
 {
+    GLsizei width = getWidth(0);
+    GLsizei height = getHeight(0);
+
+    int q = log2(std::max(width, height));
+
+    for (int level = 1; level <= q; level++)
+    {
+        if (!isLevelComplete(level))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool Texture2DArray::isLevelComplete(int level) const
+{
+    ASSERT(level >= 0 && level < (int)ArraySize(mImageArray) && mImageArray[level] != NULL);
+
     if (isImmutable())
     {
         return true;
@@ -2331,29 +2466,29 @@ bool Texture2DArray::isMipmapComplete() const
         return false;
     }
 
-    int q = log2(std::max(width, height));
-
-    for (int level = 1; level <= q; level++)
+    if (level == 0)
     {
-        if (getInternalFormat(level) != getInternalFormat(0))
-        {
-            return false;
-        }
+        return true;
+    }
 
-        if (getWidth(level) != std::max(1, width >> level))
-        {
-            return false;
-        }
+    if (getInternalFormat(level) != getInternalFormat(0))
+    {
+        return false;
+    }
 
-        if (getHeight(level) != std::max(1, height >> level))
-        {
-            return false;
-        }
+    if (getWidth(level) != std::max(1, width >> level))
+    {
+        return false;
+    }
 
-        if (getDepth(level) != depth)
-        {
-            return false;
-        }
+    if (getHeight(level) != std::max(1, height >> level))
+    {
+        return false;
+    }
+
+    if (getDepth(level) != depth)
+    {
+        return false;
     }
 
     return true;
@@ -2407,14 +2542,19 @@ void Texture2DArray::updateTexture()
     int levels = (isMipmapComplete() ? levelCount() : 1);
     for (int level = 0; level < levels; level++)
     {
-        for (int layer = 0; layer < mLayerCounts[level]; layer++)
-        {
-            rx::Image *image = mImageArray[level][layer];
+        updateTextureLevel(level);
+    }
+}
 
-            if (image->isDirty())
-            {
-                commitRect(level, 0, 0, layer, image->getWidth(), image->getHeight());
-            }
+void Texture2DArray::updateTextureLevel(int level)
+{
+    for (int layer = 0; layer < mLayerCounts[level]; layer++)
+    {
+        rx::Image *image = mImageArray[level][layer];
+
+        if (image->isDirty())
+        {
+            commitRect(level, 0, 0, layer, image->getWidth(), image->getHeight());
         }
     }
 }

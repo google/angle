@@ -190,6 +190,8 @@ class Texture2D : public Texture
     virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
 
     bool isMipmapComplete() const;
+    bool isLevelComplete(int level) const;
+    void updateTextureLevel(int level);
 
     void redefineImage(GLint level, GLint internalformat, GLsizei width, GLsizei height);
     void commitRect(GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
@@ -264,6 +266,8 @@ class TextureCubeMap : public Texture
 
     bool isCubeComplete() const;
     bool isMipmapCubeComplete() const;
+    bool isFaceLevelComplete(int face, int level) const;
+    void updateTextureFaceLevel(int face, int level);
 
     void setImage(int faceIndex, GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void commitRect(int faceIndex, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height);
@@ -332,6 +336,9 @@ class Texture3D : public Texture
     void redefineImage(GLint level, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth);
     void commitRect(GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth);
 
+    bool isLevelComplete(int level) const;
+    void updateTextureLevel(int level);
+
     rx::Image *mImageArray[IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
     rx::TextureStorageInterface3D *mTexStorage;
@@ -394,6 +401,9 @@ class Texture2DArray : public Texture
 
     void redefineImage(GLint level, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth);
     void commitRect(GLint level, GLint xoffset, GLint yoffset, GLint layerTarget, GLsizei width, GLsizei height);
+
+    bool isLevelComplete(int level) const;
+    void updateTextureLevel(int level);
 
     // Storing images as an array of single depth textures since D3D11 treats each array level of a
     // Texture2D object as a separate subresource.  Each layer would have to be looped over
