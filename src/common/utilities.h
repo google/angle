@@ -44,6 +44,12 @@ bool IsInternalTextureTarget(GLenum target);
 
 bool IsTriangleMode(GLenum drawMode);
 
+// [OpenGL ES 3.0.2] Section 2.3.1 page 14
+// Data Conversion For State-Setting Commands
+// Floating-point values are rounded to the nearest integer, instead of truncated, as done by static_cast.
+template <typename outT> outT iround(GLfloat value) { return static_cast<outT>(value > 0.0f ? floor(value + 0.5f) : ceil(value - 0.5f)); }
+template <typename outT> outT uiround(GLfloat value) { return static_cast<outT>(value + 0.5f); }
+
 }
 
 std::string getTempPath();

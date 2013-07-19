@@ -4982,7 +4982,7 @@ void __stdcall glGetIntegerv(GLenum pname, GLint* params)
                             params[i] = (GLint)(((GLfloat)(0xFFFFFFFF) * floatParams[i] - 1.0f) / 2.0f);
                         }
                         else
-                            params[i] = (GLint)(floatParams[i] > 0.0f ? floor(floatParams[i] + 0.5) : ceil(floatParams[i] - 0.5));
+                            params[i] = gl::iround<GLint>(floatParams[i]);
                     }
 
                     delete [] floatParams;
@@ -5938,7 +5938,7 @@ void __stdcall glGetVertexAttribiv(GLuint index, GLenum pname, GLint* params)
                 for (int i = 0; i < 4; ++i)
                 {
                     float currentValue = currentValueData.FloatValues[i];
-                    params[i] = (GLint)(currentValue > 0.0f ? floor(currentValue + 0.5f) : ceil(currentValue - 0.5f));
+                    params[i] = gl::iround<GLint>(currentValue);
                 }
             }
             else
@@ -7002,37 +7002,37 @@ void __stdcall glTexParameterf(GLenum target, GLenum pname, GLfloat param)
             switch (pname)
             {
               case GL_TEXTURE_WRAP_S:
-                if (!texture->setWrapS((GLenum)param))
+                if (!texture->setWrapS(gl::uiround<GLenum>(param)))
                 {
                     return gl::error(GL_INVALID_ENUM);
                 }
                 break;
               case GL_TEXTURE_WRAP_T:
-                if (!texture->setWrapT((GLenum)param))
+                if (!texture->setWrapT(gl::uiround<GLenum>(param)))
                 {
                     return gl::error(GL_INVALID_ENUM);
                 }
                 break;
               case GL_TEXTURE_WRAP_R:
-                if (context->getClientVersion() < 3 || !texture->setWrapR((GLenum)param))
+                if (context->getClientVersion() < 3 || !texture->setWrapR(gl::uiround<GLenum>(param)))
                 {
                     return gl::error(GL_INVALID_ENUM);
                 }
                 break;
               case GL_TEXTURE_MIN_FILTER:
-                if (!texture->setMinFilter((GLenum)param))
+                if (!texture->setMinFilter(gl::uiround<GLenum>(param)))
                 {
                     return gl::error(GL_INVALID_ENUM);
                 }
                 break;
               case GL_TEXTURE_MAG_FILTER:
-                if (!texture->setMagFilter((GLenum)param))
+                if (!texture->setMagFilter(gl::uiround<GLenum>(param)))
                 {
                     return gl::error(GL_INVALID_ENUM);
                 }
                 break;
               case GL_TEXTURE_USAGE_ANGLE:
-                if (!texture->setUsage((GLenum)param))
+                if (!texture->setUsage(gl::uiround<GLenum>(param)))
                 {
                     return gl::error(GL_INVALID_ENUM);
                 }
