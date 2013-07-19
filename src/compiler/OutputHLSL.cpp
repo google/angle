@@ -102,26 +102,6 @@ OutputHLSL::OutputHLSL(TParseContext &context, const ShBuiltInResources& resourc
     mUsesFaceforward2 = false;
     mUsesFaceforward3 = false;
     mUsesFaceforward4 = false;
-
-    for (unsigned int col = 0; col <= 4; col++)
-    {
-        for (unsigned int row = 0; row <= 4; row++)
-        {
-            mUsesEqualMat[col][row] = false;
-        }
-    }
-    mUsesEqualVec2 = false;
-    mUsesEqualVec3 = false;
-    mUsesEqualVec4 = false;
-    mUsesEqualIVec2 = false;
-    mUsesEqualIVec3 = false;
-    mUsesEqualIVec4 = false;
-    mUsesEqualUVec2 = false;
-    mUsesEqualUVec3 = false;
-    mUsesEqualUVec4 = false;
-    mUsesEqualBVec2 = false;
-    mUsesEqualBVec3 = false;
-    mUsesEqualBVec4 = false;
     mUsesAtan2_1 = false;
     mUsesAtan2_2 = false;
     mUsesAtan2_3 = false;
@@ -1413,149 +1393,6 @@ void OutputHLSL::header()
                "\n";
     }
 
-    for (unsigned int cols = 2; cols <= 4; cols++)
-    {
-        for (unsigned int rows = 2; rows <= 4; rows++)
-        {
-            if (mUsesEqualMat[cols][rows])
-            {
-                TString matrixType = "float" + str(cols) + "x" + str(rows);
-
-                out << "bool equal(" + matrixType + " m, " + matrixType + " n)\n"
-                       "{\n";
-
-                for (unsigned int row = 0; row < rows; row++)
-                {
-                    if (row == 0)
-                    {
-                        out << "    return ";
-                    }
-                    else
-                    {
-                        out << "           ";
-                    }
-
-                    for (unsigned int col = 0; col < cols; col++)
-                    {
-                        TString index = "[" + str(col) + "][" + str(row) + "]";
-                        out << "m" + index + " == n" + index;
-
-                        if (col == cols-1 && row == rows-1)
-                        {
-                            out << ";\n";
-                        }
-                        else if (col == cols-1)
-                        {
-                            out << " &&\n";
-                        }
-                        else
-                        {
-                            out << " && ";
-                        }
-                    }
-                }
-
-                out << "}\n";
-            }
-        }
-    }
-
-    if (mUsesEqualVec2)
-    {
-        out << "bool equal(float2 v, float2 u)\n"
-               "{\n"
-               "    return v.x == u.x && v.y == u.y;\n"
-               "}\n";
-    }
-
-    if (mUsesEqualVec3)
-    {
-        out << "bool equal(float3 v, float3 u)\n"
-               "{\n"
-               "    return v.x == u.x && v.y == u.y && v.z == u.z;\n"
-               "}\n";
-    }
-
-    if (mUsesEqualVec4)
-    {
-        out << "bool equal(float4 v, float4 u)\n"
-               "{\n"
-               "    return v.x == u.x && v.y == u.y && v.z == u.z && v.w == u.w;\n"
-               "}\n";
-    }
-
-    if (mUsesEqualIVec2)
-    {
-        out << "bool equal(int2 v, int2 u)\n"
-               "{\n"
-               "    return v.x == u.x && v.y == u.y;\n"
-               "}\n";
-    }
-
-    if (mUsesEqualIVec3)
-    {
-        out << "bool equal(int3 v, int3 u)\n"
-               "{\n"
-               "    return v.x == u.x && v.y == u.y && v.z == u.z;\n"
-               "}\n";
-    }
-
-    if (mUsesEqualIVec4)
-    {
-        out << "bool equal(int4 v, int4 u)\n"
-               "{\n"
-               "    return v.x == u.x && v.y == u.y && v.z == u.z && v.w == u.w;\n"
-               "}\n";
-    }
-
-    if (mUsesEqualUVec2)
-    {
-        out << "bool equal(uint2 v, uint2 u)\n"
-               "{\n"
-               "    return v.x == u.x && v.y == u.y;\n"
-               "}\n";
-    }
-
-    if (mUsesEqualUVec3)
-    {
-        out << "bool equal(uint3 v, uint3 u)\n"
-               "{\n"
-               "    return v.x == u.x && v.y == u.y && v.z == u.z;\n"
-               "}\n";
-    }
-
-    if (mUsesEqualUVec4)
-    {
-        out << "bool equal(uint4 v, uint4 u)\n"
-               "{\n"
-               "    return v.x == u.x && v.y == u.y && v.z == u.z && v.w == u.w;\n"
-               "}\n";
-    }
-
-    if (mUsesEqualBVec2)
-    {
-        out << "bool equal(bool2 v, bool2 u)\n"
-               "{\n"
-               "    return v.x == u.x && v.y == u.y;\n"
-               "}\n";
-    }
-
-    if (mUsesEqualBVec3)
-    {
-        out << "bool equal(bool3 v, bool3 u)\n"
-               "{\n"
-               "    return v.x == u.x && v.y == u.y && v.z == u.z;\n"
-               "}\n";
-    }
-
-    if (mUsesEqualBVec4)
-    {
-        out << "bool equal(bool4 v, bool4 u)\n"
-               "{\n"
-               "    return v.x == u.x && v.y == u.y && v.z == u.z && v.w == u.w;\n"
-               "}\n";
-    }
-
     if (mUsesAtan2_1)
     {
         out << "float atanyx(float y, float x)\n"
@@ -1916,62 +1753,15 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
         }
         else
         {
-            if (node->getLeft()->isMatrix())
-            {
-                mUsesEqualMat[node->getLeft()->getCols()][node->getLeft()->getRows()] = true;
-            }
-            else if (node->getLeft()->isVector())
-            {
-                switch (node->getLeft()->getBasicType())
-                {
-                  case EbtFloat:
-                    switch (node->getLeft()->getNominalSize())
-                    {
-                      case 2: mUsesEqualVec2 = true; break;
-                      case 3: mUsesEqualVec3 = true; break;
-                      case 4: mUsesEqualVec4 = true; break;
-                      default: UNREACHABLE();
-                    }
-                    break;
-                  case EbtInt:
-                    switch (node->getLeft()->getNominalSize())
-                    {
-                      case 2: mUsesEqualIVec2 = true; break;
-                      case 3: mUsesEqualIVec3 = true; break;
-                      case 4: mUsesEqualIVec4 = true; break;
-                      default: UNREACHABLE();
-                    }
-                    break;
-                  case EbtUInt:
-                    switch (node->getLeft()->getNominalSize())
-                    {
-                      case 2: mUsesEqualUVec2 = true; break;
-                      case 3: mUsesEqualUVec3 = true; break;
-                      case 4: mUsesEqualUVec4 = true; break;
-                      default: UNREACHABLE();
-                    }
-                    break;
-                  case EbtBool:
-                    switch (node->getLeft()->getNominalSize())
-                    {
-                      case 2: mUsesEqualBVec2 = true; break;
-                      case 3: mUsesEqualBVec3 = true; break;
-                      case 4: mUsesEqualBVec4 = true; break;
-                      default: UNREACHABLE();
-                    }
-                    break;
-                  default: UNREACHABLE();
-                }
-            }
-            else UNREACHABLE();
+            ASSERT(node->getLeft()->isMatrix() || node->getLeft()->isVector());
 
             if (node->getOp() == EOpEqual)
             {
-                outputTriplet(visit, "equal(", ", ", ")");
+                outputTriplet(visit, "all(", " == ", ")");
             }
             else
             {
-                outputTriplet(visit, "!equal(", ", ", ")");
+                outputTriplet(visit, "!all(", " == ", ")");
             }
         }
         break;
