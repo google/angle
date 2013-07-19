@@ -1817,6 +1817,41 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
     return true;
 }
 
+bool Context::getInteger64v(GLenum pname, GLint64 *params)
+{
+    switch (pname)
+    {
+      case GL_MAX_ELEMENT_INDEX:
+        *params = static_cast<GLint64>(std::numeric_limits<unsigned int>::max());
+        break;
+      case GL_MAX_UNIFORM_BLOCK_SIZE:
+        *params = static_cast<GLint64>(mRenderer->getMaxUniformBufferSize());
+        break;
+      case GL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS:
+        {
+            GLint64 uniformBufferComponents = static_cast<GLint64>(mRenderer->getMaxVertexShaderUniformBuffers()) * static_cast<GLint64>(mRenderer->getMaxUniformBufferSize() / 4);
+            GLint64 defaultBufferComponents = static_cast<GLint64>(mRenderer->getMaxVertexUniformVectors() * 4);
+            *params = uniformBufferComponents + defaultBufferComponents;
+        }
+        break;
+      case GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS:
+        {
+            GLint64 uniformBufferComponents = static_cast<GLint64>(mRenderer->getMaxFragmentShaderUniformBuffers()) * static_cast<GLint64>(mRenderer->getMaxUniformBufferSize() / 4);
+            GLint64 defaultBufferComponents = static_cast<GLint64>(mRenderer->getMaxVertexUniformVectors() * 4);
+            *params = uniformBufferComponents + defaultBufferComponents;
+        }
+        break;
+      case GL_MAX_SERVER_WAIT_TIMEOUT:
+        // Can return an arbitrary value (nanoseconds) as we do not perform any blocking, in this case 100 seconds.
+        *params = 100ll * 1000ll * 1000ll;
+        break;
+      default:
+        return false;
+    }
+
+    return true;
+}
+
 bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams)
 {
     if (pname >= GL_DRAW_BUFFER0_EXT && pname <= GL_DRAW_BUFFER15_EXT)
@@ -2028,6 +2063,17 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_VERTEX_ARRAY_BINDING:
         {
             *type = GL_INT;
+            *numParams = 1;
+        }
+        return true;
+
+      case GL_MAX_ELEMENT_INDEX:
+      case GL_MAX_UNIFORM_BLOCK_SIZE:
+      case GL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS:
+      case GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS:
+      case GL_MAX_SERVER_WAIT_TIMEOUT:
+        {
+            *type = GL_INT_64_ANGLEX;
             *numParams = 1;
         }
         return true;

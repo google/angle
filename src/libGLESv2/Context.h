@@ -336,9 +336,10 @@ class Context
     Framebuffer *getDrawFramebuffer();
     VertexArray *getCurrentVertexArray() const;
 
+    bool getBooleanv(GLenum pname, GLboolean *params);
     bool getFloatv(GLenum pname, GLfloat *params);
     bool getIntegerv(GLenum pname, GLint *params);
-    bool getBooleanv(GLenum pname, GLboolean *params);
+    bool getInteger64v(GLenum pname, GLint64 *params);
 
     bool getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams);
 
