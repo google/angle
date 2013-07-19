@@ -1950,6 +1950,144 @@ bool validateGetVertexAttribParameters(GLenum pname, int clientVersion)
     }
 }
 
+bool validateTexParamParameters(gl::Context *context, GLenum pname, GLint param)
+{
+    switch (pname)
+    {
+      case GL_TEXTURE_WRAP_R:
+      case GL_TEXTURE_SWIZZLE_R:
+      case GL_TEXTURE_SWIZZLE_G:
+      case GL_TEXTURE_SWIZZLE_B:
+      case GL_TEXTURE_SWIZZLE_A:
+      case GL_TEXTURE_BASE_LEVEL:
+      case GL_TEXTURE_MAX_LEVEL:
+      case GL_TEXTURE_COMPARE_MODE:
+      case GL_TEXTURE_COMPARE_FUNC:
+      case GL_TEXTURE_MIN_LOD:
+      case GL_TEXTURE_MAX_LOD:
+        if (context->getClientVersion() < 3)
+        {
+            return gl::error(GL_INVALID_ENUM, false);
+        }
+        break;
+
+      default: break;
+    }
+
+    switch (pname)
+    {
+      case GL_TEXTURE_WRAP_S:
+      case GL_TEXTURE_WRAP_T:
+      case GL_TEXTURE_WRAP_R:
+        switch (param)
+        {
+          case GL_REPEAT:
+          case GL_CLAMP_TO_EDGE:
+          case GL_MIRRORED_REPEAT:
+            return true;
+          default:
+            return gl::error(GL_INVALID_ENUM, false);
+        }
+
+      case GL_TEXTURE_MIN_FILTER:
+        switch (param)
+        {
+          case GL_NEAREST:
+          case GL_LINEAR:
+          case GL_NEAREST_MIPMAP_NEAREST:
+          case GL_LINEAR_MIPMAP_NEAREST:
+          case GL_NEAREST_MIPMAP_LINEAR:
+          case GL_LINEAR_MIPMAP_LINEAR:
+            return true;
+          default:
+            return gl::error(GL_INVALID_ENUM, false);
+        }
+        break;
+
+      case GL_TEXTURE_MAG_FILTER:
+        switch (param)
+        {
+          case GL_NEAREST:
+          case GL_LINEAR:
+            return true;
+          default:
+            return gl::error(GL_INVALID_ENUM, false);
+        }
+        break;
+
+      case GL_TEXTURE_USAGE_ANGLE:
+        switch (param)
+        {
+          case GL_NONE:
+          case GL_FRAMEBUFFER_ATTACHMENT_ANGLE:
+            return true;
+          default:
+            return gl::error(GL_INVALID_ENUM, false);
+        }
+        break;
+
+      case GL_TEXTURE_MAX_ANISOTROPY_EXT:
+        if (!context->supportsTextureFilterAnisotropy())
+        {
+            return gl::error(GL_INVALID_ENUM, false);
+        }
+
+        // we assume the parameter passed to this validation method is truncated, not rounded
+        if (param < 1)
+        {
+            return gl::error(GL_INVALID_VALUE, false);
+        }
+        return true;
+
+      case GL_TEXTURE_MIN_LOD:
+      case GL_TEXTURE_MAX_LOD:
+        // any value is permissible
+        return true;
+
+      case GL_TEXTURE_COMPARE_MODE:
+        switch (param)
+        {
+          case GL_NONE:
+          case GL_COMPARE_REF_TO_TEXTURE:
+            return true;
+          default:
+            return gl::error(GL_INVALID_ENUM, false);
+        }
+        break;
+
+      case GL_TEXTURE_COMPARE_FUNC:
+        switch (param)
+        {
+          case GL_LEQUAL:
+          case GL_GEQUAL:
+          case GL_LESS:
+          case GL_GREATER:
+          case GL_EQUAL:
+          case GL_NOTEQUAL:
+          case GL_ALWAYS:
+          case GL_NEVER:
+            return true;
+          default:
+            return gl::error(GL_INVALID_ENUM, false);
+        }
+        break;
+
+      case GL_TEXTURE_SWIZZLE_R:
+      case GL_TEXTURE_SWIZZLE_G:
+      case GL_TEXTURE_SWIZZLE_B:
+      case GL_TEXTURE_SWIZZLE_A:
+      case GL_TEXTURE_BASE_LEVEL:
+      case GL_TEXTURE_MAX_LEVEL:
+        UNIMPLEMENTED();
+        return true;
+
+      default:
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+}
+
+
+
 extern "C"
 {
 
@@ -7023,6 +7161,11 @@ void __stdcall glTexParameterf(GLenum target, GLenum pname, GLfloat param)
 
         if (context)
         {
+            if (!validateTexParamParameters(context, pname, static_cast<GLint>(param)))
+            {
+                return;
+            }
+
             gl::Texture *texture;
 
             switch (target)
@@ -7052,86 +7195,28 @@ void __stdcall glTexParameterf(GLenum target, GLenum pname, GLfloat param)
 
             switch (pname)
             {
-              case GL_TEXTURE_WRAP_S:
-                if (!texture->setWrapS(gl::uiround<GLenum>(param)))
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                break;
-              case GL_TEXTURE_WRAP_T:
-                if (!texture->setWrapT(gl::uiround<GLenum>(param)))
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                break;
-              case GL_TEXTURE_WRAP_R:
-                if (context->getClientVersion() < 3 || !texture->setWrapR(gl::uiround<GLenum>(param)))
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                break;
-              case GL_TEXTURE_MIN_FILTER:
-                if (!texture->setMinFilter(gl::uiround<GLenum>(param)))
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                break;
-              case GL_TEXTURE_MAG_FILTER:
-                if (!texture->setMagFilter(gl::uiround<GLenum>(param)))
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                break;
-              case GL_TEXTURE_USAGE_ANGLE:
-                if (!texture->setUsage(gl::uiround<GLenum>(param)))
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                break;
-              case GL_TEXTURE_MAX_ANISOTROPY_EXT:
-                if (!context->supportsTextureFilterAnisotropy())
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                if (!texture->setMaxAnisotropy((float)param, context->getTextureMaxAnisotropy()))
-                {
-                    return gl::error(GL_INVALID_VALUE);
-                }
-                break;
+              case GL_TEXTURE_WRAP_S:               texture->setWrapS(gl::uiround<GLenum>(param));       break;
+              case GL_TEXTURE_WRAP_T:               texture->setWrapT(gl::uiround<GLenum>(param));       break;
+              case GL_TEXTURE_WRAP_R:               texture->setWrapR(gl::uiround<GLenum>(param));       break;
+              case GL_TEXTURE_MIN_FILTER:           texture->setMinFilter(gl::uiround<GLenum>(param));   break;
+              case GL_TEXTURE_MAG_FILTER:           texture->setMagFilter(gl::uiround<GLenum>(param));   break;
+              case GL_TEXTURE_USAGE_ANGLE:          texture->setUsage(gl::uiround<GLenum>(param));       break;
+              case GL_TEXTURE_MAX_ANISOTROPY_EXT:   texture->setMaxAnisotropy(static_cast<GLfloat>(param), context->getTextureMaxAnisotropy()); break;
+              case GL_TEXTURE_COMPARE_MODE:         texture->setCompareMode(gl::uiround<GLenum>(param)); break;
+              case GL_TEXTURE_COMPARE_FUNC:         texture->setCompareFunc(gl::uiround<GLenum>(param)); break;
 
+              case GL_TEXTURE_SWIZZLE_R:
+              case GL_TEXTURE_SWIZZLE_G:
+              case GL_TEXTURE_SWIZZLE_B:
+              case GL_TEXTURE_SWIZZLE_A:
+              case GL_TEXTURE_BASE_LEVEL:
+              case GL_TEXTURE_MAX_LEVEL:
               case GL_TEXTURE_MIN_LOD:
               case GL_TEXTURE_MAX_LOD:
-                if (context->getClientVersion() < 3)
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
                 UNIMPLEMENTED();
                 break;
 
-              case GL_TEXTURE_COMPARE_MODE:
-                if (context->getClientVersion() < 3)
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                if (!texture->setCompareMode((GLenum)param))
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                break;
-
-              case GL_TEXTURE_COMPARE_FUNC:
-                if (context->getClientVersion() < 3)
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                if (!texture->setCompareFunc((GLenum)param))
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                break;
-
-              default:
-                return gl::error(GL_INVALID_ENUM);
+              default: UNREACHABLE(); break;
             }
         }
     }
@@ -7156,6 +7241,11 @@ void __stdcall glTexParameteri(GLenum target, GLenum pname, GLint param)
 
         if (context)
         {
+            if (!validateTexParamParameters(context, pname, param))
+            {
+                return;
+            }
+
             gl::Texture *texture;
 
             switch (target)
@@ -7186,52 +7276,15 @@ void __stdcall glTexParameteri(GLenum target, GLenum pname, GLint param)
 
             switch (pname)
             {
-              case GL_TEXTURE_WRAP_S:
-                if (!texture->setWrapS((GLenum)param))
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                break;
-              case GL_TEXTURE_WRAP_T:
-                if (!texture->setWrapT((GLenum)param))
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                break;
-              case GL_TEXTURE_WRAP_R:
-                  if (context->getClientVersion() < 3 || !texture->setWrapR((GLenum)param))
-                  {
-                      return gl::error(GL_INVALID_ENUM);
-                  }
-                  break;
-              case GL_TEXTURE_MIN_FILTER:
-                if (!texture->setMinFilter((GLenum)param))
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                break;
-              case GL_TEXTURE_MAG_FILTER:
-                if (!texture->setMagFilter((GLenum)param))
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                break;
-              case GL_TEXTURE_USAGE_ANGLE:
-                if (!texture->setUsage((GLenum)param))
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                break;
-              case GL_TEXTURE_MAX_ANISOTROPY_EXT:
-                if (!context->supportsTextureFilterAnisotropy())
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                if (!texture->setMaxAnisotropy((float)param, context->getTextureMaxAnisotropy()))
-                {
-                    return gl::error(GL_INVALID_VALUE);
-                }
-                break;
+              case GL_TEXTURE_WRAP_S:               texture->setWrapS((GLenum)param);       break;
+              case GL_TEXTURE_WRAP_T:               texture->setWrapT((GLenum)param);       break;
+              case GL_TEXTURE_WRAP_R:               texture->setWrapR((GLenum)param);       break;
+              case GL_TEXTURE_MIN_FILTER:           texture->setMinFilter((GLenum)param);   break;
+              case GL_TEXTURE_MAG_FILTER:           texture->setMagFilter((GLenum)param);   break;
+              case GL_TEXTURE_USAGE_ANGLE:          texture->setUsage((GLenum)param);       break;
+              case GL_TEXTURE_MAX_ANISOTROPY_EXT:   texture->setMaxAnisotropy((float)param, context->getTextureMaxAnisotropy()); break;
+              case GL_TEXTURE_COMPARE_MODE:         texture->setCompareMode((GLenum)param); break;
+              case GL_TEXTURE_COMPARE_FUNC:         texture->setCompareFunc((GLenum)param); break;
 
               case GL_TEXTURE_SWIZZLE_R:
               case GL_TEXTURE_SWIZZLE_G:
@@ -7239,37 +7292,12 @@ void __stdcall glTexParameteri(GLenum target, GLenum pname, GLint param)
               case GL_TEXTURE_SWIZZLE_A:
               case GL_TEXTURE_BASE_LEVEL:
               case GL_TEXTURE_MAX_LEVEL:
-                if (context->getClientVersion() < 3)
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
+              case GL_TEXTURE_MIN_LOD:
+              case GL_TEXTURE_MAX_LOD:
                 UNIMPLEMENTED();
                 break;
 
-              case GL_TEXTURE_COMPARE_MODE:
-                if (context->getClientVersion() < 3)
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                if (!texture->setCompareMode((GLenum)param))
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                break;
-
-              case GL_TEXTURE_COMPARE_FUNC:
-                if (context->getClientVersion() < 3)
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                if (!texture->setCompareFunc((GLenum)param))
-                {
-                    return gl::error(GL_INVALID_ENUM);
-                }
-                break;
-
-              default:
-                return gl::error(GL_INVALID_ENUM);
+              default: UNREACHABLE(); break;
             }
         }
     }
