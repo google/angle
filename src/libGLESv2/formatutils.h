@@ -59,6 +59,9 @@ GLuint GetLuminanceBits(GLint internalFormat, GLuint clientVersion);
 GLuint GetDepthBits(GLint internalFormat, GLuint clientVersion);
 GLuint GetStencilBits(GLint internalFormat, GLuint clientVersion);
 
+GLuint GetTypeBytes(GLenum type);
+bool IsSpecialInterpretationType(GLenum type);
+
 GLenum GetFormat(GLint internalFormat, GLuint clientVersion);
 GLenum GetType(GLint internalFormat, GLuint clientVersion);
 

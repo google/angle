@@ -1282,6 +1282,34 @@ GLuint GetStencilBits(GLint internalFormat, GLuint clientVersion)
     }
 }
 
+GLuint GetTypeBytes(GLenum type)
+{
+    TypeInfo typeInfo;
+    if (GetTypeInfo(type, &typeInfo))
+    {
+        return typeInfo.mTypeBytes;
+    }
+    else
+    {
+        UNREACHABLE();
+        return 0;
+    }
+}
+
+bool IsSpecialInterpretationType(GLenum type)
+{
+    TypeInfo typeInfo;
+    if (GetTypeInfo(type, &typeInfo))
+    {
+        return typeInfo.mSpecialInterpretation;
+    }
+    else
+    {
+        UNREACHABLE();
+        return false;
+    }
+}
+
 GLenum GetFormat(GLint internalFormat, GLuint clientVersion)
 {
     InternalFormatInfo internalFormatInfo;

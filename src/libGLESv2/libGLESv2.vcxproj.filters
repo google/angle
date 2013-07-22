@@ -245,6 +245,9 @@
     <ClCompile Include="Sampler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\IndexRangeCache.cpp">
+      <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinaryStream.h">
@@ -630,6 +633,9 @@
     </ClInclude>
     <ClInclude Include="Sampler.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\IndexRangeCache.h">
+      <Filter>Header Files\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
