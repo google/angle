@@ -317,6 +317,9 @@ class Renderer11 : public Renderer
     float mCurNear;
     float mCurFar;
 
+    // Currently applied primitive topology
+    D3D11_PRIMITIVE_TOPOLOGY mCurrentPrimitiveTopology;
+
     unsigned int mAppliedIBSerial;
     unsigned int mAppliedStorageIBSerial;
     unsigned int mAppliedIBOffset;

@@ -877,7 +877,11 @@ bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count)
         return gl::error(GL_INVALID_ENUM, false);
     }
 
-    mDeviceContext->IASetPrimitiveTopology(primitiveTopology);
+    if (primitiveTopology != mCurrentPrimitiveTopology)
+    {
+        mDeviceContext->IASetPrimitiveTopology(primitiveTopology);
+        mCurrentPrimitiveTopology = primitiveTopology;
+    }
 
     return count > 0;
 }
@@ -1853,6 +1857,8 @@ void Renderer11::markAllStateDirty()
     mCurrentVertexConstantBuffer = NULL;
     mCurrentPixelConstantBuffer = NULL;
     mCurrentGeometryConstantBuffer = NULL;
+
+    mCurrentPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
 }
 
 void Renderer11::releaseDeviceResources()
