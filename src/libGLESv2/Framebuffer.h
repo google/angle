@@ -64,6 +64,16 @@ class Framebuffer
     GLuint getStencilbufferHandle() const;
     GLenum getDepthStencilbufferHandle() const;
 
+    GLenum getColorbufferMipLevel(unsigned int colorAttachment) const;
+    GLenum getDepthbufferMipLevel() const;
+    GLenum getStencilbufferMipLevel() const;
+    GLenum getDepthStencilbufferMipLevel() const;
+
+    GLenum getColorbufferLayer(unsigned int colorAttachment) const;
+    GLenum getDepthbufferLayer() const;
+    GLenum getStencilbufferLayer() const;
+    GLenum getDepthStencilbufferLayer() const;
+
     GLenum getDrawBufferState(unsigned int colorAttachment) const;
     void setDrawBufferState(unsigned int colorAttachment, GLenum drawBuffer);
 
@@ -76,16 +86,12 @@ class Framebuffer
     virtual GLenum completeness() const;
 
   protected:
-    GLenum mColorbufferTypes[IMPLEMENTATION_MAX_DRAW_BUFFERS];
-    BindingPointer<Renderbuffer> mColorbufferPointers[IMPLEMENTATION_MAX_DRAW_BUFFERS];
+    FramebufferTextureBindingPointer<Renderbuffer> mColorbuffers[IMPLEMENTATION_MAX_DRAW_BUFFERS];
     GLenum mDrawBufferStates[IMPLEMENTATION_MAX_DRAW_BUFFERS];
     GLenum mReadBufferState;
 
-    GLenum mDepthbufferType;
-    BindingPointer<Renderbuffer> mDepthbufferPointer;
-
-    GLenum mStencilbufferType;
-    BindingPointer<Renderbuffer> mStencilbufferPointer;
+    FramebufferTextureBindingPointer<Renderbuffer> mDepthbuffer;
+    FramebufferTextureBindingPointer<Renderbuffer> mStencilbuffer;
 
     rx::Renderer *mRenderer;
 
