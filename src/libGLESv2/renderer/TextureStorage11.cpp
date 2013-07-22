@@ -187,15 +187,6 @@ void TextureStorage11::generateMipmapLayer(RenderTarget11 *source, RenderTarget1
                                    destRTV, destArea, dest->getWidth(), dest->getHeight(),
                                    GL_RGBA);
         }
-
-        if (sourceSRV)
-        {
-            sourceSRV->Release();
-        }
-        if (destRTV)
-        {
-            destRTV->Release();
-        }
     }
 }
 
