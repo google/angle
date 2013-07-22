@@ -327,10 +327,16 @@ class Renderer11 : public Renderer
     dx_VertexConstants mVertexConstants;
     dx_VertexConstants mAppliedVertexConstants;
     ID3D11Buffer *mDriverConstantBufferVS;
+    ID3D11Buffer *mCurrentVertexConstantBuffer;
+    unsigned int mCurrentConstantBufferVS[gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS];
 
     dx_PixelConstants mPixelConstants;
     dx_PixelConstants mAppliedPixelConstants;
     ID3D11Buffer *mDriverConstantBufferPS;
+    ID3D11Buffer *mCurrentPixelConstantBuffer;
+    unsigned int mCurrentConstantBufferPS[gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS];
+
+    ID3D11Buffer *mCurrentGeometryConstantBuffer;
 
     // Vertex, index and input layouts
     VertexDataManager *mVertexDataManager;
