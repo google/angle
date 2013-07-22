@@ -157,9 +157,6 @@ void TextureStorage11::generateMipmapLayer(RenderTarget11 *source, RenderTarget1
                                  gl::GetFormat(source->getInternalFormat(), mRenderer->getCurrentClientVersion()),
                                  GL_LINEAR);
         }
-
-        SafeRelease(sourceSRV);
-        SafeRelease(destRTV);
     }
 }
 

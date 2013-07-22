@@ -403,36 +403,18 @@ ID3D11Resource *RenderTarget11::getTexture() const
     return mTexture;
 }
 
-// Adds reference, caller must call Release
 ID3D11RenderTargetView *RenderTarget11::getRenderTargetView() const
 {
-    if (mRenderTarget)
-    {
-        mRenderTarget->AddRef();
-    }
-
     return mRenderTarget;
 }
 
-// Adds reference, caller must call Release
 ID3D11DepthStencilView *RenderTarget11::getDepthStencilView() const
 {
-    if (mDepthStencil)
-    {
-        mDepthStencil->AddRef();
-    }
-
     return mDepthStencil;
 }
 
-// Adds reference, caller must call Release
 ID3D11ShaderResourceView *RenderTarget11::getShaderResourceView() const
 {
-    if (mShaderResource)
-    {
-        mShaderResource->AddRef();
-    }
-
     return mShaderResource;
 }
 

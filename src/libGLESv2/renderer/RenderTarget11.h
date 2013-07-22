@@ -29,16 +29,9 @@ class RenderTarget11 : public RenderTarget
 
     virtual void invalidate(GLint x, GLint y, GLsizei width, GLsizei height);
 
-    // Adds reference, caller must call Release
     ID3D11Resource *getTexture() const;
-
-    // Adds reference, caller must call Release
     ID3D11RenderTargetView *getRenderTargetView() const;
-
-    // Adds reference, caller must call Release
     ID3D11DepthStencilView *getDepthStencilView() const;
-
-    // Adds reference, caller must call Release
     ID3D11ShaderResourceView *getShaderResourceView() const;
 
     unsigned int getSubresourceIndex() const;

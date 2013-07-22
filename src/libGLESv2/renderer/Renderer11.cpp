@@ -1045,9 +1045,6 @@ bool Renderer11::applyRenderTarget(gl::Framebuffer *framebuffer)
         mDepthStencilInitialized = true;
     }
 
-    SafeRelease(framebufferRTVs);
-    SafeRelease(framebufferDSV);
-
     return true;
 }
 
@@ -1597,8 +1594,6 @@ void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *
                                                        clearParams.colorClearValue.blue,
                                                        clearParams.colorClearValue.alpha };
                         mDeviceContext->ClearRenderTargetView(framebufferRTV, clearValues);
-
-                        framebufferRTV->Release();
                     }
                  }
              }
@@ -1636,8 +1631,6 @@ void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *
                 UINT8 stencilClear = clearParams.stencilClearValue & 0x000000FF;
 
                 mDeviceContext->ClearDepthStencilView(framebufferDSV, clearFlags, depthClear, stencilClear);
-
-                framebufferDSV->Release();
             }
         }
     }
@@ -2686,7 +2679,6 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     TextureStorage11_2D *storage11 = TextureStorage11_2D::makeTextureStorage11_2D(storage->getStorageInstance());
     if (!storage11)
     {
-        source->Release();
         ERR("Failed to retrieve the texture storage from the destination.");
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
@@ -2694,7 +2686,6 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     RenderTarget11 *destRenderTarget = RenderTarget11::makeRenderTarget11(storage11->getRenderTarget(level));
     if (!destRenderTarget)
     {
-        source->Release();
         ERR("Failed to retrieve the render target from the destination storage.");
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
@@ -2702,7 +2693,6 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     ID3D11RenderTargetView *dest = destRenderTarget->getRenderTargetView();
     if (!dest)
     {
-        source->Release();
         ERR("Failed to retrieve the render target view from the destination render target.");
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
@@ -2717,9 +2707,6 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     // copy
     bool ret = mBlit->copyTexture(source, sourceArea, sourceSize, dest, destArea, destSize,
                                   destFormat, GL_NEAREST);
-
-    source->Release();
-    dest->Release();
 
     return ret;
 }
@@ -2751,7 +2738,6 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     TextureStorage11_Cube *storage11 = TextureStorage11_Cube::makeTextureStorage11_Cube(storage->getStorageInstance());
     if (!storage11)
     {
-        source->Release();
         ERR("Failed to retrieve the texture storage from the destination.");
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
@@ -2759,7 +2745,6 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     RenderTarget11 *destRenderTarget = RenderTarget11::makeRenderTarget11(storage11->getRenderTargetFace(target, level));
     if (!destRenderTarget)
     {
-        source->Release();
         ERR("Failed to retrieve the render target from the destination storage.");
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
@@ -2767,7 +2752,6 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     ID3D11RenderTargetView *dest = destRenderTarget->getRenderTargetView();
     if (!dest)
     {
-        source->Release();
         ERR("Failed to retrieve the render target view from the destination render target.");
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
@@ -2782,9 +2766,6 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     // copy
     bool ret = mBlit->copyTexture(source, sourceArea, sourceSize, dest, destArea, destSize,
                                   destFormat, GL_NEAREST);
-
-    source->Release();
-    dest->Release();
 
     return ret;
 }
@@ -2816,7 +2797,6 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     TextureStorage11_3D *storage11 = TextureStorage11_3D::makeTextureStorage11_3D(storage->getStorageInstance());
     if (!storage11)
     {
-        source->Release();
         ERR("Failed to retrieve the texture storage from the destination.");
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
@@ -2824,7 +2804,6 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     RenderTarget11 *destRenderTarget = RenderTarget11::makeRenderTarget11(storage11->getRenderTargetLayer(level, zOffset));
     if (!destRenderTarget)
     {
-        source->Release();
         ERR("Failed to retrieve the render target from the destination storage.");
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
@@ -2832,7 +2811,6 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     ID3D11RenderTargetView *dest = destRenderTarget->getRenderTargetView();
     if (!dest)
     {
-        source->Release();
         ERR("Failed to retrieve the render target view from the destination render target.");
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
@@ -2847,9 +2825,6 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     // copy
     bool ret = mBlit->copyTexture(source, sourceArea, sourceSize, dest, destArea, destSize,
                                   destFormat, GL_NEAREST);
-
-    source->Release();
-    dest->Release();
 
     return ret;
 }
@@ -2897,7 +2872,6 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     ID3D11RenderTargetView *dest = destRenderTarget->getRenderTargetView();
     if (!dest)
     {
-        source->Release();
         ERR("Failed to retrieve the render target view from the destination render target.");
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
@@ -2912,9 +2886,6 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     // copy
     bool ret = mBlit->copyTexture(source, sourceArea, sourceSize, dest, destArea, destSize,
                                   destFormat, GL_NEAREST);
-
-    source->Release();
-    dest->Release();
 
     return ret;
 }
@@ -3087,7 +3058,6 @@ bool Renderer11::getRenderTargetResource(gl::Renderbuffer *colorbuffer, unsigned
         {
             ID3D11Resource *textureResource = NULL;
             colorBufferRTV->GetResource(&textureResource);
-            colorBufferRTV->Release();
 
             if (textureResource)
             {
@@ -3409,6 +3379,18 @@ bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::R
 
     bool result = true;
 
+    RenderTarget11 *drawRenderTarget11 = RenderTarget11::makeRenderTarget11(drawRenderTarget);
+    if (!drawRenderTarget)
+    {
+        ERR("Failed to retrieve the draw render target from the draw framebuffer.");
+        return gl::error(GL_OUT_OF_MEMORY, false);
+    }
+
+    ID3D11Resource *drawTexture = drawRenderTarget11->getTexture();
+    unsigned int drawSubresource = drawRenderTarget11->getSubresourceIndex();
+    ID3D11RenderTargetView *drawRTV = drawRenderTarget11->getRenderTargetView();
+    ID3D11DepthStencilView *drawDSV = drawRenderTarget11->getDepthStencilView();
+
     RenderTarget11 *readRenderTarget11 = RenderTarget11::makeRenderTarget11(readRenderTarget);
     if (!readRenderTarget)
     {
@@ -3423,7 +3405,6 @@ bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::R
     {
         ID3D11Resource *unresolvedResource = readRenderTarget11->getTexture();
         ID3D11Texture2D *unresolvedTexture = d3d11::DynamicCastComObject<ID3D11Texture2D>(unresolvedResource);
-        unresolvedResource->Release();
 
         if (unresolvedTexture)
         {
@@ -3443,28 +3424,19 @@ bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::R
     else
     {
         readTexture = readRenderTarget11->getTexture();
+        readTexture->AddRef();
         readSubresource = readRenderTarget11->getSubresourceIndex();
         readSRV = readRenderTarget11->getShaderResourceView();
+        readSRV->AddRef();
     }
 
-    if (!readTexture)
+    if (!readTexture || !readSRV)
     {
+        SafeRelease(readTexture);
+        SafeRelease(readSRV);
         ERR("Failed to retrieve the read render target view from the read render target.");
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
-
-    RenderTarget11 *drawRenderTarget11 = RenderTarget11::makeRenderTarget11(drawRenderTarget);
-    if (!drawRenderTarget)
-    {
-        readTexture->Release();
-        ERR("Failed to retrieve the draw render target from the draw framebuffer.");
-        return gl::error(GL_OUT_OF_MEMORY, false);
-    }
-
-    ID3D11Resource *drawTexture = drawRenderTarget11->getTexture();
-    unsigned int drawSubresource = drawRenderTarget11->getSubresourceIndex();
-    ID3D11RenderTargetView *drawRTV = drawRenderTarget11->getRenderTargetView();
-    ID3D11DepthStencilView *drawDSV = drawRenderTarget11->getDepthStencilView();
 
     bool wholeBufferCopy = readRect.x == 0 && readRect.width == readRenderTarget11->getWidth() &&
                            readRect.y == 0 && readRect.height == readRenderTarget11->getHeight() &&
@@ -3523,9 +3495,6 @@ bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::R
 
     SafeRelease(readTexture);
     SafeRelease(readSRV);
-    SafeRelease(drawTexture);
-    SafeRelease(drawRTV);
-    SafeRelease(drawDSV);
 
     return result;
 }
