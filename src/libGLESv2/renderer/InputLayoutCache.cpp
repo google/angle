@@ -28,6 +28,13 @@ InputLayoutCache::InputLayoutCache() : mInputLayoutMap(kMaxInputLayouts, hashInp
     mCounter = 0;
     mDevice = NULL;
     mDeviceContext = NULL;
+    mCurrentIL = NULL;
+    for (unsigned int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
+    {
+        mCurrentBuffers[i] = -1;
+        mCurrentVertexStrides[i] = -1;
+        mCurrentVertexOffsets[i] = -1;
+    }
 }
 
 InputLayoutCache::~InputLayoutCache()
@@ -49,6 +56,18 @@ void InputLayoutCache::clear()
         i->second.inputLayout->Release();
     }
     mInputLayoutMap.clear();
+    markDirty();
+}
+
+void InputLayoutCache::markDirty()
+{
+    mCurrentIL = NULL;
+    for (unsigned int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
+    {
+        mCurrentBuffers[i] = -1;
+        mCurrentVertexStrides[i] = -1;
+        mCurrentVertexOffsets[i] = -1;
+    }
 }
 
 GLenum InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS],
@@ -66,6 +85,7 @@ GLenum InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::M
     InputLayoutKey ilKey = { 0 };
 
     ID3D11Buffer *vertexBuffers[gl::MAX_VERTEX_ATTRIBS] = { NULL };
+    unsigned int vertexBufferSerials[gl::MAX_VERTEX_ATTRIBS] = { 0 };
     UINT vertexStrides[gl::MAX_VERTEX_ATTRIBS] = { 0 };
     UINT vertexOffsets[gl::MAX_VERTEX_ATTRIBS] = { 0 };
 
@@ -95,6 +115,7 @@ GLenum InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::M
             ilKey.elementCount++;
 
             vertexBuffers[i] = bufferStorage ? bufferStorage->getBuffer() : vertexBuffer->getBuffer();
+            vertexBufferSerials[i] = bufferStorage ? bufferStorage->getSerial() : vertexBuffer->getSerial();
             vertexStrides[i] = attributes[i].stride;
             vertexOffsets[i] = attributes[i].offset;
         }
@@ -143,8 +164,23 @@ GLenum InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::M
         mInputLayoutMap.insert(std::make_pair(ilKey, inputCounterPair));
     }
 
-    mDeviceContext->IASetInputLayout(inputLayout);
-    mDeviceContext->IASetVertexBuffers(0, gl::MAX_VERTEX_ATTRIBS, vertexBuffers, vertexStrides, vertexOffsets);
+    if (inputLayout != mCurrentIL)
+    {
+        mDeviceContext->IASetInputLayout(inputLayout);
+        mCurrentIL = inputLayout;
+    }
+
+    for (unsigned int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
+    {
+        if (vertexBufferSerials[i] != mCurrentBuffers[i] || vertexStrides[i] != mCurrentVertexStrides[i] ||
+            vertexOffsets[i] != mCurrentVertexOffsets[i])
+        {
+            mDeviceContext->IASetVertexBuffers(i, 1, &vertexBuffers[i], &vertexStrides[i], &vertexOffsets[i]);
+            mCurrentBuffers[i] = vertexBufferSerials[i];
+            mCurrentVertexStrides[i] = vertexStrides[i];
+            mCurrentVertexOffsets[i] = vertexOffsets[i];
+        }
+    }
 
     return GL_NO_ERROR;
 }
