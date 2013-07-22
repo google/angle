@@ -1442,9 +1442,18 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArra
     {
         mDeviceContext->Unmap(pixelConstantBuffer, 0);
     }
-    
-    mDeviceContext->VSSetConstantBuffers(0, 1, &vertexConstantBuffer);
-    mDeviceContext->PSSetConstantBuffers(0, 1, &pixelConstantBuffer);
+
+    if (mCurrentVertexConstantBuffer != vertexConstantBuffer)
+    {
+        mDeviceContext->VSSetConstantBuffers(0, 1, &vertexConstantBuffer);
+        mCurrentVertexConstantBuffer = vertexConstantBuffer;
+    }
+
+    if (mCurrentPixelConstantBuffer != pixelConstantBuffer)
+    {
+        mDeviceContext->PSSetConstantBuffers(0, 1, &pixelConstantBuffer);
+        mCurrentPixelConstantBuffer = pixelConstantBuffer;
+    }
 
     // Driver uniforms
     if (!mDriverConstantBufferVS)
@@ -1492,7 +1501,11 @@ void Renderer11::applyUniforms(gl::ProgramBinary *programBinary, gl::UniformArra
     }
 
     // needed for the point sprite geometry shader
-    mDeviceContext->GSSetConstantBuffers(0, 1, &mDriverConstantBufferPS);
+    if (mCurrentGeometryConstantBuffer != mDriverConstantBufferPS)
+    {
+        mDeviceContext->GSSetConstantBuffers(0, 1, &mDriverConstantBufferPS);
+        mCurrentGeometryConstantBuffer = mDriverConstantBufferPS;
+    }
 }
 
 void Renderer11::clear(const gl::ClearParameters &clearParams, gl::Framebuffer *frameBuffer)
@@ -1799,6 +1812,10 @@ void Renderer11::markAllStateDirty()
     memset(&mAppliedPixelConstants, 0, sizeof(dx_PixelConstants));
 
     mInputLayoutCache.markDirty();
+
+    mCurrentVertexConstantBuffer = NULL;
+    mCurrentPixelConstantBuffer = NULL;
+    mCurrentGeometryConstantBuffer = NULL;
 }
 
 void Renderer11::releaseDeviceResources()
