@@ -1819,6 +1819,8 @@ void Renderer11::markAllStateDirty()
     mAppliedProgramBinarySerial = 0;
     memset(&mAppliedVertexConstants, 0, sizeof(dx_VertexConstants));
     memset(&mAppliedPixelConstants, 0, sizeof(dx_PixelConstants));
+
+    mInputLayoutCache.markDirty();
 }
 
 void Renderer11::releaseDeviceResources()

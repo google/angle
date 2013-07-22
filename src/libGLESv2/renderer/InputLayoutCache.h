@@ -30,6 +30,7 @@ class InputLayoutCache
 
     void initialize(ID3D11Device *device, ID3D11DeviceContext *context);
     void clear();
+    void markDirty();
 
     GLenum applyVertexBuffers(TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS],
                               gl::ProgramBinary *programBinary);
@@ -49,6 +50,11 @@ class InputLayoutCache
         ID3D11InputLayout *inputLayout;
         unsigned long long lastUsedTime;
     };
+
+    ID3D11InputLayout *mCurrentIL;
+    unsigned int mCurrentBuffers[gl::MAX_VERTEX_ATTRIBS];
+    UINT mCurrentVertexStrides[gl::MAX_VERTEX_ATTRIBS];
+    UINT mCurrentVertexOffsets[gl::MAX_VERTEX_ATTRIBS];
 
     static std::size_t hashInputLayout(const InputLayoutKey &inputLayout);
     static bool compareInputLayouts(const InputLayoutKey &a, const InputLayoutKey &b);
