@@ -194,7 +194,7 @@ void Image11::loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
         loadAlphaFloatDataToRGBA(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
         break;
       case GL_LUMINANCE32F_EXT:
-        loadLuminanceFloatDataToRGB(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
+        loadLuminanceFloatDataToRGBA(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
         break;
       case GL_ALPHA16F_EXT:
         loadAlphaHalfFloatDataToRGBA(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
@@ -230,7 +230,7 @@ void Image11::loadData(GLint xoffset, GLint yoffset, GLsizei width, GLsizei heig
         loadBGRADataToBGRA(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
         break;
       case GL_RGB32F_EXT:
-        loadRGBFloatDataToNative(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
+        loadRGBFloatDataToRGBA(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
         break;
       case GL_RGB16F_EXT:
         loadRGBHalfFloatDataToRGBA(width, height, inputPitch, input, mappedImage.RowPitch, offsetMappedData);
