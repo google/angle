@@ -877,17 +877,21 @@ EGLBoolean __stdcall eglMakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface 
     {
         egl::Display *display = static_cast<egl::Display*>(dpy);
         gl::Context *context = static_cast<gl::Context*>(ctx);
-        IDirect3DDevice9 *device = display->getDevice();
 
-        if (!device || display->testDeviceLost())
+        if (display != EGL_NO_DISPLAY)
         {
-            display->notifyDeviceLost();
-            return EGL_FALSE;
-        }
+            IDirect3DDevice9 *device = display->getDevice();
 
-        if (display->isDeviceLost())
-        {
-            return error(EGL_CONTEXT_LOST, EGL_FALSE);
+            if (!device || display->testDeviceLost())
+            {
+                display->notifyDeviceLost();
+                return EGL_FALSE;
+            }
+
+            if (display->isDeviceLost())
+            {
+                return error(EGL_CONTEXT_LOST, EGL_FALSE);
+            }
         }
 
         if (ctx != EGL_NO_CONTEXT && !validateContext(display, context))
