@@ -800,7 +800,7 @@ bool validateES2CopyTexImageParameters(gl::Context* context, GLenum target, GLin
                                        GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height,
                                        GLint border)
 {
-    if (!gl::IsInternalTextureTarget(target))
+    if (!gl::IsInternalTextureTarget(target, context->getClientVersion()))
     {
         return gl::error(GL_INVALID_ENUM, false);
     }
@@ -5290,7 +5290,7 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
             {
                 attachmentObjectType = attachmentType;
             }
-            else if (gl::IsInternalTextureTarget(attachmentType))
+            else if (gl::IsInternalTextureTarget(attachmentType, context->getClientVersion()))
             {
                 attachmentObjectType = GL_TEXTURE;
             }

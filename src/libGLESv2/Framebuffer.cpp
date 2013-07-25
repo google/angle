@@ -177,18 +177,18 @@ void Framebuffer::detachTexture(GLuint texture)
     for (unsigned int colorAttachment = 0; colorAttachment < IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
     {
         if (mColorbuffers[colorAttachment].id() == texture &&
-            IsInternalTextureTarget(mColorbuffers[colorAttachment].type()))
+            IsInternalTextureTarget(mColorbuffers[colorAttachment].type(), mRenderer->getCurrentClientVersion()))
         {
             mColorbuffers[colorAttachment].set(NULL, GL_NONE, 0, 0);
         }
     }
 
-    if (mDepthbuffer.id() == texture && IsInternalTextureTarget(mDepthbuffer.type()))
+    if (mDepthbuffer.id() == texture && IsInternalTextureTarget(mDepthbuffer.type(), mRenderer->getCurrentClientVersion()))
     {
         mDepthbuffer.set(NULL, GL_NONE, 0, 0);
     }
 
-    if (mStencilbuffer.id() == texture && IsInternalTextureTarget(mStencilbuffer.type()))
+    if (mStencilbuffer.id() == texture && IsInternalTextureTarget(mStencilbuffer.type(), mRenderer->getCurrentClientVersion()))
     {
         mStencilbuffer.set(NULL, GL_NONE, 0, 0);
     }
@@ -478,7 +478,7 @@ GLenum Framebuffer::completeness() const
                     return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
                 }
             }
-            else if (IsInternalTextureTarget(mColorbuffers[colorAttachment].type()))
+            else if (IsInternalTextureTarget(mColorbuffers[colorAttachment].type(), mRenderer->getCurrentClientVersion()))
             {
                 GLint internalformat = colorbuffer->getInternalFormat();
 
@@ -568,7 +568,7 @@ GLenum Framebuffer::completeness() const
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
         }
-        else if (IsInternalTextureTarget(mDepthbuffer.type()))
+        else if (IsInternalTextureTarget(mDepthbuffer.type(), mRenderer->getCurrentClientVersion()))
         {
             GLint internalformat = depthbuffer->getInternalFormat();
 
@@ -627,7 +627,7 @@ GLenum Framebuffer::completeness() const
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
         }
-        else if (IsInternalTextureTarget(mStencilbuffer.type()))
+        else if (IsInternalTextureTarget(mStencilbuffer.type(), mRenderer->getCurrentClientVersion()))
         {
             GLint internalformat = stencilbuffer->getInternalFormat();
 
