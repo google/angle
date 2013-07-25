@@ -42,7 +42,7 @@ bool IsMipmapFiltered(const SamplerState &samplerState)
     }
 }
 
-Texture::Texture(rx::Renderer *renderer, GLuint id) : RefCountObject(id)
+Texture::Texture(rx::Renderer *renderer, GLuint id, GLenum target) : RefCountObject(id)
 {
     mRenderer = renderer;
 
@@ -60,10 +60,17 @@ Texture::Texture(rx::Renderer *renderer, GLuint id) : RefCountObject(id)
     mDirtyImages = true;
 
     mImmutable = false;
+
+    mTarget = target;
 }
 
 Texture::~Texture()
 {
+}
+
+GLenum Texture::getTarget() const
+{
+    return mTarget;
 }
 
 // Returns true on successful filter state update (valid enum parameter)
@@ -358,7 +365,7 @@ GLint Texture::creationLevels(GLsizei size) const
     return creationLevels(size, size);
 }
 
-Texture2D::Texture2D(rx::Renderer *renderer, GLuint id) : Texture(renderer, id)
+Texture2D::Texture2D(rx::Renderer *renderer, GLuint id) : Texture(renderer, id, GL_TEXTURE_2D)
 {
     mTexStorage = NULL;
     mSurface = NULL;
@@ -405,11 +412,6 @@ void Texture2D::releaseProxy(const Renderbuffer *proxy)
 
     if (mProxyRefs == 0)
         mColorbufferProxy = NULL;
-}
-
-GLenum Texture2D::getTarget() const
-{
-    return GL_TEXTURE_2D;
 }
 
 GLsizei Texture2D::getWidth(GLint level) const
@@ -995,7 +997,7 @@ rx::TextureStorageInterface *Texture2D::getStorage(bool renderTarget)
     return mTexStorage;
 }
 
-TextureCubeMap::TextureCubeMap(rx::Renderer *renderer, GLuint id) : Texture(renderer, id)
+TextureCubeMap::TextureCubeMap(rx::Renderer *renderer, GLuint id) : Texture(renderer, id, GL_TEXTURE_CUBE_MAP)
 {
     mTexStorage = NULL;
     for (int i = 0; i < 6; i++)
@@ -1053,11 +1055,6 @@ void TextureCubeMap::releaseProxy(const Renderbuffer *proxy)
                 mFaceProxies[i] = NULL;
         }
     }
-}
-
-GLenum TextureCubeMap::getTarget() const
-{
-    return GL_TEXTURE_CUBE_MAP;
 }
 
 GLsizei TextureCubeMap::getWidth(GLenum target, GLint level) const
@@ -1653,7 +1650,7 @@ rx::TextureStorageInterface *TextureCubeMap::getStorage(bool renderTarget)
     return mTexStorage;
 }
 
-Texture3D::Texture3D(rx::Renderer *renderer, GLuint id) : Texture(renderer, id)
+Texture3D::Texture3D(rx::Renderer *renderer, GLuint id) : Texture(renderer, id, GL_TEXTURE_3D)
 {
     mTexStorage = NULL;
     mColorbufferProxy = NULL;
@@ -1690,11 +1687,6 @@ void Texture3D::releaseProxy(const Renderbuffer *proxy)
 
     if (mProxyRefs == 0)
         mColorbufferProxy = NULL;
-}
-
-GLenum Texture3D::getTarget() const
-{
-    return GL_TEXTURE_3D;
 }
 
 GLsizei Texture3D::getWidth(GLint level) const
@@ -2124,7 +2116,7 @@ void Texture3D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLint zoff
     }
 }
 
-Texture2DArray::Texture2DArray(rx::Renderer *renderer, GLuint id) : Texture(renderer, id)
+Texture2DArray::Texture2DArray(rx::Renderer *renderer, GLuint id) : Texture(renderer, id, GL_TEXTURE_2D_ARRAY)
 {
     mTexStorage = NULL;
     mColorbufferProxy = NULL;
@@ -2165,11 +2157,6 @@ void Texture2DArray::releaseProxy(const Renderbuffer *proxy)
 
     if (mProxyRefs == 0)
         mColorbufferProxy = NULL;
-}
-
-GLenum Texture2DArray::getTarget() const
-{
-    return GL_TEXTURE_2D_ARRAY;
 }
 
 GLsizei Texture2DArray::getWidth(GLint level) const

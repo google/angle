@@ -59,14 +59,14 @@ enum
 class Texture : public RefCountObject
 {
   public:
-    Texture(rx::Renderer *renderer, GLuint id);
+    Texture(rx::Renderer *renderer, GLuint id, GLenum target);
 
     virtual ~Texture();
 
     virtual void addProxyRef(const Renderbuffer *proxy) = 0;
     virtual void releaseProxy(const Renderbuffer *proxy) = 0;
 
-    virtual GLenum getTarget() const = 0;
+    GLenum getTarget() const;
 
     bool setMinFilter(GLenum filter);
     bool setMagFilter(GLenum filter);
@@ -133,6 +133,8 @@ class Texture : public RefCountObject
 
     bool mImmutable;
 
+    GLenum mTarget;
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture);
 
@@ -148,8 +150,6 @@ class Texture2D : public Texture
 
     void addProxyRef(const Renderbuffer *proxy);
     void releaseProxy(const Renderbuffer *proxy);
-
-    virtual GLenum getTarget() const;
 
     GLsizei getWidth(GLint level) const;
     GLsizei getHeight(GLint level) const;
@@ -219,8 +219,6 @@ class TextureCubeMap : public Texture
     void addProxyRef(const Renderbuffer *proxy);
     void releaseProxy(const Renderbuffer *proxy);
 
-    virtual GLenum getTarget() const;
-    
     GLsizei getWidth(GLenum target, GLint level) const;
     GLsizei getHeight(GLenum target, GLint level) const;
     GLenum getInternalFormat(GLenum target, GLint level) const;
@@ -295,8 +293,6 @@ class Texture3D : public Texture
     void addProxyRef(const Renderbuffer *proxy);
     void releaseProxy(const Renderbuffer *proxy);
 
-    virtual GLenum getTarget() const;
-
     GLsizei getWidth(GLint level) const;
     GLsizei getHeight(GLint level) const;
     GLsizei getDepth(GLint level) const;
@@ -360,8 +356,6 @@ class Texture2DArray : public Texture
 
     void addProxyRef(const Renderbuffer *proxy);
     void releaseProxy(const Renderbuffer *proxy);
-
-    virtual GLenum getTarget() const;
 
     GLsizei getWidth(GLint level) const;
     GLsizei getHeight(GLint level) const;
