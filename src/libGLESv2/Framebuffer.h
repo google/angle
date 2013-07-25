@@ -34,10 +34,10 @@ class Framebuffer
 
     virtual ~Framebuffer();
 
-    void setColorbuffer(unsigned int colorAttachment, GLenum type, GLuint colorbuffer);
-    void setDepthbuffer(GLenum type, GLuint depthbuffer);
-    void setStencilbuffer(GLenum type, GLuint stencilbuffer);
-    void setDepthStencilBuffer(GLenum type, GLuint depthStencilBuffer);
+    void setColorbuffer(unsigned int colorAttachment, GLenum type, GLuint colorbuffer, GLint level, GLint layer);
+    void setDepthbuffer(GLenum type, GLuint depthbuffer, GLint level, GLint layer);
+    void setStencilbuffer(GLenum type, GLuint stencilbuffer, GLint level, GLint layer);
+    void setDepthStencilBuffer(GLenum type, GLuint depthStencilBuffer, GLint level, GLint layer);
 
     void detachTexture(GLuint texture);
     void detachRenderbuffer(GLuint renderbuffer);
@@ -98,7 +98,7 @@ class Framebuffer
   private:
     DISALLOW_COPY_AND_ASSIGN(Framebuffer);
 
-    Renderbuffer *lookupRenderbuffer(GLenum type, GLuint handle) const;
+    Renderbuffer *lookupRenderbuffer(GLenum type, GLuint handle, GLint level, GLint layer) const;
 };
 
 class DefaultFramebuffer : public Framebuffer

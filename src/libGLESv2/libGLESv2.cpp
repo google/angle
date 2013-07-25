@@ -4114,17 +4114,17 @@ void __stdcall glFramebufferRenderbuffer(GLenum target, GLenum attachment, GLenu
                     return gl::error(GL_INVALID_VALUE);
                 }
 
-                framebuffer->setColorbuffer(colorAttachment, GL_RENDERBUFFER, renderbuffer);
+                framebuffer->setColorbuffer(colorAttachment, GL_RENDERBUFFER, renderbuffer, 0, 0);
             }
             else
             {
                 switch (attachment)
                 {
                   case GL_DEPTH_ATTACHMENT:
-                    framebuffer->setDepthbuffer(GL_RENDERBUFFER, renderbuffer);
+                    framebuffer->setDepthbuffer(GL_RENDERBUFFER, renderbuffer, 0, 0);
                     break;
                   case GL_STENCIL_ATTACHMENT:
-                    framebuffer->setStencilbuffer(GL_RENDERBUFFER, renderbuffer);
+                    framebuffer->setStencilbuffer(GL_RENDERBUFFER, renderbuffer, 0, 0);
                     break;
                   default:
                     return gl::error(GL_INVALID_ENUM);
@@ -4266,15 +4266,15 @@ void __stdcall glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum t
                     return gl::error(GL_INVALID_VALUE);
                 }
 
-                framebuffer->setColorbuffer(colorAttachment, textarget, texture);
+                framebuffer->setColorbuffer(colorAttachment, textarget, texture, level, 0);
             }
             else
             {
                 switch (attachment)
                 {
-                  case GL_DEPTH_ATTACHMENT:         framebuffer->setDepthbuffer(textarget, texture);        break;
-                  case GL_STENCIL_ATTACHMENT:       framebuffer->setStencilbuffer(textarget, texture);      break;
-                  case GL_DEPTH_STENCIL_ATTACHMENT: framebuffer->setDepthStencilBuffer(textarget, texture); break;
+                  case GL_DEPTH_ATTACHMENT:         framebuffer->setDepthbuffer(textarget, texture, level, 0);        break;
+                  case GL_STENCIL_ATTACHMENT:       framebuffer->setStencilbuffer(textarget, texture, level, 0);      break;
+                  case GL_DEPTH_STENCIL_ATTACHMENT: framebuffer->setDepthStencilBuffer(textarget, texture, level, 0); break;
                 }
             }
         }
@@ -5047,6 +5047,8 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
 
             GLenum attachmentType;
             GLuint attachmentHandle;
+            GLuint attachmentLevel;
+            GLuint attachmentLayer;
 
             if (attachment >= GL_COLOR_ATTACHMENT0_EXT && attachment <= GL_COLOR_ATTACHMENT15_EXT)
             {
@@ -5059,6 +5061,8 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
 
                 attachmentType = framebuffer->getColorbufferType(colorAttachment);
                 attachmentHandle = framebuffer->getColorbufferHandle(colorAttachment);
+                attachmentLevel = framebuffer->getColorbufferMipLevel(colorAttachment);
+                attachmentLayer = framebuffer->getColorbufferLayer(colorAttachment);
             }
             else
             {
@@ -5067,10 +5071,14 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
                   case GL_DEPTH_ATTACHMENT:
                     attachmentType = framebuffer->getDepthbufferType();
                     attachmentHandle = framebuffer->getDepthbufferHandle();
+                    attachmentLevel = framebuffer->getDepthbufferMipLevel();
+                    attachmentLayer = framebuffer->getDepthbufferLayer();
                     break;
                   case GL_STENCIL_ATTACHMENT:
                     attachmentType = framebuffer->getStencilbufferType();
                     attachmentHandle = framebuffer->getStencilbufferHandle();
+                    attachmentLevel = framebuffer->getStencilbufferMipLevel();
+                    attachmentLayer = framebuffer->getStencilbufferLayer();
                     break;
                   case GL_DEPTH_STENCIL_ATTACHMENT:
                     if (context->getClientVersion() < 3)
@@ -5083,6 +5091,8 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
                     }
                     attachmentType = framebuffer->getDepthStencilbufferType();
                     attachmentHandle = framebuffer->getDepthStencilbufferHandle();
+                    attachmentLevel = framebuffer->getDepthStencilbufferMipLevel();
+                    attachmentLayer = framebuffer->getDepthStencilbufferLayer();
                   default: return gl::error(GL_INVALID_ENUM);
                 }
             }
@@ -5120,7 +5130,7 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
               case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL:
                 if (attachmentObjectType == GL_TEXTURE)
                 {
-                    *params = 0; // FramebufferTexture2D will not allow level to be set to anything else in GL ES 2.0
+                    *params = attachmentLevel;
                 }
                 else
                 {
@@ -5144,6 +5154,20 @@ void __stdcall glGetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
                     return gl::error(GL_INVALID_ENUM);
                 }
                 break;
+              case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER:
+                  if (context->getClientVersion() < 3)
+                  {
+                      return gl::error(GL_INVALID_ENUM);
+                  }
+                  if (attachmentObjectType == GL_TEXTURE)
+                  {
+                      *params = attachmentLayer;
+                  }
+                  else
+                  {
+                      return gl::error(GL_INVALID_ENUM);
+                  }
+                  break;
               default:
                 return gl::error(GL_INVALID_ENUM);
             }

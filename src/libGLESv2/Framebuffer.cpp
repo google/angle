@@ -42,38 +42,88 @@ Framebuffer::~Framebuffer()
     mStencilbuffer.set(NULL, GL_NONE, 0, 0);
 }
 
-Renderbuffer *Framebuffer::lookupRenderbuffer(GLenum type, GLuint handle) const
+Renderbuffer *Framebuffer::lookupRenderbuffer(GLenum type, GLuint handle, GLint level, GLint layer) const
 {
     gl::Context *context = gl::getContext();
-    Renderbuffer *buffer = NULL;
 
-    if (type == GL_NONE)
+    switch (type)
     {
-        buffer = NULL;
-    }
-    else if (type == GL_RENDERBUFFER)
-    {
-        buffer = context->getRenderbuffer(handle);
-    }
-    else if (IsInternalTextureTarget(type))
-    {
-        buffer = context->getTexture(handle)->getRenderbuffer(type);
-    }
-    else
-    {
+      case GL_NONE:
+        return NULL;
+
+      case GL_RENDERBUFFER:
+        return context->getRenderbuffer(handle);
+
+      case GL_TEXTURE_2D:
+        {
+            Texture *texture = context->getTexture(handle);
+            if (texture && texture->getTarget() == GL_TEXTURE_2D)
+            {
+                return static_cast<Texture2D*>(texture)->getRenderbuffer(type);
+            }
+            else
+            {
+                return NULL;
+            }
+        }
+
+      case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
+      case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
+      case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
+      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
+      case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
+      case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
+        {
+            Texture *texture = context->getTexture(handle);
+            if (texture && texture->getTarget() == GL_TEXTURE_CUBE_MAP)
+            {
+                return static_cast<TextureCubeMap*>(texture)->getRenderbuffer(type);
+            }
+            else
+            {
+                return NULL;
+            }
+        }
+
+      case GL_TEXTURE_3D:
+        {
+            Texture *texture = context->getTexture(handle);
+            if (texture && texture->getTarget() == GL_TEXTURE_3D)
+            {
+                return static_cast<Texture3D*>(texture)->getRenderbuffer(type);
+            }
+            else
+            {
+                return NULL;
+            }
+        }
+
+      case GL_TEXTURE_2D_ARRAY:
+        {
+            Texture *texture = context->getTexture(handle);
+            if (texture && texture->getTarget() == GL_TEXTURE_2D_ARRAY)
+            {
+                return static_cast<Texture2DArray*>(texture)->getRenderbuffer(type);
+            }
+            else
+            {
+                return NULL;
+            }
+        }
+
+      default:
         UNREACHABLE();
+        return NULL;
     }
-
-    return buffer;
 }
 
-void Framebuffer::setColorbuffer(unsigned int colorAttachment, GLenum type, GLuint colorbuffer)
+void Framebuffer::setColorbuffer(unsigned int colorAttachment, GLenum type, GLuint colorbuffer, GLint level, GLint layer)
 {
     ASSERT(colorAttachment < IMPLEMENTATION_MAX_DRAW_BUFFERS);
-    Renderbuffer *renderBuffer = lookupRenderbuffer(type, colorbuffer);
+    Renderbuffer *renderBuffer = lookupRenderbuffer(type, colorbuffer, level, layer);
     if (renderBuffer)
     {
-        mColorbuffers[colorAttachment].set(renderBuffer, type, 0, 0);
+        mColorbuffers[colorAttachment].set(renderBuffer, type, level, layer);
     }
     else
     {
@@ -81,12 +131,12 @@ void Framebuffer::setColorbuffer(unsigned int colorAttachment, GLenum type, GLui
     }
 }
 
-void Framebuffer::setDepthbuffer(GLenum type, GLuint depthbuffer)
+void Framebuffer::setDepthbuffer(GLenum type, GLuint depthbuffer, GLint level, GLint layer)
 {
-    Renderbuffer *renderBuffer = lookupRenderbuffer(type, depthbuffer);
+    Renderbuffer *renderBuffer = lookupRenderbuffer(type, depthbuffer, level, layer);
     if (renderBuffer)
     {
-        mDepthbuffer.set(renderBuffer, type, 0, 0);
+        mDepthbuffer.set(renderBuffer, type, level, layer);
     }
     else
     {
@@ -94,12 +144,12 @@ void Framebuffer::setDepthbuffer(GLenum type, GLuint depthbuffer)
     }
 }
 
-void Framebuffer::setStencilbuffer(GLenum type, GLuint stencilbuffer)
+void Framebuffer::setStencilbuffer(GLenum type, GLuint stencilbuffer, GLint level, GLint layer)
 {
-    Renderbuffer *renderBuffer = lookupRenderbuffer(type, stencilbuffer);
+    Renderbuffer *renderBuffer = lookupRenderbuffer(type, stencilbuffer, level, layer);
     if (renderBuffer)
     {
-        mStencilbuffer.set(renderBuffer, type, 0, 0);
+        mStencilbuffer.set(renderBuffer, type, level, layer);
     }
     else
     {
@@ -107,13 +157,13 @@ void Framebuffer::setStencilbuffer(GLenum type, GLuint stencilbuffer)
     }
 }
 
-void Framebuffer::setDepthStencilBuffer(GLenum type, GLuint depthStencilBuffer)
+void Framebuffer::setDepthStencilBuffer(GLenum type, GLuint depthStencilBuffer, GLint level, GLint layer)
 {
-    Renderbuffer *renderBuffer = lookupRenderbuffer(type, depthStencilBuffer);
+    Renderbuffer *renderBuffer = lookupRenderbuffer(type, depthStencilBuffer, level, layer);
     if (renderBuffer && renderBuffer->getDepthSize() > 0 && renderBuffer->getStencilSize() > 0)
     {
-        mDepthbuffer.set(renderBuffer, type, 0, 0);
-        mStencilbuffer.set(renderBuffer, type, 0, 0);
+        mDepthbuffer.set(renderBuffer, type, level, layer);
+        mStencilbuffer.set(renderBuffer, type, level, layer);
     }
     else
     {
@@ -126,7 +176,8 @@ void Framebuffer::detachTexture(GLuint texture)
 {
     for (unsigned int colorAttachment = 0; colorAttachment < IMPLEMENTATION_MAX_DRAW_BUFFERS; colorAttachment++)
     {
-        if (mColorbuffers[colorAttachment].id() == texture && IsInternalTextureTarget(mColorbuffers[colorAttachment].type()))
+        if (mColorbuffers[colorAttachment].id() == texture &&
+            IsInternalTextureTarget(mColorbuffers[colorAttachment].type()))
         {
             mColorbuffers[colorAttachment].set(NULL, GL_NONE, 0, 0);
         }
