@@ -1544,6 +1544,282 @@ bool validateRenderbufferStorageParameters(const gl::Context *context, GLenum ta
     return true;
 }
 
+bool validateES2FramebufferTextureParameters(gl::Context *context, GLenum target, GLenum attachment,
+                                             GLenum textarget, GLuint texture, GLint level)
+{
+    META_ASSERT(GL_DRAW_FRAMEBUFFER == GL_DRAW_FRAMEBUFFER_ANGLE && GL_READ_FRAMEBUFFER == GL_READ_FRAMEBUFFER_ANGLE);
+
+    if (target != GL_FRAMEBUFFER && target != GL_DRAW_FRAMEBUFFER && target != GL_READ_FRAMEBUFFER)
+    {
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+
+    if (attachment >= GL_COLOR_ATTACHMENT0 && attachment <= GL_COLOR_ATTACHMENT15)
+    {
+        const unsigned int colorAttachment = (attachment - GL_COLOR_ATTACHMENT0);
+        if (colorAttachment >= context->getMaximumRenderTargets())
+        {
+            return gl::error(GL_INVALID_VALUE, false);
+        }
+    }
+    else
+    {
+        switch (attachment)
+        {
+          case GL_DEPTH_ATTACHMENT:
+          case GL_STENCIL_ATTACHMENT:
+            break;
+          default:
+            return gl::error(GL_INVALID_ENUM, false);
+        }
+    }
+
+    if (texture != 0)
+    {
+        gl::Texture *tex = context->getTexture(texture);
+
+        if (tex == NULL)
+        {
+            return gl::error(GL_INVALID_OPERATION, false);
+        }
+
+        switch (textarget)
+        {
+          case GL_TEXTURE_2D:
+            {
+                if (tex->getTarget() != GL_TEXTURE_2D)
+                {
+                    return gl::error(GL_INVALID_OPERATION, false);
+                }
+                gl::Texture2D *tex2d = static_cast<gl::Texture2D *>(tex);
+                if (tex2d->isCompressed(level))
+                {
+                    return gl::error(GL_INVALID_OPERATION, false);
+                }
+                break;
+            }
+
+          case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
+          case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
+          case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
+          case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
+          case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
+          case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
+            {
+                if (tex->getTarget() != GL_TEXTURE_CUBE_MAP)
+                {
+                    return gl::error(GL_INVALID_OPERATION, false);
+                }
+                gl::TextureCubeMap *texcube = static_cast<gl::TextureCubeMap *>(tex);
+                if (texcube->isCompressed(textarget, level))
+                {
+                    return gl::error(GL_INVALID_OPERATION, false);
+                }
+                break;
+            }
+
+          default:
+            return gl::error(GL_INVALID_ENUM, false);
+        }
+
+        if (level != 0)
+        {
+            return gl::error(GL_INVALID_VALUE, false);
+        }
+    }
+
+    gl::Framebuffer *framebuffer = NULL;
+    GLuint framebufferHandle = 0;
+    if (target == GL_READ_FRAMEBUFFER)
+    {
+        framebuffer = context->getReadFramebuffer();
+        framebufferHandle = context->getReadFramebufferHandle();
+    }
+    else
+    {
+        framebuffer = context->getDrawFramebuffer();
+        framebufferHandle = context->getDrawFramebufferHandle();
+    }
+
+    if (framebufferHandle == 0 || !framebuffer)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    return true;
+}
+
+bool validateES3FramebufferTextureParameters(gl::Context *context, GLenum target, GLenum attachment,
+                                             GLenum textarget, GLuint texture, GLint level, GLint layer,
+                                             bool layerCall)
+{
+    if (target != GL_FRAMEBUFFER && target != GL_DRAW_FRAMEBUFFER && target != GL_READ_FRAMEBUFFER)
+    {
+        return gl::error(GL_INVALID_ENUM, false);
+    }
+
+    if (attachment >= GL_COLOR_ATTACHMENT0 && attachment <= GL_COLOR_ATTACHMENT15)
+    {
+        const unsigned int colorAttachment = (attachment - GL_COLOR_ATTACHMENT0);
+        if (colorAttachment >= context->getMaximumRenderTargets())
+        {
+            return gl::error(GL_INVALID_VALUE, false);
+        }
+    }
+    else
+    {
+        switch (attachment)
+        {
+          case GL_DEPTH_ATTACHMENT:
+          case GL_STENCIL_ATTACHMENT:
+          case GL_DEPTH_STENCIL_ATTACHMENT:
+            break;
+          default:
+            return gl::error(GL_INVALID_ENUM, false);
+        }
+    }
+
+    if (texture != 0)
+    {
+        gl::Texture *tex = context->getTexture(texture);
+
+        if (tex == NULL)
+        {
+            return gl::error(GL_INVALID_OPERATION, false);
+        }
+
+        if (level < 0)
+        {
+            return gl::error(GL_INVALID_VALUE, false);
+        }
+
+        if (layer < 0)
+        {
+            return gl::error(GL_INVALID_VALUE, false);
+        }
+
+        if (!layerCall)
+        {
+            switch (textarget)
+            {
+              case GL_TEXTURE_2D:
+                {
+                    if (level > gl::log2(context->getMaximum2DTextureDimension()))
+                    {
+                        return gl::error(GL_INVALID_VALUE, false);
+                    }
+                    if (tex->getTarget() != GL_TEXTURE_2D)
+                    {
+                        return gl::error(GL_INVALID_OPERATION, false);
+                    }
+                    gl::Texture2D *tex2d = static_cast<gl::Texture2D *>(tex);
+                    if (tex2d->isCompressed(level))
+                    {
+                        return gl::error(GL_INVALID_OPERATION, false);
+                    }
+                    break;
+                }
+
+              case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
+              case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
+              case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
+              case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
+              case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
+              case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
+                {
+                    if (level > gl::log2(context->getMaximumCubeTextureDimension()))
+                    {
+                        return gl::error(GL_INVALID_VALUE, false);
+                    }
+                    if (tex->getTarget() != GL_TEXTURE_CUBE_MAP)
+                    {
+                        return gl::error(GL_INVALID_OPERATION, false);
+                    }
+                    gl::TextureCubeMap *texcube = static_cast<gl::TextureCubeMap *>(tex);
+                    if (texcube->isCompressed(textarget, level))
+                    {
+                        return gl::error(GL_INVALID_OPERATION, false);
+                    }
+                    break;
+                }
+
+              default:
+                return gl::error(GL_INVALID_ENUM, false);
+            }
+        }
+        else
+        {
+            switch (tex->getTarget())
+            {
+              case GL_TEXTURE_2D_ARRAY:
+                {
+                    if (level > gl::log2(context->getMaximum2DTextureDimension()))
+                    {
+                        return gl::error(GL_INVALID_VALUE, false);
+                    }
+
+                    if (layer >= context->getMaximum2DArrayTextureLayers())
+                    {
+                        return gl::error(GL_INVALID_VALUE, false);
+                    }
+
+                    gl::Texture2DArray *texArray = static_cast<gl::Texture2DArray *>(tex);
+                    if (texArray->isCompressed(level))
+                    {
+                        return gl::error(GL_INVALID_OPERATION, false);
+                    }
+
+                    break;
+                }
+
+              case GL_TEXTURE_3D:
+                {
+                    if (level > gl::log2(context->getMaximum3DTextureDimension()))
+                    {
+                        return gl::error(GL_INVALID_VALUE, false);
+                    }
+
+                    if (layer >= context->getMaximum3DTextureDimension())
+                    {
+                        return gl::error(GL_INVALID_VALUE, false);
+                    }
+
+                    gl::Texture3D *tex3d = static_cast<gl::Texture3D *>(tex);
+                    if (tex3d->isCompressed(level))
+                    {
+                        return gl::error(GL_INVALID_OPERATION, false);
+                    }
+
+                    break;
+                }
+
+              default:
+                return gl::error(GL_INVALID_OPERATION, false);
+            }
+        }
+    }
+
+    gl::Framebuffer *framebuffer = NULL;
+    GLuint framebufferHandle = 0;
+    if (target == GL_READ_FRAMEBUFFER)
+    {
+        framebuffer = context->getReadFramebuffer();
+        framebufferHandle = context->getReadFramebufferHandle();
+    }
+    else
+    {
+        framebuffer = context->getDrawFramebuffer();
+        framebufferHandle = context->getDrawFramebufferHandle();
+    }
+
+    if (framebufferHandle == 0 || !framebuffer)
+    {
+        return gl::error(GL_INVALID_OPERATION, false);
+    }
+
+    return true;
+}
+
 // check for combinations of format and type that are valid for ReadPixels
 bool validES2ReadFormatType(GLenum format, GLenum type)
 {
@@ -4145,127 +4421,39 @@ void __stdcall glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum t
 
     try
     {
-        if (target != GL_FRAMEBUFFER && target != GL_DRAW_FRAMEBUFFER_ANGLE && target != GL_READ_FRAMEBUFFER_ANGLE)
-        {
-            return gl::error(GL_INVALID_ENUM);
-        }
-
         gl::Context *context = gl::getNonLostContext();
-
         if (context)
         {
-            if (attachment >= GL_COLOR_ATTACHMENT0_EXT && attachment <= GL_COLOR_ATTACHMENT15_EXT)
+            if (context->getClientVersion() < 3 &&
+                !validateES2FramebufferTextureParameters(context, target, attachment, textarget, texture, level))
             {
-                const unsigned int colorAttachment = (attachment - GL_COLOR_ATTACHMENT0_EXT);
-
-                if (colorAttachment >= context->getMaximumRenderTargets())
-                {
-                    return gl::error(GL_INVALID_VALUE);
-                }
+                return;
             }
-            else
+
+            if (context->getClientVersion() >= 3 &&
+                !validateES3FramebufferTextureParameters(context, target, attachment, textarget, texture, level, 0, false))
             {
-                switch (attachment)
-                {
-                  case GL_DEPTH_ATTACHMENT:
-                  case GL_STENCIL_ATTACHMENT:
-                    break;
-                  case GL_DEPTH_STENCIL_ATTACHMENT:
-                    if (context->getClientVersion() < 3)
-                    {
-                        return gl::error(GL_INVALID_ENUM);
-                    }
-                    break;
-                  default:
-                    return gl::error(GL_INVALID_ENUM);
-                }
+                return;
             }
 
             if (texture == 0)
             {
                 textarget = GL_NONE;
             }
-            else
-            {
-                gl::Texture *tex = context->getTexture(texture);
-
-                if (tex == NULL)
-                {
-                    return gl::error(GL_INVALID_OPERATION);
-                }
-
-                switch (textarget)
-                {
-                  case GL_TEXTURE_2D:
-                    {
-                        if (tex->getTarget() != GL_TEXTURE_2D)
-                        {
-                            return gl::error(GL_INVALID_OPERATION);
-                        }
-                        gl::Texture2D *tex2d = static_cast<gl::Texture2D *>(tex);
-                        if (tex2d->isCompressed(0))
-                        {
-                            return gl::error(GL_INVALID_OPERATION);
-                        }
-                        break;
-                    }
-
-                  case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
-                  case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
-                  case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
-                  case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
-                  case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
-                  case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
-                    {
-                        if (tex->getTarget() != GL_TEXTURE_CUBE_MAP)
-                        {
-                            return gl::error(GL_INVALID_OPERATION);
-                        }
-                        gl::TextureCubeMap *texcube = static_cast<gl::TextureCubeMap *>(tex);
-                        if (texcube->isCompressed(textarget, level))
-                        {
-                            return gl::error(GL_INVALID_OPERATION);
-                        }
-                        break;
-                    }
-
-                  default:
-                    return gl::error(GL_INVALID_ENUM);
-                }
-
-                if (level != 0)
-                {
-                    return gl::error(GL_INVALID_VALUE);
-                }
-            }
 
             gl::Framebuffer *framebuffer = NULL;
-            GLuint framebufferHandle = 0;
             if (target == GL_READ_FRAMEBUFFER_ANGLE)
             {
                 framebuffer = context->getReadFramebuffer();
-                framebufferHandle = context->getReadFramebufferHandle();
             }
             else
             {
                 framebuffer = context->getDrawFramebuffer();
-                framebufferHandle = context->getDrawFramebufferHandle();
-            }
-
-            if (framebufferHandle == 0 || !framebuffer)
-            {
-                return gl::error(GL_INVALID_OPERATION);
             }
 
             if (attachment >= GL_COLOR_ATTACHMENT0_EXT && attachment <= GL_COLOR_ATTACHMENT15_EXT)
             {
                 const unsigned int colorAttachment = (attachment - GL_COLOR_ATTACHMENT0_EXT);
-
-                if (colorAttachment >= context->getMaximumRenderTargets())
-                {
-                    return gl::error(GL_INVALID_VALUE);
-                }
-
                 framebuffer->setColorbuffer(colorAttachment, textarget, texture, level, 0);
             }
             else
@@ -9222,7 +9410,6 @@ void __stdcall glBlitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint sr
     try
     {
         gl::Context *context = gl::getNonLostContext();
-
         if (context)
         {
             if (context->getClientVersion() < 3)
@@ -9294,8 +9481,38 @@ void __stdcall glFramebufferTextureLayer(GLenum target, GLenum attachment, GLuin
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glFramebufferTextureLayer
-            UNIMPLEMENTED();
+            if (!validateES3FramebufferTextureParameters(context, target, attachment, GL_NONE, texture, level, layer, true))
+            {
+                return;
+            }
+
+            gl::Framebuffer *framebuffer = NULL;
+            if (target == GL_READ_FRAMEBUFFER)
+            {
+                framebuffer = context->getReadFramebuffer();
+            }
+            else
+            {
+                framebuffer = context->getDrawFramebuffer();
+            }
+
+            gl::Texture *textureObject = context->getTexture(texture);
+            GLenum textarget = textureObject ? textureObject->getTarget() : GL_NONE;
+
+            if (attachment >= GL_COLOR_ATTACHMENT0_EXT && attachment <= GL_COLOR_ATTACHMENT15_EXT)
+            {
+                const unsigned int colorAttachment = (attachment - GL_COLOR_ATTACHMENT0_EXT);
+                framebuffer->setColorbuffer(colorAttachment, textarget, texture, level, layer);
+            }
+            else
+            {
+                switch (attachment)
+                {
+                case GL_DEPTH_ATTACHMENT:         framebuffer->setDepthbuffer(textarget, texture, level, layer);        break;
+                case GL_STENCIL_ATTACHMENT:       framebuffer->setStencilbuffer(textarget, texture, level, layer);      break;
+                case GL_DEPTH_STENCIL_ATTACHMENT: framebuffer->setDepthStencilBuffer(textarget, texture, level, layer); break;
+                }
+            }
         }
     }
     catch(std::bad_alloc&)
