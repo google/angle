@@ -62,7 +62,7 @@ class RenderbufferInterface
 class RenderbufferTexture2D : public RenderbufferInterface
 {
   public:
-    RenderbufferTexture2D(Texture2D *texture, GLenum target);
+    RenderbufferTexture2D(Texture2D *texture, GLint level);
 
     virtual ~RenderbufferTexture2D();
 
@@ -84,13 +84,13 @@ class RenderbufferTexture2D : public RenderbufferInterface
     DISALLOW_COPY_AND_ASSIGN(RenderbufferTexture2D);
 
     BindingPointer <Texture2D> mTexture2D;
-    GLenum mTarget;
+    const GLint mLevel;
 };
 
 class RenderbufferTextureCubeMap : public RenderbufferInterface
 {
   public:
-    RenderbufferTextureCubeMap(TextureCubeMap *texture, GLenum target);
+    RenderbufferTextureCubeMap(TextureCubeMap *texture, GLenum faceTarget, GLint level);
 
     virtual ~RenderbufferTextureCubeMap();
 
@@ -112,7 +112,8 @@ class RenderbufferTextureCubeMap : public RenderbufferInterface
     DISALLOW_COPY_AND_ASSIGN(RenderbufferTextureCubeMap);
 
     BindingPointer <TextureCubeMap> mTextureCubeMap;
-    GLenum mTarget;
+    const GLint mLevel;
+    const GLenum mFaceTarget;
 };
 
 // A class derived from RenderbufferStorage is created whenever glRenderbufferStorage
@@ -136,8 +137,7 @@ class RenderbufferStorage : public RenderbufferInterface
 
     virtual unsigned int getSerial() const;
 
-    static unsigned int issueSerial();
-    static unsigned int issueCubeSerials();
+    static unsigned int issueSerials(GLuint count);
 
   protected:
     GLsizei mWidth;

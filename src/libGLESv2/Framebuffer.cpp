@@ -59,7 +59,7 @@ Renderbuffer *Framebuffer::lookupRenderbuffer(GLenum type, GLuint handle, GLint 
             Texture *texture = context->getTexture(handle);
             if (texture && texture->getTarget() == GL_TEXTURE_2D)
             {
-                return static_cast<Texture2D*>(texture)->getRenderbuffer(type);
+                return static_cast<Texture2D*>(texture)->getRenderbuffer(level);
             }
             else
             {
@@ -77,7 +77,7 @@ Renderbuffer *Framebuffer::lookupRenderbuffer(GLenum type, GLuint handle, GLint 
             Texture *texture = context->getTexture(handle);
             if (texture && texture->getTarget() == GL_TEXTURE_CUBE_MAP)
             {
-                return static_cast<TextureCubeMap*>(texture)->getRenderbuffer(type);
+                return static_cast<TextureCubeMap*>(texture)->getRenderbuffer(type, level);
             }
             else
             {
@@ -90,7 +90,7 @@ Renderbuffer *Framebuffer::lookupRenderbuffer(GLenum type, GLuint handle, GLint 
             Texture *texture = context->getTexture(handle);
             if (texture && texture->getTarget() == GL_TEXTURE_3D)
             {
-                return static_cast<Texture3D*>(texture)->getRenderbuffer(type);
+                return static_cast<Texture3D*>(texture)->getRenderbuffer(level, layer);
             }
             else
             {
@@ -103,7 +103,7 @@ Renderbuffer *Framebuffer::lookupRenderbuffer(GLenum type, GLuint handle, GLint 
             Texture *texture = context->getTexture(handle);
             if (texture && texture->getTarget() == GL_TEXTURE_2D_ARRAY)
             {
-                return static_cast<Texture2DArray*>(texture)->getRenderbuffer(type);
+                return static_cast<Texture2DArray*>(texture)->getRenderbuffer(level, layer);
             }
             else
             {

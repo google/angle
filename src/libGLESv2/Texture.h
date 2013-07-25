@@ -20,6 +20,7 @@
 #include "common/debug.h"
 #include "common/RefCountObject.h"
 #include "libGLESv2/angletypes.h"
+#include "libGLESv2/RenderbufferProxySet.h"
 
 namespace egl
 {
@@ -63,8 +64,8 @@ class Texture : public RefCountObject
 
     virtual ~Texture();
 
-    virtual void addProxyRef(const Renderbuffer *proxy) = 0;
-    virtual void releaseProxy(const Renderbuffer *proxy) = 0;
+    void addProxyRef(const Renderbuffer *proxy);
+    void releaseProxy(const Renderbuffer *proxy);
 
     GLenum getTarget() const;
 
@@ -92,7 +93,6 @@ class Texture : public RefCountObject
     virtual bool isSamplerComplete(const SamplerState &samplerState) const = 0;
 
     rx::TextureStorageInterface *getNativeTexture();
-    virtual Renderbuffer *getRenderbuffer(GLenum target) = 0;
 
     virtual void generateMipmaps() = 0;
     virtual void copySubImage(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height, Framebuffer *source) = 0;
@@ -101,7 +101,6 @@ class Texture : public RefCountObject
     bool hasDirtyImages() const;
     void resetDirty();
     unsigned int getTextureSerial();
-    unsigned int getRenderTargetSerial(GLenum target);
 
     bool isImmutable() const;
 
@@ -122,7 +121,6 @@ class Texture : public RefCountObject
     virtual void createTexture() = 0;
     virtual void updateTexture() = 0;
     virtual void convertToRenderTarget() = 0;
-    virtual rx::RenderTarget *getRenderTarget(GLenum target) = 0;
 
     rx::Renderer *mRenderer;
 
@@ -134,6 +132,13 @@ class Texture : public RefCountObject
     bool mImmutable;
 
     GLenum mTarget;
+
+    // A specific internal reference count is kept for colorbuffer proxy references,
+    // because, as the renderbuffer acting as proxy will maintain a binding pointer
+    // back to this texture, there would be a circular reference if we used a binding
+    // pointer here. This reference count will cause the pointer to be set to NULL if
+    // the count drops to zero, but will not cause deletion of the Renderbuffer.
+    RenderbufferProxySet mRenderbufferProxies;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Texture);
@@ -147,9 +152,6 @@ class Texture2D : public Texture
     Texture2D(rx::Renderer *renderer, GLuint id);
 
     ~Texture2D();
-
-    void addProxyRef(const Renderbuffer *proxy);
-    void releaseProxy(const Renderbuffer *proxy);
 
     GLsizei getWidth(GLint level) const;
     GLsizei getHeight(GLint level) const;
@@ -172,12 +174,13 @@ class Texture2D : public Texture
 
     virtual void generateMipmaps();
 
-    virtual Renderbuffer *getRenderbuffer(GLenum target);
+    Renderbuffer *getRenderbuffer(GLint level);
+    unsigned int getRenderTargetSerial(GLint level);
 
   protected:
     friend class RenderbufferTexture2D;
-    virtual rx::RenderTarget *getRenderTarget(GLenum target);
-    virtual rx::RenderTarget *getDepthStencil(GLenum target);
+    rx::RenderTarget *getRenderTarget(GLint level);
+    rx::RenderTarget *getDepthSencil(GLint level);
     virtual int levelCount();
 
   private:
@@ -199,14 +202,6 @@ class Texture2D : public Texture
 
     rx::TextureStorageInterface2D *mTexStorage;
     egl::Surface *mSurface;
-
-    // A specific internal reference count is kept for colorbuffer proxy references,
-    // because, as the renderbuffer acting as proxy will maintain a binding pointer
-    // back to this texture, there would be a circular reference if we used a binding
-    // pointer here. This reference count will cause the pointer to be set to NULL if
-    // the count drops to zero, but will not cause deletion of the Renderbuffer.
-    Renderbuffer *mColorbufferProxy;
-    unsigned int mProxyRefs;
 };
 
 class TextureCubeMap : public Texture
@@ -216,14 +211,12 @@ class TextureCubeMap : public Texture
 
     ~TextureCubeMap();
 
-    void addProxyRef(const Renderbuffer *proxy);
-    void releaseProxy(const Renderbuffer *proxy);
-
     GLsizei getWidth(GLenum target, GLint level) const;
     GLsizei getHeight(GLenum target, GLint level) const;
     GLenum getInternalFormat(GLenum target, GLint level) const;
     GLenum getActualFormat(GLenum target, GLint level) const;
     bool isCompressed(GLenum target, GLint level) const;
+    bool isDepth(GLenum target, GLint level) const;
 
     void setImagePosX(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
     void setImageNegX(GLint level, GLsizei width, GLsizei height, GLint internalFormat, GLenum format, GLenum type, GLint unpackAlignment, const void *pixels);
@@ -244,13 +237,15 @@ class TextureCubeMap : public Texture
 
     virtual void generateMipmaps();
 
-    virtual Renderbuffer *getRenderbuffer(GLenum target);
+    Renderbuffer *getRenderbuffer(GLenum target, GLint level);
+    unsigned int getRenderTargetSerial(GLenum faceTarget, GLint level);
 
     static unsigned int faceIndex(GLenum face);
 
   protected:
     friend class RenderbufferTextureCubeMap;
-    virtual rx::RenderTarget *getRenderTarget(GLenum target);
+    rx::RenderTarget *getRenderTarget(GLenum target, GLint level);
+    rx::RenderTarget *getDepthStencil(GLenum target, GLint level);
     virtual int levelCount();
 
   private:
@@ -273,14 +268,6 @@ class TextureCubeMap : public Texture
     rx::Image *mImageArray[6][IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
     rx::TextureStorageInterfaceCube *mTexStorage;
-
-    // A specific internal reference count is kept for colorbuffer proxy references,
-    // because, as the renderbuffer acting as proxy will maintain a binding pointer
-    // back to this texture, there would be a circular reference if we used a binding
-    // pointer here. This reference count will cause the pointer to be set to NULL if
-    // the count drops to zero, but will not cause deletion of the Renderbuffer.
-    Renderbuffer *mFaceProxies[6];
-    unsigned int *mFaceProxyRefs[6];
 };
 
 class Texture3D : public Texture
@@ -289,9 +276,6 @@ class Texture3D : public Texture
     Texture3D(rx::Renderer *renderer, GLuint id);
 
     ~Texture3D();
-
-    void addProxyRef(const Renderbuffer *proxy);
-    void releaseProxy(const Renderbuffer *proxy);
 
     GLsizei getWidth(GLint level) const;
     GLsizei getHeight(GLint level) const;
@@ -313,9 +297,12 @@ class Texture3D : public Texture
     virtual bool isSamplerComplete(const SamplerState &samplerState) const;
     virtual bool isMipmapComplete() const;
 
-    virtual Renderbuffer *getRenderbuffer(GLenum target);
+    Renderbuffer *getRenderbuffer(GLint level, GLint layer);
+    unsigned int getRenderTargetSerial(GLint level, GLint layer);
 
   protected:
+    rx::RenderTarget *getRenderTarget(GLint level, GLint layer);
+    rx::RenderTarget *getDepthStencil(GLint level, GLint layer);
     virtual int levelCount();
 
   private:
@@ -324,7 +311,6 @@ class Texture3D : public Texture
     virtual void createTexture();
     virtual void updateTexture();
     virtual void convertToRenderTarget();
-    virtual rx::RenderTarget *getRenderTarget(GLenum target);
 
     virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
 
@@ -337,14 +323,6 @@ class Texture3D : public Texture
     rx::Image *mImageArray[IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
     rx::TextureStorageInterface3D *mTexStorage;
-
-    // A specific internal reference count is kept for colorbuffer proxy references,
-    // because, as the renderbuffer acting as proxy will maintain a binding pointer
-    // back to this texture, there would be a circular reference if we used a binding
-    // pointer here. This reference count will cause the pointer to be set to NULL if
-    // the count drops to zero, but will not cause deletion of the Renderbuffer.
-    Renderbuffer *mColorbufferProxy;
-    unsigned int mProxyRefs;
 };
 
 class Texture2DArray : public Texture
@@ -353,9 +331,6 @@ class Texture2DArray : public Texture
     Texture2DArray(rx::Renderer *renderer, GLuint id);
 
     ~Texture2DArray();
-
-    void addProxyRef(const Renderbuffer *proxy);
-    void releaseProxy(const Renderbuffer *proxy);
 
     GLsizei getWidth(GLint level) const;
     GLsizei getHeight(GLint level) const;
@@ -377,9 +352,12 @@ class Texture2DArray : public Texture
     virtual bool isSamplerComplete(const SamplerState &samplerState) const;
     virtual bool isMipmapComplete() const;
 
-    virtual Renderbuffer *getRenderbuffer(GLenum target);
+    Renderbuffer *getRenderbuffer(GLint level, GLint layer);
+    unsigned int getRenderTargetSerial(GLint level, GLint layer);
 
   protected:
+    rx::RenderTarget *getRenderTarget(GLint level, GLint layer);
+    rx::RenderTarget *getDepthStencil(GLint level, GLint layer);
     virtual int levelCount();
 
   private:
@@ -388,7 +366,6 @@ class Texture2DArray : public Texture
     virtual void createTexture();
     virtual void updateTexture();
     virtual void convertToRenderTarget();
-    virtual rx::RenderTarget *getRenderTarget(GLenum target);
 
     virtual rx::TextureStorageInterface *getStorage(bool renderTarget);
 
@@ -406,14 +383,6 @@ class Texture2DArray : public Texture
     rx::Image **mImageArray[IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
     rx::TextureStorageInterface2DArray *mTexStorage;
-
-    // A specific internal reference count is kept for colorbuffer proxy references,
-    // because, as the renderbuffer acting as proxy will maintain a binding pointer
-    // back to this texture, there would be a circular reference if we used a binding
-    // pointer here. This reference count will cause the pointer to be set to NULL if
-    // the count drops to zero, but will not cause deletion of the Renderbuffer.
-    Renderbuffer *mColorbufferProxy;
-    unsigned int mProxyRefs;
 };
 
 }

@@ -277,6 +277,8 @@
             'libGLESv2/Query.cpp',
             'libGLESv2/Renderbuffer.cpp',
             'libGLESv2/Renderbuffer.h',
+            'libGLESv2/RenderbufferProxySet.cpp',
+            'libGLESv2/RenderbufferProxySet.h',
             'libGLESv2/renderer/Blit9.cpp',
             'libGLESv2/renderer/Blit9.h',
             'libGLESv2/renderer/Blit11.cpp',

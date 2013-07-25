@@ -38,7 +38,7 @@ void RenderbufferInterface::releaseProxy(const Renderbuffer *proxy)
 
 ///// RenderbufferTexture2D Implementation ////////
 
-RenderbufferTexture2D::RenderbufferTexture2D(Texture2D *texture, GLenum target) : mTarget(target)
+RenderbufferTexture2D::RenderbufferTexture2D(Texture2D *texture, GLint level) : mLevel(level)
 {
     mTexture2D.set(texture);
 }
@@ -62,32 +62,32 @@ void RenderbufferTexture2D::releaseProxy(const Renderbuffer *proxy)
 
 rx::RenderTarget *RenderbufferTexture2D::getRenderTarget()
 {
-    return mTexture2D->getRenderTarget(mTarget);
+    return mTexture2D->getRenderTarget(mLevel);
 }
 
 rx::RenderTarget *RenderbufferTexture2D::getDepthStencil()
 {
-    return mTexture2D->getDepthStencil(mTarget);
+    return mTexture2D->getDepthSencil(mLevel);
 }
 
 GLsizei RenderbufferTexture2D::getWidth() const
 {
-    return mTexture2D->getWidth(0);
+    return mTexture2D->getWidth(mLevel);
 }
 
 GLsizei RenderbufferTexture2D::getHeight() const
 {
-    return mTexture2D->getHeight(0);
+    return mTexture2D->getHeight(mLevel);
 }
 
 GLenum RenderbufferTexture2D::getInternalFormat() const
 {
-    return mTexture2D->getInternalFormat(0);
+    return mTexture2D->getInternalFormat(mLevel);
 }
 
 GLenum RenderbufferTexture2D::getActualFormat() const
 {
-    return mTexture2D->getActualFormat(0);
+    return mTexture2D->getActualFormat(mLevel);
 }
 
 GLsizei RenderbufferTexture2D::getSamples() const
@@ -97,12 +97,13 @@ GLsizei RenderbufferTexture2D::getSamples() const
 
 unsigned int RenderbufferTexture2D::getSerial() const
 {
-    return mTexture2D->getRenderTargetSerial(mTarget);
+    return mTexture2D->getRenderTargetSerial(mLevel);
 }
 
 ///// RenderbufferTextureCubeMap Implementation ////////
 
-RenderbufferTextureCubeMap::RenderbufferTextureCubeMap(TextureCubeMap *texture, GLenum target) : mTarget(target)
+RenderbufferTextureCubeMap::RenderbufferTextureCubeMap(TextureCubeMap *texture, GLenum faceTarget, GLint level)
+    : mFaceTarget(faceTarget), mLevel(level)
 {
     mTextureCubeMap.set(texture);
 }
@@ -126,32 +127,32 @@ void RenderbufferTextureCubeMap::releaseProxy(const Renderbuffer *proxy)
 
 rx::RenderTarget *RenderbufferTextureCubeMap::getRenderTarget()
 {
-    return mTextureCubeMap->getRenderTarget(mTarget);
+    return mTextureCubeMap->getRenderTarget(mFaceTarget, mLevel);
 }
 
 rx::RenderTarget *RenderbufferTextureCubeMap::getDepthStencil()
 {
-    return NULL;
+    return mTextureCubeMap->getDepthStencil(mFaceTarget, mLevel);
 }
 
 GLsizei RenderbufferTextureCubeMap::getWidth() const
 {
-    return mTextureCubeMap->getWidth(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0);
+    return mTextureCubeMap->getWidth(mFaceTarget, mLevel);
 }
 
 GLsizei RenderbufferTextureCubeMap::getHeight() const
 {
-    return mTextureCubeMap->getHeight(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0);
+    return mTextureCubeMap->getHeight(mFaceTarget, mLevel);
 }
 
 GLenum RenderbufferTextureCubeMap::getInternalFormat() const
 {
-    return mTextureCubeMap->getInternalFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0);
+    return mTextureCubeMap->getInternalFormat(mFaceTarget, mLevel);
 }
 
 GLenum RenderbufferTextureCubeMap::getActualFormat() const
 {
-    return mTextureCubeMap->getActualFormat(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0);
+    return mTextureCubeMap->getActualFormat(mFaceTarget, mLevel);
 }
 
 GLsizei RenderbufferTextureCubeMap::getSamples() const
@@ -161,7 +162,7 @@ GLsizei RenderbufferTextureCubeMap::getSamples() const
 
 unsigned int RenderbufferTextureCubeMap::getSerial() const
 {
-    return mTextureCubeMap->getRenderTargetSerial(mTarget);
+    return mTextureCubeMap->getRenderTargetSerial(mFaceTarget, mLevel);
 }
 
 ////// Renderbuffer Implementation //////
@@ -274,7 +275,7 @@ void Renderbuffer::setStorage(RenderbufferStorage *newStorage)
     mInstance = newStorage;
 }
 
-RenderbufferStorage::RenderbufferStorage() : mSerial(issueSerial())
+RenderbufferStorage::RenderbufferStorage() : mSerial(issueSerials(1))
 {
     mWidth = 0;
     mHeight = 0;
@@ -327,15 +328,10 @@ unsigned int RenderbufferStorage::getSerial() const
     return mSerial;
 }
 
-unsigned int RenderbufferStorage::issueSerial()
-{
-    return mCurrentSerial++;
-}
-
-unsigned int RenderbufferStorage::issueCubeSerials()
+unsigned int RenderbufferStorage::issueSerials(GLuint count)
 {
     unsigned int firstSerial = mCurrentSerial;
-    mCurrentSerial += 6;
+    mCurrentSerial += count;
     return firstSerial;
 }
 
@@ -377,12 +373,7 @@ Colorbuffer::~Colorbuffer()
 
 rx::RenderTarget *Colorbuffer::getRenderTarget()
 {
-    if (mRenderTarget)
-    {
-        return mRenderTarget;
-    }
-
-    return NULL;
+    return mRenderTarget;
 }
 
 DepthStencilbuffer::DepthStencilbuffer(rx::Renderer *renderer, rx::SwapChain *swapChain)
@@ -420,12 +411,7 @@ DepthStencilbuffer::~DepthStencilbuffer()
 
 rx::RenderTarget *DepthStencilbuffer::getDepthStencil()
 {
-    if (mDepthStencil)
-    {
-        return mDepthStencil;
-    }
-
-    return NULL;
+    return mDepthStencil;
 }
 
 Depthbuffer::Depthbuffer(rx::Renderer *renderer, int width, int height, GLsizei samples) : DepthStencilbuffer(renderer, width, height, samples)

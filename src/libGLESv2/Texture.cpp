@@ -73,6 +73,16 @@ GLenum Texture::getTarget() const
     return mTarget;
 }
 
+void Texture::addProxyRef(const Renderbuffer *proxy)
+{
+    mRenderbufferProxies.addRef(proxy);
+}
+
+void Texture::releaseProxy(const Renderbuffer *proxy)
+{
+    mRenderbufferProxies.release(proxy);
+}
+
 // Returns true on successful filter state update (valid enum parameter)
 bool Texture::setMinFilter(GLenum filter)
 {
@@ -330,12 +340,6 @@ unsigned int Texture::getTextureSerial()
     return texture ? texture->getTextureSerial() : 0;
 }
 
-unsigned int Texture::getRenderTargetSerial(GLenum target)
-{
-    rx::TextureStorageInterface *texture = getStorage(true);
-    return texture ? texture->getRenderTargetSerial(target) : 0;
-}
-
 bool Texture::isImmutable() const
 {
     return mImmutable;
@@ -369,8 +373,6 @@ Texture2D::Texture2D(rx::Renderer *renderer, GLuint id) : Texture(renderer, id, 
 {
     mTexStorage = NULL;
     mSurface = NULL;
-    mColorbufferProxy = NULL;
-    mProxyRefs = 0;
 
     for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++i)
     {
@@ -380,8 +382,6 @@ Texture2D::Texture2D(rx::Renderer *renderer, GLuint id) : Texture(renderer, id, 
 
 Texture2D::~Texture2D()
 {
-    mColorbufferProxy = NULL;
-
     delete mTexStorage;
     mTexStorage = NULL;
     
@@ -395,23 +395,6 @@ Texture2D::~Texture2D()
     {
         delete mImageArray[i];
     }
-}
-
-// We need to maintain a count of references to renderbuffers acting as 
-// proxies for this texture, so that we do not attempt to use a pointer 
-// to a renderbuffer proxy which has been deleted.
-void Texture2D::addProxyRef(const Renderbuffer *proxy)
-{
-    mProxyRefs++;
-}
-
-void Texture2D::releaseProxy(const Renderbuffer *proxy)
-{
-    if (mProxyRefs > 0)
-        mProxyRefs--;
-
-    if (mProxyRefs == 0)
-        mColorbufferProxy = NULL;
 }
 
 GLsizei Texture2D::getWidth(GLint level) const
@@ -919,25 +902,30 @@ void Texture2D::generateMipmaps()
     }
 }
 
-Renderbuffer *Texture2D::getRenderbuffer(GLenum target)
+Renderbuffer *Texture2D::getRenderbuffer(GLint level)
 {
-    if (target != GL_TEXTURE_2D)
+    Renderbuffer *renderBuffer = mRenderbufferProxies.get(level, 0);
+    if (!renderBuffer)
     {
-        return gl::error(GL_INVALID_OPERATION, (Renderbuffer *)NULL);
+        renderBuffer = new Renderbuffer(mRenderer, id(), new RenderbufferTexture2D(this, level));
+        mRenderbufferProxies.add(level, 0, renderBuffer);
     }
 
-    if (mColorbufferProxy == NULL)
-    {
-        mColorbufferProxy = new Renderbuffer(mRenderer, id(), new RenderbufferTexture2D(this, target));
-    }
-
-    return mColorbufferProxy;
+    return renderBuffer;
 }
 
-rx::RenderTarget *Texture2D::getRenderTarget(GLenum target)
+unsigned int Texture2D::getRenderTargetSerial(GLint level)
 {
-    ASSERT(target == GL_TEXTURE_2D);
+    if (!mTexStorage || !mTexStorage->isRenderTarget())
+    {
+        convertToRenderTarget();
+    }
 
+    return mTexStorage ? mTexStorage->getRenderTargetSerial(level) : 0;
+}
+
+rx::RenderTarget *Texture2D::getRenderTarget(GLint level)
+{
     // ensure the underlying texture is created
     if (getStorage(true) == NULL)
     {
@@ -945,20 +933,18 @@ rx::RenderTarget *Texture2D::getRenderTarget(GLenum target)
     }
 
     updateTexture();
-    
+
     // ensure this is NOT a depth texture
-    if (isDepth(0))
+    if (isDepth(level))
     {
         return NULL;
     }
 
-    return mTexStorage->getRenderTarget();
+    return mTexStorage->getRenderTarget(level);
 }
 
-rx::RenderTarget *Texture2D::getDepthStencil(GLenum target)
+rx::RenderTarget *Texture2D::getDepthSencil(GLint level)
 {
-    ASSERT(target == GL_TEXTURE_2D);
-
     // ensure the underlying texture is created
     if (getStorage(true) == NULL)
     {
@@ -968,11 +954,12 @@ rx::RenderTarget *Texture2D::getDepthStencil(GLenum target)
     updateTexture();
 
     // ensure this is actually a depth texture
-    if (!isDepth(0))
+    if (!isDepth(level))
     {
         return NULL;
     }
-    return mTexStorage->getRenderTarget();
+
+    return mTexStorage->getRenderTarget(level);
 }
 
 int Texture2D::levelCount()
@@ -1002,9 +989,6 @@ TextureCubeMap::TextureCubeMap(rx::Renderer *renderer, GLuint id) : Texture(rend
     mTexStorage = NULL;
     for (int i = 0; i < 6; i++)
     {
-        mFaceProxies[i] = NULL;
-        mFaceProxyRefs[i] = 0;
-
         for (int j = 0; j < IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++j)
         {
             mImageArray[i][j] = renderer->createImage();
@@ -1016,8 +1000,6 @@ TextureCubeMap::~TextureCubeMap()
 {
     for (int i = 0; i < 6; i++)
     {
-        mFaceProxies[i] = NULL;
-
         for (int j = 0; j < IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++j)
         {
             delete mImageArray[i][j];
@@ -1026,35 +1008,6 @@ TextureCubeMap::~TextureCubeMap()
 
     delete mTexStorage;
     mTexStorage = NULL;
-}
-
-// We need to maintain a count of references to renderbuffers acting as 
-// proxies for this texture, so that the texture is not deleted while 
-// proxy references still exist. If the reference count drops to zero,
-// we set our proxy pointer NULL, so that a new attempt at referencing
-// will cause recreation.
-void TextureCubeMap::addProxyRef(const Renderbuffer *proxy)
-{
-    for (int i = 0; i < 6; i++)
-    {
-        if (mFaceProxies[i] == proxy)
-            mFaceProxyRefs[i]++;
-    }
-}
-
-void TextureCubeMap::releaseProxy(const Renderbuffer *proxy)
-{
-    for (int i = 0; i < 6; i++)
-    {
-        if (mFaceProxies[i] == proxy)
-        {
-            if (mFaceProxyRefs[i] > 0)
-                mFaceProxyRefs[i]--;
-
-            if (mFaceProxyRefs[i] == 0)
-                mFaceProxies[i] = NULL;
-        }
-    }
 }
 
 GLsizei TextureCubeMap::getWidth(GLenum target, GLint level) const
@@ -1286,6 +1239,11 @@ bool TextureCubeMap::isFaceLevelComplete(int face, int level) const
 bool TextureCubeMap::isCompressed(GLenum target, GLint level) const
 {
     return IsFormatCompressed(getInternalFormat(target, level), mRenderer->getCurrentClientVersion());
+}
+
+bool TextureCubeMap::isDepth(GLenum target, GLint level) const
+{
+    return GetDepthBits(getInternalFormat(target, level), mRenderer->getCurrentClientVersion()) > 0;
 }
 
 // Constructs a native texture resource from the texture images, or returns an existing one
@@ -1596,7 +1554,7 @@ void TextureCubeMap::generateMipmaps()
     }
 }
 
-Renderbuffer *TextureCubeMap::getRenderbuffer(GLenum target)
+Renderbuffer *TextureCubeMap::getRenderbuffer(GLenum target, GLint level)
 {
     if (!IsCubemapTextureTarget(target))
     {
@@ -1605,15 +1563,27 @@ Renderbuffer *TextureCubeMap::getRenderbuffer(GLenum target)
 
     unsigned int face = faceIndex(target);
 
-    if (mFaceProxies[face] == NULL)
+    Renderbuffer *renderBuffer = mRenderbufferProxies.get(level, face);
+    if (!renderBuffer)
     {
-        mFaceProxies[face] = new Renderbuffer(mRenderer, id(), new RenderbufferTextureCubeMap(this, target));
+        renderBuffer = new Renderbuffer(mRenderer, id(), new RenderbufferTextureCubeMap(this, target, level));
+        mRenderbufferProxies.add(level, face, renderBuffer);
     }
 
-    return mFaceProxies[face];
+    return renderBuffer;
 }
 
-rx::RenderTarget *TextureCubeMap::getRenderTarget(GLenum target)
+unsigned int TextureCubeMap::getRenderTargetSerial(GLenum faceTarget, GLint level)
+{
+    if (!mTexStorage || !mTexStorage->isRenderTarget())
+    {
+        convertToRenderTarget();
+    }
+
+    return mTexStorage ? mTexStorage->getRenderTargetSerial(faceTarget, level) : 0;
+}
+
+rx::RenderTarget *TextureCubeMap::getRenderTarget(GLenum target, GLint level)
 {
     ASSERT(IsCubemapTextureTarget(target));
 
@@ -1624,8 +1594,35 @@ rx::RenderTarget *TextureCubeMap::getRenderTarget(GLenum target)
     }
 
     updateTexture();
-    
-    return mTexStorage->getRenderTarget(target);
+
+    // ensure this is NOT a depth texture
+    if (isDepth(target, level))
+    {
+        return NULL;
+    }
+
+    return mTexStorage->getRenderTarget(target, level);
+}
+
+rx::RenderTarget *TextureCubeMap::getDepthStencil(GLenum target, GLint level)
+{
+    ASSERT(IsCubemapTextureTarget(target));
+
+    // ensure the underlying texture is created
+    if (getStorage(true) == NULL)
+    {
+        return NULL;
+    }
+
+    updateTexture();
+
+    // ensure this is a depth texture
+    if (!isDepth(target, level))
+    {
+        return NULL;
+    }
+
+    return mTexStorage->getRenderTarget(target, level);
 }
 
 int TextureCubeMap::levelCount()
@@ -1653,8 +1650,6 @@ rx::TextureStorageInterface *TextureCubeMap::getStorage(bool renderTarget)
 Texture3D::Texture3D(rx::Renderer *renderer, GLuint id) : Texture(renderer, id, GL_TEXTURE_3D)
 {
     mTexStorage = NULL;
-    mColorbufferProxy = NULL;
-    mProxyRefs = 0;
 
     for (int i = 0; i < IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++i)
     {
@@ -1664,8 +1659,6 @@ Texture3D::Texture3D(rx::Renderer *renderer, GLuint id) : Texture(renderer, id, 
 
 Texture3D::~Texture3D()
 {
-    mColorbufferProxy = NULL;
-
     delete mTexStorage;
     mTexStorage = NULL;
 
@@ -1673,20 +1666,6 @@ Texture3D::~Texture3D()
     {
         delete mImageArray[i];
     }
-}
-
-void Texture3D::addProxyRef(const Renderbuffer *proxy)
-{
-    mProxyRefs++;
-}
-
-void Texture3D::releaseProxy(const Renderbuffer *proxy)
-{
-    if (mProxyRefs > 0)
-        mProxyRefs--;
-
-    if (mProxyRefs == 0)
-        mColorbufferProxy = NULL;
 }
 
 GLsizei Texture3D::getWidth(GLint level) const
@@ -1958,10 +1937,27 @@ bool Texture3D::isLevelComplete(int level) const
     return true;
 }
 
-Renderbuffer *Texture3D::getRenderbuffer(GLenum target)
+Renderbuffer *Texture3D::getRenderbuffer(GLint level, GLint layer)
 {
-    UNIMPLEMENTED();
-    return NULL;
+    Renderbuffer *renderBuffer = mRenderbufferProxies.get(level, layer);
+    if (!renderBuffer)
+    {
+        UNIMPLEMENTED();
+        //renderBuffer = new Renderbuffer(mRenderer, id(), new RenderbufferTexture3DLayer(this, level, layer));
+        //mRenderbufferProxies.add(level, 0, renderBuffer);
+    }
+
+    return renderBuffer;
+}
+
+unsigned int Texture3D::getRenderTargetSerial(GLint level, GLint layer)
+{
+    if (!mTexStorage || !mTexStorage->isRenderTarget())
+    {
+        convertToRenderTarget();
+    }
+
+    return mTexStorage ? mTexStorage->getRenderTargetSerial(level, layer) : 0;
 }
 
 int Texture3D::levelCount()
@@ -2049,10 +2045,42 @@ void Texture3D::convertToRenderTarget()
     mDirtyImages = true;
 }
 
-rx::RenderTarget *Texture3D::getRenderTarget(GLenum target)
+rx::RenderTarget *Texture3D::getRenderTarget(GLint level, GLint layer)
 {
-    UNIMPLEMENTED();
-    return NULL;
+    // ensure the underlying texture is created
+    if (getStorage(true) == NULL)
+    {
+        return NULL;
+    }
+
+    updateTexture();
+
+    // ensure this is NOT a depth texture
+    if (isDepth(level))
+    {
+        return NULL;
+    }
+
+    return mTexStorage->getRenderTarget(level, layer);
+}
+
+rx::RenderTarget *Texture3D::getDepthStencil(GLint level, GLint layer)
+{
+    // ensure the underlying texture is created
+    if (getStorage(true) == NULL)
+    {
+        return NULL;
+    }
+
+    updateTexture();
+
+    // ensure this is a depth texture
+    if (!isDepth(level))
+    {
+        return NULL;
+    }
+
+    return mTexStorage->getRenderTarget(level, layer);
 }
 
 rx::TextureStorageInterface *Texture3D::getStorage(bool renderTarget)
@@ -2119,8 +2147,6 @@ void Texture3D::commitRect(GLint level, GLint xoffset, GLint yoffset, GLint zoff
 Texture2DArray::Texture2DArray(rx::Renderer *renderer, GLuint id) : Texture(renderer, id, GL_TEXTURE_2D_ARRAY)
 {
     mTexStorage = NULL;
-    mColorbufferProxy = NULL;
-    mProxyRefs = 0;
 
     for (int level = 0; level < IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++level)
     {
@@ -2131,8 +2157,6 @@ Texture2DArray::Texture2DArray(rx::Renderer *renderer, GLuint id) : Texture(rend
 
 Texture2DArray::~Texture2DArray()
 {
-    mColorbufferProxy = NULL;
-
     delete mTexStorage;
     mTexStorage = NULL;
     for (int level = 0; level < IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++level)
@@ -2143,20 +2167,6 @@ Texture2DArray::~Texture2DArray()
         }
         delete[] mImageArray[level];
     }
-}
-
-void Texture2DArray::addProxyRef(const Renderbuffer *proxy)
-{
-    mProxyRefs++;
-}
-
-void Texture2DArray::releaseProxy(const Renderbuffer *proxy)
-{
-    if (mProxyRefs > 0)
-        mProxyRefs--;
-
-    if (mProxyRefs == 0)
-        mColorbufferProxy = NULL;
 }
 
 GLsizei Texture2DArray::getWidth(GLint level) const
@@ -2475,10 +2485,27 @@ bool Texture2DArray::isLevelComplete(int level) const
     return true;
 }
 
-Renderbuffer *Texture2DArray::getRenderbuffer(GLenum target)
+Renderbuffer *Texture2DArray::getRenderbuffer(GLint level, GLint layer)
 {
-    UNIMPLEMENTED();
-    return NULL;
+    Renderbuffer *renderBuffer = mRenderbufferProxies.get(level, layer);
+    if (!renderBuffer)
+    {
+        UNIMPLEMENTED();
+        //renderBuffer = new Renderbuffer(mRenderer, id(), new RenderbufferTexture2DArrayLayer(this, level, layer));
+        //mRenderbufferProxies.add(level, 0, renderBuffer);
+    }
+
+    return renderBuffer;
+}
+
+unsigned int Texture2DArray::getRenderTargetSerial( GLint level, GLint layer )
+{
+    if (!mTexStorage || !mTexStorage->isRenderTarget())
+    {
+        convertToRenderTarget();
+    }
+
+    return mTexStorage ? mTexStorage->getRenderTargetSerial(level, layer) : 0;
 }
 
 int Texture2DArray::levelCount()
@@ -2571,10 +2598,42 @@ void Texture2DArray::convertToRenderTarget()
     mDirtyImages = true;
 }
 
-rx::RenderTarget *Texture2DArray::getRenderTarget(GLenum target)
+rx::RenderTarget *Texture2DArray::getRenderTarget(GLint level, GLint layer)
 {
-    UNIMPLEMENTED();
-    return NULL;
+    // ensure the underlying texture is created
+    if (getStorage(true) == NULL)
+    {
+        return NULL;
+    }
+
+    updateTexture();
+
+    // ensure this is NOT a depth texture
+    if (isDepth(level))
+    {
+        return NULL;
+    }
+
+    return mTexStorage->getRenderTarget(level, layer);
+}
+
+rx::RenderTarget *Texture2DArray::getDepthStencil(GLint level, GLint layer)
+{
+    // ensure the underlying texture is created
+    if (getStorage(true) == NULL)
+    {
+        return NULL;
+    }
+
+    updateTexture();
+
+    // ensure this is a depth texture
+    if (!isDepth(level))
+    {
+        return NULL;
+    }
+
+    return mTexStorage->getRenderTarget(level, layer);
 }
 
 rx::TextureStorageInterface *Texture2DArray::getStorage(bool renderTarget)
