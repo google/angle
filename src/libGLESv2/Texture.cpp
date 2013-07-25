@@ -1942,9 +1942,8 @@ Renderbuffer *Texture3D::getRenderbuffer(GLint level, GLint layer)
     Renderbuffer *renderBuffer = mRenderbufferProxies.get(level, layer);
     if (!renderBuffer)
     {
-        UNIMPLEMENTED();
-        //renderBuffer = new Renderbuffer(mRenderer, id(), new RenderbufferTexture3DLayer(this, level, layer));
-        //mRenderbufferProxies.add(level, 0, renderBuffer);
+        renderBuffer = new Renderbuffer(mRenderer, id(), new RenderbufferTexture3DLayer(this, level, layer));
+        mRenderbufferProxies.add(level, 0, renderBuffer);
     }
 
     return renderBuffer;
@@ -2490,9 +2489,8 @@ Renderbuffer *Texture2DArray::getRenderbuffer(GLint level, GLint layer)
     Renderbuffer *renderBuffer = mRenderbufferProxies.get(level, layer);
     if (!renderBuffer)
     {
-        UNIMPLEMENTED();
-        //renderBuffer = new Renderbuffer(mRenderer, id(), new RenderbufferTexture2DArrayLayer(this, level, layer));
-        //mRenderbufferProxies.add(level, 0, renderBuffer);
+        renderBuffer = new Renderbuffer(mRenderer, id(), new RenderbufferTexture2DArrayLayer(this, level, layer));
+        mRenderbufferProxies.add(level, 0, renderBuffer);
     }
 
     return renderBuffer;

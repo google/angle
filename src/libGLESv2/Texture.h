@@ -301,6 +301,7 @@ class Texture3D : public Texture
     unsigned int getRenderTargetSerial(GLint level, GLint layer);
 
   protected:
+    friend class RenderbufferTexture3DLayer;
     rx::RenderTarget *getRenderTarget(GLint level, GLint layer);
     rx::RenderTarget *getDepthStencil(GLint level, GLint layer);
     virtual int levelCount();
@@ -356,6 +357,7 @@ class Texture2DArray : public Texture
     unsigned int getRenderTargetSerial(GLint level, GLint layer);
 
   protected:
+    friend class RenderbufferTexture2DArrayLayer;
     rx::RenderTarget *getRenderTarget(GLint level, GLint layer);
     rx::RenderTarget *getDepthStencil(GLint level, GLint layer);
     virtual int levelCount();

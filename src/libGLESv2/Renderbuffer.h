@@ -30,6 +30,8 @@ namespace gl
 {
 class Texture2D;
 class TextureCubeMap;
+class Texture3D;
+class Texture2DArray;
 class Renderbuffer;
 class Colorbuffer;
 class DepthStencilbuffer;
@@ -114,6 +116,64 @@ class RenderbufferTextureCubeMap : public RenderbufferInterface
     BindingPointer <TextureCubeMap> mTextureCubeMap;
     const GLint mLevel;
     const GLenum mFaceTarget;
+};
+
+class RenderbufferTexture3DLayer : public RenderbufferInterface
+{
+public:
+    RenderbufferTexture3DLayer(Texture3D *texture, GLint level, GLint layer);
+
+    virtual ~RenderbufferTexture3DLayer();
+
+    void addProxyRef(const Renderbuffer *proxy);
+    void releaseProxy(const Renderbuffer *proxy);
+
+    rx::RenderTarget *getRenderTarget();
+    rx::RenderTarget *getDepthStencil();
+
+    virtual GLsizei getWidth() const;
+    virtual GLsizei getHeight() const;
+    virtual GLenum getInternalFormat() const;
+    virtual GLenum getActualFormat() const;
+    virtual GLsizei getSamples() const;
+
+    virtual unsigned int getSerial() const;
+
+private:
+    DISALLOW_COPY_AND_ASSIGN(RenderbufferTexture3DLayer);
+
+    BindingPointer<Texture3D> mTexture3D;
+    const GLint mLevel;
+    const GLint mLayer;
+};
+
+class RenderbufferTexture2DArrayLayer : public RenderbufferInterface
+{
+public:
+    RenderbufferTexture2DArrayLayer(Texture2DArray *texture, GLint level, GLint layer);
+
+    virtual ~RenderbufferTexture2DArrayLayer();
+
+    void addProxyRef(const Renderbuffer *proxy);
+    void releaseProxy(const Renderbuffer *proxy);
+
+    rx::RenderTarget *getRenderTarget();
+    rx::RenderTarget *getDepthStencil();
+
+    virtual GLsizei getWidth() const;
+    virtual GLsizei getHeight() const;
+    virtual GLenum getInternalFormat() const;
+    virtual GLenum getActualFormat() const;
+    virtual GLsizei getSamples() const;
+
+    virtual unsigned int getSerial() const;
+
+private:
+    DISALLOW_COPY_AND_ASSIGN(RenderbufferTexture2DArrayLayer);
+
+    BindingPointer<Texture2DArray> mTexture2DArray;
+    const GLint mLevel;
+    const GLint mLayer;
 };
 
 // A class derived from RenderbufferStorage is created whenever glRenderbufferStorage

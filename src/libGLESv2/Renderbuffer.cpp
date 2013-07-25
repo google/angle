@@ -165,6 +165,134 @@ unsigned int RenderbufferTextureCubeMap::getSerial() const
     return mTextureCubeMap->getRenderTargetSerial(mFaceTarget, mLevel);
 }
 
+///// RenderbufferTexture3DLayer Implementation ////////
+
+RenderbufferTexture3DLayer::RenderbufferTexture3DLayer(Texture3D *texture, GLint level, GLint layer)
+    : mLevel(level), mLayer(layer)
+{
+    mTexture3D.set(texture);
+}
+
+RenderbufferTexture3DLayer::~RenderbufferTexture3DLayer()
+{
+    mTexture3D.set(NULL);
+}
+
+// Textures need to maintain their own reference count for references via
+// Renderbuffers acting as proxies. Here, we notify the texture of a reference.
+void RenderbufferTexture3DLayer::addProxyRef(const Renderbuffer *proxy)
+{
+    mTexture3D->addProxyRef(proxy);
+}
+
+void RenderbufferTexture3DLayer::releaseProxy(const Renderbuffer *proxy)
+{
+    mTexture3D->releaseProxy(proxy);
+}
+
+rx::RenderTarget *RenderbufferTexture3DLayer::getRenderTarget()
+{
+    return mTexture3D->getRenderTarget(mLevel, mLayer);
+}
+
+rx::RenderTarget *RenderbufferTexture3DLayer::getDepthStencil()
+{
+    return mTexture3D->getDepthStencil(mLevel, mLayer);
+}
+
+GLsizei RenderbufferTexture3DLayer::getWidth() const
+{
+    return mTexture3D->getWidth(mLevel);
+}
+
+GLsizei RenderbufferTexture3DLayer::getHeight() const
+{
+    return mTexture3D->getHeight(mLevel);
+}
+
+GLenum RenderbufferTexture3DLayer::getInternalFormat() const
+{
+    return mTexture3D->getInternalFormat(mLevel);
+}
+
+GLenum RenderbufferTexture3DLayer::getActualFormat() const
+{
+    return mTexture3D->getActualFormat(mLevel);
+}
+
+GLsizei RenderbufferTexture3DLayer::getSamples() const
+{
+    return 0;
+}
+
+unsigned int RenderbufferTexture3DLayer::getSerial() const
+{
+    return mTexture3D->getRenderTargetSerial(mLevel, mLayer);
+}
+
+////// RenderbufferTexture2DArrayLayer Implementation //////
+
+RenderbufferTexture2DArrayLayer::RenderbufferTexture2DArrayLayer(Texture2DArray *texture, GLint level, GLint layer)
+    : mLevel(level), mLayer(layer)
+{
+    mTexture2DArray.set(texture);
+}
+
+RenderbufferTexture2DArrayLayer::~RenderbufferTexture2DArrayLayer()
+{
+    mTexture2DArray.set(NULL);
+}
+
+void RenderbufferTexture2DArrayLayer::addProxyRef(const Renderbuffer *proxy)
+{
+    mTexture2DArray->addProxyRef(proxy);
+}
+
+void RenderbufferTexture2DArrayLayer::releaseProxy(const Renderbuffer *proxy)
+{
+    mTexture2DArray->releaseProxy(proxy);
+}
+
+rx::RenderTarget *RenderbufferTexture2DArrayLayer::getRenderTarget()
+{
+    return mTexture2DArray->getRenderTarget(mLevel, mLayer);
+}
+
+rx::RenderTarget *RenderbufferTexture2DArrayLayer::getDepthStencil()
+{
+    return mTexture2DArray->getDepthStencil(mLevel, mLayer);
+}
+
+GLsizei RenderbufferTexture2DArrayLayer::getWidth() const
+{
+    return mTexture2DArray->getWidth(mLevel);
+}
+
+GLsizei RenderbufferTexture2DArrayLayer::getHeight() const
+{
+    return mTexture2DArray->getHeight(mLevel);
+}
+
+GLenum RenderbufferTexture2DArrayLayer::getInternalFormat() const
+{
+    return mTexture2DArray->getInternalFormat(mLevel);
+}
+
+GLenum RenderbufferTexture2DArrayLayer::getActualFormat() const
+{
+    return mTexture2DArray->getActualFormat(mLevel);
+}
+
+GLsizei RenderbufferTexture2DArrayLayer::getSamples() const
+{
+    return 0;
+}
+
+unsigned int RenderbufferTexture2DArrayLayer::getSerial() const
+{
+    return mTexture2DArray->getRenderTargetSerial(mLevel, mLayer);
+}
+
 ////// Renderbuffer Implementation //////
 
 Renderbuffer::Renderbuffer(rx::Renderer *renderer, GLuint id, RenderbufferInterface *instance) : RefCountObject(id)
