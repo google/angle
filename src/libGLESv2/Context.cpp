@@ -789,6 +789,18 @@ GLuint Context::createRenderbuffer()
     return mResourceManager->createRenderbuffer();
 }
 
+GLsync Context::createFenceSync(GLenum condition)
+{
+    GLuint handle = mResourceManager->createFenceSync();
+
+    gl::FenceSync *fenceSync = mResourceManager->getFenceSync(handle);
+    ASSERT(fenceSync);
+
+    fenceSync->set(condition);
+
+    return reinterpret_cast<GLsync>(handle);
+}
+
 GLuint Context::createVertexArray()
 {
     GLuint handle = mVertexArrayHandleAllocator.allocate();
@@ -873,6 +885,15 @@ void Context::deleteRenderbuffer(GLuint renderbuffer)
     }
     
     mResourceManager->deleteRenderbuffer(renderbuffer);
+}
+
+void Context::deleteFenceSync(GLsync fenceSync)
+{
+    // The spec specifies the underlying Fence object is not deleted until all current
+    // wait commands finish. However, since the name becomes invalid, we cannot query the fence,
+    // and since our API is currently designed for being called from a single thread, we can delete
+    // the fence immediately.
+    mResourceManager->deleteFenceSync(reinterpret_cast<GLuint>(fenceSync));
 }
 
 void Context::deleteVertexArray(GLuint vertexArray)
@@ -962,6 +983,11 @@ Texture *Context::getTexture(GLuint handle)
 Renderbuffer *Context::getRenderbuffer(GLuint handle)
 {
     return mResourceManager->getRenderbuffer(handle);
+}
+
+FenceSync *Context::getFenceSync(GLsync handle) const
+{
+    return mResourceManager->getFenceSync(reinterpret_cast<GLuint>(handle));
 }
 
 VertexArray *Context::getVertexArray(GLuint handle) const

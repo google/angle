@@ -24,6 +24,7 @@ class Fence11 : public FenceImpl
     bool isSet() const;
     void set();
     bool test(bool flushCommandBuffer);
+    bool hasError() const;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(Fence11);

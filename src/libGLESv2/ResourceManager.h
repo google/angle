@@ -37,6 +37,7 @@ class Program;
 class Texture;
 class Renderbuffer;
 class Sampler;
+class FenceSync;
 
 class ResourceManager
 {
@@ -53,6 +54,7 @@ class ResourceManager
     GLuint createTexture();
     GLuint createRenderbuffer();
     GLuint createSampler();
+    GLuint createFenceSync();
 
     void deleteBuffer(GLuint buffer);
     void deleteShader(GLuint shader);
@@ -60,6 +62,7 @@ class ResourceManager
     void deleteTexture(GLuint texture);
     void deleteRenderbuffer(GLuint renderbuffer);
     void deleteSampler(GLuint sampler);
+    void deleteFenceSync(GLuint fenceSync);
 
     Buffer *getBuffer(GLuint handle);
     Shader *getShader(GLuint handle);
@@ -67,6 +70,7 @@ class ResourceManager
     Texture *getTexture(GLuint handle);
     Renderbuffer *getRenderbuffer(GLuint handle);
     Sampler *getSampler(GLuint handle);
+    FenceSync *getFenceSync(GLuint handle);
     
     void setRenderbuffer(GLuint handle, Renderbuffer *renderbuffer);
 
@@ -112,6 +116,9 @@ class ResourceManager
 
     HASH_MAP<GLuint, Sampler*> mSamplerMap;
     HandleAllocator mSamplerHandleAllocator;
+
+    HASH_MAP<GLuint, FenceSync*> mFenceSyncMap;
+    HandleAllocator mFenceSyncHandleAllocator;
 };
 
 }

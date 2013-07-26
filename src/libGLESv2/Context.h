@@ -64,6 +64,7 @@ class Depthbuffer;
 class Stencilbuffer;
 class DepthStencilbuffer;
 class FenceNV;
+class FenceSync;
 class Query;
 class ResourceManager;
 class Buffer;
@@ -257,6 +258,7 @@ class Context
     GLuint createTexture();
     GLuint createRenderbuffer();
     GLuint createSampler();
+    GLsync createFenceSync(GLenum condition);
 
     void deleteBuffer(GLuint buffer);
     void deleteShader(GLuint shader);
@@ -264,12 +266,13 @@ class Context
     void deleteTexture(GLuint texture);
     void deleteRenderbuffer(GLuint renderbuffer);
     void deleteSampler(GLuint sampler);
+    void deleteFenceSync(GLsync fenceSync);
 
     // Framebuffers are owned by the Context, so these methods do not pass through
     GLuint createFramebuffer();
     void deleteFramebuffer(GLuint framebuffer);
 
-    // Fences are owned by the Context.
+    // NV Fences are owned by the Context.
     GLuint createFenceNV();
     void deleteFenceNV(GLuint fence);
     
@@ -323,6 +326,7 @@ class Context
 
     Buffer *getBuffer(GLuint handle);
     FenceNV *getFenceNV(GLuint handle);
+    FenceSync *getFenceSync(GLsync handle) const;
     Shader *getShader(GLuint handle);
     Program *getProgram(GLuint handle);
     Texture *getTexture(GLuint handle);

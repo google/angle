@@ -23,6 +23,7 @@ class FenceImpl
     virtual bool isSet() const = 0;
     virtual void set() = 0;
     virtual bool test(bool flushCommandBuffer) = 0;
+    virtual bool hasError() const = 0;
 
   private:
     DISALLOW_COPY_AND_ASSIGN(FenceImpl);

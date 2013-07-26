@@ -16,6 +16,7 @@
 #include "libGLESv2/Shader.h"
 #include "libGLESv2/Texture.h"
 #include "libGLESv2/Sampler.h"
+#include "libGLESv2/Fence.h"
 
 namespace gl
 {
@@ -55,6 +56,11 @@ ResourceManager::~ResourceManager()
     while (!mSamplerMap.empty())
     {
         deleteSampler(mSamplerMap.begin()->first);
+    }
+
+    while (!mFenceSyncMap.empty())
+    {
+        deleteFenceSync(mFenceSyncMap.begin()->first);
     }
 }
 
@@ -135,6 +141,16 @@ GLuint ResourceManager::createSampler()
     GLuint handle = mSamplerHandleAllocator.allocate();
 
     mSamplerMap[handle] = NULL;
+
+    return handle;
+}
+
+// Returns the next unused fence name, and allocates the fence
+GLuint ResourceManager::createFenceSync()
+{
+    GLuint handle = mFenceSyncHandleAllocator.allocate();
+
+    mFenceSyncMap[handle] = new FenceSync(mRenderer, handle);
 
     return handle;
 }
@@ -225,6 +241,18 @@ void ResourceManager::deleteSampler(GLuint sampler)
     }
 }
 
+void ResourceManager::deleteFenceSync(GLuint fenceSync)
+{
+    auto fenceObjectIt = mFenceSyncMap.find(fenceSync);
+
+    if (fenceObjectIt != mFenceSyncMap.end())
+    {
+        mFenceSyncHandleAllocator.release(fenceObjectIt->first);
+        if (fenceObjectIt->second) fenceObjectIt->second->release();
+        mFenceSyncMap.erase(fenceObjectIt);
+    }
+}
+
 Buffer *ResourceManager::getBuffer(unsigned int handle)
 {
     BufferMap::iterator buffer = mBufferMap.find(handle);
@@ -308,6 +336,20 @@ Sampler *ResourceManager::getSampler(unsigned int handle)
     else
     {
         return sampler->second;
+    }
+}
+
+FenceSync *ResourceManager::getFenceSync(unsigned int handle)
+{
+    auto fenceObjectIt = mFenceSyncMap.find(handle);
+
+    if (fenceObjectIt == mFenceSyncMap.end())
+    {
+        return NULL;
+    }
+    else
+    {
+        return fenceObjectIt->second;
     }
 }
 

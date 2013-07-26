@@ -68,4 +68,9 @@ bool Fence9::test(bool flushCommandBuffer)
     return (result == S_OK);
 }
 
+bool Fence9::hasError() const
+{
+    return mRenderer->isDeviceLost();
+}
+
 }

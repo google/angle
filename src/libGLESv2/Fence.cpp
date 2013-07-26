@@ -7,6 +7,17 @@
 
 // Fence.cpp: Implements the gl::Fence class, which supports the GL_NV_fence extension.
 
+// Important note on accurate timers in Windows:
+//
+// QueryPerformanceCounter has a few major issues, including being 10x as expensive to call
+// as timeGetTime on laptops and "jumping" during certain hardware events.
+//
+// See the comments at the top of the Chromium source file "chromium/src/base/time/time_win.cc"
+//   https://code.google.com/p/chromium/codesearch#chromium/src/base/time/time_win.cc
+//
+// We still opt to use QPC. In the present and moving forward, most newer systems will not suffer
+// from buggy implementations.
+
 #include "libGLESv2/Fence.h"
 #include "libGLESv2/renderer/FenceImpl.h"
 #include "libGLESv2/renderer/Renderer.h"
@@ -84,6 +95,93 @@ GLint FenceNV::getFencei(GLenum pname)
 
       default: UNREACHABLE(); return 0;
     }
+}
+
+FenceSync::FenceSync(rx::Renderer *renderer, GLuint id)
+    : RefCountObject(id)
+{
+    mFence = renderer->createFence();
+
+    LARGE_INTEGER counterFreqency;
+    ASSERT(QueryPerformanceFrequency(&counterFreqency));
+
+    mCounterFrequency = counterFreqency.QuadPart;
+}
+
+FenceSync::~FenceSync()
+{
+    delete mFence;
+}
+
+void FenceSync::set(GLenum condition)
+{
+    mCondition = condition;
+    mFence->set();
+}
+
+GLenum FenceSync::clientWait(GLbitfield flags, GLuint64 timeout)
+{
+    ASSERT(mFence->isSet());
+
+    bool flushCommandBuffer = ((flags & GL_SYNC_FLUSH_COMMANDS_BIT) != 0);
+
+    if (mFence->test(flushCommandBuffer))
+    {
+        return GL_ALREADY_SIGNALED;
+    }
+
+    if (mFence->hasError())
+    {
+        return GL_WAIT_FAILED;
+    }
+
+    if (timeout == 0)
+    {
+        return GL_TIMEOUT_EXPIRED;
+    }
+
+    LARGE_INTEGER currentCounter;
+    ASSERT(QueryPerformanceCounter(&currentCounter));
+
+    LONGLONG timeoutInSeconds = static_cast<LONGLONG>(timeout) * static_cast<LONGLONG>(1000000ll);
+    LONGLONG endCounter = currentCounter.QuadPart + mCounterFrequency * timeoutInSeconds;
+
+    while (currentCounter.QuadPart < endCounter && !mFence->test(flushCommandBuffer))
+    {
+        Sleep(0);
+        ASSERT(QueryPerformanceCounter(&currentCounter));
+    }
+
+    if (mFence->hasError())
+    {
+        return GL_WAIT_FAILED;
+    }
+
+    if (currentCounter.QuadPart >= endCounter)
+    {
+        return GL_TIMEOUT_EXPIRED;
+    }
+
+    return GL_CONDITION_SATISFIED;
+}
+
+void FenceSync::serverWait()
+{
+    // Because our API is currently designed to be called from a single thread, we don't need to do
+    // extra work for a server-side fence. GPU commands issued after the fence is created will always
+    // be processed after the fence is signaled.
+}
+
+GLenum FenceSync::getStatus() const
+{
+    if (mFence->test(false))
+    {
+        // The spec does not specify any way to report errors during the status test (e.g. device lost)
+        // so we report the fence is unblocked in case of error or signaled.
+        return GL_SIGNALED;
+    }
+
+    return GL_UNSIGNALED;
 }
 
 }
