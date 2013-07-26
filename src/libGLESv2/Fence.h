@@ -26,16 +26,22 @@ class Fence
     explicit Fence(rx::Renderer *renderer);
     virtual ~Fence();
 
-    GLboolean isFence();
+    GLboolean isFence() const;
     void setFence(GLenum condition);
     GLboolean testFence();
     void finishFence();
     void getFenceiv(GLenum pname, GLint *params);
 
+    GLboolean getStatus() const { return mStatus; }
+    GLuint getCondition() const { return mCondition; }
+
   private:
     DISALLOW_COPY_AND_ASSIGN(Fence);
 
     rx::FenceImpl *mFence;
+
+    GLboolean mStatus;
+    GLenum mCondition;
 };
 
 }
