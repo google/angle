@@ -8637,8 +8637,7 @@ void __stdcall glGenQueries(GLsizei n, GLuint* ids)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glGenQueries
-            UNIMPLEMENTED();
+            glGenQueriesEXT(n, ids);
         }
     }
     catch(std::bad_alloc&)
@@ -8662,8 +8661,7 @@ void __stdcall glDeleteQueries(GLsizei n, const GLuint* ids)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glDeleteQueries
-            UNIMPLEMENTED();
+            glDeleteQueriesEXT(n, ids);
         }
     }
     catch(std::bad_alloc&)
@@ -8687,8 +8685,8 @@ GLboolean __stdcall glIsQuery(GLuint id)
                 return gl::error(GL_INVALID_OPERATION, GL_FALSE);
             }
 
-            // glIsQuery
-            UNIMPLEMENTED();
+            // TODO: XFB queries
+            return glIsQueryEXT(id);
         }
     }
     catch(std::bad_alloc&)
@@ -8714,8 +8712,30 @@ void __stdcall glBeginQuery(GLenum target, GLuint id)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glBeginQuery
-            UNIMPLEMENTED();
+            switch (target)
+            {
+              case GL_ANY_SAMPLES_PASSED:
+              case GL_ANY_SAMPLES_PASSED_CONSERVATIVE:
+              case GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN:
+                  break;
+              default:
+                  return gl::error(GL_INVALID_ENUM);
+            }
+
+            if (id == 0)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            if (target == GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN)
+            {
+                // TODO: XFB queries
+                UNIMPLEMENTED();
+            }
+            else
+            {
+                context->beginQuery(target, id);
+            }
         }
     }
     catch(std::bad_alloc&)
@@ -8739,8 +8759,15 @@ void __stdcall glEndQuery(GLenum target)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glEndQuery
-            UNIMPLEMENTED();
+            if (target == GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN)
+            {
+                // TODO: XFB queries
+                UNIMPLEMENTED();
+            }
+            else
+            {
+                glEndQueryEXT(target);
+            }
         }
     }
     catch(std::bad_alloc&)
@@ -8764,8 +8791,15 @@ void __stdcall glGetQueryiv(GLenum target, GLenum pname, GLint* params)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glGetQueryiv
-            UNIMPLEMENTED();
+            if (target == GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN)
+            {
+                // TODO: XFB queries
+                UNIMPLEMENTED();
+            }
+            else
+            {
+                glGetQueryivEXT(target, pname, params);
+            }
         }
     }
     catch(std::bad_alloc&)
@@ -8789,8 +8823,8 @@ void __stdcall glGetQueryObjectuiv(GLuint id, GLenum pname, GLuint* params)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glGetQueryObjectuiv
-            UNIMPLEMENTED();
+            // TODO: XFB queries
+            glGetQueryObjectuivEXT(id, pname, params);
         }
     }
     catch(std::bad_alloc&)
