@@ -30,7 +30,7 @@ class Fence
     void setFence(GLenum condition);
     GLboolean testFence();
     void finishFence();
-    void getFenceiv(GLenum pname, GLint *params);
+    GLint getFencei(GLenum pname);
 
     GLboolean getStatus() const { return mStatus; }
     GLuint getCondition() const { return mCondition; }

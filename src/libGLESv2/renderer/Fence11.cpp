@@ -53,10 +53,7 @@ void Fence11::set()
 
 bool Fence11::test(bool flushCommandBuffer)
 {
-    if (mQuery == NULL)
-    {
-        return gl::error(GL_INVALID_OPERATION, true);
-    }
+    ASSERT(mQuery);
 
     UINT getDataFlags = (flushCommandBuffer ? 0 : D3D11_ASYNC_GETDATA_DONOTFLUSH);
     HRESULT result = mRenderer->getDeviceContext()->GetData(mQuery, NULL, 0, getDataFlags);

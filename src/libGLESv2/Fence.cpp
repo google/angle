@@ -51,10 +51,7 @@ GLboolean Fence::testFence()
 
 void Fence::finishFence()
 {
-    if (!mFence->isSet())
-    {
-        return gl::error(GL_INVALID_OPERATION);
-    }
+    ASSERT(mFence->isSet());
 
     while (!mFence->test(true))
     {
@@ -62,12 +59,9 @@ void Fence::finishFence()
     }
 }
 
-void Fence::getFenceiv(GLenum pname, GLint *params)
+GLint Fence::getFencei(GLenum pname)
 {
-    if (!mFence->isSet())
-    {
-        return error(GL_INVALID_OPERATION);
-    }
+    ASSERT(mFence->isSet());
 
     switch (pname)
     {
@@ -78,21 +72,17 @@ void Fence::getFenceiv(GLenum pname, GLint *params)
             // or GetFenceivNV querying the FENCE_STATUS_NV), the status remains TRUE until the next SetFenceNV of the fence.
             if (mStatus == GL_TRUE)
             {
-                params[0] = GL_TRUE;
-                return;
+                return GL_TRUE;
             }
 
             mStatus = (mFence->test(false) ? GL_TRUE : GL_FALSE);
-            params[0] = mStatus;
-            break;
+            return mStatus;
         }
 
       case GL_FENCE_CONDITION_NV:
-        params[0] = mCondition;
-        break;
+        return mCondition;
 
-      default:
-        return error(GL_INVALID_ENUM);
+      default: UNREACHABLE(); return 0;
     }
 }
 

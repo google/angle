@@ -4018,6 +4018,11 @@ void __stdcall glFinishFenceNV(GLuint fence)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
+            if (fenceObject->isFence() != GL_TRUE)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
             fenceObject->finishFence();
         }
     }
@@ -4900,7 +4905,21 @@ void __stdcall glGetFenceivNV(GLuint fence, GLenum pname, GLint *params)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            fenceObject->getFenceiv(pname, params);
+            if (fenceObject->isFence() != GL_TRUE)
+            {
+                return gl::error(GL_INVALID_OPERATION);
+            }
+
+            switch (pname)
+            {
+              case GL_FENCE_STATUS_NV:
+              case GL_FENCE_CONDITION_NV:
+                break;
+
+              default: return gl::error(GL_INVALID_ENUM);
+            }
+
+            params[0] = fenceObject->getFencei(pname);
         }
     }
     catch(std::bad_alloc&)
@@ -7052,6 +7071,11 @@ GLboolean __stdcall glTestFenceNV(GLuint fence)
             gl::Fence *fenceObject = context->getFence(fence);
 
             if (fenceObject == NULL)
+            {
+                return gl::error(GL_INVALID_OPERATION, GL_TRUE);
+            }
+
+            if (fenceObject->isFence() != GL_TRUE)
             {
                 return gl::error(GL_INVALID_OPERATION, GL_TRUE);
             }

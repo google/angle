@@ -52,10 +52,7 @@ void Fence9::set()
 
 bool Fence9::test(bool flushCommandBuffer)
 {
-    if (mQuery == NULL)
-    {
-        return gl::error(GL_INVALID_OPERATION, true);
-    }
+    ASSERT(mQuery);
 
     DWORD getDataFlags = (flushCommandBuffer ? D3DGETDATA_FLUSH : 0);
     HRESULT result = mQuery->GetData(NULL, 0, getDataFlags);
