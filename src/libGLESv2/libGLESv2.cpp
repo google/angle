@@ -10877,11 +10877,20 @@ GLsync __stdcall glFenceSync(GLenum condition, GLbitfield flags)
         {
             if (context->getClientVersion() < 3)
             {
-                return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLsync>(NULL));
+                return gl::error(GL_INVALID_OPERATION, reinterpret_cast<GLsync>(0));
             }
 
-            // glFenceSync
-            UNIMPLEMENTED();
+            if (condition != GL_SYNC_GPU_COMMANDS_COMPLETE)
+            {
+                return gl::error(GL_INVALID_ENUM, reinterpret_cast<GLsync>(0));
+            }
+
+            if (flags != 0)
+            {
+                return gl::error(GL_INVALID_VALUE, reinterpret_cast<GLsync>(0));
+            }
+
+            return context->createFenceSync(condition);
         }
     }
     catch(std::bad_alloc&)
@@ -10907,8 +10916,7 @@ GLboolean __stdcall glIsSync(GLsync sync)
                 return gl::error(GL_INVALID_OPERATION, GL_FALSE);
             }
 
-            // glIsSync
-            UNIMPLEMENTED();
+            return (context->getFenceSync(sync) != NULL);
         }
     }
     catch(std::bad_alloc&)
@@ -10934,8 +10942,12 @@ void __stdcall glDeleteSync(GLsync sync)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glDeleteSync
-            UNIMPLEMENTED();
+            if (sync != static_cast<GLsync>(0) && !context->getFenceSync(sync))
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            context->deleteFenceSync(sync);
         }
     }
     catch(std::bad_alloc&)
@@ -10957,11 +10969,22 @@ GLenum __stdcall glClientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeou
         {
             if (context->getClientVersion() < 3)
             {
-                return gl::error(GL_INVALID_OPERATION, GL_FALSE);
+                return gl::error(GL_INVALID_OPERATION, GL_WAIT_FAILED);
             }
 
-            // glClientWaitSync
-            UNIMPLEMENTED();
+            if ((flags & ~(GL_SYNC_FLUSH_COMMANDS_BIT)) != 0)
+            {
+                return gl::error(GL_INVALID_VALUE, GL_WAIT_FAILED);
+            }
+
+            gl::FenceSync *fenceSync = context->getFenceSync(sync);
+
+            if (!fenceSync)
+            {
+                return gl::error(GL_INVALID_VALUE, GL_WAIT_FAILED);
+            }
+
+            return fenceSync->clientWait(flags, timeout);
         }
     }
     catch(std::bad_alloc&)
@@ -10988,8 +11011,24 @@ void __stdcall glWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glWaitSync
-            UNIMPLEMENTED();
+            if (flags != 0)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            if (timeout != GL_TIMEOUT_IGNORED)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            gl::FenceSync *fenceSync = context->getFenceSync(sync);
+
+            if (!fenceSync)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            fenceSync->serverWait();
         }
     }
     catch(std::bad_alloc&)
@@ -11102,8 +11141,28 @@ void __stdcall glGetSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei* 
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            // glGetSynciv
-            UNIMPLEMENTED();
+            if (bufSize < 0)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            gl::FenceSync *fenceSync = context->getFenceSync(sync);
+
+            if (!fenceSync)
+            {
+                return gl::error(GL_INVALID_VALUE);
+            }
+
+            switch (pname)
+            {
+              case GL_OBJECT_TYPE:     values[0] = static_cast<GLint>(GL_SYNC_FENCE);              break;
+              case GL_SYNC_STATUS:     values[0] = static_cast<GLint>(fenceSync->getStatus());     break;
+              case GL_SYNC_CONDITION:  values[0] = static_cast<GLint>(fenceSync->getCondition());  break;
+              case GL_SYNC_FLAGS:      values[0] = 0;                                              break;
+
+              default:
+                return gl::error(GL_INVALID_ENUM);
+            }
         }
     }
     catch(std::bad_alloc&)

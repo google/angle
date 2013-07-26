@@ -1915,8 +1915,8 @@ bool Context::getInteger64v(GLenum pname, GLint64 *params)
         }
         break;
       case GL_MAX_SERVER_WAIT_TIMEOUT:
-        // Can return an arbitrary value (nanoseconds) as we do not perform any blocking, in this case 100 seconds.
-        *params = 100ll * 1000ll * 1000ll;
+        // We do not wait for server fence objects internally, so report a max timeout of zero.
+        *params = 0;
         break;
       default:
         return false;
