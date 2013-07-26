@@ -45,6 +45,7 @@ TString TType::buildMangledName() const
     {
       case EbtFloat:                mangledName += 'f';      break;
       case EbtInt:                  mangledName += 'i';      break;
+      case EbtUInt:                 mangledName += 'u';      break;
       case EbtBool:                 mangledName += 'b';      break;
       case EbtSampler2D:            mangledName += "s2";     break;
       case EbtSampler3D:            mangledName += "s3";     break;
