@@ -15,24 +15,24 @@
 namespace gl
 {
 
-Fence::Fence(rx::Renderer *renderer)
+FenceNV::FenceNV(rx::Renderer *renderer)
 {
     mFence = renderer->createFence();
 }
 
-Fence::~Fence()
+FenceNV::~FenceNV()
 {
     delete mFence;
 }
 
-GLboolean Fence::isFence() const
+GLboolean FenceNV::isFence() const
 {
     // GL_NV_fence spec:
     // A name returned by GenFencesNV, but not yet set via SetFenceNV, is not the name of an existing fence.
     return (mFence->isSet() ? GL_TRUE : GL_FALSE);
 }
 
-void Fence::setFence(GLenum condition)
+void FenceNV::setFence(GLenum condition)
 {
     mFence->set();
 
@@ -40,7 +40,7 @@ void Fence::setFence(GLenum condition)
     mStatus = GL_FALSE;
 }
 
-GLboolean Fence::testFence()
+GLboolean FenceNV::testFence()
 {
     // Flush the command buffer by default
     bool result = mFence->test(true);
@@ -49,7 +49,7 @@ GLboolean Fence::testFence()
     return mStatus;
 }
 
-void Fence::finishFence()
+void FenceNV::finishFence()
 {
     ASSERT(mFence->isSet());
 
@@ -59,7 +59,7 @@ void Fence::finishFence()
     }
 }
 
-GLint Fence::getFencei(GLenum pname)
+GLint FenceNV::getFencei(GLenum pname)
 {
     ASSERT(mFence->isSet());
 

@@ -63,7 +63,7 @@ class Colorbuffer;
 class Depthbuffer;
 class Stencilbuffer;
 class DepthStencilbuffer;
-class Fence;
+class FenceNV;
 class Query;
 class ResourceManager;
 class Buffer;
@@ -272,8 +272,8 @@ class Context
     void deleteFramebuffer(GLuint framebuffer);
 
     // Fences are owned by the Context.
-    GLuint createFence();
-    void deleteFence(GLuint fence);
+    GLuint createFenceNV();
+    void deleteFenceNV(GLuint fence);
     
     // Queries are owned by the Context;
     GLuint createQuery();
@@ -320,7 +320,7 @@ class Context
     GLfloat getSamplerParameterf(GLuint sampler, GLenum pname);
 
     Buffer *getBuffer(GLuint handle);
-    Fence *getFence(GLuint handle);
+    FenceNV *getFenceNV(GLuint handle);
     Shader *getShader(GLuint handle);
     Program *getProgram(GLuint handle);
     Texture *getTexture(GLuint handle);
@@ -478,9 +478,9 @@ class Context
     FramebufferMap mFramebufferMap;
     HandleAllocator mFramebufferHandleAllocator;
 
-    typedef HASH_MAP<GLuint, Fence*> FenceMap;
-    FenceMap mFenceMap;
-    HandleAllocator mFenceHandleAllocator;
+    typedef HASH_MAP<GLuint, FenceNV*> FenceNVMap;
+    FenceNVMap mFenceNVMap;
+    HandleAllocator mFenceNVHandleAllocator;
 
     typedef HASH_MAP<GLuint, Query*> QueryMap;
     QueryMap mQueryMap;

@@ -20,11 +20,11 @@ class FenceImpl;
 namespace gl
 {
 
-class Fence
+class FenceNV
 {
   public:
-    explicit Fence(rx::Renderer *renderer);
-    virtual ~Fence();
+    explicit FenceNV(rx::Renderer *renderer);
+    virtual ~FenceNV();
 
     GLboolean isFence() const;
     void setFence(GLenum condition);
@@ -36,7 +36,7 @@ class Fence
     GLuint getCondition() const { return mCondition; }
 
   private:
-    DISALLOW_COPY_AND_ASSIGN(Fence);
+    DISALLOW_COPY_AND_ASSIGN(FenceNV);
 
     rx::FenceImpl *mFence;
 

@@ -3396,7 +3396,7 @@ void __stdcall glDeleteFencesNV(GLsizei n, const GLuint* fences)
         {
             for (int i = 0; i < n; i++)
             {
-                context->deleteFence(fences[i]);
+                context->deleteFenceNV(fences[i]);
             }
         }
     }
@@ -4011,7 +4011,7 @@ void __stdcall glFinishFenceNV(GLuint fence)
 
         if (context)
         {
-            gl::Fence* fenceObject = context->getFence(fence);
+            gl::FenceNV *fenceObject = context->getFenceNV(fence);
 
             if (fenceObject == NULL)
             {
@@ -4457,7 +4457,7 @@ void __stdcall glGenFencesNV(GLsizei n, GLuint* fences)
         {
             for (int i = 0; i < n; i++)
             {
-                fences[i] = context->createFence();
+                fences[i] = context->createFenceNV();
             }
         }
     }
@@ -4898,7 +4898,7 @@ void __stdcall glGetFenceivNV(GLuint fence, GLenum pname, GLint *params)
 
         if (context)
         {
-            gl::Fence *fenceObject = context->getFence(fence);
+            gl::FenceNV *fenceObject = context->getFenceNV(fence);
 
             if (fenceObject == NULL)
             {
@@ -6292,7 +6292,7 @@ GLboolean __stdcall glIsFenceNV(GLuint fence)
 
         if (context)
         {
-            gl::Fence *fenceObject = context->getFence(fence);
+            gl::FenceNV *fenceObject = context->getFenceNV(fence);
 
             if (fenceObject == NULL)
             {
@@ -6775,7 +6775,7 @@ void __stdcall glSetFenceNV(GLuint fence, GLenum condition)
 
         if (context)
         {
-            gl::Fence *fenceObject = context->getFence(fence);
+            gl::FenceNV *fenceObject = context->getFenceNV(fence);
 
             if (fenceObject == NULL)
             {
@@ -7068,7 +7068,7 @@ GLboolean __stdcall glTestFenceNV(GLuint fence)
 
         if (context)
         {
-            gl::Fence *fenceObject = context->getFence(fence);
+            gl::FenceNV *fenceObject = context->getFenceNV(fence);
 
             if (fenceObject == NULL)
             {

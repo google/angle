@@ -49,7 +49,7 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
 {
     ASSERT(robustAccess == false);   // Unimplemented
 
-    mFenceHandleAllocator.setBaseHandle(0);
+    mFenceNVHandleAllocator.setBaseHandle(0);
 
     setClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
@@ -229,9 +229,9 @@ Context::~Context()
         deleteFramebuffer(mFramebufferMap.begin()->first);
     }
 
-    while (!mFenceMap.empty())
+    while (!mFenceNVMap.empty())
     {
-        deleteFence(mFenceMap.begin()->first);
+        deleteFenceNV(mFenceNVMap.begin()->first);
     }
 
     while (!mQueryMap.empty())
@@ -816,11 +816,11 @@ GLuint Context::createFramebuffer()
     return handle;
 }
 
-GLuint Context::createFence()
+GLuint Context::createFenceNV()
 {
-    GLuint handle = mFenceHandleAllocator.allocate();
+    GLuint handle = mFenceNVHandleAllocator.allocate();
 
-    mFenceMap[handle] = new Fence(mRenderer);
+    mFenceNVMap[handle] = new FenceNV(mRenderer);
 
     return handle;
 }
@@ -913,15 +913,15 @@ void Context::deleteFramebuffer(GLuint framebuffer)
     }
 }
 
-void Context::deleteFence(GLuint fence)
+void Context::deleteFenceNV(GLuint fence)
 {
-    FenceMap::iterator fenceObject = mFenceMap.find(fence);
+    FenceNVMap::iterator fenceObject = mFenceNVMap.find(fence);
 
-    if (fenceObject != mFenceMap.end())
+    if (fenceObject != mFenceNVMap.end())
     {
-        mFenceHandleAllocator.release(fenceObject->first);
+        mFenceNVHandleAllocator.release(fenceObject->first);
         delete fenceObject->second;
-        mFenceMap.erase(fenceObject);
+        mFenceNVMap.erase(fenceObject);
     }
 }
 
@@ -1350,11 +1350,11 @@ Framebuffer *Context::getFramebuffer(unsigned int handle)
     }
 }
 
-Fence *Context::getFence(unsigned int handle)
+FenceNV *Context::getFenceNV(unsigned int handle)
 {
-    FenceMap::iterator fence = mFenceMap.find(handle);
+    FenceNVMap::iterator fence = mFenceNVMap.find(handle);
 
-    if (fence == mFenceMap.end())
+    if (fence == mFenceNVMap.end())
     {
         return NULL;
     }
