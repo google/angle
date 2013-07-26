@@ -256,7 +256,6 @@ class Context
     GLuint createProgram();
     GLuint createTexture();
     GLuint createRenderbuffer();
-    GLuint createVertexArray();
     GLuint createSampler();
 
     void deleteBuffer(GLuint buffer);
@@ -264,7 +263,6 @@ class Context
     void deleteProgram(GLuint program);
     void deleteTexture(GLuint texture);
     void deleteRenderbuffer(GLuint renderbuffer);
-    void deleteVertexArray(GLuint vertexArray);
     void deleteSampler(GLuint sampler);
 
     // Framebuffers are owned by the Context, so these methods do not pass through
@@ -278,6 +276,10 @@ class Context
     // Queries are owned by the Context;
     GLuint createQuery();
     void deleteQuery(GLuint query);
+
+    // Vertex arrays are owned by the Context
+    GLuint createVertexArray();
+    void deleteVertexArray(GLuint vertexArray);
 
     void bindArrayBuffer(GLuint buffer);
     void bindElementArrayBuffer(GLuint buffer);
