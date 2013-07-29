@@ -564,8 +564,9 @@ RenderTarget *TextureStorage11_Cube::getRenderTargetFace(GLenum faceTarget, int 
             else if (mDepthStencilFormat != DXGI_FORMAT_UNKNOWN)
             {
                 D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
-                dsvDesc.Format = mRenderTargetFormat;
+                dsvDesc.Format = mDepthStencilFormat;
                 dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
+                dsvDesc.Flags = 0;
                 dsvDesc.Texture2DArray.MipSlice = level;
                 dsvDesc.Texture2DArray.FirstArraySlice = faceIdx;
                 dsvDesc.Texture2DArray.ArraySize = 1;
