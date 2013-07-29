@@ -205,8 +205,7 @@ class TInfoSink;
 //
 class TIntermNode {
 public:
-    POOL_ALLOCATOR_NEW_DELETE(GlobalPoolAllocator)
-
+    POOL_ALLOCATOR_NEW_DELETE();
     TIntermNode() {
         // TODO: Move this to TSourceLoc constructor
         // after getting rid of TPublicType.
@@ -540,8 +539,7 @@ enum Visit
 class TIntermTraverser
 {
 public:
-    POOL_ALLOCATOR_NEW_DELETE(GlobalPoolAllocator)
-
+    POOL_ALLOCATOR_NEW_DELETE();
     TIntermTraverser(bool preVisit = true, bool inVisit = false, bool postVisit = false, bool rightToLeft = false) : 
             preVisit(preVisit),
             inVisit(inVisit),

@@ -19,7 +19,7 @@ class TType;
 class TField
 {
 public:
-    POOL_ALLOCATOR_NEW_DELETE(GlobalPoolAllocator);
+    POOL_ALLOCATOR_NEW_DELETE();
     TField(TType* type, TString* name) : mType(type), mName(name) {}
 
     // TODO(alokp): We should only return const type.
@@ -38,14 +38,14 @@ private:
 typedef TVector<TField*> TFieldList;
 inline TFieldList* NewPoolTFieldList()
 {
-    void* memory = GlobalPoolAllocator.allocate(sizeof(TFieldList));
+    void* memory = GetGlobalPoolAllocator()->allocate(sizeof(TFieldList));
     return new(memory) TFieldList;
 }
 
 class TStructure
 {
 public:
-    POOL_ALLOCATOR_NEW_DELETE(GlobalPoolAllocator);
+    POOL_ALLOCATOR_NEW_DELETE();
     TStructure(TString* name, TFieldList* fields)
         : mName(name),
           mFields(fields),
@@ -93,7 +93,7 @@ private:
 class TType
 {
 public:
-    POOL_ALLOCATOR_NEW_DELETE(GlobalPoolAllocator)
+    POOL_ALLOCATOR_NEW_DELETE();
     TType() {}
     TType(TBasicType t, TPrecision p, TQualifier q = EvqTemporary, int s = 1, bool m = false, bool a = false) :
             type(t), precision(p), qualifier(q), size(s), matrix(m), array(a), arraySize(0), structure(0)
