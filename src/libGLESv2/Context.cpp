@@ -127,6 +127,12 @@ Context::Context(int clientVersion, const gl::Context *shareContext, rx::Rendere
     mState.blend.colorMaskBlue = true;
     mState.blend.colorMaskAlpha = true;
 
+    const GLfloat defaultFloatValues[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+    for (int attribIndex = 0; attribIndex < MAX_VERTEX_ATTRIBS; attribIndex++)
+    {
+        mState.vertexAttribCurrentValues[attribIndex].setFloatValues(defaultFloatValues);
+    }
+
     if (shareContext != NULL)
     {
         mResourceManager = shareContext->mResourceManager;
