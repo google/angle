@@ -36,38 +36,16 @@ SwapChain9::~SwapChain9()
 
 void SwapChain9::release()
 {
-    if (mSwapChain)
-    {
-        mSwapChain->Release();
-        mSwapChain = NULL;
-    }
-
-    if (mBackBuffer)
-    {
-        mBackBuffer->Release();
-        mBackBuffer = NULL;
-    }
-
-    if (mDepthStencil)
-    {
-        mDepthStencil->Release();
-        mDepthStencil = NULL;
-    }
-
-    if (mRenderTarget)
-    {
-        mRenderTarget->Release();
-        mRenderTarget = NULL;
-    }
-
-    if (mOffscreenTexture)
-    {
-        mOffscreenTexture->Release();
-        mOffscreenTexture = NULL;
-    }
+    SafeRelease(mSwapChain);
+    SafeRelease(mBackBuffer);
+    SafeRelease(mDepthStencil);
+    SafeRelease(mRenderTarget);
+    SafeRelease(mOffscreenTexture);
 
     if (mWindow)
+    {
         mShareHandle = NULL;
+    }
 }
 
 static DWORD convertInterval(EGLint interval)
@@ -108,29 +86,10 @@ EGLint SwapChain9::reset(int backbufferWidth, int backbufferHeight, EGLint swapI
 
     // Release specific resources to free up memory for the new render target, while the
     // old render target still exists for the purpose of preserving its contents.
-    if (mSwapChain)
-    {
-        mSwapChain->Release();
-        mSwapChain = NULL;
-    }
-
-    if (mBackBuffer)
-    {
-        mBackBuffer->Release();
-        mBackBuffer = NULL;
-    }
-
-    if (mOffscreenTexture)
-    {
-        mOffscreenTexture->Release();
-        mOffscreenTexture = NULL;
-    }
-
-    if (mDepthStencil)
-    {
-        mDepthStencil->Release();
-        mDepthStencil = NULL;
-    }
+    SafeRelease(mSwapChain);
+    SafeRelease(mBackBuffer);
+    SafeRelease(mOffscreenTexture);
+    SafeRelease(mDepthStencil);
 
     HANDLE *pShareHandle = NULL;
     if (!mWindow && mRenderer->getShareHandleSupport())
@@ -184,7 +143,7 @@ EGLint SwapChain9::reset(int backbufferWidth, int backbufferHeight, EGLint swapI
         result = device->StretchRect(oldRenderTarget, &rect, mRenderTarget, &rect, D3DTEXF_NONE);
         ASSERT(SUCCEEDED(result));
 
-        oldRenderTarget->Release();
+        SafeRelease(oldRenderTarget);
     }
 
     if (mWindow)
@@ -424,10 +383,10 @@ void SwapChain9::recreate()
         return;
     }
 
-    mSwapChain->Release();
+    SafeRelease(mSwapChain);
     mSwapChain = newSwapChain;
 
-    mBackBuffer->Release();
+    SafeRelease(mBackBuffer);
     result = mSwapChain->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &mBackBuffer);
     ASSERT(SUCCEEDED(result));
 }

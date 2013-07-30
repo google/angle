@@ -95,10 +95,7 @@ RenderTarget9::RenderTarget9(Renderer *renderer, GLsizei width, GLsizei height, 
 
 RenderTarget9::~RenderTarget9()
 {
-    if (mRenderTarget)
-    {
-        mRenderTarget->Release();
-    }
+    SafeRelease(mRenderTarget);
 }
 
 RenderTarget9 *RenderTarget9::makeRenderTarget9(RenderTarget *target)

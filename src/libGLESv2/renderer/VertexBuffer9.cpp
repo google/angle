@@ -36,20 +36,12 @@ VertexBuffer9::VertexBuffer9(rx::Renderer9 *const renderer) : mRenderer(renderer
 
 VertexBuffer9::~VertexBuffer9()
 {
-    if (mVertexBuffer)
-    {
-        mVertexBuffer->Release();
-        mVertexBuffer = NULL;
-    }
+    SafeRelease(mVertexBuffer);
 }
 
 bool VertexBuffer9::initialize(unsigned int size, bool dynamicUsage)
 {
-    if (mVertexBuffer)
-    {
-        mVertexBuffer->Release();
-        mVertexBuffer = NULL;
-    }
+    SafeRelease(mVertexBuffer);
 
     updateSerial();
 

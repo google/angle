@@ -133,8 +133,7 @@ ShaderBlob *Renderer::compileToBinary(gl::InfoLog &infoLog, const char *hlsl, co
             TRACE("\n%s", hlsl);
             TRACE("\n%s", message);
 
-            errorMessage->Release();
-            errorMessage = NULL;
+            SafeRelease(errorMessage);
         }
 
         if (SUCCEEDED(result))

@@ -66,20 +66,12 @@ VertexBuffer11::VertexBuffer11(rx::Renderer11 *const renderer) : mRenderer(rende
 
 VertexBuffer11::~VertexBuffer11()
 {
-    if (mBuffer)
-    {
-        mBuffer->Release();
-        mBuffer = NULL;
-    }
+    SafeRelease(mBuffer);
 }
 
 bool VertexBuffer11::initialize(unsigned int size, bool dynamicUsage)
 {
-    if (mBuffer)
-    {
-        mBuffer->Release();
-        mBuffer = NULL;
-    }
+    SafeRelease(mBuffer);
 
     updateSerial();
 

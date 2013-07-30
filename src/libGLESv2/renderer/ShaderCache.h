@@ -53,7 +53,7 @@ class ShaderCache
         // Random eviction policy.
         if (mMap.size() >= kMaxMapSize)
         {
-            mMap.begin()->second->Release();
+            SafeRelease(mMap.begin()->second);
             mMap.erase(mMap.begin());
         }
 
@@ -67,7 +67,7 @@ class ShaderCache
     {
         for (typename Map::iterator it = mMap.begin(); it != mMap.end(); ++it)
         {
-            it->second->Release();
+            SafeRelease(it->second);
         }
 
         mMap.clear();

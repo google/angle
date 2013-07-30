@@ -56,16 +56,13 @@ Blit9::Blit9(rx::Renderer9 *renderer)
 
 Blit9::~Blit9()
 {
-    if (mSavedStateBlock) mSavedStateBlock->Release();
-    if (mQuadVertexBuffer) mQuadVertexBuffer->Release();
-    if (mQuadVertexDeclaration) mQuadVertexDeclaration->Release();
+    SafeRelease(mSavedStateBlock);
+    SafeRelease(mQuadVertexBuffer);
+    SafeRelease(mQuadVertexDeclaration);
 
     for (int i = 0; i < SHADER_COUNT; i++)
     {
-        if (mCompiledShaders[i])
-        {
-            mCompiledShaders[i]->Release();
-        }
+        SafeRelease(mCompiledShaders[i]);
     }
 }
 
@@ -205,7 +202,7 @@ bool Blit9::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
 
     render();
 
-    texture->Release();
+    SafeRelease(texture);
 
     restoreState();
 
@@ -241,10 +238,10 @@ bool Blit9::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum de
     if (destSurface)
     {
         result = copy(source, sourceRect, destFormat, xoffset, yoffset, destSurface);
-        destSurface->Release();
+        SafeRelease(destSurface);
     }
 
-    source->Release();
+    SafeRelease(source);
     return result;
 }
 
@@ -277,10 +274,10 @@ bool Blit9::copy(gl::Framebuffer *framebuffer, const RECT &sourceRect, GLenum de
     if (destSurface)
     {
         result = copy(source, sourceRect, destFormat, xoffset, yoffset, destSurface);
-        destSurface->Release();
+        SafeRelease(destSurface);
     }
 
-    source->Release();
+    SafeRelease(source);
     return result;
 }
 
@@ -340,7 +337,7 @@ bool Blit9::formatConvert(IDirect3DSurface9 *source, const RECT &sourceRect, GLe
         render();
     }
 
-    texture->Release();
+    SafeRelease(texture);
 
     restoreState();
 
@@ -438,19 +435,19 @@ IDirect3DTexture9 *Blit9::copySurfaceToTexture(IDirect3DSurface9 *surface, const
     if (FAILED(result))
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-        texture->Release();
+        SafeRelease(texture);
         return gl::error(GL_OUT_OF_MEMORY, (IDirect3DTexture9*)NULL);
     }
 
     mRenderer->endScene();
     result = device->StretchRect(surface, &sourceRect, textureSurface, NULL, D3DTEXF_NONE);
 
-    textureSurface->Release();
+    SafeRelease(textureSurface);
 
     if (FAILED(result))
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-        texture->Release();
+        SafeRelease(texture);
         return gl::error(GL_OUT_OF_MEMORY, (IDirect3DTexture9*)NULL);
     }
 
@@ -572,18 +569,10 @@ void Blit9::restoreState()
     IDirect3DDevice9 *device = mRenderer->getDevice();
 
     device->SetDepthStencilSurface(mSavedDepthStencil);
-    if (mSavedDepthStencil != NULL)
-    {
-        mSavedDepthStencil->Release();
-        mSavedDepthStencil = NULL;
-    }
+    SafeRelease(mSavedDepthStencil);
 
     device->SetRenderTarget(0, mSavedRenderTarget);
-    if (mSavedRenderTarget != NULL)
-    {
-        mSavedRenderTarget->Release();
-        mSavedRenderTarget = NULL;
-    }
+    SafeRelease(mSavedRenderTarget);
 
     ASSERT(mSavedStateBlock != NULL);
 

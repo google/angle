@@ -22,7 +22,7 @@ BufferStorage9::BufferStorage9()
 
 BufferStorage9::~BufferStorage9()
 {
-    delete[] mMemory;
+    SafeDeleteArray(mMemory);
 }
 
 BufferStorage9 *BufferStorage9::makeBufferStorage9(BufferStorage *bufferStorage)

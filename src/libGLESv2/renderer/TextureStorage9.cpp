@@ -126,12 +126,8 @@ TextureStorage9_2D::TextureStorage9_2D(Renderer *renderer, int levels, GLenum in
 
 TextureStorage9_2D::~TextureStorage9_2D()
 {
-    if (mTexture)
-    {
-        mTexture->Release();
-    }
-
-    delete mRenderTarget;
+    SafeRelease(mTexture);
+    SafeDelete(mRenderTarget);
 }
 
 TextureStorage9_2D *TextureStorage9_2D::makeTextureStorage9_2D(TextureStorage *storage)
@@ -176,8 +172,8 @@ void TextureStorage9_2D::generateMipmap(int level)
         mRenderer->boxFilter(upper, lower);
     }
 
-    if (upper != NULL) upper->Release();
-    if (lower != NULL) lower->Release();
+    SafeRelease(upper);
+    SafeRelease(lower);
 }
 
 IDirect3DBaseTexture9 *TextureStorage9_2D::getBaseTexture() const
@@ -229,14 +225,11 @@ TextureStorage9_Cube::TextureStorage9_Cube(Renderer *renderer, int levels, GLenu
 
 TextureStorage9_Cube::~TextureStorage9_Cube()
 {
-    if (mTexture)
-    {
-        mTexture->Release();
-    }
+    SafeRelease(mTexture);
 
     for (int i = 0; i < 6; ++i)
     {
-        delete mRenderTarget[i];
+        SafeDelete(mRenderTarget[i]);
     }
 }
 
@@ -283,8 +276,8 @@ void TextureStorage9_Cube::generateMipmap(int face, int level)
         mRenderer->boxFilter(upper, lower);
     }
 
-    if (upper != NULL) upper->Release();
-    if (lower != NULL) lower->Release();
+    SafeRelease(upper);
+    SafeRelease(lower);
 }
 
 IDirect3DBaseTexture9 *TextureStorage9_Cube::getBaseTexture() const

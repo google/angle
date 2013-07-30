@@ -23,11 +23,7 @@ Fence9::Fence9(rx::Renderer9 *renderer)
 
 Fence9::~Fence9()
 {
-    if (mQuery)
-    {
-        mRenderer->freeEventQuery(mQuery);
-        mQuery = NULL;
-    }
+    SafeRelease(mQuery);
 }
 
 bool Fence9::isSet() const

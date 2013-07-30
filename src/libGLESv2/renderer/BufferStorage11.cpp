@@ -43,7 +43,7 @@ BufferStorage11::~BufferStorage11()
 
     for (DirectBufferList::iterator it = mDirectBuffers.begin(); it != mDirectBuffers.end(); it++)
     {
-        delete *it;
+        SafeDelete(*it);
     }
 }
 

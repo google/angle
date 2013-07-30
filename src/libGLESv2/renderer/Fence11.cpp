@@ -22,11 +22,7 @@ Fence11::Fence11(rx::Renderer11 *renderer)
 
 Fence11::~Fence11()
 {
-    if (mQuery)
-    {
-        mQuery->Release();
-        mQuery = NULL;
-    }
+    SafeRelease(mQuery);
 }
 
 bool Fence11::isSet() const

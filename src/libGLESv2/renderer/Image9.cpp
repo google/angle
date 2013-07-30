@@ -34,10 +34,7 @@ Image9::Image9()
 
 Image9::~Image9()
 {
-    if (mSurface)
-    {
-        mSurface->Release();
-    }
+    SafeRelease(mSurface);
 }
 
 void Image9::generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 *sourceSurface)
@@ -153,11 +150,7 @@ bool Image9::redefine(rx::Renderer *renderer, GLenum target, GLint internalforma
         mActualFormat = d3d9_gl::GetInternalFormat(mD3DFormat);
         mRenderable = gl_d3d9::GetRenderFormat(internalformat, mRenderer) != D3DFMT_UNKNOWN;
 
-        if (mSurface)
-        {
-            mSurface->Release();
-            mSurface = NULL;
-        }
+        SafeRelease(mSurface);
 
         return true;
     }
@@ -197,7 +190,7 @@ void Image9::createSurface()
         }
 
         newTexture->GetSurfaceLevel(levelToFetch, &newSurface);
-        newTexture->Release();
+        SafeRelease(newTexture);
     }
 
     mSurface = newSurface;
@@ -270,7 +263,7 @@ void Image9::setManagedSurface(IDirect3DSurface9 *surface)
         if (mSurface)
         {
             copyLockableSurfaces(surface, mSurface);
-            mSurface->Release();
+            SafeRelease(mSurface);
         }
 
         mSurface = surface;
@@ -338,7 +331,7 @@ bool Image9::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint 
                 copyLockableSurfaces(surf, sourceSurface);
                 result = device->UpdateSurface(surf, &rect, destSurface, &point);
                 ASSERT(SUCCEEDED(result));
-                surf->Release();
+                SafeRelease(surf);
             }
         }
         else
@@ -349,7 +342,7 @@ bool Image9::updateSurface(IDirect3DSurface9 *destSurface, GLint xoffset, GLint 
         }
     }
 
-    destSurface->Release();
+    SafeRelease(destSurface);
     return true;
 }
 
@@ -461,7 +454,7 @@ void Image9::copy(GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y,
     if (FAILED(result))
     {
         ERR("Could not create matching destination surface.");
-        surface->Release();
+        SafeRelease(surface);
         return gl::error(GL_OUT_OF_MEMORY);
     }
 
@@ -470,8 +463,8 @@ void Image9::copy(GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y,
     if (FAILED(result))
     {
         ERR("GetRenderTargetData unexpectedly failed.");
-        renderTargetData->Release();
-        surface->Release();
+        SafeRelease(renderTargetData);
+        SafeRelease(surface);
         return gl::error(GL_OUT_OF_MEMORY);
     }
 
@@ -484,8 +477,8 @@ void Image9::copy(GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y,
     if (FAILED(result))
     {
         ERR("Failed to lock the source surface (rectangle might be invalid).");
-        renderTargetData->Release();
-        surface->Release();
+        SafeRelease(renderTargetData);
+        SafeRelease(surface);
         return gl::error(GL_OUT_OF_MEMORY);
     }
 
@@ -496,8 +489,8 @@ void Image9::copy(GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y,
     {
         ERR("Failed to lock the destination surface (rectangle might be invalid).");
         renderTargetData->UnlockRect();
-        renderTargetData->Release();
-        surface->Release();
+        SafeRelease(renderTargetData);
+        SafeRelease(surface);
         return gl::error(GL_OUT_OF_MEMORY);
     }
 
@@ -671,8 +664,8 @@ void Image9::copy(GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y,
     unlock();
     renderTargetData->UnlockRect();
 
-    renderTargetData->Release();
-    surface->Release();
+    SafeRelease(renderTargetData);
+    SafeRelease(surface);
 
     mDirty = true;
 }

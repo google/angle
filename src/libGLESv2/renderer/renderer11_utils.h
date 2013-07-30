@@ -76,10 +76,7 @@ outType* DynamicCastComObject(IUnknown* object)
     }
     else
     {
-        if (outObject)
-        {
-            outObject->Release();
-        }
+        SafeRelease(outObject);
         return NULL;
     }
 }

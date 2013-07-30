@@ -22,11 +22,7 @@ Query11::Query11(rx::Renderer11 *renderer, GLenum type) : QueryImpl(type)
 
 Query11::~Query11()
 {
-    if (mQuery)
-    {
-        mQuery->Release();
-        mQuery = NULL;
-    }
+    SafeRelease(mQuery);
 }
 
 void Query11::begin()

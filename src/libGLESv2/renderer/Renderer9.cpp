@@ -139,21 +139,11 @@ Renderer9::~Renderer9()
             resetDevice();
         }
 
-        mDevice->Release();
-        mDevice = NULL;
+        SafeRelease(mDevice);
     }
 
-    if (mDeviceEx)
-    {
-        mDeviceEx->Release();
-        mDeviceEx = NULL;
-    }
-
-    if (mD3d9)
-    {
-        mD3d9->Release();
-        mD3d9 = NULL;
-    }
+    SafeRelease(mDeviceEx);
+    SafeRelease(mD3d9);
 
     if (mDeviceWindow)
     {
@@ -161,16 +151,9 @@ Renderer9::~Renderer9()
         mDeviceWindow = NULL;
     }
 
-    if (mD3d9Ex)
-    {
-        mD3d9Ex->Release();
-        mD3d9Ex = NULL;
-    }
+    SafeRelease(mD3d9Ex);
 
-    if (mD3d9Module)
-    {
-        mD3d9Module = NULL;
-    }
+    mD3d9Module = NULL;
 }
 
 Renderer9 *Renderer9::makeRenderer9(Renderer *renderer)
@@ -352,7 +335,7 @@ EGLint Renderer9::initialize()
     IDirect3DQuery9 *occlusionQuery = NULL;
     if (SUCCEEDED(mDevice->CreateQuery(D3DQUERYTYPE_OCCLUSION, &occlusionQuery)) && occlusionQuery)
     {
-        occlusionQuery->Release();
+        SafeRelease(occlusionQuery);
         mOcclusionQuerySupport = true;
     }
     else
@@ -364,7 +347,7 @@ EGLint Renderer9::initialize()
     IDirect3DQuery9 *eventQuery = NULL;
     if (SUCCEEDED(mDevice->CreateQuery(D3DQUERYTYPE_EVENT, &eventQuery)) && eventQuery)
     {
-        eventQuery->Release();
+        SafeRelease(eventQuery);
         mEventQuerySupport = true;
     }
     else
@@ -655,7 +638,7 @@ void Renderer9::freeEventQuery(IDirect3DQuery9* query)
 {
     if (mEventQueryPool.size() > 1000)
     {
-        query->Release();
+        SafeRelease(query);
     }
     else
     {
@@ -1240,7 +1223,7 @@ bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
         }
 
         mDevice->SetRenderTarget(0, renderTargetSurface);
-        renderTargetSurface->Release();
+        SafeRelease(renderTargetSurface);
 
         mAppliedRenderTargetSerial = renderTargetSerial;
         renderTargetChanged = true;
@@ -1297,7 +1280,7 @@ bool Renderer9::applyRenderTarget(gl::Framebuffer *framebuffer)
             }
 
             mDevice->SetDepthStencilSurface(depthStencilSurface);
-            depthStencilSurface->Release();
+            SafeRelease(depthStencilSurface);
 
             depthSize = depthStencil->getDepthSize();
             stencilSize = depthStencil->getStencilSize();
@@ -1993,41 +1976,27 @@ void Renderer9::markAllStateDirty()
 
 void Renderer9::releaseDeviceResources()
 {
-    while (!mEventQueryPool.empty())
+    for (size_t i = 0; i < mEventQueryPool.size(); i++)
     {
-        mEventQueryPool.back()->Release();
-        mEventQueryPool.pop_back();
+        SafeRelease(mEventQueryPool[i]);
     }
+    mEventQueryPool.clear();
 
-    if (mMaskedClearSavedState)
-    {
-        mMaskedClearSavedState->Release();
-        mMaskedClearSavedState = NULL;
-    }
+    SafeRelease(mMaskedClearSavedState);
 
     mVertexShaderCache.clear();
     mPixelShaderCache.clear();
 
-    delete mBlit;
-    mBlit = NULL;
-
-    delete mVertexDataManager;
-    mVertexDataManager = NULL;
-
-    delete mIndexDataManager;
-    mIndexDataManager = NULL;
-
-    delete mLineLoopIB;
-    mLineLoopIB = NULL;
+    SafeDelete(mBlit);
+    SafeDelete(mVertexDataManager);
+    SafeDelete(mIndexDataManager);
+    SafeDelete(mLineLoopIB);
 
     for (int i = 0; i < NUM_NULL_COLORBUFFER_CACHE_ENTRIES; i++)
     {
-        delete mNullColorbufferCache[i].buffer;
-        mNullColorbufferCache[i].buffer = NULL;
+        SafeDelete(mNullColorbufferCache[i].buffer);
     }
-
 }
-
 
 void Renderer9::notifyDeviceLost()
 {
@@ -2609,11 +2578,13 @@ bool Renderer9::copyToRenderTarget(TextureStorageInterface2D *dest, TextureStora
             
             result = copyToRenderTarget(dstSurf, srcSurf, source9->isManaged());
 
-            if (srcSurf) srcSurf->Release();
-            if (dstSurf) dstSurf->Release();
+            SafeRelease(srcSurf);
+            SafeRelease(dstSurf);
 
             if (!result)
+            {
                 return false;
+            }
         }
     }
 
@@ -2638,11 +2609,13 @@ bool Renderer9::copyToRenderTarget(TextureStorageInterfaceCube *dest, TextureSto
 
                 result = copyToRenderTarget(dstSurf, srcSurf, source9->isManaged());
 
-                if (srcSurf) srcSurf->Release();
-                if (dstSurf) dstSurf->Release();
+                SafeRelease(srcSurf);
+                SafeRelease(dstSurf);
 
                 if (!result)
+                {
                     return false;
+                }
             }
         }
     }
@@ -2775,8 +2748,8 @@ bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, const gl::Rectangle &
 
         HRESULT result = mDevice->StretchRect(readSurface, &srcRect, drawSurface, &dstRect, D3DTEXF_NONE);
 
-        readSurface->Release();
-        drawSurface->Release();
+        SafeRelease(readSurface);
+        SafeRelease(drawSurface);
 
         if (FAILED(result))
         {
@@ -2820,8 +2793,8 @@ bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, const gl::Rectangle &
 
         HRESULT result = mDevice->StretchRect(readSurface, NULL, drawSurface, NULL, D3DTEXF_NONE);
 
-        readSurface->Release();
-        drawSurface->Release();
+        SafeRelease(readSurface);
+        SafeRelease(drawSurface);
 
         if (FAILED(result))
         {
@@ -2862,7 +2835,7 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
     if (desc.MultiSampleType != D3DMULTISAMPLE_NONE)
     {
         UNIMPLEMENTED();   // FIXME: Requires resolve using StretchRect into non-multisampled render target
-        surface->Release();
+        SafeRelease(surface);
         return gl::error(GL_OUT_OF_MEMORY);
     }
 
@@ -2890,18 +2863,17 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
         if (FAILED(result))
         {
             ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-            surface->Release();
+            SafeRelease(surface);
             return gl::error(GL_OUT_OF_MEMORY);
         }
     }
 
     result = mDevice->GetRenderTargetData(surface, systemSurface);
-    surface->Release();
-    surface = NULL;
+    SafeRelease(surface);
 
     if (FAILED(result))
     {
-        systemSurface->Release();
+        SafeRelease(systemSurface);
 
         // It turns out that D3D will sometimes produce more error
         // codes than those documented.
@@ -2920,7 +2892,7 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
 
     if (directToPixels)
     {
-        systemSurface->Release();
+        SafeRelease(systemSurface);
         return;
     }
 
@@ -2936,7 +2908,7 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
     if (FAILED(result))
     {
         UNREACHABLE();
-        systemSurface->Release();
+        SafeRelease(systemSurface);
 
         return;   // No sensible error to generate
     }
@@ -3016,8 +2988,7 @@ void Renderer9::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsiz
     }
 
     systemSurface->UnlockRect();
-
-    systemSurface->Release();
+    SafeRelease(systemSurface);
 }
 
 RenderTarget *Renderer9::createRenderTarget(SwapChain *swapChain, bool depth)
@@ -3095,10 +3066,12 @@ ShaderExecutable *Renderer9::compileToExecutable(gl::InfoLog &infoLog, const cha
 
     ID3DBlob *binary = (ID3DBlob*)compileToBinary(infoLog, shaderHLSL, profile, ANGLE_COMPILE_OPTIMIZATION_LEVEL, true);
     if (!binary)
+    {
         return NULL;
+    }
 
     ShaderExecutable *executable = loadExecutable(binary->GetBufferPointer(), binary->GetBufferSize(), type);
-    binary->Release();
+    SafeRelease(binary);
 
     return executable;
 }
@@ -3143,7 +3116,7 @@ bool Renderer9::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurface9 *s
             {
                 Image9::copyLockableSurfaces(surf, source);
                 result = mDevice->UpdateSurface(surf, NULL, dest, NULL);
-                surf->Release();
+                SafeRelease(surf);
             }
         }
         else

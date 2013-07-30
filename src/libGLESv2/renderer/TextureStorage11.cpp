@@ -187,7 +187,7 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, SwapChain11 *swapch
     D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
     offscreenRTV->GetDesc(&rtvDesc);
     mRenderTargetFormat = rtvDesc.Format;
-    offscreenRTV->Release();
+    SafeRelease(offscreenRTV);
 
     mDepthStencilFormat = DXGI_FORMAT_UNKNOWN;
 }
@@ -257,22 +257,12 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer *renderer, int levels, GLenum 
 
 TextureStorage11_2D::~TextureStorage11_2D()
 {
-    if (mTexture)
-    {
-        mTexture->Release();
-        mTexture = NULL;
-    }
-
-    if (mSRV)
-    {
-        mSRV->Release();
-        mSRV = NULL;
-    }
+    SafeRelease(mTexture);
+    SafeRelease(mSRV);
 
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
     {
-        delete mRenderTarget[i];
-        mRenderTarget[i] = NULL;
+        SafeDelete(mRenderTarget[i]);
     }
 }
 
@@ -323,7 +313,7 @@ RenderTarget *TextureStorage11_2D::getRenderTarget(int level)
 
                 if (result == E_OUTOFMEMORY)
                 {
-                    srv->Release();
+                    SafeRelease(srv);
                     return gl::error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
                 }
                 ASSERT(SUCCEEDED(result));
@@ -350,7 +340,7 @@ RenderTarget *TextureStorage11_2D::getRenderTarget(int level)
 
                 if (result == E_OUTOFMEMORY)
                 {
-                    srv->Release();
+                    SafeRelease(srv);
                     return gl::error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
                 }
                 ASSERT(SUCCEEDED(result));
@@ -473,24 +463,14 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer *renderer, int levels, GLe
 
 TextureStorage11_Cube::~TextureStorage11_Cube()
 {
-    if (mTexture)
-    {
-        mTexture->Release();
-        mTexture = NULL;
-    }
-
-    if (mSRV)
-    {
-        mSRV->Release();
-        mSRV = NULL;
-    }
+    SafeRelease(mTexture);
+    SafeRelease(mSRV);
 
     for (unsigned int i = 0; i < 6; i++)
     {
         for (unsigned int j = 0; j < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; j++)
         {
-            delete mRenderTarget[i][j];
-            mRenderTarget[i][j] = NULL;
+            SafeDelete(mRenderTarget[i][j]);
         }
     }
 }
@@ -547,7 +527,7 @@ RenderTarget *TextureStorage11_Cube::getRenderTargetFace(GLenum faceTarget, int 
 
                 if (result == E_OUTOFMEMORY)
                 {
-                    srv->Release();
+                    SafeRelease(srv);
                     return gl::error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
                 }
                 ASSERT(SUCCEEDED(result));
@@ -576,7 +556,7 @@ RenderTarget *TextureStorage11_Cube::getRenderTargetFace(GLenum faceTarget, int 
 
                 if (result == E_OUTOFMEMORY)
                 {
-                    srv->Release();
+                    SafeRelease(srv);
                     return gl::error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
                 }
                 ASSERT(SUCCEEDED(result));
@@ -701,29 +681,18 @@ TextureStorage11_3D::TextureStorage11_3D(Renderer *renderer, int levels, GLenum 
 
 TextureStorage11_3D::~TextureStorage11_3D()
 {
-    if (mTexture)
-    {
-        mTexture->Release();
-        mTexture = NULL;
-    }
+    SafeRelease(mTexture);
+    SafeRelease(mSRV);
 
-    if (mSRV)
+    for (RenderTargetMap::iterator i = mLevelLayerRenderTargets.begin(); i != mLevelLayerRenderTargets.end(); i++)
     {
-        mSRV->Release();
-        mSRV = NULL;
-    }
-
-    for (RenderTargetMap::const_iterator i = mLevelLayerRenderTargets.begin(); i != mLevelLayerRenderTargets.end(); i++)
-    {
-        RenderTarget11* renderTarget = i->second;
-        delete renderTarget;
+        SafeDelete(i->second);
     }
     mLevelLayerRenderTargets.clear();
 
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
     {
-        delete mLevelRenderTargets[i];
-        mLevelRenderTargets[i] = NULL;
+        SafeDelete(mLevelRenderTargets[i]);
     }
 }
 
@@ -800,7 +769,7 @@ RenderTarget *TextureStorage11_3D::getRenderTarget(int mipLevel)
 
                 if (result == E_OUTOFMEMORY)
                 {
-                    srv->Release();
+                    SafeRelease(srv);
                     return gl::error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
                 }
                 ASSERT(SUCCEEDED(result));
@@ -855,7 +824,7 @@ RenderTarget *TextureStorage11_3D::getRenderTargetLayer(int mipLevel, int layer)
 
                 if (result == E_OUTOFMEMORY)
                 {
-                    srv->Release();
+                    SafeRelease(srv);
                     return gl::error(GL_OUT_OF_MEMORY, static_cast<RenderTarget*>(NULL));
                 }
                 ASSERT(SUCCEEDED(result));
@@ -953,22 +922,12 @@ TextureStorage11_2DArray::TextureStorage11_2DArray(Renderer *renderer, int level
 
 TextureStorage11_2DArray::~TextureStorage11_2DArray()
 {
-    if (mTexture)
-    {
-        mTexture->Release();
-        mTexture = NULL;
-    }
+    SafeRelease(mTexture);
+    SafeRelease(mSRV);
 
-    if (mSRV)
+    for (RenderTargetMap::iterator i = mRenderTargets.begin(); i != mRenderTargets.end(); i++)
     {
-        mSRV->Release();
-        mSRV = NULL;
-    }
-
-    for (RenderTargetMap::const_iterator i = mRenderTargets.begin(); i != mRenderTargets.end(); i++)
-    {
-        RenderTarget11* renderTarget = i->second;
-        delete renderTarget;
+        SafeDelete(i->second);
     }
     mRenderTargets.clear();
 }

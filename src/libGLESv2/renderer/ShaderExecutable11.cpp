@@ -47,23 +47,11 @@ ShaderExecutable11::ShaderExecutable11(const void *function, size_t length, ID3D
 
 ShaderExecutable11::~ShaderExecutable11()
 {
-    if (mVertexExecutable)
-    {
-        mVertexExecutable->Release();
-    }
-    if (mPixelExecutable)
-    {
-        mPixelExecutable->Release();
-    }
-    if (mGeometryExecutable)
-    {
-        mGeometryExecutable->Release();
-    }
-    
-    if (mConstantBuffer)
-    {
-        mConstantBuffer->Release();
-    }
+    SafeRelease(mVertexExecutable);
+    SafeRelease(mPixelExecutable);
+    SafeRelease(mGeometryExecutable);
+
+    SafeRelease(mConstantBuffer);
 }
 
 ShaderExecutable11 *ShaderExecutable11::makeShaderExecutable11(ShaderExecutable *executable)

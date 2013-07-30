@@ -31,10 +31,7 @@ Image11::Image11()
 
 Image11::~Image11()
 {
-    if (mStagingTexture)
-    {
-        mStagingTexture->Release();
-    }
+    SafeRelease(mStagingTexture);
 }
 
 Image11 *Image11::makeImage11(Image *img)
@@ -132,12 +129,8 @@ bool Image11::redefine(Renderer *renderer, GLenum target, GLint internalformat, 
         mActualFormat = d3d11_gl::GetInternalFormat(mDXGIFormat, clientVersion);
         mRenderable = gl_d3d11::GetRTVFormat(internalformat, clientVersion) != DXGI_FORMAT_UNKNOWN;
 
-        if (mStagingTexture)
-        {
-            mStagingTexture->Release();
-            mStagingTexture = NULL;
-        }
-        
+        SafeRelease(mStagingTexture);
+
         return true;
     }
 
@@ -275,8 +268,8 @@ void Image11::copy(GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y
 
             deviceContext->CopySubresourceRegion(mStagingTexture, 0, xoffset, yoffset, zoffset, srcTex, subresourceIndex, &srcBox);
 
-            srcTex->Release();
-            colorBufferTexture->Release();
+            SafeRelease(srcTex);
+            SafeRelease(colorBufferTexture);
         }
     }
     else

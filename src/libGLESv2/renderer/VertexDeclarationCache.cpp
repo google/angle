@@ -36,10 +36,7 @@ VertexDeclarationCache::~VertexDeclarationCache()
 {
     for (int i = 0; i < NUM_VERTEX_DECL_CACHE_ENTRIES; i++)
     {
-        if (mVertexDeclCache[i].vertexDeclaration)
-        {
-            mVertexDeclCache[i].vertexDeclaration->Release();
-        }
+        SafeRelease(mVertexDeclCache[i].vertexDeclaration);
     }
 }
 
@@ -188,8 +185,7 @@ GLenum VertexDeclarationCache::applyDeclaration(IDirect3DDevice9 *device, Transl
 
     if (lastCache->vertexDeclaration != NULL)
     {
-        lastCache->vertexDeclaration->Release();
-        lastCache->vertexDeclaration = NULL;
+        SafeRelease(lastCache->vertexDeclaration);
         // mLastSetVDecl is set to the replacement, so we don't have to worry
         // about it.
     }

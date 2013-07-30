@@ -208,7 +208,7 @@ EGLint Renderer11::initialize()
         return EGL_NOT_INITIALIZED;
     }
 
-    dxgiDevice->Release();
+    SafeRelease(dxgiDevice);
 
     mDxgiAdapter->GetDesc(&mAdapterDescription);
     memset(mDescription, 0, sizeof(mDescription));
@@ -241,8 +241,7 @@ EGLint Renderer11::initialize()
         filter.DenyList.pIDList = hideMessages;
 
         infoQueue->AddStorageFilterEntries(&filter);
-
-        infoQueue->Release();
+        SafeRelease(infoQueue);
     }
 #endif
 
@@ -1867,20 +1866,11 @@ void Renderer11::releaseDeviceResources()
     mStateCache.clear();
     mInputLayoutCache.clear();
 
-    delete mVertexDataManager;
-    mVertexDataManager = NULL;
-
-    delete mIndexDataManager;
-    mIndexDataManager = NULL;
-
-    delete mLineLoopIB;
-    mLineLoopIB = NULL;
-
-    delete mTriangleFanIB;
-    mTriangleFanIB = NULL;
-
-    delete mBlit;
-    mBlit = NULL;
+    SafeDelete(mVertexDataManager);
+    SafeDelete(mIndexDataManager);
+    SafeDelete(mLineLoopIB);
+    SafeDelete(mTriangleFanIB);
+    SafeDelete(mBlit);
 
     SafeRelease(mClearVB);
     SafeRelease(mClearIL);
@@ -1981,8 +1971,8 @@ bool Renderer11::testDeviceResettable()
         return false;
     }
 
-    dummyContext->Release();
-    dummyDevice->Release();
+    SafeRelease(dummyContext);
+    SafeRelease(dummyDevice);
 
     return true;
 }
@@ -1991,31 +1981,17 @@ void Renderer11::release()
 {
     releaseDeviceResources();
 
-    if (mDxgiFactory)
-    {
-        mDxgiFactory->Release();
-        mDxgiFactory = NULL;
-    }
-
-    if (mDxgiAdapter)
-    {
-        mDxgiAdapter->Release();
-        mDxgiAdapter = NULL;
-    }
+    SafeRelease(mDxgiFactory);
+    SafeRelease(mDxgiAdapter);
 
     if (mDeviceContext)
     {
         mDeviceContext->ClearState();
         mDeviceContext->Flush();
-        mDeviceContext->Release();
-        mDeviceContext = NULL;
+        SafeRelease(mDeviceContext);
     }
 
-    if (mDevice)
-    {
-        mDevice->Release();
-        mDevice = NULL;
-    }
+    SafeRelease(mDevice);
 
     if (mD3d11Module)
     {
@@ -2864,7 +2840,7 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     TextureStorage11_2DArray *storage11 = TextureStorage11_2DArray::makeTextureStorage11_2DArray(storage->getStorageInstance());
     if (!storage11)
     {
-        source->Release();
+        SafeRelease(source);
         ERR("Failed to retrieve the texture storage from the destination.");
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
@@ -2872,7 +2848,7 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
     RenderTarget11 *destRenderTarget = RenderTarget11::makeRenderTarget11(storage11->getRenderTargetLayer(level, zOffset));
     if (!destRenderTarget)
     {
-        source->Release();
+        SafeRelease(source);
         ERR("Failed to retrieve the render target from the destination storage.");
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
@@ -3019,10 +2995,12 @@ ShaderExecutable *Renderer11::compileToExecutable(gl::InfoLog &infoLog, const ch
 
     ID3DBlob *binary = (ID3DBlob*)compileToBinary(infoLog, shaderHLSL, profile, D3DCOMPILE_OPTIMIZATION_LEVEL0, false);
     if (!binary)
+    {
         return NULL;
+    }
 
     ShaderExecutable *executable = loadExecutable((DWORD *)binary->GetBufferPointer(), binary->GetBufferSize(), type);
-    binary->Release();
+    SafeRelease(binary);
 
     return executable;
 }
@@ -3070,7 +3048,7 @@ bool Renderer11::getRenderTargetResource(gl::Renderbuffer *colorbuffer, unsigned
             if (textureResource)
             {
                 HRESULT result = textureResource->QueryInterface(IID_ID3D11Texture2D, (void**)resource);
-                textureResource->Release();
+                SafeRelease(textureResource);
 
                 if (SUCCEEDED(result))
                 {
@@ -3175,8 +3153,7 @@ void Renderer11::readPixels(gl::Framebuffer *framebuffer, GLint x, GLint y, GLsi
         readTextureData(colorBufferTexture, subresourceIndex, area, format, type, outputPitch,
                         packReverseRowOrder, packAlignment, pixels);
 
-        colorBufferTexture->Release();
-        colorBufferTexture = NULL;
+        SafeRelease(colorBufferTexture);
     }
 }
 
@@ -3266,7 +3243,7 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
         if (FAILED(result))
         {
             ERR("Failed to create resolve texture for readPixels, HRESULT: 0x%X.", result);
-            stagingTex->Release();
+            SafeRelease(stagingTex);
             return;
         }
 
@@ -3289,8 +3266,7 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
 
     mDeviceContext->CopySubresourceRegion(stagingTex, 0, 0, 0, 0, srcTex, subResource, &srcBox);
 
-    srcTex->Release();
-    srcTex = NULL;
+    SafeRelease(srcTex);
 
     D3D11_MAPPED_SUBRESOURCE mapping;
     mDeviceContext->Map(stagingTex, 0, D3D11_MAP_READ, 0, &mapping);
@@ -3373,8 +3349,7 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
 
     mDeviceContext->Unmap(stagingTex, 0);
 
-    stagingTex->Release();
-    stagingTex = NULL;
+    SafeRelease(stagingTex);
 }
 
 bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::Rectangle &drawRect, RenderTarget *readRenderTarget,
@@ -3419,12 +3394,12 @@ bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::R
             readTexture = resolveMultisampledTexture(unresolvedTexture, readRenderTarget11->getSubresourceIndex());
             readSubresource = 0;
 
-            unresolvedTexture->Release();
+            SafeRelease(unresolvedTexture);
 
             HRESULT result = mDevice->CreateShaderResourceView(readTexture, NULL, &readSRV);
             if (FAILED(result))
             {
-                readTexture->Release();
+                SafeRelease(readTexture);
                 return gl::error(GL_OUT_OF_MEMORY, false);
             }
         }

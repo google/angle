@@ -17,6 +17,16 @@
 namespace rx
 {
 
+template <typename mapType>
+static void ClearStateMap(mapType &map)
+{
+    for (mapType::iterator i = map.begin(); i != map.end(); i++)
+    {
+        SafeRelease(i->second.first);
+    }
+    map.clear();
+}
+
 // MSDN's documentation of ID3D11Device::CreateBlendState, ID3D11Device::CreateRasterizerState,
 // ID3D11Device::CreateDepthStencilState and ID3D11Device::CreateSamplerState claims the maximum
 // number of unique states of each type an application can create is 4096
@@ -46,29 +56,10 @@ void RenderStateCache::initialize(ID3D11Device *device)
 
 void RenderStateCache::clear()
 {
-    for (BlendStateMap::iterator i = mBlendStateCache.begin(); i != mBlendStateCache.end(); i++)
-    {
-        i->second.first->Release();
-    }
-    mBlendStateCache.clear();
-
-    for (RasterizerStateMap::iterator i = mRasterizerStateCache.begin(); i != mRasterizerStateCache.end(); i++)
-    {
-        i->second.first->Release();
-    }
-    mRasterizerStateCache.clear();
-
-    for (DepthStencilStateMap::iterator i = mDepthStencilStateCache.begin(); i != mDepthStencilStateCache.end(); i++)
-    {
-        i->second.first->Release();
-    }
-    mDepthStencilStateCache.clear();
-
-    for (SamplerStateMap::iterator i = mSamplerStateCache.begin(); i != mSamplerStateCache.end(); i++)
-    {
-        i->second.first->Release();
-    }
-    mSamplerStateCache.clear();
+    ClearStateMap(mBlendStateCache);
+    ClearStateMap(mRasterizerStateCache);
+    ClearStateMap(mDepthStencilStateCache);
+    ClearStateMap(mSamplerStateCache);
 }
 
 std::size_t RenderStateCache::hashBlendState(const gl::BlendState &blendState)
@@ -115,7 +106,7 @@ ID3D11BlendState *RenderStateCache::getBlendState(const gl::BlendState &blendSta
                     leastRecentlyUsed = i;
                 }
             }
-            leastRecentlyUsed->second.first->Release();
+            SafeRelease(leastRecentlyUsed->second.first);
             mBlendStateCache.erase(leastRecentlyUsed);
         }
 
@@ -210,7 +201,7 @@ ID3D11RasterizerState *RenderStateCache::getRasterizerState(const gl::Rasterizer
                     leastRecentlyUsed = i;
                 }
             }
-            leastRecentlyUsed->second.first->Release();
+            SafeRelease(leastRecentlyUsed->second.first);
             mRasterizerStateCache.erase(leastRecentlyUsed);
         }
 
@@ -292,7 +283,7 @@ ID3D11DepthStencilState *RenderStateCache::getDepthStencilState(const gl::DepthS
                     leastRecentlyUsed = i;
                 }
             }
-            leastRecentlyUsed->second.first->Release();
+            SafeRelease(leastRecentlyUsed->second.first);
             mDepthStencilStateCache.erase(leastRecentlyUsed);
         }
 
@@ -370,7 +361,7 @@ ID3D11SamplerState *RenderStateCache::getSamplerState(const gl::SamplerState &sa
                     leastRecentlyUsed = i;
                 }
             }
-            leastRecentlyUsed->second.first->Release();
+            SafeRelease(leastRecentlyUsed->second.first);
             mSamplerStateCache.erase(leastRecentlyUsed);
         }
 

@@ -25,7 +25,7 @@ static bool getTextureProperties(ID3D11Resource *resource, unsigned int *mipLeve
     {
         D3D11_TEXTURE1D_DESC texDesc;
         texture1D->GetDesc(&texDesc);
-        texture1D->Release();
+        SafeRelease(texture1D);
 
         *mipLevels = texDesc.MipLevels;
         *samples = 0;
@@ -38,7 +38,7 @@ static bool getTextureProperties(ID3D11Resource *resource, unsigned int *mipLeve
     {
         D3D11_TEXTURE2D_DESC texDesc;
         texture2D->GetDesc(&texDesc);
-        texture2D->Release();
+        SafeRelease(texture2D);
 
         *mipLevels = texDesc.MipLevels;
         *samples = texDesc.SampleDesc.Count > 1 ? texDesc.SampleDesc.Count : 0;
@@ -51,7 +51,7 @@ static bool getTextureProperties(ID3D11Resource *resource, unsigned int *mipLeve
     {
         D3D11_TEXTURE3D_DESC texDesc;
         texture3D->GetDesc(&texDesc);
-        texture3D->Release();
+        SafeRelease(texture3D);
 
         *mipLevels = texDesc.MipLevels;
         *samples = 0;
@@ -357,29 +357,10 @@ RenderTarget11::RenderTarget11(Renderer *renderer, GLsizei width, GLsizei height
 
 RenderTarget11::~RenderTarget11()
 {
-    if (mTexture)
-    {
-        mTexture->Release();
-        mTexture = NULL;
-    }
-
-    if (mRenderTarget)
-    {
-        mRenderTarget->Release();
-        mRenderTarget = NULL;
-    }
-
-    if (mDepthStencil)
-    {
-        mDepthStencil->Release();
-        mDepthStencil = NULL;
-    }
-
-    if (mShaderResource)
-    {
-        mShaderResource->Release();
-        mShaderResource = NULL;
-    }
+    SafeRelease(mTexture);
+    SafeRelease(mRenderTarget);
+    SafeRelease(mDepthStencil);
+    SafeRelease(mShaderResource);
 }
 
 RenderTarget11 *RenderTarget11::makeRenderTarget11(RenderTarget *target)

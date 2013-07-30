@@ -53,7 +53,7 @@ void InputLayoutCache::clear()
 {
     for (InputLayoutMap::iterator i = mInputLayoutMap.begin(); i != mInputLayoutMap.end(); i++)
     {
-        i->second.inputLayout->Release();
+        SafeRelease(i->second.inputLayout);
     }
     mInputLayoutMap.clear();
     markDirty();
@@ -156,7 +156,7 @@ GLenum InputLayoutCache::applyVertexBuffers(TranslatedAttribute attributes[gl::M
                     leastRecentlyUsed = i;
                 }
             }
-            leastRecentlyUsed->second.inputLayout->Release();
+            SafeRelease(leastRecentlyUsed->second.inputLayout);
             mInputLayoutMap.erase(leastRecentlyUsed);
         }
 
