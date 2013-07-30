@@ -22,11 +22,7 @@
 
 #include <string>
 #include <map>
-#ifdef _MSC_VER
-#include <hash_map>
-#else
 #include <unordered_map>
-#endif
 
 #include "common/angleutils.h"
 #include "common/RefCountObject.h"
@@ -472,27 +468,19 @@ class Context
     BindingPointer<Texture3D> mTexture3DZero;
     BindingPointer<Texture2DArray> mTexture2DArrayZero;
 
-#ifndef HASH_MAP
-# ifdef _MSC_VER
-#  define HASH_MAP stdext::hash_map
-# else
-#  define HASH_MAP std::unordered_map
-# endif
-#endif
-
-    typedef HASH_MAP<GLuint, Framebuffer*> FramebufferMap;
+    typedef std::unordered_map<GLuint, Framebuffer*> FramebufferMap;
     FramebufferMap mFramebufferMap;
     HandleAllocator mFramebufferHandleAllocator;
 
-    typedef HASH_MAP<GLuint, FenceNV*> FenceNVMap;
+    typedef std::unordered_map<GLuint, FenceNV*> FenceNVMap;
     FenceNVMap mFenceNVMap;
     HandleAllocator mFenceNVHandleAllocator;
 
-    typedef HASH_MAP<GLuint, Query*> QueryMap;
+    typedef std::unordered_map<GLuint, Query*> QueryMap;
     QueryMap mQueryMap;
     HandleAllocator mQueryHandleAllocator;
 
-    typedef HASH_MAP<GLuint, VertexArray*> VertexArrayMap;
+    typedef std::unordered_map<GLuint, VertexArray*> VertexArrayMap;
     VertexArrayMap mVertexArrayMap;
     HandleAllocator mVertexArrayHandleAllocator;
 

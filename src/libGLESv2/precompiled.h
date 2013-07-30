@@ -41,7 +41,3 @@
 #include <D3D11.h>
 #include <dxgi.h>
 #include <D3Dcompiler.h>
-
-#ifdef _MSC_VER
-#include <hash_map>
-#endif

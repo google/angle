@@ -14,11 +14,7 @@
 #include <GLES3/gl3.h>
 #include <GLES2/gl2.h>
 
-#ifdef _MSC_VER
-#include <hash_map>
-#else
 #include <unordered_map>
-#endif
 
 #include "common/angleutils.h"
 #include "libGLESv2/angletypes.h"
@@ -87,37 +83,31 @@ class ResourceManager
     std::size_t mRefCount;
     rx::Renderer *mRenderer;
 
-#ifndef HASH_MAP
-# ifdef _MSC_VER
-#  define HASH_MAP stdext::hash_map
-# else
-#  define HASH_MAP std::unordered_map
-# endif
-#endif
-
-    typedef HASH_MAP<GLuint, Buffer*> BufferMap;
+    typedef std::unordered_map<GLuint, Buffer*> BufferMap;
     BufferMap mBufferMap;
     HandleAllocator mBufferHandleAllocator;
 
-    typedef HASH_MAP<GLuint, Shader*> ShaderMap;
+    typedef std::unordered_map<GLuint, Shader*> ShaderMap;
     ShaderMap mShaderMap;
 
-    typedef HASH_MAP<GLuint, Program*> ProgramMap;
+    typedef std::unordered_map<GLuint, Program*> ProgramMap;
     ProgramMap mProgramMap;
     HandleAllocator mProgramShaderHandleAllocator;
 
-    typedef HASH_MAP<GLuint, Texture*> TextureMap;
+    typedef std::unordered_map<GLuint, Texture*> TextureMap;
     TextureMap mTextureMap;
     HandleAllocator mTextureHandleAllocator;
 
-    typedef HASH_MAP<GLuint, Renderbuffer*> RenderbufferMap;
+    typedef std::unordered_map<GLuint, Renderbuffer*> RenderbufferMap;
     RenderbufferMap mRenderbufferMap;
     HandleAllocator mRenderbufferHandleAllocator;
 
-    HASH_MAP<GLuint, Sampler*> mSamplerMap;
+    typedef std::unordered_map<GLuint, Sampler*> SamplerMap;
+    SamplerMap mSamplerMap;
     HandleAllocator mSamplerHandleAllocator;
 
-    HASH_MAP<GLuint, FenceSync*> mFenceSyncMap;
+    typedef std::unordered_map<GLuint, FenceSync*> FenceMap;
+    FenceMap mFenceSyncMap;
     HandleAllocator mFenceSyncHandleAllocator;
 };
 
