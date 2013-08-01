@@ -85,12 +85,13 @@ static void getVariableInfo(ShShaderInfo varType,
 }
 
 //
-// Driver must call this first, once, before doing any other
-// compiler operations.
+// Driver must call this first, once, before doing any other compiler operations.
+// Subsequent calls to this function are no-op.
 //
 int ShInitialize()
 {
-    return InitProcess() ? 1 : 0;
+    static const bool kInitialized = InitProcess();
+    return kInitialized ? 1 : 0;
 }
 
 //
