@@ -103,7 +103,8 @@ FenceSync::FenceSync(rx::Renderer *renderer, GLuint id)
     mFence = renderer->createFence();
 
     LARGE_INTEGER counterFreqency = { 0 };
-    ASSERT(QueryPerformanceFrequency(&counterFreqency));
+    BOOL success = QueryPerformanceFrequency(&counterFreqency);
+    ASSERT(success);
 
     mCounterFrequency = counterFreqency.QuadPart;
 }
@@ -141,7 +142,8 @@ GLenum FenceSync::clientWait(GLbitfield flags, GLuint64 timeout)
     }
 
     LARGE_INTEGER currentCounter = { 0 };
-    ASSERT(QueryPerformanceCounter(&currentCounter));
+    BOOL success = QueryPerformanceCounter(&currentCounter);
+    ASSERT(success);
 
     LONGLONG timeoutInSeconds = static_cast<LONGLONG>(timeout) * static_cast<LONGLONG>(1000000ll);
     LONGLONG endCounter = currentCounter.QuadPart + mCounterFrequency * timeoutInSeconds;
@@ -149,7 +151,8 @@ GLenum FenceSync::clientWait(GLbitfield flags, GLuint64 timeout)
     while (currentCounter.QuadPart < endCounter && !mFence->test(flushCommandBuffer))
     {
         Sleep(0);
-        ASSERT(QueryPerformanceCounter(&currentCounter));
+        BOOL success = QueryPerformanceCounter(&currentCounter);
+        ASSERT(success);
     }
 
     if (mFence->hasError())
