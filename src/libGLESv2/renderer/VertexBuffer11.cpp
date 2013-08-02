@@ -166,26 +166,52 @@ bool VertexBuffer11::storeVertexAttributes(const gl::VertexAttribute &attrib, co
     }
 }
 
-unsigned int VertexBuffer11::getSpaceRequired(const gl::VertexAttribute &attrib, GLsizei count,
-                                              GLsizei instances) const
+bool VertexBuffer11::getSpaceRequired(const gl::VertexAttribute &attrib, GLsizei count,
+                                      GLsizei instances, unsigned int *outSpaceRequired) const
 {
+    unsigned int elementCount = 0;
     if (attrib.mArrayEnabled)
     {
         unsigned int elementSize = getVertexConversion(attrib).outputElementSize;
 
         if (instances == 0 || attrib.mDivisor == 0)
         {
-            return elementSize * count;
+            elementCount = count;
         }
         else
         {
-            return elementSize * ((instances + attrib.mDivisor - 1) / attrib.mDivisor);
+            if (static_cast<unsigned int>(instances) < std::numeric_limits<unsigned int>::max() - (attrib.mDivisor - 1))
+            {
+                // Round up
+                elementCount = (static_cast<unsigned int>(instances) + (attrib.mDivisor - 1)) / attrib.mDivisor;
+            }
+            else
+            {
+                elementCount = instances / attrib.mDivisor;
+            }
+        }
+
+        if (elementSize <= std::numeric_limits<unsigned int>::max() / elementCount)
+        {
+            if (outSpaceRequired)
+            {
+                *outSpaceRequired = elementSize * elementCount;
+            }
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
     else
     {
-        unsigned int elementSize = 4;
-        return elementSize * 4;
+        const unsigned int elementSize = 4;
+        if (outSpaceRequired)
+        {
+            *outSpaceRequired = elementSize * 4;
+        }
+        return true;
     }
 }
 

@@ -87,29 +87,48 @@ bool VertexBufferInterface::discard()
     return mVertexBuffer->discard();
 }
 
-int VertexBufferInterface::storeVertexAttributes(const gl::VertexAttribute &attrib, const gl::VertexAttribCurrentValueData &currentValue,
-                                                 GLint start, GLsizei count, GLsizei instances)
+bool VertexBufferInterface::storeVertexAttributes(const gl::VertexAttribute &attrib, const gl::VertexAttribCurrentValueData &currentValue,
+                                                  GLint start, GLsizei count, GLsizei instances, unsigned int *outStreamOffset)
 {
+    unsigned int spaceRequired;
+    if (!mVertexBuffer->getSpaceRequired(attrib, count, instances, &spaceRequired))
+    {
+        return false;
+    }
+
+    if (mWritePosition + spaceRequired < mWritePosition)
+    {
+        return false;
+    }
+
     if (!reserveSpace(mReservedSpace))
     {
-        return -1;
+        return false;
     }
     mReservedSpace = 0;
 
     if (!mVertexBuffer->storeVertexAttributes(attrib, currentValue, start, count, instances, mWritePosition))
     {
-        return -1;
+        return false;
     }
 
-    int oldWritePos = static_cast<int>(mWritePosition);
-    mWritePosition += mVertexBuffer->getSpaceRequired(attrib, count, instances);
+    if (outStreamOffset)
+    {
+        *outStreamOffset = mWritePosition;
+    }
 
-    return oldWritePos;
+    mWritePosition += spaceRequired;
+
+    return true;
 }
 
 bool VertexBufferInterface::reserveVertexSpace(const gl::VertexAttribute &attribute, GLsizei count, GLsizei instances)
 {
-    unsigned int requiredSpace = mVertexBuffer->getSpaceRequired(attribute, count, instances);
+    unsigned int requiredSpace;
+    if (!mVertexBuffer->getSpaceRequired(attribute, count, instances, &requiredSpace))
+    {
+        return false;
+    }
 
     // Protect against integer overflow
     if (mReservedSpace + requiredSpace < mReservedSpace)
@@ -165,7 +184,7 @@ StaticVertexBufferInterface::~StaticVertexBufferInterface()
 {
 }
 
-int StaticVertexBufferInterface::lookupAttribute(const gl::VertexAttribute &attribute)
+bool StaticVertexBufferInterface::lookupAttribute(const gl::VertexAttribute &attribute, unsigned int *outStreamOffset)
 {
     for (unsigned int element = 0; element < mCache.size(); element++)
     {
@@ -177,12 +196,16 @@ int StaticVertexBufferInterface::lookupAttribute(const gl::VertexAttribute &attr
         {
             if (mCache[element].attributeOffset == attribute.mOffset % attribute.stride())
             {
-                return mCache[element].streamOffset;
+                if (outStreamOffset)
+                {
+                    *outStreamOffset = mCache[element].streamOffset;
+                }
+                return true;
             }
         }
     }
 
-    return -1;
+    return false;
 }
 
 bool StaticVertexBufferInterface::reserveSpace(unsigned int size)
@@ -204,14 +227,27 @@ bool StaticVertexBufferInterface::reserveSpace(unsigned int size)
     }
 }
 
-int StaticVertexBufferInterface::storeVertexAttributes(const gl::VertexAttribute &attrib, const gl::VertexAttribCurrentValueData &currentValue,
-                                                       GLint start, GLsizei count, GLsizei instances)
+bool StaticVertexBufferInterface::storeVertexAttributes(const gl::VertexAttribute &attrib, const gl::VertexAttribCurrentValueData &currentValue,
+                                                       GLint start, GLsizei count, GLsizei instances, unsigned int *outStreamOffset)
 {
-    int attributeOffset = attrib.mOffset % attrib.stride();
-    VertexElement element = { attrib.mType, attrib.mSize, attrib.stride(), attrib.mNormalized, attrib.mPureInteger, attributeOffset, getWritePosition() };
-    mCache.push_back(element);
+    unsigned int streamOffset;
+    if (VertexBufferInterface::storeVertexAttributes(attrib, currentValue, start, count, instances, &streamOffset))
+    {
+        int attributeOffset = attrib.mOffset % attrib.stride();
+        VertexElement element = { attrib.mType, attrib.mSize, attrib.stride(), attrib.mNormalized, attrib.mPureInteger, attributeOffset, streamOffset };
+        mCache.push_back(element);
 
-    return VertexBufferInterface::storeVertexAttributes(attrib, currentValue, start, count, instances);
+        if (outStreamOffset)
+        {
+            *outStreamOffset = streamOffset;
+        }
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 }

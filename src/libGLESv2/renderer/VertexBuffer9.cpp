@@ -87,7 +87,14 @@ bool VertexBuffer9::storeVertexAttributes(const gl::VertexAttribute &attrib, con
         DWORD lockFlags = mDynamicUsage ? D3DLOCK_NOOVERWRITE : 0;
 
         void *mapPtr = NULL;
-        HRESULT result = mVertexBuffer->Lock(offset, spaceRequired(attrib, count, instances), &mapPtr, lockFlags);
+
+        unsigned int mapSize;
+        if (!spaceRequired(attrib, count, instances, &mapSize))
+        {
+            return false;
+        }
+
+        HRESULT result = mVertexBuffer->Lock(offset, mapSize, &mapPtr, lockFlags);
 
         if (FAILED(result))
         {
@@ -138,9 +145,10 @@ bool VertexBuffer9::storeVertexAttributes(const gl::VertexAttribute &attrib, con
     }
 }
 
-unsigned int VertexBuffer9::getSpaceRequired(const gl::VertexAttribute &attrib, GLsizei count, GLsizei instances) const
+bool VertexBuffer9::getSpaceRequired(const gl::VertexAttribute &attrib, GLsizei count, GLsizei instances,
+                                     unsigned int *outSpaceRequired) const
 {
-    return spaceRequired(attrib, count, instances);
+    return spaceRequired(attrib, count, instances, outSpaceRequired);
 }
 
 bool VertexBuffer9::requiresConversion(const gl::VertexAttribute &attrib) const
@@ -453,24 +461,52 @@ const VertexBuffer9::FormatConverter &VertexBuffer9::getCurrentValueFormatConver
     return mFormatConverters[typeIndex(GL_FLOAT)][0][3];
 }
 
-unsigned int VertexBuffer9::spaceRequired(const gl::VertexAttribute &attrib, std::size_t count, GLsizei instances)
+bool VertexBuffer9::spaceRequired(const gl::VertexAttribute &attrib, std::size_t count, GLsizei instances,
+                                  unsigned int *outSpaceRequired)
 {
     unsigned int elementSize = formatConverter(attrib).outputElementSize;
 
     if (attrib.mArrayEnabled)
     {
+        unsigned int elementCount = 0;
         if (instances == 0 || attrib.mDivisor == 0)
         {
-            return elementSize * count;
+            elementCount = count;
         }
         else
         {
-            return elementSize * ((instances + attrib.mDivisor - 1) / attrib.mDivisor);
+            if (static_cast<unsigned int>(instances) < std::numeric_limits<unsigned int>::max() - (attrib.mDivisor - 1))
+            {
+                // Round up
+                elementCount = (static_cast<unsigned int>(instances) + (attrib.mDivisor - 1)) / attrib.mDivisor;
+            }
+            else
+            {
+                elementCount = static_cast<unsigned int>(instances) / attrib.mDivisor;
+            }
+        }
+
+        if (elementSize <= std::numeric_limits<unsigned int>::max() / elementCount)
+        {
+            if (outSpaceRequired)
+            {
+                *outSpaceRequired = elementSize * elementCount;
+            }
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
     else
     {
-        return elementSize * 4;
+        const unsigned int elementSize = 4;
+        if (outSpaceRequired)
+        {
+            *outSpaceRequired = elementSize * 4;
+        }
+        return true;
     }
 }
 

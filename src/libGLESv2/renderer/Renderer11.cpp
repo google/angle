@@ -1178,15 +1178,15 @@ void Renderer11::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices,
     }
 
     void* mappedMemory = NULL;
-    int offset = mLineLoopIB->mapBuffer(spaceNeeded, &mappedMemory);
-    if (offset == -1 || mappedMemory == NULL)
+    unsigned int offset;
+    if (!mLineLoopIB->mapBuffer(spaceNeeded, &mappedMemory, &offset))
     {
         ERR("Could not map index buffer for GL_LINE_LOOP.");
         return gl::error(GL_OUT_OF_MEMORY);
     }
 
     unsigned int *data = reinterpret_cast<unsigned int*>(mappedMemory);
-    unsigned int indexBufferOffset = static_cast<unsigned int>(offset);
+    unsigned int indexBufferOffset = offset;
 
     switch (type)
     {
@@ -1283,15 +1283,15 @@ void Renderer11::drawTriangleFan(GLsizei count, GLenum type, const GLvoid *indic
     }
 
     void* mappedMemory = NULL;
-    int offset = mTriangleFanIB->mapBuffer(spaceNeeded, &mappedMemory);
-    if (offset == -1 || mappedMemory == NULL)
+    unsigned int offset;
+    if (!mTriangleFanIB->mapBuffer(spaceNeeded, &mappedMemory, &offset))
     {
         ERR("Could not map scratch index buffer for GL_TRIANGLE_FAN.");
         return gl::error(GL_OUT_OF_MEMORY);
     }
 
     unsigned int *data = reinterpret_cast<unsigned int*>(mappedMemory);
-    unsigned int indexBufferOffset = static_cast<unsigned int>(offset);
+    unsigned int indexBufferOffset = offset;
 
     switch (type)
     {

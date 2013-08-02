@@ -34,8 +34,8 @@ struct TranslatedAttribute
 
     const gl::VertexAttribute *attribute;
     GLenum currentValueType;
-    UINT offset;
-    UINT stride;   // 0 means not to advance the read pointer at all
+    unsigned int offset;
+    unsigned int stride;   // 0 means not to advance the read pointer at all
 
     VertexBuffer *vertexBuffer;
     BufferStorage *storage;

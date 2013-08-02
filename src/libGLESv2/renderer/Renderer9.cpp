@@ -1427,7 +1427,7 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
         indices = static_cast<const GLubyte*>(storage->getData()) + offset;
     }
 
-    UINT startIndex = 0;
+    unsigned int startIndex = 0;
 
     if (get32BitIndexSupport())
     {
@@ -1461,14 +1461,14 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
         }
 
         void* mappedMemory = NULL;
-        int offset = mLineLoopIB->mapBuffer(spaceNeeded, &mappedMemory);
-        if (offset == -1 || mappedMemory == NULL)
+        unsigned int offset = 0;
+        if (!mLineLoopIB->mapBuffer(spaceNeeded, &mappedMemory, &offset))
         {
             ERR("Could not map index buffer for GL_LINE_LOOP.");
             return gl::error(GL_OUT_OF_MEMORY);
         }
 
-        startIndex = static_cast<UINT>(offset) / 4;
+        startIndex = static_cast<unsigned int>(offset) / 4;
         unsigned int *data = reinterpret_cast<unsigned int*>(mappedMemory);
 
         switch (type)
@@ -1542,14 +1542,14 @@ void Renderer9::drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, 
         }
 
         void* mappedMemory = NULL;
-        int offset = mLineLoopIB->mapBuffer(spaceNeeded, &mappedMemory);
-        if (offset == -1 || mappedMemory == NULL)
+        unsigned int offset;
+        if (mLineLoopIB->mapBuffer(spaceNeeded, &mappedMemory, &offset))
         {
             ERR("Could not map index buffer for GL_LINE_LOOP.");
             return gl::error(GL_OUT_OF_MEMORY);
         }
 
-        startIndex = static_cast<UINT>(offset) / 2;
+        startIndex = static_cast<unsigned int>(offset) / 2;
         unsigned short *data = reinterpret_cast<unsigned short*>(mappedMemory);
 
         switch (type)

@@ -26,9 +26,15 @@ namespace
 namespace rx
 {
 
-static int ElementsInBuffer(const gl::VertexAttribute &attribute, int size)
+static int ElementsInBuffer(const gl::VertexAttribute &attribute, unsigned int size)
 {
-    int stride = attribute.stride();
+    // Size cannot be larger than a GLsizei
+    if (size > static_cast<unsigned int>(std::numeric_limits<int>::max()))
+    {
+        size = static_cast<unsigned int>(std::numeric_limits<int>::max());
+    }
+
+    GLsizei stride = attribute.stride();
     return (size - attribute.mOffset % stride + (stride - attribute.typeSize())) / stride;
 }
 
@@ -97,7 +103,7 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
             gl::Buffer *buffer = attribs[i].mBoundBuffer.get();
             StaticVertexBufferInterface *staticBuffer = buffer ? buffer->getStaticVertexBuffer() : NULL;
 
-            if (staticBuffer && staticBuffer->getBufferSize() > 0 && staticBuffer->lookupAttribute(attribs[i]) == -1 &&
+            if (staticBuffer && staticBuffer->getBufferSize() > 0 && !staticBuffer->lookupAttribute(attribs[i], NULL) &&
                 !DirectStoragePossible(staticBuffer, attribs[i], currentValues[i]))
             {
                 buffer->invalidateStaticData();
@@ -160,7 +166,7 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
                 BufferStorage *storage = buffer ? buffer->getStorage() : NULL;
                 bool directStorage = DirectStoragePossible(vertexBuffer, attribs[i], currentValues[i]);
 
-                std::size_t streamOffset = -1;
+                unsigned int streamOffset = 0;
                 unsigned int outputElementSize = 0;
 
                 if (directStorage)
@@ -170,37 +176,41 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
                 }
                 else if (staticBuffer)
                 {
-                    streamOffset = staticBuffer->lookupAttribute(attribs[i]);
-                    outputElementSize = staticBuffer->getVertexBuffer()->getSpaceRequired(attribs[i], 1, 0);
+                    if (!staticBuffer->getVertexBuffer()->getSpaceRequired(attribs[i], 1, 0, &outputElementSize))
+                    {
+                        return GL_OUT_OF_MEMORY;
+                    }
 
-                    if (streamOffset == -1)
+                    if (!staticBuffer->lookupAttribute(attribs[i], &streamOffset))
                     {
                         // Convert the entire buffer
                         int totalCount = ElementsInBuffer(attribs[i], storage->getSize());
                         int startIndex = attribs[i].mOffset / attribs[i].stride();
 
-                        streamOffset = staticBuffer->storeVertexAttributes(attribs[i], currentValues[i], -startIndex, totalCount, 0);
-                    }
-
-                    if (streamOffset != -1)
-                    {
-                        streamOffset += (attribs[i].mOffset / attribs[i].stride()) * outputElementSize;
-
-                        if (instances == 0 || attribs[i].mDivisor == 0)
+                        if (!staticBuffer->storeVertexAttributes(attribs[i], currentValues[i], -startIndex, totalCount,
+                                                                 0, &streamOffset))
                         {
-                            streamOffset += start * outputElementSize;
+                            return GL_OUT_OF_MEMORY;
                         }
                     }
+
+                    unsigned int firstElementOffset = (attribs[i].mOffset / attribs[i].stride()) * outputElementSize;
+                    unsigned int startOffset = (instances == 0 || attribs[i].mDivisor == 0) ? start * outputElementSize : 0;
+                    if (streamOffset + firstElementOffset + startOffset < streamOffset)
+                    {
+                        return GL_OUT_OF_MEMORY;
+                    }
+
+                    streamOffset += firstElementOffset + startOffset;
                 }
                 else
                 {
-                    outputElementSize = mStreamingBuffer->getVertexBuffer()->getSpaceRequired(attribs[i], 1, 0);
-                    streamOffset = mStreamingBuffer->storeVertexAttributes(attribs[i], currentValues[i], start, count, instances);
-                }
-
-                if (streamOffset == -1)
-                {
-                    return GL_OUT_OF_MEMORY;
+                    if (!mStreamingBuffer->getVertexBuffer()->getSpaceRequired(attribs[i], 1, 0, &outputElementSize) ||
+                        !mStreamingBuffer->storeVertexAttributes(attribs[i], currentValues[i], start, count, instances,
+                                                                 &streamOffset))
+                    {
+                        return GL_OUT_OF_MEMORY;
+                    }
                 }
 
                 translated[i].storage = directStorage ? storage : NULL;
@@ -229,8 +239,8 @@ GLenum VertexDataManager::prepareVertexData(const gl::VertexAttribute attribs[],
                         return GL_OUT_OF_MEMORY;
                     }
 
-                    int streamOffset = buffer->storeVertexAttributes(attribs[i], currentValues[i], 0, 1, 0);
-                    if (streamOffset == -1)
+                    unsigned int streamOffset;
+                    if (!buffer->storeVertexAttributes(attribs[i], currentValues[i], 0, 1, 0, &streamOffset))
                     {
                         return GL_OUT_OF_MEMORY;
                     }

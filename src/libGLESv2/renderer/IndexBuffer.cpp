@@ -67,18 +67,30 @@ unsigned int IndexBufferInterface::getSerial() const
     return mIndexBuffer->getSerial();
 }
 
-int IndexBufferInterface::mapBuffer(unsigned int size, void** outMappedMemory)
+bool IndexBufferInterface::mapBuffer(unsigned int size, void** outMappedMemory, unsigned int *streamOffset)
 {
-    if (!mIndexBuffer->mapBuffer(mWritePosition, size, outMappedMemory))
+    // Protect against integer overflow
+    if (mWritePosition + size < mWritePosition)
     {
-        *outMappedMemory = NULL;
-        return -1;
+        return false;
     }
 
-    int oldWritePos = static_cast<int>(mWritePosition);
-    mWritePosition += size;
+    if (!mIndexBuffer->mapBuffer(mWritePosition, size, outMappedMemory))
+    {
+        if (outMappedMemory)
+        {
+            *outMappedMemory = NULL;
+        }
+        return false;
+    }
 
-    return oldWritePos;
+    if (streamOffset)
+    {
+        *streamOffset = mWritePosition;
+    }
+
+    mWritePosition += size;
+    return true;
 }
 
 bool IndexBufferInterface::unmapBuffer()

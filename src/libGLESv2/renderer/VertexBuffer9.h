@@ -28,7 +28,7 @@ class VertexBuffer9 : public VertexBuffer
     virtual bool storeVertexAttributes(const gl::VertexAttribute &attrib, const gl::VertexAttribCurrentValueData &currentValue,
                                        GLint start, GLsizei count, GLsizei instances, unsigned int offset);
 
-    virtual unsigned int getSpaceRequired(const gl::VertexAttribute &attrib, GLsizei count, GLsizei instances) const;
+    virtual bool getSpaceRequired(const gl::VertexAttribute &attrib, GLsizei count, GLsizei instances, unsigned int *outSpaceRequired) const;
 
     virtual bool requiresConversion(const gl::VertexAttribute &attrib) const;
     virtual bool requiresConversion(const gl::VertexAttribCurrentValueData &currentValue) const;
@@ -82,7 +82,8 @@ class VertexBuffer9 : public VertexBuffer
     static const FormatConverter &formatConverter(const gl::VertexAttribute &attribute);
     static const FormatConverter &getCurrentValueFormatConverter();
 
-    static unsigned int spaceRequired(const gl::VertexAttribute &attrib, std::size_t count, GLsizei instances);
+    static bool spaceRequired(const gl::VertexAttribute &attrib, std::size_t count, GLsizei instances,
+                              unsigned int *outSpaceRequired);
 };
 
 }
