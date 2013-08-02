@@ -967,7 +967,7 @@ bool TParseContext::supportsExtension(const char* extension)
 bool TParseContext::isExtensionEnabled(const char* extension) const
 {
     const TExtensionBehavior& extbehavior = extensionBehavior();
-    auto iter = extbehavior.find(extension);
+    TExtensionBehavior::const_iterator iter = extbehavior.find(extension);
 
     if (iter == extbehavior.end())
     {
