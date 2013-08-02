@@ -59,7 +59,7 @@ class IndexBufferInterface
 
     unsigned int getSerial() const;
 
-    int mapBuffer(unsigned int size, void** outMappedMemory);
+    bool mapBuffer(unsigned int size, void** outMappedMemory, unsigned int *streamOffset);
     bool unmapBuffer();
 
     IndexBuffer *getIndexBuffer() const;
