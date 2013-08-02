@@ -102,7 +102,7 @@ FenceSync::FenceSync(rx::Renderer *renderer, GLuint id)
 {
     mFence = renderer->createFence();
 
-    LARGE_INTEGER counterFreqency;
+    LARGE_INTEGER counterFreqency = { 0 };
     ASSERT(QueryPerformanceFrequency(&counterFreqency));
 
     mCounterFrequency = counterFreqency.QuadPart;
@@ -140,7 +140,7 @@ GLenum FenceSync::clientWait(GLbitfield flags, GLuint64 timeout)
         return GL_TIMEOUT_EXPIRED;
     }
 
-    LARGE_INTEGER currentCounter;
+    LARGE_INTEGER currentCounter = { 0 };
     ASSERT(QueryPerformanceCounter(&currentCounter));
 
     LONGLONG timeoutInSeconds = static_cast<LONGLONG>(timeout) * static_cast<LONGLONG>(1000000ll);
