@@ -586,7 +586,7 @@ bool Blit11::copyDepthStencil(ID3D11Resource *source, unsigned int sourceSubreso
     for (int y = startDestY; y < endDestY; y++)
     {
         float yPerc = static_cast<float>(y - startDestY) / (endDestY - startDestY - 1);
-        unsigned int readRow = sourceArea.y + yPerc * sourceArea.height;
+        unsigned int readRow = sourceArea.y + floor(yPerc * (sourceArea.height - 1) + 0.5f);
         unsigned int writeRow = y;
 
         if (sourceArea.width == destArea.width && copySize == pixelSize)
@@ -604,7 +604,7 @@ bool Blit11::copyDepthStencil(ID3D11Resource *source, unsigned int sourceSubreso
             for (int x = startDestX; x < endDestX; x++)
             {
                 float xPerc = static_cast<float>(x - startDestX) / (endDestX - startDestX - 1);
-                unsigned int readColumn = sourceArea.x + xPerc * sourceArea.width;
+                unsigned int readColumn = sourceArea.x + floor(xPerc * (sourceArea.width - 1) + 0.5f);
                 unsigned int writeColumn = x;
 
                 void *sourcePixel = reinterpret_cast<char*>(sourceMapping.pData) +
