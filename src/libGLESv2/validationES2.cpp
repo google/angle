@@ -143,7 +143,7 @@ static bool validateSubImageParamsCube(bool compressed, GLsizei width, GLsizei h
     return true;
 }
 
-bool validateES2TexImageParameters(gl::Context *context, GLenum target, GLint level, GLint internalformat, bool isCompressed, bool isSubImage,
+bool ValidateES2TexImageParameters(gl::Context *context, GLenum target, GLint level, GLint internalformat, bool isCompressed, bool isSubImage,
                                    GLint xoffset, GLint yoffset, GLsizei width, GLsizei height,
                                    GLint border, GLenum format, GLenum type, const GLvoid *pixels)
 {
@@ -468,7 +468,7 @@ bool validateES2TexImageParameters(gl::Context *context, GLenum target, GLint le
 
 
 
-bool validateES2CopyTexImageParameters(gl::Context* context, GLenum target, GLint level, GLenum internalformat, bool isSubImage,
+bool ValidateES2CopyTexImageParameters(gl::Context* context, GLenum target, GLint level, GLenum internalformat, bool isSubImage,
                                        GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height,
                                        GLint border)
 {
@@ -723,7 +723,7 @@ bool validateES2CopyTexImageParameters(gl::Context* context, GLenum target, GLin
     return true;
 }
 
-bool validateES2TexStorageParameters(gl::Context *context, GLenum target, GLsizei levels, GLenum internalformat,
+bool ValidateES2TexStorageParameters(gl::Context *context, GLenum target, GLsizei levels, GLenum internalformat,
                                      GLsizei width, GLsizei height)
 {
     if (target != GL_TEXTURE_2D && target != GL_TEXTURE_CUBE_MAP)
@@ -870,7 +870,7 @@ bool validateES2TexStorageParameters(gl::Context *context, GLenum target, GLsize
     return true;
 }
 
-bool validateES2FramebufferTextureParameters(gl::Context *context, GLenum target, GLenum attachment,
+bool ValidateES2FramebufferTextureParameters(gl::Context *context, GLenum target, GLenum attachment,
                                              GLenum textarget, GLuint texture, GLint level)
 {
     META_ASSERT(GL_DRAW_FRAMEBUFFER == GL_DRAW_FRAMEBUFFER_ANGLE && GL_READ_FRAMEBUFFER == GL_READ_FRAMEBUFFER_ANGLE);
@@ -976,7 +976,7 @@ bool validateES2FramebufferTextureParameters(gl::Context *context, GLenum target
 }
 
 // check for combinations of format and type that are valid for ReadPixels
-bool validES2ReadFormatType(GLenum format, GLenum type)
+bool ValidES2ReadFormatType(GLenum format, GLenum type)
 {
     switch (format)
     {

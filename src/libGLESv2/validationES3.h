@@ -14,24 +14,24 @@ namespace gl
 
 class Context;
 
-bool validateES3TexImageParameters(gl::Context *context, GLenum target, GLint level, GLint internalformat, bool isCompressed, bool isSubImage,
+bool ValidateES3TexImageParameters(gl::Context *context, GLenum target, GLint level, GLint internalformat, bool isCompressed, bool isSubImage,
                                    GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth,
                                    GLint border, GLenum format, GLenum type);
 
-bool validateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLint level, GLenum internalformat,
+bool ValidateES3CopyTexImageParameters(gl::Context *context, GLenum target, GLint level, GLenum internalformat,
                                        bool isSubImage, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y,
                                        GLsizei width, GLsizei height, GLint border);
 
-bool validateES3TexStorageParameters(gl::Context *context, GLenum target, GLsizei levels, GLenum internalformat,
+bool ValidateES3TexStorageParameters(gl::Context *context, GLenum target, GLsizei levels, GLenum internalformat,
                                      GLsizei width, GLsizei height, GLsizei depth);
 
-bool validateES3FramebufferTextureParameters(gl::Context *context, GLenum target, GLenum attachment,
+bool ValidateES3FramebufferTextureParameters(gl::Context *context, GLenum target, GLenum attachment,
                                              GLenum textarget, GLuint texture, GLint level, GLint layer,
                                              bool layerCall);
 
-bool validES3ReadFormatType(GLenum internalFormat, GLenum format, GLenum type);
+bool ValidES3ReadFormatType(GLenum internalFormat, GLenum format, GLenum type);
 
-bool validateInvalidateFramebufferParameters(gl::Context *context, GLenum target, GLsizei numAttachments,
+bool ValidateInvalidateFramebufferParameters(gl::Context *context, GLenum target, GLsizei numAttachments,
                                              const GLenum* attachments);
 
 }

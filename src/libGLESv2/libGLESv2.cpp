@@ -959,14 +959,14 @@ void __stdcall glCompressedTexImage2D(GLenum target, GLint level, GLenum interna
         if (context)
         {
             if (context->getClientVersion() < 3 &&
-                !validateES2TexImageParameters(context, target, level, internalformat, true, false,
+                !ValidateES2TexImageParameters(context, target, level, internalformat, true, false,
                                                0, 0, width, height, 0, GL_NONE, GL_NONE, data))
             {
                 return;
             }
 
             if (context->getClientVersion() >= 3 &&
-                !validateES3TexImageParameters(context, target, level, internalformat, true, false,
+                !ValidateES3TexImageParameters(context, target, level, internalformat, true, false,
                                                0, 0, 0, width, height, 1, 0, GL_NONE, GL_NONE))
             {
                 return;
@@ -1024,14 +1024,14 @@ void __stdcall glCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffs
         if (context)
         {
             if (context->getClientVersion() < 3 &&
-                !validateES2TexImageParameters(context, target, level, GL_NONE, true, true,
+                !ValidateES2TexImageParameters(context, target, level, GL_NONE, true, true,
                                                xoffset, yoffset, width, height, 0, GL_NONE, GL_NONE, data))
             {
                 return;
             }
 
             if (context->getClientVersion() >= 3 &&
-                !validateES3TexImageParameters(context, target, level, GL_NONE, true, true,
+                !ValidateES3TexImageParameters(context, target, level, GL_NONE, true, true,
                                                xoffset, yoffset, 0, width, height, 1, 0, GL_NONE, GL_NONE))
             {
                 return;
@@ -1087,14 +1087,14 @@ void __stdcall glCopyTexImage2D(GLenum target, GLint level, GLenum internalforma
         if (context)
         {
             if (context->getClientVersion() < 3 &&
-                !validateES2CopyTexImageParameters(context, target, level, internalformat, false,
+                !ValidateES2CopyTexImageParameters(context, target, level, internalformat, false,
                                                    0, 0, x, y, width, height, border))
             {
                 return;
             }
 
             if (context->getClientVersion() >= 3 &&
-                !validateES3CopyTexImageParameters(context, target, level, internalformat, false,
+                !ValidateES3CopyTexImageParameters(context, target, level, internalformat, false,
                                                    0, 0, 0, x, y, width, height, border))
             {
                 return;
@@ -1147,14 +1147,14 @@ void __stdcall glCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GL
         if (context)
         {
             if (context->getClientVersion() < 3 &&
-                !validateES2CopyTexImageParameters(context, target, level, GL_NONE, true,
+                !ValidateES2CopyTexImageParameters(context, target, level, GL_NONE, true,
                                                    xoffset, yoffset, x, y, width, height, 0))
             {
                 return;
             }
 
             if (context->getClientVersion() >= 3 &&
-                !validateES3CopyTexImageParameters(context, target, level, GL_NONE, true,
+                !ValidateES3CopyTexImageParameters(context, target, level, GL_NONE, true,
                                                    xoffset, yoffset, 0, x, y, width, height, 0))
             {
                 return;
@@ -2078,13 +2078,13 @@ void __stdcall glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum t
         if (context)
         {
             if (context->getClientVersion() < 3 &&
-                !validateES2FramebufferTextureParameters(context, target, attachment, textarget, texture, level))
+                !ValidateES2FramebufferTextureParameters(context, target, attachment, textarget, texture, level))
             {
                 return;
             }
 
             if (context->getClientVersion() >= 3 &&
-                !validateES3FramebufferTextureParameters(context, target, attachment, textarget, texture, level, 0, false))
+                !ValidateES3FramebufferTextureParameters(context, target, attachment, textarget, texture, level, 0, false))
             {
                 return;
             }
@@ -3973,7 +3973,7 @@ void __stdcall glGetVertexAttribfv(GLuint index, GLenum pname, GLfloat* params)
 
             const gl::VertexAttribute &attribState = context->getVertexAttribState(index);
 
-            if (!gl::validateGetVertexAttribParameters(pname, context->getClientVersion()))
+            if (!gl::ValidateGetVertexAttribParameters(pname, context->getClientVersion()))
             {
                 return;
             }
@@ -4015,7 +4015,7 @@ void __stdcall glGetVertexAttribiv(GLuint index, GLenum pname, GLint* params)
 
             const gl::VertexAttribute &attribState = context->getVertexAttribState(index);
 
-            if (!gl::validateGetVertexAttribParameters(pname, context->getClientVersion()))
+            if (!gl::ValidateGetVertexAttribParameters(pname, context->getClientVersion()))
             {
                 return;
             }
@@ -4518,8 +4518,8 @@ void __stdcall glReadnPixelsEXT(GLint x, GLint y, GLsizei width, GLsizei height,
             if (!context->getCurrentReadFormatType(&currentInternalFormat, &currentFormat, &currentType))
                 return;
 
-            bool validReadFormat = (context->getClientVersion() < 3) ? gl::validES2ReadFormatType(format, type) :
-                                                                       gl::validES3ReadFormatType(currentInternalFormat, format, type);
+            bool validReadFormat = (context->getClientVersion() < 3) ? gl::ValidES2ReadFormatType(format, type) :
+                                                                       gl::ValidES3ReadFormatType(currentInternalFormat, format, type);
 
             if (!(currentFormat == format && currentType == type) && !validReadFormat)
             {
@@ -4562,8 +4562,8 @@ void __stdcall glReadPixels(GLint x, GLint y, GLsizei width, GLsizei height,
             if (!context->getCurrentReadFormatType(&currentInternalFormat, &currentFormat, &currentType))
                 return;
 
-            bool validReadFormat = (context->getClientVersion() < 3) ? gl::validES2ReadFormatType(format, type) :
-                                                                       gl::validES3ReadFormatType(currentInternalFormat, format, type);
+            bool validReadFormat = (context->getClientVersion() < 3) ? gl::ValidES2ReadFormatType(format, type) :
+                                                                       gl::ValidES3ReadFormatType(currentInternalFormat, format, type);
 
             if (!(currentFormat == format && currentType == type) && !validReadFormat)
             {
@@ -4604,7 +4604,7 @@ void __stdcall glRenderbufferStorageMultisampleANGLE(GLenum target, GLsizei samp
 
         if (context)
         {
-            if (!validateRenderbufferStorageParameters(context, target, samples, internalformat,
+            if (!ValidateRenderbufferStorageParameters(context, target, samples, internalformat,
                                                        width, height, true))
             {
                 return;
@@ -4988,14 +4988,14 @@ void __stdcall glTexImage2D(GLenum target, GLint level, GLint internalformat, GL
         if (context)
         {
             if (context->getClientVersion() < 3 &&
-                !validateES2TexImageParameters(context, target, level, internalformat, false, false,
+                !ValidateES2TexImageParameters(context, target, level, internalformat, false, false,
                                                0, 0, width, height, border, format, type, pixels))
             {
                 return;
             }
 
             if (context->getClientVersion() >= 3 &&
-                !validateES3TexImageParameters(context, target, level, internalformat, false, false,
+                !ValidateES3TexImageParameters(context, target, level, internalformat, false, false,
                                                0, 0, 0, width, height, 1, border, format, type))
             {
                 return;
@@ -5065,7 +5065,7 @@ void __stdcall glTexParameterf(GLenum target, GLenum pname, GLfloat param)
 
         if (context)
         {
-            if (!validateTexParamParameters(context, pname, static_cast<GLint>(param)))
+            if (!ValidateTexParamParameters(context, pname, static_cast<GLint>(param)))
             {
                 return;
             }
@@ -5125,7 +5125,7 @@ void __stdcall glTexParameteri(GLenum target, GLenum pname, GLint param)
 
         if (context)
         {
-            if (!validateTexParamParameters(context, pname, param))
+            if (!ValidateTexParamParameters(context, pname, param))
             {
                 return;
             }
@@ -5187,13 +5187,13 @@ void __stdcall glTexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalf
         if (context)
         {
             if (context->getClientVersion() < 3 &&
-                !validateES2TexStorageParameters(context, target, levels, internalformat, width, height))
+                !ValidateES2TexStorageParameters(context, target, levels, internalformat, width, height))
             {
                 return;
             }
 
             if (context->getClientVersion() >= 3 &&
-                !validateES3TexStorageParameters(context, target, levels, internalformat, width, height, 1))
+                !ValidateES3TexStorageParameters(context, target, levels, internalformat, width, height, 1))
             {
                 return;
             }
@@ -5245,14 +5245,14 @@ void __stdcall glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint 
         if (context)
         {
             if (context->getClientVersion() < 3 &&
-                !validateES2TexImageParameters(context, target, level, GL_NONE, false, true,
+                !ValidateES2TexImageParameters(context, target, level, GL_NONE, false, true,
                                                0, 0, width, height, 0, format, type, pixels))
             {
                 return;
             }
 
             if (context->getClientVersion() >= 3 &&
-                !validateES3TexImageParameters(context, target, level, GL_NONE, false, true,
+                !ValidateES3TexImageParameters(context, target, level, GL_NONE, false, true,
                                                0, 0, 0, width, height, 1, 0, format, type))
             {
                 return;
@@ -6245,7 +6245,7 @@ void __stdcall glTexImage3D(GLenum target, GLint level, GLint internalformat, GL
             }
 
             // validateES3TexImageFormat sets the error code if there is an error
-            if (!validateES3TexImageParameters(context, target, level, internalformat, false, false,
+            if (!ValidateES3TexImageParameters(context, target, level, internalformat, false, false,
                                                0, 0, 0, width, height, depth, border, format, type))
             {
                 return;
@@ -6302,7 +6302,7 @@ void __stdcall glTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint 
             }
 
             // validateES3TexImageFormat sets the error code if there is an error
-            if (!validateES3TexImageParameters(context, target, level, GL_NONE, false, true,
+            if (!ValidateES3TexImageParameters(context, target, level, GL_NONE, false, true,
                                                xoffset, yoffset, zoffset, width, height, depth, 0,
                                                format, type))
             {
@@ -6353,7 +6353,7 @@ void __stdcall glCopyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GL
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (!validateES3CopyTexImageParameters(context, target, level, GL_NONE, false, xoffset, yoffset, zoffset,
+            if (!ValidateES3CopyTexImageParameters(context, target, level, GL_NONE, false, xoffset, yoffset, zoffset,
                                                    x, y, width, height, 0))
             {
                 return;
@@ -6408,7 +6408,7 @@ void __stdcall glCompressedTexImage3D(GLenum target, GLint level, GLenum interna
             }
 
             // validateES3TexImageFormat sets the error code if there is an error
-            if (!validateES3TexImageParameters(context, target, level, internalformat, true, false,
+            if (!ValidateES3TexImageParameters(context, target, level, internalformat, true, false,
                                                0, 0, 0, width, height, depth, border, GL_NONE, GL_NONE))
             {
                 return;
@@ -6470,7 +6470,7 @@ void __stdcall glCompressedTexSubImage3D(GLenum target, GLint level, GLint xoffs
             }
 
             // validateES3TexImageFormat sets the error code if there is an error
-            if (!validateES3TexImageParameters(context, target, level, GL_NONE, true, true,
+            if (!ValidateES3TexImageParameters(context, target, level, GL_NONE, true, true,
                                                0, 0, 0, width, height, depth, 0, GL_NONE, GL_NONE))
             {
                 return;
@@ -7070,7 +7070,7 @@ void __stdcall glBlitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint sr
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (!validateBlitFramebufferParameters(context, srcX0, srcY0, srcX1, srcY1,
+            if (!ValidateBlitFramebufferParameters(context, srcX0, srcY0, srcX1, srcY1,
                                                    dstX0, dstY0, dstX1, dstY1, mask, filter,
                                                    false))
             {
@@ -7103,7 +7103,7 @@ void __stdcall glRenderbufferStorageMultisample(GLenum target, GLsizei samples, 
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (!validateRenderbufferStorageParameters(context, target, samples, internalformat,
+            if (!ValidateRenderbufferStorageParameters(context, target, samples, internalformat,
                                                        width, height, false))
             {
                 return;
@@ -7134,7 +7134,7 @@ void __stdcall glFramebufferTextureLayer(GLenum target, GLenum attachment, GLuin
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (!validateES3FramebufferTextureParameters(context, target, attachment, GL_NONE, texture, level, layer, true))
+            if (!ValidateES3FramebufferTextureParameters(context, target, attachment, GL_NONE, texture, level, layer, true))
             {
                 return;
             }
@@ -7722,7 +7722,7 @@ void __stdcall glGetVertexAttribIiv(GLuint index, GLenum pname, GLint* params)
 
             const gl::VertexAttribute &attribState = context->getVertexAttribState(index);
 
-            if (!gl::validateGetVertexAttribParameters(pname, context->getClientVersion()))
+            if (!gl::ValidateGetVertexAttribParameters(pname, context->getClientVersion()))
             {
                 return;
             }
@@ -7770,7 +7770,7 @@ void __stdcall glGetVertexAttribIuiv(GLuint index, GLenum pname, GLuint* params)
 
             const gl::VertexAttribute &attribState = context->getVertexAttribState(index);
 
-            if (!gl::validateGetVertexAttribParameters(pname, context->getClientVersion()))
+            if (!gl::ValidateGetVertexAttribParameters(pname, context->getClientVersion()))
             {
                 return;
             }
@@ -9308,12 +9308,12 @@ void __stdcall glSamplerParameteri(GLuint sampler, GLenum pname, GLint param)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (!gl::validateSamplerObjectParameter(pname))
+            if (!gl::ValidateSamplerObjectParameter(pname))
             {
                 return;
             }
 
-            if (!gl::validateTexParamParameters(context, pname, param))
+            if (!gl::ValidateTexParamParameters(context, pname, param))
             {
                 return;
             }
@@ -9352,12 +9352,12 @@ void __stdcall glSamplerParameterf(GLuint sampler, GLenum pname, GLfloat param)
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (!gl::validateSamplerObjectParameter(pname))
+            if (!gl::ValidateSamplerObjectParameter(pname))
             {
                 return;
             }
 
-            if (!gl::validateTexParamParameters(context, pname, static_cast<GLint>(param)))
+            if (!gl::ValidateTexParamParameters(context, pname, static_cast<GLint>(param)))
             {
                 return;
             }
@@ -9396,7 +9396,7 @@ void __stdcall glGetSamplerParameteriv(GLuint sampler, GLenum pname, GLint* para
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (!gl::validateSamplerObjectParameter(pname))
+            if (!gl::ValidateSamplerObjectParameter(pname))
             {
                 return;
             }
@@ -9430,7 +9430,7 @@ void __stdcall glGetSamplerParameterfv(GLuint sampler, GLenum pname, GLfloat* pa
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (!gl::validateSamplerObjectParameter(pname))
+            if (!gl::ValidateSamplerObjectParameter(pname))
             {
                 return;
             }
@@ -9724,7 +9724,7 @@ void __stdcall glInvalidateFramebuffer(GLenum target, GLsizei numAttachments, co
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (!validateInvalidateFramebufferParameters(context, target, numAttachments, attachments))
+            if (!ValidateInvalidateFramebufferParameters(context, target, numAttachments, attachments))
             {
                 return;
             }
@@ -9756,7 +9756,7 @@ void __stdcall glInvalidateSubFramebuffer(GLenum target, GLsizei numAttachments,
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (!validateInvalidateFramebufferParameters(context, target, numAttachments, attachments))
+            if (!ValidateInvalidateFramebufferParameters(context, target, numAttachments, attachments))
             {
                 return;
             }
@@ -9786,7 +9786,7 @@ void __stdcall glTexStorage2D(GLenum target, GLsizei levels, GLenum internalform
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (!validateES3TexStorageParameters(context, target, levels, internalformat, width, height, 1))
+            if (!ValidateES3TexStorageParameters(context, target, levels, internalformat, width, height, 1))
             {
                 return;
             }
@@ -9840,7 +9840,7 @@ void __stdcall glTexStorage3D(GLenum target, GLsizei levels, GLenum internalform
                 return gl::error(GL_INVALID_OPERATION);
             }
 
-            if (!validateES3TexStorageParameters(context, target, levels, internalformat, width, height, depth))
+            if (!ValidateES3TexStorageParameters(context, target, levels, internalformat, width, height, depth))
             {
                 return;
             }
@@ -9942,7 +9942,7 @@ void __stdcall glBlitFramebufferANGLE(GLint srcX0, GLint srcY0, GLint srcX1, GLi
 
         if (context)
         {
-            if (!validateBlitFramebufferParameters(context, srcX0, srcY0, srcX1, srcY1,
+            if (!ValidateBlitFramebufferParameters(context, srcX0, srcY0, srcX1, srcY1,
                                                    dstX0, dstY0, dstX1, dstY1, mask, filter,
                                                    true))
             {
