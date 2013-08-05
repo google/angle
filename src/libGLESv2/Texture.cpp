@@ -2278,7 +2278,7 @@ void Texture2DArray::storage(GLsizei levels, GLenum internalformat, GLsizei widt
     for (int level = 0; level < IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
     {
         GLsizei levelWidth = std::max(width >> level, 1);
-        GLsizei levelHeight = std::max(width >> level, 1);
+        GLsizei levelHeight = std::max(height >> level, 1);
 
         // Clear this level
         for (int layer = 0; layer < mLayerCounts[level]; layer++)
