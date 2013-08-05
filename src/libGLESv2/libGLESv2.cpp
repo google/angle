@@ -4401,6 +4401,13 @@ void __stdcall glFramebufferRenderbuffer(GLenum target, GLenum attachment, GLenu
                   case GL_STENCIL_ATTACHMENT:
                     framebuffer->setStencilbuffer(GL_RENDERBUFFER, renderbuffer, 0, 0);
                     break;
+                  case GL_DEPTH_STENCIL_ATTACHMENT:
+                    if (context->getClientVersion() < 3)
+                    {
+                        return gl::error(GL_INVALID_ENUM);
+                    }
+                    framebuffer->setDepthStencilBuffer(GL_RENDERBUFFER, renderbuffer, 0, 0);
+                    break;
                   default:
                     return gl::error(GL_INVALID_ENUM);
                 }
