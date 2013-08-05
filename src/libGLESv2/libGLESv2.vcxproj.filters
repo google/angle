@@ -251,6 +251,15 @@
     <ClCompile Include="RenderbufferProxySet.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="validationES2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="validationES3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="validationES.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinaryStream.h">
@@ -641,6 +650,15 @@
       <Filter>Header Files\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="RenderbufferProxySet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="validationES2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="validationES3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="validationES.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

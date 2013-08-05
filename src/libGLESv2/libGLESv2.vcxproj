@@ -316,6 +316,9 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Uniform.cpp" />
+    <ClCompile Include="validationES.cpp" />
+    <ClCompile Include="validationES2.cpp" />
+    <ClCompile Include="validationES3.cpp" />
     <ClCompile Include="VertexArray.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -445,6 +448,9 @@ copy "$(OutDir)libGLESv2.lib" "$(ProjectDir)..\..\lib\$(Configuration)\"
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Uniform.h" />
     <ClInclude Include="..\common\version.h" />
+    <ClInclude Include="validationES.h" />
+    <ClInclude Include="validationES2.h" />
+    <ClInclude Include="validationES3.h" />
     <ClInclude Include="VertexAttribute.h" />
     <ClInclude Include="VertexArray.h" />
   </ItemGroup>
