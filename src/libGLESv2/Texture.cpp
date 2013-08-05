@@ -2238,7 +2238,7 @@ void Texture2DArray::subImage(GLint level, GLint xoffset, GLint yoffset, GLint z
 {
     GLint internalformat = getInternalFormat(level);
     GLuint clientVersion =  mRenderer->getCurrentClientVersion();
-    GLsizei inputDepthPitch = gl::GetDepthPitch(internalformat, type, width, height, clientVersion, unpackAlignment);
+    GLsizei inputDepthPitch = gl::GetDepthPitch(internalformat, type, clientVersion, width, height, unpackAlignment);
 
     for (int i = 0; i < depth; i++)
     {
