@@ -734,8 +734,7 @@ bool validateES3TexImageParameters(gl::Context *context, GLenum target, GLint le
             return gl::error(GL_INVALID_OPERATION, false);
         }
 
-        if ((target == GL_TEXTURE_3D || target == GL_TEXTURE_2D_ARRAY) &&
-            (format == GL_DEPTH_COMPONENT || format == GL_DEPTH_STENCIL))
+        if (target == GL_TEXTURE_3D && (format == GL_DEPTH_COMPONENT || format == GL_DEPTH_STENCIL))
         {
             return gl::error(GL_INVALID_OPERATION, false);
         }
