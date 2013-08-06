@@ -115,13 +115,19 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
     }
 
     GLenum destinationIndexType = (type == GL_UNSIGNED_INT) ? GL_UNSIGNED_INT : GL_UNSIGNED_SHORT;
-    intptr_t offset = reinterpret_cast<intptr_t>(indices);
+    unsigned int offset = 0;
     bool alignedOffset = false;
 
     BufferStorage *storage = NULL;
 
     if (buffer != NULL)
     {
+        if (reinterpret_cast<uintptr_t>(indices) > std::numeric_limits<unsigned int>::max())
+        {
+            return GL_OUT_OF_MEMORY;
+        }
+        offset = static_cast<unsigned int>(reinterpret_cast<uintptr_t>(indices));
+
         storage = buffer->getStorage();
 
         switch (type)
