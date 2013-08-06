@@ -140,9 +140,9 @@ GLenum IndexDataManager::prepareIndexData(GLenum type, GLsizei count, gl::Buffer
 
         unsigned int typeSize = gl::GetTypeBytes(type);
 
-        // check for interger overflows and underflows
-        if (static_cast<unsigned int>(offset) > (std::numeric_limits<unsigned int>::max() / typeSize) ||
-            static_cast<unsigned int>(count) > ((std::numeric_limits<unsigned int>::max() / typeSize) - offset))
+        // check for integer overflows
+        if (static_cast<unsigned int>(count) > (std::numeric_limits<unsigned int>::max() / typeSize) ||
+            typeSize * static_cast<unsigned int>(count) + offset < offset)
         {
             return GL_OUT_OF_MEMORY;
         }
