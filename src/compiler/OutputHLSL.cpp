@@ -1043,19 +1043,94 @@ void OutputHLSL::header()
                 {
                     if (IsSamplerArray(textureFunction->sampler))
                     {
-                        out << "    float width; float height; float layers;\n"
-                               "    x.GetDimensions(width, height, layers);\n";
+                        out << "    float width; float height; float layers; float levels;\n";
+                            
+                        if (textureFunction->method == TextureFunction::LOD0)
+                        {
+                            out << "    uint mip = 0;\n";
+                        }
+                        else
+                        {
+                            if (textureFunction->method == TextureFunction::IMPLICIT ||
+                                textureFunction->method == TextureFunction::BIAS)
+                            {
+                                out << "    x.GetDimensions(0, width, height, layers, levels);\n"
+                                       "    float2 tSized = float2(t.x * width, t.y * height);\n"
+                                       "    float dx = length(ddx(tSized));\n"
+                                       "    float dy = length(ddy(tSized));\n"
+                                       "    float lod = log2(max(sqrt(dx), sqrt(dy)));\n";
+
+                                if (textureFunction->method == TextureFunction::BIAS)
+                                {
+                                    out << "    lod += bias;\n";
+                                }
+                            }
+
+                            out << "    uint mip = uint(min(max(round(lod), 0), levels - 1));\n";
+                        }
+
+                        out << "    x.GetDimensions(mip, width, height, layers, levels);\n";
                     }
                     else
                     {
-                        out << "    float width; float height;\n"
-                               "    x.GetDimensions(width, height);\n";
+                        out << "    float width; float height; float levels;\n";
+                             
+                        if (textureFunction->method == TextureFunction::LOD0)
+                        {
+                            out << "    uint mip = 0;\n";
+                        }
+                        else
+                        {
+                            if (textureFunction->method == TextureFunction::IMPLICIT ||
+                                textureFunction->method == TextureFunction::BIAS)
+                            {
+                                out << "    x.GetDimensions(0, width, height, levels);\n"
+                                       "    float2 tSized = float2(t.x * width, t.y * height);\n"
+                                       "    float dx = length(ddx(tSized));\n"
+                                       "    float dy = length(ddy(tSized));\n"
+                                       "    float lod = log2(max(sqrt(dx), sqrt(dy)));\n";
+
+                                if (textureFunction->method == TextureFunction::BIAS)
+                                {
+                                    out << "    lod += bias;\n";
+                                }
+                            }
+
+                            out << "    uint mip = uint(min(max(round(lod), 0), levels - 1));\n";
+                        }
+
+                        out << "    x.GetDimensions(mip, width, height, levels);\n";
                     }
                 }
                 else if (IsSampler3D(textureFunction->sampler))
                 {
-                    out << "    float width; float height; float depth;\n"
-                           "    x.GetDimensions(width, height, depth);\n";
+                    out << "    float width; float height; float depth; float levels;\n";
+                      
+                    if (textureFunction->method == TextureFunction::LOD0)
+                    {
+                        out << "    uint mip = 0;\n";
+                    }
+                    else
+                    {
+                        if (textureFunction->method == TextureFunction::IMPLICIT ||
+                            textureFunction->method == TextureFunction::BIAS)
+                        {
+                            out << "    x.GetDimensions(0, width, height, depth, levels);\n"
+                                   "    float3 tSized = float3(t.x * width, t.y * height, t.z * depth);\n"
+                                   "    float dx = length(ddx(tSized));\n"
+                                   "    float dy = length(ddy(tSized));\n"
+                                   "    float lod = log2(max(sqrt(dx), sqrt(dy)));\n";
+
+                            if (textureFunction->method == TextureFunction::BIAS)
+                            {
+                                out << "    lod += bias;\n";
+                            }
+                        }
+
+                        out << "    uint mip = uint(min(max(round(lod), 0), levels - 1));\n";
+                    }
+
+                    out << "    x.GetDimensions(mip, width, height, depth, levels);\n";
                 }
                 else UNREACHABLE();
             }
@@ -1195,7 +1270,7 @@ void OutputHLSL::header()
 
                 if (IsIntegerSampler(textureFunction->sampler))
                 {
-                    out << ", 0));";   // Sample from the top level
+                    out << ", mip));";
                 }
                 else if (IsShadowSampler(textureFunction->sampler))
                 {
