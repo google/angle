@@ -140,6 +140,7 @@ class ProgramBinary : public RefCountObject
     unsigned int getSerial() const;
     int getShaderVersion() const;
 
+    void initAttributesByLayout();
     void sortAttributesByLayout(rx::TranslatedAttribute attributes[gl::MAX_VERTEX_ATTRIBS], int sortedSemanticIndices[MAX_VERTEX_ATTRIBS]) const;
 
     static std::string decorateAttribute(const std::string &name);    // Prepend an underscore
@@ -195,6 +196,7 @@ class ProgramBinary : public RefCountObject
 
     sh::Attribute mLinkedAttribute[MAX_VERTEX_ATTRIBS];
     int mSemanticIndex[MAX_VERTEX_ATTRIBS];
+    int mAttributesByLayout[MAX_VERTEX_ATTRIBS];
 
     struct Sampler
     {
