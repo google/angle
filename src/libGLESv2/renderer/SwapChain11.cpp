@@ -188,6 +188,7 @@ EGLint SwapChain11::resetOffscreenTexture(int backbufferWidth, int backbufferHei
             else
             {
                 result = offscreenTextureResource->GetSharedHandle(&mShareHandle);
+                SafeRelease(offscreenTextureResource);
 
                 if (FAILED(result))
                 {
