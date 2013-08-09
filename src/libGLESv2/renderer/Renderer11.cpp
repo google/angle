@@ -2416,7 +2416,7 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
 
     // Use nearest filtering because source and destination are the same size for the direct
     // copy
-    bool ret = mBlit->copyTexture(source, sourceArea, sourceSize, dest, destArea, destSize,
+    bool ret = mBlit->copyTexture(source, sourceArea, sourceSize, dest, destArea, destSize, NULL,
                                   destFormat, GL_NEAREST);
 
     return ret;
@@ -2475,7 +2475,7 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
 
     // Use nearest filtering because source and destination are the same size for the direct
     // copy
-    bool ret = mBlit->copyTexture(source, sourceArea, sourceSize, dest, destArea, destSize,
+    bool ret = mBlit->copyTexture(source, sourceArea, sourceSize, dest, destArea, destSize, NULL,
                                   destFormat, GL_NEAREST);
 
     return ret;
@@ -2534,7 +2534,7 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
 
     // Use nearest filtering because source and destination are the same size for the direct
     // copy
-    bool ret = mBlit->copyTexture(source, sourceArea, sourceSize, dest, destArea, destSize,
+    bool ret = mBlit->copyTexture(source, sourceArea, sourceSize, dest, destArea, destSize, NULL,
                                   destFormat, GL_NEAREST);
 
     return ret;
@@ -2595,7 +2595,7 @@ bool Renderer11::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &so
 
     // Use nearest filtering because source and destination are the same size for the direct
     // copy
-    bool ret = mBlit->copyTexture(source, sourceArea, sourceSize, dest, destArea, destSize,
+    bool ret = mBlit->copyTexture(source, sourceArea, sourceSize, dest, destArea, destSize, NULL,
                                   destFormat, GL_NEAREST);
 
     return ret;
@@ -2794,7 +2794,7 @@ bool Renderer11::getRenderTargetResource(gl::Renderbuffer *colorbuffer, unsigned
 }
 
 bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &readRect, gl::Framebuffer *drawTarget, const gl::Rectangle &drawRect,
-                          bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter)
+                          const gl::Rectangle *scissor, bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter)
 {
     if (blitRenderTarget)
     {
@@ -2822,7 +2822,7 @@ bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &read
 
                 RenderTarget *drawRenderTarget = drawBuffer->getRenderTarget();
 
-                if (!blitRenderbufferRect(readRect, drawRect, readRenderTarget, drawRenderTarget, filter,
+                if (!blitRenderbufferRect(readRect, drawRect, readRenderTarget, drawRenderTarget, filter, scissor,
                                           blitRenderTarget, false, false))
                 {
                     return false;
@@ -2851,7 +2851,7 @@ bool Renderer11::blitRect(gl::Framebuffer *readTarget, const gl::Rectangle &read
         RenderTarget *readRenderTarget = readBuffer->getDepthStencil();
         RenderTarget *drawRenderTarget = drawBuffer->getDepthStencil();
 
-        if (!blitRenderbufferRect(readRect, drawRect, readRenderTarget, drawRenderTarget, filter,
+        if (!blitRenderbufferRect(readRect, drawRect, readRenderTarget, drawRenderTarget, filter, scissor,
                                   false, blitDepth, blitStencil))
         {
             return false;
@@ -3080,7 +3080,8 @@ void Renderer11::readTextureData(ID3D11Texture2D *texture, unsigned int subResou
 }
 
 bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::Rectangle &drawRect, RenderTarget *readRenderTarget,
-                                      RenderTarget *drawRenderTarget, GLenum filter, bool colorBlit, bool depthBlit, bool stencilBlit)
+                                      RenderTarget *drawRenderTarget, GLenum filter, const gl::Rectangle *scissor,
+                                      bool colorBlit, bool depthBlit, bool stencilBlit)
 {
     // Since blitRenderbufferRect is called for each render buffer that needs to be blitted,
     // it should never be the case that both color and depth/stencil need to be blitted at
@@ -3148,16 +3149,37 @@ bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::R
         return gl::error(GL_OUT_OF_MEMORY, false);
     }
 
-    bool wholeBufferCopy = readRect.x == 0 && readRect.width == readRenderTarget11->getWidth() &&
-                           readRect.y == 0 && readRect.height == readRenderTarget11->getHeight() &&
-                           drawRect.x == 0 && drawRect.width == drawRenderTarget->getWidth() &&
-                           drawRect.y == 0 && drawRect.height == drawRenderTarget->getHeight();
+    gl::Extents readSize(readRenderTarget->getWidth(), readRenderTarget->getHeight(), 1);
+    gl::Extents drawSize(drawRenderTarget->getWidth(), drawRenderTarget->getHeight(), 1);
+
+    bool scissorNeeded = scissor && gl::ClipRectangle(drawRect, *scissor, NULL);
+
+    bool wholeBufferCopy = !scissorNeeded &&
+                           readRect.x == 0 && readRect.width == readSize.width &&
+                           readRect.y == 0 && readRect.height == readSize.height &&
+                           drawRect.x == 0 && drawRect.width == drawSize.width &&
+                           drawRect.y == 0 && drawRect.height == drawSize.height;
 
     bool stretchRequired = readRect.width != drawRect.width || readRect.height != drawRect.height;
 
+    bool flipRequired = readRect.width < 0 || readRect.height < 0 || drawRect.width < 0 || readRect.height < 0;
+
+    bool outOfBounds = readRect.x < 0 || readRect.x + readRect.width > readSize.width ||
+                       readRect.y < 0 || readRect.y + readRect.height > readSize.height ||
+                       drawRect.x < 0 || drawRect.x + drawRect.width > drawSize.width ||
+                       drawRect.y < 0 || drawRect.y + drawRect.height > drawSize.height;
+
+    bool hasDepth = gl::GetDepthBits(drawRenderTarget11->getActualFormat(), getCurrentClientVersion()) > 0;
+    bool hasStencil = gl::GetStencilBits(drawRenderTarget11->getActualFormat(), getCurrentClientVersion()) > 0;
+    bool partialDSBlit = (hasDepth && depthBlit) != (hasStencil && stencilBlit);
+
     if (readRenderTarget11->getActualFormat() == drawRenderTarget->getActualFormat() &&
-        !stretchRequired && (!(depthBlit || stencilBlit) || wholeBufferCopy))
+        !stretchRequired && !outOfBounds && !flipRequired && !partialDSBlit &&
+        (!(depthBlit || stencilBlit) || wholeBufferCopy))
     {
+        UINT dstX = drawRect.x;
+        UINT dstY = drawRect.y;
+
         D3D11_BOX readBox;
         readBox.left = readRect.x;
         readBox.right = readRect.x + readRect.width;
@@ -3166,40 +3188,66 @@ bool Renderer11::blitRenderbufferRect(const gl::Rectangle &readRect, const gl::R
         readBox.front = 0;
         readBox.back = 1;
 
+        if (scissorNeeded)
+        {
+            // drawRect is guaranteed to have positive width and height because stretchRequired is false.
+            ASSERT(drawRect.width >= 0 || drawRect.height >= 0);
+
+            if (drawRect.x < scissor->x)
+            {
+                dstX = scissor->x;
+                readBox.left += (scissor->x - drawRect.x);
+            }
+            if (drawRect.y < scissor->y)
+            {
+                dstY = scissor->y;
+                readBox.top += (scissor->y - drawRect.y);
+            }
+            if (drawRect.x + drawRect.width > scissor->x + scissor->width)
+            {
+                readBox.right -= ((drawRect.x + drawRect.width) - (scissor->x + scissor->width));
+            }
+            if (drawRect.y + drawRect.height > scissor->y + scissor->height)
+            {
+                readBox.bottom -= ((drawRect.y + drawRect.height) - (scissor->y + scissor->height));
+            }
+        }
+
         // D3D11 needs depth-stencil CopySubresourceRegions to have a NULL pSrcBox
         // We also require complete framebuffer copies for depth-stencil blit.
         D3D11_BOX *pSrcBox = wholeBufferCopy ? NULL : &readBox;
 
-        mDeviceContext->CopySubresourceRegion(drawTexture, drawSubresource, drawRect.x, drawRect.y, 0,
+        mDeviceContext->CopySubresourceRegion(drawTexture, drawSubresource, dstX, dstY, 0,
                                               readTexture, readSubresource, pSrcBox);
         result = true;
     }
     else
     {
         gl::Box readArea(readRect.x, readRect.y, 0, readRect.width, readRect.height, 1);
-        gl::Extents readSize(readRenderTarget->getWidth(), readRenderTarget->getHeight(), 1);
-
         gl::Box drawArea(drawRect.x, drawRect.y, 0, drawRect.width, drawRect.height, 1);
-        gl::Extents drawSize(drawRenderTarget->getWidth(), drawRenderTarget->getHeight(), 1);
 
         if (depthBlit && stencilBlit)
         {
             result = mBlit->copyDepthStencil(readTexture, readSubresource, readArea, readSize,
-                                             drawTexture, drawSubresource, drawArea, drawSize);
+                                             drawTexture, drawSubresource, drawArea, drawSize,
+                                             scissor);
         }
         else if (depthBlit)
         {
-            result = mBlit->copyDepth(readSRV, readArea, readSize, drawDSV, drawArea, drawSize);
+            result = mBlit->copyDepth(readSRV, readArea, readSize, drawDSV, drawArea, drawSize,
+                                      scissor);
         }
         else if (stencilBlit)
         {
             result = mBlit->copyStencil(readTexture, readSubresource, readArea, readSize,
-                                        drawTexture, drawSubresource, drawArea, drawSize);
+                                        drawTexture, drawSubresource, drawArea, drawSize,
+                                        scissor);
         }
         else
         {
             GLenum format = gl::GetFormat(drawRenderTarget->getInternalFormat(), getCurrentClientVersion());
-            result = mBlit->copyTexture(readSRV, readArea, readSize, drawRTV, drawArea, drawSize, format, filter);
+            result = mBlit->copyTexture(readSRV, readArea, readSize, drawRTV, drawArea, drawSize,
+                                        scissor, format, filter);
         }
     }
 

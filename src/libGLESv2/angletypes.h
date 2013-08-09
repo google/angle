@@ -58,6 +58,8 @@ struct Rectangle
     Rectangle(int x_in, int y_in, int width_in, int height_in) : x(x_in), y(y_in), width(width_in), height(height_in) { }
 };
 
+bool ClipRectangle(const Rectangle &source, const Rectangle &clip, Rectangle *intersection);
+
 struct Box
 {
     int x;

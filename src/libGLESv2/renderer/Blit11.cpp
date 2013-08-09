@@ -53,7 +53,8 @@ namespace rx
 
 Blit11::Blit11(rx::Renderer11 *renderer)
     : mRenderer(renderer), mShaderMap(compareBlitParameters), mVertexBuffer(NULL),
-      mPointSampler(NULL), mLinearSampler(NULL), mRasterizerState(NULL), mDepthStencilState(NULL),
+      mPointSampler(NULL), mLinearSampler(NULL), mScissorEnabledRasterizerState(NULL),
+      mScissorDisabledRasterizerState(NULL), mDepthStencilState(NULL),
       mQuad2DIL(NULL), mQuad2DVS(NULL), mDepthPS(NULL),
       mQuad3DIL(NULL), mQuad3DVS(NULL), mQuad3DGS(NULL)
 {
@@ -120,13 +121,18 @@ Blit11::Blit11(rx::Renderer11 *renderer)
     rasterDesc.SlopeScaledDepthBias = 0.0f;
     rasterDesc.DepthBiasClamp = 0.0f;
     rasterDesc.DepthClipEnable = TRUE;
-    rasterDesc.ScissorEnable = FALSE;
     rasterDesc.MultisampleEnable = FALSE;
     rasterDesc.AntialiasedLineEnable = FALSE;
 
-    result = device->CreateRasterizerState(&rasterDesc, &mRasterizerState);
+    rasterDesc.ScissorEnable = TRUE;
+    result = device->CreateRasterizerState(&rasterDesc, &mScissorEnabledRasterizerState);
     ASSERT(SUCCEEDED(result));
-    d3d11::SetDebugName(mRasterizerState, "Blit11 rasterizer state");
+    d3d11::SetDebugName(mScissorEnabledRasterizerState, "Blit11 scissoring rasterizer state");
+
+    rasterDesc.ScissorEnable = FALSE;
+    result = device->CreateRasterizerState(&rasterDesc, &mScissorDisabledRasterizerState);
+    ASSERT(SUCCEEDED(result));
+    d3d11::SetDebugName(mScissorDisabledRasterizerState, "Blit11 no scissoring rasterizer state");
 
     D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
     depthStencilDesc.DepthEnable = true;
@@ -193,7 +199,8 @@ Blit11::~Blit11()
     SafeRelease(mVertexBuffer);
     SafeRelease(mPointSampler);
     SafeRelease(mLinearSampler);
-    SafeRelease(mRasterizerState);
+    SafeRelease(mScissorEnabledRasterizerState);
+    SafeRelease(mScissorDisabledRasterizerState);
     SafeRelease(mDepthStencilState);
 
     SafeRelease(mQuad2DIL);
@@ -209,18 +216,8 @@ Blit11::~Blit11()
 
 bool Blit11::copyTexture(ID3D11ShaderResourceView *source, const gl::Box &sourceArea, const gl::Extents &sourceSize,
                          ID3D11RenderTargetView *dest, const gl::Box &destArea, const gl::Extents &destSize,
-                         GLenum destFormat, GLenum filter)
+                         const gl::Rectangle *scissor, GLenum destFormat, GLenum filter)
 {
-    if(sourceArea.x < 0 || sourceArea.x + sourceArea.width  > sourceSize.width  ||
-       sourceArea.y < 0 || sourceArea.y + sourceArea.height > sourceSize.height ||
-       sourceArea.z < 0 || sourceArea.z + sourceArea.depth  > sourceSize.depth  ||
-       destArea.x   < 0 || destArea.x   + destArea.width    > destSize.width    ||
-       destArea.y   < 0 || destArea.y   + destArea.height   > destSize.height   ||
-       destArea.z   < 0 || destArea.z   + destArea.depth    > destSize.depth    )
-    {
-        return false;
-    }
-
     HRESULT result;
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
 
@@ -269,7 +266,22 @@ bool Blit11::copyTexture(ID3D11ShaderResourceView *source, const gl::Box &source
     // Apply state
     deviceContext->OMSetBlendState(NULL, NULL, 0xFFFFFFF);
     deviceContext->OMSetDepthStencilState(NULL, 0xFFFFFFFF);
-    deviceContext->RSSetState(mRasterizerState);
+
+    if (scissor)
+    {
+        D3D11_RECT scissorRect;
+        scissorRect.left = scissor->x;
+        scissorRect.right = scissor->x + scissor->width;
+        scissorRect.top = scissor->y;
+        scissorRect.bottom = scissor->y + scissor->height;
+
+        deviceContext->RSSetScissorRects(1, &scissorRect);
+        deviceContext->RSSetState(mScissorEnabledRasterizerState);
+    }
+    else
+    {
+        deviceContext->RSSetState(mScissorDisabledRasterizerState);
+    }
 
     // Apply shaders
     deviceContext->IASetInputLayout(shader.mInputLayout);
@@ -326,49 +338,6 @@ bool Blit11::copyTexture(ID3D11ShaderResourceView *source, const gl::Box &source
     return true;
 }
 
-static ID3D11Resource *createStagingTexture(ID3D11Device *device, ID3D11DeviceContext *context,
-                                            ID3D11Resource *source, unsigned int subresource,
-                                            const gl::Extents &size, unsigned int cpuAccessFlags)
-{
-    ID3D11Texture2D *sourceTexture = d3d11::DynamicCastComObject<ID3D11Texture2D>(source);
-    if (!sourceTexture)
-    {
-        return NULL;
-    }
-
-    D3D11_TEXTURE2D_DESC sourceDesc;
-    sourceTexture->GetDesc(&sourceDesc);
-
-    if (sourceDesc.SampleDesc.Count > 1)
-    {
-        // Creating a staging texture of a multisampled texture is not supported
-        SafeRelease(sourceTexture);
-        return NULL;
-    }
-
-    D3D11_TEXTURE2D_DESC stagingDesc;
-    stagingDesc.Width = size.width;
-    stagingDesc.Height = size.height;
-    stagingDesc.MipLevels = 1;
-    stagingDesc.ArraySize = 1;
-    stagingDesc.Format = sourceDesc.Format;
-    stagingDesc.SampleDesc.Count = 1;
-    stagingDesc.SampleDesc.Quality = 0;
-    stagingDesc.Usage = D3D11_USAGE_STAGING;
-    stagingDesc.CPUAccessFlags = cpuAccessFlags;
-    stagingDesc.MiscFlags = 0;
-    stagingDesc.BindFlags = 0;
-
-    SafeRelease(sourceTexture);
-
-    ID3D11Texture2D *stagingTexture = NULL;
-    HRESULT result = device->CreateTexture2D(&stagingDesc, NULL, &stagingTexture);
-
-    context->CopySubresourceRegion(stagingTexture, 0, 0, 0, 0, source, subresource, NULL);
-
-    return stagingTexture;
-}
-
 static DXGI_FORMAT getTextureFormat(ID3D11Resource *resource)
 {
     ID3D11Texture2D *texture = d3d11::DynamicCastComObject<ID3D11Texture2D>(resource);
@@ -383,6 +352,36 @@ static DXGI_FORMAT getTextureFormat(ID3D11Resource *resource)
     SafeRelease(texture);
 
     return desc.Format;
+}
+
+static ID3D11Resource *createStagingTexture(ID3D11Device *device, ID3D11DeviceContext *context,
+                                            ID3D11Resource *source, unsigned int subresource,
+                                            const gl::Extents &size, unsigned int cpuAccessFlags)
+{
+    D3D11_TEXTURE2D_DESC stagingDesc;
+    stagingDesc.Width = size.width;
+    stagingDesc.Height = size.height;
+    stagingDesc.MipLevels = 1;
+    stagingDesc.ArraySize = 1;
+    stagingDesc.Format = getTextureFormat(source);
+    stagingDesc.SampleDesc.Count = 1;
+    stagingDesc.SampleDesc.Quality = 0;
+    stagingDesc.Usage = D3D11_USAGE_STAGING;
+    stagingDesc.CPUAccessFlags = cpuAccessFlags;
+    stagingDesc.MiscFlags = 0;
+    stagingDesc.BindFlags = 0;
+
+    ID3D11Texture2D *stagingTexture = NULL;
+    HRESULT result = device->CreateTexture2D(&stagingDesc, NULL, &stagingTexture);
+    if (FAILED(result))
+    {
+        ERR("Failed to create staging texture for depth stencil blit. HRESULT: 0x%X.", result);
+        return NULL;
+    }
+
+    context->CopySubresourceRegion(stagingTexture, 0, 0, 0, 0, source, subresource, NULL);
+
+    return stagingTexture;
 }
 
 inline static void generateVertexCoords(const gl::Box &sourceArea, const gl::Extents &sourceSize,
@@ -450,15 +449,17 @@ static void write3DVertices(const gl::Box &sourceArea, const gl::Extents &source
 }
 
 bool Blit11::copyStencil(ID3D11Resource *source, unsigned int sourceSubresource, const gl::Box &sourceArea, const gl::Extents &sourceSize,
-                         ID3D11Resource *dest, unsigned int destSubresource, const gl::Box &destArea, const gl::Extents &destSize)
+                         ID3D11Resource *dest, unsigned int destSubresource, const gl::Box &destArea, const gl::Extents &destSize,
+                         const gl::Rectangle *scissor)
 {
     return copyDepthStencil(source, sourceSubresource, sourceArea, sourceSize,
                             dest, destSubresource, destArea, destSize,
-                            true);
+                            scissor, true);
 }
 
 bool Blit11::copyDepth(ID3D11ShaderResourceView *source, const gl::Box &sourceArea, const gl::Extents &sourceSize,
-                       ID3D11DepthStencilView *dest, const gl::Box &destArea, const gl::Extents &destSize)
+                       ID3D11DepthStencilView *dest, const gl::Box &destArea, const gl::Extents &destSize,
+                       const gl::Rectangle *scissor)
 {
     HRESULT result;
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
@@ -488,7 +489,22 @@ bool Blit11::copyDepth(ID3D11ShaderResourceView *source, const gl::Box &sourceAr
     // Apply state
     deviceContext->OMSetBlendState(NULL, NULL, 0xFFFFFFF);
     deviceContext->OMSetDepthStencilState(mDepthStencilState, 0xFFFFFFFF);
-    deviceContext->RSSetState(mRasterizerState);
+
+    if (scissor)
+    {
+        D3D11_RECT scissorRect;
+        scissorRect.left = scissor->x;
+        scissorRect.right = scissor->x + scissor->width;
+        scissorRect.top = scissor->y;
+        scissorRect.bottom = scissor->y + scissor->height;
+
+        deviceContext->RSSetScissorRects(1, &scissorRect);
+        deviceContext->RSSetState(mScissorEnabledRasterizerState);
+    }
+    else
+    {
+        deviceContext->RSSetState(mScissorDisabledRasterizerState);
+    }
 
     // Apply shaders
     deviceContext->IASetInputLayout(mQuad2DIL);
@@ -539,22 +555,30 @@ bool Blit11::copyDepth(ID3D11ShaderResourceView *source, const gl::Box &sourceAr
 }
 
 bool Blit11::copyDepthStencil(ID3D11Resource *source, unsigned int sourceSubresource, const gl::Box &sourceArea, const gl::Extents &sourceSize,
-                              ID3D11Resource *dest, unsigned int destSubresource, const gl::Box &destArea, const gl::Extents &destSize)
+                              ID3D11Resource *dest, unsigned int destSubresource, const gl::Box &destArea, const gl::Extents &destSize,
+                              const gl::Rectangle *scissor)
 {
     return copyDepthStencil(source, sourceSubresource, sourceArea, sourceSize,
                             dest, destSubresource, destArea, destSize,
-                            false);
+                            scissor, false);
 }
 
 bool Blit11::copyDepthStencil(ID3D11Resource *source, unsigned int sourceSubresource, const gl::Box &sourceArea, const gl::Extents &sourceSize,
                               ID3D11Resource *dest, unsigned int destSubresource, const gl::Box &destArea, const gl::Extents &destSize,
-                              bool stencilOnly)
+                              const gl::Rectangle *scissor, bool stencilOnly)
 {
     ID3D11Device *device = mRenderer->getDevice();
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
 
     ID3D11Resource *sourceStaging = createStagingTexture(device, deviceContext, source, sourceSubresource, sourceSize, D3D11_CPU_ACCESS_READ);
     ID3D11Resource *destStaging = createStagingTexture(device, deviceContext, dest, destSubresource, destSize, D3D11_CPU_ACCESS_WRITE);
+
+    if (!sourceStaging || !destStaging)
+    {
+        SafeRelease(sourceStaging);
+        SafeRelease(destStaging);
+        return false;
+    }
 
     DXGI_FORMAT format = getTextureFormat(source);
     ASSERT(format == getTextureFormat(dest));
@@ -568,7 +592,7 @@ bool Blit11::copyDepthStencil(ID3D11Resource *source, unsigned int sourceSubreso
         copySize = d3d11::GetStencilBits(format) / 8;
 
         // It would be expensive to have non-byte sized stencil sizes since it would
-        // require reading from the destination, currently there arn't any though.
+        // require reading from the destination, currently there aren't any though.
         ASSERT(d3d11::GetStencilBits(format)   % 8 == 0 &&
                d3d11::GetStencilOffset(format) % 8 == 0);
     }
@@ -577,34 +601,66 @@ bool Blit11::copyDepthStencil(ID3D11Resource *source, unsigned int sourceSubreso
     deviceContext->Map(sourceStaging, 0, D3D11_MAP_READ, 0, &sourceMapping);
     deviceContext->Map(destStaging, 0, D3D11_MAP_WRITE, 0, &destMapping);
 
-    int startDestY = std::min(destArea.y, destArea.y + destArea.height);
-    int endDestY = std::max(destArea.y, destArea.y + destArea.height);
-
-    int startDestX = std::min(destArea.x, destArea.x + destArea.width);
-    int endDestX = std::max(destArea.x, destArea.x + destArea.width);
-
-    for (int y = startDestY; y < endDestY; y++)
+    if (!sourceMapping.pData || !destMapping.pData)
     {
-        float yPerc = static_cast<float>(y - startDestY) / (endDestY - startDestY - 1);
-        unsigned int readRow = sourceArea.y + floor(yPerc * (sourceArea.height - 1) + 0.5f);
+        if (!sourceMapping.pData)
+        {
+            deviceContext->Unmap(sourceStaging, 0);
+        }
+        if (!destMapping.pData)
+        {
+            deviceContext->Unmap(destStaging, 0);
+        }
+        SafeRelease(sourceStaging);
+        SafeRelease(destStaging);
+        return false;
+    }
+
+    gl::Rectangle clippedDestArea(destArea.x, destArea.y, destArea.width, destArea.height);
+
+    // Clip dest area to the destination size
+    gl::ClipRectangle(clippedDestArea, gl::Rectangle(0, 0, destSize.width, destSize.height), &clippedDestArea);
+
+    // Clip dest area to the scissor
+    if (scissor)
+    {
+        gl::ClipRectangle(clippedDestArea, *scissor, &clippedDestArea);
+    }
+
+    // Determine if entire rows can be copied at once instead of each individual pixel, requires that there is
+    // no out of bounds lookups required, the entire pixel is copied and no stretching
+    bool wholeRowCopy = sourceArea.width == clippedDestArea.width &&
+                        sourceArea.x >= 0 && sourceArea.x + sourceArea.width <= sourceSize.width &&
+                        copySize == pixelSize;
+
+    for (int y = clippedDestArea.y; y < clippedDestArea.y + clippedDestArea.height; y++)
+    {
+        float yPerc = static_cast<float>(y - destArea.y) / (destArea.height - 1);
+
+        // Interpolate using the original source rectangle to determine which row to sample from while clamping to the edges
+        unsigned int readRow = gl::clamp(sourceArea.y + floor(yPerc * (sourceArea.height - 1) + 0.5f), 0, sourceSize.height - 1);
         unsigned int writeRow = y;
 
-        if (sourceArea.width == destArea.width && copySize == pixelSize)
+        if (wholeRowCopy)
         {
             void *sourceRow = reinterpret_cast<char*>(sourceMapping.pData) +
-                              readRow * sourceMapping.RowPitch;
+                              readRow * sourceMapping.RowPitch +
+                              sourceArea.x * pixelSize;
 
             void *destRow = reinterpret_cast<char*>(destMapping.pData) +
-                            writeRow * destMapping.RowPitch;
+                            writeRow * destMapping.RowPitch +
+                            destArea.x * pixelSize;
 
             memcpy(destRow, sourceRow, pixelSize * destArea.width);
         }
         else
         {
-            for (int x = startDestX; x < endDestX; x++)
+            for (int x = clippedDestArea.x; x < clippedDestArea.x + clippedDestArea.width; x++)
             {
-                float xPerc = static_cast<float>(x - startDestX) / (endDestX - startDestX - 1);
-                unsigned int readColumn = sourceArea.x + floor(xPerc * (sourceArea.width - 1) + 0.5f);
+                float xPerc = static_cast<float>(x - destArea.x) / (destArea.width - 1);
+
+                // Interpolate the original source rectangle to determine which column to sample from while clamping to the edges
+                unsigned int readColumn = gl::clamp(sourceArea.x + floor(xPerc * (sourceArea.width - 1) + 0.5f), 0, sourceSize.width - 1);
                 unsigned int writeColumn = x;
 
                 void *sourcePixel = reinterpret_cast<char*>(sourceMapping.pData) +

@@ -254,6 +254,7 @@
             'libGLESv2/constants.h',
             'libGLESv2/Context.cpp',
             'libGLESv2/Context.h',
+            'libGLESv2/angletypes.cpp',
             'libGLESv2/angletypes.h',
             'libGLESv2/Fence.cpp',
             'libGLESv2/Fence.h',

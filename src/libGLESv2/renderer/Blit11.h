@@ -30,16 +30,19 @@ class Blit11
 
     bool copyTexture(ID3D11ShaderResourceView *source, const gl::Box &sourceArea, const gl::Extents &sourceSize,
                      ID3D11RenderTargetView *dest, const gl::Box &destArea, const gl::Extents &destSize,
-                     GLenum destFormat, GLenum filter);
+                     const gl::Rectangle *scissor, GLenum destFormat, GLenum filter);
 
     bool copyStencil(ID3D11Resource *source, unsigned int sourceSubresource, const gl::Box &sourceArea, const gl::Extents &sourceSize,
-                     ID3D11Resource *dest, unsigned int destSubresource, const gl::Box &destArea, const gl::Extents &destSize);
+                     ID3D11Resource *dest, unsigned int destSubresource, const gl::Box &destArea, const gl::Extents &destSize,
+                     const gl::Rectangle *scissor);
 
     bool copyDepth(ID3D11ShaderResourceView *source, const gl::Box &sourceArea, const gl::Extents &sourceSize,
-                   ID3D11DepthStencilView *dest, const gl::Box &destArea, const gl::Extents &destSize);
+                   ID3D11DepthStencilView *dest, const gl::Box &destArea, const gl::Extents &destSize,
+                   const gl::Rectangle *scissor);
 
     bool copyDepthStencil(ID3D11Resource *source, unsigned int sourceSubresource, const gl::Box &sourceArea, const gl::Extents &sourceSize,
-                          ID3D11Resource *dest, unsigned int destSubresource, const gl::Box &destArea, const gl::Extents &destSize);
+                          ID3D11Resource *dest, unsigned int destSubresource, const gl::Box &destArea, const gl::Extents &destSize,
+                          const gl::Rectangle *scissor);
 
   private:
     rx::Renderer11 *mRenderer;
@@ -53,7 +56,7 @@ class Blit11
 
     bool copyDepthStencil(ID3D11Resource *source, unsigned int sourceSubresource, const gl::Box &sourceArea, const gl::Extents &sourceSize,
                           ID3D11Resource *dest, unsigned int destSubresource, const gl::Box &destArea, const gl::Extents &destSize,
-                          bool stencilOnly);
+                          const gl::Rectangle *scissor, bool stencilOnly);
 
     static bool compareBlitParameters(const BlitParameters &a, const BlitParameters &b);
 
@@ -84,7 +87,8 @@ class Blit11
     ID3D11Buffer *mVertexBuffer;
     ID3D11SamplerState *mPointSampler;
     ID3D11SamplerState *mLinearSampler;
-    ID3D11RasterizerState *mRasterizerState;
+    ID3D11RasterizerState *mScissorEnabledRasterizerState;
+    ID3D11RasterizerState *mScissorDisabledRasterizerState;
     ID3D11DepthStencilState *mDepthStencilState;
 
     ID3D11InputLayout *mQuad2DIL;

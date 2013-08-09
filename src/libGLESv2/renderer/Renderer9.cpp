@@ -2715,7 +2715,7 @@ bool Renderer9::copyImage(gl::Framebuffer *framebuffer, const gl::Rectangle &sou
 }
 
 bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, const gl::Rectangle &readRect, gl::Framebuffer *drawFramebuffer, const gl::Rectangle &drawRect,
-                         bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter)
+                         const gl::Rectangle *scissor, bool blitRenderTarget, bool blitDepth, bool blitStencil, GLenum filter)
 {
     ASSERT(filter == GL_NEAREST);
 
@@ -2754,6 +2754,9 @@ bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, const gl::Rectangle &
             return gl::error(GL_OUT_OF_MEMORY, false);
         }
 
+        gl::Extents srcSize(readRenderTarget->getWidth(), readRenderTarget->getHeight(), 1);
+        gl::Extents dstSize(drawRenderTarget->getWidth(), drawRenderTarget->getHeight(), 1);
+
         RECT srcRect;
         srcRect.left = readRect.x;
         srcRect.right = readRect.x + readRect.width;
@@ -2765,6 +2768,75 @@ bool Renderer9::blitRect(gl::Framebuffer *readFramebuffer, const gl::Rectangle &
         dstRect.right = drawRect.x + drawRect.width;
         dstRect.top = drawRect.y;
         dstRect.bottom = drawRect.y + drawRect.height;
+
+        // Clip the rectangles to the scissor rectangle
+        if (scissor)
+        {
+            if (dstRect.left < scissor->x)
+            {
+                srcRect.left += (scissor->x - dstRect.left);
+                dstRect.left = scissor->x;
+            }
+            if (dstRect.top < scissor->y)
+            {
+                srcRect.top += (scissor->y - dstRect.top);
+                dstRect.top = scissor->y;
+            }
+            if (dstRect.right > scissor->x + scissor->width)
+            {
+                srcRect.right -= (dstRect.right - (scissor->x + scissor->width));
+                dstRect.right = scissor->x + scissor->width;
+            }
+            if (dstRect.bottom > scissor->y + scissor->height)
+            {
+                srcRect.bottom -= (dstRect.bottom - (scissor->y + scissor->height));
+                dstRect.bottom = scissor->y + scissor->height;
+            }
+        }
+
+        // Clip the rectangles to the destination size
+        if (dstRect.left < 0)
+        {
+            srcRect.left += -dstRect.left;
+            dstRect.left = 0;
+        }
+        if (dstRect.right > dstSize.width)
+        {
+            srcRect.right -= (dstRect.right - dstSize.width);
+            dstRect.right = dstSize.width;
+        }
+        if (dstRect.top < 0)
+        {
+            srcRect.top += -dstRect.top;
+            dstRect.top = 0;
+        }
+        if (dstRect.bottom > dstSize.height)
+        {
+            srcRect.bottom -= (dstRect.bottom - dstSize.height);
+            dstRect.bottom = dstSize.height;
+        }
+
+        // Clip the rectangles to the source size
+        if (srcRect.left < 0)
+        {
+            dstRect.left += -srcRect.left;
+            srcRect.left = 0;
+        }
+        if (srcRect.right > srcSize.width)
+        {
+            dstRect.right -= (srcRect.right - srcSize.width);
+            srcRect.right = srcSize.width;
+        }
+        if (srcRect.top < 0)
+        {
+            dstRect.top += -srcRect.top;
+            srcRect.top = 0;
+        }
+        if (srcRect.bottom > srcSize.height)
+        {
+            dstRect.bottom -= (srcRect.bottom - srcSize.height);
+            srcRect.bottom = srcSize.height;
+        }
 
         HRESULT result = mDevice->StretchRect(readSurface, &srcRect, drawSurface, &dstRect, D3DTEXF_NONE);
 

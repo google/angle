@@ -140,7 +140,8 @@ bool TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture, unsign
             Blit11 *blitter = mRenderer->getBlitter();
 
             return blitter->copyDepthStencil(srcTexture, sourceSubresource, copyArea, texSize,
-                                             dstTexture, dstSubresource, copyArea, texSize);
+                                             dstTexture, dstSubresource, copyArea, texSize,
+                                             NULL);
         }
         else
         {
@@ -180,7 +181,7 @@ void TextureStorage11::generateMipmapLayer(RenderTarget11 *source, RenderTarget1
 
             Blit11 *blitter = mRenderer->getBlitter();
 
-            blitter->copyTexture(sourceSRV, sourceArea, sourceSize, destRTV, destArea, destSize,
+            blitter->copyTexture(sourceSRV, sourceArea, sourceSize, destRTV, destArea, destSize, NULL,
                                  gl::GetFormat(source->getInternalFormat(), mRenderer->getCurrentClientVersion()),
                                  GL_LINEAR);
         }

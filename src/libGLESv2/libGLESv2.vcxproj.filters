@@ -263,6 +263,9 @@
     <ClCompile Include="renderer\Clear11.cpp">
       <Filter>Source Files\Renderer11</Filter>
     </ClCompile>
+    <ClCompile Include="angletypes.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BinaryStream.h">

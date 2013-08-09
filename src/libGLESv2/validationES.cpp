@@ -98,6 +98,31 @@ bool ValidateRenderbufferStorageParameters(const gl::Context *context, GLenum ta
     return true;
 }
 
+static bool IsPartialBlit(gl::Context *context, gl::Renderbuffer *readBuffer, gl::Renderbuffer *writeBuffer,
+                          GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1,
+                          GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1)
+{
+    if (srcX0 != 0 || srcY0 != 0 || dstX0 != 0 || dstY0 != 0 ||
+        dstX1 != writeBuffer->getWidth() || dstY1 != writeBuffer->getHeight() ||
+        srcX1 != readBuffer->getWidth() || srcY1 != readBuffer->getHeight())
+    {
+        return true;
+    }
+    else if (context->isScissorTestEnabled())
+    {
+        int scissorX, scissorY, scissorWidth, scissorHeight;
+        context->getScissorParams(&scissorX, &scissorY, &scissorWidth, &scissorHeight);
+
+        return scissorX > 0 || scissorY > 0 ||
+               scissorWidth < writeBuffer->getWidth() ||
+               scissorHeight < writeBuffer->getHeight();
+    }
+    else
+    {
+        return false;
+    }
+}
+
 bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1,
                                        GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask,
                                        GLenum filter, bool fromAngleExtension)
@@ -160,14 +185,6 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
     }
 
     if (drawFramebuffer->getSamples() != 0)
-    {
-        return gl::error(GL_INVALID_OPERATION, false);
-    }
-
-    gl::Rectangle sourceClippedRect, destClippedRect;
-    bool partialCopy;
-    if (!context->clipBlitFramebufferCoordinates(srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1,
-                                                 &sourceClippedRect, &destClippedRect, &partialCopy))
     {
         return gl::error(GL_INVALID_OPERATION, false);
     }
@@ -249,8 +266,9 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
                         }
                     }
                 }
-
-                if (partialCopy && readFramebuffer->getSamples() != 0)
+                if (readFramebuffer->getSamples() != 0 && IsPartialBlit(context, readColorBuffer, drawColorBuffer,
+                                                                        srcX0, srcY0, srcX1, srcY1,
+                                                                        dstX0, dstY0, dstX1, dstY1))
                 {
                     return gl::error(GL_INVALID_OPERATION, false);
                 }
@@ -277,7 +295,8 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
 
             if (fromAngleExtension)
             {
-                if (partialCopy)
+                if (IsPartialBlit(context, readDepthBuffer, drawDepthBuffer,
+                                  srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1))
                 {
                     ERR("Only whole-buffer depth and stencil blits are supported by this implementation.");
                     return gl::error(GL_INVALID_OPERATION, false); // only whole-buffer copies are permitted
@@ -296,12 +315,6 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
         gl::Renderbuffer *readStencilBuffer = readFramebuffer->getStencilbuffer();
         gl::Renderbuffer *drawStencilBuffer = drawFramebuffer->getStencilbuffer();
 
-        if (fromAngleExtension && partialCopy)
-        {
-            ERR("Only whole-buffer depth and stencil blits are supported by this implementation.");
-            return gl::error(GL_INVALID_OPERATION, false); // only whole-buffer copies are permitted
-        }
-
         if (readStencilBuffer && drawStencilBuffer)
         {
             if (readStencilBuffer->getActualFormat() != drawStencilBuffer->getActualFormat())
@@ -316,7 +329,8 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
 
             if (fromAngleExtension)
             {
-                if (partialCopy)
+                if (IsPartialBlit(context, readStencilBuffer, drawStencilBuffer,
+                                  srcX0, srcY0, srcX1, srcY1, dstX0, dstY0, dstX1, dstY1))
                 {
                     ERR("Only whole-buffer depth and stencil blits are supported by this implementation.");
                     return gl::error(GL_INVALID_OPERATION, false); // only whole-buffer copies are permitted
