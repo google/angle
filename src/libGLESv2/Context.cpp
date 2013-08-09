@@ -638,6 +638,14 @@ void Context::setScissorParams(GLint x, GLint y, GLsizei width, GLsizei height)
     mState.scissor.height = height;
 }
 
+void Context::getScissorParams(GLint *x, GLint *y, GLsizei *width, GLsizei *height)
+{
+    *x = mState.scissor.x;
+    *y = mState.scissor.y;
+    *width = mState.scissor.width;
+    *height = mState.scissor.height;
+}
+
 void Context::setColorMask(bool red, bool green, bool blue, bool alpha)
 {
     mState.blend.colorMaskRed = red;

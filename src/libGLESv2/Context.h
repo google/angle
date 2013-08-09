@@ -214,6 +214,7 @@ class Context
     void setViewportParams(GLint x, GLint y, GLsizei width, GLsizei height);
 
     void setScissorParams(GLint x, GLint y, GLsizei width, GLsizei height);
+    void getScissorParams(GLint *x, GLint *y, GLsizei *width, GLsizei *height);
 
     void setColorMask(bool red, bool green, bool blue, bool alpha);
     void setDepthMask(bool mask);
