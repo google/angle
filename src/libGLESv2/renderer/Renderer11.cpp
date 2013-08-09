@@ -286,7 +286,6 @@ EGLint Renderer11::initialize()
     {
         DXGI_FORMAT_R32_FLOAT,
         DXGI_FORMAT_R32G32_FLOAT,
-        DXGI_FORMAT_R32G32B32_FLOAT,
         DXGI_FORMAT_R32G32B32A32_FLOAT,
     };
 
