@@ -870,7 +870,7 @@ bool TIntermBinary::promote(TInfoSink& infoSink)
         getTypePointer()->setQualifier(EvqTemporary);
     }
 
-    int size = std::max(left->getNominalSize(), right->getNominalSize());
+    char size = std::max(left->getNominalSize(), right->getNominalSize());
 
     //
     // All scalars. Code after this test assumes this case is removed!
@@ -1126,7 +1126,7 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, TIntermTyped* constantNod
                     return 0;
                 }
                 {// support MSVC++6.0
-                    int size = getNominalSize();
+                    char size = getNominalSize();
                     tempConstArray = new ConstantUnion[size*size];
                     for (int row = 0; row < size; row++) {
                         for (int column = 0; column < size; column++) {
@@ -1174,9 +1174,9 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, TIntermTyped* constantNod
                 tempConstArray = new ConstantUnion[getNominalSize()];
 
                 {// support MSVC++6.0
-                    for (int size = getNominalSize(), i = 0; i < size; i++) {
+                    for (char size = getNominalSize(), i = 0; i < size; i++) {
                         tempConstArray[i].setFConst(0.0f);
-                        for (int j = 0; j < size; j++) {
+                        for (char j = 0; j < size; j++) {
                             tempConstArray[i].setFConst(tempConstArray[i].getFConst() + ((unionArray[j*size + i].getFConst()) * rightUnionArray[j].getFConst()));
                         }
                     }
@@ -1195,9 +1195,9 @@ TIntermTyped* TIntermConstantUnion::fold(TOperator op, TIntermTyped* constantNod
 
                 tempConstArray = new ConstantUnion[getNominalSize()];
                 {// support MSVC++6.0
-                    for (int size = getNominalSize(), i = 0; i < size; i++) {
+                    for (char size = getNominalSize(), i = 0; i < size; i++) {
                         tempConstArray[i].setFConst(0.0f);
-                        for (int j = 0; j < size; j++) {
+                        for (char j = 0; j < size; j++) {
                             tempConstArray[i].setFConst(tempConstArray[i].getFConst() + ((unionArray[j].getFConst()) * rightUnionArray[i*size + j].getFConst()));
                         }
                     }
