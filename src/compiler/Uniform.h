@@ -79,6 +79,7 @@ struct InterfaceBlock
     size_t dataSize;
     std::vector<BlockMemberInfo> blockInfo;
     BlockLayoutType layout;
+    bool isRowMajorLayout;
 
     unsigned int registerIndex;
 };

@@ -50,7 +50,8 @@ InterfaceBlock::InterfaceBlock(const char *name, unsigned int arraySize, unsigne
     : name(name),
       arraySize(arraySize),
       layout(BLOCKLAYOUT_SHARED),
-      registerIndex(registerIndex)
+      registerIndex(registerIndex),
+      isRowMajorLayout(false)
 {
 }
 

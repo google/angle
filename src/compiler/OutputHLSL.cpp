@@ -566,6 +566,12 @@ void OutputHLSL::header()
 
         BlockLayoutType blockLayoutType = convertBlockLayoutType(interfaceBlock.blockStorage());
         setBlockLayout(&activeBlock, blockLayoutType);
+
+        if (interfaceBlock.matrixPacking() == EmpRowMajor)
+        {
+            activeBlock.isRowMajorLayout = true;
+        }
+
         mActiveInterfaceBlocks.push_back(activeBlock);
 
         if (interfaceBlock.hasInstanceName())

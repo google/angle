@@ -2459,6 +2459,12 @@ bool ProgramBinary::areMatchingInterfaceBlocks(InfoLog &infoLog, const sh::Inter
         return false;
     }
 
+    if (vertexInterfaceBlock.layout != fragmentInterfaceBlock.layout || vertexInterfaceBlock.isRowMajorLayout != fragmentInterfaceBlock.isRowMajorLayout)
+    {
+        infoLog.append("Layout qualifiers differ for interface block '%s' between vertex and fragment shaders", blockName);
+        return false;
+    }
+
     const unsigned int numBlockMembers = vertexInterfaceBlock.activeUniforms.size();
     for (unsigned int blockMemberIndex = 0; blockMemberIndex < numBlockMembers; blockMemberIndex++)
     {
