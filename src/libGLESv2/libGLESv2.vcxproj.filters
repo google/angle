@@ -39,6 +39,9 @@
     <Filter Include="Source Files\Renderer11">
       <UniqueIdentifier>{72db61d3-e081-4b58-bc63-a04a8a70585f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Third Party\trace_event">
+      <UniqueIdentifier>{ebfc1614-8f0b-48c7-b6bd-295bf91ef85c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Buffer.cpp">
@@ -220,6 +223,9 @@
     </ClCompile>
     <ClCompile Include="renderer\IndexRangeCache.cpp">
       <Filter>Source Files\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\event_tracer.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -489,6 +495,12 @@
     </ClInclude>
     <ClInclude Include="renderer\IndexRangeCache.h">
       <Filter>Header Files\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\event_tracer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\third_party\trace_event\trace_event.h">
+      <Filter>Third Party\trace_event</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
