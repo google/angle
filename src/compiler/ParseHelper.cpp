@@ -318,7 +318,8 @@ bool TParseContext::lValueErrorCheck(const TSourceLoc& line, const char* op, TIn
     case EvqConst:          message = "can't modify a const";        break;
     case EvqConstReadOnly:  message = "can't modify a const";        break;
     case EvqAttribute:      message = "can't modify an attribute";   break;
-    case EvqVertexInput:    message = "can't modify an input";       break;
+    case EvqFragmentIn:     message = "can't modify an input";       break;
+    case EvqVertexIn:       message = "can't modify an input";       break;
     case EvqUniform:        message = "can't modify a uniform";      break;
     case EvqVaryingIn:      message = "can't modify a varying";      break;
     case EvqFragCoord:      message = "can't modify gl_FragCoord";   break;
@@ -630,8 +631,8 @@ bool TParseContext::structQualifierErrorCheck(const TSourceLoc& line, const TPub
       case EvqVaryingIn:
       case EvqVaryingOut:
       case EvqAttribute:
-      case EvqVertexInput:
-      case EvqFragmentOutput:
+      case EvqVertexIn:
+      case EvqFragmentOut:
         if (pType.type == EbtStruct)
         {
             error(line, "cannot be used with a structure", getQualifierString(pType.qualifier));
@@ -732,7 +733,7 @@ bool TParseContext::arraySizeErrorCheck(const TSourceLoc& line, TIntermTyped* ex
 //
 bool TParseContext::arrayQualifierErrorCheck(const TSourceLoc& line, TPublicType type)
 {
-    if ((type.qualifier == EvqAttribute) || (type.qualifier == EvqVertexInput) || (type.qualifier == EvqConst)) {
+    if ((type.qualifier == EvqAttribute) || (type.qualifier == EvqVertexIn) || (type.qualifier == EvqConst)) {
         error(line, "cannot declare arrays of this qualifier", TType(type).getCompleteString().c_str());
         return true;
     }
@@ -938,7 +939,7 @@ bool TParseContext::singleDeclarationErrorCheck(TPublicType &publicType, const T
         return true;
     }
 
-    if (publicType.qualifier != EvqVertexInput && publicType.qualifier != EvqFragmentOutput && layoutLocationErrorCheck(identifierLocation, publicType.layoutQualifier))
+    if (publicType.qualifier != EvqVertexIn && publicType.qualifier != EvqFragmentOut && layoutLocationErrorCheck(identifierLocation, publicType.layoutQualifier))
     {
         return true;
     }
@@ -1164,10 +1165,28 @@ TPublicType TParseContext::addFullySpecifiedType(TQualifier qualifier, TLayoutQu
     {
         switch (qualifier)
         {
-          case EvqVertexInput:
-          case EvqFragmentOutput:
-          case EvqVaryingIn:
-          case EvqVaryingOut:
+          case EvqSmoothIn:
+          case EvqSmoothOut:
+          case EvqVertexOut:
+          case EvqFragmentIn:
+          case EvqCentroidOut:
+          case EvqCentroidIn:
+            if (typeSpecifier.type == EbtBool)
+            {
+                error(typeSpecifier.line, "cannot be bool", getQualifierString(qualifier));
+                recover();
+            }
+            if (typeSpecifier.type == EbtInt || typeSpecifier.type == EbtUInt)
+            {
+                error(typeSpecifier.line, "must use 'flat' interpolation here", getQualifierString(qualifier));
+                recover();
+            }
+            break;
+
+          case EvqVertexIn:
+          case EvqFragmentOut:
+          case EvqFlatIn:
+          case EvqFlatOut:
             if (typeSpecifier.type == EbtBool)
             {
                 error(typeSpecifier.line, "cannot be bool", getQualifierString(qualifier));
@@ -2123,12 +2142,12 @@ TIntermTyped* TParseContext::addIndexExpression(TIntermTyped *baseExpression, co
     {
         if (baseExpression->isInterfaceBlock())
         {
-            error(location, "", "[", "array indexes for interface blocks arrays must be constant integeral expressions");
+            error(location, "", "[", "array indexes for interface blocks arrays must be constant integral expressions");
             recover();
         }
-        else if (baseExpression->getQualifier() == EvqFragmentOutput)
+        else if (baseExpression->getQualifier() == EvqFragmentOut)
         {
-            error(location, "", "[", "array indexes for output variables must be constant integeral expressions");
+            error(location, "", "[", "array indexes for fragment outputs must be constant integral expressions");
             recover();
         }
 
@@ -2462,7 +2481,7 @@ TPublicType TParseContext::joinInterpolationQualifiers(const TSourceLoc &interpo
 {
     TQualifier mergedQualifier = EvqSmoothIn;
 
-    if (storageQualifier == EvqSmoothIn) {
+    if (storageQualifier == EvqFragmentIn) {
         if (interpolationQualifier == EvqSmooth)
             mergedQualifier = EvqSmoothIn;
         else if (interpolationQualifier == EvqFlat)
@@ -2476,7 +2495,7 @@ TPublicType TParseContext::joinInterpolationQualifiers(const TSourceLoc &interpo
             mergedQualifier = EvqFlatIn;
         else UNREACHABLE();
     }
-    else if (storageQualifier == EvqSmoothOut) {
+    else if (storageQualifier == EvqVertexOut) {
         if (interpolationQualifier == EvqSmooth)
             mergedQualifier = EvqSmoothOut;
         else if (interpolationQualifier == EvqFlat)

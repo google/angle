@@ -27,7 +27,7 @@ void ValidateOutputs::visitSymbol(TIntermSymbol *symbol)
 
     mVisitedSymbols.insert(name);
 
-    if (qualifier == EvqFragmentOutput)
+    if (qualifier == EvqFragmentOut)
     {
         const TType &type = symbol->getType();
         const int location = type.getLayoutQualifier().location;

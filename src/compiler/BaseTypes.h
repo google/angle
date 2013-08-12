@@ -301,8 +301,11 @@ enum TQualifier
     EvqInvariantVaryingIn,     // readonly, fragment shaders only
     EvqInvariantVaryingOut,    // vertex shaders only  read/write
     EvqUniform,       // Readonly, vertex and fragment
-    EvqVertexInput,   // Vertex shader input
-    EvqFragmentOutput, // Fragment shader output
+
+    EvqVertexIn,      // Vertex shader input
+    EvqFragmentOut,   // Fragment shader output
+    EvqVertexOut,     // Vertex shader output
+    EvqFragmentIn,    // Fragment shader input
 
     // parameters
     EvqIn,
@@ -393,8 +396,10 @@ inline const char* getQualifierString(TQualifier q)
     case EvqInvariantVaryingIn: return "invariant varying";	break;
     case EvqInvariantVaryingOut:return "invariant varying";	break;
     case EvqUniform:        return "uniform";        break;
-    case EvqVertexInput:    return "in";             break;
-    case EvqFragmentOutput: return "out";            break;
+    case EvqVertexIn:       return "in";             break;
+    case EvqFragmentOut:    return "out";            break;
+    case EvqVertexOut:      return "out";            break;
+    case EvqFragmentIn:     return "in";             break;
     case EvqIn:             return "in";             break;
     case EvqOut:            return "out";            break;
     case EvqInOut:          return "inout";          break;

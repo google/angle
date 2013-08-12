@@ -3852,7 +3852,7 @@ yyreduce:
 
     {
         ES3_ONLY("in", (yylsp[(1) - (1)]), "storage qualifier");
-        (yyval.interm.type).qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqSmoothIn : EvqVertexInput;
+        (yyval.interm.type).qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragmentIn : EvqVertexIn;
     }
     break;
 
@@ -3860,7 +3860,7 @@ yyreduce:
 
     {
         ES3_ONLY("out", (yylsp[(1) - (1)]), "storage qualifier");
-        (yyval.interm.type).qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragmentOutput : EvqSmoothOut;
+        (yyval.interm.type).qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragmentOut : EvqVertexOut;
     }
     break;
 
@@ -3873,7 +3873,7 @@ yyreduce:
             context->error((yylsp[(1) - (2)]), "invalid storage qualifier", "it is an error to use 'centroid in' in the vertex shader");
             context->recover();
         }
-        (yyval.interm.type).qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqCentroidIn : EvqVertexInput;
+        (yyval.interm.type).qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqCentroidIn : EvqVertexIn;
     }
     break;
 
@@ -3886,7 +3886,7 @@ yyreduce:
             context->error((yylsp[(1) - (2)]), "invalid storage qualifier", "it is an error to use 'centroid out' in the fragment shader");
             context->recover();
         }
-        (yyval.interm.type).qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragmentOutput : EvqCentroidOut;
+        (yyval.interm.type).qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragmentOut : EvqCentroidOut;
     }
     break;
 

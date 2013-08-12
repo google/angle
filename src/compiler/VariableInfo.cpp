@@ -246,9 +246,9 @@ bool CollectAttribsUniforms::visitAggregate(Visit, TIntermAggregate* node)
     case EOpDeclaration: {
         const TIntermSequence& sequence = node->getSequence();
         TQualifier qualifier = sequence.front()->getAsTyped()->getQualifier();
-        if (qualifier == EvqAttribute || qualifier == EvqVertexInput || qualifier == EvqUniform)
+        if (qualifier == EvqAttribute || qualifier == EvqVertexIn || qualifier == EvqUniform)
         {
-            TVariableInfoList& infoList = (qualifier == EvqAttribute || qualifier == EvqVertexInput) ?
+            TVariableInfoList& infoList = (qualifier == EvqAttribute || qualifier == EvqVertexIn) ?
                 mAttribs : mUniforms;
             for (TIntermSequence::const_iterator i = sequence.begin();
                  i != sequence.end(); ++i)

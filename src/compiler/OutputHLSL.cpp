@@ -1549,7 +1549,7 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
 
             out << decorateUniform(name, nodeType);
         }
-        else if (qualifier == EvqAttribute || qualifier == EvqVertexInput)
+        else if (qualifier == EvqAttribute || qualifier == EvqVertexIn)
         {
             mReferencedAttributes[name] = node;
             out << decorate(name);
@@ -1559,7 +1559,7 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
             mReferencedVaryings[name] = node;
             out << decorate(name);
         }
-        else if (qualifier == EvqFragmentOutput)
+        else if (qualifier == EvqFragmentOut)
         {
             mReferencedOutputVariables[name] = node;
             out << "out_" << name;
@@ -2924,11 +2924,13 @@ TString OutputHLSL::interpolationString(TQualifier qualifier)
     switch(qualifier)
     {
       case EvqVaryingIn:           return "";
+      case EvqFragmentIn:          return "";
       case EvqInvariantVaryingIn:  return "";
       case EvqSmoothIn:            return "linear";
       case EvqFlatIn:              return "nointerpolation";
       case EvqCentroidIn:          return "centroid";
       case EvqVaryingOut:          return "";
+      case EvqVertexOut:           return "";
       case EvqInvariantVaryingOut: return "";
       case EvqSmoothOut:           return "linear";
       case EvqFlatOut:             return "nointerpolation";
@@ -3772,6 +3774,7 @@ bool OutputHLSL::isVaryingOut(TQualifier qualifier)
       case EvqSmoothOut:
       case EvqFlatOut:
       case EvqCentroidOut:
+      case EvqVertexOut:
         return true;
     }
 
@@ -3787,6 +3790,7 @@ bool OutputHLSL::isVaryingIn(TQualifier qualifier)
       case EvqSmoothIn:
       case EvqFlatIn:
       case EvqCentroidIn:
+      case EvqFragmentIn:
         return true;
     }
 

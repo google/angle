@@ -1190,11 +1190,11 @@ storage_qualifier
     }
     | IN_QUAL {
         ES3_ONLY("in", @1, "storage qualifier");
-        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqSmoothIn : EvqVertexInput;
+        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragmentIn : EvqVertexIn;
     }
     | OUT_QUAL {
         ES3_ONLY("out", @1, "storage qualifier");
-        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragmentOutput : EvqSmoothOut;
+        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragmentOut : EvqVertexOut;
     }
     | CENTROID IN_QUAL {
         ES3_ONLY("centroid in", @1, "storage qualifier");
@@ -1203,7 +1203,7 @@ storage_qualifier
             context->error(@1, "invalid storage qualifier", "it is an error to use 'centroid in' in the vertex shader");
             context->recover();
         }
-        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqCentroidIn : EvqVertexInput;
+        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqCentroidIn : EvqVertexIn;
     }
     | CENTROID OUT_QUAL {
         ES3_ONLY("centroid out", @1, "storage qualifier");
@@ -1212,7 +1212,7 @@ storage_qualifier
             context->error(@1, "invalid storage qualifier", "it is an error to use 'centroid out' in the fragment shader");
             context->recover();
         }
-        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragmentOutput : EvqCentroidOut;
+        $$.qualifier = (context->shaderType == SH_FRAGMENT_SHADER) ? EvqFragmentOut : EvqCentroidOut;
     }
     | UNIFORM {
         if (context->globalErrorCheck(@1, context->symbolTable.atGlobalLevel(), "uniform"))
