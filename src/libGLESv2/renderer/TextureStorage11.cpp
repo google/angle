@@ -117,20 +117,47 @@ bool TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture, unsign
     {
         GLuint clientVersion = mRenderer->getCurrentClientVersion();
 
-        D3D11_BOX srcBox;
-        srcBox.left = xoffset;
-        srcBox.top = yoffset;
-        srcBox.right = xoffset + roundUp((unsigned int)width, d3d11::GetBlockWidth(mTextureFormat, clientVersion));
-        srcBox.bottom = yoffset + roundUp((unsigned int)height, d3d11::GetBlockHeight(mTextureFormat, clientVersion));
-        srcBox.front = zoffset;
-        srcBox.back = zoffset + depth;
+        gl::Extents texSize(std::max(mTextureWidth  >> level, 1U),
+                            std::max(mTextureHeight >> level, 1U),
+                            std::max(mTextureDepth  >> level, 1U));
+        gl::Box copyArea(xoffset, yoffset, zoffset, width, height, depth);
 
-        ID3D11DeviceContext *context = mRenderer->getDeviceContext();
+        bool fullCopy = copyArea.x == 0 &&
+                        copyArea.y == 0 &&
+                        copyArea.z == 0 &&
+                        copyArea.width  == texSize.width &&
+                        copyArea.height == texSize.height &&
+                        copyArea.depth  == texSize.depth;
 
-        ASSERT(getBaseTexture());
-        context->CopySubresourceRegion(getBaseTexture(), getSubresourceIndex(level + mLodOffset, layerTarget),
-                                       xoffset, yoffset, zoffset, srcTexture, sourceSubresource, &srcBox);
-        return true;
+        ID3D11Resource *dstTexture = getBaseTexture();
+        unsigned int dstSubresource = getSubresourceIndex(level + mLodOffset, layerTarget);
+
+        ASSERT(dstTexture);
+
+        if (!fullCopy && (d3d11::GetDepthBits(mTextureFormat) > 0 || d3d11::GetStencilBits(mTextureFormat) > 0))
+        {
+            // CopySubresourceRegion cannot copy partial depth stencils, use the blitter instead
+            Blit11 *blitter = mRenderer->getBlitter();
+
+            return blitter->copyDepthStencil(srcTexture, sourceSubresource, copyArea, texSize,
+                                             dstTexture, dstSubresource, copyArea, texSize);
+        }
+        else
+        {
+            D3D11_BOX srcBox;
+            srcBox.left = copyArea.x;
+            srcBox.top = copyArea.y;
+            srcBox.right = copyArea.x + roundUp((unsigned int)width, d3d11::GetBlockWidth(mTextureFormat, clientVersion));
+            srcBox.bottom = copyArea.y + roundUp((unsigned int)height, d3d11::GetBlockHeight(mTextureFormat, clientVersion));
+            srcBox.front = copyArea.z;
+            srcBox.back = copyArea.z + copyArea.depth;
+
+            ID3D11DeviceContext *context = mRenderer->getDeviceContext();
+
+            context->CopySubresourceRegion(dstTexture, dstSubresource, copyArea.x, copyArea.y, copyArea.z,
+                                           srcTexture, sourceSubresource, fullCopy ? NULL : &srcBox);
+            return true;
+        }
     }
 
     return false;
