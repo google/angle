@@ -140,7 +140,7 @@ class TType
 public:
     POOL_ALLOCATOR_NEW_DELETE(GlobalPoolAllocator)
     TType() {}
-    TType(TBasicType t, TPrecision p, TQualifier q = EvqTemporary, int ps = 1, int ss = 1, bool a = false) :
+    TType(TBasicType t, TPrecision p, TQualifier q = EvqTemporary, char ps = 1, char ss = 1, bool a = false) :
             type(t), precision(p), qualifier(q), primarySize(ps), secondarySize(ss), array(a), layoutQualifier(TLayoutQualifier::create()), arraySize(0),
             interfaceBlock(0), structure(0)
     {
@@ -169,12 +169,12 @@ public:
     TLayoutQualifier getLayoutQualifier() const { return layoutQualifier; }
     void setLayoutQualifier(TLayoutQualifier lq) { layoutQualifier = lq; }
 
-    int getNominalSize() const { return primarySize; }
-    int getSecondarySize() const { return secondarySize; }
-    int getCols() const { ASSERT(isMatrix()); return primarySize; }
-    int getRows() const { ASSERT(isMatrix()); return secondarySize; }
-    void setPrimarySize(int ps) { primarySize = ps; }
-    void setSecondarySize(int ss) { secondarySize = ss; }
+    char getNominalSize() const { return primarySize; }
+    char getSecondarySize() const { return secondarySize; }
+    char getCols() const { ASSERT(isMatrix()); return primarySize; }
+    char getRows() const { ASSERT(isMatrix()); return secondarySize; }
+    void setPrimarySize(char ps) { primarySize = ps; }
+    void setSecondarySize(char ss) { secondarySize = ss; }
 
     // Full size of single instance of type
     size_t getObjectSize() const;
@@ -294,18 +294,18 @@ public:
         return structure ? structure->containsArrays() : false;
     }
 
-protected:
+private:
     TString buildMangledName() const;
     size_t getStructSize() const;
     void computeDeepestStructNesting();
 
-    TBasicType type      : 6;
-    TPrecision precision : 4;
-    TQualifier qualifier : 7;
-    unsigned int array   : 1;
+    TBasicType type;
+    TPrecision precision;
+    TQualifier qualifier;
     TLayoutQualifier layoutQualifier;
-    int primarySize; // size of vector or cols matrix
-    int secondarySize; // rows of a matrix
+    char primarySize; // size of vector or cols matrix
+    char secondarySize; // rows of a matrix
+    bool array;
     int arraySize;
 
     // 0 unless this is an interface block, or interface block member variable
@@ -332,8 +332,8 @@ struct TPublicType
     TLayoutQualifier layoutQualifier;
     TQualifier qualifier;
     TPrecision precision;
-    int primarySize;          // size of vector or cols of matrix
-    int secondarySize;        // rows of matrix
+    char primarySize;          // size of vector or cols of matrix
+    char secondarySize;        // rows of matrix
     bool array;
     int arraySize;
     TType* userDef;
@@ -353,12 +353,12 @@ struct TPublicType
         line = ln;
     }
 
-    void setAggregate(int size)
+    void setAggregate(char size)
     {
         primarySize = size;
     }
 
-    void setMatrix(int c, int r)
+    void setMatrix(char c, char r)
     {
         ASSERT(c > 1 && r > 1 && c <= 4 && r <= 4);
         primarySize = c;
@@ -391,19 +391,19 @@ struct TPublicType
         return primarySize > 1 && secondarySize == 1;
     }
 
-    int getCols() const
+    char getCols() const
     {
         ASSERT(isMatrix());
         return primarySize;
     }
 
-    int getRows() const
+    char getRows() const
     {
         ASSERT(isMatrix());
         return secondarySize;
     }
 
-    int getNominalSize() const
+    char getNominalSize() const
     {
         return primarySize;
     }
