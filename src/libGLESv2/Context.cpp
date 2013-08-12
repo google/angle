@@ -1889,6 +1889,9 @@ bool Context::getIntegerv(GLenum pname, GLint *params)
       case GL_PIXEL_UNPACK_BUFFER_BINDING:
         *params = mState.pixelUnpackBuffer.id();
         break;
+      case GL_NUM_EXTENSIONS:
+        *params = static_cast<GLint>(getNumExtensions());
+        break;
       default:
         return false;
     }
@@ -2142,6 +2145,7 @@ bool Context::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *nu
       case GL_VERTEX_ARRAY_BINDING:
       case GL_MAX_VERTEX_UNIFORM_COMPONENTS:
       case GL_MAX_FRAGMENT_UNIFORM_COMPONENTS:
+      case GL_NUM_EXTENSIONS:
         {
             *type = GL_INT;
             *numParams = 1;
