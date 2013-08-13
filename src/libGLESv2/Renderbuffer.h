@@ -244,6 +244,8 @@ class Renderbuffer : public RefCountObject
     GLuint getAlphaSize() const;
     GLuint getDepthSize() const;
     GLuint getStencilSize() const;
+    GLenum getComponentType() const;
+    GLenum getColorEncoding() const;
     GLsizei getSamples() const;
 
     unsigned int getSerial() const;

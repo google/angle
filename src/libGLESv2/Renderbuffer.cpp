@@ -385,6 +385,16 @@ GLuint Renderbuffer::getStencilSize() const
     return gl::GetStencilBits(getActualFormat(), mRenderer->getCurrentClientVersion());
 }
 
+GLenum Renderbuffer::getComponentType() const
+{
+    return gl::GetComponentType(getActualFormat(), mRenderer->getCurrentClientVersion());
+}
+
+GLenum Renderbuffer::getColorEncoding() const
+{
+    return gl::GetColorEncoding(getActualFormat(), mRenderer->getCurrentClientVersion());
+}
+
 GLsizei Renderbuffer::getSamples() const
 {
     return mInstance->getSamples();
