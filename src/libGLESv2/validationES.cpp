@@ -52,7 +52,8 @@ bool ValidateRenderbufferStorageParameters(const gl::Context *context, GLenum ta
         return gl::error(GL_INVALID_ENUM, false);
     }
 
-    if (gl::IsIntegerFormat(internalformat, context->getClientVersion()) && samples > 0)
+    GLenum componentType = gl::GetComponentType(internalformat, context->getClientVersion());
+    if ((componentType == GL_UNSIGNED_INT || componentType == GL_INT) && samples > 0)
     {
         return gl::error(GL_INVALID_OPERATION, false);
     }
@@ -183,40 +184,43 @@ bool ValidateBlitFramebufferParameters(gl::Context *context, GLint srcX0, GLint 
         if (readColorBuffer && drawColorBuffer)
         {
             GLint readInternalFormat = readColorBuffer->getActualFormat();
-            GLint drawInternalFormat = drawColorBuffer->getActualFormat();
+            GLenum readComponentType = gl::GetComponentType(readInternalFormat, clientVersion);
 
             for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; i++)
             {
                 if (drawFramebuffer->isEnabledColorAttachment(i))
                 {
-                    GLint drawbufferAttachmentFormat = drawFramebuffer->getColorbuffer(i)->getActualFormat();
+                    GLint drawInternalFormat = drawFramebuffer->getColorbuffer(i)->getActualFormat();
+                    GLenum drawComponentType = gl::GetComponentType(drawInternalFormat, clientVersion);
 
-                    if (gl::IsNormalizedFixedPointFormat(readInternalFormat, clientVersion) &&
-                        !gl::IsNormalizedFixedPointFormat(drawbufferAttachmentFormat, clientVersion))
+                    // The GL ES 3.0.2 spec (pg 193) states that:
+                    // 1) If the read buffer is fixed point format, the draw buffer must be as well
+                    // 2) If the read buffer is an unsigned integer format, the draw buffer must be as well
+                    // 3) If the read buffer is a signed integer format, the draw buffer must be as well
+                    if ( (readComponentType == GL_UNSIGNED_NORMALIZED || readComponentType == GL_SIGNED_NORMALIZED) &&
+                        !(drawComponentType == GL_UNSIGNED_NORMALIZED || drawComponentType == GL_SIGNED_NORMALIZED))
                     {
                         return gl::error(GL_INVALID_OPERATION, false);
                     }
 
-                    if (gl::IsUnsignedIntegerFormat(readInternalFormat, clientVersion) &&
-                        !gl::IsUnsignedIntegerFormat(drawbufferAttachmentFormat, clientVersion))
+                    if (readComponentType == GL_UNSIGNED_INT && drawComponentType != GL_UNSIGNED_INT)
                     {
                         return gl::error(GL_INVALID_OPERATION, false);
                     }
 
-                    if (gl::IsSignedIntegerFormat(readInternalFormat, clientVersion) &&
-                        !gl::IsSignedIntegerFormat(drawbufferAttachmentFormat, clientVersion))
+                    if (readComponentType == GL_INT && drawComponentType != GL_INT)
                     {
                         return gl::error(GL_INVALID_OPERATION, false);
                     }
 
-                    if (readColorBuffer->getSamples() > 0 && (readInternalFormat != drawbufferAttachmentFormat || !sameBounds))
+                    if (readColorBuffer->getSamples() > 0 && (readInternalFormat != drawInternalFormat || !sameBounds))
                     {
                         return gl::error(GL_INVALID_OPERATION, false);
                     }
                 }
             }
 
-            if (gl::IsIntegerFormat(readInternalFormat, clientVersion) && filter == GL_LINEAR)
+            if ((readComponentType == GL_INT || readComponentType == GL_UNSIGNED_INT) && filter == GL_LINEAR)
             {
                 return gl::error(GL_INVALID_OPERATION, false);
             }

@@ -2494,7 +2494,8 @@ GLsizei Renderer11::getNumSampleCounts(GLint internalFormat) const
     unsigned int numCounts = 0;
 
     // D3D11 supports multisampling for signed and unsigned format, but ES 3.0 does not
-    if (!gl::IsIntegerFormat(internalFormat, getCurrentClientVersion()))
+    GLenum componentType = gl::GetComponentType(internalFormat, getCurrentClientVersion());
+    if (componentType != GL_INT && componentType != GL_UNSIGNED_INT)
     {
         DXGI_FORMAT format = gl_d3d11::GetRenderableFormat(internalFormat, getCurrentClientVersion());
         MultisampleSupportMap::const_iterator iter = mMultisampleSupportMap.find(format);
@@ -2518,8 +2519,11 @@ GLsizei Renderer11::getNumSampleCounts(GLint internalFormat) const
 void Renderer11::getSampleCounts(GLint internalFormat, GLsizei bufSize, GLint *params) const
 {
     // D3D11 supports multisampling for signed and unsigned format, but ES 3.0 does not
-    if (gl::IsIntegerFormat(internalFormat, getCurrentClientVersion()))
+    GLenum componentType = gl::GetComponentType(internalFormat, getCurrentClientVersion());
+    if (componentType == GL_INT || componentType == GL_UNSIGNED_INT)
+    {
         return;
+    }
 
     DXGI_FORMAT format = gl_d3d11::GetRenderableFormat(internalFormat, getCurrentClientVersion());
     MultisampleSupportMap::const_iterator iter = mMultisampleSupportMap.find(format);

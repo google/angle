@@ -232,7 +232,7 @@ bool Blit11::copyTexture(ID3D11ShaderResourceView *source, const gl::Box &source
 
     BlitParameters parameters = { 0 };
     parameters.mDestinationFormat = destFormat;
-    parameters.mSignedInteger = gl::IsSignedIntegerFormat(sourceInternalFormat, mRenderer->getCurrentClientVersion());
+    parameters.mSignedInteger = gl::GetComponentType(sourceInternalFormat, mRenderer->getCurrentClientVersion()) == GL_INT;
     parameters.m3DBlit = sourceArea.depth > 1;
 
     BlitShaderMap::const_iterator i = mShaderMap.find(parameters);

@@ -756,13 +756,13 @@ bool ValidES3ReadFormatType(GLenum internalFormat, GLenum format, GLenum type)
         switch (type)
         {
           case GL_INT:
-            if (!gl::IsSignedIntegerFormat(internalFormat, 3))
+            if (gl::GetComponentType(internalFormat, 3) != GL_INT)
             {
                 return false;
             }
             break;
           case GL_UNSIGNED_INT:
-            if (!gl::IsUnsignedIntegerFormat(internalFormat, 3))
+            if (gl::GetComponentType(internalFormat, 3) != GL_UNSIGNED_INT)
             {
                 return false;
             }
