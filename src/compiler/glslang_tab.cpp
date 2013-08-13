@@ -307,7 +307,7 @@ int yyparse ();
 
 
 extern int yylex(YYSTYPE* yylval, YYLTYPE* yylloc, void* yyscanner);
-static void yyerror(YYLTYPE* yylloc, TParseContext* context, const char* reason);
+extern void yyerror(YYLTYPE* yylloc, TParseContext* context, const char* reason);
 
 #define YYLLOC_DEFAULT(Current, Rhs, N)                      \
   do {                                                       \
@@ -4871,11 +4871,6 @@ yyreturn:
 
 
 
-
-void yyerror(YYLTYPE* yylloc, TParseContext* context, const char* reason) {
-    context->error(*yylloc, reason, "");
-    context->recover();
-}
 
 int glslang_parse(TParseContext* context) {
     return yyparse(context);
